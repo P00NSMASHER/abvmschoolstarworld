@@ -41,6 +41,7 @@ function nextImportant(){
 
 function sourceLabel(){
   if(envelope?.delivery==="live")return {short:"Updated",family:"School info is up to date",stale:false};
+  if(envelope?.delivery==="verified")return {short:"Verified",family:"Verified school info is current",stale:false};
   if(envelope?.delivery==="cache")return {short:"Saved update",family:"Using the latest saved school update",stale:true};
   return {short:"School info ready",family:"School info is ready",stale:true};
 }
@@ -70,7 +71,7 @@ function render(){
   $("#upNextWhen").textContent=next?.date||"This week";
   $("#upNextText").textContent=next?"Keep this on the radar while you work through the week.":"You’re caught up on the dates currently in the school update.";
 
-  renderHomework();renderWeek();renderCalendar();renderStudy();
+  renderHomework();renderWeek();renderCalendar();renderStudy();renderLunch();
 
   $("#familySource").textContent=status.family;
   $("#familySourceDetail").textContent=formatUpdated();
@@ -108,6 +109,38 @@ function renderWeek(){
   const rem=$("#reminders");rem.replaceChildren();
   (pack.reminders||[]).forEach(x=>{const d=document.createElement("div");d.className="reminder-item";d.textContent=x;rem.append(d)});
   if(!(pack.reminders||[]).length)rem.innerHTML='<div class="muted">No reminders are listed.</div>';
+}
+
+function renderLunch(){
+  const menu=pack?.lunchMenu||[];
+  const today=new Date();today.setHours(0,0,0,0);
+  let current=null;
+  for(const row of menu){
+    const d=parseSchoolDate(row.day);
+    if(d&&d.getTime()===today.getTime()){current=row;break;}
+  }
+  const todayRoot=$("#todayLunch");
+  const todayTitle=$("#todayLunchTitle");
+  if(todayRoot){
+    if(current){
+      todayTitle.textContent=current.day||"Today’s menu";
+      todayRoot.innerHTML=(current.items||[]).map(x=>"<span>"+esc(x)+"</span>").join("");
+    }else{
+      todayTitle.textContent="School lunch";
+      todayRoot.textContent=menu.length?"No lunch entry is listed for today.":"No lunch menu is loaded.";
+    }
+  }
+  const weekRoot=$("#weekLunch");
+  if(weekRoot){
+    weekRoot.replaceChildren();
+    menu.forEach(row=>{
+      const card=document.createElement("div");
+      card.className="lunch-day";
+      card.innerHTML="<b>"+esc(row.day||"School day")+"</b><span>"+esc((row.items||[]).join(" · "))+"</span>";
+      weekRoot.append(card);
+    });
+    if(!menu.length)weekRoot.innerHTML='<div class="muted">No lunch menu is loaded for this week.</div>';
+  }
 }
 
 function renderCalendar(){
