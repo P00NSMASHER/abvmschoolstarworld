@@ -1,6 +1,6 @@
 (()=>{"use strict";
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)], stack=()=>$("#app-content");
-let envelope=null, pack=null, activeTab="today", selectedDay=null, calendarDay=null, calendarOffset=0;
+let envelope=null, pack=null, activeTab="today", selectedDay=null, calendarDay=null, calendarOffset=0, calendarMode="month";
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -173,15 +173,23 @@ function renderCalendar(){
   }
   const events=eventItemsForDate(calendarDay),lunch=lunchForDate(calendarDay);
   const agenda=(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)})).filter(o=>o.d&&o.d.getMonth()===m&&o.d.getFullYear()===y).sort((a,b)=>a.d-b.d).slice(0,8);
+  const monthPanel='<div class="calendar-month-panel '+(calendarMode==="month"?"active":"")+'">'+
+      '<div class="calendar-weekdays">'+["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(x=>"<span>"+x+"</span>").join("")+'</div>'+
+      '<div class="calendar-grid">'+monthGrid(y,m)+'</div>'+
+      '<div class="calendar-legend"><span><i class="test"></i>Test</span><span><i class="faith"></i>Faith</span><span><i class="family"></i>Family</span><span><i class="due"></i>Due</span></div>'+
+    '</div>';
+  const listPanel='<div class="calendar-list-panel '+(calendarMode==="list"?"active":"")+'">'+
+      (agenda.length?agenda.map(o=>'<button class="calendar-list-row" type="button" data-cal-day="'+o.d.toISOString()+'"><span class="calendar-list-date"><b>'+o.d.getDate()+'</b><small>'+WEEKDAY[o.d.getDay()].slice(0,3)+'</small></span><span class="event-icon '+kindClass(o.x)+'">'+eventEmoji(o.x)+'</span><span class="calendar-list-copy"><strong>'+esc(o.x.label)+'</strong><small>'+esc(o.x.kind||"School event")+'</small></span><span class="chevron">›</span></button>').join(""):'<div class="empty-note">No school dates are listed for this month.</div>')+
+    '</div>';
+
   stack().innerHTML='<div class="screen calendar-screen" role="region" aria-label="'+MONTHS[m]+' calendar">'+
     scene("calendar","SCHOOL MONTH AT A GLANCE",MONTHS[m]+" "+y,"School Month at a Glance",false)+
-    '<div class="calendar-wrap"><section class="calendar-card"><div class="calendar-title-row"><button class="month-arrow" data-month="-1" type="button">‹</button><div style="text-align:center"><p>MONTH VIEW</p><h2>'+MONTHS[m]+" "+y+'</h2></div><button class="month-arrow" data-month="1" type="button">›</button></div>'+
-    '<div class="calendar-tabs"><span class="active">Month View</span><span>List View</span></div><div class="calendar-weekdays">'+["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(x=>"<span>"+x+"</span>").join("")+'</div>'+
-    '<div class="calendar-grid">'+monthGrid(y,m)+'</div><div class="calendar-legend"><span><i class="test"></i>Test</span><span><i class="faith"></i>Faith</span><span><i class="family"></i>Family</span><span><i class="due"></i>Due</span></div></section>'+
+    '<div class="calendar-wrap"><section class="calendar-card"><div class="calendar-title-row"><button class="month-arrow" data-month="-1" type="button">‹</button><div style="text-align:center"><p>'+esc(calendarMode==="month"?"MONTH VIEW":"LIST VIEW")+'</p><h2>'+MONTHS[m]+" "+y+'</h2></div><button class="month-arrow" data-month="1" type="button">›</button></div>'+
+    '<div class="calendar-tabs"><button class="'+(calendarMode==="month"?"active":"")+'" data-cal-mode="month" type="button">Month View</button><button class="'+(calendarMode==="list"?"active":"")+'" data-cal-mode="list" type="button">List View</button></div>'+
+    monthPanel+listPanel+'</section>'+
     '<section class="calendar-day-card"><div class="calendar-day-heading"><p>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</p><h2>'+esc(fmtDate(calendarDay))+'</h2></div>'+
-    (events.length?'<div class="calendar-event-list">'+events.map(e=>'<div><i class="'+kindClass(e)+'"></i><span><strong>'+esc(e.label)+'</strong></span></div>').join("")+'</div>':'<p class="calendar-empty">No special school events are listed for this date.</p>')+
+    (events.length?'<div class="calendar-event-list">'+events.map(e=>'<div><i class="'+kindClass(e)+'"></i><span><strong>'+esc(e.label)+'</strong></span></div>').join(""):'<p class="calendar-empty">No special school events are listed for this date.</p>')+
     (lunch?'<div class="calendar-lunch"><span>🍎</span><div><b>School Lunch</b><p>'+esc((lunch.items||[]).join(", ").replace(/, ([^,]*)$/,", and $1"))+'</p></div></div>':'')+'</section>'+
-    (agenda.length?'<section class="gold-card" style="margin-top:12px"><div class="section-label">'+MONTHS[m]+' SCHOOL DATES</div><div class="event-stack" style="margin-top:10px">'+agenda.map(o=>eventRow(o.x)).join("")+'</div></section>':'')+
     '</div></div>';
 }
 function subjectCard(id,klass,title,icon,subj){
@@ -234,7 +242,8 @@ function bindScreen(){
   $$("[data-check]").forEach(b=>b.addEventListener("click",()=>{const i=Number(b.dataset.check),item=(pack.homework||[])[i],k=checkKey(item,i);localStorage.getItem(k)==="1"?localStorage.removeItem(k):localStorage.setItem(k,"1");render()}));
   $$("[data-day]").forEach(b=>b.addEventListener("click",()=>{selectedDay=new Date(b.dataset.day);renderWeek();bindScreen()}));
   $$("[data-cal-day]").forEach(b=>b.addEventListener("click",()=>{calendarDay=new Date(b.dataset.calDay);renderCalendar();bindScreen()}));
-  $$("[data-month]").forEach(b=>b.addEventListener("click",()=>{calendarOffset+=Number(b.dataset.month);calendarDay=null;renderCalendar();bindScreen()}));
+  $("[data-month]").forEach(b=>b.addEventListener("click",()=>{calendarOffset+=Number(b.dataset.month);calendarDay=null;renderCalendar();bindScreen()}));
+  $("[data-cal-mode]").forEach(b=>b.addEventListener("click",()=>{calendarMode=b.dataset.calMode;renderCalendar();bindScreen()}));
   $$(".bell-button").forEach(b=>b.addEventListener("click",()=>toast("School information is current.")));
 }
 $$(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>{activeTab=b.dataset.tab;render()}));
