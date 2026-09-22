@@ -100,7 +100,7 @@
         "kind": "assessment"
       },
       {
-        "label": "Stationery money due ($17)",
+        "label": "Stationary money due ($17)",
         "date": "Wednesday, Sept. 23",
         "kind": "deadline"
       },
@@ -125,7 +125,7 @@
         "kind": "school event"
       },
       {
-        "label": "Lego Club (students who signed up)",
+        "label": "Lego Club — 3–4 pm (students who signed up)",
         "date": "Friday, Sept. 25",
         "kind": "club"
       },
@@ -306,7 +306,7 @@
       }
     ],
     "reminders": [
-      "Stationery money ($17) is due Wednesday, Sept. 23.",
+      "Stationary money ($17) is due Wednesday, Sept. 23.",
       "Pretzel delivery is Thursday, Sept. 24 after lunch.",
       "Friday, Sept. 25 is Dress Down Day with a donation for a local charity.",
       "Lego Club is Friday, Sept. 25 for students who signed up.",
