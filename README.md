@@ -1,21 +1,18 @@
-# ABVM School Star World v4
+# ABVM Grade 2 Parent Hub
 
-Standalone Grade 2 game built from the user's ABVM requirements and research blueprint.
+Parent-facing GitHub Pages app for the current ABVM Grade 2 week.
 
 ## Included
-- Phone-cloud school source feed with server-side last-good cache and verified fallback
-- Tonight homework + reminders
-- 5-question adaptive Quests with pause/resume, read-aloud, hint ladder, model answer, auto-advance, More Time, and duplicate-reward protection
-- Creation Garden, Story Trail, Lantern Path world progression
-- Study Guides with upcoming-assessment priority and separately revealed practice answers
-- Simple first-run avatar selector, detailed SVG avatar renderer, companion, dress-up, saved looks
-- 12 Catalog collections × 10 items = 120 original items; every item has a renderer-backed thumbnail
-- Ownership, equipment, favorites, Dream Goal, coins, League Stars, room delivery/placement
-- Parent Learning Pulse, settings, export/import backup, legacy ticket conversion support
-- IndexedDB-first local persistence and PWA shell caching
-- No loot boxes, streak loss, expiring rewards, public child rankings, or FOMO pressure
+- Current homework with simple parent checkoff
+- Current reminders
+- Source freshness / fallback status
+- Upcoming assessment dates
+- Subject-by-subject study guides
+- Vocabulary
+- Review questions with reveal-answer controls
+- IndexedDB/local fallback for homework checkoff and last-good school pack
+- PWA shell caching
 
+## Parent-only v6
 
-## v5 emergency source-fix build
-
-This build rejects incomplete upstream study packs, ignores incomplete cached packs, and falls back to a sanitized local pack containing the verified homework plus the current Spelling, Reading/ELA, and Religion material supplied on 2026-09-17. The local bootstrap is automatically superseded when the sanitized upstream source reports a complete pack.
+The child game surface has been removed from the rendered app. There is no avatar tab, catalog tab, quest/game tab, room, reward wallet, onboarding flow, or game call-to-action. The retained source-grounded school pack and study-guide pipeline are unchanged.
