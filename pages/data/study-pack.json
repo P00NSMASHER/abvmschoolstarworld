@@ -1,28 +1,69 @@
 {
-  "source": "ABVM Grade 2 verified public sources",
+  "source": "ABVM Grade 2 verified public teacher and school sources",
   "delivery": "verified",
   "syncPolicy": {
     "intervalHours": 4
   },
-  "sourceLastSeenAt": "2026-09-22T13:00:00-04:00",
-  "sourceCapturedAt": "2026-09-22T13:00:00-04:00",
+  "sourceLastSeenAt": "2026-09-22T13:45:00-04:00",
+  "sourceCapturedAt": "2026-09-22T13:45:00-04:00",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
-    "sourceHash": "verified-public-2026-09-22-v1",
-    "sourceCapturedAt": "2026-09-22T13:00:00-04:00",
-    "generatedAt": "2026-09-22T13:00:00-04:00",
+    "sourceHash": "verified-public-2026-09-22-v2",
+    "sourceCapturedAt": "2026-09-22T13:45:00-04:00",
+    "generatedAt": "2026-09-22T13:45:00-04:00",
     "weekLabel": "Week of September 21, 2026",
-    "summary": "Current verified Grade 2 school-week information. The public teacher home page confirms this week's dates and specials, but it does not currently publish a new daily homework list or a new weekly spelling/reading/religion study list. Older Sept. 17 homework and study content has been removed from the current-week view rather than presented as current.",
+    "summary": "Current Grade 2 teacher-site material for the week of Sept. 21: Homework page lists a Spelling Choice Board activity, a two-sided Math paper, reading, and folder/forms tasks. Reading Work now lists “Little Flap Learns to Fly,” new sight words, two-letter consonant blends, and new vocabulary. Tests lists Math Sept. 22, STAR reading Sept. 23, and Spelling/Handwriting Sept. 25.",
     "subjects": [
+      {
+        "subject": "Reading / ELA",
+        "topics": [
+          "Story: Little Flap Learns to Fly",
+          "Sight words: she, boy, he, small, were, what, girl, here, by, want",
+          "Phonics: 2-letter consonant blends",
+          "Vocabulary: action, afraid, depend, nervously, peered, perfectly, rescue, secret",
+          "Word structure: CVC words"
+        ],
+        "studyNotes": [
+          "The current Reading Work page does not list a reading-comprehension skill."
+        ]
+      },
+      {
+        "subject": "Spelling / Handwriting",
+        "topics": [
+          "Friday, Sept. 25 test focus: 2-letter blends"
+        ],
+        "studyNotes": [
+          "The public Tests page confirms the skill and test date, but a current spelling-word list was not found on the public pages checked."
+        ]
+      },
+      {
+        "subject": "Religion",
+        "topics": [
+          "Unit 1: God Gives Us Life & Love",
+          "Chapter 2: Jesus is God's Best Gift",
+          "Chapter 1: God is the Giver of Gifts"
+        ],
+        "studyNotes": [
+          "Jesus is God's greatest gift to us; he tells us about God and teaches us how to live.",
+          "Jesus gave us the new life of grace.",
+          "Jesus died for our sins; He is our Savior.",
+          "Jesus is like a seed: a seed dies for a new plant to grow, and Jesus died so we can have new life (grace).",
+          "We are called to be disciples, friends of Jesus.",
+          "Mary is Jesus' mother and the mother of the Church, so she is our mother too.",
+          "We are made in God's image and likeness; we can think, choose, and love.",
+          "The Trinity is three persons in one God: Father, Son, and Holy Spirit.",
+          "We use our senses to enjoy God's gifts, care for creation, and thank God for creation."
+        ]
+      },
       {
         "subject": "Math",
         "topics": [
           "Chapter 1A: addition"
         ],
         "studyNotes": [
-          "A Chapter 1A addition test was previously posted for Tuesday, Sept. 22.",
-          "No new Math homework page is currently visible on the public teacher home page."
+          "The Tests page lists the Chapter 1A addition test for Tuesday, Sept. 22.",
+          "The current Homework page assigns a two-sided Math paper."
         ]
       },
       {
@@ -43,7 +84,7 @@
           "Record nightly reading on the monthly Reading Log."
         ],
         "studyNotes": [
-          "This is the standing Grade 2 homework policy, not a newly posted daily assignment."
+          "This is the standing Grade 2 homework policy."
         ]
       }
     ],
@@ -52,6 +93,11 @@
         "label": "Chapter 1A (addition) test",
         "date": "Tuesday, Sept. 22",
         "kind": "test"
+      },
+      {
+        "label": "STAR reading",
+        "date": "Wednesday, Sept. 23",
+        "kind": "assessment"
       },
       {
         "label": "Stationery money due ($17)",
@@ -67,6 +113,11 @@
         "label": "Pretzel delivery after lunch",
         "date": "Thursday, Sept. 24",
         "kind": "school event"
+      },
+      {
+        "label": "Spelling (2-letter blends) / Handwriting test",
+        "date": "Friday, Sept. 25",
+        "kind": "test"
       },
       {
         "label": "Dress Down Day — donation for a local charity",
@@ -92,6 +143,11 @@
         "label": "HSA meeting",
         "date": "Thursday, Oct. 1",
         "kind": "meeting"
+      },
+      {
+        "label": "Spelling (short a / long a) / Handwriting test",
+        "date": "Friday, Oct. 2",
+        "kind": "test"
       },
       {
         "label": "Mid-term Progress Reports",
@@ -169,18 +225,183 @@
         ]
       }
     ],
-    "vocabulary": [],
-    "homework": [],
+    "vocabulary": [
+      {
+        "subject": "Reading / ELA",
+        "term": "action",
+        "meaning": "Current Reading Work vocabulary word; the teacher page does not provide a definition."
+      },
+      {
+        "subject": "Reading / ELA",
+        "term": "afraid",
+        "meaning": "Current Reading Work vocabulary word; the teacher page does not provide a definition."
+      },
+      {
+        "subject": "Reading / ELA",
+        "term": "depend",
+        "meaning": "Current Reading Work vocabulary word; the teacher page does not provide a definition."
+      },
+      {
+        "subject": "Reading / ELA",
+        "term": "nervously",
+        "meaning": "Current Reading Work vocabulary word; the teacher page does not provide a definition."
+      },
+      {
+        "subject": "Reading / ELA",
+        "term": "peered",
+        "meaning": "Current Reading Work vocabulary word; the teacher page does not provide a definition."
+      },
+      {
+        "subject": "Reading / ELA",
+        "term": "perfectly",
+        "meaning": "Current Reading Work vocabulary word; the teacher page does not provide a definition."
+      },
+      {
+        "subject": "Reading / ELA",
+        "term": "rescue",
+        "meaning": "Current Reading Work vocabulary word; the teacher page does not provide a definition."
+      },
+      {
+        "subject": "Reading / ELA",
+        "term": "secret",
+        "meaning": "Current Reading Work vocabulary word; the teacher page does not provide a definition."
+      }
+    ],
+    "homework": [
+      {
+        "day": "Current Homework posting",
+        "subject": "Spelling",
+        "task": "Spelling Choice Board activity",
+        "due": "Current posting"
+      },
+      {
+        "day": "Current Homework posting",
+        "subject": "Math",
+        "task": "Paper (2 sides)",
+        "due": "Current posting"
+      },
+      {
+        "day": "Current Homework posting",
+        "subject": "Reading",
+        "task": "Read",
+        "due": "Current posting"
+      },
+      {
+        "day": "Current Homework posting",
+        "subject": "Parent",
+        "task": "Complete forms; cover books",
+        "due": "Current posting"
+      },
+      {
+        "day": "Current Homework posting",
+        "subject": "Reading",
+        "task": "Keep Reading Log and Behavior Chart in the HW folder",
+        "due": "Ongoing"
+      },
+      {
+        "day": "Current Homework posting",
+        "subject": "Homework Folder",
+        "task": "Return everything in the HW folder",
+        "due": "Next school day"
+      }
+    ],
     "reminders": [
       "Stationery money ($17) is due Wednesday, Sept. 23.",
       "Pretzel delivery is Thursday, Sept. 24 after lunch.",
       "Friday, Sept. 25 is Dress Down Day with a donation for a local charity.",
       "Lego Club is Friday, Sept. 25 for students who signed up.",
-      "Read for 20 minutes nightly and record it on the monthly Reading Log."
+      "Keep the Reading Log and Behavior Chart in the HW folder.",
+      "Return everything in the HW folder."
     ],
     "questions": [
       {
-        "id": "week-2026-09-22-1",
+        "id": "week-2026-09-22-reading-1",
+        "subject": "Reading / ELA",
+        "format": "multiple_choice",
+        "prompt": "Which story is on the current Reading Work page?",
+        "choices": [
+          "Little Flap Learns to Fly",
+          "Big Red Lollipop",
+          "Charlotte's Web"
+        ],
+        "answer": "Little Flap Learns to Fly",
+        "hint": "Look for the story about learning to fly.",
+        "explanation": "The current Reading Work page lists “Little Flap Learns to Fly.”",
+        "difficulty": "easy"
+      },
+      {
+        "id": "week-2026-09-22-reading-2",
+        "subject": "Reading / ELA",
+        "format": "multiple_choice",
+        "prompt": "Which word is a current sight word?",
+        "choices": [
+          "she",
+          "went",
+          "tug"
+        ],
+        "answer": "she",
+        "hint": "The other two were on an older spelling list.",
+        "explanation": "“she” is on the current Reading Work sight-word list.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "week-2026-09-22-reading-3",
+        "subject": "Reading / ELA",
+        "format": "multiple_choice",
+        "prompt": "Which word is on the current vocabulary list?",
+        "choices": [
+          "rescue",
+          "culture",
+          "triangle"
+        ],
+        "answer": "rescue",
+        "hint": "It is something you do to help someone in danger.",
+        "explanation": "“rescue” is on the current Reading Work vocabulary list.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "week-2026-09-22-phonics-1",
+        "subject": "Spelling / Handwriting",
+        "format": "multiple_choice",
+        "prompt": "What phonics skill is being practiced this week?",
+        "choices": [
+          "2-letter consonant blends",
+          "silent e only",
+          "vowel teams only"
+        ],
+        "answer": "2-letter consonant blends",
+        "hint": "The Sept. 25 spelling test uses this skill.",
+        "explanation": "The Reading Work page lists 2-letter consonant blends, and the Sept. 25 spelling test is labeled 2-letter blends.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "week-2026-09-22-religion-1",
+        "subject": "Religion",
+        "format": "true_false",
+        "prompt": "Jesus died for our sins and is our Savior.",
+        "choices": [],
+        "answer": "True",
+        "hint": "This is listed under Chapter 2.",
+        "explanation": "The current Religion page says Jesus died for our sins and is our Savior.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "week-2026-09-22-religion-2",
+        "subject": "Religion",
+        "format": "multiple_choice",
+        "prompt": "What are friends of Jesus called?",
+        "choices": [
+          "disciples",
+          "captions",
+          "blends"
+        ],
+        "answer": "disciples",
+        "hint": "The word begins with d.",
+        "explanation": "The Religion page says we are called to be disciples, friends of Jesus.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "week-2026-09-22-school-1",
         "subject": "School Week",
         "format": "multiple_choice",
         "prompt": "Which special is on Thursday?",
@@ -195,7 +416,7 @@
         "difficulty": "easy"
       },
       {
-        "id": "week-2026-09-22-2",
+        "id": "week-2026-09-22-school-2",
         "subject": "School Week",
         "format": "multiple_choice",
         "prompt": "What happens on Thursday, Sept. 24?",
@@ -208,54 +429,14 @@
         "hint": "It happens after lunch.",
         "explanation": "Pretzel delivery is scheduled for Thursday, Sept. 24 after lunch.",
         "difficulty": "easy"
-      },
-      {
-        "id": "week-2026-09-22-3",
-        "subject": "School Week",
-        "format": "multiple_choice",
-        "prompt": "Which day has Music, Art, and Guidance?",
-        "choices": [
-          "Tuesday",
-          "Wednesday",
-          "Friday"
-        ],
-        "answer": "Tuesday",
-        "hint": "It is the second school day of the week.",
-        "explanation": "Tuesday's specials are Music, Art, and Guidance.",
-        "difficulty": "easy"
-      },
-      {
-        "id": "week-2026-09-22-4",
-        "subject": "Reading Routine",
-        "format": "true_false",
-        "prompt": "Grade 2 students should read for 20 minutes on Friday too.",
-        "choices": [],
-        "answer": "True",
-        "hint": "The standing homework policy includes Friday reading.",
-        "explanation": "The Grade 2 homework policy says to read for 20 minutes every night, including Friday.",
-        "difficulty": "easy"
-      },
-      {
-        "id": "week-2026-09-22-5",
-        "subject": "Math",
-        "format": "multiple_choice",
-        "prompt": "What topic is listed for the Sept. 22 Math test?",
-        "choices": [
-          "Chapter 1A addition",
-          "Fractions",
-          "Time"
-        ],
-        "answer": "Chapter 1A addition",
-        "hint": "The test is from Chapter 1A.",
-        "explanation": "The previously posted Math test is Chapter 1A: addition.",
-        "difficulty": "easy"
       }
     ],
     "sourceSufficient": true,
     "gaps": [
-      "The public teacher home page currently confirms dates and specials but does not expose a new daily homework list for Sept. 21–25.",
-      "No new weekly spelling list, reading stories/vocabulary list, or religion study list for Sept. 21–25 is currently visible on the public teacher home page.",
-      "The automated source bridge is still returning the Sept. 17 pack, so this verified public-source pack intentionally overrides stale week-specific content."
+      "The public teacher Homework page does not show a date, so its assignments are labeled as the current posting rather than assigned to a specific weekday.",
+      "The public Tests page confirms a Sept. 25 Spelling/Handwriting test on 2-letter blends, but a current spelling-word list was not found on the public pages checked.",
+      "The current Reading Work page leaves Reading Comprehension blank, so no comprehension target is invented.",
+      "The automated source bridge is still returning the Sept. 17 pack; the GitHub workflow is being hardened so older source timestamps cannot replace this newer verified pack."
     ]
   }
 }
