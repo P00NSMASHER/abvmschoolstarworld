@@ -7,16 +7,22 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: abvm-school-pack
   cancel-in-progress: false
 
 jobs:
-  refresh:
+  refresh-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+
       - name: Fetch and validate source pack
         shell: bash
         run: |
@@ -30,22 +36,50 @@ jobs:
           pack = data.get("pack") or {}
           if pack.get("sourceSufficient") is not True:
               raise SystemExit("Refusing incomplete school pack")
-          if not isinstance(pack.get("questions"), list) or not any(q.get("prompt") and q.get("answer") for q in pack["questions"] if isinstance(q, dict)):
+          if not isinstance(pack.get("questions"), list) or not any(
+              q.get("prompt") and q.get("answer")
+              for q in pack["questions"] if isinstance(q, dict)
+          ):
               raise SystemExit("Refusing school pack without usable practice questions")
           target = pathlib.Path("pages/data/study-pack.json")
           target.parent.mkdir(parents=True, exist_ok=True)
           target.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
           PY
+
       - name: Commit only when the verified pack changed
         shell: bash
         run: |
           set -euo pipefail
           if git diff --quiet -- pages/data/study-pack.json; then
             echo "No school-pack changes."
-            exit 0
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add pages/data/study-pack.json
+            git commit -m "Refresh verified ABVM school pack"
+            git push
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add pages/data/study-pack.json
-          git commit -m "Refresh verified ABVM school pack"
-          git push
+
+      - name: Build static site
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          mkdir -p _site/game
+          cp -R pages/. _site/
+          cp index.html styles.css catalog.js manifest.webmanifest sw.js _site/game/
+          cp -R assets _site/game/
+          sed "s|fetch('/api/study-pack'|fetch('../data/study-pack.json'|" app.js > _site/game/app.js
+          touch _site/.nojekyll
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
