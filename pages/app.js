@@ -186,7 +186,9 @@ function renderParentNotices(){
 
 function renderCalendar(){
   const root=$("#calendarList");root.replaceChildren();
+  const today=new Date();today.setHours(0,0,0,0);
   const items=(pack.importantDates||[]).map((item,index)=>({item,index,date:parseSchoolDate(item.date)}))
+    .filter(x=>!x.date||x.date>=today)
     .sort((a,b)=>{
       if(a.date&&b.date)return a.date-b.date||a.index-b.index;
       if(a.date)return -1;
@@ -198,7 +200,7 @@ function renderCalendar(){
     row.innerHTML="<div class='date-chip'>"+esc(d.date||"Date")+"</div><div><b>"+esc(d.label||"School item")+"</b><div class='muted'>"+esc((d.kind||"event").replaceAll("_"," "))+"</div></div>";
     root.append(row);
   });
-  if(!items.length)root.innerHTML='<div class="muted">No important dates are listed in the current school update.</div>';
+  if(!items.length)root.innerHTML='<div class="muted">No upcoming school dates are listed in the current update.</div>';
 }
 
 function renderStudy(){
