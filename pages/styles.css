@@ -300,3 +300,25 @@ a{color:inherit}
 
 .essential-row>div{display:grid;gap:2px;min-width:0}
 .essential-row time,.essential-row strong{display:block}
+
+.calendar-tabs button{
+  border:0;background:transparent;padding:8px;text-align:center;font-size:10px;font-weight:900;color:#5e7180;border-radius:11px
+}
+.calendar-tabs button.active{background:var(--navy);color:#fff}
+.calendar-month-panel,.calendar-list-panel{display:none}
+.calendar-month-panel.active,.calendar-list-panel.active{display:block}
+.calendar-list-panel{display:none;gap:8px}
+.calendar-list-panel.active{display:grid}
+.calendar-list-row{
+  width:100%;border:1px solid #e1e4e7;background:#fbfcfd;border-radius:15px;
+  display:grid;grid-template-columns:44px 36px 1fr auto;gap:9px;align-items:center;
+  padding:9px 10px;text-align:left;color:var(--ink)
+}
+.calendar-list-date{
+  width:40px;min-height:42px;border-radius:12px;background:#eef6fd;display:grid;align-content:center;justify-items:center
+}
+.calendar-list-date b{font-size:17px;line-height:1;color:var(--navy)}
+.calendar-list-date small{font-size:9px;color:#5f7180;font-weight:900;margin-top:3px}
+.calendar-list-copy{min-width:0}
+.calendar-list-copy strong{display:block;font-size:12px;line-height:1.3}
+.calendar-list-copy small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
