@@ -140,7 +140,7 @@
         "kind": "school event"
       },
       {
-        "label": "HSA meeting",
+        "label": "HSA virtual meeting — 7 PM",
         "date": "Thursday, Oct. 1",
         "kind": "meeting"
       },
@@ -173,6 +173,41 @@
         "label": "Lego Club (students who signed up)",
         "date": "Friday, Oct. 23",
         "kind": "club"
+      },
+      {
+        "label": "Welcome Back Dance (K–4) — 6–8 PM, ABVM Gym",
+        "date": "Saturday, Oct. 3",
+        "kind": "school event"
+      },
+      {
+        "label": "Movie Night (Grades 5–8) — 6–8 PM",
+        "date": "Saturday, Oct. 3",
+        "kind": "school event"
+      },
+      {
+        "label": "Schwartz Farm Family Night RSVP due for $5/student voucher",
+        "date": "Friday, Oct. 16",
+        "kind": "deadline"
+      },
+      {
+        "label": "Schwartz Farm Family Night — ABVM s’mores 6–7 PM",
+        "date": "Friday, Oct. 23",
+        "kind": "school event"
+      },
+      {
+        "label": "Halloween Party",
+        "date": "Friday, Oct. 30",
+        "kind": "school event"
+      },
+      {
+        "label": "Santa Workshop",
+        "date": "Monday, Dec. 14",
+        "kind": "school event"
+      },
+      {
+        "label": "Christmas Party",
+        "date": "Tuesday, Dec. 22",
+        "kind": "school event"
       }
     ],
     "lunchMenu": [
@@ -311,7 +346,10 @@
       "Friday, Sept. 25 is Dress Down Day with a donation for a local charity.",
       "Lego Club is Friday, Sept. 25 for students who signed up.",
       "Keep the Reading Log and Behavior Chart in the HW folder.",
-      "Return everything in the HW folder."
+      "Return everything in the HW folder.",
+      "Welcome Back Dance for K–4 is Saturday, Oct. 3 from 6–8 PM in the ABVM Gym; grades 5–8 have Movie Night at the same time.",
+      "Schwartz Farm Family Night is Friday, Oct. 23 at 315 Schwartz Lane, Hegins; ABVM s’mores are 6–7 PM. RSVP by Oct. 16 for a $5/student voucher.",
+      "Christmas Caroling date is still TBD."
     ],
     "questions": [
       {
