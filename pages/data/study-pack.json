@@ -1,0 +1,523 @@
+{
+  "source": "Verified ABVM local bootstrap pack",
+  "delivery": "fallback",
+  "sourceLastSeenAt": "2026-09-17T20:48:00-04:00",
+  "pack": {
+    "schemaVersion": 2,
+    "sourceHash": "verified-bootstrap-2026-09-17-study-homework-v5",
+    "sourceCapturedAt": "2026-09-17T20:48:00-04:00",
+    "generatedAt": "2026-09-17T20:48:00-04:00",
+    "weekLabel": "Week of September 16, 2026",
+    "summary": "Verified ABVM Grade 2 homework plus current Spelling, Reading/ELA, and Religion study material. This safe local pack keeps the app useful until the complete sanitized live school feed is available.",
+    "homework": [
+      {
+        "day": "Thursday",
+        "subject": "Math",
+        "task": "Math pg. 8",
+        "due": "Tonight"
+      },
+      {
+        "day": "Thursday",
+        "subject": "Spelling",
+        "task": "Spelling Choice Board activity",
+        "due": "Tonight"
+      },
+      {
+        "day": "Thursday",
+        "subject": "Reading",
+        "task": "Read",
+        "due": "Tonight"
+      },
+      {
+        "day": "Thursday",
+        "subject": "Parent",
+        "task": "Complete forms; cover books",
+        "due": "Tonight"
+      },
+      {
+        "day": "Thursday",
+        "subject": "Reading",
+        "task": "Keep Reading Log & Behavior Chart in the HW folder",
+        "due": "Ongoing"
+      },
+      {
+        "day": "Thursday",
+        "subject": "Homework Folder",
+        "task": "Return everything in the HW folder",
+        "due": "Next school day"
+      }
+    ],
+    "reminders": [
+      "Scholastic orders are due Thursday Sept. 17",
+      "Pretzel money is due Friday Sept. 18",
+      "Stationery money ($17) is due Wednesday Sept. 23",
+      "Lego Club is Friday Sept. 25 for students who signed up",
+      "Thursday special: Gym"
+    ],
+    "importantDates": [
+      {
+        "label": "Scholastic orders due",
+        "date": "Thursday Sept. 17",
+        "kind": "deadline"
+      },
+      {
+        "label": "Pretzel money due",
+        "date": "Friday Sept. 18",
+        "kind": "deadline"
+      },
+      {
+        "label": "Stationery money due ($17)",
+        "date": "Wednesday Sept. 23",
+        "kind": "deadline"
+      },
+      {
+        "label": "Pretzel delivery",
+        "date": "Thursday Sept. 24",
+        "kind": "event"
+      },
+      {
+        "label": "Lego Club",
+        "date": "Friday Sept. 25",
+        "kind": "event"
+      },
+      {
+        "label": "Picture Day",
+        "date": "Thursday Oct. 1",
+        "kind": "event"
+      },
+      {
+        "label": "HSA meeting",
+        "date": "Thursday Oct. 1",
+        "kind": "meeting"
+      },
+      {
+        "label": "12:00 Dismissal",
+        "date": "Friday Oct. 9",
+        "kind": "schedule_change"
+      },
+      {
+        "label": "No School",
+        "date": "Monday Oct. 12",
+        "kind": "holiday"
+      }
+    ],
+    "subjects": [
+      {
+        "subject": "Spelling",
+        "topics": [
+          "Skill: short e, o, u",
+          "Basic words: went, tell, pet, job, fog, not, tug, hut, tub, bun",
+          "Review words: fix, has",
+          "High-frequency words: one, or, see"
+        ],
+        "studyNotes": [
+          "Practice hearing and spelling the short e, short o, and short u sounds."
+        ]
+      },
+      {
+        "subject": "Reading / ELA",
+        "topics": [
+          "Stories: Maria Celebrates Brazil; Big Red Lollipop; A Look at Families",
+          "Sight words: put, why, blue, help, for, yellow, both, there, even, ball, or, green, how, little, one, see, sounds, funny, find, could",
+          "Phonics: short a, short i, short e, o, u",
+          "Reading comprehension: visualize; plot (beginning, middle, end); understanding characters; captions",
+          "Word structure: -s and -es to make plural nouns"
+        ],
+        "studyNotes": [
+          "Current vocabulary words: language, culture, aside, invited, share, fair, plead, scurries."
+        ]
+      },
+      {
+        "subject": "Religion",
+        "topics": [
+          "Unit 1: God Gives Us Life & Love",
+          "Chapter 2: Jesus is God’s Best Gift",
+          "Chapter 1: God is the Giver of Gifts"
+        ],
+        "studyNotes": [
+          "Jesus is God’s greatest gift to us; he tells us about God and teaches us how to live.",
+          "Jesus gave us the new life of grace.",
+          "We are made in God’s image and likeness; we can think, choose, and love.",
+          "Trinity: 3 persons in one God — Father, Son, Holy Spirit.",
+          "We use our senses to enjoy God’s gifts.",
+          "It is our responsibility to take care of God’s gifts of creation.",
+          "We thank God for His gift of creation."
+        ]
+      },
+      {
+        "subject": "Specials",
+        "topics": [
+          "Monday: Computer",
+          "Tuesday: Music, Art, Guidance",
+          "Wednesday: Mass",
+          "Thursday: Gym",
+          "Friday: Library"
+        ],
+        "studyNotes": []
+      }
+    ],
+    "vocabulary": [
+      {
+        "subject": "Reading / ELA",
+        "term": "language",
+        "meaning": "Current reading vocabulary word."
+      },
+      {
+        "subject": "Reading / ELA",
+        "term": "culture",
+        "meaning": "Current reading vocabulary word."
+      },
+      {
+        "subject": "Reading / ELA",
+        "term": "aside",
+        "meaning": "Current reading vocabulary word."
+      },
+      {
+        "subject": "Reading / ELA",
+        "term": "invited",
+        "meaning": "Current reading vocabulary word."
+      },
+      {
+        "subject": "Reading / ELA",
+        "term": "share",
+        "meaning": "Current reading vocabulary word."
+      },
+      {
+        "subject": "Reading / ELA",
+        "term": "fair",
+        "meaning": "Current reading vocabulary word."
+      },
+      {
+        "subject": "Reading / ELA",
+        "term": "plead",
+        "meaning": "Current reading vocabulary word."
+      },
+      {
+        "subject": "Reading / ELA",
+        "term": "scurries",
+        "meaning": "Current reading vocabulary word."
+      }
+    ],
+    "questions": [
+      {
+        "id": "bootstrap-q1",
+        "subject": "Spelling",
+        "format": "multiple_choice",
+        "prompt": "Which word is one of this week’s basic spelling words?",
+        "choices": [
+          "tug",
+          "rain",
+          "chair"
+        ],
+        "answer": "tug",
+        "hint": "Look for the short-u word.",
+        "explanation": "“tug” is listed as a basic spelling word.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "bootstrap-q2",
+        "subject": "Spelling",
+        "format": "multiple_choice",
+        "prompt": "Which word is a review word this week?",
+        "choices": [
+          "fix",
+          "fog",
+          "bun"
+        ],
+        "answer": "fix",
+        "hint": "It is listed in the Review Words column.",
+        "explanation": "“fix” is one of the review words.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "bootstrap-q3",
+        "subject": "Spelling",
+        "format": "multiple_choice",
+        "prompt": "Which word is a high-frequency word this week?",
+        "choices": [
+          "see",
+          "pet",
+          "hut"
+        ],
+        "answer": "see",
+        "hint": "It appears in the High Frequency Words list.",
+        "explanation": "“see” is listed as a high-frequency word.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "bootstrap-q4",
+        "subject": "Spelling",
+        "format": "multiple_choice",
+        "prompt": "Which word from the list has the short-o sound?",
+        "choices": [
+          "fog",
+          "tell",
+          "tug"
+        ],
+        "answer": "fog",
+        "hint": "Think about the vowel sound in “fog.”",
+        "explanation": "“fog” practices the short-o sound.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "bootstrap-q5",
+        "subject": "Spelling",
+        "format": "multiple_choice",
+        "prompt": "Which word from the list has the short-u sound?",
+        "choices": [
+          "bun",
+          "pet",
+          "job"
+        ],
+        "answer": "bun",
+        "hint": "Think about the vowel sound in “bun.”",
+        "explanation": "“bun” practices the short-u sound.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "bootstrap-q6",
+        "subject": "Reading / ELA",
+        "format": "multiple_choice",
+        "prompt": "Which title is one of the current reading stories?",
+        "choices": [
+          "Big Red Lollipop",
+          "The Very Hungry Caterpillar",
+          "Charlotte’s Web"
+        ],
+        "answer": "Big Red Lollipop",
+        "hint": "It is one of the three titles shown on the reading page.",
+        "explanation": "“Big Red Lollipop” is one of the current stories.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "bootstrap-q7",
+        "subject": "Reading / ELA",
+        "format": "multiple_choice",
+        "prompt": "Which word is listed as a sight word?",
+        "choices": [
+          "yellow",
+          "rabbit",
+          "window"
+        ],
+        "answer": "yellow",
+        "hint": "It appears in the Sight Words list.",
+        "explanation": "“yellow” is one of the current sight words.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "bootstrap-q8",
+        "subject": "Reading / ELA",
+        "format": "multiple_choice",
+        "prompt": "What three parts of plot are listed for reading comprehension?",
+        "choices": [
+          "beginning, middle, end",
+          "first, second, third",
+          "who, what, where"
+        ],
+        "answer": "beginning, middle, end",
+        "hint": "Think about the order of a story.",
+        "explanation": "The page lists plot as beginning, middle, and end.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "bootstrap-q9",
+        "subject": "Reading / ELA",
+        "format": "multiple_choice",
+        "prompt": "Which skill is listed under Reading Comprehension?",
+        "choices": [
+          "visualize",
+          "multiply",
+          "measure"
+        ],
+        "answer": "visualize",
+        "hint": "It means making a picture in your mind while reading.",
+        "explanation": "“visualize” is listed as a reading-comprehension skill.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "bootstrap-q10",
+        "subject": "Reading / ELA",
+        "format": "multiple_choice",
+        "prompt": "What do -s and -es make, according to the Word Structure section?",
+        "choices": [
+          "plural nouns",
+          "past-tense verbs",
+          "questions"
+        ],
+        "answer": "plural nouns",
+        "hint": "Think about making more than one noun.",
+        "explanation": "The page says -s and -es are used to make plural nouns.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "bootstrap-q11",
+        "subject": "Reading / ELA",
+        "format": "multiple_choice",
+        "prompt": "Which word is on the current vocabulary list?",
+        "choices": [
+          "culture",
+          "planet",
+          "triangle"
+        ],
+        "answer": "culture",
+        "hint": "It appears under Vocab Words.",
+        "explanation": "“culture” is one of the listed vocabulary words.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "bootstrap-q12",
+        "subject": "Reading / ELA",
+        "format": "multiple_choice",
+        "prompt": "Which phonics sound is listed for practice?",
+        "choices": [
+          "short i",
+          "long oo only",
+          "silent e only"
+        ],
+        "answer": "short i",
+        "hint": "The page lists several short-vowel sounds.",
+        "explanation": "Short i is one of the phonics skills listed.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "bootstrap-q13",
+        "subject": "Religion",
+        "format": "multiple_choice",
+        "prompt": "What is the title of Unit 1?",
+        "choices": [
+          "God Gives Us Life & Love",
+          "People Build Cities",
+          "The Seasons Change"
+        ],
+        "answer": "God Gives Us Life & Love",
+        "hint": "It appears at the top of the Religion study page.",
+        "explanation": "Unit 1 is “God Gives Us Life & Love.”",
+        "difficulty": "easy"
+      },
+      {
+        "id": "bootstrap-q14",
+        "subject": "Religion",
+        "format": "multiple_choice",
+        "prompt": "Who is described as God’s greatest gift to us?",
+        "choices": [
+          "Jesus",
+          "Moses",
+          "David"
+        ],
+        "answer": "Jesus",
+        "hint": "Look at Chapter 2: God’s Best Gift.",
+        "explanation": "The study guide says Jesus is God’s greatest gift to us.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "bootstrap-q15",
+        "subject": "Religion",
+        "format": "multiple_choice",
+        "prompt": "What new life did Jesus give us?",
+        "choices": [
+          "the new life of grace",
+          "a new school year",
+          "a new language"
+        ],
+        "answer": "the new life of grace",
+        "hint": "The word begins with g.",
+        "explanation": "The study guide says Jesus gave us the new life of grace.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "bootstrap-q16",
+        "subject": "Religion",
+        "format": "multiple_choice",
+        "prompt": "Being made in God’s image and likeness means we can…",
+        "choices": [
+          "think, choose, and love",
+          "fly, swim, and dig",
+          "sleep, eat, and run"
+        ],
+        "answer": "think, choose, and love",
+        "hint": "The study guide lists three abilities.",
+        "explanation": "It says we can think, choose, and love.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "bootstrap-q17",
+        "subject": "Religion",
+        "format": "multiple_choice",
+        "prompt": "How many persons are in the Trinity?",
+        "choices": [
+          "3",
+          "2",
+          "4"
+        ],
+        "answer": "3",
+        "hint": "Father, Son, and Holy Spirit.",
+        "explanation": "The study guide says the Trinity is 3 persons in one God.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "bootstrap-q18",
+        "subject": "Religion",
+        "format": "multiple_choice",
+        "prompt": "Which three persons are named in the Trinity?",
+        "choices": [
+          "Father, Son, Holy Spirit",
+          "Abraham, Isaac, Jacob",
+          "Peter, James, John"
+        ],
+        "answer": "Father, Son, Holy Spirit",
+        "hint": "They are the three persons in one God.",
+        "explanation": "The page names Father, Son, and Holy Spirit.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "bootstrap-q19",
+        "subject": "Religion",
+        "format": "multiple_choice",
+        "prompt": "What do we use to enjoy God’s gifts?",
+        "choices": [
+          "our senses",
+          "only our eyes",
+          "a computer"
+        ],
+        "answer": "our senses",
+        "hint": "Think about sight, hearing, touch, smell, and taste.",
+        "explanation": "The study guide says we use our senses to enjoy God’s gifts.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "bootstrap-q20",
+        "subject": "Religion",
+        "format": "multiple_choice",
+        "prompt": "What responsibility is listed in the study guide?",
+        "choices": [
+          "take care of God’s gifts of creation",
+          "own every gift",
+          "never go outside"
+        ],
+        "answer": "take care of God’s gifts of creation",
+        "hint": "It is about caring for creation.",
+        "explanation": "The study guide says it is our responsibility to take care of God’s gifts of creation.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "bootstrap-q21",
+        "subject": "Religion",
+        "format": "multiple_choice",
+        "prompt": "What do we thank God for?",
+        "choices": [
+          "His gift of creation",
+          "homework folders",
+          "school buses"
+        ],
+        "answer": "His gift of creation",
+        "hint": "It is the last point on the Religion study guide.",
+        "explanation": "The guide says we thank God for His gift of creation.",
+        "difficulty": "easy"
+      }
+    ],
+    "sourceSufficient": true,
+    "gaps": [
+      "The automatic private-site sync is still preferred when it completes cleanly. This bootstrap contains only school material directly verified from the saved ABVM homework data and the current screenshots."
+    ]
+  }
+}
