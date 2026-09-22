@@ -3,114 +3,168 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#5b43d6">
-  <meta name="description" content="ABVM Grade 2 weekly planner, study guides, calendar, and School Star World.">
+  <meta name="theme-color" content="#5a3fe0">
+  <meta name="description" content="ABVM Grade 2 weekly planner, homework, calendar, study guides, and School Star World.">
   <title>ABVM Grade 2 Week</title>
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to school week</a>
+
   <header class="topbar">
-    <div>
-      <div class="eyebrow">ABVM GRADE 2</div>
-      <h1 id="weekTitle">Current school week</h1>
+    <div class="brand-lockup">
+      <div class="brand-mark" aria-hidden="true">★</div>
+      <div>
+        <div class="eyebrow">ABVM GRADE 2</div>
+        <h1 id="weekTitle">Current school week</h1>
+      </div>
     </div>
-    <div class="source-badge" id="sourceBadge">Loading…</div>
+    <div class="source-badge" id="sourceBadge" role="status">Loading…</div>
   </header>
 
-  <main class="shell">
+  <main class="shell" id="main">
     <section class="panel active" data-panel="today">
       <article class="hero">
-        <div>
-          <div class="eyebrow light">HI, SCHOOL STAR!</div>
-          <h2>One step at a time.</h2>
-          <p>Start with what is due soon. Check off one item, then keep going when you are ready.</p>
+        <div class="hero-copy">
+          <div class="eyebrow light">YOUR SCHOOL WEEK</div>
+          <h2>Everything important, in one place.</h2>
+          <p>See tonight’s homework first, then the next date and what to study.</p>
         </div>
-        <div class="hero-star">★</div>
+        <div class="hero-art" aria-hidden="true">
+          <span class="hero-orb orb-one">★</span>
+          <span class="hero-orb orb-two">✎</span>
+          <span class="hero-orb orb-three">✓</span>
+        </div>
       </article>
 
-      <article class="card accent-card">
+      <div class="glance-grid" aria-label="Week at a glance">
+        <article class="glance-card coral">
+          <span class="glance-icon" aria-hidden="true">✓</span>
+          <div><b id="glanceHomework">—</b><span>Homework</span></div>
+        </article>
+        <article class="glance-card blue">
+          <span class="glance-icon" aria-hidden="true">▣</span>
+          <div><b id="glanceDates">—</b><span>Important dates</span></div>
+        </article>
+        <article class="glance-card mint">
+          <span class="glance-icon" aria-hidden="true">✎</span>
+          <div><b id="glanceStudy">—</b><span>Study guides</span></div>
+        </article>
+      </div>
+
+      <article class="card homework-card">
         <div class="section-head">
-          <div><div class="eyebrow">UP NEXT</div><h3 id="upNextTitle">Loading…</h3></div>
-          <span class="pill" id="upNextWhen">Soon</span>
+          <div>
+            <div class="eyebrow coral-text">TONIGHT</div>
+            <h3>Homework</h3>
+            <p class="section-note">Tap each item when it’s finished.</p>
+          </div>
+          <span class="pill coral-pill" id="homeworkCount">0 listed</span>
         </div>
-        <p id="upNextText" class="muted"></p>
+        <div class="progress-track" aria-hidden="true"><span id="homeworkProgress"></span></div>
+        <div id="todayHomework" class="task-list"></div>
       </article>
 
-      <article class="card">
-        <div class="section-head"><div><div class="eyebrow">TODAY</div><h3>School day</h3></div></div>
+      <article class="card next-card">
+        <div class="next-icon" aria-hidden="true">▣</div>
+        <div class="next-copy">
+          <div class="eyebrow blue-text">UP NEXT</div>
+          <h3 id="upNextTitle">Loading…</h3>
+          <p id="upNextText" class="muted"></p>
+        </div>
+        <span class="pill blue-pill" id="upNextWhen">Soon</span>
+      </article>
+
+      <article class="card schedule-card">
+        <div class="section-head">
+          <div><div class="eyebrow purple-text">SCHOOL DAY</div><h3>Daily schedule</h3></div>
+        </div>
         <div class="timeline">
           <div><b>7:40–8:00</b><span>Arrive at school</span></div>
           <div><b>8:10</b><span>School begins</span></div>
           <div><b>2:50</b><span>Dismissal</span></div>
         </div>
       </article>
-
-      <article class="card">
-        <div class="section-head">
-          <div><div class="eyebrow">TONIGHT</div><h3>Homework</h3></div>
-          <span class="pill" id="homeworkCount">0 listed</span>
-        </div>
-        <div id="todayHomework" class="task-list"></div>
-      </article>
-
-      <article class="card lunch">
-        <div class="lunch-icon">🍎</div>
-        <div><div class="eyebrow">SCHOOL LUNCH</div><h3>Check the current school menu</h3><p class="muted">Lunch changes by day, so the GitHub version keeps this separate from verified homework data.</p></div>
-      </article>
     </section>
 
     <section class="panel" data-panel="week">
-      <div class="page-title"><div class="eyebrow">THIS WEEK</div><h2>Homework & reminders</h2></div>
+      <div class="page-title">
+        <div class="title-icon coral" aria-hidden="true">✓</div>
+        <div><div class="eyebrow coral-text">THIS WEEK</div><h2>Homework & reminders</h2><p>Everything to finish or remember this week.</p></div>
+      </div>
       <div id="weekHomework" class="stack"></div>
-      <article class="card"><div class="section-head"><div><div class="eyebrow">DON’T FORGET</div><h3>Reminders</h3></div></div><div id="reminders" class="reminder-list"></div></article>
+      <article class="card reminder-card">
+        <div class="section-head"><div><div class="eyebrow amber-text">DON’T FORGET</div><h3>Reminders</h3></div></div>
+        <div id="reminders" class="reminder-list"></div>
+      </article>
     </section>
 
     <section class="panel" data-panel="calendar">
-      <div class="page-title"><div class="eyebrow">CALENDAR</div><h2>Important dates</h2></div>
+      <div class="page-title">
+        <div class="title-icon blue" aria-hidden="true">▣</div>
+        <div><div class="eyebrow blue-text">DATES</div><h2>Important dates</h2><p>Deadlines, events, meetings, and schedule changes.</p></div>
+      </div>
       <div id="calendarList" class="calendar-list"></div>
     </section>
 
     <section class="panel" data-panel="study">
-      <div class="page-title"><div class="eyebrow">STUDY GUIDES</div><h2>What to know</h2><p class="muted">Built only from the verified school pack.</p></div>
+      <div class="page-title">
+        <div class="title-icon mint" aria-hidden="true">✎</div>
+        <div><div class="eyebrow green-text">STUDY</div><h2>Study guides</h2><p>Short, parent-friendly guides based on the current school material.</p></div>
+      </div>
       <div id="subjectGuides" class="study-grid"></div>
-      <article class="card">
-        <div class="section-head"><div><div class="eyebrow">WORDS TO KNOW</div><h3>Vocabulary</h3></div></div>
+
+      <article class="card vocab-card">
+        <div class="section-head"><div><div class="eyebrow purple-text">WORDS TO KNOW</div><h3>Vocabulary</h3></div></div>
         <div id="vocabList" class="vocab-grid"></div>
       </article>
-      <article class="card">
-        <div class="section-head"><div><div class="eyebrow">PRACTICE</div><h3>Try a few</h3></div></div>
+
+      <article class="card practice-card">
+        <div class="section-head">
+          <div><div class="eyebrow green-text">QUICK PRACTICE</div><h3>Try a few together</h3><p class="section-note">Answers stay hidden until you choose to show them.</p></div>
+        </div>
         <div id="practiceList" class="practice-list"></div>
       </article>
-      <a class="big-link" href="./game/">★ Open School Star World</a>
+
+      <a class="game-link" href="./game/">
+        <span class="game-star" aria-hidden="true">★</span>
+        <span><b>Open School Star World</b><small>Child game & learning quests</small></span>
+        <span aria-hidden="true">›</span>
+      </a>
     </section>
 
     <section class="panel" data-panel="family">
-      <div class="page-title"><div class="eyebrow">FAMILY</div><h2>Parent view</h2></div>
-      <article class="card">
-        <div class="section-head"><div><div class="eyebrow">SOURCE STATUS</div><h3 id="familySource">Current school pack</h3></div></div>
-        <p class="muted" id="familySourceDetail"></p>
-        <button id="refreshBtn" class="button">Refresh school data</button>
-      </article>
-      <article class="card">
-        <div class="section-head"><div><div class="eyebrow">QUICK ACTIONS</div><h3>Useful tools</h3></div></div>
-        <div class="family-actions">
-          <button id="printBtn" class="button soft">Print this week</button>
-          <a class="button soft" href="./game/">Open Game Mode</a>
+      <div class="page-title">
+        <div class="title-icon lavender" aria-hidden="true">⌂</div>
+        <div><div class="eyebrow purple-text">FAMILY</div><h2>Parent tools</h2><p>School-data status and a few useful actions.</p></div>
+      </div>
+
+      <article class="card status-card">
+        <div class="status-dot" id="familyStatusDot" aria-hidden="true"></div>
+        <div class="status-copy">
+          <div class="eyebrow green-text">SCHOOL INFO</div>
+          <h3 id="familySource">School info ready</h3>
+          <p class="muted" id="familySourceDetail"></p>
         </div>
+        <button id="refreshBtn" class="button">Refresh</button>
       </article>
-      <article class="card note">
-        <strong>GitHub Pages migration</strong>
-        <p>This version keeps the weekly parent app at the site root and the child game under <code>/game/</code>. Progress in the game remains browser-local unless exported from the game’s Parent Area.</p>
+
+      <article class="card">
+        <div class="section-head"><div><div class="eyebrow blue-text">QUICK ACTIONS</div><h3>Useful tools</h3></div></div>
+        <div class="family-actions">
+          <button id="printBtn" class="action-tile" type="button"><span aria-hidden="true">▤</span><b>Print weekly plan</b><small>Homework, dates & study</small></button>
+          <a class="action-tile" href="./game/"><span aria-hidden="true">★</span><b>Open Game Mode</b><small>School Star World</small></a>
+        </div>
       </article>
     </section>
   </main>
 
   <nav class="bottom-nav" aria-label="ABVM sections">
-    <button class="nav-item active" data-tab="today"><span>★</span><b>Today</b></button>
-    <button class="nav-item" data-tab="week"><span>▦</span><b>Week</b></button>
-    <button class="nav-item" data-tab="calendar"><span>▣</span><b>Calendar</b></button>
-    <button class="nav-item" data-tab="study"><span>✎</span><b>Study Guides</b></button>
-    <button class="nav-item" data-tab="family"><span>⌂</span><b>Family</b></button>
+    <button class="nav-item active" data-tab="today" aria-current="page"><span aria-hidden="true">★</span><b>Today</b></button>
+    <button class="nav-item" data-tab="week"><span aria-hidden="true">✓</span><b>Week</b></button>
+    <button class="nav-item" data-tab="calendar"><span aria-hidden="true">▣</span><b>Calendar</b></button>
+    <button class="nav-item" data-tab="study"><span aria-hidden="true">✎</span><b>Study</b></button>
+    <button class="nav-item" data-tab="family"><span aria-hidden="true">⌂</span><b>Family</b></button>
   </nav>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
