@@ -34,7 +34,7 @@ function header(kicker,title){
 function freshness(){
   const raw=envelope?.sourceLastSeenAt||pack?.sourceCapturedAt||pack?.generatedAt;
   const d=raw?new Date(raw):null;
-  const label=d&&!Number.isNaN(d.getTime()) ? "Verified&nbsp;&nbsp;"+d.toLocaleDateString(undefined,{month:"short",day:"numeric"})+" at "+d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}) : "Verified";
+  const label=d&&!Number.isNaN(d.getTime()) ? "Verified&nbsp;&nbsp;"+d.toLocaleDateString(undefined,{month:"short",day:"numeric"})+" at "+d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})+" ET" : "Verified";
   return '<div class="freshness"><span></span>'+label+'</div>';
 }
 function kindClass(item){
