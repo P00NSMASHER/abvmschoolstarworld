@@ -1,0 +1,59 @@
+name: Deploy ABVM to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'pages/**'
+      - 'index.html'
+      - 'app.js'
+      - 'styles.css'
+      - 'catalog.js'
+      - 'manifest.webmanifest'
+      - 'sw.js'
+      - 'assets/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Build static site
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          mkdir -p _site/game
+          cp -R pages/. _site/
+          cp index.html styles.css catalog.js manifest.webmanifest sw.js _site/game/
+          cp -R assets _site/game/
+          sed "s|fetch('/api/study-pack'|fetch('../data/study-pack.json'|" app.js > _site/game/app.js
+          touch _site/.nojekyll
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
