@@ -20,9 +20,16 @@ function showTab(tab){
 
 function parseSchoolDate(text){
   if(!text)return null;
-  const clean=String(text).replace(/\b(Mon|Tue|Tues|Wed|Thu|Thur|Thurs|Fri|Sat|Sun)(day)?\b\.?/gi,"").trim();
-  const year=new Date().getFullYear();
-  const d=new Date(clean+" "+year+" 12:00:00");
+  const match=String(text).match(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]*\.?\s*(\d{1,2})/i);
+  if(!match)return null;
+  const months={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,sept:8,oct:9,nov:10,dec:11};
+  const month=months[match[1].toLowerCase()];
+  const day=Number(match[2]);
+  const now=new Date();
+  let year=now.getFullYear();
+  if(now.getMonth()>=7&&month<=5)year+=1;
+  else if(now.getMonth()<=5&&month>=7)year-=1;
+  const d=new Date(year,month,day,12,0,0,0);
   return Number.isNaN(d.getTime())?null:d;
 }
 
@@ -179,12 +186,19 @@ function renderParentNotices(){
 
 function renderCalendar(){
   const root=$("#calendarList");root.replaceChildren();
-  (pack.importantDates||[]).forEach(d=>{
+  const items=(pack.importantDates||[]).map((item,index)=>({item,index,date:parseSchoolDate(item.date)}))
+    .sort((a,b)=>{
+      if(a.date&&b.date)return a.date-b.date||a.index-b.index;
+      if(a.date)return -1;
+      if(b.date)return 1;
+      return a.index-b.index;
+    });
+  items.forEach(({item:d})=>{
     const row=document.createElement("article");row.className="calendar-item";
     row.innerHTML="<div class='date-chip'>"+esc(d.date||"Date")+"</div><div><b>"+esc(d.label||"School item")+"</b><div class='muted'>"+esc((d.kind||"event").replaceAll("_"," "))+"</div></div>";
     root.append(row);
   });
-  if(!(pack.importantDates||[]).length)root.innerHTML='<div class="muted">No important dates are listed in the current school update.</div>';
+  if(!items.length)root.innerHTML='<div class="muted">No important dates are listed in the current school update.</div>';
 }
 
 function renderStudy(){
