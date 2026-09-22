@@ -1,302 +1,261 @@
 {
-  "source": "ABVM Grade 2 sanitized study feed",
+  "source": "ABVM Grade 2 verified public sources",
+  "delivery": "verified",
   "syncPolicy": {
     "intervalHours": 4
   },
-  "sourceLastSeenAt": "2026-09-17T20:20:00-04:00",
-  "sourceCapturedAt": "2026-09-17T20:20:00-04:00",
-  "freshnessHours": 112.0297075,
+  "sourceLastSeenAt": "2026-09-22T13:00:00-04:00",
+  "sourceCapturedAt": "2026-09-22T13:00:00-04:00",
+  "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
-    "sourceHash": "public-bootstrap-2026-09-17",
-    "sourceCapturedAt": "2026-09-17T20:20:00-04:00",
-    "generatedAt": "2026-09-17T20:20:00-04:00",
-    "weekLabel": "Thursday, September 17, 2026",
-    "summary": "Tonight: Math pg. 9, one Spelling Choice Board activity, reading, and the Reading Log. Spelling/Handwriting and Reading tests are listed for Friday, Sept. 18.",
+    "sourceHash": "verified-public-2026-09-22-v1",
+    "sourceCapturedAt": "2026-09-22T13:00:00-04:00",
+    "generatedAt": "2026-09-22T13:00:00-04:00",
+    "weekLabel": "Week of September 21, 2026",
+    "summary": "Current verified Grade 2 school-week information. The public teacher home page confirms this week's dates and specials, but it does not currently publish a new daily homework list or a new weekly spelling/reading/religion study list. Older Sept. 17 homework and study content has been removed from the current-week view rather than presented as current.",
     "subjects": [
-      {
-        "subject": "Religion",
-        "topics": [
-          "Jesus is God's Best Gift",
-          "God is the Giver of Gifts",
-          "The Trinity",
-          "God's gifts of creation"
-        ],
-        "studyNotes": [
-          "Jesus is God's greatest gift to us and teaches us about God and how to live.",
-          "Jesus gave us the new life of grace.",
-          "We are made in God's image and likeness; we can think, choose, and love.",
-          "The Trinity is three persons in one God: Father, Son, and Holy Spirit.",
-          "We use our senses to enjoy God's gifts and have a responsibility to care for creation."
-        ]
-      },
-      {
-        "subject": "Reading",
-        "topics": [
-          "Maria Celebrates Brazil",
-          "Big Red Lollipop",
-          "A Look at Families",
-          "Short vowel sounds",
-          "Visualize and plot",
-          "Understanding characters",
-          "Captions",
-          "Plural nouns with -s and -es"
-        ],
-        "studyNotes": [
-          "Sight words include put, why, blue, help, for, yellow, both, there, even, ball, or, green, how, little, one, see, sounds, funny, find, and could.",
-          "Phonics work includes short a, i, e, o, and u.",
-          "Reading comprehension work includes visualizing, plot (beginning, middle, end), understanding characters, and captions.",
-          "Word structure work uses -s and -es to make plural nouns."
-        ]
-      },
-      {
-        "subject": "Spelling",
-        "topics": [
-          "Short e, o, and u"
-        ],
-        "studyNotes": [
-          "Basic words: went, tell, pet, job, fog, not, tug, hut, tub, bun.",
-          "Review words: fix, has.",
-          "High-frequency words: one, or, see."
-        ]
-      },
       {
         "subject": "Math",
         "topics": [
           "Chapter 1A: addition"
         ],
         "studyNotes": [
-          "A Chapter 1A addition test is listed for Tuesday, Sept. 22.",
-          "The current Homework page assigns Math pg. 9."
+          "A Chapter 1A addition test was previously posted for Tuesday, Sept. 22.",
+          "No new Math homework page is currently visible on the public teacher home page."
+        ]
+      },
+      {
+        "subject": "Specials",
+        "topics": [
+          "Monday: Computer",
+          "Tuesday: Music, Art, Guidance",
+          "Wednesday: Mass",
+          "Thursday: Gym",
+          "Friday: Library"
+        ],
+        "studyNotes": []
+      },
+      {
+        "subject": "Reading Routine",
+        "topics": [
+          "Read or be read to for 20 minutes every night, including Friday.",
+          "Record nightly reading on the monthly Reading Log."
+        ],
+        "studyNotes": [
+          "This is the standing Grade 2 homework policy, not a newly posted daily assignment."
         ]
       }
     ],
     "importantDates": [
-      {
-        "label": "Spelling (short e, o, u) / Handwriting test",
-        "date": "Friday, Sept. 18",
-        "kind": "test"
-      },
-      {
-        "label": "Reading test",
-        "date": "Friday, Sept. 18",
-        "kind": "test"
-      },
-      {
-        "label": "Pretzel money due",
-        "date": "Friday, Sept. 18",
-        "kind": "reminder"
-      },
       {
         "label": "Chapter 1A (addition) test",
         "date": "Tuesday, Sept. 22",
         "kind": "test"
       },
       {
-        "label": "STAR reading",
+        "label": "Stationery money due ($17)",
         "date": "Wednesday, Sept. 23",
-        "kind": "test"
+        "kind": "deadline"
       },
       {
-        "label": "Stationary money due ($17)",
+        "label": "Mass",
         "date": "Wednesday, Sept. 23",
-        "kind": "reminder"
+        "kind": "school event"
       },
       {
-        "label": "Pretzel delivery",
+        "label": "Pretzel delivery after lunch",
         "date": "Thursday, Sept. 24",
-        "kind": "reminder"
+        "kind": "school event"
+      },
+      {
+        "label": "Dress Down Day — donation for a local charity",
+        "date": "Friday, Sept. 25",
+        "kind": "school event"
+      },
+      {
+        "label": "Lego Club (students who signed up)",
+        "date": "Friday, Sept. 25",
+        "kind": "club"
+      },
+      {
+        "label": "Mass; Communication Folder",
+        "date": "Wednesday, Sept. 30",
+        "kind": "school event"
       },
       {
         "label": "Picture Day",
         "date": "Thursday, Oct. 1",
         "kind": "school event"
+      },
+      {
+        "label": "HSA meeting",
+        "date": "Thursday, Oct. 1",
+        "kind": "meeting"
+      },
+      {
+        "label": "Mid-term Progress Reports",
+        "date": "Thursday, Oct. 8",
+        "kind": "school"
+      },
+      {
+        "label": "12:00 dismissal",
+        "date": "Friday, Oct. 9",
+        "kind": "schedule change"
+      },
+      {
+        "label": "No School",
+        "date": "Monday, Oct. 12",
+        "kind": "holiday"
+      },
+      {
+        "label": "K–4 Parent/Teacher Conferences",
+        "date": "Tuesday, Oct. 20",
+        "kind": "conference"
+      },
+      {
+        "label": "Lego Club (students who signed up)",
+        "date": "Friday, Oct. 23",
+        "kind": "club"
       }
     ],
-    "vocabulary": [
+    "lunchMenu": [
       {
-        "subject": "Reading",
-        "term": "language",
-        "meaning": "Current reading vocabulary word; the school source does not provide a definition."
+        "day": "Monday, Sept. 21",
+        "items": [
+          "Breaded chicken",
+          "Buttered pasta",
+          "Baked beans",
+          "Fruit"
+        ]
       },
       {
-        "subject": "Reading",
-        "term": "culture",
-        "meaning": "Current reading vocabulary word; the school source does not provide a definition."
+        "day": "Tuesday, Sept. 22",
+        "items": [
+          "Meatballs in gravy",
+          "Mashed potatoes",
+          "Garlic stick",
+          "Steamed corn",
+          "French toast sticks",
+          "Fruit"
+        ]
       },
       {
-        "subject": "Reading",
-        "term": "aside",
-        "meaning": "Current reading vocabulary word; the school source does not provide a definition."
+        "day": "Wednesday, Sept. 23",
+        "items": [
+          "French toast sticks",
+          "Hash browns",
+          "Sausage patty",
+          "Steamed carrots",
+          "Fruit"
+        ]
       },
       {
-        "subject": "Reading",
-        "term": "invited",
-        "meaning": "Current reading vocabulary word; the school source does not provide a definition."
+        "day": "Thursday, Sept. 24",
+        "items": [
+          "Macaroni & cheese",
+          "Stewed tomatoes",
+          "Breaded chicken",
+          "Fruit"
+        ]
       },
       {
-        "subject": "Reading",
-        "term": "share",
-        "meaning": "Current reading vocabulary word; the school source does not provide a definition."
-      },
-      {
-        "subject": "Reading",
-        "term": "fair",
-        "meaning": "Current reading vocabulary word; the school source does not provide a definition."
-      },
-      {
-        "subject": "Reading",
-        "term": "plead",
-        "meaning": "Current reading vocabulary word; the school source does not provide a definition."
-      },
-      {
-        "subject": "Reading",
-        "term": "scurries",
-        "meaning": "Current reading vocabulary word; the school source does not provide a definition."
+        "day": "Friday, Sept. 25",
+        "items": [
+          "Hamburger on WG roll",
+          "French fries",
+          "Steamed peas",
+          "Fruit"
+        ]
       }
     ],
-    "homework": [
-      {
-        "day": "Thursday",
-        "subject": "Math",
-        "task": "Math pg. 9",
-        "due": ""
-      },
-      {
-        "day": "Thursday",
-        "subject": "Spelling",
-        "task": "Spelling Choice Board activity",
-        "due": ""
-      },
-      {
-        "day": "Thursday",
-        "subject": "Reading",
-        "task": "Read",
-        "due": ""
-      },
-      {
-        "day": "Thursday",
-        "subject": "Reading",
-        "task": "Reading Log",
-        "due": ""
-      }
-    ],
+    "vocabulary": [],
+    "homework": [],
     "reminders": [
-      "Parents: complete forms and cover books.",
-      "Keep the Reading Log and Behavior Chart in the homework folder.",
-      "Return everything in the homework folder.",
-      "Pretzel money is due Friday, Sept. 18."
+      "Stationery money ($17) is due Wednesday, Sept. 23.",
+      "Pretzel delivery is Thursday, Sept. 24 after lunch.",
+      "Friday, Sept. 25 is Dress Down Day with a donation for a local charity.",
+      "Lego Club is Friday, Sept. 25 for students who signed up.",
+      "Read for 20 minutes nightly and record it on the monthly Reading Log."
     ],
     "questions": [
       {
-        "id": "bootstrap-religion-1",
-        "subject": "Religion",
+        "id": "week-2026-09-22-1",
+        "subject": "School Week",
+        "format": "multiple_choice",
+        "prompt": "Which special is on Thursday?",
+        "choices": [
+          "Gym",
+          "Library",
+          "Computer"
+        ],
+        "answer": "Gym",
+        "hint": "Look at the specials schedule.",
+        "explanation": "Thursday's special is Gym.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "week-2026-09-22-2",
+        "subject": "School Week",
+        "format": "multiple_choice",
+        "prompt": "What happens on Thursday, Sept. 24?",
+        "choices": [
+          "Pretzel delivery",
+          "Picture Day",
+          "No School"
+        ],
+        "answer": "Pretzel delivery",
+        "hint": "It happens after lunch.",
+        "explanation": "Pretzel delivery is scheduled for Thursday, Sept. 24 after lunch.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "week-2026-09-22-3",
+        "subject": "School Week",
+        "format": "multiple_choice",
+        "prompt": "Which day has Music, Art, and Guidance?",
+        "choices": [
+          "Tuesday",
+          "Wednesday",
+          "Friday"
+        ],
+        "answer": "Tuesday",
+        "hint": "It is the second school day of the week.",
+        "explanation": "Tuesday's specials are Music, Art, and Guidance.",
+        "difficulty": "easy"
+      },
+      {
+        "id": "week-2026-09-22-4",
+        "subject": "Reading Routine",
         "format": "true_false",
-        "prompt": "The Trinity means three persons in one God.",
+        "prompt": "Grade 2 students should read for 20 minutes on Friday too.",
         "choices": [],
         "answer": "True",
-        "hint": "Think about Father, Son, and Holy Spirit.",
-        "explanation": "The source says the Trinity is three persons in one God: Father, Son, and Holy Spirit.",
+        "hint": "The standing homework policy includes Friday reading.",
+        "explanation": "The Grade 2 homework policy says to read for 20 minutes every night, including Friday.",
         "difficulty": "easy"
       },
       {
-        "id": "bootstrap-religion-2",
-        "subject": "Religion",
-        "format": "true_false",
-        "prompt": "Jesus is described as God's greatest gift to us.",
-        "choices": [],
-        "answer": "True",
-        "hint": "Look at the title of Religion Chapter 2.",
-        "explanation": "The source says Jesus is God's greatest gift to us.",
-        "difficulty": "easy"
-      },
-      {
-        "id": "bootstrap-reading-1",
-        "subject": "Reading",
+        "id": "week-2026-09-22-5",
+        "subject": "Math",
         "format": "multiple_choice",
-        "prompt": "Which word is on the current sight-word list?",
+        "prompt": "What topic is listed for the Sept. 22 Math test?",
         "choices": [
-          "blue",
-          "went",
-          "fog"
+          "Chapter 1A addition",
+          "Fractions",
+          "Time"
         ],
-        "answer": "blue",
-        "hint": "The other two words are on the spelling list.",
-        "explanation": "Blue appears on the current Reading sight-word list.",
-        "difficulty": "easy"
-      },
-      {
-        "id": "bootstrap-reading-2",
-        "subject": "Reading",
-        "format": "multiple_choice",
-        "prompt": "Which word is on the current sight-word list?",
-        "choices": [
-          "could",
-          "tub",
-          "pet"
-        ],
-        "answer": "could",
-        "hint": "The other two words are basic spelling words.",
-        "explanation": "Could appears on the current Reading sight-word list.",
-        "difficulty": "medium"
-      },
-      {
-        "id": "bootstrap-spelling-1",
-        "subject": "Spelling",
-        "format": "multiple_choice",
-        "prompt": "Which word is listed as a review word?",
-        "choices": [
-          "fix",
-          "tug",
-          "bun"
-        ],
-        "answer": "fix",
-        "hint": "Tug and bun are basic words.",
-        "explanation": "Fix is listed under Review Words.",
-        "difficulty": "easy"
-      },
-      {
-        "id": "bootstrap-spelling-2",
-        "subject": "Spelling",
-        "format": "multiple_choice",
-        "prompt": "Which word is listed as a high-frequency spelling word?",
-        "choices": [
-          "one",
-          "went",
-          "job"
-        ],
-        "answer": "one",
-        "hint": "Went and job are basic words.",
-        "explanation": "One is listed under High Frequency Words.",
-        "difficulty": "medium"
-      },
-      {
-        "id": "bootstrap-reading-3",
-        "subject": "Reading",
-        "format": "true_false",
-        "prompt": "The current reading work practices short a and short i.",
-        "choices": [],
-        "answer": "True",
-        "hint": "Check the current phonics skills.",
-        "explanation": "The Reading Work page lists short a and short i.",
-        "difficulty": "easy"
-      },
-      {
-        "id": "bootstrap-spelling-3",
-        "subject": "Spelling",
-        "format": "word_build",
-        "prompt": "Build this spelling word: went",
-        "choices": [],
-        "answer": "went",
-        "hint": "It starts with W.",
-        "explanation": "Went is one of the current basic spelling words.",
+        "answer": "Chapter 1A addition",
+        "hint": "The test is from Chapter 1A.",
+        "explanation": "The previously posted Math test is Chapter 1A: addition.",
         "difficulty": "easy"
       }
     ],
     "sourceSufficient": true,
     "gaps": [
-      "The source lists reading vocabulary terms but does not provide definitions, so the game does not invent definitions.",
-      "The source assigns Math pg. 9 but does not reproduce that page, so the game does not invent Math pg. 9 Quest questions."
+      "The public teacher home page currently confirms dates and specials but does not expose a new daily homework list for Sept. 21–25.",
+      "No new weekly spelling list, reading stories/vocabulary list, or religion study list for Sept. 21–25 is currently visible on the public teacher home page.",
+      "The automated source bridge is still returning the Sept. 17 pack, so this verified public-source pack intentionally overrides stale week-specific content."
     ]
   }
 }
