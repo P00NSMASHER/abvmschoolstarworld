@@ -150,3 +150,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid rgba(
 .lunch-day{display:grid;gap:4px;padding:12px 13px;border:1px solid #d8eee6;border-radius:15px;background:#f6fcf9}
 .lunch-day b{color:#207b5d;font-size:13px}
 .lunch-day span{color:var(--muted);font-size:12.5px;line-height:1.45}
+
+.empty-note{padding:12px 13px;border-radius:15px;background:#fff8f6;border:1px solid #f4ddd8;color:#674c49;line-height:1.5}
+.empty-note b{display:block;color:#3a2b2a;margin-bottom:3px}
+.routine-note{margin-top:9px;padding:10px 12px;border-radius:13px;background:#f3f0ff;color:#4f3e93;font-size:13px;line-height:1.45}
