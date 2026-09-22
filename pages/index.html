@@ -3,27 +3,45 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#fffdf8">
-  <meta name="description" content="ABVM Grade 2 weekly planner">
-  <title>ABVM Grade 2 Week</title>
+  <meta name="theme-color" content="#f8fbff">
+  <meta name="description" content="ABVM Grade 2 weekly planner, study room, calendar, family dashboard, and School Star World.">
+  <title>ABVM Grade 2</title>
   <link rel="icon" href="https://abvm-grade2-week.amuricaaa.chatgpt.site/icon-192.png">
   <link rel="apple-touch-icon" href="https://abvm-grade2-week.amuricaaa.chatgpt.site/apple-touch-icon.png">
-  <link rel="stylesheet" href="./original-host.css">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <main class="site-shell">
-    <div class="ambient ambient-one" aria-hidden="true"></div>
-    <div class="ambient ambient-two" aria-hidden="true"></div>
     <section class="phone-app" aria-label="ABVM Grade 2 weekly planner">
       <a class="skip-link" href="#app-content">Skip to content</a>
       <div class="screen-stack" id="app-content"></div>
+
       <nav class="bottom-nav" aria-label="App navigation">
-        <button class="active" data-tab="today" aria-current="page"><span>★</span><b>Today</b></button>
-        <button data-tab="week"><span>▦</span><b>Week</b></button>
-        <button data-tab="calendar"><span>▣</span><b>Calendar</b></button>
-        <button data-tab="study"><span>✎</span><b>Study</b></button>
-        <button data-tab="family"><span>⌂</span><b>Family</b></button>
+        <button class="active" data-tab="today" aria-current="page" type="button">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/></svg>
+          </span><b>Today</b>
+        </button>
+        <button data-tab="week" type="button">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 9h16"/><path d="M8 13h2M12 13h2M16 13h1M8 17h2M12 17h2M16 17h1"/></svg>
+          </span><b>Week</b>
+        </button>
+        <button data-tab="calendar" type="button">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="4" y="4.5" width="16" height="16" rx="2"/><path d="M8 2.5v4M16 2.5v4M4 9h16"/><path d="M8 13h8M8 16.5h5"/></svg>
+          </span><b>Calendar</b>
+        </button>
+        <button data-tab="study" type="button">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="m4 20 3.4-.8L19 7.6 16.4 5 4.8 16.6 4 20Z"/><path d="m14.8 6.6 2.6 2.6M12 20h8"/></svg>
+          </span><b>Study</b>
+        </button>
+        <button data-tab="family" type="button">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3.5 20c.4-4.2 2.4-6.3 5.5-6.3s5.1 2.1 5.5 6.3"/><path d="M14.2 14.4c.8-.5 1.7-.7 2.8-.7 2.7 0 4.2 1.8 4.5 5.3"/></svg>
+          </span><b>Family</b>
+        </button>
       </nav>
     </section>
   </main>
