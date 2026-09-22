@@ -4,14 +4,14 @@
   "syncPolicy": {
     "intervalHours": 4
   },
-  "sourceLastSeenAt": "2026-09-22T13:45:00-04:00",
-  "sourceCapturedAt": "2026-09-22T13:45:00-04:00",
+  "sourceLastSeenAt": "2026-09-22T13:48:00-04:00",
+  "sourceCapturedAt": "2026-09-22T13:48:00-04:00",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
-    "sourceHash": "verified-public-2026-09-22-v2",
-    "sourceCapturedAt": "2026-09-22T13:45:00-04:00",
-    "generatedAt": "2026-09-22T13:45:00-04:00",
+    "sourceHash": "verified-public-2026-09-22-v3",
+    "sourceCapturedAt": "2026-09-22T13:48:00-04:00",
+    "generatedAt": "2026-09-22T13:48:00-04:00",
     "weekLabel": "Week of September 21, 2026",
     "summary": "Current Grade 2 teacher-site material for the week of Sept. 21: Homework page lists a Spelling Choice Board activity, a two-sided Math paper, reading, and folder/forms tasks. Reading Work now lists “Little Flap Learns to Fly,” new sight words, two-letter consonant blends, and new vocabulary. Tests lists Math Sept. 22, STAR reading Sept. 23, and Spelling/Handwriting Sept. 25.",
     "subjects": [
