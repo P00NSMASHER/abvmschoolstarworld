@@ -77,7 +77,7 @@ function render(){
   $("#upNextWhen").textContent=next?.date||"This week";
   $("#upNextText").textContent=next?"Keep this on the radar while you work through the week.":"You’re caught up on the dates currently in the school update.";
 
-  renderHomework();renderWeek();renderCalendar();renderStudy();renderLunch();
+  renderHomework();renderWeek();renderCalendar();renderStudy();renderLunch();renderParentNotices();
 
   $("#familySource").textContent=status.family;
   $("#familySourceDetail").textContent=formatUpdated();
@@ -162,6 +162,19 @@ function renderLunch(){
     });
     if(!menu.length)weekRoot.innerHTML='<div class="muted">No lunch menu is loaded for this week.</div>';
   }
+}
+
+function renderParentNotices(){
+  const root=$("#parentNotices");
+  if(!root)return;
+  root.replaceChildren();
+  (pack?.parentNotices||[]).forEach(x=>{
+    const d=document.createElement("div");
+    d.className="reminder-item";
+    d.textContent=x;
+    root.append(d);
+  });
+  if(!(pack?.parentNotices||[]).length)root.innerHTML='<div class="muted">No additional parent notices are listed.</div>';
 }
 
 function renderCalendar(){
