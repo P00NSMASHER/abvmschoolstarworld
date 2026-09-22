@@ -327,14 +327,15 @@
 
   function renderAll(){
     if(!pack) return;
-    updateWallet(); renderHome(); renderQuestLobby(); renderStudy(); renderAvatar(); renderCatalog();
+    renderHome();
+    renderStudy();
   }
 
   function renderHome(){
-    $('homeGreeting').textContent='Ready for your school world!';
-    $('homeWeek').textContent=`${pack.weekLabel||'Current week'} · ${pack.summary||'Practice the latest ABVM material.'}`;
-    renderDream(); renderHomeScene(); renderPortals(); renderHomework(); renderReminders(); renderDelivery();
-    $('playQuestButton').disabled=!(pack.questions?.length);
+    $('homeGreeting').textContent='Current Grade 2 week';
+    $('homeWeek').textContent=`${pack.weekLabel||'Current week'} · ${pack.summary||'The latest ABVM school information.'}`;
+    renderHomework();
+    renderReminders();
   }
 
   function renderDream(){
@@ -579,7 +580,7 @@
   function renderAssessments(){
     const root=$('assessmentArea');root.replaceChildren();const tests=(pack.importantDates||[]).filter(d=>/test|quiz|assessment/i.test(`${d.kind} ${d.label}`));
     if(!tests.length){const d=document.createElement('div');d.className='assessment-none';d.innerHTML='<span>✓</span><div><b>No upcoming test is identified in the current source.</b><small>Study Guides still follow the current school material.</small></div>';root.append(d);return;}
-    tests.slice(0,3).forEach((t,i)=>{const d=document.createElement('article');d.className=`assessment-card ${i===0?'nearest':''}`;d.innerHTML=`<div class="eyebrow">${i===0?'NEXT ASSESSMENT':'UPCOMING'}</div><h2>${escapeXml(t.label)}</h2><p>${escapeXml(t.date)}</p><button class="button soft" type="button">Practice Test-Ready Quest</button>`;d.querySelector('button').addEventListener('click',()=>{showTab('quest');startQuest('test-ready');});root.append(d);});
+    tests.slice(0,3).forEach((t,i)=>{const d=document.createElement('article');d.className=`assessment-card ${i===0?'nearest':''}`;d.innerHTML=`<div class="eyebrow">${i===0?'NEXT ASSESSMENT':'UPCOMING'}</div><h2>${escapeXml(t.label)}</h2><p>${escapeXml(t.date)}</p>`;root.append(d);});
   }
   function renderStudyPractice(){
     const root=$('studyPractice');root.replaceChildren();const qs=(pack.questions||[]).slice(0,6);if(!qs.length){const d=document.createElement('div');d.className='empty';d.textContent='No practice questions are available.';root.append(d);return;}
@@ -656,21 +657,17 @@
   async function importBackup(file){try{const data=JSON.parse(await file.text());const candidate=data.state||data;const migrated=candidate.version===VERSION?candidate:migrateCandidate(candidate);if(!migrated)throw new Error('Unsupported backup');state={...clone(DEFAULT_STATE),...migrated,version:VERSION};await saveState();closeModal('parentModal');renderAll();toast('Game backup imported.');}catch{toast('That backup could not be imported.');}}
 
   function bindEvents(){
-    $('refreshButton').addEventListener('click',fetchPack);$('playQuestButton').addEventListener('click',()=>{showTab('quest');startQuest('mixed');});
-    $$('.bottom-item').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
-    $('resumeQuestButton').addEventListener('click',resumeQuest);$('pauseQuestButton').addEventListener('click',pauseQuest);$('ttsButton').addEventListener('click',useTts);$('hintButton').addEventListener('click',useHint);$('checkButton').addEventListener('click',()=>submitAnswer(evaluateCurrentAnswer(),$('checkButton')));$('moreTimeButton').addEventListener('click',moreTime);$('nextNowButton').addEventListener('click',advanceQuest);$('backHomeAfterQuest').addEventListener('click',()=>showTab('home'));$('anotherQuestButton').addEventListener('click',()=>{questRuntime=null;showTab('quest');});
-    $('saveLookButton').addEventListener('click',saveLook);$('clearOutfitButton').addEventListener('click',clearStarterOutfit);
-    $$('.filter-chip').forEach(b=>b.addEventListener('click',()=>{activeCatalogFilter=b.dataset.filter;renderCatalog();}));
-    $('parentButton').addEventListener('click',openParentGate);$('parentGateForm').addEventListener('submit',e=>{e.preventDefault();if(Number($('gateAnswer').value)===gateAnswer){closeModal('parentGate');renderParentPulse();openModal('parentModal');}else $('gateError').textContent='Try again.';});
-    $$('[data-close-modal]').forEach(b=>b.addEventListener('click',()=>closeModal(b.dataset.closeModal)));
-    $('settingTts').addEventListener('change',async e=>{state.sound.tts=e.target.checked;await saveState();});$('settingSfx').addEventListener('change',async e=>{state.sound.sfx=e.target.checked;await saveState();});$('settingAuto').addEventListener('change',async e=>{state.sound.autoAdvance=e.target.checked;await saveState();});
-    $('exportButton').addEventListener('click',exportBackup);$('importInput').addEventListener('change',e=>{const f=e.target.files?.[0];if(f)importBackup(f);e.target.value='';});$('finishOnboarding').addEventListener('click',finishOnboarding);
+    $('refreshButton').addEventListener('click',fetchPack);
+    $('.bottom-item').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
   }
 
   async function init(){
-    await loadState();updateWallet();setupOnboarding();bindEvents();await fetchPack();$('boot').classList.add('hidden');
-    if(state.firstRun){$('onboarding').classList.remove('hidden');$('onboarding').setAttribute('aria-hidden','false');$('app').classList.add('hidden');}
-    else{$('app').classList.remove('hidden');renderAll();}
+    await loadState();
+    bindEvents();
+    await fetchPack();
+    $('boot').classList.add('hidden');
+    $('app').classList.remove('hidden');
+    renderAll();
     if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
     setInterval(()=>fetchPack(),5*60*1000);
   }
