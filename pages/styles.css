@@ -143,3 +143,10 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid rgba(
   .panel{display:block!important;break-inside:avoid}.shell{max-width:none}.hero{color:#000;background:#fff;border:1px solid #ccc;box-shadow:none}.hero .light,.hero p{color:#444}
   .card,.day-card,.calendar-item,.study-card,.vocab-item,.practice-item,.glance-card{box-shadow:none}
 }
+.lunch-card{border-top:5px solid var(--mint)}
+.lunch-menu{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.lunch-menu span{display:inline-flex;align-items:center;min-height:36px;padding:8px 11px;border-radius:12px;background:var(--mint-soft);color:#226b53;font-size:13px;font-weight:750}
+.lunch-week{display:grid;gap:9px;margin-top:12px}
+.lunch-day{display:grid;gap:4px;padding:12px 13px;border:1px solid #d8eee6;border-radius:15px;background:#f6fcf9}
+.lunch-day b{color:#207b5d;font-size:13px}
+.lunch-day span{color:var(--muted);font-size:12.5px;line-height:1.45}
