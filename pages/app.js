@@ -26,6 +26,8 @@ function parseSchoolDate(text){
   return Number.isNaN(d.getTime())?null:d;
 }
 
+function sameDay(a,b){return a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
+
 function nextImportant(){
   const items=pack?.importantDates||[];
   if(!items.length)return null;
@@ -39,9 +41,14 @@ function nextImportant(){
   return (future[0]||{item:items[0]}).item;
 }
 
+function upcomingDateCount(){
+  const today=new Date();today.setHours(0,0,0,0);
+  return (pack?.importantDates||[]).filter(x=>{const d=parseSchoolDate(x.date);return !d||d>=today}).length;
+}
+
 function sourceLabel(){
   if(envelope?.delivery==="live")return {short:"Updated",family:"School info is up to date",stale:false};
-  if(envelope?.delivery==="verified")return {short:"Verified",family:"Verified school info is current",stale:false};
+  if(envelope?.delivery==="verified")return {short:"Updated",family:"School info is up to date",stale:false};
   if(envelope?.delivery==="cache")return {short:"Saved update",family:"Using the latest saved school update",stale:true};
   return {short:"School info ready",family:"School info is ready",stale:true};
 }
@@ -61,10 +68,9 @@ function render(){
   badge.textContent=status.short;
   badge.className="source-badge"+(status.stale?" stale":"");
 
-  const homework=pack.homework||[], dates=pack.importantDates||[], subjects=pack.subjects||[];
-  $("#glanceHomework").textContent=homework.length;
-  $("#glanceDates").textContent=dates.length;
-  $("#glanceStudy").textContent=subjects.length;
+  const subjects=pack.subjects||[];
+  $("#glanceDates").textContent=String(upcomingDateCount());
+  $("#glanceStudy").textContent=String(subjects.length);
 
   const next=nextImportant();
   $("#upNextTitle").textContent=next?.label||"No upcoming school date listed";
@@ -76,6 +82,11 @@ function render(){
   $("#familySource").textContent=status.family;
   $("#familySourceDetail").textContent=formatUpdated();
   $("#familyStatusDot").className="status-dot"+(status.stale?" stale":"");
+}
+
+function readingRoutine(){
+  const s=(pack.subjects||[]).find(x=>/reading routine/i.test(x.subject||""));
+  return s?.topics?.[0]||"";
 }
 
 function renderHomework(){
@@ -90,10 +101,17 @@ function renderHomework(){
     cb.addEventListener("change",()=>{setDone(h,i,cb.checked);renderHomework()});
     label.append(cb,copy);root.append(label);if(cb.checked)done++;
   });
-  if(!list.length)root.innerHTML='<div class="muted">No homework is listed in the current school update.</div>';
-  $("#homeworkCount").textContent=list.length?(done+" of "+list.length+" done"):"0 listed";
-  $("#homeworkProgress").style.width=list.length?Math.round(done/list.length*100)+"%":"0%";
-  $("#glanceHomework").textContent=list.length?String(list.length-done)+" left":"0";
+  if(!list.length){
+    const routine=readingRoutine();
+    root.innerHTML='<div class="empty-note"><b>No new daily homework is posted.</b><span>The school update does not currently show a new homework list.</span>'+(routine?'<div class="routine-note"><b>Standing routine:</b> '+esc(routine)+'</div>':'')+'</div>';
+    $("#homeworkCount").textContent="No new list";
+    $("#homeworkProgress").style.width="0%";
+    $("#glanceHomework").textContent="No new";
+    return;
+  }
+  $("#homeworkCount").textContent=done+" of "+list.length+" done";
+  $("#homeworkProgress").style.width=Math.round(done/list.length*100)+"%";
+  $("#glanceHomework").textContent=String(list.length-done)+" left";
 }
 
 function renderWeek(){
@@ -104,7 +122,10 @@ function renderWeek(){
     a.innerHTML="<div class='eyebrow'>"+esc(day.toUpperCase())+"</div><h3>"+esc(day)+"</h3><ul>"+items.map(h=>"<li><b>"+esc(h.subject||"Task")+":</b> "+esc(h.task)+" <span class='muted'>"+esc(h.due||"")+"</span></li>").join("")+"</ul>";
     root.append(a);
   });
-  if(!Object.keys(groups).length)root.innerHTML='<div class="muted">No weekly homework is listed.</div>';
+  if(!Object.keys(groups).length){
+    const routine=readingRoutine();
+    root.innerHTML='<div class="empty-note"><b>No new daily homework list is posted.</b>'+(routine?'<div class="routine-note"><b>Standing routine:</b> '+esc(routine)+'</div>':'')+'</div>';
+  }
 
   const rem=$("#reminders");rem.replaceChildren();
   (pack.reminders||[]).forEach(x=>{const d=document.createElement("div");d.className="reminder-item";d.textContent=x;rem.append(d)});
@@ -117,7 +138,7 @@ function renderLunch(){
   let current=null;
   for(const row of menu){
     const d=parseSchoolDate(row.day);
-    if(d&&d.getTime()===today.getTime()){current=row;break;}
+    if(d&&sameDay(d,today)){current=row;break;}
   }
   const todayRoot=$("#todayLunch");
   const todayTitle=$("#todayLunchTitle");
