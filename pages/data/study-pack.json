@@ -475,6 +475,13 @@
       "The public Tests page confirms a Sept. 25 Spelling/Handwriting test on 2-letter blends, but a current spelling-word list was not found on the public pages checked.",
       "The current Reading Work page leaves Reading Comprehension blank, so no comprehension target is invented.",
       "The automated source bridge is still returning the Sept. 17 pack; the GitHub workflow is being hardened so older source timestamps cannot replace this newer verified pack."
+    ],
+    "parentNotices": [
+      "Picture Day is Thursday, Oct. 1.",
+      "Picture ordering: a digital image is $10 when added to a package; glossy finish is $5 per package; a 10×13 is $20; the other listed add-on items are $13 each.",
+      "Picture backgrounds: 1 Universe, 2 Pink Mist, 3 Fall Leaves, 4 Traditional, 5 School Spirit, 6 Patriotic, 7 Dinosaur, 8 Pastel, 9 Bookcase, 10 Blue Brush, 11 Laser. Backgrounds 1, 2, and 11 are marked NEW.",
+      "Schwartz Farm Family Night is Oct. 23 at 315 Schwartz Lane, Hegins. Farm hours are 11 AM–9 PM; ABVM s’mores are 6–7 PM; RSVP by Oct. 16 for a $5/student voucher. Cash only; ATM available.",
+      "Christmas Caroling date is TBD."
     ]
   }
 }
