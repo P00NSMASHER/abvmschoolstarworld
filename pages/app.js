@@ -341,7 +341,12 @@ function activateTab(tab,push=true){
 }
 if(!VALID_TABS.includes(location.hash.slice(1)))history.replaceState({tab:"today"},"","#today");
 $$(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>activateTab(b.dataset.tab,true)));
-window.addEventListener("popstate",()=>activateTab(location.hash.slice(1),false));
+function syncTabFromLocation(){
+  const next=VALID_TABS.includes(location.hash.slice(1))?location.hash.slice(1):"today";
+  if(next!==activeTab)activateTab(next,false);
+}
+window.addEventListener("popstate",syncTabFromLocation);
+window.addEventListener("hashchange",syncTabFromLocation);
 async function load(){
   let data;
   try{
