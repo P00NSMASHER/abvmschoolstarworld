@@ -3,18 +3,29 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#f8fbff">
-  <meta name="description" content="ABVM Grade 2 weekly planner, study room, calendar, family dashboard, and School Star World.">
-  <title>ABVM Grade 2</title>
-  <link rel="icon" href="https://abvm-grade2-week.amuricaaa.chatgpt.site/icon-192.png">
-  <link rel="apple-touch-icon" href="https://abvm-grade2-week.amuricaaa.chatgpt.site/apple-touch-icon.png">
+  <meta name="theme-color" content="#f7f4ed">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="ABVM Grade 2">
+  <meta name="description" content="ABVM Grade 2 parent companion for current school information, homework, study guides, dates, and family reminders.">
+  <title>ABVM Grade 2 Parent Companion</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./assets/school-seal-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="./assets/school-seal-192.png">
+  <link rel="preload" href="./assets/hero-today.webp" as="image" type="image/webp" fetchpriority="high">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <main class="site-shell">
     <section class="phone-app" aria-label="ABVM Grade 2 weekly planner">
       <a class="skip-link" href="#app-content">Skip to content</a>
-      <div class="screen-stack" id="app-content"></div>
+      <div class="screen-stack" id="app-content" aria-live="polite">
+        <div class="screen loading-screen" role="status" aria-label="Loading current school information">
+          <section class="top-scene loading-hero"><div class="loading-brand"></div><div class="loading-title"></div></section>
+          <div class="content loading-content"><div class="loading-card"></div><div class="loading-card short"></div></div>
+          <span class="sr-only">Loading current ABVM Grade 2 school information.</span>
+        </div>
+      </div>
 
       <nav class="bottom-nav" aria-label="App navigation">
         <button class="active" data-tab="today" aria-current="page" type="button">

@@ -1,11 +1,31 @@
 (()=>{"use strict";
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)], stack=()=>$("#app-content");
-let envelope=null, pack=null, activeTab="today", selectedDay=null, calendarDay=null, calendarOffset=0, calendarMode="list";
+const VALID_TABS=["today","week","calendar","study","family"];
+let envelope=null, pack=null, activeTab=VALID_TABS.includes(location.hash.slice(1))?location.hash.slice(1):"today", selectedDay=null, calendarDay=null, calendarOffset=0, calendarMode="list";
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
 const SHORT_MONTHS={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,sept:8,oct:9,nov:10,dec:11};
 const WEEKDAY=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+const ICON_PATHS={
+  verified:'<path d="M12 3 19 6v5c0 4.6-2.8 8-7 10-4.2-2-7-5.4-7-10V6l7-3Z"/><path d="m9 12 2 2 4-5"/>',
+  book:'<path d="M4 5.5c2.8-.8 5.4-.3 8 1.5v13c-2.6-1.8-5.2-2.3-8-1.5v-13Z"/><path d="M20 5.5c-2.8-.8-5.4-.3-8 1.5v13c2.6-1.8 5.2-2.3 8-1.5v-13Z"/>',
+  pencil:'<path d="m4 20 3.8-.8L19 8l-3-3L4.8 16.2 4 20Z"/><path d="m14.5 6.5 3 3"/>',
+  math:'<path d="M5 7h6M8 4v6M14 6h5M14 17h5M16.5 14.5v5M5 14l6 6M11 14l-6 6"/>',
+  cross:'<path d="M12 3v18M7 8h10"/>',
+  calendar:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/>',
+  folder:'<path d="M3 7h7l2 2h9v10H3V7Z"/><path d="M3 7V5h7l2 2"/>',
+  document:'<path d="M6 3h8l4 4v14H6V3Z"/><path d="M14 3v5h5M9 12h6M9 16h6"/>',
+  pin:'<path d="m8 3 8 8M15 4l5 5-4 2-5 5-3-3 5-5 2-4ZM8 16l-5 5"/>',
+  check:'<path d="m5 12 4 4L19 6"/>',
+  lunch:'<path d="M5 4v7M8 4v7M5 8h3M6.5 11v9M15 4v16M15 4c3 2 4 5 4 8h-4"/>',
+  star:'<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/>',
+  idea:'<path d="M9 18h6M10 21h4"/><path d="M8.5 15.5A7 7 0 1 1 15.5 15.5c-.7.5-1 1.2-1 2h-5c0-.8-.3-1.5-1-2Z"/>',
+  words:'<path d="M5 5h14v10H9l-4 4V5Z"/><path d="M9 9h6M9 12h4"/>',
+  home:'<path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10M9 20v-6h6v6"/>'
+};
+function icon(name,extra=""){return '<svg class="ui-icon '+extra+'" viewBox="0 0 24 24" aria-hidden="true">'+(ICON_PATHS[name]||ICON_PATHS.star)+'</svg>'}
 
 function toast(message){
   const t=$("#toast"); if(!t)return;
@@ -41,7 +61,7 @@ function schoolYearMonthDate(month,day){
   return new Date(year,month,day,12);
 }
 function schoolHeader(){
-  return '<div class="school-bar"><div class="school-identity"><img class="school-mark" src="./assets/icon.svg" alt="ABVM Grade 2 app icon"><div class="school-name"><span>Assumption BVM</span><span>Catholic School</span></div></div><button class="bell-button" type="button" aria-label="Source status"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></button></div>';
+  return '<div class="school-bar"><div class="school-identity"><img class="school-mark" src="./assets/school-seal-192.png" width="52" height="52" alt="Assumption BVM Catholic School seal"><div class="school-name"><span>Assumption BVM</span><span>Grade 2 Parent Companion</span></div></div><button class="bell-button" type="button" aria-label="Show school information freshness">'+icon("verified")+'</button></div>';
 }
 function scene(kind,kicker,title,subtitle,light=true,extra=""){
   return '<section class="top-scene '+kind+' scene-'+kind+'">'+schoolHeader()+
@@ -64,27 +84,24 @@ function kindClass(item){
   if(/holiday|closed/.test(k)||/no school|closed/.test(l))return"closed";
   return"family";
 }
-function eventEmoji(item){
+function eventIconName(item){
   const k=kindClass(item),l=(item?.label||"").toLowerCase();
-  if(/reading/.test(l))return"📖";
-  if(/spelling|handwriting/.test(l))return"✏️";
-  if(/math|addition/.test(l))return"➕";
-  if(k==="faith")return"✝️";
-  if(k==="due"&&/pretzel/.test(l))return"🥨";
-  if(k==="due")return"📌";
-  if(k==="club")return"🧱";
-  if(k==="closed")return"🏫";
-  if(k==="test")return"📝";
-  return"📅";
+  if(/reading/.test(l))return"book";
+  if(/spelling|handwriting/.test(l))return"pencil";
+  if(/math|addition/.test(l))return"math";
+  if(k==="faith")return"cross";
+  if(k==="due")return"pin";
+  if(k==="test")return"document";
+  return"calendar";
 }
-function taskEmoji(item){
+function taskIconName(item){
   const s=((item?.subject||"")+" "+(item?.task||"")).toLowerCase();
-  if(/read/.test(s))return"📚";
-  if(/spell/.test(s))return"✏️";
-  if(/math/.test(s))return"➕";
-  if(/folder/.test(s))return"🎒";
-  if(/form|cover/.test(s))return"📄";
-  return"✅";
+  if(/read/.test(s))return"book";
+  if(/spell/.test(s))return"pencil";
+  if(/math/.test(s))return"math";
+  if(/folder/.test(s))return"folder";
+  if(/form|cover/.test(s))return"document";
+  return"check";
 }
 function eventItemsForDate(date){
   return(pack?.importantDates||[]).filter(x=>{
@@ -140,23 +157,25 @@ function specialForDate(date){
 }
 function checkKey(item,index){return"abvm-gold:"+String(pack?.sourceHash||"pack")+":"+index+":"+(item?.task||"")}
 function checked(item,index){return localStorage.getItem(checkKey(item,index))==="1"}
+function familyKey(action,index){return"abvm-family:"+String(pack?.sourceHash||"pack")+":"+index+":"+action}
+function familyChecked(action,index){return localStorage.getItem(familyKey(action,index))==="1"}
 function taskHtml(item,index){
   const done=checked(item,index),subject=(item.subject||"").toLowerCase(),task=(item.task||"").toLowerCase(),due=(item.due||"").toLowerCase();
   let tag="POSTED",tagClass="";
   if(/parent/.test(subject)){tag="PARENT";tagClass="if-participating"}
   else if(/ongoing/.test(due)){tag="ONGOING";tagClass="if-participating"}
   else if(/folder/.test(subject)||/folder/.test(task)){tag="FOLDER";tagClass="if-participating"}
-  return '<button class="check-item '+(done?'is-done':'')+'" type="button" data-check="'+index+'">'+
+  return '<button class="check-item '+(done?'is-done':'')+'" type="button" data-check="'+index+'" aria-pressed="'+done+'">'+
     '<span class="check-box">'+(done?'✓':'')+'</span>'+
     '<span class="check-copy"><span class="task-tag '+tagClass+'">'+tag+'</span><strong>'+esc(item.task||"Task")+'</strong>'+(item.subject?'<small>'+esc(item.subject)+(item.due?' · '+esc(item.due):'')+'</small>':'')+'</span>'+
-    '<span class="task-deco" aria-hidden="true">'+taskEmoji(item)+'</span></button>';
+    '<span class="task-deco" aria-hidden="true">'+icon(taskIconName(item))+'</span></button>';
 }
 function eventRow(item){
-  return '<div class="event-row"><span class="event-icon '+kindClass(item)+'" aria-hidden="true">'+eventEmoji(item)+'</span><span class="kind">'+esc((item.kind||"School").replace(/\b\w/g,m=>m.toUpperCase()))+'</span><strong>'+esc(item.label||"School item")+'</strong></div>';
+  return '<div class="event-row"><span class="event-icon '+kindClass(item)+'" aria-hidden="true">'+icon(eventIconName(item))+'</span><span class="kind">'+esc((item.kind||"School").replace(/\b\w/g,m=>m.toUpperCase()))+'</span><strong>'+esc(item.label||"School item")+'</strong></div>';
 }
 function lunchCard(lunch){
   if(!lunch)return"";
-  return '<section class="lunch-card"><div class="lunch-art" aria-hidden="true">🍎</div><div><p>SCHOOL LUNCH</p><strong>'+esc((lunch.items||[]).join(", ").replace(/, ([^,]*)$/,", and $1"))+'</strong></div></section>';
+  return '<section class="lunch-card"><div class="lunch-art" aria-hidden="true">'+icon("lunch")+'</div><div><p>SCHOOL LUNCH</p><strong>'+esc((lunch.items||[]).join(", ").replace(/, ([^,]*)$/,", and $1"))+'</strong></div></section>';
 }
 function weekPriority(){
   const next=currentTest();
@@ -177,31 +196,31 @@ function renderToday(){
   const headline=mainEvent?.label||"Normal school day";
   const subline=otherEvents.length?otherEvents.map(e=>e.label).join(" · "):"Stay with the current homework and reading routine.";
   const deadlineHtml=deadline
-    ?'<section class="today-deadline"><span class="deadline-icon">📌</span><div><p>NEXT DEADLINE</p><strong>'+esc(deadline.x.label)+'</strong><small>'+esc(deadline.x.date||fmtShort(deadline.span.start))+'</small></div></section>'
-    :'<section class="today-deadline clear"><span class="deadline-icon">✓</span><div><p>NEXT DEADLINE</p><strong>No posted deadline due</strong><small>Keep the normal school routine.</small></div></section>';
+    ?'<section class="today-deadline"><span class="deadline-icon">'+icon("pin")+'</span><div><p>NEXT DEADLINE</p><strong>'+esc(deadline.x.label)+'</strong><small>'+esc(deadline.x.date||fmtShort(deadline.span.start))+'</small></div></section>'
+    :'<section class="today-deadline clear"><span class="deadline-icon">'+icon("check")+'</span><div><p>NEXT DEADLINE</p><strong>No posted deadline due</strong><small>Keep the normal school routine.</small></div></section>';
   const content='<div class="content overlap">'+
     '<section class="date-hero-card"><div class="big-date"><strong>'+WEEKDAY[d.getDay()].slice(0,3).toUpperCase()+'</strong><span>'+d.getDate()+'</span><small>Today</small></div><div class="date-hero-copy"><p>TODAY AT SCHOOL</p><h2>'+esc(headline)+'</h2><span>'+esc(subline)+'</span></div></section>'+
     deadlineHtml+
     '<section class="gold-card glass-card homework-dashboard"><div class="checklist-title"><h3>Homework</h3><span class="edit-pill">Current teacher posting</span></div><div class="task-list">'+(pack?.homework||[]).map(taskHtml).join("")+'</div></section>'+
     lunchCard(lunch)+
     '</div>';
-  stack().innerHTML='<div class="screen" role="region" aria-label="Today">'+scene("today","TODAY",fmtDate(d),priority.title,true)+freshness()+content+'</div>';
+  stack().innerHTML='<div class="screen" role="region" aria-label="Today">'+scene("today","TODAY",fmtDate(d),priority.title,false)+freshness()+content+'</div>';
 }
 function renderWeek(){
   const days=weekDays();
   if(!selectedDay||!days.some(d=>sameDay(d,selectedDay)))selectedDay=days.find(d=>sameDay(d,today()))||days[0];
   const events=eventItemsForDate(selectedDay),lunch=lunchForDate(selectedDay),special=specialForDate(selectedDay);
-  const picker=days.map(d=>'<button class="'+(sameDay(d,selectedDay)?'active':'')+'" type="button" data-day="'+d.toISOString()+'"><span>'+WEEKDAY[d.getDay()].slice(0,3)+'</span><strong>'+d.getDate()+'</strong></button>').join("");
+  const picker=days.map(d=>'<button class="'+(sameDay(d,selectedDay)?'active':'')+'" type="button" data-day="'+d.toISOString()+'" aria-pressed="'+sameDay(d,selectedDay)+'"><span>'+WEEKDAY[d.getDay()].slice(0,3)+'</span><strong>'+d.getDate()+'</strong></button>').join("");
   const future=(pack?.importantDates||[]).map(x=>({x,span:eventSpan(x.date)}))
     .filter(o=>o.span&&o.span.end>selectedDay)
     .sort((a,b)=>a.span.start-b.span.start).slice(0,4)
     .map(o=>({x:o.x,d:o.span.start<selectedDay?selectedDay:o.span.start}));
-  const note='<div class="week-hero-note">Small Steps<br><b>Big Progress!</b> ♡</div>';
+  const note='<div class="week-hero-note"><span>CALM PLAN</span><b>Five days, one clear view</b></div>';
   const homework='<section class="gold-card week-homework"><div class="checklist-title"><h3>Current homework posting</h3><span class="edit-pill">Applies until teacher updates it</span></div><div class="task-list">'+(pack?.homework||[]).map(taskHtml).join("")+'</div></section>';
   stack().innerHTML='<div class="screen" role="region" aria-label="This week">'+scene("week","YOUR SCHOOL PLAN","This Week","Tap a day for events, lunch, and specials",false,note)+
     '<div class="content overlap"><div class="day-picker">'+picker+'</div>'+homework+
     '<section class="day-detail"><div class="day-detail-inner"><div class="day-detail-title"><div><p>'+MONTHS[selectedDay.getMonth()].toUpperCase()+'</p><h2>'+esc(fmtDate(selectedDay))+'</h2></div><span class="school-day-pill">School day</span></div>'+
-    (special?'<div class="selected-special"><span>★</span><div><small>SPECIAL</small><strong>'+esc(special)+'</strong></div></div>':'')+
+    (special?'<div class="selected-special"><span>'+icon("star")+'</span><div><small>SPECIAL</small><strong>'+esc(special)+'</strong></div></div>':'')+
     '<div class="event-stack" style="margin-top:14px">'+(events.length?events.map(eventRow).join(""):'<div class="empty-note">No special school events are listed for this date.</div>')+'</div></div></section>'+
     lunchCard(lunch)+
     '<section class="reminder-strip"><span class="bang">!</span><p><strong>Don’t forget</strong>'+esc(currentReminders()[0]||"Check the homework folder and reading log.")+'</p></section>'+
@@ -215,7 +234,7 @@ function monthGrid(year,month){
     const d=new Date(year,month,day,12),events=eventItemsForDate(d),lunch=lunchForDate(d);
     const dots=[...events.map(e=>kindClass(e)),...(lunch?["lunch"]:[])].slice(0,3);
     const weekend=[0,6].includes(d.getDay()),closed=events.some(e=>kindClass(e)==="closed");
-    html+='<button class="'+(weekend?'weekend ':'')+(closed?'closed ':'')+(calendarDay&&sameDay(d,calendarDay)?'active':'')+'" type="button" data-cal-day="'+d.toISOString()+'"><strong>'+day+'</strong><span class="calendar-dots">'+dots.map(k=>'<i class="'+k+'"></i>').join("")+'</span></button>';
+    html+='<button class="'+(weekend?'weekend ':'')+(closed?'closed ':'')+(calendarDay&&sameDay(d,calendarDay)?'active':'')+'" type="button" data-cal-day="'+d.toISOString()+'" aria-pressed="'+Boolean(calendarDay&&sameDay(d,calendarDay))+'" aria-label="'+esc(fmtDate(d)+(events.length?': '+events.map(e=>e.label).join(', '):''))+'"><strong>'+day+'</strong><span class="calendar-dots">'+dots.map(k=>'<i class="'+k+'"></i>').join("")+'</span></button>';
   }
   return html;
 }
@@ -236,22 +255,21 @@ function renderCalendar(){
       '<div class="calendar-legend"><span><i class="test"></i>Test</span><span><i class="faith"></i>Faith</span><span><i class="family"></i>Family</span><span><i class="due"></i>Due</span></div>'+
     '</div>';
   const listPanel='<div class="calendar-list-panel '+(calendarMode==="list"?"active":"")+'">'+
-      (agenda.length?agenda.map(o=>'<button class="calendar-list-row" type="button" data-cal-day="'+o.d.toISOString()+'"><span class="calendar-list-date"><b>'+o.d.getDate()+'</b><small>'+WEEKDAY[o.d.getDay()].slice(0,3)+'</small></span><span class="event-icon '+kindClass(o.x)+'">'+eventEmoji(o.x)+'</span><span class="calendar-list-copy"><strong>'+esc(o.x.label)+'</strong><small>'+esc(o.x.date||"")+' · '+esc(o.x.kind||"School event")+'</small></span><span class="chevron">›</span></button>').join(""):'<div class="empty-note">No school dates are listed for this month.</div>')+
+      (agenda.length?agenda.map(o=>'<button class="calendar-list-row" type="button" data-cal-day="'+o.d.toISOString()+'"><span class="calendar-list-date"><b>'+o.d.getDate()+'</b><small>'+WEEKDAY[o.d.getDay()].slice(0,3)+'</small></span><span class="event-icon '+kindClass(o.x)+'">'+icon(eventIconName(o.x))+'</span><span class="calendar-list-copy"><strong>'+esc(o.x.label)+'</strong><small>'+esc(o.x.date||"")+' · '+esc(o.x.kind||"School event")+'</small></span><span class="chevron" aria-hidden="true">›</span></button>').join(""):'<div class="empty-note">No school dates are listed for this month.</div>')+
     '</div>';
 
   stack().innerHTML='<div class="screen calendar-screen" role="region" aria-label="'+MONTHS[m]+' calendar">'+
     scene("calendar","SCHOOL MONTH AT A GLANCE",MONTHS[m]+" "+y,"School Month at a Glance",false)+
-    '<div class="calendar-wrap"><section class="calendar-card"><div class="calendar-title-row"><button class="month-arrow" data-month="-1" type="button">‹</button><div style="text-align:center"><p>'+esc(calendarMode==="month"?"MONTH VIEW":"LIST VIEW")+'</p><h2>'+MONTHS[m]+" "+y+'</h2></div><button class="month-arrow" data-month="1" type="button">›</button></div>'+
-    '<div class="calendar-tabs"><button class="'+(calendarMode==="month"?"active":"")+'" data-cal-mode="month" type="button">Month View</button><button class="'+(calendarMode==="list"?"active":"")+'" data-cal-mode="list" type="button">List View</button></div>'+
+    '<div class="calendar-wrap"><section class="calendar-card"><div class="calendar-title-row"><button class="month-arrow" data-month="-1" type="button" aria-label="Previous month">‹</button><div class="calendar-heading"><p>'+esc(calendarMode==="month"?"MONTH VIEW":"LIST VIEW")+'</p><h2>'+MONTHS[m]+" "+y+'</h2></div><button class="month-arrow" data-month="1" type="button" aria-label="Next month">›</button></div>'+
+    '<div class="calendar-tabs"><button class="'+(calendarMode==="month"?"active":"")+'" data-cal-mode="month" type="button" aria-pressed="'+(calendarMode==="month")+'">Month View</button><button class="'+(calendarMode==="list"?"active":"")+'" data-cal-mode="list" type="button" aria-pressed="'+(calendarMode==="list")+'">List View</button></div>'+
     monthPanel+listPanel+'</section>'+
     '<section class="calendar-day-card"><div class="calendar-day-heading"><p>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</p><h2>'+esc(fmtDate(calendarDay))+'</h2></div>'+
     (events.length?'<div class="calendar-event-list">'+events.map(e=>'<div><i class="'+kindClass(e)+'"></i><span><strong>'+esc(e.label)+'</strong></span></div>').join(""):'<p class="calendar-empty">No special school events are listed for this date.</p>')+
-    (lunch?'<div class="calendar-lunch"><span>🍎</span><div><b>School Lunch</b><p>'+esc((lunch.items||[]).join(", ").replace(/, ([^,]*)$/,", and $1"))+'</p></div></div>':'')+'</section>'+
+    (lunch?'<div class="calendar-lunch"><span>'+icon("lunch")+'</span><div><b>School Lunch</b><p>'+esc((lunch.items||[]).join(", ").replace(/, ([^,]*)$/,", and $1"))+'</p></div></div>':'')+'</section>'+
     '</div></div>';
 }
 function subjectCard(id,klass,title,icon,subj){
-  const now=today();
-  const notes=[...(subj?.topics||[]),...(subj?.studyNotes||[])].filter(n=>{const span=eventSpan(n);return !span||span.end>=now});
+  const notes=[...(subj?.topics||[]),...(subj?.studyNotes||[])].filter((n,i,a)=>n&&a.indexOf(n)===i);
   return '<section id="'+id+'" class="subject-card '+klass+'"><div class="subject-head"><span class="icon" aria-hidden="true">'+icon+'</span><div><p>'+esc(title.toUpperCase())+'</p><h2>'+esc(title)+'</h2></div></div><ul>'+notes.map(n=>'<li>'+esc(n)+'</li>').join("")+'</ul></section>';
 }
 function renderStudy(){
@@ -262,22 +280,22 @@ function renderStudy(){
     .sort((a,b)=>a.span.start-b.span.start)
     .map(o=>({x:o.x,d:o.span.start<now?new Date(now):o.span.start,span:o.span}));
   const starActive=(pack?.importantDates||[]).some(x=>/star/i.test(x.label||"")&&eventSpan(x.date)?.end>=now);
-  const essentials=[{when:"Daily",label:readingRoutine(),icon:"📖",klass:"green"},...assessments.slice(0,4).map((o,i)=>({when:fmtShort(o.d),label:o.x.label,icon:["⭐","✏️","➕","✝️"][i]||"⭐",klass:["yellow","pink","blue","pink"][i]||"blue"}))];
+  const essentials=[{when:"Daily",label:readingRoutine(),icon:icon("book"),klass:"green"},...assessments.slice(0,4).map((o,i)=>({when:fmtShort(o.d),label:o.x.label,icon:icon(eventIconName(o.x)),klass:["yellow","pink","blue","pink"][i]||"blue"}))];
   const sight=(r?.topics||[]).find(x=>/^Sight words:/i.test(x))?.replace(/^Sight words:\s*/i,"").split(",").map(x=>x.trim()).filter(Boolean)||[];
   const vocab=(pack?.vocabulary||[]).map(v=>v.term);
   stack().innerHTML='<div class="screen study-screen" role="region" aria-label="Study room">'+
-    scene("study","THIS WEEK","Study","What Emma needs to know",false)+
-    '<div class="study-content"><section class="study-intro"><span class="study-bulb">💡</span><div><h2>Start with what is next</h2><p>Tests and daily reading are first. Subject details are below.</p></div></section>'+
+    scene("study","THIS WEEK","Study","Everything to review, in one calm place",true)+
+    '<div class="study-content"><section class="study-intro"><span class="study-bulb">'+icon("idea")+'</span><div><h2>Start with what is next</h2><p>Tests and daily reading are first. Subject details are below.</p></div></section>'+
     '<section class="study-at-a-glance"><div class="section-label">TESTS & DAILY ROUTINE</div><h2>Quick Look</h2>'+essentials.map(e=>'<div class="essential-row"><span class="essential-icon '+e.klass+'">'+e.icon+'</span><div><time>'+esc(e.when)+'</time><strong>'+esc(e.label)+'</strong></div></div>').join("")+'</section>'+
-    subjectCard("study-reading","reading","Reading","📖",r)+
-    subjectCard("study-spelling","spelling","Spelling and phonics","✏️",spell)+
-    subjectCard("study-religion","religion",rel?.subject||"Religion","✝️",rel)+
-    subjectCard("study-math","math","Math","🧮",math)+
-    '<section id="study-words" class="subject-card sight words-card"><div class="subject-head"><span class="icon">💬</span><div><p>WORDS</p><h2>Sight words & vocabulary</h2></div></div>'+
+    subjectCard("study-reading","reading","Reading",icon("book"),r)+
+    subjectCard("study-spelling","spelling","Spelling and phonics",icon("pencil"),spell)+
+    subjectCard("study-religion","religion",rel?.subject||"Religion",icon("cross"),rel)+
+    subjectCard("study-math","math","Math",icon("math"),math)+
+    '<section id="study-words" class="subject-card sight words-card"><div class="subject-head"><span class="icon">'+icon("words")+'</span><div><p>WORDS</p><h2>Sight words & vocabulary</h2></div></div>'+
       '<h3 class="word-subhead">Sight words</h3><div class="sight-cloud">'+sight.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div>'+
       '<h3 class="word-subhead">Vocabulary</h3><div class="word-grid">'+vocab.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></section>'+
     (starActive?'<section class="calm-card"><h3>STAR reminder</h3><p>Keep assessment preparation calm. Normal reading, normal routines, and a good night’s sleep are enough.</p></section>':'')+
-    '<a class="quest-launcher" href="./game/"><span class="quest-star">★</span><span><strong>Practice in School Star Quest</strong><small>Use short learning quests after reviewing the teacher-posted material.</small></span><span class="chevron">›</span></a>'+
+    '<section class="calm-card study-tip"><span>'+icon("check")+'</span><div><h3>Keep review short and focused</h3><p>Use the teacher-posted material above, then stop when the planned review is complete.</p></div></section>'+
     '</div></div>';
 }
 function renderFamily(){
@@ -291,40 +309,51 @@ function renderFamily(){
   const actions=[...(pack?.homework||[]).map(x=>x.task),...currentReminders()].filter((x,i,a)=>x&&a.indexOf(x)===i).slice(0,8);
   const notices=currentParentNotices(),gaps=pack?.gaps||[];
   stack().innerHTML='<div class="screen family-screen" role="region" aria-label="Family dashboard">'+
-    scene("family","FAMILY VIEW","Family Dashboard","A happy, organized school year starts here.",true)+freshness()+
+    scene("family","FAMILY VIEW","Family","The practical details that keep school days running smoothly",false)+freshness()+
     '<div class="family-content"><section class="family-priority"><p>WEEKLY PRIORITY</p><h2>'+esc(priority.title)+'</h2><span>'+esc(priority.detail)+'</span></section>'+
     '<div class="family-stats"><article><strong>'+tests+'</strong><span>tests or assessments remaining this week</span></article><article><strong>'+esc(nextDue?fmtShort(nextDue.span.start):"✓")+'</strong><span>'+esc(nextDue?nextDue.x.label:"No posted deadline due")+'</span></article></div>'+
-    '<section class="family-card"><h3>📋 Family Actions</h3><div class="family-actions">'+actions.map(a=>'<div class="family-action"><span class="box"></span><span>'+esc(a)+'</span><b>›</b></div>').join("")+'</div></section>'+
+    '<section class="family-card"><h3>Family checklist</h3><div class="family-actions">'+actions.map((a,i)=>'<button class="family-action '+(familyChecked(a,i)?'is-done':'')+'" type="button" data-family-check="'+i+'" aria-pressed="'+familyChecked(a,i)+'"><span class="box">'+(familyChecked(a,i)?icon("check"):'')+'</span><span>'+esc(a)+'</span></button>').join("")+'</div></section>'+
     '<section class="reading-policy"><span class="round">20</span><div><h3>Reading every day</h3><p>Read or be read to for 20 minutes and keep the Reading Log in the homework folder.</p></div></section>'+
     '<section class="family-card"><h3>Current notices</h3><div class="notice-list">'+notices.map(n=>'<div class="notice"><span class="notice-dot"></span><p>'+esc(n)+'</p></div>').join("")+'</div></section>'+
     '<section class="family-card"><h3>Source coverage</h3><div class="notice-list"><div class="notice"><span class="notice-dot"></span><p>'+esc(envelope?.source||"Verified ABVM school sources")+'</p></div>'+gaps.map(n=>'<div class="notice"><span class="notice-dot"></span><p>'+esc(n)+'</p></div>').join("")+'</div></section>'+
-    '<section class="install-card"><span class="install-icon">⌂</span><div><h3>Put this app on iPhone</h3><p>In Safari, use Share → Add to Home Screen for an app-like launch experience.</p></div></section>'+
+    '<section class="install-card"><span class="install-icon">'+icon("home")+'</span><div><h3>Put this app on iPhone</h3><p>In Safari, use Share → Add to Home Screen for an app-like launch experience.</p></div></section>'+
     '</div></div>';
 }
 function render(){
   if(!pack)return;
   ({today:renderToday,week:renderWeek,calendar:renderCalendar,study:renderStudy,family:renderFamily}[activeTab]||renderToday)();
   $$(".bottom-nav button").forEach(b=>{const on=b.dataset.tab===activeTab;b.classList.toggle("active",on);on?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current")});
-  stack().scrollTop=0;bindScreen();
+  const screen=stack().querySelector(".screen");if(screen)screen.scrollTop=0;bindScreen();
 }
 function bindScreen(){
   $$("[data-check]").forEach(b=>b.addEventListener("click",()=>{const i=Number(b.dataset.check),item=(pack.homework||[])[i],k=checkKey(item,i);localStorage.getItem(k)==="1"?localStorage.removeItem(k):localStorage.setItem(k,"1");render()}));
+  $$("[data-family-check]").forEach(b=>b.addEventListener("click",()=>{const i=Number(b.dataset.familyCheck),actions=[...(pack?.homework||[]).map(x=>x.task),...currentReminders()].filter((x,j,a)=>x&&a.indexOf(x)===j).slice(0,8),action=actions[i],k=familyKey(action,i);localStorage.getItem(k)==="1"?localStorage.removeItem(k):localStorage.setItem(k,"1");renderFamily();bindScreen()}));
   $$("[data-day]").forEach(b=>b.addEventListener("click",()=>{selectedDay=new Date(b.dataset.day);renderWeek();bindScreen()}));
   $$("[data-cal-day]").forEach(b=>b.addEventListener("click",()=>{calendarDay=new Date(b.dataset.calDay);renderCalendar();bindScreen()}));
   $$("[data-month]").forEach(b=>b.addEventListener("click",()=>{calendarOffset+=Number(b.dataset.month);calendarDay=null;renderCalendar();bindScreen()}));
   $$("[data-cal-mode]").forEach(b=>b.addEventListener("click",()=>{calendarMode=b.dataset.calMode;renderCalendar();bindScreen()}));
-  $(".bell-button").forEach(b=>b.addEventListener("click",()=>toast("Verified school data is loaded.")));
+  const freshnessButton=$(".bell-button");if(freshnessButton)freshnessButton.addEventListener("click",()=>toast($(".freshness")?.textContent.trim()||"Verified school information is loaded."));
 }
-$$(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>{activeTab=b.dataset.tab;render()}));
+function activateTab(tab,push=true){
+  const next=VALID_TABS.includes(tab)?tab:"today";
+  if(push&&location.hash!=="#"+next)history.pushState({tab:next},"","#"+next);
+  activeTab=next;render();
+}
+if(!VALID_TABS.includes(location.hash.slice(1)))history.replaceState({tab:"today"},"","#today");
+$$(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>activateTab(b.dataset.tab,true)));
+window.addEventListener("popstate",()=>activateTab(location.hash.slice(1),false));
 async function load(){
+  let data;
   try{
     const r=await fetch("./data/study-pack.json",{cache:"no-store"});
     if(!r.ok)throw new Error("HTTP "+r.status);
-    const d=await r.json();if(!d?.pack?.sourceSufficient)throw new Error("Incomplete school pack");
-    envelope=d;pack=d.pack;render();
+    data=await r.json();if(!data?.pack?.sourceSufficient)throw new Error("Incomplete school pack");
   }catch(e){
-    stack().innerHTML='<div class="screen"><div class="content" style="padding-top:40px"><section class="gold-card"><div class="section-label">ABVM GRADE 2</div><h2 class="card-title">School info could not be loaded</h2><p class="muted">Refresh the page to try again.</p></section></div></div>';
+    stack().innerHTML='<div class="screen"><div class="content load-error"><section class="gold-card"><div class="section-label">ABVM GRADE 2</div><h1 class="card-title">School information is temporarily unavailable</h1><p class="muted">Your saved checklist is safe. Check your connection, then refresh the page.</p><button class="retry-button" type="button" onclick="location.reload()">Try again</button></section></div></div>';
+    return;
   }
+  envelope=data;pack=data.pack;render();
 }
 load();
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 })();
