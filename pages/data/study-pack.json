@@ -393,6 +393,8 @@
     "lunchMenu": [
       {
         "day": "Monday, Sept. 21",
+        "image": "./assets/lunch-monday.webp",
+        "imageAlt": "School lunch tray with breaded chicken, buttered pasta, baked beans, and fresh fruit",
         "items": [
           "Breaded chicken",
           "Buttered pasta",
@@ -402,6 +404,8 @@
       },
       {
         "day": "Tuesday, Sept. 22",
+        "image": "./assets/lunch-tuesday.webp",
+        "imageAlt": "School lunch tray with meatballs and gravy, mashed potatoes, garlic bread, corn, French toast sticks, and fresh fruit",
         "items": [
           "Meatballs in gravy",
           "Mashed potatoes",
@@ -413,6 +417,8 @@
       },
       {
         "day": "Wednesday, Sept. 23",
+        "image": "./assets/lunch-wednesday.webp",
+        "imageAlt": "School lunch tray with French toast sticks, hash browns, a sausage patty, steamed carrots, and fresh fruit",
         "items": [
           "French toast sticks",
           "Hash browns",
@@ -423,6 +429,8 @@
       },
       {
         "day": "Thursday, Sept. 24",
+        "image": "./assets/lunch-thursday.webp",
+        "imageAlt": "School lunch tray with macaroni and cheese, stewed tomatoes, breaded chicken, and fresh fruit",
         "items": [
           "Macaroni & cheese",
           "Stewed tomatoes",
@@ -432,6 +440,8 @@
       },
       {
         "day": "Friday, Sept. 25",
+        "image": "./assets/lunch-friday.webp",
+        "imageAlt": "School lunch tray with a hamburger on a whole-grain roll, French fries, steamed peas, and fresh fruit",
         "items": [
           "Hamburger on WG roll",
           "French fries",

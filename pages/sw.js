@@ -1,4 +1,4 @@
-const CACHE = "abvm-grade2-parent-companion-v8";
+const CACHE = "abvm-grade2-parent-companion-v9";
 const SHELL = [
   "./",
   "./index.html",
@@ -12,7 +12,12 @@ const SHELL = [
   "./assets/hero-week.webp",
   "./assets/hero-calendar.webp",
   "./assets/hero-study.webp",
-  "./assets/hero-family.webp"
+  "./assets/hero-family.webp",
+  "./assets/lunch-monday.webp",
+  "./assets/lunch-tuesday.webp",
+  "./assets/lunch-wednesday.webp",
+  "./assets/lunch-thursday.webp",
+  "./assets/lunch-friday.webp"
 ];
 
 self.addEventListener("install", event => {

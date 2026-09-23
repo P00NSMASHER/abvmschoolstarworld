@@ -175,7 +175,10 @@ function eventRow(item){
 }
 function lunchCard(lunch){
   if(!lunch)return"";
-  return '<section class="lunch-card"><div class="lunch-art" aria-hidden="true">'+icon("lunch")+'</div><div><p>SCHOOL LUNCH</p><strong>'+esc((lunch.items||[]).join(", ").replace(/, ([^,]*)$/,", and $1"))+'</strong></div></section>';
+  const summary=(lunch.items||[]).join(", ").replace(/, ([^,]*)$/,", and $1");
+  return '<section class="lunch-card">'+
+    '<img class="lunch-photo" src="'+esc(lunch.image||"")+'" width="720" height="720" loading="lazy" decoding="async" alt="'+esc(lunch.imageAlt||("School lunch: "+summary))+'">'+
+    '<div class="lunch-card-copy"><p>SCHOOL LUNCH</p><strong>'+esc(summary)+'</strong></div></section>';
 }
 function weekPriority(){
   const next=currentTest();
@@ -265,7 +268,7 @@ function renderCalendar(){
     monthPanel+listPanel+'</section>'+
     '<section class="calendar-day-card"><div class="calendar-day-heading"><p>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</p><h2>'+esc(fmtDate(calendarDay))+'</h2></div>'+
     (events.length?'<div class="calendar-event-list">'+events.map(e=>'<div><i class="'+kindClass(e)+'"></i><span><strong>'+esc(e.label)+'</strong></span></div>').join(""):'<p class="calendar-empty">No special school events are listed for this date.</p>')+
-    (lunch?'<div class="calendar-lunch"><span>'+icon("lunch")+'</span><div><b>School Lunch</b><p>'+esc((lunch.items||[]).join(", ").replace(/, ([^,]*)$/,", and $1"))+'</p></div></div>':'')+'</section>'+
+    (lunch?'<div class="calendar-lunch"><img class="calendar-lunch-photo" src="'+esc(lunch.image||"")+'" width="720" height="720" loading="lazy" decoding="async" alt="'+esc(lunch.imageAlt||"School lunch")+'"><div><b>School Lunch</b><p>'+esc((lunch.items||[]).join(", ").replace(/, ([^,]*)$/,", and $1"))+'</p></div></div>':'')+'</section>'+
     '</div></div>';
 }
 function subjectCard(id,klass,title,icon,subj){
