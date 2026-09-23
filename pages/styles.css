@@ -324,7 +324,6 @@ a{color:inherit}
 .deadline-icon{width:38px;height:38px;border-radius:12px;background:#fff;display:grid;place-items:center;font-size:20px}
 .today-deadline p{margin:0;color:#8a6200;font-size:9px;font-weight:950;letter-spacing:.08em}.today-deadline strong{display:block;color:#37485a;font-size:13px}.today-deadline small{display:block;color:var(--muted);font-size:10.5px;margin-top:2px}
 .homework-dashboard{margin-top:0}
-.week-homework{margin-bottom:12px}
 .selected-special{display:grid;grid-template-columns:36px 1fr;gap:9px;align-items:center;background:#eef6fd;border-radius:13px;padding:9px 10px;margin-top:12px}
 .selected-special>span{width:32px;height:32px;border-radius:10px;background:#dceeff;display:grid;place-items:center;color:#0b61b7}.selected-special small{display:block;color:#5e7180;font-size:9px;font-weight:900}.selected-special strong{display:block;color:var(--navy);font-size:12px;margin-top:2px}
 .word-subhead{margin:14px 0 5px;color:var(--navy);font-size:13px}
@@ -438,12 +437,14 @@ button:focus-visible,a:focus-visible{outline:3px solid #f0ad42;outline-offset:3p
 .lunch-card-copy{align-self:center;padding:14px 15px}
 .week-hero-note{right:24px;bottom:22px;width:190px;background:rgba(255,255,255,.86);color:var(--navy);transform:none;font-family:inherit;text-align:left;padding:11px 13px;border:1px solid rgba(18,58,99,.1)}
 .week-hero-note span{display:block;color:#677885;font-size:8px;font-weight:900;letter-spacing:.13em}.week-hero-note b{display:block;margin-top:2px;font-size:12px}
-.day-picker{gap:8px}.day-picker button{min-height:68px;border-color:#d9dedf;border-radius:16px;box-shadow:none}.day-picker button:hover{border-color:#8daabd;background:#f5f9fb}.day-picker button.active{background:var(--navy);border-color:var(--navy);box-shadow:0 5px 0 #0b2b49}
+.day-picker{gap:8px}.day-picker button{position:relative;min-height:68px;border-color:#d9dedf;border-radius:16px;box-shadow:none}.day-picker button:hover{border-color:#8daabd;background:#f5f9fb}.day-picker button.past:not(.active){background:#f7f7f4;color:#879098}.day-picker button.today:not(.active){border-color:#7995a6;color:var(--navy)}.day-picker button.today:not(.active)::after{content:"";position:absolute;left:50%;bottom:5px;width:5px;height:5px;border-radius:50%;background:#587b8f;transform:translateX(-50%)}.day-picker button.active{background:var(--navy);border-color:var(--navy);box-shadow:0 5px 0 #0b2b49}
 .day-detail::before{background:#69876b}
 .day-detail-title h2{font-family:ui-serif,Georgia,serif;color:var(--navy)}
+.school-day-pill.closed{background:#f6e8e7;color:#8b4a45}
 .selected-special{background:#eaf2f5}.selected-special>span{background:#dce9ee;color:var(--navy)}
 .reminder-strip{background:#f8eaea;border-color:#e4c0c0}.reminder-strip .bang{background:#a6555e}
 .future-card{background:#edf4f7;border-color:#c8dbe3}
+.screen[aria-label="This week"] .day-detail,.screen[aria-label="This week"] .lunch-card{margin-bottom:12px}
 .calendar-card{margin-top:-22px;background:#fff}
 .calendar-heading{text-align:center}
 .month-arrow{min-width:44px;min-height:44px;background:#edf3f5}
@@ -498,8 +499,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #f0ad42;outline-offset:3p
   .screen[aria-label="Today"] .today-deadline{margin:0}.screen[aria-label="Today"] .lunch-card{margin:0}
   .screen[aria-label="This week"] .content{display:grid;grid-template-columns:minmax(0,.88fr) minmax(0,1.12fr);gap:14px 18px;align-items:start}
   .screen[aria-label="This week"] .day-picker{grid-column:1/-1}
-  .screen[aria-label="This week"] .week-homework{grid-column:2;grid-row:2/span 3;margin:0}
-  .screen[aria-label="This week"] .day-detail{grid-column:1;grid-row:2}.screen[aria-label="This week"] .lunch-card{grid-column:1;grid-row:3}.screen[aria-label="This week"] .reminder-strip,.screen[aria-label="This week"] .future-card{grid-column:1/-1;margin-top:0}
+  .screen[aria-label="This week"] .day-detail{grid-column:1;grid-row:2/span 2;margin:0}.screen[aria-label="This week"] .lunch-card{grid-column:2;grid-row:2;margin:0}.screen[aria-label="This week"] .reminder-strip{grid-column:2;grid-row:3;margin:0}.screen[aria-label="This week"] .future-card{grid-column:1/-1;margin-top:0}
   .calendar-wrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(290px,.75fr);gap:18px;align-items:start}.calendar-day-card{margin-top:-22px}
   .study-content{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;align-items:start}.study-intro,.study-at-a-glance,.study-tip{grid-column:1/-1}.study-at-a-glance{margin-top:0}.study-content>.calm-card{grid-column:1/-1;margin:0}.study-content>.subject-card{margin-bottom:0}
   .family-content{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;align-items:start}.family-priority,.family-stats,.install-card{grid-column:1/-1}.family-stats{margin:0}.family-card,.reading-policy{margin:0}.family-content>.family-card:nth-last-of-type(1){grid-column:1/-1}

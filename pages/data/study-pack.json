@@ -1,19 +1,22 @@
 {
-  "source": "ABVM Grade 2 verified public teacher and school sources",
+  "source": "ABVM Grade 2 public teacher pages",
   "delivery": "verified",
   "syncPolicy": {
-    "intervalHours": 4
+    "intervalHours": 24,
+    "dailyAt": "1:00 PM",
+    "timeZone": "America/New_York",
+    "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-09-22T13:48:00-04:00",
-  "sourceCapturedAt": "2026-09-22T13:48:00-04:00",
+  "sourceLastSeenAt": "2026-09-23T17:25:17.136Z",
+  "sourceCapturedAt": "2026-09-23T16:52:55.599Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
-    "sourceHash": "verified-public-2026-09-22-v3",
-    "sourceCapturedAt": "2026-09-22T13:48:00-04:00",
-    "generatedAt": "2026-09-22T13:48:00-04:00",
+    "sourceHash": "teacher-pages-d82a1f1cade42d88c440",
+    "sourceCapturedAt": "2026-09-23T16:52:55.599Z",
+    "generatedAt": "2026-09-23T17:25:17.136Z",
     "weekLabel": "Week of September 21, 2026",
-    "summary": "Current Grade 2 teacher-site material for the week of Sept. 21: Homework page lists a Spelling Choice Board activity, a two-sided Math paper, reading, and folder/forms tasks. Reading Work now lists “Little Flap Learns to Fly,” new sight words, two-letter consonant blends, and new vocabulary. Tests lists Math Sept. 22, STAR reading Sept. 23, and Spelling/Handwriting Sept. 25.",
+    "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity”, Math “Page 10”, Reading “Read”, and parent task “Complete forms; cover books”. Upcoming tests include Spelling (2-letter blends) / Handwriting on Friday, Sept. 25, Subtraction to 12 on Tuesday, Sept. 29, Grammar (types of sentences) on Wednesday, Sept. 30, and Spelling (short a / long a) / Handwriting on Friday, Oct. 2.",
     "subjects": [
       {
         "subject": "Reading / ELA",
@@ -22,7 +25,8 @@
           "Sight words: she, boy, he, small, were, what, girl, here, by, want",
           "Phonics: 2-letter consonant blends",
           "Vocabulary: action, afraid, depend, nervously, peered, perfectly, rescue, secret",
-          "Word structure: CVC words"
+          "Word structure: CVC words",
+          "Grammar: types of sentences (test Wednesday, Sept. 30)"
         ],
         "studyNotes": [
           "The current Reading Work page does not list a reading-comprehension skill."
@@ -34,7 +38,7 @@
           "Friday, Sept. 25 test focus: 2-letter blends"
         ],
         "studyNotes": [
-          "The public Tests page confirms the skill and test date, but a current spelling-word list was not found on the public pages checked."
+          "The Weekly Spelling List page currently has no word list posted."
         ]
       },
       {
@@ -45,25 +49,28 @@
           "Chapter 1: God is the Giver of Gifts"
         ],
         "studyNotes": [
-          "Jesus is God's greatest gift to us; he tells us about God and teaches us how to live.",
-          "Jesus gave us the new life of grace.",
-          "Jesus died for our sins; He is our Savior.",
-          "Jesus is like a seed: a seed dies for a new plant to grow, and Jesus died so we can have new life (grace).",
-          "We are called to be disciples, friends of Jesus.",
-          "Mary is Jesus' mother and the mother of the Church, so she is our mother too.",
-          "We are made in God's image and likeness; we can think, choose, and love.",
-          "The Trinity is three persons in one God: Father, Son, and Holy Spirit.",
-          "We use our senses to enjoy God's gifts, care for creation, and thank God for creation."
+          "Jesus is God's greatest gift to us; he tells us about God and teaches us how to live",
+          "Jesus gave us the new life of grace",
+          "Jesus died for our sins; He is our Savior",
+          "Jesus is like a seed. A seed dies for a new plant to grow — Jesus died so we can have new life (grace)",
+          "We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too",
+          "The parable of the vine and the branches",
+          "Gifts from God",
+          "We are made in God's image and likeness; we can think, choose, love",
+          "Trinity: 3 persons in one God (Father, Son, Holy Spirit)",
+          "We use our senses to enjoy God's gifts",
+          "It is our responsibility to take care of God's gifts of creation",
+          "We thank God for His gift of creation"
         ]
       },
       {
         "subject": "Math",
         "topics": [
-          "Chapter 1A: addition"
+          "Subtraction to 12"
         ],
         "studyNotes": [
-          "The Tests page lists the Chapter 1A addition test for Tuesday, Sept. 22.",
-          "The current Homework page assigns a two-sided Math paper."
+          "The Tests page lists Subtraction to 12 for Tuesday, Sept. 29.",
+          "The current Homework page assigns Page 10."
         ]
       },
       {
@@ -100,34 +107,45 @@
         "kind": "assessment"
       },
       {
-        "label": "Stationary money due ($17)",
-        "date": "Wednesday, Sept. 23",
-        "kind": "deadline"
-      },
-      {
         "label": "Mass",
         "date": "Wednesday, Sept. 23",
         "kind": "school event"
       },
       {
-        "label": "Pretzel delivery after lunch",
+        "date": "Wednesday, Sept. 23",
+        "label": "Stationary money due ($17)",
+        "source": "teacher-home",
+        "kind": "deadline"
+      },
+      {
         "date": "Thursday, Sept. 24",
+        "label": "Pretzel delivery",
+        "source": "teacher-home",
         "kind": "school event"
       },
       {
-        "label": "Spelling (2-letter blends) / Handwriting test",
         "date": "Friday, Sept. 25",
-        "kind": "test"
-      },
-      {
-        "label": "Dress Down Day — donation for a local charity",
-        "date": "Friday, Sept. 25",
+        "label": "Dress Down day — donation for a local charity",
+        "source": "teacher-home",
         "kind": "school event"
       },
       {
-        "label": "Lego Club — 3–4 pm (students who signed up)",
         "date": "Friday, Sept. 25",
+        "label": "Lego Club (for those who are signed up)",
+        "source": "teacher-home",
         "kind": "club"
+      },
+      {
+        "date": "Friday, Sept. 25",
+        "label": "Spelling (2-letter blends) / Handwriting",
+        "kind": "test",
+        "source": "teacher-tests"
+      },
+      {
+        "date": "Tuesday, Sept. 29",
+        "label": "Subtraction to 12",
+        "kind": "test",
+        "source": "teacher-tests"
       },
       {
         "label": "Mass; Communication Folder",
@@ -135,44 +153,28 @@
         "kind": "school event"
       },
       {
-        "label": "Picture Day",
+        "date": "Wednesday, Sept. 30",
+        "label": "Grammar (types of sentences)",
+        "kind": "test",
+        "source": "teacher-tests"
+      },
+      {
         "date": "Thursday, Oct. 1",
+        "label": "Picture Day",
+        "source": "teacher-home",
         "kind": "school event"
       },
       {
-        "label": "HSA virtual meeting — 7 PM",
         "date": "Thursday, Oct. 1",
+        "label": "HSA meeting",
+        "source": "teacher-home",
         "kind": "meeting"
       },
       {
-        "label": "Spelling (short a / long a) / Handwriting test",
         "date": "Friday, Oct. 2",
-        "kind": "test"
-      },
-      {
-        "label": "Mid-term Progress Reports",
-        "date": "Thursday, Oct. 8",
-        "kind": "school"
-      },
-      {
-        "label": "12:00 dismissal",
-        "date": "Friday, Oct. 9",
-        "kind": "schedule change"
-      },
-      {
-        "label": "No School",
-        "date": "Monday, Oct. 12",
-        "kind": "holiday"
-      },
-      {
-        "label": "K–4 Parent/Teacher Conferences",
-        "date": "Tuesday, Oct. 20",
-        "kind": "conference"
-      },
-      {
-        "label": "Lego Club (students who signed up)",
-        "date": "Friday, Oct. 23",
-        "kind": "club"
+        "label": "Spelling (short a / long a) / Handwriting",
+        "kind": "test",
+        "source": "teacher-tests"
       },
       {
         "label": "Welcome Back Dance (K–4) — 6–8 PM, ABVM Gym",
@@ -185,9 +187,32 @@
         "kind": "school event"
       },
       {
+        "label": "Mid-term Progress Reports",
+        "date": "Thursday, Oct. 8",
+        "kind": "school"
+      },
+      {
+        "date": "Friday, Oct. 9",
+        "label": "12:00 Dismissal",
+        "source": "teacher-home",
+        "kind": "schedule change"
+      },
+      {
+        "date": "Monday, Oct. 12",
+        "label": "No School",
+        "source": "teacher-home",
+        "kind": "holiday"
+      },
+      {
         "label": "Schwartz Farm Family Night RSVP due for $5/student voucher",
         "date": "Friday, Oct. 16",
         "kind": "deadline"
+      },
+      {
+        "date": "Monday–Tuesday, Oct. 19–20",
+        "label": "Parent / Teacher conferences (K-4 Tues. 10/20)",
+        "source": "teacher-home",
+        "kind": "conference"
       },
       {
         "label": "Schwartz Farm Family Night — ABVM s’mores 6–7 PM",
@@ -195,23 +220,20 @@
         "kind": "school event"
       },
       {
+        "date": "Friday, Oct. 23",
+        "label": "Lego Club (for those who are signed up)",
+        "source": "teacher-home",
+        "kind": "club"
+      },
+      {
         "label": "Halloween Party",
         "date": "Friday, Oct. 30",
         "kind": "school event"
       },
       {
-        "label": "Santa Workshop",
-        "date": "Monday, Dec. 14",
-        "kind": "school event"
-      },
-      {
-        "label": "Christmas Party",
-        "date": "Tuesday, Dec. 22",
-        "kind": "school event"
-      },
-      {
-        "label": "HSA meeting",
         "date": "Thursday, Nov. 5",
+        "label": "HSA Meeting",
+        "source": "teacher-home",
         "kind": "meeting"
       },
       {
@@ -220,8 +242,9 @@
         "kind": "schedule change"
       },
       {
-        "label": "Lego Club (students who signed up)",
         "date": "Friday, Nov. 13",
+        "label": "Lego Club (for those who are signed up)",
+        "source": "teacher-home",
         "kind": "club"
       },
       {
@@ -235,14 +258,26 @@
         "kind": "holiday"
       },
       {
-        "label": "HSA meeting",
         "date": "Thursday, Dec. 3",
+        "label": "HSA meeting",
+        "source": "teacher-home",
         "kind": "meeting"
       },
       {
-        "label": "Lego Club (students who signed up)",
+        "label": "Santa Workshop",
+        "date": "Monday, Dec. 14",
+        "kind": "school event"
+      },
+      {
         "date": "Friday, Dec. 18",
+        "label": "Lego Club (for those who are signed up)",
+        "source": "teacher-home",
         "kind": "club"
+      },
+      {
+        "label": "Christmas Party",
+        "date": "Tuesday, Dec. 22",
+        "kind": "school event"
       },
       {
         "label": "12:00 dismissal",
@@ -265,8 +300,9 @@
         "kind": "school"
       },
       {
-        "label": "HSA meeting",
         "date": "Thursday, Jan. 7",
+        "label": "HSA meeting",
+        "source": "teacher-home",
         "kind": "meeting"
       },
       {
@@ -285,8 +321,9 @@
         "kind": "holiday"
       },
       {
-        "label": "Lego Club (students who signed up)",
         "date": "Friday, Jan. 29",
+        "label": "Lego Club (for those who are signed up)",
+        "source": "teacher-home",
         "kind": "club"
       },
       {
@@ -295,8 +332,9 @@
         "kind": "school event"
       },
       {
-        "label": "HSA meeting",
         "date": "Thursday, Feb. 4",
+        "label": "HSA meeting",
+        "source": "teacher-home",
         "kind": "meeting"
       },
       {
@@ -310,8 +348,9 @@
         "kind": "holiday"
       },
       {
-        "label": "Lego Club (students who signed up)",
         "date": "Friday, Feb. 19",
+        "label": "Lego Club (for those who are signed up)",
+        "source": "teacher-home",
         "kind": "club"
       },
       {
@@ -330,8 +369,9 @@
         "kind": "schedule change"
       },
       {
-        "label": "Lego Club (students who signed up)",
         "date": "Friday, Mar. 19",
+        "label": "Lego Club (for those who are signed up)",
+        "source": "teacher-home",
         "kind": "club"
       },
       {
@@ -345,8 +385,9 @@
         "kind": "holiday"
       },
       {
-        "label": "HSA meeting",
         "date": "Thursday, Apr. 1",
+        "label": "HSA meeting",
+        "source": "teacher-home",
         "kind": "meeting"
       },
       {
@@ -355,13 +396,15 @@
         "kind": "school"
       },
       {
-        "label": "HSA meeting",
         "date": "Thursday, May 6",
+        "label": "HSA meeting",
+        "source": "teacher-home",
         "kind": "meeting"
       },
       {
-        "label": "Lego Club (students who signed up)",
         "date": "Friday, May 14",
+        "label": "Lego Club (for those who are signed up)",
+        "source": "teacher-home",
         "kind": "club"
       },
       {
@@ -502,7 +545,7 @@
       {
         "day": "Current Homework posting",
         "subject": "Math",
-        "task": "Paper (2 sides)",
+        "task": "Page 10",
         "due": "Current posting"
       },
       {
@@ -661,10 +704,9 @@
     ],
     "sourceSufficient": true,
     "gaps": [
-      "The public teacher Homework page does not show a date, so its assignments are labeled as the current posting rather than assigned to a specific weekday.",
-      "The public Tests page confirms a Sept. 25 Spelling/Handwriting test on 2-letter blends, but a current spelling-word list was not found on the public pages checked.",
-      "The current Reading Work page leaves Reading Comprehension blank, so no comprehension target is invented.",
-      "The automated source bridge is still returning the Sept. 17 pack; the GitHub workflow is being hardened so older source timestamps cannot replace this newer verified pack."
+      "The public teacher Homework page does not show a date, so assignments are labeled as the current posting and refreshed daily.",
+      "The Weekly Spelling List page currently has no word list posted.",
+      "The current Reading Work page leaves Reading Comprehension blank, so no comprehension target is invented."
     ],
     "parentNotices": [
       "HSA virtual meeting is Thursday, Oct. 1 at 7 PM.",
@@ -674,6 +716,46 @@
       "Picture backgrounds: 1 Universe, 2 Pink Mist, 3 Fall Leaves, 4 Traditional, 5 School Spirit, 6 Patriotic, 7 Dinosaur, 8 Pastel, 9 Bookcase, 10 Blue Brush, 11 Laser. Backgrounds 1, 2, and 11 are marked NEW.",
       "Schwartz Farm Family Night is Oct. 23 at 315 Schwartz Lane, Hegins. Farm hours are 11 AM–9 PM; ABVM s’mores are 6–7 PM; RSVP by Oct. 16 for a $5/student voucher. Cash only; ATM available.",
       "Christmas Caroling date is TBD."
-    ]
-  }
+    ],
+    "sourceCheckedAt": "2026-09-23T17:25:17.136Z"
+  },
+  "sourceLastCheckedAt": "2026-09-23T17:25:17.136Z",
+  "sourcePages": [
+    {
+      "title": "Home",
+      "url": "https://sites.google.com/view/abvmgr2/home",
+      "checkedAt": "2026-09-23T17:25:17.136Z",
+      "contentHash": "de608ace5654e2ac226d0e18d5634bb07737a81c86a200dafd3fc2c41013aa0b"
+    },
+    {
+      "title": "Homework",
+      "url": "https://sites.google.com/view/abvmgr2/homework",
+      "checkedAt": "2026-09-23T17:25:17.136Z",
+      "contentHash": "946e9928defafa61c2be38edfd98a64b6c5888867e62391e851795bfd3c8b80e"
+    },
+    {
+      "title": "Reading Work",
+      "url": "https://sites.google.com/view/abvmgr2/reading-work",
+      "checkedAt": "2026-09-23T17:25:17.136Z",
+      "contentHash": "ab2e37c8a03e6d0c4cf610a1f366bfe54112d93842b594866d2f430358c513e3"
+    },
+    {
+      "title": "Weekly Spelling List",
+      "url": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
+      "checkedAt": "2026-09-23T17:25:17.136Z",
+      "contentHash": "50a2075de79a2447360bb0784b9369af130e9f8069c1a24de4577788a1fb7bf5"
+    },
+    {
+      "title": "Tests",
+      "url": "https://sites.google.com/view/abvmgr2/tests",
+      "checkedAt": "2026-09-23T17:25:17.136Z",
+      "contentHash": "8f8b60e907d95806906e574855a3077809d70eaa258e601d1b54afbc77692762"
+    },
+    {
+      "title": "Religion",
+      "url": "https://sites.google.com/view/abvmgr2/religion",
+      "checkedAt": "2026-09-23T17:25:17.136Z",
+      "contentHash": "08c5d543509a94caf4e19b6f8262b95978b220ab248a987bb6cacca07c1c64b4"
+    }
+  ]
 }

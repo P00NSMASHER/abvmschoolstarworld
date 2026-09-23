@@ -51,7 +51,11 @@ function eventSpan(text){
   return{start,end};
 }
 function sameDay(a,b){return a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
-function today(){const d=new Date();d.setHours(12,0,0,0);return d}
+function today(){
+  const parts=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",year:"numeric",month:"numeric",day:"numeric"}).formatToParts(new Date());
+  const value=Object.fromEntries(parts.map(part=>[part.type,part.value]));
+  return new Date(Number(value.year),Number(value.month)-1,Number(value.day),12);
+}
 function fmtDate(d){return d?WEEKDAY[d.getDay()]+", "+MONTHS[d.getMonth()]+" "+d.getDate():""}
 function fmtShort(d){return d?WEEKDAY[d.getDay()].slice(0,3)+" "+d.getDate():""}
 function schoolYearMonthDate(month,day){
@@ -68,12 +72,25 @@ function scene(kind,kicker,title,subtitle,light=true,extra=""){
     '<div class="scene-title '+(light?'light':'ink')+'"><div class="section-label">'+esc(kicker)+'</div><h1>'+esc(title)+'</h1>'+(subtitle?'<p>'+esc(subtitle)+'</p>':'')+'</div>'+extra+'</section>';
 }
 function freshness(){
-  const raw=envelope?.sourceLastSeenAt||pack?.sourceCapturedAt||pack?.generatedAt;
+  const checked=envelope?.sourceLastCheckedAt||pack?.sourceCheckedAt;
+  const raw=checked||envelope?.sourceLastSeenAt||pack?.sourceCapturedAt||pack?.generatedAt;
   const d=raw?new Date(raw):null;
+  const isToday=d&&!Number.isNaN(d.getTime())&&schoolDayKey(d)===schoolDayKey(new Date());
   const label=d&&!Number.isNaN(d.getTime())
-    ?"Verified&nbsp;&nbsp;"+d.toLocaleDateString(undefined,{month:"short",day:"numeric",timeZone:"America/New_York"})+" at "+d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit",timeZone:"America/New_York"})+" ET"
-    :"Verified";
+    ?(checked?"Checked ":"Verified ")+(isToday?"today":d.toLocaleDateString(undefined,{month:"short",day:"numeric",timeZone:"America/New_York"}))+" at "+d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit",timeZone:"America/New_York"})+" ET"
+    :"Verified school information";
   return '<div class="freshness"><span></span>'+label+'</div>';
+}
+function schoolDayKey(date){
+  if(!date||Number.isNaN(date.getTime()))return"";
+  const parts=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(date);
+  const value=Object.fromEntries(parts.map(part=>[part.type,part.value]));
+  return value.year+"-"+value.month+"-"+value.day;
+}
+function homeworkStatus(){
+  const raw=envelope?.sourceLastCheckedAt||pack?.sourceCheckedAt;
+  const d=raw?new Date(raw):null;
+  return d&&schoolDayKey(d)===schoolDayKey(new Date())?"Checked today":"Latest teacher posting";
 }
 function kindClass(item){
   const k=(item?.kind||"").toLowerCase(),l=(item?.label||"").toLowerCase();
@@ -112,6 +129,12 @@ function eventIsPast(item,ref=today()){const span=eventSpan(item?.date);return s
 function currentReminders(){
   const now=today();
   return(pack?.reminders||[]).filter(text=>{const span=eventSpan(text);return !span||span.end>=now});
+}
+function reminderForDate(date){
+  const dated=(pack?.reminders||[]).find(text=>{const span=eventSpan(text);return span&&date>=span.start&&date<=span.end});
+  if(dated)return dated;
+  const deadline=eventItemsForDate(date).find(item=>kindClass(item)==="due");
+  return deadline?deadline.label+".":"Check the homework folder and reading log.";
 }
 function currentParentNotices(){
   const now=today(),picture=(pack?.importantDates||[]).find(x=>/picture day/i.test(x.label||""));
@@ -204,7 +227,7 @@ function renderToday(){
   const content='<div class="content overlap">'+
     '<section class="date-hero-card"><div class="big-date"><strong>'+WEEKDAY[d.getDay()].slice(0,3).toUpperCase()+'</strong><span>'+d.getDate()+'</span><small>Today</small></div><div class="date-hero-copy"><p>TODAY AT SCHOOL</p><h2>'+esc(headline)+'</h2><span>'+esc(subline)+'</span></div></section>'+
     deadlineHtml+
-    '<section class="gold-card glass-card homework-dashboard"><div class="checklist-title"><h3>Homework</h3><span class="edit-pill">Current teacher posting</span></div><div class="task-list">'+(pack?.homework||[]).map(taskHtml).join("")+'</div></section>'+
+    '<section class="gold-card glass-card homework-dashboard"><div class="checklist-title"><h3>Homework</h3><span class="edit-pill">'+homeworkStatus()+'</span></div><div class="task-list">'+(pack?.homework||[]).map(taskHtml).join("")+'</div></section>'+
     lunchCard(lunch)+
     '</div>';
   stack().innerHTML='<div class="screen" role="region" aria-label="Today">'+scene("today","TODAY",fmtDate(d),priority.title,false)+freshness()+content+'</div>';
@@ -213,21 +236,27 @@ function renderWeek(){
   const days=weekDays();
   if(!selectedDay||!days.some(d=>sameDay(d,selectedDay)))selectedDay=days.find(d=>sameDay(d,today()))||days[0];
   const events=eventItemsForDate(selectedDay),lunch=lunchForDate(selectedDay),special=specialForDate(selectedDay);
-  const picker=days.map(d=>'<button class="'+(sameDay(d,selectedDay)?'active':'')+'" type="button" data-day="'+d.toISOString()+'" aria-pressed="'+sameDay(d,selectedDay)+'"><span>'+WEEKDAY[d.getDay()].slice(0,3)+'</span><strong>'+d.getDate()+'</strong></button>').join("");
+  const now=today();
+  const picker=days.map(d=>{
+    const active=sameDay(d,selectedDay),isToday=sameDay(d,now),past=d<now;
+    const classes=[active?"active":"",isToday?"today":"",past?"past":""].filter(Boolean).join(" ");
+    return '<button class="'+classes+'" type="button" data-day="'+d.toISOString()+'" aria-label="'+esc(fmtDate(d)+(isToday?", today":""))+'" aria-pressed="'+active+'"><span>'+WEEKDAY[d.getDay()].slice(0,3)+'</span><strong>'+d.getDate()+'</strong></button>';
+  }).join("");
   const future=(pack?.importantDates||[]).map(x=>({x,span:eventSpan(x.date)}))
-    .filter(o=>o.span&&o.span.end>selectedDay)
+    .filter(o=>o.span&&o.span.start>selectedDay)
     .sort((a,b)=>a.span.start-b.span.start).slice(0,4)
     .map(o=>({x:o.x,d:o.span.start<selectedDay?selectedDay:o.span.start}));
+  const noSchool=events.some(item=>kindClass(item)==="closed"),weekend=[0,6].includes(selectedDay.getDay());
+  const dayStatus=noSchool?"No school":weekend?"Weekend":"School day";
   const note='<div class="week-hero-note"><span>CALM PLAN</span><b>Five days, one clear view</b></div>';
-  const homework='<section class="gold-card week-homework"><div class="checklist-title"><h3>Current homework posting</h3><span class="edit-pill">Applies until teacher updates it</span></div><div class="task-list">'+(pack?.homework||[]).map(taskHtml).join("")+'</div></section>';
   stack().innerHTML='<div class="screen" role="region" aria-label="This week">'+scene("week","YOUR SCHOOL PLAN","This Week","Tap a day for events, lunch, and specials",false,note)+
-    '<div class="content overlap"><div class="day-picker">'+picker+'</div>'+homework+
-    '<section class="day-detail"><div class="day-detail-inner"><div class="day-detail-title"><div><p>'+MONTHS[selectedDay.getMonth()].toUpperCase()+'</p><h2>'+esc(fmtDate(selectedDay))+'</h2></div><span class="school-day-pill">School day</span></div>'+
+    '<div class="content overlap"><div class="day-picker">'+picker+'</div>'+
+    '<section class="day-detail"><div class="day-detail-inner"><div class="day-detail-title"><div><p>'+MONTHS[selectedDay.getMonth()].toUpperCase()+'</p><h2>'+esc(fmtDate(selectedDay))+'</h2></div><span class="school-day-pill '+(noSchool||weekend?'closed':'')+'">'+dayStatus+'</span></div>'+
     (special?'<div class="selected-special"><span>'+icon("star")+'</span><div><small>SPECIAL</small><strong>'+esc(special)+'</strong></div></div>':'')+
     '<div class="event-stack" style="margin-top:14px">'+(events.length?events.map(eventRow).join(""):'<div class="empty-note">No special school events are listed for this date.</div>')+'</div></div></section>'+
     lunchCard(lunch)+
-    '<section class="reminder-strip"><span class="bang">!</span><p><strong>Don’t forget</strong>'+esc(currentReminders()[0]||"Check the homework folder and reading log.")+'</p></section>'+
-    '<section class="future-card"><h3>Coming soon</h3>'+future.map(o=>'<div class="future-row"><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join("")+'</section></div></div>';
+    '<section class="reminder-strip"><span class="bang">!</span><p><strong>Don’t forget</strong>'+esc(reminderForDate(selectedDay))+'</p></section>'+
+    '<section class="future-card"><h3>Coming soon</h3>'+(future.length?future.map(o=>'<div class="future-row"><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join(""):'<div class="empty-note">Nothing else is posted after this day yet.</div>')+'</section></div></div>';
 }
 function monthGrid(year,month){
   const first=new Date(year,month,1,12),last=new Date(year,month+1,0,12),blanks=first.getDay();
