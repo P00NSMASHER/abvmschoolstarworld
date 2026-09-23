@@ -1,6 +1,6 @@
 (()=>{"use strict";
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)], stack=()=>$("#app-content");
-let envelope=null, pack=null, activeTab="today", selectedDay=null, calendarDay=null, calendarOffset=0, calendarMode="month";
+let envelope=null, pack=null, activeTab="today", selectedDay=null, calendarDay=null, calendarOffset=0, calendarMode="list";
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -121,12 +121,23 @@ function upcomingTests(limit=6){
     .map(o=>({x:o.x,d:o.span.start<now?new Date(now):o.span.start,span:o.span}));
 }
 function currentTest(){return upcomingTests(1)[0]||null}
+function nextDeadline(){
+  const now=today();
+  return(pack?.importantDates||[]).map(x=>({x,span:eventSpan(x.date)}))
+    .filter(o=>o.span&&o.span.end>=now&&kindClass(o.x)==="due")
+    .sort((a,b)=>a.span.start-b.span.start)[0]||null;
+}
 function subject(re){return(pack?.subjects||[]).find(s=>re.test(s.subject||""))}
 function readingSubject(){return subject(/Reading \/ ELA/i)}
 function religionSubject(){return subject(/^Religion$/i)}
 function mathSubject(){return subject(/^Math$/i)}
 function spellingSubject(){return subject(/Spelling/i)}
 function readingRoutine(){return subject(/Reading Routine/i)?.topics?.[0]||"Read for 20 minutes every day."}
+function specialForDate(date){
+  const prefix=WEEKDAY[date.getDay()]+":";
+  const line=(subject(/^Specials$/i)?.topics||[]).find(x=>String(x).startsWith(prefix));
+  return line?String(line).slice(prefix.length).trim():"";
+}
 function checkKey(item,index){return"abvm-gold:"+String(pack?.sourceHash||"pack")+":"+index+":"+(item?.task||"")}
 function checked(item,index){return localStorage.getItem(checkKey(item,index))==="1"}
 function taskHtml(item,index){
@@ -160,27 +171,38 @@ function weekPriority(){
 }
 
 function renderToday(){
-  const d=today(),events=eventItemsForDate(d),lunch=lunchForDate(d),priority=weekPriority();
-  const headline=events.filter(e=>kindClass(e)==="test").map(e=>e.label).join(" and ")||events[0]?.label||"School day";
+  const d=today(),events=eventItemsForDate(d),lunch=lunchForDate(d),priority=weekPriority(),deadline=nextDeadline();
+  const mainEvent=events.find(e=>kindClass(e)==="test")||events[0]||null;
+  const otherEvents=events.filter(e=>e!==mainEvent);
+  const headline=mainEvent?.label||"Normal school day";
+  const subline=otherEvents.length?otherEvents.map(e=>e.label).join(" · "):"Stay with the current homework and reading routine.";
+  const deadlineHtml=deadline
+    ?'<section class="today-deadline"><span class="deadline-icon">📌</span><div><p>NEXT DEADLINE</p><strong>'+esc(deadline.x.label)+'</strong><small>'+esc(deadline.x.date||fmtShort(deadline.span.start))+'</small></div></section>'
+    :'<section class="today-deadline clear"><span class="deadline-icon">✓</span><div><p>NEXT DEADLINE</p><strong>No posted deadline due</strong><small>Keep the normal school routine.</small></div></section>';
   const content='<div class="content overlap">'+
-    '<section class="date-hero-card"><div class="big-date"><strong>'+WEEKDAY[d.getDay()].slice(0,3).toUpperCase()+'</strong><span>'+d.getDate()+'</span><small>Today at School</small></div><div class="date-hero-copy"><p>TODAY AT SCHOOL</p><h2>'+esc(headline)+'</h2><span>'+esc(events.find(e=>kindClass(e)==="due")?.label||"Stay with the current homework and reading routine.")+'</span></div></section>'+
-    '<section class="gold-card glass-card" style="margin-top:13px"><div class="section-label">'+esc(fmtDate(d))+'</div><div class="event-stack" style="margin-top:10px">'+(events.length?events.map(eventRow).join(""):'<div class="empty-note">No special school events are listed for this date.</div>')+'</div>'+
-    '<div class="checklist-title"><h3>Current teacher homework posting</h3><span class="edit-pill">Not dated by day</span></div><div class="task-list">'+(pack?.homework||[]).map(taskHtml).join("")+'</div></section>'+
+    '<section class="date-hero-card"><div class="big-date"><strong>'+WEEKDAY[d.getDay()].slice(0,3).toUpperCase()+'</strong><span>'+d.getDate()+'</span><small>Today</small></div><div class="date-hero-copy"><p>TODAY AT SCHOOL</p><h2>'+esc(headline)+'</h2><span>'+esc(subline)+'</span></div></section>'+
+    deadlineHtml+
+    '<section class="gold-card glass-card homework-dashboard"><div class="checklist-title"><h3>Homework</h3><span class="edit-pill">Current teacher posting</span></div><div class="task-list">'+(pack?.homework||[]).map(taskHtml).join("")+'</div></section>'+
     lunchCard(lunch)+
     '</div>';
-  stack().innerHTML='<div class="screen" role="region" aria-label="Today">'+scene("today","TODAY","School day",priority.title,true)+freshness()+content+'</div>';
+  stack().innerHTML='<div class="screen" role="region" aria-label="Today">'+scene("today","TODAY",fmtDate(d),priority.title,true)+freshness()+content+'</div>';
 }
 function renderWeek(){
   const days=weekDays();
   if(!selectedDay||!days.some(d=>sameDay(d,selectedDay)))selectedDay=days.find(d=>sameDay(d,today()))||days[0];
-  const events=eventItemsForDate(selectedDay),lunch=lunchForDate(selectedDay);
+  const events=eventItemsForDate(selectedDay),lunch=lunchForDate(selectedDay),special=specialForDate(selectedDay);
   const picker=days.map(d=>'<button class="'+(sameDay(d,selectedDay)?'active':'')+'" type="button" data-day="'+d.toISOString()+'"><span>'+WEEKDAY[d.getDay()].slice(0,3)+'</span><strong>'+d.getDate()+'</strong></button>').join("");
-  const future=(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)})).filter(o=>o.d&&o.d>selectedDay).sort((a,b)=>a.d-b.d).slice(0,4);
+  const future=(pack?.importantDates||[]).map(x=>({x,span:eventSpan(x.date)}))
+    .filter(o=>o.span&&o.span.end>selectedDay)
+    .sort((a,b)=>a.span.start-b.span.start).slice(0,4)
+    .map(o=>({x:o.x,d:o.span.start<selectedDay?selectedDay:o.span.start}));
   const note='<div class="week-hero-note">Small Steps<br><b>Big Progress!</b> ♡</div>';
-  stack().innerHTML='<div class="screen" role="region" aria-label="This week">'+scene("week","YOUR SCHOOL PLAN","This Week","Your School Plan",false,note)+
-    '<div class="content overlap"><div class="day-picker">'+picker+'</div><section class="day-detail"><div class="day-detail-inner"><div class="day-detail-title"><div><p>'+MONTHS[selectedDay.getMonth()].toUpperCase()+'</p><h2>'+esc(fmtDate(selectedDay))+'</h2></div><span class="school-day-pill">School day</span></div>'+
-    '<div class="event-stack" style="margin-top:14px">'+(events.length?events.map(eventRow).join(""):'<div class="empty-note">No special school events are listed for this date.</div>')+'</div>'+
-    '<div class="checklist-title"><h3>Current teacher homework posting</h3><span class="edit-pill">Not tied to '+esc(fmtShort(selectedDay))+'</span></div><div class="task-list">'+(pack?.homework||[]).map(taskHtml).join("")+'</div></div></section>'+
+  const homework='<section class="gold-card week-homework"><div class="checklist-title"><h3>Current homework posting</h3><span class="edit-pill">Applies until teacher updates it</span></div><div class="task-list">'+(pack?.homework||[]).map(taskHtml).join("")+'</div></section>';
+  stack().innerHTML='<div class="screen" role="region" aria-label="This week">'+scene("week","YOUR SCHOOL PLAN","This Week","Tap a day for events, lunch, and specials",false,note)+
+    '<div class="content overlap"><div class="day-picker">'+picker+'</div>'+homework+
+    '<section class="day-detail"><div class="day-detail-inner"><div class="day-detail-title"><div><p>'+MONTHS[selectedDay.getMonth()].toUpperCase()+'</p><h2>'+esc(fmtDate(selectedDay))+'</h2></div><span class="school-day-pill">School day</span></div>'+
+    (special?'<div class="selected-special"><span>★</span><div><small>SPECIAL</small><strong>'+esc(special)+'</strong></div></div>':'')+
+    '<div class="event-stack" style="margin-top:14px">'+(events.length?events.map(eventRow).join(""):'<div class="empty-note">No special school events are listed for this date.</div>')+'</div></div></section>'+
     lunchCard(lunch)+
     '<section class="reminder-strip"><span class="bang">!</span><p><strong>Don’t forget</strong>'+esc(currentReminders()[0]||"Check the homework folder and reading log.")+'</p></section>'+
     '<section class="future-card"><h3>Coming soon</h3>'+future.map(o=>'<div class="future-row"><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join("")+'</section></div></div>';
@@ -234,29 +256,28 @@ function subjectCard(id,klass,title,icon,subj){
 }
 function renderStudy(){
   const r=readingSubject(),rel=religionSubject(),math=mathSubject(),spell=spellingSubject();
-  const [mon,fri]=currentWeekRange();
-  const now=today();
+  const [,fri]=currentWeekRange(),now=today();
   const assessments=(pack?.importantDates||[]).map(x=>({x,span:eventSpan(x.date)}))
     .filter(o=>o.span&&o.span.end>=now&&o.span.start<=fri&&kindClass(o.x)==="test")
     .sort((a,b)=>a.span.start-b.span.start)
     .map(o=>({x:o.x,d:o.span.start<now?new Date(now):o.span.start,span:o.span}));
   const starActive=(pack?.importantDates||[]).some(x=>/star/i.test(x.label||"")&&eventSpan(x.date)?.end>=now);
-  const essentials=[{when:"Daily",label:readingRoutine(),icon:"📖",klass:"green"},...assessments.slice(0,4).map((o,i)=>({when:fmtShort(o.d),label:o.x.label,icon:["✝️","⭐","➕","✏️"][i]||"⭐",klass:["pink","yellow","blue","pink"][i]||"blue"}))];
+  const essentials=[{when:"Daily",label:readingRoutine(),icon:"📖",klass:"green"},...assessments.slice(0,4).map((o,i)=>({when:fmtShort(o.d),label:o.x.label,icon:["⭐","✏️","➕","✝️"][i]||"⭐",klass:["yellow","pink","blue","pink"][i]||"blue"}))];
   const sight=(r?.topics||[]).find(x=>/^Sight words:/i.test(x))?.replace(/^Sight words:\s*/i,"").split(",").map(x=>x.trim()).filter(Boolean)||[];
   const vocab=(pack?.vocabulary||[]).map(v=>v.term);
   stack().innerHTML='<div class="screen study-screen" role="region" aria-label="Study room">'+
-    scene("study","SMALL STEPS, CALM PRACTICE","Study Room","Small Steps, Calm Practice",false)+
-    '<div class="study-content"><section class="study-intro"><span class="study-bulb">💡</span><div><h2>Everything for this week</h2><p>All posted words and subjects stay together in this quick guide.</p></div><span class="chevron">›</span></section>'+
-    '<section class="study-at-a-glance"><div class="section-label">THIS WEEK’S ESSENTIALS</div><h2>Quick Look</h2>'+essentials.map(e=>'<div class="essential-row"><span class="essential-icon '+e.klass+'">'+e.icon+'</span><div><time>'+esc(e.when)+'</time><strong>'+esc(e.label)+'</strong></div><span class="chevron">›</span></div>').join("")+'</section>'+
-    '<nav class="study-jumps"><a href="#study-religion"><span class="jump-icon">✝️</span>Religion</a><a href="#study-reading"><span class="jump-icon">📖</span>Reading</a><a href="#study-math"><span class="jump-icon">🧮</span>Math</a><a href="#study-spelling"><span class="jump-icon">✏️</span>Spelling</a><a href="#study-sight"><span class="jump-icon">👁️</span>Sight words</a><a href="./game/"><span class="jump-icon">🎮</span>Game</a></nav>'+
-    subjectCard("study-religion","religion",rel?.subject||"Religion","✝️",rel)+
+    scene("study","THIS WEEK","Study","What Emma needs to know",false)+
+    '<div class="study-content"><section class="study-intro"><span class="study-bulb">💡</span><div><h2>Start with what is next</h2><p>Tests and daily reading are first. Subject details are below.</p></div></section>'+
+    '<section class="study-at-a-glance"><div class="section-label">TESTS & DAILY ROUTINE</div><h2>Quick Look</h2>'+essentials.map(e=>'<div class="essential-row"><span class="essential-icon '+e.klass+'">'+e.icon+'</span><div><time>'+esc(e.when)+'</time><strong>'+esc(e.label)+'</strong></div></div>').join("")+'</section>'+
     subjectCard("study-reading","reading","Reading","📖",r)+
-    subjectCard("study-math","math","Math","🧮",math)+
     subjectCard("study-spelling","spelling","Spelling and phonics","✏️",spell)+
-    '<section id="study-sight" class="subject-card sight"><div class="subject-head"><span class="icon">👁️</span><div><p>SIGHT WORDS</p><h2>Sight words</h2></div></div><div class="sight-cloud">'+sight.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></section>'+
-    '<section class="subject-card reading"><div class="subject-head"><span class="icon">💬</span><div><p>VOCABULARY</p><h2>Words to know</h2></div></div><div class="word-grid">'+vocab.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></section>'+
+    subjectCard("study-religion","religion",rel?.subject||"Religion","✝️",rel)+
+    subjectCard("study-math","math","Math","🧮",math)+
+    '<section id="study-words" class="subject-card sight words-card"><div class="subject-head"><span class="icon">💬</span><div><p>WORDS</p><h2>Sight words & vocabulary</h2></div></div>'+
+      '<h3 class="word-subhead">Sight words</h3><div class="sight-cloud">'+sight.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div>'+
+      '<h3 class="word-subhead">Vocabulary</h3><div class="word-grid">'+vocab.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></section>'+
     (starActive?'<section class="calm-card"><h3>STAR reminder</h3><p>Keep assessment preparation calm. Normal reading, normal routines, and a good night’s sleep are enough.</p></section>':'')+
-    '<a class="quest-launcher" href="./game/"><span class="quest-star">★</span><span><strong>School Star Quest</strong><small>Practice current material through short learning quests.</small></span><span class="chevron">›</span></a>'+
+    '<a class="quest-launcher" href="./game/"><span class="quest-star">★</span><span><strong>Practice in School Star Quest</strong><small>Use short learning quests after reviewing the teacher-posted material.</small></span><span class="chevron">›</span></a>'+
     '</div></div>';
 }
 function renderFamily(){
