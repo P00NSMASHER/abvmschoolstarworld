@@ -47,7 +47,7 @@ a{color:inherit}
 .skip-link{position:absolute;left:12px;top:8px;z-index:100;background:var(--navy);color:#fff;padding:9px 12px;border-radius:10px;transform:translateY(-150%);text-decoration:none;font-weight:900}
 .skip-link:focus{transform:none}
 .top-scene{
-  position:relative;min-height:250px;padding:18px 18px 26px;color:#fff;background-size:cover;background-position:center;overflow:hidden
+  position:relative;min-height:175px;padding:14px 16px 18px;color:#fff;background-size:cover;background-position:center;overflow:hidden
 }
 .top-scene::after{
   content:"";position:absolute;inset:0;background:
@@ -79,23 +79,23 @@ a{color:inherit}
   color:var(--navy);box-shadow:0 5px 14px rgba(20,49,78,.15);backdrop-filter:blur(12px)
 }
 .bell-button svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.scene-title{position:absolute;z-index:2;left:20px;right:20px;bottom:22px}
+.scene-title{position:absolute;z-index:2;left:18px;right:18px;bottom:16px}
 .scene-title.ink{color:#082e65;text-shadow:0 1px 0 rgba(255,255,255,.9)}
 .scene-title.light{color:#fff;text-shadow:0 2px 10px rgba(0,26,60,.38)}
 .scene-title h1{
-  margin:0;font-family:Georgia,"Times New Roman",serif;font-size:42px;letter-spacing:-.035em;line-height:.98;font-weight:800
+  margin:0;font-family:Georgia,"Times New Roman",serif;font-size:28px;letter-spacing:-.035em;line-height:.98;font-weight:800
 }
 .scene-title h2{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:34px;letter-spacing:-.03em;line-height:1.02}
 .scene-title p{margin:8px 0 0;font-size:14px;line-height:1.35;font-weight:750;max-width:310px}
 .scene-title .subtle{font-weight:700;font-size:12px;letter-spacing:.02em}
 .freshness{
   display:flex;align-items:center;gap:8px;width:max-content;max-width:calc(100% - 36px);
-  margin:-19px 18px 12px;position:relative;z-index:6;background:#eff9ec;color:#326327;
+  margin:-14px 16px 10px;position:relative;z-index:6;background:#eff9ec;color:#326327;
   border:1px solid #acd59e;border-radius:999px;padding:9px 12px;font-size:11px;font-weight:900;box-shadow:var(--shadow-soft)
 }
 .freshness>span{width:9px;height:9px;border-radius:50%;background:#3da92c;box-shadow:0 0 0 4px #d8efcf;flex:none}
 .content{padding:0 16px 28px}
-.content.overlap{margin-top:-24px;position:relative;z-index:5}
+.content.overlap{margin-top:-18px;position:relative;z-index:5}
 .gold-card{
   background:rgba(255,255,255,.97);border:1px solid rgba(143,155,168,.35);border-radius:24px;box-shadow:var(--shadow);
   padding:16px;margin-bottom:13px
@@ -231,7 +231,7 @@ a{color:inherit}
 .calendar-lunch>span{font-size:30px}.calendar-lunch b{color:#6b5200}.calendar-lunch p{margin:3px 0 0;font-size:12px;line-height:1.4}
 .study-content{padding:0 14px 28px}
 .study-intro{
-  margin-top:-28px;position:relative;z-index:5;background:linear-gradient(145deg,#eff9ff,#ffffff);
+  margin-top:-18px;position:relative;z-index:5;background:linear-gradient(145deg,#eff9ff,#ffffff);
   border:1px solid #b9d7eb;border-radius:23px;display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;padding:14px;box-shadow:var(--shadow)
 }
 .study-bulb{width:45px;height:45px;border-radius:14px;background:#ffe36a;display:grid;place-items:center;font-size:24px}
@@ -261,7 +261,7 @@ a{color:inherit}
 .quest-star{width:46px;height:46px;border-radius:14px;background:#ffd63f;color:#5b4200;display:grid;place-items:center;font-size:24px}.quest-launcher strong{display:block}.quest-launcher small{display:block;color:#dbeaf8;margin-top:3px;line-height:1.35}
 .family-content{padding:0 14px 28px}
 .family-priority{
-  margin-top:-28px;position:relative;z-index:5;background:linear-gradient(145deg,#0c4d8e,#08396d);color:#fff;border-radius:24px;padding:17px;box-shadow:var(--shadow);overflow:hidden
+  margin-top:-18px;position:relative;z-index:5;background:linear-gradient(145deg,#0c4d8e,#08396d);color:#fff;border-radius:24px;padding:17px;box-shadow:var(--shadow);overflow:hidden
 }
 .family-priority::after{content:"✝";position:absolute;right:18px;bottom:-12px;color:#f3c34f;font-size:72px;opacity:.30;font-family:Georgia,serif}
 .family-priority p{margin:0;color:#ffdf62;font-size:10px;font-weight:950;letter-spacing:.09em}.family-priority h2{margin:6px 0 8px;font-family:Georgia,"Times New Roman",serif;font-size:26px;line-height:1.05}.family-priority span{display:block;max-width:280px;color:#e3eef8;font-size:12px;line-height:1.45}
@@ -322,3 +322,24 @@ a{color:inherit}
 .calendar-list-copy{min-width:0}
 .calendar-list-copy strong{display:block;font-size:12px;line-height:1.3}
 .calendar-list-copy small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+
+.today-deadline{display:grid;grid-template-columns:42px 1fr;gap:11px;align-items:center;background:#fff8e4;border:1px solid #ebd18b;border-radius:18px;padding:12px 14px;margin:11px 0;box-shadow:var(--shadow-soft)}
+.today-deadline.clear{background:#eef9ea;border-color:#b6d8aa}
+.deadline-icon{width:38px;height:38px;border-radius:12px;background:#fff;display:grid;place-items:center;font-size:20px}
+.today-deadline p{margin:0;color:#8a6200;font-size:9px;font-weight:950;letter-spacing:.08em}.today-deadline strong{display:block;color:#37485a;font-size:13px}.today-deadline small{display:block;color:var(--muted);font-size:10.5px;margin-top:2px}
+.homework-dashboard{margin-top:0}
+.week-homework{margin-bottom:12px}
+.selected-special{display:grid;grid-template-columns:36px 1fr;gap:9px;align-items:center;background:#eef6fd;border-radius:13px;padding:9px 10px;margin-top:12px}
+.selected-special>span{width:32px;height:32px;border-radius:10px;background:#dceeff;display:grid;place-items:center;color:#0b61b7}.selected-special small{display:block;color:#5e7180;font-size:9px;font-weight:900}.selected-special strong{display:block;color:var(--navy);font-size:12px;margin-top:2px}
+.word-subhead{margin:14px 0 5px;color:var(--navy);font-size:13px}
+.words-card .word-subhead:first-of-type{margin-top:12px}
+@media(max-width:520px){
+  .top-scene{min-height:165px}
+  .scene-title h1{font-size:32px}
+  .scene-title h2{font-size:27px}
+}
+@media(max-width:370px){
+  .top-scene{min-height:158px}
+  .scene-title h1{font-size:29px}
+  .scene-title h2{font-size:25px}
+}
