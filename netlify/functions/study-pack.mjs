@@ -14,7 +14,7 @@ function mergeAcademic(data){
     subjects:Array.isArray(p.subjects)&&p.subjects.length?p.subjects:FALLBACK.pack.subjects,
     vocabulary:Array.isArray(p.vocabulary)&&p.vocabulary.length?p.vocabulary:FALLBACK.pack.vocabulary,
     questions:liveQuestions.length>=5?liveQuestions:FALLBACK.pack.questions,
-    gaps:[...(Array.isArray(p.gaps)?p.gaps:[]),...(liveQuestions.length>=5?[]:['Academic Quest coverage supplemented from the verified local bootstrap pack.'])]
+    gaps:[...(Array.isArray(p.gaps)?p.gaps:[]),...(liveQuestions.length>=5?[]:['Academic review coverage supplemented from the verified local bootstrap pack.'])]
   };
   return {...data,pack:merged,delivery:'live',proxiedAt:new Date().toISOString()};
 }

@@ -1,4 +1,4 @@
-# ABVM Grade 2 Parent Hub
+# ABVM Grade 2 Parent Companion
 
 Parent-facing GitHub Pages app for the current ABVM Grade 2 week.
 
@@ -13,6 +13,8 @@ Parent-facing GitHub Pages app for the current ABVM Grade 2 week.
 - IndexedDB/local fallback for homework checkoff and last-good school pack
 - PWA shell caching
 
-## Parent-only v6
+## Parent-only experience
 
-The child game surface has been removed from the rendered app. There is no avatar tab, catalog tab, quest/game tab, room, reward wallet, onboarding flow, or game call-to-action. The retained source-grounded school pack and study-guide pipeline are unchanged.
+The product has one parent-focused surface with five clear destinations: Today, Week, Calendar, Study, and Family. The former game build, game deployment route, promotional calls to action, avatar/catalog code, and obsolete game assets have been removed. The source-grounded school pack and study-guide refresh pipeline remain intact.
+
+The interface is mobile-first, supports deep links and browser history, keeps checklists on-device, works offline after the first visit, and uses compressed custom artwork for each primary section.

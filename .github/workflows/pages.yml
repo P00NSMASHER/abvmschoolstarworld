@@ -5,13 +5,6 @@ on:
     branches: [main]
     paths:
       - 'pages/**'
-      - 'index.html'
-      - 'app.js'
-      - 'styles.css'
-      - 'catalog.js'
-      - 'manifest.webmanifest'
-      - 'sw.js'
-      - 'assets/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -39,11 +32,8 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf _site
-          mkdir -p _site/game
+          mkdir -p _site
           cp -R pages/. _site/
-          cp index.html styles.css catalog.js manifest.webmanifest sw.js _site/game/
-          cp -R assets _site/game/
-          sed "s|fetch('/api/study-pack'|fetch('../data/study-pack.json'|" app.js > _site/game/app.js
           touch _site/.nojekyll
 
       - name: Configure Pages
