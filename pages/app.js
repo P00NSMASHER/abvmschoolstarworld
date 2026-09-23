@@ -61,7 +61,7 @@ function schoolYearMonthDate(month,day){
   return new Date(year,month,day,12);
 }
 function schoolHeader(){
-  return '<div class="school-bar"><div class="school-identity"><img class="school-mark" src="./assets/school-seal-192.png" width="52" height="52" alt="Assumption BVM Catholic School seal"><div class="school-name"><span>Assumption BVM</span><span>Grade 2 Parent Companion</span></div></div><button class="bell-button" type="button" aria-label="Show school information freshness">'+icon("verified")+'</button></div>';
+  return '<div class="school-bar"><div class="school-identity"><img class="school-mark" src="./assets/abvm-app-icon-192.png" width="52" height="52" alt="Assumption BVM Catholic School seal"><div class="school-name"><span>Assumption BVM</span><span>Grade 2 Parent Companion</span></div></div><button class="bell-button" type="button" aria-label="Show school information freshness">'+icon("verified")+'</button></div>';
 }
 function scene(kind,kicker,title,subtitle,light=true,extra=""){
   return '<section class="top-scene '+kind+' scene-'+kind+'">'+schoolHeader()+
