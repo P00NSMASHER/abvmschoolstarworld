@@ -92,6 +92,13 @@ function homeworkStatus(){
   const d=raw?new Date(raw):null;
   return d&&schoolDayKey(d)===schoolDayKey(new Date())?"Checked today":"Latest teacher posting";
 }
+function uploadedNoticeStatus(){
+  const info=envelope?.uploadedNotices;
+  if(!info?.count)return"";
+  const d=info.latestIntegratedAt?new Date(info.latestIntegratedAt):null;
+  const when=d&&!Number.isNaN(d.getTime())?"; latest added "+d.toLocaleDateString(undefined,{month:"short",day:"numeric",timeZone:"America/New_York"}):"";
+  return info.count+" uploaded school notice"+(info.count===1?"":"s")+" integrated"+when+".";
+}
 function kindClass(item){
   const k=(item?.kind||"").toLowerCase(),l=(item?.label||"").toLowerCase();
   if(/test|assessment/.test(k)||/test|star reading/.test(l))return"test";
@@ -128,11 +135,17 @@ function eventItemsForDate(date){
 function eventIsPast(item,ref=today()){const span=eventSpan(item?.date);return span?span.end<ref:false}
 function currentReminders(){
   const now=today();
-  return(pack?.reminders||[]).filter(text=>{const span=eventSpan(text);return !span||span.end>=now});
+  return(pack?.reminders||[]).filter(text=>{const span=eventSpan(text);return !span||span.end>=now}).sort((a,b)=>{
+    const aSpan=eventSpan(a),bSpan=eventSpan(b);
+    if(aSpan&&bSpan)return aSpan.start-bSpan.start;
+    if(aSpan)return-1;if(bSpan)return 1;return 0;
+  });
 }
 function reminderForDate(date){
-  const dated=(pack?.reminders||[]).find(text=>{const span=eventSpan(text);return span&&date>=span.start&&date<=span.end});
-  if(dated)return dated;
+  const dated=(pack?.reminders||[]).map((text,index)=>({text,index,span:eventSpan(text)}))
+    .filter(item=>item.span&&date>=item.span.start&&date<=item.span.end)
+    .sort((a,b)=>(a.span.end-a.span.start)-(b.span.end-b.span.start)||a.index-b.index)[0];
+  if(dated)return dated.text;
   const deadline=eventItemsForDate(date).find(item=>kindClass(item)==="due");
   return deadline?deadline.label+".":"Check the homework folder and reading log.";
 }
@@ -338,7 +351,7 @@ function renderFamily(){
     .filter(o=>o.span&&o.span.end>=now&&kindClass(o.x)==="due")
     .sort((a,b)=>a.span.start-b.span.start);
   const nextDue=dueItems[0]||null;
-  const actions=[...(pack?.homework||[]).map(x=>x.task),...currentReminders()].filter((x,i,a)=>x&&a.indexOf(x)===i).slice(0,8);
+  const actions=[...(pack?.homework||[]).map(x=>x.task),...currentReminders()].filter((x,i,a)=>x&&a.indexOf(x)===i).slice(0,12);
   const notices=currentParentNotices(),gaps=pack?.gaps||[];
   stack().innerHTML='<div class="screen family-screen" role="region" aria-label="Family dashboard">'+
     scene("family","FAMILY VIEW","Family","The practical details that keep school days running smoothly",false)+freshness()+
@@ -347,7 +360,7 @@ function renderFamily(){
     '<section class="family-card"><h3>Family checklist</h3><div class="family-actions">'+actions.map((a,i)=>'<button class="family-action '+(familyChecked(a,i)?'is-done':'')+'" type="button" data-family-check="'+i+'" aria-pressed="'+familyChecked(a,i)+'"><span class="box">'+(familyChecked(a,i)?icon("check"):'')+'</span><span>'+esc(a)+'</span></button>').join("")+'</div></section>'+
     '<section class="reading-policy"><span class="round">20</span><div><h3>Reading every day</h3><p>Read or be read to for 20 minutes and keep the Reading Log in the homework folder.</p></div></section>'+
     '<section class="family-card"><h3>Current notices</h3><div class="notice-list">'+notices.map(n=>'<div class="notice"><span class="notice-dot"></span><p>'+esc(n)+'</p></div>').join("")+'</div></section>'+
-    '<section class="family-card"><h3>Source coverage</h3><div class="notice-list"><div class="notice"><span class="notice-dot"></span><p>'+esc(envelope?.source||"Verified ABVM school sources")+'</p></div>'+gaps.map(n=>'<div class="notice"><span class="notice-dot"></span><p>'+esc(n)+'</p></div>').join("")+'</div></section>'+
+    '<section class="family-card"><h3>Source coverage</h3><div class="notice-list"><div class="notice"><span class="notice-dot"></span><p>'+esc(envelope?.source||"Verified ABVM school sources")+'</p></div>'+(uploadedNoticeStatus()?'<div class="notice"><span class="notice-dot"></span><p>'+esc(uploadedNoticeStatus())+'</p></div>':'')+gaps.map(n=>'<div class="notice"><span class="notice-dot"></span><p>'+esc(n)+'</p></div>').join("")+'</div></section>'+
     '<section class="install-card"><span class="install-icon">'+icon("home")+'</span><div><h3>Put this app on iPhone</h3><p>In Safari, use Share → Add to Home Screen for an app-like launch experience.</p></div></section>'+
     '</div></div>';
 }
@@ -359,7 +372,7 @@ function render(){
 }
 function bindScreen(){
   $$("[data-check]").forEach(b=>b.addEventListener("click",()=>{const i=Number(b.dataset.check),item=(pack.homework||[])[i],k=checkKey(item,i);localStorage.getItem(k)==="1"?localStorage.removeItem(k):localStorage.setItem(k,"1");render()}));
-  $$("[data-family-check]").forEach(b=>b.addEventListener("click",()=>{const i=Number(b.dataset.familyCheck),actions=[...(pack?.homework||[]).map(x=>x.task),...currentReminders()].filter((x,j,a)=>x&&a.indexOf(x)===j).slice(0,8),action=actions[i],k=familyKey(action,i);localStorage.getItem(k)==="1"?localStorage.removeItem(k):localStorage.setItem(k,"1");renderFamily();bindScreen()}));
+  $$("[data-family-check]").forEach(b=>b.addEventListener("click",()=>{const i=Number(b.dataset.familyCheck),actions=[...(pack?.homework||[]).map(x=>x.task),...currentReminders()].filter((x,j,a)=>x&&a.indexOf(x)===j).slice(0,12),action=actions[i],k=familyKey(action,i);localStorage.getItem(k)==="1"?localStorage.removeItem(k):localStorage.setItem(k,"1");renderFamily();bindScreen()}));
   $$("[data-day]").forEach(b=>b.addEventListener("click",()=>{selectedDay=new Date(b.dataset.day);renderWeek();bindScreen()}));
   $$("[data-cal-day]").forEach(b=>b.addEventListener("click",()=>{calendarDay=new Date(b.dataset.calDay);renderCalendar();bindScreen()}));
   $$("[data-month]").forEach(b=>b.addEventListener("click",()=>{calendarOffset+=Number(b.dataset.month);calendarDay=null;renderCalendar();bindScreen()}));

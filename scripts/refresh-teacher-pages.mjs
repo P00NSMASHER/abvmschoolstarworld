@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const DATA_PATH = new URL('../pages/data/study-pack.json', import.meta.url);
+const UPLOADED_NOTICES_PATH = new URL('../pages/data/uploaded-notices.json', import.meta.url);
 const SITE_ROOT = 'https://sites.google.com/view/abvmgr2';
 const PAGE_PATHS = [
   ['home', 'Home'],
@@ -165,9 +166,12 @@ function dateKey(value) {
 function topicKey(value) {
   const label = String(value || '').toLowerCase();
   const patterns = [
+    ['star', /\bstar\b/], ['mass-communication', /mass.*communication|communication.*mass/],
+    ['communication-folder', /communication folder/], ['mass', /\bmass\b/],
     ['stationery', /stationa(?:ry|ery).*money/], ['pretzel', /pretzel/], ['dress-down', /dress down/],
     ['lego', /lego club/], ['picture', /picture day/], ['hsa', /hsa.*meeting/], ['closed', /no school|closed/],
-    ['dismissal', /dismissal/], ['conference', /conference/], ['spelling', /spelling/],
+    ['dismissal', /dismissal/], ['conference', /conference/], ['dance', /welcome back dance/],
+    ['schwartz', /schwartz/], ['spelling', /spelling/],
     ['subtraction', /subtraction/], ['grammar', /grammar|types of sentences/], ['addition', /addition/],
   ];
   return patterns.find(([, pattern]) => pattern.test(label))?.[0]
@@ -184,6 +188,28 @@ function mergeTeacherEvents(existing, incoming, source) {
   });
   return [...kept, ...incoming.map(item => ({ ...item, kind: item.kind || kindFor(item.label), source }))]
     .sort((a, b) => eventTime(a.date) - eventTime(b.date));
+}
+
+function mergeUploadedEvents(existing, uploaded) {
+  const incoming = uploaded.importantDates.map(item => ({ ...item, source: 'uploaded-notice' }));
+  const incomingKeys = new Set(incoming.map(item => `${dateKey(item.date)}:${topicKey(item.label)}`));
+  const replacementKeys = new Set(uploaded.replacements.map(item => `${dateKey(item.date)}:${item.topic}`));
+  const kept = existing.filter(item => {
+    if (item.source === 'uploaded-notice') return false;
+    const key = `${dateKey(item.date)}:${topicKey(item.label)}`;
+    return !incomingKeys.has(key) && !replacementKeys.has(key);
+  });
+  return [...kept, ...incoming].sort((a, b) => {
+    const dateDifference = eventTime(a.date) - eventTime(b.date);
+    if (dateDifference) return dateDifference;
+    return Number(b.source === 'uploaded-notice') - Number(a.source === 'uploaded-notice');
+  });
+}
+
+function mergeUploadedText(existing, incoming, previousTopics = []) {
+  const uploadedTopics = new Set([...previousTopics, ...incoming.map(item => item.topic)]);
+  const kept = existing.filter(text => !uploadedTopics.has(topicKey(text)));
+  return [...new Set([...kept, ...incoming.map(item => item.text)])];
 }
 
 function eventTime(value) {
@@ -218,6 +244,37 @@ function readableList(items) {
   return `${items.slice(0, -1).join(', ')}, and ${items.at(-1)}`;
 }
 
+function readUploadedNotices() {
+  const uploaded = JSON.parse(readFileSync(UPLOADED_NOTICES_PATH, 'utf8'));
+  if (uploaded.schemaVersion !== 1 || !uploaded.lastIntegratedAt || Number.isNaN(Date.parse(uploaded.lastIntegratedAt))) {
+    throw new Error('Uploaded notices metadata is incomplete.');
+  }
+  for (const field of ['documents', 'importantDates', 'reminders', 'parentNotices', 'replacements']) {
+    if (!Array.isArray(uploaded[field])) throw new Error(`Uploaded notices is missing the ${field} array.`);
+  }
+  const documentIds = new Set(uploaded.documents.map(document => document.id));
+  if (documentIds.size !== uploaded.documents.length || [...documentIds].some(id => !id)) {
+    throw new Error('Uploaded notice document IDs must be present and unique.');
+  }
+  for (const item of uploaded.importantDates) {
+    if (!item.date || !dateKey(item.date) || !item.label || !documentIds.has(item.sourceDocument)) {
+      throw new Error(`Uploaded notice event is incomplete: ${item.label || item.date || 'unknown event'}.`);
+    }
+  }
+  for (const field of ['reminders', 'parentNotices']) {
+    for (const item of uploaded[field]) {
+      if (!item.text || !item.topic || !documentIds.has(item.sourceDocument)) {
+        throw new Error(`Uploaded ${field} entry is incomplete.`);
+      }
+    }
+  }
+  for (const item of uploaded.replacements) {
+    if (!item.topic || !item.date || !dateKey(item.date)) throw new Error('Uploaded notice replacement is incomplete.');
+  }
+  return uploaded;
+}
+
+const uploadedNotices = readUploadedNotices();
 const fetched = await Promise.all(PAGE_PATHS.map(([path, title]) => fetchPage(path, title)));
 const pages = Object.fromEntries(fetched.map(page => [page.title, page]));
 
@@ -253,10 +310,11 @@ if (!religionLines.some(line => /^Unit\s/i.test(line)) || !religionLines.some(li
 const normalizedSource = fetched.map(page => `${page.title}\n${page.lines.join('\n')}`).join('\n\n');
 const digest = createHash('sha256').update(normalizedSource).digest('hex');
 const sourceHash = `teacher-pages-${digest.slice(0, 20)}`;
+const uploadedNoticeHash = `uploaded-notices-${createHash('sha256').update(JSON.stringify(uploadedNotices)).digest('hex').slice(0, 20)}`;
 const checkedAt = new Date().toISOString();
 const data = JSON.parse(readFileSync(DATA_PATH, 'utf8'));
 const pack = data.pack || {};
-const contentChanged = pack.sourceHash !== sourceHash;
+const contentChanged = pack.sourceHash !== sourceHash || pack.uploadedNoticeHash !== uploadedNoticeHash;
 const capturedAt = contentChanged ? checkedAt : (data.sourceCapturedAt || pack.sourceCapturedAt || checkedAt);
 
 const subjects = Array.isArray(pack.subjects) ? [...pack.subjects] : [];
@@ -323,13 +381,21 @@ pack.vocabulary = vocabulary.split(',').map(term => term.trim()).filter(Boolean)
 }));
 pack.importantDates = mergeTeacherEvents(pack.importantDates || [], homeEvents, 'teacher-home');
 pack.importantDates = mergeTeacherEvents(pack.importantDates, testItems, 'teacher-tests');
+pack.importantDates = mergeUploadedEvents(pack.importantDates, uploadedNotices);
+pack.reminders = mergeUploadedText(pack.reminders || [], uploadedNotices.reminders, pack.uploadedNoticeTopics?.reminders);
+pack.parentNotices = mergeUploadedText(pack.parentNotices || [], uploadedNotices.parentNotices, pack.uploadedNoticeTopics?.parentNotices);
+pack.uploadedNoticeTopics = {
+  reminders: [...new Set(uploadedNotices.reminders.map(item => item.topic))],
+  parentNotices: [...new Set(uploadedNotices.parentNotices.map(item => item.topic))],
+};
 pack.schemaVersion = 2;
 pack.sourceHash = sourceHash;
+pack.uploadedNoticeHash = uploadedNoticeHash;
 pack.sourceCapturedAt = capturedAt;
 pack.sourceCheckedAt = checkedAt;
 pack.generatedAt = checkedAt;
 pack.weekLabel = schoolWeekLabel(new Date(checkedAt));
-pack.summary = `Current Grade 2 teacher-site material: Homework lists ${readableList(homework.slice(0, 4).map(item => item.subject === 'Parent' ? `parent task “${item.task}”` : `${item.subject} “${item.task}”`))}. Upcoming tests include ${readableList(testItems.slice(0, 4).map(item => `${item.label} on ${item.date}`))}.`;
+pack.summary = `Current Grade 2 teacher-site material: Homework lists ${readableList(homework.slice(0, 4).map(item => item.subject === 'Parent' ? `parent task “${item.task}”` : `${item.subject} “${item.task}”`))}. Upcoming tests include ${readableList(testItems.slice(0, 4).map(item => `${item.label} on ${item.date}`))}. ${uploadedNotices.documents.length} uploaded school notices are integrated with the teacher pages.`;
 pack.sourceSufficient = true;
 pack.gaps = (pack.gaps || []).filter(item => !/source bridge|four-hour|does not show a date|spelling-word list|weekly spelling|reading work page leaves/i.test(item));
 pack.gaps = [...new Set([...pack.gaps,
@@ -338,7 +404,7 @@ pack.gaps = [...new Set([...pack.gaps,
   ...(comprehension ? [] : ['The current Reading Work page leaves Reading Comprehension blank, so no comprehension target is invented.']),
 ])];
 
-data.source = 'ABVM Grade 2 public teacher pages';
+data.source = 'ABVM Grade 2 public teacher pages and uploaded school notices';
 data.delivery = 'verified';
 data.syncPolicy = {
   intervalHours: 24,
@@ -356,11 +422,16 @@ data.sourcePages = fetched.map(page => ({
   checkedAt,
   contentHash: createHash('sha256').update(page.lines.join('\n')).digest('hex'),
 }));
+data.uploadedNotices = {
+  count: uploadedNotices.documents.length,
+  latestIntegratedAt: uploadedNotices.lastIntegratedAt,
+  documents: uploadedNotices.documents.map(({ id, label, receivedAt }) => ({ id, label, receivedAt })),
+};
 data.pack = pack;
 
 if (process.argv.includes('--dry-run')) {
-  console.log(JSON.stringify({ checkedAt, contentChanged, sourceHash, homework, tests: testItems }, null, 2));
+  console.log(JSON.stringify({ checkedAt, contentChanged, sourceHash, uploadedNoticeHash, uploadedNoticeCount: uploadedNotices.documents.length, homework, tests: testItems }, null, 2));
 } else {
   writeFileSync(DATA_PATH, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
-  console.log(`${contentChanged ? 'Updated' : 'Checked'} ${fetched.length} teacher pages; ${homework.length} homework items are current.`);
+  console.log(`${contentChanged ? 'Updated' : 'Checked'} ${fetched.length} teacher pages and ${uploadedNotices.documents.length} uploaded notices; ${homework.length} homework items are current.`);
 }

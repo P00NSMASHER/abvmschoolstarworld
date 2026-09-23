@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "lastIntegratedAt": "2026-09-23T18:11:28.000Z",
+  "documents": [
+    {
+      "id": "dress-down-2026-09-25",
+      "label": "Dress Down Day flyer",
+      "receivedAt": "2026-09-23",
+      "facts": [
+        "Dress Down Day is Friday, September 25, 2026.",
+        "Families may donate any amount; all proceeds support a local charity.",
+        "Dress Down Day will occur twice each month, with future dates appearing on the school calendar beginning in October."
+      ]
+    },
+    {
+      "id": "weekly-reminders-2026-09-21",
+      "label": "Weekly reminders for September 21–25, 2026",
+      "receivedAt": "2026-09-23",
+      "facts": [
+        "STAR testing continues throughout the week.",
+        "Mass is Wednesday, September 23.",
+        "Pretzel delivery is Thursday, September 24.",
+        "Lego Club is Friday, September 25 from 3–4 PM.",
+        "Dress Down Day is Friday, September 25 with a donation to a local charity.",
+        "Upcoming dates are listed through October 23."
+      ]
+    }
+  ],
+  "importantDates": [
+    {
+      "date": "Monday–Friday, Sept. 21–25",
+      "label": "STAR testing continues this week",
+      "kind": "assessment",
+      "sourceDocument": "weekly-reminders-2026-09-21"
+    },
+    {
+      "date": "Wednesday, Sept. 23",
+      "label": "Mass",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-21"
+    },
+    {
+      "date": "Thursday, Sept. 24",
+      "label": "Pretzel delivery",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-21"
+    },
+    {
+      "date": "Friday, Sept. 25",
+      "label": "Dress Down Day — donate any amount; proceeds support a local charity",
+      "kind": "school event",
+      "sourceDocument": "dress-down-2026-09-25"
+    },
+    {
+      "date": "Friday, Sept. 25",
+      "label": "Lego Club — 3–4 PM",
+      "kind": "club",
+      "sourceDocument": "weekly-reminders-2026-09-21"
+    },
+    {
+      "date": "Wednesday, Sept. 30",
+      "label": "Mass; Communication Folder",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-21"
+    },
+    {
+      "date": "Thursday, Oct. 1",
+      "label": "Picture Day",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-21"
+    },
+    {
+      "date": "Friday, Oct. 2",
+      "label": "HSA Meeting",
+      "kind": "meeting",
+      "sourceDocument": "weekly-reminders-2026-09-21"
+    },
+    {
+      "date": "Saturday, Oct. 3",
+      "label": "Welcome Back Dance (K–4) — 6–8 PM, ABVM Gym",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-21"
+    },
+    {
+      "date": "Friday, Oct. 9",
+      "label": "12:00 dismissal",
+      "kind": "schedule change",
+      "sourceDocument": "weekly-reminders-2026-09-21"
+    },
+    {
+      "date": "Monday, Oct. 12",
+      "label": "No School — Columbus Day",
+      "kind": "holiday",
+      "sourceDocument": "weekly-reminders-2026-09-21"
+    },
+    {
+      "date": "Monday–Tuesday, Oct. 19–20",
+      "label": "Parent / Teacher conferences (K–4 Tues. 10/20)",
+      "kind": "conference",
+      "sourceDocument": "weekly-reminders-2026-09-21"
+    },
+    {
+      "date": "Friday, Oct. 23",
+      "label": "Schwartz Farm “S’more Fun” — ABVM s’mores 6–7 PM",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-21"
+    }
+  ],
+  "reminders": [
+    {
+      "text": "STAR testing continues Monday–Friday, Sept. 21–25.",
+      "topic": "star",
+      "sourceDocument": "weekly-reminders-2026-09-21"
+    },
+    {
+      "text": "Friday, Sept. 25 is Dress Down Day. Donate any amount; all proceeds support a local charity.",
+      "topic": "dress-down",
+      "sourceDocument": "dress-down-2026-09-25"
+    },
+    {
+      "text": "Lego Club is Friday, Sept. 25 from 3–4 PM.",
+      "topic": "lego",
+      "sourceDocument": "weekly-reminders-2026-09-21"
+    },
+    {
+      "text": "HSA Meeting is Friday, Oct. 2.",
+      "topic": "hsa",
+      "sourceDocument": "weekly-reminders-2026-09-21"
+    }
+  ],
+  "parentNotices": [
+    {
+      "text": "Dress Down Day is Friday, Sept. 25. Donate any amount; all proceeds support a local charity.",
+      "topic": "dress-down",
+      "sourceDocument": "dress-down-2026-09-25"
+    },
+    {
+      "text": "Dress Down Days will be held twice each month; future dates will appear on the school calendar beginning in October.",
+      "topic": "dress-down",
+      "sourceDocument": "dress-down-2026-09-25"
+    },
+    {
+      "text": "Lego Club is Friday, Sept. 25 from 3–4 PM.",
+      "topic": "lego",
+      "sourceDocument": "weekly-reminders-2026-09-21"
+    },
+    {
+      "text": "The current weekly school reminder lists the HSA Meeting for Friday, Oct. 2.",
+      "topic": "hsa",
+      "sourceDocument": "weekly-reminders-2026-09-21"
+    }
+  ],
+  "replacements": [
+    {
+      "topic": "star",
+      "date": "Wednesday, Sept. 23"
+    },
+    {
+      "topic": "hsa",
+      "date": "Thursday, Oct. 1"
+    }
+  ]
+}

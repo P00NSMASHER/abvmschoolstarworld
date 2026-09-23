@@ -1,5 +1,5 @@
 {
-  "source": "ABVM Grade 2 public teacher pages",
+  "source": "ABVM Grade 2 public teacher pages and uploaded school notices",
   "delivery": "verified",
   "syncPolicy": {
     "intervalHours": 24,
@@ -7,16 +7,16 @@
     "timeZone": "America/New_York",
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-09-23T17:25:17.136Z",
-  "sourceCapturedAt": "2026-09-23T16:52:55.599Z",
+  "sourceLastSeenAt": "2026-09-23T18:39:17.800Z",
+  "sourceCapturedAt": "2026-09-23T18:35:01.289Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-d82a1f1cade42d88c440",
-    "sourceCapturedAt": "2026-09-23T16:52:55.599Z",
-    "generatedAt": "2026-09-23T17:25:17.136Z",
+    "sourceCapturedAt": "2026-09-23T18:35:01.289Z",
+    "generatedAt": "2026-09-23T18:39:17.800Z",
     "weekLabel": "Week of September 21, 2026",
-    "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity”, Math “Page 10”, Reading “Read”, and parent task “Complete forms; cover books”. Upcoming tests include Spelling (2-letter blends) / Handwriting on Friday, Sept. 25, Subtraction to 12 on Tuesday, Sept. 29, Grammar (types of sentences) on Wednesday, Sept. 30, and Spelling (short a / long a) / Handwriting on Friday, Oct. 2.",
+    "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity”, Math “Page 10”, Reading “Read”, and parent task “Complete forms; cover books”. Upcoming tests include Spelling (2-letter blends) / Handwriting on Friday, Sept. 25, Subtraction to 12 on Tuesday, Sept. 29, Grammar (types of sentences) on Wednesday, Sept. 30, and Spelling (short a / long a) / Handwriting on Friday, Oct. 2. 2 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
       {
         "subject": "Reading / ELA",
@@ -97,19 +97,23 @@
     ],
     "importantDates": [
       {
+        "date": "Monday–Friday, Sept. 21–25",
+        "label": "STAR testing continues this week",
+        "kind": "assessment",
+        "sourceDocument": "weekly-reminders-2026-09-21",
+        "source": "uploaded-notice"
+      },
+      {
         "label": "Chapter 1A (addition) test",
         "date": "Tuesday, Sept. 22",
         "kind": "test"
       },
       {
-        "label": "STAR reading",
         "date": "Wednesday, Sept. 23",
-        "kind": "assessment"
-      },
-      {
         "label": "Mass",
-        "date": "Wednesday, Sept. 23",
-        "kind": "school event"
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-21",
+        "source": "uploaded-notice"
       },
       {
         "date": "Wednesday, Sept. 23",
@@ -120,20 +124,23 @@
       {
         "date": "Thursday, Sept. 24",
         "label": "Pretzel delivery",
-        "source": "teacher-home",
-        "kind": "school event"
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-21",
+        "source": "uploaded-notice"
       },
       {
         "date": "Friday, Sept. 25",
-        "label": "Dress Down day — donation for a local charity",
-        "source": "teacher-home",
-        "kind": "school event"
+        "label": "Dress Down Day — donate any amount; proceeds support a local charity",
+        "kind": "school event",
+        "sourceDocument": "dress-down-2026-09-25",
+        "source": "uploaded-notice"
       },
       {
         "date": "Friday, Sept. 25",
-        "label": "Lego Club (for those who are signed up)",
-        "source": "teacher-home",
-        "kind": "club"
+        "label": "Lego Club — 3–4 PM",
+        "kind": "club",
+        "sourceDocument": "weekly-reminders-2026-09-21",
+        "source": "uploaded-notice"
       },
       {
         "date": "Friday, Sept. 25",
@@ -148,9 +155,11 @@
         "source": "teacher-tests"
       },
       {
-        "label": "Mass; Communication Folder",
         "date": "Wednesday, Sept. 30",
-        "kind": "school event"
+        "label": "Mass; Communication Folder",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-21",
+        "source": "uploaded-notice"
       },
       {
         "date": "Wednesday, Sept. 30",
@@ -161,14 +170,16 @@
       {
         "date": "Thursday, Oct. 1",
         "label": "Picture Day",
-        "source": "teacher-home",
-        "kind": "school event"
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-21",
+        "source": "uploaded-notice"
       },
       {
-        "date": "Thursday, Oct. 1",
-        "label": "HSA meeting",
-        "source": "teacher-home",
-        "kind": "meeting"
+        "date": "Friday, Oct. 2",
+        "label": "HSA Meeting",
+        "kind": "meeting",
+        "sourceDocument": "weekly-reminders-2026-09-21",
+        "source": "uploaded-notice"
       },
       {
         "date": "Friday, Oct. 2",
@@ -177,9 +188,11 @@
         "source": "teacher-tests"
       },
       {
-        "label": "Welcome Back Dance (K–4) — 6–8 PM, ABVM Gym",
         "date": "Saturday, Oct. 3",
-        "kind": "school event"
+        "label": "Welcome Back Dance (K–4) — 6–8 PM, ABVM Gym",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-21",
+        "source": "uploaded-notice"
       },
       {
         "label": "Movie Night (Grades 5–8) — 6–8 PM",
@@ -193,15 +206,17 @@
       },
       {
         "date": "Friday, Oct. 9",
-        "label": "12:00 Dismissal",
-        "source": "teacher-home",
-        "kind": "schedule change"
+        "label": "12:00 dismissal",
+        "kind": "schedule change",
+        "sourceDocument": "weekly-reminders-2026-09-21",
+        "source": "uploaded-notice"
       },
       {
         "date": "Monday, Oct. 12",
-        "label": "No School",
-        "source": "teacher-home",
-        "kind": "holiday"
+        "label": "No School — Columbus Day",
+        "kind": "holiday",
+        "sourceDocument": "weekly-reminders-2026-09-21",
+        "source": "uploaded-notice"
       },
       {
         "label": "Schwartz Farm Family Night RSVP due for $5/student voucher",
@@ -210,14 +225,17 @@
       },
       {
         "date": "Monday–Tuesday, Oct. 19–20",
-        "label": "Parent / Teacher conferences (K-4 Tues. 10/20)",
-        "source": "teacher-home",
-        "kind": "conference"
+        "label": "Parent / Teacher conferences (K–4 Tues. 10/20)",
+        "kind": "conference",
+        "sourceDocument": "weekly-reminders-2026-09-21",
+        "source": "uploaded-notice"
       },
       {
-        "label": "Schwartz Farm Family Night — ABVM s’mores 6–7 PM",
         "date": "Friday, Oct. 23",
-        "kind": "school event"
+        "label": "Schwartz Farm “S’more Fun” — ABVM s’mores 6–7 PM",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-21",
+        "source": "uploaded-notice"
       },
       {
         "date": "Friday, Oct. 23",
@@ -576,13 +594,15 @@
     "reminders": [
       "Stationary money ($17) is due Wednesday, Sept. 23.",
       "Pretzel delivery is Thursday, Sept. 24 after lunch.",
-      "Friday, Sept. 25 is Dress Down Day with a donation for a local charity.",
-      "Lego Club is Friday, Sept. 25 for students who signed up.",
       "Keep the Reading Log and Behavior Chart in the HW folder.",
       "Return everything in the HW folder.",
       "Welcome Back Dance for K–4 is Saturday, Oct. 3 from 6–8 PM in the ABVM Gym; grades 5–8 have Movie Night at the same time.",
       "Schwartz Farm Family Night is Friday, Oct. 23 at 315 Schwartz Lane, Hegins; ABVM s’mores are 6–7 PM. RSVP by Oct. 16 for a $5/student voucher.",
-      "Christmas Caroling date is still TBD."
+      "Christmas Caroling date is still TBD.",
+      "STAR testing continues Monday–Friday, Sept. 21–25.",
+      "Friday, Sept. 25 is Dress Down Day. Donate any amount; all proceeds support a local charity.",
+      "Lego Club is Friday, Sept. 25 from 3–4 PM.",
+      "HSA Meeting is Friday, Oct. 2."
     ],
     "questions": [
       {
@@ -709,53 +729,86 @@
       "The current Reading Work page leaves Reading Comprehension blank, so no comprehension target is invented."
     ],
     "parentNotices": [
-      "HSA virtual meeting is Thursday, Oct. 1 at 7 PM.",
       "Welcome Back Dance for grades K–4 is Saturday, Oct. 3 from 6–8 PM in the ABVM Gym. It is free with light refreshments; use the 7th Street entrance. Grades 5–8 have Movie Night at the same time.",
       "Picture Day is Thursday, Oct. 1.",
       "Picture ordering: a digital image is $10 when added to a package; glossy finish is $5 per package; a 10×13 is $20; the other listed add-on items are $13 each.",
       "Picture backgrounds: 1 Universe, 2 Pink Mist, 3 Fall Leaves, 4 Traditional, 5 School Spirit, 6 Patriotic, 7 Dinosaur, 8 Pastel, 9 Bookcase, 10 Blue Brush, 11 Laser. Backgrounds 1, 2, and 11 are marked NEW.",
       "Schwartz Farm Family Night is Oct. 23 at 315 Schwartz Lane, Hegins. Farm hours are 11 AM–9 PM; ABVM s’mores are 6–7 PM; RSVP by Oct. 16 for a $5/student voucher. Cash only; ATM available.",
-      "Christmas Caroling date is TBD."
+      "Christmas Caroling date is TBD.",
+      "Dress Down Day is Friday, Sept. 25. Donate any amount; all proceeds support a local charity.",
+      "Dress Down Days will be held twice each month; future dates will appear on the school calendar beginning in October.",
+      "Lego Club is Friday, Sept. 25 from 3–4 PM.",
+      "The current weekly school reminder lists the HSA Meeting for Friday, Oct. 2."
     ],
-    "sourceCheckedAt": "2026-09-23T17:25:17.136Z"
+    "sourceCheckedAt": "2026-09-23T18:39:17.800Z",
+    "uploadedNoticeHash": "uploaded-notices-689db7fe67a8a4c199ec",
+    "uploadedNoticeTopics": {
+      "reminders": [
+        "star",
+        "dress-down",
+        "lego",
+        "hsa"
+      ],
+      "parentNotices": [
+        "dress-down",
+        "lego",
+        "hsa"
+      ]
+    }
   },
-  "sourceLastCheckedAt": "2026-09-23T17:25:17.136Z",
+  "sourceLastCheckedAt": "2026-09-23T18:39:17.800Z",
   "sourcePages": [
     {
       "title": "Home",
       "url": "https://sites.google.com/view/abvmgr2/home",
-      "checkedAt": "2026-09-23T17:25:17.136Z",
+      "checkedAt": "2026-09-23T18:39:17.800Z",
       "contentHash": "de608ace5654e2ac226d0e18d5634bb07737a81c86a200dafd3fc2c41013aa0b"
     },
     {
       "title": "Homework",
       "url": "https://sites.google.com/view/abvmgr2/homework",
-      "checkedAt": "2026-09-23T17:25:17.136Z",
+      "checkedAt": "2026-09-23T18:39:17.800Z",
       "contentHash": "946e9928defafa61c2be38edfd98a64b6c5888867e62391e851795bfd3c8b80e"
     },
     {
       "title": "Reading Work",
       "url": "https://sites.google.com/view/abvmgr2/reading-work",
-      "checkedAt": "2026-09-23T17:25:17.136Z",
+      "checkedAt": "2026-09-23T18:39:17.800Z",
       "contentHash": "ab2e37c8a03e6d0c4cf610a1f366bfe54112d93842b594866d2f430358c513e3"
     },
     {
       "title": "Weekly Spelling List",
       "url": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-      "checkedAt": "2026-09-23T17:25:17.136Z",
+      "checkedAt": "2026-09-23T18:39:17.800Z",
       "contentHash": "50a2075de79a2447360bb0784b9369af130e9f8069c1a24de4577788a1fb7bf5"
     },
     {
       "title": "Tests",
       "url": "https://sites.google.com/view/abvmgr2/tests",
-      "checkedAt": "2026-09-23T17:25:17.136Z",
+      "checkedAt": "2026-09-23T18:39:17.800Z",
       "contentHash": "8f8b60e907d95806906e574855a3077809d70eaa258e601d1b54afbc77692762"
     },
     {
       "title": "Religion",
       "url": "https://sites.google.com/view/abvmgr2/religion",
-      "checkedAt": "2026-09-23T17:25:17.136Z",
+      "checkedAt": "2026-09-23T18:39:17.800Z",
       "contentHash": "08c5d543509a94caf4e19b6f8262b95978b220ab248a987bb6cacca07c1c64b4"
     }
-  ]
+  ],
+  "uploadedNotices": {
+    "count": 2,
+    "latestIntegratedAt": "2026-09-23T18:11:28.000Z",
+    "documents": [
+      {
+        "id": "dress-down-2026-09-25",
+        "label": "Dress Down Day flyer",
+        "receivedAt": "2026-09-23"
+      },
+      {
+        "id": "weekly-reminders-2026-09-21",
+        "label": "Weekly reminders for September 21–25, 2026",
+        "receivedAt": "2026-09-23"
+      }
+    ]
+  }
 }

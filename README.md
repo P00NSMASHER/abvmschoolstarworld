@@ -21,3 +21,5 @@ The product has one parent-focused surface with five clear destinations: Today, 
 The interface is mobile-first, supports deep links and browser history, keeps checklists on-device, works offline after the first visit, and uses compressed custom artwork for each primary section.
 
 The refresh job reads the public Grade 2 Homework, Home, Reading Work, Weekly Spelling List, Tests, and Religion pages. It publishes only after every expected page and required homework section passes validation, so an incomplete teacher-page response cannot erase the last reliable school information.
+
+Information transcribed from school flyers or reminders is stored separately in `pages/data/uploaded-notices.json`. Those uploaded notices take priority when they clarify or correct a matching calendar item, and the daily teacher-page refresh reapplies them on every run so they are never overwritten.
