@@ -1,6 +1,6 @@
 {
   "name":"ABVM Grade 2 Parent Hub",
-  "short_name":"ABVM Parent",
+  "short_name":"ABVM App",
   "start_url":"./",
   "display":"standalone",
   "background_color":"#f7f7fb",
