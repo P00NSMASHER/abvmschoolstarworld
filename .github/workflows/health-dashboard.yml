@@ -1,9 +1,16 @@
 name: ABVM Operational Health Dashboard
 
 on:
+  workflow_run:
+    workflows:
+      - ABVM App QA
+      - Deploy ABVM to GitHub Pages
+      - Refresh ABVM teacher pages
+      - Monitor ABVM refresh health
+    types: [completed]
   schedule:
-    # 7:02 PM Eastern is 23:02 UTC in EDT and 00:02 UTC in EST.
-    - cron: '2 0,23 * * *'
+    - cron: '43 16 * * *'
+      timezone: 'America/New_York'
   workflow_dispatch:
 
 permissions:
@@ -15,55 +22,48 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  health:
+  dashboard:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.head_branch == 'main'
+    name: build operational health dashboard
     runs-on: ubuntu-latest
+    timeout-minutes: 8
     steps:
-      - name: Gate to 7:02 PM Eastern
-        id: gate
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "proceed=true" >> "$GITHUB_OUTPUT"
-          elif [ "$(TZ=America/New_York date +'%H:%M')" = "19:02" ]; then
-            echo "proceed=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "proceed=false" >> "$GITHUB_OUTPUT"
-          fi
+      - name: Checkout current main
+        uses: actions/checkout@v6
+        with:
+          ref: main
 
-      - uses: actions/checkout@v6
-        if: steps.gate.outputs.proceed == 'true'
-
-      - uses: actions/setup-node@v4
-        if: steps.gate.outputs.proceed == 'true'
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 22
 
       - name: Fetch recent workflow history
-        if: steps.gate.outputs.proceed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api "repos/${{ github.repository }}/actions/runs?per_page=100" > /tmp/abvm-runs.json
+        run: gh api "repos/${GITHUB_REPOSITORY}/actions/runs?per_page=100" > workflow-runs.json
 
-      - name: Build operational health report
-        if: steps.gate.outputs.proceed == 'true'
+      - name: Build health dashboard
         env:
-          WORKFLOW_RUNS_FILE: /tmp/abvm-runs.json
-        run: node scripts/build-health-report.mjs
+          WORKFLOW_RUNS_FILE: workflow-runs.json
+        run: npm run health:report
 
-      - name: Publish health summary
-        if: always() && steps.gate.outputs.proceed == 'true'
+      - name: Publish dashboard to job summary
+        if: always()
         shell: bash
         run: |
-          if [ -f health-output/abvm-health-summary.md ]; then
+          if [[ -f health-output/abvm-health-summary.md ]]; then
             cat health-output/abvm-health-summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "ABVM health report was not generated." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
           fi
 
-      - name: Upload health dashboard artifact
-        if: always() && steps.gate.outputs.proceed == 'true'
+      - name: Upload machine-readable health artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: abvm-operational-health
+          name: abvm-operational-health-${{ github.run_id }}
           path: health-output/
           if-no-files-found: error
           retention-days: 30
