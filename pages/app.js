@@ -505,6 +505,31 @@ function renderWeek(){
     '<section class="reminder-strip"><span class="bang">!</span><p><strong>Don’t forget</strong>'+esc(reminderForDate(selectedDay))+'</p></section>'+
     '<section class="future-card"><h3>Coming soon</h3>'+(future.length?future.map(o=>'<div class="future-row"><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join(""):'<div class="empty-note">Nothing else is posted after this day yet.</div>')+'</section></div></div>';
 }
+function calendarCellLabel(item,special){
+  if(!item){
+    const s=String(special||"").split(",")[0].trim();
+    if(/computer/i.test(s))return"Computer";
+    if(/music/i.test(s))return"Music";
+    if(/mass/i.test(s))return"Mass";
+    if(/gym/i.test(s))return"Gym";
+    if(/library/i.test(s))return"Library";
+    return s.length>12?s.slice(0,11).trim()+"…":s;
+  }
+  const k=kindClass(item),p=String(item.label||"");
+  if(/star/i.test(p))return"STAR";
+  if(k==="dress")return"Dress Down";
+  if(k==="picture")return"Picture Day";
+  if(k==="test")return"Test";
+  if(k==="due")return"Due";
+  if(k==="club")return"Club";
+  if(k==="meeting")return"Meeting";
+  if(k==="conference")return"Conference";
+  if(k==="report")return"Progress";
+  if(k==="faith"||/mass/i.test(p))return"Mass";
+  if(k==="celebration")return"Event";
+  const label=calendarLabel(item);
+  return label.split(/\s+/).slice(0,2).join(" ");
+}
 function monthGrid(year,month){
   const first=new Date(year,month,1,12),last=new Date(year,month+1,0,12),blanks=first.getDay();
   let html="";
@@ -515,13 +540,13 @@ function monthGrid(year,month){
     const scheduleClass=schedule?kindClass(schedule):"",klass=primary?kindClass(primary):"";
     const weekend=[0,6].includes(d.getDay()),closed=scheduleClass==="closed",halfday=scheduleClass==="halfday";
     const specialPrimary=!primary&&!schedule&&special?special.split(",")[0].trim():"";
-    const label=primary?calendarLabel(primary):specialPrimary;
+    const label=calendarCellLabel(primary,specialPrimary);
     const iconName=primary?eventIconName(primary):specialIconName(specialPrimary);
     const hiddenCount=Math.max(0,contentEvents.length-(primary?1:0))+((special&&(primary||halfday)&&!closed)?1:0);
     html+='<button class="'+(weekend?'weekend ':'')+(closed?'closed ':'')+(halfday?'halfday ':'')+(klass?('event-'+klass+' '):'')+(calendarDay&&sameDay(d,calendarDay)?'active':'')+'" type="button" data-cal-day="'+d.toISOString()+'" aria-pressed="'+Boolean(calendarDay&&sameDay(d,calendarDay))+'" aria-label="'+esc(fmtDate(d)+(events.length?': '+events.map(e=>e.label).join(', '):special?': '+special:''))+'"><strong>'+day+'</strong>'+
       (schedule?'<span class="calendar-status-flag '+scheduleClass+'">'+(scheduleClass==="closed"?"No School":"Half Day")+'</span>':'')+
       (label?'<span class="calendar-chip '+(klass||'special')+'"><span class="mini-icon">'+icon(iconName)+'</span><span>'+esc(label)+'</span></span>':'')+
-      (hiddenCount?'<span class="calendar-more">+'+hiddenCount+' more</span>':'')+
+      (hiddenCount?'<span class="calendar-more">+'+hiddenCount+'</span>':'')+
       '</button>';
   }
   return html;
@@ -580,7 +605,8 @@ function renderCalendar(){
 }
 function subjectCard(id,klass,title,icon,subj){
   const notes=[...(subj?.topics||[]),...(subj?.studyNotes||[])].filter((n,i,a)=>n&&a.indexOf(n)===i);
-  return '<section id="'+id+'" class="subject-card '+klass+'"><div class="subject-head"><span class="icon" aria-hidden="true">'+icon+'</span><div><p>'+esc(title.toUpperCase())+'</p><h2>'+esc(title)+'</h2></div></div><ul>'+notes.map(n=>'<li>'+esc(n)+'</li>').join("")+'</ul></section>';
+  const open=id==="study-reading"?" open":"";
+  return '<details id="'+id+'" class="subject-card subject-disclosure '+klass+'"'+open+'><summary><span class="subject-head"><span class="icon" aria-hidden="true">'+icon+'</span><span><span class="subject-kicker">'+esc(title.toUpperCase())+'</span><strong>'+esc(title)+'</strong></span></span><span class="disclosure-chevron" aria-hidden="true">›</span></summary><div class="subject-disclosure-body"><ul>'+notes.map(n=>'<li>'+esc(n)+'</li>').join("")+'</ul></div></details>';
 }
 function renderStudy(){
   const r=readingSubject(),rel=religionSubject(),math=mathSubject(),spell=spellingSubject();
@@ -597,13 +623,14 @@ function renderStudy(){
     scene("study","THIS WEEK","Study","Everything to review, in one calm place",true)+
     '<div class="study-content"><section class="study-intro"><span class="study-bulb">'+icon("idea")+'</span><div><h2>Start with what is next</h2><p>Tests and daily reading are first. Subject details are below.</p></div></section>'+
     '<section class="study-at-a-glance"><div class="section-label">TESTS & DAILY ROUTINE</div><h2>Quick Look</h2>'+essentials.map(e=>'<div class="essential-row"><span class="essential-icon '+e.klass+'">'+e.icon+'</span><div><time>'+esc(e.when)+'</time><strong>'+esc(e.label)+'</strong></div></div>').join("")+'</section>'+
+    '<nav class="study-section-nav" aria-label="Jump to a study section"><button type="button" data-study-jump="study-reading">Reading</button><button type="button" data-study-jump="study-spelling">Spelling</button><button type="button" data-study-jump="study-religion">Religion</button><button type="button" data-study-jump="study-math">Math</button><button type="button" data-study-jump="study-words">Words</button></nav>'+
     subjectCard("study-reading","reading","Reading",icon("book"),r)+
     subjectCard("study-spelling","spelling","Spelling and phonics",icon("pencil"),spell)+
     subjectCard("study-religion","religion",rel?.subject||"Religion",icon("cross"),rel)+
     subjectCard("study-math","math","Math",icon("math"),math)+
-    '<section id="study-words" class="subject-card sight words-card"><div class="subject-head"><span class="icon">'+icon("words")+'</span><div><p>WORDS</p><h2>Sight words & vocabulary</h2></div></div>'+
+    '<details id="study-words" class="subject-card subject-disclosure sight words-card"><summary><span class="subject-head"><span class="icon">'+icon("words")+'</span><span><span class="subject-kicker">WORDS</span><strong>Sight words & vocabulary</strong></span></span><span class="disclosure-chevron" aria-hidden="true">›</span></summary><div class="subject-disclosure-body">'+
       '<h3 class="word-subhead">Sight words</h3><div class="sight-cloud">'+sight.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div>'+
-      '<h3 class="word-subhead">Vocabulary</h3><div class="word-grid">'+vocab.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></section>'+
+      '<h3 class="word-subhead">Vocabulary</h3><div class="word-grid">'+vocab.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></div></details>'+
     (starActive?'<section class="calm-card"><h3>STAR reminder</h3><p>Keep assessment preparation calm. Normal reading, normal routines, and a good night’s sleep are enough.</p></section>':'')+
     '<section class="calm-card study-tip"><span>'+icon("check")+'</span><div><h3>Keep review short and focused</h3><p>Use the teacher-posted material above, then stop when the planned review is complete.</p></div></section>'+
     '</div></div>';
@@ -622,10 +649,10 @@ function renderFamily(){
     scene("family","FAMILY VIEW","Family","The practical details that keep school days running smoothly",false)+freshness()+
     '<div class="family-content"><section class="family-priority"><p>WEEKLY PRIORITY</p><h2>'+esc(priority.title)+'</h2><span>'+esc(priority.detail)+'</span></section>'+
     '<div class="family-stats"><article><strong>'+tests+'</strong><span>tests or assessments remaining this week</span></article><article><strong>'+esc(nextDue?fmtShort(nextDue.span.start):"✓")+'</strong><span>'+esc(nextDue?nextDue.x.label:"No posted deadline due")+'</span></article></div>'+
-    '<section class="family-card"><h3>Family checklist</h3><div class="family-actions">'+actions.map((a,i)=>'<button class="family-action '+(familyChecked(a,i)?'is-done':'')+'" type="button" data-family-check="'+i+'" aria-pressed="'+familyChecked(a,i)+'"><span class="box">'+(familyChecked(a,i)?icon("check"):'')+'</span><span>'+esc(a)+'</span></button>').join("")+'</div></section>'+
+    '<details class="family-card family-disclosure" open><summary><span>Family checklist</span><span class="disclosure-chevron" aria-hidden="true">›</span></summary><div class="family-disclosure-body"><p class="family-section-hint">Tap a task when it is finished.</p><div class="family-actions">'+actions.map((a,i)=>'<button class="family-action '+(familyChecked(a,i)?'is-done':'')+'" type="button" data-family-check="'+i+'" aria-pressed="'+familyChecked(a,i)+'"><span class="box">'+(familyChecked(a,i)?icon("check"):'')+'</span><span>'+esc(a)+'</span></button>').join("")+'</div></div></details>'+
     '<section class="reading-policy"><span class="round">20</span><div><h3>Reading every day</h3><p>Read or be read to for 20 minutes and keep the Reading Log in the homework folder.</p></div></section>'+
-    '<section class="family-card"><h3>Current notices</h3><div class="notice-list">'+notices.map(n=>'<div class="notice"><span class="notice-dot"></span><p>'+esc(n)+'</p></div>').join("")+'</div></section>'+
-    '<section class="family-card"><h3>Source coverage</h3><div class="notice-list"><div class="notice"><span class="notice-dot"></span><p>'+esc(envelope?.source||"Verified ABVM school sources")+'</p></div>'+(uploadedNoticeStatus()?'<div class="notice"><span class="notice-dot"></span><p>'+esc(uploadedNoticeStatus())+'</p></div>':'')+gaps.map(n=>'<div class="notice"><span class="notice-dot"></span><p>'+esc(n)+'</p></div>').join("")+'</div></section>'+
+    '<details class="family-card family-disclosure"><summary><span>Current notices</span><span class="summary-count">'+notices.length+'</span><span class="disclosure-chevron" aria-hidden="true">›</span></summary><div class="family-disclosure-body notice-list">'+notices.map(n=>'<div class="notice"><span class="notice-dot"></span><p>'+esc(n)+'</p></div>').join("")+'</div></details>'+
+    '<details class="family-card family-disclosure"><summary><span>Source coverage</span><span class="disclosure-chevron" aria-hidden="true">›</span></summary><div class="family-disclosure-body notice-list"><div class="notice"><span class="notice-dot"></span><p>'+esc(envelope?.source||"Verified ABVM school sources")+'</p></div>'+(uploadedNoticeStatus()?'<div class="notice"><span class="notice-dot"></span><p>'+esc(uploadedNoticeStatus())+'</p></div>':'')+gaps.map(n=>'<div class="notice"><span class="notice-dot"></span><p>'+esc(n)+'</p></div>').join("")+'</div></details>'+
     '<section class="install-card"><span class="install-icon">'+icon("home")+'</span><div><h3>Put this app on iPhone</h3><p>In Safari, use Share → Add to Home Screen for an app-like launch experience.</p></div></section>'+
     '</div></div>';
 }
@@ -636,6 +663,13 @@ function render(){
   const screen=stack().querySelector(".screen");if(screen)screen.scrollTop=0;bindScreen();
 }
 function bindScreen(){
+  $("[data-study-jump]").forEach(b=>b.addEventListener("click",()=>{
+    const target=document.getElementById(b.dataset.studyJump);
+    if(target){
+      if(target.tagName==="DETAILS")target.open=true;
+      target.scrollIntoView({behavior:"smooth",block:"start"});
+    }
+  }));
   $$("[data-check]").forEach(b=>b.addEventListener("click",()=>{const i=Number(b.dataset.check),item=(pack.homework||[])[i],k=checkKey(item,i);localStorage.getItem(k)==="1"?localStorage.removeItem(k):localStorage.setItem(k,"1");render()}));
   $$("[data-family-check]").forEach(b=>b.addEventListener("click",()=>{const i=Number(b.dataset.familyCheck),actions=[...(pack?.homework||[]).map(x=>x.task),...currentReminders()].filter((x,j,a)=>x&&a.indexOf(x)===j).slice(0,12),action=actions[i],k=familyKey(action,i);localStorage.getItem(k)==="1"?localStorage.removeItem(k):localStorage.setItem(k,"1");renderFamily();bindScreen()}));
   $$("[data-day]").forEach(b=>b.addEventListener("click",()=>{selectedDay=new Date(b.dataset.day);renderWeek();bindScreen()}));
