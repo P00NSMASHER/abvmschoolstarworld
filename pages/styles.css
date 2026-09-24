@@ -715,3 +715,53 @@ button:focus-visible,a:focus-visible{outline:3px solid #f0ad42;outline-offset:3p
   .calendar-grid button{min-height:72px}
   .calendar-chip>span:not(.mini-icon){max-width:38px}
 }
+
+
+/* Final mobile calendar QA: schedule status must never disappear */
+.calendar-grid button{
+  overflow:hidden;
+}
+.calendar-status-flag{
+  position:static;
+  order:1;
+  width:100%;
+  box-sizing:border-box;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:15px;
+  padding:3px 3px;
+  margin:0;
+  border-radius:7px;
+  font-size:7px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:.01em;
+}
+.calendar-grid button>strong{order:0}
+.calendar-grid .calendar-chip{order:2}
+.calendar-grid .calendar-more{order:3}
+.calendar-chip>span:not(.mini-icon){
+  min-width:0;
+  overflow:visible;
+  text-overflow:clip;
+  white-space:normal;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  line-clamp:2;
+  text-align:center;
+  line-height:1.05;
+}
+@media(max-width:560px){
+  .calendar-grid button{min-height:82px;gap:3px;padding:6px 4px}
+  .calendar-status-flag{font-size:6.7px;min-height:15px;padding:3px 2px}
+  .calendar-chip{min-height:23px;font-size:6.6px;line-height:1.05;padding:3px 2px}
+  .calendar-chip .mini-icon{display:none}
+  .calendar-chip>span:not(.mini-icon){max-width:100%;width:100%}
+  .calendar-more{font-size:6px;padding:2px 4px}
+}
+@media(max-width:390px){
+  .calendar-grid button{min-height:84px}
+  .calendar-status-flag{font-size:6.4px}
+}
