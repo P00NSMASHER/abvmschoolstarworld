@@ -109,3 +109,15 @@ test("Calendar uses the restored early-morning visual hierarchy",async({page})=>
   }));
   expect(style.radius).toBeGreaterThanOrEqual(20);
 });
+
+
+test("restored Calendar uses the 6 AM selected-day visual treatment",async({page})=>{
+  await openCalendar(page);
+  await goToMonth(page,2026,"October");
+  const eventDay=page.getByRole("button",{name:/Picture Day/i}).first();
+  await expect(eventDay).toBeVisible();
+  await eventDay.click();
+  await expect(page.locator(".calendar-day-visual img")).toBeVisible();
+  await expect(page.locator(".calendar-primary-block")).toHaveCount(0);
+  await expect(page.locator(".calendar-day-hero")).toHaveCount(0);
+});
