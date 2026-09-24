@@ -786,8 +786,11 @@ button:focus-visible,a:focus-visible{outline:3px solid #f0ad42;outline-offset:3p
   background-image:
     linear-gradient(180deg,rgba(7,26,43,.08) 0%,rgba(7,26,43,.18) 42%,rgba(5,22,38,.58) 100%),
     var(--calendar-photo);
+  background-color:#dfe7eb;
   background-repeat:no-repeat;
-  background-size:100% 100%,500% 200%;
+  /* Five square tiles across each sprite sheet. Width-based scaling preserves
+     the source photography; the 16:10 frame crops vertically instead of stretching. */
+  background-size:100% 100%,500% auto;
   background-position:center,var(--calendar-photo-x) var(--calendar-photo-y);
   box-shadow:0 14px 34px rgba(20,54,76,.17),inset 0 0 0 1px rgba(255,255,255,.28);
 }
