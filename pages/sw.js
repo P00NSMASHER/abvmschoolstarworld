@@ -1,10 +1,11 @@
-const CACHE = "abvm-grade2-parent-companion-v18";
+const CACHE = "abvm-grade2-parent-companion-v19";
 const SHELL = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
   "./manifest.webmanifest",
+  "./data/school-year-calendar.json",
   "./assets/abvm-app-icon-180.png",
   "./assets/abvm-app-icon-192.png",
   "./assets/abvm-app-icon-512.png",
