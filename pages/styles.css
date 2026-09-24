@@ -1409,3 +1409,55 @@ details[open]>summary .disclosure-chevron{transform:rotate(90deg)}
   .phone-app{grid-template-columns:210px minmax(0,1fr)}
   .bottom-nav{padding-left:18px;padding-right:18px}
 }
+
+
+/* Audit fixes 6–10: readability, semantics, checklist affordance, desktop scroll */
+.checklist-help{
+  margin:0 0 6px;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.35;
+}
+.static-notice-list{
+  margin:0;
+  padding:10px 0 0;
+  list-style:none;
+}
+.static-notice-list .notice{
+  list-style:none;
+}
+@media(max-width:899px){
+  .bottom-nav button b{font-size:10.8px}
+  .calendar-tabs button{font-size:10px}
+  .calendar-weekdays span{font-size:9.5px}
+  .calendar-grid .calendar-chip{font-size:7.5px}
+  .calendar-status-flag{font-size:6.8px}
+  .calendar-more{font-size:7px}
+  .section-label{font-size:10.5px}
+  .task-tag{font-size:9px}
+  .check-copy small{font-size:11.5px}
+  .family-section-hint{font-size:11px}
+}
+@media(min-width:900px){
+  html,body,.site-shell,.phone-app,.screen-stack,.screen{
+    overflow-x:visible;
+  }
+  html,body,.site-shell,.phone-app,.screen-stack{
+    height:auto;
+    max-height:none;
+  }
+  body{
+    overflow-y:auto !important;
+  }
+  .screen{
+    overflow-y:visible !important;
+    max-height:none;
+  }
+  .bottom-nav{
+    overflow-y:auto;
+    overscroll-behavior:contain;
+  }
+  .screen-stack{
+    min-width:0;
+  }
+}
