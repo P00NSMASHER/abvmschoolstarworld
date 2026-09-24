@@ -300,7 +300,9 @@ function calendarVisualFor(date,primary,special,schedule){
     sheet:variant.sheet,
     tile:variant.tile,
     x:col*25,
-    y:row*100
+    // The 38 source tiles are square. Preserve their photographic aspect ratio
+    // inside the 16:10 detail frame by center-cropping vertically, never stretching.
+    y:row===0?13.636:86.364
   };
 }
 function taskIconName(item){
