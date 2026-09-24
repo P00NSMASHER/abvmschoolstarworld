@@ -1348,3 +1348,69 @@ button:focus-visible,a:focus-visible{outline:3px solid #f0ad42;outline-offset:3p
   .calendar-chip.special{font-size:6px}
   .calendar-more{font-size:5.7px}
 }
+
+/* Final calendar visual QA — narrow-cell centering and overflow guards */
+.calendar-grid button{
+  box-sizing:border-box;
+}
+.calendar-status-flag{
+  align-self:center;
+  justify-self:center;
+  width:calc(100% - 2px);
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  padding:4px 2px;
+  overflow:hidden;
+  text-align:center;
+  text-overflow:clip;
+  white-space:nowrap;
+  font-size:6.15px;
+  line-height:1;
+}
+.calendar-status-flag.closed,
+.calendar-status-flag.halfday{
+  text-align:center;
+}
+.calendar-grid button.active .calendar-status-flag.closed{
+  background:#ffe2df;
+  color:#8b3531;
+  border-color:rgba(255,255,255,.9);
+}
+.calendar-grid button.active .calendar-status-flag.halfday{
+  background:#fff0bd;
+  color:#735000;
+  border-color:rgba(255,255,255,.86);
+}
+.calendar-grid .calendar-chip{
+  box-sizing:border-box;
+  justify-self:stretch;
+  overflow:hidden;
+}
+.calendar-chip>span:not(.mini-icon){
+  min-width:0;
+  overflow:hidden;
+  text-overflow:clip;
+}
+.calendar-more{
+  justify-self:center;
+  text-align:center;
+}
+@media(max-width:390px){
+  .calendar-status-flag{
+    width:100%;
+    padding:4px 1px;
+    font-size:5.95px;
+    letter-spacing:0;
+  }
+  .calendar-grid .calendar-chip{
+    min-height:22px;
+    padding-left:3px;
+    padding-right:3px;
+  }
+  .calendar-more{
+    width:100%;
+    font-size:5.6px;
+  }
+}
+
