@@ -299,9 +299,9 @@ function calendarVisualFor(date,primary,special,schedule){
     index,
     sheet:variant.sheet,
     tile:variant.tile,
+    col,
+    row,
     x:col*25,
-    // The selected-day photo card is square, matching the native source tiles.
-    // Exact 0/100 row positioning shows each tile without stretch or crop distortion.
     y:row*100
   };
 }
@@ -546,14 +546,14 @@ function renderCalendar(){
   const lunchBlock=lunch?'<div class="calendar-lunch"><img class="calendar-lunch-photo" src="'+esc(lunch.image||"")+'" width="720" height="720" loading="lazy" decoding="async" alt="'+esc(lunch.imageAlt||"School lunch")+'"><div><b>School Lunch</b><p>'+esc((lunch.items||[]).join(", ").replace(/, ([^,]*)$/,", and $1"))+'</p></div></div>':'';
   const emptyBlock=!events.length&&!effectiveSpecial?'<p class="calendar-empty">Regular school day. No special events are posted.</p>':'';
   const detailContent=dayHeading+scheduleBlock+primaryBlock+specialBlock+extraEventsBlock+lunchBlock+emptyBlock;
-  const photoStyle=visual?' style="--calendar-photo:url('+visual.src+');--calendar-photo-x:'+visual.x+'%;--calendar-photo-y:'+visual.y+'%;"':'';
+  const photoLayer=visual?'<img class="calendar-photo-background" src="'+esc(visual.src)+'" alt="" aria-hidden="true" decoding="async" style="--calendar-photo-col:'+visual.col+';--calendar-photo-row:'+visual.row+';">':'';
 
   stack().innerHTML='<div class="screen calendar-screen" role="region" aria-label="'+MONTHS[m]+' calendar">'+
     scene("calendar","SCHOOL MONTH AT A GLANCE",MONTHS[m]+" "+y,"School Month at a Glance",false)+
     '<div class="calendar-wrap"><section class="calendar-card"><div class="calendar-title-row"><button class="month-arrow" data-month="-1" type="button" aria-label="Previous month">‹</button><div class="calendar-heading"><p>'+esc(calendarMode==="month"?"MONTH VIEW":"LIST VIEW")+'</p><h2>'+MONTHS[m]+" "+y+'</h2></div><button class="month-arrow" data-month="1" type="button" aria-label="Next month">›</button></div>'+
     '<div class="calendar-tabs"><button class="'+(calendarMode==="month"?"active":"")+'" data-cal-mode="month" type="button" aria-pressed="'+(calendarMode==="month")+'">Month View</button><button class="'+(calendarMode==="list"?"active":"")+'" data-cal-mode="list" type="button" aria-pressed="'+(calendarMode==="list")+'">List View</button></div>'+
     monthPanel+listPanel+'</section>'+
-    '<section class="calendar-day-card '+(primary?('day-'+kindClass(primary)):'')+(visual?(' has-photo visual-'+visual.category):'')+'"'+photoStyle+'><div class="calendar-overlay-panel">'+detailContent+'</div></section>'+
+    '<section class="calendar-day-card '+(primary?('day-'+kindClass(primary)):'')+(visual?(' has-photo visual-'+visual.category):'')+'">'+photoLayer+'<div class="calendar-overlay-panel">'+detailContent+'</div></section>'+
     '</div></div>';
 }
 function subjectCard(id,klass,title,icon,subj){
