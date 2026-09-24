@@ -215,32 +215,39 @@ function scheduleStatusDetail(item){
   if(!item)return"";
   return kindClass(item)==="closed"?"School is closed":"Dismissal at 12:00 PM";
 }
+const CALENDAR_PHOTO_SPRITES=[
+  "./assets/calendar/photo-sprite-1.jpg",
+  "./assets/calendar/photo-sprite-2.jpg",
+  "./assets/calendar/photo-sprite-3.jpg",
+  "./assets/calendar/photo-sprite-4.jpg"
+];
+const photoTile=(sheet,tile)=>({sheet,tile});
 const CALENDAR_VISUAL_LIBRARY={
-  picture:{variants:["./assets/calendar/picture-day.svg","./assets/calendar/picture-day-2.svg"],alt:"Premium school Picture Day camera visual"},
-  mass:{variants:["./assets/calendar/mass-1.svg","./assets/calendar/mass-2.svg"],alt:"Premium Mass and church visual"},
-  gym:{variants:["./assets/calendar/gym-1.svg","./assets/calendar/gym-2.svg"],alt:"Premium gym class visual"},
-  art:{variants:["./assets/calendar/art-1.svg","./assets/calendar/art-2.svg"],alt:"Premium art class visual"},
-  dress:{variants:["./assets/calendar/dress-down-1.svg","./assets/calendar/dress-down-2.svg"],alt:"Premium Dress Down Day visual"},
-  closed:{variants:["./assets/calendar/closed-1.svg","./assets/calendar/closed-2.svg"],alt:"Premium no-school visual"},
-  halfday:{variants:["./assets/calendar/half-day-1.svg","./assets/calendar/half-day-2.svg"],alt:"Premium half-day dismissal visual"},
-  conference:{variants:["./assets/calendar/conference-1.svg","./assets/calendar/conference-2.svg"],alt:"Premium parent-teacher conference visual"},
-  progress:{variants:["./assets/calendar/progress-1.svg","./assets/calendar/progress-2.svg"],alt:"Premium progress report visual"},
-  testing:{variants:["./assets/calendar/testing-1.svg","./assets/calendar/testing-2.svg"],alt:"Premium school assessment visual"},
-  celebration:{variants:["./assets/calendar/celebration-1.svg","./assets/calendar/celebration-2.svg"],alt:"Premium school celebration visual"},
-  meeting:{variants:["./assets/calendar/meeting-1.svg","./assets/calendar/meeting-2.svg"],alt:"Premium school meeting visual"},
-  club:{variants:["./assets/calendar/club-1.svg","./assets/calendar/club-2.svg"],alt:"Premium school club visual"},
-  halloween:{variants:["./assets/calendar/halloween.svg"],alt:"Premium Halloween school celebration visual"},
-  thanksgiving:{variants:["./assets/calendar/thanksgiving.svg"],alt:"Premium Thanksgiving break visual"},
-  christmas:{variants:["./assets/calendar/christmas.svg"],alt:"Premium Christmas break visual"},
-  newyear:{variants:["./assets/calendar/new-year.svg"],alt:"Premium New Year's Day visual"},
-  mlk:{variants:["./assets/calendar/mlk-day.svg"],alt:"Premium Martin Luther King Jr. Day visual"},
-  presidents:{variants:["./assets/calendar/presidents-day.svg"],alt:"Premium Presidents' Day visual"},
-  easter:{variants:["./assets/calendar/easter.svg"],alt:"Premium Easter break visual"},
-  memorial:{variants:["./assets/calendar/memorial-day.svg"],alt:"Premium Memorial Day visual"},
-  catholic:{variants:["./assets/calendar/catholic-schools-week.svg"],alt:"Premium Catholic Schools Week visual"},
-  santa:{variants:["./assets/calendar/santa-workshop.svg"],alt:"Premium Santa Workshop visual"},
-  lastday:{variants:["./assets/calendar/last-day.svg"],alt:"Premium last day of school visual"},
-  weather:{variants:["./assets/calendar/weather-makeup.svg"],alt:"Premium weather makeup day visual"}
+  picture:{variants:[photoTile(0,0),photoTile(0,1)],alt:"Premium school Picture Day photo"},
+  mass:{variants:[photoTile(0,2),photoTile(0,3)],alt:"Premium Mass and church photo"},
+  gym:{variants:[photoTile(0,4),photoTile(0,5)],alt:"Premium ABVM gym photo"},
+  art:{variants:[photoTile(0,6),photoTile(0,7)],alt:"Premium art class photo"},
+  dress:{variants:[photoTile(0,8),photoTile(0,9)],alt:"Premium Dress Down Day photo"},
+  closed:{variants:[photoTile(1,0),photoTile(1,1)],alt:"Premium no-school photo"},
+  halfday:{variants:[photoTile(1,2),photoTile(1,3)],alt:"Premium half-day dismissal photo"},
+  conference:{variants:[photoTile(1,4),photoTile(1,5)],alt:"Premium parent-teacher conference photo"},
+  progress:{variants:[photoTile(1,6),photoTile(1,7)],alt:"Premium progress report photo"},
+  testing:{variants:[photoTile(1,8),photoTile(1,9)],alt:"Premium school assessment photo"},
+  celebration:{variants:[photoTile(2,0),photoTile(2,1)],alt:"Premium school celebration photo"},
+  meeting:{variants:[photoTile(2,2),photoTile(2,3)],alt:"Premium school meeting photo"},
+  club:{variants:[photoTile(2,4),photoTile(2,5)],alt:"Premium school club photo"},
+  halloween:{variants:[photoTile(2,6)],alt:"Premium Halloween school celebration photo"},
+  thanksgiving:{variants:[photoTile(2,7)],alt:"Premium Thanksgiving break photo"},
+  christmas:{variants:[photoTile(2,8)],alt:"Premium Christmas break photo"},
+  newyear:{variants:[photoTile(2,9)],alt:"Premium New Year's Day photo"},
+  mlk:{variants:[photoTile(3,0)],alt:"Premium Martin Luther King Jr. Day photo"},
+  presidents:{variants:[photoTile(3,1)],alt:"Premium Presidents' Day photo"},
+  easter:{variants:[photoTile(3,2)],alt:"Premium Easter break photo"},
+  memorial:{variants:[photoTile(3,3)],alt:"Premium Memorial Day photo"},
+  catholic:{variants:[photoTile(3,4)],alt:"Premium Catholic Schools Week photo"},
+  santa:{variants:[photoTile(3,5)],alt:"Premium Santa Workshop photo"},
+  lastday:{variants:[photoTile(3,6)],alt:"Premium last day of school photo"},
+  weather:{variants:[photoTile(3,7)],alt:"Premium weather makeup day photo"}
 };
 function calendarVisualCategory(primary,special,schedule){
   const pk=primary?kindClass(primary):"",p=String(primary?.label||"").toLowerCase();
@@ -284,7 +291,17 @@ function calendarVisualFor(date,primary,special,schedule){
   const entry=category?CALENDAR_VISUAL_LIBRARY[category]:null;
   if(!entry?.variants?.length)return null;
   const index=stableCalendarVisualIndex(date,entry.variants.length);
-  return{src:entry.variants[index],alt:entry.alt,category,index};
+  const variant=entry.variants[index],col=variant.tile%5,row=Math.floor(variant.tile/5);
+  return{
+    src:CALENDAR_PHOTO_SPRITES[variant.sheet],
+    alt:entry.alt,
+    category,
+    index,
+    sheet:variant.sheet,
+    tile:variant.tile,
+    x:col*25,
+    y:row*100
+  };
 }
 function taskIconName(item){
   const s=((item?.subject||"")+" "+(item?.task||"")).toLowerCase();
@@ -519,16 +536,22 @@ function renderCalendar(){
       }).join(""):'<div class="empty-note">No school dates are listed for this month.</div>')+
     '</div>';
 
+  const dayHeading='<div class="calendar-day-heading"><p>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</p><h2>'+esc(fmtDate(calendarDay))+'</h2></div>';
+  const scheduleBlock=schedule?'<div class="schedule-alert '+kindClass(schedule)+'"><span>'+icon(kindClass(schedule)==="closed"?"ban":"clock")+'</span><div><small>'+esc(scheduleStatusText(schedule).toUpperCase())+'</small><strong>'+esc(scheduleStatusDetail(schedule))+'</strong></div></div>':'';
+  const primaryBlock=primary?'<div class="calendar-primary-event '+kindClass(primary)+'"><span class="event-icon '+kindClass(primary)+'">'+icon(eventIconName(primary))+'</span><div><small>'+esc(calendarLabel(primary).toUpperCase())+'</small><strong>'+esc(primary.label)+'</strong></div></div>':'';
+  const specialBlock=effectiveSpecial?'<div class="calendar-special"><span>'+icon(specialIconName(effectiveSpecial))+'</span><div><small>'+(schedule&&kindClass(schedule)==="halfday"?'USUAL CLASS SPECIAL':'CLASS SPECIAL')+'</small><strong>'+esc(effectiveSpecial)+'</strong>'+(schedule&&kindClass(schedule)==="halfday"?'<em>Early dismissal may change the usual schedule.</em>':'')+'</div></div>':'';
+  const specialInPhoto=Boolean(visual&&!primary&&!schedule&&effectiveSpecial);
+  const dayLead=visual
+    ?'<div class="calendar-photo-card visual-'+visual.category+'" style="--calendar-photo:url('+visual.src+');--calendar-photo-x:'+visual.x+'%;--calendar-photo-y:'+visual.y+'%;"><div class="calendar-photo-content">'+dayHeading+scheduleBlock+primaryBlock+(specialInPhoto?specialBlock:'')+'</div></div>'
+    :dayHeading+scheduleBlock+primaryBlock;
+
   stack().innerHTML='<div class="screen calendar-screen" role="region" aria-label="'+MONTHS[m]+' calendar">'+
     scene("calendar","SCHOOL MONTH AT A GLANCE",MONTHS[m]+" "+y,"School Month at a Glance",false)+
     '<div class="calendar-wrap"><section class="calendar-card"><div class="calendar-title-row"><button class="month-arrow" data-month="-1" type="button" aria-label="Previous month">‹</button><div class="calendar-heading"><p>'+esc(calendarMode==="month"?"MONTH VIEW":"LIST VIEW")+'</p><h2>'+MONTHS[m]+" "+y+'</h2></div><button class="month-arrow" data-month="1" type="button" aria-label="Next month">›</button></div>'+
     '<div class="calendar-tabs"><button class="'+(calendarMode==="month"?"active":"")+'" data-cal-mode="month" type="button" aria-pressed="'+(calendarMode==="month")+'">Month View</button><button class="'+(calendarMode==="list"?"active":"")+'" data-cal-mode="list" type="button" aria-pressed="'+(calendarMode==="list")+'">List View</button></div>'+
     monthPanel+listPanel+'</section>'+
-    '<section class="calendar-day-card '+(primary?('day-'+kindClass(primary)):'')+'"><div class="calendar-day-heading"><p>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</p><h2>'+esc(fmtDate(calendarDay))+'</h2></div>'+
-    (schedule?'<div class="schedule-alert '+kindClass(schedule)+'"><span>'+icon(kindClass(schedule)==="closed"?"ban":"clock")+'</span><div><small>'+esc(scheduleStatusText(schedule).toUpperCase())+'</small><strong>'+esc(scheduleStatusDetail(schedule))+'</strong></div></div>':'')+
-    (visual?'<figure class="calendar-day-visual"><img src="'+esc(visual.src)+'" alt="'+esc(visual.alt)+'" width="960" height="600" loading="lazy" decoding="async"></figure>':'')+
-    (primary?'<div class="calendar-primary-event '+kindClass(primary)+'"><span class="event-icon '+kindClass(primary)+'">'+icon(eventIconName(primary))+'</span><div><small>'+esc(calendarLabel(primary).toUpperCase())+'</small><strong>'+esc(primary.label)+'</strong></div></div>':'')+
-    (effectiveSpecial?'<div class="calendar-special"><span>'+icon(specialIconName(effectiveSpecial))+'</span><div><small>'+(schedule&&kindClass(schedule)==="halfday"?'USUAL CLASS SPECIAL':'CLASS SPECIAL')+'</small><strong>'+esc(effectiveSpecial)+'</strong>'+(schedule&&kindClass(schedule)==="halfday"?'<em>Early dismissal may change the usual schedule.</em>':'')+'</div></div>':'')+
+    '<section class="calendar-day-card '+(primary?('day-'+kindClass(primary)):'')+(visual?(' has-photo visual-'+visual.category):'')+'">'+dayLead+
+    (specialInPhoto?'':specialBlock)+
     (contentEvents.length>1?'<div class="calendar-event-list">'+contentEvents.filter(e=>e!==primary).map(e=>'<div><span class="event-icon '+kindClass(e)+'">'+icon(eventIconName(e))+'</span><span><strong>'+esc(e.label)+'</strong></span></div>').join("")+'</div>':(!events.length&&!effectiveSpecial?'<p class="calendar-empty">Regular school day. No special events are posted.</p>':''))+
     (lunch?'<div class="calendar-lunch"><img class="calendar-lunch-photo" src="'+esc(lunch.image||"")+'" width="720" height="720" loading="lazy" decoding="async" alt="'+esc(lunch.imageAlt||"School lunch")+'"><div><b>School Lunch</b><p>'+esc((lunch.items||[]).join(", ").replace(/, ([^,]*)$/,", and $1"))+'</p></div></div>':'')+'</section>'+
     '</div></div>';
