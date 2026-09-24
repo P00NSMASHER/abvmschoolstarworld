@@ -471,7 +471,7 @@ function renderToday(){
     '<section class="gold-card glass-card homework-dashboard"><div class="checklist-title"><h3>Homework</h3><span class="edit-pill">'+homeworkStatus()+'</span></div><p class="checklist-help">Tap a task to mark it complete. Progress is saved on this device.</p><div class="task-list">'+(pack?.homework||[]).map(taskHtml).join("")+'</div></section>'+
     lunchCard(lunch)+
     '</div>';
-  stack().innerHTML='<div class="screen" role="region" aria-label="Today">'+scene("today","TODAY",fmtDate(d),priority.title,false)+freshness()+content+'</div>';
+  stack().innerHTML='<div class="screen today-screen" role="region" aria-label="Today">'+scene("today","TODAY",fmtDate(d),priority.title,false)+freshness()+content+'</div>';
 }
 function renderWeek(){
   const days=weekDays();
@@ -490,7 +490,7 @@ function renderWeek(){
   const noSchool=schedule&&kindClass(schedule)==="closed",halfDay=schedule&&kindClass(schedule)==="halfday",weekend=[0,6].includes(selectedDay.getDay());
   const dayStatus=noSchool?"No school":halfDay?"Half day • 12:00 PM":weekend?"Weekend":"School day";
   const note='<div class="week-hero-note"><span>CALM PLAN</span><b>Five days, one clear view</b></div>';
-  stack().innerHTML='<div class="screen" role="region" aria-label="This week">'+scene("week","YOUR SCHOOL PLAN","This Week","Tap a day for events, lunch, and specials",false,note)+
+  stack().innerHTML='<div class="screen week-screen" role="region" aria-label="This week">'+scene("week","YOUR SCHOOL PLAN","This Week","Tap a day for events, lunch, and specials",false,note)+
     '<div class="content overlap"><div class="day-picker">'+picker+'</div>'+
     '<section class="day-detail"><div class="day-detail-inner"><div class="day-detail-title"><div><p>'+MONTHS[selectedDay.getMonth()].toUpperCase()+'</p><h2>'+esc(fmtDate(selectedDay))+'</h2></div><span class="school-day-pill '+(noSchool?'closed':halfDay?'halfday':weekend?'closed':'')+'">'+dayStatus+'</span></div>'+
     (schedule?'<div class="schedule-alert compact '+kindClass(schedule)+'"><span>'+icon(kindClass(schedule)==="closed"?"ban":"clock")+'</span><div><small>'+esc(scheduleStatusText(schedule).toUpperCase())+'</small><strong>'+esc(scheduleStatusDetail(schedule))+'</strong></div></div>':'')+
