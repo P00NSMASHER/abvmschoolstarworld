@@ -1466,3 +1466,12 @@ body{font-family:var(--font-sans)}
 @media(min-width:900px){
   .content,.study-content,.family-content{max-width:var(--content-max)}
 }
+
+
+/* WCAG AA contrast corrections discovered by automated QA */
+.calendar-tabs button:not(.active){color:#506371}
+.calendar-weekdays span{color:#5e6972}
+.calendar-more{color:#4f616d}
+.calendar-primary-block small{color:#46687e}
+.calendar-section-label span{color:#566a78}
+.calendar-also-row small{color:#536773}
