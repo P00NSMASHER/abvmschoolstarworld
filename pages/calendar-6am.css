@@ -44,11 +44,7 @@
 
 .calendar-screen .top-scene.calendar::after{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(4,48,88,.14) 60%,rgba(4,48,88,.28))}
 
-.calendar-screen .top-scene.week::after{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(2,50,94,.10) 48%,rgba(3,43,83,.34))}
-
-.calendar-screen .scene-calendar{background-image:url("./assets/calendar-autumn.svg")}
-
-.calendar-screen .school-bar{
+.calendar-screen .top-scene.week::after{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(2,50,94,.10) 48%,rgba(3,43,83,.34))}.calendar-screen .school-bar{
   position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:10px
 }
 
