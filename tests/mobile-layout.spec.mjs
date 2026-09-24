@@ -58,6 +58,7 @@ test("each tab exposes its primary answer near the top of the scroll flow",async
   for(const [tab,selector] of targets){
     await page.getByRole("button",{name:tab,exact:true}).click();
     const top=await page.locator(selector).evaluate(el=>el.getBoundingClientRect().top);
-    expect(top,`${tab} primary answer starts too deep`).toBeLessThan(window.innerHeight*1.05);
+    const viewportHeight=page.viewportSize()?.height||844;
+    expect(top,`${tab} primary answer starts too deep`).toBeLessThan(viewportHeight*1.05);
   }
 });
