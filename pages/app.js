@@ -302,8 +302,8 @@ function renderCalendar(){
           '<button class="month-arrow" data-month="1" type="button" aria-label="Next month">›</button>'+
         '</div>'+
         '<div class="calendar-tabs" role="group" aria-label="Calendar view">'+
-          '<button class="'+(calendarMode==="month"?"active":"")+'" data-cal-mode="month" type="button" aria-pressed="'+(calendarMode==="month")+'">Month</button>'+
-          '<button class="'+(calendarMode==="list"?"active":"")+'" data-cal-mode="list" type="button" aria-pressed="'+(calendarMode==="list")+'">List</button>'+
+          '<button class="'+(calendarMode==="month"?"active":"")+'" data-cal-mode="month" type="button" aria-label="Month View" aria-pressed="'+(calendarMode==="month")+'">Month</button>'+
+          '<button class="'+(calendarMode==="list"?"active":"")+'" data-cal-mode="list" type="button" aria-label="List View" aria-pressed="'+(calendarMode==="list")+'">List</button>'+
         '</div>'+
         monthPanel+listPanel+
       '</section>'+
