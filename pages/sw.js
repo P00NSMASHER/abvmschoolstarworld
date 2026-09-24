@@ -8,6 +8,8 @@ const SHELL = [
   "./js/date-utils.js",
   "./js/storage.js",
   "./js/install.js",
+  "./js/events.js",
+  "./js/calendar-visuals.js",
   "./manifest.webmanifest",
   "./data/school-year-calendar.json",
   "./assets/abvm-app-icon-180.png",
