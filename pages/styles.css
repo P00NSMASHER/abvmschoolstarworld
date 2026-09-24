@@ -1588,3 +1588,12 @@ body{font-family:var(--font-sans)}
   .study-at-a-glance>.section-label,.study-at-a-glance>h2{grid-column:1/-1}
   .family-priority{padding-top:18px;padding-bottom:18px}
 }
+
+
+/* Phase 5: explicit keyboard focus for native disclosure controls */
+summary:focus-visible,
+[tabindex]:focus-visible{
+  outline:3px solid var(--focus);
+  outline-offset:3px;
+}
+summary{border-radius:var(--radius-sm)}
