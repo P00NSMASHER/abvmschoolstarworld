@@ -295,6 +295,22 @@ function taskIconName(item){
   if(/form|cover/.test(s))return"document";
   return"check";
 }
+function sameEventWindow(a,b){
+  const aa=eventSpan(a?.date),bb=eventSpan(b?.date);
+  return Boolean(aa&&bb&&sameDay(aa.start,bb.start)&&sameDay(aa.end,bb.end));
+}
+function semanticEventClasses(item){
+  return [...new Set([kindClass(item),...scheduleSecondaryEvents(item).map(x=>kindClass(x))])];
+}
+function mergeAnnualCalendarItems(dynamicItems,annualItems){
+  const merged=[...(dynamicItems||[])];
+  for(const base of annualItems||[]){
+    const baseClass=kindClass(base);
+    const exists=merged.some(item=>sameEventWindow(item,base)&&semanticEventClasses(item).includes(baseClass));
+    if(!exists)merged.push(base);
+  }
+  return merged;
+}
 function eventItemsForDate(date){
   return(pack?.importantDates||[]).filter(x=>{
     const span=eventSpan(x.date);return span&&date>=span.start&&date<=span.end;
@@ -582,16 +598,22 @@ function syncTabFromLocation(){
 window.addEventListener("popstate",syncTabFromLocation);
 window.addEventListener("hashchange",syncTabFromLocation);
 async function load(){
-  let data;
+  let data,annual={importantDates:[]};
   try{
-    const r=await fetch("./data/study-pack.json",{cache:"no-store"});
+    const [r,annualData]=await Promise.all([
+      fetch("./data/study-pack.json",{cache:"no-store"}),
+      fetch("./data/school-year-calendar.json",{cache:"no-store"}).then(async response=>response.ok?response.json():annual).catch(()=>annual)
+    ]);
     if(!r.ok)throw new Error("HTTP "+r.status);
     data=await r.json();if(!data?.pack?.sourceSufficient)throw new Error("Incomplete school pack");
+    annual=annualData||annual;
   }catch(e){
     stack().innerHTML='<div class="screen"><div class="content load-error"><section class="gold-card"><div class="section-label">ABVM GRADE 2</div><h1 class="card-title">School information is temporarily unavailable</h1><p class="muted">Your saved checklist is safe. Check your connection, then refresh the page.</p><button class="retry-button" type="button" onclick="location.reload()">Try again</button></section></div></div>';
     return;
   }
-  envelope=data;pack=data.pack;render();
+  envelope=data;pack=data.pack;
+  pack.importantDates=mergeAnnualCalendarItems(pack.importantDates||[],annual.importantDates||[]);
+  render();
 }
 load();
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
