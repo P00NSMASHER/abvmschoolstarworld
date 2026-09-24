@@ -1,0 +1,55 @@
+name: ABVM Refresh Health Watchdog
+
+on:
+  schedule:
+    # 6:47 PM Eastern is 22:47 UTC in EDT and 23:47 UTC in EST.
+    - cron: '47 22,23 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: abvm-refresh-health
+  cancel-in-progress: true
+
+jobs:
+  refresh-health:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Gate to 6:47 PM Eastern
+        id: gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+          elif [ "$(TZ=America/New_York date +'%H:%M')" = "18:47" ]; then
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v6
+        if: steps.gate.outputs.proceed == 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.proceed == 'true'
+        with:
+          node-version: 22
+
+      - name: Require a healthy same-day teacher refresh
+        if: steps.gate.outputs.proceed == 'true'
+        run: node scripts/check-refresh-health.mjs --require-today=true --max-age-hours=8
+
+      - name: Write health summary
+        if: steps.gate.outputs.proceed == 'true'
+        shell: bash
+        run: |
+          {
+            echo "## ABVM refresh health"
+            echo
+            echo "- Status: PASS"
+            echo "- Checked: $(TZ=America/New_York date)"
+            echo "- Requirement: school pack refreshed today and no more than 8 hours old"
+          } >> "$GITHUB_STEP_SUMMARY"
