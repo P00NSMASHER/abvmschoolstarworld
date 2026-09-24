@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-label="Library illustration">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fbfaf6"/><stop offset=".52" stop-color="#eef6fb"/><stop offset="1" stop-color="#f7efe3"/></linearGradient>
+ <linearGradient id="navy" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#2d5e87"/><stop offset=".55" stop-color="#153a5b"/><stop offset="1" stop-color="#081d31"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff1aa"/><stop offset=".5" stop-color="#e8b94c"/><stop offset="1" stop-color="#a56e18"/></linearGradient>
+ <linearGradient id="coral" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ef8b80"/><stop offset="1" stop-color="#ae4f55"/></linearGradient>
+ <filter id="sh" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="24" stdDeviation="24" flood-color="#17394f" flood-opacity=".20"/></filter>
+ <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".73" numOctaves="2" seed="81"/><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 .045 0"/></filter>
+</defs>
+<rect width="1200" height="750" rx="54" fill="url(#bg)"/><circle cx="150" cy="120" r="220" fill="#fff" opacity=".6"/>
+<g filter="url(#sh)" transform="translate(115 102)">
+ <rect width="590" height="520" rx="34" fill="#fff" stroke="#d8e1e4" stroke-width="10"/>
+ <path d="M45 188h500M45 352h500" stroke="#c9d5d9" stroke-width="18"/>
+ <g>
+  <rect x="65" y="52" width="66" height="122" rx="10" fill="url(#navy)"/><rect x="143" y="72" width="58" height="102" rx="9" fill="#86afc8"/><rect x="214" y="40" width="74" height="134" rx="10" fill="url(#coral)"/><rect x="300" y="62" width="64" height="112" rx="9" fill="url(#gold)"/><rect x="378" y="32" width="76" height="142" rx="10" fill="#6fa17c"/><rect x="468" y="70" width="52" height="104" rx="9" fill="#8967a9"/>
+  <rect x="66" y="218" width="74" height="120" rx="10" fill="#6fa17c"/><rect x="154" y="236" width="58" height="102" rx="9" fill="url(#gold)"/><rect x="225" y="204" width="78" height="134" rx="10" fill="url(#navy)"/><rect x="317" y="228" width="62" height="110" rx="9" fill="#8967a9"/><rect x="393" y="210" width="70" height="128" rx="10" fill="url(#coral)"/><rect x="477" y="238" width="45" height="100" rx="9" fill="#86afc8"/>
+ </g>
+</g>
+<g filter="url(#sh)" transform="translate(700 240)">
+ <path d="M0 75c120-72 235-62 345 28v285c-111-76-226-86-345-28Z" fill="#fff" stroke="#cfdcdf" stroke-width="10"/>
+ <path d="M345 103c110-90 225-100 345-28v285c-119-58-234-48-345 28Z" fill="#fff" stroke="#cfdcdf" stroke-width="10"/>
+ <path d="M345 103v285" stroke="url(#gold)" stroke-width="12"/>
+ <path d="M70 154c80-33 151-26 215 20M70 212c84-31 155-23 215 23M405 174c63-46 137-53 220-21M405 237c67-45 141-53 220-22" stroke="#b7c7ce" stroke-width="14" stroke-linecap="round"/>
+</g>
+<rect width="1200" height="750" rx="54" filter="url(#grain)" opacity=".5"/></svg>
