@@ -10,7 +10,8 @@
     "schedulePriority": "No School and Half Day are independent schedule facets and remain permanently visible even when another event shares the date.",
     "multiEventHandling": "Month cells show schedule flag + primary event + compact additional-event count; selected day overlays the schedule/primary information on the photo and keeps additional events below.",
     "compositeSourceHandling": "Combined source lines such as Progress Reports; 12:00 dismissal are split into schedule and event facets.",
-    "backgroundTreatment": "photo remains visible through a translucent readability treatment; schedule state and primary event remain foreground content"
+    "backgroundTreatment": "photo remains visible through a translucent readability treatment; schedule state and primary event remain foreground content",
+    "spriteAspectPreservation": "Square source tiles use width-based cover scaling with centered vertical crop inside the 16:10 detail frame; photographic tiles are never stretched."
   },
   "categories": {
     "picture": {
