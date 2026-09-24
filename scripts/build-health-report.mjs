@@ -7,16 +7,18 @@ const cache=(sw.match(/const CACHE = "([^"]+)"/)||[])[1]||"unknown";
 const runsPath=process.env.WORKFLOW_RUNS_FILE;
 const runs=runsPath?JSON.parse(readFileSync(runsPath,"utf8")).workflow_runs||[]:[];
 
+const productionRuns=runs.filter(run=>run.head_branch==="main"||run.event==="schedule");
+
 const workflowNames={
   refresh:"Refresh ABVM teacher pages",
   qa:"ABVM App QA",
   deploy:"Deploy ABVM to GitHub Pages",
   watchdog:"Monitor ABVM refresh health",
 };
-const latest=name=>runs.find(run=>run.name===name)||null;
-const latestCompleted=name=>runs.find(run=>run.name===name&&run.conclusion)||null;
-const latestSuccess=name=>runs.find(run=>run.name===name&&run.conclusion==="success")||null;
-const recentRelevant=runs.filter(run=>Object.values(workflowNames).includes(run.name)).slice(0,40);
+const latest=name=>productionRuns.find(run=>run.name===name)||null;
+const latestCompleted=name=>productionRuns.find(run=>run.name===name&&run.conclusion)||null;
+const latestSuccess=name=>productionRuns.find(run=>run.name===name&&run.conclusion==="success")||null;
+const recentRelevant=productionRuns.filter(run=>Object.values(workflowNames).includes(run.name)).slice(0,40);
 const failures=recentRelevant.filter(run=>run.conclusion==="failure").map(run=>({
   name:run.name,id:run.id,created_at:run.created_at,html_url:run.html_url,
 }));
