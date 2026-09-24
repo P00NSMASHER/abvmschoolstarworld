@@ -1,7 +1,7 @@
 (()=>{"use strict";
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)], stack=()=>$("#app-content");
 const VALID_TABS=["today","week","calendar","study","family"];
-let envelope=null, pack=null, activeTab=VALID_TABS.includes(location.hash.slice(1))?location.hash.slice(1):"today", selectedDay=null, calendarDay=null, calendarOffset=0, calendarMode="list";
+let envelope=null, pack=null, activeTab=VALID_TABS.includes(location.hash.slice(1))?location.hash.slice(1):"today", selectedDay=null, calendarDay=null, calendarOffset=0, calendarMode="month";
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -23,7 +23,19 @@ const ICON_PATHS={
   star:'<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/>',
   idea:'<path d="M9 18h6M10 21h4"/><path d="M8.5 15.5A7 7 0 1 1 15.5 15.5c-.7.5-1 1.2-1 2h-5c0-.8-.3-1.5-1-2Z"/>',
   words:'<path d="M5 5h14v10H9l-4 4V5Z"/><path d="M9 9h6M9 12h4"/>',
-  home:'<path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10M9 20v-6h6v6"/>'
+  home:'<path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10M9 20v-6h6v6"/>',
+  camera:'<rect x="3" y="7" width="18" height="13" rx="3"/><path d="M8 7l1.4-3h5.2L16 7"/><circle cx="12" cy="13" r="4"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/>',
+  users:'<path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM16.5 11a3.5 3.5 0 1 0 0-7"/><path d="M2.5 21c.5-4 2.6-6 5.5-6s5 2 5.5 6M14 15c4 0 6.5 2 7 6"/>',
+  shirt:'<path d="M8 5 5 7 2 11l4 2 2-2v9h8v-9l2 2 4-2-3-4-3-2c-1 2-7 2-8 0Z"/>',
+  palette:'<path d="M12 3a9 9 0 1 0 0 18h1.5a2 2 0 0 0 0-4H12a2 2 0 0 1 0-4h3a6 6 0 0 0 0-12Z"/><circle cx="8" cy="8" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="10" cy="6" r="1"/>',
+  gym:'<path d="M3 10v4M6 8v8M18 8v8M21 10v4M6 12h12"/>',
+  music:'<path d="M9 18V6l10-2v12"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/>',
+  computer:'<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>',
+  library:'<path d="M4 4h6v16H4zM14 4h6v16h-6z"/><path d="M10 7h4M10 17h4"/>',
+  report:'<path d="M6 3h12v18H6z"/><path d="M9 8h6M9 12h6M9 16h4"/>',
+  party:'<path d="m5 20 4-11 6 6L5 20Z"/><path d="M14 4h.01M19 7h.01M17 2l1 2M11 3l1 2M20 12l2 1"/>',
+  ban:'<circle cx="12" cy="12" r="9"/><path d="m6 6 12 12"/>'
 };
 function icon(name,extra=""){return '<svg class="ui-icon '+extra+'" viewBox="0 0 24 24" aria-hidden="true">'+(ICON_PATHS[name]||ICON_PATHS.star)+'</svg>'}
 
@@ -101,22 +113,71 @@ function uploadedNoticeStatus(){
 }
 function kindClass(item){
   const k=(item?.kind||"").toLowerCase(),l=(item?.label||"").toLowerCase();
-  if(/test|assessment/.test(k)||/test|star reading/.test(l))return"test";
-  if(/mass|relig|faith/.test(k)||/mass/.test(l))return"faith";
+  if(/no school|school closed|closed|holiday/.test(l)||/holiday|closed/.test(k))return"closed";
+  if(/12:00|noon|early dismissal|half day/.test(l)||/schedule change/.test(k))return"halfday";
+  if(/picture day|school picture|portraits?/.test(l))return"picture";
+  if(/dress down|dress-down/.test(l))return"dress";
+  if(/conference/.test(k)||/conference/.test(l))return"conference";
+  if(/progress report|report card/.test(l))return"report";
+  if(/test|assessment/.test(k)||/test|star reading|star testing/.test(l))return"test";
+  if(/mass|relig|faith/.test(k)||/mass|church/.test(l))return"faith";
   if(/deadline|due/.test(k)||/due|money|order|rsvp/.test(l))return"due";
   if(/club/.test(k)||/lego/.test(l))return"club";
-  if(/holiday|closed/.test(k)||/no school|closed/.test(l))return"closed";
-  return"family";
+  if(/party|dance|santa workshop|movie night|family night|s’more|smore/.test(l))return"celebration";
+  if(/meeting/.test(k)||/meeting/.test(l))return"meeting";
+  return"school";
 }
 function eventIconName(item){
   const k=kindClass(item),l=(item?.label||"").toLowerCase();
+  if(k==="picture")return"camera";
+  if(k==="halfday")return"clock";
+  if(k==="closed")return"ban";
+  if(k==="conference"||k==="meeting")return"users";
+  if(k==="dress")return"shirt";
+  if(k==="report")return"report";
+  if(k==="celebration")return"party";
   if(/reading/.test(l))return"book";
   if(/spelling|handwriting/.test(l))return"pencil";
-  if(/math|addition/.test(l))return"math";
+  if(/math|addition|subtraction/.test(l))return"math";
   if(k==="faith")return"cross";
   if(k==="due")return"pin";
   if(k==="test")return"document";
   return"calendar";
+}
+function specialIconName(name){
+  const s=String(name||"").toLowerCase();
+  if(/mass|church/.test(s))return"cross";
+  if(/gym/.test(s))return"gym";
+  if(/art/.test(s))return"palette";
+  if(/music/.test(s))return"music";
+  if(/computer/.test(s))return"computer";
+  if(/library/.test(s))return"library";
+  return"star";
+}
+function calendarLabel(item){
+  const k=kindClass(item),raw=String(item?.label||"School event");
+  if(k==="halfday")return"Half Day";
+  if(k==="closed")return"No School";
+  if(k==="conference")return"Conference";
+  if(k==="report")return"Progress Reports";
+  if(k==="picture")return"Picture Day";
+  if(k==="dress")return"Dress Down";
+  if(k==="test")return /star/i.test(raw)?"STAR Testing":"Test";
+  if(k==="due")return"Due";
+  if(k==="meeting")return"Meeting";
+  if(k==="club")return"Lego Club";
+  if(k==="celebration"){
+    if(/halloween/i.test(raw))return"Halloween";
+    if(/dance/i.test(raw))return"Dance";
+    if(/movie/i.test(raw))return"Movie Night";
+    return"Special Event";
+  }
+  if(k==="faith")return"Mass";
+  return raw.length>18?raw.slice(0,16).trim()+"…":raw;
+}
+function primaryCalendarEvent(events){
+  const rank={closed:0,halfday:1,picture:2,dress:3,conference:4,report:5,test:6,due:7,celebration:8,faith:9,club:10,meeting:11,school:12};
+  return [...events].sort((a,b)=>(rank[kindClass(a)]??99)-(rank[kindClass(b)]??99))[0]||null;
 }
 function taskIconName(item){
   const s=((item?.subject||"")+" "+(item?.task||"")).toLowerCase();
@@ -276,10 +337,15 @@ function monthGrid(year,month){
   let html="";
   for(let i=0;i<blanks;i++)html+='<span class="calendar-blank"></span>';
   for(let day=1;day<=last.getDate();day++){
-    const d=new Date(year,month,day,12),events=eventItemsForDate(d),lunch=lunchForDate(d);
-    const dots=[...events.map(e=>kindClass(e)),...(lunch?["lunch"]:[])].slice(0,3);
-    const weekend=[0,6].includes(d.getDay()),closed=events.some(e=>kindClass(e)==="closed");
-    html+='<button class="'+(weekend?'weekend ':'')+(closed?'closed ':'')+(calendarDay&&sameDay(d,calendarDay)?'active':'')+'" type="button" data-cal-day="'+d.toISOString()+'" aria-pressed="'+Boolean(calendarDay&&sameDay(d,calendarDay))+'" aria-label="'+esc(fmtDate(d)+(events.length?': '+events.map(e=>e.label).join(', '):''))+'"><strong>'+day+'</strong><span class="calendar-dots">'+dots.map(k=>'<i class="'+k+'"></i>').join("")+'</span></button>';
+    const d=new Date(year,month,day,12),events=eventItemsForDate(d),special=specialForDate(d);
+    const primary=primaryCalendarEvent(events);
+    const klass=primary?kindClass(primary):"";
+    const weekend=[0,6].includes(d.getDay()),closed=klass==="closed",halfday=klass==="halfday";
+    const specialPrimary=!primary&&special?special.split(",")[0].trim():"";
+    const label=primary?calendarLabel(primary):specialPrimary;
+    const iconName=primary?eventIconName(primary):specialIconName(specialPrimary);
+    const count=Math.max(0,events.length-1);
+    html+='<button class="'+(weekend?'weekend ':'')+(closed?'closed ':'')+(halfday?'halfday ':' )+(klass?('event-'+klass+' '):'')+(calendarDay&&sameDay(d,calendarDay)?'active':'')+'" type="button" data-cal-day="'+d.toISOString()+'" aria-pressed="'+Boolean(calendarDay&&sameDay(d,calendarDay))+'" aria-label="'+esc(fmtDate(d)+(events.length?': '+events.map(e=>e.label).join(', '):special?': '+special:''))+'"><strong>'+day+'</strong>'+(label?'<span class="calendar-chip '+(klass||'special')+'"><span class="mini-icon">'+icon(iconName)+'</span><span>'+esc(label)+'</span>'+(count?'<em>+'+count+'</em>':'')+'</span>':'')+'</button>';
   }
   return html;
 }
@@ -288,7 +354,7 @@ function renderCalendar(){
   if(!calendarDay||calendarDay.getMonth()!==m||calendarDay.getFullYear()!==y){
     calendarDay=(base.getMonth()===m&&base.getFullYear()===y)?new Date(base):new Date(y,m,1,12);
   }
-  const events=eventItemsForDate(calendarDay),lunch=lunchForDate(calendarDay);
+  const events=eventItemsForDate(calendarDay),lunch=lunchForDate(calendarDay),special=specialForDate(calendarDay),primary=primaryCalendarEvent(events);
   const monthStart=new Date(y,m,1,12),monthEnd=new Date(y,m+1,0,12);
   const agenda=(pack?.importantDates||[]).map(x=>({x,span:eventSpan(x.date)}))
     .filter(o=>o.span&&o.span.end>=monthStart&&o.span.start<=monthEnd)
@@ -297,7 +363,6 @@ function renderCalendar(){
   const monthPanel='<div class="calendar-month-panel '+(calendarMode==="month"?"active":"")+'">'+
       '<div class="calendar-weekdays">'+["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(x=>"<span>"+x+"</span>").join("")+'</div>'+
       '<div class="calendar-grid">'+monthGrid(y,m)+'</div>'+
-      '<div class="calendar-legend"><span><i class="test"></i>Test</span><span><i class="faith"></i>Faith</span><span><i class="family"></i>Family</span><span><i class="due"></i>Due</span></div>'+
     '</div>';
   const listPanel='<div class="calendar-list-panel '+(calendarMode==="list"?"active":"")+'">'+
       (agenda.length?agenda.map(o=>'<button class="calendar-list-row" type="button" data-cal-day="'+o.d.toISOString()+'"><span class="calendar-list-date"><b>'+o.d.getDate()+'</b><small>'+WEEKDAY[o.d.getDay()].slice(0,3)+'</small></span><span class="event-icon '+kindClass(o.x)+'">'+icon(eventIconName(o.x))+'</span><span class="calendar-list-copy"><strong>'+esc(o.x.label)+'</strong><small>'+esc(o.x.date||"")+' · '+esc(o.x.kind||"School event")+'</small></span><span class="chevron" aria-hidden="true">›</span></button>').join(""):'<div class="empty-note">No school dates are listed for this month.</div>')+
@@ -308,8 +373,10 @@ function renderCalendar(){
     '<div class="calendar-wrap"><section class="calendar-card"><div class="calendar-title-row"><button class="month-arrow" data-month="-1" type="button" aria-label="Previous month">‹</button><div class="calendar-heading"><p>'+esc(calendarMode==="month"?"MONTH VIEW":"LIST VIEW")+'</p><h2>'+MONTHS[m]+" "+y+'</h2></div><button class="month-arrow" data-month="1" type="button" aria-label="Next month">›</button></div>'+
     '<div class="calendar-tabs"><button class="'+(calendarMode==="month"?"active":"")+'" data-cal-mode="month" type="button" aria-pressed="'+(calendarMode==="month")+'">Month View</button><button class="'+(calendarMode==="list"?"active":"")+'" data-cal-mode="list" type="button" aria-pressed="'+(calendarMode==="list")+'">List View</button></div>'+
     monthPanel+listPanel+'</section>'+
-    '<section class="calendar-day-card"><div class="calendar-day-heading"><p>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</p><h2>'+esc(fmtDate(calendarDay))+'</h2></div>'+
-    (events.length?'<div class="calendar-event-list">'+events.map(e=>'<div><i class="'+kindClass(e)+'"></i><span><strong>'+esc(e.label)+'</strong></span></div>').join(""):'<p class="calendar-empty">No special school events are listed for this date.</p>')+
+    '<section class="calendar-day-card '+(primary?('day-'+kindClass(primary)):'')+'"><div class="calendar-day-heading"><p>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</p><h2>'+esc(fmtDate(calendarDay))+'</h2></div>'+
+    (primary?'<div class="calendar-primary-event '+kindClass(primary)+'"><span class="event-icon '+kindClass(primary)+'">'+icon(eventIconName(primary))+'</span><div><small>'+esc(calendarLabel(primary).toUpperCase())+'</small><strong>'+esc(primary.label)+'</strong>'+(kindClass(primary)==="halfday"?'<b>Dismissal at 12:00 PM</b>':kindClass(primary)==="closed"?'<b>School is closed</b>':'')+'</div></div>':'')+
+    (special?'<div class="calendar-special"><span>'+icon(specialIconName(special))+'</span><div><small>CLASS SPECIAL</small><strong>'+esc(special)+'</strong></div></div>':'')+
+    (events.length>1?'<div class="calendar-event-list">'+events.filter(e=>e!==primary).map(e=>'<div><span class="event-icon '+kindClass(e)+'">'+icon(eventIconName(e))+'</span><span><strong>'+esc(e.label)+'</strong></span></div>').join("")+'</div>':(!events.length&&!special?'<p class="calendar-empty">Regular school day. No special events are posted.</p>':''))+
     (lunch?'<div class="calendar-lunch"><img class="calendar-lunch-photo" src="'+esc(lunch.image||"")+'" width="720" height="720" loading="lazy" decoding="async" alt="'+esc(lunch.imageAlt||"School lunch")+'"><div><b>School Lunch</b><p>'+esc((lunch.items||[]).join(", ").replace(/, ([^,]*)$/,", and $1"))+'</p></div></div>':'')+'</section>'+
     '</div></div>';
 }
