@@ -1479,3 +1479,41 @@ body{font-family:var(--font-sans)}
 
 /* Study heading contrast correction from automated QA */
 .subject-kicker{color:#66747e}
+
+
+/* Phase 3: smallest-phone scanability and calm first-screen hierarchy */
+@media(max-width:430px){
+  .top-scene{min-height:170px}
+  .content.overlap{margin-top:-12px}
+  .day-detail-title{
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    gap:8px;
+  }
+  .school-day-pill{
+    justify-self:start;
+    min-height:30px;
+    display:inline-flex;
+    align-items:center;
+  }
+  .day-detail-title h2{font-size:20px;line-height:1.08}
+  .week-hero-note{display:none}
+  .study-intro{padding-top:12px;padding-bottom:12px}
+  .study-intro h2{font-size:18px}
+  .study-intro p{margin-top:3px}
+  .family-priority{padding-top:14px;padding-bottom:14px}
+  .family-priority h2{font-size:21px}
+  .family-stats{gap:8px}
+  .family-stats article{padding:12px}
+}
+@media(max-width:340px){
+  .content,.study-content,.family-content,.calendar-wrap{padding-left:10px;padding-right:10px}
+  .bottom-nav{padding-left:2px;padding-right:2px}
+  .bottom-nav button b{font-size:10px}
+  .nav-icon{width:33px}
+  .date-hero-card{grid-template-columns:70px minmax(0,1fr);gap:10px;padding:14px}
+  .big-date{min-height:86px}
+  .big-date span{font-size:34px}
+  .date-hero-copy h2{font-size:18px}
+  .calendar-grid button{min-height:72px;padding-left:2px;padding-right:2px}
+}
