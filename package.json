@@ -7,9 +7,10 @@
     "@netlify/blobs": "latest"
   },
   "scripts": {
-    "qa:static": "node --check pages/app.js && node --check pages/js/date-utils.js && node --check pages/js/storage.js && node --check pages/js/install.js && node scripts/validate-app.mjs",
+    "qa:static": "node --check pages/app.js && node --check pages/js/date-utils.js && node --check pages/js/storage.js && node --check pages/js/install.js && node --check scripts/check-refresh-health.mjs && node scripts/validate-app.mjs",
     "qa:e2e": "playwright test",
-    "qa": "npm run qa:static && npm run qa:e2e"
+    "qa": "npm run qa:static && npm run qa:e2e",
+    "health:refresh": "node scripts/check-refresh-health.mjs --max-age-hours 28"
   },
   "devDependencies": {
     "@axe-core/playwright": "latest",
