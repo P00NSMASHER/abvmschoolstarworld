@@ -821,6 +821,14 @@ button:focus-visible,a:focus-visible{outline:3px solid #f0ad42;outline-offset:3p
   overflow:auto;
   scrollbar-width:none;
 }
+.calendar-day-card:not(.has-photo) .calendar-overlay-panel{
+  padding:0;
+  border:0;
+  background:transparent;
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+  box-shadow:none;
+}
 .calendar-day-card.has-photo .calendar-overlay-panel::-webkit-scrollbar{display:none}
 .calendar-overlay-panel .calendar-day-heading{
   margin:0;
