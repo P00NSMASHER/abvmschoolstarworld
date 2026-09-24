@@ -1,4 +1,4 @@
-const CACHE = "abvm-grade2-parent-companion-v22";
+const CACHE = "abvm-grade2-parent-companion-v23";
 const SHELL = [
   "./",
   "./index.html",
@@ -19,6 +19,10 @@ const SHELL = [
   "./assets/lunch-wednesday.webp",
   "./assets/lunch-thursday.webp",
   "./assets/lunch-friday.webp",
+  "./assets/calendar/photo-sprite-1.jpg",
+  "./assets/calendar/photo-sprite-2.jpg",
+  "./assets/calendar/photo-sprite-3.jpg",
+  "./assets/calendar/photo-sprite-4.jpg",
   "./assets/calendar/picture-day.svg",
   "./assets/calendar/picture-day-2.svg",
   "./assets/calendar/mass-1.svg",
