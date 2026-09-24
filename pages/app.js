@@ -1,6 +1,12 @@
 import {MONTHS,SHORT_MONTHS,WEEKDAY,sameDay,today,fmtDate,fmtShort,fmtCompactDate} from "./js/date-utils.js";
 import {storageKey,readStoredFlag,toggleStoredFlag} from "./js/storage.js";
 import {initInstallTracking,installExperience,promptInstall} from "./js/install.js";
+import {
+  kindClass,eventIconName,specialIconName,calendarLabel,primaryCalendarEvent,calendarScheduleEvent,
+  scheduleSecondaryEvents,calendarContentEvents,scheduleStatusText,scheduleStatusDetail,
+  normalizedCalendarDetail,sameCalendarDetail,calendarDetailKicker,taskIconName,calendarCellLabel
+} from "./js/events.js";
+import {calendarVisualFor} from "./js/calendar-visuals.js";
 
 (()=>{"use strict";
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)], stack=()=>$("#app-content");
@@ -103,223 +109,6 @@ function uploadedNoticeStatus(){
   const d=info.latestIntegratedAt?new Date(info.latestIntegratedAt):null;
   const when=d&&!Number.isNaN(d.getTime())?"; latest added "+d.toLocaleDateString(undefined,{month:"short",day:"numeric",timeZone:"America/New_York"}):"";
   return info.count+" uploaded school notice"+(info.count===1?"":"s")+" integrated"+when+".";
-}
-function kindClass(item){
-  const k=(item?.kind||"").toLowerCase(),l=(item?.label||"").toLowerCase();
-  if(/no school|school closed|closed|holiday/.test(l)||/holiday|closed/.test(k))return"closed";
-  if(/12:00|noon|early dismissal|half day/.test(l)||/schedule change/.test(k))return"halfday";
-  if(/picture day|school picture|portraits?/.test(l))return"picture";
-  if(/dress down|dress-down/.test(l))return"dress";
-  if(/conference/.test(k)||/conference/.test(l))return"conference";
-  if(/progress report|report card/.test(l))return"report";
-  if(/test|assessment/.test(k)||/test|star reading|star testing/.test(l))return"test";
-  if(/mass|relig|faith/.test(k)||/mass|church/.test(l))return"faith";
-  if(/deadline|due/.test(k)||/due|money|order|rsvp/.test(l))return"due";
-  if(/club/.test(k)||/lego/.test(l))return"club";
-  if(/party|dance|santa workshop|movie night|family night|s’more|smore/.test(l))return"celebration";
-  if(/meeting/.test(k)||/meeting/.test(l))return"meeting";
-  return"school";
-}
-function eventIconName(item){
-  const k=kindClass(item),l=(item?.label||"").toLowerCase();
-  if(k==="picture")return"camera";
-  if(k==="halfday")return"clock";
-  if(k==="closed")return"ban";
-  if(k==="conference"||k==="meeting")return"users";
-  if(k==="dress")return"shirt";
-  if(k==="report")return"report";
-  if(k==="celebration")return"party";
-  if(/reading/.test(l))return"book";
-  if(/spelling|handwriting/.test(l))return"pencil";
-  if(/math|addition|subtraction/.test(l))return"math";
-  if(k==="faith")return"cross";
-  if(k==="due")return"pin";
-  if(k==="test")return"document";
-  return"calendar";
-}
-function specialIconName(name){
-  const s=String(name||"").toLowerCase();
-  if(/mass|church/.test(s))return"cross";
-  if(/gym/.test(s))return"gym";
-  if(/art/.test(s))return"palette";
-  if(/music/.test(s))return"music";
-  if(/computer/.test(s))return"computer";
-  if(/library/.test(s))return"library";
-  return"star";
-}
-function calendarLabel(item){
-  const k=kindClass(item),raw=String(item?.label||"School event");
-  if(k==="halfday")return"Half Day";
-  if(k==="closed")return"No School";
-  if(k==="conference")return"Conference";
-  if(k==="report")return"Progress Reports";
-  if(k==="picture")return"Picture Day";
-  if(k==="dress")return"Dress";
-  if(k==="test")return /star/i.test(raw)?"STAR Testing":"Test";
-  if(k==="due")return"Due";
-  if(k==="meeting")return"Meeting";
-  if(k==="club")return"Lego Club";
-  if(k==="celebration"){
-    if(/halloween/i.test(raw))return"Halloween";
-    if(/dance/i.test(raw))return"Dance";
-    if(/movie/i.test(raw))return"Movie Night";
-    return"Special Event";
-  }
-  if(k==="faith")return"Mass";
-  if(/catholic schools week/i.test(raw))return"Catholic Schools";
-  if(/santa workshop/i.test(raw))return"Santa Workshop";
-  if(/last day/i.test(raw))return"Last Day";
-  if(/weather makeup/i.test(raw))return"Weather Day";
-  return raw.length>18?raw.slice(0,16).trim()+"…":raw;
-}
-function primaryCalendarEvent(events){
-  const rank={closed:0,halfday:1,picture:2,dress:3,conference:4,report:5,test:6,due:7,celebration:8,faith:9,club:10,meeting:11,school:12};
-  return [...events].sort((a,b)=>(rank[kindClass(a)]??99)-(rank[kindClass(b)]??99))[0]||null;
-}
-function calendarScheduleEvent(events){
-  return events.find(e=>kindClass(e)==="closed")||events.find(e=>kindClass(e)==="halfday")||null;
-}
-function scheduleSecondaryEvents(item){
-  if(!item||kindClass(item)!=="halfday")return[];
-  const label=String(item.label||"");
-  const lower=label.toLowerCase(),out=[];
-  if(/progress report/.test(lower)){
-    const progressLabel=(label.match(/[^;]*progress reports?/i)||["Progress Reports"])[0].trim();
-    out.push({...item,label:progressLabel,kind:"school"});
-  }
-  if(/articulation meeting/.test(lower))out.push({...item,label:"Articulation Meeting",kind:"meeting"});
-  if(/last day/.test(lower))out.push({...item,label:"Last Day of School",kind:"school event"});
-  return out;
-}
-function calendarContentEvents(events){
-  const out=[];
-  for(const e of events){
-    const k=kindClass(e);
-    if(k==="closed"||k==="halfday")out.push(...scheduleSecondaryEvents(e));
-    else out.push(e);
-  }
-  return out;
-}
-function scheduleStatusText(item){
-  if(!item)return"";
-  return kindClass(item)==="closed"?"No School":"Half Day";
-}
-function scheduleStatusDetail(item){
-  if(!item)return"";
-  return kindClass(item)==="closed"?"School is closed":"Dismissal at 12:00 PM";
-}
-const CALENDAR_VISUAL_LIBRARY={
-  picture:{variants:["./assets/calendar/picture-day.svg","./assets/calendar/picture-day-2.svg"],alt:"Picture Day illustration"},
-  mass:{variants:["./assets/calendar/mass-1.svg","./assets/calendar/mass-2.svg"],alt:"Mass and church illustration"},
-  gym:{variants:["./assets/calendar/gym-1.svg","./assets/calendar/gym-2.svg"],alt:"Gym class illustration"},
-  art:{variants:["./assets/calendar/art-1.svg","./assets/calendar/art-2.svg"],alt:"Art class illustration"},
-  music:{variants:["./assets/calendar/music.svg"],alt:"Music class illustration"},
-  computer:{variants:["./assets/calendar/computer.svg"],alt:"Computer class illustration"},
-  library:{variants:["./assets/calendar/library.svg"],alt:"Library illustration"},
-  guidance:{variants:["./assets/calendar/guidance.svg"],alt:"Guidance class illustration"},
-  dress:{variants:["./assets/calendar/dress-down-1.svg","./assets/calendar/dress-down-2.svg"],alt:"Dress Down Day illustration"},
-  closed:{variants:["./assets/calendar/closed-1.svg","./assets/calendar/closed-2.svg"],alt:"No-school illustration"},
-  halfday:{variants:["./assets/calendar/half-day-1.svg","./assets/calendar/half-day-2.svg"],alt:"Half-day dismissal illustration"},
-  conference:{variants:["./assets/calendar/conference-1.svg","./assets/calendar/conference-2.svg"],alt:"Parent-teacher conference illustration"},
-  progress:{variants:["./assets/calendar/progress-1.svg","./assets/calendar/progress-2.svg"],alt:"Progress report illustration"},
-  testing:{variants:["./assets/calendar/testing-1.svg","./assets/calendar/testing-2.svg"],alt:"School assessment illustration"},
-  celebration:{variants:["./assets/calendar/celebration-1.svg","./assets/calendar/celebration-2.svg"],alt:"School celebration illustration"},
-  meeting:{variants:["./assets/calendar/meeting-1.svg","./assets/calendar/meeting-2.svg"],alt:"School meeting illustration"},
-  club:{variants:["./assets/calendar/club-1.svg","./assets/calendar/club-2.svg"],alt:"School club illustration"},
-  halloween:{variants:["./assets/calendar/halloween.svg"],alt:"Halloween school celebration illustration"},
-  thanksgiving:{variants:["./assets/calendar/thanksgiving.svg"],alt:"Thanksgiving break illustration"},
-  christmas:{variants:["./assets/calendar/christmas.svg"],alt:"Christmas break illustration"},
-  newyear:{variants:["./assets/calendar/new-year.svg"],alt:"New Year's Day illustration"},
-  mlk:{variants:["./assets/calendar/mlk-day.svg"],alt:"Martin Luther King Jr. Day illustration"},
-  presidents:{variants:["./assets/calendar/presidents-day.svg"],alt:"Presidents' Day illustration"},
-  easter:{variants:["./assets/calendar/easter.svg"],alt:"Easter break illustration"},
-  memorial:{variants:["./assets/calendar/memorial-day.svg"],alt:"Memorial Day illustration"},
-  catholic:{variants:["./assets/calendar/catholic-schools-week.svg"],alt:"Catholic Schools Week illustration"},
-  santa:{variants:["./assets/calendar/santa-workshop.svg"],alt:"Santa Workshop illustration"},
-  lastday:{variants:["./assets/calendar/last-day.svg"],alt:"Last day of school illustration"},
-  weather:{variants:["./assets/calendar/weather-makeup.svg"],alt:"Weather makeup day illustration"},
-  generic:{variants:["./assets/calendar/school-event.svg"],alt:"School event illustration"}
-};
-function calendarVisualCategory(primary,special,schedule){
-  const pk=primary?kindClass(primary):"",p=String(primary?.label||"").toLowerCase();
-  const s=String(special||"").toLowerCase(),sl=String(schedule?.label||"").toLowerCase();
-  if(schedule&&kindClass(schedule)==="closed"){
-    if(/thanksgiving/.test(sl))return"thanksgiving";
-    if(/christmas/.test(sl))return"christmas";
-    if(/new year/.test(sl))return"newyear";
-    if(/martin luther king|mlk/.test(sl))return"mlk";
-    if(/president/.test(sl))return"presidents";
-    if(/easter/.test(sl))return"easter";
-    if(/memorial/.test(sl))return"memorial";
-    return"closed";
-  }
-  if(pk==="picture"||/picture day/.test(p))return"picture";
-  if(pk==="dress"||/dress down|dress-down/.test(p))return"dress";
-  if(pk==="conference")return"conference";
-  if(pk==="report"||/progress report/.test(p))return"progress";
-  if(pk==="test")return"testing";
-  if(pk==="meeting")return"meeting";
-  if(pk==="club")return"club";
-  if(/halloween/.test(p))return"halloween";
-  if(/santa workshop/.test(p))return"santa";
-  if(/catholic schools week/.test(p))return"catholic";
-  if(/last day/.test(p))return"lastday";
-  if(/weather makeup/.test(p))return"weather";
-  if(pk==="celebration"||/dance|movie night|family night|party|s[’']?more|schwartz farm/.test(p))return"celebration";
-  if(pk==="faith"||/\bmass\b|church/.test(p)||/\bmass\b|church/.test(s))return"mass";
-  if(/library/.test(s))return"library";
-  if(/computer/.test(s))return"computer";
-  if(/music/.test(s))return"music";
-  if(/guidance/.test(s))return"guidance";
-  if(/gym/.test(s))return"gym";
-  if(/art/.test(s))return"art";
-  if(schedule&&kindClass(schedule)==="halfday")return"halfday";
-  return(primary||special||schedule)?"generic":null;
-}
-function stableCalendarVisualIndex(date,count){
-  if(count<=1)return 0;
-  const key=(date.getFullYear()*372)+(date.getMonth()*31)+date.getDate();
-  return Math.abs(key)%count;
-}
-function calendarVisualFor(date,primary,special,schedule){
-  const category=calendarVisualCategory(primary,special,schedule);
-  const entry=category?CALENDAR_VISUAL_LIBRARY[category]:null;
-  if(!entry?.variants?.length)return null;
-  const index=stableCalendarVisualIndex(date,entry.variants.length);
-  return{src:entry.variants[index],alt:entry.alt,category,index};
-}
-function normalizedCalendarDetail(value){
-  return String(value||"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
-}
-function sameCalendarDetail(a,b){
-  const left=normalizedCalendarDetail(a),right=normalizedCalendarDetail(b);
-  if(!left||!right)return false;
-  if(left===right)return true;
-  const single=right.split(" ").length===1?right:(left.split(" ").length===1?left:"");
-  const full=single===right?left:right;
-  return Boolean(single&&single.length>=3&&new RegExp("(?:^|\\s)"+single+"(?:$|\\s)").test(full));
-}
-function calendarDetailKicker(item){
-  const k=kindClass(item);
-  if(k==="test")return"TEST / ASSESSMENT";
-  if(k==="due")return"REMINDER";
-  if(k==="club")return"CLUB";
-  if(k==="meeting")return"SCHOOL MEETING";
-  if(k==="conference")return"CONFERENCE";
-  if(k==="report")return"SCHOOL UPDATE";
-  if(k==="picture")return"PICTURE DAY";
-  if(k==="dress")return"DRESS DOWN";
-  if(k==="faith")return"FAITH";
-  return"SCHOOL EVENT";
-}
-function taskIconName(item){
-  const s=((item?.subject||"")+" "+(item?.task||"")).toLowerCase();
-  if(/read/.test(s))return"book";
-  if(/spell/.test(s))return"pencil";
-  if(/math/.test(s))return"math";
-  if(/folder/.test(s))return"folder";
-  if(/form|cover/.test(s))return"document";
-  return"check";
 }
 function sameEventWindow(a,b){
   const aa=eventSpan(a?.date),bb=eventSpan(b?.date);
@@ -499,31 +288,6 @@ function renderWeek(){
     lunchCard(lunch)+
     '<section class="reminder-strip"><span class="bang">!</span><p><strong>Don’t forget</strong>'+esc(reminderForDate(selectedDay))+'</p></section>'+
     '<section class="future-card"><h3>Coming soon</h3>'+(future.length?future.map(o=>'<div class="future-row"><span>'+esc(fmtCompactDate(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join(""):'<div class="empty-note">Nothing else is posted after this day yet.</div>')+'</section></div></div>';
-}
-function calendarCellLabel(item,special){
-  if(!item){
-    const s=String(special||"").split(",")[0].trim();
-    if(/computer/i.test(s))return"Comp.";
-    if(/music/i.test(s))return"Music";
-    if(/mass/i.test(s))return"Mass";
-    if(/gym/i.test(s))return"Gym";
-    if(/library/i.test(s))return"Library";
-    return s.length>12?s.slice(0,11).trim()+"…":s;
-  }
-  const k=kindClass(item),p=String(item.label||"");
-  if(/star/i.test(p))return"STAR";
-  if(k==="dress")return"Dress Down";
-  if(k==="picture")return"Picture Day";
-  if(k==="test")return"Test";
-  if(k==="due")return"Due";
-  if(k==="club")return"Club";
-  if(k==="meeting")return"Meeting";
-  if(k==="conference")return"Conference";
-  if(k==="report")return"Progress";
-  if(k==="faith"||/mass/i.test(p))return"Mass";
-  if(k==="celebration")return"Event";
-  const label=calendarLabel(item);
-  return label.split(/\s+/).slice(0,2).join(" ");
 }
 function monthGrid(year,month){
   const first=new Date(year,month,1,12),last=new Date(year,month+1,0,12),blanks=first.getDay();
