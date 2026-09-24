@@ -532,6 +532,7 @@ function renderCalendar(){
     calendarDay=(base.getMonth()===m&&base.getFullYear()===y)?new Date(base):new Date(y,m,1,12);
   }
   const events=eventItemsForDate(calendarDay),lunch=lunchForDate(calendarDay),special=specialForDate(calendarDay),schedule=calendarScheduleEvent(events),contentEvents=calendarContentEvents(events),primary=primaryCalendarEvent(contentEvents),effectiveSpecial=(schedule&&kindClass(schedule)==="closed")?"":special;
+  const visual=calendarVisualFor(calendarDay,schedule?null:primary,schedule?"":effectiveSpecial,schedule);
   const monthStart=new Date(y,m,1,12),monthEnd=new Date(y,m+1,0,12);
   const agenda=[];
   for(let day=1;day<=monthEnd.getDate();day++){
@@ -553,18 +554,21 @@ function renderCalendar(){
     '</div>';
 
   const displaySpecial=effectiveSpecial&&!contentEvents.some(e=>sameCalendarDetail(e.label,effectiveSpecial))?effectiveSpecial:"";
-  const detailEventTile=item=>'<div class="calendar-detail-item event '+kindClass(item)+'"><span class="event-icon '+kindClass(item)+'">'+icon(eventIconName(item))+'</span><div><small>'+esc(calendarDetailKicker(item))+'</small><strong>'+esc(item.label)+'</strong></div></div>';
-  const detailTiles=[];
-  if(schedule)detailTiles.push('<div class="calendar-detail-item schedule '+kindClass(schedule)+'"><span class="detail-icon">'+icon(kindClass(schedule)==="closed"?"ban":"clock")+'</span><div><small>'+esc(scheduleStatusText(schedule).toUpperCase())+'</small><strong>'+esc(scheduleStatusDetail(schedule))+'</strong></div></div>');
-  if(primary)detailTiles.push(detailEventTile(primary));
-  if(displaySpecial)detailTiles.push('<div class="calendar-detail-item special"><span class="detail-icon">'+icon(specialIconName(displaySpecial))+'</span><div><small>'+(schedule&&kindClass(schedule)==="halfday"?'USUAL CLASS SPECIAL':'CLASS SPECIAL')+'</small><strong>'+esc(displaySpecial)+'</strong>'+(schedule&&kindClass(schedule)==="halfday"?'<em>Early dismissal may change the usual schedule.</em>':'')+'</div></div>');
-  contentEvents.filter(e=>e!==primary).forEach(e=>detailTiles.push(detailEventTile(e)));
-  const detailItemCount=detailTiles.length;
+  const focusSchedule=schedule||null,focusEvent=focusSchedule?null:primary;
+  const extraEvents=contentEvents.filter(e=>focusEvent?e!==focusEvent:true);
   const dayHeading='<div class="calendar-day-heading"><p>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</p><h2>'+esc(fmtDate(calendarDay))+'</h2></div>';
-  const detailGrid=detailItemCount?'<div class="calendar-detail-grid">'+detailTiles.join("")+'</div>':'';
-  const lunchBlock=lunch?'<div class="calendar-lunch"><img class="calendar-lunch-photo" src="'+esc(lunch.image||"")+'" width="720" height="720" loading="lazy" decoding="async" alt="'+esc(lunch.imageAlt||"School lunch")+'"><div><b>School Lunch</b><p>'+esc((lunch.items||[]).join(", ").replace(/, ([^,]*)$/,", and $1"))+'</p></div></div>':'';
+  const heroBlock='<div class="calendar-day-hero '+(visual?'has-visual':'no-visual')+'">'+
+    (visual?'<img src="'+esc(visual.src)+'" alt="" aria-hidden="true" loading="eager" decoding="async">':'')+
+    dayHeading+'</div>';
+  const primaryBlock=focusSchedule
+    ?'<section class="calendar-primary-block schedule '+kindClass(focusSchedule)+'"><span class="calendar-primary-icon">'+icon(kindClass(focusSchedule)==="closed"?"ban":"clock")+'</span><div><small>PRIMARY</small><strong>'+esc(scheduleStatusText(focusSchedule))+'</strong><span>'+esc(scheduleStatusDetail(focusSchedule))+'</span></div></section>'
+    :(focusEvent?'<section class="calendar-primary-block event '+kindClass(focusEvent)+'"><span class="calendar-primary-icon">'+icon(eventIconName(focusEvent))+'</span><div><small>'+esc(calendarDetailKicker(focusEvent))+'</small><strong>'+esc(focusEvent.label)+'</strong></div></section>':'');
+  const alsoRows=extraEvents.map(item=>'<div class="calendar-also-row '+kindClass(item)+'"><span class="event-icon '+kindClass(item)+'">'+icon(eventIconName(item))+'</span><div><small>'+esc(calendarDetailKicker(item))+'</small><strong>'+esc(item.label)+'</strong></div></div>').join("");
+  const alsoBlock=extraEvents.length?'<section class="calendar-also-section"><div class="calendar-section-label"><span>ALSO TODAY</span><b>'+extraEvents.length+'</b></div><div class="calendar-also-list">'+alsoRows+'</div></section>':'';
+  const specialBlock=displaySpecial?'<section class="calendar-special-section"><div class="calendar-section-label"><span>'+(schedule&&kindClass(schedule)==="halfday"?'USUAL CLASS SPECIAL':'CLASS SPECIAL')+'</span></div><div class="calendar-special-row"><span class="detail-icon">'+icon(specialIconName(displaySpecial))+'</span><div><strong>'+esc(displaySpecial)+'</strong>'+(schedule&&kindClass(schedule)==="halfday"?'<em>Early dismissal may change the usual schedule.</em>':'')+'</div></div></section>':'';
+  const lunchBlock=lunch?'<section class="calendar-lunch-section"><div class="calendar-section-label"><span>SCHOOL LUNCH</span></div><div class="calendar-lunch"><img class="calendar-lunch-photo" src="'+esc(lunch.image||"")+'" width="720" height="720" loading="lazy" decoding="async" alt="'+esc(lunch.imageAlt||"School lunch")+'"><div><b>School Lunch</b><p>'+esc((lunch.items||[]).join(", ").replace(/, ([^,]*)$/,", and $1"))+'</p></div></div></section>':'';
   const emptyBlock=!events.length&&!effectiveSpecial?'<p class="calendar-empty">Regular school day. No special events are posted.</p>':'';
-  const detailContent=dayHeading+detailGrid+lunchBlock+emptyBlock;
+  const detailContent=heroBlock+'<div class="calendar-day-body">'+primaryBlock+alsoBlock+specialBlock+lunchBlock+emptyBlock+'</div>';
 
   stack().innerHTML='<div class="screen calendar-screen" role="region" aria-label="'+MONTHS[m]+' calendar">'+
     scene("calendar","SCHOOL MONTH AT A GLANCE",MONTHS[m]+" "+y,"School Month at a Glance",false)+
