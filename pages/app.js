@@ -302,11 +302,26 @@ function sameEventWindow(a,b){
 function semanticEventClasses(item){
   return [...new Set([kindClass(item),...scheduleSecondaryEvents(item).map(x=>kindClass(x))])];
 }
+function eventWindowsOverlap(a,b){
+  const aa=eventSpan(a?.date),bb=eventSpan(b?.date);
+  return Boolean(aa&&bb&&aa.start<=bb.end&&bb.start<=aa.end);
+}
+function sameSchoolMonth(a,b){
+  const aa=eventSpan(a?.date),bb=eventSpan(b?.date);
+  return Boolean(aa&&bb&&aa.start.getFullYear()===bb.start.getFullYear()&&aa.start.getMonth()===bb.start.getMonth());
+}
 function mergeAnnualCalendarItems(dynamicItems,annualItems){
   const merged=[...(dynamicItems||[])];
   for(const base of annualItems||[]){
-    const baseClass=kindClass(base);
-    const exists=merged.some(item=>sameEventWindow(item,base)&&semanticEventClasses(item).includes(baseClass));
+    const baseClass=kindClass(base),baseLabel=String(base?.label||"").toLowerCase();
+    const exists=merged.some(item=>{
+      const itemClasses=semanticEventClasses(item),itemLabel=String(item?.label||"").toLowerCase();
+      if(!itemClasses.includes(baseClass))return false;
+      if(sameEventWindow(item,base))return true;
+      if(baseClass==="conference"&&eventWindowsOverlap(item,base))return true;
+      if(baseClass==="test"&&/star/.test(baseLabel)&&/star/.test(itemLabel)&&sameSchoolMonth(item,base))return true;
+      return false;
+    });
     if(!exists)merged.push(base);
   }
   return merged;
