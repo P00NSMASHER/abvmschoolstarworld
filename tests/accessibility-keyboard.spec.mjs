@@ -9,6 +9,12 @@ test("keyboard navigation reaches the skip link and all primary tabs",async({pag
   });
   await page.keyboard.press("Tab");
   await expect(page.locator(".skip-link")).toBeFocused();
+  const focusStyle=await page.locator(".skip-link").evaluate(el=>{
+    const style=getComputedStyle(el);
+    return{outlineStyle:style.outlineStyle,outlineWidth:parseFloat(style.outlineWidth)||0};
+  });
+  expect(focusStyle.outlineStyle).not.toBe("none");
+  expect(focusStyle.outlineWidth).toBeGreaterThanOrEqual(2);
   await page.evaluate(()=>document.body.removeAttribute("tabindex"));
 
   const seen=[];
@@ -62,14 +68,20 @@ test("screen changes and status messages have live-region semantics",async({page
   await expect(page.locator("#toast")).toHaveAttribute("aria-live","polite");
 });
 
-test("200 percent visual zoom does not create horizontal page overflow",async({page})=>{
+test("125, 150, and 200 percent visual zoom preserve app reflow",async({page})=>{
   await page.goto("/#today");
   await expect(page.locator(".loading-screen")).toHaveCount(0,{timeout:10_000});
-  await page.evaluate(()=>{document.documentElement.style.zoom="2"});
-  for(const tab of ["Today","Week","Calendar","Study","Family"]){
-    await page.getByRole("button",{name:tab,exact:true}).click();
-    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth+2);
-    expect(overflow,`${tab} overflows at 200% zoom`).toBeFalsy();
+  for(const zoom of [1.25,1.5,2]){
+    await page.evaluate(value=>{document.documentElement.style.zoom=String(value)},zoom);
+    for(const tab of ["Today","Week","Calendar","Study","Family"]){
+      await page.getByRole("button",{name:tab,exact:true}).click();
+      const metrics=await page.evaluate(()=>({
+        overflow:document.documentElement.scrollWidth>document.documentElement.clientWidth+2,
+        activeVisible:Boolean(document.querySelector(".screen")?.getBoundingClientRect().height),
+      }));
+      expect(metrics.overflow,`${tab} overflows at ${Math.round(zoom*100)}% zoom`).toBeFalsy();
+      expect(metrics.activeVisible).toBeTruthy();
+    }
   }
 });
 
@@ -81,5 +93,29 @@ test("heading and landmark semantics stay coherent",async({page})=>{
     await expect(page.locator("main")).toHaveCount(1);
     await expect(page.getByRole("navigation",{name:"App navigation"})).toHaveCount(1);
     await expect(page.locator(".screen h1").first()).toBeVisible();
+  }
+});
+
+
+test("calendar and checklist actions work from the keyboard and restore state",async({page})=>{
+  await page.goto("/#calendar");
+  await expect(page.locator(".loading-screen")).toHaveCount(0,{timeout:10_000});
+  const heading=page.locator(".calendar-heading h2");
+  const before=(await heading.textContent())?.trim();
+  const next=page.getByRole("button",{name:"Next month"});
+  await next.focus();
+  await page.keyboard.press("Enter");
+  await expect(heading).not.toHaveText(before||"");
+
+  await page.getByRole("button",{name:"Family",exact:true}).click();
+  const check=page.locator("[data-family-check]").first();
+  if(await check.count()){
+    const original=await check.getAttribute("aria-pressed");
+    await check.focus();
+    await page.keyboard.press("Space");
+    await expect(page.locator("[data-family-check]").first()).toHaveAttribute("aria-pressed",original==="true"?"false":"true");
+    await page.locator("[data-family-check]").first().focus();
+    await page.keyboard.press("Space");
+    await expect(page.locator("[data-family-check]").first()).toHaveAttribute("aria-pressed",original||"false");
   }
 });
