@@ -1,4 +1,4 @@
-const CACHE = "abvm-grade2-parent-companion-v28";
+const CACHE = "abvm-grade2-parent-companion-v29";
 const SHELL = [
   "./",
   "./index.html",
