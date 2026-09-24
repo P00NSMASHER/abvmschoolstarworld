@@ -215,39 +215,37 @@ function scheduleStatusDetail(item){
   if(!item)return"";
   return kindClass(item)==="closed"?"School is closed":"Dismissal at 12:00 PM";
 }
-const CALENDAR_PHOTO_SPRITES=[
-  "./assets/calendar/photo-sprite-1.jpg",
-  "./assets/calendar/photo-sprite-2.jpg",
-  "./assets/calendar/photo-sprite-3.jpg",
-  "./assets/calendar/photo-sprite-4.jpg"
-];
-const photoTile=(sheet,tile)=>({sheet,tile});
 const CALENDAR_VISUAL_LIBRARY={
-  picture:{variants:[photoTile(0,0),photoTile(0,1)],alt:"Premium school Picture Day photo"},
-  mass:{variants:[photoTile(0,2),photoTile(0,3)],alt:"Premium Mass and church photo"},
-  gym:{variants:[photoTile(0,4),photoTile(0,5)],alt:"Premium ABVM gym photo"},
-  art:{variants:[photoTile(0,6),photoTile(0,7)],alt:"Premium art class photo"},
-  dress:{variants:[photoTile(0,8),photoTile(0,9)],alt:"Premium Dress Down Day photo"},
-  closed:{variants:[photoTile(1,0),photoTile(1,1)],alt:"Premium no-school photo"},
-  halfday:{variants:[photoTile(1,2),photoTile(1,3)],alt:"Premium half-day dismissal photo"},
-  conference:{variants:[photoTile(1,4),photoTile(1,5)],alt:"Premium parent-teacher conference photo"},
-  progress:{variants:[photoTile(1,6),photoTile(1,7)],alt:"Premium progress report photo"},
-  testing:{variants:[photoTile(1,8),photoTile(1,9)],alt:"Premium school assessment photo"},
-  celebration:{variants:[photoTile(2,0),photoTile(2,1)],alt:"Premium school celebration photo"},
-  meeting:{variants:[photoTile(2,2),photoTile(2,3)],alt:"Premium school meeting photo"},
-  club:{variants:[photoTile(2,4),photoTile(2,5)],alt:"Premium school club photo"},
-  halloween:{variants:[photoTile(2,6)],alt:"Premium Halloween school celebration photo"},
-  thanksgiving:{variants:[photoTile(2,7)],alt:"Premium Thanksgiving break photo"},
-  christmas:{variants:[photoTile(2,8)],alt:"Premium Christmas break photo"},
-  newyear:{variants:[photoTile(2,9)],alt:"Premium New Year's Day photo"},
-  mlk:{variants:[photoTile(3,0)],alt:"Premium Martin Luther King Jr. Day photo"},
-  presidents:{variants:[photoTile(3,1)],alt:"Premium Presidents' Day photo"},
-  easter:{variants:[photoTile(3,2)],alt:"Premium Easter break photo"},
-  memorial:{variants:[photoTile(3,3)],alt:"Premium Memorial Day photo"},
-  catholic:{variants:[photoTile(3,4)],alt:"Premium Catholic Schools Week photo"},
-  santa:{variants:[photoTile(3,5)],alt:"Premium Santa Workshop photo"},
-  lastday:{variants:[photoTile(3,6)],alt:"Premium last day of school photo"},
-  weather:{variants:[photoTile(3,7)],alt:"Premium weather makeup day photo"}
+  picture:{variants:["./assets/calendar/picture-day.svg","./assets/calendar/picture-day-2.svg"],alt:"Picture Day illustration"},
+  mass:{variants:["./assets/calendar/mass-1.svg","./assets/calendar/mass-2.svg"],alt:"Mass and church illustration"},
+  gym:{variants:["./assets/calendar/gym-1.svg","./assets/calendar/gym-2.svg"],alt:"Gym class illustration"},
+  art:{variants:["./assets/calendar/art-1.svg","./assets/calendar/art-2.svg"],alt:"Art class illustration"},
+  music:{variants:["./assets/calendar/music.svg"],alt:"Music class illustration"},
+  computer:{variants:["./assets/calendar/computer.svg"],alt:"Computer class illustration"},
+  library:{variants:["./assets/calendar/library.svg"],alt:"Library illustration"},
+  guidance:{variants:["./assets/calendar/guidance.svg"],alt:"Guidance class illustration"},
+  dress:{variants:["./assets/calendar/dress-down-1.svg","./assets/calendar/dress-down-2.svg"],alt:"Dress Down Day illustration"},
+  closed:{variants:["./assets/calendar/closed-1.svg","./assets/calendar/closed-2.svg"],alt:"No-school illustration"},
+  halfday:{variants:["./assets/calendar/half-day-1.svg","./assets/calendar/half-day-2.svg"],alt:"Half-day dismissal illustration"},
+  conference:{variants:["./assets/calendar/conference-1.svg","./assets/calendar/conference-2.svg"],alt:"Parent-teacher conference illustration"},
+  progress:{variants:["./assets/calendar/progress-1.svg","./assets/calendar/progress-2.svg"],alt:"Progress report illustration"},
+  testing:{variants:["./assets/calendar/testing-1.svg","./assets/calendar/testing-2.svg"],alt:"School assessment illustration"},
+  celebration:{variants:["./assets/calendar/celebration-1.svg","./assets/calendar/celebration-2.svg"],alt:"School celebration illustration"},
+  meeting:{variants:["./assets/calendar/meeting-1.svg","./assets/calendar/meeting-2.svg"],alt:"School meeting illustration"},
+  club:{variants:["./assets/calendar/club-1.svg","./assets/calendar/club-2.svg"],alt:"School club illustration"},
+  halloween:{variants:["./assets/calendar/halloween.svg"],alt:"Halloween school celebration illustration"},
+  thanksgiving:{variants:["./assets/calendar/thanksgiving.svg"],alt:"Thanksgiving break illustration"},
+  christmas:{variants:["./assets/calendar/christmas.svg"],alt:"Christmas break illustration"},
+  newyear:{variants:["./assets/calendar/new-year.svg"],alt:"New Year's Day illustration"},
+  mlk:{variants:["./assets/calendar/mlk-day.svg"],alt:"Martin Luther King Jr. Day illustration"},
+  presidents:{variants:["./assets/calendar/presidents-day.svg"],alt:"Presidents' Day illustration"},
+  easter:{variants:["./assets/calendar/easter.svg"],alt:"Easter break illustration"},
+  memorial:{variants:["./assets/calendar/memorial-day.svg"],alt:"Memorial Day illustration"},
+  catholic:{variants:["./assets/calendar/catholic-schools-week.svg"],alt:"Catholic Schools Week illustration"},
+  santa:{variants:["./assets/calendar/santa-workshop.svg"],alt:"Santa Workshop illustration"},
+  lastday:{variants:["./assets/calendar/last-day.svg"],alt:"Last day of school illustration"},
+  weather:{variants:["./assets/calendar/weather-makeup.svg"],alt:"Weather makeup day illustration"},
+  generic:{variants:["./assets/calendar/school-event.svg"],alt:"School event illustration"}
 };
 function calendarVisualCategory(primary,special,schedule){
   const pk=primary?kindClass(primary):"",p=String(primary?.label||"").toLowerCase();
@@ -262,8 +260,8 @@ function calendarVisualCategory(primary,special,schedule){
     if(/memorial/.test(sl))return"memorial";
     return"closed";
   }
-  if(pk==="picture")return"picture";
-  if(pk==="dress")return"dress";
+  if(pk==="picture"||/picture day/.test(p))return"picture";
+  if(pk==="dress"||/dress down|dress-down/.test(p))return"dress";
   if(pk==="conference")return"conference";
   if(pk==="report"||/progress report/.test(p))return"progress";
   if(pk==="test")return"testing";
@@ -274,12 +272,16 @@ function calendarVisualCategory(primary,special,schedule){
   if(/catholic schools week/.test(p))return"catholic";
   if(/last day/.test(p))return"lastday";
   if(/weather makeup/.test(p))return"weather";
-  if(pk==="celebration")return"celebration";
-  if(pk==="faith"||/mass|church/.test(s))return"mass";
+  if(pk==="celebration"||/dance|movie night|family night|party|s[’']?more|schwartz farm/.test(p))return"celebration";
+  if(pk==="faith"||/\bmass\b|church/.test(p)||/\bmass\b|church/.test(s))return"mass";
+  if(/library/.test(s))return"library";
+  if(/computer/.test(s))return"computer";
+  if(/music/.test(s))return"music";
+  if(/guidance/.test(s))return"guidance";
   if(/gym/.test(s))return"gym";
   if(/art/.test(s))return"art";
   if(schedule&&kindClass(schedule)==="halfday")return"halfday";
-  return null;
+  return(primary||special||schedule)?"generic":null;
 }
 function stableCalendarVisualIndex(date,count){
   if(count<=1)return 0;
@@ -291,19 +293,31 @@ function calendarVisualFor(date,primary,special,schedule){
   const entry=category?CALENDAR_VISUAL_LIBRARY[category]:null;
   if(!entry?.variants?.length)return null;
   const index=stableCalendarVisualIndex(date,entry.variants.length);
-  const variant=entry.variants[index],col=variant.tile%5,row=Math.floor(variant.tile/5);
-  return{
-    src:CALENDAR_PHOTO_SPRITES[variant.sheet],
-    alt:entry.alt,
-    category,
-    index,
-    sheet:variant.sheet,
-    tile:variant.tile,
-    col,
-    row,
-    x:col*25,
-    y:row*100
-  };
+  return{src:entry.variants[index],alt:entry.alt,category,index};
+}
+function normalizedCalendarDetail(value){
+  return String(value||"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+}
+function sameCalendarDetail(a,b){
+  const left=normalizedCalendarDetail(a),right=normalizedCalendarDetail(b);
+  if(!left||!right)return false;
+  if(left===right)return true;
+  const single=right.split(" ").length===1?right:(left.split(" ").length===1?left:"");
+  const full=single===right?left:right;
+  return Boolean(single&&single.length>=3&&new RegExp("(?:^|\\s)"+single+"(?:$|\\s)").test(full));
+}
+function calendarDetailKicker(item){
+  const k=kindClass(item);
+  if(k==="test")return"TEST / ASSESSMENT";
+  if(k==="due")return"REMINDER";
+  if(k==="club")return"CLUB";
+  if(k==="meeting")return"SCHOOL MEETING";
+  if(k==="conference")return"CONFERENCE";
+  if(k==="report")return"SCHOOL UPDATE";
+  if(k==="picture")return"PICTURE DAY";
+  if(k==="dress")return"DRESS DOWN";
+  if(k==="faith")return"FAITH";
+  return"SCHOOL EVENT";
 }
 function taskIconName(item){
   const s=((item?.subject||"")+" "+(item?.task||"")).toLowerCase();
@@ -538,22 +552,28 @@ function renderCalendar(){
       }).join(""):'<div class="empty-note">No school dates are listed for this month.</div>')+
     '</div>';
 
+  const displaySpecial=effectiveSpecial&&!contentEvents.some(e=>sameCalendarDetail(e.label,effectiveSpecial))?effectiveSpecial:"";
+  const detailEventTile=item=>'<div class="calendar-detail-item event '+kindClass(item)+'"><span class="event-icon '+kindClass(item)+'">'+icon(eventIconName(item))+'</span><div><small>'+esc(calendarDetailKicker(item))+'</small><strong>'+esc(item.label)+'</strong></div></div>';
+  const detailTiles=[];
+  if(schedule)detailTiles.push('<div class="calendar-detail-item schedule '+kindClass(schedule)+'"><span class="detail-icon">'+icon(kindClass(schedule)==="closed"?"ban":"clock")+'</span><div><small>'+esc(scheduleStatusText(schedule).toUpperCase())+'</small><strong>'+esc(scheduleStatusDetail(schedule))+'</strong></div></div>');
+  if(primary)detailTiles.push(detailEventTile(primary));
+  if(displaySpecial)detailTiles.push('<div class="calendar-detail-item special"><span class="detail-icon">'+icon(specialIconName(displaySpecial))+'</span><div><small>'+(schedule&&kindClass(schedule)==="halfday"?'USUAL CLASS SPECIAL':'CLASS SPECIAL')+'</small><strong>'+esc(displaySpecial)+'</strong>'+(schedule&&kindClass(schedule)==="halfday"?'<em>Early dismissal may change the usual schedule.</em>':'')+'</div></div>');
+  contentEvents.filter(e=>e!==primary).forEach(e=>detailTiles.push(detailEventTile(e)));
+  const detailItemCount=detailTiles.length;
   const dayHeading='<div class="calendar-day-heading"><p>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</p><h2>'+esc(fmtDate(calendarDay))+'</h2></div>';
-  const scheduleBlock=schedule?'<div class="schedule-alert '+kindClass(schedule)+'"><span>'+icon(kindClass(schedule)==="closed"?"ban":"clock")+'</span><div><small>'+esc(scheduleStatusText(schedule).toUpperCase())+'</small><strong>'+esc(scheduleStatusDetail(schedule))+'</strong></div></div>':'';
-  const primaryBlock=primary?'<div class="calendar-primary-event '+kindClass(primary)+'"><span class="event-icon '+kindClass(primary)+'">'+icon(eventIconName(primary))+'</span><div><small>'+esc(calendarLabel(primary).toUpperCase())+'</small><strong>'+esc(primary.label)+'</strong></div></div>':'';
-  const specialBlock=effectiveSpecial?'<div class="calendar-special"><span>'+icon(specialIconName(effectiveSpecial))+'</span><div><small>'+(schedule&&kindClass(schedule)==="halfday"?'USUAL CLASS SPECIAL':'CLASS SPECIAL')+'</small><strong>'+esc(effectiveSpecial)+'</strong>'+(schedule&&kindClass(schedule)==="halfday"?'<em>Early dismissal may change the usual schedule.</em>':'')+'</div></div>':'';
-  const extraEventsBlock=contentEvents.length>1?'<div class="calendar-event-list">'+contentEvents.filter(e=>e!==primary).map(e=>'<div><span class="event-icon '+kindClass(e)+'">'+icon(eventIconName(e))+'</span><span><strong>'+esc(e.label)+'</strong></span></div>').join("")+'</div>':'';
+  const detailGrid=detailItemCount?'<div class="calendar-detail-grid">'+detailTiles.join("")+'</div>':'';
   const lunchBlock=lunch?'<div class="calendar-lunch"><img class="calendar-lunch-photo" src="'+esc(lunch.image||"")+'" width="720" height="720" loading="lazy" decoding="async" alt="'+esc(lunch.imageAlt||"School lunch")+'"><div><b>School Lunch</b><p>'+esc((lunch.items||[]).join(", ").replace(/, ([^,]*)$/,", and $1"))+'</p></div></div>':'';
   const emptyBlock=!events.length&&!effectiveSpecial?'<p class="calendar-empty">Regular school day. No special events are posted.</p>':'';
-  const detailContent=dayHeading+scheduleBlock+primaryBlock+specialBlock+extraEventsBlock+lunchBlock+emptyBlock;
-  const photoLayer=visual?'<img class="calendar-photo-background" src="'+esc(visual.src)+'" alt="" aria-hidden="true" decoding="async" style="--calendar-photo-col:'+visual.col+';--calendar-photo-row:'+visual.row+';">':'';
+  const detailContent=dayHeading+detailGrid+lunchBlock+emptyBlock;
+  const photoLayer=visual?'<img class="calendar-photo-background" src="'+esc(visual.src)+'" alt="" aria-hidden="true" decoding="async">':'';
+
 
   stack().innerHTML='<div class="screen calendar-screen" role="region" aria-label="'+MONTHS[m]+' calendar">'+
     scene("calendar","SCHOOL MONTH AT A GLANCE",MONTHS[m]+" "+y,"School Month at a Glance",false)+
     '<div class="calendar-wrap"><section class="calendar-card"><div class="calendar-title-row"><button class="month-arrow" data-month="-1" type="button" aria-label="Previous month">‹</button><div class="calendar-heading"><p>'+esc(calendarMode==="month"?"MONTH VIEW":"LIST VIEW")+'</p><h2>'+MONTHS[m]+" "+y+'</h2></div><button class="month-arrow" data-month="1" type="button" aria-label="Next month">›</button></div>'+
     '<div class="calendar-tabs"><button class="'+(calendarMode==="month"?"active":"")+'" data-cal-mode="month" type="button" aria-pressed="'+(calendarMode==="month")+'">Month View</button><button class="'+(calendarMode==="list"?"active":"")+'" data-cal-mode="list" type="button" aria-pressed="'+(calendarMode==="list")+'">List View</button></div>'+
     monthPanel+listPanel+'</section>'+
-    '<section class="calendar-day-card '+(primary?('day-'+kindClass(primary)):'')+(visual?(' has-photo visual-'+visual.category):'')+'">'+photoLayer+'<div class="calendar-overlay-panel">'+detailContent+'</div></section>'+
+    '<section class="calendar-day-card '+(primary?('day-'+kindClass(primary)):'')+(visual?(' has-photo visual-'+visual.category):'')+(detailItemCount>=3?' busy-day':'')+'">'+photoLayer+'<div class="calendar-overlay-panel">'+detailContent+'</div></section>'+
     '</div></div>';
 }
 function subjectCard(id,klass,title,icon,subj){
