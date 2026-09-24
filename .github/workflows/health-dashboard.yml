@@ -23,6 +23,7 @@ concurrency:
 
 jobs:
   dashboard:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.head_branch == 'main'
     name: build operational health dashboard
     runs-on: ubuntu-latest
     timeout-minutes: 8
