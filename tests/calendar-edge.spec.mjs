@@ -29,7 +29,7 @@ test("half-day plus regular event remain independently visible",async({page})=>{
   await openCalendar(page);
   await goToMonth(page,2026,"November");
   await chooseDate(page,/Friday, November 6/i);
-  await expect(page.locator(".calendar-primary-block")).toContainText(/Half Day/i);
+  await expect(page.locator(".calendar-day-card .schedule-alert")).toContainText(/Half Day/i);
   await expect(page.locator(".calendar-day-card")).toContainText(/Articulation Meeting/i);
 });
 
@@ -37,7 +37,7 @@ test("no-school days remain unmistakable",async({page})=>{
   await openCalendar(page);
   await goToMonth(page,2026,"October");
   await chooseDate(page,/Monday, October 12/i);
-  await expect(page.locator(".calendar-primary-block")).toContainText(/No School/i);
+  await expect(page.locator(".calendar-day-card .schedule-alert")).toContainText(/No School/i);
 });
 
 test("busy dates expose multiple events without horizontal overflow",async({page})=>{
@@ -63,9 +63,9 @@ test("multi-day holiday range applies at both ends",async({page})=>{
   await openCalendar(page);
   await goToMonth(page,2026,"December");
   await chooseDate(page,/Thursday, December 24/i);
-  await expect(page.locator(".calendar-primary-block")).toContainText(/No School/i);
+  await expect(page.locator(".calendar-day-card .schedule-alert")).toContainText(/No School/i);
   await chooseDate(page,/Thursday, December 31/i);
-  await expect(page.locator(".calendar-primary-block")).toContainText(/No School/i);
+  await expect(page.locator(".calendar-day-card .schedule-alert")).toContainText(/No School/i);
 });
 
 test("regular date gives a calm empty state rather than broken detail",async({page})=>{
@@ -85,4 +85,27 @@ test("regular date gives a calm empty state rather than broken detail",async({pa
   expect(found).toBeTruthy();
   await expect(page.locator(".calendar-day-card")).toBeVisible();
   await expect(page.locator(".calendar-empty")).toContainText(/Regular school day|No special events/i);
+});
+
+
+test("Calendar uses the restored early-morning visual hierarchy",async({page})=>{
+  await openCalendar(page);
+  await expect(page.locator(".calendar-day-hero")).toHaveCount(0);
+  await expect(page.locator(".calendar-overlay-panel")).toHaveCount(0);
+  const visual=page.locator(".calendar-day-visual");
+  if(await visual.count()){
+    await expect(visual.locator("img")).toBeVisible();
+    const ratio=await visual.evaluate(el=>{
+      const r=el.getBoundingClientRect();
+      return r.width/r.height;
+    });
+    expect(ratio).toBeGreaterThan(1.45);
+    expect(ratio).toBeLessThan(1.75);
+  }
+  const card=page.locator(".calendar-day-card");
+  const style=await card.evaluate(el=>({
+    background:getComputedStyle(el).backgroundColor,
+    radius:parseFloat(getComputedStyle(el).borderRadius),
+  }));
+  expect(style.radius).toBeGreaterThanOrEqual(20);
 });
