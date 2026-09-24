@@ -57,6 +57,9 @@ function validatePack(data,label,{freshness=true}={}){
   if(!Array.isArray(pack?.importantDates)||pack.importantDates.length<1)errors.push(label+": importantDates is empty");
   if(!Array.isArray(pack?.parentNotices))errors.push(label+": parentNotices is not an array");
 
+  if(!data?.syncPolicy?.primaryAt||!data?.syncPolicy?.backupAt)errors.push(label+": hardened primary/backup sync policy is missing");
+  if(data?.syncPolicy?.retriesPerSource!==3)errors.push(label+": retriesPerSource must remain 3");
+
   if(freshness&&checked){
     const ageHours=(Date.now()-checked.getTime())/3_600_000;
     if(ageHours<-.25)errors.push(label+": source timestamp is in the future");

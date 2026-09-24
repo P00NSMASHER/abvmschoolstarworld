@@ -125,7 +125,6 @@ a{color:inherit}
   overflow:hidden;background:linear-gradient(145deg,#fffce8,#fff4c7);border:1px solid #e6c34e;border-radius:24px;
   padding:15px 14px;display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:start;box-shadow:var(--shadow-soft)
 }
-.lunch-art{font-size:38px;filter:drop-shadow(0 4px 5px rgba(0,0,0,.14))}
 .lunch-card p{margin:0;color:#6e5200;font-size:10px;font-weight:950;letter-spacing:.09em}
 .lunch-card strong{display:block;color:#4e4122;font-size:13px;line-height:1.45;margin-top:3px}
 .week-hero-note{
@@ -165,11 +164,8 @@ a{color:inherit}
 .calendar-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
 .calendar-title-row h2{margin:0;color:var(--navy);font-family:var(--font-display);font-size:23px}
 .calendar-title-row p{margin:0;color:#3170a9;font-size:10px;font-weight:950;letter-spacing:.08em}
-.month-controls{display:flex;align-items:center;gap:8px}
 .month-arrow{border:0;width:36px;height:36px;border-radius:50%;background:#edf6fd;color:var(--navy);font-size:22px}
 .calendar-tabs{display:grid;grid-template-columns:1fr 1fr;gap:0;background:#e9f3fb;border-radius:14px;padding:3px;margin-bottom:13px}
-.calendar-tabs span{padding:8px;text-align:center;font-size:10px;font-weight:900;color:#5e7180;border-radius:11px}
-.calendar-tabs span.active{background:var(--navy);color:#fff}
 .calendar-weekdays,.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
 .calendar-weekdays span{text-align:center;color:#596573;font-size:10px;font-weight:950;padding-bottom:4px}
 .calendar-blank,.calendar-grid button{min-height:47px}
@@ -194,11 +190,6 @@ a{color:inherit}
 .calendar-day-heading p{margin:0;color:#1167b1;font-size:10px;font-weight:950;letter-spacing:.1em}
 .calendar-day-heading h2{margin:4px 0 12px;color:var(--navy);font-family:var(--font-display);font-size:22px}
 .calendar-empty{color:#5e6b78;font-size:12px;line-height:1.4}
-.calendar-event-list{display:grid;gap:7px}
-.calendar-event-list>div{display:flex;gap:10px;align-items:flex-start;background:#fff;border-radius:13px;padding:10px 11px}
-.calendar-event-list i{width:10px;height:10px;border-radius:50%;background:#1472a7;margin-top:4px;flex:none}
-.calendar-event-list i.test{background:var(--pink)}.calendar-event-list i.faith{background:#7d3eae}.calendar-event-list i.due{background:#d99100}.calendar-event-list i.club{background:#3c8c4b}.calendar-event-list i.closed{background:#a13b3b}
-.calendar-event-list strong{font-size:12px;line-height:1.35}
 .calendar-lunch{display:grid;grid-template-columns:42px 1fr;gap:10px;background:#fff8d9;border:1px solid #e4c456;border-radius:17px;margin-top:12px;padding:12px}
 .calendar-lunch>span{font-size:30px}.calendar-lunch b{color:#6b5200}.calendar-lunch p{margin:3px 0 0;font-size:12px;line-height:1.4}
 .study-content{padding:0 14px 28px}
@@ -214,12 +205,6 @@ a{color:inherit}
 .essential-row:first-of-type{border-top:0}.essential-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:18px}
 .essential-icon.green{background:#dff4df}.essential-icon.pink{background:#ffe0f0}.essential-icon.yellow{background:#fff2b8}.essential-icon.blue{background:#dff0ff}
 .essential-row time{font-size:10px;font-weight:950;color:#146098}.essential-row strong{font-size:12px;color:#344859}
-.study-jumps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
-.study-jumps a{
-  text-decoration:none;background:#fff;border:1px solid #d4d9de;border-radius:16px;min-height:70px;display:grid;align-content:center;justify-items:center;gap:4px;color:var(--navy);font-size:10px;font-weight:900;box-shadow:var(--shadow-soft)
-}
-.study-jumps .jump-icon{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;font-size:18px}
-.study-jumps a:nth-child(1) .jump-icon{background:#ffe3f0}.study-jumps a:nth-child(2) .jump-icon{background:#dff1ff}.study-jumps a:nth-child(3) .jump-icon{background:#e1f4df}.study-jumps a:nth-child(4) .jump-icon{background:#efe5ff}.study-jumps a:nth-child(5) .jump-icon{background:#ffeccf}.study-jumps a:nth-child(6) .jump-icon{background:#ffe0e7}
 .subject-card{border:1px solid;border-radius:23px;margin:0 0 12px;padding:16px;box-shadow:var(--shadow-soft)}
 .subject-card.religion{background:#f6ebff;border-color:#d7b3ef}.subject-card.reading{background:#fff0f7;border-color:#ebb5cf}.subject-card.math{background:#eef8ff;border-color:#add3ea}.subject-card.spelling{background:#fff7d7;border-color:#e1c55f}.subject-card.sight{background:#edfaff;border-color:#a9dce9}
 .subject-head{display:flex;align-items:center;gap:10px}.subject-head .icon{width:40px;height:40px;border-radius:13px;background:#fff;display:grid;place-items:center;font-size:21px;box-shadow:0 4px 12px rgba(31,52,73,.08)}
@@ -262,8 +247,7 @@ a{color:inherit}
 @media(max-width:370px){
   .top-scene{min-height:235px}.scene-title h1{font-size:35px}.scene-title h2{font-size:29px}
   .school-name{font-size:10.5px}.date-hero-card{grid-template-columns:78px 1fr}.big-date{min-height:92px}.big-date span{font-size:37px}
-  .study-jumps{grid-template-columns:repeat(3,1fr)}
-}
+  }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 
 .essential-row>div{display:grid;gap:2px;min-width:0}
@@ -1479,3 +1463,121 @@ body{font-family:var(--font-sans)}
 
 /* Study heading contrast correction from automated QA */
 .subject-kicker{color:#66747e}
+
+
+/* Phase 3: smallest-phone scanability and calm first-screen hierarchy */
+@media(max-width:430px){
+  .top-scene{min-height:170px}
+  .content.overlap{margin-top:-12px}
+  .day-detail-title{
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    gap:8px;
+  }
+  .school-day-pill{
+    justify-self:start;
+    min-height:30px;
+    display:inline-flex;
+    align-items:center;
+  }
+  .day-detail-title h2{font-size:20px;line-height:1.08}
+  .week-hero-note{display:none}
+  .study-intro{padding-top:12px;padding-bottom:12px}
+  .study-intro h2{font-size:18px}
+  .study-intro p{margin-top:3px}
+  .family-priority{padding-top:14px;padding-bottom:14px}
+  .family-priority h2{font-size:21px}
+  .family-stats{gap:8px}
+  .family-stats article{padding:12px}
+}
+@media(max-width:340px){
+  .content,.study-content,.family-content,.calendar-wrap{padding-left:10px;padding-right:10px}
+  .bottom-nav{padding-left:2px;padding-right:2px}
+  .bottom-nav button b{font-size:10px}
+  .nav-icon{width:33px}
+  .date-hero-card{grid-template-columns:70px minmax(0,1fr);gap:10px;padding:14px}
+  .big-date{min-height:86px}
+  .big-date span{font-size:34px}
+  .date-hero-copy h2{font-size:18px}
+  .calendar-grid button{min-height:72px;padding-left:2px;padding-right:2px}
+}
+
+
+/* Phase 4: deliberate tablet composition */
+@media(min-width:720px) and (max-width:899px){
+  .phone-app{
+    width:100%;
+    height:100dvh;
+    max-width:none;
+    border-radius:0;
+    border:0;
+    box-shadow:none;
+  }
+  .site-shell{padding:0;background:var(--paper)}
+  .top-scene{min-height:190px}
+  .content,.study-content,.family-content,.calendar-wrap{
+    width:min(100%,860px);
+    margin-inline:auto;
+    padding-left:22px;
+    padding-right:22px;
+  }
+  .bottom-nav{
+    padding-left:max(18px,calc((100vw - 720px)/2));
+    padding-right:max(18px,calc((100vw - 720px)/2));
+  }
+  .bottom-nav button{min-height:62px}
+  .bottom-nav button b{font-size:12px}
+  .nav-icon{width:40px;height:33px}
+  .nav-icon svg{width:24px;height:24px}
+  .study-content{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
+    align-items:start;
+  }
+  .study-intro,.study-at-a-glance,.study-section-nav,.calm-card{grid-column:1/-1}
+  .subject-card{margin:0}
+  .family-content{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
+    align-items:start;
+  }
+  .family-priority,.family-stats{grid-column:1/-1}
+  .family-card,.reading-policy,.install-card{margin:0}
+  .calendar-wrap{
+    max-width:860px;
+    display:grid;
+    grid-template-columns:minmax(0,1.18fr) minmax(280px,.82fr);
+    gap:16px;
+    align-items:start;
+  }
+  .calendar-card,.calendar-day-card{margin-top:0}
+}
+
+/* Phase 4: desktop density without losing hierarchy */
+@media(min-width:900px){
+  .top-scene{min-height:215px}
+  .content,.study-content,.family-content{max-width:1180px}
+  .calendar-wrap{
+    max-width:1180px;
+    display:grid;
+    grid-template-columns:minmax(0,1.2fr) minmax(340px,.8fr);
+    gap:18px;
+    align-items:start;
+  }
+  .calendar-card,.calendar-day-card{margin-top:0}
+  .study-content,.family-content{gap:18px}
+  .study-at-a-glance{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:16px}
+  .study-at-a-glance>.section-label,.study-at-a-glance>h2{grid-column:1/-1}
+  .family-priority{padding-top:18px;padding-bottom:18px}
+}
+
+
+/* Phase 5: explicit keyboard focus for native disclosure controls */
+summary:focus-visible,
+[tabindex]:focus-visible{
+  outline:3px solid var(--focus);
+  outline-offset:3px;
+}
+summary{border-radius:var(--radius-sm)}

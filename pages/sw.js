@@ -1,4 +1,4 @@
-const CACHE = "abvm-grade2-parent-companion-v36-audit15";
+const CACHE = "abvm-grade2-parent-companion-v37-final10";
 const SHELL = [
   "./",
   "./index.html",
@@ -8,6 +8,8 @@ const SHELL = [
   "./js/date-utils.js",
   "./js/storage.js",
   "./js/install.js",
+  "./js/events.js",
+  "./js/calendar-visuals.js",
   "./manifest.webmanifest",
   "./data/school-year-calendar.json",
   "./assets/abvm-app-icon-180.png",
