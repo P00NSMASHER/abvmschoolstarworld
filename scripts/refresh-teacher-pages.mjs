@@ -37,24 +37,33 @@ function pageLines(html) {
 
 async function fetchPage(path, title) {
   const url = `${SITE_ROOT}/${path}`;
-  const response = await fetch(url, {
-    headers: { accept: 'text/html', 'user-agent': 'ABVM-Parent-Companion/1.0' },
-    redirect: 'follow',
-    signal: AbortSignal.timeout(25_000),
-  });
-  if (!response.ok) throw new Error(`${title} returned HTTP ${response.status}.`);
-  const html = await response.text();
-  if (new URL(response.url).hostname === 'accounts.google.com' || /<title>\s*Sign in(?:\s|<)/i.test(html)) {
-    throw new Error(`${title} unexpectedly requires Google sign-in.`);
+  let lastError = null;
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    try {
+      const response = await fetch(url, {
+        headers: { accept: 'text/html', 'user-agent': 'ABVM-Parent-Companion/1.0' },
+        redirect: 'follow',
+        signal: AbortSignal.timeout(25_000),
+      });
+      if (!response.ok) throw new Error(`${title} returned HTTP ${response.status}.`);
+      const html = await response.text();
+      if (new URL(response.url).hostname === 'accounts.google.com' || /<title>\s*Sign in(?:\s|<)/i.test(html)) {
+        throw new Error(`${title} unexpectedly requires Google sign-in.`);
+      }
+      const lines = pageLines(html);
+      const hasExpectedHeading = title === 'Home'
+        ? lines.some(line => /Mrs\.\s*Benulis.*ABVM Grade 2/i.test(line))
+        : lines.some(line => line.toLowerCase() === title.toLowerCase());
+      if (!hasExpectedHeading) {
+        throw new Error(`${title} did not contain its expected page heading.`);
+      }
+      return { title, url, lines };
+    } catch (error) {
+      lastError = error;
+      if (attempt < 3) await new Promise(resolve => setTimeout(resolve, attempt * 1_500));
+    }
   }
-  const lines = pageLines(html);
-  const hasExpectedHeading = title === 'Home'
-    ? lines.some(line => /Mrs\.\s*Benulis.*ABVM Grade 2/i.test(line))
-    : lines.some(line => line.toLowerCase() === title.toLowerCase());
-  if (!hasExpectedHeading) {
-    throw new Error(`${title} did not contain its expected page heading.`);
-  }
-  return { title, url, lines };
+  throw new Error(`${title} failed after 3 attempts: ${lastError?.message || lastError}`);
 }
 
 function requireLine(lines, prefix, pageName) {
@@ -407,9 +416,10 @@ pack.gaps = [...new Set([...pack.gaps,
 data.source = 'ABVM Grade 2 public teacher pages and uploaded school notices';
 data.delivery = 'verified';
 data.syncPolicy = {
-  intervalHours: 24,
-  dailyAt: '1:00 PM',
+  primaryAt: '1:17 PM',
+  backupAt: '4:17 PM',
   timeZone: 'America/New_York',
+  retriesPerSource: 3,
   source: `${SITE_ROOT}/home`,
 };
 data.sourceLastCheckedAt = checkedAt;
