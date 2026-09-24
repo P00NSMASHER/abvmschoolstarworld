@@ -408,9 +408,10 @@ data.source = 'ABVM Grade 2 public teacher pages and uploaded school notices';
 data.delivery = 'verified';
 data.syncPolicy = {
   intervalHours: 24,
-  dailyAt: '1:00 PM',
+  dailyAt: '1:17 PM primary; 3:47 PM backup',
   timeZone: 'America/New_York',
   source: `${SITE_ROOT}/home`,
+  redundancy: 'Two staggered daily refresh attempts avoid top-of-hour scheduler congestion and provide a same-day fallback.',
 };
 data.sourceLastCheckedAt = checkedAt;
 data.sourceLastSeenAt = checkedAt;
