@@ -1,12 +1,15 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "aspectRatio": "16:10",
   "rendering": "resolution-independent SVG",
   "rules": {
     "embeddedText": false,
     "people": false,
     "rotation": "deterministic by school date so recurring events vary without flicker",
-    "placement": "selected-day detail only; month grid stays icon-and-label first"
+    "placement": "selected-day detail only; month grid stays icon-and-label first",
+    "schedulePriority": "No School and Half Day are independent schedule facets and remain visible even when other events share the date.",
+    "multiEventHandling": "Month cells show schedule flag + primary event + compact additional-event count; selected day shows the full ordered stack.",
+    "compositeSourceHandling": "Combined source lines such as Progress Reports; 12:00 dismissal are split into schedule and event facets."
   },
   "categories": {
     "picture": {
@@ -55,6 +58,186 @@
       "variants": [
         "dress-down-1.svg",
         "dress-down-2.svg"
+      ]
+    },
+    "closed": {
+      "match": [
+        "No School",
+        "School Closed",
+        "Holiday"
+      ],
+      "variants": [
+        "closed-1.svg",
+        "closed-2.svg"
+      ]
+    },
+    "halfday": {
+      "match": [
+        "12:00 dismissal",
+        "Noon dismissal",
+        "Early Dismissal"
+      ],
+      "variants": [
+        "half-day-1.svg",
+        "half-day-2.svg"
+      ]
+    },
+    "conference": {
+      "match": [
+        "Parent / Teacher conferences",
+        "Conference"
+      ],
+      "variants": [
+        "conference-1.svg",
+        "conference-2.svg"
+      ]
+    },
+    "progress": {
+      "match": [
+        "Progress Reports"
+      ],
+      "variants": [
+        "progress-1.svg",
+        "progress-2.svg"
+      ]
+    },
+    "testing": {
+      "match": [
+        "Test",
+        "STAR Testing"
+      ],
+      "variants": [
+        "testing-1.svg",
+        "testing-2.svg"
+      ]
+    },
+    "celebration": {
+      "match": [
+        "Dance",
+        "Movie Night",
+        "Family Night",
+        "Party"
+      ],
+      "variants": [
+        "celebration-1.svg",
+        "celebration-2.svg"
+      ]
+    },
+    "meeting": {
+      "match": [
+        "HSA Meeting",
+        "Articulation Meeting"
+      ],
+      "variants": [
+        "meeting-1.svg",
+        "meeting-2.svg"
+      ]
+    },
+    "club": {
+      "match": [
+        "Lego Club"
+      ],
+      "variants": [
+        "club-1.svg",
+        "club-2.svg"
+      ]
+    },
+    "halloween": {
+      "match": [
+        "Halloween Party"
+      ],
+      "variants": [
+        "halloween.svg"
+      ]
+    },
+    "thanksgiving": {
+      "match": [
+        "Thanksgiving Holiday"
+      ],
+      "variants": [
+        "thanksgiving.svg"
+      ]
+    },
+    "christmas": {
+      "match": [
+        "Christmas Holiday"
+      ],
+      "variants": [
+        "christmas.svg"
+      ]
+    },
+    "newyear": {
+      "match": [
+        "New Year’s Day",
+        "New Year's Day"
+      ],
+      "variants": [
+        "new-year.svg"
+      ]
+    },
+    "mlk": {
+      "match": [
+        "Martin Luther King Jr. Day"
+      ],
+      "variants": [
+        "mlk-day.svg"
+      ]
+    },
+    "presidents": {
+      "match": [
+        "Presidents’ Day",
+        "Presidents' Day"
+      ],
+      "variants": [
+        "presidents-day.svg"
+      ]
+    },
+    "easter": {
+      "match": [
+        "Easter Holiday"
+      ],
+      "variants": [
+        "easter.svg"
+      ]
+    },
+    "memorial": {
+      "match": [
+        "Memorial Day"
+      ],
+      "variants": [
+        "memorial-day.svg"
+      ]
+    },
+    "catholic": {
+      "match": [
+        "Catholic Schools Week"
+      ],
+      "variants": [
+        "catholic-schools-week.svg"
+      ]
+    },
+    "santa": {
+      "match": [
+        "Santa Workshop"
+      ],
+      "variants": [
+        "santa-workshop.svg"
+      ]
+    },
+    "lastday": {
+      "match": [
+        "Last day"
+      ],
+      "variants": [
+        "last-day.svg"
+      ]
+    },
+    "weather": {
+      "match": [
+        "Weather makeup"
+      ],
+      "variants": [
+        "weather-makeup.svg"
       ]
     }
   }
