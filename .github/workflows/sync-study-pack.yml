@@ -2,7 +2,9 @@ name: Refresh ABVM teacher pages
 
 on:
   schedule:
-    - cron: '0 13 * * *'
+    - cron: '17 13 * * *'
+      timezone: 'America/New_York'
+    - cron: '47 15 * * *'
       timezone: 'America/New_York'
   workflow_dispatch:
 
@@ -17,6 +19,7 @@ concurrency:
 
 jobs:
   refresh-and-deploy:
+    timeout-minutes: 25
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
