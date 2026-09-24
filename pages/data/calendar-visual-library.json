@@ -6,12 +6,12 @@
     "embeddedText": false,
     "people": false,
     "rotation": "deterministic by school date so recurring events vary without flicker",
-    "placement": "selected-day detail card uses the matching photo as the entire full-bleed background; date, schedule, event, specials, extra events, and lunch are consolidated into one frosted foreground panel",
+    "placement": "The selected-day detail card grows naturally with its content; there is no internal scrolling. Date, schedule, primary event, specials, additional events, and lunch remain in one foreground panel.",
     "schedulePriority": "No School and Half Day are independent schedule facets and remain permanently visible even when another event shares the date.",
     "multiEventHandling": "Month cells show schedule flag + primary event + compact additional-event count; selected day overlays the schedule/primary information on the photo and keeps additional events below.",
     "compositeSourceHandling": "Combined source lines such as Progress Reports; 12:00 dismissal are split into schedule and event facets.",
-    "backgroundTreatment": "photo occupies the entire selected-day card at native square proportions; one translucent foreground information panel preserves readability without covering the image with separate cards",
-    "spriteAspectPreservation": "Square source tiles render inside a square selected-day card at native proportions with exact sprite positioning; no photo stretching or compression."
+    "backgroundTreatment": "The photo fills the entire selected-day card without distortion. A lighter translucent foreground panel keeps all information readable while allowing substantially more of the image to show through.",
+    "spriteAspectPreservation": "Sprite tiles are rendered through an actual background image layer sized by card height, so each square source tile preserves its proportions while the card may grow taller for busy dates."
   },
   "categories": {
     "picture": {
