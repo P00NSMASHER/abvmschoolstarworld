@@ -514,10 +514,10 @@ function monthGrid(year,month){
     const schedule=calendarScheduleEvent(events),contentEvents=calendarContentEvents(events),primary=primaryCalendarEvent(contentEvents);
     const scheduleClass=schedule?kindClass(schedule):"",klass=primary?kindClass(primary):"";
     const weekend=[0,6].includes(d.getDay()),closed=scheduleClass==="closed",halfday=scheduleClass==="halfday";
-    const specialPrimary=!primary&&!closed&&special?special.split(",")[0].trim():"";
+    const specialPrimary=!primary&&!schedule&&special?special.split(",")[0].trim():"";
     const label=primary?calendarLabel(primary):specialPrimary;
     const iconName=primary?eventIconName(primary):specialIconName(specialPrimary);
-    const hiddenCount=Math.max(0,contentEvents.length-(primary?1:0))+((special&&primary&&!closed)?1:0);
+    const hiddenCount=Math.max(0,contentEvents.length-(primary?1:0))+((special&&(primary||halfday)&&!closed)?1:0);
     html+='<button class="'+(weekend?'weekend ':'')+(closed?'closed ':'')+(halfday?'halfday ':'')+(klass?('event-'+klass+' '):'')+(calendarDay&&sameDay(d,calendarDay)?'active':'')+'" type="button" data-cal-day="'+d.toISOString()+'" aria-pressed="'+Boolean(calendarDay&&sameDay(d,calendarDay))+'" aria-label="'+esc(fmtDate(d)+(events.length?': '+events.map(e=>e.label).join(', '):special?': '+special:''))+'"><strong>'+day+'</strong>'+
       (schedule?'<span class="calendar-status-flag '+scheduleClass+'">'+(scheduleClass==="closed"?"No School":"Half Day")+'</span>':'')+
       (label?'<span class="calendar-chip '+(klass||'special')+'"><span class="mini-icon">'+icon(iconName)+'</span><span>'+esc(label)+'</span></span>':'')+
