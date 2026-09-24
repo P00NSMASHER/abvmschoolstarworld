@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "aspectRatio": "16:10",
+  "rendering": "resolution-independent SVG",
+  "rules": {
+    "embeddedText": false,
+    "people": false,
+    "rotation": "deterministic by school date so recurring events vary without flicker",
+    "placement": "selected-day detail only; month grid stays icon-and-label first"
+  },
+  "categories": {
+    "picture": {
+      "match": [
+        "Picture Day",
+        "school portraits"
+      ],
+      "variants": [
+        "picture-day.svg",
+        "picture-day-2.svg"
+      ]
+    },
+    "mass": {
+      "match": [
+        "Mass",
+        "Church"
+      ],
+      "variants": [
+        "mass-1.svg",
+        "mass-2.svg"
+      ]
+    },
+    "gym": {
+      "match": [
+        "Gym"
+      ],
+      "variants": [
+        "gym-1.svg",
+        "gym-2.svg"
+      ]
+    },
+    "art": {
+      "match": [
+        "Art"
+      ],
+      "variants": [
+        "art-1.svg",
+        "art-2.svg"
+      ]
+    },
+    "dress": {
+      "match": [
+        "Dress Down",
+        "Dress-Down"
+      ],
+      "variants": [
+        "dress-down-1.svg",
+        "dress-down-2.svg"
+      ]
+    }
+  }
+}
