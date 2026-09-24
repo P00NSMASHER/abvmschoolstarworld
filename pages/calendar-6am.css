@@ -229,7 +229,7 @@
 }
 
 .calendar-screen .calendar-tabs button{
-  border:0;background:transparent;padding:8px;text-align:center;font-size:10px;font-weight:900;color:#5e7180;border-radius:11px
+  border:0;background:transparent;padding:8px;text-align:center;font-size:10px;font-weight:900;color:#506371;border-radius:11px
 }
 
 .calendar-screen .calendar-tabs button.active{background:var(--navy);color:#fff}
