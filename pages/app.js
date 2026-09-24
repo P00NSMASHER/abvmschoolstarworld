@@ -70,6 +70,7 @@ function today(){
 }
 function fmtDate(d){return d?WEEKDAY[d.getDay()]+", "+MONTHS[d.getMonth()]+" "+d.getDate():""}
 function fmtShort(d){return d?WEEKDAY[d.getDay()].slice(0,3)+" "+d.getDate():""}
+function fmtCompactDate(d){return d?WEEKDAY[d.getDay()].slice(0,3)+", "+MONTHS[d.getMonth()].slice(0,3)+" "+d.getDate():""}
 function schoolYearMonthDate(month,day){
   const now=today();let year=now.getFullYear();
   if(now.getMonth()>=7&&month<=5)year++;
@@ -433,9 +434,11 @@ function taskHtml(item,index){
   if(/parent/.test(subject)){tag="PARENT";tagClass="if-participating"}
   else if(/ongoing/.test(due)){tag="ONGOING";tagClass="if-participating"}
   else if(/folder/.test(subject)||/folder/.test(task)){tag="FOLDER";tagClass="if-participating"}
-  return '<button class="check-item '+(done?'is-done':'')+'" type="button" data-check="'+index+'" aria-pressed="'+done+'">'+
+  const taskName=item.task||"Task";
+  const actionLabel=done?"Completed: "+taskName+". Tap to mark incomplete.":"Mark complete: "+taskName;
+  return '<button class="check-item '+(done?'is-done':'')+'" type="button" data-check="'+index+'" aria-pressed="'+done+'" aria-label="'+esc(actionLabel)+'">'+
     '<span class="check-box">'+(done?'✓':'')+'</span>'+
-    '<span class="check-copy"><span class="task-tag '+tagClass+'">'+tag+'</span><strong>'+esc(item.task||"Task")+'</strong>'+(item.subject?'<small>'+esc(item.subject)+(item.due?' · '+esc(item.due):'')+'</small>':'')+'</span>'+
+    '<span class="check-copy"><span class="task-tag '+tagClass+'">'+tag+'</span><strong>'+esc(taskName)+'</strong>'+(item.subject?'<small>'+esc(item.subject)+(item.due?' · '+esc(item.due):'')+'</small>':'')+'</span>'+
     '<span class="task-deco" aria-hidden="true">'+icon(taskIconName(item))+'</span></button>';
 }
 function eventRow(item){
@@ -473,7 +476,7 @@ function renderToday(){
     '<section class="date-hero-card"><div class="big-date"><strong>'+WEEKDAY[d.getDay()].slice(0,3).toUpperCase()+'</strong><span>'+d.getDate()+'</span><small>Today</small></div><div class="date-hero-copy"><p>TODAY AT SCHOOL</p><h2>'+esc(headline)+'</h2><span>'+esc(subline)+'</span></div></section>'+
     (schedule?'<section class="schedule-alert '+kindClass(schedule)+'"><span>'+icon(kindClass(schedule)==="closed"?"ban":"clock")+'</span><div><small>'+esc(scheduleStatusText(schedule).toUpperCase())+'</small><strong>'+esc(scheduleStatusDetail(schedule))+'</strong></div></section>':'')+
     deadlineHtml+
-    '<section class="gold-card glass-card homework-dashboard"><div class="checklist-title"><h3>Homework</h3><span class="edit-pill">'+homeworkStatus()+'</span></div><div class="task-list">'+(pack?.homework||[]).map(taskHtml).join("")+'</div></section>'+
+    '<section class="gold-card glass-card homework-dashboard"><div class="checklist-title"><h3>Homework</h3><span class="edit-pill">'+homeworkStatus()+'</span></div><p class="checklist-help">Tap a task to mark it complete. Progress is saved on this device.</p><div class="task-list">'+(pack?.homework||[]).map(taskHtml).join("")+'</div></section>'+
     lunchCard(lunch)+
     '</div>';
   stack().innerHTML='<div class="screen" role="region" aria-label="Today">'+scene("today","TODAY",fmtDate(d),priority.title,false)+freshness()+content+'</div>';
@@ -648,11 +651,11 @@ function renderFamily(){
   stack().innerHTML='<div class="screen family-screen" role="region" aria-label="Family dashboard">'+
     scene("family","FAMILY VIEW","Family","The practical details that keep school days running smoothly",false)+freshness()+
     '<div class="family-content"><section class="family-priority"><p>WEEKLY PRIORITY</p><h2>'+esc(priority.title)+'</h2><span>'+esc(priority.detail)+'</span></section>'+
-    '<div class="family-stats"><article><strong>'+tests+'</strong><span>tests or assessments remaining this week</span></article><article><strong>'+esc(nextDue?fmtShort(nextDue.span.start):"✓")+'</strong><span>'+esc(nextDue?nextDue.x.label:"No posted deadline due")+'</span></article></div>'+
-    '<details class="family-card family-disclosure" open><summary><span>Family checklist</span><span class="disclosure-chevron" aria-hidden="true">›</span></summary><div class="family-disclosure-body"><p class="family-section-hint">Tap a task when it is finished.</p><div class="family-actions">'+actions.map((a,i)=>'<button class="family-action '+(familyChecked(a,i)?'is-done':'')+'" type="button" data-family-check="'+i+'" aria-pressed="'+familyChecked(a,i)+'"><span class="box">'+(familyChecked(a,i)?icon("check"):'')+'</span><span>'+esc(a)+'</span></button>').join("")+'</div></div></details>'+
+    '<div class="family-stats"><article><strong>'+tests+'</strong><span>tests or assessments remaining this week</span></article><article><strong>'+esc(nextDue?fmtCompactDate(nextDue.span.start):"✓")+'</strong><span>'+esc(nextDue?nextDue.x.label:"No posted deadline due")+'</span></article></div>'+
+    '<details class="family-card family-disclosure" open><summary><span>Family checklist</span><span class="disclosure-chevron" aria-hidden="true">›</span></summary><div class="family-disclosure-body"><p class="family-section-hint">Tap a task to mark it complete. Progress is saved on this device.</p><div class="family-actions">'+actions.map((a,i)=>{const done=familyChecked(a,i),label=(done?"Completed: ":"Mark complete: ")+a+(done?". Tap to mark incomplete.":"");return '<button class="family-action '+(done?'is-done':'')+'" type="button" data-family-check="'+i+'" aria-pressed="'+done+'" aria-label="'+esc(label)+'"><span class="box">'+(done?icon("check"):'')+'</span><span>'+esc(a)+'</span></button>'}).join("")+'</div></div></details>'+
     '<section class="reading-policy"><span class="round">20</span><div><h3>Reading every day</h3><p>Read or be read to for 20 minutes and keep the Reading Log in the homework folder.</p></div></section>'+
-    '<details class="family-card family-disclosure"><summary><span>Current notices</span><span class="summary-count">'+notices.length+'</span><span class="disclosure-chevron" aria-hidden="true">›</span></summary><div class="family-disclosure-body notice-list">'+notices.map(n=>'<div class="notice"><span class="notice-dot"></span><p>'+esc(n)+'</p></div>').join("")+'</div></details>'+
-    '<details class="family-card family-disclosure"><summary><span>Source coverage</span><span class="disclosure-chevron" aria-hidden="true">›</span></summary><div class="family-disclosure-body notice-list"><div class="notice"><span class="notice-dot"></span><p>'+esc(envelope?.source||"Verified ABVM school sources")+'</p></div>'+(uploadedNoticeStatus()?'<div class="notice"><span class="notice-dot"></span><p>'+esc(uploadedNoticeStatus())+'</p></div>':'')+gaps.map(n=>'<div class="notice"><span class="notice-dot"></span><p>'+esc(n)+'</p></div>').join("")+'</div></details>'+
+    '<details class="family-card family-disclosure"><summary><span>Current notices</span><span class="summary-count">'+notices.length+'</span><span class="disclosure-chevron" aria-hidden="true">›</span></summary><div class="family-disclosure-body"><ul class="notice-list static-notice-list" role="list">'+notices.map(n=>'<li class="notice"><span class="notice-dot" aria-hidden="true"></span><p>'+esc(n)+'</p></li>').join("")+'</ul></div></details>'+
+    '<details class="family-card family-disclosure"><summary><span>Source coverage</span><span class="disclosure-chevron" aria-hidden="true">›</span></summary><div class="family-disclosure-body"><ul class="notice-list static-notice-list" role="list"><li class="notice"><span class="notice-dot" aria-hidden="true"></span><p>'+esc(envelope?.source||"Verified ABVM school sources")+'</p></li>'+(uploadedNoticeStatus()?'<li class="notice"><span class="notice-dot" aria-hidden="true"></span><p>'+esc(uploadedNoticeStatus())+'</p></li>':'')+gaps.map(n=>'<li class="notice"><span class="notice-dot" aria-hidden="true"></span><p>'+esc(n)+'</p></li>').join("")+'</ul></div></details>'+
     '<section class="install-card"><span class="install-icon">'+icon("home")+'</span><div><h3>Put this app on iPhone</h3><p>In Safari, use Share → Add to Home Screen for an app-like launch experience.</p></div></section>'+
     '</div></div>';
 }
