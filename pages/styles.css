@@ -690,3 +690,28 @@ button:focus-visible,a:focus-visible{outline:3px solid #f0ad42;outline-offset:3p
   .calendar-list-row.grouped{grid-template-columns:38px 58px 1fr auto}
   .calendar-list-status{font-size:8px;padding:4px 6px}
 }
+
+
+/* Calendar QA polish — narrow iPhone cells, multiple-event readability */
+.calendar-chip>span:not(.mini-icon){
+  min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.calendar-grid button{
+  min-height:72px;
+}
+.calendar-more{
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;
+}
+.calendar-day-card .schedule-alert{
+  position:relative;z-index:2;
+}
+.calendar-day-card .schedule-alert.halfday{
+  box-shadow:0 10px 24px rgba(126,88,8,.10);
+}
+.calendar-day-card .schedule-alert.closed{
+  box-shadow:0 10px 24px rgba(142,59,54,.10);
+}
+@media(max-width:390px){
+  .calendar-grid button{min-height:72px}
+  .calendar-chip>span:not(.mini-icon){max-width:38px}
+}
