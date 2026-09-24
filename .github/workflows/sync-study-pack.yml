@@ -3,8 +3,9 @@ name: Refresh ABVM teacher pages
 on:
   schedule:
     # GitHub cron is UTC. Schedule both DST/standard-time UTC possibilities,
-    # then gate to exactly 1:17 PM or 4:17 PM America/New_York below.
-    - cron: '17 17,18,20,21 * * *'
+    # then gate to exactly 1:17 PM or 3:47 PM America/New_York below.
+    - cron: '17 17,18 * * *'
+    - cron: '47 19,20 * * *'
   workflow_dispatch:
 
 permissions:
@@ -18,6 +19,7 @@ concurrency:
 
 jobs:
   refresh-and-deploy:
+    timeout-minutes: 25
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -36,7 +38,7 @@ jobs:
           local_time="$(TZ=America/New_York date +'%H:%M')"
           case "$local_time" in
             13:17) window=primary ;;
-            16:17) window=backup ;;
+            15:47) window=backup ;;
             *) echo "proceed=false" >> "$GITHUB_OUTPUT"; echo "window=guard-skip" >> "$GITHUB_OUTPUT"; exit 0 ;;
           esac
           echo "proceed=true" >> "$GITHUB_OUTPUT"
