@@ -40,3 +40,22 @@ test("calendar duplicate matching recognizes a special already represented by an
   assert.equal(sameCalendarDetail("Gym class","Gym"),true);
   assert.equal(sameCalendarDetail("Articulation Meeting","Gym"),false);
 });
+
+
+test("calendar labels stay bounded for unusually long event names",()=>{
+  const item={label:"Extremely Long Parent Community Celebration and School Gathering",kind:"school"};
+  const compact=calendarLabel(item);
+  assert.ok(compact.length<=18);
+  assert.match(compact,/…$/);
+  assert.ok(calendarCellLabel(item,"").split(/\s+/).length<=2);
+});
+
+test("closed and half-day events outrank ordinary content deterministically",()=>{
+  const events=[
+    {label:"Lego Club"},
+    {label:"12:00 dismissal",kind:"schedule change"},
+    {label:"School Closed — Holiday",kind:"holiday"},
+  ];
+  assert.equal(primaryCalendarEvent(events).label,"School Closed — Holiday");
+  assert.equal(calendarScheduleEvent(events).label,"School Closed — Holiday");
+});
