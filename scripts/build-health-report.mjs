@@ -11,9 +11,10 @@ const workflowNames={
   refresh:"Refresh ABVM teacher pages",
   qa:"ABVM App QA",
   deploy:"Deploy ABVM to GitHub Pages",
-  watchdog:"ABVM Refresh Health Watchdog",
+  watchdog:"Monitor ABVM refresh health",
 };
 const latest=name=>runs.find(run=>run.name===name)||null;
+const latestCompleted=name=>runs.find(run=>run.name===name&&run.conclusion)||null;
 const latestSuccess=name=>runs.find(run=>run.name===name&&run.conclusion==="success")||null;
 const recentRelevant=runs.filter(run=>Object.values(workflowNames).includes(run.name)).slice(0,40);
 const failures=recentRelevant.filter(run=>run.conclusion==="failure").map(run=>({
@@ -36,19 +37,26 @@ const status={
     sourceHash:packData.pack?.sourceHash||null,
   },
   workflows:{
-    refresh:{latest:latest(workflowNames.refresh),latestSuccess:latestSuccess(workflowNames.refresh)},
-    qa:{latest:latest(workflowNames.qa),latestSuccess:latestSuccess(workflowNames.qa)},
-    deploy:{latest:latest(workflowNames.deploy),latestSuccess:latestSuccess(workflowNames.deploy)},
-    watchdog:{latest:latest(workflowNames.watchdog),latestSuccess:latestSuccess(workflowNames.watchdog)},
+    refresh:{latest:latest(workflowNames.refresh),latestCompleted:latestCompleted(workflowNames.refresh),latestSuccess:latestSuccess(workflowNames.refresh)},
+    qa:{latest:latest(workflowNames.qa),latestCompleted:latestCompleted(workflowNames.qa),latestSuccess:latestSuccess(workflowNames.qa)},
+    deploy:{latest:latest(workflowNames.deploy),latestCompleted:latestCompleted(workflowNames.deploy),latestSuccess:latestSuccess(workflowNames.deploy)},
+    watchdog:{latest:latest(workflowNames.watchdog),latestCompleted:latestCompleted(workflowNames.watchdog),latestSuccess:latestSuccess(workflowNames.watchdog)},
   },
   recentFailures:failures,
+};
+const sourceFresh=sourceAgeHours!==null&&sourceAgeHours>=-.25&&sourceAgeHours<=30;
+const completedHealthy=workflow=>{
+  const run=workflow.latestCompleted;
+  return !run||run.conclusion==="success";
 };
 const healthy=Boolean(
   status.schoolData.sourceSufficient &&
   status.schoolData.sourcePages===6 &&
-  (!status.workflows.qa.latest || status.workflows.qa.latest.conclusion==="success") &&
-  (!status.workflows.deploy.latest || status.workflows.deploy.latest.conclusion==="success") &&
-  (!status.workflows.refresh.latest || status.workflows.refresh.latest.conclusion==="success")
+  sourceFresh &&
+  completedHealthy(status.workflows.qa) &&
+  completedHealthy(status.workflows.deploy) &&
+  completedHealthy(status.workflows.refresh) &&
+  completedHealthy(status.workflows.watchdog)
 );
 status.overall=healthy?"healthy":"attention";
 
@@ -62,16 +70,16 @@ const md=[
   `**Overall: ${status.overall.toUpperCase()}**`,
   "",
   `- **School data checked:** ${sourceCheckedAt||"missing"}${sourceAgeHours===null?"":` (${sourceAgeHours.toFixed(1)}h old)`}`,
-  `- **Source coverage:** ${status.schoolData.sourcePages}/6 teacher pages; source sufficient = ${status.schoolData.sourceSufficient}`,
+  `- **Source coverage:** ${status.schoolData.sourcePages}/6 teacher pages; source sufficient = ${status.schoolData.sourceSufficient}; fresh <=30h = ${sourceFresh}`,
   `- **App version:** ${status.appVersion}`,
   `- **Service worker cache:** ${status.serviceWorkerCache}`,
   `- **Git SHA:** ${status.gitSha||"unknown"}`,
   "",
   "## Latest workflow state",
-  line("Teacher refresh",status.workflows.refresh.latest),
-  line("App QA",status.workflows.qa.latest),
-  line("Pages deploy",status.workflows.deploy.latest),
-  line("Refresh watchdog",status.workflows.watchdog.latest),
+  line("Teacher refresh",status.workflows.refresh.latestCompleted||status.workflows.refresh.latest),
+  line("App QA",status.workflows.qa.latestCompleted||status.workflows.qa.latest),
+  line("Pages deploy",status.workflows.deploy.latestCompleted||status.workflows.deploy.latest),
+  line("Refresh watchdog",status.workflows.watchdog.latestCompleted||status.workflows.watchdog.latest),
   "",
   "## Recent relevant failures",
   failures.length?failures.map(f=>`- ${f.name} — ${f.created_at} ([run](${f.html_url}))`).join("\n"):"- None in the fetched run window.",
