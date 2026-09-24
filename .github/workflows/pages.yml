@@ -5,6 +5,10 @@ on:
     branches: [main]
     paths:
       - 'pages/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - 'package.json'
+      - 'playwright.config.mjs'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -26,6 +30,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install QA dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run release QA
+        run: npm run qa
 
       - name: Build static site
         shell: bash

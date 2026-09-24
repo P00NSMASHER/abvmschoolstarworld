@@ -45,6 +45,15 @@ jobs:
             git push
           fi
 
+      - name: Install QA dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Validate refreshed app before deployment
+        run: npm run qa
+
       - name: Build static site
         shell: bash
         run: |

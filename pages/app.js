@@ -1,12 +1,13 @@
+import {MONTHS,SHORT_MONTHS,WEEKDAY,sameDay,today,fmtDate,fmtShort,fmtCompactDate} from "./js/date-utils.js";
+import {storageKey,readStoredFlag,toggleStoredFlag} from "./js/storage.js";
+import {initInstallTracking,installExperience,promptInstall} from "./js/install.js";
+
 (()=>{"use strict";
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)], stack=()=>$("#app-content");
 const VALID_TABS=["today","week","calendar","study","family"];
 let envelope=null, pack=null, activeTab=VALID_TABS.includes(location.hash.slice(1))?location.hash.slice(1):"today", selectedDay=null, calendarDay=null, calendarOffset=0, calendarMode="month";
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
-const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
-const SHORT_MONTHS={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,sept:8,oct:9,nov:10,dec:11};
-const WEEKDAY=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
 const ICON_PATHS={
   verified:'<path d="M12 3 19 6v5c0 4.6-2.8 8-7 10-4.2-2-7-5.4-7-10V6l7-3Z"/><path d="m9 12 2 2 4-5"/>',
@@ -62,15 +63,6 @@ function eventSpan(text){
   }
   return{start,end};
 }
-function sameDay(a,b){return a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
-function today(){
-  const parts=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",year:"numeric",month:"numeric",day:"numeric"}).formatToParts(new Date());
-  const value=Object.fromEntries(parts.map(part=>[part.type,part.value]));
-  return new Date(Number(value.year),Number(value.month)-1,Number(value.day),12);
-}
-function fmtDate(d){return d?WEEKDAY[d.getDay()]+", "+MONTHS[d.getMonth()]+" "+d.getDate():""}
-function fmtShort(d){return d?WEEKDAY[d.getDay()].slice(0,3)+" "+d.getDate():""}
-function fmtCompactDate(d){return d?WEEKDAY[d.getDay()].slice(0,3)+", "+MONTHS[d.getMonth()].slice(0,3)+" "+d.getDate():""}
 function schoolYearMonthDate(month,day){
   const now=today();let year=now.getFullYear();
   if(now.getMonth()>=7&&month<=5)year++;
@@ -424,10 +416,10 @@ function specialForDate(date){
   const line=(subject(/^Specials$/i)?.topics||[]).find(x=>String(x).startsWith(prefix));
   return line?String(line).slice(prefix.length).trim():"";
 }
-function checkKey(item,index){return"abvm-gold:"+String(pack?.sourceHash||"pack")+":"+index+":"+(item?.task||"")}
-function checked(item,index){return localStorage.getItem(checkKey(item,index))==="1"}
-function familyKey(action,index){return"abvm-family:"+String(pack?.sourceHash||"pack")+":"+index+":"+action}
-function familyChecked(action,index){return localStorage.getItem(familyKey(action,index))==="1"}
+function checkKey(item,index){return storageKey("abvm-gold",pack?.sourceHash||"pack",index,item?.task||"")}
+function checked(item,index){return readStoredFlag(checkKey(item,index))}
+function familyKey(action,index){return storageKey("abvm-family",pack?.sourceHash||"pack",index,action)}
+function familyChecked(action,index){return readStoredFlag(familyKey(action,index))}
 function taskHtml(item,index){
   const done=checked(item,index),subject=(item.subject||"").toLowerCase(),task=(item.task||"").toLowerCase(),due=(item.due||"").toLowerCase();
   let tag="POSTED",tagClass="";
@@ -638,6 +630,11 @@ function renderStudy(){
     '<section class="calm-card study-tip"><span>'+icon("check")+'</span><div><h3>Keep review short and focused</h3><p>Use the teacher-posted material above, then stop when the planned review is complete.</p></div></section>'+
     '</div></div>';
 }
+function installCard(){
+  const experience=installExperience();
+  if(!experience.show)return"";
+  return '<section class="install-card"><span class="install-icon">'+icon("home")+'</span><div><h3>'+esc(experience.title)+'</h3><p>'+esc(experience.detail)+'</p>'+(experience.canPrompt?'<button class="install-action" type="button" data-install-app>Install app</button>':'')+'</div></section>';
+}
 function renderFamily(){
   const priority=weekPriority(),[mon,fri]=currentWeekRange(),now=today();
   const tests=(pack?.importantDates||[]).map(x=>({x,span:eventSpan(x.date)}))
@@ -656,7 +653,7 @@ function renderFamily(){
     '<section class="reading-policy"><span class="round">20</span><div><h3>Reading every day</h3><p>Read or be read to for 20 minutes and keep the Reading Log in the homework folder.</p></div></section>'+
     '<section class="family-card family-static-card" aria-labelledby="family-current-notices"><h3 id="family-current-notices">Current notices</h3><ul class="notice-list static-notice-list" role="list">'+notices.map(n=>'<li class="notice"><span class="notice-dot" aria-hidden="true"></span><p>'+esc(n)+'</p></li>').join("")+'</ul></section>'+
     '<details class="family-card family-disclosure"><summary><span>Source coverage</span><span class="disclosure-chevron" aria-hidden="true">›</span></summary><div class="family-disclosure-body"><ul class="notice-list static-notice-list" role="list"><li class="notice"><span class="notice-dot" aria-hidden="true"></span><p>'+esc(envelope?.source||"Verified ABVM school sources")+'</p></li>'+(uploadedNoticeStatus()?'<li class="notice"><span class="notice-dot" aria-hidden="true"></span><p>'+esc(uploadedNoticeStatus())+'</p></li>':'')+gaps.map(n=>'<li class="notice"><span class="notice-dot" aria-hidden="true"></span><p>'+esc(n)+'</p></li>').join("")+'</ul></div></details>'+
-    '<section class="install-card"><span class="install-icon">'+icon("home")+'</span><div><h3>Put this app on iPhone</h3><p>In Safari, use Share → Add to Home Screen for an app-like launch experience.</p></div></section>'+
+    installCard()+
     '</div></div>';
 }
 function render(){
@@ -673,12 +670,18 @@ function bindScreen(){
       target.scrollIntoView({behavior:"smooth",block:"start"});
     }
   }));
-  $$("[data-check]").forEach(b=>b.addEventListener("click",()=>{const i=Number(b.dataset.check),item=(pack.homework||[])[i],k=checkKey(item,i);localStorage.getItem(k)==="1"?localStorage.removeItem(k):localStorage.setItem(k,"1");render()}));
-  $$("[data-family-check]").forEach(b=>b.addEventListener("click",()=>{const i=Number(b.dataset.familyCheck),actions=[...(pack?.homework||[]).map(x=>x.task),...currentReminders()].filter((x,j,a)=>x&&a.indexOf(x)===j).slice(0,12),action=actions[i],k=familyKey(action,i);localStorage.getItem(k)==="1"?localStorage.removeItem(k):localStorage.setItem(k,"1");renderFamily();bindScreen()}));
+  $$("[data-check]").forEach(b=>b.addEventListener("click",()=>{const i=Number(b.dataset.check),item=(pack.homework||[])[i],k=checkKey(item,i);toggleStoredFlag(k);render()}));
+  $$("[data-family-check]").forEach(b=>b.addEventListener("click",()=>{const i=Number(b.dataset.familyCheck),actions=[...(pack?.homework||[]).map(x=>x.task),...currentReminders()].filter((x,j,a)=>x&&a.indexOf(x)===j).slice(0,12),action=actions[i],k=familyKey(action,i);toggleStoredFlag(k);renderFamily();bindScreen()}));
   $$("[data-day]").forEach(b=>b.addEventListener("click",()=>{selectedDay=new Date(b.dataset.day);renderWeek();bindScreen()}));
   $$("[data-cal-day]").forEach(b=>b.addEventListener("click",()=>{calendarDay=new Date(b.dataset.calDay);renderCalendar();bindScreen()}));
   $$("[data-month]").forEach(b=>b.addEventListener("click",()=>{calendarOffset+=Number(b.dataset.month);calendarDay=null;renderCalendar();bindScreen()}));
   $$("[data-cal-mode]").forEach(b=>b.addEventListener("click",()=>{calendarMode=b.dataset.calMode;renderCalendar();bindScreen()}));
+  const installButton=$("[data-install-app]");
+  if(installButton)installButton.addEventListener("click",async()=>{
+    const result=await promptInstall();
+    toast(result?.outcome==="accepted"?"App installation started.":"Install prompt closed.");
+    if(activeTab==="family"){renderFamily();bindScreen()}
+  });
   const freshnessButton=$(".bell-button");if(freshnessButton)freshnessButton.addEventListener("click",()=>toast($(".freshness")?.textContent.trim()||"Verified school information is loaded."));
 }
 function activateTab(tab,push=true){
@@ -694,6 +697,10 @@ function syncTabFromLocation(){
 }
 window.addEventListener("popstate",syncTabFromLocation);
 window.addEventListener("hashchange",syncTabFromLocation);
+initInstallTracking(()=>{
+  if(pack&&activeTab==="family"){renderFamily();bindScreen()}
+});
+
 async function load(){
   let data,annual={importantDates:[]};
   try{

@@ -1,0 +1,62 @@
+name: ABVM App QA
+
+on:
+  pull_request:
+    paths:
+      - 'pages/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - 'package.json'
+      - 'playwright.config.mjs'
+      - '.github/workflows/qa.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'pages/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - 'package.json'
+      - 'playwright.config.mjs'
+      - '.github/workflows/qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: abvm-qa-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Static validation
+        run: npm run qa:static
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Browser, responsive, and accessibility QA
+        run: npm run qa:e2e
+
+      - name: Upload browser report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report
+            test-results
+          if-no-files-found: ignore
