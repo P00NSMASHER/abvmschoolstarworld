@@ -1,0 +1,230 @@
+{
+  "schemaVersion": 1,
+  "source": "Assumption BVM School Calendar — August 2026 through June 2027",
+  "sourceSupplied": "2026-09-13",
+  "note": "Static annual-calendar baseline. Teacher-page and uploaded-notice entries remain preferred when the same date and semantic event type are present.",
+  "importantDates": [
+    {
+      "date": "Wednesday, Aug. 26",
+      "label": "School Opens",
+      "kind": "school",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Friday, Sept. 4",
+      "label": "School Closed — Holiday",
+      "kind": "holiday",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Monday, Sept. 7",
+      "label": "School Closed — Labor Day",
+      "kind": "holiday",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Tuesday–Friday, Sept. 8–11",
+      "label": "STAR Testing window",
+      "kind": "assessment",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Thursday, Oct. 8",
+      "label": "Mid-term Progress Reports",
+      "kind": "school",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Friday, Oct. 9",
+      "label": "12:00 dismissal",
+      "kind": "schedule change",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Monday, Oct. 12",
+      "label": "School Closed",
+      "kind": "holiday",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Monday, Oct. 19",
+      "label": "Parent-Teacher Conferences — Grades 5–8",
+      "kind": "conference",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Tuesday, Oct. 20",
+      "label": "Parent-Teacher Conferences — Grades K–4",
+      "kind": "conference",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Friday, Nov. 6",
+      "label": "12:00 dismissal",
+      "kind": "schedule change",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Friday, Nov. 6",
+      "label": "Articulation Meeting",
+      "kind": "meeting",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Monday, Nov. 23",
+      "label": "2nd Trimester Starts",
+      "kind": "school",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Wednesday, Nov. 25",
+      "label": "12:00 dismissal",
+      "kind": "schedule change",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Thursday–Monday, Nov. 26–30",
+      "label": "Thanksgiving Holiday — School Closed",
+      "kind": "holiday",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Wednesday, Dec. 23",
+      "label": "12:00 dismissal",
+      "kind": "schedule change",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Thursday–Thursday, Dec. 24–31",
+      "label": "Christmas Holiday — School Closed",
+      "kind": "holiday",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Friday, Jan. 1",
+      "label": "New Year’s Day — School Closed",
+      "kind": "holiday",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Monday, Jan. 4",
+      "label": "School Reopens",
+      "kind": "school",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Tuesday–Friday, Jan. 12–22",
+      "label": "STAR Testing window",
+      "kind": "assessment",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Friday, Jan. 15",
+      "label": "12:00 dismissal",
+      "kind": "schedule change",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Friday, Jan. 15",
+      "label": "Mid-trimester Progress Reports",
+      "kind": "school",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Monday, Jan. 18",
+      "label": "Martin Luther King Jr. Day — School Closed",
+      "kind": "holiday",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Sunday–Saturday, Jan. 31–Feb. 6",
+      "label": "Catholic Schools Week",
+      "kind": "school event",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Friday, Feb. 12",
+      "label": "12:00 dismissal",
+      "kind": "schedule change",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Monday, Feb. 15",
+      "label": "Presidents’ Day — School Closed",
+      "kind": "holiday",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Wednesday, Mar. 3",
+      "label": "3rd Trimester Starts",
+      "kind": "school",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Friday, Mar. 12",
+      "label": "12:00 dismissal",
+      "kind": "schedule change",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Wednesday, Mar. 24",
+      "label": "12:00 dismissal",
+      "kind": "schedule change",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Thursday–Monday, Mar. 25–29",
+      "label": "Easter Holiday — School Closed",
+      "kind": "holiday",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Friday, Apr. 16",
+      "label": "12:00 dismissal",
+      "kind": "schedule change",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Friday, Apr. 16",
+      "label": "Mid-trimester Progress Reports",
+      "kind": "school",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Tuesday–Friday, May 18–21",
+      "label": "STAR Testing window",
+      "kind": "assessment",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Thursday, May 27",
+      "label": "12:00 dismissal",
+      "kind": "schedule change",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Friday, May 28",
+      "label": "Last Day of School",
+      "kind": "school event",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Friday, May 28",
+      "label": "Early Dismissal",
+      "kind": "schedule change",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Monday, May 31",
+      "label": "Memorial Day — School Closed",
+      "kind": "holiday",
+      "source": "official-annual-calendar"
+    },
+    {
+      "date": "Tuesday–Thursday, June 1–3",
+      "label": "Weather makeup days if needed",
+      "kind": "school",
+      "source": "official-annual-calendar"
+    }
+  ]
+}
