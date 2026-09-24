@@ -6,9 +6,9 @@
     "embeddedText": false,
     "people": false,
     "rotation": "deterministic by school date when a category has two variants",
-    "placement": "Selected-day artwork fills the card. The translucent information panel is always centered both vertically and horizontally.",
+    "placement": "Selected-day detail uses the mapped high-resolution event artwork as a dedicated hero with the date overlaid. Information below follows a strict hierarchy: primary event, Also Today, Class Special, then Lunch.",
     "schedulePriority": "No School and Half Day remain independently visible when another event shares the date.",
-    "multiEventHandling": "One or two items use a single-column detail list. Three or more items switch to a compact two-column tile grid, with lunch kept as one full-width footer row.",
+    "multiEventHandling": "Schedule exceptions or the highest-priority event become the single primary block. Remaining events are grouped into compact Also Today rows; class special stays separate; lunch stays last.",
     "visualCoverage": "Every recognized class special and every posted event has a mapped high-resolution category; unmatched posted events fail open to school-event.svg rather than showing a blank card.",
     "duplicateHandling": "A class special already represented by an event on the same date is not repeated in the detail panel."
   },
