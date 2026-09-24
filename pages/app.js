@@ -179,6 +179,20 @@ function primaryCalendarEvent(events){
   const rank={closed:0,halfday:1,picture:2,dress:3,conference:4,report:5,test:6,due:7,celebration:8,faith:9,club:10,meeting:11,school:12};
   return [...events].sort((a,b)=>(rank[kindClass(a)]??99)-(rank[kindClass(b)]??99))[0]||null;
 }
+function calendarScheduleEvent(events){
+  return events.find(e=>kindClass(e)==="closed")||events.find(e=>kindClass(e)==="halfday")||null;
+}
+function calendarContentEvents(events){
+  return events.filter(e=>!["closed","halfday"].includes(kindClass(e)));
+}
+function scheduleStatusText(item){
+  if(!item)return"";
+  return kindClass(item)==="closed"?"No School":"Half Day";
+}
+function scheduleStatusDetail(item){
+  if(!item)return"";
+  return kindClass(item)==="closed"?"School is closed":"Dismissal at 12:00 PM";
+}
 const CALENDAR_VISUAL_LIBRARY={
   picture:{
     variants:["./assets/calendar/picture-day.svg","./assets/calendar/picture-day-2.svg"],
@@ -334,9 +348,9 @@ function weekPriority(){
 }
 
 function renderToday(){
-  const d=today(),events=eventItemsForDate(d),lunch=lunchForDate(d),priority=weekPriority(),deadline=nextDeadline();
-  const mainEvent=events.find(e=>kindClass(e)==="test")||events[0]||null;
-  const otherEvents=events.filter(e=>e!==mainEvent);
+  const d=today(),events=eventItemsForDate(d),lunch=lunchForDate(d),priority=weekPriority(),deadline=nextDeadline(),schedule=calendarScheduleEvent(events),contentEvents=calendarContentEvents(events);
+  const mainEvent=contentEvents.find(e=>kindClass(e)==="test")||contentEvents[0]||schedule||null;
+  const otherEvents=events.filter(e=>e!==mainEvent&&e!==schedule);
   const headline=mainEvent?.label||"Normal school day";
   const subline=otherEvents.length?otherEvents.map(e=>e.label).join(" · "):"Stay with the current homework and reading routine.";
   const deadlineHtml=deadline
@@ -344,6 +358,7 @@ function renderToday(){
     :'<section class="today-deadline clear"><span class="deadline-icon">'+icon("check")+'</span><div><p>NEXT DEADLINE</p><strong>No posted deadline due</strong><small>Keep the normal school routine.</small></div></section>';
   const content='<div class="content overlap">'+
     '<section class="date-hero-card"><div class="big-date"><strong>'+WEEKDAY[d.getDay()].slice(0,3).toUpperCase()+'</strong><span>'+d.getDate()+'</span><small>Today</small></div><div class="date-hero-copy"><p>TODAY AT SCHOOL</p><h2>'+esc(headline)+'</h2><span>'+esc(subline)+'</span></div></section>'+
+    (schedule?'<section class="schedule-alert '+kindClass(schedule)+'"><span>'+icon(kindClass(schedule)==="closed"?"ban":"clock")+'</span><div><small>'+esc(scheduleStatusText(schedule).toUpperCase())+'</small><strong>'+esc(scheduleStatusDetail(schedule))+'</strong></div></section>':'')+
     deadlineHtml+
     '<section class="gold-card glass-card homework-dashboard"><div class="checklist-title"><h3>Homework</h3><span class="edit-pill">'+homeworkStatus()+'</span></div><div class="task-list">'+(pack?.homework||[]).map(taskHtml).join("")+'</div></section>'+
     lunchCard(lunch)+
@@ -353,7 +368,7 @@ function renderToday(){
 function renderWeek(){
   const days=weekDays();
   if(!selectedDay||!days.some(d=>sameDay(d,selectedDay)))selectedDay=days.find(d=>sameDay(d,today()))||days[0];
-  const events=eventItemsForDate(selectedDay),lunch=lunchForDate(selectedDay),special=specialForDate(selectedDay);
+  const events=eventItemsForDate(selectedDay),lunch=lunchForDate(selectedDay),special=specialForDate(selectedDay),schedule=calendarScheduleEvent(events);
   const now=today();
   const picker=days.map(d=>{
     const active=sameDay(d,selectedDay),isToday=sameDay(d,now),past=d<now;
@@ -364,13 +379,14 @@ function renderWeek(){
     .filter(o=>o.span&&o.span.start>selectedDay)
     .sort((a,b)=>a.span.start-b.span.start).slice(0,4)
     .map(o=>({x:o.x,d:o.span.start<selectedDay?selectedDay:o.span.start}));
-  const noSchool=events.some(item=>kindClass(item)==="closed"),weekend=[0,6].includes(selectedDay.getDay());
-  const dayStatus=noSchool?"No school":weekend?"Weekend":"School day";
+  const noSchool=schedule&&kindClass(schedule)==="closed",halfDay=schedule&&kindClass(schedule)==="halfday",weekend=[0,6].includes(selectedDay.getDay());
+  const dayStatus=noSchool?"No school":halfDay?"Half day • 12:00 PM":weekend?"Weekend":"School day";
   const note='<div class="week-hero-note"><span>CALM PLAN</span><b>Five days, one clear view</b></div>';
   stack().innerHTML='<div class="screen" role="region" aria-label="This week">'+scene("week","YOUR SCHOOL PLAN","This Week","Tap a day for events, lunch, and specials",false,note)+
     '<div class="content overlap"><div class="day-picker">'+picker+'</div>'+
-    '<section class="day-detail"><div class="day-detail-inner"><div class="day-detail-title"><div><p>'+MONTHS[selectedDay.getMonth()].toUpperCase()+'</p><h2>'+esc(fmtDate(selectedDay))+'</h2></div><span class="school-day-pill '+(noSchool||weekend?'closed':'')+'">'+dayStatus+'</span></div>'+
-    (special?'<div class="selected-special"><span>'+icon("star")+'</span><div><small>SPECIAL</small><strong>'+esc(special)+'</strong></div></div>':'')+
+    '<section class="day-detail"><div class="day-detail-inner"><div class="day-detail-title"><div><p>'+MONTHS[selectedDay.getMonth()].toUpperCase()+'</p><h2>'+esc(fmtDate(selectedDay))+'</h2></div><span class="school-day-pill '+(noSchool?'closed':halfDay?'halfday':weekend?'closed':'')+'">'+dayStatus+'</span></div>'+
+    (schedule?'<div class="schedule-alert compact '+kindClass(schedule)+'"><span>'+icon(kindClass(schedule)==="closed"?"ban":"clock")+'</span><div><small>'+esc(scheduleStatusText(schedule).toUpperCase())+'</small><strong>'+esc(scheduleStatusDetail(schedule))+'</strong></div></div>':'')+
+    (special&&!noSchool?'<div class="selected-special"><span>'+icon("star")+'</span><div><small>'+(halfDay?'USUAL SPECIAL':'SPECIAL')+'</small><strong>'+esc(special)+'</strong>'+(halfDay?'<em>Early dismissal may change the usual schedule.</em>':'')+'</div></div>':'')+
     '<div class="event-stack" style="margin-top:14px">'+(events.length?events.map(eventRow).join(""):'<div class="empty-note">No special school events are listed for this date.</div>')+'</div></div></section>'+
     lunchCard(lunch)+
     '<section class="reminder-strip"><span class="bang">!</span><p><strong>Don’t forget</strong>'+esc(reminderForDate(selectedDay))+'</p></section>'+
@@ -382,14 +398,18 @@ function monthGrid(year,month){
   for(let i=0;i<blanks;i++)html+='<span class="calendar-blank"></span>';
   for(let day=1;day<=last.getDate();day++){
     const d=new Date(year,month,day,12),events=eventItemsForDate(d),special=specialForDate(d);
-    const primary=primaryCalendarEvent(events);
-    const klass=primary?kindClass(primary):"";
-    const weekend=[0,6].includes(d.getDay()),closed=klass==="closed",halfday=klass==="halfday";
-    const specialPrimary=!primary&&special?special.split(",")[0].trim():"";
+    const schedule=calendarScheduleEvent(events),contentEvents=calendarContentEvents(events),primary=primaryCalendarEvent(contentEvents);
+    const scheduleClass=schedule?kindClass(schedule):"",klass=primary?kindClass(primary):"";
+    const weekend=[0,6].includes(d.getDay()),closed=scheduleClass==="closed",halfday=scheduleClass==="halfday";
+    const specialPrimary=!primary&&!closed&&special?special.split(",")[0].trim():"";
     const label=primary?calendarLabel(primary):specialPrimary;
     const iconName=primary?eventIconName(primary):specialIconName(specialPrimary);
-    const count=Math.max(0,events.length-1);
-    html+='<button class="'+(weekend?'weekend ':'')+(closed?'closed ':'')+(halfday?'halfday ':'')+(klass?('event-'+klass+' '):'')+(calendarDay&&sameDay(d,calendarDay)?'active':'')+'" type="button" data-cal-day="'+d.toISOString()+'" aria-pressed="'+Boolean(calendarDay&&sameDay(d,calendarDay))+'" aria-label="'+esc(fmtDate(d)+(events.length?': '+events.map(e=>e.label).join(', '):special?': '+special:''))+'"><strong>'+day+'</strong>'+(label?'<span class="calendar-chip '+(klass||'special')+'"><span class="mini-icon">'+icon(iconName)+'</span><span>'+esc(label)+'</span>'+(count?'<em>+'+count+'</em>':'')+'</span>':'')+'</button>';
+    const hiddenCount=Math.max(0,contentEvents.length-(primary?1:0))+((special&&primary&&!closed)?1:0);
+    html+='<button class="'+(weekend?'weekend ':'')+(closed?'closed ':'')+(halfday?'halfday ':'')+(klass?('event-'+klass+' '):'')+(calendarDay&&sameDay(d,calendarDay)?'active':'')+'" type="button" data-cal-day="'+d.toISOString()+'" aria-pressed="'+Boolean(calendarDay&&sameDay(d,calendarDay))+'" aria-label="'+esc(fmtDate(d)+(events.length?': '+events.map(e=>e.label).join(', '):special?': '+special:''))+'"><strong>'+day+'</strong>'+
+      (schedule?'<span class="calendar-status-flag '+scheduleClass+'">'+(scheduleClass==="closed"?"No School":"Half Day")+'</span>':'')+
+      (label?'<span class="calendar-chip '+(klass||'special')+'"><span class="mini-icon">'+icon(iconName)+'</span><span>'+esc(label)+'</span></span>':'')+
+      (hiddenCount?'<span class="calendar-more">+'+hiddenCount+' more</span>':'')+
+      '</button>';
   }
   return html;
 }
@@ -398,18 +418,25 @@ function renderCalendar(){
   if(!calendarDay||calendarDay.getMonth()!==m||calendarDay.getFullYear()!==y){
     calendarDay=(base.getMonth()===m&&base.getFullYear()===y)?new Date(base):new Date(y,m,1,12);
   }
-  const events=eventItemsForDate(calendarDay),lunch=lunchForDate(calendarDay),special=specialForDate(calendarDay),primary=primaryCalendarEvent(events),visual=calendarVisualFor(calendarDay,primary,special);
+  const events=eventItemsForDate(calendarDay),lunch=lunchForDate(calendarDay),special=specialForDate(calendarDay),schedule=calendarScheduleEvent(events),contentEvents=calendarContentEvents(events),primary=primaryCalendarEvent(contentEvents),effectiveSpecial=(schedule&&kindClass(schedule)==="closed")?"":special,visual=calendarVisualFor(calendarDay,primary,effectiveSpecial);
   const monthStart=new Date(y,m,1,12),monthEnd=new Date(y,m+1,0,12);
-  const agenda=(pack?.importantDates||[]).map(x=>({x,span:eventSpan(x.date)}))
-    .filter(o=>o.span&&o.span.end>=monthStart&&o.span.start<=monthEnd)
-    .sort((a,b)=>a.span.start-b.span.start)
-    .map(o=>({x:o.x,d:o.span.start,span:o.span}));
+  const agenda=[];
+  for(let day=1;day<=monthEnd.getDate();day++){
+    const d=new Date(y,m,day,12),items=eventItemsForDate(d);
+    if(items.length)agenda.push({d,events:items,schedule:calendarScheduleEvent(items),content:calendarContentEvents(items)});
+  }
   const monthPanel='<div class="calendar-month-panel '+(calendarMode==="month"?"active":"")+'">'+
       '<div class="calendar-weekdays">'+["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(x=>"<span>"+x+"</span>").join("")+'</div>'+
       '<div class="calendar-grid">'+monthGrid(y,m)+'</div>'+
     '</div>';
   const listPanel='<div class="calendar-list-panel '+(calendarMode==="list"?"active":"")+'">'+
-      (agenda.length?agenda.map(o=>'<button class="calendar-list-row" type="button" data-cal-day="'+o.d.toISOString()+'"><span class="calendar-list-date"><b>'+o.d.getDate()+'</b><small>'+WEEKDAY[o.d.getDay()].slice(0,3)+'</small></span><span class="event-icon '+kindClass(o.x)+'">'+icon(eventIconName(o.x))+'</span><span class="calendar-list-copy"><strong>'+esc(o.x.label)+'</strong><small>'+esc(o.x.date||"")+' · '+esc(o.x.kind||"School event")+'</small></span><span class="chevron" aria-hidden="true">›</span></button>').join(""):'<div class="empty-note">No school dates are listed for this month.</div>')+
+      (agenda.length?agenda.map(o=>{
+        const top=primaryCalendarEvent(o.content),count=o.events.length;
+        const title=top?top.label:(o.schedule?o.schedule.label:"School event");
+        return '<button class="calendar-list-row grouped" type="button" data-cal-day="'+o.d.toISOString()+'"><span class="calendar-list-date"><b>'+o.d.getDate()+'</b><small>'+WEEKDAY[o.d.getDay()].slice(0,3)+'</small></span>'+
+          (o.schedule?'<span class="calendar-list-status '+kindClass(o.schedule)+'">'+esc(scheduleStatusText(o.schedule))+'</span>':'<span class="event-icon '+kindClass(top)+'">'+icon(eventIconName(top))+'</span>')+
+          '<span class="calendar-list-copy"><strong>'+esc(title)+'</strong><small>'+count+' school event'+(count===1?"":"s")+(o.schedule?' · '+esc(scheduleStatusDetail(o.schedule)):'')+'</small></span><span class="chevron" aria-hidden="true">›</span></button>';
+      }).join(""):'<div class="empty-note">No school dates are listed for this month.</div>')+
     '</div>';
 
   stack().innerHTML='<div class="screen calendar-screen" role="region" aria-label="'+MONTHS[m]+' calendar">'+
@@ -418,10 +445,11 @@ function renderCalendar(){
     '<div class="calendar-tabs"><button class="'+(calendarMode==="month"?"active":"")+'" data-cal-mode="month" type="button" aria-pressed="'+(calendarMode==="month")+'">Month View</button><button class="'+(calendarMode==="list"?"active":"")+'" data-cal-mode="list" type="button" aria-pressed="'+(calendarMode==="list")+'">List View</button></div>'+
     monthPanel+listPanel+'</section>'+
     '<section class="calendar-day-card '+(primary?('day-'+kindClass(primary)):'')+'"><div class="calendar-day-heading"><p>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</p><h2>'+esc(fmtDate(calendarDay))+'</h2></div>'+
+    (schedule?'<div class="schedule-alert '+kindClass(schedule)+'"><span>'+icon(kindClass(schedule)==="closed"?"ban":"clock")+'</span><div><small>'+esc(scheduleStatusText(schedule).toUpperCase())+'</small><strong>'+esc(scheduleStatusDetail(schedule))+'</strong></div></div>':'')+
     (visual?'<figure class="calendar-day-visual"><img src="'+esc(visual.src)+'" alt="'+esc(visual.alt)+'" width="960" height="600" loading="lazy" decoding="async"></figure>':'')+
-    (primary?'<div class="calendar-primary-event '+kindClass(primary)+'"><span class="event-icon '+kindClass(primary)+'">'+icon(eventIconName(primary))+'</span><div><small>'+esc(calendarLabel(primary).toUpperCase())+'</small><strong>'+esc(primary.label)+'</strong>'+(kindClass(primary)==="halfday"?'<b>Dismissal at 12:00 PM</b>':kindClass(primary)==="closed"?'<b>School is closed</b>':'')+'</div></div>':'')+
-    (special?'<div class="calendar-special"><span>'+icon(specialIconName(special))+'</span><div><small>CLASS SPECIAL</small><strong>'+esc(special)+'</strong></div></div>':'')+
-    (events.length>1?'<div class="calendar-event-list">'+events.filter(e=>e!==primary).map(e=>'<div><span class="event-icon '+kindClass(e)+'">'+icon(eventIconName(e))+'</span><span><strong>'+esc(e.label)+'</strong></span></div>').join("")+'</div>':(!events.length&&!special?'<p class="calendar-empty">Regular school day. No special events are posted.</p>':''))+
+    (primary?'<div class="calendar-primary-event '+kindClass(primary)+'"><span class="event-icon '+kindClass(primary)+'">'+icon(eventIconName(primary))+'</span><div><small>'+esc(calendarLabel(primary).toUpperCase())+'</small><strong>'+esc(primary.label)+'</strong></div></div>':'')+
+    (effectiveSpecial?'<div class="calendar-special"><span>'+icon(specialIconName(effectiveSpecial))+'</span><div><small>'+(schedule&&kindClass(schedule)==="halfday"?'USUAL CLASS SPECIAL':'CLASS SPECIAL')+'</small><strong>'+esc(effectiveSpecial)+'</strong>'+(schedule&&kindClass(schedule)==="halfday"?'<em>Early dismissal may change the usual schedule.</em>':'')+'</div></div>':'')+
+    (contentEvents.length>1?'<div class="calendar-event-list">'+contentEvents.filter(e=>e!==primary).map(e=>'<div><span class="event-icon '+kindClass(e)+'">'+icon(eventIconName(e))+'</span><span><strong>'+esc(e.label)+'</strong></span></div>').join("")+'</div>':(!events.length&&!effectiveSpecial?'<p class="calendar-empty">Regular school day. No special events are posted.</p>':''))+
     (lunch?'<div class="calendar-lunch"><img class="calendar-lunch-photo" src="'+esc(lunch.image||"")+'" width="720" height="720" loading="lazy" decoding="async" alt="'+esc(lunch.imageAlt||"School lunch")+'"><div><b>School Lunch</b><p>'+esc((lunch.items||[]).join(", ").replace(/, ([^,]*)$/,", and $1"))+'</p></div></div>':'')+'</section>'+
     '</div></div>';
 }
