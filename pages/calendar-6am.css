@@ -809,3 +809,9 @@
 .calendar-screen .calendar-status-flag{font-size:6.4px}
 
 }
+
+
+/* Accessibility-only contrast corrections; geometry and 6 AM visual design remain unchanged. */
+.calendar-screen .calendar-tabs button:not(.active){color:#506371}
+.calendar-screen .calendar-primary-event small{color:#46687e}
+.calendar-screen .calendar-special small{color:#70568b}
