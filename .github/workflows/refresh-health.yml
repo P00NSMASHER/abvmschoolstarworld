@@ -1,9 +1,9 @@
-name: ABVM Refresh Health Watchdog
+name: Monitor ABVM refresh health
 
 on:
   schedule:
-    # 6:47 PM Eastern is 22:47 UTC in EDT and 23:47 UTC in EST.
-    - cron: '47 22,23 * * *'
+    - cron: '29 16 * * *'
+      timezone: 'America/New_York'
   workflow_dispatch:
 
 permissions:
@@ -14,42 +14,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  refresh-health:
+  health:
+    name: verify current teacher data
     runs-on: ubuntu-latest
+    timeout-minutes: 8
     steps:
-      - name: Gate to 6:47 PM Eastern
-        id: gate
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "proceed=true" >> "$GITHUB_OUTPUT"
-          elif [ "$(TZ=America/New_York date +'%H:%M')" = "18:47" ]; then
-            echo "proceed=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "proceed=false" >> "$GITHUB_OUTPUT"
-          fi
+      - name: Checkout
+        uses: actions/checkout@v6
 
-      - uses: actions/checkout@v6
-        if: steps.gate.outputs.proceed == 'true'
-
-      - uses: actions/setup-node@v4
-        if: steps.gate.outputs.proceed == 'true'
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Require a healthy same-day teacher refresh
-        if: steps.gate.outputs.proceed == 'true'
-        run: node scripts/check-refresh-health.mjs --require-today=true --max-age-hours=8
-
-      - name: Write health summary
-        if: steps.gate.outputs.proceed == 'true'
-        shell: bash
-        run: |
-          {
-            echo "## ABVM refresh health"
-            echo
-            echo "- Status: PASS"
-            echo "- Checked: $(TZ=America/New_York date)"
-            echo "- Requirement: school pack refreshed today and no more than 8 hours old"
-          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Verify repository and deployed school pack are current
+        run: node scripts/check-refresh-health.mjs --require-today --max-age-hours 8 --live-url https://p00nsmasher.github.io/abvmschoolstarworld/data/study-pack.json --wait-seconds 60
