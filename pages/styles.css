@@ -1457,3 +1457,31 @@ button:focus-visible,a:focus-visible{outline:3px solid #f0ad42;outline-offset:3p
   }
 }
 
+/* Narrowest-phone finishing pass */
+@media(max-width:430px){
+  .calendar-status-flag{
+    justify-self:stretch;
+    width:100%;
+    margin-left:0;
+    margin-right:0;
+    padding-left:0;
+    padding-right:0;
+    display:grid;
+    place-items:center;
+    text-align:center;
+  }
+  .calendar-grid .calendar-chip.special{
+    padding-left:1px;
+    padding-right:1px;
+    font-size:5.35px;
+    letter-spacing:-.015em;
+  }
+  .calendar-grid .calendar-chip.special>span:not(.mini-icon){
+    white-space:nowrap;
+    overflow:visible;
+    overflow-wrap:normal;
+    word-break:keep-all;
+    text-align:center;
+  }
+}
+
