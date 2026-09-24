@@ -1,15 +1,16 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "aspectRatio": "16:10",
-  "rendering": "resolution-independent SVG",
+  "rendering": "four high-quality JPEG sprite sheets containing 38 photographic tiles",
   "rules": {
     "embeddedText": false,
     "people": false,
     "rotation": "deterministic by school date so recurring events vary without flicker",
-    "placement": "selected-day detail only; month grid stays icon-and-label first",
-    "schedulePriority": "No School and Half Day are independent schedule facets and remain visible even when other events share the date.",
-    "multiEventHandling": "Month cells show schedule flag + primary event + compact additional-event count; selected day shows the full ordered stack.",
-    "compositeSourceHandling": "Combined source lines such as Progress Reports; 12:00 dismissal are split into schedule and event facets."
+    "placement": "selected-day detail hero background; date and primary information overlay inside the image; month grid stays icon-and-label first",
+    "schedulePriority": "No School and Half Day are independent schedule facets and remain permanently visible even when another event shares the date.",
+    "multiEventHandling": "Month cells show schedule flag + primary event + compact additional-event count; selected day overlays the schedule/primary information on the photo and keeps additional events below.",
+    "compositeSourceHandling": "Combined source lines such as Progress Reports; 12:00 dismissal are split into schedule and event facets.",
+    "backgroundTreatment": "photo remains visible through a translucent readability treatment; schedule state and primary event remain foreground content"
   },
   "categories": {
     "picture": {
@@ -18,8 +19,14 @@
         "school portraits"
       ],
       "variants": [
-        "picture-day.svg",
-        "picture-day-2.svg"
+        {
+          "sheet": "photo-sprite-1.jpg",
+          "tile": 0
+        },
+        {
+          "sheet": "photo-sprite-1.jpg",
+          "tile": 1
+        }
       ]
     },
     "mass": {
@@ -28,8 +35,14 @@
         "Church"
       ],
       "variants": [
-        "mass-1.svg",
-        "mass-2.svg"
+        {
+          "sheet": "photo-sprite-1.jpg",
+          "tile": 2
+        },
+        {
+          "sheet": "photo-sprite-1.jpg",
+          "tile": 3
+        }
       ]
     },
     "gym": {
@@ -37,8 +50,14 @@
         "Gym"
       ],
       "variants": [
-        "gym-1.svg",
-        "gym-2.svg"
+        {
+          "sheet": "photo-sprite-1.jpg",
+          "tile": 4
+        },
+        {
+          "sheet": "photo-sprite-1.jpg",
+          "tile": 5
+        }
       ]
     },
     "art": {
@@ -46,8 +65,14 @@
         "Art"
       ],
       "variants": [
-        "art-1.svg",
-        "art-2.svg"
+        {
+          "sheet": "photo-sprite-1.jpg",
+          "tile": 6
+        },
+        {
+          "sheet": "photo-sprite-1.jpg",
+          "tile": 7
+        }
       ]
     },
     "dress": {
@@ -56,8 +81,14 @@
         "Dress-Down"
       ],
       "variants": [
-        "dress-down-1.svg",
-        "dress-down-2.svg"
+        {
+          "sheet": "photo-sprite-1.jpg",
+          "tile": 8
+        },
+        {
+          "sheet": "photo-sprite-1.jpg",
+          "tile": 9
+        }
       ]
     },
     "closed": {
@@ -67,8 +98,14 @@
         "Holiday"
       ],
       "variants": [
-        "closed-1.svg",
-        "closed-2.svg"
+        {
+          "sheet": "photo-sprite-2.jpg",
+          "tile": 0
+        },
+        {
+          "sheet": "photo-sprite-2.jpg",
+          "tile": 1
+        }
       ]
     },
     "halfday": {
@@ -78,8 +115,14 @@
         "Early Dismissal"
       ],
       "variants": [
-        "half-day-1.svg",
-        "half-day-2.svg"
+        {
+          "sheet": "photo-sprite-2.jpg",
+          "tile": 2
+        },
+        {
+          "sheet": "photo-sprite-2.jpg",
+          "tile": 3
+        }
       ]
     },
     "conference": {
@@ -88,8 +131,14 @@
         "Conference"
       ],
       "variants": [
-        "conference-1.svg",
-        "conference-2.svg"
+        {
+          "sheet": "photo-sprite-2.jpg",
+          "tile": 4
+        },
+        {
+          "sheet": "photo-sprite-2.jpg",
+          "tile": 5
+        }
       ]
     },
     "progress": {
@@ -97,8 +146,14 @@
         "Progress Reports"
       ],
       "variants": [
-        "progress-1.svg",
-        "progress-2.svg"
+        {
+          "sheet": "photo-sprite-2.jpg",
+          "tile": 6
+        },
+        {
+          "sheet": "photo-sprite-2.jpg",
+          "tile": 7
+        }
       ]
     },
     "testing": {
@@ -107,8 +162,14 @@
         "STAR Testing"
       ],
       "variants": [
-        "testing-1.svg",
-        "testing-2.svg"
+        {
+          "sheet": "photo-sprite-2.jpg",
+          "tile": 8
+        },
+        {
+          "sheet": "photo-sprite-2.jpg",
+          "tile": 9
+        }
       ]
     },
     "celebration": {
@@ -119,8 +180,14 @@
         "Party"
       ],
       "variants": [
-        "celebration-1.svg",
-        "celebration-2.svg"
+        {
+          "sheet": "photo-sprite-3.jpg",
+          "tile": 0
+        },
+        {
+          "sheet": "photo-sprite-3.jpg",
+          "tile": 1
+        }
       ]
     },
     "meeting": {
@@ -129,8 +196,14 @@
         "Articulation Meeting"
       ],
       "variants": [
-        "meeting-1.svg",
-        "meeting-2.svg"
+        {
+          "sheet": "photo-sprite-3.jpg",
+          "tile": 2
+        },
+        {
+          "sheet": "photo-sprite-3.jpg",
+          "tile": 3
+        }
       ]
     },
     "club": {
@@ -138,8 +211,14 @@
         "Lego Club"
       ],
       "variants": [
-        "club-1.svg",
-        "club-2.svg"
+        {
+          "sheet": "photo-sprite-3.jpg",
+          "tile": 4
+        },
+        {
+          "sheet": "photo-sprite-3.jpg",
+          "tile": 5
+        }
       ]
     },
     "halloween": {
@@ -147,7 +226,10 @@
         "Halloween Party"
       ],
       "variants": [
-        "halloween.svg"
+        {
+          "sheet": "photo-sprite-3.jpg",
+          "tile": 6
+        }
       ]
     },
     "thanksgiving": {
@@ -155,7 +237,10 @@
         "Thanksgiving Holiday"
       ],
       "variants": [
-        "thanksgiving.svg"
+        {
+          "sheet": "photo-sprite-3.jpg",
+          "tile": 7
+        }
       ]
     },
     "christmas": {
@@ -163,7 +248,10 @@
         "Christmas Holiday"
       ],
       "variants": [
-        "christmas.svg"
+        {
+          "sheet": "photo-sprite-3.jpg",
+          "tile": 8
+        }
       ]
     },
     "newyear": {
@@ -172,7 +260,10 @@
         "New Year's Day"
       ],
       "variants": [
-        "new-year.svg"
+        {
+          "sheet": "photo-sprite-3.jpg",
+          "tile": 9
+        }
       ]
     },
     "mlk": {
@@ -180,7 +271,10 @@
         "Martin Luther King Jr. Day"
       ],
       "variants": [
-        "mlk-day.svg"
+        {
+          "sheet": "photo-sprite-4.jpg",
+          "tile": 0
+        }
       ]
     },
     "presidents": {
@@ -189,7 +283,10 @@
         "Presidents' Day"
       ],
       "variants": [
-        "presidents-day.svg"
+        {
+          "sheet": "photo-sprite-4.jpg",
+          "tile": 1
+        }
       ]
     },
     "easter": {
@@ -197,7 +294,10 @@
         "Easter Holiday"
       ],
       "variants": [
-        "easter.svg"
+        {
+          "sheet": "photo-sprite-4.jpg",
+          "tile": 2
+        }
       ]
     },
     "memorial": {
@@ -205,7 +305,10 @@
         "Memorial Day"
       ],
       "variants": [
-        "memorial-day.svg"
+        {
+          "sheet": "photo-sprite-4.jpg",
+          "tile": 3
+        }
       ]
     },
     "catholic": {
@@ -213,7 +316,10 @@
         "Catholic Schools Week"
       ],
       "variants": [
-        "catholic-schools-week.svg"
+        {
+          "sheet": "photo-sprite-4.jpg",
+          "tile": 4
+        }
       ]
     },
     "santa": {
@@ -221,7 +327,10 @@
         "Santa Workshop"
       ],
       "variants": [
-        "santa-workshop.svg"
+        {
+          "sheet": "photo-sprite-4.jpg",
+          "tile": 5
+        }
       ]
     },
     "lastday": {
@@ -229,7 +338,10 @@
         "Last day"
       ],
       "variants": [
-        "last-day.svg"
+        {
+          "sheet": "photo-sprite-4.jpg",
+          "tile": 6
+        }
       ]
     },
     "weather": {
@@ -237,8 +349,75 @@
         "Weather makeup"
       ],
       "variants": [
-        "weather-makeup.svg"
+        {
+          "sheet": "photo-sprite-4.jpg",
+          "tile": 7
+        }
       ]
     }
-  }
+  },
+  "spriteSheets": [
+    {
+      "file": "photo-sprite-1.jpg",
+      "grid": "5x2",
+      "tiles": [
+        "picture-1",
+        "picture-2",
+        "mass-1",
+        "mass-2",
+        "gym-1",
+        "gym-2",
+        "art-1",
+        "art-2",
+        "dress-1",
+        "dress-2"
+      ]
+    },
+    {
+      "file": "photo-sprite-2.jpg",
+      "grid": "5x2",
+      "tiles": [
+        "closed-1",
+        "closed-2",
+        "halfday-1",
+        "halfday-2",
+        "conference-1",
+        "conference-2",
+        "progress-1",
+        "progress-2",
+        "testing-1",
+        "testing-2"
+      ]
+    },
+    {
+      "file": "photo-sprite-3.jpg",
+      "grid": "5x2",
+      "tiles": [
+        "celebration-1",
+        "celebration-2",
+        "meeting-1",
+        "meeting-2",
+        "club-1",
+        "club-2",
+        "halloween",
+        "thanksgiving",
+        "christmas",
+        "newyear"
+      ]
+    },
+    {
+      "file": "photo-sprite-4.jpg",
+      "grid": "5x2",
+      "tiles": [
+        "mlk",
+        "presidents",
+        "easter",
+        "memorial",
+        "catholic",
+        "santa",
+        "lastday",
+        "weather"
+      ]
+    }
+  ]
 }
