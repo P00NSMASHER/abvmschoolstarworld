@@ -1,0 +1,31 @@
+name: Monitor ABVM refresh health
+
+on:
+  schedule:
+    - cron: '29 16 * * *'
+      timezone: 'America/New_York'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: abvm-refresh-health
+  cancel-in-progress: true
+
+jobs:
+  health:
+    name: verify current teacher data
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify repository and deployed school pack are current
+        run: node scripts/check-refresh-health.mjs --require-today --max-age-hours 8 --live-url https://p00nsmasher.github.io/abvmschoolstarworld/data/study-pack.json --wait-seconds 60
