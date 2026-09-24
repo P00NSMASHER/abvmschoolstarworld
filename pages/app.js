@@ -666,7 +666,7 @@ function render(){
   const screen=stack().querySelector(".screen");if(screen)screen.scrollTop=0;bindScreen();
 }
 function bindScreen(){
-  $("[data-study-jump]").forEach(b=>b.addEventListener("click",()=>{
+  $$("[data-study-jump]").forEach(b=>b.addEventListener("click",()=>{
     const target=document.getElementById(b.dataset.studyJump);
     if(target){
       if(target.tagName==="DETAILS")target.open=true;
