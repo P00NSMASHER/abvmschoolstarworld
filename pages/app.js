@@ -449,7 +449,7 @@ function weekPriority(){
     const isToday=sameDay(next.d,today());
     return{
       title:isToday?next.x.label:"Prepare for "+next.x.label,
-      detail:isToday?"Keep review short and calm. Focus on the teacher-posted material.":"Use short review sessions before "+fmtShort(next.d)+". Keep required reading in the normal routine."
+      detail:isToday?"Keep review short and calm. Focus on the teacher-posted material.":"Use short review sessions before "+fmtCompactDate(next.d)+". Keep required reading in the normal routine."
     };
   }
   return{title:"Keep the week organized.",detail:"Use the teacher-posted work first and keep reading in the normal routine."};
@@ -462,7 +462,7 @@ function renderToday(){
   const headline=mainEvent?.label||"Normal school day";
   const subline=otherEvents.length?otherEvents.map(e=>e.label).join(" · "):"Stay with the current homework and reading routine.";
   const deadlineHtml=deadline
-    ?'<section class="today-deadline"><span class="deadline-icon">'+icon("pin")+'</span><div><p>NEXT DEADLINE</p><strong>'+esc(deadline.x.label)+'</strong><small>'+esc(deadline.x.date||fmtShort(deadline.span.start))+'</small></div></section>'
+    ?'<section class="today-deadline"><span class="deadline-icon">'+icon("pin")+'</span><div><p>NEXT DEADLINE</p><strong>'+esc(deadline.x.label)+'</strong><small>'+esc(deadline.x.date||fmtCompactDate(deadline.span.start))+'</small></div></section>'
     :'<section class="today-deadline clear"><span class="deadline-icon">'+icon("check")+'</span><div><p>NEXT DEADLINE</p><strong>No posted deadline due</strong><small>Keep the normal school routine.</small></div></section>';
   const content='<div class="content overlap">'+
     '<section class="date-hero-card"><div class="big-date"><strong>'+WEEKDAY[d.getDay()].slice(0,3).toUpperCase()+'</strong><span>'+d.getDate()+'</span><small>Today</small></div><div class="date-hero-copy"><p>TODAY AT SCHOOL</p><h2>'+esc(headline)+'</h2><span>'+esc(subline)+'</span></div></section>'+
@@ -498,7 +498,7 @@ function renderWeek(){
     '<div class="event-stack" style="margin-top:14px">'+(calendarContentEvents(events).length?calendarContentEvents(events).map(eventRow).join(""):'<div class="empty-note">'+(schedule?"No additional events are listed for this date.":"No special school events are listed for this date.")+'</div>')+'</div></div></section>'+
     lunchCard(lunch)+
     '<section class="reminder-strip"><span class="bang">!</span><p><strong>Don’t forget</strong>'+esc(reminderForDate(selectedDay))+'</p></section>'+
-    '<section class="future-card"><h3>Coming soon</h3>'+(future.length?future.map(o=>'<div class="future-row"><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join(""):'<div class="empty-note">Nothing else is posted after this day yet.</div>')+'</section></div></div>';
+    '<section class="future-card"><h3>Coming soon</h3>'+(future.length?future.map(o=>'<div class="future-row"><span>'+esc(fmtCompactDate(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join(""):'<div class="empty-note">Nothing else is posted after this day yet.</div>')+'</section></div></div>';
 }
 function calendarCellLabel(item,special){
   if(!item){
@@ -611,7 +611,7 @@ function renderStudy(){
     .sort((a,b)=>a.span.start-b.span.start)
     .map(o=>({x:o.x,d:o.span.start<now?new Date(now):o.span.start,span:o.span}));
   const starActive=(pack?.importantDates||[]).some(x=>/star/i.test(x.label||"")&&eventSpan(x.date)?.end>=now);
-  const essentials=[{when:"Daily",label:readingRoutine(),icon:icon("book"),klass:"green"},...assessments.slice(0,4).map((o,i)=>({when:fmtShort(o.d),label:o.x.label,icon:icon(eventIconName(o.x)),klass:["yellow","pink","blue","pink"][i]||"blue"}))];
+  const essentials=[{when:"Daily",label:readingRoutine(),icon:icon("book"),klass:"green"},...assessments.slice(0,4).map((o,i)=>({when:fmtCompactDate(o.d),label:o.x.label,icon:icon(eventIconName(o.x)),klass:["yellow","pink","blue","pink"][i]||"blue"}))];
   const sight=(r?.topics||[]).find(x=>/^Sight words:/i.test(x))?.replace(/^Sight words:\s*/i,"").split(",").map(x=>x.trim()).filter(Boolean)||[];
   const vocab=(pack?.vocabulary||[]).map(v=>v.term);
   stack().innerHTML='<div class="screen study-screen" role="region" aria-label="Study room">'+
