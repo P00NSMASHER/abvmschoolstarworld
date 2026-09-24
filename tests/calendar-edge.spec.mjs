@@ -136,16 +136,21 @@ test("List view is compact and removes redundant school-event count copy",async(
   expect(text).not.toMatch(/Fundraiswer/i);
 });
 
-test("mobile Calendar content clears the fixed bottom navigation",async({page},testInfo)=>{
+test("mobile Calendar scrollport clears the bottom navigation",async({page},testInfo)=>{
   test.skip(testInfo.project.name!=="mobile","Mobile-only bottom navigation assertion");
   await openCalendar(page);
-  const screen=page.locator(".calendar-screen");
-  await screen.evaluate(el=>{el.scrollTop=el.scrollHeight});
-  await page.waitForTimeout(50);
   const geometry=await page.evaluate(()=>{
-    const detail=document.querySelector(".calendar-day-card")?.getBoundingClientRect();
-    const nav=document.querySelector(".bottom-nav")?.getBoundingClientRect();
-    return{detailBottom:detail?.bottom||0,navTop:nav?.top||window.innerHeight};
+    const screen=document.querySelector(".calendar-screen");
+    const nav=document.querySelector(".bottom-nav");
+    const screenRect=screen?.getBoundingClientRect();
+    const navRect=nav?.getBoundingClientRect();
+    return{
+      screenBottom:screenRect?.bottom||0,
+      navTop:navRect?.top||window.innerHeight,
+      navHeight:navRect?.height||0,
+      paddingBottom:parseFloat(screen?getComputedStyle(screen).paddingBottom:"0")||0,
+    };
   });
-  expect(geometry.detailBottom).toBeLessThanOrEqual(geometry.navTop+1);
+  expect(geometry.screenBottom).toBeLessThanOrEqual(geometry.navTop+1);
+  expect(geometry.paddingBottom).toBeGreaterThanOrEqual(geometry.navHeight);
 });
