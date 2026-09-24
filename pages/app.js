@@ -300,9 +300,9 @@ function calendarVisualFor(date,primary,special,schedule){
     sheet:variant.sheet,
     tile:variant.tile,
     x:col*25,
-    // The 38 source tiles are square. Preserve their photographic aspect ratio
-    // inside the 16:10 detail frame by center-cropping vertically, never stretching.
-    y:row===0?13.636:86.364
+    // The selected-day photo card is square, matching the native source tiles.
+    // Exact 0/100 row positioning shows each tile without stretch or crop distortion.
+    y:row*100
   };
 }
 function taskIconName(item){
@@ -542,20 +542,18 @@ function renderCalendar(){
   const scheduleBlock=schedule?'<div class="schedule-alert '+kindClass(schedule)+'"><span>'+icon(kindClass(schedule)==="closed"?"ban":"clock")+'</span><div><small>'+esc(scheduleStatusText(schedule).toUpperCase())+'</small><strong>'+esc(scheduleStatusDetail(schedule))+'</strong></div></div>':'';
   const primaryBlock=primary?'<div class="calendar-primary-event '+kindClass(primary)+'"><span class="event-icon '+kindClass(primary)+'">'+icon(eventIconName(primary))+'</span><div><small>'+esc(calendarLabel(primary).toUpperCase())+'</small><strong>'+esc(primary.label)+'</strong></div></div>':'';
   const specialBlock=effectiveSpecial?'<div class="calendar-special"><span>'+icon(specialIconName(effectiveSpecial))+'</span><div><small>'+(schedule&&kindClass(schedule)==="halfday"?'USUAL CLASS SPECIAL':'CLASS SPECIAL')+'</small><strong>'+esc(effectiveSpecial)+'</strong>'+(schedule&&kindClass(schedule)==="halfday"?'<em>Early dismissal may change the usual schedule.</em>':'')+'</div></div>':'';
-  const specialInPhoto=Boolean(visual&&!primary&&!schedule&&effectiveSpecial);
-  const dayLead=visual
-    ?'<div class="calendar-photo-card visual-'+visual.category+'" style="--calendar-photo:url('+visual.src+');--calendar-photo-x:'+visual.x+'%;--calendar-photo-y:'+visual.y+'%;"><div class="calendar-photo-content">'+dayHeading+scheduleBlock+primaryBlock+(specialInPhoto?specialBlock:'')+'</div></div>'
-    :dayHeading+scheduleBlock+primaryBlock;
+  const extraEventsBlock=contentEvents.length>1?'<div class="calendar-event-list">'+contentEvents.filter(e=>e!==primary).map(e=>'<div><span class="event-icon '+kindClass(e)+'">'+icon(eventIconName(e))+'</span><span><strong>'+esc(e.label)+'</strong></span></div>').join("")+'</div>':'';
+  const lunchBlock=lunch?'<div class="calendar-lunch"><img class="calendar-lunch-photo" src="'+esc(lunch.image||"")+'" width="720" height="720" loading="lazy" decoding="async" alt="'+esc(lunch.imageAlt||"School lunch")+'"><div><b>School Lunch</b><p>'+esc((lunch.items||[]).join(", ").replace(/, ([^,]*)$/,", and $1"))+'</p></div></div>':'';
+  const emptyBlock=!events.length&&!effectiveSpecial?'<p class="calendar-empty">Regular school day. No special events are posted.</p>':'';
+  const detailContent=dayHeading+scheduleBlock+primaryBlock+specialBlock+extraEventsBlock+lunchBlock+emptyBlock;
+  const photoStyle=visual?' style="--calendar-photo:url('+visual.src+');--calendar-photo-x:'+visual.x+'%;--calendar-photo-y:'+visual.y+'%;"':'';
 
   stack().innerHTML='<div class="screen calendar-screen" role="region" aria-label="'+MONTHS[m]+' calendar">'+
     scene("calendar","SCHOOL MONTH AT A GLANCE",MONTHS[m]+" "+y,"School Month at a Glance",false)+
     '<div class="calendar-wrap"><section class="calendar-card"><div class="calendar-title-row"><button class="month-arrow" data-month="-1" type="button" aria-label="Previous month">‹</button><div class="calendar-heading"><p>'+esc(calendarMode==="month"?"MONTH VIEW":"LIST VIEW")+'</p><h2>'+MONTHS[m]+" "+y+'</h2></div><button class="month-arrow" data-month="1" type="button" aria-label="Next month">›</button></div>'+
     '<div class="calendar-tabs"><button class="'+(calendarMode==="month"?"active":"")+'" data-cal-mode="month" type="button" aria-pressed="'+(calendarMode==="month")+'">Month View</button><button class="'+(calendarMode==="list"?"active":"")+'" data-cal-mode="list" type="button" aria-pressed="'+(calendarMode==="list")+'">List View</button></div>'+
     monthPanel+listPanel+'</section>'+
-    '<section class="calendar-day-card '+(primary?('day-'+kindClass(primary)):'')+(visual?(' has-photo visual-'+visual.category):'')+'">'+dayLead+
-    (specialInPhoto?'':specialBlock)+
-    (contentEvents.length>1?'<div class="calendar-event-list">'+contentEvents.filter(e=>e!==primary).map(e=>'<div><span class="event-icon '+kindClass(e)+'">'+icon(eventIconName(e))+'</span><span><strong>'+esc(e.label)+'</strong></span></div>').join("")+'</div>':(!events.length&&!effectiveSpecial?'<p class="calendar-empty">Regular school day. No special events are posted.</p>':''))+
-    (lunch?'<div class="calendar-lunch"><img class="calendar-lunch-photo" src="'+esc(lunch.image||"")+'" width="720" height="720" loading="lazy" decoding="async" alt="'+esc(lunch.imageAlt||"School lunch")+'"><div><b>School Lunch</b><p>'+esc((lunch.items||[]).join(", ").replace(/, ([^,]*)$/,", and $1"))+'</p></div></div>':'')+'</section>'+
+    '<section class="calendar-day-card '+(primary?('day-'+kindClass(primary)):'')+(visual?(' has-photo visual-'+visual.category):'')+'"'+photoStyle+'><div class="calendar-overlay-panel">'+detailContent+'</div></section>'+
     '</div></div>';
 }
 function subjectCard(id,klass,title,icon,subj){
