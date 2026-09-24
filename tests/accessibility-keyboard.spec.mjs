@@ -3,9 +3,13 @@ import {test,expect} from "@playwright/test";
 test("keyboard navigation reaches the skip link and all primary tabs",async({page})=>{
   await page.goto("/#today");
   await expect(page.locator(".loading-screen")).toHaveCount(0,{timeout:10_000});
-  await page.locator("body").click({position:{x:1,y:1}});
+  await page.evaluate(()=>{
+    document.body.setAttribute("tabindex","-1");
+    document.body.focus();
+  });
   await page.keyboard.press("Tab");
   await expect(page.locator(".skip-link")).toBeFocused();
+  await page.evaluate(()=>document.body.removeAttribute("tabindex"));
 
   const seen=[];
   for(let i=0;i<12;i++){
