@@ -22,7 +22,7 @@ if(!Array.isArray(manifest.icons)||manifest.icons.length<2)fail("PWA manifest ic
 const index=read("pages/index.html");
 const css=read("pages/styles.css");
 const responsive=read("pages/responsive.css");
-const calendarLegacy=read("pages/calendar-6am.css");
+const calendarClean=read("pages/calendar-clean.css");
 const tokens=read("pages/design-tokens.css");
 const app=read("pages/app.js");
 const sw=read("pages/sw.js");
@@ -30,12 +30,11 @@ const sw=read("pages/sw.js");
 if(!index.includes('type="module" src="./app.js"'))fail("app.js must load as an ES module");
 if(!index.includes('href="./design-tokens.css"'))fail("design-tokens.css must load before styles.css");
 if(!index.includes('href="./responsive.css"'))fail("responsive.css must load after styles.css");
-if(!index.includes('href="./calendar-6am.css"'))fail("calendar-6am.css must load after responsive.css");
+if(!index.includes('href="./calendar-clean.css"'))fail("calendar-clean.css must load after responsive.css");
 if((tokens.match(/:root\s*\{/g)||[]).length!==1)fail("Design tokens must have exactly one :root block");
 if((css.match(/:root\s*\{/g)||[]).length!==0)fail("styles.css must not redefine global design tokens");
-if(/photo-sprite-[1-4]\.jpg/.test(app+css+responsive+calendarLegacy+sw+index))fail("Obsolete calendar photo sprites are still referenced");
+if(/photo-sprite-[1-4]\.jpg/.test(app+css+responsive+calendarClean+sw+index))fail("Obsolete calendar photo sprites are still referenced");
 if(/localStorage\./.test(app))fail("Persistence should go through the storage module");
-if(!calendarLegacy.includes("a831749a6a3a77d9d045ea5d13c682940dc50203"))fail("Calendar rollback stylesheet must remain pinned to the 6 AM snapshot");
 
 const refs=new Set();
 const addMatches=(source,re)=>{
@@ -44,7 +43,7 @@ const addMatches=(source,re)=>{
 addMatches(index,/(?:href|src)="\.\/([^"#?]+)"/g);
 addMatches(css,/url\(["']?\.\/([^"')?#]+)["']?\)/g);
 addMatches(responsive,/url\(["']?\.\/([^"')?#]+)["']?\)/g);
-addMatches(calendarLegacy,/url\(["']?\.\/([^"')?#]+)["']?\)/g);
+addMatches(calendarClean,/url\(["']?\.\/([^"')?#]+)["']?\)/g);
 addMatches(app,/["']\.\/((?:assets|data|js)\/[^"']+)["']/g);
 addMatches(sw,/["']\.\/([^"']+)["']/g);
 for(const icon of manifest.icons||[])if(icon.src?.startsWith("./"))refs.add(icon.src.slice(2));
