@@ -136,21 +136,35 @@ test("List view is compact and removes redundant school-event count copy",async(
   expect(text).not.toMatch(/Fundraiswer/i);
 });
 
-test("mobile Calendar scrollport clears the bottom navigation",async({page},testInfo)=>{
+test("mobile Calendar has a real internal scrollport and clears bottom navigation",async({page},testInfo)=>{
   test.skip(testInfo.project.name!=="mobile","Mobile-only bottom navigation assertion");
   await openCalendar(page);
-  const geometry=await page.evaluate(()=>{
+  const before=await page.locator(".calendar-screen").evaluate(el=>({
+    scrollTop:el.scrollTop,
+    scrollHeight:el.scrollHeight,
+    clientHeight:el.clientHeight,
+    overflowY:getComputedStyle(el).overflowY,
+  }));
+  expect(before.scrollHeight).toBeGreaterThan(before.clientHeight);
+  expect(before.overflowY).toMatch(/auto|scroll/);
+
+  await page.locator(".calendar-screen").evaluate(el=>el.scrollTo({top:el.scrollHeight,behavior:"auto"}));
+  await page.waitForTimeout(100);
+  const after=await page.evaluate(()=>{
     const screen=document.querySelector(".calendar-screen");
+    const detail=document.querySelector(".calendar-day-card");
     const nav=document.querySelector(".bottom-nav");
     const screenRect=screen?.getBoundingClientRect();
+    const detailRect=detail?.getBoundingClientRect();
     const navRect=nav?.getBoundingClientRect();
     return{
+      scrollTop:screen?.scrollTop||0,
       screenBottom:screenRect?.bottom||0,
+      detailBottom:detailRect?.bottom||0,
       navTop:navRect?.top||window.innerHeight,
-      navHeight:navRect?.height||0,
-      paddingBottom:parseFloat(screen?getComputedStyle(screen).paddingBottom:"0")||0,
     };
   });
-  expect(geometry.screenBottom).toBeLessThanOrEqual(geometry.navTop+1);
-  expect(geometry.paddingBottom).toBeGreaterThanOrEqual(geometry.navHeight);
+  expect(after.scrollTop).toBeGreaterThan(100);
+  expect(after.screenBottom).toBeLessThanOrEqual(after.navTop+1);
+  expect(after.detailBottom).toBeLessThanOrEqual(after.navTop-8);
 });
