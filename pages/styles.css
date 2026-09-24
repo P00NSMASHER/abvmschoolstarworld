@@ -1414,3 +1414,46 @@ button:focus-visible,a:focus-visible{outline:3px solid #f0ad42;outline-offset:3p
   }
 }
 
+/* Live QA follow-up — preserve full chip labels and readable overflow counts */
+.calendar-grid .calendar-chip>span:not(.mini-icon){
+  display:block;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  max-height:none;
+  overflow:visible;
+  white-space:normal;
+  word-break:normal;
+  overflow-wrap:anywhere;
+  text-align:center;
+  line-height:1.02;
+  -webkit-line-clamp:unset;
+  line-clamp:unset;
+}
+.calendar-grid .calendar-chip{
+  min-height:24px;
+  align-content:center;
+}
+.calendar-more{
+  margin-top:1px;
+  font-size:6.35px;
+  line-height:1.05;
+}
+@media(max-width:390px){
+  .calendar-grid button{
+    min-height:80px;
+  }
+  .calendar-grid .calendar-chip{
+    min-height:24px;
+    font-size:6.15px;
+    line-height:1;
+  }
+  .calendar-grid .calendar-chip.special{
+    font-size:5.9px;
+  }
+  .calendar-more{
+    font-size:6.1px;
+    line-height:1.05;
+  }
+}
+
