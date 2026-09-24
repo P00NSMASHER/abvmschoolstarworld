@@ -5,5 +5,14 @@
   "type": "module",
   "dependencies": {
     "@netlify/blobs": "latest"
+  },
+  "scripts": {
+    "qa:static": "node --check pages/app.js && node --check pages/js/date-utils.js && node --check pages/js/storage.js && node --check pages/js/install.js && node scripts/validate-app.mjs",
+    "qa:e2e": "playwright test",
+    "qa": "npm run qa:static && npm run qa:e2e"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "latest",
+    "@playwright/test": "latest"
   }
 }
