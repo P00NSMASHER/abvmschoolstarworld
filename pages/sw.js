@@ -1,11 +1,11 @@
-const CACHE = "abvm-grade2-parent-companion-v40-calendar6am";
+const CACHE = "abvm-grade2-parent-companion-v41-calendar-clean";
 const SHELL = [
   "./",
   "./index.html",
   "./design-tokens.css",
   "./styles.css",
   "./responsive.css",
-  "./calendar-6am.css",
+  "./calendar-clean.css",
   "./app.js",
   "./js/date-utils.js",
   "./js/storage.js",
