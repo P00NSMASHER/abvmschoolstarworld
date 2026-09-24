@@ -29,7 +29,7 @@ test("half-day plus regular event remain independently visible",async({page})=>{
   await openCalendar(page);
   await goToMonth(page,2026,"November");
   await chooseDate(page,/Friday, November 6/i);
-  await expect(page.locator(".calendar-day-card .schedule-alert")).toContainText(/Half Day/i);
+  await expect(page.locator(".calendar-detail-row.schedule")).toContainText(/Half Day/i);
   await expect(page.locator(".calendar-day-card")).toContainText(/Articulation Meeting/i);
 });
 
@@ -37,7 +37,8 @@ test("no-school days remain unmistakable",async({page})=>{
   await openCalendar(page);
   await goToMonth(page,2026,"October");
   await chooseDate(page,/Monday, October 12/i);
-  await expect(page.locator(".calendar-day-card .schedule-alert")).toContainText(/No School/i);
+  await expect(page.locator(".calendar-day-status")).toContainText(/No School/i);
+  await expect(page.locator(".calendar-detail-row.schedule")).toContainText(/School is closed/i);
 });
 
 test("busy dates expose multiple events without horizontal overflow",async({page})=>{
@@ -63,9 +64,9 @@ test("multi-day holiday range applies at both ends",async({page})=>{
   await openCalendar(page);
   await goToMonth(page,2026,"December");
   await chooseDate(page,/Thursday, December 24/i);
-  await expect(page.locator(".calendar-day-card .schedule-alert")).toContainText(/No School/i);
+  await expect(page.locator(".calendar-detail-row.schedule")).toContainText(/No School/i);
   await chooseDate(page,/Thursday, December 31/i);
-  await expect(page.locator(".calendar-day-card .schedule-alert")).toContainText(/No School/i);
+  await expect(page.locator(".calendar-detail-row.schedule")).toContainText(/No School/i);
 });
 
 test("regular date gives a calm empty state rather than broken detail",async({page})=>{
@@ -87,37 +88,64 @@ test("regular date gives a calm empty state rather than broken detail",async({pa
   await expect(page.locator(".calendar-empty")).toContainText(/Regular school day|No special events/i);
 });
 
-
-test("Calendar uses the restored early-morning visual hierarchy",async({page})=>{
+test("Calendar uses the clean modern planner hierarchy",async({page})=>{
   await openCalendar(page);
+  await expect(page.getByRole("heading",{name:"Calendar",exact:true})).toBeVisible();
+  await expect(page.getByText("School Month at a Glance")).toHaveCount(0);
+  await expect(page.locator(".calendar-day-visual")).toHaveCount(0);
   await expect(page.locator(".calendar-day-hero")).toHaveCount(0);
   await expect(page.locator(".calendar-overlay-panel")).toHaveCount(0);
-  const visual=page.locator(".calendar-day-visual");
-  if(await visual.count()){
-    await expect(visual.locator("img")).toBeVisible();
-    const ratio=await visual.evaluate(el=>{
-      const r=el.getBoundingClientRect();
-      return r.width/r.height;
-    });
-    expect(ratio).toBeGreaterThan(1.45);
-    expect(ratio).toBeLessThan(1.75);
-  }
-  const card=page.locator(".calendar-day-card");
-  const style=await card.evaluate(el=>({
-    background:getComputedStyle(el).backgroundColor,
-    radius:parseFloat(getComputedStyle(el).borderRadius),
-  }));
-  expect(style.radius).toBeGreaterThanOrEqual(20);
+  await expect(page.locator(".calendar-detail-list")).toBeVisible();
+
+  const styles=await page.evaluate(()=> {
+    const month=getComputedStyle(document.querySelector(".calendar-card"));
+    const detail=getComputedStyle(document.querySelector(".calendar-day-card"));
+    return{
+      monthShadow:month.boxShadow,
+      detailShadow:detail.boxShadow,
+      detailBackground:detail.backgroundColor,
+      detailRadius:parseFloat(detail.borderRadius),
+    };
+  });
+  expect(styles.monthShadow).toBe("none");
+  expect(styles.detailShadow).toBe("none");
+  expect(styles.detailBackground).toBe("rgb(238, 241, 243)");
+  expect(styles.detailRadius).toBeLessThanOrEqual(18);
 });
 
-
-test("restored Calendar uses the 6 AM selected-day visual treatment",async({page})=>{
+test("month cells show one concise label and a separate count for extra items",async({page})=>{
   await openCalendar(page);
-  await goToMonth(page,2026,"October");
-  const eventDay=page.getByRole("button",{name:/Picture Day/i}).first();
-  await expect(eventDay).toBeVisible();
-  await eventDay.click();
-  await expect(page.locator(".calendar-day-visual img")).toBeVisible();
-  await expect(page.locator(".calendar-primary-block")).toHaveCount(0);
-  await expect(page.locator(".calendar-day-hero")).toHaveCount(0);
+  await goToMonth(page,2026,"September");
+  const busy=page.getByRole("button",{name:/Friday, September 25/i}).first();
+  await expect(busy).toBeVisible();
+  await expect(busy.locator(".calendar-cell-label")).toHaveCount(1);
+  const labels=await busy.locator(".calendar-cell-label").count();
+  expect(labels).toBe(1);
+  const more=busy.locator(".calendar-cell-more");
+  if(await more.count()) await expect(more).toContainText(/^\+\d+$/);
+  await expect(busy.locator(".mini-icon")).toHaveCount(0);
+});
+
+test("List view is compact and removes redundant school-event count copy",async({page})=>{
+  await openCalendar(page);
+  await page.getByRole("button",{name:"List View"}).click();
+  await expect(page.locator(".calendar-list-panel.active")).toBeVisible();
+  await expect(page.locator(".calendar-list-row").first()).toBeVisible();
+  const text=await page.locator(".calendar-list-panel").innerText();
+  expect(text).not.toMatch(/\b1 school event\b/i);
+  expect(text).not.toMatch(/Fundraiswer/i);
+});
+
+test("mobile Calendar content clears the fixed bottom navigation",async({page},testInfo)=>{
+  test.skip(testInfo.project.name!=="mobile","Mobile-only bottom navigation assertion");
+  await openCalendar(page);
+  const screen=page.locator(".calendar-screen");
+  await screen.evaluate(el=>{el.scrollTop=el.scrollHeight});
+  await page.waitForTimeout(50);
+  const geometry=await page.evaluate(()=>{
+    const detail=document.querySelector(".calendar-day-card")?.getBoundingClientRect();
+    const nav=document.querySelector(".bottom-nav")?.getBoundingClientRect();
+    return{detailBottom:detail?.bottom||0,navTop:nav?.top||window.innerHeight};
+  });
+  expect(geometry.detailBottom).toBeLessThanOrEqual(geometry.navTop+1);
 });
