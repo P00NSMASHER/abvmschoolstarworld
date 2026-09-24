@@ -139,8 +139,11 @@
   .bottom-nav{
     grid-column:1;
     grid-row:1;
-    position:sticky;
+    position:fixed;
+    left:0;
     top:0;
+    z-index:20;
+    width:190px;
     align-self:start;
     height:100dvh;
     display:flex;
@@ -203,5 +206,5 @@
 
 @media(min-width:1200px){
   .phone-app{grid-template-columns:210px minmax(0,1fr)}
-  .bottom-nav{padding-left:18px;padding-right:18px}
+  .bottom-nav{width:210px;padding-left:18px;padding-right:18px}
 }
