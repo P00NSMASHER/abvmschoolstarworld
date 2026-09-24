@@ -66,9 +66,12 @@ test("desktop uses native page flow and a left navigation rail",async({page},tes
     return{navDisplay:ns.display,navPosition:ns.position,screenOverflow:ss.overflowY,appHeight:as.height,bodyScroll:document.body.scrollHeight};
   });
   expect(layout.navDisplay).toBe("flex");
-  expect(layout.navPosition).toBe("sticky");
+  expect(layout.navPosition).toBe("fixed");
   expect(layout.screenOverflow).toBe("visible");
   expect(layout.bodyScroll).toBeGreaterThan(700);
+  await page.evaluate(()=>window.scrollTo(0,700));
+  const railTop=await page.locator(".bottom-nav").evaluate(el=>el.getBoundingClientRect().top);
+  expect(Math.abs(railTop)).toBeLessThanOrEqual(1);
 });
 
 test("no serious or critical automated accessibility violations",async({page})=>{
