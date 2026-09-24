@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-label="School event illustration">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8fbfd"/><stop offset=".52" stop-color="#eef7ff"/><stop offset="1" stop-color="#fff7e8"/></linearGradient>
+ <linearGradient id="navy" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#2d628e"/><stop offset=".55" stop-color="#153c61"/><stop offset="1" stop-color="#071c31"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0a7"/><stop offset=".5" stop-color="#e5b64a"/><stop offset="1" stop-color="#9e6815"/></linearGradient>
+ <linearGradient id="coral" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ee8d82"/><stop offset="1" stop-color="#b35559"/></linearGradient>
+ <filter id="sh" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="24" stdDeviation="24" flood-color="#17394f" flood-opacity=".20"/></filter>
+ <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".72" numOctaves="2" seed="129"/><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 .045 0"/></filter>
+</defs>
+<rect width="1200" height="750" rx="54" fill="url(#bg)"/><circle cx="145" cy="105" r="220" fill="#fff" opacity=".62"/><circle cx="1040" cy="660" r="210" fill="#d5e8f4" opacity=".28"/>
+<g filter="url(#sh)" transform="translate(165 90)">
+ <path d="M375 20 35 250v375h680V250Z" fill="#fff" stroke="#d4dee1" stroke-width="10"/>
+ <path d="M375 34v118M321 92h108" stroke="url(#gold)" stroke-width="18" stroke-linecap="round"/>
+ <rect x="285" y="366" width="180" height="259" rx="28" fill="url(#navy)"/>
+ <g fill="#86b3cc"><rect x="110" y="298" width="110" height="110" rx="16"/><rect x="530" y="298" width="110" height="110" rx="16"/></g>
+ <path d="M35 625h680" stroke="url(#gold)" stroke-width="18" stroke-linecap="round"/>
+</g>
+<g filter="url(#sh)" transform="translate(835 390) rotate(-9)">
+ <rect width="150" height="260" rx="28" fill="url(#coral)"/><path d="M25 63h100M25 108h100M25 153h80" stroke="#fff" stroke-width="14" stroke-linecap="round" opacity=".8"/>
+ <path d="M184 0h52v225h-52Z" fill="url(#gold)"/><path d="m184 225 26 55 26-55Z" fill="#caa46a"/>
+</g>
+<rect width="1200" height="750" rx="54" filter="url(#grain)" opacity=".52"/></svg>

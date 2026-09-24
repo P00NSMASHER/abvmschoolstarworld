@@ -1,424 +1,120 @@
 {
-  "schemaVersion": 3,
-  "aspectRatio": "1:1",
-  "rendering": "four high-quality JPEG sprite sheets containing 38 square photographic tiles",
+  "schemaVersion": 4,
+  "aspectRatio": "8:5 source art rendered as full-bleed cover inside a 1:1 selected-day card",
+  "rendering": "resolution-independent 1200x750 SVG event artwork; no low-resolution sprite-sheet scaling in the calendar UI",
   "rules": {
     "embeddedText": false,
     "people": false,
-    "rotation": "deterministic by school date so recurring events vary without flicker",
-    "placement": "The selected-day detail card grows naturally with its content; there is no internal scrolling. Date, schedule, primary event, specials, additional events, and lunch remain in one foreground panel.",
-    "schedulePriority": "No School and Half Day are independent schedule facets and remain permanently visible even when another event shares the date.",
-    "multiEventHandling": "Month cells show schedule flag + primary event + compact additional-event count; selected day overlays the schedule/primary information on the photo and keeps additional events below.",
-    "compositeSourceHandling": "Combined source lines such as Progress Reports; 12:00 dismissal are split into schedule and event facets.",
-    "backgroundTreatment": "The photo fills the entire selected-day card without distortion. A lighter translucent foreground panel keeps all information readable while allowing substantially more of the image to show through.",
-    "spriteAspectPreservation": "Sprite tiles are rendered through an actual background image layer sized by card height, so each square source tile preserves its proportions while the card may grow taller for busy dates."
+    "rotation": "deterministic by school date when a category has two variants",
+    "placement": "Selected-day artwork fills the card. The translucent information panel is always centered both vertically and horizontally.",
+    "schedulePriority": "No School and Half Day remain independently visible when another event shares the date.",
+    "multiEventHandling": "One or two items use a single-column detail list. Three or more items switch to a compact two-column tile grid, with lunch kept as one full-width footer row.",
+    "visualCoverage": "Every recognized class special and every posted event has a mapped high-resolution category; unmatched posted events fail open to school-event.svg rather than showing a blank card.",
+    "duplicateHandling": "A class special already represented by an event on the same date is not repeated in the detail panel."
   },
   "categories": {
-    "picture": {
-      "match": [
-        "Picture Day",
-        "school portraits"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-1.jpg",
-          "tile": 0
-        },
-        {
-          "sheet": "photo-sprite-1.jpg",
-          "tile": 1
-        }
-      ]
-    },
-    "mass": {
-      "match": [
-        "Mass",
-        "Church"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-1.jpg",
-          "tile": 2
-        },
-        {
-          "sheet": "photo-sprite-1.jpg",
-          "tile": 3
-        }
-      ]
-    },
-    "gym": {
-      "match": [
-        "Gym"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-1.jpg",
-          "tile": 4
-        },
-        {
-          "sheet": "photo-sprite-1.jpg",
-          "tile": 5
-        }
-      ]
-    },
-    "art": {
-      "match": [
-        "Art"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-1.jpg",
-          "tile": 6
-        },
-        {
-          "sheet": "photo-sprite-1.jpg",
-          "tile": 7
-        }
-      ]
-    },
-    "dress": {
-      "match": [
-        "Dress Down",
-        "Dress-Down"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-1.jpg",
-          "tile": 8
-        },
-        {
-          "sheet": "photo-sprite-1.jpg",
-          "tile": 9
-        }
-      ]
-    },
-    "closed": {
-      "match": [
-        "No School",
-        "School Closed",
-        "Holiday"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-2.jpg",
-          "tile": 0
-        },
-        {
-          "sheet": "photo-sprite-2.jpg",
-          "tile": 1
-        }
-      ]
-    },
-    "halfday": {
-      "match": [
-        "12:00 dismissal",
-        "Noon dismissal",
-        "Early Dismissal"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-2.jpg",
-          "tile": 2
-        },
-        {
-          "sheet": "photo-sprite-2.jpg",
-          "tile": 3
-        }
-      ]
-    },
-    "conference": {
-      "match": [
-        "Parent / Teacher conferences",
-        "Conference"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-2.jpg",
-          "tile": 4
-        },
-        {
-          "sheet": "photo-sprite-2.jpg",
-          "tile": 5
-        }
-      ]
-    },
-    "progress": {
-      "match": [
-        "Progress Reports"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-2.jpg",
-          "tile": 6
-        },
-        {
-          "sheet": "photo-sprite-2.jpg",
-          "tile": 7
-        }
-      ]
-    },
-    "testing": {
-      "match": [
-        "Test",
-        "STAR Testing"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-2.jpg",
-          "tile": 8
-        },
-        {
-          "sheet": "photo-sprite-2.jpg",
-          "tile": 9
-        }
-      ]
-    },
-    "celebration": {
-      "match": [
-        "Dance",
-        "Movie Night",
-        "Family Night",
-        "Party"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-3.jpg",
-          "tile": 0
-        },
-        {
-          "sheet": "photo-sprite-3.jpg",
-          "tile": 1
-        }
-      ]
-    },
-    "meeting": {
-      "match": [
-        "HSA Meeting",
-        "Articulation Meeting"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-3.jpg",
-          "tile": 2
-        },
-        {
-          "sheet": "photo-sprite-3.jpg",
-          "tile": 3
-        }
-      ]
-    },
-    "club": {
-      "match": [
-        "Lego Club"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-3.jpg",
-          "tile": 4
-        },
-        {
-          "sheet": "photo-sprite-3.jpg",
-          "tile": 5
-        }
-      ]
-    },
-    "halloween": {
-      "match": [
-        "Halloween Party"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-3.jpg",
-          "tile": 6
-        }
-      ]
-    },
-    "thanksgiving": {
-      "match": [
-        "Thanksgiving Holiday"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-3.jpg",
-          "tile": 7
-        }
-      ]
-    },
-    "christmas": {
-      "match": [
-        "Christmas Holiday"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-3.jpg",
-          "tile": 8
-        }
-      ]
-    },
-    "newyear": {
-      "match": [
-        "New Year’s Day",
-        "New Year's Day"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-3.jpg",
-          "tile": 9
-        }
-      ]
-    },
-    "mlk": {
-      "match": [
-        "Martin Luther King Jr. Day"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-4.jpg",
-          "tile": 0
-        }
-      ]
-    },
-    "presidents": {
-      "match": [
-        "Presidents’ Day",
-        "Presidents' Day"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-4.jpg",
-          "tile": 1
-        }
-      ]
-    },
-    "easter": {
-      "match": [
-        "Easter Holiday"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-4.jpg",
-          "tile": 2
-        }
-      ]
-    },
-    "memorial": {
-      "match": [
-        "Memorial Day"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-4.jpg",
-          "tile": 3
-        }
-      ]
-    },
-    "catholic": {
-      "match": [
-        "Catholic Schools Week"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-4.jpg",
-          "tile": 4
-        }
-      ]
-    },
-    "santa": {
-      "match": [
-        "Santa Workshop"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-4.jpg",
-          "tile": 5
-        }
-      ]
-    },
-    "lastday": {
-      "match": [
-        "Last day"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-4.jpg",
-          "tile": 6
-        }
-      ]
-    },
-    "weather": {
-      "match": [
-        "Weather makeup"
-      ],
-      "variants": [
-        {
-          "sheet": "photo-sprite-4.jpg",
-          "tile": 7
-        }
-      ]
-    }
-  },
-  "spriteSheets": [
-    {
-      "file": "photo-sprite-1.jpg",
-      "grid": "5x2",
-      "tiles": [
-        "picture-1",
-        "picture-2",
-        "mass-1",
-        "mass-2",
-        "gym-1",
-        "gym-2",
-        "art-1",
-        "art-2",
-        "dress-1",
-        "dress-2"
-      ]
-    },
-    {
-      "file": "photo-sprite-2.jpg",
-      "grid": "5x2",
-      "tiles": [
-        "closed-1",
-        "closed-2",
-        "halfday-1",
-        "halfday-2",
-        "conference-1",
-        "conference-2",
-        "progress-1",
-        "progress-2",
-        "testing-1",
-        "testing-2"
-      ]
-    },
-    {
-      "file": "photo-sprite-3.jpg",
-      "grid": "5x2",
-      "tiles": [
-        "celebration-1",
-        "celebration-2",
-        "meeting-1",
-        "meeting-2",
-        "club-1",
-        "club-2",
-        "halloween",
-        "thanksgiving",
-        "christmas",
-        "newyear"
-      ]
-    },
-    {
-      "file": "photo-sprite-4.jpg",
-      "grid": "5x2",
-      "tiles": [
-        "mlk",
-        "presidents",
-        "easter",
-        "memorial",
-        "catholic",
-        "santa",
-        "lastday",
-        "weather"
-      ]
-    }
-  ]
+    "picture": [
+      "picture-day.svg",
+      "picture-day-2.svg"
+    ],
+    "mass": [
+      "mass-1.svg",
+      "mass-2.svg"
+    ],
+    "gym": [
+      "gym-1.svg",
+      "gym-2.svg"
+    ],
+    "art": [
+      "art-1.svg",
+      "art-2.svg"
+    ],
+    "music": [
+      "music.svg"
+    ],
+    "computer": [
+      "computer.svg"
+    ],
+    "library": [
+      "library.svg"
+    ],
+    "guidance": [
+      "guidance.svg"
+    ],
+    "dress": [
+      "dress-down-1.svg",
+      "dress-down-2.svg"
+    ],
+    "closed": [
+      "closed-1.svg",
+      "closed-2.svg"
+    ],
+    "halfday": [
+      "half-day-1.svg",
+      "half-day-2.svg"
+    ],
+    "conference": [
+      "conference-1.svg",
+      "conference-2.svg"
+    ],
+    "progress": [
+      "progress-1.svg",
+      "progress-2.svg"
+    ],
+    "testing": [
+      "testing-1.svg",
+      "testing-2.svg"
+    ],
+    "celebration": [
+      "celebration-1.svg",
+      "celebration-2.svg"
+    ],
+    "meeting": [
+      "meeting-1.svg",
+      "meeting-2.svg"
+    ],
+    "club": [
+      "club-1.svg",
+      "club-2.svg"
+    ],
+    "halloween": [
+      "halloween.svg"
+    ],
+    "thanksgiving": [
+      "thanksgiving.svg"
+    ],
+    "christmas": [
+      "christmas.svg"
+    ],
+    "newyear": [
+      "new-year.svg"
+    ],
+    "mlk": [
+      "mlk-day.svg"
+    ],
+    "presidents": [
+      "presidents-day.svg"
+    ],
+    "easter": [
+      "easter.svg"
+    ],
+    "memorial": [
+      "memorial-day.svg"
+    ],
+    "catholic": [
+      "catholic-schools-week.svg"
+    ],
+    "santa": [
+      "santa-workshop.svg"
+    ],
+    "lastday": [
+      "last-day.svg"
+    ],
+    "weather": [
+      "weather-makeup.svg"
+    ],
+    "generic": [
+      "school-event.svg"
+    ]
+  }
 }
