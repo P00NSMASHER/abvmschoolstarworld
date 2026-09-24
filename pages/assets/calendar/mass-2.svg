@@ -1,10 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600">
-<defs><linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#eaf4fb"/><stop offset=".55" stop-color="#fbf8f0"/><stop offset="1" stop-color="#f7e9cd"/></linearGradient><filter id="s"><feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#163e5c" flood-opacity=".18"/></filter></defs>
-<rect width="960" height="600" rx="44" fill="url(#b)"/>
-<g transform="translate(165 78)" filter="url(#s)">
-<path d="M315 0 70 145v310h490V145z" fill="#fff" stroke="#c5d7df" stroke-width="10"/>
-<path d="M315 26v90M278 68h74" stroke="#b88622" stroke-width="15" stroke-linecap="round"/>
-<path d="M130 455V225h370v230" fill="#f8fbfc"/>
-<g transform="translate(205 185)"><circle cx="110" cy="110" r="95" fill="#1d5e8c"/><circle cx="110" cy="110" r="73" fill="#78bfd9"/><path d="M110 37v146M37 110h146" stroke="#f3d36d" stroke-width="18"/><circle cx="110" cy="110" r="22" fill="#fff4c7"/></g>
-<path d="M210 455V335a105 105 0 0 1 210 0v120" fill="#6c513e"/>
-</g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img"><defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8fbfd"/><stop offset=".52" stop-color="#fff7e8"/><stop offset="1" stop-color="#eef3f5"/></linearGradient>
+    <linearGradient id="navy" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#1f4d78"/><stop offset=".55" stop-color="#0d2e4c"/><stop offset="1" stop-color="#071b2e"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0a6"/><stop offset=".45" stop-color="#e6b84b"/><stop offset="1" stop-color="#9f6b16"/></linearGradient>
+    <linearGradient id="steel" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#53616e"/><stop offset=".48" stop-color="#1f2932"/><stop offset="1" stop-color="#080d12"/></linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#67c3f5"/><stop offset=".5" stop-color="#2877b7"/><stop offset="1" stop-color="#12466f"/></linearGradient>
+    <radialGradient id="lens" cx=".38" cy=".32" r=".72"><stop stop-color="#9ef4ff"/><stop offset=".18" stop-color="#4db5e5"/><stop offset=".48" stop-color="#254d7b"/><stop offset=".78" stop-color="#152538"/><stop offset="1" stop-color="#060b11"/></radialGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="24" stdDeviation="24" flood-color="#0c2f4e" flood-opacity=".24"/></filter>
+    <filter id="soft"><feGaussianBlur stdDeviation="18"/></filter>
+    <filter id="grain" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".72" numOctaves="2" seed="13"/><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 .055 0"/></filter>
+  </defs><rect width="1200" height="750" rx="54" fill="url(#bg)"/>
+  <circle cx="1040" cy="120" r="210" fill="#fff" opacity=".58" filter="url(#soft)"/>
+  <circle cx="170" cy="650" r="190" fill="#b7d9ee" opacity=".20" filter="url(#soft)"/>
+  <rect width="1200" height="750" rx="54" filter="url(#grain)" opacity=".65"/><g filter="url(#shadow)" transform="translate(205 112)">
+      <rect x="100" y="95" width="590" height="415" rx="32" fill="#fff" stroke="#d7e3e9" stroke-width="12"/>
+      <circle cx="395" cy="280" r="142" fill="#1b5f91"/>
+      <circle cx="395" cy="280" r="112" fill="#7cc2dc"/>
+      <path d="M395 180v200M295 280h200" stroke="url(#gold)" stroke-width="28" stroke-linecap="round"/>
+      <circle cx="395" cy="280" r="36" fill="#fff7c8"/>
+      <path d="M280 510V395a115 115 0 0 1 230 0v115" fill="#6e5340"/>
+      <path d="M115 510h560" stroke="url(#gold)" stroke-width="18" stroke-linecap="round"/>
+    </g></svg>
