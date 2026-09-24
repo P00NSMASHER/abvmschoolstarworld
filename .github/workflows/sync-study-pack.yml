@@ -2,10 +2,10 @@ name: Refresh ABVM teacher pages
 
 on:
   schedule:
-    # GitHub cron is UTC. Schedule both DST/standard-time UTC possibilities,
-    # then gate to exactly 1:17 PM or 3:47 PM America/New_York below.
-    - cron: '17 17,18 * * *'
-    - cron: '47 19,20 * * *'
+    - cron: '17 13 * * *'
+      timezone: 'America/New_York'
+    - cron: '47 15 * * *'
+      timezone: 'America/New_York'
   workflow_dispatch:
 
 permissions:
@@ -25,40 +25,19 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Decide whether this is an active Eastern-time refresh window
-        id: refresh_window
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "proceed=true" >> "$GITHUB_OUTPUT"
-            echo "window=manual" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          local_time="$(TZ=America/New_York date +'%H:%M')"
-          case "$local_time" in
-            13:17) window=primary ;;
-            15:47) window=backup ;;
-            *) echo "proceed=false" >> "$GITHUB_OUTPUT"; echo "window=guard-skip" >> "$GITHUB_OUTPUT"; exit 0 ;;
-          esac
-          echo "proceed=true" >> "$GITHUB_OUTPUT"
-          echo "window=$window" >> "$GITHUB_OUTPUT"
-          echo "Running $window refresh at $local_time America/New_York."
-
       - uses: actions/checkout@v6
-        if: steps.refresh_window.outputs.proceed == 'true'
 
       - uses: actions/setup-node@v4
-        if: steps.refresh_window.outputs.proceed == 'true'
         with:
           node-version: 22
 
       - name: Scan and validate the public teacher pages
-        if: steps.refresh_window.outputs.proceed == 'true'
         run: node scripts/refresh-teacher-pages.mjs
 
+      - name: Verify refreshed source health
+        run: node scripts/check-refresh-health.mjs --require-today --max-age-hours 1
+
       - name: Commit only when the verified pack changed
-        if: steps.refresh_window.outputs.proceed == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -73,19 +52,15 @@ jobs:
           fi
 
       - name: Install QA dependencies
-        if: steps.refresh_window.outputs.proceed == 'true'
         run: npm install --no-audit --no-fund
 
       - name: Install Chromium
-        if: steps.refresh_window.outputs.proceed == 'true'
         run: npx playwright install --with-deps chromium
 
       - name: Validate refreshed app before deployment
-        if: steps.refresh_window.outputs.proceed == 'true'
         run: npm run qa
 
       - name: Build static site
-        if: steps.refresh_window.outputs.proceed == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -95,24 +70,18 @@ jobs:
           touch _site/.nojekyll
 
       - name: Configure Pages
-        if: steps.refresh_window.outputs.proceed == 'true'
         uses: actions/configure-pages@v5
         with:
           enablement: true
 
       - name: Upload site
-        if: steps.refresh_window.outputs.proceed == 'true'
         uses: actions/upload-pages-artifact@v4
         with:
           path: _site
 
       - name: Deploy
-        if: steps.refresh_window.outputs.proceed == 'true'
         id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Verify deployed school pack matches this refresh
-        if: steps.refresh_window.outputs.proceed == 'true'
-        env:
-          LIVE_URL: ${{ steps.deployment.outputs.page_url }}
-        run: node scripts/verify-live-pack.mjs
+      - name: Verify deployed pack matches this refresh
+        run: node scripts/check-refresh-health.mjs --require-today --max-age-hours 1 --live-url https://p00nsmasher.github.io/abvmschoolstarworld/data/study-pack.json --wait-seconds 180
