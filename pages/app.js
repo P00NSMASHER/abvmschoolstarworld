@@ -179,6 +179,18 @@ function primaryCalendarEvent(events){
   const rank={closed:0,halfday:1,picture:2,dress:3,conference:4,report:5,test:6,due:7,celebration:8,faith:9,club:10,meeting:11,school:12};
   return [...events].sort((a,b)=>(rank[kindClass(a)]??99)-(rank[kindClass(b)]??99))[0]||null;
 }
+function calendarVisualFor(date,primary,special){
+  const key=(date.getFullYear()*372)+(date.getMonth()*31)+date.getDate();
+  const pick=(a,b)=>key%2?a:b;
+  const pk=primary?kindClass(primary):"";
+  const s=String(special||"").toLowerCase();
+  if(pk==="picture")return{src:"./assets/calendar/picture-day.svg",alt:"Camera and portrait-day visual"};
+  if(pk==="dress")return{src:pick("./assets/calendar/dress-down-1.svg","./assets/calendar/dress-down-2.svg"),alt:"Dress Down Day clothing visual"};
+  if(pk==="faith"||/mass|church/.test(s))return{src:pick("./assets/calendar/mass-1.svg","./assets/calendar/mass-2.svg"),alt:"Mass and church visual"};
+  if(/gym/.test(s))return{src:pick("./assets/calendar/gym-1.svg","./assets/calendar/gym-2.svg"),alt:"Gym class visual"};
+  if(/art/.test(s))return{src:pick("./assets/calendar/art-1.svg","./assets/calendar/art-2.svg"),alt:"Art class visual"};
+  return null;
+}
 function taskIconName(item){
   const s=((item?.subject||"")+" "+(item?.task||"")).toLowerCase();
   if(/read/.test(s))return"book";
@@ -354,7 +366,7 @@ function renderCalendar(){
   if(!calendarDay||calendarDay.getMonth()!==m||calendarDay.getFullYear()!==y){
     calendarDay=(base.getMonth()===m&&base.getFullYear()===y)?new Date(base):new Date(y,m,1,12);
   }
-  const events=eventItemsForDate(calendarDay),lunch=lunchForDate(calendarDay),special=specialForDate(calendarDay),primary=primaryCalendarEvent(events);
+  const events=eventItemsForDate(calendarDay),lunch=lunchForDate(calendarDay),special=specialForDate(calendarDay),primary=primaryCalendarEvent(events),visual=calendarVisualFor(calendarDay,primary,special);
   const monthStart=new Date(y,m,1,12),monthEnd=new Date(y,m+1,0,12);
   const agenda=(pack?.importantDates||[]).map(x=>({x,span:eventSpan(x.date)}))
     .filter(o=>o.span&&o.span.end>=monthStart&&o.span.start<=monthEnd)
@@ -374,6 +386,7 @@ function renderCalendar(){
     '<div class="calendar-tabs"><button class="'+(calendarMode==="month"?"active":"")+'" data-cal-mode="month" type="button" aria-pressed="'+(calendarMode==="month")+'">Month View</button><button class="'+(calendarMode==="list"?"active":"")+'" data-cal-mode="list" type="button" aria-pressed="'+(calendarMode==="list")+'">List View</button></div>'+
     monthPanel+listPanel+'</section>'+
     '<section class="calendar-day-card '+(primary?('day-'+kindClass(primary)):'')+'"><div class="calendar-day-heading"><p>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</p><h2>'+esc(fmtDate(calendarDay))+'</h2></div>'+
+    (visual?'<figure class="calendar-day-visual"><img src="'+esc(visual.src)+'" alt="'+esc(visual.alt)+'" width="960" height="600" loading="lazy" decoding="async"></figure>':'')+
     (primary?'<div class="calendar-primary-event '+kindClass(primary)+'"><span class="event-icon '+kindClass(primary)+'">'+icon(eventIconName(primary))+'</span><div><small>'+esc(calendarLabel(primary).toUpperCase())+'</small><strong>'+esc(primary.label)+'</strong>'+(kindClass(primary)==="halfday"?'<b>Dismissal at 12:00 PM</b>':kindClass(primary)==="closed"?'<b>School is closed</b>':'')+'</div></div>':'')+
     (special?'<div class="calendar-special"><span>'+icon(specialIconName(special))+'</span><div><small>CLASS SPECIAL</small><strong>'+esc(special)+'</strong></div></div>':'')+
     (events.length>1?'<div class="calendar-event-list">'+events.filter(e=>e!==primary).map(e=>'<div><span class="event-icon '+kindClass(e)+'">'+icon(eventIconName(e))+'</span><span><strong>'+esc(e.label)+'</strong></span></div>').join("")+'</div>':(!events.length&&!special?'<p class="calendar-empty">Regular school day. No special events are posted.</p>':''))+
