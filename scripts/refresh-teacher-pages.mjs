@@ -417,7 +417,7 @@ data.source = 'ABVM Grade 2 public teacher pages and uploaded school notices';
 data.delivery = 'verified';
 data.syncPolicy = {
   primaryAt: '1:17 PM',
-  backupAt: '4:17 PM',
+  backupAt: '3:47 PM',
   timeZone: 'America/New_York',
   retriesPerSource: 3,
   source: `${SITE_ROOT}/home`,
