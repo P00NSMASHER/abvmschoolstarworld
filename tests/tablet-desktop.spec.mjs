@@ -16,6 +16,13 @@ for(const viewport of [
     const calColumns=await page.locator(".calendar-wrap").evaluate(el=>getComputedStyle(el).gridTemplateColumns);
     expect(calColumns.split(" ").length).toBeGreaterThanOrEqual(2);
 
+    await page.getByRole("button",{name:"Family",exact:true}).click();
+    const familyColumns=await page.locator(".family-content").evaluate(el=>getComputedStyle(el).gridTemplateColumns);
+    expect(familyColumns.split(" ").length).toBeGreaterThanOrEqual(2);
+
+    const navLabelSize=await page.locator('.bottom-nav [data-tab="today"] b').evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
+    expect(navLabelSize).toBeGreaterThanOrEqual(12);
+
     const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
     expect(overflow).toBeFalsy();
     await context.close();
@@ -36,4 +43,12 @@ test("desktop calendar and information pages use width productively",async({page
   await page.getByRole("button",{name:"Study",exact:true}).click();
   const study=await page.locator(".study-content").evaluate(el=>el.getBoundingClientRect().width);
   expect(study).toBeGreaterThan(850);
+
+  await page.getByRole("button",{name:"Family",exact:true}).click();
+  const family=await page.locator(".family-content").evaluate(el=>({
+    width:el.getBoundingClientRect().width,
+    columns:getComputedStyle(el).gridTemplateColumns,
+  }));
+  expect(family.width).toBeGreaterThan(850);
+  expect(family.columns.split(" ").length).toBeGreaterThanOrEqual(2);
 });

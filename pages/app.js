@@ -251,7 +251,7 @@ function renderToday(){
   const headline=mainEvent?.label||"Normal school day";
   const subline=otherEvents.length?otherEvents.map(e=>e.label).join(" · "):"Stay with the current homework and reading routine.";
   const deadlineHtml=deadline
-    ?'<section class="today-deadline"><span class="deadline-icon">'+icon("pin")+'</span><div><p>NEXT DEADLINE</p><strong>'+esc(deadline.x.label)+'</strong><small>'+esc(deadline.x.date||fmtCompactDate(deadline.span.start))+'</small></div></section>'
+    ?'<section class="today-deadline"><span class="deadline-icon">'+icon("pin")+'</span><div><p>NEXT DEADLINE</p><strong>'+esc(deadline.x.label)+'</strong><small>'+esc(fmtCompactDate(deadline.span.start))+'</small></div></section>'
     :'<section class="today-deadline clear"><span class="deadline-icon">'+icon("check")+'</span><div><p>NEXT DEADLINE</p><strong>No posted deadline due</strong><small>Keep the normal school routine.</small></div></section>';
   const content='<div class="content overlap">'+
     '<section class="date-hero-card"><div class="big-date"><strong>'+WEEKDAY[d.getDay()].slice(0,3).toUpperCase()+'</strong><span>'+d.getDate()+'</span><small>Today</small></div><div class="date-hero-copy"><p>TODAY AT SCHOOL</p><h2>'+esc(headline)+'</h2><span>'+esc(subline)+'</span></div></section>'+
@@ -277,7 +277,7 @@ function renderWeek(){
     .sort((a,b)=>a.span.start-b.span.start).slice(0,4)
     .map(o=>({x:o.x,d:o.span.start<selectedDay?selectedDay:o.span.start}));
   const noSchool=schedule&&kindClass(schedule)==="closed",halfDay=schedule&&kindClass(schedule)==="halfday",weekend=[0,6].includes(selectedDay.getDay());
-  const dayStatus=noSchool?"No school":halfDay?"Half day • 12:00 PM":weekend?"Weekend":"School day";
+  const dayStatus=noSchool?"No School":halfDay?"Half Day • 12:00 PM":weekend?"Weekend":"School Day";
   const note='<div class="week-hero-note"><span>CALM PLAN</span><b>Five days, one clear view</b></div>';
   stack().innerHTML='<div class="screen week-screen" role="region" aria-label="This week">'+scene("week","YOUR SCHOOL PLAN","This Week","Tap a day for events, lunch, and specials",false,note)+
     '<div class="content overlap"><div class="day-picker">'+picker+'</div>'+

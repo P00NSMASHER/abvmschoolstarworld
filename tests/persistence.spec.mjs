@@ -48,3 +48,21 @@ test("storage failures fail soft instead of breaking the app",async({browser})=>
   await expect(page.locator(".screen")).toBeVisible();
   await context.close();
 });
+
+
+test("completion state is namespaced by the source pack hash",async({page})=>{
+  await page.goto("/#today");
+  await expect(page.locator(".loading-screen")).toHaveCount(0,{timeout:10_000});
+  const keys=await page.evaluate(()=>{
+    const task=document.querySelector("[data-check]");
+    if(!task)return[];
+    const before=Object.keys(localStorage);
+    task.click();
+    const after=Object.keys(localStorage);
+    const created=after.filter(key=>!before.includes(key));
+    task.click();
+    return created;
+  });
+  expect(keys.length).toBeGreaterThan(0);
+  expect(keys[0]).toMatch(/^abvm-gold:teacher-pages-[a-f0-9]{20}:/);
+});

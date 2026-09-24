@@ -59,6 +59,22 @@ test("each tab exposes its primary answer near the top of the scroll flow",async
     await page.getByRole("button",{name:tab,exact:true}).click();
     const top=await page.locator(selector).evaluate(el=>el.getBoundingClientRect().top);
     const viewportHeight=page.viewportSize()?.height||844;
-    expect(top,`${tab} primary answer starts too deep`).toBeLessThan(viewportHeight*1.05);
+    expect(top,`${tab} primary answer starts too deep`).toBeLessThan(viewportHeight*.95);
+  }
+});
+
+
+test("landscape phone layout keeps navigation and primary content usable",async({browser})=>{
+  for(const viewport of [{width:667,height:375},{width:844,height:390}]){
+    const context=await browser.newContext({viewport,isMobile:true,hasTouch:true});
+    const page=await context.newPage();
+    await page.goto("http://127.0.0.1:4173/#calendar");
+    await expect(page.locator(".loading-screen")).toHaveCount(0,{timeout:10_000});
+    await expect(page.getByRole("button",{name:"Calendar",exact:true})).toBeVisible();
+    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
+    expect(overflow).toBeFalsy();
+    await page.getByRole("button",{name:"Study",exact:true}).click();
+    await expect(page.locator(".study-at-a-glance")).toBeVisible();
+    await context.close();
   }
 });

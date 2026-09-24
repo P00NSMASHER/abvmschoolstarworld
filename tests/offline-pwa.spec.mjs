@@ -42,3 +42,27 @@ test("cached app shell and school pack remain usable offline after warm load",as
   await expect(page.locator(".load-error")).toHaveCount(0);
   await context.setOffline(false);
 });
+
+
+test("app recovers cleanly after reconnecting from offline mode",async({page,context})=>{
+  await page.goto("/#today");
+  await expect(page.locator(".loading-screen")).toHaveCount(0,{timeout:10_000});
+  await page.evaluate(async()=>{if("serviceWorker" in navigator)await navigator.serviceWorker.ready});
+  await page.reload();
+  await context.setOffline(true);
+  await page.reload({waitUntil:"domcontentloaded"});
+  await expect(page.locator(".load-error")).toHaveCount(0);
+  await context.setOffline(false);
+  await page.reload();
+  await expect(page.locator(".loading-screen")).toHaveCount(0,{timeout:10_000});
+  await expect(page.locator(".freshness")).toBeVisible();
+});
+
+test("service worker source includes cache cleanup for old versions",async({request})=>{
+  const response=await request.get("/sw.js");
+  expect(response.ok()).toBeTruthy();
+  const source=await response.text();
+  expect(source).toContain("caches.keys()");
+  expect(source).toContain("key !== CACHE");
+  expect(source).toContain("caches.delete(key)");
+});
