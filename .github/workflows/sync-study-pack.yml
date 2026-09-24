@@ -108,3 +108,9 @@ jobs:
         if: steps.refresh_window.outputs.proceed == 'true'
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Verify deployed school pack matches this refresh
+        if: steps.refresh_window.outputs.proceed == 'true'
+        env:
+          LIVE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: node scripts/verify-live-pack.mjs
