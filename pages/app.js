@@ -161,7 +161,7 @@ function calendarLabel(item){
   if(k==="conference")return"Conference";
   if(k==="report")return"Progress Reports";
   if(k==="picture")return"Picture Day";
-  if(k==="dress")return"Dress Down";
+  if(k==="dress")return"Dress";
   if(k==="test")return /star/i.test(raw)?"STAR Testing":"Test";
   if(k==="due")return"Due";
   if(k==="meeting")return"Meeting";
@@ -508,7 +508,7 @@ function renderWeek(){
 function calendarCellLabel(item,special){
   if(!item){
     const s=String(special||"").split(",")[0].trim();
-    if(/computer/i.test(s))return"Computer";
+    if(/computer/i.test(s))return"Comp.";
     if(/music/i.test(s))return"Music";
     if(/mass/i.test(s))return"Mass";
     if(/gym/i.test(s))return"Gym";
