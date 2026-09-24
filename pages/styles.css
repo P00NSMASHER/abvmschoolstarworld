@@ -610,3 +610,83 @@ button:focus-visible,a:focus-visible{outline:3px solid #f0ad42;outline-offset:3p
 @media (max-width:560px){
   .calendar-day-visual{border-radius:14px;margin-bottom:10px}
 }
+
+
+/* Persistent schedule status + multiple-event calendar treatment */
+.schedule-alert{
+  display:grid;grid-template-columns:46px 1fr;gap:12px;align-items:center;
+  margin:0 0 12px;padding:12px 13px;border-radius:16px;border:1px solid #efd39a;
+  background:linear-gradient(180deg,#fff9eb,#fff1cf);box-shadow:0 8px 22px rgba(102,73,15,.08);
+}
+.schedule-alert>span{
+  width:46px;height:46px;border-radius:14px;display:grid;place-items:center;
+  background:#ffe6a0;color:#8b5e00;
+}
+.schedule-alert .ui-icon{width:24px;height:24px}
+.schedule-alert small{
+  display:block;margin-bottom:2px;font-size:9px;font-weight:950;letter-spacing:.10em;color:#8a650e;
+}
+.schedule-alert strong{display:block;font-size:14px;line-height:1.25;color:#5f4308}
+.schedule-alert.closed{background:linear-gradient(180deg,#fff5f4,#fee8e6);border-color:#efc6c2}
+.schedule-alert.closed>span{background:#ffd9d5;color:#9a3c37}
+.schedule-alert.closed small,.schedule-alert.closed strong{color:#8e3b36}
+.schedule-alert.compact{margin:10px 0 0;padding:10px 11px;grid-template-columns:38px 1fr}
+.schedule-alert.compact>span{width:38px;height:38px;border-radius:11px}
+.schedule-alert.compact .ui-icon{width:20px;height:20px}
+
+.school-day-pill.halfday{background:#fff0c5;color:#7e5a08;border:1px solid #e7cb82}
+
+.calendar-grid button{
+  min-height:70px;
+  padding-top:8px;
+}
+.calendar-grid button>strong{position:relative;z-index:2}
+.calendar-status-flag{
+  position:absolute;top:5px;right:5px;z-index:2;
+  padding:3px 5px;border-radius:999px;font-size:6.5px;line-height:1;font-weight:950;
+  letter-spacing:.01em;white-space:nowrap;background:#ffe7a2;color:#7d5600;border:1px solid #ebcb74;
+  box-shadow:0 2px 6px rgba(92,68,15,.08);
+}
+.calendar-status-flag.closed{background:#ffd9d5;color:#923934;border-color:#efb8b4}
+.calendar-status-flag.halfday{background:#ffe6a0;color:#805800;border-color:#eccb6f}
+.calendar-grid button.active .calendar-status-flag{
+  background:#fff3c8;color:#755100;border-color:#fff0bb;
+}
+.calendar-grid button.active .calendar-status-flag.closed{
+  background:#ffe2df;color:#8b3531;border-color:#fff;
+}
+.calendar-grid .calendar-chip{margin-top:auto}
+.calendar-more{
+  align-self:center;margin-top:1px;padding:2px 5px;border-radius:999px;
+  background:#edf1f3;color:#546875;font-size:6.5px;line-height:1;font-weight:900;white-space:nowrap;
+}
+.calendar-grid button.active .calendar-more{background:rgba(255,255,255,.15);color:#fff}
+.calendar-grid button.halfday{
+  background:linear-gradient(180deg,#fffdf7,#fff5dc);border-color:#e8cd8a;
+}
+.calendar-grid button.closed{
+  background:linear-gradient(180deg,#fff8f7,#ffefed);border-color:#eabdb9;
+}
+
+.calendar-list-row.grouped{grid-template-columns:42px 70px 1fr auto}
+.calendar-list-status{
+  display:inline-flex;align-items:center;justify-content:center;min-height:30px;padding:5px 8px;
+  border-radius:999px;font-size:9px;font-weight:950;white-space:nowrap;
+  background:#ffe7a2;color:#7b5605;border:1px solid #e8cb7c;
+}
+.calendar-list-status.closed{background:#ffe1de;color:#913b36;border-color:#ecc0bc}
+.calendar-list-status.halfday{background:#ffe7a2;color:#7b5605;border-color:#e8cb7c}
+.calendar-list-copy small{line-height:1.35}
+
+.selected-special em,.calendar-special em{
+  display:block;margin-top:4px;font-style:normal;font-size:9px;line-height:1.3;color:#78638d;
+}
+
+@media (max-width:560px){
+  .calendar-grid button{min-height:68px;padding:7px 4px}
+  .calendar-status-flag{top:4px;right:4px;font-size:5.9px;padding:3px 4px}
+  .calendar-chip{font-size:6.8px}
+  .calendar-more{font-size:5.9px}
+  .calendar-list-row.grouped{grid-template-columns:38px 58px 1fr auto}
+  .calendar-list-status{font-size:8px;padding:4px 6px}
+}
