@@ -1269,107 +1269,8 @@ details[open]>summary .disclosure-chevron{transform:rotate(90deg)}
   color:#fff;
 }
 
-/* True desktop layout: use the viewport instead of simulating a giant phone. */
-@media(min-width:900px){
-  html,body{min-height:100%;overflow:auto}
-  .site-shell{
-    min-height:100dvh;
-    display:block;
-    padding:0;
-    background:#edf1f2;
-  }
-  .phone-app{
-    width:100%;
-    max-width:none;
-    min-height:100dvh;
-    height:auto;
-    display:grid;
-    grid-template-columns:190px minmax(0,1fr);
-    grid-template-rows:auto;
-    overflow:visible;
-    border:0;
-    border-radius:0;
-    box-shadow:none;
-    background:var(--paper);
-  }
-  .screen-stack{
-    grid-column:2;
-    grid-row:1;
-    min-height:100dvh;
-    overflow:visible;
-  }
-  .screen{
-    height:auto;
-    min-height:100dvh;
-    overflow:visible;
-    padding-bottom:56px;
-  }
-  .bottom-nav{
-    grid-column:1;
-    grid-row:1;
-    position:sticky;
-    top:0;
-    align-self:start;
-    height:100dvh;
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-    padding:26px 14px;
-    border-top:0;
-    border-right:1px solid rgba(18,58,99,.10);
-    background:#f7f7f3;
-    box-shadow:none;
-  }
-  .bottom-nav button{
-    min-height:54px;
-    grid-template-columns:38px minmax(0,1fr);
-    justify-items:start;
-    align-items:center;
-    align-content:center;
-    gap:10px;
-    padding:7px 10px;
-    text-align:left;
-    font-size:12px;
-  }
-  .bottom-nav button b{font-size:12px}
-  .bottom-nav button.active{background:#e6eff4}
-  .nav-icon{width:36px;height:34px}
-  .content,.study-content,.family-content,.calendar-wrap{
-    width:min(100%,1080px);
-    margin-inline:auto;
-    padding-left:28px;
-    padding-right:28px;
-  }
-  .top-scene{min-height:250px}
-  .study-content{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:16px;
-    align-items:start;
-  }
-  .study-intro,.study-at-a-glance,.study-section-nav,.calm-card{
-    grid-column:1/-1;
-  }
-  .subject-card{margin:0}
-  .family-content{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:16px;
-    align-items:start;
-  }
-  .family-priority,.family-stats{
-    grid-column:1/-1;
-  }
-  .family-card,.reading-policy,.install-card{margin:0}
-  .calendar-wrap{max-width:980px}
-}
-@media(min-width:1200px){
-  .phone-app{grid-template-columns:210px minmax(0,1fr)}
-  .bottom-nav{padding-left:18px;padding-right:18px}
-}
 
-
-/* Audit fixes 6–10: readability, semantics, checklist affordance, desktop scroll */
+/* Final base-component guardrails. Viewport-specific rules live in responsive.css. */
 .checklist-help{
   margin:0 0 6px;
   color:var(--muted);
@@ -1381,57 +1282,14 @@ details[open]>summary .disclosure-chevron{transform:rotate(90deg)}
   padding:10px 0 0;
   list-style:none;
 }
-.static-notice-list .notice{
-  list-style:none;
-}
-@media(max-width:899px){
-  .bottom-nav button b{font-size:10.8px}
-  .calendar-tabs button{font-size:10px}
-  .calendar-weekdays span{font-size:9.5px}
-  .calendar-grid .calendar-chip{font-size:7.5px}
-  .calendar-status-flag{font-size:6.8px}
-  .calendar-more{font-size:7px}
-  .section-label{font-size:10.5px}
-  .task-tag{font-size:9px}
-  .check-copy small{font-size:11.5px}
-  .family-section-hint{font-size:11px}
-}
-@media(min-width:900px){
-  html,body,.site-shell,.phone-app,.screen-stack,.screen{
-    overflow-x:visible;
-  }
-  html,body,.site-shell,.phone-app,.screen-stack{
-    height:auto;
-    max-height:none;
-  }
-  body{
-    overflow-y:auto !important;
-  }
-  .screen{
-    overflow-y:visible !important;
-    max-height:none;
-  }
-  .bottom-nav{
-    overflow-y:auto;
-    overscroll-behavior:contain;
-  }
-  .screen-stack{
-    min-width:0;
-  }
-}
+.static-notice-list .notice{list-style:none}
 
-
-/* Formal design-system guardrails */
 body{font-family:var(--font-sans)}
 .card-title,.scene-title h1,.scene-title h2,.calendar-heading h2,.calendar-day-heading h2,.day-detail-title h2{
   font-family:var(--font-display);
 }
-.gold-card,.calendar-card,.day-detail,.subject-card,.family-card{
-  border-radius:var(--radius-md);
-}
-.calendar-tabs,.month-arrow,.study-section-nav button,.install-action{
-  border-radius:var(--radius-sm);
-}
+.gold-card,.calendar-card,.day-detail,.subject-card,.family-card{border-radius:var(--radius-md)}
+.calendar-tabs,.month-arrow,.study-section-nav button,.install-action{border-radius:var(--radius-sm)}
 .install-action{
   min-height:40px;
   margin-top:10px;
@@ -1443,141 +1301,19 @@ body{font-family:var(--font-sans)}
   font-weight:900;
   cursor:pointer;
 }
-.install-action:focus-visible{
-  outline:3px solid var(--focus);
-  outline-offset:3px;
-}
-@media(min-width:900px){
-  .content,.study-content,.family-content{max-width:var(--content-max)}
-}
-
-
-/* WCAG AA contrast corrections discovered by automated QA */
-.calendar-tabs button:not(.active){color:#506371}
-.calendar-weekdays span{color:#5e6972}
-.calendar-more{color:#4f616d}
-.calendar-primary-block small{color:#46687e}
-.calendar-section-label span{color:#566a78}
-.calendar-also-row small{color:#536773}
-
-
-/* Study heading contrast correction from automated QA */
-.subject-kicker{color:#66747e}
-
-
-/* Phase 3: smallest-phone scanability and calm first-screen hierarchy */
-@media(max-width:430px){
-  .top-scene{min-height:170px}
-  .content.overlap{margin-top:-12px}
-  .day-detail-title{
-    display:grid;
-    grid-template-columns:minmax(0,1fr);
-    gap:8px;
-  }
-  .school-day-pill{
-    justify-self:start;
-    min-height:30px;
-    display:inline-flex;
-    align-items:center;
-  }
-  .day-detail-title h2{font-size:20px;line-height:1.08}
-  .week-hero-note{display:none}
-  .study-intro{padding-top:12px;padding-bottom:12px}
-  .study-intro h2{font-size:18px}
-  .study-intro p{margin-top:3px}
-  .family-priority{padding-top:14px;padding-bottom:14px}
-  .family-priority h2{font-size:21px}
-  .family-stats{gap:8px}
-  .family-stats article{padding:12px}
-}
-@media(max-width:340px){
-  .content,.study-content,.family-content,.calendar-wrap{padding-left:10px;padding-right:10px}
-  .bottom-nav{padding-left:2px;padding-right:2px}
-  .bottom-nav button b{font-size:10px}
-  .nav-icon{width:33px}
-  .date-hero-card{grid-template-columns:70px minmax(0,1fr);gap:10px;padding:14px}
-  .big-date{min-height:86px}
-  .big-date span{font-size:34px}
-  .date-hero-copy h2{font-size:18px}
-  .calendar-grid button{min-height:72px;padding-left:2px;padding-right:2px}
-}
-
-
-/* Phase 4: deliberate tablet composition */
-@media(min-width:720px) and (max-width:899px){
-  .phone-app{
-    width:100%;
-    height:100dvh;
-    max-width:none;
-    border-radius:0;
-    border:0;
-    box-shadow:none;
-  }
-  .site-shell{padding:0;background:var(--paper)}
-  .top-scene{min-height:190px}
-  .content,.study-content,.family-content,.calendar-wrap{
-    width:min(100%,860px);
-    margin-inline:auto;
-    padding-left:22px;
-    padding-right:22px;
-  }
-  .bottom-nav{
-    padding-left:max(18px,calc((100vw - 720px)/2));
-    padding-right:max(18px,calc((100vw - 720px)/2));
-  }
-  .bottom-nav button{min-height:62px}
-  .bottom-nav button b{font-size:12px}
-  .nav-icon{width:40px;height:33px}
-  .nav-icon svg{width:24px;height:24px}
-  .study-content{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:14px;
-    align-items:start;
-  }
-  .study-intro,.study-at-a-glance,.study-section-nav,.calm-card{grid-column:1/-1}
-  .subject-card{margin:0}
-  .family-content{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:14px;
-    align-items:start;
-  }
-  .family-priority,.family-stats{grid-column:1/-1}
-  .family-card,.reading-policy,.install-card{margin:0}
-  .calendar-wrap{
-    max-width:860px;
-    display:grid;
-    grid-template-columns:minmax(0,1.18fr) minmax(280px,.82fr);
-    gap:16px;
-    align-items:start;
-  }
-  .calendar-card,.calendar-day-card{margin-top:0}
-}
-
-/* Phase 4: desktop density without losing hierarchy */
-@media(min-width:900px){
-  .top-scene{min-height:215px}
-  .content,.study-content,.family-content{max-width:1180px}
-  .calendar-wrap{
-    max-width:1180px;
-    display:grid;
-    grid-template-columns:minmax(0,1.2fr) minmax(340px,.8fr);
-    gap:18px;
-    align-items:start;
-  }
-  .calendar-card,.calendar-day-card{margin-top:0}
-  .study-content,.family-content{gap:18px}
-  .study-at-a-glance{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:16px}
-  .study-at-a-glance>.section-label,.study-at-a-glance>h2{grid-column:1/-1}
-  .family-priority{padding-top:18px;padding-bottom:18px}
-}
-
-
-/* Phase 5: explicit keyboard focus for native disclosure controls */
+.install-action:focus-visible,
 summary:focus-visible,
 [tabindex]:focus-visible{
   outline:3px solid var(--focus);
   outline-offset:3px;
 }
 summary{border-radius:var(--radius-sm)}
+
+/* WCAG AA contrast corrections kept with the component rules they protect. */
+.calendar-tabs button:not(.active){color:#506371}
+.calendar-weekdays span{color:#5e6972}
+.calendar-more{color:#4f616d}
+.calendar-primary-block small{color:#46687e}
+.calendar-section-label span{color:#566a78}
+.calendar-also-row small{color:#536773}
+.subject-kicker{color:#66747e}
