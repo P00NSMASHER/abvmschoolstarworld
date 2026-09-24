@@ -179,17 +179,49 @@ function primaryCalendarEvent(events){
   const rank={closed:0,halfday:1,picture:2,dress:3,conference:4,report:5,test:6,due:7,celebration:8,faith:9,club:10,meeting:11,school:12};
   return [...events].sort((a,b)=>(rank[kindClass(a)]??99)-(rank[kindClass(b)]??99))[0]||null;
 }
-function calendarVisualFor(date,primary,special){
-  const key=(date.getFullYear()*372)+(date.getMonth()*31)+date.getDate();
-  const pick=(a,b)=>key%2?a:b;
+const CALENDAR_VISUAL_LIBRARY={
+  picture:{
+    variants:["./assets/calendar/picture-day.svg","./assets/calendar/picture-day-2.svg"],
+    alt:"Premium school Picture Day camera visual"
+  },
+  mass:{
+    variants:["./assets/calendar/mass-1.svg","./assets/calendar/mass-2.svg"],
+    alt:"Premium Mass and church visual"
+  },
+  gym:{
+    variants:["./assets/calendar/gym-1.svg","./assets/calendar/gym-2.svg"],
+    alt:"Premium gym class visual"
+  },
+  art:{
+    variants:["./assets/calendar/art-1.svg","./assets/calendar/art-2.svg"],
+    alt:"Premium art class visual"
+  },
+  dress:{
+    variants:["./assets/calendar/dress-down-1.svg","./assets/calendar/dress-down-2.svg"],
+    alt:"Premium Dress Down Day visual"
+  }
+};
+function calendarVisualCategory(primary,special){
   const pk=primary?kindClass(primary):"";
   const s=String(special||"").toLowerCase();
-  if(pk==="picture")return{src:"./assets/calendar/picture-day.svg",alt:"Camera and portrait-day visual"};
-  if(pk==="dress")return{src:pick("./assets/calendar/dress-down-1.svg","./assets/calendar/dress-down-2.svg"),alt:"Dress Down Day clothing visual"};
-  if(pk==="faith"||/mass|church/.test(s))return{src:pick("./assets/calendar/mass-1.svg","./assets/calendar/mass-2.svg"),alt:"Mass and church visual"};
-  if(/gym/.test(s))return{src:pick("./assets/calendar/gym-1.svg","./assets/calendar/gym-2.svg"),alt:"Gym class visual"};
-  if(/art/.test(s))return{src:pick("./assets/calendar/art-1.svg","./assets/calendar/art-2.svg"),alt:"Art class visual"};
+  if(pk==="picture")return"picture";
+  if(pk==="dress")return"dress";
+  if(pk==="faith"||/mass|church/.test(s))return"mass";
+  if(/gym/.test(s))return"gym";
+  if(/art/.test(s))return"art";
   return null;
+}
+function stableCalendarVisualIndex(date,count){
+  if(count<=1)return 0;
+  const key=(date.getFullYear()*372)+(date.getMonth()*31)+date.getDate();
+  return Math.abs(key)%count;
+}
+function calendarVisualFor(date,primary,special){
+  const category=calendarVisualCategory(primary,special);
+  const entry=category?CALENDAR_VISUAL_LIBRARY[category]:null;
+  if(!entry?.variants?.length)return null;
+  const index=stableCalendarVisualIndex(date,entry.variants.length);
+  return{src:entry.variants[index],alt:entry.alt,category,index};
 }
 function taskIconName(item){
   const s=((item?.subject||"")+" "+(item?.task||"")).toLowerCase();
