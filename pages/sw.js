@@ -1,4 +1,4 @@
-const CACHE = "abvm-grade2-parent-companion-v54-study-redesign";
+const CACHE = "abvm-grade2-parent-companion-v55-family-redesign";
 const SHELL = [
   "./",
   "./index.html",
@@ -9,6 +9,7 @@ const SHELL = [
   "./today-clean.css",
   "./week-clean.css",
   "./study-clean.css",
+  "./family-clean.css",
   "./app.js",
   "./js/date-utils.js",
   "./js/storage.js",
