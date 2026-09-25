@@ -41,3 +41,20 @@ export async function promptInstall(){
   changeHandler?.();
   return{available:true,outcome:choice?.outcome||"unknown"};
 }
+
+
+export function registerFreshServiceWorker(){
+  if(!("serviceWorker" in navigator))return;
+  let reloading=false;
+  navigator.serviceWorker.addEventListener("controllerchange",()=>{
+    if(reloading)return;
+    reloading=true;
+    location.reload();
+  });
+  window.addEventListener("load",async()=>{
+    try{
+      const registration=await navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"});
+      await registration.update();
+    }catch{}
+  });
+}
