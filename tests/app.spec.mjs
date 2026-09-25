@@ -19,6 +19,24 @@ test("all primary tabs render without horizontal overflow",async({page})=>{
   }
 });
 
+test("Today uses the clean native-style dashboard hierarchy",async({page})=>{
+  await expect(page.locator(".today-page-title h1")).toHaveText("Today");
+  await expect(page.locator(".today-overview")).toBeVisible();
+  await expect(page.locator(".today-event-stack .event-row").first()).toBeVisible();
+  await expect(page.locator(".homework-dashboard")).toBeVisible();
+  await expect(page.locator(".today-screen .top-scene")).toHaveCount(0);
+  const styles=await page.evaluate(()=>({
+    canvas:getComputedStyle(document.querySelector(".today-screen")).backgroundColor,
+    card:getComputedStyle(document.querySelector(".today-overview")).backgroundColor,
+    shadow:getComputedStyle(document.querySelector(".today-overview")).boxShadow,
+    radius:parseFloat(getComputedStyle(document.querySelector(".today-overview")).borderRadius),
+  }));
+  expect(styles.canvas).toBe("rgb(242, 242, 247)");
+  expect(styles.card).toBe("rgb(255, 255, 255)");
+  expect(styles.shadow).not.toBe("none");
+  expect(styles.radius).toBeGreaterThanOrEqual(18);
+});
+
 test("calendar controls remain interactive",async({page})=>{
   await openTab(page,"Calendar");
   const heading=page.locator(".calendar-heading h2");
