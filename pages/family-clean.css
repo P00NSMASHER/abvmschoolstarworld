@@ -1,0 +1,193 @@
+/*
+  Family tab — clean native-style parent dashboard.
+  Scoped to preserve the other completed tabs.
+*/
+.family-screen{
+  --family-blue:#0066cc;
+  --family-green:#248a3d;
+  --family-red:#c9342f;
+  --family-yellow:#8a6500;
+  --family-ink:#1c1c1e;
+  --family-secondary:#5f5f64;
+  --family-line:#e5e5ea;
+  --family-canvas:#f2f2f7;
+  background:var(--family-canvas);
+  color:var(--family-ink);
+}
+.family-screen .family-page-head{
+  padding:12px 18px 14px;
+  background:#fff;
+  border-bottom:1px solid rgba(60,60,67,.10);
+}
+.family-screen .school-bar{min-height:48px}
+.family-screen .school-mark{width:44px;height:44px;border:0;box-shadow:none}
+.family-screen .school-name{color:var(--family-ink);font-family:var(--font-sans);text-shadow:none}
+.family-screen .school-name span:first-child{font-size:12px;font-weight:800;letter-spacing:.04em}
+.family-screen .school-name span:last-child{color:#66666b;font-size:9px;letter-spacing:.07em}
+.family-screen .bell-button{
+  width:40px;height:40px;border:0;border-radius:50%;
+  background:#f2f2f7;color:var(--family-blue);box-shadow:none;backdrop-filter:none;
+}
+.family-screen .family-page-title{margin-top:14px}
+.family-screen .family-page-title h1{
+  margin:0;color:var(--family-ink);font-family:var(--font-sans);
+  font-size:34px;line-height:1.02;font-weight:800;letter-spacing:-.045em;
+}
+.family-screen .family-page-title p{margin:5px 0 0;color:var(--family-secondary);font-size:13px;line-height:1.3}
+.family-screen .freshness{
+  width:min(100% - 36px,944px);max-width:none;margin:10px auto 0;padding:0 2px;
+  border:0;border-radius:0;background:transparent;color:#4f6d55;box-shadow:none;
+  font-size:10px;font-weight:650;
+}
+.family-screen .freshness>span{width:7px;height:7px;background:#34a853;box-shadow:none}
+
+.family-screen .family-content{
+  width:min(100%,980px);
+  margin:0 auto;
+  padding:12px 18px calc(28px + env(safe-area-inset-bottom));
+}
+.family-screen .family-priority{
+  position:relative;
+  margin:0;
+  padding:16px;
+  overflow:hidden;
+  border:0;border-radius:20px;
+  background:#fff;
+  color:var(--family-ink);
+  box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);
+}
+.family-screen .family-priority::after{display:none}
+.family-screen .family-priority p{
+  margin:0;color:var(--family-blue);font-size:10px;line-height:1;font-weight:700;
+  letter-spacing:.04em;text-transform:uppercase;
+}
+.family-screen .family-priority h2{
+  margin:5px 0 5px;color:var(--family-ink);font-family:var(--font-sans);
+  font-size:22px;line-height:1.15;font-weight:760;letter-spacing:-.025em;
+}
+.family-screen .family-priority span{
+  display:block;max-width:520px;color:var(--family-secondary);font-size:12px;line-height:1.4;
+}
+
+.family-screen .family-stats{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 12px;
+}
+.family-screen .family-stats article{
+  min-height:105px;display:flex;flex-direction:column;justify-content:center;
+  padding:12px 13px;text-align:left;
+  border:0;border-radius:16px;background:#fff;
+  box-shadow:0 1px 2px rgba(0,0,0,.035);
+}
+.family-screen .family-stats article>span{
+  color:var(--family-secondary);font-size:9.5px;line-height:1.15;font-weight:650;
+}
+.family-screen .family-stats strong{
+  display:block;margin:4px 0 3px;color:var(--family-ink);font-size:24px;line-height:1;font-weight:780;
+}
+.family-screen .family-stats small{
+  display:block;color:var(--family-secondary);font-size:9.5px;line-height:1.25;font-weight:500;
+}
+
+.family-screen .family-card{
+  margin:0 0 10px;padding:0;overflow:hidden;
+  border:0;border-radius:16px;background:#fff;
+  box-shadow:0 1px 2px rgba(0,0,0,.035);
+}
+.family-screen .family-disclosure>summary{
+  min-height:58px;display:grid;grid-template-columns:minmax(0,1fr) 28px;gap:10px;align-items:center;
+  padding:12px 14px;color:var(--family-ink);font-size:14px;line-height:1.2;font-weight:700;
+}
+.family-screen .disclosure-chevron{
+  width:28px;height:28px;border-radius:50%;display:grid;place-items:center;
+  background:#f2f2f7;color:#8e8e93;font-size:20px;
+}
+.family-screen details[open]>summary .disclosure-chevron{transform:rotate(90deg)}
+.family-screen .family-disclosure-body{
+  padding:0 14px 12px;border-top:1px solid var(--family-line);
+}
+.family-screen .family-section-hint{
+  margin:9px 0 3px;color:var(--family-secondary);font-size:10.5px;line-height:1.3;
+}
+
+.family-screen .family-actions{display:grid;margin:0}
+.family-screen .family-action{
+  width:100%;min-height:54px;
+  display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:center;
+  padding:9px 0;border:0;border-bottom:1px solid var(--family-line);
+  background:#fff;color:var(--family-ink);text-align:left;
+}
+.family-screen .family-action:last-child{border-bottom:0}
+.family-screen .family-action .box{
+  width:24px;height:24px;border:1.5px solid #8e8e93;border-radius:50%;
+  display:grid;place-items:center;color:#fff;
+}
+.family-screen .family-action .box .ui-icon{width:16px;height:16px}
+.family-screen .family-action.is-done .box{background:var(--family-green);border-color:var(--family-green)}
+.family-screen .family-action.is-done>span:last-child{color:#7b7b80;text-decoration:line-through}
+.family-screen .family-action>span:last-child{font-size:12px;line-height:1.35;font-weight:550}
+
+.family-screen .reading-policy{
+  min-height:72px;display:grid;grid-template-columns:42px minmax(0,1fr);gap:11px;align-items:center;
+  margin:0 0 10px;padding:11px 13px;
+  border:0;border-radius:16px;background:#eaf7ed;
+}
+.family-screen .reading-policy .round{
+  width:40px;height:40px;border-radius:12px;display:grid;place-items:center;
+  background:#fff;color:var(--family-green);font-size:17px;font-weight:800;
+}
+.family-screen .reading-policy h3{margin:0 0 3px;color:var(--family-ink);font-size:13px;line-height:1.2;font-weight:700}
+.family-screen .reading-policy p{margin:0;color:#4f6254;font-size:11px;line-height:1.35}
+
+.family-screen .family-static-card{padding:14px}
+.family-screen .family-card h3{margin:0;color:var(--family-ink);font-size:16px;line-height:1.2;font-weight:750}
+.family-screen .notice-list{
+  display:grid;gap:0;margin:9px 0 0;padding:0;list-style:none;
+}
+.family-screen .notice{
+  min-height:45px;display:grid;grid-template-columns:8px minmax(0,1fr);gap:10px;align-items:start;
+  padding:9px 0;border-bottom:1px solid var(--family-line);border-radius:0;background:#fff;
+}
+.family-screen .notice:last-child{border-bottom:0}
+.family-screen .notice-dot{
+  width:7px;height:7px;margin-top:5px;border-radius:50%;background:var(--family-blue);box-shadow:none;
+}
+.family-screen .notice p{margin:0;color:var(--family-ink);font-size:11.5px;line-height:1.4}
+
+.family-screen .install-card{
+  display:grid;grid-template-columns:38px minmax(0,1fr);gap:10px;
+  margin:0;padding:12px 13px;
+  border:0;border-radius:16px;background:#edf5ff;
+}
+.family-screen .install-icon{
+  width:36px;height:36px;border-radius:10px;display:grid;place-items:center;
+  background:#fff;color:var(--family-blue);
+}
+.family-screen .install-icon .ui-icon{width:19px;height:19px}
+.family-screen .install-card h3{margin:0 0 2px;color:var(--family-ink);font-size:13px;font-weight:700}
+.family-screen .install-card p{margin:0;color:var(--family-secondary);font-size:10.5px;line-height:1.35}
+.family-screen .install-action{
+  min-height:36px;margin-top:8px;padding:7px 11px;border:0;border-radius:10px;
+  background:var(--family-blue);color:#fff;font-size:10.5px;font-weight:700;
+}
+
+@media(max-width:520px){
+  .family-screen .family-page-head{padding:10px 14px 12px}
+  .family-screen .family-page-title h1{font-size:31px}
+  .family-screen .freshness{width:calc(100% - 28px);margin-top:8px}
+  .family-screen .family-content{padding:10px 10px calc(112px + env(safe-area-inset-bottom))}
+  .family-screen .family-priority{border-radius:18px;padding:14px}
+  .family-screen .family-priority h2{font-size:20px}
+  .family-screen .family-stats article{min-height:96px;border-radius:14px}
+  .family-screen .family-card,
+  .family-screen .reading-policy,
+  .family-screen .install-card{border-radius:14px}
+}
+@media(max-width:360px){
+  .family-screen .family-content{padding-left:7px;padding-right:7px}
+  .family-screen .family-stats{gap:6px}
+  .family-screen .family-stats article{padding:10px}
+  .family-screen .family-stats strong{font-size:21px}
+}
+@media(prefers-reduced-motion:reduce){
+  .family-screen *{transition:none!important}
+}
