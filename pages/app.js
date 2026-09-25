@@ -143,7 +143,7 @@ function renderCalendar(){
       (lunch?'<div class="calendar-lunch"><span>🍎</span><div><b>Lunch</b><p>'+esc(lunch.items.join(", ").replace(/, ([^,]*)$/,", and $1"))+'</p></div></div>':'')+
     '</section>'+
     '<section class="month-agenda"><h2>'+MONTHS[m]+' school dates</h2>'+agenda.map(o=>'<div class="calendar-event-list"><div><i class="'+kindClass(o.x)+'"></i><span><strong>'+esc(fmtShort(o.d))+' · '+esc(o.x.label)+'</strong></span></div></div>').join("")+'</section>'+
-    '<section class="specials-card"><h2>Specials</h2><p>Monday: Computer · Tuesday: Music, Art, Guidance · Wednesday: Mass · Thursday: Gym · Friday: Library</p></section>'+
+    '<section class="specials-card"><div class="specials-head"><span class="specials-mark" aria-hidden="true">★</span><div><p>WEEKLY ROTATION</p><h2>Specials</h2></div></div><div class="specials-list"><div class="special-row"><span>Mon</span><strong>Computer</strong></div><div class="special-row"><span>Tue</span><strong>Music · Art · Guidance</strong></div><div class="special-row"><span>Wed</span><strong>Mass</strong></div><div class="special-row"><span>Thu</span><strong>Gym</strong></div><div class="special-row"><span>Fri</span><strong>Library</strong></div></div></section>'+
     '<section class="next-month-card"><h2>Coming in '+MONTHS[(m+1)%12]+'</h2>'+nextMonth.map(o=>'<div><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join("")+'</section>'+
     '</div>';
 }
@@ -163,7 +163,7 @@ function renderStudy(){
   stack().innerHTML='<div class="screen study-screen" role="region" aria-label="Study room">'+
     header("SMALL STEPS, CALM PRACTICE","Study room")+
     '<section class="study-intro"><span class="study-star">★</span><div><h2>Everything for this week</h2><p>All posted words and subjects stay together in this quick guide. Start with the closest test.</p></div></section>'+
-    '<section class="study-at-a-glance"><p>QUICK LOOK</p><h2>This week’s essentials</h2>'+essentials.map(x=>'<div><strong>'+esc(x[0])+'</strong><span>'+esc(x[1])+'</span></div>').join("")+'</section>'+
+    '<section class="study-at-a-glance"><div class="quick-look-head"><span class="quick-look-mark" aria-hidden="true">✓</span><div><p>QUICK LOOK</p><h2>This week’s essentials</h2></div></div><ol>'+essentials.map(x=>'<li><time>'+esc(x[0])+'</time><span>'+esc(x[1])+'</span></li>').join("")+'</ol></section>'+
     '<nav class="study-jumps"><a href="#study-religion">Religion</a><a href="#study-reading">Reading</a><a href="#study-math">Math</a><a href="#study-spelling">Spelling</a><a href="#study-sight">Sight words</a><a href="./game/">Game</a></nav>'+
     subjectCard("study-religion","religion",rel?.subject||"Religion",rel)+
     subjectCard("study-reading","reading","Reading",r)+
@@ -185,7 +185,7 @@ function renderFamily(){
     '<div class="family-stats"><div><strong>'+tests+'</strong><span>test days</span></div><div><strong>$17</strong><span>stationary money due Sept. 23</span></div></div>'+
     '<section class="parent-card"><h3>Family actions</h3><ul>'+actions.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></section>'+
     '<section class="policy-card"><span>20</span><div><h3>Reading every day</h3><p>Read or be read to for 20 minutes and keep the Reading Log in the homework folder.</p></div></section>'+
-    '<section class="parent-card conflicts"><h3>Please verify</h3><div><strong>Current posting</strong><p>The teacher Homework page does not show a posting date, so the app labels those items as the latest posting rather than assigning a weekday.</p></div></section>'+
+    ''+
     '<section class="parent-card sources"><h3>Current notices</h3>'+notices.map(x=>'<div><span class="status ok"></span><p>'+esc(x)+'</p></div>').join("")+'</section>'+
     '<section class="parent-card game-controls"><h3>Game privacy and controls</h3><p>School Star World keeps game progress on this device unless you export a backup.</p><a href="./game/">Open School Star World</a></section>'+
     '<section class="privacy-card policy-card"><span>✓</span><div><h3>Privacy first</h3><p>No student IDs or private classmates’ information are used here.</p></div></section>'+

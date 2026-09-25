@@ -63,3 +63,24 @@ test("historical layout remains phone-safe and interactive",async({page})=>{
     await expect(dates.nth(5)).toHaveClass(/active/);
   }
 });
+
+
+test("requested polish is present",async({page})=>{
+  await openTab(page,"Calendar");
+  await expect(page.locator(".specials-card")).toBeVisible();
+  await expect(page.locator(".special-row")).toHaveCount(5);
+
+  await openTab(page,"Study");
+  await expect(page.locator(".quick-look-head")).toBeVisible();
+  expect(await page.locator(".study-at-a-glance li").count()).toBeGreaterThanOrEqual(3);
+
+  await openTab(page,"Family");
+  await expect(page.getByText("Please verify",{exact:true})).toHaveCount(0);
+
+  const navStyles=await page.evaluate(()=>({
+    fill:getComputedStyle(document.querySelector(".bottom-nav .nav-icon svg")).fill,
+    stroke:getComputedStyle(document.querySelector(".bottom-nav .nav-icon svg")).stroke,
+  }));
+  expect(navStyles.fill).toBe("none");
+  expect(navStyles.stroke).not.toBe("none");
+});
