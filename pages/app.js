@@ -359,7 +359,7 @@ function installCard(){
   return '<section class="install-card"><span class="install-icon">'+icon("home")+'</span><div><h3>'+esc(experience.title)+'</h3><p>'+esc(experience.detail)+'</p>'+(experience.canPrompt?'<button class="install-action" type="button" data-install-app>Install app</button>':'')+'</div></section>';
 }
 function renderFamily(){
-  const priority=weekPriority(),[mon,fri]=currentWeekRange(),now=today();
+  const priority=weekPriority(),[,fri]=currentWeekRange(),now=today();
   const tests=(pack?.importantDates||[]).map(x=>({x,span:eventSpan(x.date)}))
     .filter(o=>o.span&&o.span.end>=now&&o.span.start<=fri&&kindClass(o.x)==="test").length;
   const dueItems=(pack?.importantDates||[]).map(x=>({x,span:eventSpan(x.date)}))
@@ -369,9 +369,9 @@ function renderFamily(){
   const actions=[...(pack?.homework||[]).map(x=>x.task),...currentReminders()].filter((x,i,a)=>x&&a.indexOf(x)===i).slice(0,12);
   const notices=currentParentNotices(),gaps=pack?.gaps||[];
   stack().innerHTML='<div class="screen family-screen" role="region" aria-label="Family dashboard">'+
-    scene("family","FAMILY VIEW","Family","The practical details that keep school days running smoothly",false)+freshness()+
-    '<div class="family-content"><section class="family-priority"><p>WEEKLY PRIORITY</p><h2>'+esc(priority.title)+'</h2><span>'+esc(priority.detail)+'</span></section>'+
-    '<div class="family-stats"><article><strong>'+tests+'</strong><span>tests or assessments remaining this week</span></article><article><strong>'+esc(nextDue?fmtCompactDate(nextDue.span.start):"✓")+'</strong><span>'+esc(nextDue?nextDue.x.label:"No posted deadline due")+'</span></article></div>'+
+    '<header class="family-page-head">'+schoolHeader()+'<div class="family-page-title"><h1>Family</h1><p>What needs your attention</p></div></header>'+freshness()+
+    '<div class="family-content"><section class="family-priority"><p>This week</p><h2>'+esc(priority.title)+'</h2><span>'+esc(priority.detail)+'</span></section>'+
+    '<div class="family-stats"><article><span>Assessments</span><strong>'+tests+'</strong><small>remaining this week</small></article><article><span>Next deadline</span><strong>'+esc(nextDue?fmtCompactDate(nextDue.span.start):"Clear")+'</strong><small>'+esc(nextDue?nextDue.x.label:"Nothing posted")+'</small></article></div>'+
     '<details class="family-card family-disclosure" open><summary><span>Family checklist</span><span class="disclosure-chevron" aria-hidden="true">›</span></summary><div class="family-disclosure-body"><p class="family-section-hint">Tap a task to mark it complete. Progress is saved on this device.</p><div class="family-actions">'+actions.map((a,i)=>{const done=familyChecked(a,i),label=(done?"Completed: ":"Mark complete: ")+a+(done?". Tap to mark incomplete.":"");return '<button class="family-action '+(done?'is-done':'')+'" type="button" data-family-check="'+i+'" aria-pressed="'+done+'" aria-label="'+esc(label)+'"><span class="box">'+(done?icon("check"):'')+'</span><span>'+esc(a)+'</span></button>'}).join("")+'</div></div></details>'+
     '<section class="reading-policy"><span class="round">20</span><div><h3>Reading every day</h3><p>Read or be read to for 20 minutes and keep the Reading Log in the homework folder.</p></div></section>'+
     '<section class="family-card family-static-card" aria-labelledby="family-current-notices"><h3 id="family-current-notices">Current notices</h3><ul class="notice-list static-notice-list" role="list">'+notices.map(n=>'<li class="notice"><span class="notice-dot" aria-hidden="true"></span><p>'+esc(n)+'</p></li>').join("")+'</ul></section>'+
