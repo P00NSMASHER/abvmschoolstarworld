@@ -37,6 +37,24 @@ test("Today uses the clean native-style dashboard hierarchy",async({page})=>{
   expect(styles.radius).toBeGreaterThanOrEqual(18);
 });
 
+test("Week uses the clean native-style agenda hierarchy",async({page})=>{
+  await openTab(page,"Week");
+  await expect(page.locator(".week-page-title h1")).toHaveText("Week");
+  await expect(page.locator(".day-picker")).toBeVisible();
+  await expect(page.locator(".day-detail")).toBeVisible();
+  await expect(page.locator(".week-screen .top-scene")).toHaveCount(0);
+  const styles=await page.evaluate(()=>({
+    canvas:getComputedStyle(document.querySelector(".week-screen")).backgroundColor,
+    detail:getComputedStyle(document.querySelector(".day-detail")).backgroundColor,
+    radius:parseFloat(getComputedStyle(document.querySelector(".day-detail")).borderRadius),
+    picker:getComputedStyle(document.querySelector(".day-picker button.active")).backgroundColor,
+  }));
+  expect(styles.canvas).toBe("rgb(242, 242, 247)");
+  expect(styles.detail).toBe("rgb(255, 255, 255)");
+  expect(styles.radius).toBeGreaterThanOrEqual(18);
+  expect(styles.picker).toBe("rgb(0, 102, 204)");
+});
+
 test("calendar controls remain interactive",async({page})=>{
   await openTab(page,"Calendar");
   const heading=page.locator(".calendar-heading h2");
