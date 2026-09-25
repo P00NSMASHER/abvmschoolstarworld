@@ -88,7 +88,7 @@ test("regular date gives a calm empty state rather than broken detail",async({pa
   await expect(page.locator(".calendar-empty")).toContainText(/Regular school day|No special events/i);
 });
 
-test("Calendar uses the clean modern planner hierarchy",async({page})=>{
+test("Calendar uses the premium polished planner hierarchy",async({page})=>{
   await openCalendar(page);
   await expect(page.getByRole("heading",{name:"Calendar",exact:true})).toBeVisible();
   await expect(page.getByText("School Month at a Glance")).toHaveCount(0);
@@ -96,21 +96,25 @@ test("Calendar uses the clean modern planner hierarchy",async({page})=>{
   await expect(page.locator(".calendar-day-hero")).toHaveCount(0);
   await expect(page.locator(".calendar-overlay-panel")).toHaveCount(0);
   await expect(page.locator(".calendar-detail-list")).toBeVisible();
+  await expect(page.locator(".calendar-view-kicker")).toContainText(/MONTH VIEW|AGENDA/);
 
   const styles=await page.evaluate(()=> {
     const month=getComputedStyle(document.querySelector(".calendar-card"));
     const detail=getComputedStyle(document.querySelector(".calendar-day-card"));
+    const active=getComputedStyle(document.querySelector(".calendar-tabs button.active"));
     return{
       monthShadow:month.boxShadow,
       detailShadow:detail.boxShadow,
-      detailBackground:detail.backgroundColor,
+      detailBackgroundImage:detail.backgroundImage,
       detailRadius:parseFloat(detail.borderRadius),
+      activeBackground:active.backgroundImage,
     };
   });
-  expect(styles.monthShadow).toBe("none");
-  expect(styles.detailShadow).toBe("none");
-  expect(styles.detailBackground).toBe("rgb(238, 241, 243)");
-  expect(styles.detailRadius).toBeLessThanOrEqual(18);
+  expect(styles.monthShadow).not.toBe("none");
+  expect(styles.detailShadow).not.toBe("none");
+  expect(styles.detailBackgroundImage).not.toBe("none");
+  expect(styles.detailRadius).toBeGreaterThanOrEqual(20);
+  expect(styles.activeBackground).not.toBe("none");
 });
 
 test("month cells show one concise label and a separate count for extra items",async({page})=>{
