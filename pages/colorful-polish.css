@@ -1,0 +1,282 @@
+/*
+  Color-forward polish — layered on top of the clean system.
+  Keeps the simplified information architecture while restoring energy,
+  tab identity, and visual delight.
+*/
+:root{
+  --app-blue:#1778f2;
+  --app-cyan:#41c8ff;
+  --app-purple:#8b5cf6;
+  --app-pink:#ff3b81;
+  --app-green:#22b573;
+  --app-orange:#ff8a1f;
+  --app-yellow:#ffd84d;
+  --app-red:#ef4e57;
+}
+
+.phone-app{
+  background:
+    radial-gradient(circle at 10% 0%,rgba(65,200,255,.12),transparent 24%),
+    radial-gradient(circle at 92% 0%,rgba(255,216,77,.12),transparent 22%),
+    #f4f7fb;
+}
+
+/* Scenic art returns in a controlled way: image on the right, readable text on the left. */
+.today-screen .today-page-head{
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.99) 0%,rgba(255,255,255,.94) 54%,rgba(255,255,255,.48) 100%),
+    url("./assets/hero-today.webp") center 44%/cover no-repeat;
+}
+.week-screen .week-page-head{
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.99) 0%,rgba(255,255,255,.94) 54%,rgba(255,255,255,.46) 100%),
+    url("./assets/hero-week.webp") center 42%/cover no-repeat;
+}
+.calendar-screen .calendar-page-head{
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.99) 0%,rgba(255,255,255,.94) 54%,rgba(255,255,255,.44) 100%),
+    url("./assets/hero-calendar.webp") center 45%/cover no-repeat;
+}
+.study-screen .study-page-head{
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.99) 0%,rgba(255,255,255,.94) 54%,rgba(255,255,255,.42) 100%),
+    url("./assets/hero-study.webp") center 44%/cover no-repeat;
+}
+.family-screen .family-page-head{
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.99) 0%,rgba(255,255,255,.94) 54%,rgba(255,255,255,.42) 100%),
+    url("./assets/hero-family.webp") center 44%/cover no-repeat;
+}
+
+.today-screen .today-page-title h1{color:#0f4fbf}
+.week-screen .week-page-title h1{color:#6540cf}
+.calendar-screen .calendar-page-title h1{color:#d9206b}
+.study-screen .study-page-title h1{color:#168755}
+.family-screen .family-page-title h1{color:#e46712}
+
+.today-screen .today-page-title p,
+.week-screen .week-page-title p,
+.calendar-screen .calendar-page-title p,
+.study-screen .study-page-title p,
+.family-screen .family-page-title p{
+  color:#4e6072;
+}
+
+/* Stronger top cards */
+.today-screen .today-overview{
+  background:
+    linear-gradient(135deg,#ffffff 0%,#eef8ff 60%,#e4f6ff 100%);
+  box-shadow:0 10px 28px rgba(23,120,242,.10);
+}
+.week-screen .day-detail{
+  background:
+    linear-gradient(145deg,#ffffff 0%,#f7f2ff 58%,#efe8ff 100%);
+  box-shadow:0 10px 28px rgba(139,92,246,.10);
+}
+.calendar-screen .calendar-card{
+  background:
+    linear-gradient(180deg,#fff 0%,#fffafd 56%,#fff3f8 100%);
+  box-shadow:0 10px 28px rgba(255,59,129,.09);
+}
+.study-screen .study-at-a-glance{
+  background:
+    linear-gradient(145deg,#ffffff 0%,#f0fff7 58%,#e6f9ef 100%);
+  box-shadow:0 10px 28px rgba(34,181,115,.10);
+}
+.family-screen .family-priority{
+  background:
+    linear-gradient(135deg,#fff 0%,#fff7ec 56%,#fff0df 100%);
+  box-shadow:0 10px 28px rgba(255,138,31,.10);
+}
+
+/* Today */
+.today-screen .big-date{
+  background:linear-gradient(160deg,#ff5a63,#e53448);
+  box-shadow:0 8px 18px rgba(229,52,72,.18);
+}
+.today-screen .event-row{
+  margin:4px 0;
+  padding:9px 10px;
+  border-bottom:0;
+  border-radius:12px;
+}
+.today-screen .event-row.test{background:#fff0f5}
+.today-screen .event-row.faith{background:#f3efff}
+.today-screen .event-row.due{background:#fff7df}
+.today-screen .event-row.club{background:#ecfaef}
+.today-screen .event-row.special{background:#eaf6ff}
+.today-screen .event-row.regular{background:#effaf1}
+.today-screen .homework-dashboard{
+  background:linear-gradient(145deg,#fff 0%,#f8f3ff 100%);
+  box-shadow:0 8px 24px rgba(139,92,246,.08);
+}
+.today-screen .lunch-card{
+  background:linear-gradient(145deg,#fffdf7,#fff5dd);
+  box-shadow:0 8px 24px rgba(255,184,46,.10);
+}
+
+/* Week */
+.week-screen .day-picker button{
+  background:linear-gradient(180deg,#fff,#fbfbff);
+}
+.week-screen .day-picker button.active{
+  background:linear-gradient(180deg,#9b6df9,#7147dc);
+  box-shadow:0 8px 16px rgba(113,71,220,.22);
+}
+.week-screen .day-picker button i{background:#ffbf3f}
+.week-screen .day-picker button:nth-child(1) i{background:#ff5b78}
+.week-screen .day-picker button:nth-child(2) i{background:#ffad33}
+.week-screen .day-picker button:nth-child(3) i{background:#22b573}
+.week-screen .day-picker button:nth-child(4) i{background:#41a7ff}
+.week-screen .day-picker button:nth-child(5) i{background:#9b6df9}
+.week-screen .selected-special{
+  background:linear-gradient(135deg,#edf7ff,#e6efff);
+}
+.week-screen .reminder-strip{
+  background:linear-gradient(135deg,#effcf3,#e8f8ee);
+}
+.week-screen .future-card{
+  background:linear-gradient(145deg,#fff,#f8f4ff);
+}
+
+/* Calendar */
+.calendar-screen .calendar-tabs button.active{
+  background:linear-gradient(180deg,#ff4b90,#df256d);
+  color:#fff;
+  box-shadow:0 3px 10px rgba(223,37,109,.22);
+}
+.calendar-screen .calendar-grid button{
+  background:#fff;
+}
+.calendar-screen .calendar-grid button.active:not(.closed):not(.halfday){
+  background:linear-gradient(145deg,#eef8ff,#fff2f8);
+  box-shadow:inset 0 0 0 2px rgba(255,59,129,.45),0 7px 16px rgba(255,59,129,.10);
+}
+.calendar-screen .calendar-grid button.active:not(.closed):not(.halfday)>strong{
+  background:linear-gradient(180deg,#ff4b90,#d9286b);
+}
+.calendar-screen .calendar-legend span{
+  padding:4px 7px;
+  border-radius:999px;
+  background:#fff;
+  box-shadow:0 1px 4px rgba(25,52,73,.05);
+}
+.calendar-screen .calendar-day-card{
+  background:
+    linear-gradient(145deg,#fff 0%,#fff7fb 62%,#f4f8ff 100%);
+}
+.calendar-screen .calendar-detail-row.event.test .calendar-detail-icon{background:#ffe7ef}
+.calendar-screen .calendar-detail-row.special.gym .calendar-detail-icon{background:#e7f8ee}
+.calendar-screen .calendar-detail-row.special.music .calendar-detail-icon{background:#f2eaff}
+.calendar-screen .calendar-detail-row.special.mass .calendar-detail-icon{background:#e8efff}
+.calendar-screen .calendar-detail-row.special.library .calendar-detail-icon{background:#fff3d8}
+.calendar-screen .calendar-detail-row.special.computer .calendar-detail-icon{background:#fff0e3}
+
+/* Study */
+.study-screen .study-section-nav button{
+  box-shadow:none;
+  border:0;
+}
+.study-screen .study-section-nav button:nth-child(1){background:#fff0f5;color:#b61f58}
+.study-screen .study-section-nav button:nth-child(2){background:#fff5e8;color:#a95b00}
+.study-screen .study-section-nav button:nth-child(3){background:#f1ebff;color:#7543bd}
+.study-screen .study-section-nav button:nth-child(4){background:#eaf4ff;color:#1967a8}
+.study-screen .study-section-nav button:nth-child(5){background:#e9f9ef;color:#167a4a}
+.study-screen .subject-card.reading{background:linear-gradient(145deg,#fff,#fff3f7)!important}
+.study-screen .subject-card.spelling{background:linear-gradient(145deg,#fff,#fff8ea)!important}
+.study-screen .subject-card.religion{background:linear-gradient(145deg,#fff,#f5f0ff)!important}
+.study-screen .subject-card.math{background:linear-gradient(145deg,#fff,#edf6ff)!important}
+.study-screen .subject-card.sight{background:linear-gradient(145deg,#fff,#edf9f6)!important}
+.study-screen .calm-card{
+  background:linear-gradient(145deg,#fff,#effaf3);
+}
+.study-screen .study-tip{
+  background:linear-gradient(145deg,#fff,#edf5ff);
+}
+
+/* Family */
+.family-screen .family-stats article:nth-child(1){
+  background:linear-gradient(145deg,#fff,#f5efff);
+}
+.family-screen .family-stats article:nth-child(2){
+  background:linear-gradient(145deg,#fff,#edf7ff);
+}
+.family-screen .reading-policy{
+  background:linear-gradient(135deg,#e7faef,#dff6e8);
+}
+.family-screen .family-static-card{
+  background:linear-gradient(145deg,#fff,#fff8ee);
+}
+.family-screen .notice:nth-child(3n+1) .notice-dot{background:#ff3b81}
+.family-screen .notice:nth-child(3n+2) .notice-dot{background:#8b5cf6}
+.family-screen .notice:nth-child(3n+3) .notice-dot{background:#22b573}
+.family-screen .install-card{
+  background:linear-gradient(135deg,#eef7ff,#f5f1ff);
+}
+
+/* More expressive icons */
+.today-screen .event-icon,
+.week-screen .event-icon,
+.calendar-screen .calendar-detail-icon,
+.study-screen .subject-head .icon,
+.study-screen .essential-icon,
+.family-screen .install-icon{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 4px 10px rgba(42,64,85,.08);
+}
+
+/* Tab-specific bottom nav color identity */
+.bottom-nav button[data-tab="today"].active{color:#1778f2}
+.bottom-nav button[data-tab="today"].active .nav-icon{background:#dceeff;color:#1778f2}
+.bottom-nav button[data-tab="week"].active{color:#7a49dc}
+.bottom-nav button[data-tab="week"].active .nav-icon{background:#eee5ff;color:#7a49dc}
+.bottom-nav button[data-tab="calendar"].active{color:#dc2e71}
+.bottom-nav button[data-tab="calendar"].active .nav-icon{background:#ffe2ee;color:#dc2e71}
+.bottom-nav button[data-tab="study"].active{color:#15935a}
+.bottom-nav button[data-tab="study"].active .nav-icon{background:#dcf5e7;color:#15935a}
+.bottom-nav button[data-tab="family"].active{color:#e46c14}
+.bottom-nav button[data-tab="family"].active .nav-icon{background:#fff0df;color:#e46c14}
+
+.bottom-nav{
+  background:rgba(255,255,255,.94);
+  border-top:1px solid rgba(46,62,79,.10);
+  box-shadow:0 -10px 30px rgba(28,50,72,.07);
+}
+
+/* Slightly more dimensional cards without going back to glossy clutter. */
+.today-screen .today-overview,
+.today-screen .homework-dashboard,
+.today-screen .lunch-card,
+.week-screen .day-detail,
+.week-screen .future-card,
+.week-screen .reminder-strip,
+.calendar-screen .calendar-card,
+.calendar-screen .calendar-day-card,
+.study-screen .study-at-a-glance,
+.study-screen .subject-card,
+.family-screen .family-priority,
+.family-screen .family-card,
+.family-screen .family-stats article{
+  border:1px solid rgba(255,255,255,.75);
+}
+
+/* Small-screen balance: keep the imagery visible but subordinate. */
+@media(max-width:520px){
+  .today-screen .today-page-head,
+  .week-screen .week-page-head,
+  .calendar-screen .calendar-page-head,
+  .study-screen .study-page-head,
+  .family-screen .family-page-head{
+    background-size:auto 128px;
+    background-position:right top;
+    background-repeat:no-repeat;
+  }
+  .today-screen .today-page-head{background-color:#fff}
+  .week-screen .week-page-head{background-color:#fff}
+  .calendar-screen .calendar-page-head{background-color:#fff}
+  .study-screen .study-page-head{background-color:#fff}
+  .family-screen .family-page-head{background-color:#fff}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .colorful-polish *{transition:none!important}
+}
