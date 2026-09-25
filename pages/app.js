@@ -178,6 +178,16 @@ function renderWeek(){
 function calendarDisplayText(value){
   return String(value||"").replace(/\bFundraiswer\b/gi,"Fundraiser");
 }
+function calendarSpecialClass(value){
+  const v=String(value||"").toLowerCase();
+  if(/music/.test(v))return"music";
+  if(/mass|church|relig/.test(v))return"mass";
+  if(/gym|pe\b/.test(v))return"gym";
+  if(/library/.test(v))return"library";
+  if(/computer|technology/.test(v))return"computer";
+  if(/art/.test(v))return"art";
+  return"special";
+}
 function calendarDetailRow(iconName,type,title,klass=""){
   return '<div class="calendar-detail-row '+klass+'"><span class="calendar-detail-icon" aria-hidden="true">'+icon(iconName)+'</span><div><small>'+esc(type)+'</small><strong>'+esc(calendarDisplayText(title))+'</strong></div></div>';
 }
@@ -192,6 +202,7 @@ function monthGrid(year,month){
     const weekend=[0,6].includes(d.getDay()),closed=scheduleClass==="closed",halfday=scheduleClass==="halfday";
     const distinctSpecial=Boolean(special&&!closed&&!contentEvents.some(item=>sameCalendarDetail(item.label,special)));
     const specialPrimary=!primary&&!schedule&&distinctSpecial?special.split(",")[0].trim():"";
+    const specialClass=calendarSpecialClass(specialPrimary||(!primary&&!schedule?special:""));
     const label=schedule?scheduleStatusText(schedule):calendarCellLabel(primary,specialPrimary);
     const hiddenCount=Math.max(0,contentEvents.length-(primary?1:0)+(distinctSpecial?1:0)+(schedule?1:0)-(schedule?1:0));
     const totalItems=contentEvents.length+(schedule?1:0)+(distinctSpecial?1:0);
@@ -201,6 +212,7 @@ function monthGrid(year,month){
       closed?"closed":"",
       halfday?"halfday":"",
       primaryClass?("event-"+primaryClass):"",
+      (!primaryClass&&!schedule&&distinctSpecial)?("special-"+specialClass):"",
       sameDay(d,today())?"today":"",
       calendarDay&&sameDay(d,calendarDay)?"active":""
     ].filter(Boolean).join(" ");
@@ -210,7 +222,7 @@ function monthGrid(year,month){
     ].filter(Boolean);
     html+='<button class="'+classes+'" type="button" data-cal-day="'+d.toISOString()+'" aria-pressed="'+Boolean(calendarDay&&sameDay(d,calendarDay))+'" aria-label="'+esc(fmtDate(d)+(ariaDetails.length?': '+ariaDetails.join(', '):''))+'">'+
       '<strong>'+day+'</strong>'+
-      (label?'<span class="calendar-cell-label '+(scheduleClass||primaryClass||'special')+'">'+esc(calendarDisplayText(label))+'</span>':'')+
+      (label?'<span class="calendar-cell-label '+(scheduleClass||primaryClass||specialClass||'special')+'">'+esc(calendarDisplayText(label))+'</span>':'')+
       (moreCount?'<span class="calendar-cell-more">+'+moreCount+'</span>':'')+
       '</button>';
   }
@@ -285,7 +297,7 @@ function renderCalendar(){
       specialIconName(displaySpecial),
       schedule&&kindClass(schedule)==="halfday"?"Usual class special":"Class special",
       displaySpecial,
-      "special"
+      "special "+calendarSpecialClass(displaySpecial)
     ));
   }
   if(lunch){
