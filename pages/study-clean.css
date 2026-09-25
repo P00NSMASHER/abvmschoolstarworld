@@ -1,0 +1,268 @@
+/*
+  Study tab — clean native-style review hub.
+  Scoped so the remaining Family tab can be upgraded independently.
+*/
+.study-screen{
+  --study-blue:#0066cc;
+  --study-green:#248a3d;
+  --study-orange:#b45f00;
+  --study-pink:#b4235a;
+  --study-purple:#7b43a1;
+  --study-ink:#1c1c1e;
+  --study-secondary:#5f5f64;
+  --study-line:#e5e5ea;
+  --study-canvas:#f2f2f7;
+  background:var(--study-canvas);
+  color:var(--study-ink);
+}
+.study-screen .study-page-head{
+  padding:12px 18px 14px;
+  background:#fff;
+  border-bottom:1px solid rgba(60,60,67,.10);
+}
+.study-screen .school-bar{min-height:48px}
+.study-screen .school-mark{width:44px;height:44px;border:0;box-shadow:none}
+.study-screen .school-name{color:var(--study-ink);font-family:var(--font-sans);text-shadow:none}
+.study-screen .school-name span:first-child{font-size:12px;font-weight:800;letter-spacing:.04em}
+.study-screen .school-name span:last-child{color:#66666b;font-size:9px;letter-spacing:.07em}
+.study-screen .bell-button{width:40px;height:40px;border:0;border-radius:50%;background:#f2f2f7;color:var(--study-blue);box-shadow:none;backdrop-filter:none}
+.study-screen .study-page-title{margin-top:14px}
+.study-screen .study-page-title h1{margin:0;color:var(--study-ink);font-family:var(--font-sans);font-size:34px;line-height:1.02;font-weight:800;letter-spacing:-.045em}
+.study-screen .study-page-title p{margin:5px 0 0;color:var(--study-secondary);font-size:13px;line-height:1.3}
+
+.study-screen .study-content{
+  width:min(100%,980px);
+  margin:0 auto;
+  padding:14px 18px calc(28px + env(safe-area-inset-bottom));
+}
+.study-screen .study-at-a-glance{
+  margin:0;
+  padding:16px;
+  border:0;
+  border-radius:20px;
+  background:#fff;
+  box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);
+}
+.study-screen .study-card-head{
+  padding-bottom:11px;
+  border-bottom:1px solid var(--study-line);
+}
+.study-screen .study-card-head span{
+  display:block;color:var(--study-blue);font-size:10px;line-height:1;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+}
+.study-screen .study-card-head h2{
+  margin:4px 0 0;color:var(--study-ink);font-family:var(--font-sans);font-size:22px;line-height:1.1;font-weight:760;letter-spacing:-.03em;
+}
+.study-screen .essential-row{
+  min-height:58px;
+  display:grid;
+  grid-template-columns:38px minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+  padding:9px 0;
+  border:0;
+  border-bottom:1px solid var(--study-line);
+}
+.study-screen .essential-row:last-child{border-bottom:0}
+.study-screen .essential-icon{
+  width:36px;height:36px;border-radius:10px;display:grid;place-items:center;
+}
+.study-screen .essential-icon .ui-icon{width:19px;height:19px}
+.study-screen .essential-icon.green{background:#e9f7ed;color:var(--study-green)}
+.study-screen .essential-icon.pink{background:#ffebf0;color:var(--study-pink)}
+.study-screen .essential-icon.yellow{background:#fff3dc;color:#8a5a00}
+.study-screen .essential-icon.blue{background:#edf5ff;color:var(--study-blue)}
+.study-screen .essential-row time{display:block;color:var(--study-secondary);font-size:9.5px;line-height:1.15;font-weight:650}
+.study-screen .essential-row strong{display:block;margin-top:2px;color:var(--study-ink);font-size:13px;line-height:1.3;font-weight:650}
+
+.study-screen .study-section-nav{
+  display:flex;
+  gap:6px;
+  overflow-x:auto;
+  margin:12px 0 14px;
+  padding:0 0 2px;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.study-screen .study-section-nav::-webkit-scrollbar{display:none}
+.study-screen .study-section-nav button{
+  flex:0 0 auto;
+  min-height:36px;
+  padding:7px 11px;
+  border:0;
+  border-radius:999px;
+  background:#fff;
+  color:var(--study-blue);
+  box-shadow:inset 0 0 0 1px rgba(60,60,67,.10);
+  font-size:10.5px;
+  line-height:1;
+  font-weight:650;
+}
+.study-screen .study-section-nav button:active{transform:scale(.97)}
+
+.study-screen .study-section-label{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+  margin:0 2px 7px;
+}
+.study-screen .study-section-label span{color:var(--study-ink);font-size:18px;line-height:1.1;font-weight:750}
+.study-screen .study-section-label p{margin:0;color:var(--study-secondary);font-size:10.5px;line-height:1.3;text-align:right}
+
+.study-screen .subject-card{
+  margin:0 0 9px;
+  padding:0;
+  overflow:hidden;
+  border:0;
+  border-radius:16px;
+  background:#fff!important;
+  box-shadow:0 1px 2px rgba(0,0,0,.035);
+}
+.study-screen .subject-card::before{display:none}
+.study-screen .subject-disclosure>summary{
+  min-height:62px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 28px;
+  gap:9px;
+  align-items:center;
+  padding:10px 13px;
+}
+.study-screen .subject-disclosure .subject-head{
+  display:grid;
+  grid-template-columns:38px minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+}
+.study-screen .subject-head .icon{
+  width:36px;height:36px;border-radius:10px;display:grid;place-items:center;
+  background:#f2f2f7;color:var(--study-blue);box-shadow:none;
+}
+.study-screen .subject-head .icon .ui-icon{width:19px;height:19px}
+.study-screen .subject-card.reading .subject-head .icon{background:#ffebf0;color:var(--study-pink)}
+.study-screen .subject-card.spelling .subject-head .icon{background:#fff3dc;color:#8a5a00}
+.study-screen .subject-card.religion .subject-head .icon{background:#f3ebf8;color:var(--study-purple)}
+.study-screen .subject-card.math .subject-head .icon{background:#edf5ff;color:var(--study-blue)}
+.study-screen .subject-card.sight .subject-head .icon{background:#eaf7f8;color:#277f83}
+.study-screen .subject-kicker{
+  margin:0 0 2px;
+  color:var(--study-secondary);
+  font-size:8.5px;
+  line-height:1;
+  font-weight:650;
+  letter-spacing:.05em;
+}
+.study-screen .subject-disclosure summary strong{
+  color:var(--study-ink);
+  font-size:14px;
+  line-height:1.2;
+  font-weight:680;
+}
+.study-screen .disclosure-chevron{
+  width:28px;height:28px;border-radius:50%;color:#8e8e93;background:#f2f2f7;
+  font-size:20px;transition:transform .15s ease;
+}
+.study-screen details[open]>summary .disclosure-chevron{transform:rotate(90deg)}
+.study-screen .subject-disclosure-body{
+  padding:0 13px 13px;
+  border-top:1px solid var(--study-line);
+}
+.study-screen .subject-disclosure-body ul{
+  margin:10px 0 0;
+  padding:0;
+  list-style:none;
+  display:grid;
+}
+.study-screen .subject-disclosure-body li{
+  position:relative;
+  padding:8px 0 8px 18px;
+  border-bottom:1px solid #f0f0f2;
+  color:var(--study-ink);
+  font-size:12px;
+  line-height:1.4;
+}
+.study-screen .subject-disclosure-body li:last-child{border-bottom:0}
+.study-screen .subject-disclosure-body li::before{
+  content:"";
+  position:absolute;
+  left:2px;top:14px;
+  width:6px;height:6px;border-radius:50%;
+  background:#aeaeb2;
+}
+.study-screen .subject-card.reading li::before{background:var(--study-pink)}
+.study-screen .subject-card.spelling li::before{background:#d38c00}
+.study-screen .subject-card.religion li::before{background:var(--study-purple)}
+.study-screen .subject-card.math li::before{background:var(--study-blue)}
+
+.study-screen .word-subhead{
+  margin:12px 0 6px;
+  color:var(--study-secondary);
+  font-size:10px;
+  line-height:1;
+  font-weight:700;
+}
+.study-screen .sight-cloud,
+.study-screen .word-grid{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin:0;
+}
+.study-screen .sight-cloud span,
+.study-screen .word-grid span{
+  padding:6px 8px;
+  border:0;
+  border-radius:8px;
+  background:#f2f2f7;
+  color:var(--study-ink);
+  font-size:10.5px;
+  line-height:1;
+  font-weight:650;
+}
+.study-screen .word-grid span{background:#fff6de;color:#705000}
+
+.study-screen .calm-card{
+  min-height:62px;
+  display:grid;
+  grid-template-columns:36px minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+  margin:10px 0 0;
+  padding:11px 13px;
+  border:0;
+  border-radius:16px;
+  background:#fff;
+  box-shadow:0 1px 2px rgba(0,0,0,.035);
+}
+.study-screen .calm-card>span{
+  width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+  background:#eaf7ed;color:var(--study-green);
+}
+.study-screen .calm-card>span .ui-icon{width:18px;height:18px}
+.study-screen .calm-card h3{
+  margin:0;color:var(--study-ink);font-size:13px;line-height:1.2;font-weight:700;
+}
+.study-screen .calm-card p{
+  margin:3px 0 0;color:var(--study-secondary);font-size:11px;line-height:1.35;
+}
+.study-screen .study-tip>span{background:#edf5ff;color:var(--study-blue)}
+
+@media(max-width:520px){
+  .study-screen .study-page-head{padding:10px 14px 12px}
+  .study-screen .study-page-title h1{font-size:31px}
+  .study-screen .study-content{padding:10px 10px calc(112px + env(safe-area-inset-bottom))}
+  .study-screen .study-at-a-glance{padding:14px;border-radius:18px}
+  .study-screen .study-card-head h2{font-size:20px}
+  .study-screen .study-section-label{display:block}
+  .study-screen .study-section-label p{margin-top:3px;text-align:left}
+  .study-screen .subject-card{border-radius:14px}
+}
+@media(max-width:360px){
+  .study-screen .study-content{padding-left:7px;padding-right:7px}
+  .study-screen .study-section-nav{gap:5px}
+  .study-screen .study-section-nav button{padding-left:9px;padding-right:9px;font-size:10px}
+  .study-screen .subject-disclosure>summary{padding-left:10px;padding-right:10px}
+}
+@media(prefers-reduced-motion:reduce){
+  .study-screen *{transition:none!important}
+}
