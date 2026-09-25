@@ -280,3 +280,11 @@
 @media(prefers-reduced-motion:reduce){
   .colorful-polish *{transition:none!important}
 }
+
+
+/* Accessibility-safe active navigation colors. */
+.bottom-nav button[data-tab="today"].active{color:#0b4f9c}
+.bottom-nav button[data-tab="week"].active{color:#5b32a8}
+.bottom-nav button[data-tab="calendar"].active{color:#a4144b}
+.bottom-nav button[data-tab="study"].active{color:#0d6f42}
+.bottom-nav button[data-tab="family"].active{color:#9a4300}
