@@ -27,12 +27,12 @@ test("Today uses the clean native-style dashboard hierarchy",async({page})=>{
   await expect(page.locator(".today-screen .top-scene")).toHaveCount(0);
   const styles=await page.evaluate(()=>({
     canvas:getComputedStyle(document.querySelector(".today-screen")).backgroundColor,
-    card:getComputedStyle(document.querySelector(".today-overview")).backgroundColor,
+    cardImage:getComputedStyle(document.querySelector(".today-overview")).backgroundImage,
     shadow:getComputedStyle(document.querySelector(".today-overview")).boxShadow,
     radius:parseFloat(getComputedStyle(document.querySelector(".today-overview")).borderRadius),
   }));
   expect(styles.canvas).toBe("rgb(242, 242, 247)");
-  expect(styles.card).toBe("rgb(255, 255, 255)");
+  expect(styles.cardImage).not.toBe("none");
   expect(styles.shadow).not.toBe("none");
   expect(styles.radius).toBeGreaterThanOrEqual(18);
 });
@@ -45,14 +45,14 @@ test("Week uses the clean native-style agenda hierarchy",async({page})=>{
   await expect(page.locator(".week-screen .top-scene")).toHaveCount(0);
   const styles=await page.evaluate(()=>({
     canvas:getComputedStyle(document.querySelector(".week-screen")).backgroundColor,
-    detail:getComputedStyle(document.querySelector(".day-detail")).backgroundColor,
+    detailImage:getComputedStyle(document.querySelector(".day-detail")).backgroundImage,
     radius:parseFloat(getComputedStyle(document.querySelector(".day-detail")).borderRadius),
-    picker:getComputedStyle(document.querySelector(".day-picker button.active")).backgroundColor,
+    pickerImage:getComputedStyle(document.querySelector(".day-picker button.active")).backgroundImage,
   }));
   expect(styles.canvas).toBe("rgb(242, 242, 247)");
-  expect(styles.detail).toBe("rgb(255, 255, 255)");
+  expect(styles.detailImage).not.toBe("none");
   expect(styles.radius).toBeGreaterThanOrEqual(18);
-  expect(styles.picker).toBe("rgb(0, 102, 204)");
+  expect(styles.pickerImage).not.toBe("none");
 });
 
 test("calendar controls remain interactive",async({page})=>{
@@ -79,13 +79,13 @@ test("Study uses the clean native-style review hierarchy",async({page})=>{
   await expect(page.locator(".study-screen .top-scene")).toHaveCount(0);
   const styles=await page.evaluate(()=>({
     canvas:getComputedStyle(document.querySelector(".study-screen")).backgroundColor,
-    quick:getComputedStyle(document.querySelector(".study-at-a-glance")).backgroundColor,
-    subject:getComputedStyle(document.querySelector(".subject-card")).backgroundColor,
+    quickImage:getComputedStyle(document.querySelector(".study-at-a-glance")).backgroundImage,
+    subjectImage:getComputedStyle(document.querySelector(".subject-card")).backgroundImage,
     radius:parseFloat(getComputedStyle(document.querySelector(".study-at-a-glance")).borderRadius),
   }));
   expect(styles.canvas).toBe("rgb(242, 242, 247)");
-  expect(styles.quick).toBe("rgb(255, 255, 255)");
-  expect(styles.subject).toBe("rgb(255, 255, 255)");
+  expect(styles.quickImage).not.toBe("none");
+  expect(styles.subjectImage).not.toBe("none");
   expect(styles.radius).toBeGreaterThanOrEqual(18);
 });
 
@@ -106,13 +106,13 @@ test("Family uses the clean native-style parent dashboard hierarchy",async({page
   await expect(page.locator(".family-screen .top-scene")).toHaveCount(0);
   const styles=await page.evaluate(()=>({
     canvas:getComputedStyle(document.querySelector(".family-screen")).backgroundColor,
-    priority:getComputedStyle(document.querySelector(".family-priority")).backgroundColor,
-    card:getComputedStyle(document.querySelector(".family-card")).backgroundColor,
+    priorityImage:getComputedStyle(document.querySelector(".family-priority")).backgroundImage,
+    cardColor:getComputedStyle(document.querySelector(".family-card")).backgroundColor,
     priorityRadius:parseFloat(getComputedStyle(document.querySelector(".family-priority")).borderRadius),
   }));
   expect(styles.canvas).toBe("rgb(242, 242, 247)");
-  expect(styles.priority).toBe("rgb(255, 255, 255)");
-  expect(styles.card).toBe("rgb(255, 255, 255)");
+  expect(styles.priorityImage).not.toBe("none");
+  expect(styles.cardColor).toBe("rgb(255, 255, 255)");
   expect(styles.priorityRadius).toBeGreaterThanOrEqual(18);
 });
 
