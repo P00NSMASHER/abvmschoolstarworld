@@ -142,7 +142,7 @@ function renderCalendar(){
       (events.length?'<div class="calendar-event-list">'+events.map(e=>'<div><i class="'+kindClass(e)+'"></i><span><strong>'+esc(e.label)+'</strong></span></div>').join("")+'</div>':'<p class="calendar-empty">No special school events are listed for this date.</p>')+
       (lunch?'<div class="calendar-lunch"><span>🍎</span><div><b>Lunch</b><p>'+esc(lunch.items.join(", ").replace(/, ([^,]*)$/,", and $1"))+'</p></div></div>':'')+
     '</section>'+
-    '<section class="month-agenda"><h2>'+MONTHS[m]+' school dates</h2>'+agenda.map(o=>'<div class="calendar-event-list"><div><i class="'+kindClass(o.x)+'"></i><span><strong>'+esc(fmtShort(o.d))+' · '+esc(o.x.label)+'</strong></span></div></div>').join("")+'</section>'+
+    '<section class="month-agenda"><div class="month-agenda-head"><span class="month-agenda-mark" aria-hidden="true">▦</span><div><p>MONTH AGENDA</p><h2>'+MONTHS[m]+' school dates</h2></div></div><div class="month-agenda-list">'+agenda.map(o=>'<div class="calendar-event-list month-agenda-row '+kindClass(o.x)+'"><div><i class="'+kindClass(o.x)+'"></i><span><strong>'+esc(fmtShort(o.d))+' · '+esc(o.x.label)+'</strong></span></div></div>').join("")+'</div></section>'+
     '<section class="specials-card"><div class="specials-head"><span class="specials-mark" aria-hidden="true">★</span><div><p>WEEKLY ROTATION</p><h2>Specials</h2></div></div><div class="specials-list"><div class="special-row"><span>Mon</span><strong>Computer</strong></div><div class="special-row"><span>Tue</span><strong>Music · Art · Guidance</strong></div><div class="special-row"><span>Wed</span><strong>Mass</strong></div><div class="special-row"><span>Thu</span><strong>Gym</strong></div><div class="special-row"><span>Fri</span><strong>Library</strong></div></div></section>'+
     '<section class="next-month-card"><h2>Coming in '+MONTHS[(m+1)%12]+'</h2>'+nextMonth.map(o=>'<div><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join("")+'</section>'+
     '</div>';
@@ -183,10 +183,10 @@ function renderFamily(){
     header("FAMILY VIEW","Family dashboard")+freshness()+
     '<section class="family-hero"><p>WEEKLY PRIORITY</p><h2>Keep the week short, calm, and current.</h2><span>Use the teacher-posted material first. Reading remains part of the standing routine.</span></section>'+
     '<div class="family-stats"><div><strong>'+tests+'</strong><span>test days</span></div><div><strong>$17</strong><span>stationary money due Sept. 23</span></div></div>'+
-    '<section class="parent-card"><h3>Family actions</h3><ul>'+actions.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></section>'+
-    '<section class="policy-card"><span>20</span><div><h3>Reading every day</h3><p>Read or be read to for 20 minutes and keep the Reading Log in the homework folder.</p></div></section>'+
+    '<section class="parent-card family-actions-card"><div class="family-actions-head"><span class="family-actions-mark" aria-hidden="true">✓</span><div><small>THIS WEEK</small><h3>Family actions</h3></div></div><ul>'+actions.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></section>'+
+    '<section class="policy-card reading-policy-card"><span>20</span><div><small>DAILY HABIT</small><h3>Reading every day</h3><p>Read or be read to for 20 minutes and keep the Reading Log in the homework folder.</p></div></section>'+
     ''+
-    '<section class="parent-card sources"><h3>Current notices</h3>'+notices.map(x=>'<div><span class="status ok"></span><p>'+esc(x)+'</p></div>').join("")+'</section>'+
+    '<section class="parent-card sources notices-card"><div class="notices-head"><span class="notices-mark" aria-hidden="true">i</span><div><small>SCHOOL UPDATES</small><h3>Current notices</h3></div></div>'+notices.map(x=>'<div class="notice-row"><span class="status ok"></span><p>'+esc(x)+'</p></div>').join("")+'</section>'+
     '<section class="parent-card game-controls"><h3>Game privacy and controls</h3><p>School Star World keeps game progress on this device unless you export a backup.</p><a href="./game/">Open School Star World</a></section>'+
     '<section class="privacy-card policy-card"><span>✓</span><div><h3>Privacy first</h3><p>No student IDs or private classmates’ information are used here.</p></div></section>'+
     '<section class="install-card"><span>⌂</span><div><h3>Put this app on iPhone</h3><p>Use Safari’s Share menu, then choose Add to Home Screen.</p></div></section>'+

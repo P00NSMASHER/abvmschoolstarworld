@@ -276,3 +276,325 @@ html,body{margin:0}
   .bottom-nav .nav-icon svg{width:22px;height:22px}
   .bottom-nav button b{font-size:9.5px}
 }
+
+
+/* Screenshot-era polish v62: Week day card, month agenda, and Family panels. */
+
+/* Week: remove the little top status stripe and make the day card feel finished. */
+.day-detail{
+  position:relative;
+  padding:16px 17px 15px;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(99,170,232,.10),transparent 30%),
+    linear-gradient(145deg,#ffffff 0%,#fbfdff 100%);
+  border:1px solid #cad8e5;
+  border-radius:23px;
+  box-shadow:0 10px 26px rgba(21,53,83,.08);
+}
+.day-detail::before,
+.day-detail.green::before,
+.day-detail.purple::before,
+.day-detail.blue::before,
+.day-detail.yellow::before{
+  display:none !important;
+  content:none !important;
+}
+.day-detail-title{
+  margin:0 -2px 12px;
+  padding:0 2px 14px;
+  border-bottom:1px solid #e3eaf0;
+}
+.day-detail-title>span{
+  background:linear-gradient(180deg,#edf6ff,#dfefff);
+  color:#0f568f;
+  border:1px solid #cde2f2;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8);
+}
+.day-detail .event-stack{
+  gap:9px;
+  margin-bottom:17px;
+}
+.day-detail .event-row{
+  background:linear-gradient(145deg,#fbfbf8,#ffffff);
+  border:1px solid #ecebe6;
+  border-radius:15px;
+  padding:12px 13px;
+  box-shadow:0 3px 9px rgba(33,54,72,.035);
+}
+.day-detail .event-row time{
+  color:#0e5f9e;
+  font-size:10.5px;
+}
+.day-detail .event-row strong{
+  color:#25384c;
+  font-size:13.5px;
+}
+.day-detail>h3{
+  margin:18px 0 6px;
+  padding-top:2px;
+  color:var(--navy);
+  font-size:17px;
+}
+
+/* Calendar month agenda: richer header, clearer rows, softer color coding. */
+.month-agenda{
+  position:relative;
+  overflow:hidden;
+  border:1px solid #c8d8e6;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(91,169,230,.10),transparent 30%),
+    linear-gradient(145deg,#ffffff 0%,#f8fbfe 100%);
+  border-radius:22px;
+  margin-top:13px;
+  padding:0;
+  box-shadow:0 8px 22px rgba(19,65,104,.07);
+}
+.month-agenda-head{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:15px 16px 13px;
+  border-bottom:1px solid #dbe7ef;
+}
+.month-agenda-mark{
+  width:40px;
+  height:40px;
+  border-radius:13px;
+  display:grid;
+  place-items:center;
+  flex:none;
+  background:linear-gradient(180deg,#e7f4ff,#d7ebfb);
+  color:#0c5d9d;
+  font-size:20px;
+  font-weight:950;
+  box-shadow:inset 0 0 0 1px rgba(12,93,157,.08);
+}
+.month-agenda-head>div{min-width:0}
+.month-agenda-head p{
+  margin:0 0 2px;
+  color:#17639e;
+  letter-spacing:.09em;
+  font-size:9px;
+  font-weight:950;
+}
+.month-agenda .month-agenda-head h2{
+  margin:0;
+  color:var(--navy);
+  font-size:19px;
+  line-height:1.15;
+}
+.month-agenda-list{
+  display:grid;
+  gap:7px;
+  padding:10px 11px 12px;
+}
+.month-agenda .month-agenda-row{
+  margin:0;
+}
+.month-agenda .month-agenda-row>div{
+  min-height:52px;
+  padding:10px 11px;
+  border:1px solid #e9edf0;
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 2px 7px rgba(30,54,74,.03);
+}
+.month-agenda .month-agenda-row>div strong{
+  color:#2c4054;
+  font-size:12.5px;
+  line-height:1.35;
+}
+.month-agenda .month-agenda-row.test>div{background:#fff5f8;border-color:#f1d4df}
+.month-agenda .month-agenda-row.faith>div{background:#f8f3ff;border-color:#dfd1ec}
+.month-agenda .month-agenda-row.due>div{background:#fff9e8;border-color:#eadca8}
+.month-agenda .month-agenda-row.family>div{background:#f2f9ff;border-color:#d3e7f4}
+.month-agenda .month-agenda-row.club>div{background:#f2fbf4;border-color:#d4ead8}
+
+/* Family actions: give the list a real header and readable visual rhythm. */
+.family-actions-card{
+  position:relative;
+  overflow:hidden;
+  padding:0 16px 13px;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(122,86,203,.10),transparent 31%),
+    linear-gradient(145deg,#ffffff 0%,#fbf8ff 100%);
+  border:1px solid #d8cbea;
+  border-radius:21px;
+  box-shadow:0 8px 20px rgba(91,58,135,.07);
+}
+.family-actions-head{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  margin:0 -16px;
+  padding:14px 16px 12px;
+  border-bottom:1px solid #e3d9ee;
+}
+.family-actions-mark{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  flex:none;
+  background:#efe5fb;
+  color:#6f3ca2;
+  font-size:18px;
+  font-weight:950;
+}
+.family-actions-head small{
+  display:block;
+  margin-bottom:2px;
+  color:#7b4aa5;
+  letter-spacing:.08em;
+  font-size:8.5px;
+  font-weight:950;
+}
+.family-actions-card .family-actions-head h3{
+  margin:0;
+  color:var(--navy);
+  font-size:18px;
+}
+.family-actions-card ul{
+  list-style:none;
+  margin:7px 0 0;
+  padding:0;
+}
+.family-actions-card li{
+  position:relative;
+  padding:9px 2px 9px 24px;
+  border-bottom:1px solid #eee8f3;
+  color:#354555;
+  font-size:12.5px;
+  line-height:1.4;
+}
+.family-actions-card li:last-child{border-bottom:0}
+.family-actions-card li::before{
+  content:"";
+  position:absolute;
+  left:2px;
+  top:14px;
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:#9c6ad0;
+  box-shadow:0 0 0 4px #f0e7f8;
+}
+
+/* Reading habit: more polished, but keep the same cheerful green identity. */
+.reading-policy-card{
+  position:relative;
+  overflow:hidden;
+  padding:16px;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(110,211,82,.15),transparent 36%),
+    linear-gradient(145deg,#f1fbea 0%,#eaf8e3 100%);
+  border:1px solid #9fd18b;
+  border-radius:21px;
+  box-shadow:0 8px 19px rgba(56,120,43,.07);
+}
+.reading-policy-card>span{
+  width:58px;
+  height:58px;
+  background:linear-gradient(180deg,#82df55,#6bcd42);
+  color:#1f5518;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.42),0 5px 12px rgba(71,147,50,.16);
+}
+.reading-policy-card small{
+  display:block;
+  margin-bottom:2px;
+  color:#4f843e;
+  letter-spacing:.08em;
+  font-size:8.5px;
+  font-weight:950;
+}
+.reading-policy-card h3{
+  margin:0 0 4px;
+  color:#2b6c26;
+  font-size:17px;
+}
+.reading-policy-card p{
+  color:#496d42;
+  font-size:12.5px;
+  line-height:1.45;
+}
+
+/* Current notices: clearer information grouping and less "giant plain white list". */
+.notices-card{
+  position:relative;
+  overflow:hidden;
+  padding:0 14px 12px;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(72,147,211,.10),transparent 30%),
+    linear-gradient(145deg,#ffffff 0%,#f7fbff 100%);
+  border:1px solid #bfd6e7;
+  border-radius:21px;
+  box-shadow:0 8px 22px rgba(24,79,120,.07);
+}
+.notices-head{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  margin:0 -14px;
+  padding:14px 14px 12px;
+  border-bottom:1px solid #d9e6ef;
+}
+.notices-mark{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  flex:none;
+  background:#e1f0fb;
+  color:#0d5d98;
+  font-family:Georgia,serif;
+  font-size:19px;
+  font-weight:900;
+}
+.notices-head small{
+  display:block;
+  margin-bottom:2px;
+  color:#2a6a9b;
+  letter-spacing:.08em;
+  font-size:8.5px;
+  font-weight:950;
+}
+.notices-card .notices-head h3{
+  margin:0;
+  color:var(--navy);
+  font-size:18px;
+}
+.sources.notices-card>.notice-row{
+  margin-top:8px;
+  padding:10px 11px;
+  border:1px solid #e3ebf0;
+  border-radius:13px;
+  background:rgba(255,255,255,.86);
+  gap:10px;
+}
+.sources.notices-card>.notice-row:nth-of-type(3n+2){background:#fbf8ff;border-color:#e9e0f1}
+.sources.notices-card>.notice-row:nth-of-type(3n+3){background:#f7fbf5;border-color:#e0ecdc}
+.sources.notices-card>.notice-row p{
+  color:#35485a;
+  font-size:12px;
+  line-height:1.42;
+}
+.sources.notices-card .status.ok{
+  width:10px;
+  height:10px;
+  margin-top:4px;
+  background:#4ca73d;
+  box-shadow:0 0 0 4px #dff0dc;
+}
+
+@media (width<=370px){
+  .month-agenda-head,
+  .family-actions-head,
+  .notices-head{gap:9px}
+  .month-agenda-mark,
+  .family-actions-mark,
+  .notices-mark{width:36px;height:36px}
+  .reading-policy-card>span{width:52px;height:52px}
+}

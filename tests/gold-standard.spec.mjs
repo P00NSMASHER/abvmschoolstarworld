@@ -84,3 +84,20 @@ test("requested polish is present",async({page})=>{
   expect(navStyles.fill).toBe("none");
   expect(navStyles.stroke).not.toBe("none");
 });
+
+
+test("second requested polish is present",async({page})=>{
+  await openTab(page,"Week");
+  const stripe=await page.evaluate(()=>getComputedStyle(document.querySelector(".day-detail"),"::before").display);
+  expect(stripe).toBe("none");
+
+  await openTab(page,"Calendar");
+  await expect(page.locator(".month-agenda-head")).toBeVisible();
+  expect(await page.locator(".month-agenda-row").count()).toBeGreaterThan(2);
+
+  await openTab(page,"Family");
+  await expect(page.locator(".family-actions-card")).toBeVisible();
+  await expect(page.locator(".reading-policy-card")).toBeVisible();
+  await expect(page.locator(".notices-card")).toBeVisible();
+  await expect(page.locator(".notice-row").first()).toBeVisible();
+});
