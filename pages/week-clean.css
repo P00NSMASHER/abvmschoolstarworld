@@ -1,0 +1,244 @@
+/*
+  Week tab — clean native-style school agenda
+  Scoped so Today, Calendar, Study, and Family remain independent.
+*/
+.week-screen{
+  --week-blue:#0066cc;
+  --week-red:#c9342f;
+  --week-green:#248a3d;
+  --week-yellow:#f4c430;
+  --week-ink:#1c1c1e;
+  --week-secondary:#5f5f64;
+  --week-line:#e5e5ea;
+  --week-canvas:#f2f2f7;
+  background:var(--week-canvas);
+  color:var(--week-ink);
+}
+.week-screen .week-page-head{
+  padding:12px 18px 14px;
+  background:#fff;
+  border-bottom:1px solid rgba(60,60,67,.10);
+}
+.week-screen .school-bar{min-height:48px}
+.week-screen .school-mark{width:44px;height:44px;border:0;box-shadow:none}
+.week-screen .school-name{color:var(--week-ink);font-family:var(--font-sans);text-shadow:none}
+.week-screen .school-name span:first-child{font-size:12px;font-weight:800;letter-spacing:.04em}
+.week-screen .school-name span:last-child{color:#66666b;font-size:9px;letter-spacing:.07em}
+.week-screen .bell-button{width:40px;height:40px;border:0;border-radius:50%;background:#f2f2f7;color:var(--week-blue);box-shadow:none;backdrop-filter:none}
+.week-screen .week-page-title{margin-top:14px}
+.week-screen .week-page-title h1{margin:0;color:var(--week-ink);font-family:var(--font-sans);font-size:34px;line-height:1.02;font-weight:800;letter-spacing:-.045em}
+.week-screen .week-page-title p{margin:5px 0 0;color:var(--week-secondary);font-size:13px;line-height:1.3}
+
+.week-screen .week-content{
+  width:min(100%,980px);
+  margin:0 auto;
+  padding:14px 18px calc(28px + env(safe-area-inset-bottom));
+}
+.week-screen .day-picker{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:7px;
+  margin:0 0 12px;
+}
+.week-screen .day-picker button{
+  position:relative;
+  min-height:66px;
+  padding:8px 3px 9px;
+  border:0;
+  border-radius:14px;
+  background:#fff;
+  color:var(--week-secondary);
+  box-shadow:inset 0 0 0 1px rgba(60,60,67,.08);
+}
+.week-screen .day-picker button span,
+.week-screen .day-picker button strong{display:block}
+.week-screen .day-picker button span{font-size:10px;line-height:1;font-weight:650}
+.week-screen .day-picker button strong{margin-top:5px;color:var(--week-ink);font-size:21px;line-height:1;font-weight:750}
+.week-screen .day-picker button i{
+  position:absolute;left:50%;bottom:6px;width:5px;height:5px;border-radius:50%;background:#aeaeb2;transform:translateX(-50%);
+}
+.week-screen .day-picker button.today:not(.active){box-shadow:inset 0 0 0 1.5px rgba(0,102,204,.38)}
+.week-screen .day-picker button.today:not(.active) strong{color:var(--week-blue)}
+.week-screen .day-picker button.active{
+  background:var(--week-blue);
+  color:#fff;
+  box-shadow:none;
+}
+.week-screen .day-picker button.active strong,
+.week-screen .day-picker button.active span{color:#fff}
+.week-screen .day-picker button.active i{background:#fff}
+.week-screen .day-picker button.past:not(.active){background:#f9f9fb;color:#77777d}
+.week-screen .day-picker button:active{transform:scale(.97)}
+
+.week-screen .day-detail{
+  overflow:hidden;
+  border:0;
+  border-radius:20px;
+  background:#fff;
+  box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);
+}
+.week-screen .day-detail::before{display:none}
+.week-screen .day-detail-inner{padding:16px}
+.week-screen .day-detail-title{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:12px;
+  align-items:start;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--week-line);
+}
+.week-screen .week-kicker{display:block;color:var(--week-blue);font-size:10px;line-height:1;font-weight:700}
+.week-screen .day-detail-title h2{margin:4px 0 0;color:var(--week-ink);font-family:var(--font-sans);font-size:23px;line-height:1.1;font-weight:760;letter-spacing:-.03em}
+.week-screen .week-day-summary{margin:5px 0 0;color:var(--week-secondary);font-size:11.5px;line-height:1.3}
+.week-screen .school-day-pill{
+  min-height:28px;
+  display:inline-flex;
+  align-items:center;
+  padding:6px 9px;
+  border:0;
+  border-radius:999px;
+  background:#eaf7ed;
+  color:#2f7c43;
+  font-size:10px;
+  line-height:1;
+  font-weight:700;
+  white-space:nowrap;
+}
+.week-screen .school-day-pill.closed{background:#ffebe9;color:#b42318}
+.week-screen .school-day-pill.halfday{background:#fff6cc;color:#745700}
+.week-screen .school-day-pill.weekend{background:#f2f2f7;color:#66666b}
+
+.week-screen .schedule-alert.compact,
+.week-screen .selected-special{
+  min-height:60px;
+  display:grid;
+  grid-template-columns:38px minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+  margin:12px 0 0;
+  padding:10px 12px;
+  border:0;
+  border-radius:14px;
+  box-shadow:none;
+}
+.week-screen .schedule-alert.compact{background:#fff6cc}
+.week-screen .schedule-alert.compact.closed{background:#ffebe9}
+.week-screen .schedule-alert.compact>span,
+.week-screen .selected-special>span{
+  width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.78);
+}
+.week-screen .schedule-alert.compact>span{color:#725500}
+.week-screen .schedule-alert.compact.closed>span{color:#b42318}
+.week-screen .selected-special{background:#edf5ff}
+.week-screen .selected-special>span{color:var(--week-blue)}
+.week-screen .schedule-alert.compact small,
+.week-screen .selected-special small{display:block;margin:0 0 2px;color:#6f5600;font-size:9.5px;line-height:1.15;font-weight:700;letter-spacing:0;text-transform:none}
+.week-screen .schedule-alert.compact.closed small{color:#a12a22}
+.week-screen .selected-special small{color:var(--week-blue)}
+.week-screen .schedule-alert.compact strong,
+.week-screen .selected-special strong{display:block;color:var(--week-ink);font-size:13px;line-height:1.28;font-weight:650}
+
+.week-screen .week-event-stack{margin-top:4px!important}
+.week-screen .event-row{
+  min-height:58px;
+  display:grid;
+  grid-template-columns:38px 74px minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+  padding:9px 0;
+  border:0;
+  border-bottom:1px solid var(--week-line);
+  border-radius:0;
+  background:#fff;
+}
+.week-screen .event-row:last-child{border-bottom:0}
+.week-screen .event-icon{
+  width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:#eef5fb;color:var(--week-blue);font-size:0;
+}
+.week-screen .event-icon .ui-icon{width:19px;height:19px}
+.week-screen .event-row .kind{color:var(--week-secondary);font-size:10px;line-height:1.15;font-weight:650}
+.week-screen .event-row strong{color:var(--week-ink);font-size:13px;line-height:1.28;font-weight:650}
+.week-screen .event-icon.test{background:#ffebf0;color:#b4235a}
+.week-screen .event-icon.faith{background:#f3ebf8;color:#7b43a1}
+.week-screen .event-icon.due{background:#fff3dc;color:#8a5a00}
+.week-screen .event-icon.club{background:#e9f7ed;color:var(--week-green)}
+.week-screen .event-icon.closed{background:#ffebe9;color:#b42318}
+.week-screen .empty-note{margin-top:10px;padding:11px 12px;border-radius:12px;background:#f2f2f7;color:var(--week-secondary);font-size:11.5px}
+
+.week-screen .lunch-card{
+  min-height:92px;
+  display:grid;
+  grid-template-columns:84px minmax(0,1fr);
+  gap:0;
+  align-items:stretch;
+  margin-top:12px;
+  padding:0;
+  overflow:hidden;
+  border:0;
+  border-radius:20px;
+  background:#fff;
+  box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);
+}
+.week-screen .lunch-photo{width:84px;height:100%;min-height:92px;object-fit:cover;background:#ececec}
+.week-screen .lunch-card-copy{align-self:center;padding:12px 14px}
+.week-screen .lunch-card p{margin:0;color:#8a6200;font-size:9.5px;font-weight:700;letter-spacing:.04em}
+.week-screen .lunch-card strong{display:block;margin-top:3px;color:var(--week-ink);font-size:12.5px;line-height:1.35;font-weight:600}
+
+.week-screen .reminder-strip,
+.week-screen .future-card{
+  margin-top:12px;
+  border:0;
+  border-radius:18px;
+  background:#fff;
+  box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);
+}
+.week-screen .reminder-strip{
+  min-height:62px;
+  display:grid;
+  grid-template-columns:36px minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+  padding:11px 13px;
+}
+.week-screen .reminder-strip .bang{
+  width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#eaf7ed;color:var(--week-green);
+}
+.week-screen .reminder-strip .bang .ui-icon{width:18px;height:18px}
+.week-screen .reminder-strip p{margin:0;color:var(--week-secondary);font-size:11.5px;line-height:1.35}
+.week-screen .reminder-strip strong{display:block;margin-bottom:2px;color:var(--week-ink);font-size:12.5px;font-weight:700}
+.week-screen .future-card{padding:14px 16px}
+.week-screen .week-section-head h3{margin:0;color:var(--week-ink);font-size:18px;line-height:1.15;font-weight:750}
+.week-screen .future-row{display:grid;grid-template-columns:76px minmax(0,1fr);gap:10px;padding:10px 0;border-top:1px solid var(--week-line)}
+.week-screen .future-row:first-of-type{margin-top:8px}
+.week-screen .future-row span{color:var(--week-blue);font-size:10.5px;font-weight:700}
+.week-screen .future-row p{margin:0;color:var(--week-ink);font-size:12px;line-height:1.3}
+
+@media(max-width:520px){
+  .week-screen .week-page-head{padding:10px 14px 12px}
+  .week-screen .week-page-title h1{font-size:31px}
+  .week-screen .week-content{padding:10px 10px calc(112px + env(safe-area-inset-bottom))}
+  .week-screen .day-picker{gap:5px}
+  .week-screen .day-picker button{min-height:61px;border-radius:12px}
+  .week-screen .day-detail,
+  .week-screen .lunch-card,
+  .week-screen .reminder-strip,
+  .week-screen .future-card{border-radius:18px}
+  .week-screen .day-detail-inner{padding:14px}
+  .week-screen .day-detail-title h2{font-size:21px}
+  .week-screen .event-row{grid-template-columns:36px 62px minmax(0,1fr);gap:8px}
+}
+@media(max-width:360px){
+  .week-screen .week-content{padding-left:7px;padding-right:7px}
+  .week-screen .day-picker{gap:3px}
+  .week-screen .day-picker button{min-height:57px;padding-left:1px;padding-right:1px}
+  .week-screen .day-picker button strong{font-size:19px}
+  .week-screen .day-detail-title{grid-template-columns:minmax(0,1fr) auto;gap:7px}
+  .week-screen .school-day-pill{padding:5px 7px;font-size:9px}
+  .week-screen .event-row{grid-template-columns:34px minmax(0,1fr)}
+  .week-screen .event-row .kind{display:none}
+  .week-screen .lunch-card{grid-template-columns:74px minmax(0,1fr)}
+  .week-screen .lunch-photo{width:74px}
+}
+@media(prefers-reduced-motion:reduce){
+  .week-screen *{transition:none!important}
+}
