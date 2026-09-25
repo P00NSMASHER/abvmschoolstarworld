@@ -1,6 +1,6 @@
 import {MONTHS,WEEKDAY,sameDay,today,fmtDate,fmtShort,fmtCompactDate} from "./js/date-utils.js";
 import {storageKey,readStoredFlag,toggleStoredFlag} from "./js/storage.js";
-import {initInstallTracking,installExperience,promptInstall} from "./js/install.js";
+import {initInstallTracking,installExperience,promptInstall,registerFreshServiceWorker} from "./js/install.js";
 import {
   kindClass,eventIconName,specialIconName,calendarLabel,primaryCalendarEvent,calendarScheduleEvent,
   scheduleSecondaryEvents,calendarContentEvents,scheduleStatusText,scheduleStatusDetail,
@@ -472,18 +472,5 @@ async function load(){
   render();
 }
 load();
-if("serviceWorker" in navigator){
-  let reloadingForUpdate=false;
-  navigator.serviceWorker.addEventListener("controllerchange",()=>{
-    if(reloadingForUpdate)return;
-    reloadingForUpdate=true;
-    location.reload();
-  });
-  window.addEventListener("load",async()=>{
-    try{
-      const registration=await navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"});
-      await registration.update();
-    }catch{}
-  });
-}
+registerFreshServiceWorker();
 })();
