@@ -334,7 +334,7 @@ function renderCalendar(){
       '<section class="calendar-card">'+
         '<div class="calendar-title-row">'+
           '<button class="month-arrow" data-month="-1" type="button" aria-label="Previous month">‹</button>'+
-          '<div class="calendar-heading"><h2>'+MONTHS[m]+" "+y+'</h2></div>'+
+          '<div class="calendar-heading"><span class="calendar-view-kicker">'+(calendarMode==="month"?"MONTH VIEW":"AGENDA")+'</span><h2>'+MONTHS[m]+" "+y+'</h2></div>'+
           '<button class="month-arrow" data-month="1" type="button" aria-label="Next month">›</button>'+
         '</div>'+
         '<div class="calendar-tabs" role="group" aria-label="Calendar view">'+
