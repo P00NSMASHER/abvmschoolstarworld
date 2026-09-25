@@ -1,4 +1,4 @@
-const CACHE = "abvm-grade2-parent-companion-v46-cross-repo-calendar";
+const CACHE = "abvm-grade2-parent-companion-v47-live-refresh";
 const SHELL = [
   "./",
   "./index.html",
@@ -84,26 +84,34 @@ self.addEventListener("activate", event => {
   );
 });
 
+async function networkFirst(request,fallback="./index.html"){
+  try{
+    const response=await fetch(request,{cache:"no-store"});
+    if(response&&response.ok){
+      const copy=response.clone();
+      caches.open(CACHE).then(cache=>cache.put(request,copy));
+    }
+    return response;
+  }catch(error){
+    return (await caches.match(request))||(fallback?await caches.match(fallback):undefined)||Response.error();
+  }
+}
+
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
   const url = new URL(event.request.url);
+  if(url.origin!==self.location.origin)return;
   if (url.pathname.endsWith("/data/study-pack.json")) {
-    event.respondWith(
-      fetch(event.request)
-        .then(response => {
-          const copy = response.clone();
-          caches.open(CACHE).then(cache => cache.put(event.request, copy));
-          return response;
-        })
-        .catch(() => caches.match(event.request))
-    );
+    event.respondWith(networkFirst(event.request,null));
     return;
   }
-  event.respondWith(
-    caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
-      const copy = response.clone();
-      caches.open(CACHE).then(cache => cache.put(event.request, copy));
-      return response;
-    }))
-  );
+  if(event.request.mode==="navigate"){
+    event.respondWith(networkFirst(event.request,"./index.html"));
+    return;
+  }
+  if(/\.(?:css|js|json|webp|png|svg|webmanifest)$/.test(url.pathname)){
+    event.respondWith(networkFirst(event.request,null));
+    return;
+  }
+  event.respondWith(caches.match(event.request).then(cached=>cached||fetch(event.request)));
 });
