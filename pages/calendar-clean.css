@@ -2595,3 +2595,35 @@
 .calendar-screen .calendar-grid button.halfday .calendar-cell-more{
   color:#453500;
 }
+
+
+/* Apple-style contrast correction v4.2 */
+.calendar-screen{
+  --ios-blue:#0066cc;
+  --ios-blue-deep:#0054a6;
+  --ios-red:#c9342f;
+}
+.calendar-screen .calendar-grid button.today:not(.closed):not(.halfday)>strong,
+.calendar-screen .calendar-grid button.active:not(.closed):not(.halfday)>strong{
+  background:var(--ios-blue);
+  color:#fff;
+}
+.calendar-screen .calendar-day-heading span{
+  color:var(--ios-blue);
+}
+.calendar-screen .calendar-grid button.closed,
+.calendar-screen .calendar-grid button.closed:hover,
+.calendar-screen .calendar-grid button.closed.active{
+  background:var(--ios-red);
+}
+.calendar-screen .calendar-cell-event.closed i,
+.calendar-screen .calendar-legend i.closed{
+  background:var(--ios-red);
+}
+@media(max-width:520px){
+  .calendar-screen .calendar-legend{
+    flex-wrap:wrap;
+    overflow:visible;
+    padding-bottom:0;
+  }
+}
