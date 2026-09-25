@@ -2569,3 +2569,29 @@
     transition:none;
   }
 }
+
+
+/* Apple-style accessibility tuning v4.1 */
+.calendar-screen .calendar-page-head .school-name span:last-child,
+.calendar-screen .calendar-page-title p,
+.calendar-screen .calendar-view-kicker,
+.calendar-screen .calendar-weekdays span,
+.calendar-screen .calendar-cell-more,
+.calendar-screen .calendar-legend span,
+.calendar-screen .calendar-day-summary,
+.calendar-screen .calendar-detail-row small,
+.calendar-screen .calendar-list-date small,
+.calendar-screen .calendar-list-copy small{
+  color:#5f5f64;
+}
+.calendar-screen .calendar-cell-event{
+  color:#4f4f54;
+}
+.calendar-screen .calendar-grid button.closed .calendar-cell-event,
+.calendar-screen .calendar-grid button.closed .calendar-cell-more{
+  color:#fff;
+}
+.calendar-screen .calendar-grid button.halfday .calendar-cell-event,
+.calendar-screen .calendar-grid button.halfday .calendar-cell-more{
+  color:#453500;
+}
