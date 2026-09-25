@@ -1,4 +1,4 @@
-const CACHE = "abvm-grade2-parent-companion-v47-live-refresh";
+const CACHE = "abvm-grade2-parent-companion-v48-stable-refresh";
 const SHELL = [
   "./",
   "./index.html",
@@ -93,7 +93,7 @@ async function networkFirst(request,fallback="./index.html"){
     }
     return response;
   }catch(error){
-    return (await caches.match(request))||(fallback?await caches.match(fallback):undefined)||Response.error();
+    return (await caches.match(request,{ignoreSearch:true}))||(fallback?await caches.match(fallback,{ignoreSearch:true}):undefined)||Response.error();
   }
 }
 
@@ -113,5 +113,5 @@ self.addEventListener("fetch", event => {
     event.respondWith(networkFirst(event.request,null));
     return;
   }
-  event.respondWith(caches.match(event.request).then(cached=>cached||fetch(event.request)));
+  event.respondWith(caches.match(event.request,{ignoreSearch:true}).then(cached=>cached||fetch(event.request)));
 });
