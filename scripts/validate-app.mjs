@@ -27,10 +27,10 @@ const tokens=read("pages/design-tokens.css");
 const app=read("pages/app.js");
 const sw=read("pages/sw.js");
 
-if(!index.includes('type="module" src="./app.js"'))fail("app.js must load as an ES module");
-if(!index.includes('href="./design-tokens.css"'))fail("design-tokens.css must load before styles.css");
-if(!index.includes('href="./responsive.css"'))fail("responsive.css must load after styles.css");
-if(!index.includes('href="./calendar-clean.css"'))fail("calendar-clean.css must load after responsive.css");
+if(!/type="module" src="\.\/app\.js(?:\?[^"]*)?"/.test(index))fail("app.js must load as an ES module");
+if(!/href="\.\/design-tokens\.css(?:\?[^"]*)?"/.test(index))fail("design-tokens.css must load before styles.css");
+if(!/href="\.\/responsive\.css(?:\?[^"]*)?"/.test(index))fail("responsive.css must load after styles.css");
+if(!/href="\.\/calendar-clean\.css(?:\?[^"]*)?"/.test(index))fail("calendar-clean.css must load after responsive.css");
 if((tokens.match(/:root\s*\{/g)||[]).length!==1)fail("Design tokens must have exactly one :root block");
 if((css.match(/:root\s*\{/g)||[]).length!==0)fail("styles.css must not redefine global design tokens");
 if(/photo-sprite-[1-4]\.jpg/.test(app+css+responsive+calendarClean+sw+index))fail("Obsolete calendar photo sprites are still referenced");
