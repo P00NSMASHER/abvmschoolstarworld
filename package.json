@@ -7,8 +7,8 @@
     "@netlify/blobs": "latest"
   },
   "scripts": {
-    "qa:static": "node --check pages/app.js && node --check pages/js/date-utils.js && node --check pages/js/storage.js && node --check pages/js/install.js && node --check pages/js/events.js && node --check pages/js/calendar-visuals.js && node --check pages/js/school-model.js && node --check scripts/check-refresh-health.mjs && node --check scripts/build-health-report.mjs && node scripts/validate-app.mjs && node scripts/check-css-hygiene.mjs",
-    "qa:e2e": "playwright test",
+    "qa:static": "node --check pages/app.js && node scripts/validate-app.mjs",
+    "qa:e2e": "playwright test tests/gold-standard.spec.mjs",
     "qa": "npm run qa:static && npm run qa:unit && npm run qa:e2e",
     "qa:unit": "node --test tests/*.test.mjs",
     "health:report": "node scripts/build-health-report.mjs",

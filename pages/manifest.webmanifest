@@ -5,8 +5,8 @@
   "start_url": "./#today",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f4f7fb",
-  "theme_color": "#1778f2",
+  "background_color": "#fffdfa",
+  "theme_color": "#f8fbff",
   "icons": [
     {
       "src": "./assets/abvm-app-icon-192.png",
