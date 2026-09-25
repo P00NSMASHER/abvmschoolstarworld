@@ -188,8 +188,20 @@ function calendarSpecialClass(value){
   if(/art/.test(v))return"art";
   return"special";
 }
+function calendarDetailPhoto(type,title,klass=""){
+  const key=(String(type||"")+" "+String(title||"")+" "+String(klass||"")).toLowerCase();
+  if(/star testing|star reading|assessment|\btest\b/.test(key))return{src:"./assets/calendar-star.webp",alt:"Pencil and student answer sheet"};
+  if(/\bgym\b|pe class|physical education/.test(key))return{src:"./assets/calendar-gym.webp",alt:"Gym shoes and water bottle"};
+  if(/pretzel/.test(key))return{src:"./assets/calendar-pretzel.webp",alt:"Fresh baked pretzels"};
+  if(/\blunch\b|school meal/.test(key))return{src:"./assets/calendar-lunch.webp",alt:"School lunch tray"};
+  return null;
+}
 function calendarDetailRow(iconName,type,title,klass=""){
-  return '<div class="calendar-detail-row '+klass+'"><span class="calendar-detail-icon" aria-hidden="true">'+icon(iconName)+'</span><div><small>'+esc(type)+'</small><strong>'+esc(calendarDisplayText(title))+'</strong></div></div>';
+  const photo=calendarDetailPhoto(type,title,klass);
+  const visual=photo
+    ?'<img class="calendar-detail-photo" src="'+photo.src+'" width="160" height="120" loading="lazy" decoding="async" alt="'+esc(photo.alt)+'">'
+    :'<span class="calendar-detail-icon" aria-hidden="true">'+icon(iconName)+'</span>';
+  return '<div class="calendar-detail-row '+klass+(photo?' has-photo':'')+'">'+visual+'<div class="calendar-detail-copy"><small>'+esc(type)+'</small><strong>'+esc(calendarDisplayText(title))+'</strong></div></div>';
 }
 function monthGrid(year,month){
   const first=new Date(year,month,1,12),last=new Date(year,month+1,0,12),blanks=first.getDay();
@@ -332,7 +344,7 @@ function renderCalendar(){
         monthPanel+listPanel+legend+
       '</section>'+
       '<section class="calendar-day-card">'+
-        '<div class="calendar-day-heading"><div><span>'+WEEKDAY[calendarDay.getDay()]+'</span><h2>'+MONTHS[calendarDay.getMonth()]+" "+calendarDay.getDate()+'</h2></div>'+selectedStatus+'</div>'+
+        '<div class="calendar-day-heading"><div><span>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</span><h2>'+WEEKDAY[calendarDay.getDay()]+", "+MONTHS[calendarDay.getMonth()]+" "+calendarDay.getDate()+'</h2></div>'+selectedStatus+'</div>'+
         details+
       '</section>'+
     '</div>'+
