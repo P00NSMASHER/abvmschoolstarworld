@@ -1,4 +1,4 @@
-const CACHE = "abvm-grade2-parent-companion-v48-stable-refresh";
+const CACHE = "abvm-grade2-parent-companion-v49-apple-calendar";
 const SHELL = [
   "./",
   "./index.html",
@@ -21,10 +21,6 @@ const SHELL = [
   "./assets/hero-today.webp",
   "./assets/hero-week.webp",
   "./assets/hero-calendar.webp",
-  "./assets/calendar-star.webp",
-  "./assets/calendar-gym.webp",
-  "./assets/calendar-pretzel.webp",
-  "./assets/calendar-lunch.webp",
   "./assets/hero-study.webp",
   "./assets/hero-family.webp",
   "./assets/lunch-monday.webp",
