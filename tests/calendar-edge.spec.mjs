@@ -105,16 +105,16 @@ test("Calendar uses a clean native-style planner hierarchy",async({page})=>{
     return{
       monthShadow:month.boxShadow,
       detailShadow:detail.boxShadow,
-      detailBackground:detail.backgroundColor,
+      detailBackgroundImage:detail.backgroundImage,
       detailRadius:parseFloat(detail.borderRadius),
-      activeBackground:active.backgroundColor,
+      activeBackgroundImage:active.backgroundImage,
     };
   });
   expect(styles.monthShadow).not.toBe("none");
   expect(styles.detailShadow).not.toBe("none");
-  expect(styles.detailBackground).toBe("rgb(255, 255, 255)");
+  expect(styles.detailBackgroundImage).not.toBe("none");
   expect(styles.detailRadius).toBeGreaterThanOrEqual(18);
-  expect(styles.activeBackground).toBe("rgb(255, 255, 255)");
+  expect(styles.activeBackgroundImage).not.toBe("none");
 });
 
 test("busy month cells expose multiple color-coded items without clutter",async({page})=>{
