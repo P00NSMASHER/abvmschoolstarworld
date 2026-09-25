@@ -1,4 +1,4 @@
-const CACHE = "abvm-grade2-parent-companion-v45-calendar-art-direction";
+const CACHE = "abvm-grade2-parent-companion-v46-cross-repo-calendar";
 const SHELL = [
   "./",
   "./index.html",
