@@ -251,6 +251,18 @@ function renderCalendar(){
     }).join(""):'<div class="calendar-empty-state">No school dates are listed for this month.</div>')+
     '</div>';
 
+  const legend='<div class="calendar-legend" aria-label="Calendar color key">'+
+    '<span><i class="music"></i>Music</span>'+
+    '<span><i class="mass"></i>Mass</span>'+
+    '<span><i class="gym"></i>Gym</span>'+
+    '<span><i class="library"></i>Library</span>'+
+    '<span><i class="computer"></i>Computer</span>'+
+    '<span><i class="test"></i>STAR Testing</span>'+
+    '<span><i class="closed"></i>No School</span>'+
+    '<span><i class="halfday"></i>Half Day</span>'+
+    '<span><i class="special"></i>Special</span>'+
+    '</div>';
+
   const detailRows=[];
   if(schedule){
     detailRows.push(calendarDetailRow(
@@ -302,10 +314,10 @@ function renderCalendar(){
           '<button class="month-arrow" data-month="1" type="button" aria-label="Next month">›</button>'+
         '</div>'+
         '<div class="calendar-tabs" role="group" aria-label="Calendar view">'+
-          '<button class="'+(calendarMode==="month"?"active":"")+'" data-cal-mode="month" type="button" aria-label="Month View" aria-pressed="'+(calendarMode==="month")+'">Month</button>'+
-          '<button class="'+(calendarMode==="list"?"active":"")+'" data-cal-mode="list" type="button" aria-label="List View" aria-pressed="'+(calendarMode==="list")+'">List</button>'+
+          '<button class="'+(calendarMode==="month"?"active":"")+'" data-cal-mode="month" type="button" aria-label="Month View" aria-pressed="'+(calendarMode==="month")+'">Month View</button>'+
+          '<button class="'+(calendarMode==="list"?"active":"")+'" data-cal-mode="list" type="button" aria-label="List View" aria-pressed="'+(calendarMode==="list")+'">List View</button>'+
         '</div>'+
-        monthPanel+listPanel+
+        monthPanel+listPanel+legend+
       '</section>'+
       '<section class="calendar-day-card">'+
         '<div class="calendar-day-heading"><div><span>'+WEEKDAY[calendarDay.getDay()]+'</span><h2>'+MONTHS[calendarDay.getMonth()]+" "+calendarDay.getDate()+'</h2></div>'+selectedStatus+'</div>'+
