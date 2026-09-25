@@ -45,9 +45,10 @@ export async function promptInstall(){
 
 export function registerFreshServiceWorker(){
   if(!("serviceWorker" in navigator))return;
+  const hadController=Boolean(navigator.serviceWorker.controller);
   let reloading=false;
   navigator.serviceWorker.addEventListener("controllerchange",()=>{
-    if(reloading)return;
+    if(!hadController||reloading)return;
     reloading=true;
     location.reload();
   });
