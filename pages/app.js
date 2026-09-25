@@ -148,29 +148,24 @@ function renderToday(){
 function renderWeek(){
   const days=weekDays();
   if(!selectedDay||!days.some(d=>sameDay(d,selectedDay)))selectedDay=days.find(d=>sameDay(d,today()))||days[0];
-  const events=eventItemsForDate(selectedDay),lunch=lunchForDate(selectedDay),special=specialForDate(selectedDay),schedule=calendarScheduleEvent(events);
-  const now=today();
+  const events=eventItemsForDate(selectedDay),items=calendarContentEvents(events),lunch=lunchForDate(selectedDay),special=specialForDate(selectedDay),schedule=calendarScheduleEvent(events),now=today();
   const picker=days.map(d=>{
-    const active=sameDay(d,selectedDay),isToday=sameDay(d,now),past=d<now;
-    const classes=[active?"active":"",isToday?"today":"",past?"past":""].filter(Boolean).join(" ");
-    return '<button class="'+classes+'" type="button" data-day="'+d.toISOString()+'" aria-label="'+esc(fmtDate(d)+(isToday?", today":""))+'" aria-pressed="'+active+'"><span>'+WEEKDAY[d.getDay()].slice(0,3)+'</span><strong>'+d.getDate()+'</strong></button>';
+    const active=sameDay(d,selectedDay),isToday=sameDay(d,now),dayEvents=eventItemsForDate(d),hasItems=calendarContentEvents(dayEvents).length||calendarScheduleEvent(dayEvents)||specialForDate(d);
+    return '<button class="'+[active?"active":"",isToday?"today":"",d<now?"past":""].filter(Boolean).join(" ")+'" type="button" data-day="'+d.toISOString()+'" aria-label="'+esc(fmtDate(d)+(isToday?", today":""))+'" aria-pressed="'+active+'"><span>'+WEEKDAY[d.getDay()].slice(0,3)+'</span><strong>'+d.getDate()+'</strong>'+(hasItems?'<i aria-hidden="true"></i>':'')+'</button>';
   }).join("");
-  const future=(pack?.importantDates||[]).map(x=>({x,span:eventSpan(x.date)}))
-    .filter(o=>o.span&&o.span.start>selectedDay)
-    .sort((a,b)=>a.span.start-b.span.start).slice(0,4)
-    .map(o=>({x:o.x,d:o.span.start<selectedDay?selectedDay:o.span.start}));
+  const future=(pack?.importantDates||[]).map(x=>({x,span:eventSpan(x.date)})).filter(o=>o.span&&o.span.start>selectedDay).sort((a,b)=>a.span.start-b.span.start).slice(0,4).map(o=>({x:o.x,d:o.span.start}));
   const noSchool=schedule&&kindClass(schedule)==="closed",halfDay=schedule&&kindClass(schedule)==="halfday",weekend=[0,6].includes(selectedDay.getDay());
-  const dayStatus=noSchool?"No School":halfDay?"Half Day • 12:00 PM":weekend?"Weekend":"School Day";
-  const note='<div class="week-hero-note"><span>CALM PLAN</span><b>Five days, one clear view</b></div>';
-  stack().innerHTML='<div class="screen week-screen" role="region" aria-label="This week">'+scene("week","YOUR SCHOOL PLAN","This Week","Tap a day for events, lunch, and specials",false,note)+
-    '<div class="content overlap"><div class="day-picker">'+picker+'</div>'+
-    '<section class="day-detail"><div class="day-detail-inner"><div class="day-detail-title"><div><p>'+MONTHS[selectedDay.getMonth()].toUpperCase()+'</p><h2>'+esc(fmtDate(selectedDay))+'</h2></div><span class="school-day-pill '+(noSchool?'closed':halfDay?'halfday':weekend?'closed':'')+'">'+dayStatus+'</span></div>'+
-    (schedule?'<div class="schedule-alert compact '+kindClass(schedule)+'"><span>'+icon(kindClass(schedule)==="closed"?"ban":"clock")+'</span><div><small>'+esc(scheduleStatusText(schedule).toUpperCase())+'</small><strong>'+esc(scheduleStatusDetail(schedule))+'</strong></div></div>':'')+
-    (special&&!noSchool?'<div class="selected-special"><span>'+icon("star")+'</span><div><small>'+(halfDay?'USUAL SPECIAL':'SPECIAL')+'</small><strong>'+esc(special)+'</strong>'+(halfDay?'<em>Early dismissal may change the usual schedule.</em>':'')+'</div></div>':'')+
-    '<div class="event-stack" style="margin-top:14px">'+(calendarContentEvents(events).length?calendarContentEvents(events).map(eventRow).join(""):'<div class="empty-note">'+(schedule?"No additional events are listed for this date.":"No special school events are listed for this date.")+'</div>')+'</div></div></section>'+
+  const dayStatus=noSchool?"No School":halfDay?"Half Day":weekend?"Weekend":"School Day";
+  const agendaCount=items.length+(special&&!noSchool?1:0)+(schedule?1:0);
+  stack().innerHTML='<div class="screen week-screen" role="region" aria-label="This week"><header class="week-page-head">'+schoolHeader()+'<div class="week-page-title"><h1>Week</h1><p>'+esc(fmtCompactDate(days[0]))+' – '+esc(fmtCompactDate(days[days.length-1]))+'</p></div></header>'+
+    '<div class="content week-content"><div class="day-picker">'+picker+'</div>'+
+    '<section class="day-detail"><div class="day-detail-inner"><div class="day-detail-title"><div><span class="week-kicker">'+WEEKDAY[selectedDay.getDay()]+'</span><h2>'+esc(fmtDate(selectedDay))+'</h2><p class="week-day-summary">'+(agendaCount?agendaCount+" item"+(agendaCount===1?"":"s")+" on the schedule":"Nothing extra scheduled")+'</p></div><span class="school-day-pill '+(noSchool?'closed':halfDay?'halfday':weekend?'weekend':'')+'">'+dayStatus+'</span></div>'+
+    (schedule?'<div class="schedule-alert compact '+kindClass(schedule)+'"><span>'+icon(kindClass(schedule)==="closed"?"ban":"clock")+'</span><div><small>'+esc(scheduleStatusText(schedule))+'</small><strong>'+esc(scheduleStatusDetail(schedule))+'</strong></div></div>':'')+
+    (special&&!noSchool?'<div class="selected-special"><span>'+icon(specialIconName(special))+'</span><div><small>Class special</small><strong>'+esc(special)+'</strong></div></div>':'')+
+    '<div class="event-stack week-event-stack">'+(items.length?items.map(eventRow).join(""):'<div class="empty-note">No additional school events are listed.</div>')+'</div></div></section>'+
     lunchCard(lunch)+
-    '<section class="reminder-strip"><span class="bang">!</span><p><strong>Don’t forget</strong>'+esc(reminderForDate(selectedDay))+'</p></section>'+
-    '<section class="future-card"><h3>Coming soon</h3>'+(future.length?future.map(o=>'<div class="future-row"><span>'+esc(fmtCompactDate(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join(""):'<div class="empty-note">Nothing else is posted after this day yet.</div>')+'</section></div></div>';
+    '<section class="reminder-strip"><span class="bang">'+icon("check")+'</span><p><strong>Remember</strong>'+esc(reminderForDate(selectedDay))+'</p></section>'+
+    '<section class="future-card"><div class="week-section-head"><h3>Coming up</h3></div>'+(future.length?future.map(o=>'<div class="future-row"><span>'+esc(fmtCompactDate(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join(""):'<div class="empty-note">Nothing else is posted after this day yet.</div>')+'</section></div></div>';
 }
 function calendarDisplayText(value){
   return String(value||"").replace(/\bFundraiswer\b/gi,"Fundraiser");
