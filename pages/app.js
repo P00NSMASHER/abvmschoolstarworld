@@ -339,31 +339,19 @@ function subjectCard(id,klass,title,icon,subj){
   return '<details id="'+id+'" class="subject-card subject-disclosure '+klass+'"'+open+'><summary><span class="subject-head"><span class="icon" aria-hidden="true">'+icon+'</span><span><span class="subject-kicker">'+esc(title.toUpperCase())+'</span><strong>'+esc(title)+'</strong></span></span><span class="disclosure-chevron" aria-hidden="true">›</span></summary><div class="subject-disclosure-body"><ul>'+notes.map(n=>'<li>'+esc(n)+'</li>').join("")+'</ul></div></details>';
 }
 function renderStudy(){
-  const r=readingSubject(),rel=religionSubject(),math=mathSubject(),spell=spellingSubject();
-  const [,fri]=currentWeekRange(),now=today();
-  const assessments=(pack?.importantDates||[]).map(x=>({x,span:eventSpan(x.date)}))
-    .filter(o=>o.span&&o.span.end>=now&&o.span.start<=fri&&kindClass(o.x)==="test")
-    .sort((a,b)=>a.span.start-b.span.start)
-    .map(o=>({x:o.x,d:o.span.start<now?new Date(now):o.span.start,span:o.span}));
+  const r=readingSubject(),rel=religionSubject(),math=mathSubject(),spell=spellingSubject(),[,fri]=currentWeekRange(),now=today();
+  const assessments=(pack?.importantDates||[]).map(x=>({x,span:eventSpan(x.date)})).filter(o=>o.span&&o.span.end>=now&&o.span.start<=fri&&kindClass(o.x)==="test").sort((a,b)=>a.span.start-b.span.start).map(o=>({x:o.x,d:o.span.start<now?new Date(now):o.span.start}));
   const starActive=(pack?.importantDates||[]).some(x=>/star/i.test(x.label||"")&&eventSpan(x.date)?.end>=now);
   const essentials=[{when:"Daily",label:readingRoutine(),icon:icon("book"),klass:"green"},...assessments.slice(0,4).map((o,i)=>({when:fmtCompactDate(o.d),label:o.x.label,icon:icon(eventIconName(o.x)),klass:["yellow","pink","blue","pink"][i]||"blue"}))];
-  const sight=(r?.topics||[]).find(x=>/^Sight words:/i.test(x))?.replace(/^Sight words:\s*/i,"").split(",").map(x=>x.trim()).filter(Boolean)||[];
-  const vocab=(pack?.vocabulary||[]).map(v=>v.term);
-  stack().innerHTML='<div class="screen study-screen" role="region" aria-label="Study room">'+
-    scene("study","THIS WEEK","Study","Everything to review, in one calm place",true)+
-    '<div class="study-content"><section class="study-intro"><span class="study-bulb">'+icon("idea")+'</span><div><h2>Start with what is next</h2><p>Tests and daily reading are first. Subject details are below.</p></div></section>'+
-    '<section class="study-at-a-glance"><div class="section-label">TESTS & DAILY ROUTINE</div><h2>Quick Look</h2>'+essentials.map(e=>'<div class="essential-row"><span class="essential-icon '+e.klass+'">'+e.icon+'</span><div><time>'+esc(e.when)+'</time><strong>'+esc(e.label)+'</strong></div></div>').join("")+'</section>'+
+  const sight=(r?.topics||[]).find(x=>/^Sight words:/i.test(x))?.replace(/^Sight words:\s*/i,"").split(",").map(x=>x.trim()).filter(Boolean)||[],vocab=(pack?.vocabulary||[]).map(v=>v.term);
+  stack().innerHTML='<div class="screen study-screen" role="region" aria-label="Study room"><header class="study-page-head">'+schoolHeader()+'<div class="study-page-title"><h1>Study</h1><p>What to review this week</p></div></header>'+
+    '<div class="study-content"><section class="study-at-a-glance"><div class="study-card-head"><span>Up next</span><h2>Quick Look</h2></div>'+essentials.map(e=>'<div class="essential-row"><span class="essential-icon '+e.klass+'">'+e.icon+'</span><div><time>'+esc(e.when)+'</time><strong>'+esc(e.label)+'</strong></div></div>').join("")+'</section>'+
     '<nav class="study-section-nav" aria-label="Jump to a study section"><button type="button" data-study-jump="study-reading">Reading</button><button type="button" data-study-jump="study-spelling">Spelling</button><button type="button" data-study-jump="study-religion">Religion</button><button type="button" data-study-jump="study-math">Math</button><button type="button" data-study-jump="study-words">Words</button></nav>'+
-    subjectCard("study-reading","reading","Reading",icon("book"),r)+
-    subjectCard("study-spelling","spelling","Spelling and phonics",icon("pencil"),spell)+
-    subjectCard("study-religion","religion",rel?.subject||"Religion",icon("cross"),rel)+
-    subjectCard("study-math","math","Math",icon("math"),math)+
-    '<details id="study-words" class="subject-card subject-disclosure sight words-card"><summary><span class="subject-head"><span class="icon">'+icon("words")+'</span><span><span class="subject-kicker">WORDS</span><strong>Sight words & vocabulary</strong></span></span><span class="disclosure-chevron" aria-hidden="true">›</span></summary><div class="subject-disclosure-body">'+
-      '<h3 class="word-subhead">Sight words</h3><div class="sight-cloud">'+sight.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div>'+
-      '<h3 class="word-subhead">Vocabulary</h3><div class="word-grid">'+vocab.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></div></details>'+
-    (starActive?'<section class="calm-card"><h3>STAR reminder</h3><p>Keep assessment preparation calm. Normal reading, normal routines, and a good night’s sleep are enough.</p></section>':'')+
-    '<section class="calm-card study-tip"><span>'+icon("check")+'</span><div><h3>Keep review short and focused</h3><p>Use the teacher-posted material above, then stop when the planned review is complete.</p></div></section>'+
-    '</div></div>';
+    '<div class="study-section-label"><span>Subjects</span><p>Tap a subject to open its review list.</p></div>'+
+    subjectCard("study-reading","reading","Reading",icon("book"),r)+subjectCard("study-spelling","spelling","Spelling and phonics",icon("pencil"),spell)+subjectCard("study-religion","religion",rel?.subject||"Religion",icon("cross"),rel)+subjectCard("study-math","math","Math",icon("math"),math)+
+    '<details id="study-words" class="subject-card subject-disclosure sight words-card"><summary><span class="subject-head"><span class="icon">'+icon("words")+'</span><span><span class="subject-kicker">WORDS</span><strong>Sight words & vocabulary</strong></span></span><span class="disclosure-chevron" aria-hidden="true">›</span></summary><div class="subject-disclosure-body"><h3 class="word-subhead">Sight words</h3><div class="sight-cloud">'+sight.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div><h3 class="word-subhead">Vocabulary</h3><div class="word-grid">'+vocab.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></div></details>'+
+    (starActive?'<section class="calm-card"><span>'+icon("moon")+'</span><div><h3>STAR reminder</h3><p>Keep preparation calm: normal reading, normal routines, and a good night’s sleep.</p></div></section>':"")+
+    '<section class="calm-card study-tip"><span>'+icon("check")+'</span><div><h3>Short and focused wins</h3><p>Use the teacher-posted material above, then stop when the planned review is complete.</p></div></section></div></div>';
 }
 function installCard(){
   const experience=installExperience();
