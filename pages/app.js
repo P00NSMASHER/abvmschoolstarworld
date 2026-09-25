@@ -188,20 +188,8 @@ function calendarSpecialClass(value){
   if(/art/.test(v))return"art";
   return"special";
 }
-function calendarDetailPhoto(type,title,klass=""){
-  const key=(String(type||"")+" "+String(title||"")+" "+String(klass||"")).toLowerCase();
-  if(/star testing|star reading|assessment|\btest\b/.test(key))return{src:"./assets/calendar-star.webp",alt:"Pencil and student answer sheet"};
-  if(/\bgym\b|pe class|physical education/.test(key))return{src:"./assets/calendar-gym.webp",alt:"Gym shoes and water bottle"};
-  if(/pretzel/.test(key))return{src:"./assets/calendar-pretzel.webp",alt:"Fresh baked pretzels"};
-  if(/\blunch\b|school meal/.test(key))return{src:"./assets/calendar-lunch.webp",alt:"School lunch tray"};
-  return null;
-}
 function calendarDetailRow(iconName,type,title,klass=""){
-  const photo=calendarDetailPhoto(type,title,klass);
-  const visual=photo
-    ?'<img class="calendar-detail-photo" src="'+photo.src+'" width="160" height="120" loading="lazy" decoding="async" alt="'+esc(photo.alt)+'">'
-    :'<span class="calendar-detail-icon" aria-hidden="true">'+icon(iconName)+'</span>';
-  return '<div class="calendar-detail-row '+klass+(photo?' has-photo':'')+'">'+visual+'<div class="calendar-detail-copy"><small>'+esc(type)+'</small><strong>'+esc(calendarDisplayText(title))+'</strong></div></div>';
+  return '<div class="calendar-detail-row '+klass+'"><span class="calendar-detail-icon" aria-hidden="true">'+icon(iconName)+'</span><div class="calendar-detail-copy"><small>'+esc(type)+'</small><strong>'+esc(calendarDisplayText(title))+'</strong></div></div>';
 }
 function monthGrid(year,month){
   const first=new Date(year,month,1,12),last=new Date(year,month+1,0,12),blanks=first.getDay();
@@ -213,12 +201,13 @@ function monthGrid(year,month){
     const scheduleClass=schedule?kindClass(schedule):"",primaryClass=primary?kindClass(primary):"";
     const weekend=[0,6].includes(d.getDay()),closed=scheduleClass==="closed",halfday=scheduleClass==="halfday";
     const distinctSpecial=Boolean(special&&!closed&&!contentEvents.some(item=>sameCalendarDetail(item.label,special)));
-    const specialPrimary=!primary&&!schedule&&distinctSpecial?special.split(",")[0].trim():"";
-    const specialClass=calendarSpecialClass(specialPrimary||(!primary&&!schedule?special:""));
-    const label=schedule?scheduleStatusText(schedule):calendarCellLabel(primary,specialPrimary);
-    const hiddenCount=Math.max(0,contentEvents.length-(primary?1:0)+(distinctSpecial?1:0)+(schedule?1:0)-(schedule?1:0));
-    const totalItems=contentEvents.length+(schedule?1:0)+(distinctSpecial?1:0);
-    const moreCount=Math.max(0,totalItems-(label?1:0));
+    const specialLabel=distinctSpecial?special.split(",")[0].trim():"";
+    const specialClass=calendarSpecialClass(specialLabel||special);
+    const cellItems=[];
+    if(schedule)cellItems.push({label:scheduleStatusText(schedule),klass:scheduleClass});
+    for(const item of contentEvents)cellItems.push({label:calendarDisplayText(item.label),klass:kindClass(item)});
+    if(distinctSpecial)cellItems.push({label:calendarDisplayText(specialLabel),klass:specialClass});
+    const shownItems=cellItems.slice(0,2),moreCount=Math.max(0,cellItems.length-shownItems.length);
     const classes=[
       weekend?"weekend":"",
       closed?"closed":"",
@@ -232,11 +221,11 @@ function monthGrid(year,month){
       ...events.map(item=>calendarDisplayText(item.label)),
       ...(special?[calendarDisplayText(special)]:[])
     ].filter(Boolean);
+    const eventStack=shownItems.length
+      ?'<span class="calendar-cell-events" aria-hidden="true">'+shownItems.map(item=>'<span class="calendar-cell-event '+(item.klass||"special")+'"><i></i><em>'+esc(item.label)+'</em></span>').join("")+(moreCount?'<span class="calendar-cell-more">+'+moreCount+' more</span>':'')+'</span>'
+      :"";
     html+='<button class="'+classes+'" type="button" data-cal-day="'+d.toISOString()+'" aria-pressed="'+Boolean(calendarDay&&sameDay(d,calendarDay))+'" aria-label="'+esc(fmtDate(d)+(ariaDetails.length?': '+ariaDetails.join(', '):''))+'">'+
-      '<strong>'+day+'</strong>'+
-      (label?'<span class="calendar-cell-label '+(scheduleClass||primaryClass||specialClass||'special')+'">'+esc(calendarDisplayText(label))+'</span>':'')+
-      (moreCount?'<span class="calendar-cell-more">+'+moreCount+'</span>':'')+
-      '</button>';
+      '<strong>'+day+'</strong>'+eventStack+'</button>';
   }
   return html;
 }
@@ -324,6 +313,8 @@ function renderCalendar(){
   const selectedStatus=schedule
     ?'<span class="calendar-day-status '+kindClass(schedule)+'">'+esc(scheduleStatusText(schedule))+'</span>'
     :"";
+  const eventCount=(schedule?1:0)+contentEvents.length+(displaySpecial?1:0);
+  const daySummary=eventCount?eventCount+" event"+(eventCount===1?"":"s"):"Regular school day";
   const noSpecialItems=!schedule&&!contentEvents.length&&!displaySpecial;
   const details=(noSpecialItems?'<p class="calendar-empty">No special events. Regular school day.</p>':'')+
     '<div class="calendar-detail-list">'+detailRows.join("")+'</div>';
@@ -344,7 +335,7 @@ function renderCalendar(){
         monthPanel+listPanel+legend+
       '</section>'+
       '<section class="calendar-day-card">'+
-        '<div class="calendar-day-heading"><div><span>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</span><h2>'+WEEKDAY[calendarDay.getDay()]+", "+MONTHS[calendarDay.getMonth()]+" "+calendarDay.getDate()+'</h2></div>'+selectedStatus+'</div>'+
+        '<div class="calendar-day-heading"><div><span>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</span><h2>'+WEEKDAY[calendarDay.getDay()]+", "+MONTHS[calendarDay.getMonth()]+" "+calendarDay.getDate()+'</h2><p class="calendar-day-summary">'+esc(daySummary)+'</p></div><div class="calendar-day-badges">'+selectedStatus+'</div></div>'+
         details+
       '</section>'+
     '</div>'+
