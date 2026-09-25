@@ -7,6 +7,14 @@ async function openTab(page,label){
 
 test.beforeEach(async({page})=>{
   await page.goto("/?rollback=gold#today");
+});
+
+test("gold-standard app boots without runtime errors",async({page})=>{
+  const errors=[];
+  page.on("pageerror",error=>errors.push(error.message));
+  await page.reload();
+  await page.waitForTimeout(1500);
+  expect(errors,errors.join("\n")).toEqual([]);
   await expect(page.locator(".screen")).toBeVisible({timeout:10000});
 });
 
