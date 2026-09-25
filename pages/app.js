@@ -319,7 +319,7 @@ function renderCalendar(){
   const details=(noSpecialItems?'<p class="calendar-empty">No special events. Regular school day.</p>':'')+
     '<div class="calendar-detail-list">'+detailRows.join("")+'</div>';
 
-  stack().innerHTML='<div class="screen calendar-screen" role="region" aria-label="'+MONTHS[m]+' calendar">'+
+  stack().innerHTML='<div class="screen calendar-screen" role="region" tabindex="0" aria-label="'+MONTHS[m]+' calendar">'+
     '<header class="calendar-page-head">'+schoolHeader()+'<div class="calendar-page-title"><h1>Calendar</h1><p>Tap a date for details.</p></div></header>'+
     '<div class="calendar-wrap">'+
       '<section class="calendar-card">'+
