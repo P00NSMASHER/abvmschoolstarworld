@@ -98,6 +98,24 @@ test("study jump controls open their target sections",async({page})=>{
   expect(after).toBeGreaterThanOrEqual(before);
 });
 
+test("Family uses the clean native-style parent dashboard hierarchy",async({page})=>{
+  await openTab(page,"Family");
+  await expect(page.locator(".family-page-title h1")).toHaveText("Family");
+  await expect(page.locator(".family-priority")).toBeVisible();
+  await expect(page.locator(".family-stats")).toBeVisible();
+  await expect(page.locator(".family-screen .top-scene")).toHaveCount(0);
+  const styles=await page.evaluate(()=>({
+    canvas:getComputedStyle(document.querySelector(".family-screen")).backgroundColor,
+    priority:getComputedStyle(document.querySelector(".family-priority")).backgroundColor,
+    card:getComputedStyle(document.querySelector(".family-card")).backgroundColor,
+    priorityRadius:parseFloat(getComputedStyle(document.querySelector(".family-priority")).borderRadius),
+  }));
+  expect(styles.canvas).toBe("rgb(242, 242, 247)");
+  expect(styles.priority).toBe("rgb(255, 255, 255)");
+  expect(styles.card).toBe("rgb(255, 255, 255)");
+  expect(styles.priorityRadius).toBeGreaterThanOrEqual(18);
+});
+
 test("family notices are static and checklist semantics are explicit",async({page})=>{
   await openTab(page,"Family");
   await expect(page.locator("#family-current-notices")).toBeVisible();
