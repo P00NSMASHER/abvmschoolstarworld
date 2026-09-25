@@ -88,7 +88,7 @@ test("regular date gives a calm empty state rather than broken detail",async({pa
   await expect(page.locator(".calendar-empty")).toContainText(/Regular school day|No special events/i);
 });
 
-test("Calendar uses the premium polished planner hierarchy",async({page})=>{
+test("Calendar uses a clean native-style planner hierarchy",async({page})=>{
   await openCalendar(page);
   await expect(page.getByRole("heading",{name:"Calendar",exact:true})).toBeVisible();
   await expect(page.getByText("School Month at a Glance")).toHaveCount(0);
@@ -105,28 +105,29 @@ test("Calendar uses the premium polished planner hierarchy",async({page})=>{
     return{
       monthShadow:month.boxShadow,
       detailShadow:detail.boxShadow,
-      detailBackgroundImage:detail.backgroundImage,
+      detailBackground:detail.backgroundColor,
       detailRadius:parseFloat(detail.borderRadius),
-      activeBackground:active.backgroundImage,
+      activeBackground:active.backgroundColor,
     };
   });
   expect(styles.monthShadow).not.toBe("none");
   expect(styles.detailShadow).not.toBe("none");
-  expect(styles.detailBackgroundImage).not.toBe("none");
-  expect(styles.detailRadius).toBeGreaterThanOrEqual(20);
-  expect(styles.activeBackground).not.toBe("none");
+  expect(styles.detailBackground).toBe("rgb(255, 255, 255)");
+  expect(styles.detailRadius).toBeGreaterThanOrEqual(18);
+  expect(styles.activeBackground).toBe("rgb(255, 255, 255)");
 });
 
-test("month cells show one concise label and a separate count for extra items",async({page})=>{
+test("busy month cells expose multiple color-coded items without clutter",async({page})=>{
   await openCalendar(page);
   await goToMonth(page,2026,"September");
   const busy=page.getByRole("button",{name:/Friday, September 25/i}).first();
   await expect(busy).toBeVisible();
-  await expect(busy.locator(".calendar-cell-label")).toHaveCount(1);
-  const labels=await busy.locator(".calendar-cell-label").count();
-  expect(labels).toBe(1);
+  const items=busy.locator(".calendar-cell-event");
+  expect(await items.count()).toBeGreaterThanOrEqual(1);
+  expect(await items.count()).toBeLessThanOrEqual(2);
+  await expect(items.first().locator("i")).toBeVisible();
   const more=busy.locator(".calendar-cell-more");
-  if(await more.count()) await expect(more).toContainText(/^\+\d+$/);
+  if(await more.count()) await expect(more).toContainText(/^\+\d+ more$/);
   await expect(busy.locator(".mini-icon")).toHaveCount(0);
 });
 
@@ -171,4 +172,16 @@ test("mobile Calendar has a real internal scrollport and clears bottom navigatio
   expect(after.scrollTop).toBeGreaterThan(100);
   expect(after.screenBottom).toBeLessThanOrEqual(after.navTop+1);
   expect(after.detailBottom).toBeLessThanOrEqual(after.navTop-8);
+});
+
+
+test("selected busy day states the event count and lists every item vertically",async({page})=>{
+  await openCalendar(page);
+  await goToMonth(page,2026,"September");
+  await chooseDate(page,/Thursday, September 24/i);
+  await expect(page.locator(".calendar-day-summary")).toContainText(/event|Regular school day/i);
+  const rows=page.locator(".calendar-detail-row");
+  expect(await rows.count()).toBeGreaterThan(1);
+  const photoCount=await page.locator(".calendar-detail-photo:visible").count();
+  expect(photoCount).toBe(0);
 });
