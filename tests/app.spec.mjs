@@ -71,6 +71,24 @@ test("calendar controls remain interactive",async({page})=>{
   await expect(firstDay).toHaveAttribute("aria-pressed","true");
 });
 
+test("Study uses the clean native-style review hierarchy",async({page})=>{
+  await openTab(page,"Study");
+  await expect(page.locator(".study-page-title h1")).toHaveText("Study");
+  await expect(page.locator(".study-at-a-glance")).toBeVisible();
+  await expect(page.locator(".study-section-nav")).toBeVisible();
+  await expect(page.locator(".study-screen .top-scene")).toHaveCount(0);
+  const styles=await page.evaluate(()=>({
+    canvas:getComputedStyle(document.querySelector(".study-screen")).backgroundColor,
+    quick:getComputedStyle(document.querySelector(".study-at-a-glance")).backgroundColor,
+    subject:getComputedStyle(document.querySelector(".subject-card")).backgroundColor,
+    radius:parseFloat(getComputedStyle(document.querySelector(".study-at-a-glance")).borderRadius),
+  }));
+  expect(styles.canvas).toBe("rgb(242, 242, 247)");
+  expect(styles.quick).toBe("rgb(255, 255, 255)");
+  expect(styles.subject).toBe("rgb(255, 255, 255)");
+  expect(styles.radius).toBeGreaterThanOrEqual(18);
+});
+
 test("study jump controls open their target sections",async({page})=>{
   await openTab(page,"Study");
   const before=await page.evaluate(()=>document.querySelector(".screen")?.scrollTop||window.scrollY);
