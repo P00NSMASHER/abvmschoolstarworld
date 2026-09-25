@@ -132,21 +132,17 @@ function weekPriority(){
 
 function renderToday(){
   const d=today(),events=eventItemsForDate(d),lunch=lunchForDate(d),priority=weekPriority(),deadline=nextDeadline(),schedule=calendarScheduleEvent(events),contentEvents=calendarContentEvents(events);
-  const mainEvent=contentEvents.find(e=>kindClass(e)==="test")||contentEvents[0]||schedule||null;
-  const otherEvents=events.filter(e=>e!==mainEvent&&e!==schedule);
-  const headline=mainEvent?.label||"Normal school day";
-  const subline=otherEvents.length?otherEvents.map(e=>e.label).join(" · "):"Stay with the current homework and reading routine.";
+  const schoolRows=contentEvents.length?contentEvents.map(eventRow).join(""):'<div class="event-row regular"><span class="event-icon">'+icon("check")+'</span><span class="kind">School</span><strong>Regular school day</strong></div>';
   const deadlineHtml=deadline
-    ?'<section class="today-deadline"><span class="deadline-icon">'+icon("pin")+'</span><div><p>NEXT DEADLINE</p><strong>'+esc(deadline.x.label)+'</strong><small>'+esc(fmtCompactDate(deadline.span.start))+'</small></div></section>'
-    :'<section class="today-deadline clear"><span class="deadline-icon">'+icon("check")+'</span><div><p>NEXT DEADLINE</p><strong>No posted deadline due</strong><small>Keep the normal school routine.</small></div></section>';
-  const content='<div class="content overlap">'+
-    '<section class="date-hero-card"><div class="big-date"><strong>'+WEEKDAY[d.getDay()].slice(0,3).toUpperCase()+'</strong><span>'+d.getDate()+'</span><small>Today</small></div><div class="date-hero-copy"><p>TODAY AT SCHOOL</p><h2>'+esc(headline)+'</h2><span>'+esc(subline)+'</span></div></section>'+
-    (schedule?'<section class="schedule-alert '+kindClass(schedule)+'"><span>'+icon(kindClass(schedule)==="closed"?"ban":"clock")+'</span><div><small>'+esc(scheduleStatusText(schedule).toUpperCase())+'</small><strong>'+esc(scheduleStatusDetail(schedule))+'</strong></div></section>':'')+
+    ?'<section class="today-deadline"><span class="deadline-icon">'+icon("pin")+'</span><div><p>Next deadline</p><strong>'+esc(deadline.x.label)+'</strong><small>'+esc(fmtCompactDate(deadline.span.start))+'</small></div></section>'
+    :'<section class="today-deadline clear"><span class="deadline-icon">'+icon("check")+'</span><div><p>Next deadline</p><strong>No posted deadline due</strong><small>Nothing extra is due right now.</small></div></section>';
+  const content='<div class="content today-content">'+
+    '<section class="date-hero-card today-overview"><div class="today-overview-head"><div class="big-date"><strong>'+WEEKDAY[d.getDay()].slice(0,3).toUpperCase()+'</strong><span>'+d.getDate()+'</span></div><div class="date-hero-copy"><p>At school</p><h2>'+(contentEvents.length?contentEvents.length+" item"+(contentEvents.length===1?"":"s")+" today":"Regular school day")+'</h2><span>'+esc(priority.title)+'</span></div></div><div class="today-event-stack">'+schoolRows+'</div></section>'+
+    (schedule?'<section class="schedule-alert '+kindClass(schedule)+'"><span>'+icon(kindClass(schedule)==="closed"?"ban":"clock")+'</span><div><small>'+esc(scheduleStatusText(schedule))+'</small><strong>'+esc(scheduleStatusDetail(schedule))+'</strong></div></section>':'')+
     deadlineHtml+
-    '<section class="gold-card glass-card homework-dashboard"><div class="checklist-title"><h3>Homework</h3><span class="edit-pill">'+homeworkStatus()+'</span></div><p class="checklist-help">Tap a task to mark it complete. Progress is saved on this device.</p><div class="task-list">'+(pack?.homework||[]).map(taskHtml).join("")+'</div></section>'+
-    lunchCard(lunch)+
-    '</div>';
-  stack().innerHTML='<div class="screen today-screen" role="region" aria-label="Today">'+scene("today","TODAY",fmtDate(d),priority.title,false)+freshness()+content+'</div>';
+    '<section class="gold-card homework-dashboard"><div class="checklist-title"><div><span class="today-section-kicker">To do</span><h3>Homework</h3></div><span class="edit-pill">'+homeworkStatus()+'</span></div><p class="checklist-help">Tap a circle when a task is finished.</p><div class="task-list">'+(pack?.homework||[]).map(taskHtml).join("")+'</div></section>'+
+    lunchCard(lunch)+'</div>';
+  stack().innerHTML='<div class="screen today-screen" role="region" aria-label="Today"><header class="today-page-head">'+schoolHeader()+'<div class="today-page-title"><h1>Today</h1><p>'+esc(fmtDate(d))+'</p></div></header>'+freshness()+content+'</div>';
 }
 function renderWeek(){
   const days=weekDays();
