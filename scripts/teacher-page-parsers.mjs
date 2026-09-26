@@ -1,4 +1,4 @@
-const SUBJECTS = new Set(['Spelling', 'Math', 'Reading']);
+const VERIFIED_ASSIGNMENT_SUBJECTS = new Set(['Spelling', 'Math', 'Reading', 'Religion']);
 
 export function decodeHtml(value) {
   return String(value || '')
@@ -105,7 +105,9 @@ export function parseHomework(lines) {
     }
 
     let match;
-    if ((match = line.match(/^Parents?\s*(?::|-|—)\s*(.+)$/i))) {
+    if (/^Attend Mass(?:\s*[.!])?$/i.test(line)) {
+      entries.push(assignment(day, 'Religion', 'Attend Mass'));
+    } else if ((match = line.match(/^Parents?\s*(?::|-|—)\s*(.+)$/i))) {
       entries.push(assignment(day, 'Parent', match[1]));
     } else if (/^Reading log/i.test(line)) {
       entries.push(assignment(day, 'Reading', 'Keep Reading Log and Behavior Chart in the HW folder', 'Ongoing'));
@@ -114,7 +116,7 @@ export function parseHomework(lines) {
     }
   }
 
-  const academicEntries = entries.filter(entry => SUBJECTS.has(entry.subject));
+  const academicEntries = entries.filter(entry => VERIFIED_ASSIGNMENT_SUBJECTS.has(entry.subject));
   if (academicEntries.length === 0 && explicitNoHomework) {
     return [assignment(day, 'Homework', 'No homework assigned')];
   }
