@@ -57,6 +57,24 @@ test('parseHomework does not require every academic subject on every posting', (
   assert.equal(rows.some(row => row.subject === 'Reading'), false);
 });
 
+
+test('parseHomework accepts the live September 26 teacher posting', () => {
+  const rows = parseHomework([
+    'Homework',
+    'Attend Mass',
+    'Read',
+    'Parents: cover books',
+    'Reading log (please keep Reading log & Behavior chart in the HW folder)',
+    'Everything should be returned in the HW folder',
+  ]);
+  assert.deepEqual(rows.map(row => [row.subject, row.task, row.due]), [
+    ['Religion', 'Attend Mass', 'Current posting'],
+    ['Reading', 'Read', 'Current posting'],
+    ['Parent', 'Cover books', 'Current posting'],
+    ['Reading', 'Keep Reading Log and Behavior Chart in the HW folder', 'Ongoing'],
+    ['Homework Folder', 'Return everything in the HW folder', 'Next school day'],
+  ]);
+});
 test('parseHomework accepts an explicit no-homework posting', () => {
   assert.deepEqual(parseHomework(['Homework', 'No homework!']), [{
     day: 'Current Homework posting',
