@@ -1,6 +1,11 @@
 name: Refresh ABVM teacher pages
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/refresh-teacher-pages.mjs'
+      - 'scripts/teacher-page-parsers.mjs'
   schedule:
     - cron: '17 13 * * *'
       timezone: 'America/New_York'
