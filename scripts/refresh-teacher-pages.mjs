@@ -1,6 +1,12 @@
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 
+import {
+  cleanTeacherText,
+  pageLines,
+  parseHomework,
+} from './teacher-page-parsers.mjs';
+
 const DATA_PATH = new URL('../pages/data/study-pack.json', import.meta.url);
 const UPLOADED_NOTICES_PATH = new URL('../pages/data/uploaded-notices.json', import.meta.url);
 const SITE_ROOT = 'https://sites.google.com/view/abvmgr2';
@@ -17,23 +23,6 @@ const MONTHS = {
   jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
   jul: 6, aug: 7, sep: 8, sept: 8, oct: 9, nov: 10, dec: 11,
 };
-
-function decodeHtml(value) {
-  return value
-    .replace(/&#x([0-9a-f]+);/gi, (_, code) => String.fromCodePoint(Number.parseInt(code, 16)))
-    .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code)))
-    .replace(/&(amp|lt|gt|quot|apos|nbsp);/gi, entity => ({
-      '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&apos;': "'", '&nbsp;': ' ',
-    })[entity.toLowerCase()] || entity);
-}
-
-function pageLines(html) {
-  const withoutScripts = html.replace(/<(script|style|svg)\b[\s\S]*?<\/\1>/gi, ' ');
-  const lines = [...withoutScripts.matchAll(/<(?:p|h[1-3])\b[^>]*>([\s\S]*?)<\/(?:p|h[1-3])>/gi)]
-    .map(match => decodeHtml(match[1].replace(/<[^>]*>/g, ' ')).replace(/\s+/g, ' ').trim())
-    .filter(Boolean);
-  return [...new Set(lines)];
-}
 
 async function fetchPage(path, title) {
   const url = `${SITE_ROOT}/${path}`;
@@ -70,56 +59,6 @@ function requireLine(lines, prefix, pageName) {
   const line = lines.find(item => item.toLowerCase().startsWith(prefix.toLowerCase()));
   if (!line) throw new Error(`${pageName} is missing “${prefix}”.`);
   return line.slice(prefix.length).trim();
-}
-
-function cleanTeacherText(value) {
-  const cleaned = String(value || '')
-    .replace(/Handwrititng/gi, 'Handwriting')
-    .replace(/\b2 letter\b/gi, '2-letter')
-    .replace(/--/g, ' — ')
-    .replace(/\s*\/\s*/g, ' / ')
-    .replace(/\b(\d+)\s+\/\s+(\d+)\b/g, '$1/$2')
-    .replace(/\s{2,}/g, ' ')
-    .trim();
-  return cleaned ? cleaned[0].toUpperCase() + cleaned.slice(1) : cleaned;
-}
-
-function parseHomework(lines) {
-  const source = lines.filter(line => line.toLowerCase() !== 'homework');
-  if (source.length < 5) throw new Error('Homework page has too few assignments to publish safely.');
-  const entries = [];
-  for (const line of source) {
-    let match;
-    if ((match = line.match(/^Spelling:\s*(.+)$/i))) {
-      entries.push({ day: 'Current Homework posting', subject: 'Spelling', task: `Spelling ${cleanTeacherText(match[1])}`, due: 'Current posting' });
-    } else if ((match = line.match(/^Math(?:\s*:)?\s*(.+)$/i))) {
-      const task = /^pg\.?\s*(\d+)/i.test(match[1]) ? match[1].replace(/^pg\.?/i, 'Page') : cleanTeacherText(match[1]);
-      entries.push({ day: 'Current Homework posting', subject: 'Math', task, due: 'Current posting' });
-    } else if (/^Read$/i.test(line)) {
-      entries.push({ day: 'Current Homework posting', subject: 'Reading', task: 'Read', due: 'Current posting' });
-    } else if ((match = line.match(/^Parents?:\s*(.+)$/i))) {
-      entries.push({ day: 'Current Homework posting', subject: 'Parent', task: cleanTeacherText(match[1]), due: 'Current posting' });
-    } else if (/^Reading log/i.test(line)) {
-      entries.push({
-        day: 'Current Homework posting',
-        subject: 'Reading',
-        task: 'Keep Reading Log and Behavior Chart in the HW folder',
-        due: 'Ongoing',
-      });
-    } else if (/everything should be returned/i.test(line)) {
-      entries.push({
-        day: 'Current Homework posting',
-        subject: 'Homework Folder',
-        task: 'Return everything in the HW folder',
-        due: 'Next school day',
-      });
-    }
-  }
-  const subjects = new Set(entries.map(item => item.subject));
-  if (entries.length < 5 || !subjects.has('Spelling') || !subjects.has('Math') || !subjects.has('Reading')) {
-    throw new Error('Homework page did not contain the expected Spelling, Math, and Reading assignments.');
-  }
-  return entries;
 }
 
 function formatMonth(raw) {
