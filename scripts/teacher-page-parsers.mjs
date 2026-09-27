@@ -81,15 +81,15 @@ export function parseHomework(lines) {
   let pendingSubject = null;
 
   for (const line of source) {
-    const header = subjectHeader(line);
-    if (header) { pendingSubject = header; continue; }
-
     const inline = inlineAcademicAssignment(line);
     if (inline) {
       entries.push(assignment(day, inline[0], inline[1]));
       pendingSubject = null;
       continue;
     }
+
+    const header = subjectHeader(line);
+    if (header) { pendingSubject = header; continue; }
 
     if (pendingSubject) {
       if (!/^(?:none|n\/a|no homework|no assignment)(?:\s*[.!])?$/i.test(line)) {
