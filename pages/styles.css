@@ -844,3 +844,209 @@ html,body{margin:0}
   display:block;margin-top:7px;padding:7px 8px;border-radius:9px;background:#fff4c9;
   color:#684f0c;font-size:9px;line-height:1.35;font-weight:850
 }
+
+
+/* v67 — simplicity + performance pass */
+.app-header{margin:2px 0 10px}
+.app-header>div:first-child{min-width:0}
+.app-header p{margin-bottom:2px;font-size:9px;letter-spacing:.07em}
+.app-header h1{
+  display:block!important;
+  border:0!important;
+  padding:0!important;
+  font-size:clamp(25px,6.5vw,29px);
+  line-height:1.08;
+  letter-spacing:-.035em
+}
+.school-mark{width:46px;height:46px;box-shadow:none}
+.freshness{
+  margin:0 0 12px;
+  padding:6px 9px;
+  font-size:10px;
+  border-radius:999px;
+  box-shadow:none
+}
+.screen{padding-top:max(18px,env(safe-area-inset-top));padding-inline:16px;padding-bottom:22px}
+.hero-card,.family-hero,.study-intro,.today-panel,.day-detail,.calendar-card,.calendar-day-card,.month-agenda,.subject-card,.parent-card,.game-question-card{
+  box-shadow:none
+}
+.hero-card{min-height:188px;border-radius:22px;padding-top:20px;padding-bottom:20px}
+.priority-card,.today-panel,.day-detail,.calendar-card,.calendar-day-card,.month-agenda,.specials-card,.next-month-card,.subject-card,.parent-card,.policy-card,.install-card,.family-hero,.study-games-hero,.game-question-card,.game-finish{
+  border-radius:18px
+}
+.section-heading{margin-top:18px}
+.reminder-strip,.future-card,.lunch-card{margin-top:10px}
+
+.bottom-nav{
+  min-height:66px;
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+  gap:0
+}
+.bottom-nav button{
+  min-height:52px;
+  gap:2px;
+  padding:1px;
+  font-size:8.6px;
+  line-height:1.02
+}
+.bottom-nav button>span{width:34px;height:28px;border-radius:10px}
+.bottom-nav button b{font-weight:850}
+.bottom-nav button.active>span{box-shadow:none}
+
+.study-screen .study-at-a-glance{margin-top:2px}
+.study-games-cta{
+  color:inherit;
+  text-decoration:none;
+  display:grid;
+  grid-template-columns:48px minmax(0,1fr) 22px;
+  align-items:center;
+  gap:11px;
+  min-height:78px;
+  margin:11px 0 16px;
+  padding:12px 13px;
+  border:1px solid #b8d8ec;
+  border-radius:17px;
+  background:#f4faff
+}
+.study-games-cta>span{
+  width:46px;height:46px;border-radius:14px;
+  display:grid;place-items:center;
+  background:#0b3c74;color:#fff6b0;
+  font-size:24px
+}
+.study-games-cta small,.study-games-cta strong,.study-games-cta p{display:block}
+.study-games-cta small{color:#246493;font-size:8px;font-weight:950;letter-spacing:.07em}
+.study-games-cta strong{color:#173a5b;margin-top:1px;font-size:14px}
+.study-games-cta p{color:#5d6d79;margin:3px 0 0;font-size:10px;line-height:1.3}
+.study-games-cta>b{color:#54738c;font-size:23px;font-weight:500}
+.study-section-label{margin:4px 2px 8px}
+.study-section-label p{color:#6b358d;margin:0;font-size:8px;font-weight:950;letter-spacing:.08em}
+.study-section-label span{color:#6d747a;display:block;margin-top:2px;font-size:10px}
+
+.study-accordion{
+  margin:0 0 8px;
+  padding:0;
+  overflow:hidden
+}
+.study-accordion summary{
+  list-style:none;
+  cursor:pointer;
+  min-height:58px;
+  padding:10px 12px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 30px;
+  align-items:center;
+  gap:9px
+}
+.study-accordion summary::-webkit-details-marker{display:none}
+.study-accordion summary span{min-width:0}
+.study-accordion summary small,.study-accordion summary strong{display:block}
+.study-accordion summary small{color:#6a5275;font-size:8px;font-weight:950;letter-spacing:.07em}
+.study-accordion summary strong{color:#28394a;margin-top:2px;font-size:14px}
+.study-accordion summary>b{
+  width:28px;height:28px;border-radius:50%;
+  display:grid;place-items:center;
+  color:#5d4c69;background:#f2eef5;
+  font-size:19px;font-weight:500;
+  transition:transform .15s ease
+}
+.study-accordion[open] summary>b{transform:rotate(45deg)}
+.study-accordion ul{margin:0;padding:0 14px 12px 31px}
+.study-accordion li{padding:3px 0;font-size:11px;line-height:1.38}
+.study-accordion .sight-cloud,.study-accordion .word-grid{margin:0;padding:0 12px 12px}
+.calm-card.compact{margin-top:10px;padding:13px 14px}
+.calm-card.compact h3{font-size:13px}
+.calm-card.compact p{font-size:10.5px}
+
+.study-games-hero.simple{
+  grid-template-columns:58px minmax(0,1fr);
+  gap:11px;
+  padding:13px;
+  margin-bottom:12px;
+  border-radius:18px
+}
+.study-games-hero.simple .study-games-mascot{
+  width:54px;height:54px;border-radius:16px;font-size:31px;box-shadow:none
+}
+.study-games-hero.simple h2{font-size:18px}
+.study-games-hero.simple span{font-size:10px}
+.study-game-grid{grid-template-columns:1fr!important;gap:8px}
+.study-game-tile{
+  min-height:86px!important;
+  grid-template-columns:44px minmax(0,1fr)!important;
+  grid-template-rows:auto!important;
+  align-items:center;
+  padding:10px 12px;
+  border-radius:16px;
+  box-shadow:none
+}
+.study-game-copy{grid-column:2!important;grid-row:1!important;align-self:center}
+.study-game-copy small{font-size:9.5px}
+.study-game-copy em{margin-top:4px}
+.study-game-tile>b{top:50%;right:11px;transform:translateY(-50%)}
+.game-privacy-note{margin-top:10px}
+.games-screen.is-playing{padding-top:max(10px,env(safe-area-inset-top))}
+.games-screen.is-playing .game-topbar{margin-top:0}
+.game-question-card{padding:14px}
+.game-question-card>h2{margin:12px 0;font-size:18px}
+.game-answer{min-height:54px;padding:8px 10px}
+.game-streak{margin-top:8px}
+.game-loading{display:grid;align-content:center}
+.loading-star{display:block;margin:0 auto 6px;font-size:32px;color:#6b3b8e}
+
+.family-hero.compact{padding:16px}
+.family-hero.compact h2{font-size:20px}
+.family-hero.compact span{font-size:11px}
+.family-more{
+  margin-top:10px;
+  border:1px solid #d9d9d5;
+  border-radius:16px;
+  background:#fff;
+  overflow:hidden
+}
+.family-more summary{
+  list-style:none;
+  min-height:50px;
+  padding:10px 13px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  cursor:pointer;
+  color:#33485a;
+  font-size:12px;
+  font-weight:900
+}
+.family-more summary::-webkit-details-marker{display:none}
+.family-more summary b{font-size:18px;font-weight:500}
+.family-more[open] summary b{transform:rotate(45deg)}
+.family-more>div{border-top:1px solid #ecebe7;padding:11px 13px}
+.family-more p{color:#5b6872;margin:0 0 9px;font-size:10.5px;line-height:1.45}
+.family-more a{
+  display:inline-block;
+  min-height:40px;
+  padding:10px 12px;
+  border-radius:11px;
+  background:#edf6fd;
+  color:#174f7c;
+  font-size:10px;
+  font-weight:900;
+  text-decoration:none
+}
+
+.agenda-day,.subject-card,.parent-card,.specials-card,.next-month-card,.future-card{
+  content-visibility:auto;
+  contain-intrinsic-size:1px 160px
+}
+.agenda-day{contain:layout paint style}
+.month-agenda-list{gap:8px}
+
+@media (width<=430px){
+  .screen{padding-inline:14px}
+  .bottom-nav button{font-size:8.2px}
+  .bottom-nav button>span{width:32px}
+}
+@media (width<=360px){
+  .bottom-nav button b{font-size:7.7px}
+  .study-games-cta{grid-template-columns:42px minmax(0,1fr) 18px}
+  .study-games-cta>span{width:40px;height:40px}
+}
