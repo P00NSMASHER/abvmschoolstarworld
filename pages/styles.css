@@ -1132,3 +1132,48 @@ html,body{margin:0}
 .study-game-tile:active .study-game-icon{transform:scale(.97)}
 .today-panel .task-list .check-copy small{font-weight:650}
 .today-panel .task-list .check-item{min-height:68px}
+
+
+/* v69 — hardening: honest freshness + navigable calendar */
+.freshness{
+  border:1px solid #b9d7ad;
+  background:#f2fbef;
+  color:#37652f
+}
+.freshness>span{
+  display:inline-block;
+  width:9px;height:9px;border-radius:50%;
+  margin-right:7px;background:#4ea93f;box-shadow:0 0 0 4px #4ea93f1f
+}
+.freshness.stale,.freshness.offline{
+  border-color:#dfc774;background:#fff8dd;color:#71570b
+}
+.freshness.stale>span,.freshness.offline>span{
+  background:#c58d10;box-shadow:0 0 0 4px #c58d101f
+}
+.freshness.attention{
+  border-color:#d7a3a6;background:#fff0f1;color:#7d3338
+}
+.freshness.attention>span{
+  background:#ba4f56;box-shadow:0 0 0 4px #ba4f561f
+}
+.calendar-month-nav{
+  display:grid;grid-template-columns:48px minmax(0,1fr) 48px;
+  align-items:center;gap:8px;margin:0 0 10px;padding:8px;
+  background:#edf7ff;border:1px solid #b8d8ec;border-radius:17px
+}
+.calendar-month-nav button{
+  min-width:44px;min-height:44px;border:1px solid #8dbbd8;border-radius:13px;
+  background:#fff;color:var(--navy);font-size:26px;line-height:1;cursor:pointer
+}
+.calendar-month-nav>div{text-align:center;min-width:0}
+.calendar-month-nav strong,.calendar-month-nav span{display:block}
+.calendar-month-nav strong{color:var(--navy);font-size:14px}
+.calendar-month-nav span{color:#5d7182;margin-top:2px;font-size:9px;font-weight:850}
+.calendar-today-jump{
+  width:100%;min-height:42px;margin:-2px 0 10px;border:1px solid #b8d8ec;
+  border-radius:12px;background:#fff;color:#165a91;font-size:10px;font-weight:900;cursor:pointer
+}
+@media (width<=350px){
+  .calendar-month-nav{grid-template-columns:44px minmax(0,1fr) 44px;gap:5px;padding:6px}
+}
