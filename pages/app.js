@@ -2,7 +2,7 @@
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const stack=()=>$("#app-content");
 let envelope=null, pack=null, activeTab=(["today","week","calendar","study","games","family"].includes(location.hash.slice(1))?location.hash.slice(1):"today"), selectedDay=null, calendarDay=null, weekOffset=0;
-let studyGameCatalogCache=null, gameState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false};
+let studyGameCatalogCache=null, studyEnginePromise=null, screenEventsBound=false, gameState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false};
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -202,7 +202,7 @@ function renderCalendar(){
 }
 function subjectCard(id,klass,title,subject){
   const notes=[...(subject?.topics||[]),...(subject?.studyNotes||[])];
-  return '<section id="'+id+'" class="subject-card '+klass+'"><div class="subject-title"><div><p>'+esc(title.toUpperCase())+'</p><h2>'+esc(title)+'</h2></div></div><ul>'+notes.map(n=>'<li>✓ '+esc(n)+'</li>').join("")+'</ul></section>';
+  return '<details id="'+id+'" class="subject-card study-accordion '+klass+'"><summary><span><small>'+esc(title.toUpperCase())+'</small><strong>'+esc(title)+'</strong></span><b aria-hidden="true">+</b></summary><ul>'+notes.map(n=>'<li>✓ '+esc(n)+'</li>').join("")+'</ul></details>';
 }
 function renderStudy(){
   const r=readingSubject(), rel=religionSubject(), math=mathSubject(), spell=spellingSubject(), next=currentTest();
@@ -214,21 +214,33 @@ function renderStudy(){
   const sight=(r?.topics||[]).find(x=>/^Sight words:/i.test(x))?.replace(/^Sight words:\s*/i,"").split(",").map(x=>x.trim()).filter(Boolean)||[];
   const vocab=(pack?.vocabulary||[]).map(v=>v.term);
   stack().innerHTML='<div class="screen study-screen" role="region" aria-label="Study room">'+
-    header("SMALL STEPS, CALM PRACTICE","Study room")+
-    '<section class="study-intro"><span class="study-star">★</span><div><h2>Everything for this week</h2><p>All posted words and subjects stay together in this quick guide. Start with the closest test.</p></div></section>'+
-    '<section class="study-at-a-glance"><div class="quick-look-head"><span class="quick-look-mark" aria-hidden="true">✓</span><div><p>QUICK LOOK</p><h2>This week’s essentials</h2></div></div><ol>'+essentials.map(x=>'<li><time>'+esc(x[0])+'</time><span>'+esc(x[1])+'</span></li>').join("")+'</ol></section>'+
-    '<nav class="study-jumps"><a href="#study-religion">Religion</a><a href="#study-reading">Reading</a><a href="#study-math">Math</a><a href="#study-spelling">Spelling</a><a href="#study-sight">Sight words</a><a href="#games" data-open-games>Study Games</a></nav>'+
+    header("STUDY","Study room")+
+    '<section class="study-at-a-glance"><div class="quick-look-head"><span class="quick-look-mark" aria-hidden="true">✓</span><div><p>START HERE</p><h2>What matters this week</h2></div></div><ol>'+essentials.map(x=>'<li><time>'+esc(x[0])+'</time><span>'+esc(x[1])+'</span></li>').join("")+'</ol></section>'+
+    '<a class="study-games-cta" href="#games" data-open-games><span>★</span><div><small>5–10 MINUTES</small><strong>Practice with Study Games</strong><p>Current school skills with hints and explanations.</p></div><b aria-hidden="true">›</b></a>'+
+    '<div class="study-section-label"><p>SUBJECT DETAILS</p><span>Tap a subject only when you need it.</span></div>'+
     subjectCard("study-religion","religion",rel?.subject||"Religion",rel)+
     subjectCard("study-reading","reading","Reading",r)+
     subjectCard("study-math","math","Math",math)+
     subjectCard("study-spelling","spelling","Spelling and phonics",spell)+
-    '<section id="study-sight" class="subject-card sight"><div class="subject-title"><div><p>SIGHT WORDS</p><h2>Sight words</h2></div></div><div class="sight-cloud">'+sight.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></section>'+
-    '<section class="subject-card reading"><div class="subject-title"><div><p>VOCABULARY</p><h2>Words to know</h2></div></div><div class="word-grid">'+vocab.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></section>'+
-    '<section class="calm-card"><h3>STAR reminder</h3><p>Keep assessment preparation calm. Normal reading and a good night’s sleep are enough.</p></section>'+
-    '<div id="study-game" class="study-game-heading"><p>LEARN THROUGH A SHORT GAME</p><h2>School Star Quest</h2></div><a class="quest-launcher" href="#games" data-open-games><div class="school-star-avatar compact">★</div><div class="quest-launcher-copy"><strong>Open Study Games</strong><span>Practice current material through short learning games.</span></div></a>'+
+    '<details id="study-sight" class="subject-card study-accordion sight"><summary><span><small>SIGHT WORDS</small><strong>Sight words</strong></span><b aria-hidden="true">+</b></summary><div class="sight-cloud">'+sight.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></details>'+
+    '<details class="subject-card study-accordion reading"><summary><span><small>VOCABULARY</small><strong>Words to know</strong></span><b aria-hidden="true">+</b></summary><div class="word-grid">'+vocab.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></details>'+
+    '<section class="calm-card compact"><h3>STAR reminder</h3><p>Normal reading, calm practice, and a good night’s sleep are enough.</p></section>'+
     '</div>';
 }
 function studyGameEngine(){return window.ABVMStudyGames||null}
+function ensureStudyGameEngine(){
+  if(window.ABVMStudyGames)return Promise.resolve(window.ABVMStudyGames);
+  if(studyEnginePromise)return studyEnginePromise;
+  studyEnginePromise=new Promise((resolve,reject)=>{
+    const script=document.createElement("script");
+    script.src="./study-games.js?v=67";
+    script.async=true;
+    script.onload=()=>window.ABVMStudyGames?resolve(window.ABVMStudyGames):reject(new Error("Study Games engine did not initialize"));
+    script.onerror=()=>reject(new Error("Study Games engine could not be loaded"));
+    document.head.append(script);
+  }).catch(error=>{studyEnginePromise=null;throw error;});
+  return studyEnginePromise;
+}
 function studyGameCatalog(){
   const engine=studyGameEngine();
   if(!engine)return null;
@@ -344,18 +356,12 @@ function gameTypeLabel(type){
 }
 function gameMenuHtml(catalog){
   const modes=studyGameModes();
-  const equivalent=(catalog?.questions||[]).filter(q=>q.originalEquivalent===true).length;
-  const subjects=new Set((catalog?.questions||[]).map(q=>q.subject));
-  return '<section class="study-games-hero"><div class="study-games-mascot">★</div><div><p>POWERED BY THE STARBLOX QUESTION SYSTEM</p><h2>Fresh practice, same school skills</h2><span>The engine turns verified skills into original direct, transfer, and reasoning questions.</span></div></section>'+
-    '<section class="game-engine-stats"><div><strong>'+String(catalog?.questionCount||0)+'</strong><span>ready questions</span></div><div><strong>'+String(equivalent)+'</strong><span>fresh equivalents</span></div><div><strong>'+String(subjects.size)+'</strong><span>subjects</span></div></section>'+
-    '<div class="game-section-heading"><div><p>CHOOSE A GAME</p><h2>What should we play?</h2></div></div>'+
+  return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Pick a game and start</h2><span>Questions use this week’s school skills and adjust as you practice.</span></div></section>'+
     '<div class="study-game-grid">'+modes.map(mode=>{
-      const available=(catalog?.questions||[]).filter(q=>!mode.subjects.length||mode.subjects.includes(q.subject)).length;
       const record=loadGameRecord(mode.id);
-      return '<button type="button" class="study-game-tile game-'+mode.id+'" data-game-start="'+esc(mode.id)+'"><span class="study-game-icon">'+esc(mode.icon)+'</span><span class="study-game-copy"><strong>'+esc(mode.title)+'</strong><small>'+esc(mode.copy)+'</small><em>'+available+' questions ready'+(record.plays?' · best '+record.best:'')+'</em></span><b aria-hidden="true">›</b></button>';
+      return '<button type="button" class="study-game-tile game-'+mode.id+'" data-game-start="'+esc(mode.id)+'"><span class="study-game-icon">'+esc(mode.icon)+'</span><span class="study-game-copy"><strong>'+esc(mode.title)+'</strong><small>'+esc(mode.copy)+'</small>'+(record.plays?'<em>Best '+record.best+' / '+mode.count+'</em>':'')+'</span><b aria-hidden="true">›</b></button>';
     }).join("")+'</div>'+
-    '<section class="question-tech-card"><p>HOW THE QUESTIONS GET SMARTER</p><div><span><b>1</b><strong>Direct</strong><small>Practice the skill.</small></span><span><b>2</b><strong>Transfer</strong><small>Use it in a new example.</small></span><span><b>3</b><strong>Reason</strong><small>Explain why it works.</small></span></div><p class="question-quality-note">No list-recognition questions. Grade-2 standards, DOK 1–3, misconception feedback, and adaptive difficulty are enforced before a question can appear.</p></section>'+
-    '<p class="game-privacy-note">Questions use verified skill signals and current school material. The equivalent-item engine does not need student answers, grades, or private worksheet text.</p>';
+    '<p class="game-privacy-note">Practice is generated from verified skills; private student answers and grades are not used.</p>';
 }
 function gamePlayHtml(){
   const mode=gameMode(gameState.mode),q=gameState.questions[gameState.index];
@@ -388,30 +394,29 @@ function gameFinishHtml(){
   return '<section class="game-finish"><div class="game-finish-stars" aria-label="'+stars+' stars">'+[0,1,2].map(i=>'<span class="'+(i<stars?'earned':'')+'">★</span>').join("")+'</div><p>'+esc(mode.title.toUpperCase())+'</p><h2>'+gameState.score+' out of '+total+'</h2><strong>'+pct+'%</strong><span>'+(pct>=90?'Fantastic work!':pct>=70?'Great job — one more round can make it even stronger.':pct>=40?'Good practice. Try another round to build the skill.':'Keep practicing — every round helps.')+'</span><div class="game-finish-actions"><button type="button" class="primary" data-game-start="'+esc(mode.id)+'">Play again</button><button type="button" data-game-home>All study games</button></div><small>Best score on this material: '+record.best+' / '+total+'</small></section>';
 }
 function renderGames(){
-  const engine=studyGameEngine(),catalog=studyGameCatalog();
-  if(!engine||!catalog){
-    stack().innerHTML='<div class="screen games-screen"><section class="error-card"><p>STUDY GAMES</p><h1>Question engine unavailable</h1><span>Refresh the app to load the study-game engine.</span></section></div>';
+  const engine=studyGameEngine();
+  if(!engine){
+    stack().innerHTML='<div class="screen games-screen game-loading" role="region" aria-label="Study games"><section class="game-empty"><span class="loading-star">★</span><h2>Getting Study Games ready…</h2><p>One moment.</p></section></div>';
+    ensureStudyGameEngine().then(()=>{studyGameCatalogCache=null;renderGames();bindScreen();}).catch(()=>{stack().innerHTML='<div class="screen games-screen"><section class="error-card"><p>STUDY GAMES</p><h1>Games could not be loaded</h1><span>Check your connection and try again.</span></section></div>';});
     return;
   }
+  const catalog=studyGameCatalog();
   const body=gameState.screen==="play"?gamePlayHtml():gameState.screen==="finish"?gameFinishHtml():gameMenuHtml(catalog);
-  stack().innerHTML='<div class="screen games-screen" role="region" aria-label="Study games">'+header("LEARN THROUGH PLAY","Study games")+freshness()+body+'</div>';
+  const chrome=gameState.screen==="menu"?header("STUDY GAMES","Study games")+freshness():"";
+  stack().innerHTML='<div class="screen games-screen'+(gameState.screen!=="menu"?' is-playing':'')+'" role="region" aria-label="Study games">'+chrome+body+'</div>';
 }
 
 function renderFamily(){
   const tests=(pack?.importantDates||[]).filter(x=>kindClass(x)==="test").filter(x=>{const d=parseDate(x.date);return d&&d>=today()&&d<=weekDays()[4]}).length;
   const notices=pack?.parentNotices||[];
-  const actions=[...(pack?.homework||[]).map(x=>x.task),...(pack?.reminders||[])].slice(0,8);
+  const actions=[...(pack?.homework||[]).map(x=>x.task),...(pack?.reminders||[])].slice(0,6);
   stack().innerHTML='<div class="screen family-screen" role="region" aria-label="Family dashboard">'+
-    header("FAMILY VIEW","Family dashboard")+freshness()+
-    '<section class="family-hero"><p>WEEKLY PRIORITY</p><h2>Keep the week short, calm, and current.</h2><span>Use the teacher-posted material first. Reading remains part of the standing routine.</span></section>'+
-    '<div class="family-stats"><div><strong>'+tests+'</strong><span>test days</span></div><div><strong>$17</strong><span>stationary money due Sept. 23</span></div></div>'+
-    '<section class="parent-card family-actions-card"><div class="family-actions-head"><span class="family-actions-mark" aria-hidden="true">✓</span><div><small>THIS WEEK</small><h3>Family actions</h3></div></div><ul>'+actions.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></section>'+
-    '<section class="policy-card reading-policy-card"><span>20</span><div><small>DAILY HABIT</small><h3>Reading every day</h3><p>Read or be read to for 20 minutes and keep the Reading Log in the homework folder.</p></div></section>'+
-    ''+
+    header("FAMILY","Family dashboard")+freshness()+
+    '<section class="family-hero compact"><p>THIS WEEK</p><h2>What needs attention</h2><span>Current school actions and notices in one place.</span></section>'+
+    '<div class="family-stats"><div><strong>'+tests+'</strong><span>test days</span></div><div><strong>'+actions.length+'</strong><span>current actions</span></div></div>'+
+    '<section class="parent-card family-actions-card"><div class="family-actions-head"><span class="family-actions-mark" aria-hidden="true">✓</span><div><small>TO DO</small><h3>Family actions</h3></div></div><ul>'+actions.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></section>'+
     '<section class="parent-card sources notices-card"><div class="notices-head"><span class="notices-mark" aria-hidden="true">i</span><div><small>SCHOOL UPDATES</small><h3>Current notices</h3></div></div>'+notices.map(x=>'<div class="notice-row"><span class="status ok"></span><p>'+esc(x)+'</p></div>').join("")+'</section>'+
-    '<section class="parent-card game-controls"><h3>Game privacy and controls</h3><p>School Star World keeps game progress on this device unless you export a backup.</p><a href="#games" data-open-games>Open Study Games</a></section>'+
-    '<section class="privacy-card policy-card"><span>✓</span><div><h3>Privacy first</h3><p>No student IDs or private classmates’ information are used here.</p></div></section>'+
-    '<section class="install-card"><span>⌂</span><div><h3>Put this app on iPhone</h3><p>Use Safari’s Share menu, then choose Add to Home Screen.</p></div></section>'+
+    '<details class="family-more"><summary><span>App & privacy</span><b aria-hidden="true">+</b></summary><div><p>Study-game progress stays on this device. No student IDs or private classmates’ information are used.</p><a href="#games" data-open-games>Open Study Games</a><p>To install on iPhone, use Safari’s Share menu → Add to Home Screen.</p></div></details>'+
     '<p class="unofficial-note">Family planning tool based on current ABVM Grade 2 sources.</p>'+
     '</div>';
 }
@@ -426,17 +431,23 @@ function render(){
   bindScreen();
 }
 function bindScreen(){
-  $$("[data-check]").forEach(b=>b.addEventListener("click",()=>toggleChecked((pack.homework||[])[Number(b.dataset.check)],Number(b.dataset.check))));
-  $$("[data-day]").forEach(b=>b.addEventListener("click",()=>{selectedDay=new Date(b.dataset.day);renderWeek();bindScreen();}));
-  $$("[data-week-step]").forEach(b=>b.addEventListener("click",()=>{weekOffset+=Number(b.dataset.weekStep||0);selectedDay=null;renderWeek();bindScreen();}));
-  $$("[data-week-today]").forEach(b=>b.addEventListener("click",()=>{weekOffset=0;selectedDay=null;renderWeek();bindScreen();}));
-  $$("[data-cal-day]").forEach(b=>b.addEventListener("click",()=>{calendarDay=new Date(b.dataset.calDay);renderCalendar();bindScreen();}));
-  $$("[data-game-start]").forEach(b=>b.addEventListener("click",()=>startStudyGame(b.dataset.gameStart)));
-  $$("[data-game-answer]").forEach(b=>b.addEventListener("click",()=>answerStudyGame(Number(b.dataset.gameAnswer))));
-  $$("[data-game-next]").forEach(b=>b.addEventListener("click",advanceStudyGame));
-  $$("[data-game-home]").forEach(b=>b.addEventListener("click",leaveStudyGame));
-  document.querySelectorAll("[data-game-hint]").forEach(b=>b.addEventListener("click",toggleStudyHint));
-  document.querySelectorAll("[data-open-games]").forEach(a=>a.addEventListener("click",event=>{event.preventDefault();activeTab="games";history.replaceState(null,"","#games");gameState.screen="menu";render();}));
+  if(screenEventsBound)return;
+  screenEventsBound=true;
+  stack().addEventListener("click",event=>{
+    const target=event.target.closest("button,a");
+    if(!target||!stack().contains(target))return;
+    if(target.matches("[data-check]")){toggleChecked((pack.homework||[])[Number(target.dataset.check)],Number(target.dataset.check));return;}
+    if(target.matches("[data-day]")){selectedDay=new Date(target.dataset.day);renderWeek();return;}
+    if(target.matches("[data-week-step]")){weekOffset+=Number(target.dataset.weekStep||0);selectedDay=null;renderWeek();return;}
+    if(target.matches("[data-week-today]")){weekOffset=0;selectedDay=null;renderWeek();return;}
+    if(target.matches("[data-cal-day]")){calendarDay=new Date(target.dataset.calDay);renderCalendar();return;}
+    if(target.matches("[data-game-start]")){startStudyGame(target.dataset.gameStart);return;}
+    if(target.matches("[data-game-answer]")){answerStudyGame(Number(target.dataset.gameAnswer));return;}
+    if(target.matches("[data-game-next]")){advanceStudyGame();return;}
+    if(target.matches("[data-game-home]")){leaveStudyGame();return;}
+    if(target.matches("[data-game-hint]")){toggleStudyHint();return;}
+    if(target.matches("[data-open-games]")){event.preventDefault();activeTab="games";history.replaceState(null,"","#games");gameState.screen="menu";render();return;}
+  });
 }
 $$(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>{activeTab=b.dataset.tab;history.replaceState(null,"","#"+activeTab);render();}));
 async function load(){
@@ -445,10 +456,21 @@ async function load(){
     if(!r.ok)throw new Error("HTTP "+r.status);
     const d=await r.json(); if(!d?.pack?.sourceSufficient)throw new Error("Incomplete pack");
     envelope=d;pack=d.pack;render();
+    const warmGames=()=>ensureStudyGameEngine().catch(()=>{});
+    if("requestIdleCallback" in window)requestIdleCallback(warmGames,{timeout:2200});
+    else setTimeout(warmGames,1400);
   }catch(e){
     stack().innerHTML='<div class="screen"><section class="error-card"><p>ABVM GRADE 2</p><h1>School info could not be loaded</h1><span>Refresh the page to try again.</span></section></div>';
   }
 }
+window.addEventListener("hashchange",()=>{
+  const next=location.hash.slice(1);
+  if(["today","week","calendar","study","games","family"].includes(next)&&next!==activeTab){
+    activeTab=next;
+    if(next==="games")gameState.screen="menu";
+    render();
+  }
+});
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"}).catch(()=>{}));
 load();
 })();
