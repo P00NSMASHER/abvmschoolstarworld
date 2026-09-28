@@ -8,9 +8,24 @@ on:
       - 'scripts/**'
       - 'tests/**'
       - 'package.json'
+      - 'package-lock.json'
       - 'playwright.config.mjs'
       - '.github/workflows/pages.yml'
+      - '.github/workflows/sync-study-pack.yml'
+      - '.github/workflows/refresh-health.yml'
   workflow_dispatch:
+    inputs:
+      ref:
+        description: Git ref to deploy
+        required: false
+        default: main
+  workflow_call:
+    inputs:
+      ref:
+        description: Git ref to deploy
+        required: false
+        type: string
+        default: main
 
 permissions:
   contents: read
@@ -28,8 +43,10 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout deploy ref
         uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.ref || github.sha }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
