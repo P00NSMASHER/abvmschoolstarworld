@@ -308,7 +308,7 @@ function ensureStudyGameEngine(){
   if(studyEnginePromise)return studyEnginePromise;
   studyEnginePromise=new Promise((resolve,reject)=>{
     const script=document.createElement("script");
-    script.src="./study-games.js?v=68";
+    script.src="./study-games.js?v=70";
     script.async=true;
     script.onload=()=>window.ABVMStudyGames?resolve(window.ABVMStudyGames):reject(new Error("Study Games engine did not initialize"));
     script.onerror=()=>reject(new Error("Study Games engine could not be loaded"));
