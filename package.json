@@ -3,9 +3,6 @@
   "version": "7.0.0",
   "private": true,
   "type": "module",
-  "dependencies": {
-    "@netlify/blobs": "latest"
-  },
   "scripts": {
     "qa:static": "node --check pages/study-games.js && node --check pages/app.js && node scripts/validate-app.mjs",
     "qa:e2e": "playwright test tests/*.spec.mjs",
