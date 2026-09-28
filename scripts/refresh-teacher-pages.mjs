@@ -6,6 +6,7 @@ import {
   pageLines,
   parseHomework,
 } from './teacher-page-parsers.mjs';
+import { validateUploadedNoticePolicy } from './uploaded-notice-policy.mjs';
 
 const DATA_PATH = new URL('../pages/data/study-pack.json', import.meta.url);
 const UPLOADED_NOTICES_PATH = new URL('../pages/data/uploaded-notices.json', import.meta.url);
@@ -194,7 +195,8 @@ function readableList(items) {
 
 function readUploadedNotices() {
   const uploaded = JSON.parse(readFileSync(UPLOADED_NOTICES_PATH, 'utf8'));
-  if (uploaded.schemaVersion !== 1 || !uploaded.lastIntegratedAt || Number.isNaN(Date.parse(uploaded.lastIntegratedAt))) {
+  validateUploadedNoticePolicy(uploaded);
+  if (!uploaded.lastIntegratedAt || Number.isNaN(Date.parse(uploaded.lastIntegratedAt))) {
     throw new Error('Uploaded notices metadata is incomplete.');
   }
   for (const field of ['documents', 'importantDates', 'reminders', 'parentNotices', 'replacements']) {

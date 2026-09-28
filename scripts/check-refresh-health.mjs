@@ -8,7 +8,7 @@ function option(name,fallback=null){
   return i>=0&&argv[i+1]!==undefined?argv[i+1]:fallback;
 }
 const requireToday=argv.includes("--require-today");
-const maxAgeHours=Number(option("--max-age-hours","28"));
+const maxAgeHours=Number(option("--max-age-hours","8"));
 const liveUrl=option("--live-url");
 const waitSeconds=Math.max(0,Number(option("--wait-seconds","0"))||0);
 

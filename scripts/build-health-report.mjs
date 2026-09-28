@@ -46,19 +46,22 @@ const status={
   },
   recentFailures:failures,
 };
-const sourceFresh=sourceAgeHours!==null&&sourceAgeHours>=-.25&&sourceAgeHours<=30;
-const completedHealthy=workflow=>{
+const sourceFresh=sourceAgeHours!==null&&sourceAgeHours>=-.25&&sourceAgeHours<=8;
+const runAgeHours=run=>run?.created_at?(Date.now()-Date.parse(run.created_at))/3_600_000:null;
+const completedHealthy=(workflow,maxAgeHours)=>{
   const run=workflow.latestCompleted;
-  return !run||run.conclusion==="success";
+  if(!run||run.conclusion!=="success")return false;
+  const age=runAgeHours(run);
+  return age!==null&&age>=-.25&&age<=maxAgeHours;
 };
 const healthy=Boolean(
   status.schoolData.sourceSufficient &&
   status.schoolData.sourcePages===6 &&
   sourceFresh &&
-  completedHealthy(status.workflows.qa) &&
-  completedHealthy(status.workflows.deploy) &&
-  completedHealthy(status.workflows.refresh) &&
-  completedHealthy(status.workflows.watchdog)
+  completedHealthy(status.workflows.qa,48) &&
+  completedHealthy(status.workflows.deploy,48) &&
+  completedHealthy(status.workflows.refresh,30) &&
+  completedHealthy(status.workflows.watchdog,30)
 );
 status.overall=healthy?"healthy":"attention";
 
@@ -72,7 +75,7 @@ const md=[
   `**Overall: ${status.overall.toUpperCase()}**`,
   "",
   `- **School data checked:** ${sourceCheckedAt||"missing"}${sourceAgeHours===null?"":` (${sourceAgeHours.toFixed(1)}h old)`}`,
-  `- **Source coverage:** ${status.schoolData.sourcePages}/6 teacher pages; source sufficient = ${status.schoolData.sourceSufficient}; fresh <=30h = ${sourceFresh}`,
+  `- **Source coverage:** ${status.schoolData.sourcePages}/6 teacher pages; source sufficient = ${status.schoolData.sourceSufficient}; fresh <=8h = ${sourceFresh}`,
   `- **App version:** ${status.appVersion}`,
   `- **Service worker cache:** ${status.serviceWorkerCache}`,
   `- **Git SHA:** ${status.gitSha||"unknown"}`,
@@ -82,6 +85,7 @@ const md=[
   line("App QA",status.workflows.qa.latestCompleted||status.workflows.qa.latest),
   line("Pages deploy",status.workflows.deploy.latestCompleted||status.workflows.deploy.latest),
   line("Refresh watchdog",status.workflows.watchdog.latestCompleted||status.workflows.watchdog.latest),
+  `- **Required successful-run age:** refresh/watchdog <=30h; QA/deploy <=48h`,
   "",
   "## Recent relevant failures",
   failures.length?failures.map(f=>`- ${f.name} — ${f.created_at} ([run](${f.html_url}))`).join("\n"):"- None in the fetched run window.",

@@ -3,19 +3,16 @@
   "version": "7.0.0",
   "private": true,
   "type": "module",
-  "dependencies": {
-    "@netlify/blobs": "latest"
-  },
   "scripts": {
-    "qa:static": "node --check pages/study-games.js && node --check pages/app.js && node scripts/validate-app.mjs",
+    "qa:static": "node --check pages/study-games.js && node --check pages/app.js && node scripts/validate-uploaded-notices.mjs && node scripts/validate-app.mjs",
     "qa:e2e": "playwright test tests/*.spec.mjs",
     "qa": "npm run qa:static && npm run qa:unit && npm run qa:e2e",
     "qa:unit": "node --test tests/*.test.mjs",
     "health:report": "node scripts/build-health-report.mjs",
-    "health:refresh": "node scripts/check-refresh-health.mjs --max-age-hours 28"
+    "health:refresh": "node scripts/check-refresh-health.mjs --max-age-hours 8"
   },
   "devDependencies": {
-    "@axe-core/playwright": "latest",
-    "@playwright/test": "latest"
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.63.0"
   }
 }

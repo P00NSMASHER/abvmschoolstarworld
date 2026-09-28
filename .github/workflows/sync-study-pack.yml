@@ -6,6 +6,7 @@ on:
     paths:
       - 'scripts/refresh-teacher-pages.mjs'
       - 'scripts/teacher-page-parsers.mjs'
+      - 'scripts/validate-uploaded-notices.mjs'
   schedule:
     - cron: '17 13 * * *'
       timezone: 'America/New_York'
@@ -15,26 +16,27 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
   group: abvm-school-pack
   cancel-in-progress: false
 
 jobs:
-  refresh-and-deploy:
+  refresh:
     timeout-minutes: 25
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: main
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
 
       - name: Scan and validate the public teacher pages
         run: node scripts/refresh-teacher-pages.mjs
@@ -42,51 +44,22 @@ jobs:
       - name: Verify refreshed source health
         run: node scripts/check-refresh-health.mjs --require-today --max-age-hours 1
 
-      - name: Commit only when the verified pack changed
+      - name: Install Chromium for candidate QA
+        run: npx playwright install --with-deps chromium
+
+      - name: Validate the candidate app before changing main
+        run: npm run qa
+
+      - name: Commit only after the candidate passed all QA
         shell: bash
         run: |
           set -euo pipefail
           if git diff --quiet -- pages/data/study-pack.json; then
             echo "No school-pack changes."
-          else
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add pages/data/study-pack.json
-            git commit -m "Refresh verified ABVM teacher pages"
-            git push
+            exit 0
           fi
-
-      - name: Install QA dependencies
-        run: npm install --no-audit --no-fund
-
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
-
-      - name: Validate refreshed app before deployment
-        run: npm run qa
-
-      - name: Build static site
-        shell: bash
-        run: |
-          set -euo pipefail
-          rm -rf _site
-          mkdir -p _site
-          cp -R pages/. _site/
-          touch _site/.nojekyll
-
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
-
-      - name: Upload site
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: _site
-
-      - name: Deploy
-        id: deployment
-        uses: actions/deploy-pages@v4
-
-      - name: Verify deployed pack matches this refresh
-        run: node scripts/check-refresh-health.mjs --require-today --max-age-hours 1 --live-url https://p00nsmasher.github.io/abvmschoolstarworld/data/study-pack.json --wait-seconds 180
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pages/data/study-pack.json
+          git commit -m "Refresh verified ABVM teacher pages"
+          git push
