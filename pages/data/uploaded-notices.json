@@ -141,31 +141,52 @@
       "label": "Reading Royals Game Family Fun Night",
       "kind": "school event",
       "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "date": "Saturday, Oct. 3",
+      "label": "Welcome Back Dance (K–4) — 6–8 PM, ABVM Gym",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "date": "Saturday, Oct. 3",
+      "label": "Movie Night (Grades 5–8) — 6–8 PM",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "date": "Friday, Oct. 9",
+      "label": "12:00 dismissal",
+      "kind": "schedule change",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "date": "Monday, Oct. 12",
+      "label": "No School — Columbus Day",
+      "kind": "holiday",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "date": "Monday–Tuesday, Oct. 19–20",
+      "label": "Parent-Teacher Conferences",
+      "kind": "conference",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "date": "Friday, Oct. 23",
+      "label": "S’more Fun at Schwartz Farm",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-28"
     }
   ],
   "reminders": [
-    {
-      "text": "STAR testing continues Monday–Friday, Sept. 21–25.",
-      "topic": "star",
-      "sourceDocument": "weekly-reminders-2026-09-21"
-    },
-    {
-      "text": "Friday, Sept. 25 is Dress Down Day. Donate any amount; all proceeds support a local charity.",
-      "topic": "dress-down",
-      "sourceDocument": "dress-down-2026-09-25"
-    },
-    {
-      "text": "Lego Club is Friday, Sept. 25 from 3–4 PM.",
-      "topic": "lego",
-      "sourceDocument": "weekly-reminders-2026-09-21"
-    },
     {
       "text": "October Gift Card Calendar Fundraiser money and calendar bottoms are due Monday, Sept. 28.",
       "topic": "fundraiser",
       "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
-      "text": "Sign up for parent-teacher conferences using the OptionC portal on Tuesday, Sept. 29.",
+      "text": "Sign up for conferences using the OptionC portal on Tuesday, Sept. 29.",
       "topic": "conference",
       "sourceDocument": "weekly-reminders-2026-09-28"
     },
@@ -190,6 +211,11 @@
       "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
+      "text": "S’more Fun at Schwartz Farm is Friday, Oct. 23.",
+      "topic": "schwartz",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
       "text": "Drama Club Play is Nov. 13–14.",
       "topic": "drama",
       "sourceDocument": "weekly-reminders-2026-09-28"
@@ -198,41 +224,11 @@
       "text": "Reading Royals Game Family Fun Night is Saturday, Nov. 21.",
       "topic": "reading-royals",
       "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "text": "Sign up for conferences using the OptionC portal on Tuesday, Sept. 29.",
-      "topic": "conference-signup",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "text": "Wednesday, Sept. 30: Mass, Communication Folder, and the Chick-fil-A sale starts.",
-      "topic": "week-0930",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "text": "Thursday, Oct. 1: Picture Day, Business Casual, and the HSA virtual meeting.",
-      "topic": "week-1001",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "text": "Chick-fil-A pickup is Thursday, Oct. 22.",
-      "topic": "chick-fil-a",
-      "sourceDocument": "weekly-reminders-2026-09-28"
     }
   ],
   "parentNotices": [
     {
-      "text": "Dress Down Day is Friday, Sept. 25. Donate any amount; all proceeds support a local charity.",
-      "topic": "dress-down",
-      "sourceDocument": "dress-down-2026-09-25"
-    },
-    {
-      "text": "Dress Down Days will be held twice each month; future dates will appear on the school calendar beginning in October.",
-      "topic": "dress-down",
-      "sourceDocument": "dress-down-2026-09-25"
-    },
-    {
-      "text": "Sign up for parent-teacher conferences using the OptionC portal on Tuesday, Sept. 29.",
+      "text": "Sign up for conferences using the OptionC portal on Tuesday, Sept. 29.",
       "topic": "conference",
       "sourceDocument": "weekly-reminders-2026-09-28"
     },
@@ -279,21 +275,6 @@
     {
       "text": "S’more Fun at Schwartz Farm is Friday, Oct. 23.",
       "topic": "schwartz",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "text": "Conference sign-up opens Tuesday, Sept. 29 through the OptionC portal.",
-      "topic": "conference-signup",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "text": "Thursday, Oct. 1 is Picture Day and Business Casual; the HSA meeting is virtual.",
-      "topic": "week-1001",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "text": "The Chick-fil-A sale starts Wednesday, Sept. 30; pickup is Thursday, Oct. 22.",
-      "topic": "chick-fil-a",
       "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
