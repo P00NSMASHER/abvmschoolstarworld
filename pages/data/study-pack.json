@@ -8,14 +8,14 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-09-28T13:56:40.521Z",
-  "sourceCapturedAt": "2026-09-28T13:19:00.000Z",
+  "sourceLastSeenAt": "2026-09-28T18:30:18.550Z",
+  "sourceCapturedAt": "2026-09-28T18:30:18.550Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-36ebaede87cba691e51e",
-    "sourceCapturedAt": "2026-09-28T13:19:00.000Z",
-    "generatedAt": "2026-09-28T13:56:40.521Z",
+    "sourceCapturedAt": "2026-09-28T18:30:18.550Z",
+    "generatedAt": "2026-09-28T18:30:18.550Z",
     "weekLabel": "Week of September 28, 2026",
     "summary": "Current Grade 2 teacher-site material: Homework lists Religion “Attend Mass”, Reading “Read”, parent task “Cover books”, and Reading “Keep Reading Log and Behavior Chart in the HW folder”. Upcoming tests include Spelling (2-letter blends) / Handwriting on Friday, Sept. 25, Subtraction to 12 on Tuesday, Sept. 29, Religion Ch. 2 on Tuesday, Sept. 29, and Grammar (types of sentences) on Wednesday, Sept. 30. 3 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
@@ -824,8 +824,8 @@
       "Christmas Caroling date is TBD.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
-    "sourceCheckedAt": "2026-09-28T13:56:40.521Z",
-    "uploadedNoticeHash": "uploaded-notices-f449295b3dca9a27ed4c",
+    "sourceCheckedAt": "2026-09-28T18:30:18.550Z",
+    "uploadedNoticeHash": "uploaded-notices-14d4298a59d340258558",
     "uploadedNoticeTopics": {
       "reminders": [
         "fundraiser",
@@ -853,42 +853,42 @@
       ]
     }
   },
-  "sourceLastCheckedAt": "2026-09-28T13:56:40.521Z",
+  "sourceLastCheckedAt": "2026-09-28T18:30:18.550Z",
   "sourcePages": [
     {
       "title": "Home",
       "url": "https://sites.google.com/view/abvmgr2/home",
-      "checkedAt": "2026-09-28T13:56:40.521Z",
+      "checkedAt": "2026-09-28T18:30:18.550Z",
       "contentHash": "e55ec54aac3af22acc40fc551cfed9c7e884b46aef2e109def8aee50468b3374"
     },
     {
       "title": "Homework",
       "url": "https://sites.google.com/view/abvmgr2/homework",
-      "checkedAt": "2026-09-28T13:56:40.521Z",
+      "checkedAt": "2026-09-28T18:30:18.550Z",
       "contentHash": "781165f9000ee8a601a3e942f00d95f14d901bcbe65f8c23f707698206f345a9"
     },
     {
       "title": "Reading Work",
       "url": "https://sites.google.com/view/abvmgr2/reading-work",
-      "checkedAt": "2026-09-28T13:56:40.521Z",
+      "checkedAt": "2026-09-28T18:30:18.550Z",
       "contentHash": "32d208056bf55cd9cea8ef374fc89aea482d3586c28ba99da1b242cedd10a705"
     },
     {
       "title": "Weekly Spelling List",
       "url": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-      "checkedAt": "2026-09-28T13:56:40.521Z",
+      "checkedAt": "2026-09-28T18:30:18.550Z",
       "contentHash": "d077ca4b2b95d79755f88f5a726e6b5acf3a52c6575c3d986a16ca1c834b5777"
     },
     {
       "title": "Tests",
       "url": "https://sites.google.com/view/abvmgr2/tests",
-      "checkedAt": "2026-09-28T13:56:40.521Z",
+      "checkedAt": "2026-09-28T18:30:18.550Z",
       "contentHash": "67b060f3d7e2a63a875548a1bb84dfdeb1fc2ef26c7df93fd3dbe6d0574b3dc3"
     },
     {
       "title": "Religion",
       "url": "https://sites.google.com/view/abvmgr2/religion",
-      "checkedAt": "2026-09-28T13:56:40.521Z",
+      "checkedAt": "2026-09-28T18:30:18.550Z",
       "contentHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c"
     }
   ],
