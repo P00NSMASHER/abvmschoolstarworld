@@ -332,7 +332,8 @@ function advanceStudyGame(){
     gameState.index++;
     gameState.selectedIndex=null;
     gameState.answered=false;
-    gameState.hintOpen=false;\n    gameState.learningRow=null;
+    gameState.hintOpen=false;
+    gameState.learningRow=null;
   }
   renderGames();bindScreen();
 }
