@@ -31,16 +31,16 @@
       "receivedAt": "2026-09-28",
       "facts": [
         "Monday, September 28: October Gift Card Calendar Fundraiser money and calendar bottoms are due.",
-        "Tuesday, September 29: Sign up for parent-teacher conferences using the OptionC portal.",
+        "Tuesday, September 29: Sign up for conferences using the OptionC portal.",
         "Wednesday, September 30: Mass; Communication Folder; Chick-fil-A sale starts.",
-        "Thursday, October 1: Picture Day; Business Casual; HSA Virtual Meeting.",
+        "Thursday, October 1: Picture Day; Business Casual; HSA virtual meeting.",
         "Saturday, October 3: Welcome Back Dance / Movie Night.",
         "Friday, October 9: 12:00 dismissal.",
         "Monday, October 12: No School — Columbus Day.",
-        "October 19–20: Parent-Teacher Conferences.",
+        "Monday–Tuesday, October 19–20: Parent-Teacher Conferences.",
         "Thursday, October 22: Chick-fil-A pickup.",
-        "Friday, October 23: S’more Fun at Schwartz Farm.",
-        "November 13–14: Drama Club Play.",
+        "Friday, October 23: S'more Fun at Schwartz Farm.",
+        "Friday–Saturday, November 13–14: Drama Club Play.",
         "Saturday, November 21: Reading Royals Game Family Fun Night."
       ]
     }
@@ -84,8 +84,8 @@
     },
     {
       "date": "Tuesday, Sept. 29",
-      "label": "Sign up for parent-teacher conferences using the OptionC portal",
-      "kind": "family action",
+      "label": "Sign up for conferences using the OptionC portal",
+      "kind": "deadline",
       "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
@@ -120,49 +120,13 @@
     },
     {
       "date": "Thursday, Oct. 1",
-      "label": "HSA Virtual Meeting",
+      "label": "HSA virtual meeting",
       "kind": "meeting",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "date": "Saturday, Oct. 3",
-      "label": "Welcome Back Dance (K–4) — 6–8 PM, ABVM Gym",
-      "kind": "school event",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "date": "Saturday, Oct. 3",
-      "label": "Movie Night (Grades 5–8) — 6–8 PM",
-      "kind": "school event",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "date": "Friday, Oct. 9",
-      "label": "12:00 dismissal",
-      "kind": "schedule change",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "date": "Monday, Oct. 12",
-      "label": "No School — Columbus Day",
-      "kind": "holiday",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "date": "Monday–Tuesday, Oct. 19–20",
-      "label": "Parent-Teacher Conferences",
-      "kind": "conference",
       "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
       "date": "Thursday, Oct. 22",
       "label": "Chick-fil-A pickup",
-      "kind": "school event",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "date": "Friday, Oct. 23",
-      "label": "S’more Fun at Schwartz Farm",
       "kind": "school event",
       "sourceDocument": "weekly-reminders-2026-09-28"
     },
@@ -234,6 +198,26 @@
       "text": "Reading Royals Game Family Fun Night is Saturday, Nov. 21.",
       "topic": "reading-royals",
       "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "Sign up for conferences using the OptionC portal on Tuesday, Sept. 29.",
+      "topic": "conference-signup",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "Wednesday, Sept. 30: Mass, Communication Folder, and the Chick-fil-A sale starts.",
+      "topic": "week-0930",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "Thursday, Oct. 1: Picture Day, Business Casual, and the HSA virtual meeting.",
+      "topic": "week-1001",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "Chick-fil-A pickup is Thursday, Oct. 22.",
+      "topic": "chick-fil-a",
+      "sourceDocument": "weekly-reminders-2026-09-28"
     }
   ],
   "parentNotices": [
@@ -298,6 +282,21 @@
       "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
+      "text": "Conference sign-up opens Tuesday, Sept. 29 through the OptionC portal.",
+      "topic": "conference-signup",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "Thursday, Oct. 1 is Picture Day and Business Casual; the HSA meeting is virtual.",
+      "topic": "week-1001",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "The Chick-fil-A sale starts Wednesday, Sept. 30; pickup is Thursday, Oct. 22.",
+      "topic": "chick-fil-a",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
       "text": "Drama Club Play is Nov. 13–14.",
       "topic": "drama",
       "sourceDocument": "weekly-reminders-2026-09-28"
@@ -314,16 +313,16 @@
       "date": "Wednesday, Sept. 23"
     },
     {
+      "topic": "movie-night-grades",
+      "date": "Saturday, Oct. 3"
+    },
+    {
       "topic": "october-gift-calendar",
       "date": "Monday, Sept. 28"
     },
     {
       "topic": "hsa",
-      "date": "Thursday, Oct. 1"
-    },
-    {
-      "topic": "movie-night-grades",
-      "date": "Saturday, Oct. 3"
+      "date": "Friday, Oct. 2"
     }
   ]
 }
