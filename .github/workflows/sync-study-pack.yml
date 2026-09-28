@@ -44,6 +44,9 @@ jobs:
       - name: Verify refreshed source health
         run: node scripts/check-refresh-health.mjs --require-today --max-age-hours 1
 
+      - name: Install Chromium for candidate QA
+        run: npx playwright install --with-deps chromium
+
       - name: Validate the candidate app before changing main
         run: npm run qa
 
