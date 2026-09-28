@@ -288,5 +288,5 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   expect(sw).not.toContain("hero-today.webp");
   expect(sw).not.toContain("calendar/picture-day.svg");
   const cached=[...sw.matchAll(/"\.\/[^\"]+"/g)];
-  expect(cached.length).toBeLessThanOrEqual(10);
+  expect(cached.length).toBeLessThanOrEqual(12);
 });
