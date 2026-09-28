@@ -217,7 +217,7 @@ function renderStudy(){
     header("SMALL STEPS, CALM PRACTICE","Study room")+
     '<section class="study-intro"><span class="study-star">★</span><div><h2>Everything for this week</h2><p>All posted words and subjects stay together in this quick guide. Start with the closest test.</p></div></section>'+
     '<section class="study-at-a-glance"><div class="quick-look-head"><span class="quick-look-mark" aria-hidden="true">✓</span><div><p>QUICK LOOK</p><h2>This week’s essentials</h2></div></div><ol>'+essentials.map(x=>'<li><time>'+esc(x[0])+'</time><span>'+esc(x[1])+'</span></li>').join("")+'</ol></section>'+
-    '<nav class="study-jumps"><a href="#study-religion">Religion</a><a href="#study-reading">Reading</a><a href="#study-math">Math</a><a href="#study-spelling">Spelling</a><a href="#study-sight">Sight words</a><a href="./game/">Game</a></nav>'+
+    '<nav class="study-jumps"><a href="#study-religion">Religion</a><a href="#study-reading">Reading</a><a href="#study-math">Math</a><a href="#study-spelling">Spelling</a><a href="#study-sight">Sight words</a><a href="#games" data-open-games>Study Games</a></nav>'+
     subjectCard("study-religion","religion",rel?.subject||"Religion",rel)+
     subjectCard("study-reading","reading","Reading",r)+
     subjectCard("study-math","math","Math",math)+
@@ -225,7 +225,7 @@ function renderStudy(){
     '<section id="study-sight" class="subject-card sight"><div class="subject-title"><div><p>SIGHT WORDS</p><h2>Sight words</h2></div></div><div class="sight-cloud">'+sight.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></section>'+
     '<section class="subject-card reading"><div class="subject-title"><div><p>VOCABULARY</p><h2>Words to know</h2></div></div><div class="word-grid">'+vocab.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></section>'+
     '<section class="calm-card"><h3>STAR reminder</h3><p>Keep assessment preparation calm. Normal reading and a good night’s sleep are enough.</p></section>'+
-    '<div id="study-game" class="study-game-heading"><p>LEARN THROUGH A SHORT GAME</p><h2>School Star Quest</h2></div><a class="quest-launcher" href="./game/"><div class="school-star-avatar compact">★</div><div class="quest-launcher-copy"><strong>Open School Star World</strong><span>Practice current material through short learning quests.</span></div></a>'+
+    '<div id="study-game" class="study-game-heading"><p>LEARN THROUGH A SHORT GAME</p><h2>School Star Quest</h2></div><a class="quest-launcher" href="#games" data-open-games><div class="school-star-avatar compact">★</div><div class="quest-launcher-copy"><strong>Open Study Games</strong><span>Practice current material through short learning games.</span></div></a>'+
     '</div>';
 }
 function studyGameEngine(){return window.ABVMStudyGames||null}
@@ -379,7 +379,7 @@ function renderFamily(){
     '<section class="policy-card reading-policy-card"><span>20</span><div><small>DAILY HABIT</small><h3>Reading every day</h3><p>Read or be read to for 20 minutes and keep the Reading Log in the homework folder.</p></div></section>'+
     ''+
     '<section class="parent-card sources notices-card"><div class="notices-head"><span class="notices-mark" aria-hidden="true">i</span><div><small>SCHOOL UPDATES</small><h3>Current notices</h3></div></div>'+notices.map(x=>'<div class="notice-row"><span class="status ok"></span><p>'+esc(x)+'</p></div>').join("")+'</section>'+
-    '<section class="parent-card game-controls"><h3>Game privacy and controls</h3><p>School Star World keeps game progress on this device unless you export a backup.</p><a href="./game/">Open School Star World</a></section>'+
+    '<section class="parent-card game-controls"><h3>Game privacy and controls</h3><p>School Star World keeps game progress on this device unless you export a backup.</p><a href="#games" data-open-games>Open Study Games</a></section>'+
     '<section class="privacy-card policy-card"><span>✓</span><div><h3>Privacy first</h3><p>No student IDs or private classmates’ information are used here.</p></div></section>'+
     '<section class="install-card"><span>⌂</span><div><h3>Put this app on iPhone</h3><p>Use Safari’s Share menu, then choose Add to Home Screen.</p></div></section>'+
     '<p class="unofficial-note">Family planning tool based on current ABVM Grade 2 sources.</p>'+
@@ -405,7 +405,8 @@ function bindScreen(){
   $$("[data-game-answer]").forEach(b=>b.addEventListener("click",()=>answerStudyGame(Number(b.dataset.gameAnswer))));
   $$("[data-game-next]").forEach(b=>b.addEventListener("click",advanceStudyGame));
   $$("[data-game-home]").forEach(b=>b.addEventListener("click",leaveStudyGame));
-  $$("[data-game-hint]").forEach(b=>b.addEventListener("click",toggleStudyHint));
+  document.querySelectorAll("[data-game-hint]").forEach(b=>b.addEventListener("click",toggleStudyHint));
+  document.querySelectorAll("[data-open-games]").forEach(a=>a.addEventListener("click",event=>{event.preventDefault();activeTab="games";history.replaceState(null,"","#games");gameState.screen="menu";render();}));
 }
 $$(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>{activeTab=b.dataset.tab;history.replaceState(null,"","#"+activeTab);render();}));
 async function load(){
