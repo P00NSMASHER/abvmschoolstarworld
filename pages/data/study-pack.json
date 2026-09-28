@@ -108,138 +108,6 @@
     ],
     "importantDates": [
       {
-        "label": "Chapter 1A (addition) test",
-        "date": "Tuesday, Sept. 22",
-        "kind": "test"
-      },
-      {
-        "date": "Wednesday, Sept. 23",
-        "label": "Stationary money due ($17)",
-        "source": "teacher-home",
-        "kind": "deadline"
-      },
-      {
-        "date": "Friday, Sept. 25",
-        "label": "Spelling (2-letter blends) / Handwriting",
-        "kind": "test",
-        "source": "teacher-tests"
-      },
-      {
-        "date": "Tuesday, Sept. 29",
-        "label": "Subtraction to 12",
-        "kind": "test",
-        "source": "teacher-tests"
-      },
-      {
-        "date": "Tuesday, Sept. 29",
-        "label": "Religion Ch. 2",
-        "kind": "test",
-        "source": "teacher-tests"
-      },
-      {
-        "date": "Wednesday, Sept. 30",
-        "label": "Grammar (types of sentences)",
-        "kind": "test",
-        "source": "teacher-tests"
-      },
-      {
-        "date": "Friday, Oct. 2",
-        "label": "Spelling (short a / long a) / Handwriting",
-        "kind": "test",
-        "source": "teacher-tests"
-      },
-      {
-        "label": "Movie Night (Grades 5–8) — 6–8 PM",
-        "date": "Saturday, Oct. 3",
-        "kind": "school event"
-      },
-      {
-        "date": "Wednesday, Oct. 7",
-        "label": "Reading",
-        "kind": "test",
-        "source": "teacher-tests"
-      },
-      {
-        "label": "Mid-term Progress Reports",
-        "date": "Thursday, Oct. 8",
-        "kind": "school"
-      },
-      {
-        "label": "Schwartz Farm Family Night RSVP due for $5/student voucher",
-        "date": "Friday, Oct. 16",
-        "kind": "deadline"
-      },
-      {
-        "date": "Friday, Oct. 23",
-        "label": "Lego Club (for those who are signed up)",
-        "source": "teacher-home",
-        "kind": "club"
-      },
-      {
-        "label": "Halloween Party",
-        "date": "Friday, Oct. 30",
-        "kind": "school event"
-      },
-      {
-        "date": "Thursday, Nov. 5",
-        "label": "HSA Meeting",
-        "source": "teacher-home",
-        "kind": "meeting"
-      },
-      {
-        "label": "12:00 dismissal — Articulation Meeting",
-        "date": "Friday, Nov. 6",
-        "kind": "schedule change"
-      },
-      {
-        "date": "Friday, Nov. 13",
-        "label": "Lego Club (for those who are signed up)",
-        "source": "teacher-home",
-        "kind": "club"
-      },
-      {
-        "label": "2nd Trimester starts",
-        "date": "Monday, Nov. 23",
-        "kind": "school"
-      },
-      {
-        "label": "Thanksgiving Holiday — School Closed",
-        "date": "Thursday–Monday, Nov. 26–30",
-        "kind": "holiday"
-      },
-      {
-        "date": "Thursday, Dec. 3",
-        "label": "HSA meeting",
-        "source": "teacher-home",
-        "kind": "meeting"
-      },
-      {
-        "label": "Santa Workshop",
-        "date": "Monday, Dec. 14",
-        "kind": "school event"
-      },
-      {
-        "date": "Friday, Dec. 18",
-        "label": "Lego Club (for those who are signed up)",
-        "source": "teacher-home",
-        "kind": "club"
-      },
-      {
-        "label": "Christmas Party",
-        "date": "Tuesday, Dec. 22",
-        "kind": "school event"
-      },
-      {
-        "label": "12:00 dismissal",
-        "date": "Wednesday, Dec. 23",
-        "kind": "schedule change"
-      },
-      {
-        "label": "Christmas Holiday — School Closed",
-        "date": "Thursday–Thursday, Dec. 24–31",
-        "kind": "holiday"
-      },
-      {
         "label": "New Year’s Day — School Closed",
         "date": "Friday, Jan. 1",
         "kind": "holiday"
@@ -390,11 +258,22 @@
         "source": "uploaded-notice"
       },
       {
+        "label": "Chapter 1A (addition) test",
+        "date": "Tuesday, Sept. 22",
+        "kind": "test"
+      },
+      {
         "date": "Wednesday, Sept. 23",
         "label": "Mass",
         "kind": "school event",
         "sourceDocument": "weekly-reminders-2026-09-21",
         "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Sept. 23",
+        "label": "Stationary money due ($17)",
+        "source": "teacher-home",
+        "kind": "deadline"
       },
       {
         "date": "Thursday, Sept. 24",
@@ -418,6 +297,12 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Friday, Sept. 25",
+        "label": "Spelling (2-letter blends) / Handwriting",
+        "kind": "test",
+        "source": "teacher-tests"
+      },
+      {
         "date": "Monday, Sept. 28",
         "label": "October Gift Card Calendar Fundraiser money and calendar bottoms due",
         "kind": "deadline",
@@ -430,6 +315,18 @@
         "kind": "deadline",
         "sourceDocument": "weekly-reminders-2026-09-28",
         "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Sept. 29",
+        "label": "Subtraction to 12",
+        "kind": "test",
+        "source": "teacher-tests"
+      },
+      {
+        "date": "Tuesday, Sept. 29",
+        "label": "Religion Ch. 2",
+        "kind": "test",
+        "source": "teacher-tests"
       },
       {
         "date": "Wednesday, Sept. 30",
@@ -453,6 +350,12 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Wednesday, Sept. 30",
+        "label": "Grammar (types of sentences)",
+        "kind": "test",
+        "source": "teacher-tests"
+      },
+      {
         "date": "Thursday, Oct. 1",
         "label": "Picture Day",
         "kind": "school event",
@@ -474,11 +377,55 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Friday, Oct. 2",
+        "label": "Spelling (short a / long a) / Handwriting",
+        "kind": "test",
+        "source": "teacher-tests"
+      },
+      {
+        "date": "Wednesday, Oct. 7",
+        "label": "Reading",
+        "kind": "test",
+        "source": "teacher-tests"
+      },
+      {
+        "label": "Mid-term Progress Reports",
+        "date": "Thursday, Oct. 8",
+        "kind": "school"
+      },
+      {
+        "label": "Schwartz Farm Family Night RSVP due for $5/student voucher",
+        "date": "Friday, Oct. 16",
+        "kind": "deadline"
+      },
+      {
         "date": "Thursday, Oct. 22",
         "label": "Chick-fil-A pickup",
         "kind": "school event",
         "sourceDocument": "weekly-reminders-2026-09-28",
         "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Oct. 23",
+        "label": "Lego Club (for those who are signed up)",
+        "source": "teacher-home",
+        "kind": "club"
+      },
+      {
+        "label": "Halloween Party",
+        "date": "Friday, Oct. 30",
+        "kind": "school event"
+      },
+      {
+        "date": "Thursday, Nov. 5",
+        "label": "HSA Meeting",
+        "source": "teacher-home",
+        "kind": "meeting"
+      },
+      {
+        "label": "12:00 dismissal — Articulation Meeting",
+        "date": "Friday, Nov. 6",
+        "kind": "schedule change"
       },
       {
         "date": "Friday–Saturday, Nov. 13–14",
@@ -488,11 +435,59 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Friday, Nov. 13",
+        "label": "Lego Club (for those who are signed up)",
+        "source": "teacher-home",
+        "kind": "club"
+      },
+      {
         "date": "Saturday, Nov. 21",
         "label": "Reading Royals Game Family Fun Night",
         "kind": "school event",
         "sourceDocument": "weekly-reminders-2026-09-28",
         "source": "uploaded-notice"
+      },
+      {
+        "label": "2nd Trimester starts",
+        "date": "Monday, Nov. 23",
+        "kind": "school"
+      },
+      {
+        "label": "Thanksgiving Holiday — School Closed",
+        "date": "Thursday–Monday, Nov. 26–30",
+        "kind": "holiday"
+      },
+      {
+        "date": "Thursday, Dec. 3",
+        "label": "HSA meeting",
+        "source": "teacher-home",
+        "kind": "meeting"
+      },
+      {
+        "label": "Santa Workshop",
+        "date": "Monday, Dec. 14",
+        "kind": "school event"
+      },
+      {
+        "date": "Friday, Dec. 18",
+        "label": "Lego Club (for those who are signed up)",
+        "source": "teacher-home",
+        "kind": "club"
+      },
+      {
+        "label": "Christmas Party",
+        "date": "Tuesday, Dec. 22",
+        "kind": "school event"
+      },
+      {
+        "label": "12:00 dismissal",
+        "date": "Wednesday, Dec. 23",
+        "kind": "schedule change"
+      },
+      {
+        "label": "Christmas Holiday — School Closed",
+        "date": "Thursday–Thursday, Dec. 24–31",
+        "kind": "holiday"
       }
     ],
     "lunchMenu": [
@@ -630,13 +625,6 @@
       }
     ],
     "reminders": [
-      "Stationary money ($17) is due Wednesday, Sept. 23.",
-      "Pretzel delivery is Thursday, Sept. 24 after lunch.",
-      "Keep the Reading Log and Behavior Chart in the HW folder.",
-      "Return everything in the HW folder.",
-      "Welcome Back Dance for K–4 is Saturday, Oct. 3 from 6–8 PM in the ABVM Gym; grades 5–8 have Movie Night at the same time.",
-      "Schwartz Farm Family Night is Friday, Oct. 23 at 315 Schwartz Lane, Hegins; ABVM s’mores are 6–7 PM. RSVP by Oct. 16 for a $5/student voucher.",
-      "Christmas Caroling date is still TBD.",
       "STAR testing continues Monday–Friday, Sept. 21–25.",
       "Friday, Sept. 25 is Dress Down Day. Donate any amount; all proceeds support a local charity.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM.",
@@ -650,7 +638,13 @@
       "Reading Royals Game Family Fun Night is Saturday, Nov. 21.",
       "Sign up for conferences using the OptionC portal on Tuesday, Sept. 29.",
       "Wednesday, Sept. 30: Mass, Communication Folder, and the Chick-fil-A sale starts.",
-      "Thursday, Oct. 1: Picture Day, Business Casual, and the HSA virtual meeting."
+      "Thursday, Oct. 1: Picture Day, Business Casual, and the HSA virtual meeting.",
+      "Stationary money ($17) is due Wednesday, Sept. 23.",
+      "Pretzel delivery is Thursday, Sept. 24 after lunch.",
+      "Keep the Reading Log and Behavior Chart in the HW folder.",
+      "Return everything in the HW folder.",
+      "Schwartz Farm Family Night is Friday, Oct. 23 at 315 Schwartz Lane, Hegins; ABVM s’mores are 6–7 PM. RSVP by Oct. 16 for a $5/student voucher.",
+      "Christmas Caroling date is still TBD."
     ],
     "questions": [
       {
@@ -775,15 +769,8 @@
       "The public teacher Homework page does not show a date, so assignments are labeled as the current posting and refreshed daily."
     ],
     "parentNotices": [
-      "Welcome Back Dance for grades K–4 is Saturday, Oct. 3 from 6–8 PM in the ABVM Gym. It is free with light refreshments; use the 7th Street entrance. Grades 5–8 have Movie Night at the same time.",
-      "Picture Day is Thursday, Oct. 1.",
-      "Picture ordering: a digital image is $10 when added to a package; glossy finish is $5 per package; a 10×13 is $20; the other listed add-on items are $13 each.",
-      "Picture backgrounds: 1 Universe, 2 Pink Mist, 3 Fall Leaves, 4 Traditional, 5 School Spirit, 6 Patriotic, 7 Dinosaur, 8 Pastel, 9 Bookcase, 10 Blue Brush, 11 Laser. Backgrounds 1, 2, and 11 are marked NEW.",
-      "Schwartz Farm Family Night is Oct. 23 at 315 Schwartz Lane, Hegins. Farm hours are 11 AM–9 PM; ABVM s’mores are 6–7 PM; RSVP by Oct. 16 for a $5/student voucher. Cash only; ATM available.",
-      "Christmas Caroling date is TBD.",
       "Dress Down Day is Friday, Sept. 25. Donate any amount; all proceeds support a local charity.",
       "Dress Down Days will be held twice each month; future dates will appear on the school calendar beginning in October.",
-      "Lego Club is Friday, Sept. 25 from 3–4 PM.",
       "Sign up for parent-teacher conferences using the OptionC portal on Tuesday, Sept. 29.",
       "Wednesday, Sept. 30: Mass, Communication Folder, and Chick-fil-A sale starts.",
       "Thursday, Oct. 1 is Picture Day and Business Casual.",
@@ -798,10 +785,14 @@
       "Thursday, Oct. 1 is Picture Day and Business Casual; the HSA meeting is virtual.",
       "The Chick-fil-A sale starts Wednesday, Sept. 30; pickup is Thursday, Oct. 22.",
       "Drama Club Play is Nov. 13–14.",
-      "Reading Royals Game Family Fun Night is Saturday, Nov. 21."
+      "Reading Royals Game Family Fun Night is Saturday, Nov. 21.",
+      "Picture ordering: a digital image is $10 when added to a package; glossy finish is $5 per package; a 10×13 is $20; the other listed add-on items are $13 each.",
+      "Picture backgrounds: 1 Universe, 2 Pink Mist, 3 Fall Leaves, 4 Traditional, 5 School Spirit, 6 Patriotic, 7 Dinosaur, 8 Pastel, 9 Bookcase, 10 Blue Brush, 11 Laser. Backgrounds 1, 2, and 11 are marked NEW.",
+      "Christmas Caroling date is TBD.",
+      "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
     "sourceCheckedAt": "2026-09-28T13:19:00.000Z",
-    "uploadedNoticeHash": "uploaded-notices-20260928-weekly",
+    "uploadedNoticeHash": "uploaded-notices-ce7814f3f5f5d08626d1",
     "uploadedNoticeTopics": {
       "reminders": [
         "star",
