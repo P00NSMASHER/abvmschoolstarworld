@@ -9,6 +9,10 @@ const MONTHS=["January","February","March","April","May","June","July","August",
 const SHORT_MONTHS={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,sept:8,oct:9,nov:10,dec:11};
 const WEEKDAY=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
+function storageGet(key){try{return localStorage.getItem(key)}catch{return null}}
+function storageSet(key,value){try{localStorage.setItem(key,value);return true}catch{return false}}
+function storageRemove(key){try{localStorage.removeItem(key);return true}catch{return false}}
+
 function toast(message){
   let t=$("#toast");
   if(!t){t=document.createElement("div");t.id="toast";t.className="toast";document.body.append(t);}
@@ -66,8 +70,8 @@ function lunchForDate(date){
   return (pack?.lunchMenu||[]).find(x=>sameDay(parseDate(x.day),date))||null;
 }
 function checkKey(item,index){return "abvm-old-look:"+String(pack?.sourceHash||"pack")+":"+index+":"+(item.task||item.label||"");}
-function checked(item,index){return localStorage.getItem(checkKey(item,index))==="1";}
-function toggleChecked(item,index){const k=checkKey(item,index);localStorage.getItem(k)==="1"?localStorage.removeItem(k):localStorage.setItem(k,"1");render();}
+function checked(item,index){return storageGet(checkKey(item,index))==="1";}
+function toggleChecked(item,index){const k=checkKey(item,index);storageGet(k)==="1"?storageRemove(k):storageSet(k,"1");render();}
 function taskHtml(item,index){
   const done=checked(item,index);
   const optional=/parent|if participating/i.test((item.subject||"")+" "+(item.task||"")) || /forms|cover books/i.test(item.task||"");
@@ -289,7 +293,7 @@ function gameRecordKey(modeId){
 }
 function loadGameRecord(modeId){
   try{
-    const value=JSON.parse(localStorage.getItem(gameRecordKey(modeId))||"{}");
+    const value=JSON.parse(storageGet(gameRecordKey(modeId))||"{}");
     return {best:Number(value.best)||0,plays:Number(value.plays)||0,totalCorrect:Number(value.totalCorrect)||0,totalAnswered:Number(value.totalAnswered)||0};
   }catch{return {best:0,plays:0,totalCorrect:0,totalAnswered:0}}
 }
@@ -302,20 +306,20 @@ function saveGameRecord(){
     totalCorrect:record.totalCorrect+gameState.score,
     totalAnswered:record.totalAnswered+gameState.questions.length
   };
-  localStorage.setItem(gameRecordKey(gameState.mode),JSON.stringify(next));
+  storageSet(gameRecordKey(gameState.mode),JSON.stringify(next));
   gameState.saved=true;
 }
 function nextGameSessionSeed(modeId){
   const catalog=studyGameCatalog();
   const key="abvm-study-games-session:"+String(catalog?.sourceKey||"current")+":"+modeId;
-  const next=(Number(localStorage.getItem(key))||0)+1;
-  localStorage.setItem(key,String(next));
+  const next=(Number(storageGet(key))||0)+1;
+  storageSet(key,String(next));
   return String(catalog?.sourceKey||"current")+"|"+modeId+"|"+next;
 }
 function gameLearningKey(){return "abvm-study-learning:v2";}
 function loadGameLearning(){
   try{
-    const parsed=JSON.parse(localStorage.getItem(gameLearningKey())||"{}");
+    const parsed=JSON.parse(storageGet(gameLearningKey())||"{}");
     return parsed&&typeof parsed==="object"?parsed:{};
   }catch{return {}}
 }
@@ -335,7 +339,7 @@ function recordGameLearning(question,correct){
     if(row.ConsecutiveWrong>=2)row.TargetDifficulty=2;
   }
   all[question.skill]=row;
-  localStorage.setItem(gameLearningKey(),JSON.stringify(all));
+  storageSet(gameLearningKey(),JSON.stringify(all));
   return row;
 }
 function startStudyGame(modeId){
