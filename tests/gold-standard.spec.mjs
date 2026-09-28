@@ -45,7 +45,7 @@ test("historical gold-standard visual hierarchy is restored",async({page})=>{
 });
 
 test("historical layout remains phone-safe and interactive",async({page})=>{
-  for(const label of ["Today","Week","Calendar","Study","Family"]){
+  for(const label of ["Today","Week","Calendar","Study","Study Games","Family"]){
     await openTab(page,label);
     const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
     expect(overflow,label+" has horizontal overflow").toBeFalsy();
@@ -119,4 +119,41 @@ test("week paging and full calendar agenda work on phone",async({page})=>{
   await expect(page.locator(".agenda-lunch").first()).toBeVisible();
   await expect(page.locator(".month-agenda")).toContainText("Lunch");
   await expect(page.locator(".calendar-legend")).toContainText("Lunch");
+});
+
+
+test("Study Games uses the StarBlox-style equivalent question engine",async({page})=>{
+  await openTab(page,"Study Games");
+  await expect(page.locator(".study-games-hero")).toBeVisible();
+  await expect(page.locator(".study-game-tile")).toHaveCount(4);
+  await expect(page.locator(".question-tech-card")).toContainText("Direct");
+  await expect(page.locator(".question-tech-card")).toContainText("Transfer");
+  await expect(page.locator(".question-tech-card")).toContainText("Reason");
+
+  const engine=await page.evaluate(async()=>{
+    const source=await (await fetch("./data/study-pack.json",{cache:"no-store"})).json();
+    const catalog=window.ABVMStudyGames.buildCatalog(source.pack,{sourceKey:"playwright-certified-source"});
+    return {
+      count:catalog.questionCount,
+      issues:window.ABVMStudyGames.validateCatalog(catalog),
+      equivalent:catalog.questions.filter(q=>q.originalEquivalent===true).length,
+      types:[...new Set(catalog.questions.filter(q=>q.originalEquivalent===true).map(q=>q.questionType))],
+      transform:catalog.sourceTransform,
+      privateKeys:catalog.questions.flatMap(q=>Object.keys(q)).filter(k=>["studentResponse","teacherMark","grade","score","rawText","worksheetText","imageHash","imagePath"].includes(k))
+    };
+  });
+  expect(engine.count).toBeGreaterThan(20);
+  expect(engine.equivalent).toBeGreaterThan(10);
+  expect(engine.issues).toEqual([]);
+  expect(engine.types.sort()).toEqual(["direct","reasoning","transfer"]);
+  expect(engine.transform).toBe("skill-only-equivalent-item-v1");
+  expect(engine.privateKeys).toEqual([]);
+
+  await page.getByRole("button",{name:/Quick Mix/i}).click();
+  await expect(page.locator(".game-question-card")).toBeVisible();
+  expect(await page.locator(".game-answer").count()).toBeGreaterThanOrEqual(2);
+
+  await page.locator(".game-answer").first().click();
+  await expect(page.locator(".game-feedback")).toBeVisible();
+  await expect(page.locator(".game-next")).toBeVisible();
 });
