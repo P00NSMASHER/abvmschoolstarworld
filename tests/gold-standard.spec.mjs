@@ -101,3 +101,20 @@ test("second requested polish is present",async({page})=>{
   await expect(page.locator(".notices-card")).toBeVisible();
   await expect(page.locator(".notice-row").first()).toBeVisible();
 });
+
+
+test("week paging and full calendar agenda work on phone",async({page})=>{
+  await openTab(page,"Week");
+  const range=page.locator(".week-nav strong");
+  const initial=(await range.textContent())?.trim();
+  await page.locator('[data-week-step="1"]').click();
+  await expect(page.locator(".week-today-jump")).toBeVisible();
+  await expect(range).not.toHaveText(initial||"");
+  await expect(page.locator("[data-day]").first()).toContainText("28");
+
+  await openTab(page,"Calendar");
+  expect(await page.locator(".agenda-day").count()).toBeGreaterThan(15);
+  await expect(page.locator(".agenda-lunch").first()).toBeVisible();
+  await expect(page.locator(".month-agenda")).toContainText("Lunch");
+  await expect(page.locator(".calendar-legend")).toContainText("Lunch");
+});
