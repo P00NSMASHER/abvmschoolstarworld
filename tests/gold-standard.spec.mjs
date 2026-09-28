@@ -336,3 +336,49 @@ test("Sept 28 weekly notice is integrated without duplicate stale events",async(
   expect(events.some(e=>e.date==="Friday, Oct. 2"&&/HSA/i.test(e.label||""))).toBe(false);
   expect(data.uploadedNotices.documents.some(d=>d.id==="weekly-reminders-2026-09-28")).toBe(true);
 });
+
+
+test("Sept 28 weekly notice is integrated across Today, Week, Calendar, and Family",async({page})=>{
+  const data=await page.evaluate(async()=>await (await fetch("./data/study-pack.json",{cache:"no-store"})).json());
+  const events=data.pack.importantDates;
+  const byLabel=label=>events.find(item=>item.label===label);
+  expect(byLabel("October Gift Card Calendar Fundraiser money and calendar bottoms due")?.date).toContain("Sept. 28");
+  expect(byLabel("Sign up for conferences using the OptionC portal")?.date).toContain("Sept. 29");
+  expect(byLabel("Chick-fil-A sale starts")?.date).toContain("Sept. 30");
+  expect(byLabel("Business Casual")?.date).toContain("Oct. 1");
+  expect(byLabel("HSA virtual meeting")?.date).toContain("Oct. 1");
+  expect(byLabel("Chick-fil-A pickup")?.date).toContain("Oct. 22");
+  expect(byLabel("Drama Club Play")?.date).toContain("Nov. 13");
+  expect(byLabel("Reading Royals Game Family Fun Night")?.date).toContain("Nov. 21");
+  expect(events.some(item=>item.date.includes("Oct. 2")&&/HSA/i.test(item.label))).toBe(false);
+
+  await openTab(page,"Today");
+  await expect(page.locator(".timeline")).toContainText("October Gift Card Calendar Fundraiser");
+
+  await openTab(page,"Week");
+  const days=page.locator("[data-day]");
+  await days.nth(1).click();
+  await expect(page.locator(".day-detail")).toContainText("OptionC portal");
+  await days.nth(2).click();
+  await expect(page.locator(".day-detail")).toContainText("Chick-fil-A sale starts");
+  await days.nth(3).click();
+  await expect(page.locator(".day-detail")).toContainText("Picture Day");
+  await expect(page.locator(".day-detail")).toContainText("Business Casual");
+  await expect(page.locator(".day-detail")).toContainText("HSA virtual meeting");
+
+  await openTab(page,"Calendar");
+  await expect(page.locator(".month-agenda")).toContainText("Chick-fil-A sale starts");
+
+  await openTab(page,"Family");
+  await expect(page.locator(".notices-card")).toContainText("OptionC portal");
+  await expect(page.locator(".notices-card")).toContainText("Picture Day and Business Casual");
+});
+
+test("current uploaded notice survives the scheduled refresh ordering rules",async({page})=>{
+  const result=await page.request.get("/data/uploaded-notices.json");
+  expect(result.ok()).toBe(true);
+  const notices=await result.json();
+  expect(notices.documents.some(doc=>doc.id==="weekly-reminders-2026-09-28")).toBe(true);
+  expect(notices.parentNotices[0].sourceDocument).toBe("weekly-reminders-2026-09-28");
+  expect(notices.importantDates.some(item=>item.label==="Parent-Teacher Conferences"&&item.date.includes("Oct. 19"))).toBe(true);
+});
