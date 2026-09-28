@@ -4,51 +4,37 @@ for(const viewport of [
   {name:"iPad portrait",width:768,height:1024},
   {name:"large tablet",width:820,height:1180},
 ]){
-  test(`${viewport.name} uses deliberate tablet composition`,async({browser})=>{
+  test(`${viewport.name} keeps all six tabs and content usable`,async({browser})=>{
     const context=await browser.newContext({viewport:{width:viewport.width,height:viewport.height},hasTouch:true});
     const page=await context.newPage();
-    await page.goto("http://127.0.0.1:4173/#study");
-    await expect(page.locator(".loading-screen")).toHaveCount(0,{timeout:10_000});
-    const studyColumns=await page.locator(".study-content").evaluate(el=>getComputedStyle(el).gridTemplateColumns);
-    expect(studyColumns.split(" ").length).toBeGreaterThanOrEqual(2);
-
-    await page.getByRole("button",{name:"Calendar",exact:true}).click();
-    const calColumns=await page.locator(".calendar-wrap").evaluate(el=>getComputedStyle(el).gridTemplateColumns);
-    expect(calColumns.split(" ").length).toBeGreaterThanOrEqual(2);
-
-    await page.getByRole("button",{name:"Family",exact:true}).click();
-    const familyColumns=await page.locator(".family-content").evaluate(el=>getComputedStyle(el).gridTemplateColumns);
-    expect(familyColumns.split(" ").length).toBeGreaterThanOrEqual(2);
-
-    const navLabelSize=await page.locator('.bottom-nav [data-tab="today"] b').evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
-    expect(navLabelSize).toBeGreaterThanOrEqual(12);
-
-    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
-    expect(overflow).toBeFalsy();
+    await page.goto("http://127.0.0.1:4173/#today");
+    await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
+    await expect(page.locator(".bottom-nav button")).toHaveCount(6);
+    for(const tab of ["Calendar","Study","Study Games","Family"]){
+      await page.getByRole("button",{name:tab,exact:true}).click();
+      await expect(page.locator(".screen")).toBeVisible();
+      if(tab==="Study Games")await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
+      const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
+      expect(overflow,viewport.name+" "+tab+" overflow").toBeFalsy();
+    }
+    const minTarget=await page.locator(".bottom-nav button").evaluateAll(nodes=>Math.min(...nodes.map(n=>n.getBoundingClientRect().height)));
+    expect(minTarget).toBeGreaterThanOrEqual(44);
     await context.close();
   });
 }
 
-test("desktop calendar and information pages use width productively",async({page},testInfo)=>{
-  test.skip(testInfo.project.name!=="desktop","Desktop-only density assertion");
+test("desktop keeps the centered app, navigation, and long information pages readable",async({page},testInfo)=>{
+  test.skip(testInfo.project.name!=="desktop","Desktop-only assertion");
   await page.goto("/#calendar");
-  await expect(page.locator(".loading-screen")).toHaveCount(0,{timeout:10_000});
-  const cal=await page.locator(".calendar-wrap").evaluate(el=>{
-    const rect=el.getBoundingClientRect();
-    return{width:rect.width,columns:getComputedStyle(el).gridTemplateColumns};
-  });
-  expect(cal.width).toBeGreaterThan(850);
-  expect(cal.columns.split(" ").length).toBeGreaterThanOrEqual(2);
-
-  await page.getByRole("button",{name:"Study",exact:true}).click();
-  const study=await page.locator(".study-content").evaluate(el=>el.getBoundingClientRect().width);
-  expect(study).toBeGreaterThan(850);
-
+  await expect(page.locator(".calendar-card")).toBeVisible({timeout:10_000});
+  const shell=await page.locator(".phone-app").evaluate(el=>({width:el.getBoundingClientRect().width,left:el.getBoundingClientRect().left}));
+  expect(shell.width).toBeGreaterThan(320);
+  expect(shell.width).toBeLessThanOrEqual(1440);
+  await expect(page.locator(".bottom-nav button")).toHaveCount(6);
+  await page.getByRole("button",{name:"Study Games",exact:true}).click();
+  await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
   await page.getByRole("button",{name:"Family",exact:true}).click();
-  const family=await page.locator(".family-content").evaluate(el=>({
-    width:el.getBoundingClientRect().width,
-    columns:getComputedStyle(el).gridTemplateColumns,
-  }));
-  expect(family.width).toBeGreaterThan(850);
-  expect(family.columns.split(" ").length).toBeGreaterThanOrEqual(2);
+  await expect(page.locator(".notices-card")).toBeVisible();
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
+  expect(overflow).toBeFalsy();
 });

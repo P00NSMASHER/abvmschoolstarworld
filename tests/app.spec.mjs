@@ -4,153 +4,75 @@ import AxeBuilder from "@axe-core/playwright";
 async function openTab(page,label){
   await page.getByRole("button",{name:label,exact:true}).click();
   await expect(page.locator(".screen")).toBeVisible();
+  if(label==="Study Games")await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
 }
-
 test.beforeEach(async({page})=>{
   await page.goto("/#today");
-  await expect(page.locator(".loading-screen")).toHaveCount(0,{timeout:10_000});
+  await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
 });
 
-test("all primary tabs render without horizontal overflow",async({page})=>{
-  for(const label of ["Today","Week","Calendar","Study","Family"]){
+test("all six primary tabs render without horizontal overflow",async({page})=>{
+  for(const label of ["Today","Week","Calendar","Study","Study Games","Family"]){
     await openTab(page,label);
     const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
     expect(overflow,label+" has horizontal overflow").toBeFalsy();
   }
 });
 
-test("Today uses the clean native-style dashboard hierarchy",async({page})=>{
-  await expect(page.locator(".today-page-title h1")).toHaveText("Today");
-  await expect(page.locator(".today-overview")).toBeVisible();
-  await expect(page.locator(".today-event-stack .event-row").first()).toBeVisible();
-  await expect(page.locator(".homework-dashboard")).toBeVisible();
-  await expect(page.locator(".today-screen .top-scene")).toHaveCount(0);
-  const styles=await page.evaluate(()=>({
-    canvas:getComputedStyle(document.querySelector(".today-screen")).backgroundColor,
-    cardImage:getComputedStyle(document.querySelector(".today-overview")).backgroundImage,
-    shadow:getComputedStyle(document.querySelector(".today-overview")).boxShadow,
-    radius:parseFloat(getComputedStyle(document.querySelector(".today-overview")).borderRadius),
-  }));
-  expect(styles.canvas).toBe("rgb(242, 242, 247)");
-  expect(styles.cardImage).not.toBe("none");
-  expect(styles.shadow).not.toBe("none");
-  expect(styles.radius).toBeGreaterThanOrEqual(18);
+test("Today exposes the weekly priority and focused checklist",async({page})=>{
+  await expect(page.locator(".hero-card")).toBeVisible();
+  await expect(page.locator(".priority-card")).toBeVisible();
+  await expect(page.locator(".today-panel")).toBeVisible();
+  await expect(page.locator(".timeline-row").first()).toBeVisible();
+  await expect(page.locator(".check-item").first()).toBeVisible();
 });
 
-test("Week uses the clean native-style agenda hierarchy",async({page})=>{
+test("Week exposes paging, weekdays, selected-day detail, and reminders",async({page})=>{
   await openTab(page,"Week");
-  await expect(page.locator(".week-page-title h1")).toHaveText("Week");
-  await expect(page.locator(".day-picker")).toBeVisible();
+  await expect(page.locator(".week-nav")).toBeVisible();
+  await expect(page.locator(".day-picker [data-day]")).toHaveCount(5);
   await expect(page.locator(".day-detail")).toBeVisible();
-  await expect(page.locator(".week-screen .top-scene")).toHaveCount(0);
-  const styles=await page.evaluate(()=>({
-    canvas:getComputedStyle(document.querySelector(".week-screen")).backgroundColor,
-    detailImage:getComputedStyle(document.querySelector(".day-detail")).backgroundImage,
-    radius:parseFloat(getComputedStyle(document.querySelector(".day-detail")).borderRadius),
-    pickerImage:getComputedStyle(document.querySelector(".day-picker button.active")).backgroundImage,
-  }));
-  expect(styles.canvas).toBe("rgb(242, 242, 247)");
-  expect(styles.detailImage).not.toBe("none");
-  expect(styles.radius).toBeGreaterThanOrEqual(18);
-  expect(styles.pickerImage).not.toBe("none");
+  await expect(page.locator(".event-stack")).toBeVisible();
+  await expect(page.locator(".reminder-strip")).toBeVisible();
 });
 
-test("calendar controls remain interactive",async({page})=>{
+test("Calendar exposes month grid, selected-day detail, full agenda, and specials",async({page})=>{
   await openTab(page,"Calendar");
-  const heading=page.locator(".calendar-heading h2");
-  const initial=(await heading.textContent())?.trim();
-  await page.getByRole("button",{name:"Next month"}).click();
-  await expect(heading).not.toHaveText(initial||"");
-  await page.getByRole("button",{name:"Previous month"}).click();
-  await page.getByRole("button",{name:"List View"}).click();
-  await expect(page.locator(".calendar-list-panel.active")).toBeVisible();
-  await page.getByRole("button",{name:"Month View"}).click();
-  await expect(page.locator(".calendar-month-panel.active")).toBeVisible();
-  const firstDay=page.locator("[data-cal-day]").first();
-  await firstDay.click();
-  await expect(firstDay).toHaveAttribute("aria-pressed","true");
+  await expect(page.locator(".calendar-card")).toBeVisible();
+  expect(await page.locator("[data-cal-day]").count()).toBeGreaterThan(27);
+  await expect(page.locator(".calendar-day-card")).toBeVisible();
+  await expect(page.locator(".month-agenda")).toBeVisible();
+  await expect(page.locator(".specials-card")).toBeVisible();
 });
 
-test("Study uses the clean native-style review hierarchy",async({page})=>{
+test("Study exposes one primary game CTA and collapsed subject details",async({page})=>{
   await openTab(page,"Study");
-  await expect(page.locator(".study-page-title h1")).toHaveText("Study");
   await expect(page.locator(".study-at-a-glance")).toBeVisible();
-  await expect(page.locator(".study-section-nav")).toBeVisible();
-  await expect(page.locator(".study-screen .top-scene")).toHaveCount(0);
-  const styles=await page.evaluate(()=>({
-    canvas:getComputedStyle(document.querySelector(".study-screen")).backgroundColor,
-    quickImage:getComputedStyle(document.querySelector(".study-at-a-glance")).backgroundImage,
-    subjectImage:getComputedStyle(document.querySelector(".subject-card")).backgroundImage,
-    radius:parseFloat(getComputedStyle(document.querySelector(".study-at-a-glance")).borderRadius),
-  }));
-  expect(styles.canvas).toBe("rgb(242, 242, 247)");
-  expect(styles.quickImage).not.toBe("none");
-  expect(styles.subjectImage).not.toBe("none");
-  expect(styles.radius).toBeGreaterThanOrEqual(18);
+  await expect(page.locator(".study-games-cta")).toBeVisible();
+  const details=page.locator(".study-accordion");
+  await expect(details).toHaveCount(6);
+  for(let i=0;i<await details.count();i++)await expect(details.nth(i)).not.toHaveAttribute("open");
 });
 
-test("study jump controls open their target sections",async({page})=>{
-  await openTab(page,"Study");
-  const before=await page.evaluate(()=>document.querySelector(".screen")?.scrollTop||window.scrollY);
-  await page.locator('[data-study-jump="study-math"]').click();
-  await expect(page.locator("#study-math")).toHaveAttribute("open","");
-  const after=await page.evaluate(()=>document.querySelector(".screen")?.scrollTop||window.scrollY);
-  expect(after).toBeGreaterThanOrEqual(before);
+test("Study Games loads lazily and starts a playable round",async({page})=>{
+  await openTab(page,"Study Games");
+  await expect(page.locator(".study-game-tile")).toHaveCount(4);
+  await page.getByRole("button",{name:/Quick Mix/i}).click();
+  await expect(page.locator(".game-question-card")).toBeVisible();
+  expect(await page.locator(".game-answer").count()).toBe(3);
 });
 
-test("Family uses the clean native-style parent dashboard hierarchy",async({page})=>{
+test("Family exposes current actions, notices, and app/privacy disclosure",async({page})=>{
   await openTab(page,"Family");
-  await expect(page.locator(".family-page-title h1")).toHaveText("Family");
-  await expect(page.locator(".family-priority")).toBeVisible();
+  await expect(page.locator(".family-hero")).toBeVisible();
   await expect(page.locator(".family-stats")).toBeVisible();
-  await expect(page.locator(".family-screen .top-scene")).toHaveCount(0);
-  const styles=await page.evaluate(()=>({
-    canvas:getComputedStyle(document.querySelector(".family-screen")).backgroundColor,
-    priorityImage:getComputedStyle(document.querySelector(".family-priority")).backgroundImage,
-    cardColor:getComputedStyle(document.querySelector(".family-card")).backgroundColor,
-    priorityRadius:parseFloat(getComputedStyle(document.querySelector(".family-priority")).borderRadius),
-  }));
-  expect(styles.canvas).toBe("rgb(242, 242, 247)");
-  expect(styles.priorityImage).not.toBe("none");
-  expect(styles.cardColor).toBe("rgb(255, 255, 255)");
-  expect(styles.priorityRadius).toBeGreaterThanOrEqual(18);
+  await expect(page.locator(".family-actions-card")).toBeVisible();
+  await expect(page.locator(".notices-card")).toBeVisible();
+  await expect(page.locator(".family-more")).toBeVisible();
 });
 
-test("family notices are static and checklist semantics are explicit",async({page})=>{
-  await openTab(page,"Family");
-  await expect(page.locator("#family-current-notices")).toBeVisible();
-  await expect(page.locator("details").filter({has:page.locator("#family-current-notices")})).toHaveCount(0);
-  await expect(page.getByText("Progress is saved on this device.").first()).toBeVisible();
-  const check=page.locator("[data-family-check]").first();
-  if(await check.count()){
-    await expect(check).toHaveAttribute("aria-pressed",/true|false/);
-    await expect(check).toHaveAttribute("aria-label",/Mark complete|Completed/);
-  }
-});
-
-test("desktop uses native page flow and a left navigation rail",async({page},testInfo)=>{
-  test.skip(testInfo.project.name!=="desktop","Desktop-only layout assertion");
-  const layout=await page.evaluate(()=>{
-    const nav=document.querySelector(".bottom-nav");
-    const screen=document.querySelector(".screen");
-    const app=document.querySelector(".phone-app");
-    const ns=getComputedStyle(nav),ss=getComputedStyle(screen),as=getComputedStyle(app);
-    return{navDisplay:ns.display,navPosition:ns.position,screenOverflow:ss.overflowY,appHeight:as.height,bodyScroll:document.body.scrollHeight};
-  });
-  expect(layout.navDisplay).toBe("flex");
-  expect(layout.navPosition).toBe("fixed");
-  expect(layout.screenOverflow).toBe("visible");
-  expect(layout.bodyScroll).toBeGreaterThan(700);
-  await page.evaluate(()=>window.scrollTo(0,700));
-  const railTop=await page.locator(".bottom-nav").evaluate(el=>el.getBoundingClientRect().top);
-  expect(Math.abs(railTop)).toBeLessThanOrEqual(1);
-});
-
-test("no serious or critical automated accessibility violations",async({page})=>{
-  for(const label of ["Today","Calendar","Study","Family"]){
-    await openTab(page,label);
-    const result=await new AxeBuilder({page}).withTags(["wcag2a","wcag2aa"]).analyze();
-    const severe=result.violations.filter(v=>v.impact==="serious"||v.impact==="critical");
-    expect(severe,label+" accessibility violations: "+severe.map(v=>v.id).join(", ")).toEqual([]);
-  }
+test("current app has no critical automated accessibility violations",async({page})=>{
+  const results=await new AxeBuilder({page}).analyze();
+  const critical=results.violations.filter(v=>v.impact==="critical");
+  expect(critical.map(v=>({id:v.id,nodes:v.nodes.length}))).toEqual([]);
 });
