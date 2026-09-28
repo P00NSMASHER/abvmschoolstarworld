@@ -833,3 +833,14 @@ html,body{margin:0}
   .question-tech-card>div{grid-template-columns:1fr}
   .game-engine-stats span{font-size:8px}
 }
+
+
+/* v66 — researched question-quality restoration */
+.question-quality-note{
+  margin:10px 1px 0!important;padding-top:9px;border-top:1px solid #ded6e5;
+  color:#5d5964!important;font-size:9px!important;line-height:1.4!important;letter-spacing:0!important;font-weight:800!important
+}
+.adaptive-note{
+  display:block;margin-top:7px;padding:7px 8px;border-radius:9px;background:#fff4c9;
+  color:#684f0c;font-size:9px;line-height:1.35;font-weight:850
+}
