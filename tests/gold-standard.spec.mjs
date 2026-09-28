@@ -107,10 +107,12 @@ test("week paging and full calendar agenda work on phone",async({page})=>{
   await openTab(page,"Week");
   const range=page.locator(".week-nav strong");
   const initial=(await range.textContent())?.trim();
+  const firstBefore=await page.locator("[data-day]").first().getAttribute("data-day");
   await page.locator('[data-week-step="1"]').click();
   await expect(page.locator(".week-today-jump")).toBeVisible();
   await expect(range).not.toHaveText(initial||"");
-  await expect(page.locator("[data-day]").first()).toContainText("28");
+  const firstAfter=await page.locator("[data-day]").first().getAttribute("data-day");
+  expect(firstAfter).not.toBe(firstBefore);
 
   await openTab(page,"Calendar");
   expect(await page.locator(".agenda-day").count()).toBeGreaterThan(15);
