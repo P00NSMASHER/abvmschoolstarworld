@@ -316,3 +316,23 @@ test("Study Games uses distinct polished subject icon badges",async({page})=>{
   await expect(page.locator(".game-icon-words .icon-book")).toHaveCount(2);
   await expect(page.locator(".game-icon-faith .icon-cross")).toHaveCount(1);
 });
+
+
+test("Sept 28 weekly notice is integrated without duplicate stale events",async({page})=>{
+  const data=await (await page.request.get("/data/study-pack.json")).json();
+  const events=data.pack.importantDates||[];
+  const has=(date,label)=>events.some(e=>e.date===date&&e.label===label);
+  expect(has("Monday, Sept. 28","October Gift Card Calendar Fundraiser money and calendar bottoms due")).toBe(true);
+  expect(has("Tuesday, Sept. 29","Sign up for conferences using the OptionC portal")).toBe(true);
+  expect(has("Wednesday, Sept. 30","Mass")).toBe(true);
+  expect(has("Wednesday, Sept. 30","Communication Folder")).toBe(true);
+  expect(has("Wednesday, Sept. 30","Chick-fil-A sale starts")).toBe(true);
+  expect(has("Thursday, Oct. 1","Picture Day")).toBe(true);
+  expect(has("Thursday, Oct. 1","Business Casual")).toBe(true);
+  expect(has("Thursday, Oct. 1","HSA virtual meeting")).toBe(true);
+  expect(has("Thursday, Oct. 22","Chick-fil-A pickup")).toBe(true);
+  expect(has("Friday–Saturday, Nov. 13–14","Drama Club Play")).toBe(true);
+  expect(has("Saturday, Nov. 21","Reading Royals Game Family Fun Night")).toBe(true);
+  expect(events.some(e=>e.date==="Friday, Oct. 2"&&/HSA/i.test(e.label||""))).toBe(false);
+  expect(data.uploadedNotices.documents.some(d=>d.id==="weekly-reminders-2026-09-28")).toBe(true);
+});
