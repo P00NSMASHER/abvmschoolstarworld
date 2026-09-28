@@ -146,7 +146,7 @@ test("Study Games uses the StarBlox-style equivalent question engine",async({pag
   expect(engine.equivalent).toBeGreaterThan(10);
   expect(engine.issues).toEqual([]);
   expect(engine.types.sort()).toEqual(["direct","reasoning","transfer"]);
-  expect(engine.transform).toBe("skill-only-equivalent-item-v1");
+  expect(engine.transform).toBe("skill-only-equivalent-item-v2");
   expect(engine.privateKeys).toEqual([]);
 
   await page.getByRole("button",{name:/Quick Mix/i}).click();
