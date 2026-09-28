@@ -92,7 +92,8 @@ test("Calendar Specials are rendered from the verified Specials source",async({p
   const data=await (await page.request.get("/data/study-pack.json")).json();
   const expected=data.pack.subjects.find(s=>s.subject==="Specials")?.topics||[];
   await openTab(page,"Calendar");
-  const rows=(await page.locator(".special-row").allInnerTexts()).map(text=>text.replace(/\\s+/g," ").trim());
+  await page.locator(".specials-card").scrollIntoViewIfNeeded();
+  const rows=(await page.locator(".special-row").evaluateAll(nodes=>nodes.map(n=>n.textContent||""))).map(text=>text.replace(/\s+/g," ").trim());
   expect(rows).toHaveLength(expected.length);
   for(const topic of expected){
     const [day,...rest]=topic.split(":");
