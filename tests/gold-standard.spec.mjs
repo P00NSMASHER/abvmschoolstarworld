@@ -330,9 +330,40 @@ test("Sept 28 weekly notice is integrated without duplicate stale events",async(
   expect(has("Thursday, Oct. 1","Picture Day")).toBe(true);
   expect(has("Thursday, Oct. 1","Business Casual")).toBe(true);
   expect(has("Thursday, Oct. 1","HSA virtual meeting")).toBe(true);
+  expect(has("Saturday, Oct. 3","Welcome Back Dance (K–4) — 6–8 PM, ABVM Gym")).toBe(true);
+  expect(has("Saturday, Oct. 3","Movie Night (Grades 5–8) — 6–8 PM")).toBe(true);
+  expect(has("Friday, Oct. 9","12:00 dismissal")).toBe(true);
+  expect(has("Monday, Oct. 12","No School — Columbus Day")).toBe(true);
+  expect(has("Monday–Tuesday, Oct. 19–20","Parent-Teacher Conferences")).toBe(true);
   expect(has("Thursday, Oct. 22","Chick-fil-A pickup")).toBe(true);
+  expect(has("Friday, Oct. 23","S’more Fun at Schwartz Farm")).toBe(true);
   expect(has("Friday–Saturday, Nov. 13–14","Drama Club Play")).toBe(true);
   expect(has("Saturday, Nov. 21","Reading Royals Game Family Fun Night")).toBe(true);
   expect(events.some(e=>e.date==="Friday, Oct. 2"&&/HSA/i.test(e.label||""))).toBe(false);
   expect(data.uploadedNotices.documents.some(d=>d.id==="weekly-reminders-2026-09-28")).toBe(true);
+  expect(data.pack.reminders[0]).toContain("Gift Card Calendar Fundraiser");
+  expect(data.pack.parentNotices[0]).toContain("OptionC portal");
+});
+
+
+test("current weekly notice appears in Week, Calendar, and Family screens",async({page})=>{
+  await openTab(page,"Week");
+  const days=page.locator("[data-day]");
+  await days.nth(1).click();
+  await expect(page.locator(".day-detail")).toContainText("OptionC portal");
+  await days.nth(2).click();
+  await expect(page.locator(".day-detail")).toContainText("Mass");
+  await expect(page.locator(".day-detail")).toContainText("Communication Folder");
+  await expect(page.locator(".day-detail")).toContainText("Chick-fil-A sale starts");
+  await days.nth(3).click();
+  await expect(page.locator(".day-detail")).toContainText("Picture Day");
+  await expect(page.locator(".day-detail")).toContainText("Business Casual");
+  await expect(page.locator(".day-detail")).toContainText("HSA virtual meeting");
+
+  await openTab(page,"Calendar");
+  await expect(page.locator(".month-agenda")).toContainText("Chick-fil-A sale starts");
+
+  await openTab(page,"Family");
+  await expect(page.locator(".notices-card")).toContainText("OptionC portal");
+  await expect(page.locator(".notices-card")).toContainText("Picture Day and Business Casual");
 });
