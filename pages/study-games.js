@@ -1,45 +1,125 @@
 (()=>{"use strict";
-const VERSION="abvm-starblox-study-engine-v1";
-const SOURCE_TRANSFORM="skill-only-equivalent-item-v1";
-const EQUIVALENT_PROVENANCE="original-practice-derived-from-verified-abvm-skills";
-const BASE_PROVENANCE="verified-abvm-study-pack";
+const VERSION="abvm-starblox-study-engine-v2-research-quality";
+const SOURCE_TRANSFORM="skill-only-equivalent-item-v2";
+const MATERIAL_PROVENANCE="original-practice-derived-from-verified-abvm-skills";
+const FALLBACK_PROVENANCE="original-star-aligned-grade2-practice";
+const FORBIDDEN=[
+  /sight word/i,
+  /which .* is on the current .* list/i,
+  /which .* is on .* list/i,
+  /current vocabulary list/i,
+  /what .* is being practiced this week/i,
+  /being practiced this week/i,
+  /which story is on the current .* page/i,
+  /teacher page/i,
+  /study list/i
+];
+const STANDARD_BY_SKILL=Object.freeze({
+  "subtraction-within-12":["CCSS.2.OA.B.2"],
+  "subtraction-word-problem":["CCSS.2.OA.A.1"],
+  "two-step-word-problem":["CCSS.2.OA.A.1"],
+  "sentence-types":["CCSS.L.2.1"],
+  "consonant-blends":["CCSS.RF.2.3"],
+  "cvc-structure":["CCSS.RF.2.3"],
+  "high-frequency-word-use":["CCSS.RF.2.3.f"],
+  "vocabulary-in-context":["CCSS.L.2.4.a"],
+  "theme":["CCSS.RL.2.2"],
+  "inference":["CCSS.RL.2.1"],
+  "text-evidence":["CCSS.RL.2.1"],
+  "visualize":["CCSS.RL.2.1"],
+  "character-motivation":["CCSS.RL.2.3"],
+  "religion-application":["ABVM.RELIGION.CURRENT"],
+  "addition-within-100":["CCSS.2.NBT.B.5"],
+  "subtraction-within-100":["CCSS.2.NBT.B.5"],
+  "place-value":["CCSS.2.NBT.A.1"],
+  "compare-numbers":["CCSS.2.NBT.A.4"],
+  "time":["CCSS.2.MD.C.7"],
+  "measurement":["CCSS.2.MD.A.1"],
+  "data-interpretation":["CCSS.2.MD.D.10"],
+  "author-purpose":["CCSS.RI.2.6"],
+  "word-choice":["CCSS.RL.2.4"],
+  "cause-effect":["CCSS.RI.2.3"]
+});
+const DOMAIN_BY_SKILL=Object.freeze({
+  "subtraction-within-12":"Numbers and operations",
+  "subtraction-word-problem":"Algebraic thinking",
+  "two-step-word-problem":"Algebraic thinking",
+  "sentence-types":"Language",
+  "consonant-blends":"Foundational reading",
+  "cvc-structure":"Foundational reading",
+  "high-frequency-word-use":"Foundational reading",
+  "vocabulary-in-context":"Word knowledge and skills",
+  "theme":"Analyzing literary text",
+  "inference":"Comprehension / constructing meaning",
+  "text-evidence":"Comprehension / constructing meaning",
+  "visualize":"Comprehension / constructing meaning",
+  "character-motivation":"Analyzing literary text",
+  "religion-application":"Religion",
+  "addition-within-100":"Numbers and operations",
+  "subtraction-within-100":"Numbers and operations",
+  "place-value":"Numbers and operations",
+  "compare-numbers":"Numbers and operations",
+  "time":"Geometry and measurement",
+  "measurement":"Geometry and measurement",
+  "data-interpretation":"Data analysis, statistics, and probability",
+  "author-purpose":"Understanding author's craft",
+  "word-choice":"Understanding author's craft",
+  "cause-effect":"Comprehension / constructing meaning"
+});
+const VOCAB=Object.freeze({
+  action:{
+    meaning:"something a person or thing does",
+    sentence:"The firefighter's quick action helped everyone get outside safely.",
+    best:"Mia took action by picking up the books that fell."
+  },
+  afraid:{
+    meaning:"feeling scared or worried about danger",
+    sentence:"Kai felt afraid when thunder shook the windows.",
+    best:"The child felt afraid and held Dad's hand during the loud storm."
+  },
+  depend:{
+    meaning:"to need or rely on someone or something",
+    sentence:"Young birds depend on their parents for food.",
+    best:"Plants depend on sunlight and water to grow."
+  },
+  nervously:{
+    meaning:"in a worried or uneasy way",
+    sentence:"Lena waited nervously outside the principal's office.",
+    best:"Owen tapped his foot nervously before his turn on stage."
+  },
+  peered:{
+    meaning:"looked closely or carefully",
+    sentence:"Nico peered through the foggy window to see the bus.",
+    best:"Ava peered into the tiny box to see what was inside."
+  },
+  perfectly:{
+    meaning:"in exactly the right way or without mistakes",
+    sentence:"The puzzle piece fit perfectly into the empty space.",
+    best:"The lid fit perfectly, with no gap around the edge."
+  },
+  rescue:{
+    meaning:"to save someone or something from danger",
+    sentence:"The lifeguard swam out to rescue the tired swimmer.",
+    best:"Firefighters rescue people when they are in danger."
+  },
+  secret:{
+    meaning:"something kept hidden or not told to everyone",
+    sentence:"Maya whispered the secret so no one else could hear it.",
+    best:"The surprise party stayed a secret until Saturday."
+  }
+});
 
 function text(value){return String(value??"").trim()}
 function slug(value){return text(value).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"item"}
 function hash(value){
   let h=2166136261>>>0;
-  for(const ch of String(value)){
-    h^=ch.charCodeAt(0);
-    h=Math.imul(h,16777619)>>>0;
-  }
+  for(const ch of String(value)){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)>>>0}
   return h>>>0;
 }
 function variantFor(sourceKey){return (hash(sourceKey)%2)+1}
 function rowFor(rows,variant){return rows[Math.max(0,(Math.floor(Number(variant)||1)-1)%rows.length)]}
-function makeQuestion({id,subject,skill,type,prompt,choices,answer,explanation,hint,variant,sourceFact,base=false}){
-  return {
-    id,subject,skill,
-    questionType:type||"practice",
-    format:"multiple_choice",
-    prompt:text(prompt),
-    choices:[...choices].map(text),
-    answer:text(answer),
-    explanation:text(explanation),
-    hint:text(hint||"Think about the skill, then choose the best answer."),
-    provenance:base?BASE_PROVENANCE:EQUIVALENT_PROVENANCE,
-    sourceFact:text(sourceFact||skill),
-    generationVariant:base?0:variant,
-    sourceTransform:base?null:SOURCE_TRANSFORM,
-    originalEquivalent:!base
-  };
-}
-function triad(prefix,subject,skill,variant,sourceFact,items){
-  return items.map((item,index)=>makeQuestion({
-    id:prefix+"-"+["direct","transfer","reasoning"][index]+"-v"+variant,
-    subject,skill,type:["direct","transfer","reasoning"][index],
-    prompt:item.prompt,choices:item.choices,answer:item.answer,
-    explanation:item.explanation,hint:item.hint,variant,sourceFact
-  }));
+function shuffled(values,seed){
+  return [...values].sort((a,b)=>hash(seed+"|"+a)-hash(seed+"|"+b));
 }
 function subject(pack,name){return (pack?.subjects||[]).find(row=>text(row.subject).toLowerCase()===name.toLowerCase())||null}
 function subjectText(pack,name){
@@ -53,280 +133,599 @@ function listFromTopic(pack,label){
   if(!row)return [];
   return row.replace(new RegExp("^"+label+"\\s*:","i"),"").split(",").map(text).filter(Boolean);
 }
-function pickDistinct(pool,count,seed){
-  const unique=[...new Set(pool.map(text).filter(Boolean))];
-  return unique.sort((a,b)=>hash(seed+a)-hash(seed+b)).slice(0,count);
-}
-function normalizeBaseQuestion(row,index){
-  let choices=Array.isArray(row.choices)?row.choices.map(text).filter(Boolean):[];
-  let prompt=text(row.prompt),answer=text(row.answer);
-  if(row.format==="true_false"&&choices.length===0){
-    choices=["True","False"];
+function diagnosticMap(choices,answer,feedback,misconception){
+  const map={};
+  for(const choice of choices){
+    if(choice===answer)continue;
+    map[choice]={
+      misconception:text(typeof misconception==="function"?misconception(choice):misconception||"skill-misapplied"),
+      feedback:text(typeof feedback==="function"?feedback(choice):feedback||"Try the skill again and use the clue in the question.")
+    };
   }
-  if(!choices.includes(answer)&&answer)choices.unshift(answer);
-  choices=[...new Set(choices)].slice(0,4);
-  if(choices.length<2||!answer||!prompt)return null;
-  return makeQuestion({
-    id:"verified-"+slug(row.id||index),
-    subject:text(row.subject||"Current material"),
-    skill:"Verified current material",
-    type:"source",
-    prompt,choices,answer,
-    explanation:text(row.explanation||"This answer matches the current verified school material."),
-    hint:text(row.hint||"Use this week's study material."),
-    variant:0,
-    sourceFact:"Current verified ABVM study-pack question",
-    base:true
-  });
+  return map;
 }
-function mathFactory(pack,variant){
-  if(!topicMatch(pack,"Math",/subtraction\s+to\s+12/i))return [];
+function rubric(){
+  return {
+    maxPoints:2,
+    criteria:[
+      "2 points: selects the correct answer using the target skill.",
+      "1 point: selects a plausible misconception-aligned answer that shows partial understanding.",
+      "0 points: selects an unrelated or unsupported answer."
+    ]
+  };
+}
+function makeQuestion({
+  id,subject,skill,tier,type,prompt,choices,answer,explanation,hint,sourceFact,
+  dok=2,difficulty=2,standards,domain,wrongFeedback,misconception,richContent=null
+}){
+  const cleanChoices=[...choices].map(text);
+  return {
+    id,subject,skill,tier,
+    questionType:type||"direct",
+    format:"multiple_choice",
+    prompt:text(prompt),
+    choices:cleanChoices,
+    answer:text(answer),
+    explanation:text(explanation),
+    hint:text(hint||"Use the important clue in the question before choosing."),
+    standards:standards||STANDARD_BY_SKILL[skill]||[],
+    domain:domain||DOMAIN_BY_SKILL[skill]||"Grade 2",
+    dok,
+    cognitiveDemand:dok===3?"strategic reasoning":dok===2?"skill / concept":"recall / procedure",
+    difficulty,
+    choiceDiagnostics:diagnosticMap(cleanChoices,text(answer),wrongFeedback,misconception),
+    rubric:rubric(),
+    provenance:tier==="material"?MATERIAL_PROVENANCE:FALLBACK_PROVENANCE,
+    sourceFact:text(sourceFact||skill),
+    sourceTransform:SOURCE_TRANSFORM,
+    originalEquivalent:true,
+    richContent
+  };
+}
+function addTriad(out,prefix,base,items){
+  const types=["direct","transfer","reasoning"];
+  items.forEach((item,index)=>out.push(makeQuestion({
+    ...base,...item,type:types[index],
+    id:prefix+"-"+types[index]+"-"+slug(item.idSuffix||String(index+1))
+  })));
+}
+function add(out,question){out.push(makeQuestion(question))}
+function materialMath(pack,variant,out){
+  if(!topicMatch(pack,"Math",/subtraction\s+to\s+12/i))return;
   const row=rowFor([
-    {a:9,b:4,c:12,d:7,storyA:10,storyB:3},
-    {a:8,b:3,c:11,d:6,storyA:12,storyB:8}
+    {a:12,b:7,c:10,d:6,start:9,give:4,first:11,add:1,take:5},
+    {a:11,b:5,c:9,d:4,start:12,give:8,first:8,add:3,take:4}
   ],variant);
-  const direct=row.a-row.b,transfer=row.c-row.d,story=row.storyA-row.storyB;
-  return triad("math-subtraction-12","Math","Subtraction to 12",variant,"Verified topic: Subtraction to 12",[
+  addTriad(out,"mat-sub12",{
+    subject:"Math",skill:"subtraction-within-12",tier:"material",
+    sourceFact:"Verified current ABVM skill: Subtraction to 12",
+    hint:"Think about the amount you start with and how many are taken away."
+  },[
     {
       prompt:`What is ${row.a} − ${row.b}?`,
-      choices:[String(direct),String(Math.max(0,direct-1)),String(direct+2)],
-      answer:String(direct),
-      explanation:`${row.a} take away ${row.b} leaves ${direct}.`
+      choices:shuffled([String(row.a-row.b),String(row.a-row.b+1),String(row.a-row.b-1)],"m1"+variant),
+      answer:String(row.a-row.b),
+      explanation:`${row.a} take away ${row.b} leaves ${row.a-row.b}.`,
+      dok:1,difficulty:2,
+      wrongFeedback:choice=>`Check by adding ${row.b} to ${choice}. The result should equal ${row.a}.`,
+      misconception:"subtraction-fact-error"
     },
     {
-      prompt:`Solve ${row.c} − ${row.d}.`,
-      choices:[String(transfer),String(transfer+1),String(Math.max(0,transfer-2))],
-      answer:String(transfer),
-      explanation:`Count back ${row.d} from ${row.c} to get ${transfer}.`
+      prompt:`Mila had ${row.start} stickers and gave ${row.give} away. How many stickers does she have now?`,
+      choices:shuffled([String(row.start-row.give),String(row.start+row.give),String(row.give)],"m2"+variant),
+      answer:String(row.start-row.give),
+      explanation:`Giving some away means subtracting: ${row.start} − ${row.give} = ${row.start-row.give}.`,
+      dok:2,difficulty:2,
+      wrongFeedback:choice=>choice===String(row.start+row.give)?"You added, but the story says stickers were given away.":"Use the starting amount, then take away the amount given.",
+      misconception:choice=>choice===String(row.start+row.give)?"operation-confusion":"part-whole-confusion"
     },
     {
-      prompt:`A student has ${row.storyA} crayons and gives away ${row.storyB}. How many are left?`,
-      choices:[String(story),String(story+1),String(Math.max(0,story-1))],
-      answer:String(story),
-      explanation:`“Gives away” means subtract: ${row.storyA} − ${row.storyB} = ${story}.`
+      prompt:`A box held ${row.first} crayons. ${row.add} crayon was added, then ${row.take} crayons were used. How many crayons are left?`,
+      choices:shuffled([String(row.first+row.add-row.take),String(row.first+row.add),String(Math.max(0,row.first-row.take))],"m3"+variant),
+      answer:String(row.first+row.add-row.take),
+      explanation:`First add: ${row.first} + ${row.add} = ${row.first+row.add}. Then subtract ${row.take}: ${row.first+row.add} − ${row.take} = ${row.first+row.add-row.take}.`,
+      dok:3,difficulty:3,
+      hint:"Do the changes in order. Write the new amount after the first change.",
+      wrongFeedback:choice=>choice===String(row.first+row.add)?"You solved the first step but stopped before the crayons were used.":"Do the addition first, then subtract the crayons that were used.",
+      misconception:choice=>choice===String(row.first+row.add)?"one-step-only":"operation-order"
     }
   ]);
 }
-function blendFactory(pack,variant){
-  if(!topicMatch(pack,"Reading / ELA",/2-letter consonant blends/i)&&!topicMatch(pack,"Spelling / Handwriting",/2-letter blends/i))return [];
+function materialSentences(pack,variant,out){
+  if(!topicMatch(pack,"Reading / ELA",/types of sentences/i))return;
   const row=rowFor([
-    {direct:"frog",transfer:"blue",reason:"stop",blend:"st",wrong:["apple","oven"],transferWrong:["sun","kite"]},
-    {direct:"clap",transfer:"grape",reason:"flag",blend:"fl",wrong:["eagle","under"],transferWrong:["moon","easy"]}
+    {direct:"Please put your folder on the desk.",a1:"command",transfer:"Why is the puppy hiding?",a2:"question",reason:"What a gigantic pumpkin!"},
+    {direct:"The class planted seeds today.",a1:"statement",transfer:"Watch out for that puddle!",a2:"exclamation",reason:"Could you pass the crayons?"}
   ],variant);
-  return triad("phonics-consonant-blends","Spelling / Handwriting","2-letter consonant blends",variant,"Verified skill: 2-letter consonant blends",[
-    {
-      prompt:"Which word begins with a 2-letter consonant blend?",
-      choices:[row.direct,...row.wrong],answer:row.direct,
-      explanation:"A consonant blend keeps the sound of both consonants."
-    },
-    {
-      prompt:"Which word begins with a consonant blend?",
-      choices:[row.transfer,...row.transferWrong],answer:row.transfer,
-      explanation:"Listen to the first two consonant sounds."
-    },
-    {
-      prompt:`Why is “${row.blend}” in “${row.reason}” a consonant blend?`,
-      choices:["You can hear both consonant sounds.","It has only one consonant sound.","It is a vowel team."],
-      answer:"You can hear both consonant sounds.",
-      explanation:"In a blend, both consonant sounds can still be heard."
-    }
-  ]);
-}
-function sentenceFactory(pack,variant){
-  if(!topicMatch(pack,"Reading / ELA",/types of sentences/i))return [];
-  const row=rowFor([
-    {direct:"Please close the door.",directAnswer:"command",transfer:"Where is my pencil?",transferAnswer:"question",reason:"What a huge pumpkin!"},
-    {direct:"The dog is sleeping.",directAnswer:"statement",transfer:"Watch out for the puddle!",transferAnswer:"exclamation",reason:"Can you help me?"}
-  ],variant);
-  const distractors=["statement","question","command","exclamation"];
-  function choicesFor(answer){return [answer,...distractors.filter(x=>x!==answer)].slice(0,3)}
-  return triad("grammar-sentence-types","Reading / ELA","Types of sentences",variant,"Verified skill: grammar — types of sentences",[
+  const types=["statement","question","command","exclamation"];
+  const choices=a=>shuffled([a,...types.filter(x=>x!==a).slice(0,2)],"sent"+variant+a);
+  addTriad(out,"mat-sentence-types",{
+    subject:"Reading / ELA",skill:"sentence-types",tier:"material",
+    sourceFact:"Verified current ABVM grammar skill: types of sentences",
+    hint:"Ask what the sentence is doing: telling, asking, directing, or showing strong feeling."
+  },[
     {
       prompt:`What type of sentence is “${row.direct}”?`,
-      choices:choicesFor(row.directAnswer),answer:row.directAnswer,
-      explanation:"Look at what the sentence is doing and the punctuation it uses."
+      choices:choices(row.a1),answer:row.a1,
+      explanation:"Sentence type depends on its purpose and ending punctuation.",
+      dok:2,difficulty:2,
+      wrongFeedback:"Read the sentence aloud and decide what the speaker is trying to do.",
+      misconception:"sentence-purpose-confusion"
     },
     {
       prompt:`What type of sentence is “${row.transfer}”?`,
-      choices:choicesFor(row.transferAnswer),answer:row.transferAnswer,
-      explanation:"Decide whether the sentence tells, asks, commands, or shows strong feeling."
+      choices:choices(row.a2),answer:row.a2,
+      explanation:"Look at both the meaning and punctuation.",
+      dok:2,difficulty:2,
+      wrongFeedback:"Use both the sentence's purpose and its punctuation mark.",
+      misconception:"punctuation-purpose-confusion"
     },
     {
-      prompt:`What clue best helps identify “${row.reason}”?`,
-      choices:["Its purpose and ending punctuation.","The number of letters.","Whether it has a long word."],
+      prompt:`Which clue is most useful for identifying the sentence type in “${row.reason}”?`,
+      choices:shuffled(["Its purpose and ending punctuation.","The number of words.","Whether it contains a noun."],"sent3"+variant),
       answer:"Its purpose and ending punctuation.",
-      explanation:"Sentence type depends on purpose and punctuation."
+      explanation:"Sentence type is determined by what the sentence does and how it ends.",
+      dok:3,difficulty:3,
+      wrongFeedback:"Length and parts of speech do not decide whether a sentence tells, asks, commands, or exclaims.",
+      misconception:"irrelevant-feature"
     }
   ]);
 }
-function sightWordFactory(pack,variant){
+function materialPhonics(pack,variant,out){
+  const hasBlend=topicMatch(pack,"Reading / ELA",/2-letter consonant blends/i)||topicMatch(pack,"Spelling / Handwriting",/2-letter blends/i);
+  if(hasBlend){
+    const row=rowFor([
+      {word:"frog",blend:"fr",same:"frame",near:"fog",other:"boat"},
+      {word:"clap",blend:"cl",same:"clock",near:"cap",other:"eagle"}
+    ],variant);
+    addTriad(out,"mat-blends",{
+      subject:"Spelling / Handwriting",skill:"consonant-blends",tier:"material",
+      sourceFact:"Verified current ABVM phonics skill: 2-letter consonant blends",
+      hint:"Say the beginning slowly and listen for both consonant sounds."
+    },[
+      {
+        prompt:`Which beginning blend do you hear in “${row.word}”?`,
+        choices:shuffled([row.blend,row.blend[0],row.blend[1]],"bl1"+variant),answer:row.blend,
+        explanation:`In “${row.word},” both sounds in ${row.blend} can be heard.`,
+        dok:1,difficulty:2,
+        wrongFeedback:"Say the word slowly. A blend includes both beginning consonant sounds.",
+        misconception:"blend-partial-sound"
+      },
+      {
+        prompt:`Which word begins with the same consonant blend as “${row.word}”?`,
+        choices:shuffled([row.same,row.near,row.other],"bl2"+variant),answer:row.same,
+        explanation:`“${row.same}” begins with the same two consonant sounds.`,
+        dok:2,difficulty:2,
+        wrongFeedback:choice=>choice===row.near?"That word shares one sound, but not the full two-letter blend.":"Compare the first two sounds in each word.",
+        misconception:choice=>choice===row.near?"single-sound-match":"blend-mismatch"
+      },
+      {
+        prompt:`Why is “${row.blend}” in “${row.word}” a blend instead of one sound?`,
+        choices:shuffled(["You can hear both consonant sounds.","One consonant is silent.","The letters make a long vowel sound."],"bl3"+variant),
+        answer:"You can hear both consonant sounds.",
+        explanation:"A consonant blend keeps both consonant sounds.",
+        dok:3,difficulty:3,
+        wrongFeedback:"Listen to each letter in the beginning of the word.",
+        misconception:"blend-definition"
+      }
+    ]);
+  }
+  if(topicMatch(pack,"Reading / ELA",/CVC words/i)){
+    const row=rowFor([
+      {word:"map",other:"moon",almost:"make"},
+      {word:"fin",other:"boat",almost:"fine"}
+    ],variant);
+    addTriad(out,"mat-cvc",{
+      subject:"Reading / ELA",skill:"cvc-structure",tier:"material",
+      sourceFact:"Verified current ABVM word-structure skill: CVC words",
+      hint:"Look for consonant-vowel-consonant with one short vowel in the middle."
+    },[
+      {
+        prompt:`Which word has a consonant-vowel-consonant pattern?`,
+        choices:shuffled([row.word,row.other,row.almost],"cvc1"+variant),answer:row.word,
+        explanation:`“${row.word}” follows consonant-vowel-consonant.`,
+        dok:1,difficulty:2,
+        wrongFeedback:"Check the letter pattern from left to right.",
+        misconception:"word-pattern-confusion"
+      },
+      {
+        prompt:`Which change would turn “${row.word}” into a word that is no longer CVC?`,
+        choices:shuffled(["Add e to the end.","Change the first consonant.","Change the last consonant."],"cvc2"+variant),
+        answer:"Add e to the end.",
+        explanation:"Adding a final e changes the simple three-letter CVC pattern.",
+        dok:2,difficulty:2,
+        wrongFeedback:"A CVC word has exactly three letters in the consonant-vowel-consonant pattern.",
+        misconception:"structure-count"
+      },
+      {
+        prompt:"What is the best way to check whether a three-letter word is CVC?",
+        choices:shuffled(["Name each letter type in order: consonant, vowel, consonant.","Count how many syllables are in the sentence.","Look only at the first letter."],"cvc3"+variant),
+        answer:"Name each letter type in order: consonant, vowel, consonant.",
+        explanation:"CVC describes the letter-type pattern across the whole word.",
+        dok:3,difficulty:3,
+        wrongFeedback:"You need to inspect all three letters, not just one part.",
+        misconception:"incomplete-structure-check"
+      }
+    ]);
+  }
+}
+function materialHighFrequency(pack,variant,out){
   const words=listFromTopic(pack,"Sight words");
-  if(words.length<4)return [];
-  const picked=pickDistinct(words,4,"sight-"+variant);
-  const wrongPool=["jump","yellow","train","window","after","plant"].filter(w=>!words.includes(w));
-  const wrong=pickDistinct(wrongPool,3,"sight-wrong-"+variant);
-  return triad("reading-sight-words","Reading / ELA","Current sight words",variant,"Verified current sight-word list",[
+  if(words.length<4)return;
+  const available=new Set(words.map(w=>w.toLowerCase()));
+  const rows=[
+    {prompt:"___ is my little sister.",answer:"she",choices:["she","what","by"]},
+    {prompt:"The puppy is very ___.",answer:"small",choices:["small","were","what"]},
+    {prompt:"Put your backpack ___ the chair.",answer:"by",choices:["by","he","want"]},
+    {prompt:"___ do you want for lunch?",answer:"what",choices:["what","here","girl"]},
+    {prompt:"The boys ___ ready for recess.",answer:"were",choices:["were","she","small"]},
+    {prompt:"Please come over ___.",answer:"here",choices:["here","boy","by"]}
+  ].filter(row=>row.choices.every(choice=>available.has(choice)));
+  if(rows.length<3)return;
+  const start=(variant-1)%rows.length;
+  const selected=[rows[start],rows[(start+2)%rows.length],rows[(start+4)%rows.length]];
+  addTriad(out,"mat-high-frequency",{
+    subject:"Reading / ELA",skill:"high-frequency-word-use",tier:"material",
+    sourceFact:"Verified current ABVM high-frequency-word set",
+    hint:"Read the whole sentence and choose the word that makes the meaning and grammar correct."
+  },selected.map((row,index)=>({
+    prompt:`Which word correctly completes the sentence? “${row.prompt}”`,
+    choices:shuffled(row.choices,"hf"+variant+index),answer:row.answer,
+    explanation:`“${row.answer}” makes the sentence sound right and complete.`,
+    dok:index===2?3:2,difficulty:index===2?3:2,
+    wrongFeedback:"Read the entire sentence with each choice. Only one fits both meaning and grammar.",
+    misconception:"context-grammar-mismatch"
+  })));
+}
+function materialVocabulary(pack,variant,out){
+  const current=(pack?.vocabulary||[]).map(v=>text(v.term).toLowerCase()).filter(w=>VOCAB[w]);
+  if(current.length<3)return;
+  const ordered=[...current].sort((a,b)=>hash("vocab"+variant+a)-hash("vocab"+variant+b));
+  const selected=ordered.slice(0,3);
+  const meanings=Object.values(VOCAB).map(row=>row.meaning);
+  addTriad(out,"mat-vocab-context",{
+    subject:"Reading / ELA",skill:"vocabulary-in-context",tier:"material",
+    sourceFact:"Verified current ABVM vocabulary words practiced through context",
+    hint:"Use the surrounding sentence to test the meaning."
+  },selected.map((word,index)=>{
+    const row=VOCAB[word];
+    const distractors=meanings.filter(x=>x!==row.meaning).sort((a,b)=>hash(word+a)-hash(word+b)).slice(0,2);
+    return {
+      prompt:`Read: “${row.sentence}” What does “${word}” mean in this sentence?`,
+      choices:shuffled([row.meaning,...distractors],"voc"+variant+word),answer:row.meaning,
+      explanation:`The clues in the sentence show that “${word}” means ${row.meaning}.`,
+      dok:index===2?3:2,difficulty:index===2?3:2,
+      wrongFeedback:"Use the action or situation around the word as a context clue.",
+      misconception:"context-clue-missed"
+    };
+  }));
+  const word=selected[0],row=VOCAB[word];
+  add(out,{
+    id:"mat-vocab-use-"+word+"-v"+variant,subject:"Reading / ELA",skill:"vocabulary-in-context",tier:"material",
+    prompt:`Which sentence uses “${word}” correctly?`,
+    choices:shuffled([row.best,`The ${word} sandwich slept under the desk.`,`We counted ${word} because seven is blue.`],"use"+word+variant),
+    answer:row.best,explanation:`The correct sentence uses “${word}” with its real meaning.`,
+    hint:"Choose the sentence in which the word's meaning fits the situation.",
+    sourceFact:"Verified current ABVM vocabulary word: "+word,dok:3,difficulty:3,
+    wrongFeedback:"Check whether the word's meaning makes sense in the entire sentence.",
+    misconception:"word-meaning-misuse"
+  });
+}
+function materialReading(pack,variant,out){
+  const source=subjectText(pack,"Reading / ELA");
+  if(!/visualize|theme/i.test(source))return;
+  const rows=rowFor([
     {
-      prompt:"Which word is one of this week's sight words?",
-      choices:[picked[0],wrong[0],wrong[1]],answer:picked[0],
-      explanation:`“${picked[0]}” is on the current sight-word list.`
+      infer:"Nora zipped her coat, pulled up her hood, and stepped around puddles on the sidewalk.",
+      inferQ:"What can you infer about the weather?",inferA:"It is rainy or has just rained.",
+      inferChoices:["It is rainy or has just rained.","It is very hot and dry.","It is snowing heavily."],
+      evidence:"The sidewalk has puddles and Nora uses a hood.",
+      theme:"Evan's paper airplane failed again and again. He changed one fold each time, tested it, and finally made it glide across the room.",
+      themeA:"Keep trying and learn from mistakes.",
+      visualize:"Golden leaves spun slowly from the tall tree and covered the path like a crunchy blanket.",
+      visualA:"A path covered with falling autumn leaves."
     },
     {
-      prompt:"Which pair contains two current sight words?",
-      choices:[picked[1]+" and "+picked[2],picked[1]+" and "+wrong[0],wrong[1]+" and "+wrong[2]],
-      answer:picked[1]+" and "+picked[2],
-      explanation:"Both words in the correct pair are on the current list."
+      infer:"Mia carried a flashlight into the dark closet and checked behind every box.",
+      inferQ:"What can you infer Mia is trying to do?",inferA:"She is searching for something.",
+      inferChoices:["She is searching for something.","She is getting ready to sleep.","She is watering plants."],
+      evidence:"She checks behind every box with a flashlight.",
+      theme:"Jalen could not tie the knot at first. He watched carefully, practiced several times, and then tied it by himself.",
+      themeA:"Practice can help you learn a hard skill.",
+      visualize:"Tiny raindrops tapped the window while gray clouds covered the sky.",
+      visualA:"A gray, rainy scene outside a window."
+    }
+  ],variant);
+  addTriad(out,"mat-reading-skills",{
+    subject:"Reading / ELA",tier:"material",
+    sourceFact:"Verified current ABVM reading-comprehension skills: visualize and theme",
+    hint:"Use details from the passage, not just one familiar word."
+  },[
+    {
+      skill:"inference",prompt:`Read: “${rows.infer}” ${rows.inferQ}`,
+      choices:shuffled(rows.inferChoices,"read1"+variant),answer:rows.inferA,
+      explanation:`The best inference combines the clues: ${rows.evidence}`,
+      dok:3,difficulty:3,
+      wrongFeedback:"Choose the answer supported by more than one detail in the passage.",
+      misconception:"unsupported-inference"
     },
     {
-      prompt:"Which word belongs in this week's sight-word practice?",
-      choices:[picked[3],wrong[1],wrong[2]],answer:picked[3],
-      explanation:`“${picked[3]}” is part of the current practice list.`
+      skill:"theme",prompt:`Read: “${rows.theme}” What lesson best fits the whole story?`,
+      choices:shuffled([rows.themeA,"Things work only when they are easy.","It is better to quit after one mistake."],"read2"+variant),answer:rows.themeA,
+      explanation:"The character improves by continuing to work and learn from the problem.",
+      dok:3,difficulty:3,
+      wrongFeedback:"Theme is the lesson shown by the whole story, especially the character's choices and result.",
+      misconception:"theme-vs-detail"
+    },
+    {
+      skill:"visualize",prompt:`Read: “${rows.visualize}” Which mental picture best matches the author's details?`,
+      choices:shuffled([rows.visualA,"A bright beach with waves.","A classroom with empty desks."],"read3"+variant),answer:rows.visualA,
+      explanation:"The describing words create a specific picture in the reader's mind.",
+      dok:2,difficulty:2,
+      wrongFeedback:"Match the picture to the exact describing words in the sentence.",
+      misconception:"visual-detail-mismatch"
     }
   ]);
+  add(out,{
+    id:"mat-text-evidence-v"+variant,subject:"Reading / ELA",skill:"text-evidence",tier:"material",
+    prompt:"Read: “The kitten crouched low, wiggled its back legs, stared at the toy mouse, and sprang forward.” Which detail is the strongest evidence that the kitten was getting ready to pounce?",
+    choices:shuffled(["It crouched low and wiggled its back legs.","It stared at the toy mouse.","The toy mouse was in front of it."],"evidence"+variant),
+    answer:"It crouched low and wiggled its back legs.",
+    explanation:"Several details relate to the toy, but crouching and wiggling the back legs most directly show preparation to pounce.",
+    hint:"Choose the detail that most directly proves the idea.",
+    sourceFact:"Verified current ABVM reading-comprehension work",dok:3,difficulty:3,
+    wrongFeedback:"Pick the detail that is strongest evidence, not merely related to the topic.",
+    misconception:"related-detail-not-best-evidence"
+  });
 }
-function vocabularyFactory(pack,variant){
-  const words=(pack?.vocabulary||[]).map(v=>text(v.term)).filter(Boolean);
-  if(words.length<3)return [];
-  const picked=pickDistinct(words,4,"vocab-"+variant);
-  const wrongPool=["planet","triangle","engine","museum","winter","garden"].filter(w=>!words.includes(w));
-  const wrong=pickDistinct(wrongPool,3,"vocab-wrong-"+variant);
-  return triad("reading-current-vocabulary","Reading / ELA","Current vocabulary",variant,"Verified current vocabulary list",[
-    {
-      prompt:"Which word is on the current vocabulary list?",
-      choices:[picked[0],wrong[0],wrong[1]],answer:picked[0],
-      explanation:`“${picked[0]}” appears on the current Reading Work vocabulary list.`
-    },
-    {
-      prompt:"Which pair contains two current vocabulary words?",
-      choices:[picked[1]+" and "+picked[2],picked[1]+" and "+wrong[0],wrong[1]+" and "+wrong[2]],
-      answer:picked[1]+" and "+picked[2],
-      explanation:"Both words in the correct pair are current vocabulary words."
-    },
-    {
-      prompt:"Which word should be included in this week's vocabulary review?",
-      choices:[picked[3]||picked[0],wrong[1],wrong[2]],answer:picked[3]||picked[0],
-      explanation:"That word is part of the current verified vocabulary list."
-    }
-  ]);
-}
-function religionChapterFactory(pack,variant){
+function materialReligion(pack,variant,out){
   const source=subjectText(pack,"Religion");
-  if(!/disciples|savior|Jesus died for our sins/i.test(source))return [];
-  const row=rowFor([
-    {scenario:"A student tries to follow Jesus by helping a classmate who is alone.",reason:"The student is choosing to live as a friend and follower of Jesus."},
-    {scenario:"A student forgives a friend and chooses kindness after an argument.",reason:"The student is trying to follow Jesus through loving action."}
-  ],variant);
-  return triad("religion-chapter-2","Religion","Jesus is God's Best Gift",variant,"Verified Religion Chapter 2 material",[
-    {
-      prompt:"What are friends and followers of Jesus called?",
-      choices:["disciples","captions","blends"],answer:"disciples",
-      explanation:"The current religion material says we are called to be disciples, friends of Jesus."
-    },
-    {
-      prompt:`${row.scenario} Which idea from the lesson best matches this choice?`,
-      choices:["Being a disciple","Choosing a sentence type","Practicing subtraction"],answer:"Being a disciple",
-      explanation:row.reason
-    },
-    {
-      prompt:"Why is Jesus called our Savior in the current lesson?",
-      choices:["He died for our sins and gives us new life.","He teaches only math facts.","He is a name for a school subject."],
-      answer:"He died for our sins and gives us new life.",
-      explanation:"The current Chapter 2 notes identify Jesus as Savior and connect his death with new life in grace."
-    }
-  ]);
-}
-function trinityFactory(pack,variant){
-  if(!topicMatch(pack,"Religion",/Trinity:\s*3 persons in one God/i))return [];
-  const row=rowFor([
-    {direct:"Which statement best describes the Trinity?",transfer:"Which names identify the three Persons of the Trinity?"},
-    {direct:"Which sentence matches the Christian teaching about one God in three Persons?",transfer:"Which group belongs together in a lesson about the Trinity?"}
-  ],variant);
-  return triad("religion-trinity","Religion","The Trinity",variant,"Verified Religion topic: Trinity — 3 persons in one God",[
-    {
-      prompt:row.direct,
-      choices:["One God in three Persons: Father, Son, and Holy Spirit.","Three separate gods.","One Person with three unrelated jobs."],
+  if(!source)return;
+  if(/disciples|Savior|Jesus died for our sins/i.test(source)){
+    const row=rowFor([
+      {scenario:"A new student is sitting alone at recess. Mia invites the student to join her game.",reason:"She is choosing to love and include another person."},
+      {scenario:"After an argument, Leo apologizes and forgives his friend.",reason:"He is choosing love and forgiveness."}
+    ],variant);
+    addTriad(out,"mat-religion-disciple",{
+      subject:"Religion",skill:"religion-application",tier:"material",
+      sourceFact:"Verified current ABVM Religion Chapter 2: disciples, Savior, new life in grace",
+      hint:"Connect the situation to how a friend and follower of Jesus would act."
+    },[
+      {
+        prompt:"What are friends and followers of Jesus called?",
+        choices:shuffled(["disciples","captions","blends"],"rel1"+variant),answer:"disciples",
+        explanation:"The current religion material teaches that disciples are friends and followers of Jesus.",
+        dok:1,difficulty:2,
+        wrongFeedback:"Think about the lesson's word for a person who follows Jesus.",
+        misconception:"religion-term-confusion"
+      },
+      {
+        prompt:`${row.scenario} Which lesson idea best matches this action?`,
+        choices:shuffled(["Living as a disciple by loving others.","Using creation only for yourself.","Avoiding people who need help."],"rel2"+variant),
+        answer:"Living as a disciple by loving others.",
+        explanation:row.reason,
+        dok:2,difficulty:2,
+        wrongFeedback:"A disciple tries to put Jesus' teaching about love into action.",
+        misconception:"application-mismatch"
+      },
+      {
+        prompt:"Why is Jesus called our Savior in the current lesson?",
+        choices:shuffled(["He died for our sins and gives us new life in grace.","He teaches that people should never make choices.","He is another name for one of the school subjects."],"rel3"+variant),
+        answer:"He died for our sins and gives us new life in grace.",
+        explanation:"The Chapter 2 notes connect Jesus as Savior with his death for our sins and the gift of new life in grace.",
+        dok:3,difficulty:3,
+        wrongFeedback:"Use the Chapter 2 idea about Jesus' death, salvation, and new life.",
+        misconception:"religion-concept-confusion"
+      }
+    ]);
+  }
+  if(/Trinity:\s*3 persons in one God/i.test(source)){
+    add(out,{
+      id:"mat-religion-trinity-v"+variant,subject:"Religion",skill:"religion-application",tier:"material",
+      prompt:"Which statement best explains the Trinity?",
+      choices:shuffled(["One God in three Persons: Father, Son, and Holy Spirit.","Three separate gods who are unrelated.","One person with three unrelated jobs."],"trinity"+variant),
       answer:"One God in three Persons: Father, Son, and Holy Spirit.",
-      explanation:"The Trinity teaches one God in three divine Persons."
-    },
-    {
-      prompt:row.transfer,
-      choices:["Father, Son, and Holy Spirit","Teacher, student, and principal","Angel, prophet, and king"],
-      answer:"Father, Son, and Holy Spirit",
-      explanation:"Those are the three Persons named in the Trinity."
-    },
-    {
-      prompt:"Why is “three separate gods” different from the Trinity?",
-      choices:["The Trinity teaches one God, not three gods.","The Trinity has only two Persons.","The Trinity means three separate religions."],
-      answer:"The Trinity teaches one God, not three gods.",
-      explanation:"Christian teaching describes one God in three Persons."
-    }
-  ]);
+      explanation:"The Trinity teaches one God in three divine Persons.",
+      hint:"Remember both parts: one God and three Persons.",
+      sourceFact:"Verified current ABVM Religion topic: Trinity — 3 persons in one God",
+      dok:2,difficulty:2,
+      wrongFeedback:"The Trinity is not three gods; the lesson says one God in three Persons.",
+      misconception:"trinity-one-vs-three-confusion"
+    });
+  }
+  if(/Gifts from God|Giver of Gifts|God's gifts/i.test(source)){
+    const row=rowFor([
+      {skill:"music",action:"Playing a cheerful song for someone who is lonely."},
+      {skill:"drawing",action:"Making a welcome card for a new student."}
+    ],variant);
+    add(out,{
+      id:"mat-religion-gifts-v"+variant,subject:"Religion",skill:"religion-application",tier:"material",
+      prompt:`A student is good at ${row.skill}. Which choice best shows using that gift to love and serve others?`,
+      choices:shuffled([row.action,"Using the skill only to brag.","Refusing to use the skill when someone needs help."],"gift"+variant),
+      answer:row.action,
+      explanation:"The lesson connects gifts with gratitude, love, and service.",
+      hint:"Choose the action that helps another person.",
+      sourceFact:"Verified current ABVM Religion topic: Gifts from God",
+      dok:2,difficulty:2,
+      wrongFeedback:"A gift is being used well when it helps or encourages another person.",
+      misconception:"gift-self-focus"
+    });
+  }
 }
-function giftsFactory(pack,variant){
-  if(!topicMatch(pack,"Religion",/Gifts from God|Giver of Gifts|God's gifts/i))return [];
-  const row=rowFor([
-    {direct:"A student is good at music. Which action best uses that gift to help others?",directAnswer:"Playing a cheerful song for residents at a care home.",transfer:"A student is good at math. Which action best uses that gift to serve someone?",transferAnswer:"Helping a classmate understand a practice problem."},
-    {direct:"A student enjoys drawing. Which action best uses that gift kindly?",directAnswer:"Making a welcome card for a new student.",transfer:"A student is a patient reader. Which action best uses that gift to help?",transferAnswer:"Reading a story with a younger child."}
-  ],variant);
-  return triad("religion-gifts","Religion","Gifts from God",variant,"Verified Religion topic: Gifts from God",[
+function fallbackReading(variant,out){
+  const rows=[
     {
-      prompt:row.direct,
-      choices:[row.directAnswer,"Using the skill only to brag.","Refusing to use the skill when help is needed."],
-      answer:row.directAnswer,
-      explanation:"A gift can be used to help and encourage another person."
+      id:"star-read-infer-1",skill:"inference",
+      prompt:"Read: “Tariq packed an extra water bottle, put on a cap, and rubbed sunscreen on his arms before leaving.” Where is Tariq most likely going?",
+      choices:["Somewhere outdoors in sunny weather.","To bed for the night.","Into a snowstorm."],
+      answer:"Somewhere outdoors in sunny weather.",
+      explanation:"The cap, sunscreen, and water are clues that point to being outside in warm, sunny conditions."
     },
     {
-      prompt:row.transfer,
-      choices:[row.transferAnswer,"Hiding the skill from everyone.","Using the skill only when a prize is offered."],
-      answer:row.transferAnswer,
-      explanation:"The ability is being used in service of someone else."
+      id:"star-read-theme-1",skill:"theme",
+      prompt:"Read: “Ava's tower fell twice. She studied the bottom blocks, rebuilt a wider base, and the third tower stayed up.” What lesson best fits the story?",
+      choices:["Learn from mistakes and keep trying.","Never change a plan.","The tallest tower always wins."],
+      answer:"Learn from mistakes and keep trying.",
+      explanation:"Ava uses earlier failures to improve her next attempt."
     },
     {
-      prompt:"Why can ordinary talents be treated as gifts in a religion lesson?",
-      choices:["They can be received gratefully and used to love and serve others.","They make one person more important than everyone else.","They matter only when they win a prize."],
-      answer:"They can be received gratefully and used to love and serve others.",
-      explanation:"The lesson connects gifts with gratitude, love, and service."
+      id:"star-read-evidence-1",skill:"text-evidence",
+      prompt:"Read: “Ben yawned, rubbed his eyes, and rested his head on the table.” Which detail is the strongest evidence that Ben is tired?",
+      choices:["He yawned and rubbed his eyes.","He is near a table.","His name is Ben."],
+      answer:"He yawned and rubbed his eyes.",
+      explanation:"Those actions most directly show tiredness."
+    },
+    {
+      id:"star-read-purpose-1",skill:"author-purpose",
+      prompt:"A paragraph explains three steps for planting a seed in a cup. What is the author's main purpose?",
+      choices:["To teach how to do something.","To persuade the reader to buy a toy.","To tell a fantasy story."],
+      answer:"To teach how to do something.",
+      explanation:"Step-by-step directions are written to teach a process."
+    },
+    {
+      id:"star-read-wordchoice-1",skill:"word-choice",
+      prompt:"Read: “The wind whispered through the tall grass.” Why might the author use the word “whispered”?",
+      choices:["To help the reader imagine a soft sound.","To prove the wind can really talk.","To tell the exact temperature."],
+      answer:"To help the reader imagine a soft sound.",
+      explanation:"The word creates a quiet sound image."
+    },
+    {
+      id:"star-read-cause-1",skill:"cause-effect",
+      prompt:"Read: “The sidewalk froze overnight, so the school spread salt on it in the morning.” Why did the school spread salt?",
+      choices:["Because the sidewalk was icy.","Because the sun was too bright.","Because students needed pencils."],
+      answer:"Because the sidewalk was icy.",
+      explanation:"The frozen sidewalk caused the school to spread salt."
     }
-  ]);
+  ];
+  for(const [index,row] of rows.entries()){
+    add(out,{
+      id:row.id+"-v"+variant,subject:"Reading / ELA",skill:row.skill,tier:"star-fallback",
+      prompt:row.prompt,choices:shuffled(row.choices,row.id+variant),answer:row.answer,explanation:row.explanation,
+      hint:row.skill==="text-evidence"?"Choose the detail that most directly proves the idea.":"Use the passage clues, not just one familiar word.",
+      sourceFact:"Original Grade 2 STAR-aligned Reading practice",dok:index%3===0?2:3,difficulty:index%3===0?2:3,
+      wrongFeedback:"Go back to the text and choose the answer supported by the strongest clue.",
+      misconception:"unsupported-reading-choice"
+    });
+  }
+}
+function fallbackMath(variant,out){
+  const offset=variant===1?0:3;
+  const rows=[
+    {
+      id:"star-math-two-step",skill:"two-step-word-problem",
+      prompt:`A class has ${24+offset} markers. The teacher adds 13 more, then 8 are used. How many markers are left?`,
+      answer:String(24+offset+13-8),
+      choices:[String(24+offset+13-8),String(24+offset+13),String(24+offset-8)],
+      explanation:`First add ${24+offset} + 13 = ${37+offset}. Then subtract 8 to get ${29+offset}.`,
+      wrongFeedback:choice=>choice===String(37+offset)?"You stopped after the first step. The story has a second change.":"Do the addition first, then subtract the markers that were used.",
+      misconception:choice=>choice===String(37+offset)?"one-step-only":"operation-order",
+      dok:3,difficulty:3
+    },
+    {
+      id:"star-math-place",skill:"place-value",
+      prompt:`In the number ${462+offset*10}, what value does the 6 represent?`,
+      answer:"60",choices:["60","6","600"],
+      explanation:"The 6 is in the tens place, so its value is 60.",
+      wrongFeedback:"Name the place first: hundreds, tens, or ones.",
+      misconception:"digit-vs-place-value",dok:2,difficulty:2
+    },
+    {
+      id:"star-math-compare",skill:"compare-numbers",
+      prompt:`Which comparison is true?`,
+      answer:`${58+offset} < ${65+offset}`,
+      choices:[`${58+offset} < ${65+offset}`,`${58+offset} > ${65+offset}`,`${58+offset} = ${65+offset}`],
+      explanation:"Compare the tens first. Five tens is less than six tens.",
+      wrongFeedback:"Compare tens before ones.",
+      misconception:"comparison-direction",dok:2,difficulty:2
+    },
+    {
+      id:"star-math-time",skill:"time",
+      prompt:"A movie starts at 2:15 and lasts 30 minutes. What time does it end?",
+      answer:"2:45",choices:["2:45","2:30","3:15"],
+      explanation:"Thirty minutes after 2:15 is 2:45.",
+      wrongFeedback:"Count forward 30 minutes from the starting time.",
+      misconception:"elapsed-time",dok:2,difficulty:2
+    },
+    {
+      id:"star-math-measure",skill:"measurement",
+      prompt:"A ribbon is 36 centimeters long. Mia cuts off 9 centimeters. How long is the ribbon now?",
+      answer:"27 centimeters",choices:["27 centimeters","45 centimeters","25 centimeters"],
+      explanation:"The ribbon gets shorter, so subtract: 36 − 9 = 27.",
+      wrongFeedback:"Because some ribbon is cut off, the length should decrease.",
+      misconception:"measurement-operation",dok:2,difficulty:2
+    },
+    {
+      id:"star-math-data",skill:"data-interpretation",
+      prompt:"A class chart shows 7 votes for apples, 5 for bananas, and 3 for grapes. How many more votes did apples get than grapes?",
+      answer:"4",choices:["4","10","2"],
+      explanation:"Compare apples and grapes: 7 − 3 = 4.",
+      wrongFeedback:"“How many more” asks for the difference between the two categories.",
+      misconception:"data-comparison",dok:2,difficulty:2
+    }
+  ];
+  for(const row of rows){
+    add(out,{
+      id:row.id+"-v"+variant,subject:"Math",skill:row.skill,tier:"star-fallback",
+      prompt:row.prompt,choices:shuffled(row.choices,row.id+variant),answer:row.answer,explanation:row.explanation,
+      hint:row.skill==="two-step-word-problem"?"Solve the first change, write the new amount, then solve the second change.":"Use the math relationship in the question before calculating.",
+      sourceFact:"Original Grade 2 STAR-aligned Math practice",dok:row.dok,difficulty:row.difficulty,
+      wrongFeedback:row.wrongFeedback,misconception:row.misconception
+    });
+  }
 }
 function validateQuestion(question){
   const issues=[];
   if(!question||typeof question!=="object")return ["question-missing"];
   if(!text(question.id))issues.push("id-missing");
-  if(text(question.prompt).length<10)issues.push("prompt-too-short");
-  if(!Array.isArray(question.choices)||question.choices.length<2||question.choices.length>4)issues.push("choices-invalid");
+  if(text(question.prompt).length<20)issues.push("prompt-too-short");
+  for(const pattern of FORBIDDEN)if(pattern.test(question.prompt))issues.push("forbidden-meta-prompt");
+  if(!Array.isArray(question.choices)||question.choices.length!==3)issues.push("choices-not-three");
   else{
-    if(new Set(question.choices).size!==question.choices.length)issues.push("choices-duplicate");
+    if(new Set(question.choices).size!==3)issues.push("choices-duplicate");
     if(!question.choices.includes(question.answer))issues.push("answer-not-in-choices");
   }
   if(!text(question.explanation))issues.push("explanation-missing");
-  if(question.originalEquivalent===true){
-    if(!["direct","transfer","reasoning"].includes(question.questionType))issues.push("question-type-invalid");
-    if(question.sourceTransform!==SOURCE_TRANSFORM)issues.push("source-transform-invalid");
-    if(!Number.isInteger(question.generationVariant)||question.generationVariant<1)issues.push("variant-invalid");
+  if(!text(question.hint))issues.push("hint-missing");
+  if(!["material","star-fallback"].includes(question.tier))issues.push("tier-invalid");
+  if(!Number.isInteger(question.dok)||question.dok<1||question.dok>3)issues.push("dok-invalid");
+  if(!Number.isInteger(question.difficulty)||question.difficulty<2||question.difficulty>3)issues.push("difficulty-invalid");
+  if(!Array.isArray(question.standards)||question.standards.length===0)issues.push("standards-missing");
+  if(!text(question.domain))issues.push("domain-missing");
+  if(!question.choiceDiagnostics||typeof question.choiceDiagnostics!=="object")issues.push("diagnostics-missing");
+  else{
+    for(const choice of question.choices){
+      if(choice===question.answer)continue;
+      if(!text(question.choiceDiagnostics[choice]?.feedback))issues.push("wrong-feedback-missing");
+      if(!text(question.choiceDiagnostics[choice]?.misconception))issues.push("misconception-missing");
+    }
   }
-  return issues;
+  if(question.rubric?.maxPoints!==2||!Array.isArray(question.rubric?.criteria)||question.rubric.criteria.length<2)issues.push("rubric-invalid");
+  if(question.sourceTransform!==SOURCE_TRANSFORM||question.originalEquivalent!==true)issues.push("source-transform-invalid");
+  return [...new Set(issues)];
 }
 function validateCatalog(catalog){
-  const issues=[],ids=new Set();
+  const issues=[],ids=new Set(),doks=new Set(),tiers=new Set();
   for(const question of catalog?.questions||[]){
     if(ids.has(question.id))issues.push({id:question.id,issue:"duplicate-id"});
-    ids.add(question.id);
+    ids.add(question.id);doks.add(question.dok);tiers.add(question.tier);
     for(const issue of validateQuestion(question))issues.push({id:question.id,issue});
   }
+  if(!doks.has(1)||!doks.has(2)||!doks.has(3))issues.push({id:"catalog",issue:"dok-range-incomplete"});
+  if(!tiers.has("material")||!tiers.has("star-fallback"))issues.push({id:"catalog",issue:"tier-mix-incomplete"});
   return issues;
 }
 function buildCatalog(pack,{sourceKey}={}){
   const key=text(sourceKey||pack?.sourceHash||pack?.sourceCheckedAt||pack?.weekLabel||"abvm-current");
-  const variant=variantFor(key);
-  const questions=[];
-  for(const [index,row] of (pack?.questions||[]).entries()){
-    const normalized=normalizeBaseQuestion(row,index);
-    if(normalized)questions.push(normalized);
-  }
-  for(const factory of [mathFactory,blendFactory,sentenceFactory,sightWordFactory,vocabularyFactory,religionChapterFactory,trinityFactory,giftsFactory]){
-    questions.push(...factory(pack,variant));
-  }
+  const variant=variantFor(key),questions=[];
+  materialMath(pack,variant,questions);
+  materialSentences(pack,variant,questions);
+  materialPhonics(pack,variant,questions);
+  materialHighFrequency(pack,variant,questions);
+  materialVocabulary(pack,variant,questions);
+  materialReading(pack,variant,questions);
+  materialReligion(pack,variant,questions);
+  fallbackReading(variant,questions);
+  fallbackMath(variant,questions);
   const deduped=[],seen=new Set();
   for(const question of questions){
     const signature=question.prompt+"|"+question.answer;
@@ -334,50 +733,75 @@ function buildCatalog(pack,{sourceKey}={}){
     seen.add(signature);deduped.push(question);
   }
   const catalog={
-    schemaVersion:1,engineVersion:VERSION,sourceTransform:SOURCE_TRANSFORM,
-    sourceKey:key,generationVariant:variant,questionCount:deduped.length,questions:deduped
+    schemaVersion:2,engineVersion:VERSION,sourceTransform:SOURCE_TRANSFORM,
+    sourceKey:key,generationVariant:variant,
+    qualityPolicy:{
+      materialFirst:true,
+      minimumDifficulty:2,
+      forbiddenMetaPrompts:true,
+      standardsRequired:true,
+      dokRequired:true,
+      diagnosticDistractors:true,
+      targetedWrongFeedback:true,
+      analyticRubric:true,
+      starFallbackOriginalOnly:true
+    },
+    questionCount:deduped.length,questions:deduped
   };
   const issues=validateCatalog(catalog);
   if(issues.length)throw new Error("ABVM study-game catalog validation failed: "+JSON.stringify(issues));
   return catalog;
 }
-function seededOrder(question,seed){return hash(seed+"|"+question.id)}
-function selectQuestions(catalog,{subjects,count=8,seed="session"}={}){
+function targetDifficultyFor(skillStats,skill){
+  const row=skillStats?.[skill]||{};
+  if((Number(row.ConsecutiveCorrect)||0)>=2)return 3;
+  if((Number(row.ConsecutiveWrong)||0)>=2)return 2;
+  return Math.max(2,Math.min(3,Number(row.TargetDifficulty)||2));
+}
+function pickBalanced(pool,count,seed,skillStats){
+  const selected=[],used=new Set(),skillCounts={},maxPerSkill=3;
+  const ordered=[...pool].sort((a,b)=>{
+    if(a.tier!==b.tier)return a.tier==="material"?-1:1;
+    const ta=Math.abs(a.difficulty-targetDifficultyFor(skillStats,a.skill));
+    const tb=Math.abs(b.difficulty-targetDifficultyFor(skillStats,b.skill));
+    if(ta!==tb)return ta-tb;
+    return hash(seed+"|"+a.id)-hash(seed+"|"+b.id);
+  });
+  while(selected.length<Math.min(count,ordered.length)){
+    let candidate=ordered.find(q=>{
+      if(used.has(q.id))return false;
+      if((skillCounts[q.skill]||0)>=maxPerSkill)return false;
+      const last=selected[selected.length-1];
+      if(last&&last.skill===q.skill){
+        return !ordered.some(other=>!used.has(other.id)&&other.skill!==q.skill&&(skillCounts[other.skill]||0)<maxPerSkill);
+      }
+      return true;
+    });
+    if(!candidate)candidate=ordered.find(q=>!used.has(q.id));
+    if(!candidate)break;
+    selected.push(candidate);used.add(candidate.id);skillCounts[candidate.skill]=(skillCounts[candidate.skill]||0)+1;
+  }
+  return selected;
+}
+function selectQuestions(catalog,{subjects,count=8,seed="session",skillStats={}}={}){
   let pool=[...(catalog?.questions||[])];
   const wanted=Array.isArray(subjects)?subjects.map(text).filter(Boolean):[];
   if(wanted.length)pool=pool.filter(q=>wanted.includes(q.subject));
-  const types=["direct","transfer","reasoning","source"];
-  pool.sort((a,b)=>{
-    const ta=types.indexOf(a.questionType),tb=types.indexOf(b.questionType);
-    const aa=ta<0?99:ta,bb=tb<0?99:tb;
-    if(aa!==bb)return aa-bb;
-    return seededOrder(a,seed)-seededOrder(b,seed);
-  });
-  const buckets=new Map(types.map(type=>[type,pool.filter(q=>q.questionType===type)]));
-  const selected=[],used=new Set();
-  while(selected.length<Math.min(count,pool.length)){
-    let added=false;
-    for(const type of types){
-      const bucket=buckets.get(type)||[];
-      const next=bucket.find(q=>!used.has(q.id));
-      if(next&&selected.length<count){selected.push(next);used.add(next.id);added=true}
-    }
-    if(!added)break;
-  }
-  if(selected.length<count){
-    for(const q of pool.sort((a,b)=>seededOrder(a,seed+"fill")-seededOrder(b,seed+"fill"))){
-      if(selected.length>=count)break;
-      if(!used.has(q.id)){selected.push(q);used.add(q.id)}
-    }
-  }
-  return selected;
+  return pickBalanced(pool,count,seed,skillStats);
+}
+function supportQuestion(catalog,current,{skillStats={},seed="support"}={}){
+  if(!current)return null;
+  const candidates=(catalog?.questions||[])
+    .filter(q=>q.id!==current.id&&q.skill===current.skill&&q.difficulty<=2)
+    .sort((a,b)=>hash(seed+a.id)-hash(seed+b.id));
+  return candidates[0]||null;
 }
 function sourceKeyFromEnvelope(pack,envelope){
   const hashes=(envelope?.sourcePages||[]).map(row=>row.contentHash).filter(Boolean).join("|");
   return hashes||text(pack?.sourceHash||pack?.sourceCheckedAt||pack?.weekLabel||"abvm-current");
 }
 window.ABVMStudyGames=Object.freeze({
-  VERSION,SOURCE_TRANSFORM,EQUIVALENT_PROVENANCE,
-  buildCatalog,validateCatalog,selectQuestions,sourceKeyFromEnvelope
+  VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
+  buildCatalog,validateCatalog,selectQuestions,supportQuestion,sourceKeyFromEnvelope,targetDifficultyFor
 });
 })();
