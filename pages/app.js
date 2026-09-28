@@ -405,8 +405,8 @@ function bindScreen(){
   $$("[data-game-answer]").forEach(b=>b.addEventListener("click",()=>answerStudyGame(Number(b.dataset.gameAnswer))));
   $$("[data-game-next]").forEach(b=>b.addEventListener("click",advanceStudyGame));
   $$("[data-game-home]").forEach(b=>b.addEventListener("click",leaveStudyGame));
-  $("[data-game-hint]").forEach(b=>b.addEventListener("click",toggleStudyHint));
-  $("[data-open-games]").forEach(a=>a.addEventListener("click",event=>{event.preventDefault();activeTab="games";history.replaceState(null,"","#games");gameState.screen="menu";render();}));
+  document.querySelectorAll("[data-game-hint]").forEach(b=>b.addEventListener("click",toggleStudyHint));
+  document.querySelectorAll("[data-open-games]").forEach(a=>a.addEventListener("click",event=>{event.preventDefault();activeTab="games";history.replaceState(null,"","#games");gameState.screen="menu";render();}));
 }
 $$(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>{activeTab=b.dataset.tab;history.replaceState(null,"","#"+activeTab);render();}));
 async function load(){
