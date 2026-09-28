@@ -157,7 +157,7 @@ function mergeUploadedEvents(existing, uploaded) {
 function mergeUploadedText(existing, incoming, previousTopics = []) {
   const uploadedTopics = new Set([...previousTopics, ...incoming.map(item => item.topic)]);
   const kept = existing.filter(text => !uploadedTopics.has(topicKey(text)));
-  return [...new Set([...kept, ...incoming.map(item => item.text)])];
+  return [...new Set([...incoming.map(item => item.text), ...kept])];
 }
 
 function eventTime(value) {
