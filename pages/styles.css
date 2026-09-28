@@ -598,3 +598,70 @@ html,body{margin:0}
   .notices-mark{width:36px;height:36px}
   .reading-policy-card>span{width:52px;height:52px}
 }
+
+
+/* v63 — week paging + full day-by-day calendar agenda */
+.week-nav{
+  display:grid;grid-template-columns:52px minmax(0,1fr) 52px;align-items:center;gap:9px;
+  margin:0 0 10px;padding:9px;background:#edf7ff;border:1px solid #b8d8ec;border-radius:18px
+}
+.week-nav button{
+  min-width:48px;min-height:48px;border:1px solid #8dbbd8;border-radius:14px;background:#fff;color:var(--navy);
+  cursor:pointer;font-size:28px;font-weight:800;line-height:1;box-shadow:0 2px 7px #0b3c7414
+}
+.week-nav button:active{transform:translateY(1px);background:#e3f2fc}
+.week-nav div{text-align:center;min-width:0}
+.week-nav span{display:block;color:#17629f;letter-spacing:.08em;font-size:9px;font-weight:950}
+.week-nav strong{display:block;color:var(--navy);margin-top:2px;font-size:15px;line-height:1.2}
+.week-today-jump{
+  display:block;width:100%;min-height:44px;margin:-2px 0 12px;border:1px solid #b8d8ec;border-radius:13px;
+  background:#fff;color:#145b99;cursor:pointer;font-size:11px;font-weight:900
+}
+.week-empty{
+  margin-top:8px;padding:13px 14px;border:1px dashed #a7bfd1;border-radius:14px;background:#f7fbfe;color:#40586a
+}
+.week-empty strong,.week-empty span{display:block}
+.week-empty strong{color:#214c6c;font-size:12px}
+.week-empty span{margin-top:4px;font-size:11px;line-height:1.42}
+.calendar-legend i.lunch{background:#6c8b38}
+.month-agenda-note{color:#526579;margin:7px 2px 11px;font-size:11px;line-height:1.45}
+.month-agenda-list{display:grid;gap:10px}
+.month-agenda-row.agenda-day{
+  display:block;margin:0;background:#fff;border:1px solid #cbd8e4;border-radius:18px;overflow:hidden;
+  box-shadow:0 4px 14px #243b530d
+}
+.agenda-day>header{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:12px 13px 10px;
+  background:linear-gradient(180deg,#f6fbff,#eef7fd);border-bottom:1px solid #dce8f0
+}
+.agenda-day>header p{color:var(--royal);letter-spacing:.08em;margin:0 0 2px;font-size:9px;font-weight:950}
+.agenda-day>header h3{color:var(--navy);margin:0;font-size:16px;line-height:1.2}
+.agenda-day>header>span{
+  flex:none;color:#174f7c;background:#fff;border:1px solid #c7ddeb;border-radius:999px;padding:6px 8px;
+  font-size:9px;font-weight:900
+}
+.agenda-events{display:grid;gap:6px;padding:10px 11px 0}
+.agenda-event{display:flex;align-items:flex-start;gap:9px;padding:9px 10px;background:#fbfcfd;border-radius:11px}
+.agenda-event i{
+  flex:none;width:9px;height:9px;margin-top:4px;border-radius:50%;background:#1472a7;box-shadow:0 0 0 3px #1167b11a
+}
+.agenda-event i.test{background:var(--pink)}.agenda-event i.faith{background:#7d3eae}.agenda-event i.due{background:#a96800}
+.agenda-event i.club{background:#328345}.agenda-event i.closed{background:#a13b3b}.agenda-event i.family{background:#1472a7}
+.agenda-event strong{display:block;color:#2b3e50;font-size:12px;line-height:1.35}
+.agenda-event small{display:block;color:#687887;margin-top:2px;font-size:9px;line-height:1.35;text-transform:capitalize}
+.agenda-regular{background:#f8fafb}
+.agenda-lunch{
+  display:flex;align-items:flex-start;gap:10px;margin:8px 11px 11px;padding:10px 11px;border:1px solid #e6ca62;border-radius:12px;
+  background:#fff8dc
+}
+.agenda-lunch>span{font-size:20px;line-height:1.2}
+.agenda-lunch b{display:block;color:#765600;font-size:10px;text-transform:uppercase;letter-spacing:.06em}
+.agenda-lunch p{color:#493f21;margin:2px 0 0;font-size:11px;line-height:1.4}
+.agenda-lunch.is-missing{background:#f7f8f8;border-color:#d8dddf}
+.agenda-lunch.is-missing b,.agenda-lunch.is-missing p{color:#66727a}
+.calendar-day-card>.agenda-lunch{margin:10px 0 0}
+@media (width<=370px){
+  .week-nav{grid-template-columns:46px minmax(0,1fr) 46px;gap:6px;padding:7px}
+  .week-nav button{min-width:44px;min-height:44px}
+  .agenda-day>header{padding-inline:11px}
+}
