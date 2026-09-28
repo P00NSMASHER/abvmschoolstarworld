@@ -11,9 +11,11 @@ for(const key of ["importantDates","homework","subjects","reminders","parentNoti
 if(manifest.display!=="standalone")fail("PWA manifest must remain standalone");
 const index=read("pages/index.html"),css=read("pages/styles.css"),app=read("pages/app.js"),games=read("pages/study-games.js"),sw=read("pages/sw.js");
 if(!/href="\.\/styles\.css(?:\?[^"]*)?"/.test(index))fail("Gold-standard styles.css must be loaded");
+if(!/src="\.\/study-games\.js(?:\?[^"]*)?"/.test(index))fail("Study Games engine must be loaded");
 if(!/src="\.\/app\.js(?:\?[^"]*)?"/.test(index))fail("Gold-standard app.js must be loaded");
 for(const marker of ["YOUR SCHOOL PLAN","SCHOOL MONTH AT A GLANCE","SMALL STEPS, CALM PRACTICE","Study games","Family dashboard"])if(!app.includes(marker))fail("Missing historical UI marker: "+marker);
-for(const marker of [".app-header",".day-picker",".calendar-card",".study-intro",".study-game-grid",".family-hero",".bottom-nav"])if(!css.includes(marker))fail("Missing historical style marker: "+marker);\nfor(const marker of ["skill-only-equivalent-item-v1","buildCatalog","selectQuestions"])if(!games.includes(marker))fail("Missing Study Games engine marker: "+marker);
+for(const marker of [".app-header",".day-picker",".calendar-card",".study-intro",".study-game-grid",".family-hero",".bottom-nav"])if(!css.includes(marker))fail("Missing historical style marker: "+marker );
+for(const marker of ["skill-only-equivalent-item-v1","buildCatalog","selectQuestions"])if(!games.includes(marker))fail("Missing Study Games engine marker: "+marker);
 if(!app.includes("./assets/abvm-app-icon-192.png"))fail("School seal must use local app asset");
 for(const ref of ["pages/assets/abvm-app-icon-180.png","pages/assets/abvm-app-icon-192.png","pages/data/study-pack.json","pages/styles.css","pages/study-games.js","pages/app.js"])if(!exists(ref))fail("Missing rollback asset: "+ref);
 const swShell=[...sw.matchAll(/"\.\/([^"]+)"/g)].map(m=>m[1]).filter(Boolean);
