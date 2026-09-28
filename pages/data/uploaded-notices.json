@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "lastIntegratedAt": "2026-09-28T13:19:00.000Z",
   "documents": [
     {
@@ -10,7 +10,17 @@
         "Dress Down Day is Friday, September 25, 2026.",
         "Families may donate any amount; all proceeds support a local charity.",
         "Dress Down Day will occur twice each month, with future dates appearing on the school calendar beginning in October."
-      ]
+      ],
+      "provenance": {
+        "factsHash": "993a78309f198142d238bbc9f0ebb1342d5892a8451f14e3b30ccc108a1a9246",
+        "sourceContentHash": null
+      },
+      "review": {
+        "status": "legacy-reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "manual-school-notice-review",
+        "reviewedAt": "2026-09-28T18:12:00.000Z"
+      }
     },
     {
       "id": "weekly-reminders-2026-09-21",
@@ -23,7 +33,17 @@
         "Lego Club is Friday, September 25 from 3–4 PM.",
         "Dress Down Day is Friday, September 25 with a donation to a local charity.",
         "Upcoming dates are listed through October 23."
-      ]
+      ],
+      "provenance": {
+        "factsHash": "d144d32c6f725aad6e98a3d8e2f1530f2fde9fed13996c58c2c3084be5c194eb",
+        "sourceContentHash": null
+      },
+      "review": {
+        "status": "legacy-reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "manual-school-notice-review",
+        "reviewedAt": "2026-09-28T18:12:00.000Z"
+      }
     },
     {
       "id": "weekly-reminders-2026-09-28",
@@ -42,7 +62,17 @@
         "Friday, October 23: S'more Fun at Schwartz Farm.",
         "Friday–Saturday, November 13–14: Drama Club Play.",
         "Saturday, November 21: Reading Royals Game Family Fun Night."
-      ]
+      ],
+      "provenance": {
+        "factsHash": "c178a77e1fb2070186bbda66760abe2bd35bdc4a30bec8a3839a7fe4dc1aba3c",
+        "sourceContentHash": "4e69ae7ed60b32279bc326de96befc33475726a6ec7a7faf131a67f8a71eb796"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "manual-school-notice-review",
+        "reviewedAt": "2026-09-28T18:12:00.000Z"
+      }
     }
   ],
   "importantDates": [
