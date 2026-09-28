@@ -276,11 +276,37 @@ function nextGameSessionSeed(modeId){
   localStorage.setItem(key,String(next));
   return String(catalog?.sourceKey||"current")+"|"+modeId+"|"+next;
 }
+function gameLearningKey(){return "abvm-study-learning:v2";}
+function loadGameLearning(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(gameLearningKey())||"{}");
+    return parsed&&typeof parsed==="object"?parsed:{};
+  }catch{return {}}
+}
+function recordGameLearning(question,correct){
+  if(!question?.skill)return null;
+  const all=loadGameLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2};
+  row.Seen=(Number(row.Seen)||0)+1;
+  if(correct){
+    row.Correct=(Number(row.Correct)||0)+1;
+    row.ConsecutiveCorrect=(Number(row.ConsecutiveCorrect)||0)+1;
+    row.ConsecutiveWrong=0;
+    if(row.ConsecutiveCorrect>=2)row.TargetDifficulty=3;
+  }else{
+    row.Wrong=(Number(row.Wrong)||0)+1;
+    row.ConsecutiveWrong=(Number(row.ConsecutiveWrong)||0)+1;
+    row.ConsecutiveCorrect=0;
+    if(row.ConsecutiveWrong>=2)row.TargetDifficulty=2;
+  }
+  all[question.skill]=row;
+  localStorage.setItem(gameLearningKey(),JSON.stringify(all));
+  return row;
+}
 function startStudyGame(modeId){
   const engine=studyGameEngine(),catalog=studyGameCatalog(),mode=gameMode(modeId);
   if(!engine||!catalog)return;
-  const questions=engine.selectQuestions(catalog,{subjects:mode.subjects,count:mode.count,seed:nextGameSessionSeed(mode.id)});
-  gameState={screen:"play",mode:mode.id,questions,index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false};
+  const questions=engine.selectQuestions(catalog,{subjects:mode.subjects,count:mode.count,seed:nextGameSessionSeed(mode.id),skillStats:loadGameLearning()});
+  gameState={screen:"play",mode:mode.id,questions,index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,learningRow:null};
   renderGames();bindScreen();
 }
 function answerStudyGame(index){
@@ -289,6 +315,7 @@ function answerStudyGame(index){
   if(choice===undefined)return;
   const correct=choice===question.answer;
   gameState.selectedIndex=index;gameState.answered=true;gameState.hintOpen=false;
+  gameState.learningRow=recordGameLearning(question,correct);
   if(correct){
     gameState.score++;
     gameState.streak++;
@@ -305,7 +332,7 @@ function advanceStudyGame(){
     gameState.index++;
     gameState.selectedIndex=null;
     gameState.answered=false;
-    gameState.hintOpen=false;
+    gameState.hintOpen=false;\n    gameState.learningRow=null;
   }
   renderGames();bindScreen();
 }
@@ -326,7 +353,7 @@ function gameMenuHtml(catalog){
       const record=loadGameRecord(mode.id);
       return '<button type="button" class="study-game-tile game-'+mode.id+'" data-game-start="'+esc(mode.id)+'"><span class="study-game-icon">'+esc(mode.icon)+'</span><span class="study-game-copy"><strong>'+esc(mode.title)+'</strong><small>'+esc(mode.copy)+'</small><em>'+available+' questions ready'+(record.plays?' · best '+record.best:'')+'</em></span><b aria-hidden="true">›</b></button>';
     }).join("")+'</div>'+
-    '<section class="question-tech-card"><p>HOW THE QUESTIONS GET SMARTER</p><div><span><b>1</b><strong>Direct</strong><small>Practice the skill.</small></span><span><b>2</b><strong>Transfer</strong><small>Use it in a new example.</small></span><span><b>3</b><strong>Reason</strong><small>Explain why it works.</small></span></div></section>'+
+    '<section class="question-tech-card"><p>HOW THE QUESTIONS GET SMARTER</p><div><span><b>1</b><strong>Direct</strong><small>Practice the skill.</small></span><span><b>2</b><strong>Transfer</strong><small>Use it in a new example.</small></span><span><b>3</b><strong>Reason</strong><small>Explain why it works.</small></span></div><p class="question-quality-note">No list-recognition questions. Grade-2 standards, DOK 1–3, misconception feedback, and adaptive difficulty are enforced before a question can appear.</p></section>'+
     '<p class="game-privacy-note">Questions use verified skill signals and current school material. The equivalent-item engine does not need student answers, grades, or private worksheet text.</p>';
 }
 function gamePlayHtml(){
@@ -343,8 +370,10 @@ function gamePlayHtml(){
     return '<button type="button" class="game-answer'+klass+'" data-game-answer="'+index+'" '+(gameState.answered?'disabled':'')+'><span>'+String.fromCharCode(65+index)+'</span><strong>'+esc(choice)+'</strong></button>';
   }).join("");
   const selected=chosen===null?null:q.choices[chosen],correct=selected===q.answer;
+  const targeted=!correct&&selected?q.choiceDiagnostics?.[selected]?.feedback:null;
+  const adaptive=!correct&&(gameState.learningRow?.ConsecutiveWrong||0)>=2?'<small class="adaptive-note">Support mode: the next rounds will favor a simpler same-skill item until this skill stabilizes.</small>':'';
   const feedback=gameState.answered
-    ? '<section class="game-feedback '+(correct?'correct':'retry')+'" aria-live="polite"><span>'+(correct?'✓':'↻')+'</span><div><strong>'+(correct?'Nice work!':'Good try — here’s the answer.')+'</strong><p>'+esc(q.explanation)+'</p></div></section><button type="button" class="game-next" data-game-next>'+(progress===total?'See my score':'Next question')+' <span>›</span></button>'
+    ? '<section class="game-feedback '+(correct?'correct':'retry')+'" aria-live="polite"><span>'+(correct?'✓':'↻')+'</span><div><strong>'+(correct?'Nice work!':'Good try — here’s the answer.')+'</strong><p>'+esc(correct?q.explanation:(targeted||q.explanation))+'</p>'+adaptive+'</div></section><button type="button" class="game-next" data-game-next>'+(progress===total?'See my score':'Next question')+' <span>›</span></button>'
     : '<div class="game-hint-wrap"><button type="button" class="game-hint-button" data-game-hint>'+(gameState.hintOpen?'Hide hint':'Need a hint?')+'</button>'+(gameState.hintOpen?'<p class="game-hint">'+esc(q.hint)+'</p>':'')+'</div>';
   return '<div class="game-topbar"><button type="button" data-game-home aria-label="Back to study games">‹</button><div><span>'+esc(mode.title)+'</span><strong>'+progress+' of '+total+'</strong></div><b>★ '+gameState.score+'</b></div>'+
     '<div class="game-progress" aria-label="Game progress"><span style="width:'+pct+'%"></span></div>'+
