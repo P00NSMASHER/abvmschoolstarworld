@@ -1,4 +1,4 @@
-const CACHE = "abvm-grade2-parent-companion-v67-simple-fast";
+const CACHE = "abvm-grade2-parent-companion-v68-icons-today";
 const SHELL = [
   "./",
   "./index.html",
