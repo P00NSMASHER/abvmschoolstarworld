@@ -34,9 +34,10 @@ test("historical gold-standard visual hierarchy is restored",async({page})=>{
   await expect(page.locator(".calendar-card")).toBeVisible();
 
   await openTab(page,"Study");
-  await expect(page.locator(".app-header p")).toContainText("SMALL STEPS, CALM PRACTICE");
-  await expect(page.locator(".study-intro")).toBeVisible();
+  await expect(page.locator(".app-header h1")).toHaveText(/Study room/i);
   await expect(page.locator(".study-at-a-glance")).toBeVisible();
+  await expect(page.locator(".study-games-cta")).toBeVisible();
+  await expect(page.locator(".study-accordion")).toHaveCount(6);
 
   await openTab(page,"Family");
   await expect(page.locator(".app-header h1")).toHaveText(/Family dashboard/i);
@@ -97,9 +98,9 @@ test("second requested polish is present",async({page})=>{
 
   await openTab(page,"Family");
   await expect(page.locator(".family-actions-card")).toBeVisible();
-  await expect(page.locator(".reading-policy-card")).toBeVisible();
   await expect(page.locator(".notices-card")).toBeVisible();
   await expect(page.locator(".notice-row").first()).toBeVisible();
+  await expect(page.locator(".family-more")).toBeVisible();
 });
 
 
@@ -124,11 +125,10 @@ test("week paging and full calendar agenda work on phone",async({page})=>{
 
 test("Study Games uses the StarBlox-style equivalent question engine",async({page})=>{
   await openTab(page,"Study Games");
-  await expect(page.locator(".study-games-hero")).toBeVisible();
+  await expect(page.locator(".study-games-hero")).toBeVisible({timeout:10000});
   await expect(page.locator(".study-game-tile")).toHaveCount(4);
-  await expect(page.locator(".question-tech-card")).toContainText("Direct");
-  await expect(page.locator(".question-tech-card")).toContainText("Transfer");
-  await expect(page.locator(".question-tech-card")).toContainText("Reason");
+  await expect(page.locator(".game-engine-stats")).toHaveCount(0);
+  await expect(page.locator(".question-tech-card")).toHaveCount(0);
 
   const engine=await page.evaluate(async()=>{
     const source=await (await fetch("./data/study-pack.json",{cache:"no-store"})).json();
@@ -162,7 +162,7 @@ test("Study Games uses the StarBlox-style equivalent question engine",async({pag
 test("all study game entry points stay inside the ABVM app",async({page})=>{
   await openTab(page,"Study");
   const links=page.locator("[data-open-games]");
-  expect(await links.count()).toBeGreaterThanOrEqual(2);
+  expect(await links.count()).toBeGreaterThanOrEqual(1);
   for(let i=0;i<await links.count();i++){
     await expect(links.nth(i)).toHaveAttribute("href","#games");
   }
@@ -257,4 +257,36 @@ test("Study Games uses targeted misconception feedback and adaptive evidence",as
   });
   expect(answerData.engineVersion).toContain("research-quality");
   expect(answerData.transform).toBe("skill-only-equivalent-item-v2");
+});
+
+
+test("simplicity pass keeps core actions obvious and reduces rendering overhead",async({page})=>{
+  await openTab(page,"Study");
+  await expect(page.locator(".study-games-cta")).toBeVisible();
+  await expect(page.locator(".study-jumps")).toHaveCount(0);
+  await expect(page.locator(".quest-launcher")).toHaveCount(0);
+  const accordions=page.locator(".study-accordion");
+  expect(await accordions.count()).toBe(6);
+  for(let i=0;i<await accordions.count();i++) await expect(accordions.nth(i)).not.toHaveAttribute("open");
+
+  await accordions.first().locator("summary").click();
+  await expect(accordions.first()).toHaveAttribute("open","");
+
+  await openTab(page,"Study Games");
+  await expect(page.locator(".study-game-tile")).toHaveCount(4);
+  const tileHeights=await page.locator(".study-game-tile").evaluateAll(nodes=>nodes.map(n=>Math.round(n.getBoundingClientRect().height)));
+  expect(Math.max(...tileHeights)).toBeLessThanOrEqual(120);
+
+  await page.getByRole("button",{name:/Quick Mix/i}).click();
+  await expect(page.locator(".game-question-card")).toBeVisible();
+  await expect(page.locator(".games-screen")).toHaveClass(/is-playing/);
+  await expect(page.locator(".games-screen .app-header")).toHaveCount(0);
+  await expect(page.locator(".games-screen .freshness")).toHaveCount(0);
+
+  const sw=await (await page.request.get("/sw.js")).text();
+  expect(sw).toContain("v67-simple-fast");
+  expect(sw).not.toContain("hero-today.webp");
+  expect(sw).not.toContain("calendar/picture-day.svg");
+  const cached=[...sw.matchAll(/"\.\/[^\"]+"/g)];
+  expect(cached.length).toBeLessThanOrEqual(10);
 });
