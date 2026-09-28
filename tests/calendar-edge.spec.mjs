@@ -50,7 +50,9 @@ test("busy date and month agenda do not cause horizontal overflow",async({page})
 
 test("next-month summary exposes upcoming October school items",async({page})=>{
   await openCalendar(page);
-  await expect(page.locator(".next-month-card")).toContainText("October");
-  const text=await page.locator(".next-month-card").innerText();
-  expect(text).toMatch(/Picture Day|Business Casual|HSA|Spelling/);
+  const card=page.locator(".next-month-card");
+  await card.scrollIntoViewIfNeeded();
+  await expect(card).toContainText("October");
+  const text=await card.textContent();
+  expect(text||"").toMatch(/Picture Day|Business Casual|HSA|Spelling/);
 });
