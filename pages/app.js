@@ -396,16 +396,16 @@ function render(){
   bindScreen();
 }
 function bindScreen(){
-  $("[data-check]").forEach(b=>b.addEventListener("click",()=>toggleChecked((pack.homework||[])[Number(b.dataset.check)],Number(b.dataset.check))));
-  $("[data-day]").forEach(b=>b.addEventListener("click",()=>{selectedDay=new Date(b.dataset.day);renderWeek();bindScreen();}));
-  $("[data-week-step]").forEach(b=>b.addEventListener("click",()=>{weekOffset+=Number(b.dataset.weekStep||0);selectedDay=null;renderWeek();bindScreen();}));
-  $("[data-week-today]").forEach(b=>b.addEventListener("click",()=>{weekOffset=0;selectedDay=null;renderWeek();bindScreen();}));
-  $("[data-cal-day]").forEach(b=>b.addEventListener("click",()=>{calendarDay=new Date(b.dataset.calDay);renderCalendar();bindScreen();}));
-  $("[data-game-start]").forEach(b=>b.addEventListener("click",()=>startStudyGame(b.dataset.gameStart)));
-  $("[data-game-answer]").forEach(b=>b.addEventListener("click",()=>answerStudyGame(Number(b.dataset.gameAnswer))));
-  $("[data-game-next]").forEach(b=>b.addEventListener("click",advanceStudyGame));
-  $("[data-game-home]").forEach(b=>b.addEventListener("click",leaveStudyGame));
-  $("[data-game-hint]").forEach(b=>b.addEventListener("click",toggleStudyHint));
+  $$("[data-check]").forEach(b=>b.addEventListener("click",()=>toggleChecked((pack.homework||[])[Number(b.dataset.check)],Number(b.dataset.check))));
+  $$("[data-day]").forEach(b=>b.addEventListener("click",()=>{selectedDay=new Date(b.dataset.day);renderWeek();bindScreen();}));
+  $$("[data-week-step]").forEach(b=>b.addEventListener("click",()=>{weekOffset+=Number(b.dataset.weekStep||0);selectedDay=null;renderWeek();bindScreen();}));
+  $$("[data-week-today]").forEach(b=>b.addEventListener("click",()=>{weekOffset=0;selectedDay=null;renderWeek();bindScreen();}));
+  $$("[data-cal-day]").forEach(b=>b.addEventListener("click",()=>{calendarDay=new Date(b.dataset.calDay);renderCalendar();bindScreen();}));
+  $$("[data-game-start]").forEach(b=>b.addEventListener("click",()=>startStudyGame(b.dataset.gameStart)));
+  $$("[data-game-answer]").forEach(b=>b.addEventListener("click",()=>answerStudyGame(Number(b.dataset.gameAnswer))));
+  $$("[data-game-next]").forEach(b=>b.addEventListener("click",advanceStudyGame));
+  $$("[data-game-home]").forEach(b=>b.addEventListener("click",leaveStudyGame));
+  $$("[data-game-hint]").forEach(b=>b.addEventListener("click",toggleStudyHint));
 }
 $$(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>{activeTab=b.dataset.tab;history.replaceState(null,"","#"+activeTab);render();}));
 async function load(){
