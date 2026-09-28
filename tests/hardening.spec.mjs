@@ -36,15 +36,10 @@ test("Calendar can browse months and return to the current month",async({page})=
   await expect(heading).toHaveText(initial||"");
 });
 
-test("freshness states distinguish current, stale, and offline data",async({page,context})=>{
-  await expect(page.locator(".freshness")).toHaveClass(/current/);
-  await context.setOffline(true);
-  await page.reload({waitUntil:"domcontentloaded"});
-  await expect(page.locator(".freshness")).toHaveClass(/offline/);
-  await expect(page.locator(".freshness")).toContainText(/Offline · last verified/);
-  await context.setOffline(false);
-
-  await page.route("**/data/study-pack.json",async route=>{
+test("freshness states distinguish current, stale, and offline data",async({browser})=>{
+  const staleContext=await browser.newContext({serviceWorkers:"block"});
+  const stalePage=await staleContext.newPage();
+  await stalePage.route("**/data/study-pack.json",async route=>{
     const response=await route.fetch();
     const body=await response.json();
     const stale=new Date(Date.now()-12*3600_000).toISOString();
@@ -53,9 +48,23 @@ test("freshness states distinguish current, stale, and offline data",async({page
     body.pack.generatedAt=stale;
     await route.fulfill({response,json:body});
   });
-  await page.goto("/#today");
-  await expect(page.locator(".freshness")).toHaveClass(/stale/);
-  await expect(page.locator(".freshness")).toContainText(/Older data/);
+  await stalePage.goto("http://127.0.0.1:4173/#today");
+  await expect(stalePage.locator(".freshness")).toHaveClass(/stale/);
+  await expect(stalePage.locator(".freshness")).toContainText(/Older data/);
+  await staleContext.close();
+
+  const offlineContext=await browser.newContext();
+  const offlinePage=await offlineContext.newPage();
+  await offlinePage.goto("http://127.0.0.1:4173/#today");
+  await expect(offlinePage.locator(".screen")).toBeVisible({timeout:10_000});
+  await offlinePage.evaluate(async()=>{if("serviceWorker" in navigator)await navigator.serviceWorker.ready});
+  await offlinePage.reload();
+  await offlineContext.setOffline(true);
+  await offlinePage.reload({waitUntil:"domcontentloaded"});
+  await expect(offlinePage.locator(".freshness")).toHaveClass(/offline/);
+  await expect(offlinePage.locator(".freshness")).toContainText(/Offline · last verified/);
+  await offlineContext.setOffline(false);
+  await offlineContext.close();
 });
 
 test("Week reminders follow the selected day instead of the first reminder",async({page})=>{
@@ -83,7 +92,7 @@ test("Calendar Specials are rendered from the verified Specials source",async({p
   const data=await (await page.request.get("/data/study-pack.json")).json();
   const expected=data.pack.subjects.find(s=>s.subject==="Specials")?.topics||[];
   await openTab(page,"Calendar");
-  const rows=await page.locator(".special-row").allInnerTexts();
+  const rows=(await page.locator(".special-row").allInnerTexts()).map(text=>text.replace(/\\s+/g," ").trim());
   expect(rows).toHaveLength(expected.length);
   for(const topic of expected){
     const [day,...rest]=topic.split(":");
