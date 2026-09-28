@@ -130,6 +130,19 @@ function isPackWeek(days){
 function lunchText(lunch){
   return lunch?.items?.length?lunch.items.join(", ").replace(/, ([^,]*)$/,", and $1"):"";
 }
+function lunchUnavailableText(date){
+  const source=pack?.lunchMenuSource||null;
+  const through=source?.coverageThrough?new Date(source.coverageThrough+"T12:00:00"):null;
+  if(source?.status==="partial-current-week"&&through&&!Number.isNaN(through.getTime())&&date>through){
+    return "The official October lunch menu has not been posted yet.";
+  }
+  return "Lunch menu not posted in the current verified source.";
+}
+function lunchCardHtml(date,lunch){
+  if(lunch)return '<section class="lunch-card"><span>🍎</span><div><p>SCHOOL LUNCH</p><strong>'+esc(lunchText(lunch))+'</strong></div></section>';
+  if([0,6].includes(date.getDay()))return "";
+  return '<section class="lunch-card lunch-missing"><span>🍎</span><div><p>SCHOOL LUNCH</p><strong>'+esc(lunchUnavailableText(date))+'</strong></div></section>';
+}
 function currentTest(){
   const now=today();
   const upcoming=(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)})).filter(o=>o.d&&o.d>=now&&kindClass(o.x)==="test").sort((a,b)=>a.d-b.d);
@@ -193,7 +206,7 @@ function renderToday(){
     (next?'<section class="priority-card"><div class="date-tile"><strong>'+esc(WEEKDAY[next.d.getDay()].slice(0,3).toUpperCase())+'</strong><span>'+next.d.getDate()+'</span></div><div><p>CLOSEST TEST</p><h3>'+esc(next.x.label)+'</h3><span>Keep review short and focused.</span></div></section>':'<section class="priority-card"><div class="date-tile"><strong>★</strong><span>✓</span></div><div><p>UP NEXT</p><h3>No upcoming test is currently listed</h3><span>Keep up with the posted homework and reading routine.</span></div></section>')+
     '<div class="section-heading"><h2><span class="heading-dot blue"></span>'+esc(fmtDate(d))+'</h2></div>'+
     '<section class="today-panel"><div class="timeline">'+timeline+'</div><div class="task-list">'+tasks.map(({item,index})=>taskHtml(item,index)).join("")+'</div></section>'+
-    (lunch?'<section class="lunch-card"><span>🍎</span><div><p>SCHOOL LUNCH</p><strong>'+esc(lunch.items.join(", ").replace(/, ([^,]*)$/,", and $1"))+'</strong></div></section>':'')+
+    lunchCardHtml(d,lunch)+
     '</div>';
   stack().innerHTML=html;
 }
@@ -213,7 +226,7 @@ function renderWeek(){
     (weekOffset!==0?'<button class="week-today-jump" type="button" data-week-today>Back to this week</button>':'')+
     '<div class="day-picker">'+picker+'</div>'+
     '<section class="day-detail green"><div class="day-detail-title"><div><p>'+MONTHS[selectedDay.getMonth()].toUpperCase()+'</p><h2>'+esc(fmtDate(selectedDay))+'</h2></div><span>School day</span></div><div class="event-stack">'+eventRows+'</div><h3>My checklist</h3>'+checklist+'</section>'+
-    (lunch?'<section class="lunch-card"><span>🍎</span><div><p>SCHOOL LUNCH</p><strong>'+esc(lunchText(lunch))+'</strong></div></section>':'')+
+    lunchCardHtml(selectedDay,lunch)+
     (reminderForDate(selectedDay)?'<section class="reminder-strip"><span>!</span><p><strong>Don’t forget</strong>'+esc(reminderForDate(selectedDay))+'</p></section>':'')+
     '<section class="future-card"><h3>Coming soon</h3>'+future.map(o=>'<div><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join("")+'</section>'+
     '</div>';
@@ -240,7 +253,7 @@ function monthAgendaDays(year,month){
 }
 function agendaLunchHtml(date,lunch){
   const events=eventItemsForDate(date),closed=events.some(e=>kindClass(e)==="closed"),weekend=[0,6].includes(date.getDay());
-  const text=lunch?lunchText(lunch):(closed||weekend?"No school lunch":"Lunch menu not posted in the current verified source.");
+  const text=lunch?lunchText(lunch):(closed||weekend?"No school lunch":lunchUnavailableText(date));
   return '<div class="agenda-lunch'+(lunch?"":" is-missing")+'"><span>🍎</span><div><b>Lunch</b><p>'+esc(text)+'</p></div></div>';
 }
 function agendaDayHtml(date){
