@@ -256,11 +256,11 @@ function render(){
   bindScreen();
 }
 function bindScreen(){
-  $("[data-check]").forEach(b=>b.addEventListener("click",()=>toggleChecked((pack.homework||[])[Number(b.dataset.check)],Number(b.dataset.check))));
-  $("[data-day]").forEach(b=>b.addEventListener("click",()=>{selectedDay=new Date(b.dataset.day);renderWeek();bindScreen();}));
-  $("[data-week-step]").forEach(b=>b.addEventListener("click",()=>{weekOffset+=Number(b.dataset.weekStep||0);selectedDay=null;renderWeek();bindScreen();}));
-  $("[data-week-today]").forEach(b=>b.addEventListener("click",()=>{weekOffset=0;selectedDay=null;renderWeek();bindScreen();}));
-  $("[data-cal-day]").forEach(b=>b.addEventListener("click",()=>{calendarDay=new Date(b.dataset.calDay);renderCalendar();bindScreen();}));
+  $$("[data-check]").forEach(b=>b.addEventListener("click",()=>toggleChecked((pack.homework||[])[Number(b.dataset.check)],Number(b.dataset.check))));
+  $$("[data-day]").forEach(b=>b.addEventListener("click",()=>{selectedDay=new Date(b.dataset.day);renderWeek();bindScreen();}));
+  $$("[data-week-step]").forEach(b=>b.addEventListener("click",()=>{weekOffset+=Number(b.dataset.weekStep||0);selectedDay=null;renderWeek();bindScreen();}));
+  $$("[data-week-today]").forEach(b=>b.addEventListener("click",()=>{weekOffset=0;selectedDay=null;renderWeek();bindScreen();}));
+  $$("[data-cal-day]").forEach(b=>b.addEventListener("click",()=>{calendarDay=new Date(b.dataset.calDay);renderCalendar();bindScreen();}));
 }
 $$(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>{activeTab=b.dataset.tab;history.replaceState(null,"","#"+activeTab);render();}));
 async function load(){
