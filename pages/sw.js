@@ -1,4 +1,4 @@
-const CACHE = "abvm-grade2-parent-companion-v64-study-games";
+const CACHE = "abvm-grade2-parent-companion-v65-study-game-links";
 const SHELL = [
   "./",
   "./index.html",
