@@ -9,6 +9,10 @@ on:
       - 'package.json'
       - 'playwright.config.mjs'
       - '.github/workflows/qa.yml'
+      - '.github/workflows/pages.yml'
+      - '.github/workflows/sync-study-pack.yml'
+      - '.github/workflows/refresh-health.yml'
+      - '.github/workflows/health-dashboard.yml'
   push:
     branches: [main]
     paths:
