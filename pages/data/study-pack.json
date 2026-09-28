@@ -534,60 +534,30 @@
     ],
     "lunchMenu": [
       {
-        "day": "Monday, Sept. 21",
-        "image": "./assets/lunch-monday.webp",
-        "imageAlt": "School lunch tray with breaded chicken, buttered pasta, baked beans, and fresh fruit",
+        "day": "Monday, Sept. 28",
         "items": [
           "Breaded chicken",
-          "Buttered pasta",
-          "Baked beans",
+          "Brown rice",
+          "Steamed broccoli",
           "Fruit"
         ]
       },
       {
-        "day": "Tuesday, Sept. 22",
-        "image": "./assets/lunch-tuesday.webp",
-        "imageAlt": "School lunch tray with meatballs and gravy, mashed potatoes, garlic bread, corn, French toast sticks, and fresh fruit",
+        "day": "Tuesday, Sept. 29",
         "items": [
-          "Meatballs in gravy",
-          "Mashed potatoes",
-          "Garlic stick",
+          "Cheese quesadilla wedge",
+          "Garden salad",
+          "Salsa",
           "Steamed corn",
-          "French toast sticks",
           "Fruit"
         ]
       },
       {
-        "day": "Wednesday, Sept. 23",
-        "image": "./assets/lunch-wednesday.webp",
-        "imageAlt": "School lunch tray with French toast sticks, hash browns, a sausage patty, steamed carrots, and fresh fruit",
+        "day": "Wednesday, Sept. 30",
         "items": [
-          "French toast sticks",
-          "Hash browns",
-          "Sausage patty",
-          "Steamed carrots",
-          "Fruit"
-        ]
-      },
-      {
-        "day": "Thursday, Sept. 24",
-        "image": "./assets/lunch-thursday.webp",
-        "imageAlt": "School lunch tray with macaroni and cheese, stewed tomatoes, breaded chicken, and fresh fruit",
-        "items": [
-          "Macaroni & cheese",
-          "Stewed tomatoes",
-          "Breaded chicken",
-          "Fruit"
-        ]
-      },
-      {
-        "day": "Friday, Sept. 25",
-        "image": "./assets/lunch-friday.webp",
-        "imageAlt": "School lunch tray with a hamburger on a whole-grain roll, French fries, steamed peas, and fresh fruit",
-        "items": [
-          "Hamburger on WG roll",
-          "French fries",
-          "Steamed peas",
+          "Breaded fish sandwich",
+          "Baby cake potatoes",
+          "Baked beans",
           "Fruit"
         ]
       }
@@ -851,6 +821,16 @@
         "drama",
         "reading-royals"
       ]
+    },
+    "lunchMenuSource": {
+      "status": "partial-current-week",
+      "checkedAt": "2026-09-28T20:30:00.000Z",
+      "provider": "Saint Clair Area School District",
+      "school": "Assumption BVM School",
+      "parentResourcesUrl": "https://www.assumptionbvmschool.net/parent-resources",
+      "menuDocumentUrl": "https://resources.finalsite.net/images/v1787165302/adeducatorsorg/gvzkkrduwn7fce9l3vsw/AugustandSeptlunch26.pdf",
+      "coverageThrough": "2026-09-30",
+      "note": "The official September menu covers Sept. 28–30. The official October menu was not posted at the source when checked."
     }
   },
   "sourceLastCheckedAt": "2026-09-28T18:30:18.550Z",
