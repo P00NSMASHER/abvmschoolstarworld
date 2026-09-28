@@ -202,7 +202,7 @@ function materialMath(pack,variant,out){
     hint:"Think about the amount you start with and how many are taken away."
   },[
     {
-      prompt:`What is ${row.a} − ${row.b}?`,
+      prompt:`Solve this subtraction problem: ${row.a} − ${row.b}. What is the difference?`,
       choices:shuffled([String(row.a-row.b),String(row.a-row.b+1),String(row.a-row.b-1)],"m1"+variant),
       answer:String(row.a-row.b),
       explanation:`${row.a} take away ${row.b} leaves ${row.a-row.b}.`,
