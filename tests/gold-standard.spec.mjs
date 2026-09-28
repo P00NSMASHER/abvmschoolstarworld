@@ -157,3 +157,20 @@ test("Study Games uses the StarBlox-style equivalent question engine",async({pag
   await expect(page.locator(".game-feedback")).toBeVisible();
   await expect(page.locator(".game-next")).toBeVisible();
 });
+
+
+test("all study game entry points stay inside the ABVM app",async({page})=>{
+  await openTab(page,"Study");
+  const links=page.locator("[data-open-games]");
+  expect(await links.count()).toBeGreaterThanOrEqual(2);
+  for(let i=0;i<await links.count();i++){
+    await expect(links.nth(i)).toHaveAttribute("href","#games");
+  }
+  await links.first().click();
+  await expect(page.locator(".games-screen")).toBeVisible();
+  await expect(page.locator(".study-game-grid")).toBeVisible();
+  await expect(page).toHaveURL(/#games$/);
+
+  const legacy=await page.locator('a[href="./game/"],a[href$="/game/"]').count();
+  expect(legacy).toBe(0);
+});
