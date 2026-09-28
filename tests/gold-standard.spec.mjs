@@ -284,7 +284,7 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   await expect(page.locator(".games-screen .freshness")).toHaveCount(0);
 
   const sw=await (await page.request.get("/sw.js")).text();
-  expect(sw).toContain("v67-simple-fast");
+  expect(sw).toContain("v68-icons-today");
   expect(sw).not.toContain("hero-today.webp");
   expect(sw).not.toContain("calendar/picture-day.svg");
   const cached=[...sw.matchAll(/"\.\/[^\"]+"/g)];
