@@ -16,6 +16,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: abvm-school-pack
@@ -63,3 +65,10 @@ jobs:
           git add pages/data/study-pack.json
           git commit -m "Refresh verified ABVM teacher pages"
           git push
+
+  deploy:
+    name: deploy verified refresh through Pages workflow
+    needs: refresh
+    uses: ./.github/workflows/pages.yml
+    with:
+      ref: main
