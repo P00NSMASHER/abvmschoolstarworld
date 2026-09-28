@@ -284,7 +284,7 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   await expect(page.locator(".games-screen .freshness")).toHaveCount(0);
 
   const sw=await (await page.request.get("/sw.js")).text();
-  expect(sw).toContain("v70-hardening");
+  expect(sw).toContain("v71-lunch-recovery");
   expect(sw).not.toContain("hero-today.webp");
   expect(sw).not.toContain("calendar/picture-day.svg");
   const cached=[...sw.matchAll(/"\.\/[^\"]+"/g)];
@@ -366,4 +366,36 @@ test("current weekly notice appears in Week, Calendar, and Family screens",async
   await openTab(page,"Family");
   await expect(page.locator(".notices-card")).toContainText("OptionC portal");
   await expect(page.locator(".notices-card")).toContainText("Picture Day and Business Casual");
+});
+
+
+test("current week lunch menu is verified and visible instead of last week's menu",async({page})=>{
+  const data=await (await page.request.get("/data/study-pack.json")).json();
+  expect(data.pack.weekLabel).toContain("September 28, 2026");
+  expect(data.pack.lunchMenu.map(item=>item.day)).toEqual([
+    "Monday, Sept. 28",
+    "Tuesday, Sept. 29",
+    "Wednesday, Sept. 30"
+  ]);
+  expect(data.pack.lunchMenu[0].items).toEqual(["Breaded chicken","Brown rice","Steamed broccoli","Fruit"]);
+  expect(data.pack.lunchMenu[1].items).toEqual(["Cheese quesadilla wedge","Garden salad","Salsa","Steamed corn","Fruit"]);
+  expect(data.pack.lunchMenu[2].items).toEqual(["Breaded fish sandwich","Baby cake potatoes","Baked beans","Fruit"]);
+  expect(data.pack.lunchMenuSource.provider).toBe("Saint Clair Area School District");
+  expect(data.pack.lunchMenuSource.school).toBe("Assumption BVM School");
+  expect(data.pack.lunchMenuSource.coverageThrough).toBe("2026-09-30");
+  expect(data.pack.lunchMenu.some(item=>/Sept\. 2[1-5]/.test(item.day))).toBe(false);
+
+  await openTab(page,"Today");
+  await expect(page.locator(".lunch-card")).toContainText("Breaded chicken");
+  await expect(page.locator(".lunch-card")).toContainText("Brown rice");
+  await expect(page.locator(".lunch-card")).toContainText("Steamed broccoli");
+
+  await openTab(page,"Week");
+  const days=page.locator("[data-day]");
+  await days.nth(1).click();
+  await expect(page.locator(".lunch-card")).toContainText("Cheese quesadilla wedge");
+  await days.nth(2).click();
+  await expect(page.locator(".lunch-card")).toContainText("Breaded fish sandwich");
+  await days.nth(3).click();
+  await expect(page.locator(".lunch-card")).toContainText("official October lunch menu has not been posted yet");
 });
