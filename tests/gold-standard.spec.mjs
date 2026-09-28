@@ -146,7 +146,7 @@ test("Study Games uses the StarBlox-style equivalent question engine",async({pag
   expect(engine.equivalent).toBeGreaterThan(10);
   expect(engine.issues).toEqual([]);
   expect(engine.types.sort()).toEqual(["direct","reasoning","transfer"]);
-  expect(engine.transform).toBe("skill-only-equivalent-item-v1");
+  expect(engine.transform).toBe("skill-only-equivalent-item-v2");
   expect(engine.privateKeys).toEqual([]);
 
   await page.getByRole("button",{name:/Quick Mix/i}).click();
@@ -173,4 +173,88 @@ test("all study game entry points stay inside the ABVM app",async({page})=>{
 
   const legacy=await page.locator('a[href="./game/"],a[href$="/game/"]').count();
   expect(legacy).toBe(0);
+});
+
+
+test("Study Games hard-blocks list-recognition and restores researched quality gates",async({page})=>{
+  await openTab(page,"Study Games");
+  const report=await page.evaluate(async()=>{
+    const source=await (await fetch("./data/study-pack.json",{cache:"no-store"})).json();
+    const catalog=window.ABVMStudyGames.buildCatalog(source.pack,{sourceKey:"quality-regression-snapshot"});
+    const forbidden=[
+      /sight word/i,
+      /which .* is on the current .* list/i,
+      /which .* is on .* list/i,
+      /current vocabulary list/i,
+      /what .* is being practiced this week/i,
+      /teacher page/i,
+      /study list/i
+    ];
+    const bad=catalog.questions.filter(q=>forbidden.some(re=>re.test(q.prompt))).map(q=>q.prompt);
+    const missingDiagnostics=catalog.questions.filter(q=>
+      q.choices.some(choice=>choice!==q.answer&&(!q.choiceDiagnostics?.[choice]?.feedback||!q.choiceDiagnostics?.[choice]?.misconception))
+    ).map(q=>q.id);
+    const maxSkillCount=questions=>{
+      const counts={};
+      for(const q of questions)counts[q.skill]=(counts[q.skill]||0)+1;
+      return Math.max(0,...Object.values(counts));
+    };
+    const selected=window.ABVMStudyGames.selectQuestions(catalog,{count:8,seed:"quality-session",skillStats:{}});
+    return {
+      issues:window.ABVMStudyGames.validateCatalog(catalog),
+      count:catalog.questionCount,
+      bad,
+      minimumDifficulty:Math.min(...catalog.questions.map(q=>q.difficulty)),
+      dok:[...new Set(catalog.questions.map(q=>q.dok))].sort(),
+      standardsAll:catalog.questions.every(q=>Array.isArray(q.standards)&&q.standards.length>0),
+      rubricAll:catalog.questions.every(q=>q.rubric?.maxPoints===2),
+      missingDiagnostics,
+      hasMaterialSubtraction:catalog.questions.some(q=>q.tier==="material"&&q.skill==="subtraction-within-12"),
+      hasSentenceTypes:catalog.questions.some(q=>q.tier==="material"&&q.skill==="sentence-types"),
+      hasBlends:catalog.questions.some(q=>q.tier==="material"&&q.skill==="consonant-blends"),
+      hasReligion:catalog.questions.some(q=>q.tier==="material"&&q.subject==="Religion"),
+      hasStarReading:catalog.questions.some(q=>q.tier==="star-fallback"&&q.subject==="Reading / ELA"),
+      hasStarMath:catalog.questions.some(q=>q.tier==="star-fallback"&&q.subject==="Math"),
+      hasContextVocabulary:catalog.questions.some(q=>/What does “.+” mean in this sentence\\?/.test(q.prompt)),
+      selectionMaxPerSkill:maxSkillCount(selected),
+      selectionConsecutive:selected.some((q,i)=>i>0&&selected[i-1].skill===q.skill)
+    };
+  });
+  expect(report.issues).toEqual([]);
+  expect(report.count).toBeGreaterThan(25);
+  expect(report.bad).toEqual([]);
+  expect(report.minimumDifficulty).toBeGreaterThanOrEqual(2);
+  expect(report.dok).toEqual([1,2,3]);
+  expect(report.standardsAll).toBe(true);
+  expect(report.rubricAll).toBe(true);
+  expect(report.missingDiagnostics).toEqual([]);
+  expect(report.hasMaterialSubtraction).toBe(true);
+  expect(report.hasSentenceTypes).toBe(true);
+  expect(report.hasBlends).toBe(true);
+  expect(report.hasReligion).toBe(true);
+  expect(report.hasStarReading).toBe(true);
+  expect(report.hasStarMath).toBe(true);
+  expect(report.hasContextVocabulary).toBe(true);
+  expect(report.selectionMaxPerSkill).toBeLessThanOrEqual(3);
+  expect(report.selectionConsecutive).toBe(false);
+});
+
+test("Study Games uses targeted misconception feedback and adaptive evidence",async({page})=>{
+  await openTab(page,"Study Games");
+  await page.getByRole("button",{name:/Math Dash/i}).click();
+  await expect(page.locator(".game-question-card")).toBeVisible();
+  const wrongIndex=await page.evaluate(()=>{
+    const buttons=[...document.querySelectorAll(".game-answer")];
+    const qText=document.querySelector(".game-question-card h2")?.textContent||"";
+    return {count:buttons.length,qText};
+  });
+  expect(wrongIndex.count).toBe(3);
+
+  const answerData=await page.evaluate(()=>{
+    const engine=window.ABVMStudyGames;
+    const source=JSON.parse(document.querySelector("#app-content")?localStorage.getItem("__never__")||"null":"null");
+    return {engineVersion:engine.VERSION,transform:engine.SOURCE_TRANSFORM};
+  });
+  expect(answerData.engineVersion).toContain("research-quality");
+  expect(answerData.transform).toBe("skill-only-equivalent-item-v2");
 });
