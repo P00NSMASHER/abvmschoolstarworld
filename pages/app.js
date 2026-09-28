@@ -1,7 +1,7 @@
 (()=>{"use strict";
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const stack=()=>$("#app-content");
-let envelope=null, pack=null, activeTab=(["today","week","calendar","study","family"].includes(location.hash.slice(1))?location.hash.slice(1):"today"), selectedDay=null, calendarDay=null;
+let envelope=null, pack=null, activeTab=(["today","week","calendar","study","family"].includes(location.hash.slice(1))?location.hash.slice(1):"today"), selectedDay=null, calendarDay=null, weekOffset=0;
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -46,8 +46,20 @@ function kindClass(item){
   if(/holiday|closed/.test(k)||/no school|closed/.test(l))return "closed";
   return "family";
 }
+function eventDateRange(text){
+  const value=String(text||"");
+  const m=value.match(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]*\.?\s*(\d{1,2})\s*[–-]\s*(?:(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]*\.?\s*)?(\d{1,2})/i);
+  if(!m){const d=parseDate(value);return d?[d,d]:null;}
+  const start=parseDate(m[1]+" "+m[2]); if(!start)return null;
+  const endMonth=SHORT_MONTHS[(m[3]||m[1]).toLowerCase()];
+  let endYear=start.getFullYear(); if(endMonth<start.getMonth())endYear++;
+  const end=new Date(endYear,endMonth,Number(m[4]),12);
+  return [start,end];
+}
 function eventItemsForDate(date){
-  return (pack?.importantDates||[]).filter(x=>sameDay(parseDate(x.date),date));
+  return (pack?.importantDates||[]).filter(x=>{
+    const range=eventDateRange(x.date); return range&&date>=range[0]&&date<=range[1];
+  });
 }
 function lunchForDate(date){
   return (pack?.lunchMenu||[]).find(x=>sameDay(parseDate(x.day),date))||null;
@@ -65,10 +77,27 @@ function today(){
   const d=new Date(); d.setHours(12,0,0,0);
   return d;
 }
-function weekDays(){
-  const base=today(), day=base.getDay();
-  const mon=new Date(base); mon.setDate(base.getDate()-(day===0?6:day-1));
+function mondayFor(date){
+  const base=new Date(date); base.setHours(12,0,0,0);
+  const day=base.getDay(); base.setDate(base.getDate()-(day===0?6:day-1));
+  return base;
+}
+function weekDays(offset=weekOffset){
+  const mon=mondayFor(today()); mon.setDate(mon.getDate()+(offset*7));
   return Array.from({length:5},(_,i)=>{const x=new Date(mon);x.setDate(mon.getDate()+i);return x;});
+}
+function weekRangeLabel(days){
+  const first=days[0],last=days[days.length-1];
+  const a=MONTHS[first.getMonth()].slice(0,3)+" "+first.getDate();
+  const b=(first.getMonth()===last.getMonth()?"":MONTHS[last.getMonth()].slice(0,3)+" ")+last.getDate();
+  return a+" – "+b;
+}
+function isPackWeek(days){
+  const sourceStart=parseDate(pack?.weekLabel||"");
+  return !!sourceStart&&days.some(d=>sameDay(d,sourceStart));
+}
+function lunchText(lunch){
+  return lunch?.items?.length?lunch.items.join(", ").replace(/, ([^,]*)$/,", and $1"):"";
 }
 function currentTest(){
   const now=today();
@@ -103,22 +132,24 @@ function renderToday(){
 
 function renderWeek(){
   const days=weekDays();
-  if(!selectedDay||!days.some(d=>sameDay(d,selectedDay)))selectedDay=days.find(d=>sameDay(d,today()))||days[0];
+  if(!selectedDay||!days.some(d=>sameDay(d,selectedDay)))selectedDay=weekOffset===0?(days.find(d=>sameDay(d,today()))||days[0]):days[0];
   const events=eventItemsForDate(selectedDay), lunch=lunchForDate(selectedDay);
   const picker=days.map(d=>'<button class="'+(sameDay(d,selectedDay)?"active":"")+'" data-day="'+d.toISOString()+'"><span>'+WEEKDAY[d.getDay()].slice(0,3)+'</span><strong>'+d.getDate()+'</strong></button>').join("");
   const eventRows=events.length?events.map(e=>'<div class="event-row"><time>'+esc((e.kind||"School").replace(/\b\w/g,m=>m.toUpperCase()))+'</time><div><strong>'+esc(e.label)+'</strong></div></div>').join(""):'<div class="event-row"><time>School</time><div><strong>No special school events are listed.</strong></div></div>';
-  const tasks=(pack?.homework||[]);
+  const sourceWeek=isPackWeek(days), tasks=sourceWeek?(pack?.homework||[]):[];
+  const checklist=tasks.length?tasks.map(taskHtml).join(""):'<div class="week-empty"><strong>No checklist has been verified for this week yet.</strong><span>Calendar dates still appear below, and new homework will show here after the school source refreshes.</span></div>';
   const future=(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)})).filter(o=>o.d&&o.d>selectedDay).sort((a,b)=>a.d-b.d).slice(0,4);
   stack().innerHTML='<div class="screen" role="region" aria-label="This week">'+
     header("YOUR SCHOOL PLAN","This week")+freshness()+
+    '<nav class="week-nav" aria-label="Change displayed week"><button type="button" data-week-step="-1" aria-label="Previous week">‹</button><div aria-live="polite"><span>'+(weekOffset===0?"CURRENT WEEK":"VIEWING WEEK")+'</span><strong>'+esc(weekRangeLabel(days))+'</strong></div><button type="button" data-week-step="1" aria-label="Next week">›</button></nav>'+
+    (weekOffset!==0?'<button class="week-today-jump" type="button" data-week-today>Back to this week</button>':'')+
     '<div class="day-picker">'+picker+'</div>'+
-    '<section class="day-detail green"><div class="day-detail-title"><div><p>'+MONTHS[selectedDay.getMonth()].toUpperCase()+'</p><h2>'+esc(fmtDate(selectedDay))+'</h2></div><span>School day</span></div><div class="event-stack">'+eventRows+'</div><h3>My checklist</h3>'+tasks.map(taskHtml).join("")+'</section>'+
-    (lunch?'<section class="lunch-card"><span>🍎</span><div><p>SCHOOL LUNCH</p><strong>'+esc(lunch.items.join(", ").replace(/, ([^,]*)$/,", and $1"))+'</strong></div></section>':'')+
+    '<section class="day-detail green"><div class="day-detail-title"><div><p>'+MONTHS[selectedDay.getMonth()].toUpperCase()+'</p><h2>'+esc(fmtDate(selectedDay))+'</h2></div><span>School day</span></div><div class="event-stack">'+eventRows+'</div><h3>My checklist</h3>'+checklist+'</section>'+
+    (lunch?'<section class="lunch-card"><span>🍎</span><div><p>SCHOOL LUNCH</p><strong>'+esc(lunchText(lunch))+'</strong></div></section>':'')+
     '<section class="reminder-strip"><span>!</span><p><strong>Don’t forget</strong>'+esc((pack?.reminders||[])[0]||"Check the homework folder and reading log.")+'</p></section>'+
     '<section class="future-card"><h3>Coming soon</h3>'+future.map(o=>'<div><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join("")+'</section>'+
     '</div>';
 }
-
 function monthGrid(year,month){
   const first=new Date(year,month,1,12), last=new Date(year,month+1,0,12), blanks=first.getDay();
   let html=""; for(let i=0;i<blanks;i++)html+='<span class="calendar-blank"></span>';
@@ -130,21 +161,42 @@ function monthGrid(year,month){
   }
   return html;
 }
+function monthAgendaDays(year,month){
+  const last=new Date(year,month+1,0,12).getDate(),days=[];
+  for(let n=1;n<=last;n++){
+    const d=new Date(year,month,n,12),weekend=[0,6].includes(d.getDay());
+    if(!weekend||eventItemsForDate(d).length||lunchForDate(d))days.push(d);
+  }
+  return days;
+}
+function agendaLunchHtml(date,lunch){
+  const events=eventItemsForDate(date),closed=events.some(e=>kindClass(e)==="closed"),weekend=[0,6].includes(date.getDay());
+  const text=lunch?lunchText(lunch):(closed||weekend?"No school lunch":"Lunch menu not posted in the current verified source.");
+  return '<div class="agenda-lunch'+(lunch?"":" is-missing")+'"><span>🍎</span><div><b>Lunch</b><p>'+esc(text)+'</p></div></div>';
+}
+function agendaDayHtml(date){
+  const events=eventItemsForDate(date),lunch=lunchForDate(date),closed=events.some(e=>kindClass(e)==="closed"),weekend=[0,6].includes(date.getDay());
+  const status=closed?"No school":(weekend?"Weekend":"School day");
+  const rows=events.length?events.map(e=>'<div class="agenda-event"><i class="'+kindClass(e)+'"></i><span><strong>'+esc(e.label)+'</strong>'+(e.kind?'<small>'+esc(e.kind)+'</small>':'')+'</span></div>').join(""):'<div class="agenda-event agenda-regular"><i class="family"></i><span><strong>Regular school day</strong><small>No special event is currently listed.</small></span></div>';
+  return '<article class="agenda-day month-agenda-row"><header><div><p>'+WEEKDAY[date.getDay()].toUpperCase()+'</p><h3>'+MONTHS[date.getMonth()]+' '+date.getDate()+'</h3></div><span>'+status+'</span></header><div class="agenda-events">'+rows+'</div>'+agendaLunchHtml(date,lunch)+'</article>';
+}
+
 function renderCalendar(){
   const base=today(); if(!calendarDay)calendarDay=new Date(base);
   const y=base.getFullYear(),m=base.getMonth(), events=eventItemsForDate(calendarDay), lunch=lunchForDate(calendarDay);
-  const agenda=(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)})).filter(o=>o.d&&o.d.getMonth()===m&&o.d.getFullYear()===y).sort((a,b)=>a.d-b.d);
-  const nextMonth=(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)})).filter(o=>o.d&&o.d.getMonth()===m+1).sort((a,b)=>a.d-b.d).slice(0,5);
+  const agendaDays=monthAgendaDays(y,m);
+  const nextMonthDate=new Date(y,m+1,1,12),nextY=nextMonthDate.getFullYear(),nextM=nextMonthDate.getMonth();
+  const nextMonth=(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)})).filter(o=>o.d&&o.d.getMonth()===nextM&&o.d.getFullYear()===nextY).sort((a,b)=>a.d-b.d).slice(0,5);
   stack().innerHTML='<div class="screen calendar-screen" role="region" aria-label="'+MONTHS[m]+' calendar">'+
     header("SCHOOL MONTH AT A GLANCE",MONTHS[m]+" "+y)+freshness()+
-    '<section class="calendar-card"><div class="calendar-title-row"><div><p>MONTH VIEW</p><h2>'+MONTHS[m]+'</h2></div><span>Tap any date</span></div><div class="calendar-weekdays">'+["S","M","T","W","T","F","S"].map(x=>"<span>"+x+"</span>").join("")+'</div><div class="calendar-grid">'+monthGrid(y,m)+'</div><div class="calendar-legend"><span><i class="test"></i>Test</span><span><i class="faith"></i>Faith</span><span><i class="family"></i>Family</span><span><i class="due"></i>Due</span></div></section>'+
+    '<section class="calendar-card"><div class="calendar-title-row"><div><p>MONTH VIEW</p><h2>'+MONTHS[m]+'</h2></div><span>Tap any date</span></div><div class="calendar-weekdays">'+["S","M","T","W","T","F","S"].map(x=>"<span>"+x+"</span>").join("")+'</div><div class="calendar-grid">'+monthGrid(y,m)+'</div><div class="calendar-legend"><span><i class="test"></i>Test</span><span><i class="faith"></i>Faith</span><span><i class="family"></i>Family</span><span><i class="due"></i>Due</span><span><i class="lunch"></i>Lunch</span></div></section>'+
     '<section class="calendar-day-card"><div class="calendar-day-heading"><div><p>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</p><h2>'+MONTHS[calendarDay.getMonth()]+" "+calendarDay.getDate()+'</h2></div></div>'+
       (events.length?'<div class="calendar-event-list">'+events.map(e=>'<div><i class="'+kindClass(e)+'"></i><span><strong>'+esc(e.label)+'</strong></span></div>').join("")+'</div>':'<p class="calendar-empty">No special school events are listed for this date.</p>')+
-      (lunch?'<div class="calendar-lunch"><span>🍎</span><div><b>Lunch</b><p>'+esc(lunch.items.join(", ").replace(/, ([^,]*)$/,", and $1"))+'</p></div></div>':'')+
+      agendaLunchHtml(calendarDay,lunch)+
     '</section>'+
-    '<section class="month-agenda"><div class="month-agenda-head"><span class="month-agenda-mark" aria-hidden="true">▦</span><div><p>MONTH AGENDA</p><h2>'+MONTHS[m]+' school dates</h2></div></div><div class="month-agenda-list">'+agenda.map(o=>'<div class="calendar-event-list month-agenda-row '+kindClass(o.x)+'"><div><i class="'+kindClass(o.x)+'"></i><span><strong>'+esc(fmtShort(o.d))+' · '+esc(o.x.label)+'</strong></span></div></div>').join("")+'</div></section>'+
+    '<section class="month-agenda"><div class="month-agenda-head"><span class="month-agenda-mark" aria-hidden="true">▦</span><div><p>MONTH AGENDA</p><h2>'+MONTHS[m]+' full agenda</h2></div></div><p class="month-agenda-note">Every school day is included. Lunch is shown when it has been verified; otherwise the app says that it has not been posted yet.</p><div class="month-agenda-list">'+agendaDays.map(agendaDayHtml).join("")+'</div></section>'+
     '<section class="specials-card"><div class="specials-head"><span class="specials-mark" aria-hidden="true">★</span><div><p>WEEKLY ROTATION</p><h2>Specials</h2></div></div><div class="specials-list"><div class="special-row"><span>Mon</span><strong>Computer</strong></div><div class="special-row"><span>Tue</span><strong>Music · Art · Guidance</strong></div><div class="special-row"><span>Wed</span><strong>Mass</strong></div><div class="special-row"><span>Thu</span><strong>Gym</strong></div><div class="special-row"><span>Fri</span><strong>Library</strong></div></div></section>'+
-    '<section class="next-month-card"><h2>Coming in '+MONTHS[(m+1)%12]+'</h2>'+nextMonth.map(o=>'<div><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join("")+'</section>'+
+    '<section class="next-month-card"><h2>Coming in '+MONTHS[nextM]+'</h2>'+nextMonth.map(o=>'<div><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join("")+'</section>'+
     '</div>';
 }
 function subjectCard(id,klass,title,subject){
@@ -206,6 +258,8 @@ function render(){
 function bindScreen(){
   $$("[data-check]").forEach(b=>b.addEventListener("click",()=>toggleChecked((pack.homework||[])[Number(b.dataset.check)],Number(b.dataset.check))));
   $$("[data-day]").forEach(b=>b.addEventListener("click",()=>{selectedDay=new Date(b.dataset.day);renderWeek();bindScreen();}));
+  $$("[data-week-step]").forEach(b=>b.addEventListener("click",()=>{weekOffset+=Number(b.dataset.weekStep||0);selectedDay=null;renderWeek();bindScreen();}));
+  $$("[data-week-today]").forEach(b=>b.addEventListener("click",()=>{weekOffset=0;selectedDay=null;renderWeek();bindScreen();}));
   $$("[data-cal-day]").forEach(b=>b.addEventListener("click",()=>{calendarDay=new Date(b.dataset.calDay);renderCalendar();bindScreen();}));
 }
 $$(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>{activeTab=b.dataset.tab;history.replaceState(null,"","#"+activeTab);render();}));
