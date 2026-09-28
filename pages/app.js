@@ -204,8 +204,8 @@ function renderWeek(){
   const events=eventItemsForDate(selectedDay), lunch=lunchForDate(selectedDay);
   const picker=days.map(d=>'<button type="button" class="'+(sameDay(d,selectedDay)?"active":"")+'" data-day="'+d.toISOString()+'" aria-label="'+esc(fmtDate(d))+'" aria-pressed="'+(sameDay(d,selectedDay)?"true":"false")+'"><span>'+WEEKDAY[d.getDay()].slice(0,3)+'</span><strong>'+d.getDate()+'</strong></button>').join("");
   const eventRows=events.length?events.map(e=>'<div class="event-row"><time>'+esc((e.kind||"School").replace(/\b\w/g,m=>m.toUpperCase()))+'</time><div><strong>'+esc(e.label)+'</strong></div></div>').join(""):'<div class="event-row"><time>School</time><div><strong>No special school events are listed.</strong></div></div>';
-  const sourceWeek=isPackWeek(days), tasks=sourceWeek?taskRecordsForSurface("today"):[];
-  const checklist=tasks.length?tasks.map(({item,index})=>taskHtml(item,index)).join(""):'<div class="week-empty"><strong>No checklist has been verified for this week yet.</strong><span>Calendar dates still appear below, and new homework will show here after the school source refreshes.</span></div>';
+  const sourceWeek=isPackWeek(days), tasks=sourceWeek?(pack?.homework||[]):[];
+  const checklist=tasks.length?tasks.map(taskHtml).join(""):'<div class="week-empty"><strong>No checklist has been verified for this week yet.</strong><span>Calendar dates still appear below, and new homework will show here after the school source refreshes.</span></div>';
   const future=(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)})).filter(o=>o.d&&o.d>selectedDay).sort((a,b)=>a.d-b.d).slice(0,4);
   stack().innerHTML='<div class="screen" role="region" aria-label="This week">'+
     header("YOUR SCHOOL PLAN","This week")+freshness()+
