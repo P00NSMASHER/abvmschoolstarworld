@@ -1177,3 +1177,12 @@ html,body{margin:0}
 @media (width<=350px){
   .calendar-month-nav{grid-template-columns:44px minmax(0,1fr) 44px;gap:5px;padding:6px}
 }
+
+
+/* v71 — verified lunch recovery */
+.lunch-card.lunch-missing{
+  background:#f7f8f8;
+  border-color:#d8dddf;
+}
+.lunch-card.lunch-missing p,
+.lunch-card.lunch-missing strong{color:#66727a}
