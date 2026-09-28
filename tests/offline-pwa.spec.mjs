@@ -69,7 +69,7 @@ test("service worker cleans old versions and precaches the critical shell",async
   expect(response.ok()).toBeTruthy();
   const source=await response.text();
   expect(source).toContain("caches.keys()");
-  expect(source).toContain("key !== CACHE");
+  expect(source).toMatch(/key\s*!==\s*CACHE/);
   expect(source).toContain("caches.delete(key)");
   expect(source).toContain('"./study-games.js"');
   expect(source).toContain('"./data/study-pack.json"');
