@@ -1,7 +1,7 @@
 (()=>{"use strict";
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const stack=()=>$("#app-content");
-let envelope=null, pack=null, activeTab=(["today","week","calendar","study","games","family"].includes(location.hash.slice(1))?location.hash.slice(1):"today"), selectedDay=null, calendarDay=null, weekOffset=0;
+let envelope=null, pack=null, activeTab=(["today","week","calendar","study","games","family"].includes(location.hash.slice(1))?location.hash.slice(1):"today"), selectedDay=null, calendarDay=null, weekOffset=0, calendarOffset=0;
 let studyGameCatalogCache=null, studyEnginePromise=null, screenEventsBound=false, gameState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false};
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
@@ -36,11 +36,20 @@ function schoolLogo(){return '<img class="school-mark" src="./assets/abvm-app-ic
 function header(kicker,title){
   return '<header class="app-header"><div><p>'+esc(kicker)+'</p><h1>'+esc(title)+'</h1></div>'+schoolLogo()+'</header>';
 }
-function freshness(){
+function freshnessState(){
   const raw=envelope?.sourceLastSeenAt||pack?.sourceCapturedAt||pack?.generatedAt;
   const d=raw?new Date(raw):null;
-  const label=d&&!Number.isNaN(d.getTime()) ? "Verified&nbsp;&nbsp;"+d.toLocaleDateString(undefined,{month:"short",day:"numeric"})+" at "+d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})+" ET" : "Verified";
-  return '<div class="freshness"><span></span>'+label+'</div>';
+  if(!d||Number.isNaN(d.getTime()))return{state:"attention",label:"Source verification unavailable"};
+  const stamp=d.toLocaleDateString(undefined,{month:"short",day:"numeric"})+" at "+d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})+" ET";
+  const ageHours=(Date.now()-d.getTime())/3600000;
+  if(navigator.onLine===false)return{state:"offline",label:"Offline · last verified "+stamp};
+  if(ageHours>30)return{state:"attention",label:"Needs refresh · last verified "+stamp};
+  if(ageHours>8)return{state:"stale",label:"Older data · last verified "+stamp};
+  return{state:"current",label:"Verified "+stamp};
+}
+function freshness(){
+  const state=freshnessState();
+  return '<div class="freshness '+state.state+'" role="status" aria-live="polite"><span aria-hidden="true"></span>'+esc(state.label)+'</div>';
 }
 function kindClass(item){
   const k=(item?.kind||"").toLowerCase(), l=(item?.label||"").toLowerCase();
@@ -72,11 +81,28 @@ function lunchForDate(date){
 function checkKey(item,index){return "abvm-old-look:"+String(pack?.sourceHash||"pack")+":"+index+":"+(item.task||item.label||"");}
 function checked(item,index){return storageGet(checkKey(item,index))==="1";}
 function toggleChecked(item,index){const k=checkKey(item,index);storageGet(k)==="1"?storageRemove(k):storageSet(k,"1");render();}
+function taskPolicy(item){
+  const task=String(item?.task||"").trim(),subject=String(item?.subject||"").trim();
+  const haystack=(subject+" "+task).toLowerCase();
+  if(/cover books|reading log and behavior chart|return everything in the hw folder/.test(haystack)){
+    return{type:"background-routine",today:false,family:false};
+  }
+  if(/^read$/i.test(task))return{type:"daily-habit",today:true,family:false,subject:"20 minutes today"};
+  if(/^attend mass$/i.test(task))return{type:"current-action",today:true,family:false};
+  if(/parent|if participating|forms/.test(haystack))return{type:"parent-action",today:false,family:true};
+  return{type:"current-action",today:true,family:true};
+}
+function taskRecordsForSurface(surface){
+  return (pack?.homework||[]).map((item,index)=>({item,index,policy:taskPolicy(item)}))
+    .filter(record=>record.policy[surface]!==false)
+    .map(record=>record.policy.subject?{...record,item:{...record.item,subject:record.policy.subject}}:record);
+}
 function taskHtml(item,index){
   const done=checked(item,index);
   const optional=/parent|if participating/i.test((item.subject||"")+" "+(item.task||"")) || /forms|cover books/i.test(item.task||"");
   const tag=optional?"IF PARTICIPATING":"REQUIRED";
-  return '<button class="check-item'+(done?' is-done':'')+'" data-check="'+index+'"><span class="check-box">'+(done?"✓":"")+'</span><span class="check-copy"><span class="task-tag '+(optional?"if-participating":"required")+'">'+tag+'</span><strong>'+esc(item.task||"Task")+'</strong>'+(item.subject?'<small>'+esc(item.subject)+'</small>':'')+'</span></button>';
+  const action=(done?"Completed: ":"Mark complete: ")+(item.task||"Task");
+  return '<button type="button" class="check-item'+(done?' is-done':'')+'" data-check="'+index+'" aria-pressed="'+(done?"true":"false")+'" aria-label="'+esc(action)+'"><span class="check-box" aria-hidden="true">'+(done?"✓":"")+'</span><span class="check-copy"><span class="task-tag '+(optional?"if-participating":"required")+'">'+tag+'</span><strong>'+esc(item.task||"Task")+'</strong>'+(item.subject?'<small>'+esc(item.subject)+'</small>':'')+'</span></button>';
 }
 function today(){
   const d=new Date(); d.setHours(12,0,0,0);
@@ -115,19 +141,32 @@ function mathSubject(){return (pack?.subjects||[]).find(s=>/^Math$/i.test(s.subj
 function spellingSubject(){return (pack?.subjects||[]).find(s=>/Spelling/i.test(s.subject||""));}
 function readingRoutine(){return (pack?.subjects||[]).find(s=>/Reading Routine/i.test(s.subject||""))?.topics?.[0]||"Read for 20 minutes every day.";}
 
-function todayTaskRecords(date){
-  const records=(pack?.homework||[]).map((item,index)=>({item,index}));
-  const isSep28=date?.getFullYear?.()===2026&&date.getMonth()===8&&date.getDate()===28;
-  if(!isSep28)return records;
-  return records
-    .filter(({item})=>/^(Attend Mass|Read)$/i.test(String(item?.task||"").trim()))
-    .map(record=>{
-      if(/^Read$/i.test(String(record.item?.task||"").trim())){
-        return {...record,item:{...record.item,subject:"20 minutes today"}};
-      }
-      return record;
-    });
+function reminderRange(text){return eventDateRange(text)}
+function reminderForDate(date){
+  const rows=(pack?.reminders||[]).map(text=>({text,range:reminderRange(text)})).filter(row=>row.range);
+  const exact=rows.find(row=>date>=row.range[0]&&date<=row.range[1]);
+  if(exact)return exact.text;
+  return rows.filter(row=>row.range[0]>=date).sort((a,b)=>a.range[0]-b.range[0])[0]?.text||"";
 }
+function upcomingReminderTexts(date=today(),limit=6){
+  const timed=(pack?.reminders||[]).map(text=>({text,range:reminderRange(text)}))
+    .filter(row=>row.range&&row.range[1]>=date)
+    .sort((a,b)=>a.range[0]-b.range[0]).map(row=>row.text);
+  return [...new Set(timed)].slice(0,limit);
+}
+function specialsRows(){
+  const source=(pack?.subjects||[]).find(s=>/^Specials$/i.test(s.subject||""));
+  return (source?.topics||[]).map(line=>{
+    const m=String(line).match(/^(Monday|Tuesday|Wednesday|Thursday|Friday):\s*(.+)$/i);
+    return m?{day:m[1].slice(0,3),label:m[2]}:null;
+  }).filter(Boolean);
+}
+function calendarBase(){
+  const now=today();
+  return new Date(now.getFullYear(),now.getMonth()+calendarOffset,1,12);
+}
+
+function todayTaskRecords(){return taskRecordsForSurface("today");}
 
 function studyGameIconHtml(modeId){
   const icons={
@@ -145,7 +184,7 @@ function renderToday(){
   const headline=tests.length?tests.map(e=>e.label.replace(/\s*\/\s*/g," and ")).join(", "):events[0]?.label||"School day";
   let timeline=events.map(e=>'<div class="timeline-row"><time>School</time><span class="timeline-pin '+kindClass(e)+'"></span><div><strong>'+esc(e.label)+'</strong>'+(e.kind?'<small>'+esc(e.kind)+'</small>':'')+'</div><i></i></div>').join("");
   if(!timeline) timeline='<div class="timeline-row"><time>School</time><span class="timeline-pin family"></span><div><strong>No special school events are listed for this date.</strong></div></div>';
-  const tasks=todayTaskRecords(d);
+  const tasks=todayTaskRecords();
   const html='<div class="screen" role="region" aria-label="Today">'+
     header("ABVM GRADE 2 · "+(pack?.weekLabel||"CURRENT WEEK").replace(/^Week of /i,"").toUpperCase(),"Hi, school star!")+
     freshness()+
@@ -163,10 +202,10 @@ function renderWeek(){
   const days=weekDays();
   if(!selectedDay||!days.some(d=>sameDay(d,selectedDay)))selectedDay=weekOffset===0?(days.find(d=>sameDay(d,today()))||days[0]):days[0];
   const events=eventItemsForDate(selectedDay), lunch=lunchForDate(selectedDay);
-  const picker=days.map(d=>'<button class="'+(sameDay(d,selectedDay)?"active":"")+'" data-day="'+d.toISOString()+'"><span>'+WEEKDAY[d.getDay()].slice(0,3)+'</span><strong>'+d.getDate()+'</strong></button>').join("");
+  const picker=days.map(d=>'<button type="button" class="'+(sameDay(d,selectedDay)?"active":"")+'" data-day="'+d.toISOString()+'" aria-label="'+esc(fmtDate(d))+'" aria-pressed="'+(sameDay(d,selectedDay)?"true":"false")+'"><span>'+WEEKDAY[d.getDay()].slice(0,3)+'</span><strong>'+d.getDate()+'</strong></button>').join("");
   const eventRows=events.length?events.map(e=>'<div class="event-row"><time>'+esc((e.kind||"School").replace(/\b\w/g,m=>m.toUpperCase()))+'</time><div><strong>'+esc(e.label)+'</strong></div></div>').join(""):'<div class="event-row"><time>School</time><div><strong>No special school events are listed.</strong></div></div>';
-  const sourceWeek=isPackWeek(days), tasks=sourceWeek?(pack?.homework||[]):[];
-  const checklist=tasks.length?tasks.map(taskHtml).join(""):'<div class="week-empty"><strong>No checklist has been verified for this week yet.</strong><span>Calendar dates still appear below, and new homework will show here after the school source refreshes.</span></div>';
+  const sourceWeek=isPackWeek(days), tasks=sourceWeek?taskRecordsForSurface("today"):[];
+  const checklist=tasks.length?tasks.map(({item,index})=>taskHtml(item,index)).join(""):'<div class="week-empty"><strong>No checklist has been verified for this week yet.</strong><span>Calendar dates still appear below, and new homework will show here after the school source refreshes.</span></div>';
   const future=(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)})).filter(o=>o.d&&o.d>selectedDay).sort((a,b)=>a.d-b.d).slice(0,4);
   stack().innerHTML='<div class="screen" role="region" aria-label="This week">'+
     header("YOUR SCHOOL PLAN","This week")+freshness()+
@@ -175,7 +214,7 @@ function renderWeek(){
     '<div class="day-picker">'+picker+'</div>'+
     '<section class="day-detail green"><div class="day-detail-title"><div><p>'+MONTHS[selectedDay.getMonth()].toUpperCase()+'</p><h2>'+esc(fmtDate(selectedDay))+'</h2></div><span>School day</span></div><div class="event-stack">'+eventRows+'</div><h3>My checklist</h3>'+checklist+'</section>'+
     (lunch?'<section class="lunch-card"><span>🍎</span><div><p>SCHOOL LUNCH</p><strong>'+esc(lunchText(lunch))+'</strong></div></section>':'')+
-    '<section class="reminder-strip"><span>!</span><p><strong>Don’t forget</strong>'+esc((pack?.reminders||[])[0]||"Check the homework folder and reading log.")+'</p></section>'+
+    (reminderForDate(selectedDay)?'<section class="reminder-strip"><span>!</span><p><strong>Don’t forget</strong>'+esc(reminderForDate(selectedDay))+'</p></section>':'')+
     '<section class="future-card"><h3>Coming soon</h3>'+future.map(o=>'<div><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join("")+'</section>'+
     '</div>';
 }
@@ -186,7 +225,8 @@ function monthGrid(year,month){
     const d=new Date(year,month,day,12), events=eventItemsForDate(d), lunch=lunchForDate(d);
     const dots=[...events.map(e=>kindClass(e)),...(lunch?["lunch"]:[])].slice(0,3);
     const weekend=[0,6].includes(d.getDay()), closed=events.some(e=>kindClass(e)==="closed");
-    html+='<button class="'+(weekend?"weekend ":"")+(closed?"closed ":"")+(calendarDay&&sameDay(d,calendarDay)?"active":"")+'" data-cal-day="'+d.toISOString()+'"><strong>'+day+'</strong><span class="calendar-dots">'+dots.map(k=>'<i class="'+k+'"></i>').join("")+'</span></button>';
+    const eventLabel=events.length?": "+events.map(e=>e.label).join(", "):"";
+    html+='<button type="button" class="'+(weekend?"weekend ":"")+(closed?"closed ":"")+(calendarDay&&sameDay(d,calendarDay)?"active":"")+'" data-cal-day="'+d.toISOString()+'" aria-label="'+esc(fmtDate(d)+eventLabel)+'" aria-pressed="'+(calendarDay&&sameDay(d,calendarDay)?"true":"false")+'"><strong>'+day+'</strong><span class="calendar-dots" aria-hidden="true">'+dots.map(k=>'<i class="'+k+'"></i>').join("")+'</span></button>';
   }
   return html;
 }
@@ -211,20 +251,27 @@ function agendaDayHtml(date){
 }
 
 function renderCalendar(){
-  const base=today(); if(!calendarDay)calendarDay=new Date(base);
-  const y=base.getFullYear(),m=base.getMonth(), events=eventItemsForDate(calendarDay), lunch=lunchForDate(calendarDay);
+  const base=calendarBase(),y=base.getFullYear(),m=base.getMonth();
+  if(!calendarDay||calendarDay.getFullYear()!==y||calendarDay.getMonth()!==m){
+    const now=today();
+    calendarDay=calendarOffset===0?new Date(now):new Date(y,m,1,12);
+  }
+  const events=eventItemsForDate(calendarDay),lunch=lunchForDate(calendarDay);
   const agendaDays=monthAgendaDays(y,m);
   const nextMonthDate=new Date(y,m+1,1,12),nextY=nextMonthDate.getFullYear(),nextM=nextMonthDate.getMonth();
   const nextMonth=(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)})).filter(o=>o.d&&o.d.getMonth()===nextM&&o.d.getFullYear()===nextY).sort((a,b)=>a.d-b.d).slice(0,5);
+  const specials=specialsRows();
   stack().innerHTML='<div class="screen calendar-screen" role="region" aria-label="'+MONTHS[m]+' calendar">'+
     header("SCHOOL MONTH AT A GLANCE",MONTHS[m]+" "+y)+freshness()+
+    '<nav class="calendar-month-nav" aria-label="Change calendar month"><button type="button" data-cal-step="-1" aria-label="Previous month">‹</button><div aria-live="polite"><strong>'+MONTHS[m]+' '+y+'</strong><span>'+(calendarOffset===0?"Current month":"Browsing calendar")+'</span></div><button type="button" data-cal-step="1" aria-label="Next month">›</button></nav>'+
+    (calendarOffset!==0?'<button type="button" class="calendar-today-jump" data-cal-today>Back to current month</button>':'')+
     '<section class="calendar-card"><div class="calendar-title-row"><div><p>MONTH VIEW</p><h2>'+MONTHS[m]+'</h2></div><span>Tap any date</span></div><div class="calendar-weekdays">'+["S","M","T","W","T","F","S"].map(x=>"<span>"+x+"</span>").join("")+'</div><div class="calendar-grid">'+monthGrid(y,m)+'</div><div class="calendar-legend"><span><i class="test"></i>Test</span><span><i class="faith"></i>Faith</span><span><i class="family"></i>Family</span><span><i class="due"></i>Due</span><span><i class="lunch"></i>Lunch</span></div></section>'+
-    '<section class="calendar-day-card"><div class="calendar-day-heading"><div><p>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</p><h2>'+MONTHS[calendarDay.getMonth()]+" "+calendarDay.getDate()+'</h2></div></div>'+
+    '<section class="calendar-day-card" aria-live="polite"><div class="calendar-day-heading"><div><p>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</p><h2>'+MONTHS[calendarDay.getMonth()]+" "+calendarDay.getDate()+'</h2></div></div>'+
       (events.length?'<div class="calendar-event-list">'+events.map(e=>'<div><i class="'+kindClass(e)+'"></i><span><strong>'+esc(e.label)+'</strong></span></div>').join("")+'</div>':'<p class="calendar-empty">No special school events are listed for this date.</p>')+
       agendaLunchHtml(calendarDay,lunch)+
     '</section>'+
     '<section class="month-agenda"><div class="month-agenda-head"><span class="month-agenda-mark" aria-hidden="true">▦</span><div><p>MONTH AGENDA</p><h2>'+MONTHS[m]+' full agenda</h2></div></div><p class="month-agenda-note">Every school day is included. Lunch is shown when it has been verified; otherwise the app says that it has not been posted yet.</p><div class="month-agenda-list">'+agendaDays.map(agendaDayHtml).join("")+'</div></section>'+
-    '<section class="specials-card"><div class="specials-head"><span class="specials-mark" aria-hidden="true">★</span><div><p>WEEKLY ROTATION</p><h2>Specials</h2></div></div><div class="specials-list"><div class="special-row"><span>Mon</span><strong>Computer</strong></div><div class="special-row"><span>Tue</span><strong>Music · Art · Guidance</strong></div><div class="special-row"><span>Wed</span><strong>Mass</strong></div><div class="special-row"><span>Thu</span><strong>Gym</strong></div><div class="special-row"><span>Fri</span><strong>Library</strong></div></div></section>'+
+    '<section class="specials-card"><div class="specials-head"><span class="specials-mark" aria-hidden="true">★</span><div><p>WEEKLY ROTATION</p><h2>Specials</h2></div></div><div class="specials-list">'+specials.map(row=>'<div class="special-row"><span>'+esc(row.day)+'</span><strong>'+esc(row.label)+'</strong></div>').join("")+'</div></section>'+
     '<section class="next-month-card"><h2>Coming in '+MONTHS[nextM]+'</h2>'+nextMonth.map(o=>'<div><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join("")+'</section>'+
     '</div>';
 }
@@ -437,13 +484,14 @@ function renderGames(){
 function renderFamily(){
   const tests=(pack?.importantDates||[]).filter(x=>kindClass(x)==="test").filter(x=>{const d=parseDate(x.date);return d&&d>=today()&&d<=weekDays()[4]}).length;
   const notices=pack?.parentNotices||[];
-  const actions=[...(pack?.homework||[]).map(x=>x.task),...(pack?.reminders||[])].slice(0,6);
+  const homeworkActions=taskRecordsForSurface("family").map(({item})=>item.task);
+  const actions=[...new Set([...homeworkActions,...upcomingReminderTexts(today(),6)])].slice(0,6);
   stack().innerHTML='<div class="screen family-screen" role="region" aria-label="Family dashboard">'+
     header("FAMILY","Family dashboard")+freshness()+
     '<section class="family-hero compact"><p>THIS WEEK</p><h2>What needs attention</h2><span>Current school actions and notices in one place.</span></section>'+
     '<div class="family-stats"><div><strong>'+tests+'</strong><span>test days</span></div><div><strong>'+actions.length+'</strong><span>current actions</span></div></div>'+
     '<section class="parent-card family-actions-card"><div class="family-actions-head"><span class="family-actions-mark" aria-hidden="true">✓</span><div><small>TO DO</small><h3>Family actions</h3></div></div><ul>'+actions.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></section>'+
-    '<section class="parent-card sources notices-card"><div class="notices-head"><span class="notices-mark" aria-hidden="true">i</span><div><small>SCHOOL UPDATES</small><h3>Current notices</h3></div></div>'+notices.map(x=>'<div class="notice-row"><span class="status ok"></span><p>'+esc(x)+'</p></div>').join("")+'</section>'+
+    '<section class="parent-card sources notices-card" aria-labelledby="family-current-notices"><div class="notices-head"><span class="notices-mark" aria-hidden="true">i</span><div><small>SCHOOL UPDATES</small><h3 id="family-current-notices">Current notices</h3></div></div><div class="static-notice-list" role="list">'+notices.map(x=>'<div class="notice-row" role="listitem"><span class="status ok" aria-hidden="true"></span><p>'+esc(x)+'</p></div>').join("")+'</div></section>'+
     '<details class="family-more"><summary><span>App & privacy</span><b aria-hidden="true">+</b></summary><div><p>Study-game progress stays on this device. No student IDs or private classmates’ information are used.</p><a href="#games" data-open-games>Open Study Games</a><p>To install on iPhone, use Safari’s Share menu → Add to Home Screen.</p></div></details>'+
     '<p class="unofficial-note">Family planning tool based on current ABVM Grade 2 sources.</p>'+
     '</div>';
@@ -468,7 +516,7 @@ function bindScreen(){
     if(target.matches("[data-day]")){selectedDay=new Date(target.dataset.day);renderWeek();return;}
     if(target.matches("[data-week-step]")){weekOffset+=Number(target.dataset.weekStep||0);selectedDay=null;renderWeek();return;}
     if(target.matches("[data-week-today]")){weekOffset=0;selectedDay=null;renderWeek();return;}
-    if(target.matches("[data-cal-day]")){calendarDay=new Date(target.dataset.calDay);renderCalendar();return;}
+    if(target.matches("[data-cal-day]")){calendarDay=new Date(target.dataset.calDay);renderCalendar();return;}\n    if(target.matches("[data-cal-step]")){calendarOffset+=Number(target.dataset.calStep||0);calendarDay=null;renderCalendar();return;}\n    if(target.matches("[data-cal-today]")){calendarOffset=0;calendarDay=null;renderCalendar();return;}
     if(target.matches("[data-game-start]")){startStudyGame(target.dataset.gameStart);return;}
     if(target.matches("[data-game-answer]")){answerStudyGame(Number(target.dataset.gameAnswer));return;}
     if(target.matches("[data-game-next]")){advanceStudyGame();return;}
@@ -499,6 +547,6 @@ window.addEventListener("hashchange",()=>{
     render();
   }
 });
-if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"}).catch(()=>{}));
+window.addEventListener("online",()=>{if(pack)render()});\nwindow.addEventListener("offline",()=>{if(pack)render()});\nif("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"}).catch(()=>{}));
 load();
 })();
