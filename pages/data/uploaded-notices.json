@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "lastIntegratedAt": "2026-09-23T18:11:28.000Z",
+  "lastIntegratedAt": "2026-09-28T13:19:00.000Z",
   "documents": [
     {
       "id": "dress-down-2026-09-25",
@@ -23,6 +23,25 @@
         "Lego Club is Friday, September 25 from 3–4 PM.",
         "Dress Down Day is Friday, September 25 with a donation to a local charity.",
         "Upcoming dates are listed through October 23."
+      ]
+    },
+    {
+      "id": "weekly-reminders-2026-09-28",
+      "label": "Weekly reminders for September 28–October 2, 2026",
+      "receivedAt": "2026-09-28",
+      "facts": [
+        "Monday, September 28: October Gift Card Calendar Fundraiser money and calendar bottoms are due.",
+        "Tuesday, September 29: Sign up for parent-teacher conferences using the OptionC portal.",
+        "Wednesday, September 30: Mass; Communication Folder; Chick-fil-A sale starts.",
+        "Thursday, October 1: Picture Day; Business Casual; HSA Virtual Meeting.",
+        "Saturday, October 3: Welcome Back Dance / Movie Night.",
+        "Friday, October 9: 12:00 dismissal.",
+        "Monday, October 12: No School — Columbus Day.",
+        "October 19–20: Parent-Teacher Conferences.",
+        "Thursday, October 22: Chick-fil-A pickup.",
+        "Friday, October 23: S’more Fun at Schwartz Farm.",
+        "November 13–14: Drama Club Play.",
+        "Saturday, November 21: Reading Royals Game Family Fun Night."
       ]
     }
   ],
@@ -58,52 +77,106 @@
       "sourceDocument": "weekly-reminders-2026-09-21"
     },
     {
+      "date": "Monday, Sept. 28",
+      "label": "October Gift Card Calendar Fundraiser money and calendar bottoms due",
+      "kind": "deadline",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "date": "Tuesday, Sept. 29",
+      "label": "Sign up for parent-teacher conferences using the OptionC portal",
+      "kind": "family action",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
       "date": "Wednesday, Sept. 30",
-      "label": "Mass; Communication Folder",
+      "label": "Mass",
       "kind": "school event",
-      "sourceDocument": "weekly-reminders-2026-09-21"
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "date": "Wednesday, Sept. 30",
+      "label": "Communication Folder",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "date": "Wednesday, Sept. 30",
+      "label": "Chick-fil-A sale starts",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
       "date": "Thursday, Oct. 1",
       "label": "Picture Day",
       "kind": "school event",
-      "sourceDocument": "weekly-reminders-2026-09-21"
+      "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
-      "date": "Friday, Oct. 2",
-      "label": "HSA Meeting",
+      "date": "Thursday, Oct. 1",
+      "label": "Business Casual",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "date": "Thursday, Oct. 1",
+      "label": "HSA Virtual Meeting",
       "kind": "meeting",
-      "sourceDocument": "weekly-reminders-2026-09-21"
+      "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
       "date": "Saturday, Oct. 3",
       "label": "Welcome Back Dance (K–4) — 6–8 PM, ABVM Gym",
       "kind": "school event",
-      "sourceDocument": "weekly-reminders-2026-09-21"
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "date": "Saturday, Oct. 3",
+      "label": "Movie Night (Grades 5–8) — 6–8 PM",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
       "date": "Friday, Oct. 9",
       "label": "12:00 dismissal",
       "kind": "schedule change",
-      "sourceDocument": "weekly-reminders-2026-09-21"
+      "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
       "date": "Monday, Oct. 12",
       "label": "No School — Columbus Day",
       "kind": "holiday",
-      "sourceDocument": "weekly-reminders-2026-09-21"
+      "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
       "date": "Monday–Tuesday, Oct. 19–20",
-      "label": "Parent / Teacher conferences (K–4 Tues. 10/20)",
+      "label": "Parent-Teacher Conferences",
       "kind": "conference",
-      "sourceDocument": "weekly-reminders-2026-09-21"
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "date": "Thursday, Oct. 22",
+      "label": "Chick-fil-A pickup",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
       "date": "Friday, Oct. 23",
-      "label": "Schwartz Farm “S’more Fun” — ABVM s’mores 6–7 PM",
+      "label": "S’more Fun at Schwartz Farm",
       "kind": "school event",
-      "sourceDocument": "weekly-reminders-2026-09-21"
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "date": "Friday–Saturday, Nov. 13–14",
+      "label": "Drama Club Play",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "date": "Saturday, Nov. 21",
+      "label": "Reading Royals Game Family Fun Night",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-28"
     }
   ],
   "reminders": [
@@ -123,9 +196,44 @@
       "sourceDocument": "weekly-reminders-2026-09-21"
     },
     {
-      "text": "HSA Meeting is Friday, Oct. 2.",
+      "text": "October Gift Card Calendar Fundraiser money and calendar bottoms are due Monday, Sept. 28.",
+      "topic": "fundraiser",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "Sign up for parent-teacher conferences using the OptionC portal on Tuesday, Sept. 29.",
+      "topic": "conference",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "Wednesday, Sept. 30: Mass, Communication Folder, and Chick-fil-A sale starts.",
+      "topic": "mass-communication",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "Thursday, Oct. 1: Picture Day, Business Casual, and HSA Virtual Meeting.",
       "topic": "hsa",
-      "sourceDocument": "weekly-reminders-2026-09-21"
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "Welcome Back Dance / Movie Night is Saturday, Oct. 3.",
+      "topic": "dance",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "Chick-fil-A pickup is Thursday, Oct. 22.",
+      "topic": "chick-fil",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "Drama Club Play is Nov. 13–14.",
+      "topic": "drama",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "Reading Royals Game Family Fun Night is Saturday, Nov. 21.",
+      "topic": "reading-royals",
+      "sourceDocument": "weekly-reminders-2026-09-28"
     }
   ],
   "parentNotices": [
@@ -140,14 +248,64 @@
       "sourceDocument": "dress-down-2026-09-25"
     },
     {
-      "text": "Lego Club is Friday, Sept. 25 from 3–4 PM.",
-      "topic": "lego",
-      "sourceDocument": "weekly-reminders-2026-09-21"
+      "text": "Sign up for parent-teacher conferences using the OptionC portal on Tuesday, Sept. 29.",
+      "topic": "conference",
+      "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
-      "text": "The current weekly school reminder lists the HSA Meeting for Friday, Oct. 2.",
+      "text": "Wednesday, Sept. 30: Mass, Communication Folder, and Chick-fil-A sale starts.",
+      "topic": "mass-communication",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "Thursday, Oct. 1 is Picture Day and Business Casual.",
+      "topic": "picture",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "HSA Virtual Meeting is Thursday, Oct. 1.",
       "topic": "hsa",
-      "sourceDocument": "weekly-reminders-2026-09-21"
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "Welcome Back Dance / Movie Night is Saturday, Oct. 3.",
+      "topic": "dance",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "12:00 dismissal is Friday, Oct. 9.",
+      "topic": "dismissal",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "No School — Columbus Day is Monday, Oct. 12.",
+      "topic": "closed",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "Parent-Teacher Conferences are Oct. 19–20.",
+      "topic": "conference",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "Chick-fil-A pickup is Thursday, Oct. 22.",
+      "topic": "chick-fil",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "S’more Fun at Schwartz Farm is Friday, Oct. 23.",
+      "topic": "schwartz",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "Drama Club Play is Nov. 13–14.",
+      "topic": "drama",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "Reading Royals Game Family Fun Night is Saturday, Nov. 21.",
+      "topic": "reading-royals",
+      "sourceDocument": "weekly-reminders-2026-09-28"
     }
   ],
   "replacements": [
@@ -156,8 +314,16 @@
       "date": "Wednesday, Sept. 23"
     },
     {
+      "topic": "october-gift-calendar",
+      "date": "Monday, Sept. 28"
+    },
+    {
       "topic": "hsa",
       "date": "Thursday, Oct. 1"
+    },
+    {
+      "topic": "movie-night-grades",
+      "date": "Saturday, Oct. 3"
     }
   ]
 }
