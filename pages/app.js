@@ -111,13 +111,37 @@ function mathSubject(){return (pack?.subjects||[]).find(s=>/^Math$/i.test(s.subj
 function spellingSubject(){return (pack?.subjects||[]).find(s=>/Spelling/i.test(s.subject||""));}
 function readingRoutine(){return (pack?.subjects||[]).find(s=>/Reading Routine/i.test(s.subject||""))?.topics?.[0]||"Read for 20 minutes every day.";}
 
+function todayTaskRecords(date){
+  const records=(pack?.homework||[]).map((item,index)=>({item,index}));
+  const isSep28=date?.getFullYear?.()===2026&&date.getMonth()===8&&date.getDate()===28;
+  if(!isSep28)return records;
+  return records
+    .filter(({item})=>/^(Attend Mass|Read)$/i.test(String(item?.task||"").trim()))
+    .map(record=>{
+      if(/^Read$/i.test(String(record.item?.task||"").trim())){
+        return {...record,item:{...record.item,subject:"20 minutes today"}};
+      }
+      return record;
+    });
+}
+
+function studyGameIconHtml(modeId){
+  const icons={
+    quick:'<svg viewBox="0 0 48 48" aria-hidden="true"><path class="icon-fill" d="m24 6 5.3 10.8 11.9 1.7-8.6 8.4 2 11.8L24 33.1l-10.6 5.6 2-11.8-8.6-8.4 11.9-1.7L24 6Z"/><path class="icon-spark" d="M37.5 7.5v6M34.5 10.5h6"/></svg>',
+    math:'<svg viewBox="0 0 48 48" aria-hidden="true"><rect class="icon-outline" x="9" y="6.5" width="30" height="35" rx="6"/><rect class="icon-screen" x="14" y="11" width="20" height="7" rx="2.5"/><path class="icon-stroke" d="M16 26h7M19.5 22.5v7M28 26h6M16 34h7M28 34h6"/></svg>',
+    words:'<svg viewBox="0 0 48 48" aria-hidden="true"><path class="icon-book" d="M7.5 11.5c5.5-1.4 10.5-.6 16.5 3.1v24c-5.7-3.5-11-4.3-16.5-2.7V11.5Z"/><path class="icon-book" d="M40.5 11.5c-5.5-1.4-10.5-.6-16.5 3.1v24c5.7-3.5 11-4.3 16.5-2.7V11.5Z"/><text class="icon-letter" x="13" y="27">A</text><text class="icon-letter small" x="29" y="29">a</text></svg>',
+    faith:'<svg viewBox="0 0 48 48" aria-hidden="true"><circle class="icon-halo" cx="24" cy="24" r="18"/><path class="icon-cross" d="M24 12v24M17 20h14"/><path class="icon-ray" d="M10 12l3 3M38 12l-3 3M9 31l4-2M39 31l-4-2"/></svg>'
+  };
+  return '<span class="study-game-icon game-icon-'+esc(modeId)+'" aria-hidden="true">'+(icons[modeId]||icons.quick)+'</span>';
+}
+
 function renderToday(){
   const d=today(), events=eventItemsForDate(d), lunch=lunchForDate(d), next=currentTest();
   const tests=events.filter(e=>kindClass(e)==="test");
   const headline=tests.length?tests.map(e=>e.label.replace(/\s*\/\s*/g," and ")).join(", "):events[0]?.label||"School day";
   let timeline=events.map(e=>'<div class="timeline-row"><time>School</time><span class="timeline-pin '+kindClass(e)+'"></span><div><strong>'+esc(e.label)+'</strong>'+(e.kind?'<small>'+esc(e.kind)+'</small>':'')+'</div><i></i></div>').join("");
   if(!timeline) timeline='<div class="timeline-row"><time>School</time><span class="timeline-pin family"></span><div><strong>No special school events are listed for this date.</strong></div></div>';
-  const tasks=(pack?.homework||[]);
+  const tasks=todayTaskRecords(d);
   const html='<div class="screen" role="region" aria-label="Today">'+
     header("ABVM GRADE 2 · "+(pack?.weekLabel||"CURRENT WEEK").replace(/^Week of /i,"").toUpperCase(),"Hi, school star!")+
     freshness()+
@@ -125,7 +149,7 @@ function renderToday(){
     '<div class="section-heading"><h2><span class="heading-dot pink"></span>Up next</h2></div>'+
     (next?'<section class="priority-card"><div class="date-tile"><strong>'+esc(WEEKDAY[next.d.getDay()].slice(0,3).toUpperCase())+'</strong><span>'+next.d.getDate()+'</span></div><div><p>CLOSEST TEST</p><h3>'+esc(next.x.label)+'</h3><span>Keep review short and focused.</span></div></section>':'<section class="priority-card"><div class="date-tile"><strong>★</strong><span>✓</span></div><div><p>UP NEXT</p><h3>No upcoming test is currently listed</h3><span>Keep up with the posted homework and reading routine.</span></div></section>')+
     '<div class="section-heading"><h2><span class="heading-dot blue"></span>'+esc(fmtDate(d))+'</h2></div>'+
-    '<section class="today-panel"><div class="timeline">'+timeline+'</div><div class="task-list">'+tasks.map(taskHtml).join("")+'</div></section>'+
+    '<section class="today-panel"><div class="timeline">'+timeline+'</div><div class="task-list">'+tasks.map(({item,index})=>taskHtml(item,index)).join("")+'</div></section>'+
     (lunch?'<section class="lunch-card"><span>🍎</span><div><p>SCHOOL LUNCH</p><strong>'+esc(lunch.items.join(", ").replace(/, ([^,]*)$/,", and $1"))+'</strong></div></section>':'')+
     '</div>';
   stack().innerHTML=html;
@@ -233,7 +257,7 @@ function ensureStudyGameEngine(){
   if(studyEnginePromise)return studyEnginePromise;
   studyEnginePromise=new Promise((resolve,reject)=>{
     const script=document.createElement("script");
-    script.src="./study-games.js?v=67";
+    script.src="./study-games.js?v=68";
     script.async=true;
     script.onload=()=>window.ABVMStudyGames?resolve(window.ABVMStudyGames):reject(new Error("Study Games engine did not initialize"));
     script.onerror=()=>reject(new Error("Study Games engine could not be loaded"));
@@ -359,7 +383,7 @@ function gameMenuHtml(catalog){
   return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Pick a game and start</h2><span>Questions use this week’s school skills and adjust as you practice.</span></div></section>'+
     '<div class="study-game-grid">'+modes.map(mode=>{
       const record=loadGameRecord(mode.id);
-      return '<button type="button" class="study-game-tile game-'+mode.id+'" data-game-start="'+esc(mode.id)+'"><span class="study-game-icon">'+esc(mode.icon)+'</span><span class="study-game-copy"><strong>'+esc(mode.title)+'</strong><small>'+esc(mode.copy)+'</small>'+(record.plays?'<em>Best '+record.best+' / '+mode.count+'</em>':'')+'</span><b aria-hidden="true">›</b></button>';
+      return '<button type="button" class="study-game-tile game-'+mode.id+'" data-game-start="'+esc(mode.id)+'">'+studyGameIconHtml(mode.id)+'<span class="study-game-copy"><strong>'+esc(mode.title)+'</strong><small>'+esc(mode.copy)+'</small>'+(record.plays?'<em>Best '+record.best+' / '+mode.count+'</em>':'')+'</span><b aria-hidden="true">›</b></button>';
     }).join("")+'</div>'+
     '<p class="game-privacy-note">Practice is generated from verified skills; private student answers and grades are not used.</p>';
 }

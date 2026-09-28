@@ -1050,3 +1050,85 @@ html,body{margin:0}
   .study-games-cta{grid-template-columns:42px minmax(0,1fr) 18px}
   .study-games-cta>span{width:40px;height:40px}
 }
+
+
+/* v68 — polished Study Games subject badges + focused Sept 28 Today list */
+.study-game-icon{
+  width:46px;
+  height:46px;
+  border-radius:15px;
+  display:grid;
+  place-items:center;
+  border:1px solid #ffffffc7;
+  box-shadow:inset 0 1px 0 #fff, 0 3px 9px #26354812;
+  overflow:hidden
+}
+.study-game-icon svg{width:32px;height:32px;display:block}
+.study-game-tile.game-quick .study-game-icon{
+  color:#155789;
+  background:linear-gradient(145deg,#eef7ff,#dcecff)
+}
+.game-icon-quick .icon-fill{fill:currentColor}
+.game-icon-quick .icon-spark{
+  fill:none;
+  stroke:#5f8fbd;
+  stroke-width:2.2;
+  stroke-linecap:round
+}
+.study-game-tile.game-math .study-game-icon{
+  color:#2d762f;
+  background:linear-gradient(145deg,#f0faec,#dff2d9)
+}
+.game-icon-math .icon-outline{
+  fill:#ffffffa8;
+  stroke:currentColor;
+  stroke-width:2.2
+}
+.game-icon-math .icon-screen{fill:#cce8c6}
+.game-icon-math .icon-stroke{
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2.4;
+  stroke-linecap:round
+}
+.study-game-tile.game-words .study-game-icon{
+  color:#a12669;
+  background:linear-gradient(145deg,#fff2f8,#fbe1ee)
+}
+.game-icon-words .icon-book{
+  fill:#ffffffb8;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linejoin:round
+}
+.game-icon-words .icon-letter{
+  fill:currentColor;
+  font-family:ui-rounded,"SF Pro Rounded","Avenir Next",system-ui,sans-serif;
+  font-size:13px;
+  font-weight:950
+}
+.game-icon-words .icon-letter.small{font-size:12px}
+.study-game-tile.game-faith .study-game-icon{
+  color:#704294;
+  background:linear-gradient(145deg,#f7effd,#eadcf6)
+}
+.game-icon-faith .icon-halo{
+  fill:#ffffff91;
+  stroke:#a983c2;
+  stroke-width:1.4
+}
+.game-icon-faith .icon-cross{
+  fill:none;
+  stroke:currentColor;
+  stroke-width:3;
+  stroke-linecap:round
+}
+.game-icon-faith .icon-ray{
+  fill:none;
+  stroke:#b390ca;
+  stroke-width:1.8;
+  stroke-linecap:round
+}
+.study-game-tile:active .study-game-icon{transform:scale(.97)}
+.today-panel .task-list .check-copy small{font-weight:650}
+.today-panel .task-list .check-item{min-height:68px}

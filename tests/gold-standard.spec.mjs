@@ -284,9 +284,35 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   await expect(page.locator(".games-screen .freshness")).toHaveCount(0);
 
   const sw=await (await page.request.get("/sw.js")).text();
-  expect(sw).toContain("v67-simple-fast");
+  expect(sw).toContain("v68-icons-today");
   expect(sw).not.toContain("hero-today.webp");
   expect(sw).not.toContain("calendar/picture-day.svg");
   const cached=[...sw.matchAll(/"\.\/[^\"]+"/g)];
   expect(cached.length).toBeLessThanOrEqual(12);
+});
+
+
+test("Sept 28 Today shows only Mass and daily reading",async({page})=>{
+  await openTab(page,"Today");
+  const tasks=page.locator(".today-panel .check-item");
+  await expect(tasks).toHaveCount(2);
+  await expect(tasks.nth(0)).toContainText("Attend Mass");
+  await expect(tasks.nth(1)).toContainText("Read");
+  await expect(tasks.nth(1)).toContainText("20 minutes today");
+  await expect(page.getByText("Cover books",{exact:true})).toHaveCount(0);
+  await expect(page.getByText("Keep Reading Log and Behavior Chart in the HW folder",{exact:true})).toHaveCount(0);
+  await expect(page.getByText("Return everything in the HW folder",{exact:true})).toHaveCount(0);
+});
+
+test("Study Games uses distinct polished subject icon badges",async({page})=>{
+  await openTab(page,"Study Games");
+  await expect(page.locator(".study-game-tile")).toHaveCount(4);
+  for(const id of ["quick","math","words","faith"]){
+    const icon=page.locator(".game-icon-"+id);
+    await expect(icon).toBeVisible();
+    await expect(icon.locator("svg")).toHaveCount(1);
+  }
+  await expect(page.locator(".game-icon-math .icon-outline")).toHaveCount(1);
+  await expect(page.locator(".game-icon-words .icon-book")).toHaveCount(2);
+  await expect(page.locator(".game-icon-faith .icon-cross")).toHaveCount(1);
 });
