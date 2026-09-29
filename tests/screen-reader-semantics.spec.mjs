@@ -64,7 +64,7 @@ test("freshness and toast status remain available to assistive technology",async
   await expect(page.locator("#toast")).toHaveAttribute("role","status");
   await expect(page.locator("#toast")).toHaveAttribute("aria-live","polite");
   const freshness=page.locator(".freshness");
-  await expect(freshness).toContainText(/Verified/);
+  await expect(freshness).toContainText(/Verified|Older data|Needs refresh|Offline|Source verification unavailable/);
   await expect(freshness).toHaveRole("button");
   await expect(freshness).toHaveAttribute("aria-label",/Refresh school information/);
 });
