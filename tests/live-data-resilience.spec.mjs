@@ -281,3 +281,26 @@ test("required parent tasks are not mislabeled as if participating",async({brows
   await expect(rows.nth(1)).toContainText("IF PARTICIPATING");
   await context.close();
 });
+
+
+test("Study derives spelling review date and STAR reminder from current school dates",async({browser})=>{
+  const sourceResponse=await fetch("data:application/json,{}").catch(()=>null);
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-09-29T13:00:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:source}));
+  await page.goto("http://127.0.0.1:4173/#study");
+  await expect(page.locator(".study-at-a-glance")).toContainText("Fri 2");
+  await expect(page.locator(".study-at-a-glance")).toContainText("Spelling / Handwriting review");
+  await expect(page.locator(".calm-card")).toHaveCount(0);
+  await context.close();
+
+  const starContext=await browser.newContext({serviceWorkers:"block"});
+  const starPage=await starContext.newPage();
+  await starPage.clock.setFixedTime(new Date("2027-01-10T13:00:00Z"));
+  await starPage.route("**/data/study-pack.json*",route=>route.fulfill({json:source}));
+  await starPage.goto("http://127.0.0.1:4173/#study");
+  await expect(starPage.locator(".calm-card")).toContainText("STAR reminder");
+  await starContext.close();
+});
