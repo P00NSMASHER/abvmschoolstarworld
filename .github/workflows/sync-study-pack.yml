@@ -10,6 +10,10 @@ on:
       - 'pages/data/lunch-catalog.json'
       - 'scripts/validate-uploaded-notices.mjs'
   schedule:
+    - cron: '17 6 * * *'
+      timezone: 'America/New_York'
+    - cron: '47 9 * * *'
+      timezone: 'America/New_York'
     - cron: '17 13 * * *'
       timezone: 'America/New_York'
     - cron: '47 15 * * *'
