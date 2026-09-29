@@ -101,3 +101,29 @@ test("index promotes a newly activated service worker before relying on versione
   expect(html).toContain('registration.update()');
   expect(html.indexOf("abvm-sw-reloaded-v72")).toBeLessThan(html.indexOf("./app.js?v=72"));
 });
+
+
+test("timestamp-only verification refresh does not reset open UI state",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  let current=structuredClone(source);
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:current}));
+  await page.goto("http://127.0.0.1:4173/#study");
+  const first=page.locator(".study-accordion").first();
+  await first.locator("summary").click();
+  await expect(first).toHaveAttribute("open","");
+
+  current=structuredClone(source);
+  const stamp=new Date().toISOString();
+  current.sourceLastSeenAt=stamp;
+  current.pack.generatedAt=stamp;
+  current.pack.sourceCheckedAt=stamp;
+  current.pack.lunchMenuHash="metadata-only-hash-change";
+  if(current.pack.lunchMenuSource)current.pack.lunchMenuSource.lastAttemptAt=stamp;
+
+  await page.evaluate(()=>window.dispatchEvent(new Event("online")));
+  await expect(first).toHaveAttribute("open","");
+  await expect(page.locator("#toast")).not.toContainText("School info updated");
+  await context.close();
+});
