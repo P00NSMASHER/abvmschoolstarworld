@@ -226,3 +226,26 @@ test("derived school-content changes refresh even when source hashes are unchang
   await expect(page.locator("#toast")).toContainText("School info updated");
   await context.close();
 });
+
+
+test("undated picture-order details expire after Picture Day",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-10-02T13:00:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  const fixture=structuredClone(source);
+  fixture.pack.importantDates=[
+    {date:"Thursday, Oct. 1",label:"Picture Day",kind:"school event"}
+  ];
+  fixture.pack.parentNotices=[
+    "Picture ordering: package details.",
+    "Picture backgrounds: background choices.",
+    "Standing undated family information."
+  ];
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:fixture}));
+  await page.goto("http://127.0.0.1:4173/#family");
+  await expect(page.locator(".notices-card")).not.toContainText("Picture ordering");
+  await expect(page.locator(".notices-card")).not.toContainText("Picture backgrounds");
+  await expect(page.locator(".notices-card")).toContainText("Standing undated family information");
+  await context.close();
+});
