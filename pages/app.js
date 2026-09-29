@@ -51,8 +51,8 @@ function freshnessState(){
   return{state:"current",label:"Verified "+stamp};
 }
 function freshness(){
-  const state=freshnessState(),label=manualRefreshActive?"Checking latest school info…":state.label;
-  const action=manualRefreshActive?"Checking latest school information":"Check latest school information. "+state.label;
+  const state=freshnessState(),label=manualRefreshActive?"Checking published school info…":state.label;
+  const action=manualRefreshActive?"Checking published school information":"Check published school information. "+state.label;
   return '<button type="button" class="freshness '+state.state+(manualRefreshActive?' is-refreshing':'')+'" data-refresh-pack aria-label="'+esc(action)+'"'+(manualRefreshActive?' disabled':'')+'><span aria-hidden="true"></span><strong>'+esc(label)+'</strong><b aria-hidden="true">↻</b></button>';
 }
 function kindClass(item){
