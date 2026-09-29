@@ -92,3 +92,12 @@ test("service worker install tolerates optional school-data precache failure",as
   expect(source).toContain('url.searchParams.has("v")');
   expect(source).toContain("networkFirst(event.request,null)");
 });
+
+
+test("index promotes a newly activated service worker before relying on versioned code",async({request})=>{
+  const html=await (await request.get("/index.html")).text();
+  expect(html).toContain('abvm-sw-reloaded-v72');
+  expect(html).toContain('navigator.serviceWorker.addEventListener("controllerchange"');
+  expect(html).toContain('registration.update()');
+  expect(html.indexOf("abvm-sw-reloaded-v72")).toBeLessThan(html.indexOf("./app.js?v=72"));
+});
