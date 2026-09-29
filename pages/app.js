@@ -320,7 +320,7 @@ function subjectCard(id,klass,title,subject){
 function storyQuestionsCard(subject){
   const rows=Array.isArray(subject?.storyQuestions)?subject.storyQuestions:[];
   if(!rows.length)return "";
-  return '<details id="study-story-questions" class="subject-card study-accordion reading story-study-card" open>'+
+  return '<details id="study-story-questions" class="subject-card study-accordion reading story-study-card">'+
     '<summary><span><small>STORY QUESTIONS</small><strong>Little Flap + Help!</strong></span><b aria-hidden="true">+</b></summary>'+
     '<div class="story-question-list">'+rows.map((row,index)=>
       '<details class="story-question">'+
