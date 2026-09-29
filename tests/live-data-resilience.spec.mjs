@@ -158,7 +158,7 @@ test("tapping the freshness box forces an immediate live pack refresh",async({br
   const status=page.locator("[data-refresh-pack]");
   await expect(status).toContainText("Older data");
   await status.click();
-  await expect(page.locator("[data-refresh-pack]")).toContainText("Refreshing school info");
+  await expect(page.locator("[data-refresh-pack]")).toContainText("Checking latest school info");
   await expect(page.locator("[data-refresh-pack]")).toBeDisabled();
   await expect(page.locator(".freshness")).toHaveClass(/current/);
   await expect(page.locator(".freshness")).toContainText("Verified");
@@ -179,7 +179,7 @@ test("manual refresh explains when no newer verified data exists",async({browser
   await page.route("**/data/study-pack.json*",route=>route.fulfill({json:stale}));
   await page.goto("http://127.0.0.1:4173/#today");
   await page.locator("[data-refresh-pack]").click();
-  await expect(page.locator("#toast")).toContainText("still the newest verified school info");
+  await expect(page.locator("#toast")).toContainText("no newer verified update is available yet");
   await expect(page.locator(".freshness")).toHaveClass(/stale/);
   await context.close();
 });
