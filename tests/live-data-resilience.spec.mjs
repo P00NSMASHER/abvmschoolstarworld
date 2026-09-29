@@ -203,3 +203,26 @@ test("Family counts distinct test days instead of individual tests",async({brows
   await expect(stats).toContainText("test days");
   await context.close();
 });
+
+
+test("derived school-content changes refresh even when source hashes are unchanged",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-09-29T13:00:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  let current=structuredClone(source);
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:current}));
+  await page.goto("http://127.0.0.1:4173/#family");
+  await expect(page.locator(".family-screen")).toBeVisible({timeout:10_000});
+  await expect(page.locator(".notices-card")).not.toContainText("Parser-derived current notice");
+
+  current=structuredClone(source);
+  current.pack.parentNotices=[...current.pack.parentNotices,"Parser-derived current notice Tuesday, Sept. 29."];
+  current.sourceLastSeenAt=new Date().toISOString();
+  current.pack.sourceCheckedAt=current.sourceLastSeenAt;
+  await page.evaluate(()=>window.dispatchEvent(new Event("online")));
+
+  await expect(page.locator(".notices-card")).toContainText("Parser-derived current notice");
+  await expect(page.locator("#toast")).toContainText("School info updated");
+  await context.close();
+});
