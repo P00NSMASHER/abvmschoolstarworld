@@ -120,3 +120,11 @@ test('cleanTeacherText fixes obvious teacher-page typo without changing meaning'
   assert.equal(cleanTeacherText('visualize, theme, dioalogue'), 'Visualize, theme, dialogue');
 });
 
+
+
+test('teacherContentLines treats Religion as navigation on the spelling page', () => {
+  assert.deepEqual(
+    teacherContentLines(['Weekly Spelling List','Religion','Reading Work','Homework','Tests','More Home'], 'Weekly Spelling List'),
+    []
+  );
+});
