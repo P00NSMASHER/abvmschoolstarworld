@@ -249,3 +249,35 @@ test("undated picture-order details expire after Picture Day",async({browser})=>
   await expect(page.locator(".notices-card")).toContainText("Standing undated family information");
   await context.close();
 });
+
+
+test("Week marks a closed weekday as No school",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-10-12T13:00:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:source}));
+  await page.goto("http://127.0.0.1:4173/#week");
+  await expect(page.locator(".day-detail-title")).toContainText("No school");
+  await expect(page.locator(".day-detail-title")).not.toContainText("School day");
+  await context.close();
+});
+
+test("required parent tasks are not mislabeled as if participating",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-09-29T13:00:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  const fixture=structuredClone(source);
+  fixture.pack.homework=[
+    {subject:"Parent",task:"Cover books"},
+    {subject:"Parent",task:"Return permission slip if participating"}
+  ];
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:fixture}));
+  await page.goto("http://127.0.0.1:4173/#week");
+  const rows=page.locator(".check-item");
+  await expect(rows.nth(0)).toContainText("REQUIRED");
+  await expect(rows.nth(0)).not.toContainText("IF PARTICIPATING");
+  await expect(rows.nth(1)).toContainText("IF PARTICIPATING");
+  await context.close();
+});
