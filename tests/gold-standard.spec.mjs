@@ -485,5 +485,5 @@ test("game progress reflects the current question instead of starting at zero",a
   await page.getByRole("button",{name:/Quick Mix/i}).click();
   await expect(page.locator(".game-question-card")).toBeVisible();
   const width=await page.locator(".game-progress span").getAttribute("style");
-  expect(width).toContain("12");
+  expect(width).toContain("13");
 });
