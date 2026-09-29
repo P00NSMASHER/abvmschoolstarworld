@@ -51,8 +51,12 @@ const status={
 };
 const sourceFresh=sourceAgeHours!==null&&sourceAgeHours>=-.25&&sourceAgeHours<=8;
 const runAgeHours=run=>run?.created_at?(Date.now()-Date.parse(run.created_at))/3_600_000:null;
+const activeStatuses=new Set(["queued","in_progress","waiting","pending","requested"]);
 const completedHealthy=(workflow,maxAgeHours)=>{
-  const run=workflow.latestDecisive;
+  const latestRun=workflow.latest;
+  const decisive=workflow.latestDecisive;
+  const newerActive=latestRun&&activeStatuses.has(latestRun.status)&&(!decisive||Date.parse(latestRun.created_at)>=Date.parse(decisive.created_at));
+  const run=newerActive?workflow.latestSuccess:decisive;
   if(!run||run.conclusion!=="success")return false;
   const age=runAgeHours(run);
   return age!==null&&age>=-.25&&age<=maxAgeHours;
@@ -87,10 +91,10 @@ const md=[
   `- **Git SHA:** ${status.gitSha||"unknown"}`,
   "",
   "## Latest workflow state",
-  line("Teacher refresh",status.workflows.refresh.latestDecisive||status.workflows.refresh.latestCompleted||status.workflows.refresh.latest),
-  line("App QA",status.workflows.qa.latestDecisive||status.workflows.qa.latestCompleted||status.workflows.qa.latest),
-  line("Pages deploy",status.workflows.deploy.latestDecisive||status.workflows.deploy.latestCompleted||status.workflows.deploy.latest),
-  line("Refresh watchdog",status.workflows.watchdog.latestDecisive||status.workflows.watchdog.latestCompleted||status.workflows.watchdog.latest),
+  line("Teacher refresh",status.workflows.refresh.latest||status.workflows.refresh.latestDecisive||status.workflows.refresh.latestCompleted),
+  line("App QA",status.workflows.qa.latest||status.workflows.qa.latestDecisive||status.workflows.qa.latestCompleted),
+  line("Pages deploy",status.workflows.deploy.latest||status.workflows.deploy.latestDecisive||status.workflows.deploy.latestCompleted),
+  line("Refresh watchdog",status.workflows.watchdog.latest||status.workflows.watchdog.latestDecisive||status.workflows.watchdog.latestCompleted),
   `- **Required successful-run age:** refresh/watchdog <=30h; QA/deploy <=48h`,
   "",
   "## Recent relevant failures",
