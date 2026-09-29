@@ -156,13 +156,21 @@ function lunchText(lunch){
 function lunchUnavailableText(date){
   return "Lunch menu not yet verified for "+MONTHS[date.getMonth()]+" "+date.getDate()+".";
 }
+function lunchVerificationNote(lunch){
+  if(!lunch?.sourceId)return "";
+  const proof=(pack?.lunchMenuSource?.sourcePages||[]).find(row=>row.id===lunch.sourceId);
+  if(proof?.checkedAt)return "";
+  if(proof?.reviewedAt)return pack?.lunchMenuSource?.retrievalState==="needs-review"
+    ?"Reviewed school menu · automated source check pending"
+    :"Reviewed school menu · automated source check unavailable";
+  return "Lunch source verification unavailable";
+}
 function lunchCardHtml(date,lunch){
   const closed=lunch?.status==="no-school"||eventItemsForDate(date).some(e=>kindClass(e)==="closed");
   if([0,6].includes(date.getDay()))return "";
   const message=closed?"No school lunch":lunch?lunchText(lunch):lunchUnavailableText(date);
-  const retrieval=pack?.lunchMenuSource?.retrievalState||"unknown",retained=lunch&&!closed&&retrieval!=="verified";
-  const sourceNote=retrieval==="needs-review"?"Reviewed school menu · automated source check pending":"Saved school menu · automated source check unavailable";
-  return '<section class="lunch-card'+(!lunch&&!closed?' lunch-missing':'')+'"><span aria-hidden="true">🍎</span><div><p>SCHOOL LUNCH</p><strong>'+esc(message)+'</strong>'+(retained?'<small>'+esc(sourceNote)+'</small>':'')+'</div></section>';
+  const sourceNote=lunch&&!closed?lunchVerificationNote(lunch):"";
+  return '<section class="lunch-card'+(!lunch&&!closed?' lunch-missing':'')+'"><span aria-hidden="true">🍎</span><div><p>SCHOOL LUNCH</p><strong>'+esc(message)+'</strong>'+(sourceNote?'<small>'+esc(sourceNote)+'</small>':'')+'</div></section>';
 }
 function currentTest(){
   const now=today();
