@@ -201,11 +201,6 @@ function upsertSubject(subjects, matcher, next) {
   else subjects.push(next);
 }
 
-function parseLunchDay(value){
-  const date=new Date(`${String(value).replace(',', '')} 2026 12:00:00 UTC`);
-  return Number.isNaN(date.getTime())?new Date(0):date;
-}
-
 function schoolWeekLabel(now) {
   const local = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
   const monday = new Date(local);
@@ -372,7 +367,7 @@ if(lunchFeed){
     feedUrl:LUNCH_FEED_URL,
     weekStart:lunchFeed.weekStart||null,
     weekEnd:lunchFeed.weekEnd||null,
-    coverageThrough:pack.lunchMenu.length?new Date(Math.max(...pack.lunchMenu.map(item=>parseLunchDay(item.day).getTime()))).toISOString().slice(0,10):null,
+    coverageThrough:(lunchFeed.lunchMenu||[]).map(item=>item.date).filter(Boolean).sort().at(-1)||null,
     gaps:Array.isArray(lunchFeed.gaps)?lunchFeed.gaps:[],
   };
 }
