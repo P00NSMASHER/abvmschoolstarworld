@@ -168,6 +168,18 @@ function currentTest(){
   const upcoming=(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)})).filter(o=>o.d&&o.d>=now&&kindClass(o.x)==="test").sort((a,b)=>a.d-b.d);
   return upcoming[0]||null;
 }
+function nextSpellingTest(){
+  const now=today();
+  return (pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)}))
+    .filter(o=>o.d&&o.d>=now&&kindClass(o.x)==="test"&&/spelling|handwriting/i.test(o.x.label||""))
+    .sort((a,b)=>a.d-b.d)[0]||null;
+}
+function currentOrSoonStarAssessment(){
+  const now=today(),weekMs=7*24*60*60*1000;
+  return (pack?.importantDates||[]).map(x=>({x,range:eventDateRange(x.date)}))
+    .filter(o=>/\bSTAR\b/i.test(o.x.label||"")&&o.range&&o.range[1]>=now&&o.range[0].getTime()-now.getTime()<=weekMs)
+    .sort((a,b)=>a.range[0]-b.range[0])[0]||null;
+}
 function readingSubject(){return (pack?.subjects||[]).find(s=>/Reading \/ ELA/i.test(s.subject||""));}
 function religionSubject(){return (pack?.subjects||[]).find(s=>/^Religion$/i.test(s.subject||""));}
 function mathSubject(){return (pack?.subjects||[]).find(s=>/^Math$/i.test(s.subject||""));}
@@ -326,11 +338,11 @@ function subjectCard(id,klass,title,subject){
   return '<details id="'+id+'" class="subject-card study-accordion '+klass+'"><summary><span><small>'+esc(title.toUpperCase())+'</small><strong>'+esc(title)+'</strong></span><b aria-hidden="true">+</b></summary><ul>'+notes.map(n=>'<li>✓ '+esc(n)+'</li>').join("")+'</ul></details>';
 }
 function renderStudy(){
-  const r=readingSubject(), rel=religionSubject(), math=mathSubject(), spell=spellingSubject(), next=currentTest();
+  const r=readingSubject(), rel=religionSubject(), math=mathSubject(), spell=spellingSubject(), next=currentTest(), spellingTest=nextSpellingTest(), star=currentOrSoonStarAssessment();
   const essentials=[
     ["Daily",readingRoutine()],
     next?[fmtShort(next.d),next.x.label]:["This week","Keep up with current class skills"],
-    ["Friday","Spelling / Handwriting review"]
+    ...(spellingTest?[ [fmtShort(spellingTest.d),"Spelling / Handwriting review"] ]:[])
   ];
   const sight=(r?.topics||[]).find(x=>/^Sight words:/i.test(x))?.replace(/^Sight words:\s*/i,"").split(",").map(x=>x.trim()).filter(Boolean)||[];
   const vocab=(pack?.vocabulary||[]).map(v=>v.term);
@@ -345,7 +357,7 @@ function renderStudy(){
     subjectCard("study-spelling","spelling","Spelling and phonics",spell)+
     '<details id="study-sight" class="subject-card study-accordion sight"><summary><span><small>SIGHT WORDS</small><strong>Sight words</strong></span><b aria-hidden="true">+</b></summary><div class="sight-cloud">'+sight.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></details>'+
     '<details class="subject-card study-accordion reading"><summary><span><small>VOCABULARY</small><strong>Words to know</strong></span><b aria-hidden="true">+</b></summary><div class="word-grid">'+vocab.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></details>'+
-    '<section class="calm-card compact"><h3>STAR reminder</h3><p>Normal reading, calm practice, and a good night’s sleep are enough.</p></section>'+
+    (star?'<section class="calm-card compact"><h3>STAR reminder</h3><p>Normal reading, calm practice, and a good night’s sleep are enough.</p></section>':'')+
     '</div>';
 }
 function studyGameEngine(){return window.ABVMStudyGames||null}
@@ -650,7 +662,7 @@ async function manualRefreshSchoolInfo(){
     else if(state.state==="current")toast("Latest published school info is loaded");
     else toast("Checked published school info — no newer verified update is available yet.");
   }catch{
-    toast("Couldn’t refresh school info. Try again.");
+    toast("Couldn’t check published school info. Try again.");
   }finally{
     manualRefreshActive=false;
     updateFreshnessUI();
