@@ -25,6 +25,22 @@ function isoDate(value){
   const date=new Date(value);
   return Number.isNaN(date.getTime())?null:date;
 }
+
+const MONTH_INDEX={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,sept:8,oct:9,nov:10,dec:11};
+function parseFriendlySchoolDate(value,year){
+  const match=String(value||"").match(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]*\.?\s*(\d{1,2})/i);
+  if(!match)return null;
+  return new Date(Date.UTC(year,MONTH_INDEX[match[1].replace(".","").toLowerCase()],Number(match[2]),12));
+}
+function easternSchoolWeek(){
+  const parts=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",year:"numeric",month:"2-digit",day:"2-digit",weekday:"short"}).formatToParts(new Date());
+  const map=Object.fromEntries(parts.map(part=>[part.type,part.value]));
+  const base=new Date(Date.UTC(Number(map.year),Number(map.month)-1,Number(map.day),12));
+  const day=base.getUTCDay();
+  base.setUTCDate(base.getUTCDate()-(day===0?6:day-1));
+  const end=new Date(base);end.setUTCDate(base.getUTCDate()+4);
+  return{start:base,end};
+}
 function validatePack(data,label,{freshness=true}={}){
   const errors=[];
   const pack=data?.pack||{};
@@ -56,6 +72,34 @@ function validatePack(data,label,{freshness=true}={}){
   if(!Array.isArray(pack?.subjects)||pack.subjects.length<4)errors.push(label+": subject set is unexpectedly small");
   if(!Array.isArray(pack?.importantDates)||pack.importantDates.length<1)errors.push(label+": importantDates is empty");
   if(!Array.isArray(pack?.parentNotices))errors.push(label+": parentNotices is not an array");
+
+  const lunchSource=pack?.lunchMenuSource||null;
+  const lunchMenu=Array.isArray(pack?.lunchMenu)?pack.lunchMenu:[];
+  const schoolWeek=easternSchoolWeek();
+  const expectedStart=schoolWeek.start.toISOString().slice(0,10);
+  const expectedEnd=schoolWeek.end.toISOString().slice(0,10);
+  if(!lunchSource)errors.push(label+": lunchMenuSource is missing");
+  else{
+    if(lunchSource.provider!=="Saint Clair Area School District")errors.push(label+": lunch provider is not the official Saint Clair source");
+    if(lunchSource.school!=="Assumption BVM School")errors.push(label+": lunch school is not Assumption BVM School");
+    if(lunchSource.weekStart&&lunchSource.weekStart!==expectedStart)errors.push(label+": lunch source weekStart is not the current school week");
+    if(lunchSource.weekEnd&&lunchSource.weekEnd!==expectedEnd)errors.push(label+": lunch source weekEnd is not the current school week");
+    if(!["current-week","partial-current-week"].includes(String(lunchSource.status||"")))errors.push(label+": lunch source status is not current-week/partial-current-week");
+    const lunchChecked=isoDate(lunchSource.checkedAt);
+    if(!lunchChecked)errors.push(label+": lunch source checkedAt is missing or invalid");
+    else if(freshness){
+      const lunchAge=(Date.now()-lunchChecked.getTime())/3_600_000;
+      if(lunchAge<-.25)errors.push(label+": lunch source timestamp is in the future");
+      if(Number.isFinite(maxAgeHours)&&lunchAge>maxAgeHours)errors.push(label+": lunch source is "+lunchAge.toFixed(1)+"h old (limit "+maxAgeHours+"h)");
+    }
+  }
+  if(lunchMenu.length<1)errors.push(label+": current-week lunch menu is empty");
+  const lunchYear=schoolWeek.start.getUTCFullYear();
+  for(const lunch of lunchMenu){
+    const date=parseFriendlySchoolDate(lunch?.day,lunchYear);
+    if(!date||date<schoolWeek.start||date>schoolWeek.end)errors.push(label+": stale/out-of-week lunch entry "+String(lunch?.day||"unknown"));
+    if(!Array.isArray(lunch?.items)||lunch.items.length<1)errors.push(label+": lunch entry has no food items for "+String(lunch?.day||"unknown"));
+  }
 
   if(!data?.syncPolicy?.primaryAt||!data?.syncPolicy?.backupAt)errors.push(label+": hardened primary/backup sync policy is missing");
   if(data?.syncPolicy?.retriesPerSource!==3)errors.push(label+": retriesPerSource must remain 3");
