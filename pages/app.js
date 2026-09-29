@@ -354,7 +354,7 @@ function ensureStudyGameEngine(){
   if(studyEnginePromise)return studyEnginePromise;
   studyEnginePromise=new Promise((resolve,reject)=>{
     const script=document.createElement("script");
-    script.src="./study-games.js?v=72";
+    script.src="./study-games.js?v=76";
     script.async=true;
     script.onload=()=>window.ABVMStudyGames?resolve(window.ABVMStudyGames):reject(new Error("Study Games engine did not initialize"));
     script.onerror=()=>reject(new Error("Study Games engine could not be loaded"));
@@ -373,13 +373,18 @@ function studyGameCatalog(){
 }
 function studyGameModes(){
   return [
-    {id:"quick",title:"Quick Mix",icon:"★",subjects:[],count:8,copy:"A little bit of everything from this week."},
-    {id:"math",title:"Math Dash",icon:"−",subjects:["Math"],count:8,copy:"Subtraction practice built from the current math skill."},
-    {id:"words",title:"Word Power",icon:"Aa",subjects:["Reading / ELA","Spelling / Handwriting"],count:8,copy:"Sight words, vocabulary, phonics, and grammar."},
+    {id:"quick",title:"Quick Mix",icon:"★",subjects:[],count:8,copy:"Current school skills mixed into one quick round."},
+    {id:"math",title:"Math Dash",icon:"−",subjects:["Math"],count:8,copy:"Eight questions built from the current subtraction skill."},
+    {id:"words",title:"Word Power",icon:"Aa",subjects:["Reading / ELA","Spelling / Handwriting"],count:8,copy:"Current sight words, vocabulary, phonics, and grammar."},
     {id:"faith",title:"Faith Quest",icon:"✦",subjects:["Religion"],count:8,copy:"Religion practice from the current class material."}
   ];
 }
 function gameMode(id){return studyGameModes().find(mode=>mode.id===id)||studyGameModes()[0]}
+function gameModeQuestionTotal(catalog,mode){
+  const wanted=mode?.subjects||[];
+  const pool=(catalog?.questions||[]).filter(q=>!wanted.length||wanted.includes(q.subject));
+  return Math.min(mode?.count||0,pool.length);
+}
 function gameRecordKey(modeId){
   const catalog=studyGameCatalog();
   return "abvm-study-games:"+String(catalog?.sourceKey||"current")+":"+modeId;
@@ -477,12 +482,12 @@ function gameTypeLabel(type){
 }
 function gameMenuHtml(catalog){
   const modes=studyGameModes();
-  return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Pick a game and start</h2><span>Questions use this week’s school skills and adjust as you practice.</span></div></section>'+
+  return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Pick a game and start</h2><span>Questions prioritize this week’s school skills and adjust as you practice.</span></div></section>'+
     '<div class="study-game-grid">'+modes.map(mode=>{
-      const record=loadGameRecord(mode.id);
-      return '<button type="button" class="study-game-tile game-'+mode.id+'" data-game-start="'+esc(mode.id)+'">'+studyGameIconHtml(mode.id)+'<span class="study-game-copy"><strong>'+esc(mode.title)+'</strong><small>'+esc(mode.copy)+'</small>'+(record.plays?'<em>Best '+record.best+' / '+mode.count+'</em>':'')+'</span><b aria-hidden="true">›</b></button>';
+      const record=loadGameRecord(mode.id),total=gameModeQuestionTotal(catalog,mode),disabled=total===0;
+      return '<button type="button" class="study-game-tile game-'+mode.id+'" data-game-start="'+esc(mode.id)+'"'+(disabled?' disabled aria-disabled="true"':'')+'>'+studyGameIconHtml(mode.id)+'<span class="study-game-copy"><strong>'+esc(mode.title)+'</strong><small>'+esc(mode.copy)+'</small>'+(disabled?'<em>Not ready yet</em>':record.plays?'<em>Best '+record.best+' / '+total+'</em>':'')+'</span><b aria-hidden="true">›</b></button>';
     }).join("")+'</div>'+
-    '<p class="game-privacy-note">Practice is generated from verified skills; private student answers and grades are not used.</p>';
+    '<p class="game-privacy-note">Practice prioritizes verified school skills; private student answers and grades are not used.</p>';
 }
 function gamePlayHtml(){
   const mode=gameMode(gameState.mode),q=gameState.questions[gameState.index];
