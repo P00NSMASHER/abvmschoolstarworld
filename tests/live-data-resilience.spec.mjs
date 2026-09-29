@@ -77,9 +77,9 @@ test("versioned app code bypasses an older cache entry while online",async({page
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
 
   const result=await page.evaluate(async()=>{
-    const cache=await caches.open("abvm-grade2-parent-companion-v85-code-cleanup");
-    await cache.put("./app.js?v=85",new Response("OLD_CACHED_APP_MARKER",{headers:{"Content-Type":"application/javascript"}}));
-    const text=await (await fetch("./app.js?v=85")).text();
+    const cache=await caches.open("abvm-grade2-parent-companion-v86-runtime-assets");
+    await cache.put("./app.js?v=86",new Response("OLD_CACHED_APP_MARKER",{headers:{"Content-Type":"application/javascript"}}));
+    const text=await (await fetch("./app.js?v=86")).text();
     return {old:text.includes("OLD_CACHED_APP_MARKER"),fresh:text.includes("PACK_REFRESH_MS")};
   });
   expect(result.old).toBe(false);
@@ -88,7 +88,7 @@ test("versioned app code bypasses an older cache entry while online",async({page
 
 test("service worker install tolerates optional school-data precache failure",async({request})=>{
   const source=await (await request.get("/sw.js")).text();
-  expect(source).toContain('const CACHE = "abvm-grade2-parent-companion-v85-code-cleanup"');
+  expect(source).toContain('const CACHE = "abvm-grade2-parent-companion-v86-runtime-assets"');
   expect(source).toContain("Promise.allSettled");
   expect(source).toContain("OPTIONAL_DATA");
   expect(source).toContain('url.searchParams.has("v")');
@@ -98,10 +98,10 @@ test("service worker install tolerates optional school-data precache failure",as
 
 test("index promotes a newly activated service worker before relying on versioned code",async({request})=>{
   const html=await (await request.get("/index.html")).text();
-  expect(html).toContain('abvm-sw-reloaded-v85');
+  expect(html).toContain('abvm-sw-reloaded-v86');
   expect(html).toContain('navigator.serviceWorker.addEventListener("controllerchange"');
   expect(html).toContain('registration.update()');
-  expect(html.indexOf("abvm-sw-reloaded-v85")).toBeLessThan(html.indexOf("./app.js?v=85"));
+  expect(html.indexOf("abvm-sw-reloaded-v86")).toBeLessThan(html.indexOf("./app.js?v=86"));
 });
 
 
@@ -330,5 +330,36 @@ test("Study does not present a distant test as something that matters this week"
   await page.goto("http://127.0.0.1:4173/#study");
   await expect(page.locator(".study-at-a-glance")).toContainText("Keep up with current class skills");
   await expect(page.locator(".study-at-a-glance")).not.toContainText("STAR Testing window");
+  await context.close();
+});
+
+
+test("current lunch overrides archive data in the derived index",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-09-29T13:00:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  const fixture=structuredClone(source);
+  fixture.pack.lunchArchive=[...(fixture.pack.lunchArchive||[]).filter(x=>x.date!=="2026-09-29"),{date:"2026-09-29",items:["Archived wrong meal"]}];
+  fixture.pack.lunchMenu=[...(fixture.pack.lunchMenu||[]).filter(x=>x.date!=="2026-09-29"),{date:"2026-09-29",items:["Current indexed meal"]}];
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:fixture}));
+  await page.goto("http://127.0.0.1:4173/#today");
+  await expect(page.locator(".lunch-card")).toContainText("Current indexed meal");
+  await expect(page.locator(".lunch-card")).not.toContainText("Archived wrong meal");
+  await context.close();
+});
+
+test("derived event index preserves every day of multi-day school events",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-10-19T13:00:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  const fixture=structuredClone(source);
+  fixture.pack.importantDates=[{date:"Monday–Tuesday, Oct. 19–20",label:"Parent-Teacher Conferences",kind:"conference"}];
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:fixture}));
+  await page.goto("http://127.0.0.1:4173/#week");
+  await expect(page.locator(".day-detail")).toContainText("Parent-Teacher Conferences");
+  await page.locator('[data-day^="2026-10-20"]').click();
+  await expect(page.locator(".day-detail")).toContainText("Parent-Teacher Conferences");
   await context.close();
 });

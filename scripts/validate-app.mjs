@@ -24,6 +24,12 @@ for(const ref of [
   "pages/family-clean.css","pages/responsive.css","pages/study-clean.css",
   "pages/today-clean.css","pages/week-clean.css"
 ])if(exists(ref))fail("Obsolete legacy source must stay removed: "+ref);
+const obsoleteAssetNames=fs.readdirSync(path.join(root,"pages/assets")).filter(name=>
+  /^(?:hero-(?:today|week|calendar|study|family)|lunch-(?:monday|tuesday|wednesday|thursday|friday)|calendar-(?:lunch|star|gym|pretzel))\.webp$/.test(name)
+);
+if(obsoleteAssetNames.length)fail("Obsolete legacy visual assets must stay removed: "+obsoleteAssetNames.join(", "));
+if(exists("pages/assets/calendar"))fail("Obsolete calendar visual asset directory must stay removed");
+if(exists("pages/data/calendar-visual-library.json"))fail("Obsolete calendar visual library must stay removed");
 const swShell=[...sw.matchAll(/"\.\/([^"]+)"/g)].map(m=>m[1]).filter(Boolean);
 for(const ref of swShell)if(!exists("pages/"+ref)&&ref!=="")fail("Service worker shell references missing file: "+ref);
 console.log("Gold-standard rollback validation passed",{importantDates:pack.pack.importantDates.length,homework:pack.pack.homework.length});

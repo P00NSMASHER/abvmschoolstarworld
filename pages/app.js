@@ -2,7 +2,7 @@
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const stack=()=>$("#app-content");
 let envelope=null, pack=null, activeTab=(["today","week","calendar","study","games","family"].includes(location.hash.slice(1))?location.hash.slice(1):"today"), selectedDay=null, calendarDay=null, weekOffset=0, calendarOffset=0;
-let studyGameCatalogCache=null, studyEnginePromise=null, screenEventsBound=false, lastPackFetchAt=0, packRefreshPromise=null, manualRefreshActive=false, gameState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false};
+let studyGameCatalogCache=null, derivedPackCache=null, studyEnginePromise=null, screenEventsBound=false, lastPackFetchAt=0, packRefreshPromise=null, manualRefreshActive=false, gameState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false};
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -50,8 +50,41 @@ function sameDay(a,b){return a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth
 function isoDateKey(date){
   return date.getFullYear()+"-"+String(date.getMonth()+1).padStart(2,"0")+"-"+String(date.getDate()).padStart(2,"0");
 }
+function getDerivedPack(){
+  if(derivedPackCache?.pack===pack)return derivedPackCache;
+  const datedEvents=(pack?.importantDates||[]).map(item=>{
+    const date=parseDate(item.date),range=eventDateRange(item.date);
+    return{item,date,range};
+  }).filter(row=>row.date||row.range);
+  const eventsByDate=new Map();
+  for(const row of datedEvents){
+    if(!row.range)continue;
+    for(let cursor=new Date(row.range[0]);cursor<=row.range[1];cursor.setDate(cursor.getDate()+1)){
+      const key=isoDateKey(cursor),items=eventsByDate.get(key)||[];
+      items.push(row.item);eventsByDate.set(key,items);
+    }
+  }
+  const lunchByDate=new Map();
+  const lunchKey=item=>{
+    if(item?.date)return item.date;
+    const parsed=parseDate(item?.day);
+    return parsed?isoDateKey(parsed):null;
+  };
+  for(const item of pack?.lunchArchive||[]){
+    const key=lunchKey(item);
+    if(key)lunchByDate.set(key,item);
+  }
+  for(const item of pack?.lunchMenu||[]){
+    const key=lunchKey(item);
+    if(key)lunchByDate.set(key,item);
+  }
+  const subjects=new Map((pack?.subjects||[]).map(item=>[String(item.subject||"").trim().toLowerCase(),item]));
+  const reminderRows=(pack?.reminders||[]).map(text=>({text,range:eventDateRange(text)})).filter(row=>row.range);
+  derivedPackCache={pack,datedEvents,eventsByDate,lunchByDate,subjects,reminderRows};
+  return derivedPackCache;
+}
 function datedImportantEvents(){
-  return (pack?.importantDates||[]).map(item=>({item,date:parseDate(item.date)})).filter(row=>row.date);
+  return getDerivedPack().datedEvents.filter(row=>row.date);
 }
 function fmtDate(d){return d?WEEKDAY[d.getDay()]+", "+MONTHS[d.getMonth()]+" "+d.getDate():"";}
 function fmtShort(d){return d?WEEKDAY[d.getDay()].slice(0,3)+" "+d.getDate():"";}
@@ -94,13 +127,10 @@ function eventDateRange(text){
   return [start,end];
 }
 function eventItemsForDate(date){
-  return (pack?.importantDates||[]).filter(x=>{
-    const range=eventDateRange(x.date); return range&&date>=range[0]&&date<=range[1];
-  });
+  return getDerivedPack().eventsByDate.get(isoDateKey(date))||[];
 }
 function lunchForDate(date){
-  const key=isoDateKey(date);
-  return [...(pack?.lunchMenu||[]),...(pack?.lunchArchive||[])].find(x=>x.date?x.date===key:sameDay(parseDate(x.day),date))||null;
+  return getDerivedPack().lunchByDate.get(isoDateKey(date))||null;
 }
 function keyPart(value){return String(value||"").trim().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,90)||"item";}
 function taskWeekKey(){return keyPart(pack?.weekLabel||"current-week");}
@@ -214,25 +244,27 @@ function nextSpellingTest(){
 }
 function currentOrSoonStarAssessment(){
   const now=today(),weekMs=7*24*60*60*1000;
-  return (pack?.importantDates||[]).map(x=>({x,range:eventDateRange(x.date)}))
-    .filter(o=>/\bSTAR\b/i.test(o.x.label||"")&&o.range&&o.range[1]>=now&&o.range[0].getTime()-now.getTime()<=weekMs)
-    .sort((a,b)=>a.range[0]-b.range[0])[0]||null;
+  return getDerivedPack().datedEvents
+    .filter(({item,range})=>/\bSTAR\b/i.test(item.label||"")&&range&&range[1]>=now&&range[0].getTime()-now.getTime()<=weekMs)
+    .sort((a,b)=>a.range[0]-b.range[0])
+    .map(({item,range})=>({x:item,range}))[0]||null;
 }
-function readingSubject(){return (pack?.subjects||[]).find(s=>/Reading \/ ELA/i.test(s.subject||""));}
-function religionSubject(){return (pack?.subjects||[]).find(s=>/^Religion$/i.test(s.subject||""));}
-function mathSubject(){return (pack?.subjects||[]).find(s=>/^Math$/i.test(s.subject||""));}
-function spellingSubject(){return (pack?.subjects||[]).find(s=>/Spelling/i.test(s.subject||""));}
-function readingRoutine(){return (pack?.subjects||[]).find(s=>/Reading Routine/i.test(s.subject||""))?.topics?.[0]||"Read for 20 minutes every day.";}
+function subjectByName(name){return getDerivedPack().subjects.get(name.toLowerCase())||null;}
+function readingSubject(){return subjectByName("Reading / ELA");}
+function religionSubject(){return subjectByName("Religion");}
+function mathSubject(){return subjectByName("Math");}
+function spellingSubject(){return subjectByName("Spelling / Handwriting");}
+function readingRoutine(){return subjectByName("Reading Routine")?.topics?.[0]||"Read for 20 minutes every day.";}
 
 function reminderForDate(date){
-  const rows=(pack?.reminders||[]).map(text=>({text,range:eventDateRange(text)})).filter(row=>row.range);
+  const rows=getDerivedPack().reminderRows;
   const exact=rows.find(row=>date>=row.range[0]&&date<=row.range[1]);
   if(exact)return exact.text;
   return rows.filter(row=>row.range[0]>=date).sort((a,b)=>a.range[0]-b.range[0])[0]?.text||"";
 }
 function upcomingReminderTexts(date=today(),limit=6){
-  const timed=(pack?.reminders||[]).map(text=>({text,range:eventDateRange(text)}))
-    .filter(row=>row.range&&row.range[1]>=date)
+  const timed=getDerivedPack().reminderRows
+    .filter(row=>row.range[1]>=date)
     .sort((a,b)=>a.range[0]-b.range[0]).map(row=>row.text);
   return [...new Set(timed)].slice(0,limit);
 }
@@ -250,7 +282,7 @@ function currentNoticeTexts(date=today()){
   });
 }
 function specialsRows(){
-  const source=(pack?.subjects||[]).find(s=>/^Specials$/i.test(s.subject||""));
+  const source=subjectByName("Specials");
   return (source?.topics||[]).map(line=>{
     const m=String(line).match(/^(Monday|Tuesday|Wednesday|Thursday|Friday):\s*(.+)$/i);
     return m?{day:m[1].slice(0,3),label:m[2]}:null;
@@ -652,7 +684,7 @@ async function fetchPack({force=false,notify=false}={}){
       const data=await r.json();
       if(!data?.pack?.sourceSufficient)throw new Error("Incomplete pack");
       const before=packContentKey(envelope),after=packContentKey(data),changed=!!before&&before!==after;
-      envelope=data;pack=data.pack;lastPackFetchAt=Date.now();
+      envelope=data;pack=data.pack;derivedPackCache=null;lastPackFetchAt=Date.now();
       if(changed)studyGameCatalogCache=null;
       if(!before||changed)render({preserveScroll:!!before});
       else updateFreshnessUI();
