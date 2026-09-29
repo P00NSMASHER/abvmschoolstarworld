@@ -2,12 +2,15 @@
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const stack=()=>$("#app-content");
 let envelope=null, pack=null, activeTab=(["today","week","calendar","study","games","family"].includes(location.hash.slice(1))?location.hash.slice(1):"today"), selectedDay=null, calendarDay=null, weekOffset=0, calendarOffset=0;
-let studyGameCatalogCache=null, studyEnginePromise=null, screenEventsBound=false, gameState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false};
+let studyGameCatalogCache=null, studyEnginePromise=null, screenEventsBound=false, lastPackFetchAt=0, packRefreshPromise=null, gameState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false};
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
 const SHORT_MONTHS={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,sept:8,oct:9,nov:10,dec:11};
 const WEEKDAY=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const SCHOOL_TIME_ZONE="America/New_York";
+const PACK_URL="./data/study-pack.json";
+const PACK_REFRESH_MS=5*60*1000;
 
 function storageGet(key){try{return localStorage.getItem(key)}catch{return null}}
 function storageSet(key,value){try{localStorage.setItem(key,value);return true}catch{return false}}
@@ -24,7 +27,7 @@ function parseDate(text){
   const m=String(text).match(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]*\.?\s*(\d{1,2})/i);
   if(!m)return null;
   const month=SHORT_MONTHS[m[1].toLowerCase()], day=Number(m[2]);
-  const now=new Date(); let year=now.getFullYear();
+  const now=today(); let year=now.getFullYear();
   if(now.getMonth()>=7&&month<=5)year++;
   else if(now.getMonth()<=5&&month>=7)year--;
   return new Date(year,month,day,12);
@@ -40,7 +43,7 @@ function freshnessState(){
   const raw=envelope?.sourceLastSeenAt||pack?.sourceCapturedAt||pack?.generatedAt;
   const d=raw?new Date(raw):null;
   if(!d||Number.isNaN(d.getTime()))return{state:"attention",label:"Source verification unavailable"};
-  const stamp=d.toLocaleDateString(undefined,{month:"short",day:"numeric"})+" at "+d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})+" ET";
+  const stamp=d.toLocaleDateString(undefined,{month:"short",day:"numeric",timeZone:SCHOOL_TIME_ZONE})+" at "+d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit",timeZone:SCHOOL_TIME_ZONE})+" ET";
   const ageHours=(Date.now()-d.getTime())/3600000;
   if(navigator.onLine===false)return{state:"offline",label:"Offline · last verified "+stamp};
   if(ageHours>30)return{state:"attention",label:"Needs refresh · last verified "+stamp};
@@ -79,9 +82,22 @@ function lunchForDate(date){
   const key=date.getFullYear()+"-"+String(date.getMonth()+1).padStart(2,"0")+"-"+String(date.getDate()).padStart(2,"0");
   return [...(pack?.lunchMenu||[]),...(pack?.lunchArchive||[])].find(x=>x.date?x.date===key:sameDay(parseDate(x.day),date))||null;
 }
-function checkKey(item,index){return "abvm-old-look:"+String(pack?.sourceHash||"pack")+":"+index+":"+(item.task||item.label||"");}
-function checked(item,index){return storageGet(checkKey(item,index))==="1";}
-function toggleChecked(item,index){const k=checkKey(item,index);storageGet(k)==="1"?storageRemove(k):storageSet(k,"1");render();}
+function keyPart(value){return String(value||"").trim().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,90)||"item";}
+function taskWeekKey(){return keyPart(pack?.weekLabel||"current-week");}
+function checkKey(item){return "abvm-task:v2:"+taskWeekKey()+":"+keyPart(item?._sourceSubject||item?.subject)+":"+keyPart(item?.task||item?.label);}
+function legacyCheckKey(item,index){return "abvm-old-look:"+String(pack?.sourceHash||"pack")+":"+index+":"+(item?.task||item?.label||"");}
+function checked(item,index){
+  const key=checkKey(item);
+  if(storageGet(key)==="1")return true;
+  if(storageGet(legacyCheckKey(item,index))==="1"){storageSet(key,"1");return true;}
+  return false;
+}
+function toggleChecked(item,index){
+  const key=checkKey(item),legacy=legacyCheckKey(item,index);
+  if(checked(item,index)){storageRemove(key);storageRemove(legacy);}
+  else storageSet(key,"1");
+  render();
+}
 function taskPolicy(item){
   const task=String(item?.task||"").trim(),subject=String(item?.subject||"").trim();
   const haystack=(subject+" "+task).toLowerCase();
@@ -96,7 +112,7 @@ function taskPolicy(item){
 function taskRecordsForSurface(surface){
   return (pack?.homework||[]).map((item,index)=>({item,index,policy:taskPolicy(item)}))
     .filter(record=>record.policy[surface]!==false)
-    .map(record=>record.policy.subject?{...record,item:{...record.item,subject:record.policy.subject}}:record);
+    .map(record=>record.policy.subject?{...record,item:{...record.item,_sourceSubject:record.item.subject,subject:record.policy.subject}}:record);
 }
 function taskHtml(item,index){
   const done=checked(item,index);
@@ -105,9 +121,14 @@ function taskHtml(item,index){
   const action=(done?"Completed: ":"Mark complete: ")+(item.task||"Task");
   return '<button type="button" class="check-item'+(done?' is-done':'')+'" data-check="'+index+'" aria-pressed="'+(done?"true":"false")+'" aria-label="'+esc(action)+'"><span class="check-box" aria-hidden="true">'+(done?"✓":"")+'</span><span class="check-copy"><span class="task-tag '+(optional?"if-participating":"required")+'">'+tag+'</span><strong>'+esc(item.task||"Task")+'</strong>'+(item.subject?'<small>'+esc(item.subject)+'</small>':'')+'</span></button>';
 }
+function schoolDateParts(value=new Date()){
+  const parts=new Intl.DateTimeFormat("en-US",{timeZone:SCHOOL_TIME_ZONE,year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(value);
+  const map=Object.fromEntries(parts.map(part=>[part.type,part.value]));
+  return{year:Number(map.year),month:Number(map.month),day:Number(map.day)};
+}
 function today(){
-  const d=new Date(); d.setHours(12,0,0,0);
-  return d;
+  const parts=schoolDateParts();
+  return new Date(parts.year,parts.month-1,parts.day,12);
 }
 function mondayFor(date){
   const base=new Date(date); base.setHours(12,0,0,0);
@@ -164,6 +185,12 @@ function upcomingReminderTexts(date=today(),limit=6){
     .filter(row=>row.range&&row.range[1]>=date)
     .sort((a,b)=>a.range[0]-b.range[0]).map(row=>row.text);
   return [...new Set(timed)].slice(0,limit);
+}
+function currentNoticeTexts(date=today()){
+  return (pack?.parentNotices||[]).filter(text=>{
+    const range=eventDateRange(text);
+    return !range||range[1]>=date;
+  });
 }
 function specialsRows(){
   const source=(pack?.subjects||[]).find(s=>/^Specials$/i.test(s.subject||""));
@@ -319,7 +346,7 @@ function ensureStudyGameEngine(){
   if(studyEnginePromise)return studyEnginePromise;
   studyEnginePromise=new Promise((resolve,reject)=>{
     const script=document.createElement("script");
-    script.src="./study-games.js?v=70";
+    script.src="./study-games.js?v=72";
     script.async=true;
     script.onload=()=>window.ABVMStudyGames?resolve(window.ABVMStudyGames):reject(new Error("Study Games engine did not initialize"));
     script.onerror=()=>reject(new Error("Study Games engine could not be loaded"));
@@ -494,7 +521,7 @@ function renderGames(){
 
 function renderFamily(){
   const tests=(pack?.importantDates||[]).filter(x=>kindClass(x)==="test").filter(x=>{const d=parseDate(x.date);return d&&d>=today()&&d<=weekDays()[4]}).length;
-  const notices=pack?.parentNotices||[];
+  const notices=currentNoticeTexts();
   const homeworkActions=taskRecordsForSurface("family").map(({item})=>item.task);
   const actions=[...new Set([...homeworkActions,...upcomingReminderTexts(today(),6)])].slice(0,6);
   stack().innerHTML='<div class="screen family-screen" role="region" aria-label="Family dashboard">'+
@@ -507,15 +534,21 @@ function renderFamily(){
     '<p class="unofficial-note">Family planning tool based on current ABVM Grade 2 sources.</p>'+
     '</div>';
 }
-function render(){
+function render({preserveScroll=false}={}){
   if(!pack)return;
+  const scrollTop=stack().querySelector(".screen")?.scrollTop||0;
   ({today:renderToday,week:renderWeek,calendar:renderCalendar,study:renderStudy,games:renderGames,family:renderFamily}[activeTab]||renderToday)();
   $$(".bottom-nav button").forEach(b=>{
     const on=b.dataset.tab===activeTab;b.classList.toggle("active",on);
     on?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current");
   });
-  stack().scrollTop=0;
+  const screen=stack().querySelector(".screen");
+  if(screen)screen.scrollTop=preserveScroll?scrollTop:0;
   bindScreen();
+}
+function updateFreshnessUI(){
+  const node=stack().querySelector(".freshness");
+  if(node)node.outerHTML=freshness();
 }
 function bindScreen(){
   if(screenEventsBound)return;
@@ -539,12 +572,47 @@ function bindScreen(){
   });
 }
 $$(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>{activeTab=b.dataset.tab;history.replaceState(null,"","#"+activeTab);render();}));
+function packContentKey(data){
+  const p=data?.pack||{},lunchSource=p.lunchMenuSource||{};
+  return JSON.stringify({
+    sourceHash:p.sourceHash||"",
+    uploadedNoticeHash:p.uploadedNoticeHash||"",
+    weekLabel:p.weekLabel||"",
+    lunchMenu:p.lunchMenu||[],
+    lunchStatus:lunchSource.status||"",
+    lunchRetrievalState:lunchSource.retrievalState||"",
+    lunchMissingDates:lunchSource.missingDates||[]
+  });
+}
+async function fetchPack({force=false,notify=false}={}){
+  const now=Date.now();
+  if(!force&&pack&&(now-lastPackFetchAt)<PACK_REFRESH_MS)return false;
+  if(packRefreshPromise)return packRefreshPromise;
+  packRefreshPromise=(async()=>{
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),8000);
+    try{
+      const r=await fetch(PACK_URL,{cache:"no-store",signal:controller.signal});
+      if(!r.ok)throw new Error("HTTP "+r.status);
+      const data=await r.json();
+      if(!data?.pack?.sourceSufficient)throw new Error("Incomplete pack");
+      const before=packContentKey(envelope),after=packContentKey(data),changed=!!before&&before!==after;
+      envelope=data;pack=data.pack;lastPackFetchAt=Date.now();
+      if(changed)studyGameCatalogCache=null;
+      if(!before||changed)render({preserveScroll:!!before});
+      else updateFreshnessUI();
+      if(notify&&changed)toast("School info updated");
+      return changed;
+    }finally{
+      clearTimeout(timeout);
+      packRefreshPromise=null;
+    }
+  })();
+  return packRefreshPromise;
+}
 async function load(){
   try{
-    const r=await fetch("./data/study-pack.json",{cache:"no-store"});
-    if(!r.ok)throw new Error("HTTP "+r.status);
-    const d=await r.json(); if(!d?.pack?.sourceSufficient)throw new Error("Incomplete pack");
-    envelope=d;pack=d.pack;render();
+    await fetchPack({force:true});
     const warmGames=()=>ensureStudyGameEngine().catch(()=>{});
     if("requestIdleCallback" in window)requestIdleCallback(warmGames,{timeout:2200});
     else setTimeout(warmGames,1400);
@@ -560,8 +628,13 @@ window.addEventListener("hashchange",()=>{
     render();
   }
 });
-window.addEventListener("online",()=>{if(pack)render()});
-window.addEventListener("offline",()=>{if(pack)render()});
-if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"}).catch(()=>{}));
+window.addEventListener("online",()=>{if(pack)fetchPack({force:true,notify:true}).catch(()=>updateFreshnessUI())});
+window.addEventListener("offline",()=>{if(pack)updateFreshnessUI()});
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="visible"&&pack)fetchPack({notify:true}).catch(()=>{});
+});
+window.addEventListener("pageshow",event=>{
+  if(event.persisted&&pack)fetchPack({force:true,notify:true}).catch(()=>{});
+});
 load();
 })();
