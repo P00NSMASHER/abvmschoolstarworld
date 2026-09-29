@@ -77,9 +77,9 @@ test("versioned app code bypasses an older cache entry while online",async({page
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
 
   const result=await page.evaluate(async()=>{
-    const cache=await caches.open("abvm-grade2-parent-companion-v74-audit-fixes");
-    await cache.put("./app.js?v=74",new Response("OLD_CACHED_APP_MARKER",{headers:{"Content-Type":"application/javascript"}}));
-    const text=await (await fetch("./app.js?v=74")).text();
+    const cache=await caches.open("abvm-grade2-parent-companion-v76-game-audit");
+    await cache.put("./app.js?v=76",new Response("OLD_CACHED_APP_MARKER",{headers:{"Content-Type":"application/javascript"}}));
+    const text=await (await fetch("./app.js?v=76")).text();
     return {old:text.includes("OLD_CACHED_APP_MARKER"),fresh:text.includes("PACK_REFRESH_MS")};
   });
   expect(result.old).toBe(false);
@@ -88,7 +88,7 @@ test("versioned app code bypasses an older cache entry while online",async({page
 
 test("service worker install tolerates optional school-data precache failure",async({request})=>{
   const source=await (await request.get("/sw.js")).text();
-  expect(source).toContain('const CACHE = "abvm-grade2-parent-companion-v74-audit-fixes"');
+  expect(source).toContain('const CACHE = "abvm-grade2-parent-companion-v76-game-audit"');
   expect(source).toContain("Promise.allSettled");
   expect(source).toContain("OPTIONAL_DATA");
   expect(source).toContain('url.searchParams.has("v")');
@@ -98,10 +98,10 @@ test("service worker install tolerates optional school-data precache failure",as
 
 test("index promotes a newly activated service worker before relying on versioned code",async({request})=>{
   const html=await (await request.get("/index.html")).text();
-  expect(html).toContain('abvm-sw-reloaded-v74');
+  expect(html).toContain('abvm-sw-reloaded-v76');
   expect(html).toContain('navigator.serviceWorker.addEventListener("controllerchange"');
   expect(html).toContain('registration.update()');
-  expect(html.indexOf("abvm-sw-reloaded-v74")).toBeLessThan(html.indexOf("./app.js?v=74"));
+  expect(html.indexOf("abvm-sw-reloaded-v76")).toBeLessThan(html.indexOf("./app.js?v=76"));
 });
 
 
@@ -158,7 +158,7 @@ test("tapping the freshness box forces an immediate live pack refresh",async({br
   const status=page.locator("[data-refresh-pack]");
   await expect(status).toContainText("Older data");
   await status.click();
-  await expect(page.locator("[data-refresh-pack]")).toContainText("Checking latest school info");
+  await expect(page.locator("[data-refresh-pack]")).toContainText("Checking published school info");
   await expect(page.locator("[data-refresh-pack]")).toBeDisabled();
   await expect(page.locator(".freshness")).toHaveClass(/current/);
   await expect(page.locator(".freshness")).toContainText("Verified");
