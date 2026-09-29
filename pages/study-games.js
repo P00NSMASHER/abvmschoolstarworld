@@ -936,9 +936,10 @@ function pickBalanced(pool,count,seed,skillStats,preferredSkills=[]){
     return hash(seed+"|"+a.id)-hash(seed+"|"+b.id);
   });
   while(selected.length<Math.min(count,ordered.length)){
-    const eligible=ordered.filter(q=>!used.has(q.id)&&(skillCounts[q.skill]||0)<maxPerSkill);
-    if(!eligible.length)break;
-    const material=eligible.filter(q=>q.tier==="material"),tierPool=material.length?material:eligible;
+    const underCap=ordered.filter(q=>!used.has(q.id)&&(skillCounts[q.skill]||0)<maxPerSkill);
+    const remaining=underCap.length?underCap:ordered.filter(q=>!used.has(q.id));
+    if(!remaining.length)break;
+    const material=remaining.filter(q=>q.tier==="material"),tierPool=material.length?material:remaining;
     let candidate=tierPool.find(q=>{
       const last=selected[selected.length-1];
       if(last&&last.skill===q.skill){
