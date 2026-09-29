@@ -375,7 +375,7 @@ function studyGameModes(){
   return [
     {id:"quick",title:"Quick Mix",icon:"★",subjects:[],count:8,copy:"Current school skills mixed into one quick round."},
     {id:"math",title:"Math Dash",icon:"−",subjects:["Math"],count:8,copy:"Eight questions built from the current subtraction skill."},
-    {id:"words",title:"Word Power",icon:"Aa",subjects:["Reading / ELA","Spelling / Handwriting"],count:8,copy:"Current sight words, vocabulary, phonics, and grammar."},
+    {id:"words",title:"Word Power",icon:"Aa",subjects:["Reading / ELA","Spelling / Handwriting"],preferredSkills:["long-short-a","suffix-ed-ing"],count:8,copy:"Current spelling-test, phonics, word-building, and reading skills."},
     {id:"faith",title:"Faith Quest",icon:"✦",subjects:["Religion"],count:8,copy:"Religion practice from the current class material."}
   ];
 }
@@ -443,7 +443,7 @@ function recordGameLearning(question,correct){
 function startStudyGame(modeId){
   const engine=studyGameEngine(),catalog=studyGameCatalog(),mode=gameMode(modeId);
   if(!engine||!catalog)return;
-  const questions=engine.selectQuestions(catalog,{subjects:mode.subjects,count:mode.count,seed:nextGameSessionSeed(mode.id),skillStats:loadGameLearning()});
+  const questions=engine.selectQuestions(catalog,{subjects:mode.subjects,preferredSkills:mode.preferredSkills||[],count:mode.count,seed:nextGameSessionSeed(mode.id),skillStats:loadGameLearning()});
   gameState={screen:"play",mode:mode.id,questions,index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,learningRow:null};
   renderGames();bindScreen();
 }
