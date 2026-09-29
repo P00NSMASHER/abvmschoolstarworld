@@ -1,4 +1,12 @@
 const VERIFIED_ASSIGNMENT_SUBJECTS = new Set(['Spelling', 'Math', 'Reading', 'Religion']);
+const TEACHER_NAVIGATION_LABELS = new Set([
+  'home',
+  'reading work',
+  'weekly spelling list',
+  'homework',
+  'tests',
+  'more home',
+]);
 
 export function decodeHtml(value) {
   return String(value || '')
@@ -24,6 +32,7 @@ export function pageLines(html) {
 export function cleanTeacherText(value) {
   const cleaned = String(value || '')
     .replace(/Handwrititng/gi, 'Handwriting')
+    .replace(/\bdioalogue\b/gi, 'dialogue')
     .replace(/\b2 letter\b/gi, '2-letter')
     .replace(/--/g, ' — ')
     .replace(/\s*\/\s*/g, ' / ')
@@ -63,6 +72,36 @@ function inlineAcademicAssignment(line) {
   if (match) return ['Reading', match[1]];
   if (/^Read$/i.test(normalized)) return ['Reading', 'Read'];
   return null;
+}
+
+export function teacherContentLines(lines, pageTitle = '') {
+  const title = String(pageTitle || '').trim().toLowerCase();
+  return [...new Set((Array.isArray(lines) ? lines : [])
+    .map(line => String(line || '').replace(/\s+/g, ' ').trim())
+    .filter(Boolean))]
+    .filter(line => {
+      const normalized = line.toLowerCase();
+      return normalized !== title && !TEACHER_NAVIGATION_LABELS.has(normalized);
+    });
+}
+
+export function parseStoryTitles(value) {
+  const normalized = String(value || '')
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+  const quoted = [...normalized.matchAll(/["']([^"']+?)["']/g)]
+    .map(match => match[1].trim())
+    .filter(Boolean);
+  if (quoted.length >= 2) return [...new Set(quoted)];
+
+  const cleaned = normalized.replace(/^["']+|["']+$/g, '').trim();
+  const pieces = cleaned
+    .split(/["']+\s+(?=[A-Z])/)
+    .map(part => part.replace(/^["']+|["']+$/g, '').trim())
+    .filter(Boolean);
+  return [...new Set(pieces.length ? pieces : [cleaned].filter(Boolean))];
 }
 
 export function parseHomework(lines) {
