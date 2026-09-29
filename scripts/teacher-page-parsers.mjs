@@ -5,6 +5,7 @@ const TEACHER_NAVIGATION_LABELS = new Set([
   'weekly spelling list',
   'homework',
   'tests',
+  'religion',
   'more home',
 ]);
 
