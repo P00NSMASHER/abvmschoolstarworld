@@ -65,12 +65,17 @@ function getDerivedPack(){
     }
   }
   const lunchByDate=new Map();
+  const lunchKey=item=>{
+    if(item?.date)return item.date;
+    const parsed=parseDate(item?.day);
+    return parsed?isoDateKey(parsed):null;
+  };
   for(const item of pack?.lunchArchive||[]){
-    const key=item.date||isoDateKey(parseDate(item.day));
+    const key=lunchKey(item);
     if(key)lunchByDate.set(key,item);
   }
   for(const item of pack?.lunchMenu||[]){
-    const key=item.date||isoDateKey(parseDate(item.day));
+    const key=lunchKey(item);
     if(key)lunchByDate.set(key,item);
   }
   const subjects=new Map((pack?.subjects||[]).map(item=>[String(item.subject||"").trim().toLowerCase(),item]));
