@@ -5,6 +5,8 @@ import {
   cleanTeacherText,
   pageLines,
   parseHomework,
+  parseStoryTitles,
+  teacherContentLines,
 } from './teacher-page-parsers.mjs';
 import { validateUploadedNoticePolicy } from './uploaded-notice-policy.mjs';
 import { refreshLunchPublication } from './lunch-publication.mjs';
@@ -96,7 +98,7 @@ function parseDatedLines(lines) {
 }
 
 function kindFor(label) {
-  if (/STAR/i.test(label)) return 'assessment';
+  if (/\bSTAR\b/i.test(label)) return 'assessment';
   if (/test|grammar|subtraction|addition/i.test(label)) return 'test';
   if (/due|money|rsvp/i.test(label)) return 'deadline';
   if (/no school|closed/i.test(label)) return 'holiday';
@@ -119,7 +121,7 @@ function topicKey(value) {
     ['star', /\bstar\b/], ['mass-communication', /mass.*communication|communication.*mass/],
     ['communication-folder', /communication folder/], ['mass', /\bmass\b/],
     ['stationery', /stationa(?:ry|ery).*money/], ['pretzel', /pretzel/], ['dress-down', /dress down/],
-    ['lego', /lego club/], ['picture', /picture day/], ['hsa', /hsa.*meeting/], ['closed', /no school|closed/],
+    ['lego', /lego club/], ['hsa', /hsa.*meeting/], ['picture', /picture day/], ['closed', /no school|closed/],
     ['dismissal', /dismissal/], ['conference', /conference/], ['dance', /welcome back dance/],
     ['schwartz', /schwartz/], ['spelling', /spelling/],
     ['subtraction', /subtraction/], ['grammar', /grammar|types of sentences/], ['addition', /addition/],
@@ -244,7 +246,9 @@ if (homeEvents.some(item => !dateKey(item.date))) {
 
 const homework = parseHomework(pages.Homework.lines);
 const readingLines = pages['Reading Work'].lines;
-const story = requireLine(readingLines, 'Stories:', 'Reading Work');
+const storyLine = requireLine(readingLines, 'Stories:', 'Reading Work');
+const stories = parseStoryTitles(storyLine);
+if (!stories.length) throw new Error('Reading Work did not contain a usable story title.');
 const sightWords = requireLine(readingLines, 'Sight Words:', 'Reading Work');
 const phonics = requireLine(readingLines, 'Phonics:', 'Reading Work');
 const vocabulary = requireLine(readingLines, 'Vocab Words:', 'Reading Work');
@@ -253,7 +257,8 @@ const comprehension = requireLine(readingLines, 'Reading Comprehension:', 'Readi
 const testItems = parseDatedLines(pages.Tests.lines).map(item => ({ ...item, kind: 'test', source: 'teacher-tests' }));
 if (testItems.length < 2) throw new Error('Tests page did not contain enough dated tests to publish safely.');
 
-const religionLines = pages.Religion.lines.filter(line => line.toLowerCase() !== 'religion');
+const religionLines = teacherContentLines(pages.Religion.lines, 'Religion');
+const spellingLines = teacherContentLines(pages['Weekly Spelling List'].lines, 'Weekly Spelling List');
 if (!religionLines.some(line => /^Unit\s/i.test(line)) || !religionLines.some(line => /^Chapter\s/i.test(line))) {
   throw new Error('Religion page did not contain the expected unit and chapter material.');
 }
@@ -273,7 +278,7 @@ const grammarTest = testItems.find(item => /grammar|types of sentences/i.test(it
 upsertSubject(subjects, /Reading \/ ELA/i, {
   subject: 'Reading / ELA',
   topics: [
-    `Story: ${story.replace(/^['“"]|['”"]$/g, '')}`,
+    ...stories.map(story => `Story: ${story}`),
     `Sight words: ${sightWords}`,
     `Phonics: ${phonics.replace(/2 letter/i, '2-letter')}`,
     `Vocabulary: ${vocabulary}`,
@@ -289,8 +294,8 @@ const spellingTest = testItems.find(item => /spelling/i.test(item.label));
 upsertSubject(subjects, /Spelling/i, {
   subject: 'Spelling / Handwriting',
   topics: spellingTest ? [`${spellingTest.date} test focus: ${spellingTest.label.replace(/^Spelling\s*/i, '').replace(/\s*\/\s*Handwriting$/i, '').replace(/^\(([^)]+)\)$/, '$1')}`] : [`Phonics: ${phonics}`],
-  studyNotes: pages['Weekly Spelling List'].lines.length > 1
-    ? pages['Weekly Spelling List'].lines.slice(1)
+  studyNotes: spellingLines.length
+    ? spellingLines
     : ['The Weekly Spelling List page currently has no word list posted.'],
 });
 
@@ -336,8 +341,8 @@ pack.vocabulary = vocabulary.split(',').map(term => term.trim()).filter(Boolean)
 pack.importantDates = mergeTeacherEvents(pack.importantDates || [], homeEvents, 'teacher-home');
 pack.importantDates = mergeTeacherEvents(pack.importantDates, testItems, 'teacher-tests');
 pack.importantDates = mergeUploadedEvents(pack.importantDates, uploadedNotices);
-pack.reminders = mergeUploadedText(pack.reminders || [], uploadedNotices.reminders, pack.uploadedNoticeTopics?.reminders);
-pack.parentNotices = mergeUploadedText(pack.parentNotices || [], uploadedNotices.parentNotices, pack.uploadedNoticeTopics?.parentNotices);
+pack.reminders = [...new Set(uploadedNotices.reminders.map(item => item.text))];
+pack.parentNotices = [...new Set(uploadedNotices.parentNotices.map(item => item.text))];
 pack.uploadedNoticeTopics = {
   reminders: [...new Set(uploadedNotices.reminders.map(item => item.topic))],
   parentNotices: [...new Set(uploadedNotices.parentNotices.map(item => item.topic))],
@@ -354,7 +359,7 @@ pack.sourceSufficient = true;
 pack.gaps = (pack.gaps || []).filter(item => !/source bridge|four-hour|does not show a date|spelling-word list|weekly spelling|reading work page leaves/i.test(item));
 pack.gaps = [...new Set([...pack.gaps,
   'The public teacher Homework page does not show a date, so assignments are labeled as the current posting and refreshed daily.',
-  ...(pages['Weekly Spelling List'].lines.length > 1 ? [] : ['The Weekly Spelling List page currently has no word list posted.']),
+  ...(spellingLines.length ? [] : ['The Weekly Spelling List page currently has no word list posted.']),
   ...(comprehension ? [] : ['The current Reading Work page leaves Reading Comprehension blank, so no comprehension target is invented.']),
 ])];
 
