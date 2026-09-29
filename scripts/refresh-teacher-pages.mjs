@@ -268,21 +268,193 @@ const pack = data.pack || {};
 const contentChanged = pack.sourceHash !== sourceHash || pack.uploadedNoticeHash !== uploadedNoticeHash;
 const capturedAt = contentChanged ? checkedAt : (data.sourceCapturedAt || pack.sourceCapturedAt || checkedAt);
 
+function currentStoryStudy(storyTitle) {
+  if (!/Little Flap Learns to Fly/i.test(storyTitle || '')) return null;
+  return {
+    pairedTitle: 'Help! A Story of Friendship',
+    focus: 'Compare how friends help one another, how fear affects choices, and what each story teaches about trust.',
+    questions: [
+        {
+            "story": "Little Flap Learns to Fly",
+            "skill": "character-motivation",
+            "prompt": "Why do Little Flap, Fluff, and Tuff need to learn how to fly?",
+            "choices": [
+                "So they can get their own worms.",
+                "So they can build a new nest.",
+                "So they can sing louder."
+            ],
+            "answer": "So they can get their own worms.",
+            "explanation": "The young birds want to get food for themselves, so learning to fly becomes important.",
+            "hint": "Think about what their parents had been bringing them."
+        },
+        {
+            "story": "Little Flap Learns to Fly",
+            "skill": "inference",
+            "prompt": "Why is Little Flap afraid when he looks over the edge of the nest?",
+            "choices": [
+                "The ground looks very far away.",
+                "He cannot find Fluff and Tuff.",
+                "A storm is coming."
+            ],
+            "answer": "The ground looks very far away.",
+            "explanation": "Looking down from the high nest makes Little Flap feel scared about flying.",
+            "hint": "Picture what Little Flap sees when he looks down."
+        },
+        {
+            "story": "Little Flap Learns to Fly",
+            "skill": "text-evidence",
+            "prompt": "What do the birds practice before they try to fly?",
+            "choices": [
+                "Flapping their wings.",
+                "Digging for worms.",
+                "Building a nest."
+            ],
+            "answer": "Flapping their wings.",
+            "explanation": "Fluff shows the others how to flap their wings so they can make them strong.",
+            "hint": "Think about the action Fluff demonstrates for the others."
+        },
+        {
+            "story": "Little Flap Learns to Fly",
+            "skill": "character-motivation",
+            "prompt": "What feeling does Little Flap keep secret from his friends at first?",
+            "choices": [
+                "He is afraid to fly.",
+                "He is angry with his parents.",
+                "He is bored in the nest."
+            ],
+            "answer": "He is afraid to fly.",
+            "explanation": "Little Flap is scared by the height but is initially too afraid to tell his friends.",
+            "hint": "Think about what he finally admits before it is time to fly."
+        },
+        {
+            "story": "Little Flap Learns to Fly",
+            "skill": "theme",
+            "prompt": "How do Fluff and Tuff help Little Flap become brave enough to fly?",
+            "choices": [
+                "They promise to stay close and help him if he falls.",
+                "They tell him to fly by himself.",
+                "They bring him a worm so he can stay in the nest."
+            ],
+            "answer": "They promise to stay close and help him if he falls.",
+            "explanation": "Their support helps Little Flap trust his friends and try something that scares him.",
+            "hint": "Think about what it means for Little Flap to depend on his friends."
+        },
+        {
+            "story": "Little Flap Learns to Fly",
+            "skill": "theme",
+            "prompt": "Which lesson best fits Little Flap Learns to Fly?",
+            "choices": [
+                "Friends can support you when you are afraid.",
+                "Never try something that feels difficult.",
+                "Keeping every fear secret makes problems disappear."
+            ],
+            "answer": "Friends can support you when you are afraid.",
+            "explanation": "Little Flap succeeds after practicing and accepting encouragement from friends he can depend on.",
+            "hint": "Choose the lesson shown by Little Flap’s problem, his friends’ actions, and the ending."
+        },
+        {
+            "story": "Help! A Story of Friendship",
+            "skill": "character-motivation",
+            "prompt": "Why does Mouse hide from Snake at the beginning of Help! A Story of Friendship?",
+            "choices": [
+                "He heard gossip that snakes are dangerous to mice.",
+                "Snake had taken his food.",
+                "He wanted to surprise Snake."
+            ],
+            "answer": "He heard gossip that snakes are dangerous to mice.",
+            "explanation": "Mouse becomes afraid because of something he hears from others, even though Snake has been his friend.",
+            "hint": "Think about the rumor Mouse believes."
+        },
+        {
+            "story": "Help! A Story of Friendship",
+            "skill": "cause-effect",
+            "prompt": "What happens because Mouse is so busy watching for danger?",
+            "choices": [
+                "He falls into a deep hole and hurts his foot.",
+                "He gets lost in the forest.",
+                "He bumps into Snake."
+            ],
+            "answer": "He falls into a deep hole and hurts his foot.",
+            "explanation": "Mouse is distracted by his fear and does not watch where he is going.",
+            "hint": "Look for the accident caused by Mouse’s worry."
+        },
+        {
+            "story": "Help! A Story of Friendship",
+            "skill": "text-evidence",
+            "prompt": "Why can’t Hedgehog simply carry Mouse out of the hole?",
+            "choices": [
+                "His prickles could hurt Mouse.",
+                "He is too sleepy.",
+                "He does not know where Mouse is."
+            ],
+            "answer": "His prickles could hurt Mouse.",
+            "explanation": "Hedgehog wants to help, but his prickly back would make carrying injured Mouse unsafe.",
+            "hint": "Think about Hedgehog’s body."
+        },
+        {
+            "story": "Help! A Story of Friendship",
+            "skill": "text-evidence",
+            "prompt": "Who is ultimately able to rescue Mouse from the hole?",
+            "choices": [
+                "Snake.",
+                "Fox.",
+                "Skunk."
+            ],
+            "answer": "Snake.",
+            "explanation": "The friend Mouse feared is the one who finds a safe way to help him.",
+            "hint": "The rescuer proves Mouse’s fear was based on gossip rather than his friend’s actions."
+        },
+        {
+            "story": "Help! A Story of Friendship",
+            "skill": "cause-effect",
+            "prompt": "How does Snake help get Mouse out without frightening him?",
+            "choices": [
+                "A stick is tied to Snake’s tail and lowered for Mouse to hold.",
+                "Snake fills the hole with leaves.",
+                "Rabbit carries Mouse on his back."
+            ],
+            "answer": "A stick is tied to Snake’s tail and lowered for Mouse to hold.",
+            "explanation": "Snake uses a careful plan that lets Mouse grab the stick and be pulled to safety.",
+            "hint": "Think about the tool Snake and the other friends use."
+        },
+        {
+            "story": "Help! A Story of Friendship",
+            "skill": "theme",
+            "prompt": "Which lesson best fits Help! A Story of Friendship?",
+            "choices": [
+                "Do not judge a friend only by gossip; pay attention to how the friend actually acts.",
+                "Friends should never ask one another for help.",
+                "Being afraid always keeps you safe."
+            ],
+            "answer": "Do not judge a friend only by gossip; pay attention to how the friend actually acts.",
+            "explanation": "Mouse’s fear comes from a rumor, while Snake’s actions show that he is a caring and dependable friend.",
+            "hint": "Compare what Mouse heard about Snake with what Snake actually did."
+        }
+    ]
+  };
+}
+
 const subjects = Array.isArray(pack.subjects) ? [...pack.subjects] : [];
 const grammarTest = testItems.find(item => /grammar|types of sentences/i.test(item.label));
+const storyStudy = currentStoryStudy(story);
 upsertSubject(subjects, /Reading \/ ELA/i, {
   subject: 'Reading / ELA',
   topics: [
     `Story: ${story.replace(/^['“"]|['”"]$/g, '')}`,
+    ...(storyStudy?.pairedTitle ? [`Paired story: ${storyStudy.pairedTitle}`] : []),
     `Sight words: ${sightWords}`,
     `Phonics: ${phonics.replace(/2 letter/i, '2-letter')}`,
     `Vocabulary: ${vocabulary}`,
     `Word structure: ${/^cvc words$/i.test(wordStructure) ? 'CVC words' : wordStructure}`,
     ...(grammarTest ? [`Grammar: ${grammarTest.label.match(/\(([^)]+)\)/)?.[1] || grammarTest.label} (test ${grammarTest.date})`] : []),
   ],
-  studyNotes: comprehension
-    ? [`Reading comprehension: ${comprehension}`]
-    : ['The current Reading Work page does not list a reading-comprehension skill.'],
+  studyNotes: [
+    ...(comprehension
+      ? [`Reading comprehension: ${comprehension}`]
+      : ['The current Reading Work page does not list a reading-comprehension skill.']),
+    ...(storyStudy?.focus ? [`Story focus: ${storyStudy.focus}`] : []),
+  ],
+  storyQuestions: storyStudy?.questions || [],
 });
 
 const spellingTest = testItems.find(item => /spelling/i.test(item.label));
