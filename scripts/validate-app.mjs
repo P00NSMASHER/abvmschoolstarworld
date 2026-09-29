@@ -18,6 +18,12 @@ for(const marker of [".app-header",".day-picker",".calendar-card",".study-accord
 for(const marker of ["skill-only-equivalent-item-v2","research-quality","buildCatalog","selectQuestions","FORBIDDEN"])if(!games.includes(marker))fail("Missing Study Games engine marker: "+marker);
 if(!app.includes("./assets/abvm-app-icon-192.png"))fail("School seal must use local app asset");
 for(const ref of ["pages/assets/abvm-app-icon-180.png","pages/assets/abvm-app-icon-192.png","pages/data/study-pack.json","pages/styles.css","pages/study-games.js","pages/app.js"])if(!exists(ref))fail("Missing rollback asset: "+ref);
+for(const ref of [
+  "pages/js/calendar-visuals.js","pages/js/install.js","pages/js/storage.js",
+  "pages/calendar-clean.css","pages/colorful-polish.css","pages/design-tokens.css",
+  "pages/family-clean.css","pages/responsive.css","pages/study-clean.css",
+  "pages/today-clean.css","pages/week-clean.css"
+])if(exists(ref))fail("Obsolete legacy source must stay removed: "+ref);
 const swShell=[...sw.matchAll(/"\.\/([^"]+)"/g)].map(m=>m[1]).filter(Boolean);
 for(const ref of swShell)if(!exists("pages/"+ref)&&ref!=="")fail("Service worker shell references missing file: "+ref);
 console.log("Gold-standard rollback validation passed",{importantDates:pack.pack.importantDates.length,homework:pack.pack.homework.length});
