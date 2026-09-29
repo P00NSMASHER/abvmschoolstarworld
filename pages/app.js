@@ -86,7 +86,12 @@ function keyPart(value){return String(value||"").trim().toLowerCase().replace(/[
 function taskWeekKey(){return keyPart(pack?.weekLabel||"current-week");}
 function checkKey(item){return "abvm-task:v2:"+taskWeekKey()+":"+keyPart(item?.subject)+":"+keyPart(item?.task||item?.label);}
 function legacyCheckKey(item,index){return "abvm-old-look:"+String(pack?.sourceHash||"pack")+":"+index+":"+(item?.task||item?.label||"");}
-function checked(item,index){return storageGet(checkKey(item))==="1"||storageGet(legacyCheckKey(item,index))==="1";}
+function checked(item,index){
+  const key=checkKey(item);
+  if(storageGet(key)==="1")return true;
+  if(storageGet(legacyCheckKey(item,index))==="1"){storageSet(key,"1");return true;}
+  return false;
+}
 function toggleChecked(item,index){
   const key=checkKey(item),legacy=legacyCheckKey(item,index);
   if(checked(item,index)){storageRemove(key);storageRemove(legacy);}
@@ -531,14 +536,19 @@ function renderFamily(){
 }
 function render({preserveScroll=false}={}){
   if(!pack)return;
-  const scrollTop=stack().scrollTop;
+  const scrollTop=stack().querySelector(".screen")?.scrollTop||0;
   ({today:renderToday,week:renderWeek,calendar:renderCalendar,study:renderStudy,games:renderGames,family:renderFamily}[activeTab]||renderToday)();
-  $(".bottom-nav button").forEach(b=>{
+  $$(".bottom-nav button").forEach(b=>{
     const on=b.dataset.tab===activeTab;b.classList.toggle("active",on);
     on?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current");
   });
-  stack().scrollTop=preserveScroll?scrollTop:0;
+  const screen=stack().querySelector(".screen");
+  if(screen)screen.scrollTop=preserveScroll?scrollTop:0;
   bindScreen();
+}
+function updateFreshnessUI(){
+  const node=stack().querySelector(".freshness");
+  if(node)node.outerHTML=freshness();
 }
 function bindScreen(){
   if(screenEventsBound)return;
@@ -581,7 +591,8 @@ async function fetchPack({force=false,notify=false}={}){
       const before=packContentKey(envelope),after=packContentKey(data),changed=!!before&&before!==after;
       envelope=data;pack=data.pack;lastPackFetchAt=Date.now();
       if(changed)studyGameCatalogCache=null;
-      render({preserveScroll:!!before});
+      if(!before||changed)render({preserveScroll:!!before});
+      else updateFreshnessUI();
       if(notify&&changed)toast("School info updated");
       return changed;
     }finally{
