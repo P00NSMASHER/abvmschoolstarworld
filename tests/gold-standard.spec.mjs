@@ -416,3 +416,28 @@ test("current week lunch menu is verified and visible instead of last week's men
   await days.nth(3).click();
   await expect(page.locator(".lunch-card")).toContainText("Lunch menu not yet verified for October 1");
 });
+
+
+test("published study content contains real lesson material instead of Google Sites chrome",async({page})=>{
+  const data=await (await page.request.get("/data/study-pack.json")).json();
+  const subjects=data.pack.subjects||[];
+  const reading=subjects.find(s=>s.subject==="Reading / ELA");
+  const spelling=subjects.find(s=>s.subject==="Spelling / Handwriting");
+  const religion=subjects.find(s=>s.subject==="Religion");
+  const nav=new Set(["Home","Reading Work","Weekly Spelling List","Homework","Tests","More Home"]);
+
+  expect(reading.topics.filter(x=>x.startsWith("Story: "))).toEqual([
+    "Story: Little Flap Learns to Fly",
+    "Story: Help! A Story of Friendship"
+  ]);
+  expect(reading.studyNotes.join(" ")).not.toMatch(/dioalogue/i);
+  expect(spelling.studyNotes).toEqual(["The Weekly Spelling List page currently has no word list posted."]);
+  expect(religion.topics.filter(x=>nav.has(x))).toEqual([]);
+
+  const winter=data.pack.importantDates.find(x=>x.label==="Start winter dress code");
+  expect(winter?.kind).toBe("school event");
+
+  const normalized=data.pack.reminders.map(x=>x.toLowerCase().replace(/\bthe\b/g,"").replace(/[^a-z0-9]/g,""));
+  expect(new Set(normalized).size).toBe(normalized.length);
+  expect(data.pack.parentNotices.join("\n")).not.toMatch(/Picture ordering:|Picture backgrounds:|Lego Club is Friday, Sept\. 25/i);
+});
