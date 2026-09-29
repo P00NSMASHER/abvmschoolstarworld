@@ -2,7 +2,7 @@
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const stack=()=>$("#app-content");
 let envelope=null, pack=null, activeTab=(["today","week","calendar","study","games","family"].includes(location.hash.slice(1))?location.hash.slice(1):"today"), selectedDay=null, calendarDay=null, weekOffset=0, calendarOffset=0;
-let studyGameCatalogCache=null, studyEnginePromise=null, screenEventsBound=false, lastPackFetchAt=0, packRefreshPromise=null, gameState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false};
+let studyGameCatalogCache=null, studyEnginePromise=null, screenEventsBound=false, lastPackFetchAt=0, packRefreshPromise=null, manualRefreshActive=false, gameState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false};
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -51,8 +51,9 @@ function freshnessState(){
   return{state:"current",label:"Verified "+stamp};
 }
 function freshness(){
-  const state=freshnessState();
-  return '<div class="freshness '+state.state+'" role="status" aria-live="polite"><span aria-hidden="true"></span>'+esc(state.label)+'</div>';
+  const state=freshnessState(),label=manualRefreshActive?"Refreshing school info…":state.label;
+  const action=manualRefreshActive?"Refreshing school information":"Refresh school information. "+state.label;
+  return '<button type="button" class="freshness '+state.state+(manualRefreshActive?' is-refreshing':'')+'" data-refresh-pack aria-label="'+esc(action)+'"'+(manualRefreshActive?' disabled':'')+'><span aria-hidden="true"></span><strong>'+esc(label)+'</strong><b aria-hidden="true">↻</b></button>';
 }
 function kindClass(item){
   const k=(item?.kind||"").toLowerCase(), l=(item?.label||"").toLowerCase();
@@ -556,6 +557,7 @@ function bindScreen(){
   stack().addEventListener("click",event=>{
     const target=event.target.closest("button,a");
     if(!target||!stack().contains(target))return;
+    if(target.matches("[data-refresh-pack]")){manualRefreshSchoolInfo();return;}
     if(target.matches("[data-check]")){toggleChecked((pack.homework||[])[Number(target.dataset.check)],Number(target.dataset.check));return;}
     if(target.matches("[data-day]")){selectedDay=new Date(target.dataset.day);renderWeek();return;}
     if(target.matches("[data-week-step]")){weekOffset+=Number(target.dataset.weekStep||0);selectedDay=null;renderWeek();return;}
@@ -609,6 +611,28 @@ async function fetchPack({force=false,notify=false}={}){
     }
   })();
   return packRefreshPromise;
+}
+async function manualRefreshSchoolInfo(){
+  if(manualRefreshActive)return;
+  if(navigator.onLine===false){
+    toast("You’re offline. Showing saved school info.");
+    updateFreshnessUI();
+    return;
+  }
+  manualRefreshActive=true;
+  updateFreshnessUI();
+  try{
+    const changed=await fetchPack({force:true,notify:false});
+    const state=freshnessState();
+    if(changed)toast("School info updated");
+    else if(state.state==="current")toast("School info is up to date");
+    else toast("Checked again — this is still the newest verified school info.");
+  }catch{
+    toast("Couldn’t refresh school info. Try again.");
+  }finally{
+    manualRefreshActive=false;
+    updateFreshnessUI();
+  }
 }
 async function load(){
   try{
