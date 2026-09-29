@@ -75,9 +75,9 @@ test("versioned app code bypasses an older cache entry while online",async({page
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
 
   const result=await page.evaluate(async()=>{
-    const cache=await caches.open("abvm-grade2-parent-companion-v72-live-data");
-    await cache.put("./app.js?v=72",new Response("OLD_CACHED_APP_MARKER",{headers:{"Content-Type":"application/javascript"}}));
-    const text=await (await fetch("./app.js?v=72")).text();
+    const cache=await caches.open("abvm-grade2-parent-companion-v73-manual-refresh");
+    await cache.put("./app.js?v=73",new Response("OLD_CACHED_APP_MARKER",{headers:{"Content-Type":"application/javascript"}}));
+    const text=await (await fetch("./app.js?v=73")).text();
     return {old:text.includes("OLD_CACHED_APP_MARKER"),fresh:text.includes("PACK_REFRESH_MS")};
   });
   expect(result.old).toBe(false);
@@ -86,7 +86,7 @@ test("versioned app code bypasses an older cache entry while online",async({page
 
 test("service worker install tolerates optional school-data precache failure",async({request})=>{
   const source=await (await request.get("/sw.js")).text();
-  expect(source).toContain('const CACHE = "abvm-grade2-parent-companion-v72-live-data"');
+  expect(source).toContain('const CACHE = "abvm-grade2-parent-companion-v73-manual-refresh"');
   expect(source).toContain("Promise.allSettled");
   expect(source).toContain("OPTIONAL_DATA");
   expect(source).toContain('url.searchParams.has("v")');
@@ -96,10 +96,10 @@ test("service worker install tolerates optional school-data precache failure",as
 
 test("index promotes a newly activated service worker before relying on versioned code",async({request})=>{
   const html=await (await request.get("/index.html")).text();
-  expect(html).toContain('abvm-sw-reloaded-v72');
+  expect(html).toContain('abvm-sw-reloaded-v73');
   expect(html).toContain('navigator.serviceWorker.addEventListener("controllerchange"');
   expect(html).toContain('registration.update()');
-  expect(html.indexOf("abvm-sw-reloaded-v72")).toBeLessThan(html.indexOf("./app.js?v=72"));
+  expect(html.indexOf("abvm-sw-reloaded-v73")).toBeLessThan(html.indexOf("./app.js?v=73"));
 });
 
 
@@ -125,5 +125,59 @@ test("timestamp-only verification refresh does not reset open UI state",async({b
   await page.evaluate(()=>window.dispatchEvent(new Event("online")));
   await expect(first).toHaveAttribute("open","");
   await expect(page.locator("#toast")).not.toContainText("School info updated");
+  await context.close();
+});
+
+
+test("tapping the freshness box forces an immediate live pack refresh",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-09-29T15:34:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  const stale=structuredClone(source);
+  stale.sourceLastSeenAt="2026-09-29T05:53:00.000Z";
+  stale.pack.sourceCapturedAt="2026-09-29T05:53:00.000Z";
+  stale.pack.generatedAt="2026-09-29T05:53:00.000Z";
+  const fresh=structuredClone(stale);
+  fresh.sourceLastSeenAt="2026-09-29T15:33:00.000Z";
+  fresh.pack.sourceCapturedAt="2026-09-29T15:33:00.000Z";
+  fresh.pack.generatedAt="2026-09-29T15:33:00.000Z";
+  fresh.pack.sourceHash="teacher-pages-manual-refresh-regression";
+
+  let calls=0;
+  await page.route("**/data/study-pack.json*",async route=>{
+    calls++;
+    if(calls>1){
+      await new Promise(resolve=>setTimeout(resolve,250));
+      await route.fulfill({json:fresh});
+    }else await route.fulfill({json:stale});
+  });
+  await page.goto("http://127.0.0.1:4173/#today");
+  const status=page.locator("[data-refresh-pack]");
+  await expect(status).toContainText("Older data");
+  await status.click();
+  await expect(page.locator("[data-refresh-pack]")).toContainText("Refreshing school info");
+  await expect(page.locator("[data-refresh-pack]")).toBeDisabled();
+  await expect(page.locator(".freshness")).toHaveClass(/current/);
+  await expect(page.locator(".freshness")).toContainText("Verified");
+  await expect(page.locator("#toast")).toContainText("School info updated");
+  expect(calls).toBeGreaterThanOrEqual(2);
+  await context.close();
+});
+
+test("manual refresh explains when no newer verified data exists",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-09-29T15:34:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  const stale=structuredClone(source);
+  stale.sourceLastSeenAt="2026-09-29T05:53:00.000Z";
+  stale.pack.sourceCapturedAt="2026-09-29T05:53:00.000Z";
+  stale.pack.generatedAt="2026-09-29T05:53:00.000Z";
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:stale}));
+  await page.goto("http://127.0.0.1:4173/#today");
+  await page.locator("[data-refresh-pack]").click();
+  await expect(page.locator("#toast")).toContainText("still the newest verified school info");
+  await expect(page.locator(".freshness")).toHaveClass(/stale/);
   await context.close();
 });
