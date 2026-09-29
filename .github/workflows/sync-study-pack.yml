@@ -6,6 +6,8 @@ on:
     paths:
       - 'scripts/refresh-teacher-pages.mjs'
       - 'scripts/teacher-page-parsers.mjs'
+      - 'scripts/lunch-publication.mjs'
+      - 'pages/data/lunch-catalog.json'
       - 'scripts/validate-uploaded-notices.mjs'
   schedule:
     - cron: '17 13 * * *'
