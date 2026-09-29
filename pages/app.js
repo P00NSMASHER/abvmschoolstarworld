@@ -573,8 +573,16 @@ function bindScreen(){
 }
 $$(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>{activeTab=b.dataset.tab;history.replaceState(null,"","#"+activeTab);render();}));
 function packContentKey(data){
-  const p=data?.pack||{};
-  return [p.sourceHash||"",p.uploadedNoticeHash||"",p.lunchMenuHash||"",p.weekLabel||""].join("|");
+  const p=data?.pack||{},lunchSource=p.lunchMenuSource||{};
+  return JSON.stringify({
+    sourceHash:p.sourceHash||"",
+    uploadedNoticeHash:p.uploadedNoticeHash||"",
+    weekLabel:p.weekLabel||"",
+    lunchMenu:p.lunchMenu||[],
+    lunchStatus:lunchSource.status||"",
+    lunchRetrievalState:lunchSource.retrievalState||"",
+    lunchMissingDates:lunchSource.missingDates||[]
+  });
 }
 async function fetchPack({force=false,notify=false}={}){
   const now=Date.now();
