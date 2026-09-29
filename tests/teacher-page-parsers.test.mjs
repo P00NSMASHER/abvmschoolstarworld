@@ -96,6 +96,7 @@ test('teacherContentLines removes Google Sites navigation chrome from lesson con
   assert.deepEqual(teacherContentLines([
     'Religion',
     'Home',
+    'Religion',
     'Reading Work',
     'Weekly Spelling List',
     'Homework',
@@ -120,3 +121,11 @@ test('cleanTeacherText fixes obvious teacher-page typo without changing meaning'
   assert.equal(cleanTeacherText('visualize, theme, dioalogue'), 'Visualize, theme, dialogue');
 });
 
+
+
+test('parseStoryTitles handles malformed mixed story quotes from the live teacher page', () => {
+  assert.deepEqual(
+    parseStoryTitles('"Little Flap Learns to Fly" \'Help! A Story of Friendship'),
+    ['Little Flap Learns to Fly', 'Help! A Story of Friendship']
+  );
+});
