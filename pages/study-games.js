@@ -21,6 +21,8 @@ const STANDARD_BY_SKILL=Object.freeze({
   "sentence-types":["CCSS.L.2.1"],
   "consonant-blends":["CCSS.RF.2.3"],
   "cvc-structure":["CCSS.RF.2.3"],
+  "long-short-a":["CCSS.RF.2.3"],
+  "suffix-ed-ing":["CCSS.RF.2.3.d"],
   "high-frequency-word-use":["CCSS.RF.2.3.f"],
   "vocabulary-in-context":["CCSS.L.2.4.a"],
   "theme":["CCSS.RL.2.2"],
@@ -47,6 +49,8 @@ const DOMAIN_BY_SKILL=Object.freeze({
   "sentence-types":"Language",
   "consonant-blends":"Foundational reading",
   "cvc-structure":"Foundational reading",
+  "long-short-a":"Foundational reading",
+  "suffix-ed-ing":"Foundational reading",
   "high-frequency-word-use":"Foundational reading",
   "vocabulary-in-context":"Word knowledge and skills",
   "theme":"Analyzing literary text",
@@ -403,6 +407,76 @@ function materialPhonics(pack,variant,out){
         dok:3,difficulty:3,
         wrongFeedback:"You need to inspect all three letters, not just one part.",
         misconception:"incomplete-structure-check"
+      }
+    ]);
+  }
+  if(topicMatch(pack,"Reading / ELA",/long a|short a|a_e/i)||topicMatch(pack,"Spelling / Handwriting",/short a\s*\/\s*long a/i)){
+    addTriad(out,"mat-long-short-a",{
+      subject:"Spelling / Handwriting",skill:"long-short-a",tier:"material",
+      sourceFact:"Verified current ABVM phonics and spelling skill: short a / long a (a_e)",
+      hint:"Listen to the vowel sound. In many a_e words, the final e helps a say its name."
+    },[
+      {
+        prompt:"Which word has a long a sound?",
+        choices:shuffled(["cake","cat","map"],"a1"+variant),
+        answer:"cake",
+        explanation:"In “cake,” the a_e pattern makes the a say its long sound.",
+        dok:1,difficulty:2,
+        wrongFeedback:"Say each word slowly and listen to the middle vowel sound.",
+        misconception:"long-short-vowel-confusion"
+      },
+      {
+        prompt:"Which pair of words both have a short a sound?",
+        choices:shuffled(["cat and map","cake and game","late and cap"],"a2"+variant),
+        answer:"cat and map",
+        explanation:"The a in both “cat” and “map” has the short a sound.",
+        dok:2,difficulty:2,
+        wrongFeedback:"Check both words in the pair; both must use the short a sound.",
+        misconception:"mixed-vowel-pair"
+      },
+      {
+        prompt:"Why does the a in “game” have a long sound?",
+        choices:shuffled(["The final e helps the a say its name.","The g makes every vowel long.","The word has four letters."],"a3"+variant),
+        answer:"The final e helps the a say its name.",
+        explanation:"“Game” follows the a_e pattern being practiced this week.",
+        dok:3,difficulty:3,
+        wrongFeedback:"Look at the a_e pattern: the final e changes the vowel sound.",
+        misconception:"silent-e-rule-confusion"
+      }
+    ]);
+  }
+  if(topicMatch(pack,"Reading / ELA",/adding\s+-?ed.*-?ing|adding\s+-?ing.*-?ed/i)){
+    addTriad(out,"mat-suffix-ed-ing",{
+      subject:"Reading / ELA",skill:"suffix-ed-ing",tier:"material",
+      sourceFact:"Verified current ABVM word-structure skill: adding -ed and -ing",
+      hint:"Use -ed for an action that already happened and -ing for an action happening now."
+    },[
+      {
+        prompt:"Which word means the action already happened: play, played, or playing?",
+        choices:shuffled(["played","play","playing"],"suf1"+variant),
+        answer:"played",
+        explanation:"Adding -ed to “play” makes “played,” which tells about an action that already happened.",
+        dok:1,difficulty:2,
+        wrongFeedback:"Look for the ending that usually tells about a past action.",
+        misconception:"suffix-time-confusion"
+      },
+      {
+        prompt:"Which word correctly completes the sentence? “Mia is ___ at recess right now.”",
+        choices:shuffled(["jumping","jumped","jump"],"suf2"+variant),
+        answer:"jumping",
+        explanation:"The sentence says the action is happening right now, so “jumping” fits.",
+        dok:2,difficulty:2,
+        wrongFeedback:"“Right now” is a clue that the action is still happening.",
+        misconception:"progressive-form-confusion"
+      },
+      {
+        prompt:"What does adding -ed or -ing usually change about a word?",
+        choices:shuffled(["It helps show when or how an action is happening.","It always changes a word into a person's name.","It removes the base word's meaning."],"suf3"+variant),
+        answer:"It helps show when or how an action is happening.",
+        explanation:"The endings -ed and -ing help show the action's time or state while keeping the base action idea.",
+        dok:3,difficulty:3,
+        wrongFeedback:"Think about “played” versus “playing” and what each ending tells you.",
+        misconception:"suffix-function-confusion"
       }
     ]);
   }
@@ -851,10 +925,11 @@ function targetDifficultyFor(skillStats,skill){
   if((Number(row.ConsecutiveWrong)||0)>=2)return 2;
   return Math.max(2,Math.min(3,Number(row.TargetDifficulty)||2));
 }
-function pickBalanced(pool,count,seed,skillStats){
-  const selected=[],used=new Set(),skillCounts={},maxPerSkill=3;
+function pickBalanced(pool,count,seed,skillStats,preferredSkills=[]){
+  const selected=[],used=new Set(),skillCounts={},maxPerSkill=3,preferred=new Set(preferredSkills||[]);
   const ordered=[...pool].sort((a,b)=>{
     if(a.tier!==b.tier)return a.tier==="material"?-1:1;
+    if(preferred.has(a.skill)!==preferred.has(b.skill))return preferred.has(a.skill)?-1:1;
     const ta=Math.abs(a.difficulty-targetDifficultyFor(skillStats,a.skill));
     const tb=Math.abs(b.difficulty-targetDifficultyFor(skillStats,b.skill));
     if(ta!==tb)return ta-tb;
@@ -876,11 +951,11 @@ function pickBalanced(pool,count,seed,skillStats){
   }
   return selected;
 }
-function selectQuestions(catalog,{subjects,count=8,seed="session",skillStats={}}={}){
+function selectQuestions(catalog,{subjects,count=8,seed="session",skillStats={},preferredSkills=[]}={}){
   let pool=[...(catalog?.questions||[])];
   const wanted=Array.isArray(subjects)?subjects.map(text).filter(Boolean):[];
   if(wanted.length)pool=pool.filter(q=>wanted.includes(q.subject));
-  return pickBalanced(pool,count,seed,skillStats);
+  return pickBalanced(pool,count,seed,skillStats,preferredSkills);
 }
 function supportQuestion(catalog,current,{skillStats={},seed="support"}={}){
   if(!current)return null;
