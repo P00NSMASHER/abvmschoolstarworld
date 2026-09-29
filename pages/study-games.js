@@ -202,6 +202,7 @@ function materialMath(pack,variant,out){
     hint:"Think about the amount you start with and how many are taken away."
   },[
     {
+      skill:"subtraction-within-12",
       prompt:`Solve this subtraction problem: ${row.a} − ${row.b}. What is the difference?`,
       choices:shuffled([String(row.a-row.b),String(row.a-row.b+1),String(row.a-row.b-1)],"m1"+variant),
       answer:String(row.a-row.b),
@@ -211,6 +212,7 @@ function materialMath(pack,variant,out){
       misconception:"subtraction-fact-error"
     },
     {
+      skill:"subtraction-word-problem",
       prompt:`Mila had ${row.start} stickers and gave ${row.give} away. How many stickers does she have now?`,
       choices:shuffled([String(row.start-row.give),String(row.start+row.give),String(row.give)],"m2"+variant),
       answer:String(row.start-row.give),
@@ -220,6 +222,7 @@ function materialMath(pack,variant,out){
       misconception:choice=>choice===String(row.start+row.give)?"operation-confusion":"part-whole-confusion"
     },
     {
+      skill:"two-step-word-problem",
       prompt:`A box held ${row.first} crayons. ${row.add} crayon was added, then ${row.take} crayons were used. How many crayons are left?`,
       choices:shuffled([String(row.first+row.add-row.take),String(row.first+row.add),String(Math.max(0,row.first-row.take))],"m3"+variant),
       answer:String(row.first+row.add-row.take),
@@ -230,6 +233,61 @@ function materialMath(pack,variant,out){
       misconception:choice=>choice===String(row.first+row.add)?"one-step-only":"operation-order"
     }
   ]);
+  add(out,{
+    id:"mat-sub12-fact-b-v"+variant,subject:"Math",skill:"subtraction-within-12",tier:"material",
+    prompt:`What is ${row.c} − ${row.d}?`,
+    choices:shuffled([String(row.c-row.d),String(row.c-row.d+1),String(row.c-row.d-1)],"m4"+variant),
+    answer:String(row.c-row.d),
+    explanation:`${row.c} take away ${row.d} leaves ${row.c-row.d}.`,
+    hint:"Count back or use an addition fact to check.",
+    sourceFact:"Verified current ABVM skill: Subtraction to 12",dok:1,difficulty:2,
+    wrongFeedback:`Add ${row.d} back to your answer. You should get ${row.c}.`,
+    misconception:"subtraction-fact-error"
+  });
+  add(out,{
+    id:"mat-sub12-story-b-v"+variant,subject:"Math",skill:"subtraction-word-problem",tier:"material",
+    prompt:`There were ${row.c} birds on a fence. ${row.d} flew away. How many birds stayed?`,
+    choices:shuffled([String(row.c-row.d),String(row.c+row.d),String(row.d)],"m5"+variant),
+    answer:String(row.c-row.d),
+    explanation:`“Flew away” means subtract: ${row.c} − ${row.d} = ${row.c-row.d}.`,
+    hint:"Start with the number of birds on the fence, then take away the birds that left.",
+    sourceFact:"Verified current ABVM skill: Subtraction to 12",dok:2,difficulty:2,
+    wrongFeedback:"The amount gets smaller because some birds flew away.",
+    misconception:"operation-confusion"
+  });
+  add(out,{
+    id:"mat-sub12-missing-part-v"+variant,subject:"Math",skill:"subtraction-within-12",tier:"material",
+    prompt:`Which number makes this true? ${row.c} − ___ = ${row.d}`,
+    choices:shuffled([String(row.c-row.d),String(row.d),String(row.c)],"m6"+variant),
+    answer:String(row.c-row.d),
+    explanation:`${row.c} − ${row.c-row.d} = ${row.d}.`,
+    hint:"Ask what amount must be taken away to reach the number on the right.",
+    sourceFact:"Verified current ABVM skill: Subtraction to 12",dok:2,difficulty:2,
+    wrongFeedback:"Check each choice by putting it in the blank and subtracting.",
+    misconception:"missing-part-confusion"
+  });
+  add(out,{
+    id:"mat-sub12-equation-story-v"+variant,subject:"Math",skill:"subtraction-word-problem",tier:"material",
+    prompt:`A basket had ${row.c} apples and ${row.d} were eaten. Which equation matches the story?`,
+    choices:shuffled([`${row.c} − ${row.d} = ${row.c-row.d}`,`${row.c} + ${row.d} = ${row.c+row.d}`,`${row.d} − ${row.c} = ${row.d-row.c}`],"m7"+variant),
+    answer:`${row.c} − ${row.d} = ${row.c-row.d}`,
+    explanation:"Eating apples removes some from the starting amount, so subtraction matches the story.",
+    hint:"Look for the equation that starts with the whole amount and takes some away.",
+    sourceFact:"Verified current ABVM skill: Subtraction to 12",dok:2,difficulty:2,
+    wrongFeedback:"The story starts with the larger amount and says some were eaten.",
+    misconception:"equation-model-mismatch"
+  });
+  add(out,{
+    id:"mat-sub12-two-step-b-v"+variant,subject:"Math",skill:"two-step-word-problem",tier:"material",
+    prompt:`A tray had ${row.c} counters. 2 more were added, then ${row.d} were removed. How many counters are left?`,
+    choices:shuffled([String(row.c+2-row.d),String(row.c+2),String(row.c-row.d)],"m8"+variant),
+    answer:String(row.c+2-row.d),
+    explanation:`First ${row.c} + 2 = ${row.c+2}. Then ${row.c+2} − ${row.d} = ${row.c+2-row.d}.`,
+    hint:"Do the changes in order: add first, then subtract.",
+    sourceFact:"Verified current ABVM skill: Subtraction to 12",dok:3,difficulty:3,
+    wrongFeedback:"Do both steps. The second change removes counters.",
+    misconception:"one-step-only"
+  });
 }
 function materialSentences(pack,variant,out){
   if(!topicMatch(pack,"Reading / ELA",/types of sentences/i))return;
@@ -550,6 +608,41 @@ function materialReligion(pack,variant,out){
       wrongFeedback:"A gift is being used well when it helps or encourages another person.",
       misconception:"gift-self-focus"
     });
+  }
+  if(/image and likeness|senses|creation/i.test(source)){
+    addTriad(out,"mat-religion-creation",{
+      subject:"Religion",skill:"religion-application",tier:"material",
+      sourceFact:"Verified current ABVM Religion topics: God's image and likeness, senses, and caring for creation",
+      hint:"Use the current lesson ideas about thinking, choosing, loving, gratitude, and creation."
+    },[
+      {
+        prompt:"According to the current lesson, which ability helps show that people are made in God's image and likeness?",
+        choices:shuffled(["We can think, choose, and love.","We never have to make choices.","Everyone must look exactly the same."],"rel6"+variant),
+        answer:"We can think, choose, and love.",
+        explanation:"The lesson says people are made in God's image and likeness and can think, choose, and love.",
+        dok:1,difficulty:2,
+        wrongFeedback:"Remember the lesson's three abilities: think, choose, and love.",
+        misconception:"image-likeness-confusion"
+      },
+      {
+        prompt:"Which action best shows taking care of God's gift of creation?",
+        choices:shuffled(["Picking up litter at a park.","Leaving trash beside a stream.","Wasting water on purpose."],"rel7"+variant),
+        answer:"Picking up litter at a park.",
+        explanation:"Caring for creation means protecting and respecting the gifts of the world around us.",
+        dok:2,difficulty:2,
+        wrongFeedback:"Choose the action that protects rather than harms creation.",
+        misconception:"creation-care-mismatch"
+      },
+      {
+        prompt:"Why can using our senses lead us to thank God in the current lesson?",
+        choices:shuffled(["Our senses help us notice and enjoy the gifts of creation.","Our senses mean we never need to make choices.","Our senses are only useful at school."],"rel8"+variant),
+        answer:"Our senses help us notice and enjoy the gifts of creation.",
+        explanation:"The lesson connects our senses with enjoying God's gifts and being thankful for creation.",
+        dok:3,difficulty:3,
+        wrongFeedback:"Connect seeing, hearing, smelling, tasting, and touching with noticing God's gifts.",
+        misconception:"senses-purpose-confusion"
+      }
+    ]);
   }
 }
 function fallbackReading(variant,out){
