@@ -57,15 +57,15 @@ jobs:
         run: |
           set -o pipefail
           npm run qa 2>&1 | tee /tmp/lunch-proof/qa.log
-      - name: Commit verified branch changes only
+      - name: Commit verified code changes within bot contents permissions
         shell: bash
         run: |
           set -euo pipefail
           test "$(git branch --show-current)" = 'fix/current-week-lunch-source'
-          git diff --stat
+          git reset HEAD -- .github/workflows
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add pages/app.js pages/data/study-pack.json scripts/refresh-teacher-pages.mjs scripts/check-refresh-health.mjs scripts/build-health-report.mjs tests/hardening.spec.mjs tests/gold-standard.spec.mjs .github/workflows/sync-study-pack.yml
+          git add pages/app.js pages/data/study-pack.json scripts/refresh-teacher-pages.mjs scripts/check-refresh-health.mjs scripts/build-health-report.mjs tests/hardening.spec.mjs tests/gold-standard.spec.mjs
           if ! git diff --cached --quiet; then
             git commit -m 'Verify and integrate resilient lunch source publication'
             git push origin HEAD:fix/current-week-lunch-source
