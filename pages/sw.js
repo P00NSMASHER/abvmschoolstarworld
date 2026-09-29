@@ -1,4 +1,4 @@
-const CACHE = "abvm-grade2-parent-companion-v76-game-audit";
+const CACHE = "abvm-grade2-parent-companion-v77-current-skills";
 const STATIC_SHELL = [
   "./",
   "./index.html",
