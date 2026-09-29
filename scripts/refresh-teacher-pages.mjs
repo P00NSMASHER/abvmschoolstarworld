@@ -7,6 +7,7 @@ import {
   parseHomework,
 } from './teacher-page-parsers.mjs';
 import { validateUploadedNoticePolicy } from './uploaded-notice-policy.mjs';
+import { refreshLunchPublication } from './lunch-publication.mjs';
 
 const DATA_PATH = new URL('../pages/data/study-pack.json', import.meta.url);
 const UPLOADED_NOTICES_PATH = new URL('../pages/data/uploaded-notices.json', import.meta.url);
@@ -324,6 +325,9 @@ upsertSubject(subjects, /^Math$/i, {
 upsertSubject(subjects, /^Specials$/i, { subject: 'Specials', topics: specials, studyNotes: [] });
 pack.subjects = subjects;
 pack.homework = homework;
+const lunchResult = await refreshLunchPublication(pack, { now: new Date(checkedAt) });
+console.log('Lunch source result:', JSON.stringify(lunchResult));
+
 pack.vocabulary = vocabulary.split(',').map(term => term.trim()).filter(Boolean).map(term => ({
   subject: 'Reading / ELA',
   term,
@@ -381,7 +385,7 @@ data.uploadedNotices = {
 data.pack = pack;
 
 if (process.argv.includes('--dry-run')) {
-  console.log(JSON.stringify({ checkedAt, contentChanged, sourceHash, uploadedNoticeHash, uploadedNoticeCount: uploadedNotices.documents.length, homework, tests: testItems }, null, 2));
+  console.log(JSON.stringify({ checkedAt, contentChanged, sourceHash, uploadedNoticeHash, uploadedNoticeCount: uploadedNotices.documents.length, lunchDays: pack.lunchMenu?.map(item=>item.day)||[], homework, tests: testItems }, null, 2));
 } else {
   writeFileSync(DATA_PATH, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
   console.log(`${contentChanged ? 'Updated' : 'Checked'} ${fetched.length} teacher pages and ${uploadedNotices.documents.length} uploaded notices; ${homework.length} homework items are current.`);

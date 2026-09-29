@@ -1,4 +1,5 @@
 import {appendFileSync, readFileSync} from "node:fs";
+import {validateLunchPublication} from "./lunch-publication.mjs";
 
 const DATA_PATH=new URL("../pages/data/study-pack.json",import.meta.url);
 const argv=process.argv.slice(2);
@@ -25,6 +26,7 @@ function isoDate(value){
   const date=new Date(value);
   return Number.isNaN(date.getTime())?null:date;
 }
+
 function validatePack(data,label,{freshness=true}={}){
   const errors=[];
   const pack=data?.pack||{};
@@ -57,6 +59,8 @@ function validatePack(data,label,{freshness=true}={}){
   if(!Array.isArray(pack?.importantDates)||pack.importantDates.length<1)errors.push(label+": importantDates is empty");
   if(!Array.isArray(pack?.parentNotices))errors.push(label+": parentNotices is not an array");
 
+  for(const error of validateLunchPublication(pack))errors.push(label+": "+error);
+
   if(!data?.syncPolicy?.primaryAt||!data?.syncPolicy?.backupAt)errors.push(label+": hardened primary/backup sync policy is missing");
   if(data?.syncPolicy?.retriesPerSource!==3)errors.push(label+": retriesPerSource must remain 3");
 
@@ -74,7 +78,8 @@ function readLocal(){
 function sameRefresh(local,live){
   return local?.sourceLastCheckedAt===live?.sourceLastCheckedAt
     && local?.pack?.sourceHash===live?.pack?.sourceHash
-    && local?.pack?.uploadedNoticeHash===live?.pack?.uploadedNoticeHash;
+    && local?.pack?.uploadedNoticeHash===live?.pack?.uploadedNoticeHash
+    && local?.pack?.lunchMenuHash===live?.pack?.lunchMenuHash;
 }
 async function fetchLive(){
   const separator=liveUrl.includes("?")?"&":"?";
@@ -119,6 +124,8 @@ const summary=[
   "",
   "- Repository source check: **"+checked+"**",
   "- Expected source pages: **6**",
+  "- Lunch retrieval: **"+(local.pack?.lunchMenuSource?.retrievalState||"unknown")+"**; reviewed meals: "+(local.pack?.lunchMenu?.length||0),
+  "- Lunch gaps: "+JSON.stringify(local.pack?.lunchMenuSource?.missingDates||[]),
   "- Repository pack: **"+(errors.filter(e=>e.startsWith("repository pack")).length?"FAIL":"PASS")+"**",
   "- Deployed pack comparison: **"+(liveUrl?(liveError?"FAIL":"PASS"):"not requested")+"**",
   "- Freshness requirement: **"+(requireToday?"checked today":"<="+maxAgeHours+"h")+"**",

@@ -38,6 +38,7 @@ const status={
     sourcePages:packData.sourcePages?.length||0,
     sourceHash:packData.pack?.sourceHash||null,
   },
+  lunch:{status:packData.pack?.lunchMenuSource?.status||"unknown",retrievalState:packData.pack?.lunchMenuSource?.retrievalState||"unknown",days:packData.pack?.lunchMenu?.length||0,missingDates:packData.pack?.lunchMenuSource?.missingDates||[]},
   workflows:{
     refresh:{latest:latest(workflowNames.refresh),latestCompleted:latestCompleted(workflowNames.refresh),latestSuccess:latestSuccess(workflowNames.refresh)},
     qa:{latest:latest(workflowNames.qa),latestCompleted:latestCompleted(workflowNames.qa),latestSuccess:latestSuccess(workflowNames.qa)},
@@ -58,6 +59,8 @@ const healthy=Boolean(
   status.schoolData.sourceSufficient &&
   status.schoolData.sourcePages===6 &&
   sourceFresh &&
+  status.lunch.retrievalState==="verified" &&
+  status.lunch.days>0 &&
   completedHealthy(status.workflows.qa,48) &&
   completedHealthy(status.workflows.deploy,48) &&
   completedHealthy(status.workflows.refresh,30) &&
@@ -76,6 +79,7 @@ const md=[
   "",
   `- **School data checked:** ${sourceCheckedAt||"missing"}${sourceAgeHours===null?"":` (${sourceAgeHours.toFixed(1)}h old)`}`,
   `- **Source coverage:** ${status.schoolData.sourcePages}/6 teacher pages; source sufficient = ${status.schoolData.sourceSufficient}; fresh <=8h = ${sourceFresh}`,
+  `- **Lunch source:** ${status.lunch.retrievalState}; ${status.lunch.days} reviewed days; missing dates: ${status.lunch.missingDates.join(", ")||"none"}`,
   `- **App version:** ${status.appVersion}`,
   `- **Service worker cache:** ${status.serviceWorkerCache}`,
   `- **Git SHA:** ${status.gitSha||"unknown"}`,

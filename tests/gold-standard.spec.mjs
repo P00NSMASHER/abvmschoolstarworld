@@ -6,6 +6,7 @@ async function openTab(page,label){
 }
 
 test.beforeEach(async({page})=>{
+  await page.clock.setFixedTime(new Date("2026-09-28T12:00:00Z"));
   await page.goto("/?rollback=gold#today");
 });
 
@@ -284,7 +285,7 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   await expect(page.locator(".games-screen .freshness")).toHaveCount(0);
 
   const sw=await (await page.request.get("/sw.js")).text();
-  expect(sw).toContain("v70-hardening");
+  expect(sw).toContain("v71-lunch-recovery");
   expect(sw).not.toContain("hero-today.webp");
   expect(sw).not.toContain("calendar/picture-day.svg");
   const cached=[...sw.matchAll(/"\.\/[^\"]+"/g)];
@@ -292,16 +293,32 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
 });
 
 
-test("Sept 28 Today shows only Mass and daily reading",async({page})=>{
-  await openTab(page,"Today");
-  const tasks=page.locator(".today-panel .check-item");
+test("Sept 28 task-policy fixture keeps Mass and reading without routine clutter",async({page,browser})=>{
+  const source=await (await page.request.get("/data/study-pack.json")).json();
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const fixturePage=await context.newPage();
+  await fixturePage.clock.setFixedTime(new Date("2026-09-28T12:00:00Z"));
+  const homework=[
+    {task:"Attend Mass",subject:"Religion"},
+    {task:"Read",subject:"Reading"},
+    {task:"Cover books",subject:"Parent"},
+    {task:"Keep Reading Log and Behavior Chart in the HW folder",subject:"Reading"},
+    {task:"Return everything in the HW folder",subject:"Homework Folder"}
+  ];
+  await fixturePage.route("**/data/study-pack.json*",route=>route.fulfill({json:{...source,pack:{...source.pack,homework}}}));
+  await fixturePage.goto("http://127.0.0.1:4173/#today");
+  const tasks=fixturePage.locator(".today-panel .check-item");
   await expect(tasks).toHaveCount(2);
   await expect(tasks.nth(0)).toContainText("Attend Mass");
   await expect(tasks.nth(1)).toContainText("Read");
   await expect(tasks.nth(1)).toContainText("20 minutes today");
-  await expect(page.getByText("Cover books",{exact:true})).toHaveCount(0);
-  await expect(page.getByText("Keep Reading Log and Behavior Chart in the HW folder",{exact:true})).toHaveCount(0);
-  await expect(page.getByText("Return everything in the HW folder",{exact:true})).toHaveCount(0);
+  for(const item of homework.slice(2))await expect(fixturePage.getByText(item.task,{exact:true})).toHaveCount(0);
+  homework.shift();
+  await fixturePage.reload();
+  await expect(tasks).toHaveCount(1);
+  await expect(tasks.first()).toContainText("Read");
+  await expect(fixturePage.getByText("Attend Mass",{exact:true})).toHaveCount(0);
+  await context.close();
 });
 
 test("Study Games uses distinct polished subject icon badges",async({page})=>{
@@ -366,4 +383,36 @@ test("current weekly notice appears in Week, Calendar, and Family screens",async
   await openTab(page,"Family");
   await expect(page.locator(".notices-card")).toContainText("OptionC portal");
   await expect(page.locator(".notices-card")).toContainText("Picture Day and Business Casual");
+});
+
+
+test("current week lunch menu is verified and visible instead of last week's menu",async({page})=>{
+  const data=await (await page.request.get("/data/study-pack.json")).json();
+  expect(data.pack.weekLabel).toContain("September 28, 2026");
+  expect(data.pack.lunchMenu.map(item=>item.day)).toEqual([
+    "Monday, Sept. 28",
+    "Tuesday, Sept. 29",
+    "Wednesday, Sept. 30"
+  ]);
+  expect(data.pack.lunchMenu[0].items).toEqual(["Breaded chicken","Brown rice","Steamed broccoli","Fruit"]);
+  expect(data.pack.lunchMenu[1].items).toEqual(["Cheese quesadilla wedge","Garden salad","Salsa","Steamed corn","Fruit"]);
+  expect(data.pack.lunchMenu[2].items).toEqual(["Breaded fish sandwich","Baby cake potatoes","Baked beans","Fruit"]);
+  expect(data.pack.lunchMenuSource.provider).toBe("Saint Clair Area School District");
+  expect(data.pack.lunchMenuSource.school).toBe("Assumption BVM School");
+  expect(data.pack.lunchMenuSource.coverageThrough).toBe("2026-09-30");
+  expect(data.pack.lunchMenu.some(item=>/Sept\. 2[1-5]/.test(item.day))).toBe(false);
+
+  await openTab(page,"Today");
+  await expect(page.locator(".lunch-card")).toContainText("Breaded chicken");
+  await expect(page.locator(".lunch-card")).toContainText("Brown rice");
+  await expect(page.locator(".lunch-card")).toContainText("Steamed broccoli");
+
+  await openTab(page,"Week");
+  const days=page.locator("[data-day]");
+  await days.nth(1).click();
+  await expect(page.locator(".lunch-card")).toContainText("Cheese quesadilla wedge");
+  await days.nth(2).click();
+  await expect(page.locator(".lunch-card")).toContainText("Breaded fish sandwich");
+  await days.nth(3).click();
+  await expect(page.locator(".lunch-card")).toContainText("Lunch menu not yet verified for October 1");
 });

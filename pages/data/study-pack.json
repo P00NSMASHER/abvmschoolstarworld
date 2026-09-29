@@ -8,16 +8,16 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-09-28T18:30:18.550Z",
-  "sourceCapturedAt": "2026-09-28T18:30:18.550Z",
+  "sourceLastSeenAt": "2026-09-29T05:46:10.369Z",
+  "sourceCapturedAt": "2026-09-29T05:46:10.369Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
-    "sourceHash": "teacher-pages-36ebaede87cba691e51e",
-    "sourceCapturedAt": "2026-09-28T18:30:18.550Z",
-    "generatedAt": "2026-09-28T18:30:18.550Z",
+    "sourceHash": "teacher-pages-6a856b04c0ec29772f8b",
+    "sourceCapturedAt": "2026-09-29T05:46:10.369Z",
+    "generatedAt": "2026-09-29T05:46:10.369Z",
     "weekLabel": "Week of September 28, 2026",
-    "summary": "Current Grade 2 teacher-site material: Homework lists Religion “Attend Mass”, Reading “Read”, parent task “Cover books”, and Reading “Keep Reading Log and Behavior Chart in the HW folder”. Upcoming tests include Spelling (2-letter blends) / Handwriting on Friday, Sept. 25, Subtraction to 12 on Tuesday, Sept. 29, Religion Ch. 2 on Tuesday, Sept. 29, and Grammar (types of sentences) on Wednesday, Sept. 30. 3 uploaded school notices are integrated with the teacher pages.",
+    "summary": "Current Grade 2 teacher-site material: Homework lists Reading “Read”, parent task “Cover books”, Reading “Keep Reading Log and Behavior Chart in the HW folder”, and Homework Folder “Return everything in the HW folder”. Upcoming tests include Spelling (2-letter blends) / Handwriting on Friday, Sept. 25, Subtraction to 12 on Tuesday, Sept. 29, Religion Ch. 2 on Tuesday, Sept. 29, and Grammar (types of sentences) on Wednesday, Sept. 30. 3 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
       {
         "subject": "Reading / ELA",
@@ -254,6 +254,12 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Monday, Oct. 5",
+        "label": "Start winter dress code",
+        "source": "teacher-home",
+        "kind": "assessment"
+      },
+      {
         "date": "Wednesday, Oct. 7",
         "label": "Reading",
         "kind": "test",
@@ -270,6 +276,12 @@
         "kind": "schedule change",
         "sourceDocument": "weekly-reminders-2026-09-28",
         "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Oct. 9",
+        "label": "Spelling (short i / long i) / Handwriting",
+        "kind": "test",
+        "source": "teacher-tests"
       },
       {
         "date": "Monday, Oct. 12",
@@ -534,62 +546,38 @@
     ],
     "lunchMenu": [
       {
-        "day": "Monday, Sept. 21",
-        "image": "./assets/lunch-monday.webp",
-        "imageAlt": "School lunch tray with breaded chicken, buttered pasta, baked beans, and fresh fruit",
+        "date": "2026-09-28",
+        "day": "Monday, Sept. 28",
         "items": [
           "Breaded chicken",
-          "Buttered pasta",
+          "Brown rice",
+          "Steamed broccoli",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-29",
+        "day": "Tuesday, Sept. 29",
+        "items": [
+          "Cheese quesadilla wedge",
+          "Garden salad",
+          "Salsa",
+          "Steamed corn",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-30",
+        "day": "Wednesday, Sept. 30",
+        "items": [
+          "Breaded fish sandwich",
+          "Baby cake potatoes",
           "Baked beans",
           "Fruit"
-        ]
-      },
-      {
-        "day": "Tuesday, Sept. 22",
-        "image": "./assets/lunch-tuesday.webp",
-        "imageAlt": "School lunch tray with meatballs and gravy, mashed potatoes, garlic bread, corn, French toast sticks, and fresh fruit",
-        "items": [
-          "Meatballs in gravy",
-          "Mashed potatoes",
-          "Garlic stick",
-          "Steamed corn",
-          "French toast sticks",
-          "Fruit"
-        ]
-      },
-      {
-        "day": "Wednesday, Sept. 23",
-        "image": "./assets/lunch-wednesday.webp",
-        "imageAlt": "School lunch tray with French toast sticks, hash browns, a sausage patty, steamed carrots, and fresh fruit",
-        "items": [
-          "French toast sticks",
-          "Hash browns",
-          "Sausage patty",
-          "Steamed carrots",
-          "Fruit"
-        ]
-      },
-      {
-        "day": "Thursday, Sept. 24",
-        "image": "./assets/lunch-thursday.webp",
-        "imageAlt": "School lunch tray with macaroni and cheese, stewed tomatoes, breaded chicken, and fresh fruit",
-        "items": [
-          "Macaroni & cheese",
-          "Stewed tomatoes",
-          "Breaded chicken",
-          "Fruit"
-        ]
-      },
-      {
-        "day": "Friday, Sept. 25",
-        "image": "./assets/lunch-friday.webp",
-        "imageAlt": "School lunch tray with a hamburger on a whole-grain roll, French fries, steamed peas, and fresh fruit",
-        "items": [
-          "Hamburger on WG roll",
-          "French fries",
-          "Steamed peas",
-          "Fruit"
-        ]
+        ],
+        "sourceId": "abvm-2026-09-official"
       }
     ],
     "vocabulary": [
@@ -635,12 +623,6 @@
       }
     ],
     "homework": [
-      {
-        "day": "Current Homework posting",
-        "subject": "Religion",
-        "task": "Attend Mass",
-        "due": "Current posting"
-      },
       {
         "day": "Current Homework posting",
         "subject": "Reading",
@@ -824,7 +806,7 @@
       "Christmas Caroling date is TBD.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
-    "sourceCheckedAt": "2026-09-28T18:30:18.550Z",
+    "sourceCheckedAt": "2026-09-29T05:46:10.369Z",
     "uploadedNoticeHash": "uploaded-notices-14d4298a59d340258558",
     "uploadedNoticeTopics": {
       "reminders": [
@@ -851,44 +833,320 @@
         "drama",
         "reading-royals"
       ]
-    }
+    },
+    "lunchMenuSource": {
+      "status": "partial-current-week",
+      "retrievalState": "verified",
+      "checkedAt": "2026-09-29T05:46:09.381Z",
+      "lastAttemptAt": "2026-09-29T05:46:10.369Z",
+      "provider": "Saint Clair Area School District",
+      "school": "Assumption BVM School",
+      "feedUrl": "https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu",
+      "parentResourcesUrl": "https://www.assumptionbvmschool.net/parent-resources",
+      "weekStart": "2026-09-28",
+      "weekEnd": "2026-10-02",
+      "coverageThrough": "2026-09-30",
+      "missingDates": [
+        "2026-10-01",
+        "2026-10-02"
+      ],
+      "sourcePages": [
+        {
+          "id": "abvm-2026-09-official",
+          "url": "https://resources.finalsite.net/images/v1787165302/adeducatorsorg/gvzkkrduwn7fce9l3vsw/AugustandSeptlunch26.pdf",
+          "contentHash": "6c01fef18e1f589a544713c21e4d6b31b0063ef7fdbfaa4537dd30cc7b6a64eb",
+          "reviewedAt": "2026-09-29T05:26:39Z",
+          "checkedAt": "2026-09-29T05:46:09.381Z"
+        }
+      ],
+      "pendingDocuments": [],
+      "gaps": [
+        "No reviewed school lunch menu is available for 2026-10-01.",
+        "No reviewed school lunch menu is available for 2026-10-02."
+      ]
+    },
+    "lunchArchive": [
+      {
+        "date": "2026-09-01",
+        "day": "Tuesday, Sept. 1",
+        "items": [
+          "Meatballs in sauce",
+          "Whole-grain pasta",
+          "Steamed corn",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-02",
+        "day": "Wednesday, Sept. 2",
+        "items": [
+          "Cheese pizza",
+          "Garden salad",
+          "Steamed broccoli",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-03",
+        "day": "Thursday, Sept. 3",
+        "items": [
+          "Hamburger on a roll",
+          "French fries",
+          "Mixed vegetables",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-04",
+        "day": "Friday, Sept. 4",
+        "items": [],
+        "status": "no-school",
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-07",
+        "day": "Monday, Sept. 7",
+        "items": [],
+        "status": "no-school",
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-08",
+        "day": "Tuesday, Sept. 8",
+        "items": [
+          "Hot ham & cheese",
+          "Pretzel roll",
+          "Tortilla chips",
+          "Steamed peas",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-09",
+        "day": "Wednesday, Sept. 9",
+        "items": [
+          "Meatballs & whole-grain pasta",
+          "Whole-grain dinner roll",
+          "Steamed carrots",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-10",
+        "day": "Thursday, Sept. 10",
+        "items": [
+          "Chicken patty on a roll",
+          "Baby cake potatoes",
+          "Green beans",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-11",
+        "day": "Friday, Sept. 11",
+        "items": [
+          "Cheesy breadsticks",
+          "Dipping sauce",
+          "Garden salad",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-14",
+        "day": "Monday, Sept. 14",
+        "items": [
+          "Chicken finger wrap",
+          "Brown rice",
+          "Steamed corn",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-15",
+        "day": "Tuesday, Sept. 15",
+        "items": [
+          "Taco Tuesday & chips",
+          "Cheese",
+          "Shredded lettuce",
+          "Green beans",
+          "Salsa",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-16",
+        "day": "Wednesday, Sept. 16",
+        "items": [
+          "Fish shapes",
+          "French fries",
+          "Steamed broccoli",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-17",
+        "day": "Thursday, Sept. 17",
+        "items": [
+          "Beef-a-roni",
+          "Shredded cheese",
+          "Whole-grain roll",
+          "Steamed carrots",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-18",
+        "day": "Friday, Sept. 18",
+        "items": [
+          "Pizza bagel",
+          "Garden salad",
+          "Steamed peas",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-21",
+        "day": "Monday, Sept. 21",
+        "items": [
+          "Breaded chicken",
+          "Buttered pasta",
+          "Baked beans",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-22",
+        "day": "Tuesday, Sept. 22",
+        "items": [
+          "Meatballs in gravy",
+          "Mashed potatoes",
+          "Garlic stick",
+          "Steamed corn",
+          "French toast sticks",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-23",
+        "day": "Wednesday, Sept. 23",
+        "items": [
+          "French toast sticks",
+          "Hash browns",
+          "Sausage patty",
+          "Steamed carrots",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-24",
+        "day": "Thursday, Sept. 24",
+        "items": [
+          "Macaroni & cheese",
+          "Stewed tomatoes",
+          "Breaded chicken",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-25",
+        "day": "Friday, Sept. 25",
+        "items": [
+          "Hamburger on WG roll",
+          "French fries",
+          "Steamed peas",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-28",
+        "day": "Monday, Sept. 28",
+        "items": [
+          "Breaded chicken",
+          "Brown rice",
+          "Steamed broccoli",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-29",
+        "day": "Tuesday, Sept. 29",
+        "items": [
+          "Cheese quesadilla wedge",
+          "Garden salad",
+          "Salsa",
+          "Steamed corn",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-09-30",
+        "day": "Wednesday, Sept. 30",
+        "items": [
+          "Breaded fish sandwich",
+          "Baby cake potatoes",
+          "Baked beans",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-09-official"
+      }
+    ],
+    "lunchMenuHash": "2be6f3248113eea945424400052a8ae0e9e09b0a3331f561c7627775419645d3"
   },
-  "sourceLastCheckedAt": "2026-09-28T18:30:18.550Z",
+  "sourceLastCheckedAt": "2026-09-29T05:46:10.369Z",
   "sourcePages": [
     {
       "title": "Home",
       "url": "https://sites.google.com/view/abvmgr2/home",
-      "checkedAt": "2026-09-28T18:30:18.550Z",
-      "contentHash": "e55ec54aac3af22acc40fc551cfed9c7e884b46aef2e109def8aee50468b3374"
+      "checkedAt": "2026-09-29T05:46:10.369Z",
+      "contentHash": "cd71039982b534bed71d95d29e5e7d25743cba03e6d614b09048c1fd7e78b858"
     },
     {
       "title": "Homework",
       "url": "https://sites.google.com/view/abvmgr2/homework",
-      "checkedAt": "2026-09-28T18:30:18.550Z",
-      "contentHash": "781165f9000ee8a601a3e942f00d95f14d901bcbe65f8c23f707698206f345a9"
+      "checkedAt": "2026-09-29T05:46:10.369Z",
+      "contentHash": "21e9e72f4026109383c4baefe80c7b74c74df9c9e13e5751690a3a7b7d91b32c"
     },
     {
       "title": "Reading Work",
       "url": "https://sites.google.com/view/abvmgr2/reading-work",
-      "checkedAt": "2026-09-28T18:30:18.550Z",
+      "checkedAt": "2026-09-29T05:46:10.369Z",
       "contentHash": "32d208056bf55cd9cea8ef374fc89aea482d3586c28ba99da1b242cedd10a705"
     },
     {
       "title": "Weekly Spelling List",
       "url": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-      "checkedAt": "2026-09-28T18:30:18.550Z",
+      "checkedAt": "2026-09-29T05:46:10.369Z",
       "contentHash": "d077ca4b2b95d79755f88f5a726e6b5acf3a52c6575c3d986a16ca1c834b5777"
     },
     {
       "title": "Tests",
       "url": "https://sites.google.com/view/abvmgr2/tests",
-      "checkedAt": "2026-09-28T18:30:18.550Z",
-      "contentHash": "67b060f3d7e2a63a875548a1bb84dfdeb1fc2ef26c7df93fd3dbe6d0574b3dc3"
+      "checkedAt": "2026-09-29T05:46:10.369Z",
+      "contentHash": "c61d0d245852807fbe1e6cea155cb92ac1a9876cefa5cdf134e72e15e47111c2"
     },
     {
       "title": "Religion",
       "url": "https://sites.google.com/view/abvmgr2/religion",
-      "checkedAt": "2026-09-28T18:30:18.550Z",
+      "checkedAt": "2026-09-29T05:46:10.369Z",
       "contentHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c"
     }
   ],
