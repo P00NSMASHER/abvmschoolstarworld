@@ -470,3 +470,12 @@ test("Subject Study Games stay on current material for full rounds",async({page}
   expect(report.words.filter(q=>q.skill==="long-short-a")).toHaveLength(3);
   expect(report.words.filter(q=>q.skill==="suffix-ed-ing")).toHaveLength(3);
 });
+
+
+test("game progress reflects the current question instead of starting at zero",async({page})=>{
+  await openTab(page,"Study Games");
+  await page.getByRole("button",{name:/Quick Mix/i}).click();
+  await expect(page.locator(".game-question-card")).toBeVisible();
+  const width=await page.locator(".game-progress span").getAttribute("style");
+  expect(width).toContain("12");
+});
