@@ -1231,8 +1231,13 @@ button.freshness.is-refreshing b{
 
 
 /* Story-study question bank */
-.story-study-card{background:#fff7fb;border-color:#e7a9c7}
-.story-question-list{display:grid;gap:8px;padding:0 12px 12px}
+.story-study-card{background:#fff7fb;border:1px solid #e7a9c7;border-radius:14px;margin:4px 12px 12px;overflow:hidden}
+.story-study-heading{padding:11px 12px 8px}
+.story-study-heading small,.story-study-heading strong,.story-study-heading span{display:block}
+.story-study-heading small{color:#8a4165;font-size:8px;font-weight:950;letter-spacing:.08em}
+.story-study-heading strong{color:#26384a;margin-top:2px;font-size:13px}
+.story-study-heading span{color:#6c5b64;margin-top:3px;font-size:10px;line-height:1.35}
+.story-question-list{display:grid;gap:8px;padding:0 10px 10px}
 .story-question{background:#fff;border:1px solid #ead5df;border-radius:13px;overflow:hidden}
 .study-accordion .story-question>summary{grid-template-columns:28px minmax(0,1fr);gap:9px;min-height:0;padding:11px;align-items:start}
 .study-accordion .story-question>summary .story-question-number{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#f6dbe8;color:#7c2853;font-size:10px;font-weight:950}
