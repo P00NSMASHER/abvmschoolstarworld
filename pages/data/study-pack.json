@@ -28,7 +28,8 @@
       {
         "subject": "Reading / ELA",
         "topics": [
-          "Story: Little Flap Learns to Fly\" 'Help! A Story of Friendship",
+          "Story: Little Flap Learns to Fly",
+          "Story: Help! A Story of Friendship",
           "Sight words: she, boy, he, small, were, what, girl, here, by, want",
           "Phonics: 2-letter consonant blends",
           "Vocabulary: action, afraid, depend, nervously, peered, perfectly, rescue, secret",
@@ -36,7 +37,7 @@
           "Grammar: types of sentences (test Wednesday, Sept. 30)"
         ],
         "studyNotes": [
-          "Reading comprehension: visualize, theme, dioalogue"
+          "Reading comprehension: visualize, theme, dialogue"
         ]
       },
       {
@@ -45,23 +46,12 @@
           "Friday, Oct. 2 test focus: short a / long a"
         ],
         "studyNotes": [
-          "Religion",
-          "Reading Work",
-          "Weekly Spelling List",
-          "Homework",
-          "Tests",
-          "More Home"
+          "The Weekly Spelling List page currently has no word list posted."
         ]
       },
       {
         "subject": "Religion",
         "topics": [
-          "Home",
-          "Reading Work",
-          "Weekly Spelling List",
-          "Homework",
-          "Tests",
-          "More Home",
           "Unit 1: God Gives Us Life & Love",
           "Chapter 2: Jesus is God's Best Gift",
           "Chapter 1: God is the Giver of Gifts"
@@ -245,7 +235,7 @@
         "date": "Monday, Oct. 5",
         "label": "Start winter dress code",
         "source": "teacher-home",
-        "kind": "assessment"
+        "kind": "school event"
       },
       {
         "date": "Wednesday, Oct. 7",
@@ -651,13 +641,7 @@
       "Chick-fil-A pickup is Thursday, Oct. 22.",
       "S’more Fun at Schwartz Farm is Friday, Oct. 23.",
       "Drama Club Play is Nov. 13–14.",
-      "Reading Royals Game Family Fun Night is Saturday, Nov. 21.",
-      "Thursday, Oct. 1: Picture Day, Business Casual, and the HSA virtual meeting.",
-      "Stationary money ($17) is due Wednesday, Sept. 23.",
-      "Pretzel delivery is Thursday, Sept. 24 after lunch.",
-      "Keep the Reading Log and Behavior Chart in the HW folder.",
-      "Return everything in the HW folder.",
-      "Christmas Caroling date is still TBD."
+      "Reading Royals Game Family Fun Night is Saturday, Nov. 21."
     ],
     "questions": [
       {
@@ -779,7 +763,8 @@
     ],
     "sourceSufficient": true,
     "gaps": [
-      "The public teacher Homework page does not show a date, so assignments are labeled as the current posting and refreshed daily."
+      "The public teacher Homework page does not show a date, so assignments are labeled as the current posting and refreshed daily.",
+      "The Weekly Spelling List page currently has no word list posted."
     ],
     "parentNotices": [
       "Sign up for conferences using the OptionC portal on Tuesday, Sept. 29.",
@@ -793,12 +778,7 @@
       "Chick-fil-A pickup is Thursday, Oct. 22.",
       "S’more Fun at Schwartz Farm is Friday, Oct. 23.",
       "Drama Club Play is Nov. 13–14.",
-      "Reading Royals Game Family Fun Night is Saturday, Nov. 21.",
-      "The Chick-fil-A sale starts Wednesday, Sept. 30; pickup is Thursday, Oct. 22.",
-      "Picture ordering: a digital image is $10 when added to a package; glossy finish is $5 per package; a 10×13 is $20; the other listed add-on items are $13 each.",
-      "Picture backgrounds: 1 Universe, 2 Pink Mist, 3 Fall Leaves, 4 Traditional, 5 School Spirit, 6 Patriotic, 7 Dinosaur, 8 Pastel, 9 Bookcase, 10 Blue Brush, 11 Laser. Backgrounds 1, 2, and 11 are marked NEW.",
-      "Christmas Caroling date is TBD.",
-      "Lego Club is Friday, Sept. 25 from 3–4 PM."
+      "Reading Royals Game Family Fun Night is Saturday, Nov. 21."
     ],
     "sourceCheckedAt": "2026-09-29T16:01:33.884Z",
     "uploadedNoticeHash": "uploaded-notices-14d4298a59d340258558",
