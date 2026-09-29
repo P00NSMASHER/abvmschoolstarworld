@@ -45,13 +45,20 @@ test("Calendar exposes month grid, selected-day detail, full agenda, and special
   await expect(page.locator(".specials-card")).toBeVisible();
 });
 
-test("Study exposes one primary game CTA and collapsed subject details",async({page})=>{
+test("Study exposes current story questions with collapsed subject details",async({page})=>{
   await openTab(page,"Study");
   await expect(page.locator(".study-at-a-glance")).toBeVisible();
   await expect(page.locator(".study-games-cta")).toBeVisible();
   const details=page.locator(".study-accordion");
-  await expect(details).toHaveCount(6);
+  await expect(details).toHaveCount(7);
   for(let i=0;i<await details.count();i++)await expect(details.nth(i)).not.toHaveAttribute("open");
+
+  const storyCard=page.locator("#study-story-questions");
+  await expect(storyCard).toBeVisible();
+  await storyCard.locator(":scope > summary").click();
+  await expect(storyCard.locator(".story-question")).toHaveCount(12);
+  await expect(storyCard).toContainText("Little Flap Learns to Fly");
+  await expect(storyCard).toContainText("Help! A Story of Friendship");
 });
 
 test("Study Games loads lazily and starts a playable round",async({page})=>{
