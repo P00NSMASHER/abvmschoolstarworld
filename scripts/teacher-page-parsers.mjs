@@ -99,7 +99,7 @@ export function parseStoryTitles(value) {
 
   const cleaned = normalized.replace(/^["']+|["']+$/g, '').trim();
   const pieces = cleaned
-    .split(/["']+\s+(?=[A-Z])/)
+    .split(/["']+\s+["']?(?=[A-Z])/)
     .map(part => part.replace(/^["']+|["']+$/g, '').trim())
     .filter(Boolean);
   return [...new Set(pieces.length ? pieces : [cleaned].filter(Boolean))];
