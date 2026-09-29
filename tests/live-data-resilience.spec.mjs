@@ -303,3 +303,32 @@ test("Study derives spelling review date and STAR reminder from current school d
   await expect(starPage.locator(".calm-card")).toContainText("STAR reminder");
   await starContext.close();
 });
+
+
+test("Today labels closed events as Closed instead of School",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-10-12T13:00:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:source}));
+  await page.goto("http://127.0.0.1:4173/#today");
+  const closedRow=page.locator(".timeline-row").filter({hasText:"No School — Columbus Day"});
+  await expect(closedRow.locator("time")).toHaveText("Closed");
+  await context.close();
+});
+
+test("Study does not present a distant test as something that matters this week",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-10-13T13:00:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  const fixture=structuredClone(source);
+  fixture.pack.importantDates=[
+    {date:"Tuesday–Friday, Jan. 12–22",label:"STAR Testing window",kind:"assessment"}
+  ];
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:fixture}));
+  await page.goto("http://127.0.0.1:4173/#study");
+  await expect(page.locator(".study-at-a-glance")).toContainText("Keep up with current class skills");
+  await expect(page.locator(".study-at-a-glance")).not.toContainText("STAR Testing window");
+  await context.close();
+});
