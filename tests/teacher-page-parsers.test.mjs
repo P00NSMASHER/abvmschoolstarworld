@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import {pageLines, parseHomework} from '../scripts/teacher-page-parsers.mjs';
+import {cleanTeacherText, pageLines, parseHomework, parseStoryTitles, teacherContentLines} from '../scripts/teacher-page-parsers.mjs';
 
 test('pageLines reads current Google Sites text containers without scripts', () => {
   const html = `
@@ -89,4 +89,33 @@ test('parseHomework still fails closed when nothing academic can be verified', (
     () => parseHomework(['Homework', 'Remember your water bottle.', 'Picture Day is Friday.']),
     /verifiable academic assignment or an explicit no-homework state/
   );
+});
+
+
+test('teacherContentLines removes Google Sites navigation chrome from lesson content', () => {
+  assert.deepEqual(teacherContentLines([
+    'Religion',
+    'Home',
+    'Reading Work',
+    'Weekly Spelling List',
+    'Homework',
+    'Tests',
+    'More Home',
+    'Unit 1: God Gives Us Life & Love',
+    "Chapter 2: Jesus is God's Best Gift",
+  ], 'Religion'), [
+    'Unit 1: God Gives Us Life & Love',
+    "Chapter 2: Jesus is God's Best Gift",
+  ]);
+});
+
+test('parseStoryTitles separates the two live story titles cleanly', () => {
+  assert.deepEqual(
+    parseStoryTitles('"Little Flap Learns to Fly" \'Help! A Story of Friendship\''),
+    ['Little Flap Learns to Fly', 'Help! A Story of Friendship']
+  );
+});
+
+test('cleanTeacherText fixes obvious teacher-page typo without changing meaning', () => {
+  assert.equal(cleanTeacherText('visualize, theme, dioalogue'), 'Visualize, theme, dialogue');
 });
