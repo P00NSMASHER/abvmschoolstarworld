@@ -2,7 +2,7 @@ name: Verify ABVM lunch repair
 on:
   push:
     branches: [fix/current-week-lunch-source]
-    paths: ['.repair/lunch-repair.py', '.github/workflows/lunch-repair-verify.yml']
+    paths: ['.repair/lunch-repair.py', '.repair/lunch-fixture.py', '.github/workflows/lunch-repair-verify.yml']
 permissions:
   contents: write
 concurrency:
@@ -20,8 +20,10 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - name: Apply exact-anchor lunch integration fixes
-        run: python3 .repair/lunch-repair.py
+      - name: Apply exact-anchor lunch integration fixes and dated fixture
+        run: |
+          python3 .repair/lunch-repair.py
+          python3 .repair/lunch-fixture.py
       - name: Probe actual public API and validate reviewed source evidence
         run: |
           mkdir -p /tmp/lunch-proof
@@ -40,12 +42,21 @@ jobs:
         run: node scripts/refresh-teacher-pages.mjs
       - name: Prove repository and lunch health
         run: node scripts/check-refresh-health.mjs --require-today --max-age-hours 1
+      - name: Remove one-time repair machinery from the candidate
+        run: git rm .repair/lunch-repair.py .repair/lunch-fixture.py .github/workflows/lunch-source-diagnostic.yml .github/workflows/lunch-repair-verify.yml
+      - name: Retain candidate source evidence
+        run: |
+          mkdir -p /tmp/lunch-proof/candidate
+          cp -R pages scripts tests .github package.json package-lock.json playwright.config.mjs /tmp/lunch-proof/candidate/
       - name: Install locked QA dependencies and Chromium
         run: |
           npm ci --no-audit --no-fund
           npx playwright install --with-deps chromium
       - name: Full static, unit and mobile/desktop regression tests
-        run: npm run qa
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run qa 2>&1 | tee /tmp/lunch-proof/qa.log
       - name: Commit verified branch changes only
         shell: bash
         run: |
