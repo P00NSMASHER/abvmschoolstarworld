@@ -59,9 +59,13 @@
     (() => {
       if (!("serviceWorker" in navigator)) return;
       const reloadKey = "abvm-sw-reloaded-v72";
+      const hadController = !!navigator.serviceWorker.controller;
       navigator.serviceWorker.addEventListener("controllerchange", () => {
-        if (sessionStorage.getItem(reloadKey) === "1") return;
-        sessionStorage.setItem(reloadKey, "1");
+        if (!hadController) return;
+        try {
+          if (sessionStorage.getItem(reloadKey) === "1") return;
+          sessionStorage.setItem(reloadKey, "1");
+        } catch {}
         location.reload();
       });
       navigator.serviceWorker.register("./sw.js", { updateViaCache: "none" })
