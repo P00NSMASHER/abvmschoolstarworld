@@ -450,13 +450,23 @@ test("Math Dash and Faith Quest stay on current material for full rounds",async(
     const catalog=engine.buildCatalog(source.pack,{sourceKey:"current-material-mode-audit"});
     const math=engine.selectQuestions(catalog,{subjects:["Math"],count:8,seed:"math-current",skillStats:{}});
     const faith=engine.selectQuestions(catalog,{subjects:["Religion"],count:8,seed:"faith-current",skillStats:{}});
+    const words=engine.selectQuestions(catalog,{
+      subjects:["Reading / ELA","Spelling / Handwriting"],
+      preferredSkills:["long-short-a","suffix-ed-ing"],
+      count:8,seed:"word-current",skillStats:{}
+    });
     return {
       math:math.map(q=>({tier:q.tier,skill:q.skill,sourceFact:q.sourceFact})),
-      faith:faith.map(q=>({tier:q.tier,skill:q.skill,sourceFact:q.sourceFact}))
+      faith:faith.map(q=>({tier:q.tier,skill:q.skill,sourceFact:q.sourceFact})),
+      words:words.map(q=>({tier:q.tier,skill:q.skill,sourceFact:q.sourceFact}))
     };
   });
   expect(report.math).toHaveLength(8);
   expect(report.faith).toHaveLength(8);
   expect(report.math.every(q=>q.tier==="material"&&/Subtraction to 12/i.test(q.sourceFact))).toBe(true);
   expect(report.faith.every(q=>q.tier==="material"&&/ABVM Religion/i.test(q.sourceFact))).toBe(true);
+  expect(report.words).toHaveLength(8);
+  expect(report.words.every(q=>q.tier==="material")).toBe(true);
+  expect(report.words.filter(q=>q.skill==="long-short-a")).toHaveLength(3);
+  expect(report.words.filter(q=>q.skill==="suffix-ed-ing")).toHaveLength(3);
 });
