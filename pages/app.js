@@ -160,8 +160,9 @@ function lunchCardHtml(date,lunch){
   const closed=lunch?.status==="no-school"||eventItemsForDate(date).some(e=>kindClass(e)==="closed");
   if([0,6].includes(date.getDay()))return "";
   const message=closed?"No school lunch":lunch?lunchText(lunch):lunchUnavailableText(date);
-  const retained=lunch&&!closed&&pack?.lunchMenuSource?.retrievalState!=="verified";
-  return '<section class="lunch-card'+(!lunch&&!closed?' lunch-missing':'')+'"><span aria-hidden="true">🍎</span><div><p>SCHOOL LUNCH</p><strong>'+esc(message)+'</strong>'+(retained?'<small>Saved school menu · source check needs attention</small>':'')+'</div></section>';
+  const retrieval=pack?.lunchMenuSource?.retrievalState||"unknown",retained=lunch&&!closed&&retrieval!=="verified";
+  const sourceNote=retrieval==="needs-review"?"Reviewed school menu · automated source check pending":"Saved school menu · automated source check unavailable";
+  return '<section class="lunch-card'+(!lunch&&!closed?' lunch-missing':'')+'"><span aria-hidden="true">🍎</span><div><p>SCHOOL LUNCH</p><strong>'+esc(message)+'</strong>'+(retained?'<small>'+esc(sourceNote)+'</small>':'')+'</div></section>';
 }
 function currentTest(){
   const now=today();
