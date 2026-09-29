@@ -117,7 +117,7 @@ function taskRecordsForSurface(surface){
 }
 function taskHtml(item,index){
   const done=checked(item,index);
-  const optional=/parent|if participating/i.test((item.subject||"")+" "+(item.task||"")) || /forms|cover books/i.test(item.task||"");
+  const optional=/\bif participating\b|\boptional\b/i.test((item.subject||"")+" "+(item.task||""));
   const tag=optional?"IF PARTICIPATING":"REQUIRED";
   const action=(done?"Completed: ":"Mark complete: ")+(item.task||"Task");
   return '<button type="button" class="check-item'+(done?' is-done':'')+'" data-check="'+index+'" aria-pressed="'+(done?"true":"false")+'" aria-label="'+esc(action)+'"><span class="check-box" aria-hidden="true">'+(done?"✓":"")+'</span><span class="check-copy"><span class="task-tag '+(optional?"if-participating":"required")+'">'+tag+'</span><strong>'+esc(item.task||"Task")+'</strong>'+(item.subject?'<small>'+esc(item.subject)+'</small>':'')+'</span></button>';
@@ -247,7 +247,7 @@ function renderToday(){
 function renderWeek(){
   const days=weekDays();
   if(!selectedDay||!days.some(d=>sameDay(d,selectedDay)))selectedDay=weekOffset===0?(days.find(d=>sameDay(d,today()))||days[0]):days[0];
-  const events=eventItemsForDate(selectedDay), lunch=lunchForDate(selectedDay);
+  const events=eventItemsForDate(selectedDay), lunch=lunchForDate(selectedDay), closed=events.some(e=>kindClass(e)==="closed");
   const picker=days.map(d=>'<button type="button" class="'+(sameDay(d,selectedDay)?"active":"")+'" data-day="'+d.toISOString()+'" aria-label="'+esc(fmtDate(d))+'" aria-pressed="'+(sameDay(d,selectedDay)?"true":"false")+'"><span>'+WEEKDAY[d.getDay()].slice(0,3)+'</span><strong>'+d.getDate()+'</strong></button>').join("");
   const eventRows=events.length?events.map(e=>'<div class="event-row"><time>'+esc((e.kind||"School").replace(/\b\w/g,m=>m.toUpperCase()))+'</time><div><strong>'+esc(e.label)+'</strong></div></div>').join(""):'<div class="event-row"><time>School</time><div><strong>No special school events are listed.</strong></div></div>';
   const sourceWeek=isPackWeek(days), tasks=sourceWeek?(pack?.homework||[]):[];
@@ -258,7 +258,7 @@ function renderWeek(){
     '<nav class="week-nav" aria-label="Change displayed week"><button type="button" data-week-step="-1" aria-label="Previous week">‹</button><div aria-live="polite"><span>'+(weekOffset===0?"CURRENT WEEK":"VIEWING WEEK")+'</span><strong>'+esc(weekRangeLabel(days))+'</strong></div><button type="button" data-week-step="1" aria-label="Next week">›</button></nav>'+
     (weekOffset!==0?'<button class="week-today-jump" type="button" data-week-today>Back to this week</button>':'')+
     '<div class="day-picker">'+picker+'</div>'+
-    '<section class="day-detail green"><div class="day-detail-title"><div><p>'+MONTHS[selectedDay.getMonth()].toUpperCase()+'</p><h2>'+esc(fmtDate(selectedDay))+'</h2></div><span>School day</span></div><div class="event-stack">'+eventRows+'</div><h3>My checklist</h3>'+checklist+'</section>'+
+    '<section class="day-detail green"><div class="day-detail-title"><div><p>'+MONTHS[selectedDay.getMonth()].toUpperCase()+'</p><h2>'+esc(fmtDate(selectedDay))+'</h2></div><span>'+(closed?"No school":"School day")+'</span></div><div class="event-stack">'+eventRows+'</div><h3>My checklist</h3>'+checklist+'</section>'+
     lunchCardHtml(selectedDay,lunch)+
     (reminderForDate(selectedDay)?'<section class="reminder-strip"><span>!</span><p><strong>Don’t forget</strong>'+esc(reminderForDate(selectedDay))+'</p></section>':'')+
     '<section class="future-card"><h3>Coming soon</h3>'+future.map(o=>'<div><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join("")+'</section>'+
@@ -492,7 +492,7 @@ function gameMenuHtml(catalog){
 function gamePlayHtml(){
   const mode=gameMode(gameState.mode),q=gameState.questions[gameState.index];
   if(!q)return '<section class="game-empty"><h2>No questions are ready for this game yet.</h2><button type="button" data-game-home>Back to games</button></section>';
-  const progress=gameState.index+1,total=gameState.questions.length,pct=Math.round((gameState.index/Math.max(1,total))*100);
+  const progress=gameState.index+1,total=gameState.questions.length,pct=Math.round((progress/Math.max(1,total))*100);
   const chosen=gameState.selectedIndex;
   const answers=q.choices.map((choice,index)=>{
     let klass="";
