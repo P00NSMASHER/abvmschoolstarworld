@@ -21,6 +21,8 @@ const STANDARD_BY_SKILL=Object.freeze({
   "sentence-types":["CCSS.L.2.1"],
   "consonant-blends":["CCSS.RF.2.3"],
   "cvc-structure":["CCSS.RF.2.3"],
+  "long-short-a":["CCSS.RF.2.3"],
+  "suffix-ed-ing":["CCSS.RF.2.3.d"],
   "high-frequency-word-use":["CCSS.RF.2.3.f"],
   "vocabulary-in-context":["CCSS.L.2.4.a"],
   "theme":["CCSS.RL.2.2"],
@@ -47,6 +49,8 @@ const DOMAIN_BY_SKILL=Object.freeze({
   "sentence-types":"Language",
   "consonant-blends":"Foundational reading",
   "cvc-structure":"Foundational reading",
+  "long-short-a":"Foundational reading",
+  "suffix-ed-ing":"Foundational reading",
   "high-frequency-word-use":"Foundational reading",
   "vocabulary-in-context":"Word knowledge and skills",
   "theme":"Analyzing literary text",
@@ -202,6 +206,7 @@ function materialMath(pack,variant,out){
     hint:"Think about the amount you start with and how many are taken away."
   },[
     {
+      skill:"subtraction-within-12",
       prompt:`Solve this subtraction problem: ${row.a} − ${row.b}. What is the difference?`,
       choices:shuffled([String(row.a-row.b),String(row.a-row.b+1),String(row.a-row.b-1)],"m1"+variant),
       answer:String(row.a-row.b),
@@ -211,6 +216,7 @@ function materialMath(pack,variant,out){
       misconception:"subtraction-fact-error"
     },
     {
+      skill:"subtraction-word-problem",
       prompt:`Mila had ${row.start} stickers and gave ${row.give} away. How many stickers does she have now?`,
       choices:shuffled([String(row.start-row.give),String(row.start+row.give),String(row.give)],"m2"+variant),
       answer:String(row.start-row.give),
@@ -220,6 +226,7 @@ function materialMath(pack,variant,out){
       misconception:choice=>choice===String(row.start+row.give)?"operation-confusion":"part-whole-confusion"
     },
     {
+      skill:"two-step-word-problem",
       prompt:`A box held ${row.first} crayons. ${row.add} crayon was added, then ${row.take} crayons were used. How many crayons are left?`,
       choices:shuffled([String(row.first+row.add-row.take),String(row.first+row.add),String(Math.max(0,row.first-row.take))],"m3"+variant),
       answer:String(row.first+row.add-row.take),
@@ -230,6 +237,61 @@ function materialMath(pack,variant,out){
       misconception:choice=>choice===String(row.first+row.add)?"one-step-only":"operation-order"
     }
   ]);
+  add(out,{
+    id:"mat-sub12-fact-b-v"+variant,subject:"Math",skill:"subtraction-within-12",tier:"material",
+    prompt:`Solve this subtraction fact: ${row.c} − ${row.d}. What is the difference?`,
+    choices:shuffled([String(row.c-row.d),String(row.c-row.d+1),String(row.c-row.d-1)],"m4"+variant),
+    answer:String(row.c-row.d),
+    explanation:`${row.c} take away ${row.d} leaves ${row.c-row.d}.`,
+    hint:"Count back or use an addition fact to check.",
+    sourceFact:"Verified current ABVM skill: Subtraction to 12",dok:1,difficulty:2,
+    wrongFeedback:`Add ${row.d} back to your answer. You should get ${row.c}.`,
+    misconception:"subtraction-fact-error"
+  });
+  add(out,{
+    id:"mat-sub12-story-b-v"+variant,subject:"Math",skill:"subtraction-word-problem",tier:"material",
+    prompt:`There were ${row.c} birds on a fence. ${row.d} flew away. How many birds stayed?`,
+    choices:shuffled([String(row.c-row.d),String(row.c+row.d),String(row.d)],"m5"+variant),
+    answer:String(row.c-row.d),
+    explanation:`“Flew away” means subtract: ${row.c} − ${row.d} = ${row.c-row.d}.`,
+    hint:"Start with the number of birds on the fence, then take away the birds that left.",
+    sourceFact:"Verified current ABVM skill: Subtraction to 12",dok:2,difficulty:2,
+    wrongFeedback:"The amount gets smaller because some birds flew away.",
+    misconception:"operation-confusion"
+  });
+  add(out,{
+    id:"mat-sub12-missing-part-v"+variant,subject:"Math",skill:"subtraction-within-12",tier:"material",
+    prompt:`Which number makes this true? ${row.c} − ___ = ${row.d}`,
+    choices:shuffled([String(row.c-row.d),String(row.d),String(row.c)],"m6"+variant),
+    answer:String(row.c-row.d),
+    explanation:`${row.c} − ${row.c-row.d} = ${row.d}.`,
+    hint:"Ask what amount must be taken away to reach the number on the right.",
+    sourceFact:"Verified current ABVM skill: Subtraction to 12",dok:2,difficulty:2,
+    wrongFeedback:"Check each choice by putting it in the blank and subtracting.",
+    misconception:"missing-part-confusion"
+  });
+  add(out,{
+    id:"mat-sub12-equation-story-v"+variant,subject:"Math",skill:"subtraction-word-problem",tier:"material",
+    prompt:`A basket had ${row.c} apples and ${row.d} were eaten. Which equation matches the story?`,
+    choices:shuffled([`${row.c} − ${row.d} = ${row.c-row.d}`,`${row.c} + ${row.d} = ${row.c+row.d}`,`${row.d} − ${row.c} = ${row.d-row.c}`],"m7"+variant),
+    answer:`${row.c} − ${row.d} = ${row.c-row.d}`,
+    explanation:"Eating apples removes some from the starting amount, so subtraction matches the story.",
+    hint:"Look for the equation that starts with the whole amount and takes some away.",
+    sourceFact:"Verified current ABVM skill: Subtraction to 12",dok:2,difficulty:2,
+    wrongFeedback:"The story starts with the larger amount and says some were eaten.",
+    misconception:"equation-model-mismatch"
+  });
+  add(out,{
+    id:"mat-sub12-two-step-b-v"+variant,subject:"Math",skill:"two-step-word-problem",tier:"material",
+    prompt:`A tray had ${row.c} counters. 2 more were added, then ${row.d} were removed. How many counters are left?`,
+    choices:shuffled([String(row.c+2-row.d),String(row.c+2),String(row.c-row.d)],"m8"+variant),
+    answer:String(row.c+2-row.d),
+    explanation:`First ${row.c} + 2 = ${row.c+2}. Then ${row.c+2} − ${row.d} = ${row.c+2-row.d}.`,
+    hint:"Do the changes in order: add first, then subtract.",
+    sourceFact:"Verified current ABVM skill: Subtraction to 12",dok:3,difficulty:3,
+    wrongFeedback:"Do both steps. The second change removes counters.",
+    misconception:"one-step-only"
+  });
 }
 function materialSentences(pack,variant,out){
   if(!topicMatch(pack,"Reading / ELA",/types of sentences/i))return;
@@ -345,6 +407,76 @@ function materialPhonics(pack,variant,out){
         dok:3,difficulty:3,
         wrongFeedback:"You need to inspect all three letters, not just one part.",
         misconception:"incomplete-structure-check"
+      }
+    ]);
+  }
+  if(topicMatch(pack,"Reading / ELA",/long a|short a|a_e/i)||topicMatch(pack,"Spelling / Handwriting",/short a\s*\/\s*long a/i)){
+    addTriad(out,"mat-long-short-a",{
+      subject:"Spelling / Handwriting",skill:"long-short-a",tier:"material",
+      sourceFact:"Verified current ABVM phonics and spelling skill: short a / long a (a_e)",
+      hint:"Listen to the vowel sound. In many a_e words, the final e helps a say its name."
+    },[
+      {
+        prompt:"Which word has a long a sound?",
+        choices:shuffled(["cake","cat","map"],"a1"+variant),
+        answer:"cake",
+        explanation:"In “cake,” the a_e pattern makes the a say its long sound.",
+        dok:1,difficulty:2,
+        wrongFeedback:"Say each word slowly and listen to the middle vowel sound.",
+        misconception:"long-short-vowel-confusion"
+      },
+      {
+        prompt:"Which pair of words both have a short a sound?",
+        choices:shuffled(["cat and map","cake and game","late and cap"],"a2"+variant),
+        answer:"cat and map",
+        explanation:"The a in both “cat” and “map” has the short a sound.",
+        dok:2,difficulty:2,
+        wrongFeedback:"Check both words in the pair; both must use the short a sound.",
+        misconception:"mixed-vowel-pair"
+      },
+      {
+        prompt:"Why does the a in “game” have a long sound?",
+        choices:shuffled(["The final e helps the a say its name.","The g makes every vowel long.","The word has four letters."],"a3"+variant),
+        answer:"The final e helps the a say its name.",
+        explanation:"“Game” follows the a_e pattern being practiced this week.",
+        dok:3,difficulty:3,
+        wrongFeedback:"Look at the a_e pattern: the final e changes the vowel sound.",
+        misconception:"silent-e-rule-confusion"
+      }
+    ]);
+  }
+  if(topicMatch(pack,"Reading / ELA",/adding\s+-?ed.*-?ing|adding\s+-?ing.*-?ed/i)){
+    addTriad(out,"mat-suffix-ed-ing",{
+      subject:"Reading / ELA",skill:"suffix-ed-ing",tier:"material",
+      sourceFact:"Verified current ABVM word-structure skill: adding -ed and -ing",
+      hint:"Use -ed for an action that already happened and -ing for an action happening now."
+    },[
+      {
+        prompt:"Which word means the action already happened: play, played, or playing?",
+        choices:shuffled(["played","play","playing"],"suf1"+variant),
+        answer:"played",
+        explanation:"Adding -ed to “play” makes “played,” which tells about an action that already happened.",
+        dok:1,difficulty:2,
+        wrongFeedback:"Look for the ending that usually tells about a past action.",
+        misconception:"suffix-time-confusion"
+      },
+      {
+        prompt:"Which word correctly completes the sentence? “Mia is ___ at recess right now.”",
+        choices:shuffled(["jumping","jumped","jump"],"suf2"+variant),
+        answer:"jumping",
+        explanation:"The sentence says the action is happening right now, so “jumping” fits.",
+        dok:2,difficulty:2,
+        wrongFeedback:"“Right now” is a clue that the action is still happening.",
+        misconception:"progressive-form-confusion"
+      },
+      {
+        prompt:"What does adding -ed or -ing usually change about a word?",
+        choices:shuffled(["It helps show when or how an action is happening.","It always changes a word into a person's name.","It removes the base word's meaning."],"suf3"+variant),
+        answer:"It helps show when or how an action is happening.",
+        explanation:"The endings -ed and -ing help show the action's time or state while keeping the base action idea.",
+        dok:3,difficulty:3,
+        wrongFeedback:"Think about “played” versus “playing” and what each ending tells you.",
+        misconception:"suffix-function-confusion"
       }
     ]);
   }
@@ -550,6 +682,41 @@ function materialReligion(pack,variant,out){
       wrongFeedback:"A gift is being used well when it helps or encourages another person.",
       misconception:"gift-self-focus"
     });
+  }
+  if(/image and likeness|senses|creation/i.test(source)){
+    addTriad(out,"mat-religion-creation",{
+      subject:"Religion",skill:"religion-application",tier:"material",
+      sourceFact:"Verified current ABVM Religion topics: God's image and likeness, senses, and caring for creation",
+      hint:"Use the current lesson ideas about thinking, choosing, loving, gratitude, and creation."
+    },[
+      {
+        prompt:"According to the current lesson, which ability helps show that people are made in God's image and likeness?",
+        choices:shuffled(["We can think, choose, and love.","We never have to make choices.","Everyone must look exactly the same."],"rel6"+variant),
+        answer:"We can think, choose, and love.",
+        explanation:"The lesson says people are made in God's image and likeness and can think, choose, and love.",
+        dok:1,difficulty:2,
+        wrongFeedback:"Remember the lesson's three abilities: think, choose, and love.",
+        misconception:"image-likeness-confusion"
+      },
+      {
+        prompt:"Which action best shows taking care of God's gift of creation?",
+        choices:shuffled(["Picking up litter at a park.","Leaving trash beside a stream.","Wasting water on purpose."],"rel7"+variant),
+        answer:"Picking up litter at a park.",
+        explanation:"Caring for creation means protecting and respecting the gifts of the world around us.",
+        dok:2,difficulty:2,
+        wrongFeedback:"Choose the action that protects rather than harms creation.",
+        misconception:"creation-care-mismatch"
+      },
+      {
+        prompt:"Why can using our senses lead us to thank God in the current lesson?",
+        choices:shuffled(["Our senses help us notice and enjoy the gifts of creation.","Our senses mean we never need to make choices.","Our senses are only useful at school."],"rel8"+variant),
+        answer:"Our senses help us notice and enjoy the gifts of creation.",
+        explanation:"The lesson connects our senses with enjoying God's gifts and being thankful for creation.",
+        dok:3,difficulty:3,
+        wrongFeedback:"Connect seeing, hearing, smelling, tasting, and touching with noticing God's gifts.",
+        misconception:"senses-purpose-confusion"
+      }
+    ]);
   }
 }
 function fallbackReading(variant,out){
@@ -758,36 +925,38 @@ function targetDifficultyFor(skillStats,skill){
   if((Number(row.ConsecutiveWrong)||0)>=2)return 2;
   return Math.max(2,Math.min(3,Number(row.TargetDifficulty)||2));
 }
-function pickBalanced(pool,count,seed,skillStats){
-  const selected=[],used=new Set(),skillCounts={},maxPerSkill=3;
+function pickBalanced(pool,count,seed,skillStats,preferredSkills=[]){
+  const selected=[],used=new Set(),skillCounts={},maxPerSkill=3,preferred=new Set(preferredSkills||[]);
   const ordered=[...pool].sort((a,b)=>{
     if(a.tier!==b.tier)return a.tier==="material"?-1:1;
+    if(preferred.has(a.skill)!==preferred.has(b.skill))return preferred.has(a.skill)?-1:1;
     const ta=Math.abs(a.difficulty-targetDifficultyFor(skillStats,a.skill));
     const tb=Math.abs(b.difficulty-targetDifficultyFor(skillStats,b.skill));
     if(ta!==tb)return ta-tb;
     return hash(seed+"|"+a.id)-hash(seed+"|"+b.id);
   });
   while(selected.length<Math.min(count,ordered.length)){
-    let candidate=ordered.find(q=>{
-      if(used.has(q.id))return false;
-      if((skillCounts[q.skill]||0)>=maxPerSkill)return false;
+    const underCap=ordered.filter(q=>!used.has(q.id)&&(skillCounts[q.skill]||0)<maxPerSkill);
+    const remaining=underCap.length?underCap:ordered.filter(q=>!used.has(q.id));
+    if(!remaining.length)break;
+    const material=remaining.filter(q=>q.tier==="material"),tierPool=material.length?material:remaining;
+    let candidate=tierPool.find(q=>{
       const last=selected[selected.length-1];
       if(last&&last.skill===q.skill){
-        return !ordered.some(other=>!used.has(other.id)&&other.skill!==q.skill&&(skillCounts[other.skill]||0)<maxPerSkill);
+        return !tierPool.some(other=>other.skill!==q.skill);
       }
       return true;
     });
-    if(!candidate)candidate=ordered.find(q=>!used.has(q.id));
-    if(!candidate)break;
+    if(!candidate)candidate=tierPool[0];
     selected.push(candidate);used.add(candidate.id);skillCounts[candidate.skill]=(skillCounts[candidate.skill]||0)+1;
   }
   return selected;
 }
-function selectQuestions(catalog,{subjects,count=8,seed="session",skillStats={}}={}){
+function selectQuestions(catalog,{subjects,count=8,seed="session",skillStats={},preferredSkills=[]}={}){
   let pool=[...(catalog?.questions||[])];
   const wanted=Array.isArray(subjects)?subjects.map(text).filter(Boolean):[];
   if(wanted.length)pool=pool.filter(q=>wanted.includes(q.subject));
-  return pickBalanced(pool,count,seed,skillStats);
+  return pickBalanced(pool,count,seed,skillStats,preferredSkills);
 }
 function supportQuestion(catalog,current,{skillStats={},seed="support"}={}){
   if(!current)return null;

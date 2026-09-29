@@ -51,8 +51,8 @@ function freshnessState(){
   return{state:"current",label:"Verified "+stamp};
 }
 function freshness(){
-  const state=freshnessState(),label=manualRefreshActive?"Checking latest school info…":state.label;
-  const action=manualRefreshActive?"Checking latest school information":"Check latest school information. "+state.label;
+  const state=freshnessState(),label=manualRefreshActive?"Checking published school info…":state.label;
+  const action=manualRefreshActive?"Checking published school information":"Check published school information. "+state.label;
   return '<button type="button" class="freshness '+state.state+(manualRefreshActive?' is-refreshing':'')+'" data-refresh-pack aria-label="'+esc(action)+'"'+(manualRefreshActive?' disabled':'')+'><span aria-hidden="true"></span><strong>'+esc(label)+'</strong><b aria-hidden="true">↻</b></button>';
 }
 function kindClass(item){
@@ -117,7 +117,7 @@ function taskRecordsForSurface(surface){
 }
 function taskHtml(item,index){
   const done=checked(item,index);
-  const optional=/parent|if participating/i.test((item.subject||"")+" "+(item.task||"")) || /forms|cover books/i.test(item.task||"");
+  const optional=/\bif participating\b|\boptional\b/i.test((item.subject||"")+" "+(item.task||""));
   const tag=optional?"IF PARTICIPATING":"REQUIRED";
   const action=(done?"Completed: ":"Mark complete: ")+(item.task||"Task");
   return '<button type="button" class="check-item'+(done?' is-done':'')+'" data-check="'+index+'" aria-pressed="'+(done?"true":"false")+'" aria-label="'+esc(action)+'"><span class="check-box" aria-hidden="true">'+(done?"✓":"")+'</span><span class="check-copy"><span class="task-tag '+(optional?"if-participating":"required")+'">'+tag+'</span><strong>'+esc(item.task||"Task")+'</strong>'+(item.subject?'<small>'+esc(item.subject)+'</small>':'')+'</span></button>';
@@ -156,17 +156,44 @@ function lunchText(lunch){
 function lunchUnavailableText(date){
   return "Lunch menu not yet verified for "+MONTHS[date.getMonth()]+" "+date.getDate()+".";
 }
+function lunchVerificationNote(lunch){
+  if(!lunch?.sourceId)return "";
+  const proof=(pack?.lunchMenuSource?.sourcePages||[]).find(row=>row.id===lunch.sourceId);
+  if(proof?.checkedAt)return "";
+  if(proof?.reviewedAt)return pack?.lunchMenuSource?.retrievalState==="needs-review"
+    ?"Reviewed school menu · automated source check pending"
+    :"Reviewed school menu · automated source check unavailable";
+  return "Lunch source verification unavailable";
+}
 function lunchCardHtml(date,lunch){
   const closed=lunch?.status==="no-school"||eventItemsForDate(date).some(e=>kindClass(e)==="closed");
   if([0,6].includes(date.getDay()))return "";
   const message=closed?"No school lunch":lunch?lunchText(lunch):lunchUnavailableText(date);
-  const retained=lunch&&!closed&&pack?.lunchMenuSource?.retrievalState!=="verified";
-  return '<section class="lunch-card'+(!lunch&&!closed?' lunch-missing':'')+'"><span aria-hidden="true">🍎</span><div><p>SCHOOL LUNCH</p><strong>'+esc(message)+'</strong>'+(retained?'<small>Saved school menu · source check needs attention</small>':'')+'</div></section>';
+  const sourceNote=lunch&&!closed?lunchVerificationNote(lunch):"";
+  return '<section class="lunch-card'+(!lunch&&!closed?' lunch-missing':'')+'"><span aria-hidden="true">🍎</span><div><p>SCHOOL LUNCH</p><strong>'+esc(message)+'</strong>'+(sourceNote?'<small>'+esc(sourceNote)+'</small>':'')+'</div></section>';
 }
 function currentTest(){
   const now=today();
   const upcoming=(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)})).filter(o=>o.d&&o.d>=now&&kindClass(o.x)==="test").sort((a,b)=>a.d-b.d);
   return upcoming[0]||null;
+}
+function currentWeekTest(){
+  const now=today(),end=weekDays(0)[4];
+  return (pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)}))
+    .filter(o=>o.d&&o.d>=now&&o.d<=end&&kindClass(o.x)==="test")
+    .sort((a,b)=>a.d-b.d)[0]||null;
+}
+function nextSpellingTest(){
+  const now=today();
+  return (pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)}))
+    .filter(o=>o.d&&o.d>=now&&kindClass(o.x)==="test"&&/spelling|handwriting/i.test(o.x.label||""))
+    .sort((a,b)=>a.d-b.d)[0]||null;
+}
+function currentOrSoonStarAssessment(){
+  const now=today(),weekMs=7*24*60*60*1000;
+  return (pack?.importantDates||[]).map(x=>({x,range:eventDateRange(x.date)}))
+    .filter(o=>/\bSTAR\b/i.test(o.x.label||"")&&o.range&&o.range[1]>=now&&o.range[0].getTime()-now.getTime()<=weekMs)
+    .sort((a,b)=>a.range[0]-b.range[0])[0]||null;
 }
 function readingSubject(){return (pack?.subjects||[]).find(s=>/Reading \/ ELA/i.test(s.subject||""));}
 function religionSubject(){return (pack?.subjects||[]).find(s=>/^Religion$/i.test(s.subject||""));}
@@ -228,7 +255,7 @@ function renderToday(){
   const d=today(), events=eventItemsForDate(d), lunch=lunchForDate(d), next=currentTest();
   const tests=events.filter(e=>kindClass(e)==="test");
   const headline=tests.length?tests.map(e=>e.label.replace(/\s*\/\s*/g," and ")).join(", "):events[0]?.label||"School day";
-  let timeline=events.map(e=>'<div class="timeline-row"><time>School</time><span class="timeline-pin '+kindClass(e)+'"></span><div><strong>'+esc(e.label)+'</strong>'+(e.kind?'<small>'+esc(e.kind)+'</small>':'')+'</div><i></i></div>').join("");
+  let timeline=events.map(e=>'<div class="timeline-row"><time>'+(kindClass(e)==="closed"?"Closed":"School")+'</time><span class="timeline-pin '+kindClass(e)+'"></span><div><strong>'+esc(e.label)+'</strong>'+(e.kind?'<small>'+esc(e.kind)+'</small>':'')+'</div><i></i></div>').join("");
   if(!timeline) timeline='<div class="timeline-row"><time>School</time><span class="timeline-pin family"></span><div><strong>No special school events are listed for this date.</strong></div></div>';
   const tasks=todayTaskRecords();
   const html='<div class="screen" role="region" aria-label="Today">'+
@@ -247,7 +274,7 @@ function renderToday(){
 function renderWeek(){
   const days=weekDays();
   if(!selectedDay||!days.some(d=>sameDay(d,selectedDay)))selectedDay=weekOffset===0?(days.find(d=>sameDay(d,today()))||days[0]):days[0];
-  const events=eventItemsForDate(selectedDay), lunch=lunchForDate(selectedDay);
+  const events=eventItemsForDate(selectedDay), lunch=lunchForDate(selectedDay), closed=events.some(e=>kindClass(e)==="closed");
   const picker=days.map(d=>'<button type="button" class="'+(sameDay(d,selectedDay)?"active":"")+'" data-day="'+d.toISOString()+'" aria-label="'+esc(fmtDate(d))+'" aria-pressed="'+(sameDay(d,selectedDay)?"true":"false")+'"><span>'+WEEKDAY[d.getDay()].slice(0,3)+'</span><strong>'+d.getDate()+'</strong></button>').join("");
   const eventRows=events.length?events.map(e=>'<div class="event-row"><time>'+esc((e.kind||"School").replace(/\b\w/g,m=>m.toUpperCase()))+'</time><div><strong>'+esc(e.label)+'</strong></div></div>').join(""):'<div class="event-row"><time>School</time><div><strong>No special school events are listed.</strong></div></div>';
   const sourceWeek=isPackWeek(days), tasks=sourceWeek?(pack?.homework||[]):[];
@@ -258,7 +285,7 @@ function renderWeek(){
     '<nav class="week-nav" aria-label="Change displayed week"><button type="button" data-week-step="-1" aria-label="Previous week">‹</button><div aria-live="polite"><span>'+(weekOffset===0?"CURRENT WEEK":"VIEWING WEEK")+'</span><strong>'+esc(weekRangeLabel(days))+'</strong></div><button type="button" data-week-step="1" aria-label="Next week">›</button></nav>'+
     (weekOffset!==0?'<button class="week-today-jump" type="button" data-week-today>Back to this week</button>':'')+
     '<div class="day-picker">'+picker+'</div>'+
-    '<section class="day-detail green"><div class="day-detail-title"><div><p>'+MONTHS[selectedDay.getMonth()].toUpperCase()+'</p><h2>'+esc(fmtDate(selectedDay))+'</h2></div><span>School day</span></div><div class="event-stack">'+eventRows+'</div><h3>My checklist</h3>'+checklist+'</section>'+
+    '<section class="day-detail green"><div class="day-detail-title"><div><p>'+MONTHS[selectedDay.getMonth()].toUpperCase()+'</p><h2>'+esc(fmtDate(selectedDay))+'</h2></div><span>'+(closed?"No school":"School day")+'</span></div><div class="event-stack">'+eventRows+'</div><h3>My checklist</h3>'+checklist+'</section>'+
     lunchCardHtml(selectedDay,lunch)+
     (reminderForDate(selectedDay)?'<section class="reminder-strip"><span>!</span><p><strong>Don’t forget</strong>'+esc(reminderForDate(selectedDay))+'</p></section>':'')+
     '<section class="future-card"><h3>Coming soon</h3>'+future.map(o=>'<div><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join("")+'</section>'+
@@ -326,11 +353,11 @@ function subjectCard(id,klass,title,subject){
   return '<details id="'+id+'" class="subject-card study-accordion '+klass+'"><summary><span><small>'+esc(title.toUpperCase())+'</small><strong>'+esc(title)+'</strong></span><b aria-hidden="true">+</b></summary><ul>'+notes.map(n=>'<li>✓ '+esc(n)+'</li>').join("")+'</ul></details>';
 }
 function renderStudy(){
-  const r=readingSubject(), rel=religionSubject(), math=mathSubject(), spell=spellingSubject(), next=currentTest();
+  const r=readingSubject(), rel=religionSubject(), math=mathSubject(), spell=spellingSubject(), next=currentWeekTest(), spellingTest=nextSpellingTest(), star=currentOrSoonStarAssessment();
   const essentials=[
     ["Daily",readingRoutine()],
     next?[fmtShort(next.d),next.x.label]:["This week","Keep up with current class skills"],
-    ["Friday","Spelling / Handwriting review"]
+    ...(spellingTest?[ [fmtShort(spellingTest.d),"Spelling / Handwriting review"] ]:[])
   ];
   const sight=(r?.topics||[]).find(x=>/^Sight words:/i.test(x))?.replace(/^Sight words:\s*/i,"").split(",").map(x=>x.trim()).filter(Boolean)||[];
   const vocab=(pack?.vocabulary||[]).map(v=>v.term);
@@ -345,7 +372,7 @@ function renderStudy(){
     subjectCard("study-spelling","spelling","Spelling and phonics",spell)+
     '<details id="study-sight" class="subject-card study-accordion sight"><summary><span><small>SIGHT WORDS</small><strong>Sight words</strong></span><b aria-hidden="true">+</b></summary><div class="sight-cloud">'+sight.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></details>'+
     '<details class="subject-card study-accordion reading"><summary><span><small>VOCABULARY</small><strong>Words to know</strong></span><b aria-hidden="true">+</b></summary><div class="word-grid">'+vocab.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></details>'+
-    '<section class="calm-card compact"><h3>STAR reminder</h3><p>Normal reading, calm practice, and a good night’s sleep are enough.</p></section>'+
+    (star?'<section class="calm-card compact"><h3>STAR reminder</h3><p>Normal reading, calm practice, and a good night’s sleep are enough.</p></section>':'')+
     '</div>';
 }
 function studyGameEngine(){return window.ABVMStudyGames||null}
@@ -354,7 +381,7 @@ function ensureStudyGameEngine(){
   if(studyEnginePromise)return studyEnginePromise;
   studyEnginePromise=new Promise((resolve,reject)=>{
     const script=document.createElement("script");
-    script.src="./study-games.js?v=72";
+    script.src="./study-games.js?v=84";
     script.async=true;
     script.onload=()=>window.ABVMStudyGames?resolve(window.ABVMStudyGames):reject(new Error("Study Games engine did not initialize"));
     script.onerror=()=>reject(new Error("Study Games engine could not be loaded"));
@@ -373,13 +400,18 @@ function studyGameCatalog(){
 }
 function studyGameModes(){
   return [
-    {id:"quick",title:"Quick Mix",icon:"★",subjects:[],count:8,copy:"A little bit of everything from this week."},
-    {id:"math",title:"Math Dash",icon:"−",subjects:["Math"],count:8,copy:"Subtraction practice built from the current math skill."},
-    {id:"words",title:"Word Power",icon:"Aa",subjects:["Reading / ELA","Spelling / Handwriting"],count:8,copy:"Sight words, vocabulary, phonics, and grammar."},
+    {id:"quick",title:"Quick Mix",icon:"★",subjects:[],count:8,copy:"Current school skills mixed into one quick round."},
+    {id:"math",title:"Math Dash",icon:"−",subjects:["Math"],count:8,copy:"Eight questions built from the current subtraction skill."},
+    {id:"words",title:"Word Power",icon:"Aa",subjects:["Reading / ELA","Spelling / Handwriting"],preferredSkills:["long-short-a","suffix-ed-ing"],count:8,copy:"Current spelling-test, phonics, word-building, and reading skills."},
     {id:"faith",title:"Faith Quest",icon:"✦",subjects:["Religion"],count:8,copy:"Religion practice from the current class material."}
   ];
 }
 function gameMode(id){return studyGameModes().find(mode=>mode.id===id)||studyGameModes()[0]}
+function gameModeQuestionTotal(catalog,mode){
+  const wanted=mode?.subjects||[];
+  const pool=(catalog?.questions||[]).filter(q=>!wanted.length||wanted.includes(q.subject));
+  return Math.min(mode?.count||0,pool.length);
+}
 function gameRecordKey(modeId){
   const catalog=studyGameCatalog();
   return "abvm-study-games:"+String(catalog?.sourceKey||"current")+":"+modeId;
@@ -438,7 +470,7 @@ function recordGameLearning(question,correct){
 function startStudyGame(modeId){
   const engine=studyGameEngine(),catalog=studyGameCatalog(),mode=gameMode(modeId);
   if(!engine||!catalog)return;
-  const questions=engine.selectQuestions(catalog,{subjects:mode.subjects,count:mode.count,seed:nextGameSessionSeed(mode.id),skillStats:loadGameLearning()});
+  const questions=engine.selectQuestions(catalog,{subjects:mode.subjects,preferredSkills:mode.preferredSkills||[],count:mode.count,seed:nextGameSessionSeed(mode.id),skillStats:loadGameLearning()});
   gameState={screen:"play",mode:mode.id,questions,index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,learningRow:null};
   renderGames();bindScreen();
 }
@@ -477,17 +509,17 @@ function gameTypeLabel(type){
 }
 function gameMenuHtml(catalog){
   const modes=studyGameModes();
-  return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Pick a game and start</h2><span>Questions use this week’s school skills and adjust as you practice.</span></div></section>'+
+  return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Pick a game and start</h2><span>Questions prioritize this week’s school skills and adjust as you practice.</span></div></section>'+
     '<div class="study-game-grid">'+modes.map(mode=>{
-      const record=loadGameRecord(mode.id);
-      return '<button type="button" class="study-game-tile game-'+mode.id+'" data-game-start="'+esc(mode.id)+'">'+studyGameIconHtml(mode.id)+'<span class="study-game-copy"><strong>'+esc(mode.title)+'</strong><small>'+esc(mode.copy)+'</small>'+(record.plays?'<em>Best '+record.best+' / '+mode.count+'</em>':'')+'</span><b aria-hidden="true">›</b></button>';
+      const record=loadGameRecord(mode.id),total=gameModeQuestionTotal(catalog,mode),disabled=total===0;
+      return '<button type="button" class="study-game-tile game-'+mode.id+'" data-game-start="'+esc(mode.id)+'"'+(disabled?' disabled aria-disabled="true"':'')+'>'+studyGameIconHtml(mode.id)+'<span class="study-game-copy"><strong>'+esc(mode.title)+'</strong><small>'+esc(mode.copy)+'</small>'+(disabled?'<em>Not ready yet</em>':record.plays?'<em>Best '+record.best+' / '+total+'</em>':'')+'</span><b aria-hidden="true">›</b></button>';
     }).join("")+'</div>'+
-    '<p class="game-privacy-note">Practice is generated from verified skills; private student answers and grades are not used.</p>';
+    '<p class="game-privacy-note">Practice prioritizes verified school skills; private student answers and grades are not used.</p>';
 }
 function gamePlayHtml(){
   const mode=gameMode(gameState.mode),q=gameState.questions[gameState.index];
   if(!q)return '<section class="game-empty"><h2>No questions are ready for this game yet.</h2><button type="button" data-game-home>Back to games</button></section>';
-  const progress=gameState.index+1,total=gameState.questions.length,pct=Math.round((gameState.index/Math.max(1,total))*100);
+  const progress=gameState.index+1,total=gameState.questions.length,pct=Math.round((progress/Math.max(1,total))*100);
   const chosen=gameState.selectedIndex;
   const answers=q.choices.map((choice,index)=>{
     let klass="";
@@ -645,7 +677,7 @@ async function manualRefreshSchoolInfo(){
     else if(state.state==="current")toast("Latest published school info is loaded");
     else toast("Checked published school info — no newer verified update is available yet.");
   }catch{
-    toast("Couldn’t refresh school info. Try again.");
+    toast("Couldn’t check published school info. Try again.");
   }finally{
     manualRefreshActive=false;
     updateFreshnessUI();

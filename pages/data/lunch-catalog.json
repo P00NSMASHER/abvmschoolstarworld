@@ -13,28 +13,234 @@
       "coverageStart": "2026-09-01",
       "coverageEnd": "2026-09-30",
       "meals": [
-        {"date":"2026-09-01","items":["Meatballs in sauce","Whole-grain pasta","Steamed corn","Fruit"]},
-        {"date":"2026-09-02","items":["Cheese pizza","Garden salad","Steamed broccoli","Fruit"]},
-        {"date":"2026-09-03","items":["Hamburger on a roll","French fries","Mixed vegetables","Fruit"]},
-        {"date":"2026-09-04","status":"no-school","items":[]},
-        {"date":"2026-09-07","status":"no-school","items":[]},
-        {"date":"2026-09-08","items":["Hot ham & cheese","Pretzel roll","Tortilla chips","Steamed peas","Fruit"]},
-        {"date":"2026-09-09","items":["Meatballs & whole-grain pasta","Whole-grain dinner roll","Steamed carrots","Fruit"]},
-        {"date":"2026-09-10","items":["Chicken patty on a roll","Baby cake potatoes","Green beans","Fruit"]},
-        {"date":"2026-09-11","items":["Cheesy breadsticks","Dipping sauce","Garden salad","Fruit"]},
-        {"date":"2026-09-14","items":["Chicken finger wrap","Brown rice","Steamed corn","Fruit"]},
-        {"date":"2026-09-15","items":["Taco Tuesday & chips","Cheese","Shredded lettuce","Green beans","Salsa","Fruit"]},
-        {"date":"2026-09-16","items":["Fish shapes","French fries","Steamed broccoli","Fruit"]},
-        {"date":"2026-09-17","items":["Beef-a-roni","Shredded cheese","Whole-grain roll","Steamed carrots","Fruit"]},
-        {"date":"2026-09-18","items":["Pizza bagel","Garden salad","Steamed peas","Fruit"]},
-        {"date":"2026-09-21","items":["Breaded chicken","Buttered pasta","Baked beans","Fruit"]},
-        {"date":"2026-09-22","items":["Meatballs in gravy","Mashed potatoes","Garlic stick","Steamed corn","French toast sticks","Fruit"]},
-        {"date":"2026-09-23","items":["French toast sticks","Hash browns","Sausage patty","Steamed carrots","Fruit"]},
-        {"date":"2026-09-24","items":["Macaroni & cheese","Stewed tomatoes","Breaded chicken","Fruit"]},
-        {"date":"2026-09-25","items":["Hamburger on WG roll","French fries","Steamed peas","Fruit"]},
-        {"date":"2026-09-28","items":["Breaded chicken","Brown rice","Steamed broccoli","Fruit"]},
-        {"date":"2026-09-29","items":["Cheese quesadilla wedge","Garden salad","Salsa","Steamed corn","Fruit"]},
-        {"date":"2026-09-30","items":["Breaded fish sandwich","Baby cake potatoes","Baked beans","Fruit"]}
+        {
+          "date": "2026-09-01",
+          "items": [
+            "Meatballs in sauce",
+            "Whole-grain pasta",
+            "Steamed corn",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-09-02",
+          "items": [
+            "Cheese pizza",
+            "Garden salad",
+            "Steamed broccoli",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-09-03",
+          "items": [
+            "Hamburger on a roll",
+            "French fries",
+            "Mixed vegetables",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-09-04",
+          "status": "no-school",
+          "items": []
+        },
+        {
+          "date": "2026-09-07",
+          "status": "no-school",
+          "items": []
+        },
+        {
+          "date": "2026-09-08",
+          "items": [
+            "Hot ham & cheese",
+            "Pretzel roll",
+            "Tortilla chips",
+            "Steamed peas",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-09-09",
+          "items": [
+            "Meatballs & whole-grain pasta",
+            "Whole-grain dinner roll",
+            "Steamed carrots",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-09-10",
+          "items": [
+            "Chicken patty on a roll",
+            "Baby cake potatoes",
+            "Green beans",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-09-11",
+          "items": [
+            "Cheesy breadsticks",
+            "Dipping sauce",
+            "Garden salad",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-09-14",
+          "items": [
+            "Chicken finger wrap",
+            "Brown rice",
+            "Steamed corn",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-09-15",
+          "items": [
+            "Taco Tuesday & chips",
+            "Cheese",
+            "Shredded lettuce",
+            "Green beans",
+            "Salsa",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-09-16",
+          "items": [
+            "Fish shapes",
+            "French fries",
+            "Steamed broccoli",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-09-17",
+          "items": [
+            "Beef-a-roni",
+            "Shredded cheese",
+            "Whole-grain roll",
+            "Steamed carrots",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-09-18",
+          "items": [
+            "Pizza bagel",
+            "Garden salad",
+            "Steamed peas",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-09-21",
+          "items": [
+            "Breaded chicken",
+            "Buttered pasta",
+            "Baked beans",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-09-22",
+          "items": [
+            "Meatballs in gravy",
+            "Mashed potatoes",
+            "Garlic stick",
+            "Steamed corn",
+            "French toast sticks",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-09-23",
+          "items": [
+            "French toast sticks",
+            "Hash browns",
+            "Sausage patty",
+            "Steamed carrots",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-09-24",
+          "items": [
+            "Macaroni & cheese",
+            "Stewed tomatoes",
+            "Breaded chicken",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-09-25",
+          "items": [
+            "Hamburger on WG roll",
+            "French fries",
+            "Steamed peas",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-09-28",
+          "items": [
+            "Breaded chicken",
+            "Brown rice",
+            "Steamed broccoli",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-09-29",
+          "items": [
+            "Cheese quesadilla wedge",
+            "Garden salad",
+            "Salsa",
+            "Steamed corn",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-09-30",
+          "items": [
+            "Breaded fish sandwich",
+            "Baby cake potatoes",
+            "Baked beans",
+            "Fruit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "abvm-2026-10-official",
+      "url": "https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1790692534/adeducatorsorg/xdbrqzybydptd5srbor0/Octobercalendar.heic",
+      "contentHash": "a99ce9385295921c9fff19ae4051732da45f7c38df077d30d9b62577c8c6eb45",
+      "proofMode": "pinned-url",
+      "reviewedAt": "2026-09-29T19:36:00Z",
+      "reviewMethod": "Visual verification against the official October 2026 lunch-menu image embedded on the ABVM Parent Resources page; exact versioned Finalsite image URL is pinned and its URL SHA-256 is recorded as the proof digest. Only Oct. 1–2 were transcribed in this review.",
+      "coverageStart": "2026-10-01",
+      "coverageEnd": "2026-10-02",
+      "meals": [
+        {
+          "date": "2026-10-01",
+          "items": [
+            "Baked cheese pizza",
+            "Tortilla chips",
+            "Mixed vegetables",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-10-02",
+          "items": [
+            "Cheesy breadsticks",
+            "Dipping sauce",
+            "Garden salad",
+            "Fruit"
+          ]
+        }
       ]
     }
   ]

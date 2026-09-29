@@ -77,9 +77,9 @@ test("versioned app code bypasses an older cache entry while online",async({page
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
 
   const result=await page.evaluate(async()=>{
-    const cache=await caches.open("abvm-grade2-parent-companion-v74-audit-fixes");
-    await cache.put("./app.js?v=74",new Response("OLD_CACHED_APP_MARKER",{headers:{"Content-Type":"application/javascript"}}));
-    const text=await (await fetch("./app.js?v=74")).text();
+    const cache=await caches.open("abvm-grade2-parent-companion-v84-material-first");
+    await cache.put("./app.js?v=84",new Response("OLD_CACHED_APP_MARKER",{headers:{"Content-Type":"application/javascript"}}));
+    const text=await (await fetch("./app.js?v=84")).text();
     return {old:text.includes("OLD_CACHED_APP_MARKER"),fresh:text.includes("PACK_REFRESH_MS")};
   });
   expect(result.old).toBe(false);
@@ -88,7 +88,7 @@ test("versioned app code bypasses an older cache entry while online",async({page
 
 test("service worker install tolerates optional school-data precache failure",async({request})=>{
   const source=await (await request.get("/sw.js")).text();
-  expect(source).toContain('const CACHE = "abvm-grade2-parent-companion-v74-audit-fixes"');
+  expect(source).toContain('const CACHE = "abvm-grade2-parent-companion-v84-material-first"');
   expect(source).toContain("Promise.allSettled");
   expect(source).toContain("OPTIONAL_DATA");
   expect(source).toContain('url.searchParams.has("v")');
@@ -98,10 +98,10 @@ test("service worker install tolerates optional school-data precache failure",as
 
 test("index promotes a newly activated service worker before relying on versioned code",async({request})=>{
   const html=await (await request.get("/index.html")).text();
-  expect(html).toContain('abvm-sw-reloaded-v74');
+  expect(html).toContain('abvm-sw-reloaded-v84');
   expect(html).toContain('navigator.serviceWorker.addEventListener("controllerchange"');
   expect(html).toContain('registration.update()');
-  expect(html.indexOf("abvm-sw-reloaded-v74")).toBeLessThan(html.indexOf("./app.js?v=74"));
+  expect(html.indexOf("abvm-sw-reloaded-v84")).toBeLessThan(html.indexOf("./app.js?v=84"));
 });
 
 
@@ -158,7 +158,7 @@ test("tapping the freshness box forces an immediate live pack refresh",async({br
   const status=page.locator("[data-refresh-pack]");
   await expect(status).toContainText("Older data");
   await status.click();
-  await expect(page.locator("[data-refresh-pack]")).toContainText("Checking latest school info");
+  await expect(page.locator("[data-refresh-pack]")).toContainText("Checking published school info");
   await expect(page.locator("[data-refresh-pack]")).toBeDisabled();
   await expect(page.locator(".freshness")).toHaveClass(/current/);
   await expect(page.locator(".freshness")).toContainText("Verified");
@@ -247,5 +247,88 @@ test("undated picture-order details expire after Picture Day",async({browser})=>
   await expect(page.locator(".notices-card")).not.toContainText("Picture ordering");
   await expect(page.locator(".notices-card")).not.toContainText("Picture backgrounds");
   await expect(page.locator(".notices-card")).toContainText("Standing undated family information");
+  await context.close();
+});
+
+
+test("Week marks a closed weekday as No school",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-10-12T13:00:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:source}));
+  await page.goto("http://127.0.0.1:4173/#week");
+  await expect(page.locator(".day-detail-title")).toContainText("No school");
+  await expect(page.locator(".day-detail-title")).not.toContainText("School day");
+  await context.close();
+});
+
+test("required parent tasks are not mislabeled as if participating",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-09-29T13:00:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  const fixture=structuredClone(source);
+  fixture.pack.homework=[
+    {subject:"Parent",task:"Cover books"},
+    {subject:"Parent",task:"Return permission slip if participating"}
+  ];
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:fixture}));
+  await page.goto("http://127.0.0.1:4173/#week");
+  const rows=page.locator(".check-item");
+  await expect(rows.nth(0)).toContainText("REQUIRED");
+  await expect(rows.nth(0)).not.toContainText("IF PARTICIPATING");
+  await expect(rows.nth(1)).toContainText("IF PARTICIPATING");
+  await context.close();
+});
+
+
+test("Study derives spelling review date and STAR reminder from current school dates",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-09-29T13:00:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:source}));
+  await page.goto("http://127.0.0.1:4173/#study");
+  await expect(page.locator(".study-at-a-glance")).toContainText("Fri 2");
+  await expect(page.locator(".study-at-a-glance")).toContainText("Spelling / Handwriting review");
+  await expect(page.locator(".calm-card")).toHaveCount(0);
+  await context.close();
+
+  const starContext=await browser.newContext({serviceWorkers:"block"});
+  const starPage=await starContext.newPage();
+  await starPage.clock.setFixedTime(new Date("2027-01-10T13:00:00Z"));
+  await starPage.route("**/data/study-pack.json*",route=>route.fulfill({json:source}));
+  await starPage.goto("http://127.0.0.1:4173/#study");
+  await expect(starPage.locator(".calm-card")).toContainText("STAR reminder");
+  await starContext.close();
+});
+
+
+test("Today labels closed events as Closed instead of School",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-10-12T13:00:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:source}));
+  await page.goto("http://127.0.0.1:4173/#today");
+  const closedRow=page.locator(".timeline-row").filter({hasText:"No School — Columbus Day"});
+  await expect(closedRow.locator("time")).toHaveText("Closed");
+  await context.close();
+});
+
+test("Study does not present a distant test as something that matters this week",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-10-13T13:00:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  const fixture=structuredClone(source);
+  fixture.pack.importantDates=[
+    {date:"Tuesday–Friday, Jan. 12–22",label:"STAR Testing window",kind:"assessment"}
+  ];
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:fixture}));
+  await page.goto("http://127.0.0.1:4173/#study");
+  await expect(page.locator(".study-at-a-glance")).toContainText("Keep up with current class skills");
+  await expect(page.locator(".study-at-a-glance")).not.toContainText("STAR Testing window");
   await context.close();
 });

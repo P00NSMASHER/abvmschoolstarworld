@@ -282,7 +282,7 @@ upsertSubject(subjects, /Reading \/ ELA/i, {
     `Sight words: ${sightWords}`,
     `Phonics: ${phonics.replace(/2 letter/i, '2-letter')}`,
     `Vocabulary: ${vocabulary}`,
-    `Word structure: ${/^cvc words$/i.test(wordStructure) ? 'CVC words' : wordStructure}`,
+    `Word structure: ${wordStructure.replace(/\bcvc\b/gi, 'CVC')}`,
     ...(grammarTest ? [`Grammar: ${grammarTest.label.match(/\(([^)]+)\)/)?.[1] || grammarTest.label} (test ${grammarTest.date})`] : []),
   ],
   studyNotes: comprehension

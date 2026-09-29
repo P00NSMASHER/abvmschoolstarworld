@@ -285,7 +285,7 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   await expect(page.locator(".games-screen .freshness")).toHaveCount(0);
 
   const sw=await (await page.request.get("/sw.js")).text();
-  expect(sw).toContain("v74-audit-fixes");
+  expect(sw).toContain("v84-material-first");
   expect(sw).not.toContain("hero-today.webp");
   expect(sw).not.toContain("calendar/picture-day.svg");
   const cached=[...sw.matchAll(/"\.\/[^\"]+"/g)];
@@ -392,20 +392,25 @@ test("current week lunch menu is verified and visible instead of last week's men
   expect(data.pack.lunchMenu.map(item=>item.day)).toEqual([
     "Monday, Sept. 28",
     "Tuesday, Sept. 29",
-    "Wednesday, Sept. 30"
+    "Wednesday, Sept. 30",
+    "Thursday, Oct. 1",
+    "Friday, Oct. 2"
   ]);
   expect(data.pack.lunchMenu[0].items).toEqual(["Breaded chicken","Brown rice","Steamed broccoli","Fruit"]);
   expect(data.pack.lunchMenu[1].items).toEqual(["Cheese quesadilla wedge","Garden salad","Salsa","Steamed corn","Fruit"]);
   expect(data.pack.lunchMenu[2].items).toEqual(["Breaded fish sandwich","Baby cake potatoes","Baked beans","Fruit"]);
+  expect(data.pack.lunchMenu[3].items).toEqual(["Baked cheese pizza","Tortilla chips","Mixed vegetables","Fruit"]);
+  expect(data.pack.lunchMenu[4].items).toEqual(["Cheesy breadsticks","Dipping sauce","Garden salad","Fruit"]);
   expect(data.pack.lunchMenuSource.provider).toBe("Saint Clair Area School District");
   expect(data.pack.lunchMenuSource.school).toBe("Assumption BVM School");
-  expect(data.pack.lunchMenuSource.coverageThrough).toBe("2026-09-30");
+  expect(data.pack.lunchMenuSource.coverageThrough).toBe("2026-10-02");
   expect(data.pack.lunchMenu.some(item=>/Sept\. 2[1-5]/.test(item.day))).toBe(false);
 
   await openTab(page,"Today");
   await expect(page.locator(".lunch-card")).toContainText("Breaded chicken");
   await expect(page.locator(".lunch-card")).toContainText("Brown rice");
   await expect(page.locator(".lunch-card")).toContainText("Steamed broccoli");
+  await expect(page.locator(".lunch-card")).not.toContainText("automated source check");
 
   await openTab(page,"Week");
   const days=page.locator("[data-day]");
@@ -414,7 +419,12 @@ test("current week lunch menu is verified and visible instead of last week's men
   await days.nth(2).click();
   await expect(page.locator(".lunch-card")).toContainText("Breaded fish sandwich");
   await days.nth(3).click();
-  await expect(page.locator(".lunch-card")).toContainText("Lunch menu not yet verified for October 1");
+  await expect(page.locator(".lunch-card")).toContainText("Baked cheese pizza");
+  await expect(page.locator(".lunch-card")).toContainText("Mixed vegetables");
+  await expect(page.locator(".lunch-card")).toContainText("Reviewed school menu · automated source check pending");
+  await days.nth(4).click();
+  await expect(page.locator(".lunch-card")).toContainText("Cheesy breadsticks");
+  await expect(page.locator(".lunch-card")).toContainText("Dipping sauce");
 });
 
 
@@ -439,4 +449,43 @@ test("published study content contains real lesson material instead of Google Si
 
   const normalized=data.pack.reminders.map(x=>x.toLowerCase().replace(/\bthe\b/g,"").replace(/[^a-z0-9]/g,""));
   expect(new Set(normalized).size).toBe(normalized.length);
+});
+
+
+test("Subject Study Games stay on current material for full rounds",async({page})=>{
+  await openTab(page,"Study Games");
+  const report=await page.evaluate(async()=>{
+    const source=await (await fetch("./data/study-pack.json",{cache:"no-store"})).json();
+    const engine=window.ABVMStudyGames;
+    const catalog=engine.buildCatalog(source.pack,{sourceKey:"current-material-mode-audit"});
+    const math=engine.selectQuestions(catalog,{subjects:["Math"],count:8,seed:"math-current",skillStats:{}});
+    const faith=engine.selectQuestions(catalog,{subjects:["Religion"],count:8,seed:"faith-current",skillStats:{}});
+    const words=engine.selectQuestions(catalog,{
+      subjects:["Reading / ELA","Spelling / Handwriting"],
+      preferredSkills:["long-short-a","suffix-ed-ing"],
+      count:8,seed:"word-current",skillStats:{}
+    });
+    return {
+      math:math.map(q=>({tier:q.tier,skill:q.skill,sourceFact:q.sourceFact})),
+      faith:faith.map(q=>({tier:q.tier,skill:q.skill,sourceFact:q.sourceFact})),
+      words:words.map(q=>({tier:q.tier,skill:q.skill,sourceFact:q.sourceFact}))
+    };
+  });
+  expect(report.math).toHaveLength(8);
+  expect(report.faith).toHaveLength(8);
+  expect(report.math.every(q=>q.tier==="material"&&/Subtraction to 12/i.test(q.sourceFact))).toBe(true);
+  expect(report.faith.every(q=>q.tier==="material"&&/ABVM Religion/i.test(q.sourceFact))).toBe(true);
+  expect(report.words).toHaveLength(8);
+  expect(report.words.every(q=>q.tier==="material")).toBe(true);
+  expect(report.words.filter(q=>q.skill==="long-short-a")).toHaveLength(3);
+  expect(report.words.filter(q=>q.skill==="suffix-ed-ing")).toHaveLength(3);
+});
+
+
+test("game progress reflects the current question instead of starting at zero",async({page})=>{
+  await openTab(page,"Study Games");
+  await page.getByRole("button",{name:/Quick Mix/i}).click();
+  await expect(page.locator(".game-question-card")).toBeVisible();
+  const width=await page.locator(".game-progress span").getAttribute("style");
+  expect(width).toContain("13");
 });
