@@ -48,18 +48,18 @@ test("storage failures fail soft instead of breaking the app",async({browser})=>
   await context.close();
 });
 
-test("completion state is namespaced by the current source pack hash",async({page})=>{
+test("completion state is keyed by school week and task identity",async({page})=>{
   await page.goto("/#today");
   await expect(page.locator("[data-check]").first()).toBeVisible({timeout:10_000});
   const created=await page.evaluate(()=>{
+    for(const key of Object.keys(localStorage))if(key.startsWith("abvm-task:v2:"))localStorage.removeItem(key);
     const task=document.querySelector("[data-check]");
     const before=Object.keys(localStorage);
     task?.click();
     const after=Object.keys(localStorage);
-    const delta=after.filter(key=>!before.includes(key));
-    task?.click();
-    return delta;
+    return after.filter(key=>!before.includes(key));
   });
-  expect(created.length).toBeGreaterThan(0);
-  expect(created[0]).toMatch(/^abvm-old-look:teacher-pages-[a-f0-9]{20}:/);
+  expect(created.length).toBe(1);
+  expect(created[0]).toMatch(/^abvm-task:v2:week-of-september-28-2026:/);
+  expect(created[0]).not.toContain("teacher-pages-");
 });
