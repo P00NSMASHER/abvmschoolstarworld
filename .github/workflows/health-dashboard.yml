@@ -3,9 +3,6 @@ name: ABVM Operational Health Dashboard
 on:
   workflow_run:
     workflows:
-      - ABVM App QA
-      - Deploy ABVM to GitHub Pages
-      - Refresh ABVM teacher pages
       - Monitor ABVM refresh health
     types: [completed]
   schedule:
