@@ -168,6 +168,12 @@ function currentTest(){
   const upcoming=(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)})).filter(o=>o.d&&o.d>=now&&kindClass(o.x)==="test").sort((a,b)=>a.d-b.d);
   return upcoming[0]||null;
 }
+function currentWeekTest(){
+  const now=today(),end=weekDays(0)[4];
+  return (pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)}))
+    .filter(o=>o.d&&o.d>=now&&o.d<=end&&kindClass(o.x)==="test")
+    .sort((a,b)=>a.d-b.d)[0]||null;
+}
 function nextSpellingTest(){
   const now=today();
   return (pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)}))
@@ -240,7 +246,7 @@ function renderToday(){
   const d=today(), events=eventItemsForDate(d), lunch=lunchForDate(d), next=currentTest();
   const tests=events.filter(e=>kindClass(e)==="test");
   const headline=tests.length?tests.map(e=>e.label.replace(/\s*\/\s*/g," and ")).join(", "):events[0]?.label||"School day";
-  let timeline=events.map(e=>'<div class="timeline-row"><time>School</time><span class="timeline-pin '+kindClass(e)+'"></span><div><strong>'+esc(e.label)+'</strong>'+(e.kind?'<small>'+esc(e.kind)+'</small>':'')+'</div><i></i></div>').join("");
+  let timeline=events.map(e=>'<div class="timeline-row"><time>'+(kindClass(e)==="closed"?"Closed":"School")+'</time><span class="timeline-pin '+kindClass(e)+'"></span><div><strong>'+esc(e.label)+'</strong>'+(e.kind?'<small>'+esc(e.kind)+'</small>':'')+'</div><i></i></div>').join("");
   if(!timeline) timeline='<div class="timeline-row"><time>School</time><span class="timeline-pin family"></span><div><strong>No special school events are listed for this date.</strong></div></div>';
   const tasks=todayTaskRecords();
   const html='<div class="screen" role="region" aria-label="Today">'+
@@ -338,7 +344,7 @@ function subjectCard(id,klass,title,subject){
   return '<details id="'+id+'" class="subject-card study-accordion '+klass+'"><summary><span><small>'+esc(title.toUpperCase())+'</small><strong>'+esc(title)+'</strong></span><b aria-hidden="true">+</b></summary><ul>'+notes.map(n=>'<li>✓ '+esc(n)+'</li>').join("")+'</ul></details>';
 }
 function renderStudy(){
-  const r=readingSubject(), rel=religionSubject(), math=mathSubject(), spell=spellingSubject(), next=currentTest(), spellingTest=nextSpellingTest(), star=currentOrSoonStarAssessment();
+  const r=readingSubject(), rel=religionSubject(), math=mathSubject(), spell=spellingSubject(), next=currentWeekTest(), spellingTest=nextSpellingTest(), star=currentOrSoonStarAssessment();
   const essentials=[
     ["Daily",readingRoutine()],
     next?[fmtShort(next.d),next.x.label]:["This week","Keep up with current class skills"],
