@@ -11,6 +11,20 @@ const WEEKDAY=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Satu
 const SCHOOL_TIME_ZONE="America/New_York";
 const PACK_URL="./data/study-pack.json";
 const PACK_REFRESH_MS=5*60*1000;
+const SCHOOL_LOGO_HTML='<img class="school-mark" src="./assets/abvm-app-icon-192.png" alt="Assumption BVM Catholic School logo">';
+const GAME_LEARNING_KEY="abvm-study-learning:v2";
+const GAME_TYPE_LABELS=Object.freeze({
+  direct:"Direct practice",
+  transfer:"Try it a new way",
+  reasoning:"Explain your thinking",
+  source:"Current class material"
+});
+const STUDY_GAME_MODES=Object.freeze([
+  Object.freeze({id:"quick",title:"Quick Mix",subjects:[],count:8,copy:"Current school skills mixed into one quick round."}),
+  Object.freeze({id:"math",title:"Math Dash",subjects:["Math"],count:8,copy:"Eight questions built from the current subtraction skill."}),
+  Object.freeze({id:"words",title:"Word Power",subjects:["Reading / ELA","Spelling / Handwriting"],preferredSkills:["long-short-a","suffix-ed-ing"],count:8,copy:"Current spelling-test, phonics, word-building, and reading skills."}),
+  Object.freeze({id:"faith",title:"Faith Quest",subjects:["Religion"],count:8,copy:"Religion practice from the current class material."})
+]);
 
 function storageGet(key){try{return localStorage.getItem(key)}catch{return null}}
 function storageSet(key,value){try{localStorage.setItem(key,value);return true}catch{return false}}
@@ -33,11 +47,16 @@ function parseDate(text){
   return new Date(year,month,day,12);
 }
 function sameDay(a,b){return a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
+function isoDateKey(date){
+  return date.getFullYear()+"-"+String(date.getMonth()+1).padStart(2,"0")+"-"+String(date.getDate()).padStart(2,"0");
+}
+function datedImportantEvents(){
+  return (pack?.importantDates||[]).map(item=>({item,date:parseDate(item.date)})).filter(row=>row.date);
+}
 function fmtDate(d){return d?WEEKDAY[d.getDay()]+", "+MONTHS[d.getMonth()]+" "+d.getDate():"";}
 function fmtShort(d){return d?WEEKDAY[d.getDay()].slice(0,3)+" "+d.getDate():"";}
-function schoolLogo(){return '<img class="school-mark" src="./assets/abvm-app-icon-192.png" alt="Assumption BVM Catholic School logo">';}
 function header(kicker,title){
-  return '<header class="app-header"><div><p>'+esc(kicker)+'</p><h1>'+esc(title)+'</h1></div>'+schoolLogo()+'</header>';
+  return '<header class="app-header"><div><p>'+esc(kicker)+'</p><h1>'+esc(title)+'</h1></div>'+SCHOOL_LOGO_HTML+'</header>';
 }
 function freshnessState(){
   const raw=envelope?.sourceLastSeenAt||pack?.sourceCapturedAt||pack?.generatedAt;
@@ -80,7 +99,7 @@ function eventItemsForDate(date){
   });
 }
 function lunchForDate(date){
-  const key=date.getFullYear()+"-"+String(date.getMonth()+1).padStart(2,"0")+"-"+String(date.getDate()).padStart(2,"0");
+  const key=isoDateKey(date);
   return [...(pack?.lunchMenu||[]),...(pack?.lunchArchive||[])].find(x=>x.date?x.date===key:sameDay(parseDate(x.day),date))||null;
 }
 function keyPart(value){return String(value||"").trim().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,90)||"item";}
@@ -174,20 +193,24 @@ function lunchCardHtml(date,lunch){
 }
 function currentTest(){
   const now=today();
-  const upcoming=(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)})).filter(o=>o.d&&o.d>=now&&kindClass(o.x)==="test").sort((a,b)=>a.d-b.d);
-  return upcoming[0]||null;
+  return datedImportantEvents()
+    .filter(({item,date})=>date>=now&&kindClass(item)==="test")
+    .sort((a,b)=>a.date-b.date)
+    .map(({item,date})=>({x:item,d:date}))[0]||null;
 }
 function currentWeekTest(){
   const now=today(),end=weekDays(0)[4];
-  return (pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)}))
-    .filter(o=>o.d&&o.d>=now&&o.d<=end&&kindClass(o.x)==="test")
-    .sort((a,b)=>a.d-b.d)[0]||null;
+  return datedImportantEvents()
+    .filter(({item,date})=>date>=now&&date<=end&&kindClass(item)==="test")
+    .sort((a,b)=>a.date-b.date)
+    .map(({item,date})=>({x:item,d:date}))[0]||null;
 }
 function nextSpellingTest(){
   const now=today();
-  return (pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)}))
-    .filter(o=>o.d&&o.d>=now&&kindClass(o.x)==="test"&&/spelling|handwriting/i.test(o.x.label||""))
-    .sort((a,b)=>a.d-b.d)[0]||null;
+  return datedImportantEvents()
+    .filter(({item,date})=>date>=now&&kindClass(item)==="test"&&/spelling|handwriting/i.test(item.label||""))
+    .sort((a,b)=>a.date-b.date)
+    .map(({item,date})=>({x:item,d:date}))[0]||null;
 }
 function currentOrSoonStarAssessment(){
   const now=today(),weekMs=7*24*60*60*1000;
@@ -201,15 +224,14 @@ function mathSubject(){return (pack?.subjects||[]).find(s=>/^Math$/i.test(s.subj
 function spellingSubject(){return (pack?.subjects||[]).find(s=>/Spelling/i.test(s.subject||""));}
 function readingRoutine(){return (pack?.subjects||[]).find(s=>/Reading Routine/i.test(s.subject||""))?.topics?.[0]||"Read for 20 minutes every day.";}
 
-function reminderRange(text){return eventDateRange(text)}
 function reminderForDate(date){
-  const rows=(pack?.reminders||[]).map(text=>({text,range:reminderRange(text)})).filter(row=>row.range);
+  const rows=(pack?.reminders||[]).map(text=>({text,range:eventDateRange(text)})).filter(row=>row.range);
   const exact=rows.find(row=>date>=row.range[0]&&date<=row.range[1]);
   if(exact)return exact.text;
   return rows.filter(row=>row.range[0]>=date).sort((a,b)=>a.range[0]-b.range[0])[0]?.text||"";
 }
 function upcomingReminderTexts(date=today(),limit=6){
-  const timed=(pack?.reminders||[]).map(text=>({text,range:reminderRange(text)}))
+  const timed=(pack?.reminders||[]).map(text=>({text,range:eventDateRange(text)}))
     .filter(row=>row.range&&row.range[1]>=date)
     .sort((a,b)=>a.range[0]-b.range[0]).map(row=>row.text);
   return [...new Set(timed)].slice(0,limit);
@@ -239,8 +261,6 @@ function calendarBase(){
   return new Date(now.getFullYear(),now.getMonth()+calendarOffset,1,12);
 }
 
-function todayTaskRecords(){return taskRecordsForSurface("today");}
-
 function studyGameIconHtml(modeId){
   const icons={
     quick:'<svg viewBox="0 0 48 48" aria-hidden="true"><path class="icon-fill" d="m24 6 5.3 10.8 11.9 1.7-8.6 8.4 2 11.8L24 33.1l-10.6 5.6 2-11.8-8.6-8.4 11.9-1.7L24 6Z"/><path class="icon-spark" d="M37.5 7.5v6M34.5 10.5h6"/></svg>',
@@ -253,11 +273,9 @@ function studyGameIconHtml(modeId){
 
 function renderToday(){
   const d=today(), events=eventItemsForDate(d), lunch=lunchForDate(d), next=currentTest();
-  const tests=events.filter(e=>kindClass(e)==="test");
-  const headline=tests.length?tests.map(e=>e.label.replace(/\s*\/\s*/g," and ")).join(", "):events[0]?.label||"School day";
   let timeline=events.map(e=>'<div class="timeline-row"><time>'+(kindClass(e)==="closed"?"Closed":"School")+'</time><span class="timeline-pin '+kindClass(e)+'"></span><div><strong>'+esc(e.label)+'</strong>'+(e.kind?'<small>'+esc(e.kind)+'</small>':'')+'</div><i></i></div>').join("");
   if(!timeline) timeline='<div class="timeline-row"><time>School</time><span class="timeline-pin family"></span><div><strong>No special school events are listed for this date.</strong></div></div>';
-  const tasks=todayTaskRecords();
+  const tasks=taskRecordsForSurface("today");
   const html='<div class="screen" role="region" aria-label="Today">'+
     header("ABVM GRADE 2 · "+fmtDate(d).toUpperCase(),"Hi, school star!")+
     freshness()+
@@ -398,15 +416,7 @@ function studyGameCatalog(){
   }
   return studyGameCatalogCache;
 }
-function studyGameModes(){
-  return [
-    {id:"quick",title:"Quick Mix",icon:"★",subjects:[],count:8,copy:"Current school skills mixed into one quick round."},
-    {id:"math",title:"Math Dash",icon:"−",subjects:["Math"],count:8,copy:"Eight questions built from the current subtraction skill."},
-    {id:"words",title:"Word Power",icon:"Aa",subjects:["Reading / ELA","Spelling / Handwriting"],preferredSkills:["long-short-a","suffix-ed-ing"],count:8,copy:"Current spelling-test, phonics, word-building, and reading skills."},
-    {id:"faith",title:"Faith Quest",icon:"✦",subjects:["Religion"],count:8,copy:"Religion practice from the current class material."}
-  ];
-}
-function gameMode(id){return studyGameModes().find(mode=>mode.id===id)||studyGameModes()[0]}
+function gameMode(id){return STUDY_GAME_MODES.find(mode=>mode.id===id)||STUDY_GAME_MODES[0]}
 function gameModeQuestionTotal(catalog,mode){
   const wanted=mode?.subjects||[];
   const pool=(catalog?.questions||[]).filter(q=>!wanted.length||wanted.includes(q.subject));
@@ -441,10 +451,9 @@ function nextGameSessionSeed(modeId){
   storageSet(key,String(next));
   return String(catalog?.sourceKey||"current")+"|"+modeId+"|"+next;
 }
-function gameLearningKey(){return "abvm-study-learning:v2";}
 function loadGameLearning(){
   try{
-    const parsed=JSON.parse(storageGet(gameLearningKey())||"{}");
+    const parsed=JSON.parse(storageGet(GAME_LEARNING_KEY)||"{}");
     return parsed&&typeof parsed==="object"?parsed:{};
   }catch{return {}}
 }
@@ -464,7 +473,7 @@ function recordGameLearning(question,correct){
     if(row.ConsecutiveWrong>=2)row.TargetDifficulty=2;
   }
   all[question.skill]=row;
-  storageSet(gameLearningKey(),JSON.stringify(all));
+  storageSet(GAME_LEARNING_KEY,JSON.stringify(all));
   return row;
 }
 function startStudyGame(modeId){
@@ -504,11 +513,8 @@ function advanceStudyGame(){
 }
 function leaveStudyGame(){gameState.screen="menu";renderGames();bindScreen()}
 function toggleStudyHint(){if(gameState.screen==="play"&&!gameState.answered){gameState.hintOpen=!gameState.hintOpen;renderGames();bindScreen()}}
-function gameTypeLabel(type){
-  return ({direct:"Direct practice",transfer:"Try it a new way",reasoning:"Explain your thinking",source:"Current class material"})[type]||"Practice";
-}
 function gameMenuHtml(catalog){
-  const modes=studyGameModes();
+  const modes=STUDY_GAME_MODES;
   return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Pick a game and start</h2><span>Questions prioritize this week’s school skills and adjust as you practice.</span></div></section>'+
     '<div class="study-game-grid">'+modes.map(mode=>{
       const record=loadGameRecord(mode.id),total=gameModeQuestionTotal(catalog,mode),disabled=total===0;
@@ -537,7 +543,7 @@ function gamePlayHtml(){
     : '<div class="game-hint-wrap"><button type="button" class="game-hint-button" data-game-hint>'+(gameState.hintOpen?'Hide hint':'Need a hint?')+'</button>'+(gameState.hintOpen?'<p class="game-hint">'+esc(q.hint)+'</p>':'')+'</div>';
   return '<div class="game-topbar"><button type="button" data-game-home aria-label="Back to study games">‹</button><div><span>'+esc(mode.title)+'</span><strong>'+progress+' of '+total+'</strong></div><b>★ '+gameState.score+'</b></div>'+
     '<div class="game-progress" aria-label="Game progress"><span style="width:'+pct+'%"></span></div>'+
-    '<section class="game-question-card"><div class="game-question-meta"><span>'+esc(q.subject)+'</span><b>'+esc(gameTypeLabel(q.questionType))+'</b></div><h2>'+esc(q.prompt)+'</h2><div class="game-answer-list">'+answers+'</div>'+feedback+'</section>'+
+    '<section class="game-question-card"><div class="game-question-meta"><span>'+esc(q.subject)+'</span><b>'+esc(GAME_TYPE_LABELS[q.questionType]||"Practice")+'</b></div><h2>'+esc(q.prompt)+'</h2><div class="game-answer-list">'+answers+'</div>'+feedback+'</section>'+
     '<div class="game-streak"><span>Streak <b>'+gameState.streak+'</b></span><span>Best this round <b>'+gameState.bestStreak+'</b></span></div>';
 }
 function gameFinishHtml(){
@@ -561,11 +567,9 @@ function renderGames(){
 
 function renderFamily(){
   const weekEnd=weekDays()[4],todayDate=today();
-  const tests=new Set((pack?.importantDates||[])
-    .filter(x=>kindClass(x)==="test")
-    .map(x=>parseDate(x.date))
-    .filter(d=>d&&d>=todayDate&&d<=weekEnd)
-    .map(d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"))).size;
+  const tests=new Set(datedImportantEvents()
+    .filter(({item,date})=>kindClass(item)==="test"&&date>=todayDate&&date<=weekEnd)
+    .map(({date})=>isoDateKey(date))).size;
   const notices=currentNoticeTexts();
   const homeworkActions=taskRecordsForSurface("family").map(({item})=>item.task);
   const actions=[...new Set([...homeworkActions,...upcomingReminderTexts(today(),6)])].slice(0,6);
