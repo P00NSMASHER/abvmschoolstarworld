@@ -51,8 +51,8 @@ function freshnessState(){
   return{state:"current",label:"Verified "+stamp};
 }
 function freshness(){
-  const state=freshnessState(),label=manualRefreshActive?"Refreshing school info…":state.label;
-  const action=manualRefreshActive?"Refreshing school information":"Refresh school information. "+state.label;
+  const state=freshnessState(),label=manualRefreshActive?"Checking latest school info…":state.label;
+  const action=manualRefreshActive?"Checking latest school information":"Check latest school information. "+state.label;
   return '<button type="button" class="freshness '+state.state+(manualRefreshActive?' is-refreshing':'')+'" data-refresh-pack aria-label="'+esc(action)+'"'+(manualRefreshActive?' disabled':'')+'><span aria-hidden="true"></span><strong>'+esc(label)+'</strong><b aria-hidden="true">↻</b></button>';
 }
 function kindClass(item){
@@ -187,10 +187,17 @@ function upcomingReminderTexts(date=today(),limit=6){
     .sort((a,b)=>a.range[0]-b.range[0]).map(row=>row.text);
   return [...new Set(timed)].slice(0,limit);
 }
+function linkedNoticeExpiry(text){
+  if(/^Picture (?:ordering|backgrounds):/i.test(String(text||""))){
+    const picture=(pack?.importantDates||[]).find(item=>/\bPicture Day\b/i.test(item.label||""));
+    return eventDateRange(picture?.date)?.[1]||null;
+  }
+  return null;
+}
 function currentNoticeTexts(date=today()){
   return (pack?.parentNotices||[]).filter(text=>{
-    const range=eventDateRange(text);
-    return !range||range[1]>=date;
+    const range=eventDateRange(text),expiry=range?.[1]||linkedNoticeExpiry(text);
+    return !expiry||expiry>=date;
   });
 }
 function specialsRows(){
@@ -521,7 +528,12 @@ function renderGames(){
 }
 
 function renderFamily(){
-  const tests=(pack?.importantDates||[]).filter(x=>kindClass(x)==="test").filter(x=>{const d=parseDate(x.date);return d&&d>=today()&&d<=weekDays()[4]}).length;
+  const weekEnd=weekDays()[4],todayDate=today();
+  const tests=new Set((pack?.importantDates||[])
+    .filter(x=>kindClass(x)==="test")
+    .map(x=>parseDate(x.date))
+    .filter(d=>d&&d>=todayDate&&d<=weekEnd)
+    .map(d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"))).size;
   const notices=currentNoticeTexts();
   const homeworkActions=taskRecordsForSurface("family").map(({item})=>item.task);
   const actions=[...new Set([...homeworkActions,...upcomingReminderTexts(today(),6)])].slice(0,6);
@@ -580,6 +592,11 @@ function packContentKey(data){
     sourceHash:p.sourceHash||"",
     uploadedNoticeHash:p.uploadedNoticeHash||"",
     weekLabel:p.weekLabel||"",
+    importantDates:p.importantDates||[],
+    homework:p.homework||[],
+    subjects:p.subjects||[],
+    reminders:p.reminders||[],
+    parentNotices:p.parentNotices||[],
     lunchMenu:p.lunchMenu||[],
     lunchStatus:lunchSource.status||"",
     lunchRetrievalState:lunchSource.retrievalState||"",
@@ -625,8 +642,8 @@ async function manualRefreshSchoolInfo(){
     const changed=await fetchPack({force:true,notify:false});
     const state=freshnessState();
     if(changed)toast("School info updated");
-    else if(state.state==="current")toast("School info is up to date");
-    else toast("Checked again — this is still the newest verified school info.");
+    else if(state.state==="current")toast("Latest published school info is loaded");
+    else toast("Checked published school info — no newer verified update is available yet.");
   }catch{
     toast("Couldn’t refresh school info. Try again.");
   }finally{

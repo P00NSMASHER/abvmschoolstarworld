@@ -77,9 +77,9 @@ test("versioned app code bypasses an older cache entry while online",async({page
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
 
   const result=await page.evaluate(async()=>{
-    const cache=await caches.open("abvm-grade2-parent-companion-v73-manual-refresh");
-    await cache.put("./app.js?v=73",new Response("OLD_CACHED_APP_MARKER",{headers:{"Content-Type":"application/javascript"}}));
-    const text=await (await fetch("./app.js?v=73")).text();
+    const cache=await caches.open("abvm-grade2-parent-companion-v74-audit-fixes");
+    await cache.put("./app.js?v=74",new Response("OLD_CACHED_APP_MARKER",{headers:{"Content-Type":"application/javascript"}}));
+    const text=await (await fetch("./app.js?v=74")).text();
     return {old:text.includes("OLD_CACHED_APP_MARKER"),fresh:text.includes("PACK_REFRESH_MS")};
   });
   expect(result.old).toBe(false);
@@ -88,7 +88,7 @@ test("versioned app code bypasses an older cache entry while online",async({page
 
 test("service worker install tolerates optional school-data precache failure",async({request})=>{
   const source=await (await request.get("/sw.js")).text();
-  expect(source).toContain('const CACHE = "abvm-grade2-parent-companion-v73-manual-refresh"');
+  expect(source).toContain('const CACHE = "abvm-grade2-parent-companion-v74-audit-fixes"');
   expect(source).toContain("Promise.allSettled");
   expect(source).toContain("OPTIONAL_DATA");
   expect(source).toContain('url.searchParams.has("v")');
@@ -98,10 +98,10 @@ test("service worker install tolerates optional school-data precache failure",as
 
 test("index promotes a newly activated service worker before relying on versioned code",async({request})=>{
   const html=await (await request.get("/index.html")).text();
-  expect(html).toContain('abvm-sw-reloaded-v73');
+  expect(html).toContain('abvm-sw-reloaded-v74');
   expect(html).toContain('navigator.serviceWorker.addEventListener("controllerchange"');
   expect(html).toContain('registration.update()');
-  expect(html.indexOf("abvm-sw-reloaded-v73")).toBeLessThan(html.indexOf("./app.js?v=73"));
+  expect(html.indexOf("abvm-sw-reloaded-v74")).toBeLessThan(html.indexOf("./app.js?v=74"));
 });
 
 
@@ -158,7 +158,7 @@ test("tapping the freshness box forces an immediate live pack refresh",async({br
   const status=page.locator("[data-refresh-pack]");
   await expect(status).toContainText("Older data");
   await status.click();
-  await expect(page.locator("[data-refresh-pack]")).toContainText("Refreshing school info");
+  await expect(page.locator("[data-refresh-pack]")).toContainText("Checking latest school info");
   await expect(page.locator("[data-refresh-pack]")).toBeDisabled();
   await expect(page.locator(".freshness")).toHaveClass(/current/);
   await expect(page.locator(".freshness")).toContainText("Verified");
@@ -179,7 +179,73 @@ test("manual refresh explains when no newer verified data exists",async({browser
   await page.route("**/data/study-pack.json*",route=>route.fulfill({json:stale}));
   await page.goto("http://127.0.0.1:4173/#today");
   await page.locator("[data-refresh-pack]").click();
-  await expect(page.locator("#toast")).toContainText("still the newest verified school info");
+  await expect(page.locator("#toast")).toContainText("no newer verified update is available yet");
   await expect(page.locator(".freshness")).toHaveClass(/stale/);
+  await context.close();
+});
+
+
+test("Family counts distinct test days instead of individual tests",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-09-29T13:00:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  const fixture=structuredClone(source);
+  fixture.pack.importantDates=[
+    {date:"Tuesday, Sept. 29",label:"Math test",kind:"test"},
+    {date:"Tuesday, Sept. 29",label:"Reading test",kind:"test"},
+    {date:"Wednesday, Sept. 30",label:"Grammar test",kind:"test"}
+  ];
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:fixture}));
+  await page.goto("http://127.0.0.1:4173/#family");
+  const stats=page.locator(".family-stats div").first();
+  await expect(stats).toContainText("2");
+  await expect(stats).toContainText("test days");
+  await context.close();
+});
+
+
+test("derived school-content changes refresh even when source hashes are unchanged",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-09-29T13:00:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  let current=structuredClone(source);
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:current}));
+  await page.goto("http://127.0.0.1:4173/#family");
+  await expect(page.locator(".family-screen")).toBeVisible({timeout:10_000});
+  await expect(page.locator(".notices-card")).not.toContainText("Parser-derived current notice");
+
+  current=structuredClone(source);
+  current.pack.parentNotices=[...current.pack.parentNotices,"Parser-derived current notice Tuesday, Sept. 29."];
+  current.sourceLastSeenAt=new Date().toISOString();
+  current.pack.sourceCheckedAt=current.sourceLastSeenAt;
+  await page.evaluate(()=>window.dispatchEvent(new Event("online")));
+
+  await expect(page.locator(".notices-card")).toContainText("Parser-derived current notice");
+  await expect(page.locator("#toast")).toContainText("School info updated");
+  await context.close();
+});
+
+
+test("undated picture-order details expire after Picture Day",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-10-02T13:00:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  const fixture=structuredClone(source);
+  fixture.pack.importantDates=[
+    {date:"Thursday, Oct. 1",label:"Picture Day",kind:"school event"}
+  ];
+  fixture.pack.parentNotices=[
+    "Picture ordering: package details.",
+    "Picture backgrounds: background choices.",
+    "Standing undated family information."
+  ];
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:fixture}));
+  await page.goto("http://127.0.0.1:4173/#family");
+  await expect(page.locator(".notices-card")).not.toContainText("Picture ordering");
+  await expect(page.locator(".notices-card")).not.toContainText("Picture backgrounds");
+  await expect(page.locator(".notices-card")).toContainText("Standing undated family information");
   await context.close();
 });
