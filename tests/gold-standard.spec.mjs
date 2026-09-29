@@ -392,14 +392,18 @@ test("current week lunch menu is verified and visible instead of last week's men
   expect(data.pack.lunchMenu.map(item=>item.day)).toEqual([
     "Monday, Sept. 28",
     "Tuesday, Sept. 29",
-    "Wednesday, Sept. 30"
+    "Wednesday, Sept. 30",
+    "Thursday, Oct. 1",
+    "Friday, Oct. 2"
   ]);
   expect(data.pack.lunchMenu[0].items).toEqual(["Breaded chicken","Brown rice","Steamed broccoli","Fruit"]);
   expect(data.pack.lunchMenu[1].items).toEqual(["Cheese quesadilla wedge","Garden salad","Salsa","Steamed corn","Fruit"]);
   expect(data.pack.lunchMenu[2].items).toEqual(["Breaded fish sandwich","Baby cake potatoes","Baked beans","Fruit"]);
+  expect(data.pack.lunchMenu[3].items).toEqual(["Baked cheese pizza","Tortilla chips","Mixed vegetables","Fruit"]);
+  expect(data.pack.lunchMenu[4].items).toEqual(["Cheesy breadsticks","Dipping sauce","Garden salad","Fruit"]);
   expect(data.pack.lunchMenuSource.provider).toBe("Saint Clair Area School District");
   expect(data.pack.lunchMenuSource.school).toBe("Assumption BVM School");
-  expect(data.pack.lunchMenuSource.coverageThrough).toBe("2026-09-30");
+  expect(data.pack.lunchMenuSource.coverageThrough).toBe("2026-10-02");
   expect(data.pack.lunchMenu.some(item=>/Sept\. 2[1-5]/.test(item.day))).toBe(false);
 
   await openTab(page,"Today");
@@ -414,7 +418,11 @@ test("current week lunch menu is verified and visible instead of last week's men
   await days.nth(2).click();
   await expect(page.locator(".lunch-card")).toContainText("Breaded fish sandwich");
   await days.nth(3).click();
-  await expect(page.locator(".lunch-card")).toContainText("Lunch menu not yet verified for October 1");
+  await expect(page.locator(".lunch-card")).toContainText("Baked cheese pizza");
+  await expect(page.locator(".lunch-card")).toContainText("Mixed vegetables");
+  await days.nth(4).click();
+  await expect(page.locator(".lunch-card")).toContainText("Cheesy breadsticks");
+  await expect(page.locator(".lunch-card")).toContainText("Dipping sauce");
 });
 
 
