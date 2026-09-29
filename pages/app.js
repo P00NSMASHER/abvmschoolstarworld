@@ -628,6 +628,5 @@ document.addEventListener("visibilitychange",()=>{
 window.addEventListener("pageshow",event=>{
   if(event.persisted&&pack)fetchPack({force:true,notify:true}).catch(()=>{});
 });
-if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"}).catch(()=>{}));
 load();
 })();
