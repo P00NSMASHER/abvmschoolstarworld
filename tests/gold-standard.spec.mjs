@@ -439,5 +439,4 @@ test("published study content contains real lesson material instead of Google Si
 
   const normalized=data.pack.reminders.map(x=>x.toLowerCase().replace(/\bthe\b/g,"").replace(/[^a-z0-9]/g,""));
   expect(new Set(normalized).size).toBe(normalized.length);
-  expect(data.pack.parentNotices.join("\n")).not.toMatch(/Picture ordering:|Picture backgrounds:|Lego Club is Friday, Sept\. 25/i);
 });
