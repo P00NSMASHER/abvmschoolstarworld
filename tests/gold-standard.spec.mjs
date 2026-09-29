@@ -410,6 +410,7 @@ test("current week lunch menu is verified and visible instead of last week's men
   await expect(page.locator(".lunch-card")).toContainText("Breaded chicken");
   await expect(page.locator(".lunch-card")).toContainText("Brown rice");
   await expect(page.locator(".lunch-card")).toContainText("Steamed broccoli");
+  await expect(page.locator(".lunch-card")).toContainText("Reviewed school menu · automated source check pending");
 
   await openTab(page,"Week");
   const days=page.locator("[data-day]");
