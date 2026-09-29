@@ -51,8 +51,8 @@ function freshnessState(){
   return{state:"current",label:"Verified "+stamp};
 }
 function freshness(){
-  const state=freshnessState(),label=manualRefreshActive?"Refreshing school info…":state.label;
-  const action=manualRefreshActive?"Refreshing school information":"Refresh school information. "+state.label;
+  const state=freshnessState(),label=manualRefreshActive?"Checking latest school info…":state.label;
+  const action=manualRefreshActive?"Checking latest school information":"Check latest school information. "+state.label;
   return '<button type="button" class="freshness '+state.state+(manualRefreshActive?' is-refreshing':'')+'" data-refresh-pack aria-label="'+esc(action)+'"'+(manualRefreshActive?' disabled':'')+'><span aria-hidden="true"></span><strong>'+esc(label)+'</strong><b aria-hidden="true">↻</b></button>';
 }
 function kindClass(item){
@@ -635,8 +635,8 @@ async function manualRefreshSchoolInfo(){
     const changed=await fetchPack({force:true,notify:false});
     const state=freshnessState();
     if(changed)toast("School info updated");
-    else if(state.state==="current")toast("School info is up to date");
-    else toast("Checked again — this is still the newest verified school info.");
+    else if(state.state==="current")toast("Latest published school info is loaded");
+    else toast("Checked published school info — no newer verified update is available yet.");
   }catch{
     toast("Couldn’t refresh school info. Try again.");
   }finally{
