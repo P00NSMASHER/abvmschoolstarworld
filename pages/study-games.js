@@ -411,6 +411,30 @@ function materialVocabulary(pack,variant,out){
     misconception:"word-meaning-misuse"
   });
 }
+function materialStoryQuestions(pack,variant,out){
+  const rows=subject(pack,"Reading / ELA")?.storyQuestions||[];
+  rows.forEach((row,index)=>{
+    if(!row||!Array.isArray(row.choices)||row.choices.length!==3||!row.answer||!row.prompt)return;
+    const skill=text(row.skill||"text-evidence");
+    add(out,{
+      id:"mat-story-"+slug(row.story||"reading")+"-"+(index+1)+"-v"+variant,
+      subject:"Reading / ELA",
+      skill,
+      tier:"material",
+      prompt:row.prompt,
+      choices:shuffled(row.choices,"story|"+variant+"|"+index),
+      answer:row.answer,
+      explanation:row.explanation||"Use the story events and character actions to support the answer.",
+      hint:row.hint||"Think about what the characters did and why.",
+      sourceFact:"Current ABVM story-comprehension practice: "+text(row.story||"Reading"),
+      dok:skill==="theme"?3:2,
+      difficulty:skill==="theme"||skill==="inference"?3:2,
+      wrongFeedback:"Go back to the story event or character action that directly supports the answer.",
+      misconception:"story-detail-or-theme-mismatch"
+    });
+  });
+}
+
 function materialReading(pack,variant,out){
   const source=subjectText(pack,"Reading / ELA");
   if(!/visualize|theme/i.test(source))return;
@@ -722,6 +746,7 @@ function buildCatalog(pack,{sourceKey}={}){
   materialPhonics(pack,variant,questions);
   materialHighFrequency(pack,variant,questions);
   materialVocabulary(pack,variant,questions);
+  materialStoryQuestions(pack,variant,questions);
   materialReading(pack,variant,questions);
   materialReligion(pack,variant,questions);
   fallbackReading(variant,questions);
