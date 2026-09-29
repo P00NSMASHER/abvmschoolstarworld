@@ -75,3 +75,12 @@ test('new week does not relabel old meals and unknown months do not halt teacher
   assert.deepEqual(validateLunchPublication(pack, { now: next }), []);
   assert.deepEqual(schoolWeek(new Date('2027-01-01T12:00:00Z')), ['2026-12-28', '2026-12-29', '2026-12-30', '2026-12-31', '2027-01-01']);
 });
+
+
+test('pinned image source proof is recomputed from its exact URL', () => {
+  const changed = structuredClone(CATALOG);
+  const october = changed.sources.find(source => source.proofMode === 'pinned-url');
+  assert.ok(october);
+  october.contentHash = 'a'.repeat(64);
+  assert.throws(() => catalogMeals(changed), /Invalid pinned lunch source proof/);
+});
