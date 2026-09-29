@@ -15,6 +15,7 @@ test("operational dashboard waits for the post-deploy watchdog",()=>{
 
 test("health verdict ignores skipped and cancelled orchestration noise",()=>{
   assert.match(report,/decisiveConclusions=new Set\(\["success","failure","timed_out","action_required","startup_failure"\]\)/);
-  assert.match(report,/const run=workflow\.latestDecisive/);
+  assert.match(report,/const newerActive=latestRun&&activeStatuses\.has\(latestRun\.status\)/);
+  assert.match(report,/const run=newerActive\?workflow\.latestSuccess:decisive/);
   assert.doesNotMatch(report,/const run=workflow\.latestCompleted;\n  if\(!run\|\|run\.conclusion!==\"success\"\)/);
 });
