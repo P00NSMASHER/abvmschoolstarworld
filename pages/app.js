@@ -225,7 +225,7 @@ function renderToday(){
   if(!timeline) timeline='<div class="timeline-row"><time>School</time><span class="timeline-pin family"></span><div><strong>No special school events are listed for this date.</strong></div></div>';
   const tasks=todayTaskRecords();
   const html='<div class="screen" role="region" aria-label="Today">'+
-    header("ABVM GRADE 2 · "+(pack?.weekLabel||"CURRENT WEEK").replace(/^Week of /i,"").toUpperCase(),"Hi, school star!")+
+    header("ABVM GRADE 2 · "+fmtDate(d).toUpperCase(),"Hi, school star!")+
     freshness()+
     '<section class="hero-card"><span class="spark spark-one">★</span><span class="spark spark-two">♥</span><div class="hero-copy"><p class="pill">ONE STEP AT A TIME</p><h2>A calm plan for the week</h2><p>Start with what is due soon. Check off one item, then keep going when you are ready.</p></div><div class="book-buddy"><span>📚</span></div></section>'+
     '<div class="section-heading"><h2><span class="heading-dot pink"></span>Up next</h2></div>'+
