@@ -521,7 +521,12 @@ function renderGames(){
 }
 
 function renderFamily(){
-  const tests=(pack?.importantDates||[]).filter(x=>kindClass(x)==="test").filter(x=>{const d=parseDate(x.date);return d&&d>=today()&&d<=weekDays()[4]}).length;
+  const weekEnd=weekDays()[4],todayDate=today();
+  const tests=new Set((pack?.importantDates||[])
+    .filter(x=>kindClass(x)==="test")
+    .map(x=>parseDate(x.date))
+    .filter(d=>d&&d>=todayDate&&d<=weekEnd)
+    .map(d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"))).size;
   const notices=currentNoticeTexts();
   const homeworkActions=taskRecordsForSurface("family").map(({item})=>item.task);
   const actions=[...new Set([...homeworkActions,...upcomingReminderTexts(today(),6)])].slice(0,6);
@@ -580,6 +585,11 @@ function packContentKey(data){
     sourceHash:p.sourceHash||"",
     uploadedNoticeHash:p.uploadedNoticeHash||"",
     weekLabel:p.weekLabel||"",
+    importantDates:p.importantDates||[],
+    homework:p.homework||[],
+    subjects:p.subjects||[],
+    reminders:p.reminders||[],
+    parentNotices:p.parentNotices||[],
     lunchMenu:p.lunchMenu||[],
     lunchStatus:lunchSource.status||"",
     lunchRetrievalState:lunchSource.retrievalState||"",
