@@ -45,20 +45,24 @@ test("Calendar exposes month grid, selected-day detail, full agenda, and special
   await expect(page.locator(".specials-card")).toBeVisible();
 });
 
-test("Study exposes current story questions with collapsed subject details",async({page})=>{
+test("Study exposes current story questions inside the Reading section",async({page})=>{
   await openTab(page,"Study");
   await expect(page.locator(".study-at-a-glance")).toBeVisible();
   await expect(page.locator(".study-games-cta")).toBeVisible();
   const details=page.locator(".study-accordion");
-  await expect(details).toHaveCount(7);
+  await expect(details).toHaveCount(6);
   for(let i=0;i<await details.count();i++)await expect(details.nth(i)).not.toHaveAttribute("open");
 
-  const storyCard=page.locator("#study-story-questions");
-  await expect(storyCard).toBeVisible();
-  await storyCard.locator(":scope > summary").click();
-  await expect(storyCard.locator(".story-question")).toHaveCount(12);
-  await expect(storyCard).toContainText("Little Flap Learns to Fly");
-  await expect(storyCard).toContainText("Help! A Story of Friendship");
+  const reading=page.locator("#study-reading");
+  await reading.locator(":scope > summary").click();
+  const storyBank=reading.locator("#study-story-questions");
+  await expect(storyBank).toBeVisible();
+  await expect(storyBank.locator(".story-question")).toHaveCount(12);
+  await expect(storyBank).toContainText("Little Flap Learns to Fly");
+  await expect(storyBank).toContainText("Help! A Story of Friendship");
+
+  await storyBank.locator(".story-question").first().locator("summary").click();
+  await expect(storyBank.locator(".story-question").first().locator(".story-answer")).toBeVisible();
 });
 
 test("Study Games loads lazily and starts a playable round",async({page})=>{
