@@ -332,3 +332,34 @@ test("Study does not present a distant test as something that matters this week"
   await expect(page.locator(".study-at-a-glance")).not.toContainText("STAR Testing window");
   await context.close();
 });
+
+
+test("current lunch overrides archive data in the derived index",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-09-29T13:00:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  const fixture=structuredClone(source);
+  fixture.pack.lunchArchive=[...(fixture.pack.lunchArchive||[]).filter(x=>x.date!=="2026-09-29"),{date:"2026-09-29",items:["Archived wrong meal"]}];
+  fixture.pack.lunchMenu=[...(fixture.pack.lunchMenu||[]).filter(x=>x.date!=="2026-09-29"),{date:"2026-09-29",items:["Current indexed meal"]}];
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:fixture}));
+  await page.goto("http://127.0.0.1:4173/#today");
+  await expect(page.locator(".lunch-card")).toContainText("Current indexed meal");
+  await expect(page.locator(".lunch-card")).not.toContainText("Archived wrong meal");
+  await context.close();
+});
+
+test("derived event index preserves every day of multi-day school events",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-10-19T13:00:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  const fixture=structuredClone(source);
+  fixture.pack.importantDates=[{date:"Monday–Tuesday, Oct. 19–20",label:"Parent-Teacher Conferences",kind:"conference"}];
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:fixture}));
+  await page.goto("http://127.0.0.1:4173/#week");
+  await expect(page.locator(".day-detail")).toContainText("Parent-Teacher Conferences");
+  await page.locator('[data-day^="2026-10-20"]').click();
+  await expect(page.locator(".day-detail")).toContainText("Parent-Teacher Conferences");
+  await context.close();
+});
