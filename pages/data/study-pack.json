@@ -562,6 +562,28 @@
           "Fruit"
         ],
         "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-10-01",
+        "day": "Thursday, Oct. 1",
+        "items": [
+          "Baked cheese pizza",
+          "Tortilla chips",
+          "Mixed vegetables",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-02",
+        "day": "Friday, Oct. 2",
+        "items": [
+          "Cheesy breadsticks",
+          "Dipping sauce",
+          "Garden salad",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
       }
     ],
     "vocabulary": [
@@ -819,8 +841,8 @@
       ]
     },
     "lunchMenuSource": {
-      "status": "partial-current-week",
-      "retrievalState": "verified",
+      "status": "current-week",
+      "retrievalState": "needs-review",
       "checkedAt": "2026-09-29T19:17:52.854Z",
       "lastAttemptAt": "2026-09-29T19:20:03.923Z",
       "provider": "Saint Clair Area School District",
@@ -829,11 +851,8 @@
       "parentResourcesUrl": "https://www.assumptionbvmschool.net/parent-resources",
       "weekStart": "2026-09-28",
       "weekEnd": "2026-10-02",
-      "coverageThrough": "2026-09-30",
-      "missingDates": [
-        "2026-10-01",
-        "2026-10-02"
-      ],
+      "coverageThrough": "2026-10-02",
+      "missingDates": [],
       "sourcePages": [
         {
           "id": "abvm-2026-09-official",
@@ -841,12 +860,20 @@
           "contentHash": "6c01fef18e1f589a544713c21e4d6b31b0063ef7fdbfaa4537dd30cc7b6a64eb",
           "reviewedAt": "2026-09-29T05:26:39Z",
           "checkedAt": "2026-09-29T19:17:52.854Z"
+        },
+        {
+          "id": "abvm-2026-10-official",
+          "url": "https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1790692534/adeducatorsorg/xdbrqzybydptd5srbor0/Octobercalendar.heic",
+          "contentHash": "a99ce9385295921c9fff19ae4051732da45f7c38df077d30d9b62577c8c6eb45",
+          "reviewedAt": "2026-09-29T19:36:00Z",
+          "checkedAt": null
         }
       ],
-      "pendingDocuments": [],
+      "pendingDocuments": [
+        "https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1790692534/adeducatorsorg/xdbrqzybydptd5srbor0/Octobercalendar.heic"
+      ],
       "gaps": [
-        "No reviewed school lunch menu is available for 2026-10-01.",
-        "No reviewed school lunch menu is available for 2026-10-02."
+        "Lunch source needs attention; the newly reviewed October image is awaiting live source-bridge confirmation."
       ]
     },
     "lunchArchive": [
@@ -1091,9 +1118,31 @@
           "Fruit"
         ],
         "sourceId": "abvm-2026-09-official"
+      },
+      {
+        "date": "2026-10-01",
+        "day": "Thursday, Oct. 1",
+        "items": [
+          "Baked cheese pizza",
+          "Tortilla chips",
+          "Mixed vegetables",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-02",
+        "day": "Friday, Oct. 2",
+        "items": [
+          "Cheesy breadsticks",
+          "Dipping sauce",
+          "Garden salad",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
       }
     ],
-    "lunchMenuHash": "5aaa2584d91db257a2f5a9610337e5aecceca052e260bfb444bf7ce36ebe04d8"
+    "lunchMenuHash": "809cc1a4e5fc42e6b31193837b4b4c2c3cc93af7b1fe37c3744e75484a84ed63"
   },
   "sourceLastCheckedAt": "2026-09-29T19:20:03.923Z",
   "sourcePages": [
