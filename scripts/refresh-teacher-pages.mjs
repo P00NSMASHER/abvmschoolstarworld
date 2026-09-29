@@ -7,11 +7,11 @@ import {
   parseHomework,
 } from './teacher-page-parsers.mjs';
 import { validateUploadedNoticePolicy } from './uploaded-notice-policy.mjs';
+import { refreshLunchPublication } from './lunch-publication.mjs';
 
 const DATA_PATH = new URL('../pages/data/study-pack.json', import.meta.url);
 const UPLOADED_NOTICES_PATH = new URL('../pages/data/uploaded-notices.json', import.meta.url);
 const SITE_ROOT = 'https://sites.google.com/view/abvmgr2';
-const LUNCH_FEED_URL = 'https://abvm-source-bridge-gkj08k.v2.appdeploy.ai/api/lunch-menu';
 const PAGE_PATHS = [
   ['home', 'Home'],
   ['homework', 'Homework'],
@@ -55,28 +55,6 @@ async function fetchPage(path, title) {
     }
   }
   throw new Error(`${title} failed after 3 attempts: ${lastError?.message || lastError}`);
-}
-
-async function fetchLunchFeed(){
-  let lastError=null;
-  for(let attempt=1;attempt<=3;attempt+=1){
-    try{
-      const response=await fetch(LUNCH_FEED_URL,{headers:{accept:'application/json'},signal:AbortSignal.timeout(45_000)});
-      if(!response.ok)throw new Error(`Lunch feed HTTP ${response.status}`);
-      const payload=await response.json();
-      if(!payload||!Array.isArray(payload.lunchMenu))throw new Error('Lunch feed payload is malformed');
-      return payload;
-    }catch(error){
-      lastError=error;
-      if(attempt<3)await new Promise(resolve=>setTimeout(resolve,attempt*1500));
-    }
-  }
-  throw lastError||new Error('Lunch feed failed');
-}
-function lunchDisplayDay(iso){
-  const date=new Date(`${iso}T12:00:00Z`);
-  if(Number.isNaN(date.getTime()))return '';
-  return date.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric',timeZone:'UTC'}).replace(',', '');
 }
 
 function requireLine(lines, prefix, pageName) {
@@ -285,12 +263,6 @@ const digest = createHash('sha256').update(normalizedSource).digest('hex');
 const sourceHash = `teacher-pages-${digest.slice(0, 20)}`;
 const uploadedNoticeHash = `uploaded-notices-${createHash('sha256').update(JSON.stringify(uploadedNotices)).digest('hex').slice(0, 20)}`;
 const checkedAt = new Date().toISOString();
-let lunchFeed=null;
-try{
-  lunchFeed=await fetchLunchFeed();
-}catch(error){
-  console.warn('Current lunch feed unavailable; preserving only same-week verified lunch data:',error instanceof Error?error.message:String(error));
-}
 const data = JSON.parse(readFileSync(DATA_PATH, 'utf8'));
 const pack = data.pack || {};
 const contentChanged = pack.sourceHash !== sourceHash || pack.uploadedNoticeHash !== uploadedNoticeHash;
@@ -353,24 +325,8 @@ upsertSubject(subjects, /^Math$/i, {
 upsertSubject(subjects, /^Specials$/i, { subject: 'Specials', topics: specials, studyNotes: [] });
 pack.subjects = subjects;
 pack.homework = homework;
-if(lunchFeed){
-  pack.lunchMenu=(lunchFeed.lunchMenu||[]).flatMap(item=>{
-    const day=lunchDisplayDay(item.date);
-    const items=Array.isArray(item.items)?item.items.map(value=>String(value).trim()).filter(Boolean):[];
-    return day&&items.length?[{day,items}]:[];
-  });
-  pack.lunchMenuSource={
-    status:lunchFeed.gaps?.length?'partial-current-week':'current-week',
-    checkedAt:lunchFeed.sourceCheckedAt||checkedAt,
-    provider:lunchFeed.source||'Saint Clair Area School District',
-    school:lunchFeed.school||'Assumption BVM School',
-    feedUrl:LUNCH_FEED_URL,
-    weekStart:lunchFeed.weekStart||null,
-    weekEnd:lunchFeed.weekEnd||null,
-    coverageThrough:(lunchFeed.lunchMenu||[]).map(item=>item.date).filter(Boolean).sort().at(-1)||null,
-    gaps:Array.isArray(lunchFeed.gaps)?lunchFeed.gaps:[],
-  };
-}
+const lunchResult = await refreshLunchPublication(pack, { now: new Date(checkedAt) });
+console.log('Lunch source result:', JSON.stringify(lunchResult));
 
 pack.vocabulary = vocabulary.split(',').map(term => term.trim()).filter(Boolean).map(term => ({
   subject: 'Reading / ELA',

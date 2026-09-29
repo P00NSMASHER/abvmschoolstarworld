@@ -76,7 +76,8 @@ function eventItemsForDate(date){
   });
 }
 function lunchForDate(date){
-  return (pack?.lunchMenu||[]).find(x=>sameDay(parseDate(x.day),date))||null;
+  const key=date.getFullYear()+"-"+String(date.getMonth()+1).padStart(2,"0")+"-"+String(date.getDate()).padStart(2,"0");
+  return [...(pack?.lunchMenu||[]),...(pack?.lunchArchive||[])].find(x=>x.date?x.date===key:sameDay(parseDate(x.day),date))||null;
 }
 function checkKey(item,index){return "abvm-old-look:"+String(pack?.sourceHash||"pack")+":"+index+":"+(item.task||item.label||"");}
 function checked(item,index){return storageGet(checkKey(item,index))==="1";}
@@ -131,17 +132,14 @@ function lunchText(lunch){
   return lunch?.items?.length?lunch.items.join(", ").replace(/, ([^,]*)$/,", and $1"):"";
 }
 function lunchUnavailableText(date){
-  const source=pack?.lunchMenuSource||null;
-  const through=source?.coverageThrough?new Date(source.coverageThrough+"T12:00:00"):null;
-  if(source?.status==="partial-current-week"&&through&&!Number.isNaN(through.getTime())&&date>through){
-    return "The official October lunch menu has not been posted yet.";
-  }
-  return "Lunch menu not posted in the current verified source.";
+  return "Lunch menu not yet verified for "+MONTHS[date.getMonth()]+" "+date.getDate()+".";
 }
 function lunchCardHtml(date,lunch){
-  if(lunch)return '<section class="lunch-card"><span>🍎</span><div><p>SCHOOL LUNCH</p><strong>'+esc(lunchText(lunch))+'</strong></div></section>';
+  const closed=lunch?.status==="no-school"||eventItemsForDate(date).some(e=>kindClass(e)==="closed");
   if([0,6].includes(date.getDay()))return "";
-  return '<section class="lunch-card lunch-missing"><span>🍎</span><div><p>SCHOOL LUNCH</p><strong>'+esc(lunchUnavailableText(date))+'</strong></div></section>';
+  const message=closed?"No school lunch":lunch?lunchText(lunch):lunchUnavailableText(date);
+  const retained=lunch&&!closed&&pack?.lunchMenuSource?.retrievalState!=="verified";
+  return '<section class="lunch-card'+(!lunch&&!closed?' lunch-missing':'')+'"><span aria-hidden="true">🍎</span><div><p>SCHOOL LUNCH</p><strong>'+esc(message)+'</strong>'+(retained?'<small>Saved school menu · source check needs attention</small>':'')+'</div></section>';
 }
 function currentTest(){
   const now=today();
@@ -253,7 +251,7 @@ function monthAgendaDays(year,month){
 }
 function agendaLunchHtml(date,lunch){
   const events=eventItemsForDate(date),closed=events.some(e=>kindClass(e)==="closed"),weekend=[0,6].includes(date.getDay());
-  const text=lunch?lunchText(lunch):(closed||weekend?"No school lunch":lunchUnavailableText(date));
+  const text=closed||weekend||lunch?.status==="no-school"?"No school lunch":lunch?lunchText(lunch):lunchUnavailableText(date);
   return '<div class="agenda-lunch'+(lunch?"":" is-missing")+'"><span>🍎</span><div><b>Lunch</b><p>'+esc(text)+'</p></div></div>';
 }
 function agendaDayHtml(date){

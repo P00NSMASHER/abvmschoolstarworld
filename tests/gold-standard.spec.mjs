@@ -6,6 +6,7 @@ async function openTab(page,label){
 }
 
 test.beforeEach(async({page})=>{
+  await page.clock.setFixedTime(new Date("2026-09-28T12:00:00Z"));
   await page.goto("/?rollback=gold#today");
 });
 
@@ -292,16 +293,32 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
 });
 
 
-test("Sept 28 Today shows only Mass and daily reading",async({page})=>{
-  await openTab(page,"Today");
-  const tasks=page.locator(".today-panel .check-item");
+test("Sept 28 task-policy fixture keeps Mass and reading without routine clutter",async({page,browser})=>{
+  const source=await (await page.request.get("/data/study-pack.json")).json();
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const fixturePage=await context.newPage();
+  await fixturePage.clock.setFixedTime(new Date("2026-09-28T12:00:00Z"));
+  const homework=[
+    {task:"Attend Mass",subject:"Religion"},
+    {task:"Read",subject:"Reading"},
+    {task:"Cover books",subject:"Parent"},
+    {task:"Keep Reading Log and Behavior Chart in the HW folder",subject:"Reading"},
+    {task:"Return everything in the HW folder",subject:"Homework Folder"}
+  ];
+  await fixturePage.route("**/data/study-pack.json*",route=>route.fulfill({json:{...source,pack:{...source.pack,homework}}}));
+  await fixturePage.goto("http://127.0.0.1:4173/#today");
+  const tasks=fixturePage.locator(".today-panel .check-item");
   await expect(tasks).toHaveCount(2);
   await expect(tasks.nth(0)).toContainText("Attend Mass");
   await expect(tasks.nth(1)).toContainText("Read");
   await expect(tasks.nth(1)).toContainText("20 minutes today");
-  await expect(page.getByText("Cover books",{exact:true})).toHaveCount(0);
-  await expect(page.getByText("Keep Reading Log and Behavior Chart in the HW folder",{exact:true})).toHaveCount(0);
-  await expect(page.getByText("Return everything in the HW folder",{exact:true})).toHaveCount(0);
+  for(const item of homework.slice(2))await expect(fixturePage.getByText(item.task,{exact:true})).toHaveCount(0);
+  homework.shift();
+  await fixturePage.reload();
+  await expect(tasks).toHaveCount(1);
+  await expect(tasks.first()).toContainText("Read");
+  await expect(fixturePage.getByText("Attend Mass",{exact:true})).toHaveCount(0);
+  await context.close();
 });
 
 test("Study Games uses distinct polished subject icon badges",async({page})=>{
@@ -397,5 +414,5 @@ test("current week lunch menu is verified and visible instead of last week's men
   await days.nth(2).click();
   await expect(page.locator(".lunch-card")).toContainText("Breaded fish sandwich");
   await days.nth(3).click();
-  await expect(page.locator(".lunch-card")).toContainText("official October lunch menu has not been posted yet");
+  await expect(page.locator(".lunch-card")).toContainText("Lunch menu not yet verified for October 1");
 });
