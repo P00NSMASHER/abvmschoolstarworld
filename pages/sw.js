@@ -1,4 +1,4 @@
-const CACHE = "abvm-grade2-parent-companion-v81-lunch-status";
+const CACHE = "abvm-grade2-parent-companion-v82-source-scoped-lunch";
 const STATIC_SHELL = [
   "./",
   "./index.html",
