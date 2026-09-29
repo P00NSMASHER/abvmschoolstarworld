@@ -341,8 +341,8 @@ pack.vocabulary = vocabulary.split(',').map(term => term.trim()).filter(Boolean)
 pack.importantDates = mergeTeacherEvents(pack.importantDates || [], homeEvents, 'teacher-home');
 pack.importantDates = mergeTeacherEvents(pack.importantDates, testItems, 'teacher-tests');
 pack.importantDates = mergeUploadedEvents(pack.importantDates, uploadedNotices);
-pack.reminders = [...new Set(uploadedNotices.reminders.map(item => item.text))];
-pack.parentNotices = [...new Set(uploadedNotices.parentNotices.map(item => item.text))];
+pack.reminders = mergeUploadedText(pack.reminders || [], uploadedNotices.reminders, pack.uploadedNoticeTopics?.reminders);
+pack.parentNotices = mergeUploadedText(pack.parentNotices || [], uploadedNotices.parentNotices, pack.uploadedNoticeTopics?.parentNotices);
 pack.uploadedNoticeTopics = {
   reminders: [...new Set(uploadedNotices.reminders.map(item => item.topic))],
   parentNotices: [...new Set(uploadedNotices.parentNotices.map(item => item.topic))],
