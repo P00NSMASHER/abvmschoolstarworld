@@ -7,6 +7,8 @@ test("school date follows Eastern time even when the device is elsewhere",async(
   await page.goto("http://127.0.0.1:4173/#today");
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
   await expect(page.getByRole("heading",{name:"Tuesday, September 29"})).toBeVisible();
+  await expect(page.locator(".app-header p")).toHaveText("ABVM GRADE 2 · TUESDAY, SEPTEMBER 29");
+  await expect(page.locator(".app-header p")).not.toContainText("SEPTEMBER 28");
   await context.close();
 });
 
