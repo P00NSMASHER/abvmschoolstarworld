@@ -442,7 +442,7 @@ test("published study content contains real lesson material instead of Google Si
 });
 
 
-test("Math Dash and Faith Quest stay on current material for full rounds",async({page})=>{
+test("Subject Study Games stay on current material for full rounds",async({page})=>{
   await openTab(page,"Study Games");
   const report=await page.evaluate(async()=>{
     const source=await (await fetch("./data/study-pack.json",{cache:"no-store"})).json();
