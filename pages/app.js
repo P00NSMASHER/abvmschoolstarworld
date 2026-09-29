@@ -317,6 +317,19 @@ function subjectCard(id,klass,title,subject){
   const notes=[...(subject?.topics||[]),...(subject?.studyNotes||[])];
   return '<details id="'+id+'" class="subject-card study-accordion '+klass+'"><summary><span><small>'+esc(title.toUpperCase())+'</small><strong>'+esc(title)+'</strong></span><b aria-hidden="true">+</b></summary><ul>'+notes.map(n=>'<li>✓ '+esc(n)+'</li>').join("")+'</ul></details>';
 }
+function storyQuestionsCard(subject){
+  const rows=Array.isArray(subject?.storyQuestions)?subject.storyQuestions:[];
+  if(!rows.length)return "";
+  return '<details id="study-story-questions" class="subject-card study-accordion reading story-study-card" open>'+
+    '<summary><span><small>STORY QUESTIONS</small><strong>Little Flap + Help!</strong></span><b aria-hidden="true">+</b></summary>'+
+    '<div class="story-question-list">'+rows.map((row,index)=>
+      '<details class="story-question">'+
+        '<summary><span class="story-question-number">'+(index+1)+'</span><span><small>'+esc(row.story||"Reading")+'</small><strong>'+esc(row.prompt||"")+'</strong></span></summary>'+
+        '<div class="story-answer"><small>ANSWER</small><p>'+esc(row.answer||"")+'</p>'+(row.explanation?'<span>'+esc(row.explanation)+'</span>':"")+'</div>'+
+      '</details>'
+    ).join("")+'</div>'+
+  '</details>';
+}
 function renderStudy(){
   const r=readingSubject(), rel=religionSubject(), math=mathSubject(), spell=spellingSubject(), next=currentTest();
   const essentials=[
@@ -333,6 +346,7 @@ function renderStudy(){
     '<div class="study-section-label"><p>SUBJECT DETAILS</p><span>Tap a subject only when you need it.</span></div>'+
     subjectCard("study-religion","religion",rel?.subject||"Religion",rel)+
     subjectCard("study-reading","reading","Reading",r)+
+    storyQuestionsCard(r)+
     subjectCard("study-math","math","Math",math)+
     subjectCard("study-spelling","spelling","Spelling and phonics",spell)+
     '<details id="study-sight" class="subject-card study-accordion sight"><summary><span><small>SIGHT WORDS</small><strong>Sight words</strong></span><b aria-hidden="true">+</b></summary><div class="sight-cloud">'+sight.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></details>'+
