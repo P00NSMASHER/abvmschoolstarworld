@@ -84,7 +84,7 @@ function lunchForDate(date){
 }
 function keyPart(value){return String(value||"").trim().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,90)||"item";}
 function taskWeekKey(){return keyPart(pack?.weekLabel||"current-week");}
-function checkKey(item){return "abvm-task:v2:"+taskWeekKey()+":"+keyPart(item?.subject)+":"+keyPart(item?.task||item?.label);}
+function checkKey(item){return "abvm-task:v2:"+taskWeekKey()+":"+keyPart(item?._sourceSubject||item?.subject)+":"+keyPart(item?.task||item?.label);}
 function legacyCheckKey(item,index){return "abvm-old-look:"+String(pack?.sourceHash||"pack")+":"+index+":"+(item?.task||item?.label||"");}
 function checked(item,index){
   const key=checkKey(item);
@@ -112,7 +112,7 @@ function taskPolicy(item){
 function taskRecordsForSurface(surface){
   return (pack?.homework||[]).map((item,index)=>({item,index,policy:taskPolicy(item)}))
     .filter(record=>record.policy[surface]!==false)
-    .map(record=>record.policy.subject?{...record,item:{...record.item,subject:record.policy.subject}}:record);
+    .map(record=>record.policy.subject?{...record,item:{...record.item,_sourceSubject:record.item.subject,subject:record.policy.subject}}:record);
 }
 function taskHtml(item,index){
   const done=checked(item,index);
@@ -620,8 +620,8 @@ window.addEventListener("hashchange",()=>{
     render();
   }
 });
-window.addEventListener("online",()=>{if(pack)fetchPack({force:true,notify:true}).catch(()=>render({preserveScroll:true}))});
-window.addEventListener("offline",()=>{if(pack)render({preserveScroll:true})});
+window.addEventListener("online",()=>{if(pack)fetchPack({force:true,notify:true}).catch(()=>updateFreshnessUI())});
+window.addEventListener("offline",()=>{if(pack)updateFreshnessUI()});
 document.addEventListener("visibilitychange",()=>{
   if(document.visibilityState==="visible"&&pack)fetchPack({notify:true}).catch(()=>{});
 });
