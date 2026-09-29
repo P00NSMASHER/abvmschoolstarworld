@@ -936,17 +936,17 @@ function pickBalanced(pool,count,seed,skillStats,preferredSkills=[]){
     return hash(seed+"|"+a.id)-hash(seed+"|"+b.id);
   });
   while(selected.length<Math.min(count,ordered.length)){
-    let candidate=ordered.find(q=>{
-      if(used.has(q.id))return false;
-      if((skillCounts[q.skill]||0)>=maxPerSkill)return false;
+    const eligible=ordered.filter(q=>!used.has(q.id)&&(skillCounts[q.skill]||0)<maxPerSkill);
+    if(!eligible.length)break;
+    const material=eligible.filter(q=>q.tier==="material"),tierPool=material.length?material:eligible;
+    let candidate=tierPool.find(q=>{
       const last=selected[selected.length-1];
       if(last&&last.skill===q.skill){
-        return !ordered.some(other=>!used.has(other.id)&&other.skill!==q.skill&&(skillCounts[other.skill]||0)<maxPerSkill);
+        return !tierPool.some(other=>other.skill!==q.skill);
       }
       return true;
     });
-    if(!candidate)candidate=ordered.find(q=>!used.has(q.id));
-    if(!candidate)break;
+    if(!candidate)candidate=tierPool[0];
     selected.push(candidate);used.add(candidate.id);skillCounts[candidate.skill]=(skillCounts[candidate.skill]||0)+1;
   }
   return selected;
