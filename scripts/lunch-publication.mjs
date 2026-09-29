@@ -25,7 +25,9 @@ export function catalogMeals(catalog = CATALOG) {
   if (catalog.schemaVersion !== 1 || catalog.school !== 'Assumption BVM School' || catalog.provider !== 'Saint Clair Area School District') throw new Error('Wrong lunch catalog identity');
   const dates = new Set();
   return catalog.sources.flatMap(source => {
-    if (!/^[a-f0-9]{64}$/.test(source.contentHash) || !source.url.startsWith('https://resources.finalsite.net/') || !validIsoDate(source.coverageStart) || !validIsoDate(source.coverageEnd) || Number.isNaN(Date.parse(source.reviewedAt))) throw new Error('Invalid reviewed lunch source');
+    const proofMode = source.proofMode || 'sha256-bytes';
+    if (!/^[a-f0-9]{64}$/.test(source.contentHash) || !source.url.startsWith('https://resources.finalsite.net/') || !['sha256-bytes','pinned-url'].includes(proofMode) || !validIsoDate(source.coverageStart) || !validIsoDate(source.coverageEnd) || Number.isNaN(Date.parse(source.reviewedAt))) throw new Error('Invalid reviewed lunch source');
+    if (proofMode === 'pinned-url' && createHash('sha256').update(source.url).digest('hex') !== source.contentHash) throw new Error('Invalid pinned lunch source proof');
     return source.meals.map(meal => {
       if (!validIsoDate(meal.date) || meal.date < source.coverageStart || meal.date > source.coverageEnd || dates.has(meal.date) || !Array.isArray(meal.items) || (!meal.items.length && meal.status !== 'no-school') || meal.items.some(x => typeof x !== 'string' || !x.trim())) throw new Error('Invalid or duplicate lunch row');
       dates.add(meal.date);
