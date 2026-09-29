@@ -17,6 +17,8 @@ const workflowNames={
 };
 const latest=name=>productionRuns.find(run=>run.name===name)||null;
 const latestCompleted=name=>productionRuns.find(run=>run.name===name&&run.conclusion)||null;
+const decisiveConclusions=new Set(["success","failure","timed_out","action_required","startup_failure"]);
+const latestDecisive=name=>productionRuns.find(run=>run.name===name&&decisiveConclusions.has(run.conclusion))||null;
 const latestSuccess=name=>productionRuns.find(run=>run.name===name&&run.conclusion==="success")||null;
 const recentRelevant=productionRuns.filter(run=>Object.values(workflowNames).includes(run.name)).slice(0,40);
 const failures=recentRelevant.filter(run=>run.conclusion==="failure").map(run=>({
@@ -40,17 +42,17 @@ const status={
   },
   lunch:{status:packData.pack?.lunchMenuSource?.status||"unknown",retrievalState:packData.pack?.lunchMenuSource?.retrievalState||"unknown",days:packData.pack?.lunchMenu?.length||0,missingDates:packData.pack?.lunchMenuSource?.missingDates||[]},
   workflows:{
-    refresh:{latest:latest(workflowNames.refresh),latestCompleted:latestCompleted(workflowNames.refresh),latestSuccess:latestSuccess(workflowNames.refresh)},
-    qa:{latest:latest(workflowNames.qa),latestCompleted:latestCompleted(workflowNames.qa),latestSuccess:latestSuccess(workflowNames.qa)},
-    deploy:{latest:latest(workflowNames.deploy),latestCompleted:latestCompleted(workflowNames.deploy),latestSuccess:latestSuccess(workflowNames.deploy)},
-    watchdog:{latest:latest(workflowNames.watchdog),latestCompleted:latestCompleted(workflowNames.watchdog),latestSuccess:latestSuccess(workflowNames.watchdog)},
+    refresh:{latest:latest(workflowNames.refresh),latestCompleted:latestCompleted(workflowNames.refresh),latestDecisive:latestDecisive(workflowNames.refresh),latestSuccess:latestSuccess(workflowNames.refresh)},
+    qa:{latest:latest(workflowNames.qa),latestCompleted:latestCompleted(workflowNames.qa),latestDecisive:latestDecisive(workflowNames.qa),latestSuccess:latestSuccess(workflowNames.qa)},
+    deploy:{latest:latest(workflowNames.deploy),latestCompleted:latestCompleted(workflowNames.deploy),latestDecisive:latestDecisive(workflowNames.deploy),latestSuccess:latestSuccess(workflowNames.deploy)},
+    watchdog:{latest:latest(workflowNames.watchdog),latestCompleted:latestCompleted(workflowNames.watchdog),latestDecisive:latestDecisive(workflowNames.watchdog),latestSuccess:latestSuccess(workflowNames.watchdog)},
   },
   recentFailures:failures,
 };
 const sourceFresh=sourceAgeHours!==null&&sourceAgeHours>=-.25&&sourceAgeHours<=8;
 const runAgeHours=run=>run?.created_at?(Date.now()-Date.parse(run.created_at))/3_600_000:null;
 const completedHealthy=(workflow,maxAgeHours)=>{
-  const run=workflow.latestCompleted;
+  const run=workflow.latestDecisive;
   if(!run||run.conclusion!=="success")return false;
   const age=runAgeHours(run);
   return age!==null&&age>=-.25&&age<=maxAgeHours;
@@ -85,10 +87,10 @@ const md=[
   `- **Git SHA:** ${status.gitSha||"unknown"}`,
   "",
   "## Latest workflow state",
-  line("Teacher refresh",status.workflows.refresh.latestCompleted||status.workflows.refresh.latest),
-  line("App QA",status.workflows.qa.latestCompleted||status.workflows.qa.latest),
-  line("Pages deploy",status.workflows.deploy.latestCompleted||status.workflows.deploy.latest),
-  line("Refresh watchdog",status.workflows.watchdog.latestCompleted||status.workflows.watchdog.latest),
+  line("Teacher refresh",status.workflows.refresh.latestDecisive||status.workflows.refresh.latestCompleted||status.workflows.refresh.latest),
+  line("App QA",status.workflows.qa.latestDecisive||status.workflows.qa.latestCompleted||status.workflows.qa.latest),
+  line("Pages deploy",status.workflows.deploy.latestDecisive||status.workflows.deploy.latestCompleted||status.workflows.deploy.latest),
+  line("Refresh watchdog",status.workflows.watchdog.latestDecisive||status.workflows.watchdog.latestCompleted||status.workflows.watchdog.latest),
   `- **Required successful-run age:** refresh/watchdog <=30h; QA/deploy <=48h`,
   "",
   "## Recent relevant failures",
