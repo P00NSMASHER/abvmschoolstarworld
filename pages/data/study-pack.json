@@ -2,27 +2,33 @@
   "source": "ABVM Grade 2 public teacher pages and uploaded school notices",
   "delivery": "verified",
   "syncPolicy": {
-    "primaryAt": "1:17 PM",
-    "backupAt": "3:47 PM",
+    "scheduledAt": [
+      "6:17 AM",
+      "9:47 AM",
+      "1:17 PM",
+      "3:47 PM"
+    ],
+    "primaryAt": "6:17 AM",
+    "backupAt": "9:47 AM",
     "timeZone": "America/New_York",
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-09-29T05:53:52.959Z",
-  "sourceCapturedAt": "2026-09-29T05:46:10.369Z",
+  "sourceLastSeenAt": "2026-09-29T16:01:33.884Z",
+  "sourceCapturedAt": "2026-09-29T16:01:33.884Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
-    "sourceHash": "teacher-pages-6a856b04c0ec29772f8b",
-    "sourceCapturedAt": "2026-09-29T05:46:10.369Z",
-    "generatedAt": "2026-09-29T05:53:52.959Z",
+    "sourceHash": "teacher-pages-1368a564f9b2a038776e",
+    "sourceCapturedAt": "2026-09-29T16:01:33.884Z",
+    "generatedAt": "2026-09-29T16:01:33.884Z",
     "weekLabel": "Week of September 28, 2026",
-    "summary": "Current Grade 2 teacher-site material: Homework lists Reading “Read”, parent task “Cover books”, Reading “Keep Reading Log and Behavior Chart in the HW folder”, and Homework Folder “Return everything in the HW folder”. Upcoming tests include Spelling (2-letter blends) / Handwriting on Friday, Sept. 25, Subtraction to 12 on Tuesday, Sept. 29, Religion Ch. 2 on Tuesday, Sept. 29, and Grammar (types of sentences) on Wednesday, Sept. 30. 3 uploaded school notices are integrated with the teacher pages.",
+    "summary": "Current Grade 2 teacher-site material: Homework lists Reading “Read”, parent task “Cover books”, Reading “Keep Reading Log and Behavior Chart in the HW folder”, and Homework Folder “Return everything in the HW folder”. Upcoming tests include Subtraction to 12 on Tuesday, Sept. 29, Grammar (types of sentences) on Wednesday, Sept. 30, Spelling (short a / long a) / Handwriting on Friday, Oct. 2, and Reading on Wednesday, Oct. 7. 3 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
       {
         "subject": "Reading / ELA",
         "topics": [
-          "Story: Little Flap Learns to Fly",
+          "Story: Little Flap Learns to Fly\" 'Help! A Story of Friendship",
           "Sight words: she, boy, he, small, were, what, girl, here, by, want",
           "Phonics: 2-letter consonant blends",
           "Vocabulary: action, afraid, depend, nervously, peered, perfectly, rescue, secret",
@@ -30,13 +36,13 @@
           "Grammar: types of sentences (test Wednesday, Sept. 30)"
         ],
         "studyNotes": [
-          "Reading comprehension: visualize, theme"
+          "Reading comprehension: visualize, theme, dioalogue"
         ]
       },
       {
         "subject": "Spelling / Handwriting",
         "topics": [
-          "Friday, Sept. 25 test focus: 2-letter blends"
+          "Friday, Oct. 2 test focus: short a / long a"
         ],
         "studyNotes": [
           "Religion",
@@ -127,12 +133,6 @@
         "source": "uploaded-notice"
       },
       {
-        "date": "Wednesday, Sept. 23",
-        "label": "Stationary money due ($17)",
-        "source": "teacher-home",
-        "kind": "deadline"
-      },
-      {
         "date": "Thursday, Sept. 24",
         "label": "Pretzel delivery",
         "kind": "school event",
@@ -154,12 +154,6 @@
         "source": "uploaded-notice"
       },
       {
-        "date": "Friday, Sept. 25",
-        "label": "Spelling (2-letter blends) / Handwriting",
-        "kind": "test",
-        "source": "teacher-tests"
-      },
-      {
         "date": "Monday, Sept. 28",
         "label": "October Gift Card Calendar Fundraiser money and calendar bottoms due",
         "kind": "deadline",
@@ -176,12 +170,6 @@
       {
         "date": "Tuesday, Sept. 29",
         "label": "Subtraction to 12",
-        "kind": "test",
-        "source": "teacher-tests"
-      },
-      {
-        "date": "Tuesday, Sept. 29",
-        "label": "Religion Ch. 2",
         "kind": "test",
         "source": "teacher-tests"
       },
@@ -280,6 +268,12 @@
       {
         "date": "Friday, Oct. 9",
         "label": "Spelling (short i / long i) / Handwriting",
+        "kind": "test",
+        "source": "teacher-tests"
+      },
+      {
+        "date": "Friday, Oct. 9",
+        "label": "Grammar (subject & predicate)",
         "kind": "test",
         "source": "teacher-tests"
       },
@@ -806,7 +800,7 @@
       "Christmas Caroling date is TBD.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
-    "sourceCheckedAt": "2026-09-29T05:53:52.959Z",
+    "sourceCheckedAt": "2026-09-29T16:01:33.884Z",
     "uploadedNoticeHash": "uploaded-notices-14d4298a59d340258558",
     "uploadedNoticeTopics": {
       "reminders": [
@@ -837,8 +831,8 @@
     "lunchMenuSource": {
       "status": "partial-current-week",
       "retrievalState": "verified",
-      "checkedAt": "2026-09-29T05:53:55.925Z",
-      "lastAttemptAt": "2026-09-29T05:53:52.959Z",
+      "checkedAt": "2026-09-29T16:01:36.019Z",
+      "lastAttemptAt": "2026-09-29T16:01:33.884Z",
       "provider": "Saint Clair Area School District",
       "school": "Assumption BVM School",
       "feedUrl": "https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu",
@@ -856,7 +850,7 @@
           "url": "https://resources.finalsite.net/images/v1787165302/adeducatorsorg/gvzkkrduwn7fce9l3vsw/AugustandSeptlunch26.pdf",
           "contentHash": "6c01fef18e1f589a544713c21e4d6b31b0063ef7fdbfaa4537dd30cc7b6a64eb",
           "reviewedAt": "2026-09-29T05:26:39Z",
-          "checkedAt": "2026-09-29T05:53:55.925Z"
+          "checkedAt": "2026-09-29T16:01:36.019Z"
         }
       ],
       "pendingDocuments": [],
@@ -1109,44 +1103,44 @@
         "sourceId": "abvm-2026-09-official"
       }
     ],
-    "lunchMenuHash": "a9c164cc468658cb524221bcd89a40c40378f42153f344f543bc40706ac23363"
+    "lunchMenuHash": "05fdd552922dca1f0b7ba5ffe7da26128095bd5e264f247dc638b31fc7145adb"
   },
-  "sourceLastCheckedAt": "2026-09-29T05:53:52.959Z",
+  "sourceLastCheckedAt": "2026-09-29T16:01:33.884Z",
   "sourcePages": [
     {
       "title": "Home",
       "url": "https://sites.google.com/view/abvmgr2/home",
-      "checkedAt": "2026-09-29T05:53:52.959Z",
-      "contentHash": "cd71039982b534bed71d95d29e5e7d25743cba03e6d614b09048c1fd7e78b858"
+      "checkedAt": "2026-09-29T16:01:33.884Z",
+      "contentHash": "57a886fcdbb4c0fc796de04f82966518d3bfe03ffd4216d887640c45180e5079"
     },
     {
       "title": "Homework",
       "url": "https://sites.google.com/view/abvmgr2/homework",
-      "checkedAt": "2026-09-29T05:53:52.959Z",
-      "contentHash": "21e9e72f4026109383c4baefe80c7b74c74df9c9e13e5751690a3a7b7d91b32c"
+      "checkedAt": "2026-09-29T16:01:33.884Z",
+      "contentHash": "faabffa7a06fe6eeefa98e3204993203dd9d2f2a623f5b70ba1b7ac55ef04fde"
     },
     {
       "title": "Reading Work",
       "url": "https://sites.google.com/view/abvmgr2/reading-work",
-      "checkedAt": "2026-09-29T05:53:52.959Z",
-      "contentHash": "32d208056bf55cd9cea8ef374fc89aea482d3586c28ba99da1b242cedd10a705"
+      "checkedAt": "2026-09-29T16:01:33.884Z",
+      "contentHash": "b5a9fa60804c56f69b6e82fa276d8534eebd69e167f69121081a6bc1eacb94e1"
     },
     {
       "title": "Weekly Spelling List",
       "url": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-      "checkedAt": "2026-09-29T05:53:52.959Z",
+      "checkedAt": "2026-09-29T16:01:33.884Z",
       "contentHash": "d077ca4b2b95d79755f88f5a726e6b5acf3a52c6575c3d986a16ca1c834b5777"
     },
     {
       "title": "Tests",
       "url": "https://sites.google.com/view/abvmgr2/tests",
-      "checkedAt": "2026-09-29T05:53:52.959Z",
-      "contentHash": "c61d0d245852807fbe1e6cea155cb92ac1a9876cefa5cdf134e72e15e47111c2"
+      "checkedAt": "2026-09-29T16:01:33.884Z",
+      "contentHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c"
     },
     {
       "title": "Religion",
       "url": "https://sites.google.com/view/abvmgr2/religion",
-      "checkedAt": "2026-09-29T05:53:52.959Z",
+      "checkedAt": "2026-09-29T16:01:33.884Z",
       "contentHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c"
     }
   ],
