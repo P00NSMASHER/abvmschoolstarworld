@@ -183,3 +183,23 @@ test("manual refresh explains when no newer verified data exists",async({browser
   await expect(page.locator(".freshness")).toHaveClass(/stale/);
   await context.close();
 });
+
+
+test("Family counts distinct test days instead of individual tests",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-09-29T13:00:00Z"));
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  const fixture=structuredClone(source);
+  fixture.pack.importantDates=[
+    {date:"Tuesday, Sept. 29",label:"Math test",kind:"test"},
+    {date:"Tuesday, Sept. 29",label:"Reading test",kind:"test"},
+    {date:"Wednesday, Sept. 30",label:"Grammar test",kind:"test"}
+  ];
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({json:fixture}));
+  await page.goto("http://127.0.0.1:4173/#family");
+  const stats=page.locator(".family-stats div").first();
+  await expect(stats).toContainText("2");
+  await expect(stats).toContainText("test days");
+  await context.close();
+});
