@@ -239,7 +239,7 @@ function materialMath(pack,variant,out){
   ]);
   add(out,{
     id:"mat-sub12-fact-b-v"+variant,subject:"Math",skill:"subtraction-within-12",tier:"material",
-    prompt:`What is ${row.c} − ${row.d}?`,
+    prompt:`Solve this subtraction fact: ${row.c} − ${row.d}. What is the difference?`,
     choices:shuffled([String(row.c-row.d),String(row.c-row.d+1),String(row.c-row.d-1)],"m4"+variant),
     answer:String(row.c-row.d),
     explanation:`${row.c} take away ${row.d} leaves ${row.c-row.d}.`,
