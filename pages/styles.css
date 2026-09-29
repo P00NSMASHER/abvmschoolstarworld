@@ -1186,3 +1186,45 @@ html,body{margin:0}
 }
 .lunch-card.lunch-missing p,
 .lunch-card.lunch-missing strong{color:#66727a}
+
+
+/* v73 — tap freshness status to force a live data check */
+button.freshness{
+  appearance:none;
+  -webkit-appearance:none;
+  font:inherit;
+  text-align:left;
+  cursor:pointer;
+  max-width:100%;
+}
+button.freshness strong{
+  color:inherit;
+  font:inherit;
+  font-weight:800;
+  min-width:0;
+}
+button.freshness b{
+  color:currentColor;
+  font-size:15px;
+  line-height:1;
+  margin-left:2px;
+  opacity:.72;
+}
+button.freshness:focus-visible{
+  outline:3px solid #1670b8;
+  outline-offset:3px;
+}
+button.freshness:active:not(:disabled){
+  transform:scale(.985);
+}
+button.freshness:disabled{
+  cursor:wait;
+  opacity:.92;
+}
+button.freshness.is-refreshing b{
+  animation:abvm-refresh-spin .8s linear infinite;
+}
+@keyframes abvm-refresh-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){
+  button.freshness.is-refreshing b{animation:none}
+}
