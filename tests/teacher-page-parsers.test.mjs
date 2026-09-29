@@ -128,3 +128,11 @@ test('teacherContentLines treats Religion as navigation on the spelling page', (
     []
   );
 });
+
+
+test('parseStoryTitles handles malformed mixed story quotes from the live teacher page', () => {
+  assert.deepEqual(
+    parseStoryTitles('"Little Flap Learns to Fly" \'Help! A Story of Friendship'),
+    ['Little Flap Learns to Fly', 'Help! A Story of Friendship']
+  );
+});
