@@ -284,7 +284,6 @@ test("required parent tasks are not mislabeled as if participating",async({brows
 
 
 test("Study derives spelling review date and STAR reminder from current school dates",async({browser})=>{
-  const sourceResponse=await fetch("data:application/json,{}").catch(()=>null);
   const context=await browser.newContext({serviceWorkers:"block"});
   const page=await context.newPage();
   await page.clock.setFixedTime(new Date("2026-09-29T13:00:00Z"));
