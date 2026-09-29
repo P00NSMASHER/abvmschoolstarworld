@@ -56,3 +56,18 @@ test("next-month summary exposes upcoming October school items",async({page})=>{
   const text=await card.textContent();
   expect(text||"").toMatch(/Picture Day|Business Casual|HSA|Spelling/);
 });
+
+
+test("school-year date parsing crosses December into January in the actual app",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-12-31T17:00:00Z"));
+  await page.goto("http://127.0.0.1:4173/#calendar");
+  await expect(page.locator(".calendar-card")).toBeVisible({timeout:10_000});
+  await page.locator('[data-cal-day^="2026-12-31"]').click();
+  await expect(page.locator(".calendar-day-card")).toContainText("Christmas Holiday");
+  await page.getByRole("button",{name:"Next month"}).click();
+  await page.locator('[data-cal-day^="2027-01-01"]').click();
+  await expect(page.locator(".calendar-day-card")).toContainText("New Year");
+  await context.close();
+});
