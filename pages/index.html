@@ -55,6 +55,20 @@
     </section>
   </main>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script>
+    (() => {
+      if (!("serviceWorker" in navigator)) return;
+      const reloadKey = "abvm-sw-reloaded-v72";
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (sessionStorage.getItem(reloadKey) === "1") return;
+        sessionStorage.setItem(reloadKey, "1");
+        location.reload();
+      });
+      navigator.serviceWorker.register("./sw.js", { updateViaCache: "none" })
+        .then(registration => registration.update())
+        .catch(() => {});
+    })();
+  </script>
   <script src="./app.js?v=72"></script>
 </body>
 </html>
