@@ -187,10 +187,17 @@ function upcomingReminderTexts(date=today(),limit=6){
     .sort((a,b)=>a.range[0]-b.range[0]).map(row=>row.text);
   return [...new Set(timed)].slice(0,limit);
 }
+function linkedNoticeExpiry(text){
+  if(/^Picture (?:ordering|backgrounds):/i.test(String(text||""))){
+    const picture=(pack?.importantDates||[]).find(item=>/\bPicture Day\b/i.test(item.label||""));
+    return eventDateRange(picture?.date)?.[1]||null;
+  }
+  return null;
+}
 function currentNoticeTexts(date=today()){
   return (pack?.parentNotices||[]).filter(text=>{
-    const range=eventDateRange(text);
-    return !range||range[1]>=date;
+    const range=eventDateRange(text),expiry=range?.[1]||linkedNoticeExpiry(text);
+    return !expiry||expiry>=date;
   });
 }
 function specialsRows(){
