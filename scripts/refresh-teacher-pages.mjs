@@ -253,7 +253,7 @@ const sightWords = requireLine(readingLines, 'Sight Words:', 'Reading Work');
 const phonics = requireLine(readingLines, 'Phonics:', 'Reading Work');
 const vocabulary = requireLine(readingLines, 'Vocab Words:', 'Reading Work');
 const wordStructure = requireLine(readingLines, 'Word Structure:', 'Reading Work');
-const comprehension = requireLine(readingLines, 'Reading Comprehension:', 'Reading Work');
+const comprehension = cleanTeacherText(requireLine(readingLines, 'Reading Comprehension:', 'Reading Work'));
 const testItems = parseDatedLines(pages.Tests.lines).map(item => ({ ...item, kind: 'test', source: 'teacher-tests' }));
 if (testItems.length < 2) throw new Error('Tests page did not contain enough dated tests to publish safely.');
 
