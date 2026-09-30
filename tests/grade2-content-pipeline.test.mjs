@@ -36,6 +36,9 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
     'religion-creation-care',
     'religion-five-senses',
     'religion-jesus-savior',
+    'religion-disciples',
+    'religion-mary-church',
+    'religion-seed-new-life',
     'religion-gifts-choices',
   ]) {
     assert.equal(ids.has(expected), true, `missing current skill: ${expected}`);
@@ -54,6 +57,7 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
   assert.deepEqual(pipeline.qa.subjectCoverage, ['Math', 'Reading / ELA', 'Religion', 'Spelling / Handwriting']);
   assert.equal(ids.has('vocabulary-in-context'), false, 'must not invent vocabulary definitions absent from source');
   assert.ok(pipeline.coverage.some(row => row.status === 'SOURCE_INSUFFICIENT' && /vocabulary definitions/i.test(row.topic)));
+  assert.ok(pipeline.coverage.some(row => row.status === 'SOURCE_INSUFFICIENT' && /vine and the branches/i.test(row.topic)));
   assert.ok(pipeline.coverage.some(row => row.status === 'COVERED' && row.skillId === 'high-frequency-word-use'));
   assert.ok(pipeline.coverage.some(row => row.status === 'NOT_PRACTICED_BY_DESIGN' && /^Story:/i.test(row.topic)));
   const sightQuestions = pipeline.questions.filter(question => question.skill === 'high-frequency-word-use');
@@ -79,7 +83,9 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
   for (const skill of ['sentence-types','consonant-blends','cvc-structure','long-short-a','suffix-ed-ing','theme','visualize','dialogue','subtraction-within-12']) {
     assert.ok((pipeline.qa.questionsPerSkill?.[skill] || 0) >= 3, `expected semantic sibling family for ${skill}`);
   }
-  assert.ok((pipeline.qa.questionsPerSkill?.['religion-trinity'] || 0) >= 2, 'Trinity intentionally keeps a smaller strict-source bank');
+  for (const skill of ['religion-trinity','religion-disciples','religion-mary-church','religion-seed-new-life']) {
+    assert.ok((pipeline.qa.questionsPerSkill?.[skill] || 0) >= 2, `${skill} intentionally keeps a small strict-source sibling bank`);
+  }
   assert.ok((pipeline.qa.questionTypeCounts?.transfer || 0) > 0);
   assert.ok((pipeline.qa.questionTypeCounts?.reasoning || 0) > 0);
   assert.ok((pipeline.qa.dokCounts?.[1] || 0) > 0);
