@@ -50,3 +50,16 @@ test('unknown Dream Goals are rejected rather than creating a hidden catalog', a
   });
   expect(result).toContain('Unknown Study Star Dream Goal');
 });
+
+
+test('Dream Goal caps accessible progress at the goal target after unlock', async ({ page }) => {
+  const html=await page.evaluate(()=>{
+    const e=window.ABVMStudyGames,v=window.ABVMStudyGameView;
+    e.selectStudyStarGoal();
+    return v.goal({state:e.studyStarGoalProgress(90)});
+  });
+  expect(html).toContain('90 / 50 Stars');
+  expect(html).toContain('aria-valuemax="50"');
+  expect(html).toContain('aria-valuenow="50"');
+  expect(html).not.toContain('aria-valuenow="90"');
+});
