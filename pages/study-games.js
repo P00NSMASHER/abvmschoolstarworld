@@ -1183,7 +1183,7 @@ function noteItemAttempt(question,index){
   row.LastUpdatedAt=Date.now();data.items[id]=row;writeItemQuality(data);return row;
 }
 function pointBiserial(row){
-  const n=Number(row?.AbilityN)||0,c=Number(row?.NormalCorrect)||0,w=Number(row?.NormalWrong)||0;
+  const n=Number(row?.AbilityN)||0,c=Number(row?.NormalCorrect??row?.Correct)||0,w=Number(row?.NormalWrong??row?.Wrong)||0;
   if(n<2||c<1||w<1)return null;
   const sum=Number(row.AbilitySum)||0,sumSq=Number(row.AbilitySumSq)||0,correctSum=Number(row.CorrectAbilitySum)||0;
   const variance=Math.max(0,(sumSq/n)-Math.pow(sum/n,2)),sd=Math.sqrt(variance);
