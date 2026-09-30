@@ -41,6 +41,7 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
 
   assert.equal(pipeline.qa.status, 'pass');
   assert.equal(pipeline.qa.rejectedCount, 0);
+  assert.deepEqual(pipeline.qa.subjectCoverage, ['Math', 'Reading / ELA', 'Religion', 'Spelling / Handwriting']);
   assert.ok(pipeline.questions.length >= pipeline.skills.length);
   assert.equal(validateGrade2ContentPipeline(pipeline).length, 0);
 
