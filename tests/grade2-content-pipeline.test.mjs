@@ -29,6 +29,7 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
     'suffix-ed-ing',
     'theme',
     'visualize',
+    'dialogue',
     'religion-trinity',
     'religion-image-likeness',
     'religion-creation-care',
