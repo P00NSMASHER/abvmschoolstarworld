@@ -14,14 +14,14 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-09-30T13:28:07.733Z",
+  "sourceLastSeenAt": "2026-09-30T13:38:06.942Z",
   "sourceCapturedAt": "2026-09-29T19:20:03.923Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-48dd7ac3b25e5d8fdda7",
     "sourceCapturedAt": "2026-09-29T19:20:03.923Z",
-    "generatedAt": "2026-09-30T13:28:07.733Z",
+    "generatedAt": "2026-09-30T13:38:06.942Z",
     "weekLabel": "Week of September 28, 2026",
     "summary": "Current Grade 2 teacher-site material: Homework lists Reading “Read”, parent task “Cover books”, Reading “Keep Reading Log and Behavior Chart in the HW folder”, and Homework Folder “Return everything in the HW folder”. Upcoming tests include Subtraction to 12 on Tuesday, Sept. 29, Grammar (types of sentences) on Wednesday, Sept. 30, Spelling (short a / long a) / Handwriting on Friday, Oct. 2, and Reading on Wednesday, Oct. 7. 3 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
@@ -831,7 +831,7 @@
       "Christmas Caroling date is TBD.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
-    "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+    "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
     "uploadedNoticeHash": "uploaded-notices-14d4298a59d340258558",
     "uploadedNoticeTopics": {
       "reminders": [
@@ -862,8 +862,8 @@
     "lunchMenuSource": {
       "status": "current-week",
       "retrievalState": "verified",
-      "checkedAt": "2026-09-30T13:28:10.031Z",
-      "lastAttemptAt": "2026-09-30T13:28:07.733Z",
+      "checkedAt": "2026-09-30T13:38:09.517Z",
+      "lastAttemptAt": "2026-09-30T13:38:06.942Z",
       "provider": "Saint Clair Area School District",
       "school": "Assumption BVM School",
       "feedUrl": "https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu",
@@ -878,14 +878,14 @@
           "url": "https://resources.finalsite.net/images/v1787165302/adeducatorsorg/gvzkkrduwn7fce9l3vsw/AugustandSeptlunch26.pdf",
           "contentHash": "6c01fef18e1f589a544713c21e4d6b31b0063ef7fdbfaa4537dd30cc7b6a64eb",
           "reviewedAt": "2026-09-29T05:26:39Z",
-          "checkedAt": "2026-09-30T13:28:10.031Z"
+          "checkedAt": "2026-09-30T13:38:09.716Z"
         },
         {
           "id": "abvm-2026-10-official",
           "url": "https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1790692534/adeducatorsorg/xdbrqzybydptd5srbor0/Octobercalendar.heic",
           "contentHash": "a99ce9385295921c9fff19ae4051732da45f7c38df077d30d9b62577c8c6eb45",
           "reviewedAt": "2026-09-29T19:36:00Z",
-          "checkedAt": "2026-09-30T13:28:10.060Z"
+          "checkedAt": "2026-09-30T13:38:09.517Z"
         }
       ],
       "pendingDocuments": [],
@@ -1157,13 +1157,13 @@
         "sourceId": "abvm-2026-10-official"
       }
     ],
-    "lunchMenuHash": "107cd772a9c2b611bc1297c35f127a6da83058a922d7025cc83272f19ac580dc",
+    "lunchMenuHash": "bf9a04ae60bd9ad1d66e45cad709e7ada66e39dca19529efb5c0c3732c8f53f6",
     "contentPipeline": {
       "schemaVersion": 2,
       "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-      "generatedAt": "2026-09-30T13:28:07.733Z",
+      "generatedAt": "2026-09-30T13:38:06.942Z",
       "sourceHash": "teacher-pages-48dd7ac3b25e5d8fdda7",
-      "bankFingerprint": "556c2588",
+      "bankFingerprint": "1f36f23a",
       "lifecycleStage": "QA_PASSED",
       "safetyState": "SAFE_PARTIAL",
       "sourcePolicy": {
@@ -1197,7 +1197,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:97a8630afc0d062e9eb4dc6f7c4e8e41827a3c0bae739d8c49bc0a04726d2d73",
             "matchedEvidence": [
               "Wednesday Sept. 30: Grammar (types of sentences)"
@@ -1224,7 +1224,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -1251,7 +1251,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -1278,7 +1278,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -1305,7 +1305,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -1332,7 +1332,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -1359,7 +1359,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -1386,7 +1386,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -1425,7 +1425,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -1452,7 +1452,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:069bfb1da5808507bd3cb6f634f86a6eef21729d26368c999187bb4f63410d2a",
             "matchedEvidence": [
               "Tuesday Sept. 29: Subtraction to 12"
@@ -1479,7 +1479,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -1506,7 +1506,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -1533,7 +1533,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -1560,7 +1560,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -1587,7 +1587,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -1614,7 +1614,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -1641,7 +1641,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -1668,7 +1668,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -1695,7 +1695,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -1952,7 +1952,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:97a8630afc0d062e9eb4dc6f7c4e8e41827a3c0bae739d8c49bc0a04726d2d73",
             "matchedEvidence": [
               "Wednesday Sept. 30: Grammar (types of sentences)"
@@ -2032,7 +2032,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -2112,7 +2112,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -2192,7 +2192,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -2272,7 +2272,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -2352,7 +2352,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -2432,7 +2432,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -2512,7 +2512,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -2593,7 +2593,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -2674,7 +2674,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -2755,7 +2755,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -2836,7 +2836,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -2917,7 +2917,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -2998,7 +2998,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3079,7 +3079,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3160,7 +3160,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3241,7 +3241,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3322,7 +3322,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3402,7 +3402,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:069bfb1da5808507bd3cb6f634f86a6eef21729d26368c999187bb4f63410d2a",
             "matchedEvidence": [
               "Tuesday Sept. 29: Subtraction to 12"
@@ -3482,7 +3482,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -3562,7 +3562,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -3600,7 +3600,7 @@
           "dok": 2,
           "cognitiveDemand": "skill-and-concept-application",
           "difficulty": 2,
-          "questionType": "direct",
+          "questionType": "transfer",
           "choiceDiagnostics": {
             "Leaving trash beside a stream": {
               "misconception": "religion-creation-care-distractor",
@@ -3634,7 +3634,7 @@
             ]
           },
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "f63af35f",
+          "contentFingerprint": "ad8fbc99",
           "variantFingerprint": "52857af7",
           "presentationFingerprint": "cd61cee9",
           "sourceLineage": {
@@ -3642,7 +3642,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -3722,7 +3722,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -3802,7 +3802,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -3882,7 +3882,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -3962,7 +3962,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -4042,7 +4042,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -4122,7 +4122,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -4202,7 +4202,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:97a8630afc0d062e9eb4dc6f7c4e8e41827a3c0bae739d8c49bc0a04726d2d73",
             "matchedEvidence": [
               "Wednesday Sept. 30: Grammar (types of sentences)"
@@ -4282,7 +4282,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:97a8630afc0d062e9eb4dc6f7c4e8e41827a3c0bae739d8c49bc0a04726d2d73",
             "matchedEvidence": [
               "Wednesday Sept. 30: Grammar (types of sentences)"
@@ -4362,7 +4362,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -4442,7 +4442,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -4522,7 +4522,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -4602,7 +4602,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -4682,7 +4682,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -4762,7 +4762,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -4842,7 +4842,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -4922,7 +4922,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -5002,7 +5002,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -5082,7 +5082,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -5162,7 +5162,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -5242,7 +5242,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -5322,7 +5322,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -5402,7 +5402,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -5482,7 +5482,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:069bfb1da5808507bd3cb6f634f86a6eef21729d26368c999187bb4f63410d2a",
             "matchedEvidence": [
               "Tuesday Sept. 29: Subtraction to 12"
@@ -5562,10 +5562,90 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:069bfb1da5808507bd3cb6f634f86a6eef21729d26368c999187bb4f63410d2a",
             "matchedEvidence": [
               "Tuesday Sept. 29: Subtraction to 12"
+            ]
+          }
+        },
+        {
+          "id": "auto-religion-trinity-the-trinity-7cc1ac",
+          "templateId": "grade2-religion-trinity-v1",
+          "subject": "Religion",
+          "skill": "religion-trinity",
+          "assessedSkillIds": [
+            "religion-trinity"
+          ],
+          "prompt": "According to the current Religion lesson, a note says “one God in three Persons: Father, Son, and Holy Spirit.” Which lesson topic does that statement describe?",
+          "choices": [
+            "being made in God's image and likeness",
+            "the Trinity",
+            "caring for God's creation"
+          ],
+          "answer": "the Trinity",
+          "explanation": "The current lesson uses one God in three Persons — Father, Son, and Holy Spirit — to explain the Trinity.",
+          "hint": "Match the three Persons named in the statement to the lesson topic.",
+          "sourceFact": "Verified Grade 2 skill: The Trinity",
+          "sourceEvidence": [
+            "Trinity"
+          ],
+          "sourceMode": "STRICT_SOURCE",
+          "supportType": "explicit",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "ABVM.RELIGION.CURRENT"
+          ],
+          "domain": "Religion",
+          "dok": 2,
+          "cognitiveDemand": "skill-and-concept-application",
+          "difficulty": 2,
+          "questionType": "transfer",
+          "choiceDiagnostics": {
+            "being made in God's image and likeness": {
+              "misconception": "religion-trinity-distractor",
+              "feedback": "Recheck the the trinity skill and use the clue in the question."
+            },
+            "caring for God's creation": {
+              "misconception": "religion-trinity-distractor",
+              "feedback": "Recheck the the trinity skill and use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "being made in God's image and likeness": 0,
+              "caring for God's creation": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "religion-trinity"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "1a449277",
+          "variantFingerprint": "a33ff84a",
+          "presentationFingerprint": "41190b66",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Religion",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
+            "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
+            "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
+            "matchedEvidence": [
+              "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
             ]
           }
         },
@@ -5580,8 +5660,8 @@
           "prompt": "According to the current Religion lesson, which statement best explains the Trinity?",
           "choices": [
             "People are made in God’s image and likeness and can think, choose, and love.",
-            "One God in three Persons: Father, Son, and Holy Spirit.",
-            "We are responsible for caring for God’s gift of creation."
+            "We are responsible for caring for God’s gift of creation.",
+            "One God in three Persons: Father, Son, and Holy Spirit."
           ],
           "answer": "One God in three Persons: Father, Son, and Holy Spirit.",
           "explanation": "The current lesson describes the Trinity as one God in three Persons.",
@@ -5597,9 +5677,9 @@
             "ABVM.RELIGION.CURRENT"
           ],
           "domain": "Religion",
-          "dok": 2,
-          "cognitiveDemand": "skill-and-concept-application",
-          "difficulty": 2,
+          "dok": 3,
+          "cognitiveDemand": "strategic-reasoning",
+          "difficulty": 3,
           "questionType": "reasoning",
           "choiceDiagnostics": {
             "People are made in God’s image and likeness and can think, choose, and love.": {
@@ -5636,13 +5716,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "8af5399d",
           "variantFingerprint": "50b6c144",
-          "presentationFingerprint": "8b7610c0",
+          "presentationFingerprint": "6feff210",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -5650,22 +5730,22 @@
           }
         },
         {
-          "id": "auto-religion-image-likeness-thinking-choosing-and-loving-fbf766",
+          "id": "auto-religion-image-likeness-being-made-in-god-s-image-and-likeness-480aa4",
           "templateId": "grade2-religion-image-likeness-v1",
           "subject": "Religion",
           "skill": "religion-image-likeness",
           "assessedSkillIds": [
             "religion-image-likeness"
           ],
-          "prompt": "According to the current Religion lesson, which abilities are connected with being made in God's image and likeness?",
+          "prompt": "According to the current Religion lesson, which lesson idea is explained by the words “we can think, choose, and love”?",
           "choices": [
-            "running, jumping, and throwing",
-            "reading, writing, and drawing",
-            "thinking, choosing, and loving"
+            "being made in God's image and likeness",
+            "the Trinity",
+            "using our senses to enjoy creation"
           ],
-          "answer": "thinking, choosing, and loving",
-          "explanation": "The current lesson says people are made in God's image and likeness and can think, choose, and love.",
-          "hint": "Use the exact abilities named in the current lesson.",
+          "answer": "being made in God's image and likeness",
+          "explanation": "The current lesson connects thinking, choosing, and loving with being made in God's image and likeness.",
+          "hint": "Match the three abilities to the lesson concept they explain.",
           "sourceFact": "Verified Grade 2 skill: Made in God's image and likeness",
           "sourceEvidence": [
             "made in God's image"
@@ -5677,16 +5757,16 @@
             "ABVM.RELIGION.CURRENT"
           ],
           "domain": "Religion",
-          "dok": 1,
-          "cognitiveDemand": "recall-and-fluency",
+          "dok": 2,
+          "cognitiveDemand": "skill-and-concept-application",
           "difficulty": 2,
-          "questionType": "direct",
+          "questionType": "transfer",
           "choiceDiagnostics": {
-            "running, jumping, and throwing": {
+            "the Trinity": {
               "misconception": "religion-image-likeness-distractor",
               "feedback": "Recheck the made in god's image and likeness skill and use the clue in the question."
             },
-            "reading, writing, and drawing": {
+            "using our senses to enjoy creation": {
               "misconception": "religion-image-likeness-distractor",
               "feedback": "Recheck the made in god's image and likeness skill and use the clue in the question."
             }
@@ -5698,8 +5778,8 @@
               "Uses the clue, rule, or evidence required by the item."
             ],
             "partialCredit": {
-              "running, jumping, and throwing": 0,
-              "reading, writing, and drawing": 0
+              "the Trinity": 0,
+              "using our senses to enjoy creation": 0
             }
           },
           "evidenceContract": {
@@ -5714,15 +5794,15 @@
             ]
           },
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "d6ad76d8",
-          "variantFingerprint": "50aeec38",
-          "presentationFingerprint": "92929ada",
+          "contentFingerprint": "26fdf051",
+          "variantFingerprint": "edc609ca",
+          "presentationFingerprint": "d8f47886",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -5730,43 +5810,123 @@
           }
         },
         {
-          "id": "auto-religion-creation-care-turning-off-running-water-after-washing-your-hands-ec8f8c",
+          "id": "auto-religion-image-likeness-god-s-image-and-likeness-people-can-think-choose-and-love-2af68f",
+          "templateId": "grade2-religion-image-likeness-v1",
+          "subject": "Religion",
+          "skill": "religion-image-likeness",
+          "assessedSkillIds": [
+            "religion-image-likeness"
+          ],
+          "prompt": "According to the current Religion lesson, which pair correctly connects a lesson idea with its supporting detail?",
+          "choices": [
+            "Trinity → people use five senses to enjoy creation",
+            "God's image and likeness → people can think, choose, and love",
+            "Disciples → three Persons in one God"
+          ],
+          "answer": "God's image and likeness → people can think, choose, and love",
+          "explanation": "The current lesson specifically links God's image and likeness with the abilities to think, choose, and love.",
+          "hint": "Choose the pair whose two parts are directly connected in the current lesson.",
+          "sourceFact": "Verified Grade 2 skill: Made in God's image and likeness",
+          "sourceEvidence": [
+            "made in God's image"
+          ],
+          "sourceMode": "STRICT_SOURCE",
+          "supportType": "explicit",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "ABVM.RELIGION.CURRENT"
+          ],
+          "domain": "Religion",
+          "dok": 3,
+          "cognitiveDemand": "strategic-reasoning",
+          "difficulty": 3,
+          "questionType": "reasoning",
+          "choiceDiagnostics": {
+            "Trinity → people use five senses to enjoy creation": {
+              "misconception": "religion-image-likeness-distractor",
+              "feedback": "Recheck the made in god's image and likeness skill and use the clue in the question."
+            },
+            "Disciples → three Persons in one God": {
+              "misconception": "religion-image-likeness-distractor",
+              "feedback": "Recheck the made in god's image and likeness skill and use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "Trinity → people use five senses to enjoy creation": 0,
+              "Disciples → three Persons in one God": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "religion-image-likeness"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "7a86e7d7",
+          "variantFingerprint": "d6a2ddb9",
+          "presentationFingerprint": "f03498d0",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Religion",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
+            "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
+            "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
+            "matchedEvidence": [
+              "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
+            ]
+          }
+        },
+        {
+          "id": "auto-religion-creation-care-take-care-of-them-9ee8f3",
           "templateId": "grade2-religion-creation-care-v1",
           "subject": "Religion",
           "skill": "religion-creation-care",
           "assessedSkillIds": [
             "religion-creation-care"
           ],
-          "prompt": "Which choice best applies the current Religion lesson about caring for creation?",
+          "prompt": "According to the current Religion lesson, what responsibility is listed for God's gifts of creation?",
           "choices": [
-            "Turning off running water after washing your hands",
-            "Leaving trash beside a stream",
-            "Breaking plants for fun"
+            "Ignore them.",
+            "Use them without responsibility.",
+            "Take care of them."
           ],
-          "answer": "Turning off running water after washing your hands",
-          "explanation": "Protecting resources is one way to care for creation responsibly.",
-          "hint": "Choose the action that protects rather than wastes or harms.",
+          "answer": "Take care of them.",
+          "explanation": "The current lesson says it is our responsibility to take care of God's gifts of creation.",
+          "hint": "Use the responsibility stated directly in the current lesson.",
           "sourceFact": "Verified Grade 2 skill: Caring for God's creation",
           "sourceEvidence": [
             "take care of God's gifts of creation"
           ],
-          "sourceMode": "CURATED_CONTEXT",
-          "supportType": "deterministic_transform",
+          "sourceMode": "STRICT_SOURCE",
+          "supportType": "explicit",
           "provenance": "verified-abvm-skill-template",
           "standards": [
             "ABVM.RELIGION.CURRENT"
           ],
           "domain": "Religion",
-          "dok": 2,
-          "cognitiveDemand": "skill-and-concept-application",
+          "dok": 1,
+          "cognitiveDemand": "recall-and-fluency",
           "difficulty": 2,
-          "questionType": "transfer",
+          "questionType": "direct",
           "choiceDiagnostics": {
-            "Leaving trash beside a stream": {
+            "Ignore them.": {
               "misconception": "religion-creation-care-distractor",
               "feedback": "Recheck the caring for god's creation skill and use the clue in the question."
             },
-            "Breaking plants for fun": {
+            "Use them without responsibility.": {
               "misconception": "religion-creation-care-distractor",
               "feedback": "Recheck the caring for god's creation skill and use the clue in the question."
             }
@@ -5778,8 +5938,8 @@
               "Uses the clue, rule, or evidence required by the item."
             ],
             "partialCredit": {
-              "Leaving trash beside a stream": 0,
-              "Breaking plants for fun": 0
+              "Ignore them.": 0,
+              "Use them without responsibility.": 0
             }
           },
           "evidenceContract": {
@@ -5794,15 +5954,15 @@
             ]
           },
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "64757b08",
-          "variantFingerprint": "8731c20c",
-          "presentationFingerprint": "00d235ab",
+          "contentFingerprint": "feef49b7",
+          "variantFingerprint": "74337d70",
+          "presentationFingerprint": "e9e6bcbb",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -5810,22 +5970,102 @@
           }
         },
         {
-          "id": "auto-religion-jesus-savior-new-life-in-grace-81bf86",
+          "id": "auto-religion-creation-care-it-protects-a-resource-instead-of-wasting-it-3afb17",
+          "templateId": "grade2-religion-creation-care-v1",
+          "subject": "Religion",
+          "skill": "religion-creation-care",
+          "assessedSkillIds": [
+            "religion-creation-care"
+          ],
+          "prompt": "Which explanation best connects turning off running water with the current Religion lesson about caring for God's creation?",
+          "choices": [
+            "It protects a resource instead of wasting it.",
+            "It shows that water should never be used.",
+            "It changes the number of Persons in the Trinity."
+          ],
+          "answer": "It protects a resource instead of wasting it.",
+          "explanation": "Protecting resources is a concrete way to apply the lesson's responsibility to care for creation.",
+          "hint": "Choose the explanation that protects rather than wastes a gift of creation.",
+          "sourceFact": "Verified Grade 2 skill: Caring for God's creation",
+          "sourceEvidence": [
+            "take care of God's gifts of creation"
+          ],
+          "sourceMode": "CURATED_CONTEXT",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "ABVM.RELIGION.CURRENT"
+          ],
+          "domain": "Religion",
+          "dok": 3,
+          "cognitiveDemand": "strategic-reasoning",
+          "difficulty": 3,
+          "questionType": "reasoning",
+          "choiceDiagnostics": {
+            "It shows that water should never be used.": {
+              "misconception": "religion-creation-care-distractor",
+              "feedback": "Recheck the caring for god's creation skill and use the clue in the question."
+            },
+            "It changes the number of Persons in the Trinity.": {
+              "misconception": "religion-creation-care-distractor",
+              "feedback": "Recheck the caring for god's creation skill and use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "It shows that water should never be used.": 0,
+              "It changes the number of Persons in the Trinity.": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "religion-creation-care"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "dca7f998",
+          "variantFingerprint": "3ec0d197",
+          "presentationFingerprint": "ae6fb09c",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Religion",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
+            "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
+            "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
+            "matchedEvidence": [
+              "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
+            ]
+          }
+        },
+        {
+          "id": "auto-religion-jesus-savior-jesus-is-our-savior-69df60",
           "templateId": "grade2-religion-jesus-savior-v1",
           "subject": "Religion",
           "skill": "religion-jesus-savior",
           "assessedSkillIds": [
             "religion-jesus-savior"
           ],
-          "prompt": "According to the current Religion lesson, what new life does Jesus give us?",
+          "prompt": "According to the current Religion lesson, which lesson idea is described by “Jesus died for our sins and gives us new life in grace”?",
           "choices": [
-            "God’s gift of creation",
-            "new life in grace",
-            "the five senses"
+            "We use our senses to enjoy creation.",
+            "Jesus is our Savior.",
+            "Mary is the mother of the Church."
           ],
-          "answer": "new life in grace",
-          "explanation": "The lesson says Jesus gives us new life in grace.",
-          "hint": "Use the exact phrase connected with Jesus in the current lesson.",
+          "answer": "Jesus is our Savior.",
+          "explanation": "The current lesson connects Jesus as Savior with his death for our sins and the gift of new life in grace.",
+          "hint": "Match the description about sin and grace to the lesson title it explains.",
           "sourceFact": "Verified Grade 2 skill: Jesus our Savior",
           "sourceEvidence": [
             "new life of grace"
@@ -5837,16 +6077,16 @@
             "ABVM.RELIGION.CURRENT"
           ],
           "domain": "Religion",
-          "dok": 1,
-          "cognitiveDemand": "recall-and-fluency",
+          "dok": 2,
+          "cognitiveDemand": "skill-and-concept-application",
           "difficulty": 2,
-          "questionType": "direct",
+          "questionType": "transfer",
           "choiceDiagnostics": {
-            "God’s gift of creation": {
+            "We use our senses to enjoy creation.": {
               "misconception": "religion-jesus-savior-distractor",
               "feedback": "Recheck the jesus our savior skill and use the clue in the question."
             },
-            "the five senses": {
+            "Mary is the mother of the Church.": {
               "misconception": "religion-jesus-savior-distractor",
               "feedback": "Recheck the jesus our savior skill and use the clue in the question."
             }
@@ -5858,8 +6098,8 @@
               "Uses the clue, rule, or evidence required by the item."
             ],
             "partialCredit": {
-              "God’s gift of creation": 0,
-              "the five senses": 0
+              "We use our senses to enjoy creation.": 0,
+              "Mary is the mother of the Church.": 0
             }
           },
           "evidenceContract": {
@@ -5874,15 +6114,15 @@
             ]
           },
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "385c8ac8",
-          "variantFingerprint": "1afc6318",
-          "presentationFingerprint": "f3187f90",
+          "contentFingerprint": "7790914d",
+          "variantFingerprint": "3d5aef22",
+          "presentationFingerprint": "0f62f0d2",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -5890,22 +6130,102 @@
           }
         },
         {
-          "id": "auto-religion-disciples-a-disciple-is-a-friend-and-follower-of-jesus-e250d8",
+          "id": "auto-religion-jesus-savior-he-died-for-our-sins-and-gives-us-new-life-in-grace-89c106",
+          "templateId": "grade2-religion-jesus-savior-v1",
+          "subject": "Religion",
+          "skill": "religion-jesus-savior",
+          "assessedSkillIds": [
+            "religion-jesus-savior"
+          ],
+          "prompt": "According to the current Religion lesson, which two ideas are connected in the explanation of Jesus as our Savior?",
+          "choices": [
+            "He is Mary’s son and people have five senses.",
+            "Creation has gifts and disciples are friends.",
+            "He died for our sins and gives us new life in grace."
+          ],
+          "answer": "He died for our sins and gives us new life in grace.",
+          "explanation": "The lesson directly connects salvation from sin with the gift of new life in grace.",
+          "hint": "Choose the pair that the current lesson joins in its explanation of Savior.",
+          "sourceFact": "Verified Grade 2 skill: Jesus our Savior",
+          "sourceEvidence": [
+            "new life of grace"
+          ],
+          "sourceMode": "STRICT_SOURCE",
+          "supportType": "explicit",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "ABVM.RELIGION.CURRENT"
+          ],
+          "domain": "Religion",
+          "dok": 3,
+          "cognitiveDemand": "strategic-reasoning",
+          "difficulty": 3,
+          "questionType": "reasoning",
+          "choiceDiagnostics": {
+            "He is Mary’s son and people have five senses.": {
+              "misconception": "religion-jesus-savior-distractor",
+              "feedback": "Recheck the jesus our savior skill and use the clue in the question."
+            },
+            "Creation has gifts and disciples are friends.": {
+              "misconception": "religion-jesus-savior-distractor",
+              "feedback": "Recheck the jesus our savior skill and use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "He is Mary’s son and people have five senses.": 0,
+              "Creation has gifts and disciples are friends.": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "religion-jesus-savior"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "9fc86cd5",
+          "variantFingerprint": "670693e1",
+          "presentationFingerprint": "e7dc8b45",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Religion",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
+            "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
+            "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
+            "matchedEvidence": [
+              "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
+            ]
+          }
+        },
+        {
+          "id": "auto-religion-disciples-disciple-4e3edb",
           "templateId": "grade2-religion-disciples-v1",
           "subject": "Religion",
           "skill": "religion-disciples",
           "assessedSkillIds": [
             "religion-disciples"
           ],
-          "prompt": "According to the current Religion lesson, which statement best describes a disciple?",
+          "prompt": "According to the current Religion lesson, what word fits a person described as a friend and follower of Jesus?",
           "choices": [
-            "The Trinity is three Persons in one God.",
-            "People are made in God’s image and likeness and can think, choose, and love.",
-            "A disciple is a friend and follower of Jesus."
+            "disciple",
+            "Trinity",
+            "creation"
           ],
-          "answer": "A disciple is a friend and follower of Jesus.",
-          "explanation": "The lesson defines disciples as friends and followers of Jesus.",
-          "hint": "Use the lesson’s relationship between disciples and Jesus.",
+          "answer": "disciple",
+          "explanation": "The current lesson defines disciples as friends and followers of Jesus.",
+          "hint": "Match the description “friend and follower of Jesus” to the Religion word.",
           "sourceFact": "Verified Grade 2 skill: Disciples: friends and followers of Jesus",
           "sourceEvidence": [
             "disciples"
@@ -5920,13 +6240,13 @@
           "dok": 2,
           "cognitiveDemand": "skill-and-concept-application",
           "difficulty": 2,
-          "questionType": "reasoning",
+          "questionType": "transfer",
           "choiceDiagnostics": {
-            "The Trinity is three Persons in one God.": {
+            "Trinity": {
               "misconception": "religion-disciples-distractor",
               "feedback": "Recheck the disciples: friends and followers of jesus skill and use the clue in the question."
             },
-            "People are made in God’s image and likeness and can think, choose, and love.": {
+            "creation": {
               "misconception": "religion-disciples-distractor",
               "feedback": "Recheck the disciples: friends and followers of jesus skill and use the clue in the question."
             }
@@ -5938,8 +6258,8 @@
               "Uses the clue, rule, or evidence required by the item."
             ],
             "partialCredit": {
-              "The Trinity is three Persons in one God.": 0,
-              "People are made in God’s image and likeness and can think, choose, and love.": 0
+              "Trinity": 0,
+              "creation": 0
             }
           },
           "evidenceContract": {
@@ -5954,15 +6274,15 @@
             ]
           },
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "c2c04cd0",
-          "variantFingerprint": "c90483fb",
-          "presentationFingerprint": "fc0d9bf7",
+          "contentFingerprint": "9a4eda01",
+          "variantFingerprint": "773b89d0",
+          "presentationFingerprint": "a2a49f4e",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -5970,22 +6290,102 @@
           }
         },
         {
-          "id": "auto-religion-mary-church-mary-is-jesus-mother-and-the-mother-of-the-church-3f907e",
+          "id": "auto-religion-disciples-that-is-how-the-current-lesson-defines-disciples-b2d0e0",
+          "templateId": "grade2-religion-disciples-v1",
+          "subject": "Religion",
+          "skill": "religion-disciples",
+          "assessedSkillIds": [
+            "religion-disciples"
+          ],
+          "prompt": "According to the current Religion lesson, why does the word “disciple” fit someone described as a friend and follower of Jesus?",
+          "choices": [
+            "Disciple is another name for the Trinity.",
+            "That is how the current lesson defines disciples.",
+            "Disciple means one of the five senses."
+          ],
+          "answer": "That is how the current lesson defines disciples.",
+          "explanation": "The lesson explicitly says disciples are friends and followers of Jesus.",
+          "hint": "Use the relationship stated directly in the current lesson.",
+          "sourceFact": "Verified Grade 2 skill: Disciples: friends and followers of Jesus",
+          "sourceEvidence": [
+            "disciples"
+          ],
+          "sourceMode": "STRICT_SOURCE",
+          "supportType": "explicit",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "ABVM.RELIGION.CURRENT"
+          ],
+          "domain": "Religion",
+          "dok": 3,
+          "cognitiveDemand": "strategic-reasoning",
+          "difficulty": 3,
+          "questionType": "reasoning",
+          "choiceDiagnostics": {
+            "Disciple is another name for the Trinity.": {
+              "misconception": "religion-disciples-distractor",
+              "feedback": "Recheck the disciples: friends and followers of jesus skill and use the clue in the question."
+            },
+            "Disciple means one of the five senses.": {
+              "misconception": "religion-disciples-distractor",
+              "feedback": "Recheck the disciples: friends and followers of jesus skill and use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "Disciple is another name for the Trinity.": 0,
+              "Disciple means one of the five senses.": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "religion-disciples"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "5852f9b1",
+          "variantFingerprint": "76e2de1f",
+          "presentationFingerprint": "5a99ec8e",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Religion",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
+            "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
+            "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
+            "matchedEvidence": [
+              "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
+            ]
+          }
+        },
+        {
+          "id": "auto-religion-mary-church-mary-44ad14",
           "templateId": "grade2-religion-mary-church-v1",
           "subject": "Religion",
           "skill": "religion-mary-church",
           "assessedSkillIds": [
             "religion-mary-church"
           ],
-          "prompt": "Which statement about Mary matches the current Religion lesson?",
+          "prompt": "According to the current Religion lesson, who is described as both Jesus’ mother and the mother of the Church?",
           "choices": [
-            "Mary is Jesus’ mother and the mother of the Church.",
-            "Disciples are friends and followers of Jesus.",
-            "The Trinity is three Persons in one God."
+            "a disciple",
+            "the Holy Spirit",
+            "Mary"
           ],
-          "answer": "Mary is Jesus’ mother and the mother of the Church.",
-          "explanation": "That statement matches the current Religion lesson exactly.",
-          "hint": "Use the titles for Mary stated in the current lesson.",
+          "answer": "Mary",
+          "explanation": "The current lesson gives both of those titles to Mary.",
+          "hint": "Match the two mother titles to the person named in the lesson.",
           "sourceFact": "Verified Grade 2 skill: Mary: Jesus’ mother and mother of the Church",
           "sourceEvidence": [
             "Mary is Jesus' mother"
@@ -6000,13 +6400,13 @@
           "dok": 2,
           "cognitiveDemand": "skill-and-concept-application",
           "difficulty": 2,
-          "questionType": "reasoning",
+          "questionType": "transfer",
           "choiceDiagnostics": {
-            "Disciples are friends and followers of Jesus.": {
+            "a disciple": {
               "misconception": "religion-mary-church-distractor",
               "feedback": "Recheck the mary: jesus’ mother and mother of the church skill and use the clue in the question."
             },
-            "The Trinity is three Persons in one God.": {
+            "the Holy Spirit": {
               "misconception": "religion-mary-church-distractor",
               "feedback": "Recheck the mary: jesus’ mother and mother of the church skill and use the clue in the question."
             }
@@ -6018,8 +6418,8 @@
               "Uses the clue, rule, or evidence required by the item."
             ],
             "partialCredit": {
-              "Disciples are friends and followers of Jesus.": 0,
-              "The Trinity is three Persons in one God.": 0
+              "a disciple": 0,
+              "the Holy Spirit": 0
             }
           },
           "evidenceContract": {
@@ -6034,15 +6434,15 @@
             ]
           },
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "48e9557d",
-          "variantFingerprint": "32236449",
-          "presentationFingerprint": "bba36025",
+          "contentFingerprint": "faf9df5c",
+          "variantFingerprint": "0287db86",
+          "presentationFingerprint": "25338cb2",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -6050,21 +6450,181 @@
           }
         },
         {
-          "id": "auto-religion-seed-new-life-the-comparison-connects-death-with-new-life-in-grace-6ab6ae",
+          "id": "auto-religion-mary-church-mary-is-jesus-mother-mary-is-mother-of-the-church-she-is-our-mother-too-b2e3c9",
+          "templateId": "grade2-religion-mary-church-v1",
+          "subject": "Religion",
+          "skill": "religion-mary-church",
+          "assessedSkillIds": [
+            "religion-mary-church"
+          ],
+          "prompt": "According to the current Religion lesson, which chain keeps the lesson’s statements about Mary together correctly?",
+          "choices": [
+            "Mary is Jesus’ mother → Mary is mother of the Church → she is our mother too.",
+            "Mary is one Person of the Trinity → Mary gives new life in grace.",
+            "Mary is a disciple → Mary is one of the five senses."
+          ],
+          "answer": "Mary is Jesus’ mother → Mary is mother of the Church → she is our mother too.",
+          "explanation": "That chain preserves the relationships stated in the current lesson.",
+          "hint": "Choose the sequence made only from the lesson’s statements about Mary.",
+          "sourceFact": "Verified Grade 2 skill: Mary: Jesus’ mother and mother of the Church",
+          "sourceEvidence": [
+            "Mary is Jesus' mother"
+          ],
+          "sourceMode": "STRICT_SOURCE",
+          "supportType": "explicit",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "ABVM.RELIGION.CURRENT"
+          ],
+          "domain": "Religion",
+          "dok": 3,
+          "cognitiveDemand": "strategic-reasoning",
+          "difficulty": 3,
+          "questionType": "reasoning",
+          "choiceDiagnostics": {
+            "Mary is one Person of the Trinity → Mary gives new life in grace.": {
+              "misconception": "religion-mary-church-distractor",
+              "feedback": "Recheck the mary: jesus’ mother and mother of the church skill and use the clue in the question."
+            },
+            "Mary is a disciple → Mary is one of the five senses.": {
+              "misconception": "religion-mary-church-distractor",
+              "feedback": "Recheck the mary: jesus’ mother and mother of the church skill and use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "Mary is one Person of the Trinity → Mary gives new life in grace.": 0,
+              "Mary is a disciple → Mary is one of the five senses.": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "religion-mary-church"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "fd0131f1",
+          "variantFingerprint": "15f6923a",
+          "presentationFingerprint": "c2508b54",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Religion",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
+            "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
+            "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
+            "matchedEvidence": [
+              "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
+            ]
+          }
+        },
+        {
+          "id": "auto-religion-seed-new-life-new-life-in-grace-67e8d0",
           "templateId": "grade2-religion-seed-new-life-v1",
           "subject": "Religion",
           "skill": "religion-seed-new-life",
           "assessedSkillIds": [
             "religion-seed-new-life"
           ],
-          "prompt": "Why does the current Religion lesson compare Jesus with a seed that dies and then produces new growth?",
+          "prompt": "According to the current Religion lesson, as a seed dies and new growth appears, Jesus’ death is compared with what gift?",
           "choices": [
-            "It teaches our responsibility to care for God’s gift of creation.",
-            "The comparison connects death with new life in grace.",
-            "It names the three Persons of the Trinity."
+            "the five senses",
+            "new life in grace",
+            "the title mother of the Church"
+          ],
+          "answer": "new life in grace",
+          "explanation": "The current lesson compares the seed’s new growth with the new life in grace Jesus gives.",
+          "hint": "Complete the second half of the seed comparison using the lesson’s phrase.",
+          "sourceFact": "Verified Grade 2 skill: Seed analogy and new life in grace",
+          "sourceEvidence": [
+            "Jesus is like a seed"
+          ],
+          "sourceMode": "STRICT_SOURCE",
+          "supportType": "explicit",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "ABVM.RELIGION.CURRENT"
+          ],
+          "domain": "Religion",
+          "dok": 2,
+          "cognitiveDemand": "skill-and-concept-application",
+          "difficulty": 2,
+          "questionType": "transfer",
+          "choiceDiagnostics": {
+            "the five senses": {
+              "misconception": "religion-seed-new-life-distractor",
+              "feedback": "Recheck the seed analogy and new life in grace skill and use the clue in the question."
+            },
+            "the title mother of the Church": {
+              "misconception": "religion-seed-new-life-distractor",
+              "feedback": "Recheck the seed analogy and new life in grace skill and use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "the five senses": 0,
+              "the title mother of the Church": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "religion-seed-new-life"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "093d8dfb",
+          "variantFingerprint": "530f51b0",
+          "presentationFingerprint": "8fdd5031",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Religion",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
+            "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
+            "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
+            "matchedEvidence": [
+              "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
+            ]
+          }
+        },
+        {
+          "id": "auto-religion-seed-new-life-the-comparison-connects-death-with-new-life-in-grace-558555",
+          "templateId": "grade2-religion-seed-new-life-v1",
+          "subject": "Religion",
+          "skill": "religion-seed-new-life",
+          "assessedSkillIds": [
+            "religion-seed-new-life"
+          ],
+          "prompt": "According to the current Religion lesson, why is the seed comparison used when teaching about Jesus and new life?",
+          "choices": [
+            "The comparison names the three Persons of the Trinity.",
+            "The comparison lists the five senses.",
+            "The comparison connects death with new life in grace."
           ],
           "answer": "The comparison connects death with new life in grace.",
-          "explanation": "The lesson connects the seed’s new growth with Jesus giving us new life in grace.",
+          "explanation": "The lesson uses new growth after the seed dies to help explain new life in grace through Jesus.",
           "hint": "Focus on what comes after the seed dies and on the lesson’s phrase “new life in grace.”",
           "sourceFact": "Verified Grade 2 skill: Seed analogy and new life in grace",
           "sourceEvidence": [
@@ -6082,11 +6642,11 @@
           "difficulty": 3,
           "questionType": "reasoning",
           "choiceDiagnostics": {
-            "It teaches our responsibility to care for God’s gift of creation.": {
+            "The comparison names the three Persons of the Trinity.": {
               "misconception": "religion-seed-new-life-distractor",
               "feedback": "Recheck the seed analogy and new life in grace skill and use the clue in the question."
             },
-            "It names the three Persons of the Trinity.": {
+            "The comparison lists the five senses.": {
               "misconception": "religion-seed-new-life-distractor",
               "feedback": "Recheck the seed analogy and new life in grace skill and use the clue in the question."
             }
@@ -6098,8 +6658,8 @@
               "Uses the clue, rule, or evidence required by the item."
             ],
             "partialCredit": {
-              "It teaches our responsibility to care for God’s gift of creation.": 0,
-              "It names the three Persons of the Trinity.": 0
+              "The comparison names the three Persons of the Trinity.": 0,
+              "The comparison lists the five senses.": 0
             }
           },
           "evidenceContract": {
@@ -6114,15 +6674,15 @@
             ]
           },
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "b1c5f16e",
-          "variantFingerprint": "89578b83",
-          "presentationFingerprint": "62adff49",
+          "contentFingerprint": "afca91a2",
+          "variantFingerprint": "a8c6358e",
+          "presentationFingerprint": "e3b7b81a",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -6139,9 +6699,9 @@
           ],
           "prompt": "Which choice best applies the current Religion lesson about using our senses to notice God’s gifts of creation?",
           "choices": [
+            "Listening to birds and noticing the colors of flowers",
             "Ignoring everything around you on purpose",
-            "Breaking plants to see what happens",
-            "Listening to birds and noticing the colors of flowers"
+            "Breaking plants to see what happens"
           ],
           "answer": "Listening to birds and noticing the colors of flowers",
           "explanation": "Hearing and seeing can help a person notice and appreciate creation.",
@@ -6196,13 +6756,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "c78a8eb4",
           "variantFingerprint": "6a41455e",
-          "presentationFingerprint": "fd3843a4",
+          "presentationFingerprint": "636de598",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -6210,22 +6770,102 @@
           }
         },
         {
-          "id": "auto-religion-gifts-choices-god-is-the-giver-of-gifts-523920",
+          "id": "auto-religion-five-senses-they-help-us-notice-and-enjoy-god-s-gifts-dfa2ce",
+          "templateId": "grade2-religion-five-senses-v1",
+          "subject": "Religion",
+          "skill": "religion-five-senses",
+          "assessedSkillIds": [
+            "religion-five-senses"
+          ],
+          "prompt": "According to the current Religion lesson, why are the senses connected with gratitude for creation?",
+          "choices": [
+            "They replace the need to think or choose.",
+            "They help us notice and enjoy God’s gifts.",
+            "They identify the three Persons of the Trinity."
+          ],
+          "answer": "They help us notice and enjoy God’s gifts.",
+          "explanation": "The current lesson connects the senses with experiencing and appreciating God’s gifts of creation.",
+          "hint": "Choose the reason that connects seeing, hearing, smelling, tasting, and touching with noticing gifts.",
+          "sourceFact": "Verified Grade 2 skill: Five senses and God’s gifts",
+          "sourceEvidence": [
+            "our senses"
+          ],
+          "sourceMode": "STRICT_SOURCE",
+          "supportType": "explicit",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "ABVM.RELIGION.CURRENT"
+          ],
+          "domain": "Religion",
+          "dok": 3,
+          "cognitiveDemand": "strategic-reasoning",
+          "difficulty": 3,
+          "questionType": "reasoning",
+          "choiceDiagnostics": {
+            "They replace the need to think or choose.": {
+              "misconception": "religion-five-senses-distractor",
+              "feedback": "Recheck the five senses and god’s gifts skill and use the clue in the question."
+            },
+            "They identify the three Persons of the Trinity.": {
+              "misconception": "religion-five-senses-distractor",
+              "feedback": "Recheck the five senses and god’s gifts skill and use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "They replace the need to think or choose.": 0,
+              "They identify the three Persons of the Trinity.": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "religion-five-senses"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "f77ac4a4",
+          "variantFingerprint": "3177e1e2",
+          "presentationFingerprint": "6945de57",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Religion",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
+            "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
+            "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
+            "matchedEvidence": [
+              "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
+            ]
+          }
+        },
+        {
+          "id": "auto-religion-gifts-choices-god-is-the-giver-of-gifts-8b9c08",
           "templateId": "grade2-religion-gifts-choices-v1",
           "subject": "Religion",
           "skill": "religion-gifts-choices",
           "assessedSkillIds": [
             "religion-gifts-choices"
           ],
-          "prompt": "According to the current Religion lesson about gifts from God, which choice best matches the lesson?",
+          "prompt": "According to the current Religion lesson, which chapter idea best matches the phrase “Gifts from God”?",
           "choices": [
-            "God is the giver of gifts.",
             "Disciples are friends and followers of Jesus.",
-            "The Trinity is three Persons in one God."
+            "Mary is the mother of the Church.",
+            "God is the Giver of Gifts."
           ],
-          "answer": "God is the giver of gifts.",
-          "explanation": "The current lesson identifies God as the giver of gifts.",
-          "hint": "Use the exact idea named in the current Religion material about gifts.",
+          "answer": "God is the Giver of Gifts.",
+          "explanation": "The current lesson’s chapter title identifies God as the giver of the gifts named in the topic.",
+          "hint": "Match “Gifts from God” with the chapter title that names the giver.",
           "sourceFact": "Verified Grade 2 skill: God is the Giver of Gifts",
           "sourceEvidence": [
             "Giver of Gifts"
@@ -6237,16 +6877,16 @@
             "ABVM.RELIGION.CURRENT"
           ],
           "domain": "Religion",
-          "dok": 1,
-          "cognitiveDemand": "recall-and-fluency",
+          "dok": 2,
+          "cognitiveDemand": "skill-and-concept-application",
           "difficulty": 2,
-          "questionType": "direct",
+          "questionType": "transfer",
           "choiceDiagnostics": {
             "Disciples are friends and followers of Jesus.": {
               "misconception": "religion-gifts-choices-distractor",
               "feedback": "Recheck the god is the giver of gifts skill and use the clue in the question."
             },
-            "The Trinity is three Persons in one God.": {
+            "Mary is the mother of the Church.": {
               "misconception": "religion-gifts-choices-distractor",
               "feedback": "Recheck the god is the giver of gifts skill and use the clue in the question."
             }
@@ -6259,7 +6899,7 @@
             ],
             "partialCredit": {
               "Disciples are friends and followers of Jesus.": 0,
-              "The Trinity is three Persons in one God.": 0
+              "Mary is the mother of the Church.": 0
             }
           },
           "evidenceContract": {
@@ -6274,15 +6914,95 @@
             ]
           },
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "a3d535b5",
-          "variantFingerprint": "daff6e87",
-          "presentationFingerprint": "cfd6e25a",
+          "contentFingerprint": "f6c677d7",
+          "variantFingerprint": "be007e96",
+          "presentationFingerprint": "425ff3a5",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
+            "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
+            "matchedEvidence": [
+              "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
+            ]
+          }
+        },
+        {
+          "id": "auto-religion-gifts-choices-both-identify-god-as-the-source-or-giver-of-the-gifts-772bad",
+          "templateId": "grade2-religion-gifts-choices-v1",
+          "subject": "Religion",
+          "skill": "religion-gifts-choices",
+          "assessedSkillIds": [
+            "religion-gifts-choices"
+          ],
+          "prompt": "According to the current Religion lesson, why do “Gifts from God” and “God is the Giver of Gifts” belong together?",
+          "choices": [
+            "Both identify God as the source or giver of the gifts.",
+            "Both define disciples as friends of Jesus.",
+            "Both list the five senses."
+          ],
+          "answer": "Both identify God as the source or giver of the gifts.",
+          "explanation": "The topic and chapter title express the same source relationship for the gifts.",
+          "hint": "Compare who the gifts are from with who the chapter names as the giver.",
+          "sourceFact": "Verified Grade 2 skill: God is the Giver of Gifts",
+          "sourceEvidence": [
+            "Giver of Gifts"
+          ],
+          "sourceMode": "STRICT_SOURCE",
+          "supportType": "explicit",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "ABVM.RELIGION.CURRENT"
+          ],
+          "domain": "Religion",
+          "dok": 3,
+          "cognitiveDemand": "strategic-reasoning",
+          "difficulty": 3,
+          "questionType": "reasoning",
+          "choiceDiagnostics": {
+            "Both define disciples as friends of Jesus.": {
+              "misconception": "religion-gifts-choices-distractor",
+              "feedback": "Recheck the god is the giver of gifts skill and use the clue in the question."
+            },
+            "Both list the five senses.": {
+              "misconception": "religion-gifts-choices-distractor",
+              "feedback": "Recheck the god is the giver of gifts skill and use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "Both define disciples as friends of Jesus.": 0,
+              "Both list the five senses.": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "religion-gifts-choices"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "f4f34938",
+          "variantFingerprint": "849ae807",
+          "presentationFingerprint": "a8e3f6c4",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Religion",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
+            "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -6293,25 +7013,25 @@
       "qa": {
         "status": "pass",
         "skillCount": 19,
-        "questionCount": 55,
+        "questionCount": 64,
         "minimumQuestionsPerSkill": 2,
         "duplicatesRemoved": 0,
         "answerPositionCounts": [
-          19,
-          18,
-          18
+          22,
+          21,
+          21
         ],
-        "semanticVariantCount": 55,
+        "semanticVariantCount": 64,
         "maxConsecutiveAnswerPosition": 1,
         "questionTypeCounts": {
-          "direct": 21,
-          "transfer": 21,
-          "reasoning": 13
+          "direct": 18,
+          "transfer": 28,
+          "reasoning": 18
         },
         "dokCounts": {
-          "1": 9,
-          "2": 36,
-          "3": 10
+          "1": 7,
+          "2": 39,
+          "3": 18
         },
         "questionsPerSkill": {
           "sentence-types": 3,
@@ -6324,15 +7044,15 @@
           "dialogue": 3,
           "high-frequency-word-use": 10,
           "subtraction-within-12": 3,
-          "religion-trinity": 2,
-          "religion-image-likeness": 2,
-          "religion-creation-care": 2,
-          "religion-jesus-savior": 2,
-          "religion-disciples": 2,
-          "religion-mary-church": 2,
-          "religion-seed-new-life": 2,
-          "religion-five-senses": 2,
-          "religion-gifts-choices": 2
+          "religion-trinity": 3,
+          "religion-image-likeness": 3,
+          "religion-creation-care": 3,
+          "religion-jesus-savior": 3,
+          "religion-disciples": 3,
+          "religion-mary-church": 3,
+          "religion-seed-new-life": 3,
+          "religion-five-senses": 3,
+          "religion-gifts-choices": 3
         },
         "rejectedCount": 0,
         "rejected": [],
@@ -6344,47 +7064,47 @@
         ],
         "sourceInsufficientCount": 3,
         "unsupportedSkillCount": 0,
-        "pageExactLineageCount": 55,
+        "pageExactLineageCount": 64,
         "unresolvedLineageCount": 0
       }
     }
   },
-  "sourceLastCheckedAt": "2026-09-30T13:28:07.733Z",
+  "sourceLastCheckedAt": "2026-09-30T13:38:06.942Z",
   "sourcePages": [
     {
       "title": "Home",
       "url": "https://sites.google.com/view/abvmgr2/home",
-      "checkedAt": "2026-09-30T13:28:07.733Z",
+      "checkedAt": "2026-09-30T13:38:06.942Z",
       "contentHash": "230bd0fb1d6acef81aa2e9d4aec8b097d2dfbb8bbd4cac4ce058889a4eb0d6a9"
     },
     {
       "title": "Homework",
       "url": "https://sites.google.com/view/abvmgr2/homework",
-      "checkedAt": "2026-09-30T13:28:07.733Z",
+      "checkedAt": "2026-09-30T13:38:06.942Z",
       "contentHash": "faabffa7a06fe6eeefa98e3204993203dd9d2f2a623f5b70ba1b7ac55ef04fde"
     },
     {
       "title": "Reading Work",
       "url": "https://sites.google.com/view/abvmgr2/reading-work",
-      "checkedAt": "2026-09-30T13:28:07.733Z",
+      "checkedAt": "2026-09-30T13:38:06.942Z",
       "contentHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058"
     },
     {
       "title": "Weekly Spelling List",
       "url": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-      "checkedAt": "2026-09-30T13:28:07.733Z",
+      "checkedAt": "2026-09-30T13:38:06.942Z",
       "contentHash": "d077ca4b2b95d79755f88f5a726e6b5acf3a52c6575c3d986a16ca1c834b5777"
     },
     {
       "title": "Tests",
       "url": "https://sites.google.com/view/abvmgr2/tests",
-      "checkedAt": "2026-09-30T13:28:07.733Z",
+      "checkedAt": "2026-09-30T13:38:06.942Z",
       "contentHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c"
     },
     {
       "title": "Religion",
       "url": "https://sites.google.com/view/abvmgr2/religion",
-      "checkedAt": "2026-09-30T13:28:07.733Z",
+      "checkedAt": "2026-09-30T13:38:06.942Z",
       "contentHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c"
     }
   ],
