@@ -1000,7 +1000,9 @@ function supportQuestion(catalog,current,{skillStats={},seed="support"}={}){
 }
 function sourceKeyFromEnvelope(pack,envelope){
   const hashes=(envelope?.sourcePages||[]).map(row=>row.contentHash).filter(Boolean).join("|");
-  return hashes||text(pack?.sourceHash||pack?.sourceCheckedAt||pack?.weekLabel||"abvm-current");
+  const source=hashes||text(pack?.sourceHash||pack?.sourceCheckedAt||pack?.weekLabel||"abvm-current");
+  const bank=text(pack?.contentPipeline?.bankFingerprint||"legacy-bank");
+  return source+"|bank:"+bank;
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
