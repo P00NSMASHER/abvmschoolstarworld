@@ -22,7 +22,7 @@ const GAME_TYPE_LABELS=Object.freeze({
 });
 const STUDY_GAME_MODES=Object.freeze([
   Object.freeze({id:"quick",title:"Quick Mix",subjects:[],count:8,copy:"Current school skills mixed into one quick round."}),
-  Object.freeze({id:"math",title:"Math Dash",subjects:["Math"],count:8,copy:"Eight questions built from the current math skills."}),
+  Object.freeze({id:"math",title:"Math Dash",subjects:["Math"],count:8,copy:"Current verified math skills."}),
   Object.freeze({id:"words",title:"Word Power",subjects:["Reading / ELA","Spelling / Handwriting"],preferredSkills:["long-short-a","suffix-ed-ing"],count:8,copy:"Current spelling-test, phonics, word-building, and reading skills."}),
   Object.freeze({id:"faith",title:"Faith Quest",subjects:["Religion"],count:8,copy:"Religion practice from the current class material."})
 ]);
@@ -451,10 +451,9 @@ function studyGameCatalog(){
   return studyGameCatalogCache;
 }
 function gameMode(id){return availableStudyGameModes().find(mode=>mode.id===id)||availableStudyGameModes()[0]}
-function gameModeQuestionTotal(catalog,mode){
-  const wanted=mode?.subjects||[],skills=mode?.skills||[];
-  const pool=(catalog?.questions||[]).filter(q=>(!wanted.length||wanted.includes(q.subject))&&(!skills.length||skills.includes(q.skill)));
-  return Math.min(mode?.count||0,pool.length);
+function gameModeQuestionTotal(c,m){
+  const s=m?.subjects||[],k=m?.skills||[],x=s.length||k.length;
+  return Math.min(m?.count||0,(c?.questions||[]).filter(q=>(!s.length||s.includes(q.subject))&&(!k.length||k.includes(q.skill))&&(!x||q.tier==="material")).length)
 }
 function loadGameRecord(modeId){return studyGameEngine()?.loadGameRecord?.(currentGameSourceKey(),modeId)||{best:0,plays:0,totalCorrect:0,totalAnswered:0}}
 function saveGameRecord(){if(gameState.saved||!gameState.mode||!gameState.questions.length)return;studyGameEngine()?.saveGameRecord?.(currentGameSourceKey(),gameState.mode,{score:gameState.score,total:gameState.questions.length});gameState.saved=true}
