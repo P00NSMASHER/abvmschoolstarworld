@@ -2,7 +2,7 @@
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const stack=()=>$("#app-content");
 let envelope=null, pack=null, activeTab=(["today","week","calendar","study","games","family"].includes(location.hash.slice(1))?location.hash.slice(1):"today"), selectedDay=null, calendarDay=null, weekOffset=0, calendarOffset=0;
-let studyGameCatalogCache=null, derivedPackCache=null, studyEnginePromise=null, screenEventsBound=false, lastPackFetchAt=0, packRefreshPromise=null, manualRefreshActive=false, gameState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null};
+let studyGameCatalogCache=null, derivedPackCache=null, studyEnginePromise=null, screenEventsBound=false, lastPackFetchAt=0, packRefreshPromise=null, manualRefreshActive=false, lastPackFetchUsedCache=false, gameState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null};
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -117,7 +117,7 @@ function freshnessState(){
   if(!d||Number.isNaN(d.getTime()))return{state:"attention",label:"Source verification unavailable"};
   const stamp=FRESH_DATE_FORMATTER.format(d)+" at "+FRESH_TIME_FORMATTER.format(d)+" ET";
   const ageHours=(Date.now()-d.getTime())/3600000;
-  if(navigator.onLine===false)return{state:"offline",label:"Offline · last verified "+stamp};
+  if(navigator.onLine===false||lastPackFetchUsedCache)return{state:"offline",label:"Offline · last verified "+stamp};
   if(ageHours>30)return{state:"attention",label:"Needs refresh · last verified "+stamp};
   if(ageHours>8)return{state:"stale",label:"Older data · last verified "+stamp};
   return{state:"current",label:"Verified "+stamp};
@@ -702,6 +702,7 @@ async function fetchPack({force=false,notify=false}={}){
     const timeout=setTimeout(()=>controller.abort(),8000);
     try{
       const r=await fetch(PACK_URL,{cache:"no-store",signal:controller.signal});
+      lastPackFetchUsedCache=r.headers.get("x-abvm-cache-fallback")==="1";
       if(!r.ok)throw new Error("HTTP "+r.status);
       const data=await r.json();
       if(!data?.pack?.sourceSufficient)throw new Error("Incomplete pack");
@@ -731,7 +732,8 @@ async function manualRefreshSchoolInfo(){
   try{
     const changed=await fetchPack({force:true,notify:false});
     const state=freshnessState();
-    if(changed)toast("School info updated");
+    if(state.state==="offline")toast("You’re offline. Showing saved school info.");
+    else if(changed)toast("School info updated");
     else if(state.state==="current")toast("Latest published school info is loaded");
     else toast("Checked published school info — no newer verified update is available yet.");
   }catch{
@@ -759,8 +761,8 @@ window.addEventListener("hashchange",()=>{
     render();
   }
 });
-window.addEventListener("online",()=>{if(pack)fetchPack({force:true,notify:true}).catch(()=>updateFreshnessUI())});
-window.addEventListener("offline",()=>{if(pack)updateFreshnessUI()});
+window.addEventListener("online",()=>{lastPackFetchUsedCache=false;if(pack)fetchPack({force:true,notify:true}).catch(()=>updateFreshnessUI())});
+window.addEventListener("offline",()=>{lastPackFetchUsedCache=true;if(pack)updateFreshnessUI()});
 document.addEventListener("visibilitychange",()=>{
   if(document.visibilityState==="visible"&&pack)fetchPack({notify:true}).catch(()=>{});
 });
