@@ -57,7 +57,7 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
   assert.ok(pipeline.questions.every(question => question.contentFingerprint && question.variantFingerprint && question.presentationFingerprint));
   assert.ok(Math.max(...pipeline.qa.answerPositionCounts) - Math.min(...pipeline.qa.answerPositionCounts) <= 1);
 
-  for (const skill of ['sentence-types','consonant-blends','cvc-structure','long-short-a','suffix-ed-ing','theme','visualize','dialogue','inference','subtraction-within-12']) {
+  for (const skill of ['sentence-types','consonant-blends','cvc-structure','long-short-a','suffix-ed-ing','theme','visualize','dialogue','subtraction-within-12']) {
     assert.ok((pipeline.qa.questionsPerSkill?.[skill] || 0) >= 3, `expected semantic sibling family for ${skill}`);
   }
   assert.ok((pipeline.qa.questionsPerSkill?.['religion-trinity'] || 0) >= 2, 'Trinity intentionally keeps a smaller strict-source bank');
@@ -101,6 +101,7 @@ test('future teacher skills are detected without hand-editing the app', () => {
     assert.equal(ids.has(expected), true, `missing future skill: ${expected}`);
   }
   assert.equal(pipeline.qa.status, 'pass');
+  assert.ok((pipeline.qa.questionsPerSkill?.inference || 0) >= 3, 'future inference skill should receive its semantic sibling family');
   assert.equal(pipeline.safetyState, 'SAFE_PARTIAL');
   assert.equal(pipeline.qa.unsupportedSkillCount, 1);
   assert.ok(pipeline.coverage.some(row => row.status === 'GENERATOR_UNSUPPORTED' && row.topic.toLowerCase() === 'sequence'));
