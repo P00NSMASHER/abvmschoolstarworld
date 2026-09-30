@@ -122,7 +122,7 @@ test("interactive day and checklist controls expose selected/completion state",a
 test("service worker keeps school data network-first and static assets stale-while-revalidate",async({request})=>{
   const source=await (await request.get("/sw.js")).text();
   expect(source).toContain('endsWith("/data/study-pack.json")');
-  expect(source).toContain("networkFirst(event.request,null)");
+  expect(source).toContain("networkFirst(event.request,null,event)");
   expect(source).toContain("staleWhileRevalidate(event.request)");
   expect(source).toMatch(/const CACHE = "abvm-grade2-parent-companion-v[0-9]+-[a-z-]+"/);
 });
