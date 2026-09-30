@@ -1,25 +1,45 @@
 # ABVM Grade 2 Parent Companion
 
-Parent-facing GitHub Pages app for the current ABVM Grade 2 week.
+Mobile-first parent/student companion for the current Assumption BVM Grade 2 school week.
 
-## Included
-- Current homework with simple parent checkoff
-- Current reminders
-- Source freshness / fallback status
-- Validated teacher-page refresh every day at 1:00 PM Eastern
-- Upcoming assessment dates
-- Subject-by-subject study guides
-- Vocabulary
-- Review questions with reveal-answer controls
-- IndexedDB/local fallback for homework checkoff and last-good school pack
-- PWA shell caching
+## Production architecture
 
-## Parent-only experience
+- **Frontend:** static PWA deployed by GitHub Pages from `pages/`
+- **School-data refresh:** GitHub Actions validates the six public Grade 2 teacher pages before publishing
+- **Refresh schedule:** 6:17 AM, 9:47 AM, 1:17 PM, and 3:47 PM Eastern, plus manual workflow runs
+- **Lunch source:** reviewed school lunch documents, verified through the ABVM AppDeploy source bridge
+- **Local state:** checklist completion and Study Games learning state use browser `localStorage`
+- **Offline behavior:** the service worker retains the app shell and the latest verified school pack
 
-The product has one parent-focused surface with five clear destinations: Today, Week, Calendar, Study, and Family. The former game build, game deployment route, promotional calls to action, avatar/catalog code, and obsolete game assets have been removed. The source-grounded school pack and study-guide refresh pipeline remain intact.
+## App sections
 
-The interface is mobile-first, supports deep links and browser history, keeps checklists on-device, works offline after the first visit, and uses compressed custom artwork for each primary section.
+The bottom navigation has six destinations:
+
+1. **Today** — current date, priority test, focused tasks, events, and lunch
+2. **Week** — weekday picker, events, checklist, reminders, and lunch
+3. **Calendar** — month grid, selected-day details, full agenda, specials, and upcoming dates
+4. **Study** — current subject material, sight words, vocabulary, and study priorities
+5. **Study Games** — short adaptive practice generated from current verified class skills
+6. **Family** — current actions, notices, test-day count, privacy/source information
+
+## Data safety and reliability
 
 The refresh job reads the public Grade 2 Homework, Home, Reading Work, Weekly Spelling List, Tests, and Religion pages. It publishes only after every expected page and required homework section passes validation, so an incomplete teacher-page response cannot erase the last reliable school information.
 
-Information transcribed from school flyers or reminders is stored separately in `pages/data/uploaded-notices.json`. Those uploaded notices take priority when they clarify or correct a matching calendar item, and the daily teacher-page refresh reapplies them on every run so they are never overwritten.
+Information transcribed from school flyers or reminders is stored in `pages/data/uploaded-notices.json`. Those notices take priority when they clarify or correct a matching calendar item, and the teacher-page refresh reapplies them on every run.
+
+The app distinguishes reviewed lunch data from automated source verification and retains previously reviewed meals if a live source check is temporarily unavailable.
+
+## Quality gates
+
+Before candidate code or refreshed school data reaches `main`, the repository runs:
+
+- static JavaScript and data validation
+- CSS/code hygiene checks
+- unit tests
+- Chromium browser tests
+- responsive/mobile tests
+- accessibility checks
+- publication verification
+
+GitHub Pages deployment repeats release QA and then verifies the live lunch/mobile flows.
