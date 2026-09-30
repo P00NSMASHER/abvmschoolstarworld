@@ -1797,6 +1797,13 @@ export function validateGeneratedQuestionSpec(question) {
   if (!text(question.hint)) issues.push('hint-missing');
   if (normalize(question.answer).length >= 4 && normalize(question.hint).includes(normalize(question.answer))) issues.push('hint-leaks-answer');
   if (!['STRICT_SOURCE', 'CURATED_CONTEXT', 'DETERMINISTIC_TEMPLATE'].includes(question.sourceMode)) issues.push('source-mode-invalid');
+  if (question.subject === 'Religion' && question.sourceMode === 'STRICT_SOURCE') {
+    if (!/current Religion lesson/i.test(question.prompt)) issues.push('religion-source-framing-missing');
+    const religionForbidden = /invented the seasons|every book in the Bible|unrelated gods|school subject|text feature|current Reading story|consonant blends|captions|school schedule|how to spell/i;
+    if ([question.prompt, ...(question.choices || [])].some(value => religionForbidden.test(String(value)))) {
+      issues.push('religion-distractor-policy');
+    }
+  }
   if (!text(question.provenance)) issues.push('provenance-missing');
   if (!text(question.contentFingerprint) || !text(question.variantFingerprint) || !text(question.presentationFingerprint)) issues.push('fingerprints-missing');
   if (!question.evidenceContract || question.evidenceContract.evidenceType !== 'DIRECT_TARGET') issues.push('evidence-contract-invalid');
