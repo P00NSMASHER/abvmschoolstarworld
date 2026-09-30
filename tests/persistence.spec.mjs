@@ -20,8 +20,11 @@ test("Study Games learning evidence persists across reload",async({page})=>{
   await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
   await page.getByRole("button",{name:/Quick Mix/i}).click();
   await expect(page.locator(".game-answer").first()).toBeVisible();
-  await page.locator(".game-answer").first().click();
-  const before=await page.evaluate(()=>localStorage.getItem("abvm-study-learning:v2"));
+  let before=null;
+  for(let attempt=0;attempt<3&&!before;attempt++){
+    await page.locator(".game-answer").first().click();
+    before=await page.evaluate(()=>localStorage.getItem("abvm-study-learning:v2"));
+  }
   expect(before).toBeTruthy();
   await page.reload();
   await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});

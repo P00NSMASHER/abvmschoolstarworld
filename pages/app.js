@@ -473,98 +473,36 @@ function startStudyGame(modeId){
   renderGames();bindScreen();
 }
 function answerStudyGame(index){
-  if(gameState.screen!=="play"||gameState.answered)return;
-  const question=activeGameQuestion(),choice=question?.choices?.[index];
-  if(choice===undefined)return;
-  const correct=choice===question.answer;
-  gameState.selectedIndex=index;gameState.answered=true;gameState.hintOpen=false;
-  if(gameState.comebackMode){
-    gameState.learningRow=studyGameEngine()?.recordComeback?.(question,correct)||null;
-    gameState.comebackCorrect=correct;
-  }else if(gameState.supportMode){
-    gameState.learningRow=studyGameEngine()?.recordSupport?.(question,correct)||null;
-    gameState.supportCorrect=correct;
-  }else{
-    gameState.learningRow=studyGameEngine()?.recordLearning?.(question,correct)||null;
-    if(correct){
-      gameState.score++;
-      gameState.streak++;
-      gameState.bestStreak=Math.max(gameState.bestStreak,gameState.streak);
-    }else gameState.streak=0;
-  }
-  renderGames();bindScreen();
+  const g=gameState,q=activeGameQuestion(),choice=q?.choices?.[index];if(g.screen!=="play"||g.answered||choice===undefined)return;
+  const correct=choice===q.answer,e=studyGameEngine();g.tries=(g.tries||0)+1;g.selectedIndex=index;g.hintOpen=false;
+  if(g.comebackMode){g.answered=true;g.learningRow=e?.recordComeback?.(q,correct)||null;g.comebackCorrect=correct}
+  else if(g.supportMode){g.answered=true;g.learningRow=e?.recordSupport?.(q,correct)||null;g.supportCorrect=correct}
+  else if(correct){g.answered=true;g.retry=0;g.learningRow=e?.recordLearning?.(q,true,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;g.score++;g.streak++;g.bestStreak=Math.max(g.bestStreak,g.streak)}
+  else{g.misses=(g.misses||0)+1;g.lastWrong=index;g.streak=0;if(g.misses<3){g.retry=g.misses;g.selectedIndex=null}else{g.answered=true;g.retry=3;g.learningRow=e?.recordLearning?.(q,false,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null}}
+  renderGames();bindScreen()
 }
 function advanceStudyGame(){
-  if(!gameState.answered)return;
-  const resetAnswerState=()=>{
-    gameState.selectedIndex=null;
-    gameState.answered=false;
-    gameState.hintOpen=false;
-    gameState.learningRow=null;
-  };
-
-  if(gameState.comebackMode){
-    clearActiveGameComeback();
-    resetAnswerState();
-    renderGames();bindScreen();
-    return;
-  }
-
-  if(gameState.supportMode){
-    const origin=gameState.supportOriginQuestion;
-    gameState.supportMode=false;
-    gameState.supportQuestion=null;
-    gameState.supportCorrect=null;
-    gameState.supportOriginQuestion=null;
+  const g=gameState;if(!g.answered)return;
+  const reset=()=>Object.assign(g,{selectedIndex:null,answered:false,hintOpen:false,learningRow:null});
+  if(g.comebackMode){clearActiveGameComeback();reset();renderGames();bindScreen();return}
+  if(g.supportMode){
+    const origin=g.supportOriginQuestion;Object.assign(g,{supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null});
     if(origin)scheduleGameComeback(origin);
-    if(gameState.index>=gameState.questions.length-1){
-      markGameComebacksNextSession();
-      gameState.screen="finish";
-      saveGameRecord();
-    }else{
-      gameState.index++;
-      tickGameComebacks();
-      resetAnswerState();
-      activateDueGameComeback();
-    }
-    renderGames();bindScreen();
-    return;
+    if(g.index>=g.questions.length-1){markGameComebacksNextSession();g.screen="finish";saveGameRecord()}
+    else{g.index++;tickGameComebacks();reset();activateDueGameComeback()}
+    renderGames();bindScreen();return
   }
-
-  const current=gameState.questions[gameState.index];
-  const selected=current?.choices?.[gameState.selectedIndex];
-  const correct=selected===current?.answer;
-  if(!correct&&(gameState.learningRow?.ConsecutiveWrong||0)>=2){
-    const engine=studyGameEngine(),catalog=studyGameCatalog();
-    const support=engine?.supportQuestion(catalog,current,{
-      skillStats:studyGameEngine()?.loadLearning?.()||{},
-      seed:String(catalog?.sourceKey||"current")+"|support|"+String(current?.id||"item")+"|"+String(gameState.learningRow?.Seen||0)
-    });
-    if(support){
-      gameState.supportMode=true;
-      gameState.supportQuestion=support;
-      gameState.supportCorrect=null;
-      gameState.supportOriginQuestion=current;
-      resetAnswerState();
-      renderGames();bindScreen();
-      return;
-    }
+  const current=g.questions[g.index],selected=current?.choices?.[g.selectedIndex],correct=selected===current?.answer;
+  if(!correct&&(g.learningRow?.ConsecutiveWrong||0)>=2){
+    const engine=studyGameEngine(),catalog=studyGameCatalog(),support=engine?.supportQuestion(catalog,current,{skillStats:engine?.loadLearning?.()||{},seed:String(catalog?.sourceKey||"current")+"|support|"+String(current?.id||"item")+"|"+String(g.learningRow?.Seen||0)});
+    if(support){Object.assign(g,{supportMode:true,supportQuestion:support,supportCorrect:null,supportOriginQuestion:current});reset();renderGames();bindScreen();return}
   }
-
-  if(gameState.index>=gameState.questions.length-1){
-    markGameComebacksNextSession();
-    gameState.screen="finish";
-    saveGameRecord();
-  }else{
-    gameState.index++;
-    tickGameComebacks();
-    resetAnswerState();
-    activateDueGameComeback();
-  }
-  renderGames();bindScreen();
+  if(g.index>=g.questions.length-1){markGameComebacksNextSession();g.screen="finish";saveGameRecord()}
+  else{g.index++;tickGameComebacks();reset();activateDueGameComeback()}
+  renderGames();bindScreen()
 }
 function leaveStudyGame(){gameState.screen="menu";renderGames();bindScreen()}
-function toggleStudyHint(){if(gameState.screen==="play"&&!gameState.answered){gameState.hintOpen=!gameState.hintOpen;renderGames();bindScreen()}}
+function toggleStudyHint(){const g=gameState;if(g.screen==="play"&&!g.answered){g.hintOpen=!g.hintOpen;if(g.hintOpen)g.hints=(g.hints||0)+1;renderGames();bindScreen()}}
 function gameMenuHtml(catalog){
   const modes=availableStudyGameModes();
   return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Pick a game and start</h2><span>Questions prioritize this week’s school skills and adjust as you practice.</span></div></section>'+
@@ -575,28 +513,28 @@ function gameMenuHtml(catalog){
     '<p class="game-privacy-note">Practice prioritizes verified school skills; private student answers and grades are not used.</p>';
 }
 function gamePlayHtml(){
-  const mode=gameMode(gameState.mode),q=activeGameQuestion(),support=gameState.supportMode,comeback=gameState.comebackMode,teach=support?studyGameEngine()?.teachCardFor?.(q):null;
+  const g=gameState;
+  const mode=gameMode(g.mode),q=activeGameQuestion(),support=g.supportMode,comeback=g.comebackMode,teach=support?studyGameEngine()?.teachCardFor?.(q):null;
   if(!q)return '<section class="game-empty"><h2>No questions are ready for this game yet.</h2><button type="button" data-game-home>Back to games</button></section>';
-  const progress=gameState.index+1,total=gameState.questions.length,pct=Math.round((progress/Math.max(1,total))*100);
-  const chosen=gameState.selectedIndex;
+  const progress=g.index+1,total=g.questions.length,pct=Math.round((progress/Math.max(1,total))*100);
+  const chosen=g.selectedIndex;
   const answers=q.choices.map((choice,index)=>{
     let klass="";
-    if(gameState.answered){
+    if(g.answered){
       if(choice===q.answer)klass=" correct";
-      else if(index===chosen)klass=" wrong";
-    }
-    return '<button type="button" class="game-answer'+klass+'" data-game-answer="'+index+'" '+(gameState.answered?'disabled':'')+'><span>'+String.fromCharCode(65+index)+'</span><strong>'+esc(choice)+'</strong></button>';
+      else if(index===chosen||index===g.lastWrong)klass=" wrong";
+    }else if(g.retry&&index===g.lastWrong)klass=" wrong";
+    return '<button type="button" class="game-answer'+klass+'" data-game-answer="'+index+'" '+(g.answered?'disabled':'')+'><span>'+String.fromCharCode(65+index)+'</span><strong>'+esc(choice)+'</strong></button>';
   }).join("");
   const selected=chosen===null?null:q.choices[chosen],correct=selected===q.answer;
   const targeted=!correct&&selected?q.choiceDiagnostics?.[selected]?.feedback:null;
-  const adaptive=!support&&!comeback&&!correct&&(gameState.learningRow?.ConsecutiveWrong||0)>=2?'<small class="adaptive-note">A smaller same-skill support step is next. It does not count toward your score.</small>':'';
-  const feedback=gameState.answered
-    ? '<section class="game-feedback '+(correct?'correct':'retry')+'" aria-live="polite"><span>'+(correct?'✓':'↻')+'</span><div><strong>'+(comeback?(correct?'Remembered later!':'Good review — here’s the answer.'):(support?(correct?'Good — keep going!':'Here is the smaller-step answer.'):(correct?'Nice work!':'Good try — here’s the answer.')))+'</strong><p>'+esc(correct?q.explanation:(targeted||q.explanation))+'</p>'+adaptive+'</div></section><button type="button" class="game-next" data-game-next>'+(support||comeback?'Continue':progress===total?'See my score':'Next question')+' <span>›</span></button>'
-    : '<div class="game-hint-wrap">'+(comeback?'<small class="adaptive-note">Comeback · same skill · not scored</small>':support?'<small class="adaptive-note">Support step · same skill · not scored</small>':'')+'<button type="button" class="game-hint-button" data-game-hint>'+(gameState.hintOpen?'Hide hint':'Need a hint?')+'</button>'+(gameState.hintOpen?'<p class="game-hint">'+esc(q.hint)+'</p>':'')+'</div>';
-  return '<div class="game-topbar"><button type="button" data-game-home aria-label="Back to study games">‹</button><div><span>'+esc(comeback?"Comeback":support?"Support step":mode.title)+'</span><strong>'+(comeback?'Remember this skill later':support?'Same skill · smaller step':progress+' of '+total)+'</strong></div><b>★ '+gameState.score+'</b></div>'+
+  const adaptive=!support&&!comeback&&!correct&&(g.learningRow?.ConsecutiveWrong||0)>=2?'<small class="adaptive-note">A smaller same-skill support step is next. It does not count toward your score.</small>':'';
+  const retryClue=!support&&!comeback&&!g.answered&&g.retry?'<section class="game-feedback retry" aria-live="polite"><span>↻</span><div><strong>'+(g.retry===1?'Not yet — use this clue.':'Try once more with a stronger clue.')+'</strong><p>'+esc(g.retry===1?q.hint:(studyGameEngine()?.teachCardFor?.(q)?.instruction||targeted||q.hint))+'</p></div></section>':'';
+  const feedback=g.answered?'<section class="game-feedback '+(correct?'correct':'retry')+'" aria-live="polite"><span>'+(correct?'✓':'↻')+'</span><div><strong>'+(comeback?(correct?'Remembered later!':'Good review — here’s the answer.'):(support?(correct?'Good — keep going!':'Here is the smaller-step answer.'):(correct?(g.misses?'You worked it out!':'Nice work!'):'Here’s the model answer.')))+'</strong><p>'+esc(correct?q.explanation:(targeted||q.explanation))+'</p>'+adaptive+'</div></section><button type="button" class="game-next" data-game-next>'+(support||comeback?'Continue':progress===total?'See my score':'Next question')+' <span>›</span></button>':retryClue+'<div class="game-hint-wrap">'+(comeback?'<small class="adaptive-note">Comeback · same skill · not scored</small>':support?'<small class="adaptive-note">Support step · same skill · not scored</small>':'')+'<button type="button" class="game-hint-button" data-game-hint>'+(g.hintOpen?'Hide hint':'Need a hint?')+'</button>'+(g.hintOpen?'<p class="game-hint">'+esc(q.hint)+'</p>':'')+'</div>';
+  return '<div class="game-topbar"><button type="button" data-game-home aria-label="Back to study games">‹</button><div><span>'+esc(comeback?"Comeback":support?"Support step":mode.title)+'</span><strong>'+(comeback?'Remember this skill later':support?'Same skill · smaller step':progress+' of '+total)+'</strong></div><b>★ '+g.score+'</b></div>'+
     '<div class="game-progress" aria-label="Game progress"><span style="width:'+pct+'%"></span></div>'+
     '<section class="game-question-card"><div class="game-question-meta"><span>'+esc(q.subject)+'</span><b>'+esc(comeback?"Comeback":support?"Support":GAME_TYPE_LABELS[q.questionType]||"Practice")+'</b></div>'+(teach?'<div class="game-hint-wrap teach-card"><small class="adaptive-note">Quick lesson · not scored</small><p class="game-hint">'+esc(teach.instruction)+(teach.example?' '+esc(teach.example):'')+'</p></div>':'')+'<h2>'+esc(q.prompt)+'</h2><div class="game-answer-list">'+answers+'</div>'+feedback+'</section>'+
-    '<div class="game-streak"><span>Streak <b>'+gameState.streak+'</b></span><span>Best this round <b>'+gameState.bestStreak+'</b></span></div>';
+    '<div class="game-streak"><span>Streak <b>'+g.streak+'</b></span><span>Best this round <b>'+g.bestStreak+'</b></span></div>';
 }
 function gameFinishHtml(){
   const mode=gameMode(gameState.mode),total=gameState.questions.length,record=loadGameRecord(gameState.mode);
