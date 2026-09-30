@@ -1090,42 +1090,79 @@ function semanticRotationKey(question){
 function rotationStorageKey(sourceKey){return ROTATION_STORAGE_PREFIX+hash(String(sourceKey||"current")).toString(36)}
 function loadRotation(sourceKey){
   try{
-    const parsed=JSON.parse(localStorage.getItem(rotationStorageKey(sourceKey))||"{}");
-    return {recent:Array.isArray(parsed?.recent)?parsed.recent.slice(-48):[]};
+    const key=rotationStorageKey(sourceKey),raw=localStorage.getItem(key),parsed=JSON.parse(raw||"{}");
+    const recent=(Array.isArray(parsed?.recent)?parsed.recent:[])
+      .filter(row=>row?.v).slice(-48)
+      .map(row=>({v:String(row.v||""),skill:String(row.skill||""),type:String(row.type||"")}));
+    const safe=JSON.stringify({recent});
+    if(raw!==null&&raw!==safe)localStorage.setItem(key,safe);
+    return {recent};
   }catch{return {recent:[]}}
 }
 function saveRotation(sourceKey,rows){
-  const recent=(Array.isArray(rows)?rows:[]).filter(row=>row?.v).slice(-48);
+  const recent=(Array.isArray(rows)?rows:[]).filter(row=>row?.v).slice(-48)
+    .map(row=>({v:String(row.v||""),skill:String(row.skill||""),type:String(row.type||"")}));
   try{localStorage.setItem(rotationStorageKey(sourceKey),JSON.stringify({recent}))}catch{}
   return recent;
 }
 function rememberRotation(sourceKey,selected){
   if(!sourceKey||!Array.isArray(selected)||!selected.length)return;
-  const current=loadRotation(sourceKey).recent,now=Date.now();
+  const current=loadRotation(sourceKey).recent;
   for(const question of selected){
     const v=semanticRotationKey(question);if(!v)continue;
     const prior=current.findIndex(row=>row.v===v);if(prior>=0)current.splice(prior,1);
-    current.push({v,skill:String(question.skill||""),type:String(question.questionType||""),at:now});
+    current.push({v,skill:String(question.skill||""),type:String(question.questionType||"")});
   }
   saveRotation(sourceKey,current);
 }
 function dynamicSkillCap(pool,count){
   const skillCount=new Set((pool||[]).map(q=>q.skill).filter(Boolean)).size;
-  return skillCount>=3?2:skillCount===2?3:Math.max(1,count);
+  return skillCount>=3?2:skillCount===2?Math.max(1,Math.ceil(Math.max(1,count)/2)):Math.max(1,count);
 }
 function orderForVariety(rows){
-  const remaining=[...(rows||[])],out=[];
+  const source=[...(rows||[])];
+  if(source.length<2)return source;
+  const skillFrequency=new Map(),typeFrequency=new Map();
+  for(const q of source){
+    skillFrequency.set(q.skill,(skillFrequency.get(q.skill)||0)+1);
+    typeFrequency.set(q.questionType,(typeFrequency.get(q.questionType)||0)+1);
+  }
+  const rank=(a,b)=>
+    (typeFrequency.get(source[b].questionType)||0)-(typeFrequency.get(source[a].questionType)||0)
+    ||(skillFrequency.get(source[b].skill)||0)-(skillFrequency.get(source[a].skill)||0)
+    ||a-b;
+  if(source.length<=12){
+    const full=(1<<source.length)-1,memo=new Map();
+    const better=(candidate,current)=>
+      !current
+      ||candidate.typeTriples<current.typeTriples
+      ||(candidate.typeTriples===current.typeTriples&&candidate.skillRepeats<current.skillRepeats);
+    const solve=(mask,last,before)=>{
+      if(mask===full)return{typeTriples:0,skillRepeats:0,path:[]};
+      const key=mask+"|"+last+"|"+before;
+      if(memo.has(key))return memo.get(key);
+      const candidates=source.map((_,index)=>index).filter(index=>(mask&(1<<index))===0).sort(rank);
+      let best=null;
+      for(const index of candidates){
+        const q=source[index],lastQ=last>=0?source[last]:null,beforeQ=before>=0?source[before]:null;
+        const triple=lastQ&&beforeQ&&lastQ.questionType===beforeQ.questionType&&q.questionType===lastQ.questionType?1:0;
+        const repeat=lastQ&&lastQ.skill===q.skill?1:0;
+        const tail=solve(mask|(1<<index),index,last);
+        const candidate={typeTriples:triple+tail.typeTriples,skillRepeats:repeat+tail.skillRepeats,path:[index,...tail.path]};
+        if(better(candidate,best))best=candidate;
+      }
+      memo.set(key,best);return best;
+    };
+    const best=solve(0,-1,-1);
+    if(best?.path?.length===source.length)return best.path.map(index=>source[index]);
+  }
+  const remaining=[...source],out=[];
   while(remaining.length){
     const last=out[out.length-1],before=out[out.length-2];
     let candidates=[...remaining];
     if(last&&candidates.some(q=>q.skill!==last.skill))candidates=candidates.filter(q=>q.skill!==last.skill);
     if(last&&before&&last.questionType===before.questionType&&candidates.some(q=>q.questionType!==last.questionType)){
       candidates=candidates.filter(q=>q.questionType!==last.questionType);
-    }
-    const skillFrequency=new Map(),typeFrequency=new Map();
-    for(const q of remaining){
-      skillFrequency.set(q.skill,(skillFrequency.get(q.skill)||0)+1);
-      typeFrequency.set(q.questionType,(typeFrequency.get(q.questionType)||0)+1);
     }
     candidates.sort((a,b)=>
       (typeFrequency.get(b.questionType)||0)-(typeFrequency.get(a.questionType)||0)
@@ -1161,7 +1198,20 @@ function pickBalanced(pool,count,seed,skillStats,preferredSkills=[],recentKeys=n
     const needsSecondSkill=selected.length>0&&selectedSkills.size===1&&availableSkills.size>1;
     const diversityPool=needsSecondSkill?tierPool.filter(q=>q.skill!==selected[0].skill):tierPool;
     const fresh=diversityPool.filter(q=>!recentKeys.has(semanticRotationKey(q)));
-    const candidate=(fresh.length?fresh:diversityPool)[0];
+    const preferredPool=fresh.length?fresh:diversityPool;
+    let candidate=preferredPool[0];
+    const representedTypes=new Set(selected.filter(q=>q.skill===candidate.skill).map(q=>q.questionType));
+    if(representedTypes.has(candidate.questionType)){
+      const alternate=fresh.find(q=>q.skill===candidate.skill&&!representedTypes.has(q.questionType))
+        ||diversityPool.find(q=>q.skill===candidate.skill&&!representedTypes.has(q.questionType));
+      if(alternate)candidate=alternate;
+    }
+    const last=selected[selected.length-1],before=selected[selected.length-2];
+    if(last&&before&&last.questionType===before.questionType){
+      const alternate=fresh.find(q=>q.questionType!==last.questionType)
+        ||diversityPool.find(q=>q.questionType!==last.questionType);
+      if(alternate)candidate=alternate;
+    }
     selected.push(candidate);
     usedIds.add(candidate.id);usedVariants.add(semanticRotationKey(candidate));
     skillCounts[candidate.skill]=(skillCounts[candidate.skill]||0)+1;
@@ -1325,6 +1375,16 @@ function openStudyStarDb(){
 function studyStarEventId(sourcePack,roundId,rewardType){
   return "star-"+hash(text(sourcePack)+"|"+text(roundId)+"|"+text(rewardType)).toString(36);
 }
+function safeStudyStarRow(row){
+  return {
+    sourcePack:text(row?.sourcePack),
+    roundId:text(row?.roundId),
+    rewardType:text(row?.rewardType),
+    eventId:text(row?.eventId),
+    currency:text(row?.currency),
+    amount:Number(row?.amount)||0
+  };
+}
 async function commitStudyStarRewards({sourcePack,roundId,completed=false,comebackSucceeded=false}={}){
   const source=text(sourcePack),round=text(roundId),events=studyStarRewardEvents({completed,comebackSucceeded});
   if(!source||!round)throw new Error("Study Star ledger requires sourcePack and roundId");
@@ -1342,10 +1402,10 @@ async function commitStudyStarRewards({sourcePack,roundId,completed=false,comeba
       get.onsuccess=()=>{
         if(get.result){
           duplicateAmount+=Number(get.result.amount)||0;
-          results.push({rewardType:event.rewardType,amount:Number(get.result.amount)||0,awarded:false,eventId:get.result.eventId});
+          results.push({rewardType:event.rewardType,amount:Number(get.result.amount)||0,awarded:false,eventId:text(get.result.eventId)});
           return;
         }
-        const entry={sourcePack:source,roundId:round,rewardType:event.rewardType,eventId:studyStarEventId(source,round,event.rewardType),currency:STUDY_STAR_POLICY.currency,amount:event.amount,createdAt:Date.now()};
+        const entry={sourcePack:source,roundId:round,rewardType:event.rewardType,eventId:studyStarEventId(source,round,event.rewardType),currency:STUDY_STAR_POLICY.currency,amount:event.amount};
         const add=store.add(entry);
         add.onerror=()=>tx.abort();
         add.onsuccess=()=>{awardedAmount+=event.amount;results.push({rewardType:event.rewardType,amount:event.amount,awarded:true,eventId:entry.eventId})};
@@ -1358,7 +1418,12 @@ async function loadStudyStarLedger(){
   return await new Promise((resolve,reject)=>{
     const tx=db.transaction(STUDY_STAR_STORE,"readonly"),request=tx.objectStore(STUDY_STAR_STORE).getAll();
     request.onerror=()=>{db.close();reject(request.error||new Error("Study Star ledger read failed"))};
-    request.onsuccess=()=>{const rows=(request.result||[]).sort((a,b)=>Number(a.createdAt)-Number(b.createdAt)||String(a.eventId).localeCompare(String(b.eventId)));db.close();resolve(rows)};
+    request.onsuccess=()=>{
+      const rows=(request.result||[]).map(safeStudyStarRow).sort((a,b)=>
+        a.sourcePack.localeCompare(b.sourcePack)||a.roundId.localeCompare(b.roundId)||a.rewardType.localeCompare(b.rewardType)||a.eventId.localeCompare(b.eventId)
+      );
+      db.close();resolve(rows);
+    };
   });
 }
 async function studyStarBalance(){
