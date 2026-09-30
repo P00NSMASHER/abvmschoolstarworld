@@ -1154,15 +1154,21 @@ function writeItemQuality(data){
   try{localStorage.setItem(ITEM_QUALITY_STORAGE_KEY,JSON.stringify(safe))}catch{}
   return safe;
 }
+function itemQualityKey(question){
+  const stable=String(question?.variantFingerprint||question?.contentFingerprint||question?.id||"");
+  return stable?"q"+hash(stable).toString(36):"";
+}
 function markQuestionShown(question){
-  if(question?.id&&!itemShownAt.has(question.id))itemShownAt.set(question.id,Date.now());
+  const key=itemQualityKey(question);if(!key)return;
+  const previous=itemShownAt.get(key),now=Date.now();
+  if(!previous||now-previous>600000)itemShownAt.set(key,now);
 }
 function responseTimeBand(start,now){
   const ms=Math.max(0,Number(now)-Number(start));
   return ms<5000?"lt5":ms<15000?"5to15":ms<30000?"15to30":"gte30";
 }
 function itemQualityRow(data,question){
-  const id=String(question?.id||"");
+  const id=itemQualityKey(question);
   const row=data.items[id]||{
     Skill:String(question?.skill||""),Subject:String(question?.subject||""),Resolved:0,Correct:0,Wrong:0,
     NormalResolved:0,NormalCorrect:0,NormalWrong:0,FirstTryCorrect:0,ChoicePositions:[0,0,0],Misconceptions:{},
@@ -1172,7 +1178,7 @@ function itemQualityRow(data,question){
   return {id,row};
 }
 function noteItemAttempt(question,index){
-  if(!question?.id||!Number.isInteger(index)||index<0||index>2)return null;
+  if(!itemQualityKey(question)||!Number.isInteger(index)||index<0||index>2)return null;
   const data=loadItemQuality(),{id,row}=itemQualityRow(data,question);
   row.ChoicePositions[index]=(Number(row.ChoicePositions[index])||0)+1;
   const choice=question.choices?.[index];
@@ -1193,8 +1199,8 @@ function pointBiserial(row){
   return (mean1-mean0)/sd*Math.sqrt(p*q);
 }
 function recordItemQuality(question,correct,{attemptCount=1,incorrectCount=correct?0:1,hintCount=0,kind="normal",priorMastery=.5}={}){
-  if(!question?.id)return null;
-  const data=loadItemQuality(),{id,row}=itemQualityRow(data,question),now=Date.now(),start=itemShownAt.get(id);itemShownAt.delete(id);
+  const key=itemQualityKey(question);if(!key)return null;
+  const data=loadItemQuality(),{id,row}=itemQualityRow(data,question),now=Date.now(),start=itemShownAt.get(key);itemShownAt.delete(key);
   row.Resolved=(Number(row.Resolved)||0)+1;correct?row.Correct=(Number(row.Correct)||0)+1:row.Wrong=(Number(row.Wrong)||0)+1;
   const attempts=Math.max(1,Number(attemptCount)||1),incorrect=Math.max(0,Number(incorrectCount)||0),hints=Math.max(0,Number(hintCount)||0);
   row.HintsUsed=(Number(row.HintsUsed)||0)+hints;
@@ -1223,7 +1229,7 @@ function reviewItemQuality(data=loadItemQuality()){
     if(wrongAttempts>=4&&mis[0]&&Number(mis[0][1])/wrongAttempts>=.6)flags.push("dominant-misconception");
     if(wrongAttempts>=6&&firstTry>.35&&firstTry<.7&&mis[1]&&Number(mis[0][1])/wrongAttempts>=.25&&Number(mis[1][1])/wrongAttempts>=.25)flags.push("possible-ambiguity");
     const discrimination=pointBiserial(row),discriminationReady=n>=12&&discrimination!==null;
-    if(discriminationReady&&Math.abs(discrimination)<.1)flags.push("low-discrimination");
+    if(discriminationReady&&discrimination<.1)flags.push("low-discrimination");
     out.push({id,skill:row.Skill,subject:row.Subject,resolved:n,accuracy,firstTryRate:firstTry,discrimination,discriminationEvidence:discriminationReady?"reviewable":"insufficient-evidence",method:"classical-longitudinal-proxy",irtUsed:false,comebackRate:(Number(row.ComebackSeen)||0)?(Number(row.ComebackCorrect)||0)/(Number(row.ComebackSeen)||1):null,flags,dominantMisconception:mis[0]?.[0]||null});
   }
   return out.sort((a,b)=>b.flags.length-a.flags.length||b.resolved-a.resolved||a.id.localeCompare(b.id));
@@ -1359,6 +1365,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,selectQuestions,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality
+  buildCatalog,validateCatalog,selectQuestions,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,itemQualityKey
 });
 })();
