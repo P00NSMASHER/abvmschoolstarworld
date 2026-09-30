@@ -58,6 +58,12 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
   assert.ok(pipeline.questions.every(question => question.evidenceContract?.evidenceType === 'DIRECT_TARGET'));
   assert.ok(pipeline.questions.every(question => question.contentFingerprint && question.variantFingerprint && question.presentationFingerprint));
   assert.ok(Math.max(...pipeline.qa.answerPositionCounts) - Math.min(...pipeline.qa.answerPositionCounts) <= 1);
+  assert.equal(pipeline.qa.semanticVariantCount, pipeline.qa.questionCount);
+  assert.ok(pipeline.qa.maxConsecutiveAnswerPosition <= 2);
+  assert.deepEqual(
+    [...new Set(pipeline.questions.filter(question => question.skill === 'subtraction-within-12').map(question => question.questionType))].sort(),
+    ['direct','reasoning','transfer']
+  );
 
   for (const skill of ['sentence-types','consonant-blends','cvc-structure','long-short-a','suffix-ed-ing','theme','visualize','dialogue','subtraction-within-12']) {
     assert.ok((pipeline.qa.questionsPerSkill?.[skill] || 0) >= 3, `expected semantic sibling family for ${skill}`);
@@ -147,6 +153,22 @@ test('generated study notes are merged into the matching Study subjects without 
   assert.ok(spelling.studyNotes.some(note => /short a words/i.test(note)));
   assert.equal(new Set(reading.studyNotes.map(note => note.toLowerCase())).size, reading.studyNotes.length);
   assert.equal(new Set(spelling.studyNotes.map(note => note.toLowerCase())).size, spelling.studyNotes.length);
+});
+
+test('pipeline validation rejects fake semantic variety and answer-position streaks', () => {
+  const envelope = JSON.parse(readFileSync(DATA_PATH, 'utf8'));
+  const pipeline = buildGrade2ContentPipeline(structuredClone(envelope.pack), { sourceHash: 'variety-gate-test' });
+  const family = pipeline.questions.filter(question => question.skill === 'sentence-types');
+  assert.ok(family.length >= 3);
+
+  const duplicate = structuredClone(pipeline);
+  const duplicateFamily = duplicate.questions.filter(question => question.skill === 'sentence-types');
+  duplicateFamily[1].variantFingerprint = duplicateFamily[0].variantFingerprint;
+  assert.ok(validateGrade2ContentPipeline(duplicate).some(issue => issue === 'semantic-variant-duplicate:sentence-types'));
+
+  const biased = structuredClone(pipeline);
+  biased.qa.maxConsecutiveAnswerPosition = 3;
+  assert.ok(validateGrade2ContentPipeline(biased).includes('answer-position-run-too-long'));
 });
 
 test('bad generated question specs are rejected before publication', () => {
