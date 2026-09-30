@@ -65,3 +65,29 @@ test("landscape phone keeps navigation and content usable",async({browser})=>{
     await context.close();
   }
 });
+
+
+test("Family notices stay stacked and inside the phone viewport",async({browser})=>{
+  const context=await browser.newContext({viewport:{width:393,height:852},isMobile:true,hasTouch:true});
+  const page=await context.newPage();
+  await page.goto("http://127.0.0.1:4173/#family");
+  const list=page.locator(".static-notice-list");
+  await expect(list).toBeVisible({timeout:10_000});
+  const rows=list.locator(".notice-row");
+  expect(await rows.count()).toBeGreaterThan(0);
+  const layout=await list.evaluate(el=>({
+    display:getComputedStyle(el).display,
+    clientWidth:el.clientWidth,
+    scrollWidth:el.scrollWidth,
+    rows:[...el.querySelectorAll(".notice-row")].map(row=>{
+      const r=row.getBoundingClientRect();
+      return{left:r.left,right:r.right,width:r.width};
+    })
+  }));
+  expect(layout.display).toBe("block");
+  expect(layout.scrollWidth).toBeLessThanOrEqual(layout.clientWidth+1);
+  for(const row of layout.rows)expect(row.width).toBeLessThanOrEqual(layout.clientWidth+1);
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
+  expect(overflow).toBeFalsy();
+  await context.close();
+});
