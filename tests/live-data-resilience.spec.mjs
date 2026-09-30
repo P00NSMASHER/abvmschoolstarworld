@@ -77,7 +77,7 @@ test("versioned app code bypasses an older cache entry while online",async({page
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
 
   const result=await page.evaluate(async()=>{
-    const cache=await caches.open("abvm-grade2-parent-companion-v91-runtime-allocations");
+    const cache=await caches.open("abvm-grade2-parent-companion-v92-css-residue");
     await cache.put("./app.js?v=91",new Response("OLD_CACHED_APP_MARKER",{headers:{"Content-Type":"application/javascript"}}));
     const text=await (await fetch("./app.js?v=91")).text();
     return {old:text.includes("OLD_CACHED_APP_MARKER"),fresh:text.includes("PACK_REFRESH_MS")};
@@ -88,7 +88,7 @@ test("versioned app code bypasses an older cache entry while online",async({page
 
 test("service worker install tolerates optional school-data precache failure",async({request})=>{
   const source=await (await request.get("/sw.js")).text();
-  expect(source).toContain('const CACHE = "abvm-grade2-parent-companion-v91-runtime-allocations"');
+  expect(source).toContain('const CACHE = "abvm-grade2-parent-companion-v92-css-residue"');
   expect(source).toContain("Promise.allSettled");
   expect(source).toContain("OPTIONAL_DATA");
   expect(source).toContain('url.searchParams.has("v")');
@@ -98,10 +98,10 @@ test("service worker install tolerates optional school-data precache failure",as
 
 test("index promotes a newly activated service worker before relying on versioned code",async({request})=>{
   const html=await (await request.get("/index.html")).text();
-  expect(html).toContain('abvm-sw-reloaded-v91');
+  expect(html).toContain('abvm-sw-reloaded-v92');
   expect(html).toContain('navigator.serviceWorker.addEventListener("controllerchange"');
   expect(html).toContain('registration.update()');
-  expect(html.indexOf("abvm-sw-reloaded-v91")).toBeLessThan(html.indexOf("./app.js?v=91"));
+  expect(html.indexOf("abvm-sw-reloaded-v92")).toBeLessThan(html.indexOf("./app.js?v=91"));
 });
 
 
