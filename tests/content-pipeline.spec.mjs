@@ -94,3 +94,66 @@ test('legacy reading material cannot outrank the verified pipeline with unlisted
   expect(result).not.toContain('inference');
   expect(result).not.toContain('text-evidence');
 });
+
+
+test('skill-restricted selection keeps Test Ready practice inside the verified assessment skill', async ({ page }) => {
+  const result = await page.evaluate(async () => {
+    const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(response => response.json());
+    const pack = structuredClone(envelope.pack);
+    pack.contentPipeline = {
+      schemaVersion: 2,
+      sourceHash: 'test-ready-selection',
+      skills: [
+        { id: 'sentence-types', subject: 'Reading / ELA' },
+        { id: 'long-short-a', subject: 'Spelling / Handwriting' },
+      ],
+      questions: [
+        {
+          id: 'test-ready-sentence-1',
+          subject: 'Reading / ELA',
+          skill: 'sentence-types',
+          questionType: 'direct',
+          prompt: 'Which sentence asks a question and needs a question mark at the end?',
+          choices: ['Where is my book?', 'Put the book away.', 'My book is blue.'],
+          answer: 'Where is my book?',
+          explanation: 'A question asks for information.',
+          hint: 'Choose the sentence that asks something.',
+          sourceFact: 'Verified Grade 2 skill: Types of sentences',
+          standards: ['CCSS.L.2.1'],
+          domain: 'Language',
+          dok: 1,
+          difficulty: 2,
+        },
+        {
+          id: 'test-ready-vowel-1',
+          subject: 'Spelling / Handwriting',
+          skill: 'long-short-a',
+          questionType: 'direct',
+          prompt: 'Which word has the long a sound made by the a_e pattern?',
+          choices: ['game', 'cat', 'map'],
+          answer: 'game',
+          explanation: 'The final e helps a say its long sound.',
+          hint: 'Look for a consonant between a and final e.',
+          sourceFact: 'Verified Grade 2 skill: Long a and short a',
+          standards: ['CCSS.RF.2.3'],
+          domain: 'Foundational reading',
+          dok: 2,
+          difficulty: 2,
+        },
+      ],
+      coverage: [],
+    };
+    const catalog = window.ABVMStudyGames.buildCatalog(pack, { sourceKey: 'test-ready-selection' });
+    const selected = window.ABVMStudyGames.selectQuestions(catalog, {
+      skills: ['sentence-types'],
+      count: 5,
+      seed: 'test-ready',
+      skillStats: {},
+      preferredSkills: ['sentence-types'],
+    });
+    return selected.map(question => ({ id: question.id, skill: question.skill, tier: question.tier }));
+  });
+
+  expect(result.length).toBeGreaterThan(0);
+  expect(result.every(question => question.skill === 'sentence-types')).toBe(true);
+});
