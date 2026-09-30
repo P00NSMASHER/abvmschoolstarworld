@@ -34,19 +34,26 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
     'religion-creation-care',
     'religion-jesus-savior',
     'religion-gifts-choices',
-    'vocabulary-in-context',
   ]) {
     assert.equal(ids.has(expected), true, `missing current skill: ${expected}`);
   }
 
   assert.equal(pipeline.qa.status, 'pass');
   assert.equal(pipeline.qa.rejectedCount, 0);
+  assert.equal(pipeline.schemaVersion, 2);
+  assert.equal(pipeline.safetyState, 'SAFE_PARTIAL');
   assert.deepEqual(pipeline.qa.subjectCoverage, ['Math', 'Reading / ELA', 'Religion', 'Spelling / Handwriting']);
+  assert.equal(ids.has('vocabulary-in-context'), false, 'must not invent vocabulary definitions absent from source');
+  assert.ok(pipeline.coverage.some(row => row.status === 'SOURCE_INSUFFICIENT' && /vocabulary definitions/i.test(row.topic)));
   assert.ok(pipeline.questions.length >= pipeline.skills.length);
   assert.equal(validateGrade2ContentPipeline(pipeline).length, 0);
 
   const signatures = pipeline.questions.map(question => question.prompt.toLowerCase() + '|' + question.answer.toLowerCase());
   assert.equal(new Set(signatures).size, signatures.length);
+  assert.ok(pipeline.questions.every(question => question.provenance === 'verified-abvm-skill-template'));
+  assert.ok(pipeline.questions.every(question => question.evidenceContract?.evidenceType === 'DIRECT_TARGET'));
+  assert.ok(pipeline.questions.every(question => question.contentFingerprint && question.variantFingerprint && question.presentationFingerprint));
+  assert.ok(Math.max(...pipeline.qa.answerPositionCounts) - Math.min(...pipeline.qa.answerPositionCounts) <= 1);
 });
 
 test('future teacher skills are detected without hand-editing the app', () => {
@@ -82,6 +89,25 @@ test('future teacher skills are detected without hand-editing the app', () => {
     assert.equal(ids.has(expected), true, `missing future skill: ${expected}`);
   }
   assert.equal(pipeline.qa.status, 'pass');
+});
+
+test('vocabulary definitions are generated only when the verified pack actually supplies meanings', () => {
+  const pack = {
+    sourceHash: 'vocab-source',
+    subjects: [
+      { subject: 'Reading / ELA', topics: ['Vocabulary: rescue, secret, depend'], studyNotes: [] },
+    ],
+    vocabulary: [
+      { term: 'rescue', meaning: 'to save someone or something from danger' },
+      { term: 'secret', meaning: 'something kept hidden from other people' },
+      { term: 'depend', meaning: 'to rely on someone or something' },
+    ],
+  };
+  const pipeline = buildGrade2ContentPipeline(pack, { sourceHash: pack.sourceHash });
+  assert.ok(pipeline.skills.some(skill => skill.id === 'vocabulary-in-context'));
+  assert.ok(pipeline.questions.some(question => question.skill === 'vocabulary-in-context'));
+  assert.equal(pipeline.coverage.some(row => row.status === 'SOURCE_INSUFFICIENT' && /vocabulary definitions/i.test(row.topic)), false);
+  assert.equal(validateGrade2ContentPipeline(pipeline).length, 0);
 });
 
 test('generated study notes are merged into the matching Study subjects without duplicates', () => {
