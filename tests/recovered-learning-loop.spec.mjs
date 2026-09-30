@@ -74,3 +74,136 @@ test('Comeback queue deduplicates the same failed origin question', async ({ pag
   expect(result.second).toBeNull();
   expect(result.queue).toHaveLength(1);
 });
+
+
+test('Comeback stays hidden until two later resolved transitions make it due', async ({ page }) => {
+  const result = await page.evaluate(async () => {
+    const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(response => response.json());
+    const sourceKey = window.ABVMStudyGames.sourceKeyFromEnvelope(envelope.pack, envelope);
+    const catalog = window.ABVMStudyGames.buildCatalog(envelope.pack, { sourceKey });
+    const current = catalog.questions.find(item =>
+      item.tier === 'material' &&
+      item.skill &&
+      catalog.questions.some(other => other.skill === item.skill && other.id !== item.id)
+    );
+    if (!current) return null;
+
+    const scheduled = window.ABVMStudyGames.scheduleComeback(catalog, current, {
+      sourceKey,
+      remaining: 3,
+      seed: 'delay-proof',
+    });
+    if (!scheduled) return null;
+
+    // Leaving the failed origin question consumes the first transition.
+    window.ABVMStudyGames.tickComebacks(sourceKey);
+    const afterOrigin = JSON.parse(localStorage.getItem('abvm-study-comebacks:v1') || '[]')[0]?.remaining;
+    const dueAfterOrigin = window.ABVMStudyGames.dueComeback(catalog, sourceKey);
+
+    // First later resolved question.
+    window.ABVMStudyGames.tickComebacks(sourceKey);
+    const afterOneLater = JSON.parse(localStorage.getItem('abvm-study-comebacks:v1') || '[]')[0]?.remaining;
+    const dueAfterOneLater = window.ABVMStudyGames.dueComeback(catalog, sourceKey);
+
+    // Second later resolved question.
+    window.ABVMStudyGames.tickComebacks(sourceKey);
+    const afterTwoLater = JSON.parse(localStorage.getItem('abvm-study-comebacks:v1') || '[]')[0]?.remaining;
+    const dueAfterTwoLater = window.ABVMStudyGames.dueComeback(catalog, sourceKey);
+
+    return {
+      currentId: current.id,
+      siblingId: scheduled.question.id,
+      skill: current.skill,
+      siblingSkill: scheduled.question.skill,
+      afterOrigin,
+      afterOneLater,
+      afterTwoLater,
+      dueAfterOrigin: dueAfterOrigin?.question?.id || null,
+      dueAfterOneLater: dueAfterOneLater?.question?.id || null,
+      dueAfterTwoLater: dueAfterTwoLater?.question?.id || null,
+    };
+  });
+
+  expect(result).not.toBeNull();
+  expect(result.siblingId).not.toBe(result.currentId);
+  expect(result.siblingSkill).toBe(result.skill);
+  expect(result.afterOrigin).toBe(2);
+  expect(result.dueAfterOrigin).toBeNull();
+  expect(result.afterOneLater).toBe(1);
+  expect(result.dueAfterOneLater).toBeNull();
+  expect(result.afterTwoLater).toBe(0);
+  expect(result.dueAfterTwoLater).toBe(result.siblingId);
+});
+
+test('unfinished Comeback persists as due work for the next session', async ({ page }) => {
+  const result = await page.evaluate(async () => {
+    const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(response => response.json());
+    const sourceKey = window.ABVMStudyGames.sourceKeyFromEnvelope(envelope.pack, envelope);
+    const catalog = window.ABVMStudyGames.buildCatalog(envelope.pack, { sourceKey });
+    const current = catalog.questions.find(item =>
+      item.tier === 'material' &&
+      item.skill &&
+      catalog.questions.some(other => other.skill === item.skill && other.id !== item.id)
+    );
+    if (!current) return null;
+
+    const scheduled = window.ABVMStudyGames.scheduleComeback(catalog, current, {
+      sourceKey,
+      remaining: 4,
+      seed: 'next-session-proof',
+    });
+    if (!scheduled) return null;
+
+    window.ABVMStudyGames.deferComebacksToNextSession(sourceKey);
+    const stored = JSON.parse(localStorage.getItem('abvm-study-comebacks:v1') || '[]')[0] || null;
+    const due = window.ABVMStudyGames.dueComeback(catalog, sourceKey);
+    return {
+      siblingId: scheduled.question.id,
+      storedRemaining: stored?.remaining,
+      dueId: due?.question?.id || null,
+    };
+  });
+
+  expect(result).not.toBeNull();
+  expect(result.storedRemaining).toBe(0);
+  expect(result.dueId).toBe(result.siblingId);
+});
+
+test('independent success breaks the failure streak before Teach Card eligibility', async ({ page }) => {
+  const result = await page.evaluate(() => {
+    const engine = window.ABVMStudyGames;
+    const question = {
+      id: 'teach-streak-proof',
+      skill: 'subtraction-within-12',
+      difficulty: 2,
+    };
+    const firstFailure = engine.recordLearning(question, false, {
+      attemptCount: 3,
+      incorrectCount: 3,
+      hintCount: 0,
+    });
+    const independentSuccess = engine.recordLearning(question, true, {
+      attemptCount: 1,
+      incorrectCount: 0,
+      hintCount: 0,
+    });
+    const laterFailure = engine.recordLearning(question, false, {
+      attemptCount: 3,
+      incorrectCount: 3,
+      hintCount: 0,
+    });
+    return {
+      firstWrongStreak: firstFailure.ConsecutiveWrong,
+      independentCorrect: independentSuccess.IndependentCorrect,
+      afterSuccessWrongStreak: independentSuccess.ConsecutiveWrong,
+      laterWrongStreak: laterFailure.ConsecutiveWrong,
+      teachEligibleAfterLaterFailure: (laterFailure.ConsecutiveWrong || 0) >= 2,
+    };
+  });
+
+  expect(result.firstWrongStreak).toBe(1);
+  expect(result.independentCorrect).toBe(1);
+  expect(result.afterSuccessWrongStreak).toBe(0);
+  expect(result.laterWrongStreak).toBe(1);
+  expect(result.teachEligibleAfterLaterFailure).toBe(false);
+});
