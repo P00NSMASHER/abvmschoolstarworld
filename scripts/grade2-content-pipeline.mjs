@@ -396,6 +396,57 @@ const RELIGION_SKILLS = [
     },
   },
   {
+    id: 'religion-disciples',
+    label: 'Disciples: friends and followers of Jesus',
+    pattern: /\bdisciples\b|friends? of jesus|followers? of jesus/i,
+    studyNotes: ['The current Religion lesson calls disciples friends and followers of Jesus.'],
+    question: {
+      prompt: 'According to the current Religion lesson, what are friends and followers of Jesus called?',
+      choices: ['disciples', 'captions', 'consonant blends'],
+      answer: 'disciples',
+      explanation: 'The current lesson says disciples are friends and followers of Jesus.',
+      hint: 'Use the exact Religion word for a friend and follower of Jesus.',
+      sourceMode: 'STRICT_SOURCE',
+      supportType: 'explicit',
+      dok: 1,
+      difficulty: 2,
+    },
+  },
+  {
+    id: 'religion-mary-church',
+    label: 'Mary: Jesus’ mother and mother of the Church',
+    pattern: /mary is jesus'? mother|mother of the church|mary.*mother.*church/i,
+    studyNotes: ['The current Religion lesson identifies Mary as Jesus’ mother and the mother of the Church.'],
+    question: {
+      prompt: 'According to the current Religion lesson, who is identified as Jesus’ mother and the mother of the Church?',
+      choices: ['Mary', 'Martha', 'Ruth'],
+      answer: 'Mary',
+      explanation: 'The current lesson identifies Mary as Jesus’ mother and the mother of the Church.',
+      hint: 'Use the person named in the current Religion note.',
+      sourceMode: 'STRICT_SOURCE',
+      supportType: 'explicit',
+      dok: 1,
+      difficulty: 2,
+    },
+  },
+  {
+    id: 'religion-seed-new-life',
+    label: 'Seed analogy and new life in grace',
+    pattern: /jesus is like a seed|seed dies.*new plant|seed.*new life.*grace/i,
+    studyNotes: ['The current Religion lesson compares a seed dying so a new plant can grow with Jesus dying so we can have new life in grace.'],
+    question: {
+      prompt: 'According to the current Religion lesson, what comparison is made between a seed and Jesus?',
+      choices: ['A seed dies so new life can grow, and Jesus died so we can have new life in grace.', 'A seed never changes, and Jesus teaches that nothing changes.', 'A seed is used only to explain the five senses.'],
+      answer: 'A seed dies so new life can grow, and Jesus died so we can have new life in grace.',
+      explanation: 'The lesson uses the seed’s new growth as a comparison for new life in grace through Jesus.',
+      hint: 'Connect the seed becoming new growth with the lesson’s phrase about new life in grace.',
+      sourceMode: 'STRICT_SOURCE',
+      supportType: 'explicit',
+      dok: 2,
+      difficulty: 2,
+    },
+  },
+  {
     id: 'religion-five-senses',
     label: 'Five senses and God’s gifts',
     pattern: /\bfive senses\b|\bour senses\b|seeing.*hearing|hearing.*smelling|smelling.*tasting|tasting.*touching/i,
@@ -689,6 +740,48 @@ const SUPPLEMENTAL_QUESTION_FAMILIES = Object.freeze({
       supportType: 'explicit',
       dok: 1,
       difficulty: 2,
+    },
+  ],
+  'religion-disciples': [
+    {
+      questionType: 'reasoning',
+      prompt: 'According to the current Religion lesson, which statement best describes a disciple?',
+      choices: ['A disciple is a friend and follower of Jesus.', 'A disciple is another name for a school subject.', 'A disciple is a type of text feature.'],
+      answer: 'A disciple is a friend and follower of Jesus.',
+      explanation: 'The lesson defines disciples as friends and followers of Jesus.',
+      hint: 'Use the lesson’s relationship between disciples and Jesus.',
+      sourceMode: 'STRICT_SOURCE',
+      supportType: 'explicit',
+      dok: 2,
+      difficulty: 2,
+    },
+  ],
+  'religion-mary-church': [
+    {
+      questionType: 'reasoning',
+      prompt: 'Which statement about Mary matches the current Religion lesson?',
+      choices: ['Mary is Jesus’ mother and the mother of the Church.', 'Mary is one of the three Persons of the Trinity.', 'Mary is the name of the current Reading story.'],
+      answer: 'Mary is Jesus’ mother and the mother of the Church.',
+      explanation: 'That statement matches the current Religion lesson exactly.',
+      hint: 'Use the titles for Mary stated in the current lesson.',
+      sourceMode: 'STRICT_SOURCE',
+      supportType: 'explicit',
+      dok: 2,
+      difficulty: 2,
+    },
+  ],
+  'religion-seed-new-life': [
+    {
+      questionType: 'reasoning',
+      prompt: 'Why does the current Religion lesson compare Jesus with a seed that dies and then produces new growth?',
+      choices: ['The comparison connects death with new life in grace.', 'The comparison teaches that plants are one Person of the Trinity.', 'The comparison explains how to spell the word seed.'],
+      answer: 'The comparison connects death with new life in grace.',
+      explanation: 'The lesson connects the seed’s new growth with Jesus giving us new life in grace.',
+      hint: 'Focus on what comes after the seed dies and on the lesson’s phrase “new life in grace.”',
+      sourceMode: 'STRICT_SOURCE',
+      supportType: 'explicit',
+      dok: 3,
+      difficulty: 3,
     },
   ],
   sequence: [
@@ -1648,6 +1741,17 @@ function detectUnsupportedExplicitSkills(pack, coverage) {
     if (focus && !BASE_SKILLS.some(rule => rule.pattern.test(focus[1]))) {
       addUnsupported('Spelling / Handwriting', focus[1]);
     }
+  }
+
+  const religion = subjectRow(pack, 'Religion');
+  const religionLines = [...(religion?.topics || []), ...(religion?.studyNotes || [])].map(text).filter(Boolean);
+  if (religionLines.some(line => /vine and the branches|vine and branches/i.test(line))) {
+    coverage.push({
+      topic: 'Parable of the vine and the branches',
+      subject: 'Religion',
+      status: 'SOURCE_INSUFFICIENT',
+      reason: 'The verified source names the parable but does not provide enough passage or lesson detail to generate a defensible skill question without adding outside content.',
+    });
   }
 
   const mathPatterns = [
