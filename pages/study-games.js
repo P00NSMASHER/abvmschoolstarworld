@@ -1094,9 +1094,7 @@ function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillSt
   if(wantedSkills.length)pool=pool.filter(q=>wantedSkills.includes(q.skill));
   if(wanted.length||wantedSkills.length)pool=pool.filter(q=>q.tier==="material");
   const sourceKey=String(catalog?.sourceKey||"current"),recent=new Set(loadRotation(sourceKey).recent.map(row=>row.v));
-  const selected=pickBalanced(pool,count,seed,skillStats,preferredSkills,recent);
-  rememberRotation(sourceKey,selected);
-  return selected;
+  return pickBalanced(pool,count,seed,skillStats,preferredSkills,recent);
 }
 function supportQuestion(catalog,current,{skillStats={},seed="support"}={}){
   if(!current)return null;
@@ -1199,10 +1197,11 @@ function itemQualityKey(question){
   const stable=String(question?.variantFingerprint||question?.contentFingerprint||question?.id||"");
   return stable?"q"+hash(stable).toString(36):"";
 }
-function markQuestionShown(question){
+function markQuestionShown(question,sourceKey){
   const key=itemQualityKey(question);if(!key)return;
   const previous=itemShownAt.get(key),now=Date.now();
   if(!previous||now-previous>600000)itemShownAt.set(key,now);
+  if(sourceKey)rememberRotation(sourceKey,[question]);
 }
 function responseTimeBand(start,now){
   const ms=Math.max(0,Number(now)-Number(start));
