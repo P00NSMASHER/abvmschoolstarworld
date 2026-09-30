@@ -12,6 +12,7 @@ const DOMAIN_BY_SKILL = Object.freeze({
   'long-short-a': ['Foundational reading'],
   'suffix-ed-ing': ['Foundational reading'],
   'suffix-s-es': ['Language'],
+  'high-frequency-word-use': ['Foundational reading'],
   'vocabulary-in-context': ['Word knowledge and skills'],
   theme: ['Analyzing literary text'],
   visualize: ['Comprehension / constructing meaning'],
@@ -116,6 +117,11 @@ const EXACT_SKILLS = Object.freeze({
     subject: 'Reading / ELA',
     standards: ['CCSS.RL.2.3'],
     anchors: ['feel', 'character', 'actions', 'clue'],
+  },
+  'high-frequency-word-use': {
+    subject: 'Reading / ELA',
+    standards: ['CCSS.RF.2.3.f'],
+    anchors: ['word', 'sentence', 'complete', 'grammar', 'meaning', 'high-frequency'],
   },
   'vocabulary-in-context': {
     subject: 'Reading / ELA',
