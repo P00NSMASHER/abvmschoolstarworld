@@ -962,6 +962,7 @@ function assessmentSkillIds(pack,test){
   if(/consonant blend/.test(label))add("consonant-blends");
   if(/cvc/.test(label))add("cvc-structure");
   if(/-ed|-ing|ed\b.*ing\b/.test(label))add("suffix-ed-ing");
+  if(/sight word|high[- ]frequency/.test(label))add("high-frequency-word-use");
   if(/theme/.test(label))add("theme");
   if(/visualiz/.test(label))add("visualize");
   if(/sequence|beginning.*middle.*end|plot/.test(label))add("sequence");
@@ -1050,6 +1051,7 @@ function teachCardFor(question){
     "cvc-structure":["Check the three letter types from left to right.","“Map” is consonant-vowel-consonant: m-a-p."],
     "long-short-a":["Compare the vowel sound and the spelling pattern.","Short a: cat. Long a with a_e: game."],
     "suffix-ed-ing":["Use the sentence’s time clue to choose the ending.","-ed often marks a finished action; -ing often marks an action happening now."],
+    "high-frequency-word-use":["Read the whole sentence with each choice.","Choose the current high-frequency word that makes both the grammar and meaning work."],
     "theme":["Look for the lesson shown by the whole story.","A theme is bigger than one small detail."],
     "visualize":["Turn the describing words into a mental picture.","Use only details the text actually gives."],
     "sequence":["Track what happens first, next, and last.","A strong sequence has an order supported by the events, not just a random arrangement."],
