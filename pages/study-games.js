@@ -1244,6 +1244,27 @@ function comebackQuestion(catalog,current,{seed="comeback",seenIds=[]}={}){
   return candidates[0]||null;
 }
 
+function learningFirstSummary(outcomes=[]){
+  const bySkill=new Map();
+  for(const outcome of Array.isArray(outcomes)?outcomes:[]){
+    const skill=text(outcome?.skill),kind=text(outcome?.kind),correct=!!outcome?.correct;
+    if(!skill||kind==="support")continue;
+    let status="";
+    if(kind==="comeback")status=correct?"remembered":"practice";
+    else if(kind==="normal")status=(correct&&outcome?.independent===true)?"strong":"practice";
+    if(!status)continue;
+    if(status==="strong"&&bySkill.has(skill))continue;
+    bySkill.set(skill,status);
+  }
+  const values=[...bySkill.values()];
+  return Object.freeze({
+    strong:values.filter(value=>value==="strong").length,
+    remembered:values.filter(value=>value==="remembered").length,
+    practice:values.filter(value=>value==="practice").length,
+    total:values.length
+  });
+}
+
 const STUDY_STAR_POLICY=Object.freeze({
   currency:"Study Stars",
   roundComplete:10,
@@ -1257,6 +1278,30 @@ function studyStarRewardEvents({completed=false,comebackSucceeded=false}={}){
   if(completed)events.push(Object.freeze({rewardType:"round-complete",amount:STUDY_STAR_POLICY.roundComplete,currency:STUDY_STAR_POLICY.currency}));
   if(comebackSucceeded)events.push(Object.freeze({rewardType:"comeback-success",amount:STUDY_STAR_POLICY.comebackSuccess,currency:STUDY_STAR_POLICY.currency}));
   return Object.freeze(events);
+}
+
+const STUDY_STAR_GOAL=Object.freeze({
+  id:"starlight-study-badge",
+  title:"Starlight Study Badge",
+  target:50,
+  cosmetic:true,
+  copy:"Fill the bar to unlock a simple Study Games badge."
+});
+const STUDY_STAR_GOAL_KEY="abvm-study-stars-goal:v1";
+function studyStarDreamGoal(){return STUDY_STAR_GOAL}
+function loadStudyStarGoal(){
+  let selected=false;
+  try{selected=localStorage.getItem(STUDY_STAR_GOAL_KEY)===STUDY_STAR_GOAL.id}catch{}
+  return {goal:STUDY_STAR_GOAL,selected};
+}
+function selectStudyStarGoal(goalId=STUDY_STAR_GOAL.id){
+  if(text(goalId)!==STUDY_STAR_GOAL.id)throw new Error("Unknown Study Star Dream Goal");
+  try{localStorage.setItem(STUDY_STAR_GOAL_KEY,STUDY_STAR_GOAL.id)}catch{}
+  return {goal:STUDY_STAR_GOAL,selected:true};
+}
+function studyStarGoalProgress(balance=0){
+  const stars=Math.max(0,Math.floor(Number(balance)||0)),target=STUDY_STAR_GOAL.target;
+  return {goal:STUDY_STAR_GOAL,balance:stars,target,remaining:Math.max(0,target-stars),percent:Math.min(100,Math.floor((stars/target)*100)),unlocked:stars>=target,selected:loadStudyStarGoal().selected};
 }
 
 const STUDY_STAR_DB="abvm-study-stars-v1",STUDY_STAR_STORE="reward-ledger";
@@ -1564,6 +1609,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,validateRichContent,selectQuestions,studyStarPolicy,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,loadStudyStarLedger,studyStarBalance,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,itemQualityKey
+  buildCatalog,validateCatalog,validateRichContent,selectQuestions,learningFirstSummary,studyStarPolicy,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,itemQualityKey
 });
 })();
