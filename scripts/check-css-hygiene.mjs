@@ -51,6 +51,13 @@ if(/True desktop layout|Audit fixes 6–10|Phase 3:|Phase 4:|Phase 5:/.test(css)
 if(/date-utils\.js|events\.js|school-model\.js|school-year-calendar\.json/.test(app)){
   fail("Production app references removed duplicate model code");
 }
+for(const stalePattern of [
+  "(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)}))",
+  "const date=parseDate(item.date),range=eventDateRange(item.date)",
+  "const picture=(pack?.importantDates||[])"
+]){
+  if(app.includes(stalePattern))fail("Repeated school-data scan returned: "+stalePattern);
+}
 
 console.log("CSS/code hygiene PASS",{
   cssBytes:Buffer.byteLength(css,"utf8"),
