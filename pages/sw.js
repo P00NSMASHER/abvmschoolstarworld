@@ -1,5 +1,5 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = CACHE_PREFIX + "v90-network-first";
+const CACHE = "abvm-grade2-parent-companion-v90-network-first";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=89",
