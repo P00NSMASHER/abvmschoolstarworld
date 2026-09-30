@@ -24,6 +24,7 @@ test('semantic cooldown prefers unseen variants across sessions and relaxes safe
     }));
     const catalog = { sourceKey: 'cooldown-pack', questions };
     const first = engine.selectQuestions(catalog, { count: 4, seed: 'round-1' });
+    first.forEach(question => engine.markQuestionShown(question, catalog.sourceKey));
     const second = engine.selectQuestions(catalog, { count: 4, seed: 'round-2' });
     const third = engine.selectQuestions(catalog, { count: 4, seed: 'round-3' });
     return {
@@ -36,6 +37,33 @@ test('semantic cooldown prefers unseen variants across sessions and relaxes safe
   expect(new Set([...result.first, ...result.second]).size).toBe(8);
   expect(result.first.filter(v => result.second.includes(v))).toEqual([]);
   expect(result.third).toHaveLength(4);
+});
+
+test('unshown selected questions do not enter the cooldown history', async ({ page }) => {
+  const result = await page.evaluate(() => {
+    const engine = window.ABVMStudyGames;
+    const questions = Array.from({ length: 6 }, (_, i) => ({
+      id: 'seen-only-' + i,
+      skill: 'theme',
+      subject: 'Reading / ELA',
+      tier: 'material',
+      difficulty: 2,
+      questionType: ['direct', 'transfer', 'reasoning'][i % 3],
+      variantFingerprint: 'seen-only-semantic-' + i,
+    }));
+    const catalog = { sourceKey: 'seen-only-pack', questions };
+    const first = engine.selectQuestions(catalog, { count: 3, seed: 'first' });
+    engine.markQuestionShown(first[0], catalog.sourceKey);
+    const second = engine.selectQuestions(catalog, { count: 3, seed: 'second' });
+    return {
+      shown: first[0].variantFingerprint,
+      unshown: first.slice(1).map(q => q.variantFingerprint),
+      second: second.map(q => q.variantFingerprint),
+    };
+  });
+
+  expect(result.second).not.toContain(result.shown);
+  expect(result.unshown.some(v => result.second.includes(v))).toBe(true);
 });
 
 test('three or more eligible skills use a dynamic cap of two and avoid back-to-back skills', async ({ page }) => {
@@ -145,7 +173,9 @@ test('rotation history is source-scoped and stores no question text or answer co
       prompt: 'PRIVATE PROMPT ' + i,
       answer: 'PRIVATE ANSWER ' + i,
     }));
-    const first = engine.selectQuestions({ sourceKey: 'source-A', questions }, { count: 2, seed: 'same-seed' });
+    const firstCatalog = { sourceKey: 'source-A', questions };
+    const first = engine.selectQuestions(firstCatalog, { count: 2, seed: 'same-seed' });
+    first.forEach(question => engine.markQuestionShown(question, firstCatalog.sourceKey));
     const isolated = engine.selectQuestions({ sourceKey: 'source-B', questions }, { count: 2, seed: 'same-seed' });
     const rotationEntries = Object.entries(localStorage).filter(([key]) => key.startsWith('abvm-study-rotation:v1:'));
     return {
