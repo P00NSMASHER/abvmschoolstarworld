@@ -56,9 +56,15 @@ function goal({state}){
   return '<section class="study-star-goal" aria-label="Dream Goal"><div class="study-star-goal-head"><span>★</span><div><small>DREAM GOAL</small><strong>'+esc(g.title)+'</strong></div><b>'+balance+' / '+target+' Stars</b></div><div class="study-star-goal-progress" role="progressbar" aria-label="Dream Goal progress" aria-valuemin="0" aria-valuemax="'+target+'" aria-valuenow="'+progress+'"><span style="width:'+pct+'%"></span></div><p>'+esc(unlocked?"Goal reached! Your badge is ready.":g.copy||"Keep practicing to fill the bar.")+'</p>'+(selected?'<small class="study-star-goal-selected">'+(unlocked?'Unlocked':'Goal selected')+'</small>':'<button type="button" data-study-star-goal="'+esc(g.id)+'">Choose this goal</button>')+'</section>';
 }
 
+function rewardReveal({amount=0,currency="Study Stars"}={}){
+  const stars=Math.max(0,Math.floor(Number(amount)||0));
+  if(!stars)return "";
+  return '<div class="study-star-reveal" data-reward-reveal data-duration-ms="1200" role="status" aria-live="polite" aria-atomic="true"><span aria-hidden="true">★</span><strong>+'+stars+' '+esc(currency)+'</strong><small>Practice reward</small></div>';
+}
+
 function finish({mode,state,record}){
   const total=state.questions.length,pct=total?Math.round((state.score/total)*100):0,stars=pct>=90?3:pct>=70?2:pct>=40?1:0;
   return '<section class="game-finish"><div class="game-finish-stars" aria-label="'+stars+' stars">'+[0,1,2].map(i=>'<span class="'+(i<stars?'earned':'')+'">★</span>').join("")+'</div><p>'+esc(mode.title.toUpperCase())+'</p><h2>'+state.score+' out of '+total+'</h2><strong>'+pct+'%</strong><span>'+(pct>=90?'Fantastic work!':pct>=70?'Great job — one more round can make it even stronger.':pct>=40?'Good practice. Try another round to build the skill.':'Keep practicing — every round helps.')+'</span><div class="game-finish-actions"><button type="button" class="primary" data-game-start="'+esc(mode.id)+'">Play again</button><button type="button" data-game-home>All study games</button></div><small>Best score on this material: '+record.best+' / '+total+'</small></section>';
 }
-window.ABVMStudyGameView=Object.freeze({play,goal,finish});
+window.ABVMStudyGameView=Object.freeze({play,goal,rewardReveal,finish});
 })();
