@@ -10,7 +10,8 @@ test("item-quality monitoring stays local and stores privacy-minimized aggregate
   const result=await page.evaluate(()=>{
     const e=window.ABVMStudyGames;
     const q={
-      id:"quality-math-1",subject:"Math",skill:"subtraction-within-12",
+      id:"quality-math-answer-7",contentFingerprint:"content-fp-abc123",variantFingerprint:"variant-fp-xyz789",
+      subject:"Math",skill:"subtraction-within-12",
       choices:["7","6","5"],answer:"7",
       choiceDiagnostics:{
         "6":{misconception:"off-by-one",feedback:"Count back once more."},
@@ -40,7 +41,11 @@ test("item-quality monitoring stays local and stores privacy-minimized aggregate
   });
 
   expect(result.schemaVersion).toBe(1);
-  const row=result.items["quality-math-1"];
+  const keys=Object.keys(result.items);
+  expect(keys).toHaveLength(1);
+  expect(keys[0]).not.toContain("quality-math-answer-7");
+  expect(keys[0]).not.toContain("variant-fp-xyz789");
+  const row=result.items[keys[0]];
   expect(row.Resolved).toBe(4);
   expect(row.Correct).toBe(3);
   expect(row.Wrong).toBe(1);
@@ -58,6 +63,8 @@ test("item-quality monitoring stays local and stores privacy-minimized aggregate
   for(const forbidden of ["username","userId","rawAnswer","sessionId","email","studentId"]){
     expect(serialized.toLowerCase()).not.toContain(forbidden.toLowerCase());
   }
+  expect(serialized).not.toContain("quality-math-answer-7");
+  expect(serialized).not.toContain("variant-fp-xyz789");
   expect(row).not.toHaveProperty("Prompt");
   expect(row).not.toHaveProperty("Answer");
   expect(row).not.toHaveProperty("Choices");
@@ -104,6 +111,24 @@ test("item-quality review flags weak items without claiming standardized psychom
   expect(byId.flat.method).toBe("classical-longitudinal-proxy");
   expect(byId.flat.irtUsed).toBe(false);
   expect(byId.hard.comebackRate).toBe(.5);
+});
+
+test("negative discrimination is treated as a review problem rather than strong evidence",async({page})=>{
+  const [row]=await page.evaluate(()=>window.ABVMStudyGames.reviewItemQuality({
+    schemaVersion:1,
+    items:{
+      reversed:{
+        Skill:"theme",Subject:"Reading / ELA",Resolved:12,NormalResolved:12,NormalCorrect:6,NormalWrong:6,FirstTryCorrect:6,
+        ChoicePositions:[4,4,4],Misconceptions:{m:6},ResponseBands:{lt5:3,"5to15":5,"15to30":4,gte30:0},
+        ComebackSeen:0,ComebackCorrect:0,
+        AbilityN:12,AbilitySum:6,AbilitySumSq:4,FirstTryAbilitySum:1
+      }
+    }
+  }));
+  expect(row.discrimination).toBeLessThan(0);
+  expect(row.discriminationEvidence).toBe("reviewable");
+  expect(row.flags).toContain("low-discrimination");
+  expect(row.irtUsed).toBe(false);
 });
 
 test("item-quality review refuses discrimination claims when evidence is insufficient",async({page})=>{
