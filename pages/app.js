@@ -458,7 +458,7 @@ function gameModeQuestionTotal(c,m){
 function loadGameRecord(modeId){return studyGameEngine()?.loadGameRecord?.(currentGameSourceKey(),modeId)||{best:0,plays:0,totalCorrect:0,totalAnswered:0}}
 function saveGameRecord(){if(gameState.saved||!gameState.mode||!gameState.questions.length)return;studyGameEngine()?.saveGameRecord?.(currentGameSourceKey(),gameState.mode,{score:gameState.score,total:gameState.questions.length});gameState.saved=true}
 function currentGameSourceKey(){return studyGameCatalog()?.sourceKey||"current"}
-function scheduleGameComeback(origin){const e=studyGameEngine(),c=studyGameCatalog(),s=currentGameSourceKey();return e?.scheduleComeback?.(c,origin,{sourceKey:s,remaining:2,seenIds:gameState.questions.slice(0,gameState.index+1).map(q=>q.id),seed:s+"|comeback|"+String(origin?.id||"item")})||null}
+function scheduleGameComeback(origin){const e=studyGameEngine(),c=studyGameCatalog(),s=currentGameSourceKey();return e?.scheduleComeback?.(c,origin,{sourceKey:s,remaining:3,seenIds:gameState.questions.slice(0,gameState.index+1).map(q=>q.id),seed:s+"|comeback|"+String(origin?.id||"item")})||null}
 function tickGameComebacks(){studyGameEngine()?.tickComebacks?.(currentGameSourceKey())}
 function markGameComebacksNextSession(){studyGameEngine()?.deferComebacksToNextSession?.(currentGameSourceKey())}
 function activateDueGameComeback(){const due=studyGameEngine()?.dueComeback?.(studyGameCatalog(),currentGameSourceKey());if(!due)return false;Object.assign(gameState,{comebackMode:true,comebackQuestion:due.question,comebackKey:due.row.key,comebackCorrect:null,selectedIndex:null,answered:false,hintOpen:false,learningRow:null});return true}
@@ -493,6 +493,7 @@ function advanceStudyGame(){
     renderGames();bindScreen();return
   }
   const current=g.questions[g.index],selected=current?.choices?.[g.selectedIndex],correct=selected===current?.answer;
+  if(!correct)scheduleGameComeback(current);
   if(!correct&&(g.learningRow?.ConsecutiveWrong||0)>=2){
     const engine=studyGameEngine(),catalog=studyGameCatalog(),support=engine?.supportQuestion(catalog,current,{skillStats:engine?.loadLearning?.()||{},seed:String(catalog?.sourceKey||"current")+"|support|"+String(current?.id||"item")+"|"+String(g.learningRow?.Seen||0)});
     if(support){Object.assign(g,{supportMode:true,supportQuestion:support,supportCorrect:null,supportOriginQuestion:current});reset();renderGames();bindScreen();return}
