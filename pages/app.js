@@ -507,7 +507,7 @@ function gameMenuHtml(catalog){
     }).join("")+'</div>'+
     '<p class="game-privacy-note">Practice prioritizes verified school skills; private student answers and grades are not used.</p>';
 }
-function gamePlayHtml(){const g=gameState,q=activeGameQuestion(),e=studyGameEngine();if(q)e?.markQuestionShown?.(q);return window.ABVMStudyGameView.play({g,mode:gameMode(g.mode),q,teach:g.supportMode?e?.teachCardFor?.(q):null,retryInstruction:e?.teachCardFor?.(q)?.instruction,labels:GAME_TYPE_LABELS})}
+function gamePlayHtml(){const g=gameState,q=activeGameQuestion(),e=studyGameEngine();if(q)e?.markQuestionShown?.(q,currentGameSourceKey());return window.ABVMStudyGameView.play({g,mode:gameMode(g.mode),q,teach:g.supportMode?e?.teachCardFor?.(q):null,retryInstruction:e?.teachCardFor?.(q)?.instruction,labels:GAME_TYPE_LABELS})}
 function gameFinishHtml(){return window.ABVMStudyGameView.finish({mode:gameMode(gameState.mode),state:gameState,record:loadGameRecord(gameState.mode)})}
 function renderGames(){
   const engine=studyGameEngine();
