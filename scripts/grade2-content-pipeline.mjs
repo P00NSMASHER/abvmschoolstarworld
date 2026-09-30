@@ -960,8 +960,8 @@ function supplementalQuestionFamily(skill) {
   const subtraction = String(skill.id || '').match(/^subtraction-within-(\d+)$/);
   if (subtraction) {
     const max = Number(subtraction[1]);
-    const start = Math.max(6, Math.min(max, 14));
-    const take = Math.max(2, Math.min(5, start - 2));
+    const start = Math.max(3, Math.min(max, 14));
+    const take = Math.max(1, Math.min(5, start - 1));
     const answer = start - take;
     return [
       {
@@ -1307,6 +1307,7 @@ function detectMath(pack, skills, questions) {
     const b = Math.max(3, Math.min(max - a, 6));
     const answer = a + b;
     questions.push(questionFor(skill, {
+      questionType: 'transfer',
       prompt: `A basket has ${a} red apples and ${b} green apples. How many apples are there altogether?`,
       choices: [String(answer), String(answer - 1), String(answer + 2)],
       answer: String(answer),
