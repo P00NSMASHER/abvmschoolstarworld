@@ -1154,3 +1154,34 @@ button.freshness.is-refreshing b{
 @media (prefers-reduced-motion:reduce){
   button.freshness.is-refreshing b{animation:none}
 }
+
+
+/* v93 — live mobile acceptance fixes */
+.sources.notices-card>.static-notice-list{
+  display:block;
+  min-width:0;
+  padding:0;
+  border-top:0;
+  color:inherit;
+}
+.sources.notices-card .static-notice-list>.notice-row{
+  display:flex;
+  align-items:flex-start;
+  width:100%;
+  min-width:0;
+  margin-top:8px;
+  padding:10px 11px;
+  border:1px solid #e3ebf0;
+  border-radius:13px;
+  background:rgba(255,255,255,.86);
+  gap:10px;
+}
+.sources.notices-card .static-notice-list>.notice-row:nth-child(3n+2){background:#fbf8ff;border-color:#e9e0f1}
+.sources.notices-card .static-notice-list>.notice-row:nth-child(3n+3){background:#f7fbf5;border-color:#e0ecdc}
+.sources.notices-card .static-notice-list>.notice-row p{
+  min-width:0;
+  overflow-wrap:anywhere;
+  color:#35485a;
+  font-size:12px;
+  line-height:1.42;
+}

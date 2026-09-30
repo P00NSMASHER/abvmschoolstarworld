@@ -109,3 +109,14 @@ test("cache fallback searches only the ABVM cache",async({request})=>{
   expect(body).toContain("const cache=await caches.open(CACHE)");
   expect(body).not.toContain("caches.match(request)");
 });
+
+
+test("network-first cache fallback identifies saved responses to the app",async({request})=>{
+  const source=await (await request.get("/sw.js")).text();
+  expect(source).toContain('headers.set("X-ABVM-Cache-Fallback","1")');
+});
+
+test("PWA head includes the current cross-platform capable meta tag",async({request})=>{
+  const html=await (await request.get("/")).text();
+  expect(html).toContain('<meta name="mobile-web-app-capable" content="yes">');
+});

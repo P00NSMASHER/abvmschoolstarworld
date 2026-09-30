@@ -194,6 +194,24 @@ function addTriad(out,prefix,base,items){
   })));
 }
 function add(out,question){out.push(makeQuestion(question))}
+function materialContentPipeline(pack,out){
+  const specs=Array.isArray(pack?.contentPipeline?.questions)?pack.contentPipeline.questions:[];
+  for(const spec of specs){
+    if(!spec||typeof spec!=="object")continue;
+    const diagnostics=spec.choiceDiagnostics&&typeof spec.choiceDiagnostics==="object"?spec.choiceDiagnostics:{};
+    add(out,{
+      id:text(spec.id),subject:text(spec.subject),skill:text(spec.skill),tier:"material",
+      type:text(spec.questionType)||"direct",prompt:spec.prompt,choices:spec.choices||[],answer:spec.answer,
+      explanation:spec.explanation,hint:spec.hint,sourceFact:spec.sourceFact,
+      dok:Number.isInteger(spec.dok)?spec.dok:2,
+      difficulty:Number.isInteger(spec.difficulty)?spec.difficulty:2,
+      standards:Array.isArray(spec.standards)?spec.standards:undefined,
+      domain:spec.domain,
+      wrongFeedback:choice=>text(diagnostics?.[choice]?.feedback||"Review the target skill and use the hint before choosing again."),
+      misconception:choice=>text(diagnostics?.[choice]?.misconception||"pipeline-generated-distractor")
+    });
+  }
+}
 function materialMath(pack,variant,out){
   if(!topicMatch(pack,"Math",/subtraction\s+to\s+12/i))return;
   const row=rowFor([
@@ -510,6 +528,8 @@ function materialHighFrequency(pack,variant,out){
   })));
 }
 function materialVocabulary(pack,variant,out){
+  const pipelineSkills=Array.isArray(pack?.contentPipeline?.skills)?pack.contentPipeline.skills:null;
+  if(pipelineSkills&&!pipelineSkills.some(skill=>text(skill?.id)==="vocabulary-in-context"))return;
   const current=(pack?.vocabulary||[]).map(v=>text(v.term).toLowerCase()).filter(w=>VOCAB[w]);
   if(current.length<3)return;
   const ordered=[...current].sort((a,b)=>hash("vocab"+variant+a)-hash("vocab"+variant+b));
@@ -769,7 +789,7 @@ function fallbackReading(variant,out){
       id:row.id+"-v"+variant,subject:"Reading / ELA",skill:row.skill,tier:"star-fallback",
       prompt:row.prompt,choices:shuffled(row.choices,row.id+variant),answer:row.answer,explanation:row.explanation,
       hint:row.skill==="text-evidence"?"Choose the detail that most directly proves the idea.":"Use the passage clues, not just one familiar word.",
-      sourceFact:"Original Grade 2 STAR-aligned Reading practice",dok:index%3===0?2:3,difficulty:index%3===0?2:3,
+      sourceFact:"Original Grade 2 STAR-aligned Reading practice",dok:index%3===0?1:index%3===1?2:3,difficulty:index%3===2?3:2,
       wrongFeedback:"Go back to the text and choose the answer supported by the strongest clue.",
       misconception:"unsupported-reading-choice"
     });
@@ -878,19 +898,31 @@ function validateCatalog(catalog){
     for(const issue of validateQuestion(question))issues.push({id:question.id,issue});
   }
   if(!doks.has(1)||!doks.has(2)||!doks.has(3))issues.push({id:"catalog",issue:"dok-range-incomplete"});
-  if(!tiers.has("material")||!tiers.has("star-fallback"))issues.push({id:"catalog",issue:"tier-mix-incomplete"});
+  if(!tiers.has("star-fallback"))issues.push({id:"catalog",issue:"fallback-tier-missing"});
+  if(catalog?.qualityPolicy?.materialExpected!==false&&!tiers.has("material"))issues.push({id:"catalog",issue:"tier-mix-incomplete"});
   return issues;
 }
 function buildCatalog(pack,{sourceKey}={}){
   const key=text(sourceKey||pack?.sourceHash||pack?.sourceCheckedAt||pack?.weekLabel||"abvm-current");
   const variant=variantFor(key),questions=[];
-  materialMath(pack,variant,questions);
-  materialSentences(pack,variant,questions);
-  materialPhonics(pack,variant,questions);
-  materialHighFrequency(pack,variant,questions);
-  materialVocabulary(pack,variant,questions);
-  materialReading(pack,variant,questions);
-  materialReligion(pack,variant,questions);
+  materialContentPipeline(pack,questions);
+
+  const legacyMaterial=[];
+  materialMath(pack,variant,legacyMaterial);
+  materialSentences(pack,variant,legacyMaterial);
+  materialPhonics(pack,variant,legacyMaterial);
+  materialHighFrequency(pack,variant,legacyMaterial);
+  materialVocabulary(pack,variant,legacyMaterial);
+  materialReading(pack,variant,legacyMaterial);
+  materialReligion(pack,variant,legacyMaterial);
+
+  const pipelineSkills=Array.isArray(pack?.contentPipeline?.skills)
+    ?new Set(pack.contentPipeline.skills.map(skill=>text(skill?.id)).filter(Boolean))
+    :null;
+  questions.push(...(pipelineSkills
+    ?legacyMaterial.filter(question=>pipelineSkills.has(question.skill)&&question.skill!=="vocabulary-in-context")
+    :legacyMaterial));
+
   fallbackReading(variant,questions);
   fallbackMath(variant,questions);
   const deduped=[],seen=new Set();
@@ -911,13 +943,56 @@ function buildCatalog(pack,{sourceKey}={}){
       diagnosticDistractors:true,
       targetedWrongFeedback:true,
       analyticRubric:true,
-      starFallbackOriginalOnly:true
+      starFallbackOriginalOnly:true,
+      materialExpected:pipelineSkills?pipelineSkills.size>0:true
     },
     questionCount:deduped.length,questions:deduped
   };
   const issues=validateCatalog(catalog);
   if(issues.length)throw new Error("ABVM study-game catalog validation failed: "+JSON.stringify(issues));
   return catalog;
+}
+function assessmentSkillIds(pack,test){
+  const label=text(test?.x?.label).toLowerCase();
+  const available=new Set((pack?.contentPipeline?.skills||[]).map(skill=>text(skill?.id)).filter(Boolean));
+  const wanted=[];
+  const add=id=>{if(available.has(id)&&!wanted.includes(id))wanted.push(id);};
+  if(/grammar|types of sentences/.test(label))add("sentence-types");
+  if(/short a|long a|a_e/.test(label))add("long-short-a");
+  if(/consonant blend/.test(label))add("consonant-blends");
+  if(/cvc/.test(label))add("cvc-structure");
+  if(/-ed|-ing|ed\b.*ing\b/.test(label))add("suffix-ed-ing");
+  if(/sight word|high[- ]frequency/.test(label))add("high-frequency-word-use");
+  if(/theme/.test(label))add("theme");
+  if(/visualiz/.test(label))add("visualize");
+  if(/sequence|beginning.*middle.*end|plot/.test(label))add("sequence");
+  if(/caption|text feature/.test(label))add("caption");
+  if(/dialogue/.test(label))add("dialogue");
+  if(/infer/.test(label))add("inference");
+  if(/cause.*effect|effect.*cause/.test(label))add("cause-effect");
+  if(/setting/.test(label))add("setting");
+  if(/genre/.test(label))add("genre");
+  if(/character/.test(label)&&/feeling/.test(label))add("character-feelings");
+  if(/main character/.test(label))add("main-character");
+  if(/subtraction/.test(label)){
+    const exact=[...available].find(id=>/^subtraction-within-\d+$/.test(id));
+    if(exact)add(exact);
+  }
+  if(/addition/.test(label)){
+    const exact=[...available].find(id=>/^addition-within-\d+$/.test(id));
+    if(exact)add(exact);
+  }
+  if(/place value/.test(label))add("place-value");
+  if(/money|coin/.test(label))add("money");
+  return wanted;
+}
+function testReadyMode(pack,test){
+  const skills=assessmentSkillIds(pack,test);
+  if(!test||!skills.length)return null;
+  return Object.freeze({
+    id:"test-ready",title:"Test Ready",subjects:[],skills,preferredSkills:skills,count:5,
+    copy:"Five questions focused only on the verified skills for "+text(test.x?.label||"this week’s test")+"."
+  });
 }
 function targetDifficultyFor(skillStats,skill){
   const row=skillStats?.[skill]||{};
@@ -952,10 +1027,12 @@ function pickBalanced(pool,count,seed,skillStats,preferredSkills=[]){
   }
   return selected;
 }
-function selectQuestions(catalog,{subjects,count=8,seed="session",skillStats={},preferredSkills=[]}={}){
+function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillStats={},preferredSkills=[]}={}){
   let pool=[...(catalog?.questions||[])];
   const wanted=Array.isArray(subjects)?subjects.map(text).filter(Boolean):[];
+  const wantedSkills=Array.isArray(skills)?skills.map(text).filter(Boolean):[];
   if(wanted.length)pool=pool.filter(q=>wanted.includes(q.subject));
+  if(wantedSkills.length)pool=pool.filter(q=>wantedSkills.includes(q.skill));
   return pickBalanced(pool,count,seed,skillStats,preferredSkills);
 }
 function supportQuestion(catalog,current,{skillStats={},seed="support"}={}){
@@ -965,12 +1042,178 @@ function supportQuestion(catalog,current,{skillStats={},seed="support"}={}){
     .sort((a,b)=>hash(seed+a.id)-hash(seed+b.id));
   return candidates[0]||null;
 }
+
+function teachCardFor(question){
+  if(!question?.skill)return null;
+  const cards={
+    "sentence-types":["Ask what job the sentence does.","A statement tells, a question asks, a command directs, and an exclamation shows strong feeling."],
+    "consonant-blends":["Listen for both beginning consonant sounds.","In “flag,” you can hear both /f/ and /l/."],
+    "cvc-structure":["Check the three letter types from left to right.","“Map” is consonant-vowel-consonant: m-a-p."],
+    "long-short-a":["Compare the vowel sound and the spelling pattern.","Short a: cat. Long a with a_e: game."],
+    "suffix-ed-ing":["Use the sentence’s time clue to choose the ending.","-ed often marks a finished action; -ing often marks an action happening now."],
+    "high-frequency-word-use":["Read the whole sentence with each choice.","Choose the current high-frequency word that makes both the grammar and meaning work."],
+    "theme":["Look for the lesson shown by the whole story.","A theme is bigger than one small detail."],
+    "visualize":["Turn the describing words into a mental picture.","Use only details the text actually gives."],
+    "sequence":["Track what happens first, next, and last.","A strong sequence has an order supported by the events, not just a random arrangement."],
+    "caption":["Match a short text feature to what a picture or diagram actually shows.","A useful caption directly describes or explains the visual."],
+    "inference":["Combine a text clue with what you already know.","The answer still has to be supported by the clue."],
+    "cause-effect":["Find what happened first and what happened because of it.","The cause leads to the effect."],
+    "main-character":["Ask who the story follows most.","The main character is the person or animal whose actions drive most of the story."],
+    "setting":["Find both where and when.","A setting can be “at the lake at sunset”: place plus time."],
+    "character-feelings":["Use what the character says and does as clues.","Actions such as smiling or hiding can show feelings."],
+    "genre":["Look for the features that tell what kind of text it is.","Magic and impossible creatures are clues for fantasy."],
+    "place-value":["Name the digit’s place before its value.","In 347, the 4 is in the tens place, so it is worth 40."],
+    "compare-numbers":["Compare the greatest place first.","If the hundreds match, compare tens next."],
+    "time":["Read the minute hand before deciding the hour.","A minute hand on 6 means 30 minutes past the hour."],
+    "money":["Name each coin value before adding.","Quarter 25¢ + dime 10¢ = 35¢."],
+    "religion-trinity":["Use the exact current lesson statement.","The lesson names Father, Son, and Holy Spirit as the three Persons of the Trinity."],
+    "religion-creation-care":["Choose the action that protects rather than harms creation.","Caring for a park is an example of caring for creation."],
+    "religion-image-likeness":["Connect the lesson to thinking, choosing, and loving.","Use the current lesson wording rather than guessing about a person’s character."],
+    "religion-jesus-savior":["Use the current lesson’s Savior and grace statement.","Answer from the Religion lesson, not from an unrelated fact."],
+    "religion-disciples":["Use the current lesson’s definition of disciple.","A disciple is described as a friend and follower of Jesus."],
+    "religion-mary-church":["Use the exact titles for Mary in the current lesson.","The lesson identifies Mary as Jesus’ mother and the mother of the Church."],
+    "religion-seed-new-life":["Connect the seed comparison to the lesson’s phrase about new life in grace.","The lesson compares a seed producing new growth after dying with Jesus giving new life in grace."],
+    "religion-gifts-choices":["Apply the current lesson by choosing a helpful, responsible use of a gift.","The best example should clearly serve or help another person."],
+    "religion-five-senses":["Connect the five senses with noticing creation.","Seeing, hearing, smelling, tasting, and touching help us notice the world around us."]
+  };
+  const row=cards[question.skill];
+  if(row)return{instruction:row[0],example:row[1]};
+  if(/^subtraction-within-\d+$/.test(question.skill))return{instruction:"Subtraction means taking away or finding what remains.",example:"Example: 8 − 3 = 5."};
+  if(/^addition-within-\d+$/.test(question.skill))return{instruction:"Addition joins amounts to find a total.",example:"Example: 5 + 4 = 9."};
+  return{instruction:text(question.hint||"Use the key rule for this skill before answering."),example:""};
+}
+
+function comebackQuestion(catalog,current,{seed="comeback",seenIds=[]}={}){
+  if(!current)return null;
+  const seen=new Set(Array.isArray(seenIds)?seenIds:[]);
+  const candidates=(catalog?.questions||[])
+    .filter(q=>q.id!==current.id&&q.skill===current.skill)
+    .sort((a,b)=>{
+      const aSeen=seen.has(a.id),bSeen=seen.has(b.id);
+      if(aSeen!==bSeen)return aSeen?1:-1;
+      const aType=a.questionType===current.questionType,bType=b.questionType===current.questionType;
+      if(aType!==bType)return aType?1:-1;
+      const aDistance=Math.abs((Number(a.difficulty)||2)-(Number(current.difficulty)||2));
+      const bDistance=Math.abs((Number(b.difficulty)||2)-(Number(current.difficulty)||2));
+      if(aDistance!==bDistance)return aDistance-bDistance;
+      return hash(seed+"|"+a.id)-hash(seed+"|"+b.id);
+    });
+  return candidates[0]||null;
+}
+
+const GAME_RECORD_PREFIX="abvm-study-games:";
+function gameRecordKey(sourceKey,modeId){return GAME_RECORD_PREFIX+String(sourceKey||"current")+":"+String(modeId||"quick")}
+function loadGameRecord(sourceKey,modeId){
+  try{
+    const value=JSON.parse(localStorage.getItem(gameRecordKey(sourceKey,modeId))||"{}");
+    return {best:Number(value.best)||0,plays:Number(value.plays)||0,totalCorrect:Number(value.totalCorrect)||0,totalAnswered:Number(value.totalAnswered)||0};
+  }catch{return {best:0,plays:0,totalCorrect:0,totalAnswered:0}}
+}
+function saveGameRecord(sourceKey,modeId,{score=0,total=0}={}){
+  const record=loadGameRecord(sourceKey,modeId);
+  const next={best:Math.max(record.best,Number(score)||0),plays:record.plays+1,totalCorrect:record.totalCorrect+(Number(score)||0),totalAnswered:record.totalAnswered+(Number(total)||0)};
+  try{localStorage.setItem(gameRecordKey(sourceKey,modeId),JSON.stringify(next))}catch{}
+  return next;
+}
+const LEARNING_STORAGE_KEY="abvm-study-learning:v2";
+const COMEBACK_STORAGE_KEY="abvm-study-comebacks:v1";
+function loadLearning(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(LEARNING_STORAGE_KEY)||"{}");
+    return parsed&&typeof parsed==="object"?parsed:{};
+  }catch{return {}}
+}
+function writeLearning(all){try{localStorage.setItem(LEARNING_STORAGE_KEY,JSON.stringify(all))}catch{};return all}
+function recordLearning(question,correct){
+  if(!question?.skill)return null;
+  const all=loadLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2};
+  row.Seen=(Number(row.Seen)||0)+1;
+  if(correct){
+    row.Correct=(Number(row.Correct)||0)+1;row.ConsecutiveCorrect=(Number(row.ConsecutiveCorrect)||0)+1;row.ConsecutiveWrong=0;
+    if(row.ConsecutiveCorrect>=2)row.TargetDifficulty=3;
+  }else{
+    row.Wrong=(Number(row.Wrong)||0)+1;row.ConsecutiveWrong=(Number(row.ConsecutiveWrong)||0)+1;row.ConsecutiveCorrect=0;
+    if(row.ConsecutiveWrong>=2)row.TargetDifficulty=2;
+  }
+  all[question.skill]=row;writeLearning(all);return row;
+}
+function recordAuxLearning(question,correct,kind){
+  if(!question?.skill)return null;
+  const all=loadLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2};
+  if(kind==="support"){row.SupportSeen=(Number(row.SupportSeen)||0)+1;correct?row.SupportedCorrect=(Number(row.SupportedCorrect)||0)+1:row.SupportedWrong=(Number(row.SupportedWrong)||0)+1;}
+  else{row.ComebackSeen=(Number(row.ComebackSeen)||0)+1;correct?row.RememberedLater=(Number(row.RememberedLater)||0)+1:row.ComebackWrong=(Number(row.ComebackWrong)||0)+1;}
+  all[question.skill]=row;writeLearning(all);return row;
+}
+function recordSupport(question,correct){return recordAuxLearning(question,correct,"support")}
+function recordComeback(question,correct){return recordAuxLearning(question,correct,"comeback")}
+function nextSessionSeed(sourceKey,modeId){
+  const key="abvm-study-games-session:"+String(sourceKey||"current")+":"+String(modeId||"quick");
+  let next=1;
+  try{next=(Number(localStorage.getItem(key))||0)+1;localStorage.setItem(key,String(next))}catch{}
+  return String(sourceKey||"current")+"|"+String(modeId||"quick")+"|"+next;
+}
+function readComebacks(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(COMEBACK_STORAGE_KEY)||"[]");
+    return Array.isArray(parsed)?parsed.filter(row=>row&&row.sourceKey&&row.questionId&&row.skill):[];
+  }catch{return []}
+}
+function writeComebacks(rows){
+  const safe=(Array.isArray(rows)?rows:[]).slice(-20);
+  try{localStorage.setItem(COMEBACK_STORAGE_KEY,JSON.stringify(safe))}catch{}
+  return safe;
+}
+function scheduleComeback(catalog,current,{sourceKey,seenIds=[],seed="comeback",remaining=2}={}){
+  if(!catalog||!current||!sourceKey)return null;
+  const rows=readComebacks();
+  if(rows.some(row=>row.sourceKey===sourceKey&&row.originQuestionId===current.id))return null;
+  const sibling=comebackQuestion(catalog,current,{seed,seenIds});
+  if(!sibling)return null;
+  const row={
+    key:sourceKey+"|"+String(current.id||"origin")+"|"+String(sibling.id||"sibling"),
+    sourceKey,questionId:sibling.id,originQuestionId:current.id,skill:current.skill,
+    remaining:Math.max(0,Number(remaining)||0)
+  };
+  rows.push(row);writeComebacks(rows);
+  return {row,question:sibling};
+}
+function tickComebacks(sourceKey){
+  const rows=readComebacks();let changed=false;
+  for(const row of rows){
+    if(row.sourceKey!==sourceKey||Number(row.remaining)<=0)continue;
+    row.remaining=Math.max(0,Number(row.remaining)-1);changed=true;
+  }
+  if(changed)writeComebacks(rows);
+  return rows;
+}
+function deferComebacksToNextSession(sourceKey){
+  const rows=readComebacks();let changed=false;
+  for(const row of rows){
+    if(row.sourceKey===sourceKey&&Number(row.remaining)>0){row.remaining=0;changed=true;}
+  }
+  if(changed)writeComebacks(rows);
+  return rows;
+}
+function dueComeback(catalog,sourceKey){
+  const rows=readComebacks();
+  const row=rows.find(item=>item.sourceKey===sourceKey&&Number(item.remaining)<=0);
+  if(!row)return null;
+  const question=(catalog?.questions||[]).find(item=>item.id===row.questionId);
+  if(!question){writeComebacks(rows.filter(item=>item!==row));return null}
+  return {row,question};
+}
+function resolveComeback(key){
+  if(!key)return readComebacks();
+  return writeComebacks(readComebacks().filter(row=>row.key!==key));
+}
 function sourceKeyFromEnvelope(pack,envelope){
   const hashes=(envelope?.sourcePages||[]).map(row=>row.contentHash).filter(Boolean).join("|");
-  return hashes||text(pack?.sourceHash||pack?.sourceCheckedAt||pack?.weekLabel||"abvm-current");
+  const source=hashes||text(pack?.sourceHash||pack?.sourceCheckedAt||pack?.weekLabel||"abvm-current");
+  const bank=text(pack?.contentPipeline?.bankFingerprint||"legacy-bank");
+  return source+"|bank:"+bank;
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,selectQuestions,supportQuestion,sourceKeyFromEnvelope,targetDifficultyFor
+  buildCatalog,validateCatalog,selectQuestions,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,testReadyMode
 });
 })();

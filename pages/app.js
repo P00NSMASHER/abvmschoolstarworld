@@ -2,7 +2,7 @@
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const stack=()=>$("#app-content");
 let envelope=null, pack=null, activeTab=(["today","week","calendar","study","games","family"].includes(location.hash.slice(1))?location.hash.slice(1):"today"), selectedDay=null, calendarDay=null, weekOffset=0, calendarOffset=0;
-let studyGameCatalogCache=null, derivedPackCache=null, studyEnginePromise=null, screenEventsBound=false, lastPackFetchAt=0, packRefreshPromise=null, manualRefreshActive=false, gameState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false};
+let studyGameCatalogCache=null, derivedPackCache=null, studyEnginePromise=null, screenEventsBound=false, lastPackFetchAt=0, packRefreshPromise=null, manualRefreshActive=false, lastPackFetchUsedCache=false, gameState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null};
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -15,16 +15,14 @@ const FRESH_TIME_FORMATTER=new Intl.DateTimeFormat(undefined,{hour:"numeric",min
 const PACK_URL="./data/study-pack.json";
 const PACK_REFRESH_MS=5*60*1000;
 const SCHOOL_LOGO_HTML='<img class="school-mark" src="./assets/abvm-app-icon-192.png" alt="Assumption BVM Catholic School logo">';
-const GAME_LEARNING_KEY="abvm-study-learning:v2";
 const GAME_TYPE_LABELS=Object.freeze({
   direct:"Direct practice",
   transfer:"Try it a new way",
-  reasoning:"Explain your thinking",
-  source:"Current class material"
+  reasoning:"Explain your thinking"
 });
 const STUDY_GAME_MODES=Object.freeze([
   Object.freeze({id:"quick",title:"Quick Mix",subjects:[],count:8,copy:"Current school skills mixed into one quick round."}),
-  Object.freeze({id:"math",title:"Math Dash",subjects:["Math"],count:8,copy:"Eight questions built from the current subtraction skill."}),
+  Object.freeze({id:"math",title:"Math Dash",subjects:["Math"],count:8,copy:"Eight questions built from the current math skills."}),
   Object.freeze({id:"words",title:"Word Power",subjects:["Reading / ELA","Spelling / Handwriting"],preferredSkills:["long-short-a","suffix-ed-ing"],count:8,copy:"Current spelling-test, phonics, word-building, and reading skills."}),
   Object.freeze({id:"faith",title:"Faith Quest",subjects:["Religion"],count:8,copy:"Religion practice from the current class material."})
 ]);
@@ -118,7 +116,7 @@ function freshnessState(){
   if(!d||Number.isNaN(d.getTime()))return{state:"attention",label:"Source verification unavailable"};
   const stamp=FRESH_DATE_FORMATTER.format(d)+" at "+FRESH_TIME_FORMATTER.format(d)+" ET";
   const ageHours=(Date.now()-d.getTime())/3600000;
-  if(navigator.onLine===false)return{state:"offline",label:"Offline · last verified "+stamp};
+  if(navigator.onLine===false||lastPackFetchUsedCache)return{state:"offline",label:"Offline · last verified "+stamp};
   if(ageHours>30)return{state:"attention",label:"Needs refresh · last verified "+stamp};
   if(ageHours>8)return{state:"stale",label:"Older data · last verified "+stamp};
   return{state:"current",label:"Verified "+stamp};
@@ -255,6 +253,8 @@ function nextSpellingTest(){
   const row=datedImportantEvents().find(({item,date})=>date>=now&&kindClass(item)==="test"&&/spelling|handwriting/i.test(item.label||""));
   return row?{x:row.item,d:row.date}:null;
 }
+function testReadyMode(){return studyGameEngine()?.testReadyMode?.(pack,currentWeekTest())||null}
+function availableStudyGameModes(){const test=testReadyMode();return test?[test,...STUDY_GAME_MODES]:STUDY_GAME_MODES}
 function currentOrSoonStarAssessment(){
   const now=today(),weekMs=7*24*60*60*1000;
   const row=datedImportantEvents().find(({item,range})=>
@@ -296,7 +296,8 @@ function studyGameIconHtml(modeId){
     quick:'<svg viewBox="0 0 48 48" aria-hidden="true"><path class="icon-fill" d="m24 6 5.3 10.8 11.9 1.7-8.6 8.4 2 11.8L24 33.1l-10.6 5.6 2-11.8-8.6-8.4 11.9-1.7L24 6Z"/><path class="icon-spark" d="M37.5 7.5v6M34.5 10.5h6"/></svg>',
     math:'<svg viewBox="0 0 48 48" aria-hidden="true"><rect class="icon-outline" x="9" y="6.5" width="30" height="35" rx="6"/><rect class="icon-screen" x="14" y="11" width="20" height="7" rx="2.5"/><path class="icon-stroke" d="M16 26h7M19.5 22.5v7M28 26h6M16 34h7M28 34h6"/></svg>',
     words:'<svg viewBox="0 0 48 48" aria-hidden="true"><path class="icon-book" d="M7.5 11.5c5.5-1.4 10.5-.6 16.5 3.1v24c-5.7-3.5-11-4.3-16.5-2.7V11.5Z"/><path class="icon-book" d="M40.5 11.5c-5.5-1.4-10.5-.6-16.5 3.1v24c5.7-3.5 11-4.3 16.5-2.7V11.5Z"/><text class="icon-letter" x="13" y="27">A</text><text class="icon-letter small" x="29" y="29">a</text></svg>',
-    faith:'<svg viewBox="0 0 48 48" aria-hidden="true"><circle class="icon-halo" cx="24" cy="24" r="18"/><path class="icon-cross" d="M24 12v24M17 20h14"/><path class="icon-ray" d="M10 12l3 3M38 12l-3 3M9 31l4-2M39 31l-4-2"/></svg>'
+    faith:'<svg viewBox="0 0 48 48" aria-hidden="true"><circle class="icon-halo" cx="24" cy="24" r="18"/><path class="icon-cross" d="M24 12v24M17 20h14"/><path class="icon-ray" d="M10 12l3 3M38 12l-3 3M9 31l4-2M39 31l-4-2"/></svg>',
+    "test-ready":'<svg viewBox="0 0 48 48" aria-hidden="true"><rect class="icon-outline" x="10" y="8" width="28" height="32" rx="5"/><path class="icon-stroke" d="M17 17h14M17 24h8M17 31h5M28 30l3 3 6-7"/></svg>'
   };
   return '<span class="study-game-icon game-icon-'+esc(modeId)+'" aria-hidden="true">'+(icons[modeId]||icons.quick)+'</span>';
 }
@@ -449,105 +450,124 @@ function studyGameCatalog(){
   }
   return studyGameCatalogCache;
 }
-function gameMode(id){return STUDY_GAME_MODES.find(mode=>mode.id===id)||STUDY_GAME_MODES[0]}
+function gameMode(id){return availableStudyGameModes().find(mode=>mode.id===id)||availableStudyGameModes()[0]}
 function gameModeQuestionTotal(catalog,mode){
-  const wanted=mode?.subjects||[];
-  const pool=(catalog?.questions||[]).filter(q=>!wanted.length||wanted.includes(q.subject));
+  const wanted=mode?.subjects||[],skills=mode?.skills||[];
+  const pool=(catalog?.questions||[]).filter(q=>(!wanted.length||wanted.includes(q.subject))&&(!skills.length||skills.includes(q.skill)));
   return Math.min(mode?.count||0,pool.length);
 }
-function gameRecordKey(modeId){
-  const catalog=studyGameCatalog();
-  return "abvm-study-games:"+String(catalog?.sourceKey||"current")+":"+modeId;
-}
-function loadGameRecord(modeId){
-  try{
-    const value=JSON.parse(storageGet(gameRecordKey(modeId))||"{}");
-    return {best:Number(value.best)||0,plays:Number(value.plays)||0,totalCorrect:Number(value.totalCorrect)||0,totalAnswered:Number(value.totalAnswered)||0};
-  }catch{return {best:0,plays:0,totalCorrect:0,totalAnswered:0}}
-}
-function saveGameRecord(){
-  if(gameState.saved||!gameState.mode||!gameState.questions.length)return;
-  const record=loadGameRecord(gameState.mode);
-  const next={
-    best:Math.max(record.best,gameState.score),
-    plays:record.plays+1,
-    totalCorrect:record.totalCorrect+gameState.score,
-    totalAnswered:record.totalAnswered+gameState.questions.length
-  };
-  storageSet(gameRecordKey(gameState.mode),JSON.stringify(next));
-  gameState.saved=true;
-}
-function nextGameSessionSeed(modeId){
-  const catalog=studyGameCatalog();
-  const key="abvm-study-games-session:"+String(catalog?.sourceKey||"current")+":"+modeId;
-  const next=(Number(storageGet(key))||0)+1;
-  storageSet(key,String(next));
-  return String(catalog?.sourceKey||"current")+"|"+modeId+"|"+next;
-}
-function loadGameLearning(){
-  try{
-    const parsed=JSON.parse(storageGet(GAME_LEARNING_KEY)||"{}");
-    return parsed&&typeof parsed==="object"?parsed:{};
-  }catch{return {}}
-}
-function recordGameLearning(question,correct){
-  if(!question?.skill)return null;
-  const all=loadGameLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2};
-  row.Seen=(Number(row.Seen)||0)+1;
-  if(correct){
-    row.Correct=(Number(row.Correct)||0)+1;
-    row.ConsecutiveCorrect=(Number(row.ConsecutiveCorrect)||0)+1;
-    row.ConsecutiveWrong=0;
-    if(row.ConsecutiveCorrect>=2)row.TargetDifficulty=3;
-  }else{
-    row.Wrong=(Number(row.Wrong)||0)+1;
-    row.ConsecutiveWrong=(Number(row.ConsecutiveWrong)||0)+1;
-    row.ConsecutiveCorrect=0;
-    if(row.ConsecutiveWrong>=2)row.TargetDifficulty=2;
-  }
-  all[question.skill]=row;
-  storageSet(GAME_LEARNING_KEY,JSON.stringify(all));
-  return row;
-}
+function loadGameRecord(modeId){return studyGameEngine()?.loadGameRecord?.(currentGameSourceKey(),modeId)||{best:0,plays:0,totalCorrect:0,totalAnswered:0}}
+function saveGameRecord(){if(gameState.saved||!gameState.mode||!gameState.questions.length)return;studyGameEngine()?.saveGameRecord?.(currentGameSourceKey(),gameState.mode,{score:gameState.score,total:gameState.questions.length});gameState.saved=true}
+function currentGameSourceKey(){return studyGameCatalog()?.sourceKey||"current"}
+function scheduleGameComeback(origin){const e=studyGameEngine(),c=studyGameCatalog(),s=currentGameSourceKey();return e?.scheduleComeback?.(c,origin,{sourceKey:s,remaining:2,seenIds:gameState.questions.slice(0,gameState.index+1).map(q=>q.id),seed:s+"|comeback|"+String(origin?.id||"item")})||null}
+function tickGameComebacks(){studyGameEngine()?.tickComebacks?.(currentGameSourceKey())}
+function markGameComebacksNextSession(){studyGameEngine()?.deferComebacksToNextSession?.(currentGameSourceKey())}
+function activateDueGameComeback(){const due=studyGameEngine()?.dueComeback?.(studyGameCatalog(),currentGameSourceKey());if(!due)return false;Object.assign(gameState,{comebackMode:true,comebackQuestion:due.question,comebackKey:due.row.key,comebackCorrect:null,selectedIndex:null,answered:false,hintOpen:false,learningRow:null});return true}
+function clearActiveGameComeback(){studyGameEngine()?.resolveComeback?.(gameState.comebackKey);Object.assign(gameState,{comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null})}
+function activeGameQuestion(){return gameState.comebackMode?gameState.comebackQuestion:gameState.supportMode?gameState.supportQuestion:gameState.questions[gameState.index]}
 function startStudyGame(modeId){
   const engine=studyGameEngine(),catalog=studyGameCatalog(),mode=gameMode(modeId);
   if(!engine||!catalog)return;
-  const questions=engine.selectQuestions(catalog,{subjects:mode.subjects,preferredSkills:mode.preferredSkills||[],count:mode.count,seed:nextGameSessionSeed(mode.id),skillStats:loadGameLearning()});
-  gameState={screen:"play",mode:mode.id,questions,index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,learningRow:null};
+  const questions=engine.selectQuestions(catalog,{subjects:mode.subjects,skills:mode.skills||[],preferredSkills:mode.preferredSkills||[],count:mode.count,seed:engine.nextSessionSeed?.(currentGameSourceKey(),mode.id)||"session",skillStats:engine.loadLearning?.()||{}});
+  gameState={screen:"play",mode:mode.id,questions,index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,learningRow:null,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null};
+  activateDueGameComeback();
   renderGames();bindScreen();
 }
 function answerStudyGame(index){
   if(gameState.screen!=="play"||gameState.answered)return;
-  const question=gameState.questions[gameState.index],choice=question?.choices?.[index];
+  const question=activeGameQuestion(),choice=question?.choices?.[index];
   if(choice===undefined)return;
   const correct=choice===question.answer;
   gameState.selectedIndex=index;gameState.answered=true;gameState.hintOpen=false;
-  gameState.learningRow=recordGameLearning(question,correct);
-  if(correct){
-    gameState.score++;
-    gameState.streak++;
-    gameState.bestStreak=Math.max(gameState.bestStreak,gameState.streak);
-  }else gameState.streak=0;
+  if(gameState.comebackMode){
+    gameState.learningRow=studyGameEngine()?.recordComeback?.(question,correct)||null;
+    gameState.comebackCorrect=correct;
+  }else if(gameState.supportMode){
+    gameState.learningRow=studyGameEngine()?.recordSupport?.(question,correct)||null;
+    gameState.supportCorrect=correct;
+  }else{
+    gameState.learningRow=studyGameEngine()?.recordLearning?.(question,correct)||null;
+    if(correct){
+      gameState.score++;
+      gameState.streak++;
+      gameState.bestStreak=Math.max(gameState.bestStreak,gameState.streak);
+    }else gameState.streak=0;
+  }
   renderGames();bindScreen();
 }
 function advanceStudyGame(){
   if(!gameState.answered)return;
-  if(gameState.index>=gameState.questions.length-1){
-    gameState.screen="finish";
-    saveGameRecord();
-  }else{
-    gameState.index++;
+  const resetAnswerState=()=>{
     gameState.selectedIndex=null;
     gameState.answered=false;
     gameState.hintOpen=false;
     gameState.learningRow=null;
+  };
+
+  if(gameState.comebackMode){
+    clearActiveGameComeback();
+    resetAnswerState();
+    renderGames();bindScreen();
+    return;
+  }
+
+  if(gameState.supportMode){
+    const origin=gameState.supportOriginQuestion;
+    gameState.supportMode=false;
+    gameState.supportQuestion=null;
+    gameState.supportCorrect=null;
+    gameState.supportOriginQuestion=null;
+    if(origin)scheduleGameComeback(origin);
+    if(gameState.index>=gameState.questions.length-1){
+      markGameComebacksNextSession();
+      gameState.screen="finish";
+      saveGameRecord();
+    }else{
+      gameState.index++;
+      tickGameComebacks();
+      resetAnswerState();
+      activateDueGameComeback();
+    }
+    renderGames();bindScreen();
+    return;
+  }
+
+  const current=gameState.questions[gameState.index];
+  const selected=current?.choices?.[gameState.selectedIndex];
+  const correct=selected===current?.answer;
+  if(!correct&&(gameState.learningRow?.ConsecutiveWrong||0)>=2){
+    const engine=studyGameEngine(),catalog=studyGameCatalog();
+    const support=engine?.supportQuestion(catalog,current,{
+      skillStats:studyGameEngine()?.loadLearning?.()||{},
+      seed:String(catalog?.sourceKey||"current")+"|support|"+String(current?.id||"item")+"|"+String(gameState.learningRow?.Seen||0)
+    });
+    if(support){
+      gameState.supportMode=true;
+      gameState.supportQuestion=support;
+      gameState.supportCorrect=null;
+      gameState.supportOriginQuestion=current;
+      resetAnswerState();
+      renderGames();bindScreen();
+      return;
+    }
+  }
+
+  if(gameState.index>=gameState.questions.length-1){
+    markGameComebacksNextSession();
+    gameState.screen="finish";
+    saveGameRecord();
+  }else{
+    gameState.index++;
+    tickGameComebacks();
+    resetAnswerState();
+    activateDueGameComeback();
   }
   renderGames();bindScreen();
 }
 function leaveStudyGame(){gameState.screen="menu";renderGames();bindScreen()}
 function toggleStudyHint(){if(gameState.screen==="play"&&!gameState.answered){gameState.hintOpen=!gameState.hintOpen;renderGames();bindScreen()}}
 function gameMenuHtml(catalog){
-  const modes=STUDY_GAME_MODES;
+  const modes=availableStudyGameModes();
   return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Pick a game and start</h2><span>Questions prioritize this week’s school skills and adjust as you practice.</span></div></section>'+
     '<div class="study-game-grid">'+modes.map(mode=>{
       const record=loadGameRecord(mode.id),total=gameModeQuestionTotal(catalog,mode),disabled=total===0;
@@ -556,7 +576,7 @@ function gameMenuHtml(catalog){
     '<p class="game-privacy-note">Practice prioritizes verified school skills; private student answers and grades are not used.</p>';
 }
 function gamePlayHtml(){
-  const mode=gameMode(gameState.mode),q=gameState.questions[gameState.index];
+  const mode=gameMode(gameState.mode),q=activeGameQuestion(),support=gameState.supportMode,comeback=gameState.comebackMode,teach=support?studyGameEngine()?.teachCardFor?.(q):null;
   if(!q)return '<section class="game-empty"><h2>No questions are ready for this game yet.</h2><button type="button" data-game-home>Back to games</button></section>';
   const progress=gameState.index+1,total=gameState.questions.length,pct=Math.round((progress/Math.max(1,total))*100);
   const chosen=gameState.selectedIndex;
@@ -570,13 +590,13 @@ function gamePlayHtml(){
   }).join("");
   const selected=chosen===null?null:q.choices[chosen],correct=selected===q.answer;
   const targeted=!correct&&selected?q.choiceDiagnostics?.[selected]?.feedback:null;
-  const adaptive=!correct&&(gameState.learningRow?.ConsecutiveWrong||0)>=2?'<small class="adaptive-note">Support mode: the next rounds will favor a simpler same-skill item until this skill stabilizes.</small>':'';
+  const adaptive=!support&&!comeback&&!correct&&(gameState.learningRow?.ConsecutiveWrong||0)>=2?'<small class="adaptive-note">A smaller same-skill support step is next. It does not count toward your score.</small>':'';
   const feedback=gameState.answered
-    ? '<section class="game-feedback '+(correct?'correct':'retry')+'" aria-live="polite"><span>'+(correct?'✓':'↻')+'</span><div><strong>'+(correct?'Nice work!':'Good try — here’s the answer.')+'</strong><p>'+esc(correct?q.explanation:(targeted||q.explanation))+'</p>'+adaptive+'</div></section><button type="button" class="game-next" data-game-next>'+(progress===total?'See my score':'Next question')+' <span>›</span></button>'
-    : '<div class="game-hint-wrap"><button type="button" class="game-hint-button" data-game-hint>'+(gameState.hintOpen?'Hide hint':'Need a hint?')+'</button>'+(gameState.hintOpen?'<p class="game-hint">'+esc(q.hint)+'</p>':'')+'</div>';
-  return '<div class="game-topbar"><button type="button" data-game-home aria-label="Back to study games">‹</button><div><span>'+esc(mode.title)+'</span><strong>'+progress+' of '+total+'</strong></div><b>★ '+gameState.score+'</b></div>'+
+    ? '<section class="game-feedback '+(correct?'correct':'retry')+'" aria-live="polite"><span>'+(correct?'✓':'↻')+'</span><div><strong>'+(comeback?(correct?'Remembered later!':'Good review — here’s the answer.'):(support?(correct?'Good — keep going!':'Here is the smaller-step answer.'):(correct?'Nice work!':'Good try — here’s the answer.')))+'</strong><p>'+esc(correct?q.explanation:(targeted||q.explanation))+'</p>'+adaptive+'</div></section><button type="button" class="game-next" data-game-next>'+(support||comeback?'Continue':progress===total?'See my score':'Next question')+' <span>›</span></button>'
+    : '<div class="game-hint-wrap">'+(comeback?'<small class="adaptive-note">Comeback · same skill · not scored</small>':support?'<small class="adaptive-note">Support step · same skill · not scored</small>':'')+'<button type="button" class="game-hint-button" data-game-hint>'+(gameState.hintOpen?'Hide hint':'Need a hint?')+'</button>'+(gameState.hintOpen?'<p class="game-hint">'+esc(q.hint)+'</p>':'')+'</div>';
+  return '<div class="game-topbar"><button type="button" data-game-home aria-label="Back to study games">‹</button><div><span>'+esc(comeback?"Comeback":support?"Support step":mode.title)+'</span><strong>'+(comeback?'Remember this skill later':support?'Same skill · smaller step':progress+' of '+total)+'</strong></div><b>★ '+gameState.score+'</b></div>'+
     '<div class="game-progress" aria-label="Game progress"><span style="width:'+pct+'%"></span></div>'+
-    '<section class="game-question-card"><div class="game-question-meta"><span>'+esc(q.subject)+'</span><b>'+esc(GAME_TYPE_LABELS[q.questionType]||"Practice")+'</b></div><h2>'+esc(q.prompt)+'</h2><div class="game-answer-list">'+answers+'</div>'+feedback+'</section>'+
+    '<section class="game-question-card"><div class="game-question-meta"><span>'+esc(q.subject)+'</span><b>'+esc(comeback?"Comeback":support?"Support":GAME_TYPE_LABELS[q.questionType]||"Practice")+'</b></div>'+(teach?'<div class="game-hint-wrap teach-card"><small class="adaptive-note">Quick lesson · not scored</small><p class="game-hint">'+esc(teach.instruction)+(teach.example?' '+esc(teach.example):'')+'</p></div>':'')+'<h2>'+esc(q.prompt)+'</h2><div class="game-answer-list">'+answers+'</div>'+feedback+'</section>'+
     '<div class="game-streak"><span>Streak <b>'+gameState.streak+'</b></span><span>Best this round <b>'+gameState.bestStreak+'</b></span></div>';
 }
 function gameFinishHtml(){
@@ -681,6 +701,7 @@ async function fetchPack({force=false,notify=false}={}){
     const timeout=setTimeout(()=>controller.abort(),8000);
     try{
       const r=await fetch(PACK_URL,{cache:"no-store",signal:controller.signal});
+      lastPackFetchUsedCache=r.headers.get("x-abvm-cache-fallback")==="1";
       if(!r.ok)throw new Error("HTTP "+r.status);
       const data=await r.json();
       if(!data?.pack?.sourceSufficient)throw new Error("Incomplete pack");
@@ -710,7 +731,8 @@ async function manualRefreshSchoolInfo(){
   try{
     const changed=await fetchPack({force:true,notify:false});
     const state=freshnessState();
-    if(changed)toast("School info updated");
+    if(state.state==="offline")toast("You’re offline. Showing saved school info.");
+    else if(changed)toast("School info updated");
     else if(state.state==="current")toast("Latest published school info is loaded");
     else toast("Checked published school info — no newer verified update is available yet.");
   }catch{
@@ -738,8 +760,8 @@ window.addEventListener("hashchange",()=>{
     render();
   }
 });
-window.addEventListener("online",()=>{if(pack)fetchPack({force:true,notify:true}).catch(()=>updateFreshnessUI())});
-window.addEventListener("offline",()=>{if(pack)updateFreshnessUI()});
+window.addEventListener("online",()=>{lastPackFetchUsedCache=false;if(pack)fetchPack({force:true,notify:true}).catch(()=>updateFreshnessUI())});
+window.addEventListener("offline",()=>{lastPackFetchUsedCache=true;if(pack)updateFreshnessUI()});
 document.addEventListener("visibilitychange",()=>{
   if(document.visibilityState==="visible"&&pack)fetchPack({notify:true}).catch(()=>{});
 });

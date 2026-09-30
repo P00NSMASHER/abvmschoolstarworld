@@ -29,3 +29,18 @@ test("health summary displays the same effective evidence used by the verdict",(
   assert.match(report,/line\("Refresh watchdog",effectiveRun\(status\.workflows\.watchdog\)\)/);
   assert.doesNotMatch(report,/## Latest workflow state/);
 });
+
+
+test("operational health surfaces Grade 2 pipeline coverage without treating known source gaps as unsupported",()=>{
+  assert.match(report,/const contentPipeline=packData\.pack\?\.contentPipeline\|\|null/);
+  assert.match(report,/status\.contentPipeline\.qaStatus==="pass"/);
+  assert.match(report,/status\.contentPipeline\.unsupportedSkillCount===0/);
+  assert.match(report,/status\.contentPipeline\.unresolvedLineageCount===0/);
+  assert.match(report,/status\.contentPipeline\.pageExactLineageCount===status\.contentPipeline\.questionCount/);
+  assert.match(report,/Grade 2 content pipeline/);
+  assert.match(report,/Question lineage/);
+  assert.match(report,/Partially covered study topics/);
+  assert.match(report,/Source-insufficient study topics/);
+  assert.match(report,/Intentionally not practiced/);
+  assert.match(report,/Unsupported teacher skills/);
+});
