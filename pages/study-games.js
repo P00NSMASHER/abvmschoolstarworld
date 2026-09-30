@@ -1050,30 +1050,6 @@ function dynamicSkillCap(pool,count){
   const skillCount=new Set((pool||[]).map(q=>q.skill).filter(Boolean)).size;
   return skillCount>=3?2:skillCount===2?3:Math.max(1,count);
 }
-function arrangeBalanced(items,seed){
-  const source=[...(items||[])];
-  if(source.length<2)return source;
-  const stable=[...source].sort((a,b)=>hash(seed+"|sequence|"+a.id)-hash(seed+"|sequence|"+b.id));
-  const search=(strictSkill,strictType)=>{
-    const walk=(remaining,out)=>{
-      if(!remaining.length)return out;
-      const last=out[out.length-1],before=out[out.length-2];
-      const candidates=remaining.filter(q=>{
-        if(strictSkill&&last&&q.skill===last.skill)return false;
-        if(strictType&&last&&before&&q.questionType===last.questionType&&q.questionType===before.questionType)return false;
-        return true;
-      });
-      for(const candidate of candidates){
-        const index=remaining.indexOf(candidate);
-        const next=walk([...remaining.slice(0,index),...remaining.slice(index+1)],[...out,candidate]);
-        if(next)return next;
-      }
-      return null;
-    };
-    return walk(stable,[]);
-  };
-  return search(true,true)||search(true,false)||search(false,true)||stable;
-}
 function orderForVariety(rows){
   const remaining=[...(rows||[])],out=[];
   while(remaining.length){
@@ -1118,8 +1094,11 @@ function pickBalanced(pool,count,seed,skillStats,preferredSkills=[],recentKeys=n
     const remaining=underCap.length?underCap:available;
     if(!remaining.length)break;
     const material=remaining.filter(q=>q.tier==="material"),tierPool=material.length?material:remaining;
-    const fresh=tierPool.filter(q=>!recentKeys.has(semanticRotationKey(q)));
-    const candidate=(fresh.length?fresh:tierPool)[0];
+    const selectedSkills=new Set(selected.map(q=>q.skill).filter(Boolean)),availableSkills=new Set(tierPool.map(q=>q.skill).filter(Boolean));
+    const needsSecondSkill=selected.length>0&&selectedSkills.size===1&&availableSkills.size>1;
+    const diversityPool=needsSecondSkill?tierPool.filter(q=>q.skill!==selected[0].skill):tierPool;
+    const fresh=diversityPool.filter(q=>!recentKeys.has(semanticRotationKey(q)));
+    const candidate=(fresh.length?fresh:diversityPool)[0];
     selected.push(candidate);
     usedIds.add(candidate.id);usedVariants.add(semanticRotationKey(candidate));
     skillCounts[candidate.skill]=(skillCounts[candidate.skill]||0)+1;
