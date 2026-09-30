@@ -201,6 +201,26 @@ test('selector avoids three identical question types in a row when another type 
   }
 });
 
+test('selector pulls an alternate representation before selecting a third identical type', async ({ page }) => {
+  const result = await page.evaluate(() => {
+    const engine = window.ABVMStudyGames;
+    const questions = [
+      ...Array.from({ length:6 }, (_, i) => ({
+        id:'d' + i, skill:'single-skill', subject:'Reading / ELA', tier:'material',
+        difficulty:2, questionType:'direct', variantFingerprint:'direct-' + i,
+      })),
+      { id:'t0', skill:'single-skill', subject:'Reading / ELA', tier:'material', difficulty:2, questionType:'transfer', variantFingerprint:'transfer-0' },
+      { id:'r0', skill:'single-skill', subject:'Reading / ELA', tier:'material', difficulty:2, questionType:'reasoning', variantFingerprint:'reasoning-0' },
+    ];
+    return engine.selectQuestions({ sourceKey:'selection-type-pack', questions }, { count:3, seed:'seed-2' })
+      .map(q => q.questionType);
+  });
+
+  expect(result).toHaveLength(3);
+  expect(result.some(type => type !== 'direct')).toBe(true);
+  expect(result[0] === result[1] && result[1] === result[2]).toBe(false);
+});
+
 test('ordering finds a non-repetitive arrangement when the greedy first choice would create a type triple', async ({ page }) => {
   const result = await page.evaluate(() => {
     const engine = window.ABVMStudyGames;
