@@ -123,6 +123,6 @@ test("service worker keeps school data network-first and static assets stale-whi
   const source=await (await request.get("/sw.js")).text();
   expect(source).toContain('endsWith("/data/study-pack.json")');
   expect(source).toContain("networkFirst(event.request,null,event)");
-  expect(source).toContain("staleWhileRevalidate(event.request)");
+  expect(source).toContain("staleWhileRevalidate(event.request,event)");
   expect(source).toMatch(/const CACHE = "abvm-grade2-parent-companion-v[0-9]+-[a-z-]+"/);
 });
