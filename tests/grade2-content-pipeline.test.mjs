@@ -275,6 +275,20 @@ test('production lineage resolves every question to an exact teacher page captur
   assert.equal(sourceFor('sentence-types')?.sourceTitle, 'Tests');
   assert.equal(sourceFor('theme')?.sourceTitle, 'Reading Work');
   assert.equal(sourceFor('religion-trinity')?.sourceTitle, 'Religion');
+
+  const normalizeLine = value => String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  for (const skill of pipeline.skills) {
+    const evidence = (skill.evidence || []).map(normalizeLine).filter(Boolean);
+    const matched = (skill.sourceLineage?.matchedEvidence || []).map(normalizeLine).filter(Boolean);
+    assert.ok(
+      matched.some(line => evidence.some(item => line.includes(item))),
+      `source lineage for ${skill.id} must contain its actual skill evidence`
+    );
+  }
+
+  const suffixLineage = sourceFor('suffix-ed-ing');
+  assert.ok(suffixLineage?.matchedEvidence?.some(line => /adding\s+-ed,\s*-ing/i.test(line)));
+  assert.equal(suffixLineage?.matchedEvidence?.some(line => /Reading Comprehension:/i.test(line)), false);
 });
 
 test('vocabulary definitions are generated only when the verified pack actually supplies meanings', () => {
