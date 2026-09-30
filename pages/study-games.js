@@ -1057,6 +1057,62 @@ function comebackQuestion(catalog,current,{seed="comeback",seenIds=[]}={}){
     });
   return candidates[0]||null;
 }
+
+const COMEBACK_STORAGE_KEY="abvm-study-comebacks:v1";
+function readComebacks(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(COMEBACK_STORAGE_KEY)||"[]");
+    return Array.isArray(parsed)?parsed.filter(row=>row&&row.sourceKey&&row.questionId&&row.skill):[];
+  }catch{return []}
+}
+function writeComebacks(rows){
+  const safe=(Array.isArray(rows)?rows:[]).slice(-20);
+  try{localStorage.setItem(COMEBACK_STORAGE_KEY,JSON.stringify(safe))}catch{}
+  return safe;
+}
+function scheduleComeback(catalog,current,{sourceKey,seenIds=[],seed="comeback",remaining=2}={}){
+  if(!catalog||!current||!sourceKey)return null;
+  const rows=readComebacks();
+  if(rows.some(row=>row.sourceKey===sourceKey&&row.originQuestionId===current.id))return null;
+  const sibling=comebackQuestion(catalog,current,{seed,seenIds});
+  if(!sibling)return null;
+  const row={
+    key:sourceKey+"|"+String(current.id||"origin")+"|"+String(sibling.id||"sibling"),
+    sourceKey,questionId:sibling.id,originQuestionId:current.id,skill:current.skill,
+    remaining:Math.max(0,Number(remaining)||0)
+  };
+  rows.push(row);writeComebacks(rows);
+  return {row,question:sibling};
+}
+function tickComebacks(sourceKey){
+  const rows=readComebacks();let changed=false;
+  for(const row of rows){
+    if(row.sourceKey!==sourceKey||Number(row.remaining)<=0)continue;
+    row.remaining=Math.max(0,Number(row.remaining)-1);changed=true;
+  }
+  if(changed)writeComebacks(rows);
+  return rows;
+}
+function deferComebacksToNextSession(sourceKey){
+  const rows=readComebacks();let changed=false;
+  for(const row of rows){
+    if(row.sourceKey===sourceKey&&Number(row.remaining)>0){row.remaining=0;changed=true;}
+  }
+  if(changed)writeComebacks(rows);
+  return rows;
+}
+function dueComeback(catalog,sourceKey){
+  const rows=readComebacks();
+  const row=rows.find(item=>item.sourceKey===sourceKey&&Number(item.remaining)<=0);
+  if(!row)return null;
+  const question=(catalog?.questions||[]).find(item=>item.id===row.questionId);
+  if(!question){writeComebacks(rows.filter(item=>item!==row));return null}
+  return {row,question};
+}
+function resolveComeback(key){
+  if(!key)return readComebacks();
+  return writeComebacks(readComebacks().filter(row=>row.key!==key));
+}
 function sourceKeyFromEnvelope(pack,envelope){
   const hashes=(envelope?.sourcePages||[]).map(row=>row.contentHash).filter(Boolean).join("|");
   const source=hashes||text(pack?.sourceHash||pack?.sourceCheckedAt||pack?.weekLabel||"abvm-current");
@@ -1065,6 +1121,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,selectQuestions,supportQuestion,comebackQuestion,sourceKeyFromEnvelope,targetDifficultyFor,testReadyMode
+  buildCatalog,validateCatalog,selectQuestions,supportQuestion,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,sourceKeyFromEnvelope,targetDifficultyFor,testReadyMode
 });
 })();
