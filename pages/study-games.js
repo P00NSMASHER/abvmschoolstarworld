@@ -1102,8 +1102,13 @@ function pickBalanced(pool,count,seed,skillStats,preferredSkills=[],recentKeys=n
       if(repeatsType&&tierPool.some(other=>other.questionType!==q.questionType))return false;
       return true;
     };
-    let candidate=freshPool.find(diverse);
-    if(!candidate)candidate=tierPool.find(diverse);
+    const balanced=choices=>{
+      const valid=choices.filter(diverse);if(!valid.length)return null;
+      const min=Math.min(...valid.map(q=>skillCounts[q.skill]||0));
+      return valid.find(q=>(skillCounts[q.skill]||0)===min)||valid[0];
+    };
+    let candidate=balanced(freshPool);
+    if(!candidate)candidate=balanced(tierPool);
     if(!candidate)candidate=freshPool[0];
     selected.push(candidate);
     usedIds.add(candidate.id);usedVariants.add(semanticRotationKey(candidate));
