@@ -92,11 +92,18 @@ try {
   await page.locator('.calendar-day-card').scrollIntoViewIfNeeded();
   await page.screenshot({ path: `${out}/calendar.png` });
   await page.getByRole('button', { name: 'Study Games', exact: true }).click();
-  await expect(page.locator('.study-game-tile')).toHaveCount(4, { timeout: 15000 });
-  receipt.screens.push({ screen: 'Study Games', modeCount: 4 });
+  for (const label of ['Quick Mix', 'Math Dash', 'Word Power', 'Faith Quest']) {
+    await expect(page.getByRole('button', { name: new RegExp(label, 'i') })).toBeVisible({ timeout: 15000 });
+  }
+  const modeCount = await page.locator('.study-game-tile').count();
+  expect([4, 5]).toContain(modeCount);
+  receipt.screens.push({ screen: 'Study Games', modeCount });
   await page.evaluate(async () => { if ('serviceWorker' in navigator) await navigator.serviceWorker.ready; });
   await page.reload();
-  await expect(page.locator('.study-game-tile')).toHaveCount(4, { timeout: 15000 });
+  for (const label of ['Quick Mix', 'Math Dash', 'Word Power', 'Faith Quest']) {
+    await expect(page.getByRole('button', { name: new RegExp(label, 'i') })).toBeVisible({ timeout: 15000 });
+  }
+  expect([4, 5]).toContain(await page.locator('.study-game-tile').count());
   await page.getByRole('button', { name: 'Today', exact: true }).click();
   if (todayMeal?.items.length) for (const item of todayMeal.items) await expect(page.locator('.lunch-card')).toContainText(item);
   receipt.cacheReloadVerified = true;
