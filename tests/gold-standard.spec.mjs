@@ -421,7 +421,13 @@ test("current week lunch menu is verified and visible instead of last week's men
   await days.nth(3).click();
   await expect(page.locator(".lunch-card")).toContainText("Baked cheese pizza");
   await expect(page.locator(".lunch-card")).toContainText("Mixed vegetables");
-  await expect(page.locator(".lunch-card")).toContainText("Reviewed school menu · automated source check pending");
+  const thursday=data.pack.lunchMenu.find(item=>item.date==="2026-10-01");
+  const thursdayProof=(data.pack.lunchMenuSource.sourcePages||[]).find(source=>source.id===thursday?.sourceId);
+  if(thursdayProof?.checkedAt){
+    await expect(page.locator(".lunch-card")).not.toContainText("automated source check");
+  }else{
+    await expect(page.locator(".lunch-card")).toContainText("Reviewed school menu · automated source check pending");
+  }
   await days.nth(4).click();
   await expect(page.locator(".lunch-card")).toContainText("Cheesy breadsticks");
   await expect(page.locator(".lunch-card")).toContainText("Dipping sauce");
