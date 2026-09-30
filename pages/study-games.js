@@ -980,10 +980,12 @@ function pickBalanced(pool,count,seed,skillStats,preferredSkills=[]){
   }
   return selected;
 }
-function selectQuestions(catalog,{subjects,count=8,seed="session",skillStats={},preferredSkills=[]}={}){
+function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillStats={},preferredSkills=[]}={}){
   let pool=[...(catalog?.questions||[])];
   const wanted=Array.isArray(subjects)?subjects.map(text).filter(Boolean):[];
+  const wantedSkills=Array.isArray(skills)?skills.map(text).filter(Boolean):[];
   if(wanted.length)pool=pool.filter(q=>wanted.includes(q.subject));
+  if(wantedSkills.length)pool=pool.filter(q=>wantedSkills.includes(q.skill));
   return pickBalanced(pool,count,seed,skillStats,preferredSkills);
 }
 function supportQuestion(catalog,current,{skillStats={},seed="support"}={}){
