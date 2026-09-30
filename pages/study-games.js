@@ -1032,12 +1032,18 @@ function semanticRotationKey(question){
 function rotationStorageKey(sourceKey){return ROTATION_STORAGE_PREFIX+hash(String(sourceKey||"current")).toString(36)}
 function loadRotation(sourceKey){
   try{
-    const parsed=JSON.parse(localStorage.getItem(rotationStorageKey(sourceKey))||"{}");
-    return {recent:Array.isArray(parsed?.recent)?parsed.recent.slice(-48):[]};
+    const key=rotationStorageKey(sourceKey),raw=localStorage.getItem(key),parsed=JSON.parse(raw||"{}");
+    const recent=(Array.isArray(parsed?.recent)?parsed.recent:[])
+      .filter(row=>row?.v).slice(-48)
+      .map(row=>({v:String(row.v||""),skill:String(row.skill||""),type:String(row.type||"")}));
+    const safe=JSON.stringify({recent});
+    if(raw!==null&&raw!==safe)localStorage.setItem(key,safe);
+    return {recent};
   }catch{return {recent:[]}}
 }
 function saveRotation(sourceKey,rows){
-  const recent=(Array.isArray(rows)?rows:[]).filter(row=>row?.v).slice(-48);
+  const recent=(Array.isArray(rows)?rows:[]).filter(row=>row?.v).slice(-48)
+    .map(row=>({v:String(row.v||""),skill:String(row.skill||""),type:String(row.type||"")}));
   try{localStorage.setItem(rotationStorageKey(sourceKey),JSON.stringify({recent}))}catch{}
   return recent;
 }

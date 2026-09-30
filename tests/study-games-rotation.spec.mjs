@@ -287,6 +287,11 @@ test('rotation history is source-scoped and stores no question text or answer co
     const firstCatalog = { sourceKey: 'source-A', questions };
     const first = engine.selectQuestions(firstCatalog, { count: 2, seed: 'same-seed' });
     first.forEach(question => engine.markQuestionShown(question, firstCatalog.sourceKey));
+    const [historyKey, historyValue] = Object.entries(localStorage).find(([key]) => key.startsWith('abvm-study-rotation:v1:'));
+    const legacy = JSON.parse(historyValue);
+    legacy.recent[0].at = 123456789;
+    localStorage.setItem(historyKey, JSON.stringify(legacy));
+    engine.selectQuestions(firstCatalog, { count: 2, seed: 'privacy-migration' });
     const isolated = engine.selectQuestions({ sourceKey: 'source-B', questions }, { count: 2, seed: 'same-seed' });
     const rotationEntries = Object.entries(localStorage).filter(([key]) => key.startsWith('abvm-study-rotation:v1:'));
     return {
