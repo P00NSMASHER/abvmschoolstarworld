@@ -66,3 +66,31 @@ test('Study Games does not bypass SOURCE_INSUFFICIENT vocabulary coverage with i
 
   expect(result).toEqual([]);
 });
+
+
+test('legacy reading material cannot outrank the verified pipeline with unlisted skills', async ({ page }) => {
+  const result = await page.evaluate(async () => {
+    const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(response => response.json());
+    const pack = structuredClone(envelope.pack);
+    pack.contentPipeline = {
+      schemaVersion: 2,
+      sourceHash: 'reading-filter-test',
+      skills: [
+        { id: 'theme', subject: 'Reading / ELA' },
+        { id: 'visualize', subject: 'Reading / ELA' },
+        { id: 'dialogue', subject: 'Reading / ELA' },
+      ],
+      questions: [],
+      coverage: [],
+    };
+    const catalog = window.ABVMStudyGames.buildCatalog(pack, { sourceKey: 'reading-filter-test' });
+    return catalog.questions
+      .filter(question => question.tier === 'material' && question.subject === 'Reading / ELA')
+      .map(question => question.skill);
+  });
+
+  expect(result).toContain('theme');
+  expect(result).toContain('visualize');
+  expect(result).not.toContain('inference');
+  expect(result).not.toContain('text-evidence');
+});
