@@ -50,9 +50,15 @@ function play({g,mode,q,teach,retryInstruction,labels}){
     '<section class="game-question-card"><div class="game-question-meta"><span>'+esc(q.subject)+'</span><b>'+esc(comeback?"Comeback":support?"Support":labels[q.questionType]||"Practice")+'</b></div>'+(teach?'<div class="game-hint-wrap teach-card"><small class="adaptive-note">Quick lesson · not scored</small><p class="game-hint">'+esc(teach.instruction)+(teach.example?' '+esc(teach.example):'')+'</p></div>':'')+'<h2>'+esc(q.prompt)+'</h2>'+visual+'<div class="game-answer-list">'+answers+'</div>'+feedback+'</section>'+
     '<div class="game-streak"><span>Streak <b>'+g.streak+'</b></span><span>Best this round <b>'+g.bestStreak+'</b></span></div>';
 }
+function goal({state}){
+  const g=state?.goal||{},selected=!!state?.selected,unlocked=!!state?.unlocked,pct=Math.max(0,Math.min(100,Number(state?.percent)||0)),target=Math.max(1,Math.floor(Number(state?.target)||1)),balance=Math.max(0,Math.floor(Number(state?.balance)||0)),progress=Math.min(target,balance);
+  if(!g.id)return "";
+  return '<section class="study-star-goal" aria-label="Dream Goal"><div class="study-star-goal-head"><span>★</span><div><small>DREAM GOAL</small><strong>'+esc(g.title)+'</strong></div><b>'+balance+' / '+target+' Stars</b></div><div class="study-star-goal-progress" role="progressbar" aria-label="Dream Goal progress" aria-valuemin="0" aria-valuemax="'+target+'" aria-valuenow="'+progress+'"><span style="width:'+pct+'%"></span></div><p>'+esc(unlocked?"Goal reached! Your badge is ready.":g.copy||"Keep practicing to fill the bar.")+'</p>'+(selected?'<small class="study-star-goal-selected">'+(unlocked?'Unlocked':'Goal selected')+'</small>':'<button type="button" data-study-star-goal="'+esc(g.id)+'">Choose this goal</button>')+'</section>';
+}
+
 function finish({mode,state,record}){
   const total=state.questions.length,pct=total?Math.round((state.score/total)*100):0,stars=pct>=90?3:pct>=70?2:pct>=40?1:0;
   return '<section class="game-finish"><div class="game-finish-stars" aria-label="'+stars+' stars">'+[0,1,2].map(i=>'<span class="'+(i<stars?'earned':'')+'">★</span>').join("")+'</div><p>'+esc(mode.title.toUpperCase())+'</p><h2>'+state.score+' out of '+total+'</h2><strong>'+pct+'%</strong><span>'+(pct>=90?'Fantastic work!':pct>=70?'Great job — one more round can make it even stronger.':pct>=40?'Good practice. Try another round to build the skill.':'Keep practicing — every round helps.')+'</span><div class="game-finish-actions"><button type="button" class="primary" data-game-start="'+esc(mode.id)+'">Play again</button><button type="button" data-game-home>All study games</button></div><small>Best score on this material: '+record.best+' / '+total+'</small></section>';
 }
-window.ABVMStudyGameView=Object.freeze({play,finish});
+window.ABVMStudyGameView=Object.freeze({play,goal,finish});
 })();
