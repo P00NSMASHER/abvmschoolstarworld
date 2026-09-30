@@ -33,6 +33,9 @@ const DOMAIN_BY_SKILL = Object.freeze({
   'religion-image-likeness': ['Religion'],
   'religion-creation-care': ['Religion'],
   'religion-jesus-savior': ['Religion'],
+  'religion-disciples': ['Religion'],
+  'religion-mary-church': ['Religion'],
+  'religion-seed-new-life': ['Religion'],
   'religion-five-senses': ['Religion'],
   'religion-gifts-choices': ['Religion'],
 });
@@ -172,6 +175,21 @@ const EXACT_SKILLS = Object.freeze({
     subject: 'Religion',
     standards: ['ABVM.RELIGION.CURRENT'],
     anchors: ['jesus', 'savior', 'sins', 'grace'],
+  },
+  'religion-disciples': {
+    subject: 'Religion',
+    standards: ['ABVM.RELIGION.CURRENT'],
+    anchors: ['disciple', 'friend', 'follower', 'jesus'],
+  },
+  'religion-mary-church': {
+    subject: 'Religion',
+    standards: ['ABVM.RELIGION.CURRENT'],
+    anchors: ['mary', 'mother', 'jesus', 'church'],
+  },
+  'religion-seed-new-life': {
+    subject: 'Religion',
+    standards: ['ABVM.RELIGION.CURRENT'],
+    anchors: ['seed', 'new life', 'grace', 'jesus'],
   },
   'religion-five-senses': {
     subject: 'Religion',
