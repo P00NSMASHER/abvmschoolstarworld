@@ -55,3 +55,33 @@ test("recent misses can remain review-priority even before a long spacing interv
   });
   expect(result.struggling).toBeGreaterThan(result.strong);
 });
+
+
+test("retry-supported success stays separate from independent evidence and remains higher review priority",async({page})=>{
+  const result=await page.evaluate(()=>{
+    const engine=window.ABVMStudyGames;
+    localStorage.removeItem("abvm-study-learning:v2");
+    const before=Date.now();
+    engine.recordLearning({skill:"theme"},true,{attemptCount:2,incorrectCount:1,hintCount:0});
+    const retry={...engine.loadLearning().theme};
+    engine.recordLearning({skill:"visualize"},true,{attemptCount:1,incorrectCount:0,hintCount:0});
+    const independent={...engine.loadLearning().visualize};
+    const now=Date.now();
+    return {
+      before,retry,independent,
+      retryPriority:engine.reviewPriority({theme:retry},"theme",now),
+      independentPriority:engine.reviewPriority({visualize:independent},"visualize",now)
+    };
+  });
+
+  expect(result.retry.LastSeenAt).toBeGreaterThanOrEqual(result.before);
+  expect(result.retry.LastIndependentAt).toBeUndefined();
+  expect(result.retry.CorrectAfterRetry).toBe(1);
+  expect(result.retry.IndependentCorrect || 0).toBe(0);
+  expect(result.retry.LastResolution?.independent).toBe(false);
+
+  expect(result.independent.LastIndependentAt).toBeGreaterThanOrEqual(result.before);
+  expect(result.independent.IndependentCorrect).toBe(1);
+  expect(result.independent.LastResolution?.independent).toBe(true);
+  expect(result.retryPriority).toBeGreaterThan(result.independentPriority);
+});
