@@ -138,6 +138,22 @@ const BASE_SKILLS = [
     }),
   },
   {
+    id: 'dialogue',
+    subject: 'Reading / ELA',
+    label: 'Dialogue',
+    pattern: /\bdialogue\b|quotation marks?|characters? (?:say|speak|talk)/i,
+    standards: ['CCSS.RL.2.6'],
+    domain: 'Analyzing literary text',
+    studyNotes: ['Dialogue is the exact speech of characters; quotation marks help show the words they say.'],
+    question: () => ({
+      prompt: 'Read: “Can I borrow the blue marker?” Maya asked. “Sure,” Eli said. Which words are dialogue?',
+      choices: ['“Can I borrow the blue marker?”', 'Maya asked.', 'blue marker'],
+      answer: '“Can I borrow the blue marker?”',
+      explanation: 'Dialogue is the exact speech of characters, shown here inside quotation marks.',
+      hint: 'Look for the exact words a character says.',
+    }),
+  },
+  {
     id: 'inference',
     subject: 'Reading / ELA',
     label: 'Inference',
