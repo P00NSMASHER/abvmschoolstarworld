@@ -41,6 +41,7 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
 
   assert.equal(pipeline.qa.status, 'pass');
   assert.equal(pipeline.qa.rejectedCount, 0);
+  assert.match(pipeline.bankFingerprint, /^[0-9a-f]{8}$/);
   assert.equal(pipeline.qa.unsupportedSkillCount, 0);
   assert.equal(pipeline.schemaVersion, 2);
   assert.equal(pipeline.safetyState, 'SAFE_PARTIAL');
