@@ -1019,11 +1019,43 @@ function reviewPriority(skillStats,skill,now=Date.now()){
   const supportedBonus=(Number(row.CorrectAfterRetry)||0)>0&&!(Number(row.LastIndependentCorrectAt)||0)?0.5:0;
   return overdue+need+missBonus+supportedBonus;
 }
-function pickBalanced(pool,count,seed,skillStats,preferredSkills=[]){
-  const selected=[],used=new Set(),skillCounts={},maxPerSkill=3,preferred=new Set(preferredSkills||[]),now=Date.now();
+const ROTATION_STORAGE_PREFIX="abvm-study-rotation:v1:";
+function semanticRotationKey(question){
+  const stable=String(question?.variantFingerprint||question?.contentFingerprint||question?.id||"");
+  return stable?"v"+hash(stable).toString(36):"";
+}
+function rotationStorageKey(sourceKey){return ROTATION_STORAGE_PREFIX+hash(String(sourceKey||"current")).toString(36)}
+function loadRotation(sourceKey){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(rotationStorageKey(sourceKey))||"{}");
+    return {recent:Array.isArray(parsed?.recent)?parsed.recent.slice(-48):[]};
+  }catch{return {recent:[]}}
+}
+function saveRotation(sourceKey,rows){
+  const recent=(Array.isArray(rows)?rows:[]).filter(row=>row?.v).slice(-48);
+  try{localStorage.setItem(rotationStorageKey(sourceKey),JSON.stringify({recent}))}catch{}
+  return recent;
+}
+function rememberRotation(sourceKey,selected){
+  if(!sourceKey||!Array.isArray(selected)||!selected.length)return;
+  const current=loadRotation(sourceKey).recent,now=Date.now();
+  for(const question of selected){
+    const v=semanticRotationKey(question);if(!v)continue;
+    current.push({v,skill:String(question.skill||""),type:String(question.questionType||""),at:now});
+  }
+  saveRotation(sourceKey,current);
+}
+function dynamicSkillCap(pool,count){
+  const skillCount=new Set((pool||[]).map(q=>q.skill).filter(Boolean)).size;
+  return skillCount>=3?2:skillCount===2?3:Math.max(1,count);
+}
+function pickBalanced(pool,count,seed,skillStats,preferredSkills=[],recentKeys=new Set()){
+  const selected=[],usedIds=new Set(),usedVariants=new Set(),skillCounts={},maxPerSkill=dynamicSkillCap(pool,count),preferred=new Set(preferredSkills||[]),now=Date.now();
   const ordered=[...pool].sort((a,b)=>{
     if(a.tier!==b.tier)return a.tier==="material"?-1:1;
     if(preferred.has(a.skill)!==preferred.has(b.skill))return preferred.has(a.skill)?-1:1;
+    const ar=recentKeys.has(semanticRotationKey(a)),br=recentKeys.has(semanticRotationKey(b));
+    if(ar!==br)return ar?1:-1;
     const ra=reviewPriority(skillStats,a.skill,now),rb=reviewPriority(skillStats,b.skill,now);
     if(ra!==rb)return rb-ra;
     const ta=Math.abs(a.difficulty-targetDifficultyFor(skillStats,a.skill));
@@ -1032,19 +1064,25 @@ function pickBalanced(pool,count,seed,skillStats,preferredSkills=[]){
     return hash(seed+"|"+a.id)-hash(seed+"|"+b.id);
   });
   while(selected.length<Math.min(count,ordered.length)){
-    const underCap=ordered.filter(q=>!used.has(q.id)&&(skillCounts[q.skill]||0)<maxPerSkill);
-    const remaining=underCap.length?underCap:ordered.filter(q=>!used.has(q.id));
+    const available=ordered.filter(q=>!usedIds.has(q.id)&&!usedVariants.has(semanticRotationKey(q)));
+    const underCap=available.filter(q=>(skillCounts[q.skill]||0)<maxPerSkill);
+    const remaining=underCap.length?underCap:available;
     if(!remaining.length)break;
     const material=remaining.filter(q=>q.tier==="material"),tierPool=material.length?material:remaining;
-    let candidate=tierPool.find(q=>{
-      const last=selected[selected.length-1];
-      if(last&&last.skill===q.skill){
-        return !tierPool.some(other=>other.skill!==q.skill);
-      }
+    const fresh=tierPool.filter(q=>!recentKeys.has(semanticRotationKey(q))),freshPool=fresh.length?fresh:tierPool;
+    const last=selected[selected.length-1],before=selected[selected.length-2];
+    let candidate=freshPool.find(q=>{
+      const alternateSkill=freshPool.some(other=>other.skill!==q.skill);
+      if(last&&last.skill===q.skill&&alternateSkill)return false;
+      const repeatsType=last&&before&&last.questionType===before.questionType&&q.questionType===last.questionType;
+      if(repeatsType&&freshPool.some(other=>other.questionType!==q.questionType))return false;
       return true;
     });
-    if(!candidate)candidate=tierPool[0];
-    selected.push(candidate);used.add(candidate.id);skillCounts[candidate.skill]=(skillCounts[candidate.skill]||0)+1;
+    if(!candidate&&last)candidate=freshPool.find(q=>q.skill!==last.skill);
+    if(!candidate)candidate=freshPool[0];
+    selected.push(candidate);
+    usedIds.add(candidate.id);usedVariants.add(semanticRotationKey(candidate));
+    skillCounts[candidate.skill]=(skillCounts[candidate.skill]||0)+1;
   }
   return selected;
 }
@@ -1055,7 +1093,10 @@ function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillSt
   if(wanted.length)pool=pool.filter(q=>wanted.includes(q.subject));
   if(wantedSkills.length)pool=pool.filter(q=>wantedSkills.includes(q.skill));
   if(wanted.length||wantedSkills.length)pool=pool.filter(q=>q.tier==="material");
-  return pickBalanced(pool,count,seed,skillStats,preferredSkills);
+  const sourceKey=String(catalog?.sourceKey||"current"),recent=new Set(loadRotation(sourceKey).recent.map(row=>row.v));
+  const selected=pickBalanced(pool,count,seed,skillStats,preferredSkills,recent);
+  rememberRotation(sourceKey,selected);
+  return selected;
 }
 function supportQuestion(catalog,current,{skillStats={},seed="support"}={}){
   if(!current)return null;
