@@ -1261,7 +1261,7 @@ function pageLineageForSkill(skill, sourcePages, sourceHash) {
       const haystack = normalize(line);
       return evidence.some(item => {
         const needle = normalize(item);
-        return needle.length >= 3 && (haystack.includes(needle) || needle.includes(haystack));
+        return needle.length >= 3 && haystack.includes(needle);
       });
     });
     return { page, matchedLines, score: matchedLines.length };
@@ -1390,17 +1390,21 @@ function questionFor(skill, raw) {
 }
 
 function detectBaseSkills(pack, skills, questions) {
-  const haystack = [
-    subjectText(pack, 'Reading / ELA'),
-    subjectText(pack, 'Spelling / Handwriting'),
-  ].join(' | ');
+  const sourceLines = uniqueText([
+    ...(subjectRow(pack, 'Reading / ELA')?.topics || []),
+    ...(subjectRow(pack, 'Reading / ELA')?.studyNotes || []),
+    ...(subjectRow(pack, 'Spelling / Handwriting')?.topics || []),
+    ...(subjectRow(pack, 'Spelling / Handwriting')?.studyNotes || []),
+  ]);
   for (const rule of BASE_SKILLS) {
-    if (!rule.pattern.test(haystack)) continue;
+    const sourceLine = sourceLines.find(line => rule.pattern.test(line));
+    if (!sourceLine) continue;
+    const matchedEvidence = text(sourceLine).match(rule.pattern)?.[0] || sourceLine;
     const skill = {
       id: rule.id,
       subject: rule.subject,
       label: rule.label,
-      evidence: [haystack.match(rule.pattern)?.[0] || rule.label],
+      evidence: [matchedEvidence],
       studyNotes: rule.studyNotes,
       standards: rule.standards,
       domain: rule.domain,
