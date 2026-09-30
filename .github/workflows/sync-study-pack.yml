@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/refresh-teacher-pages.mjs'
+      - 'scripts/grade2-content-pipeline.mjs'
       - 'scripts/teacher-page-parsers.mjs'
       - 'scripts/lunch-publication.mjs'
       - 'pages/data/lunch-catalog.json'
