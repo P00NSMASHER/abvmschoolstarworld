@@ -1062,18 +1062,47 @@ function dynamicSkillCap(pool,count){
   return skillCount>=3?2:skillCount===2?3:Math.max(1,count);
 }
 function orderForVariety(rows){
-  const remaining=[...(rows||[])],out=[];
+  const source=[...(rows||[])];
+  if(source.length<2)return source;
+  const skillFrequency=new Map(),typeFrequency=new Map();
+  for(const q of source){
+    skillFrequency.set(q.skill,(skillFrequency.get(q.skill)||0)+1);
+    typeFrequency.set(q.questionType,(typeFrequency.get(q.questionType)||0)+1);
+  }
+  const rank=(a,b)=>
+    (typeFrequency.get(source[b].questionType)||0)-(typeFrequency.get(source[a].questionType)||0)
+    ||(skillFrequency.get(source[b].skill)||0)-(skillFrequency.get(source[a].skill)||0)
+    ||a-b;
+  if(source.length<=12){
+    const dead=new Set();
+    const search=(remaining,lastSkill,lastType,beforeType)=>{
+      if(!remaining.length)return [];
+      const key=remaining.join(",")+"|"+lastSkill+"|"+lastType+"|"+beforeType;
+      if(dead.has(key))return null;
+      const candidates=remaining
+        .filter(index=>{
+          const q=source[index];
+          if(lastSkill&&q.skill===lastSkill)return false;
+          if(beforeType&&lastType&&beforeType===lastType&&q.questionType===lastType)return false;
+          return true;
+        })
+        .sort(rank);
+      for(const index of candidates){
+        const tail=search(remaining.filter(item=>item!==index),source[index].skill,source[index].questionType,lastType);
+        if(tail)return [source[index],...tail];
+      }
+      dead.add(key);return null;
+    };
+    const strict=search(source.map((_,index)=>index),"","","");
+    if(strict)return strict;
+  }
+  const remaining=[...source],out=[];
   while(remaining.length){
     const last=out[out.length-1],before=out[out.length-2];
     let candidates=[...remaining];
     if(last&&candidates.some(q=>q.skill!==last.skill))candidates=candidates.filter(q=>q.skill!==last.skill);
     if(last&&before&&last.questionType===before.questionType&&candidates.some(q=>q.questionType!==last.questionType)){
       candidates=candidates.filter(q=>q.questionType!==last.questionType);
-    }
-    const skillFrequency=new Map(),typeFrequency=new Map();
-    for(const q of remaining){
-      skillFrequency.set(q.skill,(skillFrequency.get(q.skill)||0)+1);
-      typeFrequency.set(q.questionType,(typeFrequency.get(q.questionType)||0)+1);
     }
     candidates.sort((a,b)=>
       (typeFrequency.get(b.questionType)||0)-(typeFrequency.get(a.questionType)||0)
