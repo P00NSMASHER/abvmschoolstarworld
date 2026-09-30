@@ -1367,7 +1367,7 @@ function detectSightWords(pack, skills, questions, coverage) {
       choices: [row.word, ...row.distractors],
       answer: row.word,
       explanation: `“${row.word}” makes the sentence grammatically complete and meaningful.`,
-      hint: 'Read the whole sentence with each choice and choose the word that fits both grammar and meaning.',
+      hint: 'Read the whole sentence with each choice and choose the word that makes the sentence sound correct and make sense.',
       sourceMode: 'CURATED_CONTEXT',
       sourceFact: `Verified current high-frequency word: ${row.word}`,
       dok: 2,
