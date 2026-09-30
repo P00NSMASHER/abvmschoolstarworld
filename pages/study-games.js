@@ -1049,6 +1049,10 @@ function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillSt
   const wantedSkills=Array.isArray(skills)?skills.map(text).filter(Boolean):[];
   if(wanted.length)pool=pool.filter(q=>wanted.includes(q.subject));
   if(wantedSkills.length)pool=pool.filter(q=>wantedSkills.includes(q.skill));
+  if(wanted.length||wantedSkills.length){
+    const material=pool.filter(q=>q.tier==="material");
+    if(material.length)pool=material;
+  }
   return pickBalanced(pool,count,seed,skillStats,preferredSkills);
 }
 function supportQuestion(catalog,current,{skillStats={},seed="support"}={}){
