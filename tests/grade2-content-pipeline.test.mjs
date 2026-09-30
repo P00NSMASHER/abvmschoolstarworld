@@ -115,6 +115,8 @@ test('future teacher skills are detected without hand-editing the app', () => {
   assert.equal(pipeline.qa.status, 'pass');
   for (const skillId of ['suffix-s-es', 'cause-effect', 'setting', 'inference', 'genre', 'sequence', 'caption', 'addition-within-20', 'place-value', 'compare-numbers', 'time', 'money']) {
     assert.ok((pipeline.qa.questionsPerSkill?.[skillId] || 0) >= 3, `${skillId} should receive a three-item semantic family`);
+    const familyTypes = new Set(pipeline.questions.filter(question => question.skill === skillId).map(question => question.questionType));
+    assert.deepEqual([...familyTypes].sort(), ['direct', 'reasoning', 'transfer'], `${skillId} should include direct, transfer, and reasoning practice`);
   }
   assert.equal(pipeline.safetyState, 'READY');
   assert.equal(pipeline.qa.unsupportedSkillCount, 0);
@@ -287,6 +289,17 @@ test('pipeline validation rejects fake semantic variety and answer-position stre
   const biased = structuredClone(pipeline);
   biased.qa.maxConsecutiveAnswerPosition = 3;
   assert.ok(validateGrade2ContentPipeline(biased).includes('answer-position-run-too-long'));
+
+  const missingType = structuredClone(pipeline);
+  const typeSkill = missingType.skills.find(skill => {
+    const rows = missingType.questions.filter(question => question.skill === skill.id);
+    return rows.length >= 3 && rows.some(question => question.questionType === 'reasoning');
+  });
+  assert.ok(typeSkill);
+  for (const question of missingType.questions.filter(question => question.skill === typeSkill.id && question.questionType === 'reasoning')) {
+    question.questionType = 'transfer';
+  }
+  assert.ok(validateGrade2ContentPipeline(missingType).includes(`semantic-family-type-missing:${typeSkill.id}:reasoning`));
 });
 
 test('bad generated question specs are rejected before publication', () => {
