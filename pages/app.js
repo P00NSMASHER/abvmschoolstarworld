@@ -53,12 +53,12 @@ function isoDateKey(date){
 function getDerivedPack(){
   if(derivedPackCache?.pack===pack)return derivedPackCache;
   const datedEvents=(pack?.importantDates||[]).map(item=>{
-    const date=parseDate(item.date),range=eventDateRange(item.date);
-    return{item,date,range};
-  }).filter(row=>row.date||row.range);
+    const range=eventDateRange(item.date);
+    return{item,date:range?.[0]||null,range};
+  }).filter(row=>row.range);
+  const chronologicalEvents=[...datedEvents].sort((a,b)=>a.date-b.date);
   const eventsByDate=new Map();
   for(const row of datedEvents){
-    if(!row.range)continue;
     for(let cursor=new Date(row.range[0]);cursor<=row.range[1];cursor.setDate(cursor.getDate()+1)){
       const key=isoDateKey(cursor),items=eventsByDate.get(key)||[];
       items.push(row.item);eventsByDate.set(key,items);
@@ -79,12 +79,19 @@ function getDerivedPack(){
     if(key)lunchByDate.set(key,item);
   }
   const subjects=new Map((pack?.subjects||[]).map(item=>[String(item.subject||"").trim().toLowerCase(),item]));
-  const reminderRows=(pack?.reminders||[]).map(text=>({text,range:eventDateRange(text)})).filter(row=>row.range);
-  derivedPackCache={pack,datedEvents,eventsByDate,lunchByDate,subjects,reminderRows};
+  const specials=(subjects.get("specials")?.topics||[]).map(line=>{
+    const m=String(line).match(/^(Monday|Tuesday|Wednesday|Thursday|Friday):\s*(.+)$/i);
+    return m?{day:m[1].slice(0,3),label:m[2]}:null;
+  }).filter(Boolean);
+  const reminderRows=(pack?.reminders||[]).map(text=>({text,range:eventDateRange(text)}))
+    .filter(row=>row.range).sort((a,b)=>a.range[0]-b.range[0]);
+  const packWeekStart=parseDate(pack?.weekLabel||"");
+  const pictureDayEnd=datedEvents.find(({item})=>/\bPicture Day\b/i.test(item.label||""))?.range?.[1]||null;
+  derivedPackCache={pack,datedEvents,chronologicalEvents,eventsByDate,lunchByDate,subjects,specials,reminderRows,packWeekStart,pictureDayEnd};
   return derivedPackCache;
 }
 function datedImportantEvents(){
-  return getDerivedPack().datedEvents.filter(row=>row.date);
+  return getDerivedPack().chronologicalEvents;
 }
 function fmtDate(d){return d?WEEKDAY[d.getDay()]+", "+MONTHS[d.getMonth()]+" "+d.getDate():"";}
 function fmtShort(d){return d?WEEKDAY[d.getDay()].slice(0,3)+" "+d.getDate():"";}
