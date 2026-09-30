@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto';
+
 import { validateGrade2PipelineAlignment } from './grade2-content-alignment.mjs';
 
 const FORBIDDEN_QUESTION_PATTERNS = [
@@ -656,6 +658,86 @@ function subjectRow(pack, name) {
   return (pack?.subjects || []).find(row => normalize(row?.subject) === normalize(name)) || null;
 }
 
+function sha256(value) {
+  return 'sha256:' + createHash('sha256').update(String(value ?? '')).digest('hex');
+}
+
+function normalizedSourcePages(sourcePages) {
+  return (Array.isArray(sourcePages) ? sourcePages : []).map(page => ({
+    title: text(page?.title),
+    url: text(page?.url),
+    checkedAt: text(page?.checkedAt),
+    contentHash: text(page?.contentHash),
+    lines: uniqueText(page?.lines || []),
+  })).filter(page => page.title && page.contentHash);
+}
+
+function sourcePriority(skill, title) {
+  const priorities = skill.subject === 'Religion'
+    ? ['Religion']
+    : skill.subject === 'Math'
+      ? ['Tests', 'Homework']
+      : skill.subject === 'Spelling / Handwriting'
+        ? ['Weekly Spelling List', 'Reading Work', 'Tests']
+        : skill.id === 'sentence-types'
+          ? ['Tests', 'Reading Work']
+          : ['Reading Work', 'Tests', 'Homework'];
+  const index = priorities.indexOf(title);
+  return index < 0 ? priorities.length + 1 : index;
+}
+
+function pageLineageForSkill(skill, sourcePages, sourceHash) {
+  const evidence = uniqueText(skill?.evidence || []);
+  const pages = normalizedSourcePages(sourcePages);
+  const candidates = pages.map(page => {
+    const matchedLines = page.lines.filter(line => {
+      const haystack = normalize(line);
+      return evidence.some(item => {
+        const needle = normalize(item);
+        return needle.length >= 3 && (haystack.includes(needle) || needle.includes(haystack));
+      });
+    });
+    return { page, matchedLines, score: matchedLines.length };
+  }).filter(row => row.score > 0)
+    .sort((a, b) => b.score - a.score || sourcePriority(skill, a.page.title) - sourcePriority(skill, b.page.title));
+
+  const match = candidates[0];
+  if (!match) {
+    return {
+      quality: 'unresolved',
+      sourceHash: text(sourceHash),
+      evidenceExcerptHash: sha256(evidence.join('\n')),
+      matchedEvidence: evidence,
+    };
+  }
+  return {
+    quality: 'page-exact',
+    sourceTitle: match.page.title,
+    sourceUrl: match.page.url,
+    sourceCaptureHash: match.page.contentHash,
+    sourceCheckedAt: match.page.checkedAt,
+    evidenceExcerptHash: sha256(match.matchedLines.join('\n')),
+    matchedEvidence: match.matchedLines,
+  };
+}
+
+function attachSourceLineage(skills, questions, { sourcePages, sourceHash } = {}) {
+  const bySkill = new Map();
+  for (const skill of skills) {
+    const lineage = pageLineageForSkill(skill, sourcePages, sourceHash);
+    skill.sourceLineage = lineage;
+    bySkill.set(skill.id, lineage);
+  }
+  for (const question of questions) {
+    question.sourceLineage = bySkill.get(question.skill) || {
+      quality: 'unresolved',
+      sourceHash: text(sourceHash),
+      evidenceExcerptHash: sha256(question.sourceFact || question.skill || ''),
+      matchedEvidence: uniqueText(question.sourceEvidence || []),
+    };
+  }
+}
+
 function subjectText(pack, name) {
   const row = subjectRow(pack, name);
   return uniqueText([...(row?.topics || []), ...(row?.studyNotes || [])]).join(' | ');
@@ -1106,6 +1188,7 @@ export function validateGrade2ContentPipeline(pipeline) {
     if (!text(skill.subject)) issues.push(`skill-subject-missing:${skill.id}`);
     if (!Array.isArray(skill.studyNotes) || skill.studyNotes.length === 0) issues.push(`skill-study-notes-missing:${skill.id}`);
     if (!Array.isArray(skill.standards) || skill.standards.length === 0) issues.push(`skill-standards-missing:${skill.id}`);
+    if (pipeline.sourcePolicy?.requirePageExactLineage && skill.sourceLineage?.quality !== 'page-exact') issues.push(`skill-lineage-unresolved:${skill.id}`);
   }
 
   const questionIds = new Set();
@@ -1115,6 +1198,12 @@ export function validateGrade2ContentPipeline(pipeline) {
     questionIds.add(question.id);
     questionSkills.add(question.skill);
     for (const issue of validateGeneratedQuestionSpec(question)) issues.push(`${question.id}:${issue}`);
+    if (pipeline.sourcePolicy?.requirePageExactLineage) {
+      const lineage = question.sourceLineage;
+      if (lineage?.quality !== 'page-exact' || !text(lineage.sourceTitle) || !text(lineage.sourceCaptureHash) || !text(lineage.evidenceExcerptHash)) {
+        issues.push(`question-lineage-unresolved:${question.id}`);
+      }
+    }
   }
 
   for (const skill of pipeline.skills || []) {
@@ -1142,7 +1231,7 @@ export function validateGrade2ContentPipeline(pipeline) {
   return [...new Set(issues)];
 }
 
-export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash } = {}) {
+export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash, sourcePages = [], requirePageExactLineage = false } = {}) {
   const skills = [];
   const rawQuestions = [];
   const coverage = [];
@@ -1151,6 +1240,7 @@ export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash } = {
   detectReligion(pack, skills, rawQuestions);
   detectVocabulary(pack, skills, rawQuestions, coverage);
   addSupplementalQuestionFamilies(skills, rawQuestions);
+  attachSourceLineage(skills, rawQuestions, { sourcePages, sourceHash: sourceHash || pack?.sourceHash });
   detectUnsupportedExplicitSkills(pack, coverage);
 
   for (const skill of skills) {
@@ -1199,6 +1289,7 @@ export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash } = {
       runtimeAI: false,
       modes: ['STRICT_SOURCE', 'CURATED_CONTEXT', 'DETERMINISTIC_TEMPLATE'],
       failClosed: true,
+      requirePageExactLineage,
     },
     skills,
     coverage,
@@ -1232,6 +1323,8 @@ export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash } = {
       subjectCoverage: [...new Set(skills.map(skill => skill.subject))].sort(),
       sourceInsufficientCount: coverage.filter(row => row.status === 'SOURCE_INSUFFICIENT').length,
       unsupportedSkillCount: coverage.filter(row => row.status === 'GENERATOR_UNSUPPORTED').length,
+      pageExactLineageCount: questions.filter(question => question.sourceLineage?.quality === 'page-exact').length,
+      unresolvedLineageCount: questions.filter(question => question.sourceLineage?.quality !== 'page-exact').length,
     },
   };
 
