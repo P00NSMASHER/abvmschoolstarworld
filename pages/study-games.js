@@ -1050,6 +1050,30 @@ function dynamicSkillCap(pool,count){
   const skillCount=new Set((pool||[]).map(q=>q.skill).filter(Boolean)).size;
   return skillCount>=3?2:skillCount===2?3:Math.max(1,count);
 }
+function arrangeBalanced(items,seed){
+  const source=[...(items||[])];
+  if(source.length<2)return source;
+  const stable=[...source].sort((a,b)=>hash(seed+"|sequence|"+a.id)-hash(seed+"|sequence|"+b.id));
+  const search=(strictSkill,strictType)=>{
+    const walk=(remaining,out)=>{
+      if(!remaining.length)return out;
+      const last=out[out.length-1],before=out[out.length-2];
+      const candidates=remaining.filter(q=>{
+        if(strictSkill&&last&&q.skill===last.skill)return false;
+        if(strictType&&last&&before&&q.questionType===last.questionType&&q.questionType===before.questionType)return false;
+        return true;
+      });
+      for(const candidate of candidates){
+        const index=remaining.indexOf(candidate);
+        const next=walk([...remaining.slice(0,index),...remaining.slice(index+1)],[...out,candidate]);
+        if(next)return next;
+      }
+      return null;
+    };
+    return walk(stable,[]);
+  };
+  return search(true,true)||search(true,false)||search(false,true)||stable;
+}
 function pickBalanced(pool,count,seed,skillStats,preferredSkills=[],recentKeys=new Set()){
   const selected=[],usedIds=new Set(),usedVariants=new Set(),skillCounts={},maxPerSkill=dynamicSkillCap(pool,count),preferred=new Set(preferredSkills||[]),now=Date.now();
   const ordered=[...pool].sort((a,b)=>{
@@ -1085,7 +1109,7 @@ function pickBalanced(pool,count,seed,skillStats,preferredSkills=[],recentKeys=n
     usedIds.add(candidate.id);usedVariants.add(semanticRotationKey(candidate));
     skillCounts[candidate.skill]=(skillCounts[candidate.skill]||0)+1;
   }
-  return selected;
+  return arrangeBalanced(selected,seed);
 }
 function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillStats={},preferredSkills=[]}={}){
   let pool=[...(catalog?.questions||[])];
