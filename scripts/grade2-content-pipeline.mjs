@@ -1474,6 +1474,39 @@ function detectSightWords(pack, skills, questions, coverage) {
     }));
   }
 
+  for (let index = 0; index + 1 < candidates.length && index < 6; index += 2) {
+    const first = candidates[index], second = candidates[index + 1];
+    const answer = `${first.word} / ${second.word}`;
+    const firstWrong = `${first.distractors[0]} / ${second.word}`;
+    const secondWrong = `${first.word} / ${second.distractors[0]}`;
+    questions.push(questionFor(skill, {
+      questionType: 'reasoning',
+      prompt: `Which pair correctly completes both sentences? 1) “${first.sentence}” 2) “${second.sentence}”`,
+      choices: [answer, firstWrong, secondWrong],
+      answer,
+      explanation: `“${first.word}” correctly completes the first sentence and “${second.word}” correctly completes the second.`,
+      hint: 'Check each sentence separately, then choose the pair that works in both places.',
+      sourceMode: 'CURATED_CONTEXT',
+      sourceFact: `Verified current high-frequency words: ${first.word}, ${second.word}`,
+      dok: 2,
+      difficulty: 3,
+      misconceptions: {
+        [firstWrong]: 'first-context-mismatch',
+        [secondWrong]: 'second-context-mismatch',
+      },
+      wrongFeedback: {
+        [firstWrong]: 'The second word fits; reread the first sentence and test its blank again.',
+        [secondWrong]: 'The first word fits; reread the second sentence and test its blank again.',
+      },
+      evidenceContract: {
+        evidenceType: 'INTEGRATED_COMPONENT',
+        supports: ['high-frequency-word-use'],
+        strongestClaim: 'integrated-contextual-high-frequency-word-use',
+        doesNotClaim: ['spelling', 'oral-fluency', 'isolated-print-recognition'],
+      },
+    }));
+  }
+
   coverage.push({
     topic: 'Sight / high-frequency words',
     subject: 'Reading / ELA',
@@ -1806,7 +1839,7 @@ export function validateGeneratedQuestionSpec(question) {
   }
   if (!text(question.provenance)) issues.push('provenance-missing');
   if (!text(question.contentFingerprint) || !text(question.variantFingerprint) || !text(question.presentationFingerprint)) issues.push('fingerprints-missing');
-  if (!question.evidenceContract || question.evidenceContract.evidenceType !== 'DIRECT_TARGET') issues.push('evidence-contract-invalid');
+  if (!question.evidenceContract || !['DIRECT_TARGET', 'INTEGRATED_COMPONENT'].includes(question.evidenceContract.evidenceType)) issues.push('evidence-contract-invalid');
   if (!question.choiceDiagnostics || typeof question.choiceDiagnostics !== 'object') issues.push('choice-diagnostics-missing');
   if (!question.rubric || question.rubric.maxPoints !== 2) issues.push('rubric-invalid');
   if (!Array.isArray(question.standards) || question.standards.length === 0) issues.push('standards-missing');
