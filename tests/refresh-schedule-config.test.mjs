@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 
 const workflow=readFileSync(new URL("../.github/workflows/sync-study-pack.yml",import.meta.url),"utf8");
+const watchdog=readFileSync(new URL("../.github/workflows/refresh-health.yml",import.meta.url),"utf8");
 const refresh=readFileSync(new URL("../scripts/refresh-teacher-pages.mjs",import.meta.url),"utf8");
 
 test("teacher refresh covers the school day and self-triggers after workflow changes",()=>{
@@ -14,4 +15,15 @@ test("published sync policy matches the workflow schedule",()=>{
   assert.match(refresh,/scheduledAt: \['6:17 AM', '9:47 AM', '1:17 PM', '3:47 PM'\]/);
   assert.match(refresh,/primaryAt: '6:17 AM'/);
   assert.match(refresh,/backupAt: '9:47 AM'/);
+});
+
+
+test("overnight watchdog uses the 8-hour SLA instead of an impossible same-day rule",()=>{
+  const watchdogCommand=watchdog.match(/node scripts\/check-refresh-health\.mjs[^\n]+/)?.[0]||"";
+  assert.match(watchdogCommand,/--max-age-hours 8/);
+  assert.doesNotMatch(watchdogCommand,/--require-today/);
+
+  const refreshCommand=workflow.match(/node scripts\/check-refresh-health\.mjs[^\n]+/)?.[0]||"";
+  assert.match(refreshCommand,/--require-today/);
+  assert.match(refreshCommand,/--max-age-hours 1/);
 });
