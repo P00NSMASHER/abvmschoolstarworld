@@ -42,6 +42,10 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
 
   assert.equal(pipeline.qa.status, 'pass');
   assert.equal(pipeline.qa.rejectedCount, 0);
+  assert.equal(pipeline.qa.minimumQuestionsPerSkill, 2);
+  for (const skill of pipeline.skills) {
+    assert.ok((pipeline.qa.questionsPerSkill?.[skill.id] || 0) >= 2, `${skill.id} must have a sibling item for Comeback practice`);
+  }
   assert.match(pipeline.bankFingerprint, /^[0-9a-f]{8}$/);
   assert.equal(pipeline.qa.unsupportedSkillCount, 0);
   assert.equal(pipeline.schemaVersion, 2);
@@ -87,7 +91,7 @@ test('future teacher skills are detected without hand-editing the app', () => {
       },
       {
         subject: 'Math',
-        topics: ['Place value', 'Money'],
+        topics: ['Addition within 20', 'Place value', 'Compare numbers', 'Time', 'Money'],
         studyNotes: [],
       },
       {
@@ -105,16 +109,40 @@ test('future teacher skills are detected without hand-editing the app', () => {
   });
   const ids = new Set(pipeline.skills.map(skill => skill.id));
 
-  for (const expected of ['suffix-s-es', 'cause-effect', 'setting', 'inference', 'genre', 'sequence', 'caption', 'place-value', 'money', 'religion-image-likeness']) {
+  for (const expected of ['suffix-s-es', 'cause-effect', 'setting', 'inference', 'genre', 'sequence', 'caption', 'addition-within-20', 'place-value', 'compare-numbers', 'time', 'money', 'religion-image-likeness']) {
     assert.equal(ids.has(expected), true, `missing future skill: ${expected}`);
   }
   assert.equal(pipeline.qa.status, 'pass');
-  for (const skillId of ['suffix-s-es', 'cause-effect', 'setting', 'inference', 'genre', 'sequence', 'caption', 'place-value', 'money']) {
+  for (const skillId of ['suffix-s-es', 'cause-effect', 'setting', 'inference', 'genre', 'sequence', 'caption', 'addition-within-20', 'place-value', 'compare-numbers', 'time', 'money']) {
     assert.ok((pipeline.qa.questionsPerSkill?.[skillId] || 0) >= 3, `${skillId} should receive a three-item semantic family`);
   }
   assert.equal(pipeline.safetyState, 'READY');
   assert.equal(pipeline.qa.unsupportedSkillCount, 0);
   assert.equal(pipeline.coverage.some(row => row.status === 'GENERATOR_UNSUPPORTED'), false);
+});
+
+test('publication rejects a skill bank that cannot supply a different sibling Comeback item', () => {
+  const envelope = JSON.parse(readFileSync(DATA_PATH, 'utf8'));
+  const pipeline = buildGrade2ContentPipeline(structuredClone(envelope.pack), { sourceHash: 'sibling-gate-test' });
+  const target = pipeline.skills.find(skill => (pipeline.qa.questionsPerSkill?.[skill.id] || 0) >= 2);
+  assert.ok(target);
+
+  const broken = structuredClone(pipeline);
+  let kept = false;
+  broken.questions = broken.questions.filter(question => {
+    if (question.skill !== target.id) return true;
+    if (!kept) {
+      kept = true;
+      return true;
+    }
+    return false;
+  });
+  broken.qa.questionsPerSkill[target.id] = 1;
+  broken.qa.questionCount = broken.questions.length;
+
+  assert.ok(
+    validateGrade2ContentPipeline(broken).some(issue => issue === `skill-sibling-bank-too-small:${target.id}:1/2`)
+  );
 });
 
 test('production lineage resolves every question to an exact teacher page capture', () => {
