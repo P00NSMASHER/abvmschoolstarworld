@@ -2,7 +2,7 @@
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const stack=()=>$("#app-content");
 let envelope=null, pack=null, activeTab=(["today","week","calendar","study","games","family"].includes(location.hash.slice(1))?location.hash.slice(1):"today"), selectedDay=null, calendarDay=null, weekOffset=0, calendarOffset=0;
-let studyGameCatalogCache=null, derivedPackCache=null, studyEnginePromise=null, screenEventsBound=false, lastPackFetchAt=0, packRefreshPromise=null, manualRefreshActive=false, lastPackFetchUsedCache=false, gameState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,hints:0,tries:0,misses:0,retry:0,lastWrong:null,saved:false,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null};
+let studyGameCatalogCache=null, derivedPackCache=null, studyEnginePromise=null, screenEventsBound=false, lastPackFetchAt=0, packRefreshPromise=null, manualRefreshActive=false, lastPackFetchUsedCache=false, gameState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null};
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -468,7 +468,7 @@ function startStudyGame(modeId){
   const engine=studyGameEngine(),catalog=studyGameCatalog(),mode=gameMode(modeId);
   if(!engine||!catalog)return;
   const questions=engine.selectQuestions(catalog,{subjects:mode.subjects,skills:mode.skills||[],preferredSkills:mode.preferredSkills||[],count:mode.count,seed:engine.nextSessionSeed?.(currentGameSourceKey(),mode.id)||"session",skillStats:engine.loadLearning?.()||{}});
-  gameState={screen:"play",mode:mode.id,questions,index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,hints:0,tries:0,misses:0,retry:0,lastWrong:null,saved:false,learningRow:null,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null};
+  gameState={screen:"play",mode:mode.id,questions,index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,learningRow:null,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null};
   activateDueGameComeback();
   renderGames();bindScreen();
 }
@@ -482,29 +482,30 @@ function answerStudyGame(index){
   renderGames();bindScreen()
 }
 function advanceStudyGame(){
-  if(!gameState.answered)return;
-  const resetAnswerState=()=>Object.assign(gameState,{selectedIndex:null,answered:false,hintOpen:false,hints:0,tries:0,misses:0,retry:0,lastWrong:null,learningRow:null});
+  const g=gameState;
+  if(!g.answered)return;
+  const resetAnswerState=()=>Object.assign(gameState,{selectedIndex:null,answered:false,hintOpen:false,learningRow:null});
 
-  if(gameState.comebackMode){
+  if(g.comebackMode){
     clearActiveGameComeback();
     resetAnswerState();
     renderGames();bindScreen();
     return;
   }
 
-  if(gameState.supportMode){
-    const origin=gameState.supportOriginQuestion;
-    gameState.supportMode=false;
-    gameState.supportQuestion=null;
-    gameState.supportCorrect=null;
-    gameState.supportOriginQuestion=null;
+  if(g.supportMode){
+    const origin=g.supportOriginQuestion;
+    g.supportMode=false;
+    g.supportQuestion=null;
+    g.supportCorrect=null;
+    g.supportOriginQuestion=null;
     if(origin)scheduleGameComeback(origin);
-    if(gameState.index>=gameState.questions.length-1){
+    if(g.index>=g.questions.length-1){
       markGameComebacksNextSession();
-      gameState.screen="finish";
+      g.screen="finish";
       saveGameRecord();
     }else{
-      gameState.index++;
+      g.index++;
       tickGameComebacks();
       resetAnswerState();
       activateDueGameComeback();
@@ -513,32 +514,32 @@ function advanceStudyGame(){
     return;
   }
 
-  const current=gameState.questions[gameState.index];
-  const selected=current?.choices?.[gameState.selectedIndex];
+  const current=g.questions[g.index];
+  const selected=current?.choices?.[g.selectedIndex];
   const correct=selected===current?.answer;
-  if(!correct&&(gameState.learningRow?.ConsecutiveWrong||0)>=2){
+  if(!correct&&(g.learningRow?.ConsecutiveWrong||0)>=2){
     const engine=studyGameEngine(),catalog=studyGameCatalog();
     const support=engine?.supportQuestion(catalog,current,{
       skillStats:studyGameEngine()?.loadLearning?.()||{},
-      seed:String(catalog?.sourceKey||"current")+"|support|"+String(current?.id||"item")+"|"+String(gameState.learningRow?.Seen||0)
+      seed:String(catalog?.sourceKey||"current")+"|support|"+String(current?.id||"item")+"|"+String(g.learningRow?.Seen||0)
     });
     if(support){
-      gameState.supportMode=true;
-      gameState.supportQuestion=support;
-      gameState.supportCorrect=null;
-      gameState.supportOriginQuestion=current;
+      g.supportMode=true;
+      g.supportQuestion=support;
+      g.supportCorrect=null;
+      g.supportOriginQuestion=current;
       resetAnswerState();
       renderGames();bindScreen();
       return;
     }
   }
 
-  if(gameState.index>=gameState.questions.length-1){
+  if(g.index>=g.questions.length-1){
     markGameComebacksNextSession();
-    gameState.screen="finish";
+    g.screen="finish";
     saveGameRecord();
   }else{
-    gameState.index++;
+    g.index++;
     tickGameComebacks();
     resetAnswerState();
     activateDueGameComeback();
@@ -557,31 +558,32 @@ function gameMenuHtml(catalog){
     '<p class="game-privacy-note">Practice prioritizes verified school skills; private student answers and grades are not used.</p>';
 }
 function gamePlayHtml(){
-  const mode=gameMode(gameState.mode),q=activeGameQuestion(),support=gameState.supportMode,comeback=gameState.comebackMode,teach=support?studyGameEngine()?.teachCardFor?.(q):null;
+  const g=gameState;
+  const mode=gameMode(g.mode),q=activeGameQuestion(),support=g.supportMode,comeback=g.comebackMode,teach=support?studyGameEngine()?.teachCardFor?.(q):null;
   if(!q)return '<section class="game-empty"><h2>No questions are ready for this game yet.</h2><button type="button" data-game-home>Back to games</button></section>';
-  const progress=gameState.index+1,total=gameState.questions.length,pct=Math.round((progress/Math.max(1,total))*100);
-  const chosen=gameState.selectedIndex;
+  const progress=g.index+1,total=g.questions.length,pct=Math.round((progress/Math.max(1,total))*100);
+  const chosen=g.selectedIndex;
   const answers=q.choices.map((choice,index)=>{
     let klass="";
-    if(gameState.answered){
+    if(g.answered){
       if(choice===q.answer)klass=" correct";
-      else if(index===chosen||index===gameState.lastWrong)klass=" wrong";
-    }else if(gameState.retry&&index===gameState.lastWrong)klass=" wrong";
-    return '<button type="button" class="game-answer'+klass+'" data-game-answer="'+index+'" '+(gameState.answered?'disabled':'')+'><span>'+String.fromCharCode(65+index)+'</span><strong>'+esc(choice)+'</strong></button>';
+      else if(index===chosen||index===g.lastWrong)klass=" wrong";
+    }else if(g.retry&&index===g.lastWrong)klass=" wrong";
+    return '<button type="button" class="game-answer'+klass+'" data-game-answer="'+index+'" '+(g.answered?'disabled':'')+'><span>'+String.fromCharCode(65+index)+'</span><strong>'+esc(choice)+'</strong></button>';
   }).join("");
   const selected=chosen===null?null:q.choices[chosen],correct=selected===q.answer;
   const targeted=!correct&&selected?q.choiceDiagnostics?.[selected]?.feedback:null;
-  const adaptive=!support&&!comeback&&!correct&&(gameState.learningRow?.ConsecutiveWrong||0)>=2?'<small class="adaptive-note">A smaller same-skill support step is next. It does not count toward your score.</small>':'';
-  const retryClue=!support&&!comeback&&!gameState.answered&&gameState.retry
-    ? '<section class="game-feedback retry" aria-live="polite"><span>↻</span><div><strong>'+(gameState.retry===1?'Not yet — use this clue.':'Try once more with a stronger clue.')+'</strong><p>'+esc(gameState.retry===1?q.hint:(studyGameEngine()?.teachCardFor?.(q)?.instruction||targeted||q.hint))+'</p></div></section>'
+  const adaptive=!support&&!comeback&&!correct&&(g.learningRow?.ConsecutiveWrong||0)>=2?'<small class="adaptive-note">A smaller same-skill support step is next. It does not count toward your score.</small>':'';
+  const retryClue=!support&&!comeback&&!g.answered&&g.retry
+    ? '<section class="game-feedback retry" aria-live="polite"><span>↻</span><div><strong>'+(g.retry===1?'Not yet — use this clue.':'Try once more with a stronger clue.')+'</strong><p>'+esc(g.retry===1?q.hint:(studyGameEngine()?.teachCardFor?.(q)?.instruction||targeted||q.hint))+'</p></div></section>'
     : '';
-  const feedback=gameState.answered
-    ? '<section class="game-feedback '+(correct?'correct':'retry')+'" aria-live="polite"><span>'+(correct?'✓':'↻')+'</span><div><strong>'+(comeback?(correct?'Remembered later!':'Good review — here’s the answer.'):(support?(correct?'Good — keep going!':'Here is the smaller-step answer.'):(correct?(gameState.misses?'You worked it out!':'Nice work!'):'Here’s the model answer.')))+'</strong><p>'+esc(correct?q.explanation:(targeted||q.explanation))+'</p>'+adaptive+'</div></section><button type="button" class="game-next" data-game-next>'+(support||comeback?'Continue':progress===total?'See my score':'Next question')+' <span>›</span></button>'
-    : retryClue+'<div class="game-hint-wrap">'+(comeback?'<small class="adaptive-note">Comeback · same skill · not scored</small>':support?'<small class="adaptive-note">Support step · same skill · not scored</small>':'')+'<button type="button" class="game-hint-button" data-game-hint>'+(gameState.hintOpen?'Hide hint':'Need a hint?')+'</button>'+(gameState.hintOpen?'<p class="game-hint">'+esc(q.hint)+'</p>':'')+'</div>';
-  return '<div class="game-topbar"><button type="button" data-game-home aria-label="Back to study games">‹</button><div><span>'+esc(comeback?"Comeback":support?"Support step":mode.title)+'</span><strong>'+(comeback?'Remember this skill later':support?'Same skill · smaller step':progress+' of '+total)+'</strong></div><b>★ '+gameState.score+'</b></div>'+
+  const feedback=g.answered
+    ? '<section class="game-feedback '+(correct?'correct':'retry')+'" aria-live="polite"><span>'+(correct?'✓':'↻')+'</span><div><strong>'+(comeback?(correct?'Remembered later!':'Good review — here’s the answer.'):(support?(correct?'Good — keep going!':'Here is the smaller-step answer.'):(correct?(g.misses?'You worked it out!':'Nice work!'):'Here’s the model answer.')))+'</strong><p>'+esc(correct?q.explanation:(targeted||q.explanation))+'</p>'+adaptive+'</div></section><button type="button" class="game-next" data-game-next>'+(support||comeback?'Continue':progress===total?'See my score':'Next question')+' <span>›</span></button>'
+    : retryClue+'<div class="game-hint-wrap">'+(comeback?'<small class="adaptive-note">Comeback · same skill · not scored</small>':support?'<small class="adaptive-note">Support step · same skill · not scored</small>':'')+'<button type="button" class="game-hint-button" data-game-hint>'+(g.hintOpen?'Hide hint':'Need a hint?')+'</button>'+(g.hintOpen?'<p class="game-hint">'+esc(q.hint)+'</p>':'')+'</div>';
+  return '<div class="game-topbar"><button type="button" data-game-home aria-label="Back to study games">‹</button><div><span>'+esc(comeback?"Comeback":support?"Support step":mode.title)+'</span><strong>'+(comeback?'Remember this skill later':support?'Same skill · smaller step':progress+' of '+total)+'</strong></div><b>★ '+g.score+'</b></div>'+
     '<div class="game-progress" aria-label="Game progress"><span style="width:'+pct+'%"></span></div>'+
     '<section class="game-question-card"><div class="game-question-meta"><span>'+esc(q.subject)+'</span><b>'+esc(comeback?"Comeback":support?"Support":GAME_TYPE_LABELS[q.questionType]||"Practice")+'</b></div>'+(teach?'<div class="game-hint-wrap teach-card"><small class="adaptive-note">Quick lesson · not scored</small><p class="game-hint">'+esc(teach.instruction)+(teach.example?' '+esc(teach.example):'')+'</p></div>':'')+'<h2>'+esc(q.prompt)+'</h2><div class="game-answer-list">'+answers+'</div>'+feedback+'</section>'+
-    '<div class="game-streak"><span>Streak <b>'+gameState.streak+'</b></span><span>Best this round <b>'+gameState.bestStreak+'</b></span></div>';
+    '<div class="game-streak"><span>Streak <b>'+g.streak+'</b></span><span>Best this round <b>'+g.bestStreak+'</b></span></div>';
 }
 function gameFinishHtml(){
   const mode=gameMode(gameState.mode),total=gameState.questions.length,record=loadGameRecord(gameState.mode);
