@@ -64,13 +64,49 @@ test("app recovers cleanly after reconnecting from offline mode",async({page,con
   await expect(page.locator(".freshness")).toBeVisible();
 });
 
-test("service worker cleans old versions and precaches the critical shell",async({request})=>{
+test("service worker cleans only old ABVM caches and precaches the exact shell",async({request})=>{
   const response=await request.get("/sw.js");
   expect(response.ok()).toBeTruthy();
   const source=await response.text();
+  expect(source).toContain('const CACHE_PREFIX = "abvm-grade2-parent-companion-"');
   expect(source).toContain("caches.keys()");
-  expect(source).toMatch(/key\s*!==\s*CACHE/);
+  expect(source).toContain("key.startsWith(CACHE_PREFIX)&&key!==CACHE");
+  expect(source).not.toContain("keys.filter(key=>key!==CACHE)");
   expect(source).toContain("caches.delete(key)");
-  expect(source).toContain('"./study-games.js"');
+  expect(source).toContain('"./styles.css?v=89"');
+  expect(source).toContain('"./app.js?v=89"');
+  expect(source).toContain('"./study-games.js?v=84"');
   expect(source).toContain('"./data/study-pack.json"');
+  expect(source).not.toMatch(/STATIC_SHELL\s*=\s*\[\s*"\.\/"/);
+});
+
+
+test("network-first requests do not read cache before a successful fetch",async({request})=>{
+  const source=await (await request.get("/sw.js")).text();
+  const start=source.indexOf("function networkFirst");
+  const end=source.indexOf("function staleWhileRevalidate",start);
+  expect(start).toBeGreaterThanOrEqual(0);
+  expect(end).toBeGreaterThan(start);
+  const body=source.slice(start,end);
+  expect(body.indexOf('fetch(request,{cache:"no-store"})')).toBeGreaterThanOrEqual(0);
+  expect(body.indexOf('fetch(request,{cache:"no-store"})')).toBeLessThan(body.indexOf("cachedFallback(request,fallback)"));
+  expect(body).toContain("event.waitUntil(persist.catch(()=>{}))");
+});
+
+test("stale-while-revalidate keeps its cache update alive",async({request})=>{
+  const source=await (await request.get("/sw.js")).text();
+  const start=source.indexOf("function staleWhileRevalidate");
+  const end=source.indexOf('self.addEventListener("fetch"',start);
+  const body=source.slice(start,end);
+  expect(body).toContain("event.waitUntil(update.then(()=>{}))");
+  expect(source).toContain("staleWhileRevalidate(event.request,event)");
+});
+
+test("cache fallback searches only the ABVM cache",async({request})=>{
+  const source=await (await request.get("/sw.js")).text();
+  const start=source.indexOf("async function cachedFallback");
+  const end=source.indexOf("function networkFirst",start);
+  const body=source.slice(start,end);
+  expect(body).toContain("const cache=await caches.open(CACHE)");
+  expect(body).not.toContain("caches.match(request)");
 });
