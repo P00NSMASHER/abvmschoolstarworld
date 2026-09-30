@@ -1076,6 +1076,7 @@ export function validateGrade2ContentPipeline(pipeline) {
   if (!pipeline || typeof pipeline !== 'object') return ['pipeline-missing'];
   if (pipeline.schemaVersion !== 2) issues.push('schema-version-invalid');
   if (!text(pipeline.sourceHash)) issues.push('source-hash-missing');
+  if (!text(pipeline.bankFingerprint)) issues.push('bank-fingerprint-missing');
   if (!Array.isArray(pipeline.skills) || pipeline.skills.length === 0) issues.push('skills-empty');
   if (!Array.isArray(pipeline.questions) || pipeline.questions.length === 0) issues.push('questions-empty');
 
@@ -1156,11 +1157,16 @@ export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash } = {
   }
 
   const partialCoverage = coverage.some(row => ['SOURCE_INSUFFICIENT', 'MISSING', 'GENERATOR_UNSUPPORTED'].includes(row.status));
+  const bankFingerprint = fingerprint([
+    ...questions.map(question => question.variantFingerprint).sort(),
+    ...coverage.map(row => `${row.subject}|${row.topic}|${row.status}`).sort(),
+  ].join('||'));
   const pipeline = {
     schemaVersion: 2,
     generatorVersion: 'grade2-content-pipeline-v2-research-recovery',
     generatedAt: generatedAt || new Date().toISOString(),
     sourceHash: sourceHash || pack?.sourceHash || 'unknown-source',
+    bankFingerprint,
     lifecycleStage: 'QA_PASSED',
     safetyState: partialCoverage ? 'SAFE_PARTIAL' : 'READY',
     sourcePolicy: {
