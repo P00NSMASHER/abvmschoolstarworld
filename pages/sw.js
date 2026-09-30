@@ -2,7 +2,6 @@ const CACHE_PREFIX = "abvm-grade2-parent-companion-";
 const CACHE = "abvm-grade2-parent-companion-v96-study-games-rich-formats";
 const STATIC_SHELL = [
   "./index.html",
-  "./styles.css?v=94",\n  "./study-games-rich.css?v=1",
   "./app.js?v=96",
   "./study-games.js?v=86",
   "./study-games-view.js?v=2",
