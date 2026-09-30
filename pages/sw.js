@@ -1,4 +1,4 @@
-const CACHE = "abvm-grade2-parent-companion-v89-derived-cache";
+const CACHE = "abvm-grade2-parent-companion-v90-network-first";
 const STATIC_SHELL = [
   "./",
   "./index.html",
@@ -30,7 +30,6 @@ async function cachedFallback(request,fallback=null){
     (fallback?await caches.match(fallback,{ignoreSearch:true}):null);
 }
 async function networkFirst(request,fallback="./index.html"){
-  const cached=await cachedFallback(request,fallback);
   try{
     const response=await fetch(request,{cache:"no-store"});
     if(response&&response.ok){
@@ -38,9 +37,9 @@ async function networkFirst(request,fallback="./index.html"){
       caches.open(CACHE).then(cache=>cache.put(request,copy));
       return response;
     }
-    return cached||response||Response.error();
+    return (await cachedFallback(request,fallback))||response||Response.error();
   }catch{
-    return cached||Response.error();
+    return (await cachedFallback(request,fallback))||Response.error();
   }
 }
 async function staleWhileRevalidate(request){
