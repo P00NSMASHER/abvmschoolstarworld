@@ -1900,7 +1900,8 @@ export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash, sour
 
   const issues = validateGrade2ContentPipeline(pipeline);
   if (issues.length) {
-    throw new Error(`Grade 2 content pipeline validation failed: ${JSON.stringify(issues)}`);
+    const rejectionDetail = rejected.length ? `; rejected=${JSON.stringify(rejected)}` : '';
+    throw new Error(`Grade 2 content pipeline validation failed: ${JSON.stringify(issues)}${rejectionDetail}`);
   }
   return pipeline;
 }
