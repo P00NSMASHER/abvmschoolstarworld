@@ -950,6 +950,45 @@ function buildCatalog(pack,{sourceKey}={}){
   if(issues.length)throw new Error("ABVM study-game catalog validation failed: "+JSON.stringify(issues));
   return catalog;
 }
+function assessmentSkillIds(pack,test){
+  const label=text(test?.x?.label).toLowerCase();
+  const available=new Set((pack?.contentPipeline?.skills||[]).map(skill=>text(skill?.id)).filter(Boolean));
+  const wanted=[];
+  const add=id=>{if(available.has(id)&&!wanted.includes(id))wanted.push(id);};
+  if(/grammar|types of sentences/.test(label))add("sentence-types");
+  if(/short a|long a|a_e/.test(label))add("long-short-a");
+  if(/consonant blend/.test(label))add("consonant-blends");
+  if(/cvc/.test(label))add("cvc-structure");
+  if(/-ed|-ing|ed\b.*ing\b/.test(label))add("suffix-ed-ing");
+  if(/theme/.test(label))add("theme");
+  if(/visualiz/.test(label))add("visualize");
+  if(/dialogue/.test(label))add("dialogue");
+  if(/infer/.test(label))add("inference");
+  if(/cause.*effect|effect.*cause/.test(label))add("cause-effect");
+  if(/setting/.test(label))add("setting");
+  if(/genre/.test(label))add("genre");
+  if(/character/.test(label)&&/feeling/.test(label))add("character-feelings");
+  if(/main character/.test(label))add("main-character");
+  if(/subtraction/.test(label)){
+    const exact=[...available].find(id=>/^subtraction-within-\d+$/.test(id));
+    if(exact)add(exact);
+  }
+  if(/addition/.test(label)){
+    const exact=[...available].find(id=>/^addition-within-\d+$/.test(id));
+    if(exact)add(exact);
+  }
+  if(/place value/.test(label))add("place-value");
+  if(/money|coin/.test(label))add("money");
+  return wanted;
+}
+function testReadyMode(pack,test){
+  const skills=assessmentSkillIds(pack,test);
+  if(!test||!skills.length)return null;
+  return Object.freeze({
+    id:"test-ready",title:"Test Ready",subjects:[],skills,preferredSkills:skills,count:5,
+    copy:"Five questions focused only on the verified skills for "+text(test.x?.label||"this week’s test")+"."
+  });
+}
 function targetDifficultyFor(skillStats,skill){
   const row=skillStats?.[skill]||{};
   if((Number(row.ConsecutiveCorrect)||0)>=2)return 3;
@@ -1006,6 +1045,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,selectQuestions,supportQuestion,sourceKeyFromEnvelope,targetDifficultyFor
+  buildCatalog,validateCatalog,selectQuestions,supportQuestion,sourceKeyFromEnvelope,targetDifficultyFor,testReadyMode
 });
 })();
