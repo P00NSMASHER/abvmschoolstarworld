@@ -477,8 +477,8 @@ function answerStudyGame(index){
   const correct=choice===q.answer,e=studyGameEngine();g.tries=(g.tries||0)+1;g.selectedIndex=index;g.hintOpen=false;
   if(g.comebackMode){g.answered=true;g.learningRow=e?.recordComeback?.(q,correct)||null;g.comebackCorrect=correct}
   else if(g.supportMode){g.answered=true;g.learningRow=e?.recordSupport?.(q,correct)||null;g.supportCorrect=correct}
-  else if(correct){g.answered=true;g.retry=0;g.learningRow=e?.recordLearning?.(q,true,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;g.score++;g.streak++;g.bestStreak=Math.max(g.bestStreak,g.streak)}
-  else{g.misses=(g.misses||0)+1;g.lastWrong=index;g.streak=0;if(g.misses<3){g.retry=g.misses;g.selectedIndex=null}else{g.answered=true;g.retry=3;g.learningRow=e?.recordLearning?.(q,false,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null}}
+  else if(correct){g.answered=true;g.retry=0;g.learningRow=e?.recordLearning?.(q,true,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints,r:index,w:g.lastWrong})||null;g.score++;g.streak++;g.bestStreak=Math.max(g.bestStreak,g.streak)}
+  else{g.misses=(g.misses||0)+1;g.lastWrong=index;g.streak=0;if(g.misses<3){g.retry=g.misses;g.selectedIndex=null}else{g.answered=true;g.retry=3;g.learningRow=e?.recordLearning?.(q,false,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints,r:index,w:g.lastWrong})||null}}
   renderGames();bindScreen()
 }
 function advanceStudyGame(){
@@ -516,6 +516,7 @@ function gamePlayHtml(){
   const g=gameState;
   const mode=gameMode(g.mode),q=activeGameQuestion(),support=g.supportMode,comeback=g.comebackMode,teach=support?studyGameEngine()?.teachCardFor?.(q):null;
   if(!q)return '<section class="game-empty"><h2>No questions are ready for this game yet.</h2><button type="button" data-game-home>Back to games</button></section>';
+  studyGameEngine()?.markQuestionShown?.(q);
   const progress=g.index+1,total=g.questions.length,pct=Math.round((progress/Math.max(1,total))*100);
   const chosen=g.selectedIndex;
   const answers=q.choices.map((choice,index)=>{
