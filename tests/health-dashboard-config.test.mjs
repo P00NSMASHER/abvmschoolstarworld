@@ -35,7 +35,10 @@ test("operational health surfaces Grade 2 pipeline coverage without treating kno
   assert.match(report,/const contentPipeline=packData\.pack\?\.contentPipeline\|\|null/);
   assert.match(report,/status\.contentPipeline\.qaStatus==="pass"/);
   assert.match(report,/status\.contentPipeline\.unsupportedSkillCount===0/);
+  assert.match(report,/status\.contentPipeline\.unresolvedLineageCount===0/);
+  assert.match(report,/status\.contentPipeline\.pageExactLineageCount===status\.contentPipeline\.questionCount/);
   assert.match(report,/Grade 2 content pipeline/);
+  assert.match(report,/Question lineage/);
   assert.match(report,/Unsupported teacher skills/);
   assert.match(report,/Source-insufficient study topics/);
 });
