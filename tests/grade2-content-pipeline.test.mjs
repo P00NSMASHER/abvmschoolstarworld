@@ -80,11 +80,16 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
     ['direct','reasoning','transfer']
   );
 
-  for (const skill of ['sentence-types','consonant-blends','cvc-structure','long-short-a','suffix-ed-ing','theme','visualize','dialogue','subtraction-within-12']) {
-    assert.ok((pipeline.qa.questionsPerSkill?.[skill] || 0) >= 3, `expected semantic sibling family for ${skill}`);
-  }
-  for (const skill of ['religion-trinity','religion-disciples','religion-mary-church','religion-seed-new-life']) {
-    assert.ok((pipeline.qa.questionsPerSkill?.[skill] || 0) >= 2, `${skill} intentionally keeps a small strict-source sibling bank`);
+  const priorityFamilies = [
+    'sentence-types','consonant-blends','cvc-structure','long-short-a','suffix-ed-ing',
+    'dialogue','subtraction-within-12',
+    'religion-trinity','religion-image-likeness','religion-creation-care','religion-jesus-savior',
+    'religion-disciples','religion-mary-church','religion-seed-new-life','religion-five-senses','religion-gifts-choices',
+  ];
+  for (const skill of priorityFamilies) {
+    assert.ok((pipeline.qa.questionsPerSkill?.[skill] || 0) >= 3, `expected renewable three-item family for ${skill}`);
+    const types = new Set(pipeline.questions.filter(question => question.skill === skill).map(question => question.questionType));
+    assert.deepEqual([...types].sort(), ['direct','reasoning','transfer'], `${skill} must include direct, transfer, and reasoning siblings`);
   }
   assert.ok((pipeline.qa.questionTypeCounts?.transfer || 0) > 0);
   assert.ok((pipeline.qa.questionTypeCounts?.reasoning || 0) > 0);
@@ -104,8 +109,17 @@ test('Religion banks stay source-framed and avoid the rejected ambiguous/cross-s
   const image = religion.filter(question => question.skill === 'religion-image-likeness');
   const gifts = religion.filter(question => question.skill === 'religion-gifts-choices');
 
-  assert.ok(image.length >= 2);
-  assert.ok(gifts.length >= 2);
+  assert.ok(image.length >= 3);
+  assert.ok(gifts.length >= 3);
+  for (const skill of [...new Set(religion.map(question => question.skill))]) {
+    const rows = religion.filter(question => question.skill === skill);
+    assert.ok(rows.length >= 3, `${skill} should have at least three semantic siblings`);
+    assert.deepEqual(
+      [...new Set(rows.map(question => question.questionType))].sort(),
+      ['direct','reasoning','transfer'],
+      `${skill} should cover direct, transfer, and reasoning practice`
+    );
+  }
   assert.ok(image.every(question => question.sourceMode === 'STRICT_SOURCE'));
   assert.ok(gifts.every(question => question.sourceMode === 'STRICT_SOURCE'));
 
@@ -179,7 +193,7 @@ test('future teacher skills are detected without hand-editing the app', () => {
     assert.equal(ids.has(expected), true, `missing future skill: ${expected}`);
   }
   assert.equal(pipeline.qa.status, 'pass');
-  for (const skillId of ['suffix-s-es', 'cause-effect', 'setting', 'inference', 'genre', 'sequence', 'caption', 'addition-within-20', 'place-value', 'compare-numbers', 'time', 'money']) {
+  for (const skillId of ['suffix-s-es', 'cause-effect', 'setting', 'inference', 'genre', 'sequence', 'caption', 'addition-within-20', 'place-value', 'compare-numbers', 'time', 'money', 'religion-image-likeness']) {
     assert.ok((pipeline.qa.questionsPerSkill?.[skillId] || 0) >= 3, `${skillId} should receive a three-item semantic family`);
     const familyTypes = new Set(pipeline.questions.filter(question => question.skill === skillId).map(question => question.questionType));
     assert.deepEqual([...familyTypes].sort(), ['direct', 'reasoning', 'transfer'], `${skillId} should include direct, transfer, and reasoning practice`);
@@ -379,7 +393,9 @@ test('pipeline validation rejects fake semantic variety and answer-position stre
   for (const question of missingType.questions.filter(question => question.skill === typeSkill.id && question.questionType === 'reasoning')) {
     question.questionType = 'transfer';
   }
-  assert.ok(validateGrade2ContentPipeline(missingType).includes(`semantic-family-type-missing:${typeSkill.id}:reasoning`));
+  const missingTypeIssues = validateGrade2ContentPipeline(missingType);
+  assert.ok(missingTypeIssues.includes(`semantic-family-type-missing:${typeSkill.id}:reasoning`));
+  assert.ok(missingTypeIssues.includes(`priority-family-type-missing:${typeSkill.id}:reasoning`));
 });
 
 test('bad generated question specs are rejected before publication', () => {
