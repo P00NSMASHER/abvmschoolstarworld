@@ -1004,15 +1004,20 @@ function reviewPriority(skillStats,skill,now=Date.now()){
   const row=skillStats?.[skill]||{};
   const seen=Number(row.Seen)||0;
   if(!seen)return 1.5;
-  const correct=Number(row.Correct)||0,wrong=Number(row.Wrong)||0;
-  const mastery=(correct+1)/(correct+wrong+2);
+  const hasEvidenceFields=Number.isFinite(Number(row.IndependentCorrect))||Number.isFinite(Number(row.CorrectAfterRetry));
+  const independent=hasEvidenceFields?(Number(row.IndependentCorrect)||0):(Number(row.Correct)||0);
+  const recovered=hasEvidenceFields?(Number(row.CorrectAfterRetry)||0):0;
+  const wrong=Number(row.Wrong)||0;
+  const effectiveCorrect=independent+(recovered*0.5);
+  const mastery=(effectiveCorrect+1)/(Math.max(seen,independent+recovered+wrong)+2);
   const last=Number(row.LastIndependentAt)||Number(row.LastSeenAt)||0;
   const ageDays=last?Math.max(0,(now-last)/86400000):3;
   const intervalDays=mastery>=0.85?4:mastery>=0.7?2:1;
   const overdue=Math.min(3,ageDays/intervalDays);
   const need=(1-mastery)*2;
   const missBonus=(Number(row.ConsecutiveWrong)||0)>0?1:0;
-  return overdue+need+missBonus;
+  const supportedBonus=(Number(row.CorrectAfterRetry)||0)>0&&!(Number(row.LastIndependentCorrectAt)||0)?0.5:0;
+  return overdue+need+missBonus+supportedBonus;
 }
 function pickBalanced(pool,count,seed,skillStats,preferredSkills=[]){
   const selected=[],used=new Set(),skillCounts={},maxPerSkill=3,preferred=new Set(preferredSkills||[]),now=Date.now();
@@ -1140,17 +1145,39 @@ function loadLearning(){
   }catch{return {}}
 }
 function writeLearning(all){try{localStorage.setItem(LEARNING_STORAGE_KEY,JSON.stringify(all))}catch{};return all}
-function recordLearning(question,correct){
+function recordLearning(question,correct,{attemptCount=1,incorrectCount=correct?0:1,hintCount=0}={}){
   if(!question?.skill)return null;
   const all=loadLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2},now=Date.now();
-  row.Seen=(Number(row.Seen)||0)+1;row.LastSeenAt=now;row.LastIndependentAt=now;
+  const attempts=Math.max(1,Number(attemptCount)||1),incorrect=Math.max(0,Number(incorrectCount)||0),hints=Math.max(0,Number(hintCount)||0);
+  const independent=!!correct&&incorrect===0&&hints===0;
+  row.Seen=(Number(row.Seen)||0)+1;
+  row.Attempts=(Number(row.Attempts)||0)+attempts;
+  row.IncorrectAttempts=(Number(row.IncorrectAttempts)||0)+incorrect;
+  row.HintsUsed=(Number(row.HintsUsed)||0)+hints;
+  row.LastSeenAt=now;
   if(correct){
-    row.Correct=(Number(row.Correct)||0)+1;row.ConsecutiveCorrect=(Number(row.ConsecutiveCorrect)||0)+1;row.ConsecutiveWrong=0;row.LastIndependentCorrectAt=now;
-    if(row.ConsecutiveCorrect>=2)row.TargetDifficulty=3;
+    row.Correct=(Number(row.Correct)||0)+1;
+    if(independent){
+      row.FirstTryCorrect=(Number(row.FirstTryCorrect)||0)+1;
+      row.IndependentCorrect=(Number(row.IndependentCorrect)||0)+1;
+      row.ConsecutiveCorrect=(Number(row.ConsecutiveCorrect)||0)+1;
+      row.ConsecutiveWrong=0;
+      row.LastIndependentAt=now;
+      row.LastIndependentCorrectAt=now;
+      if(row.ConsecutiveCorrect>=2)row.TargetDifficulty=3;
+    }else{
+      row.CorrectAfterRetry=(Number(row.CorrectAfterRetry)||0)+1;
+      if(hints>0)row.HintedCorrect=(Number(row.HintedCorrect)||0)+1;
+      row.ConsecutiveCorrect=0;
+      row.ConsecutiveWrong=0;
+    }
   }else{
-    row.Wrong=(Number(row.Wrong)||0)+1;row.ConsecutiveWrong=(Number(row.ConsecutiveWrong)||0)+1;row.ConsecutiveCorrect=0;
+    row.Wrong=(Number(row.Wrong)||0)+1;
+    row.ConsecutiveWrong=(Number(row.ConsecutiveWrong)||0)+1;
+    row.ConsecutiveCorrect=0;
     if(row.ConsecutiveWrong>=2)row.TargetDifficulty=2;
   }
+  row.LastResolution={correct:!!correct,independent,attemptCount:attempts,incorrectCount:incorrect,hintCount:hints,resolvedAt:now};
   all[question.skill]=row;writeLearning(all);return row;
 }
 function recordAuxLearning(question,correct,kind){
