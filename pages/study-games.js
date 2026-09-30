@@ -1245,7 +1245,7 @@ function comebackQuestion(catalog,current,{seed="comeback",seenIds=[]}={}){
 }
 
 function learningFirstSummary(outcomes=[]){
-  const bySkill=new Map();
+  const bySkill=new Map(),rank={practice:1,remembered:2,strong:3};
   for(const outcome of Array.isArray(outcomes)?outcomes:[]){
     const skill=text(outcome?.skill),kind=text(outcome?.kind),correct=!!outcome?.correct;
     if(!skill||kind==="support")continue;
@@ -1253,8 +1253,8 @@ function learningFirstSummary(outcomes=[]){
     if(kind==="comeback")status=correct?"remembered":"practice";
     else if(kind==="normal")status=(correct&&outcome?.independent===true)?"strong":"practice";
     if(!status)continue;
-    if(status==="strong"&&bySkill.has(skill))continue;
-    bySkill.set(skill,status);
+    const prior=bySkill.get(skill);
+    if(!prior||rank[status]>rank[prior])bySkill.set(skill,status);
   }
   const values=[...bySkill.values()];
   return Object.freeze({

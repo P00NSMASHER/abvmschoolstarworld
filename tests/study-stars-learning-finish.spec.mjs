@@ -54,6 +54,18 @@ test('learning-first summary counts only independent normal work as Strong today
   expect(summary).toEqual({strong:1,remembered:1,practice:1,total:3});
 });
 
+test('learning-first summary keeps the strongest valid evidence for each skill regardless of event order',async({page})=>{
+  const summary=await page.evaluate(()=>window.ABVMStudyGames.learningFirstSummary([
+    {skill:'recover-later',kind:'normal',correct:false,independent:false},
+    {skill:'recover-later',kind:'normal',correct:true,independent:true},
+    {skill:'stay-strong',kind:'normal',correct:true,independent:true},
+    {skill:'stay-strong',kind:'normal',correct:false,independent:false},
+    {skill:'remember-only',kind:'normal',correct:false,independent:false},
+    {skill:'remember-only',kind:'comeback',correct:true,independent:false},
+  ]));
+  expect(summary).toEqual({strong:2,remembered:1,practice:0,total:3});
+});
+
 test('learning-first finish puts learning evidence before secondary rewards',async({page})=>{
   const html=await page.evaluate(()=>window.ABVMStudyGameView.finish({
     mode:{id:'quick',title:'Quick Mix'},
