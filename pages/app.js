@@ -429,16 +429,10 @@ function renderStudy(){
 }
 function studyGameEngine(){return window.ABVMStudyGames||null}
 function ensureStudyGameEngine(){
-  if(window.ABVMStudyGames)return Promise.resolve(window.ABVMStudyGames);
+  if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
   if(studyEnginePromise)return studyEnginePromise;
-  studyEnginePromise=new Promise((resolve,reject)=>{
-    const script=document.createElement("script");
-    script.src="./study-games.js?v=84";
-    script.async=true;
-    script.onload=()=>window.ABVMStudyGames?resolve(window.ABVMStudyGames):reject(new Error("Study Games engine did not initialize"));
-    script.onerror=()=>reject(new Error("Study Games engine could not be loaded"));
-    document.head.append(script);
-  }).catch(error=>{studyEnginePromise=null;throw error;});
+  const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.async=true;s.onload=()=>window[key]?resolve():reject(new Error(key+" did not initialize"));s.onerror=()=>reject(new Error(key+" could not be loaded"));document.head.append(s)});
+  studyEnginePromise=Promise.all([load("./study-games.js?v=84","ABVMStudyGames"),load("./study-games-view.js?v=1","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
   return studyEnginePromise;
 }
 function studyGameCatalog(){
@@ -513,37 +507,8 @@ function gameMenuHtml(catalog){
     }).join("")+'</div>'+
     '<p class="game-privacy-note">Practice prioritizes verified school skills; private student answers and grades are not used.</p>';
 }
-function gamePlayHtml(){
-  const g=gameState;
-  const mode=gameMode(g.mode),q=activeGameQuestion(),support=g.supportMode,comeback=g.comebackMode,teach=support?studyGameEngine()?.teachCardFor?.(q):null;
-  if(!q)return '<section class="game-empty"><h2>No questions are ready for this game yet.</h2><button type="button" data-game-home>Back to games</button></section>';
-  studyGameEngine()?.markQuestionShown?.(q);
-  const progress=g.index+1,total=g.questions.length,pct=Math.round((progress/Math.max(1,total))*100);
-  const chosen=g.selectedIndex;
-  const answers=q.choices.map((choice,index)=>{
-    let klass="";
-    if(g.answered){
-      if(choice===q.answer)klass=" correct";
-      else if(index===chosen||index===g.lastWrong)klass=" wrong";
-    }else if(g.retry&&index===g.lastWrong)klass=" wrong";
-    return '<button type="button" class="game-answer'+klass+'" data-game-answer="'+index+'" '+(g.answered?'disabled':'')+'><span>'+String.fromCharCode(65+index)+'</span><strong>'+esc(choice)+'</strong></button>';
-  }).join("");
-  const selected=chosen===null?null:q.choices[chosen],correct=selected===q.answer;
-  const targeted=!correct&&selected?q.choiceDiagnostics?.[selected]?.feedback:null;
-  const adaptive=!support&&!comeback&&!correct&&(g.learningRow?.ConsecutiveWrong||0)>=2?'<small class="adaptive-note">A smaller same-skill support step is next. It does not count toward your score.</small>':'';
-  const retryClue=!support&&!comeback&&!g.answered&&g.retry?'<section class="game-feedback retry" aria-live="polite"><span>↻</span><div><strong>'+(g.retry===1?'Not yet — use this clue.':'Try once more with a stronger clue.')+'</strong><p>'+esc(g.retry===1?q.hint:(studyGameEngine()?.teachCardFor?.(q)?.instruction||targeted||q.hint))+'</p></div></section>':'';
-  const feedback=g.answered?'<section class="game-feedback '+(correct?'correct':'retry')+'" aria-live="polite"><span>'+(correct?'✓':'↻')+'</span><div><strong>'+(comeback?(correct?'Remembered later!':'Good review — here’s the answer.'):(support?(correct?'Good — keep going!':'Here is the smaller-step answer.'):(correct?(g.misses?'You worked it out!':'Nice work!'):'Here’s the model answer.')))+'</strong><p>'+esc(correct?q.explanation:(targeted||q.explanation))+'</p>'+adaptive+'</div></section><button type="button" class="game-next" data-game-next>'+(support||comeback?'Continue':progress===total?'See my score':'Next question')+' <span>›</span></button>':retryClue+'<div class="game-hint-wrap">'+(comeback?'<small class="adaptive-note">Comeback · same skill · not scored</small>':support?'<small class="adaptive-note">Support step · same skill · not scored</small>':'')+'<button type="button" class="game-hint-button" data-game-hint>'+(g.hintOpen?'Hide hint':'Need a hint?')+'</button>'+(g.hintOpen?'<p class="game-hint">'+esc(q.hint)+'</p>':'')+'</div>';
-  return '<div class="game-topbar"><button type="button" data-game-home aria-label="Back to study games">‹</button><div><span>'+esc(comeback?"Comeback":support?"Support step":mode.title)+'</span><strong>'+(comeback?'Remember this skill later':support?'Same skill · smaller step':progress+' of '+total)+'</strong></div><b>★ '+g.score+'</b></div>'+
-    '<div class="game-progress" aria-label="Game progress"><span style="width:'+pct+'%"></span></div>'+
-    '<section class="game-question-card"><div class="game-question-meta"><span>'+esc(q.subject)+'</span><b>'+esc(comeback?"Comeback":support?"Support":GAME_TYPE_LABELS[q.questionType]||"Practice")+'</b></div>'+(teach?'<div class="game-hint-wrap teach-card"><small class="adaptive-note">Quick lesson · not scored</small><p class="game-hint">'+esc(teach.instruction)+(teach.example?' '+esc(teach.example):'')+'</p></div>':'')+'<h2>'+esc(q.prompt)+'</h2><div class="game-answer-list">'+answers+'</div>'+feedback+'</section>'+
-    '<div class="game-streak"><span>Streak <b>'+g.streak+'</b></span><span>Best this round <b>'+g.bestStreak+'</b></span></div>';
-}
-function gameFinishHtml(){
-  const mode=gameMode(gameState.mode),total=gameState.questions.length,record=loadGameRecord(gameState.mode);
-  const pct=total?Math.round((gameState.score/total)*100):0;
-  const stars=pct>=90?3:pct>=70?2:pct>=40?1:0;
-  return '<section class="game-finish"><div class="game-finish-stars" aria-label="'+stars+' stars">'+[0,1,2].map(i=>'<span class="'+(i<stars?'earned':'')+'">★</span>').join("")+'</div><p>'+esc(mode.title.toUpperCase())+'</p><h2>'+gameState.score+' out of '+total+'</h2><strong>'+pct+'%</strong><span>'+(pct>=90?'Fantastic work!':pct>=70?'Great job — one more round can make it even stronger.':pct>=40?'Good practice. Try another round to build the skill.':'Keep practicing — every round helps.')+'</span><div class="game-finish-actions"><button type="button" class="primary" data-game-start="'+esc(mode.id)+'">Play again</button><button type="button" data-game-home>All study games</button></div><small>Best score on this material: '+record.best+' / '+total+'</small></section>';
-}
+function gamePlayHtml(){const g=gameState,q=activeGameQuestion(),e=studyGameEngine();if(q)e?.markQuestionShown?.(q);return window.ABVMStudyGameView.play({g,mode:gameMode(g.mode),q,teach:g.supportMode?e?.teachCardFor?.(q):null,retryInstruction:e?.teachCardFor?.(q)?.instruction,labels:GAME_TYPE_LABELS})}
+function gameFinishHtml(){return window.ABVMStudyGameView.finish({mode:gameMode(gameState.mode),state:gameState,record:loadGameRecord(gameState.mode)})}
 function renderGames(){
   const engine=studyGameEngine();
   if(!engine){
