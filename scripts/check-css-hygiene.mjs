@@ -38,8 +38,11 @@ const deadSelectors=[
   ".question-quality-note"
 ];
 for(const selector of deadSelectors)if(css.includes(selector))fail("Obsolete selector remains: "+selector);
-for(const marker of ["--tw-","@layer utilities","@property --tw-",".sr-only{",".day-detail:before{",".day-detail::before"]){
+for(const marker of ["--tw-","@layer utilities","@property --tw-",".sr-only{",".day-detail:before{",".day-detail.green::before",".day-detail.purple::before",".day-detail.blue::before",".day-detail.yellow::before"]){
   if(css.includes(marker))fail("Compiler/dead CSS residue returned: "+marker);
+}
+if(!css.includes(".day-detail::before{display:none;content:none}")){
+  fail("Retired day-detail stripe must stay explicitly suppressed");
 }
 
 if(Buffer.byteLength(css,"utf8")>64000)fail("styles.css exceeded the 64 KB hygiene ceiling");
