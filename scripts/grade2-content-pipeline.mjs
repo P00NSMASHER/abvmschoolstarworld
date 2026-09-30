@@ -242,8 +242,10 @@ const RELIGION_SKILLS = [
     pattern: /\btrinity\b|father,\s*son,\s*holy spirit/i,
     studyNotes: ['Remember: the Trinity is three Persons in one God — Father, Son, and Holy Spirit.'],
     question: {
-      prompt: 'Which answer names the three Persons of the Trinity?',
+      prompt: 'According to the current Religion lesson, which answer names the three Persons of the Trinity?',
       choices: ['Father, Son, and Holy Spirit', 'Abraham, Moses, and David', 'Faith, hope, and love'],
+      sourceMode: 'STRICT_SOURCE',
+      supportType: 'explicit',
       answer: 'Father, Son, and Holy Spirit',
       explanation: 'The Trinity is Father, Son, and Holy Spirit: three Persons in one God.',
       hint: 'Think of the words used when making the Sign of the Cross.',
@@ -255,8 +257,9 @@ const RELIGION_SKILLS = [
     pattern: /image and likeness|made in god'?s image/i,
     studyNotes: ["Being made in God's image means people can think, choose, and love."],
     question: {
-      prompt: "Which action best shows a person using the gifts of thinking, choosing, and loving?",
+      prompt: "Which action best applies the current Religion lesson about thinking, choosing, and loving?",
       choices: ['Helping a classmate after deciding it is the kind thing to do', 'Knocking over blocks on purpose', 'Ignoring someone who needs help'],
+      sourceMode: 'CURATED_CONTEXT',
       answer: 'Helping a classmate after deciding it is the kind thing to do',
       explanation: 'Thinking, choosing what is good, and loving others are ways people use gifts from God.',
       hint: 'Choose the action that combines a good choice with love for another person.',
@@ -268,8 +271,9 @@ const RELIGION_SKILLS = [
     pattern: /take care of god'?s gifts of creation|care for creation|gift of creation/i,
     studyNotes: ["Caring for creation is one way to show gratitude for God's gifts."],
     question: {
-      prompt: "Which action is a responsible way to care for God's creation?",
+      prompt: "Which action best applies the current Religion lesson about caring for God's creation?",
       choices: ['Picking up litter at the park', 'Leaving trash beside a stream', 'Breaking branches for no reason'],
+      sourceMode: 'CURATED_CONTEXT',
       answer: 'Picking up litter at the park',
       explanation: "Caring for the world around us shows respect for God's gift of creation.",
       hint: 'Choose the action that protects rather than harms creation.',
@@ -283,6 +287,8 @@ const RELIGION_SKILLS = [
     question: {
       prompt: 'According to the current Religion lesson, why is Jesus called our Savior?',
       choices: ['He died for our sins and gives us new life in grace.', 'He invented the seasons.', 'He wrote every book in the Bible by hand.'],
+      sourceMode: 'STRICT_SOURCE',
+      supportType: 'explicit',
       answer: 'He died for our sins and gives us new life in grace.',
       explanation: 'The Religion lesson teaches that Jesus died for our sins and gives us new life in grace.',
       hint: 'Use the class note about Jesus, sin, and grace.',
@@ -294,8 +300,9 @@ const RELIGION_SKILLS = [
     pattern: /gifts from god|we can think,\s*choose,\s*love|giver of gifts/i,
     studyNotes: ["God's gifts call us to make loving and responsible choices."],
     question: {
-      prompt: 'Which choice best shows using a gift from God responsibly?',
+      prompt: 'Which choice best applies the current Religion lesson about using gifts responsibly?',
       choices: ['Using your abilities to help someone who needs support', 'Refusing to share because a gift is only for you', 'Damaging something another person needs'],
+      sourceMode: 'CURATED_CONTEXT',
       answer: 'Using your abilities to help someone who needs support',
       explanation: 'Using gifts to love and help others is a responsible choice.',
       hint: 'Choose the action that uses a gift for good.',
