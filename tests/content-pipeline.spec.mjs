@@ -307,3 +307,28 @@ test('two consecutive misses trigger an unscored same-skill support step', async
   await expect(page.locator('.adaptive-note')).toContainText('not scored');
   await expect(page.locator('.game-question-card')).toBeVisible();
 });
+
+
+test('Test Ready policy resolves only certified skills from the assessment label', async ({ page }) => {
+  const result = await page.evaluate(() => {
+    const pack = {
+      contentPipeline: {
+        skills: [
+          { id: 'setting', subject: 'Reading / ELA' },
+          { id: 'theme', subject: 'Reading / ELA' },
+          { id: 'long-short-a', subject: 'Spelling / Handwriting' },
+        ],
+      },
+    };
+    return {
+      setting: window.ABVMStudyGames.testReadyMode(pack, { x: { label: 'Setting test' } }),
+      spelling: window.ABVMStudyGames.testReadyMode(pack, { x: { label: 'Spelling test — short a / long a' } }),
+      unrelated: window.ABVMStudyGames.testReadyMode(pack, { x: { label: 'Picture Day' } }),
+    };
+  });
+
+  expect(result.setting?.skills).toEqual(['setting']);
+  expect(result.setting?.count).toBe(5);
+  expect(result.spelling?.skills).toEqual(['long-short-a']);
+  expect(result.unrelated).toBeNull();
+});
