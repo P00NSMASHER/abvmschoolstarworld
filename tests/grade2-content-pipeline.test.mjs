@@ -89,6 +89,7 @@ test('generated study notes are merged into the matching Study subjects without 
     sourceHash: 'notes-test',
     subjects: [
       { subject: 'Reading / ELA', topics: ['Phonics: long a (a_e) and short a'], studyNotes: ['Keep this teacher note.'] },
+      { subject: 'Spelling / Handwriting', topics: ['Test focus: short a / long a'], studyNotes: [] },
       { subject: 'Math', topics: ['Subtraction to 12'], studyNotes: [] },
     ],
     vocabulary: [],
