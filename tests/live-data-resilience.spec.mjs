@@ -1,4 +1,5 @@
 import {test,expect} from "@playwright/test";
+import {readPwaVersions} from "./pwa-test-helpers.mjs";
 
 test("school date follows Eastern time even when the device is elsewhere",async({browser})=>{
   const context=await browser.newContext({timezoneId:"America/Los_Angeles",serviceWorkers:"block"});
@@ -70,25 +71,26 @@ test("Family hides dated notices after they expire",async({browser})=>{
 });
 
 test("versioned app code bypasses an older cache entry while online",async({page})=>{
+  const {cacheName,appUrl}=await readPwaVersions(page.request);
   await page.goto("/#today");
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
   await page.evaluate(async()=>{if("serviceWorker" in navigator)await navigator.serviceWorker.ready});
   await page.reload();
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
 
-  const result=await page.evaluate(async()=>{
-    const cache=await caches.open("abvm-grade2-parent-companion-v92-css-residue");
-    await cache.put("./app.js?v=91",new Response("OLD_CACHED_APP_MARKER",{headers:{"Content-Type":"application/javascript"}}));
-    const text=await (await fetch("./app.js?v=91")).text();
+  const result=await page.evaluate(async({cacheName,appUrl})=>{
+    const cache=await caches.open(cacheName);
+    await cache.put(appUrl,new Response("OLD_CACHED_APP_MARKER",{headers:{"Content-Type":"application/javascript"}}));
+    const text=await (await fetch(appUrl)).text();
     return {old:text.includes("OLD_CACHED_APP_MARKER"),fresh:text.includes("PACK_REFRESH_MS")};
-  });
+  },{cacheName,appUrl});
   expect(result.old).toBe(false);
   expect(result.fresh).toBe(true);
 });
 
 test("service worker install tolerates optional school-data precache failure",async({request})=>{
-  const source=await (await request.get("/sw.js")).text();
-  expect(source).toContain('const CACHE = "abvm-grade2-parent-companion-v92-css-residue"');
+  const {sw:source,cacheName}=await readPwaVersions(request);
+  expect(source).toContain('const CACHE = "'+cacheName+'"');
   expect(source).toContain("Promise.allSettled");
   expect(source).toContain("OPTIONAL_DATA");
   expect(source).toContain('url.searchParams.has("v")');
@@ -97,11 +99,11 @@ test("service worker install tolerates optional school-data precache failure",as
 
 
 test("index promotes a newly activated service worker before relying on versioned code",async({request})=>{
-  const html=await (await request.get("/index.html")).text();
-  expect(html).toContain('abvm-sw-reloaded-v92');
+  const {index:html,reloadKey,appUrl}=await readPwaVersions(request);
+  expect(reloadKey).toMatch(/^abvm-sw-reloaded-v\d+$/);
   expect(html).toContain('navigator.serviceWorker.addEventListener("controllerchange"');
   expect(html).toContain('registration.update()');
-  expect(html.indexOf("abvm-sw-reloaded-v92")).toBeLessThan(html.indexOf("./app.js?v=91"));
+  expect(html.indexOf(reloadKey)).toBeLessThan(html.indexOf(appUrl));
 });
 
 
