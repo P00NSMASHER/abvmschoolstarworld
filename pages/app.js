@@ -482,69 +482,24 @@ function answerStudyGame(index){
   renderGames();bindScreen()
 }
 function advanceStudyGame(){
-  const g=gameState;
-  if(!g.answered)return;
-  const resetAnswerState=()=>Object.assign(gameState,{selectedIndex:null,answered:false,hintOpen:false,learningRow:null});
-
-  if(g.comebackMode){
-    clearActiveGameComeback();
-    resetAnswerState();
-    renderGames();bindScreen();
-    return;
-  }
-
+  const g=gameState;if(!g.answered)return;
+  const reset=()=>Object.assign(g,{selectedIndex:null,answered:false,hintOpen:false,learningRow:null});
+  if(g.comebackMode){clearActiveGameComeback();reset();renderGames();bindScreen();return}
   if(g.supportMode){
-    const origin=g.supportOriginQuestion;
-    g.supportMode=false;
-    g.supportQuestion=null;
-    g.supportCorrect=null;
-    g.supportOriginQuestion=null;
+    const origin=g.supportOriginQuestion;Object.assign(g,{supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null});
     if(origin)scheduleGameComeback(origin);
-    if(g.index>=g.questions.length-1){
-      markGameComebacksNextSession();
-      g.screen="finish";
-      saveGameRecord();
-    }else{
-      g.index++;
-      tickGameComebacks();
-      resetAnswerState();
-      activateDueGameComeback();
-    }
-    renderGames();bindScreen();
-    return;
+    if(g.index>=g.questions.length-1){markGameComebacksNextSession();g.screen="finish";saveGameRecord()}
+    else{g.index++;tickGameComebacks();reset();activateDueGameComeback()}
+    renderGames();bindScreen();return
   }
-
-  const current=g.questions[g.index];
-  const selected=current?.choices?.[g.selectedIndex];
-  const correct=selected===current?.answer;
+  const current=g.questions[g.index],selected=current?.choices?.[g.selectedIndex],correct=selected===current?.answer;
   if(!correct&&(g.learningRow?.ConsecutiveWrong||0)>=2){
-    const engine=studyGameEngine(),catalog=studyGameCatalog();
-    const support=engine?.supportQuestion(catalog,current,{
-      skillStats:studyGameEngine()?.loadLearning?.()||{},
-      seed:String(catalog?.sourceKey||"current")+"|support|"+String(current?.id||"item")+"|"+String(g.learningRow?.Seen||0)
-    });
-    if(support){
-      g.supportMode=true;
-      g.supportQuestion=support;
-      g.supportCorrect=null;
-      g.supportOriginQuestion=current;
-      resetAnswerState();
-      renderGames();bindScreen();
-      return;
-    }
+    const engine=studyGameEngine(),catalog=studyGameCatalog(),support=engine?.supportQuestion(catalog,current,{skillStats:engine?.loadLearning?.()||{},seed:String(catalog?.sourceKey||"current")+"|support|"+String(current?.id||"item")+"|"+String(g.learningRow?.Seen||0)});
+    if(support){Object.assign(g,{supportMode:true,supportQuestion:support,supportCorrect:null,supportOriginQuestion:current});reset();renderGames();bindScreen();return}
   }
-
-  if(g.index>=g.questions.length-1){
-    markGameComebacksNextSession();
-    g.screen="finish";
-    saveGameRecord();
-  }else{
-    g.index++;
-    tickGameComebacks();
-    resetAnswerState();
-    activateDueGameComeback();
-  }
-  renderGames();bindScreen();
+  if(g.index>=g.questions.length-1){markGameComebacksNextSession();g.screen="finish";saveGameRecord()}
+  else{g.index++;tickGameComebacks();reset();activateDueGameComeback()}
+  renderGames();bindScreen()
 }
 function leaveStudyGame(){gameState.screen="menu";renderGames();bindScreen()}
 function toggleStudyHint(){const g=gameState;if(g.screen==="play"&&!g.answered){g.hintOpen=!g.hintOpen;if(g.hintOpen)g.hints=(g.hints||0)+1;renderGames();bindScreen()}}
@@ -574,12 +529,8 @@ function gamePlayHtml(){
   const selected=chosen===null?null:q.choices[chosen],correct=selected===q.answer;
   const targeted=!correct&&selected?q.choiceDiagnostics?.[selected]?.feedback:null;
   const adaptive=!support&&!comeback&&!correct&&(g.learningRow?.ConsecutiveWrong||0)>=2?'<small class="adaptive-note">A smaller same-skill support step is next. It does not count toward your score.</small>':'';
-  const retryClue=!support&&!comeback&&!g.answered&&g.retry
-    ? '<section class="game-feedback retry" aria-live="polite"><span>↻</span><div><strong>'+(g.retry===1?'Not yet — use this clue.':'Try once more with a stronger clue.')+'</strong><p>'+esc(g.retry===1?q.hint:(studyGameEngine()?.teachCardFor?.(q)?.instruction||targeted||q.hint))+'</p></div></section>'
-    : '';
-  const feedback=g.answered
-    ? '<section class="game-feedback '+(correct?'correct':'retry')+'" aria-live="polite"><span>'+(correct?'✓':'↻')+'</span><div><strong>'+(comeback?(correct?'Remembered later!':'Good review — here’s the answer.'):(support?(correct?'Good — keep going!':'Here is the smaller-step answer.'):(correct?(g.misses?'You worked it out!':'Nice work!'):'Here’s the model answer.')))+'</strong><p>'+esc(correct?q.explanation:(targeted||q.explanation))+'</p>'+adaptive+'</div></section><button type="button" class="game-next" data-game-next>'+(support||comeback?'Continue':progress===total?'See my score':'Next question')+' <span>›</span></button>'
-    : retryClue+'<div class="game-hint-wrap">'+(comeback?'<small class="adaptive-note">Comeback · same skill · not scored</small>':support?'<small class="adaptive-note">Support step · same skill · not scored</small>':'')+'<button type="button" class="game-hint-button" data-game-hint>'+(g.hintOpen?'Hide hint':'Need a hint?')+'</button>'+(g.hintOpen?'<p class="game-hint">'+esc(q.hint)+'</p>':'')+'</div>';
+  const retryClue=!support&&!comeback&&!g.answered&&g.retry?'<section class="game-feedback retry" aria-live="polite"><span>↻</span><div><strong>'+(g.retry===1?'Not yet — use this clue.':'Try once more with a stronger clue.')+'</strong><p>'+esc(g.retry===1?q.hint:(studyGameEngine()?.teachCardFor?.(q)?.instruction||targeted||q.hint))+'</p></div></section>':'';
+  const feedback=g.answered?'<section class="game-feedback '+(correct?'correct':'retry')+'" aria-live="polite"><span>'+(correct?'✓':'↻')+'</span><div><strong>'+(comeback?(correct?'Remembered later!':'Good review — here’s the answer.'):(support?(correct?'Good — keep going!':'Here is the smaller-step answer.'):(correct?(g.misses?'You worked it out!':'Nice work!'):'Here’s the model answer.')))+'</strong><p>'+esc(correct?q.explanation:(targeted||q.explanation))+'</p>'+adaptive+'</div></section><button type="button" class="game-next" data-game-next>'+(support||comeback?'Continue':progress===total?'See my score':'Next question')+' <span>›</span></button>':retryClue+'<div class="game-hint-wrap">'+(comeback?'<small class="adaptive-note">Comeback · same skill · not scored</small>':support?'<small class="adaptive-note">Support step · same skill · not scored</small>':'')+'<button type="button" class="game-hint-button" data-game-hint>'+(g.hintOpen?'Hide hint':'Need a hint?')+'</button>'+(g.hintOpen?'<p class="game-hint">'+esc(q.hint)+'</p>':'')+'</div>';
   return '<div class="game-topbar"><button type="button" data-game-home aria-label="Back to study games">‹</button><div><span>'+esc(comeback?"Comeback":support?"Support step":mode.title)+'</span><strong>'+(comeback?'Remember this skill later':support?'Same skill · smaller step':progress+' of '+total)+'</strong></div><b>★ '+g.score+'</b></div>'+
     '<div class="game-progress" aria-label="Game progress"><span style="width:'+pct+'%"></span></div>'+
     '<section class="game-question-card"><div class="game-question-meta"><span>'+esc(q.subject)+'</span><b>'+esc(comeback?"Comeback":support?"Support":GAME_TYPE_LABELS[q.questionType]||"Practice")+'</b></div>'+(teach?'<div class="game-hint-wrap teach-card"><small class="adaptive-note">Quick lesson · not scored</small><p class="game-hint">'+esc(teach.instruction)+(teach.example?' '+esc(teach.example):'')+'</p></div>':'')+'<h2>'+esc(q.prompt)+'</h2><div class="game-answer-list">'+answers+'</div>'+feedback+'</section>'+
