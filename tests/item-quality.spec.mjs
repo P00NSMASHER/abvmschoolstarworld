@@ -78,16 +78,16 @@ test("item-quality review flags weak items without claiming standardized psychom
         ComebackSeen:2,ComebackCorrect:1,AbilityN:10,AbilitySum:5,AbilitySumSq:2.5,CorrectAbilitySum:1
       },
       ambiguous:{
-        Skill:"dialogue",Subject:"Reading / ELA",Resolved:12,Correct:5,Wrong:7,FirstTryCorrect:4,
+        Skill:"dialogue",Subject:"Reading / ELA",Resolved:12,Correct:5,Wrong:7,FirstTryCorrect:5,
         ChoicePositions:[4,4,4],Misconceptions:{"speaker-vs-dialogue":3,"quotation-boundary":2,"narration-confusion":2},
         ResponseBands:{lt5:2,"5to15":3,"15to30":1,gte30:6},
-        ComebackSeen:2,ComebackCorrect:1,AbilityN:12,AbilitySum:6,AbilitySumSq:3,CorrectAbilitySum:2.5
+        ComebackSeen:2,ComebackCorrect:1,AbilityN:12,AbilitySum:6,AbilitySumSq:4,FirstTryAbilitySum:2.5
       },
       flat:{
         Skill:"visualize",Subject:"Reading / ELA",Resolved:12,Correct:6,Wrong:6,FirstTryCorrect:5,
         ChoicePositions:[4,4,4],Misconceptions:{"detail-mismatch":4,"unrelated-scene":2},
         ResponseBands:{lt5:5,"5to15":5,"15to30":2,gte30:0},
-        ComebackSeen:0,ComebackCorrect:0,AbilityN:12,AbilitySum:6,AbilitySumSq:3,CorrectAbilitySum:3
+        ComebackSeen:0,ComebackCorrect:0,AbilityN:12,AbilitySum:6,AbilitySumSq:4,FirstTryAbilitySum:2.5
       }
     }
   }));
@@ -99,7 +99,27 @@ test("item-quality review flags weak items without claiming standardized psychom
   expect(byId.ambiguous.flags).toContain("possible-ambiguity");
   expect(byId.ambiguous.flags).toContain("slow-response");
   expect(byId.flat.flags).toContain("low-discrimination");
+  expect(byId.flat.discrimination).toBe(0);
+  expect(byId.flat.discriminationEvidence).toBe("reviewable");
+  expect(byId.flat.method).toBe("classical-longitudinal-proxy");
+  expect(byId.flat.irtUsed).toBe(false);
   expect(byId.hard.comebackRate).toBe(.5);
+});
+
+test("item-quality review refuses discrimination claims when evidence is insufficient",async({page})=>{
+  const [small,noVariance]=await page.evaluate(()=>[
+    window.ABVMStudyGames.reviewItemQuality({schemaVersion:1,items:{
+      small:{Skill:"theme",Subject:"Reading / ELA",Resolved:5,Correct:4,Wrong:1,FirstTryCorrect:3,ChoicePositions:[2,2,1],Misconceptions:{m:1},ResponseBands:{lt5:1,"5to15":3,"15to30":1,gte30:0},AbilityN:5,AbilitySum:2.5,AbilitySumSq:1.75,FirstTryAbilitySum:1.5}
+    }})[0],
+    window.ABVMStudyGames.reviewItemQuality({schemaVersion:1,items:{
+      flatAbility:{Skill:"theme",Subject:"Reading / ELA",Resolved:12,Correct:6,Wrong:6,FirstTryCorrect:6,ChoicePositions:[4,4,4],Misconceptions:{m:6},ResponseBands:{lt5:2,"5to15":8,"15to30":2,gte30:0},AbilityN:12,AbilitySum:6,AbilitySumSq:3,FirstTryAbilitySum:3}
+    }})[0]
+  ]);
+  expect(small.discriminationEvidence).toBe("insufficient-evidence");
+  expect(noVariance.discrimination).toBeNull();
+  expect(noVariance.discriminationEvidence).toBe("insufficient-evidence");
+  expect(noVariance.flags).not.toContain("low-discrimination");
+  expect(noVariance.irtUsed).toBe(false);
 });
 
 test("item-quality storage is bounded and does not become an event log",async({page})=>{
