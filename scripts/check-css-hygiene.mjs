@@ -38,8 +38,11 @@ const deadSelectors=[
   ".question-quality-note"
 ];
 for(const selector of deadSelectors)if(css.includes(selector))fail("Obsolete selector remains: "+selector);
+for(const marker of ["--tw-","@layer utilities","@property --tw-",".sr-only{",".day-detail:before{",".day-detail::before"]){
+  if(css.includes(marker))fail("Compiler/dead CSS residue returned: "+marker);
+}
 
-if(Buffer.byteLength(css,"utf8")>70000)fail("styles.css exceeded the 70 KB hygiene ceiling");
+if(Buffer.byteLength(css,"utf8")>64000)fail("styles.css exceeded the 64 KB hygiene ceiling");
 if(Buffer.byteLength(app,"utf8")>55000)fail("app.js exceeded the 55 KB hygiene ceiling");
 
 const calendarCellRuleBlocks=(css.match(/\.calendar-grid button\s*\{/g)||[]).length;
