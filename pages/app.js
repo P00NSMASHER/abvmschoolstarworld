@@ -462,6 +462,7 @@ function startStudyGame(modeId){
   const engine=studyGameEngine(),catalog=studyGameCatalog(),mode=gameMode(modeId);
   if(!engine||!catalog)return;
   const questions=engine.selectQuestions(catalog,{subjects:mode.subjects,skills:mode.skills||[],preferredSkills:mode.preferredSkills||[],count:mode.count,seed:engine.nextSessionSeed?.(currentGameSourceKey(),mode.id)||"session",skillStats:engine.loadLearning?.()||{}});
+  engine.rememberSelectedVariants?.(currentGameSourceKey(),questions);
   gameState={screen:"play",mode:mode.id,questions,index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,learningRow:null,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null};
   activateDueGameComeback();
   renderGames();bindScreen();
