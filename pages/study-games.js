@@ -1074,6 +1074,30 @@ function arrangeBalanced(items,seed){
   };
   return search(true,true)||search(true,false)||search(false,true)||stable;
 }
+function orderForVariety(rows){
+  const remaining=[...(rows||[])],out=[];
+  while(remaining.length){
+    const last=out[out.length-1],before=out[out.length-2];
+    let candidates=[...remaining];
+    if(last&&candidates.some(q=>q.skill!==last.skill))candidates=candidates.filter(q=>q.skill!==last.skill);
+    if(last&&before&&last.questionType===before.questionType&&candidates.some(q=>q.questionType!==last.questionType)){
+      candidates=candidates.filter(q=>q.questionType!==last.questionType);
+    }
+    const skillFrequency=new Map(),typeFrequency=new Map();
+    for(const q of remaining){
+      skillFrequency.set(q.skill,(skillFrequency.get(q.skill)||0)+1);
+      typeFrequency.set(q.questionType,(typeFrequency.get(q.questionType)||0)+1);
+    }
+    candidates.sort((a,b)=>
+      (typeFrequency.get(b.questionType)||0)-(typeFrequency.get(a.questionType)||0)
+      ||(skillFrequency.get(b.skill)||0)-(skillFrequency.get(a.skill)||0)
+      ||remaining.indexOf(a)-remaining.indexOf(b)
+    );
+    const candidate=candidates[0]||remaining[0],index=remaining.indexOf(candidate);
+    out.push(candidate);remaining.splice(index,1);
+  }
+  return out;
+}
 function pickBalanced(pool,count,seed,skillStats,preferredSkills=[],recentKeys=new Set()){
   const selected=[],usedIds=new Set(),usedVariants=new Set(),skillCounts={},maxPerSkill=dynamicSkillCap(pool,count),preferred=new Set(preferredSkills||[]),now=Date.now();
   const ordered=[...pool].sort((a,b)=>{
@@ -1094,27 +1118,13 @@ function pickBalanced(pool,count,seed,skillStats,preferredSkills=[],recentKeys=n
     const remaining=underCap.length?underCap:available;
     if(!remaining.length)break;
     const material=remaining.filter(q=>q.tier==="material"),tierPool=material.length?material:remaining;
-    const fresh=tierPool.filter(q=>!recentKeys.has(semanticRotationKey(q))),freshPool=fresh.length?fresh:tierPool;
-    const last=selected[selected.length-1],before=selected[selected.length-2];
-    const diverse=q=>{
-      if(last&&last.skill===q.skill&&tierPool.some(other=>other.skill!==q.skill))return false;
-      const repeatsType=last&&before&&last.questionType===before.questionType&&q.questionType===last.questionType;
-      if(repeatsType&&tierPool.some(other=>other.questionType!==q.questionType))return false;
-      return true;
-    };
-    const balanced=choices=>{
-      const valid=choices.filter(diverse);if(!valid.length)return null;
-      const min=Math.min(...valid.map(q=>skillCounts[q.skill]||0));
-      return valid.find(q=>(skillCounts[q.skill]||0)===min)||valid[0];
-    };
-    let candidate=balanced(freshPool);
-    if(!candidate)candidate=balanced(tierPool);
-    if(!candidate)candidate=freshPool[0];
+    const fresh=tierPool.filter(q=>!recentKeys.has(semanticRotationKey(q)));
+    const candidate=(fresh.length?fresh:tierPool)[0];
     selected.push(candidate);
     usedIds.add(candidate.id);usedVariants.add(semanticRotationKey(candidate));
     skillCounts[candidate.skill]=(skillCounts[candidate.skill]||0)+1;
   }
-  return arrangeBalanced(selected,seed);
+  return orderForVariety(selected);
 }
 function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillStats={},preferredSkills=[]}={}){
   let pool=[...(catalog?.questions||[])];
