@@ -18,8 +18,7 @@ function richVisual(raw){
   }
   if(kind==="place-value"){
     const number=Number(raw.number);if(!Number.isInteger(number)||number<0||number>999)return "";
-    const h=Math.floor(number/100),t=Math.floor(number/10)%10,o=number%10;
-    return '<figure class="game-rich-content rich-place-value" role="img" aria-label="'+esc(label)+'"><div><span><small>Hundreds</small><b>'+h+'</b></span><span><small>Tens</small><b>'+t+'</b></span><span><small>Ones</small><b>'+o+'</b></span></div><figcaption>'+esc("Build "+number+" by place")+'</figcaption></figure>';
+    return '<figure class="game-rich-content rich-place-value" role="img" aria-label="'+esc(label)+'"><div><span><small>Hundreds</small><b aria-hidden="true">?</b></span><span><small>Tens</small><b aria-hidden="true">?</b></span><span><small>Ones</small><b aria-hidden="true">?</b></span></div><figcaption>'+esc("Use the number in the question to fill the chart")+'</figcaption></figure>';
   }
   if(kind==="bar-chart"){
     const entries=Array.isArray(raw.entries)?raw.entries:[],clean=entries.map(row=>({label:String(row?.label||"").trim(),value:Number(row?.value)}));

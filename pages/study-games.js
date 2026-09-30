@@ -196,7 +196,7 @@ function derivedRichContent(question){
   }
   if(skill==="place-value"){
     const match=prompt.match(/number\s+(\d{2,3})/i);
-    if(match)return normalizeRichContent({kind:"place-value",label:"Place-value chart for "+match[1]+".",number:Number(match[1])});
+    if(match)return normalizeRichContent({kind:"place-value",label:"Blank place-value chart. Use the number in the question to identify hundreds, tens, and ones.",number:Number(match[1])});
   }
   if(skill==="time"){
     const match=prompt.match(/starts at\s+(\d{1,2}):(\d{2})/i);
