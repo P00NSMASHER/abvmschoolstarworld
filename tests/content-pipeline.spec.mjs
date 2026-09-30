@@ -240,7 +240,19 @@ test('a repeated Math miss triggers an unscored same-skill support step', async 
 
   await expect(page.locator('.game-topbar')).toContainText('Support step');
   await expect(page.locator('.adaptive-note')).toContainText('not scored');
+  await expect(page.locator('.teach-card')).toBeVisible();
+  await expect(page.locator('.teach-card')).toContainText('Quick lesson');
+  await expect(page.locator('.teach-card .game-hint')).not.toHaveText('');
   await expect(page.locator('.game-question-card')).toBeVisible();
+});
+
+test('Teach Card gives a concise skill rule and worked example without becoming a question', async ({ page }) => {
+  const card = await page.evaluate(() => window.ABVMStudyGames.teachCardFor({
+    skill: 'setting',
+    hint: 'Find where and when.',
+  }));
+  expect(card?.instruction).toMatch(/where and when/i);
+  expect(card?.example).toMatch(/lake|sunset/i);
 });
 
 test('Test Ready policy resolves only certified skills from the assessment label', async ({ page }) => {
