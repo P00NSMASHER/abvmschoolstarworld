@@ -1,3 +1,5 @@
+import { validateGrade2PipelineAlignment } from './grade2-content-alignment.mjs';
+
 const FORBIDDEN_QUESTION_PATTERNS = [
   /teacher page/i,
   /study list/i,
@@ -5,41 +7,6 @@ const FORBIDDEN_QUESTION_PATTERNS = [
   /being practiced this week/i,
   /which .* is on .* list/i,
 ];
-
-const VOCAB_GLOSSARY = Object.freeze({
-  action: {
-    meaning: 'something a person or thing does',
-    sentence: "Mia took action by picking up the books that fell.",
-  },
-  afraid: {
-    meaning: 'feeling scared or worried about danger',
-    sentence: "The child felt afraid and held Dad's hand during the loud storm.",
-  },
-  depend: {
-    meaning: 'to need or rely on someone or something',
-    sentence: 'Plants depend on sunlight and water to grow.',
-  },
-  nervously: {
-    meaning: 'in a worried or uneasy way',
-    sentence: 'Owen tapped his foot nervously before his turn on stage.',
-  },
-  peered: {
-    meaning: 'looked closely or carefully',
-    sentence: 'Ava peered into the tiny box to see what was inside.',
-  },
-  perfectly: {
-    meaning: 'in exactly the right way or without mistakes',
-    sentence: 'The lid fit perfectly, with no gap around the edge.',
-  },
-  rescue: {
-    meaning: 'to save someone or something from danger',
-    sentence: 'Firefighters rescue people when they are in danger.',
-  },
-  secret: {
-    meaning: 'something kept hidden or not told to everyone',
-    sentence: 'The surprise party stayed a secret until Saturday.',
-  },
-});
 
 const BASE_SKILLS = [
   {
@@ -127,8 +94,8 @@ const BASE_SKILLS = [
     subject: 'Reading / ELA',
     label: 'Adding -s and -es',
     pattern: /adding\s+-?s.*-?es|\b-s\b.*\b-es\b/i,
-    standards: ['CCSS.RF.2.3.d'],
-    domain: 'Foundational reading',
+    standards: ['CCSS.L.2.1.b'],
+    domain: 'Language',
     studyNotes: ['Practice choosing -s or -es when making regular plural words.'],
     question: () => ({
       prompt: 'Which word correctly shows more than one box?',
@@ -348,6 +315,32 @@ function slug(value) {
   return normalize(value).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'item';
 }
 
+function fingerprint(value) {
+  let hash = 2166136261 >>> 0;
+  for (const ch of String(value ?? '')) {
+    hash ^= ch.charCodeAt(0);
+    hash = Math.imul(hash, 16777619) >>> 0;
+  }
+  return hash.toString(16).padStart(8, '0');
+}
+
+function balancedChoices(question, index) {
+  const choices = [...question.choices];
+  const current = choices.indexOf(question.answer);
+  const target = index % choices.length;
+  if (current < 0 || current === target) return question;
+  const [answer] = choices.splice(current, 1);
+  choices.splice(target, 0, answer);
+  return { ...question, choices };
+}
+
+function isPlaceholderVocabularyMeaning(value) {
+  const clean = normalize(value);
+  return !clean
+    || clean.includes('teacher page does not provide a definition')
+    || clean.includes('current reading work vocabulary word');
+}
+
 function uniqueText(values) {
   const seen = new Set();
   const out = [];
@@ -386,21 +379,62 @@ function addSkill(out, skill) {
 
 function questionFor(skill, raw) {
   if (!raw) return null;
+  const choices = (raw.choices || []).map(text);
+  const answer = text(raw.answer);
+  const sourceMode = raw.sourceMode || skill.sourceMode || (skill.subject === 'Religion' ? 'STRICT_SOURCE' : 'DETERMINISTIC_TEMPLATE');
+  const sourceFact = text(raw.sourceFact || `Verified Grade 2 skill: ${skill.label}`);
+  const questionId = `auto-${slug(skill.id)}-${slug(answer)}-${fingerprint(raw.prompt).slice(0, 6)}`;
+  const diagnostics = {};
+  for (const choice of choices) {
+    if (choice === answer) continue;
+    diagnostics[choice] = {
+      misconception: text(raw.misconceptions?.[choice] || `${skill.id}-distractor`),
+      feedback: text(raw.wrongFeedback?.[choice] || raw.wrongFeedback || `Recheck the ${skill.label.toLowerCase()} skill and use the clue in the question.`),
+    };
+  }
+  const dok = Number.isInteger(raw.dok) ? raw.dok : 2;
+  const difficulty = Number.isInteger(raw.difficulty) ? raw.difficulty : 2;
   return {
-    id: `auto-${slug(skill.id)}-${slug(raw.answer)}`,
+    id: questionId,
+    templateId: `grade2-${skill.id}-v1`,
     subject: skill.subject,
     skill: skill.id,
+    assessedSkillIds: [skill.id],
     prompt: text(raw.prompt),
-    choices: (raw.choices || []).map(text),
-    answer: text(raw.answer),
+    choices,
+    answer,
     explanation: text(raw.explanation),
     hint: text(raw.hint),
-    sourceFact: `Verified Grade 2 skill: ${skill.label}`,
+    sourceFact,
+    sourceEvidence: uniqueText(skill.evidence || []),
+    sourceMode,
+    supportType: raw.supportType || 'deterministic_transform',
+    provenance: 'verified-abvm-skill-template',
     standards: [...new Set(skill.standards || [])],
     domain: skill.domain || 'Grade 2',
-    dok: Number.isInteger(raw.dok) ? raw.dok : 2,
-    difficulty: Number.isInteger(raw.difficulty) ? raw.difficulty : 2,
+    dok,
+    cognitiveDemand: dok === 3 ? 'strategic-reasoning' : dok === 2 ? 'skill-and-concept-application' : 'recall-and-fluency',
+    difficulty,
     questionType: raw.questionType || 'direct',
+    choiceDiagnostics: diagnostics,
+    rubric: {
+      maxPoints: 2,
+      criteria: [
+        'Selects the correct answer using the target Grade 2 skill.',
+        'Uses the clue, rule, or evidence required by the item.',
+      ],
+      partialCredit: Object.fromEntries(Object.keys(diagnostics).map(choice => [choice, 0])),
+    },
+    evidenceContract: {
+      evidenceType: 'DIRECT_TARGET',
+      supports: [skill.id],
+      strongestClaim: 'practice-performance-on-this-skill',
+      doesNotClaim: ['standardized-test-score', 'global-subject-mastery'],
+    },
+    generatorVersion: 'grade2-content-pipeline-v2-research-recovery',
+    contentFingerprint: fingerprint(`${skill.id}|${raw.questionType || 'direct'}|${raw.prompt}`),
+    variantFingerprint: fingerprint(`${raw.prompt}|${answer}|${choices.join('|')}`),
+    presentationFingerprint: fingerprint(choices.join('|')),
   };
 }
 
@@ -573,32 +607,65 @@ function detectReligion(pack, skills, questions) {
   }
 }
 
-function detectVocabulary(pack, skills, questions) {
-  const terms = uniqueText((pack?.vocabulary || []).map(row => row?.term)).map(term => term.toLowerCase());
-  const known = terms.filter(term => VOCAB_GLOSSARY[term]);
-  if (!known.length) return;
+function detectVocabulary(pack, skills, questions, coverage) {
+  const rows = (pack?.vocabulary || [])
+    .map(row => ({
+      term: text(row?.term).toLowerCase(),
+      meaning: text(row?.meaning),
+    }))
+    .filter(row => row.term);
+
+  if (!rows.length) return;
+
+  const supported = rows.filter(row => !isPlaceholderVocabularyMeaning(row.meaning));
+  if (!supported.length) {
+    coverage.push({
+      topic: 'Reading / ELA vocabulary definitions',
+      subject: 'Reading / ELA',
+      status: 'SOURCE_INSUFFICIENT',
+      reason: 'Vocabulary terms are present, but the verified teacher source does not provide definitions. Definition questions are intentionally suppressed.',
+    });
+    return;
+  }
+
   const skill = {
     id: 'vocabulary-in-context',
     subject: 'Reading / ELA',
-    label: 'Vocabulary in context',
-    evidence: known,
-    studyNotes: known.map(term => `${term}: ${VOCAB_GLOSSARY[term].meaning}`),
+    label: 'Vocabulary meaning',
+    evidence: supported.map(row => `${row.term}: ${row.meaning}`),
+    studyNotes: supported.map(row => `${row.term}: ${row.meaning}`),
     standards: ['CCSS.L.2.4.a'],
     domain: 'Word knowledge and skills',
+    sourceMode: 'STRICT_SOURCE',
   };
   addSkill(skills, skill);
-  for (const term of known.slice(0, 8)) {
-    const row = VOCAB_GLOSSARY[term];
+
+  for (const row of supported.slice(0, 6)) {
+    const distractors = supported
+      .filter(other => other.term !== row.term)
+      .map(other => other.meaning)
+      .filter(Boolean)
+      .slice(0, 2);
+    if (distractors.length < 2) {
+      coverage.push({
+        topic: `Vocabulary: ${row.term}`,
+        subject: 'Reading / ELA',
+        status: 'SOURCE_INSUFFICIENT',
+        reason: 'A verified definition exists, but there are not enough same-construct verified distractors for a three-choice item.',
+      });
+      continue;
+    }
     questions.push(questionFor(skill, {
-      prompt: `Which meaning best matches the word “${term}”?`,
-      choices: uniqueText([
-        row.meaning,
-        'a place where people buy food',
-        'to move very slowly without stopping',
-      ]).slice(0, 3),
+      prompt: `Which meaning matches the vocabulary word “${row.term}”?`,
+      choices: [row.meaning, ...distractors],
       answer: row.meaning,
-      explanation: `“${term}” means ${row.meaning}.`,
-      hint: `Think about this sentence: ${row.sentence}`,
+      explanation: `The verified source defines “${row.term}” as ${row.meaning}.`,
+      hint: 'Use the verified vocabulary meaning from the current school material.',
+      sourceMode: 'STRICT_SOURCE',
+      supportType: 'explicit',
+      sourceFact: `Verified vocabulary definition: ${row.term} — ${row.meaning}`,
+      dok: 1,
+      difficulty: 2,
     }));
   }
 }
@@ -610,6 +677,8 @@ export function validateGeneratedQuestionSpec(question) {
   if (!text(question.subject)) issues.push('subject-missing');
   if (!text(question.skill)) issues.push('skill-missing');
   if (text(question.prompt).length < 20) issues.push('prompt-too-short');
+  if (text(question.prompt).length > 320) issues.push('prompt-too-long');
+  if (/\b(?:NOT|EXCEPT)\b/.test(question.prompt)) issues.push('negative-stem');
   for (const pattern of FORBIDDEN_QUESTION_PATTERNS) {
     if (pattern.test(question.prompt)) issues.push('forbidden-meta-prompt');
   }
@@ -621,6 +690,13 @@ export function validateGeneratedQuestionSpec(question) {
   }
   if (!text(question.explanation)) issues.push('explanation-missing');
   if (!text(question.hint)) issues.push('hint-missing');
+  if (normalize(question.answer).length >= 4 && normalize(question.hint).includes(normalize(question.answer))) issues.push('hint-leaks-answer');
+  if (!['STRICT_SOURCE', 'CURATED_CONTEXT', 'DETERMINISTIC_TEMPLATE'].includes(question.sourceMode)) issues.push('source-mode-invalid');
+  if (!text(question.provenance)) issues.push('provenance-missing');
+  if (!text(question.contentFingerprint) || !text(question.variantFingerprint) || !text(question.presentationFingerprint)) issues.push('fingerprints-missing');
+  if (!question.evidenceContract || question.evidenceContract.evidenceType !== 'DIRECT_TARGET') issues.push('evidence-contract-invalid');
+  if (!question.choiceDiagnostics || typeof question.choiceDiagnostics !== 'object') issues.push('choice-diagnostics-missing');
+  if (!question.rubric || question.rubric.maxPoints !== 2) issues.push('rubric-invalid');
   if (!Array.isArray(question.standards) || question.standards.length === 0) issues.push('standards-missing');
   if (!text(question.domain)) issues.push('domain-missing');
   if (!Number.isInteger(question.dok) || question.dok < 1 || question.dok > 3) issues.push('dok-invalid');
@@ -629,7 +705,7 @@ export function validateGeneratedQuestionSpec(question) {
 }
 
 function filterQuestions(rawQuestions) {
-  const questions = [];
+  const accepted = [];
   const rejected = [];
   const seen = new Set();
   let duplicatesRemoved = 0;
@@ -645,15 +721,25 @@ function filterQuestions(rawQuestions) {
       continue;
     }
     seen.add(signature);
-    questions.push(question);
+    accepted.push(question);
   }
-  return { questions, rejected, duplicatesRemoved };
+
+  const questions = accepted.map((question, index) => balancedChoices(question, index)).map(question => ({
+    ...question,
+    presentationFingerprint: fingerprint(question.choices.join('|')),
+  }));
+  const answerPositionCounts = [0, 0, 0];
+  for (const question of questions) {
+    const position = question.choices.indexOf(question.answer);
+    if (position >= 0 && position < 3) answerPositionCounts[position] += 1;
+  }
+  return { questions, rejected, duplicatesRemoved, answerPositionCounts };
 }
 
 export function validateGrade2ContentPipeline(pipeline) {
   const issues = [];
   if (!pipeline || typeof pipeline !== 'object') return ['pipeline-missing'];
-  if (pipeline.schemaVersion !== 1) issues.push('schema-version-invalid');
+  if (pipeline.schemaVersion !== 2) issues.push('schema-version-invalid');
   if (!text(pipeline.sourceHash)) issues.push('source-hash-missing');
   if (!Array.isArray(pipeline.skills) || pipeline.skills.length === 0) issues.push('skills-empty');
   if (!Array.isArray(pipeline.questions) || pipeline.questions.length === 0) issues.push('questions-empty');
@@ -682,18 +768,47 @@ export function validateGrade2ContentPipeline(pipeline) {
   }
   if ((pipeline.qa?.rejectedCount || 0) > 0) issues.push('rejected-questions-present');
   if (pipeline.qa?.status !== 'pass') issues.push('qa-status-not-pass');
+
+  const alignmentIssues = validateGrade2PipelineAlignment(pipeline);
+  for (const issue of alignmentIssues) issues.push(`alignment:${issue.id}:${issue.issue}`);
+
+  const positions = pipeline.qa?.answerPositionCounts || [];
+  if (pipeline.questions?.length >= 3 && positions.length === 3) {
+    const spread = Math.max(...positions) - Math.min(...positions);
+    if (spread > 1) issues.push('answer-position-bias');
+  }
   return [...new Set(issues)];
 }
 
 export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash } = {}) {
   const skills = [];
   const rawQuestions = [];
+  const coverage = [];
   detectBaseSkills(pack, skills, rawQuestions);
   detectMath(pack, skills, rawQuestions);
   detectReligion(pack, skills, rawQuestions);
-  detectVocabulary(pack, skills, rawQuestions);
+  detectVocabulary(pack, skills, rawQuestions, coverage);
 
-  const { questions, rejected, duplicatesRemoved } = filterQuestions(rawQuestions);
+  for (const skill of skills) {
+    coverage.push({
+      topic: skill.label,
+      subject: skill.subject,
+      status: 'COVERED',
+      skillId: skill.id,
+    });
+  }
+
+  const spelling = subjectRow(pack, 'Spelling / Handwriting');
+  if ((spelling?.studyNotes || []).some(note => /no word list posted/i.test(note))) {
+    coverage.push({
+      topic: 'Weekly spelling word list',
+      subject: 'Spelling / Handwriting',
+      status: 'SOURCE_INSUFFICIENT',
+      reason: 'The teacher spelling page does not currently provide a usable word list.',
+    });
+  }
+
+  const { questions, rejected, duplicatesRemoved, answerPositionCounts } = filterQuestions(rawQuestions);
   const studyNotesBySubject = {};
   for (const skill of skills) {
     if (!studyNotesBySubject[skill.subject]) studyNotesBySubject[skill.subject] = [];
@@ -703,11 +818,21 @@ export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash } = {
     studyNotesBySubject[key] = uniqueText(studyNotesBySubject[key]);
   }
 
+  const sourceInsufficient = coverage.some(row => row.status === 'SOURCE_INSUFFICIENT' || row.status === 'MISSING');
   const pipeline = {
-    schemaVersion: 1,
+    schemaVersion: 2,
+    generatorVersion: 'grade2-content-pipeline-v2-research-recovery',
     generatedAt: generatedAt || new Date().toISOString(),
     sourceHash: sourceHash || pack?.sourceHash || 'unknown-source',
+    lifecycleStage: 'QA_PASSED',
+    safetyState: sourceInsufficient ? 'SAFE_PARTIAL' : 'READY',
+    sourcePolicy: {
+      runtimeAI: false,
+      modes: ['STRICT_SOURCE', 'CURATED_CONTEXT', 'DETERMINISTIC_TEMPLATE'],
+      failClosed: true,
+    },
     skills,
+    coverage,
     studyNotesBySubject,
     questions,
     qa: {
@@ -715,9 +840,11 @@ export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash } = {
       skillCount: skills.length,
       questionCount: questions.length,
       duplicatesRemoved,
+      answerPositionCounts,
       rejectedCount: rejected.length,
       rejected,
       subjectCoverage: [...new Set(skills.map(skill => skill.subject))].sort(),
+      sourceInsufficientCount: coverage.filter(row => row.status === 'SOURCE_INSUFFICIENT').length,
     },
   };
 
