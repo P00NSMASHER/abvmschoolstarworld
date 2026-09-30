@@ -179,3 +179,22 @@ test('the content pipeline is authoritative for every legacy material generator'
   expect(result.length).toBeGreaterThan(0);
   expect(result.every(question => question.skill === 'sentence-types')).toBe(true);
 });
+
+
+test('Study Games source identity changes when the certified bank fingerprint changes', async ({ page }) => {
+  const result = await page.evaluate(async () => {
+    const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(response => response.json());
+    const packA = structuredClone(envelope.pack);
+    const packB = structuredClone(envelope.pack);
+    packA.contentPipeline = { ...(packA.contentPipeline || {}), bankFingerprint: 'aaaaaaaa' };
+    packB.contentPipeline = { ...(packB.contentPipeline || {}), bankFingerprint: 'bbbbbbbb' };
+    return {
+      a: window.ABVMStudyGames.sourceKeyFromEnvelope(packA, envelope),
+      b: window.ABVMStudyGames.sourceKeyFromEnvelope(packB, envelope),
+    };
+  });
+
+  expect(result.a).not.toBe(result.b);
+  expect(result.a).toContain('bank:aaaaaaaa');
+  expect(result.b).toContain('bank:bbbbbbbb');
+});
