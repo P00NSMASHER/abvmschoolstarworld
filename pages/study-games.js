@@ -1124,17 +1124,34 @@ function loadLearning(){
   }catch{return {}}
 }
 function writeLearning(all){try{localStorage.setItem(LEARNING_STORAGE_KEY,JSON.stringify(all))}catch{};return all}
-function recordLearning(question,correct){
+function recordLearning(question,correct,{attemptCount=1,incorrectCount=correct?0:1,hintCount=0}={}){
   if(!question?.skill)return null;
   const all=loadLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2};
+  const attempts=Math.max(1,Number(attemptCount)||1),incorrect=Math.max(0,Number(incorrectCount)||0),hints=Math.max(0,Number(hintCount)||0);
+  const independent=!!correct&&incorrect===0&&hints===0;
   row.Seen=(Number(row.Seen)||0)+1;
+  row.Attempts=(Number(row.Attempts)||0)+attempts;
+  row.IncorrectAttempts=(Number(row.IncorrectAttempts)||0)+incorrect;
+  row.HintsUsed=(Number(row.HintsUsed)||0)+hints;
   if(correct){
-    row.Correct=(Number(row.Correct)||0)+1;row.ConsecutiveCorrect=(Number(row.ConsecutiveCorrect)||0)+1;row.ConsecutiveWrong=0;
-    if(row.ConsecutiveCorrect>=2)row.TargetDifficulty=3;
+    row.Correct=(Number(row.Correct)||0)+1;
+    if(independent){
+      row.FirstTryCorrect=(Number(row.FirstTryCorrect)||0)+1;
+      row.IndependentCorrect=(Number(row.IndependentCorrect)||0)+1;
+      row.ConsecutiveCorrect=(Number(row.ConsecutiveCorrect)||0)+1;
+      row.ConsecutiveWrong=0;
+      if(row.ConsecutiveCorrect>=2)row.TargetDifficulty=3;
+    }else{
+      row.CorrectAfterRetry=(Number(row.CorrectAfterRetry)||0)+1;
+      if(hints>0)row.HintedCorrect=(Number(row.HintedCorrect)||0)+1;
+      row.ConsecutiveCorrect=0;
+      row.ConsecutiveWrong=0;
+    }
   }else{
     row.Wrong=(Number(row.Wrong)||0)+1;row.ConsecutiveWrong=(Number(row.ConsecutiveWrong)||0)+1;row.ConsecutiveCorrect=0;
     if(row.ConsecutiveWrong>=2)row.TargetDifficulty=2;
   }
+  row.LastResolution={correct:!!correct,independent,attemptCount:attempts,incorrectCount:incorrect,hintCount:hints};
   all[question.skill]=row;writeLearning(all);return row;
 }
 function recordAuxLearning(question,correct,kind){
