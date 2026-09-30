@@ -380,3 +380,40 @@ test('a persisted due Comeback is shown unscored and records RememberedLater aft
   expect(stored.learning.ComebackSeen).toBe(1);
   expect(stored.learning.RememberedLater).toBe(1);
 });
+
+
+test('Study Games honors pipeline authorization for high-frequency word practice', async ({ page }) => {
+  const result = await page.evaluate(async () => {
+    const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(response => response.json());
+
+    const allowed = structuredClone(envelope.pack);
+    allowed.contentPipeline = {
+      schemaVersion: 2,
+      sourceHash: 'sight-authorized',
+      bankFingerprint: 'sightauth1',
+      skills: [{ id: 'high-frequency-word-use', subject: 'Reading / ELA' }],
+      coverage: [{ topic: 'Sight / high-frequency words', subject: 'Reading / ELA', status: 'COVERED', skillId: 'high-frequency-word-use' }],
+      questions: [],
+    };
+    const allowedCatalog = window.ABVMStudyGames.buildCatalog(allowed, { sourceKey: 'sight-authorized' });
+
+    const blocked = structuredClone(envelope.pack);
+    blocked.contentPipeline = {
+      schemaVersion: 2,
+      sourceHash: 'sight-blocked',
+      bankFingerprint: 'sightblock1',
+      skills: [{ id: 'theme', subject: 'Reading / ELA' }],
+      coverage: [{ topic: 'Sight / high-frequency words', subject: 'Reading / ELA', status: 'SOURCE_INSUFFICIENT' }],
+      questions: [],
+    };
+    const blockedCatalog = window.ABVMStudyGames.buildCatalog(blocked, { sourceKey: 'sight-blocked' });
+
+    return {
+      allowedCount: allowedCatalog.questions.filter(question => question.skill === 'high-frequency-word-use').length,
+      blockedCount: blockedCatalog.questions.filter(question => question.skill === 'high-frequency-word-use').length,
+    };
+  });
+
+  expect(result.allowedCount).toBeGreaterThan(0);
+  expect(result.blockedCount).toBe(0);
+});
