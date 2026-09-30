@@ -91,6 +91,11 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
     const types = new Set(pipeline.questions.filter(question => question.skill === skill).map(question => question.questionType));
     assert.deepEqual([...types].sort(), ['direct','reasoning','transfer'], `${skill} must include direct, transfer, and reasoning siblings`);
   }
+  const expandedFamilies = ['sentence-types','consonant-blends','cvc-structure','long-short-a','suffix-ed-ing','theme','visualize','dialogue','subtraction-within-12'];
+  for (const skill of expandedFamilies) {
+    assert.ok((pipeline.qa.questionsPerSkill?.[skill] || 0) >= 8, `${skill} should have at least eight genuine semantic variants`);
+  }
+  assert.ok(pipeline.qa.questionCount >= 100, 'current verified pack should expose at least 100 playable questions after renewable expansion');
   assert.ok((pipeline.qa.questionTypeCounts?.transfer || 0) > 0);
   assert.ok((pipeline.qa.questionTypeCounts?.reasoning || 0) > 0);
   assert.ok((pipeline.qa.dokCounts?.[1] || 0) > 0);
