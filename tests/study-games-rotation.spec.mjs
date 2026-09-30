@@ -10,6 +10,67 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
+test('real catalog builder preserves semantic fingerprints for rotation and privacy', async ({ page }) => {
+  const result = await page.evaluate(() => {
+    const engine = window.ABVMStudyGames;
+    const base = {
+      subject: 'Reading / ELA',
+      skill: 'theme',
+      assessedSkillIds: ['theme'],
+      choices: ['A', 'B', 'C'],
+      answer: 'A',
+      explanation: 'Because A is supported.',
+      hint: 'Use the story clue.',
+      sourceFact: 'Verified current ABVM skill: theme',
+      standards: ['CCSS.RL.2.2'],
+      domain: 'Analyzing literary text',
+      dok: 2,
+      difficulty: 2,
+      questionType: 'direct',
+      choiceDiagnostics: {},
+    };
+    const pack = {
+      contentPipeline: {
+        skills: [{ id: 'theme' }],
+        questions: [
+          { ...base, id: 'pipeline-dup-a', prompt: 'Prompt A', contentFingerprint: 'content-a', variantFingerprint: 'shared-semantic' },
+          { ...base, id: 'pipeline-dup-b', prompt: 'Prompt B', contentFingerprint: 'content-b', variantFingerprint: 'shared-semantic' },
+          { ...base, id: 'pipeline-unique', prompt: 'Prompt C', contentFingerprint: 'content-c', variantFingerprint: 'unique-semantic' },
+        ],
+      },
+      subjects: [],
+    };
+    const catalog = engine.buildCatalog(pack, { sourceKey: 'pipeline-fingerprint-pack' });
+    const pipeline = catalog.questions.filter(q => q.id.startsWith('pipeline-'));
+    const selected = engine.selectQuestions(
+      { sourceKey: catalog.sourceKey, questions: pipeline },
+      { count: 3, seed: 'pipeline-integration' }
+    );
+    selected.forEach(question => engine.markQuestionShown(question, catalog.sourceKey));
+    const serialized = JSON.stringify(
+      Object.entries(localStorage).filter(([key]) => key.startsWith('abvm-study-rotation:v1:'))
+    );
+    return {
+      fingerprints: pipeline.map(q => ({ id:q.id, content:q.contentFingerprint, variant:q.variantFingerprint })),
+      selectedVariants: selected.map(q => q.variantFingerprint),
+      serialized,
+    };
+  });
+
+  expect(result.fingerprints).toEqual([
+    { id:'pipeline-dup-a', content:'content-a', variant:'shared-semantic' },
+    { id:'pipeline-dup-b', content:'content-b', variant:'shared-semantic' },
+    { id:'pipeline-unique', content:'content-c', variant:'unique-semantic' },
+  ]);
+  expect(result.selectedVariants).toHaveLength(2);
+  expect(new Set(result.selectedVariants).size).toBe(2);
+  expect(result.selectedVariants.filter(v => v === 'shared-semantic')).toHaveLength(1);
+  expect(result.serialized).not.toContain('pipeline-dup-a');
+  expect(result.serialized).not.toContain('pipeline-dup-b');
+  expect(result.serialized).not.toContain('shared-semantic');
+  expect(result.serialized).not.toContain('content-a');
+});
+
 test('semantic cooldown prefers unseen variants across sessions and relaxes safely when exhausted', async ({ page }) => {
   const result = await page.evaluate(() => {
     const engine = window.ABVMStudyGames;
