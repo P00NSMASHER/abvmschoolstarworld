@@ -1,5 +1,5 @@
 (()=>{"use strict";
-const VERSION="abvm-starblox-study-engine-v2-research-quality";
+const VERSION="abvm-starblox-study-engine-v3-research-quality";
 const SOURCE_TRANSFORM="skill-only-equivalent-item-v2";
 const MATERIAL_PROVENANCE="original-practice-derived-from-verified-abvm-skills";
 const FALLBACK_PROVENANCE="original-star-aligned-grade2-practice";
@@ -30,6 +30,11 @@ const STANDARD_BY_SKILL=Object.freeze({
   "text-evidence":["CCSS.RL.2.1"],
   "visualize":["CCSS.RL.2.1"],
   "character-motivation":["CCSS.RL.2.3"],
+  "dialogue":["CCSS.RL.2.6"],
+  "character-feelings":["CCSS.RL.2.3"],
+  "main-character":["CCSS.RL.2.1"],
+  "setting":["CCSS.RL.2.1"],
+  "genre":["CCSS.RL.2.10"],
   "religion-application":["ABVM.RELIGION.CURRENT"],
   "addition-within-100":["CCSS.2.NBT.B.5"],
   "subtraction-within-100":["CCSS.2.NBT.B.5"],
@@ -58,6 +63,11 @@ const DOMAIN_BY_SKILL=Object.freeze({
   "text-evidence":"Comprehension / constructing meaning",
   "visualize":"Comprehension / constructing meaning",
   "character-motivation":"Analyzing literary text",
+  "dialogue":"Analyzing literary text",
+  "character-feelings":"Analyzing literary text",
+  "main-character":"Comprehension / constructing meaning",
+  "setting":"Comprehension / constructing meaning",
+  "genre":"Analyzing literary text",
   "religion-application":"Religion",
   "addition-within-100":"Numbers and operations",
   "subtraction-within-100":"Numbers and operations",
@@ -545,8 +555,8 @@ function materialVocabulary(pack,variant,out){
 }
 function materialReading(pack,variant,out){
   const source=subjectText(pack,"Reading / ELA");
-  if(!/visualize|theme/i.test(source))return;
-  const rows=rowFor([
+  if(!source)return;
+  const row=rowFor([
     {
       infer:"Nora zipped her coat, pulled up her hood, and stepped around puddles on the sidewalk.",
       inferQ:"What can you infer about the weather?",inferA:"It is rainy or has just rained.",
@@ -555,7 +565,13 @@ function materialReading(pack,variant,out){
       theme:"Evan's paper airplane failed again and again. He changed one fold each time, tested it, and finally made it glide across the room.",
       themeA:"Keep trying and learn from mistakes.",
       visualize:"Golden leaves spun slowly from the tall tree and covered the path like a crunchy blanket.",
-      visualA:"A path covered with falling autumn leaves."
+      visualA:"A path covered with falling autumn leaves.",
+      dialogue:'“Can I borrow the blue marker?” Maya asked. “Sure,” Eli said, handing it to her.',
+      feelings:"Lena looked at her broken model, sighed, and slowly gathered the pieces.",
+      main:"Jamal wanted to grow a sunflower. He planted a seed, watered it every morning, and measured the stem each Friday.",
+      setting:"Snowflakes tapped the classroom windows while boots and wet mittens dried beside the heater.",
+      cause:"The soccer ball rolled into a puddle, so Priya wiped it dry before the next kick.",
+      genreInfo:"Beavers build dams from branches and mud. Their dams slow moving water and create ponds."
     },
     {
       infer:"Mia carried a flashlight into the dark closet and checked behind every box.",
@@ -565,50 +581,306 @@ function materialReading(pack,variant,out){
       theme:"Jalen could not tie the knot at first. He watched carefully, practiced several times, and then tied it by himself.",
       themeA:"Practice can help you learn a hard skill.",
       visualize:"Tiny raindrops tapped the window while gray clouds covered the sky.",
-      visualA:"A gray, rainy scene outside a window."
+      visualA:"A gray, rainy scene outside a window.",
+      dialogue:'“I found your library book,” Zoe said. “Thank you! I was worried,” Marcus replied.',
+      feelings:"Owen bounced on his toes, grinned at the stage, and whispered, “I can’t wait for my turn.”",
+      main:"Ava trained for the fun run. She practiced after school, chose healthy snacks, and cheered when she crossed the finish line.",
+      setting:"Crickets chirped beside the tent while the moon shone over the dark campground.",
+      cause:"Mateo forgot his umbrella, so his jacket was soaked by the time he reached home.",
+      genreInfo:"A cactus stores water in its thick stem. Spines help protect it from animals."
     }
   ],variant);
-  addTriad(out,"mat-reading-skills",{
-    subject:"Reading / ELA",tier:"material",
-    sourceFact:"Verified current ABVM reading-comprehension skills: visualize and theme",
-    hint:"Use details from the passage, not just one familiar word."
-  },[
-    {
-      skill:"inference",prompt:`Read: “${rows.infer}” ${rows.inferQ}`,
-      choices:shuffled(rows.inferChoices,"read1"+variant),answer:rows.inferA,
-      explanation:`The best inference combines the clues: ${rows.evidence}`,
-      dok:3,difficulty:3,
-      wrongFeedback:"Choose the answer supported by more than one detail in the passage.",
+
+  if(/inference/i.test(source)){
+    add(out,{
+      id:"mat-reading-inference-v"+variant,subject:"Reading / ELA",skill:"inference",tier:"material",
+      prompt:`Read: “${row.infer}” ${row.inferQ}`,
+      choices:shuffled(row.inferChoices,"read-infer"+variant),answer:row.inferA,
+      explanation:`The best inference combines the clues: ${row.evidence}`,
+      hint:"Use more than one clue from the passage.",
+      sourceFact:"Verified current ABVM reading-comprehension skill: inference",dok:3,difficulty:3,
+      wrongFeedback:"Choose the answer supported by the passage details, not a guess with no evidence.",
       misconception:"unsupported-inference"
-    },
-    {
-      skill:"theme",prompt:`Read: “${rows.theme}” What lesson best fits the whole story?`,
-      choices:shuffled([rows.themeA,"Things work only when they are easy.","It is better to quit after one mistake."],"read2"+variant),answer:rows.themeA,
+    });
+  }
+  if(/theme/i.test(source)){
+    add(out,{
+      id:"mat-reading-theme-v"+variant,subject:"Reading / ELA",skill:"theme",tier:"material",
+      prompt:`Read: “${row.theme}” What lesson best fits the whole story?`,
+      choices:shuffled([row.themeA,"Things work only when they are easy.","It is better to quit after one mistake."],"read-theme"+variant),
+      answer:row.themeA,
       explanation:"The character improves by continuing to work and learn from the problem.",
-      dok:3,difficulty:3,
-      wrongFeedback:"Theme is the lesson shown by the whole story, especially the character's choices and result.",
+      hint:"Think about what the character learns across the whole story.",
+      sourceFact:"Verified current ABVM reading-comprehension skill: theme",dok:3,difficulty:3,
+      wrongFeedback:"Theme is the lesson shown by the whole story, not one small detail.",
       misconception:"theme-vs-detail"
-    },
-    {
-      skill:"visualize",prompt:`Read: “${rows.visualize}” Which mental picture best matches the author's details?`,
-      choices:shuffled([rows.visualA,"A bright beach with waves.","A classroom with empty desks."],"read3"+variant),answer:rows.visualA,
+    });
+  }
+  if(/visualize/i.test(source)){
+    add(out,{
+      id:"mat-reading-visualize-v"+variant,subject:"Reading / ELA",skill:"visualize",tier:"material",
+      prompt:`Read: “${row.visualize}” Which mental picture best matches the author's details?`,
+      choices:shuffled([row.visualA,"A bright beach with waves.","A classroom with empty desks."],"read-visualize"+variant),
+      answer:row.visualA,
       explanation:"The describing words create a specific picture in the reader's mind.",
-      dok:2,difficulty:2,
-      wrongFeedback:"Match the picture to the exact describing words in the sentence.",
+      hint:"Match the picture to the exact describing words.",
+      sourceFact:"Verified current ABVM reading-comprehension skill: visualize",dok:2,difficulty:2,
+      wrongFeedback:"Use the passage's describing words rather than adding details that are not there.",
       misconception:"visual-detail-mismatch"
-    }
-  ]);
-  add(out,{
-    id:"mat-text-evidence-v"+variant,subject:"Reading / ELA",skill:"text-evidence",tier:"material",
-    prompt:"Read: “The kitten crouched low, wiggled its back legs, stared at the toy mouse, and sprang forward.” Which detail is the strongest evidence that the kitten was getting ready to pounce?",
-    choices:shuffled(["It crouched low and wiggled its back legs.","It stared at the toy mouse.","The toy mouse was in front of it."],"evidence"+variant),
-    answer:"It crouched low and wiggled its back legs.",
-    explanation:"Several details relate to the toy, but crouching and wiggling the back legs most directly show preparation to pounce.",
-    hint:"Choose the detail that most directly proves the idea.",
-    sourceFact:"Verified current ABVM reading-comprehension work",dok:3,difficulty:3,
-    wrongFeedback:"Pick the detail that is strongest evidence, not merely related to the topic.",
-    misconception:"related-detail-not-best-evidence"
-  });
+    });
+  }
+  if(/text evidence|evidence/i.test(source)){
+    add(out,{
+      id:"mat-reading-evidence-v"+variant,subject:"Reading / ELA",skill:"text-evidence",tier:"material",
+      prompt:"Read: “The kitten crouched low, wiggled its back legs, stared at the toy mouse, and sprang forward.” Which detail is the strongest evidence that the kitten was getting ready to pounce?",
+      choices:shuffled(["It crouched low and wiggled its back legs.","It stared at the toy mouse.","The toy mouse was in front of it."],"read-evidence"+variant),
+      answer:"It crouched low and wiggled its back legs.",
+      explanation:"Crouching and wiggling the back legs most directly show preparation to pounce.",
+      hint:"Choose the detail that most directly proves the idea.",
+      sourceFact:"Verified current ABVM reading-comprehension skill: text evidence",dok:3,difficulty:3,
+      wrongFeedback:"Pick the strongest evidence, not a detail that is only related to the topic.",
+      misconception:"related-detail-not-best-evidence"
+    });
+  }
+  if(/dialogue/i.test(source)){
+    addTriad(out,"mat-reading-dialogue",{
+      subject:"Reading / ELA",skill:"dialogue",tier:"material",
+      sourceFact:"Verified current ABVM reading-comprehension skill: dialogue",
+      hint:"Dialogue is the exact speech of characters, usually shown with quotation marks."
+    },[
+      {
+        prompt:`Read: ${row.dialogue} Which words are dialogue?`,
+        choices:shuffled([
+          variant===1?"“Can I borrow the blue marker?”":"“I found your library book,”",
+          variant===1?"Maya asked.":"Zoe said.",
+          variant===1?"handing it to her":"library book"
+        ],"dialogue1"+variant),
+        answer:variant===1?"“Can I borrow the blue marker?”":"“I found your library book,”",
+        explanation:"The quoted words are the exact words a character says.",
+        dok:1,difficulty:2,
+        wrongFeedback:"Look for the words inside quotation marks.",
+        misconception:"dialogue-vs-narration"
+      },
+      {
+        prompt:`Read: ${row.dialogue} What does the second speaker's reply show?`,
+        choices:shuffled([
+          variant===1?"Eli is willing to share.":"Marcus feels relieved and thankful.",
+          variant===1?"Eli wants to hide the marker.":"Marcus is angry that the book was found.",
+          variant===1?"Maya refuses to speak.":"Zoe does not know Marcus."
+        ],"dialogue2"+variant),
+        answer:variant===1?"Eli is willing to share.":"Marcus feels relieved and thankful.",
+        explanation:"A character's spoken words can reveal thoughts, feelings, and choices.",
+        dok:2,difficulty:2,
+        wrongFeedback:"Use what the character actually says to infer the meaning.",
+        misconception:"dialogue-meaning-missed"
+      },
+      {
+        prompt:"Why do quotation marks help a reader understand dialogue?",
+        choices:shuffled(["They show the exact words a character says.","They show where a story takes place.","They tell the reader which word is a noun."],"dialogue3"+variant),
+        answer:"They show the exact words a character says.",
+        explanation:"Quotation marks separate a character's spoken words from narration.",
+        dok:3,difficulty:3,
+        wrongFeedback:"Think about the job quotation marks do around spoken words.",
+        misconception:"quotation-mark-purpose"
+      }
+    ]);
+  }
+  if(/character feelings|feelings/i.test(source)){
+    addTriad(out,"mat-reading-feelings",{
+      subject:"Reading / ELA",skill:"character-feelings",tier:"material",
+      sourceFact:"Verified current ABVM reading-comprehension skill: character feelings",
+      hint:"Use a character's actions, words, and body language as clues."
+    },[
+      {
+        prompt:`Read: “${row.feelings}” How does the character most likely feel?`,
+        choices:shuffled(
+          variant===1?["disappointed","proud","silly"]:["excited","bored","angry"],
+          "feel1"+variant
+        ),
+        answer:variant===1?"disappointed":"excited",
+        explanation:"The character's actions and words are clues to the feeling.",
+        dok:2,difficulty:2,
+        wrongFeedback:"Point to an action or spoken clue that matches the feeling.",
+        misconception:"feeling-without-evidence"
+      },
+      {
+        prompt:`Which detail from “${row.feelings}” is the strongest clue to the character's feeling?`,
+        choices:shuffled(
+          variant===1?["She sighed.","She gathered the pieces.","The model had pieces."]:["He grinned and said he could not wait.","He was near a stage.","It was his turn later."],
+          "feel2"+variant
+        ),
+        answer:variant===1?"She sighed.":"He grinned and said he could not wait.",
+        explanation:"The strongest clue directly shows emotion through an action or words.",
+        dok:3,difficulty:3,
+        wrongFeedback:"Choose the detail that most directly reveals emotion.",
+        misconception:"weak-feeling-evidence"
+      },
+      {
+        prompt:"What is the best way to figure out a character's feelings when the feeling is not named?",
+        choices:shuffled(["Use the character's actions, words, and reactions.","Count the sentences in the paragraph.","Look only at the story title."],"feel3"+variant),
+        answer:"Use the character's actions, words, and reactions.",
+        explanation:"Readers infer feelings from evidence in what a character does and says.",
+        dok:3,difficulty:3,
+        wrongFeedback:"Feelings are inferred from evidence about the character.",
+        misconception:"character-evidence-strategy"
+      }
+    ]);
+  }
+  if(/main character/i.test(source)){
+    addTriad(out,"mat-reading-main-character",{
+      subject:"Reading / ELA",skill:"main-character",tier:"material",
+      sourceFact:"Verified current ABVM reading-comprehension skill: main character",
+      hint:"The main character is the person or animal the story focuses on most."
+    },[
+      {
+        prompt:`Read: “${row.main}” Who is the main character?`,
+        choices:shuffled(variant===1?["Jamal","the sunflower","Friday"]:["Ava","the finish line","after school"],"main1"+variant),
+        answer:variant===1?"Jamal":"Ava",
+        explanation:"The passage focuses on that character's goal and actions.",
+        dok:1,difficulty:2,
+        wrongFeedback:"Choose the person whose actions drive the passage.",
+        misconception:"character-vs-object"
+      },
+      {
+        prompt:`Read: “${row.main}” Which detail best proves who the main character is?`,
+        choices:shuffled(
+          variant===1?["Jamal performs several actions across the passage.","A sunflower is mentioned once.","Friday is a day of the week."]:["Ava performs several actions across the passage.","A finish line is mentioned.","Snacks are food."],
+          "main2"+variant
+        ),
+        answer:variant===1?"Jamal performs several actions across the passage.":"Ava performs several actions across the passage.",
+        explanation:"The main character is usually the one whose goal, choices, and actions the text follows.",
+        dok:2,difficulty:2,
+        wrongFeedback:"Look for the character connected to most of the important actions.",
+        misconception:"main-character-evidence"
+      },
+      {
+        prompt:"Which clue is most useful when identifying a main character?",
+        choices:shuffled(["The text follows that character's actions and problem.","The character has the longest name.","The character appears in the final word."],"main3"+variant),
+        answer:"The text follows that character's actions and problem.",
+        explanation:"Main characters are central to the important events, goal, or problem.",
+        dok:3,difficulty:3,
+        wrongFeedback:"Use the role in the story, not an unrelated feature of the name.",
+        misconception:"main-character-strategy"
+      }
+    ]);
+  }
+  if(/setting/i.test(source)){
+    addTriad(out,"mat-reading-setting",{
+      subject:"Reading / ELA",skill:"setting",tier:"material",
+      sourceFact:"Verified current ABVM reading-comprehension skill: setting",
+      hint:"Setting tells where and when a story happens."
+    },[
+      {
+        prompt:`Read: “${row.setting}” Which setting best matches the passage?`,
+        choices:shuffled(
+          variant===1?["A classroom on a snowy day.","A beach on a hot afternoon.","A kitchen during breakfast."]:["A campground at night.","A gym during lunch.","A city street at noon."],
+          "setting1"+variant
+        ),
+        answer:variant===1?"A classroom on a snowy day.":"A campground at night.",
+        explanation:"Place and time clues together identify the setting.",
+        dok:2,difficulty:2,
+        wrongFeedback:"Use both where the events happen and when they happen.",
+        misconception:"setting-clue-missed"
+      },
+      {
+        prompt:`Which words from “${row.setting}” give the strongest setting clues?`,
+        choices:shuffled(
+          variant===1?["classroom windows and snowflakes","boots and mittens","tapped and dried"]:["tent, moon, and dark campground","crickets chirped","beside and over"],
+          "setting2"+variant
+        ),
+        answer:variant===1?"classroom windows and snowflakes":"tent, moon, and dark campground",
+        explanation:"Those words directly identify place and time.",
+        dok:3,difficulty:3,
+        wrongFeedback:"Choose details that tell where and when, not just any description.",
+        misconception:"setting-vs-description"
+      },
+      {
+        prompt:"What two ideas make up a story's setting?",
+        choices:shuffled(["where and when","who and why","problem and solution"],"setting3"+variant),
+        answer:"where and when",
+        explanation:"Setting describes the place and time of a story.",
+        dok:1,difficulty:2,
+        wrongFeedback:"Think about location and time.",
+        misconception:"setting-definition"
+      }
+    ]);
+  }
+  if(/cause\s*(?:and|&|\/)\s*effect|cause.?effect/i.test(source)){
+    addTriad(out,"mat-reading-cause-effect",{
+      subject:"Reading / ELA",skill:"cause-effect",tier:"material",
+      sourceFact:"Verified current ABVM reading-comprehension skill: cause and effect",
+      hint:"The cause tells why something happened; the effect tells what happened because of it."
+    },[
+      {
+        prompt:`Read: “${row.cause}” What is the cause?`,
+        choices:shuffled(
+          variant===1?["The ball rolled into a puddle.","Priya wiped the ball.","There was a next kick."]:["Mateo forgot his umbrella.","His jacket was soaked.","He reached home."],
+          "cause1"+variant
+        ),
+        answer:variant===1?"The ball rolled into a puddle.":"Mateo forgot his umbrella.",
+        explanation:"The cause is the event that makes the later event happen.",
+        dok:2,difficulty:2,
+        wrongFeedback:"Ask which event happened first and led to the result.",
+        misconception:"cause-effect-reversed"
+      },
+      {
+        prompt:`Read: “${row.cause}” What is the effect?`,
+        choices:shuffled(
+          variant===1?["Priya wiped the ball dry.","The ball rolled into a puddle.","The game had a soccer ball."]:["Mateo's jacket was soaked.","Mateo forgot his umbrella.","Mateo walked home."],
+          "cause2"+variant
+        ),
+        answer:variant===1?"Priya wiped the ball dry.":"Mateo's jacket was soaked.",
+        explanation:"The effect is what happens because of the cause.",
+        dok:2,difficulty:2,
+        wrongFeedback:"Look for the result that happened because of the earlier event.",
+        misconception:"effect-cause-reversed"
+      },
+      {
+        prompt:"Which question helps a reader find a cause?",
+        choices:shuffled(["Why did this happen?","Who is the tallest character?","How many words are in the title?"],"cause3"+variant),
+        answer:"Why did this happen?",
+        explanation:"Asking why points to the event or reason that caused the effect.",
+        dok:3,difficulty:3,
+        wrongFeedback:"Cause explains why an effect happened.",
+        misconception:"cause-strategy"
+      }
+    ]);
+  }
+  if(/genre/i.test(source)){
+    addTriad(out,"mat-reading-genre",{
+      subject:"Reading / ELA",skill:"genre",tier:"material",
+      sourceFact:"Verified current ABVM reading-comprehension skill: genre",
+      hint:"Use the text's purpose, structure, and features to identify its type."
+    },[
+      {
+        prompt:`Read: “${row.genreInfo}” Which genre best describes this passage?`,
+        choices:shuffled(["informational text","fantasy story","poem"],"genre1"+variant),
+        answer:"informational text",
+        explanation:"The passage gives facts about a real topic.",
+        dok:2,difficulty:2,
+        wrongFeedback:"Decide whether the text mainly gives facts, tells an invented story, or uses poem structure.",
+        misconception:"genre-feature-missed"
+      },
+      {
+        prompt:"Which clue most strongly suggests a passage is informational text?",
+        choices:shuffled(["It explains facts about a real topic.","It has talking dragons and magic.","It is written in lines and stanzas."],"genre2"+variant),
+        answer:"It explains facts about a real topic.",
+        explanation:"Informational text is written to explain or teach facts about real topics.",
+        dok:2,difficulty:2,
+        wrongFeedback:"Use the text's purpose and features.",
+        misconception:"genre-purpose-confusion"
+      },
+      {
+        prompt:"A story has made-up characters, a problem, and a solution. Which genre is the best fit?",
+        choices:shuffled(["fiction","informational text","dictionary entry"],"genre3"+variant),
+        answer:"fiction",
+        explanation:"Made-up characters and a story problem are common fiction features.",
+        dok:3,difficulty:3,
+        wrongFeedback:"Match the text features to the genre.",
+        misconception:"genre-feature-confusion"
+      }
+    ]);
+  }
 }
 function materialReligion(pack,variant,out){
   const source=subjectText(pack,"Religion");
