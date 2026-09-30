@@ -16,7 +16,6 @@ const PACK_URL="./data/study-pack.json";
 const PACK_REFRESH_MS=5*60*1000;
 const SCHOOL_LOGO_HTML='<img class="school-mark" src="./assets/abvm-app-icon-192.png" alt="Assumption BVM Catholic School logo">';
 const GAME_LEARNING_KEY="abvm-study-learning:v2";
-const GAME_COMEBACK_KEY="abvm-study-comebacks:v1";
 const GAME_TYPE_LABELS=Object.freeze({
   direct:"Direct practice",
   transfer:"Try it a new way",
@@ -513,99 +512,31 @@ function recordGameLearning(question,correct){
   storageSet(GAME_LEARNING_KEY,JSON.stringify(all));
   return row;
 }
-function recordGameSupport(question,correct){
+function recordSpecialGameLearning(question,correct,kind){
   if(!question?.skill)return null;
   const all=loadGameLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2};
-  row.SupportSeen=(Number(row.SupportSeen)||0)+1;
-  if(correct)row.SupportedCorrect=(Number(row.SupportedCorrect)||0)+1;
-  else row.SupportedWrong=(Number(row.SupportedWrong)||0)+1;
-  all[question.skill]=row;
-  storageSet(GAME_LEARNING_KEY,JSON.stringify(all));
-  return row;
+  if(kind==="support"){row.SupportSeen=(Number(row.SupportSeen)||0)+1;correct?row.SupportedCorrect=(Number(row.SupportedCorrect)||0)+1:row.SupportedWrong=(Number(row.SupportedWrong)||0)+1;}
+  else{row.ComebackSeen=(Number(row.ComebackSeen)||0)+1;correct?row.RememberedLater=(Number(row.RememberedLater)||0)+1:row.ComebackWrong=(Number(row.ComebackWrong)||0)+1;}
+  all[question.skill]=row;storageSet(GAME_LEARNING_KEY,JSON.stringify(all));return row;
 }
-
-function recordGameComeback(question,correct){
-  if(!question?.skill)return null;
-  const all=loadGameLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2};
-  row.ComebackSeen=(Number(row.ComebackSeen)||0)+1;
-  if(correct)row.RememberedLater=(Number(row.RememberedLater)||0)+1;
-  else row.ComebackWrong=(Number(row.ComebackWrong)||0)+1;
-  all[question.skill]=row;
-  storageSet(GAME_LEARNING_KEY,JSON.stringify(all));
-  return row;
-}
-function loadGameComebacks(){
-  try{
-    const parsed=JSON.parse(storageGet(GAME_COMEBACK_KEY)||"[]");
-    return Array.isArray(parsed)?parsed.filter(row=>row&&row.sourceKey&&row.questionId&&row.skill):[];
-  }catch{return []}
-}
-function saveGameComebacks(rows){
-  const safe=(Array.isArray(rows)?rows:[]).slice(-20);
-  storageSet(GAME_COMEBACK_KEY,JSON.stringify(safe));
-  return safe;
-}
+function recordGameSupport(question,correct){return recordSpecialGameLearning(question,correct,"support")}
+function recordGameComeback(question,correct){return recordSpecialGameLearning(question,correct,"comeback")}
 function currentGameSourceKey(){return String(studyGameCatalog()?.sourceKey||"current")}
 function scheduleGameComeback(origin){
-  const engine=studyGameEngine(),catalog=studyGameCatalog();
-  if(!origin||!engine?.comebackQuestion||!catalog)return null;
-  const sourceKey=currentGameSourceKey(),rows=loadGameComebacks();
-  if(rows.some(row=>row.sourceKey===sourceKey&&row.originQuestionId===origin.id))return null;
-  const seenIds=gameState.questions.slice(0,Math.max(0,gameState.index+1)).map(question=>question.id);
-  const sibling=engine.comebackQuestion(catalog,origin,{
-    seed:sourceKey+"|comeback|"+String(origin.id||"item")+"|"+String(gameState.learningRow?.Seen||0),
-    seenIds
-  });
-  if(!sibling)return null;
-  const key=sourceKey+"|"+String(origin.id||"origin")+"|"+String(sibling.id||"sibling");
-  rows.push({key,sourceKey,questionId:sibling.id,originQuestionId:origin.id,skill:origin.skill,remaining:2});
-  saveGameComebacks(rows);
-  return sibling;
+  const engine=studyGameEngine(),catalog=studyGameCatalog(),sourceKey=currentGameSourceKey();
+  return engine?.scheduleComeback?.(catalog,origin,{sourceKey,remaining:2,seenIds:gameState.questions.slice(0,gameState.index+1).map(q=>q.id),seed:sourceKey+"|comeback|"+String(origin?.id||"item")})||null;
 }
-function tickGameComebacks(){
-  const sourceKey=currentGameSourceKey(),rows=loadGameComebacks();
-  let changed=false;
-  for(const row of rows){
-    if(row.sourceKey!==sourceKey||Number(row.remaining)<=0)continue;
-    row.remaining=Math.max(0,Number(row.remaining)-1);
-    changed=true;
-  }
-  if(changed)saveGameComebacks(rows);
-}
-function markGameComebacksNextSession(){
-  const sourceKey=currentGameSourceKey(),rows=loadGameComebacks();
-  let changed=false;
-  for(const row of rows){
-    if(row.sourceKey===sourceKey&&Number(row.remaining)>0){row.remaining=0;changed=true;}
-  }
-  if(changed)saveGameComebacks(rows);
-}
+function tickGameComebacks(){studyGameEngine()?.tickComebacks?.(currentGameSourceKey())}
+function markGameComebacksNextSession(){studyGameEngine()?.deferComebacksToNextSession?.(currentGameSourceKey())}
 function activateDueGameComeback(){
-  const catalog=studyGameCatalog(),sourceKey=currentGameSourceKey(),rows=loadGameComebacks();
-  const due=rows.find(row=>row.sourceKey===sourceKey&&Number(row.remaining)<=0);
+  const due=studyGameEngine()?.dueComeback?.(studyGameCatalog(),currentGameSourceKey());
   if(!due)return false;
-  const question=(catalog?.questions||[]).find(item=>item.id===due.questionId);
-  if(!question){
-    saveGameComebacks(rows.filter(row=>row!==due));
-    return false;
-  }
-  gameState.comebackMode=true;
-  gameState.comebackQuestion=question;
-  gameState.comebackKey=due.key;
-  gameState.comebackCorrect=null;
-  gameState.selectedIndex=null;
-  gameState.answered=false;
-  gameState.hintOpen=false;
-  gameState.learningRow=null;
+  Object.assign(gameState,{comebackMode:true,comebackQuestion:due.question,comebackKey:due.row.key,comebackCorrect:null,selectedIndex:null,answered:false,hintOpen:false,learningRow:null});
   return true;
 }
 function clearActiveGameComeback(){
-  const key=gameState.comebackKey,rows=loadGameComebacks();
-  if(key)saveGameComebacks(rows.filter(row=>row.key!==key));
-  gameState.comebackMode=false;
-  gameState.comebackQuestion=null;
-  gameState.comebackKey=null;
-  gameState.comebackCorrect=null;
+  studyGameEngine()?.resolveComeback?.(gameState.comebackKey);
+  Object.assign(gameState,{comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null});
 }
 function activeGameQuestion(){
   if(gameState.comebackMode)return gameState.comebackQuestion;
