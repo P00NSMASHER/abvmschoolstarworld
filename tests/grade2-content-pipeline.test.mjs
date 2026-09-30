@@ -97,9 +97,11 @@ test('generated study notes are merged into the matching Study subjects without 
   mergeGrade2StudyNotes(pack, pipeline);
 
   const reading = pack.subjects.find(row => row.subject === 'Reading / ELA');
+  const spelling = pack.subjects.find(row => row.subject === 'Spelling / Handwriting');
   assert.ok(reading.studyNotes.includes('Keep this teacher note.'));
-  assert.ok(reading.studyNotes.some(note => /short a words/i.test(note)));
+  assert.ok(spelling.studyNotes.some(note => /short a words/i.test(note)));
   assert.equal(new Set(reading.studyNotes.map(note => note.toLowerCase())).size, reading.studyNotes.length);
+  assert.equal(new Set(spelling.studyNotes.map(note => note.toLowerCase())).size, spelling.studyNotes.length);
 });
 
 test('bad generated question specs are rejected before publication', () => {
