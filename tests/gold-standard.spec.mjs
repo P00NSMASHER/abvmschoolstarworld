@@ -1,4 +1,5 @@
 import {test,expect} from "@playwright/test";
+import {readPwaVersions} from "./pwa-test-helpers.mjs";
 
 async function openTab(page,label){
   await page.getByRole("button",{name:label,exact:true}).click();
@@ -284,8 +285,8 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   await expect(page.locator(".games-screen .app-header")).toHaveCount(0);
   await expect(page.locator(".games-screen .freshness")).toHaveCount(0);
 
-  const sw=await (await page.request.get("/sw.js")).text();
-  expect(sw).toContain("v92-css-residue");
+  const {sw,cacheName}=await readPwaVersions(page.request);
+  expect(cacheName).toMatch(/^abvm-grade2-parent-companion-v\d+-[a-z-]+$/);
   expect(sw).not.toContain("hero-today.webp");
   expect(sw).not.toContain("calendar/picture-day.svg");
   const cached=[...sw.matchAll(/"\.\/[^\"]+"/g)];
