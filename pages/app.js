@@ -514,7 +514,7 @@ function startStudyGame(modeId){
   if(!engine||!catalog)return;
   const questions=engine.selectQuestions(catalog,{subjects:mode.subjects,preferredSkills:mode.preferredSkills||[],count:mode.count,seed:nextGameSessionSeed(mode.id),skillStats:loadGameLearning()});
   gameState={screen:"play",mode:mode.id,questions,index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,learningRow:null};
-  renderGames();bindScreen();
+  renderGames();
 }
 function answerStudyGame(index){
   if(gameState.screen!=="play"||gameState.answered)return;
@@ -528,7 +528,7 @@ function answerStudyGame(index){
     gameState.streak++;
     gameState.bestStreak=Math.max(gameState.bestStreak,gameState.streak);
   }else gameState.streak=0;
-  renderGames();bindScreen();
+  renderGames();
 }
 function advanceStudyGame(){
   if(!gameState.answered)return;
@@ -542,10 +542,10 @@ function advanceStudyGame(){
     gameState.hintOpen=false;
     gameState.learningRow=null;
   }
-  renderGames();bindScreen();
+  renderGames();
 }
-function leaveStudyGame(){gameState.screen="menu";renderGames();bindScreen()}
-function toggleStudyHint(){if(gameState.screen==="play"&&!gameState.answered){gameState.hintOpen=!gameState.hintOpen;renderGames();bindScreen()}}
+function leaveStudyGame(){gameState.screen="menu";renderGames()}
+function toggleStudyHint(){if(gameState.screen==="play"&&!gameState.answered){gameState.hintOpen=!gameState.hintOpen;renderGames()}}
 function gameMenuHtml(catalog){
   const modes=STUDY_GAME_MODES;
   return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Pick a game and start</h2><span>Questions prioritize this week’s school skills and adjust as you practice.</span></div></section>'+
@@ -589,7 +589,7 @@ function renderGames(){
   const engine=studyGameEngine();
   if(!engine){
     stack().innerHTML='<div class="screen games-screen game-loading" role="region" aria-label="Study games"><section class="game-empty"><span class="loading-star">★</span><h2>Getting Study Games ready…</h2><p>One moment.</p></section></div>';
-    ensureStudyGameEngine().then(()=>{studyGameCatalogCache=null;renderGames();bindScreen();}).catch(()=>{stack().innerHTML='<div class="screen games-screen"><section class="error-card"><p>STUDY GAMES</p><h1>Games could not be loaded</h1><span>Check your connection and try again.</span></section></div>';});
+    ensureStudyGameEngine().then(()=>{studyGameCatalogCache=null;renderGames();}).catch(()=>{stack().innerHTML='<div class="screen games-screen"><section class="error-card"><p>STUDY GAMES</p><h1>Games could not be loaded</h1><span>Check your connection and try again.</span></section></div>';});
     return;
   }
   const catalog=studyGameCatalog();
