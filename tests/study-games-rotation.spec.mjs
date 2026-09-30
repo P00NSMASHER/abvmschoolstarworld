@@ -301,4 +301,5 @@ test('rotation history is source-scoped and stores no question text or answer co
   expect(result.serialized).not.toContain('PRIVATE ANSWER');
   expect(result.serialized).not.toContain('private-question-');
   expect(result.serialized).not.toContain('private-semantic-');
+  expect(result.serialized).not.toContain('"at"');
 });

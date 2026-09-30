@@ -1043,11 +1043,11 @@ function saveRotation(sourceKey,rows){
 }
 function rememberRotation(sourceKey,selected){
   if(!sourceKey||!Array.isArray(selected)||!selected.length)return;
-  const current=loadRotation(sourceKey).recent,now=Date.now();
+  const current=loadRotation(sourceKey).recent;
   for(const question of selected){
     const v=semanticRotationKey(question);if(!v)continue;
     const prior=current.findIndex(row=>row.v===v);if(prior>=0)current.splice(prior,1);
-    current.push({v,skill:String(question.skill||""),type:String(question.questionType||""),at:now});
+    current.push({v,skill:String(question.skill||""),type:String(question.questionType||"")});
   }
   saveRotation(sourceKey,current);
 }
