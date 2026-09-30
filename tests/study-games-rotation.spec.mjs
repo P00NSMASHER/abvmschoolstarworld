@@ -115,7 +115,7 @@ test('unshown selected questions do not enter the cooldown history', async ({ pa
     const catalog = { sourceKey: 'seen-only-pack', questions };
     const first = engine.selectQuestions(catalog, { count: 3, seed: 'first' });
     engine.markQuestionShown(first[0], catalog.sourceKey);
-    const second = engine.selectQuestions(catalog, { count: 3, seed: 'second' });
+    const second = engine.selectQuestions(catalog, { count: 5, seed: 'second' });
     return {
       shown: first[0].variantFingerprint,
       unshown: first.slice(1).map(q => q.variantFingerprint),
@@ -123,8 +123,9 @@ test('unshown selected questions do not enter the cooldown history', async ({ pa
     };
   });
 
+  expect(result.second).toHaveLength(5);
   expect(result.second).not.toContain(result.shown);
-  expect(result.unshown.some(v => result.second.includes(v))).toBe(true);
+  expect(result.unshown.every(v => result.second.includes(v))).toBe(true);
 });
 
 test('three or more eligible skills use a dynamic cap of two and avoid back-to-back skills', async ({ page }) => {
