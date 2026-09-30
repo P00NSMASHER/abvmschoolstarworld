@@ -1058,7 +1058,43 @@ function comebackQuestion(catalog,current,{seed="comeback",seenIds=[]}={}){
   return candidates[0]||null;
 }
 
+const LEARNING_STORAGE_KEY="abvm-study-learning:v2";
 const COMEBACK_STORAGE_KEY="abvm-study-comebacks:v1";
+function loadLearning(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(LEARNING_STORAGE_KEY)||"{}");
+    return parsed&&typeof parsed==="object"?parsed:{};
+  }catch{return {}}
+}
+function writeLearning(all){try{localStorage.setItem(LEARNING_STORAGE_KEY,JSON.stringify(all))}catch{};return all}
+function recordLearning(question,correct){
+  if(!question?.skill)return null;
+  const all=loadLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2};
+  row.Seen=(Number(row.Seen)||0)+1;
+  if(correct){
+    row.Correct=(Number(row.Correct)||0)+1;row.ConsecutiveCorrect=(Number(row.ConsecutiveCorrect)||0)+1;row.ConsecutiveWrong=0;
+    if(row.ConsecutiveCorrect>=2)row.TargetDifficulty=3;
+  }else{
+    row.Wrong=(Number(row.Wrong)||0)+1;row.ConsecutiveWrong=(Number(row.ConsecutiveWrong)||0)+1;row.ConsecutiveCorrect=0;
+    if(row.ConsecutiveWrong>=2)row.TargetDifficulty=2;
+  }
+  all[question.skill]=row;writeLearning(all);return row;
+}
+function recordAuxLearning(question,correct,kind){
+  if(!question?.skill)return null;
+  const all=loadLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2};
+  if(kind==="support"){row.SupportSeen=(Number(row.SupportSeen)||0)+1;correct?row.SupportedCorrect=(Number(row.SupportedCorrect)||0)+1:row.SupportedWrong=(Number(row.SupportedWrong)||0)+1;}
+  else{row.ComebackSeen=(Number(row.ComebackSeen)||0)+1;correct?row.RememberedLater=(Number(row.RememberedLater)||0)+1:row.ComebackWrong=(Number(row.ComebackWrong)||0)+1;}
+  all[question.skill]=row;writeLearning(all);return row;
+}
+function recordSupport(question,correct){return recordAuxLearning(question,correct,"support")}
+function recordComeback(question,correct){return recordAuxLearning(question,correct,"comeback")}
+function nextSessionSeed(sourceKey,modeId){
+  const key="abvm-study-games-session:"+String(sourceKey||"current")+":"+String(modeId||"quick");
+  let next=1;
+  try{next=(Number(localStorage.getItem(key))||0)+1;localStorage.setItem(key,String(next))}catch{}
+  return String(sourceKey||"current")+"|"+String(modeId||"quick")+"|"+next;
+}
 function readComebacks(){
   try{
     const parsed=JSON.parse(localStorage.getItem(COMEBACK_STORAGE_KEY)||"[]");
@@ -1121,6 +1157,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,selectQuestions,supportQuestion,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,sourceKeyFromEnvelope,targetDifficultyFor,testReadyMode
+  buildCatalog,validateCatalog,selectQuestions,supportQuestion,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,sourceKeyFromEnvelope,targetDifficultyFor,testReadyMode
 });
 })();
