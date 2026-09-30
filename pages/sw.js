@@ -1,9 +1,9 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v92-css-residue";
+const CACHE = "abvm-grade2-parent-companion-v93-live-acceptance-fixes";
 const STATIC_SHELL = [
   "./index.html",
-  "./styles.css?v=92",
-  "./app.js?v=91",
+  "./styles.css?v=93",
+  "./app.js?v=93",
   "./study-games.js?v=84",
   "./manifest.webmanifest",
   "./assets/abvm-app-icon-180.png",
@@ -48,7 +48,11 @@ function networkFirst(request,fallback="./index.html",event=null){
   if(event)event.waitUntil(persist.catch(()=>{}));
   return network.then(async response=>{
     if(response?.ok)return response;
-    return (await cachedFallback(request,fallback))||response||Response.error();
+    const cached=await cachedFallback(request,fallback);
+    if(!cached)return response||Response.error();
+    const headers=new Headers(cached.headers);
+    headers.set("X-ABVM-Cache-Fallback","1");
+    return new Response(await cached.blob(),{status:cached.status,statusText:cached.statusText,headers});
   });
 }
 function staleWhileRevalidate(request,event){
