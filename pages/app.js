@@ -265,6 +265,15 @@ function assessmentSkillIds(test=currentWeekTest()){
   if(/consonant blend/.test(label))add("consonant-blends");
   if(/cvc/.test(label))add("cvc-structure");
   if(/-ed|-ing|ed\b.*ing\b/.test(label))add("suffix-ed-ing");
+  if(/theme/.test(label))add("theme");
+  if(/visualiz/.test(label))add("visualize");
+  if(/dialogue/.test(label))add("dialogue");
+  if(/infer/.test(label))add("inference");
+  if(/cause.*effect|effect.*cause/.test(label))add("cause-effect");
+  if(/setting/.test(label))add("setting");
+  if(/genre/.test(label))add("genre");
+  if(/character/.test(label)&&/feeling/.test(label))add("character-feelings");
+  if(/main character/.test(label))add("main-character");
   if(/subtraction/.test(label)){
     const exact=[...available].find(id=>/^subtraction-within-\d+$/.test(id));
     if(exact)add(exact);
