@@ -1070,6 +1070,9 @@ function teachCardFor(question){
     "religion-creation-care":["Choose the action that protects rather than harms creation.","Caring for a park is an example of caring for creation."],
     "religion-image-likeness":["Connect the lesson to thinking, choosing, and loving.","Use the current lesson wording rather than guessing about a person’s character."],
     "religion-jesus-savior":["Use the current lesson’s Savior and grace statement.","Answer from the Religion lesson, not from an unrelated fact."],
+    "religion-disciples":["Use the current lesson’s definition of disciple.","A disciple is described as a friend and follower of Jesus."],
+    "religion-mary-church":["Use the exact titles for Mary in the current lesson.","The lesson identifies Mary as Jesus’ mother and the mother of the Church."],
+    "religion-seed-new-life":["Connect the seed comparison to the lesson’s phrase about new life in grace.","The lesson compares a seed producing new growth after dying with Jesus giving new life in grace."],
     "religion-gifts-choices":["Apply the current lesson by choosing a helpful, responsible use of a gift.","The best example should clearly serve or help another person."],
     "religion-five-senses":["Connect the five senses with noticing creation.","Seeing, hearing, smelling, tasting, and touching help us notice the world around us."]
   };
