@@ -5,12 +5,41 @@ const app=readFileSync(new URL("../pages/app.js",import.meta.url),"utf8");
 const fail=message=>{throw new Error(message)};
 
 const deadSelectors=[
-  ".quest-launcher",".mission-picker",".school-star-avatar",".avatar-studio",
-  ".shop-grid",".star-league",".purchase-dialog"
+  ".quest-launcher",
+  ".mission-picker",
+  ".school-star-avatar",
+  ".avatar-studio",
+  ".shop-grid",
+  ".star-league",
+  ".purchase-dialog",
+  ".ambient",
+  ".offline-banner",
+  ".calendar-lunch",
+  ".calendar-note",
+  ".study-intro",
+  ".study-jumps",
+  ".subject-title",
+  ".say-it",
+  ".story-line",
+  ".word-line",
+  ".chip-row",
+  ".study-source-warning",
+  ".privacy-card",
+  ".policy-card",
+  ".conflicts",
+  ".source-note",
+  ".game-controls",
+  ".install-card",
+  ".error-shell",
+  ".reading-policy-card",
+  ".game-section-heading",
+  ".question-tech-card",
+  ".game-engine-stats",
+  ".question-quality-note"
 ];
 for(const selector of deadSelectors)if(css.includes(selector))fail("Obsolete selector remains: "+selector);
 
-if(Buffer.byteLength(css,"utf8")>80000)fail("styles.css exceeded the 80 KB hygiene ceiling");
+if(Buffer.byteLength(css,"utf8")>70000)fail("styles.css exceeded the 70 KB hygiene ceiling");
 if(Buffer.byteLength(app,"utf8")>55000)fail("app.js exceeded the 55 KB hygiene ceiling");
 
 const calendarCellRuleBlocks=(css.match(/\.calendar-grid button\s*\{/g)||[]).length;
