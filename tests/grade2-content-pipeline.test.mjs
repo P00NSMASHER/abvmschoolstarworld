@@ -41,6 +41,7 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
 
   assert.equal(pipeline.qa.status, 'pass');
   assert.equal(pipeline.qa.rejectedCount, 0);
+  assert.equal(pipeline.qa.unsupportedSkillCount, 0);
   assert.equal(pipeline.schemaVersion, 2);
   assert.equal(pipeline.safetyState, 'SAFE_PARTIAL');
   assert.deepEqual(pipeline.qa.subjectCoverage, ['Math', 'Reading / ELA', 'Religion', 'Spelling / Handwriting']);
@@ -64,7 +65,7 @@ test('future teacher skills are detected without hand-editing the app', () => {
       {
         subject: 'Reading / ELA',
         topics: ['Word structure: adding -s and -es'],
-        studyNotes: ['Reading comprehension: cause and effect, setting, inference, genre'],
+        studyNotes: ['Reading comprehension: cause and effect, setting, inference, genre, sequence'],
       },
       {
         subject: 'Math',
@@ -90,6 +91,9 @@ test('future teacher skills are detected without hand-editing the app', () => {
     assert.equal(ids.has(expected), true, `missing future skill: ${expected}`);
   }
   assert.equal(pipeline.qa.status, 'pass');
+  assert.equal(pipeline.safetyState, 'SAFE_PARTIAL');
+  assert.equal(pipeline.qa.unsupportedSkillCount, 1);
+  assert.ok(pipeline.coverage.some(row => row.status === 'GENERATOR_UNSUPPORTED' && row.topic.toLowerCase() === 'sequence'));
 });
 
 test('vocabulary definitions are generated only when the verified pack actually supplies meanings', () => {
