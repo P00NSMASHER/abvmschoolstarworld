@@ -1074,27 +1074,29 @@ function orderForVariety(rows){
     ||(skillFrequency.get(source[b].skill)||0)-(skillFrequency.get(source[a].skill)||0)
     ||a-b;
   if(source.length<=12){
-    const dead=new Set();
-    const search=(remaining,lastSkill,lastType,beforeType)=>{
-      if(!remaining.length)return [];
-      const key=remaining.join(",")+"|"+lastSkill+"|"+lastType+"|"+beforeType;
-      if(dead.has(key))return null;
-      const candidates=remaining
-        .filter(index=>{
-          const q=source[index];
-          if(lastSkill&&q.skill===lastSkill)return false;
-          if(beforeType&&lastType&&beforeType===lastType&&q.questionType===lastType)return false;
-          return true;
-        })
-        .sort(rank);
+    const full=(1<<source.length)-1,memo=new Map();
+    const better=(candidate,current)=>
+      !current
+      ||candidate.typeTriples<current.typeTriples
+      ||(candidate.typeTriples===current.typeTriples&&candidate.skillRepeats<current.skillRepeats);
+    const solve=(mask,last,before)=>{
+      if(mask===full)return{typeTriples:0,skillRepeats:0,path:[]};
+      const key=mask+"|"+last+"|"+before;
+      if(memo.has(key))return memo.get(key);
+      const candidates=source.map((_,index)=>index).filter(index=>(mask&(1<<index))===0).sort(rank);
+      let best=null;
       for(const index of candidates){
-        const tail=search(remaining.filter(item=>item!==index),source[index].skill,source[index].questionType,lastType);
-        if(tail)return [source[index],...tail];
+        const q=source[index],lastQ=last>=0?source[last]:null,beforeQ=before>=0?source[before]:null;
+        const triple=lastQ&&beforeQ&&lastQ.questionType===beforeQ.questionType&&q.questionType===lastQ.questionType?1:0;
+        const repeat=lastQ&&lastQ.skill===q.skill?1:0;
+        const tail=solve(mask|(1<<index),index,last);
+        const candidate={typeTriples:triple+tail.typeTriples,skillRepeats:repeat+tail.skillRepeats,path:[index,...tail.path]};
+        if(better(candidate,best))best=candidate;
       }
-      dead.add(key);return null;
+      memo.set(key,best);return best;
     };
-    const strict=search(source.map((_,index)=>index),"","","");
-    if(strict)return strict;
+    const best=solve(0,-1,-1);
+    if(best?.path?.length===source.length)return best.path.map(index=>source[index]);
   }
   const remaining=[...source],out=[];
   while(remaining.length){
