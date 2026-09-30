@@ -14,14 +14,14 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-09-30T12:51:59.957Z",
+  "sourceLastSeenAt": "2026-09-30T13:28:07.733Z",
   "sourceCapturedAt": "2026-09-29T19:20:03.923Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-48dd7ac3b25e5d8fdda7",
     "sourceCapturedAt": "2026-09-29T19:20:03.923Z",
-    "generatedAt": "2026-09-30T12:51:59.957Z",
+    "generatedAt": "2026-09-30T13:28:07.733Z",
     "weekLabel": "Week of September 28, 2026",
     "summary": "Current Grade 2 teacher-site material: Homework lists Reading “Read”, parent task “Cover books”, Reading “Keep Reading Log and Behavior Chart in the HW folder”, and Homework Folder “Return everything in the HW folder”. Upcoming tests include Subtraction to 12 on Tuesday, Sept. 29, Grammar (types of sentences) on Wednesday, Sept. 30, Spelling (short a / long a) / Handwriting on Friday, Oct. 2, and Reading on Wednesday, Oct. 7. 3 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
@@ -831,7 +831,7 @@
       "Christmas Caroling date is TBD.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
-    "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+    "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
     "uploadedNoticeHash": "uploaded-notices-14d4298a59d340258558",
     "uploadedNoticeTopics": {
       "reminders": [
@@ -862,8 +862,8 @@
     "lunchMenuSource": {
       "status": "current-week",
       "retrievalState": "verified",
-      "checkedAt": "2026-09-30T12:52:01.887Z",
-      "lastAttemptAt": "2026-09-30T12:51:59.957Z",
+      "checkedAt": "2026-09-30T13:28:10.031Z",
+      "lastAttemptAt": "2026-09-30T13:28:07.733Z",
       "provider": "Saint Clair Area School District",
       "school": "Assumption BVM School",
       "feedUrl": "https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu",
@@ -878,14 +878,14 @@
           "url": "https://resources.finalsite.net/images/v1787165302/adeducatorsorg/gvzkkrduwn7fce9l3vsw/AugustandSeptlunch26.pdf",
           "contentHash": "6c01fef18e1f589a544713c21e4d6b31b0063ef7fdbfaa4537dd30cc7b6a64eb",
           "reviewedAt": "2026-09-29T05:26:39Z",
-          "checkedAt": "2026-09-30T12:52:01.887Z"
+          "checkedAt": "2026-09-30T13:28:10.031Z"
         },
         {
           "id": "abvm-2026-10-official",
           "url": "https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1790692534/adeducatorsorg/xdbrqzybydptd5srbor0/Octobercalendar.heic",
           "contentHash": "a99ce9385295921c9fff19ae4051732da45f7c38df077d30d9b62577c8c6eb45",
           "reviewedAt": "2026-09-29T19:36:00Z",
-          "checkedAt": "2026-09-30T12:52:02.077Z"
+          "checkedAt": "2026-09-30T13:28:10.060Z"
         }
       ],
       "pendingDocuments": [],
@@ -1157,11 +1157,11 @@
         "sourceId": "abvm-2026-10-official"
       }
     ],
-    "lunchMenuHash": "987debc5598c47d02d00fbde932f8385166dedd0668d3a2a26989a6951695709",
+    "lunchMenuHash": "107cd772a9c2b611bc1297c35f127a6da83058a922d7025cc83272f19ac580dc",
     "contentPipeline": {
       "schemaVersion": 2,
       "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-      "generatedAt": "2026-09-30T12:51:59.957Z",
+      "generatedAt": "2026-09-30T13:28:07.733Z",
       "sourceHash": "teacher-pages-48dd7ac3b25e5d8fdda7",
       "bankFingerprint": "556c2588",
       "lifecycleStage": "QA_PASSED",
@@ -1197,7 +1197,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:97a8630afc0d062e9eb4dc6f7c4e8e41827a3c0bae739d8c49bc0a04726d2d73",
             "matchedEvidence": [
               "Wednesday Sept. 30: Grammar (types of sentences)"
@@ -1224,7 +1224,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -1251,7 +1251,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -1278,7 +1278,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -1290,7 +1290,7 @@
           "subject": "Reading / ELA",
           "label": "Adding -ed and -ing",
           "evidence": [
-            "adding -ed, -ing | Grammar: types of sentences (test Wednesday, Sept. 30) | Reading comprehension: Visualize, theme, dialogue | Friday, Oct. 2 test focus: short a / long a | The Weekly Spelling"
+            "adding -ed, -ing"
           ],
           "studyNotes": [
             "Practice building words by adding -ed and -ing to a base word."
@@ -1305,10 +1305,10 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Word Structure: cvc words, adding -ed, -ing"
             ]
           }
         },
@@ -1332,7 +1332,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -1359,7 +1359,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -1386,7 +1386,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -1425,7 +1425,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -1452,7 +1452,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:069bfb1da5808507bd3cb6f634f86a6eef21729d26368c999187bb4f63410d2a",
             "matchedEvidence": [
               "Tuesday Sept. 29: Subtraction to 12"
@@ -1479,7 +1479,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -1506,7 +1506,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -1533,7 +1533,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -1560,7 +1560,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -1587,7 +1587,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -1614,7 +1614,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -1641,7 +1641,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -1668,7 +1668,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -1695,7 +1695,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -1952,7 +1952,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:97a8630afc0d062e9eb4dc6f7c4e8e41827a3c0bae739d8c49bc0a04726d2d73",
             "matchedEvidence": [
               "Wednesday Sept. 30: Grammar (types of sentences)"
@@ -2032,7 +2032,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -2112,7 +2112,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -2192,7 +2192,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -2218,7 +2218,7 @@
           "hint": "Keep the base word jump and add the ending -ing.",
           "sourceFact": "Verified Grade 2 skill: Adding -ed and -ing",
           "sourceEvidence": [
-            "adding -ed, -ing | Grammar: types of sentences (test Wednesday, Sept. 30) | Reading comprehension: Visualize, theme, dialogue | Friday, Oct. 2 test focus: short a / long a | The Weekly Spelling"
+            "adding -ed, -ing"
           ],
           "sourceMode": "DETERMINISTIC_TEMPLATE",
           "supportType": "deterministic_transform",
@@ -2272,10 +2272,10 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Word Structure: cvc words, adding -ed, -ing"
             ]
           }
         },
@@ -2352,7 +2352,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -2432,7 +2432,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -2512,7 +2512,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -2593,7 +2593,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -2674,7 +2674,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -2755,7 +2755,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -2836,7 +2836,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -2917,7 +2917,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -2998,7 +2998,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3079,7 +3079,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3160,7 +3160,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3241,7 +3241,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3322,7 +3322,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3402,7 +3402,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:069bfb1da5808507bd3cb6f634f86a6eef21729d26368c999187bb4f63410d2a",
             "matchedEvidence": [
               "Tuesday Sept. 29: Subtraction to 12"
@@ -3482,7 +3482,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -3562,7 +3562,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -3642,7 +3642,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -3722,7 +3722,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -3802,7 +3802,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -3882,7 +3882,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -3962,7 +3962,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -4042,7 +4042,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -4122,7 +4122,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -4202,7 +4202,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:97a8630afc0d062e9eb4dc6f7c4e8e41827a3c0bae739d8c49bc0a04726d2d73",
             "matchedEvidence": [
               "Wednesday Sept. 30: Grammar (types of sentences)"
@@ -4282,7 +4282,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:97a8630afc0d062e9eb4dc6f7c4e8e41827a3c0bae739d8c49bc0a04726d2d73",
             "matchedEvidence": [
               "Wednesday Sept. 30: Grammar (types of sentences)"
@@ -4362,7 +4362,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -4442,7 +4442,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -4522,7 +4522,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -4602,7 +4602,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -4682,7 +4682,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -4762,7 +4762,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -4788,7 +4788,7 @@
           "hint": "Use the time clue in the sentence to choose the ending.",
           "sourceFact": "Verified Grade 2 skill: Adding -ed and -ing",
           "sourceEvidence": [
-            "adding -ed, -ing | Grammar: types of sentences (test Wednesday, Sept. 30) | Reading comprehension: Visualize, theme, dialogue | Friday, Oct. 2 test focus: short a / long a | The Weekly Spelling"
+            "adding -ed, -ing"
           ],
           "sourceMode": "DETERMINISTIC_TEMPLATE",
           "supportType": "deterministic_transform",
@@ -4842,10 +4842,10 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Word Structure: cvc words, adding -ed, -ing"
             ]
           }
         },
@@ -4868,7 +4868,7 @@
           "hint": "Compare a word such as played with playing.",
           "sourceFact": "Verified Grade 2 skill: Adding -ed and -ing",
           "sourceEvidence": [
-            "adding -ed, -ing | Grammar: types of sentences (test Wednesday, Sept. 30) | Reading comprehension: Visualize, theme, dialogue | Friday, Oct. 2 test focus: short a / long a | The Weekly Spelling"
+            "adding -ed, -ing"
           ],
           "sourceMode": "DETERMINISTIC_TEMPLATE",
           "supportType": "deterministic_transform",
@@ -4922,10 +4922,10 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
+            "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Word Structure: cvc words, adding -ed, -ing"
             ]
           }
         },
@@ -5002,7 +5002,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -5082,7 +5082,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -5162,7 +5162,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -5242,7 +5242,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -5322,7 +5322,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -5402,7 +5402,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -5482,7 +5482,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:069bfb1da5808507bd3cb6f634f86a6eef21729d26368c999187bb4f63410d2a",
             "matchedEvidence": [
               "Tuesday Sept. 29: Subtraction to 12"
@@ -5562,7 +5562,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:069bfb1da5808507bd3cb6f634f86a6eef21729d26368c999187bb4f63410d2a",
             "matchedEvidence": [
               "Tuesday Sept. 29: Subtraction to 12"
@@ -5642,7 +5642,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -5722,7 +5722,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -5802,7 +5802,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -5882,7 +5882,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -5962,7 +5962,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -6042,7 +6042,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -6122,7 +6122,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -6202,7 +6202,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -6282,7 +6282,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c",
-            "sourceCheckedAt": "2026-09-30T12:51:59.957Z",
+            "sourceCheckedAt": "2026-09-30T13:28:07.733Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -6349,42 +6349,42 @@
       }
     }
   },
-  "sourceLastCheckedAt": "2026-09-30T12:51:59.957Z",
+  "sourceLastCheckedAt": "2026-09-30T13:28:07.733Z",
   "sourcePages": [
     {
       "title": "Home",
       "url": "https://sites.google.com/view/abvmgr2/home",
-      "checkedAt": "2026-09-30T12:51:59.957Z",
+      "checkedAt": "2026-09-30T13:28:07.733Z",
       "contentHash": "230bd0fb1d6acef81aa2e9d4aec8b097d2dfbb8bbd4cac4ce058889a4eb0d6a9"
     },
     {
       "title": "Homework",
       "url": "https://sites.google.com/view/abvmgr2/homework",
-      "checkedAt": "2026-09-30T12:51:59.957Z",
+      "checkedAt": "2026-09-30T13:28:07.733Z",
       "contentHash": "faabffa7a06fe6eeefa98e3204993203dd9d2f2a623f5b70ba1b7ac55ef04fde"
     },
     {
       "title": "Reading Work",
       "url": "https://sites.google.com/view/abvmgr2/reading-work",
-      "checkedAt": "2026-09-30T12:51:59.957Z",
+      "checkedAt": "2026-09-30T13:28:07.733Z",
       "contentHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058"
     },
     {
       "title": "Weekly Spelling List",
       "url": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-      "checkedAt": "2026-09-30T12:51:59.957Z",
+      "checkedAt": "2026-09-30T13:28:07.733Z",
       "contentHash": "d077ca4b2b95d79755f88f5a726e6b5acf3a52c6575c3d986a16ca1c834b5777"
     },
     {
       "title": "Tests",
       "url": "https://sites.google.com/view/abvmgr2/tests",
-      "checkedAt": "2026-09-30T12:51:59.957Z",
+      "checkedAt": "2026-09-30T13:28:07.733Z",
       "contentHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c"
     },
     {
       "title": "Religion",
       "url": "https://sites.google.com/view/abvmgr2/religion",
-      "checkedAt": "2026-09-30T12:51:59.957Z",
+      "checkedAt": "2026-09-30T13:28:07.733Z",
       "contentHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c"
     }
   ],
