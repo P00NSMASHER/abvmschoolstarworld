@@ -319,7 +319,8 @@ function renderWeek(){
   const eventRows=events.length?events.map(e=>'<div class="event-row"><time>'+esc((e.kind||"School").replace(/\b\w/g,m=>m.toUpperCase()))+'</time><div><strong>'+esc(e.label)+'</strong></div></div>').join(""):'<div class="event-row"><time>School</time><div><strong>No special school events are listed.</strong></div></div>';
   const sourceWeek=isPackWeek(days), tasks=sourceWeek?(pack?.homework||[]):[];
   const checklist=tasks.length?tasks.map(taskHtml).join(""):'<div class="week-empty"><strong>No checklist has been verified for this week yet.</strong><span>Calendar dates still appear below, and new homework will show here after the school source refreshes.</span></div>';
-  const future=(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)})).filter(o=>o.d&&o.d>selectedDay).sort((a,b)=>a.d-b.d).slice(0,4);
+  const future=datedImportantEvents().filter(({date})=>date>selectedDay).slice(0,4).map(({item,date})=>({x:item,d:date}));
+  const reminder=reminderForDate(selectedDay);
   stack().innerHTML='<div class="screen" role="region" aria-label="This week">'+
     header("YOUR SCHOOL PLAN","This week")+freshness()+
     '<nav class="week-nav" aria-label="Change displayed week"><button type="button" data-week-step="-1" aria-label="Previous week">‹</button><div aria-live="polite"><span>'+(weekOffset===0?"CURRENT WEEK":"VIEWING WEEK")+'</span><strong>'+esc(weekRangeLabel(days))+'</strong></div><button type="button" data-week-step="1" aria-label="Next week">›</button></nav>'+
@@ -327,7 +328,7 @@ function renderWeek(){
     '<div class="day-picker">'+picker+'</div>'+
     '<section class="day-detail green"><div class="day-detail-title"><div><p>'+MONTHS[selectedDay.getMonth()].toUpperCase()+'</p><h2>'+esc(fmtDate(selectedDay))+'</h2></div><span>'+(closed?"No school":"School day")+'</span></div><div class="event-stack">'+eventRows+'</div><h3>My checklist</h3>'+checklist+'</section>'+
     lunchCardHtml(selectedDay,lunch)+
-    (reminderForDate(selectedDay)?'<section class="reminder-strip"><span>!</span><p><strong>Don’t forget</strong>'+esc(reminderForDate(selectedDay))+'</p></section>':'')+
+    (reminder?'<section class="reminder-strip"><span>!</span><p><strong>Don’t forget</strong>'+esc(reminder)+'</p></section>':'')+
     '<section class="future-card"><h3>Coming soon</h3>'+future.map(o=>'<div><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join("")+'</section>'+
     '</div>';
 }
@@ -372,7 +373,9 @@ function renderCalendar(){
   const events=eventItemsForDate(calendarDay),lunch=lunchForDate(calendarDay);
   const agendaDays=monthAgendaDays(y,m);
   const nextMonthDate=new Date(y,m+1,1,12),nextY=nextMonthDate.getFullYear(),nextM=nextMonthDate.getMonth();
-  const nextMonth=(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)})).filter(o=>o.d&&o.d.getMonth()===nextM&&o.d.getFullYear()===nextY).sort((a,b)=>a.d-b.d).slice(0,5);
+  const nextMonth=datedImportantEvents()
+    .filter(({date})=>date.getMonth()===nextM&&date.getFullYear()===nextY)
+    .slice(0,5).map(({item,date})=>({x:item,d:date}));
   const specials=specialsRows();
   stack().innerHTML='<div class="screen calendar-screen" role="region" aria-label="'+MONTHS[m]+' calendar">'+
     header("SCHOOL MONTH AT A GLANCE",MONTHS[m]+" "+y)+freshness()+
