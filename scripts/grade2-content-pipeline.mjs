@@ -1219,7 +1219,7 @@ const RENEWABLE_EXTENSION_FAMILIES = Object.freeze({
     {questionType:'transfer',prompt:'Which word begins with the same blend as “plant”?',choices:['plate','flag','ant'],answer:'plate',explanation:'Plant and plate both begin with pl.',hint:'Listen to the first two consonant sounds.',dok:2,difficulty:2},
     {questionType:'transfer',prompt:'Which pair begins with the same consonant blend?',choices:['green and grape','stop and frog','clap and lamp'],answer:'green and grape',explanation:'Both words begin with gr.',hint:'Compare the first two sounds in each pair.',dok:2,difficulty:2},
     {questionType:'reasoning',prompt:'Why does “clap” begin with a blend?',choices:['You can hear both c and l sounds.','The letters c and l make one new sound.','The word ends with p.'],answer:'You can hear both c and l sounds.',explanation:'A blend keeps both consonant sounds audible.',hint:'A blend lets you hear each consonant.',dok:3,difficulty:3},
-    {questionType:'reasoning',prompt:'Which word does NOT begin with a two-consonant blend?',choices:['apple','frog','stop'],answer:'apple',explanation:'Apple begins with a vowel, while frog and stop begin with blends.',hint:'Listen to the beginning sounds.',dok:3,difficulty:3},
+    {questionType:'reasoning',prompt:'Which word begins with the consonant blend st?',choices:['stop','apple','open'],answer:'stop',explanation:'Stop begins with the two heard sounds s and t.',hint:'Listen for both consonant sounds at the beginning.',dok:3,difficulty:3},
   ],
   'cvc-structure': [
     {questionType:'direct',prompt:'Which word is a CVC word?',choices:['pig','rain','cake'],answer:'pig',explanation:'Pig is p-i-g: consonant, vowel, consonant.',hint:'Check the three letters in order.',dok:1,difficulty:2},
@@ -1264,7 +1264,7 @@ const RENEWABLE_EXTENSION_FAMILIES = Object.freeze({
     {questionType:'reasoning',prompt:'Why is “Dad said, ‘Dinner is ready.’” partly dialogue and partly narration?',choices:['The quoted words are spoken; “Dad said” tells who spoke.','Every word is dialogue.','None of the words are spoken.'],answer:'The quoted words are spoken; “Dad said” tells who spoke.',explanation:'Dialogue gives exact speech while narration identifies the speaker.',hint:'Separate the quoted words from the speech tag.',dok:3,difficulty:3},
   ],
   'subtraction-within-12': [
-    {questionType:'direct',prompt:'What is 11 - 4?',choices:['7','6','8'],answer:'7',explanation:'Eleven take away four leaves seven.',hint:'Start at 11 and count back 4.',dok:1,difficulty:2},
+    {questionType:'direct',prompt:'Solve the subtraction fact 11 - 4. What is the difference?',choices:['7','6','8'],answer:'7',explanation:'Eleven take away four leaves seven.',hint:'Start at 11 and count back 4.',dok:1,difficulty:2},
     {questionType:'transfer',prompt:'Mia has 10 stickers and gives 3 away. How many stickers remain?',choices:['7','6','13'],answer:'7',explanation:'10 - 3 = 7.',hint:'Start with 10 and take away 3.',dok:2,difficulty:2},
     {questionType:'transfer',prompt:'There are 12 birds. Five fly away. How many are left?',choices:['7','8','6'],answer:'7',explanation:'12 - 5 = 7.',hint:'Take 5 away from 12.',dok:2,difficulty:2},
     {questionType:'reasoning',prompt:'Sam says 9 - 4 = 6. Which fact shows his answer is one too high?',choices:['5 + 4 = 9','6 + 4 = 10','9 + 4 = 13'],answer:'5 + 4 = 9',explanation:'The related addition fact shows the correct difference is 5.',hint:'Find the number that plus 4 makes 9.',dok:3,difficulty:3},
