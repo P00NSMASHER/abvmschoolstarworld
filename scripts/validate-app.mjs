@@ -40,5 +40,8 @@ if(obsoleteAssetNames.length)fail("Obsolete legacy visual assets must stay remov
 if(exists("pages/assets/calendar"))fail("Obsolete calendar visual asset directory must stay removed");
 if(exists("pages/data/calendar-visual-library.json"))fail("Obsolete calendar visual library must stay removed");
 const swShell=[...sw.matchAll(/"\.\/([^"]+)"/g)].map(m=>m[1]).filter(Boolean);
-for(const ref of swShell)if(!exists("pages/"+ref)&&ref!=="")fail("Service worker shell references missing file: "+ref);
+for(const ref of swShell){
+  const fileRef=ref.split(/[?#]/)[0];
+  if(fileRef&&!exists("pages/"+fileRef))fail("Service worker shell references missing file: "+ref);
+}
 console.log("Gold-standard rollback validation passed",{importantDates:pack.pack.importantDates.length,homework:pack.pack.homework.length});

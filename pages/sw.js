@@ -1,10 +1,10 @@
-const CACHE = "abvm-grade2-parent-companion-v89-derived-cache";
+const CACHE_PREFIX = "abvm-grade2-parent-companion-";
+const CACHE = "abvm-grade2-parent-companion-v90-network-first";
 const STATIC_SHELL = [
-  "./",
   "./index.html",
-  "./styles.css",
-  "./app.js",
-  "./study-games.js",
+  "./styles.css?v=89",
+  "./app.js?v=89",
+  "./study-games.js?v=84",
   "./manifest.webmanifest",
   "./assets/abvm-app-icon-180.png",
   "./assets/abvm-app-icon-192.png",
@@ -21,37 +21,56 @@ self.addEventListener("install",event=>{
   })());
 });
 self.addEventListener("activate",event=>{
-  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));
+  event.waitUntil((async()=>{
+    const keys=await caches.keys();
+    await Promise.all(
+      keys
+        .filter(key=>key.startsWith(CACHE_PREFIX)&&key!==CACHE)
+        .map(key=>caches.delete(key))
+    );
+    await self.clients.claim();
+  })());
 });
 
 async function cachedFallback(request,fallback=null){
-  return (await caches.match(request))||
-    (await caches.match(request,{ignoreSearch:true}))||
-    (fallback?await caches.match(fallback,{ignoreSearch:true}):null);
-}
-async function networkFirst(request,fallback="./index.html"){
-  const cached=await cachedFallback(request,fallback);
-  try{
-    const response=await fetch(request,{cache:"no-store"});
-    if(response&&response.ok){
-      const copy=response.clone();
-      caches.open(CACHE).then(cache=>cache.put(request,copy));
-      return response;
-    }
-    return cached||response||Response.error();
-  }catch{
-    return cached||Response.error();
-  }
-}
-async function staleWhileRevalidate(request){
   const cache=await caches.open(CACHE);
-  const cached=(await cache.match(request))||(await cache.match(request,{ignoreSearch:true}));
-  const update=fetch(request).then(response=>{
-    if(response&&response.ok)cache.put(request,response.clone());
-    return response;
-  }).catch(()=>null);
-  if(cached){update.catch(()=>{});return cached}
-  return (await update)||Response.error();
+  return (await cache.match(request))||
+    (await cache.match(request,{ignoreSearch:true}))||
+    (fallback?await cache.match(fallback,{ignoreSearch:true}):null);
+}
+function networkFirst(request,fallback="./index.html",event=null){
+  const network=fetch(request,{cache:"no-store"}).catch(()=>null);
+  const persist=network.then(async response=>{
+    if(!response?.ok)return;
+    const cache=await caches.open(CACHE);
+    await cache.put(request,response.clone());
+  });
+  if(event)event.waitUntil(persist.catch(()=>{}));
+  return network.then(async response=>{
+    if(response?.ok)return response;
+    return (await cachedFallback(request,fallback))||response||Response.error();
+  });
+}
+function staleWhileRevalidate(request,event){
+  const update=(async()=>{
+    try{
+      const response=await fetch(request);
+      if(response?.ok){
+        const cache=await caches.open(CACHE);
+        await cache.put(request,response.clone());
+      }
+      return response;
+    }catch{
+      return null;
+    }
+  })();
+  event.waitUntil(update.then(()=>{}));
+  return (async()=>{
+    const cache=await caches.open(CACHE);
+    const cached=(await cache.match(request))||(await cache.match(request,{ignoreSearch:true}));
+    if(cached)return cached;
+    return (await update)||Response.error();
+  })();
 }
 
 self.addEventListener("fetch",event=>{
@@ -60,26 +79,26 @@ self.addEventListener("fetch",event=>{
   if(url.origin!==self.location.origin)return;
 
   if(url.pathname.endsWith("/data/study-pack.json")){
-    event.respondWith(networkFirst(event.request,null));
+    event.respondWith(networkFirst(event.request,null,event));
     return;
   }
   if(event.request.mode==="navigate"){
-    event.respondWith(networkFirst(event.request,"./index.html"));
+    event.respondWith(networkFirst(event.request,"./index.html",event));
     return;
   }
 
   // Versioned code must never be satisfied by an older cached version while online.
   if(/\.(?:css|js)$/.test(url.pathname)&&url.searchParams.has("v")){
-    event.respondWith(networkFirst(event.request,null));
+    event.respondWith(networkFirst(event.request,null,event));
     return;
   }
   if(/\.(?:css|js|webp|png|svg|webmanifest)$/.test(url.pathname)){
-    event.respondWith(staleWhileRevalidate(event.request));
+    event.respondWith(staleWhileRevalidate(event.request,event));
     return;
   }
   if(url.pathname.endsWith(".json")){
-    event.respondWith(staleWhileRevalidate(event.request));
+    event.respondWith(staleWhileRevalidate(event.request,event));
     return;
   }
-  event.respondWith(caches.match(event.request).then(cached=>cached||fetch(event.request)));
+  event.respondWith(caches.open(CACHE).then(cache=>cache.match(event.request)).then(cached=>cached||fetch(event.request)));
 });
