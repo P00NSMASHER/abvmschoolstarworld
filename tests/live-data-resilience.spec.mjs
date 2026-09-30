@@ -92,7 +92,7 @@ test("service worker install tolerates optional school-data precache failure",as
   expect(source).toContain("Promise.allSettled");
   expect(source).toContain("OPTIONAL_DATA");
   expect(source).toContain('url.searchParams.has("v")');
-  expect(source).toContain("networkFirst(event.request,null)");
+  expect(source).toContain("networkFirst(event.request,null,event)");
 });
 
 
