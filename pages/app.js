@@ -485,10 +485,7 @@ function recordGameSupport(question,correct){return studyGameEngine()?.recordSup
 function recordGameComeback(question,correct){return studyGameEngine()?.recordComeback?.(question,correct)||null}
 function nextGameSessionSeed(modeId){return studyGameEngine()?.nextSessionSeed?.(currentGameSourceKey(),modeId)||"session"}
 function currentGameSourceKey(){return String(studyGameCatalog()?.sourceKey||"current")}
-function scheduleGameComeback(origin){
-  const engine=studyGameEngine(),catalog=studyGameCatalog(),sourceKey=currentGameSourceKey();
-  return engine?.scheduleComeback?.(catalog,origin,{sourceKey,remaining:2,seenIds:gameState.questions.slice(0,gameState.index+1).map(q=>q.id),seed:sourceKey+"|comeback|"+String(origin?.id||"item")})||null;
-}
+function scheduleGameComeback(origin){const e=studyGameEngine(),c=studyGameCatalog(),s=currentGameSourceKey();return e?.scheduleComeback?.(c,origin,{sourceKey:s,remaining:2,seenIds:gameState.questions.slice(0,gameState.index+1).map(q=>q.id),seed:s+"|comeback|"+String(origin?.id||"item")})||null}
 function tickGameComebacks(){studyGameEngine()?.tickComebacks?.(currentGameSourceKey())}
 function markGameComebacksNextSession(){studyGameEngine()?.deferComebacksToNextSession?.(currentGameSourceKey())}
 function activateDueGameComeback(){
@@ -497,14 +494,8 @@ function activateDueGameComeback(){
   Object.assign(gameState,{comebackMode:true,comebackQuestion:due.question,comebackKey:due.row.key,comebackCorrect:null,selectedIndex:null,answered:false,hintOpen:false,learningRow:null});
   return true;
 }
-function clearActiveGameComeback(){
-  studyGameEngine()?.resolveComeback?.(gameState.comebackKey);
-  Object.assign(gameState,{comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null});
-}
-function activeGameQuestion(){
-  if(gameState.comebackMode)return gameState.comebackQuestion;
-  return gameState.supportMode?gameState.supportQuestion:gameState.questions[gameState.index];
-}
+function clearActiveGameComeback(){studyGameEngine()?.resolveComeback?.(gameState.comebackKey);Object.assign(gameState,{comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null})}
+function activeGameQuestion(){return gameState.comebackMode?gameState.comebackQuestion:gameState.supportMode?gameState.supportQuestion:gameState.questions[gameState.index]}
 function startStudyGame(modeId){
   const engine=studyGameEngine(),catalog=studyGameCatalog(),mode=gameMode(modeId);
   if(!engine||!catalog)return;
