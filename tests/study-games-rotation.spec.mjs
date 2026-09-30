@@ -201,6 +201,26 @@ test('selector avoids three identical question types in a row when another type 
   }
 });
 
+test('ordering finds a non-repetitive arrangement when the greedy first choice would create a type triple', async ({ page }) => {
+  const result = await page.evaluate(() => {
+    const engine = window.ABVMStudyGames;
+    const questions = [
+      { id:'a-direct-1', skill:'skill-a', subject:'Reading / ELA', tier:'material', difficulty:2, questionType:'direct', variantFingerprint:'a-direct-1' },
+      { id:'a-direct-2', skill:'skill-a', subject:'Reading / ELA', tier:'material', difficulty:2, questionType:'direct', variantFingerprint:'a-direct-2' },
+      { id:'b-direct', skill:'skill-b', subject:'Reading / ELA', tier:'material', difficulty:2, questionType:'direct', variantFingerprint:'b-direct' },
+      { id:'b-transfer', skill:'skill-b', subject:'Reading / ELA', tier:'material', difficulty:2, questionType:'transfer', variantFingerprint:'b-transfer' },
+    ];
+    return engine.selectQuestions({ sourceKey:'ordering-counterexample-pack', questions }, { count:4, seed:'ordering-counterexample' })
+      .map(q => ({ skill:q.skill, type:q.questionType }));
+  });
+
+  expect(result).toHaveLength(4);
+  for (let i = 1; i < result.length; i += 1) expect(result[i].skill).not.toBe(result[i - 1].skill);
+  for (let i = 2; i < result.length; i += 1) {
+    expect(result[i].type === result[i - 1].type && result[i - 1].type === result[i - 2].type).toBe(false);
+  }
+});
+
 test('diversity can relax cooldown freshness when that prevents a repetitive run', async ({ page }) => {
   const result = await page.evaluate(() => {
     const engine = window.ABVMStudyGames;
