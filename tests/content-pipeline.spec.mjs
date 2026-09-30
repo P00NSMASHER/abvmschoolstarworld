@@ -198,3 +198,112 @@ test('Study Games source identity changes when the certified bank fingerprint ch
   expect(result.a).toContain('bank:aaaaaaaa');
   expect(result.b).toContain('bank:bbbbbbbb');
 });
+
+
+test('two consecutive misses trigger an unscored same-skill support step', async ({ page }) => {
+  await page.evaluate(() => localStorage.clear());
+  await page.addInitScript(() => {
+    const RealDate = Date;
+    const fixed = new RealDate('2026-09-30T16:00:00.000Z').valueOf();
+    class FixedDate extends RealDate {
+      constructor(...args) {
+        super(...(args.length ? args : [fixed]));
+      }
+      static now() { return fixed; }
+      static parse(value) { return RealDate.parse(value); }
+      static UTC(...args) { return RealDate.UTC(...args); }
+    }
+    window.Date = FixedDate;
+  });
+
+  await page.route('**/data/study-pack.json', async route => {
+    const response = await route.fetch();
+    const envelope = await response.json();
+    const pack = structuredClone(envelope.pack);
+    pack.importantDates = [
+      { date: 'Wednesday, Sept. 30', label: 'Setting test', kind: 'test', source: 'browser-fixture' },
+    ];
+    pack.contentPipeline = {
+      schemaVersion: 2,
+      sourceHash: 'support-flow-fixture',
+      bankFingerprint: 'support01',
+      skills: [{ id: 'setting', subject: 'Reading / ELA' }],
+      coverage: [{ topic: 'Setting', subject: 'Reading / ELA', status: 'COVERED', skillId: 'setting' }],
+      questions: [
+        {
+          id: 'setting-support-a',
+          subject: 'Reading / ELA',
+          skill: 'setting',
+          questionType: 'direct',
+          prompt: 'A story begins in a classroom on Monday morning. Which detail tells the setting?',
+          choices: ['a classroom on Monday morning', 'the student feels proud', 'a pencil falls'],
+          answer: 'a classroom on Monday morning',
+          explanation: 'Setting tells where and when a story happens.',
+          hint: 'Look for both a place and a time.',
+          sourceFact: 'Verified Grade 2 skill: Setting',
+          standards: ['CCSS.RL.2.3'],
+          domain: 'Analyzing literary text',
+          dok: 2,
+          difficulty: 2,
+        },
+        {
+          id: 'setting-support-b',
+          subject: 'Reading / ELA',
+          skill: 'setting',
+          questionType: 'transfer',
+          prompt: 'The children hike beside a lake at sunset. Which phrase describes the setting?',
+          choices: ['beside a lake at sunset', 'the children are tired', 'they carry backpacks'],
+          answer: 'beside a lake at sunset',
+          explanation: 'The phrase gives both the place and the time.',
+          hint: 'Find the where-and-when clue.',
+          sourceFact: 'Verified Grade 2 skill: Setting',
+          standards: ['CCSS.RL.2.3'],
+          domain: 'Analyzing literary text',
+          dok: 2,
+          difficulty: 2,
+        },
+        {
+          id: 'setting-support-c',
+          subject: 'Reading / ELA',
+          skill: 'setting',
+          questionType: 'reasoning',
+          prompt: 'Why does “in the library after lunch” describe a setting?',
+          choices: ['It tells where and when.', 'It tells only how a character feels.', 'It names the story problem.'],
+          answer: 'It tells where and when.',
+          explanation: 'A setting is built from place and time information.',
+          hint: 'Ask whether the phrase gives a place, a time, or both.',
+          sourceFact: 'Verified Grade 2 skill: Setting',
+          standards: ['CCSS.RL.2.3'],
+          domain: 'Analyzing literary text',
+          dok: 2,
+          difficulty: 2,
+        },
+      ],
+    };
+    await route.fulfill({
+      response,
+      contentType: 'application/json',
+      body: JSON.stringify({ ...envelope, pack }),
+    });
+  });
+
+  await page.reload();
+  await expect(page.locator('.study-game-grid')).toBeVisible({ timeout: 10_000 });
+  const testReady = page.getByRole('button', { name: /Test Ready/i });
+  await expect(testReady).toBeVisible();
+  await testReady.click();
+
+  for (let miss = 0; miss < 2; miss += 1) {
+    await expect(page.locator('.game-question-card')).toBeVisible();
+    await page.locator('.game-answer').nth(1).click();
+    await expect(page.locator('.game-feedback.retry')).toBeVisible();
+    if (miss === 1) {
+      await expect(page.locator('.adaptive-note')).toContainText('smaller same-skill support step');
+    }
+    await page.locator('[data-game-next]').click();
+  }
+
+  await expect(page.locator('.game-topbar')).toContainText('Support step');
+  await expect(page.locator('.adaptive-note')).toContainText('not scored');
+  await expect(page.locator('.game-question-card')).toBeVisible();
+});
