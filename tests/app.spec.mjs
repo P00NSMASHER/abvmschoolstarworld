@@ -56,7 +56,11 @@ test("Study exposes one primary game CTA and collapsed subject details",async({p
 
 test("Study Games loads lazily and starts a playable round",async({page})=>{
   await openTab(page,"Study Games");
-  await expect(page.locator(".study-game-tile")).toHaveCount(4);
+  const tiles=page.locator(".study-game-tile");
+  expect(await tiles.count()).toBeGreaterThanOrEqual(4);
+  for(const name of ["Quick Mix","Math Dash","Word Power","Faith Quest"]){
+    await expect(page.getByRole("button",{name:new RegExp(name,"i")})).toBeVisible();
+  }
   await page.getByRole("button",{name:/Quick Mix/i}).click();
   await expect(page.locator(".game-question-card")).toBeVisible();
   expect(await page.locator(".game-answer").count()).toBe(3);
