@@ -71,6 +71,11 @@ const EXACT_SKILLS = Object.freeze({
     standards: ['CCSS.RL.2.3'],
     anchors: ['feel', 'character', 'actions', 'clue'],
   },
+  'vocabulary-in-context': {
+    subject: 'Reading / ELA',
+    standards: ['CCSS.L.2.4.a'],
+    anchors: ['vocabulary', 'meaning', 'word', 'definition'],
+  },
   genre: {
     subject: 'Reading / ELA',
     standards: ['CCSS.RL.2.5'],
