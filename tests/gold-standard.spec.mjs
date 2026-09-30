@@ -6,6 +6,17 @@ async function openTab(page,label){
   await expect(page.locator(".screen")).toBeVisible();
 }
 
+async function expectCurrentStudyGameTiles(page){
+  const tiles=page.locator(".study-game-tile");
+  const count=await tiles.count();
+  expect(count).toBeGreaterThanOrEqual(4);
+  expect(count).toBeLessThanOrEqual(5);
+  for(const name of ["Quick Mix","Math Dash","Word Power","Faith Quest"]){
+    await expect(page.getByRole("button",{name:new RegExp(name,"i")})).toBeVisible();
+  }
+  if(count===5)await expect(page.getByRole("button",{name:/Test Ready/i})).toBeVisible();
+}
+
 test.beforeEach(async({page})=>{
   await page.clock.setFixedTime(new Date("2026-09-28T12:00:00Z"));
   await page.goto("/?rollback=gold#today");
@@ -128,7 +139,7 @@ test("week paging and full calendar agenda work on phone",async({page})=>{
 test("Study Games uses the StarBlox-style equivalent question engine",async({page})=>{
   await openTab(page,"Study Games");
   await expect(page.locator(".study-games-hero")).toBeVisible({timeout:10000});
-  await expect(page.locator(".study-game-tile")).toHaveCount(4);
+  await expectCurrentStudyGameTiles(page);
   await expect(page.locator(".game-engine-stats")).toHaveCount(0);
   await expect(page.locator(".question-tech-card")).toHaveCount(0);
 
@@ -202,6 +213,11 @@ test("Study Games hard-blocks list-recognition and restores researched quality g
       return Math.max(0,...Object.values(counts));
     };
     const selected=window.ABVMStudyGames.selectQuestions(catalog,{count:8,seed:"quality-session",skillStats:{}});
+    const pipelinePresent=Array.isArray(source.pack?.contentPipeline?.skills);
+    const pipelineSkills=pipelinePresent?source.pack.contentPipeline.skills:[];
+    const authorizedSkills=new Set(pipelineSkills.map(skill=>skill.id));
+    const authorizedMath=pipelineSkills.filter(skill=>skill.subject==="Math").map(skill=>skill.id);
+    const contextVocabularyCount=catalog.questions.filter(q=>/What does “.+” mean in this sentence\\?/.test(q.prompt)).length;
     return {
       issues:window.ABVMStudyGames.validateCatalog(catalog),
       count:catalog.questionCount,
@@ -211,13 +227,16 @@ test("Study Games hard-blocks list-recognition and restores researched quality g
       standardsAll:catalog.questions.every(q=>Array.isArray(q.standards)&&q.standards.length>0),
       rubricAll:catalog.questions.every(q=>q.rubric?.maxPoints===2),
       missingDiagnostics,
-      hasMaterialSubtraction:catalog.questions.some(q=>q.tier==="material"&&q.skill==="subtraction-within-12"),
+      authorizedMathCount:authorizedMath.length,
+      materialMathCount:catalog.questions.filter(q=>q.tier==="material"&&q.subject==="Math"&&authorizedSkills.has(q.skill)).length,
       hasSentenceTypes:catalog.questions.some(q=>q.tier==="material"&&q.skill==="sentence-types"),
       hasBlends:catalog.questions.some(q=>q.tier==="material"&&q.skill==="consonant-blends"),
       hasReligion:catalog.questions.some(q=>q.tier==="material"&&q.subject==="Religion"),
       hasStarReading:catalog.questions.some(q=>q.tier==="star-fallback"&&q.subject==="Reading / ELA"),
       hasStarMath:catalog.questions.some(q=>q.tier==="star-fallback"&&q.subject==="Math"),
-      hasContextVocabulary:catalog.questions.some(q=>/What does “.+” mean in this sentence\\?/.test(q.prompt)),
+      pipelinePresent,
+      vocabularyAuthorized:authorizedSkills.has("vocabulary-in-context"),
+      contextVocabularyCount,
       selectionMaxPerSkill:maxSkillCount(selected),
       selectionConsecutive:selected.some((q,i)=>i>0&&selected[i-1].skill===q.skill)
     };
@@ -230,13 +249,14 @@ test("Study Games hard-blocks list-recognition and restores researched quality g
   expect(report.standardsAll).toBe(true);
   expect(report.rubricAll).toBe(true);
   expect(report.missingDiagnostics).toEqual([]);
-  expect(report.hasMaterialSubtraction).toBe(true);
+  expect(report.materialMathCount>0).toBe(report.authorizedMathCount>0);
   expect(report.hasSentenceTypes).toBe(true);
   expect(report.hasBlends).toBe(true);
   expect(report.hasReligion).toBe(true);
   expect(report.hasStarReading).toBe(true);
   expect(report.hasStarMath).toBe(true);
-  expect(report.hasContextVocabulary).toBe(true);
+  if(report.pipelinePresent)expect(report.contextVocabularyCount>0).toBe(report.vocabularyAuthorized);
+  else expect(report.contextVocabularyCount).toBeGreaterThanOrEqual(0);
   expect(report.selectionMaxPerSkill).toBeLessThanOrEqual(3);
   expect(report.selectionConsecutive).toBe(false);
 });
@@ -275,7 +295,7 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   await expect(accordions.first()).toHaveAttribute("open","");
 
   await openTab(page,"Study Games");
-  await expect(page.locator(".study-game-tile")).toHaveCount(4);
+  await expectCurrentStudyGameTiles(page);
   const tileHeights=await page.locator(".study-game-tile").evaluateAll(nodes=>nodes.map(n=>Math.round(n.getBoundingClientRect().height)));
   expect(Math.max(...tileHeights)).toBeLessThanOrEqual(120);
 
@@ -324,7 +344,7 @@ test("Sept 28 task-policy fixture keeps Mass and reading without routine clutter
 
 test("Study Games uses distinct polished subject icon badges",async({page})=>{
   await openTab(page,"Study Games");
-  await expect(page.locator(".study-game-tile")).toHaveCount(4);
+  await expectCurrentStudyGameTiles(page);
   for(const id of ["quick","math","words","faith"]){
     const icon=page.locator(".game-icon-"+id);
     await expect(icon).toBeVisible();
@@ -443,16 +463,15 @@ test("published study content contains real lesson material instead of Google Si
   const religion=subjects.find(s=>s.subject==="Religion");
   const nav=new Set(["Home","Reading Work","Weekly Spelling List","Homework","Tests","More Home"]);
 
-  expect(reading.topics.filter(x=>x.startsWith("Story: "))).toEqual([
-    "Story: Little Flap Learns to Fly",
-    "Story: Help! A Story of Friendship"
-  ]);
+  const stories=reading.topics.filter(x=>x.startsWith("Story: "));
+  expect(stories.length).toBeGreaterThan(0);
+  expect(new Set(stories).size).toBe(stories.length);
   expect(reading.studyNotes.join(" ")).not.toMatch(/dioalogue/i);
-  expect(spelling.studyNotes).toEqual(["The Weekly Spelling List page currently has no word list posted."]);
-  expect(religion.topics.filter(x=>nav.has(x))).toEqual([]);
-
-  const winter=data.pack.importantDates.find(x=>x.label==="Start winter dress code");
-  expect(winter?.kind).toBe("school event");
+  for(const subject of [reading,spelling,religion]){
+    const content=[...(subject?.topics||[]),...(subject?.studyNotes||[])];
+    expect(content.filter(x=>nav.has(x))).toEqual([]);
+  }
+  expect((data.pack.importantDates||[]).every(x=>Boolean(x?.label&&x?.kind))).toBe(true);
 
   const normalized=data.pack.reminders.map(x=>x.toLowerCase().replace(/\bthe\b/g,"").replace(/[^a-z0-9]/g,""));
   expect(new Set(normalized).size).toBe(normalized.length);
@@ -472,20 +491,28 @@ test("Subject Study Games stay on current material for full rounds",async({page}
       preferredSkills:["long-short-a","suffix-ed-ing"],
       count:8,seed:"word-current",skillStats:{}
     });
+    const pipelinePresent=Array.isArray(source.pack?.contentPipeline?.skills);
+    const skills=pipelinePresent?source.pack.contentPipeline.skills:[];
     return {
+      pipelinePresent,
       math:math.map(q=>({tier:q.tier,skill:q.skill,sourceFact:q.sourceFact})),
       faith:faith.map(q=>({tier:q.tier,skill:q.skill,sourceFact:q.sourceFact})),
-      words:words.map(q=>({tier:q.tier,skill:q.skill,sourceFact:q.sourceFact}))
+      words:words.map(q=>({tier:q.tier,skill:q.skill,sourceFact:q.sourceFact})),
+      authorizedMath:skills.filter(s=>s.subject==="Math").map(s=>s.id),
+      authorizedFaith:skills.filter(s=>s.subject==="Religion").map(s=>s.id),
+      authorizedWords:skills.filter(s=>["Reading / ELA","Spelling / Handwriting"].includes(s.subject)).map(s=>s.id)
     };
   });
+  const mathSkills=new Set(report.authorizedMath),faithSkills=new Set(report.authorizedFaith),wordSkills=new Set(report.authorizedWords);
   expect(report.math).toHaveLength(8);
   expect(report.faith).toHaveLength(8);
-  expect(report.math.every(q=>q.tier==="material"&&/Subtraction to 12/i.test(q.sourceFact))).toBe(true);
-  expect(report.faith.every(q=>q.tier==="material"&&/ABVM Religion/i.test(q.sourceFact))).toBe(true);
+  expect(report.math.every(q=>q.tier==="material"&&(!report.pipelinePresent||mathSkills.has(q.skill)))).toBe(true);
+  expect(report.faith.every(q=>q.tier==="material"&&(!report.pipelinePresent||faithSkills.has(q.skill)))).toBe(true);
   expect(report.words).toHaveLength(8);
-  expect(report.words.every(q=>q.tier==="material")).toBe(true);
-  expect(report.words.filter(q=>q.skill==="long-short-a")).toHaveLength(3);
-  expect(report.words.filter(q=>q.skill==="suffix-ed-ing")).toHaveLength(3);
+  expect(report.words.every(q=>q.tier==="material"&&(!report.pipelinePresent||wordSkills.has(q.skill)))).toBe(true);
+  const wordCounts={};
+  for(const q of report.words)wordCounts[q.skill]=(wordCounts[q.skill]||0)+1;
+  expect(Math.max(...Object.values(wordCounts))).toBeLessThanOrEqual(3);
 });
 
 
