@@ -5,6 +5,33 @@ const SUBJECT_STANDARD_PREFIXES = Object.freeze({
   Religion: ['ABVM.RELIGION.'],
 });
 
+const DOMAIN_BY_SKILL = Object.freeze({
+  'sentence-types': ['Language'],
+  'consonant-blends': ['Foundational reading'],
+  'cvc-structure': ['Foundational reading'],
+  'long-short-a': ['Foundational reading'],
+  'suffix-ed-ing': ['Foundational reading'],
+  'suffix-s-es': ['Language'],
+  'vocabulary-in-context': ['Word knowledge and skills'],
+  theme: ['Analyzing literary text'],
+  visualize: ['Comprehension / constructing meaning'],
+  inference: ['Comprehension / constructing meaning'],
+  'cause-effect': ['Comprehension / constructing meaning'],
+  'main-character': ['Analyzing literary text'],
+  setting: ['Analyzing literary text'],
+  'character-feelings': ['Analyzing literary text'],
+  genre: ['Analyzing literary text'],
+  'place-value': ['Numbers and operations'],
+  'compare-numbers': ['Numbers and operations'],
+  time: ['Geometry and measurement'],
+  money: ['Geometry and measurement'],
+  'religion-trinity': ['Religion'],
+  'religion-image-likeness': ['Religion'],
+  'religion-creation-care': ['Religion'],
+  'religion-jesus-savior': ['Religion'],
+  'religion-gifts-choices': ['Religion'],
+});
+
 const EXACT_SKILLS = Object.freeze({
   'sentence-types': {
     subject: 'Reading / ELA',
@@ -148,6 +175,7 @@ function dynamicSkillRule(skill) {
       subject: 'Math',
       standards: ['CCSS.2.OA.B.2', 'CCSS.2.NBT.B.5'],
       anchors: ['subtract', 'subtraction', 'left', 'count back', '-'],
+      domains: ['Numbers and operations'],
     };
   }
   if (/^addition-within-\d+$/.test(skill)) {
@@ -155,6 +183,7 @@ function dynamicSkillRule(skill) {
       subject: 'Math',
       standards: ['CCSS.2.OA.B.2', 'CCSS.2.NBT.B.5'],
       anchors: ['add', 'addition', 'altogether', 'total', '+'],
+      domains: ['Numbers and operations'],
     };
   }
   return null;
@@ -195,13 +224,16 @@ export function validateGrade2QuestionAlignment(question) {
     issues.push({ id, issue: 'skill-standard-mismatch', skill, standards, expected: rule.standards });
   }
 
+  const allowedDomains = rule.domains || DOMAIN_BY_SKILL[skill] || [];
+  if (allowedDomains.length && !allowedDomains.includes(String(question.domain || ''))) {
+    issues.push({ id, issue: 'skill-domain-mismatch', skill, domain: question.domain, expected: allowedDomains });
+  }
+
   const semanticText = [
     question.prompt,
     question.explanation,
     question.hint,
     question.sourceFact,
-    question.skill,
-    question.domain,
   ].join(' ');
 
   if (!matchesAny(semanticText, rule.anchors)) {
