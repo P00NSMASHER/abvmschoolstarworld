@@ -311,6 +311,23 @@ const RELIGION_SKILLS = [
     },
   },
   {
+    id: 'religion-five-senses',
+    label: 'Five senses and God’s gifts',
+    pattern: /\bfive senses\b|\bour senses\b|seeing.*hearing|hearing.*smelling|smelling.*tasting|tasting.*touching/i,
+    studyNotes: ['The current Religion lesson connects our senses with noticing and enjoying God’s gifts of creation.'],
+    question: {
+      prompt: 'According to the current Religion lesson, how can our five senses help us appreciate God’s gifts?',
+      choices: ['They help us notice and enjoy the world around us.', 'They mean we never need to make choices.', 'They are useful only during school lessons.'],
+      answer: 'They help us notice and enjoy the world around us.',
+      explanation: 'The lesson connects our senses with enjoying God’s gifts and giving thanks for creation.',
+      hint: 'Think about seeing, hearing, smelling, tasting, and touching.',
+      sourceMode: 'STRICT_SOURCE',
+      supportType: 'explicit',
+      dok: 2,
+      difficulty: 2,
+    },
+  },
+  {
     id: 'religion-gifts-choices',
     label: 'Gifts and good choices',
     pattern: /gifts from god|we can think,\s*choose,\s*love|giver of gifts/i,
