@@ -76,3 +76,18 @@ test("current app has no critical automated accessibility violations",async({pag
   const critical=results.violations.filter(v=>v.impact==="critical");
   expect(critical.map(v=>({id:v.id,nodes:v.nodes.length}))).toEqual([]);
 });
+
+
+test("bottom navigation is a single six-column row",async({page})=>{
+  const nav=page.locator(".bottom-nav");
+  await expect(nav.locator("button")).toHaveCount(6);
+  const layout=await nav.evaluate(el=>{
+    const style=getComputedStyle(el);
+    return {
+      columns:style.gridTemplateColumns.split(/\s+/).filter(Boolean).length,
+      rows:style.gridTemplateRows.split(/\s+/).filter(Boolean).length
+    };
+  });
+  expect(layout.columns).toBe(6);
+  expect(layout.rows).toBe(1);
+});
