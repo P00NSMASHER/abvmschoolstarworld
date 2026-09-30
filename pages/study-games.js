@@ -1161,56 +1161,66 @@ function responseTimeBand(start,now){
   const ms=Math.max(0,Number(now)-Number(start));
   return ms<5000?"lt5":ms<15000?"5to15":ms<30000?"15to30":"gte30";
 }
+function itemQualityRow(data,question){
+  const id=String(question?.id||"");
+  const row=data.items[id]||{
+    Skill:String(question?.skill||""),Subject:String(question?.subject||""),Resolved:0,Correct:0,Wrong:0,
+    NormalResolved:0,NormalCorrect:0,NormalWrong:0,FirstTryCorrect:0,ChoicePositions:[0,0,0],Misconceptions:{},
+    ResponseBands:{lt5:0,"5to15":0,"15to30":0,gte30:0},HintsUsed:0,SupportSeen:0,ComebackSeen:0,ComebackCorrect:0,
+    AbilityN:0,AbilitySum:0,AbilitySumSq:0,CorrectAbilitySum:0
+  };
+  return {id,row};
+}
+function noteItemAttempt(question,index){
+  if(!question?.id||!Number.isInteger(index)||index<0||index>2)return null;
+  const data=loadItemQuality(),{id,row}=itemQualityRow(data,question);
+  row.ChoicePositions[index]=(Number(row.ChoicePositions[index])||0)+1;
+  const choice=question.choices?.[index];
+  if(choice!==question.answer){
+    const tag=choice?question.choiceDiagnostics?.[choice]?.misconception:null;
+    if(tag)row.Misconceptions[tag]=(Number(row.Misconceptions[tag])||0)+1;
+  }
+  row.LastUpdatedAt=Date.now();data.items[id]=row;writeItemQuality(data);return row;
+}
 function pointBiserial(row){
-  const n=Number(row?.AbilityN)||0,c=Number(row?.Correct)||0,w=Number(row?.Wrong)||0;
+  const n=Number(row?.AbilityN)||0,c=Number(row?.NormalCorrect)||0,w=Number(row?.NormalWrong)||0;
   if(n<2||c<1||w<1)return null;
   const sum=Number(row.AbilitySum)||0,sumSq=Number(row.AbilitySumSq)||0,correctSum=Number(row.CorrectAbilitySum)||0;
   const variance=Math.max(0,(sumSq/n)-Math.pow(sum/n,2)),sd=Math.sqrt(variance);
   if(!sd)return 0;
-  const p=c/(c+w),q=1-p;
-  if(!p||!q)return null;
+  const p=c/(c+w),q=1-p;if(!p||!q)return null;
   const mean1=correctSum/c,mean0=(sum-correctSum)/w;
   return (mean1-mean0)/sd*Math.sqrt(p*q);
 }
-function recordItemQuality(question,correct,{attemptCount=1,incorrectCount=correct?0:1,hintCount=0,r=null,w=null,kind="normal",priorMastery=.5}={}){
+function recordItemQuality(question,correct,{attemptCount=1,incorrectCount=correct?0:1,hintCount=0,kind="normal",priorMastery=.5}={}){
   if(!question?.id)return null;
-  const data=loadItemQuality(),id=String(question.id),row=data.items[id]||{
-    Skill:String(question.skill||""),Subject:String(question.subject||""),Resolved:0,Correct:0,Wrong:0,FirstTryCorrect:0,
-    ChoicePositions:[0,0,0],Misconceptions:{},ResponseBands:{lt5:0,"5to15":0,"15to30":0,gte30:0},
-    HintsUsed:0,SupportSeen:0,ComebackSeen:0,ComebackCorrect:0,AbilityN:0,AbilitySum:0,AbilitySumSq:0,CorrectAbilitySum:0
-  };
-  const now=Date.now(),start=itemShownAt.get(id);itemShownAt.delete(id);
+  const data=loadItemQuality(),{id,row}=itemQualityRow(data,question),now=Date.now(),start=itemShownAt.get(id);itemShownAt.delete(id);
   row.Resolved=(Number(row.Resolved)||0)+1;correct?row.Correct=(Number(row.Correct)||0)+1:row.Wrong=(Number(row.Wrong)||0)+1;
   const attempts=Math.max(1,Number(attemptCount)||1),incorrect=Math.max(0,Number(incorrectCount)||0),hints=Math.max(0,Number(hintCount)||0);
-  if(kind==="normal"&&correct&&attempts===1&&incorrect===0&&hints===0)row.FirstTryCorrect=(Number(row.FirstTryCorrect)||0)+1;
-  if(Number.isInteger(r)&&r>=0&&r<3)row.ChoicePositions[r]=(Number(row.ChoicePositions[r])||0)+1;
-  const wrongIndex=Number.isInteger(w)?w:(!correct&&Number.isInteger(r)?r:null);
-  if(Number.isInteger(wrongIndex)){
-    const choice=question.choices?.[wrongIndex],tag=choice?question.choiceDiagnostics?.[choice]?.misconception:null;
-    if(tag)row.Misconceptions[tag]=(Number(row.Misconceptions[tag])||0)+1;
-  }
   row.HintsUsed=(Number(row.HintsUsed)||0)+hints;
-  if(kind==="support")row.SupportSeen=(Number(row.SupportSeen)||0)+1;
-  if(kind==="comeback"){row.ComebackSeen=(Number(row.ComebackSeen)||0)+1;if(correct)row.ComebackCorrect=(Number(row.ComebackCorrect)||0)+1}
-  if(start)row.ResponseBands[responseTimeBand(start,now)]=(Number(row.ResponseBands[responseTimeBand(start,now)])||0)+1;
   if(kind==="normal"){
+    row.NormalResolved=(Number(row.NormalResolved)||0)+1;correct?row.NormalCorrect=(Number(row.NormalCorrect)||0)+1:row.NormalWrong=(Number(row.NormalWrong)||0)+1;
+    if(correct&&attempts===1&&incorrect===0&&hints===0)row.FirstTryCorrect=(Number(row.FirstTryCorrect)||0)+1;
+    if(start)row.ResponseBands[responseTimeBand(start,now)]=(Number(row.ResponseBands[responseTimeBand(start,now)])||0)+1;
     const ability=Math.max(0,Math.min(1,Number(priorMastery)||0));
     row.AbilityN=(Number(row.AbilityN)||0)+1;row.AbilitySum=(Number(row.AbilitySum)||0)+ability;row.AbilitySumSq=(Number(row.AbilitySumSq)||0)+ability*ability;
     if(correct)row.CorrectAbilitySum=(Number(row.CorrectAbilitySum)||0)+ability;
-  }
+  }else if(kind==="support")row.SupportSeen=(Number(row.SupportSeen)||0)+1;
+  else if(kind==="comeback"){row.ComebackSeen=(Number(row.ComebackSeen)||0)+1;if(correct)row.ComebackCorrect=(Number(row.ComebackCorrect)||0)+1}
   row.LastUpdatedAt=now;data.items[id]=row;writeItemQuality(data);return row;
 }
 function reviewItemQuality(data=loadItemQuality()){
   const out=[];
   for(const [id,row] of Object.entries(data?.items||{})){
-    const n=Number(row.Resolved)||0;if(!n)continue;
-    const correct=Number(row.Correct)||0,wrong=Number(row.Wrong)||0,accuracy=correct/n,firstTry=(Number(row.FirstTryCorrect)||0)/n;
+    const n=Number(row.NormalResolved??row.Resolved)||0;if(!n)continue;
+    const correct=Number(row.NormalCorrect??row.Correct)||0,wrong=Number(row.NormalWrong??row.Wrong)||0,accuracy=correct/n,firstTry=(Number(row.FirstTryCorrect)||0)/n;
     const flags=[],bands=row.ResponseBands||{},slow=Number(bands.gte30)||0,mis=Object.entries(row.Misconceptions||{}).sort((a,b)=>Number(b[1])-Number(a[1]));
     if(n>=8&&accuracy>=.95)flags.push("too-easy");
     if(n>=8&&accuracy<=.35)flags.push("too-hard");
     if(n>=6&&slow/n>=.5)flags.push("slow-response");
-    if(wrong>=4&&mis[0]&&Number(mis[0][1])/wrong>=.6)flags.push("dominant-misconception");
-    if(wrong>=6&&accuracy>.35&&accuracy<.7&&mis[1]&&Number(mis[0][1])/wrong>=.25&&Number(mis[1][1])/wrong>=.25)flags.push("possible-ambiguity");
+    const wrongAttempts=mis.reduce((sum,item)=>sum+Number(item[1]||0),0);
+    if(wrongAttempts>=4&&mis[0]&&Number(mis[0][1])/wrongAttempts>=.6)flags.push("dominant-misconception");
+    if(wrongAttempts>=6&&accuracy>.35&&accuracy<.7&&mis[1]&&Number(mis[0][1])/wrongAttempts>=.25&&Number(mis[1][1])/wrongAttempts>=.25)flags.push("possible-ambiguity");
     const discrimination=pointBiserial(row);
     if(n>=12&&discrimination!==null&&Math.abs(discrimination)<.1)flags.push("low-discrimination");
     out.push({id,skill:row.Skill,subject:row.Subject,resolved:n,accuracy,firstTryRate:first,discrimination,comebackRate:(Number(row.ComebackSeen)||0)?(Number(row.ComebackCorrect)||0)/(Number(row.ComebackSeen)||1):null,flags,dominantMisconception:mis[0]?.[0]||null});
@@ -1224,7 +1234,7 @@ function loadLearning(){
   }catch{return {}}
 }
 function writeLearning(all){try{localStorage.setItem(LEARNING_STORAGE_KEY,JSON.stringify(all))}catch{};return all}
-function recordLearning(question,correct,{attemptCount=1,incorrectCount=correct?0:1,hintCount=0,r=null,w=null}={}){
+function recordLearning(question,correct,{attemptCount=1,incorrectCount=correct?0:1,hintCount=0}={}){
   if(!question?.skill)return null;
   const all=loadLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2},now=Date.now();
   const priorSeen=Math.max(0,Number(row.Seen)||0),priorIndependent=Math.max(0,Number(row.IndependentCorrect)||Number(row.Correct)||0),priorMastery=priorSeen?priorIndependent/priorSeen:.5;
@@ -1258,7 +1268,7 @@ function recordLearning(question,correct,{attemptCount=1,incorrectCount=correct?
     if(row.ConsecutiveWrong>=2)row.TargetDifficulty=2;
   }
   row.LastResolution={correct:!!correct,independent,attemptCount:attempts,incorrectCount:incorrect,hintCount:hints,resolvedAt:now};
-  recordItemQuality(question,correct,{attemptCount:attempts,incorrectCount:incorrect,hintCount:hints,r,w,kind:"normal",priorMastery});
+  recordItemQuality(question,correct,{attemptCount:attempts,incorrectCount:incorrect,hintCount:hints,kind:"normal",priorMastery});
   all[question.skill]=row;writeLearning(all);return row;
 }
 function recordAuxLearning(question,correct,kind){
@@ -1341,6 +1351,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,selectQuestions,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,loadItemQuality,reviewItemQuality
+  buildCatalog,validateCatalog,selectQuestions,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality
 });
 })();
