@@ -19,15 +19,21 @@ test("item-quality monitoring stays local and stores privacy-minimized aggregate
     };
 
     e.markQuestionShown(q);
-    e.recordLearning(q,true,{attemptCount:1,incorrectCount:0,hintCount:0,r:0,w:null});
+    e.note(q,0);
+    e.recordLearning(q,true,{attemptCount:1,incorrectCount:0,hintCount:0});
 
     e.markQuestionShown(q);
-    e.recordLearning(q,false,{attemptCount:3,incorrectCount:3,hintCount:1,r:1,w:1});
+    e.note(q,1);
+    e.note(q,2);
+    e.note(q,1);
+    e.recordLearning(q,false,{attemptCount:3,incorrectCount:3,hintCount:1});
 
     e.markQuestionShown(q);
+    e.note(q,0);
     e.recordSupport(q,true);
 
     e.markQuestionShown(q);
+    e.note(q,0);
     e.recordComeback(q,true);
 
     return e.loadItemQuality();
@@ -39,13 +45,14 @@ test("item-quality monitoring stays local and stores privacy-minimized aggregate
   expect(row.Correct).toBe(3);
   expect(row.Wrong).toBe(1);
   expect(row.FirstTryCorrect).toBe(1);
-  expect(row.ChoicePositions).toEqual([1,1,0]);
-  expect(row.Misconceptions["off-by-one"]).toBe(1);
+  expect(row.ChoicePositions).toEqual([3,2,1]);
+  expect(row.Misconceptions["off-by-one"]).toBe(2);
+  expect(row.Misconceptions["over-subtraction"]).toBe(1);
   expect(row.HintsUsed).toBe(1);
   expect(row.SupportSeen).toBe(1);
   expect(row.ComebackSeen).toBe(1);
   expect(row.ComebackCorrect).toBe(1);
-  expect(Object.values(row.ResponseBands).reduce((a,b)=>a+b,0)).toBe(4);
+  expect(Object.values(row.ResponseBands).reduce((a,b)=>a+b,0)).toBe(2);
 
   const serialized=JSON.stringify(result);
   for(const forbidden of ["username","userId","rawAnswer","sessionId","email","studentId"]){
@@ -101,7 +108,8 @@ test("item-quality storage is bounded and does not become an event log",async({p
     for(let i=0;i<275;i++){
       const q={id:"bounded-"+i,subject:"Math",skill:"subtraction-within-12",choices:["1","2","3"],answer:"1",choiceDiagnostics:{"2":{misconception:"m2"},"3":{misconception:"m3"}}};
       e.markQuestionShown(q);
-      e.recordLearning(q,true,{attemptCount:1,incorrectCount:0,hintCount:0,r:0});
+      e.note(q,0);
+      e.recordLearning(q,true,{attemptCount:1,incorrectCount:0,hintCount:0});
     }
     return e.loadItemQuality();
   });
