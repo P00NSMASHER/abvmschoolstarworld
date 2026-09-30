@@ -1259,6 +1259,68 @@ function studyStarRewardEvents({completed=false,comebackSucceeded=false}={}){
   return Object.freeze(events);
 }
 
+const STUDY_STAR_DB="abvm-study-stars-v1",STUDY_STAR_STORE="reward-ledger";
+function studyStarRoundId({sourcePack,mode,sessionSeed}={}){
+  const source=text(sourcePack),game=text(mode),seed=text(sessionSeed);
+  if(!source||!game||!seed)throw new Error("Study Star round identity requires sourcePack, mode, and sessionSeed");
+  return "round-"+hash(source+"|"+game+"|"+seed).toString(36);
+}
+function openStudyStarDb(){
+  return new Promise((resolve,reject)=>{
+    if(typeof indexedDB==="undefined"){reject(new Error("IndexedDB unavailable"));return}
+    const request=indexedDB.open(STUDY_STAR_DB,1);
+    request.onupgradeneeded=()=>{
+      const db=request.result;
+      if(!db.objectStoreNames.contains(STUDY_STAR_STORE))db.createObjectStore(STUDY_STAR_STORE,{keyPath:["sourcePack","roundId","rewardType"]});
+    };
+    request.onsuccess=()=>resolve(request.result);
+    request.onerror=()=>reject(request.error||new Error("Study Star ledger unavailable"));
+  });
+}
+function studyStarEventId(sourcePack,roundId,rewardType){
+  return "star-"+hash(text(sourcePack)+"|"+text(roundId)+"|"+text(rewardType)).toString(36);
+}
+async function commitStudyStarRewards({sourcePack,roundId,completed=false,comebackSucceeded=false}={}){
+  const source=text(sourcePack),round=text(roundId),events=studyStarRewardEvents({completed,comebackSucceeded});
+  if(!source||!round)throw new Error("Study Star ledger requires sourcePack and roundId");
+  if(!events.length)return{currency:STUDY_STAR_POLICY.currency,awardedAmount:0,duplicateAmount:0,results:[]};
+  const db=await openStudyStarDb();
+  return await new Promise((resolve,reject)=>{
+    const tx=db.transaction(STUDY_STAR_STORE,"readwrite"),store=tx.objectStore(STUDY_STAR_STORE),results=[];
+    let awardedAmount=0,duplicateAmount=0;
+    tx.onerror=()=>{const error=tx.error||new Error("Study Star ledger transaction failed");db.close();reject(error)};
+    tx.onabort=()=>{const error=tx.error||new Error("Study Star ledger transaction aborted");db.close();reject(error)};
+    tx.oncomplete=()=>{db.close();resolve({currency:STUDY_STAR_POLICY.currency,awardedAmount,duplicateAmount,results})};
+    for(const event of events){
+      const key=[source,round,event.rewardType],get=store.get(key);
+      get.onerror=()=>tx.abort();
+      get.onsuccess=()=>{
+        if(get.result){
+          duplicateAmount+=Number(get.result.amount)||0;
+          results.push({rewardType:event.rewardType,amount:Number(get.result.amount)||0,awarded:false,eventId:get.result.eventId});
+          return;
+        }
+        const entry={sourcePack:source,roundId:round,rewardType:event.rewardType,eventId:studyStarEventId(source,round,event.rewardType),currency:STUDY_STAR_POLICY.currency,amount:event.amount,createdAt:Date.now()};
+        const add=store.add(entry);
+        add.onerror=()=>tx.abort();
+        add.onsuccess=()=>{awardedAmount+=event.amount;results.push({rewardType:event.rewardType,amount:event.amount,awarded:true,eventId:entry.eventId})};
+      };
+    }
+  });
+}
+async function loadStudyStarLedger(){
+  const db=await openStudyStarDb();
+  return await new Promise((resolve,reject)=>{
+    const tx=db.transaction(STUDY_STAR_STORE,"readonly"),request=tx.objectStore(STUDY_STAR_STORE).getAll();
+    request.onerror=()=>{db.close();reject(request.error||new Error("Study Star ledger read failed"))};
+    request.onsuccess=()=>{const rows=(request.result||[]).sort((a,b)=>Number(a.createdAt)-Number(b.createdAt)||String(a.eventId).localeCompare(String(b.eventId)));db.close();resolve(rows)};
+  });
+}
+async function studyStarBalance(){
+  const rows=await loadStudyStarLedger();
+  return rows.reduce((sum,row)=>sum+(Number(row.amount)||0),0);
+}
+
 const GAME_RECORD_PREFIX="abvm-study-games:";
 function gameRecordKey(sourceKey,modeId){return GAME_RECORD_PREFIX+String(sourceKey||"current")+":"+String(modeId||"quick")}
 function loadGameRecord(sourceKey,modeId){
@@ -1502,6 +1564,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,validateRichContent,selectQuestions,studyStarPolicy,studyStarRewardEvents,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,itemQualityKey
+  buildCatalog,validateCatalog,validateRichContent,selectQuestions,studyStarPolicy,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,loadStudyStarLedger,studyStarBalance,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,itemQualityKey
 });
 })();
