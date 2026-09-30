@@ -31,6 +31,8 @@ const contentPipeline=packData.pack?.contentPipeline||null;
 const pipelineCoverage=Array.isArray(contentPipeline?.coverage)?contentPipeline.coverage:[];
 const unsupportedTopics=pipelineCoverage.filter(row=>row?.status==="GENERATOR_UNSUPPORTED").map(row=>row.topic).filter(Boolean);
 const sourceInsufficientTopics=pipelineCoverage.filter(row=>row?.status==="SOURCE_INSUFFICIENT").map(row=>row.topic).filter(Boolean);
+const partiallyCoveredTopics=pipelineCoverage.filter(row=>row?.status==="PARTIALLY_COVERED").map(row=>row.topic).filter(Boolean);
+const notPracticedByDesignTopics=pipelineCoverage.filter(row=>row?.status==="NOT_PRACTICED_BY_DESIGN").map(row=>row.topic).filter(Boolean);
 const pipelineUnsupportedCount=Number.isFinite(Number(contentPipeline?.qa?.unsupportedSkillCount))
   ?Number(contentPipeline.qa.unsupportedSkillCount)
   :unsupportedTopics.length;
@@ -55,11 +57,15 @@ const status={
     skillCount:Number(contentPipeline?.qa?.skillCount||contentPipeline?.skills?.length||0),
     questionCount:Number(contentPipeline?.qa?.questionCount||contentPipeline?.questions?.length||0),
     sourceInsufficientCount:Number(contentPipeline?.qa?.sourceInsufficientCount||sourceInsufficientTopics.length||0),
+    partiallyCoveredCount:partiallyCoveredTopics.length,
+    notPracticedByDesignCount:notPracticedByDesignTopics.length,
     unsupportedSkillCount:pipelineUnsupportedCount,
     lineageRequired:contentPipeline?.sourcePolicy?.requirePageExactLineage===true,
     pageExactLineageCount:Number(contentPipeline?.qa?.pageExactLineageCount||0),
     unresolvedLineageCount:Number(contentPipeline?.qa?.unresolvedLineageCount||0),
     sourceInsufficientTopics,
+    partiallyCoveredTopics,
+    notPracticedByDesignTopics,
     unsupportedTopics,
   },
   workflows:{
@@ -120,10 +126,12 @@ const md=[
   `- **School data checked:** ${sourceCheckedAt||"missing"}${sourceAgeHours===null?"":` (${sourceAgeHours.toFixed(1)}h old)`}`,
   `- **Source coverage:** ${status.schoolData.sourcePages}/6 teacher pages; source sufficient = ${status.schoolData.sourceSufficient}; fresh <=8h = ${sourceFresh}`,
   `- **Lunch source:** ${status.lunch.retrievalState}; ${status.lunch.days} reviewed days; missing dates: ${status.lunch.missingDates.join(", ")||"none"}`,
-  `- **Grade 2 content pipeline:** QA ${status.contentPipeline.qaStatus}; safety ${status.contentPipeline.safetyState}; ${status.contentPipeline.skillCount} skills; ${status.contentPipeline.questionCount} questions; source-insufficient ${status.contentPipeline.sourceInsufficientCount}; unsupported ${status.contentPipeline.unsupportedSkillCount}`,
+  `- **Grade 2 content pipeline:** QA ${status.contentPipeline.qaStatus}; safety ${status.contentPipeline.safetyState}; ${status.contentPipeline.skillCount} skills; ${status.contentPipeline.questionCount} questions; partial ${status.contentPipeline.partiallyCoveredCount}; source-insufficient ${status.contentPipeline.sourceInsufficientCount}; not-practiced-by-design ${status.contentPipeline.notPracticedByDesignCount}; unsupported ${status.contentPipeline.unsupportedSkillCount}`,
   `- **Question lineage:** required = ${status.contentPipeline.lineageRequired}; page-exact ${status.contentPipeline.pageExactLineageCount}/${status.contentPipeline.questionCount}; unresolved ${status.contentPipeline.unresolvedLineageCount}`,
-  `- **Unsupported teacher skills:** ${status.contentPipeline.unsupportedTopics.join(", ")||"none"}`,
+  `- **Partially covered study topics:** ${status.contentPipeline.partiallyCoveredTopics.join(", ")||"none"}`,
   `- **Source-insufficient study topics:** ${status.contentPipeline.sourceInsufficientTopics.join(", ")||"none"}`,
+  `- **Intentionally not practiced:** ${status.contentPipeline.notPracticedByDesignTopics.join(", ")||"none"}`,
+  `- **Unsupported teacher skills:** ${status.contentPipeline.unsupportedTopics.join(", ")||"none"}`,
   `- **App version:** ${status.appVersion}`,
   `- **Service worker cache:** ${status.serviceWorkerCache}`,
   `- **Git SHA:** ${status.gitSha||"unknown"}`,
