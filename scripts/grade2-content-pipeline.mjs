@@ -60,7 +60,7 @@ const BASE_SKILLS = [
   },
   {
     id: 'consonant-blends',
-    subject: 'Reading / ELA',
+    subject: 'Spelling / Handwriting',
     label: 'Consonant blends',
     pattern: /consonant blends?/i,
     standards: ['CCSS.RF.2.3'],
@@ -92,7 +92,7 @@ const BASE_SKILLS = [
   },
   {
     id: 'long-short-a',
-    subject: 'Reading / ELA',
+    subject: 'Spelling / Handwriting',
     label: 'Long a and short a',
     pattern: /long a|short a|\ba_e\b/i,
     standards: ['CCSS.RF.2.3'],
