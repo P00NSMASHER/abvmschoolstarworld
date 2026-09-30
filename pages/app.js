@@ -203,7 +203,7 @@ function weekRangeLabel(days){
   return a+" – "+b;
 }
 function isPackWeek(days){
-  const sourceStart=parseDate(pack?.weekLabel||"");
+  const sourceStart=getDerivedPack().packWeekStart;
   return !!sourceStart&&days.some(d=>sameDay(d,sourceStart));
 }
 function lunchText(lunch){
@@ -230,31 +230,24 @@ function lunchCardHtml(date,lunch){
 }
 function currentTest(){
   const now=today();
-  return datedImportantEvents()
-    .filter(({item,date})=>date>=now&&kindClass(item)==="test")
-    .sort((a,b)=>a.date-b.date)
-    .map(({item,date})=>({x:item,d:date}))[0]||null;
+  const row=datedImportantEvents().find(({item,date})=>date>=now&&kindClass(item)==="test");
+  return row?{x:row.item,d:row.date}:null;
 }
 function currentWeekTest(){
   const now=today(),end=weekDays(0)[4];
-  return datedImportantEvents()
-    .filter(({item,date})=>date>=now&&date<=end&&kindClass(item)==="test")
-    .sort((a,b)=>a.date-b.date)
-    .map(({item,date})=>({x:item,d:date}))[0]||null;
+  const row=datedImportantEvents().find(({item,date})=>date>=now&&date<=end&&kindClass(item)==="test");
+  return row?{x:row.item,d:row.date}:null;
 }
 function nextSpellingTest(){
   const now=today();
-  return datedImportantEvents()
-    .filter(({item,date})=>date>=now&&kindClass(item)==="test"&&/spelling|handwriting/i.test(item.label||""))
-    .sort((a,b)=>a.date-b.date)
-    .map(({item,date})=>({x:item,d:date}))[0]||null;
+  const row=datedImportantEvents().find(({item,date})=>date>=now&&kindClass(item)==="test"&&/spelling|handwriting/i.test(item.label||""));
+  return row?{x:row.item,d:row.date}:null;
 }
 function currentOrSoonStarAssessment(){
   const now=today(),weekMs=7*24*60*60*1000;
-  return getDerivedPack().datedEvents
-    .filter(({item,range})=>/\bSTAR\b/i.test(item.label||"")&&range&&range[1]>=now&&range[0].getTime()-now.getTime()<=weekMs)
-    .sort((a,b)=>a.range[0]-b.range[0])
-    .map(({item,range})=>({x:item,range}))[0]||null;
+  const row=datedImportantEvents().find(({item,range})=>
+    /\bSTAR\b/i.test(item.label||"")&&range[1]>=now&&range[0].getTime()-now.getTime()<=weekMs);
+  return row?{x:row.item,range:row.range}:null;
 }
 function subjectByName(name){return getDerivedPack().subjects.get(name.toLowerCase())||null;}
 function readingSubject(){return subjectByName("Reading / ELA");}
@@ -267,20 +260,16 @@ function reminderForDate(date){
   const rows=getDerivedPack().reminderRows;
   const exact=rows.find(row=>date>=row.range[0]&&date<=row.range[1]);
   if(exact)return exact.text;
-  return rows.filter(row=>row.range[0]>=date).sort((a,b)=>a.range[0]-b.range[0])[0]?.text||"";
+  return rows.find(row=>row.range[0]>=date)?.text||"";
 }
 function upcomingReminderTexts(date=today(),limit=6){
-  const timed=getDerivedPack().reminderRows
-    .filter(row=>row.range[1]>=date)
-    .sort((a,b)=>a.range[0]-b.range[0]).map(row=>row.text);
+  const timed=getDerivedPack().reminderRows.filter(row=>row.range[1]>=date).map(row=>row.text);
   return [...new Set(timed)].slice(0,limit);
 }
 function linkedNoticeExpiry(text){
-  if(/^Picture (?:ordering|backgrounds):/i.test(String(text||""))){
-    const picture=(pack?.importantDates||[]).find(item=>/\bPicture Day\b/i.test(item.label||""));
-    return eventDateRange(picture?.date)?.[1]||null;
-  }
-  return null;
+  return /^Picture (?:ordering|backgrounds):/i.test(String(text||""))
+    ? getDerivedPack().pictureDayEnd
+    : null;
 }
 function currentNoticeTexts(date=today()){
   return (pack?.parentNotices||[]).filter(text=>{
@@ -288,13 +277,7 @@ function currentNoticeTexts(date=today()){
     return !expiry||expiry>=date;
   });
 }
-function specialsRows(){
-  const source=subjectByName("Specials");
-  return (source?.topics||[]).map(line=>{
-    const m=String(line).match(/^(Monday|Tuesday|Wednesday|Thursday|Friday):\s*(.+)$/i);
-    return m?{day:m[1].slice(0,3),label:m[2]}:null;
-  }).filter(Boolean);
-}
+function specialsRows(){return getDerivedPack().specials;}
 function calendarBase(){
   const now=today();
   return new Date(now.getFullYear(),now.getMonth()+calendarOffset,1,12);
