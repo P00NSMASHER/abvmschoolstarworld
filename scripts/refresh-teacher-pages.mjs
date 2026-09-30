@@ -273,6 +273,13 @@ const digest = createHash('sha256').update(normalizedSource).digest('hex');
 const sourceHash = `teacher-pages-${digest.slice(0, 20)}`;
 const uploadedNoticeHash = `uploaded-notices-${createHash('sha256').update(JSON.stringify(uploadedNotices)).digest('hex').slice(0, 20)}`;
 const checkedAt = new Date().toISOString();
+const teacherSourcePages = fetched.map(page => ({
+  title: page.title,
+  url: page.url,
+  checkedAt,
+  contentHash: createHash('sha256').update(page.lines.join('\n')).digest('hex'),
+  lines: page.lines,
+}));
 const data = JSON.parse(readFileSync(DATA_PATH, 'utf8'));
 const pack = data.pack || {};
 const contentChanged = pack.sourceHash !== sourceHash || pack.uploadedNoticeHash !== uploadedNoticeHash;
@@ -344,7 +351,12 @@ pack.vocabulary = vocabulary.split(',').map(term => term.trim()).filter(Boolean)
   meaning: 'Current Reading Work vocabulary word; the teacher page does not provide a definition.',
 }));
 
-const contentPipeline = buildGrade2ContentPipeline(pack, { generatedAt: checkedAt, sourceHash });
+const contentPipeline = buildGrade2ContentPipeline(pack, {
+  generatedAt: checkedAt,
+  sourceHash,
+  sourcePages: teacherSourcePages,
+  requirePageExactLineage: true,
+});
 mergeGrade2StudyNotes(pack, contentPipeline);
 const contentPipelineIssues = validateGrade2ContentPipeline(contentPipeline);
 if (contentPipelineIssues.length) {
@@ -390,12 +402,7 @@ data.sourceLastCheckedAt = checkedAt;
 data.sourceLastSeenAt = checkedAt;
 data.sourceCapturedAt = capturedAt;
 data.freshnessHours = 0;
-data.sourcePages = fetched.map(page => ({
-  title: page.title,
-  url: page.url,
-  checkedAt,
-  contentHash: createHash('sha256').update(page.lines.join('\n')).digest('hex'),
-}));
+data.sourcePages = teacherSourcePages.map(({ lines: _lines, ...page }) => page);
 data.uploadedNotices = {
   count: uploadedNotices.documents.length,
   latestIntegratedAt: uploadedNotices.lastIntegratedAt,
