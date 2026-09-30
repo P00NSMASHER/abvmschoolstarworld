@@ -1,11 +1,11 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v96-study-games-rich-formats";
+const CACHE = "abvm-grade2-parent-companion-v97-study-games-learning-first";
 const STATIC_SHELL = [
   "./index.html",
-  "./styles.css?v=94",
-  "./app.js?v=96",
-  "./study-games.js?v=86",
-  "./study-games-view.js?v=2",
+  "./styles.css?v=95",
+  "./app.js?v=97",
+  "./study-games.js?v=87",
+  "./study-games-view.js?v=3",
   "./manifest.webmanifest",
   "./assets/abvm-app-icon-180.png",
   "./assets/abvm-app-icon-192.png",
