@@ -239,7 +239,7 @@ test('a repeated Math miss triggers an unscored same-skill support step', async 
   await page.locator('[data-game-next]').click();
 
   await expect(page.locator('.game-topbar')).toContainText('Support step');
-  await expect(page.locator('.adaptive-note')).toContainText('not scored');
+  await expect(page.getByText('Support step · same skill · not scored',{exact:true})).toBeVisible();
   await expect(page.locator('.teach-card')).toBeVisible();
   await expect(page.locator('.teach-card')).toContainText('Quick lesson');
   await expect(page.locator('.teach-card .game-hint')).not.toHaveText('');
