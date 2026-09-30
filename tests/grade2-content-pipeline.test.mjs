@@ -115,6 +115,70 @@ test('future teacher skills are detected without hand-editing the app', () => {
   assert.ok(pipeline.coverage.some(row => row.status === 'GENERATOR_UNSUPPORTED' && row.topic.toLowerCase() === 'sequence'));
 });
 
+test('production lineage resolves every question to an exact teacher page capture', () => {
+  const envelope = JSON.parse(readFileSync(DATA_PATH, 'utf8'));
+  const pack = structuredClone(envelope.pack);
+  const reading = pack.subjects.find(row => row.subject === 'Reading / ELA');
+  const spelling = pack.subjects.find(row => row.subject === 'Spelling / Handwriting');
+  const math = pack.subjects.find(row => row.subject === 'Math');
+  const religion = pack.subjects.find(row => row.subject === 'Religion');
+  const sourcePages = [
+    {
+      title: 'Reading Work',
+      url: 'https://sites.google.com/view/abvmgr2/reading-work',
+      checkedAt: '2026-09-30T08:00:00.000Z',
+      contentHash: 'reading-capture-hash',
+      lines: [...reading.topics.filter(line => !/^Grammar:/i.test(line)), ...reading.studyNotes],
+    },
+    {
+      title: 'Weekly Spelling List',
+      url: 'https://sites.google.com/view/abvmgr2/weekly-spelling-list',
+      checkedAt: '2026-09-30T08:00:00.000Z',
+      contentHash: 'spelling-capture-hash',
+      lines: spelling.studyNotes,
+    },
+    {
+      title: 'Tests',
+      url: 'https://sites.google.com/view/abvmgr2/tests',
+      checkedAt: '2026-09-30T08:00:00.000Z',
+      contentHash: 'tests-capture-hash',
+      lines: [
+        ...reading.topics.filter(line => /^Grammar:/i.test(line)),
+        ...spelling.topics,
+        ...math.topics,
+        ...math.studyNotes,
+      ],
+    },
+    {
+      title: 'Religion',
+      url: 'https://sites.google.com/view/abvmgr2/religion',
+      checkedAt: '2026-09-30T08:00:00.000Z',
+      contentHash: 'religion-capture-hash',
+      lines: [...religion.topics, ...religion.studyNotes],
+    },
+  ];
+
+  const pipeline = buildGrade2ContentPipeline(pack, {
+    generatedAt: '2026-09-30T08:00:00.000Z',
+    sourceHash: pack.sourceHash,
+    sourcePages,
+    requirePageExactLineage: true,
+  });
+
+  assert.equal(validateGrade2ContentPipeline(pipeline).length, 0);
+  assert.equal(pipeline.sourcePolicy.requirePageExactLineage, true);
+  assert.equal(pipeline.qa.unresolvedLineageCount, 0);
+  assert.equal(pipeline.qa.pageExactLineageCount, pipeline.qa.questionCount);
+  assert.ok(pipeline.questions.every(question => question.sourceLineage?.quality === 'page-exact'));
+  assert.ok(pipeline.questions.every(question => /^sha256:[0-9a-f]{64}$/.test(question.sourceLineage?.evidenceExcerptHash || '')));
+
+  const sourceFor = skill => pipeline.questions.find(question => question.skill === skill)?.sourceLineage;
+  assert.equal(sourceFor('subtraction-within-12')?.sourceTitle, 'Tests');
+  assert.equal(sourceFor('sentence-types')?.sourceTitle, 'Tests');
+  assert.equal(sourceFor('theme')?.sourceTitle, 'Reading Work');
+  assert.equal(sourceFor('religion-trinity')?.sourceTitle, 'Religion');
+});
+
 test('vocabulary definitions are generated only when the verified pack actually supplies meanings', () => {
   const pack = {
     sourceHash: 'vocab-source',
@@ -153,6 +217,30 @@ test('generated study notes are merged into the matching Study subjects without 
   assert.ok(spelling.studyNotes.some(note => /short a words/i.test(note)));
   assert.equal(new Set(reading.studyNotes.map(note => note.toLowerCase())).size, reading.studyNotes.length);
   assert.equal(new Set(spelling.studyNotes.map(note => note.toLowerCase())).size, spelling.studyNotes.length);
+});
+
+test('page-exact publication fails closed when a detected skill has no matching source page evidence', () => {
+  const pack = {
+    sourceHash: 'missing-lineage-source',
+    subjects: [
+      { subject: 'Math', topics: ['Subtraction to 12'], studyNotes: [] },
+    ],
+    vocabulary: [],
+  };
+  assert.throws(
+    () => buildGrade2ContentPipeline(pack, {
+      sourceHash: pack.sourceHash,
+      sourcePages: [{
+        title: 'Tests',
+        url: 'https://example.test/tests',
+        checkedAt: '2026-09-30T08:00:00.000Z',
+        contentHash: 'capture-hash',
+        lines: ['Unrelated teacher content'],
+      }],
+      requirePageExactLineage: true,
+    }),
+    /lineage-unresolved/
+  );
 });
 
 test('pipeline validation rejects fake semantic variety and answer-position streaks', () => {
