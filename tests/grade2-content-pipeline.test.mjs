@@ -27,6 +27,7 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
     'cvc-structure',
     'long-short-a',
     'suffix-ed-ing',
+    'high-frequency-word-use',
     'theme',
     'visualize',
     'dialogue',
@@ -53,6 +54,12 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
   assert.deepEqual(pipeline.qa.subjectCoverage, ['Math', 'Reading / ELA', 'Religion', 'Spelling / Handwriting']);
   assert.equal(ids.has('vocabulary-in-context'), false, 'must not invent vocabulary definitions absent from source');
   assert.ok(pipeline.coverage.some(row => row.status === 'SOURCE_INSUFFICIENT' && /vocabulary definitions/i.test(row.topic)));
+  assert.ok(pipeline.coverage.some(row => row.status === 'COVERED' && row.skillId === 'high-frequency-word-use'));
+  assert.ok(pipeline.coverage.some(row => row.status === 'NOT_PRACTICED_BY_DESIGN' && /^Story:/i.test(row.topic)));
+  const sightQuestions = pipeline.questions.filter(question => question.skill === 'high-frequency-word-use');
+  assert.ok(sightQuestions.length >= 2);
+  assert.ok(sightQuestions.every(question => question.evidenceContract?.doesNotClaim?.includes('spelling')));
+  assert.ok(sightQuestions.every(question => question.evidenceContract?.doesNotClaim?.includes('isolated-print-recognition')));
   assert.ok(pipeline.questions.length >= pipeline.skills.length);
   assert.equal(validateGrade2ContentPipeline(pipeline).length, 0);
 
@@ -78,6 +85,33 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
   assert.ok((pipeline.qa.dokCounts?.[1] || 0) > 0);
   assert.ok((pipeline.qa.dokCounts?.[2] || 0) > 0);
   assert.ok((pipeline.qa.dokCounts?.[3] || 0) > 0);
+});
+
+test('source-bound sight-word contexts restore the older StarBlox high-frequency practice without claiming spelling mastery', () => {
+  const pack = {
+    sourceHash: 'older-sight-word-week',
+    subjects: [{
+      subject: 'Reading / ELA',
+      topics: ['Sight words: put, why, blue, help, for, yellow, both, there, even, ball, or, green, how, little, one, see, sounds, funny, find, could'],
+      studyNotes: [],
+    }],
+    vocabulary: [],
+  };
+
+  const pipeline = buildGrade2ContentPipeline(pack, {
+    generatedAt: '2026-09-30T12:00:00.000Z',
+    sourceHash: pack.sourceHash,
+  });
+
+  const questions = pipeline.questions.filter(question => question.skill === 'high-frequency-word-use');
+  assert.equal(pipeline.safetyState, 'READY');
+  assert.equal(pipeline.coverage.some(row => row.status === 'PARTIALLY_COVERED'), false);
+  assert.equal(questions.length, 20);
+  assert.ok(questions.every(question => question.sourceMode === 'CURATED_CONTEXT'));
+  assert.ok(questions.every(question => question.questionType === 'transfer'));
+  assert.ok(questions.every(question => question.evidenceContract?.strongestClaim === 'contextual-high-frequency-word-use'));
+  assert.ok(questions.every(question => question.evidenceContract?.doesNotClaim?.includes('spelling')));
+  assert.equal(validateGrade2ContentPipeline(pipeline).length, 0);
 });
 
 test('future teacher skills are detected without hand-editing the app', () => {
