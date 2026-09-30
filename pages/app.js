@@ -479,7 +479,7 @@ function saveGameRecord(){
   storageSet(gameRecordKey(gameState.mode),JSON.stringify(next));
   gameState.saved=true;
 }
-function currentGameSourceKey(){return String(studyGameCatalog()?.sourceKey||"current")}
+function currentGameSourceKey(){return studyGameCatalog()?.sourceKey||"current"}
 function scheduleGameComeback(origin){const e=studyGameEngine(),c=studyGameCatalog(),s=currentGameSourceKey();return e?.scheduleComeback?.(c,origin,{sourceKey:s,remaining:2,seenIds:gameState.questions.slice(0,gameState.index+1).map(q=>q.id),seed:s+"|comeback|"+String(origin?.id||"item")})||null}
 function tickGameComebacks(){studyGameEngine()?.tickComebacks?.(currentGameSourceKey())}
 function markGameComebacksNextSession(){studyGameEngine()?.deferComebacksToNextSession?.(currentGameSourceKey())}
