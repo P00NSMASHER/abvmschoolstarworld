@@ -156,6 +156,44 @@ const BASE_SKILLS = [
     }),
   },
   {
+    id: 'sequence',
+    subject: 'Reading / ELA',
+    label: 'Sequence / beginning, middle, end',
+    pattern: /\bsequence\b|plot.*beginning.*middle.*end|beginning.*middle.*end/i,
+    standards: ['CCSS.RL.2.5'],
+    domain: 'Comprehension / constructing meaning',
+    studyNotes: ['Sequence means putting events in the order they happen; beginning, middle, and end describe story order.'],
+    question: () => ({
+      prompt: 'First Ava pours water into an ice tray. Next she puts the tray in the freezer. Later the water becomes ice. What happens immediately before the water becomes ice?',
+      choices: ['She puts the tray in the freezer.', 'She pours water into the tray.', 'She takes the ice outside.'],
+      answer: 'She puts the tray in the freezer.',
+      explanation: 'The tray goes into the freezer directly before the water becomes ice.',
+      hint: 'Follow the events in order and choose the step just before the last event.',
+      questionType: 'direct',
+      dok: 2,
+      difficulty: 2,
+    }),
+  },
+  {
+    id: 'caption',
+    subject: 'Reading / ELA',
+    label: 'Captions / text features',
+    pattern: /\bcaptions?\b|text features?/i,
+    standards: ['CCSS.RI.2.5'],
+    domain: 'Informational text features',
+    studyNotes: ['A caption is a short text feature that explains or describes a picture, photograph, or diagram.'],
+    question: () => ({
+      prompt: 'A science page shows a photo of a ladybug resting on a green leaf. Which sentence works best as the caption?',
+      choices: ['A ladybug rests on a green leaf.', 'Ladybugs are always the biggest insects.', 'The page has many words.'],
+      answer: 'A ladybug rests on a green leaf.',
+      explanation: 'A caption should clearly describe or explain what the picture shows.',
+      hint: 'Choose the sentence that directly matches the pictured scene described in the question.',
+      questionType: 'direct',
+      dok: 2,
+      difficulty: 2,
+    }),
+  },
+  {
     id: 'inference',
     subject: 'Reading / ELA',
     label: 'Inference',
@@ -594,12 +632,383 @@ const SUPPLEMENTAL_QUESTION_FAMILIES = Object.freeze({
       difficulty: 2,
     },
   ],
+  sequence: [
+    {
+      questionType: 'transfer',
+      prompt: 'Which sequence has one clear cause-and-effect order?',
+      choices: ['Put water in an ice tray → place it in a freezer → the water freezes', 'The water freezes → put water in a tray → place it in a freezer', 'Place an empty tray in a freezer → the water freezes → pour in water'],
+      answer: 'Put water in an ice tray → place it in a freezer → the water freezes',
+      explanation: 'The water must be in the tray before it can freeze there.',
+      hint: 'Choose the order in which each step makes the next step possible.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Why is “put on socks → put on shoes → tie the laces” a stronger sequence than “put on shoes → put on socks → tie the laces”?',
+      choices: ['The steps have a necessary order because socks go on before shoes.', 'The first sequence has more words.', 'Any order works exactly the same.'],
+      answer: 'The steps have a necessary order because socks go on before shoes.',
+      explanation: 'A strong sequence uses events whose order is supported by a real dependency.',
+      hint: 'Ask whether changing the order would make a step impossible or incorrect.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  caption: [
+    {
+      questionType: 'transfer',
+      prompt: 'A page shows a picture of three chicks following a hen across a barnyard. Which caption best matches the picture?',
+      choices: ['Three chicks follow a hen across the barnyard.', 'Chickens can live for many years.', 'The farmer owns a red tractor.'],
+      answer: 'Three chicks follow a hen across the barnyard.',
+      explanation: 'The best caption directly describes the important action shown in the picture.',
+      hint: 'Choose the sentence that matches the pictured scene described in the question.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Why is “A red kite flies above the field” a stronger caption for a kite photograph than “It is fun outside”?',
+      choices: ['It gives specific information that directly matches the photograph.', 'It uses fewer letters.', 'A caption should never describe what is visible.'],
+      answer: 'It gives specific information that directly matches the photograph.',
+      explanation: 'A useful caption adds clear information about the picture instead of making a vague statement.',
+      hint: 'Choose the reason that connects the caption to the picture most directly.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  'suffix-s-es': [
+    {
+      questionType: 'transfer',
+      prompt: 'Which word correctly shows more than one dish?',
+      choices: ['dishes', 'dishs', 'disheses'],
+      answer: 'dishes',
+      explanation: 'Dish ends with sh, so the plural is formed by adding -es.',
+      hint: 'Words ending in sounds like sh often need -es to make the plural.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Why does “boxes” use -es instead of only -s?',
+      choices: ['The singular word box ends in x, so -es forms the regular plural.', 'Every four-letter word uses -es.', 'The word box is a verb.'],
+      answer: 'The singular word box ends in x, so -es forms the regular plural.',
+      explanation: 'Regular nouns ending in x commonly add -es to show more than one.',
+      hint: 'Look at the ending of the singular noun.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  'cause-effect': [
+    {
+      questionType: 'transfer',
+      prompt: 'The plant was not watered for many days, and its leaves drooped. What is the cause?',
+      choices: ['The plant was not watered.', 'The leaves drooped.', 'The pot was green.'],
+      answer: 'The plant was not watered.',
+      explanation: 'Not receiving water happened first and led to the drooping leaves.',
+      hint: 'Choose what happened first and made the later event happen.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'In “The sidewalk was icy, so Maya walked slowly,” why is the icy sidewalk the cause?',
+      choices: ['It explains why Maya changed how she walked.', 'It happened after Maya arrived home.', 'It tells Maya’s favorite activity.'],
+      answer: 'It explains why Maya changed how she walked.',
+      explanation: 'The icy condition caused Maya to walk more carefully.',
+      hint: 'Ask which detail explains why the other event happened.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  'main-character': [
+    {
+      questionType: 'transfer',
+      prompt: 'A story follows Ben as he trains for a race, worries before the start, and celebrates at the finish. Who is the main character?',
+      choices: ['Ben', 'the race', 'the finish line'],
+      answer: 'Ben',
+      explanation: 'The story follows Ben’s actions and feelings across the whole sequence.',
+      hint: 'Choose the person the story follows most closely.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Why is Ben the main character in a story that follows his problem, choices, and result?',
+      choices: ['Most of the important events happen to or because of Ben.', 'His name has three letters.', 'He appears only in the title.'],
+      answer: 'Most of the important events happen to or because of Ben.',
+      explanation: 'The main character is central to the important events and changes in the story.',
+      hint: 'Think about whose actions drive the story.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  setting: [
+    {
+      questionType: 'transfer',
+      prompt: 'A story says, “At sunset, the family spread a blanket beside the lake.” Which words tell the setting?',
+      choices: ['at sunset beside the lake', 'the family spread', 'a blanket'],
+      answer: 'at sunset beside the lake',
+      explanation: 'Those words tell both when and where the story is happening.',
+      hint: 'Find the place and time clues.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Why is “in the school gym on Friday night” a complete setting detail?',
+      choices: ['It tells both where and when.', 'It names the main character.', 'It explains the story’s theme.'],
+      answer: 'It tells both where and when.',
+      explanation: 'Setting includes the place and time in which events happen.',
+      hint: 'Check whether the phrase gives a place clue and a time clue.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  'character-feelings': [
+    {
+      questionType: 'transfer',
+      prompt: 'Noah hides behind his dad and speaks in a tiny voice before meeting the new coach. How does Noah most likely feel?',
+      choices: ['nervous', 'furious', 'proud'],
+      answer: 'nervous',
+      explanation: 'Hiding and speaking quietly are clues that Noah feels nervous.',
+      hint: 'Use the character’s actions as clues to the feeling.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Which detail is the strongest evidence that Ana feels excited about her surprise?',
+      choices: ['She jumps up, smiles, and claps.', 'She is standing in a room.', 'The box is on a table.'],
+      answer: 'She jumps up, smiles, and claps.',
+      explanation: 'Those actions directly show excitement.',
+      hint: 'Choose the action that most directly reveals a feeling.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  genre: [
+    {
+      questionType: 'transfer',
+      prompt: 'A text explains how bees collect nectar and includes labeled photographs. Which genre fits best?',
+      choices: ['informational text', 'fantasy', 'poetry'],
+      answer: 'informational text',
+      explanation: 'The text gives factual information and labeled photographs about a real topic.',
+      hint: 'Ask whether the text is mainly teaching facts, telling an impossible story, or using poetic form.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Why does a story with a talking dragon and a magic doorway fit fantasy?',
+      choices: ['It includes events and characters that cannot happen in ordinary real life.', 'It contains only true facts and labels.', 'It is written as a list of directions.'],
+      answer: 'It includes events and characters that cannot happen in ordinary real life.',
+      explanation: 'Fantasy often includes magical or impossible elements.',
+      hint: 'Look for features that separate fantasy from realistic or informational text.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  'place-value': [
+    {
+      questionType: 'transfer',
+      prompt: 'In the number 582, what value does the digit 8 represent?',
+      choices: ['80', '8', '800'],
+      answer: '80',
+      explanation: 'The 8 is in the tens place, so its value is 80.',
+      hint: 'Name the place first: hundreds, tens, ones.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Why is the 6 worth 600 in the number 641?',
+      choices: ['It is in the hundreds place.', 'It is the first digit written.', 'Every 6 is worth 600.'],
+      answer: 'It is in the hundreds place.',
+      explanation: 'A digit’s value depends on its place in the number.',
+      hint: 'Identify the place occupied by the digit 6.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  'compare-numbers': [
+    {
+      questionType: 'transfer',
+      prompt: 'Which comparison is true for 375 and 357?',
+      choices: ['375 > 357', '375 < 357', '375 = 357'],
+      answer: '375 > 357',
+      explanation: 'The hundreds are equal, but 375 has 7 tens while 357 has 5 tens.',
+      hint: 'Compare the greatest place first, then move right.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Why is 428 greater than 419?',
+      choices: ['The hundreds match, and 2 tens is greater than 1 ten.', '8 ones is always more important than hundreds.', 'The numbers have the same digits.'],
+      answer: 'The hundreds match, and 2 tens is greater than 1 ten.',
+      explanation: 'When hundreds are equal, compare the tens place next.',
+      hint: 'Compare hundreds first and tens second.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  time: [
+    {
+      questionType: 'transfer',
+      prompt: 'The minute hand points to 9 and the hour hand is between 4 and 5. What time is it?',
+      choices: ['4:45', '9:20', '5:45'],
+      answer: '4:45',
+      explanation: 'A minute hand on 9 means 45 minutes past the hour.',
+      hint: 'Count by fives around the clock to find the minutes.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Why does a minute hand pointing to 6 mean 30 minutes past the hour?',
+      choices: ['Each clock number represents 5 minutes, and 6 × 5 = 30.', 'The number 6 always means 6:00.', 'There are 30 hours in a day.'],
+      answer: 'Each clock number represents 5 minutes, and 6 × 5 = 30.',
+      explanation: 'Counting by fives to the 6 gives 30 minutes.',
+      hint: 'Count the minute marks in groups of five.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  money: [
+    {
+      questionType: 'transfer',
+      prompt: 'What is the total value of two dimes and one nickel?',
+      choices: ['25¢', '20¢', '30¢'],
+      answer: '25¢',
+      explanation: 'Two dimes are 20¢ and one nickel is 5¢, for a total of 25¢.',
+      hint: 'Name each coin value and then add the cents.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Why do one quarter and two nickels have a total value of 35¢?',
+      choices: ['25¢ + 5¢ + 5¢ = 35¢', '25¢ + 10¢ + 10¢ = 45¢', 'A quarter is worth 35¢ by itself.'],
+      answer: '25¢ + 5¢ + 5¢ = 35¢',
+      explanation: 'A quarter is 25¢ and each nickel is 5¢.',
+      hint: 'Write each coin’s value before adding.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  'religion-image-likeness': [
+    {
+      questionType: 'direct',
+      prompt: "According to the current Religion lesson, which abilities are connected with being made in God's image and likeness?",
+      choices: ['thinking, choosing, and loving', 'running, jumping, and throwing', 'reading, writing, and drawing'],
+      answer: 'thinking, choosing, and loving',
+      explanation: "The current lesson says people are made in God's image and likeness and can think, choose, and love.",
+      hint: 'Use the exact abilities named in the current lesson.',
+      sourceMode: 'STRICT_SOURCE',
+      supportType: 'explicit',
+      dok: 1,
+      difficulty: 2,
+    },
+  ],
+  'religion-jesus-savior': [
+    {
+      questionType: 'direct',
+      prompt: 'According to the current Religion lesson, what new life does Jesus give us?',
+      choices: ['new life in grace', 'a new school schedule', 'a new set of senses'],
+      answer: 'new life in grace',
+      explanation: 'The lesson says Jesus gives us new life in grace.',
+      hint: 'Use the exact phrase connected with Jesus in the current lesson.',
+      sourceMode: 'STRICT_SOURCE',
+      supportType: 'explicit',
+      dok: 1,
+      difficulty: 2,
+    },
+  ],
+  'religion-five-senses': [
+    {
+      questionType: 'transfer',
+      prompt: 'Which choice best applies the current Religion lesson about using our senses to notice God’s gifts of creation?',
+      choices: ['Listening to birds and noticing the colors of flowers', 'Ignoring everything around you on purpose', 'Breaking plants to see what happens'],
+      answer: 'Listening to birds and noticing the colors of flowers',
+      explanation: 'Hearing and seeing can help a person notice and appreciate creation.',
+      hint: 'Choose an action that uses the senses to notice the world respectfully.',
+      sourceMode: 'CURATED_CONTEXT',
+      dok: 2,
+      difficulty: 2,
+    },
+  ],
 });
+
+function supplementalQuestionFamily(skill) {
+  const staticFamily = SUPPLEMENTAL_QUESTION_FAMILIES[skill.id] || [];
+  if (staticFamily.length) return staticFamily;
+
+  const subtraction = String(skill.id || '').match(/^subtraction-within-(\d+)$/);
+  if (subtraction) {
+    const max = Number(subtraction[1]);
+    const start = Math.max(6, Math.min(max, 14));
+    const take = Math.max(2, Math.min(5, start - 2));
+    const answer = start - take;
+    return [
+      {
+        questionType: 'direct',
+        prompt: `What is ${start} - ${take}?`,
+        choices: [String(answer), String(answer + 1), String(Math.max(0, answer - 1))],
+        answer: String(answer),
+        explanation: `${start} take away ${take} leaves ${answer}.`,
+        hint: `Start at ${start} and count back ${take}.`,
+        dok: 1,
+        difficulty: 2,
+      },
+      {
+        questionType: 'reasoning',
+        prompt: `Which addition fact correctly checks ${start} - ${take} = ${answer}?`,
+        choices: [`${answer} + ${take} = ${start}`, `${start} + ${take} = ${start + take}`, `${answer} + ${start} = ${answer + start}`],
+        answer: `${answer} + ${take} = ${start}`,
+        explanation: 'The difference plus the amount taken away should equal the starting number.',
+        hint: 'Use the same three numbers to build the related addition fact.',
+        dok: 3,
+        difficulty: 3,
+      },
+    ];
+  }
+
+  const addition = String(skill.id || '').match(/^addition-within-(\d+)$/);
+  if (addition) {
+    const max = Number(addition[1]);
+    const a = Math.max(2, Math.min(7, Math.floor(max / 2)));
+    const b = Math.max(2, Math.min(5, max - a));
+    const answer = a + b;
+    return [
+      {
+        questionType: 'direct',
+        prompt: `What is ${a} + ${b}?`,
+        choices: [String(answer), String(Math.max(0, answer - 1)), String(Math.min(max + 1, answer + 1))],
+        answer: String(answer),
+        explanation: `${a} plus ${b} equals ${answer}.`,
+        hint: `Start with ${a} and count on ${b} more.`,
+        dok: 1,
+        difficulty: 2,
+      },
+      {
+        questionType: 'reasoning',
+        prompt: `Which subtraction fact correctly checks ${a} + ${b} = ${answer}?`,
+        choices: [`${answer} - ${b} = ${a}`, `${answer} + ${b} = ${answer + b}`, `${a} - ${b} = ${Math.max(0, a - b)}`],
+        answer: `${answer} - ${b} = ${a}`,
+        explanation: 'Subtracting one addend from the total gives the other addend.',
+        hint: 'Use the total and take away one part.',
+        dok: 3,
+        difficulty: 3,
+      },
+    ];
+  }
+
+  return [];
+}
 
 function addSupplementalQuestionFamilies(skills, questions) {
   for (const skill of skills) {
-    const family = SUPPLEMENTAL_QUESTION_FAMILIES[skill.id] || [];
-    for (const raw of family) questions.push(questionFor(skill, raw));
+    for (const raw of supplementalQuestionFamily(skill)) questions.push(questionFor(skill, raw));
   }
 }
 
@@ -1208,7 +1617,7 @@ export function validateGrade2ContentPipeline(pipeline) {
 
   for (const skill of pipeline.skills || []) {
     if (!questionSkills.has(skill.id)) issues.push(`skill-without-question:${skill.id}`);
-    const expected=1+(SUPPLEMENTAL_QUESTION_FAMILIES[skill.id]?.length||0);
+    const expected=1+supplementalQuestionFamily(skill).length;
     if(expected>1){
       const rows=(pipeline.questions||[]).filter(question=>question.skill===skill.id);
       if(rows.length<expected)issues.push(`semantic-family-incomplete:${skill.id}:${rows.length}/${expected}`);
