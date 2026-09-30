@@ -1019,13 +1019,30 @@ function reviewPriority(skillStats,skill,now=Date.now()){
   const supportedBonus=(Number(row.CorrectAfterRetry)||0)>0&&!(Number(row.LastIndependentCorrectAt)||0)?0.5:0;
   return overdue+need+missBonus+supportedBonus;
 }
-function pickBalanced(pool,count,seed,skillStats,preferredSkills=[]){
-  const selected=[],used=new Set(),skillCounts={},maxPerSkill=3,preferred=new Set(preferredSkills||[]),now=Date.now();
+const RECENT_VARIANTS_KEY="abvm-study-recent-variants:v1";
+function variantKey(question){return text(question?.variantFingerprint||question?.contentFingerprint||(question?.id?String(hash(question.id)):""))}
+function readRecentVariants(sourceKey){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(RECENT_VARIANTS_KEY)||"{}");
+    return parsed?.sourceKey===sourceKey&&Array.isArray(parsed?.variants)?parsed.variants:[];
+  }catch{return []}
+}
+function rememberSelectedVariants(sourceKey,questions){
+  if(!sourceKey)return [];
+  const prior=readRecentVariants(sourceKey),next=[...prior,...(questions||[]).map(variantKey).filter(Boolean)];
+  const variants=[...new Set(next.slice(-24))];
+  try{localStorage.setItem(RECENT_VARIANTS_KEY,JSON.stringify({sourceKey,variants}))}catch{}
+  return variants;
+}
+function pickBalanced(pool,count,seed,skillStats,preferredSkills=[],recentVariants=[]){
+  const selected=[],used=new Set(),skillCounts={},preferred=new Set(preferredSkills||[]),recent=new Set(recentVariants||[]),now=Date.now();
+  const skillTotal=new Set(pool.map(q=>q.skill)).size,maxPerSkill=skillTotal>=3?2:skillTotal===2?Math.min(3,count):Math.max(1,count);
   const ordered=[...pool].sort((a,b)=>{
     if(a.tier!==b.tier)return a.tier==="material"?-1:1;
     if(preferred.has(a.skill)!==preferred.has(b.skill))return preferred.has(a.skill)?-1:1;
     const ra=reviewPriority(skillStats,a.skill,now),rb=reviewPriority(skillStats,b.skill,now);
     if(ra!==rb)return rb-ra;
+    const ar=recent.has(variantKey(a)),br=recent.has(variantKey(b));if(ar!==br)return ar?1:-1;
     const ta=Math.abs(a.difficulty-targetDifficultyFor(skillStats,a.skill));
     const tb=Math.abs(b.difficulty-targetDifficultyFor(skillStats,b.skill));
     if(ta!==tb)return ta-tb;
@@ -1037,10 +1054,9 @@ function pickBalanced(pool,count,seed,skillStats,preferredSkills=[]){
     if(!remaining.length)break;
     const material=remaining.filter(q=>q.tier==="material"),tierPool=material.length?material:remaining;
     let candidate=tierPool.find(q=>{
-      const last=selected[selected.length-1];
-      if(last&&last.skill===q.skill){
-        return !tierPool.some(other=>other.skill!==q.skill);
-      }
+      const last=selected[selected.length-1],lastTwo=selected.slice(-2);
+      if(last&&last.skill===q.skill&&tierPool.some(other=>other.skill!==q.skill))return false;
+      if(lastTwo.length===2&&lastTwo[0].questionType===lastTwo[1].questionType&&q.questionType===last.questionType&&tierPool.some(other=>other.questionType!==q.questionType))return false;
       return true;
     });
     if(!candidate)candidate=tierPool[0];
@@ -1055,7 +1071,7 @@ function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillSt
   if(wanted.length)pool=pool.filter(q=>wanted.includes(q.subject));
   if(wantedSkills.length)pool=pool.filter(q=>wantedSkills.includes(q.skill));
   if(wanted.length||wantedSkills.length)pool=pool.filter(q=>q.tier==="material");
-  return pickBalanced(pool,count,seed,skillStats,preferredSkills);
+  return pickBalanced(pool,count,seed,skillStats,preferredSkills,readRecentVariants(catalog?.sourceKey));
 }
 function supportQuestion(catalog,current,{skillStats={},seed="support"}={}){
   if(!current)return null;
@@ -1365,6 +1381,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,selectQuestions,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,itemQualityKey
+  buildCatalog,validateCatalog,selectQuestions,rememberSelectedVariants,readRecentVariants,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,itemQualityKey
 });
 })();
