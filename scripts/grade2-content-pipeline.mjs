@@ -776,6 +776,7 @@ function detectMath(pack, skills, questions) {
     const take = Math.max(3, Math.min(5, start - 2));
     const answer = start - take;
     questions.push(questionFor(skill, {
+      questionType: 'transfer',
       prompt: `Mia has ${start} crayons and gives ${take} away. How many crayons does she have left?`,
       choices: [String(answer), String(answer + 1), String(Math.max(0, answer - 1))],
       answer: String(answer),
@@ -1118,6 +1119,13 @@ export function validateGrade2ContentPipeline(pipeline) {
 
   for (const skill of pipeline.skills || []) {
     if (!questionSkills.has(skill.id)) issues.push(`skill-without-question:${skill.id}`);
+    const expected=1+(SUPPLEMENTAL_QUESTION_FAMILIES[skill.id]?.length||0);
+    if(expected>1){
+      const rows=(pipeline.questions||[]).filter(question=>question.skill===skill.id);
+      if(rows.length<expected)issues.push(`semantic-family-incomplete:${skill.id}:${rows.length}/${expected}`);
+      if(new Set(rows.map(question=>question.variantFingerprint)).size!==rows.length)issues.push(`semantic-variant-duplicate:${skill.id}`);
+      if(new Set(rows.map(question=>question.contentFingerprint)).size!==rows.length)issues.push(`content-fingerprint-duplicate:${skill.id}`);
+    }
   }
   if ((pipeline.qa?.rejectedCount || 0) > 0) issues.push('rejected-questions-present');
   if (pipeline.qa?.status !== 'pass') issues.push('qa-status-not-pass');
@@ -1130,6 +1138,7 @@ export function validateGrade2ContentPipeline(pipeline) {
     const spread = Math.max(...positions) - Math.min(...positions);
     if (spread > 1) issues.push('answer-position-bias');
   }
+  if((pipeline.qa?.maxConsecutiveAnswerPosition||0)>2)issues.push('answer-position-run-too-long');
   return [...new Set(issues)];
 }
 
@@ -1201,6 +1210,11 @@ export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash } = {
       questionCount: questions.length,
       duplicatesRemoved,
       answerPositionCounts,
+      semanticVariantCount:new Set(questions.map(question=>question.variantFingerprint)).size,
+      maxConsecutiveAnswerPosition:questions.reduce((state,question)=>{
+        const position=question.choices.indexOf(question.answer);
+        state.run=position===state.last?state.run+1:1;state.last=position;state.max=Math.max(state.max,state.run);return state;
+      },{last:-1,run:0,max:0}).max,
       questionTypeCounts: questions.reduce((counts, question) => {
         counts[question.questionType] = (counts[question.questionType] || 0) + 1;
         return counts;
