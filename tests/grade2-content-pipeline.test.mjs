@@ -33,6 +33,7 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
     'religion-trinity',
     'religion-image-likeness',
     'religion-creation-care',
+    'religion-five-senses',
     'religion-jesus-savior',
     'religion-gifts-choices',
   ]) {
