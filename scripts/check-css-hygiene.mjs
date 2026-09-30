@@ -51,6 +51,14 @@ if(/True desktop layout|Audit fixes 6–10|Phase 3:|Phase 4:|Phase 5:/.test(css)
 if(/date-utils\.js|events\.js|school-model\.js|school-year-calendar\.json/.test(app)){
   fail("Production app references removed duplicate model code");
 }
+const intlFormatterCount=(app.match(/new Intl\.DateTimeFormat/g)||[]).length;
+if(intlFormatterCount!==3)fail("Intl.DateTimeFormat construction drifted from the three shared formatters");
+for(const marker of ["getDerivedPack().homeworkRows","getDerivedPack().lunchProofs.get","parentNoticeRows"]){
+  if(!app.includes(marker))fail("Pack-stable runtime cache marker missing: "+marker);
+}
+if(app.includes('(pack?.lunchMenuSource?.sourcePages||[]).find(row=>row.id===lunch.sourceId)')){
+  fail("Lunch proof lookup regressed to a per-render linear scan");
+}
 for(const stalePattern of [
   "(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)}))",
   "const date=parseDate(item.date),range=eventDateRange(item.date)",
