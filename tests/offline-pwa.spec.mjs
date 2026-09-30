@@ -74,3 +74,16 @@ test("service worker cleans old versions and precaches the critical shell",async
   expect(source).toContain('"./study-games.js"');
   expect(source).toContain('"./data/study-pack.json"');
 });
+
+
+test("network-first requests do not read cache before a successful fetch",async({request})=>{
+  const source=await (await request.get("/sw.js")).text();
+  const start=source.indexOf("async function networkFirst");
+  const end=source.indexOf("async function staleWhileRevalidate",start);
+  expect(start).toBeGreaterThanOrEqual(0);
+  expect(end).toBeGreaterThan(start);
+  const body=source.slice(start,end);
+  expect(body).not.toContain("const cached=await cachedFallback");
+  expect(body.indexOf('await fetch(request,{cache:"no-store"})')).toBeGreaterThanOrEqual(0);
+  expect(body.indexOf('await fetch(request,{cache:"no-store"})')).toBeLessThan(body.indexOf("cachedFallback(request,fallback)"));
+});
