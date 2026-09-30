@@ -93,6 +93,32 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
   assert.ok((pipeline.qa.dokCounts?.[3] || 0) > 0);
 });
 
+test('Religion banks stay source-framed and avoid the rejected ambiguous/cross-subject distractor patterns', () => {
+  const envelope = JSON.parse(readFileSync(DATA_PATH, 'utf8'));
+  const pipeline = buildGrade2ContentPipeline(structuredClone(envelope.pack), {
+    generatedAt: '2026-09-30T12:15:00.000Z',
+    sourceHash: envelope.pack.sourceHash,
+  });
+
+  const religion = pipeline.questions.filter(question => question.subject === 'Religion');
+  const image = religion.filter(question => question.skill === 'religion-image-likeness');
+  const gifts = religion.filter(question => question.skill === 'religion-gifts-choices');
+
+  assert.ok(image.length >= 2);
+  assert.ok(gifts.length >= 2);
+  assert.ok(image.every(question => question.sourceMode === 'STRICT_SOURCE'));
+  assert.ok(gifts.every(question => question.sourceMode === 'STRICT_SOURCE'));
+
+  const strictReligion = religion.filter(question => question.sourceMode === 'STRICT_SOURCE');
+  assert.ok(strictReligion.every(question => /current Religion lesson/i.test(question.prompt)));
+
+  const forbidden = /invented the seasons|every book in the Bible|unrelated gods|school subject|text feature|current Reading story|consonant blends|captions|school schedule|how to spell/i;
+  assert.equal(
+    religion.some(question => [question.prompt, ...question.choices].some(value => forbidden.test(String(value)))),
+    false
+  );
+});
+
 test('source-bound sight-word contexts restore the older StarBlox high-frequency practice without claiming spelling mastery', () => {
   const pack = {
     sourceHash: 'older-sight-word-week',
