@@ -14,14 +14,14 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-09-29T23:14:07.645Z",
+  "sourceLastSeenAt": "2026-09-30T01:21:58.790Z",
   "sourceCapturedAt": "2026-09-29T19:20:03.923Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-48dd7ac3b25e5d8fdda7",
     "sourceCapturedAt": "2026-09-29T19:20:03.923Z",
-    "generatedAt": "2026-09-29T23:14:07.645Z",
+    "generatedAt": "2026-09-30T01:21:58.790Z",
     "weekLabel": "Week of September 28, 2026",
     "summary": "Current Grade 2 teacher-site material: Homework lists Reading “Read”, parent task “Cover books”, Reading “Keep Reading Log and Behavior Chart in the HW folder”, and Homework Folder “Return everything in the HW folder”. Upcoming tests include Subtraction to 12 on Tuesday, Sept. 29, Grammar (types of sentences) on Wednesday, Sept. 30, Spelling (short a / long a) / Handwriting on Friday, Oct. 2, and Reading on Wednesday, Oct. 7. 3 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
@@ -812,7 +812,7 @@
       "Christmas Caroling date is TBD.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
-    "sourceCheckedAt": "2026-09-29T23:14:07.645Z",
+    "sourceCheckedAt": "2026-09-30T01:21:58.790Z",
     "uploadedNoticeHash": "uploaded-notices-14d4298a59d340258558",
     "uploadedNoticeTopics": {
       "reminders": [
@@ -842,9 +842,9 @@
     },
     "lunchMenuSource": {
       "status": "current-week",
-      "retrievalState": "needs-review",
-      "checkedAt": "2026-09-29T19:17:52.854Z",
-      "lastAttemptAt": "2026-09-29T23:14:07.645Z",
+      "retrievalState": "verified",
+      "checkedAt": "2026-09-30T01:22:00.947Z",
+      "lastAttemptAt": "2026-09-30T01:21:58.790Z",
       "provider": "Saint Clair Area School District",
       "school": "Assumption BVM School",
       "feedUrl": "https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu",
@@ -859,20 +859,18 @@
           "url": "https://resources.finalsite.net/images/v1787165302/adeducatorsorg/gvzkkrduwn7fce9l3vsw/AugustandSeptlunch26.pdf",
           "contentHash": "6c01fef18e1f589a544713c21e4d6b31b0063ef7fdbfaa4537dd30cc7b6a64eb",
           "reviewedAt": "2026-09-29T05:26:39Z",
-          "checkedAt": "2026-09-29T23:14:08.590Z"
+          "checkedAt": "2026-09-30T01:22:00.947Z"
         },
         {
           "id": "abvm-2026-10-official",
           "url": "https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1790692534/adeducatorsorg/xdbrqzybydptd5srbor0/Octobercalendar.heic",
           "contentHash": "a99ce9385295921c9fff19ae4051732da45f7c38df077d30d9b62577c8c6eb45",
           "reviewedAt": "2026-09-29T19:36:00Z",
-          "checkedAt": null
+          "checkedAt": "2026-09-30T01:22:00.950Z"
         }
       ],
       "pendingDocuments": [],
-      "gaps": [
-        "Source check unavailable or awaiting review; previously reviewed meals remain on their original dates."
-      ]
+      "gaps": []
     },
     "lunchArchive": [
       {
@@ -1140,44 +1138,44 @@
         "sourceId": "abvm-2026-10-official"
       }
     ],
-    "lunchMenuHash": "9e3d71c00388eed622d594c721f94db6e8faac03706458dc57850de5e98e74bc"
+    "lunchMenuHash": "6a8d9462f90313082740698f74c2c25c519d7280059b6a6d5651f6948f3ff66e"
   },
-  "sourceLastCheckedAt": "2026-09-29T23:14:07.645Z",
+  "sourceLastCheckedAt": "2026-09-30T01:21:58.790Z",
   "sourcePages": [
     {
       "title": "Home",
       "url": "https://sites.google.com/view/abvmgr2/home",
-      "checkedAt": "2026-09-29T23:14:07.645Z",
+      "checkedAt": "2026-09-30T01:21:58.790Z",
       "contentHash": "230bd0fb1d6acef81aa2e9d4aec8b097d2dfbb8bbd4cac4ce058889a4eb0d6a9"
     },
     {
       "title": "Homework",
       "url": "https://sites.google.com/view/abvmgr2/homework",
-      "checkedAt": "2026-09-29T23:14:07.645Z",
+      "checkedAt": "2026-09-30T01:21:58.790Z",
       "contentHash": "faabffa7a06fe6eeefa98e3204993203dd9d2f2a623f5b70ba1b7ac55ef04fde"
     },
     {
       "title": "Reading Work",
       "url": "https://sites.google.com/view/abvmgr2/reading-work",
-      "checkedAt": "2026-09-29T23:14:07.645Z",
+      "checkedAt": "2026-09-30T01:21:58.790Z",
       "contentHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058"
     },
     {
       "title": "Weekly Spelling List",
       "url": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-      "checkedAt": "2026-09-29T23:14:07.645Z",
+      "checkedAt": "2026-09-30T01:21:58.790Z",
       "contentHash": "d077ca4b2b95d79755f88f5a726e6b5acf3a52c6575c3d986a16ca1c834b5777"
     },
     {
       "title": "Tests",
       "url": "https://sites.google.com/view/abvmgr2/tests",
-      "checkedAt": "2026-09-29T23:14:07.645Z",
+      "checkedAt": "2026-09-30T01:21:58.790Z",
       "contentHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c"
     },
     {
       "title": "Religion",
       "url": "https://sites.google.com/view/abvmgr2/religion",
-      "checkedAt": "2026-09-29T23:14:07.645Z",
+      "checkedAt": "2026-09-30T01:21:58.790Z",
       "contentHash": "7d7f8366cfdcfc1541d41cbf2495abd7daf0037bd1573328d05f859aed331d1c"
     }
   ],
