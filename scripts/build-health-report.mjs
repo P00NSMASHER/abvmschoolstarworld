@@ -56,6 +56,9 @@ const status={
     questionCount:Number(contentPipeline?.qa?.questionCount||contentPipeline?.questions?.length||0),
     sourceInsufficientCount:Number(contentPipeline?.qa?.sourceInsufficientCount||sourceInsufficientTopics.length||0),
     unsupportedSkillCount:pipelineUnsupportedCount,
+    lineageRequired:contentPipeline?.sourcePolicy?.requirePageExactLineage===true,
+    pageExactLineageCount:Number(contentPipeline?.qa?.pageExactLineageCount||0),
+    unresolvedLineageCount:Number(contentPipeline?.qa?.unresolvedLineageCount||0),
     sourceInsufficientTopics,
     unsupportedTopics,
   },
@@ -85,7 +88,11 @@ const completedHealthy=(workflow,maxAgeHours)=>{
 const pipelineHealthy=Boolean(
   status.contentPipeline.present &&
   status.contentPipeline.qaStatus==="pass" &&
-  status.contentPipeline.unsupportedSkillCount===0
+  status.contentPipeline.unsupportedSkillCount===0 &&
+  (!status.contentPipeline.lineageRequired || (
+    status.contentPipeline.unresolvedLineageCount===0 &&
+    status.contentPipeline.pageExactLineageCount===status.contentPipeline.questionCount
+  ))
 );
 const healthy=Boolean(
   status.schoolData.sourceSufficient &&
@@ -114,6 +121,7 @@ const md=[
   `- **Source coverage:** ${status.schoolData.sourcePages}/6 teacher pages; source sufficient = ${status.schoolData.sourceSufficient}; fresh <=8h = ${sourceFresh}`,
   `- **Lunch source:** ${status.lunch.retrievalState}; ${status.lunch.days} reviewed days; missing dates: ${status.lunch.missingDates.join(", ")||"none"}`,
   `- **Grade 2 content pipeline:** QA ${status.contentPipeline.qaStatus}; safety ${status.contentPipeline.safetyState}; ${status.contentPipeline.skillCount} skills; ${status.contentPipeline.questionCount} questions; source-insufficient ${status.contentPipeline.sourceInsufficientCount}; unsupported ${status.contentPipeline.unsupportedSkillCount}`,
+  `- **Question lineage:** required = ${status.contentPipeline.lineageRequired}; page-exact ${status.contentPipeline.pageExactLineageCount}/${status.contentPipeline.questionCount}; unresolved ${status.contentPipeline.unresolvedLineageCount}`,
   `- **Unsupported teacher skills:** ${status.contentPipeline.unsupportedTopics.join(", ")||"none"}`,
   `- **Source-insufficient study topics:** ${status.contentPipeline.sourceInsufficientTopics.join(", ")||"none"}`,
   `- **App version:** ${status.appVersion}`,
