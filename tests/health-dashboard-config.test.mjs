@@ -6,7 +6,7 @@ const workflow=readFileSync(new URL("../.github/workflows/health-dashboard.yml",
 const report=readFileSync(new URL("../scripts/build-health-report.mjs",import.meta.url),"utf8");
 
 test("operational dashboard waits for the post-deploy watchdog",()=>{
-  const workflowRun=workflow.match(/workflow_run:\n([\s\S]*?)\n  schedule:/)?.[1]||"";
+  const workflowRun=workflow.match(/workflow_run:\r?\n([\s\S]*?)\r?\n  schedule:/)?.[1]||"";
   assert.match(workflowRun,/Monitor ABVM refresh health/);
   assert.doesNotMatch(workflowRun,/ABVM App QA/);
   assert.doesNotMatch(workflowRun,/Deploy ABVM to GitHub Pages/);
