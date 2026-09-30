@@ -178,6 +178,26 @@ test('two eligible skills may use three each without deadlocking a six-question 
   expect(Math.max(...Object.values(counts))).toBeLessThanOrEqual(3);
 });
 
+test('two-skill cap scales to shorter rounds so an avoidable 3-1 split is not selected', async ({ page }) => {
+  const result = await page.evaluate(() => {
+    const engine = window.ABVMStudyGames;
+    const questions = [
+      { id:'a0', skill:'skill-a', subject:'Reading / ELA', tier:'material', difficulty:2, questionType:'direct', variantFingerprint:'a0' },
+      { id:'a1', skill:'skill-a', subject:'Reading / ELA', tier:'material', difficulty:2, questionType:'direct', variantFingerprint:'a1' },
+      { id:'a2', skill:'skill-a', subject:'Reading / ELA', tier:'material', difficulty:2, questionType:'transfer', variantFingerprint:'a2' },
+      { id:'b0', skill:'skill-b', subject:'Reading / ELA', tier:'material', difficulty:2, questionType:'direct', variantFingerprint:'b0' },
+      { id:'b1', skill:'skill-b', subject:'Reading / ELA', tier:'material', difficulty:2, questionType:'reasoning', variantFingerprint:'b1' },
+    ];
+    return engine.selectQuestions({ sourceKey:'short-two-skill-pack', questions }, { count:4, seed:'s1' })
+      .map(q => ({ skill:q.skill, type:q.questionType }));
+  });
+
+  expect(result).toHaveLength(4);
+  const counts = result.reduce((all, row) => ({ ...all, [row.skill]:(all[row.skill] || 0) + 1 }), {});
+  expect(Math.max(...Object.values(counts))).toBeLessThanOrEqual(2);
+  for (let i = 1; i < result.length; i += 1) expect(result[i].skill).not.toBe(result[i - 1].skill);
+});
+
 test('selector avoids three identical question types in a row when another type is available', async ({ page }) => {
   const result = await page.evaluate(() => {
     const engine = window.ABVMStudyGames;
