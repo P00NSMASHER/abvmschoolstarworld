@@ -493,22 +493,27 @@ test("Subject Study Games stay on current material for full rounds",async({page}
     });
     const pipelinePresent=Array.isArray(source.pack?.contentPipeline?.skills);
     const skills=pipelinePresent?source.pack.contentPipeline.skills:[];
+    const authorizedMath=skills.filter(s=>s.subject==="Math").map(s=>s.id);
+    const authorizedFaith=skills.filter(s=>s.subject==="Religion").map(s=>s.id);
+    const authorizedWords=skills.filter(s=>["Reading / ELA","Spelling / Handwriting"].includes(s.subject)).map(s=>s.id);
+    const allowed=(q,subjects,authorized)=>q.tier==="material"&&subjects.includes(q.subject)&&(!pipelinePresent||authorized.includes(q.skill));
     return {
       pipelinePresent,
       math:math.map(q=>({tier:q.tier,skill:q.skill,sourceFact:q.sourceFact})),
       faith:faith.map(q=>({tier:q.tier,skill:q.skill,sourceFact:q.sourceFact})),
       words:words.map(q=>({tier:q.tier,skill:q.skill,sourceFact:q.sourceFact})),
-      authorizedMath:skills.filter(s=>s.subject==="Math").map(s=>s.id),
-      authorizedFaith:skills.filter(s=>s.subject==="Religion").map(s=>s.id),
-      authorizedWords:skills.filter(s=>["Reading / ELA","Spelling / Handwriting"].includes(s.subject)).map(s=>s.id)
+      expectedMath:Math.min(8,catalog.questions.filter(q=>allowed(q,["Math"],authorizedMath)).length),
+      expectedFaith:Math.min(8,catalog.questions.filter(q=>allowed(q,["Religion"],authorizedFaith)).length),
+      expectedWords:Math.min(8,catalog.questions.filter(q=>allowed(q,["Reading / ELA","Spelling / Handwriting"],authorizedWords)).length),
+      authorizedMath,authorizedFaith,authorizedWords
     };
   });
   const mathSkills=new Set(report.authorizedMath),faithSkills=new Set(report.authorizedFaith),wordSkills=new Set(report.authorizedWords);
-  expect(report.math).toHaveLength(8);
-  expect(report.faith).toHaveLength(8);
+  expect(report.math).toHaveLength(report.expectedMath);
+  expect(report.faith).toHaveLength(report.expectedFaith);
   expect(report.math.every(q=>q.tier==="material"&&(!report.pipelinePresent||mathSkills.has(q.skill)))).toBe(true);
   expect(report.faith.every(q=>q.tier==="material"&&(!report.pipelinePresent||faithSkills.has(q.skill)))).toBe(true);
-  expect(report.words).toHaveLength(8);
+  expect(report.words).toHaveLength(report.expectedWords);
   expect(report.words.every(q=>q.tier==="material"&&(!report.pipelinePresent||wordSkills.has(q.skill)))).toBe(true);
   const wordCounts={};
   for(const q of report.words)wordCounts[q.skill]=(wordCounts[q.skill]||0)+1;
