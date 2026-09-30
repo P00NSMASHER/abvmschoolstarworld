@@ -528,6 +528,8 @@ function materialHighFrequency(pack,variant,out){
   })));
 }
 function materialVocabulary(pack,variant,out){
+  const pipelineSkills=Array.isArray(pack?.contentPipeline?.skills)?pack.contentPipeline.skills:null;
+  if(pipelineSkills&&!pipelineSkills.some(skill=>text(skill?.id)==="vocabulary-in-context"))return;
   const current=(pack?.vocabulary||[]).map(v=>text(v.term).toLowerCase()).filter(w=>VOCAB[w]);
   if(current.length<3)return;
   const ordered=[...current].sort((a,b)=>hash("vocab"+variant+a)-hash("vocab"+variant+b));
