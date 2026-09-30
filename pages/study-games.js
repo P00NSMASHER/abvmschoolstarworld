@@ -1072,14 +1072,14 @@ function pickBalanced(pool,count,seed,skillStats,preferredSkills=[],recentKeys=n
     const material=remaining.filter(q=>q.tier==="material"),tierPool=material.length?material:remaining;
     const fresh=tierPool.filter(q=>!recentKeys.has(semanticRotationKey(q))),freshPool=fresh.length?fresh:tierPool;
     const last=selected[selected.length-1],before=selected[selected.length-2];
-    let candidate=freshPool.find(q=>{
-      const alternateSkill=freshPool.some(other=>other.skill!==q.skill);
-      if(last&&last.skill===q.skill&&alternateSkill)return false;
+    const diverse=q=>{
+      if(last&&last.skill===q.skill&&tierPool.some(other=>other.skill!==q.skill))return false;
       const repeatsType=last&&before&&last.questionType===before.questionType&&q.questionType===last.questionType;
-      if(repeatsType&&freshPool.some(other=>other.questionType!==q.questionType))return false;
+      if(repeatsType&&tierPool.some(other=>other.questionType!==q.questionType))return false;
       return true;
-    });
-    if(!candidate&&last)candidate=freshPool.find(q=>q.skill!==last.skill);
+    };
+    let candidate=freshPool.find(diverse);
+    if(!candidate)candidate=tierPool.find(diverse);
     if(!candidate)candidate=freshPool[0];
     selected.push(candidate);
     usedIds.add(candidate.id);usedVariants.add(semanticRotationKey(candidate));
