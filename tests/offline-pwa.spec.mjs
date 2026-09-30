@@ -73,7 +73,7 @@ test("service worker cleans only old ABVM caches and precaches the exact shell",
   expect(source).toContain("key.startsWith(CACHE_PREFIX)&&key!==CACHE");
   expect(source).not.toContain("keys.filter(key=>key!==CACHE)");
   expect(source).toContain("caches.delete(key)");
-  expect(source).toContain('"./styles.css?v=89"');
+  expect(source).toContain('"./styles.css?v=92"');
   expect(source).toContain('"./app.js?v=91"');
   expect(source).toContain('"./study-games.js?v=84"');
   expect(source).toContain('"./data/study-pack.json"');
