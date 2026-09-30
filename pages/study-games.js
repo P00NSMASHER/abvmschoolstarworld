@@ -1000,11 +1000,27 @@ function targetDifficultyFor(skillStats,skill){
   if((Number(row.ConsecutiveWrong)||0)>=2)return 2;
   return Math.max(2,Math.min(3,Number(row.TargetDifficulty)||2));
 }
+function reviewPriority(skillStats,skill,now=Date.now()){
+  const row=skillStats?.[skill]||{};
+  const seen=Number(row.Seen)||0;
+  if(!seen)return 1.5;
+  const correct=Number(row.Correct)||0,wrong=Number(row.Wrong)||0;
+  const mastery=(correct+1)/(correct+wrong+2);
+  const last=Number(row.LastIndependentAt)||Number(row.LastSeenAt)||0;
+  const ageDays=last?Math.max(0,(now-last)/86400000):3;
+  const intervalDays=mastery>=0.85?4:mastery>=0.7?2:1;
+  const overdue=Math.min(3,ageDays/intervalDays);
+  const need=(1-mastery)*2;
+  const missBonus=(Number(row.ConsecutiveWrong)||0)>0?1:0;
+  return overdue+need+missBonus;
+}
 function pickBalanced(pool,count,seed,skillStats,preferredSkills=[]){
-  const selected=[],used=new Set(),skillCounts={},maxPerSkill=3,preferred=new Set(preferredSkills||[]);
+  const selected=[],used=new Set(),skillCounts={},maxPerSkill=3,preferred=new Set(preferredSkills||[]),now=Date.now();
   const ordered=[...pool].sort((a,b)=>{
     if(a.tier!==b.tier)return a.tier==="material"?-1:1;
     if(preferred.has(a.skill)!==preferred.has(b.skill))return preferred.has(a.skill)?-1:1;
+    const ra=reviewPriority(skillStats,a.skill,now),rb=reviewPriority(skillStats,b.skill,now);
+    if(ra!==rb)return rb-ra;
     const ta=Math.abs(a.difficulty-targetDifficultyFor(skillStats,a.skill));
     const tb=Math.abs(b.difficulty-targetDifficultyFor(skillStats,b.skill));
     if(ta!==tb)return ta-tb;
@@ -1126,10 +1142,10 @@ function loadLearning(){
 function writeLearning(all){try{localStorage.setItem(LEARNING_STORAGE_KEY,JSON.stringify(all))}catch{};return all}
 function recordLearning(question,correct){
   if(!question?.skill)return null;
-  const all=loadLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2};
-  row.Seen=(Number(row.Seen)||0)+1;
+  const all=loadLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2},now=Date.now();
+  row.Seen=(Number(row.Seen)||0)+1;row.LastSeenAt=now;row.LastIndependentAt=now;
   if(correct){
-    row.Correct=(Number(row.Correct)||0)+1;row.ConsecutiveCorrect=(Number(row.ConsecutiveCorrect)||0)+1;row.ConsecutiveWrong=0;
+    row.Correct=(Number(row.Correct)||0)+1;row.ConsecutiveCorrect=(Number(row.ConsecutiveCorrect)||0)+1;row.ConsecutiveWrong=0;row.LastIndependentCorrectAt=now;
     if(row.ConsecutiveCorrect>=2)row.TargetDifficulty=3;
   }else{
     row.Wrong=(Number(row.Wrong)||0)+1;row.ConsecutiveWrong=(Number(row.ConsecutiveWrong)||0)+1;row.ConsecutiveCorrect=0;
@@ -1139,9 +1155,10 @@ function recordLearning(question,correct){
 }
 function recordAuxLearning(question,correct,kind){
   if(!question?.skill)return null;
-  const all=loadLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2};
-  if(kind==="support"){row.SupportSeen=(Number(row.SupportSeen)||0)+1;correct?row.SupportedCorrect=(Number(row.SupportedCorrect)||0)+1:row.SupportedWrong=(Number(row.SupportedWrong)||0)+1;}
-  else{row.ComebackSeen=(Number(row.ComebackSeen)||0)+1;correct?row.RememberedLater=(Number(row.RememberedLater)||0)+1:row.ComebackWrong=(Number(row.ComebackWrong)||0)+1;}
+  const all=loadLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2},now=Date.now();
+  row.LastSeenAt=now;
+  if(kind==="support"){row.SupportSeen=(Number(row.SupportSeen)||0)+1;row.LastSupportAt=now;correct?row.SupportedCorrect=(Number(row.SupportedCorrect)||0)+1:row.SupportedWrong=(Number(row.SupportedWrong)||0)+1;}
+  else{row.ComebackSeen=(Number(row.ComebackSeen)||0)+1;row.LastComebackAt=now;correct?row.RememberedLater=(Number(row.RememberedLater)||0)+1:row.ComebackWrong=(Number(row.ComebackWrong)||0)+1;}
   all[question.skill]=row;writeLearning(all);return row;
 }
 function recordSupport(question,correct){return recordAuxLearning(question,correct,"support")}
@@ -1214,6 +1231,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,selectQuestions,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,testReadyMode
+  buildCatalog,validateCatalog,selectQuestions,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode
 });
 })();
