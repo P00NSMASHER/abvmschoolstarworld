@@ -15,6 +15,8 @@ const DOMAIN_BY_SKILL = Object.freeze({
   'vocabulary-in-context': ['Word knowledge and skills'],
   theme: ['Analyzing literary text'],
   visualize: ['Comprehension / constructing meaning'],
+  sequence: ['Comprehension / constructing meaning'],
+  caption: ['Informational text features'],
   dialogue: ['Analyzing literary text'],
   inference: ['Comprehension / constructing meaning'],
   'cause-effect': ['Comprehension / constructing meaning'],
@@ -74,6 +76,16 @@ const EXACT_SKILLS = Object.freeze({
     subject: 'Reading / ELA',
     standards: ['CCSS.RL.2.1'],
     anchors: ['visual', 'picture', 'imagine', 'details'],
+  },
+  sequence: {
+    subject: 'Reading / ELA',
+    standards: ['CCSS.RL.2.5'],
+    anchors: ['sequence', 'order', 'first', 'next', 'before', 'after', 'beginning', 'middle', 'end'],
+  },
+  caption: {
+    subject: 'Reading / ELA',
+    standards: ['CCSS.RI.2.5'],
+    anchors: ['caption', 'picture', 'photo', 'photograph', 'text feature', 'describe'],
   },
   dialogue: {
     subject: 'Reading / ELA',
