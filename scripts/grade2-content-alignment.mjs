@@ -30,6 +30,7 @@ const DOMAIN_BY_SKILL = Object.freeze({
   'religion-image-likeness': ['Religion'],
   'religion-creation-care': ['Religion'],
   'religion-jesus-savior': ['Religion'],
+  'religion-five-senses': ['Religion'],
   'religion-gifts-choices': ['Religion'],
 });
 
@@ -153,6 +154,11 @@ const EXACT_SKILLS = Object.freeze({
     subject: 'Religion',
     standards: ['ABVM.RELIGION.CURRENT'],
     anchors: ['jesus', 'savior', 'sins', 'grace'],
+  },
+  'religion-five-senses': {
+    subject: 'Religion',
+    standards: ['ABVM.RELIGION.CURRENT'],
+    anchors: ['senses', 'seeing', 'hearing', 'smelling', 'tasting', 'touching', 'creation'],
   },
   'religion-gifts-choices': {
     subject: 'Religion',
