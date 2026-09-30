@@ -158,6 +158,60 @@ function rubric(){
     ]
   };
 }
+const RICH_CONTENT_KINDS=new Set(["number-line","clock","place-value","bar-chart"]);
+function normalizeRichContent(input){
+  if(!input||typeof input!=="object")return null;
+  const kind=text(input.kind),label=text(input.label);
+  if(!RICH_CONTENT_KINDS.has(kind)||!label||label.length>180)return null;
+  if(kind==="number-line"){
+    const min=Number(input.min),max=Number(input.max),start=Number(input.start),steps=Number(input.steps);
+    if(![min,max,start,steps].every(Number.isInteger)||min<0||max<=min||max-min>20||start<min||start>max||steps<1||steps>20)return null;
+    return {kind,label,min,max,start,steps};
+  }
+  if(kind==="clock"){
+    const hour=Number(input.hour),minute=Number(input.minute);
+    if(!Number.isInteger(hour)||hour<1||hour>12||!Number.isInteger(minute)||minute<0||minute>59)return null;
+    return {kind,label,hour,minute};
+  }
+  if(kind==="place-value"){
+    const number=Number(input.number);
+    if(!Number.isInteger(number)||number<0||number>999)return null;
+    return {kind,label,number};
+  }
+  const entries=Array.isArray(input.entries)?input.entries:[];
+  if(entries.length<2||entries.length>5)return null;
+  const clean=entries.map(row=>({label:text(row?.label),value:Number(row?.value)}));
+  if(clean.some(row=>!row.label||row.label.length>30||!Number.isInteger(row.value)||row.value<0||row.value>99))return null;
+  if(new Set(clean.map(row=>row.label.toLowerCase())).size!==clean.length)return null;
+  return {kind,label,entries:clean};
+}
+function derivedRichContent(question){
+  const prompt=text(question?.prompt),skill=text(question?.skill);
+  if(/^subtraction-within-\d+$/.test(skill)){
+    const match=prompt.match(/(\d+)\s*[−-]\s*(\d+)/);
+    if(match){
+      const start=Number(match[1]),steps=Number(match[2]);
+      return normalizeRichContent({kind:"number-line",label:"Number line. Start at "+start+" and move back "+steps+" spaces.",min:0,max:start,start,steps});
+    }
+  }
+  if(skill==="place-value"){
+    const match=prompt.match(/number\s+(\d{2,3})/i);
+    if(match)return normalizeRichContent({kind:"place-value",label:"Place-value chart for "+match[1]+".",number:Number(match[1])});
+  }
+  if(skill==="time"){
+    const match=prompt.match(/starts at\s+(\d{1,2}):(\d{2})/i);
+    if(match)return normalizeRichContent({kind:"clock",label:"Clock showing the starting time "+match[1]+":"+match[2]+".",hour:Number(match[1]),minute:Number(match[2])});
+  }
+  if(skill==="data-interpretation"){
+    const match=prompt.match(/(\d+)\s+votes for apples,\s*(\d+)\s+for bananas,\s*and\s*(\d+)\s+for grapes/i);
+    if(match)return normalizeRichContent({kind:"bar-chart",label:"Bar chart of the class votes stated in the question.",entries:[
+      {label:"Apples",value:Number(match[1])},{label:"Bananas",value:Number(match[2])},{label:"Grapes",value:Number(match[3])}
+    ]});
+  }
+  return null;
+}
+function validateRichContent(input){return input==null||!!normalizeRichContent(input)}
+
 function makeQuestion({
   id,subject,skill,tier,type,prompt,choices,answer,explanation,hint,sourceFact,
   dok=2,difficulty=2,standards,domain,wrongFeedback,misconception,richContent=null,
@@ -186,7 +240,7 @@ function makeQuestion({
     originalEquivalent:true,
     contentFingerprint:text(contentFingerprint),
     variantFingerprint:text(variantFingerprint),
-    richContent
+    richContent:normalizeRichContent(richContent)
   };
 }
 function addTriad(out,prefix,base,items){
@@ -212,6 +266,7 @@ function materialContentPipeline(pack,out){
       domain:spec.domain,
       contentFingerprint:spec.contentFingerprint,
       variantFingerprint:spec.variantFingerprint,
+      richContent:spec.richContent,
       wrongFeedback:choice=>text(diagnostics?.[choice]?.feedback||"Review the target skill and use the hint before choosing again."),
       misconception:choice=>text(diagnostics?.[choice]?.misconception||"pipeline-generated-distractor")
     });
@@ -893,6 +948,7 @@ function validateQuestion(question){
   }
   if(question.rubric?.maxPoints!==2||!Array.isArray(question.rubric?.criteria)||question.rubric.criteria.length<2)issues.push("rubric-invalid");
   if(question.sourceTransform!==SOURCE_TRANSFORM||question.originalEquivalent!==true)issues.push("source-transform-invalid");
+  if(!validateRichContent(question.richContent))issues.push("rich-content-invalid");
   return [...new Set(issues)];
 }
 function validateCatalog(catalog){
@@ -934,7 +990,7 @@ function buildCatalog(pack,{sourceKey}={}){
   for(const question of questions){
     const signature=question.prompt+"|"+question.answer;
     if(seen.has(signature))continue;
-    seen.add(signature);deduped.push(question);
+    seen.add(signature);deduped.push({...question,richContent:derivedRichContent(question)});
   }
   const catalog={
     schemaVersion:2,engineVersion:VERSION,sourceTransform:SOURCE_TRANSFORM,
@@ -949,6 +1005,8 @@ function buildCatalog(pack,{sourceKey}={}){
       targetedWrongFeedback:true,
       analyticRubric:true,
       starFallbackOriginalOnly:true,
+      structuredRichContent:true,
+      richContentFallbackSafe:true,
       materialExpected:pipelineSkills?pipelineSkills.size>0:true
     },
     questionCount:deduped.length,questions:deduped
@@ -1479,6 +1537,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,selectQuestions,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,itemQualityKey
+  buildCatalog,validateCatalog,validateRichContent,selectQuestions,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,itemQualityKey
 });
 })();
