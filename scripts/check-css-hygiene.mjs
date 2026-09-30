@@ -65,6 +65,9 @@ for(const marker of ["getDerivedPack().homeworkRows","getDerivedPack().lunchProo
 if(app.includes('(pack?.lunchMenuSource?.sourcePages||[]).find(row=>row.id===lunch.sourceId)')){
   fail("Lunch proof lookup regressed to a per-render linear scan");
 }
+if(app.includes("renderGames();bindScreen()")){
+  fail("Study Games regressed to redundant event rebinding after delegated renders");
+}
 for(const stalePattern of [
   "(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)}))",
   "const date=parseDate(item.date),range=eventDateRange(item.date)",
