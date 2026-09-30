@@ -1138,7 +1138,14 @@ function pickBalanced(pool,count,seed,skillStats,preferredSkills=[],recentKeys=n
     const needsSecondSkill=selected.length>0&&selectedSkills.size===1&&availableSkills.size>1;
     const diversityPool=needsSecondSkill?tierPool.filter(q=>q.skill!==selected[0].skill):tierPool;
     const fresh=diversityPool.filter(q=>!recentKeys.has(semanticRotationKey(q)));
-    const candidate=(fresh.length?fresh:diversityPool)[0];
+    const preferredPool=fresh.length?fresh:diversityPool;
+    let candidate=preferredPool[0];
+    const last=selected[selected.length-1],before=selected[selected.length-2];
+    if(last&&before&&last.questionType===before.questionType){
+      const alternate=fresh.find(q=>q.questionType!==last.questionType)
+        ||diversityPool.find(q=>q.questionType!==last.questionType);
+      if(alternate)candidate=alternate;
+    }
     selected.push(candidate);
     usedIds.add(candidate.id);usedVariants.add(semanticRotationKey(candidate));
     skillCounts[candidate.skill]=(skillCounts[candidate.skill]||0)+1;
