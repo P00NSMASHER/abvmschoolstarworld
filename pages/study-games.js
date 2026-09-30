@@ -198,6 +198,7 @@ function materialContentPipeline(pack,out){
   const specs=Array.isArray(pack?.contentPipeline?.questions)?pack.contentPipeline.questions:[];
   for(const spec of specs){
     if(!spec||typeof spec!=="object")continue;
+    const diagnostics=spec.choiceDiagnostics&&typeof spec.choiceDiagnostics==="object"?spec.choiceDiagnostics:{};
     add(out,{
       id:text(spec.id),subject:text(spec.subject),skill:text(spec.skill),tier:"material",
       type:text(spec.questionType)||"direct",prompt:spec.prompt,choices:spec.choices||[],answer:spec.answer,
@@ -206,8 +207,8 @@ function materialContentPipeline(pack,out){
       difficulty:Number.isInteger(spec.difficulty)?spec.difficulty:2,
       standards:Array.isArray(spec.standards)?spec.standards:undefined,
       domain:spec.domain,
-      wrongFeedback:"Review the target skill and use the hint before choosing again.",
-      misconception:"pipeline-generated distractor"
+      wrongFeedback:choice=>text(diagnostics?.[choice]?.feedback||"Review the target skill and use the hint before choosing again."),
+      misconception:choice=>text(diagnostics?.[choice]?.misconception||"pipeline-generated-distractor")
     });
   }
 }
