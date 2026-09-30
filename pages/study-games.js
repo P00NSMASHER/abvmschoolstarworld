@@ -1039,6 +1039,24 @@ function supportQuestion(catalog,current,{skillStats={},seed="support"}={}){
     .sort((a,b)=>hash(seed+a.id)-hash(seed+b.id));
   return candidates[0]||null;
 }
+
+function comebackQuestion(catalog,current,{seed="comeback",seenIds=[]}={}){
+  if(!current)return null;
+  const seen=new Set(Array.isArray(seenIds)?seenIds:[]);
+  const candidates=(catalog?.questions||[])
+    .filter(q=>q.id!==current.id&&q.skill===current.skill)
+    .sort((a,b)=>{
+      const aSeen=seen.has(a.id),bSeen=seen.has(b.id);
+      if(aSeen!==bSeen)return aSeen?1:-1;
+      const aType=a.questionType===current.questionType,bType=b.questionType===current.questionType;
+      if(aType!==bType)return aType?1:-1;
+      const aDistance=Math.abs((Number(a.difficulty)||2)-(Number(current.difficulty)||2));
+      const bDistance=Math.abs((Number(b.difficulty)||2)-(Number(current.difficulty)||2));
+      if(aDistance!==bDistance)return aDistance-bDistance;
+      return hash(seed+"|"+a.id)-hash(seed+"|"+b.id);
+    });
+  return candidates[0]||null;
+}
 function sourceKeyFromEnvelope(pack,envelope){
   const hashes=(envelope?.sourcePages||[]).map(row=>row.contentHash).filter(Boolean).join("|");
   const source=hashes||text(pack?.sourceHash||pack?.sourceCheckedAt||pack?.weekLabel||"abvm-current");
@@ -1047,6 +1065,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,selectQuestions,supportQuestion,sourceKeyFromEnvelope,targetDifficultyFor,testReadyMode
+  buildCatalog,validateCatalog,selectQuestions,supportQuestion,comebackQuestion,sourceKeyFromEnvelope,targetDifficultyFor,testReadyMode
 });
 })();
