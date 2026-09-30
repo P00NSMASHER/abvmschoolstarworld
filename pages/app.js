@@ -479,11 +479,6 @@ function saveGameRecord(){
   storageSet(gameRecordKey(gameState.mode),JSON.stringify(next));
   gameState.saved=true;
 }
-function loadGameLearning(){return studyGameEngine()?.loadLearning?.()||{}}
-function recordGameLearning(question,correct){return studyGameEngine()?.recordLearning?.(question,correct)||null}
-function recordGameSupport(question,correct){return studyGameEngine()?.recordSupport?.(question,correct)||null}
-function recordGameComeback(question,correct){return studyGameEngine()?.recordComeback?.(question,correct)||null}
-function nextGameSessionSeed(modeId){return studyGameEngine()?.nextSessionSeed?.(currentGameSourceKey(),modeId)||"session"}
 function currentGameSourceKey(){return String(studyGameCatalog()?.sourceKey||"current")}
 function scheduleGameComeback(origin){const e=studyGameEngine(),c=studyGameCatalog(),s=currentGameSourceKey();return e?.scheduleComeback?.(c,origin,{sourceKey:s,remaining:2,seenIds:gameState.questions.slice(0,gameState.index+1).map(q=>q.id),seed:s+"|comeback|"+String(origin?.id||"item")})||null}
 function tickGameComebacks(){studyGameEngine()?.tickComebacks?.(currentGameSourceKey())}
@@ -499,7 +494,7 @@ function activeGameQuestion(){return gameState.comebackMode?gameState.comebackQu
 function startStudyGame(modeId){
   const engine=studyGameEngine(),catalog=studyGameCatalog(),mode=gameMode(modeId);
   if(!engine||!catalog)return;
-  const questions=engine.selectQuestions(catalog,{subjects:mode.subjects,skills:mode.skills||[],preferredSkills:mode.preferredSkills||[],count:mode.count,seed:nextGameSessionSeed(mode.id),skillStats:loadGameLearning()});
+  const questions=engine.selectQuestions(catalog,{subjects:mode.subjects,skills:mode.skills||[],preferredSkills:mode.preferredSkills||[],count:mode.count,seed:engine.nextSessionSeed?.(currentGameSourceKey(),mode.id)||"session",skillStats:engine.loadLearning?.()||{}});
   gameState={screen:"play",mode:mode.id,questions,index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,learningRow:null,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null};
   activateDueGameComeback();
   renderGames();bindScreen();
@@ -511,13 +506,13 @@ function answerStudyGame(index){
   const correct=choice===question.answer;
   gameState.selectedIndex=index;gameState.answered=true;gameState.hintOpen=false;
   if(gameState.comebackMode){
-    gameState.learningRow=recordGameComeback(question,correct);
+    gameState.learningRow=studyGameEngine()?.recordComeback?.(question,correct)||null;
     gameState.comebackCorrect=correct;
   }else if(gameState.supportMode){
-    gameState.learningRow=recordGameSupport(question,correct);
+    gameState.learningRow=studyGameEngine()?.recordSupport?.(question,correct)||null;
     gameState.supportCorrect=correct;
   }else{
-    gameState.learningRow=recordGameLearning(question,correct);
+    gameState.learningRow=studyGameEngine()?.recordLearning?.(question,correct)||null;
     if(correct){
       gameState.score++;
       gameState.streak++;
@@ -569,7 +564,7 @@ function advanceStudyGame(){
   if(!correct&&(gameState.learningRow?.ConsecutiveWrong||0)>=2){
     const engine=studyGameEngine(),catalog=studyGameCatalog();
     const support=engine?.supportQuestion(catalog,current,{
-      skillStats:loadGameLearning(),
+      skillStats:studyGameEngine()?.loadLearning?.()||{},
       seed:String(catalog?.sourceKey||"current")+"|support|"+String(current?.id||"item")+"|"+String(gameState.learningRow?.Seen||0)
     });
     if(support){
