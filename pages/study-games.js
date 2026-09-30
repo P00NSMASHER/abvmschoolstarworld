@@ -964,6 +964,8 @@ function assessmentSkillIds(pack,test){
   if(/-ed|-ing|ed\b.*ing\b/.test(label))add("suffix-ed-ing");
   if(/theme/.test(label))add("theme");
   if(/visualiz/.test(label))add("visualize");
+  if(/sequence|beginning.*middle.*end|plot/.test(label))add("sequence");
+  if(/caption|text feature/.test(label))add("caption");
   if(/dialogue/.test(label))add("dialogue");
   if(/infer/.test(label))add("inference");
   if(/cause.*effect|effect.*cause/.test(label))add("cause-effect");
@@ -1050,6 +1052,8 @@ function teachCardFor(question){
     "suffix-ed-ing":["Use the sentence’s time clue to choose the ending.","-ed often marks a finished action; -ing often marks an action happening now."],
     "theme":["Look for the lesson shown by the whole story.","A theme is bigger than one small detail."],
     "visualize":["Turn the describing words into a mental picture.","Use only details the text actually gives."],
+    "sequence":["Track what happens first, next, and last.","A strong sequence has an order supported by the events, not just a random arrangement."],
+    "caption":["Match a short text feature to what a picture or diagram actually shows.","A useful caption directly describes or explains the visual."],
     "inference":["Combine a text clue with what you already know.","The answer still has to be supported by the clue."],
     "cause-effect":["Find what happened first and what happened because of it.","The cause leads to the effect."],
     "main-character":["Ask who the story follows most.","The main character is the person or animal whose actions drive most of the story."],
