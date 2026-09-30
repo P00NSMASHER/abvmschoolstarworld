@@ -140,6 +140,33 @@ test('selector avoids three identical question types in a row when another type 
   }
 });
 
+test('diversity can relax cooldown freshness when that prevents a repetitive run', async ({ page }) => {
+  const result = await page.evaluate(() => {
+    const engine = window.ABVMStudyGames;
+    const make = (id, skill, type, fp) => ({
+      id, skill, subject: 'Reading / ELA', tier: 'material', difficulty: 2,
+      questionType: type, variantFingerprint: fp,
+    });
+    const catalog = {
+      sourceKey: 'diversity-relax-pack',
+      questions: [
+        make('a1','theme','direct','a1'),
+        make('a2','theme','direct','a2'),
+        make('a3','theme','direct','a3'),
+        make('b1','visualize','transfer','b1'),
+      ],
+    };
+    // Make the only alternate skill/type "recent" before selection.
+    engine.markQuestionShown(catalog.questions[3], catalog.sourceKey);
+    return engine.selectQuestions(catalog, { count: 3, seed: 'diversity-relax' })
+      .map(q => ({ skill:q.skill, type:q.questionType, fp:q.variantFingerprint }));
+  });
+  expect(result.some(row => row.skill === 'visualize')).toBe(true);
+  for (let i = 1; i < result.length; i += 1) {
+    expect(result[i].skill === result[i-1].skill && result.some(row => row.skill !== result[i].skill)).toBe(false);
+  }
+});
+
 test('different IDs with the same semantic fingerprint cannot both enter one round', async ({ page }) => {
   const result = await page.evaluate(() => {
     const engine = window.ABVMStudyGames;
