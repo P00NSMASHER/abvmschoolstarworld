@@ -905,20 +905,23 @@ function buildCatalog(pack,{sourceKey}={}){
   const key=text(sourceKey||pack?.sourceHash||pack?.sourceCheckedAt||pack?.weekLabel||"abvm-current");
   const variant=variantFor(key),questions=[];
   materialContentPipeline(pack,questions);
-  materialMath(pack,variant,questions);
-  materialSentences(pack,variant,questions);
-  materialPhonics(pack,variant,questions);
-  materialHighFrequency(pack,variant,questions);
-  materialVocabulary(pack,variant,questions);
-  const legacyReading=[];
-  materialReading(pack,variant,legacyReading);
-  const pipelineReadingSkills=Array.isArray(pack?.contentPipeline?.skills)
+
+  const legacyMaterial=[];
+  materialMath(pack,variant,legacyMaterial);
+  materialSentences(pack,variant,legacyMaterial);
+  materialPhonics(pack,variant,legacyMaterial);
+  materialHighFrequency(pack,variant,legacyMaterial);
+  materialVocabulary(pack,variant,legacyMaterial);
+  materialReading(pack,variant,legacyMaterial);
+  materialReligion(pack,variant,legacyMaterial);
+
+  const pipelineSkills=Array.isArray(pack?.contentPipeline?.skills)
     ?new Set(pack.contentPipeline.skills.map(skill=>text(skill?.id)).filter(Boolean))
     :null;
-  questions.push(...(pipelineReadingSkills
-    ?legacyReading.filter(question=>pipelineReadingSkills.has(question.skill))
-    :legacyReading));
-  materialReligion(pack,variant,questions);
+  questions.push(...(pipelineSkills
+    ?legacyMaterial.filter(question=>pipelineSkills.has(question.skill)&&question.skill!=="vocabulary-in-context")
+    :legacyMaterial));
+
   fallbackReading(variant,questions);
   fallbackMath(variant,questions);
   const deduped=[],seen=new Set();
