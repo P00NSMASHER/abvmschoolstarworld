@@ -266,3 +266,105 @@ test('Test Ready policy resolves only certified skills from the assessment label
   expect(result.spelling?.skills).toEqual(['long-short-a']);
   expect(result.unrelated).toBeNull();
 });
+
+
+test('Comeback selector prefers an unseen same-skill sibling instead of repeating the failed stem', async ({ page }) => {
+  const result = await page.evaluate(async () => {
+    const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(response => response.json());
+    const pack = structuredClone(envelope.pack);
+    pack.contentPipeline = {
+      schemaVersion: 2,
+      sourceHash: 'comeback-selector-test',
+      bankFingerprint: 'comeback01',
+      skills: [{ id: 'setting', subject: 'Reading / ELA' }],
+      coverage: [{ topic: 'Setting', subject: 'Reading / ELA', status: 'COVERED', skillId: 'setting' }],
+      questions: [
+        {
+          id: 'comeback-setting-a', subject: 'Reading / ELA', skill: 'setting', questionType: 'direct',
+          prompt: 'A story begins in a classroom on Monday morning. Which detail tells the setting?',
+          choices: ['a classroom on Monday morning', 'the student feels proud', 'a pencil falls'],
+          answer: 'a classroom on Monday morning', explanation: 'Setting tells where and when a story happens.',
+          hint: 'Look for both a place and a time.', sourceFact: 'Verified Grade 2 skill: Setting',
+          standards: ['CCSS.RL.2.3'], domain: 'Analyzing literary text', dok: 2, difficulty: 2,
+        },
+        {
+          id: 'comeback-setting-b', subject: 'Reading / ELA', skill: 'setting', questionType: 'transfer',
+          prompt: 'The children hike beside a lake at sunset. Which phrase describes the setting?',
+          choices: ['beside a lake at sunset', 'the children are tired', 'they carry backpacks'],
+          answer: 'beside a lake at sunset', explanation: 'The phrase gives both the place and the time.',
+          hint: 'Find the where-and-when clue.', sourceFact: 'Verified Grade 2 skill: Setting',
+          standards: ['CCSS.RL.2.3'], domain: 'Analyzing literary text', dok: 2, difficulty: 2,
+        },
+        {
+          id: 'comeback-setting-c', subject: 'Reading / ELA', skill: 'setting', questionType: 'reasoning',
+          prompt: 'Why does “in the library after lunch” describe a setting?',
+          choices: ['It tells where and when.', 'It tells only how a character feels.', 'It names the story problem.'],
+          answer: 'It tells where and when.', explanation: 'A setting is built from place and time information.',
+          hint: 'Ask whether the phrase gives a place, a time, or both.', sourceFact: 'Verified Grade 2 skill: Setting',
+          standards: ['CCSS.RL.2.3'], domain: 'Analyzing literary text', dok: 3, difficulty: 3,
+        },
+        {
+          id: 'comeback-setting-d', subject: 'Reading / ELA', skill: 'setting', questionType: 'transfer',
+          prompt: 'A story happens at the playground just before dinner. Which words tell the setting?',
+          choices: ['at the playground just before dinner', 'the child laughs loudly', 'a ball rolls away'],
+          answer: 'at the playground just before dinner', explanation: 'Those words give both place and time.',
+          hint: 'Find the phrase that answers where and when.', sourceFact: 'Verified Grade 2 skill: Setting',
+          standards: ['CCSS.RL.2.3'], domain: 'Analyzing literary text', dok: 2, difficulty: 2,
+        },
+      ],
+    };
+    const sourceKey = window.ABVMStudyGames.sourceKeyFromEnvelope(pack, envelope);
+    const catalog = window.ABVMStudyGames.buildCatalog(pack, { sourceKey });
+    const current = catalog.questions.find(question => question.id === 'comeback-setting-a');
+    const sibling = window.ABVMStudyGames.comebackQuestion(catalog, current, {
+      seed: 'comeback-selector',
+      seenIds: ['comeback-setting-a', 'comeback-setting-b', 'comeback-setting-c'],
+    });
+    return { current: current?.id, sibling: sibling?.id, skill: sibling?.skill, questionType: sibling?.questionType };
+  });
+
+  expect(result.current).toBe('comeback-setting-a');
+  expect(result.sibling).toBe('comeback-setting-d');
+  expect(result.skill).toBe('setting');
+  expect(result.questionType).not.toBe('direct');
+});
+
+test('a persisted due Comeback is shown unscored and records RememberedLater after success', async ({ page }) => {
+  await page.evaluate(() => localStorage.clear());
+  const seeded = await page.evaluate(async () => {
+    const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(response => response.json());
+    const pack = structuredClone(envelope.pack);
+    const sourceKey = window.ABVMStudyGames.sourceKeyFromEnvelope(pack, envelope);
+    const catalog = window.ABVMStudyGames.buildCatalog(pack, { sourceKey });
+    const question = catalog.questions.find(item => item.tier === 'material' && item.skill && item.choices?.length === 3);
+    if (!question) return null;
+    localStorage.setItem('abvm-study-comebacks:v1', JSON.stringify([{
+      key: 'browser-due-comeback',
+      sourceKey,
+      questionId: question.id,
+      originQuestionId: 'browser-origin',
+      skill: question.skill,
+      remaining: 0,
+    }]));
+    return { id: question.id, skill: question.skill, answer: question.answer };
+  });
+  expect(seeded).not.toBeNull();
+
+  await page.getByRole('button', { name: /Quick Mix/i }).click();
+  await expect(page.locator('.game-topbar')).toContainText('Comeback');
+  await expect(page.locator('.adaptive-note')).toContainText('not scored');
+  await expect(page.locator('.game-topbar b')).toContainText('★ 0');
+
+  await page.locator('.game-answer').filter({ hasText: seeded.answer }).click();
+  await expect(page.locator('.game-feedback.correct')).toContainText('Remembered later!');
+  await expect(page.locator('.game-topbar b')).toContainText('★ 0');
+  await page.locator('[data-game-next]').click();
+
+  const stored = await page.evaluate(skill => ({
+    queue: JSON.parse(localStorage.getItem('abvm-study-comebacks:v1') || '[]'),
+    learning: JSON.parse(localStorage.getItem('abvm-study-learning:v2') || '{}')[skill] || {},
+  }), seeded.skill);
+  expect(stored.queue).toEqual([]);
+  expect(stored.learning.ComebackSeen).toBe(1);
+  expect(stored.learning.RememberedLater).toBe(1);
+});
