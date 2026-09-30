@@ -39,7 +39,7 @@ test('scores, mastery, speed, streaks, perfect play, Teach Cards, and support ne
   });
   expect(result.noisy).toEqual(result.baseline);
   expect(result.policy.excludedSignals).toEqual(expect.arrayContaining([
-    'first-try','perfect','mastery','streak','speed','teach-card','support'
+    'score','accuracy','first-try','perfect','mastery','streak','speed','hints','teach-card','support'
   ]));
   expect(result.noisy.every(row=>row.amount>0)).toBe(true);
 });
