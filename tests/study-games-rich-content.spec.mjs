@@ -40,7 +40,7 @@ test('every supported rich format has an accessible text alternative and keeps t
     }), richContent);
     expect(html).toContain('role="img"');
     expect(html).toContain('aria-label="');
-    expect((html.match(/class="game-answer/g)||[]).length).toBe(3);
+    expect((html.match(/class="game-answer"/g)||[]).length).toBe(3);
   }
 });
 
@@ -58,7 +58,7 @@ test('malformed visuals fail to text-only presentation instead of blocking a que
   });
   expect(result.valid).toBe(false);
   expect(result.html).not.toContain('game-rich-content');
-  expect((result.html.match(/class="game-answer/g)||[]).length).toBe(3);
+  expect((result.html.match(/class="game-answer"/g)||[]).length).toBe(3);
 });
 
 test('rich visuals remain inside the phone viewport', async ({ page }) => {
