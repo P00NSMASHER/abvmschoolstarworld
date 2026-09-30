@@ -221,6 +221,26 @@ test('selector avoids three identical question types in a row when another type 
   }
 });
 
+test('type diversity remains protected when perfect skill alternation is impossible', async ({ page }) => {
+  const result = await page.evaluate(() => {
+    const engine = window.ABVMStudyGames;
+    const questions = [
+      { id:'a0', skill:'skill-a', subject:'Reading / ELA', tier:'material', difficulty:2, questionType:'direct', variantFingerprint:'imbalanced-a0' },
+      { id:'a1', skill:'skill-a', subject:'Reading / ELA', tier:'material', difficulty:2, questionType:'direct', variantFingerprint:'imbalanced-a1' },
+      { id:'a2', skill:'skill-a', subject:'Reading / ELA', tier:'material', difficulty:2, questionType:'direct', variantFingerprint:'imbalanced-a2' },
+      { id:'a3', skill:'skill-a', subject:'Reading / ELA', tier:'material', difficulty:2, questionType:'direct', variantFingerprint:'imbalanced-a3' },
+      { id:'b0', skill:'skill-b', subject:'Reading / ELA', tier:'material', difficulty:2, questionType:'transfer', variantFingerprint:'imbalanced-b0' },
+    ];
+    return engine.selectQuestions({ sourceKey:'imbalanced-order-pack', questions }, { count:5, seed:'imbalanced-order' })
+      .map(q => ({ skill:q.skill, type:q.questionType }));
+  });
+
+  expect(result).toHaveLength(5);
+  for (let i = 2; i < result.length; i += 1) {
+    expect(result[i].type === result[i - 1].type && result[i - 1].type === result[i - 2].type).toBe(false);
+  }
+});
+
 test('selector pulls an alternate representation before selecting a third identical type', async ({ page }) => {
   const result = await page.evaluate(() => {
     const engine = window.ABVMStudyGames;
