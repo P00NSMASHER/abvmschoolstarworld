@@ -1224,7 +1224,7 @@ function reviewItemQuality(data=loadItemQuality()){
     if(wrongAttempts>=6&&firstTry>.35&&firstTry<.7&&mis[1]&&Number(mis[0][1])/wrongAttempts>=.25&&Number(mis[1][1])/wrongAttempts>=.25)flags.push("possible-ambiguity");
     const discrimination=pointBiserial(row),discriminationReady=n>=12&&discrimination!==null;
     if(discriminationReady&&Math.abs(discrimination)<.1)flags.push("low-discrimination");
-    out.push({id,skill:row.Skill,subject:row.Subject,resolved:n,accuracy,firstTryRate:first,discrimination,discriminationEvidence:discriminationReady?"reviewable":"insufficient-evidence",method:"classical-longitudinal-proxy",irtUsed:false,comebackRate:(Number(row.ComebackSeen)||0)?(Number(row.ComebackCorrect)||0)/(Number(row.ComebackSeen)||1):null,flags,dominantMisconception:mis[0]?.[0]||null});
+    out.push({id,skill:row.Skill,subject:row.Subject,resolved:n,accuracy,firstTryRate:firstTry,discrimination,discriminationEvidence:discriminationReady?"reviewable":"insufficient-evidence",method:"classical-longitudinal-proxy",irtUsed:false,comebackRate:(Number(row.ComebackSeen)||0)?(Number(row.ComebackCorrect)||0)/(Number(row.ComebackSeen)||1):null,flags,dominantMisconception:mis[0]?.[0]||null});
   }
   return out.sort((a,b)=>b.flags.length-a.flags.length||b.resolved-a.resolved||a.id.localeCompare(b.id));
 }
