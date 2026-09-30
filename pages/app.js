@@ -255,54 +255,8 @@ function nextSpellingTest(){
   const row=datedImportantEvents().find(({item,date})=>date>=now&&kindClass(item)==="test"&&/spelling|handwriting/i.test(item.label||""));
   return row?{x:row.item,d:row.date}:null;
 }
-function assessmentSkillIds(test=currentWeekTest()){
-  const label=String(test?.x?.label||"").toLowerCase();
-  const available=new Set((pack?.contentPipeline?.skills||[]).map(skill=>String(skill?.id||"")).filter(Boolean));
-  const wanted=[];
-  const add=id=>{if(available.has(id)&&!wanted.includes(id))wanted.push(id);};
-  if(/grammar|types of sentences/.test(label))add("sentence-types");
-  if(/short a|long a|a_e/.test(label))add("long-short-a");
-  if(/consonant blend/.test(label))add("consonant-blends");
-  if(/cvc/.test(label))add("cvc-structure");
-  if(/-ed|-ing|ed\b.*ing\b/.test(label))add("suffix-ed-ing");
-  if(/theme/.test(label))add("theme");
-  if(/visualiz/.test(label))add("visualize");
-  if(/dialogue/.test(label))add("dialogue");
-  if(/infer/.test(label))add("inference");
-  if(/cause.*effect|effect.*cause/.test(label))add("cause-effect");
-  if(/setting/.test(label))add("setting");
-  if(/genre/.test(label))add("genre");
-  if(/character/.test(label)&&/feeling/.test(label))add("character-feelings");
-  if(/main character/.test(label))add("main-character");
-  if(/subtraction/.test(label)){
-    const exact=[...available].find(id=>/^subtraction-within-\d+$/.test(id));
-    if(exact)add(exact);
-  }
-  if(/addition/.test(label)){
-    const exact=[...available].find(id=>/^addition-within-\d+$/.test(id));
-    if(exact)add(exact);
-  }
-  if(/place value/.test(label))add("place-value");
-  if(/money|coin/.test(label))add("money");
-  return wanted;
-}
-function testReadyMode(){
-  const test=currentWeekTest(),skills=assessmentSkillIds(test);
-  if(!test||!skills.length)return null;
-  return Object.freeze({
-    id:"test-ready",
-    title:"Test Ready",
-    subjects:[],
-    skills,
-    preferredSkills:skills,
-    count:5,
-    copy:"Five questions focused only on the verified skills for "+String(test.x?.label||"this week’s test")+"."
-  });
-}
-function availableStudyGameModes(){
-  const test=testReadyMode();
-  return test?[test,...STUDY_GAME_MODES]:STUDY_GAME_MODES;
-}
+function testReadyMode(){return studyGameEngine()?.testReadyMode?.(pack,currentWeekTest())||null}
+function availableStudyGameModes(){const test=testReadyMode();return test?[test,...STUDY_GAME_MODES]:STUDY_GAME_MODES}
 function currentOrSoonStarAssessment(){
   const now=today(),weekMs=7*24*60*60*1000;
   const row=datedImportantEvents().find(({item,range})=>
