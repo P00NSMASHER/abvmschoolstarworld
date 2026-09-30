@@ -160,7 +160,8 @@ function rubric(){
 }
 function makeQuestion({
   id,subject,skill,tier,type,prompt,choices,answer,explanation,hint,sourceFact,
-  dok=2,difficulty=2,standards,domain,wrongFeedback,misconception,richContent=null
+  dok=2,difficulty=2,standards,domain,wrongFeedback,misconception,richContent=null,
+  contentFingerprint="",variantFingerprint=""
 }){
   const cleanChoices=[...choices].map(text);
   return {
@@ -183,6 +184,8 @@ function makeQuestion({
     sourceFact:text(sourceFact||skill),
     sourceTransform:SOURCE_TRANSFORM,
     originalEquivalent:true,
+    contentFingerprint:text(contentFingerprint),
+    variantFingerprint:text(variantFingerprint),
     richContent
   };
 }
@@ -207,6 +210,8 @@ function materialContentPipeline(pack,out){
       difficulty:Number.isInteger(spec.difficulty)?spec.difficulty:2,
       standards:Array.isArray(spec.standards)?spec.standards:undefined,
       domain:spec.domain,
+      contentFingerprint:spec.contentFingerprint,
+      variantFingerprint:spec.variantFingerprint,
       wrongFeedback:choice=>text(diagnostics?.[choice]?.feedback||"Review the target skill and use the hint before choosing again."),
       misconception:choice=>text(diagnostics?.[choice]?.misconception||"pipeline-generated-distractor")
     });
