@@ -365,3 +365,21 @@ test("derived event index preserves every day of multi-day school events",async(
   await expect(page.locator(".day-detail")).toContainText("Parent-Teacher Conferences");
   await context.close();
 });
+
+
+test("cached fallback refresh is labeled offline instead of current",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  await page.route("**/data/study-pack.json*",route=>route.fulfill({
+    json:source,
+    headers:{"x-abvm-cache-fallback":"1"}
+  }));
+  await page.goto("http://127.0.0.1:4173/#today");
+  await expect(page.locator(".freshness")).toHaveClass(/offline/);
+  await expect(page.locator(".freshness")).toContainText("Offline");
+  await page.locator("[data-refresh-pack]").click();
+  await expect(page.locator("#toast")).toContainText("offline");
+  await expect(page.locator("#toast")).toContainText("saved school info");
+  await context.close();
+});
