@@ -24,7 +24,7 @@ const GAME_TYPE_LABELS=Object.freeze({
 });
 const STUDY_GAME_MODES=Object.freeze([
   Object.freeze({id:"quick",title:"Quick Mix",subjects:[],count:8,copy:"Current school skills mixed into one quick round."}),
-  Object.freeze({id:"math",title:"Math Dash",subjects:["Math"],count:8,copy:"Eight questions built from the current subtraction skill."}),
+  Object.freeze({id:"math",title:"Math Dash",subjects:["Math"],count:8,copy:"Eight questions built from the current math skills."}),
   Object.freeze({id:"words",title:"Word Power",subjects:["Reading / ELA","Spelling / Handwriting"],preferredSkills:["long-short-a","suffix-ed-ing"],count:8,copy:"Current spelling-test, phonics, word-building, and reading skills."}),
   Object.freeze({id:"faith",title:"Faith Quest",subjects:["Religion"],count:8,copy:"Religion practice from the current class material."})
 ]);
@@ -255,6 +255,45 @@ function nextSpellingTest(){
   const row=datedImportantEvents().find(({item,date})=>date>=now&&kindClass(item)==="test"&&/spelling|handwriting/i.test(item.label||""));
   return row?{x:row.item,d:row.date}:null;
 }
+function assessmentSkillIds(test=currentWeekTest()){
+  const label=String(test?.x?.label||"").toLowerCase();
+  const available=new Set((pack?.contentPipeline?.skills||[]).map(skill=>String(skill?.id||"")).filter(Boolean));
+  const wanted=[];
+  const add=id=>{if(available.has(id)&&!wanted.includes(id))wanted.push(id);};
+  if(/grammar|types of sentences/.test(label))add("sentence-types");
+  if(/short a|long a|a_e/.test(label))add("long-short-a");
+  if(/consonant blend/.test(label))add("consonant-blends");
+  if(/cvc/.test(label))add("cvc-structure");
+  if(/-ed|-ing|ed\b.*ing\b/.test(label))add("suffix-ed-ing");
+  if(/subtraction/.test(label)){
+    const exact=[...available].find(id=>/^subtraction-within-\d+$/.test(id));
+    if(exact)add(exact);
+  }
+  if(/addition/.test(label)){
+    const exact=[...available].find(id=>/^addition-within-\d+$/.test(id));
+    if(exact)add(exact);
+  }
+  if(/place value/.test(label))add("place-value");
+  if(/money|coin/.test(label))add("money");
+  return wanted;
+}
+function testReadyMode(){
+  const test=currentWeekTest(),skills=assessmentSkillIds(test);
+  if(!test||!skills.length)return null;
+  return Object.freeze({
+    id:"test-ready",
+    title:"Test Ready",
+    subjects:[],
+    skills,
+    preferredSkills:skills,
+    count:5,
+    copy:"Five questions focused only on the verified skills for "+String(test.x?.label||"this week’s test")+"."
+  });
+}
+function availableStudyGameModes(){
+  const test=testReadyMode();
+  return test?[test,...STUDY_GAME_MODES]:STUDY_GAME_MODES;
+}
 function currentOrSoonStarAssessment(){
   const now=today(),weekMs=7*24*60*60*1000;
   const row=datedImportantEvents().find(({item,range})=>
@@ -449,10 +488,10 @@ function studyGameCatalog(){
   }
   return studyGameCatalogCache;
 }
-function gameMode(id){return STUDY_GAME_MODES.find(mode=>mode.id===id)||STUDY_GAME_MODES[0]}
+function gameMode(id){return availableStudyGameModes().find(mode=>mode.id===id)||availableStudyGameModes()[0]}
 function gameModeQuestionTotal(catalog,mode){
-  const wanted=mode?.subjects||[];
-  const pool=(catalog?.questions||[]).filter(q=>!wanted.length||wanted.includes(q.subject));
+  const wanted=mode?.subjects||[],skills=mode?.skills||[];
+  const pool=(catalog?.questions||[]).filter(q=>(!wanted.length||wanted.includes(q.subject))&&(!skills.length||skills.includes(q.skill)));
   return Math.min(mode?.count||0,pool.length);
 }
 function gameRecordKey(modeId){
@@ -512,7 +551,7 @@ function recordGameLearning(question,correct){
 function startStudyGame(modeId){
   const engine=studyGameEngine(),catalog=studyGameCatalog(),mode=gameMode(modeId);
   if(!engine||!catalog)return;
-  const questions=engine.selectQuestions(catalog,{subjects:mode.subjects,preferredSkills:mode.preferredSkills||[],count:mode.count,seed:nextGameSessionSeed(mode.id),skillStats:loadGameLearning()});
+  const questions=engine.selectQuestions(catalog,{subjects:mode.subjects,skills:mode.skills||[],preferredSkills:mode.preferredSkills||[],count:mode.count,seed:nextGameSessionSeed(mode.id),skillStats:loadGameLearning()});
   gameState={screen:"play",mode:mode.id,questions,index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,learningRow:null};
   renderGames();bindScreen();
 }
@@ -547,7 +586,7 @@ function advanceStudyGame(){
 function leaveStudyGame(){gameState.screen="menu";renderGames();bindScreen()}
 function toggleStudyHint(){if(gameState.screen==="play"&&!gameState.answered){gameState.hintOpen=!gameState.hintOpen;renderGames();bindScreen()}}
 function gameMenuHtml(catalog){
-  const modes=STUDY_GAME_MODES;
+  const modes=availableStudyGameModes();
   return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Pick a game and start</h2><span>Questions prioritize this week’s school skills and adjust as you practice.</span></div></section>'+
     '<div class="study-game-grid">'+modes.map(mode=>{
       const record=loadGameRecord(mode.id),total=gameModeQuestionTotal(catalog,mode),disabled=total===0;
