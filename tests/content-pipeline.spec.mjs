@@ -43,3 +43,26 @@ test('Study Games consumes generated content-pipeline questions and validates th
   expect(result.question?.choices).toHaveLength(3);
   expect(result.question?.answer).toBe('12');
 });
+
+
+test('Study Games does not bypass SOURCE_INSUFFICIENT vocabulary coverage with its legacy glossary', async ({ page }) => {
+  const result = await page.evaluate(async () => {
+    const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(response => response.json());
+    const pack = structuredClone(envelope.pack);
+    pack.contentPipeline = {
+      schemaVersion: 2,
+      sourceHash: 'vocab-source-insufficient-test',
+      skills: [],
+      questions: [],
+      coverage: [{
+        topic: 'Reading / ELA vocabulary definitions',
+        subject: 'Reading / ELA',
+        status: 'SOURCE_INSUFFICIENT',
+      }],
+    };
+    const catalog = window.ABVMStudyGames.buildCatalog(pack, { sourceKey: 'vocab-source-insufficient-test' });
+    return catalog.questions.filter(question => question.skill === 'vocabulary-in-context').map(question => question.id);
+  });
+
+  expect(result).toEqual([]);
+});
