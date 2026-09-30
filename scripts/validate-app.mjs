@@ -18,7 +18,7 @@ for(const marker of ["YOUR SCHOOL PLAN","SCHOOL MONTH AT A GLANCE","Study room",
 for(const marker of [".app-header",".day-picker",".calendar-card",".study-accordion",".study-games-cta",".study-game-grid",".family-hero",".bottom-nav"])if(!css.includes(marker))fail("Missing core style marker: "+marker);
 for(const marker of ["skill-only-equivalent-item-v2","research-quality","buildCatalog","selectQuestions","FORBIDDEN"])if(!games.includes(marker))fail("Missing Study Games engine marker: "+marker);
 if(!app.includes("./assets/abvm-app-icon-192.png"))fail("School seal must use local app asset");
-for(const ref of ["pages/assets/abvm-app-icon-180.png","pages/assets/abvm-app-icon-192.png","pages/data/study-pack.json","pages/styles.css","pages/study-games.js","pages/study-games-view.js","pages/app.js"])if(!exists(ref))fail("Missing rollback asset: "+ref);
+for(const ref of ["pages/assets/abvm-app-icon-180.png","pages/assets/abvm-app-icon-192.png","pages/data/study-pack.json","pages/styles.css","pages/study-games-rich.css","pages/study-games.js","pages/study-games-view.js","pages/app.js"])if(!exists(ref))fail("Missing rollback asset: "+ref);
 for(const ref of [
   "pages/js/calendar-visuals.js","pages/js/install.js","pages/js/storage.js",
   "pages/calendar-clean.css","pages/colorful-polish.css","pages/design-tokens.css",
