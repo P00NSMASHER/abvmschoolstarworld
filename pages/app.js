@@ -15,7 +15,6 @@ const FRESH_TIME_FORMATTER=new Intl.DateTimeFormat(undefined,{hour:"numeric",min
 const PACK_URL="./data/study-pack.json";
 const PACK_REFRESH_MS=5*60*1000;
 const SCHOOL_LOGO_HTML='<img class="school-mark" src="./assets/abvm-app-icon-192.png" alt="Assumption BVM Catholic School logo">';
-const GAME_LEARNING_KEY="abvm-study-learning:v2";
 const GAME_TYPE_LABELS=Object.freeze({
   direct:"Direct practice",
   transfer:"Try it a new way",
@@ -480,47 +479,11 @@ function saveGameRecord(){
   storageSet(gameRecordKey(gameState.mode),JSON.stringify(next));
   gameState.saved=true;
 }
-function nextGameSessionSeed(modeId){
-  const catalog=studyGameCatalog();
-  const key="abvm-study-games-session:"+String(catalog?.sourceKey||"current")+":"+modeId;
-  const next=(Number(storageGet(key))||0)+1;
-  storageSet(key,String(next));
-  return String(catalog?.sourceKey||"current")+"|"+modeId+"|"+next;
-}
-function loadGameLearning(){
-  try{
-    const parsed=JSON.parse(storageGet(GAME_LEARNING_KEY)||"{}");
-    return parsed&&typeof parsed==="object"?parsed:{};
-  }catch{return {}}
-}
-function recordGameLearning(question,correct){
-  if(!question?.skill)return null;
-  const all=loadGameLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2};
-  row.Seen=(Number(row.Seen)||0)+1;
-  if(correct){
-    row.Correct=(Number(row.Correct)||0)+1;
-    row.ConsecutiveCorrect=(Number(row.ConsecutiveCorrect)||0)+1;
-    row.ConsecutiveWrong=0;
-    if(row.ConsecutiveCorrect>=2)row.TargetDifficulty=3;
-  }else{
-    row.Wrong=(Number(row.Wrong)||0)+1;
-    row.ConsecutiveWrong=(Number(row.ConsecutiveWrong)||0)+1;
-    row.ConsecutiveCorrect=0;
-    if(row.ConsecutiveWrong>=2)row.TargetDifficulty=2;
-  }
-  all[question.skill]=row;
-  storageSet(GAME_LEARNING_KEY,JSON.stringify(all));
-  return row;
-}
-function recordSpecialGameLearning(question,correct,kind){
-  if(!question?.skill)return null;
-  const all=loadGameLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2};
-  if(kind==="support"){row.SupportSeen=(Number(row.SupportSeen)||0)+1;correct?row.SupportedCorrect=(Number(row.SupportedCorrect)||0)+1:row.SupportedWrong=(Number(row.SupportedWrong)||0)+1;}
-  else{row.ComebackSeen=(Number(row.ComebackSeen)||0)+1;correct?row.RememberedLater=(Number(row.RememberedLater)||0)+1:row.ComebackWrong=(Number(row.ComebackWrong)||0)+1;}
-  all[question.skill]=row;storageSet(GAME_LEARNING_KEY,JSON.stringify(all));return row;
-}
-function recordGameSupport(question,correct){return recordSpecialGameLearning(question,correct,"support")}
-function recordGameComeback(question,correct){return recordSpecialGameLearning(question,correct,"comeback")}
+function loadGameLearning(){return studyGameEngine()?.loadLearning?.()||{}}
+function recordGameLearning(question,correct){return studyGameEngine()?.recordLearning?.(question,correct)||null}
+function recordGameSupport(question,correct){return studyGameEngine()?.recordSupport?.(question,correct)||null}
+function recordGameComeback(question,correct){return studyGameEngine()?.recordComeback?.(question,correct)||null}
+function nextGameSessionSeed(modeId){return studyGameEngine()?.nextSessionSeed?.(currentGameSourceKey(),modeId)||"session"}
 function currentGameSourceKey(){return String(studyGameCatalog()?.sourceKey||"current")}
 function scheduleGameComeback(origin){
   const engine=studyGameEngine(),catalog=studyGameCatalog(),sourceKey=currentGameSourceKey();
