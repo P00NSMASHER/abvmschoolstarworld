@@ -1139,6 +1139,84 @@ function saveGameRecord(sourceKey,modeId,{score=0,total=0}={}){
 }
 const LEARNING_STORAGE_KEY="abvm-study-learning:v2";
 const COMEBACK_STORAGE_KEY="abvm-study-comebacks:v1";
+const ITEM_QUALITY_STORAGE_KEY="abvm-study-item-quality:v1";
+const itemShownAt=new Map();
+function loadItemQuality(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(ITEM_QUALITY_STORAGE_KEY)||"{}");
+    return parsed&&parsed.schemaVersion===1&&parsed.items&&typeof parsed.items==="object"?parsed:{schemaVersion:1,items:{}};
+  }catch{return {schemaVersion:1,items:{}}}
+}
+function writeItemQuality(data){
+  const source=data?.items&&typeof data.items==="object"?data.items:{};
+  const entries=Object.entries(source).sort((a,b)=>(Number(b[1]?.LastUpdatedAt)||0)-(Number(a[1]?.LastUpdatedAt)||0)).slice(0,250);
+  const safe={schemaVersion:1,items:Object.fromEntries(entries)};
+  try{localStorage.setItem(ITEM_QUALITY_STORAGE_KEY,JSON.stringify(safe))}catch{}
+  return safe;
+}
+function markQuestionShown(question){
+  if(question?.id&&!itemShownAt.has(question.id))itemShownAt.set(question.id,Date.now());
+}
+function responseTimeBand(start,now){
+  const ms=Math.max(0,Number(now)-Number(start));
+  return ms<5000?"lt5":ms<15000?"5to15":ms<30000?"15to30":"gte30";
+}
+function pointBiserial(row){
+  const n=Number(row?.AbilityN)||0,c=Number(row?.Correct)||0,w=Number(row?.Wrong)||0;
+  if(n<2||c<1||w<1)return null;
+  const sum=Number(row.AbilitySum)||0,sumSq=Number(row.AbilitySumSq)||0,correctSum=Number(row.CorrectAbilitySum)||0;
+  const variance=Math.max(0,(sumSq/n)-Math.pow(sum/n,2)),sd=Math.sqrt(variance);
+  if(!sd)return 0;
+  const p=c/(c+w),q=1-p;
+  if(!p||!q)return null;
+  const mean1=correctSum/c,mean0=(sum-correctSum)/w;
+  return (mean1-mean0)/sd*Math.sqrt(p*q);
+}
+function recordItemQuality(question,correct,{attemptCount=1,incorrectCount=correct?0:1,hintCount=0,r=null,w=null,kind="normal",priorMastery=.5}={}){
+  if(!question?.id)return null;
+  const data=loadItemQuality(),id=String(question.id),row=data.items[id]||{
+    Skill:String(question.skill||""),Subject:String(question.subject||""),Resolved:0,Correct:0,Wrong:0,FirstTryCorrect:0,
+    ChoicePositions:[0,0,0],Misconceptions:{},ResponseBands:{lt5:0,"5to15":0,"15to30":0,gte30:0},
+    HintsUsed:0,SupportSeen:0,ComebackSeen:0,ComebackCorrect:0,AbilityN:0,AbilitySum:0,AbilitySumSq:0,CorrectAbilitySum:0
+  };
+  const now=Date.now(),start=itemShownAt.get(id);itemShownAt.delete(id);
+  row.Resolved=(Number(row.Resolved)||0)+1;correct?row.Correct=(Number(row.Correct)||0)+1:row.Wrong=(Number(row.Wrong)||0)+1;
+  const attempts=Math.max(1,Number(attemptCount)||1),incorrect=Math.max(0,Number(incorrectCount)||0),hints=Math.max(0,Number(hintCount)||0);
+  if(kind==="normal"&&correct&&attempts===1&&incorrect===0&&hints===0)row.FirstTryCorrect=(Number(row.FirstTryCorrect)||0)+1;
+  if(Number.isInteger(r)&&r>=0&&r<3)row.ChoicePositions[r]=(Number(row.ChoicePositions[r])||0)+1;
+  const wrongIndex=Number.isInteger(w)?w:(!correct&&Number.isInteger(r)?r:null);
+  if(Number.isInteger(wrongIndex)){
+    const choice=question.choices?.[wrongIndex],tag=choice?question.choiceDiagnostics?.[choice]?.misconception:null;
+    if(tag)row.Misconceptions[tag]=(Number(row.Misconceptions[tag])||0)+1;
+  }
+  row.HintsUsed=(Number(row.HintsUsed)||0)+hints;
+  if(kind==="support")row.SupportSeen=(Number(row.SupportSeen)||0)+1;
+  if(kind==="comeback"){row.ComebackSeen=(Number(row.ComebackSeen)||0)+1;if(correct)row.ComebackCorrect=(Number(row.ComebackCorrect)||0)+1}
+  if(start)row.ResponseBands[responseTimeBand(start,now)]=(Number(row.ResponseBands[responseTimeBand(start,now)])||0)+1;
+  if(kind==="normal"){
+    const ability=Math.max(0,Math.min(1,Number(priorMastery)||0));
+    row.AbilityN=(Number(row.AbilityN)||0)+1;row.AbilitySum=(Number(row.AbilitySum)||0)+ability;row.AbilitySumSq=(Number(row.AbilitySumSq)||0)+ability*ability;
+    if(correct)row.CorrectAbilitySum=(Number(row.CorrectAbilitySum)||0)+ability;
+  }
+  row.LastUpdatedAt=now;data.items[id]=row;writeItemQuality(data);return row;
+}
+function reviewItemQuality(data=loadItemQuality()){
+  const out=[];
+  for(const [id,row] of Object.entries(data?.items||{})){
+    const n=Number(row.Resolved)||0;if(!n)continue;
+    const correct=Number(row.Correct)||0,wrong=Number(row.Wrong)||0,accuracy=correct/n,firstTry=(Number(row.FirstTryCorrect)||0)/n;
+    const flags=[],bands=row.ResponseBands||{},slow=Number(bands.gte30)||0,mis=Object.entries(row.Misconceptions||{}).sort((a,b)=>Number(b[1])-Number(a[1]));
+    if(n>=8&&accuracy>=.95)flags.push("too-easy");
+    if(n>=8&&accuracy<=.35)flags.push("too-hard");
+    if(n>=6&&slow/n>=.5)flags.push("slow-response");
+    if(wrong>=4&&mis[0]&&Number(mis[0][1])/wrong>=.6)flags.push("dominant-misconception");
+    if(wrong>=6&&accuracy>.35&&accuracy<.7&&mis[1]&&Number(mis[0][1])/wrong>=.25&&Number(mis[1][1])/wrong>=.25)flags.push("possible-ambiguity");
+    const discrimination=pointBiserial(row);
+    if(n>=12&&discrimination!==null&&Math.abs(discrimination)<.1)flags.push("low-discrimination");
+    out.push({id,skill:row.Skill,subject:row.Subject,resolved:n,accuracy,firstTryRate:first,discrimination,comebackRate:(Number(row.ComebackSeen)||0)?(Number(row.ComebackCorrect)||0)/(Number(row.ComebackSeen)||1):null,flags,dominantMisconception:mis[0]?.[0]||null});
+  }
+  return out.sort((a,b)=>b.flags.length-a.flags.length||b.resolved-a.resolved||a.id.localeCompare(b.id));
+}
 function loadLearning(){
   try{
     const parsed=JSON.parse(localStorage.getItem(LEARNING_STORAGE_KEY)||"{}");
@@ -1146,9 +1224,10 @@ function loadLearning(){
   }catch{return {}}
 }
 function writeLearning(all){try{localStorage.setItem(LEARNING_STORAGE_KEY,JSON.stringify(all))}catch{};return all}
-function recordLearning(question,correct,{attemptCount=1,incorrectCount=correct?0:1,hintCount=0}={}){
+function recordLearning(question,correct,{attemptCount=1,incorrectCount=correct?0:1,hintCount=0,r=null,w=null}={}){
   if(!question?.skill)return null;
   const all=loadLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2},now=Date.now();
+  const priorSeen=Math.max(0,Number(row.Seen)||0),priorIndependent=Math.max(0,Number(row.IndependentCorrect)||Number(row.Correct)||0),priorMastery=priorSeen?priorIndependent/priorSeen:.5;
   const attempts=Math.max(1,Number(attemptCount)||1),incorrect=Math.max(0,Number(incorrectCount)||0),hints=Math.max(0,Number(hintCount)||0);
   const independent=!!correct&&incorrect===0&&hints===0;
   row.Seen=(Number(row.Seen)||0)+1;
@@ -1179,14 +1258,17 @@ function recordLearning(question,correct,{attemptCount=1,incorrectCount=correct?
     if(row.ConsecutiveWrong>=2)row.TargetDifficulty=2;
   }
   row.LastResolution={correct:!!correct,independent,attemptCount:attempts,incorrectCount:incorrect,hintCount:hints,resolvedAt:now};
+  recordItemQuality(question,correct,{attemptCount:attempts,incorrectCount:incorrect,hintCount:hints,r,w,kind:"normal",priorMastery});
   all[question.skill]=row;writeLearning(all);return row;
 }
 function recordAuxLearning(question,correct,kind){
   if(!question?.skill)return null;
   const all=loadLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2},now=Date.now();
+  const priorSeen=Math.max(0,Number(row.Seen)||0),priorIndependent=Math.max(0,Number(row.IndependentCorrect)||Number(row.Correct)||0),priorMastery=priorSeen?priorIndependent/priorSeen:.5;
   row.LastSeenAt=now;
   if(kind==="support"){row.SupportSeen=(Number(row.SupportSeen)||0)+1;row.LastSupportAt=now;correct?row.SupportedCorrect=(Number(row.SupportedCorrect)||0)+1:row.SupportedWrong=(Number(row.SupportedWrong)||0)+1;}
   else{row.ComebackSeen=(Number(row.ComebackSeen)||0)+1;row.LastComebackAt=now;correct?row.RememberedLater=(Number(row.RememberedLater)||0)+1:row.ComebackWrong=(Number(row.ComebackWrong)||0)+1;}
+  recordItemQuality(question,correct,{kind,priorMastery});
   all[question.skill]=row;writeLearning(all);return row;
 }
 function recordSupport(question,correct){return recordAuxLearning(question,correct,"support")}
@@ -1259,6 +1341,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,selectQuestions,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode
+  buildCatalog,validateCatalog,selectQuestions,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,loadItemQuality,reviewItemQuality
 });
 })();
