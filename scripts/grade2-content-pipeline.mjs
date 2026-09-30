@@ -966,7 +966,7 @@ function supplementalQuestionFamily(skill) {
     return [
       {
         questionType: 'direct',
-        prompt: `What is ${start} - ${take}?`,
+        prompt: `Solve this subtraction fact: ${start} - ${take}. What is the difference?`,
         choices: [String(answer), String(answer + 1), String(Math.max(0, answer - 1))],
         answer: String(answer),
         explanation: `${start} take away ${take} leaves ${answer}.`,
@@ -996,7 +996,7 @@ function supplementalQuestionFamily(skill) {
     return [
       {
         questionType: 'direct',
-        prompt: `What is ${a} + ${b}?`,
+        prompt: `Solve this addition fact: ${a} + ${b}. What is the total?`,
         choices: [String(answer), String(Math.max(0, answer - 1)), String(Math.min(max + 1, answer + 1))],
         answer: String(answer),
         explanation: `${a} plus ${b} equals ${answer}.`,
