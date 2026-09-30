@@ -1639,6 +1639,12 @@ export function validateGrade2ContentPipeline(pipeline) {
       if(rows.length<expected)issues.push(`semantic-family-incomplete:${skill.id}:${rows.length}/${expected}`);
       if(new Set(rows.map(question=>question.variantFingerprint)).size!==rows.length)issues.push(`semantic-variant-duplicate:${skill.id}`);
       if(new Set(rows.map(question=>question.contentFingerprint)).size!==rows.length)issues.push(`content-fingerprint-duplicate:${skill.id}`);
+      if(expected>=3){
+        const types=new Set(rows.map(question=>question.questionType));
+        for(const requiredType of ['direct','transfer','reasoning']){
+          if(!types.has(requiredType))issues.push(`semantic-family-type-missing:${skill.id}:${requiredType}`);
+        }
+      }
     }
   }
   if ((pipeline.qa?.rejectedCount || 0) > 0) issues.push('rejected-questions-present');
