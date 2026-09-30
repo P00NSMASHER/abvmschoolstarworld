@@ -159,6 +159,29 @@ test('different IDs with the same semantic fingerprint cannot both enter one rou
   expect(result.filter(v => v === 'same-semantic')).toHaveLength(1);
 });
 
+
+test('re-rendering the same visible question does not crowd cooldown history', async ({ page }) => {
+  const result = await page.evaluate(() => {
+    const engine = window.ABVMStudyGames;
+    const q = {
+      id: 'rerender-question',
+      skill: 'theme',
+      subject: 'Reading / ELA',
+      tier: 'material',
+      difficulty: 2,
+      questionType: 'direct',
+      variantFingerprint: 'rerender-semantic',
+    };
+    for (let i = 0; i < 12; i += 1) engine.markQuestionShown(q, 'rerender-pack');
+    const entries = Object.entries(localStorage).filter(([key]) => key.startsWith('abvm-study-rotation:v1:'));
+    const parsed = entries.map(([, value]) => JSON.parse(value));
+    return parsed.flatMap(row => row.recent || []);
+  });
+  expect(result).toHaveLength(1);
+  expect(result[0].skill).toBe('theme');
+  expect(result[0].type).toBe('direct');
+});
+
 test('rotation history is source-scoped and stores no question text or answer content', async ({ page }) => {
   const result = await page.evaluate(() => {
     const engine = window.ABVMStudyGames;
