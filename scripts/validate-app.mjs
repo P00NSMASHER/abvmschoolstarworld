@@ -11,7 +11,8 @@ for(const key of ["importantDates","homework","subjects","reminders","parentNoti
 if(manifest.display!=="standalone")fail("PWA manifest must remain standalone");
 const index=read("pages/index.html"),css=read("pages/styles.css"),app=read("pages/app.js"),games=read("pages/study-games.js"),sw=read("pages/sw.js");
 if(!/href="\.\/styles\.css(?:\?[^"]*)?"/.test(index))fail("Gold-standard styles.css must be loaded");
-if(!/[\"\']\\.\\/study-games\\.js\\?v=\\d+[\"\']/.test(app))fail("Versioned Study Games engine must be lazy-loadable from app.js");\nif(!/[\"\']\\.\\/study-games-view\\.js\\?v=\\d+[\"\']/.test(app))fail("Versioned Study Games view must be lazy-loadable from app.js");
+if(!/["']\.\/study-games\.js\?v=\d+["']/.test(app))fail("Versioned Study Games engine must be lazy-loadable from app.js");
+if(!/["']\.\/study-games-view\.js\?v=\d+["']/.test(app))fail("Versioned Study Games view must be lazy-loadable from app.js");
 if(!/src="\.\/app\.js(?:\?[^"]*)?"/.test(index))fail("Gold-standard app.js must be loaded");
 for(const marker of ["YOUR SCHOOL PLAN","SCHOOL MONTH AT A GLANCE","Study room","Study games","Family dashboard"])if(!app.includes(marker))fail("Missing core UI marker: "+marker);
 for(const marker of [".app-header",".day-picker",".calendar-card",".study-accordion",".study-games-cta",".study-game-grid",".family-hero",".bottom-nav"])if(!css.includes(marker))fail("Missing core style marker: "+marker);
