@@ -83,7 +83,7 @@ test('future teacher skills are detected without hand-editing the app', () => {
       {
         subject: 'Reading / ELA',
         topics: ['Word structure: adding -s and -es'],
-        studyNotes: ['Reading comprehension: cause and effect, setting, inference, genre, sequence'],
+        studyNotes: ['Reading comprehension: cause and effect, setting, inference, genre, sequence, captions'],
       },
       {
         subject: 'Math',
@@ -105,14 +105,16 @@ test('future teacher skills are detected without hand-editing the app', () => {
   });
   const ids = new Set(pipeline.skills.map(skill => skill.id));
 
-  for (const expected of ['suffix-s-es', 'cause-effect', 'setting', 'inference', 'genre', 'place-value', 'money', 'religion-image-likeness']) {
+  for (const expected of ['suffix-s-es', 'cause-effect', 'setting', 'inference', 'genre', 'sequence', 'caption', 'place-value', 'money', 'religion-image-likeness']) {
     assert.equal(ids.has(expected), true, `missing future skill: ${expected}`);
   }
   assert.equal(pipeline.qa.status, 'pass');
-  assert.ok((pipeline.qa.questionsPerSkill?.inference || 0) >= 3, 'future inference skill should receive its semantic sibling family');
-  assert.equal(pipeline.safetyState, 'SAFE_PARTIAL');
-  assert.equal(pipeline.qa.unsupportedSkillCount, 1);
-  assert.ok(pipeline.coverage.some(row => row.status === 'GENERATOR_UNSUPPORTED' && row.topic.toLowerCase() === 'sequence'));
+  for (const skillId of ['suffix-s-es', 'cause-effect', 'setting', 'inference', 'genre', 'sequence', 'caption', 'place-value', 'money']) {
+    assert.ok((pipeline.qa.questionsPerSkill?.[skillId] || 0) >= 3, `${skillId} should receive a three-item semantic family`);
+  }
+  assert.equal(pipeline.safetyState, 'READY');
+  assert.equal(pipeline.qa.unsupportedSkillCount, 0);
+  assert.equal(pipeline.coverage.some(row => row.status === 'GENERATOR_UNSUPPORTED'), false);
 });
 
 test('production lineage resolves every question to an exact teacher page capture', () => {
