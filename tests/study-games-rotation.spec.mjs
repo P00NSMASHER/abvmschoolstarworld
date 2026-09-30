@@ -33,9 +33,9 @@ test('real catalog builder preserves semantic fingerprints for rotation and priv
       contentPipeline: {
         skills: [{ id: 'theme' }],
         questions: [
-          { ...base, id: 'pipeline-dup-a', prompt: 'Prompt A', contentFingerprint: 'content-a', variantFingerprint: 'shared-semantic' },
-          { ...base, id: 'pipeline-dup-b', prompt: 'Prompt B', contentFingerprint: 'content-b', variantFingerprint: 'shared-semantic' },
-          { ...base, id: 'pipeline-unique', prompt: 'Prompt C', contentFingerprint: 'content-c', variantFingerprint: 'unique-semantic' },
+          { ...base, id: 'pipeline-dup-a', prompt: 'A child helps a classmate feel welcome at recess. Which theme fits best?', contentFingerprint: 'content-a', variantFingerprint: 'shared-semantic' },
+          { ...base, id: 'pipeline-dup-b', prompt: 'A student invites someone new to join a game. Which theme fits best?', contentFingerprint: 'content-b', variantFingerprint: 'shared-semantic' },
+          { ...base, id: 'pipeline-unique', prompt: 'Friends include a new classmate during an activity. Which theme fits best?', contentFingerprint: 'content-c', variantFingerprint: 'unique-semantic' },
         ],
       },
       subjects: [],
