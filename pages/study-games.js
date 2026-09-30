@@ -789,7 +789,7 @@ function fallbackReading(variant,out){
       id:row.id+"-v"+variant,subject:"Reading / ELA",skill:row.skill,tier:"star-fallback",
       prompt:row.prompt,choices:shuffled(row.choices,row.id+variant),answer:row.answer,explanation:row.explanation,
       hint:row.skill==="text-evidence"?"Choose the detail that most directly proves the idea.":"Use the passage clues, not just one familiar word.",
-      sourceFact:"Original Grade 2 STAR-aligned Reading practice",dok:index%3===0?2:3,difficulty:index%3===0?2:3,
+      sourceFact:"Original Grade 2 STAR-aligned Reading practice",dok:index%3===0?1:index%3===1?2:3,difficulty:index%3===2?3:2,
       wrongFeedback:"Go back to the text and choose the answer supported by the strongest clue.",
       misconception:"unsupported-reading-choice"
     });
@@ -898,7 +898,8 @@ function validateCatalog(catalog){
     for(const issue of validateQuestion(question))issues.push({id:question.id,issue});
   }
   if(!doks.has(1)||!doks.has(2)||!doks.has(3))issues.push({id:"catalog",issue:"dok-range-incomplete"});
-  if(!tiers.has("material")||!tiers.has("star-fallback"))issues.push({id:"catalog",issue:"tier-mix-incomplete"});
+  if(!tiers.has("star-fallback"))issues.push({id:"catalog",issue:"fallback-tier-missing"});
+  if(catalog?.qualityPolicy?.materialExpected!==false&&!tiers.has("material"))issues.push({id:"catalog",issue:"tier-mix-incomplete"});
   return issues;
 }
 function buildCatalog(pack,{sourceKey}={}){
@@ -942,7 +943,8 @@ function buildCatalog(pack,{sourceKey}={}){
       diagnosticDistractors:true,
       targetedWrongFeedback:true,
       analyticRubric:true,
-      starFallbackOriginalOnly:true
+      starFallbackOriginalOnly:true,
+      materialExpected:pipelineSkills?pipelineSkills.size>0:true
     },
     questionCount:deduped.length,questions:deduped
   };
