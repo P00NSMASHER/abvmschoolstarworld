@@ -56,6 +56,16 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
   assert.ok(pipeline.questions.every(question => question.evidenceContract?.evidenceType === 'DIRECT_TARGET'));
   assert.ok(pipeline.questions.every(question => question.contentFingerprint && question.variantFingerprint && question.presentationFingerprint));
   assert.ok(Math.max(...pipeline.qa.answerPositionCounts) - Math.min(...pipeline.qa.answerPositionCounts) <= 1);
+
+  for (const skill of ['sentence-types','consonant-blends','cvc-structure','long-short-a','suffix-ed-ing','theme','visualize','dialogue','inference','subtraction-within-12']) {
+    assert.ok((pipeline.qa.questionsPerSkill?.[skill] || 0) >= 3, `expected semantic sibling family for ${skill}`);
+  }
+  assert.ok((pipeline.qa.questionsPerSkill?.['religion-trinity'] || 0) >= 2, 'Trinity intentionally keeps a smaller strict-source bank');
+  assert.ok((pipeline.qa.questionTypeCounts?.transfer || 0) > 0);
+  assert.ok((pipeline.qa.questionTypeCounts?.reasoning || 0) > 0);
+  assert.ok((pipeline.qa.dokCounts?.[1] || 0) > 0);
+  assert.ok((pipeline.qa.dokCounts?.[2] || 0) > 0);
+  assert.ok((pipeline.qa.dokCounts?.[3] || 0) > 0);
 });
 
 test('future teacher skills are detected without hand-editing the app', () => {
