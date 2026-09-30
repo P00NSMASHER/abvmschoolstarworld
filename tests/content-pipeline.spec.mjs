@@ -157,3 +157,25 @@ test('skill-restricted selection keeps Test Ready practice inside the verified a
   expect(result.length).toBeGreaterThan(0);
   expect(result.every(question => question.skill === 'sentence-types')).toBe(true);
 });
+
+
+test('the content pipeline is authoritative for every legacy material generator', async ({ page }) => {
+  const result = await page.evaluate(async () => {
+    const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(response => response.json());
+    const pack = structuredClone(envelope.pack);
+    pack.contentPipeline = {
+      schemaVersion: 2,
+      sourceHash: 'material-authority-test',
+      skills: [{ id: 'sentence-types', subject: 'Reading / ELA' }],
+      questions: [],
+      coverage: [],
+    };
+    const catalog = window.ABVMStudyGames.buildCatalog(pack, { sourceKey: 'material-authority-test' });
+    return catalog.questions
+      .filter(question => question.tier === 'material')
+      .map(question => ({ id: question.id, skill: question.skill, subject: question.subject }));
+  });
+
+  expect(result.length).toBeGreaterThan(0);
+  expect(result.every(question => question.skill === 'sentence-types')).toBe(true);
+});
