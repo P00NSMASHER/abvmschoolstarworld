@@ -27,6 +27,13 @@ const failures=recentRelevant.filter(run=>run.conclusion==="failure").map(run=>(
 
 const sourceCheckedAt=packData.sourceLastCheckedAt||packData.pack?.sourceCheckedAt||null;
 const sourceAgeHours=sourceCheckedAt?(Date.now()-Date.parse(sourceCheckedAt))/3_600_000:null;
+const contentPipeline=packData.pack?.contentPipeline||null;
+const pipelineCoverage=Array.isArray(contentPipeline?.coverage)?contentPipeline.coverage:[];
+const unsupportedTopics=pipelineCoverage.filter(row=>row?.status==="GENERATOR_UNSUPPORTED").map(row=>row.topic).filter(Boolean);
+const sourceInsufficientTopics=pipelineCoverage.filter(row=>row?.status==="SOURCE_INSUFFICIENT").map(row=>row.topic).filter(Boolean);
+const pipelineUnsupportedCount=Number.isFinite(Number(contentPipeline?.qa?.unsupportedSkillCount))
+  ?Number(contentPipeline.qa.unsupportedSkillCount)
+  :unsupportedTopics.length;
 const now=new Date().toISOString();
 const status={
   generatedAt:now,
@@ -41,6 +48,17 @@ const status={
     sourceHash:packData.pack?.sourceHash||null,
   },
   lunch:{status:packData.pack?.lunchMenuSource?.status||"unknown",retrievalState:packData.pack?.lunchMenuSource?.retrievalState||"unknown",days:packData.pack?.lunchMenu?.length||0,missingDates:packData.pack?.lunchMenuSource?.missingDates||[]},
+  contentPipeline:{
+    present:Boolean(contentPipeline),
+    qaStatus:contentPipeline?.qa?.status||"missing",
+    safetyState:contentPipeline?.safetyState||"missing",
+    skillCount:Number(contentPipeline?.qa?.skillCount||contentPipeline?.skills?.length||0),
+    questionCount:Number(contentPipeline?.qa?.questionCount||contentPipeline?.questions?.length||0),
+    sourceInsufficientCount:Number(contentPipeline?.qa?.sourceInsufficientCount||sourceInsufficientTopics.length||0),
+    unsupportedSkillCount:pipelineUnsupportedCount,
+    sourceInsufficientTopics,
+    unsupportedTopics,
+  },
   workflows:{
     refresh:{latest:latest(workflowNames.refresh),latestCompleted:latestCompleted(workflowNames.refresh),latestDecisive:latestDecisive(workflowNames.refresh),latestSuccess:latestSuccess(workflowNames.refresh)},
     qa:{latest:latest(workflowNames.qa),latestCompleted:latestCompleted(workflowNames.qa),latestDecisive:latestDecisive(workflowNames.qa),latestSuccess:latestSuccess(workflowNames.qa)},
@@ -64,6 +82,11 @@ const completedHealthy=(workflow,maxAgeHours)=>{
   const age=runAgeHours(run);
   return age!==null&&age>=-.25&&age<=maxAgeHours;
 };
+const pipelineHealthy=Boolean(
+  status.contentPipeline.present &&
+  status.contentPipeline.qaStatus==="pass" &&
+  status.contentPipeline.unsupportedSkillCount===0
+);
 const healthy=Boolean(
   status.schoolData.sourceSufficient &&
   status.schoolData.sourcePages===6 &&
@@ -73,7 +96,8 @@ const healthy=Boolean(
   completedHealthy(status.workflows.qa,48) &&
   completedHealthy(status.workflows.deploy,48) &&
   completedHealthy(status.workflows.refresh,30) &&
-  completedHealthy(status.workflows.watchdog,30)
+  completedHealthy(status.workflows.watchdog,30) &&
+  pipelineHealthy
 );
 status.overall=healthy?"healthy":"attention";
 
@@ -89,6 +113,9 @@ const md=[
   `- **School data checked:** ${sourceCheckedAt||"missing"}${sourceAgeHours===null?"":` (${sourceAgeHours.toFixed(1)}h old)`}`,
   `- **Source coverage:** ${status.schoolData.sourcePages}/6 teacher pages; source sufficient = ${status.schoolData.sourceSufficient}; fresh <=8h = ${sourceFresh}`,
   `- **Lunch source:** ${status.lunch.retrievalState}; ${status.lunch.days} reviewed days; missing dates: ${status.lunch.missingDates.join(", ")||"none"}`,
+  `- **Grade 2 content pipeline:** QA ${status.contentPipeline.qaStatus}; safety ${status.contentPipeline.safetyState}; ${status.contentPipeline.skillCount} skills; ${status.contentPipeline.questionCount} questions; source-insufficient ${status.contentPipeline.sourceInsufficientCount}; unsupported ${status.contentPipeline.unsupportedSkillCount}`,
+  `- **Unsupported teacher skills:** ${status.contentPipeline.unsupportedTopics.join(", ")||"none"}`,
+  `- **Source-insufficient study topics:** ${status.contentPipeline.sourceInsufficientTopics.join(", ")||"none"}`,
   `- **App version:** ${status.appVersion}`,
   `- **Service worker cache:** ${status.serviceWorkerCache}`,
   `- **Git SHA:** ${status.gitSha||"unknown"}`,
