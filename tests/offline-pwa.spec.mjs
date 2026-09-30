@@ -66,7 +66,7 @@ test("app recovers cleanly after reconnecting from offline mode",async({page,con
 });
 
 test("service worker cleans only old ABVM caches and precaches the exact shell",async({request})=>{
-  const {sw:source,styleUrl,appUrl,gamesUrl}=await readPwaVersions(request);
+  const {sw:source,styleUrl,appUrl,gamesUrl,gamesViewUrl}=await readPwaVersions(request);
   expect(source).toContain('const CACHE_PREFIX = "abvm-grade2-parent-companion-"');
   expect(source).toContain("caches.keys()");
   expect(source).toContain("key.startsWith(CACHE_PREFIX)&&key!==CACHE");
@@ -75,6 +75,7 @@ test("service worker cleans only old ABVM caches and precaches the exact shell",
   expect(source).toContain('"'+styleUrl+'"');
   expect(source).toContain('"'+appUrl+'"');
   expect(source).toContain('"'+gamesUrl+'"');
+  expect(source).toContain('"'+gamesViewUrl+'"');
   expect(source).toContain('"./data/study-pack.json"');
   expect(source).not.toMatch(/STATIC_SHELL\s*=\s*\[\s*"\.\/"/);
 });
