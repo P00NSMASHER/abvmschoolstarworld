@@ -10,6 +10,11 @@ import {
 } from './teacher-page-parsers.mjs';
 import { validateUploadedNoticePolicy } from './uploaded-notice-policy.mjs';
 import { refreshLunchPublication } from './lunch-publication.mjs';
+import {
+  buildGrade2ContentPipeline,
+  mergeGrade2StudyNotes,
+  validateGrade2ContentPipeline,
+} from './grade2-content-pipeline.mjs';
 
 const DATA_PATH = new URL('../pages/data/study-pack.json', import.meta.url);
 const UPLOADED_NOTICES_PATH = new URL('../pages/data/uploaded-notices.json', import.meta.url);
@@ -338,6 +343,14 @@ pack.vocabulary = vocabulary.split(',').map(term => term.trim()).filter(Boolean)
   term,
   meaning: 'Current Reading Work vocabulary word; the teacher page does not provide a definition.',
 }));
+
+const contentPipeline = buildGrade2ContentPipeline(pack, { generatedAt: checkedAt, sourceHash });
+mergeGrade2StudyNotes(pack, contentPipeline);
+const contentPipelineIssues = validateGrade2ContentPipeline(contentPipeline);
+if (contentPipelineIssues.length) {
+  throw new Error(`Generated Grade 2 content failed QA: ${JSON.stringify(contentPipelineIssues)}`);
+}
+pack.contentPipeline = contentPipeline;
 pack.importantDates = mergeTeacherEvents(pack.importantDates || [], homeEvents, 'teacher-home');
 pack.importantDates = mergeTeacherEvents(pack.importantDates, testItems, 'teacher-tests');
 pack.importantDates = mergeUploadedEvents(pack.importantDates, uploadedNotices);
