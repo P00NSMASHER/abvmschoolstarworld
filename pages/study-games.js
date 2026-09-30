@@ -194,6 +194,23 @@ function addTriad(out,prefix,base,items){
   })));
 }
 function add(out,question){out.push(makeQuestion(question))}
+function materialContentPipeline(pack,out){
+  const specs=Array.isArray(pack?.contentPipeline?.questions)?pack.contentPipeline.questions:[];
+  for(const spec of specs){
+    if(!spec||typeof spec!=="object")continue;
+    add(out,{
+      id:text(spec.id),subject:text(spec.subject),skill:text(spec.skill),tier:"material",
+      type:text(spec.questionType)||"direct",prompt:spec.prompt,choices:spec.choices||[],answer:spec.answer,
+      explanation:spec.explanation,hint:spec.hint,sourceFact:spec.sourceFact,
+      dok:Number.isInteger(spec.dok)?spec.dok:2,
+      difficulty:Number.isInteger(spec.difficulty)?spec.difficulty:2,
+      standards:Array.isArray(spec.standards)?spec.standards:undefined,
+      domain:spec.domain,
+      wrongFeedback:"Review the target skill and use the hint before choosing again.",
+      misconception:"pipeline-generated distractor"
+    });
+  }
+}
 function materialMath(pack,variant,out){
   if(!topicMatch(pack,"Math",/subtraction\s+to\s+12/i))return;
   const row=rowFor([
@@ -884,6 +901,7 @@ function validateCatalog(catalog){
 function buildCatalog(pack,{sourceKey}={}){
   const key=text(sourceKey||pack?.sourceHash||pack?.sourceCheckedAt||pack?.weekLabel||"abvm-current");
   const variant=variantFor(key),questions=[];
+  materialContentPipeline(pack,questions);
   materialMath(pack,variant,questions);
   materialSentences(pack,variant,questions);
   materialPhonics(pack,variant,questions);
