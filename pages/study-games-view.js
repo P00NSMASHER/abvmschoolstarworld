@@ -51,9 +51,9 @@ function play({g,mode,q,teach,retryInstruction,labels}){
     '<div class="game-streak"><span>Streak <b>'+g.streak+'</b></span><span>Best this round <b>'+g.bestStreak+'</b></span></div>';
 }
 function goal({state}){
-  const g=state?.goal||{},selected=!!state?.selected,unlocked=!!state?.unlocked,pct=Math.max(0,Math.min(100,Number(state?.percent)||0));
+  const g=state?.goal||{},selected=!!state?.selected,unlocked=!!state?.unlocked,pct=Math.max(0,Math.min(100,Number(state?.percent)||0)),target=Math.max(1,Math.floor(Number(state?.target)||1)),balance=Math.max(0,Math.floor(Number(state?.balance)||0)),progress=Math.min(target,balance);
   if(!g.id)return "";
-  return '<section class="study-star-goal" aria-label="Dream Goal"><div class="study-star-goal-head"><span>★</span><div><small>DREAM GOAL</small><strong>'+esc(g.title)+'</strong></div><b>'+Math.max(0,Number(state?.balance)||0)+' / '+Math.max(1,Number(state?.target)||1)+' Stars</b></div><div class="study-star-goal-progress" role="progressbar" aria-label="Dream Goal progress" aria-valuemin="0" aria-valuemax="'+Math.max(1,Number(state?.target)||1)+'" aria-valuenow="'+Math.max(0,Number(state?.balance)||0)+'"><span style="width:'+pct+'%"></span></div><p>'+esc(unlocked?"Goal reached! Your badge is ready.":g.copy||"Keep practicing to fill the bar.")+'</p>'+(selected?'<small class="study-star-goal-selected">'+(unlocked?'Unlocked':'Goal selected')+'</small>':'<button type="button" data-study-star-goal="'+esc(g.id)+'">Choose this goal</button>')+'</section>';
+  return '<section class="study-star-goal" aria-label="Dream Goal"><div class="study-star-goal-head"><span>★</span><div><small>DREAM GOAL</small><strong>'+esc(g.title)+'</strong></div><b>'+balance+' / '+target+' Stars</b></div><div class="study-star-goal-progress" role="progressbar" aria-label="Dream Goal progress" aria-valuemin="0" aria-valuemax="'+target+'" aria-valuenow="'+progress+'"><span style="width:'+pct+'%"></span></div><p>'+esc(unlocked?"Goal reached! Your badge is ready.":g.copy||"Keep practicing to fill the bar.")+'</p>'+(selected?'<small class="study-star-goal-selected">'+(unlocked?'Unlocked':'Goal selected')+'</small>':'<button type="button" data-study-star-goal="'+esc(g.id)+'">Choose this goal</button>')+'</section>';
 }
 
 function finish({mode,state,record}){
