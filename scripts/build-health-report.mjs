@@ -52,11 +52,14 @@ const status={
 const sourceFresh=sourceAgeHours!==null&&sourceAgeHours>=-.25&&sourceAgeHours<=8;
 const runAgeHours=run=>run?.created_at?(Date.now()-Date.parse(run.created_at))/3_600_000:null;
 const activeStatuses=new Set(["queued","in_progress","waiting","pending","requested"]);
-const completedHealthy=(workflow,maxAgeHours)=>{
+const effectiveRun=workflow=>{
   const latestRun=workflow.latest;
   const decisive=workflow.latestDecisive;
   const newerActive=latestRun&&activeStatuses.has(latestRun.status)&&(!decisive||Date.parse(latestRun.created_at)>=Date.parse(decisive.created_at));
-  const run=newerActive?workflow.latestSuccess:decisive;
+  return newerActive?workflow.latestSuccess:decisive;
+};
+const completedHealthy=(workflow,maxAgeHours)=>{
+  const run=effectiveRun(workflow);
   if(!run||run.conclusion!=="success")return false;
   const age=runAgeHours(run);
   return age!==null&&age>=-.25&&age<=maxAgeHours;
@@ -90,11 +93,11 @@ const md=[
   `- **Service worker cache:** ${status.serviceWorkerCache}`,
   `- **Git SHA:** ${status.gitSha||"unknown"}`,
   "",
-  "## Latest workflow state",
-  line("Teacher refresh",status.workflows.refresh.latest||status.workflows.refresh.latestDecisive||status.workflows.refresh.latestCompleted),
-  line("App QA",status.workflows.qa.latest||status.workflows.qa.latestDecisive||status.workflows.qa.latestCompleted),
-  line("Pages deploy",status.workflows.deploy.latest||status.workflows.deploy.latestDecisive||status.workflows.deploy.latestCompleted),
-  line("Refresh watchdog",status.workflows.watchdog.latest||status.workflows.watchdog.latestDecisive||status.workflows.watchdog.latestCompleted),
+  "## Workflow evidence used for health verdict",
+  line("Teacher refresh",effectiveRun(status.workflows.refresh)),
+  line("App QA",effectiveRun(status.workflows.qa)),
+  line("Pages deploy",effectiveRun(status.workflows.deploy)),
+  line("Refresh watchdog",effectiveRun(status.workflows.watchdog)),
   `- **Required successful-run age:** refresh/watchdog <=30h; QA/deploy <=48h`,
   "",
   "## Recent relevant failures",
