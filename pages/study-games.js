@@ -910,7 +910,14 @@ function buildCatalog(pack,{sourceKey}={}){
   materialPhonics(pack,variant,questions);
   materialHighFrequency(pack,variant,questions);
   materialVocabulary(pack,variant,questions);
-  materialReading(pack,variant,questions);
+  const legacyReading=[];
+  materialReading(pack,variant,legacyReading);
+  const pipelineReadingSkills=Array.isArray(pack?.contentPipeline?.skills)
+    ?new Set(pack.contentPipeline.skills.map(skill=>text(skill?.id)).filter(Boolean))
+    :null;
+  questions.push(...(pipelineReadingSkills
+    ?legacyReading.filter(question=>pipelineReadingSkills.has(question.skill))
+    :legacyReading));
   materialReligion(pack,variant,questions);
   fallbackReading(variant,questions);
   fallbackMath(variant,questions);
