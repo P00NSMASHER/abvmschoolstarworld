@@ -20,29 +20,11 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
   });
 
   const ids = new Set(pipeline.skills.map(skill => skill.id));
-  for (const expected of [
-    'subtraction-within-12',
-    'sentence-types',
-    'consonant-blends',
-    'cvc-structure',
-    'long-short-a',
-    'suffix-ed-ing',
-    'high-frequency-word-use',
-    'theme',
-    'visualize',
-    'dialogue',
-    'religion-trinity',
-    'religion-image-likeness',
-    'religion-creation-care',
-    'religion-five-senses',
-    'religion-jesus-savior',
-    'religion-disciples',
-    'religion-mary-church',
-    'religion-seed-new-life',
-    'religion-gifts-choices',
-  ]) {
-    assert.equal(ids.has(expected), true, `missing current skill: ${expected}`);
-  }
+  const sourceSubjects = new Set((pack.subjects || []).map(row => row.subject));
+  assert.ok(pipeline.skills.length > 0, 'current verified source must yield at least one supported skill');
+  assert.ok(pipeline.skills.every(skill => sourceSubjects.has(skill.subject)), 'every generated skill must map to a current source subject');
+  assert.ok(pipeline.skills.every(skill => Array.isArray(skill.evidence) && skill.evidence.length > 0), 'every generated skill must retain source evidence');
+  assert.ok(pipeline.questions.every(question => ids.has(question.skill)), 'every generated question must resolve to a current supported skill');
 
   assert.equal(pipeline.qa.status, 'pass');
   assert.equal(pipeline.qa.rejectedCount, 0);
@@ -53,17 +35,40 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
   assert.match(pipeline.bankFingerprint, /^[0-9a-f]{8}$/);
   assert.equal(pipeline.qa.unsupportedSkillCount, 0);
   assert.equal(pipeline.schemaVersion, 2);
-  assert.equal(pipeline.safetyState, 'SAFE_PARTIAL');
-  assert.deepEqual(pipeline.qa.subjectCoverage, ['Math', 'Reading / ELA', 'Religion', 'Spelling / Handwriting']);
-  assert.equal(ids.has('vocabulary-in-context'), false, 'must not invent vocabulary definitions absent from source');
-  assert.ok(pipeline.coverage.some(row => row.status === 'SOURCE_INSUFFICIENT' && /vocabulary definitions/i.test(row.topic)));
-  assert.ok(pipeline.coverage.some(row => row.status === 'SOURCE_INSUFFICIENT' && /vine and the branches/i.test(row.topic)));
-  assert.ok(pipeline.coverage.some(row => row.status === 'COVERED' && row.skillId === 'high-frequency-word-use'));
-  assert.ok(pipeline.coverage.some(row => row.status === 'NOT_PRACTICED_BY_DESIGN' && /^Story:/i.test(row.topic)));
-  const sightQuestions = pipeline.questions.filter(question => question.skill === 'high-frequency-word-use');
-  assert.ok(sightQuestions.length >= 2);
-  assert.ok(sightQuestions.every(question => question.evidenceContract?.doesNotClaim?.includes('spelling')));
-  assert.ok(sightQuestions.every(question => question.evidenceContract?.doesNotClaim?.includes('isolated-print-recognition')));
+  assert.ok(['SAFE_PARTIAL', 'READY'].includes(pipeline.safetyState));
+  assert.deepEqual(
+    pipeline.qa.subjectCoverage,
+    [...new Set(pipeline.skills.map(skill => skill.subject))].sort(),
+    'reported subject coverage must exactly match the currently generated source-backed skills'
+  );
+
+  const reading = (pack.subjects || []).find(row => row.subject === 'Reading / ELA');
+  const religion = (pack.subjects || []).find(row => row.subject === 'Religion');
+  const readingTopics = reading?.topics || [];
+  const readingNotes = reading?.studyNotes || [];
+  const sightTopic = readingTopics.find(topic => /^Sight words\s*:/i.test(String(topic || '')));
+  if (sightTopic) {
+    const sightQuestions = pipeline.questions.filter(question => question.skill === 'high-frequency-word-use');
+    if (ids.has('high-frequency-word-use')) {
+      assert.ok(sightQuestions.length >= 2);
+      assert.ok(pipeline.coverage.some(row => row.status === 'COVERED' && row.skillId === 'high-frequency-word-use'));
+      assert.ok(sightQuestions.every(question => question.evidenceContract?.doesNotClaim?.includes('spelling')));
+      assert.ok(sightQuestions.every(question => question.evidenceContract?.doesNotClaim?.includes('isolated-print-recognition')));
+    } else {
+      assert.ok(pipeline.coverage.some(row => row.status === 'SOURCE_INSUFFICIENT' && /high-frequency|sight/i.test(row.topic)));
+    }
+  }
+  if (readingTopics.some(topic => /^Story\s*:/i.test(String(topic || '')))) {
+    assert.ok(pipeline.coverage.some(row => row.status === 'NOT_PRACTICED_BY_DESIGN' && /^Story:/i.test(row.topic)));
+  }
+  if (/vine and the branches|vine and branches/i.test([...(religion?.topics || []), ...(religion?.studyNotes || [])].join(' | '))) {
+    assert.ok(pipeline.coverage.some(row => row.status === 'SOURCE_INSUFFICIENT' && /vine and the branches/i.test(row.topic)));
+  }
+  const hasVerifiedVocabularyMeanings = (pack.vocabulary || []).some(row => String(row?.meaning || '').trim() && !/^(?:tbd|unknown|not provided|not posted)$/i.test(String(row?.meaning || '').trim()));
+  if (!hasVerifiedVocabularyMeanings && (pack.vocabulary || []).length) {
+    assert.equal(ids.has('vocabulary-in-context'), false, 'must not invent vocabulary definitions absent from source');
+    assert.ok(pipeline.coverage.some(row => row.status === 'SOURCE_INSUFFICIENT' && /vocabulary definitions/i.test(row.topic)));
+  }
   assert.ok(pipeline.questions.length >= pipeline.skills.length);
   assert.equal(validateGrade2ContentPipeline(pipeline).length, 0);
 
@@ -75,10 +80,13 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
   assert.ok(Math.max(...pipeline.qa.answerPositionCounts) - Math.min(...pipeline.qa.answerPositionCounts) <= 1);
   assert.equal(pipeline.qa.semanticVariantCount, pipeline.qa.questionCount);
   assert.ok(pipeline.qa.maxConsecutiveAnswerPosition <= 2);
-  assert.deepEqual(
-    [...new Set(pipeline.questions.filter(question => question.skill === 'subtraction-within-12').map(question => question.questionType))].sort(),
-    ['direct','reasoning','transfer']
-  );
+  for (const skill of pipeline.skills.filter(row => /^subtraction-within-\d+$/.test(row.id))) {
+    assert.deepEqual(
+      [...new Set(pipeline.questions.filter(question => question.skill === skill.id).map(question => question.questionType))].sort(),
+      ['direct','reasoning','transfer'],
+      `${skill.id} must retain direct, reasoning, and transfer variants while it is present in current source material`
+    );
+  }
 
   const priorityFamilies = [
     'sentence-types','consonant-blends','cvc-structure','long-short-a','suffix-ed-ing',
@@ -86,14 +94,14 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
     'religion-trinity','religion-image-likeness','religion-creation-care','religion-jesus-savior',
     'religion-disciples','religion-mary-church','religion-seed-new-life','religion-five-senses','religion-gifts-choices',
   ];
-  for (const skill of priorityFamilies) {
-    assert.ok((pipeline.qa.questionsPerSkill?.[skill] || 0) >= 3, `expected renewable three-item family for ${skill}`);
+  for (const skill of priorityFamilies.filter(skill => ids.has(skill))) {
+    assert.ok((pipeline.qa.questionsPerSkill?.[skill] || 0) >= 3, `expected renewable three-item family for active skill ${skill}`);
     const types = new Set(pipeline.questions.filter(question => question.skill === skill).map(question => question.questionType));
-    assert.deepEqual([...types].sort(), ['direct','reasoning','transfer'], `${skill} must include direct, transfer, and reasoning siblings`);
+    assert.deepEqual([...types].sort(), ['direct','reasoning','transfer'], `${skill} must include direct, transfer, and reasoning siblings while source-backed`);
   }
   const expandedFamilies = ['sentence-types','consonant-blends','cvc-structure','long-short-a','suffix-ed-ing','theme','visualize','dialogue','subtraction-within-12'];
-  for (const skill of expandedFamilies) {
-    assert.ok((pipeline.qa.questionsPerSkill?.[skill] || 0) >= 8, `${skill} should have at least eight genuine semantic variants`);
+  for (const skill of expandedFamilies.filter(skill => ids.has(skill))) {
+    assert.ok((pipeline.qa.questionsPerSkill?.[skill] || 0) >= 8, `${skill} should have at least eight genuine semantic variants while source-backed`);
   }
   assert.ok(pipeline.qa.questionCount >= 100, 'current verified pack should expose at least 100 playable questions after renewable expansion');
   assert.ok((pipeline.qa.questionTypeCounts?.transfer || 0) > 0);
@@ -101,6 +109,24 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
   assert.ok((pipeline.qa.dokCounts?.[1] || 0) > 0);
   assert.ok((pipeline.qa.dokCounts?.[2] || 0) > 0);
   assert.ok((pipeline.qa.dokCounts?.[3] || 0) > 0);
+});
+
+test('source rollover drops lesson skills that are no longer present instead of carrying stale questions forward', () => {
+  const pack = {
+    sourceHash: 'rollover-source',
+    subjects: [
+      { subject: 'Reading / ELA', topics: ['Phonics: long a (a_e) and short a'], studyNotes: [] },
+      { subject: 'Math', topics: [], studyNotes: [] },
+    ],
+    vocabulary: [],
+  };
+  const pipeline = buildGrade2ContentPipeline(pack, { sourceHash: pack.sourceHash });
+  const ids = new Set(pipeline.skills.map(skill => skill.id));
+  assert.equal(ids.has('subtraction-within-12'), false);
+  assert.equal(ids.has('sentence-types'), false);
+  assert.ok(ids.has('long-short-a'));
+  assert.ok(pipeline.questions.every(question => question.skill !== 'subtraction-within-12' && question.skill !== 'sentence-types'));
+  assert.equal(validateGrade2ContentPipeline(pipeline).length, 0);
 });
 
 test('Religion banks stay source-framed and avoid the rejected ambiguous/cross-subject distractor patterns', () => {
@@ -235,10 +261,10 @@ test('publication rejects a skill bank that cannot supply a different sibling Co
 test('production lineage resolves every question to an exact teacher page capture', () => {
   const envelope = JSON.parse(readFileSync(DATA_PATH, 'utf8'));
   const pack = structuredClone(envelope.pack);
-  const reading = pack.subjects.find(row => row.subject === 'Reading / ELA');
-  const spelling = pack.subjects.find(row => row.subject === 'Spelling / Handwriting');
-  const math = pack.subjects.find(row => row.subject === 'Math');
-  const religion = pack.subjects.find(row => row.subject === 'Religion');
+  const reading = pack.subjects.find(row => row.subject === 'Reading / ELA') || { topics: [], studyNotes: [] };
+  const spelling = pack.subjects.find(row => row.subject === 'Spelling / Handwriting') || { topics: [], studyNotes: [] };
+  const math = pack.subjects.find(row => row.subject === 'Math') || { topics: [], studyNotes: [] };
+  const religion = pack.subjects.find(row => row.subject === 'Religion') || { topics: [], studyNotes: [] };
   const sourcePages = [
     {
       title: 'Reading Work',
@@ -290,10 +316,14 @@ test('production lineage resolves every question to an exact teacher page captur
   assert.ok(pipeline.questions.every(question => /^sha256:[0-9a-f]{64}$/.test(question.sourceLineage?.evidenceExcerptHash || '')));
 
   const sourceFor = skill => pipeline.questions.find(question => question.skill === skill)?.sourceLineage;
-  assert.equal(sourceFor('subtraction-within-12')?.sourceTitle, 'Tests');
-  assert.equal(sourceFor('sentence-types')?.sourceTitle, 'Tests');
-  assert.equal(sourceFor('theme')?.sourceTitle, 'Reading Work');
-  assert.equal(sourceFor('religion-trinity')?.sourceTitle, 'Religion');
+  for (const [skill, sourceTitle] of Object.entries({
+    'subtraction-within-12': 'Tests',
+    'sentence-types': 'Tests',
+    'theme': 'Reading Work',
+    'religion-trinity': 'Religion',
+  })) {
+    if (pipeline.skills.some(row => row.id === skill)) assert.equal(sourceFor(skill)?.sourceTitle, sourceTitle);
+  }
 
   const normalizeLine = value => String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
   for (const skill of pipeline.skills) {
@@ -306,8 +336,10 @@ test('production lineage resolves every question to an exact teacher page captur
   }
 
   const suffixLineage = sourceFor('suffix-ed-ing');
-  assert.ok(suffixLineage?.matchedEvidence?.some(line => /adding\s+-ed,\s*-ing/i.test(line)));
-  assert.equal(suffixLineage?.matchedEvidence?.some(line => /Reading Comprehension:/i.test(line)), false);
+  if (suffixLineage) {
+    assert.ok(suffixLineage.matchedEvidence?.some(line => /adding\s+-ed,\s*-ing/i.test(line)));
+    assert.equal(suffixLineage.matchedEvidence?.some(line => /Reading Comprehension:/i.test(line)), false);
+  }
 });
 
 test('vocabulary definitions are generated only when the verified pack actually supplies meanings', () => {
@@ -377,13 +409,17 @@ test('page-exact publication fails closed when a detected skill has no matching 
 test('pipeline validation rejects fake semantic variety and answer-position streaks', () => {
   const envelope = JSON.parse(readFileSync(DATA_PATH, 'utf8'));
   const pipeline = buildGrade2ContentPipeline(structuredClone(envelope.pack), { sourceHash: 'variety-gate-test' });
-  const family = pipeline.questions.filter(question => question.skill === 'sentence-types');
-  assert.ok(family.length >= 3);
+  const familySkill = pipeline.skills.find(skill => {
+    const rows = pipeline.questions.filter(question => question.skill === skill.id);
+    const types = new Set(rows.map(question => question.questionType));
+    return rows.length >= 3 && ['direct','transfer','reasoning'].every(type => types.has(type));
+  });
+  assert.ok(familySkill, 'current source-backed bank must contain at least one multi-type semantic family');
 
   const duplicate = structuredClone(pipeline);
-  const duplicateFamily = duplicate.questions.filter(question => question.skill === 'sentence-types');
+  const duplicateFamily = duplicate.questions.filter(question => question.skill === familySkill.id);
   duplicateFamily[1].variantFingerprint = duplicateFamily[0].variantFingerprint;
-  assert.ok(validateGrade2ContentPipeline(duplicate).some(issue => issue === 'semantic-variant-duplicate:sentence-types'));
+  assert.ok(validateGrade2ContentPipeline(duplicate).some(issue => issue === `semantic-variant-duplicate:${familySkill.id}`));
 
   const biased = structuredClone(pipeline);
   biased.qa.maxConsecutiveAnswerPosition = 3;

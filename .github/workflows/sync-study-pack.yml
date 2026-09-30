@@ -11,6 +11,7 @@ on:
       - 'scripts/lunch-publication.mjs'
       - 'pages/data/lunch-catalog.json'
       - 'scripts/validate-uploaded-notices.mjs'
+      - 'tests/grade2-content-pipeline.test.mjs'
       - '.github/workflows/sync-study-pack.yml'
   schedule:
     - cron: '17 6 * * *'
