@@ -18,8 +18,7 @@ const SCHOOL_LOGO_HTML='<img class="school-mark" src="./assets/abvm-app-icon-192
 const GAME_TYPE_LABELS=Object.freeze({
   direct:"Direct practice",
   transfer:"Try it a new way",
-  reasoning:"Explain your thinking",
-  source:"Current class material"
+  reasoning:"Explain your thinking"
 });
 const STUDY_GAME_MODES=Object.freeze([
   Object.freeze({id:"quick",title:"Quick Mix",subjects:[],count:8,copy:"Current school skills mixed into one quick round."}),
