@@ -28,6 +28,8 @@ for(const ref of [
   "pages/js/date-utils.js","pages/js/events.js","pages/js/school-model.js",
   "pages/data/school-year-calendar.json","tests/events.test.mjs","tests/school-model.test.mjs"
 ])if(exists(ref))fail("Duplicate unused school-model source must stay removed: "+ref);
+for(const ref of ["netlify.toml","netlify/functions/refresh-study-pack.mjs","netlify/functions/study-pack.mjs"])
+  if(exists(ref))fail("Obsolete Netlify proxy/fallback source must stay removed: "+ref);
 for(const selector of [".quest-launcher",".mission-picker",".school-star-avatar",".avatar-studio",".shop-grid",".star-league",".purchase-dialog"])
   if(css.includes(selector))fail("Obsolete Quest/avatar/shop CSS must stay removed: "+selector);
 if(Buffer.byteLength(css,"utf8")>80000)fail("styles.css exceeded the post-cleanup 80 KB ceiling");
