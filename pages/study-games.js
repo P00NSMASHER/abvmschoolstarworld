@@ -1041,6 +1041,7 @@ function rememberRotation(sourceKey,selected){
   const current=loadRotation(sourceKey).recent,now=Date.now();
   for(const question of selected){
     const v=semanticRotationKey(question);if(!v)continue;
+    const prior=current.findIndex(row=>row.v===v);if(prior>=0)current.splice(prior,1);
     current.push({v,skill:String(question.skill||""),type:String(question.questionType||""),at:now});
   }
   saveRotation(sourceKey,current);
