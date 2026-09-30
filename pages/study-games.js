@@ -1299,7 +1299,7 @@ const STUDY_STAR_POLICY=Object.freeze({
   roundComplete:10,
   comebackSuccess:2,
   rewardTypes:Object.freeze(["round-complete","comeback-success"]),
-  excludedSignals:Object.freeze(["first-try","perfect","mastery","streak","speed","teach-card","support"])
+  excludedSignals:Object.freeze(["score","accuracy","first-try","perfect","mastery","streak","speed","hints","teach-card","support"])
 });
 function studyStarPolicy(){return STUDY_STAR_POLICY}
 function studyStarRewardEvents({completed=false,comebackSucceeded=false}={}){
