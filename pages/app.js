@@ -461,24 +461,8 @@ function gameRecordKey(modeId){
   const catalog=studyGameCatalog();
   return "abvm-study-games:"+String(catalog?.sourceKey||"current")+":"+modeId;
 }
-function loadGameRecord(modeId){
-  try{
-    const value=JSON.parse(storageGet(gameRecordKey(modeId))||"{}");
-    return {best:Number(value.best)||0,plays:Number(value.plays)||0,totalCorrect:Number(value.totalCorrect)||0,totalAnswered:Number(value.totalAnswered)||0};
-  }catch{return {best:0,plays:0,totalCorrect:0,totalAnswered:0}}
-}
-function saveGameRecord(){
-  if(gameState.saved||!gameState.mode||!gameState.questions.length)return;
-  const record=loadGameRecord(gameState.mode);
-  const next={
-    best:Math.max(record.best,gameState.score),
-    plays:record.plays+1,
-    totalCorrect:record.totalCorrect+gameState.score,
-    totalAnswered:record.totalAnswered+gameState.questions.length
-  };
-  storageSet(gameRecordKey(gameState.mode),JSON.stringify(next));
-  gameState.saved=true;
-}
+function loadGameRecord(modeId){try{const v=JSON.parse(storageGet(gameRecordKey(modeId))||"{}");return{best:Number(v.best)||0,plays:Number(v.plays)||0,totalCorrect:Number(v.totalCorrect)||0,totalAnswered:Number(v.totalAnswered)||0}}catch{return{best:0,plays:0,totalCorrect:0,totalAnswered:0}}}
+function saveGameRecord(){if(gameState.saved||!gameState.mode||!gameState.questions.length)return;const r=loadGameRecord(gameState.mode),n={best:Math.max(r.best,gameState.score),plays:r.plays+1,totalCorrect:r.totalCorrect+gameState.score,totalAnswered:r.totalAnswered+gameState.questions.length};storageSet(gameRecordKey(gameState.mode),JSON.stringify(n));gameState.saved=true}
 function currentGameSourceKey(){return studyGameCatalog()?.sourceKey||"current"}
 function scheduleGameComeback(origin){const e=studyGameEngine(),c=studyGameCatalog(),s=currentGameSourceKey();return e?.scheduleComeback?.(c,origin,{sourceKey:s,remaining:2,seenIds:gameState.questions.slice(0,gameState.index+1).map(q=>q.id),seed:s+"|comeback|"+String(origin?.id||"item")})||null}
 function tickGameComebacks(){studyGameEngine()?.tickComebacks?.(currentGameSourceKey())}
