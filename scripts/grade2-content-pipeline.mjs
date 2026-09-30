@@ -693,6 +693,60 @@ function detectVocabulary(pack, skills, questions, coverage) {
   }
 }
 
+
+function detectUnsupportedExplicitSkills(pack, coverage) {
+  const addUnsupported = (subject, topic) => {
+    const clean = text(topic);
+    if (!clean || coverage.some(row => row.status === 'GENERATOR_UNSUPPORTED' && normalize(row.topic) === normalize(clean))) return;
+    coverage.push({
+      topic: clean,
+      subject,
+      status: 'GENERATOR_UNSUPPORTED',
+      reason: 'The verified teacher source names this instructional skill, but the current deterministic generator does not yet have an approved practice template for it.',
+    });
+  };
+
+  const reading = subjectRow(pack, 'Reading / ELA');
+  const readingLines = [...(reading?.topics || []), ...(reading?.studyNotes || [])];
+  for (const raw of readingLines) {
+    const line = text(raw);
+    const comprehension = line.match(/^Reading comprehension:\s*(.+)$/i);
+    if (comprehension) {
+      for (const item of comprehension[1].split(/\s*[,;]\s*/).map(text).filter(Boolean)) {
+        if (!BASE_SKILLS.some(rule => rule.pattern.test(item))) addUnsupported('Reading / ELA', item);
+      }
+      continue;
+    }
+    const explicit = line.match(/^(Phonics|Word structure|Grammar):\s*(.+)$/i);
+    if (explicit && !BASE_SKILLS.some(rule => rule.pattern.test(explicit[2]))) {
+      addUnsupported('Reading / ELA', explicit[2]);
+    }
+  }
+
+  const spelling = subjectRow(pack, 'Spelling / Handwriting');
+  for (const raw of spelling?.topics || []) {
+    const line = text(raw);
+    const focus = line.match(/(?:test\s+focus|focus):\s*(.+)$/i);
+    if (focus && !BASE_SKILLS.some(rule => rule.pattern.test(focus[1]))) {
+      addUnsupported('Spelling / Handwriting', focus[1]);
+    }
+  }
+
+  const mathPatterns = [
+    /subtraction\s+(?:to|within)\s+\d+/i,
+    /addition\s+(?:to|within)\s+\d+/i,
+    /place value/i,
+    /compare numbers|greater than|less than/i,
+    /\btime\b|clock/i,
+    /\bmoney\b|coins?|dimes?|nickels?|quarters?/i,
+  ];
+  const math = subjectRow(pack, 'Math');
+  for (const raw of math?.topics || []) {
+    const topic = text(raw);
+    if (topic && !mathPatterns.some(pattern => pattern.test(topic))) addUnsupported('Math', topic);
+  }
+}
+
 export function validateGeneratedQuestionSpec(question) {
   const issues = [];
   if (!question || typeof question !== 'object') return ['question-missing'];
@@ -811,6 +865,7 @@ export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash } = {
   detectMath(pack, skills, rawQuestions);
   detectReligion(pack, skills, rawQuestions);
   detectVocabulary(pack, skills, rawQuestions, coverage);
+  detectUnsupportedExplicitSkills(pack, coverage);
 
   for (const skill of skills) {
     coverage.push({
@@ -841,14 +896,14 @@ export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash } = {
     studyNotesBySubject[key] = uniqueText(studyNotesBySubject[key]);
   }
 
-  const sourceInsufficient = coverage.some(row => row.status === 'SOURCE_INSUFFICIENT' || row.status === 'MISSING');
+  const partialCoverage = coverage.some(row => ['SOURCE_INSUFFICIENT', 'MISSING', 'GENERATOR_UNSUPPORTED'].includes(row.status));
   const pipeline = {
     schemaVersion: 2,
     generatorVersion: 'grade2-content-pipeline-v2-research-recovery',
     generatedAt: generatedAt || new Date().toISOString(),
     sourceHash: sourceHash || pack?.sourceHash || 'unknown-source',
     lifecycleStage: 'QA_PASSED',
-    safetyState: sourceInsufficient ? 'SAFE_PARTIAL' : 'READY',
+    safetyState: partialCoverage ? 'SAFE_PARTIAL' : 'READY',
     sourcePolicy: {
       runtimeAI: false,
       modes: ['STRICT_SOURCE', 'CURATED_CONTEXT', 'DETERMINISTIC_TEMPLATE'],
@@ -868,6 +923,7 @@ export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash } = {
       rejected,
       subjectCoverage: [...new Set(skills.map(skill => skill.subject))].sort(),
       sourceInsufficientCount: coverage.filter(row => row.status === 'SOURCE_INSUFFICIENT').length,
+      unsupportedSkillCount: coverage.filter(row => row.status === 'GENERATOR_UNSUPPORTED').length,
     },
   };
 
