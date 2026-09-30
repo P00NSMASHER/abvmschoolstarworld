@@ -1040,6 +1040,40 @@ function supportQuestion(catalog,current,{skillStats={},seed="support"}={}){
   return candidates[0]||null;
 }
 
+function teachCardFor(question){
+  if(!question?.skill)return null;
+  const cards={
+    "sentence-types":["Ask what job the sentence does.","A statement tells, a question asks, a command directs, and an exclamation shows strong feeling."],
+    "consonant-blends":["Listen for both beginning consonant sounds.","In “flag,” you can hear both /f/ and /l/."],
+    "cvc-structure":["Check the three letter types from left to right.","“Map” is consonant-vowel-consonant: m-a-p."],
+    "long-short-a":["Compare the vowel sound and the spelling pattern.","Short a: cat. Long a with a_e: game."],
+    "suffix-ed-ing":["Use the sentence’s time clue to choose the ending.","-ed often marks a finished action; -ing often marks an action happening now."],
+    "theme":["Look for the lesson shown by the whole story.","A theme is bigger than one small detail."],
+    "visualize":["Turn the describing words into a mental picture.","Use only details the text actually gives."],
+    "inference":["Combine a text clue with what you already know.","The answer still has to be supported by the clue."],
+    "cause-effect":["Find what happened first and what happened because of it.","The cause leads to the effect."],
+    "main-character":["Ask who the story follows most.","The main character is the person or animal whose actions drive most of the story."],
+    "setting":["Find both where and when.","A setting can be “at the lake at sunset”: place plus time."],
+    "character-feelings":["Use what the character says and does as clues.","Actions such as smiling or hiding can show feelings."],
+    "genre":["Look for the features that tell what kind of text it is.","Magic and impossible creatures are clues for fantasy."],
+    "place-value":["Name the digit’s place before its value.","In 347, the 4 is in the tens place, so it is worth 40."],
+    "compare-numbers":["Compare the greatest place first.","If the hundreds match, compare tens next."],
+    "time":["Read the minute hand before deciding the hour.","A minute hand on 6 means 30 minutes past the hour."],
+    "money":["Name each coin value before adding.","Quarter 25¢ + dime 10¢ = 35¢."],
+    "religion-trinity":["Use the exact current lesson statement.","The lesson names Father, Son, and Holy Spirit as the three Persons of the Trinity."],
+    "religion-creation-care":["Choose the action that protects rather than harms creation.","Caring for a park is an example of caring for creation."],
+    "religion-image-likeness":["Connect the lesson to thinking, choosing, and loving.","Use the current lesson wording rather than guessing about a person’s character."],
+    "religion-jesus-savior":["Use the current lesson’s Savior and grace statement.","Answer from the Religion lesson, not from an unrelated fact."],
+    "religion-gifts-choices":["Apply the current lesson by choosing a helpful, responsible use of a gift.","The best example should clearly serve or help another person."],
+    "religion-five-senses":["Connect the five senses with noticing creation.","Seeing, hearing, smelling, tasting, and touching help us notice the world around us."]
+  };
+  const row=cards[question.skill];
+  if(row)return{instruction:row[0],example:row[1]};
+  if(/^subtraction-within-\d+$/.test(question.skill))return{instruction:"Subtraction means taking away or finding what remains.",example:"Example: 8 − 3 = 5."};
+  if(/^addition-within-\d+$/.test(question.skill))return{instruction:"Addition joins amounts to find a total.",example:"Example: 5 + 4 = 9."};
+  return{instruction:text(question.hint||"Use the key rule for this skill before answering."),example:""};
+}
+
 function comebackQuestion(catalog,current,{seed="comeback",seenIds=[]}={}){
   if(!current)return null;
   const seen=new Set(Array.isArray(seenIds)?seenIds:[]);
@@ -1171,6 +1205,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,selectQuestions,supportQuestion,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,testReadyMode
+  buildCatalog,validateCatalog,selectQuestions,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,testReadyMode
 });
 })();
