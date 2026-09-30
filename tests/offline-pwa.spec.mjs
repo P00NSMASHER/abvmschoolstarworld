@@ -1,4 +1,5 @@
 import {test,expect} from "@playwright/test";
+import {readPwaVersions} from "./pwa-test-helpers.mjs";
 
 test("manifest remains installable-quality",async({request})=>{
   const response=await request.get("/manifest.webmanifest");
@@ -65,17 +66,15 @@ test("app recovers cleanly after reconnecting from offline mode",async({page,con
 });
 
 test("service worker cleans only old ABVM caches and precaches the exact shell",async({request})=>{
-  const response=await request.get("/sw.js");
-  expect(response.ok()).toBeTruthy();
-  const source=await response.text();
+  const {sw:source,styleUrl,appUrl,gamesUrl}=await readPwaVersions(request);
   expect(source).toContain('const CACHE_PREFIX = "abvm-grade2-parent-companion-"');
   expect(source).toContain("caches.keys()");
   expect(source).toContain("key.startsWith(CACHE_PREFIX)&&key!==CACHE");
   expect(source).not.toContain("keys.filter(key=>key!==CACHE)");
   expect(source).toContain("caches.delete(key)");
-  expect(source).toContain('"./styles.css?v=92"');
-  expect(source).toContain('"./app.js?v=91"');
-  expect(source).toContain('"./study-games.js?v=84"');
+  expect(source).toContain('"'+styleUrl+'"');
+  expect(source).toContain('"'+appUrl+'"');
+  expect(source).toContain('"'+gamesUrl+'"');
   expect(source).toContain('"./data/study-pack.json"');
   expect(source).not.toMatch(/STATIC_SHELL\s*=\s*\[\s*"\.\/"/);
 });
