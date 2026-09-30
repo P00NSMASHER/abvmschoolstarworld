@@ -17,5 +17,6 @@ export async function readPwaVersions(request){
     appUrl:required(index.match(/src="(\.\/app\.js\?v=[^"]+)"/)?.[1],"app URL"),
     reloadKey:required(index.match(/const reloadKey = "([^"]+)"/)?.[1],"service-worker reload key"),
     gamesUrl:required(app.match(/["\'](\.\/study-games\.js\?v=[^"\']+)["\']/)?.[1],"Study Games URL"),
+    gamesViewUrl:required(app.match(/["\'](\.\/study-games-view\.js\?v=[^"\']+)["\']/)?.[1],"Study Games view URL"),
   };
 }
