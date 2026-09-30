@@ -632,6 +632,20 @@ const SUPPLEMENTAL_QUESTION_FAMILIES = Object.freeze({
       difficulty: 2,
     },
   ],
+  'religion-gifts-choices': [
+    {
+      questionType: 'direct',
+      prompt: 'According to the current Religion lesson about gifts from God, which choice best matches the lesson?',
+      choices: ['God is the giver of gifts.', 'Gifts should never be used to help anyone.', 'Only school supplies can be gifts.'],
+      answer: 'God is the giver of gifts.',
+      explanation: 'The current lesson identifies God as the giver of gifts.',
+      hint: 'Use the exact idea named in the current Religion material about gifts.',
+      sourceMode: 'STRICT_SOURCE',
+      supportType: 'explicit',
+      dok: 1,
+      difficulty: 2,
+    },
+  ],
   sequence: [
     {
       questionType: 'transfer',
@@ -1617,9 +1631,10 @@ export function validateGrade2ContentPipeline(pipeline) {
 
   for (const skill of pipeline.skills || []) {
     if (!questionSkills.has(skill.id)) issues.push(`skill-without-question:${skill.id}`);
+    const rows=(pipeline.questions||[]).filter(question=>question.skill===skill.id);
+    if(rows.length<2)issues.push(`skill-sibling-bank-too-small:${skill.id}:${rows.length}/2`);
     const expected=1+supplementalQuestionFamily(skill).length;
     if(expected>1){
-      const rows=(pipeline.questions||[]).filter(question=>question.skill===skill.id);
       if(rows.length<expected)issues.push(`semantic-family-incomplete:${skill.id}:${rows.length}/${expected}`);
       if(new Set(rows.map(question=>question.variantFingerprint)).size!==rows.length)issues.push(`semantic-variant-duplicate:${skill.id}`);
       if(new Set(rows.map(question=>question.contentFingerprint)).size!==rows.length)issues.push(`content-fingerprint-duplicate:${skill.id}`);
@@ -1708,6 +1723,7 @@ export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash, sour
       status: rejected.length === 0 && skills.length > 0 && questions.length > 0 ? 'pass' : 'fail',
       skillCount: skills.length,
       questionCount: questions.length,
+      minimumQuestionsPerSkill: 2,
       duplicatesRemoved,
       answerPositionCounts,
       semanticVariantCount:new Set(questions.map(question=>question.variantFingerprint)).size,
