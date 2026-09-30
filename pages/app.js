@@ -9,6 +9,9 @@ const MONTHS=["January","February","March","April","May","June","July","August",
 const SHORT_MONTHS={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,sept:8,oct:9,nov:10,dec:11};
 const WEEKDAY=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 const SCHOOL_TIME_ZONE="America/New_York";
+const SCHOOL_DATE_FORMATTER=new Intl.DateTimeFormat("en-US",{timeZone:SCHOOL_TIME_ZONE,year:"numeric",month:"2-digit",day:"2-digit"});
+const FRESH_DATE_FORMATTER=new Intl.DateTimeFormat(undefined,{month:"short",day:"numeric",timeZone:SCHOOL_TIME_ZONE});
+const FRESH_TIME_FORMATTER=new Intl.DateTimeFormat(undefined,{hour:"numeric",minute:"2-digit",timeZone:SCHOOL_TIME_ZONE});
 const PACK_URL="./data/study-pack.json";
 const PACK_REFRESH_MS=5*60*1000;
 const SCHOOL_LOGO_HTML='<img class="school-mark" src="./assets/abvm-app-icon-192.png" alt="Assumption BVM Catholic School logo">';
@@ -85,9 +88,20 @@ function getDerivedPack(){
   }).filter(Boolean);
   const reminderRows=(pack?.reminders||[]).map(text=>({text,range:eventDateRange(text)}))
     .filter(row=>row.range).sort((a,b)=>a.range[0]-b.range[0]);
+  const homeworkRows=(pack?.homework||[]).map((item,index)=>{
+    const policy=taskPolicy(item);
+    const displayItem=policy.subject?{...item,_sourceSubject:item.subject,subject:policy.subject}:item;
+    return{item:displayItem,index,policy};
+  });
+  const parentNoticeRows=(pack?.parentNotices||[]).map(text=>({
+    text,
+    range:eventDateRange(text),
+    pictureLinked:/^Picture (?:ordering|backgrounds):/i.test(String(text||""))
+  }));
+  const lunchProofs=new Map((pack?.lunchMenuSource?.sourcePages||[]).map(row=>[row.id,row]));
   const packWeekStart=parseDate(pack?.weekLabel||"");
   const pictureDayEnd=datedEvents.find(({item})=>/\bPicture Day\b/i.test(item.label||""))?.range?.[1]||null;
-  derivedPackCache={pack,datedEvents,chronologicalEvents,eventsByDate,lunchByDate,subjects,specials,reminderRows,packWeekStart,pictureDayEnd};
+  derivedPackCache={pack,datedEvents,chronologicalEvents,eventsByDate,lunchByDate,lunchProofs,subjects,specials,reminderRows,homeworkRows,parentNoticeRows,packWeekStart,pictureDayEnd};
   return derivedPackCache;
 }
 function datedImportantEvents(){
@@ -102,7 +116,7 @@ function freshnessState(){
   const raw=envelope?.sourceLastSeenAt||pack?.sourceCapturedAt||pack?.generatedAt;
   const d=raw?new Date(raw):null;
   if(!d||Number.isNaN(d.getTime()))return{state:"attention",label:"Source verification unavailable"};
-  const stamp=d.toLocaleDateString(undefined,{month:"short",day:"numeric",timeZone:SCHOOL_TIME_ZONE})+" at "+d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit",timeZone:SCHOOL_TIME_ZONE})+" ET";
+  const stamp=FRESH_DATE_FORMATTER.format(d)+" at "+FRESH_TIME_FORMATTER.format(d)+" ET";
   const ageHours=(Date.now()-d.getTime())/3600000;
   if(navigator.onLine===false)return{state:"offline",label:"Offline · last verified "+stamp};
   if(ageHours>30)return{state:"attention",label:"Needs refresh · last verified "+stamp};
@@ -167,9 +181,7 @@ function taskPolicy(item){
   return{type:"current-action",today:true,family:true};
 }
 function taskRecordsForSurface(surface){
-  return (pack?.homework||[]).map((item,index)=>({item,index,policy:taskPolicy(item)}))
-    .filter(record=>record.policy[surface]!==false)
-    .map(record=>record.policy.subject?{...record,item:{...record.item,_sourceSubject:record.item.subject,subject:record.policy.subject}}:record);
+  return getDerivedPack().homeworkRows.filter(record=>record.policy[surface]!==false);
 }
 function taskHtml(item,index){
   const done=checked(item,index);
@@ -179,7 +191,7 @@ function taskHtml(item,index){
   return '<button type="button" class="check-item'+(done?' is-done':'')+'" data-check="'+index+'" aria-pressed="'+(done?"true":"false")+'" aria-label="'+esc(action)+'"><span class="check-box" aria-hidden="true">'+(done?"✓":"")+'</span><span class="check-copy"><span class="task-tag '+(optional?"if-participating":"required")+'">'+tag+'</span><strong>'+esc(item.task||"Task")+'</strong>'+(item.subject?'<small>'+esc(item.subject)+'</small>':'')+'</span></button>';
 }
 function schoolDateParts(value=new Date()){
-  const parts=new Intl.DateTimeFormat("en-US",{timeZone:SCHOOL_TIME_ZONE,year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(value);
+  const parts=SCHOOL_DATE_FORMATTER.formatToParts(value);
   const map=Object.fromEntries(parts.map(part=>[part.type,part.value]));
   return{year:Number(map.year),month:Number(map.month),day:Number(map.day)};
 }
@@ -214,7 +226,7 @@ function lunchUnavailableText(date){
 }
 function lunchVerificationNote(lunch){
   if(!lunch?.sourceId)return "";
-  const proof=(pack?.lunchMenuSource?.sourcePages||[]).find(row=>row.id===lunch.sourceId);
+  const proof=getDerivedPack().lunchProofs.get(lunch.sourceId);
   if(proof?.checkedAt)return "";
   if(proof?.reviewedAt)return pack?.lunchMenuSource?.retrievalState==="needs-review"
     ?"Reviewed school menu · automated source check pending"
@@ -266,16 +278,12 @@ function upcomingReminderTexts(date=today(),limit=6){
   const timed=getDerivedPack().reminderRows.filter(row=>row.range[1]>=date).map(row=>row.text);
   return [...new Set(timed)].slice(0,limit);
 }
-function linkedNoticeExpiry(text){
-  return /^Picture (?:ordering|backgrounds):/i.test(String(text||""))
-    ? getDerivedPack().pictureDayEnd
-    : null;
-}
 function currentNoticeTexts(date=today()){
-  return (pack?.parentNotices||[]).filter(text=>{
-    const range=eventDateRange(text),expiry=range?.[1]||linkedNoticeExpiry(text);
+  const {parentNoticeRows,pictureDayEnd}=getDerivedPack();
+  return parentNoticeRows.filter(row=>{
+    const expiry=row.range?.[1]||(row.pictureLinked?pictureDayEnd:null);
     return !expiry||expiry>=date;
-  });
+  }).map(row=>row.text);
 }
 function specialsRows(){return getDerivedPack().specials;}
 function calendarBase(){
