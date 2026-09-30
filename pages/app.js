@@ -53,12 +53,12 @@ function isoDateKey(date){
 function getDerivedPack(){
   if(derivedPackCache?.pack===pack)return derivedPackCache;
   const datedEvents=(pack?.importantDates||[]).map(item=>{
-    const date=parseDate(item.date),range=eventDateRange(item.date);
-    return{item,date,range};
-  }).filter(row=>row.date||row.range);
+    const range=eventDateRange(item.date);
+    return{item,date:range?.[0]||null,range};
+  }).filter(row=>row.range);
+  const chronologicalEvents=[...datedEvents].sort((a,b)=>a.date-b.date);
   const eventsByDate=new Map();
   for(const row of datedEvents){
-    if(!row.range)continue;
     for(let cursor=new Date(row.range[0]);cursor<=row.range[1];cursor.setDate(cursor.getDate()+1)){
       const key=isoDateKey(cursor),items=eventsByDate.get(key)||[];
       items.push(row.item);eventsByDate.set(key,items);
@@ -79,12 +79,19 @@ function getDerivedPack(){
     if(key)lunchByDate.set(key,item);
   }
   const subjects=new Map((pack?.subjects||[]).map(item=>[String(item.subject||"").trim().toLowerCase(),item]));
-  const reminderRows=(pack?.reminders||[]).map(text=>({text,range:eventDateRange(text)})).filter(row=>row.range);
-  derivedPackCache={pack,datedEvents,eventsByDate,lunchByDate,subjects,reminderRows};
+  const specials=(subjects.get("specials")?.topics||[]).map(line=>{
+    const m=String(line).match(/^(Monday|Tuesday|Wednesday|Thursday|Friday):\s*(.+)$/i);
+    return m?{day:m[1].slice(0,3),label:m[2]}:null;
+  }).filter(Boolean);
+  const reminderRows=(pack?.reminders||[]).map(text=>({text,range:eventDateRange(text)}))
+    .filter(row=>row.range).sort((a,b)=>a.range[0]-b.range[0]);
+  const packWeekStart=parseDate(pack?.weekLabel||"");
+  const pictureDayEnd=datedEvents.find(({item})=>/\bPicture Day\b/i.test(item.label||""))?.range?.[1]||null;
+  derivedPackCache={pack,datedEvents,chronologicalEvents,eventsByDate,lunchByDate,subjects,specials,reminderRows,packWeekStart,pictureDayEnd};
   return derivedPackCache;
 }
 function datedImportantEvents(){
-  return getDerivedPack().datedEvents.filter(row=>row.date);
+  return getDerivedPack().chronologicalEvents;
 }
 function fmtDate(d){return d?WEEKDAY[d.getDay()]+", "+MONTHS[d.getMonth()]+" "+d.getDate():"";}
 function fmtShort(d){return d?WEEKDAY[d.getDay()].slice(0,3)+" "+d.getDate():"";}
@@ -196,7 +203,7 @@ function weekRangeLabel(days){
   return a+" – "+b;
 }
 function isPackWeek(days){
-  const sourceStart=parseDate(pack?.weekLabel||"");
+  const sourceStart=getDerivedPack().packWeekStart;
   return !!sourceStart&&days.some(d=>sameDay(d,sourceStart));
 }
 function lunchText(lunch){
@@ -223,31 +230,24 @@ function lunchCardHtml(date,lunch){
 }
 function currentTest(){
   const now=today();
-  return datedImportantEvents()
-    .filter(({item,date})=>date>=now&&kindClass(item)==="test")
-    .sort((a,b)=>a.date-b.date)
-    .map(({item,date})=>({x:item,d:date}))[0]||null;
+  const row=datedImportantEvents().find(({item,date})=>date>=now&&kindClass(item)==="test");
+  return row?{x:row.item,d:row.date}:null;
 }
 function currentWeekTest(){
   const now=today(),end=weekDays(0)[4];
-  return datedImportantEvents()
-    .filter(({item,date})=>date>=now&&date<=end&&kindClass(item)==="test")
-    .sort((a,b)=>a.date-b.date)
-    .map(({item,date})=>({x:item,d:date}))[0]||null;
+  const row=datedImportantEvents().find(({item,date})=>date>=now&&date<=end&&kindClass(item)==="test");
+  return row?{x:row.item,d:row.date}:null;
 }
 function nextSpellingTest(){
   const now=today();
-  return datedImportantEvents()
-    .filter(({item,date})=>date>=now&&kindClass(item)==="test"&&/spelling|handwriting/i.test(item.label||""))
-    .sort((a,b)=>a.date-b.date)
-    .map(({item,date})=>({x:item,d:date}))[0]||null;
+  const row=datedImportantEvents().find(({item,date})=>date>=now&&kindClass(item)==="test"&&/spelling|handwriting/i.test(item.label||""));
+  return row?{x:row.item,d:row.date}:null;
 }
 function currentOrSoonStarAssessment(){
   const now=today(),weekMs=7*24*60*60*1000;
-  return getDerivedPack().datedEvents
-    .filter(({item,range})=>/\bSTAR\b/i.test(item.label||"")&&range&&range[1]>=now&&range[0].getTime()-now.getTime()<=weekMs)
-    .sort((a,b)=>a.range[0]-b.range[0])
-    .map(({item,range})=>({x:item,range}))[0]||null;
+  const row=datedImportantEvents().find(({item,range})=>
+    /\bSTAR\b/i.test(item.label||"")&&range[1]>=now&&range[0].getTime()-now.getTime()<=weekMs);
+  return row?{x:row.item,range:row.range}:null;
 }
 function subjectByName(name){return getDerivedPack().subjects.get(name.toLowerCase())||null;}
 function readingSubject(){return subjectByName("Reading / ELA");}
@@ -260,20 +260,16 @@ function reminderForDate(date){
   const rows=getDerivedPack().reminderRows;
   const exact=rows.find(row=>date>=row.range[0]&&date<=row.range[1]);
   if(exact)return exact.text;
-  return rows.filter(row=>row.range[0]>=date).sort((a,b)=>a.range[0]-b.range[0])[0]?.text||"";
+  return rows.find(row=>row.range[0]>=date)?.text||"";
 }
 function upcomingReminderTexts(date=today(),limit=6){
-  const timed=getDerivedPack().reminderRows
-    .filter(row=>row.range[1]>=date)
-    .sort((a,b)=>a.range[0]-b.range[0]).map(row=>row.text);
+  const timed=getDerivedPack().reminderRows.filter(row=>row.range[1]>=date).map(row=>row.text);
   return [...new Set(timed)].slice(0,limit);
 }
 function linkedNoticeExpiry(text){
-  if(/^Picture (?:ordering|backgrounds):/i.test(String(text||""))){
-    const picture=(pack?.importantDates||[]).find(item=>/\bPicture Day\b/i.test(item.label||""));
-    return eventDateRange(picture?.date)?.[1]||null;
-  }
-  return null;
+  return /^Picture (?:ordering|backgrounds):/i.test(String(text||""))
+    ? getDerivedPack().pictureDayEnd
+    : null;
 }
 function currentNoticeTexts(date=today()){
   return (pack?.parentNotices||[]).filter(text=>{
@@ -281,13 +277,7 @@ function currentNoticeTexts(date=today()){
     return !expiry||expiry>=date;
   });
 }
-function specialsRows(){
-  const source=subjectByName("Specials");
-  return (source?.topics||[]).map(line=>{
-    const m=String(line).match(/^(Monday|Tuesday|Wednesday|Thursday|Friday):\s*(.+)$/i);
-    return m?{day:m[1].slice(0,3),label:m[2]}:null;
-  }).filter(Boolean);
-}
+function specialsRows(){return getDerivedPack().specials;}
 function calendarBase(){
   const now=today();
   return new Date(now.getFullYear(),now.getMonth()+calendarOffset,1,12);
@@ -329,7 +319,8 @@ function renderWeek(){
   const eventRows=events.length?events.map(e=>'<div class="event-row"><time>'+esc((e.kind||"School").replace(/\b\w/g,m=>m.toUpperCase()))+'</time><div><strong>'+esc(e.label)+'</strong></div></div>').join(""):'<div class="event-row"><time>School</time><div><strong>No special school events are listed.</strong></div></div>';
   const sourceWeek=isPackWeek(days), tasks=sourceWeek?(pack?.homework||[]):[];
   const checklist=tasks.length?tasks.map(taskHtml).join(""):'<div class="week-empty"><strong>No checklist has been verified for this week yet.</strong><span>Calendar dates still appear below, and new homework will show here after the school source refreshes.</span></div>';
-  const future=(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)})).filter(o=>o.d&&o.d>selectedDay).sort((a,b)=>a.d-b.d).slice(0,4);
+  const future=datedImportantEvents().filter(({date})=>date>selectedDay).slice(0,4).map(({item,date})=>({x:item,d:date}));
+  const reminder=reminderForDate(selectedDay);
   stack().innerHTML='<div class="screen" role="region" aria-label="This week">'+
     header("YOUR SCHOOL PLAN","This week")+freshness()+
     '<nav class="week-nav" aria-label="Change displayed week"><button type="button" data-week-step="-1" aria-label="Previous week">‹</button><div aria-live="polite"><span>'+(weekOffset===0?"CURRENT WEEK":"VIEWING WEEK")+'</span><strong>'+esc(weekRangeLabel(days))+'</strong></div><button type="button" data-week-step="1" aria-label="Next week">›</button></nav>'+
@@ -337,7 +328,7 @@ function renderWeek(){
     '<div class="day-picker">'+picker+'</div>'+
     '<section class="day-detail green"><div class="day-detail-title"><div><p>'+MONTHS[selectedDay.getMonth()].toUpperCase()+'</p><h2>'+esc(fmtDate(selectedDay))+'</h2></div><span>'+(closed?"No school":"School day")+'</span></div><div class="event-stack">'+eventRows+'</div><h3>My checklist</h3>'+checklist+'</section>'+
     lunchCardHtml(selectedDay,lunch)+
-    (reminderForDate(selectedDay)?'<section class="reminder-strip"><span>!</span><p><strong>Don’t forget</strong>'+esc(reminderForDate(selectedDay))+'</p></section>':'')+
+    (reminder?'<section class="reminder-strip"><span>!</span><p><strong>Don’t forget</strong>'+esc(reminder)+'</p></section>':'')+
     '<section class="future-card"><h3>Coming soon</h3>'+future.map(o=>'<div><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join("")+'</section>'+
     '</div>';
 }
@@ -382,7 +373,9 @@ function renderCalendar(){
   const events=eventItemsForDate(calendarDay),lunch=lunchForDate(calendarDay);
   const agendaDays=monthAgendaDays(y,m);
   const nextMonthDate=new Date(y,m+1,1,12),nextY=nextMonthDate.getFullYear(),nextM=nextMonthDate.getMonth();
-  const nextMonth=(pack?.importantDates||[]).map(x=>({x,d:parseDate(x.date)})).filter(o=>o.d&&o.d.getMonth()===nextM&&o.d.getFullYear()===nextY).sort((a,b)=>a.d-b.d).slice(0,5);
+  const nextMonth=datedImportantEvents()
+    .filter(({date})=>date.getMonth()===nextM&&date.getFullYear()===nextY)
+    .slice(0,5).map(({item,date})=>({x:item,d:date}));
   const specials=specialsRows();
   stack().innerHTML='<div class="screen calendar-screen" role="region" aria-label="'+MONTHS[m]+' calendar">'+
     header("SCHOOL MONTH AT A GLANCE",MONTHS[m]+" "+y)+freshness()+
