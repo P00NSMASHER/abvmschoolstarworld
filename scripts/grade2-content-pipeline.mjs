@@ -326,6 +326,264 @@ const RELIGION_SKILLS = [
   },
 ];
 
+
+const SUPPLEMENTAL_QUESTION_FAMILIES = Object.freeze({
+  'sentence-types': [
+    {
+      questionType: 'transfer',
+      prompt: 'What type of sentence is “Watch out for that puddle!”?',
+      choices: ['exclamation', 'question', 'statement'],
+      answer: 'exclamation',
+      explanation: 'The sentence shows strong feeling and ends with an exclamation mark.',
+      hint: 'Ask whether the sentence tells, asks, directs, or shows strong feeling.',
+      dok: 1,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Which pair has a statement first and a command second?',
+      choices: ['The paint is wet. — Do not touch it.', 'Is the paint wet? — The paint is wet.', 'Do not touch it. — Is the paint wet?'],
+      answer: 'The paint is wet. — Do not touch it.',
+      explanation: 'The first sentence tells information; the second gives a direction.',
+      hint: 'Classify what each sentence is doing before choosing the pair.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  'consonant-blends': [
+    {
+      questionType: 'transfer',
+      prompt: 'Which word begins with the same consonant blend as “flag”?',
+      choices: ['flower', 'frog', 'apple'],
+      answer: 'flower',
+      explanation: 'Flag and flower both begin with the blend fl.',
+      hint: 'Say the first two consonant sounds in each word.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Why does the beginning of “stop” count as a consonant blend?',
+      choices: ['You can hear both the s and t sounds.', 'The word has a short vowel.', 'The word ends with two consonants.'],
+      answer: 'You can hear both the s and t sounds.',
+      explanation: 'In a consonant blend, both consonant sounds are heard.',
+      hint: 'Listen to the beginning of the word and count the sounds you can hear.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  'cvc-structure': [
+    {
+      questionType: 'transfer',
+      prompt: 'Which new word follows the same CVC structure as “map”?',
+      choices: ['sun', 'rain', 'cake'],
+      answer: 'sun',
+      explanation: 'Sun is s-u-n: consonant, vowel, consonant.',
+      hint: 'Check each letter type from left to right.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Why is “cake” not a simple three-letter CVC word?',
+      choices: ['It has a fourth letter and a final e.', 'It begins with a consonant.', 'It contains the letter a.'],
+      answer: 'It has a fourth letter and a final e.',
+      explanation: 'A simple CVC word has exactly three letters in consonant-vowel-consonant order.',
+      hint: 'Compare the number and type of letters with a three-letter CVC pattern.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  'long-short-a': [
+    {
+      questionType: 'transfer',
+      prompt: 'Which pair of words both use the short a sound?',
+      choices: ['cat and map', 'cake and game', 'late and cap'],
+      answer: 'cat and map',
+      explanation: 'Both cat and map use the short a sound.',
+      hint: 'Check the vowel sound in both words in each pair.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Why does the a in “game” have a long sound?',
+      choices: ['The final e helps the a say its name.', 'The g makes every vowel long.', 'Every four-letter word has a long vowel.'],
+      answer: 'The final e helps the a say its name.',
+      explanation: 'Game follows the a_e pattern in which the final e changes the a sound.',
+      hint: 'Look at the vowel-consonant-final-e pattern.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  'suffix-ed-ing': [
+    {
+      questionType: 'transfer',
+      prompt: 'Which word correctly completes the sentence “Mia is ___ at recess right now”?',
+      choices: ['jumping', 'jumped', 'jumps'],
+      answer: 'jumping',
+      explanation: 'The words “right now” show that the action is happening, so jumping fits.',
+      hint: 'Use the time clue in the sentence to choose the ending.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'What does adding -ed or -ing usually help show about an action word?',
+      choices: ['When or how the action is happening', 'That the word names a person', 'That the base word has no meaning'],
+      answer: 'When or how the action is happening',
+      explanation: 'The endings -ed and -ing change how the action is described while keeping the base action idea.',
+      hint: 'Compare a word such as played with playing.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  theme: [
+    {
+      questionType: 'transfer',
+      prompt: 'Evan keeps changing one fold on his paper airplane until it finally flies. Which theme fits best?',
+      choices: ['Keep trying and learn from mistakes.', 'Only easy tasks are worth doing.', 'Stop after the first mistake.'],
+      answer: 'Keep trying and learn from mistakes.',
+      explanation: 'Evan improves by continuing to try and learning from each attempt.',
+      hint: 'Choose the lesson shown by the whole situation.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Why is “Keep trying and learn from mistakes” a stronger theme than “Paper airplanes can fly”?',
+      choices: ['It states a lesson shown by the character’s actions.', 'It repeats one object from the story.', 'It describes only where the story happens.'],
+      answer: 'It states a lesson shown by the character’s actions.',
+      explanation: 'A theme is a broader lesson or message, not just a fact or detail from the story.',
+      hint: 'Ask which choice could apply beyond this one story.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  visualize: [
+    {
+      questionType: 'transfer',
+      prompt: 'Read: “Tiny raindrops tapped the window while gray clouds covered the sky.” Which picture best matches?',
+      choices: ['A gray rainy scene outside a window', 'A bright beach with large waves', 'A sunny playground with no clouds'],
+      answer: 'A gray rainy scene outside a window',
+      explanation: 'The words raindrops, window, and gray clouds create that mental picture.',
+      hint: 'Match the picture to the exact describing words.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Which detail is most important for visualizing “golden leaves covered the path like a crunchy blanket”?',
+      choices: ['The path is covered with golden leaves.', 'Someone may walk later.', 'The sentence has many words.'],
+      answer: 'The path is covered with golden leaves.',
+      explanation: 'Color and where the leaves are located are concrete details that build the mental picture.',
+      hint: 'Choose a detail you could actually picture in your mind.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  dialogue: [
+    {
+      questionType: 'transfer',
+      prompt: 'Which part of this sentence is dialogue: “I found my book!” Lena shouted.',
+      choices: ['“I found my book!”', 'Lena shouted.', 'my book'],
+      answer: '“I found my book!”',
+      explanation: 'Dialogue is the exact speech of a character and is shown inside quotation marks.',
+      hint: 'Look for the words the character actually says.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Why do quotation marks help a reader recognize dialogue?',
+      choices: ['They show the exact words a character says.', 'They show where the story takes place.', 'They tell how many paragraphs are in a story.'],
+      answer: 'They show the exact words a character says.',
+      explanation: 'Quotation marks separate a character’s spoken words from the narration around them.',
+      hint: 'Think about what information quotation marks surround.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  inference: [
+    {
+      questionType: 'transfer',
+      prompt: 'Mia carries a flashlight into a dark closet and checks behind every box. What can you infer?',
+      choices: ['She is searching for something.', 'She is getting ready to sleep.', 'She is watering plants.'],
+      answer: 'She is searching for something.',
+      explanation: 'Using a flashlight and checking behind boxes are clues that Mia is looking for something.',
+      hint: 'Combine more than one clue from the sentence.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Which clue best supports the inference that Mia is searching for something?',
+      choices: ['She checks behind every box.', 'The closet is dark.', 'Her name is Mia.'],
+      answer: 'She checks behind every box.',
+      explanation: 'Checking behind every box most directly shows an active search.',
+      hint: 'Choose the clue that most directly proves the inference.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  'subtraction-within-12': [
+    {
+      questionType: 'direct',
+      prompt: 'What is the difference in 12 - 5?',
+      choices: ['7', '6', '8'],
+      answer: '7',
+      explanation: 'Twelve take away five leaves seven.',
+      hint: 'Start at 12 and count back 5.',
+      dok: 1,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Which addition fact is the best check for 12 - 5 = 7?',
+      choices: ['7 + 5 = 12', '12 + 5 = 17', '7 + 12 = 19'],
+      answer: '7 + 5 = 12',
+      explanation: 'Addition can check subtraction because the difference plus the amount taken away should equal the starting number.',
+      hint: 'Use the same three numbers to build the related addition fact.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  'religion-trinity': [
+    {
+      questionType: 'reasoning',
+      prompt: 'According to the current Religion lesson, which statement best explains the Trinity?',
+      choices: ['One God in three Persons: Father, Son, and Holy Spirit.', 'Three unrelated gods with separate roles.', 'One person with three unrelated names.'],
+      answer: 'One God in three Persons: Father, Son, and Holy Spirit.',
+      explanation: 'The current lesson describes the Trinity as one God in three Persons.',
+      hint: 'Keep both parts of the lesson together: one God and three Persons.',
+      sourceMode: 'STRICT_SOURCE',
+      supportType: 'explicit',
+      dok: 2,
+      difficulty: 2,
+    },
+  ],
+  'religion-creation-care': [
+    {
+      questionType: 'transfer',
+      prompt: 'Which choice best applies the current Religion lesson about caring for creation?',
+      choices: ['Turning off running water after washing your hands', 'Leaving trash beside a stream', 'Breaking plants for fun'],
+      answer: 'Turning off running water after washing your hands',
+      explanation: 'Protecting resources is one way to care for creation responsibly.',
+      hint: 'Choose the action that protects rather than wastes or harms.',
+      sourceMode: 'CURATED_CONTEXT',
+      dok: 2,
+      difficulty: 2,
+    },
+  ],
+});
+
+function addSupplementalQuestionFamilies(skills, questions) {
+  for (const skill of skills) {
+    const family = SUPPLEMENTAL_QUESTION_FAMILIES[skill.id] || [];
+    for (const raw of family) questions.push(questionFor(skill, raw));
+  }
+}
+
 function text(value) {
   return String(value ?? '').replace(/\s+/g, ' ').trim();
 }
@@ -865,6 +1123,7 @@ export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash } = {
   detectMath(pack, skills, rawQuestions);
   detectReligion(pack, skills, rawQuestions);
   detectVocabulary(pack, skills, rawQuestions, coverage);
+  addSupplementalQuestionFamilies(skills, rawQuestions);
   detectUnsupportedExplicitSkills(pack, coverage);
 
   for (const skill of skills) {
@@ -919,6 +1178,18 @@ export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash } = {
       questionCount: questions.length,
       duplicatesRemoved,
       answerPositionCounts,
+      questionTypeCounts: questions.reduce((counts, question) => {
+        counts[question.questionType] = (counts[question.questionType] || 0) + 1;
+        return counts;
+      }, {}),
+      dokCounts: questions.reduce((counts, question) => {
+        counts[question.dok] = (counts[question.dok] || 0) + 1;
+        return counts;
+      }, {}),
+      questionsPerSkill: questions.reduce((counts, question) => {
+        counts[question.skill] = (counts[question.skill] || 0) + 1;
+        return counts;
+      }, {}),
       rejectedCount: rejected.length,
       rejected,
       subjectCoverage: [...new Set(skills.map(skill => skill.subject))].sort(),
