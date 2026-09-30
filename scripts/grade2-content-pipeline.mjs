@@ -1,0 +1,738 @@
+const FORBIDDEN_QUESTION_PATTERNS = [
+  /teacher page/i,
+  /study list/i,
+  /current vocabulary list/i,
+  /being practiced this week/i,
+  /which .* is on .* list/i,
+];
+
+const VOCAB_GLOSSARY = Object.freeze({
+  action: {
+    meaning: 'something a person or thing does',
+    sentence: "Mia took action by picking up the books that fell.",
+  },
+  afraid: {
+    meaning: 'feeling scared or worried about danger',
+    sentence: "The child felt afraid and held Dad's hand during the loud storm.",
+  },
+  depend: {
+    meaning: 'to need or rely on someone or something',
+    sentence: 'Plants depend on sunlight and water to grow.',
+  },
+  nervously: {
+    meaning: 'in a worried or uneasy way',
+    sentence: 'Owen tapped his foot nervously before his turn on stage.',
+  },
+  peered: {
+    meaning: 'looked closely or carefully',
+    sentence: 'Ava peered into the tiny box to see what was inside.',
+  },
+  perfectly: {
+    meaning: 'in exactly the right way or without mistakes',
+    sentence: 'The lid fit perfectly, with no gap around the edge.',
+  },
+  rescue: {
+    meaning: 'to save someone or something from danger',
+    sentence: 'Firefighters rescue people when they are in danger.',
+  },
+  secret: {
+    meaning: 'something kept hidden or not told to everyone',
+    sentence: 'The surprise party stayed a secret until Saturday.',
+  },
+});
+
+const BASE_SKILLS = [
+  {
+    id: 'sentence-types',
+    subject: 'Reading / ELA',
+    label: 'Types of sentences',
+    pattern: /types of sentences|statement.*question.*command.*exclamation/i,
+    standards: ['CCSS.L.2.1'],
+    domain: 'Language',
+    studyNotes: ['Practice telling a statement, question, command, and exclamation apart.'],
+    question: () => ({
+      prompt: 'Which sentence is a question that asks for information?',
+      choices: ['Where did the puppy hide?', 'Please close the door.', 'The puppy is under the chair.'],
+      answer: 'Where did the puppy hide?',
+      explanation: 'A question asks something and ends with a question mark.',
+      hint: 'Look for the sentence that is asking something.',
+    }),
+  },
+  {
+    id: 'consonant-blends',
+    subject: 'Reading / ELA',
+    label: 'Consonant blends',
+    pattern: /consonant blends?/i,
+    standards: ['CCSS.RF.2.3'],
+    domain: 'Foundational reading',
+    studyNotes: ['Blend the sounds in two-letter consonant blends without adding an extra vowel sound.'],
+    question: () => ({
+      prompt: 'Which word begins with a two-consonant blend?',
+      choices: ['frog', 'apple', 'open'],
+      answer: 'frog',
+      explanation: 'The word “frog” begins with the blend fr.',
+      hint: 'Say the first two sounds in each word slowly.',
+    }),
+  },
+  {
+    id: 'cvc-structure',
+    subject: 'Reading / ELA',
+    label: 'CVC word structure',
+    pattern: /\bcvc\b|consonant[- ]vowel[- ]consonant/i,
+    standards: ['CCSS.RF.2.3'],
+    domain: 'Foundational reading',
+    studyNotes: ['For CVC words, look for a consonant-vowel-consonant pattern such as map or sit.'],
+    question: () => ({
+      prompt: 'Which word follows a consonant-vowel-consonant (CVC) pattern?',
+      choices: ['map', 'rain', 'boat'],
+      answer: 'map',
+      explanation: 'Map is m-a-p: consonant, vowel, consonant.',
+      hint: 'Check the three letters and name each as consonant or vowel.',
+    }),
+  },
+  {
+    id: 'long-short-a',
+    subject: 'Reading / ELA',
+    label: 'Long a and short a',
+    pattern: /long a|short a|\ba_e\b/i,
+    standards: ['CCSS.RF.2.3'],
+    domain: 'Foundational reading',
+    studyNotes: ['Compare short a words like cat with a_e long-a words like game.'],
+    question: () => ({
+      prompt: 'Which word has a long a sound because of the a_e pattern?',
+      choices: ['game', 'cat', 'map'],
+      answer: 'game',
+      explanation: 'The silent e in game helps the a say its long sound.',
+      hint: 'Look for an a, then a consonant, then a silent e.',
+    }),
+  },
+  {
+    id: 'suffix-ed-ing',
+    subject: 'Reading / ELA',
+    label: 'Adding -ed and -ing',
+    pattern: /adding\s+-?ed.*-?ing|-ed,\s*-ing|\b-ed\b.*\b-ing\b/i,
+    standards: ['CCSS.RF.2.3.d'],
+    domain: 'Foundational reading',
+    studyNotes: ['Practice building words by adding -ed and -ing to a base word.'],
+    question: () => ({
+      prompt: 'Which word correctly adds -ing to the base word jump?',
+      choices: ['jumping', 'jumpeding', 'jumpsing'],
+      answer: 'jumping',
+      explanation: 'Jump + ing makes jumping.',
+      hint: 'Keep the base word jump and add the ending -ing.',
+    }),
+  },
+  {
+    id: 'suffix-s-es',
+    subject: 'Reading / ELA',
+    label: 'Adding -s and -es',
+    pattern: /adding\s+-?s.*-?es|\b-s\b.*\b-es\b/i,
+    standards: ['CCSS.RF.2.3.d'],
+    domain: 'Foundational reading',
+    studyNotes: ['Practice choosing -s or -es when making regular plural words.'],
+    question: () => ({
+      prompt: 'Which word correctly shows more than one box?',
+      choices: ['boxes', 'boxs', 'boxeses'],
+      answer: 'boxes',
+      explanation: 'Words ending in x usually add -es, so box becomes boxes.',
+      hint: 'Say the plural aloud and listen for the extra syllable.',
+    }),
+  },
+  {
+    id: 'theme',
+    subject: 'Reading / ELA',
+    label: 'Theme',
+    pattern: /\btheme\b/i,
+    standards: ['CCSS.RL.2.2'],
+    domain: 'Analyzing literary text',
+    studyNotes: ['For theme, ask what lesson or message the whole story shows.'],
+    question: () => ({
+      prompt: 'Nora sees a new student alone at recess and invites him to play. What theme fits best?',
+      choices: ['Kindness can help people feel included.', 'Recess should always be quiet.', 'New students should play alone.'],
+      answer: 'Kindness can help people feel included.',
+      explanation: 'Nora’s kind action shows the message that including others matters.',
+      hint: 'Choose the lesson shown by Nora’s action.',
+    }),
+  },
+  {
+    id: 'visualize',
+    subject: 'Reading / ELA',
+    label: 'Visualize',
+    pattern: /\bvisualize\b/i,
+    standards: ['CCSS.RL.2.1'],
+    domain: 'Comprehension / constructing meaning',
+    studyNotes: ['Visualize by using story details to make a clear mental picture.'],
+    question: () => ({
+      prompt: 'The author says, “Snow covered the red sled and sparkled in the morning sun.” What should you visualize?',
+      choices: ['A snowy red sled shining in sunlight', 'A dark room with no windows', 'A boat floating on a lake'],
+      answer: 'A snowy red sled shining in sunlight',
+      explanation: 'The sentence gives details about snow, a red sled, and sunlight.',
+      hint: 'Use only the picture details the sentence gives you.',
+    }),
+  },
+  {
+    id: 'inference',
+    subject: 'Reading / ELA',
+    label: 'Inference',
+    pattern: /\binfer(?:ence|ring)?\b/i,
+    standards: ['CCSS.RL.2.1'],
+    domain: 'Comprehension / constructing meaning',
+    studyNotes: ['Make an inference by combining text clues with what you already know.'],
+    question: () => ({
+      prompt: 'Leo puts on boots, grabs an umbrella, and sees dark clouds outside. What can you infer?',
+      choices: ['It may be raining or about to rain.', 'It is a hot beach day.', 'Leo is getting ready for bed.'],
+      answer: 'It may be raining or about to rain.',
+      explanation: 'Boots, an umbrella, and dark clouds are clues that point to rain.',
+      hint: 'Combine all three clues before choosing.',
+    }),
+  },
+  {
+    id: 'cause-effect',
+    subject: 'Reading / ELA',
+    label: 'Cause and effect',
+    pattern: /cause\s*(?:\/|&|and)?\s*effect/i,
+    standards: ['CCSS.RI.2.3'],
+    domain: 'Comprehension / constructing meaning',
+    studyNotes: ['For cause and effect, identify what happened first and what happened because of it.'],
+    question: () => ({
+      prompt: 'The ice cream sat in the sun for ten minutes, so it melted. What caused the melting?',
+      choices: ['It sat in the sun.', 'It was in a bowl.', 'Someone bought it.'],
+      answer: 'It sat in the sun.',
+      explanation: 'Sitting in the sun is the cause; melting is the effect.',
+      hint: 'Ask what happened first that made the change happen.',
+    }),
+  },
+  {
+    id: 'main-character',
+    subject: 'Reading / ELA',
+    label: 'Main character',
+    pattern: /main character/i,
+    standards: ['CCSS.RL.2.3'],
+    domain: 'Analyzing literary text',
+    studyNotes: ['The main character is the person or animal the story mostly follows.'],
+    question: () => ({
+      prompt: 'A story follows Maya as she loses her mitten, searches the playground, and finally finds it. Who is the main character?',
+      choices: ['Maya', 'the mitten', 'the playground'],
+      answer: 'Maya',
+      explanation: 'The story mostly follows Maya and what she does.',
+      hint: 'Choose the person the story follows from beginning to end.',
+    }),
+  },
+  {
+    id: 'setting',
+    subject: 'Reading / ELA',
+    label: 'Setting',
+    pattern: /\bsetting\b/i,
+    standards: ['CCSS.RL.2.3'],
+    domain: 'Analyzing literary text',
+    studyNotes: ['Setting tells where and when a story happens.'],
+    question: () => ({
+      prompt: 'The story begins in a classroom on Monday morning. Which detail describes the setting?',
+      choices: ['a classroom on Monday morning', 'the teacher feels excited', 'a student drops a pencil'],
+      answer: 'a classroom on Monday morning',
+      explanation: 'Setting tells the place and time of a story.',
+      hint: 'Look for where and when.',
+    }),
+  },
+  {
+    id: 'character-feelings',
+    subject: 'Reading / ELA',
+    label: 'Character feelings',
+    pattern: /character feelings?|how .* feels?/i,
+    standards: ['CCSS.RL.2.3'],
+    domain: 'Analyzing literary text',
+    studyNotes: ['Use a character’s words and actions as clues to how the character feels.'],
+    question: () => ({
+      prompt: 'Jada smiles, claps, and runs to show her family the ribbon she won. How does Jada most likely feel?',
+      choices: ['proud and excited', 'angry and bored', 'sleepy and confused'],
+      answer: 'proud and excited',
+      explanation: 'Smiling, clapping, and showing the ribbon are clues that Jada feels proud and excited.',
+      hint: 'Use the character’s actions as feeling clues.',
+    }),
+  },
+  {
+    id: 'genre',
+    subject: 'Reading / ELA',
+    label: 'Genre',
+    pattern: /\bgenre\b/i,
+    standards: ['CCSS.RL.2.5'],
+    domain: 'Analyzing literary text',
+    studyNotes: ['Genre describes the kind of text, such as realistic fiction, fantasy, poetry, or informational text.'],
+    question: () => ({
+      prompt: 'A story has talking dragons, magic doors, and an invented kingdom. Which genre fits best?',
+      choices: ['fantasy', 'informational text', 'biography'],
+      answer: 'fantasy',
+      explanation: 'Magic and impossible creatures are common features of fantasy.',
+      hint: 'Look for details that could not happen in real life.',
+    }),
+  },
+];
+
+const RELIGION_SKILLS = [
+  {
+    id: 'religion-trinity',
+    label: 'The Trinity',
+    pattern: /\btrinity\b|father,\s*son,\s*holy spirit/i,
+    studyNotes: ['Remember: the Trinity is three Persons in one God — Father, Son, and Holy Spirit.'],
+    question: {
+      prompt: 'Which answer names the three Persons of the Trinity?',
+      choices: ['Father, Son, and Holy Spirit', 'Abraham, Moses, and David', 'Faith, hope, and love'],
+      answer: 'Father, Son, and Holy Spirit',
+      explanation: 'The Trinity is Father, Son, and Holy Spirit: three Persons in one God.',
+      hint: 'Think of the words used when making the Sign of the Cross.',
+    },
+  },
+  {
+    id: 'religion-image-likeness',
+    label: "Made in God's image and likeness",
+    pattern: /image and likeness|made in god'?s image/i,
+    studyNotes: ["Being made in God's image means people can think, choose, and love."],
+    question: {
+      prompt: "Which action best shows a person using the gifts of thinking, choosing, and loving?",
+      choices: ['Helping a classmate after deciding it is the kind thing to do', 'Knocking over blocks on purpose', 'Ignoring someone who needs help'],
+      answer: 'Helping a classmate after deciding it is the kind thing to do',
+      explanation: 'Thinking, choosing what is good, and loving others are ways people use gifts from God.',
+      hint: 'Choose the action that combines a good choice with love for another person.',
+    },
+  },
+  {
+    id: 'religion-creation-care',
+    label: "Caring for God's creation",
+    pattern: /take care of god'?s gifts of creation|care for creation|gift of creation/i,
+    studyNotes: ["Caring for creation is one way to show gratitude for God's gifts."],
+    question: {
+      prompt: "Which action is a responsible way to care for God's creation?",
+      choices: ['Picking up litter at the park', 'Leaving trash beside a stream', 'Breaking branches for no reason'],
+      answer: 'Picking up litter at the park',
+      explanation: "Caring for the world around us shows respect for God's gift of creation.",
+      hint: 'Choose the action that protects rather than harms creation.',
+    },
+  },
+  {
+    id: 'religion-jesus-savior',
+    label: 'Jesus our Savior',
+    pattern: /jesus died for our sins|our savior|new life of grace/i,
+    studyNotes: ['Jesus is our Savior; class notes connect his death and Resurrection with new life in grace.'],
+    question: {
+      prompt: 'According to the current Religion lesson, why is Jesus called our Savior?',
+      choices: ['He died for our sins and gives us new life in grace.', 'He invented the seasons.', 'He wrote every book in the Bible by hand.'],
+      answer: 'He died for our sins and gives us new life in grace.',
+      explanation: 'The Religion lesson teaches that Jesus died for our sins and gives us new life in grace.',
+      hint: 'Use the class note about Jesus, sin, and grace.',
+    },
+  },
+  {
+    id: 'religion-gifts-choices',
+    label: 'Gifts and good choices',
+    pattern: /gifts from god|we can think,\s*choose,\s*love|giver of gifts/i,
+    studyNotes: ["God's gifts call us to make loving and responsible choices."],
+    question: {
+      prompt: 'Which choice best shows using a gift from God responsibly?',
+      choices: ['Using your abilities to help someone who needs support', 'Refusing to share because a gift is only for you', 'Damaging something another person needs'],
+      answer: 'Using your abilities to help someone who needs support',
+      explanation: 'Using gifts to love and help others is a responsible choice.',
+      hint: 'Choose the action that uses a gift for good.',
+    },
+  },
+];
+
+function text(value) {
+  return String(value ?? '').replace(/\s+/g, ' ').trim();
+}
+
+function normalize(value) {
+  return text(value).toLowerCase();
+}
+
+function slug(value) {
+  return normalize(value).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'item';
+}
+
+function uniqueText(values) {
+  const seen = new Set();
+  const out = [];
+  for (const value of values || []) {
+    const clean = text(value);
+    const key = normalize(clean);
+    if (!clean || seen.has(key)) continue;
+    seen.add(key);
+    out.push(clean);
+  }
+  return out;
+}
+
+function subjectRow(pack, name) {
+  return (pack?.subjects || []).find(row => normalize(row?.subject) === normalize(name)) || null;
+}
+
+function subjectText(pack, name) {
+  const row = subjectRow(pack, name);
+  return uniqueText([...(row?.topics || []), ...(row?.studyNotes || [])]).join(' | ');
+}
+
+function addSkill(out, skill) {
+  if (!skill?.id || out.some(row => row.id === skill.id)) return;
+  out.push({
+    id: skill.id,
+    subject: skill.subject,
+    label: skill.label,
+    evidence: uniqueText(skill.evidence || []),
+    studyNotes: uniqueText(skill.studyNotes || []),
+    standards: [...new Set(skill.standards || [])],
+    domain: skill.domain || 'Grade 2',
+    sourceBacked: true,
+  });
+}
+
+function questionFor(skill, raw) {
+  if (!raw) return null;
+  return {
+    id: `auto-${slug(skill.id)}-${slug(raw.answer)}`,
+    subject: skill.subject,
+    skill: skill.id,
+    prompt: text(raw.prompt),
+    choices: (raw.choices || []).map(text),
+    answer: text(raw.answer),
+    explanation: text(raw.explanation),
+    hint: text(raw.hint),
+    sourceFact: `Verified Grade 2 skill: ${skill.label}`,
+    standards: [...new Set(skill.standards || [])],
+    domain: skill.domain || 'Grade 2',
+    dok: Number.isInteger(raw.dok) ? raw.dok : 2,
+    difficulty: Number.isInteger(raw.difficulty) ? raw.difficulty : 2,
+    questionType: raw.questionType || 'direct',
+  };
+}
+
+function detectBaseSkills(pack, skills, questions) {
+  const haystack = [
+    subjectText(pack, 'Reading / ELA'),
+    subjectText(pack, 'Spelling / Handwriting'),
+  ].join(' | ');
+  for (const rule of BASE_SKILLS) {
+    if (!rule.pattern.test(haystack)) continue;
+    const skill = {
+      id: rule.id,
+      subject: rule.subject,
+      label: rule.label,
+      evidence: [haystack.match(rule.pattern)?.[0] || rule.label],
+      studyNotes: rule.studyNotes,
+      standards: rule.standards,
+      domain: rule.domain,
+    };
+    addSkill(skills, skill);
+    questions.push(questionFor(skill, rule.question()));
+  }
+}
+
+function detectMath(pack, skills, questions) {
+  const source = subjectText(pack, 'Math');
+  let match = source.match(/subtraction\s+(?:to|within)\s+(\d+)/i);
+  if (match) {
+    const max = Number(match[1]);
+    const skill = {
+      id: max <= 20 ? `subtraction-within-${max}` : 'subtraction-within-100',
+      subject: 'Math',
+      label: `Subtraction within ${max}`,
+      evidence: [match[0]],
+      studyNotes: [`Practice subtraction facts with answers and starting numbers within ${max}.`],
+      standards: [max <= 20 ? 'CCSS.2.OA.B.2' : 'CCSS.2.NBT.B.5'],
+      domain: 'Numbers and operations',
+    };
+    addSkill(skills, skill);
+    const start = Math.max(8, Math.min(max, 12));
+    const take = Math.max(3, Math.min(5, start - 2));
+    const answer = start - take;
+    questions.push(questionFor(skill, {
+      prompt: `Mia has ${start} crayons and gives ${take} away. How many crayons does she have left?`,
+      choices: [String(answer), String(answer + 1), String(Math.max(0, answer - 1))],
+      answer: String(answer),
+      explanation: `${start} - ${take} = ${answer}.`,
+      hint: `Start at ${start} and count back ${take}.`,
+    }));
+  }
+
+  match = source.match(/addition\s+(?:to|within)\s+(\d+)/i);
+  if (match) {
+    const max = Number(match[1]);
+    const skill = {
+      id: max <= 20 ? `addition-within-${max}` : 'addition-within-100',
+      subject: 'Math',
+      label: `Addition within ${max}`,
+      evidence: [match[0]],
+      studyNotes: [`Practice addition facts with totals within ${max}.`],
+      standards: [max <= 20 ? 'CCSS.2.OA.B.2' : 'CCSS.2.NBT.B.5'],
+      domain: 'Numbers and operations',
+    };
+    addSkill(skills, skill);
+    const a = Math.max(4, Math.min(9, Math.floor(max / 2)));
+    const b = Math.max(3, Math.min(max - a, 6));
+    const answer = a + b;
+    questions.push(questionFor(skill, {
+      prompt: `A basket has ${a} red apples and ${b} green apples. How many apples are there altogether?`,
+      choices: [String(answer), String(answer - 1), String(answer + 2)],
+      answer: String(answer),
+      explanation: `${a} + ${b} = ${answer}.`,
+      hint: `Add ${a} and ${b}.`,
+    }));
+  }
+
+  const additional = [
+    {
+      id: 'place-value',
+      label: 'Place value',
+      pattern: /place value/i,
+      standards: ['CCSS.2.NBT.A.1'],
+      domain: 'Numbers and operations',
+      note: 'Use hundreds, tens, and ones to explain the value of each digit.',
+      q: {
+        prompt: 'In the number 347, what value does the digit 4 represent?',
+        choices: ['40', '4', '400'],
+        answer: '40',
+        explanation: 'The 4 is in the tens place, so its value is 40.',
+        hint: 'Read the places from right to left: ones, tens, hundreds.',
+      },
+    },
+    {
+      id: 'compare-numbers',
+      label: 'Compare numbers',
+      pattern: /compare numbers|greater than|less than/i,
+      standards: ['CCSS.2.NBT.A.4'],
+      domain: 'Numbers and operations',
+      note: 'Compare hundreds first, then tens, then ones.',
+      q: {
+        prompt: 'Which comparison is true?',
+        choices: ['462 > 426', '462 < 426', '462 = 426'],
+        answer: '462 > 426',
+        explanation: 'Both numbers have 4 hundreds, but 462 has 6 tens while 426 has 2 tens.',
+        hint: 'Compare the hundreds and then the tens.',
+      },
+    },
+    {
+      id: 'time',
+      label: 'Tell time',
+      pattern: /\btime\b|clock/i,
+      standards: ['CCSS.2.MD.C.7'],
+      domain: 'Geometry and measurement',
+      note: 'Practice reading clocks to the nearest five minutes.',
+      q: {
+        prompt: 'The minute hand points to 6 and the hour hand is between 3 and 4. What time is it?',
+        choices: ['3:30', '6:15', '4:30'],
+        answer: '3:30',
+        explanation: 'A minute hand on 6 means 30 minutes past the hour.',
+        hint: 'Each number on the clock counts as five minutes.',
+      },
+    },
+    {
+      id: 'money',
+      label: 'Money',
+      pattern: /\bmoney\b|coins?|dimes?|nickels?|quarters?/i,
+      standards: ['CCSS.2.MD.C.8'],
+      domain: 'Geometry and measurement',
+      note: 'Count coin values carefully and write the total with a cent sign.',
+      q: {
+        prompt: 'What is the total value of one quarter and one dime?',
+        choices: ['35¢', '25¢', '40¢'],
+        answer: '35¢',
+        explanation: 'A quarter is 25¢ and a dime is 10¢, so 25¢ + 10¢ = 35¢.',
+        hint: 'Add 25 cents and 10 cents.',
+      },
+    },
+  ];
+  for (const rule of additional) {
+    if (!rule.pattern.test(source)) continue;
+    const skill = {
+      id: rule.id,
+      subject: 'Math',
+      label: rule.label,
+      evidence: [source.match(rule.pattern)?.[0] || rule.label],
+      studyNotes: [rule.note],
+      standards: rule.standards,
+      domain: rule.domain,
+    };
+    addSkill(skills, skill);
+    questions.push(questionFor(skill, rule.q));
+  }
+}
+
+function detectReligion(pack, skills, questions) {
+  const source = subjectText(pack, 'Religion');
+  for (const rule of RELIGION_SKILLS) {
+    if (!rule.pattern.test(source)) continue;
+    const skill = {
+      id: rule.id,
+      subject: 'Religion',
+      label: rule.label,
+      evidence: [source.match(rule.pattern)?.[0] || rule.label],
+      studyNotes: rule.studyNotes,
+      standards: ['ABVM.RELIGION.CURRENT'],
+      domain: 'Religion',
+    };
+    addSkill(skills, skill);
+    questions.push(questionFor(skill, rule.question));
+  }
+}
+
+function detectVocabulary(pack, skills, questions) {
+  const terms = uniqueText((pack?.vocabulary || []).map(row => row?.term)).map(term => term.toLowerCase());
+  const known = terms.filter(term => VOCAB_GLOSSARY[term]);
+  if (!known.length) return;
+  const skill = {
+    id: 'vocabulary-in-context',
+    subject: 'Reading / ELA',
+    label: 'Vocabulary in context',
+    evidence: known,
+    studyNotes: known.map(term => `${term}: ${VOCAB_GLOSSARY[term].meaning}`),
+    standards: ['CCSS.L.2.4.a'],
+    domain: 'Word knowledge and skills',
+  };
+  addSkill(skills, skill);
+  for (const term of known.slice(0, 8)) {
+    const row = VOCAB_GLOSSARY[term];
+    questions.push(questionFor(skill, {
+      prompt: `Which meaning best matches the word “${term}”?`,
+      choices: uniqueText([
+        row.meaning,
+        'a place where people buy food',
+        'to move very slowly without stopping',
+      ]).slice(0, 3),
+      answer: row.meaning,
+      explanation: `“${term}” means ${row.meaning}.`,
+      hint: `Think about this sentence: ${row.sentence}`,
+    }));
+  }
+}
+
+export function validateGeneratedQuestionSpec(question) {
+  const issues = [];
+  if (!question || typeof question !== 'object') return ['question-missing'];
+  if (!text(question.id)) issues.push('id-missing');
+  if (!text(question.subject)) issues.push('subject-missing');
+  if (!text(question.skill)) issues.push('skill-missing');
+  if (text(question.prompt).length < 20) issues.push('prompt-too-short');
+  for (const pattern of FORBIDDEN_QUESTION_PATTERNS) {
+    if (pattern.test(question.prompt)) issues.push('forbidden-meta-prompt');
+  }
+  if (!Array.isArray(question.choices) || question.choices.length !== 3) {
+    issues.push('choices-not-three');
+  } else {
+    if (new Set(question.choices.map(normalize)).size !== 3) issues.push('choices-duplicate');
+    if (!question.choices.includes(question.answer)) issues.push('answer-not-in-choices');
+  }
+  if (!text(question.explanation)) issues.push('explanation-missing');
+  if (!text(question.hint)) issues.push('hint-missing');
+  if (!Array.isArray(question.standards) || question.standards.length === 0) issues.push('standards-missing');
+  if (!text(question.domain)) issues.push('domain-missing');
+  if (!Number.isInteger(question.dok) || question.dok < 1 || question.dok > 3) issues.push('dok-invalid');
+  if (!Number.isInteger(question.difficulty) || question.difficulty < 1 || question.difficulty > 3) issues.push('difficulty-invalid');
+  return [...new Set(issues)];
+}
+
+function filterQuestions(rawQuestions) {
+  const questions = [];
+  const rejected = [];
+  const seen = new Set();
+  let duplicatesRemoved = 0;
+  for (const question of rawQuestions.filter(Boolean)) {
+    const issues = validateGeneratedQuestionSpec(question);
+    if (issues.length) {
+      rejected.push({ id: question.id || 'unknown', issues });
+      continue;
+    }
+    const signature = `${normalize(question.prompt)}|${normalize(question.answer)}`;
+    if (seen.has(signature)) {
+      duplicatesRemoved += 1;
+      continue;
+    }
+    seen.add(signature);
+    questions.push(question);
+  }
+  return { questions, rejected, duplicatesRemoved };
+}
+
+export function validateGrade2ContentPipeline(pipeline) {
+  const issues = [];
+  if (!pipeline || typeof pipeline !== 'object') return ['pipeline-missing'];
+  if (pipeline.schemaVersion !== 1) issues.push('schema-version-invalid');
+  if (!text(pipeline.sourceHash)) issues.push('source-hash-missing');
+  if (!Array.isArray(pipeline.skills) || pipeline.skills.length === 0) issues.push('skills-empty');
+  if (!Array.isArray(pipeline.questions) || pipeline.questions.length === 0) issues.push('questions-empty');
+
+  const skillIds = new Set();
+  for (const skill of pipeline.skills || []) {
+    if (!text(skill.id)) issues.push('skill-id-missing');
+    if (skillIds.has(skill.id)) issues.push(`duplicate-skill:${skill.id}`);
+    skillIds.add(skill.id);
+    if (!text(skill.subject)) issues.push(`skill-subject-missing:${skill.id}`);
+    if (!Array.isArray(skill.studyNotes) || skill.studyNotes.length === 0) issues.push(`skill-study-notes-missing:${skill.id}`);
+    if (!Array.isArray(skill.standards) || skill.standards.length === 0) issues.push(`skill-standards-missing:${skill.id}`);
+  }
+
+  const questionIds = new Set();
+  const questionSkills = new Set();
+  for (const question of pipeline.questions || []) {
+    if (questionIds.has(question.id)) issues.push(`duplicate-question-id:${question.id}`);
+    questionIds.add(question.id);
+    questionSkills.add(question.skill);
+    for (const issue of validateGeneratedQuestionSpec(question)) issues.push(`${question.id}:${issue}`);
+  }
+
+  for (const skill of pipeline.skills || []) {
+    if (!questionSkills.has(skill.id)) issues.push(`skill-without-question:${skill.id}`);
+  }
+  if ((pipeline.qa?.rejectedCount || 0) > 0) issues.push('rejected-questions-present');
+  if (pipeline.qa?.status !== 'pass') issues.push('qa-status-not-pass');
+  return [...new Set(issues)];
+}
+
+export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash } = {}) {
+  const skills = [];
+  const rawQuestions = [];
+  detectBaseSkills(pack, skills, rawQuestions);
+  detectMath(pack, skills, rawQuestions);
+  detectReligion(pack, skills, rawQuestions);
+  detectVocabulary(pack, skills, rawQuestions);
+
+  const { questions, rejected, duplicatesRemoved } = filterQuestions(rawQuestions);
+  const studyNotesBySubject = {};
+  for (const skill of skills) {
+    if (!studyNotesBySubject[skill.subject]) studyNotesBySubject[skill.subject] = [];
+    studyNotesBySubject[skill.subject].push(...skill.studyNotes);
+  }
+  for (const key of Object.keys(studyNotesBySubject)) {
+    studyNotesBySubject[key] = uniqueText(studyNotesBySubject[key]);
+  }
+
+  const pipeline = {
+    schemaVersion: 1,
+    generatedAt: generatedAt || new Date().toISOString(),
+    sourceHash: sourceHash || pack?.sourceHash || 'unknown-source',
+    skills,
+    studyNotesBySubject,
+    questions,
+    qa: {
+      status: rejected.length === 0 && skills.length > 0 && questions.length > 0 ? 'pass' : 'fail',
+      skillCount: skills.length,
+      questionCount: questions.length,
+      duplicatesRemoved,
+      rejectedCount: rejected.length,
+      rejected,
+      subjectCoverage: [...new Set(skills.map(skill => skill.subject))].sort(),
+    },
+  };
+
+  const issues = validateGrade2ContentPipeline(pipeline);
+  if (issues.length) {
+    throw new Error(`Grade 2 content pipeline validation failed: ${JSON.stringify(issues)}`);
+  }
+  return pipeline;
+}
+
+export function mergeGrade2StudyNotes(pack, pipeline) {
+  const notesBySubject = pipeline?.studyNotesBySubject || {};
+  for (const subject of pack?.subjects || []) {
+    const generated = notesBySubject[subject.subject] || [];
+    subject.studyNotes = uniqueText([...(subject.studyNotes || []), ...generated]);
+  }
+  return pack;
+}
