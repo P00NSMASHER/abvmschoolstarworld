@@ -200,7 +200,86 @@ test('Study Games source identity changes when the certified bank fingerprint ch
 });
 
 
-test('a repeated Math miss triggers an unscored same-skill support step', async ({ page }) => {
+test('three-step retry ladder teaches before resolving and records one failed learning opportunity', async ({ page }) => {
+  await page.evaluate(() => localStorage.clear());
+
+  const math = page.getByRole('button', { name: /Math Dash/i });
+  await expect(math).toBeVisible();
+  await math.click();
+  await expect(page.locator('.game-question-card')).toBeVisible();
+
+  const prompt = await page.locator('.game-question-card h2').textContent();
+  const question = await page.evaluate(async currentPrompt => {
+    const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(response => response.json());
+    const catalog = window.ABVMStudyGames.buildCatalog(envelope.pack, {
+      sourceKey: window.ABVMStudyGames.sourceKeyFromEnvelope(envelope.pack, envelope),
+    });
+    const row = catalog.questions.find(item => item.prompt === currentPrompt);
+    return row ? { id: row.id, skill: row.skill, answer: row.answer, choices: row.choices } : null;
+  }, prompt);
+
+  expect(question).not.toBeNull();
+  const wrongIndex = question.choices.findIndex(choice => choice !== question.answer);
+  expect(wrongIndex).toBeGreaterThanOrEqual(0);
+
+  await page.locator('.game-answer').nth(wrongIndex).click();
+  await expect(page.locator('.game-feedback.retry')).toContainText('Not yet');
+  await expect(page.locator('[data-game-next]')).toHaveCount(0);
+  await expect(page.locator('.game-topbar b')).toContainText('★ 0');
+
+  await page.locator('.game-answer').nth(wrongIndex).click();
+  await expect(page.locator('.game-feedback.retry')).toContainText('stronger clue');
+  await expect(page.locator('[data-game-next]')).toHaveCount(0);
+
+  await page.locator('.game-answer').nth(wrongIndex).click();
+  await expect(page.locator('.game-feedback.retry')).toContainText('model answer');
+  await expect(page.locator('[data-game-next]')).toBeVisible();
+
+  const stored = await page.evaluate(skill => JSON.parse(localStorage.getItem('abvm-study-learning:v2') || '{}')[skill] || {}, question.skill);
+  expect(stored.Seen).toBe(1);
+  expect(stored.Wrong).toBe(1);
+  expect(stored.Attempts).toBe(3);
+  expect(stored.IncorrectAttempts).toBe(3);
+  expect(stored.Correct).toBe(0);
+  expect(stored.LastResolution?.independent).toBe(false);
+});
+
+test('a retry-correct answer is recorded separately from independent first-try mastery', async ({ page }) => {
+  await page.evaluate(() => localStorage.clear());
+
+  await page.getByRole('button', { name: /Math Dash/i }).click();
+  await expect(page.locator('.game-question-card')).toBeVisible();
+
+  const prompt = await page.locator('.game-question-card h2').textContent();
+  const question = await page.evaluate(async currentPrompt => {
+    const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(response => response.json());
+    const catalog = window.ABVMStudyGames.buildCatalog(envelope.pack, {
+      sourceKey: window.ABVMStudyGames.sourceKeyFromEnvelope(envelope.pack, envelope),
+    });
+    const row = catalog.questions.find(item => item.prompt === currentPrompt);
+    return row ? { skill: row.skill, answer: row.answer, choices: row.choices } : null;
+  }, prompt);
+  expect(question).not.toBeNull();
+
+  const wrongIndex = question.choices.findIndex(choice => choice !== question.answer);
+  const correctIndex = question.choices.findIndex(choice => choice === question.answer);
+  await page.locator('.game-answer').nth(wrongIndex).click();
+  await expect(page.locator('.game-feedback.retry')).toContainText('Not yet');
+  await page.locator('.game-answer').nth(correctIndex).click();
+  await expect(page.locator('.game-feedback.correct')).toContainText('worked it out');
+
+  const stored = await page.evaluate(skill => JSON.parse(localStorage.getItem('abvm-study-learning:v2') || '{}')[skill] || {}, question.skill);
+  expect(stored.Seen).toBe(1);
+  expect(stored.Correct).toBe(1);
+  expect(stored.CorrectAfterRetry).toBe(1);
+  expect(stored.FirstTryCorrect || 0).toBe(0);
+  expect(stored.IndependentCorrect || 0).toBe(0);
+  expect(stored.ConsecutiveCorrect).toBe(0);
+  expect(stored.LastIndependentAt).toBeUndefined();
+  expect(stored.LastResolution?.independent).toBe(false);
+});
+
+test('two resolved failures trigger an unscored same-skill support step and Teach Card', async ({ page }) => {
   await page.evaluate(() => {
     localStorage.clear();
     localStorage.setItem('abvm-study-learning:v2', JSON.stringify({
@@ -215,26 +294,25 @@ test('a repeated Math miss triggers an unscored same-skill support step', async 
     }));
   });
 
-  const math = page.getByRole('button', { name: /Math Dash/i });
-  await expect(math).toBeVisible();
-  await math.click();
+  await page.getByRole('button', { name: /Math Dash/i }).click();
   await expect(page.locator('.game-question-card')).toBeVisible();
 
   const prompt = await page.locator('.game-question-card h2').textContent();
-  const answer = await page.evaluate(async currentPrompt => {
+  const question = await page.evaluate(async currentPrompt => {
     const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(response => response.json());
     const catalog = window.ABVMStudyGames.buildCatalog(envelope.pack, {
       sourceKey: window.ABVMStudyGames.sourceKeyFromEnvelope(envelope.pack, envelope),
     });
-    const question = catalog.questions.find(row => row.prompt === currentPrompt);
-    return question ? { answer: question.answer, choices: question.choices } : null;
+    const row = catalog.questions.find(item => item.prompt === currentPrompt);
+    return row ? { answer: row.answer, choices: row.choices } : null;
   }, prompt);
+  expect(question).not.toBeNull();
 
-  expect(answer).not.toBeNull();
-  const wrongIndex = answer.choices.findIndex(choice => choice !== answer.answer);
-  expect(wrongIndex).toBeGreaterThanOrEqual(0);
-  await page.locator('.game-answer').nth(wrongIndex).click();
-  await expect(page.locator('.game-feedback.retry')).toBeVisible();
+  const wrongIndex = question.choices.findIndex(choice => choice !== question.answer);
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    await page.locator('.game-answer').nth(wrongIndex).click();
+  }
+  await expect(page.locator('[data-game-next]')).toBeVisible();
   await expect(page.locator('.adaptive-note')).toContainText('smaller same-skill support step');
   await page.locator('[data-game-next]').click();
 
@@ -245,6 +323,7 @@ test('a repeated Math miss triggers an unscored same-skill support step', async 
   await expect(page.locator('.teach-card .game-hint')).not.toHaveText('');
   await expect(page.locator('.game-question-card')).toBeVisible();
 });
+
 
 test('Teach Card gives a concise skill rule and worked example without becoming a question', async ({ page }) => {
   const card = await page.evaluate(() => window.ABVMStudyGames.teachCardFor({
