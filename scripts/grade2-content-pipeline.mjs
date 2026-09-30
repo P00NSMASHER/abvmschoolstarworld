@@ -10,6 +10,39 @@ const FORBIDDEN_QUESTION_PATTERNS = [
   /which .* is on .* list/i,
 ];
 
+const SIGHT_WORD_CONTEXTS = Object.freeze({
+  she: { sentence: '___ packed her lunch before school.', distractors: ['what', 'small'] },
+  boy: { sentence: 'The ___ carried a blue backpack.', distractors: ['what', 'were'] },
+  he: { sentence: '___ hung his coat by the door.', distractors: ['what', 'small'] },
+  small: { sentence: 'The ant is very ___.', distractors: ['were', 'what'] },
+  were: { sentence: 'The boys ___ ready for recess.', distractors: ['small', 'what'] },
+  what: { sentence: '___ do you want for lunch?', distractors: ['here', 'small'] },
+  girl: { sentence: 'The ___ carried a yellow umbrella.', distractors: ['were', 'what'] },
+  here: { sentence: 'Please come over ___.', distractors: ['were', 'want'] },
+  by: { sentence: 'Put your backpack ___ the chair.', distractors: ['he', 'what'] },
+  want: { sentence: 'I ___ to read this book.', distractors: ['were', 'by'] },
+  put: { sentence: 'Please ___ the book on the table.', distractors: ['why', 'blue'] },
+  why: { sentence: '___ did the dog bark?', distractors: ['blue', 'for'] },
+  blue: { sentence: 'The clear daytime sky looks ___.', distractors: ['help', 'for'] },
+  help: { sentence: 'Can you ___ me carry this box?', distractors: ['blue', 'for'] },
+  for: { sentence: 'This gift is ___ Mom.', distractors: ['blue', 'help'] },
+  yellow: { sentence: 'The ripe banana is ___.', distractors: ['for', 'both'] },
+  both: { sentence: 'Mia and Leo ___ brought lunch.', distractors: ['yellow', 'there'] },
+  there: { sentence: 'Set the basket over ___.', distractors: ['yellow', 'or'] },
+  even: { sentence: 'The two teams had an ___ score.', distractors: ['there', 'or'] },
+  ball: { sentence: 'He kicked the soccer ___.', distractors: ['even', 'both'] },
+  or: { sentence: 'Would you like milk ___ water?', distractors: ['there', 'even'] },
+  green: { sentence: 'Fresh grass is usually ___.', distractors: ['both', 'or'] },
+  how: { sentence: '___ did you solve the puzzle?', distractors: ['green', 'or'] },
+  little: { sentence: 'The kitten is still very ___.', distractors: ['how', 'or'] },
+  one: { sentence: 'I have ___ apple left.', distractors: ['green', 'how'] },
+  see: { sentence: 'I can ___ the moon tonight.', distractors: ['one', 'or'] },
+  sounds: { sentence: 'The school bell ___ loud.', distractors: ['see', 'one'] },
+  funny: { sentence: 'The joke was very ___.', distractors: ['sounds', 'find'] },
+  find: { sentence: 'Can you ___ my missing sock?', distractors: ['funny', 'sounds'] },
+  could: { sentence: 'I ___ read that book by myself.', distractors: ['find', 'funny'] },
+});
+
 const BASE_SKILLS = [
   {
     id: 'sentence-types',
@@ -163,6 +196,12 @@ const BASE_SKILLS = [
     standards: ['CCSS.RL.2.5'],
     domain: 'Comprehension / constructing meaning',
     studyNotes: ['Sequence means putting events in the order they happen; beginning, middle, and end describe story order.'],
+    evidenceContract: {
+      evidenceType: 'DIRECT_TARGET',
+      supports: ['sequence'],
+      strongestClaim: 'orders-one-validated-dependency-chain',
+      doesNotClaim: ['global-reading-comprehension', 'longer-unseen-narrative-sequencing'],
+    },
     question: () => ({
       prompt: 'First Ava pours water into an ice tray. Next she puts the tray in the freezer. Later the water becomes ice. What happens immediately before the water becomes ice?',
       choices: ['She puts the tray in the freezer.', 'She pours water into the tray.', 'She takes the ice outside.'],
@@ -182,6 +221,12 @@ const BASE_SKILLS = [
     standards: ['CCSS.RI.2.5'],
     domain: 'Informational text features',
     studyNotes: ['A caption is a short text feature that explains or describes a picture, photograph, or diagram.'],
+    evidenceContract: {
+      evidenceType: 'DIRECT_TARGET',
+      supports: ['caption'],
+      strongestClaim: 'caption-function-or-described-scene-selection',
+      doesNotClaim: ['caption-writing', 'real-image-interpretation'],
+    },
     question: () => ({
       prompt: 'A science page shows a photo of a ladybug resting on a green leaf. Which sentence works best as the caption?',
       choices: ['A ladybug rests on a green leaf.', 'Ladybugs are always the biggest insects.', 'The page has many words.'],
@@ -1177,6 +1222,7 @@ function addSkill(out, skill) {
     standards: [...new Set(skill.standards || [])],
     domain: skill.domain || 'Grade 2',
     sourceBacked: true,
+    ...(skill.evidenceContract ? { evidenceContract: structuredClone(skill.evidenceContract) } : {}),
   });
 }
 
@@ -1234,6 +1280,9 @@ function questionFor(skill, raw) {
       strongestClaim: 'practice-performance-on-this-skill',
       doesNotClaim: ['standardized-test-score', 'global-subject-mastery'],
     },
+    ...(raw.evidenceContract || skill.evidenceContract ? {
+      evidenceContract: structuredClone(raw.evidenceContract || skill.evidenceContract),
+    } : {}),
     generatorVersion: 'grade2-content-pipeline-v2-research-recovery',
     contentFingerprint: fingerprint(`${skill.id}|${raw.questionType || 'direct'}|${raw.prompt}`),
     variantFingerprint: fingerprint(`${raw.prompt}|${answer}|${choices.join('|')}`),
@@ -1256,10 +1305,86 @@ function detectBaseSkills(pack, skills, questions) {
       studyNotes: rule.studyNotes,
       standards: rule.standards,
       domain: rule.domain,
+      evidenceContract: rule.evidenceContract,
     };
     addSkill(skills, skill);
     questions.push(questionFor(skill, rule.question()));
   }
+}
+
+function detectSightWords(pack, skills, questions, coverage) {
+  const reading = subjectRow(pack, 'Reading / ELA');
+  const sightTopic = (reading?.topics || []).find(topic => /^Sight words\s*:/i.test(text(topic)));
+  if (!sightTopic) return;
+
+  const words = uniqueText(text(sightTopic).replace(/^Sight words\s*:/i, '').split(',')).map(word => normalize(word)).filter(Boolean);
+  if (!words.length) return;
+
+  const available = new Set(words);
+  const candidates = [];
+  const uncovered = [];
+  for (const word of words) {
+    const context = SIGHT_WORD_CONTEXTS[word];
+    if (!context || !context.distractors.every(distractor => available.has(distractor))) {
+      uncovered.push(word);
+      continue;
+    }
+    candidates.push({ word, ...context });
+  }
+
+  if (candidates.length < 2) {
+    coverage.push({
+      topic: 'Sight / high-frequency words',
+      subject: 'Reading / ELA',
+      status: 'SOURCE_INSUFFICIENT',
+      reason: 'The teacher source provides sight words, but fewer than two have an approved contextual-cloze template with same-construct distractors.',
+    });
+    return;
+  }
+
+  const skill = {
+    id: 'high-frequency-word-use',
+    subject: 'Reading / ELA',
+    label: 'High-frequency words in context',
+    evidence: [sightTopic],
+    studyNotes: ['Practice current high-frequency words in short sentence contexts. Context-cloze performance does not claim spelling or isolated print-recognition mastery.'],
+    standards: ['CCSS.RF.2.3.f'],
+    domain: 'Foundational reading',
+    sourceMode: 'CURATED_CONTEXT',
+    evidenceContract: {
+      evidenceType: 'DIRECT_TARGET',
+      supports: ['high-frequency-word-use'],
+      strongestClaim: 'contextual-high-frequency-word-use',
+      doesNotClaim: ['spelling', 'oral-fluency', 'isolated-print-recognition'],
+    },
+  };
+  addSkill(skills, skill);
+
+  for (const row of candidates) {
+    questions.push(questionFor(skill, {
+      questionType: 'transfer',
+      prompt: `Which word correctly completes the sentence? “${row.sentence}”`,
+      choices: [row.word, ...row.distractors],
+      answer: row.word,
+      explanation: `“${row.word}” makes the sentence grammatically complete and meaningful.`,
+      hint: 'Read the whole sentence with each choice and choose the word that fits both grammar and meaning.',
+      sourceMode: 'CURATED_CONTEXT',
+      sourceFact: `Verified current high-frequency word: ${row.word}`,
+      dok: 2,
+      difficulty: 2,
+    }));
+  }
+
+  coverage.push({
+    topic: 'Sight / high-frequency words',
+    subject: 'Reading / ELA',
+    skillId: skill.id,
+    status: uncovered.length ? 'PARTIALLY_COVERED' : 'COVERED',
+    ...(uncovered.length ? {
+      reason: `Approved contextual-cloze templates are not yet available for: ${uncovered.join(', ')}.`,
+      uncovered,
+    } : {}),
+  });
 }
 
 function detectMath(pack, skills, questions) {
@@ -1505,6 +1630,17 @@ function detectUnsupportedExplicitSkills(pack, coverage) {
     }
   }
 
+  const readingSubject = subjectRow(pack, 'Reading / ELA');
+  for (const topic of readingSubject?.topics || []) {
+    if (!/^Story\s*:/i.test(text(topic))) continue;
+    coverage.push({
+      topic: text(topic),
+      subject: 'Reading / ELA',
+      status: 'NOT_PRACTICED_BY_DESIGN',
+      reason: 'Only the story title is verified here; the pipeline does not invent plot, character, or comprehension facts without passage-level evidence.',
+    });
+  }
+
   const spelling = subjectRow(pack, 'Spelling / Handwriting');
   for (const raw of spelling?.topics || []) {
     const line = text(raw);
@@ -1667,6 +1803,7 @@ export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash, sour
   const rawQuestions = [];
   const coverage = [];
   detectBaseSkills(pack, skills, rawQuestions);
+  detectSightWords(pack, skills, rawQuestions, coverage);
   detectMath(pack, skills, rawQuestions);
   detectReligion(pack, skills, rawQuestions);
   detectVocabulary(pack, skills, rawQuestions, coverage);
@@ -1675,6 +1812,7 @@ export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash, sour
   detectUnsupportedExplicitSkills(pack, coverage);
 
   for (const skill of skills) {
+    if (coverage.some(row => row.skillId === skill.id)) continue;
     coverage.push({
       topic: skill.label,
       subject: skill.subject,
@@ -1703,7 +1841,7 @@ export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash, sour
     studyNotesBySubject[key] = uniqueText(studyNotesBySubject[key]);
   }
 
-  const partialCoverage = coverage.some(row => ['SOURCE_INSUFFICIENT', 'MISSING', 'GENERATOR_UNSUPPORTED'].includes(row.status));
+  const partialCoverage = coverage.some(row => ['PARTIALLY_COVERED', 'SOURCE_INSUFFICIENT', 'MISSING', 'GENERATOR_UNSUPPORTED'].includes(row.status));
   const bankFingerprint = fingerprint([
     ...questions.map(question => question.variantFingerprint).sort(),
     ...coverage.map(row => `${row.subject}|${row.topic}|${row.status}`).sort(),
