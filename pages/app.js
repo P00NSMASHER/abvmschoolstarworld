@@ -577,7 +577,7 @@ function gameMenuHtml(catalog){
     '<p class="game-privacy-note">Practice prioritizes verified school skills; private student answers and grades are not used.</p>';
 }
 function gamePlayHtml(){
-  const mode=gameMode(gameState.mode),q=activeGameQuestion(),support=gameState.supportMode,comeback=gameState.comebackMode;
+  const mode=gameMode(gameState.mode),q=activeGameQuestion(),support=gameState.supportMode,comeback=gameState.comebackMode,teach=support?studyGameEngine()?.teachCardFor?.(q):null;
   if(!q)return '<section class="game-empty"><h2>No questions are ready for this game yet.</h2><button type="button" data-game-home>Back to games</button></section>';
   const progress=gameState.index+1,total=gameState.questions.length,pct=Math.round((progress/Math.max(1,total))*100);
   const chosen=gameState.selectedIndex;
@@ -597,7 +597,7 @@ function gamePlayHtml(){
     : '<div class="game-hint-wrap">'+(comeback?'<small class="adaptive-note">Comeback · same skill · not scored</small>':support?'<small class="adaptive-note">Support step · same skill · not scored</small>':'')+'<button type="button" class="game-hint-button" data-game-hint>'+(gameState.hintOpen?'Hide hint':'Need a hint?')+'</button>'+(gameState.hintOpen?'<p class="game-hint">'+esc(q.hint)+'</p>':'')+'</div>';
   return '<div class="game-topbar"><button type="button" data-game-home aria-label="Back to study games">‹</button><div><span>'+esc(comeback?"Comeback":support?"Support step":mode.title)+'</span><strong>'+(comeback?'Remember this skill later':support?'Same skill · smaller step':progress+' of '+total)+'</strong></div><b>★ '+gameState.score+'</b></div>'+
     '<div class="game-progress" aria-label="Game progress"><span style="width:'+pct+'%"></span></div>'+
-    '<section class="game-question-card"><div class="game-question-meta"><span>'+esc(q.subject)+'</span><b>'+esc(comeback?"Comeback":support?"Support":GAME_TYPE_LABELS[q.questionType]||"Practice")+'</b></div><h2>'+esc(q.prompt)+'</h2><div class="game-answer-list">'+answers+'</div>'+feedback+'</section>'+
+    '<section class="game-question-card"><div class="game-question-meta"><span>'+esc(q.subject)+'</span><b>'+esc(comeback?"Comeback":support?"Support":GAME_TYPE_LABELS[q.questionType]||"Practice")+'</b></div>'+(teach?'<div class="game-hint-wrap teach-card"><small class="adaptive-note">Quick lesson · not scored</small><p class="game-hint">'+esc(teach.instruction)+(teach.example?' '+esc(teach.example):'')+'</p></div>':'')+'<h2>'+esc(q.prompt)+'</h2><div class="game-answer-list">'+answers+'</div>'+feedback+'</section>'+
     '<div class="game-streak"><span>Streak <b>'+gameState.streak+'</b></span><span>Best this round <b>'+gameState.bestStreak+'</b></span></div>';
 }
 function gameFinishHtml(){
