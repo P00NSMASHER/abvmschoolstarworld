@@ -1058,6 +1058,20 @@ function comebackQuestion(catalog,current,{seed="comeback",seenIds=[]}={}){
   return candidates[0]||null;
 }
 
+const GAME_RECORD_PREFIX="abvm-study-games:";
+function gameRecordKey(sourceKey,modeId){return GAME_RECORD_PREFIX+String(sourceKey||"current")+":"+String(modeId||"quick")}
+function loadGameRecord(sourceKey,modeId){
+  try{
+    const value=JSON.parse(localStorage.getItem(gameRecordKey(sourceKey,modeId))||"{}");
+    return {best:Number(value.best)||0,plays:Number(value.plays)||0,totalCorrect:Number(value.totalCorrect)||0,totalAnswered:Number(value.totalAnswered)||0};
+  }catch{return {best:0,plays:0,totalCorrect:0,totalAnswered:0}}
+}
+function saveGameRecord(sourceKey,modeId,{score=0,total=0}={}){
+  const record=loadGameRecord(sourceKey,modeId);
+  const next={best:Math.max(record.best,Number(score)||0),plays:record.plays+1,totalCorrect:record.totalCorrect+(Number(score)||0),totalAnswered:record.totalAnswered+(Number(total)||0)};
+  try{localStorage.setItem(gameRecordKey(sourceKey,modeId),JSON.stringify(next))}catch{}
+  return next;
+}
 const LEARNING_STORAGE_KEY="abvm-study-learning:v2";
 const COMEBACK_STORAGE_KEY="abvm-study-comebacks:v1";
 function loadLearning(){
@@ -1157,6 +1171,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,selectQuestions,supportQuestion,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,sourceKeyFromEnvelope,targetDifficultyFor,testReadyMode
+  buildCatalog,validateCatalog,selectQuestions,supportQuestion,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,testReadyMode
 });
 })();
