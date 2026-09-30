@@ -1059,7 +1059,7 @@ function rememberRotation(sourceKey,selected){
 }
 function dynamicSkillCap(pool,count){
   const skillCount=new Set((pool||[]).map(q=>q.skill).filter(Boolean)).size;
-  return skillCount>=3?2:skillCount===2?3:Math.max(1,count);
+  return skillCount>=3?2:skillCount===2?Math.max(1,Math.ceil(Math.max(1,count)/2)):Math.max(1,count);
 }
 function orderForVariety(rows){
   const source=[...(rows||[])];
@@ -1140,6 +1140,12 @@ function pickBalanced(pool,count,seed,skillStats,preferredSkills=[],recentKeys=n
     const fresh=diversityPool.filter(q=>!recentKeys.has(semanticRotationKey(q)));
     const preferredPool=fresh.length?fresh:diversityPool;
     let candidate=preferredPool[0];
+    const representedTypes=new Set(selected.filter(q=>q.skill===candidate.skill).map(q=>q.questionType));
+    if(representedTypes.has(candidate.questionType)){
+      const alternate=fresh.find(q=>q.skill===candidate.skill&&!representedTypes.has(q.questionType))
+        ||diversityPool.find(q=>q.skill===candidate.skill&&!representedTypes.has(q.questionType));
+      if(alternate)candidate=alternate;
+    }
     const last=selected[selected.length-1],before=selected[selected.length-2];
     if(last&&before&&last.questionType===before.questionType){
       const alternate=fresh.find(q=>q.questionType!==last.questionType)
