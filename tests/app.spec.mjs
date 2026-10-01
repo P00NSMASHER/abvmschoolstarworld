@@ -139,7 +139,7 @@ test("Study Games uses the iPad canvas with priority hierarchy and tablet nav",a
   expect(Math.abs(quick.y-math.y)).toBeLessThan(4);
 
   const readyVisual=await page.getByRole("button",{name:/Test Ready/i}).evaluate(el=>{
-    const outline=el.querySelector(".icon-outline"),stroke=el.querySelector(".icon-stroke");
+    const outline=el.querySelector(".game-icon-test-ready rect"),stroke=el.querySelector(".game-icon-test-ready path");
     return {outlineFill:outline.getAttribute("fill"),outlineStroke:outline.getAttribute("stroke"),checkFill:stroke.getAttribute("fill"),checkStroke:stroke.getAttribute("stroke")};
   });
   expect(readyVisual.outlineFill).toBe("none");
