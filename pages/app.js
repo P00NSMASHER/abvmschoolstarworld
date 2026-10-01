@@ -481,8 +481,8 @@ function answerStudyGame(index){
   const correct=choice===q.answer,e=studyGameEngine();e?.note?.(q,index);g.tries=(g.tries||0)+1;g.selectedIndex=index;g.hintOpen=false;
   if(g.comebackMode){g.answered=true;g.learningRow=e?.recordComeback?.(q,correct)||null;g.comebackCorrect=correct;noteRoundLearning(g,q,"comeback",correct,false)}
   else if(g.supportMode){g.answered=true;g.learningRow=e?.recordSupport?.(q,correct)||null;g.supportCorrect=correct}
-  else if(correct){g.answered=true;g.retry=0;g.learningRow=e?.recordLearning?.(q,true,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;noteRoundLearning(g,q,"normal",true,g.learningRow?.LastResolution?.independent===true);g.score++;g.streak++;g.bestStreak=Math.max(g.bestStreak,g.streak)}
-  else{g.misses=(g.misses||0)+1;g.lastWrong=index;g.streak=0;if(g.misses<3){g.retry=g.misses;g.selectedIndex=null}else{g.answered=true;g.retry=3;g.learningRow=e?.recordLearning?.(q,false,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;noteRoundLearning(g,q,"normal",false,false)}}
+  else if(correct){g.answered=true;g.retry=0;g.learningRow=e?.recordLearning?.(q,true,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;noteRoundLearning(g,q,q.tier==="recent-review"?"review":"normal",true,g.learningRow?.LastResolution?.independent===true);g.score++;g.streak++;g.bestStreak=Math.max(g.bestStreak,g.streak)}
+  else{g.misses=(g.misses||0)+1;g.lastWrong=index;g.streak=0;if(g.misses<3){g.retry=g.misses;g.selectedIndex=null}else{g.answered=true;g.retry=3;g.learningRow=e?.recordLearning?.(q,false,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;noteRoundLearning(g,q,q.tier==="recent-review"?"review":"normal",false,false)}}
   renderGames();bindScreen()
 }
 function settleStudyStarRewards(g=gameState){
