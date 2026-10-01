@@ -163,6 +163,7 @@ test('the content pipeline is authoritative for every legacy material generator'
   const result = await page.evaluate(async () => {
     const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(response => response.json());
     const pack = structuredClone(envelope.pack);
+    pack.subjects = [{ subject:'Reading / ELA', topics:['Grammar: types of sentences'], studyNotes:[] }];
     pack.contentPipeline = {
       schemaVersion: 2,
       sourceHash: 'material-authority-test',
@@ -202,7 +203,7 @@ test('Study Games source identity changes when the certified bank fingerprint ch
 
 test('three-step retry ladder teaches before resolving and records one failed learning opportunity', async ({ page }) => {
   await page.evaluate(() => localStorage.clear());
-  await page.getByRole('button', { name: /Math Dash/i }).click();
+  await page.getByRole('button', { name: /Quick Mix/i }).click();
   await expect(page.locator('.game-question-card')).toBeVisible();
 
   const prompt = await page.locator('.game-question-card h2').textContent();
@@ -240,7 +241,7 @@ test('three-step retry ladder teaches before resolving and records one failed le
 
 test('a retry-correct answer is recorded separately from independent first-try mastery', async ({ page }) => {
   await page.evaluate(() => localStorage.clear());
-  await page.getByRole('button', { name: /Math Dash/i }).click();
+  await page.getByRole('button', { name: /Quick Mix/i }).click();
   await expect(page.locator('.game-question-card')).toBeVisible();
 
   const prompt = await page.locator('.game-question-card h2').textContent();
@@ -273,17 +274,9 @@ test('a retry-correct answer is recorded separately from independent first-try m
 });
 
 test('two resolved failures trigger an unscored same-skill support step and Teach Card', async ({ page }) => {
-  await page.evaluate(() => {
-    localStorage.clear();
-    localStorage.setItem('abvm-study-learning:v2', JSON.stringify({
-      'subtraction-within-12': {
-        Seen: 1, Correct: 0, Wrong: 1,
-        ConsecutiveCorrect: 0, ConsecutiveWrong: 1, TargetDifficulty: 2,
-      },
-    }));
-  });
+  await page.evaluate(() => localStorage.clear());
 
-  await page.getByRole('button', { name: /Math Dash/i }).click();
+  await page.getByRole('button', { name: /Quick Mix/i }).click();
   await expect(page.locator('.game-question-card')).toBeVisible();
 
   const prompt = await page.locator('.game-question-card h2').textContent();
@@ -293,9 +286,17 @@ test('two resolved failures trigger an unscored same-skill support step and Teac
       sourceKey: window.ABVMStudyGames.sourceKeyFromEnvelope(envelope.pack, envelope),
     });
     const row = catalog.questions.find(item => item.prompt === currentPrompt);
-    return row ? { answer: row.answer, choices: row.choices } : null;
+    return row ? { skill: row.skill, answer: row.answer, choices: row.choices } : null;
   }, prompt);
   expect(question).not.toBeNull();
+  await page.evaluate(skill => {
+    localStorage.setItem('abvm-study-learning:v2', JSON.stringify({
+      [skill]: {
+        Seen: 1, Correct: 0, Wrong: 1,
+        ConsecutiveCorrect: 0, ConsecutiveWrong: 1, TargetDifficulty: 2,
+      },
+    }));
+  }, question.skill);
 
   const wrongIndex = question.choices.findIndex(choice => choice !== question.answer);
   for (let attempt = 0; attempt < 3; attempt += 1) await page.locator('.game-answer').nth(wrongIndex).click();
