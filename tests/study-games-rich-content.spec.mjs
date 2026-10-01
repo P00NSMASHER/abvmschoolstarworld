@@ -44,6 +44,36 @@ test('every supported rich format has an accessible text alternative and keeps t
   }
 });
 
+test('place-value support never fills the answer-bearing digit into a labeled place', async ({ page }) => {
+  const result = await page.evaluate(async () => {
+    const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(r => r.json());
+    const engine = window.ABVMStudyGames;
+    const catalog = engine.buildCatalog(envelope.pack, { sourceKey:engine.sourceKeyFromEnvelope(envelope.pack, envelope) });
+    const q = catalog.questions.find(item => item.richContent?.kind === 'place-value');
+    if (!q) throw new Error('Expected a place-value rich question');
+    const html = window.ABVMStudyGameView.play({
+      g:{supportMode:false,comebackMode:false,index:0,questions:[q],selectedIndex:null,answered:false,retry:0,lastWrong:null,score:0,streak:0,bestStreak:0,learningRow:{}},
+      mode:{title:'Quick Mix'},q,teach:null,retryInstruction:'Use the clue.',labels:{direct:'Practice',transfer:'Practice',reasoning:'Practice'}
+    });
+    const host = document.createElement('div');
+    host.innerHTML = html;
+    const visual = host.querySelector('.rich-place-value');
+    return {
+      answer:String(q.answer),
+      visualText:visual?.textContent || '',
+      visualHtml:visual?.innerHTML || '',
+      label:visual?.getAttribute('aria-label') || ''
+    };
+  });
+  expect(result.visualText).not.toContain(result.answer);
+  expect(result.visualHtml).toContain('Hundreds');
+  expect(result.visualHtml).toContain('Tens');
+  expect(result.visualHtml).toContain('Ones');
+  expect(result.visualHtml).not.toMatch(/<b[^>]*>[0-9]<\/b>/);
+  expect(result.label).toContain('Blank place-value chart');
+});
+
+
 test('malformed visuals fail to text-only presentation instead of blocking a question', async ({ page }) => {
   const result = await page.evaluate(() => {
     const engine = window.ABVMStudyGames;

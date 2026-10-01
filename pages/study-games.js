@@ -196,7 +196,7 @@ function derivedRichContent(question){
   }
   if(skill==="place-value"){
     const match=prompt.match(/number\s+(\d{2,3})/i);
-    if(match)return normalizeRichContent({kind:"place-value",label:"Place-value chart for "+match[1]+".",number:Number(match[1])});
+    if(match)return normalizeRichContent({kind:"place-value",label:"Blank place-value chart. Use the number in the question to identify hundreds, tens, and ones.",number:Number(match[1])});
   }
   if(skill==="time"){
     const match=prompt.match(/starts at\s+(\d{1,2}):(\d{2})/i);
@@ -1090,42 +1090,79 @@ function semanticRotationKey(question){
 function rotationStorageKey(sourceKey){return ROTATION_STORAGE_PREFIX+hash(String(sourceKey||"current")).toString(36)}
 function loadRotation(sourceKey){
   try{
-    const parsed=JSON.parse(localStorage.getItem(rotationStorageKey(sourceKey))||"{}");
-    return {recent:Array.isArray(parsed?.recent)?parsed.recent.slice(-48):[]};
+    const key=rotationStorageKey(sourceKey),raw=localStorage.getItem(key),parsed=JSON.parse(raw||"{}");
+    const recent=(Array.isArray(parsed?.recent)?parsed.recent:[])
+      .filter(row=>row?.v).slice(-48)
+      .map(row=>({v:String(row.v||""),skill:String(row.skill||""),type:String(row.type||"")}));
+    const safe=JSON.stringify({recent});
+    if(raw!==null&&raw!==safe)localStorage.setItem(key,safe);
+    return {recent};
   }catch{return {recent:[]}}
 }
 function saveRotation(sourceKey,rows){
-  const recent=(Array.isArray(rows)?rows:[]).filter(row=>row?.v).slice(-48);
+  const recent=(Array.isArray(rows)?rows:[]).filter(row=>row?.v).slice(-48)
+    .map(row=>({v:String(row.v||""),skill:String(row.skill||""),type:String(row.type||"")}));
   try{localStorage.setItem(rotationStorageKey(sourceKey),JSON.stringify({recent}))}catch{}
   return recent;
 }
 function rememberRotation(sourceKey,selected){
   if(!sourceKey||!Array.isArray(selected)||!selected.length)return;
-  const current=loadRotation(sourceKey).recent,now=Date.now();
+  const current=loadRotation(sourceKey).recent;
   for(const question of selected){
     const v=semanticRotationKey(question);if(!v)continue;
     const prior=current.findIndex(row=>row.v===v);if(prior>=0)current.splice(prior,1);
-    current.push({v,skill:String(question.skill||""),type:String(question.questionType||""),at:now});
+    current.push({v,skill:String(question.skill||""),type:String(question.questionType||"")});
   }
   saveRotation(sourceKey,current);
 }
 function dynamicSkillCap(pool,count){
   const skillCount=new Set((pool||[]).map(q=>q.skill).filter(Boolean)).size;
-  return skillCount>=3?2:skillCount===2?3:Math.max(1,count);
+  return skillCount>=3?2:skillCount===2?Math.max(1,Math.ceil(Math.max(1,count)/2)):Math.max(1,count);
 }
 function orderForVariety(rows){
-  const remaining=[...(rows||[])],out=[];
+  const source=[...(rows||[])];
+  if(source.length<2)return source;
+  const skillFrequency=new Map(),typeFrequency=new Map();
+  for(const q of source){
+    skillFrequency.set(q.skill,(skillFrequency.get(q.skill)||0)+1);
+    typeFrequency.set(q.questionType,(typeFrequency.get(q.questionType)||0)+1);
+  }
+  const rank=(a,b)=>
+    (typeFrequency.get(source[b].questionType)||0)-(typeFrequency.get(source[a].questionType)||0)
+    ||(skillFrequency.get(source[b].skill)||0)-(skillFrequency.get(source[a].skill)||0)
+    ||a-b;
+  if(source.length<=12){
+    const full=(1<<source.length)-1,memo=new Map();
+    const better=(candidate,current)=>
+      !current
+      ||candidate.typeTriples<current.typeTriples
+      ||(candidate.typeTriples===current.typeTriples&&candidate.skillRepeats<current.skillRepeats);
+    const solve=(mask,last,before)=>{
+      if(mask===full)return{typeTriples:0,skillRepeats:0,path:[]};
+      const key=mask+"|"+last+"|"+before;
+      if(memo.has(key))return memo.get(key);
+      const candidates=source.map((_,index)=>index).filter(index=>(mask&(1<<index))===0).sort(rank);
+      let best=null;
+      for(const index of candidates){
+        const q=source[index],lastQ=last>=0?source[last]:null,beforeQ=before>=0?source[before]:null;
+        const triple=lastQ&&beforeQ&&lastQ.questionType===beforeQ.questionType&&q.questionType===lastQ.questionType?1:0;
+        const repeat=lastQ&&lastQ.skill===q.skill?1:0;
+        const tail=solve(mask|(1<<index),index,last);
+        const candidate={typeTriples:triple+tail.typeTriples,skillRepeats:repeat+tail.skillRepeats,path:[index,...tail.path]};
+        if(better(candidate,best))best=candidate;
+      }
+      memo.set(key,best);return best;
+    };
+    const best=solve(0,-1,-1);
+    if(best?.path?.length===source.length)return best.path.map(index=>source[index]);
+  }
+  const remaining=[...source],out=[];
   while(remaining.length){
     const last=out[out.length-1],before=out[out.length-2];
     let candidates=[...remaining];
     if(last&&candidates.some(q=>q.skill!==last.skill))candidates=candidates.filter(q=>q.skill!==last.skill);
     if(last&&before&&last.questionType===before.questionType&&candidates.some(q=>q.questionType!==last.questionType)){
       candidates=candidates.filter(q=>q.questionType!==last.questionType);
-    }
-    const skillFrequency=new Map(),typeFrequency=new Map();
-    for(const q of remaining){
-      skillFrequency.set(q.skill,(skillFrequency.get(q.skill)||0)+1);
-      typeFrequency.set(q.questionType,(typeFrequency.get(q.questionType)||0)+1);
     }
     candidates.sort((a,b)=>
       (typeFrequency.get(b.questionType)||0)-(typeFrequency.get(a.questionType)||0)
@@ -1161,7 +1198,20 @@ function pickBalanced(pool,count,seed,skillStats,preferredSkills=[],recentKeys=n
     const needsSecondSkill=selected.length>0&&selectedSkills.size===1&&availableSkills.size>1;
     const diversityPool=needsSecondSkill?tierPool.filter(q=>q.skill!==selected[0].skill):tierPool;
     const fresh=diversityPool.filter(q=>!recentKeys.has(semanticRotationKey(q)));
-    const candidate=(fresh.length?fresh:diversityPool)[0];
+    const preferredPool=fresh.length?fresh:diversityPool;
+    let candidate=preferredPool[0];
+    const representedTypes=new Set(selected.filter(q=>q.skill===candidate.skill).map(q=>q.questionType));
+    if(representedTypes.has(candidate.questionType)){
+      const alternate=fresh.find(q=>q.skill===candidate.skill&&!representedTypes.has(q.questionType))
+        ||diversityPool.find(q=>q.skill===candidate.skill&&!representedTypes.has(q.questionType));
+      if(alternate)candidate=alternate;
+    }
+    const last=selected[selected.length-1],before=selected[selected.length-2];
+    if(last&&before&&last.questionType===before.questionType){
+      const alternate=fresh.find(q=>q.questionType!==last.questionType)
+        ||diversityPool.find(q=>q.questionType!==last.questionType);
+      if(alternate)candidate=alternate;
+    }
     selected.push(candidate);
     usedIds.add(candidate.id);usedVariants.add(semanticRotationKey(candidate));
     skillCounts[candidate.skill]=(skillCounts[candidate.skill]||0)+1;
@@ -1244,26 +1294,79 @@ function comebackQuestion(catalog,current,{seed="comeback",seenIds=[]}={}){
   return candidates[0]||null;
 }
 
+function learningFirstSummary(outcomes=[]){
+  const bySkill=new Map(),rank={practice:1,remembered:2,strong:3};
+  for(const outcome of Array.isArray(outcomes)?outcomes:[]){
+    const skill=text(outcome?.skill),kind=text(outcome?.kind),correct=!!outcome?.correct;
+    if(!skill||kind==="support")continue;
+    let status="";
+    if(kind==="comeback")status=correct?"remembered":"practice";
+    else if(kind==="normal")status=(correct&&outcome?.independent===true)?"strong":"practice";
+    if(!status)continue;
+    const prior=bySkill.get(skill);
+    if(!prior||rank[status]>rank[prior])bySkill.set(skill,status);
+  }
+  const values=[...bySkill.values()];
+  return Object.freeze({
+    strong:values.filter(value=>value==="strong").length,
+    remembered:values.filter(value=>value==="remembered").length,
+    practice:values.filter(value=>value==="practice").length,
+    total:values.length
+  });
+}
+
 const STUDY_STAR_POLICY=Object.freeze({
   currency:"Study Stars",
   roundComplete:10,
   comebackSuccess:2,
   rewardTypes:Object.freeze(["round-complete","comeback-success"]),
-  excludedSignals:Object.freeze(["first-try","perfect","mastery","streak","speed","teach-card","support"])
+  excludedSignals:Object.freeze(["score","accuracy","first-try","perfect","mastery","streak","speed","hints","teach-card","support"])
 });
 function studyStarPolicy(){return STUDY_STAR_POLICY}
 function studyStarRewardEvents({completed=false,comebackSucceeded=false}={}){
   const events=[];
-  if(completed)events.push(Object.freeze({rewardType:"round-complete",amount:STUDY_STAR_POLICY.roundComplete,currency:STUDY_STAR_POLICY.currency}));
-  if(comebackSucceeded)events.push(Object.freeze({rewardType:"comeback-success",amount:STUDY_STAR_POLICY.comebackSuccess,currency:STUDY_STAR_POLICY.currency}));
+  if(completed===true)events.push(Object.freeze({rewardType:"round-complete",amount:STUDY_STAR_POLICY.roundComplete,currency:STUDY_STAR_POLICY.currency}));
+  if(comebackSucceeded===true)events.push(Object.freeze({rewardType:"comeback-success",amount:STUDY_STAR_POLICY.comebackSuccess,currency:STUDY_STAR_POLICY.currency}));
   return Object.freeze(events);
 }
 
+const STUDY_STAR_GOAL=Object.freeze({
+  id:"starlight-study-badge",
+  title:"Starlight Study Badge",
+  target:50,
+  cosmetic:true,
+  copy:"Fill the bar to unlock a simple Study Games badge."
+});
+const STUDY_STAR_GOAL_KEY="abvm-study-stars-goal:v1";
+function studyStarDreamGoal(){return STUDY_STAR_GOAL}
+function loadStudyStarGoal(){
+  let selected=false;
+  try{selected=localStorage.getItem(STUDY_STAR_GOAL_KEY)===STUDY_STAR_GOAL.id}catch{}
+  return {goal:STUDY_STAR_GOAL,selected};
+}
+function selectStudyStarGoal(goalId=STUDY_STAR_GOAL.id){
+  if(text(goalId)!==STUDY_STAR_GOAL.id)throw new Error("Unknown Study Star Dream Goal");
+  let selected=false;
+  try{
+    localStorage.setItem(STUDY_STAR_GOAL_KEY,STUDY_STAR_GOAL.id);
+    selected=localStorage.getItem(STUDY_STAR_GOAL_KEY)===STUDY_STAR_GOAL.id;
+  }catch{}
+  return {goal:STUDY_STAR_GOAL,selected};
+}
+function studyStarGoalProgress(balance=0){
+  const stars=Math.max(0,Math.floor(Number(balance)||0)),target=STUDY_STAR_GOAL.target;
+  return {goal:STUDY_STAR_GOAL,balance:stars,target,remaining:Math.max(0,target-stars),percent:Math.min(100,Math.floor((stars/target)*100)),unlocked:stars>=target,selected:loadStudyStarGoal().selected};
+}
+
 const STUDY_STAR_DB="abvm-study-stars-v1",STUDY_STAR_STORE="reward-ledger";
+function studyStarOpaqueId(prefix,value){
+  const stable=text(value);
+  return prefix+hash(stable).toString(36)+"-"+hash("study-stars|"+stable).toString(36);
+}
 function studyStarRoundId({sourcePack,mode,sessionSeed}={}){
   const source=text(sourcePack),game=text(mode),seed=text(sessionSeed);
   if(!source||!game||!seed)throw new Error("Study Star round identity requires sourcePack, mode, and sessionSeed");
-  return "round-"+hash(source+"|"+game+"|"+seed).toString(36);
+  return studyStarOpaqueId("round-",source+"|"+game+"|"+seed);
 }
 function openStudyStarDb(){
   return new Promise((resolve,reject)=>{
@@ -1278,11 +1381,22 @@ function openStudyStarDb(){
   });
 }
 function studyStarEventId(sourcePack,roundId,rewardType){
-  return "star-"+hash(text(sourcePack)+"|"+text(roundId)+"|"+text(rewardType)).toString(36);
+  return studyStarOpaqueId("star-",text(sourcePack)+"|"+text(roundId)+"|"+text(rewardType));
+}
+function safeStudyStarRow(row){
+  return {
+    sourcePack:text(row?.sourcePack),
+    roundId:text(row?.roundId),
+    rewardType:text(row?.rewardType),
+    eventId:text(row?.eventId),
+    currency:text(row?.currency),
+    amount:Number(row?.amount)||0
+  };
 }
 async function commitStudyStarRewards({sourcePack,roundId,completed=false,comebackSucceeded=false}={}){
-  const source=text(sourcePack),round=text(roundId),events=studyStarRewardEvents({completed,comebackSucceeded});
+  const source=text(sourcePack),round=text(roundId);
   if(!source||!round)throw new Error("Study Star ledger requires sourcePack and roundId");
+  const events=completed===true?studyStarRewardEvents({completed:true,comebackSucceeded:comebackSucceeded===true}):Object.freeze([]);
   if(!events.length)return{currency:STUDY_STAR_POLICY.currency,awardedAmount:0,duplicateAmount:0,results:[]};
   const db=await openStudyStarDb();
   return await new Promise((resolve,reject)=>{
@@ -1297,10 +1411,10 @@ async function commitStudyStarRewards({sourcePack,roundId,completed=false,comeba
       get.onsuccess=()=>{
         if(get.result){
           duplicateAmount+=Number(get.result.amount)||0;
-          results.push({rewardType:event.rewardType,amount:Number(get.result.amount)||0,awarded:false,eventId:get.result.eventId});
+          results.push({rewardType:event.rewardType,amount:Number(get.result.amount)||0,awarded:false,eventId:text(get.result.eventId)});
           return;
         }
-        const entry={sourcePack:source,roundId:round,rewardType:event.rewardType,eventId:studyStarEventId(source,round,event.rewardType),currency:STUDY_STAR_POLICY.currency,amount:event.amount,createdAt:Date.now()};
+        const entry={sourcePack:source,roundId:round,rewardType:event.rewardType,eventId:studyStarEventId(source,round,event.rewardType),currency:STUDY_STAR_POLICY.currency,amount:event.amount};
         const add=store.add(entry);
         add.onerror=()=>tx.abort();
         add.onsuccess=()=>{awardedAmount+=event.amount;results.push({rewardType:event.rewardType,amount:event.amount,awarded:true,eventId:entry.eventId})};
@@ -1313,7 +1427,12 @@ async function loadStudyStarLedger(){
   return await new Promise((resolve,reject)=>{
     const tx=db.transaction(STUDY_STAR_STORE,"readonly"),request=tx.objectStore(STUDY_STAR_STORE).getAll();
     request.onerror=()=>{db.close();reject(request.error||new Error("Study Star ledger read failed"))};
-    request.onsuccess=()=>{const rows=(request.result||[]).sort((a,b)=>Number(a.createdAt)-Number(b.createdAt)||String(a.eventId).localeCompare(String(b.eventId)));db.close();resolve(rows)};
+    request.onsuccess=()=>{
+      const rows=(request.result||[]).map(safeStudyStarRow).sort((a,b)=>
+        a.sourcePack.localeCompare(b.sourcePack)||a.roundId.localeCompare(b.roundId)||a.rewardType.localeCompare(b.rewardType)||a.eventId.localeCompare(b.eventId)
+      );
+      db.close();resolve(rows);
+    };
   });
 }
 async function studyStarBalance(){
@@ -1338,17 +1457,63 @@ function saveGameRecord(sourceKey,modeId,{score=0,total=0}={}){
 const LEARNING_STORAGE_KEY="abvm-study-learning:v2";
 const COMEBACK_STORAGE_KEY="abvm-study-comebacks:v1";
 const ITEM_QUALITY_STORAGE_KEY="abvm-study-item-quality:v1";
+const ITEM_QUALITY_SCHEMA_VERSION=2,ITEM_QUALITY_LIMIT=250;
 const itemShownAt=new Map();
+function finiteNumber(value){const n=Number(value);return Number.isFinite(n)?n:0}
+function nonnegativeCount(value){return Math.max(0,Math.floor(finiteNumber(value)))}
+function safeMisconceptionCounts(value){
+  const out={};
+  for(const [key,count] of Object.entries(value&&typeof value==="object"?value:{})){
+    const label=text(key).slice(0,80),n=nonnegativeCount(count);
+    if(/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(label)&&n)out[label]=n;
+  }
+  return out;
+}
+function safeItemQualityRow(row,order=0){
+  const positions=Array.isArray(row?.ChoicePositions)?row.ChoicePositions:[];
+  const bands=row?.ResponseBands&&typeof row.ResponseBands==="object"?row.ResponseBands:{};
+  return {
+    Skill:text(row?.Skill).slice(0,80),Subject:text(row?.Subject).slice(0,80),
+    Resolved:nonnegativeCount(row?.Resolved),Correct:nonnegativeCount(row?.Correct),Wrong:nonnegativeCount(row?.Wrong),
+    NormalResolved:nonnegativeCount(row?.NormalResolved),NormalCorrect:nonnegativeCount(row?.NormalCorrect),NormalWrong:nonnegativeCount(row?.NormalWrong),
+    FirstTryCorrect:nonnegativeCount(row?.FirstTryCorrect),
+    ChoicePositions:[0,1,2].map(index=>nonnegativeCount(positions[index])),
+    Misconceptions:safeMisconceptionCounts(row?.Misconceptions),
+    ResponseBands:{lt5:nonnegativeCount(bands.lt5),"5to15":nonnegativeCount(bands["5to15"]),"15to30":nonnegativeCount(bands["15to30"]),gte30:nonnegativeCount(bands.gte30)},
+    HintsUsed:nonnegativeCount(row?.HintsUsed),SupportSeen:nonnegativeCount(row?.SupportSeen),
+    ComebackSeen:nonnegativeCount(row?.ComebackSeen),ComebackCorrect:nonnegativeCount(row?.ComebackCorrect),
+    AbilityN:nonnegativeCount(row?.AbilityN),AbilitySum:finiteNumber(row?.AbilitySum),AbilitySumSq:finiteNumber(row?.AbilitySumSq),
+    FirstTryAbilitySum:finiteNumber(row?.FirstTryAbilitySum??row?.CorrectAbilitySum),
+    Order:Math.max(0,Math.floor(finiteNumber(order||row?.Order)))
+  };
+}
+function rankedItemQualityEntries(source){
+  const entries=Object.entries(source&&typeof source==="object"?source:{})
+    .filter(([id])=>/^q[a-z0-9]+$/i.test(id))
+    .sort((a,b)=>{
+      const ao=nonnegativeCount(a[1]?.Order),bo=nonnegativeCount(b[1]?.Order);
+      if(ao||bo)return ao-bo||a[0].localeCompare(b[0]);
+      return finiteNumber(a[1]?.LastUpdatedAt)-finiteNumber(b[1]?.LastUpdatedAt)||a[0].localeCompare(b[0]);
+    }).slice(-ITEM_QUALITY_LIMIT);
+  return entries.map(([id,row],index)=>[id,safeItemQualityRow(row,index+1)]);
+}
 function loadItemQuality(){
   try{
     const parsed=JSON.parse(localStorage.getItem(ITEM_QUALITY_STORAGE_KEY)||"{}");
-    return parsed&&parsed.schemaVersion===1&&parsed.items&&typeof parsed.items==="object"?parsed:{schemaVersion:1,items:{}};
-  }catch{return {schemaVersion:1,items:{}}}
+    const normalized=rankedItemQualityEntries(parsed?.items);
+    const safe={schemaVersion:ITEM_QUALITY_SCHEMA_VERSION,items:Object.fromEntries(normalized)};
+    const serialized=JSON.stringify(safe);
+    if(localStorage.getItem(ITEM_QUALITY_STORAGE_KEY)!==serialized)localStorage.setItem(ITEM_QUALITY_STORAGE_KEY,serialized);
+    return safe;
+  }catch{return {schemaVersion:ITEM_QUALITY_SCHEMA_VERSION,items:{}}}
+}
+function touchItemQualityRow(data,row){
+  const maxOrder=Object.values(data?.items||{}).reduce((max,item)=>Math.max(max,nonnegativeCount(item?.Order)),0);
+  row.Order=maxOrder+1;return row;
 }
 function writeItemQuality(data){
-  const source=data?.items&&typeof data.items==="object"?data.items:{};
-  const entries=Object.entries(source).sort((a,b)=>(Number(b[1]?.LastUpdatedAt)||0)-(Number(a[1]?.LastUpdatedAt)||0)).slice(0,250);
-  const safe={schemaVersion:1,items:Object.fromEntries(entries)};
+  const normalized=rankedItemQualityEntries(data?.items);
+  const safe={schemaVersion:ITEM_QUALITY_SCHEMA_VERSION,items:Object.fromEntries(normalized)};
   try{localStorage.setItem(ITEM_QUALITY_STORAGE_KEY,JSON.stringify(safe))}catch{}
   return safe;
 }
@@ -1372,7 +1537,7 @@ function itemQualityRow(data,question){
     Skill:String(question?.skill||""),Subject:String(question?.subject||""),Resolved:0,Correct:0,Wrong:0,
     NormalResolved:0,NormalCorrect:0,NormalWrong:0,FirstTryCorrect:0,ChoicePositions:[0,0,0],Misconceptions:{},
     ResponseBands:{lt5:0,"5to15":0,"15to30":0,gte30:0},HintsUsed:0,SupportSeen:0,ComebackSeen:0,ComebackCorrect:0,
-    AbilityN:0,AbilitySum:0,AbilitySumSq:0,FirstTryAbilitySum:0
+    AbilityN:0,AbilitySum:0,AbilitySumSq:0,FirstTryAbilitySum:0,Order:0
   };
   return {id,row};
 }
@@ -1385,7 +1550,7 @@ function noteItemAttempt(question,index){
     const tag=choice?question.choiceDiagnostics?.[choice]?.misconception:null;
     if(tag)row.Misconceptions[tag]=(Number(row.Misconceptions[tag])||0)+1;
   }
-  row.LastUpdatedAt=Date.now();data.items[id]=row;writeItemQuality(data);return row;
+  touchItemQualityRow(data,row);data.items[id]=row;writeItemQuality(data);return row;
 }
 function pointBiserial(row){
   const n=Number(row?.AbilityN)||0,c=Number(row?.FirstTryCorrect)||0,w=n-c;
@@ -1413,7 +1578,7 @@ function recordItemQuality(question,correct,{attemptCount=1,incorrectCount=corre
     if(firstTry)row.FirstTryAbilitySum=(Number(row.FirstTryAbilitySum)||0)+ability;
   }else if(kind==="support")row.SupportSeen=(Number(row.SupportSeen)||0)+1;
   else if(kind==="comeback"){row.ComebackSeen=(Number(row.ComebackSeen)||0)+1;if(correct)row.ComebackCorrect=(Number(row.ComebackCorrect)||0)+1}
-  row.LastUpdatedAt=now;data.items[id]=row;writeItemQuality(data);return row;
+  touchItemQualityRow(data,row);data.items[id]=row;writeItemQuality(data);return row;
 }
 function reviewItemQuality(data=loadItemQuality()){
   const out=[];
@@ -1432,6 +1597,30 @@ function reviewItemQuality(data=loadItemQuality()){
     out.push({id,skill:row.Skill,subject:row.Subject,resolved:n,accuracy,firstTryRate:firstTry,discrimination,discriminationEvidence:discriminationReady?"reviewable":"insufficient-evidence",method:"classical-longitudinal-proxy",irtUsed:false,comebackRate:(Number(row.ComebackSeen)||0)?(Number(row.ComebackCorrect)||0)/(Number(row.ComebackSeen)||1):null,flags,dominantMisconception:mis[0]?.[0]||null});
   }
   return out.sort((a,b)=>b.flags.length-a.flags.length||b.resolved-a.resolved||a.id.localeCompare(b.id));
+}
+const QUESTION_FAMILY_ROLLOUT_POLICY=Object.freeze({
+  featureFlagRequired:true,
+  automaticPromotion:false,
+  automaticDelete:false,
+  automaticRewrite:false,
+  irtUsed:false,
+  requiredEvidence:Object.freeze(["automated-qa","sufficient-safe-usage-evidence"])
+});
+function questionFamilyRolloutPolicy(){return QUESTION_FAMILY_ROLLOUT_POLICY}
+function reviewQuestionFamilyPromotion({familyId,featureFlagged=false,automatedQaPassed=false,safeUsageEvidence="insufficient-evidence"}={}){
+  const id=text(familyId);
+  if(!id)throw new Error("Question family review requires familyId");
+  const evidence=text(safeUsageEvidence)||"insufficient-evidence";
+  if(!["insufficient-evidence","sufficient-safe-usage"].includes(evidence))throw new Error("Unknown safe usage evidence state");
+  const blockers=[];
+  if(!featureFlagged)blockers.push("feature-flag-required");
+  if(!automatedQaPassed)blockers.push("automated-qa-required");
+  if(evidence!=="sufficient-safe-usage")blockers.push("safe-usage-evidence-required");
+  return Object.freeze({
+    familyId:id,featureFlagged:!!featureFlagged,automatedQaPassed:!!automatedQaPassed,safeUsageEvidence:evidence,
+    status:blockers.length?"HOLD":"READY_FOR_MANUAL_PROMOTION",blockers:Object.freeze(blockers),
+    automaticPromotion:false,automaticDelete:false,automaticRewrite:false,irtUsed:false
+  });
 }
 function loadLearning(){
   try{
@@ -1564,6 +1753,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,validateRichContent,selectQuestions,studyStarPolicy,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,loadStudyStarLedger,studyStarBalance,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,itemQualityKey
+  buildCatalog,validateCatalog,validateRichContent,selectQuestions,learningFirstSummary,studyStarPolicy,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,questionFamilyRolloutPolicy,reviewQuestionFamilyPromotion,itemQualityKey
 });
 })();

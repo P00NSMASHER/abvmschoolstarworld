@@ -40,7 +40,7 @@ test("item-quality monitoring stays local and stores privacy-minimized aggregate
     return e.loadItemQuality();
   });
 
-  expect(result.schemaVersion).toBe(1);
+  expect(result.schemaVersion).toBe(2);
   const keys=Object.keys(result.items);
   expect(keys).toHaveLength(1);
   expect(keys[0]).not.toContain("quality-math-answer-7");
@@ -68,6 +68,8 @@ test("item-quality monitoring stays local and stores privacy-minimized aggregate
   expect(row).not.toHaveProperty("Prompt");
   expect(row).not.toHaveProperty("Answer");
   expect(row).not.toHaveProperty("Choices");
+  expect(row).not.toHaveProperty("LastUpdatedAt");
+  expect(row).toHaveProperty("Order");
 });
 
 test("item-quality review flags weak items without claiming standardized psychometrics",async({page})=>{
@@ -159,4 +161,74 @@ test("item-quality storage is bounded and does not become an event log",async({p
     return e.loadItemQuality();
   });
   expect(Object.keys(result.items).length).toBeLessThanOrEqual(250);
+});
+
+
+test("legacy item-quality rows are scrubbed to timestamp-free aggregate schema",async({page})=>{
+  const result=await page.evaluate(()=>{
+    localStorage.setItem("abvm-study-item-quality:v1",JSON.stringify({
+      schemaVersion:1,
+      items:{
+        qlegacy123:{
+          Skill:"theme",Subject:"Reading / ELA",Resolved:3,Correct:2,Wrong:1,NormalResolved:3,NormalCorrect:2,NormalWrong:1,
+          FirstTryCorrect:1,ChoicePositions:[1,1,1],Misconceptions:{m:1,"PRIVATE ANSWER TAG":9},ResponseBands:{lt5:1,"5to15":2,"15to30":0,gte30:0},
+          HintsUsed:1,SupportSeen:0,ComebackSeen:1,ComebackCorrect:1,AbilityN:3,AbilitySum:1.5,AbilitySumSq:.75,
+          FirstTryAbilitySum:.5,LastUpdatedAt:1700000000000,Prompt:"PRIVATE PROMPT",Answer:"PRIVATE ANSWER",SessionId:"PRIVATE SESSION"
+        }
+      }
+    }));
+    const loaded=window.ABVMStudyGames.loadItemQuality();
+    return {loaded,stored:localStorage.getItem("abvm-study-item-quality:v1")};
+  });
+  expect(result.loaded.schemaVersion).toBe(2);
+  expect(result.loaded.items.qlegacy123).toBeDefined();
+  expect(result.loaded.items.qlegacy123).not.toHaveProperty("LastUpdatedAt");
+  expect(result.loaded.items.qlegacy123).toHaveProperty("Order");
+  for(const forbidden of ["PRIVATE PROMPT","PRIVATE ANSWER","PRIVATE ANSWER TAG","PRIVATE SESSION","LastUpdatedAt","SessionId"]){
+    expect(result.stored).not.toContain(forbidden);
+  }
+});
+
+test("new question families stay feature-flagged until QA and sufficient safe usage evidence",async({page})=>{
+  const result=await page.evaluate(()=>{
+    const e=window.ABVMStudyGames;
+    return {
+      policy:e.questionFamilyRolloutPolicy(),
+      initial:e.reviewQuestionFamilyPromotion({familyId:"experimental-family"}),
+      qaOnly:e.reviewQuestionFamilyPromotion({familyId:"experimental-family",automatedQaPassed:true}),
+      ready:e.reviewQuestionFamilyPromotion({familyId:"experimental-family",featureFlagged:true,automatedQaPassed:true,safeUsageEvidence:"sufficient-safe-usage"}),
+      missingFlag:e.reviewQuestionFamilyPromotion({familyId:"experimental-family",automatedQaPassed:true,safeUsageEvidence:"sufficient-safe-usage"})
+    };
+  });
+  expect(result.policy).toEqual(expect.objectContaining({
+    featureFlagRequired:true,automaticPromotion:false,automaticDelete:false,automaticRewrite:false,irtUsed:false
+  }));
+  expect(result.initial.status).toBe("HOLD");
+  expect(result.initial.blockers).toEqual(expect.arrayContaining(["automated-qa-required","safe-usage-evidence-required"]));
+  expect(result.qaOnly.status).toBe("HOLD");
+  expect(result.qaOnly.blockers).toContain("safe-usage-evidence-required");
+  expect(result.ready.status).toBe("READY_FOR_MANUAL_PROMOTION");
+  expect(result.ready.blockers).toEqual([]);
+  expect(result.missingFlag.status).toBe("HOLD");
+  expect(result.missingFlag.blockers).toContain("feature-flag-required");
+  expect(result.ready.automaticPromotion).toBe(false);
+});
+
+test("small samples stay insufficient and cannot trigger automatic family promotion or mutation",async({page})=>{
+  const result=await page.evaluate(()=>{
+    const e=window.ABVMStudyGames;
+    const [small]=e.reviewItemQuality({schemaVersion:2,items:{
+      qsmall:{Skill:"theme",Subject:"Reading / ELA",Resolved:5,NormalResolved:5,NormalCorrect:4,NormalWrong:1,FirstTryCorrect:3,
+        ChoicePositions:[2,2,1],Misconceptions:{m:1},ResponseBands:{lt5:1,"5to15":3,"15to30":1,gte30:0},
+        AbilityN:5,AbilitySum:2.5,AbilitySumSq:1.75,FirstTryAbilitySum:1.5}
+    }});
+    const gate=e.reviewQuestionFamilyPromotion({familyId:"small-sample-family",automatedQaPassed:true,safeUsageEvidence:small.discriminationEvidence});
+    return {small,gate};
+  });
+  expect(result.small.discriminationEvidence).toBe("insufficient-evidence");
+  expect(result.small.irtUsed).toBe(false);
+  expect(result.gate.status).toBe("HOLD");
+  expect(result.gate.automaticPromotion).toBe(false);
+  expect(result.gate.automaticDelete).toBe(false);
+  expect(result.gate.automaticRewrite).toBe(false);
 });

@@ -58,12 +58,15 @@ test('round identity is deterministic and includes source pack, mode, and sessio
   });
   expect(ids[0]).toBe(ids[1]);
   expect(new Set([ids[0],ids[2],ids[3],ids[4]]).size).toBe(4);
+  expect(ids[0]).toMatch(/^round-[a-z0-9]+-[a-z0-9]+$/);
+  expect(ids[0]).not.toContain('pack-a');
+  expect(ids[0]).not.toContain('quick');
 });
 
 test('interrupted or support-only activity cannot create reward rows', async ({ page }) => {
   const result=await page.evaluate(async()=>{
     const e=window.ABVMStudyGames;
-    const committed=await e.commitStudyStarRewards({sourcePack:'pack-interrupt',roundId:'r1',completed:false,comebackSucceeded:false,support:true,teachCard:true});
+    const committed=await e.commitStudyStarRewards({sourcePack:'pack-interrupt',roundId:'r1',completed:false,comebackSucceeded:true,support:true,teachCard:true});
     return {committed,balance:await e.studyStarBalance(),rows:await e.loadStudyStarLedger()};
   });
   expect(result.committed.awardedAmount).toBe(0);
@@ -109,4 +112,18 @@ test('reward persistence stays separate from learning evidence storage', async (
   expect(result.before).toBeNull();
   expect(result.after).toBeNull();
   expect(result.balance).toBe(12);
+});
+
+
+test('reward ledger persists only bounded accounting fields and no exact activity timestamp', async ({ page }) => {
+  const row=await page.evaluate(async()=>{
+    const e=window.ABVMStudyGames;
+    await e.commitStudyStarRewards({sourcePack:'pack-private',roundId:'r-private',completed:true,comebackSucceeded:false,prompt:'PRIVATE PROMPT',answer:'PRIVATE ANSWER'});
+    return (await e.loadStudyStarLedger())[0];
+  });
+  expect(Object.keys(row).sort()).toEqual(['amount','currency','eventId','rewardType','roundId','sourcePack'].sort());
+  expect(row).not.toHaveProperty('createdAt');
+  expect(JSON.stringify(row)).not.toContain('PRIVATE PROMPT');
+  expect(JSON.stringify(row)).not.toContain('PRIVATE ANSWER');
+  expect(row.eventId).toMatch(/^star-[a-z0-9]+-[a-z0-9]+$/);
 });

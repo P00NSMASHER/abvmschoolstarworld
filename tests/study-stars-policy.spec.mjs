@@ -39,9 +39,23 @@ test('scores, mastery, speed, streaks, perfect play, Teach Cards, and support ne
   });
   expect(result.noisy).toEqual(result.baseline);
   expect(result.policy.excludedSignals).toEqual(expect.arrayContaining([
-    'first-try','perfect','mastery','streak','speed','teach-card','support'
+    'score','accuracy','first-try','perfect','mastery','streak','speed','hints','teach-card','support'
   ]));
   expect(result.noisy.every(row=>row.amount>0)).toBe(true);
+});
+
+test('reward inputs are explicit booleans so truthy strings cannot mint rewards', async ({ page }) => {
+  const result = await page.evaluate(() => {
+    const engine = window.ABVMStudyGames;
+    return {
+      strings:engine.studyStarRewardEvents({completed:'true',comebackSucceeded:'yes'}),
+      numbers:engine.studyStarRewardEvents({completed:1,comebackSucceeded:1}),
+      booleans:engine.studyStarRewardEvents({completed:true,comebackSucceeded:true})
+    };
+  });
+  expect(result.strings).toEqual([]);
+  expect(result.numbers).toEqual([]);
+  expect(result.booleans).toHaveLength(2);
 });
 
 test('reward policy is deterministic and contains no random or loot-box outcome', async ({ page }) => {

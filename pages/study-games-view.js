@@ -18,8 +18,7 @@ function richVisual(raw){
   }
   if(kind==="place-value"){
     const number=Number(raw.number);if(!Number.isInteger(number)||number<0||number>999)return "";
-    const h=Math.floor(number/100),t=Math.floor(number/10)%10,o=number%10;
-    return '<figure class="game-rich-content rich-place-value" role="img" aria-label="'+esc(label)+'"><div><span><small>Hundreds</small><b>'+h+'</b></span><span><small>Tens</small><b>'+t+'</b></span><span><small>Ones</small><b>'+o+'</b></span></div><figcaption>'+esc("Build "+number+" by place")+'</figcaption></figure>';
+    return '<figure class="game-rich-content rich-place-value" role="img" aria-label="'+esc(label)+'"><div><span><small>Hundreds</small><b aria-hidden="true">?</b></span><span><small>Tens</small><b aria-hidden="true">?</b></span><span><small>Ones</small><b aria-hidden="true">?</b></span></div><figcaption>'+esc("Use the number in the question to fill the chart")+'</figcaption></figure>';
   }
   if(kind==="bar-chart"){
     const entries=Array.isArray(raw.entries)?raw.entries:[],clean=entries.map(row=>({label:String(row?.label||"").trim(),value:Number(row?.value)}));
@@ -50,9 +49,23 @@ function play({g,mode,q,teach,retryInstruction,labels}){
     '<section class="game-question-card"><div class="game-question-meta"><span>'+esc(q.subject)+'</span><b>'+esc(comeback?"Comeback":support?"Support":labels[q.questionType]||"Practice")+'</b></div>'+(teach?'<div class="game-hint-wrap teach-card"><small class="adaptive-note">Quick lesson · not scored</small><p class="game-hint">'+esc(teach.instruction)+(teach.example?' '+esc(teach.example):'')+'</p></div>':'')+'<h2>'+esc(q.prompt)+'</h2>'+visual+'<div class="game-answer-list">'+answers+'</div>'+feedback+'</section>'+
     '<div class="game-streak"><span>Streak <b>'+g.streak+'</b></span><span>Best this round <b>'+g.bestStreak+'</b></span></div>';
 }
-function finish({mode,state,record}){
-  const total=state.questions.length,pct=total?Math.round((state.score/total)*100):0,stars=pct>=90?3:pct>=70?2:pct>=40?1:0;
-  return '<section class="game-finish"><div class="game-finish-stars" aria-label="'+stars+' stars">'+[0,1,2].map(i=>'<span class="'+(i<stars?'earned':'')+'">★</span>').join("")+'</div><p>'+esc(mode.title.toUpperCase())+'</p><h2>'+state.score+' out of '+total+'</h2><strong>'+pct+'%</strong><span>'+(pct>=90?'Fantastic work!':pct>=70?'Great job — one more round can make it even stronger.':pct>=40?'Good practice. Try another round to build the skill.':'Keep practicing — every round helps.')+'</span><div class="game-finish-actions"><button type="button" class="primary" data-game-start="'+esc(mode.id)+'">Play again</button><button type="button" data-game-home>All study games</button></div><small>Best score on this material: '+record.best+' / '+total+'</small></section>';
+function goal({state}){
+  const g=state?.goal||{},selected=!!state?.selected,unlocked=!!state?.unlocked,pct=Math.max(0,Math.min(100,Number(state?.percent)||0)),target=Math.max(1,Math.floor(Number(state?.target)||1)),balance=Math.max(0,Math.floor(Number(state?.balance)||0)),progress=Math.min(target,balance);
+  if(!g.id)return "";
+  return '<section class="study-star-goal" aria-label="Dream Goal"><div class="study-star-goal-head"><span>★</span><div><small>DREAM GOAL</small><strong>'+esc(g.title)+'</strong></div><b>'+balance+' / '+target+' Stars</b></div><div class="study-star-goal-progress" role="progressbar" aria-label="Dream Goal progress" aria-valuemin="0" aria-valuemax="'+target+'" aria-valuenow="'+progress+'"><span style="width:'+pct+'%"></span></div><p>'+esc(unlocked?"Goal reached! Your badge is ready.":g.copy||"Keep practicing to fill the bar.")+'</p>'+(selected?'<small class="study-star-goal-selected">'+(unlocked?'Unlocked':'Goal selected')+'</small>':'<button type="button" data-study-star-goal="'+esc(g.id)+'">Choose this goal</button>')+'</section>';
 }
-window.ABVMStudyGameView=Object.freeze({play,finish});
+
+function rewardReveal({amount=0}={}){
+  const raw=Number(amount),stars=Number.isFinite(raw)&&raw>0?Math.floor(raw):0;
+  if(!stars)return "";
+  return '<div class="study-star-reveal" data-reward-reveal data-duration-ms="1200" role="status" aria-live="polite" aria-atomic="true"><span aria-hidden="true">★</span><strong>+'+stars+' Study Stars</strong><small>Practice reward</small></div>';
+}
+
+function finish({mode,state,record,summary={},reward={}}){
+  const total=state.questions.length,pct=total?Math.round((state.score/total)*100):0,stars=pct>=90?3:pct>=70?2:pct>=40?1:0,strong=Math.max(0,Number(summary.strong)||0),remembered=Math.max(0,Number(summary.remembered)||0),practice=Math.max(0,Number(summary.practice)||0);
+  const rewardHtml=reward.status==="pending"?'<div class="study-star-earned secondary" aria-label="Study Stars reward"><span>Study Stars</span><strong>Saving on this device…</strong></div>':reward.status==="done"?'<div class="study-star-earned secondary" aria-label="Study Stars reward"><span>Study Stars</span><strong>'+(Number(reward.awardedAmount)>0?'+'+Math.max(0,Number(reward.awardedAmount)||0)+' Study Stars':'Already saved for this round')+'</strong><small>Balance '+Math.max(0,Number(reward.balance)||0)+'</small></div>':"";
+  const starsHtml='<div class="game-finish-stars" aria-label="'+stars+' stars">'+[0,1,2].map(i=>'<span class="'+(i<stars?'earned':'')+'">★</span>').join("")+'</div>';
+  return '<section class="game-finish learning-first"><p>'+esc(mode.title.toUpperCase())+'</p><h2>What you learned</h2><div class="learning-summary" aria-label="Round learning summary"><div><strong>'+strong+'</strong><span>Strong today</span></div><div><strong>'+remembered+'</strong><span>Remembered later</span></div><div><strong>'+practice+'</strong><span>We’ll practice again</span></div></div><small class="round-score">Round score '+state.score+' of '+total+' · Best '+record.best+' of '+total+'</small>'+starsHtml+rewardHtml+'<div class="game-finish-actions"><button type="button" class="primary" data-game-start="'+esc(mode.id)+'">Play again</button><button type="button" data-game-home>All study games</button></div></section>';
+}
+window.ABVMStudyGameView=Object.freeze({play,goal,rewardReveal,finish});
 })();
