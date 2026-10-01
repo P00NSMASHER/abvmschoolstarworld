@@ -19,7 +19,7 @@ test("busy Sept 30 keeps all independently verified events visible",async({page}
   await expect(card).toContainText("Mass");
   await expect(card).toContainText("Communication Folder");
   await expect(card).toContainText("Chick-fil-A sale starts");
-  await expect(card).toContainText("Grammar");
+  await expect(card).toContainText("Lunch");
 });
 
 test("multi-day STAR range applies at both ends",async({page})=>{
