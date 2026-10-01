@@ -63,6 +63,27 @@ test('unsupported teacher skill becomes a disabled source-grounded candidate ins
   assert.ok(candidate.readiness.blockers.includes('manual-promotion-required'));
 });
 
+test('candidate manifest rejects stale authoring metadata that overstates its question family', () => {
+  const plan = buildCurriculumCoveragePlan({
+    pipeline: {
+      sourceHash: 'gap-metadata',
+      coverage: [{topic:'syllable types',subject:'Reading / ELA',status:'GENERATOR_UNSUPPORTED'}],
+    },
+    sourcePages: [{
+      title:'Tests',url:'https://sites.google.com/view/abvmgr2/tests',checkedAt:'2026-10-01T12:00:00.000Z',
+      contentHash:'tests-hash',lines:['Grammar: syllable types'],
+    }],
+    sourceHash:'gap-metadata',
+    generatedAt:'2026-10-01T12:00:00.000Z',
+  });
+  const candidate = structuredClone(plan.candidates[0]);
+  candidate.authoring.generatedQuestionCount = 8;
+  candidate.authoring.status = 'DRAFT_FAMILY_PRESENT';
+  const issues = validateCurriculumCoveragePlan({...plan,candidates:[candidate]});
+  assert.ok(issues.some(issue => issue.includes('authoring-question-count-mismatch')));
+  assert.ok(issues.some(issue => issue.includes('authoring-status-count-mismatch')));
+});
+
 test('approved subject-predicate registry family is absorbed by normal refresh generation', () => {
   const pack = {
     sourceHash: 'subject-predicate-week',
