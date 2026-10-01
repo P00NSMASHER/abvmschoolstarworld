@@ -128,6 +128,12 @@ test("Study Games uses the iPad canvas with priority hierarchy and tablet nav",a
   const appBox=await page.locator(".phone-app").boundingBox();
   expect(appBox).not.toBeNull();
   expect(appBox.width).toBeGreaterThan(700);
+  const headerSize=await page.locator(".app-header h1").evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
+  const freshnessSize=await page.locator(".freshness").evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
+  const seal=await page.locator(".school-mark").boundingBox();
+  expect(headerSize).toBeGreaterThanOrEqual(30);
+  expect(freshnessSize).toBeGreaterThanOrEqual(11);
+  expect(seal.width).toBeGreaterThanOrEqual(50);
 
   const ready=await page.getByRole("button",{name:/Test Ready/i}).boundingBox();
   const quick=await page.getByRole("button",{name:/Quick Mix/i}).boundingBox();
@@ -135,6 +141,8 @@ test("Study Games uses the iPad canvas with priority hierarchy and tablet nav",a
   expect(ready).not.toBeNull();
   expect(quick).not.toBeNull();
   expect(math).not.toBeNull();
+  const readyBackground=await page.getByRole("button",{name:/Test Ready/i}).evaluate(el=>getComputedStyle(el).backgroundColor);
+  expect(readyBackground).not.toBe("rgb(255, 255, 255)");
   expect(ready.width).toBeGreaterThan(quick.width*1.8);
   expect(Math.abs(quick.y-math.y)).toBeLessThan(4);
 
