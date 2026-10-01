@@ -461,3 +461,45 @@ test('STAR fallback metadata includes direct, transfer, and reasoning practice',
   expect(result.math.twoStep.questionType).toBe('reasoning');
   expect(result.math.twoStep.dok).toBe(3);
 });
+
+
+test('Quick Mix keeps a fallback-only subject represented without using fallback for covered subjects', async ({ page }) => {
+  const result = await page.evaluate(() => {
+    const engine = window.ABVMStudyGames;
+    const material = [
+      ['read-theme-1','Reading / ELA','theme','direct'],
+      ['read-theme-2','Reading / ELA','theme','transfer'],
+      ['read-viz-1','Reading / ELA','visualize','direct'],
+      ['read-viz-2','Reading / ELA','visualize','reasoning'],
+      ['faith-1','Religion','religion-trinity','direct'],
+      ['faith-2','Religion','religion-trinity','transfer'],
+      ['faith-3','Religion','religion-image-likeness','direct'],
+      ['faith-4','Religion','religion-image-likeness','reasoning'],
+      ['faith-5','Religion','religion-application','transfer'],
+      ['faith-6','Religion','religion-application','reasoning'],
+    ].map(([id,subject,skill,questionType]) => ({
+      id, subject, skill, questionType, tier:'material', difficulty:2, dok:2,
+      variantFingerprint:'material-' + id,
+    }));
+    const starMath = Array.from({ length: 8 }, (_, i) => ({
+      id:'star-math-' + i, subject:'Math', skill:'math-skill-' + i,
+      questionType:['direct','transfer','reasoning'][i % 3], tier:'star-fallback',
+      difficulty:2, dok:2, variantFingerprint:'star-math-' + i,
+    }));
+    const starReading = Array.from({ length: 8 }, (_, i) => ({
+      id:'star-reading-' + i, subject:'Reading / ELA', skill:'reading-fallback-' + i,
+      questionType:['direct','transfer','reasoning'][i % 3], tier:'star-fallback',
+      difficulty:2, dok:2, variantFingerprint:'star-reading-' + i,
+    }));
+    const selected = engine.selectQuestions(
+      { sourceKey:'quick-mix-gap-subject-test', questions:[...material,...starMath,...starReading] },
+      { count:8, seed:'quick-mix-gap-subject-test' }
+    );
+    return selected.map(q => ({ id:q.id, subject:q.subject, tier:q.tier }));
+  });
+
+  expect(result).toHaveLength(8);
+  expect(result.some(row => row.subject === 'Math' && row.tier === 'star-fallback')).toBe(true);
+  expect(result.some(row => row.subject === 'Reading / ELA' && row.tier === 'star-fallback')).toBe(false);
+  expect(result.some(row => row.tier === 'material')).toBe(true);
+});
