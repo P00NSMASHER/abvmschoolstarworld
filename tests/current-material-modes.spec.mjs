@@ -21,16 +21,18 @@ test("subject-constrained selection never pads current material with fallback qu
   expect(result.every(q=>q.tier==="material")).toBe(true);
 });
 
-test("a constrained mode with no current material returns no questions instead of generic fallback",async({page})=>{
+test("a constrained academic mode with no current or review material uses STAR-style fallback",async({page})=>{
   const result=await page.evaluate(()=>{
     const engine=window.ABVMStudyGames;
     const catalog={questions:[
-      {id:"f1",subject:"Religion",skill:"fallback-a",tier:"star-fallback",difficulty:2},
-      {id:"f2",subject:"Religion",skill:"fallback-b",tier:"star-fallback",difficulty:2}
+      {id:"f1",subject:"Math",skill:"fallback-a",tier:"star-fallback",difficulty:2},
+      {id:"f2",subject:"Math",skill:"fallback-b",tier:"star-fallback",difficulty:2}
     ]};
-    return engine.selectQuestions(catalog,{subjects:["Religion"],count:8,seed:"no-material",skillStats:{}});
+    return engine.selectQuestions(catalog,{subjects:["Math"],count:8,seed:"no-material",skillStats:{}})
+      .map(q=>({id:q.id,tier:q.tier}));
   });
-  expect(result).toEqual([]);
+  expect(result).toHaveLength(2);
+  expect(result.every(q=>q.tier==="star-fallback")).toBe(true);
 });
 
 test("Quick Mix remains allowed to use fallback after exhausting current material",async({page})=>{

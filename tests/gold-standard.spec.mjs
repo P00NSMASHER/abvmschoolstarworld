@@ -508,7 +508,7 @@ test("Subject Study Games stay on current material for full rounds",async({page}
   });
   const mathSkills=new Set(report.authorizedMath),faithSkills=new Set(report.authorizedFaith),wordSkills=new Set(report.authorizedWords);
   const reviewMath=new Set(report.reviewMath),reviewFaith=new Set(report.reviewFaith),reviewWords=new Set(report.reviewWords);
-  const assertSubjectTier=(rows,currentIds,reviewIds)=>{
+  const assertSubjectTier=(rows,currentIds,reviewIds,{starFallback=false}={})=>{
     if(!report.pipelinePresent){
       expect(rows.length).toBeGreaterThan(0);
       return;
@@ -519,11 +519,15 @@ test("Subject Study Games stay on current material for full rounds",async({page}
     }else if(reviewIds.size){
       expect(rows.length).toBeGreaterThan(0);
       expect(rows.every(q=>q.tier==="recent-review"&&reviewIds.has(q.skill))).toBe(true);
+    }else if(starFallback){
+      expect(rows.length).toBeGreaterThan(0);
+      expect(rows.every(q=>q.tier==="star-fallback")).toBe(true);
     }else expect(rows).toEqual([]);
   };
-  assertSubjectTier(report.math,mathSkills,reviewMath);
+  assertSubjectTier(report.math,mathSkills,reviewMath,{starFallback:true});
   assertSubjectTier(report.faith,faithSkills,reviewFaith);
-  assertSubjectTier(report.words,wordSkills,reviewWords);
+  assertSubjectTier(report.words,wordSkills,reviewWords,{starFallback:true});
+  if(!mathSkills.size&&!reviewMath.size)expect(report.math.length).toBe(8);
   expect(report.math.length).toBeLessThanOrEqual(8);
   expect(report.faith.length).toBeLessThanOrEqual(8);
   expect(report.words.length).toBeLessThanOrEqual(8);

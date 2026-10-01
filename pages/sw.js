@@ -1,12 +1,12 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v102-school-changes";
+const CACHE = "abvm-grade2-parent-companion-v103-star-gap-fallback";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=96",
-  "./app.js?v=102",
+  "./app.js?v=103",
   "./weekly-learning.js?v=2",
-  "./study-games.js?v=91",
-  "./study-games-view.js?v=5",
+  "./study-games.js?v=92",
+  "./study-games-view.js?v=6",
   "./manifest.webmanifest",
   "./assets/abvm-app-icon-180.png",
   "./assets/abvm-app-icon-192.png"

@@ -870,6 +870,20 @@ function fallbackReading(variant,out){
       choices:["Because the sidewalk was icy.","Because the sun was too bright.","Because students needed pencils."],
       answer:"Because the sidewalk was icy.",
       explanation:"The frozen sidewalk caused the school to spread salt."
+    },
+    {
+      id:"star-read-infer-2",skill:"inference",
+      prompt:"Read: “Lena zipped her coat, pulled on mittens, and watched her breath make little clouds.” What can you infer about the weather?",
+      choices:["It is cold outside.","It is very hot outside.","It is raining indoors."],
+      answer:"It is cold outside.",
+      explanation:"The coat, mittens, and visible breath are clues that the air is cold."
+    },
+    {
+      id:"star-read-evidence-2",skill:"text-evidence",
+      prompt:"Read: “Marco practiced the same piano measure four times before playing the whole song.” Which detail best shows that Marco is working carefully?",
+      choices:["He practiced the same measure four times.","He owns a piano.","The song has music notes."],
+      answer:"He practiced the same measure four times.",
+      explanation:"Repeating the difficult measure is direct evidence that Marco is working carefully."
     }
   ];
   for(const [index,row] of rows.entries()){
@@ -936,6 +950,22 @@ function fallbackMath(variant,out){
       explanation:"Compare apples and grapes: 7 − 3 = 4.",
       wrongFeedback:"“How many more” asks for the difference between the two categories.",
       misconception:"data-comparison",dok:2,difficulty:2
+    },
+    {
+      id:"star-math-add",skill:"addition-within-100",
+      prompt:`Solve ${34+offset} + 27. What is the sum?`,
+      answer:String(61+offset),choices:[String(61+offset),String(51+offset),String(71+offset)],
+      explanation:`Add tens and ones: ${34+offset} + 27 = ${61+offset}.`,
+      wrongFeedback:"Add the ones and tens carefully, then check that the total is larger than both addends.",
+      misconception:"addition-place-value",dok:2,difficulty:2
+    },
+    {
+      id:"star-math-subtract",skill:"subtraction-within-100",
+      prompt:`Solve ${68+offset} − 24. What is the difference?`,
+      answer:String(44+offset),choices:[String(44+offset),String(54+offset),String(42+offset)],
+      explanation:`${68+offset} − 20 = ${48+offset}, then subtract 4 more to get ${44+offset}.`,
+      wrongFeedback:"Subtract the tens first, then the ones, and check by adding your answer to 24.",
+      misconception:"subtraction-place-value",dok:2,difficulty:2
     }
   ];
   for(const row of rows){
@@ -1264,8 +1294,15 @@ function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillSt
   if(wantedSkills.length){
     pool=pool.filter(q=>q.tier==="material");
   }else if(wanted.length){
-    const current=pool.filter(q=>q.tier==="material"),review=pool.filter(q=>q.tier==="recent-review");
-    pool=current.length?current:review;
+    const current=pool.filter(q=>q.tier==="material"),review=pool.filter(q=>q.tier==="recent-review"),star=pool.filter(q=>q.tier==="star-fallback"&&["Math","Reading / ELA"].includes(q.subject));
+    pool=current.length?current:review.length?review:star;
+  }else{
+    const current=pool.filter(q=>q.tier==="material"),review=pool.filter(q=>q.tier==="recent-review"),star=pool.filter(q=>q.tier==="star-fallback"&&["Math","Reading / ELA"].includes(q.subject));
+    const currentSubjects=new Set(current.map(q=>q.subject));
+    const reviewFill=review.filter(q=>!currentSubjects.has(q.subject));
+    const covered=new Set([...currentSubjects,...reviewFill.map(q=>q.subject)]);
+    const starFill=star.filter(q=>!covered.has(q.subject));
+    pool=[...current,...reviewFill,...starFill];
   }
   const sourceKey=String(catalog?.sourceKey||"current"),recent=new Set(loadRotation(sourceKey).recent.map(row=>row.v));
   return pickBalanced(pool,count,seed,skillStats,preferredSkills,recent);
