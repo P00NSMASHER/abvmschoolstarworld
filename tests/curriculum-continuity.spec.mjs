@@ -60,3 +60,13 @@ test('real catalog keeps current material ahead of recent review while preservin
   expect(result.tiers).toEqual(expect.arrayContaining(['material','recent-review','star-fallback']));
   expect(result.math.length).toBeGreaterThan(0);
 });
+
+
+test('recent review evidence maps to Remembered later instead of Strong today',async({page})=>{
+  const summary=await page.evaluate(()=>window.ABVMStudyGames.learningFirstSummary([
+    {skill:'old-math',kind:'review',correct:true,independent:true},
+    {skill:'current-reading',kind:'normal',correct:true,independent:true},
+    {skill:'old-writing',kind:'review',correct:false,independent:false}
+  ]));
+  expect(summary).toEqual({strong:1,remembered:1,practice:1,total:3});
+});
