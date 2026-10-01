@@ -27,6 +27,14 @@ test("Today exposes the weekly priority and focused checklist",async({page})=>{
   await expect(page.locator(".check-item").first()).toBeVisible();
 });
 
+test("Today never treats Door Decorating Contest as a test",async({page})=>{
+  const priority=page.locator(".priority-card");
+  await expect(priority).toBeVisible();
+  await expect(priority).not.toContainText("Door Decorating Contest");
+  await expect(priority).toContainText("Spelling");
+  await expect(priority).toContainText("Handwriting");
+});
+
 test("Week exposes paging, weekdays, selected-day detail, and reminders",async({page})=>{
   await openTab(page,"Week");
   await expect(page.locator(".week-nav")).toBeVisible();
