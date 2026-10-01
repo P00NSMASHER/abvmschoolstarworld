@@ -37,5 +37,11 @@ function render(args={}){
     line("Practice again",data.practice,"No recent practice needs another look.","warn")+
     '</div><small>Current school skills only · based on Study Games practice on this device · not a grade.</small></section>';
 }
-window.ABVMWeeklyLearning=Object.freeze({snapshot,render});
+function renderChanges(feed={}){
+  const items=Array.isArray(feed?.items)?feed.items:[];
+  if(!items.length)return "";
+  const rows=items.slice(0,8).map(row=>'<div class="notice-row" role="listitem"><span class="status '+(row.kind==="unchanged"?"ok":"warn")+'" aria-hidden="true"></span><p>'+esc(row.text)+'</p></div>').join("");
+  return '<section class="parent-card notices-card" aria-labelledby="school-change-title"><div class="notices-head"><span class="notices-mark" aria-hidden="true">↻</span><div><small>LATEST VERIFIED REFRESH</small><h3 id="school-change-title">What changed at school?</h3></div></div><div class="static-notice-list" role="list">'+rows+'</div></section>';
+}
+window.ABVMWeeklyLearning=Object.freeze({snapshot,render,renderChanges});
 })();
