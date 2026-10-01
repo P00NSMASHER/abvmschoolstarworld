@@ -3,6 +3,7 @@ import test from 'node:test';
 
 import {
   buildCurriculumCoveragePlan,
+  curriculumCandidateIntrinsicBlockers,
   evaluateCurriculumCandidate,
   validateCurriculumCoveragePlan,
 } from '../scripts/curriculum-coverage-autopilot.mjs';
@@ -48,6 +49,14 @@ test('unsupported teacher skill becomes a disabled source-grounded candidate ins
   assert.equal(candidate.sourceContext.sourceTitle, 'Tests');
   assert.match(candidate.sourceContext.sourceLine, /syllable types/i);
   assert.equal(candidate.rollout.automaticPromotion, false);
+  assert.equal(candidate.authoring.status, 'AUTHORING_REQUIRED');
+  assert.equal(candidate.authoring.generatedQuestionCount, 0);
+  assert.deepEqual(curriculumCandidateIntrinsicBlockers(candidate), [
+    'minimum-semantic-variants:0/8',
+    'question-type-required:direct',
+    'question-type-required:transfer',
+    'question-type-required:reasoning',
+  ]);
   assert.equal(candidate.readiness.status, 'HOLD');
   assert.ok(candidate.readiness.blockers.includes('automated-qa-required'));
   assert.ok(candidate.readiness.blockers.includes('safe-usage-evidence-required'));
@@ -114,6 +123,8 @@ test('candidate promotion requires full family, automated QA, safe usage evidenc
     requiredQuestionTypes: family.requiredQuestionTypes,
     proposedQuestions: questions,
   };
+
+  assert.deepEqual(curriculumCandidateIntrinsicBlockers(candidate), []);
 
   const beforeManual = evaluateCurriculumCandidate(candidate, {
     automatedQaPassed: true,
