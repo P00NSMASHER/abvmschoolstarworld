@@ -13,6 +13,13 @@ test("operational dashboard waits for the post-deploy watchdog",()=>{
   assert.doesNotMatch(workflowRun,/Refresh ABVM teacher pages/);
 });
 
+test("health verdict prefers the most recently updated rerun evidence",()=>{
+  assert.match(report,/const runEvidenceAt=run=>Date\.parse\(run\?\.updated_at\|\|run\?\.created_at\|\|0\)\|\|0/);
+  assert.match(report,/const rankedRuns=name=>productionRuns\.filter\(run=>run\.name===name\)\.sort\(\(a,b\)=>runEvidenceAt\(b\)-runEvidenceAt\(a\)\)/);
+  assert.match(report,/const latestDecisive=name=>rankedRuns\(name\)\.find\(run=>decisiveConclusions\.has\(run\.conclusion\)\)\|\|null/);
+  assert.match(report,/const latestSuccess=name=>rankedRuns\(name\)\.find\(run=>run\.conclusion==="success"\)\|\|null/);
+});
+
 test("health verdict ignores skipped and cancelled orchestration noise",()=>{
   assert.match(report,/decisiveConclusions=new Set\(\["success","failure","timed_out","action_required","startup_failure"\]\)/);
   assert.match(report,/const newerActive=latestRun&&activeStatuses\.has\(latestRun\.status\)/);
