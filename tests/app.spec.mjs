@@ -28,6 +28,17 @@ test("Today exposes the weekly priority and focused checklist",async({page})=>{
 });
 
 test("Today never treats Door Decorating Contest as a test",async({page})=>{
+  await page.addInitScript(()=>{
+    const RealDate=Date;
+    const fixed=new RealDate("2026-10-01T12:00:00-04:00").valueOf();
+    class FixedDate extends RealDate{
+      constructor(...args){super(...(args.length?args:[fixed]));}
+      static now(){return fixed;}
+    }
+    window.Date=FixedDate;
+  });
+  await page.goto("/#today");
+  await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
   const priority=page.locator(".priority-card");
   await expect(priority).toBeVisible();
   await expect(priority).not.toContainText("Door Decorating Contest");
