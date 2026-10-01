@@ -572,12 +572,7 @@ function renderGames(){
   }
 }
 
-function schoolChangeFeedHtml(){
-  const feed=pack?.schoolChangeFeed,items=Array.isArray(feed?.items)?feed.items:[];
-  if(!items.length)return "";
-  const rows=items.slice(0,8).map(row=>'<div class="notice-row" role="listitem"><span class="status '+(row.kind==="unchanged"?"ok":"warn")+'" aria-hidden="true"></span><p>'+esc(row.text)+'</p></div>').join("");
-  return '<section class="parent-card notices-card" aria-labelledby="school-change-title"><div class="notices-head"><span class="notices-mark" aria-hidden="true">↻</span><div><small>LATEST VERIFIED REFRESH</small><h3 id="school-change-title">What changed at school?</h3></div></div><div class="static-notice-list" role="list">'+rows+'</div></section>';
-}
+function schoolChangeFeedHtml(){const a=pack?.schoolChangeFeed?.items||[];return a.length?'<section class=parent-card><h3>What changed at school?</h3><div class=static-notice-list role=list>'+a.slice(0,8).map(x=>'<div class=notice-row role=listitem><p>'+esc(x.text)+'</p></div>').join("")+'</div></section>':""}
 
 function renderFamily(){
   const weekEnd=weekDays()[4],todayDate=today();
