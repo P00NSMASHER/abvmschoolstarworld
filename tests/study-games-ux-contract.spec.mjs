@@ -16,7 +16,7 @@ test('Study Games keeps the approved menu, play, and finish interaction contract
   for (const label of ['Quick Mix', 'Math Dash', 'Word Power', 'Faith Quest']) {
     await expect(page.getByRole('button', { name: new RegExp(label, 'i') })).toBeVisible();
   }
-  await expect(page.getByText('Practice prioritizes verified school skills; private student answers and grades are not used.')).toBeVisible();
+  await expect(page.getByText('Practice prioritizes verified school skills. STAR-style fallback uses original Grade 2 practice, not copied STAR test items; private student answers and grades are not used.')).toBeVisible();
 
   await page.getByRole('button', { name: /Quick Mix/i }).click();
   await expect(page.locator('.game-topbar')).toBeVisible();

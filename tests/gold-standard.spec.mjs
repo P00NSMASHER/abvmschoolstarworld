@@ -111,7 +111,7 @@ test("second requested polish is present",async({page})=>{
 
   await openTab(page,"Family");
   await expect(page.locator(".family-actions-card")).toBeVisible();
-  await expect(page.locator(".notices-card")).toBeVisible();
+  await expect(page.locator('[aria-labelledby="family-current-notices"]')).toBeVisible();
   await expect(page.locator(".notice-row").first()).toBeVisible();
   await expect(page.locator(".family-more")).toBeVisible();
 });
@@ -402,8 +402,8 @@ test("current weekly notice appears in Week, Calendar, and Family screens",async
   await expect(page.locator(".month-agenda")).toContainText("Chick-fil-A sale starts");
 
   await openTab(page,"Family");
-  await expect(page.locator(".notices-card")).toContainText("OptionC portal");
-  await expect(page.locator(".notices-card")).toContainText("Picture Day and Business Casual");
+  await expect(page.locator('[aria-labelledby="family-current-notices"]')).toContainText("OptionC portal");
+  await expect(page.locator('[aria-labelledby="family-current-notices"]')).toContainText("Picture Day and Business Casual");
 });
 
 
@@ -500,25 +500,37 @@ test("Subject Study Games stay on current material for full rounds",async({page}
       words:words.map(q=>({tier:q.tier,skill:q.skill,sourceFact:q.sourceFact})),
       authorizedMath:skills.filter(s=>s.subject==="Math").map(s=>s.id),
       authorizedFaith:skills.filter(s=>s.subject==="Religion").map(s=>s.id),
-      authorizedWords:skills.filter(s=>["Reading / ELA","Spelling / Handwriting"].includes(s.subject)).map(s=>s.id)
+      authorizedWords:skills.filter(s=>["Reading / ELA","Spelling / Handwriting"].includes(s.subject)).map(s=>s.id),
+      reviewMath:(source.pack?.recentReviewPipeline?.skills||[]).filter(s=>s.subject==="Math").map(s=>s.id),
+      reviewFaith:(source.pack?.recentReviewPipeline?.skills||[]).filter(s=>s.subject==="Religion").map(s=>s.id),
+      reviewWords:(source.pack?.recentReviewPipeline?.skills||[]).filter(s=>["Reading / ELA","Spelling / Handwriting"].includes(s.subject)).map(s=>s.id)
     };
   });
   const mathSkills=new Set(report.authorizedMath),faithSkills=new Set(report.authorizedFaith),wordSkills=new Set(report.authorizedWords);
-  if(report.pipelinePresent){
-    expect(report.math.length>0).toBe(report.authorizedMath.length>0);
-    expect(report.faith.length>0).toBe(report.authorizedFaith.length>0);
-    expect(report.words.length>0).toBe(report.authorizedWords.length>0);
-  }else{
-    expect(report.math.length).toBeGreaterThan(0);
-    expect(report.faith.length).toBeGreaterThan(0);
-    expect(report.words.length).toBeGreaterThan(0);
-  }
+  const reviewMath=new Set(report.reviewMath),reviewFaith=new Set(report.reviewFaith),reviewWords=new Set(report.reviewWords);
+  const assertSubjectTier=(rows,currentIds,reviewIds,{starFallback=false}={})=>{
+    if(!report.pipelinePresent){
+      expect(rows.length).toBeGreaterThan(0);
+      return;
+    }
+    if(currentIds.size){
+      expect(rows.length).toBeGreaterThan(0);
+      expect(rows.every(q=>q.tier==="material"&&currentIds.has(q.skill))).toBe(true);
+    }else if(reviewIds.size){
+      expect(rows.length).toBeGreaterThan(0);
+      expect(rows.every(q=>q.tier==="recent-review"&&reviewIds.has(q.skill))).toBe(true);
+    }else if(starFallback){
+      expect(rows.length).toBeGreaterThan(0);
+      expect(rows.every(q=>q.tier==="star-fallback")).toBe(true);
+    }else expect(rows).toEqual([]);
+  };
+  assertSubjectTier(report.math,mathSkills,reviewMath,{starFallback:true});
+  assertSubjectTier(report.faith,faithSkills,reviewFaith);
+  assertSubjectTier(report.words,wordSkills,reviewWords,{starFallback:true});
+  if(!mathSkills.size&&!reviewMath.size)expect(report.math.length).toBe(8);
   expect(report.math.length).toBeLessThanOrEqual(8);
   expect(report.faith.length).toBeLessThanOrEqual(8);
   expect(report.words.length).toBeLessThanOrEqual(8);
-  expect(report.math.every(q=>q.tier==="material"&&(!report.pipelinePresent||mathSkills.has(q.skill)))).toBe(true);
-  expect(report.faith.every(q=>q.tier==="material"&&(!report.pipelinePresent||faithSkills.has(q.skill)))).toBe(true);
-  expect(report.words.every(q=>q.tier==="material"&&(!report.pipelinePresent||wordSkills.has(q.skill)))).toBe(true);
   if(report.words.length){
     const wordCounts={};
     for(const q of report.words)wordCounts[q.skill]=(wordCounts[q.skill]||0)+1;

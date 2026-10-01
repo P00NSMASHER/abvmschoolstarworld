@@ -2,6 +2,7 @@
 const VERSION="abvm-starblox-study-engine-v2-research-quality";
 const SOURCE_TRANSFORM="skill-only-equivalent-item-v2";
 const MATERIAL_PROVENANCE="original-practice-derived-from-verified-abvm-skills";
+const REVIEW_PROVENANCE="original-practice-derived-from-recently-verified-abvm-skills";
 const FALLBACK_PROVENANCE="original-star-aligned-grade2-practice";
 const FORBIDDEN=[
   /sight word/i,
@@ -217,7 +218,7 @@ function validateRichContent(input){return input==null||!!normalizeRichContent(i
 function makeQuestion({
   id,subject,skill,tier,type,prompt,choices,answer,explanation,hint,sourceFact,
   dok=2,difficulty=2,standards,domain,wrongFeedback,misconception,richContent=null,
-  contentFingerprint="",variantFingerprint=""
+  contentFingerprint="",variantFingerprint="",reviewVerifiedAt="",reviewExpiresAt=""
 }){
   const cleanChoices=[...choices].map(text);
   return {
@@ -236,13 +237,15 @@ function makeQuestion({
     difficulty,
     choiceDiagnostics:diagnosticMap(cleanChoices,text(answer),wrongFeedback,misconception),
     rubric:rubric(),
-    provenance:tier==="material"?MATERIAL_PROVENANCE:FALLBACK_PROVENANCE,
+    provenance:tier==="material"?MATERIAL_PROVENANCE:tier==="recent-review"?REVIEW_PROVENANCE:FALLBACK_PROVENANCE,
     sourceFact:text(sourceFact||skill),
     sourceTransform:SOURCE_TRANSFORM,
     originalEquivalent:true,
     contentFingerprint:text(contentFingerprint),
     variantFingerprint:text(variantFingerprint),
-    richContent:normalizeRichContent(richContent)
+    richContent:normalizeRichContent(richContent),
+    reviewVerifiedAt:text(reviewVerifiedAt),
+    reviewExpiresAt:text(reviewExpiresAt)
   };
 }
 function addTriad(out,prefix,base,items){
@@ -269,6 +272,29 @@ function materialContentPipeline(pack,out){
       contentFingerprint:spec.contentFingerprint,
       variantFingerprint:spec.variantFingerprint,
       richContent:spec.richContent,
+      wrongFeedback:choice=>text(diagnostics?.[choice]?.feedback||"Review the target skill and use the hint before choosing again."),
+      misconception:choice=>text(diagnostics?.[choice]?.misconception||"pipeline-generated-distractor")
+    });
+  }
+}
+function recentReviewContentPipeline(pack,out){
+  const specs=Array.isArray(pack?.recentReviewPipeline?.questions)?pack.recentReviewPipeline.questions:[];
+  for(const spec of specs){
+    if(!spec||typeof spec!=="object")continue;
+    const diagnostics=spec.choiceDiagnostics&&typeof spec.choiceDiagnostics==="object"?spec.choiceDiagnostics:{};
+    add(out,{
+      id:"review-"+text(spec.id),subject:text(spec.subject),skill:text(spec.skill),tier:"recent-review",
+      type:text(spec.questionType)||"direct",prompt:spec.prompt,choices:spec.choices||[],answer:spec.answer,
+      explanation:spec.explanation,hint:spec.hint,sourceFact:spec.sourceFact,
+      dok:Number.isInteger(spec.dok)?spec.dok:2,
+      difficulty:Number.isInteger(spec.difficulty)?spec.difficulty:2,
+      standards:Array.isArray(spec.standards)?spec.standards:undefined,
+      domain:spec.domain,
+      contentFingerprint:spec.contentFingerprint,
+      variantFingerprint:spec.variantFingerprint,
+      richContent:spec.richContent,
+      reviewVerifiedAt:spec.reviewVerifiedAt,
+      reviewExpiresAt:spec.reviewExpiresAt,
       wrongFeedback:choice=>text(diagnostics?.[choice]?.feedback||"Review the target skill and use the hint before choosing again."),
       misconception:choice=>text(diagnostics?.[choice]?.misconception||"pipeline-generated-distractor")
     });
@@ -844,6 +870,20 @@ function fallbackReading(variant,out){
       choices:["Because the sidewalk was icy.","Because the sun was too bright.","Because students needed pencils."],
       answer:"Because the sidewalk was icy.",
       explanation:"The frozen sidewalk caused the school to spread salt."
+    },
+    {
+      id:"star-read-infer-2",skill:"inference",
+      prompt:"Read: “Lena zipped her coat, pulled on mittens, and watched her breath make little clouds.” What can you infer about the weather?",
+      choices:["It is cold outside.","It is very hot outside.","It is raining indoors."],
+      answer:"It is cold outside.",
+      explanation:"The coat, mittens, and visible breath are clues that the air is cold."
+    },
+    {
+      id:"star-read-evidence-2",skill:"text-evidence",
+      prompt:"Read: “Marco practiced the same piano measure four times before playing the whole song.” Which detail best shows that Marco is working carefully?",
+      choices:["He practiced the same measure four times.","He owns a piano.","The song has music notes."],
+      answer:"He practiced the same measure four times.",
+      explanation:"Repeating the difficult measure is direct evidence that Marco is working carefully."
     }
   ];
   for(const [index,row] of rows.entries()){
@@ -910,6 +950,22 @@ function fallbackMath(variant,out){
       explanation:"Compare apples and grapes: 7 − 3 = 4.",
       wrongFeedback:"“How many more” asks for the difference between the two categories.",
       misconception:"data-comparison",dok:2,difficulty:2
+    },
+    {
+      id:"star-math-add",skill:"addition-within-100",
+      prompt:`Solve ${34+offset} + 27. What is the sum?`,
+      answer:String(61+offset),choices:[String(61+offset),String(51+offset),String(71+offset)],
+      explanation:`Add tens and ones: ${34+offset} + 27 = ${61+offset}.`,
+      wrongFeedback:"Add the ones and tens carefully, then check that the total is larger than both addends.",
+      misconception:"addition-place-value",dok:2,difficulty:2
+    },
+    {
+      id:"star-math-subtract",skill:"subtraction-within-100",
+      prompt:`Solve ${68+offset} − 24. What is the difference?`,
+      answer:String(44+offset),choices:[String(44+offset),String(54+offset),String(42+offset)],
+      explanation:`${68+offset} − 20 = ${48+offset}, then subtract 4 more to get ${44+offset}.`,
+      wrongFeedback:"Subtract the tens first, then the ones, and check by adding your answer to 24.",
+      misconception:"subtraction-place-value",dok:2,difficulty:2
     }
   ];
   for(const row of rows){
@@ -935,7 +991,11 @@ function validateQuestion(question){
   }
   if(!text(question.explanation))issues.push("explanation-missing");
   if(!text(question.hint))issues.push("hint-missing");
-  if(!["material","star-fallback"].includes(question.tier))issues.push("tier-invalid");
+  if(!["material","recent-review","star-fallback"].includes(question.tier))issues.push("tier-invalid");
+  if(question.tier==="recent-review"){
+    if(!Number.isFinite(Date.parse(question.reviewVerifiedAt||"")))issues.push("review-verified-at-invalid");
+    if(!Number.isFinite(Date.parse(question.reviewExpiresAt||"")))issues.push("review-expires-at-invalid");
+  }
   if(!Number.isInteger(question.dok)||question.dok<1||question.dok>3)issues.push("dok-invalid");
   if(!Number.isInteger(question.difficulty)||question.difficulty<2||question.difficulty>3)issues.push("difficulty-invalid");
   if(!Array.isArray(question.standards)||question.standards.length===0)issues.push("standards-missing");
@@ -969,6 +1029,7 @@ function buildCatalog(pack,{sourceKey}={}){
   const key=text(sourceKey||pack?.sourceHash||pack?.sourceCheckedAt||pack?.weekLabel||"abvm-current");
   const variant=variantFor(key),questions=[];
   materialContentPipeline(pack,questions);
+  recentReviewContentPipeline(pack,questions);
 
   const legacyMaterial=[];
   materialMath(pack,variant,legacyMaterial);
@@ -1180,7 +1241,10 @@ function orderForVariety(rows){
 function pickBalanced(pool,count,seed,skillStats,preferredSkills=[],recentKeys=new Set()){
   const selected=[],usedIds=new Set(),usedVariants=new Set(),skillCounts={},maxPerSkill=dynamicSkillCap(pool,count),preferred=new Set(preferredSkills||[]),now=Date.now();
   const ordered=[...pool].sort((a,b)=>{
-    if(a.tier!==b.tier)return a.tier==="material"?-1:1;
+    if(a.tier!==b.tier){
+      const rank=tier=>tier==="material"?0:tier==="recent-review"?1:2;
+      return rank(a.tier)-rank(b.tier);
+    }
     if(preferred.has(a.skill)!==preferred.has(b.skill))return preferred.has(a.skill)?-1:1;
     const ar=recentKeys.has(semanticRotationKey(a)),br=recentKeys.has(semanticRotationKey(b));
     if(ar!==br)return ar?1:-1;
@@ -1196,7 +1260,7 @@ function pickBalanced(pool,count,seed,skillStats,preferredSkills=[],recentKeys=n
     const underCap=available.filter(q=>(skillCounts[q.skill]||0)<maxPerSkill);
     const remaining=underCap.length?underCap:available;
     if(!remaining.length)break;
-    const material=remaining.filter(q=>q.tier==="material"),tierPool=material.length?material:remaining;
+    const material=remaining.filter(q=>q.tier==="material"),review=remaining.filter(q=>q.tier==="recent-review"),tierPool=material.length?material:review.length?review:remaining;
     const selectedSkills=new Set(selected.map(q=>q.skill).filter(Boolean)),availableSkills=new Set(tierPool.map(q=>q.skill).filter(Boolean));
     const needsSecondSkill=selected.length>0&&selectedSkills.size===1&&availableSkills.size>1;
     const diversityPool=needsSecondSkill?tierPool.filter(q=>q.skill!==selected[0].skill):tierPool;
@@ -1227,7 +1291,19 @@ function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillSt
   const wantedSkills=Array.isArray(skills)?skills.map(text).filter(Boolean):[];
   if(wanted.length)pool=pool.filter(q=>wanted.includes(q.subject));
   if(wantedSkills.length)pool=pool.filter(q=>wantedSkills.includes(q.skill));
-  if(wanted.length||wantedSkills.length)pool=pool.filter(q=>q.tier==="material");
+  if(wantedSkills.length){
+    pool=pool.filter(q=>q.tier==="material");
+  }else if(wanted.length){
+    const current=pool.filter(q=>q.tier==="material"),review=pool.filter(q=>q.tier==="recent-review"),star=pool.filter(q=>q.tier==="star-fallback"&&["Math","Reading / ELA"].includes(q.subject));
+    pool=current.length?current:review.length?review:star;
+  }else{
+    const current=pool.filter(q=>q.tier==="material"),review=pool.filter(q=>q.tier==="recent-review"),star=pool.filter(q=>q.tier==="star-fallback"&&["Math","Reading / ELA"].includes(q.subject));
+    const currentSubjects=new Set(current.map(q=>q.subject));
+    const reviewFill=review.filter(q=>!currentSubjects.has(q.subject));
+    const covered=new Set([...currentSubjects,...reviewFill.map(q=>q.subject)]);
+    const starFill=star.filter(q=>!covered.has(q.subject));
+    pool=[...current,...reviewFill,...starFill];
+  }
   const sourceKey=String(catalog?.sourceKey||"current"),recent=new Set(loadRotation(sourceKey).recent.map(row=>row.v));
   return pickBalanced(pool,count,seed,skillStats,preferredSkills,recent);
 }
@@ -1235,7 +1311,7 @@ function supportQuestion(catalog,current,{skillStats={},seed="support"}={}){
   if(!current)return null;
   const candidates=(catalog?.questions||[])
     .filter(q=>q.id!==current.id&&q.skill===current.skill&&q.difficulty<=2)
-    .sort((a,b)=>hash(seed+a.id)-hash(seed+b.id));
+    .sort((a,b)=>Number(b.tier===current.tier)-Number(a.tier===current.tier)||hash(seed+a.id)-hash(seed+b.id));
   return candidates[0]||null;
 }
 
@@ -1304,7 +1380,7 @@ function learningFirstSummary(outcomes=[]){
     const skill=text(outcome?.skill),kind=text(outcome?.kind),correct=!!outcome?.correct;
     if(!skill||kind==="support")continue;
     let status="";
-    if(kind==="comeback")status=correct?"remembered":"practice";
+    if(kind==="comeback"||kind==="review")status=correct?"remembered":"practice";
     else if(kind==="normal")status=(correct&&outcome?.independent===true)?"strong":"practice";
     if(!status)continue;
     const prior=bySkill.get(skill);
@@ -1684,7 +1760,7 @@ function recordAuxLearning(question,correct,kind){
   const all=loadLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2},now=Date.now(),priorMastery=priorAbility(all,question.skill);
   row.LastSeenAt=now;
   if(kind==="support"){row.SupportSeen=(Number(row.SupportSeen)||0)+1;row.LastSupportAt=now;correct?row.SupportedCorrect=(Number(row.SupportedCorrect)||0)+1:row.SupportedWrong=(Number(row.SupportedWrong)||0)+1;}
-  else{row.ComebackSeen=(Number(row.ComebackSeen)||0)+1;row.LastComebackAt=now;correct?row.RememberedLater=(Number(row.RememberedLater)||0)+1:row.ComebackWrong=(Number(row.ComebackWrong)||0)+1;}
+  else{row.ComebackSeen=(Number(row.ComebackSeen)||0)+1;row.LastComebackAt=now;if(correct){row.RememberedLater=(Number(row.RememberedLater)||0)+1;row.LastComebackCorrectAt=now}else{row.ComebackWrong=(Number(row.ComebackWrong)||0)+1;row.LastComebackWrongAt=now}}
   recordItemQuality(question,correct,{kind,priorMastery});
   all[question.skill]=row;writeLearning(all);return row;
 }
@@ -1754,10 +1830,11 @@ function sourceKeyFromEnvelope(pack,envelope){
   const hashes=(envelope?.sourcePages||[]).map(row=>row.contentHash).filter(Boolean).join("|");
   const source=hashes||text(pack?.sourceHash||pack?.sourceCheckedAt||pack?.weekLabel||"abvm-current");
   const bank=text(pack?.contentPipeline?.bankFingerprint||"legacy-bank");
-  return source+"|bank:"+bank;
+  const review=text(pack?.recentReviewPipeline?.bankFingerprint||"no-review");
+  return source+"|bank:"+bank+"|review:"+review;
 }
 window.ABVMStudyGames=Object.freeze({
-  VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
+  VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,REVIEW_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
   buildCatalog,validateCatalog,validateRichContent,selectQuestions,learningFirstSummary,studyStarPolicy,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,questionFamilyRolloutPolicy,reviewQuestionFamilyPromotion,itemQualityKey
 });
 })();

@@ -22,7 +22,7 @@ const GAME_TYPE_LABELS=Object.freeze({
 });
 const STUDY_GAME_MODES=Object.freeze([
   Object.freeze({id:"quick",title:"Quick Mix",subjects:[],count:8,copy:"Current school skills mixed into one quick round."}),
-  Object.freeze({id:"math",title:"Math Dash",subjects:["Math"],count:8,copy:"Current verified math skills."}),
+  Object.freeze({id:"math",title:"Math Dash",subjects:["Math"],count:8,copy:"Current math first; STAR-style practice fills verified-data gaps."}),
   Object.freeze({id:"words",title:"Word Power",subjects:["Reading / ELA","Spelling / Handwriting"],preferredSkills:["long-short-a","suffix-ed-ing"],count:8,copy:"Current spelling-test, phonics, word-building, and reading skills."}),
   Object.freeze({id:"faith",title:"Faith Quest",subjects:["Religion"],count:8,copy:"Religion practice from the current class material."})
 ]);
@@ -404,6 +404,11 @@ function subjectCard(id,klass,title,subject){
   const notes=[...(subject?.topics||[]),...(subject?.studyNotes||[])];
   return '<details id="'+id+'" class="subject-card study-accordion '+klass+'"><summary><span><small>'+esc(title.toUpperCase())+'</small><strong>'+esc(title)+'</strong></span><b aria-hidden="true">+</b></summary><ul>'+notes.map(n=>'<li>✓ '+esc(n)+'</li>').join("")+'</ul></details>';
 }
+function weeklyLearningDashboardHtml(){
+  let learning={};
+  try{const parsed=JSON.parse(storageGet("abvm-study-learning:v2")||"{}");if(parsed&&typeof parsed==="object")learning=parsed}catch{}
+  return window.ABVMWeeklyLearning?.render({pack,learning,now:Date.now(),timeZone:SCHOOL_TIME_ZONE})||"";
+}
 function renderStudy(){
   const r=readingSubject(), rel=religionSubject(), math=mathSubject(), spell=spellingSubject(), next=currentWeekTest(), spellingTest=nextSpellingTest(), star=currentOrSoonStarAssessment();
   const essentials=[
@@ -416,6 +421,7 @@ function renderStudy(){
   stack().innerHTML='<div class="screen study-screen" role="region" aria-label="Study room">'+
     header("STUDY","Study room")+
     '<section class="study-at-a-glance"><div class="quick-look-head"><span class="quick-look-mark" aria-hidden="true">✓</span><div><p>START HERE</p><h2>What matters this week</h2></div></div><ol>'+essentials.map(x=>'<li><time>'+esc(x[0])+'</time><span>'+esc(x[1])+'</span></li>').join("")+'</ol></section>'+
+    weeklyLearningDashboardHtml()+
     '<a class="study-games-cta" href="#games" data-open-games><span>★</span><div><small>5–10 MINUTES</small><strong>Practice with Study Games</strong><p>Current school skills with hints and explanations.</p></div><b aria-hidden="true">›</b></a>'+
     '<div class="study-section-label"><p>SUBJECT DETAILS</p><span>Tap a subject only when you need it.</span></div>'+
     subjectCard("study-religion","religion",rel?.subject||"Religion",rel)+
@@ -432,7 +438,7 @@ function ensureStudyGameEngine(){
   if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
   if(studyEnginePromise)return studyEnginePromise;
   const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.async=true;s.onload=()=>window[key]?resolve():reject(new Error(key+" did not initialize"));s.onerror=()=>reject(new Error(key+" could not be loaded"));document.head.append(s)});
-  studyEnginePromise=Promise.all([load("./study-games.js?v=89","ABVMStudyGames"),load("./study-games-view.js?v=4","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
+  studyEnginePromise=Promise.all([load("./study-games.js?v=92","ABVMStudyGames"),load("./study-games-view.js?v=6","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
   return studyEnginePromise;
 }
 function studyGameCatalog(){
@@ -447,7 +453,11 @@ function studyGameCatalog(){
 function gameMode(id){return availableStudyGameModes().find(mode=>mode.id===id)||availableStudyGameModes()[0]}
 function gameModeQuestionTotal(c,m){
   const s=m?.subjects||[],k=m?.skills||[],x=s.length||k.length;
-  return Math.min(m?.count||0,(c?.questions||[]).filter(q=>(!s.length||s.includes(q.subject))&&(!k.length||k.includes(q.skill))&&(!x||q.tier==="material")).length)
+  const eligible=(c?.questions||[]).filter(q=>(!s.length||s.includes(q.subject))&&(!k.length||k.includes(q.skill)));
+  if(!x)return Math.min(m?.count||0,eligible.length);
+  if(k.length)return Math.min(m?.count||0,eligible.filter(q=>q.tier==="material").length);
+  const current=eligible.filter(q=>q.tier==="material"),review=eligible.filter(q=>q.tier==="recent-review"),star=eligible.filter(q=>q.tier==="star-fallback");
+  return Math.min(m?.count||0,(current.length?current:review.length?review:star).length)
 }
 function loadGameRecord(modeId,sourceKey=currentGameSourceKey()){return studyGameEngine()?.loadGameRecord?.(sourceKey,modeId)||{best:0,plays:0,totalCorrect:0,totalAnswered:0}}
 function saveGameRecord(){if(gameState.saved||!gameState.mode||!gameState.questions.length)return;studyGameEngine()?.saveGameRecord?.(gameState.sourceKey||currentGameSourceKey(),gameState.mode,{score:gameState.score,total:gameState.questions.length});gameState.saved=true}
@@ -478,8 +488,8 @@ function answerStudyGame(index){
   const correct=choice===q.answer,e=studyGameEngine();e?.note?.(q,index);g.tries=(g.tries||0)+1;g.selectedIndex=index;g.hintOpen=false;
   if(g.comebackMode){g.answered=true;g.learningRow=e?.recordComeback?.(q,correct)||null;g.comebackCorrect=correct;noteRoundLearning(g,q,"comeback",correct,false)}
   else if(g.supportMode){g.answered=true;g.learningRow=e?.recordSupport?.(q,correct)||null;g.supportCorrect=correct}
-  else if(correct){g.answered=true;g.retry=0;g.learningRow=e?.recordLearning?.(q,true,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;noteRoundLearning(g,q,"normal",true,g.learningRow?.LastResolution?.independent===true);g.score++;g.streak++;g.bestStreak=Math.max(g.bestStreak,g.streak)}
-  else{g.misses=(g.misses||0)+1;g.lastWrong=index;g.streak=0;if(g.misses<3){g.retry=g.misses;g.selectedIndex=null}else{g.answered=true;g.retry=3;g.learningRow=e?.recordLearning?.(q,false,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;noteRoundLearning(g,q,"normal",false,false)}}
+  else if(correct){g.answered=true;g.retry=0;g.learningRow=e?.recordLearning?.(q,true,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;noteRoundLearning(g,q,q.tier==="recent-review"?"review":"normal",true,g.learningRow?.LastResolution?.independent===true);g.score++;g.streak++;g.bestStreak=Math.max(g.bestStreak,g.streak)}
+  else{g.misses=(g.misses||0)+1;g.lastWrong=index;g.streak=0;if(g.misses<3){g.retry=g.misses;g.selectedIndex=null}else{g.answered=true;g.retry=3;g.learningRow=e?.recordLearning?.(q,false,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;noteRoundLearning(g,q,q.tier==="recent-review"?"review":"normal",false,false)}}
   renderGames();bindScreen()
 }
 function settleStudyStarRewards(g=gameState){
@@ -528,12 +538,12 @@ function leaveStudyGame(){gameState.screen="menu";renderGames();bindScreen()}
 function toggleStudyHint(){const g=gameState;if(g.screen==="play"&&!g.answered){g.hintOpen=!g.hintOpen;if(g.hintOpen)g.hints=(g.hints||0)+1;renderGames();bindScreen()}}
 function gameMenuHtml(catalog){
   const modes=availableStudyGameModes();
-  return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Pick a game and start</h2><span>Questions prioritize this week’s school skills and adjust as you practice.</span></div></section>'+
+  return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Pick a game and start</h2><span>Questions prioritize current school skills, then recent verified review, then original Grade 2 STAR-style practice when a subject still has a gap.</span></div></section>'+
     '<div class="study-game-grid">'+modes.map(mode=>{
       const record=loadGameRecord(mode.id),total=gameModeQuestionTotal(catalog,mode),disabled=total===0;
       return '<button type="button" class="study-game-tile game-'+mode.id+'" data-game-start="'+esc(mode.id)+'"'+(disabled?' disabled aria-disabled="true"':'')+'>'+studyGameIconHtml(mode.id)+'<span class="study-game-copy"><strong>'+esc(mode.title)+'</strong><small>'+esc(mode.copy)+'</small>'+(disabled?'<em>Not ready yet</em>':record.plays?'<em>Best '+record.best+' / '+total+'</em>':'')+'</span><b aria-hidden="true">›</b></button>';
     }).join("")+'</div>'+
-    '<p class="game-privacy-note">Practice prioritizes verified school skills; private student answers and grades are not used.</p>';
+    '<p class="game-privacy-note">Practice prioritizes verified school skills. STAR-style fallback uses original Grade 2 practice, not copied STAR test items; private student answers and grades are not used.</p>';
 }
 function gamePlayHtml(){const g=gameState,q=activeGameQuestion(),e=studyGameEngine();if(q)e?.markQuestionShown?.(q,g.sourceKey||currentGameSourceKey());return window.ABVMStudyGameView.play({g,mode:gameMode(g.mode),q,teach:g.supportMode?e?.teachCardFor?.(q):null,retryInstruction:e?.teachCardFor?.(q)?.instruction,labels:GAME_TYPE_LABELS})}
 function gameFinishHtml(){
@@ -574,6 +584,7 @@ function renderFamily(){
     header("FAMILY","Family dashboard")+freshness()+
     '<section class="family-hero compact"><p>THIS WEEK</p><h2>What needs attention</h2><span>Current school actions and notices in one place.</span></section>'+
     '<div class="family-stats"><div><strong>'+tests+'</strong><span>test days</span></div><div><strong>'+actions.length+'</strong><span>current actions</span></div></div>'+
+    (window.ABVMWeeklyLearning?.renderChanges?.(pack?.schoolChangeFeed)||"")+
     '<section class="parent-card family-actions-card"><div class="family-actions-head"><span class="family-actions-mark" aria-hidden="true">✓</span><div><small>TO DO</small><h3>Family actions</h3></div></div><ul>'+actions.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></section>'+
     '<section class="parent-card sources notices-card" aria-labelledby="family-current-notices"><div class="notices-head"><span class="notices-mark" aria-hidden="true">i</span><div><small>SCHOOL UPDATES</small><h3 id="family-current-notices">Current notices</h3></div></div><div class="static-notice-list" role="list">'+notices.map(x=>'<div class="notice-row" role="listitem"><span class="status ok" aria-hidden="true"></span><p>'+esc(x)+'</p></div>').join("")+'</div></section>'+
     '<details class="family-more"><summary><span>App & privacy</span><b aria-hidden="true">+</b></summary><div><p>Study-game progress stays on this device. No student IDs or private classmates’ information are used.</p><a href="#games" data-open-games>Open Study Games</a><p>To install on iPhone, use Safari’s Share menu → Add to Home Screen.</p></div></details>'+

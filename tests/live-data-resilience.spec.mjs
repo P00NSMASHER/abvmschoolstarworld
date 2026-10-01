@@ -63,10 +63,10 @@ test("Family hides dated notices after they expire",async({browser})=>{
   await page.route("**/data/study-pack.json*",route=>route.fulfill({json:fixture}));
   await page.goto("http://127.0.0.1:4173/#family");
   await expect(page.locator(".family-screen")).toBeVisible({timeout:10_000});
-  await expect(page.locator(".notices-card")).not.toContainText("Old family item");
-  await expect(page.locator(".notices-card")).toContainText("Current family item");
-  await expect(page.locator(".notices-card")).toContainText("Future family item");
-  await expect(page.locator(".notices-card")).toContainText("Standing undated family information");
+  await expect(page.locator('[aria-labelledby="family-current-notices"]')).not.toContainText("Old family item");
+  await expect(page.locator('[aria-labelledby="family-current-notices"]')).toContainText("Current family item");
+  await expect(page.locator('[aria-labelledby="family-current-notices"]')).toContainText("Future family item");
+  await expect(page.locator('[aria-labelledby="family-current-notices"]')).toContainText("Standing undated family information");
   await context.close();
 });
 
@@ -216,7 +216,7 @@ test("derived school-content changes refresh even when source hashes are unchang
   await page.route("**/data/study-pack.json*",route=>route.fulfill({json:current}));
   await page.goto("http://127.0.0.1:4173/#family");
   await expect(page.locator(".family-screen")).toBeVisible({timeout:10_000});
-  await expect(page.locator(".notices-card")).not.toContainText("Parser-derived current notice");
+  await expect(page.locator('[aria-labelledby="family-current-notices"]')).not.toContainText("Parser-derived current notice");
 
   current=structuredClone(source);
   current.pack.parentNotices=[...current.pack.parentNotices,"Parser-derived current notice Tuesday, Sept. 29."];
@@ -224,7 +224,7 @@ test("derived school-content changes refresh even when source hashes are unchang
   current.pack.sourceCheckedAt=current.sourceLastSeenAt;
   await page.evaluate(()=>window.dispatchEvent(new Event("online")));
 
-  await expect(page.locator(".notices-card")).toContainText("Parser-derived current notice");
+  await expect(page.locator('[aria-labelledby="family-current-notices"]')).toContainText("Parser-derived current notice");
   await expect(page.locator("#toast")).toContainText("School info updated");
   await context.close();
 });
@@ -246,9 +246,9 @@ test("undated picture-order details expire after Picture Day",async({browser})=>
   ];
   await page.route("**/data/study-pack.json*",route=>route.fulfill({json:fixture}));
   await page.goto("http://127.0.0.1:4173/#family");
-  await expect(page.locator(".notices-card")).not.toContainText("Picture ordering");
-  await expect(page.locator(".notices-card")).not.toContainText("Picture backgrounds");
-  await expect(page.locator(".notices-card")).toContainText("Standing undated family information");
+  await expect(page.locator('[aria-labelledby="family-current-notices"]')).not.toContainText("Picture ordering");
+  await expect(page.locator('[aria-labelledby="family-current-notices"]')).not.toContainText("Picture backgrounds");
+  await expect(page.locator('[aria-labelledby="family-current-notices"]')).toContainText("Standing undated family information");
   await context.close();
 });
 

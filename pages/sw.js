@@ -1,15 +1,15 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v99-curriculum-autopilot";
+const CACHE = "abvm-grade2-parent-companion-v103-star-gap-fallback";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=96",
-  "./app.js?v=99",
-  "./study-games.js?v=89",
-  "./study-games-view.js?v=4",
+  "./app.js?v=103",
+  "./weekly-learning.js?v=2",
+  "./study-games.js?v=92",
+  "./study-games-view.js?v=6",
   "./manifest.webmanifest",
   "./assets/abvm-app-icon-180.png",
-  "./assets/abvm-app-icon-192.png",
-  "./assets/abvm-app-icon-512.png"
+  "./assets/abvm-app-icon-192.png"
 ];
 const OPTIONAL_DATA = ["./data/study-pack.json"];
 

@@ -64,4 +64,3 @@ test('refresh publication reconciles main races without force-pushing unverified
   assert.match(workflow, /git push origin HEAD:main/);
   assert.doesNotMatch(workflow, /git push[^\n]*--force/);
 });
-

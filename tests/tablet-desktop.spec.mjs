@@ -34,7 +34,7 @@ test("desktop keeps the centered app, navigation, and long information pages rea
   await page.getByRole("button",{name:"Study Games",exact:true}).click();
   await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
   await page.getByRole("button",{name:"Family",exact:true}).click();
-  await expect(page.locator(".notices-card")).toBeVisible();
+  await expect(page.locator('[aria-labelledby="family-current-notices"]')).toBeVisible();
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
   expect(overflow).toBeFalsy();
 });
