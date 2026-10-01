@@ -297,7 +297,7 @@ function studyGameIconHtml(modeId){
     math:'<svg viewBox="0 0 48 48" aria-hidden="true"><rect class="icon-outline" x="9" y="6.5" width="30" height="35" rx="6"/><rect class="icon-screen" x="14" y="11" width="20" height="7" rx="2.5"/><path class="icon-stroke" d="M16 26h7M19.5 22.5v7M28 26h6M16 34h7M28 34h6"/></svg>',
     words:'<svg viewBox="0 0 48 48" aria-hidden="true"><path class="icon-book" d="M7.5 11.5c5.5-1.4 10.5-.6 16.5 3.1v24c-5.7-3.5-11-4.3-16.5-2.7V11.5Z"/><path class="icon-book" d="M40.5 11.5c-5.5-1.4-10.5-.6-16.5 3.1v24c5.7-3.5 11-4.3 16.5-2.7V11.5Z"/><text class="icon-letter" x="13" y="27">A</text><text class="icon-letter small" x="29" y="29">a</text></svg>',
     faith:'<svg viewBox="0 0 48 48" aria-hidden="true"><circle class="icon-halo" cx="24" cy="24" r="18"/><path class="icon-cross" d="M24 12v24M17 20h14"/><path class="icon-ray" d="M10 12l3 3M38 12l-3 3M9 31l4-2M39 31l-4-2"/></svg>',
-    "test-ready":'<svg viewBox="0 0 48 48" aria-hidden="true"><rect class="icon-outline" x="10" y="8" width="28" height="32" rx="5"/><path class="icon-stroke" d="M17 17h14M17 24h8M17 31h5M28 30l3 3 6-7"/></svg>'
+    "test-ready":'<svg viewBox="0 0 48 48" aria-hidden="true"><rect class="icon-outline" x="10" y="8" width="28" height="32" rx="5" fill="none" stroke="currentColor" stroke-width="2.2"/><path class="icon-stroke" d="M17 17h14M17 24h8M17 31h5M28 30l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   };
   return '<span class="study-game-icon game-icon-'+esc(modeId)+'" aria-hidden="true">'+(icons[modeId]||icons.quick)+'</span>';
 }
