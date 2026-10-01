@@ -432,7 +432,7 @@ function ensureStudyGameEngine(){
   if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
   if(studyEnginePromise)return studyEnginePromise;
   const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.async=true;s.onload=()=>window[key]?resolve():reject(new Error(key+" did not initialize"));s.onerror=()=>reject(new Error(key+" could not be loaded"));document.head.append(s)});
-  studyEnginePromise=Promise.all([load("./study-games.js?v=89","ABVMStudyGames"),load("./study-games-view.js?v=4","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
+  studyEnginePromise=Promise.all([load("./study-games.js?v=90","ABVMStudyGames"),load("./study-games-view.js?v=5","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
   return studyEnginePromise;
 }
 function studyGameCatalog(){
@@ -447,7 +447,10 @@ function studyGameCatalog(){
 function gameMode(id){return availableStudyGameModes().find(mode=>mode.id===id)||availableStudyGameModes()[0]}
 function gameModeQuestionTotal(c,m){
   const s=m?.subjects||[],k=m?.skills||[],x=s.length||k.length;
-  return Math.min(m?.count||0,(c?.questions||[]).filter(q=>(!s.length||s.includes(q.subject))&&(!k.length||k.includes(q.skill))&&(!x||q.tier==="material")).length)
+  const eligible=(c?.questions||[]).filter(q=>(!s.length||s.includes(q.subject))&&(!k.length||k.includes(q.skill)));
+  if(!x)return Math.min(m?.count||0,eligible.length);
+  const current=eligible.filter(q=>q.tier==="material"),review=eligible.filter(q=>q.tier==="recent-review");
+  return Math.min(m?.count||0,(current.length?current:review).length)
 }
 function loadGameRecord(modeId,sourceKey=currentGameSourceKey()){return studyGameEngine()?.loadGameRecord?.(sourceKey,modeId)||{best:0,plays:0,totalCorrect:0,totalAnswered:0}}
 function saveGameRecord(){if(gameState.saved||!gameState.mode||!gameState.questions.length)return;studyGameEngine()?.saveGameRecord?.(gameState.sourceKey||currentGameSourceKey(),gameState.mode,{score:gameState.score,total:gameState.questions.length});gameState.saved=true}
@@ -528,7 +531,7 @@ function leaveStudyGame(){gameState.screen="menu";renderGames();bindScreen()}
 function toggleStudyHint(){const g=gameState;if(g.screen==="play"&&!g.answered){g.hintOpen=!g.hintOpen;if(g.hintOpen)g.hints=(g.hints||0)+1;renderGames();bindScreen()}}
 function gameMenuHtml(catalog){
   const modes=availableStudyGameModes();
-  return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Pick a game and start</h2><span>Questions prioritize this week’s school skills and adjust as you practice.</span></div></section>'+
+  return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Pick a game and start</h2><span>Questions prioritize current school skills, then recent verified review when a subject has no current practice.</span></div></section>'+
     '<div class="study-game-grid">'+modes.map(mode=>{
       const record=loadGameRecord(mode.id),total=gameModeQuestionTotal(catalog,mode),disabled=total===0;
       return '<button type="button" class="study-game-tile game-'+mode.id+'" data-game-start="'+esc(mode.id)+'"'+(disabled?' disabled aria-disabled="true"':'')+'>'+studyGameIconHtml(mode.id)+'<span class="study-game-copy"><strong>'+esc(mode.title)+'</strong><small>'+esc(mode.copy)+'</small>'+(disabled?'<em>Not ready yet</em>':record.plays?'<em>Best '+record.best+' / '+total+'</em>':'')+'</span><b aria-hidden="true">›</b></button>';

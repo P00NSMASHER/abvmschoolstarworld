@@ -10368,6 +10368,574 @@
         "pageExactLineageCount": 101,
         "unresolvedLineageCount": 0
       }
+    },
+    "recentReviewPipeline": {
+      "schemaVersion": 1,
+      "retentionDays": 14,
+      "generatedAt": "2026-10-01T13:33:33.508Z",
+      "bankFingerprint": "seed-1f36f23a-sentence-types-subtraction-within-12",
+      "skills": [
+        {
+          "id": "sentence-types",
+          "subject": "Reading / ELA",
+          "label": "Types of sentences",
+          "evidence": [
+            "types of sentences"
+          ],
+          "studyNotes": [
+            "Practice telling a statement, question, command, and exclamation apart."
+          ],
+          "standards": [
+            "CCSS.L.2.1"
+          ],
+          "domain": "Language",
+          "sourceBacked": true,
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
+            "evidenceExcerptHash": "sha256:97a8630afc0d062e9eb4dc6f7c4e8e41827a3c0bae739d8c49bc0a04726d2d73",
+            "matchedEvidence": [
+              "Wednesday Sept. 30: Grammar (types of sentences)"
+            ]
+          },
+          "reviewVerifiedAt": "2026-09-30T13:38:06.942Z",
+          "reviewExpiresAt": "2026-10-14T13:38:06.942Z",
+          "reviewSourceHash": "teacher-pages-48dd7ac3b25e5d8fdda7"
+        },
+        {
+          "id": "subtraction-within-12",
+          "subject": "Math",
+          "label": "Subtraction within 12",
+          "evidence": [
+            "Subtraction to 12"
+          ],
+          "studyNotes": [
+            "Practice subtraction facts with answers and starting numbers within 12."
+          ],
+          "standards": [
+            "CCSS.2.OA.B.2"
+          ],
+          "domain": "Numbers and operations",
+          "sourceBacked": true,
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
+            "evidenceExcerptHash": "sha256:069bfb1da5808507bd3cb6f634f86a6eef21729d26368c999187bb4f63410d2a",
+            "matchedEvidence": [
+              "Tuesday Sept. 29: Subtraction to 12"
+            ]
+          },
+          "reviewVerifiedAt": "2026-09-30T13:38:06.942Z",
+          "reviewExpiresAt": "2026-10-14T13:38:06.942Z",
+          "reviewSourceHash": "teacher-pages-48dd7ac3b25e5d8fdda7"
+        }
+      ],
+      "questions": [
+        {
+          "id": "auto-sentence-types-where-did-the-puppy-hide-36c75d",
+          "templateId": "grade2-sentence-types-v1",
+          "subject": "Reading / ELA",
+          "skill": "sentence-types",
+          "assessedSkillIds": [
+            "sentence-types"
+          ],
+          "prompt": "Which sentence is a question that asks for information?",
+          "choices": [
+            "Where did the puppy hide?",
+            "Please close the door.",
+            "The puppy is under the chair."
+          ],
+          "answer": "Where did the puppy hide?",
+          "explanation": "A question asks something and ends with a question mark.",
+          "hint": "Look for the sentence that is asking something.",
+          "sourceFact": "Verified Grade 2 skill: Types of sentences",
+          "sourceEvidence": [
+            "types of sentences"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.L.2.1"
+          ],
+          "domain": "Language",
+          "dok": 2,
+          "cognitiveDemand": "skill-and-concept-application",
+          "difficulty": 2,
+          "questionType": "direct",
+          "choiceDiagnostics": {
+            "Please close the door.": {
+              "misconception": "sentence-types-distractor",
+              "feedback": "Recheck the types of sentences skill and use the clue in the question."
+            },
+            "The puppy is under the chair.": {
+              "misconception": "sentence-types-distractor",
+              "feedback": "Recheck the types of sentences skill and use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "Please close the door.": 0,
+              "The puppy is under the chair.": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "sentence-types"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "457dc69d",
+          "variantFingerprint": "673b6a29",
+          "presentationFingerprint": "0779599b",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
+            "evidenceExcerptHash": "sha256:97a8630afc0d062e9eb4dc6f7c4e8e41827a3c0bae739d8c49bc0a04726d2d73",
+            "matchedEvidence": [
+              "Wednesday Sept. 30: Grammar (types of sentences)"
+            ]
+          },
+          "reviewVerifiedAt": "2026-09-30T13:38:06.942Z",
+          "reviewExpiresAt": "2026-10-14T13:38:06.942Z",
+          "reviewSourceHash": "teacher-pages-48dd7ac3b25e5d8fdda7"
+        },
+        {
+          "id": "auto-subtraction-within-12-7-2b8f4d",
+          "templateId": "grade2-subtraction-within-12-v1",
+          "subject": "Math",
+          "skill": "subtraction-within-12",
+          "assessedSkillIds": [
+            "subtraction-within-12"
+          ],
+          "prompt": "Mia has 12 crayons and gives 5 away. How many crayons does she have left?",
+          "choices": [
+            "7",
+            "8",
+            "6"
+          ],
+          "answer": "7",
+          "explanation": "12 - 5 = 7.",
+          "hint": "Start at 12 and count back 5.",
+          "sourceFact": "Verified Grade 2 skill: Subtraction within 12",
+          "sourceEvidence": [
+            "Subtraction to 12"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.2.OA.B.2"
+          ],
+          "domain": "Numbers and operations",
+          "dok": 2,
+          "cognitiveDemand": "skill-and-concept-application",
+          "difficulty": 2,
+          "questionType": "transfer",
+          "choiceDiagnostics": {
+            "6": {
+              "misconception": "subtraction-within-12-distractor",
+              "feedback": "Recheck the subtraction within 12 skill and use the clue in the question."
+            },
+            "8": {
+              "misconception": "subtraction-within-12-distractor",
+              "feedback": "Recheck the subtraction within 12 skill and use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "6": 0,
+              "8": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "subtraction-within-12"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "a88edade",
+          "variantFingerprint": "ed3dcd1b",
+          "presentationFingerprint": "415f1774",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
+            "evidenceExcerptHash": "sha256:069bfb1da5808507bd3cb6f634f86a6eef21729d26368c999187bb4f63410d2a",
+            "matchedEvidence": [
+              "Tuesday Sept. 29: Subtraction to 12"
+            ]
+          },
+          "reviewVerifiedAt": "2026-09-30T13:38:06.942Z",
+          "reviewExpiresAt": "2026-10-14T13:38:06.942Z",
+          "reviewSourceHash": "teacher-pages-48dd7ac3b25e5d8fdda7"
+        },
+        {
+          "id": "auto-sentence-types-exclamation-248588",
+          "templateId": "grade2-sentence-types-v1",
+          "subject": "Reading / ELA",
+          "skill": "sentence-types",
+          "assessedSkillIds": [
+            "sentence-types"
+          ],
+          "prompt": "What type of sentence is “Watch out for that puddle!”?",
+          "choices": [
+            "question",
+            "exclamation",
+            "statement"
+          ],
+          "answer": "exclamation",
+          "explanation": "The sentence shows strong feeling and ends with an exclamation mark.",
+          "hint": "Ask whether the sentence tells, asks, directs, or shows strong feeling.",
+          "sourceFact": "Verified Grade 2 skill: Types of sentences",
+          "sourceEvidence": [
+            "types of sentences"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.L.2.1"
+          ],
+          "domain": "Language",
+          "dok": 1,
+          "cognitiveDemand": "recall-and-fluency",
+          "difficulty": 2,
+          "questionType": "transfer",
+          "choiceDiagnostics": {
+            "question": {
+              "misconception": "sentence-types-distractor",
+              "feedback": "Recheck the types of sentences skill and use the clue in the question."
+            },
+            "statement": {
+              "misconception": "sentence-types-distractor",
+              "feedback": "Recheck the types of sentences skill and use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "question": 0,
+              "statement": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "sentence-types"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "478422c7",
+          "variantFingerprint": "eb499a44",
+          "presentationFingerprint": "fb1807c5",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
+            "evidenceExcerptHash": "sha256:97a8630afc0d062e9eb4dc6f7c4e8e41827a3c0bae739d8c49bc0a04726d2d73",
+            "matchedEvidence": [
+              "Wednesday Sept. 30: Grammar (types of sentences)"
+            ]
+          },
+          "reviewVerifiedAt": "2026-09-30T13:38:06.942Z",
+          "reviewExpiresAt": "2026-10-14T13:38:06.942Z",
+          "reviewSourceHash": "teacher-pages-48dd7ac3b25e5d8fdda7"
+        },
+        {
+          "id": "auto-sentence-types-the-paint-is-wet-do-not-touch-it-10585e",
+          "templateId": "grade2-sentence-types-v1",
+          "subject": "Reading / ELA",
+          "skill": "sentence-types",
+          "assessedSkillIds": [
+            "sentence-types"
+          ],
+          "prompt": "Which pair has a statement first and a command second?",
+          "choices": [
+            "Is the paint wet? — The paint is wet.",
+            "Do not touch it. — Is the paint wet?",
+            "The paint is wet. — Do not touch it."
+          ],
+          "answer": "The paint is wet. — Do not touch it.",
+          "explanation": "The first sentence tells information; the second gives a direction.",
+          "hint": "Classify what each sentence is doing before choosing the pair.",
+          "sourceFact": "Verified Grade 2 skill: Types of sentences",
+          "sourceEvidence": [
+            "types of sentences"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.L.2.1"
+          ],
+          "domain": "Language",
+          "dok": 3,
+          "cognitiveDemand": "strategic-reasoning",
+          "difficulty": 3,
+          "questionType": "reasoning",
+          "choiceDiagnostics": {
+            "Is the paint wet? — The paint is wet.": {
+              "misconception": "sentence-types-distractor",
+              "feedback": "Recheck the types of sentences skill and use the clue in the question."
+            },
+            "Do not touch it. — Is the paint wet?": {
+              "misconception": "sentence-types-distractor",
+              "feedback": "Recheck the types of sentences skill and use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "Is the paint wet? — The paint is wet.": 0,
+              "Do not touch it. — Is the paint wet?": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "sentence-types"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "ed81c7b5",
+          "variantFingerprint": "64094073",
+          "presentationFingerprint": "dce07839",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
+            "evidenceExcerptHash": "sha256:97a8630afc0d062e9eb4dc6f7c4e8e41827a3c0bae739d8c49bc0a04726d2d73",
+            "matchedEvidence": [
+              "Wednesday Sept. 30: Grammar (types of sentences)"
+            ]
+          },
+          "reviewVerifiedAt": "2026-09-30T13:38:06.942Z",
+          "reviewExpiresAt": "2026-10-14T13:38:06.942Z",
+          "reviewSourceHash": "teacher-pages-48dd7ac3b25e5d8fdda7"
+        },
+        {
+          "id": "auto-subtraction-within-12-7-08e6dd",
+          "templateId": "grade2-subtraction-within-12-v1",
+          "subject": "Math",
+          "skill": "subtraction-within-12",
+          "assessedSkillIds": [
+            "subtraction-within-12"
+          ],
+          "prompt": "What is the difference in 12 - 5?",
+          "choices": [
+            "6",
+            "8",
+            "7"
+          ],
+          "answer": "7",
+          "explanation": "Twelve take away five leaves seven.",
+          "hint": "Start at 12 and count back 5.",
+          "sourceFact": "Verified Grade 2 skill: Subtraction within 12",
+          "sourceEvidence": [
+            "Subtraction to 12"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.2.OA.B.2"
+          ],
+          "domain": "Numbers and operations",
+          "dok": 1,
+          "cognitiveDemand": "recall-and-fluency",
+          "difficulty": 2,
+          "questionType": "direct",
+          "choiceDiagnostics": {
+            "6": {
+              "misconception": "subtraction-within-12-distractor",
+              "feedback": "Recheck the subtraction within 12 skill and use the clue in the question."
+            },
+            "8": {
+              "misconception": "subtraction-within-12-distractor",
+              "feedback": "Recheck the subtraction within 12 skill and use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "6": 0,
+              "8": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "subtraction-within-12"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "a3a206e9",
+          "variantFingerprint": "c467b4da",
+          "presentationFingerprint": "9a5af9d4",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
+            "evidenceExcerptHash": "sha256:069bfb1da5808507bd3cb6f634f86a6eef21729d26368c999187bb4f63410d2a",
+            "matchedEvidence": [
+              "Tuesday Sept. 29: Subtraction to 12"
+            ]
+          },
+          "reviewVerifiedAt": "2026-09-30T13:38:06.942Z",
+          "reviewExpiresAt": "2026-10-14T13:38:06.942Z",
+          "reviewSourceHash": "teacher-pages-48dd7ac3b25e5d8fdda7"
+        },
+        {
+          "id": "auto-subtraction-within-12-7-5-12-1d65bf",
+          "templateId": "grade2-subtraction-within-12-v1",
+          "subject": "Math",
+          "skill": "subtraction-within-12",
+          "assessedSkillIds": [
+            "subtraction-within-12"
+          ],
+          "prompt": "Which addition fact is the best check for 12 - 5 = 7?",
+          "choices": [
+            "7 + 5 = 12",
+            "12 + 5 = 17",
+            "7 + 12 = 19"
+          ],
+          "answer": "7 + 5 = 12",
+          "explanation": "Addition can check subtraction because the difference plus the amount taken away should equal the starting number.",
+          "hint": "Use the same three numbers to build the related addition fact.",
+          "sourceFact": "Verified Grade 2 skill: Subtraction within 12",
+          "sourceEvidence": [
+            "Subtraction to 12"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.2.OA.B.2"
+          ],
+          "domain": "Numbers and operations",
+          "dok": 3,
+          "cognitiveDemand": "strategic-reasoning",
+          "difficulty": 3,
+          "questionType": "reasoning",
+          "choiceDiagnostics": {
+            "12 + 5 = 17": {
+              "misconception": "subtraction-within-12-distractor",
+              "feedback": "Recheck the subtraction within 12 skill and use the clue in the question."
+            },
+            "7 + 12 = 19": {
+              "misconception": "subtraction-within-12-distractor",
+              "feedback": "Recheck the subtraction within 12 skill and use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "12 + 5 = 17": 0,
+              "7 + 12 = 19": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "subtraction-within-12"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "27c87090",
+          "variantFingerprint": "5f310a50",
+          "presentationFingerprint": "ede7fd02",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "d8bc536cbd7e72822acd69060c70257ac637aeacc79faa98263b8bb6ce7bf06c",
+            "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
+            "evidenceExcerptHash": "sha256:069bfb1da5808507bd3cb6f634f86a6eef21729d26368c999187bb4f63410d2a",
+            "matchedEvidence": [
+              "Tuesday Sept. 29: Subtraction to 12"
+            ]
+          },
+          "reviewVerifiedAt": "2026-09-30T13:38:06.942Z",
+          "reviewExpiresAt": "2026-10-14T13:38:06.942Z",
+          "reviewSourceHash": "teacher-pages-48dd7ac3b25e5d8fdda7"
+        }
+      ]
     }
   },
   "sourceLastCheckedAt": "2026-10-01T13:33:33.508Z",

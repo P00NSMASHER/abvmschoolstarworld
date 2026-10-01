@@ -2,6 +2,7 @@
 const VERSION="abvm-starblox-study-engine-v2-research-quality";
 const SOURCE_TRANSFORM="skill-only-equivalent-item-v2";
 const MATERIAL_PROVENANCE="original-practice-derived-from-verified-abvm-skills";
+const REVIEW_PROVENANCE="original-practice-derived-from-recently-verified-abvm-skills";
 const FALLBACK_PROVENANCE="original-star-aligned-grade2-practice";
 const FORBIDDEN=[
   /sight word/i,
@@ -217,7 +218,7 @@ function validateRichContent(input){return input==null||!!normalizeRichContent(i
 function makeQuestion({
   id,subject,skill,tier,type,prompt,choices,answer,explanation,hint,sourceFact,
   dok=2,difficulty=2,standards,domain,wrongFeedback,misconception,richContent=null,
-  contentFingerprint="",variantFingerprint=""
+  contentFingerprint="",variantFingerprint="",reviewVerifiedAt="",reviewExpiresAt=""
 }){
   const cleanChoices=[...choices].map(text);
   return {
@@ -236,13 +237,15 @@ function makeQuestion({
     difficulty,
     choiceDiagnostics:diagnosticMap(cleanChoices,text(answer),wrongFeedback,misconception),
     rubric:rubric(),
-    provenance:tier==="material"?MATERIAL_PROVENANCE:FALLBACK_PROVENANCE,
+    provenance:tier==="material"?MATERIAL_PROVENANCE:tier==="recent-review"?REVIEW_PROVENANCE:FALLBACK_PROVENANCE,
     sourceFact:text(sourceFact||skill),
     sourceTransform:SOURCE_TRANSFORM,
     originalEquivalent:true,
     contentFingerprint:text(contentFingerprint),
     variantFingerprint:text(variantFingerprint),
-    richContent:normalizeRichContent(richContent)
+    richContent:normalizeRichContent(richContent),
+    reviewVerifiedAt:text(reviewVerifiedAt),
+    reviewExpiresAt:text(reviewExpiresAt)
   };
 }
 function addTriad(out,prefix,base,items){
@@ -269,6 +272,29 @@ function materialContentPipeline(pack,out){
       contentFingerprint:spec.contentFingerprint,
       variantFingerprint:spec.variantFingerprint,
       richContent:spec.richContent,
+      wrongFeedback:choice=>text(diagnostics?.[choice]?.feedback||"Review the target skill and use the hint before choosing again."),
+      misconception:choice=>text(diagnostics?.[choice]?.misconception||"pipeline-generated-distractor")
+    });
+  }
+}
+function recentReviewContentPipeline(pack,out){
+  const specs=Array.isArray(pack?.recentReviewPipeline?.questions)?pack.recentReviewPipeline.questions:[];
+  for(const spec of specs){
+    if(!spec||typeof spec!=="object")continue;
+    const diagnostics=spec.choiceDiagnostics&&typeof spec.choiceDiagnostics==="object"?spec.choiceDiagnostics:{};
+    add(out,{
+      id:"review-"+text(spec.id),subject:text(spec.subject),skill:text(spec.skill),tier:"recent-review",
+      type:text(spec.questionType)||"direct",prompt:spec.prompt,choices:spec.choices||[],answer:spec.answer,
+      explanation:spec.explanation,hint:spec.hint,sourceFact:spec.sourceFact,
+      dok:Number.isInteger(spec.dok)?spec.dok:2,
+      difficulty:Number.isInteger(spec.difficulty)?spec.difficulty:2,
+      standards:Array.isArray(spec.standards)?spec.standards:undefined,
+      domain:spec.domain,
+      contentFingerprint:spec.contentFingerprint,
+      variantFingerprint:spec.variantFingerprint,
+      richContent:spec.richContent,
+      reviewVerifiedAt:spec.reviewVerifiedAt,
+      reviewExpiresAt:spec.reviewExpiresAt,
       wrongFeedback:choice=>text(diagnostics?.[choice]?.feedback||"Review the target skill and use the hint before choosing again."),
       misconception:choice=>text(diagnostics?.[choice]?.misconception||"pipeline-generated-distractor")
     });
@@ -935,7 +961,11 @@ function validateQuestion(question){
   }
   if(!text(question.explanation))issues.push("explanation-missing");
   if(!text(question.hint))issues.push("hint-missing");
-  if(!["material","star-fallback"].includes(question.tier))issues.push("tier-invalid");
+  if(!["material","recent-review","star-fallback"].includes(question.tier))issues.push("tier-invalid");
+  if(question.tier==="recent-review"){
+    if(!Number.isFinite(Date.parse(question.reviewVerifiedAt||"")))issues.push("review-verified-at-invalid");
+    if(!Number.isFinite(Date.parse(question.reviewExpiresAt||"")))issues.push("review-expires-at-invalid");
+  }
   if(!Number.isInteger(question.dok)||question.dok<1||question.dok>3)issues.push("dok-invalid");
   if(!Number.isInteger(question.difficulty)||question.difficulty<2||question.difficulty>3)issues.push("difficulty-invalid");
   if(!Array.isArray(question.standards)||question.standards.length===0)issues.push("standards-missing");
@@ -969,6 +999,7 @@ function buildCatalog(pack,{sourceKey}={}){
   const key=text(sourceKey||pack?.sourceHash||pack?.sourceCheckedAt||pack?.weekLabel||"abvm-current");
   const variant=variantFor(key),questions=[];
   materialContentPipeline(pack,questions);
+  recentReviewContentPipeline(pack,questions);
 
   const legacyMaterial=[];
   materialMath(pack,variant,legacyMaterial);
@@ -1180,7 +1211,10 @@ function orderForVariety(rows){
 function pickBalanced(pool,count,seed,skillStats,preferredSkills=[],recentKeys=new Set()){
   const selected=[],usedIds=new Set(),usedVariants=new Set(),skillCounts={},maxPerSkill=dynamicSkillCap(pool,count),preferred=new Set(preferredSkills||[]),now=Date.now();
   const ordered=[...pool].sort((a,b)=>{
-    if(a.tier!==b.tier)return a.tier==="material"?-1:1;
+    if(a.tier!==b.tier){
+      const rank=tier=>tier==="material"?0:tier==="recent-review"?1:2;
+      return rank(a.tier)-rank(b.tier);
+    }
     if(preferred.has(a.skill)!==preferred.has(b.skill))return preferred.has(a.skill)?-1:1;
     const ar=recentKeys.has(semanticRotationKey(a)),br=recentKeys.has(semanticRotationKey(b));
     if(ar!==br)return ar?1:-1;
@@ -1196,7 +1230,7 @@ function pickBalanced(pool,count,seed,skillStats,preferredSkills=[],recentKeys=n
     const underCap=available.filter(q=>(skillCounts[q.skill]||0)<maxPerSkill);
     const remaining=underCap.length?underCap:available;
     if(!remaining.length)break;
-    const material=remaining.filter(q=>q.tier==="material"),tierPool=material.length?material:remaining;
+    const material=remaining.filter(q=>q.tier==="material"),review=remaining.filter(q=>q.tier==="recent-review"),tierPool=material.length?material:review.length?review:remaining;
     const selectedSkills=new Set(selected.map(q=>q.skill).filter(Boolean)),availableSkills=new Set(tierPool.map(q=>q.skill).filter(Boolean));
     const needsSecondSkill=selected.length>0&&selectedSkills.size===1&&availableSkills.size>1;
     const diversityPool=needsSecondSkill?tierPool.filter(q=>q.skill!==selected[0].skill):tierPool;
@@ -1227,7 +1261,10 @@ function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillSt
   const wantedSkills=Array.isArray(skills)?skills.map(text).filter(Boolean):[];
   if(wanted.length)pool=pool.filter(q=>wanted.includes(q.subject));
   if(wantedSkills.length)pool=pool.filter(q=>wantedSkills.includes(q.skill));
-  if(wanted.length||wantedSkills.length)pool=pool.filter(q=>q.tier==="material");
+  if(wanted.length||wantedSkills.length){
+    const current=pool.filter(q=>q.tier==="material"),review=pool.filter(q=>q.tier==="recent-review");
+    pool=current.length?current:review;
+  }
   const sourceKey=String(catalog?.sourceKey||"current"),recent=new Set(loadRotation(sourceKey).recent.map(row=>row.v));
   return pickBalanced(pool,count,seed,skillStats,preferredSkills,recent);
 }
@@ -1235,7 +1272,7 @@ function supportQuestion(catalog,current,{skillStats={},seed="support"}={}){
   if(!current)return null;
   const candidates=(catalog?.questions||[])
     .filter(q=>q.id!==current.id&&q.skill===current.skill&&q.difficulty<=2)
-    .sort((a,b)=>hash(seed+a.id)-hash(seed+b.id));
+    .sort((a,b)=>Number(b.tier===current.tier)-Number(a.tier===current.tier)||hash(seed+a.id)-hash(seed+b.id));
   return candidates[0]||null;
 }
 
@@ -1754,10 +1791,11 @@ function sourceKeyFromEnvelope(pack,envelope){
   const hashes=(envelope?.sourcePages||[]).map(row=>row.contentHash).filter(Boolean).join("|");
   const source=hashes||text(pack?.sourceHash||pack?.sourceCheckedAt||pack?.weekLabel||"abvm-current");
   const bank=text(pack?.contentPipeline?.bankFingerprint||"legacy-bank");
-  return source+"|bank:"+bank;
+  const review=text(pack?.recentReviewPipeline?.bankFingerprint||"no-review");
+  return source+"|bank:"+bank+"|review:"+review;
 }
 window.ABVMStudyGames=Object.freeze({
-  VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
+  VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,REVIEW_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
   buildCatalog,validateCatalog,validateRichContent,selectQuestions,learningFirstSummary,studyStarPolicy,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,questionFamilyRolloutPolicy,reviewQuestionFamilyPromotion,itemQualityKey
 });
 })();
