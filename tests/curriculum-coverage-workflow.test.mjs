@@ -21,3 +21,16 @@ test('static QA validates candidate manifests before browser testing', () => {
   const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
   assert.match(pkg.scripts['qa:static'], /validate-curriculum-candidates\.mjs/);
 });
+
+test('teacher refresh reruns when its browser-QA contract changes', () => {
+  const workflow = readFileSync('.github/workflows/sync-study-pack.yml', 'utf8');
+  for (const path of [
+    'tests/calendar-edge.spec.mjs',
+    'tests/content-pipeline.spec.mjs',
+    'tests/gold-standard.spec.mjs',
+    'tests/recovered-learning-loop.spec.mjs',
+    'tests/study-games-rich-content.spec.mjs',
+  ]) {
+    assert.ok(workflow.includes(path), `Missing refresh trigger for ${path}`);
+  }
+});
