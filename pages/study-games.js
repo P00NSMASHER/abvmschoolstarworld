@@ -1294,6 +1294,27 @@ function comebackQuestion(catalog,current,{seed="comeback",seenIds=[]}={}){
   return candidates[0]||null;
 }
 
+function learningFirstSummary(outcomes=[]){
+  const bySkill=new Map(),rank={practice:1,remembered:2,strong:3};
+  for(const outcome of Array.isArray(outcomes)?outcomes:[]){
+    const skill=text(outcome?.skill),kind=text(outcome?.kind),correct=!!outcome?.correct;
+    if(!skill||kind==="support")continue;
+    let status="";
+    if(kind==="comeback")status=correct?"remembered":"practice";
+    else if(kind==="normal")status=(correct&&outcome?.independent===true)?"strong":"practice";
+    if(!status)continue;
+    const prior=bySkill.get(skill);
+    if(!prior||rank[status]>rank[prior])bySkill.set(skill,status);
+  }
+  const values=[...bySkill.values()];
+  return Object.freeze({
+    strong:values.filter(value=>value==="strong").length,
+    remembered:values.filter(value=>value==="remembered").length,
+    practice:values.filter(value=>value==="practice").length,
+    total:values.length
+  });
+}
+
 const STUDY_STAR_POLICY=Object.freeze({
   currency:"Study Stars",
   roundComplete:10,
@@ -1663,6 +1684,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,validateRichContent,selectQuestions,studyStarPolicy,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,itemQualityKey
+  buildCatalog,validateCatalog,validateRichContent,selectQuestions,learningFirstSummary,studyStarPolicy,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,itemQualityKey
 });
 })();
