@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('third miss model answer automatically queues a different same-skill Comeback', async ({ page }) => {
-  await page.getByRole('button', { name: /Math Dash/i }).click();
+  await page.getByRole('button', { name: /Quick Mix/i }).click();
   await expect(page.locator('.game-question-card')).toBeVisible();
 
   const prompt = await page.locator('.game-question-card h2').textContent();
