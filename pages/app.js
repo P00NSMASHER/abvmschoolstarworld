@@ -404,6 +404,44 @@ function subjectCard(id,klass,title,subject){
   const notes=[...(subject?.topics||[]),...(subject?.studyNotes||[])];
   return '<details id="'+id+'" class="subject-card study-accordion '+klass+'"><summary><span><small>'+esc(title.toUpperCase())+'</small><strong>'+esc(title)+'</strong></span><b aria-hidden="true">+</b></summary><ul>'+notes.map(n=>'<li>✓ '+esc(n)+'</li>').join("")+'</ul></details>';
 }
+const WEEKLY_LEARNING_WINDOW_MS=7*24*60*60*1000;
+function weeklyLearningDashboardData(nowMs=Date.now()){
+  let learning={};
+  try{const parsed=JSON.parse(storageGet("abvm-study-learning:v2")||"{}");if(parsed&&typeof parsed==="object")learning=parsed}catch{}
+  const currentSkills=Array.isArray(pack?.contentPipeline?.skills)?pack.contentPipeline.skills:[],cutoff=nowMs-WEEKLY_LEARNING_WINDOW_MS,currentDay=SCHOOL_DATE_FORMATTER.format(new Date(nowMs));
+  const rows=[];
+  for(const skill of currentSkills){
+    const id=String(skill?.id||"").trim(),row=learning[id];if(!id||!row)continue;
+    const seenAt=Math.max(Number(row.LastSeenAt)||0,Number(row.LastResolution?.resolvedAt)||0,Number(row.LastComebackAt)||0,Number(row.LastSupportAt)||0);
+    if(!seenAt||seenAt<cutoff||seenAt>nowMs+60000)continue;
+    const strongAt=Number(row.LastIndependentCorrectAt)||0,rememberedAt=Number(row.LastComebackCorrectAt)||0;
+    const resolutionAt=Number(row.LastResolution?.resolvedAt)||0;
+    const resolutionNeedsPractice=resolutionAt&&(!row.LastResolution?.correct||row.LastResolution?.independent!==true)?resolutionAt:0;
+    const practiceAt=Math.max(resolutionNeedsPractice,Number(row.LastSupportAt)||0,Number(row.LastComebackWrongAt)||0);
+    const candidates=[];
+    if(strongAt>=cutoff&&strongAt<=nowMs+60000&&SCHOOL_DATE_FORMATTER.format(new Date(strongAt))===currentDay)candidates.push({status:"strong",at:strongAt,priority:1});
+    if(rememberedAt>=cutoff&&rememberedAt<=nowMs+60000)candidates.push({status:"remembered",at:rememberedAt,priority:2});
+    if(practiceAt>=cutoff&&practiceAt<=nowMs+60000)candidates.push({status:"practice",at:practiceAt,priority:3});
+    if(!candidates.length)candidates.push({status:"practice",at:seenAt,priority:3});
+    candidates.sort((a,b)=>b.at-a.at||b.priority-a.priority);
+    rows.push({id,label:String(skill.label||id),subject:String(skill.subject||""),status:candidates[0].status,lastAt:candidates[0].at});
+  }
+  rows.sort((a,b)=>b.lastAt-a.lastAt||a.label.localeCompare(b.label));
+  return {
+    strong:rows.filter(row=>row.status==="strong"),
+    remembered:rows.filter(row=>row.status==="remembered"),
+    practice:rows.filter(row=>row.status==="practice")
+  };
+}
+function weeklyLearningDashboardHtml(){
+  const data=weeklyLearningDashboardData(),line=(title,rows,empty,klass)=>'<div class="notice-row"><span class="status '+klass+'" aria-hidden="true"></span><p><strong>'+esc(title)+'</strong><br><span>'+esc(rows.length?rows.slice(0,4).map(row=>row.label).join(" · "):empty)+'</span></p></div>';
+  return '<section class="parent-card" aria-labelledby="weekly-learning-title"><div class="notices-head"><span class="notices-mark" aria-hidden="true">✓</span><div><small>LAST 7 DAYS</small><h3 id="weekly-learning-title">Weekly learning</h3></div></div><div class="static-notice-list" role="list">'+
+    line("Strong today",data.strong,"No current skills here yet.","ok")+
+    line("Remembered later",data.remembered,"No comeback evidence yet.","ok")+
+    line("Practice again",data.practice,"No recent practice needs another look.","warn")+
+    '</div><small>Current school skills only · based on Study Games practice on this device · not a grade.</small></section>';
+}
+
 function renderStudy(){
   const r=readingSubject(), rel=religionSubject(), math=mathSubject(), spell=spellingSubject(), next=currentWeekTest(), spellingTest=nextSpellingTest(), star=currentOrSoonStarAssessment();
   const essentials=[
@@ -416,6 +454,7 @@ function renderStudy(){
   stack().innerHTML='<div class="screen study-screen" role="region" aria-label="Study room">'+
     header("STUDY","Study room")+
     '<section class="study-at-a-glance"><div class="quick-look-head"><span class="quick-look-mark" aria-hidden="true">✓</span><div><p>START HERE</p><h2>What matters this week</h2></div></div><ol>'+essentials.map(x=>'<li><time>'+esc(x[0])+'</time><span>'+esc(x[1])+'</span></li>').join("")+'</ol></section>'+
+    weeklyLearningDashboardHtml()+
     '<a class="study-games-cta" href="#games" data-open-games><span>★</span><div><small>5–10 MINUTES</small><strong>Practice with Study Games</strong><p>Current school skills with hints and explanations.</p></div><b aria-hidden="true">›</b></a>'+
     '<div class="study-section-label"><p>SUBJECT DETAILS</p><span>Tap a subject only when you need it.</span></div>'+
     subjectCard("study-religion","religion",rel?.subject||"Religion",rel)+
@@ -432,7 +471,7 @@ function ensureStudyGameEngine(){
   if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
   if(studyEnginePromise)return studyEnginePromise;
   const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.async=true;s.onload=()=>window[key]?resolve():reject(new Error(key+" did not initialize"));s.onerror=()=>reject(new Error(key+" could not be loaded"));document.head.append(s)});
-  studyEnginePromise=Promise.all([load("./study-games.js?v=90","ABVMStudyGames"),load("./study-games-view.js?v=5","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
+  studyEnginePromise=Promise.all([load("./study-games.js?v=91","ABVMStudyGames"),load("./study-games-view.js?v=5","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
   return studyEnginePromise;
 }
 function studyGameCatalog(){
