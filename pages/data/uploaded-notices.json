@@ -256,16 +256,10 @@
       "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
-      "date": "Friday–Saturday, Nov. 13–14",
-      "label": "Drama Club Play",
+      "date": "Friday, Oct. 2",
+      "label": "Door Decorating Contest starts",
       "kind": "school event",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "date": "Saturday, Nov. 21",
-      "label": "Reading Royals Game Family Fun Night",
-      "kind": "school event",
-      "sourceDocument": "weekly-reminders-2026-09-28"
+      "sourceDocument": "october-calendar-2026"
     },
     {
       "date": "Saturday, Oct. 3",
@@ -278,18 +272,6 @@
       "label": "Movie Night (Grades 5–8) — 6–8 PM",
       "kind": "school event",
       "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "date": "Friday, Oct. 23",
-      "label": "S’more Fun at Schwartz Farm",
-      "kind": "school event",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "date": "Friday, Oct. 2",
-      "label": "Door Decorating Contest starts",
-      "kind": "school event",
-      "sourceDocument": "october-calendar-2026"
     },
     {
       "date": "Sunday, Oct. 4",
@@ -376,6 +358,12 @@
       "sourceDocument": "birthday-party-2026-10-18"
     },
     {
+      "date": "Monday–Tuesday, Oct. 19–20",
+      "label": "Parent-Teacher Conferences",
+      "kind": "conference",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
       "date": "Tuesday, Oct. 20",
       "label": "K–4 No School — Parent-Teacher Conferences",
       "kind": "holiday",
@@ -389,9 +377,15 @@
     },
     {
       "date": "Thursday, Oct. 22",
-      "label": "Chick-fil-A delivery/pickup — 3:00–4:30 PM; pickup available at dismissal",
+      "label": "Chick-fil-A pickup",
       "kind": "school event",
-      "sourceDocument": "chick-fil-a-order-form-2026-10"
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "date": "Friday, Oct. 23",
+      "label": "S’more Fun at Schwartz Farm",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
       "date": "Friday, Oct. 23",
@@ -434,6 +428,18 @@
       "label": "Halloween Celebration",
       "kind": "school event",
       "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "date": "Friday–Saturday, Nov. 13–14",
+      "label": "Drama Club Play",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "date": "Saturday, Nov. 21",
+      "label": "Reading Royals Game Family Fun Night",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-28"
     }
   ],
   "reminders": [
