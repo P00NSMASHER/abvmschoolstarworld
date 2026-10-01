@@ -389,3 +389,32 @@ test('rotation history is source-scoped and stores no question text or answer co
   expect(result.serialized).not.toContain('private-semantic-');
   expect(result.serialized).not.toContain('"at"');
 });
+
+
+test('Reading STAR fallback changes prompt content between generation variants', async ({ page }) => {
+  const result = await page.evaluate(() => {
+    const engine = window.ABVMStudyGames;
+    const catalogs = Array.from({ length: 20 }, (_, i) => engine.buildCatalog(
+      { contentPipeline: { skills: [], questions: [] }, recentReviewPipeline: { questions: [] }, subjects: [] },
+      { sourceKey: 'reading-fallback-variant-' + i }
+    ));
+    const first = catalogs.find(catalog => catalog.generationVariant === 1);
+    const second = catalogs.find(catalog => catalog.generationVariant === 2);
+    const readingPrompts = catalog => catalog.questions
+      .filter(question => question.tier === 'star-fallback' && question.subject === 'Reading / ELA')
+      .map(question => question.prompt);
+    return {
+      firstVariant: first?.generationVariant ?? null,
+      secondVariant: second?.generationVariant ?? null,
+      firstPrompts: first ? readingPrompts(first) : [],
+      secondPrompts: second ? readingPrompts(second) : [],
+    };
+  });
+
+  expect(result.firstVariant).toBe(1);
+  expect(result.secondVariant).toBe(2);
+  expect(result.firstPrompts).toHaveLength(8);
+  expect(result.secondPrompts).toHaveLength(8);
+  expect(result.secondPrompts).not.toEqual(result.firstPrompts);
+  expect(result.secondPrompts.filter(prompt => result.firstPrompts.includes(prompt))).toEqual([]);
+});
