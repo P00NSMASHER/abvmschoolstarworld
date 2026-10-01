@@ -1341,7 +1341,7 @@ function learningFirstSummary(outcomes=[]){
     const skill=text(outcome?.skill),kind=text(outcome?.kind),correct=!!outcome?.correct;
     if(!skill||kind==="support")continue;
     let status="";
-    if(kind==="comeback")status=correct?"remembered":"practice";
+    if(kind==="comeback"||kind==="review")status=correct?"remembered":"practice";
     else if(kind==="normal")status=(correct&&outcome?.independent===true)?"strong":"practice";
     if(!status)continue;
     const prior=bySkill.get(skill);
