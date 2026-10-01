@@ -14,14 +14,14 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-10-01T19:06:31.465Z",
+  "sourceLastSeenAt": "2026-10-01T19:20:38.974Z",
   "sourceCapturedAt": "2026-10-01T18:41:13.006Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-1140e20941b1f6f76b8b",
     "sourceCapturedAt": "2026-10-01T18:41:13.006Z",
-    "generatedAt": "2026-10-01T19:06:31.465Z",
+    "generatedAt": "2026-10-01T19:20:38.974Z",
     "weekLabel": "Week of September 28, 2026",
     "summary": "Current Grade 2 teacher-site material: Homework lists Reading “Read”, parent task “Cover books”, Reading “Keep Reading Log and Behavior Chart in the HW folder”, and Homework Folder “Return everything in the HW folder”. Upcoming tests include Spelling (short a / long a) / Handwriting on Friday, Oct. 2, Reading on Wednesday, Oct. 7, Spelling (short i / long i) / Handwriting on Friday, Oct. 9, and Grammar (subject & predicate) on Friday, Oct. 9. 8 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
@@ -988,7 +988,7 @@
       "Christmas Caroling date is TBD.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
-    "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+    "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
     "uploadedNoticeHash": "uploaded-notices-642a3157225783067067",
     "uploadedNoticeTopics": {
       "reminders": [
@@ -1027,8 +1027,8 @@
     "lunchMenuSource": {
       "status": "current-week",
       "retrievalState": "verified",
-      "checkedAt": "2026-10-01T19:06:33.464Z",
-      "lastAttemptAt": "2026-10-01T19:06:31.465Z",
+      "checkedAt": "2026-10-01T19:20:40.826Z",
+      "lastAttemptAt": "2026-10-01T19:20:38.974Z",
       "provider": "Saint Clair Area School District",
       "school": "Assumption BVM School",
       "feedUrl": "https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu",
@@ -1043,14 +1043,14 @@
           "url": "https://resources.finalsite.net/images/v1787165302/adeducatorsorg/gvzkkrduwn7fce9l3vsw/AugustandSeptlunch26.pdf",
           "contentHash": "6c01fef18e1f589a544713c21e4d6b31b0063ef7fdbfaa4537dd30cc7b6a64eb",
           "reviewedAt": "2026-09-29T05:26:39Z",
-          "checkedAt": "2026-10-01T19:06:33.481Z"
+          "checkedAt": "2026-10-01T19:20:40.893Z"
         },
         {
           "id": "abvm-2026-10-official",
           "url": "https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1790692534/adeducatorsorg/xdbrqzybydptd5srbor0/Octobercalendar.heic",
           "contentHash": "a99ce9385295921c9fff19ae4051732da45f7c38df077d30d9b62577c8c6eb45",
           "reviewedAt": "2026-10-01T00:44:00Z",
-          "checkedAt": "2026-10-01T19:06:33.464Z"
+          "checkedAt": "2026-10-01T19:20:40.826Z"
         }
       ],
       "pendingDocuments": [],
@@ -1545,11 +1545,11 @@
         "sourceId": "abvm-2026-10-official"
       }
     ],
-    "lunchMenuHash": "0bca1913fc92e8723c77548927c94afe9fed140a30958e97c5b6d29c17aa7cb6",
+    "lunchMenuHash": "86f0c79dd3b6118668c4c682f48e0483ec8add274d6be750afdf59eb64b4c5ae",
     "contentPipeline": {
       "schemaVersion": 2,
       "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-      "generatedAt": "2026-10-01T19:06:31.465Z",
+      "generatedAt": "2026-10-01T19:20:38.974Z",
       "sourceHash": "teacher-pages-1140e20941b1f6f76b8b",
       "bankFingerprint": "d3c87c01",
       "lifecycleStage": "QA_PASSED",
@@ -1585,7 +1585,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -1612,7 +1612,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -1639,7 +1639,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -1666,7 +1666,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -1693,7 +1693,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -1720,7 +1720,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -1747,7 +1747,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -1774,7 +1774,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d9f45fdf64e3d1f918a0e31cf97b732471585c00f7b27fbb2ba622a08cd8ed4d",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
             "matchedEvidence": [
               "Friday Oct. 9: Grammar (subject & predicate)"
@@ -1813,7 +1813,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -1840,7 +1840,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -1867,7 +1867,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -1894,7 +1894,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -1921,7 +1921,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:eaf345011898b7c5bbfc5c6f14f1db7ea6d59b70fbd176bde124554f8ce9e814",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace",
@@ -1949,7 +1949,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -1976,7 +1976,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -2003,7 +2003,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -2030,7 +2030,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -2057,7 +2057,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -2084,7 +2084,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -2111,7 +2111,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -2138,7 +2138,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -2165,7 +2165,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -2403,11 +2403,11 @@
           "choiceDiagnostics": {
             "apple": {
               "misconception": "consonant-blends-distractor",
-              "feedback": "Recheck the consonant blends skill and use the clue in the question."
+              "feedback": "Review: Consonant blends. Then use the clue in the question."
             },
             "open": {
               "misconception": "consonant-blends-distractor",
-              "feedback": "Recheck the consonant blends skill and use the clue in the question."
+              "feedback": "Review: Consonant blends. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -2441,7 +2441,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -2483,11 +2483,11 @@
           "choiceDiagnostics": {
             "rain": {
               "misconception": "cvc-structure-distractor",
-              "feedback": "Recheck the cvc word structure skill and use the clue in the question."
+              "feedback": "Review: CVC word structure. Then use the clue in the question."
             },
             "boat": {
               "misconception": "cvc-structure-distractor",
-              "feedback": "Recheck the cvc word structure skill and use the clue in the question."
+              "feedback": "Review: CVC word structure. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -2521,7 +2521,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -2563,11 +2563,11 @@
           "choiceDiagnostics": {
             "cat": {
               "misconception": "long-short-a-distractor",
-              "feedback": "Recheck the long a and short a skill and use the clue in the question."
+              "feedback": "Review: Long a and short a. Then use the clue in the question."
             },
             "map": {
               "misconception": "long-short-a-distractor",
-              "feedback": "Recheck the long a and short a skill and use the clue in the question."
+              "feedback": "Review: Long a and short a. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -2601,7 +2601,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -2643,11 +2643,11 @@
           "choiceDiagnostics": {
             "jumpeding": {
               "misconception": "suffix-ed-ing-distractor",
-              "feedback": "Recheck the adding -ed and -ing skill and use the clue in the question."
+              "feedback": "Review: Adding -ed and -ing. Then use the clue in the question."
             },
             "jumpsing": {
               "misconception": "suffix-ed-ing-distractor",
-              "feedback": "Recheck the adding -ed and -ing skill and use the clue in the question."
+              "feedback": "Review: Adding -ed and -ing. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -2681,7 +2681,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -2723,11 +2723,11 @@
           "choiceDiagnostics": {
             "Recess should always be quiet.": {
               "misconception": "theme-distractor",
-              "feedback": "Recheck the theme skill and use the clue in the question."
+              "feedback": "Review: Theme. Then use the clue in the question."
             },
             "New students should play alone.": {
               "misconception": "theme-distractor",
-              "feedback": "Recheck the theme skill and use the clue in the question."
+              "feedback": "Review: Theme. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -2761,7 +2761,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -2803,11 +2803,11 @@
           "choiceDiagnostics": {
             "A dark room with no windows": {
               "misconception": "visualize-distractor",
-              "feedback": "Recheck the visualize skill and use the clue in the question."
+              "feedback": "Review: Visualize. Then use the clue in the question."
             },
             "A boat floating on a lake": {
               "misconception": "visualize-distractor",
-              "feedback": "Recheck the visualize skill and use the clue in the question."
+              "feedback": "Review: Visualize. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -2841,7 +2841,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -2883,11 +2883,11 @@
           "choiceDiagnostics": {
             "Maya asked.": {
               "misconception": "dialogue-distractor",
-              "feedback": "Recheck the dialogue skill and use the clue in the question."
+              "feedback": "Review: Dialogue. Then use the clue in the question."
             },
             "blue marker": {
               "misconception": "dialogue-distractor",
-              "feedback": "Recheck the dialogue skill and use the clue in the question."
+              "feedback": "Review: Dialogue. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -2921,7 +2921,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -2963,11 +2963,11 @@
           "choiceDiagnostics": {
             "chased the ball": {
               "misconception": "subject-predicate-distractor",
-              "feedback": "Recheck the subject and predicate skill and use the clue in the question."
+              "feedback": "Review: Subject and predicate. Then use the clue in the question."
             },
             "the ball": {
               "misconception": "subject-predicate-distractor",
-              "feedback": "Recheck the subject and predicate skill and use the clue in the question."
+              "feedback": "Review: Subject and predicate. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -3001,7 +3001,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d9f45fdf64e3d1f918a0e31cf97b732471585c00f7b27fbb2ba622a08cd8ed4d",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
             "matchedEvidence": [
               "Friday Oct. 9: Grammar (subject & predicate)"
@@ -3043,11 +3043,11 @@
           "choiceDiagnostics": {
             "what": {
               "misconception": "high-frequency-word-use-distractor",
-              "feedback": "Recheck the high-frequency words in context skill and use the clue in the question."
+              "feedback": "Review: High-frequency words in context. Then use the clue in the question."
             },
             "small": {
               "misconception": "high-frequency-word-use-distractor",
-              "feedback": "Recheck the high-frequency words in context skill and use the clue in the question."
+              "feedback": "Review: High-frequency words in context. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -3082,7 +3082,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3124,11 +3124,11 @@
           "choiceDiagnostics": {
             "what": {
               "misconception": "high-frequency-word-use-distractor",
-              "feedback": "Recheck the high-frequency words in context skill and use the clue in the question."
+              "feedback": "Review: High-frequency words in context. Then use the clue in the question."
             },
             "were": {
               "misconception": "high-frequency-word-use-distractor",
-              "feedback": "Recheck the high-frequency words in context skill and use the clue in the question."
+              "feedback": "Review: High-frequency words in context. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -3163,7 +3163,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3205,11 +3205,11 @@
           "choiceDiagnostics": {
             "what": {
               "misconception": "high-frequency-word-use-distractor",
-              "feedback": "Recheck the high-frequency words in context skill and use the clue in the question."
+              "feedback": "Review: High-frequency words in context. Then use the clue in the question."
             },
             "small": {
               "misconception": "high-frequency-word-use-distractor",
-              "feedback": "Recheck the high-frequency words in context skill and use the clue in the question."
+              "feedback": "Review: High-frequency words in context. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -3244,7 +3244,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3286,11 +3286,11 @@
           "choiceDiagnostics": {
             "were": {
               "misconception": "high-frequency-word-use-distractor",
-              "feedback": "Recheck the high-frequency words in context skill and use the clue in the question."
+              "feedback": "Review: High-frequency words in context. Then use the clue in the question."
             },
             "what": {
               "misconception": "high-frequency-word-use-distractor",
-              "feedback": "Recheck the high-frequency words in context skill and use the clue in the question."
+              "feedback": "Review: High-frequency words in context. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -3325,7 +3325,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3367,11 +3367,11 @@
           "choiceDiagnostics": {
             "small": {
               "misconception": "high-frequency-word-use-distractor",
-              "feedback": "Recheck the high-frequency words in context skill and use the clue in the question."
+              "feedback": "Review: High-frequency words in context. Then use the clue in the question."
             },
             "what": {
               "misconception": "high-frequency-word-use-distractor",
-              "feedback": "Recheck the high-frequency words in context skill and use the clue in the question."
+              "feedback": "Review: High-frequency words in context. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -3406,7 +3406,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3448,11 +3448,11 @@
           "choiceDiagnostics": {
             "here": {
               "misconception": "high-frequency-word-use-distractor",
-              "feedback": "Recheck the high-frequency words in context skill and use the clue in the question."
+              "feedback": "Review: High-frequency words in context. Then use the clue in the question."
             },
             "small": {
               "misconception": "high-frequency-word-use-distractor",
-              "feedback": "Recheck the high-frequency words in context skill and use the clue in the question."
+              "feedback": "Review: High-frequency words in context. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -3487,7 +3487,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3529,11 +3529,11 @@
           "choiceDiagnostics": {
             "were": {
               "misconception": "high-frequency-word-use-distractor",
-              "feedback": "Recheck the high-frequency words in context skill and use the clue in the question."
+              "feedback": "Review: High-frequency words in context. Then use the clue in the question."
             },
             "what": {
               "misconception": "high-frequency-word-use-distractor",
-              "feedback": "Recheck the high-frequency words in context skill and use the clue in the question."
+              "feedback": "Review: High-frequency words in context. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -3568,7 +3568,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3610,11 +3610,11 @@
           "choiceDiagnostics": {
             "were": {
               "misconception": "high-frequency-word-use-distractor",
-              "feedback": "Recheck the high-frequency words in context skill and use the clue in the question."
+              "feedback": "Review: High-frequency words in context. Then use the clue in the question."
             },
             "want": {
               "misconception": "high-frequency-word-use-distractor",
-              "feedback": "Recheck the high-frequency words in context skill and use the clue in the question."
+              "feedback": "Review: High-frequency words in context. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -3649,7 +3649,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3691,11 +3691,11 @@
           "choiceDiagnostics": {
             "he": {
               "misconception": "high-frequency-word-use-distractor",
-              "feedback": "Recheck the high-frequency words in context skill and use the clue in the question."
+              "feedback": "Review: High-frequency words in context. Then use the clue in the question."
             },
             "what": {
               "misconception": "high-frequency-word-use-distractor",
-              "feedback": "Recheck the high-frequency words in context skill and use the clue in the question."
+              "feedback": "Review: High-frequency words in context. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -3730,7 +3730,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3772,11 +3772,11 @@
           "choiceDiagnostics": {
             "were": {
               "misconception": "high-frequency-word-use-distractor",
-              "feedback": "Recheck the high-frequency words in context skill and use the clue in the question."
+              "feedback": "Review: High-frequency words in context. Then use the clue in the question."
             },
             "by": {
               "misconception": "high-frequency-word-use-distractor",
-              "feedback": "Recheck the high-frequency words in context skill and use the clue in the question."
+              "feedback": "Review: High-frequency words in context. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -3811,7 +3811,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3853,11 +3853,11 @@
           "choiceDiagnostics": {
             "think, choose, and love": {
               "misconception": "religion-trinity-distractor",
-              "feedback": "Recheck the the trinity skill and use the clue in the question."
+              "feedback": "Review: The Trinity. Then use the clue in the question."
             },
             "Jesus, Mary, and disciples": {
               "misconception": "religion-trinity-distractor",
-              "feedback": "Recheck the the trinity skill and use the clue in the question."
+              "feedback": "Review: The Trinity. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -3891,7 +3891,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -3933,11 +3933,11 @@
           "choiceDiagnostics": {
             "Father, Son, and Holy Spirit": {
               "misconception": "religion-image-likeness-distractor",
-              "feedback": "Recheck the made in god's image and likeness skill and use the clue in the question."
+              "feedback": "Review: Made in God's image and likeness. Then use the clue in the question."
             },
             "see, hear, and taste": {
               "misconception": "religion-image-likeness-distractor",
-              "feedback": "Recheck the made in god's image and likeness skill and use the clue in the question."
+              "feedback": "Review: Made in God's image and likeness. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -3971,7 +3971,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -4013,11 +4013,11 @@
           "choiceDiagnostics": {
             "Leaving trash beside a stream": {
               "misconception": "religion-creation-care-distractor",
-              "feedback": "Recheck the caring for god's creation skill and use the clue in the question."
+              "feedback": "Review: Caring for God's creation. Then use the clue in the question."
             },
             "Breaking branches for no reason": {
               "misconception": "religion-creation-care-distractor",
-              "feedback": "Recheck the caring for god's creation skill and use the clue in the question."
+              "feedback": "Review: Caring for God's creation. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -4051,7 +4051,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -4093,11 +4093,11 @@
           "choiceDiagnostics": {
             "He tells us about God and teaches us how to live.": {
               "misconception": "religion-jesus-savior-distractor",
-              "feedback": "Recheck the jesus our savior skill and use the clue in the question."
+              "feedback": "Review: Jesus our Savior. Then use the clue in the question."
             },
             "We use our senses to enjoy God’s gifts.": {
               "misconception": "religion-jesus-savior-distractor",
-              "feedback": "Recheck the jesus our savior skill and use the clue in the question."
+              "feedback": "Review: Jesus our Savior. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -4131,7 +4131,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:eaf345011898b7c5bbfc5c6f14f1db7ea6d59b70fbd176bde124554f8ce9e814",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace",
@@ -4174,11 +4174,11 @@
           "choiceDiagnostics": {
             "A sacred sign given to the Church by Jesus.": {
               "misconception": "religion-original-sin-distractor",
-              "feedback": "Recheck the original sin skill and use the clue in the question."
+              "feedback": "Review: Original sin. Then use the clue in the question."
             },
             "The gift that helps us believe.": {
               "misconception": "religion-original-sin-distractor",
-              "feedback": "Recheck the original sin skill and use the clue in the question."
+              "feedback": "Review: Original sin. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -4212,7 +4212,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -4254,11 +4254,11 @@
           "choiceDiagnostics": {
             "A sacred sign given to the Church by Jesus.": {
               "misconception": "religion-faith-gift-distractor",
-              "feedback": "Recheck the faith: a gift that helps us believe skill and use the clue in the question."
+              "feedback": "Review: Faith: a gift that helps us believe. Then use the clue in the question."
             },
             "The human tendency to sin.": {
               "misconception": "religion-faith-gift-distractor",
-              "feedback": "Recheck the faith: a gift that helps us believe skill and use the clue in the question."
+              "feedback": "Review: Faith: a gift that helps us believe. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -4292,7 +4292,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -4334,11 +4334,11 @@
           "choiceDiagnostics": {
             "A gift from God that helps us believe.": {
               "misconception": "religion-sacrament-sign-distractor",
-              "feedback": "Recheck the sacrament: a sacred sign skill and use the clue in the question."
+              "feedback": "Review: Sacrament: a sacred sign. Then use the clue in the question."
             },
             "The human tendency to sin.": {
               "misconception": "religion-sacrament-sign-distractor",
-              "feedback": "Recheck the sacrament: a sacred sign skill and use the clue in the question."
+              "feedback": "Review: Sacrament: a sacred sign. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -4372,7 +4372,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -4414,11 +4414,11 @@
           "choiceDiagnostics": {
             "We learn the names of the three Persons of the Trinity.": {
               "misconception": "religion-baptism-grace-distractor",
-              "feedback": "Recheck the baptism: holy spirit, faith, and grace skill and use the clue in the question."
+              "feedback": "Review: Baptism: Holy Spirit, faith, and grace. Then use the clue in the question."
             },
             "We are taught to use our five senses.": {
               "misconception": "religion-baptism-grace-distractor",
-              "feedback": "Recheck the baptism: holy spirit, faith, and grace skill and use the clue in the question."
+              "feedback": "Review: Baptism: Holy Spirit, faith, and grace. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -4452,7 +4452,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -4494,11 +4494,11 @@
           "choiceDiagnostics": {
             "Trinity": {
               "misconception": "religion-disciples-distractor",
-              "feedback": "Recheck the disciples: friends and followers of jesus skill and use the clue in the question."
+              "feedback": "Review: Disciples: friends and followers of Jesus. Then use the clue in the question."
             },
             "creation": {
               "misconception": "religion-disciples-distractor",
-              "feedback": "Recheck the disciples: friends and followers of jesus skill and use the clue in the question."
+              "feedback": "Review: Disciples: friends and followers of Jesus. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -4532,7 +4532,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -4574,11 +4574,11 @@
           "choiceDiagnostics": {
             "The Trinity is three Persons in one God.": {
               "misconception": "religion-mary-church-distractor",
-              "feedback": "Recheck the mary: jesus’ mother and mother of the church skill and use the clue in the question."
+              "feedback": "Review: Mary: Jesus’ mother and mother of the Church. Then use the clue in the question."
             },
             "We are responsible for caring for God’s gift of creation.": {
               "misconception": "religion-mary-church-distractor",
-              "feedback": "Recheck the mary: jesus’ mother and mother of the church skill and use the clue in the question."
+              "feedback": "Review: Mary: Jesus’ mother and mother of the Church. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -4612,7 +4612,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -4654,11 +4654,11 @@
           "choiceDiagnostics": {
             "Our senses help us notice and enjoy God’s gifts of creation.": {
               "misconception": "religion-seed-new-life-distractor",
-              "feedback": "Recheck the seed analogy and new life in grace skill and use the clue in the question."
+              "feedback": "Review: Seed analogy and new life in grace. Then use the clue in the question."
             },
             "People are made in God’s image and likeness and can think, choose, and love.": {
               "misconception": "religion-seed-new-life-distractor",
-              "feedback": "Recheck the seed analogy and new life in grace skill and use the clue in the question."
+              "feedback": "Review: Seed analogy and new life in grace. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -4692,7 +4692,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -4734,11 +4734,11 @@
           "choiceDiagnostics": {
             "We are made in God’s image and likeness and can think, choose, and love.": {
               "misconception": "religion-five-senses-distractor",
-              "feedback": "Recheck the five senses and god’s gifts skill and use the clue in the question."
+              "feedback": "Review: Five senses and God’s gifts. Then use the clue in the question."
             },
             "Disciples are friends and followers of Jesus.": {
               "misconception": "religion-five-senses-distractor",
-              "feedback": "Recheck the five senses and god’s gifts skill and use the clue in the question."
+              "feedback": "Review: Five senses and God’s gifts. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -4772,7 +4772,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -4814,11 +4814,11 @@
           "choiceDiagnostics": {
             "disciples": {
               "misconception": "religion-gifts-choices-distractor",
-              "feedback": "Recheck the god is the giver of gifts skill and use the clue in the question."
+              "feedback": "Review: God is the Giver of Gifts. Then use the clue in the question."
             },
             "our five senses": {
               "misconception": "religion-gifts-choices-distractor",
-              "feedback": "Recheck the god is the giver of gifts skill and use the clue in the question."
+              "feedback": "Review: God is the Giver of Gifts. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -4852,7 +4852,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -4894,11 +4894,11 @@
           "choiceDiagnostics": {
             "frog": {
               "misconception": "consonant-blends-distractor",
-              "feedback": "Recheck the consonant blends skill and use the clue in the question."
+              "feedback": "Review: Consonant blends. Then use the clue in the question."
             },
             "apple": {
               "misconception": "consonant-blends-distractor",
-              "feedback": "Recheck the consonant blends skill and use the clue in the question."
+              "feedback": "Review: Consonant blends. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -4932,7 +4932,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -4974,11 +4974,11 @@
           "choiceDiagnostics": {
             "The word has a short vowel.": {
               "misconception": "consonant-blends-distractor",
-              "feedback": "Recheck the consonant blends skill and use the clue in the question."
+              "feedback": "Review: Consonant blends. Then use the clue in the question."
             },
             "The word ends with two consonants.": {
               "misconception": "consonant-blends-distractor",
-              "feedback": "Recheck the consonant blends skill and use the clue in the question."
+              "feedback": "Review: Consonant blends. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -5012,7 +5012,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -5054,11 +5054,11 @@
           "choiceDiagnostics": {
             "rush": {
               "misconception": "consonant-blends-distractor",
-              "feedback": "Recheck the consonant blends skill and use the clue in the question."
+              "feedback": "Review: Consonant blends. Then use the clue in the question."
             },
             "apple": {
               "misconception": "consonant-blends-distractor",
-              "feedback": "Recheck the consonant blends skill and use the clue in the question."
+              "feedback": "Review: Consonant blends. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -5092,7 +5092,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -5134,11 +5134,11 @@
           "choiceDiagnostics": {
             "flag": {
               "misconception": "consonant-blends-distractor",
-              "feedback": "Recheck the consonant blends skill and use the clue in the question."
+              "feedback": "Review: Consonant blends. Then use the clue in the question."
             },
             "ant": {
               "misconception": "consonant-blends-distractor",
-              "feedback": "Recheck the consonant blends skill and use the clue in the question."
+              "feedback": "Review: Consonant blends. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -5172,7 +5172,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -5214,11 +5214,11 @@
           "choiceDiagnostics": {
             "stop and frog": {
               "misconception": "consonant-blends-distractor",
-              "feedback": "Recheck the consonant blends skill and use the clue in the question."
+              "feedback": "Review: Consonant blends. Then use the clue in the question."
             },
             "clap and lamp": {
               "misconception": "consonant-blends-distractor",
-              "feedback": "Recheck the consonant blends skill and use the clue in the question."
+              "feedback": "Review: Consonant blends. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -5252,7 +5252,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -5294,11 +5294,11 @@
           "choiceDiagnostics": {
             "The letters c and l make one new sound.": {
               "misconception": "consonant-blends-distractor",
-              "feedback": "Recheck the consonant blends skill and use the clue in the question."
+              "feedback": "Review: Consonant blends. Then use the clue in the question."
             },
             "The word ends with p.": {
               "misconception": "consonant-blends-distractor",
-              "feedback": "Recheck the consonant blends skill and use the clue in the question."
+              "feedback": "Review: Consonant blends. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -5332,7 +5332,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -5374,11 +5374,11 @@
           "choiceDiagnostics": {
             "apple": {
               "misconception": "consonant-blends-distractor",
-              "feedback": "Recheck the consonant blends skill and use the clue in the question."
+              "feedback": "Review: Consonant blends. Then use the clue in the question."
             },
             "open": {
               "misconception": "consonant-blends-distractor",
-              "feedback": "Recheck the consonant blends skill and use the clue in the question."
+              "feedback": "Review: Consonant blends. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -5412,7 +5412,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -5454,11 +5454,11 @@
           "choiceDiagnostics": {
             "rain": {
               "misconception": "cvc-structure-distractor",
-              "feedback": "Recheck the cvc word structure skill and use the clue in the question."
+              "feedback": "Review: CVC word structure. Then use the clue in the question."
             },
             "cake": {
               "misconception": "cvc-structure-distractor",
-              "feedback": "Recheck the cvc word structure skill and use the clue in the question."
+              "feedback": "Review: CVC word structure. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -5492,7 +5492,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -5534,11 +5534,11 @@
           "choiceDiagnostics": {
             "It begins with a consonant.": {
               "misconception": "cvc-structure-distractor",
-              "feedback": "Recheck the cvc word structure skill and use the clue in the question."
+              "feedback": "Review: CVC word structure. Then use the clue in the question."
             },
             "It contains the letter a.": {
               "misconception": "cvc-structure-distractor",
-              "feedback": "Recheck the cvc word structure skill and use the clue in the question."
+              "feedback": "Review: CVC word structure. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -5572,7 +5572,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -5614,11 +5614,11 @@
           "choiceDiagnostics": {
             "rain": {
               "misconception": "cvc-structure-distractor",
-              "feedback": "Recheck the cvc word structure skill and use the clue in the question."
+              "feedback": "Review: CVC word structure. Then use the clue in the question."
             },
             "cake": {
               "misconception": "cvc-structure-distractor",
-              "feedback": "Recheck the cvc word structure skill and use the clue in the question."
+              "feedback": "Review: CVC word structure. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -5652,7 +5652,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -5694,11 +5694,11 @@
           "choiceDiagnostics": {
             "boat": {
               "misconception": "cvc-structure-distractor",
-              "feedback": "Recheck the cvc word structure skill and use the clue in the question."
+              "feedback": "Review: CVC word structure. Then use the clue in the question."
             },
             "play": {
               "misconception": "cvc-structure-distractor",
-              "feedback": "Recheck the cvc word structure skill and use the clue in the question."
+              "feedback": "Review: CVC word structure. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -5732,7 +5732,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -5774,11 +5774,11 @@
           "choiceDiagnostics": {
             "rain and boat": {
               "misconception": "cvc-structure-distractor",
-              "feedback": "Recheck the cvc word structure skill and use the clue in the question."
+              "feedback": "Review: CVC word structure. Then use the clue in the question."
             },
             "cake and kite": {
               "misconception": "cvc-structure-distractor",
-              "feedback": "Recheck the cvc word structure skill and use the clue in the question."
+              "feedback": "Review: CVC word structure. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -5812,7 +5812,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -5854,11 +5854,11 @@
           "choiceDiagnostics": {
             "It starts with a consonant.": {
               "misconception": "cvc-structure-distractor",
-              "feedback": "Recheck the cvc word structure skill and use the clue in the question."
+              "feedback": "Review: CVC word structure. Then use the clue in the question."
             },
             "It has the letter b.": {
               "misconception": "cvc-structure-distractor",
-              "feedback": "Recheck the cvc word structure skill and use the clue in the question."
+              "feedback": "Review: CVC word structure. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -5892,7 +5892,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -5934,11 +5934,11 @@
           "choiceDiagnostics": {
             "Red names a color.": {
               "misconception": "cvc-structure-distractor",
-              "feedback": "Recheck the cvc word structure skill and use the clue in the question."
+              "feedback": "Review: CVC word structure. Then use the clue in the question."
             },
             "Red has a short vowel sound.": {
               "misconception": "cvc-structure-distractor",
-              "feedback": "Recheck the cvc word structure skill and use the clue in the question."
+              "feedback": "Review: CVC word structure. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -5972,7 +5972,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -6014,11 +6014,11 @@
           "choiceDiagnostics": {
             "cake and game": {
               "misconception": "long-short-a-distractor",
-              "feedback": "Recheck the long a and short a skill and use the clue in the question."
+              "feedback": "Review: Long a and short a. Then use the clue in the question."
             },
             "late and cap": {
               "misconception": "long-short-a-distractor",
-              "feedback": "Recheck the long a and short a skill and use the clue in the question."
+              "feedback": "Review: Long a and short a. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -6052,7 +6052,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -6094,11 +6094,11 @@
           "choiceDiagnostics": {
             "The g makes every vowel long.": {
               "misconception": "long-short-a-distractor",
-              "feedback": "Recheck the long a and short a skill and use the clue in the question."
+              "feedback": "Review: Long a and short a. Then use the clue in the question."
             },
             "Every four-letter word has a long vowel.": {
               "misconception": "long-short-a-distractor",
-              "feedback": "Recheck the long a and short a skill and use the clue in the question."
+              "feedback": "Review: Long a and short a. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -6132,7 +6132,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -6174,11 +6174,11 @@
           "choiceDiagnostics": {
             "cake": {
               "misconception": "long-short-a-distractor",
-              "feedback": "Recheck the long a and short a skill and use the clue in the question."
+              "feedback": "Review: Long a and short a. Then use the clue in the question."
             },
             "late": {
               "misconception": "long-short-a-distractor",
-              "feedback": "Recheck the long a and short a skill and use the clue in the question."
+              "feedback": "Review: Long a and short a. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -6212,7 +6212,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -6254,11 +6254,11 @@
           "choiceDiagnostics": {
             "cat": {
               "misconception": "long-short-a-distractor",
-              "feedback": "Recheck the long a and short a skill and use the clue in the question."
+              "feedback": "Review: Long a and short a. Then use the clue in the question."
             },
             "map": {
               "misconception": "long-short-a-distractor",
-              "feedback": "Recheck the long a and short a skill and use the clue in the question."
+              "feedback": "Review: Long a and short a. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -6292,7 +6292,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -6334,11 +6334,11 @@
           "choiceDiagnostics": {
             "game — lake": {
               "misconception": "long-short-a-distractor",
-              "feedback": "Recheck the long a and short a skill and use the clue in the question."
+              "feedback": "Review: Long a and short a. Then use the clue in the question."
             },
             "cat — map": {
               "misconception": "long-short-a-distractor",
-              "feedback": "Recheck the long a and short a skill and use the clue in the question."
+              "feedback": "Review: Long a and short a. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -6372,7 +6372,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -6414,11 +6414,11 @@
           "choiceDiagnostics": {
             "The l always makes a long vowel.": {
               "misconception": "long-short-a-distractor",
-              "feedback": "Recheck the long a and short a skill and use the clue in the question."
+              "feedback": "Review: Long a and short a. Then use the clue in the question."
             },
             "The t changes a into e.": {
               "misconception": "long-short-a-distractor",
-              "feedback": "Recheck the long a and short a skill and use the clue in the question."
+              "feedback": "Review: Long a and short a. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -6452,7 +6452,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -6494,11 +6494,11 @@
           "choiceDiagnostics": {
             "Both words have short a.": {
               "misconception": "long-short-a-distractor",
-              "feedback": "Recheck the long a and short a skill and use the clue in the question."
+              "feedback": "Review: Long a and short a. Then use the clue in the question."
             },
             "Made has short a because it has four letters.": {
               "misconception": "long-short-a-distractor",
-              "feedback": "Recheck the long a and short a skill and use the clue in the question."
+              "feedback": "Review: Long a and short a. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -6532,7 +6532,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -6574,11 +6574,11 @@
           "choiceDiagnostics": {
             "jumped": {
               "misconception": "suffix-ed-ing-distractor",
-              "feedback": "Recheck the adding -ed and -ing skill and use the clue in the question."
+              "feedback": "Review: Adding -ed and -ing. Then use the clue in the question."
             },
             "jumps": {
               "misconception": "suffix-ed-ing-distractor",
-              "feedback": "Recheck the adding -ed and -ing skill and use the clue in the question."
+              "feedback": "Review: Adding -ed and -ing. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -6612,7 +6612,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -6654,11 +6654,11 @@
           "choiceDiagnostics": {
             "That the word names a person": {
               "misconception": "suffix-ed-ing-distractor",
-              "feedback": "Recheck the adding -ed and -ing skill and use the clue in the question."
+              "feedback": "Review: Adding -ed and -ing. Then use the clue in the question."
             },
             "That the base word has no meaning": {
               "misconception": "suffix-ed-ing-distractor",
-              "feedback": "Recheck the adding -ed and -ing skill and use the clue in the question."
+              "feedback": "Review: Adding -ed and -ing. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -6692,7 +6692,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -6734,11 +6734,11 @@
           "choiceDiagnostics": {
             "jumpeded": {
               "misconception": "suffix-ed-ing-distractor",
-              "feedback": "Recheck the adding -ed and -ing skill and use the clue in the question."
+              "feedback": "Review: Adding -ed and -ing. Then use the clue in the question."
             },
             "jumpsed": {
               "misconception": "suffix-ed-ing-distractor",
-              "feedback": "Recheck the adding -ed and -ing skill and use the clue in the question."
+              "feedback": "Review: Adding -ed and -ing. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -6772,7 +6772,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -6814,11 +6814,11 @@
           "choiceDiagnostics": {
             "looked": {
               "misconception": "suffix-ed-ing-distractor",
-              "feedback": "Recheck the adding -ed and -ing skill and use the clue in the question."
+              "feedback": "Review: Adding -ed and -ing. Then use the clue in the question."
             },
             "looks": {
               "misconception": "suffix-ed-ing-distractor",
-              "feedback": "Recheck the adding -ed and -ing skill and use the clue in the question."
+              "feedback": "Review: Adding -ed and -ing. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -6852,7 +6852,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -6894,11 +6894,11 @@
           "choiceDiagnostics": {
             "playing": {
               "misconception": "suffix-ed-ing-distractor",
-              "feedback": "Recheck the adding -ed and -ing skill and use the clue in the question."
+              "feedback": "Review: Adding -ed and -ing. Then use the clue in the question."
             },
             "plays": {
               "misconception": "suffix-ed-ing-distractor",
-              "feedback": "Recheck the adding -ed and -ing skill and use the clue in the question."
+              "feedback": "Review: Adding -ed and -ing. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -6932,7 +6932,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -6974,11 +6974,11 @@
           "choiceDiagnostics": {
             "-ed makes the word name a person.": {
               "misconception": "suffix-ed-ing-distractor",
-              "feedback": "Recheck the adding -ed and -ing skill and use the clue in the question."
+              "feedback": "Review: Adding -ed and -ing. Then use the clue in the question."
             },
             "-ed always means the action is happening now.": {
               "misconception": "suffix-ed-ing-distractor",
-              "feedback": "Recheck the adding -ed and -ing skill and use the clue in the question."
+              "feedback": "Review: Adding -ed and -ing. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -7012,7 +7012,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -7054,11 +7054,11 @@
           "choiceDiagnostics": {
             "Both mean the action happened yesterday.": {
               "misconception": "suffix-ed-ing-distractor",
-              "feedback": "Recheck the adding -ed and -ing skill and use the clue in the question."
+              "feedback": "Review: Adding -ed and -ing. Then use the clue in the question."
             },
             "Both are plural nouns.": {
               "misconception": "suffix-ed-ing-distractor",
-              "feedback": "Recheck the adding -ed and -ing skill and use the clue in the question."
+              "feedback": "Review: Adding -ed and -ing. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -7092,7 +7092,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -7134,11 +7134,11 @@
           "choiceDiagnostics": {
             "Only easy tasks are worth doing.": {
               "misconception": "theme-distractor",
-              "feedback": "Recheck the theme skill and use the clue in the question."
+              "feedback": "Review: Theme. Then use the clue in the question."
             },
             "Stop after the first mistake.": {
               "misconception": "theme-distractor",
-              "feedback": "Recheck the theme skill and use the clue in the question."
+              "feedback": "Review: Theme. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -7172,7 +7172,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -7214,11 +7214,11 @@
           "choiceDiagnostics": {
             "It repeats one object from the story.": {
               "misconception": "theme-distractor",
-              "feedback": "Recheck the theme skill and use the clue in the question."
+              "feedback": "Review: Theme. Then use the clue in the question."
             },
             "It describes only where the story happens.": {
               "misconception": "theme-distractor",
-              "feedback": "Recheck the theme skill and use the clue in the question."
+              "feedback": "Review: Theme. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -7252,7 +7252,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -7294,11 +7294,11 @@
           "choiceDiagnostics": {
             "Shoes should always be new.": {
               "misconception": "theme-distractor",
-              "feedback": "Recheck the theme skill and use the clue in the question."
+              "feedback": "Review: Theme. Then use the clue in the question."
             },
             "Mornings are the longest part of the day.": {
               "misconception": "theme-distractor",
-              "feedback": "Recheck the theme skill and use the clue in the question."
+              "feedback": "Review: Theme. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -7332,7 +7332,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -7374,11 +7374,11 @@
           "choiceDiagnostics": {
             "Crayons are difficult to carry.": {
               "misconception": "theme-distractor",
-              "feedback": "Recheck the theme skill and use the clue in the question."
+              "feedback": "Review: Theme. Then use the clue in the question."
             },
             "Classrooms should have no colors.": {
               "misconception": "theme-distractor",
-              "feedback": "Recheck the theme skill and use the clue in the question."
+              "feedback": "Review: Theme. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -7412,7 +7412,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -7454,11 +7454,11 @@
           "choiceDiagnostics": {
             "Reading should only happen silently.": {
               "misconception": "theme-distractor",
-              "feedback": "Recheck the theme skill and use the clue in the question."
+              "feedback": "Review: Theme. Then use the clue in the question."
             },
             "Feeling nervous means you should always stop.": {
               "misconception": "theme-distractor",
-              "feedback": "Recheck the theme skill and use the clue in the question."
+              "feedback": "Review: Theme. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -7492,7 +7492,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -7534,11 +7534,11 @@
           "choiceDiagnostics": {
             "It tells exactly where the story happens.": {
               "misconception": "theme-distractor",
-              "feedback": "Recheck the theme skill and use the clue in the question."
+              "feedback": "Review: Theme. Then use the clue in the question."
             },
             "It names one object in the story.": {
               "misconception": "theme-distractor",
-              "feedback": "Recheck the theme skill and use the clue in the question."
+              "feedback": "Review: Theme. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -7572,7 +7572,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -7614,11 +7614,11 @@
           "choiceDiagnostics": {
             "Damaged things are always useless.": {
               "misconception": "theme-distractor",
-              "feedback": "Recheck the theme skill and use the clue in the question."
+              "feedback": "Review: Theme. Then use the clue in the question."
             },
             "Mistakes should always be hidden.": {
               "misconception": "theme-distractor",
-              "feedback": "Recheck the theme skill and use the clue in the question."
+              "feedback": "Review: Theme. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -7652,7 +7652,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -7694,11 +7694,11 @@
           "choiceDiagnostics": {
             "A bright beach with large waves": {
               "misconception": "visualize-distractor",
-              "feedback": "Recheck the visualize skill and use the clue in the question."
+              "feedback": "Review: Visualize. Then use the clue in the question."
             },
             "A sunny playground with no clouds": {
               "misconception": "visualize-distractor",
-              "feedback": "Recheck the visualize skill and use the clue in the question."
+              "feedback": "Review: Visualize. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -7732,7 +7732,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -7774,11 +7774,11 @@
           "choiceDiagnostics": {
             "Someone may walk later.": {
               "misconception": "visualize-distractor",
-              "feedback": "Recheck the visualize skill and use the clue in the question."
+              "feedback": "Review: Visualize. Then use the clue in the question."
             },
             "The sentence has many words.": {
               "misconception": "visualize-distractor",
-              "feedback": "Recheck the visualize skill and use the clue in the question."
+              "feedback": "Review: Visualize. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -7812,7 +7812,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -7854,11 +7854,11 @@
           "choiceDiagnostics": {
             "A dark cave with a lantern": {
               "misconception": "visualize-distractor",
-              "feedback": "Recheck the visualize skill and use the clue in the question."
+              "feedback": "Review: Visualize. Then use the clue in the question."
             },
             "A snowy road at night": {
               "misconception": "visualize-distractor",
-              "feedback": "Recheck the visualize skill and use the clue in the question."
+              "feedback": "Review: Visualize. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -7892,7 +7892,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -7934,11 +7934,11 @@
           "choiceDiagnostics": {
             "A dry sandbox in bright sun": {
               "misconception": "visualize-distractor",
-              "feedback": "Recheck the visualize skill and use the clue in the question."
+              "feedback": "Review: Visualize. Then use the clue in the question."
             },
             "A frozen lake under stars": {
               "misconception": "visualize-distractor",
-              "feedback": "Recheck the visualize skill and use the clue in the question."
+              "feedback": "Review: Visualize. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -7972,7 +7972,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -8014,11 +8014,11 @@
           "choiceDiagnostics": {
             "A horse running across a field": {
               "misconception": "visualize-distractor",
-              "feedback": "Recheck the visualize skill and use the clue in the question."
+              "feedback": "Review: Visualize. Then use the clue in the question."
             },
             "A bird sitting on a roof": {
               "misconception": "visualize-distractor",
-              "feedback": "Recheck the visualize skill and use the clue in the question."
+              "feedback": "Review: Visualize. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -8052,7 +8052,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -8094,11 +8094,11 @@
           "choiceDiagnostics": {
             "the, across, the": {
               "misconception": "visualize-distractor",
-              "feedback": "Recheck the visualize skill and use the clue in the question."
+              "feedback": "Review: Visualize. Then use the clue in the question."
             },
             "moonlight is a word": {
               "misconception": "visualize-distractor",
-              "feedback": "Recheck the visualize skill and use the clue in the question."
+              "feedback": "Review: Visualize. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -8132,7 +8132,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -8174,11 +8174,11 @@
           "choiceDiagnostics": {
             "It has more letters.": {
               "misconception": "visualize-distractor",
-              "feedback": "Recheck the visualize skill and use the clue in the question."
+              "feedback": "Review: Visualize. Then use the clue in the question."
             },
             "It uses the word sidewalk.": {
               "misconception": "visualize-distractor",
-              "feedback": "Recheck the visualize skill and use the clue in the question."
+              "feedback": "Review: Visualize. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -8212,7 +8212,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -8254,11 +8254,11 @@
           "choiceDiagnostics": {
             "Lena shouted.": {
               "misconception": "dialogue-distractor",
-              "feedback": "Recheck the dialogue skill and use the clue in the question."
+              "feedback": "Review: Dialogue. Then use the clue in the question."
             },
             "my book": {
               "misconception": "dialogue-distractor",
-              "feedback": "Recheck the dialogue skill and use the clue in the question."
+              "feedback": "Review: Dialogue. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -8292,7 +8292,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -8334,11 +8334,11 @@
           "choiceDiagnostics": {
             "They show where the story takes place.": {
               "misconception": "dialogue-distractor",
-              "feedback": "Recheck the dialogue skill and use the clue in the question."
+              "feedback": "Review: Dialogue. Then use the clue in the question."
             },
             "They tell how many paragraphs are in a story.": {
               "misconception": "dialogue-distractor",
-              "feedback": "Recheck the dialogue skill and use the clue in the question."
+              "feedback": "Review: Dialogue. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -8372,7 +8372,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -8414,11 +8414,11 @@
           "choiceDiagnostics": {
             "Noah said.": {
               "misconception": "dialogue-distractor",
-              "feedback": "Recheck the dialogue skill and use the clue in the question."
+              "feedback": "Review: Dialogue. Then use the clue in the question."
             },
             "help Noah": {
               "misconception": "dialogue-distractor",
-              "feedback": "Recheck the dialogue skill and use the clue in the question."
+              "feedback": "Review: Dialogue. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -8452,7 +8452,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -8494,11 +8494,11 @@
           "choiceDiagnostics": {
             "Ava whispered.": {
               "misconception": "dialogue-distractor",
-              "feedback": "Recheck the dialogue skill and use the clue in the question."
+              "feedback": "Review: Dialogue. Then use the clue in the question."
             },
             "The narrator said Ava was loud.": {
               "misconception": "dialogue-distractor",
-              "feedback": "Recheck the dialogue skill and use the clue in the question."
+              "feedback": "Review: Dialogue. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -8532,7 +8532,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -8574,11 +8574,11 @@
           "choiceDiagnostics": {
             "Let’s go outside, Ben said.": {
               "misconception": "dialogue-distractor",
-              "feedback": "Recheck the dialogue skill and use the clue in the question."
+              "feedback": "Review: Dialogue. Then use the clue in the question."
             },
             "Ben said lets “go outside”.": {
               "misconception": "dialogue-distractor",
-              "feedback": "Recheck the dialogue skill and use the clue in the question."
+              "feedback": "Review: Dialogue. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -8612,7 +8612,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -8654,11 +8654,11 @@
           "choiceDiagnostics": {
             "Mia is the narrator.": {
               "misconception": "dialogue-distractor",
-              "feedback": "Recheck the dialogue skill and use the clue in the question."
+              "feedback": "Review: Dialogue. Then use the clue in the question."
             },
             "The story happens outside.": {
               "misconception": "dialogue-distractor",
-              "feedback": "Recheck the dialogue skill and use the clue in the question."
+              "feedback": "Review: Dialogue. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -8692,7 +8692,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -8734,11 +8734,11 @@
           "choiceDiagnostics": {
             "Every word is dialogue.": {
               "misconception": "dialogue-distractor",
-              "feedback": "Recheck the dialogue skill and use the clue in the question."
+              "feedback": "Review: Dialogue. Then use the clue in the question."
             },
             "None of the words are spoken.": {
               "misconception": "dialogue-distractor",
-              "feedback": "Recheck the dialogue skill and use the clue in the question."
+              "feedback": "Review: Dialogue. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -8772,7 +8772,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
             "matchedEvidence": [
               "Reading Comprehension: visualize, theme, dialogue"
@@ -8814,11 +8814,11 @@
           "choiceDiagnostics": {
             "The birds": {
               "misconception": "subject-predicate-distractor",
-              "feedback": "Recheck the subject and predicate skill and use the clue in the question."
+              "feedback": "Review: Subject and predicate. Then use the clue in the question."
             },
             "the tree": {
               "misconception": "subject-predicate-distractor",
-              "feedback": "Recheck the subject and predicate skill and use the clue in the question."
+              "feedback": "Review: Subject and predicate. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -8852,7 +8852,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d9f45fdf64e3d1f918a0e31cf97b732471585c00f7b27fbb2ba622a08cd8ed4d",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
             "matchedEvidence": [
               "Friday Oct. 9: Grammar (subject & predicate)"
@@ -8894,11 +8894,11 @@
           "choiceDiagnostics": {
             "Opened is the subject; Mia is the predicate.": {
               "misconception": "subject-predicate-distractor",
-              "feedback": "Recheck the subject and predicate skill and use the clue in the question."
+              "feedback": "Review: Subject and predicate. Then use the clue in the question."
             },
             "The window is the subject; Mia opened is the predicate.": {
               "misconception": "subject-predicate-distractor",
-              "feedback": "Recheck the subject and predicate skill and use the clue in the question."
+              "feedback": "Review: Subject and predicate. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -8932,7 +8932,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d9f45fdf64e3d1f918a0e31cf97b732471585c00f7b27fbb2ba622a08cd8ed4d",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
             "matchedEvidence": [
               "Friday Oct. 9: Grammar (subject & predicate)"
@@ -8974,11 +8974,11 @@
           "choiceDiagnostics": {
             "builds a tower": {
               "misconception": "subject-predicate-distractor",
-              "feedback": "Recheck the subject and predicate skill and use the clue in the question."
+              "feedback": "Review: Subject and predicate. Then use the clue in the question."
             },
             "a tower": {
               "misconception": "subject-predicate-distractor",
-              "feedback": "Recheck the subject and predicate skill and use the clue in the question."
+              "feedback": "Review: Subject and predicate. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -9012,7 +9012,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d9f45fdf64e3d1f918a0e31cf97b732471585c00f7b27fbb2ba622a08cd8ed4d",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
             "matchedEvidence": [
               "Friday Oct. 9: Grammar (subject & predicate)"
@@ -9054,11 +9054,11 @@
           "choiceDiagnostics": {
             "The yellow bus": {
               "misconception": "subject-predicate-distractor",
-              "feedback": "Recheck the subject and predicate skill and use the clue in the question."
+              "feedback": "Review: Subject and predicate. Then use the clue in the question."
             },
             "the school": {
               "misconception": "subject-predicate-distractor",
-              "feedback": "Recheck the subject and predicate skill and use the clue in the question."
+              "feedback": "Review: Subject and predicate. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -9092,7 +9092,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d9f45fdf64e3d1f918a0e31cf97b732471585c00f7b27fbb2ba622a08cd8ed4d",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
             "matchedEvidence": [
               "Friday Oct. 9: Grammar (subject & predicate)"
@@ -9134,11 +9134,11 @@
           "choiceDiagnostics": {
             "subject: hopped; predicate: The rabbit": {
               "misconception": "subject-predicate-distractor",
-              "feedback": "Recheck the subject and predicate skill and use the clue in the question."
+              "feedback": "Review: Subject and predicate. Then use the clue in the question."
             },
             "subject: the yard; predicate: The rabbit hopped": {
               "misconception": "subject-predicate-distractor",
-              "feedback": "Recheck the subject and predicate skill and use the clue in the question."
+              "feedback": "Review: Subject and predicate. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -9172,7 +9172,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d9f45fdf64e3d1f918a0e31cf97b732471585c00f7b27fbb2ba622a08cd8ed4d",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
             "matchedEvidence": [
               "Friday Oct. 9: Grammar (subject & predicate)"
@@ -9214,11 +9214,11 @@
           "choiceDiagnostics": {
             "It tells what the tree did.": {
               "misconception": "subject-predicate-distractor",
-              "feedback": "Recheck the subject and predicate skill and use the clue in the question."
+              "feedback": "Review: Subject and predicate. Then use the clue in the question."
             },
             "It names where the action happened.": {
               "misconception": "subject-predicate-distractor",
-              "feedback": "Recheck the subject and predicate skill and use the clue in the question."
+              "feedback": "Review: Subject and predicate. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -9252,7 +9252,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d9f45fdf64e3d1f918a0e31cf97b732471585c00f7b27fbb2ba622a08cd8ed4d",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
             "matchedEvidence": [
               "Friday Oct. 9: Grammar (subject & predicate)"
@@ -9294,11 +9294,11 @@
           "choiceDiagnostics": {
             "Read a | new book our class.": {
               "misconception": "subject-predicate-distractor",
-              "feedback": "Recheck the subject and predicate skill and use the clue in the question."
+              "feedback": "Review: Subject and predicate. Then use the clue in the question."
             },
             "A new book | our class read.": {
               "misconception": "subject-predicate-distractor",
-              "feedback": "Recheck the subject and predicate skill and use the clue in the question."
+              "feedback": "Review: Subject and predicate. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -9332,7 +9332,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d9f45fdf64e3d1f918a0e31cf97b732471585c00f7b27fbb2ba622a08cd8ed4d",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
             "matchedEvidence": [
               "Friday Oct. 9: Grammar (subject & predicate)"
@@ -9374,11 +9374,11 @@
           "choiceDiagnostics": {
             "being made in God's image and likeness": {
               "misconception": "religion-trinity-distractor",
-              "feedback": "Recheck the the trinity skill and use the clue in the question."
+              "feedback": "Review: The Trinity. Then use the clue in the question."
             },
             "caring for God's creation": {
               "misconception": "religion-trinity-distractor",
-              "feedback": "Recheck the the trinity skill and use the clue in the question."
+              "feedback": "Review: The Trinity. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -9412,7 +9412,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -9454,11 +9454,11 @@
           "choiceDiagnostics": {
             "People are made in God’s image and likeness and can think, choose, and love.": {
               "misconception": "religion-trinity-distractor",
-              "feedback": "Recheck the the trinity skill and use the clue in the question."
+              "feedback": "Review: The Trinity. Then use the clue in the question."
             },
             "We are responsible for caring for God’s gift of creation.": {
               "misconception": "religion-trinity-distractor",
-              "feedback": "Recheck the the trinity skill and use the clue in the question."
+              "feedback": "Review: The Trinity. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -9492,7 +9492,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -9534,11 +9534,11 @@
           "choiceDiagnostics": {
             "the Trinity": {
               "misconception": "religion-image-likeness-distractor",
-              "feedback": "Recheck the made in god's image and likeness skill and use the clue in the question."
+              "feedback": "Review: Made in God's image and likeness. Then use the clue in the question."
             },
             "using our senses to enjoy creation": {
               "misconception": "religion-image-likeness-distractor",
-              "feedback": "Recheck the made in god's image and likeness skill and use the clue in the question."
+              "feedback": "Review: Made in God's image and likeness. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -9572,7 +9572,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -9614,11 +9614,11 @@
           "choiceDiagnostics": {
             "Trinity → people use five senses to enjoy creation": {
               "misconception": "religion-image-likeness-distractor",
-              "feedback": "Recheck the made in god's image and likeness skill and use the clue in the question."
+              "feedback": "Review: Made in God's image and likeness. Then use the clue in the question."
             },
             "Disciples → three Persons in one God": {
               "misconception": "religion-image-likeness-distractor",
-              "feedback": "Recheck the made in god's image and likeness skill and use the clue in the question."
+              "feedback": "Review: Made in God's image and likeness. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -9652,7 +9652,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -9694,11 +9694,11 @@
           "choiceDiagnostics": {
             "Ignore them.": {
               "misconception": "religion-creation-care-distractor",
-              "feedback": "Recheck the caring for god's creation skill and use the clue in the question."
+              "feedback": "Review: Caring for God's creation. Then use the clue in the question."
             },
             "Use them without responsibility.": {
               "misconception": "religion-creation-care-distractor",
-              "feedback": "Recheck the caring for god's creation skill and use the clue in the question."
+              "feedback": "Review: Caring for God's creation. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -9732,7 +9732,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -9774,11 +9774,11 @@
           "choiceDiagnostics": {
             "It shows that water should never be used.": {
               "misconception": "religion-creation-care-distractor",
-              "feedback": "Recheck the caring for god's creation skill and use the clue in the question."
+              "feedback": "Review: Caring for God's creation. Then use the clue in the question."
             },
             "It changes the number of Persons in the Trinity.": {
               "misconception": "religion-creation-care-distractor",
-              "feedback": "Recheck the caring for god's creation skill and use the clue in the question."
+              "feedback": "Review: Caring for God's creation. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -9812,7 +9812,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -9854,11 +9854,11 @@
           "choiceDiagnostics": {
             "We use our senses to enjoy creation.": {
               "misconception": "religion-jesus-savior-distractor",
-              "feedback": "Recheck the jesus our savior skill and use the clue in the question."
+              "feedback": "Review: Jesus our Savior. Then use the clue in the question."
             },
             "Mary is the mother of the Church.": {
               "misconception": "religion-jesus-savior-distractor",
-              "feedback": "Recheck the jesus our savior skill and use the clue in the question."
+              "feedback": "Review: Jesus our Savior. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -9892,7 +9892,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:eaf345011898b7c5bbfc5c6f14f1db7ea6d59b70fbd176bde124554f8ce9e814",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace",
@@ -9935,11 +9935,11 @@
           "choiceDiagnostics": {
             "He is Mary’s son and people have five senses.": {
               "misconception": "religion-jesus-savior-distractor",
-              "feedback": "Recheck the jesus our savior skill and use the clue in the question."
+              "feedback": "Review: Jesus our Savior. Then use the clue in the question."
             },
             "Creation has gifts and disciples are friends.": {
               "misconception": "religion-jesus-savior-distractor",
-              "feedback": "Recheck the jesus our savior skill and use the clue in the question."
+              "feedback": "Review: Jesus our Savior. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -9973,7 +9973,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:eaf345011898b7c5bbfc5c6f14f1db7ea6d59b70fbd176bde124554f8ce9e814",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace",
@@ -10016,11 +10016,11 @@
           "choiceDiagnostics": {
             "They are named as the three Persons of the Trinity.": {
               "misconception": "religion-original-sin-distractor",
-              "feedback": "Recheck the original sin skill and use the clue in the question."
+              "feedback": "Review: Original sin. Then use the clue in the question."
             },
             "They gave the Church the sacraments.": {
               "misconception": "religion-original-sin-distractor",
-              "feedback": "Recheck the original sin skill and use the clue in the question."
+              "feedback": "Review: Original sin. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -10054,7 +10054,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -10096,11 +10096,11 @@
           "choiceDiagnostics": {
             "The lesson says they are sacraments.": {
               "misconception": "religion-original-sin-distractor",
-              "feedback": "Recheck the original sin skill and use the clue in the question."
+              "feedback": "Review: Original sin. Then use the clue in the question."
             },
             "The lesson says they are gifts of the Holy Spirit.": {
               "misconception": "religion-original-sin-distractor",
-              "feedback": "Recheck the original sin skill and use the clue in the question."
+              "feedback": "Review: Original sin. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -10134,7 +10134,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -10176,11 +10176,11 @@
           "choiceDiagnostics": {
             "washes away every mistake we make": {
               "misconception": "religion-faith-gift-distractor",
-              "feedback": "Recheck the faith: a gift that helps us believe skill and use the clue in the question."
+              "feedback": "Review: Faith: a gift that helps us believe. Then use the clue in the question."
             },
             "names the three Persons of the Trinity": {
               "misconception": "religion-faith-gift-distractor",
-              "feedback": "Recheck the faith: a gift that helps us believe skill and use the clue in the question."
+              "feedback": "Review: Faith: a gift that helps us believe. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -10214,7 +10214,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -10256,11 +10256,11 @@
           "choiceDiagnostics": {
             "sacred sign → human tendency to sin": {
               "misconception": "religion-faith-gift-distractor",
-              "feedback": "Recheck the faith: a gift that helps us believe skill and use the clue in the question."
+              "feedback": "Review: Faith: a gift that helps us believe. Then use the clue in the question."
             },
             "Baptism → three Persons in one God": {
               "misconception": "religion-faith-gift-distractor",
-              "feedback": "Recheck the faith: a gift that helps us believe skill and use the clue in the question."
+              "feedback": "Review: Faith: a gift that helps us believe. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -10294,7 +10294,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -10336,11 +10336,11 @@
           "choiceDiagnostics": {
             "a human tendency to sin": {
               "misconception": "religion-sacrament-sign-distractor",
-              "feedback": "Recheck the sacrament: a sacred sign skill and use the clue in the question."
+              "feedback": "Review: Sacrament: a sacred sign. Then use the clue in the question."
             },
             "a gift that helps us use our senses": {
               "misconception": "religion-sacrament-sign-distractor",
-              "feedback": "Recheck the sacrament: a sacred sign skill and use the clue in the question."
+              "feedback": "Review: Sacrament: a sacred sign. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -10374,7 +10374,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -10416,11 +10416,11 @@
           "choiceDiagnostics": {
             "They are all names for original sin.": {
               "misconception": "religion-sacrament-sign-distractor",
-              "feedback": "Recheck the sacrament: a sacred sign skill and use the clue in the question."
+              "feedback": "Review: Sacrament: a sacred sign. Then use the clue in the question."
             },
             "They are all gifts received at Baptism.": {
               "misconception": "religion-sacrament-sign-distractor",
-              "feedback": "Recheck the sacrament: a sacred sign skill and use the clue in the question."
+              "feedback": "Review: Sacrament: a sacred sign. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -10454,7 +10454,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -10496,11 +10496,11 @@
           "choiceDiagnostics": {
             "the three Persons of the Trinity and five senses": {
               "misconception": "religion-baptism-grace-distractor",
-              "feedback": "Recheck the baptism: holy spirit, faith, and grace skill and use the clue in the question."
+              "feedback": "Review: Baptism: Holy Spirit, faith, and grace. Then use the clue in the question."
             },
             "Adam, Eve, and the disciples": {
               "misconception": "religion-baptism-grace-distractor",
-              "feedback": "Recheck the baptism: holy spirit, faith, and grace skill and use the clue in the question."
+              "feedback": "Review: Baptism: Holy Spirit, faith, and grace. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -10534,7 +10534,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -10576,11 +10576,11 @@
           "choiceDiagnostics": {
             "faith is washed away → original sin is received": {
               "misconception": "religion-baptism-grace-distractor",
-              "feedback": "Recheck the baptism: holy spirit, faith, and grace skill and use the clue in the question."
+              "feedback": "Review: Baptism: Holy Spirit, faith, and grace. Then use the clue in the question."
             },
             "the Trinity is washed away → the five senses are received": {
               "misconception": "religion-baptism-grace-distractor",
-              "feedback": "Recheck the baptism: holy spirit, faith, and grace skill and use the clue in the question."
+              "feedback": "Review: Baptism: Holy Spirit, faith, and grace. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -10614,7 +10614,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -10656,11 +10656,11 @@
           "choiceDiagnostics": {
             "Trinity": {
               "misconception": "religion-disciples-distractor",
-              "feedback": "Recheck the disciples: friends and followers of jesus skill and use the clue in the question."
+              "feedback": "Review: Disciples: friends and followers of Jesus. Then use the clue in the question."
             },
             "creation": {
               "misconception": "religion-disciples-distractor",
-              "feedback": "Recheck the disciples: friends and followers of jesus skill and use the clue in the question."
+              "feedback": "Review: Disciples: friends and followers of Jesus. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -10694,7 +10694,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -10736,11 +10736,11 @@
           "choiceDiagnostics": {
             "Disciple is another name for the Trinity.": {
               "misconception": "religion-disciples-distractor",
-              "feedback": "Recheck the disciples: friends and followers of jesus skill and use the clue in the question."
+              "feedback": "Review: Disciples: friends and followers of Jesus. Then use the clue in the question."
             },
             "Disciple means one of the five senses.": {
               "misconception": "religion-disciples-distractor",
-              "feedback": "Recheck the disciples: friends and followers of jesus skill and use the clue in the question."
+              "feedback": "Review: Disciples: friends and followers of Jesus. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -10774,7 +10774,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -10816,11 +10816,11 @@
           "choiceDiagnostics": {
             "a disciple": {
               "misconception": "religion-mary-church-distractor",
-              "feedback": "Recheck the mary: jesus’ mother and mother of the church skill and use the clue in the question."
+              "feedback": "Review: Mary: Jesus’ mother and mother of the Church. Then use the clue in the question."
             },
             "the Holy Spirit": {
               "misconception": "religion-mary-church-distractor",
-              "feedback": "Recheck the mary: jesus’ mother and mother of the church skill and use the clue in the question."
+              "feedback": "Review: Mary: Jesus’ mother and mother of the Church. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -10854,7 +10854,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -10896,11 +10896,11 @@
           "choiceDiagnostics": {
             "Mary is one Person of the Trinity → Mary gives new life in grace.": {
               "misconception": "religion-mary-church-distractor",
-              "feedback": "Recheck the mary: jesus’ mother and mother of the church skill and use the clue in the question."
+              "feedback": "Review: Mary: Jesus’ mother and mother of the Church. Then use the clue in the question."
             },
             "Mary is a disciple → Mary is one of the five senses.": {
               "misconception": "religion-mary-church-distractor",
-              "feedback": "Recheck the mary: jesus’ mother and mother of the church skill and use the clue in the question."
+              "feedback": "Review: Mary: Jesus’ mother and mother of the Church. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -10934,7 +10934,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -10976,11 +10976,11 @@
           "choiceDiagnostics": {
             "the five senses": {
               "misconception": "religion-seed-new-life-distractor",
-              "feedback": "Recheck the seed analogy and new life in grace skill and use the clue in the question."
+              "feedback": "Review: Seed analogy and new life in grace. Then use the clue in the question."
             },
             "the title mother of the Church": {
               "misconception": "religion-seed-new-life-distractor",
-              "feedback": "Recheck the seed analogy and new life in grace skill and use the clue in the question."
+              "feedback": "Review: Seed analogy and new life in grace. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -11014,7 +11014,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -11056,11 +11056,11 @@
           "choiceDiagnostics": {
             "The comparison names the three Persons of the Trinity.": {
               "misconception": "religion-seed-new-life-distractor",
-              "feedback": "Recheck the seed analogy and new life in grace skill and use the clue in the question."
+              "feedback": "Review: Seed analogy and new life in grace. Then use the clue in the question."
             },
             "The comparison lists the five senses.": {
               "misconception": "religion-seed-new-life-distractor",
-              "feedback": "Recheck the seed analogy and new life in grace skill and use the clue in the question."
+              "feedback": "Review: Seed analogy and new life in grace. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -11094,7 +11094,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -11136,11 +11136,11 @@
           "choiceDiagnostics": {
             "Ignoring everything around you on purpose": {
               "misconception": "religion-five-senses-distractor",
-              "feedback": "Recheck the five senses and god’s gifts skill and use the clue in the question."
+              "feedback": "Review: Five senses and God’s gifts. Then use the clue in the question."
             },
             "Breaking plants to see what happens": {
               "misconception": "religion-five-senses-distractor",
-              "feedback": "Recheck the five senses and god’s gifts skill and use the clue in the question."
+              "feedback": "Review: Five senses and God’s gifts. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -11174,7 +11174,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -11216,11 +11216,11 @@
           "choiceDiagnostics": {
             "They replace the need to think or choose.": {
               "misconception": "religion-five-senses-distractor",
-              "feedback": "Recheck the five senses and god’s gifts skill and use the clue in the question."
+              "feedback": "Review: Five senses and God’s gifts. Then use the clue in the question."
             },
             "They identify the three Persons of the Trinity.": {
               "misconception": "religion-five-senses-distractor",
-              "feedback": "Recheck the five senses and god’s gifts skill and use the clue in the question."
+              "feedback": "Review: Five senses and God’s gifts. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -11254,7 +11254,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -11296,11 +11296,11 @@
           "choiceDiagnostics": {
             "Disciples are friends and followers of Jesus.": {
               "misconception": "religion-gifts-choices-distractor",
-              "feedback": "Recheck the god is the giver of gifts skill and use the clue in the question."
+              "feedback": "Review: God is the Giver of Gifts. Then use the clue in the question."
             },
             "Mary is the mother of the Church.": {
               "misconception": "religion-gifts-choices-distractor",
-              "feedback": "Recheck the god is the giver of gifts skill and use the clue in the question."
+              "feedback": "Review: God is the Giver of Gifts. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -11334,7 +11334,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -11376,11 +11376,11 @@
           "choiceDiagnostics": {
             "Both define disciples as friends of Jesus.": {
               "misconception": "religion-gifts-choices-distractor",
-              "feedback": "Recheck the god is the giver of gifts skill and use the clue in the question."
+              "feedback": "Review: God is the Giver of Gifts. Then use the clue in the question."
             },
             "Both list the five senses.": {
               "misconception": "religion-gifts-choices-distractor",
-              "feedback": "Recheck the god is the giver of gifts skill and use the clue in the question."
+              "feedback": "Review: God is the Giver of Gifts. Then use the clue in the question."
             }
           },
           "rubric": {
@@ -11414,7 +11414,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-01T19:06:31.465Z",
+            "sourceCheckedAt": "2026-10-01T19:20:38.974Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -11485,14 +11485,14 @@
     "recentReviewPipeline": {
       "schemaVersion": 1,
       "retentionDays": 14,
-      "generatedAt": "2026-10-01T19:06:31.465Z",
+      "generatedAt": "2026-10-01T19:20:38.974Z",
       "bankFingerprint": "298a86be532c2f049292ac9e8c2276540db1c7db7f6e272960d812e3a20862f0",
       "skills": [],
       "questions": []
     },
     "schoolChangeFeed": {
       "schemaVersion": 1,
-      "generatedAt": "2026-10-01T19:06:31.465Z",
+      "generatedAt": "2026-10-01T19:20:38.974Z",
       "sourceHash": "teacher-pages-1140e20941b1f6f76b8b",
       "changed": false,
       "items": [
@@ -11523,42 +11523,42 @@
       ]
     }
   },
-  "sourceLastCheckedAt": "2026-10-01T19:06:31.465Z",
+  "sourceLastCheckedAt": "2026-10-01T19:20:38.974Z",
   "sourcePages": [
     {
       "title": "Home",
       "url": "https://sites.google.com/view/abvmgr2/home",
-      "checkedAt": "2026-10-01T19:06:31.465Z",
+      "checkedAt": "2026-10-01T19:20:38.974Z",
       "contentHash": "037b7bb8d405dda46b9f318c37535d26b4c8b201cea3bc032b56ac79de54038d"
     },
     {
       "title": "Homework",
       "url": "https://sites.google.com/view/abvmgr2/homework",
-      "checkedAt": "2026-10-01T19:06:31.465Z",
+      "checkedAt": "2026-10-01T19:20:38.974Z",
       "contentHash": "9aea6322284068d3e4f632e31e80f750459d72553b3b5bced75a8a3130d9f6b3"
     },
     {
       "title": "Reading Work",
       "url": "https://sites.google.com/view/abvmgr2/reading-work",
-      "checkedAt": "2026-10-01T19:06:31.465Z",
+      "checkedAt": "2026-10-01T19:20:38.974Z",
       "contentHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058"
     },
     {
       "title": "Weekly Spelling List",
       "url": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-      "checkedAt": "2026-10-01T19:06:31.465Z",
+      "checkedAt": "2026-10-01T19:20:38.974Z",
       "contentHash": "d077ca4b2b95d79755f88f5a726e6b5acf3a52c6575c3d986a16ca1c834b5777"
     },
     {
       "title": "Tests",
       "url": "https://sites.google.com/view/abvmgr2/tests",
-      "checkedAt": "2026-10-01T19:06:31.465Z",
+      "checkedAt": "2026-10-01T19:20:38.974Z",
       "contentHash": "d9f45fdf64e3d1f918a0e31cf97b732471585c00f7b27fbb2ba622a08cd8ed4d"
     },
     {
       "title": "Religion",
       "url": "https://sites.google.com/view/abvmgr2/religion",
-      "checkedAt": "2026-10-01T19:06:31.465Z",
+      "checkedAt": "2026-10-01T19:20:38.974Z",
       "contentHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4"
     }
   ],
