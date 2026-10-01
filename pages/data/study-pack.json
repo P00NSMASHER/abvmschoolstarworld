@@ -21,9 +21,9 @@
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-48dd7ac3b25e5d8fdda7",
     "sourceCapturedAt": "2026-09-29T19:20:03.923Z",
-    "generatedAt": "2026-09-30T13:38:06.942Z",
+    "generatedAt": "2026-10-01T00:44:00.000Z",
     "weekLabel": "Week of September 28, 2026",
-    "summary": "Current Grade 2 teacher-site material: Homework lists Reading “Read”, parent task “Cover books”, Reading “Keep Reading Log and Behavior Chart in the HW folder”, and Homework Folder “Return everything in the HW folder”. Upcoming tests include Subtraction to 12 on Tuesday, Sept. 29, Grammar (types of sentences) on Wednesday, Sept. 30, Spelling (short a / long a) / Handwriting on Friday, Oct. 2, and Reading on Wednesday, Oct. 7. 3 uploaded school notices are integrated with the teacher pages.",
+    "summary": "Current Grade 2 teacher-site material: Homework lists Reading “Read”, parent task “Cover books”, Reading “Keep Reading Log and Behavior Chart in the HW folder”, and Homework Folder “Return everything in the HW folder”. Upcoming tests include Subtraction to 12 on Tuesday, Sept. 29, Grammar (types of sentences) on Wednesday, Sept. 30, Spelling (short a / long a) / Handwriting on Friday, Oct. 2, and Reading on Wednesday, Oct. 7. 8 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
       {
         "subject": "Reading / ELA",
@@ -232,6 +232,13 @@
       },
       {
         "date": "Friday, Oct. 2",
+        "label": "Door Decorating Contest starts",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Oct. 2",
         "label": "Spelling (short a / long a) / Handwriting",
         "kind": "test",
         "source": "teacher-tests"
@@ -251,10 +258,45 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Sunday, Oct. 4",
+        "label": "Winter uniform begins",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Oct. 5",
+        "label": "Raise Right physical gift cards ordered",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
         "date": "Monday, Oct. 5",
         "label": "Start winter dress code",
         "source": "teacher-home",
         "kind": "school event"
+      },
+      {
+        "date": "Tuesday, Oct. 6",
+        "label": "Faculty Meeting",
+        "kind": "meeting",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 7",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 7",
+        "label": "K–4 flag football permission form due",
+        "kind": "deadline",
+        "sourceDocument": "flag-football-2026-10",
+        "source": "uploaded-notice"
       },
       {
         "date": "Wednesday, Oct. 7",
@@ -263,15 +305,24 @@
         "source": "teacher-tests"
       },
       {
-        "label": "Mid-term Progress Reports",
         "date": "Thursday, Oct. 8",
-        "kind": "school"
+        "label": "Progress Reports Issued",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
       },
       {
         "date": "Friday, Oct. 9",
-        "label": "12:00 dismissal",
+        "label": "12:00 dismissal — no school lunch",
         "kind": "schedule change",
-        "sourceDocument": "weekly-reminders-2026-09-28",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Oct. 9",
+        "label": "Chick-fil-A orders and money due — $7 each",
+        "kind": "deadline",
+        "sourceDocument": "chick-fil-a-order-form-2026-10",
         "source": "uploaded-notice"
       },
       {
@@ -288,9 +339,37 @@
       },
       {
         "date": "Monday, Oct. 12",
-        "label": "No School — Columbus Day",
+        "label": "No School — calendar lists Teacher Inservice; lunch menu lists Columbus Day",
         "kind": "holiday",
-        "sourceDocument": "weekly-reminders-2026-09-28",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Oct. 13",
+        "label": "Dress Down Day — local charity",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 14",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 14",
+        "label": "Communication Folder",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 14",
+        "label": "Student Council Meeting",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
         "source": "uploaded-notice"
       },
       {
@@ -299,17 +378,31 @@
         "kind": "deadline"
       },
       {
-        "date": "Monday–Tuesday, Oct. 19–20",
-        "label": "Parent-Teacher Conferences",
-        "kind": "conference",
-        "sourceDocument": "weekly-reminders-2026-09-28",
+        "date": "Sunday, Oct. 18",
+        "label": "Birthday party at Roller Roost Sports Arena — 12:30–3:30 PM",
+        "kind": "family",
+        "sourceDocument": "birthday-party-2026-10-18",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Oct. 20",
+        "label": "K–4 No School — Parent-Teacher Conferences",
+        "kind": "holiday",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 21",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
         "source": "uploaded-notice"
       },
       {
         "date": "Thursday, Oct. 22",
-        "label": "Chick-fil-A pickup",
+        "label": "Chick-fil-A delivery/pickup — 3:00–4:30 PM; pickup available at dismissal",
         "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-09-28",
+        "sourceDocument": "chick-fil-a-order-form-2026-10",
         "source": "uploaded-notice"
       },
       {
@@ -321,14 +414,52 @@
       },
       {
         "date": "Friday, Oct. 23",
-        "label": "Lego Club (for those who are signed up)",
-        "source": "teacher-home",
-        "kind": "club"
+        "label": "Lego Club — 3:00–4:00 PM",
+        "kind": "club",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
       },
       {
-        "label": "Halloween Party",
+        "date": "Friday, Oct. 23",
+        "label": "Red Ribbon Week begins",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Oct. 26",
+        "label": "K–4 Dress Down & Flag Football — 1:45–2:30 PM; food-bank item or $5 donation",
+        "kind": "school event",
+        "sourceDocument": "flag-football-2026-10",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Oct. 27",
+        "label": "Door Decorating Judging",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 28",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 28",
+        "label": "Communication Folder",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
         "date": "Friday, Oct. 30",
-        "kind": "school event"
+        "label": "Halloween Celebration",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
       },
       {
         "date": "Thursday, Nov. 5",
@@ -679,10 +810,17 @@
       "Wednesday, Sept. 30: Mass, Communication Folder, and Chick-fil-A sale starts.",
       "Thursday, Oct. 1: Picture Day, Business Casual, and HSA Virtual Meeting.",
       "Welcome Back Dance / Movie Night is Saturday, Oct. 3.",
-      "Chick-fil-A pickup is Thursday, Oct. 22.",
       "S’more Fun at Schwartz Farm is Friday, Oct. 23.",
       "Drama Club Play is Nov. 13–14.",
       "Reading Royals Game Family Fun Night is Saturday, Nov. 21.",
+      "Sunday, Oct. 4: Winter uniform begins.",
+      "Wednesday, Oct. 7: K–4 flag football permission form is due.",
+      "Thursday, Oct. 8: Progress Reports are issued.",
+      "Friday, Oct. 9: Chick-fil-A orders and money are due; orders are $7 each.",
+      "Saturday, Oct. 10: RSVP deadline for the Oct. 18 birthday party at Roller Roost Sports Arena.",
+      "Tuesday, Oct. 20: K–4 has no school for Parent-Teacher Conferences.",
+      "Thursday, Oct. 22: Chick-fil-A delivery/pickup is 3:00–4:30 PM; pickup is available at dismissal.",
+      "Monday, Oct. 26: K–4 Dress Down & Flag Football is 1:45–2:30 PM; send a requested food-bank item or $5 donation to participate in dress down.",
       "Stationary money ($17) is due Wednesday, Sept. 23.",
       "Pretzel delivery is Thursday, Sept. 24 after lunch.",
       "Keep the Reading Log and Behavior Chart in the HW folder.",
@@ -820,19 +958,21 @@
       "Welcome Back Dance / Movie Night is Saturday, Oct. 3.",
       "12:00 dismissal is Friday, Oct. 9.",
       "No School — Columbus Day is Monday, Oct. 12.",
-      "Parent-Teacher Conferences are Oct. 19–20.",
-      "Chick-fil-A pickup is Thursday, Oct. 22.",
       "S’more Fun at Schwartz Farm is Friday, Oct. 23.",
       "Drama Club Play is Nov. 13–14.",
       "Reading Royals Game Family Fun Night is Saturday, Nov. 21.",
-      "The Chick-fil-A sale starts Wednesday, Sept. 30; pickup is Thursday, Oct. 22.",
+      "Oct. 7–26: K–4 flag football permission form is due Oct. 7; the game is Oct. 26 from 1:45–2:30 PM.",
+      "Oct. 9–22: Chick-fil-A orders are $7 each and due Oct. 9; delivery/pickup is Oct. 22 from 3:00–4:30 PM, with pickup available at dismissal.",
+      "Sunday, Oct. 18: Personal birthday party at Roller Roost Sports Arena from 12:30–3:30 PM. Direct contact information and the street address are kept out of the public app.",
+      "Tuesday, Oct. 20: K–4 has no school for Parent-Teacher Conferences.",
+      "Monday, Oct. 26: K–4 Dress Down & Flag Football; dress-down participation requires a requested food-bank item or $5 donation.",
       "Picture ordering: a digital image is $10 when added to a package; glossy finish is $5 per package; a 10×13 is $20; the other listed add-on items are $13 each.",
       "Picture backgrounds: 1 Universe, 2 Pink Mist, 3 Fall Leaves, 4 Traditional, 5 School Spirit, 6 Patriotic, 7 Dinosaur, 8 Pastel, 9 Bookcase, 10 Blue Brush, 11 Laser. Backgrounds 1, 2, and 11 are marked NEW.",
       "Christmas Caroling date is TBD.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
     "sourceCheckedAt": "2026-09-30T13:38:06.942Z",
-    "uploadedNoticeHash": "uploaded-notices-14d4298a59d340258558",
+    "uploadedNoticeHash": "uploaded-notices-d5d589b8306334851490",
     "uploadedNoticeTopics": {
       "reminders": [
         "fundraiser",
@@ -840,10 +980,15 @@
         "mass-communication",
         "hsa",
         "dance",
-        "chick-fil",
         "schwartz",
         "drama",
-        "reading-royals"
+        "reading-royals",
+        "winter-uniform",
+        "flag-football",
+        "progress-report",
+        "chick-fil",
+        "birthday-party",
+        "dress-down"
       ],
       "parentNotices": [
         "conference",
@@ -853,10 +998,13 @@
         "dance",
         "dismissal",
         "closed",
-        "chick-fil",
         "schwartz",
         "drama",
-        "reading-royals"
+        "reading-royals",
+        "flag-football",
+        "chick-fil",
+        "birthday-party",
+        "dress-down"
       ]
     },
     "lunchMenuSource": {
@@ -884,7 +1032,7 @@
           "id": "abvm-2026-10-official",
           "url": "https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1790692534/adeducatorsorg/xdbrqzybydptd5srbor0/Octobercalendar.heic",
           "contentHash": "a99ce9385295921c9fff19ae4051732da45f7c38df077d30d9b62577c8c6eb45",
-          "reviewedAt": "2026-09-29T19:36:00Z",
+          "reviewedAt": "2026-10-01T00:44:00Z",
           "checkedAt": "2026-09-30T13:38:09.517Z"
         }
       ],
@@ -1155,9 +1303,232 @@
           "Fruit"
         ],
         "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-05",
+        "day": "Monday, Oct. 5",
+        "items": [
+          "Popcorn chicken",
+          "Mashed potatoes",
+          "Steamed corn",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-06",
+        "day": "Tuesday, Oct. 6",
+        "items": [
+          "Taco Tuesday & chips",
+          "Cheese",
+          "Brown rice",
+          "Salsa",
+          "Refried beans",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-07",
+        "day": "Wednesday, Oct. 7",
+        "items": [
+          "Buttered pierogies",
+          "Whole-grain roll",
+          "String cheese",
+          "Steamed carrots",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-08",
+        "day": "Thursday, Oct. 8",
+        "items": [
+          "Beef cheesesteak",
+          "Whole-grain roll",
+          "French fries",
+          "Steamed broccoli",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-09",
+        "day": "Friday, Oct. 9",
+        "items": [
+          "No lunch — noon dismissal"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-12",
+        "day": "Monday, Oct. 12",
+        "items": [],
+        "status": "no-school",
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-13",
+        "day": "Tuesday, Oct. 13",
+        "items": [
+          "Meatballs in sauce",
+          "Whole-grain buttered pasta",
+          "Steamed corn",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-14",
+        "day": "Wednesday, Oct. 14",
+        "items": [
+          "Baked cheese pizza",
+          "Garden salad",
+          "Steamed broccoli",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-15",
+        "day": "Thursday, Oct. 15",
+        "items": [
+          "Hamburger on whole-grain roll",
+          "French fries",
+          "Mixed vegetables",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-16",
+        "day": "Friday, Oct. 16",
+        "items": [
+          "Chicken taco",
+          "Brown rice",
+          "Cheese",
+          "Salsa",
+          "Refried beans",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-19",
+        "day": "Monday, Oct. 19",
+        "items": [
+          "Breaded chicken",
+          "Buttered pasta",
+          "Steamed broccoli",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-20",
+        "day": "Tuesday, Oct. 20",
+        "items": [
+          "Hot ham & cheese",
+          "Whole-grain pretzel roll",
+          "Tortilla chips",
+          "Steamed peas",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-21",
+        "day": "Wednesday, Oct. 21",
+        "items": [
+          "Pasta with meatballs",
+          "Whole-grain roll",
+          "Shredded cheese",
+          "Steamed carrots",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-22",
+        "day": "Thursday, Oct. 22",
+        "items": [
+          "Chicken patty on whole-grain roll",
+          "Baby cake potatoes",
+          "Green beans",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-23",
+        "day": "Friday, Oct. 23",
+        "items": [
+          "Cheesy breadsticks",
+          "Dipping sauce",
+          "Kidney beans",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-26",
+        "day": "Monday, Oct. 26",
+        "items": [
+          "Chicken finger wrap",
+          "Brown rice",
+          "Steamed corn",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-27",
+        "day": "Tuesday, Oct. 27",
+        "items": [
+          "Taco Tuesday & chips",
+          "Cheese",
+          "Shredded lettuce",
+          "Green beans",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-28",
+        "day": "Wednesday, Oct. 28",
+        "items": [
+          "Fish shapes",
+          "French fries",
+          "Steamed broccoli",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-29",
+        "day": "Thursday, Oct. 29",
+        "items": [
+          "Beef-a-roni",
+          "Shredded cheese",
+          "Whole-grain roll",
+          "Steamed carrots",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-30",
+        "day": "Friday, Oct. 30",
+        "items": [
+          "Baked cheese pizza",
+          "Garden salad",
+          "Steamed peas",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
       }
     ],
-    "lunchMenuHash": "bf9a04ae60bd9ad1d66e45cad709e7ada66e39dca19529efb5c0c3732c8f53f6",
+    "lunchMenuHash": "bf925d3d6935ae5fbdefe6c114791e9962a45b5bb4bee6e4f4e6b56fab078569",
     "contentPipeline": {
       "schemaVersion": 2,
       "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
@@ -7109,8 +7480,8 @@
     }
   ],
   "uploadedNotices": {
-    "count": 3,
-    "latestIntegratedAt": "2026-09-28T13:19:00.000Z",
+    "count": 8,
+    "latestIntegratedAt": "2026-10-01T00:44:00.000Z",
     "documents": [
       {
         "id": "dress-down-2026-09-25",
@@ -7126,6 +7497,31 @@
         "id": "weekly-reminders-2026-09-28",
         "label": "Weekly reminders for September 28–October 2, 2026",
         "receivedAt": "2026-09-28"
+      },
+      {
+        "id": "october-calendar-2026",
+        "label": "October 2026 ABVM school calendar",
+        "receivedAt": "2026-09-30"
+      },
+      {
+        "id": "october-lunch-menu-2026",
+        "label": "October 2026 ABVM lunch menu",
+        "receivedAt": "2026-09-30"
+      },
+      {
+        "id": "chick-fil-a-order-form-2026-10",
+        "label": "Chick-fil-A order form — October 2026",
+        "receivedAt": "2026-09-30"
+      },
+      {
+        "id": "flag-football-2026-10",
+        "label": "Flag football and food-bank dress-down notice",
+        "receivedAt": "2026-09-30"
+      },
+      {
+        "id": "birthday-party-2026-10-18",
+        "label": "Personal birthday-party invitation — privacy-redacted",
+        "receivedAt": "2026-09-30"
       }
     ]
   }
