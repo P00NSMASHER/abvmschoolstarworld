@@ -92,6 +92,7 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
     'sentence-types','consonant-blends','cvc-structure','long-short-a','suffix-ed-ing',
     'dialogue','subtraction-within-12',
     'religion-trinity','religion-image-likeness','religion-creation-care','religion-jesus-savior',
+    'religion-original-sin','religion-faith-gift','religion-sacrament-sign','religion-baptism-grace',
     'religion-disciples','religion-mary-church','religion-seed-new-life','religion-five-senses','religion-gifts-choices',
   ];
   for (const skill of priorityFamilies.filter(skill => ids.has(skill))) {
@@ -139,9 +140,17 @@ test('Religion banks stay source-framed and avoid the rejected ambiguous/cross-s
   const religion = pipeline.questions.filter(question => question.subject === 'Religion');
   const image = religion.filter(question => question.skill === 'religion-image-likeness');
   const gifts = religion.filter(question => question.skill === 'religion-gifts-choices');
+  const originalSin = religion.filter(question => question.skill === 'religion-original-sin');
+  const faith = religion.filter(question => question.skill === 'religion-faith-gift');
+  const sacrament = religion.filter(question => question.skill === 'religion-sacrament-sign');
+  const baptism = religion.filter(question => question.skill === 'religion-baptism-grace');
 
   assert.ok(image.length >= 3);
   assert.ok(gifts.length >= 3);
+  assert.ok(originalSin.length >= 3);
+  assert.ok(faith.length >= 3);
+  assert.ok(sacrament.length >= 3);
+  assert.ok(baptism.length >= 3);
   for (const skill of [...new Set(religion.map(question => question.skill))]) {
     const rows = religion.filter(question => question.skill === skill);
     assert.ok(rows.length >= 3, `${skill} should have at least three semantic siblings`);
@@ -153,6 +162,10 @@ test('Religion banks stay source-framed and avoid the rejected ambiguous/cross-s
   }
   assert.ok(image.every(question => question.sourceMode === 'STRICT_SOURCE'));
   assert.ok(gifts.every(question => question.sourceMode === 'STRICT_SOURCE'));
+  assert.ok(originalSin.every(question => question.sourceMode === 'STRICT_SOURCE'));
+  assert.ok(faith.every(question => question.sourceMode === 'STRICT_SOURCE'));
+  assert.ok(sacrament.every(question => question.sourceMode === 'STRICT_SOURCE'));
+  assert.ok(baptism.every(question => question.sourceMode === 'STRICT_SOURCE'));
 
   const strictReligion = religion.filter(question => question.sourceMode === 'STRICT_SOURCE');
   assert.ok(strictReligion.every(question => /current Religion lesson/i.test(question.prompt)));
@@ -162,6 +175,45 @@ test('Religion banks stay source-framed and avoid the rejected ambiguous/cross-s
     religion.some(question => [question.prompt, ...question.choices].some(value => forbidden.test(String(value)))),
     false
   );
+});
+
+
+test('Chapter 3 Religion source yields dedicated original sin, faith, sacrament, and Baptism families', () => {
+  const pack = {
+    sourceHash: 'religion-chapter-3',
+    subjects: [{
+      subject: 'Religion',
+      topics: ['Chapter 3: Jesus Lives in His Church'],
+      studyNotes: [
+        "Original sin; human tendency to sin which is the result of Adam & Eve's sin",
+        'Faith: gift from God that helps us believe',
+        'Sacrament: sacred sign given to the Church by Jesus',
+        'At Baptism, original sin is washed away and we receive the gift of the Holy Spirit and the gift of faith as well as the new life of grace',
+      ],
+    }],
+    vocabulary: [],
+  };
+
+  const pipeline = buildGrade2ContentPipeline(pack, {
+    generatedAt: '2026-10-01T18:45:00.000Z',
+    sourceHash: pack.sourceHash,
+  });
+  const expected = ['religion-original-sin', 'religion-faith-gift', 'religion-sacrament-sign', 'religion-baptism-grace'];
+  const ids = new Set(pipeline.skills.map(skill => skill.id));
+
+  for (const skillId of expected) {
+    assert.equal(ids.has(skillId), true, `missing Chapter 3 skill: ${skillId}`);
+    const rows = pipeline.questions.filter(question => question.skill === skillId);
+    assert.ok(rows.length >= 3, `${skillId} should have at least three semantic siblings`);
+    assert.deepEqual(
+      [...new Set(rows.map(question => question.questionType))].sort(),
+      ['direct', 'reasoning', 'transfer'],
+      `${skillId} should include direct, transfer, and reasoning practice`
+    );
+    assert.ok(rows.every(question => question.sourceMode === 'STRICT_SOURCE'));
+  }
+
+  assert.equal(validateGrade2ContentPipeline(pipeline).length, 0);
 });
 
 test('source-bound sight-word contexts restore the older StarBlox high-frequency practice without claiming spelling mastery', () => {
