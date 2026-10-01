@@ -20,10 +20,14 @@ test("health verdict prefers the most recently updated rerun evidence",()=>{
   assert.match(report,/const latestSuccess=name=>rankedRuns\(name\)\.find\(run=>run\.conclusion==="success"\)\|\|null/);
 });
 
-test("health verdict ignores skipped and cancelled orchestration noise",()=>{
+test("health verdict ignores superseded cancellation noise but flags the newest unsuperseded cancellation",()=>{
   assert.match(report,/decisiveConclusions=new Set\(\["success","failure","timed_out","action_required","startup_failure"\]\)/);
-  assert.match(report,/const newerActive=latestRun&&activeStatuses\.has\(latestRun\.status\)/);
-  assert.match(report,/return newerActive\?workflow\.latestSuccess:decisive/);
+  assert.match(report,/const latestCreated=name=>createdRuns\(name\)\[0\]\|\|null/);
+  assert.match(report,/const newestCreated=workflow\.latestCreated/);
+  assert.match(report,/const newerActive=newestCreated&&activeStatuses\.has\(newestCreated\.status\)/);
+  assert.match(report,/if\(newerActive\)return workflow\.latestSuccess/);
+  assert.match(report,/if\(newestCreated\?\.conclusion==="cancelled"\)return newestCreated/);
+  assert.match(report,/return decisive/);
   assert.match(report,/const run=effectiveRun\(workflow\)/);
   assert.doesNotMatch(report,/const run=workflow\.latestCompleted;\n  if\(!run\|\|run\.conclusion!==\"success\"\)/);
 });
