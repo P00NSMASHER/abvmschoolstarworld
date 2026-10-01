@@ -1344,9 +1344,10 @@ function safeStudyStarRow(row){
     amount:Number(row?.amount)||0
   };
 }
-async function commitStudyStarRewards({sourcePack,roundId,completed=false,comebackSucceeded=false}={}){
-  const source=text(sourcePack),round=text(roundId);
-  if(!source||!/^round-[a-z0-9]+-[a-z0-9]+$/.test(round))throw new Error("Study Star ledger requires sourcePack and deterministic roundId");
+async function commitStudyStarRewards({sourcePack,mode,sessionSeed,roundId,completed=false,comebackSucceeded=false}={}){
+  const source=text(sourcePack),game=text(mode),seed=text(sessionSeed);
+  const expectedRound=studyStarRoundId({sourcePack:source,mode:game,sessionSeed:seed}),round=text(roundId||expectedRound);
+  if(round!==expectedRound)throw new Error("Study Star ledger roundId must match sourcePack, mode, and sessionSeed");
   const events=completed===true?studyStarRewardEvents({completed:true,comebackSucceeded:comebackSucceeded===true}):Object.freeze([]);
   if(!events.length)return{currency:STUDY_STAR_POLICY.currency,awardedAmount:0,duplicateAmount:0,results:[]};
   const db=await openStudyStarDb();
