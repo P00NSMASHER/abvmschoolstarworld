@@ -1294,10 +1294,10 @@ function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillSt
   if(wantedSkills.length){
     pool=pool.filter(q=>q.tier==="material");
   }else if(wanted.length){
-    const current=pool.filter(q=>q.tier==="material"),review=pool.filter(q=>q.tier==="recent-review"),star=pool.filter(q=>q.tier==="star-fallback");
+    const current=pool.filter(q=>q.tier==="material"),review=pool.filter(q=>q.tier==="recent-review"),star=pool.filter(q=>q.tier==="star-fallback"&&["Math","Reading / ELA"].includes(q.subject));
     pool=current.length?current:review.length?review:star;
   }else{
-    const current=pool.filter(q=>q.tier==="material"),review=pool.filter(q=>q.tier==="recent-review"),star=pool.filter(q=>q.tier==="star-fallback");
+    const current=pool.filter(q=>q.tier==="material"),review=pool.filter(q=>q.tier==="recent-review"),star=pool.filter(q=>q.tier==="star-fallback"&&["Math","Reading / ELA"].includes(q.subject));
     const currentSubjects=new Set(current.map(q=>q.subject));
     const reviewFill=review.filter(q=>!currentSubjects.has(q.subject));
     const covered=new Set([...currentSubjects,...reviewFill.map(q=>q.subject)]);
