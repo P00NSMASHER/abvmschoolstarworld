@@ -84,6 +84,32 @@ test('candidate manifest rejects stale authoring metadata that overstates its qu
   assert.ok(issues.some(issue => issue.includes('authoring-status-count-mismatch')));
 });
 
+test('page-exact curriculum candidates retain the exact source URL and source line', () => {
+  const plan = buildCurriculumCoveragePlan({
+    pipeline: {
+      sourceHash: 'gap-evidence',
+      coverage: [{topic:'syllable types',subject:'Reading / ELA',status:'GENERATOR_UNSUPPORTED'}],
+    },
+    sourcePages: [{
+      title:'Tests',
+      url:'https://sites.google.com/view/abvmgr2/tests',
+      checkedAt:'2026-10-01T12:00:00.000Z',
+      contentHash:'tests-hash',
+      lines:['Grammar: syllable types'],
+    }],
+    sourceHash:'gap-evidence',
+    generatedAt:'2026-10-01T12:00:00.000Z',
+  });
+  const noLine = structuredClone(plan.candidates[0]);
+  delete noLine.sourceContext.sourceLine;
+  const noUrl = structuredClone(plan.candidates[0]);
+  delete noUrl.sourceContext.sourceUrl;
+  const lineIssues = validateCurriculumCoveragePlan({...plan,candidates:[noLine]});
+  const urlIssues = validateCurriculumCoveragePlan({...plan,candidates:[noUrl]});
+  assert.ok(lineIssues.some(issue => issue.includes('source-line-missing')));
+  assert.ok(urlIssues.some(issue => issue.includes('source-url-missing')));
+});
+
 test('approved subject-predicate registry family is absorbed by normal refresh generation', () => {
   const pack = {
     sourceHash: 'subject-predicate-week',
