@@ -71,7 +71,7 @@ test("Family notices stay stacked and inside the phone viewport",async({browser}
   const context=await browser.newContext({viewport:{width:393,height:852},isMobile:true,hasTouch:true});
   const page=await context.newPage();
   await page.goto("http://127.0.0.1:4173/#family");
-  const list=page.locator(".static-notice-list");
+  const list=page.locator('[aria-labelledby="family-current-notices"] .static-notice-list');
   await expect(list).toBeVisible({timeout:10_000});
   const rows=list.locator(".notice-row");
   expect(await rows.count()).toBeGreaterThan(0);

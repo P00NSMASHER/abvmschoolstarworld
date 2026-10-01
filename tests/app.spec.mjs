@@ -71,7 +71,7 @@ test("Family exposes current actions, notices, and app/privacy disclosure",async
   await expect(page.locator(".family-hero")).toBeVisible();
   await expect(page.locator(".family-stats")).toBeVisible();
   await expect(page.locator(".family-actions-card")).toBeVisible();
-  await expect(page.locator(".notices-card")).toBeVisible();
+  await expect(page.locator('[aria-labelledby="family-current-notices"]')).toBeVisible();
   await expect(page.locator(".family-more")).toBeVisible();
 });
 
