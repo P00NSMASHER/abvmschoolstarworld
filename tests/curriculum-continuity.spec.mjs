@@ -52,7 +52,7 @@ test('real catalog keeps current material ahead of recent review while preservin
     pack.recentReviewPipeline={
       schemaVersion:1,retentionDays:14,generatedAt:'2026-10-01T12:00:00.000Z',bankFingerprint:'review-test',
       skills:[{id:'review-only',subject:'Math',label:'Review only',reviewVerifiedAt:'2026-09-30T12:00:00.000Z',reviewExpiresAt:'2026-10-14T12:00:00.000Z',reviewSourceHash:'old'}],
-      questions:[{...sample,id:'review-only-q',skill:'review-only',subject:'Math',reviewVerifiedAt:'2026-09-30T12:00:00.000Z',reviewExpiresAt:'2026-10-14T12:00:00.000Z',reviewSourceHash:'old'}]
+      questions:[{...sample,id:'review-only-q',skill:'review-only',subject:'Math',prompt:'Which answer is correct for this distinct recent-review-only practice item?',reviewVerifiedAt:'2026-09-30T12:00:00.000Z',reviewExpiresAt:'2026-10-14T12:00:00.000Z',reviewSourceHash:'old'}]
     };
     const e=window.ABVMStudyGames,c=e.buildCatalog(pack,{sourceKey:'review-real'});
     return {tiers:[...new Set(c.questions.map(q=>q.tier))],math:e.selectQuestions(c,{subjects:['Math'],count:3,seed:'math'}).map(q=>q.tier)};
