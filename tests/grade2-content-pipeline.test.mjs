@@ -197,7 +197,7 @@ test('future teacher skills are detected without hand-editing the app', () => {
     subjects: [
       {
         subject: 'Reading / ELA',
-        topics: ['Word structure: adding -s and -es'],
+        topics: ['Word structure: adding -s and -es', 'Grammar: subject & predicate'],
         studyNotes: ['Reading comprehension: cause and effect, setting, inference, genre, sequence, captions'],
       },
       {
@@ -220,15 +220,16 @@ test('future teacher skills are detected without hand-editing the app', () => {
   });
   const ids = new Set(pipeline.skills.map(skill => skill.id));
 
-  for (const expected of ['suffix-s-es', 'cause-effect', 'setting', 'inference', 'genre', 'sequence', 'caption', 'addition-within-20', 'place-value', 'compare-numbers', 'time', 'money', 'religion-image-likeness']) {
+  for (const expected of ['suffix-s-es', 'subject-predicate', 'cause-effect', 'setting', 'inference', 'genre', 'sequence', 'caption', 'addition-within-20', 'place-value', 'compare-numbers', 'time', 'money', 'religion-image-likeness']) {
     assert.equal(ids.has(expected), true, `missing future skill: ${expected}`);
   }
   assert.equal(pipeline.qa.status, 'pass');
-  for (const skillId of ['suffix-s-es', 'cause-effect', 'setting', 'inference', 'genre', 'sequence', 'caption', 'addition-within-20', 'place-value', 'compare-numbers', 'time', 'money', 'religion-image-likeness']) {
+  for (const skillId of ['suffix-s-es', 'subject-predicate', 'cause-effect', 'setting', 'inference', 'genre', 'sequence', 'caption', 'addition-within-20', 'place-value', 'compare-numbers', 'time', 'money', 'religion-image-likeness']) {
     assert.ok((pipeline.qa.questionsPerSkill?.[skillId] || 0) >= 3, `${skillId} should receive a three-item semantic family`);
     const familyTypes = new Set(pipeline.questions.filter(question => question.skill === skillId).map(question => question.questionType));
     assert.deepEqual([...familyTypes].sort(), ['direct', 'reasoning', 'transfer'], `${skillId} should include direct, transfer, and reasoning practice`);
   }
+  assert.ok((pipeline.qa.questionsPerSkill?.['subject-predicate'] || 0) >= 8, 'subject-predicate should have a renewable eight-item family');
   assert.equal(pipeline.safetyState, 'READY');
   assert.equal(pipeline.qa.unsupportedSkillCount, 0);
   assert.equal(pipeline.coverage.some(row => row.status === 'GENERATOR_UNSUPPORTED'), false);
