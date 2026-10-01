@@ -46,6 +46,7 @@ test('unsupported teacher skill becomes a disabled source-grounded candidate ins
   const [candidate] = plan.candidates;
   assert.equal(candidate.enabledByDefault, false);
   assert.equal(candidate.sourceContext.quality, 'page-exact');
+  assert.equal(candidate.sourceContext.matchMethod, 'exact-topic-phrase');
   assert.equal(candidate.sourceContext.sourceTitle, 'Tests');
   assert.match(candidate.sourceContext.sourceLine, /syllable types/i);
   assert.equal(candidate.rollout.automaticPromotion, false);
@@ -202,3 +203,56 @@ test('registry exposes feature flags and never treats draft candidates as produc
   assert.equal(subjectPredicate.minimumSemanticVariants, 8);
   assert.deepEqual([...subjectPredicate.requiredQuestionTypes].sort(), ['direct', 'reasoning', 'transfer']);
 });
+
+test('source evidence stays unresolved when teacher lines only partially overlap the unsupported topic', () => {
+  const plan = buildCurriculumCoveragePlan({
+    pipeline: {
+      sourceHash: 'partial-overlap-gap',
+      coverage: [{
+        topic: 'syllable types',
+        subject: 'Reading / ELA',
+        status: 'GENERATOR_UNSUPPORTED',
+      }],
+    },
+    sourcePages: [{
+      title: 'Tests',
+      url: 'https://sites.google.com/view/abvmgr2/tests',
+      checkedAt: '2026-10-01T12:00:00.000Z',
+      contentHash: 'tests-hash',
+      lines: ['Syllables review this week', 'Types of sentences quiz Friday'],
+    }],
+    generatedAt: '2026-10-01T12:00:00.000Z',
+  });
+  assert.deepEqual(validateCurriculumCoveragePlan(plan), []);
+  const [candidate] = plan.candidates;
+  assert.equal(candidate.sourceContext.quality, 'unresolved');
+  assert.equal(candidate.sourceContext.matchMethod, 'none');
+  assert.ok(candidate.readiness.blockers.includes('page-exact-source-context-required'));
+});
+
+test('source evidence can match reordered complete topic tokens without accepting partial matches', () => {
+  const plan = buildCurriculumCoveragePlan({
+    pipeline: {
+      sourceHash: 'token-order-gap',
+      coverage: [{
+        topic: 'syllable types',
+        subject: 'Reading / ELA',
+        status: 'GENERATOR_UNSUPPORTED',
+      }],
+    },
+    sourcePages: [{
+      title: 'Reading Work',
+      url: 'https://sites.google.com/view/abvmgr2/reading',
+      checkedAt: '2026-10-01T12:00:00.000Z',
+      contentHash: 'reading-hash',
+      lines: ['Review the types of syllable patterns from class.'],
+    }],
+    generatedAt: '2026-10-01T12:00:00.000Z',
+  });
+  assert.deepEqual(validateCurriculumCoveragePlan(plan), []);
+  const [candidate] = plan.candidates;
+  assert.equal(candidate.sourceContext.quality, 'page-exact');
+  assert.equal(candidate.sourceContext.matchMethod, 'all-topic-tokens');
+  assert.match(candidate.sourceContext.sourceLine, /types of syllable/i);
+});
+
