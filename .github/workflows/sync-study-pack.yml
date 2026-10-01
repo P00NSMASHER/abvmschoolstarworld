@@ -7,6 +7,7 @@ on:
       - 'scripts/refresh-teacher-pages.mjs'
       - 'scripts/curriculum-coverage-autopilot.mjs'
       - 'scripts/curriculum-family-registry.mjs'
+      - 'scripts/curriculum-continuity.mjs'
       - 'scripts/validate-curriculum-candidates.mjs'
       - 'scripts/grade2-content-pipeline.mjs'
       - 'scripts/grade2-content-alignment.mjs'
@@ -20,6 +21,8 @@ on:
       - 'tests/gold-standard.spec.mjs'
       - 'tests/recovered-learning-loop.spec.mjs'
       - 'tests/study-games-rich-content.spec.mjs'
+      - 'tests/curriculum-continuity.test.mjs'
+      - 'tests/curriculum-continuity.spec.mjs'
       - '.github/workflows/sync-study-pack.yml'
   schedule:
     - cron: '17 6 * * *'
