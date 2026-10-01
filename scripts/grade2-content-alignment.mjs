@@ -34,6 +34,10 @@ const DOMAIN_BY_SKILL = Object.freeze({
   'religion-image-likeness': ['Religion'],
   'religion-creation-care': ['Religion'],
   'religion-jesus-savior': ['Religion'],
+  'religion-original-sin': ['Religion'],
+  'religion-faith-gift': ['Religion'],
+  'religion-sacrament-sign': ['Religion'],
+  'religion-baptism-grace': ['Religion'],
   'religion-disciples': ['Religion'],
   'religion-mary-church': ['Religion'],
   'religion-seed-new-life': ['Religion'],
@@ -181,6 +185,26 @@ const EXACT_SKILLS = Object.freeze({
     subject: 'Religion',
     standards: ['ABVM.RELIGION.CURRENT'],
     anchors: ['jesus', 'savior', 'sins', 'grace'],
+  },
+  'religion-original-sin': {
+    subject: 'Religion',
+    standards: ['ABVM.RELIGION.CURRENT'],
+    anchors: ['original sin', 'adam', 'eve', 'tendency'],
+  },
+  'religion-faith-gift': {
+    subject: 'Religion',
+    standards: ['ABVM.RELIGION.CURRENT'],
+    anchors: ['faith', 'gift', 'believe'],
+  },
+  'religion-sacrament-sign': {
+    subject: 'Religion',
+    standards: ['ABVM.RELIGION.CURRENT'],
+    anchors: ['sacrament', 'sacred sign', 'church', 'jesus'],
+  },
+  'religion-baptism-grace': {
+    subject: 'Religion',
+    standards: ['ABVM.RELIGION.CURRENT'],
+    anchors: ['baptism', 'original sin', 'holy spirit', 'faith', 'grace'],
   },
   'religion-disciples': {
     subject: 'Religion',
