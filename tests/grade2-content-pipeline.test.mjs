@@ -216,6 +216,53 @@ test('Chapter 3 Religion source yields dedicated original sin, faith, sacrament,
   assert.equal(validateGrade2ContentPipeline(pipeline).length, 0);
 });
 
+test('Religion lineage stays page-exact after refreshed study notes are merged back into the pack', () => {
+  const pack = {
+    sourceHash: 'religion-refresh-lineage',
+    subjects: [{
+      subject: 'Religion',
+      topics: ['Chapter 3: Jesus Lives in His Church'],
+      studyNotes: [
+        "Orignial sin; human tendancy to sin which is the result of Adam & Eve's sin",
+        'Faith: gift from god tht helps us believe',
+        'Sacrament: sacred sign given to the Church by Jesus',
+        'At Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace',
+      ],
+    }],
+    vocabulary: [],
+  };
+
+  const first = buildGrade2ContentPipeline(structuredClone(pack), {
+    generatedAt: '2026-10-01T18:45:00.000Z',
+    sourceHash: pack.sourceHash,
+  });
+  mergeGrade2StudyNotes(pack, first);
+
+  const religion = pack.subjects[0];
+  const sourcePages = [{
+    title: 'Religion',
+    url: 'https://sites.google.com/view/abvmgr2/religion',
+    checkedAt: '2026-10-01T18:45:00.000Z',
+    contentHash: 'religion-refresh-capture-hash',
+    lines: [...religion.topics, ...religion.studyNotes],
+  }];
+  const rebuilt = buildGrade2ContentPipeline(pack, {
+    generatedAt: '2026-10-01T18:46:00.000Z',
+    sourceHash: pack.sourceHash,
+    sourcePages,
+    requirePageExactLineage: true,
+  });
+
+  for (const skillId of ['religion-original-sin', 'religion-faith-gift', 'religion-sacrament-sign', 'religion-baptism-grace']) {
+    const skill = rebuilt.skills.find(row => row.id === skillId);
+    assert.equal(skill?.sourceLineage?.quality, 'page-exact', `${skillId} should resolve to one exact Religion source line`);
+    assert.ok((skill?.sourceLineage?.matchedEvidence || []).every(line => !line.includes(' | ')));
+    assert.ok(rebuilt.questions.filter(question => question.skill === skillId).every(question => question.sourceLineage?.quality === 'page-exact'));
+  }
+  assert.equal(rebuilt.qa.unresolvedLineageCount, 0);
+  assert.equal(validateGrade2ContentPipeline(rebuilt).length, 0);
+});
+
 test('source-bound sight-word contexts restore the older StarBlox high-frequency practice without claiming spelling mastery', () => {
   const pack = {
     sourceHash: 'older-sight-word-week',
