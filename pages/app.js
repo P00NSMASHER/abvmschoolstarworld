@@ -404,6 +404,11 @@ function subjectCard(id,klass,title,subject){
   const notes=[...(subject?.topics||[]),...(subject?.studyNotes||[])];
   return '<details id="'+id+'" class="subject-card study-accordion '+klass+'"><summary><span><small>'+esc(title.toUpperCase())+'</small><strong>'+esc(title)+'</strong></span><b aria-hidden="true">+</b></summary><ul>'+notes.map(n=>'<li>✓ '+esc(n)+'</li>').join("")+'</ul></details>';
 }
+function weeklyLearningDashboardHtml(){
+  let learning={};
+  try{const parsed=JSON.parse(storageGet("abvm-study-learning:v2")||"{}");if(parsed&&typeof parsed==="object")learning=parsed}catch{}
+  return window.ABVMWeeklyLearning?.render({pack,learning,now:Date.now(),timeZone:SCHOOL_TIME_ZONE})||"";
+}
 function renderStudy(){
   const r=readingSubject(), rel=religionSubject(), math=mathSubject(), spell=spellingSubject(), next=currentWeekTest(), spellingTest=nextSpellingTest(), star=currentOrSoonStarAssessment();
   const essentials=[
@@ -416,6 +421,7 @@ function renderStudy(){
   stack().innerHTML='<div class="screen study-screen" role="region" aria-label="Study room">'+
     header("STUDY","Study room")+
     '<section class="study-at-a-glance"><div class="quick-look-head"><span class="quick-look-mark" aria-hidden="true">✓</span><div><p>START HERE</p><h2>What matters this week</h2></div></div><ol>'+essentials.map(x=>'<li><time>'+esc(x[0])+'</time><span>'+esc(x[1])+'</span></li>').join("")+'</ol></section>'+
+    weeklyLearningDashboardHtml()+
     '<a class="study-games-cta" href="#games" data-open-games><span>★</span><div><small>5–10 MINUTES</small><strong>Practice with Study Games</strong><p>Current school skills with hints and explanations.</p></div><b aria-hidden="true">›</b></a>'+
     '<div class="study-section-label"><p>SUBJECT DETAILS</p><span>Tap a subject only when you need it.</span></div>'+
     subjectCard("study-religion","religion",rel?.subject||"Religion",rel)+
@@ -432,7 +438,7 @@ function ensureStudyGameEngine(){
   if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
   if(studyEnginePromise)return studyEnginePromise;
   const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.async=true;s.onload=()=>window[key]?resolve():reject(new Error(key+" did not initialize"));s.onerror=()=>reject(new Error(key+" could not be loaded"));document.head.append(s)});
-  studyEnginePromise=Promise.all([load("./study-games.js?v=90","ABVMStudyGames"),load("./study-games-view.js?v=5","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
+  studyEnginePromise=Promise.all([load("./study-games.js?v=91","ABVMStudyGames"),load("./study-games-view.js?v=5","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
   return studyEnginePromise;
 }
 function studyGameCatalog(){
