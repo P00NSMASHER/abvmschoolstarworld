@@ -61,6 +61,22 @@ const BASE_SKILLS = [
     }),
   },
   {
+    id: 'subject-predicate',
+    subject: 'Reading / ELA',
+    label: 'Subject and predicate',
+    pattern: /subject\s*(?:&|and)\s*predicate|subject\s*\/\s*predicate/i,
+    standards: ['CCSS.L.2.1'],
+    domain: 'Language',
+    studyNotes: ['The subject tells who or what the sentence is about; the predicate tells what the subject does or is.'],
+    question: () => ({
+      prompt: 'In the sentence “The brown puppy chased the ball,” which words are the subject?',
+      choices: ['The brown puppy', 'chased the ball', 'the ball'],
+      answer: 'The brown puppy',
+      explanation: 'The subject names who or what the sentence is about: the brown puppy.',
+      hint: 'Find who or what is doing the action.',
+    }),
+  },
+  {
     id: 'consonant-blends',
     subject: 'Spelling / Handwriting',
     label: 'Consonant blends',
@@ -506,6 +522,28 @@ const SUPPLEMENTAL_QUESTION_FAMILIES = Object.freeze({
       answer: 'The paint is wet. — Do not touch it.',
       explanation: 'The first sentence tells information; the second gives a direction.',
       hint: 'Classify what each sentence is doing before choosing the pair.',
+      dok: 3,
+      difficulty: 3,
+    },
+  ],
+  'subject-predicate': [
+    {
+      questionType: 'transfer',
+      prompt: 'In the sentence “The birds sing in the tree,” which words are the predicate?',
+      choices: ['sing in the tree', 'The birds', 'the tree'],
+      answer: 'sing in the tree',
+      explanation: 'The predicate tells what the subject does: the birds sing in the tree.',
+      hint: 'First find the subject, then choose the words that tell what it does.',
+      dok: 2,
+      difficulty: 2,
+    },
+    {
+      questionType: 'reasoning',
+      prompt: 'Which explanation correctly separates the subject and predicate in “Mia opened the window”?',
+      choices: ['Mia is the subject; opened the window is the predicate.', 'Opened is the subject; Mia is the predicate.', 'The window is the subject; Mia opened is the predicate.'],
+      answer: 'Mia is the subject; opened the window is the predicate.',
+      explanation: 'Mia names who the sentence is about, and opened the window tells what Mia did.',
+      hint: 'The subject names who or what; the predicate tells what that subject does or is.',
       dok: 3,
       difficulty: 3,
     },
@@ -1214,6 +1252,13 @@ const RENEWABLE_EXTENSION_FAMILIES = Object.freeze({
     {questionType:'reasoning',prompt:'Why is “Did you feed the dog?” a question instead of a statement?',choices:['It asks for information.','It gives a direction.','It shows strong feeling.'],answer:'It asks for information.',explanation:'A question asks something the speaker wants answered.',hint:'Think about the purpose of the sentence.',dok:3,difficulty:3},
     {questionType:'reasoning',prompt:'Which pair has a command first and an exclamation second?',choices:['Open the window. — What a cool breeze!','Is it windy? — The window is open.','What a cool breeze! — Open the window.'],answer:'Open the window. — What a cool breeze!',explanation:'The first sentence gives a direction and the second shows strong feeling.',hint:'Classify both sentences before choosing.',dok:3,difficulty:3},
   ],
+  'subject-predicate': [
+    {questionType:'direct',prompt:'In “My little brother builds a tower,” which words are the subject?',choices:['My little brother','builds a tower','a tower'],answer:'My little brother',explanation:'The subject tells who the sentence is about.',hint:'Ask who is doing the action.',dok:1,difficulty:2},
+    {questionType:'transfer',prompt:'In “The yellow bus stopped by the school,” which words are the predicate?',choices:['stopped by the school','The yellow bus','the school'],answer:'stopped by the school',explanation:'The predicate tells what the yellow bus did.',hint:'Find the action and the words that go with it.',dok:2,difficulty:2},
+    {questionType:'transfer',prompt:'Which pair correctly labels the parts of “The rabbit hopped across the yard”?',choices:['subject: The rabbit; predicate: hopped across the yard','subject: hopped; predicate: The rabbit','subject: the yard; predicate: The rabbit hopped'],answer:'subject: The rabbit; predicate: hopped across the yard',explanation:'The rabbit names who the sentence is about; hopped across the yard tells what it did.',hint:'Split the sentence into who or what, then what that subject does.',dok:2,difficulty:2},
+    {questionType:'reasoning',prompt:'Why is “The tall tree” the subject in “The tall tree swayed in the wind”?',choices:['It names what the sentence is about.','It tells what the tree did.','It names where the action happened.'],answer:'It names what the sentence is about.',explanation:'A subject names who or what the sentence is about.',hint:'Decide whether the words name the subject or tell what it does.',dok:3,difficulty:3},
+    {questionType:'reasoning',prompt:'Which sentence is correctly split into subject and predicate?',choices:['Our class | read a new book.','Read a | new book our class.','Our | class read | a new book.'],answer:'Our class | read a new book.',explanation:'Our class is the complete subject, and read a new book is the predicate.',hint:'Keep all the subject words together, then all the words telling what the subject does.',dok:3,difficulty:3},
+  ],
   'consonant-blends': [
     {questionType:'direct',prompt:'Which word begins with the blend br?',choices:['brush','rush','apple'],answer:'brush',explanation:'Brush begins with the two heard sounds b and r.',hint:'Say the first two sounds slowly.',dok:1,difficulty:2},
     {questionType:'transfer',prompt:'Which word begins with the same blend as “plant”?',choices:['plate','flag','ant'],answer:'plate',explanation:'Plant and plate both begin with pl.',hint:'Listen to the first two consonant sounds.',dok:2,difficulty:2},
@@ -1274,6 +1319,7 @@ const RENEWABLE_EXTENSION_FAMILIES = Object.freeze({
 
 const PRIORITY_THREE_TYPE_SKILLS = new Set([
   'sentence-types',
+  'subject-predicate',
   'dialogue',
   'sequence',
   'caption',
@@ -1438,7 +1484,7 @@ function sourcePriority(skill, title) {
       ? ['Tests', 'Homework']
       : skill.subject === 'Spelling / Handwriting'
         ? ['Weekly Spelling List', 'Reading Work', 'Tests']
-        : skill.id === 'sentence-types'
+        : ['sentence-types', 'subject-predicate'].includes(skill.id)
           ? ['Tests', 'Reading Work']
           : ['Reading Work', 'Tests', 'Homework'];
   const index = priorities.indexOf(title);
