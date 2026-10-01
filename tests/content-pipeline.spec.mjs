@@ -327,17 +327,20 @@ test('Test Ready policy resolves only certified skills from the assessment label
         skills: [
           { id: 'setting', subject: 'Reading / ELA' },
           { id: 'theme', subject: 'Reading / ELA' },
+          { id: 'subject-predicate', subject: 'Reading / ELA' },
           { id: 'long-short-a', subject: 'Spelling / Handwriting' },
         ],
       },
     };
     return {
+      grammar: window.ABVMStudyGames.testReadyMode(pack, { x: { label: 'Grammar — subject & predicate' } }),
       setting: window.ABVMStudyGames.testReadyMode(pack, { x: { label: 'Setting test' } }),
       spelling: window.ABVMStudyGames.testReadyMode(pack, { x: { label: 'Spelling test — short a / long a' } }),
       unrelated: window.ABVMStudyGames.testReadyMode(pack, { x: { label: 'Picture Day' } }),
     };
   });
 
+  expect(result.grammar?.skills).toEqual(['subject-predicate']);
   expect(result.setting?.skills).toEqual(['setting']);
   expect(result.setting?.count).toBe(5);
   expect(result.spelling?.skills).toEqual(['long-short-a']);
