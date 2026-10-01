@@ -7,7 +7,7 @@ async function openCalendar(page){
 function day(page,isoDate){return page.locator('[data-cal-day^="'+isoDate+'"]')}
 async function openSeptemberCalendar(page){
   await page.clock.setFixedTime(new Date("2026-09-15T16:00:00Z"));
-  await openSeptemberCalendar(page);
+  await openCalendar(page);
 }
 
 test("busy Sept 30 keeps all independently verified events visible",async({page})=>{
@@ -53,7 +53,7 @@ test("busy date and month agenda do not cause horizontal overflow",async({page})
 });
 
 test("next-month summary exposes upcoming October school items",async({page})=>{
-  await openCalendar(page);
+  await openSeptemberCalendar(page);
   const card=page.locator(".next-month-card");
   await card.scrollIntoViewIfNeeded();
   await expect(card).toContainText("October");
