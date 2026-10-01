@@ -24,6 +24,23 @@ function overlapScore(a, b) {
   return score;
 }
 
+function sourceTopicMatch(topic, line) {
+  const topicNormalized = normalize(topic);
+  const lineNormalized = normalize(line);
+  if (!topicNormalized || !lineNormalized) return null;
+  if (lineNormalized.includes(topicNormalized)) {
+    return { method: 'exact-topic-phrase', score: 100 + overlapScore(topic, line) };
+  }
+  const topicTerms = topicNormalized.split(' ').filter(Boolean);
+  const meaningfulTerms = topicTerms.filter(term => term.length >= 3);
+  const requiredTerms = meaningfulTerms.length ? meaningfulTerms : topicTerms;
+  const lineTerms = new Set(lineNormalized.split(' ').filter(Boolean));
+  if (requiredTerms.length && requiredTerms.every(term => lineTerms.has(term))) {
+    return { method: 'all-topic-tokens', score: 50 + overlapScore(topic, line) };
+  }
+  return null;
+}
+
 export function sourceContextForGap(gap, sourcePages = []) {
   const topic = text(gap?.topic);
   const subject = text(gap?.subject);
@@ -32,9 +49,9 @@ export function sourceContextForGap(gap, sourcePages = []) {
     for (const line of Array.isArray(page?.lines) ? page.lines : []) {
       const clean = text(line);
       if (!clean) continue;
-      const score = overlapScore(topic, clean) + (normalize(clean).includes(normalize(topic)) ? 10 : 0);
-      if (!score) continue;
-      candidates.push({ score, page, line: clean });
+      const match = sourceTopicMatch(topic, clean);
+      if (!match) continue;
+      candidates.push({ score: match.score, matchMethod: match.method, page, line: clean });
     }
   }
   candidates.sort((a, b) =>
@@ -46,6 +63,7 @@ export function sourceContextForGap(gap, sourcePages = []) {
   if (!best) {
     return {
       quality: 'unresolved',
+      matchMethod: 'none',
       subject,
       topic,
       evidenceExcerptHash: `sha256:${sha256(topic)}`,
@@ -53,6 +71,7 @@ export function sourceContextForGap(gap, sourcePages = []) {
   }
   return {
     quality: 'page-exact',
+    matchMethod: best.matchMethod,
     subject,
     topic,
     sourceTitle: text(best.page?.title),
@@ -220,6 +239,7 @@ export function validateCurriculumCandidateManifest(candidate) {
   if (candidate?.rollout?.automaticPromotion !== false) issues.push(`${id}:automatic-promotion-must-stay-disabled`);
   if (!['page-exact', 'unresolved'].includes(candidate?.sourceContext?.quality)) issues.push(`${id}:source-context-quality-invalid`);
   if (candidate?.sourceContext?.quality === 'page-exact') {
+    if (!['exact-topic-phrase', 'all-topic-tokens'].includes(candidate.sourceContext.matchMethod)) issues.push(`${id}:source-match-method-invalid`);
     if (!text(candidate.sourceContext.sourceTitle)) issues.push(`${id}:source-title-missing`);
     if (!text(candidate.sourceContext.sourceUrl)) issues.push(`${id}:source-url-missing`);
     if (!text(candidate.sourceContext.sourceCaptureHash)) issues.push(`${id}:source-capture-hash-missing`);
