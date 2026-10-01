@@ -34,3 +34,13 @@ test('teacher refresh reruns when its browser-QA contract changes', () => {
     assert.ok(workflow.includes(path), `Missing refresh trigger for ${path}`);
   }
 });
+
+test('candidate PR lifecycle cannot stall on a pre-existing branch or closed draft', () => {
+  const workflow = readFileSync('.github/workflows/sync-study-pack.yml', 'utf8');
+  assert.match(workflow, /gh pr list --head "\$CANDIDATE_BRANCH" --state all/);
+  assert.match(workflow, /Candidate branch exists without a PR; recreating the governed draft PR/);
+  assert.match(workflow, /gh pr reopen "\$PR_NUMBER"/);
+  assert.match(workflow, /gh pr ready "\$PR_NUMBER" --undo/);
+  assert.match(workflow, /retry-\$\{GITHUB_RUN_ID\}/);
+  assert.doesNotMatch(workflow, /gh pr merge|--auto-merge|enable-auto-merge/i);
+});
