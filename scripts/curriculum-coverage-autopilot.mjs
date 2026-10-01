@@ -219,9 +219,15 @@ export function validateCurriculumCandidateManifest(candidate) {
   if (candidate?.rollout?.manualPromotionRequired !== true) issues.push(`${id}:manual-promotion-gate-required`);
   if (candidate?.rollout?.automaticPromotion !== false) issues.push(`${id}:automatic-promotion-must-stay-disabled`);
   if (!['page-exact', 'unresolved'].includes(candidate?.sourceContext?.quality)) issues.push(`${id}:source-context-quality-invalid`);
+  const proposedQuestions = Array.isArray(candidate?.proposedQuestions) ? candidate.proposedQuestions : [];
+  if (candidate?.authoring?.generatedQuestionCount !== proposedQuestions.length) issues.push(`${id}:authoring-question-count-mismatch`);
+  const expectedAuthoringStatus = proposedQuestions.length ? 'DRAFT_FAMILY_PRESENT' : 'AUTHORING_REQUIRED';
+  if (candidate?.authoring?.status !== expectedAuthoringStatus) issues.push(`${id}:authoring-status-mismatch`);
   if (candidate?.sourceContext?.quality === 'page-exact') {
     if (!text(candidate.sourceContext.sourceTitle)) issues.push(`${id}:source-title-missing`);
+    if (!text(candidate.sourceContext.sourceUrl)) issues.push(`${id}:source-url-missing`);
     if (!text(candidate.sourceContext.sourceCaptureHash)) issues.push(`${id}:source-capture-hash-missing`);
+    if (!text(candidate.sourceContext.sourceLine)) issues.push(`${id}:source-line-missing`);
     if (!text(candidate.sourceContext.evidenceExcerptHash)) issues.push(`${id}:evidence-excerpt-hash-missing`);
   }
   if (!candidate?.readiness || candidate.readiness.status !== 'HOLD') issues.push(`${id}:draft-readiness-must-hold`);
