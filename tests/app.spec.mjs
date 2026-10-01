@@ -114,3 +114,25 @@ test("bottom navigation is a single six-column row",async({page})=>{
   expect(layout.columns).toBe(6);
   expect(layout.rows).toBe(1);
 });
+
+
+test("Study Games uses the iPad canvas with a two-column game grid",async({page})=>{
+  await page.setViewportSize({width:810,height:1080});
+  await page.goto("/#games");
+  await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
+  const appBox=await page.locator(".phone-app").boundingBox();
+  expect(appBox).not.toBeNull();
+  expect(appBox.width).toBeGreaterThan(700);
+
+  const tiles=page.locator(".study-game-tile");
+  expect(await tiles.count()).toBeGreaterThanOrEqual(4);
+  const first=await tiles.nth(0).boundingBox();
+  const second=await tiles.nth(1).boundingBox();
+  expect(first).not.toBeNull();
+  expect(second).not.toBeNull();
+  expect(Math.abs(first.y-second.y)).toBeLessThan(4);
+  expect(second.x).toBeGreaterThan(first.x+first.width/2);
+
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
+  expect(overflow).toBeFalsy();
+});
