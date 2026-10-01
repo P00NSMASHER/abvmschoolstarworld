@@ -9,8 +9,22 @@ test('catalog adds validated non-answer-leaking rich formats to appropriate ques
   const result = await page.evaluate(async () => {
     const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(r => r.json());
     const engine = window.ABVMStudyGames;
-    const sourceKey = engine.sourceKeyFromEnvelope(envelope.pack, envelope);
-    const catalog = engine.buildCatalog(envelope.pack, { sourceKey });
+    const pack = JSON.parse(JSON.stringify(envelope.pack));
+    pack.contentPipeline ||= { schemaVersion:2, sourceHash:'rich-format-fixture', skills:[], questions:[], coverage:[] };
+    pack.contentPipeline.skills ||= [];
+    pack.contentPipeline.questions ||= [];
+    if(!pack.contentPipeline.skills.some(skill=>skill.id==='subtraction-within-20')){
+      pack.contentPipeline.skills.push({id:'subtraction-within-20',subject:'Math'});
+    }
+    pack.contentPipeline.questions.push({
+      id:'rich-number-line-fixture',subject:'Math',skill:'subtraction-within-20',questionType:'direct',
+      prompt:'Solve 14 − 6. What is the difference?',choices:['8','7','9'],answer:'8',
+      explanation:'14 take away 6 leaves 8.',hint:'Start at 14 and move back 6 spaces.',
+      sourceFact:'Deterministic rich-format QA fixture',standards:['CCSS.2.OA.B.2'],domain:'Numbers and operations',
+      dok:2,difficulty:2
+    });
+    const sourceKey = engine.sourceKeyFromEnvelope(pack, envelope);
+    const catalog = engine.buildCatalog(pack, { sourceKey });
     const rich = catalog.questions.filter(q => q.richContent).map(q => ({
       skill:q.skill, kind:q.richContent.kind, rich:q.richContent, prompt:q.prompt, answer:q.answer
     }));
@@ -110,9 +124,20 @@ test('pre-supplied rich content cannot inject information that is absent from th
   const result = await page.evaluate(async () => {
     const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(r => r.json());
     const pack = JSON.parse(JSON.stringify(envelope.pack));
-    const target = pack.contentPipeline.questions.find(q => q.skill === 'sentence-types');
-    if (!target) throw new Error('Expected sentence-types pipeline question');
-    target.richContent = {kind:'place-value',label:'Hidden answer data',number:999};
+    pack.contentPipeline ||= { schemaVersion:2, sourceHash:'rich-injection-fixture', skills:[], questions:[], coverage:[] };
+    pack.contentPipeline.skills ||= [];
+    pack.contentPipeline.questions ||= [];
+    if(!pack.contentPipeline.skills.some(skill=>skill.id==='sentence-types')){
+      pack.contentPipeline.skills.push({id:'sentence-types',subject:'Reading / ELA'});
+    }
+    const target = {
+      id:'rich-injection-fixture',subject:'Reading / ELA',skill:'sentence-types',questionType:'direct',
+      prompt:'Which sentence is asking a question and needs a question mark?',choices:['Where is my book?','Put the book away.','My book is blue.'],
+      answer:'Where is my book?',explanation:'A question asks for information.',hint:'Choose the sentence that asks something.',
+      sourceFact:'Deterministic rich-content injection fixture',standards:['CCSS.L.2.1'],domain:'Language',dok:1,difficulty:2,
+      richContent:{kind:'place-value',label:'Hidden answer data',number:999}
+    };
+    pack.contentPipeline.questions.push(target);
     const engine = window.ABVMStudyGames;
     const catalog = engine.buildCatalog(pack, { sourceKey:'rich-content-injection-test' });
     const built = catalog.questions.find(q => q.id === target.id);
