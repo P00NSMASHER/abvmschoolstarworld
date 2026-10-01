@@ -116,22 +116,32 @@ test("bottom navigation is a single six-column row",async({page})=>{
 });
 
 
-test("Study Games uses the iPad canvas with a two-column game grid",async({page})=>{
+test("Study Games uses the iPad canvas with priority hierarchy and tablet nav",async({page})=>{
   await page.setViewportSize({width:810,height:1080});
+  await page.addInitScript(()=>{
+    const RealDate=Date,fixed=new RealDate("2026-10-01T12:00:00-04:00").valueOf();
+    class FixedDate extends RealDate{constructor(...args){super(...(args.length?args:[fixed]));}static now(){return fixed;}}
+    window.Date=FixedDate;
+  });
   await page.goto("/#games");
   await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
   const appBox=await page.locator(".phone-app").boundingBox();
   expect(appBox).not.toBeNull();
   expect(appBox.width).toBeGreaterThan(700);
 
-  const tiles=page.locator(".study-game-tile");
-  expect(await tiles.count()).toBeGreaterThanOrEqual(4);
-  const first=await tiles.nth(0).boundingBox();
-  const second=await tiles.nth(1).boundingBox();
-  expect(first).not.toBeNull();
-  expect(second).not.toBeNull();
-  expect(Math.abs(first.y-second.y)).toBeLessThan(4);
-  expect(second.x).toBeGreaterThan(first.x+first.width/2);
+  const ready=await page.getByRole("button",{name:/Test Ready/i}).boundingBox();
+  const quick=await page.getByRole("button",{name:/Quick Mix/i}).boundingBox();
+  const math=await page.getByRole("button",{name:/Math Dash/i}).boundingBox();
+  expect(ready).not.toBeNull();
+  expect(quick).not.toBeNull();
+  expect(math).not.toBeNull();
+  expect(ready.width).toBeGreaterThan(quick.width*1.8);
+  expect(Math.abs(quick.y-math.y)).toBeLessThan(4);
+
+  const navButton=await page.locator(".bottom-nav button").first().boundingBox();
+  const navIcon=await page.locator(".bottom-nav .nav-icon").first().boundingBox();
+  expect(navButton.height).toBeGreaterThanOrEqual(64);
+  expect(navIcon.width).toBeGreaterThanOrEqual(48);
 
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
   expect(overflow).toBeFalsy();
