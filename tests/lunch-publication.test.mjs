@@ -42,7 +42,7 @@ test('refresh publishes meals, archive and a reproducible content receipt', asyn
   const result = await refreshLunchPublication(pack, { now, fetchImpl: mock(validFeed()) });
   assert.equal(result.verified, true);
   assert.deepEqual(pack.lunchMenu.map(m => m.date), ['2026-09-28', '2026-09-29', '2026-09-30', '2026-10-01', '2026-10-02']);
-  assert.equal(pack.lunchArchive.length, 24);
+  assert.equal(pack.lunchArchive.length, catalogMeals().length);
   assert.deepEqual(validateLunchPublication(pack, { now }), []);
   pack.lunchMenu[1] = { ...pack.lunchMenu[1], items: ['Wrong lunch'] };
   assert.match(validateLunchPublication(pack, { now }).join(' '), /changed a reviewed meal/);
@@ -64,18 +64,28 @@ test('HTTP error, HTML, malformed JSON and empty feed never erase reviewed meals
     assert.deepEqual(validateLunchPublication(pack, { now }), []);
   }
 });
-test('new week does not relabel old meals and unknown months do not halt teacher updates', async () => {
+test('next reviewed October week publishes exact meals even when live source check is unavailable', async () => {
   const next = new Date('2026-10-05T12:00:00Z');
   const pack = {};
   await refreshLunchPublication(pack, { now: next, fetchImpl: async () => { throw new Error('Unavailable'); } });
-  assert.deepEqual(pack.lunchMenu, []);
-  assert.equal(pack.lunchMenuSource.status, 'not-yet-verified');
-  assert.equal(pack.lunchMenuSource.missingDates.length, 5);
-  assert.equal(pack.lunchArchive.length, 24);
+  assert.deepEqual(pack.lunchMenu.map(m => m.date), ['2026-10-05', '2026-10-06', '2026-10-07', '2026-10-08', '2026-10-09']);
+  assert.equal(pack.lunchMenu.at(-1).items[0], 'No lunch — noon dismissal');
+  assert.equal(pack.lunchMenuSource.status, 'current-week');
+  assert.equal(pack.lunchMenuSource.retrievalState, 'unavailable');
+  assert.deepEqual(pack.lunchMenuSource.missingDates, []);
+  assert.equal(pack.lunchArchive.length, catalogMeals().length);
   assert.deepEqual(validateLunchPublication(pack, { now: next }), []);
   assert.deepEqual(schoolWeek(new Date('2027-01-01T12:00:00Z')), ['2026-12-28', '2026-12-29', '2026-12-30', '2026-12-31', '2027-01-01']);
 });
 
+
+test('October catalog covers every printed weekday through Oct. 30', () => {
+  const rows = catalogMeals().filter(m => m.date.startsWith('2026-10-'));
+  assert.equal(rows.length, 22);
+  assert.equal(rows.find(m => m.date === '2026-10-09').items[0], 'No lunch — noon dismissal');
+  assert.equal(rows.find(m => m.date === '2026-10-12').status, 'no-school');
+  assert.equal(rows.at(-1).date, '2026-10-30');
+});
 
 test('pinned image source proof is recomputed from its exact URL', () => {
   const changed = structuredClone(CATALOG);
