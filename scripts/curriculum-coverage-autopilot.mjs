@@ -154,6 +154,18 @@ export function curriculumCandidateIntrinsicBlockers(candidate) {
   }).blockers];
 }
 
+function curriculumCandidateSetKey(candidates = []) {
+  const evidenceRows = (Array.isArray(candidates) ? candidates : [])
+    .map(candidate => [
+      text(candidate?.candidateId),
+      text(candidate?.sourceContext?.quality),
+      text(candidate?.sourceContext?.evidenceExcerptHash),
+    ].join('|'))
+    .sort();
+  return evidenceRows.length
+    ? `gaps-${sha256(evidenceRows.join('\n')).slice(0, 24)}`
+    : 'no-gaps';
+}
 export function buildCurriculumCoveragePlan({
   pipeline,
   sourcePages = [],
@@ -208,6 +220,7 @@ export function buildCurriculumCoveragePlan({
     schemaVersion: 1,
     generatedAt,
     sourceHash: text(sourceHash || pipeline?.sourceHash),
+    candidateSetKey: curriculumCandidateSetKey(candidates),
     unsupportedCount: unsupported.length,
     status: unsupported.length ? 'CANDIDATES_REQUIRED' : 'NO_GAPS',
     candidates,
@@ -259,6 +272,8 @@ export function validateCurriculumCoveragePlan(plan) {
   for (const candidate of plan.candidates || []) {
     issues.push(...validateCurriculumCandidateManifest(candidate));
   }
+  const expectedCandidateSetKey = curriculumCandidateSetKey(plan.candidates || []);
+  if (text(plan.candidateSetKey) !== expectedCandidateSetKey) issues.push('candidate-set-key-mismatch');
   if ((plan.unsupportedCount || 0) !== (plan.candidates || []).length) issues.push('unsupported-count-mismatch');
   return [...new Set(issues)];
 }

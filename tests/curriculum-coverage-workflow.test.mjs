@@ -44,3 +44,11 @@ test('candidate PR lifecycle cannot stall on a pre-existing branch or closed dra
   assert.match(workflow, /retry-\$\{GITHUB_RUN_ID\}/);
   assert.doesNotMatch(workflow, /gh pr merge|--auto-merge|enable-auto-merge/i);
 });
+test('candidate branch identity is stable across unrelated source-hash churn', () => {
+  const workflow = readFileSync('.github/workflows/sync-study-pack.yml', 'utf8');
+  assert.match(workflow, /p\.candidateSetKey\|\|"unknown"/);
+  assert.match(workflow, /CANDIDATE_KEY=/);
+  assert.match(workflow, /SAFE_KEY=.*CANDIDATE_KEY/);
+  assert.match(workflow, /curriculum-candidate-\$\{SAFE_KEY\}/);
+  assert.match(workflow, /Source revision: \$SOURCE_HASH/);
+});

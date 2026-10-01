@@ -255,4 +255,42 @@ test('source evidence can match reordered complete topic tokens without acceptin
   assert.equal(candidate.sourceContext.matchMethod, 'all-topic-tokens');
   assert.match(candidate.sourceContext.sourceLine, /types of syllable/i);
 });
+test('candidate set key ignores unrelated whole-pack hash changes for the same exact gap evidence', () => {
+  const pipeline = {
+    coverage: [{ topic: 'syllable types', subject: 'Reading / ELA', status: 'GENERATOR_UNSUPPORTED' }],
+  };
+  const sourcePages = [{
+    title: 'Tests',
+    url: 'https://sites.google.com/view/abvmgr2/tests',
+    checkedAt: '2026-10-01T12:00:00.000Z',
+    contentHash: 'tests-hash',
+    lines: ['Friday Oct. 16: Grammar (syllable types)'],
+  }];
+  const a = buildCurriculumCoveragePlan({pipeline, sourcePages, sourceHash:'whole-pack-a', generatedAt:'2026-10-01T12:00:00.000Z'});
+  const b = buildCurriculumCoveragePlan({pipeline, sourcePages, sourceHash:'whole-pack-b', generatedAt:'2026-10-01T12:05:00.000Z'});
+  assert.notEqual(a.sourceHash, b.sourceHash);
+  assert.equal(a.candidateSetKey, b.candidateSetKey);
+  assert.match(a.candidateSetKey, /^gaps-[a-f0-9]{24}$/);
+});
 
+test('candidate set key changes when the exact supporting teacher evidence changes', () => {
+  const pipeline = {
+    coverage: [{ topic: 'syllable types', subject: 'Reading / ELA', status: 'GENERATOR_UNSUPPORTED' }],
+  };
+  const planFor = line => buildCurriculumCoveragePlan({
+    pipeline,
+    sourcePages: [{
+      title: 'Tests',
+      url: 'https://sites.google.com/view/abvmgr2/tests',
+      checkedAt: '2026-10-01T12:00:00.000Z',
+      contentHash: 'tests-hash',
+      lines: [line],
+    }],
+    sourceHash: 'same-whole-pack-label',
+    generatedAt: '2026-10-01T12:00:00.000Z',
+  });
+  const a = planFor('Friday Oct. 16: Grammar (syllable types)');
+  const b = planFor('Friday Oct. 23: Grammar (syllable types)');
+  assert.notEqual(a.candidates[0].sourceContext.evidenceExcerptHash, b.candidates[0].sourceContext.evidenceExcerptHash);
+  assert.notEqual(a.candidateSetKey, b.candidateSetKey);
+});
