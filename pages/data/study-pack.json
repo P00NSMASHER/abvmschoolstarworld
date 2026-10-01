@@ -123,6 +123,149 @@
     ],
     "importantDates": [
       {
+        "label": "New Year’s Day — School Closed",
+        "date": "Friday, Jan. 1",
+        "kind": "holiday"
+      },
+      {
+        "label": "School reopens",
+        "date": "Monday, Jan. 4",
+        "kind": "school"
+      },
+      {
+        "date": "Thursday, Jan. 7",
+        "label": "HSA meeting",
+        "source": "teacher-home",
+        "kind": "meeting"
+      },
+      {
+        "label": "STAR Testing window",
+        "date": "Tuesday–Friday, Jan. 12–22",
+        "kind": "assessment"
+      },
+      {
+        "label": "Mid-trimester Progress Reports; 12:00 dismissal",
+        "date": "Friday, Jan. 15",
+        "kind": "school"
+      },
+      {
+        "label": "Martin Luther King Jr. Day — School Closed",
+        "date": "Monday, Jan. 18",
+        "kind": "holiday"
+      },
+      {
+        "date": "Friday, Jan. 29",
+        "label": "Lego Club (for those who are signed up)",
+        "source": "teacher-home",
+        "kind": "club"
+      },
+      {
+        "label": "Catholic Schools Week",
+        "date": "Sunday–Saturday, Jan. 31–Feb. 6",
+        "kind": "school event"
+      },
+      {
+        "date": "Thursday, Feb. 4",
+        "label": "HSA meeting",
+        "source": "teacher-home",
+        "kind": "meeting"
+      },
+      {
+        "label": "12:00 dismissal",
+        "date": "Friday, Feb. 12",
+        "kind": "schedule change"
+      },
+      {
+        "label": "Presidents’ Day — School Closed",
+        "date": "Monday, Feb. 15",
+        "kind": "holiday"
+      },
+      {
+        "date": "Friday, Feb. 19",
+        "label": "Lego Club (for those who are signed up)",
+        "source": "teacher-home",
+        "kind": "club"
+      },
+      {
+        "label": "3rd Trimester starts",
+        "date": "Wednesday, Mar. 3",
+        "kind": "school"
+      },
+      {
+        "label": "HSA meeting",
+        "date": "Thursday, Mar. 4",
+        "kind": "meeting"
+      },
+      {
+        "label": "12:00 dismissal",
+        "date": "Friday, Mar. 12",
+        "kind": "schedule change"
+      },
+      {
+        "date": "Friday, Mar. 19",
+        "label": "Lego Club (for those who are signed up)",
+        "source": "teacher-home",
+        "kind": "club"
+      },
+      {
+        "label": "12:00 dismissal",
+        "date": "Wednesday, Mar. 24",
+        "kind": "schedule change"
+      },
+      {
+        "label": "Easter Holiday — School Closed",
+        "date": "Thursday–Monday, Mar. 25–29",
+        "kind": "holiday"
+      },
+      {
+        "date": "Thursday, Apr. 1",
+        "label": "HSA meeting",
+        "source": "teacher-home",
+        "kind": "meeting"
+      },
+      {
+        "label": "Mid-trimester Progress Reports; 12:00 dismissal",
+        "date": "Friday, Apr. 16",
+        "kind": "school"
+      },
+      {
+        "date": "Thursday, May 6",
+        "label": "HSA meeting",
+        "source": "teacher-home",
+        "kind": "meeting"
+      },
+      {
+        "date": "Friday, May 14",
+        "label": "Lego Club (for those who are signed up)",
+        "source": "teacher-home",
+        "kind": "club"
+      },
+      {
+        "label": "STAR Testing window",
+        "date": "Tuesday–Friday, May 18–21",
+        "kind": "assessment"
+      },
+      {
+        "label": "12:00 dismissal",
+        "date": "Thursday, May 27",
+        "kind": "schedule change"
+      },
+      {
+        "label": "Last day — Early Dismissal",
+        "date": "Friday, May 28",
+        "kind": "school"
+      },
+      {
+        "label": "Memorial Day — School Closed",
+        "date": "Monday, May 31",
+        "kind": "holiday"
+      },
+      {
+        "label": "Weather makeup days if needed",
+        "date": "Tuesday–Thursday, June 1–3",
+        "kind": "school"
+      },
+      {
         "date": "Monday–Friday, Sept. 21–25",
         "label": "STAR testing continues this week",
         "kind": "assessment",
@@ -385,6 +528,13 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Monday–Tuesday, Oct. 19–20",
+        "label": "Parent-Teacher Conferences",
+        "kind": "conference",
+        "sourceDocument": "weekly-reminders-2026-09-28",
+        "source": "uploaded-notice"
+      },
+      {
         "date": "Tuesday, Oct. 20",
         "label": "K–4 No School — Parent-Teacher Conferences",
         "kind": "holiday",
@@ -400,9 +550,9 @@
       },
       {
         "date": "Thursday, Oct. 22",
-        "label": "Chick-fil-A delivery/pickup — 3:00–4:30 PM; pickup available at dismissal",
+        "label": "Chick-fil-A pickup",
         "kind": "school event",
-        "sourceDocument": "chick-fil-a-order-form-2026-10",
+        "sourceDocument": "weekly-reminders-2026-09-28",
         "source": "uploaded-notice"
       },
       {
@@ -533,149 +683,6 @@
         "label": "Christmas Holiday — School Closed",
         "date": "Thursday–Thursday, Dec. 24–31",
         "kind": "holiday"
-      },
-      {
-        "label": "New Year’s Day — School Closed",
-        "date": "Friday, Jan. 1",
-        "kind": "holiday"
-      },
-      {
-        "label": "School reopens",
-        "date": "Monday, Jan. 4",
-        "kind": "school"
-      },
-      {
-        "date": "Thursday, Jan. 7",
-        "label": "HSA meeting",
-        "source": "teacher-home",
-        "kind": "meeting"
-      },
-      {
-        "label": "STAR Testing window",
-        "date": "Tuesday–Friday, Jan. 12–22",
-        "kind": "assessment"
-      },
-      {
-        "label": "Mid-trimester Progress Reports; 12:00 dismissal",
-        "date": "Friday, Jan. 15",
-        "kind": "school"
-      },
-      {
-        "label": "Martin Luther King Jr. Day — School Closed",
-        "date": "Monday, Jan. 18",
-        "kind": "holiday"
-      },
-      {
-        "date": "Friday, Jan. 29",
-        "label": "Lego Club (for those who are signed up)",
-        "source": "teacher-home",
-        "kind": "club"
-      },
-      {
-        "label": "Catholic Schools Week",
-        "date": "Sunday–Saturday, Jan. 31–Feb. 6",
-        "kind": "school event"
-      },
-      {
-        "date": "Thursday, Feb. 4",
-        "label": "HSA meeting",
-        "source": "teacher-home",
-        "kind": "meeting"
-      },
-      {
-        "label": "12:00 dismissal",
-        "date": "Friday, Feb. 12",
-        "kind": "schedule change"
-      },
-      {
-        "label": "Presidents’ Day — School Closed",
-        "date": "Monday, Feb. 15",
-        "kind": "holiday"
-      },
-      {
-        "date": "Friday, Feb. 19",
-        "label": "Lego Club (for those who are signed up)",
-        "source": "teacher-home",
-        "kind": "club"
-      },
-      {
-        "label": "3rd Trimester starts",
-        "date": "Wednesday, Mar. 3",
-        "kind": "school"
-      },
-      {
-        "label": "HSA meeting",
-        "date": "Thursday, Mar. 4",
-        "kind": "meeting"
-      },
-      {
-        "label": "12:00 dismissal",
-        "date": "Friday, Mar. 12",
-        "kind": "schedule change"
-      },
-      {
-        "date": "Friday, Mar. 19",
-        "label": "Lego Club (for those who are signed up)",
-        "source": "teacher-home",
-        "kind": "club"
-      },
-      {
-        "label": "12:00 dismissal",
-        "date": "Wednesday, Mar. 24",
-        "kind": "schedule change"
-      },
-      {
-        "label": "Easter Holiday — School Closed",
-        "date": "Thursday–Monday, Mar. 25–29",
-        "kind": "holiday"
-      },
-      {
-        "date": "Thursday, Apr. 1",
-        "label": "HSA meeting",
-        "source": "teacher-home",
-        "kind": "meeting"
-      },
-      {
-        "label": "Mid-trimester Progress Reports; 12:00 dismissal",
-        "date": "Friday, Apr. 16",
-        "kind": "school"
-      },
-      {
-        "date": "Thursday, May 6",
-        "label": "HSA meeting",
-        "source": "teacher-home",
-        "kind": "meeting"
-      },
-      {
-        "date": "Friday, May 14",
-        "label": "Lego Club (for those who are signed up)",
-        "source": "teacher-home",
-        "kind": "club"
-      },
-      {
-        "label": "STAR Testing window",
-        "date": "Tuesday–Friday, May 18–21",
-        "kind": "assessment"
-      },
-      {
-        "label": "12:00 dismissal",
-        "date": "Thursday, May 27",
-        "kind": "schedule change"
-      },
-      {
-        "label": "Last day — Early Dismissal",
-        "date": "Friday, May 28",
-        "kind": "school"
-      },
-      {
-        "label": "Memorial Day — School Closed",
-        "date": "Monday, May 31",
-        "kind": "holiday"
-      },
-      {
-        "label": "Weather makeup days if needed",
-        "date": "Tuesday–Thursday, June 1–3",
-        "kind": "school"
       }
     ],
     "lunchMenu": [
