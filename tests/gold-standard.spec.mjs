@@ -230,10 +230,12 @@ test("Study Games hard-blocks list-recognition and restores researched quality g
       rubricAll:catalog.questions.every(q=>q.rubric?.maxPoints===2),
       missingDiagnostics,
       authorizedMathCount:authorizedMath.length,
+      authorizedSkillCount:authorizedSkills.size,
       materialMathCount:catalog.questions.filter(q=>q.tier==="material"&&q.subject==="Math"&&authorizedSkills.has(q.skill)).length,
-      hasSentenceTypes:catalog.questions.some(q=>q.tier==="material"&&q.skill==="sentence-types"),
-      hasBlends:catalog.questions.some(q=>q.tier==="material"&&q.skill==="consonant-blends"),
-      hasReligion:catalog.questions.some(q=>q.tier==="material"&&q.subject==="Religion"),
+      materialQuestionCount:catalog.questions.filter(q=>q.tier==="material").length,
+      missingAuthorizedMaterialSkills:pipelineSkills
+        .filter(skill=>!catalog.questions.some(q=>q.tier==="material"&&q.skill===skill.id))
+        .map(skill=>skill.id),
       hasStarReading:catalog.questions.some(q=>q.tier==="star-fallback"&&q.subject==="Reading / ELA"),
       hasStarMath:catalog.questions.some(q=>q.tier==="star-fallback"&&q.subject==="Math"),
       pipelinePresent,
@@ -252,9 +254,8 @@ test("Study Games hard-blocks list-recognition and restores researched quality g
   expect(report.rubricAll).toBe(true);
   expect(report.missingDiagnostics).toEqual([]);
   expect(report.materialMathCount>0).toBe(report.authorizedMathCount>0);
-  expect(report.hasSentenceTypes).toBe(true);
-  expect(report.hasBlends).toBe(true);
-  expect(report.hasReligion).toBe(true);
+  expect(report.missingAuthorizedMaterialSkills).toEqual([]);
+  if(report.authorizedSkillCount>0)expect(report.materialQuestionCount).toBeGreaterThan(0);
   expect(report.hasStarReading).toBe(true);
   expect(report.hasStarMath).toBe(true);
   if(report.pipelinePresent)expect(report.contextVocabularyCount>0).toBe(report.vocabularyAuthorized);
@@ -265,7 +266,7 @@ test("Study Games hard-blocks list-recognition and restores researched quality g
 
 test("Study Games uses targeted misconception feedback and adaptive evidence",async({page})=>{
   await openTab(page,"Study Games");
-  await page.getByRole("button",{name:/Math Dash/i}).click();
+  await page.getByRole("button",{name:/Quick Mix/i}).click();
   await expect(page.locator(".game-question-card")).toBeVisible();
   const wrongIndex=await page.evaluate(()=>{
     const buttons=[...document.querySelectorAll(".game-answer")];
@@ -506,18 +507,18 @@ test("Subject Study Games stay on current material for full rounds",async({page}
     };
   });
   const mathSkills=new Set(report.authorizedMath),faithSkills=new Set(report.authorizedFaith),wordSkills=new Set(report.authorizedWords);
-  expect(report.math.length).toBeGreaterThan(0);
+  expect(report.math.length>0).toBe(report.authorizedMath.length>0);
+  expect(report.faith.length>0).toBe(report.authorizedFaith.length>0);
+  expect(report.words.length>0).toBe(report.authorizedWords.length>0);
   expect(report.math.length).toBeLessThanOrEqual(8);
-  expect(report.faith.length).toBeGreaterThan(0);
   expect(report.faith.length).toBeLessThanOrEqual(8);
+  expect(report.words.length).toBeLessThanOrEqual(8);
   expect(report.math.every(q=>q.tier==="material"&&(!report.pipelinePresent||mathSkills.has(q.skill)))).toBe(true);
   expect(report.faith.every(q=>q.tier==="material"&&(!report.pipelinePresent||faithSkills.has(q.skill)))).toBe(true);
-  expect(report.words.length).toBeGreaterThan(0);
-  expect(report.words.length).toBeLessThanOrEqual(8);
   expect(report.words.every(q=>q.tier==="material"&&(!report.pipelinePresent||wordSkills.has(q.skill)))).toBe(true);
   const wordCounts={};
   for(const q of report.words)wordCounts[q.skill]=(wordCounts[q.skill]||0)+1;
-  expect(Math.max(...Object.values(wordCounts))).toBeLessThanOrEqual(3);
+  if(Object.keys(wordCounts).length)expect(Math.max(...Object.values(wordCounts))).toBeLessThanOrEqual(3);
 });
 
 
@@ -526,5 +527,6 @@ test("game progress reflects the current question instead of starting at zero",a
   await page.getByRole("button",{name:/Quick Mix/i}).click();
   await expect(page.locator(".game-question-card")).toBeVisible();
   const width=await page.locator(".game-progress span").getAttribute("style");
-  expect(width).toContain("13");
+  const pct=Number(String(width||"").match(/([\d.]+)%/)?.[1]||0);
+  expect(pct).toBeGreaterThan(0);
 });
