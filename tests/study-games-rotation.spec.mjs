@@ -418,3 +418,46 @@ test('Reading STAR fallback changes prompt content between generation variants',
   expect(result.secondPrompts).not.toEqual(result.firstPrompts);
   expect(result.secondPrompts.filter(prompt => result.firstPrompts.includes(prompt))).toEqual([]);
 });
+
+
+test('STAR fallback metadata includes direct, transfer, and reasoning practice', async ({ page }) => {
+  const result = await page.evaluate(() => {
+    const engine = window.ABVMStudyGames;
+    const catalog = engine.buildCatalog(
+      { contentPipeline: { skills: [], questions: [] }, recentReviewPipeline: { questions: [] }, subjects: [] },
+      { sourceKey: 'fallback-metadata-audit' }
+    );
+    const rows = catalog.questions.filter(question => question.tier === 'star-fallback');
+    const bySubject = subject => rows.filter(question => question.subject === subject);
+    const pick = (subject, skill) => bySubject(subject).find(question => question.skill === skill);
+    return {
+      readingTypes: [...new Set(bySubject('Reading / ELA').map(question => question.questionType))].sort(),
+      mathTypes: [...new Set(bySubject('Math').map(question => question.questionType))].sort(),
+      reading: {
+        authorPurpose: pick('Reading / ELA', 'author-purpose'),
+        inference: pick('Reading / ELA', 'inference'),
+        evidence: pick('Reading / ELA', 'text-evidence'),
+      },
+      math: {
+        placeValue: pick('Math', 'place-value'),
+        elapsedTime: pick('Math', 'time'),
+        twoStep: pick('Math', 'two-step-word-problem'),
+      },
+    };
+  });
+
+  expect(result.readingTypes).toEqual(['direct', 'reasoning', 'transfer']);
+  expect(result.mathTypes).toEqual(['direct', 'reasoning', 'transfer']);
+
+  expect(result.reading.authorPurpose.questionType).toBe('direct');
+  expect(result.reading.authorPurpose.dok).toBe(1);
+  expect(result.reading.inference.questionType).toBe('transfer');
+  expect(result.reading.inference.dok).toBe(2);
+  expect(result.reading.evidence.questionType).toBe('reasoning');
+  expect(result.reading.evidence.dok).toBe(3);
+
+  expect(result.math.placeValue.questionType).toBe('direct');
+  expect(result.math.elapsedTime.questionType).toBe('transfer');
+  expect(result.math.twoStep.questionType).toBe('reasoning');
+  expect(result.math.twoStep.dok).toBe(3);
+});
