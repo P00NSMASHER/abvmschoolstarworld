@@ -7,6 +7,7 @@ const SUBJECT_STANDARD_PREFIXES = Object.freeze({
 
 const DOMAIN_BY_SKILL = Object.freeze({
   'sentence-types': ['Language'],
+  'subject-predicate': ['Language'],
   'consonant-blends': ['Foundational reading'],
   'cvc-structure': ['Foundational reading'],
   'long-short-a': ['Foundational reading'],
@@ -45,6 +46,11 @@ const EXACT_SKILLS = Object.freeze({
     subject: 'Reading / ELA',
     standards: ['CCSS.L.2.1'],
     anchors: ['sentence', 'question', 'command', 'statement'],
+  },
+  'subject-predicate': {
+    subject: 'Reading / ELA',
+    standards: ['CCSS.L.2.1'],
+    anchors: ['subject', 'predicate', 'who or what', 'does', 'is'],
   },
   'consonant-blends': {
     subject: 'Spelling / Handwriting',
