@@ -1354,8 +1354,8 @@ function selectStudyStarGoal(goalId=STUDY_STAR_GOAL.id){
   return {goal:STUDY_STAR_GOAL,selected};
 }
 function studyStarGoalProgress(balance=0){
-  const stars=Math.max(0,Math.floor(Number(balance)||0)),target=STUDY_STAR_GOAL.target;
-  return {goal:STUDY_STAR_GOAL,balance:stars,target,remaining:Math.max(0,target-stars),percent:Math.min(100,Math.floor((stars/target)*100)),unlocked:stars>=target,selected:loadStudyStarGoal().selected};
+  const stars=Math.max(0,Math.floor(Number(balance)||0)),target=STUDY_STAR_GOAL.target,progress=Math.min(target,stars);
+  return {goal:STUDY_STAR_GOAL,balance:stars,target,remaining:Math.max(0,target-stars),percent:Math.min(100,Math.floor((progress/target)*100)),progress,unlocked:stars>=target,selected:loadStudyStarGoal().selected};
 }
 
 const STUDY_STAR_DB="abvm-study-stars-v1",STUDY_STAR_STORE="reward-ledger";
@@ -1393,9 +1393,10 @@ function safeStudyStarRow(row){
     amount:Number(row?.amount)||0
   };
 }
-async function commitStudyStarRewards({sourcePack,roundId,completed=false,comebackSucceeded=false}={}){
-  const source=text(sourcePack),round=text(roundId);
-  if(!source||!round)throw new Error("Study Star ledger requires sourcePack and roundId");
+async function commitStudyStarRewards({sourcePack,mode,sessionSeed,roundId,completed=false,comebackSucceeded=false}={}){
+  const source=text(sourcePack),game=text(mode),seed=text(sessionSeed);
+  const expectedRound=studyStarRoundId({sourcePack:source,mode:game,sessionSeed:seed}),round=text(roundId||expectedRound);
+  if(round!==expectedRound)throw new Error("Study Star ledger roundId must match sourcePack, mode, and sessionSeed");
   const events=completed===true?studyStarRewardEvents({completed:true,comebackSucceeded:comebackSucceeded===true}):Object.freeze([]);
   if(!events.length)return{currency:STUDY_STAR_POLICY.currency,awardedAmount:0,duplicateAmount:0,results:[]};
   const db=await openStudyStarDb();
@@ -1499,11 +1500,11 @@ function rankedItemQualityEntries(source){
 }
 function loadItemQuality(){
   try{
-    const parsed=JSON.parse(localStorage.getItem(ITEM_QUALITY_STORAGE_KEY)||"{}");
+    const raw=localStorage.getItem(ITEM_QUALITY_STORAGE_KEY),parsed=JSON.parse(raw||"{}");
     const normalized=rankedItemQualityEntries(parsed?.items);
     const safe={schemaVersion:ITEM_QUALITY_SCHEMA_VERSION,items:Object.fromEntries(normalized)};
     const serialized=JSON.stringify(safe);
-    if(localStorage.getItem(ITEM_QUALITY_STORAGE_KEY)!==serialized)localStorage.setItem(ITEM_QUALITY_STORAGE_KEY,serialized);
+    if(raw!==serialized){try{localStorage.setItem(ITEM_QUALITY_STORAGE_KEY,serialized)}catch{}}
     return safe;
   }catch{return {schemaVersion:ITEM_QUALITY_SCHEMA_VERSION,items:{}}}
 }
