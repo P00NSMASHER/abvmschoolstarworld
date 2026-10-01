@@ -24,6 +24,7 @@ import {
   TEACHER_EVENT_HISTORY_DAYS,
   validateRecentReviewPipeline,
 } from './curriculum-continuity.mjs';
+import { buildSchoolChangeFeed, validateSchoolChangeFeed } from './school-change-feed.mjs';
 
 const DATA_PATH = new URL('../pages/data/study-pack.json', import.meta.url);
 const UPLOADED_NOTICES_PATH = new URL('../pages/data/uploaded-notices.json', import.meta.url);
@@ -300,6 +301,7 @@ const teacherSourcePages = fetched.map(page => ({
 }));
 const data = JSON.parse(readFileSync(DATA_PATH, 'utf8'));
 const pack = data.pack || {};
+const previousPackSnapshot = structuredClone(pack);
 const previousCurrentPipeline = pack.contentPipeline ? structuredClone(pack.contentPipeline) : null;
 const previousReviewPipeline = pack.recentReviewPipeline ? structuredClone(pack.recentReviewPipeline) : null;
 const contentChanged = pack.sourceHash !== sourceHash || pack.uploadedNoticeHash !== uploadedNoticeHash;
@@ -430,6 +432,15 @@ pack.gaps = [...new Set([...pack.gaps,
   ...(comprehension ? [] : ['The current Reading Work page leaves Reading Comprehension blank, so no comprehension target is invented.']),
 ])];
 
+pack.schoolChangeFeed = buildSchoolChangeFeed({
+  previousPack: previousPackSnapshot,
+  currentPack: pack,
+  generatedAt: checkedAt,
+  sourceHash,
+});
+const changeFeedIssues = validateSchoolChangeFeed(pack.schoolChangeFeed);
+if (changeFeedIssues.length) throw new Error(`School change feed failed QA: ${JSON.stringify(changeFeedIssues)}`);
+
 data.source = 'ABVM Grade 2 public teacher pages and uploaded school notices';
 data.delivery = 'verified';
 data.syncPolicy = {
@@ -471,6 +482,10 @@ if (process.argv.includes('--dry-run')) {
       reviewSkillCount: recentReviewPipeline.skills.length,
       reviewQuestionCount: recentReviewPipeline.questions.length,
       retentionDays: recentReviewPipeline.retentionDays,
+    },
+    schoolChanges: {
+      changed: pack.schoolChangeFeed.changed,
+      items: pack.schoolChangeFeed.items.map(row => row.text),
     },
   }, null, 2));
 } else {
