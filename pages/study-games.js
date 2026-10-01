@@ -886,7 +886,66 @@ function fallbackReading(variant,out){
       explanation:"Repeating the difficult measure is direct evidence that Marco is working carefully."
     }
   ];
-  for(const [index,row] of rows.entries()){
+  const alternateRows=[
+    {
+      id:"star-read-infer-1",skill:"inference",
+      prompt:"Read: “Priya stepped out of the car carrying a towel and goggles while she could smell chlorine.” Where is Priya most likely going?",
+      choices:["To a swimming pool.","To a snowy hill.","To a movie theater."],
+      answer:"To a swimming pool.",
+      explanation:"The towel, goggles, and smell of chlorine are clues that point to a swimming pool."
+    },
+    {
+      id:"star-read-theme-1",skill:"theme",
+      prompt:"Read: “Leo could not hold the model bridge pieces in place by himself. He asked Ana to steady them while he taped the pieces together, and they finished the bridge.” What lesson best fits?",
+      choices:["Working together can help solve a problem.","Never ask anyone for help.","Models are always easy to build."],
+      answer:"Working together can help solve a problem.",
+      explanation:"Leo and Ana succeed because they cooperate on a job that was hard to do alone."
+    },
+    {
+      id:"star-read-evidence-1",skill:"text-evidence",
+      prompt:"Read: “Nora checked the directions twice, erased one answer, and solved the problem again.” Which detail best shows that Nora is working carefully?",
+      choices:["She checked the directions twice.","She used a pencil.","The problem had an answer."],
+      answer:"She checked the directions twice.",
+      explanation:"Checking the directions again is the strongest direct evidence that Nora is being careful."
+    },
+    {
+      id:"star-read-purpose-1",skill:"author-purpose",
+      prompt:"A paragraph gives facts about how bees carry pollen from flower to flower and help plants make seeds. What is the author's main purpose?",
+      choices:["To inform the reader about bees and plants.","To persuade the reader to buy honey.","To tell a make-believe adventure."],
+      answer:"To inform the reader about bees and plants.",
+      explanation:"The paragraph presents facts to explain how bees help flowering plants."
+    },
+    {
+      id:"star-read-wordchoice-1",skill:"word-choice",
+      prompt:"Read: “Rain drummed on the roof while Maya read her book.” Why might the author use the word “drummed”?",
+      choices:["To help the reader imagine repeated tapping sounds.","To show that the rain played a real drum.","To tell how many pages Maya read."],
+      answer:"To help the reader imagine repeated tapping sounds.",
+      explanation:"Drummed creates a sound image of rain tapping steadily on the roof."
+    },
+    {
+      id:"star-read-cause-1",skill:"cause-effect",
+      prompt:"Read: “The plant had not been watered for several days, so its leaves began to droop.” Why did the leaves droop?",
+      choices:["Because the plant needed water.","Because the pot was blue.","Because the window was closed."],
+      answer:"Because the plant needed water.",
+      explanation:"Not getting water caused the plant's leaves to droop."
+    },
+    {
+      id:"star-read-infer-2",skill:"inference",
+      prompt:"Read: “Mateo heard the final bell, zipped his backpack, and joined the line of students heading toward the buses.” What can you infer?",
+      choices:["The school day is ending.","The school day is just beginning.","Mateo is going to lunch."],
+      answer:"The school day is ending.",
+      explanation:"The final bell, packed backpack, and buses are clues that students are leaving school."
+    },
+    {
+      id:"star-read-evidence-2",skill:"text-evidence",
+      prompt:"Read: “Sofia practiced the tricky dance step slowly, watched herself in the mirror, and tried it again.” Which detail best shows that Sofia wants to improve?",
+      choices:["She practiced the tricky step again.","There was a mirror in the room.","The step was part of a dance."],
+      answer:"She practiced the tricky step again.",
+      explanation:"Repeating the difficult step is direct evidence that Sofia is working to improve."
+    }
+  ];
+  const activeRows=variant===1?rows:alternateRows;
+  for(const [index,row] of activeRows.entries()){
     add(out,{
       id:row.id+"-v"+variant,subject:"Reading / ELA",skill:row.skill,tier:"star-fallback",
       prompt:row.prompt,choices:shuffled(row.choices,row.id+variant),answer:row.answer,explanation:row.explanation,
