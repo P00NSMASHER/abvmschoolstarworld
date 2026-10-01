@@ -1723,7 +1723,7 @@ function recordAuxLearning(question,correct,kind){
   const all=loadLearning(),row=all[question.skill]||{Seen:0,Correct:0,Wrong:0,ConsecutiveCorrect:0,ConsecutiveWrong:0,TargetDifficulty:2},now=Date.now(),priorMastery=priorAbility(all,question.skill);
   row.LastSeenAt=now;
   if(kind==="support"){row.SupportSeen=(Number(row.SupportSeen)||0)+1;row.LastSupportAt=now;correct?row.SupportedCorrect=(Number(row.SupportedCorrect)||0)+1:row.SupportedWrong=(Number(row.SupportedWrong)||0)+1;}
-  else{row.ComebackSeen=(Number(row.ComebackSeen)||0)+1;row.LastComebackAt=now;correct?row.RememberedLater=(Number(row.RememberedLater)||0)+1:row.ComebackWrong=(Number(row.ComebackWrong)||0)+1;}
+  else{row.ComebackSeen=(Number(row.ComebackSeen)||0)+1;row.LastComebackAt=now;if(correct){row.RememberedLater=(Number(row.RememberedLater)||0)+1;row.LastComebackCorrectAt=now}else{row.ComebackWrong=(Number(row.ComebackWrong)||0)+1;row.LastComebackWrongAt=now}}
   recordItemQuality(question,correct,{kind,priorMastery});
   all[question.skill]=row;writeLearning(all);return row;
 }
