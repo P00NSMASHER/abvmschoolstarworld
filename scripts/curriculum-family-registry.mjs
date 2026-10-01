@@ -113,7 +113,7 @@ const FAMILY_REGISTRY = Object.freeze([
         choices: Object.freeze([
           'Our class | read a new book.',
           'Read a | new book our class.',
-          'Our | class read | a new book.',
+          'A new book | our class read.',
         ]),
         answer: 'Our class | read a new book.',
         explanation: 'Our class is the complete subject, and read a new book is the predicate.',
