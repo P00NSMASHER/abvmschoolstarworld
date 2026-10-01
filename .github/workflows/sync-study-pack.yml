@@ -6,12 +6,14 @@ on:
     paths:
       - 'scripts/refresh-teacher-pages.mjs'
       - 'scripts/grade2-content-pipeline.mjs'
+      - 'scripts/grade2-coverage-autopilot.mjs'
       - 'scripts/grade2-content-alignment.mjs'
       - 'scripts/teacher-page-parsers.mjs'
       - 'scripts/lunch-publication.mjs'
       - 'pages/data/lunch-catalog.json'
       - 'scripts/validate-uploaded-notices.mjs'
       - 'tests/grade2-content-pipeline.test.mjs'
+      - 'tests/grade2-coverage-autopilot.test.mjs'
       - '.github/workflows/sync-study-pack.yml'
   schedule:
     - cron: '17 6 * * *'
@@ -55,6 +57,18 @@ jobs:
 
       - name: Verify refreshed source health
         run: node scripts/check-refresh-health.mjs --require-today --max-age-hours 1
+
+      - name: Build curriculum coverage candidate packet
+        run: node scripts/grade2-coverage-autopilot.mjs --input pages/data/study-pack.json --output artifacts/grade2-coverage-candidates.json
+
+      - name: Retain curriculum coverage candidate packet
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: grade2-coverage-candidates-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/grade2-coverage-candidates.json
+          if-no-files-found: ignore
+          retention-days: 14
 
       - name: Install Chromium for candidate QA
         run: npx playwright install --with-deps chromium
