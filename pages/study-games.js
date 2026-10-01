@@ -944,13 +944,22 @@ function fallbackReading(variant,out){
       explanation:"Repeating the difficult step is direct evidence that Sofia is working to improve."
     }
   ];
+  const metadata={
+    inference:{type:"transfer",dok:2,difficulty:2},
+    theme:{type:"transfer",dok:2,difficulty:2},
+    "text-evidence":{type:"reasoning",dok:3,difficulty:3},
+    "author-purpose":{type:"direct",dok:1,difficulty:2},
+    "word-choice":{type:"reasoning",dok:2,difficulty:2},
+    "cause-effect":{type:"direct",dok:1,difficulty:2}
+  };
   const activeRows=variant===1?rows:alternateRows;
-  for(const [index,row] of activeRows.entries()){
+  for(const row of activeRows){
+    const meta=metadata[row.skill]||{type:"transfer",dok:2,difficulty:2};
     add(out,{
-      id:row.id+"-v"+variant,subject:"Reading / ELA",skill:row.skill,tier:"star-fallback",
+      id:row.id+"-v"+variant,subject:"Reading / ELA",skill:row.skill,tier:"star-fallback",type:meta.type,
       prompt:row.prompt,choices:shuffled(row.choices,row.id+variant),answer:row.answer,explanation:row.explanation,
       hint:row.skill==="text-evidence"?"Choose the detail that most directly proves the idea.":"Use the passage clues, not just one familiar word.",
-      sourceFact:"Original Grade 2 STAR-aligned Reading practice",dok:index%3===0?1:index%3===1?2:3,difficulty:index%3===2?3:2,
+      sourceFact:"Original Grade 2 STAR-aligned Reading practice",dok:meta.dok,difficulty:meta.difficulty,
       wrongFeedback:"Go back to the text and choose the answer supported by the strongest clue.",
       misconception:"unsupported-reading-choice"
     });
@@ -967,7 +976,7 @@ function fallbackMath(variant,out){
       explanation:`First add ${24+offset} + 13 = ${37+offset}. Then subtract 8 to get ${29+offset}.`,
       wrongFeedback:choice=>choice===String(37+offset)?"You stopped after the first step. The story has a second change.":"Do the addition first, then subtract the markers that were used.",
       misconception:choice=>choice===String(37+offset)?"one-step-only":"operation-order",
-      dok:3,difficulty:3
+      type:"reasoning",dok:3,difficulty:3
     },
     {
       id:"star-math-place",skill:"place-value",
@@ -975,7 +984,7 @@ function fallbackMath(variant,out){
       answer:"60",choices:["60","6","600"],
       explanation:"The 6 is in the tens place, so its value is 60.",
       wrongFeedback:"Name the place first: hundreds, tens, or ones.",
-      misconception:"digit-vs-place-value",dok:2,difficulty:2
+      misconception:"digit-vs-place-value",type:"direct",dok:2,difficulty:2
     },
     {
       id:"star-math-compare",skill:"compare-numbers",
@@ -984,7 +993,7 @@ function fallbackMath(variant,out){
       choices:[`${58+offset} < ${65+offset}`,`${58+offset} > ${65+offset}`,`${58+offset} = ${65+offset}`],
       explanation:"Compare the tens first. Five tens is less than six tens.",
       wrongFeedback:"Compare tens before ones.",
-      misconception:"comparison-direction",dok:2,difficulty:2
+      misconception:"comparison-direction",type:"direct",dok:2,difficulty:2
     },
     {
       id:"star-math-time",skill:"time",
@@ -992,7 +1001,7 @@ function fallbackMath(variant,out){
       answer:"2:45",choices:["2:45","2:30","3:15"],
       explanation:"Thirty minutes after 2:15 is 2:45.",
       wrongFeedback:"Count forward 30 minutes from the starting time.",
-      misconception:"elapsed-time",dok:2,difficulty:2
+      misconception:"elapsed-time",type:"transfer",dok:2,difficulty:2
     },
     {
       id:"star-math-measure",skill:"measurement",
@@ -1000,7 +1009,7 @@ function fallbackMath(variant,out){
       answer:"27 centimeters",choices:["27 centimeters","45 centimeters","25 centimeters"],
       explanation:"The ribbon gets shorter, so subtract: 36 − 9 = 27.",
       wrongFeedback:"Because some ribbon is cut off, the length should decrease.",
-      misconception:"measurement-operation",dok:2,difficulty:2
+      misconception:"measurement-operation",type:"transfer",dok:2,difficulty:2
     },
     {
       id:"star-math-data",skill:"data-interpretation",
@@ -1008,7 +1017,7 @@ function fallbackMath(variant,out){
       answer:"4",choices:["4","10","2"],
       explanation:"Compare apples and grapes: 7 − 3 = 4.",
       wrongFeedback:"“How many more” asks for the difference between the two categories.",
-      misconception:"data-comparison",dok:2,difficulty:2
+      misconception:"data-comparison",type:"transfer",dok:2,difficulty:2
     },
     {
       id:"star-math-add",skill:"addition-within-100",
@@ -1016,7 +1025,7 @@ function fallbackMath(variant,out){
       answer:String(61+offset),choices:[String(61+offset),String(51+offset),String(71+offset)],
       explanation:`Add tens and ones: ${34+offset} + 27 = ${61+offset}.`,
       wrongFeedback:"Add the ones and tens carefully, then check that the total is larger than both addends.",
-      misconception:"addition-place-value",dok:2,difficulty:2
+      misconception:"addition-place-value",type:"direct",dok:2,difficulty:2
     },
     {
       id:"star-math-subtract",skill:"subtraction-within-100",
@@ -1024,12 +1033,12 @@ function fallbackMath(variant,out){
       answer:String(44+offset),choices:[String(44+offset),String(54+offset),String(42+offset)],
       explanation:`${68+offset} − 20 = ${48+offset}, then subtract 4 more to get ${44+offset}.`,
       wrongFeedback:"Subtract the tens first, then the ones, and check by adding your answer to 24.",
-      misconception:"subtraction-place-value",dok:2,difficulty:2
+      misconception:"subtraction-place-value",type:"direct",dok:2,difficulty:2
     }
   ];
   for(const row of rows){
     add(out,{
-      id:row.id+"-v"+variant,subject:"Math",skill:row.skill,tier:"star-fallback",
+      id:row.id+"-v"+variant,subject:"Math",skill:row.skill,tier:"star-fallback",type:row.type,
       prompt:row.prompt,choices:shuffled(row.choices,row.id+variant),answer:row.answer,explanation:row.explanation,
       hint:row.skill==="two-step-word-problem"?"Solve the first change, write the new amount, then solve the second change.":"Use the math relationship in the question before calculating.",
       sourceFact:"Original Grade 2 STAR-aligned Math practice",dok:row.dok,difficulty:row.difficulty,
