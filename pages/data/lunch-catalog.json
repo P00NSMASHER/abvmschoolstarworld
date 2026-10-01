@@ -218,10 +218,10 @@
       "url": "https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1790692534/adeducatorsorg/xdbrqzybydptd5srbor0/Octobercalendar.heic",
       "contentHash": "a99ce9385295921c9fff19ae4051732da45f7c38df077d30d9b62577c8c6eb45",
       "proofMode": "pinned-url",
-      "reviewedAt": "2026-09-29T19:36:00Z",
-      "reviewMethod": "Visual verification against the official October 2026 lunch-menu image embedded on the ABVM Parent Resources page; exact versioned Finalsite image URL is pinned and its URL SHA-256 is recorded as the proof digest. Only Oct. 1–2 were transcribed in this review.",
+      "reviewedAt": "2026-10-01T00:44:00Z",
+      "reviewMethod": "Full October 2026 transcription visually verified against the user-supplied school menu photo received 2026-09-30 and the pinned official ABVM Parent Resources source reference; rows are limited to the printed menu.",
       "coverageStart": "2026-10-01",
-      "coverageEnd": "2026-10-02",
+      "coverageEnd": "2026-10-30",
       "meals": [
         {
           "date": "2026-10-01",
@@ -238,6 +238,189 @@
             "Cheesy breadsticks",
             "Dipping sauce",
             "Garden salad",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-10-05",
+          "items": [
+            "Popcorn chicken",
+            "Mashed potatoes",
+            "Steamed corn",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-10-06",
+          "items": [
+            "Taco Tuesday & chips",
+            "Cheese",
+            "Brown rice",
+            "Salsa",
+            "Refried beans",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-10-07",
+          "items": [
+            "Buttered pierogies",
+            "Whole-grain roll",
+            "String cheese",
+            "Steamed carrots",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-10-08",
+          "items": [
+            "Beef cheesesteak",
+            "Whole-grain roll",
+            "French fries",
+            "Steamed broccoli",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-10-09",
+          "items": [
+            "No lunch — noon dismissal"
+          ]
+        },
+        {
+          "date": "2026-10-12",
+          "status": "no-school",
+          "items": []
+        },
+        {
+          "date": "2026-10-13",
+          "items": [
+            "Meatballs in sauce",
+            "Whole-grain buttered pasta",
+            "Steamed corn",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-10-14",
+          "items": [
+            "Baked cheese pizza",
+            "Garden salad",
+            "Steamed broccoli",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-10-15",
+          "items": [
+            "Hamburger on whole-grain roll",
+            "French fries",
+            "Mixed vegetables",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-10-16",
+          "items": [
+            "Chicken taco",
+            "Brown rice",
+            "Cheese",
+            "Salsa",
+            "Refried beans",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-10-19",
+          "items": [
+            "Breaded chicken",
+            "Buttered pasta",
+            "Steamed broccoli",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-10-20",
+          "items": [
+            "Hot ham & cheese",
+            "Whole-grain pretzel roll",
+            "Tortilla chips",
+            "Steamed peas",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-10-21",
+          "items": [
+            "Pasta with meatballs",
+            "Whole-grain roll",
+            "Shredded cheese",
+            "Steamed carrots",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-10-22",
+          "items": [
+            "Chicken patty on whole-grain roll",
+            "Baby cake potatoes",
+            "Green beans",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-10-23",
+          "items": [
+            "Cheesy breadsticks",
+            "Dipping sauce",
+            "Kidney beans",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-10-26",
+          "items": [
+            "Chicken finger wrap",
+            "Brown rice",
+            "Steamed corn",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-10-27",
+          "items": [
+            "Taco Tuesday & chips",
+            "Cheese",
+            "Shredded lettuce",
+            "Green beans",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-10-28",
+          "items": [
+            "Fish shapes",
+            "French fries",
+            "Steamed broccoli",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-10-29",
+          "items": [
+            "Beef-a-roni",
+            "Shredded cheese",
+            "Whole-grain roll",
+            "Steamed carrots",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-10-30",
+          "items": [
+            "Baked cheese pizza",
+            "Garden salad",
+            "Steamed peas",
             "Fruit"
           ]
         }
