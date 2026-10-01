@@ -5,9 +5,13 @@ async function openCalendar(page){
   await expect(page.locator(".calendar-card")).toBeVisible({timeout:10_000});
 }
 function day(page,isoDate){return page.locator('[data-cal-day^="'+isoDate+'"]')}
+async function openSeptemberCalendar(page){
+  await page.clock.setFixedTime(new Date("2026-09-15T16:00:00Z"));
+  await openCalendar(page);
+}
 
 test("busy Sept 30 keeps all independently verified events visible",async({page})=>{
-  await openCalendar(page);
+  await openSeptemberCalendar(page);
   const button=day(page,"2026-09-30");
   await expect(button).toBeVisible();
   await button.click();
@@ -19,7 +23,7 @@ test("busy Sept 30 keeps all independently verified events visible",async({page}
 });
 
 test("multi-day STAR range applies at both ends",async({page})=>{
-  await openCalendar(page);
+  await openSeptemberCalendar(page);
   for(const iso of ["2026-09-21","2026-09-25"]){
     const button=day(page,iso);await button.click();
     await expect(page.locator(".calendar-day-card")).toContainText(/STAR testing/i);
@@ -27,7 +31,7 @@ test("multi-day STAR range applies at both ends",async({page})=>{
 });
 
 test("regular date gives a calm empty state",async({page})=>{
-  await openCalendar(page);
+  await openSeptemberCalendar(page);
   const button=day(page,"2026-09-14");
   await button.click();
   await expect(page.locator(".calendar-day-card")).toBeVisible();
@@ -35,21 +39,21 @@ test("regular date gives a calm empty state",async({page})=>{
 });
 
 test("month agenda includes every school weekday and lunch state",async({page})=>{
-  await openCalendar(page);
+  await openSeptemberCalendar(page);
   expect(await page.locator(".agenda-day").count()).toBeGreaterThan(15);
   await expect(page.locator(".month-agenda")).toContainText("Lunch");
   await expect(page.locator(".agenda-lunch").first()).toBeVisible();
 });
 
 test("busy date and month agenda do not cause horizontal overflow",async({page})=>{
-  await openCalendar(page);
+  await openSeptemberCalendar(page);
   await day(page,"2026-09-30").click();
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
   expect(overflow).toBeFalsy();
 });
 
 test("next-month summary exposes upcoming October school items",async({page})=>{
-  await openCalendar(page);
+  await openSeptemberCalendar(page);
   const card=page.locator(".next-month-card");
   await card.scrollIntoViewIfNeeded();
   await expect(card).toContainText("October");
