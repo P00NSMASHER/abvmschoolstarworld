@@ -216,6 +216,47 @@ test('Chapter 3 Religion source yields dedicated original sin, faith, sacrament,
   assert.equal(validateGrade2ContentPipeline(pipeline).length, 0);
 });
 
+test('Chapter 3 Religion lineage resolves against one exact combined teacher-page line', () => {
+  const rawChapter3 = "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace";
+  const pack = {
+    sourceHash: 'religion-chapter-3-lineage',
+    subjects: [{
+      subject: 'Religion',
+      topics: ['Chapter 3: Jesus Lives in His Church'],
+      studyNotes: [
+        "orignial sin; human tendancy to sin which is the result of Adam & Eve's sin",
+        'faith: gift from god tht helps us believe',
+        'sacrament: sacred sign given to the Church by Jesus',
+        'at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace',
+      ],
+    }],
+    vocabulary: [],
+  };
+  const pipeline = buildGrade2ContentPipeline(pack, {
+    generatedAt: '2026-10-01T18:55:00.000Z',
+    sourceHash: pack.sourceHash,
+    requirePageExactLineage: true,
+    sourcePages: [{
+      title: 'Religion',
+      url: 'https://sites.google.com/view/abvmgr2/religion',
+      checkedAt: '2026-10-01T18:55:00.000Z',
+      contentHash: 'chapter-3-religion-capture',
+      lines: [rawChapter3],
+    }],
+  });
+
+  const expected = ['religion-original-sin', 'religion-faith-gift', 'religion-sacrament-sign', 'religion-baptism-grace'];
+  for (const skillId of expected) {
+    const skill = pipeline.skills.find(row => row.id === skillId);
+    assert.ok(skill, `missing Chapter 3 lineage skill: ${skillId}`);
+    assert.equal(skill.sourceLineage?.quality, 'page-exact', `${skillId} should resolve to exact Religion page evidence`);
+    assert.equal(skill.sourceLineage?.sourceTitle, 'Religion');
+    assert.ok((skill.sourceLineage?.matchedEvidence || []).includes(rawChapter3));
+    assert.ok(pipeline.questions.filter(question => question.skill === skillId).every(question => question.sourceLineage?.quality === 'page-exact'));
+  }
+  assert.equal(validateGrade2ContentPipeline(pipeline).length, 0);
+});
+
 test('source-bound sight-word contexts restore the older StarBlox high-frequency practice without claiming spelling mastery', () => {
   const pack = {
     sourceHash: 'older-sight-word-week',
