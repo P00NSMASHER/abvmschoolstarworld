@@ -204,7 +204,13 @@ export function validateCurriculumCandidateManifest(candidate) {
   if (!text(candidate?.topic)) issues.push(`${id}:topic-missing`);
   if (!text(candidate?.featureFlag)) issues.push(`${id}:feature-flag-missing`);
   if (!['AUTHORING_REQUIRED', 'DRAFT_FAMILY_PRESENT'].includes(candidate?.authoring?.status)) issues.push(`${id}:authoring-status-invalid`);
+  const questionCount = Array.isArray(candidate?.proposedQuestions) ? candidate.proposedQuestions.length : 0;
   if (!Number.isInteger(candidate?.authoring?.generatedQuestionCount) || candidate.authoring.generatedQuestionCount < 0) issues.push(`${id}:authoring-question-count-invalid`);
+  else if (candidate.authoring.generatedQuestionCount !== questionCount) issues.push(`${id}:authoring-question-count-mismatch`);
+  if (candidate?.authoring?.status === 'AUTHORING_REQUIRED' && questionCount !== 0) issues.push(`${id}:authoring-status-count-mismatch`);
+  if (candidate?.authoring?.status === 'DRAFT_FAMILY_PRESENT' && questionCount === 0) issues.push(`${id}:authoring-status-count-mismatch`);
+  if (Number(candidate?.authoring?.minimumSemanticVariants) !== Number(candidate?.minimumSemanticVariants)) issues.push(`${id}:authoring-minimum-mismatch`);
+  if (JSON.stringify(candidate?.authoring?.requiredQuestionTypes || []) !== JSON.stringify(candidate?.requiredQuestionTypes || [])) issues.push(`${id}:authoring-types-mismatch`);
   if (!Array.isArray(candidate?.authoring?.requiredQuestionFields) || candidate.authoring.requiredQuestionFields.length < 8) issues.push(`${id}:authoring-contract-incomplete`);
   if (candidate?.enabledByDefault !== false) issues.push(`${id}:candidate-must-start-disabled`);
   if (candidate?.rollout?.featureFlagRequired !== true) issues.push(`${id}:feature-flag-gate-required`);
