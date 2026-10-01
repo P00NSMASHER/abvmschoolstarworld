@@ -139,12 +139,13 @@ test("Study Games uses the iPad canvas with priority hierarchy and tablet nav",a
   expect(Math.abs(quick.y-math.y)).toBeLessThan(4);
 
   const readyVisual=await page.getByRole("button",{name:/Test Ready/i}).evaluate(el=>{
-    const icon=el.querySelector(".study-game-icon"),outline=el.querySelector(".icon-outline");
-    return {background:getComputedStyle(icon).backgroundImage,fill:getComputedStyle(outline).fill,stroke:getComputedStyle(outline).stroke};
+    const outline=el.querySelector(".icon-outline"),stroke=el.querySelector(".icon-stroke");
+    return {outlineFill:outline.getAttribute("fill"),outlineStroke:outline.getAttribute("stroke"),checkFill:stroke.getAttribute("fill"),checkStroke:stroke.getAttribute("stroke")};
   });
-  expect(readyVisual.background).toContain("linear-gradient");
-  expect(readyVisual.fill).not.toBe("rgb(0, 0, 0)");
-  expect(readyVisual.stroke).not.toBe("none");
+  expect(readyVisual.outlineFill).toBe("none");
+  expect(readyVisual.outlineStroke).toBe("currentColor");
+  expect(readyVisual.checkFill).toBe("none");
+  expect(readyVisual.checkStroke).toBe("currentColor");
 
   const navButton=await page.locator(".bottom-nav button").first().boundingBox();
   const navIcon=await page.locator(".bottom-nav .nav-icon").first().boundingBox();
