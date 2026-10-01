@@ -155,7 +155,7 @@ test('skill-restricted selection keeps Test Ready practice inside the verified a
   });
 
   expect(result.length).toBeGreaterThan(0);
-  expect(result.every(question => question.skill === 'theme')).toBe(true);
+  expect(result.every(question => question.skill === 'sentence-types')).toBe(true);
 });
 
 
@@ -177,7 +177,7 @@ test('the content pipeline is authoritative for every legacy material generator'
   });
 
   expect(result.length).toBeGreaterThan(0);
-  expect(result.every(question => question.skill === 'sentence-types')).toBe(true);
+  expect(result.every(question => question.skill === 'theme')).toBe(true);
 });
 
 
