@@ -19,6 +19,11 @@ import {
   buildCurriculumCoveragePlan,
   writeCurriculumCoveragePlan,
 } from './curriculum-coverage-autopilot.mjs';
+import {
+  buildRecentReviewPipeline,
+  TEACHER_EVENT_HISTORY_DAYS,
+  validateRecentReviewPipeline,
+} from './curriculum-continuity.mjs';
 
 const DATA_PATH = new URL('../pages/data/study-pack.json', import.meta.url);
 const UPLOADED_NOTICES_PATH = new URL('../pages/data/uploaded-notices.json', import.meta.url);
@@ -144,16 +149,21 @@ function topicKey(value) {
     || label.replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(word => word.length > 3).slice(0, 3).join('-');
 }
 
-function mergeTeacherEvents(existing, incoming, source) {
+function mergeTeacherEvents(existing, incoming, source, { now = new Date() } = {}) {
   const newKeys = new Set(incoming.map(item => `${dateKey(item.date)}:${topicKey(item.label)}`));
   const uniqueTopicKeys = new Set(incoming.filter(item => topicKey(item.label) === 'conference').map(item => topicKey(item.label)));
+  const nowMs = new Date(now).getTime(), historyFloor = nowMs - (TEACHER_EVENT_HISTORY_DAYS * 86400000);
   const kept = existing.filter(item => {
-    if (item.source === source) return false;
     const key = `${dateKey(item.date)}:${topicKey(item.label)}`;
-    return !newKeys.has(key) && !uniqueTopicKeys.has(topicKey(item.label));
+    if (newKeys.has(key)) return false;
+    if (item.source === source) {
+      const when = eventTime(item.date, new Date(now));
+      return Number.isFinite(when) && when < nowMs && when >= historyFloor;
+    }
+    return !uniqueTopicKeys.has(topicKey(item.label));
   });
   return [...kept, ...incoming.map(item => ({ ...item, kind: item.kind || kindFor(item.label), source }))]
-    .sort((a, b) => eventTime(a.date) - eventTime(b.date));
+    .sort((a, b) => eventTime(a.date, new Date(now)) - eventTime(b.date, new Date(now)));
 }
 
 function mergeUploadedEvents(existing, uploaded) {
@@ -178,11 +188,10 @@ function mergeUploadedText(existing, incoming, previousTopics = []) {
   return [...new Set([...incoming.map(item => item.text), ...kept])];
 }
 
-function eventTime(value) {
+function eventTime(value, now = new Date()) {
   const match = String(value || '').match(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]*\.?\s*(\d{1,2})/i);
   if (!match) return Number.MAX_SAFE_INTEGER;
   const month = MONTHS[match[1].replace('.', '').toLowerCase()];
-  const now = new Date();
   let year = now.getUTCFullYear();
   if (now.getUTCMonth() >= 7 && month <= 5) year += 1;
   if (now.getUTCMonth() <= 5 && month >= 7) year -= 1;
@@ -291,6 +300,8 @@ const teacherSourcePages = fetched.map(page => ({
 }));
 const data = JSON.parse(readFileSync(DATA_PATH, 'utf8'));
 const pack = data.pack || {};
+const previousCurrentPipeline = pack.contentPipeline ? structuredClone(pack.contentPipeline) : null;
+const previousReviewPipeline = pack.recentReviewPipeline ? structuredClone(pack.recentReviewPipeline) : null;
 const contentChanged = pack.sourceHash !== sourceHash || pack.uploadedNoticeHash !== uploadedNoticeHash;
 const capturedAt = contentChanged ? checkedAt : (data.sourceCapturedAt || pack.sourceCapturedAt || checkedAt);
 
@@ -371,6 +382,14 @@ const contentPipelineIssues = validateGrade2ContentPipeline(contentPipeline);
 if (contentPipelineIssues.length) {
   throw new Error(`Generated Grade 2 content failed QA: ${JSON.stringify(contentPipelineIssues)}`);
 }
+const recentReviewPipeline = buildRecentReviewPipeline({
+  previousCurrent: previousCurrentPipeline,
+  previousReview: previousReviewPipeline,
+  current: contentPipeline,
+  now: checkedAt,
+});
+const reviewIssues = validateRecentReviewPipeline(recentReviewPipeline, { current: contentPipeline });
+if (reviewIssues.length) throw new Error(`Recent review continuity failed QA: ${JSON.stringify(reviewIssues)}`);
 const autopilotPlan = buildCurriculumCoveragePlan({
   pipeline: contentPipeline,
   sourcePages: teacherSourcePages,
@@ -385,8 +404,9 @@ if (autopilotReportArg) {
   console.log(`Curriculum Coverage Autopilot: ${autopilotPlan.unsupportedCount} unsupported skill(s); report=${outputPath}`);
 }
 pack.contentPipeline = contentPipeline;
-pack.importantDates = mergeTeacherEvents(pack.importantDates || [], homeEvents, 'teacher-home');
-pack.importantDates = mergeTeacherEvents(pack.importantDates, testItems, 'teacher-tests');
+pack.recentReviewPipeline = recentReviewPipeline;
+pack.importantDates = mergeTeacherEvents(pack.importantDates || [], homeEvents, 'teacher-home', { now: checkedAt });
+pack.importantDates = mergeTeacherEvents(pack.importantDates, testItems, 'teacher-tests', { now: checkedAt });
 pack.importantDates = mergeUploadedEvents(pack.importantDates, uploadedNotices);
 pack.reminders = mergeUploadedText(pack.reminders || [], uploadedNotices.reminders, pack.uploadedNoticeTopics?.reminders);
 pack.parentNotices = mergeUploadedText(pack.parentNotices || [], uploadedNotices.parentNotices, pack.uploadedNoticeTopics?.parentNotices);
@@ -446,6 +466,11 @@ if (process.argv.includes('--dry-run')) {
       status: autopilotPlan.status,
       unsupportedCount: autopilotPlan.unsupportedCount,
       candidateIds: autopilotPlan.candidates.map(candidate => candidate.candidateId),
+    },
+    curriculumContinuity: {
+      reviewSkillCount: recentReviewPipeline.skills.length,
+      reviewQuestionCount: recentReviewPipeline.questions.length,
+      retentionDays: recentReviewPipeline.retentionDays,
     },
   }, null, 2));
 } else {
