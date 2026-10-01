@@ -170,6 +170,17 @@ test('Religion banks stay source-framed and avoid the rejected ambiguous/cross-s
   const strictReligion = religion.filter(question => question.sourceMode === 'STRICT_SOURCE');
   assert.ok(strictReligion.every(question => /current Religion lesson/i.test(question.prompt)));
 
+  const trinityDirect = religion.find(question => question.skill === 'religion-trinity' && question.questionType === 'direct');
+  const imageDirect = religion.find(question => question.skill === 'religion-image-likeness' && question.questionType === 'direct');
+  assert.ok(trinityDirect);
+  assert.ok(imageDirect);
+  assert.ok(Object.values(trinityDirect.choiceDiagnostics || {}).every(row => row.feedback === 'Review: The Trinity. Then use the clue in the question.'));
+  assert.ok(Object.values(imageDirect.choiceDiagnostics || {}).every(row => row.feedback === "Review: Made in God's image and likeness. Then use the clue in the question."));
+  assert.equal(
+    religion.some(question => Object.values(question.choiceDiagnostics || {}).some(row => /\bthe the\b/i.test(String(row.feedback || '')))),
+    false
+  );
+
   const forbidden = /invented the seasons|every book in the Bible|unrelated gods|school subject|text feature|current Reading story|consonant blends|captions|school schedule|how to spell/i;
   assert.equal(
     religion.some(question => [question.prompt, ...question.choices].some(value => forbidden.test(String(value)))),

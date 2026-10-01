@@ -1709,7 +1709,7 @@ function questionFor(skill, raw) {
     if (choice === answer) continue;
     diagnostics[choice] = {
       misconception: text(raw.misconceptions?.[choice] || `${skill.id}-distractor`),
-      feedback: text(raw.wrongFeedback?.[choice] || raw.wrongFeedback || `Recheck the ${skill.label.toLowerCase()} skill and use the clue in the question.`),
+      feedback: text(raw.wrongFeedback?.[choice] || raw.wrongFeedback || `Review: ${skill.label}. Then use the clue in the question.`),
     };
   }
   const dok = Number.isInteger(raw.dok) ? raw.dok : 2;
