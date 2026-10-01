@@ -3,6 +3,7 @@ import test from 'node:test';
 
 import {
   buildCurriculumCoveragePlan,
+  curriculumCandidateIntrinsicBlockers,
   evaluateCurriculumCandidate,
   validateCurriculumCoveragePlan,
 } from '../scripts/curriculum-coverage-autopilot.mjs';
@@ -48,10 +49,65 @@ test('unsupported teacher skill becomes a disabled source-grounded candidate ins
   assert.equal(candidate.sourceContext.sourceTitle, 'Tests');
   assert.match(candidate.sourceContext.sourceLine, /syllable types/i);
   assert.equal(candidate.rollout.automaticPromotion, false);
+  assert.equal(candidate.authoring.status, 'AUTHORING_REQUIRED');
+  assert.equal(candidate.authoring.generatedQuestionCount, 0);
+  assert.deepEqual(curriculumCandidateIntrinsicBlockers(candidate), [
+    'minimum-semantic-variants:0/8',
+    'question-type-required:direct',
+    'question-type-required:transfer',
+    'question-type-required:reasoning',
+  ]);
   assert.equal(candidate.readiness.status, 'HOLD');
   assert.ok(candidate.readiness.blockers.includes('automated-qa-required'));
   assert.ok(candidate.readiness.blockers.includes('safe-usage-evidence-required'));
   assert.ok(candidate.readiness.blockers.includes('manual-promotion-required'));
+});
+
+test('candidate manifest rejects stale authoring metadata that overstates its question family', () => {
+  const plan = buildCurriculumCoveragePlan({
+    pipeline: {
+      sourceHash: 'gap-metadata',
+      coverage: [{topic:'syllable types',subject:'Reading / ELA',status:'GENERATOR_UNSUPPORTED'}],
+    },
+    sourcePages: [{
+      title:'Tests',url:'https://sites.google.com/view/abvmgr2/tests',checkedAt:'2026-10-01T12:00:00.000Z',
+      contentHash:'tests-hash',lines:['Grammar: syllable types'],
+    }],
+    sourceHash:'gap-metadata',
+    generatedAt:'2026-10-01T12:00:00.000Z',
+  });
+  const candidate = structuredClone(plan.candidates[0]);
+  candidate.authoring.generatedQuestionCount = 8;
+  candidate.authoring.status = 'DRAFT_FAMILY_PRESENT';
+  const issues = validateCurriculumCoveragePlan({...plan,candidates:[candidate]});
+  assert.ok(issues.some(issue => issue.includes('authoring-question-count-mismatch')));
+  assert.ok(issues.some(issue => issue.includes('authoring-status-count-mismatch')));
+});
+
+test('page-exact curriculum candidates retain the exact source URL and source line', () => {
+  const plan = buildCurriculumCoveragePlan({
+    pipeline: {
+      sourceHash: 'gap-evidence',
+      coverage: [{topic:'syllable types',subject:'Reading / ELA',status:'GENERATOR_UNSUPPORTED'}],
+    },
+    sourcePages: [{
+      title:'Tests',
+      url:'https://sites.google.com/view/abvmgr2/tests',
+      checkedAt:'2026-10-01T12:00:00.000Z',
+      contentHash:'tests-hash',
+      lines:['Grammar: syllable types'],
+    }],
+    sourceHash:'gap-evidence',
+    generatedAt:'2026-10-01T12:00:00.000Z',
+  });
+  const noLine = structuredClone(plan.candidates[0]);
+  delete noLine.sourceContext.sourceLine;
+  const noUrl = structuredClone(plan.candidates[0]);
+  delete noUrl.sourceContext.sourceUrl;
+  const lineIssues = validateCurriculumCoveragePlan({...plan,candidates:[noLine]});
+  const urlIssues = validateCurriculumCoveragePlan({...plan,candidates:[noUrl]});
+  assert.ok(lineIssues.some(issue => issue.includes('source-line-missing')));
+  assert.ok(urlIssues.some(issue => issue.includes('source-url-missing')));
 });
 
 test('approved subject-predicate registry family is absorbed by normal refresh generation', () => {
@@ -114,6 +170,8 @@ test('candidate promotion requires full family, automated QA, safe usage evidenc
     requiredQuestionTypes: family.requiredQuestionTypes,
     proposedQuestions: questions,
   };
+
+  assert.deepEqual(curriculumCandidateIntrinsicBlockers(candidate), []);
 
   const beforeManual = evaluateCurriculumCandidate(candidate, {
     automatedQaPassed: true,

@@ -1,7 +1,10 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { validateCurriculumCandidateManifest } from './curriculum-coverage-autopilot.mjs';
+import {
+  curriculumCandidateIntrinsicBlockers,
+  validateCurriculumCandidateManifest,
+} from './curriculum-coverage-autopilot.mjs';
 
 const DIR = 'curriculum-candidates';
 if (!existsSync(DIR)) {
@@ -21,6 +24,7 @@ for (const name of files) {
     continue;
   }
   for (const issue of validateCurriculumCandidateManifest(candidate)) issues.push(`${name}:${issue}`);
+  for (const blocker of curriculumCandidateIntrinsicBlockers(candidate)) issues.push(`${name}:promotion-quality:${blocker}`);
 }
 
 if (issues.length) {

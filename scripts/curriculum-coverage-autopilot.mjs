@@ -127,6 +127,14 @@ export function evaluateCurriculumCandidate(candidate, {
   });
 }
 
+export function curriculumCandidateIntrinsicBlockers(candidate) {
+  return [...evaluateCurriculumCandidate(candidate, {
+    automatedQaPassed: true,
+    safeUsageEvidence: 'sufficient-safe-usage',
+    manualApproval: true,
+  }).blockers];
+}
+
 export function buildCurriculumCoveragePlan({
   pipeline,
   sourcePages = [],
@@ -156,6 +164,13 @@ export function buildCurriculumCoveragePlan({
       minimumSemanticVariants: registered?.minimumSemanticVariants || DEFAULT_MIN_VARIANTS,
       requiredQuestionTypes: registered?.requiredQuestionTypes || [...REQUIRED_TYPES],
       proposedQuestions,
+      authoring: {
+        status: proposedQuestions.length ? 'DRAFT_FAMILY_PRESENT' : 'AUTHORING_REQUIRED',
+        generatedQuestionCount: proposedQuestions.length,
+        minimumSemanticVariants: registered?.minimumSemanticVariants || DEFAULT_MIN_VARIANTS,
+        requiredQuestionTypes: registered?.requiredQuestionTypes || [...REQUIRED_TYPES],
+        requiredQuestionFields: ['questionType', 'prompt', 'choices', 'answer', 'explanation', 'hint', 'dok', 'difficulty'],
+      },
       rollout: {
         featureFlagRequired: true,
         automatedQaRequired: true,
@@ -188,6 +203,15 @@ export function validateCurriculumCandidateManifest(candidate) {
   if (!text(candidate?.subject)) issues.push(`${id}:subject-missing`);
   if (!text(candidate?.topic)) issues.push(`${id}:topic-missing`);
   if (!text(candidate?.featureFlag)) issues.push(`${id}:feature-flag-missing`);
+  if (!['AUTHORING_REQUIRED', 'DRAFT_FAMILY_PRESENT'].includes(candidate?.authoring?.status)) issues.push(`${id}:authoring-status-invalid`);
+  const questionCount = Array.isArray(candidate?.proposedQuestions) ? candidate.proposedQuestions.length : 0;
+  if (!Number.isInteger(candidate?.authoring?.generatedQuestionCount) || candidate.authoring.generatedQuestionCount < 0) issues.push(`${id}:authoring-question-count-invalid`);
+  else if (candidate.authoring.generatedQuestionCount !== questionCount) issues.push(`${id}:authoring-question-count-mismatch`);
+  if (candidate?.authoring?.status === 'AUTHORING_REQUIRED' && questionCount !== 0) issues.push(`${id}:authoring-status-count-mismatch`);
+  if (candidate?.authoring?.status === 'DRAFT_FAMILY_PRESENT' && questionCount === 0) issues.push(`${id}:authoring-status-count-mismatch`);
+  if (Number(candidate?.authoring?.minimumSemanticVariants) !== Number(candidate?.minimumSemanticVariants)) issues.push(`${id}:authoring-minimum-mismatch`);
+  if (JSON.stringify(candidate?.authoring?.requiredQuestionTypes || []) !== JSON.stringify(candidate?.requiredQuestionTypes || [])) issues.push(`${id}:authoring-types-mismatch`);
+  if (!Array.isArray(candidate?.authoring?.requiredQuestionFields) || candidate.authoring.requiredQuestionFields.length < 8) issues.push(`${id}:authoring-contract-incomplete`);
   if (candidate?.enabledByDefault !== false) issues.push(`${id}:candidate-must-start-disabled`);
   if (candidate?.rollout?.featureFlagRequired !== true) issues.push(`${id}:feature-flag-gate-required`);
   if (candidate?.rollout?.automatedQaRequired !== true) issues.push(`${id}:automated-qa-gate-required`);
@@ -197,7 +221,9 @@ export function validateCurriculumCandidateManifest(candidate) {
   if (!['page-exact', 'unresolved'].includes(candidate?.sourceContext?.quality)) issues.push(`${id}:source-context-quality-invalid`);
   if (candidate?.sourceContext?.quality === 'page-exact') {
     if (!text(candidate.sourceContext.sourceTitle)) issues.push(`${id}:source-title-missing`);
+    if (!text(candidate.sourceContext.sourceUrl)) issues.push(`${id}:source-url-missing`);
     if (!text(candidate.sourceContext.sourceCaptureHash)) issues.push(`${id}:source-capture-hash-missing`);
+    if (!text(candidate.sourceContext.sourceLine)) issues.push(`${id}:source-line-missing`);
     if (!text(candidate.sourceContext.evidenceExcerptHash)) issues.push(`${id}:evidence-excerpt-hash-missing`);
   }
   if (!candidate?.readiness || candidate.readiness.status !== 'HOLD') issues.push(`${id}:draft-readiness-must-hold`);
