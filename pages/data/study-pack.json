@@ -313,7 +313,7 @@
       },
       {
         "date": "Friday, Oct. 9",
-        "label": "12:00 dismissal — no school lunch",
+        "label": "12:00 dismissal",
         "kind": "schedule change",
         "sourceDocument": "october-calendar-2026",
         "source": "uploaded-notice"
@@ -339,7 +339,7 @@
       },
       {
         "date": "Monday, Oct. 12",
-        "label": "No School — calendar lists Teacher Inservice; lunch menu lists Columbus Day",
+        "label": "No School — Columbus Day",
         "kind": "holiday",
         "sourceDocument": "october-calendar-2026",
         "source": "uploaded-notice"
