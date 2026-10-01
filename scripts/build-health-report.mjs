@@ -16,8 +16,11 @@ const workflowNames={
   watchdog:"Monitor ABVM refresh health",
 };
 const runEvidenceAt=run=>Date.parse(run?.updated_at||run?.created_at||0)||0;
+const runCreatedAt=run=>Date.parse(run?.created_at||0)||0;
 const rankedRuns=name=>productionRuns.filter(run=>run.name===name).sort((a,b)=>runEvidenceAt(b)-runEvidenceAt(a));
+const createdRuns=name=>productionRuns.filter(run=>run.name===name).sort((a,b)=>runCreatedAt(b)-runCreatedAt(a));
 const latest=name=>rankedRuns(name)[0]||null;
+const latestCreated=name=>createdRuns(name)[0]||null;
 const latestCompleted=name=>rankedRuns(name).find(run=>run.conclusion)||null;
 const decisiveConclusions=new Set(["success","failure","timed_out","action_required","startup_failure"]);
 const latestDecisive=name=>rankedRuns(name).find(run=>decisiveConclusions.has(run.conclusion))||null;
@@ -71,10 +74,10 @@ const status={
     unsupportedTopics,
   },
   workflows:{
-    refresh:{latest:latest(workflowNames.refresh),latestCompleted:latestCompleted(workflowNames.refresh),latestDecisive:latestDecisive(workflowNames.refresh),latestSuccess:latestSuccess(workflowNames.refresh)},
-    qa:{latest:latest(workflowNames.qa),latestCompleted:latestCompleted(workflowNames.qa),latestDecisive:latestDecisive(workflowNames.qa),latestSuccess:latestSuccess(workflowNames.qa)},
-    deploy:{latest:latest(workflowNames.deploy),latestCompleted:latestCompleted(workflowNames.deploy),latestDecisive:latestDecisive(workflowNames.deploy),latestSuccess:latestSuccess(workflowNames.deploy)},
-    watchdog:{latest:latest(workflowNames.watchdog),latestCompleted:latestCompleted(workflowNames.watchdog),latestDecisive:latestDecisive(workflowNames.watchdog),latestSuccess:latestSuccess(workflowNames.watchdog)},
+    refresh:{latest:latest(workflowNames.refresh),latestCreated:latestCreated(workflowNames.refresh),latestCompleted:latestCompleted(workflowNames.refresh),latestDecisive:latestDecisive(workflowNames.refresh),latestSuccess:latestSuccess(workflowNames.refresh)},
+    qa:{latest:latest(workflowNames.qa),latestCreated:latestCreated(workflowNames.qa),latestCompleted:latestCompleted(workflowNames.qa),latestDecisive:latestDecisive(workflowNames.qa),latestSuccess:latestSuccess(workflowNames.qa)},
+    deploy:{latest:latest(workflowNames.deploy),latestCreated:latestCreated(workflowNames.deploy),latestCompleted:latestCompleted(workflowNames.deploy),latestDecisive:latestDecisive(workflowNames.deploy),latestSuccess:latestSuccess(workflowNames.deploy)},
+    watchdog:{latest:latest(workflowNames.watchdog),latestCreated:latestCreated(workflowNames.watchdog),latestCompleted:latestCompleted(workflowNames.watchdog),latestDecisive:latestDecisive(workflowNames.watchdog),latestSuccess:latestSuccess(workflowNames.watchdog)},
   },
   recentFailures:failures,
 };
@@ -82,10 +85,12 @@ const sourceFresh=sourceAgeHours!==null&&sourceAgeHours>=-.25&&sourceAgeHours<=8
 const runAgeHours=run=>run?.created_at?(Date.now()-Date.parse(run.created_at))/3_600_000:null;
 const activeStatuses=new Set(["queued","in_progress","waiting","pending","requested"]);
 const effectiveRun=workflow=>{
-  const latestRun=workflow.latest;
+  const newestCreated=workflow.latestCreated;
   const decisive=workflow.latestDecisive;
-  const newerActive=latestRun&&activeStatuses.has(latestRun.status)&&(!decisive||Date.parse(latestRun.created_at)>=Date.parse(decisive.created_at));
-  return newerActive?workflow.latestSuccess:decisive;
+  const newerActive=newestCreated&&activeStatuses.has(newestCreated.status)&&(!decisive||runCreatedAt(newestCreated)>=runCreatedAt(decisive));
+  if(newerActive)return workflow.latestSuccess;
+  if(newestCreated?.conclusion==="cancelled")return newestCreated;
+  return decisive;
 };
 const completedHealthy=(workflow,maxAgeHours)=>{
   const run=effectiveRun(workflow);
