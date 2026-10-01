@@ -149,6 +149,17 @@ test("Study Games uses the iPad canvas with priority hierarchy and tablet nav",a
   expect(navButton.height).toBeGreaterThanOrEqual(64);
   expect(navIcon.width).toBeGreaterThanOrEqual(48);
 
-  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
+  let overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
+  expect(overflow).toBeFalsy();
+
+  await page.getByRole("button",{name:/Quick Mix/i}).click();
+  await expect(page.locator(".game-question-card")).toBeVisible({timeout:10_000});
+  const promptSize=await page.locator(".game-question-card>h2").evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
+  const answer=await page.locator(".game-answer").first().boundingBox();
+  const answerSize=await page.locator(".game-answer strong").first().evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
+  expect(promptSize).toBeGreaterThanOrEqual(23);
+  expect(answer.height).toBeGreaterThanOrEqual(66);
+  expect(answerSize).toBeGreaterThanOrEqual(15);
+  overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
   expect(overflow).toBeFalsy();
 });
