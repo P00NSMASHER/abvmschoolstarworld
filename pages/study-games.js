@@ -1357,6 +1357,7 @@ function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillSt
   let pool=[...(catalog?.questions||[])];
   const wanted=Array.isArray(subjects)?subjects.map(text).filter(Boolean):[];
   const wantedSkills=Array.isArray(skills)?skills.map(text).filter(Boolean):[];
+  const sourceKey=String(catalog?.sourceKey||"current"),recent=new Set(loadRotation(sourceKey).recent.map(row=>row.v));
   if(wanted.length)pool=pool.filter(q=>wanted.includes(q.subject));
   if(wantedSkills.length)pool=pool.filter(q=>wantedSkills.includes(q.skill));
   if(wantedSkills.length){
@@ -1370,9 +1371,26 @@ function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillSt
     const reviewFill=review.filter(q=>!currentSubjects.has(q.subject));
     const covered=new Set([...currentSubjects,...reviewFill.map(q=>q.subject)]);
     const starFill=star.filter(q=>!covered.has(q.subject));
-    pool=[...current,...reviewFill,...starFill];
+    const primary=[...current,...reviewFill];
+    const fallbackSubjects=[...new Set(starFill.map(q=>q.subject).filter(Boolean))];
+    const anchors=[];
+    for(const subjectName of fallbackSubjects){
+      if(anchors.length>=count)break;
+      const subjectPool=starFill.filter(q=>q.subject===subjectName);
+      const anchor=pickBalanced(subjectPool,1,seed+"|fallback-subject|"+subjectName,skillStats,preferredSkills,recent)[0];
+      if(anchor)anchors.push(anchor);
+    }
+    const anchorVariants=new Set(anchors.map(semanticRotationKey));
+    const primarySelected=pickBalanced(primary,Math.max(0,count-anchors.length),seed+"|primary",skillStats,preferredSkills,new Set([...recent,...anchorVariants]));
+    const selected=[...anchors,...primarySelected];
+    if(selected.length<count){
+      const usedIds=new Set(selected.map(q=>q.id)),usedVariants=new Set(selected.map(semanticRotationKey));
+      const remainder=starFill.filter(q=>!usedIds.has(q.id)&&!usedVariants.has(semanticRotationKey(q)));
+      const fill=pickBalanced(remainder,count-selected.length,seed+"|fallback-fill",skillStats,preferredSkills,new Set([...recent,...usedVariants]));
+      selected.push(...fill);
+    }
+    return orderForVariety(selected.slice(0,count));
   }
-  const sourceKey=String(catalog?.sourceKey||"current"),recent=new Set(loadRotation(sourceKey).recent.map(row=>row.v));
   return pickBalanced(pool,count,seed,skillStats,preferredSkills,recent);
 }
 function supportQuestion(catalog,current,{skillStats={},seed="support"}={}){
