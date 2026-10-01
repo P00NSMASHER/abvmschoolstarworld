@@ -19,6 +19,7 @@ const STANDARD_BY_SKILL=Object.freeze({
   "subtraction-word-problem":["CCSS.2.OA.A.1"],
   "two-step-word-problem":["CCSS.2.OA.A.1"],
   "sentence-types":["CCSS.L.2.1"],
+  "subject-predicate":["CCSS.L.2.1"],
   "consonant-blends":["CCSS.RF.2.3"],
   "cvc-structure":["CCSS.RF.2.3"],
   "long-short-a":["CCSS.RF.2.3"],
@@ -47,6 +48,7 @@ const DOMAIN_BY_SKILL=Object.freeze({
   "subtraction-word-problem":"Algebraic thinking",
   "two-step-word-problem":"Algebraic thinking",
   "sentence-types":"Language",
+  "subject-predicate":"Language",
   "consonant-blends":"Foundational reading",
   "cvc-structure":"Foundational reading",
   "long-short-a":"Foundational reading",
@@ -1020,7 +1022,8 @@ function assessmentSkillIds(pack,test){
   const available=new Set((pack?.contentPipeline?.skills||[]).map(skill=>text(skill?.id)).filter(Boolean));
   const wanted=[];
   const add=id=>{if(available.has(id)&&!wanted.includes(id))wanted.push(id);};
-  if(/grammar|types of sentences/.test(label))add("sentence-types");
+  if(/subject\s*(?:&|and)\s*predicate/.test(label))add("subject-predicate");
+  else if(/grammar|types of sentences/.test(label))add("sentence-types");
   if(/short a|long a|a_e/.test(label))add("long-short-a");
   if(/consonant blend/.test(label))add("consonant-blends");
   if(/cvc/.test(label))add("cvc-structure");
@@ -1240,6 +1243,7 @@ function teachCardFor(question){
   if(!question?.skill)return null;
   const cards={
     "sentence-types":["Ask what job the sentence does.","A statement tells, a question asks, a command directs, and an exclamation shows strong feeling."],
+    "subject-predicate":["Find who or what the sentence is about, then what that subject does or is.","In “The dog barked loudly,” The dog is the subject and barked loudly is the predicate."],
     "consonant-blends":["Listen for both beginning consonant sounds.","In “flag,” you can hear both /f/ and /l/."],
     "cvc-structure":["Check the three letter types from left to right.","“Map” is consonant-vowel-consonant: m-a-p."],
     "long-short-a":["Compare the vowel sound and the spelling pattern.","Short a: cat. Long a with a_e: game."],
