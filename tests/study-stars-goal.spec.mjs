@@ -68,6 +68,17 @@ test('Dream Goal renderer reuses existing accessible game UI and exposes no stor
   expect(html).not.toMatch(/store|shop|catalog|purchase/i);
 });
 
+test('Dream Goal renderer falls back to balance when progress is omitted', async ({ page }) => {
+  const html=await page.evaluate(()=>{
+    const e=window.ABVMStudyGames,v=window.ABVMStudyGameView,state=e.studyStarGoalProgress(12);
+    delete state.progress;
+    return v.goal({state});
+  });
+  expect(html).toContain('12 / 50 Stars');
+  expect(html).toContain('aria-valuenow="12"');
+  expect(html).not.toContain('NaN');
+});
+
 test('unknown Dream Goals are rejected rather than creating a hidden catalog', async ({ page }) => {
   const result=await page.evaluate(()=>{
     try{window.ABVMStudyGames.selectStudyStarGoal('second-goal');return 'accepted'}catch(error){return String(error.message)}
