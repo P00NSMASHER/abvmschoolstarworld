@@ -128,7 +128,7 @@ function freshness(){
 }
 function kindClass(item){
   const k=(item?.kind||"").toLowerCase(), l=(item?.label||"").toLowerCase();
-  if(/test|assessment/.test(k)||/test|star reading/.test(l))return "test";
+  if(/\btests?\b|\bassessments?\b/.test(k)||/\btests?\b|\bassessments?\b|star reading/.test(l))return "test";
   if(/mass|relig|faith/.test(k)||/mass/.test(l))return "faith";
   if(/deadline|due/.test(k)||/due|money|order|rsvp/.test(l))return "due";
   if(/club/.test(k)||/lego/.test(l))return "club";
