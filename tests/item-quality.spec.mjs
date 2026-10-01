@@ -189,6 +189,25 @@ test("legacy item-quality rows are scrubbed to timestamp-free aggregate schema",
   }
 });
 
+test("item-quality migration returns sanitized aggregates even when write-back storage fails",async({page})=>{
+  const result=await page.evaluate(()=>{
+    const key="abvm-study-item-quality:v1";
+    localStorage.setItem(key,JSON.stringify({schemaVersion:1,items:{
+      qlegacyfail:{Skill:"theme",Subject:"Reading / ELA",Resolved:2,Correct:1,Wrong:1,NormalResolved:2,NormalCorrect:1,NormalWrong:1,
+        FirstTryCorrect:1,ChoicePositions:[1,1,0],Misconceptions:{"theme-too-narrow":1},ResponseBands:{lt5:0,"5to15":2,"15to30":0,gte30:0},
+        HintsUsed:0,SupportSeen:0,ComebackSeen:0,ComebackCorrect:0,AbilityN:2,AbilitySum:1,AbilitySumSq:.5,FirstTryAbilitySum:.5,
+        LastUpdatedAt:1700000000000,Prompt:"PRIVATE PROMPT"}
+    }}));
+    const original=Storage.prototype.setItem;
+    Storage.prototype.setItem=function(k,v){if(k===key)throw new Error("blocked");return original.call(this,k,v)};
+    try{return window.ABVMStudyGames.loadItemQuality()}finally{Storage.prototype.setItem=original}
+  });
+  expect(result.schemaVersion).toBe(2);
+  expect(result.items.qlegacyfail).toBeDefined();
+  expect(result.items.qlegacyfail).not.toHaveProperty("LastUpdatedAt");
+  expect(JSON.stringify(result)).not.toContain("PRIVATE PROMPT");
+});
+
 test("new question families stay feature-flagged until QA and sufficient safe usage evidence",async({page})=>{
   const result=await page.evaluate(()=>{
     const e=window.ABVMStudyGames;

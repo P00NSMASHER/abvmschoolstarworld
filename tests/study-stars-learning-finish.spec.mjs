@@ -9,24 +9,28 @@ async function clearStarLedger(page){
   }));
 }
 
+async function resolveRenderedQuestion(page){
+  const card=page.locator('.game-question-card');
+  await expect(card).toBeVisible();
+  const prompt=(await card.locator('h2').innerText()).trim();
+  const choices=(await card.locator('[data-game-answer] strong').allTextContents()).map(x=>x.trim());
+  return await page.evaluate(async ({prompt,choices})=>{
+    const envelope=await fetch('./data/study-pack.json',{cache:'no-store'}).then(r=>r.json());
+    const engine=window.ABVMStudyGames;
+    const sourceKey=engine.sourceKeyFromEnvelope(envelope.pack,envelope);
+    const catalog=engine.buildCatalog(envelope.pack,{sourceKey});
+    const question=catalog.questions.find(q=>q.prompt===prompt&&q.choices.length===choices.length&&q.choices.every((choice,index)=>choice===choices[index]));
+    if(!question)throw new Error('Could not resolve rendered question');
+    return {answerIndex:question.choices.indexOf(question.answer),skill:question.skill};
+  },{prompt,choices});
+}
+
 async function answerPerfectRound(page){
   await page.getByRole('button',{name:/Quick Mix/i}).click();
   for(let i=0;i<8;i++){
-    const card=page.locator('.game-question-card');
-    await expect(card).toBeVisible();
-    const prompt=(await card.locator('h2').innerText()).trim();
-    const choices=(await card.locator('[data-game-answer] strong').allTextContents()).map(x=>x.trim());
-    const answerIndex=await page.evaluate(async ({prompt,choices})=>{
-      const envelope=await fetch('./data/study-pack.json',{cache:'no-store'}).then(r=>r.json());
-      const engine=window.ABVMStudyGames;
-      const sourceKey=engine.sourceKeyFromEnvelope(envelope.pack,envelope);
-      const catalog=engine.buildCatalog(envelope.pack,{sourceKey});
-      const question=catalog.questions.find(q=>q.prompt===prompt&&q.choices.length===choices.length&&q.choices.every((choice,index)=>choice===choices[index]));
-      if(!question)throw new Error('Could not resolve rendered question');
-      return question.choices.indexOf(question.answer);
-    },{prompt,choices});
-    expect(answerIndex).toBeGreaterThanOrEqual(0);
-    await card.locator('[data-game-answer]').nth(answerIndex).click();
+    const q=await resolveRenderedQuestion(page);
+    expect(q.answerIndex).toBeGreaterThanOrEqual(0);
+    await page.locator('.game-question-card [data-game-answer]').nth(q.answerIndex).click();
     await page.locator('[data-game-next]').click();
   }
 }
@@ -37,6 +41,7 @@ test.beforeEach(async ({page})=>{
   await clearStarLedger(page);
   await page.evaluate(()=>{
     localStorage.removeItem('abvm-study-stars-goal:v1');
+    localStorage.removeItem('abvm-study-learning:v2');
     for(const key of Object.keys(localStorage)){
       if(key.startsWith('abvm-study-games-session:'))localStorage.removeItem(key);
     }
@@ -54,7 +59,7 @@ test('learning-first summary counts only independent normal work as Strong today
   expect(summary).toEqual({strong:1,remembered:1,practice:1,total:3});
 });
 
-test('learning-first summary keeps the strongest valid evidence for each skill regardless of event order',async({page})=>{
+test('learning-first summary keeps strongest valid evidence for each skill regardless of event order',async({page})=>{
   const summary=await page.evaluate(()=>window.ABVMStudyGames.learningFirstSummary([
     {skill:'recover-later',kind:'normal',correct:false,independent:false},
     {skill:'recover-later',kind:'normal',correct:true,independent:true},
@@ -80,9 +85,25 @@ test('learning-first finish puts learning evidence before secondary rewards',asy
   expect(html).toContain('We’ll practice again');
   expect(html).toContain('Round score 6 of 8');
   expect(html).toContain('+12 Study Stars');
-  expect(html).toContain('game-finish-stars');
   expect(html.indexOf('learning-summary')).toBeLessThan(html.indexOf('game-finish-stars'));
   expect(html.indexOf('learning-summary')).toBeLessThan(html.indexOf('study-star-earned'));
+});
+
+test('secondary reward summary stays visually separated and readable',async({page})=>{
+  const html=await page.evaluate(()=>window.ABVMStudyGameView.finish({
+    mode:{id:'quick',title:'Quick Mix'},
+    state:{questions:Array(8).fill({}),score:8},
+    record:{best:8},
+    summary:{strong:4,remembered:0,practice:0,total:4},
+    reward:{status:'done',awardedAmount:10,currency:'Study Stars',balance:10}
+  }));
+  await page.locator('#app-content').evaluate((node,markup)=>{node.innerHTML=markup},html);
+  const reward=page.locator('.study-star-earned.secondary');
+  await expect(reward).toBeVisible();
+  expect(await reward.evaluate(node=>getComputedStyle(node).borderStyle)).toBe('solid');
+  for(const selector of ['span','strong','small']){
+    expect(await reward.locator(selector).evaluate(node=>getComputedStyle(node).display)).toBe('block');
+  }
 });
 
 test('learning-first reward summary cannot display a second currency',async({page})=>{
@@ -97,26 +118,40 @@ test('learning-first reward summary cannot display a second currency',async({pag
   expect(html).not.toContain('Coins');
 });
 
+test('question retry and hint evidence resets before the next question',async({page})=>{
+  await page.getByRole('button',{name:/Quick Mix/i}).click();
+  const first=await resolveRenderedQuestion(page);
+  const wrong=(first.answerIndex+1)%3;
+  await page.locator('.game-question-card [data-game-answer]').nth(wrong).click();
+  await page.locator('.game-question-card [data-game-answer]').nth(first.answerIndex).click();
+  await page.locator('[data-game-next]').click();
+
+  const second=await resolveRenderedQuestion(page);
+  await page.locator('.game-question-card [data-game-answer]').nth(second.answerIndex).click();
+  const row=await page.evaluate(skill=>window.ABVMStudyGames.loadLearning()[skill],second.skill);
+  expect(row.LastResolution).toEqual(expect.objectContaining({
+    independent:true,attemptCount:1,incorrectCount:0,hintCount:0
+  }));
+});
+
 test('perfect round auto-saves one completion reward, survives rerender, and removes reduced-motion reveal',async({page})=>{
   await page.emulateMedia({reducedMotion:'reduce'});
   await answerPerfectRound(page);
   await expect(page.getByRole('heading',{name:'What you learned'})).toBeVisible();
   await expect(page.locator('.study-star-earned')).toContainText('+10 Study Stars');
-  const firstBalance=await page.evaluate(()=>window.ABVMStudyGames.studyStarBalance());
-  expect(firstBalance).toBe(10);
+  expect(await page.evaluate(()=>window.ABVMStudyGames.studyStarBalance())).toBe(10);
 
   const goalButton=page.locator('[data-study-star-goal]');
   await expect(goalButton).toBeVisible();
   await goalButton.click();
-  await expect(page.locator('.study-star-goal-selected')).toContainText(/Goal selected|Unlocked/);
-  const afterRerender=await page.evaluate(()=>window.ABVMStudyGames.studyStarBalance());
-  expect(afterRerender).toBe(10);
+  await expect(page.locator('.adaptive-note')).toContainText(/Goal selected|Unlocked/);
+  expect(await page.evaluate(()=>window.ABVMStudyGames.studyStarBalance())).toBe(10);
 
   await page.waitForTimeout(1350);
   await expect(page.locator('[data-reward-reveal]')).toHaveCount(0);
 });
 
-test('Step 9 freezes source key and session seed for reward identity and advances all PWA assets together',async({page})=>{
+test('Step 9 freezes reward identity and advances all PWA assets together',async({page})=>{
   const [app,index,sw]=await Promise.all([
     page.request.get('/app.js').then(r=>r.text()),
     page.request.get('/index.html').then(r=>r.text()),
@@ -124,14 +159,15 @@ test('Step 9 freezes source key and session seed for reward identity and advance
   ]);
   expect(app).toContain('sourceKey=currentGameSourceKey(),sessionSeed=engine.nextSessionSeed');
   expect(app).toContain('sourceKey,sessionSeed,learningEvents');
-  expect(app).toContain('const sourceKey=g.sourceKey||currentGameSourceKey()');
   expect(app).toContain('studyStarRoundId({sourcePack:sourceKey,mode:g.mode,sessionSeed:g.sessionSeed})');
-  expect(app).toContain('commitStudyStarRewards({sourcePack:sourceKey,roundId,completed:true,comebackSucceeded:!!g.comebackSucceeded})');
-  expect(app).toContain('./study-games.js?v=87');
-  expect(app).toContain('./study-games-view.js?v=3');
-  expect(index).toContain('./styles.css?v=95');
-  expect(index).toContain('./app.js?v=97');
-  expect(sw).toContain('v97-study-games-learning-first');
-  expect(sw).toContain('./study-games.js?v=87');
-  expect(sw).toContain('./study-games-view.js?v=3');
+  expect(app).toContain('commitStudyStarRewards({sourcePack:sourceKey,mode:g.mode,sessionSeed:g.sessionSeed,roundId,completed:true,comebackSucceeded:!!g.comebackSucceeded})');
+  expect(app).toContain('tries:0,misses:0,hints:0,retry:0,lastWrong:null');
+  expect(app).toContain('./study-games.js?v=88');
+  expect(app).toContain('./study-games-view.js?v=4');
+  expect(index).toContain('./styles.css?v=96');
+  expect(index).toContain('abvm-sw-reloaded-v98');
+  expect(index).toContain('./app.js?v=98');
+  expect(sw).toContain('v98-step11-clean-hardening');
+  expect(sw).toContain('./study-games.js?v=88');
+  expect(sw).toContain('./study-games-view.js?v=4');
 });

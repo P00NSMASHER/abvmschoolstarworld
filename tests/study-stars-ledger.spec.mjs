@@ -17,9 +17,9 @@ test.beforeEach(async ({ page }) => {
 
 test('reward ledger is idempotent for retries and double commits', async ({ page }) => {
   const result=await page.evaluate(async()=>{
-    const e=window.ABVMStudyGames,sourcePack='pack-alpha',roundId='round-alpha';
-    const first=await e.commitStudyStarRewards({sourcePack,roundId,completed:true,comebackSucceeded:true});
-    const second=await e.commitStudyStarRewards({sourcePack,roundId,completed:true,comebackSucceeded:true});
+    const e=window.ABVMStudyGames,sourcePack='pack-alpha',roundId=e.studyStarRoundId({sourcePack,mode:'quick',sessionSeed:'alpha'});
+    const first=await e.commitStudyStarRewards({sourcePack,mode:'quick',sessionSeed:'alpha',roundId,completed:true,comebackSucceeded:true});
+    const second=await e.commitStudyStarRewards({sourcePack,mode:'quick',sessionSeed:'alpha',roundId,completed:true,comebackSucceeded:true});
     return {first,second,balance:await e.studyStarBalance(),ledger:await e.loadStudyStarLedger()};
   });
   expect(result.first.awardedAmount).toBe(12);
@@ -32,16 +32,18 @@ test('reward ledger is idempotent for retries and double commits', async ({ page
 test('composite sourcePack + roundId + rewardType key isolates pack updates and reward types', async ({ page }) => {
   const result=await page.evaluate(async()=>{
     const e=window.ABVMStudyGames;
-    await e.commitStudyStarRewards({sourcePack:'pack-a',roundId:'same-round',completed:true,comebackSucceeded:true});
-    await e.commitStudyStarRewards({sourcePack:'pack-b',roundId:'same-round',completed:true,comebackSucceeded:false});
+    const roundA=e.studyStarRoundId({sourcePack:'pack-a',mode:'quick',sessionSeed:'same'});
+    const roundB=e.studyStarRoundId({sourcePack:'pack-b',mode:'quick',sessionSeed:'same'});
+    await e.commitStudyStarRewards({sourcePack:'pack-a',mode:'quick',sessionSeed:'same',roundId:roundA,completed:true,comebackSucceeded:true});
+    await e.commitStudyStarRewards({sourcePack:'pack-b',mode:'quick',sessionSeed:'same',roundId:roundB,completed:true,comebackSucceeded:false});
     const rows=await e.loadStudyStarLedger();
-    return {rows,balance:await e.studyStarBalance()};
+    return {rows,balance:await e.studyStarBalance(),roundA,roundB};
   });
   expect(result.balance).toBe(22);
   expect(result.rows.map(x=>[x.sourcePack,x.roundId,x.rewardType])).toEqual(expect.arrayContaining([
-    ['pack-a','same-round','round-complete'],
-    ['pack-a','same-round','comeback-success'],
-    ['pack-b','same-round','round-complete'],
+    ['pack-a',result.roundA,'round-complete'],
+    ['pack-a',result.roundA,'comeback-success'],
+    ['pack-b',result.roundB,'round-complete'],
   ]));
 });
 
@@ -63,10 +65,23 @@ test('round identity is deterministic and includes source pack, mode, and sessio
   expect(ids[0]).not.toContain('quick');
 });
 
+test('ledger rejects arbitrary caller-supplied round IDs', async ({ page }) => {
+  const result=await page.evaluate(async()=>{
+    const e=window.ABVMStudyGames;
+    try{
+      await e.commitStudyStarRewards({sourcePack:'pack-raw',mode:'quick',sessionSeed:'raw',roundId:'round-fake-id',completed:true});
+      return {rejected:false};
+    }catch(error){return {rejected:true,message:String(error?.message||error)}}
+  });
+  expect(result.rejected).toBe(true);
+  expect(result.message).toContain('must match sourcePack, mode, and sessionSeed');
+});
+
 test('interrupted or support-only activity cannot create reward rows', async ({ page }) => {
   const result=await page.evaluate(async()=>{
     const e=window.ABVMStudyGames;
-    const committed=await e.commitStudyStarRewards({sourcePack:'pack-interrupt',roundId:'r1',completed:false,comebackSucceeded:true,support:true,teachCard:true});
+    const roundId=e.studyStarRoundId({sourcePack:'pack-interrupt',mode:'quick',sessionSeed:'interrupt'});
+    const committed=await e.commitStudyStarRewards({sourcePack:'pack-interrupt',mode:'quick',sessionSeed:'interrupt',roundId,completed:false,comebackSucceeded:true,support:true,teachCard:true});
     return {committed,balance:await e.studyStarBalance(),rows:await e.loadStudyStarLedger()};
   });
   expect(result.committed.awardedAmount).toBe(0);
@@ -84,8 +99,8 @@ test('two tabs racing the same round can only award each reward type once', asyn
   ]);
   await clearLedger(a);
   const [ra,rb]=await Promise.all([
-    a.evaluate(()=>window.ABVMStudyGames.commitStudyStarRewards({sourcePack:'pack-race',roundId:'round-race',completed:true,comebackSucceeded:true})),
-    b.evaluate(()=>window.ABVMStudyGames.commitStudyStarRewards({sourcePack:'pack-race',roundId:'round-race',completed:true,comebackSucceeded:true}))
+    a.evaluate(()=>{const e=window.ABVMStudyGames,roundId=e.studyStarRoundId({sourcePack:'pack-race',mode:'quick',sessionSeed:'race'});return e.commitStudyStarRewards({sourcePack:'pack-race',mode:'quick',sessionSeed:'race',roundId,completed:true,comebackSucceeded:true})}),
+    b.evaluate(()=>{const e=window.ABVMStudyGames,roundId=e.studyStarRoundId({sourcePack:'pack-race',mode:'quick',sessionSeed:'race'});return e.commitStudyStarRewards({sourcePack:'pack-race',mode:'quick',sessionSeed:'race',roundId,completed:true,comebackSucceeded:true})})
   ]);
   const final=await a.evaluate(async()=>({balance:await window.ABVMStudyGames.studyStarBalance(),rows:await window.ABVMStudyGames.loadStudyStarLedger()}));
   expect(ra.awardedAmount+rb.awardedAmount).toBe(12);
@@ -95,7 +110,7 @@ test('two tabs racing the same round can only award each reward type once', asyn
 });
 
 test('ledger remains available while the app is offline', async ({ page, context }) => {
-  await page.evaluate(async()=>window.ABVMStudyGames.commitStudyStarRewards({sourcePack:'pack-offline',roundId:'r1',completed:true}));
+  await page.evaluate(async()=>{const e=window.ABVMStudyGames,roundId=e.studyStarRoundId({sourcePack:'pack-offline',mode:'quick',sessionSeed:'offline'});return e.commitStudyStarRewards({sourcePack:'pack-offline',mode:'quick',sessionSeed:'offline',roundId,completed:true})});
   await context.setOffline(true);
   const balance=await page.evaluate(()=>window.ABVMStudyGames.studyStarBalance());
   expect(balance).toBe(10);
@@ -106,7 +121,8 @@ test('reward persistence stays separate from learning evidence storage', async (
   const result=await page.evaluate(async()=>{
     localStorage.removeItem('abvm-study-learning:v2');
     const before=localStorage.getItem('abvm-study-learning:v2');
-    await window.ABVMStudyGames.commitStudyStarRewards({sourcePack:'pack-separate',roundId:'r1',completed:true,comebackSucceeded:true});
+    const e=window.ABVMStudyGames,roundId=e.studyStarRoundId({sourcePack:'pack-separate',mode:'quick',sessionSeed:'separate'});
+    await e.commitStudyStarRewards({sourcePack:'pack-separate',mode:'quick',sessionSeed:'separate',roundId,completed:true,comebackSucceeded:true});
     return {before,after:localStorage.getItem('abvm-study-learning:v2'),balance:await window.ABVMStudyGames.studyStarBalance()};
   });
   expect(result.before).toBeNull();
@@ -118,7 +134,8 @@ test('reward persistence stays separate from learning evidence storage', async (
 test('reward ledger persists only bounded accounting fields and no exact activity timestamp', async ({ page }) => {
   const row=await page.evaluate(async()=>{
     const e=window.ABVMStudyGames;
-    await e.commitStudyStarRewards({sourcePack:'pack-private',roundId:'r-private',completed:true,comebackSucceeded:false,prompt:'PRIVATE PROMPT',answer:'PRIVATE ANSWER'});
+    const roundId=e.studyStarRoundId({sourcePack:'pack-private',mode:'quick',sessionSeed:'private'});
+    await e.commitStudyStarRewards({sourcePack:'pack-private',mode:'quick',sessionSeed:'private',roundId,completed:true,comebackSucceeded:false,prompt:'PRIVATE PROMPT',answer:'PRIVATE ANSWER'});
     return (await e.loadStudyStarLedger())[0];
   });
   expect(Object.keys(row).sort()).toEqual(['amount','currency','eventId','rewardType','roundId','sourcePack'].sort());
