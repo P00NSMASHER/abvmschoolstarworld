@@ -55,12 +55,23 @@ test("Week exposes paging, weekdays, selected-day detail, and reminders",async({
   await expect(page.locator(".reminder-strip")).toBeVisible();
 });
 
-test("Calendar exposes month grid, selected-day detail, full agenda, and specials",async({page})=>{
-  await openTab(page,"Calendar");
-  await expect(page.locator(".calendar-card")).toBeVisible();
+test("Calendar keeps the current-month summary as concise as next month",async({page})=>{
+  await page.addInitScript(()=>{
+    const RealDate=Date,fixed=new RealDate("2026-10-01T12:00:00-04:00").valueOf();
+    class FixedDate extends RealDate{constructor(...args){super(...(args.length?args:[fixed]));}static now(){return fixed;}}
+    window.Date=FixedDate;
+  });
+  await page.goto("/#calendar");
+  await expect(page.locator(".calendar-card")).toBeVisible({timeout:10_000});
   expect(await page.locator("[data-cal-day]").count()).toBeGreaterThan(27);
   await expect(page.locator(".calendar-day-card")).toBeVisible();
-  await expect(page.locator(".month-agenda")).toBeVisible();
+  const summary=page.locator(".current-month-summary");
+  await expect(summary).toBeVisible();
+  await expect(summary.locator("h2")).toHaveText("Coming in October");
+  await expect(summary.locator(":scope > div")).toHaveCount(5);
+  await expect(summary).not.toContainText("School day");
+  await expect(summary.locator(".agenda-lunch")).toHaveCount(0);
+  await expect(summary.locator(".agenda-day")).toHaveCount(0);
   await expect(page.locator(".specials-card")).toBeVisible();
 });
 
