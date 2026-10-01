@@ -127,6 +127,14 @@ export function evaluateCurriculumCandidate(candidate, {
   });
 }
 
+export function curriculumCandidateIntrinsicBlockers(candidate) {
+  return [...evaluateCurriculumCandidate(candidate, {
+    automatedQaPassed: true,
+    safeUsageEvidence: 'sufficient-safe-usage',
+    manualApproval: true,
+  }).blockers];
+}
+
 export function buildCurriculumCoveragePlan({
   pipeline,
   sourcePages = [],
@@ -156,6 +164,13 @@ export function buildCurriculumCoveragePlan({
       minimumSemanticVariants: registered?.minimumSemanticVariants || DEFAULT_MIN_VARIANTS,
       requiredQuestionTypes: registered?.requiredQuestionTypes || [...REQUIRED_TYPES],
       proposedQuestions,
+      authoring: {
+        status: proposedQuestions.length ? 'DRAFT_FAMILY_PRESENT' : 'AUTHORING_REQUIRED',
+        generatedQuestionCount: proposedQuestions.length,
+        minimumSemanticVariants: registered?.minimumSemanticVariants || DEFAULT_MIN_VARIANTS,
+        requiredQuestionTypes: registered?.requiredQuestionTypes || [...REQUIRED_TYPES],
+        requiredQuestionFields: ['questionType', 'prompt', 'choices', 'answer', 'explanation', 'hint', 'dok', 'difficulty'],
+      },
       rollout: {
         featureFlagRequired: true,
         automatedQaRequired: true,
@@ -188,6 +203,9 @@ export function validateCurriculumCandidateManifest(candidate) {
   if (!text(candidate?.subject)) issues.push(`${id}:subject-missing`);
   if (!text(candidate?.topic)) issues.push(`${id}:topic-missing`);
   if (!text(candidate?.featureFlag)) issues.push(`${id}:feature-flag-missing`);
+  if (!['AUTHORING_REQUIRED', 'DRAFT_FAMILY_PRESENT'].includes(candidate?.authoring?.status)) issues.push(`${id}:authoring-status-invalid`);
+  if (!Number.isInteger(candidate?.authoring?.generatedQuestionCount) || candidate.authoring.generatedQuestionCount < 0) issues.push(`${id}:authoring-question-count-invalid`);
+  if (!Array.isArray(candidate?.authoring?.requiredQuestionFields) || candidate.authoring.requiredQuestionFields.length < 8) issues.push(`${id}:authoring-contract-incomplete`);
   if (candidate?.enabledByDefault !== false) issues.push(`${id}:candidate-must-start-disabled`);
   if (candidate?.rollout?.featureFlagRequired !== true) issues.push(`${id}:feature-flag-gate-required`);
   if (candidate?.rollout?.automatedQaRequired !== true) issues.push(`${id}:automated-qa-gate-required`);
