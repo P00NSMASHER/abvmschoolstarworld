@@ -165,10 +165,10 @@ test('Step 9 freezes reward identity and advances all PWA assets together',async
   expect(app).toContain('./study-games.js?v=91');
   expect(app).toContain('./study-games-view.js?v=5');
   expect(index).toContain('./styles.css?v=96');
-  expect(index).toContain('abvm-sw-reloaded-v101');
+  expect(index).toContain('abvm-sw-reloaded-v102');
   expect(index).toContain('./weekly-learning.js?v=1');
-  expect(index).toContain('./app.js?v=101');
-  expect(sw).toContain('v101-weekly-learning');
+  expect(index).toContain('./app.js?v=102');
+  expect(sw).toContain('v102-school-changes');
   expect(sw).toContain('./weekly-learning.js?v=1');
   expect(sw).toContain('./study-games.js?v=91');
   expect(sw).toContain('./study-games-view.js?v=5');
