@@ -40,7 +40,7 @@ html,body{margin:0}
 .app-header p{margin-left:5px}
 
 
-/* Screenshot-era polish v61: small targeted refinements only. */
+
 
 /* Calendar specials: turn the plain paragraph into a compact weekly rotation card. */
 .specials-card{
@@ -125,7 +125,7 @@ html,body{margin:0}
   font-weight:800;
 }
 
-/* Study Quick Look: stronger hierarchy, proper rows, no run-together text. */
+
 .study-at-a-glance{
   overflow:hidden;
   background:linear-gradient(145deg,#eef7ff 0%,#f9fcff 100%);
@@ -255,7 +255,7 @@ html,body{margin:0}
 }
 
 
-/* Screenshot-era polish v62: Week day card, month agenda, and Family panels. */
+
 
 /* Week: remove the little top status stripe and make the day card feel finished. */
 .day-detail{
@@ -538,7 +538,7 @@ html,body{margin:0}
 }
 
 
-/* v63 — week paging + full day-by-day calendar agenda */
+
 .week-nav{
   display:grid;grid-template-columns:52px minmax(0,1fr) 52px;align-items:center;gap:9px;
   margin:0 0 10px;padding:9px;background:#edf7ff;border:1px solid #b8d8ec;border-radius:18px
@@ -605,7 +605,7 @@ html,body{margin:0}
 }
 
 
-/* v64 — Study Games powered by the StarBlox-style equivalent question engine */
+
 
 .bottom-nav button{font-size:9.5px;line-height:1.05}
 .bottom-nav button b{display:block;min-width:0;line-height:1.05}
@@ -764,7 +764,7 @@ html,body{margin:0}
 }
 
 
-/* v66 — researched question-quality restoration */
+
 
 .adaptive-note{
   display:block;margin-top:7px;padding:7px 8px;border-radius:9px;background:#fff4c9;
@@ -772,7 +772,7 @@ html,body{margin:0}
 }
 
 
-/* v67 — simplicity + performance pass */
+
 .app-header{margin:2px 0 10px}
 .app-header>div:first-child{min-width:0}
 .app-header p{margin-bottom:2px;font-size:9px;letter-spacing:.07em}
@@ -978,7 +978,7 @@ html,body{margin:0}
 }
 
 
-/* v68 — polished Study Games subject badges + focused Sept 28 Today list */
+
 .study-game-icon{
   width:46px;
   height:46px;
@@ -1060,7 +1060,7 @@ html,body{margin:0}
 .today-panel .task-list .check-item{min-height:68px}
 
 
-/* v69 — hardening: honest freshness + navigable calendar */
+
 .freshness{
   border:1px solid #b9d7ad;
   background:#f2fbef;
@@ -1105,7 +1105,7 @@ html,body{margin:0}
 }
 
 
-/* v71 — verified lunch recovery */
+
 .lunch-card.lunch-missing{
   background:#f7f8f8;
   border-color:#d8dddf;
@@ -1114,7 +1114,7 @@ html,body{margin:0}
 .lunch-card.lunch-missing strong{color:#66727a}
 
 
-/* v73 — tap freshness status to force a live data check */
+
 button.freshness{
   appearance:none;
   -webkit-appearance:none;
@@ -1186,3 +1186,4 @@ button.freshness.is-refreshing b{
   line-height:1.42;
 }
 .game-rich-content{margin:0 0 10px;border:1px solid #d9e2e8;border-radius:12px;background:#f8fbfd;padding:8px}.game-rich-content figcaption{font-size:8px;text-align:center}.rich-number-line>div{display:flex;justify-content:space-between;position:relative}.rich-number-line>div:before{content:"";position:absolute;left:2%;right:2%;top:5px;height:2px;background:#7892a3}.rich-number-line span{position:relative;display:grid;justify-items:center}.rich-number-line i{width:9px;height:9px;border-radius:50%;background:#fff;border:2px solid #7892a3}.rich-number-line .start i,.rich-bar-chart i{background:#6b3b8e}.rich-clock-wrap{display:grid;justify-items:center}.rich-clock{position:relative;width:80px;height:80px;border:4px solid #6c8190;border-radius:50%;background:#fff}.clock-hand{position:absolute;left:50%;bottom:50%;width:3px;background:#2f4555;transform-origin:bottom}.clock-hand.hour{height:22px}.clock-hand.minute{height:30px;width:2px;background:#6b3b8e}.rich-place-value>div{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.rich-place-value span{display:grid;text-align:center;border:1px solid #c7d8e3;border-radius:8px;padding:5px}.rich-place-value b{font-size:18px}.rich-bar-chart span{display:grid;grid-template-columns:48px 1fr 18px;align-items:center;gap:5px}.rich-bar-chart small{text-align:right}.rich-bar-chart i{height:10px;min-width:4px;border-radius:8px}.rich-number-line b,.rich-place-value small,.rich-bar-chart small,.rich-bar-chart b{font-size:8px}
+.study-star-reveal{position:fixed;z-index:8;left:50%;top:18%;transform:translateX(-50%);display:grid;justify-items:center;padding:12px 16px;border:1px solid #d9c768;border-radius:16px;background:#fff9d8;box-shadow:0 8px 22px #1e26331f;pointer-events:none;animation:study-star-pop 1.2s ease both}.study-star-reveal>span{font-size:27px}.study-star-reveal>strong{font-size:13px}.study-star-reveal>small{font-size:8px}@keyframes study-star-pop{0%{opacity:0;transform:translate(-50%,8px) scale(.94)}15%,75%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-4px) scale(.98)}}@media (prefers-reduced-motion:reduce){.study-star-reveal{animation:none;opacity:1}}
