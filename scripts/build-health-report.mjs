@@ -15,12 +15,14 @@ const workflowNames={
   deploy:"Deploy ABVM to GitHub Pages",
   watchdog:"Monitor ABVM refresh health",
 };
-const latest=name=>productionRuns.find(run=>run.name===name)||null;
-const latestCompleted=name=>productionRuns.find(run=>run.name===name&&run.conclusion)||null;
+const runEvidenceAt=run=>Date.parse(run?.updated_at||run?.created_at||0)||0;
+const rankedRuns=name=>productionRuns.filter(run=>run.name===name).sort((a,b)=>runEvidenceAt(b)-runEvidenceAt(a));
+const latest=name=>rankedRuns(name)[0]||null;
+const latestCompleted=name=>rankedRuns(name).find(run=>run.conclusion)||null;
 const decisiveConclusions=new Set(["success","failure","timed_out","action_required","startup_failure"]);
-const latestDecisive=name=>productionRuns.find(run=>run.name===name&&decisiveConclusions.has(run.conclusion))||null;
-const latestSuccess=name=>productionRuns.find(run=>run.name===name&&run.conclusion==="success")||null;
-const recentRelevant=productionRuns.filter(run=>Object.values(workflowNames).includes(run.name)).slice(0,40);
+const latestDecisive=name=>rankedRuns(name).find(run=>decisiveConclusions.has(run.conclusion))||null;
+const latestSuccess=name=>rankedRuns(name).find(run=>run.conclusion==="success")||null;
+const recentRelevant=productionRuns.filter(run=>Object.values(workflowNames).includes(run.name)).sort((a,b)=>runEvidenceAt(b)-runEvidenceAt(a)).slice(0,40);
 const failures=recentRelevant.filter(run=>run.conclusion==="failure").map(run=>({
   name:run.name,id:run.id,created_at:run.created_at,html_url:run.html_url,
 }));
