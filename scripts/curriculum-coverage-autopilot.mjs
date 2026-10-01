@@ -180,18 +180,38 @@ export function buildCurriculumCoveragePlan({
   };
 }
 
+export function validateCurriculumCandidateManifest(candidate) {
+  const issues = [];
+  const id = text(candidate?.candidateId) || 'candidate';
+  if (!text(candidate?.candidateId)) issues.push('candidate-id-missing');
+  if (!text(candidate?.familyId)) issues.push(`${id}:family-id-missing`);
+  if (!text(candidate?.subject)) issues.push(`${id}:subject-missing`);
+  if (!text(candidate?.topic)) issues.push(`${id}:topic-missing`);
+  if (!text(candidate?.featureFlag)) issues.push(`${id}:feature-flag-missing`);
+  if (candidate?.enabledByDefault !== false) issues.push(`${id}:candidate-must-start-disabled`);
+  if (candidate?.rollout?.featureFlagRequired !== true) issues.push(`${id}:feature-flag-gate-required`);
+  if (candidate?.rollout?.automatedQaRequired !== true) issues.push(`${id}:automated-qa-gate-required`);
+  if (candidate?.rollout?.safeUsageEvidenceRequired !== true) issues.push(`${id}:safe-usage-gate-required`);
+  if (candidate?.rollout?.manualPromotionRequired !== true) issues.push(`${id}:manual-promotion-gate-required`);
+  if (candidate?.rollout?.automaticPromotion !== false) issues.push(`${id}:automatic-promotion-must-stay-disabled`);
+  if (!['page-exact', 'unresolved'].includes(candidate?.sourceContext?.quality)) issues.push(`${id}:source-context-quality-invalid`);
+  if (candidate?.sourceContext?.quality === 'page-exact') {
+    if (!text(candidate.sourceContext.sourceTitle)) issues.push(`${id}:source-title-missing`);
+    if (!text(candidate.sourceContext.sourceCaptureHash)) issues.push(`${id}:source-capture-hash-missing`);
+    if (!text(candidate.sourceContext.evidenceExcerptHash)) issues.push(`${id}:evidence-excerpt-hash-missing`);
+  }
+  if (!candidate?.readiness || candidate.readiness.status !== 'HOLD') issues.push(`${id}:draft-readiness-must-hold`);
+  if (candidate?.readiness?.automaticPromotion !== false) issues.push(`${id}:readiness-auto-promotion-must-stay-disabled`);
+  return [...new Set(issues)];
+}
+
 export function validateCurriculumCoveragePlan(plan) {
   const issues = [];
   if (!plan || typeof plan !== 'object') return ['plan-missing'];
   if (plan.schemaVersion !== 1) issues.push('schema-version-invalid');
   if (!Array.isArray(plan.candidates)) issues.push('candidates-missing');
   for (const candidate of plan.candidates || []) {
-    if (!text(candidate.candidateId)) issues.push('candidate-id-missing');
-    if (!text(candidate.subject)) issues.push(`${candidate.candidateId}:subject-missing`);
-    if (!text(candidate.topic)) issues.push(`${candidate.candidateId}:topic-missing`);
-    if (!text(candidate.featureFlag)) issues.push(`${candidate.candidateId}:feature-flag-missing`);
-    if (candidate.enabledByDefault !== false) issues.push(`${candidate.candidateId}:candidate-must-start-disabled`);
-    if (candidate.rollout?.automaticPromotion !== false) issues.push(`${candidate.candidateId}:automatic-promotion-must-stay-disabled`);
+    issues.push(...validateCurriculumCandidateManifest(candidate));
   }
   if ((plan.unsupportedCount || 0) !== (plan.candidates || []).length) issues.push('unsupported-count-mismatch');
   return [...new Set(issues)];
