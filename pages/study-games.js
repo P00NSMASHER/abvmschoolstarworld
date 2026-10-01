@@ -1346,7 +1346,7 @@ function safeStudyStarRow(row){
 }
 async function commitStudyStarRewards({sourcePack,roundId,completed=false,comebackSucceeded=false}={}){
   const source=text(sourcePack),round=text(roundId);
-  if(!source||!round)throw new Error("Study Star ledger requires sourcePack and roundId");
+  if(!source||!/^round-[a-z0-9]+-[a-z0-9]+$/.test(round))throw new Error("Study Star ledger requires sourcePack and deterministic roundId");
   const events=completed===true?studyStarRewardEvents({completed:true,comebackSucceeded:comebackSucceeded===true}):Object.freeze([]);
   if(!events.length)return{currency:STUDY_STAR_POLICY.currency,awardedAmount:0,duplicateAmount:0,results:[]};
   const db=await openStudyStarDb();
