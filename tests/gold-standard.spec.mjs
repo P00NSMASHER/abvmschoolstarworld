@@ -111,7 +111,7 @@ test("second requested polish is present",async({page})=>{
 
   await openTab(page,"Family");
   await expect(page.locator(".family-actions-card")).toBeVisible();
-  await expect(page.locator(".notices-card")).toBeVisible();
+  await expect(page.locator('[aria-labelledby="family-current-notices"]')).toBeVisible();
   await expect(page.locator(".notice-row").first()).toBeVisible();
   await expect(page.locator(".family-more")).toBeVisible();
 });
@@ -402,8 +402,8 @@ test("current weekly notice appears in Week, Calendar, and Family screens",async
   await expect(page.locator(".month-agenda")).toContainText("Chick-fil-A sale starts");
 
   await openTab(page,"Family");
-  await expect(page.locator(".notices-card")).toContainText("OptionC portal");
-  await expect(page.locator(".notices-card")).toContainText("Picture Day and Business Casual");
+  await expect(page.locator('[aria-labelledby="family-current-notices"]')).toContainText("OptionC portal");
+  await expect(page.locator('[aria-labelledby="family-current-notices"]')).toContainText("Picture Day and Business Casual");
 });
 
 
