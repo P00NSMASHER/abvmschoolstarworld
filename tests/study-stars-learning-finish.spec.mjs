@@ -89,6 +89,23 @@ test('learning-first finish puts learning evidence before secondary rewards',asy
   expect(html.indexOf('learning-summary')).toBeLessThan(html.indexOf('study-star-earned'));
 });
 
+test('secondary reward summary stays visually separated and readable',async({page})=>{
+  const html=await page.evaluate(()=>window.ABVMStudyGameView.finish({
+    mode:{id:'quick',title:'Quick Mix'},
+    state:{questions:Array(8).fill({}),score:8},
+    record:{best:8},
+    summary:{strong:4,remembered:0,practice:0,total:4},
+    reward:{status:'done',awardedAmount:10,currency:'Study Stars',balance:10}
+  }));
+  await page.locator('#app-content').evaluate((node,markup)=>{node.innerHTML=markup},html);
+  const reward=page.locator('.study-star-earned.secondary');
+  await expect(reward).toBeVisible();
+  expect(await reward.evaluate(node=>getComputedStyle(node).borderStyle)).toBe('solid');
+  for(const selector of ['span','strong','small']){
+    expect(await reward.locator(selector).evaluate(node=>getComputedStyle(node).display)).toBe('block');
+  }
+});
+
 test('learning-first reward summary cannot display a second currency',async({page})=>{
   const html=await page.evaluate(()=>window.ABVMStudyGameView.finish({
     mode:{id:'quick',title:'Quick Mix'},
