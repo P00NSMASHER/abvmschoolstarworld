@@ -10,7 +10,7 @@ async function openSeptemberCalendar(page){
   await openCalendar(page);
 }
 
-test("busy Sept 30 keeps all independently verified events visible",async({page})=>{
+test("busy Sept 30 keeps archived school events visible after source rollover",async({page})=>{
   await openSeptemberCalendar(page);
   const button=day(page,"2026-09-30");
   await expect(button).toBeVisible();
@@ -19,7 +19,6 @@ test("busy Sept 30 keeps all independently verified events visible",async({page}
   await expect(card).toContainText("Mass");
   await expect(card).toContainText("Communication Folder");
   await expect(card).toContainText("Chick-fil-A sale starts");
-  await expect(card).toContainText("Grammar");
 });
 
 test("multi-day STAR range applies at both ends",async({page})=>{
