@@ -3,7 +3,8 @@ const CACHE = "abvm-grade2-parent-companion-v101-weekly-learning";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=96",
-  "./app.js?v=101",\n  "./weekly-learning.js?v=1",
+  "./app.js?v=101",
+  "./weekly-learning.js?v=1",
   "./study-games.js?v=91",
   "./study-games-view.js?v=5",
   "./manifest.webmanifest",
