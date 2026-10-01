@@ -59,7 +59,7 @@
   <script>
     (() => {
       if (!("serviceWorker" in navigator)) return;
-      const reloadKey = "abvm-sw-reloaded-v100";
+      const reloadKey = "abvm-sw-reloaded-v101";
       const hadController = !!navigator.serviceWorker.controller;
       navigator.serviceWorker.addEventListener("controllerchange", () => {
         if (!hadController) return;
@@ -74,6 +74,6 @@
         .catch(() => {});
     })();
   </script>
-  <script src="./app.js?v=100"></script>
+  <script src="./app.js?v=101"></script>
 </body>
 </html>
