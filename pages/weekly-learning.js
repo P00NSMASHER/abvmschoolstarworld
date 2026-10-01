@@ -30,7 +30,7 @@ function snapshot({pack={},learning={},now=Date.now(),timeZone="America/New_York
 }
 function render(args={}){
   const data=snapshot(args);
-  const line=(title,rows,empty,klass)=>'<div class="notice-row"><span class="status '+klass+'" aria-hidden="true"></span><p><strong>'+esc(title)+'</strong><br><span>'+esc(rows.length?rows.slice(0,4).map(row=>row.label).join(" · "):empty)+'</span></p></div>';
+  const line=(title,rows,empty,klass)=>'<div class="notice-row" role="listitem"><span class="status '+klass+'" aria-hidden="true"></span><p><strong>'+esc(title)+'</strong><br><span>'+esc(rows.length?rows.slice(0,4).map(row=>row.label).join(" · "):empty)+'</span></p></div>';
   return '<section class="parent-card" aria-labelledby="weekly-learning-title"><div class="notices-head"><span class="notices-mark" aria-hidden="true">✓</span><div><small>LAST 7 DAYS</small><h3 id="weekly-learning-title">Weekly learning</h3></div></div><div class="static-notice-list" role="list">'+
     line("Strong today",data.strong,"No current skills here yet.","ok")+
     line("Remembered later",data.remembered,"No comeback evidence yet.","ok")+
