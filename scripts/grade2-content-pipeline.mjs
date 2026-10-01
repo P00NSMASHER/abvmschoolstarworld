@@ -1999,14 +1999,17 @@ function detectMath(pack, skills, questions) {
 }
 
 function detectReligion(pack, skills, questions) {
-  const source = subjectText(pack, 'Religion');
+  const row = subjectRow(pack, 'Religion');
+  const sourceLines = uniqueText([...(row?.topics || []), ...(row?.studyNotes || [])]);
   for (const rule of RELIGION_SKILLS) {
-    if (!rule.pattern.test(source)) continue;
+    const sourceLine = sourceLines.find(line => rule.pattern.test(line));
+    if (!sourceLine) continue;
+    const matchedEvidence = text(sourceLine).match(rule.pattern)?.[0] || sourceLine;
     const skill = {
       id: rule.id,
       subject: 'Religion',
       label: rule.label,
-      evidence: [source.match(rule.pattern)?.[0] || rule.label],
+      evidence: [matchedEvidence],
       studyNotes: rule.studyNotes,
       standards: ['ABVM.RELIGION.CURRENT'],
       domain: 'Religion',
