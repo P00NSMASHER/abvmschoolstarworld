@@ -1,6 +1,11 @@
 import { createHash } from 'node:crypto';
 
 import { validateGrade2PipelineAlignment } from './grade2-content-alignment.mjs';
+import {
+  registeredCurriculumFamilyRules,
+  registeredPrioritySkillIds,
+  registeredSupplementalQuestionFamily,
+} from './curriculum-family-registry.mjs';
 
 const FORBIDDEN_QUESTION_PATTERNS = [
   /teacher page/i,
@@ -1273,6 +1278,7 @@ const RENEWABLE_EXTENSION_FAMILIES = Object.freeze({
 });
 
 const PRIORITY_THREE_TYPE_SKILLS = new Set([
+  ...registeredPrioritySkillIds(),
   'sentence-types',
   'dialogue',
   'sequence',
@@ -1290,6 +1296,8 @@ function requiresThreeTypeFamily(skillId) {
 }
 
 function supplementalQuestionFamily(skill) {
+  const registeredFamily = registeredSupplementalQuestionFamily(skill.id);
+  if (registeredFamily.length) return registeredFamily;
   const staticFamily = [...(SUPPLEMENTAL_QUESTION_FAMILIES[skill.id] || []), ...(RENEWABLE_EXTENSION_FAMILIES[skill.id] || [])];
   if (staticFamily.length) return staticFamily;
 
@@ -1581,6 +1589,10 @@ function questionFor(skill, raw) {
   };
 }
 
+function baseSkillRules() {
+  return [...BASE_SKILLS, ...registeredCurriculumFamilyRules()];
+}
+
 function detectBaseSkills(pack, skills, questions) {
   const sourceLines = uniqueText([
     ...(subjectRow(pack, 'Reading / ELA')?.topics || []),
@@ -1588,7 +1600,7 @@ function detectBaseSkills(pack, skills, questions) {
     ...(subjectRow(pack, 'Spelling / Handwriting')?.topics || []),
     ...(subjectRow(pack, 'Spelling / Handwriting')?.studyNotes || []),
   ]);
-  for (const rule of BASE_SKILLS) {
+  for (const rule of baseSkillRules()) {
     const sourceLine = sourceLines.find(line => rule.pattern.test(line));
     if (!sourceLine) continue;
     const matchedEvidence = text(sourceLine).match(rule.pattern)?.[0] || sourceLine;
@@ -1915,12 +1927,12 @@ function detectUnsupportedExplicitSkills(pack, coverage) {
     const comprehension = line.match(/^Reading comprehension:\s*(.+)$/i);
     if (comprehension) {
       for (const item of comprehension[1].split(/\s*[,;]\s*/).map(text).filter(Boolean)) {
-        if (!BASE_SKILLS.some(rule => rule.pattern.test(item))) addUnsupported('Reading / ELA', item);
+        if (!baseSkillRules().some(rule => rule.pattern.test(item))) addUnsupported('Reading / ELA', item);
       }
       continue;
     }
     const explicit = line.match(/^(Phonics|Word structure|Grammar):\s*(.+)$/i);
-    if (explicit && !BASE_SKILLS.some(rule => rule.pattern.test(explicit[2]))) {
+    if (explicit && !baseSkillRules().some(rule => rule.pattern.test(explicit[2]))) {
       addUnsupported('Reading / ELA', explicit[2]);
     }
   }
@@ -1940,7 +1952,7 @@ function detectUnsupportedExplicitSkills(pack, coverage) {
   for (const raw of spelling?.topics || []) {
     const line = text(raw);
     const focus = line.match(/(?:test\s+focus|focus):\s*(.+)$/i);
-    if (focus && !BASE_SKILLS.some(rule => rule.pattern.test(focus[1]))) {
+    if (focus && !baseSkillRules().some(rule => rule.pattern.test(focus[1]))) {
       addUnsupported('Spelling / Handwriting', focus[1]);
     }
   }

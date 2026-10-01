@@ -15,6 +15,10 @@ import {
   mergeGrade2StudyNotes,
   validateGrade2ContentPipeline,
 } from './grade2-content-pipeline.mjs';
+import {
+  buildCurriculumCoveragePlan,
+  writeCurriculumCoveragePlan,
+} from './curriculum-coverage-autopilot.mjs';
 
 const DATA_PATH = new URL('../pages/data/study-pack.json', import.meta.url);
 const UPLOADED_NOTICES_PATH = new URL('../pages/data/uploaded-notices.json', import.meta.url);
@@ -367,6 +371,19 @@ const contentPipelineIssues = validateGrade2ContentPipeline(contentPipeline);
 if (contentPipelineIssues.length) {
   throw new Error(`Generated Grade 2 content failed QA: ${JSON.stringify(contentPipelineIssues)}`);
 }
+const autopilotPlan = buildCurriculumCoveragePlan({
+  pipeline: contentPipeline,
+  sourcePages: teacherSourcePages,
+  sourceHash,
+  generatedAt: checkedAt,
+});
+const autopilotReportArg = process.argv.find(arg => arg.startsWith('--autopilot-report='));
+if (autopilotReportArg) {
+  const outputPath = autopilotReportArg.slice('--autopilot-report='.length);
+  if (!outputPath) throw new Error('Autopilot report path cannot be empty.');
+  writeCurriculumCoveragePlan(autopilotPlan, outputPath);
+  console.log(`Curriculum Coverage Autopilot: ${autopilotPlan.unsupportedCount} unsupported skill(s); report=${outputPath}`);
+}
 pack.contentPipeline = contentPipeline;
 pack.importantDates = mergeTeacherEvents(pack.importantDates || [], homeEvents, 'teacher-home');
 pack.importantDates = mergeTeacherEvents(pack.importantDates, testItems, 'teacher-tests');
@@ -416,7 +433,21 @@ data.uploadedNotices = {
 data.pack = pack;
 
 if (process.argv.includes('--dry-run')) {
-  console.log(JSON.stringify({ checkedAt, contentChanged, sourceHash, uploadedNoticeHash, uploadedNoticeCount: uploadedNotices.documents.length, lunchDays: pack.lunchMenu?.map(item=>item.day)||[], homework, tests: testItems }, null, 2));
+  console.log(JSON.stringify({
+    checkedAt,
+    contentChanged,
+    sourceHash,
+    uploadedNoticeHash,
+    uploadedNoticeCount: uploadedNotices.documents.length,
+    lunchDays: pack.lunchMenu?.map(item=>item.day)||[],
+    homework,
+    tests: testItems,
+    curriculumAutopilot: {
+      status: autopilotPlan.status,
+      unsupportedCount: autopilotPlan.unsupportedCount,
+      candidateIds: autopilotPlan.candidates.map(candidate => candidate.candidateId),
+    },
+  }, null, 2));
 } else {
   writeFileSync(DATA_PATH, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
   console.log(`${contentChanged ? 'Updated' : 'Checked'} ${fetched.length} teacher pages and ${uploadedNotices.documents.length} uploaded notices; ${homework.length} homework items are current.`);
