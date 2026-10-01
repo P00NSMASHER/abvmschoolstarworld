@@ -196,7 +196,7 @@ function derivedRichContent(question){
   }
   if(skill==="place-value"){
     const match=prompt.match(/number\s+(\d{2,3})/i);
-    if(match)return normalizeRichContent({kind:"place-value",label:"Place-value chart for "+match[1]+".",number:Number(match[1])});
+    if(match)return normalizeRichContent({kind:"place-value",label:"Blank place-value chart. Use the number in the question to identify hundreds, tens, and ones.",number:Number(match[1])});
   }
   if(skill==="time"){
     const match=prompt.match(/starts at\s+(\d{1,2}):(\d{2})/i);
@@ -1320,13 +1320,13 @@ const STUDY_STAR_POLICY=Object.freeze({
   roundComplete:10,
   comebackSuccess:2,
   rewardTypes:Object.freeze(["round-complete","comeback-success"]),
-  excludedSignals:Object.freeze(["first-try","perfect","mastery","streak","speed","teach-card","support"])
+  excludedSignals:Object.freeze(["score","accuracy","first-try","perfect","mastery","streak","speed","hints","teach-card","support"])
 });
 function studyStarPolicy(){return STUDY_STAR_POLICY}
 function studyStarRewardEvents({completed=false,comebackSucceeded=false}={}){
   const events=[];
-  if(completed)events.push(Object.freeze({rewardType:"round-complete",amount:STUDY_STAR_POLICY.roundComplete,currency:STUDY_STAR_POLICY.currency}));
-  if(comebackSucceeded)events.push(Object.freeze({rewardType:"comeback-success",amount:STUDY_STAR_POLICY.comebackSuccess,currency:STUDY_STAR_POLICY.currency}));
+  if(completed===true)events.push(Object.freeze({rewardType:"round-complete",amount:STUDY_STAR_POLICY.roundComplete,currency:STUDY_STAR_POLICY.currency}));
+  if(comebackSucceeded===true)events.push(Object.freeze({rewardType:"comeback-success",amount:STUDY_STAR_POLICY.comebackSuccess,currency:STUDY_STAR_POLICY.currency}));
   return Object.freeze(events);
 }
 
@@ -1346,8 +1346,12 @@ function loadStudyStarGoal(){
 }
 function selectStudyStarGoal(goalId=STUDY_STAR_GOAL.id){
   if(text(goalId)!==STUDY_STAR_GOAL.id)throw new Error("Unknown Study Star Dream Goal");
-  try{localStorage.setItem(STUDY_STAR_GOAL_KEY,STUDY_STAR_GOAL.id)}catch{}
-  return {goal:STUDY_STAR_GOAL,selected:true};
+  let selected=false;
+  try{
+    localStorage.setItem(STUDY_STAR_GOAL_KEY,STUDY_STAR_GOAL.id);
+    selected=localStorage.getItem(STUDY_STAR_GOAL_KEY)===STUDY_STAR_GOAL.id;
+  }catch{}
+  return {goal:STUDY_STAR_GOAL,selected};
 }
 function studyStarGoalProgress(balance=0){
   const stars=Math.max(0,Math.floor(Number(balance)||0)),target=STUDY_STAR_GOAL.target;
@@ -1355,10 +1359,14 @@ function studyStarGoalProgress(balance=0){
 }
 
 const STUDY_STAR_DB="abvm-study-stars-v1",STUDY_STAR_STORE="reward-ledger";
+function studyStarOpaqueId(prefix,value){
+  const stable=text(value);
+  return prefix+hash(stable).toString(36)+"-"+hash("study-stars|"+stable).toString(36);
+}
 function studyStarRoundId({sourcePack,mode,sessionSeed}={}){
   const source=text(sourcePack),game=text(mode),seed=text(sessionSeed);
   if(!source||!game||!seed)throw new Error("Study Star round identity requires sourcePack, mode, and sessionSeed");
-  return "round-"+hash(source+"|"+game+"|"+seed).toString(36);
+  return studyStarOpaqueId("round-",source+"|"+game+"|"+seed);
 }
 function openStudyStarDb(){
   return new Promise((resolve,reject)=>{
@@ -1373,7 +1381,7 @@ function openStudyStarDb(){
   });
 }
 function studyStarEventId(sourcePack,roundId,rewardType){
-  return "star-"+hash(text(sourcePack)+"|"+text(roundId)+"|"+text(rewardType)).toString(36);
+  return studyStarOpaqueId("star-",text(sourcePack)+"|"+text(roundId)+"|"+text(rewardType));
 }
 function safeStudyStarRow(row){
   return {
@@ -1386,8 +1394,9 @@ function safeStudyStarRow(row){
   };
 }
 async function commitStudyStarRewards({sourcePack,roundId,completed=false,comebackSucceeded=false}={}){
-  const source=text(sourcePack),round=text(roundId),events=studyStarRewardEvents({completed,comebackSucceeded});
+  const source=text(sourcePack),round=text(roundId);
   if(!source||!round)throw new Error("Study Star ledger requires sourcePack and roundId");
+  const events=completed===true?studyStarRewardEvents({completed:true,comebackSucceeded:comebackSucceeded===true}):Object.freeze([]);
   if(!events.length)return{currency:STUDY_STAR_POLICY.currency,awardedAmount:0,duplicateAmount:0,results:[]};
   const db=await openStudyStarDb();
   return await new Promise((resolve,reject)=>{
@@ -1448,17 +1457,63 @@ function saveGameRecord(sourceKey,modeId,{score=0,total=0}={}){
 const LEARNING_STORAGE_KEY="abvm-study-learning:v2";
 const COMEBACK_STORAGE_KEY="abvm-study-comebacks:v1";
 const ITEM_QUALITY_STORAGE_KEY="abvm-study-item-quality:v1";
+const ITEM_QUALITY_SCHEMA_VERSION=2,ITEM_QUALITY_LIMIT=250;
 const itemShownAt=new Map();
+function finiteNumber(value){const n=Number(value);return Number.isFinite(n)?n:0}
+function nonnegativeCount(value){return Math.max(0,Math.floor(finiteNumber(value)))}
+function safeMisconceptionCounts(value){
+  const out={};
+  for(const [key,count] of Object.entries(value&&typeof value==="object"?value:{})){
+    const label=text(key).slice(0,80),n=nonnegativeCount(count);
+    if(/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(label)&&n)out[label]=n;
+  }
+  return out;
+}
+function safeItemQualityRow(row,order=0){
+  const positions=Array.isArray(row?.ChoicePositions)?row.ChoicePositions:[];
+  const bands=row?.ResponseBands&&typeof row.ResponseBands==="object"?row.ResponseBands:{};
+  return {
+    Skill:text(row?.Skill).slice(0,80),Subject:text(row?.Subject).slice(0,80),
+    Resolved:nonnegativeCount(row?.Resolved),Correct:nonnegativeCount(row?.Correct),Wrong:nonnegativeCount(row?.Wrong),
+    NormalResolved:nonnegativeCount(row?.NormalResolved),NormalCorrect:nonnegativeCount(row?.NormalCorrect),NormalWrong:nonnegativeCount(row?.NormalWrong),
+    FirstTryCorrect:nonnegativeCount(row?.FirstTryCorrect),
+    ChoicePositions:[0,1,2].map(index=>nonnegativeCount(positions[index])),
+    Misconceptions:safeMisconceptionCounts(row?.Misconceptions),
+    ResponseBands:{lt5:nonnegativeCount(bands.lt5),"5to15":nonnegativeCount(bands["5to15"]),"15to30":nonnegativeCount(bands["15to30"]),gte30:nonnegativeCount(bands.gte30)},
+    HintsUsed:nonnegativeCount(row?.HintsUsed),SupportSeen:nonnegativeCount(row?.SupportSeen),
+    ComebackSeen:nonnegativeCount(row?.ComebackSeen),ComebackCorrect:nonnegativeCount(row?.ComebackCorrect),
+    AbilityN:nonnegativeCount(row?.AbilityN),AbilitySum:finiteNumber(row?.AbilitySum),AbilitySumSq:finiteNumber(row?.AbilitySumSq),
+    FirstTryAbilitySum:finiteNumber(row?.FirstTryAbilitySum??row?.CorrectAbilitySum),
+    Order:Math.max(0,Math.floor(finiteNumber(order||row?.Order)))
+  };
+}
+function rankedItemQualityEntries(source){
+  const entries=Object.entries(source&&typeof source==="object"?source:{})
+    .filter(([id])=>/^q[a-z0-9]+$/i.test(id))
+    .sort((a,b)=>{
+      const ao=nonnegativeCount(a[1]?.Order),bo=nonnegativeCount(b[1]?.Order);
+      if(ao||bo)return ao-bo||a[0].localeCompare(b[0]);
+      return finiteNumber(a[1]?.LastUpdatedAt)-finiteNumber(b[1]?.LastUpdatedAt)||a[0].localeCompare(b[0]);
+    }).slice(-ITEM_QUALITY_LIMIT);
+  return entries.map(([id,row],index)=>[id,safeItemQualityRow(row,index+1)]);
+}
 function loadItemQuality(){
   try{
     const parsed=JSON.parse(localStorage.getItem(ITEM_QUALITY_STORAGE_KEY)||"{}");
-    return parsed&&parsed.schemaVersion===1&&parsed.items&&typeof parsed.items==="object"?parsed:{schemaVersion:1,items:{}};
-  }catch{return {schemaVersion:1,items:{}}}
+    const normalized=rankedItemQualityEntries(parsed?.items);
+    const safe={schemaVersion:ITEM_QUALITY_SCHEMA_VERSION,items:Object.fromEntries(normalized)};
+    const serialized=JSON.stringify(safe);
+    if(localStorage.getItem(ITEM_QUALITY_STORAGE_KEY)!==serialized)localStorage.setItem(ITEM_QUALITY_STORAGE_KEY,serialized);
+    return safe;
+  }catch{return {schemaVersion:ITEM_QUALITY_SCHEMA_VERSION,items:{}}}
+}
+function touchItemQualityRow(data,row){
+  const maxOrder=Object.values(data?.items||{}).reduce((max,item)=>Math.max(max,nonnegativeCount(item?.Order)),0);
+  row.Order=maxOrder+1;return row;
 }
 function writeItemQuality(data){
-  const source=data?.items&&typeof data.items==="object"?data.items:{};
-  const entries=Object.entries(source).sort((a,b)=>(Number(b[1]?.LastUpdatedAt)||0)-(Number(a[1]?.LastUpdatedAt)||0)).slice(0,250);
-  const safe={schemaVersion:1,items:Object.fromEntries(entries)};
+  const normalized=rankedItemQualityEntries(data?.items);
+  const safe={schemaVersion:ITEM_QUALITY_SCHEMA_VERSION,items:Object.fromEntries(normalized)};
   try{localStorage.setItem(ITEM_QUALITY_STORAGE_KEY,JSON.stringify(safe))}catch{}
   return safe;
 }
@@ -1482,7 +1537,7 @@ function itemQualityRow(data,question){
     Skill:String(question?.skill||""),Subject:String(question?.subject||""),Resolved:0,Correct:0,Wrong:0,
     NormalResolved:0,NormalCorrect:0,NormalWrong:0,FirstTryCorrect:0,ChoicePositions:[0,0,0],Misconceptions:{},
     ResponseBands:{lt5:0,"5to15":0,"15to30":0,gte30:0},HintsUsed:0,SupportSeen:0,ComebackSeen:0,ComebackCorrect:0,
-    AbilityN:0,AbilitySum:0,AbilitySumSq:0,FirstTryAbilitySum:0
+    AbilityN:0,AbilitySum:0,AbilitySumSq:0,FirstTryAbilitySum:0,Order:0
   };
   return {id,row};
 }
@@ -1495,7 +1550,7 @@ function noteItemAttempt(question,index){
     const tag=choice?question.choiceDiagnostics?.[choice]?.misconception:null;
     if(tag)row.Misconceptions[tag]=(Number(row.Misconceptions[tag])||0)+1;
   }
-  row.LastUpdatedAt=Date.now();data.items[id]=row;writeItemQuality(data);return row;
+  touchItemQualityRow(data,row);data.items[id]=row;writeItemQuality(data);return row;
 }
 function pointBiserial(row){
   const n=Number(row?.AbilityN)||0,c=Number(row?.FirstTryCorrect)||0,w=n-c;
@@ -1523,7 +1578,7 @@ function recordItemQuality(question,correct,{attemptCount=1,incorrectCount=corre
     if(firstTry)row.FirstTryAbilitySum=(Number(row.FirstTryAbilitySum)||0)+ability;
   }else if(kind==="support")row.SupportSeen=(Number(row.SupportSeen)||0)+1;
   else if(kind==="comeback"){row.ComebackSeen=(Number(row.ComebackSeen)||0)+1;if(correct)row.ComebackCorrect=(Number(row.ComebackCorrect)||0)+1}
-  row.LastUpdatedAt=now;data.items[id]=row;writeItemQuality(data);return row;
+  touchItemQualityRow(data,row);data.items[id]=row;writeItemQuality(data);return row;
 }
 function reviewItemQuality(data=loadItemQuality()){
   const out=[];
@@ -1542,6 +1597,30 @@ function reviewItemQuality(data=loadItemQuality()){
     out.push({id,skill:row.Skill,subject:row.Subject,resolved:n,accuracy,firstTryRate:firstTry,discrimination,discriminationEvidence:discriminationReady?"reviewable":"insufficient-evidence",method:"classical-longitudinal-proxy",irtUsed:false,comebackRate:(Number(row.ComebackSeen)||0)?(Number(row.ComebackCorrect)||0)/(Number(row.ComebackSeen)||1):null,flags,dominantMisconception:mis[0]?.[0]||null});
   }
   return out.sort((a,b)=>b.flags.length-a.flags.length||b.resolved-a.resolved||a.id.localeCompare(b.id));
+}
+const QUESTION_FAMILY_ROLLOUT_POLICY=Object.freeze({
+  featureFlagRequired:true,
+  automaticPromotion:false,
+  automaticDelete:false,
+  automaticRewrite:false,
+  irtUsed:false,
+  requiredEvidence:Object.freeze(["automated-qa","sufficient-safe-usage-evidence"])
+});
+function questionFamilyRolloutPolicy(){return QUESTION_FAMILY_ROLLOUT_POLICY}
+function reviewQuestionFamilyPromotion({familyId,featureFlagged=false,automatedQaPassed=false,safeUsageEvidence="insufficient-evidence"}={}){
+  const id=text(familyId);
+  if(!id)throw new Error("Question family review requires familyId");
+  const evidence=text(safeUsageEvidence)||"insufficient-evidence";
+  if(!["insufficient-evidence","sufficient-safe-usage"].includes(evidence))throw new Error("Unknown safe usage evidence state");
+  const blockers=[];
+  if(!featureFlagged)blockers.push("feature-flag-required");
+  if(!automatedQaPassed)blockers.push("automated-qa-required");
+  if(evidence!=="sufficient-safe-usage")blockers.push("safe-usage-evidence-required");
+  return Object.freeze({
+    familyId:id,featureFlagged:!!featureFlagged,automatedQaPassed:!!automatedQaPassed,safeUsageEvidence:evidence,
+    status:blockers.length?"HOLD":"READY_FOR_MANUAL_PROMOTION",blockers:Object.freeze(blockers),
+    automaticPromotion:false,automaticDelete:false,automaticRewrite:false,irtUsed:false
+  });
 }
 function loadLearning(){
   try{
@@ -1674,6 +1753,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,validateRichContent,selectQuestions,learningFirstSummary,studyStarPolicy,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,itemQualityKey
+  buildCatalog,validateCatalog,validateRichContent,selectQuestions,learningFirstSummary,studyStarPolicy,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,questionFamilyRolloutPolicy,reviewQuestionFamilyPromotion,itemQualityKey
 });
 })();

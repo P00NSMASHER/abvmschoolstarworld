@@ -31,6 +31,20 @@ test('Dream Goal progress is bounded, simple, and never spends Stars', async ({ 
   expect(result[5]).toEqual(expect.objectContaining({balance:90,remaining:0,percent:100,unlocked:true}));
 });
 
+test('Dream Goal selection and progress never spend or mutate the Study Star ledger', async ({ page }) => {
+  const result=await page.evaluate(async()=>{
+    const e=window.ABVMStudyGames;
+    const before=await e.studyStarBalance();
+    e.selectStudyStarGoal();
+    const progress=e.studyStarGoalProgress(12);
+    const after=await e.studyStarBalance();
+    return {before,after,progress};
+  });
+  expect(result.before).toBe(0);
+  expect(result.after).toBe(0);
+  expect(result.progress).toEqual(expect.objectContaining({balance:12,remaining:38,percent:24}));
+});
+
 test('Dream Goal renderer exposes one accessible progress bar and no store or catalog', async ({ page }) => {
   const html=await page.evaluate(()=>{
     const e=window.ABVMStudyGames,v=window.ABVMStudyGameView;

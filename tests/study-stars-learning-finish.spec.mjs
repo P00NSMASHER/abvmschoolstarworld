@@ -85,6 +85,18 @@ test('learning-first finish puts learning evidence before secondary rewards',asy
   expect(html.indexOf('learning-summary')).toBeLessThan(html.indexOf('study-star-earned'));
 });
 
+test('learning-first reward summary cannot display a second currency',async({page})=>{
+  const html=await page.evaluate(()=>window.ABVMStudyGameView.finish({
+    mode:{id:'quick',title:'Quick Mix'},
+    state:{questions:Array(8).fill({}),score:6},
+    record:{best:7},
+    summary:{strong:3,remembered:1,practice:2,total:6},
+    reward:{status:'done',awardedAmount:12,currency:'Coins',balance:32}
+  }));
+  expect(html).toContain('+12 Study Stars');
+  expect(html).not.toContain('Coins');
+});
+
 test('perfect round auto-saves one completion reward, survives rerender, and removes reduced-motion reveal',async({page})=>{
   await page.emulateMedia({reducedMotion:'reduce'});
   await answerPerfectRound(page);

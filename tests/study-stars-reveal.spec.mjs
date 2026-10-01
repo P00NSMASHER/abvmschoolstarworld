@@ -12,12 +12,29 @@ test('reward reveal is a short 1.2 second Study Stars acknowledgement', async ({
   expect(html).toContain('role="status"');
   expect(html).toContain('aria-live="polite"');
   expect(html).not.toMatch(/continue|claim|open|shop|store/i);
+  expect(html).not.toMatch(/<button|<a\b|tabindex=/i);
+});
+
+test('reward reveal cannot introduce a second currency', async ({ page }) => {
+  const html=await page.evaluate(()=>window.ABVMStudyGameView.rewardReveal({amount:10,currency:'Coins'}));
+  expect(html).toContain('+10 Study Stars');
+  expect(html).not.toContain('Coins');
 });
 
 test('zero or duplicate-only awards produce no reveal', async ({ page }) => {
   const html=await page.evaluate(()=>window.ABVMStudyGameView.rewardReveal({amount:0,currency:'Study Stars'}));
   expect(html).toBe('');
 });
+
+test('invalid, negative, and non-finite reward amounts render nothing', async ({ page }) => {
+  const result=await page.evaluate(()=>({
+    negative:window.ABVMStudyGameView.rewardReveal({amount:-2}),
+    infinity:window.ABVMStudyGameView.rewardReveal({amount:Infinity}),
+    text:window.ABVMStudyGameView.rewardReveal({amount:'not-a-number'})
+  }));
+  expect(result).toEqual({negative:'',infinity:'',text:''});
+});
+
 
 test('reward reveal is noninteractive and respects reduced motion', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
