@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "lastIntegratedAt": "2026-09-28T13:19:00.000Z",
+  "lastIntegratedAt": "2026-10-01T00:44:00.000Z",
   "documents": [
     {
       "id": "dress-down-2026-09-25",
@@ -72,6 +72,107 @@
         "piiReviewed": true,
         "reviewedBy": "manual-school-notice-review",
         "reviewedAt": "2026-09-28T18:12:00.000Z"
+      }
+    },
+    {
+      "id": "october-calendar-2026",
+      "label": "October 2026 ABVM school calendar",
+      "receivedAt": "2026-09-30",
+      "facts": [
+        "October 2026 ABVM school calendar lists picture/HSA activities, schedule changes, Mass/communication dates, clubs, family events, dress-down days, and the Halloween celebration.",
+        "Grade 2-relevant schedule changes include winter uniform beginning Oct. 4; progress reports Oct. 8; noon dismissal Oct. 9; no school Oct. 12 and Oct. 20; and K–4 flag football/dress down Oct. 26.",
+        "Chick-fil-A orders and money are due Oct. 9; the calendar lists delivery Oct. 22 from 2:45–4:30 PM."
+      ],
+      "provenance": {
+        "factsHash": "7c23f7802898918aa0dfdab4e5967ed01085b03a5e3e5a4c026ff75d3e2184b0",
+        "sourceContentHash": "3e9db4703b9671f753221be01ae4f0933da6181f5f6eb155c3402427146a5cf8"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "manual-school-notice-review",
+        "reviewedAt": "2026-10-01T00:44:00.000Z"
+      }
+    },
+    {
+      "id": "october-lunch-menu-2026",
+      "label": "October 2026 ABVM lunch menu",
+      "receivedAt": "2026-09-30",
+      "facts": [
+        "The October 2026 lunch menu is for Assumption BVM School and is provided by Saint Clair Area School District.",
+        "The printed menu covers Oct. 1–30 and lists no lunch on Oct. 9 for noon dismissal and no school on Oct. 12.",
+        "The full transcribed October menu is stored in lunch-catalog.json."
+      ],
+      "provenance": {
+        "factsHash": "5790ce50d594310100c82dc527212398de493bcd4716ed9bae552df5d2c57f41",
+        "sourceContentHash": "19d3f7e004f33092cc753600ecad0574d2e0df1bbc27320806c2f8033944c269"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "manual-school-notice-review",
+        "reviewedAt": "2026-10-01T00:44:00.000Z"
+      }
+    },
+    {
+      "id": "chick-fil-a-order-form-2026-10",
+      "label": "Chick-fil-A order form — October 2026",
+      "receivedAt": "2026-09-30",
+      "facts": [
+        "Chick-fil-A orders cost $7.00 each.",
+        "Orders and money are due Friday, Oct. 9, 2026.",
+        "Delivery/pickup is Thursday, Oct. 22, 2026 from 3:00–4:30 PM at Assumption BVM School; orders can be picked up at dismissal."
+      ],
+      "provenance": {
+        "factsHash": "44ba7fdc15c6b9114822b5e7f28a389bff9eb12bf16a8426c16e6c86d18bb195",
+        "sourceContentHash": "a06e598cc57e2f3cdcfc15683965594fe5748629f1fa9719fe723e8cefb4b65b"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "manual-school-notice-review",
+        "reviewedAt": "2026-10-01T00:44:00.000Z"
+      }
+    },
+    {
+      "id": "flag-football-2026-10",
+      "label": "Flag football and food-bank dress-down notice",
+      "receivedAt": "2026-09-30",
+      "facts": [
+        "K–4 flag football is Monday, Oct. 26 from 1:45–2:30 PM during the school day; each grade plays its own grade.",
+        "K–4 Dress Down Day is Monday, Oct. 26; participation requires either a requested food-bank item or a $5 donation.",
+        "Flag football permission forms are due Wednesday, Oct. 7.",
+        "Grades 5–8 have their own flag football and dress-down day Thursday, Oct. 29."
+      ],
+      "provenance": {
+        "factsHash": "12f24e91d6d88a5ef0ce931f92c668483b22e61b31944bd9a45d3a86027ab470",
+        "sourceContentHash": "2c33a4a03b3dbd16d1d837ce256d6f8162404002af2f58f2770af6cdec70ecf6"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "manual-school-notice-review",
+        "reviewedAt": "2026-10-01T00:44:00.000Z"
+      }
+    },
+    {
+      "id": "birthday-party-2026-10-18",
+      "label": "Personal birthday-party invitation — privacy-redacted",
+      "receivedAt": "2026-09-30",
+      "facts": [
+        "A personal birthday party is Sunday, Oct. 18 from 12:30–3:30 PM at Roller Roost Sports Arena.",
+        "RSVP is requested by Saturday, Oct. 10.",
+        "Direct contact information, the invited child’s name, age, and the street address are intentionally omitted from the public app."
+      ],
+      "provenance": {
+        "factsHash": "515cee5e3dda65d5e47178ad93c770e7a176c8ae428b3e26792310e81cb728a0",
+        "sourceContentHash": "540eab6598045b99871aada877572488bf4c8b00085f085de244db47fb915cb9"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "manual-school-notice-review",
+        "reviewedAt": "2026-10-01T00:44:00.000Z"
       }
     }
   ],
@@ -155,22 +256,10 @@
       "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
-      "date": "Thursday, Oct. 22",
-      "label": "Chick-fil-A pickup",
+      "date": "Friday, Oct. 2",
+      "label": "Door Decorating Contest starts",
       "kind": "school event",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "date": "Friday–Saturday, Nov. 13–14",
-      "label": "Drama Club Play",
-      "kind": "school event",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "date": "Saturday, Nov. 21",
-      "label": "Reading Royals Game Family Fun Night",
-      "kind": "school event",
-      "sourceDocument": "weekly-reminders-2026-09-28"
+      "sourceDocument": "october-calendar-2026"
     },
     {
       "date": "Saturday, Oct. 3",
@@ -185,16 +274,88 @@
       "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
+      "date": "Sunday, Oct. 4",
+      "label": "Winter uniform begins",
+      "kind": "school event",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "date": "Monday, Oct. 5",
+      "label": "Raise Right physical gift cards ordered",
+      "kind": "school event",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "date": "Tuesday, Oct. 6",
+      "label": "Faculty Meeting",
+      "kind": "meeting",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "date": "Wednesday, Oct. 7",
+      "label": "Mass",
+      "kind": "school event",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "date": "Wednesday, Oct. 7",
+      "label": "K–4 flag football permission form due",
+      "kind": "deadline",
+      "sourceDocument": "flag-football-2026-10"
+    },
+    {
+      "date": "Thursday, Oct. 8",
+      "label": "Progress Reports Issued",
+      "kind": "school event",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
       "date": "Friday, Oct. 9",
       "label": "12:00 dismissal",
       "kind": "schedule change",
-      "sourceDocument": "weekly-reminders-2026-09-28"
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "date": "Friday, Oct. 9",
+      "label": "Chick-fil-A orders and money due — $7 each",
+      "kind": "deadline",
+      "sourceDocument": "chick-fil-a-order-form-2026-10"
     },
     {
       "date": "Monday, Oct. 12",
       "label": "No School — Columbus Day",
       "kind": "holiday",
-      "sourceDocument": "weekly-reminders-2026-09-28"
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "date": "Tuesday, Oct. 13",
+      "label": "Dress Down Day — local charity",
+      "kind": "school event",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "date": "Wednesday, Oct. 14",
+      "label": "Mass",
+      "kind": "school event",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "date": "Wednesday, Oct. 14",
+      "label": "Communication Folder",
+      "kind": "school event",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "date": "Wednesday, Oct. 14",
+      "label": "Student Council Meeting",
+      "kind": "school event",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "date": "Sunday, Oct. 18",
+      "label": "Birthday party at Roller Roost Sports Arena — 12:30–3:30 PM",
+      "kind": "family",
+      "sourceDocument": "birthday-party-2026-10-18"
     },
     {
       "date": "Monday–Tuesday, Oct. 19–20",
@@ -203,8 +364,80 @@
       "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
+      "date": "Tuesday, Oct. 20",
+      "label": "K–4 No School — Parent-Teacher Conferences",
+      "kind": "holiday",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "date": "Wednesday, Oct. 21",
+      "label": "Mass",
+      "kind": "school event",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "date": "Thursday, Oct. 22",
+      "label": "Chick-fil-A pickup",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
       "date": "Friday, Oct. 23",
       "label": "S’more Fun at Schwartz Farm",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "date": "Friday, Oct. 23",
+      "label": "Lego Club — 3:00–4:00 PM",
+      "kind": "club",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "date": "Friday, Oct. 23",
+      "label": "Red Ribbon Week begins",
+      "kind": "school event",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "date": "Monday, Oct. 26",
+      "label": "K–4 Dress Down & Flag Football — 1:45–2:30 PM; food-bank item or $5 donation",
+      "kind": "school event",
+      "sourceDocument": "flag-football-2026-10"
+    },
+    {
+      "date": "Tuesday, Oct. 27",
+      "label": "Door Decorating Judging",
+      "kind": "school event",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "date": "Wednesday, Oct. 28",
+      "label": "Mass",
+      "kind": "school event",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "date": "Wednesday, Oct. 28",
+      "label": "Communication Folder",
+      "kind": "school event",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "date": "Friday, Oct. 30",
+      "label": "Halloween Celebration",
+      "kind": "school event",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "date": "Friday–Saturday, Nov. 13–14",
+      "label": "Drama Club Play",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "date": "Saturday, Nov. 21",
+      "label": "Reading Royals Game Family Fun Night",
       "kind": "school event",
       "sourceDocument": "weekly-reminders-2026-09-28"
     }
@@ -236,11 +469,6 @@
       "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
-      "text": "Chick-fil-A pickup is Thursday, Oct. 22.",
-      "topic": "chick-fil",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
       "text": "S’more Fun at Schwartz Farm is Friday, Oct. 23.",
       "topic": "schwartz",
       "sourceDocument": "weekly-reminders-2026-09-28"
@@ -254,6 +482,46 @@
       "text": "Reading Royals Game Family Fun Night is Saturday, Nov. 21.",
       "topic": "reading-royals",
       "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "Sunday, Oct. 4: Winter uniform begins.",
+      "topic": "winter-uniform",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "text": "Wednesday, Oct. 7: K–4 flag football permission form is due.",
+      "topic": "flag-football",
+      "sourceDocument": "flag-football-2026-10"
+    },
+    {
+      "text": "Thursday, Oct. 8: Progress Reports are issued.",
+      "topic": "progress-report",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "text": "Friday, Oct. 9: Chick-fil-A orders and money are due; orders are $7 each.",
+      "topic": "chick-fil",
+      "sourceDocument": "chick-fil-a-order-form-2026-10"
+    },
+    {
+      "text": "Saturday, Oct. 10: RSVP deadline for the Oct. 18 birthday party at Roller Roost Sports Arena.",
+      "topic": "birthday-party",
+      "sourceDocument": "birthday-party-2026-10-18"
+    },
+    {
+      "text": "Tuesday, Oct. 20: K–4 has no school for Parent-Teacher Conferences.",
+      "topic": "conference",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "text": "Thursday, Oct. 22: Chick-fil-A delivery/pickup is 3:00–4:30 PM; pickup is available at dismissal.",
+      "topic": "chick-fil",
+      "sourceDocument": "chick-fil-a-order-form-2026-10"
+    },
+    {
+      "text": "Monday, Oct. 26: K–4 Dress Down & Flag Football is 1:45–2:30 PM; send a requested food-bank item or $5 donation to participate in dress down.",
+      "topic": "dress-down",
+      "sourceDocument": "flag-football-2026-10"
     }
   ],
   "parentNotices": [
@@ -293,16 +561,6 @@
       "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
-      "text": "Parent-Teacher Conferences are Oct. 19–20.",
-      "topic": "conference",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "text": "Chick-fil-A pickup is Thursday, Oct. 22.",
-      "topic": "chick-fil",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
       "text": "S’more Fun at Schwartz Farm is Friday, Oct. 23.",
       "topic": "schwartz",
       "sourceDocument": "weekly-reminders-2026-09-28"
@@ -316,6 +574,31 @@
       "text": "Reading Royals Game Family Fun Night is Saturday, Nov. 21.",
       "topic": "reading-royals",
       "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "text": "Oct. 7–26: K–4 flag football permission form is due Oct. 7; the game is Oct. 26 from 1:45–2:30 PM.",
+      "topic": "flag-football",
+      "sourceDocument": "flag-football-2026-10"
+    },
+    {
+      "text": "Oct. 9–22: Chick-fil-A orders are $7 each and due Oct. 9; delivery/pickup is Oct. 22 from 3:00–4:30 PM, with pickup available at dismissal.",
+      "topic": "chick-fil",
+      "sourceDocument": "chick-fil-a-order-form-2026-10"
+    },
+    {
+      "text": "Sunday, Oct. 18: Personal birthday party at Roller Roost Sports Arena from 12:30–3:30 PM. Direct contact information and the street address are kept out of the public app.",
+      "topic": "birthday-party",
+      "sourceDocument": "birthday-party-2026-10-18"
+    },
+    {
+      "text": "Tuesday, Oct. 20: K–4 has no school for Parent-Teacher Conferences.",
+      "topic": "conference",
+      "sourceDocument": "october-calendar-2026"
+    },
+    {
+      "text": "Monday, Oct. 26: K–4 Dress Down & Flag Football; dress-down participation requires a requested food-bank item or $5 donation.",
+      "topic": "dress-down",
+      "sourceDocument": "flag-football-2026-10"
     }
   ],
   "replacements": [
@@ -334,6 +617,18 @@
     {
       "topic": "hsa",
       "date": "Friday, Oct. 2"
+    },
+    {
+      "topic": "start-winter-dress",
+      "date": "Monday, Oct. 5"
+    },
+    {
+      "topic": "term-progress-reports",
+      "date": "Thursday, Oct. 8"
+    },
+    {
+      "topic": "halloween-party",
+      "date": "Friday, Oct. 30"
     }
   ]
 }

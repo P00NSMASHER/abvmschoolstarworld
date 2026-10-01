@@ -128,6 +128,11 @@ function topicKey(value) {
     ['stationery', /stationa(?:ry|ery).*money/], ['pretzel', /pretzel/], ['dress-down', /dress down/],
     ['lego', /lego club/], ['hsa', /hsa.*meeting/], ['picture', /picture day/], ['closed', /no school|closed/],
     ['dismissal', /dismissal/], ['conference', /conference/], ['dance', /welcome back dance/],
+    ['chick-fil', /chick[-\\s]?fil[-\\s]?a/], ['flag-football', /flag football/],
+    ['door-decorating', /door decorating/], ['winter-uniform', /winter (?:uniform|dress code)/],
+    ['progress-report', /progress report/], ['raise-right', /raise right/],
+    ['student-council', /student council/], ['red-ribbon', /red ribbon/],
+    ['halloween', /halloween/], ['birthday-party', /birthday party/],
     ['schwartz', /schwartz/], ['spelling', /spelling/],
     ['subtraction', /subtraction/], ['grammar', /grammar|types of sentences/], ['addition', /addition/],
   ];
