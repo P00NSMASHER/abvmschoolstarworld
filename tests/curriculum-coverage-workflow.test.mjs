@@ -52,3 +52,15 @@ test('candidate branch identity is stable across unrelated source-hash churn', (
   assert.match(workflow, /curriculum-candidate-\$\{SAFE_KEY\}/);
   assert.match(workflow, /Source revision: \$SOURCE_HASH/);
 });
+
+test('refresh publication reconciles main races without force-pushing unverified state', () => {
+  const workflow = readFileSync('.github/workflows/sync-study-pack.yml', 'utf8');
+  assert.match(workflow, /for ATTEMPT in 1 2 3/);
+  assert.match(workflow, /git fetch origin main/);
+  assert.match(workflow, /git reset --hard "\$REMOTE_MAIN"/);
+  assert.match(workflow, /refresh-teacher-pages\.mjs --autopilot-report=/);
+  assert.match(workflow, /Unresolved curriculum coverage after main advanced/);
+  assert.match(workflow, /npm run qa/);
+  assert.match(workflow, /git push origin HEAD:main/);
+  assert.doesNotMatch(workflow, /git push[^\n]*--force/);
+});

@@ -168,7 +168,7 @@ jobs:
       - name: Validate the candidate app before changing main
         run: npm run qa
 
-      - name: Commit only after the candidate passed all QA
+      - name: Commit refreshed pack against latest main
         shell: bash
         run: |
           set -euo pipefail
@@ -176,11 +176,40 @@ jobs:
             echo "No school-pack changes."
             exit 0
           fi
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add pages/data/study-pack.json
-          git commit -m "Refresh verified ABVM teacher pages"
-          git push
+
+          for ATTEMPT in 1 2 3; do
+            git fetch origin main
+            REMOTE_MAIN="$(git rev-parse origin/main)"
+            LOCAL_HEAD="$(git rev-parse HEAD)"
+
+            if [ "$LOCAL_HEAD" != "$REMOTE_MAIN" ]; then
+              echo "main advanced during refresh QA; regenerating and revalidating on $REMOTE_MAIN."
+              git reset --hard "$REMOTE_MAIN"
+              node scripts/refresh-teacher-pages.mjs --autopilot-report=.curriculum-coverage-plan.json
+              node -e 'const p=JSON.parse(require("fs").readFileSync(".curriculum-coverage-plan.json","utf8"));if((p.unsupportedCount||0)>0){console.error("Unresolved curriculum coverage after main advanced: "+p.candidates.map(c=>c.subject+": "+c.topic).join("; "));process.exit(1)}'
+              node scripts/check-refresh-health.mjs --require-today --max-age-hours 1
+              npm run qa
+            fi
+
+            if git diff --quiet -- pages/data/study-pack.json; then
+              echo "Latest main already contains the refreshed school pack."
+              exit 0
+            fi
+
+            git add pages/data/study-pack.json
+            git commit -m "Refresh verified ABVM teacher pages"
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+
+            echo "main moved during publish attempt $ATTEMPT; retrying from the latest verified base."
+          done
+
+          echo "Could not publish the verified school pack after 3 main-race retries." >&2
+          exit 1
 
   deploy:
     name: deploy verified refresh through Pages workflow
