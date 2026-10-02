@@ -63,3 +63,14 @@ test("operational health uses the same overnight freshness allowance as the watc
   assert.match(report,/fresh <=\$\{SOURCE_FRESH_HOURS\}h/);
   assert.doesNotMatch(report,/sourceAgeHours<=8/);
 });
+
+
+test("operational health treats complete reviewed lunch coverage as attention, not critical failure",()=>{
+  assert.match(report,/const lunchReviewedCoverageComplete=Boolean\(/);
+  assert.match(report,/status\.lunch\.retrievalState==="unavailable"&&lunchReviewedCoverageComplete/);
+  assert.match(report,/const lunchOperationallyUsable=Boolean\(/);
+  assert.match(report,/status\.overall=criticalHealthy\?\(warnings\.length\?"attention":"healthy"\):"critical"/);
+  assert.match(report,/if\(status\.overall==="critical"\)process\.exitCode=1/);
+  assert.doesNotMatch(report,/if\(!healthy\)process\.exitCode=1/);
+  assert.match(report,/Lunch source bridge is unavailable; complete previously reviewed coverage remains usable/);
+});
