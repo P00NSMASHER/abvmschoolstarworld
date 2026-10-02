@@ -5,14 +5,7 @@ on:
     branches: [main]
     paths:
       - 'pages/**'
-      - 'scripts/**'
-      - 'tests/**'
-      - 'package.json'
-      - 'package-lock.json'
-      - 'playwright.config.mjs'
       - '.github/workflows/pages.yml'
-      - '.github/workflows/sync-study-pack.yml'
-      - '.github/workflows/refresh-health.yml'
   workflow_dispatch:
     inputs:
       ref:
