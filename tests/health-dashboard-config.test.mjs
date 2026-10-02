@@ -45,7 +45,7 @@ test("health verdict ignores superseded cancellation noise but flags the newest 
 
 test("health summary displays the same effective evidence used by the verdict",()=>{
   assert.match(report,/## Workflow evidence used for health verdict/);
-  assert.match(report,/line\("Teacher refresh",effectiveRun\(status\.workflows\.refresh\)\)/);
+  assert.match(report,/line\("Teacher refresh",refreshDisplayRun\)/);
   assert.match(report,/line\("App QA",effectiveRun\(status\.workflows\.qa\)\)/);
   assert.match(report,/line\("Publication evidence",status\.publicationEvidence\)/);
   assert.match(report,/line\("Standalone Pages deploy",effectiveRun\(status\.workflows\.deploy\)\)/);
@@ -106,7 +106,9 @@ test("health dashboard fetches exact refresh failure steps and open draft candid
 
 test("governed curriculum holds become attention without masking unrelated refresh failures",()=>{
   assert.match(report,/selectGovernedCurriculumHold/);
-  assert.match(report,/status\.curriculumHold=selectGovernedCurriculumHold\(effectiveRefreshRun,refreshJobsData,openPulls\)/);
+  assert.match(report,/const curriculumHoldRefreshRun=selectRefreshFailureEvidence\(productionRuns,refreshJobsData\)/);
+  assert.match(report,/status\.curriculumHold=selectGovernedCurriculumHold\(curriculumHoldRefreshRun,refreshJobsData,openPulls\)/);
+  assert.match(report,/const refreshDisplayRun=status\.curriculumHold\?curriculumHoldRefreshRun:effectiveRefreshRun/);
   assert.match(report,/const refreshOperationallyHealthy=refreshHealthy\|\|Boolean\(status\.curriculumHold\)/);
   assert.match(report,/Teacher refresh is intentionally holding publication for governed curriculum candidate PR/);
   assert.match(report,/Curriculum hold:/);
