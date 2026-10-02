@@ -9,6 +9,8 @@ const refresh=readFileSync(new URL("../scripts/refresh-teacher-pages.mjs",import
 test("teacher refresh covers the school day and self-triggers after workflow changes",()=>{
   for(const cron of ["17 6 * * *","47 9 * * *","17 13 * * *","47 15 * * *"])assert.match(workflow,new RegExp(cron.replace(/\*/g,"\\*")));
   assert.match(workflow,/\.github\/workflows\/sync-study-pack\.yml/);
+  assert.match(workflow,/\.github\/workflows\/refresh-health\.yml/);
+  assert.match(workflow,/\.github\/workflows\/health-dashboard\.yml/);
 });
 
 test("published sync policy matches the workflow schedule",()=>{
@@ -26,4 +28,13 @@ test("overnight watchdog covers the 14.5-hour scheduled refresh gap",()=>{
   const refreshCommand=workflow.match(/node scripts\/check-refresh-health\.mjs[^\n]+/)?.[0]||"";
   assert.match(refreshCommand,/--require-today/);
   assert.match(refreshCommand,/--max-age-hours 1/);
+});
+
+
+test("watchdog follows both standalone deploys and completed teacher refresh workflows",()=>{
+  const workflowRun=watchdog.match(/workflow_run:\n([\s\S]*?)\n  schedule:/)?.[1]||"";
+  assert.match(workflowRun,/Deploy ABVM to GitHub Pages/);
+  assert.match(workflowRun,/Refresh ABVM teacher pages/);
+  assert.match(watchdog,/github\.event\.workflow_run\.conclusion == 'success'/);
+  assert.match(watchdog,/github\.event\.workflow_run\.head_branch == 'main'/);
 });
