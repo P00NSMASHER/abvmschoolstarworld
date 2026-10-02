@@ -11,7 +11,8 @@
     "qa": "npm run qa:static && npm run qa:unit && npm run qa:e2e",
     "qa:unit": "node --test tests/*.test.mjs",
     "health:report": "node scripts/build-health-report.mjs",
-    "health:refresh": "node scripts/check-refresh-health.mjs --max-age-hours 8"
+    "health:refresh": "node scripts/check-refresh-health.mjs --max-age-hours 8",
+    "preqa:e2e": "npm run pack:runtime"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
