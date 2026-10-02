@@ -1,4 +1,5 @@
 import {readFileSync,mkdirSync,writeFileSync} from "node:fs";
+import {selectPublicationEvidence} from "./health-evidence.mjs";
 
 const packData=JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8"));
 const pkg=JSON.parse(readFileSync(new URL("../package.json",import.meta.url),"utf8"));
@@ -108,12 +109,10 @@ const completedRunHealthy=(run,maxAgeHours)=>{
   return age!==null&&age>=-.25&&age<=maxAgeHours;
 };
 const completedHealthy=(workflow,maxAgeHours)=>completedRunHealthy(effectiveRun(workflow),maxAgeHours);
-const effectivePublicationRun=()=>{
-  const deployRun=effectiveRun(status.workflows.deploy);
-  const refreshRun=effectiveRun(status.workflows.refresh);
-  if(refreshRun?.conclusion==="success"&&(!deployRun||runEvidenceAt(refreshRun)>runEvidenceAt(deployRun)))return refreshRun;
-  return deployRun;
-};
+const effectivePublicationRun=()=>selectPublicationEvidence(
+  effectiveRun(status.workflows.deploy),
+  effectiveRun(status.workflows.refresh)
+);
 status.publicationEvidence=effectivePublicationRun();
 const pipelineHealthy=Boolean(
   status.contentPipeline.present &&
