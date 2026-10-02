@@ -34,6 +34,30 @@ test("Today exposes the weekly priority and focused checklist",async({page})=>{
   await expect(page.locator(".check-item").first()).toBeVisible();
 });
 
+test("Today hero uses integrated Assumption branding on iPad",async({page})=>{
+  await page.setViewportSize({width:810,height:1080});
+  await page.goto("/#today");
+  const hero=page.locator(".hero-card");
+  await expect(hero).toBeVisible({timeout:10_000});
+  const brand=hero.locator(".hero-brand");
+  const mark=hero.locator(".hero-brand-mark");
+  const brandBox=await brand.boundingBox();
+  const markBox=await mark.boundingBox();
+  const style=await brand.evaluate(el=>{
+    const cs=getComputedStyle(el);
+    return {background:cs.backgroundColor,borderTop:cs.borderTopStyle,boxShadow:cs.boxShadow};
+  });
+  expect(brandBox.width).toBeGreaterThanOrEqual(205);
+  expect(markBox.width).toBeGreaterThanOrEqual(116);
+  expect(style.background).toBe("rgba(0, 0, 0, 0)");
+  expect(style.borderTop).toBe("none");
+  expect(style.boxShadow).toBe("none");
+  await expect(brand).toContainText("ASSUMPTION");
+  await expect(brand).toContainText("BVM");
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
+  expect(overflow).toBeFalsy();
+});
+
 test("Today never treats Door Decorating Contest as a test",async({page})=>{
   await page.addInitScript(()=>{
     const RealDate=Date;
