@@ -219,7 +219,9 @@ test("Week uses a two-column iPad layout and stays stacked on phone",async({page
   expect(picker.width).toBeGreaterThan(detail.width*1.8);
   expect(lunch.x).toBeGreaterThan(detail.x+detail.width/2);
   expect(future.x).toBeGreaterThan(detail.x+detail.width/2);
+  expect(Math.abs(detail.y-lunch.y)).toBeLessThan(4);
   expect(Math.abs(lunch.x-future.x)).toBeLessThan(4);
+  expect(future.y).toBeGreaterThan(lunch.y+lunch.height-2);
   const tabletOverflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
   expect(tabletOverflow).toBeFalsy();
 
