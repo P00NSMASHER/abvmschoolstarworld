@@ -38,9 +38,19 @@ test("health summary displays the same effective evidence used by the verdict",(
   assert.match(report,/## Workflow evidence used for health verdict/);
   assert.match(report,/line\("Teacher refresh",effectiveRun\(status\.workflows\.refresh\)\)/);
   assert.match(report,/line\("App QA",effectiveRun\(status\.workflows\.qa\)\)/);
-  assert.match(report,/line\("Pages deploy",effectiveRun\(status\.workflows\.deploy\)\)/);
+  assert.match(report,/line\("Publication evidence",status\.publicationEvidence\)/);
+  assert.match(report,/line\("Standalone Pages deploy",effectiveRun\(status\.workflows\.deploy\)\)/);
   assert.match(report,/line\("Refresh watchdog",effectiveRun\(status\.workflows\.watchdog\)\)/);
   assert.doesNotMatch(report,/## Latest workflow state/);
+});
+
+test("successful completed refresh can supersede a cancelled standalone Pages run as publication evidence",()=>{
+  assert.match(report,/const effectivePublicationRun=\(\)=>\{/);
+  assert.match(report,/const deployRun=effectiveRun\(status\.workflows\.deploy\)/);
+  assert.match(report,/const refreshRun=effectiveRun\(status\.workflows\.refresh\)/);
+  assert.match(report,/refreshRun\?\.conclusion==="success"&&\(!deployRun\|\|runEvidenceAt\(refreshRun\)>runEvidenceAt\(deployRun\)\)/);
+  assert.match(report,/status\.publicationEvidence=effectivePublicationRun\(\)/);
+  assert.match(report,/completedRunHealthy\(status\.publicationEvidence,48\)/);
 });
 
 
