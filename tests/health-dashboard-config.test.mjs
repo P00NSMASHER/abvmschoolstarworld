@@ -85,3 +85,21 @@ test("operational health treats complete reviewed lunch coverage as attention, n
   assert.doesNotMatch(report,/if\(!healthy\)process\.exitCode=1/);
   assert.match(report,/Lunch source bridge is unavailable; complete previously reviewed coverage remains usable/);
 });
+
+
+test("health dashboard fetches exact refresh failure steps and open draft candidate PRs",()=>{
+  assert.match(workflow,/pull-requests: read/);
+  assert.match(workflow,/actions\/runs\/\$\{REFRESH_RUN_ID\}\/jobs/);
+  assert.match(workflow,/pulls\?state=open&per_page=100/);
+  assert.match(workflow,/REFRESH_JOBS_FILE: refresh-jobs\.json/);
+  assert.match(workflow,/OPEN_PULLS_FILE: open-pulls\.json/);
+});
+
+test("governed curriculum holds become attention without masking unrelated refresh failures",()=>{
+  assert.match(report,/selectGovernedCurriculumHold/);
+  assert.match(report,/status\.curriculumHold=selectGovernedCurriculumHold\(effectiveRefreshRun,refreshJobsData,openPulls\)/);
+  assert.match(report,/const refreshOperationallyHealthy=refreshHealthy\|\|Boolean\(status\.curriculumHold\)/);
+  assert.match(report,/Teacher refresh is intentionally holding publication for governed curriculum candidate PR/);
+  assert.match(report,/Curriculum hold:/);
+  assert.match(report,/status\.overall=criticalHealthy\?\(warnings\.length\?"attention":"healthy"\):"critical"/);
+});
