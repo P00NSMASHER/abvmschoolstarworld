@@ -247,6 +247,7 @@ test('disabled characters registry family supplies a complete candidate without 
   assert.deepEqual(curriculumCandidateIntrinsicBlockers(plan.candidates[0]), []);
 });
 
+
 test('source evidence stays unresolved when teacher lines only partially overlap the unsupported topic', () => {
   const plan = buildCurriculumCoveragePlan({
     pipeline: {

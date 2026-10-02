@@ -113,6 +113,39 @@ test("visible buttons keep 44px touch targets across primary screens",async({pag
   }
 });
 
+test("Today uses a two-column iPad dashboard and stays stacked on phone",async({page})=>{
+  await page.setViewportSize({width:810,height:1080});
+  await page.addInitScript(()=>{
+    const RealDate=Date,fixed=new RealDate("2026-10-01T12:00:00-04:00").valueOf();
+    class FixedDate extends RealDate{constructor(...args){super(...(args.length?args:[fixed]));}static now(){return fixed;}}
+    window.Date=FixedDate;
+  });
+  await page.goto("/#today");
+  await expect(page.locator(".today-screen")).toBeVisible({timeout:10_000});
+  const hero=await page.locator(".hero-card").boundingBox();
+  const priorityHeading=await page.locator(".today-priority-heading").boundingBox();
+  const dateHeading=await page.locator(".today-date-heading").boundingBox();
+  const priority=await page.locator(".priority-card").boundingBox();
+  const panel=await page.locator(".today-panel").boundingBox();
+  const lunch=await page.locator(".lunch-card").boundingBox();
+  for(const box of [hero,priorityHeading,dateHeading,priority,panel,lunch])expect(box).not.toBeNull();
+  expect(hero.width).toBeGreaterThan(priority.width*1.8);
+  expect(Math.abs(priorityHeading.y-dateHeading.y)).toBeLessThan(4);
+  expect(Math.abs(priority.y-panel.y)).toBeLessThan(4);
+  expect(panel.x).toBeGreaterThan(priority.x+priority.width/2);
+  expect(Math.abs(lunch.x-priority.x)).toBeLessThan(4);
+  expect(lunch.y).toBeGreaterThan(priority.y+priority.height-2);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1)).toBeFalsy();
+
+  await page.setViewportSize({width:390,height:844});
+  await page.goto("/#today");
+  await expect(page.locator(".priority-card")).toBeVisible({timeout:10_000});
+  const phonePriority=await page.locator(".priority-card").boundingBox();
+  const phonePanel=await page.locator(".today-panel").boundingBox();
+  expect(phonePanel.y).toBeGreaterThan(phonePriority.y+phonePriority.height-2);
+  expect(Math.abs(phonePanel.x-phonePriority.x)).toBeLessThan(4);
+});
+
 test("Today exposes the weekly priority and focused checklist",async({page})=>{
   const hero=page.locator(".hero-card");
   await expect(hero).toBeVisible();

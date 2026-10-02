@@ -5,6 +5,15 @@ import {readFileSync} from "node:fs";
 const workflow=readFileSync(new URL("../.github/workflows/health-dashboard.yml",import.meta.url),"utf8");
 const report=readFileSync(new URL("../scripts/build-health-report.mjs",import.meta.url),"utf8");
 
+test("health classifier changes trigger an immediate main-branch dashboard run",()=>{
+  assert.match(workflow,/push:\n\s+branches: \[main\]/);
+  for(const path of [
+    ".github/workflows/health-dashboard.yml",
+    "scripts/build-health-report.mjs",
+    "scripts/health-evidence.mjs",
+  ]) assert.ok(workflow.includes(path),path);
+});
+
 test("operational dashboard waits for the post-deploy watchdog",()=>{
   const workflowRun=workflow.match(/workflow_run:\n([\s\S]*?)\n  schedule:/)?.[1]||"";
   assert.match(workflowRun,/Monitor ABVM refresh health/);
@@ -27,16 +36,20 @@ test("health verdict ignores superseded cancellation noise but flags the newest 
   assert.match(report,/const latestCreated=name=>createdRuns\(name\)\[0\]\|\|null/);
   assert.match(report,/const newestCreated=workflow\.latestCreated/);
   assert.match(report,/const newerActive=newestCreated&&activeStatuses\.has\(newestCreated\.status\)/);
-  assert.match(report,/if\(newerActive\)return workflow\.latestSuccess/);
+  assert.match(report,/if\(newerActive\)return workflow\.latestSuccess\|\|decisive/);
   assert.match(report,/if\(newestCreated\?\.conclusion==="cancelled"\)return newestCreated/);
   assert.match(report,/return decisive/);
   assert.match(report,/const completedHealthy=\(workflow,maxAgeHours\)=>completedRunHealthy\(effectiveRun\(workflow\),maxAgeHours\)/);
   assert.doesNotMatch(report,/const run=workflow\.latestCompleted;\n  if\(!run\|\|run\.conclusion!==\"success\"\)/);
 });
 
+test("active workflow evidence falls back to the latest decisive run when no success exists",()=>{
+  assert.match(report,/if\(newerActive\)return workflow\.latestSuccess\|\|decisive/);
+});
+
 test("health summary displays the same effective evidence used by the verdict",()=>{
   assert.match(report,/## Workflow evidence used for health verdict/);
-  assert.match(report,/line\("Teacher refresh",effectiveRun\(status\.workflows\.refresh\)\)/);
+  assert.match(report,/line\("Teacher refresh",refreshDisplayRun\)/);
   assert.match(report,/line\("App QA",effectiveRun\(status\.workflows\.qa\)\)/);
   assert.match(report,/line\("Publication evidence",status\.publicationEvidence\)/);
   assert.match(report,/line\("Standalone Pages deploy",effectiveRun\(status\.workflows\.deploy\)\)/);
@@ -84,4 +97,24 @@ test("operational health treats complete reviewed lunch coverage as attention, n
   assert.match(report,/if\(status\.overall==="critical"\)process\.exitCode=1/);
   assert.doesNotMatch(report,/if\(!healthy\)process\.exitCode=1/);
   assert.match(report,/Lunch source bridge is unavailable; complete previously reviewed coverage remains usable/);
+});
+
+
+test("health dashboard fetches exact refresh failure steps and open draft candidate PRs",()=>{
+  assert.match(workflow,/pull-requests: read/);
+  assert.match(workflow,/actions\/runs\/\$\{REFRESH_RUN_ID\}\/jobs/);
+  assert.match(workflow,/pulls\?state=open&per_page=100/);
+  assert.match(workflow,/REFRESH_JOBS_FILE: refresh-jobs\.json/);
+  assert.match(workflow,/OPEN_PULLS_FILE: open-pulls\.json/);
+});
+
+test("governed curriculum holds become attention without masking unrelated refresh failures",()=>{
+  assert.match(report,/selectGovernedCurriculumHold/);
+  assert.match(report,/const curriculumHoldRefreshRun=selectRefreshFailureEvidence\(productionRuns,refreshJobsData\)/);
+  assert.match(report,/status\.curriculumHold=selectGovernedCurriculumHold\(curriculumHoldRefreshRun,refreshJobsData,openPulls\)/);
+  assert.match(report,/const refreshDisplayRun=status\.curriculumHold\?curriculumHoldRefreshRun:effectiveRefreshRun/);
+  assert.match(report,/const refreshOperationallyHealthy=refreshHealthy\|\|Boolean\(status\.curriculumHold\)/);
+  assert.match(report,/Teacher refresh is intentionally holding publication for governed curriculum candidate PR/);
+  assert.match(report,/Curriculum hold:/);
+  assert.match(report,/status\.overall=criticalHealthy\?\(warnings\.length\?"attention":"healthy"\):"critical"/);
 });

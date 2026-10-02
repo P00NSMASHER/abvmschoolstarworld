@@ -1,6 +1,14 @@
 name: ABVM Operational Health Dashboard
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/health-dashboard.yml'
+      - 'scripts/build-health-report.mjs'
+      - 'scripts/health-evidence.mjs'
+      - 'tests/health-dashboard-config.test.mjs'
+      - 'tests/health-evidence.test.mjs'
   workflow_run:
     workflows:
       - Monitor ABVM refresh health
@@ -13,6 +21,7 @@ on:
 permissions:
   contents: read
   actions: read
+  pull-requests: read
 
 concurrency:
   group: abvm-operational-health
@@ -38,11 +47,24 @@ jobs:
       - name: Fetch recent workflow history
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api "repos/${GITHUB_REPOSITORY}/actions/runs?per_page=100" > workflow-runs.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/${GITHUB_REPOSITORY}/actions/runs?per_page=100" > workflow-runs.json
+          REFRESH_RUN_ID="$(node -e 'const fs=require("fs");const runs=JSON.parse(fs.readFileSync("workflow-runs.json","utf8")).workflow_runs||[];const rows=runs.filter(r=>r.name==="Refresh ABVM teacher pages"&&(r.head_branch==="main"||r.event==="schedule")&&r.conclusion==="failure").sort((a,b)=>Date.parse(b.updated_at||b.created_at||0)-Date.parse(a.updated_at||a.created_at||0));process.stdout.write(rows[0]?String(rows[0].id):"")')"
+          if [ -n "$REFRESH_RUN_ID" ]; then
+            gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${REFRESH_RUN_ID}/jobs?per_page=100" > refresh-jobs-raw.json
+            node -e 'const fs=require("fs");const raw=JSON.parse(fs.readFileSync("refresh-jobs-raw.json","utf8"));fs.writeFileSync("refresh-jobs.json",JSON.stringify({run_id:Number(process.argv[1]),jobs:raw.jobs||[]},null,2)+"\n")' "$REFRESH_RUN_ID"
+          else
+            printf '%s\n' '{"run_id":null,"jobs":[]}' > refresh-jobs.json
+          fi
+          gh api "repos/${GITHUB_REPOSITORY}/pulls?state=open&per_page=100" > open-pulls.json
 
       - name: Build health dashboard
         env:
           WORKFLOW_RUNS_FILE: workflow-runs.json
+          REFRESH_JOBS_FILE: refresh-jobs.json
+          OPEN_PULLS_FILE: open-pulls.json
         run: npm run health:report
 
       - name: Publish dashboard to job summary
