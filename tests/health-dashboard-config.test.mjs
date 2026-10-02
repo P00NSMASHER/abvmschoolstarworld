@@ -5,6 +5,15 @@ import {readFileSync} from "node:fs";
 const workflow=readFileSync(new URL("../.github/workflows/health-dashboard.yml",import.meta.url),"utf8");
 const report=readFileSync(new URL("../scripts/build-health-report.mjs",import.meta.url),"utf8");
 
+test("health classifier changes trigger an immediate main-branch dashboard run",()=>{
+  assert.match(workflow,/push:\n\s+branches: \[main\]/);
+  for(const path of [
+    ".github/workflows/health-dashboard.yml",
+    "scripts/build-health-report.mjs",
+    "scripts/health-evidence.mjs",
+  ]) assert.ok(workflow.includes(path),path);
+});
+
 test("operational dashboard waits for the post-deploy watchdog",()=>{
   const workflowRun=workflow.match(/workflow_run:\n([\s\S]*?)\n  schedule:/)?.[1]||"";
   assert.match(workflowRun,/Monitor ABVM refresh health/);
