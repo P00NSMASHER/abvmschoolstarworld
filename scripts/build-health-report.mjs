@@ -102,12 +102,19 @@ const effectiveRun=workflow=>{
   if(newestCreated?.conclusion==="cancelled")return newestCreated;
   return decisive;
 };
-const completedHealthy=(workflow,maxAgeHours)=>{
-  const run=effectiveRun(workflow);
+const completedRunHealthy=(run,maxAgeHours)=>{
   if(!run||run.conclusion!=="success")return false;
   const age=runAgeHours(run);
   return age!==null&&age>=-.25&&age<=maxAgeHours;
 };
+const completedHealthy=(workflow,maxAgeHours)=>completedRunHealthy(effectiveRun(workflow),maxAgeHours);
+const effectivePublicationRun=()=>{
+  const deployRun=effectiveRun(status.workflows.deploy);
+  const refreshRun=effectiveRun(status.workflows.refresh);
+  if(refreshRun?.conclusion==="success"&&(!deployRun||runEvidenceAt(refreshRun)>runEvidenceAt(deployRun)))return refreshRun;
+  return deployRun;
+};
+status.publicationEvidence=effectivePublicationRun();
 const pipelineHealthy=Boolean(
   status.contentPipeline.present &&
   status.contentPipeline.qaStatus==="pass" &&
@@ -140,7 +147,7 @@ const criticalHealthy=Boolean(
   sourceFresh &&
   lunchOperationallyUsable &&
   completedHealthy(status.workflows.qa,48) &&
-  completedHealthy(status.workflows.deploy,48) &&
+  completedRunHealthy(status.publicationEvidence,48) &&
   completedHealthy(status.workflows.refresh,30) &&
   completedHealthy(status.workflows.watchdog,30) &&
   pipelineHealthy
@@ -178,9 +185,10 @@ const md=[
   "## Workflow evidence used for health verdict",
   line("Teacher refresh",effectiveRun(status.workflows.refresh)),
   line("App QA",effectiveRun(status.workflows.qa)),
-  line("Pages deploy",effectiveRun(status.workflows.deploy)),
+  line("Publication evidence",status.publicationEvidence),
+  line("Standalone Pages deploy",effectiveRun(status.workflows.deploy)),
   line("Refresh watchdog",effectiveRun(status.workflows.watchdog)),
-  `- **Required successful-run age:** refresh/watchdog <=30h; QA/deploy <=48h`,
+  `- **Required successful-run age:** refresh/watchdog <=30h; QA/publication <=48h`,
   "",
   "## Recent relevant failures",
   failures.length?failures.map(f=>`- ${f.name} — ${f.created_at} ([run](${f.html_url}))`).join("\n"):"- None in the fetched run window.",
