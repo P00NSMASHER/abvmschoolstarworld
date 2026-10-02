@@ -1,9 +1,9 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v103-star-gap-fallback";
+const CACHE = "abvm-grade2-parent-companion-v104-runtime-pack";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=96",
-  "./app.js?v=103",
+  "./app.js?v=104",
   "./weekly-learning.js?v=2",
   "./study-games.js?v=92",
   "./study-games-view.js?v=6",
@@ -11,7 +11,7 @@ const STATIC_SHELL = [
   "./assets/abvm-app-icon-180.png",
   "./assets/abvm-app-icon-192.png"
 ];
-const OPTIONAL_DATA = ["./data/study-pack.json"];
+const OPTIONAL_DATA = ["./data/study-pack-runtime.json","./data/study-pack.json"];
 
 self.addEventListener("install",event=>{
   event.waitUntil((async()=>{
@@ -83,6 +83,10 @@ self.addEventListener("fetch",event=>{
   const url=new URL(event.request.url);
   if(url.origin!==self.location.origin)return;
 
+  if(url.pathname.endsWith("/data/study-pack-runtime.json")){
+    event.respondWith(networkFirst(event.request,"./data/study-pack.json",event));
+    return;
+  }
   if(url.pathname.endsWith("/data/study-pack.json")){
     event.respondWith(networkFirst(event.request,null,event));
     return;
