@@ -87,6 +87,14 @@ test("freshness refresh control keeps a 44px touch target",async({page})=>{
   const backBox=await back.boundingBox();
   expect(backBox).not.toBeNull();
   expect(backBox.height,"Back to current month touch target is too short").toBeGreaterThanOrEqual(44);
+
+  await openTab(page,"Family");
+  await page.locator(".family-more summary").click();
+  const familyAction=page.locator(".family-more a");
+  await expect(familyAction).toBeVisible();
+  const familyActionBox=await familyAction.boundingBox();
+  expect(familyActionBox).not.toBeNull();
+  expect(familyActionBox.height,"Family Study Games link touch target is too short").toBeGreaterThanOrEqual(44);
 });
 
 test("visible buttons keep 44px touch targets across primary screens",async({page})=>{
