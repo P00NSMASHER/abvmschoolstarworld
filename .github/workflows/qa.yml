@@ -17,11 +17,18 @@ on:
       - '.github/workflows/health-dashboard.yml'
   push:
     branches: [main]
-    # Deploy workflow already runs the full release QA for deploy-affecting paths.
-    # Keep this post-push lane only for non-deploy governance/config changes.
+    # Pages runs release QA for live-site changes. Keep non-deployable tooling and
+    # governance changes in this exact-main QA lane without publishing the site.
     paths:
+      - 'scripts/**'
+      - 'tests/**'
       - 'curriculum-candidates/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'playwright.config.mjs'
       - '.github/workflows/qa.yml'
+      - '.github/workflows/sync-study-pack.yml'
+      - '.github/workflows/refresh-health.yml'
       - '.github/workflows/health-dashboard.yml'
   workflow_dispatch:
 
