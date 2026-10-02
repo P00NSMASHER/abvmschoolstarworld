@@ -166,8 +166,9 @@ jobs:
         with:
           name: curriculum-coverage-${{ github.run_id }}
           path: .curriculum-coverage-plan.json
+          include-hidden-files: true
           retention-days: 30
-          if-no-files-found: ignore
+          if-no-files-found: error
 
       - name: Block publication while curriculum candidates are unresolved
         shell: bash

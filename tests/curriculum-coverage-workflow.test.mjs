@@ -12,6 +12,14 @@ test('teacher refresh opens only draft curriculum candidates and blocks publicat
   assert.doesNotMatch(workflow, /gh pr merge|--auto-merge|enable-auto-merge/i);
 });
 
+test('curriculum coverage evidence artifact includes the hidden report and fails closed if it disappears', () => {
+  const workflow = readFileSync('.github/workflows/sync-study-pack.yml', 'utf8');
+  assert.match(workflow, /name: Retain curriculum coverage evidence/);
+  assert.match(workflow, /path: \.curriculum-coverage-plan\.json/);
+  assert.match(workflow, /include-hidden-files: true/);
+  assert.match(workflow, /if-no-files-found: error/);
+});
+
 test('candidate-only pull requests still receive the full QA workflow', () => {
   const qa = readFileSync('.github/workflows/qa.yml', 'utf8');
   assert.match(qa, /curriculum-candidates\/\*\*/);
