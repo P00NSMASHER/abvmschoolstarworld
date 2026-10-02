@@ -82,6 +82,7 @@ export async function refreshLunchPublication(pack, { now = new Date(), fetchImp
   const meals = archive.filter(m => dates.includes(m.date));
   const missingDates = dates.filter(date => !meals.some(m => m.date === date));
   const old = pack.lunchMenuSource || {};
+  const oldProofs = new Map((old.sourcePages || []).map(proof => [proof.id, proof]));
   const sources = CATALOG.sources.filter(s => meals.some(m => m.sourceId === s.id));
   const verifiedNow = feed?.retrievalState === 'verified';
   const proofTimes = sources.map(s => feed?.sourcePages.find(p => p.id === s.id)?.checkedAt || null).filter(Boolean);
@@ -100,7 +101,7 @@ export async function refreshLunchPublication(pack, { now = new Date(), fetchImp
     weekStart: dates[0], weekEnd: dates[4],
     coverageThrough: meals.at(-1)?.date || null,
     missingDates,
-    sourcePages: sources.map(s => ({ id: s.id, url: s.url, contentHash: s.contentHash, reviewedAt: s.reviewedAt, checkedAt: feed?.sourcePages.find(p => p.id === s.id)?.checkedAt || null })),
+    sourcePages: sources.map(s => ({ id: s.id, url: s.url, contentHash: s.contentHash, reviewedAt: s.reviewedAt, checkedAt: feed?.sourcePages.find(p => p.id === s.id)?.checkedAt || oldProofs.get(s.id)?.checkedAt || null })),
     pendingDocuments: feed?.pendingDocuments || [],
     gaps: [
       ...missingDates.map(date => `No reviewed school lunch menu is available for ${date}.`),
