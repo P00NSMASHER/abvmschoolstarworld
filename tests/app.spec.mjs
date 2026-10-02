@@ -19,6 +19,24 @@ test("all six primary tabs render without horizontal overflow",async({page})=>{
   }
 });
 
+test("all six primary tabs stay tablet-wide and overflow-free on iPad",async({page})=>{
+  await page.setViewportSize({width:810,height:1080});
+  await page.goto("/#today");
+  await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
+  for(const label of ["Today","Week","Calendar","Study","Study Games","Family"]){
+    await openTab(page,label);
+    const appBox=await page.locator(".phone-app").boundingBox();
+    expect(appBox,label+" app shell missing").not.toBeNull();
+    expect(appBox.width,label+" collapsed to phone width").toBeGreaterThan(700);
+    const layout=await page.locator(".screen").evaluate(el=>({
+      screenOverflow:el.scrollWidth>el.clientWidth+1,
+      pageOverflow:document.documentElement.scrollWidth>window.innerWidth+1
+    }));
+    expect(layout.screenOverflow,label+" screen overflows horizontally").toBeFalsy();
+    expect(layout.pageOverflow,label+" page overflows horizontally").toBeFalsy();
+  }
+});
+
 test("Today exposes the weekly priority and focused checklist",async({page})=>{
   const hero=page.locator(".hero-card");
   await expect(hero).toBeVisible();
