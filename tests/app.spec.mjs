@@ -80,6 +80,13 @@ test("freshness refresh control keeps a 44px touch target",async({page})=>{
     expect(box,label+" freshness box missing").not.toBeNull();
     expect(box.height,label+" freshness touch target is too short").toBeGreaterThanOrEqual(44);
   }
+  await openTab(page,"Calendar");
+  await page.getByRole("button",{name:"Next month"}).click();
+  const back=page.locator(".calendar-today-jump");
+  await expect(back).toBeVisible();
+  const backBox=await back.boundingBox();
+  expect(backBox).not.toBeNull();
+  expect(backBox.height,"Back to current month touch target is too short").toBeGreaterThanOrEqual(44);
 });
 
 test("Today exposes the weekly priority and focused checklist",async({page})=>{
