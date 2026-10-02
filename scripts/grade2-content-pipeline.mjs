@@ -1461,14 +1461,15 @@ const PRIORITY_THREE_TYPE_SKILLS = new Set([
   'suffix-ed-ing',
 ]);
 
-function requiresThreeTypeFamily(skillId) {
+function requiresThreeTypeFamily(skillId, curriculumOptions = {}) {
   return PRIORITY_THREE_TYPE_SKILLS.has(String(skillId || ''))
+    || registeredPrioritySkillIds(curriculumOptions).includes(String(skillId || ''))
     || /^subtraction-within-\d+$/.test(String(skillId || ''))
     || /^religion-/.test(String(skillId || ''));
 }
 
-function supplementalQuestionFamily(skill) {
-  const registeredFamily = registeredSupplementalQuestionFamily(skill.id);
+function supplementalQuestionFamily(skill, curriculumOptions = {}) {
+  const registeredFamily = registeredSupplementalQuestionFamily(skill.id, curriculumOptions);
   if (registeredFamily.length) return registeredFamily;
   const staticFamily = [...(SUPPLEMENTAL_QUESTION_FAMILIES[skill.id] || []), ...(RENEWABLE_EXTENSION_FAMILIES[skill.id] || [])];
   if (staticFamily.length) return staticFamily;
@@ -1536,9 +1537,9 @@ function supplementalQuestionFamily(skill) {
   return [];
 }
 
-function addSupplementalQuestionFamilies(skills, questions) {
+function addSupplementalQuestionFamilies(skills, questions, curriculumOptions = {}) {
   for (const skill of skills) {
-    for (const raw of supplementalQuestionFamily(skill)) questions.push(questionFor(skill, raw));
+    for (const raw of supplementalQuestionFamily(skill, curriculumOptions)) questions.push(questionFor(skill, raw));
   }
 }
 
@@ -1761,18 +1762,18 @@ function questionFor(skill, raw) {
   };
 }
 
-function baseSkillRules() {
-  return [...BASE_SKILLS, ...registeredCurriculumFamilyRules()];
+function baseSkillRules(curriculumOptions = {}) {
+  return [...BASE_SKILLS, ...registeredCurriculumFamilyRules(curriculumOptions)];
 }
 
-function detectBaseSkills(pack, skills, questions) {
+function detectBaseSkills(pack, skills, questions, curriculumOptions = {}) {
   const sourceLines = uniqueText([
     ...(subjectRow(pack, 'Reading / ELA')?.topics || []),
     ...(subjectRow(pack, 'Reading / ELA')?.studyNotes || []),
     ...(subjectRow(pack, 'Spelling / Handwriting')?.topics || []),
     ...(subjectRow(pack, 'Spelling / Handwriting')?.studyNotes || []),
   ]);
-  for (const rule of baseSkillRules()) {
+  for (const rule of baseSkillRules(curriculumOptions)) {
     const sourceLine = sourceLines.find(line => rule.pattern.test(line));
     if (!sourceLine) continue;
     const matchedEvidence = text(sourceLine).match(rule.pattern)?.[0] || sourceLine;
@@ -2083,7 +2084,7 @@ function detectVocabulary(pack, skills, questions, coverage) {
 }
 
 
-function detectUnsupportedExplicitSkills(pack, coverage) {
+function detectUnsupportedExplicitSkills(pack, coverage, curriculumOptions = {}) {
   const addUnsupported = (subject, topic) => {
     const clean = text(topic);
     if (!clean || coverage.some(row => row.status === 'GENERATOR_UNSUPPORTED' && normalize(row.topic) === normalize(clean))) return;
@@ -2102,12 +2103,12 @@ function detectUnsupportedExplicitSkills(pack, coverage) {
     const comprehension = line.match(/^Reading comprehension:\s*(.+)$/i);
     if (comprehension) {
       for (const item of comprehension[1].split(/\s*[,;]\s*/).map(text).filter(Boolean)) {
-        if (!baseSkillRules().some(rule => rule.pattern.test(item))) addUnsupported('Reading / ELA', item);
+        if (!baseSkillRules(curriculumOptions).some(rule => rule.pattern.test(item))) addUnsupported('Reading / ELA', item);
       }
       continue;
     }
     const explicit = line.match(/^(Phonics|Word structure|Grammar):\s*(.+)$/i);
-    if (explicit && !baseSkillRules().some(rule => rule.pattern.test(explicit[2]))) {
+    if (explicit && !baseSkillRules(curriculumOptions).some(rule => rule.pattern.test(explicit[2]))) {
       addUnsupported('Reading / ELA', explicit[2]);
     }
   }
@@ -2127,7 +2128,7 @@ function detectUnsupportedExplicitSkills(pack, coverage) {
   for (const raw of spelling?.topics || []) {
     const line = text(raw);
     const focus = line.match(/(?:test\s+focus|focus):\s*(.+)$/i);
-    if (focus && !baseSkillRules().some(rule => rule.pattern.test(focus[1]))) {
+    if (focus && !baseSkillRules(curriculumOptions).some(rule => rule.pattern.test(focus[1]))) {
       addUnsupported('Spelling / Handwriting', focus[1]);
     }
   }
@@ -2233,6 +2234,7 @@ function filterQuestions(rawQuestions) {
 
 export function validateGrade2ContentPipeline(pipeline) {
   const issues = [];
+  const curriculumOptions = { activeFeatureFlags: pipeline?.sourcePolicy?.activeCurriculumFeatureFlags || [] };
   if (!pipeline || typeof pipeline !== 'object') return ['pipeline-missing'];
   if (pipeline.schemaVersion !== 2) issues.push('schema-version-invalid');
   if (!text(pipeline.sourceHash)) issues.push('source-hash-missing');
@@ -2270,14 +2272,14 @@ export function validateGrade2ContentPipeline(pipeline) {
     if (!questionSkills.has(skill.id)) issues.push(`skill-without-question:${skill.id}`);
     const rows=(pipeline.questions||[]).filter(question=>question.skill===skill.id);
     if(rows.length<2)issues.push(`skill-sibling-bank-too-small:${skill.id}:${rows.length}/2`);
-    if(requiresThreeTypeFamily(skill.id)){
+    if(requiresThreeTypeFamily(skill.id, curriculumOptions)){
       if(rows.length<3)issues.push(`priority-family-too-small:${skill.id}:${rows.length}/3`);
       const priorityTypes=new Set(rows.map(question=>question.questionType));
       for(const requiredType of ['direct','transfer','reasoning']){
         if(!priorityTypes.has(requiredType))issues.push(`priority-family-type-missing:${skill.id}:${requiredType}`);
       }
     }
-    const expected=1+supplementalQuestionFamily(skill).length;
+    const expected=1+supplementalQuestionFamily(skill, curriculumOptions).length;
     if(expected>1){
       if(rows.length<expected)issues.push(`semantic-family-incomplete:${skill.id}:${rows.length}/${expected}`);
       if(new Set(rows.map(question=>question.variantFingerprint)).size!==rows.length)issues.push(`semantic-variant-duplicate:${skill.id}`);
@@ -2305,18 +2307,19 @@ export function validateGrade2ContentPipeline(pipeline) {
   return [...new Set(issues)];
 }
 
-export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash, sourcePages = [], requirePageExactLineage = false } = {}) {
+export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash, sourcePages = [], requirePageExactLineage = false, activeCurriculumFeatureFlags = [] } = {}) {
   const skills = [];
+  const curriculumOptions = { activeFeatureFlags: activeCurriculumFeatureFlags };
   const rawQuestions = [];
   const coverage = [];
-  detectBaseSkills(pack, skills, rawQuestions);
+  detectBaseSkills(pack, skills, rawQuestions, curriculumOptions);
   detectSightWords(pack, skills, rawQuestions, coverage);
   detectMath(pack, skills, rawQuestions);
   detectReligion(pack, skills, rawQuestions);
   detectVocabulary(pack, skills, rawQuestions, coverage);
-  addSupplementalQuestionFamilies(skills, rawQuestions);
+  addSupplementalQuestionFamilies(skills, rawQuestions, curriculumOptions);
   attachSourceLineage(skills, rawQuestions, { sourcePages, sourceHash: sourceHash || pack?.sourceHash });
-  detectUnsupportedExplicitSkills(pack, coverage);
+  detectUnsupportedExplicitSkills(pack, coverage, curriculumOptions);
 
   for (const skill of skills) {
     if (coverage.some(row => row.skillId === skill.id)) continue;
@@ -2366,6 +2369,7 @@ export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash, sour
       modes: ['STRICT_SOURCE', 'CURATED_CONTEXT', 'DETERMINISTIC_TEMPLATE'],
       failClosed: true,
       requirePageExactLineage,
+      activeCurriculumFeatureFlags: [...new Set((Array.isArray(activeCurriculumFeatureFlags) ? activeCurriculumFeatureFlags : []).map(String))].sort(),
     },
     skills,
     coverage,
