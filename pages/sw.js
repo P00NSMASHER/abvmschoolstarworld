@@ -9,7 +9,8 @@ const STATIC_SHELL = [
   "./study-games-view.js?v=6",
   "./manifest.webmanifest",
   "./assets/abvm-app-icon-180.png",
-  "./assets/abvm-app-icon-192.png"
+  "./assets/abvm-app-icon-192.png",
+  "./assets/abvm-app-icon-512.png"
 ];
 const OPTIONAL_DATA = ["./data/study-pack-runtime.json"];
 
