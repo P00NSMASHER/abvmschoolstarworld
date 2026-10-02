@@ -268,10 +268,18 @@ test("Family exposes current actions, notices, and app/privacy disclosure",async
   await expect(page.locator(".family-more")).toBeVisible();
 });
 
-test("current app has no critical automated accessibility violations",async({page})=>{
-  const results=await new AxeBuilder({page}).analyze();
-  const critical=results.violations.filter(v=>v.impact==="critical");
-  expect(critical.map(v=>({id:v.id,nodes:v.nodes.length}))).toEqual([]);
+test("all primary screens have no serious or critical automated accessibility violations",async({page})=>{
+  const findings=[];
+  for(const label of ["Today","Week","Calendar","Study","Study Games","Family"]){
+    await openTab(page,label);
+    const results=await new AxeBuilder({page}).analyze();
+    for(const violation of results.violations){
+      if(violation.impact==="serious"||violation.impact==="critical"){
+        findings.push({screen:label,id:violation.id,impact:violation.impact,nodes:violation.nodes.length});
+      }
+    }
+  }
+  expect(findings).toEqual([]);
 });
 
 
