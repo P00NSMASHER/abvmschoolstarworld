@@ -309,8 +309,10 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   expect(cacheName).toMatch(/^abvm-grade2-parent-companion-v\d+-[a-z-]+$/);
   expect(sw).not.toContain("hero-today.webp");
   expect(sw).not.toContain("calendar/picture-day.svg");
-  const cached=[...sw.matchAll(/"\.\/[^\"]+"/g)];
+  const staticShell=sw.match(/const STATIC_SHELL = \[([\s\S]*?)\];/)?.[1]||"";
+  const cached=[...staticShell.matchAll(/"\.\/[^\"]+"/g)];
   expect(cached.length).toBeLessThanOrEqual(12);
+  expect(sw).toContain('const OPTIONAL_DATA = ["./data/study-pack-runtime.json"]');
 });
 
 
