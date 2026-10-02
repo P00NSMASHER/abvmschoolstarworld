@@ -89,6 +89,24 @@ test("all six tabs use the tablet layout on large iPad Pro landscape",async({pag
   expect(gridStyle.trim().split(/\s+/).length).toBe(2);
 });
 
+test("large iPad Pro portrait uses the expanded tablet shell",async({page})=>{
+  await page.setViewportSize({width:1024,height:1366});
+  await page.goto("/#today");
+  await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
+  for(const label of ["Today","Calendar","Study Games","Family"]){
+    await openTab(page,label);
+    const appBox=await page.locator(".phone-app").boundingBox();
+    expect(appBox,label+" portrait shell missing").not.toBeNull();
+    expect(appBox.width,label+" portrait shell is underusing the canvas").toBeGreaterThanOrEqual(930);
+    const overflow=await page.locator(".screen").evaluate(el=>({
+      screen:el.scrollWidth>el.clientWidth+1,
+      page:document.documentElement.scrollWidth>window.innerWidth+1
+    }));
+    expect(overflow.screen,label+" portrait screen overflows").toBeFalsy();
+    expect(overflow.page,label+" portrait page overflows").toBeFalsy();
+  }
+});
+
 test("freshness refresh control keeps a 44px touch target",async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await page.goto("/#today");
