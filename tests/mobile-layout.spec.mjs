@@ -91,3 +91,28 @@ test("Family notices stay stacked and inside the phone viewport",async({browser}
   expect(overflow).toBeFalsy();
   await context.close();
 });
+
+
+test("navy Today hero stays compact and readable at 280px",async({browser})=>{
+  const context=await browser.newContext({viewport:{width:280,height:653},isMobile:true,hasTouch:true});
+  const page=await context.newPage();
+  await page.goto("http://127.0.0.1:4173/#today");
+  const hero=page.locator(".hero-card");
+  await expect(hero).toBeVisible({timeout:10_000});
+  const heroBox=await hero.boundingBox();
+  const brandBox=await page.locator(".hero-brand").boundingBox();
+  const style=await page.evaluate(()=>({
+    pillWhiteSpace:getComputedStyle(document.querySelector(".hero-copy .pill")).whiteSpace,
+    taglineDisplay:getComputedStyle(document.querySelector(".hero-brand small")).display,
+    taglineSize:parseFloat(getComputedStyle(document.querySelector(".hero-brand small")).fontSize),
+    overflow:document.documentElement.scrollWidth>window.innerWidth+1,
+  }));
+  expect(heroBox.height).toBeLessThan(300);
+  expect(brandBox.height).toBeLessThanOrEqual(66);
+  expect(brandBox.width).toBeGreaterThan(210);
+  expect(style.pillWhiteSpace).toBe("nowrap");
+  expect(style.taglineDisplay).not.toBe("none");
+  expect(style.taglineSize).toBeGreaterThanOrEqual(7);
+  expect(style.overflow).toBeFalsy();
+  await context.close();
+});
