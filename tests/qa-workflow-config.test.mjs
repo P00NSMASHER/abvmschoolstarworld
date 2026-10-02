@@ -20,3 +20,14 @@ test("deploy-covered main pushes are not QA'd twice",()=>{
 
   assert.match(pages,/name: Run release QA[\s\S]*run: npm run qa/);
 });
+
+
+test("Pages push deploys only when live site or deployment workflow changes",()=>{
+  const push=pages.match(/\n  push:\n([\s\S]*?)\n  workflow_dispatch:/)?.[1]||"";
+  assert.equal(push.includes("'pages/**'"),true);
+  assert.equal(push.includes("'.github/workflows/pages.yml'"),true);
+  for(const nonDeployable of [
+    "scripts/**","tests/**","package.json","package-lock.json","playwright.config.mjs",
+    ".github/workflows/sync-study-pack.yml",".github/workflows/refresh-health.yml"
+  ]) assert.equal(push.includes("'"+nonDeployable+"'"),false,"non-deployable path triggered Pages: "+nonDeployable);
+});
