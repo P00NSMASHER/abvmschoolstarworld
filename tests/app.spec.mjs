@@ -232,6 +232,27 @@ test("Week uses a two-column iPad layout and stays stacked on phone",async({page
   expect(Math.abs(phoneLunch.x-phoneDetail.x)).toBeLessThan(4);
 });
 
+test("Week uses a two-column iPad main area and stays stacked on phone",async({page})=>{
+  await page.setViewportSize({width:810,height:1080});
+  await page.goto("/#week");
+  await expect(page.locator(".week-main")).toBeVisible({timeout:10_000});
+  const detail=await page.locator(".day-detail").boundingBox();
+  const rail=await page.locator(".week-rail").boundingBox();
+  expect(detail).not.toBeNull();
+  expect(rail).not.toBeNull();
+  expect(Math.abs(detail.y-rail.y)).toBeLessThan(4);
+  expect(rail.x).toBeGreaterThan(detail.x+detail.width/2);
+  expect(detail.width).toBeGreaterThan(rail.width);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1)).toBeFalsy();
+
+  await page.setViewportSize({width:390,height:844});
+  await page.goto("/#week");
+  const phoneDetail=await page.locator(".day-detail").boundingBox();
+  const phoneRail=await page.locator(".week-rail").boundingBox();
+  expect(phoneRail.y).toBeGreaterThan(phoneDetail.y+phoneDetail.height-2);
+  expect(Math.abs(phoneRail.x-phoneDetail.x)).toBeLessThan(4);
+});
+
 test("Week exposes paging, weekdays, selected-day detail, and reminders",async({page})=>{
   await openTab(page,"Week");
   await expect(page.locator(".week-nav")).toBeVisible();
