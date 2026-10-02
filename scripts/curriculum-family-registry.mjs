@@ -193,8 +193,11 @@ export function registeredRuntimeMetadata(skillId, options = {}) {
   if (!family || !curriculumFamilyRuntimeEnabled(family, options)) return null;
   return {
     id: family.id,
+    subject: family.subject,
+    label: family.label,
     standards: [...family.standards],
     domain: family.domain,
+    studyNotes: [...family.studyNotes],
     teachCard: [...family.teachCard],
     assessmentPatterns: [...family.assessmentPatterns],
     featureFlag: family.featureFlag,
