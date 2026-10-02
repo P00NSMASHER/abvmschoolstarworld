@@ -27,3 +27,12 @@ test("overnight watchdog covers the 14.5-hour scheduled refresh gap",()=>{
   assert.match(refreshCommand,/--require-today/);
   assert.match(refreshCommand,/--max-age-hours 1/);
 });
+
+
+test("watchdog follows both standalone deploys and completed teacher refresh workflows",()=>{
+  const workflowRun=watchdog.match(/workflow_run:\n([\s\S]*?)\n  schedule:/)?.[1]||"";
+  assert.match(workflowRun,/Deploy ABVM to GitHub Pages/);
+  assert.match(workflowRun,/Refresh ABVM teacher pages/);
+  assert.match(watchdog,/github\.event\.workflow_run\.conclusion == 'success'/);
+  assert.match(watchdog,/github\.event\.workflow_run\.head_branch == 'main'/);
+});
