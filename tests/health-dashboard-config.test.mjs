@@ -63,3 +63,13 @@ test("operational health uses the same overnight freshness allowance as the watc
   assert.match(report,/fresh <=\$\{SOURCE_FRESH_HOURS\}h/);
   assert.doesNotMatch(report,/sourceAgeHours<=8/);
 });
+
+
+test("operational health accepts complete lunch coverage backed by fresh retained source proof",()=>{
+  assert.match(report,/const lunchSourceIds=\[\.\.\.new Set\(\(packData\.pack\?\.lunchMenu\|\|\[\]\)\.map\(meal=>meal\?\.sourceId\)\.filter\(Boolean\)\)\]/);
+  assert.match(report,/const lunchProofFresh=lunchSourceIds\.length>0&&lunchSourceIds\.every\(id=>freshTimestamp\(lunchProofById\.get\(id\)\?\.checkedAt\)\)/);
+  assert.match(report,/const lunchHealthy=status\.lunch\.days>0&&status\.lunch\.missingDates\.length===0&&lunchProofFresh/);
+  assert.match(report,/\n  lunchHealthy &&\n/);
+  assert.doesNotMatch(report,/status\.lunch\.retrievalState==="verified" &&/);
+  assert.match(report,/retained proof fresh <=\$\{SOURCE_FRESH_HOURS\}h = \$\{lunchProofFresh\}/);
+});
