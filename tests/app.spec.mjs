@@ -223,10 +223,10 @@ test("Family exposes current actions, notices, and app/privacy disclosure",async
   await expect(page.locator(".family-more")).toBeVisible();
 });
 
-test("current app has no critical automated accessibility violations",async({page})=>{
+test("current app has no serious or critical automated accessibility violations",async({page})=>{
   const results=await new AxeBuilder({page}).analyze();
-  const critical=results.violations.filter(v=>v.impact==="critical");
-  expect(critical.map(v=>({id:v.id,nodes:v.nodes.length}))).toEqual([]);
+  const blocking=results.violations.filter(v=>v.impact==="serious"||v.impact==="critical");
+  expect(blocking.map(v=>({id:v.id,impact:v.impact,nodes:v.nodes.length}))).toEqual([]);
 });
 
 
