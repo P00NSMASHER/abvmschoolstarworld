@@ -36,11 +36,15 @@ test("health verdict ignores superseded cancellation noise but flags the newest 
   assert.match(report,/const latestCreated=name=>createdRuns\(name\)\[0\]\|\|null/);
   assert.match(report,/const newestCreated=workflow\.latestCreated/);
   assert.match(report,/const newerActive=newestCreated&&activeStatuses\.has\(newestCreated\.status\)/);
-  assert.match(report,/if\(newerActive\)return workflow\.latestSuccess/);
+  assert.match(report,/if\(newerActive\)return workflow\.latestSuccess\|\|decisive/);
   assert.match(report,/if\(newestCreated\?\.conclusion==="cancelled"\)return newestCreated/);
   assert.match(report,/return decisive/);
   assert.match(report,/const completedHealthy=\(workflow,maxAgeHours\)=>completedRunHealthy\(effectiveRun\(workflow\),maxAgeHours\)/);
   assert.doesNotMatch(report,/const run=workflow\.latestCompleted;\n  if\(!run\|\|run\.conclusion!==\"success\"\)/);
+});
+
+test("active workflow evidence falls back to the latest decisive run when no success exists",()=>{
+  assert.match(report,/if\(newerActive\)return workflow\.latestSuccess\|\|decisive/);
 });
 
 test("health summary displays the same effective evidence used by the verdict",()=>{
