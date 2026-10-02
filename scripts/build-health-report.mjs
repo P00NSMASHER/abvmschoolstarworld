@@ -103,7 +103,7 @@ const effectiveRun=workflow=>{
   const newestCreated=workflow.latestCreated;
   const decisive=workflow.latestDecisive;
   const newerActive=newestCreated&&activeStatuses.has(newestCreated.status)&&(!decisive||runCreatedAt(newestCreated)>=runCreatedAt(decisive));
-  if(newerActive)return workflow.latestSuccess;
+  if(newerActive)return workflow.latestSuccess||decisive;
   if(newestCreated?.conclusion==="cancelled")return newestCreated;
   return decisive;
 };
