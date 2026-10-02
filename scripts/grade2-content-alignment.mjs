@@ -269,14 +269,11 @@ function dynamicSkillRule(skill) {
   return null;
 }
 
-function ruleFor(skill, curriculumOptions = {}) {
-  const staticRule = EXACT_SKILLS[skill] || dynamicSkillRule(skill);
-  if (staticRule) return staticRule;
-  const registered = registeredRuntimeMetadata(skill, curriculumOptions);
+export function registeredAlignmentRule(registered) {
   if (!registered) return null;
   return {
     subject: registered.subject,
-    standards: [...registered.standards],
+    standards: [...(registered.standards || [])],
     anchors: [
       registered.label,
       ...(registered.studyNotes || []),
@@ -284,6 +281,12 @@ function ruleFor(skill, curriculumOptions = {}) {
     ].filter(Boolean),
     domains: [registered.domain].filter(Boolean),
   };
+}
+
+function ruleFor(skill, curriculumOptions = {}) {
+  const staticRule = EXACT_SKILLS[skill] || dynamicSkillRule(skill);
+  if (staticRule) return staticRule;
+  return registeredAlignmentRule(registeredRuntimeMetadata(skill, curriculumOptions));
 }
 
 export function validateGrade2QuestionAlignment(question, curriculumOptions = {}) {
