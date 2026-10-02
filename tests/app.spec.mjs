@@ -72,6 +72,17 @@ test("Calendar keeps the current-month summary as concise as next month",async({
   await expect(summary).not.toContainText("School day");
   await expect(summary.locator(".agenda-lunch")).toHaveCount(0);
   await expect(summary.locator(".agenda-day")).toHaveCount(0);
+  const nextSummary=page.locator(".next-month-card");
+  await expect(nextSummary).toBeVisible();
+  await expect(summary).toHaveClass(/compact-month-card/);
+  await expect(nextSummary).toHaveClass(/compact-month-card/);
+  for(const card of [summary,nextSummary]){
+    const rows=card.locator(":scope > div");
+    for(let i=0;i<await rows.count();i++){
+      await expect(rows.nth(i).locator(":scope > span")).toHaveCount(1);
+      await expect(rows.nth(i).locator(":scope > p")).toHaveCount(1);
+    }
+  }
   await expect(page.locator(".specials-card")).toBeVisible();
 });
 
