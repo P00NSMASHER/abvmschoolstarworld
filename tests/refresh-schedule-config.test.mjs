@@ -35,6 +35,6 @@ test("watchdog follows both standalone deploys and completed teacher refresh wor
   const workflowRun=watchdog.match(/workflow_run:\n([\s\S]*?)\n  schedule:/)?.[1]||"";
   assert.match(workflowRun,/Deploy ABVM to GitHub Pages/);
   assert.match(workflowRun,/Refresh ABVM teacher pages/);
-  assert.match(watchdog,/github\.event\.workflow_run\.conclusion == 'success'/);
+  assert.doesNotMatch(watchdog,/workflow_run\.conclusion == 'success'/);
   assert.match(watchdog,/github\.event\.workflow_run\.head_branch == 'main'/);
 });
