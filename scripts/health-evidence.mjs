@@ -6,3 +6,26 @@ export function selectPublicationEvidence(deployRun,refreshRun){
   if(refreshRun?.conclusion==="success"&&(!deployRun||workflowEvidenceAt(refreshRun)>workflowEvidenceAt(deployRun)))return refreshRun;
   return deployRun||null;
 }
+
+
+export function selectGovernedCurriculumHold(refreshRun,refreshJobsData,openPulls=[]){
+  if(refreshRun?.conclusion!=="failure")return null;
+  if(Number(refreshJobsData?.run_id)!==Number(refreshRun?.id))return null;
+  const failedSteps=(Array.isArray(refreshJobsData?.jobs)?refreshJobsData.jobs:[])
+    .flatMap(job=>Array.isArray(job?.steps)?job.steps:[])
+    .filter(step=>step?.conclusion==="failure");
+  if(failedSteps.length!==1||failedSteps[0]?.name!=="Block publication while curriculum candidates are unresolved")return null;
+  const candidate=(Array.isArray(openPulls)?openPulls:[]).find(pr=>
+    pr?.state==="open"&&
+    pr?.draft===true&&
+    String(pr?.head?.ref||"").startsWith("curriculum-candidate-")
+  );
+  if(!candidate)return null;
+  return {
+    runId:Number(refreshRun.id),
+    failedStep:failedSteps[0].name,
+    candidatePrNumber:Number(candidate.number),
+    candidatePrUrl:String(candidate.html_url||""),
+    candidateBranch:String(candidate.head.ref),
+  };
+}
