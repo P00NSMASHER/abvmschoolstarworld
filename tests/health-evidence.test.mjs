@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {selectGovernedCurriculumHold,selectPublicationEvidence} from "../scripts/health-evidence.mjs";
+import {selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence} from "../scripts/health-evidence.mjs";
 
 const run=(name,conclusion,updated_at)=>({name,conclusion,updated_at,created_at:updated_at});
 
@@ -64,4 +64,21 @@ test("governed curriculum hold requires matching run evidence and a draft curric
   assert.equal(selectGovernedCurriculumHold(refresh,{...jobs,run_id:41},[{number:172,state:"open",draft:true,head:{ref:"curriculum-candidate-gaps-abc"}}]),null);
   assert.equal(selectGovernedCurriculumHold(refresh,jobs,[{number:172,state:"open",draft:false,head:{ref:"curriculum-candidate-gaps-abc"}}]),null);
   assert.equal(selectGovernedCurriculumHold(refresh,jobs,[{number:172,state:"open",draft:true,head:{ref:"feature-not-curriculum"}}]),null);
+});
+
+
+test("refresh failure evidence stays bound to the fetched run while a newer refresh is active",()=>{
+  const runs=[
+    {id:43,name:"Refresh ABVM teacher pages",status:"in_progress",conclusion:null,created_at:"2026-10-02T17:37:33Z"},
+    {id:42,name:"Refresh ABVM teacher pages",status:"completed",conclusion:"failure",created_at:"2026-10-02T17:25:40Z"},
+  ];
+  const jobs={run_id:42,jobs:[{steps:[{name:"Block publication while curriculum candidates are unresolved",conclusion:"failure"}]}]};
+  const selected=selectRefreshFailureEvidence(runs,jobs);
+  assert.equal(selected?.id,42);
+  const pulls=[{number:172,state:"open",draft:true,head:{ref:"curriculum-candidate-gaps-abc"}}];
+  assert.equal(selectGovernedCurriculumHold(selected,jobs,pulls)?.candidatePrNumber,172);
+});
+
+test("refresh failure evidence is null when the fetched run id is absent",()=>{
+  assert.equal(selectRefreshFailureEvidence([{id:43,conclusion:"failure"}],{run_id:42,jobs:[]}),null);
 });
