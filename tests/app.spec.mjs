@@ -211,6 +211,33 @@ test("Week exposes paging, weekdays, selected-day detail, and reminders",async({
   await expect(page.locator(".reminder-strip")).toBeVisible();
 });
 
+test("Calendar uses a tablet two-column layout without changing phone stacking",async({page})=>{
+  await page.setViewportSize({width:810,height:1080});
+  await page.goto("/#calendar");
+  await expect(page.locator(".calendar-card")).toBeVisible({timeout:10_000});
+  const month=await page.locator(".calendar-card").boundingBox();
+  const day=await page.locator(".calendar-day-card").boundingBox();
+  const summary=await page.locator(".current-month-summary").boundingBox();
+  const specials=await page.locator(".specials-card").boundingBox();
+  const next=await page.locator(".next-month-card").boundingBox();
+  for(const box of [month,day,summary,specials,next])expect(box).not.toBeNull();
+  expect(Math.abs(month.y-day.y)).toBeLessThan(4);
+  expect(day.x).toBeGreaterThan(month.x+month.width/2);
+  expect(Math.abs(summary.y-specials.y)).toBeLessThan(4);
+  expect(specials.x).toBeGreaterThan(summary.x+summary.width/2);
+  expect(next.width).toBeGreaterThan(summary.width*1.8);
+  const tabletOverflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
+  expect(tabletOverflow).toBeFalsy();
+
+  await page.setViewportSize({width:390,height:844});
+  await page.goto("/#calendar");
+  await expect(page.locator(".calendar-card")).toBeVisible({timeout:10_000});
+  const phoneMonth=await page.locator(".calendar-card").boundingBox();
+  const phoneDay=await page.locator(".calendar-day-card").boundingBox();
+  expect(phoneDay.y).toBeGreaterThan(phoneMonth.y+phoneMonth.height-2);
+  expect(Math.abs(phoneDay.x-phoneMonth.x)).toBeLessThan(4);
+});
+
 test("Calendar keeps the current-month summary as concise as next month",async({page})=>{
   await page.addInitScript(()=>{
     const RealDate=Date,fixed=new RealDate("2026-10-01T12:00:00-04:00").valueOf();
