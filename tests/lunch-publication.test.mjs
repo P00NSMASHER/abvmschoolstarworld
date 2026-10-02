@@ -55,12 +55,19 @@ test('HTTP error, HTML, malformed JSON and empty feed never erase reviewed meals
     mock({ ...validFeed(), lunchMenu: [] }),
   ];
   for (const fetchImpl of failures) {
-    const pack = { lunchMenuSource: { checkedAt: '2026-09-28T20:30:00Z' } };
+    const previousCheck = '2026-09-28T20:30:00Z';
+    const pack = {
+      lunchMenuSource: {
+        checkedAt: previousCheck,
+        sourcePages: CATALOG.sources.map(source => ({ id: source.id, checkedAt: previousCheck })),
+      },
+    };
     await refreshLunchPublication(pack, { now, fetchImpl });
     assert.equal(pack.lunchMenu.length, 5);
     assert.equal(pack.lunchMenuSource.retrievalState, 'unavailable');
-    assert.equal(pack.lunchMenuSource.checkedAt, '2026-09-28T20:30:00Z');
+    assert.equal(pack.lunchMenuSource.checkedAt, previousCheck);
     assert.equal(pack.lunchMenuSource.lastAttemptAt, now.toISOString());
+    assert.ok(pack.lunchMenuSource.sourcePages.every(proof => proof.checkedAt === previousCheck));
     assert.deepEqual(validateLunchPublication(pack, { now }), []);
   }
 });
@@ -93,4 +100,20 @@ test('pinned image source proof is recomputed from its exact URL', () => {
   assert.ok(october);
   october.contentHash = 'a'.repeat(64);
   assert.throws(() => catalogMeals(changed), /Invalid pinned lunch source proof/);
+});
+
+
+test('transient verification outage keeps per-source proof for the published current week', async () => {
+  const previousCheck = '2026-09-28T20:30:00Z';
+  const pack = {
+    lunchMenuSource: {
+      checkedAt: previousCheck,
+      sourcePages: CATALOG.sources.map(source => ({ id: source.id, checkedAt: previousCheck })),
+    },
+  };
+  await refreshLunchPublication(pack, { now, fetchImpl: async () => { throw new Error('Temporary outage'); } });
+  const usedSourceIds = new Set(pack.lunchMenu.map(meal => meal.sourceId));
+  const publishedProofs = pack.lunchMenuSource.sourcePages.filter(proof => usedSourceIds.has(proof.id));
+  assert.ok(publishedProofs.length > 0);
+  assert.ok(publishedProofs.every(proof => proof.checkedAt === previousCheck));
 });
