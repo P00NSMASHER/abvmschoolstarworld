@@ -19,7 +19,14 @@
   },
   "featureFlag": "curriculum-family:characters-candidate",
   "enabledByDefault": false,
-  "registryMatch": null,
+  "registryMatch": {
+    "id": "characters",
+    "rolloutStatus": "CANDIDATE",
+    "standards": [
+      "CCSS.RL.2.3"
+    ],
+    "domain": "Reading Literature"
+  },
   "minimumSemanticVariants": 8,
   "requiredQuestionTypes": [
     "direct",
