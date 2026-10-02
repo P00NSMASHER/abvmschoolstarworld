@@ -207,10 +207,13 @@ test("Week uses a two-column iPad main area and stays stacked on phone",async({p
   await page.setViewportSize({width:810,height:1080});
   await page.goto("/#week");
   await expect(page.locator(".week-main")).toBeVisible({timeout:10_000});
+  const main=await page.locator(".week-main").boundingBox();
   const detail=await page.locator(".day-detail").boundingBox();
   const rail=await page.locator(".week-rail").boundingBox();
+  expect(main).not.toBeNull();
   expect(detail).not.toBeNull();
   expect(rail).not.toBeNull();
+  expect(main.width).toBeGreaterThan(700);
   expect(Math.abs(detail.y-rail.y)).toBeLessThan(4);
   expect(rail.x).toBeGreaterThan(detail.x+detail.width/2);
   expect(detail.width).toBeGreaterThan(rail.width);
