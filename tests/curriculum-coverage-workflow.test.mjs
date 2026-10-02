@@ -44,6 +44,16 @@ test('candidate PR lifecycle cannot stall on a pre-existing branch or closed dra
   assert.match(workflow, /retry-\$\{GITHUB_RUN_ID\}/);
   assert.doesNotMatch(workflow, /gh pr merge|--auto-merge|enable-auto-merge/i);
 });
+test('blocked Actions PR bookkeeping cannot bypass the unresolved coverage gate', () => {
+  const workflow = readFileSync('.github/workflows/sync-study-pack.yml', 'utf8');
+  assert.match(workflow, /if gh pr create --draft/);
+  assert.match(workflow, /GitHub Actions could not create the governed draft PR/);
+  assert.match(workflow, /if ! create_candidate_pr/);
+  assert.match(workflow, /continuing so the explicit unresolved-coverage gate can report the curriculum blocker/);
+  assert.match(workflow, /Block publication while curriculum candidates are unresolved/);
+  assert.match(workflow, /Unresolved curriculum coverage:/);
+});
+
 test('candidate branch identity is stable across unrelated source-hash churn', () => {
   const workflow = readFileSync('.github/workflows/sync-study-pack.yml', 'utf8');
   assert.match(workflow, /p\.candidateSetKey\|\|"unknown"/);
