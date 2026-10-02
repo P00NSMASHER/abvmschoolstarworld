@@ -113,6 +113,8 @@ test("large iPad Pro portrait uses the expanded tablet shell",async({page})=>{
     const appBox=await page.locator(".phone-app").boundingBox();
     expect(appBox,label+" portrait shell missing").not.toBeNull();
     expect(appBox.width,label+" portrait shell is underusing the canvas").toBeGreaterThanOrEqual(930);
+    expect(appBox.height,label+" portrait shell is underusing vertical space").toBeGreaterThanOrEqual(1200);
+    expect(appBox.y+appBox.height,label+" portrait shell extends below viewport").toBeLessThanOrEqual(1367);
     const overflow=await page.locator(".screen").evaluate(el=>({
       screen:el.scrollWidth>el.clientWidth+1,
       page:document.documentElement.scrollWidth>window.innerWidth+1
