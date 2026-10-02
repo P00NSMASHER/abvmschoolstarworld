@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import path from "node:path";
 import {fileURLToPath} from "node:url";
 
 const INPUT=new URL("../pages/data/study-pack.json",import.meta.url);
@@ -28,7 +29,7 @@ export function runtimePackJson(envelope){
   return JSON.stringify(buildRuntimePack(envelope))+"\n";
 }
 
-const isDirect=process.argv[1]&&fileURLToPath(import.meta.url)===process.argv[1];
+const isDirect=process.argv[1]&&fileURLToPath(import.meta.url)===path.resolve(process.argv[1]);
 if(isDirect){
   const source=JSON.parse(fs.readFileSync(INPUT,"utf8"));
   const output=runtimePackJson(source);
