@@ -26,6 +26,24 @@ test("all primary screens emit no uncaught or console errors",async({page})=>{
   expect(errors).toEqual([]);
 });
 
+test("phone landscape respects horizontal safe areas and stays overflow-free",async({page,request})=>{
+  const css=await (await request.get("/styles.css")).text();
+  expect(css).toContain("safe-area-inset-left");
+  expect(css).toContain("safe-area-inset-right");
+  await page.setViewportSize({width:844,height:390});
+  await page.goto("/#today");
+  await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
+  for(const label of ["Today","Week","Calendar","Study","Study Games","Family"]){
+    await openTab(page,label);
+    const overflow=await page.evaluate(()=>({
+      page:document.documentElement.scrollWidth>window.innerWidth+1,
+      screen:document.querySelector(".screen")?.scrollWidth>document.querySelector(".screen")?.clientWidth+1
+    }));
+    expect(overflow.page,label+" page overflows in phone landscape").toBeFalsy();
+    expect(overflow.screen,label+" screen overflows in phone landscape").toBeFalsy();
+  }
+});
+
 test("all six primary tabs render without horizontal overflow",async({page})=>{
   for(const label of ["Today","Week","Calendar","Study","Study Games","Family"]){
     await openTab(page,label);
