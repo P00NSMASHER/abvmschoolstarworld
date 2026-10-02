@@ -1,3 +1,5 @@
+import { registeredRuntimeMetadata } from './curriculum-family-registry.mjs';
+
 const SUBJECT_STANDARD_PREFIXES = Object.freeze({
   'Reading / ELA': ['CCSS.RL.2.', 'CCSS.RI.2.', 'CCSS.RF.2.', 'CCSS.L.2.'],
   'Spelling / Handwriting': ['CCSS.RF.2.', 'CCSS.L.2.'],
@@ -267,11 +269,27 @@ function dynamicSkillRule(skill) {
   return null;
 }
 
-function ruleFor(skill) {
-  return EXACT_SKILLS[skill] || dynamicSkillRule(skill);
+export function registeredAlignmentRule(registered) {
+  if (!registered) return null;
+  return {
+    subject: registered.subject,
+    standards: [...(registered.standards || [])],
+    anchors: [
+      registered.label,
+      ...(registered.studyNotes || []),
+      ...(registered.teachCard || []),
+    ].filter(Boolean),
+    domains: [registered.domain].filter(Boolean),
+  };
 }
 
-export function validateGrade2QuestionAlignment(question) {
+function ruleFor(skill, curriculumOptions = {}) {
+  const staticRule = EXACT_SKILLS[skill] || dynamicSkillRule(skill);
+  if (staticRule) return staticRule;
+  return registeredAlignmentRule(registeredRuntimeMetadata(skill, curriculumOptions));
+}
+
+export function validateGrade2QuestionAlignment(question, curriculumOptions = {}) {
   const issues = [];
   const id = String(question?.id || 'unknown');
   const subject = String(question?.subject || '');
@@ -288,7 +306,7 @@ export function validateGrade2QuestionAlignment(question) {
     issues.push({ id, issue: 'standard-subject-mismatch', subject, standards });
   }
 
-  const rule = ruleFor(skill);
+  const rule = ruleFor(skill, curriculumOptions);
   if (!rule) {
     issues.push({ id, issue: 'unknown-skill', skill });
     return issues;
@@ -323,8 +341,11 @@ export function validateGrade2QuestionAlignment(question) {
 
 export function validateGrade2PipelineAlignment(pipeline) {
   const issues = [];
+  const curriculumOptions = {
+    activeFeatureFlags: pipeline?.sourcePolicy?.activeCurriculumFeatureFlags || [],
+  };
   for (const question of pipeline?.questions || []) {
-    issues.push(...validateGrade2QuestionAlignment(question));
+    issues.push(...validateGrade2QuestionAlignment(question, curriculumOptions));
   }
   return issues;
 }
