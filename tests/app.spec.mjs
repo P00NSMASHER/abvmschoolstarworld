@@ -269,6 +269,36 @@ test("Calendar keeps the current-month summary as concise as next month",async({
   await expect(page.locator(".specials-card")).toBeVisible();
 });
 
+test("Study uses a two-column subject grid on iPad and stacks on phone",async({page})=>{
+  await page.setViewportSize({width:810,height:1080});
+  await page.goto("/#study");
+  await expect(page.locator(".study-at-a-glance")).toBeVisible({timeout:10_000});
+  const cards=page.locator(".study-accordion");
+  await expect(cards).toHaveCount(6);
+  const boxes=[];
+  for(let i=0;i<6;i++)boxes.push(await cards.nth(i).boundingBox());
+  for(const box of boxes)expect(box).not.toBeNull();
+  expect(Math.abs(boxes[0].y-boxes[1].y)).toBeLessThan(4);
+  expect(boxes[1].x).toBeGreaterThan(boxes[0].x+boxes[0].width/2);
+  expect(Math.abs(boxes[2].y-boxes[3].y)).toBeLessThan(4);
+  expect(Math.abs(boxes[4].y-boxes[5].y)).toBeLessThan(4);
+  const atGlance=await page.locator(".study-at-a-glance").boundingBox();
+  const gamesCta=await page.locator(".study-games-cta").boundingBox();
+  expect(atGlance.width).toBeGreaterThan(boxes[0].width*1.8);
+  expect(gamesCta.width).toBeGreaterThan(boxes[0].width*1.8);
+  await cards.nth(0).locator("summary").click();
+  const tabletOverflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
+  expect(tabletOverflow).toBeFalsy();
+
+  await page.setViewportSize({width:390,height:844});
+  await page.goto("/#study");
+  await expect(page.locator(".study-at-a-glance")).toBeVisible({timeout:10_000});
+  const phoneFirst=await page.locator(".study-accordion").nth(0).boundingBox();
+  const phoneSecond=await page.locator(".study-accordion").nth(1).boundingBox();
+  expect(Math.abs(phoneFirst.x-phoneSecond.x)).toBeLessThan(4);
+  expect(phoneSecond.y).toBeGreaterThan(phoneFirst.y+phoneFirst.height-2);
+});
+
 test("Study exposes one primary game CTA and collapsed subject details",async({page})=>{
   await openTab(page,"Study");
   await expect(page.locator(".study-at-a-glance")).toBeVisible();
