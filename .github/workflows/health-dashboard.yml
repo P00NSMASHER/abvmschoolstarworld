@@ -1,6 +1,14 @@
 name: ABVM Operational Health Dashboard
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/health-dashboard.yml'
+      - 'scripts/build-health-report.mjs'
+      - 'scripts/health-evidence.mjs'
+      - 'tests/health-dashboard-config.test.mjs'
+      - 'tests/health-evidence.test.mjs'
   workflow_run:
     workflows:
       - Monitor ABVM refresh health
