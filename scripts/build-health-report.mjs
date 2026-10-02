@@ -92,7 +92,8 @@ const freshTimestamp=value=>{
   return ageHours>=-.25&&ageHours<=SOURCE_FRESH_HOURS;
 };
 const lunchProofFresh=lunchSourceIds.length>0&&lunchSourceIds.every(id=>freshTimestamp(lunchProofById.get(id)?.checkedAt));
-const lunchHealthy=status.lunch.days>0&&status.lunch.missingDates.length===0&&lunchProofFresh;
+const lunchStateAcceptable=status.lunch.retrievalState==="verified"||status.lunch.retrievalState==="unavailable";
+const lunchHealthy=status.lunch.status==="current-week"&&status.lunch.days>0&&status.lunch.missingDates.length===0&&lunchProofFresh&&lunchStateAcceptable;
 status.lunch.proofFresh=lunchProofFresh;
 status.lunch.sourceIds=lunchSourceIds;
 const runAgeHours=run=>run?.created_at?(Date.now()-Date.parse(run.created_at))/3_600_000:null;
