@@ -353,24 +353,13 @@ function monthGrid(year,month){
   }
   return html;
 }
-function monthAgendaDays(year,month){
-  const last=new Date(year,month+1,0,12).getDate(),days=[];
-  for(let n=1;n<=last;n++){
-    const d=new Date(year,month,n,12),weekend=[0,6].includes(d.getDay());
-    if(!weekend||eventItemsForDate(d).length||lunchForDate(d))days.push(d);
-  }
-  return days;
-}
 function agendaLunchHtml(date,lunch){
   const events=eventItemsForDate(date),closed=events.some(e=>kindClass(e)==="closed"),weekend=[0,6].includes(date.getDay());
   const text=closed||weekend||lunch?.status==="no-school"?"No school lunch":lunch?lunchText(lunch):lunchUnavailableText(date);
   return '<div class="agenda-lunch'+(lunch?"":" is-missing")+'"><span>🍎</span><div><b>Lunch</b><p>'+esc(text)+'</p></div></div>';
 }
-function agendaDayHtml(date){
-  const events=eventItemsForDate(date),lunch=lunchForDate(date),closed=events.some(e=>kindClass(e)==="closed"),weekend=[0,6].includes(date.getDay());
-  const status=closed?"No school":(weekend?"Weekend":"School day");
-  const rows=events.length?events.map(e=>'<div class="agenda-event"><i class="'+kindClass(e)+'"></i><span><strong>'+esc(e.label)+'</strong>'+(e.kind?'<small>'+esc(e.kind)+'</small>':'')+'</span></div>').join(""):'<div class="agenda-event agenda-regular"><i class="family"></i><span><strong>Regular school day</strong><small>No special event is currently listed.</small></span></div>';
-  return '<article class="agenda-day month-agenda-row"><header><div><p>'+WEEKDAY[date.getDay()].toUpperCase()+'</p><h3>'+MONTHS[date.getMonth()]+' '+date.getDate()+'</h3></div><span>'+status+'</span></header><div class="agenda-events">'+rows+'</div>'+agendaLunchHtml(date,lunch)+'</article>';
+function compactMonthCardHtml(month,rows,extraClass){
+  return '<section class="'+extraClass+' compact-month-card"><h2>Coming in '+MONTHS[month]+'</h2>'+rows.map(o=>'<div><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join("")+'</section>';
 }
 
 function renderCalendar(){
@@ -397,9 +386,9 @@ function renderCalendar(){
       (events.length?'<div class="calendar-event-list">'+events.map(e=>'<div><i class="'+kindClass(e)+'"></i><span><strong>'+esc(e.label)+'</strong></span></div>').join("")+'</div>':'<p class="calendar-empty">No special school events are listed for this date.</p>')+
       agendaLunchHtml(calendarDay,lunch)+
     '</section>'+
-    '<section class="current-month-summary compact-month-card"><h2>Coming in '+MONTHS[m]+'</h2>'+monthSummary.map(o=>'<div><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join("")+'</section>'+
+    compactMonthCardHtml(m,monthSummary,"current-month-summary")+
     '<section class="specials-card"><div class="specials-head"><span class="specials-mark" aria-hidden="true">★</span><div><p>WEEKLY ROTATION</p><h2>Specials</h2></div></div><div class="specials-list">'+specials.map(row=>'<div class="special-row"><span>'+esc(row.day)+'</span><strong>'+esc(row.label)+'</strong></div>').join("")+'</div></section>'+
-    '<section class="next-month-card compact-month-card"><h2>Coming in '+MONTHS[nextM]+'</h2>'+nextMonth.map(o=>'<div><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join("")+'</section>'+
+    compactMonthCardHtml(nextM,nextMonth,"next-month-card")+
     '</div>';
 }
 function subjectCard(id,klass,title,subject){
