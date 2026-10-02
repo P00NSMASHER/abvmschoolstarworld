@@ -97,12 +97,17 @@ self.addEventListener("fetch",event=>{
     return;
   }
 
+  if(url.pathname.endsWith(".webmanifest")){
+    event.respondWith(networkFirst(event.request,null,event));
+    return;
+  }
+
   // Versioned code must never be satisfied by an older cached version while online.
   if(/\.(?:css|js)$/.test(url.pathname)&&url.searchParams.has("v")){
     event.respondWith(networkFirst(event.request,null,event));
     return;
   }
-  if(/\.(?:css|js|webp|png|svg|webmanifest)$/.test(url.pathname)){
+  if(/\.(?:css|js|webp|png|svg)$/.test(url.pathname)){
     event.respondWith(staleWhileRevalidate(event.request,event));
     return;
   }

@@ -6,6 +6,7 @@ test("manifest remains installable-quality",async({request})=>{
   expect(response.ok()).toBeTruthy();
   const manifest=await response.json();
   expect(manifest.display).toBe("standalone");
+  expect(manifest.theme_color).toBe("#0b3c74");
   expect(manifest.start_url).toContain("#today");
   expect(manifest.icons?.length).toBeGreaterThanOrEqual(2);
 });
@@ -92,6 +93,18 @@ test("network-first requests do not read cache before a successful fetch",async(
   expect(body.indexOf('fetch(request,{cache:"no-store"})')).toBeGreaterThanOrEqual(0);
   expect(body.indexOf('fetch(request,{cache:"no-store"})')).toBeLessThan(body.indexOf("cachedFallback(request,fallback)"));
   expect(body).toContain("event.waitUntil(persist.catch(()=>{}))");
+});
+
+test("web manifest is network-first so branding updates immediately online",async({request})=>{
+  const source=await (await request.get("/sw.js")).text();
+  const fetchStart=source.indexOf('self.addEventListener("fetch"');
+  const fetchBody=source.slice(fetchStart);
+  expect(fetchBody).toContain('if(url.pathname.endsWith(".webmanifest"))');
+  const manifestIndex=fetchBody.indexOf('if(url.pathname.endsWith(".webmanifest"))');
+  const staleIndex=fetchBody.indexOf("staleWhileRevalidate(event.request,event)");
+  expect(manifestIndex).toBeGreaterThanOrEqual(0);
+  expect(staleIndex).toBeGreaterThan(manifestIndex);
+  expect(fetchBody.slice(manifestIndex,staleIndex)).toContain("networkFirst(event.request,null,event)");
 });
 
 test("stale-while-revalidate keeps its cache update alive",async({request})=>{
