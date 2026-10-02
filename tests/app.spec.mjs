@@ -37,6 +37,37 @@ test("all six primary tabs stay tablet-wide and overflow-free on iPad",async({pa
   }
 });
 
+test("all six tabs stay usable in iPad landscape",async({page})=>{
+  await page.setViewportSize({width:1080,height:810});
+  await page.goto("/#today");
+  await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
+  for(const label of ["Today","Week","Calendar","Study","Study Games","Family"]){
+    await openTab(page,label);
+    const appBox=await page.locator(".phone-app").boundingBox();
+    const navBox=await page.locator(".bottom-nav").boundingBox();
+    expect(appBox,label+" app shell missing").not.toBeNull();
+    expect(navBox,label+" bottom nav missing").not.toBeNull();
+    expect(appBox.width,label+" landscape shell is too narrow").toBeGreaterThanOrEqual(800);
+    expect(appBox.y,label+" app starts above viewport").toBeGreaterThanOrEqual(0);
+    expect(appBox.y+appBox.height,label+" app extends below viewport").toBeLessThanOrEqual(811);
+    expect(navBox.y+navBox.height,label+" nav extends below viewport").toBeLessThanOrEqual(811);
+    const layout=await page.locator(".screen").evaluate(el=>({
+      screenOverflow:el.scrollWidth>el.clientWidth+1,
+      pageOverflow:document.documentElement.scrollWidth>window.innerWidth+1
+    }));
+    expect(layout.screenOverflow,label+" screen overflows horizontally in landscape").toBeFalsy();
+    expect(layout.pageOverflow,label+" page overflows horizontally in landscape").toBeFalsy();
+  }
+  await openTab(page,"Today");
+  const hero=await page.locator(".hero-card").boundingBox();
+  const brand=await page.locator(".hero-brand").boundingBox();
+  expect(hero).not.toBeNull();
+  expect(brand).not.toBeNull();
+  expect(brand.x).toBeGreaterThan(hero.x+hero.width/2);
+  expect(brand.y).toBeGreaterThanOrEqual(hero.y);
+  expect(brand.y+brand.height).toBeLessThanOrEqual(hero.y+hero.height+1);
+});
+
 test("Today exposes the weekly priority and focused checklist",async({page})=>{
   const hero=page.locator(".hero-card");
   await expect(hero).toBeVisible();
