@@ -38,7 +38,7 @@ test("all six primary tabs stay tablet-wide and overflow-free on iPad",async({pa
 });
 
 test("all six tabs stay usable in iPad landscape",async({page})=>{
-  await page.setViewportSize({width:1080,height:810});
+  await page.setViewportSize({width:1024,height:768});
   await page.goto("/#today");
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
   for(const label of ["Today","Week","Calendar","Study","Study Games","Family"]){
@@ -49,8 +49,8 @@ test("all six tabs stay usable in iPad landscape",async({page})=>{
     expect(navBox,label+" bottom nav missing").not.toBeNull();
     expect(appBox.width,label+" landscape shell is too narrow").toBeGreaterThanOrEqual(800);
     expect(appBox.y,label+" app starts above viewport").toBeGreaterThanOrEqual(0);
-    expect(appBox.y+appBox.height,label+" app extends below viewport").toBeLessThanOrEqual(811);
-    expect(navBox.y+navBox.height,label+" nav extends below viewport").toBeLessThanOrEqual(811);
+    expect(appBox.y+appBox.height,label+" app extends below viewport").toBeLessThanOrEqual(769);
+    expect(navBox.y+navBox.height,label+" nav extends below viewport").toBeLessThanOrEqual(769);
     const layout=await page.locator(".screen").evaluate(el=>({
       screenOverflow:el.scrollWidth>el.clientWidth+1,
       pageOverflow:document.documentElement.scrollWidth>window.innerWidth+1
