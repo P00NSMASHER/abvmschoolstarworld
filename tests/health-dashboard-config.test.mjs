@@ -11,6 +11,8 @@ test("operational dashboard waits for the post-deploy watchdog",()=>{
   assert.doesNotMatch(workflowRun,/ABVM App QA/);
   assert.doesNotMatch(workflowRun,/Deploy ABVM to GitHub Pages/);
   assert.doesNotMatch(workflowRun,/Refresh ABVM teacher pages/);
+  assert.match(workflow,/github\.event\.workflow_run\.conclusion == 'success'/);
+  assert.match(workflow,/github\.event\.workflow_run\.head_branch == 'main'/);
 });
 
 test("health verdict prefers the most recently updated rerun evidence",()=>{
