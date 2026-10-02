@@ -4,6 +4,7 @@ import {readFileSync} from "node:fs";
 
 const workflow=readFileSync(new URL("../.github/workflows/health-dashboard.yml",import.meta.url),"utf8");
 const report=readFileSync(new URL("../scripts/build-health-report.mjs",import.meta.url),"utf8");
+const refreshHealthWorkflow=readFileSync(new URL("../.github/workflows/refresh-health.yml",import.meta.url),"utf8");
 
 test("health classifier changes trigger an immediate main-branch dashboard run",()=>{
   assert.match(workflow,/push:\n\s+branches: \[main\]/);
@@ -22,6 +23,13 @@ test("operational dashboard waits for the post-deploy watchdog",()=>{
   assert.doesNotMatch(workflowRun,/Refresh ABVM teacher pages/);
   assert.match(workflow,/github\.event\.workflow_run\.conclusion == 'success'/);
   assert.match(workflow,/github\.event\.workflow_run\.head_branch == 'main'/);
+});
+
+test("refresh watchdog runs for completed main refreshes even when upstream publication is intentionally blocked",()=>{
+  assert.match(refreshHealthWorkflow,/workflows:\n\s+- Deploy ABVM to GitHub Pages\n\s+- Refresh ABVM teacher pages/);
+  assert.match(refreshHealthWorkflow,/github\.event\.workflow_run\.head_branch == 'main'/);
+  assert.doesNotMatch(refreshHealthWorkflow,/workflow_run\.conclusion == 'success'/);
+  assert.match(refreshHealthWorkflow,/check-refresh-health\.mjs/);
 });
 
 test("health verdict prefers the most recently updated rerun evidence",()=>{
