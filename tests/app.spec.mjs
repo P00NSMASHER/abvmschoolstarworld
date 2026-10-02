@@ -58,6 +58,30 @@ test("Today hero uses integrated Assumption branding on iPad",async({page})=>{
   expect(overflow).toBeFalsy();
 });
 
+test("Today priority card follows navy and gold identity",async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.addInitScript(()=>{
+    const RealDate=Date,fixed=new RealDate("2026-10-01T12:00:00-04:00").valueOf();
+    class FixedDate extends RealDate{constructor(...args){super(...(args.length?args:[fixed]));}static now(){return fixed;}}
+    window.Date=FixedDate;
+  });
+  await page.goto("/#today");
+  const priority=page.locator(".priority-card");
+  const tile=page.locator(".date-tile");
+  const dot=page.locator(".heading-dot.pink");
+  await expect(priority).toBeVisible({timeout:10_000});
+  const visual=await priority.evaluate(el=>{
+    const cs=getComputedStyle(el);
+    return {background:cs.backgroundImage,border:cs.borderColor};
+  });
+  const tileVisual=await tile.evaluate(el=>({background:getComputedStyle(el).backgroundImage,shadow:getComputedStyle(el).boxShadow}));
+  const dotColor=await dot.evaluate(el=>getComputedStyle(el).backgroundColor);
+  expect(visual.background).toContain("linear-gradient");
+  expect(tileVisual.background).toContain("rgb(11, 60, 116)");
+  expect(tileVisual.shadow).toContain("rgb(217, 183, 87)");
+  expect(dotColor).toBe("rgb(216, 179, 78)");
+});
+
 test("Today never treats Door Decorating Contest as a test",async({page})=>{
   await page.addInitScript(()=>{
     const RealDate=Date;
