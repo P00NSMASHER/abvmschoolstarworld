@@ -68,6 +68,20 @@ test("all six tabs stay usable in iPad landscape",async({page})=>{
   expect(brand.y+brand.height).toBeLessThanOrEqual(hero.y+hero.height+1);
 });
 
+test("freshness refresh control keeps a 44px touch target",async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.goto("/#today");
+  await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
+  for(const label of ["Today","Week","Calendar","Study Games","Family"]){
+    await openTab(page,label);
+    const control=page.locator(".freshness");
+    await expect(control,label+" freshness control missing").toBeVisible();
+    const box=await control.boundingBox();
+    expect(box,label+" freshness box missing").not.toBeNull();
+    expect(box.height,label+" freshness touch target is too short").toBeGreaterThanOrEqual(44);
+  }
+});
+
 test("Today exposes the weekly priority and focused checklist",async({page})=>{
   const hero=page.locator(".hero-card");
   await expect(hero).toBeVisible();
