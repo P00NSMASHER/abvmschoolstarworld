@@ -217,7 +217,11 @@ test('disabled characters registry family supplies a complete candidate without 
 
   const pack = {
     sourceHash: 'characters-week',
-    subjects: [{subject:'Reading / ELA',topics:['Reading Comprehension: characters'],studyNotes:[]}],
+    subjects: [{
+      subject:'Reading / ELA',
+      topics:['Grammar: subject & predicate','Reading Comprehension: characters'],
+      studyNotes:[],
+    }],
     vocabulary: [],
   };
   const pipeline = buildGrade2ContentPipeline(pack, {
