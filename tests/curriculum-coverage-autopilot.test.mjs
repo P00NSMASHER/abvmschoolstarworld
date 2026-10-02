@@ -204,6 +204,45 @@ test('registry exposes feature flags and never treats draft candidates as produc
   assert.deepEqual([...subjectPredicate.requiredQuestionTypes].sort(), ['direct', 'reasoning', 'transfer']);
 });
 
+test('disabled characters registry family supplies a complete candidate without entering production inventory', () => {
+  const family = matchCurriculumFamily('Reading / ELA', 'characters');
+  assert.ok(family);
+  assert.equal(family.rolloutStatus, 'CANDIDATE');
+  assert.equal(family.enabledByDefault, false);
+  assert.equal(family.supplementalQuestions.length + 1, 8);
+  assert.deepEqual(
+    [...new Set([family.baseQuestion, ...family.supplementalQuestions].map(question => question.questionType))].sort(),
+    ['direct', 'reasoning', 'transfer']
+  );
+
+  const pack = {
+    sourceHash: 'characters-week',
+    subjects: [{subject:'Reading / ELA',topics:['Reading Comprehension: characters'],studyNotes:[]}],
+    vocabulary: [],
+  };
+  const pipeline = buildGrade2ContentPipeline(pack, {
+    generatedAt:'2026-10-02T12:00:00.000Z',
+    sourceHash:pack.sourceHash,
+  });
+  assert.equal(pipeline.coverage.some(row => row.topic === 'characters' && row.status === 'GENERATOR_UNSUPPORTED'), true);
+
+  const plan = buildCurriculumCoveragePlan({
+    pipeline,
+    sourcePages:[{
+      title:'Reading Work',
+      url:'https://sites.google.com/view/abvmgr2/reading-work',
+      checkedAt:'2026-10-02T12:00:00.000Z',
+      contentHash:'characters-source-hash',
+      lines:['Reading Comprehension: visualize, theme, dialogue, characters'],
+    }],
+    sourceHash:pack.sourceHash,
+    generatedAt:'2026-10-02T12:00:00.000Z',
+  });
+  assert.equal(plan.candidates[0].authoring.status, 'DRAFT_FAMILY_PRESENT');
+  assert.equal(plan.candidates[0].proposedQuestions.length, 8);
+  assert.deepEqual(curriculumCandidateIntrinsicBlockers(plan.candidates[0]), []);
+});
+
 test('source evidence stays unresolved when teacher lines only partially overlap the unsupported topic', () => {
   const plan = buildCurriculumCoveragePlan({
     pipeline: {
