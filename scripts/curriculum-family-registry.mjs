@@ -127,6 +127,19 @@ const FAMILY_REGISTRY = Object.freeze([
 
 const clone = value => structuredClone(value);
 const regexFor = family => new RegExp(family.patternSource, family.patternFlags || 'i');
+const featureFlagSet = value => new Set(
+  value instanceof Set ? [...value].map(String) :
+  Array.isArray(value) ? value.map(String) :
+  value ? [String(value)] : []
+);
+
+export function curriculumFamilyRuntimeEnabled(family, { activeFeatureFlags = [] } = {}) {
+  if (!family) return false;
+  if (family.rolloutStatus === 'APPROVED' && family.enabledByDefault) return true;
+  if (family.rolloutStatus !== 'CANDIDATE' || family.enabledByDefault) return false;
+  const flag = String(family.featureFlag || '');
+  return !!flag && featureFlagSet(activeFeatureFlags).has(flag);
+}
 
 export function curriculumFamilyRegistrySnapshot() {
   return FAMILY_REGISTRY.map(family => ({
@@ -147,9 +160,9 @@ export function curriculumFamilyRegistrySnapshot() {
   }));
 }
 
-export function registeredCurriculumFamilyRules() {
+export function registeredCurriculumFamilyRules(options = {}) {
   return FAMILY_REGISTRY
-    .filter(family => family.rolloutStatus === 'APPROVED' && family.enabledByDefault)
+    .filter(family => curriculumFamilyRuntimeEnabled(family, options))
     .map(family => ({
       id: family.id,
       subject: family.subject,
@@ -162,22 +175,22 @@ export function registeredCurriculumFamilyRules() {
     }));
 }
 
-export function registeredSupplementalQuestionFamily(skillId) {
+export function registeredSupplementalQuestionFamily(skillId, options = {}) {
   const family = FAMILY_REGISTRY.find(row => row.id === String(skillId || ''));
-  if (!family || family.rolloutStatus !== 'APPROVED' || !family.enabledByDefault) return [];
+  if (!family || !curriculumFamilyRuntimeEnabled(family, options)) return [];
   return family.supplementalQuestions.map(clone);
 }
 
-export function registeredPrioritySkillIds() {
+export function registeredPrioritySkillIds(options = {}) {
   return FAMILY_REGISTRY
-    .filter(family => family.rolloutStatus === 'APPROVED' && family.enabledByDefault)
+    .filter(family => curriculumFamilyRuntimeEnabled(family, options))
     .filter(family => family.requiredQuestionTypes.length >= 3)
     .map(family => family.id);
 }
 
-export function registeredRuntimeMetadata(skillId) {
+export function registeredRuntimeMetadata(skillId, options = {}) {
   const family = FAMILY_REGISTRY.find(row => row.id === String(skillId || ''));
-  if (!family || family.rolloutStatus !== 'APPROVED' || !family.enabledByDefault) return null;
+  if (!family || !curriculumFamilyRuntimeEnabled(family, options)) return null;
   return {
     id: family.id,
     standards: [...family.standards],
