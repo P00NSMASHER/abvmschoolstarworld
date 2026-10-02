@@ -31,7 +31,7 @@ for(const ref of [
 ])if(exists(ref))fail("Duplicate unused school-model source must stay removed: "+ref);
 for(const ref of ["netlify.toml","netlify/functions/refresh-study-pack.mjs","netlify/functions/study-pack.mjs"])
   if(exists(ref))fail("Obsolete Netlify proxy/fallback source must stay removed: "+ref);
-for(const selector of [".quest-launcher",".mission-picker",".school-star-avatar",".avatar-studio",".shop-grid",".star-league",".purchase-dialog",".ambient",".offline-banner",".calendar-lunch",".calendar-note",".study-intro",".study-jumps",".subject-title",".say-it",".story-line",".word-line",".chip-row",".study-source-warning",".privacy-card",".policy-card",".conflicts",".source-note",".game-controls",".install-card",".error-shell",".reading-policy-card",".game-section-heading",".question-tech-card",".game-engine-stats",".question-quality-note"])
+for(const selector of [".quest-launcher",".mission-picker",".school-star-avatar",".avatar-studio",".shop-grid",".star-league",".purchase-dialog",".ambient",".offline-banner",".calendar-lunch",".calendar-note",".study-intro",".study-jumps",".subject-title",".say-it",".story-line",".word-line",".chip-row",".study-source-warning",".privacy-card",".policy-card",".conflicts",".source-note",".game-controls",".install-card",".error-shell",".reading-policy-card",".game-section-heading",".question-tech-card",".game-engine-stats",".question-quality-note",".month-agenda",".agenda-day",".agenda-event",".agenda-events",".agenda-regular"])
   if(css.includes(selector))fail("Obsolete CSS must stay removed: "+selector);
 if(Buffer.byteLength(css,"utf8")>64000)fail("styles.css exceeded the post-cleanup 64 KB ceiling");
 const obsoleteAssetNames=fs.readdirSync(path.join(root,"pages/assets")).filter(name=>
