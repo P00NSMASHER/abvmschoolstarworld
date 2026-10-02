@@ -116,3 +116,27 @@ test("navy Today hero stays compact and readable at 280px",async({browser})=>{
   expect(style.overflow).toBeFalsy();
   await context.close();
 });
+
+
+test("navy Today hero school branding is readable at 390px",async({browser})=>{
+  const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+  const page=await context.newPage();
+  await page.goto("http://127.0.0.1:4173/#today");
+  await expect(page.locator(".hero-card")).toBeVisible({timeout:10_000});
+  const brand=await page.locator(".hero-brand").evaluate(el=>{
+    const strong=el.querySelector("strong"),b=el.querySelector("b"),small=el.querySelector("small");
+    return {
+      school:parseFloat(getComputedStyle(strong).fontSize),
+      bvm:parseFloat(getComputedStyle(b).fontSize),
+      tagline:parseFloat(getComputedStyle(small).fontSize),
+      taglineDisplay:getComputedStyle(small).display,
+      taglineColor:getComputedStyle(small).color,
+    };
+  });
+  expect(brand.school).toBeGreaterThanOrEqual(11);
+  expect(brand.bvm).toBeGreaterThanOrEqual(12);
+  expect(brand.tagline).toBeGreaterThanOrEqual(7.5);
+  expect(brand.taglineDisplay).not.toBe("none");
+  expect(brand.taglineColor).not.toBe("rgb(205, 219, 234)");
+  await context.close();
+});
