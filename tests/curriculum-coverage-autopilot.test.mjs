@@ -10,11 +10,67 @@ import {
 import {
   matchCurriculumFamily,
   curriculumFamilyRegistrySnapshot,
+  curriculumFamilyRuntimeEnabled,
+  registeredCurriculumFamilyRules,
 } from '../scripts/curriculum-family-registry.mjs';
 import {
   buildGrade2ContentPipeline,
   validateGrade2ContentPipeline,
 } from '../scripts/grade2-content-pipeline.mjs';
+
+test('candidate curriculum families require their exact explicit feature flag', () => {
+  const approved = {
+    rolloutStatus:'APPROVED',
+    enabledByDefault:true,
+    featureFlag:'curriculum-family:approved',
+  };
+  const candidate = {
+    rolloutStatus:'CANDIDATE',
+    enabledByDefault:false,
+    featureFlag:'curriculum-family:test-candidate',
+  };
+
+  assert.equal(curriculumFamilyRuntimeEnabled(approved), true);
+  assert.equal(curriculumFamilyRuntimeEnabled(candidate), false);
+  assert.equal(curriculumFamilyRuntimeEnabled(candidate, {activeFeatureFlags:['curriculum-family:other']}), false);
+  assert.equal(curriculumFamilyRuntimeEnabled(candidate, {activeFeatureFlags:['curriculum-family:test-candidate']}), true);
+});
+
+test('unknown curriculum feature flags do not change the production generator', () => {
+  const pack = {
+    sourceHash:'feature-flag-noop',
+    subjects:[{
+      subject:'Reading / ELA',
+      topics:['Grammar: subject & predicate'],
+      studyNotes:[],
+    }],
+    vocabulary:[],
+  };
+  const baseline = buildGrade2ContentPipeline(pack, {
+    generatedAt:'2026-10-02T12:00:00.000Z',
+    sourceHash:pack.sourceHash,
+  });
+  const flagged = buildGrade2ContentPipeline(pack, {
+    generatedAt:'2026-10-02T12:00:00.000Z',
+    sourceHash:pack.sourceHash,
+    activeCurriculumFeatureFlags:['curriculum-family:not-a-real-family'],
+  });
+
+  assert.deepEqual(
+    flagged.skills.map(row=>row.id),
+    baseline.skills.map(row=>row.id)
+  );
+  assert.deepEqual(
+    flagged.questions.map(row=>row.contentFingerprint),
+    baseline.questions.map(row=>row.contentFingerprint)
+  );
+  assert.deepEqual(flagged.sourcePolicy.activeCurriculumFeatureFlags, ['curriculum-family:not-a-real-family']);
+  assert.deepEqual(validateGrade2ContentPipeline(flagged), []);
+  assert.deepEqual(
+    registeredCurriculumFamilyRules({activeFeatureFlags:['curriculum-family:not-a-real-family']}).map(row=>row.id),
+    registeredCurriculumFamilyRules().map(row=>row.id)
+  );
+});
 
 test('unsupported teacher skill becomes a disabled source-grounded candidate instead of silently publishing', () => {
   const pipeline = {
@@ -229,6 +285,30 @@ test('disabled characters registry family supplies a complete candidate without 
     sourceHash:pack.sourceHash,
   });
   assert.equal(pipeline.coverage.some(row => row.topic === 'characters' && row.status === 'GENERATOR_UNSUPPORTED'), true);
+  assert.equal(pipeline.skills.some(row => row.id === 'characters'), false);
+
+  const flaggedPipeline = buildGrade2ContentPipeline(pack, {
+    generatedAt:'2026-10-02T12:00:00.000Z',
+    sourceHash:pack.sourceHash,
+    activeCurriculumFeatureFlags:['curriculum-family:characters-candidate'],
+  });
+  assert.equal(flaggedPipeline.coverage.some(row => row.topic === 'characters' && row.status === 'GENERATOR_UNSUPPORTED'), false);
+  assert.equal(flaggedPipeline.coverage.some(row => row.skillId === 'characters' && row.status === 'COVERED'), true);
+  assert.equal(flaggedPipeline.questions.filter(row => row.skill === 'characters').length, 8);
+  assert.deepEqual(
+    [...new Set(flaggedPipeline.questions.filter(row => row.skill === 'characters').map(row => row.questionType))].sort(),
+    ['direct', 'reasoning', 'transfer']
+  );
+  assert.deepEqual(flaggedPipeline.sourcePolicy.activeCurriculumFeatureFlags, ['curriculum-family:characters-candidate']);
+  assert.deepEqual(validateGrade2ContentPipeline(flaggedPipeline), []);
+
+  const wrongFlagPipeline = buildGrade2ContentPipeline(pack, {
+    generatedAt:'2026-10-02T12:00:00.000Z',
+    sourceHash:pack.sourceHash,
+    activeCurriculumFeatureFlags:['curriculum-family:not-characters'],
+  });
+  assert.equal(wrongFlagPipeline.coverage.some(row => row.topic === 'characters' && row.status === 'GENERATOR_UNSUPPORTED'), true);
+  assert.equal(wrongFlagPipeline.skills.some(row => row.id === 'characters'), false);
 
   const plan = buildCurriculumCoveragePlan({
     pipeline,
