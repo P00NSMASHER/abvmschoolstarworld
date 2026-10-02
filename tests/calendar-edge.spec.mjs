@@ -37,14 +37,16 @@ test("regular date gives a calm empty state",async({page})=>{
   await expect(page.locator(".calendar-empty")).toContainText(/No special school events/i);
 });
 
-test("month agenda includes every school weekday and lunch state",async({page})=>{
+test("current-month summary stays compact and excludes the lunch ledger",async({page})=>{
   await openSeptemberCalendar(page);
-  expect(await page.locator(".agenda-day").count()).toBeGreaterThan(15);
-  await expect(page.locator(".month-agenda")).toContainText("Lunch");
-  await expect(page.locator(".agenda-lunch").first()).toBeVisible();
+  const summary=page.locator(".current-month-summary");
+  await expect(summary).toBeVisible();
+  await expect(summary.locator(":scope > div")).toHaveCount(5);
+  await expect(summary.locator(".agenda-day")).toHaveCount(0);
+  await expect(summary.locator(".agenda-lunch")).toHaveCount(0);
 });
 
-test("busy date and month agenda do not cause horizontal overflow",async({page})=>{
+test("busy date and compact month summary do not cause horizontal overflow",async({page})=>{
   await openSeptemberCalendar(page);
   await day(page,"2026-09-30").click();
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);

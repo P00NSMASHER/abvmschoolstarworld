@@ -106,8 +106,8 @@ test("second requested polish is present",async({page})=>{
   expect(stripe).toBe("none");
 
   await openTab(page,"Calendar");
-  await expect(page.locator(".month-agenda-head")).toBeVisible();
-  expect(await page.locator(".month-agenda-row").count()).toBeGreaterThan(2);
+  await expect(page.locator(".current-month-summary")).toBeVisible();
+  await expect(page.locator(".current-month-summary > div")).toHaveCount(5);
 
   await openTab(page,"Family");
   await expect(page.locator(".family-actions-card")).toBeVisible();
@@ -129,9 +129,9 @@ test("week paging and full calendar agenda work on phone",async({page})=>{
   expect(firstAfter).not.toBe(firstBefore);
 
   await openTab(page,"Calendar");
-  expect(await page.locator(".agenda-day").count()).toBeGreaterThan(15);
-  await expect(page.locator(".agenda-lunch").first()).toBeVisible();
-  await expect(page.locator(".month-agenda")).toContainText("Lunch");
+  await expect(page.locator(".current-month-summary > div")).toHaveCount(5);
+  await expect(page.locator(".current-month-summary .agenda-lunch")).toHaveCount(0);
+  await expect(page.locator(".calendar-day-card .agenda-lunch")).toBeVisible();
   await expect(page.locator(".calendar-legend")).toContainText("Lunch");
 });
 
@@ -399,7 +399,7 @@ test("current weekly notice appears in Week, Calendar, and Family screens",async
   await expect(page.locator(".day-detail")).toContainText("HSA virtual meeting");
 
   await openTab(page,"Calendar");
-  await expect(page.locator(".month-agenda")).toContainText("Chick-fil-A sale starts");
+  await expect(page.locator(".current-month-summary")).toContainText("Chick-fil-A sale starts");
 
   await openTab(page,"Family");
   await expect(page.locator('[aria-labelledby="family-current-notices"]')).toContainText("OptionC portal");
