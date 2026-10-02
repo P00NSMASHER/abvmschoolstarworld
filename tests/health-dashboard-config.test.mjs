@@ -30,7 +30,7 @@ test("health verdict ignores superseded cancellation noise but flags the newest 
   assert.match(report,/if\(newerActive\)return workflow\.latestSuccess/);
   assert.match(report,/if\(newestCreated\?\.conclusion==="cancelled"\)return newestCreated/);
   assert.match(report,/return decisive/);
-  assert.match(report,/const run=effectiveRun\(workflow\)/);
+  assert.match(report,/const completedHealthy=\(workflow,maxAgeHours\)=>completedRunHealthy\(effectiveRun\(workflow\),maxAgeHours\)/);
   assert.doesNotMatch(report,/const run=workflow\.latestCompleted;\n  if\(!run\|\|run\.conclusion!==\"success\"\)/);
 });
 
@@ -38,9 +38,18 @@ test("health summary displays the same effective evidence used by the verdict",(
   assert.match(report,/## Workflow evidence used for health verdict/);
   assert.match(report,/line\("Teacher refresh",effectiveRun\(status\.workflows\.refresh\)\)/);
   assert.match(report,/line\("App QA",effectiveRun\(status\.workflows\.qa\)\)/);
-  assert.match(report,/line\("Pages deploy",effectiveRun\(status\.workflows\.deploy\)\)/);
+  assert.match(report,/line\("Publication evidence",status\.publicationEvidence\)/);
+  assert.match(report,/line\("Standalone Pages deploy",effectiveRun\(status\.workflows\.deploy\)\)/);
   assert.match(report,/line\("Refresh watchdog",effectiveRun\(status\.workflows\.watchdog\)\)/);
   assert.doesNotMatch(report,/## Latest workflow state/);
+});
+
+test("operational health uses the tested publication evidence selector",()=>{
+  assert.match(report,/selectPublicationEvidence/);
+  assert.match(report,/effectiveRun\(status\.workflows\.deploy\)/);
+  assert.match(report,/effectiveRun\(status\.workflows\.refresh\)/);
+  assert.match(report,/status\.publicationEvidence=effectivePublicationRun\(\)/);
+  assert.match(report,/completedRunHealthy\(status\.publicationEvidence,48\)/);
 });
 
 
