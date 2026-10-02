@@ -18,9 +18,9 @@ test("published sync policy matches the workflow schedule",()=>{
 });
 
 
-test("overnight watchdog uses the 8-hour SLA instead of an impossible same-day rule",()=>{
+test("overnight watchdog covers the 14.5-hour scheduled refresh gap",()=>{
   const watchdogCommand=watchdog.match(/node scripts\/check-refresh-health\.mjs[^\n]+/)?.[0]||"";
-  assert.match(watchdogCommand,/--max-age-hours 8/);
+  assert.match(watchdogCommand,/--max-age-hours 16/);
   assert.doesNotMatch(watchdogCommand,/--require-today/);
 
   const refreshCommand=workflow.match(/node scripts\/check-refresh-health\.mjs[^\n]+/)?.[0]||"";
