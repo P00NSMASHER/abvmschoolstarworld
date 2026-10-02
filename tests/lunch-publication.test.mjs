@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { CATALOG, LUNCH_FEED_URL, catalogMeals, schoolWeek, validateLunchFeed, refreshLunchPublication, validateLunchPublication } from '../scripts/lunch-publication.mjs';
+import { createHash } from 'node:crypto';
+import { CATALOG, LUNCH_FEED_URL, catalogMeals, schoolWeek, validateLunchFeed, verifyCatalogSources, refreshLunchPublication, validateLunchPublication } from '../scripts/lunch-publication.mjs';
 
 const now = new Date('2026-09-29T12:00:00Z');
 const meals = catalogMeals().filter(m => schoolWeek(now).includes(m.date));
@@ -16,10 +17,68 @@ function validFeed() {
 }
 const mock = data => async () => new Response(JSON.stringify(data), { headers: { 'content-type': 'application/json' } });
 
-test('uses the actual AppDeploy API host, never the HTML website route', () => {
+test('keeps the AppDeploy endpoint only as a bridge fallback', () => {
   assert.equal(new URL(LUNCH_FEED_URL).origin, 'https://api-v2.appdeploy.ai');
   assert.match(LUNCH_FEED_URL, /\/app\/abvm-source-bridge-gkj08k\/api\/lunch-menu$/);
 });
+
+test('direct verification checks official source bytes and pinned URLs without the bridge', async () => {
+  const pdfUrl = 'https://resources.finalsite.net/test/reviewed-menu.pdf';
+  const imageUrl = 'https://resources.finalsite.net/test/reviewed-menu.heic';
+  const pdfBytes = new TextEncoder().encode('reviewed official pdf bytes');
+  const imageBytes = new TextEncoder().encode('reachable pinned image');
+  const directCatalog = {
+    schemaVersion: 1,
+    school: CATALOG.school,
+    provider: CATALOG.provider,
+    parentResourcesUrl: CATALOG.parentResourcesUrl,
+    sources: [
+      {
+        id: 'direct-pdf',
+        url: pdfUrl,
+        contentHash: createHash('sha256').update(pdfBytes).digest('hex'),
+        reviewedAt: '2026-09-29T05:26:39Z',
+        coverageStart: '2026-09-28',
+        coverageEnd: '2026-09-30',
+        meals: [
+          { date: '2026-09-28', items: ['Meal 1'] },
+          { date: '2026-09-29', items: ['Meal 2'] },
+          { date: '2026-09-30', items: ['Meal 3'] },
+        ],
+      },
+      {
+        id: 'direct-image',
+        url: imageUrl,
+        proofMode: 'pinned-url',
+        contentHash: createHash('sha256').update(imageUrl).digest('hex'),
+        reviewedAt: '2026-10-01T00:44:00Z',
+        coverageStart: '2026-10-01',
+        coverageEnd: '2026-10-02',
+        meals: [
+          { date: '2026-10-01', items: ['Meal 4'] },
+          { date: '2026-10-02', items: ['Meal 5'] },
+        ],
+      },
+    ],
+  };
+  const seen = [];
+  const fetchImpl = async url => {
+    seen.push(String(url));
+    const isPdf = String(url) === pdfUrl;
+    return new Response(isPdf ? pdfBytes : imageBytes, {
+      status: 200,
+      headers: { 'content-type': isPdf ? 'application/pdf' : 'image/heic' },
+    });
+  };
+  const feed = await verifyCatalogSources({ fetchImpl, now, catalog: directCatalog });
+  assert.equal(feed.retrievalState, 'verified');
+  assert.equal(feed.verificationMode, 'direct-official-source');
+  assert.deepEqual(seen, [pdfUrl, imageUrl]);
+  assert.deepEqual(feed.missingDates, []);
+  assert.ok(feed.sourcePages.every(page => page.state === 'verified' && page.checkedAt === now.toISOString()));
+  assert.equal(validateLunchFeed(feed, { now, catalog: directCatalog }).expected.length, 5);
+});
+
 test('complete reviewed rows and exact source hashes are required', () => {
   assert.equal(validateLunchFeed(validFeed(), { now }).expected.length, 5);
   const changed = validFeed(); changed.lunchMenu[1].items = ['Invented pizza'];
