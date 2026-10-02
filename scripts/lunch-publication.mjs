@@ -59,15 +59,88 @@ export function validateLunchFeed(feed, { now = new Date(), catalog = CATALOG } 
   }
   return { dates, expected, missing };
 }
-export async function fetchLunchFeed({ fetchImpl = fetch, now = new Date() } = {}) {
+const MAX_SOURCE_BYTES = 20_000_000;
+
+export async function verifyCatalogSources({ fetchImpl = fetch, now = new Date(), catalog = CATALOG } = {}) {
+  const dates = schoolWeek(now);
+  const expected = catalogMeals(catalog).filter(meal => dates.includes(meal.date));
+  const sources = catalog.sources.filter(source => expected.some(meal => meal.sourceId === source.id));
+  if (!expected.length || !sources.length) throw new Error('No reviewed lunch source covers the current school week');
+
+  const checkedAt = now.toISOString();
+  const sourcePages = [];
+  for (const source of sources) {
+    const response = await fetchImpl(source.url, {
+      headers: { accept: '*/*', 'cache-control': 'no-cache' },
+      signal: AbortSignal.timeout(22000),
+    });
+    if (!response.ok) throw new Error('Lunch source ' + source.id + ' HTTP ' + response.status);
+    const contentType = (response.headers.get('content-type') || '').toLowerCase();
+    if (contentType.includes('text/html')) throw new Error('Lunch source ' + source.id + ' returned HTML');
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    if (!bytes.length || bytes.length > MAX_SOURCE_BYTES) throw new Error('Lunch source ' + source.id + ' returned invalid size');
+    if ((source.proofMode || 'sha256-bytes') === 'sha256-bytes') {
+      const actualHash = createHash('sha256').update(bytes).digest('hex');
+      if (actualHash !== source.contentHash) throw new Error('Lunch source ' + source.id + ' content hash changed');
+    }
+    sourcePages.push({
+      id: source.id,
+      url: source.url,
+      contentHash: source.contentHash,
+      checkedAt,
+      state: 'verified',
+    });
+  }
+
+  const missingDates = dates.filter(date => !expected.some(meal => meal.date === date));
+  const feed = {
+    schemaVersion: 2,
+    source: catalog.provider,
+    school: catalog.school,
+    weekStart: dates[0],
+    weekEnd: dates[4],
+    lunchMenu: expected.map(({ date, items, status, sourceId }) => ({
+      date,
+      items,
+      ...(status ? { status } : {}),
+      sourceId,
+    })),
+    retrievalState: 'verified',
+    sourceCheckedAt: checkedAt,
+    missingDates,
+    pendingDocuments: [],
+    gaps: missingDates.map(date => 'No reviewed school lunch menu is available for ' + date + '.'),
+    sourcePages,
+    verificationMode: 'direct-official-source',
+  };
+  validateLunchFeed(feed, { now, catalog });
+  return feed;
+}
+
+async function fetchBridgeFeed({ fetchImpl = fetch, now = new Date(), catalog = CATALOG } = {}) {
   const response = await fetchImpl(LUNCH_FEED_URL, { headers: { accept: 'application/json', 'cache-control': 'no-cache' }, signal: AbortSignal.timeout(22000) });
   if (!response.ok) throw new Error('Lunch API HTTP ' + response.status);
   if (!(response.headers.get('content-type') || '').includes('application/json')) throw new Error('Lunch endpoint returned HTML instead of JSON');
   const text = await response.text();
   if (text.length > 250000) throw new Error('Lunch feed exceeds size limit');
   const feed = JSON.parse(text);
-  validateLunchFeed(feed, { now });
-  return feed;
+  validateLunchFeed(feed, { now, catalog });
+  return { ...feed, verificationMode: 'bridge-fallback' };
+}
+
+export async function fetchLunchFeed({ fetchImpl = fetch, now = new Date(), catalog = CATALOG } = {}) {
+  let directError = null;
+  try {
+    return await verifyCatalogSources({ fetchImpl, now, catalog });
+  } catch (failure) {
+    directError = failure instanceof Error ? failure.message : String(failure);
+  }
+  try {
+    return await fetchBridgeFeed({ fetchImpl, now, catalog });
+  } catch (failure) {
+    const bridgeError = failure instanceof Error ? failure.message : String(failure);
+    throw new Error('Direct lunch verification failed: ' + directError + '; bridge fallback failed: ' + bridgeError);
+  }
 }
 export function lunchDigest(pack) {
   return createHash('sha256').update(JSON.stringify({ menu: pack.lunchMenu || [], archive: pack.lunchArchive || [], source: pack.lunchMenuSource || null })).digest('hex');
@@ -97,6 +170,7 @@ export async function refreshLunchPublication(pack, { now = new Date(), fetchImp
     provider: CATALOG.provider,
     school: CATALOG.school,
     feedUrl: LUNCH_FEED_URL,
+    verificationMode: verifiedNow ? (feed?.verificationMode || 'bridge-fallback') : 'unavailable',
     parentResourcesUrl: CATALOG.parentResourcesUrl,
     weekStart: dates[0], weekEnd: dates[4],
     coverageThrough: meals.at(-1)?.date || null,
