@@ -11,7 +11,7 @@ const STATIC_SHELL = [
   "./assets/abvm-app-icon-180.png",
   "./assets/abvm-app-icon-192.png"
 ];
-const OPTIONAL_DATA = ["./data/study-pack-runtime.json","./data/study-pack.json"];
+const OPTIONAL_DATA = ["./data/study-pack-runtime.json"];
 
 self.addEventListener("install",event=>{
   event.waitUntil((async()=>{
