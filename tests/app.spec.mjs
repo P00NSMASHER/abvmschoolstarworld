@@ -11,6 +11,39 @@ test.beforeEach(async({page})=>{
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
 });
 
+test("all primary screens emit no uncaught or console errors",async({page})=>{
+  const errors=[];
+  page.on("pageerror",error=>errors.push("pageerror: "+error.message));
+  page.on("console",message=>{
+    if(message.type()==="error")errors.push("console: "+message.text());
+  });
+  await page.goto("/#today");
+  await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
+  for(const label of ["Today","Week","Calendar","Study","Study Games","Family"]){
+    await openTab(page,label);
+  }
+  await page.waitForTimeout(100);
+  expect(errors).toEqual([]);
+});
+
+test("phone landscape respects horizontal safe areas and stays overflow-free",async({page,request})=>{
+  const css=await (await request.get("/styles.css")).text();
+  expect(css).toContain("safe-area-inset-left");
+  expect(css).toContain("safe-area-inset-right");
+  await page.setViewportSize({width:844,height:390});
+  await page.goto("/#today");
+  await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
+  for(const label of ["Today","Week","Calendar","Study","Study Games","Family"]){
+    await openTab(page,label);
+    const overflow=await page.evaluate(()=>({
+      page:document.documentElement.scrollWidth>window.innerWidth+1,
+      screen:document.querySelector(".screen")?.scrollWidth>document.querySelector(".screen")?.clientWidth+1
+    }));
+    expect(overflow.page,label+" page overflows in phone landscape").toBeFalsy();
+    expect(overflow.screen,label+" screen overflows in phone landscape").toBeFalsy();
+  }
+});
+
 test("all six primary tabs render without horizontal overflow",async({page})=>{
   for(const label of ["Today","Week","Calendar","Study","Study Games","Family"]){
     await openTab(page,label);
@@ -66,6 +99,47 @@ test("all six tabs stay usable in iPad landscape",async({page})=>{
   expect(brand.x).toBeGreaterThan(hero.x+hero.width/2);
   expect(brand.y).toBeGreaterThanOrEqual(hero.y);
   expect(brand.y+brand.height).toBeLessThanOrEqual(hero.y+hero.height+1);
+});
+
+test("all six tabs use the tablet layout on large iPad Pro landscape",async({page})=>{
+  await page.setViewportSize({width:1366,height:1024});
+  await page.goto("/#today");
+  await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
+  for(const label of ["Today","Week","Calendar","Study","Study Games","Family"]){
+    await openTab(page,label);
+    const appBox=await page.locator(".phone-app").boundingBox();
+    expect(appBox,label+" large-iPad shell missing").not.toBeNull();
+    expect(appBox.width,label+" fell back to phone width on large iPad").toBeGreaterThanOrEqual(1000);
+    const overflow=await page.locator(".screen").evaluate(el=>({
+      screen:el.scrollWidth>el.clientWidth+1,
+      page:document.documentElement.scrollWidth>window.innerWidth+1
+    }));
+    expect(overflow.screen,label+" screen overflows on large iPad").toBeFalsy();
+    expect(overflow.page,label+" page overflows on large iPad").toBeFalsy();
+  }
+  await openTab(page,"Study Games");
+  const gridStyle=await page.locator(".study-game-grid").evaluate(el=>getComputedStyle(el).gridTemplateColumns);
+  expect(gridStyle.trim().split(/\s+/).length).toBe(2);
+});
+
+test("large iPad Pro portrait uses the expanded tablet shell",async({page})=>{
+  await page.setViewportSize({width:1024,height:1366});
+  await page.goto("/#today");
+  await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
+  for(const label of ["Today","Calendar","Study Games","Family"]){
+    await openTab(page,label);
+    const appBox=await page.locator(".phone-app").boundingBox();
+    expect(appBox,label+" portrait shell missing").not.toBeNull();
+    expect(appBox.width,label+" portrait shell is underusing the canvas").toBeGreaterThanOrEqual(930);
+    expect(appBox.height,label+" portrait shell is underusing vertical space").toBeGreaterThanOrEqual(1200);
+    expect(appBox.y+appBox.height,label+" portrait shell extends below viewport").toBeLessThanOrEqual(1367);
+    const overflow=await page.locator(".screen").evaluate(el=>({
+      screen:el.scrollWidth>el.clientWidth+1,
+      page:document.documentElement.scrollWidth>window.innerWidth+1
+    }));
+    expect(overflow.screen,label+" portrait screen overflows").toBeFalsy();
+    expect(overflow.page,label+" portrait page overflows").toBeFalsy();
+  }
 });
 
 test("freshness refresh control keeps a 44px touch target",async({page})=>{

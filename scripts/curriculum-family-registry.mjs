@@ -122,8 +122,7 @@ const FAMILY_REGISTRY = Object.freeze([
         difficulty: 3,
       }),
     ]),
-  }),
-  Object.freeze({
+  }),  Object.freeze({
     id: 'characters',
     subject: 'Reading / ELA',
     label: 'Characters',

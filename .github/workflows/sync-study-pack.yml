@@ -27,8 +27,6 @@ on:
       - 'tests/school-change-feed.test.mjs'
       - 'tests/school-change-feed.spec.mjs'
       - '.github/workflows/sync-study-pack.yml'
-      - '.github/workflows/refresh-health.yml'
-      - '.github/workflows/health-dashboard.yml'
   schedule:
     - cron: '17 6 * * *'
       timezone: 'America/New_York'
@@ -168,8 +166,9 @@ jobs:
         with:
           name: curriculum-coverage-${{ github.run_id }}
           path: .curriculum-coverage-plan.json
+          include-hidden-files: true
           retention-days: 30
-          if-no-files-found: ignore
+          if-no-files-found: error
 
       - name: Block publication while curriculum candidates are unresolved
         shell: bash

@@ -6,7 +6,7 @@
   "scope": "./",
   "display": "standalone",
   "background_color": "#fffdfa",
-  "theme_color": "#f8fbff",
+  "theme_color": "#0b3c74",
   "icons": [
     {
       "src": "./assets/abvm-app-icon-192.png",
