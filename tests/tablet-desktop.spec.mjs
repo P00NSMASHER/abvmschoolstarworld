@@ -10,6 +10,14 @@ for(const viewport of [
     await page.goto("http://127.0.0.1:4173/#today");
     await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
     await expect(page.locator(".bottom-nav button")).toHaveCount(6);
+    const hero=page.locator(".hero-card");
+    await expect(hero).toBeVisible();
+    const heroBox=await hero.boundingBox();
+    const brandMark=await hero.locator(".hero-brand-mark").boundingBox();
+    const titleSize=await hero.locator(".hero-copy h2").evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
+    expect(heroBox.height).toBeGreaterThanOrEqual(240);
+    expect(brandMark.width).toBeGreaterThanOrEqual(96);
+    expect(titleSize).toBeGreaterThanOrEqual(30);
     for(const tab of ["Calendar","Study","Study Games","Family"]){
       await page.getByRole("button",{name:tab,exact:true}).click();
       await expect(page.locator(".screen")).toBeVisible();
