@@ -54,7 +54,7 @@ const status={
     sourcePages:packData.sourcePages?.length||0,
     sourceHash:packData.pack?.sourceHash||null,
   },
-  lunch:{status:packData.pack?.lunchMenuSource?.status||"unknown",retrievalState:packData.pack?.lunchMenuSource?.retrievalState||"unknown",days:packData.pack?.lunchMenu?.length||0,missingDates:packData.pack?.lunchMenuSource?.missingDates||[]},
+  lunch:{status:packData.pack?.lunchMenuSource?.status||"unknown",retrievalState:packData.pack?.lunchMenuSource?.retrievalState||"unknown",days:packData.pack?.lunchMenu?.length||0,missingDates:packData.pack?.lunchMenuSource?.missingDates||[],checkedAt:packData.pack?.lunchMenuSource?.checkedAt||null,sourcePages:packData.pack?.lunchMenuSource?.sourcePages||[]},
   contentPipeline:{
     present:Boolean(contentPipeline),
     qaStatus:contentPipeline?.qa?.status||"missing",
@@ -83,6 +83,18 @@ const status={
 };
 const SOURCE_FRESH_HOURS=16;
 const sourceFresh=sourceAgeHours!==null&&sourceAgeHours>=-.25&&sourceAgeHours<=SOURCE_FRESH_HOURS;
+const lunchSourceIds=[...new Set((packData.pack?.lunchMenu||[]).map(meal=>meal?.sourceId).filter(Boolean))];
+const lunchProofById=new Map(status.lunch.sourcePages.map(proof=>[proof.id,proof]));
+const freshTimestamp=value=>{
+  const parsed=Date.parse(value||"");
+  if(!Number.isFinite(parsed))return false;
+  const ageHours=(Date.now()-parsed)/3_600_000;
+  return ageHours>=-.25&&ageHours<=SOURCE_FRESH_HOURS;
+};
+const lunchProofFresh=lunchSourceIds.length>0&&lunchSourceIds.every(id=>freshTimestamp(lunchProofById.get(id)?.checkedAt));
+const lunchHealthy=status.lunch.days>0&&status.lunch.missingDates.length===0&&lunchProofFresh;
+status.lunch.proofFresh=lunchProofFresh;
+status.lunch.sourceIds=lunchSourceIds;
 const runAgeHours=run=>run?.created_at?(Date.now()-Date.parse(run.created_at))/3_600_000:null;
 const activeStatuses=new Set(["queued","in_progress","waiting","pending","requested"]);
 const effectiveRun=workflow=>{
@@ -112,8 +124,7 @@ const healthy=Boolean(
   status.schoolData.sourceSufficient &&
   status.schoolData.sourcePages===6 &&
   sourceFresh &&
-  status.lunch.retrievalState==="verified" &&
-  status.lunch.days>0 &&
+  lunchHealthy &&
   completedHealthy(status.workflows.qa,48) &&
   completedHealthy(status.workflows.deploy,48) &&
   completedHealthy(status.workflows.refresh,30) &&
@@ -133,7 +144,7 @@ const md=[
   "",
   `- **School data checked:** ${sourceCheckedAt||"missing"}${sourceAgeHours===null?"":` (${sourceAgeHours.toFixed(1)}h old)`}`,
   `- **Source coverage:** ${status.schoolData.sourcePages}/6 teacher pages; source sufficient = ${status.schoolData.sourceSufficient}; fresh <=${SOURCE_FRESH_HOURS}h = ${sourceFresh}`,
-  `- **Lunch source:** ${status.lunch.retrievalState}; ${status.lunch.days} reviewed days; missing dates: ${status.lunch.missingDates.join(", ")||"none"}`,
+  `- **Lunch source:** ${status.lunch.retrievalState}; ${status.lunch.days} reviewed days; missing dates: ${status.lunch.missingDates.join(", ")||"none"}; retained proof fresh <=${SOURCE_FRESH_HOURS}h = ${lunchProofFresh}`,
   `- **Grade 2 content pipeline:** QA ${status.contentPipeline.qaStatus}; safety ${status.contentPipeline.safetyState}; ${status.contentPipeline.skillCount} skills; ${status.contentPipeline.questionCount} questions; partial ${status.contentPipeline.partiallyCoveredCount}; source-insufficient ${status.contentPipeline.sourceInsufficientCount}; not-practiced-by-design ${status.contentPipeline.notPracticedByDesignCount}; unsupported ${status.contentPipeline.unsupportedSkillCount}`,
   `- **Question lineage:** required = ${status.contentPipeline.lineageRequired}; page-exact ${status.contentPipeline.pageExactLineageCount}/${status.contentPipeline.questionCount}; unresolved ${status.contentPipeline.unresolvedLineageCount}`,
   `- **Partially covered study topics:** ${status.contentPipeline.partiallyCoveredTopics.join(", ")||"none"}`,
