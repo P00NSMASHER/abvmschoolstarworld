@@ -320,6 +320,38 @@ test("Study Games loads lazily and starts a playable round",async({page})=>{
   expect(await page.locator(".game-answer").count()).toBe(3);
 });
 
+test("Family uses a two-column iPad layout and stays stacked on phone",async({page})=>{
+  await page.setViewportSize({width:810,height:1080});
+  await page.goto("/#family");
+  await expect(page.locator(".family-actions-card")).toBeVisible({timeout:10_000});
+  const hero=await page.locator(".family-hero").boundingBox();
+  const stats=await page.locator(".family-stats").boundingBox();
+  const actions=await page.locator(".family-actions-card").boundingBox();
+  const notices=await page.locator('[aria-labelledby="family-current-notices"]').boundingBox();
+  const more=await page.locator(".family-more").boundingBox();
+  for(const box of [hero,stats,actions,notices,more])expect(box).not.toBeNull();
+  expect(Math.abs(actions.y-notices.y)).toBeLessThan(4);
+  expect(notices.x).toBeGreaterThan(actions.x+actions.width/2);
+  expect(hero.width).toBeGreaterThan(actions.width*1.8);
+  expect(stats.width).toBeGreaterThan(actions.width*1.8);
+  expect(more.width).toBeGreaterThan(actions.width*1.8);
+  const schoolChanges=page.locator('[aria-labelledby="school-change-title"]');
+  if(await schoolChanges.count()){
+    const changes=await schoolChanges.boundingBox();
+    expect(changes.width).toBeGreaterThan(actions.width*1.8);
+  }
+  const tabletOverflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
+  expect(tabletOverflow).toBeFalsy();
+
+  await page.setViewportSize({width:390,height:844});
+  await page.goto("/#family");
+  await expect(page.locator(".family-actions-card")).toBeVisible({timeout:10_000});
+  const phoneActions=await page.locator(".family-actions-card").boundingBox();
+  const phoneNotices=await page.locator('[aria-labelledby="family-current-notices"]').boundingBox();
+  expect(phoneNotices.y).toBeGreaterThan(phoneActions.y+phoneActions.height-2);
+  expect(Math.abs(phoneNotices.x-phoneActions.x)).toBeLessThan(4);
+});
+
 test("Family exposes current actions, notices, and app/privacy disclosure",async({page})=>{
   await openTab(page,"Family");
   await expect(page.locator(".family-hero")).toBeVisible();
