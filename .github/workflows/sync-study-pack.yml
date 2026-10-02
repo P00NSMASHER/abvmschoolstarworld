@@ -27,6 +27,8 @@ on:
       - 'tests/school-change-feed.test.mjs'
       - 'tests/school-change-feed.spec.mjs'
       - '.github/workflows/sync-study-pack.yml'
+      - '.github/workflows/refresh-health.yml'
+      - '.github/workflows/health-dashboard.yml'
   schedule:
     - cron: '17 6 * * *'
       timezone: 'America/New_York'
