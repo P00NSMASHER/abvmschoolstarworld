@@ -6,11 +6,11 @@ const workflow=readFileSync(new URL("../.github/workflows/sync-study-pack.yml",i
 const watchdog=readFileSync(new URL("../.github/workflows/refresh-health.yml",import.meta.url),"utf8");
 const refresh=readFileSync(new URL("../scripts/refresh-teacher-pages.mjs",import.meta.url),"utf8");
 
-test("teacher refresh covers the school day and self-triggers after workflow changes",()=>{
+test("teacher refresh covers the school day and self-triggers only for refresh-relevant workflow changes",()=>{
   for(const cron of ["17 6 * * *","47 9 * * *","17 13 * * *","47 15 * * *"])assert.match(workflow,new RegExp(cron.replace(/\*/g,"\\*")));
   assert.match(workflow,/\.github\/workflows\/sync-study-pack\.yml/);
-  assert.match(workflow,/\.github\/workflows\/refresh-health\.yml/);
-  assert.match(workflow,/\.github\/workflows\/health-dashboard\.yml/);
+  assert.doesNotMatch(workflow,/\.github\/workflows\/refresh-health\.yml/);
+  assert.doesNotMatch(workflow,/\.github\/workflows\/health-dashboard\.yml/);
 });
 
 test("published sync policy matches the workflow schedule",()=>{

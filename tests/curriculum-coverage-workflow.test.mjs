@@ -35,6 +35,13 @@ test('teacher refresh reruns when its browser-QA contract changes', () => {
   }
 });
 
+test('health-only workflow changes do not trigger teacher source refresh', () => {
+  const workflow = readFileSync('.github/workflows/sync-study-pack.yml', 'utf8');
+  assert.doesNotMatch(workflow, /\.github\/workflows\/health-dashboard\.yml/);
+  assert.doesNotMatch(workflow, /\.github\/workflows\/refresh-health\.yml/);
+  assert.match(workflow, /\.github\/workflows\/sync-study-pack\.yml/);
+});
+
 test('candidate PR lifecycle cannot stall on a pre-existing branch or closed draft', () => {
   const workflow = readFileSync('.github/workflows/sync-study-pack.yml', 'utf8');
   assert.match(workflow, /gh pr list --head "\$CANDIDATE_BRANCH" --state all/);
