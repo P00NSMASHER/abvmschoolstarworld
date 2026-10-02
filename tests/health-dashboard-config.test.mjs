@@ -68,7 +68,9 @@ test("operational health uses the same overnight freshness allowance as the watc
 test("operational health accepts complete lunch coverage backed by fresh retained source proof",()=>{
   assert.match(report,/const lunchSourceIds=\[\.\.\.new Set\(\(packData\.pack\?\.lunchMenu\|\|\[\]\)\.map\(meal=>meal\?\.sourceId\)\.filter\(Boolean\)\)\]/);
   assert.match(report,/const lunchProofFresh=lunchSourceIds\.length>0&&lunchSourceIds\.every\(id=>freshTimestamp\(lunchProofById\.get\(id\)\?\.checkedAt\)\)/);
-  assert.match(report,/const lunchHealthy=status\.lunch\.days>0&&status\.lunch\.missingDates\.length===0&&lunchProofFresh/);
+  assert.match(report,/const lunchStateAcceptable=status\.lunch\.retrievalState==="verified"\|\|status\.lunch\.retrievalState==="unavailable"/);
+  assert.match(report,/const lunchHealthy=status\.lunch\.status==="current-week"&&status\.lunch\.days>0&&status\.lunch\.missingDates\.length===0&&lunchProofFresh&&lunchStateAcceptable/);
+  assert.doesNotMatch(report,/retrievalState==="needs-review"\|\|/);
   assert.match(report,/\n  lunchHealthy &&\n/);
   assert.doesNotMatch(report,/status\.lunch\.retrievalState==="verified" &&/);
   assert.match(report,/retained proof fresh <=\$\{SOURCE_FRESH_HOURS\}h = \$\{lunchProofFresh\}/);
