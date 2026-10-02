@@ -55,3 +55,11 @@ test("operational health surfaces Grade 2 pipeline coverage without treating kno
   assert.match(report,/Intentionally not practiced/);
   assert.match(report,/Unsupported teacher skills/);
 });
+
+
+test("operational health uses the same overnight freshness allowance as the watchdog",()=>{
+  assert.match(report,/const SOURCE_FRESH_HOURS=16/);
+  assert.match(report,/sourceAgeHours<=SOURCE_FRESH_HOURS/);
+  assert.match(report,/fresh <=\$\{SOURCE_FRESH_HOURS\}h/);
+  assert.doesNotMatch(report,/sourceAgeHours<=8/);
+});
