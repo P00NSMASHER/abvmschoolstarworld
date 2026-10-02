@@ -335,6 +335,11 @@ test("Family uses a two-column iPad layout and stays stacked on phone",async({pa
   expect(hero.width).toBeGreaterThan(actions.width*1.8);
   expect(stats.width).toBeGreaterThan(actions.width*1.8);
   expect(more.width).toBeGreaterThan(actions.width*1.8);
+  const schoolChanges=page.locator('[aria-labelledby="school-change-title"]');
+  if(await schoolChanges.count()){
+    const changes=await schoolChanges.boundingBox();
+    expect(changes.width).toBeGreaterThan(actions.width*1.8);
+  }
   const tabletOverflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
   expect(tabletOverflow).toBeFalsy();
 
