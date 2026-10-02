@@ -12,6 +12,7 @@ import {
   curriculumFamilyRegistrySnapshot,
   curriculumFamilyRuntimeEnabled,
   registeredCurriculumFamilyRules,
+  registeredRuntimeMetadata,
 } from '../scripts/curriculum-family-registry.mjs';
 import {
   buildGrade2ContentPipeline,
@@ -301,6 +302,27 @@ test('disabled characters registry family supplies a complete candidate without 
   );
   assert.deepEqual(flaggedPipeline.sourcePolicy.activeCurriculumFeatureFlags, ['curriculum-family:characters-candidate']);
   assert.deepEqual(validateGrade2ContentPipeline(flaggedPipeline), []);
+  assert.equal(registeredRuntimeMetadata('characters'), null);
+  assert.deepEqual(
+    registeredRuntimeMetadata('characters', {activeFeatureFlags:['curriculum-family:characters-candidate']}),
+    {
+      id:'characters',
+      subject:'Reading / ELA',
+      label:'Characters',
+      standards:['CCSS.RL.2.3'],
+      domain:'Reading Literature',
+      studyNotes:[
+        'Characters are the people or animals who take part in a story.',
+        'Use a character’s actions, words, feelings, and changes as evidence for what the character is like.',
+      ],
+      teachCard:[
+        'Ask who the story follows, then use that character’s actions and words as clues.',
+        'Strong answers point to a specific detail that shows what a character feels, does, or learns.',
+      ],
+      assessmentPatterns:['\\bcharacters?\\b'],
+      featureFlag:'curriculum-family:characters-candidate',
+    }
+  );
 
   const wrongFlagPipeline = buildGrade2ContentPipeline(pack, {
     generatedAt:'2026-10-02T12:00:00.000Z',
