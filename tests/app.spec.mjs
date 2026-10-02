@@ -202,6 +202,36 @@ test("Today never treats Door Decorating Contest as a test",async({page})=>{
   await expect(priority).toContainText("Handwriting");
 });
 
+test("Week uses a two-column iPad layout and stays stacked on phone",async({page})=>{
+  await page.setViewportSize({width:810,height:1080});
+  await page.addInitScript(()=>{
+    const RealDate=Date,fixed=new RealDate("2026-10-01T12:00:00-04:00").valueOf();
+    class FixedDate extends RealDate{constructor(...args){super(...(args.length?args:[fixed]));}static now(){return fixed;}}
+    window.Date=FixedDate;
+  });
+  await page.goto("/#week");
+  await expect(page.locator(".week-screen")).toBeVisible({timeout:10_000});
+  const picker=await page.locator(".day-picker").boundingBox();
+  const detail=await page.locator(".day-detail").boundingBox();
+  const lunch=await page.locator(".lunch-card").boundingBox();
+  const future=await page.locator(".future-card").boundingBox();
+  for(const box of [picker,detail,lunch,future])expect(box).not.toBeNull();
+  expect(picker.width).toBeGreaterThan(detail.width*1.8);
+  expect(lunch.x).toBeGreaterThan(detail.x+detail.width/2);
+  expect(future.x).toBeGreaterThan(detail.x+detail.width/2);
+  expect(Math.abs(lunch.x-future.x)).toBeLessThan(4);
+  const tabletOverflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
+  expect(tabletOverflow).toBeFalsy();
+
+  await page.setViewportSize({width:390,height:844});
+  await page.goto("/#week");
+  await expect(page.locator(".day-detail")).toBeVisible({timeout:10_000});
+  const phoneDetail=await page.locator(".day-detail").boundingBox();
+  const phoneLunch=await page.locator(".lunch-card").boundingBox();
+  expect(phoneLunch.y).toBeGreaterThan(phoneDetail.y+phoneDetail.height-2);
+  expect(Math.abs(phoneLunch.x-phoneDetail.x)).toBeLessThan(4);
+});
+
 test("Week exposes paging, weekdays, selected-day detail, and reminders",async({page})=>{
   await openTab(page,"Week");
   await expect(page.locator(".week-nav")).toBeVisible();
