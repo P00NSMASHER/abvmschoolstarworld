@@ -120,6 +120,10 @@ test("Today exposes the weekly priority and focused checklist",async({page})=>{
   await expect(hero.locator(".hero-brand img")).toHaveAttribute("src",/abvm-app-icon-192\.png/);
   await expect(hero.locator(".hero-brand img")).toHaveAttribute("srcset",/abvm-app-icon-512\.png 512w/);
   await expect(hero.locator(".hero-brand img")).toHaveAttribute("sizes",/min-width:700px/);
+  await expect(hero.locator(".hero-brand img")).toHaveAttribute("width","118");
+  await expect(hero.locator(".hero-brand img")).toHaveAttribute("height","118");
+  await expect(page.locator(".school-mark")).toHaveAttribute("width","52");
+  await expect(page.locator(".school-mark")).toHaveAttribute("height","52");
   await expect(hero.locator(".hero-brand small")).toHaveText("FAITH AND EDUCATION");
   await expect(page.locator(".book-buddy,.spark")).toHaveCount(0);
   const heroVisual=await hero.evaluate(el=>({background:getComputedStyle(el).backgroundImage,border:getComputedStyle(el).borderColor}));

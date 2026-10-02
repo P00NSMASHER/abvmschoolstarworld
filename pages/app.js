@@ -14,7 +14,7 @@ const FRESH_DATE_FORMATTER=new Intl.DateTimeFormat(undefined,{month:"short",day:
 const FRESH_TIME_FORMATTER=new Intl.DateTimeFormat(undefined,{hour:"numeric",minute:"2-digit",timeZone:SCHOOL_TIME_ZONE});
 const PACK_URL="./data/study-pack-runtime.json",PACK_FALLBACK_URL="./data/study-pack.json";
 const PACK_REFRESH_MS=5*60*1000;
-const SCHOOL_LOGO_HTML='<img class="school-mark" src="./assets/abvm-app-icon-192.png" alt="Assumption BVM Catholic School logo">';
+const SCHOOL_LOGO_HTML='<img class="school-mark" src="./assets/abvm-app-icon-192.png" width="52" height="52" alt="Assumption BVM Catholic School logo">';
 const GAME_TYPE_LABELS=Object.freeze({
   direct:"Direct practice",
   transfer:"Try it a new way",
@@ -310,7 +310,7 @@ function renderToday(){
   const html='<div class="screen" role="region" aria-label="Today">'+
     header("ABVM GRADE 2 · "+fmtDate(d).toUpperCase(),"Hi, school star!")+
     freshness()+
-    '<section class="hero-card"><div class="hero-copy"><p class="pill">ONE STEP AT A TIME</p><h2>A calm plan for the week</h2><p>Start with what is due soon. Check off one item, then keep going when you are ready.</p></div><div class="hero-brand" aria-label="Assumption BVM Catholic School"><span class="hero-brand-mark"><img src="./assets/abvm-app-icon-192.png" srcset="./assets/abvm-app-icon-192.png 192w, ./assets/abvm-app-icon-512.png 512w" sizes="(min-width:700px) 118px, (max-width:370px) 62px, 76px" alt=""></span><strong>ASSUMPTION</strong><b>BVM</b><small>FAITH AND EDUCATION</small></div></section>'+
+    '<section class="hero-card"><div class="hero-copy"><p class="pill">ONE STEP AT A TIME</p><h2>A calm plan for the week</h2><p>Start with what is due soon. Check off one item, then keep going when you are ready.</p></div><div class="hero-brand" aria-label="Assumption BVM Catholic School"><span class="hero-brand-mark"><img src="./assets/abvm-app-icon-192.png" srcset="./assets/abvm-app-icon-192.png 192w, ./assets/abvm-app-icon-512.png 512w" sizes="(min-width:700px) 118px, (max-width:370px) 62px, 76px" width="118" height="118" alt=""></span><strong>ASSUMPTION</strong><b>BVM</b><small>FAITH AND EDUCATION</small></div></section>'+
     '<div class="section-heading"><h2><span class="heading-dot pink"></span>Up next</h2></div>'+
     (next?'<section class="priority-card"><div class="date-tile"><strong>'+esc(WEEKDAY[next.d.getDay()].slice(0,3).toUpperCase())+'</strong><span>'+next.d.getDate()+'</span></div><div><p>CLOSEST TEST</p><h3>'+esc(next.x.label)+'</h3><span>Keep review short and focused.</span></div></section>':'<section class="priority-card"><div class="date-tile"><strong>★</strong><span>✓</span></div><div><p>UP NEXT</p><h3>No upcoming test is currently listed</h3><span>Keep up with the posted homework and reading routine.</span></div></section>')+
     '<div class="section-heading"><h2><span class="heading-dot blue"></span>'+esc(fmtDate(d))+'</h2></div>'+
