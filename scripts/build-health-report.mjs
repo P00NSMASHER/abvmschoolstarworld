@@ -102,11 +102,24 @@ const effectiveRun=workflow=>{
   if(newestCreated?.conclusion==="cancelled")return newestCreated;
   return decisive;
 };
-const completedHealthy=(workflow,maxAgeHours)=>{
-  const run=effectiveRun(workflow);
+const completedRunHealthy=(run,maxAgeHours)=>{
   if(!run||run.conclusion!=="success")return false;
   const age=runAgeHours(run);
   return age!==null&&age>=-.25&&age<=maxAgeHours;
+};
+const completedHealthy=(workflow,maxAgeHours)=>completedRunHealthy(effectiveRun(workflow),maxAgeHours);
+const effectiveWatchdogRun=effectiveRun(status.workflows.watchdog);
+const rawDeployRun=effectiveRun(status.workflows.deploy);
+const watchdogSupersedesCancelledDeploy=Boolean(
+  rawDeployRun?.conclusion==="cancelled" &&
+  effectiveWatchdogRun?.conclusion==="success" &&
+  runEvidenceAt(effectiveWatchdogRun)>runEvidenceAt(rawDeployRun)
+);
+const effectiveDeployRun=watchdogSupersedesCancelledDeploy?effectiveWatchdogRun:rawDeployRun;
+status.workflows.deployProof={
+  source:watchdogSupersedesCancelledDeploy?"watchdog-live-proof":"pages-workflow",
+  supersededRun:watchdogSupersedesCancelledDeploy?rawDeployRun:null,
+  run:effectiveDeployRun,
 };
 const pipelineHealthy=Boolean(
   status.contentPipeline.present &&
@@ -140,9 +153,9 @@ const criticalHealthy=Boolean(
   sourceFresh &&
   lunchOperationallyUsable &&
   completedHealthy(status.workflows.qa,48) &&
-  completedHealthy(status.workflows.deploy,48) &&
+  completedRunHealthy(effectiveDeployRun,48) &&
   completedHealthy(status.workflows.refresh,30) &&
-  completedHealthy(status.workflows.watchdog,30) &&
+  completedRunHealthy(effectiveWatchdogRun,30) &&
   pipelineHealthy
 );
 const warnings=[];
@@ -178,8 +191,8 @@ const md=[
   "## Workflow evidence used for health verdict",
   line("Teacher refresh",effectiveRun(status.workflows.refresh)),
   line("App QA",effectiveRun(status.workflows.qa)),
-  line("Pages deploy",effectiveRun(status.workflows.deploy)),
-  line("Refresh watchdog",effectiveRun(status.workflows.watchdog)),
+  line(watchdogSupersedesCancelledDeploy?"Pages/live proof (watchdog superseded cancelled push deploy)":"Pages deploy",effectiveDeployRun),
+  line("Refresh watchdog",effectiveWatchdogRun),
   `- **Required successful-run age:** refresh/watchdog <=30h; QA/deploy <=48h`,
   "",
   "## Recent relevant failures",
