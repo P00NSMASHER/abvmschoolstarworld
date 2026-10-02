@@ -76,3 +76,15 @@ test("operational health treats complete reviewed lunch coverage as attention, n
   assert.doesNotMatch(report,/if\(!healthy\)process\.exitCode=1/);
   assert.match(report,/Lunch source bridge is unavailable; complete previously reviewed coverage remains usable/);
 });
+
+
+test("newer successful watchdog can supersede only an older cancelled standalone deploy",()=>{
+  assert.match(report,/const rawDeployRun=effectiveRun\(status\.workflows\.deploy\)/);
+  assert.match(report,/rawDeployRun\?\.conclusion==="cancelled"/);
+  assert.match(report,/effectiveWatchdogRun\?\.conclusion==="success"/);
+  assert.match(report,/runEvidenceAt\(effectiveWatchdogRun\)>runEvidenceAt\(rawDeployRun\)/);
+  assert.match(report,/const effectiveDeployRun=watchdogSupersedesCancelledDeploy\?effectiveWatchdogRun:rawDeployRun/);
+  assert.match(report,/completedRunHealthy\(effectiveDeployRun,48\)/);
+  assert.doesNotMatch(report,/rawDeployRun\?\.conclusion==="failure"[^\n]*watchdogSupersedesCancelledDeploy/);
+  assert.match(report,/Pages\/live proof \(watchdog superseded cancelled push deploy\)/);
+});
