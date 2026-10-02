@@ -54,7 +54,16 @@ const status={
     sourcePages:packData.sourcePages?.length||0,
     sourceHash:packData.pack?.sourceHash||null,
   },
-  lunch:{status:packData.pack?.lunchMenuSource?.status||"unknown",retrievalState:packData.pack?.lunchMenuSource?.retrievalState||"unknown",days:packData.pack?.lunchMenu?.length||0,missingDates:packData.pack?.lunchMenuSource?.missingDates||[]},
+  lunch:{
+    status:packData.pack?.lunchMenuSource?.status||"unknown",
+    retrievalState:packData.pack?.lunchMenuSource?.retrievalState||"unknown",
+    days:packData.pack?.lunchMenu?.length||0,
+    missingDates:packData.pack?.lunchMenuSource?.missingDates||[],
+    coverageThrough:packData.pack?.lunchMenuSource?.coverageThrough||null,
+    pendingDocuments:packData.pack?.lunchMenuSource?.pendingDocuments||[],
+    sourcePages:packData.pack?.lunchMenuSource?.sourcePages||[],
+    lastError:packData.pack?.lunchMenuSource?.lastError||null,
+  },
   contentPipeline:{
     present:Boolean(contentPipeline),
     qaStatus:contentPipeline?.qa?.status||"missing",
@@ -108,19 +117,40 @@ const pipelineHealthy=Boolean(
     status.contentPipeline.pageExactLineageCount===status.contentPipeline.questionCount
   ))
 );
-const healthy=Boolean(
+const lunchReviewedCoverageComplete=Boolean(
+  status.lunch.days>0 &&
+  status.lunch.missingDates.length===0 &&
+  status.lunch.pendingDocuments.length===0 &&
+  status.lunch.coverageThrough &&
+  status.lunch.sourcePages.length>0 &&
+  status.lunch.sourcePages.every(page=>
+    page?.reviewedAt &&
+    page?.checkedAt &&
+    /^[a-f0-9]{64}$/i.test(String(page?.contentHash||""))
+  )
+);
+const lunchVerified=status.lunch.retrievalState==="verified";
+const lunchOperationallyUsable=Boolean(
+  lunchVerified ||
+  (status.lunch.retrievalState==="unavailable"&&lunchReviewedCoverageComplete)
+);
+const criticalHealthy=Boolean(
   status.schoolData.sourceSufficient &&
   status.schoolData.sourcePages===6 &&
   sourceFresh &&
-  status.lunch.retrievalState==="verified" &&
-  status.lunch.days>0 &&
+  lunchOperationallyUsable &&
   completedHealthy(status.workflows.qa,48) &&
   completedHealthy(status.workflows.deploy,48) &&
   completedHealthy(status.workflows.refresh,30) &&
   completedHealthy(status.workflows.watchdog,30) &&
   pipelineHealthy
 );
-status.overall=healthy?"healthy":"attention";
+const warnings=[];
+if(!lunchVerified&&lunchOperationallyUsable){
+  warnings.push("Lunch source bridge is unavailable; complete previously reviewed coverage remains usable"+(status.lunch.lastError?" ("+status.lunch.lastError+")":"")+".");
+}
+status.warnings=warnings;
+status.overall=criticalHealthy?(warnings.length?"attention":"healthy"):"critical";
 
 mkdirSync("health-output",{recursive:true});
 writeFileSync("health-output/abvm-health-status.json",JSON.stringify(status,null,2)+"\n");
@@ -133,7 +163,7 @@ const md=[
   "",
   `- **School data checked:** ${sourceCheckedAt||"missing"}${sourceAgeHours===null?"":` (${sourceAgeHours.toFixed(1)}h old)`}`,
   `- **Source coverage:** ${status.schoolData.sourcePages}/6 teacher pages; source sufficient = ${status.schoolData.sourceSufficient}; fresh <=${SOURCE_FRESH_HOURS}h = ${sourceFresh}`,
-  `- **Lunch source:** ${status.lunch.retrievalState}; ${status.lunch.days} reviewed days; missing dates: ${status.lunch.missingDates.join(", ")||"none"}`,
+  `- **Lunch source:** ${status.lunch.retrievalState}; ${status.lunch.days} reviewed days; complete reviewed coverage = ${lunchReviewedCoverageComplete}; missing dates: ${status.lunch.missingDates.join(", ")||"none"}`,
   `- **Grade 2 content pipeline:** QA ${status.contentPipeline.qaStatus}; safety ${status.contentPipeline.safetyState}; ${status.contentPipeline.skillCount} skills; ${status.contentPipeline.questionCount} questions; partial ${status.contentPipeline.partiallyCoveredCount}; source-insufficient ${status.contentPipeline.sourceInsufficientCount}; not-practiced-by-design ${status.contentPipeline.notPracticedByDesignCount}; unsupported ${status.contentPipeline.unsupportedSkillCount}`,
   `- **Question lineage:** required = ${status.contentPipeline.lineageRequired}; page-exact ${status.contentPipeline.pageExactLineageCount}/${status.contentPipeline.questionCount}; unresolved ${status.contentPipeline.unresolvedLineageCount}`,
   `- **Partially covered study topics:** ${status.contentPipeline.partiallyCoveredTopics.join(", ")||"none"}`,
@@ -144,6 +174,7 @@ const md=[
   `- **Service worker cache:** ${status.serviceWorkerCache}`,
   `- **Git SHA:** ${status.gitSha||"unknown"}`,
   "",
+  ...(warnings.length?["## Attention items",...warnings.map(w=>"- "+w),""]:[]),
   "## Workflow evidence used for health verdict",
   line("Teacher refresh",effectiveRun(status.workflows.refresh)),
   line("App QA",effectiveRun(status.workflows.qa)),
@@ -157,4 +188,4 @@ const md=[
 ].join("\n");
 writeFileSync("health-output/abvm-health-summary.md",md);
 console.log(md);
-if(!healthy)process.exitCode=1;
+if(status.overall==="critical")process.exitCode=1;
