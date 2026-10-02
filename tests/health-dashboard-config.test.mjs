@@ -44,11 +44,10 @@ test("health summary displays the same effective evidence used by the verdict",(
   assert.doesNotMatch(report,/## Latest workflow state/);
 });
 
-test("successful completed refresh can supersede a cancelled standalone Pages run as publication evidence",()=>{
-  assert.match(report,/const effectivePublicationRun=\(\)=>\{/);
-  assert.match(report,/const deployRun=effectiveRun\(status\.workflows\.deploy\)/);
-  assert.match(report,/const refreshRun=effectiveRun\(status\.workflows\.refresh\)/);
-  assert.match(report,/refreshRun\?\.conclusion==="success"&&\(!deployRun\|\|runEvidenceAt\(refreshRun\)>runEvidenceAt\(deployRun\)\)/);
+test("operational health uses the tested publication evidence selector",()=>{
+  assert.match(report,/selectPublicationEvidence/);
+  assert.match(report,/effectiveRun\(status\.workflows\.deploy\)/);
+  assert.match(report,/effectiveRun\(status\.workflows\.refresh\)/);
   assert.match(report,/status\.publicationEvidence=effectivePublicationRun\(\)/);
   assert.match(report,/completedRunHealthy\(status\.publicationEvidence,48\)/);
 });
