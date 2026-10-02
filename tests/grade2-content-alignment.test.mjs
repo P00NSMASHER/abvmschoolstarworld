@@ -3,6 +3,7 @@ import test from 'node:test';
 
 import { buildGrade2ContentPipeline } from '../scripts/grade2-content-pipeline.mjs';
 import {
+  registeredAlignmentRule,
   validateGrade2PipelineAlignment,
   validateGrade2QuestionAlignment,
 } from '../scripts/grade2-content-alignment.mjs';
@@ -35,6 +36,24 @@ function currentLikePack() {
     vocabulary: [],
   };
 }
+
+test('registry alignment rule preserves subject, standards, domain, and semantic anchors', () => {
+  const rule = registeredAlignmentRule({
+    id:'candidate-family',
+    subject:'Reading / ELA',
+    label:'Characters',
+    standards:['CCSS.RL.2.3'],
+    domain:'Reading Literature',
+    studyNotes:['Use a character’s actions as evidence.'],
+    teachCard:['Ask who the story follows.'],
+  });
+  assert.deepEqual(rule, {
+    subject:'Reading / ELA',
+    standards:['CCSS.RL.2.3'],
+    anchors:['Characters','Use a character’s actions as evidence.','Ask who the story follows.'],
+    domains:['Reading Literature'],
+  });
+});
 
 test('independent alignment gate accepts a correctly generated Grade 2 pipeline', () => {
   const pipeline = buildGrade2ContentPipeline(currentLikePack(), { sourceHash: 'alignment-fixture' });
