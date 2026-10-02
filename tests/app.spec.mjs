@@ -68,6 +68,45 @@ test("all six tabs stay usable in iPad landscape",async({page})=>{
   expect(brand.y+brand.height).toBeLessThanOrEqual(hero.y+hero.height+1);
 });
 
+test("all six tabs use the tablet layout on large iPad Pro landscape",async({page})=>{
+  await page.setViewportSize({width:1366,height:1024});
+  await page.goto("/#today");
+  await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
+  for(const label of ["Today","Week","Calendar","Study","Study Games","Family"]){
+    await openTab(page,label);
+    const appBox=await page.locator(".phone-app").boundingBox();
+    expect(appBox,label+" large-iPad shell missing").not.toBeNull();
+    expect(appBox.width,label+" fell back to phone width on large iPad").toBeGreaterThanOrEqual(1000);
+    const overflow=await page.locator(".screen").evaluate(el=>({
+      screen:el.scrollWidth>el.clientWidth+1,
+      page:document.documentElement.scrollWidth>window.innerWidth+1
+    }));
+    expect(overflow.screen,label+" screen overflows on large iPad").toBeFalsy();
+    expect(overflow.page,label+" page overflows on large iPad").toBeFalsy();
+  }
+  await openTab(page,"Study Games");
+  const gridStyle=await page.locator(".study-game-grid").evaluate(el=>getComputedStyle(el).gridTemplateColumns);
+  expect(gridStyle.trim().split(/\s+/).length).toBe(2);
+});
+
+test("large iPad Pro portrait uses the expanded tablet shell",async({page})=>{
+  await page.setViewportSize({width:1024,height:1366});
+  await page.goto("/#today");
+  await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
+  for(const label of ["Today","Calendar","Study Games","Family"]){
+    await openTab(page,label);
+    const appBox=await page.locator(".phone-app").boundingBox();
+    expect(appBox,label+" portrait shell missing").not.toBeNull();
+    expect(appBox.width,label+" portrait shell is underusing the canvas").toBeGreaterThanOrEqual(930);
+    const overflow=await page.locator(".screen").evaluate(el=>({
+      screen:el.scrollWidth>el.clientWidth+1,
+      page:document.documentElement.scrollWidth>window.innerWidth+1
+    }));
+    expect(overflow.screen,label+" portrait screen overflows").toBeFalsy();
+    expect(overflow.page,label+" portrait page overflows").toBeFalsy();
+  }
+});
+
 test("freshness refresh control keeps a 44px touch target",async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await page.goto("/#today");
