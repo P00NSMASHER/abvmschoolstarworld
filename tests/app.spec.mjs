@@ -11,6 +11,21 @@ test.beforeEach(async({page})=>{
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
 });
 
+test("all primary screens emit no uncaught or console errors",async({page})=>{
+  const errors=[];
+  page.on("pageerror",error=>errors.push("pageerror: "+error.message));
+  page.on("console",message=>{
+    if(message.type()==="error")errors.push("console: "+message.text());
+  });
+  await page.goto("/#today");
+  await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
+  for(const label of ["Today","Week","Calendar","Study","Study Games","Family"]){
+    await openTab(page,label);
+  }
+  await page.waitForTimeout(100);
+  expect(errors).toEqual([]);
+});
+
 test("all six primary tabs render without horizontal overflow",async({page})=>{
   for(const label of ["Today","Week","Calendar","Study","Study Games","Family"]){
     await openTab(page,label);
