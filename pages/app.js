@@ -12,7 +12,7 @@ const SCHOOL_TIME_ZONE="America/New_York";
 const SCHOOL_DATE_FORMATTER=new Intl.DateTimeFormat("en-US",{timeZone:SCHOOL_TIME_ZONE,year:"numeric",month:"2-digit",day:"2-digit"});
 const FRESH_DATE_FORMATTER=new Intl.DateTimeFormat(undefined,{month:"short",day:"numeric",timeZone:SCHOOL_TIME_ZONE});
 const FRESH_TIME_FORMATTER=new Intl.DateTimeFormat(undefined,{hour:"numeric",minute:"2-digit",timeZone:SCHOOL_TIME_ZONE});
-const PACK_URL="./data/study-pack.json";
+const PACK_URL="./data/study-pack-runtime.json",PACK_FALLBACK_URL="./data/study-pack.json";
 const PACK_REFRESH_MS=5*60*1000;
 const SCHOOL_LOGO_HTML='<img class="school-mark" src="./assets/abvm-app-icon-192.png" alt="Assumption BVM Catholic School logo">';
 const GAME_TYPE_LABELS=Object.freeze({
@@ -639,19 +639,29 @@ function packContentKey(data){
     lunchMissingDates:lunchSource.missingDates||[]
   });
 }
+async function readPackUrl(url){
+  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),8000);
+  try{
+    const response=await fetch(url,{cache:"no-store",signal:controller.signal});
+    if(!response.ok)throw new Error("HTTP "+response.status+" for "+url);
+    const data=await response.json();
+    if(!data?.pack?.sourceSufficient)throw new Error("Incomplete pack from "+url);
+    return{response,data};
+  }finally{clearTimeout(timeout)}
+}
 async function fetchPack({force=false,notify=false}={}){
   const now=Date.now();
   if(!force&&pack&&(now-lastPackFetchAt)<PACK_REFRESH_MS)return false;
   if(packRefreshPromise)return packRefreshPromise;
   packRefreshPromise=(async()=>{
-    const controller=new AbortController();
-    const timeout=setTimeout(()=>controller.abort(),8000);
     try{
-      const r=await fetch(PACK_URL,{cache:"no-store",signal:controller.signal});
+      let loaded=null,lastError=null;
+      for(const url of [PACK_URL,PACK_FALLBACK_URL]){
+        try{loaded=await readPackUrl(url);break}catch(error){lastError=error}
+      }
+      if(!loaded)throw lastError||new Error("School pack unavailable");
+      const {response:r,data}=loaded;
       lastPackFetchUsedCache=r.headers.get("x-abvm-cache-fallback")==="1";
-      if(!r.ok)throw new Error("HTTP "+r.status);
-      const data=await r.json();
-      if(!data?.pack?.sourceSufficient)throw new Error("Incomplete pack");
       const before=packContentKey(envelope),after=packContentKey(data),changed=!!before&&before!==after;
       envelope=data;pack=data.pack;derivedPackCache=null;lastPackFetchAt=Date.now();
       if(changed)studyGameCatalogCache=null;
@@ -659,10 +669,7 @@ async function fetchPack({force=false,notify=false}={}){
       else updateFreshnessUI();
       if(notify&&changed)toast("School info updated");
       return changed;
-    }finally{
-      clearTimeout(timeout);
-      packRefreshPromise=null;
-    }
+    }finally{packRefreshPromise=null}
   })();
   return packRefreshPromise;
 }

@@ -39,7 +39,7 @@ test("Calendar can browse months and return to the current month",async({page})=
 test("freshness states distinguish current, stale, and offline data",async({browser})=>{
   const staleContext=await browser.newContext({serviceWorkers:"block"});
   const stalePage=await staleContext.newPage();
-  await stalePage.route("**/data/study-pack.json",async route=>{
+  await stalePage.route("**/data/study-pack-runtime.json",async route=>{
     const response=await route.fetch();
     const body=await response.json();
     const stale=new Date(Date.now()-12*3600_000).toISOString();
@@ -119,8 +119,26 @@ test("interactive day and checklist controls expose selected/completion state",a
   await expect(page.locator("#app-content")).toHaveAttribute("aria-live","polite");
 });
 
+test("generated runtime school pack is substantially smaller but keeps the live question bank",async({request})=>{
+  const [fullResponse,runtimeResponse]=await Promise.all([
+    request.get("/data/study-pack.json"),
+    request.get("/data/study-pack-runtime.json")
+  ]);
+  expect(fullResponse.ok()).toBeTruthy();
+  expect(runtimeResponse.ok()).toBeTruthy();
+  const [fullText,runtimeText]=await Promise.all([fullResponse.text(),runtimeResponse.text()]);
+  const full=JSON.parse(fullText),runtime=JSON.parse(runtimeText);
+  expect(runtime.pack.sourceHash).toBe(full.pack.sourceHash);
+  expect(runtime.pack.contentPipeline.questions).toHaveLength(full.pack.contentPipeline.questions.length);
+  expect(runtimeText.length).toBeLessThan(fullText.length*.7);
+  expect(runtime.pack.contentPipeline.questions[0]).not.toHaveProperty("sourceLineage");
+  expect(runtime.pack.contentPipeline.questions[0]).not.toHaveProperty("rubric");
+});
+
 test("service worker keeps school data network-first and static assets stale-while-revalidate",async({request})=>{
   const source=await (await request.get("/sw.js")).text();
+  expect(source).toContain('endsWith("/data/study-pack-runtime.json")');
+  expect(source).toContain('networkFirst(event.request,"./data/study-pack.json",event)');
   expect(source).toContain('endsWith("/data/study-pack.json")');
   expect(source).toContain("networkFirst(event.request,null,event)");
   expect(source).toContain("staleWhileRevalidate(event.request,event)");

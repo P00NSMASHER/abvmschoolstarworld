@@ -14,7 +14,7 @@ test('Family shows the verified What changed at school feed',async({page})=>{
       {id:'d',kind:'unchanged',subject:'Religion',text:'No changes to Religion.'}
     ]
   };
-  await page.route('**/data/study-pack.json*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(envelope)}));
+  await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(envelope)}));
   await page.goto('/?school-change-feed-test=1#family');
   const card=page.locator('section[aria-labelledby="school-change-title"]');
   await expect(card).toBeVisible();
@@ -28,7 +28,7 @@ test('Family shows the verified What changed at school feed',async({page})=>{
 test('Family does not invent a change feed before verified refresh evidence exists',async({page})=>{
   const envelope=await (await page.request.get('/data/study-pack.json')).json();
   delete envelope.pack.schoolChangeFeed;
-  await page.route('**/data/study-pack.json*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(envelope)}));
+  await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(envelope)}));
   await page.goto('/?school-change-feed-empty=1#family');
   await expect(page.locator('section[aria-labelledby="school-change-title"]')).toHaveCount(0);
 });

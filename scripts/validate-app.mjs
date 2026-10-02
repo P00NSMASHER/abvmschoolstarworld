@@ -17,6 +17,8 @@ if(!/src="\.\/app\.js(?:\?[^"]*)?"/.test(index))fail("Gold-standard app.js must 
 for(const marker of ["YOUR SCHOOL PLAN","SCHOOL MONTH AT A GLANCE","Study room","Study games","Family dashboard"])if(!app.includes(marker))fail("Missing core UI marker: "+marker);
 for(const marker of [".app-header",".day-picker",".calendar-card",".study-accordion",".study-games-cta",".study-game-grid",".family-hero",".bottom-nav"])if(!css.includes(marker))fail("Missing core style marker: "+marker);
 for(const marker of ["skill-only-equivalent-item-v2","research-quality","buildCatalog","selectQuestions","FORBIDDEN"])if(!games.includes(marker))fail("Missing Study Games engine marker: "+marker);
+if(!app.includes("./data/study-pack-runtime.json")||!app.includes("./data/study-pack.json"))fail("App must prefer runtime pack and retain full-pack fallback");
+if(!sw.includes("./data/study-pack-runtime.json")||!sw.includes("./data/study-pack.json"))fail("Service worker must cache runtime and full school packs");
 if(!app.includes("./assets/abvm-app-icon-192.png"))fail("School seal must use local app asset");
 for(const ref of ["pages/assets/abvm-app-icon-180.png","pages/assets/abvm-app-icon-192.png","pages/data/study-pack.json","pages/styles.css","pages/study-games.js","pages/study-games-view.js","pages/app.js"])if(!exists(ref))fail("Missing rollback asset: "+ref);
 for(const ref of [
@@ -41,8 +43,9 @@ if(obsoleteAssetNames.length)fail("Obsolete legacy visual assets must stay remov
 if(exists("pages/assets/calendar"))fail("Obsolete calendar visual asset directory must stay removed");
 if(exists("pages/data/calendar-visual-library.json"))fail("Obsolete calendar visual library must stay removed");
 const swShell=[...sw.matchAll(/"\.\/([^"]+)"/g)].map(m=>m[1]).filter(Boolean);
+const generatedShellRefs=new Set(["data/study-pack-runtime.json"]);
 for(const ref of swShell){
   const fileRef=ref.split(/[?#]/)[0];
-  if(fileRef&&!exists("pages/"+fileRef))fail("Service worker shell references missing file: "+ref);
+  if(fileRef&&!generatedShellRefs.has(fileRef)&&!exists("pages/"+fileRef))fail("Service worker shell references missing file: "+ref);
 }
 console.log("Gold-standard rollback validation passed",{importantDates:pack.pack.importantDates.length,homework:pack.pack.homework.length});

@@ -76,6 +76,7 @@ test("service worker cleans only old ABVM caches and precaches the exact shell",
   expect(source).toContain('"'+appUrl+'"');
   expect(source).toContain('"'+gamesUrl+'"');
   expect(source).toContain('"'+gamesViewUrl+'"');
+  expect(source).toContain('"./data/study-pack-runtime.json"');
   expect(source).toContain('"./data/study-pack.json"');
   expect(source).not.toMatch(/STATIC_SHELL\s*=\s*\[\s*"\.\/"/);
 });
