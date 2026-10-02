@@ -1,12 +1,16 @@
 import {readFileSync,mkdirSync,writeFileSync} from "node:fs";
-import {selectPublicationEvidence} from "./health-evidence.mjs";
+import {selectGovernedCurriculumHold,selectPublicationEvidence} from "./health-evidence.mjs";
 
 const packData=JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8"));
 const pkg=JSON.parse(readFileSync(new URL("../package.json",import.meta.url),"utf8"));
 const sw=readFileSync(new URL("../pages/sw.js",import.meta.url),"utf8");
 const cache=(sw.match(/const CACHE = "([^"]+)"/)||[])[1]||"unknown";
 const runsPath=process.env.WORKFLOW_RUNS_FILE;
+const refreshJobsPath=process.env.REFRESH_JOBS_FILE;
+const openPullsPath=process.env.OPEN_PULLS_FILE;
 const runs=runsPath?JSON.parse(readFileSync(runsPath,"utf8")).workflow_runs||[]:[];
+const refreshJobsData=refreshJobsPath?JSON.parse(readFileSync(refreshJobsPath,"utf8")):{run_id:null,jobs:[]};
+const openPulls=openPullsPath?JSON.parse(readFileSync(openPullsPath,"utf8")):[];
 
 const productionRuns=runs.filter(run=>run.head_branch==="main"||run.event==="schedule");
 
@@ -114,6 +118,10 @@ const effectivePublicationRun=()=>selectPublicationEvidence(
   effectiveRun(status.workflows.refresh)
 );
 status.publicationEvidence=effectivePublicationRun();
+const effectiveRefreshRun=effectiveRun(status.workflows.refresh);
+status.curriculumHold=selectGovernedCurriculumHold(effectiveRefreshRun,refreshJobsData,openPulls);
+const refreshHealthy=completedHealthy(status.workflows.refresh,30);
+const refreshOperationallyHealthy=refreshHealthy||Boolean(status.curriculumHold);
 const pipelineHealthy=Boolean(
   status.contentPipeline.present &&
   status.contentPipeline.qaStatus==="pass" &&
@@ -147,11 +155,14 @@ const criticalHealthy=Boolean(
   lunchOperationallyUsable &&
   completedHealthy(status.workflows.qa,48) &&
   completedRunHealthy(status.publicationEvidence,48) &&
-  completedHealthy(status.workflows.refresh,30) &&
+  refreshOperationallyHealthy &&
   completedHealthy(status.workflows.watchdog,30) &&
   pipelineHealthy
 );
 const warnings=[];
+if(status.curriculumHold){
+  warnings.push("Teacher refresh is intentionally holding publication for governed curriculum candidate PR #"+status.curriculumHold.candidatePrNumber+".");
+}
 if(!lunchVerified&&lunchOperationallyUsable){
   warnings.push("Lunch source bridge is unavailable; complete previously reviewed coverage remains usable"+(status.lunch.lastError?" ("+status.lunch.lastError+")":"")+".");
 }
@@ -176,6 +187,7 @@ const md=[
   `- **Source-insufficient study topics:** ${status.contentPipeline.sourceInsufficientTopics.join(", ")||"none"}`,
   `- **Intentionally not practiced:** ${status.contentPipeline.notPracticedByDesignTopics.join(", ")||"none"}`,
   `- **Unsupported teacher skills:** ${status.contentPipeline.unsupportedTopics.join(", ")||"none"}`,
+  `- **Curriculum hold:** ${status.curriculumHold?"draft PR #"+status.curriculumHold.candidatePrNumber+"; publication intentionally blocked":"none"}`,
   `- **App version:** ${status.appVersion}`,
   `- **Service worker cache:** ${status.serviceWorkerCache}`,
   `- **Git SHA:** ${status.gitSha||"unknown"}`,
