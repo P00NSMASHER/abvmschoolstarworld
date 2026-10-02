@@ -68,6 +68,51 @@ test("all six tabs stay usable in iPad landscape",async({page})=>{
   expect(brand.y+brand.height).toBeLessThanOrEqual(hero.y+hero.height+1);
 });
 
+test("freshness refresh control keeps a 44px touch target",async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.goto("/#today");
+  await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
+  for(const label of ["Today","Week","Calendar","Study Games","Family"]){
+    await openTab(page,label);
+    const control=page.locator(".freshness");
+    await expect(control,label+" freshness control missing").toBeVisible();
+    const box=await control.boundingBox();
+    expect(box,label+" freshness box missing").not.toBeNull();
+    expect(box.height,label+" freshness touch target is too short").toBeGreaterThanOrEqual(44);
+  }
+  await openTab(page,"Calendar");
+  await page.getByRole("button",{name:"Next month"}).click();
+  const back=page.locator(".calendar-today-jump");
+  await expect(back).toBeVisible();
+  const backBox=await back.boundingBox();
+  expect(backBox).not.toBeNull();
+  expect(backBox.height,"Back to current month touch target is too short").toBeGreaterThanOrEqual(44);
+
+  await openTab(page,"Family");
+  await page.locator(".family-more summary").click();
+  const familyAction=page.locator(".family-more a");
+  await expect(familyAction).toBeVisible();
+  const familyActionBox=await familyAction.boundingBox();
+  expect(familyActionBox).not.toBeNull();
+  expect(familyActionBox.height,"Family Study Games link touch target is too short").toBeGreaterThanOrEqual(44);
+});
+
+test("visible buttons keep 44px touch targets across primary screens",async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.goto("/#today");
+  await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
+  for(const label of ["Today","Week","Calendar","Study","Study Games","Family"]){
+    await openTab(page,label);
+    const undersized=await page.locator(".screen button:visible, .bottom-nav button:visible").evaluateAll(nodes=>nodes
+      .map(node=>{
+        const box=node.getBoundingClientRect();
+        return {text:(node.getAttribute("aria-label")||node.textContent||"").trim().replace(/\s+/g," ").slice(0,80),height:box.height,width:box.width};
+      })
+      .filter(item=>item.height<43.5));
+    expect(undersized,label+" has undersized visible buttons").toEqual([]);
+  }
+});
+
 test("Today exposes the weekly priority and focused checklist",async({page})=>{
   const hero=page.locator(".hero-card");
   await expect(hero).toBeVisible();
