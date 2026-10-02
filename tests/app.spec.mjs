@@ -20,7 +20,14 @@ test("all six primary tabs render without horizontal overflow",async({page})=>{
 });
 
 test("Today exposes the weekly priority and focused checklist",async({page})=>{
-  await expect(page.locator(".hero-card")).toBeVisible();
+  const hero=page.locator(".hero-card");
+  await expect(hero).toBeVisible();
+  await expect(hero.locator(".hero-brand")).toBeVisible();
+  await expect(hero.locator(".hero-brand img")).toHaveAttribute("src",/abvm-app-icon-192\.png/);
+  await expect(page.locator(".book-buddy,.spark")).toHaveCount(0);
+  const heroVisual=await hero.evaluate(el=>({background:getComputedStyle(el).backgroundImage,border:getComputedStyle(el).borderColor}));
+  expect(heroVisual.background).toContain("rgb(11, 60, 116)");
+  expect(heroVisual.border).not.toBe("rgba(0, 0, 0, 0)");
   await expect(page.locator(".priority-card")).toBeVisible();
   await expect(page.locator(".today-panel")).toBeVisible();
   await expect(page.locator(".timeline-row").first()).toBeVisible();
