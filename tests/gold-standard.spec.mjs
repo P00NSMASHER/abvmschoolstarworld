@@ -326,7 +326,7 @@ test("Sept 28 task-policy fixture keeps Mass and reading without routine clutter
     {task:"Keep Reading Log and Behavior Chart in the HW folder",subject:"Reading"},
     {task:"Return everything in the HW folder",subject:"Homework Folder"}
   ];
-  await fixturePage.route("**/data/study-pack.json*",route=>route.fulfill({json:{...source,pack:{...source.pack,homework}}}));
+  await fixturePage.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:{...source,pack:{...source.pack,homework}}}));
   await fixturePage.goto("http://127.0.0.1:4173/#today");
   const tasks=fixturePage.locator(".today-panel .check-item");
   await expect(tasks).toHaveCount(2);
