@@ -1,0 +1,72 @@
+{
+  "candidateId": "curriculum-reading-ela-characters-f391fd40a4",
+  "familyId": "characters",
+  "subject": "Reading / ELA",
+  "topic": "characters",
+  "sourceHash": "teacher-pages-49bc1dcf1d6a54be5284",
+  "generatedAt": "2026-10-02T16:17:41.619Z",
+  "sourceContext": {
+    "quality": "page-exact",
+    "matchMethod": "exact-topic-phrase",
+    "subject": "Reading / ELA",
+    "topic": "characters",
+    "sourceTitle": "Reading Work",
+    "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
+    "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+    "sourceCheckedAt": "2026-10-02T16:17:41.619Z",
+    "sourceLine": "Reading Comprehension: visualize, theme, dialogue, characters",
+    "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e"
+  },
+  "featureFlag": "curriculum-family:characters-candidate",
+  "enabledByDefault": false,
+  "registryMatch": null,
+  "minimumSemanticVariants": 8,
+  "requiredQuestionTypes": [
+    "direct",
+    "transfer",
+    "reasoning"
+  ],
+  "proposedQuestions": [],
+  "authoring": {
+    "status": "AUTHORING_REQUIRED",
+    "generatedQuestionCount": 0,
+    "minimumSemanticVariants": 8,
+    "requiredQuestionTypes": [
+      "direct",
+      "transfer",
+      "reasoning"
+    ],
+    "requiredQuestionFields": [
+      "questionType",
+      "prompt",
+      "choices",
+      "answer",
+      "explanation",
+      "hint",
+      "dok",
+      "difficulty"
+    ]
+  },
+  "rollout": {
+    "featureFlagRequired": true,
+    "automatedQaRequired": true,
+    "safeUsageEvidenceRequired": true,
+    "manualPromotionRequired": true,
+    "automaticPromotion": false
+  },
+  "readiness": {
+    "status": "HOLD",
+    "blockers": [
+      "minimum-semantic-variants:0/8",
+      "question-type-required:direct",
+      "question-type-required:transfer",
+      "question-type-required:reasoning",
+      "automated-qa-required",
+      "safe-usage-evidence-required",
+      "manual-promotion-required"
+    ],
+    "automaticPromotion": false,
+    "automaticDelete": false,
+    "automaticRewrite": false
+  }
+}
