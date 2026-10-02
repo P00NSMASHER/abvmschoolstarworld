@@ -1,5 +1,5 @@
 import {readFileSync,mkdirSync,writeFileSync} from "node:fs";
-import {selectGovernedCurriculumHold,selectPublicationEvidence} from "./health-evidence.mjs";
+import {selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence} from "./health-evidence.mjs";
 
 const packData=JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8"));
 const pkg=JSON.parse(readFileSync(new URL("../package.json",import.meta.url),"utf8"));
@@ -119,7 +119,9 @@ const effectivePublicationRun=()=>selectPublicationEvidence(
 );
 status.publicationEvidence=effectivePublicationRun();
 const effectiveRefreshRun=effectiveRun(status.workflows.refresh);
-status.curriculumHold=selectGovernedCurriculumHold(effectiveRefreshRun,refreshJobsData,openPulls);
+const curriculumHoldRefreshRun=selectRefreshFailureEvidence(productionRuns,refreshJobsData);
+status.curriculumHold=selectGovernedCurriculumHold(curriculumHoldRefreshRun,refreshJobsData,openPulls);
+const refreshDisplayRun=status.curriculumHold?curriculumHoldRefreshRun:effectiveRefreshRun;
 const refreshHealthy=completedHealthy(status.workflows.refresh,30);
 const refreshOperationallyHealthy=refreshHealthy||Boolean(status.curriculumHold);
 const pipelineHealthy=Boolean(
@@ -194,7 +196,7 @@ const md=[
   "",
   ...(warnings.length?["## Attention items",...warnings.map(w=>"- "+w),""]:[]),
   "## Workflow evidence used for health verdict",
-  line("Teacher refresh",effectiveRun(status.workflows.refresh)),
+  line("Teacher refresh",refreshDisplayRun),
   line("App QA",effectiveRun(status.workflows.qa)),
   line("Publication evidence",status.publicationEvidence),
   line("Standalone Pages deploy",effectiveRun(status.workflows.deploy)),

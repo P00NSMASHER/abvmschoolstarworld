@@ -8,6 +8,12 @@ export function selectPublicationEvidence(deployRun,refreshRun){
 }
 
 
+export function selectRefreshFailureEvidence(runs,refreshJobsData){
+  const runId=Number(refreshJobsData?.run_id);
+  if(!Number.isFinite(runId))return null;
+  return (Array.isArray(runs)?runs:[]).find(run=>Number(run?.id)===runId)||null;
+}
+
 export function selectGovernedCurriculumHold(refreshRun,refreshJobsData,openPulls=[]){
   if(refreshRun?.conclusion!=="failure")return null;
   if(Number(refreshJobsData?.run_id)!==Number(refreshRun?.id))return null;
