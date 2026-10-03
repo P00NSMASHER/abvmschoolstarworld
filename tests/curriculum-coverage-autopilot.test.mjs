@@ -18,6 +18,7 @@ import {
   buildGrade2ContentPipeline,
   validateGrade2ContentPipeline,
 } from '../scripts/grade2-content-pipeline.mjs';
+import { parseCurriculumPreviewOptions } from '../scripts/curriculum-preview-options.mjs';
 
 test('candidate curriculum families require their exact explicit feature flag', () => {
   const approved = {
@@ -259,6 +260,18 @@ test('registry exposes feature flags and never treats draft candidates as produc
   assert.match(subjectPredicate.featureFlag, /^curriculum-family:/);
   assert.equal(subjectPredicate.minimumSemanticVariants, 8);
   assert.deepEqual([...subjectPredicate.requiredQuestionTypes].sort(), ['direct', 'reasoning', 'transfer']);
+});
+
+test('characters candidate is accepted by the fail-closed preview option guard', () => {
+  const result = parseCurriculumPreviewOptions([
+    '--curriculum-feature-flag=curriculum-family:characters-candidate',
+    '--curriculum-preview-output=.tmp/characters-preview.json',
+  ], {
+    productionDataPath:'/repo/pages/data/study-pack.json',
+    curriculumFamilies:curriculumFamilyRegistrySnapshot(),
+  });
+  assert.deepEqual([...result.activeCurriculumFeatureFlags], ['curriculum-family:characters-candidate']);
+  assert.ok(result.curriculumPreviewOutput.endsWith('/.tmp/characters-preview.json'));
 });
 
 test('disabled characters registry family supplies a complete candidate without entering production inventory', () => {
