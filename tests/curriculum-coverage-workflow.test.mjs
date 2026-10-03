@@ -25,6 +25,8 @@ test('candidate curriculum flags require a separate non-production preview outpu
   assert.match(refresh, /--curriculum-feature-flag=/);
   assert.match(refresh, /--curriculum-preview-output=/);
   assert.match(refresh, /Candidate curriculum feature flags require --curriculum-preview-output=/);
+  assert.match(refresh, /Curriculum preview flags must identify disabled CANDIDATE families/);
+  assert.match(refresh, /family\.rolloutStatus === 'CANDIDATE'/);
   assert.match(refresh, /Curriculum preview output cannot overwrite the production study pack/);
   assert.match(refresh, /activeCurriculumFeatureFlags,/);
   assert.match(refresh, /production study pack was not changed/);
