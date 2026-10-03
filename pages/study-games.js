@@ -1765,6 +1765,44 @@ function reviewItemQuality(data=loadItemQuality()){
   }
   return out.sort((a,b)=>b.flags.length-a.flags.length||b.resolved-a.resolved||a.id.localeCompare(b.id));
 }
+function reviewQuestionFamilySafeUsage({questions=[],data=loadItemQuality()}={}){
+  const ids=[...new Set((Array.isArray(questions)?questions:[]).map(itemQualityKey).filter(Boolean))];
+  const rowsById=new Map(reviewItemQuality(data).map(row=>[row.id,row]));
+  const items=ids.map(id=>{
+    const row=rowsById.get(id);
+    return row?{
+      id,
+      resolved:row.resolved,
+      discriminationEvidence:row.discriminationEvidence,
+      flags:[...(row.flags||[])],
+      comebackRate:row.comebackRate,
+      irtUsed:false
+    }:{
+      id,
+      resolved:0,
+      discriminationEvidence:"insufficient-evidence",
+      flags:[],
+      comebackRate:null,
+      irtUsed:false
+    };
+  });
+  const blockers=[];
+  if(!ids.length)blockers.push("family-questions-required");
+  for(const item of items){
+    if(item.discriminationEvidence!=="reviewable")blockers.push("item-evidence-required:"+item.id);
+    for(const flag of item.flags)blockers.push("item-quality-flag:"+item.id+":"+flag);
+  }
+  return Object.freeze({
+    safeUsageEvidence:ids.length&&!blockers.length?"sufficient-safe-usage":"insufficient-evidence",
+    questionCount:ids.length,
+    reviewableCount:items.filter(item=>item.discriminationEvidence==="reviewable").length,
+    flaggedCount:items.filter(item=>item.flags.length).length,
+    blockers:Object.freeze([...new Set(blockers)]),
+    items:Object.freeze(items.map(item=>Object.freeze({...item,flags:Object.freeze([...item.flags])}))),
+    automaticPromotion:false,
+    irtUsed:false
+  });
+}
 const QUESTION_FAMILY_ROLLOUT_POLICY=Object.freeze({
   featureFlagRequired:true,
   automaticPromotion:false,
@@ -1921,6 +1959,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,REVIEW_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,validateRichContent,selectQuestions,learningFirstSummary,studyStarPolicy,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,questionFamilyRolloutPolicy,reviewQuestionFamilyPromotion,itemQualityKey
+  buildCatalog,validateCatalog,validateRichContent,selectQuestions,learningFirstSummary,studyStarPolicy,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,reviewQuestionFamilySafeUsage,questionFamilyRolloutPolicy,reviewQuestionFamilyPromotion,itemQualityKey
 });
 })();
