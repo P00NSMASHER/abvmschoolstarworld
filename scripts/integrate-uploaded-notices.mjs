@@ -82,6 +82,10 @@ export function integrateUploadedNotices(data,uploaded,{now=new Date()}={}){
     pack.generatedAt=stamp;
     data.sourceCapturedAt=stamp;
   }
+  const countSentence=`${uploaded.documents.length} uploaded school notices are integrated with the teacher pages.`;
+  if(/\d+ uploaded school notices are integrated with the teacher pages\./.test(String(pack.summary||""))){
+    pack.summary=String(pack.summary).replace(/\d+ uploaded school notices are integrated with the teacher pages\./,countSentence);
+  }
   data.uploadedNotices={
     count:uploaded.documents.length,
     latestIntegratedAt:uploaded.lastIntegratedAt,
@@ -92,9 +96,11 @@ export function integrateUploadedNotices(data,uploaded,{now=new Date()}={}){
 }
 
 const data=JSON.parse(readFileSync(DATA_PATH,"utf8"));
+const before=JSON.stringify(data);
 const uploaded=JSON.parse(readFileSync(NOTICES_PATH,"utf8"));
 const result=integrateUploadedNotices(data,uploaded,{now:new Date()});
-if(result.changed){
+const after=JSON.stringify(result.data);
+if(after!==before){
   writeFileSync(DATA_PATH,JSON.stringify(result.data,null,2)+"\n","utf8");
   console.log("Integrated uploaded school notices",{count:uploaded.documents.length,uploadedNoticeHash:result.uploadedNoticeHash});
 }else{
