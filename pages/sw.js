@@ -1,8 +1,8 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v109-runtime-pack";
+const CACHE = "abvm-grade2-parent-companion-v110-runtime-pack";
 const STATIC_SHELL = [
   "./index.html",
-  "./styles.css?v=100",
+  "./styles.css?v=101",
   "./app.js?v=108",
   "./weekly-learning.js?v=2",
   "./study-games.js?v=92",
