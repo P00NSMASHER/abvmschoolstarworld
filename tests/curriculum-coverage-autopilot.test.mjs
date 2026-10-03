@@ -302,6 +302,25 @@ test('disabled characters registry family supplies a complete candidate without 
   );
   assert.deepEqual(flaggedPipeline.sourcePolicy.activeCurriculumFeatureFlags, ['curriculum-family:characters-candidate']);
   assert.deepEqual(validateGrade2ContentPipeline(flaggedPipeline), []);
+
+  const repeatedFlaggedPipeline = buildGrade2ContentPipeline(pack, {
+    generatedAt:'2026-10-02T12:05:00.000Z',
+    sourceHash:pack.sourceHash,
+    activeCurriculumFeatureFlags:['curriculum-family:characters-candidate'],
+  });
+  const characterEvidenceSignature = candidatePipeline => candidatePipeline.questions
+    .filter(row => row.skill === 'characters')
+    .map(row => ({
+      questionType:row.questionType,
+      contentFingerprint:row.contentFingerprint,
+      variantFingerprint:row.variantFingerprint,
+    }))
+    .sort((a,b)=>a.contentFingerprint.localeCompare(b.contentFingerprint));
+  assert.deepEqual(
+    characterEvidenceSignature(repeatedFlaggedPipeline),
+    characterEvidenceSignature(flaggedPipeline),
+    'Equivalent flagged refreshes must preserve character question fingerprints for local evidence continuity'
+  );
   assert.equal(registeredRuntimeMetadata('characters'), null);
   assert.deepEqual(
     registeredRuntimeMetadata('characters', {activeFeatureFlags:['curriculum-family:characters-candidate']}),
