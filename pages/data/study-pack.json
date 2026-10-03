@@ -15,13 +15,13 @@
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
   "sourceLastSeenAt": "2026-10-02T13:27:05.105Z",
-  "sourceCapturedAt": "2026-10-03T16:54:52.594Z",
+  "sourceCapturedAt": "2026-10-03T17:02:40.077Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-1140e20941b1f6f76b8b",
-    "sourceCapturedAt": "2026-10-03T16:54:52.594Z",
-    "generatedAt": "2026-10-03T16:54:52.594Z",
+    "sourceCapturedAt": "2026-10-03T17:02:40.077Z",
+    "generatedAt": "2026-10-03T17:02:40.077Z",
     "weekLabel": "Week of September 28, 2026",
     "summary": "Current Grade 2 teacher-site material: Homework lists Reading “Read”, parent task “Cover books”, Reading “Keep Reading Log and Behavior Chart in the HW folder”, and Homework Folder “Return everything in the HW folder”. Upcoming tests include Spelling (short a / long a) / Handwriting on Friday, Oct. 2, Reading on Wednesday, Oct. 7, Spelling (short i / long i) / Handwriting on Friday, Oct. 9, and Grammar (subject & predicate) on Friday, Oct. 9. 11 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
@@ -1009,13 +1009,14 @@
       "CYO registration for 2nd graders is open through the St. Nicholas Seahawks; sign-up fee is $25. Register: https://tools.signupgenius.com/c/st-nicholas-basketball-registration-k-1st-grade-copy",
       "Friday, Oct. 9: Conference schedule portal closes.",
       "Tuesday, Oct. 13: Dress Down Day supports the Knights of Columbus Thanksgiving Meal.",
+      "Gift Card Calendar winners were announced for Oct. 1 and Oct. 2: each prize was $50; the featured businesses were Cracker Barrel and Roman Delight. Winner and seller names are kept out of the public app.",
       "Picture ordering: a digital image is $10 when added to a package; glossy finish is $5 per package; a 10×13 is $20; the other listed add-on items are $13 each.",
       "Picture backgrounds: 1 Universe, 2 Pink Mist, 3 Fall Leaves, 4 Traditional, 5 School Spirit, 6 Patriotic, 7 Dinosaur, 8 Pastel, 9 Bookcase, 10 Blue Brush, 11 Laser. Backgrounds 1, 2, and 11 are marked NEW.",
       "Christmas Caroling date is TBD.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
     "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-    "uploadedNoticeHash": "uploaded-notices-f6c70e9ab386f1f1cfb3",
+    "uploadedNoticeHash": "uploaded-notices-d46b3e42b729bbb91e4e",
     "uploadedNoticeTopics": {
       "reminders": [
         "fundraiser",
@@ -1052,7 +1053,8 @@
         "dress-down",
         "cyo-basketball",
         "conference-schedule",
-        "knights-thanksgiving-ddd"
+        "knights-thanksgiving-ddd",
+        "gift-card-winners"
       ]
     },
     "lunchMenuSource": {
@@ -11596,7 +11598,7 @@
   ],
   "uploadedNotices": {
     "count": 11,
-    "latestIntegratedAt": "2026-10-03T16:45:00.000Z",
+    "latestIntegratedAt": "2026-10-03T17:02:00.000Z",
     "documents": [
       {
         "id": "dress-down-2026-09-25",
