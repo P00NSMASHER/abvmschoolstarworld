@@ -12,11 +12,13 @@ import {
   curriculumFamilyRegistrySnapshot,
   curriculumFamilyRuntimeEnabled,
   registeredCurriculumFamilyRules,
+  registeredRuntimeMetadata,
 } from '../scripts/curriculum-family-registry.mjs';
 import {
   buildGrade2ContentPipeline,
   validateGrade2ContentPipeline,
 } from '../scripts/grade2-content-pipeline.mjs';
+import { parseCurriculumPreviewOptions } from '../scripts/curriculum-preview-options.mjs';
 
 test('candidate curriculum families require their exact explicit feature flag', () => {
   const approved = {
@@ -258,6 +260,125 @@ test('registry exposes feature flags and never treats draft candidates as produc
   assert.match(subjectPredicate.featureFlag, /^curriculum-family:/);
   assert.equal(subjectPredicate.minimumSemanticVariants, 8);
   assert.deepEqual([...subjectPredicate.requiredQuestionTypes].sort(), ['direct', 'reasoning', 'transfer']);
+});
+
+test('characters candidate is accepted by the fail-closed preview option guard', () => {
+  const result = parseCurriculumPreviewOptions([
+    '--curriculum-feature-flag=curriculum-family:characters-candidate',
+    '--curriculum-preview-output=.tmp/characters-preview.json',
+  ], {
+    productionDataPath:'/repo/pages/data/study-pack.json',
+    curriculumFamilies:curriculumFamilyRegistrySnapshot(),
+  });
+  assert.deepEqual([...result.activeCurriculumFeatureFlags], ['curriculum-family:characters-candidate']);
+  assert.ok(result.curriculumPreviewOutput.endsWith('/.tmp/characters-preview.json'));
+});
+
+test('disabled characters registry family supplies a complete candidate without entering production inventory', () => {
+  const family = matchCurriculumFamily('Reading / ELA', 'characters');
+  assert.ok(family);
+  assert.equal(family.rolloutStatus, 'CANDIDATE');
+  assert.equal(family.enabledByDefault, false);
+  assert.equal(family.supplementalQuestions.length + 1, 8);
+  assert.deepEqual(
+    [...new Set([family.baseQuestion, ...family.supplementalQuestions].map(question => question.questionType))].sort(),
+    ['direct', 'reasoning', 'transfer']
+  );
+
+  const pack = {
+    sourceHash: 'characters-week',
+    subjects: [{
+      subject:'Reading / ELA',
+      topics:['Grammar: subject & predicate','Reading Comprehension: characters'],
+      studyNotes:[],
+    }],
+    vocabulary: [],
+  };
+  const pipeline = buildGrade2ContentPipeline(pack, {
+    generatedAt:'2026-10-02T12:00:00.000Z',
+    sourceHash:pack.sourceHash,
+  });
+  assert.equal(pipeline.coverage.some(row => row.topic === 'characters' && row.status === 'GENERATOR_UNSUPPORTED'), true);
+  assert.equal(pipeline.skills.some(row => row.id === 'characters'), false);
+
+  const flaggedPipeline = buildGrade2ContentPipeline(pack, {
+    generatedAt:'2026-10-02T12:00:00.000Z',
+    sourceHash:pack.sourceHash,
+    activeCurriculumFeatureFlags:['curriculum-family:characters-candidate'],
+  });
+  assert.equal(flaggedPipeline.coverage.some(row => row.topic === 'characters' && row.status === 'GENERATOR_UNSUPPORTED'), false);
+  assert.equal(flaggedPipeline.coverage.some(row => row.skillId === 'characters' && row.status === 'COVERED'), true);
+  assert.equal(flaggedPipeline.questions.filter(row => row.skill === 'characters').length, 8);
+  assert.deepEqual(
+    [...new Set(flaggedPipeline.questions.filter(row => row.skill === 'characters').map(row => row.questionType))].sort(),
+    ['direct', 'reasoning', 'transfer']
+  );
+  assert.deepEqual(flaggedPipeline.sourcePolicy.activeCurriculumFeatureFlags, ['curriculum-family:characters-candidate']);
+  assert.deepEqual(validateGrade2ContentPipeline(flaggedPipeline), []);
+
+  const repeatedFlaggedPipeline = buildGrade2ContentPipeline(pack, {
+    generatedAt:'2026-10-02T12:05:00.000Z',
+    sourceHash:pack.sourceHash,
+    activeCurriculumFeatureFlags:['curriculum-family:characters-candidate'],
+  });
+  const characterEvidenceSignature = candidatePipeline => candidatePipeline.questions
+    .filter(row => row.skill === 'characters')
+    .map(row => ({
+      questionType:row.questionType,
+      contentFingerprint:row.contentFingerprint,
+      variantFingerprint:row.variantFingerprint,
+    }))
+    .sort((a,b)=>a.contentFingerprint.localeCompare(b.contentFingerprint));
+  assert.deepEqual(
+    characterEvidenceSignature(repeatedFlaggedPipeline),
+    characterEvidenceSignature(flaggedPipeline),
+    'Equivalent flagged refreshes must preserve character question fingerprints for local evidence continuity'
+  );
+  assert.equal(registeredRuntimeMetadata('characters'), null);
+  assert.deepEqual(
+    registeredRuntimeMetadata('characters', {activeFeatureFlags:['curriculum-family:characters-candidate']}),
+    {
+      id:'characters',
+      subject:'Reading / ELA',
+      label:'Characters',
+      standards:['CCSS.RL.2.3'],
+      domain:'Reading Literature',
+      studyNotes:[
+        'Characters are the people or animals who take part in a story.',
+        'Use a character’s actions, words, feelings, and changes as evidence for what the character is like.',
+      ],
+      teachCard:[
+        'Ask who the story follows, then use that character’s actions and words as clues.',
+        'Strong answers point to a specific detail that shows what a character feels, does, or learns.',
+      ],
+      assessmentPatterns:['\\bcharacters?\\b'],
+      featureFlag:'curriculum-family:characters-candidate',
+    }
+  );
+
+  const wrongFlagPipeline = buildGrade2ContentPipeline(pack, {
+    generatedAt:'2026-10-02T12:00:00.000Z',
+    sourceHash:pack.sourceHash,
+    activeCurriculumFeatureFlags:['curriculum-family:not-characters'],
+  });
+  assert.equal(wrongFlagPipeline.coverage.some(row => row.topic === 'characters' && row.status === 'GENERATOR_UNSUPPORTED'), true);
+  assert.equal(wrongFlagPipeline.skills.some(row => row.id === 'characters'), false);
+
+  const plan = buildCurriculumCoveragePlan({
+    pipeline,
+    sourcePages:[{
+      title:'Reading Work',
+      url:'https://sites.google.com/view/abvmgr2/reading-work',
+      checkedAt:'2026-10-02T12:00:00.000Z',
+      contentHash:'characters-source-hash',
+      lines:['Reading Comprehension: visualize, theme, dialogue, characters'],
+    }],
+    sourceHash:pack.sourceHash,
+    generatedAt:'2026-10-02T12:00:00.000Z',
+  });
+  assert.equal(plan.candidates[0].authoring.status, 'DRAFT_FAMILY_PRESENT');
+  assert.equal(plan.candidates[0].proposedQuestions.length, 8);
+  assert.deepEqual(curriculumCandidateIntrinsicBlockers(plan.candidates[0]), []);
 });
 
 test('source evidence stays unresolved when teacher lines only partially overlap the unsupported topic', () => {
