@@ -15,13 +15,13 @@
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
   "sourceLastSeenAt": "2026-10-02T13:27:05.105Z",
-  "sourceCapturedAt": "2026-10-01T18:41:13.006Z",
+  "sourceCapturedAt": "2026-10-03T16:54:52.594Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-1140e20941b1f6f76b8b",
-    "sourceCapturedAt": "2026-10-01T18:41:13.006Z",
-    "generatedAt": "2026-10-02T13:27:05.105Z",
+    "sourceCapturedAt": "2026-10-03T16:54:52.594Z",
+    "generatedAt": "2026-10-03T16:54:52.594Z",
     "weekLabel": "Week of September 28, 2026",
     "summary": "Current Grade 2 teacher-site material: Homework lists Reading “Read”, parent task “Cover books”, Reading “Keep Reading Log and Behavior Chart in the HW folder”, and Homework Folder “Return everything in the HW folder”. Upcoming tests include Spelling (short a / long a) / Handwriting on Friday, Oct. 2, Reading on Wednesday, Oct. 7, Spelling (short i / long i) / Handwriting on Friday, Oct. 9, and Grammar (subject & predicate) on Friday, Oct. 9. 8 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
@@ -258,9 +258,9 @@
       },
       {
         "date": "Monday, Oct. 5",
-        "label": "Raise Right physical gift cards ordered",
+        "label": "Raise Right physical gift card order",
         "kind": "school event",
-        "sourceDocument": "october-calendar-2026",
+        "sourceDocument": "weekly-reminders-2026-10-05",
         "source": "uploaded-notice"
       },
       {
@@ -271,16 +271,16 @@
       },
       {
         "date": "Tuesday, Oct. 6",
-        "label": "Faculty Meeting",
+        "label": "Faculty Meeting — 3–4 PM",
         "kind": "meeting",
-        "sourceDocument": "october-calendar-2026",
+        "sourceDocument": "weekly-reminders-2026-10-05",
         "source": "uploaded-notice"
       },
       {
-        "date": "Wednesday, Oct. 7",
-        "label": "Mass",
-        "kind": "school event",
-        "sourceDocument": "october-calendar-2026",
+        "date": "Tuesday, Oct. 6",
+        "label": "Flag football sign-ups due",
+        "kind": "deadline",
+        "sourceDocument": "weekly-reminders-2026-10-05",
         "source": "uploaded-notice"
       },
       {
@@ -288,6 +288,13 @@
         "label": "K–4 flag football permission form due",
         "kind": "deadline",
         "sourceDocument": "flag-football-2026-10",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 7",
+        "label": "Mass — St. John the Baptist, 9 AM",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-05",
         "source": "uploaded-notice"
       },
       {
@@ -300,14 +307,7 @@
         "date": "Thursday, Oct. 8",
         "label": "Progress Reports Issued",
         "kind": "school event",
-        "sourceDocument": "october-calendar-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Friday, Oct. 9",
-        "label": "12:00 dismissal",
-        "kind": "schedule change",
-        "sourceDocument": "october-calendar-2026",
+        "sourceDocument": "weekly-reminders-2026-10-05",
         "source": "uploaded-notice"
       },
       {
@@ -315,6 +315,20 @@
         "label": "Chick-fil-A orders and money due — $7 each",
         "kind": "deadline",
         "sourceDocument": "chick-fil-a-order-form-2026-10",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Oct. 9",
+        "label": "12:00 dismissal",
+        "kind": "schedule change",
+        "sourceDocument": "weekly-reminders-2026-10-05",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Oct. 9",
+        "label": "Conference schedule portal closes",
+        "kind": "deadline",
+        "sourceDocument": "weekly-reminders-2026-10-05",
         "source": "uploaded-notice"
       },
       {
@@ -338,9 +352,9 @@
       },
       {
         "date": "Tuesday, Oct. 13",
-        "label": "Dress Down Day — local charity",
+        "label": "Dress Down Day — Knights of Columbus Thanksgiving Meal",
         "kind": "school event",
-        "sourceDocument": "october-calendar-2026",
+        "sourceDocument": "weekly-reminders-2026-10-05",
         "source": "uploaded-notice"
       },
       {
@@ -469,6 +483,13 @@
         "label": "Communication Folder",
         "kind": "school event",
         "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Thursday, Oct. 29",
+        "label": "Grades 5–8 Dress Down Day & Flag Football",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-05",
         "source": "uploaded-notice"
       },
       {
@@ -831,13 +852,15 @@
       "Drama Club Play is Nov. 13–14.",
       "Reading Royals Game Family Fun Night is Saturday, Nov. 21.",
       "Sunday, Oct. 4: Winter uniform begins.",
-      "Wednesday, Oct. 7: K–4 flag football permission form is due.",
       "Thursday, Oct. 8: Progress Reports are issued.",
       "Friday, Oct. 9: Chick-fil-A orders and money are due; orders are $7 each.",
       "Saturday, Oct. 10: RSVP deadline for the Oct. 18 birthday party at Roller Roost Sports Arena.",
       "Tuesday, Oct. 20: K–4 has no school for Parent-Teacher Conferences.",
       "Thursday, Oct. 22: Chick-fil-A delivery/pickup is 3:00–4:30 PM; pickup is available at dismissal.",
       "Monday, Oct. 26: K–4 Dress Down & Flag Football is 1:45–2:30 PM; send a requested food-bank item or $5 donation to participate in dress down.",
+      "Tuesday, Oct. 6: Flag football sign-ups are due. Wednesday, Oct. 7: K–4 flag football permission form is due.",
+      "Friday, Oct. 9: Conference schedule portal closes.",
+      "Tuesday, Oct. 13: Dress Down Day supports the Knights of Columbus Thanksgiving Meal.",
       "Stationary money ($17) is due Wednesday, Sept. 23.",
       "Pretzel delivery is Thursday, Sept. 24 after lunch.",
       "Keep the Reading Log and Behavior Chart in the HW folder.",
@@ -983,13 +1006,16 @@
       "Sunday, Oct. 18: Personal birthday party at Roller Roost Sports Arena from 12:30–3:30 PM. Direct contact information and the street address are kept out of the public app.",
       "Tuesday, Oct. 20: K–4 has no school for Parent-Teacher Conferences.",
       "Monday, Oct. 26: K–4 Dress Down & Flag Football; dress-down participation requires a requested food-bank item or $5 donation.",
+      "CYO registration for 2nd graders is open through the St. Nicholas Seahawks; sign-up fee is $25. Register: https://tools.signupgenius.com/c/st-nicholas-basketball-registration-k-1st-grade-copy",
+      "Friday, Oct. 9: Conference schedule portal closes.",
+      "Tuesday, Oct. 13: Dress Down Day supports the Knights of Columbus Thanksgiving Meal.",
       "Picture ordering: a digital image is $10 when added to a package; glossy finish is $5 per package; a 10×13 is $20; the other listed add-on items are $13 each.",
       "Picture backgrounds: 1 Universe, 2 Pink Mist, 3 Fall Leaves, 4 Traditional, 5 School Spirit, 6 Patriotic, 7 Dinosaur, 8 Pastel, 9 Bookcase, 10 Blue Brush, 11 Laser. Backgrounds 1, 2, and 11 are marked NEW.",
       "Christmas Caroling date is TBD.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
     "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-    "uploadedNoticeHash": "uploaded-notices-642a3157225783067067",
+    "uploadedNoticeHash": "uploaded-notices-f6c70e9ab386f1f1cfb3",
     "uploadedNoticeTopics": {
       "reminders": [
         "fundraiser",
@@ -1001,11 +1027,13 @@
         "drama",
         "reading-royals",
         "winter-uniform",
-        "flag-football",
         "progress-report",
         "chick-fil",
         "birthday-party",
-        "dress-down"
+        "dress-down",
+        "flag-football",
+        "conference-schedule",
+        "knights-thanksgiving-ddd"
       ],
       "parentNotices": [
         "conference",
@@ -1021,7 +1049,10 @@
         "flag-football",
         "chick-fil",
         "birthday-party",
-        "dress-down"
+        "dress-down",
+        "cyo-basketball",
+        "conference-schedule",
+        "knights-thanksgiving-ddd"
       ]
     },
     "lunchMenuSource": {
@@ -11564,8 +11595,8 @@
     }
   ],
   "uploadedNotices": {
-    "count": 8,
-    "latestIntegratedAt": "2026-10-01T00:44:00.000Z",
+    "count": 11,
+    "latestIntegratedAt": "2026-10-03T16:45:00.000Z",
     "documents": [
       {
         "id": "dress-down-2026-09-25",
@@ -11606,6 +11637,21 @@
         "id": "birthday-party-2026-10-18",
         "label": "Personal birthday-party invitation — privacy-redacted",
         "receivedAt": "2026-09-30"
+      },
+      {
+        "id": "weekly-reminders-2026-10-05",
+        "label": "Weekly reminders for October 5–9, 2026",
+        "receivedAt": "2026-10-03"
+      },
+      {
+        "id": "st-nicholas-cyo-basketball-2026",
+        "label": "St. Nicholas Seahawks CYO basketball flyer",
+        "receivedAt": "2026-10-03"
+      },
+      {
+        "id": "gift-card-winners-2026-10-01-02",
+        "label": "Gift Card Calendar winners — privacy-redacted",
+        "receivedAt": "2026-10-03"
       }
     ]
   }
