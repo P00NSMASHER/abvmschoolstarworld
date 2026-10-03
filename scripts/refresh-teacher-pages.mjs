@@ -27,6 +27,7 @@ import {
   validateRecentReviewPipeline,
 } from './curriculum-continuity.mjs';
 import { buildSchoolChangeFeed, validateSchoolChangeFeed } from './school-change-feed.mjs';
+import { curriculumFamilyRegistrySnapshot } from './curriculum-family-registry.mjs';
 
 const DATA_PATH = new URL('../pages/data/study-pack.json', import.meta.url);
 const UPLOADED_NOTICES_PATH = new URL('../pages/data/uploaded-notices.json', import.meta.url);
@@ -51,6 +52,15 @@ const activeCurriculumFeatureFlags = [...new Set(curriculumFeatureFlagArgs.map(a
 ))].sort();
 if (curriculumFeatureFlagArgs.length !== activeCurriculumFeatureFlags.filter(Boolean).length) {
   throw new Error('Curriculum feature flags cannot be empty or duplicated.');
+}
+const previewCandidateFlags = new Set(
+  curriculumFamilyRegistrySnapshot()
+    .filter(family => family.rolloutStatus === 'CANDIDATE' && family.enabledByDefault === false)
+    .map(family => family.featureFlag)
+);
+const invalidPreviewFlags = activeCurriculumFeatureFlags.filter(flag => !previewCandidateFlags.has(flag));
+if (invalidPreviewFlags.length) {
+  throw new Error(`Curriculum preview flags must identify disabled CANDIDATE families: ${invalidPreviewFlags.join(', ')}`);
 }
 const curriculumPreviewOutputArg = process.argv.find(arg => arg.startsWith('--curriculum-preview-output='));
 const curriculumPreviewOutput = curriculumPreviewOutputArg
