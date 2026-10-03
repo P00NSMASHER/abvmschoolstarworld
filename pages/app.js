@@ -12,7 +12,8 @@ const SCHOOL_TIME_ZONE="America/New_York";
 const SCHOOL_DATE_FORMATTER=new Intl.DateTimeFormat("en-US",{timeZone:SCHOOL_TIME_ZONE,year:"numeric",month:"2-digit",day:"2-digit"});
 const FRESH_DATE_FORMATTER=new Intl.DateTimeFormat(undefined,{month:"short",day:"numeric",timeZone:SCHOOL_TIME_ZONE});
 const FRESH_TIME_FORMATTER=new Intl.DateTimeFormat(undefined,{hour:"numeric",minute:"2-digit",timeZone:SCHOOL_TIME_ZONE});
-const PACK_URL="./data/study-pack-runtime.json",PACK_FALLBACK_URL="./data/study-pack.json";
+const LOCAL_PREVIEW_PACK_URL=window.ABVM_LOCAL_PREVIEW_PACK_URL||"";
+const PACK_URL=LOCAL_PREVIEW_PACK_URL||"./data/study-pack-runtime.json",PACK_FALLBACK_URL=LOCAL_PREVIEW_PACK_URL||"./data/study-pack.json";
 const PACK_REFRESH_MS=5*60*1000;
 const SCHOOL_LOGO_HTML='<img class="school-mark" src="./assets/abvm-app-icon-192.png" width="52" height="52" alt="Assumption BVM Catholic School logo">';
 const GAME_TYPE_LABELS=Object.freeze({
@@ -111,6 +112,7 @@ function header(kicker,title){
   return '<header class="app-header"><div><p>'+esc(kicker)+'</p><h1>'+esc(title)+'</h1></div>'+SCHOOL_LOGO_HTML+'</header>';
 }
 function freshnessState(){
+  if(LOCAL_PREVIEW_PACK_URL)return{state:"preview",label:"Local preview · not published"};
   const raw=envelope?.sourceLastSeenAt||pack?.sourceCapturedAt||pack?.generatedAt;
   const d=raw?new Date(raw):null;
   if(!d||Number.isNaN(d.getTime()))return{state:"attention",label:"Source verification unavailable"};
@@ -656,7 +658,7 @@ async function fetchPack({force=false,notify=false}={}){
   packRefreshPromise=(async()=>{
     try{
       let loaded=null,lastError=null;
-      for(const url of [PACK_URL,PACK_FALLBACK_URL]){
+      for(const url of [...new Set([PACK_URL,PACK_FALLBACK_URL])]){
         try{loaded=await readPackUrl(url);break}catch(error){lastError=error}
       }
       if(!loaded)throw lastError||new Error("School pack unavailable");

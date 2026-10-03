@@ -13,7 +13,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./assets/abvm-app-icon-192.png" type="image/png">
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/abvm-app-icon-180.png">
-  <link rel="stylesheet" href="./styles.css?v=96">
+  <link rel="stylesheet" href="./styles.css?v=97">
 </head>
 <body>
   <main class="site-shell">
@@ -59,7 +59,13 @@
   <script>
     (() => {
       if (!("serviceWorker" in navigator)) return;
-      const reloadKey = "abvm-sw-reloaded-v104";
+      const previewPack = new URLSearchParams(location.search).get("pack") || "";
+      window.ABVM_LOCAL_PREVIEW_PACK_URL =
+        /^(?:localhost|127\.0\.0\.1|::1)$/.test(location.hostname) &&
+        /^\.\/data\/study-pack\.[a-z0-9._-]+-preview\.json$/i.test(previewPack)
+          ? previewPack
+          : "";
+      const reloadKey = "abvm-sw-reloaded-v105";
       const hadController = !!navigator.serviceWorker.controller;
       navigator.serviceWorker.addEventListener("controllerchange", () => {
         if (!hadController) return;
@@ -75,6 +81,6 @@
     })();
   </script>
   <script src="./weekly-learning.js?v=2"></script>
-  <script src="./app.js?v=104"></script>
+  <script src="./app.js?v=105"></script>
 </body>
 </html>

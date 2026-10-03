@@ -5,3 +5,4 @@ test-results/
 live-lunch-proof/
 health-output/
 pages/data/study-pack-runtime.json
+pages/data/study-pack.*-preview.json
