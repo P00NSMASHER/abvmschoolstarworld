@@ -1,5 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import {
   cleanTeacherText,
@@ -42,6 +44,27 @@ const MONTHS = {
   jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
   jul: 6, aug: 7, sep: 8, sept: 8, oct: 9, nov: 10, dec: 11,
 };
+
+const curriculumFeatureFlagArgs = process.argv.filter(arg => arg.startsWith('--curriculum-feature-flag='));
+const activeCurriculumFeatureFlags = [...new Set(curriculumFeatureFlagArgs.map(arg =>
+  arg.slice('--curriculum-feature-flag='.length).trim()
+))].sort();
+if (curriculumFeatureFlagArgs.length !== activeCurriculumFeatureFlags.filter(Boolean).length) {
+  throw new Error('Curriculum feature flags cannot be empty or duplicated.');
+}
+const curriculumPreviewOutputArg = process.argv.find(arg => arg.startsWith('--curriculum-preview-output='));
+const curriculumPreviewOutput = curriculumPreviewOutputArg
+  ? curriculumPreviewOutputArg.slice('--curriculum-preview-output='.length).trim()
+  : '';
+if (curriculumPreviewOutputArg && !curriculumPreviewOutput) {
+  throw new Error('Curriculum preview output path cannot be empty.');
+}
+if (activeCurriculumFeatureFlags.length && !curriculumPreviewOutput) {
+  throw new Error('Candidate curriculum feature flags require --curriculum-preview-output=...; production study-pack output stays fail-closed.');
+}
+if (curriculumPreviewOutput && resolve(curriculumPreviewOutput) === resolve(fileURLToPath(DATA_PATH))) {
+  throw new Error('Curriculum preview output cannot overwrite the production study pack.');
+}
 
 async function fetchPage(path, title) {
   const url = `${SITE_ROOT}/${path}`;
@@ -378,6 +401,7 @@ const contentPipeline = buildGrade2ContentPipeline(pack, {
   sourceHash,
   sourcePages: teacherSourcePages,
   requirePageExactLineage: true,
+  activeCurriculumFeatureFlags,
 });
 mergeGrade2StudyNotes(pack, contentPipeline);
 const contentPipelineIssues = validateGrade2ContentPipeline(contentPipeline);
@@ -477,6 +501,8 @@ if (process.argv.includes('--dry-run')) {
       status: autopilotPlan.status,
       unsupportedCount: autopilotPlan.unsupportedCount,
       candidateIds: autopilotPlan.candidates.map(candidate => candidate.candidateId),
+      activeCurriculumFeatureFlags,
+      previewOutput: curriculumPreviewOutput || null,
     },
     curriculumContinuity: {
       reviewSkillCount: recentReviewPipeline.skills.length,
@@ -488,6 +514,9 @@ if (process.argv.includes('--dry-run')) {
       items: pack.schoolChangeFeed.items.map(row => row.text),
     },
   }, null, 2));
+} else if (curriculumPreviewOutput) {
+  writeFileSync(resolve(curriculumPreviewOutput), `${JSON.stringify(data, null, 2)}\n`, 'utf8');
+  console.log(`Wrote candidate curriculum preview to ${resolve(curriculumPreviewOutput)} with ${activeCurriculumFeatureFlags.length} explicit feature flag(s); production study pack was not changed.`);
 } else {
   writeFileSync(DATA_PATH, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
   console.log(`${contentChanged ? 'Updated' : 'Checked'} ${fetched.length} teacher pages and ${uploadedNotices.documents.length} uploaded notices; ${homework.length} homework items are current.`);
