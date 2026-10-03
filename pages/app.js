@@ -8,12 +8,12 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 
 function linkedTextHtml(value){
   const text=String(value??"");
-  const urlPattern=/https?:\\/\\/[^\\s<]+/g;
+  const urlPattern=/https?:\/\/[^\s<]+/g;
   let html="",cursor=0,match;
   while((match=urlPattern.exec(text))){
     html+=esc(text.slice(cursor,match.index));
     const url=match[0];
-    html+='<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(url.replace(/^https?:\\/\\//,""))+'</a>';
+    html+='<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(url.replace(/^https?:\/\//,""))+'</a>';
     cursor=match.index+url.length;
   }
   return html+esc(text.slice(cursor));
