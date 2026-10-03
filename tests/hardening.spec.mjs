@@ -116,7 +116,9 @@ test("interactive day and checklist controls expose selected/completion state",a
   const check=page.locator("[data-check]").first();
   await expect(check).toHaveAttribute("aria-label",/Mark complete|Completed/);
   await expect(check).toHaveAttribute("aria-pressed",/true|false/);
-  await expect(page.locator("#app-content")).toHaveAttribute("aria-live","polite");
+  expect(await page.locator("#app-content").getAttribute("aria-live")).toBeNull();
+  await expect(page.locator("#toast")).toHaveAttribute("role","status");
+  await expect(page.locator("#toast")).toHaveAttribute("aria-live","polite");
 });
 
 test("generated runtime school pack is substantially smaller but keeps the live question bank",async({request})=>{
