@@ -329,7 +329,7 @@ function renderToday(){
     (next?'<section class="priority-card"><div class="date-tile"><strong>'+esc(WEEKDAY[next.d.getDay()].slice(0,3).toUpperCase())+'</strong><span>'+next.d.getDate()+'</span></div><div><p>CLOSEST TEST</p><h3>'+esc(next.x.label)+'</h3><span>Keep review short and focused.</span></div></section>':'<section class="priority-card"><div class="date-tile"><strong>★</strong><span>✓</span></div><div><p>UP NEXT</p><h3>No upcoming test is currently listed</h3><span>Keep up with the posted homework and reading routine.</span></div></section>')+
     '<div class="section-heading today-date-heading"><h2><span class="heading-dot blue"></span>'+esc(fmtDate(d))+'</h2></div>'+
     '<section class="today-panel"><div class="timeline">'+timeline+'</div><div class="task-list">'+tasks.map(({item,index})=>taskHtml(item,index)).join("")+'</div></section>'+
-    (schoolUpdates.length?'<section class="today-updates-card"><div class="today-updates-head"><span aria-hidden="true">i</span><div><p>SCHOOL UPDATES</p><h3>Coming up</h3></div></div><div class="today-updates-list">'+schoolUpdates.map(x=>'<div><span aria-hidden="true">•</span><p>'+linkedTextHtml(x)+'</p></div>').join("")+'</div></section>':'')+
+    (schoolUpdates.length?'<section class="future-card today-updates-card"><h3>School updates</h3>'+schoolUpdates.map(x=>'<div><span>UP NEXT</span><p>'+linkedTextHtml(x)+'</p></div>').join("")+'</section>':'')+
     lunchCardHtml(d,lunch)+
     '</div>';
   stack().innerHTML=html;
