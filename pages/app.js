@@ -5,6 +5,19 @@ let envelope=null, pack=null, activeTab=(["today","week","calendar","study","gam
 let studyGameCatalogCache=null, derivedPackCache=null, studyEnginePromise=null, screenEventsBound=false, lastPackFetchAt=0, packRefreshPromise=null, manualRefreshActive=false, lastPackFetchUsedCache=false, gameState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null,sourceKey:"",sessionSeed:"",learningEvents:[],comebackSucceeded:false,rewardStatus:"idle",rewardAwarded:0,rewardCurrency:"Study Stars",starBalance:0,rewardRevealAmount:0,rewardRevealScheduled:false,tries:0,misses:0,hints:0,retry:0,lastWrong:null};
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+
+function linkedTextHtml(value){
+  const text=String(value??"");
+  const urlPattern=/https?:\\/\\/[^\\s<]+/g;
+  let html="",cursor=0,match;
+  while((match=urlPattern.exec(text))){
+    html+=esc(text.slice(cursor,match.index));
+    const url=match[0];
+    html+='<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(url.replace(/^https?:\\/\\//,""))+'</a>';
+    cursor=match.index+url.length;
+  }
+  return html+esc(text.slice(cursor));
+}
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
 const SHORT_MONTHS={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,sept:8,oct:9,nov:10,dec:11};
 const WEEKDAY=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
@@ -307,6 +320,7 @@ function renderToday(){
   let timeline=events.map(e=>'<div class="timeline-row"><time>'+(kindClass(e)==="closed"?"Closed":"School")+'</time><span class="timeline-pin '+kindClass(e)+'"></span><div><strong>'+esc(e.label)+'</strong>'+(e.kind?'<small>'+esc(e.kind)+'</small>':'')+'</div><i></i></div>').join("");
   if(!timeline) timeline='<div class="timeline-row"><time>School</time><span class="timeline-pin family"></span><div><strong>No special school events are listed for this date.</strong></div></div>';
   const tasks=taskRecordsForSurface("today");
+  const schoolUpdates=upcomingReminderTexts(d,3);
   const html='<div class="screen today-screen" role="region" aria-label="Today">'+
     header("ABVM GRADE 2 · "+fmtDate(d).toUpperCase(),"Hi, school star!")+
     freshness()+
@@ -315,6 +329,7 @@ function renderToday(){
     (next?'<section class="priority-card"><div class="date-tile"><strong>'+esc(WEEKDAY[next.d.getDay()].slice(0,3).toUpperCase())+'</strong><span>'+next.d.getDate()+'</span></div><div><p>CLOSEST TEST</p><h3>'+esc(next.x.label)+'</h3><span>Keep review short and focused.</span></div></section>':'<section class="priority-card"><div class="date-tile"><strong>★</strong><span>✓</span></div><div><p>UP NEXT</p><h3>No upcoming test is currently listed</h3><span>Keep up with the posted homework and reading routine.</span></div></section>')+
     '<div class="section-heading today-date-heading"><h2><span class="heading-dot blue"></span>'+esc(fmtDate(d))+'</h2></div>'+
     '<section class="today-panel"><div class="timeline">'+timeline+'</div><div class="task-list">'+tasks.map(({item,index})=>taskHtml(item,index)).join("")+'</div></section>'+
+    (schoolUpdates.length?'<section class="today-updates-card"><div class="today-updates-head"><span aria-hidden="true">i</span><div><p>SCHOOL UPDATES</p><h3>Coming up</h3></div></div><div class="today-updates-list">'+schoolUpdates.map(x=>'<div><span aria-hidden="true">•</span><p>'+linkedTextHtml(x)+'</p></div>').join("")+'</div></section>':'')+
     lunchCardHtml(d,lunch)+
     '</div>';
   stack().innerHTML=html;
@@ -577,7 +592,7 @@ function renderFamily(){
     '<div class="family-stats"><div><strong>'+tests+'</strong><span>test days</span></div><div><strong>'+actions.length+'</strong><span>current actions</span></div></div>'+
     (window.ABVMWeeklyLearning?.renderChanges?.(pack?.schoolChangeFeed)||"")+
     '<section class="parent-card family-actions-card"><div class="family-actions-head"><span class="family-actions-mark" aria-hidden="true">✓</span><div><small>TO DO</small><h3>Family actions</h3></div></div><ul>'+actions.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></section>'+
-    '<section class="parent-card sources notices-card" aria-labelledby="family-current-notices"><div class="notices-head"><span class="notices-mark" aria-hidden="true">i</span><div><small>SCHOOL UPDATES</small><h3 id="family-current-notices">Current notices</h3></div></div><div class="static-notice-list" role="list">'+notices.map(x=>'<div class="notice-row" role="listitem"><span class="status ok" aria-hidden="true"></span><p>'+esc(x)+'</p></div>').join("")+'</div></section>'+
+    '<section class="parent-card sources notices-card" aria-labelledby="family-current-notices"><div class="notices-head"><span class="notices-mark" aria-hidden="true">i</span><div><small>SCHOOL UPDATES & SIGN-UPS</small><h3 id="family-current-notices">Current notices</h3></div></div><div class="static-notice-list" role="list">'+notices.map(x=>'<div class="notice-row" role="listitem"><span class="status ok" aria-hidden="true"></span><p>'+linkedTextHtml(x)+'</p></div>').join("")+'</div></section>'+
     '<details class="family-more"><summary><span>App & privacy</span><b aria-hidden="true">+</b></summary><div><p>Study-game progress stays on this device. No student IDs or private classmates’ information are used.</p><a href="#games" data-open-games>Open Study Games</a><p>To install on iPhone, use Safari’s Share menu → Add to Home Screen.</p></div></details>'+
     '<p class="unofficial-note">Family planning tool based on current ABVM Grade 2 sources.</p>'+
     '</div>';
