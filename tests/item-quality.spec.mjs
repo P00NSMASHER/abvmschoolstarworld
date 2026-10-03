@@ -251,3 +251,53 @@ test("small samples stay insufficient and cannot trigger automatic family promot
   expect(result.gate.automaticDelete).toBe(false);
   expect(result.gate.automaticRewrite).toBe(false);
 });
+
+
+test("family safe-usage evidence requires every item to be reviewable and unflagged",async({page})=>{
+  const result=await page.evaluate(()=>{
+    const e=window.ABVMStudyGames;
+    const questions=[
+      {id:"family-a",variantFingerprint:"family-a",subject:"Reading / ELA",skill:"characters"},
+      {id:"family-b",variantFingerprint:"family-b",subject:"Reading / ELA",skill:"characters"}
+    ];
+    const safeRow={Skill:"characters",Subject:"Reading / ELA",Resolved:12,NormalResolved:12,NormalCorrect:7,NormalWrong:5,FirstTryCorrect:7,
+      ChoicePositions:[4,4,4],Misconceptions:{},ResponseBands:{lt5:2,"5to15":7,"15to30":3,gte30:0},
+      HintsUsed:1,SupportSeen:2,ComebackSeen:2,ComebackCorrect:1,
+      AbilityN:12,AbilitySum:6,AbilitySumSq:4,FirstTryAbilitySum:4};
+    const ids=questions.map(q=>e.itemQualityKey(q));
+    const sufficient=e.reviewQuestionFamilySafeUsage({questions,data:{schemaVersion:2,items:{
+      [ids[0]]:{...safeRow},[ids[1]]:{...safeRow}
+    }}});
+    const missing=e.reviewQuestionFamilySafeUsage({questions,data:{schemaVersion:2,items:{
+      [ids[0]]:{...safeRow}
+    }}});
+    const flagged=e.reviewQuestionFamilySafeUsage({questions,data:{schemaVersion:2,items:{
+      [ids[0]]:{...safeRow},
+      [ids[1]]:{...safeRow,FirstTryCorrect:12,NormalCorrect:12,NormalWrong:0}
+    }}});
+    const gate=e.reviewQuestionFamilyPromotion({
+      familyId:"characters",
+      featureFlagged:true,
+      automatedQaPassed:true,
+      safeUsageEvidence:sufficient.safeUsageEvidence
+    });
+    return {ids,sufficient,missing,flagged,gate};
+  });
+
+  expect(result.sufficient.safeUsageEvidence).toBe("sufficient-safe-usage");
+  expect(result.sufficient.questionCount).toBe(2);
+  expect(result.sufficient.reviewableCount).toBe(2);
+  expect(result.sufficient.flaggedCount).toBe(0);
+  expect(result.sufficient.blockers).toEqual([]);
+  expect(result.sufficient.automaticPromotion).toBe(false);
+  expect(result.sufficient.irtUsed).toBe(false);
+
+  expect(result.missing.safeUsageEvidence).toBe("insufficient-evidence");
+  expect(result.missing.blockers).toContain("item-evidence-required:"+result.ids[1]);
+
+  expect(result.flagged.safeUsageEvidence).toBe("insufficient-evidence");
+  expect(result.flagged.blockers.some(item=>item.includes("too-easy"))).toBe(true);
+
+  expect(result.gate.status).toBe("READY_FOR_MANUAL_PROMOTION");
+  expect(result.gate.automaticPromotion).toBe(false);
+});
