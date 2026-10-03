@@ -22,14 +22,16 @@ test('curriculum coverage evidence artifact includes the hidden report and fails
 
 test('candidate curriculum flags require a separate non-production preview output', () => {
   const refresh = readFileSync('scripts/refresh-teacher-pages.mjs', 'utf8');
-  assert.match(refresh, /--curriculum-feature-flag=/);
-  assert.match(refresh, /--curriculum-preview-output=/);
-  assert.match(refresh, /Candidate curriculum feature flags require --curriculum-preview-output=/);
-  assert.match(refresh, /Curriculum preview flags must identify disabled CANDIDATE families/);
-  assert.match(refresh, /family\.rolloutStatus === 'CANDIDATE'/);
-  assert.match(refresh, /Curriculum preview output cannot overwrite the production study pack/);
+  const guard = readFileSync('scripts/curriculum-preview-options.mjs', 'utf8');
+  assert.match(refresh, /parseCurriculumPreviewOptions\(process\.argv/);
   assert.match(refresh, /activeCurriculumFeatureFlags,/);
   assert.match(refresh, /production study pack was not changed/);
+  assert.match(guard, /--curriculum-feature-flag=/);
+  assert.match(guard, /--curriculum-preview-output=/);
+  assert.match(guard, /Candidate curriculum feature flags require --curriculum-preview-output=/);
+  assert.match(guard, /Curriculum preview flags must identify disabled CANDIDATE families/);
+  assert.match(guard, /family\?\.rolloutStatus === 'CANDIDATE'/);
+  assert.match(guard, /Curriculum preview output cannot overwrite the production study pack/);
 });
 
 test('candidate-only pull requests still receive the full QA workflow', () => {
