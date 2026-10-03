@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "lastIntegratedAt": "2026-10-03T16:45:00.000Z",
+  "lastIntegratedAt": "2026-10-03T17:02:00.000Z",
   "documents": [
     {
       "id": "dress-down-2026-09-25",
@@ -709,6 +709,11 @@
       "text": "Tuesday, Oct. 13: Dress Down Day supports the Knights of Columbus Thanksgiving Meal.",
       "topic": "knights-thanksgiving-ddd",
       "sourceDocument": "weekly-reminders-2026-10-05"
+    },
+    {
+      "text": "Gift Card Calendar winners were announced for Oct. 1 and Oct. 2: each prize was $50; the featured businesses were Cracker Barrel and Roman Delight. Winner and seller names are kept out of the public app.",
+      "topic": "gift-card-winners",
+      "sourceDocument": "gift-card-winners-2026-10-01-02"
     }
   ],
   "replacements": [
