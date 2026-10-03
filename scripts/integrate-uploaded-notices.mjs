@@ -86,6 +86,7 @@ export function integrateUploadedNotices(data,uploaded,{now=new Date()}={}){
   if(/\d+ uploaded school notices are integrated with the teacher pages\./.test(String(pack.summary||""))){
     pack.summary=String(pack.summary).replace(/\d+ uploaded school notices are integrated with the teacher pages\./,countSentence);
   }
+  if(Date.parse(uploaded.lastIntegratedAt)>Date.parse(data.sourceLastSeenAt||0))data.sourceLastSeenAt=uploaded.lastIntegratedAt;
   data.uploadedNotices={
     count:uploaded.documents.length,
     latestIntegratedAt:uploaded.lastIntegratedAt,
