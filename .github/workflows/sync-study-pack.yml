@@ -15,6 +15,7 @@ on:
       - 'scripts/teacher-page-parsers.mjs'
       - 'scripts/lunch-publication.mjs'
       - 'pages/data/lunch-catalog.json'
+      - 'pages/data/uploaded-notices.json'
       - 'scripts/validate-uploaded-notices.mjs'
       - 'tests/grade2-content-pipeline.test.mjs'
       - 'tests/calendar-edge.spec.mjs'
