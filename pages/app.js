@@ -12,13 +12,9 @@ const SCHOOL_TIME_ZONE="America/New_York";
 const SCHOOL_DATE_FORMATTER=new Intl.DateTimeFormat("en-US",{timeZone:SCHOOL_TIME_ZONE,year:"numeric",month:"2-digit",day:"2-digit"});
 const FRESH_DATE_FORMATTER=new Intl.DateTimeFormat(undefined,{month:"short",day:"numeric",timeZone:SCHOOL_TIME_ZONE});
 const FRESH_TIME_FORMATTER=new Intl.DateTimeFormat(undefined,{hour:"numeric",minute:"2-digit",timeZone:SCHOOL_TIME_ZONE});
-function localCurriculumPreviewPackUrl(){
-  if(!new Set(["127.0.0.1","localhost","::1"]).has(location.hostname))return "";
-  const value=new URLSearchParams(location.search).get("pack")||"";
-  return /^\.\/data\/study-pack\.[a-z0-9._-]+-preview\.json$/i.test(value)?value:"";
-}
-const LOCAL_CURRICULUM_PREVIEW_PACK_URL=localCurriculumPreviewPackUrl();
-const PACK_URL=LOCAL_CURRICULUM_PREVIEW_PACK_URL||"./data/study-pack-runtime.json",PACK_FALLBACK_URL=LOCAL_CURRICULUM_PREVIEW_PACK_URL||"./data/study-pack.json";
+const PREVIEW_PACK_QUERY=new URLSearchParams(location.search).get("pack")||"";
+const LOCAL_PREVIEW_PACK_URL=["127.0.0.1","localhost","::1"].includes(location.hostname)&&/^\.\/data\/study-pack\.[a-z0-9._-]+-preview\.json$/i.test(PREVIEW_PACK_QUERY)?PREVIEW_PACK_QUERY:"";
+const PACK_URL=LOCAL_PREVIEW_PACK_URL||"./data/study-pack-runtime.json",PACK_FALLBACK_URL=LOCAL_PREVIEW_PACK_URL||"./data/study-pack.json";
 const PACK_REFRESH_MS=5*60*1000;
 const SCHOOL_LOGO_HTML='<img class="school-mark" src="./assets/abvm-app-icon-192.png" width="52" height="52" alt="Assumption BVM Catholic School logo">';
 const GAME_TYPE_LABELS=Object.freeze({
@@ -117,7 +113,7 @@ function header(kicker,title){
   return '<header class="app-header"><div><p>'+esc(kicker)+'</p><h1>'+esc(title)+'</h1></div>'+SCHOOL_LOGO_HTML+'</header>';
 }
 function freshnessState(){
-  if(LOCAL_CURRICULUM_PREVIEW_PACK_URL)return{state:"preview",label:"Local preview · not published"};
+  if(LOCAL_PREVIEW_PACK_URL)return{state:"preview",label:"Local preview · not published"};
   const raw=envelope?.sourceLastSeenAt||pack?.sourceCapturedAt||pack?.generatedAt;
   const d=raw?new Date(raw):null;
   if(!d||Number.isNaN(d.getTime()))return{state:"attention",label:"Source verification unavailable"};
