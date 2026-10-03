@@ -20,6 +20,16 @@ test('curriculum coverage evidence artifact includes the hidden report and fails
   assert.match(workflow, /if-no-files-found: error/);
 });
 
+test('candidate curriculum flags require a separate non-production preview output', () => {
+  const refresh = readFileSync('scripts/refresh-teacher-pages.mjs', 'utf8');
+  assert.match(refresh, /--curriculum-feature-flag=/);
+  assert.match(refresh, /--curriculum-preview-output=/);
+  assert.match(refresh, /Candidate curriculum feature flags require --curriculum-preview-output=/);
+  assert.match(refresh, /Curriculum preview output cannot overwrite the production study pack/);
+  assert.match(refresh, /activeCurriculumFeatureFlags,/);
+  assert.match(refresh, /production study pack was not changed/);
+});
+
 test('candidate-only pull requests still receive the full QA workflow', () => {
   const qa = readFileSync('.github/workflows/qa.yml', 'utf8');
   assert.match(qa, /curriculum-candidates\/\*\*/);
