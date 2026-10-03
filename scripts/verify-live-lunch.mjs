@@ -91,7 +91,8 @@ try {
   }
   await page.locator('.calendar-day-card').scrollIntoViewIfNeeded();
   await page.screenshot({ path: `${out}/calendar.png` });
-  await page.getByRole('button', { name: 'Study Games', exact: true }).click();
+  await page.getByRole('button', { name: 'Study', exact: true }).click();
+  await page.locator('.study-games-cta').click();
   for (const label of ['Quick Mix', 'Math Dash', 'Word Power', 'Faith Quest']) {
     await expect(page.getByRole('button', { name: new RegExp(label, 'i') })).toBeVisible({ timeout: 15000 });
   }
