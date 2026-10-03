@@ -1,0 +1,68 @@
+name: Integrate ABVM uploaded notices
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'pages/data/uploaded-notices.json'
+      - 'scripts/integrate-uploaded-notices.mjs'
+      - 'scripts/uploaded-notice-policy.mjs'
+      - '.github/workflows/sync-uploaded-notices.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: abvm-uploaded-notices
+  cancel-in-progress: false
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Integrate reviewed uploaded notices and publish to main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          for ATTEMPT in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+
+            node scripts/integrate-uploaded-notices.mjs
+            npm run qa:static
+
+            if git diff --quiet -- pages/data/study-pack.json; then
+              echo "Latest main already contains the reviewed uploaded notices."
+              exit 0
+            fi
+
+            git add pages/data/study-pack.json
+            git commit -m "Integrate reviewed ABVM uploaded notices"
+
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+
+            echo "main moved during notice integration attempt $ATTEMPT; retrying from latest main."
+          done
+
+          echo "Could not publish reviewed uploaded notices after 3 main-race retries." >&2
+          exit 1
