@@ -27,7 +27,7 @@ test('candidate preview requires exact disabled candidate flag and separate outp
     curriculumFamilies:families,
   });
   assert.deepEqual([...result.activeCurriculumFeatureFlags], ['curriculum-family:characters-candidate']);
-  assert.ok(result.curriculumPreviewOutput.endsWith('/.tmp/characters-preview.json'));
+  assert.ok(result.curriculumPreviewOutput.replaceAll('\\','/').endsWith('/.tmp/characters-preview.json'));
 });
 
 test('candidate preview rejects unknown, approved, empty, duplicate, and unscoped flags', () => {

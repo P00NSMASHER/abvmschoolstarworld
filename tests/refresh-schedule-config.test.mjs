@@ -2,8 +2,9 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 
-const workflow=readFileSync(new URL("../.github/workflows/sync-study-pack.yml",import.meta.url),"utf8");
-const watchdog=readFileSync(new URL("../.github/workflows/refresh-health.yml",import.meta.url),"utf8");
+const readText=url=>readFileSync(url,"utf8").replaceAll("\r\n","\n");
+const workflow=readText(new URL("../.github/workflows/sync-study-pack.yml",import.meta.url));
+const watchdog=readText(new URL("../.github/workflows/refresh-health.yml",import.meta.url));
 const refresh=readFileSync(new URL("../scripts/refresh-teacher-pages.mjs",import.meta.url),"utf8");
 
 test("teacher refresh covers the school day and self-triggers only for refresh-relevant workflow changes",()=>{

@@ -2,9 +2,10 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 
-const workflow=readFileSync(new URL("../.github/workflows/health-dashboard.yml",import.meta.url),"utf8");
+const readText=url=>readFileSync(url,"utf8").replaceAll("\r\n","\n");
+const workflow=readText(new URL("../.github/workflows/health-dashboard.yml",import.meta.url));
 const report=readFileSync(new URL("../scripts/build-health-report.mjs",import.meta.url),"utf8");
-const refreshHealthWorkflow=readFileSync(new URL("../.github/workflows/refresh-health.yml",import.meta.url),"utf8");
+const refreshHealthWorkflow=readText(new URL("../.github/workflows/refresh-health.yml",import.meta.url));
 
 test("health classifier changes trigger an immediate main-branch dashboard run",()=>{
   assert.match(workflow,/push:\n\s+branches: \[main\]/);

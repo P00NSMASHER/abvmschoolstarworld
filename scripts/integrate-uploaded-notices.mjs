@@ -1,5 +1,7 @@
 import {createHash} from "node:crypto";
 import {readFileSync, writeFileSync} from "node:fs";
+import {resolve} from "node:path";
+import {fileURLToPath} from "node:url";
 import {validateUploadedNoticePolicy} from "./uploaded-notice-policy.mjs";
 
 const DATA_PATH=new URL("../pages/data/study-pack.json",import.meta.url);
@@ -23,6 +25,7 @@ function topicKey(value){
     ["dance",/welcome back dance/],["chick-fil",/chick[-\s]?fil[-\s]?a/],["flag-football",/flag football/],
     ["door-decorating",/door decorating/],["winter-uniform",/winter (?:uniform|dress code)/],
     ["progress-report",/progress report/],["raise-right",/raise right/],
+    ["gift-card-winners",/gift card calendar.*(?:winner|drawing)|(?:winner|drawing).*gift card calendar/],
     ["student-council",/student council/],["red-ribbon",/red ribbon/],
     ["halloween",/halloween/],["birthday-party",/birthday party/],["cyo-basketball",/cyo.*basketball|basketball.*cyo/],
     ["schwartz",/schwartz/],["spelling",/spelling/],["subtraction",/subtraction/],
@@ -60,7 +63,7 @@ function mergeText(existing,incoming,previousTopics=[]){
   const kept=(existing||[]).filter(text=>!topics.has(topicKey(text)));
   return [...new Set([...incoming.map(item=>item.text),...kept])];
 }
-function noticeHash(uploaded){
+export function noticeHash(uploaded){
   return "uploaded-notices-"+createHash("sha256").update(JSON.stringify(uploaded)).digest("hex").slice(0,20);
 }
 export function integrateUploadedNotices(data,uploaded,{now=new Date()}={}){
@@ -96,14 +99,16 @@ export function integrateUploadedNotices(data,uploaded,{now=new Date()}={}){
   return{data,changed,uploadedNoticeHash:nextHash};
 }
 
-const data=JSON.parse(readFileSync(DATA_PATH,"utf8"));
-const before=JSON.stringify(data);
-const uploaded=JSON.parse(readFileSync(NOTICES_PATH,"utf8"));
-const result=integrateUploadedNotices(data,uploaded,{now:new Date()});
-const after=JSON.stringify(result.data);
-if(after!==before){
-  writeFileSync(DATA_PATH,JSON.stringify(result.data,null,2)+"\n","utf8");
-  console.log("Integrated uploaded school notices",{count:uploaded.documents.length,uploadedNoticeHash:result.uploadedNoticeHash});
-}else{
-  console.log("Uploaded school notices already integrated",{count:uploaded.documents.length,uploadedNoticeHash:result.uploadedNoticeHash});
+if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
+  const data=JSON.parse(readFileSync(DATA_PATH,"utf8"));
+  const before=JSON.stringify(data);
+  const uploaded=JSON.parse(readFileSync(NOTICES_PATH,"utf8"));
+  const result=integrateUploadedNotices(data,uploaded,{now:new Date()});
+  const after=JSON.stringify(result.data);
+  if(after!==before){
+    writeFileSync(DATA_PATH,JSON.stringify(result.data,null,2)+"\n","utf8");
+    console.log("Integrated uploaded school notices",{count:uploaded.documents.length,uploadedNoticeHash:result.uploadedNoticeHash});
+  }else{
+    console.log("Uploaded school notices already integrated",{count:uploaded.documents.length,uploadedNoticeHash:result.uploadedNoticeHash});
+  }
 }

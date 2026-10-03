@@ -165,9 +165,12 @@ function checked(item,index){
 }
 function toggleChecked(item,index){
   const key=checkKey(item),legacy=legacyCheckKey(item,index);
-  if(checked(item,index)){storageRemove(key);storageRemove(legacy);}
+  const wasDone=checked(item,index);
+  if(wasDone){storageRemove(key);storageRemove(legacy);}
   else storageSet(key,"1");
-  render();
+  render({preserveScroll:true});
+  stack().querySelector(`[data-check="${index}"]`)?.focus({preventScroll:true});
+  toast(`${wasDone?"Marked incomplete":"Completed"}: ${item?.task||item?.label||"Task"}`);
 }
 function taskPolicy(item){
   const task=String(item?.task||"").trim(),subject=String(item?.subject||"").trim();
@@ -590,8 +593,9 @@ function render({preserveScroll=false}={}){
   if(!pack)return;
   const scrollTop=stack().querySelector(".screen")?.scrollTop||0;
   ({today:renderToday,week:renderWeek,calendar:renderCalendar,study:renderStudy,games:renderGames,family:renderFamily}[activeTab]||renderToday)();
+  const navTab=activeTab==="games"?"study":activeTab;
   $$(".bottom-nav button").forEach(b=>{
-    const on=b.dataset.tab===activeTab;b.classList.toggle("active",on);
+    const on=b.dataset.tab===navTab;b.classList.toggle("active",on);
     on?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current");
   });
   const screen=stack().querySelector(".screen");

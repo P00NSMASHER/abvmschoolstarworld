@@ -11,7 +11,7 @@ test("manifest remains installable-quality",async({request})=>{
   expect(manifest.icons?.length).toBeGreaterThanOrEqual(2);
 });
 
-test("standalone mode boots the same six-tab app shell",async({browser})=>{
+test("standalone mode boots the same five-tab app shell",async({browser})=>{
   const context=await browser.newContext();
   await context.addInitScript(()=>{
     Object.defineProperty(navigator,"standalone",{value:true,configurable:true});
@@ -23,7 +23,7 @@ test("standalone mode boots the same six-tab app shell",async({browser})=>{
   const page=await context.newPage();
   await page.goto("http://127.0.0.1:4173/#family");
   await expect(page.locator(".family-screen")).toBeVisible({timeout:10_000});
-  await expect(page.locator(".bottom-nav button")).toHaveCount(6);
+  await expect(page.locator(".bottom-nav button")).toHaveCount(5);
   await context.close();
 });
 

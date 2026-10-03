@@ -2,7 +2,10 @@ import {test,expect} from "@playwright/test";
 import {readPwaVersions} from "./pwa-test-helpers.mjs";
 
 async function openTab(page,label){
-  await page.getByRole("button",{name:label,exact:true}).click();
+  if(label==="Study Games"){
+    await page.getByRole("button",{name:"Study",exact:true}).click();
+    await page.locator(".study-games-cta").click();
+  }else await page.getByRole("button",{name:label,exact:true}).click();
   await expect(page.locator(".screen")).toBeVisible();
 }
 

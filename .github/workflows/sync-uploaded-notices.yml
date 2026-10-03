@@ -7,6 +7,11 @@ on:
       - 'pages/data/uploaded-notices.json'
       - 'scripts/integrate-uploaded-notices.mjs'
       - 'scripts/uploaded-notice-policy.mjs'
+      - 'scripts/validate-uploaded-notices.mjs'
+      - 'scripts/check-css-hygiene.mjs'
+      - 'scripts/validate-app.mjs'
+      - 'tests/uploaded-notice-integration.test.mjs'
+      - 'tests/uploaded-notice-policy.test.mjs'
       - '.github/workflows/sync-uploaded-notices.yml'
   workflow_dispatch:
 
@@ -50,6 +55,7 @@ jobs:
 
             node scripts/integrate-uploaded-notices.mjs
             npm run qa:static
+            node --test tests/uploaded-notice-integration.test.mjs tests/uploaded-notice-policy.test.mjs
 
             if git diff --quiet -- pages/data/study-pack.json; then
               echo "Latest main already contains the reviewed uploaded notices."

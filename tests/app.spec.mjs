@@ -2,7 +2,10 @@ import {test,expect} from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 async function openTab(page,label){
-  await page.getByRole("button",{name:label,exact:true}).click();
+  if(label==="Study Games"){
+    await page.getByRole("button",{name:"Study",exact:true}).click();
+    await page.locator(".study-games-cta").click();
+  }else await page.getByRole("button",{name:label,exact:true}).click();
   await expect(page.locator(".screen")).toBeVisible();
   if(label==="Study Games")await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
 }
@@ -44,7 +47,7 @@ test("phone landscape respects horizontal safe areas and stays overflow-free",as
   }
 });
 
-test("all six primary tabs render without horizontal overflow",async({page})=>{
+test("all six destinations render without horizontal overflow",async({page})=>{
   for(const label of ["Today","Week","Calendar","Study","Study Games","Family"]){
     await openTab(page,label);
     const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
@@ -52,7 +55,7 @@ test("all six primary tabs render without horizontal overflow",async({page})=>{
   }
 });
 
-test("all six primary tabs stay tablet-wide and overflow-free on iPad",async({page})=>{
+test("all six destinations stay tablet-wide and overflow-free on iPad",async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await page.goto("/#today");
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
@@ -70,7 +73,7 @@ test("all six primary tabs stay tablet-wide and overflow-free on iPad",async({pa
   }
 });
 
-test("all six tabs stay usable in iPad landscape",async({page})=>{
+test("all six destinations stay usable in iPad landscape",async({page})=>{
   await page.setViewportSize({width:1024,height:768});
   await page.goto("/#today");
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
@@ -101,7 +104,7 @@ test("all six tabs stay usable in iPad landscape",async({page})=>{
   expect(brand.y+brand.height).toBeLessThanOrEqual(hero.y+hero.height+1);
 });
 
-test("all six tabs use the tablet layout on large iPad Pro landscape",async({page})=>{
+test("all six destinations use the tablet layout on large iPad Pro landscape",async({page})=>{
   await page.setViewportSize({width:1366,height:1024});
   await page.goto("/#today");
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
@@ -472,6 +475,21 @@ test("Family exposes current actions, notices, and app/privacy disclosure",async
   await expect(page.locator(".family-more")).toBeVisible();
 });
 
+test("latest reviewed phone uploads reach Family with a safe registration link",async({page})=>{
+  await openTab(page,"Family");
+  const notices=page.locator('[aria-labelledby="family-current-notices"]');
+  await expect(notices).toContainText("CYO registration for 2nd graders");
+  await expect(notices).toContainText("Gift Card Calendar update: two $50 winners");
+  await expect(notices).toContainText("Winner and seller names are kept out of the public app");
+
+  const registration=notices.getByRole("link",{
+    name:"tools.signupgenius.com/c/st-nicholas-basketball-registration-k-1st-grade-copy"
+  });
+  await expect(registration).toHaveAttribute("href","https://tools.signupgenius.com/c/st-nicholas-basketball-registration-k-1st-grade-copy");
+  await expect(registration).toHaveAttribute("target","_blank");
+  await expect(registration).toHaveAttribute("rel",/\bnoopener\b/);
+});
+
 test("all primary screens have no serious or critical automated accessibility violations",async({page})=>{
   const findings=[];
   for(const label of ["Today","Week","Calendar","Study","Study Games","Family"]){
@@ -487,9 +505,9 @@ test("all primary screens have no serious or critical automated accessibility vi
 });
 
 
-test("bottom navigation is a single six-column row",async({page})=>{
+test("bottom navigation is a single five-column row",async({page})=>{
   const nav=page.locator(".bottom-nav");
-  await expect(nav.locator("button")).toHaveCount(6);
+  await expect(nav.locator("button")).toHaveCount(5);
   const layout=await nav.evaluate(el=>{
     const style=getComputedStyle(el);
     return {
@@ -497,7 +515,7 @@ test("bottom navigation is a single six-column row",async({page})=>{
       rows:style.gridTemplateRows.split(/\s+/).filter(Boolean).length
     };
   });
-  expect(layout.columns).toBe(6);
+  expect(layout.columns).toBe(5);
   expect(layout.rows).toBe(1);
 });
 

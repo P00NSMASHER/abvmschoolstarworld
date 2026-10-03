@@ -8,16 +8,23 @@ const sizes=[
   {name:"430x932",width:430,height:932},
 ];
 
-test("all six core flows remain usable across small-phone sizes",async({browser})=>{
+async function openDestination(page,label){
+  if(label==="Study Games"){
+    await page.getByRole("button",{name:"Study",exact:true}).click();
+    await page.locator(".study-games-cta").click();
+    await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
+  }else await page.getByRole("button",{name:label,exact:true}).click();
+  await expect(page.locator(".screen")).toBeVisible();
+}
+
+test("all six core flows remain usable through five primary tabs",async({browser})=>{
   for(const size of sizes){
     const context=await browser.newContext({viewport:{width:size.width,height:size.height},isMobile:true,hasTouch:true});
     const page=await context.newPage();
     await page.goto("http://127.0.0.1:4173/#today");
     await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
     for(const tab of ["Today","Week","Calendar","Study","Study Games","Family"]){
-      await page.getByRole("button",{name:tab,exact:true}).click();
-      await expect(page.locator(".screen")).toBeVisible();
-      if(tab==="Study Games")await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
+      await openDestination(page,tab);
       const metrics=await page.evaluate(()=>({doc:document.documentElement.scrollWidth,body:document.body.scrollWidth,viewport:window.innerWidth}));
       expect(metrics.doc,size.name+" "+tab+" document overflow").toBeLessThanOrEqual(metrics.viewport+1);
       expect(metrics.body,size.name+" "+tab+" body overflow").toBeLessThanOrEqual(metrics.viewport+1);
@@ -45,7 +52,7 @@ test("each tab exposes its primary answer in the first viewport",async({page})=>
     ["Study",".study-at-a-glance"],["Study Games",".study-game-grid"],["Family",".family-hero"]
   ];
   for(const [tab,selector] of targets){
-    await page.getByRole("button",{name:tab,exact:true}).click();
+    await openDestination(page,tab);
     await expect(page.locator(selector)).toBeVisible({timeout:10_000});
     const top=await page.locator(selector).evaluate(el=>el.getBoundingClientRect().top);
     expect(top,tab+" primary content starts too deep").toBeLessThan((page.viewportSize()?.height||844)*.98);
@@ -60,8 +67,7 @@ test("landscape phone keeps navigation and content usable",async({browser})=>{
     await expect(page.locator(".calendar-card")).toBeVisible({timeout:10_000});
     const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
     expect(overflow).toBeFalsy();
-    await page.getByRole("button",{name:"Study Games",exact:true}).click();
-    await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
+    await openDestination(page,"Study Games");
     await context.close();
   }
 });

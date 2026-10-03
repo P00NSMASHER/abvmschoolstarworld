@@ -46,7 +46,8 @@ test("storage failures fail soft instead of breaking the app",async({browser})=>
   await expect(page.locator("[data-check]").first()).toBeVisible();
   await page.locator("[data-check]").first().click();
   await expect(page.locator(".screen")).toBeVisible();
-  await page.getByRole("button",{name:"Study Games",exact:true}).click();
+  await page.getByRole("button",{name:"Study",exact:true}).click();
+  await page.locator(".study-games-cta").click();
   await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
   await context.close();
 });

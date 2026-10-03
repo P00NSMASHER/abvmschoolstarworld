@@ -9,14 +9,19 @@ test("primary views expose stable regions and navigation state",async({page})=>{
   await waitForApp(page,"/#today");
   const tabs=[
     ["Today","Today"],["Week","This week"],["Calendar",/calendar/i],
-    ["Study","Study room"],["Study Games","Study games"],["Family","Family dashboard"]
+    ["Study","Study room"],["Family","Family dashboard"]
   ];
   for(const [tab,regionName] of tabs){
     await page.getByRole("button",{name:tab,exact:true}).click();
     await expect(page.getByRole("button",{name:tab,exact:true})).toHaveAttribute("aria-current","page");
     await expect(page.getByRole("region",{name:regionName})).toBeVisible({timeout:10_000});
-    await expect(page.locator('.bottom-nav button[data-tab]:not([aria-current="page"])')).toHaveCount(5);
+    await expect(page.locator('.bottom-nav button[data-tab]:not([aria-current="page"])')).toHaveCount(4);
   }
+  await page.getByRole("button",{name:"Study",exact:true}).click();
+  await page.locator(".study-games-cta").click();
+  await expect(page.getByRole("region",{name:"Study games"})).toBeVisible({timeout:10_000});
+  await expect(page.getByRole("button",{name:"Study",exact:true})).toHaveAttribute("aria-current","page");
+  await expect(page.getByRole("navigation",{name:"App navigation"}).getByRole("button",{name:"Study Games",exact:true})).toHaveCount(0);
 });
 
 test("Week day controls retain useful visible accessible names",async({page})=>{
@@ -61,6 +66,7 @@ test("Family notices are static information rather than accidental controls",asy
 
 test("freshness and toast status remain available to assistive technology",async({page})=>{
   await waitForApp(page,"/#today");
+  expect(await page.locator("#app-content").getAttribute("aria-live")).toBeNull();
   await expect(page.locator("#toast")).toHaveAttribute("role","status");
   await expect(page.locator("#toast")).toHaveAttribute("aria-live","polite");
   const freshness=page.locator(".freshness");

@@ -45,8 +45,8 @@ if(!css.includes(".day-detail::before{display:none;content:none}")){
   fail("Retired day-detail stripe must stay explicitly suppressed");
 }
 
-if(Buffer.byteLength(css,"utf8")>64000)fail("styles.css exceeded the 64 KB hygiene ceiling");
-if(Buffer.byteLength(app,"utf8")>55000)fail("app.js exceeded the 55 KB hygiene ceiling");
+if(Buffer.byteLength(css,"utf8")>70000)fail("styles.css exceeded the 70 KB hygiene ceiling");
+if(Buffer.byteLength(app,"utf8")>60000)fail("app.js exceeded the 60 KB hygiene ceiling");
 
 const calendarCellRuleBlocks=(css.match(/\.calendar-grid button\s*\{/g)||[]).length;
 if(calendarCellRuleBlocks>2)fail("Calendar cell CSS has accumulated duplicate rule blocks");

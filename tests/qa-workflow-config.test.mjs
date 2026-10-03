@@ -2,8 +2,9 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 
-const qa=fs.readFileSync(".github/workflows/qa.yml","utf8");
-const pages=fs.readFileSync(".github/workflows/pages.yml","utf8");
+const readText=path=>fs.readFileSync(path,"utf8").replaceAll("\r\n","\n");
+const qa=readText(".github/workflows/qa.yml");
+const pages=readText(".github/workflows/pages.yml");
 
 test("main pushes route live-site changes to Pages and tooling changes to QA only",()=>{
   assert.match(qa,/pull_request:/);
