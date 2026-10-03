@@ -6,18 +6,7 @@ let studyGameCatalogCache=null, derivedPackCache=null, studyEnginePromise=null, 
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 
-function linkedTextHtml(value){
-  const text=String(value??"");
-  const urlPattern=/https?:\/\/[^\s<]+/g;
-  let html="",cursor=0,match;
-  while((match=urlPattern.exec(text))){
-    html+=esc(text.slice(cursor,match.index));
-    const url=match[0];
-    html+='<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(url.replace(/^https?:\/\//,""))+'</a>';
-    cursor=match.index+url.length;
-  }
-  return html+esc(text.slice(cursor));
-}
+function linkedTextHtml(value){return esc(value).replace(/https?:\/\/[^\s<]+/g,url=>'<a href="'+url+'" target="_blank" rel="noopener">'+url.replace(/^https?:\/\//,"")+'</a>')}
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
 const SHORT_MONTHS={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,sept:8,oct:9,nov:10,dec:11};
 const WEEKDAY=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
