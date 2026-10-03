@@ -12,6 +12,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: abvm-uploaded-notices
@@ -66,3 +68,10 @@ jobs:
 
           echo "Could not publish reviewed uploaded notices after 3 main-race retries." >&2
           exit 1
+
+  deploy:
+    name: deploy reviewed notice update through Pages workflow
+    needs: integrate
+    uses: ./.github/workflows/pages.yml
+    with:
+      ref: main
