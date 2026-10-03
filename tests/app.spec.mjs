@@ -189,11 +189,7 @@ test("visible buttons keep 44px touch targets across primary screens",async({pag
 
 test("Today uses a two-column iPad dashboard and stays stacked on phone",async({page})=>{
   await page.setViewportSize({width:810,height:1080});
-  await page.addInitScript(()=>{
-    const RealDate=Date,fixed=new RealDate("2026-10-01T12:00:00-04:00").valueOf();
-    class FixedDate extends RealDate{constructor(...args){super(...(args.length?args:[fixed]));}static now(){return fixed;}}
-    window.Date=FixedDate;
-  });
+  await page.clock.setFixedTime(new Date("2026-10-01T12:00:00-04:00"));
   await page.goto("/#today");
   await expect(page.locator(".today-screen")).toBeVisible({timeout:10_000});
   const hero=await page.locator(".hero-card").boundingBox();
@@ -268,11 +264,7 @@ test("Today hero uses integrated Assumption branding on iPad",async({page})=>{
 
 test("Today priority card follows navy and gold identity",async({page})=>{
   await page.setViewportSize({width:390,height:844});
-  await page.addInitScript(()=>{
-    const RealDate=Date,fixed=new RealDate("2026-10-01T12:00:00-04:00").valueOf();
-    class FixedDate extends RealDate{constructor(...args){super(...(args.length?args:[fixed]));}static now(){return fixed;}}
-    window.Date=FixedDate;
-  });
+  await page.clock.setFixedTime(new Date("2026-10-01T12:00:00-04:00"));
   await page.goto("/#today");
   const priority=page.locator(".priority-card");
   const tile=page.locator(".date-tile");
@@ -291,15 +283,7 @@ test("Today priority card follows navy and gold identity",async({page})=>{
 });
 
 test("Today never treats Door Decorating Contest as a test",async({page})=>{
-  await page.addInitScript(()=>{
-    const RealDate=Date;
-    const fixed=new RealDate("2026-10-01T12:00:00-04:00").valueOf();
-    class FixedDate extends RealDate{
-      constructor(...args){super(...(args.length?args:[fixed]));}
-      static now(){return fixed;}
-    }
-    window.Date=FixedDate;
-  });
+  await page.clock.setFixedTime(new Date("2026-10-01T12:00:00-04:00"));
   await page.goto("/#today");
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
   const priority=page.locator(".priority-card");
@@ -373,11 +357,7 @@ test("Calendar uses a tablet two-column layout without changing phone stacking",
 });
 
 test("Calendar keeps the current-month summary as concise as next month",async({page})=>{
-  await page.addInitScript(()=>{
-    const RealDate=Date,fixed=new RealDate("2026-10-01T12:00:00-04:00").valueOf();
-    class FixedDate extends RealDate{constructor(...args){super(...(args.length?args:[fixed]));}static now(){return fixed;}}
-    window.Date=FixedDate;
-  });
+  await page.clock.setFixedTime(new Date("2026-10-01T12:00:00-04:00"));
   await page.goto("/#calendar");
   await expect(page.locator(".calendar-card")).toBeVisible({timeout:10_000});
   expect(await page.locator("[data-cal-day]").count()).toBeGreaterThan(27);
@@ -527,11 +507,7 @@ test("bottom navigation is a single six-column row",async({page})=>{
 
 test("Study Games uses the iPad canvas with priority hierarchy and tablet nav",async({page})=>{
   await page.setViewportSize({width:810,height:1080});
-  await page.addInitScript(()=>{
-    const RealDate=Date,fixed=new RealDate("2026-10-01T12:00:00-04:00").valueOf();
-    class FixedDate extends RealDate{constructor(...args){super(...(args.length?args:[fixed]));}static now(){return fixed;}}
-    window.Date=FixedDate;
-  });
+  await page.clock.setFixedTime(new Date("2026-10-01T12:00:00-04:00"));
   await page.goto("/#games");
   await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
   const appBox=await page.locator(".phone-app").boundingBox();
