@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "lastIntegratedAt": "2026-10-03T17:02:00.000Z",
+  "lastIntegratedAt": "2026-10-03T17:05:00.000Z",
   "documents": [
     {
       "id": "dress-down-2026-09-25",
@@ -711,7 +711,7 @@
       "sourceDocument": "weekly-reminders-2026-10-05"
     },
     {
-      "text": "Gift Card Calendar winners were announced for Oct. 1 and Oct. 2: each prize was $50; the featured businesses were Cracker Barrel and Roman Delight. Winner and seller names are kept out of the public app.",
+      "text": "Gift Card Calendar update: two $50 winners were announced for the first two October drawings; the featured businesses were Cracker Barrel and Roman Delight. Winner and seller names are kept out of the public app.",
       "topic": "gift-card-winners",
       "sourceDocument": "gift-card-winners-2026-10-01-02"
     }
