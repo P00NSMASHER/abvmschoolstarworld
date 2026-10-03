@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 import {
   cleanTeacherText,
@@ -25,6 +26,8 @@ import {
   validateRecentReviewPipeline,
 } from './curriculum-continuity.mjs';
 import { buildSchoolChangeFeed, validateSchoolChangeFeed } from './school-change-feed.mjs';
+import { curriculumFamilyRegistrySnapshot } from './curriculum-family-registry.mjs';
+import { parseCurriculumPreviewOptions } from './curriculum-preview-options.mjs';
 
 const DATA_PATH = new URL('../pages/data/study-pack.json', import.meta.url);
 const UPLOADED_NOTICES_PATH = new URL('../pages/data/uploaded-notices.json', import.meta.url);
@@ -42,6 +45,14 @@ const MONTHS = {
   jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
   jul: 6, aug: 7, sep: 8, sept: 8, oct: 9, nov: 10, dec: 11,
 };
+
+const {
+  activeCurriculumFeatureFlags,
+  curriculumPreviewOutput,
+} = parseCurriculumPreviewOptions(process.argv, {
+  productionDataPath: fileURLToPath(DATA_PATH),
+  curriculumFamilies: curriculumFamilyRegistrySnapshot(),
+});
 
 async function fetchPage(path, title) {
   const url = `${SITE_ROOT}/${path}`;
@@ -378,6 +389,7 @@ const contentPipeline = buildGrade2ContentPipeline(pack, {
   sourceHash,
   sourcePages: teacherSourcePages,
   requirePageExactLineage: true,
+  activeCurriculumFeatureFlags,
 });
 mergeGrade2StudyNotes(pack, contentPipeline);
 const contentPipelineIssues = validateGrade2ContentPipeline(contentPipeline);
@@ -477,6 +489,8 @@ if (process.argv.includes('--dry-run')) {
       status: autopilotPlan.status,
       unsupportedCount: autopilotPlan.unsupportedCount,
       candidateIds: autopilotPlan.candidates.map(candidate => candidate.candidateId),
+      activeCurriculumFeatureFlags,
+      previewOutput: curriculumPreviewOutput || null,
     },
     curriculumContinuity: {
       reviewSkillCount: recentReviewPipeline.skills.length,
@@ -488,6 +502,9 @@ if (process.argv.includes('--dry-run')) {
       items: pack.schoolChangeFeed.items.map(row => row.text),
     },
   }, null, 2));
+} else if (curriculumPreviewOutput) {
+  writeFileSync(curriculumPreviewOutput, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
+  console.log(`Wrote candidate curriculum preview to ${curriculumPreviewOutput} with ${activeCurriculumFeatureFlags.length} explicit feature flag(s); production study pack was not changed.`);
 } else {
   writeFileSync(DATA_PATH, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
   console.log(`${contentChanged ? 'Updated' : 'Checked'} ${fetched.length} teacher pages and ${uploadedNotices.documents.length} uploaded notices; ${homework.length} homework items are current.`);
