@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "lastIntegratedAt": "2026-10-01T00:44:00.000Z",
+  "lastIntegratedAt": "2026-10-03T16:45:00.000Z",
   "documents": [
     {
       "id": "dress-down-2026-09-25",
@@ -174,6 +174,73 @@
         "reviewedBy": "manual-school-notice-review",
         "reviewedAt": "2026-10-01T00:44:00.000Z"
       }
+    },
+    {
+      "id": "weekly-reminders-2026-10-05",
+      "label": "Weekly reminders for October 5–9, 2026",
+      "receivedAt": "2026-10-03",
+      "facts": [
+        "Monday, Oct. 5: Raise Right physical gift card order; the Door Decorating Contest has begun.",
+        "Tuesday, Oct. 6: Faculty Meeting is 3–4 PM; flag football sign-ups are due.",
+        "Wednesday, Oct. 7: Mass for St. John the Baptist is at 9 AM.",
+        "Thursday, Oct. 8: Progress Reports are issued.",
+        "Friday, Oct. 9: 12:00 dismissal; Chick-fil-A orders are due; the conference schedule portal closes.",
+        "Upcoming reminders include no school Oct. 12; Dress Down Day for the Knights of Columbus Thanksgiving Meal Oct. 13; Mass and Communication Folder Oct. 14; Parent-Teacher Conferences Oct. 19–20; Mass Oct. 21; Chick-fil-A delivery Oct. 22; Lego Club and S'Mores Family Oct. 23; K–4 Dress Down Day/flag football Oct. 26; grades 5–8 Dress Down Day/flag football Oct. 29; and the Halloween Celebration Oct. 30."
+      ],
+      "provenance": {
+        "factsHash": "f484b7255f282a2e62688e3945e0f7c028bdf3a36b373bbf5dbbb450d9db1c78",
+        "sourceContentHash": "bfceddb57100f32ab8e4e691d79dc3461c2f1a1e98076da265d7676cadbd6df7"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "manual-school-notice-review",
+        "reviewedAt": "2026-10-03T16:45:00.000Z"
+      }
+    },
+    {
+      "id": "st-nicholas-cyo-basketball-2026",
+      "label": "St. Nicholas Seahawks CYO basketball flyer",
+      "receivedAt": "2026-10-03",
+      "facts": [
+        "St. Nicholas Seahawks CYO basketball registration is open.",
+        "Programs are co-ed for kindergarten/1st grade and for 2nd grade, and all children are welcome.",
+        "The program is held at St. Nicholas School Gymnasium in Minersville, Pennsylvania.",
+        "The sign-up fee is $25.",
+        "2nd grade registration: https://tools.signupgenius.com/c/st-nicholas-basketball-registration-k-1st-grade-copy",
+        "Kindergarten/1st grade registration: https://tools.signupgenius.com/c/st-nicholas-basketball-registration"
+      ],
+      "provenance": {
+        "factsHash": "da86de4ef18c4cdd5edeeefed1d4fa695f1f0bce40426fe092a77118437f5c7a",
+        "sourceContentHash": "bdf00b3d3d409282c2e8004668d4277047609d78b92f9e691d95ad8958c4f290"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "manual-school-notice-review",
+        "reviewedAt": "2026-10-03T16:45:00.000Z"
+      }
+    },
+    {
+      "id": "gift-card-winners-2026-10-01-02",
+      "label": "Gift Card Calendar winners — privacy-redacted",
+      "receivedAt": "2026-10-03",
+      "facts": [
+        "Gift Card Calendar winners were announced for October 1 and October 2, 2026.",
+        "Each announced prize was $50.",
+        "The October 1 prize was for Cracker Barrel; the October 2 prize was for Roman Delight.",
+        "Winner and seller names are intentionally omitted from the public app."
+      ],
+      "provenance": {
+        "factsHash": "a84e99ef7fb6954d40b2c73d56b373260f63a755f651697f4de1efe1fd47887c",
+        "sourceContentHash": "6a1f6608dc419d0aea45082d519c5b84f8a0d3769731027ec1480cd8da182317"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "manual-school-notice-review",
+        "reviewedAt": "2026-10-03T16:45:00.000Z"
+      }
     }
   ],
   "importantDates": [
@@ -280,40 +347,10 @@
       "sourceDocument": "october-calendar-2026"
     },
     {
-      "date": "Monday, Oct. 5",
-      "label": "Raise Right physical gift cards ordered",
-      "kind": "school event",
-      "sourceDocument": "october-calendar-2026"
-    },
-    {
-      "date": "Tuesday, Oct. 6",
-      "label": "Faculty Meeting",
-      "kind": "meeting",
-      "sourceDocument": "october-calendar-2026"
-    },
-    {
-      "date": "Wednesday, Oct. 7",
-      "label": "Mass",
-      "kind": "school event",
-      "sourceDocument": "october-calendar-2026"
-    },
-    {
       "date": "Wednesday, Oct. 7",
       "label": "K–4 flag football permission form due",
       "kind": "deadline",
       "sourceDocument": "flag-football-2026-10"
-    },
-    {
-      "date": "Thursday, Oct. 8",
-      "label": "Progress Reports Issued",
-      "kind": "school event",
-      "sourceDocument": "october-calendar-2026"
-    },
-    {
-      "date": "Friday, Oct. 9",
-      "label": "12:00 dismissal",
-      "kind": "schedule change",
-      "sourceDocument": "october-calendar-2026"
     },
     {
       "date": "Friday, Oct. 9",
@@ -325,12 +362,6 @@
       "date": "Monday, Oct. 12",
       "label": "No School — Columbus Day",
       "kind": "holiday",
-      "sourceDocument": "october-calendar-2026"
-    },
-    {
-      "date": "Tuesday, Oct. 13",
-      "label": "Dress Down Day — local charity",
-      "kind": "school event",
       "sourceDocument": "october-calendar-2026"
     },
     {
@@ -440,6 +471,60 @@
       "label": "Reading Royals Game Family Fun Night",
       "kind": "school event",
       "sourceDocument": "weekly-reminders-2026-09-28"
+    },
+    {
+      "date": "Monday, Oct. 5",
+      "label": "Raise Right physical gift card order",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-05"
+    },
+    {
+      "date": "Tuesday, Oct. 6",
+      "label": "Faculty Meeting — 3–4 PM",
+      "kind": "meeting",
+      "sourceDocument": "weekly-reminders-2026-10-05"
+    },
+    {
+      "date": "Tuesday, Oct. 6",
+      "label": "Flag football sign-ups due",
+      "kind": "deadline",
+      "sourceDocument": "weekly-reminders-2026-10-05"
+    },
+    {
+      "date": "Wednesday, Oct. 7",
+      "label": "Mass — St. John the Baptist, 9 AM",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-05"
+    },
+    {
+      "date": "Thursday, Oct. 8",
+      "label": "Progress Reports Issued",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-05"
+    },
+    {
+      "date": "Friday, Oct. 9",
+      "label": "12:00 dismissal",
+      "kind": "schedule change",
+      "sourceDocument": "weekly-reminders-2026-10-05"
+    },
+    {
+      "date": "Friday, Oct. 9",
+      "label": "Conference schedule portal closes",
+      "kind": "deadline",
+      "sourceDocument": "weekly-reminders-2026-10-05"
+    },
+    {
+      "date": "Tuesday, Oct. 13",
+      "label": "Dress Down Day — Knights of Columbus Thanksgiving Meal",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-05"
+    },
+    {
+      "date": "Thursday, Oct. 29",
+      "label": "Grades 5–8 Dress Down Day & Flag Football",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-05"
     }
   ],
   "reminders": [
@@ -489,11 +574,6 @@
       "sourceDocument": "october-calendar-2026"
     },
     {
-      "text": "Wednesday, Oct. 7: K–4 flag football permission form is due.",
-      "topic": "flag-football",
-      "sourceDocument": "flag-football-2026-10"
-    },
-    {
       "text": "Thursday, Oct. 8: Progress Reports are issued.",
       "topic": "progress-report",
       "sourceDocument": "october-calendar-2026"
@@ -522,6 +602,21 @@
       "text": "Monday, Oct. 26: K–4 Dress Down & Flag Football is 1:45–2:30 PM; send a requested food-bank item or $5 donation to participate in dress down.",
       "topic": "dress-down",
       "sourceDocument": "flag-football-2026-10"
+    },
+    {
+      "text": "Tuesday, Oct. 6: Flag football sign-ups are due. Wednesday, Oct. 7: K–4 flag football permission form is due.",
+      "topic": "flag-football",
+      "sourceDocument": "weekly-reminders-2026-10-05"
+    },
+    {
+      "text": "Friday, Oct. 9: Conference schedule portal closes.",
+      "topic": "conference-schedule",
+      "sourceDocument": "weekly-reminders-2026-10-05"
+    },
+    {
+      "text": "Tuesday, Oct. 13: Dress Down Day supports the Knights of Columbus Thanksgiving Meal.",
+      "topic": "knights-thanksgiving-ddd",
+      "sourceDocument": "weekly-reminders-2026-10-05"
     }
   ],
   "parentNotices": [
@@ -599,6 +694,21 @@
       "text": "Monday, Oct. 26: K–4 Dress Down & Flag Football; dress-down participation requires a requested food-bank item or $5 donation.",
       "topic": "dress-down",
       "sourceDocument": "flag-football-2026-10"
+    },
+    {
+      "text": "St. Nicholas Seahawks CYO basketball registration is open to 2nd graders; sign-up fee is $25. Register: https://tools.signupgenius.com/c/st-nicholas-basketball-registration-k-1st-grade-copy",
+      "topic": "cyo-basketball",
+      "sourceDocument": "st-nicholas-cyo-basketball-2026"
+    },
+    {
+      "text": "Friday, Oct. 9: Conference schedule portal closes.",
+      "topic": "conference-schedule",
+      "sourceDocument": "weekly-reminders-2026-10-05"
+    },
+    {
+      "text": "Tuesday, Oct. 13: Dress Down Day supports the Knights of Columbus Thanksgiving Meal.",
+      "topic": "knights-thanksgiving-ddd",
+      "sourceDocument": "weekly-reminders-2026-10-05"
     }
   ],
   "replacements": [
