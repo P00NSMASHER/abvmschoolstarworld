@@ -28,6 +28,14 @@ class YahooWeeklyImportTests(unittest.TestCase):
         self.assertNotIn("named guest", str(events))
         self.assertNotIn("birthday", str(events))
 
+    def test_date_can_be_on_a_line_before_the_fixed_event_label(self):
+        events = module.events_from_text(
+            "Monday, October 5\nNo School\nTuesday, October 6\nMass\n",
+            dt.date(2026, 10, 5),
+        )
+        self.assertEqual([(x["date"], x["label"]) for x in events],
+                         [("Monday, Oct. 5", "No School"), ("Tuesday, Oct. 6", "Mass")])
+
     def test_unrecognized_pdf_fails_closed(self):
         with self.assertRaisesRegex(ValueError, "manual review required"):
             module.events_from_text("Monday, October 5: Private classroom note", dt.date(2026, 10, 5))
