@@ -126,7 +126,8 @@ def extract_events(pdf, week):
     with tempfile.TemporaryDirectory() as folder:
         source = Path(folder) / "notice.pdf"
         source.write_bytes(pdf)
-        result = subprocess.run(["pdftotext", "-layout", str(source), "-"], capture_output=True, text=True, check=True, timeout=15)
+        result = subprocess.run(["pdftotext", "-layout", str(source), "-"], capture_output=True, text=True,
+                                check=True, timeout=15, env={"PATH": os.environ.get("PATH", "")})
     return events_from_text(result.stdout, week)
 
 
@@ -157,14 +158,13 @@ def events_from_text(text, week):
 
 
 def access_token():
-    required = ("YAHOO_OAUTH_CLIENT_ID", "YAHOO_OAUTH_CLIENT_SECRET", "YAHOO_OAUTH_REFRESH_TOKEN")
+    required = ("YAHOO_OAUTH_CLIENT_ID", "YAHOO_OAUTH_CLIENT_SECRET", "YAHOO_OAUTH_REFRESH_TOKEN", "YAHOO_OAUTH_REDIRECT_URI")
     missing = [name for name in required if not os.environ.get(name)]
     if missing:
         raise ValueError("Missing GitHub Actions secrets: " + ", ".join(missing))
     credentials = f"{os.environ['YAHOO_OAUTH_CLIENT_ID']}:{os.environ['YAHOO_OAUTH_CLIENT_SECRET']}"
     body = {"grant_type": "refresh_token", "refresh_token": os.environ["YAHOO_OAUTH_REFRESH_TOKEN"]}
-    if os.environ.get("YAHOO_OAUTH_REDIRECT_URI"):
-        body["redirect_uri"] = os.environ["YAHOO_OAUTH_REDIRECT_URI"]
+    body["redirect_uri"] = os.environ["YAHOO_OAUTH_REDIRECT_URI"]
     request = urllib.request.Request(
         "https://api.login.yahoo.com/oauth2/get_token",
         data=urllib.parse.urlencode(body).encode(),
