@@ -157,27 +157,37 @@ def events_from_text(text, week):
 
 
 def access_token():
-    required = ("YAHOO_MAIL_ACCOUNT", "YAHOO_OAUTH_CLIENT_ID", "YAHOO_OAUTH_CLIENT_SECRET", "YAHOO_OAUTH_REFRESH_TOKEN")
+    required = ("YAHOO_OAUTH_CLIENT_ID", "YAHOO_OAUTH_CLIENT_SECRET", "YAHOO_OAUTH_REFRESH_TOKEN")
     missing = [name for name in required if not os.environ.get(name)]
     if missing:
         raise ValueError("Missing GitHub Actions secrets: " + ", ".join(missing))
     credentials = f"{os.environ['YAHOO_OAUTH_CLIENT_ID']}:{os.environ['YAHOO_OAUTH_CLIENT_SECRET']}"
+    body = {"grant_type": "refresh_token", "refresh_token": os.environ["YAHOO_OAUTH_REFRESH_TOKEN"]}
+    if os.environ.get("YAHOO_OAUTH_REDIRECT_URI"):
+        body["redirect_uri"] = os.environ["YAHOO_OAUTH_REDIRECT_URI"]
     request = urllib.request.Request(
         "https://api.login.yahoo.com/oauth2/get_token",
-        data=urllib.parse.urlencode({"grant_type": "refresh_token", "refresh_token": os.environ["YAHOO_OAUTH_REFRESH_TOKEN"]}).encode(),
+        data=urllib.parse.urlencode(body).encode(),
         headers={"Authorization": "Basic " + base64.b64encode(credentials.encode()).decode(), "Content-Type": "application/x-www-form-urlencoded"},
         method="POST",
     )
     with urllib.request.urlopen(request, timeout=20) as response:
-        return json.load(response)["access_token"]
+        payload = json.load(response)
+    if payload.get("refresh_token") and payload["refresh_token"] != os.environ["YAHOO_OAUTH_REFRESH_TOKEN"]:
+        raise RuntimeError("Yahoo rotated the refresh token; update the GitHub secret before another scheduled run")
+    return payload["access_token"]
 
 
-def messages(token):
+def messages():
     account = os.environ["YAHOO_MAIL_ACCOUNT"]
     since = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=45)).strftime("%d-%b-%Y")
     with imaplib.IMAP4_SSL("imap.mail.yahoo.com", 993) as inbox:
-        bearer = f"n,a={account},\x01host=imap.mail.yahoo.com\x01port=993\x01auth=Bearer {token}\x01\x01"
-        inbox.authenticate("OAUTHBEARER", lambda _: bearer.encode())
+        if os.environ.get("YAHOO_APP_PASSWORD"):
+            inbox.login(account, os.environ["YAHOO_APP_PASSWORD"])
+        else:
+            token = access_token()
+            bearer = f"n,a={account},\x01host=imap.mail.yahoo.com\x01port=993\x01auth=Bearer {token}\x01\x01"
+            inbox.authenticate("OAUTHBEARER", lambda _: bearer.encode())
         inbox.select("INBOX", readonly=True)
         status, uids = inbox.uid("SEARCH", None, "FROM", f'"{SENDER}"', "SINCE", since)
         if status != "OK":
@@ -191,10 +201,12 @@ def messages(token):
 
 
 def main():
+    if not os.environ.get("YAHOO_MAIL_ACCOUNT"):
+        raise ValueError("Missing YAHOO_MAIL_ACCOUNT secret")
     uploaded = json.loads(DATA.read_text())
     known = {doc["id"]: doc for doc in uploaded["documents"]}
     added = 0
-    for message in messages(access_token()):
+    for message in messages():
         if parseaddr(message.get("From", ""))[1].lower() != SENDER or "weekly reminders" not in str(message.get("Subject", "")).lower():
             continue
         received = parsedate_to_datetime(message["Date"]).date().isoformat()
