@@ -56,6 +56,13 @@ class YahooWeeklyImportTests(unittest.TestCase):
         self.assertEqual(module.body_events(message, dt.date(2026, 9, 25)),
                          [{"date": "Monday, Sep. 28", "label": "Gym classes moved to this date", "kind": "schedule change"}])
 
+    def test_gym_html_only_email(self):
+        message = EmailMessage()
+        message["Subject"] = "Change of date for Gym Classes"
+        message.set_content("<p>Due to&nbsp;picture&nbsp;day&nbsp;next Thursday, gym classes will be held on Monday, September 28th.</p>", subtype="html")
+        self.assertEqual(module.body_events(message, dt.date(2026, 9, 25)),
+                         [{"date": "Monday, Sep. 28", "label": "Gym classes moved to this date", "kind": "schedule change"}])
+
     def test_plain_and_html_document_links_are_deduplicated(self):
         message = EmailMessage()
         label = "Weekly Reminders for Week of 10.05.26.pdf"

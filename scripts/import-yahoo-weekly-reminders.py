@@ -270,9 +270,20 @@ def body_events(message, received):
     if "gym" not in str(message.get("Subject", "")).lower():
         return []
     for part in message.walk():
-        if part.get_content_type() != "text/plain" or part.get_content_disposition() == "attachment":
+        if part.get_content_type() not in ("text/plain", "text/html") or part.get_content_disposition() == "attachment":
             continue
-        text = " ".join(part.get_content().split()).split("SchoolMessenger ABVM would like")[0]
+        content = part.get_content()
+        if part.get_content_type() == "text/html":
+            class BodyText(HTMLParser):
+                def __init__(self):
+                    super().__init__()
+                    self.text = []
+                def handle_data(self, data):
+                    self.text.append(data)
+            parser = BodyText()
+            parser.feed(content)
+            content = " ".join(parser.text)
+        text = " ".join(content.split()).split("SchoolMessenger ABVM would like")[0]
         match = re.search(r"gym classes will be held on ((?:Monday|Tuesday|Wednesday|Thursday|Friday),? [A-Za-z]+ \d{1,2}(?:st|nd|rd|th)?)", text, re.I)
         if match:
             items = events_from_text(match[1] + ": Gym classes moved", received)
