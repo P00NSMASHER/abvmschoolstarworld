@@ -5,6 +5,8 @@ Only fixed, public school-event labels leave this process. Unexpected PDF layout
 changed documents, and unrecognized messages fail closed for manual handling.
 """
 
+import csv
+import io
 import base64
 import datetime as dt
 import email
@@ -22,6 +24,7 @@ import socket
 import subprocess
 import tempfile
 import urllib.parse
+import urllib.request
 
 
 SENDER = "mthompson@assumptionbvmschool.net"
@@ -35,17 +38,18 @@ DATE_LINE = re.compile(
     r"(\d{1,2})(?:/(\d{1,2}))?\b\s*[:.\-–]?\s*(.*)$", re.I
 )
 EVENTS = (
+    (re.compile(r"\bgym classes moved\b", re.I), "Gym classes moved to this date", "schedule change"),
     (re.compile(r"\bno school\b", re.I), "No School", "holiday"),
-    (re.compile(r"\b(?:12:00|noon)\s+dismissal\b", re.I), "12:00 dismissal", "schedule change"),
+    (re.compile(r"\b(?:12(?::00)?|noon)\s+dismissal\b", re.I), "12:00 dismissal", "schedule change"),
     (re.compile(r"\bmass\b", re.I), "Mass", "school event"),
-    (re.compile(r"\bcommunication folders?\b", re.I), "Communication Folder", "school event"),
+    (re.compile(r"\bcommunication\s+folders?\b", re.I), "Communication Folder", "school event"),
     (re.compile(r"\bpicture day\b", re.I), "Picture Day", "school event"),
-    (re.compile(r"\bdress[- ]down day\b", re.I), "Dress Down Day", "school event"),
+    (re.compile(r"\b(?:dress[- ]down day|DDD)\b", re.I), "Dress Down Day", "school event"),
     (re.compile(r"\bprogress reports?\b", re.I), "Progress Reports", "school event"),
     (re.compile(r"\blego club\b", re.I), "Lego Club", "club"),
     (re.compile(r"\bflag football\b", re.I), "Flag football", "school event"),
     (re.compile(r"\bparent[- ]teacher conferences?\b", re.I), "Parent-Teacher Conferences", "conference"),
-    (re.compile(r"\bpretzel delivery\b", re.I), "Pretzel delivery", "school event"),
+    (re.compile(r"\bpretzel[\s;|]+delivery\b", re.I), "Pretzel delivery", "school event"),
     (re.compile(r"\bSTAR testing\b", re.I), "STAR testing", "assessment"),
     (re.compile(r"\bChick[- ]fil[- ]A\b", re.I), "Chick-fil-A", "school event"),
 )
@@ -81,15 +85,39 @@ def week_from_name(name):
     return dt.date(year + (2000 if year < 100 else 0), month, day)
 
 
-def pdf_links(message):
+def document_links(message):
     result = []
     for part in message.walk():
-        if part.get_content_type() != "text/html":
+        if part.get_content_disposition() == "attachment":
             continue
-        parser = Links()
-        parser.feed(part.get_content())
-        result.extend((week_from_name(label), url) for label, url in parser.links if week_from_name(label))
-    return result
+        if part.get_content_type() == "text/html":
+            parser = Links()
+            parser.feed(part.get_content())
+            result.extend(parser.links)
+        elif part.get_content_type() == "text/plain":
+            result.extend(re.findall(r"(?m)^([^\n]+[.]pdf)\s*\n\[(https?://[^]\s]+)\]", part.get_content(), re.I))
+    return list(dict.fromkeys(result))
+
+
+def pdf_links(message):
+    return [(week_from_name(label), url) for label, url in document_links(message) if week_from_name(label)]
+
+
+def flyer_events(pdf, received):
+    with tempfile.TemporaryDirectory() as folder:
+        source = Path(folder) / "flyer.pdf"
+        source.write_bytes(pdf)
+        env = {"PATH": os.environ.get("PATH", "")}
+        subprocess.run(["pdftoppm", "-f", "1", "-singlefile", "-scale-to", "2200", "-png",
+                        str(source), str(Path(folder) / "page")], check=True, capture_output=True, timeout=30, env=env)
+        result = subprocess.run(["tesseract", str(Path(folder) / "page.png"), "stdout", "--psm", "3"],
+                                check=True, capture_output=True, text=True, timeout=30, env=env)
+    if not re.search(r"Dress Down Day", result.stdout, re.I):
+        raise ValueError("Dress down flyer layout changed; manual review required")
+    dates = re.findall(r"(?:Monday|Tuesday|Wednesday|Thursday|Friday),?\s+[A-Za-z]+\s+\d{1,2}(?:st|nd|rd|th)?", result.stdout, re.I)
+    if len(dates) != 1:
+        raise ValueError("Dress down flyer date is ambiguous; manual review required")
+    return events_from_text(dates[0] + ": Dress Down Day", received)
 
 
 def safe_url(url, first=False):
@@ -106,8 +134,8 @@ def safe_url(url, first=False):
     return urllib.parse.urlunparse(parsed)
 
 
-def get_pdf(url, week):
-    filename = f"Weekly Reminders for Week of {week.month:02d}.{week.day:02d}.{str(week.year)[-2:]}.pdf"
+def get_pdf(url, week, filename=None):
+    filename = filename or f"Weekly Reminders for Week of {week.month:02d}.{week.day:02d}.{str(week.year)[-2:]}.pdf"
     env = {
         "PATH": os.environ.get("PATH", ""),
         "HOME": os.environ.get("HOME", ""),
@@ -128,46 +156,128 @@ def get_pdf(url, week):
     return data
 
 
-def extract_events(pdf, week):
+def ocr_blocks(pdf):
+    """Read detected calendar cells separately; never join adjacent day cells."""
+    from PIL import Image
+    import numpy as np
+    from scipy import ndimage
+
     with tempfile.TemporaryDirectory() as folder:
         source = Path(folder) / "notice.pdf"
         source.write_bytes(pdf)
-        result = subprocess.run(["pdftotext", "-layout", str(source), "-"], capture_output=True, text=True,
-                                check=True, timeout=15, env={"PATH": os.environ.get("PATH", "")})
-    return events_from_text(result.stdout, week)
+        env = {"PATH": os.environ.get("PATH", "")}
+        subprocess.run(["pdftoppm", "-f", "1", "-singlefile", "-scale-to", "2200", "-png",
+                        str(source), str(Path(folder) / "page")], check=True, capture_output=True,
+                       timeout=30, env=env)
+        image_path = Path(folder) / "page.png"
+        image = Image.open(image_path)
+        # Rounded calendar cells form separate light connected regions. This also
+        # handles the four-column bottom row in the September reminder template.
+        labels, _ = ndimage.label(np.asarray(image.convert("L")) > 180)
+        regions = []
+        for region in ndimage.find_objects(labels):
+            if region is None:
+                continue
+            vertical, horizontal = region
+            width, height = horizontal.stop - horizontal.start, vertical.stop - vertical.start
+            if image.width * .12 < width < image.width * .55 and image.height * .035 < height < image.height * .65:
+                regions.append((horizontal.start, vertical.start, horizontal.stop, vertical.stop))
+        anchors = []
+        result = subprocess.run(["tesseract", str(image_path), "stdout", "--psm", "6", "tsv"],
+                                check=True, capture_output=True, text=True, timeout=30, env=env)
+        for row in csv.DictReader(io.StringIO(result.stdout), delimiter="\t"):
+            if row["text"].lower() in ("monday", "tuesday", "wednesday", "thursday", "friday") and float(row["conf"]) >= 60:
+                anchors.append((int(row["left"]) + int(row["width"]) / 2, int(row["top"])))
+        if not 5 <= len(regions) <= 15:
+            raise ValueError("Unrecognized calendar cells; manual review required")
+        blocks = []
+        for index, (left, top, right, bottom) in enumerate(regions):
+            nearby = [y for x, y in anchors if left <= x <= right and 0 < top - y < image.height * .2]
+            # Templates with a separate date heading and event card need both.
+            if nearby:
+                top = max(0, max(nearby) - 10)
+            crop = Path(folder) / f"cell-{index}.png"
+            image.crop((left, top, right, bottom)).save(crop)
+            result = subprocess.run(["tesseract", str(crop), "stdout", "--psm", "6"], check=True,
+                                    capture_output=True, text=True, timeout=30, env=env)
+            blocks.append(result.stdout)
+        return blocks
 
 
-def events_from_text(text, week):
-    found = []
-    lines = [" ".join(raw.split()) for raw in text.splitlines()]
-    for index, line in enumerate(lines):
-        match = DATE_LINE.match(line)
-        if not match:
-            continue
-        weekday, month, day, slash_month, rest = match.groups()
-        month_number = dt.datetime.strptime(month[:3], "%b").month if month else (int(day) if slash_month else week.month)
-        day_number = int(slash_month) if slash_month else int(day)
-        year = week.year + (1 if month_number < week.month - 6 else -1 if month_number > week.month + 6 else 0)
-        try:
-            event_date = dt.date(year, month_number, day_number)
-        except ValueError:
-            continue
-        if abs((event_date - week).days) > 90 or event_date.strftime("%A").lower() != weekday.lower():
-            continue
-        event_context = [rest]
-        for following in lines[index + 1:index + 4]:
-            if DATE_LINE.match(following):
-                break
-            if following:
-                event_context.append(following)
-        searchable = " ".join(event_context)
-        for pattern, label, kind in EVENTS:
-            if pattern.search(searchable):
-                found.append({"date": f"{weekday.title()}, {event_date.strftime('%b')}. {event_date.day}", "label": label, "kind": kind})
-    unique = {(item["date"], item["label"]): item for item in found}
+def extract_events(pdf, week):
+    events = []
+    for block in ocr_blocks(pdf):
+        events.extend(events_from_text(block, week, required=False))
+    unique = {(item["date"], item["label"]): item for item in events}
     if not unique:
         raise ValueError("No recognized dated school events in a new weekly PDF; manual review required")
     return list(unique.values())
+
+
+def events_from_text(text, week, required=True):
+    # Ignore decorative OCR prefixes around validated weekday headings.
+    text = re.sub(r"(?im)^.*?\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b", r"\1", text)
+    text = re.sub(r"(?m)(\d{1,2}/\d)!", r"\g<1>1", text)
+    text = re.sub(r"(?im)^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\s*\n\s*[: ]*(?=\d)", r"\1 ", text)
+    text = re.sub(r"(?i)(\d)(?:st|nd|rd|th)\b", r"\1", text)
+    lines = [" ".join(raw.split()).lstrip("|: ") for raw in text.splitlines()]
+    starts = []
+    numeric = re.compile(r"^(?:(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\s*[, :]?\s*)?(\d{1,2})/(\d{1,2})(?:/(\d{4}))?(?:-(\d{1,2})/(\d{1,2}))?\b\s*(.*)$", re.I)
+    for index, line in enumerate(lines):
+        match = numeric.match(line)
+        dates = []
+        if match:
+            weekday, month, day, year, end_month, end_day, rest = match.groups()
+            year = int(year) if year else week.year + (1 if int(month) < week.month - 6 else -1 if int(month) > week.month + 6 else 0)
+            try:
+                start = dt.date(year, int(month), int(day))
+                end = dt.date(year, int(end_month), int(end_day)) if end_month else start
+                if 0 <= (end - start).days <= 7:
+                    dates = [start + dt.timedelta(days=offset) for offset in range((end - start).days + 1)]
+            except ValueError:
+                pass
+        else:
+            match = DATE_LINE.match(line)
+            if not match:
+                continue
+            weekday, month, day, slash_month, rest = match.groups()
+            month_number = dt.datetime.strptime(month[:3], "%b").month if month else week.month
+            year = week.year + (1 if month_number < week.month - 6 else -1 if month_number > week.month + 6 else 0)
+            try:
+                dates = [dt.date(year, month_number, int(day))]
+            except ValueError:
+                pass
+        # Even an invalid date terminates the preceding event block.
+        dates = [date for date in dates if abs((date - week).days) <= 90 and
+                 (not weekday or date.strftime("%A").lower() == weekday.lower())]
+        starts.append((index, dates, rest))
+    found = []
+    for offset, (index, dates, rest) in enumerate(starts):
+        stop = starts[offset + 1][0] if offset + 1 < len(starts) else len(lines)
+        context = " ".join([rest] + lines[index + 1:stop])
+        for date in dates:
+            for pattern, label, kind in EVENTS:
+                if pattern.search(context):
+                    found.append({"date": f"{date.strftime('%A')}, {date.strftime('%b')}. {date.day}", "label": label, "kind": kind})
+    unique = {(item["date"], item["label"]): item for item in found}
+    if required and not unique:
+        raise ValueError("No recognized dated school events in a new weekly PDF; manual review required")
+    return list(unique.values())
+
+
+def body_events(message, received):
+    """Recognize an explicit gym change without assigning the nearby relative picture date."""
+    if "gym" not in str(message.get("Subject", "")).lower():
+        return []
+    for part in message.walk():
+        if part.get_content_type() != "text/plain" or part.get_content_disposition() == "attachment":
+            continue
+        text = " ".join(part.get_content().split()).split("SchoolMessenger ABVM would like")[0]
+        match = re.search(r"gym classes will be held on ((?:Monday|Tuesday|Wednesday|Thursday|Friday),? [A-Za-z]+ \d{1,2}(?:st|nd|rd|th)?)", text, re.I)
+        if match:
+            items = events_from_text(match[1] + ": Gym classes moved", received)
+            return [{**item, "label": "Gym classes moved to this date", "kind": "schedule change"} for item in items]
+    return []
 
 
 def access_token():
@@ -220,20 +330,55 @@ def main():
     known = {doc["id"]: doc for doc in uploaded["documents"]}
     added = 0
     for message in messages():
-        if parseaddr(message.get("From", ""))[1].lower() != SENDER or "weekly reminders" not in str(message.get("Subject", "")).lower():
+        if parseaddr(message.get("From", ""))[1].lower() != SENDER :
             continue
-        received = parsedate_to_datetime(message["Date"]).date().isoformat()
+        received_date = parsedate_to_datetime(message["Date"]).date()
+        received = received_date.isoformat()
+        sources = []
+        gym = body_events(message, received_date)
+        if gym:
+            sources.append(("school-email-" + hashlib.sha256(message.as_bytes()).hexdigest()[:20],
+                            "Gym schedule update", gym, message.as_bytes()))
+        for label, link in document_links(message):
+            if label not in ("CO-ED CYO Basketball Flyer.pdf", "Joyful Dress Down Day Flyer for Kids.pdf"):
+                continue
+            doc_id = "school-flyer-" + hashlib.sha256(label.encode() + received.encode()).hexdigest()[:20]
+            if doc_id in known:
+                continue
+            pdf = get_pdf(link, received_date, filename=label)
+            events = flyer_events(pdf, received_date) if label.startswith("Joyful") else []
+            title = "Dress Down Day flyer" if events else "CYO Basketball flyer"
+            sources.append((doc_id, title, events, pdf))
+        for part in message.iter_attachments():
+            week = week_from_name(part.get_filename() or "")
+            if not week or f"weekly-reminders-{week.isoformat()}" in known:
+                continue
+            pdf = part.get_payload(decode=True)
+            if not pdf or len(pdf) > 8_000_000 or not pdf.startswith(b"%PDF-"):
+                raise ValueError("Invalid weekly reminder attachment")
+            sources.append((f"weekly-reminders-{week.isoformat()}",
+                            f"Weekly reminders for week of {week.isoformat()}", extract_events(pdf, week), pdf))
         for week, link in pdf_links(message):
             doc_id = f"weekly-reminders-{week.isoformat()}"
             if doc_id in known:
                 continue
-            pdf = get_pdf(link, week)
-            events = extract_events(pdf, week)
+            try:
+                pdf = get_pdf(link, week)
+                events = extract_events(pdf, week)
+            except ValueError:
+                print("::warning::A weekly reminder could not be safely extracted; manual review required.")
+                continue
+            sources.append((doc_id, f"Weekly reminders for week of {week.isoformat()}", events, pdf))
+        for doc_id, title, events, source_bytes in sources:
+            if doc_id in known:
+                continue
             facts = [f"{item['date']}: {item['label']}." for item in events]
+            if not facts and title == "CYO Basketball flyer":
+                facts = ["CYO Basketball flyer received."]
             stamp = dt.datetime.now(dt.timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
-            doc = {"id": doc_id, "label": f"Weekly reminders for week of {week.isoformat()}", "receivedAt": received,
+            doc = {"id": doc_id, "label": title, "receivedAt": received,
                    "facts": facts, "provenance": {"factsHash": hashlib.sha256(json.dumps(facts, ensure_ascii=False, separators=(",", ":")).encode()).hexdigest(),
-                   "sourceContentHash": hashlib.sha256(pdf).hexdigest()},
+                   "sourceContentHash": hashlib.sha256(source_bytes).hexdigest()},
                    "review": {"status": "reviewed", "piiReviewed": True, "reviewedBy": "automated-fixed-event-extraction-v1", "reviewedAt": stamp}}
             uploaded["documents"].append(doc)
             for item in events:
@@ -243,7 +388,7 @@ def main():
             added += 1
     if added:
         DATA.write_text(json.dumps(uploaded, ensure_ascii=False, indent=2) + "\n")
-    print(f"Imported {added} new weekly reminder PDFs")
+    print(f"Imported {added} new school notices")
 
 
 if __name__ == "__main__":

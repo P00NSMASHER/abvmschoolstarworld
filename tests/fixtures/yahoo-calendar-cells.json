@@ -1,0 +1,102 @@
+[
+  {
+    "week": "2026-09-21",
+    "cells": [
+      "- Monday 9/2! \u201c5\nSTAR Testing\nContinues this week\ned ae 4\n",
+      "iss 7\nTuesday 9/22\n",
+      "Y WEDNESDAY 9/23\nMass\n\u201d\n",
+      "& UPCOMING: >\n9/30 Communication Folder\nMass\n10/1 Picture Day\n10/2 HSA Meeting\n10/3 Welcome Back Dance\n10/9 12 dismissal\n10/12 No School: Columbus\nDay\n10/19-10/20 Parent-Teacher\nConferences\n10/23 S\u2019 MORE FUN AT lana\n",
+      "THURSDAY 9/24\nPretzel ;\nDelivery |\n\n|\n\nSee eee\n",
+      "r FRIDAY 9/25.\nLEGO CLUB 3-4 PM\nDDD DONATION\nWILL BE GIVEN TO\nA LOCAL CHARITY\nGomreeae 4\n"
+    ],
+    "expected": [
+      [
+        "Monday, Sep. 21",
+        "STAR testing"
+      ],
+      [
+        "Wednesday, Sep. 23",
+        "Mass"
+      ],
+      [
+        "Thursday, Sep. 24",
+        "Pretzel delivery"
+      ],
+      [
+        "Friday, Sep. 25",
+        "Dress Down Day"
+      ],
+      [
+        "Friday, Sep. 25",
+        "Lego Club"
+      ]
+    ]
+  },
+  {
+    "week": "2026-09-28",
+    "cells": [
+      "Y WEDNESDAY 9/30 |\nMass\nCommunication\nFolder\nChick-fil-a sale\nstarts\nSe ie be Gee\n",
+      "& >\nTuesday 9/29\nSign up for\nconferences\n\nusing the\nOptionC portal\n",
+      "fF Monday 9/28 ~\u2014*\nOctober Gift Card\nCalendar Fundraiser\nmoney and calendar\nbottoms due\naa\n",
+      "fF Ss UPCOMING:\n10/3 Welcome Back Dance\n10/9 12 dismissal\n10/12 No School: Columbus\nDay\n10/19-10/20 Parent-Teacher\nConferences\n10/22 Chick-fil-a pick up\n10/23 S\u2019 MORE FUN AT SCHWARTZ\nFARM\n11/13-11/14 Drama Club Play\n11/21 Reading Royals Game Family\n, Fun Night\n",
+      "THURSDAY 10/1\nPicture Day\nBusiness Casual\nHSA VIRTUAL\n\nMEETING\nLe. a\n",
+      "\" Friday 10/2 4\ni o\n",
+      "fe >\nWelcome Back\nDance/Movie\nNight Saturday\n10/3\n=\n"
+    ],
+    "expected": [
+      [
+        "Wednesday, Sep. 30",
+        "Mass"
+      ],
+      [
+        "Wednesday, Sep. 30",
+        "Communication Folder"
+      ],
+      [
+        "Thursday, Oct. 1",
+        "Picture Day"
+      ]
+    ]
+  },
+  {
+    "week": "2026-10-05",
+    "cells": [
+      ": Monday =\n10/5/2026\nTn eee teen ire ad\n",
+      "& So een\nTuesday\n10/6/2026\nge a\n",
+      "Monday\n: 10/5/2026\nRaise Right\nPhysical Gift Card\nOrder\nDoor Decorating \u00a9\nContest has begun,\n",
+      "Tuesday\n10/6/2026\n\u2018Faculty Meeting 3-4\n\n| pm\n\nSign ups for flag\nfootball due\n\nSeo a\n",
+      "Wednesday\n10/7/2026\nMass St. John the\nBaptist 9am\nS \u2014\n",
+      "2 Thursday\n10/8/2026\nae eee iad\n",
+      "Pi. ay ae ame\nFriday\n10/9/2026\nBt aetticg 0 a a\n",
+      "10/12 No School \u2019\n10/13 DDD Knight of Columbus\nThanksgiving Meal\n10/14 Mass Communication\nFolder |\n| 10/19-10/20 Parent-Teacher\n| Conferences |\n| 10/21 Mass |\n10/22 Chick-fil-A Delivery |\n10/23 Lego Club S\u2019Mores Family\n10/26 DDD Flag football K-4 |\n10/29 DDD Flag football for 5-8\n| 10/30 Halloween Celebration\n",
+      "Thursday\n10/8/2026\nProgress Reports\nIssued\n> :\n\nee ee\n",
+      "Friday\n10/9/2026\n12 dismissal\nChick-fil-A orders\ndue\n\nConference Schedule |\nportal closes |\nee\n"
+    ],
+    "expected": [
+      [
+        "Tuesday, Oct. 6",
+        "Flag football"
+      ],
+      [
+        "Wednesday, Oct. 7",
+        "Mass"
+      ],
+      [
+        "Thursday, Oct. 8",
+        "Progress Reports"
+      ],
+      [
+        "Friday, Oct. 9",
+        "12:00 dismissal"
+      ],
+      [
+        "Monday, Oct. 19",
+        "Parent-Teacher Conferences"
+      ],
+      [
+        "Tuesday, Oct. 20",
+        "Parent-Teacher Conferences"
+      ]
+    ]
+  }
+]

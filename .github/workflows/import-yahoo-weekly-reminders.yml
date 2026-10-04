@@ -42,7 +42,7 @@ jobs:
         run: |
           npm ci --no-audit --no-fund
           sudo apt-get update -qq
-          sudo apt-get install -y poppler-utils
+          sudo apt-get install -y poppler-utils tesseract-ocr python3-pil python3-numpy python3-scipy
 
       - name: Cache SchoolMessenger browser runtime
         uses: actions/cache@v4
