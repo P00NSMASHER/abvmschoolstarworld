@@ -43,3 +43,20 @@ Before candidate code or refreshed school data reaches `main`, the repository ru
 - publication verification
 
 GitHub Pages deployment repeats release QA and then verifies the live lunch/mobile flows.
+
+## iPhone experience
+
+The phone layout prioritizes the next dated action, readable school information,
+44-point-or-larger control heights, and a compact five-tab navigation bar. Week
+opens the coming Monday on weekends. Repeated calendar entries are merged for
+presentation while distinct dates and detailed event variants remain available.
+
+New school notices, teacher lessons, homework, and teacher calendar changes show
+an in-app unread indicator after the first visit establishes a baseline. Read
+status is saved only on the current device and changes only when **Mark updates
+as read** is selected. This indicator is not a background push notification.
+
+The installed app receives versioned shell updates through its service worker.
+On iPhone, install from Safari using **Share → Add to Home Screen**. Physical
+VoiceOver and preferred-text-size checks remain part of device acceptance;
+headless mobile and WebKit checks do not replace those checks.

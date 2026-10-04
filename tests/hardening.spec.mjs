@@ -68,6 +68,7 @@ test("freshness states distinguish current, stale, and offline data",async({brow
 });
 
 test("Week reminders follow the selected day instead of the first reminder",async({page})=>{
+  await page.clock.setFixedTime(new Date("2026-09-30T12:00:00-04:00"));
   await openTab(page,"Week");
   const days=page.locator("[data-day]");
   await days.nth(1).click();

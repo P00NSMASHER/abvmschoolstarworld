@@ -99,50 +99,19 @@ test("Family notices stay stacked and inside the phone viewport",async({browser}
 });
 
 
-test("navy Today hero stays compact and readable at 280px",async({browser})=>{
-  const context=await browser.newContext({viewport:{width:280,height:653},isMobile:true,hasTouch:true});
-  const page=await context.newPage();
-  await page.goto("http://127.0.0.1:4173/#today");
-  const hero=page.locator(".hero-card");
-  await expect(hero).toBeVisible({timeout:10_000});
-  const heroBox=await hero.boundingBox();
-  const brandBox=await page.locator(".hero-brand").boundingBox();
-  const style=await page.evaluate(()=>({
-    pillWhiteSpace:getComputedStyle(document.querySelector(".hero-copy .pill")).whiteSpace,
-    taglineDisplay:getComputedStyle(document.querySelector(".hero-brand small")).display,
-    taglineSize:parseFloat(getComputedStyle(document.querySelector(".hero-brand small")).fontSize),
-    overflow:document.documentElement.scrollWidth>window.innerWidth+1,
-  }));
-  expect(heroBox.height).toBeLessThan(300);
-  expect(brandBox.height).toBeLessThanOrEqual(66);
-  expect(brandBox.width).toBeGreaterThan(210);
-  expect(style.pillWhiteSpace).toBe("nowrap");
-  expect(style.taglineDisplay).not.toBe("none");
-  expect(style.taglineSize).toBeGreaterThanOrEqual(7);
-  expect(style.overflow).toBeFalsy();
-  await context.close();
-});
-
-
-test("navy Today hero school branding is readable at 390px",async({browser})=>{
-  const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
-  const page=await context.newPage();
-  await page.goto("http://127.0.0.1:4173/#today");
-  await expect(page.locator(".hero-card")).toBeVisible({timeout:10_000});
-  const brand=await page.locator(".hero-brand").evaluate(el=>{
-    const strong=el.querySelector("strong"),b=el.querySelector("b"),small=el.querySelector("small");
-    return {
-      school:parseFloat(getComputedStyle(strong).fontSize),
-      bvm:parseFloat(getComputedStyle(b).fontSize),
-      tagline:parseFloat(getComputedStyle(small).fontSize),
-      taglineDisplay:getComputedStyle(small).display,
-      taglineColor:getComputedStyle(small).color,
-    };
-  });
-  expect(brand.school).toBeGreaterThanOrEqual(11);
-  expect(brand.bvm).toBeGreaterThanOrEqual(12);
-  expect(brand.tagline).toBeGreaterThanOrEqual(7.5);
-  expect(brand.taglineDisplay).not.toBe("none");
-  expect(brand.taglineColor).not.toBe("rgb(205, 219, 234)");
-  await context.close();
+test("iPhone identity stays compact so the next action is visible",async({browser})=>{
+  for(const width of [280,320,390,430]){
+    const context=await browser.newContext({viewport:{width,height:844},isMobile:true,hasTouch:true});
+    const page=await context.newPage();
+    await page.goto("http://127.0.0.1:4173/#today");
+    await expect(page.locator(".priority-card")).toBeVisible();
+    const hero=await page.locator(".hero-card").boundingBox();
+    const priority=await page.locator(".priority-card").boundingBox();
+    expect(hero.height).toBeLessThan(180);
+    expect(priority.y+priority.height).toBeLessThan(730);
+    const navSizes=await page.locator(".bottom-nav button b").evaluateAll(nodes=>nodes.map(x=>parseFloat(getComputedStyle(x).fontSize)));
+    expect(Math.min(...navSizes)).toBeGreaterThanOrEqual(11);
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1)).toBeFalsy();
+    await context.close();
+  }
 });

@@ -70,6 +70,7 @@ test("completion state is keyed by school week and task identity",async({page})=
 
 
 test("Read completion stays synchronized between Today and Week",async({page})=>{
+  await page.clock.setFixedTime(new Date("2026-09-30T12:00:00-04:00"));
   await page.goto("/#today");
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
   const readToday=page.locator("[data-check]").filter({hasText:"Read"}).first();
