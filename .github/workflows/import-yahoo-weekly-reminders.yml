@@ -44,6 +44,15 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y poppler-utils
 
+      - name: Cache SchoolMessenger browser runtime
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: schoolmessenger-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Chromium for SchoolMessenger document delivery
+        run: npx playwright install --with-deps chromium
+
       - name: Import bounded school events and publish verified pack
         id: publish
         shell: bash

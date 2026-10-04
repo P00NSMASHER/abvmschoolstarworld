@@ -22,12 +22,12 @@ import socket
 import subprocess
 import tempfile
 import urllib.parse
-import urllib.request
 
 
 SENDER = "mthompson@assumptionbvmschool.net"
 TRACK_HOST = "track.spe.schoolmessenger.com"
 DATA = Path(__file__).resolve().parents[1] / "pages/data/uploaded-notices.json"
+PDF_DOWNLOADER = Path(__file__).with_name("download-schoolmessenger-pdf.mjs")
 PDF_NAME = re.compile(r"^weekly reminders for week of (\d{1,2})[.]?(\d{1,2})[.](\d{2,4})[.]pdf$", re.I)
 DATE_LINE = re.compile(
     r"^\s*(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b[, :\-]*"
@@ -106,17 +106,23 @@ def safe_url(url, first=False):
     return urllib.parse.urlunparse(parsed)
 
 
-class SafeRedirect(urllib.request.HTTPRedirectHandler):
-    def redirect_request(self, request, fp, code, msg, headers, newurl):
-        return super().redirect_request(request, fp, code, msg, headers, safe_url(newurl))
-
-
-def get_pdf(url):
-    opener = urllib.request.build_opener(SafeRedirect())
-    with opener.open(safe_url(url, first=True), timeout=20) as response:
-        if response.url.startswith("http:"):
-            raise ValueError("PDF download downgraded to HTTP")
-        data = response.read(8_000_001)
+def get_pdf(url, week):
+    filename = f"Weekly Reminders for Week of {week.month:02d}.{week.day:02d}.{str(week.year)[-2:]}.pdf"
+    env = {
+        "PATH": os.environ.get("PATH", ""),
+        "HOME": os.environ.get("HOME", ""),
+        "CI": "true",
+    }
+    if os.environ.get("PLAYWRIGHT_BROWSERS_PATH"):
+        env["PLAYWRIGHT_BROWSERS_PATH"] = os.environ["PLAYWRIGHT_BROWSERS_PATH"]
+    env["SCHOOLMESSENGER_DOCUMENT_URL"] = safe_url(url, first=True)
+    env["SCHOOLMESSENGER_EXPECTED_FILENAME"] = filename
+    result = subprocess.run(
+        ["node", str(PDF_DOWNLOADER)], capture_output=True, timeout=100, env=env
+    )
+    if result.returncode:
+        raise ValueError("SchoolMessenger did not deliver the expected weekly reminder PDF")
+    data = result.stdout
     if not data.startswith(b"%PDF-") or len(data) > 8_000_000:
         raise ValueError("Weekly reminder link did not return a bounded PDF")
     return data
@@ -214,7 +220,7 @@ def main():
             doc_id = f"weekly-reminders-{week.isoformat()}"
             if doc_id in known:
                 continue
-            pdf = get_pdf(link)
+            pdf = get_pdf(link, week)
             events = extract_events(pdf, week)
             facts = [f"{item['date']}: {item['label']}." for item in events]
             stamp = dt.datetime.now(dt.timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
