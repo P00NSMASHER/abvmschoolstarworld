@@ -366,7 +366,17 @@ function agendaLunchHtml(date,lunch){
   return '<div class="agenda-lunch'+(lunch?"":" is-missing")+'"><span>🍎</span><div><b>Lunch</b><p>'+esc(text)+'</p></div></div>';
 }
 function compactMonthCardHtml(month,rows,extraClass){
-  return '<section class="'+extraClass+' compact-month-card"><h2>Coming in '+MONTHS[month]+'</h2>'+rows.map(o=>'<div><span>'+esc(fmtShort(o.d))+'</span><p>'+esc(o.x.label)+'</p></div>').join("")+'</section>';
+  const dates=new Map();
+  for(const {x,d} of rows){
+    const key=d.getTime();
+    if(!dates.has(key)){
+      if(dates.size>=5)continue;
+      dates.set(key,{d,labels:[]});
+    }
+    const group=dates.get(key);
+    if(!group.labels.includes(x.label))group.labels.push(x.label);
+  }
+  return '<section class="'+extraClass+' compact-month-card"><h2>Coming in '+MONTHS[month]+'</h2>'+[...dates.values()].map(o=>'<div><span>'+esc(fmtShort(o.d))+'</span><p>'+o.labels.map(esc).join("<br>")+'</p></div>').join("")+'</section>';
 }
 
 function renderCalendar(){
@@ -378,11 +388,11 @@ function renderCalendar(){
   const events=eventItemsForDate(calendarDay),lunch=lunchForDate(calendarDay);
   const monthSummary=datedImportantEvents()
     .filter(({date})=>date.getMonth()===m&&date.getFullYear()===y&&(calendarOffset!==0||date>=today()))
-    .slice(0,5).map(({item,date})=>({x:item,d:date}));
+    .map(({item,date})=>({x:item,d:date}));
   const nextMonthDate=new Date(y,m+1,1,12),nextY=nextMonthDate.getFullYear(),nextM=nextMonthDate.getMonth();
   const nextMonth=datedImportantEvents()
     .filter(({date})=>date.getMonth()===nextM&&date.getFullYear()===nextY)
-    .slice(0,5).map(({item,date})=>({x:item,d:date}));
+    .map(({item,date})=>({x:item,d:date}));
   const specials=specialsRows();
   stack().innerHTML='<div class="screen calendar-screen" role="region" aria-label="'+MONTHS[m]+' calendar">'+
     header("SCHOOL MONTH AT A GLANCE",MONTHS[m]+" "+y)+freshness()+

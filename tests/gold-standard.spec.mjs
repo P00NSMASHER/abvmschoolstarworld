@@ -405,6 +405,7 @@ test("current weekly notice appears in Week, Calendar, and Family screens",async
 
   await openTab(page,"Calendar");
   await expect(page.locator(".current-month-summary")).toContainText("Chick-fil-A sale starts");
+  await expect(page.locator(".current-month-summary")).toContainText("Gym classes moved to this date");
 
   await openTab(page,"Family");
   await expect(page.locator('[aria-labelledby="family-current-notices"]')).toContainText("OptionC portal");
