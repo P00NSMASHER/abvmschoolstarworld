@@ -110,7 +110,10 @@ test("second requested polish is present",async({page})=>{
 
   await openTab(page,"Calendar");
   await expect(page.locator(".current-month-summary")).toBeVisible();
-  await expect(page.locator(".current-month-summary > div")).toHaveCount(5);
+  // The remaining September events occupy three dates; every event on each date stays visible.
+  await expect(page.locator(".current-month-summary > div")).toHaveCount(3);
+  await expect(page.locator(".current-month-summary")).toContainText("Gym classes moved to this date");
+  await expect(page.locator(".current-month-summary")).toContainText("Chick-fil-A sale starts");
 
   await openTab(page,"Family");
   await expect(page.locator(".family-actions-card")).toBeVisible();
