@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "lastIntegratedAt": "2026-10-03T17:10:00.000Z",
+  "lastIntegratedAt": "2026-10-04T21:40:04.538Z",
   "documents": [
     {
       "id": "dress-down-2026-09-25",
@@ -240,6 +240,119 @@
         "piiReviewed": true,
         "reviewedBy": "manual-school-notice-review",
         "reviewedAt": "2026-10-03T16:45:00.000Z"
+      }
+    },
+    {
+      "id": "weekly-reminders-2026-08-31",
+      "label": "Weekly reminders for week of 2026-08-31",
+      "receivedAt": "2026-08-27",
+      "facts": [
+        "Wednesday, Sep. 2: Communication Folder.",
+        "Monday, Sep. 7: No School.",
+        "Wednesday, Sep. 16: Mass.",
+        "Friday, Oct. 9: 12:00 dismissal.",
+        "Monday, Oct. 12: No School.",
+        "Friday, Sep. 4: No School."
+      ],
+      "provenance": {
+        "factsHash": "01e4b4c518478f1b9453341bad7a33750f014206e5ed850e34f2d80e0e60eada",
+        "sourceContentHash": "02639854f3b623bcaec03303a02b266725a95f36478c319b37d8e7691ebfc500"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "automated-fixed-event-extraction-v1",
+        "reviewedAt": "2026-10-04T21:39:26.051Z"
+      }
+    },
+    {
+      "id": "weekly-reminders-2026-09-07",
+      "label": "Weekly reminders for week of 2026-09-07",
+      "receivedAt": "2026-09-03",
+      "facts": [
+        "Monday, Sep. 7: No School.",
+        "Tuesday, Sep. 8: STAR testing.",
+        "Wednesday, Sep. 9: Mass.",
+        "Wednesday, Sep. 16: Mass.",
+        "Wednesday, Sep. 16: Communication Folder.",
+        "Thursday, Sep. 24: Pretzel delivery.",
+        "Friday, Sep. 25: Lego Club.",
+        "Friday, Oct. 9: 12:00 dismissal.",
+        "Monday, Oct. 12: No School.",
+        "Monday, Oct. 19: Parent-Teacher Conferences.",
+        "Tuesday, Oct. 20: Parent-Teacher Conferences.",
+        "Thursday, Sep. 10: Communication Folder."
+      ],
+      "provenance": {
+        "factsHash": "822b2df4f8a0f32e2a3400a4736e48327c3633c7b035a8a13ecb4ae34213f36b",
+        "sourceContentHash": "8785350eb78b838ee4561c84cf4556a2e3ca3134067ad48ba88d3249b3b4e02d"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "automated-fixed-event-extraction-v1",
+        "reviewedAt": "2026-10-04T21:39:36.240Z"
+      }
+    },
+    {
+      "id": "weekly-reminders-2026-09-14",
+      "label": "Weekly reminders for week of 2026-09-14",
+      "receivedAt": "2026-09-11",
+      "facts": [
+        "Tuesday, Sep. 15: STAR testing.",
+        "Wednesday, Sep. 16: Mass.",
+        "Wednesday, Sep. 16: Communication Folder.",
+        "Thursday, Sep. 24: Pretzel delivery.",
+        "Friday, Sep. 25: Lego Club.",
+        "Thursday, Oct. 1: Picture Day.",
+        "Friday, Oct. 9: 12:00 dismissal.",
+        "Monday, Oct. 12: No School."
+      ],
+      "provenance": {
+        "factsHash": "48b0cd781bcce9ac5b4f55939898530f7a0777839b76eac1fb5dbbb80997fd11",
+        "sourceContentHash": "459745ce2fef6c0b47d5b9e89b646b0f6ef44031eb05e28c232a64b635a39e8f"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "automated-fixed-event-extraction-v1",
+        "reviewedAt": "2026-10-04T21:39:48.816Z"
+      }
+    },
+    {
+      "id": "school-flyer-ca26241222dca1cf4795",
+      "label": "Dress Down Day flyer",
+      "receivedAt": "2026-09-18",
+      "facts": [
+        "Friday, Sep. 25: Dress Down Day."
+      ],
+      "provenance": {
+        "factsHash": "169a5ba271743da4cd105949ee3f3335fbc3a53c03855cde5fd2618dc8bafd86",
+        "sourceContentHash": "8af4f76eb7fb13c20ebb8979edd079f5a897c6e5bcaccd8436fd9daef59fda02"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "automated-fixed-event-extraction-v1",
+        "reviewedAt": "2026-10-04T21:39:57.167Z"
+      }
+    },
+    {
+      "id": "school-flyer-e8dbe7d93fcf35bc311a",
+      "label": "CYO Basketball flyer",
+      "receivedAt": "2026-09-28",
+      "facts": [
+        "CYO Basketball flyer received."
+      ],
+      "provenance": {
+        "factsHash": "4a81d4cc9c1c9e1f1f414ee90e85e41c1f8cb1462dc3efc5faf14cecc7cd9d22",
+        "sourceContentHash": "bdf00b3d3d409282c2e8004668d4277047609d78b92f9e691d95ad8958c4f290"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "automated-fixed-event-extraction-v1",
+        "reviewedAt": "2026-10-04T21:40:04.538Z"
       }
     }
   ],
@@ -525,6 +638,168 @@
       "label": "Grades 5–8 Dress Down Day & Flag Football",
       "kind": "school event",
       "sourceDocument": "weekly-reminders-2026-10-05"
+    },
+    {
+      "date": "Wednesday, Sep. 2",
+      "label": "Communication Folder",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-08-31"
+    },
+    {
+      "date": "Monday, Sep. 7",
+      "label": "No School",
+      "kind": "holiday",
+      "sourceDocument": "weekly-reminders-2026-08-31"
+    },
+    {
+      "date": "Wednesday, Sep. 16",
+      "label": "Mass",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-08-31"
+    },
+    {
+      "date": "Friday, Oct. 9",
+      "label": "12:00 dismissal",
+      "kind": "schedule change",
+      "sourceDocument": "weekly-reminders-2026-08-31"
+    },
+    {
+      "date": "Monday, Oct. 12",
+      "label": "No School",
+      "kind": "holiday",
+      "sourceDocument": "weekly-reminders-2026-08-31"
+    },
+    {
+      "date": "Friday, Sep. 4",
+      "label": "No School",
+      "kind": "holiday",
+      "sourceDocument": "weekly-reminders-2026-08-31"
+    },
+    {
+      "date": "Monday, Sep. 7",
+      "label": "No School",
+      "kind": "holiday",
+      "sourceDocument": "weekly-reminders-2026-09-07"
+    },
+    {
+      "date": "Tuesday, Sep. 8",
+      "label": "STAR testing",
+      "kind": "assessment",
+      "sourceDocument": "weekly-reminders-2026-09-07"
+    },
+    {
+      "date": "Wednesday, Sep. 9",
+      "label": "Mass",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-07"
+    },
+    {
+      "date": "Wednesday, Sep. 16",
+      "label": "Mass",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-07"
+    },
+    {
+      "date": "Wednesday, Sep. 16",
+      "label": "Communication Folder",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-07"
+    },
+    {
+      "date": "Thursday, Sep. 24",
+      "label": "Pretzel delivery",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-07"
+    },
+    {
+      "date": "Friday, Sep. 25",
+      "label": "Lego Club",
+      "kind": "club",
+      "sourceDocument": "weekly-reminders-2026-09-07"
+    },
+    {
+      "date": "Friday, Oct. 9",
+      "label": "12:00 dismissal",
+      "kind": "schedule change",
+      "sourceDocument": "weekly-reminders-2026-09-07"
+    },
+    {
+      "date": "Monday, Oct. 12",
+      "label": "No School",
+      "kind": "holiday",
+      "sourceDocument": "weekly-reminders-2026-09-07"
+    },
+    {
+      "date": "Monday, Oct. 19",
+      "label": "Parent-Teacher Conferences",
+      "kind": "conference",
+      "sourceDocument": "weekly-reminders-2026-09-07"
+    },
+    {
+      "date": "Tuesday, Oct. 20",
+      "label": "Parent-Teacher Conferences",
+      "kind": "conference",
+      "sourceDocument": "weekly-reminders-2026-09-07"
+    },
+    {
+      "date": "Thursday, Sep. 10",
+      "label": "Communication Folder",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-07"
+    },
+    {
+      "date": "Tuesday, Sep. 15",
+      "label": "STAR testing",
+      "kind": "assessment",
+      "sourceDocument": "weekly-reminders-2026-09-14"
+    },
+    {
+      "date": "Wednesday, Sep. 16",
+      "label": "Mass",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-14"
+    },
+    {
+      "date": "Wednesday, Sep. 16",
+      "label": "Communication Folder",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-14"
+    },
+    {
+      "date": "Thursday, Sep. 24",
+      "label": "Pretzel delivery",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-14"
+    },
+    {
+      "date": "Friday, Sep. 25",
+      "label": "Lego Club",
+      "kind": "club",
+      "sourceDocument": "weekly-reminders-2026-09-14"
+    },
+    {
+      "date": "Thursday, Oct. 1",
+      "label": "Picture Day",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-09-14"
+    },
+    {
+      "date": "Friday, Oct. 9",
+      "label": "12:00 dismissal",
+      "kind": "schedule change",
+      "sourceDocument": "weekly-reminders-2026-09-14"
+    },
+    {
+      "date": "Monday, Oct. 12",
+      "label": "No School",
+      "kind": "holiday",
+      "sourceDocument": "weekly-reminders-2026-09-14"
+    },
+    {
+      "date": "Friday, Sep. 25",
+      "label": "Dress Down Day",
+      "kind": "school event",
+      "sourceDocument": "school-flyer-ca26241222dca1cf4795"
     }
   ],
   "reminders": [

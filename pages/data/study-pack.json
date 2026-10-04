@@ -14,16 +14,16 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-10-03T17:10:00.000Z",
-  "sourceCapturedAt": "2026-10-03T17:10:05.538Z",
+  "sourceLastSeenAt": "2026-10-04T21:40:04.538Z",
+  "sourceCapturedAt": "2026-10-04T21:40:05.080Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-1140e20941b1f6f76b8b",
-    "sourceCapturedAt": "2026-10-03T17:10:05.538Z",
-    "generatedAt": "2026-10-03T17:10:05.538Z",
+    "sourceCapturedAt": "2026-10-04T21:40:05.080Z",
+    "generatedAt": "2026-10-04T21:40:05.080Z",
     "weekLabel": "Week of September 28, 2026",
-    "summary": "Current Grade 2 teacher-site material: Homework lists Reading “Read”, parent task “Cover books”, Reading “Keep Reading Log and Behavior Chart in the HW folder”, and Homework Folder “Return everything in the HW folder”. Upcoming tests include Spelling (short a / long a) / Handwriting on Friday, Oct. 2, Reading on Wednesday, Oct. 7, Spelling (short i / long i) / Handwriting on Friday, Oct. 9, and Grammar (subject & predicate) on Friday, Oct. 9. 11 uploaded school notices are integrated with the teacher pages.",
+    "summary": "Current Grade 2 teacher-site material: Homework lists Reading “Read”, parent task “Cover books”, Reading “Keep Reading Log and Behavior Chart in the HW folder”, and Homework Folder “Return everything in the HW folder”. Upcoming tests include Spelling (short a / long a) / Handwriting on Friday, Oct. 2, Reading on Wednesday, Oct. 7, Spelling (short i / long i) / Handwriting on Friday, Oct. 9, and Grammar (subject & predicate) on Friday, Oct. 9. 16 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
       {
         "subject": "Reading / ELA",
@@ -127,6 +127,97 @@
     ],
     "importantDates": [
       {
+        "date": "Wednesday, Sep. 2",
+        "label": "Communication Folder",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-08-31",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Sep. 4",
+        "label": "No School",
+        "kind": "holiday",
+        "sourceDocument": "weekly-reminders-2026-08-31",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Sep. 7",
+        "label": "No School",
+        "kind": "holiday",
+        "sourceDocument": "weekly-reminders-2026-08-31",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Sep. 7",
+        "label": "No School",
+        "kind": "holiday",
+        "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Sep. 8",
+        "label": "STAR testing",
+        "kind": "assessment",
+        "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Sep. 9",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Thursday, Sep. 10",
+        "label": "Communication Folder",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Sep. 15",
+        "label": "STAR testing",
+        "kind": "assessment",
+        "sourceDocument": "weekly-reminders-2026-09-14",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Sep. 16",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-08-31",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Sep. 16",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Sep. 16",
+        "label": "Communication Folder",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Sep. 16",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-14",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Sep. 16",
+        "label": "Communication Folder",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-14",
+        "source": "uploaded-notice"
+      },
+      {
         "date": "Monday–Friday, Sept. 21–25",
         "label": "STAR testing continues this week",
         "kind": "assessment",
@@ -153,6 +244,20 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Thursday, Sep. 24",
+        "label": "Pretzel delivery",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Thursday, Sep. 24",
+        "label": "Pretzel delivery",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-14",
+        "source": "uploaded-notice"
+      },
+      {
         "date": "Friday, Sept. 25",
         "label": "Dress Down Day — donate any amount; proceeds support a local charity",
         "kind": "school event",
@@ -164,6 +269,27 @@
         "label": "Lego Club — 3–4 PM",
         "kind": "club",
         "sourceDocument": "weekly-reminders-2026-09-21",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Sep. 25",
+        "label": "Lego Club",
+        "kind": "club",
+        "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Sep. 25",
+        "label": "Lego Club",
+        "kind": "club",
+        "sourceDocument": "weekly-reminders-2026-09-14",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Sep. 25",
+        "label": "Dress Down Day",
+        "kind": "school event",
+        "sourceDocument": "school-flyer-ca26241222dca1cf4795",
         "source": "uploaded-notice"
       },
       {
@@ -220,6 +346,13 @@
         "label": "HSA virtual meeting",
         "kind": "meeting",
         "sourceDocument": "weekly-reminders-2026-09-28",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Thursday, Oct. 1",
+        "label": "Picture Day",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-14",
         "source": "uploaded-notice"
       },
       {
@@ -333,6 +466,27 @@
       },
       {
         "date": "Friday, Oct. 9",
+        "label": "12:00 dismissal",
+        "kind": "schedule change",
+        "sourceDocument": "weekly-reminders-2026-08-31",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Oct. 9",
+        "label": "12:00 dismissal",
+        "kind": "schedule change",
+        "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Oct. 9",
+        "label": "12:00 dismissal",
+        "kind": "schedule change",
+        "sourceDocument": "weekly-reminders-2026-09-14",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Oct. 9",
         "label": "Spelling (short i / long i) / Handwriting",
         "kind": "test",
         "source": "teacher-tests"
@@ -348,6 +502,27 @@
         "label": "No School — Columbus Day",
         "kind": "holiday",
         "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Oct. 12",
+        "label": "No School",
+        "kind": "holiday",
+        "sourceDocument": "weekly-reminders-2026-08-31",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Oct. 12",
+        "label": "No School",
+        "kind": "holiday",
+        "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Oct. 12",
+        "label": "No School",
+        "kind": "holiday",
+        "sourceDocument": "weekly-reminders-2026-09-14",
         "source": "uploaded-notice"
       },
       {
@@ -404,10 +579,24 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Monday, Oct. 19",
+        "label": "Parent-Teacher Conferences",
+        "kind": "conference",
+        "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
         "date": "Tuesday, Oct. 20",
         "label": "K–4 No School — Parent-Teacher Conferences",
         "kind": "holiday",
         "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Oct. 20",
+        "label": "Parent-Teacher Conferences",
+        "kind": "conference",
+        "sourceDocument": "weekly-reminders-2026-09-07",
         "source": "uploaded-notice"
       },
       {
@@ -1016,7 +1205,7 @@
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
     "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-    "uploadedNoticeHash": "uploaded-notices-6a9387a79aa94b89fd76",
+    "uploadedNoticeHash": "uploaded-notices-850593d73b5948f02193",
     "uploadedNoticeTopics": {
       "reminders": [
         "fundraiser",
@@ -11597,8 +11786,8 @@
     }
   ],
   "uploadedNotices": {
-    "count": 11,
-    "latestIntegratedAt": "2026-10-03T17:10:00.000Z",
+    "count": 16,
+    "latestIntegratedAt": "2026-10-04T21:40:04.538Z",
     "documents": [
       {
         "id": "dress-down-2026-09-25",
@@ -11654,6 +11843,31 @@
         "id": "gift-card-winners-2026-10-01-02",
         "label": "Gift Card Calendar winners — privacy-redacted",
         "receivedAt": "2026-10-03"
+      },
+      {
+        "id": "weekly-reminders-2026-08-31",
+        "label": "Weekly reminders for week of 2026-08-31",
+        "receivedAt": "2026-08-27"
+      },
+      {
+        "id": "weekly-reminders-2026-09-07",
+        "label": "Weekly reminders for week of 2026-09-07",
+        "receivedAt": "2026-09-03"
+      },
+      {
+        "id": "weekly-reminders-2026-09-14",
+        "label": "Weekly reminders for week of 2026-09-14",
+        "receivedAt": "2026-09-11"
+      },
+      {
+        "id": "school-flyer-ca26241222dca1cf4795",
+        "label": "Dress Down Day flyer",
+        "receivedAt": "2026-09-18"
+      },
+      {
+        "id": "school-flyer-e8dbe7d93fcf35bc311a",
+        "label": "CYO Basketball flyer",
+        "receivedAt": "2026-09-28"
       }
     ]
   }
