@@ -139,8 +139,8 @@ def extract_events(pdf, week):
 
 def events_from_text(text, week):
     found = []
-    for raw in text.splitlines():
-        line = " ".join(raw.split())
+    lines = [" ".join(raw.split()) for raw in text.splitlines()]
+    for index, line in enumerate(lines):
         match = DATE_LINE.match(line)
         if not match:
             continue
@@ -154,8 +154,15 @@ def events_from_text(text, week):
             continue
         if abs((event_date - week).days) > 90 or event_date.strftime("%A").lower() != weekday.lower():
             continue
+        event_context = [rest]
+        for following in lines[index + 1:index + 4]:
+            if DATE_LINE.match(following):
+                break
+            if following:
+                event_context.append(following)
+        searchable = " ".join(event_context)
         for pattern, label, kind in EVENTS:
-            if pattern.search(rest):
+            if pattern.search(searchable):
                 found.append({"date": f"{weekday.title()}, {event_date.strftime('%b')}. {event_date.day}", "label": label, "kind": kind})
     unique = {(item["date"], item["label"]): item for item in found}
     if not unique:
