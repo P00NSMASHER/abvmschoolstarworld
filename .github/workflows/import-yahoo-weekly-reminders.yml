@@ -49,13 +49,15 @@ jobs:
         shell: bash
         env:
           YAHOO_MAIL_ACCOUNT: ${{ secrets.YAHOO_MAIL_ACCOUNT }}
+          YAHOO_APP_PASSWORD: ${{ secrets.YAHOO_APP_PASSWORD }}
           YAHOO_OAUTH_CLIENT_ID: ${{ secrets.YAHOO_OAUTH_CLIENT_ID }}
           YAHOO_OAUTH_CLIENT_SECRET: ${{ secrets.YAHOO_OAUTH_CLIENT_SECRET }}
           YAHOO_OAUTH_REFRESH_TOKEN: ${{ secrets.YAHOO_OAUTH_REFRESH_TOKEN }}
+          YAHOO_OAUTH_REDIRECT_URI: ${{ secrets.YAHOO_OAUTH_REDIRECT_URI }}
         run: |
           set -euo pipefail
-          if [[ -z "$YAHOO_MAIL_ACCOUNT" || -z "$YAHOO_OAUTH_CLIENT_ID" || -z "$YAHOO_OAUTH_CLIENT_SECRET" || -z "$YAHOO_OAUTH_REFRESH_TOKEN" ]]; then
-            echo "::notice::Yahoo OAuth secrets are incomplete; scheduled mail import is waiting for setup."
+          if [[ -z "$YAHOO_MAIL_ACCOUNT" || ( -z "$YAHOO_APP_PASSWORD" && ( -z "$YAHOO_OAUTH_CLIENT_ID" || -z "$YAHOO_OAUTH_CLIENT_SECRET" || -z "$YAHOO_OAUTH_REFRESH_TOKEN" ) ) ]]; then
+            echo "::notice::Yahoo mail secrets are incomplete; scheduled mail import is waiting for setup."
             exit 0
           fi
 
