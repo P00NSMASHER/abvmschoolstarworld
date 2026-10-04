@@ -135,7 +135,7 @@ test("week paging and full calendar agenda work on phone",async({page})=>{
   expect(firstAfter).not.toBe(firstBefore);
 
   await openTab(page,"Calendar");
-  await expect(page.locator(".current-month-summary > div")).toHaveCount(5);
+  await expect(page.locator(".current-month-summary > div > span")).toHaveText(["Mon 28","Tue 29","Wed 30"]);
   await expect(page.locator(".current-month-summary .agenda-lunch")).toHaveCount(0);
   await expect(page.locator(".calendar-day-card .agenda-lunch")).toBeVisible();
   await expect(page.locator(".calendar-legend")).toContainText("Lunch");
