@@ -51,8 +51,8 @@ jobs:
       - name: Install QA dependencies
         run: npm ci --no-audit --no-fund
 
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
+      - name: Install Chromium and WebKit
+        run: npx playwright install --with-deps chromium webkit
 
       - name: Run release QA
         run: npm run qa

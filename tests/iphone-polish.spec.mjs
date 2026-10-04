@@ -76,3 +76,17 @@ test('larger preferred text reflows without hiding Family or Study content',asyn
     expect(clipped,tab+' with enlarged text').toBeFalsy();
   }
 });
+
+test('touch navigation reaches the five tabs and Study Games',async({page})=>{
+  await page.goto('/#today');
+  await expect(page.locator('.screen')).toBeVisible();
+  for(const label of ['Week','Calendar','Family','Study','Today']){
+    const button=page.getByRole('button',{name:label,exact:true});
+    await button.click();
+    await expect(button).toHaveAttribute('aria-current','page');
+    await expect(page.locator('.screen')).toBeVisible();
+  }
+  await page.getByRole('button',{name:'Study',exact:true}).click();
+  await page.locator('.study-games-cta').click();
+  await expect(page.locator('.study-game-grid')).toBeVisible();
+});
