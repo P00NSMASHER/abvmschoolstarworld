@@ -980,7 +980,7 @@ function fallbackMath(variant,out){
     },
     {
       id:"star-math-place",skill:"place-value",
-      prompt:`In the number ${462+offset*10}, what value does the 6 represent?`,
+      prompt:`In the number ${462+offset*100}, what value does the 6 represent?`,
       answer:"60",choices:["60","6","600"],
       explanation:"The 6 is in the tens place, so its value is 60.",
       wrongFeedback:"Name the place first: hundreds, tens, or ones.",
@@ -991,7 +991,7 @@ function fallbackMath(variant,out){
       prompt:`Which comparison is true?`,
       answer:`${58+offset} < ${65+offset}`,
       choices:[`${58+offset} < ${65+offset}`,`${58+offset} > ${65+offset}`,`${58+offset} = ${65+offset}`],
-      explanation:"Compare the tens first. Five tens is less than six tens.",
+      explanation:variant===1?"Compare the tens first. Five tens is less than six tens.":"Both numbers have six tens. Compare the ones: 1 is less than 8.",
       wrongFeedback:"Compare tens before ones.",
       misconception:"comparison-direction",type:"direct",dok:2,difficulty:2
     },

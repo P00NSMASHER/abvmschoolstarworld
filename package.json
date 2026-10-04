@@ -6,7 +6,7 @@
   "scripts": {
     "pack:runtime": "node scripts/build-runtime-pack.mjs",
     "preqa:static": "npm run pack:runtime",
-    "qa:static": "node --check pages/study-games.js && node --check pages/study-games-view.js && node --check pages/app.js && node --check pages/school-updates.js && node --check pages/weekly-learning.js && node scripts/validate-uploaded-notices.mjs && node scripts/validate-curriculum-candidates.mjs && node scripts/validate-app.mjs && node scripts/check-css-hygiene.mjs",
+    "qa:static": "node --check pages/study-games.js && node --check pages/study-games-view.js && node --check pages/app.js && node --check pages/study-practice.js && node --check pages/school-updates.js && node --check pages/weekly-learning.js && node scripts/validate-uploaded-notices.mjs && node scripts/validate-curriculum-candidates.mjs && node scripts/validate-app.mjs && node scripts/check-css-hygiene.mjs",
     "qa:e2e": "playwright test tests/*.spec.mjs",
     "qa": "npm run qa:static && npm run qa:unit && npm run qa:e2e",
     "qa:unit": "node --test tests/*.test.mjs",
