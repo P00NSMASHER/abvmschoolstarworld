@@ -59,20 +59,29 @@ try {
   } else if (![0, 6].includes(new Date(today + 'T12:00:00Z').getUTCDay())) {
     await expect(page.locator('.lunch-card')).toContainText(/No school lunch|Lunch menu not yet verified/);
   }
-  await page.locator('.lunch-card').first().scrollIntoViewIfNeeded().catch(() => {});
+  if (await page.locator('.lunch-card').count()) await page.locator('.lunch-card').first().scrollIntoViewIfNeeded();
   await page.screenshot({ path: `${out}/today.png` });
   receipt.screens.push({ screen: 'Today', date: today, lunch: await page.locator('.lunch-card').allTextContents() });
 
   await page.getByRole('button', { name: 'Week', exact: true }).click();
+  async function selectWeekDate(date) {
+    for (let attempt = 0; attempt < 60; attempt++) {
+      const target = page.locator(`[data-day^="${date}"]`);
+      if (await target.count()) { await target.click(); return; }
+      const firstDate = (await page.locator('[data-day]').first().getAttribute('data-day')).slice(0, 10);
+      await page.getByRole('button', { name: firstDate < date ? 'Next week' : 'Previous week', exact: true }).click();
+    }
+    throw new Error('Could not reach published lunch date in Week: ' + date);
+  }
   for (const meal of data.pack.lunchMenu) {
-    await page.locator(`[data-day^="${meal.date}"]`).click();
+    await selectWeekDate(meal.date);
     for (const item of meal.items) await expect(page.locator('.lunch-card')).toContainText(item);
     receipt.screens.push({ screen: 'Week', date: meal.date, lunch: await page.locator('.lunch-card').textContent() });
   }
   await page.locator('.lunch-card').scrollIntoViewIfNeeded();
   await page.screenshot({ path: `${out}/week.png` });
   for (const date of data.pack.lunchMenuSource.missingDates) {
-    await page.locator(`[data-day^="${date}"]`).click();
+    await selectWeekDate(date);
     await expect(page.locator('.lunch-card')).toContainText(/Lunch menu not yet verified|No school lunch/);
     receipt.screens.push({ screen: 'Week gap', date, text: await page.locator('.lunch-card').textContent() });
   }

@@ -174,8 +174,11 @@ test('Step 9 freezes reward identity and advances all PWA assets together',async
   expect(cacheVersion).toBe(reloadVersion);
   expect(sw).toContain(`./styles.css?v=${styleVersion}`);
   expect(sw).toContain(`./app.js?v=${appVersion}`);
-  expect(index).toContain('./weekly-learning.js?v=2');
-  expect(sw).toContain('./weekly-learning.js?v=2');
+  for(const script of ['weekly-learning','school-updates']){
+    const ref=index.match(new RegExp('\\./'+script+'\\.js\\?v=\\d+'))?.[0];
+    expect(ref).toBeTruthy();
+    expect(sw).toContain(ref);
+  }
   expect(sw).toContain('./study-games.js?v=92');
   expect(sw).toContain('./study-games-view.js?v=6');
 });

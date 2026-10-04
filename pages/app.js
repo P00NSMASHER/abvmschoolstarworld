@@ -55,16 +55,16 @@ function isoDateKey(date){
 }
 function getDerivedPack(){
   if(derivedPackCache?.pack===pack)return derivedPackCache;
-  const datedEvents=(pack?.importantDates||[]).map(item=>{
+  const datedEvents=window.ABVMSchoolUpdates.uniqueRows((pack?.importantDates||[]).map(item=>{
     const range=eventDateRange(item.date);
     return{item,date:range?.[0]||null,range};
-  }).filter(row=>row.range);
+  }).filter(row=>row.range));
   const chronologicalEvents=[...datedEvents].sort((a,b)=>a.date-b.date);
   const eventsByDate=new Map();
   for(const row of datedEvents){
     for(let cursor=new Date(row.range[0]);cursor<=row.range[1];cursor.setDate(cursor.getDate()+1)){
       const key=isoDateKey(cursor),items=eventsByDate.get(key)||[];
-      items.push(row.item);eventsByDate.set(key,items);
+      items.push(row.item);eventsByDate.set(key,window.ABVMSchoolUpdates.uniqueEvents(items));
     }
   }
   const lunchByDate=new Map();
@@ -208,7 +208,7 @@ function mondayFor(date){
   return base;
 }
 function weekDays(offset=weekOffset){
-  const mon=mondayFor(today()); mon.setDate(mon.getDate()+(offset*7));
+  const now=today(),mon=mondayFor(now); mon.setDate(mon.getDate()+(([0,6].includes(now.getDay())?1:0)+offset)*7);
   return Array.from({length:5},(_,i)=>{const x=new Date(mon);x.setDate(mon.getDate()+i);return x;});
 }
 function weekRangeLabel(days){
@@ -308,17 +308,20 @@ function studyGameIconHtml(modeId){
 }
 
 function renderToday(){
-  const d=today(), events=eventItemsForDate(d), lunch=lunchForDate(d), next=currentTest();
+  const d=today(), events=eventItemsForDate(d), lunch=lunchForDate(d);
+  const priority=datedImportantEvents().find(({item,date})=>date>=d&&(kindClass(item)==="test"||/\b(?:deadline|due)\b/i.test((item.kind||"")+" "+item.label)));
+  const next=priority?{x:priority.item,d:priority.date}:currentTest();
   let timeline=events.map(e=>'<div class="timeline-row"><time>'+(kindClass(e)==="closed"?"Closed":"School")+'</time><span class="timeline-pin '+kindClass(e)+'"></span><div><strong>'+esc(e.label)+'</strong>'+(e.kind?'<small>'+esc(e.kind)+'</small>':'')+'</div><i></i></div>').join("");
   if(!timeline) timeline='<div class="timeline-row"><time>School</time><span class="timeline-pin family"></span><div><strong>No special school events are listed for this date.</strong></div></div>';
   const tasks=taskRecordsForSurface("today");
   const schoolUpdates=upcomingReminderTexts(d,3);
   const html='<div class="screen today-screen" role="region" aria-label="Today">'+
-    header("ABVM GRADE 2 · "+fmtDate(d).toUpperCase(),"Hi, school star!")+
+    header("ABVM GRADE 2", "Today")+
     freshness()+
-    '<section class="hero-card"><div class="hero-copy"><p class="pill">ONE STEP AT A TIME</p><h2>A calm plan for the week</h2><p>Start with what is due soon. Check off one item, then keep going when you are ready.</p></div><div class="hero-brand" aria-label="Assumption BVM Catholic School"><span class="hero-brand-mark"><img src="./assets/abvm-app-icon-192.png" srcset="./assets/abvm-app-icon-192.png 192w, ./assets/abvm-app-icon-512.png 512w" sizes="(min-width:700px) 118px, (max-width:370px) 62px, 76px" width="118" height="118" alt=""></span><strong>ASSUMPTION</strong><b>BVM</b><small>FAITH AND EDUCATION</small></div></section>'+
+    window.ABVMSchoolUpdates.banner(pack)+
+    '<section class="hero-card"><div class="hero-copy"><p class="pill">YOUR SCHOOL DAY</p><h2>One thing at a time.</h2><p>Your next deadline, daily plan, and school updates.</p></div><div class="hero-brand" role="img" aria-label="Assumption BVM Catholic School"><span class="hero-brand-mark"><img src="./assets/abvm-app-icon-192.png" srcset="./assets/abvm-app-icon-192.png 192w, ./assets/abvm-app-icon-512.png 512w" sizes="(min-width:700px) 118px, (max-width:370px) 62px, 76px" width="118" height="118" alt=""></span><strong>ASSUMPTION</strong><b>BVM</b><small>FAITH AND EDUCATION</small></div></section>'+
     '<div class="section-heading today-priority-heading"><h2><span class="heading-dot pink"></span>Up next</h2></div>'+
-    (next?'<section class="priority-card"><div class="date-tile"><strong>'+esc(WEEKDAY[next.d.getDay()].slice(0,3).toUpperCase())+'</strong><span>'+next.d.getDate()+'</span></div><div><p>CLOSEST TEST</p><h3>'+esc(next.x.label)+'</h3><span>Keep review short and focused.</span></div></section>':'<section class="priority-card"><div class="date-tile"><strong>★</strong><span>✓</span></div><div><p>UP NEXT</p><h3>No upcoming test is currently listed</h3><span>Keep up with the posted homework and reading routine.</span></div></section>')+
+    (next?'<section class="priority-card"><div class="date-tile"><strong>'+esc(WEEKDAY[next.d.getDay()].slice(0,3).toUpperCase())+'</strong><span>'+next.d.getDate()+'</span></div><div><p>'+(kindClass(next.x)==="due"?"NEXT DEADLINE":"NEXT TEST")+'</p><h3>'+esc(next.x.label)+'</h3><span>'+(kindClass(next.x)==="due"?"Plan ahead for this date.":"Keep review short and focused.")+'</span></div></section>':'<section class="priority-card"><div class="date-tile"><strong>★</strong><span>✓</span></div><div><p>UP NEXT</p><h3>No upcoming test is currently listed</h3><span>Keep up with the posted homework and reading routine.</span></div></section>')+
     '<div class="section-heading today-date-heading"><h2><span class="heading-dot blue"></span>'+esc(fmtDate(d))+'</h2></div>'+
     '<section class="today-panel"><div class="timeline">'+timeline+'</div><div class="task-list">'+tasks.map(({item,index})=>taskHtml(item,index)).join("")+'</div></section>'+
     (schoolUpdates.length?'<section class="future-card today-updates-card"><h3>School updates</h3>'+schoolUpdates.map(x=>'<div><span>UP NEXT</span><p>'+linkedTextHtml(x)+'</p></div>').join("")+'</section>':'')+
@@ -339,7 +342,7 @@ function renderWeek(){
   const reminder=reminderForDate(selectedDay);
   stack().innerHTML='<div class="screen week-screen" role="region" aria-label="This week">'+
     header("YOUR SCHOOL PLAN","This week")+freshness()+
-    '<nav class="week-nav" aria-label="Change displayed week"><button type="button" data-week-step="-1" aria-label="Previous week">‹</button><div aria-live="polite"><span>'+(weekOffset===0?"CURRENT WEEK":"VIEWING WEEK")+'</span><strong>'+esc(weekRangeLabel(days))+'</strong></div><button type="button" data-week-step="1" aria-label="Next week">›</button></nav>'+
+    '<nav class="week-nav" aria-label="Change displayed week"><button type="button" data-week-step="-1" aria-label="Previous week">‹</button><div aria-live="polite"><span>'+(weekOffset===0?([0,6].includes(today().getDay())?"COMING SCHOOL WEEK":"CURRENT WEEK"):"VIEWING WEEK")+'</span><strong>'+esc(weekRangeLabel(days))+'</strong></div><button type="button" data-week-step="1" aria-label="Next week">›</button></nav>'+
     (weekOffset!==0?'<button class="week-today-jump" type="button" data-week-today>Back to this week</button>':'')+
     '<div class="day-picker">'+picker+'</div>'+
     '<div class="week-main"><section class="day-detail green"><div class="day-detail-title"><div><p>'+MONTHS[selectedDay.getMonth()].toUpperCase()+'</p><h2>'+esc(fmtDate(selectedDay))+'</h2></div><span>'+(closed?"No school":"School day")+'</span></div><div class="event-stack">'+eventRows+'</div><h3>My checklist</h3>'+checklist+'</section><div class="week-rail">'+
@@ -353,7 +356,7 @@ function monthGrid(year,month){
   let html=""; for(let i=0;i<blanks;i++)html+='<span class="calendar-blank"></span>';
   for(let day=1;day<=last.getDate();day++){
     const d=new Date(year,month,day,12), events=eventItemsForDate(d), lunch=lunchForDate(d);
-    const dots=[...events.map(e=>kindClass(e)),...(lunch?["lunch"]:[])].slice(0,3);
+    const dots=[...new Set([...events.map(e=>kindClass(e)),...(lunch?["lunch"]:[])])].slice(0,3);
     const weekend=[0,6].includes(d.getDay()), closed=events.some(e=>kindClass(e)==="closed");
     const eventLabel=events.length?": "+events.map(e=>e.label).join(", "):"";
     html+='<button type="button" class="'+(weekend?"weekend ":"")+(closed?"closed ":"")+(calendarDay&&sameDay(d,calendarDay)?"active":"")+'" data-cal-day="'+d.toISOString()+'" aria-label="'+esc(fmtDate(d)+eventLabel)+'" aria-pressed="'+(calendarDay&&sameDay(d,calendarDay)?"true":"false")+'"><strong>'+day+'</strong><span class="calendar-dots" aria-hidden="true">'+dots.map(k=>'<i class="'+k+'"></i>').join("")+'</span></button>';
@@ -429,8 +432,8 @@ function renderStudy(){
   stack().innerHTML='<div class="screen study-screen" role="region" aria-label="Study room">'+
     header("STUDY","Study room")+
     '<section class="study-at-a-glance"><div class="quick-look-head"><span class="quick-look-mark" aria-hidden="true">✓</span><div><p>START HERE</p><h2>What matters this week</h2></div></div><ol>'+essentials.map(x=>'<li><time>'+esc(x[0])+'</time><span>'+esc(x[1])+'</span></li>').join("")+'</ol></section>'+
-    weeklyLearningDashboardHtml()+
     '<a class="study-games-cta" href="#games" data-open-games><span>★</span><div><small>5–10 MINUTES</small><strong>Practice with Study Games</strong><p>Current school skills with hints and explanations.</p></div><b aria-hidden="true">›</b></a>'+
+    weeklyLearningDashboardHtml()+
     '<div class="study-section-label"><p>SUBJECT DETAILS</p><span>Tap a subject only when you need it.</span></div>'+
     subjectCard("study-religion","religion",rel?.subject||"Religion",rel)+
     subjectCard("study-reading","reading","Reading",r)+
@@ -592,15 +595,20 @@ function renderFamily(){
     header("FAMILY","Family dashboard")+freshness()+
     '<section class="family-hero compact"><p>THIS WEEK</p><h2>What needs attention</h2><span>Current school actions and notices in one place.</span></section>'+
     '<div class="family-stats"><div><strong>'+tests+'</strong><span>test days</span></div><div><strong>'+actions.length+'</strong><span>current actions</span></div></div>'+
-    (window.ABVMWeeklyLearning?.renderChanges?.(pack?.schoolChangeFeed)||"")+
+    window.ABVMSchoolUpdates.card(pack)+
     '<section class="parent-card family-actions-card"><div class="family-actions-head"><span class="family-actions-mark" aria-hidden="true">✓</span><div><small>TO DO</small><h3>Family actions</h3></div></div><ul>'+actions.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></section>'+
     '<section class="parent-card sources notices-card" aria-labelledby="family-current-notices"><div class="notices-head"><span class="notices-mark" aria-hidden="true">i</span><div><small>SCHOOL UPDATES & SIGN-UPS</small><h3 id="family-current-notices">Current notices</h3></div></div><div class="static-notice-list" role="list">'+notices.map(x=>'<div class="notice-row" role="listitem"><span class="status ok" aria-hidden="true"></span><p>'+linkedTextHtml(x)+'</p></div>').join("")+'</div></section>'+
-    '<details class="family-more"><summary><span>App & privacy</span><b aria-hidden="true">+</b></summary><div><p>Study-game progress stays on this device. No student IDs or private classmates’ information are used.</p><a href="#games" data-open-games>Open Study Games</a><p>To install on iPhone, use Safari’s Share menu → Add to Home Screen.</p></div></details>'+
+    (window.ABVMWeeklyLearning?.renderChanges?.(pack?.schoolChangeFeed)||"")+
+    '<details class="family-more"><summary><span>App & privacy</span><b aria-hidden="true">+</b></summary><div><p>Study-game progress stays on this device. No student IDs or private classmates’ information are used.</p><a href="#games" data-open-games>Open Study Games</a><p>Verified shows the last successful source check; individual notices may be older.</p><p>To install on iPhone, use Safari’s Share menu → Add to Home Screen.</p></div></details>'+
     '<p class="unofficial-note">Family planning tool based on current ABVM Grade 2 sources.</p>'+
     '</div>';
 }
 function render({preserveScroll=false}={}){
   if(!pack)return;
+  const pending=window.ABVMSchoolUpdates.state(pack).unread.length;
+  const familyTab=document.querySelector('.bottom-nav [data-tab="family"]');
+  familyTab?.setAttribute("data-has-updates",pending?"true":"false");
+  familyTab?.setAttribute("aria-description",pending?pending+" unread school updates":"");
   const scrollTop=stack().querySelector(".screen")?.scrollTop||0;
   ({today:renderToday,week:renderWeek,calendar:renderCalendar,study:renderStudy,games:renderGames,family:renderFamily}[activeTab]||renderToday)();
   const navTab=activeTab==="games"?"study":activeTab;
@@ -622,6 +630,8 @@ function bindScreen(){
   stack().addEventListener("click",event=>{
     const target=event.target.closest("button,a");
     if(!target||!stack().contains(target))return;
+    if(target.matches("[data-open-family]")){activeTab="family";history.replaceState(null,"","#family");render();return;}
+    if(target.matches("[data-mark-updates-read]")){const saved=window.ABVMSchoolUpdates.markRead(pack);render({preserveScroll:true});toast(saved?"Updates marked as read":"Could not save read status on this device");return;}
     if(target.matches("[data-refresh-pack]")){manualRefreshSchoolInfo();return;}
     if(target.matches("[data-check]")){toggleChecked((pack.homework||[])[Number(target.dataset.check)],Number(target.dataset.check));return;}
     if(target.matches("[data-day]")){selectedDay=new Date(target.dataset.day);renderWeek();return;}

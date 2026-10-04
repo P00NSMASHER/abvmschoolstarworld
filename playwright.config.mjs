@@ -21,6 +21,7 @@ export default defineConfig({
   },
   projects:[
     {name:"mobile",use:{viewport:{width:390,height:844},isMobile:true,hasTouch:true}},
-    {name:"desktop",use:{viewport:{width:1440,height:900}}}
+    {name:"desktop",use:{viewport:{width:1440,height:900}}},
+    {name:"iphone-webkit",testMatch:"iphone-polish.spec.mjs",use:{browserName:"webkit",viewport:{width:393,height:852},isMobile:true,hasTouch:true}}
   ]
 });

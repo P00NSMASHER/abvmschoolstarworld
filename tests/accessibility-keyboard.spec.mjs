@@ -49,6 +49,7 @@ test("native Study disclosures work from keyboard",async({page})=>{
 });
 
 test("checklist completion preserves scroll position and keyboard focus",async({page})=>{
+  await page.clock.setFixedTime(new Date("2026-09-30T12:00:00-04:00"));
   await page.setViewportSize({width:390,height:700});
   await waitForApp(page,"/#week");
   const checks=page.locator("[data-check]");

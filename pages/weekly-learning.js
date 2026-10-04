@@ -30,6 +30,7 @@ function snapshot({pack={},learning={},now=Date.now(),timeZone="America/New_York
 }
 function render(args={}){
   const data=snapshot(args);
+  if(!data.strong.length&&!data.remembered.length&&!data.practice.length)return "";
   const line=(title,rows,empty,klass)=>'<div class="notice-row" role="listitem"><span class="status '+klass+'" aria-hidden="true"></span><p><strong>'+esc(title)+'</strong><br><span>'+esc(rows.length?rows.slice(0,4).map(row=>row.label).join(" · "):empty)+'</span></p></div>';
   return '<section class="parent-card" aria-labelledby="weekly-learning-title"><div class="notices-head"><span class="notices-mark" aria-hidden="true">✓</span><div><small>LAST 7 DAYS</small><h3 id="weekly-learning-title">Weekly learning</h3></div></div><div class="static-notice-list" role="list">'+
     line("Strong today",data.strong,"No current skills here yet.","ok")+
@@ -40,6 +41,7 @@ function render(args={}){
 function renderChanges(feed={}){
   const items=Array.isArray(feed?.items)?feed.items:[];
   if(!items.length)return "";
+  if(items.every(row=>row.kind==="unchanged"))return '<p class="updates-status">Class lessons were unchanged at the last teacher-page check.</p>';
   const rows=items.slice(0,8).map(row=>'<div class="notice-row" role="listitem"><span class="status '+(row.kind==="unchanged"?"ok":"warn")+'" aria-hidden="true"></span><p>'+esc(row.text)+'</p></div>').join("");
   return '<section class="parent-card notices-card" aria-labelledby="school-change-title"><div class="notices-head"><span class="notices-mark" aria-hidden="true">↻</span><div><small>LATEST VERIFIED REFRESH</small><h3 id="school-change-title">What changed at school?</h3></div></div><div class="static-notice-list" role="list">'+rows+'</div></section>';
 }

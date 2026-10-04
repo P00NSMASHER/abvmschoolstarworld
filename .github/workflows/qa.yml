@@ -67,8 +67,8 @@ jobs:
       - name: Yahoo weekly importer parser tests
         run: python3 -m unittest discover -s tests -p test_yahoo_weekly_import.py
 
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
+      - name: Install Chromium and WebKit
+        run: npx playwright install --with-deps chromium webkit
 
       - name: Browser, responsive, and accessibility QA
         run: npm run qa:e2e
