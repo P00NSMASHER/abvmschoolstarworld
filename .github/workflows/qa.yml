@@ -13,6 +13,7 @@ on:
       - '.github/workflows/qa.yml'
       - '.github/workflows/pages.yml'
       - '.github/workflows/sync-study-pack.yml'
+      - '.github/workflows/import-yahoo-weekly-reminders.yml'
       - '.github/workflows/refresh-health.yml'
       - '.github/workflows/health-dashboard.yml'
   push:
@@ -28,6 +29,7 @@ on:
       - 'playwright.config.mjs'
       - '.github/workflows/qa.yml'
       - '.github/workflows/sync-study-pack.yml'
+      - '.github/workflows/import-yahoo-weekly-reminders.yml'
       - '.github/workflows/refresh-health.yml'
       - '.github/workflows/health-dashboard.yml'
   workflow_dispatch:
@@ -61,6 +63,9 @@ jobs:
 
       - name: Unit and lunch-source failure-path tests
         run: npm run qa:unit
+
+      - name: Yahoo weekly importer parser tests
+        run: python3 -m unittest discover -s tests -p test_yahoo_weekly_import.py
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium

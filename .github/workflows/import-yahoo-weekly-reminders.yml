@@ -1,0 +1,98 @@
+name: Import ABVM Yahoo weekly reminders
+
+on:
+  schedule:
+    - cron: '55 5 * * *'
+      timezone: 'America/New_York'
+    - cron: '25 9 * * *'
+      timezone: 'America/New_York'
+    - cron: '55 12 * * *'
+      timezone: 'America/New_York'
+    - cron: '25 15 * * *'
+      timezone: 'America/New_York'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: abvm-yahoo-weekly-reminders
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      published: ${{ steps.publish.outputs.published }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies and PDF text extractor
+        run: |
+          npm ci --no-audit --no-fund
+          sudo apt-get update -qq
+          sudo apt-get install -y poppler-utils
+
+      - name: Import bounded school events and publish verified pack
+        id: publish
+        shell: bash
+        env:
+          YAHOO_MAIL_ACCOUNT: ${{ secrets.YAHOO_MAIL_ACCOUNT }}
+          YAHOO_APP_PASSWORD: ${{ secrets.YAHOO_APP_PASSWORD }}
+          YAHOO_OAUTH_CLIENT_ID: ${{ secrets.YAHOO_OAUTH_CLIENT_ID }}
+          YAHOO_OAUTH_CLIENT_SECRET: ${{ secrets.YAHOO_OAUTH_CLIENT_SECRET }}
+          YAHOO_OAUTH_REFRESH_TOKEN: ${{ secrets.YAHOO_OAUTH_REFRESH_TOKEN }}
+          YAHOO_OAUTH_REDIRECT_URI: ${{ secrets.YAHOO_OAUTH_REDIRECT_URI }}
+        run: |
+          set -euo pipefail
+          if [[ -z "$YAHOO_MAIL_ACCOUNT" || ( -z "$YAHOO_APP_PASSWORD" && ( -z "$YAHOO_OAUTH_CLIENT_ID" || -z "$YAHOO_OAUTH_CLIENT_SECRET" || -z "$YAHOO_OAUTH_REFRESH_TOKEN" || -z "$YAHOO_OAUTH_REDIRECT_URI" ) ) ]]; then
+            echo "::notice::Yahoo mail secrets are incomplete; scheduled mail import is waiting for setup."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          for ATTEMPT in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+
+            python3 scripts/import-yahoo-weekly-reminders.py
+            if git diff --quiet -- pages/data/uploaded-notices.json; then
+              echo "No new weekly reminder PDFs to import."
+              exit 0
+            fi
+
+            node scripts/integrate-uploaded-notices.mjs
+            npm run qa:static
+            node --test tests/uploaded-notice-integration.test.mjs tests/uploaded-notice-policy.test.mjs
+
+            git add pages/data/uploaded-notices.json pages/data/study-pack.json
+            git commit -m "Import screened ABVM weekly reminders from Yahoo"
+            if git push origin HEAD:main; then
+              echo "published=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            echo "main moved during Yahoo import attempt $ATTEMPT; retrying on latest main."
+          done
+
+          echo "Could not publish verified Yahoo reminders after 3 main-race retries." >&2
+          exit 1
+
+  deploy:
+    needs: import
+    if: needs.import.outputs.published == 'true'
+    uses: ./.github/workflows/pages.yml
+    with:
+      ref: main
