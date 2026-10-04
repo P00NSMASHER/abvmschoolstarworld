@@ -14,16 +14,16 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-10-04T21:40:04.538Z",
-  "sourceCapturedAt": "2026-10-04T21:40:05.080Z",
+  "sourceLastSeenAt": "2026-10-04T21:48:15.578Z",
+  "sourceCapturedAt": "2026-10-04T21:48:16.797Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-1140e20941b1f6f76b8b",
-    "sourceCapturedAt": "2026-10-04T21:40:05.080Z",
-    "generatedAt": "2026-10-04T21:40:05.080Z",
+    "sourceCapturedAt": "2026-10-04T21:48:16.797Z",
+    "generatedAt": "2026-10-04T21:48:16.797Z",
     "weekLabel": "Week of September 28, 2026",
-    "summary": "Current Grade 2 teacher-site material: Homework lists Reading “Read”, parent task “Cover books”, Reading “Keep Reading Log and Behavior Chart in the HW folder”, and Homework Folder “Return everything in the HW folder”. Upcoming tests include Spelling (short a / long a) / Handwriting on Friday, Oct. 2, Reading on Wednesday, Oct. 7, Spelling (short i / long i) / Handwriting on Friday, Oct. 9, and Grammar (subject & predicate) on Friday, Oct. 9. 16 uploaded school notices are integrated with the teacher pages.",
+    "summary": "Current Grade 2 teacher-site material: Homework lists Reading “Read”, parent task “Cover books”, Reading “Keep Reading Log and Behavior Chart in the HW folder”, and Homework Folder “Return everything in the HW folder”. Upcoming tests include Spelling (short a / long a) / Handwriting on Friday, Oct. 2, Reading on Wednesday, Oct. 7, Spelling (short i / long i) / Handwriting on Friday, Oct. 9, and Grammar (subject & predicate) on Friday, Oct. 9. 17 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
       {
         "subject": "Reading / ELA",
@@ -297,6 +297,13 @@
         "label": "October Gift Card Calendar Fundraiser money and calendar bottoms due",
         "kind": "deadline",
         "sourceDocument": "weekly-reminders-2026-09-28",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Sep. 28",
+        "label": "Gym classes moved to this date",
+        "kind": "schedule change",
+        "sourceDocument": "school-email-b44b85fd20772d689a49",
         "source": "uploaded-notice"
       },
       {
@@ -1205,7 +1212,7 @@
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
     "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-    "uploadedNoticeHash": "uploaded-notices-850593d73b5948f02193",
+    "uploadedNoticeHash": "uploaded-notices-26fe2c565e7774d235fd",
     "uploadedNoticeTopics": {
       "reminders": [
         "fundraiser",
@@ -11786,8 +11793,8 @@
     }
   ],
   "uploadedNotices": {
-    "count": 16,
-    "latestIntegratedAt": "2026-10-04T21:40:04.538Z",
+    "count": 17,
+    "latestIntegratedAt": "2026-10-04T21:48:15.578Z",
     "documents": [
       {
         "id": "dress-down-2026-09-25",
@@ -11868,6 +11875,11 @@
         "id": "school-flyer-e8dbe7d93fcf35bc311a",
         "label": "CYO Basketball flyer",
         "receivedAt": "2026-09-28"
+      },
+      {
+        "id": "school-email-b44b85fd20772d689a49",
+        "label": "Gym schedule update",
+        "receivedAt": "2026-09-25"
       }
     ]
   }

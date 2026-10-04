@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "lastIntegratedAt": "2026-10-04T21:40:04.538Z",
+  "lastIntegratedAt": "2026-10-04T21:48:15.578Z",
   "documents": [
     {
       "id": "dress-down-2026-09-25",
@@ -353,6 +353,24 @@
         "piiReviewed": true,
         "reviewedBy": "automated-fixed-event-extraction-v1",
         "reviewedAt": "2026-10-04T21:40:04.538Z"
+      }
+    },
+    {
+      "id": "school-email-b44b85fd20772d689a49",
+      "label": "Gym schedule update",
+      "receivedAt": "2026-09-25",
+      "facts": [
+        "Monday, Sep. 28: Gym classes moved to this date."
+      ],
+      "provenance": {
+        "factsHash": "8e0fd548b4437a872e0488d645b14547c431f41b10d8daa67a31f6736eea7f1f",
+        "sourceContentHash": "b44b85fd20772d689a494d95e4fc48f725656b3ef38c5d36c0770a04a4167df0"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "automated-fixed-event-extraction-v1",
+        "reviewedAt": "2026-10-04T21:48:15.578Z"
       }
     }
   ],
@@ -800,6 +818,12 @@
       "label": "Dress Down Day",
       "kind": "school event",
       "sourceDocument": "school-flyer-ca26241222dca1cf4795"
+    },
+    {
+      "date": "Monday, Sep. 28",
+      "label": "Gym classes moved to this date",
+      "kind": "schedule change",
+      "sourceDocument": "school-email-b44b85fd20772d689a49"
     }
   ],
   "reminders": [
