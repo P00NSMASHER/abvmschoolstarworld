@@ -110,7 +110,10 @@ test("second requested polish is present",async({page})=>{
 
   await openTab(page,"Calendar");
   await expect(page.locator(".current-month-summary")).toBeVisible();
-  await expect(page.locator(".current-month-summary > div")).toHaveCount(5);
+  // The remaining September events occupy three dates; every event on each date stays visible.
+  await expect(page.locator(".current-month-summary > div")).toHaveCount(3);
+  await expect(page.locator(".current-month-summary")).toContainText("Gym classes moved to this date");
+  await expect(page.locator(".current-month-summary")).toContainText("Chick-fil-A sale starts");
 
   await openTab(page,"Family");
   await expect(page.locator(".family-actions-card")).toBeVisible();
@@ -132,7 +135,7 @@ test("week paging and full calendar agenda work on phone",async({page})=>{
   expect(firstAfter).not.toBe(firstBefore);
 
   await openTab(page,"Calendar");
-  await expect(page.locator(".current-month-summary > div")).toHaveCount(5);
+  await expect(page.locator(".current-month-summary > div > span")).toHaveText(["Mon 28","Tue 29","Wed 30"]);
   await expect(page.locator(".current-month-summary .agenda-lunch")).toHaveCount(0);
   await expect(page.locator(".calendar-day-card .agenda-lunch")).toBeVisible();
   await expect(page.locator(".calendar-legend")).toContainText("Lunch");
@@ -405,6 +408,7 @@ test("current weekly notice appears in Week, Calendar, and Family screens",async
 
   await openTab(page,"Calendar");
   await expect(page.locator(".current-month-summary")).toContainText("Chick-fil-A sale starts");
+  await expect(page.locator(".current-month-summary")).toContainText("Gym classes moved to this date");
 
   await openTab(page,"Family");
   await expect(page.locator('[aria-labelledby="family-current-notices"]')).toContainText("OptionC portal");
