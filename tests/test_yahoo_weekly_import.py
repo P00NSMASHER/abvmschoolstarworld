@@ -1,4 +1,6 @@
 import datetime as dt
+from email.message import EmailMessage
+import json
 import importlib.util
 from pathlib import Path
 import unittest
@@ -35,6 +37,36 @@ class YahooWeeklyImportTests(unittest.TestCase):
         )
         self.assertEqual([(x["date"], x["label"]) for x in events],
                          [("Monday, Oct. 5", "No School"), ("Tuesday, Oct. 6", "Mass")])
+
+    def test_three_observed_calendar_formats(self):
+        fixtures = json.loads((Path(__file__).parent / "fixtures/yahoo-calendar-cells.json").read_text())
+        for sample in fixtures:
+            week = dt.date.fromisoformat(sample["week"])
+            events = [event for block in sample["cells"] for event in module.events_from_text(block, week, required=False)]
+            pairs = {(event["date"], event["label"]) for event in events}
+            for expected in sample["expected"]:
+                self.assertIn(tuple(expected), pairs, sample["week"])
+            self.assertNotIn(("Tuesday, Oct. 6", "Mass"), pairs)
+            self.assertNotIn(("Friday, Oct. 9", "Progress Reports"), pairs)
+
+    def test_gym_body_change_does_not_move_picture_day(self):
+        message = EmailMessage()
+        message["Subject"] = "Change of date for Gym Classes"
+        message.set_content("Due to picture day next Thursday, gym classes will be held on Monday, September\n28th.")
+        self.assertEqual(module.body_events(message, dt.date(2026, 9, 25)),
+                         [{"date": "Monday, Sep. 28", "label": "Gym classes moved to this date", "kind": "schedule change"}])
+
+    def test_plain_and_html_document_links_are_deduplicated(self):
+        message = EmailMessage()
+        label = "Weekly Reminders for Week of 10.05.26.pdf"
+        url = "https://track.spe.schoolmessenger.com/f/a/test"
+        message.set_content(f"{label}\n[{url}]\nGift Card Winners.pdf\n[{url}/other]")
+        message.add_alternative(f'<a href="{url}">{label}</a>', subtype="html")
+        self.assertEqual(module.pdf_links(message), [(dt.date(2026, 10, 5), url)])
+
+    def test_invalid_date_cannot_inherit_previous_day(self):
+        events = module.events_from_text("Monday 10/5: No School\nTuesday 10/99: Mass", dt.date(2026, 10, 5))
+        self.assertEqual([event["label"] for event in events], ["No School"])
 
     def test_unrecognized_pdf_fails_closed(self):
         with self.assertRaisesRegex(ValueError, "manual review required"):
