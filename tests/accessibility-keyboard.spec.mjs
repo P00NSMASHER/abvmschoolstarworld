@@ -39,7 +39,7 @@ test("keyboard navigation reaches the skip link and all five primary tabs",async
 test("native Study disclosures work from keyboard",async({page})=>{
   await waitForApp(page,"/#study");
   const details=page.locator("#study-math");
-  const summary=details.locator("summary");
+  const summary=details.locator(":scope > summary");
   await summary.focus();
   await expect(summary).toBeFocused();
   await page.keyboard.press("Enter");

@@ -30,7 +30,7 @@ test('empty Math opens a playable eight-question round directly',async({page})=>
   await page.getByRole('button',{name:'Practice with Math Dash'}).click();
   await expect(page.locator('.game-question-card')).toBeVisible();
   await expect(page.locator('.game-answer')).toHaveCount(3);
-  await expect(page.locator('.game-progress')).toContainText('8');
+  await expect(page.locator('.game-topbar')).toContainText('1 of 8');
 });
 test('all fallback place-value variants name a present digit and correct value',async({page})=>{
   await page.goto('/#games');await expect(page.locator('.study-game-grid')).toBeVisible();
