@@ -16,11 +16,14 @@ export function mergeSchoolwork(current,batch) {
   for (const source of batch.sourceManifest) {
     const old=manifest.get(source.id);
     if (old) {
-      const replayOfAutomaticDuplicate = old.sha256 === source.sha256 && old.status === 'duplicate' && old.reason === 'Exact SHA-256 duplicate of an existing source.' && source.status === 'integrated';
-      if (JSON.stringify(old)!==JSON.stringify(source) && !replayOfAutomaticDuplicate) throw new Error(`Source ID collision: ${source.id}; preserve the existing record or use a new source ID.`);
+      const sameHash=old.sha256===source.sha256;
+      const replayOfAutomaticDuplicate=sameHash&&old.status==='duplicate'&&old.reason==='Exact SHA-256 duplicate of an existing source.'&&source.status==='integrated';
+      const resolveHeld=sameHash&&old.status==='held'&&(source.status==='integrated'||source.status==='duplicate');
+      if (JSON.stringify(old)!==JSON.stringify(source) && !replayOfAutomaticDuplicate && !resolveHeld) throw new Error(`Source ID collision: ${source.id}; preserve the existing record or resolve a held source with the same ID and SHA-256.`);
+      if(resolveHeld)manifest.set(source.id,structuredClone(source));
       continue;
     }
-    const priorHash=[...manifest.values()].find(s=>s.sha256===source.sha256 && s.status!=='duplicate');
+    const priorHash=[...manifest.values()].find(s=>s.sha256===source.sha256 && s.status==='integrated');
     const incoming=structuredClone(source);
     if(priorHash) {incoming.status='duplicate';incoming.duplicateOf=priorHash.id;incoming.reason='Exact SHA-256 duplicate of an existing source.';}
     manifest.set(incoming.id,incoming);
