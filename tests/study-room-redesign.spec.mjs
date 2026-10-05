@@ -154,7 +154,8 @@ test('wrong Study Room answers stay rejected and do not consume another attempt'
 });
 
 test('test completion has immediate Undo and survives reload with a restore control',async({page})=>{
-  await page.addInitScript(()=>localStorage.removeItem('abvm-completed-tests'));
+  await page.goto('/#today');
+  await page.evaluate(()=>localStorage.removeItem('abvm-completed-tests'));
   await openRoom(page);
   const prep=page.locator('.hub-prep');
   const original=await prep.locator('h3').textContent();
