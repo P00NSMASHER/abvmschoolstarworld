@@ -17,7 +17,7 @@ function speechFixture() {
 }
 
 test('all four destinations preserve child-facing labels', () => {
-  for (const [key, label] of Object.entries({weekly:'This week',cumulative:'Cumulative',star:'STAR practice',games:'Study games'})) {
+  for (const [key, label] of Object.entries({weekly:'This week',cumulative:'All my learning',star:'STAR practice',games:'Make a mix'})) {
     assert(destinationMarkup(key).includes(label));
     assert(destinationMarkup(key).includes('aria-hidden="true"'));
   }
