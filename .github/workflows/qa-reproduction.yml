@@ -1,0 +1,36 @@
+name: Study QA reproduction bundle
+on:
+  pull_request:
+    paths:
+      - 'pages/study-room*'
+      - 'tests/study-room*'
+      - '.github/workflows/qa-reproduction.yml'
+permissions:
+  contents: read
+concurrency:
+  group: abvm-qa-reproduction-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  dependencies:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Package only lockfile-matched test dependencies
+        run: |
+          mkdir -p "$RUNNER_TEMP/abvm-test-dependencies"
+          tar -czf "$RUNNER_TEMP/abvm-test-dependencies/dependencies.tar.gz" node_modules package-lock.json
+          sha256sum package-lock.json > "$RUNNER_TEMP/abvm-test-dependencies/lock-sha256.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: abvm-test-dependencies-${{ github.run_id }}
+          path: ${{ runner.temp }}/abvm-test-dependencies/
+          retention-days: 3
+          if-no-files-found: error
