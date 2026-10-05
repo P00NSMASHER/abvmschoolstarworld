@@ -135,11 +135,16 @@ export async function mountStudyHub(
     link.dataset.studyHub = "true";
     document.head.append(link);
   }
-  events = Array.isArray(events) ? events : [];
-  const savedDone = getSaved("abvm-completed-tests", []),
-    done = Array.isArray(savedDone) ? savedDone : [];
-  events = events.filter((t) => !done.includes(t.date + "|" + t.label));
-  const loadingTests = nextTests(events, now());
+  const allEvents = Array.isArray(events) ? [...events] : [];
+  const completedKeys = () => {
+    const rows = getSaved("abvm-completed-tests", []);
+    return new Set(Array.isArray(rows) ? rows.filter((x) => typeof x === "string") : []);
+  };
+  const activeEvents = () => {
+    const done = completedKeys();
+    return allEvents.filter((t) => !done.has(t.date + "|" + t.label));
+  };
+  const loadingTests = nextTests(activeEvents(), now());
   const loadingDate = loadingTests.length
     ? new Intl.DateTimeFormat("en-US", {
         weekday: "long",
@@ -216,8 +221,11 @@ export async function mountStudyHub(
     revealed = false,
     selected = null,
     hinted = false,
+    wrong = new Set(),
     score = 0,
-    format = "quiz";
+    format = "quiz",
+    completionUndo = null,
+    completionMessage = "";
   let picks = new Set(["weekly"]);
   const star = unique([
     ...(catalog.questions || []).filter((q) => q.tier === "star-fallback"),
@@ -288,6 +296,7 @@ export async function mountStudyHub(
     revealed = false;
     selected = null;
     hinted = false;
+    wrong = new Set();
     score = 0;
     render();
     host.querySelector("h3")?.focus();
@@ -331,12 +340,12 @@ export async function mountStudyHub(
                 '<button data-answer="' +
                 i +
                 '" ' +
-                (revealed ? "disabled" : "") +
+                (revealed || wrong.has(i) ? 'disabled aria-disabled="true"' : "") +
                 ' class="' +
                 (revealed && a === q.answer
                   ? "hub-correct"
-                  : revealed && i === selected
-                    ? "hub-incorrect"
+                  : wrong.has(i)
+                    ? "hub-rejected"
                     : "") +
                 '">' +
                 escape(a) +
@@ -346,7 +355,10 @@ export async function mountStudyHub(
           "</div>"
         : '<button class="hub-primary" data-reveal>Turn card over</button>') +
       (!revealed
-        ? "<button data-hint>Show a hint</button>" +
+        ? (wrong.size
+            ? '<div class="hub-feedback hub-try" role="status"><strong>Not quite. Try another.</strong><p>The answer you tried stays marked so you can focus on the choices left.</p></div>'
+            : "") +
+          "<button data-hint>Show a hint</button>" +
           (hinted
             ? "<p>" +
               escape(
@@ -371,7 +383,11 @@ export async function mountStudyHub(
     const old = host.parentElement.querySelector("[data-study-legacy]");
     if (old) old.hidden = tab !== "weekly" || !!round;
     const bounds = weekBounds(now()),
-      tests = nextTests(events, now());
+      tests = nextTests(activeEvents(), now()),
+      doneKeys = completedKeys(),
+      completedUpcoming = allEvents.filter(
+        (t) => doneKeys.has(t.date + "|" + t.label) && t.date >= schoolDay(now()),
+      );
     const groups = tests.map((t) => {
       // Current class material leads. Only an explicit chapter/grammar focus
       // makes undated matching worksheets relevant to this test.
@@ -434,6 +450,18 @@ export async function mountStudyHub(
             "</button></div>"
           : "<h3>Small steps. Big discoveries.</h3><p>No upcoming test is listed. Your weekly lessons are ready below.</p>") +
         "</section>" +
+        (completionMessage
+          ? '<div class="hub-undo" role="status"><span>' + escape(completionMessage) + '</span>' +
+            (completionUndo ? '<button type="button" data-undo-test>Undo</button>' : '') + '</div>'
+          : '') +
+        (completedUpcoming.length
+          ? '<details class="hub-completed-tests"><summary>Tests hidden on this device <span class="hub-count">' +
+            completedUpcoming.length +
+            '</span></summary><p class="hub-caption">These are hidden only on this browser. Restore any test to practice it again.</p>' +
+            completedUpcoming.map((t,i) =>
+              '<button type="button" class="hub-text-button" data-restore-test="' + i + '">Restore ' + escape(t.label) + '</button>'
+            ).join('') + '</details>'
+          : '') +
         (dated.length
           ? '<details class="hub-card"><summary>This week’s schoolwork <span class="hub-count">' +
             dated.length +
@@ -571,14 +599,52 @@ export async function mountStudyHub(
     host
       .querySelector("[data-complete-test]")
       ?.addEventListener("click", () => {
-        const savedDone = getSaved("abvm-completed-tests", []),
-          done = Array.isArray(savedDone) ? savedDone : [];
-        for (const t of tests) done.push(t.date + "|" + t.label);
-        if (!save("abvm-completed-tests", [...new Set(done)]))
-          return alert("Could not save on this device. Please try again.");
-        events = events.filter((t) => !done.includes(t.date + "|" + t.label));
+        const before = completedKeys(),
+          keys = tests.map((t) => t.date + "|" + t.label),
+          labels = tests.map((t) => t.label);
+        const after = new Set(before);
+        keys.forEach((key) => after.add(key));
+        if (!save("abvm-completed-tests", [...after])) {
+          completionUndo = null;
+          completionMessage = "Could not save that change. Your tests are still listed.";
+          render();
+          return;
+        }
+        completionUndo = { keys, before: [...before] };
+        completionMessage =
+          (labels.length > 1 ? "Tests marked finished: " : "Test marked finished: ") +
+          labels.join(", ") + ".";
         render();
+        host.querySelector("[data-undo-test]")?.focus({ preventScroll: true });
       });
+    host.querySelector("[data-undo-test]")?.addEventListener("click", () => {
+      if (!completionUndo) return;
+      if (!save("abvm-completed-tests", completionUndo.before)) {
+        completionMessage = "Could not restore the test list. Please try again.";
+        render();
+        return;
+      }
+      completionUndo = null;
+      completionMessage = "Your test list has been restored.";
+      render();
+      host.querySelector("[data-complete-test]")?.focus({ preventScroll: true });
+    });
+    host.querySelectorAll("[data-restore-test]").forEach((button) =>
+      button.addEventListener("click", () => {
+        const test = completedUpcoming[Number(button.dataset.restoreTest)];
+        if (!test) return;
+        const done = completedKeys();
+        done.delete(test.date + "|" + test.label);
+        if (!save("abvm-completed-tests", [...done])) {
+          completionMessage = "Could not restore that test. Please try again.";
+          render();
+          return;
+        }
+        completionUndo = null;
+        completionMessage = test.label + " restored.";
+        render();
+      }),
+    );
     host.querySelectorAll("[data-pick]").forEach(
       (b) =>
         (b.onchange = () => {
@@ -613,17 +679,42 @@ export async function mountStudyHub(
       (b) =>
         (b.onclick = () => {
           if (revealed) return;
-          selected = Number(b.dataset.answer);
-          revealed = true;
+          const answerIndex = Number(b.dataset.answer);
+          if (wrong.has(answerIndex)) return;
+          selected = answerIndex;
           const q = round.questions[index],
             correct = q.choices[selected] === q.answer;
-          if (correct) score++;
-          engine.recordLearning?.(q, correct, {
-            attemptCount: 1,
-            incorrectCount: correct ? 0 : 1,
-            hintCount: hinted ? 1 : 0,
-          });
+          if (correct) {
+            revealed = true;
+            if (!wrong.size) score++;
+            try {
+              engine.recordLearning?.(q, true, {
+                attemptCount: wrong.size + 1,
+                incorrectCount: wrong.size,
+                hintCount: hinted ? 1 : 0,
+              });
+            } catch {}
+          } else {
+            wrong.add(answerIndex);
+            const maxWrong = Math.min(2, Math.max(1, q.choices.length - 1));
+            if (wrong.size >= maxWrong) {
+              revealed = true;
+              try {
+                engine.recordLearning?.(q, false, {
+                  attemptCount: wrong.size,
+                  incorrectCount: wrong.size,
+                  hintCount: hinted ? 1 : 0,
+                });
+              } catch {}
+            } else {
+              selected = null;
+            }
+          }
           render();
+          if (revealed)
+            host.querySelector(".hub-feedback,[data-next]")?.focus?.({ preventScroll: true });
+          else
+            host.querySelector(".hub-answers button:not(:disabled)")?.focus({ preventScroll: true });
         }),
     );
     host.querySelector("[data-next]")?.addEventListener("click", () => {
@@ -631,6 +722,7 @@ export async function mountStudyHub(
       revealed = false;
       selected = null;
       hinted = false;
+      wrong = new Set();
       render();
       host.querySelector(".hub-round h3,.hub-finish h3")?.focus();
     });
@@ -638,7 +730,7 @@ export async function mountStudyHub(
   render();
   // Recompute date-dependent cards when returning from the publisher, and across midnight.
   let lastDay = schoolDay(now()),
-    lastTests = JSON.stringify(nextTests(events, now()));
+    lastTests = JSON.stringify(nextTests(activeEvents(), now()));
   const refresh = () => {
     if (!host.isConnected) {
       document.removeEventListener("visibilitychange", refresh);
@@ -647,14 +739,14 @@ export async function mountStudyHub(
     }
     if (!round) {
       lastDay = schoolDay(now());
-      lastTests = JSON.stringify(nextTests(events, now()));
+      lastTests = JSON.stringify(nextTests(activeEvents(), now()));
       render();
     }
   };
   const timer = setInterval(() => {
     if (
       schoolDay(now()) !== lastDay ||
-      JSON.stringify(nextTests(events, now())) !== lastTests
+      JSON.stringify(nextTests(activeEvents(), now())) !== lastTests
     )
       refresh();
   }, 60000);
