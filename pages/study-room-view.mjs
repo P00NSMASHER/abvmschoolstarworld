@@ -148,8 +148,8 @@ export function prepareStudyRoom(host) {
       if (feedback && !feedback.querySelector('.room-feedback-title')) {
         const title = doc.createElement('p');
         title.className = 'room-feedback-title';
-        title.textContent = round.querySelector('.hub-incorrect') ? 'Let’s learn this one together.' :
-          round.querySelector('[data-answer]') ? 'You’ve got it!' : 'Turn a little practice into learning.';
+        title.textContent = feedback.classList.contains('hub-feedback-learn') ? 'Let’s learn this one together.' :
+          feedback.classList.contains('hub-feedback-correct') ? 'You’ve got it!' : 'Turn a little practice into learning.';
         feedback.prepend(title);
         feedback.tabIndex = -1;
       }
