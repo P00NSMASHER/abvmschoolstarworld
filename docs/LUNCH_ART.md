@@ -4,16 +4,25 @@ The verified school menu is always the source of truth. Illustrations are a visu
 extra; the exact menu text, dates, closures and source links remain visible. Every
 image is labeled **Meal illustration**. It is not a photograph of the actual meal.
 
-## Automatic intake and backup
+## Automatic intake, hourly audit and backup
 
 A lunch menu upload plus “integrate into the app” includes artwork in that same
 run: review the menu, reuse suitable approved art, generate missing art with the
 built-in high-quality image generator, inspect it, test, and publish. No second
 artwork request is needed.
 
+The active hourly **ABVM Lunch Artwork** lane coordinates through the
+[current delivery board](https://github.com/P00NSMASHER/abvmschoolstarworld/issues/204).
+It checks current/future exact-menu coverage when menu or artwork inputs change,
+using the same plan, review and QA process below. When coverage is complete, it
+can take the board's unowned provenance/documentation work; it must not regenerate
+already-reviewed artwork just to produce activity. Check live ownership before
+writing and publish through the normal pull-request workflow.
+
 The GitHub merge-event task **Complete lunch artwork** is configured as a backup
 but currently paused: enabling it was blocked by the account limit of 15 active
-tasks. Do not describe it as active until enablement succeeds. Once enabled, after
+tasks. This separate paused backup does not describe the active hourly lane.
+Do not describe the backup as active until enablement succeeds. Once enabled, after
 merged pull requests it checks for current/future menus needing illustrations,
 completes the same review and QA process, and quietly does nothing when coverage is
 complete. It does not trigger on direct pushes. Use PRs for menu changes. It is not
@@ -45,7 +54,8 @@ retain the accurate menu text and report the precise missing coverage.
    accurately, keep the text-only card until reviewed.
 5. Inspect each generated image. Store approved images under
    `pages/assets/lunch-art/` as optimized WebP files. Record the prompt and image
-   review in `docs/lunch-art-prompts.md`; record the asset, alt text, generator,
+   review in `docs/lunch-art-prompts.md` or an explicitly linked supplement in its
+   prompt/review index; record the asset, alt text, generator,
    review date, review notes and exact menu approvals in
    `pages/data/lunch-art-registry.json`. Only `status: reviewed` entries render.
    Keep the source image immutable when changing foods; add a new asset and review.
