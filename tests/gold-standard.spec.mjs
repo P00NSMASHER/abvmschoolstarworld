@@ -51,6 +51,7 @@ test("historical gold-standard visual hierarchy is restored",async({page})=>{
 
   await openTab(page,"Study");
   await expect(page.locator(".app-header h1")).toHaveText(/Study room/i);
+  await page.locator(".room-adults > summary").click();
   await expect(page.locator(".study-at-a-glance")).toBeVisible();
   await expect(page.locator(".study-games-cta")).toBeVisible();
   await expect(page.locator(".study-accordion")).toHaveCount(6);
@@ -88,6 +89,9 @@ test("requested polish is present",async({page})=>{
   await expect(page.locator(".special-row")).toHaveCount(5);
 
   await openTab(page,"Study");
+  await expect(page.getByRole("button",{name:"Practice now",exact:true})).toBeVisible();
+  await expect(page.locator(".room-subject-grid > .study-accordion")).toHaveCount(6);
+  await page.locator(".room-adults > summary").click();
   await expect(page.locator(".quick-look-head")).toBeVisible();
   expect(await page.locator(".study-at-a-glance li").count()).toBeGreaterThanOrEqual(3);
 
@@ -322,8 +326,8 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   const optionalAssets=[...optional.matchAll(/"(\.\/[^\"]+)"/g)].map(match=>match[1]);
   expect(optionalAssets).toEqual([
     "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json",
-    "./study-hub.mjs", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-model.mjs", "./star-practice.mjs",
-    "./study-hub.css?v=2", "./family-view.css?v=1", "./visual-polish.css?v=1", "./lunch-art.js?v=1"
+    "./study-hub.mjs", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs", "./study-resources.mjs", "./study-clarity.css?v=1", "./study-model.mjs", "./star-practice.mjs",
+    "./study-hub.css?v=3", "./family-view.css?v=1", "./visual-polish.css?v=1", "./lunch-art.js?v=1"
   ]);
   expect(new Set(optionalAssets).size).toBe(optionalAssets.length);
 });
@@ -487,6 +491,8 @@ test("published study content contains real lesson material instead of Google Si
 
 test("Subject Study Games stay on current material for full rounds",async({page})=>{
   await openTab(page,"Study Games");
+  await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
+  await page.waitForFunction(()=>!!window.ABVMStudyGames);
   const report=await page.evaluate(async()=>{
     const source=await (await fetch("./data/study-pack.json",{cache:"no-store"})).json();
     const engine=window.ABVMStudyGames;

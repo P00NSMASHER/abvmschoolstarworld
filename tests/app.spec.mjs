@@ -457,6 +457,8 @@ test("Study subject cards use a three-column iPad grid and a compact two-column 
 
 test("Study exposes one primary game CTA and collapsed subject details",async({page})=>{
   await openTab(page,"Study");
+  await expect(page.locator(".room-adults")).not.toHaveAttribute("open");
+  await page.locator(".room-adults > summary").click();
   await expect(page.locator(".study-at-a-glance")).toBeVisible();
   await expect(page.locator(".study-games-cta")).toBeVisible();
   const details=page.locator(".study-accordion");

@@ -77,9 +77,9 @@ function complete(now=Date.now()){
 }
 function render({pack={},learning={},now=Date.now()}={}){
   const due=dueSkills(pack,learning,now),done=completion(now),count=due.length;
-  const title=done?"Today’s practice is complete":"A little practice, every day";
-  const copy=done?"Nice work. Come back tomorrow, or keep exploring at your own pace.":count?count+' skill'+(count===1?' is':'s are')+' ready for another look. We’ll mix a short review with school skills.':"Eight questions, one step at a time. School skills come first, with Grade 2 practice to fill the gaps.";
-  return '<section class="daily-practice" aria-labelledby="daily-practice-title"><p class="daily-eyebrow">'+(done?'DONE FOR TODAY':'YOUR DAILY PRACTICE')+'</p><h2 id="daily-practice-title">'+title+'</h2><p>'+copy+'</p>'+(count&&!done?'<ul aria-label="Skills to revisit">'+due.slice(0,3).map(s=>'<li>'+esc(s.label)+'</li>').join('')+'</ul>':'')+'<button type="button" data-subject-practice="daily">'+(done?'Practice a little more':'Start 5-minute practice')+'<span aria-hidden="true">›</span></button><small>Hints are always available. No timer. Progress stays on this device.</small></section>';
+  const title=done?"Today’s practice is complete":"Let’s practice";
+  const copy=done?"Nice work. Come back tomorrow, or keep exploring at your own pace. No timer.":count?count+' skill'+(count===1?' is':'s are')+' ready for another look. We’ll mix a short review with school skills. No timer.':"Eight questions. No timer.";
+  return '<section class="daily-practice" aria-labelledby="daily-practice-title"><p class="daily-eyebrow">'+(done?'DONE FOR TODAY':'YOUR DAILY PRACTICE')+'</p><h2 id="daily-practice-title">'+title+'</h2><p>'+copy+'</p>'+(count&&!done?'<ul aria-label="Skills to revisit">'+due.slice(0,3).map(s=>'<li>'+esc(s.label)+'</li>').join('')+'</ul>':'')+'<button type="button" data-subject-practice="daily">'+(done?'Practice a little more':'Practice now')+'<span aria-hidden="true">›</span></button></section>';
 }
 window.ABVMStudyReview=Object.freeze({sm2,schedule,validReview,dueAt,isDue,dueSkills,complete,completion,render});
 })();

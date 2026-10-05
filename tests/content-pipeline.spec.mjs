@@ -207,7 +207,7 @@ test('Study Games source identity changes when the certified bank fingerprint ch
 });
 
 
-test('two distinct misses resolve honestly and record one failed learning opportunity', async ({ page }) => {
+test('two distinct misses teach before resolving and record one failed learning opportunity', async ({ page }) => {
   await page.evaluate(() => localStorage.clear());
   await page.getByRole('button', { name: /Quick Mix/i }).click();
   await expect(page.locator('.game-question-card')).toBeVisible();
@@ -225,17 +225,17 @@ test('two distinct misses resolve honestly and record one failed learning opport
 
   const wrongs = question.choices.map((choice,index)=>choice!==question.answer?index:-1).filter(index=>index>=0);
   expect(wrongs.length).toBeGreaterThanOrEqual(2);
-
-  const firstWrong=page.locator('.game-answer').nth(wrongs[0]);
+  const firstWrong = page.locator('.game-answer').nth(wrongs[0]);
   await firstWrong.click();
   await expect(firstWrong).toBeDisabled();
   await expect(page.locator('.game-feedback.retry')).toContainText('Not yet');
   await expect(page.locator('[data-game-next]')).toHaveCount(0);
 
+  // Repeat activation of the rejected choice must not burn another attempt.
   await firstWrong.evaluate(button=>button.click());
   await expect(page.locator('[data-game-next]')).toHaveCount(0);
 
-  const secondWrong=page.locator('.game-answer').nth(wrongs[1]);
+  const secondWrong = page.locator('.game-answer').nth(wrongs[1]);
   await secondWrong.click();
   await expect(secondWrong).toBeDisabled();
   await expect(page.locator('.game-feedback.retry')).toContainText('model answer');
@@ -445,11 +445,11 @@ test('a persisted due Comeback is shown unscored and records RememberedLater aft
   await page.getByRole('button', { name: /Quick Mix/i }).click();
   await expect(page.locator('.game-topbar')).toContainText('Comeback');
   await expect(page.locator('.adaptive-note')).toContainText('not scored');
-  await expect(page.locator('.game-topbar b')).toContainText('★ 0');
+  await expect(page.locator('.game-topbar b')).toHaveCount(0);
 
   await page.locator('.game-answer').filter({ hasText: seeded.answer }).click();
   await expect(page.locator('.game-feedback.correct')).toContainText('Remembered later!');
-  await expect(page.locator('.game-topbar b')).toContainText('★ 0');
+  await expect(page.locator('.game-topbar b')).toHaveCount(0);
   await page.locator('[data-game-next]').click();
 
   const stored = await page.evaluate(skill => ({

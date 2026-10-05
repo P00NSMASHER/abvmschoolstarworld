@@ -204,6 +204,7 @@ test('Study Hub load failure keeps legacy study content usable and retry visible
   const host=page.locator('#study-hub');
   await expect(host).toHaveAttribute('data-study-state','error',{timeout:10_000});
   await expect(host.getByRole('button',{name:'Try again'})).toBeVisible();
+  await page.locator('.room-adults > summary').click();
   await expect(page.locator('.study-at-a-glance')).toBeVisible();
   await expect(page.locator('.study-games-cta')).toBeVisible();
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);

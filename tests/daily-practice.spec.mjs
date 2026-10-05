@@ -5,7 +5,7 @@ test('daily practice remains accessible below study collections and scales with 
     await page.setViewportSize({width,height:852});await page.goto('/#study');
     const card=page.locator('.daily-practice');await expect(card).toBeVisible();
     await expect(card).toContainText('No timer');
-    const button=card.getByRole('button',{name:'Start 5-minute practice'});
+    const button=card.getByRole('button',{name:'Practice now'});
     await expect(page.locator('#study-hub .hub-tabs')).toBeVisible();
     await button.scrollIntoViewIfNeeded();await expect(button).toBeInViewport();expect((await button.boundingBox()).height).toBeGreaterThanOrEqual(44);
     await page.evaluate(()=>document.documentElement.style.fontSize='34px');
@@ -18,15 +18,20 @@ test('daily practice remains accessible below study collections and scales with 
 test('due skill chips lead into a playable daily review round',async({page})=>{
   await page.addInitScript(()=>localStorage.setItem('abvm-study-learning:v2',JSON.stringify({'place-value':{LastSeenAt:Date.now()-3*86400000}})));
   await page.goto('/#study');await expect(page.locator('.daily-practice')).toContainText('Place value');
-  await page.getByRole('button',{name:'Start 5-minute practice'}).click();
+  await page.getByRole('button',{name:'Practice now'}).click();
   await expect(page.locator('.game-topbar')).toContainText('Daily Practice');
   await expect(page.locator('.game-topbar')).toContainText('1 of 8');
-  await expect(page.locator('.game-question-card h2')).toContainText('what value');
+  const prompt=await page.locator('.game-question-card h2').innerText();
+  const skill=await page.evaluate(async text=>{
+    const data=await fetch('./data/study-pack.json').then(r=>r.json());
+    return window.ABVMStudyGames.buildCatalog(data.pack).questions.find(q=>q.prompt===text)?.skill;
+  },prompt);
+  expect(skill).toBe('place-value');
   await page.getByRole('button',{name:'Need a hint?'}).click();
   await expect(page.locator('.game-hint')).toBeVisible();
 });
 test('complete a daily round, persist its calm completion state, and keep all named games',async({page})=>{
-  await page.goto('/#study');await page.getByRole('button',{name:'Start 5-minute practice'}).click();
+  await page.goto('/#study');await page.getByRole('button',{name:'Practice now'}).click();
   await expect(page.locator('.game-question-card')).toBeVisible();
   for(let i=0;i<12;i++){
     if(await page.locator('.game-finish').count())break;
@@ -50,6 +55,6 @@ test('complete a daily round, persist its calm completion state, and keep all na
 });
 test('corrupt progress cannot prevent Study or daily practice from loading',async({page})=>{
   await page.addInitScript(()=>localStorage.setItem('abvm-study-learning:v2','broken json'));
-  await page.goto('/#study');await page.getByRole('button',{name:'Start 5-minute practice'}).click();
+  await page.goto('/#study');await page.getByRole('button',{name:'Practice now'}).click();
   await expect(page.locator('.game-question-card')).toBeVisible();
 });

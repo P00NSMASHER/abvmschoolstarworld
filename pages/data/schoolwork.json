@@ -36,7 +36,7 @@
             "7 + 2 = 5"
           ],
           "explanation": "The whole is 7. Taking away 2 leaves 5.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Use the same three numbers. Start a subtraction fact with the whole, then take away one part.",
           "sourceFact": "Fact families",
           "tier": "material",
           "questionType": "direct",
@@ -61,7 +61,7 @@
             "9 \u2212 3 = 6"
           ],
           "explanation": "The whole is 9. Taking away 3 leaves 6.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Use the same three numbers. Start a subtraction fact with the whole, then take away one part.",
           "sourceFact": "Fact families",
           "tier": "material",
           "questionType": "direct",
@@ -86,7 +86,7 @@
             "4 \u2212 11 = 7"
           ],
           "explanation": "The whole is 11. Taking away 4 leaves 7.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Use the same three numbers. Start a subtraction fact with the whole, then take away one part.",
           "sourceFact": "Fact families",
           "tier": "material",
           "questionType": "direct",
@@ -111,7 +111,7 @@
             "13 \u2212 8 = 8"
           ],
           "explanation": "The whole is 13. Taking away 5 leaves 8.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Use the same three numbers. Start a subtraction fact with the whole, then take away one part.",
           "sourceFact": "Fact families",
           "tier": "material",
           "questionType": "direct",
@@ -136,7 +136,7 @@
             "9 + 2 = 7"
           ],
           "explanation": "The whole is 9. Taking away 2 leaves 7.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Use the same three numbers. Start a subtraction fact with the whole, then take away one part.",
           "sourceFact": "Fact families",
           "tier": "material",
           "questionType": "direct",
@@ -161,7 +161,7 @@
             "11 \u2212 3 = 8"
           ],
           "explanation": "The whole is 11. Taking away 3 leaves 8.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Use the same three numbers. Start a subtraction fact with the whole, then take away one part.",
           "sourceFact": "Fact families",
           "tier": "material",
           "questionType": "direct",
@@ -186,7 +186,7 @@
             "4 \u2212 13 = 9"
           ],
           "explanation": "The whole is 13. Taking away 4 leaves 9.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Use the same three numbers. Start a subtraction fact with the whole, then take away one part.",
           "sourceFact": "Fact families",
           "tier": "material",
           "questionType": "direct",
@@ -211,7 +211,7 @@
             "13 \u2212 7 = 7"
           ],
           "explanation": "The whole is 13. Taking away 6 leaves 7.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Use the same three numbers. Start a subtraction fact with the whole, then take away one part.",
           "sourceFact": "Fact families",
           "tier": "material",
           "questionType": "direct",
@@ -257,7 +257,7 @@
             "There is no subject"
           ],
           "explanation": "The rabbit tells who or what the sentence is about.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Find the action first. Ask who or what is doing it. Keep the words that name that person or thing together.",
           "sourceFact": "Subjects and predicates",
           "tier": "material",
           "questionType": "direct",
@@ -282,7 +282,7 @@
             "My friend"
           ],
           "explanation": "My friend tells who or what the sentence is about.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Find the action first. Ask who or what is doing it. Keep the words that name that person or thing together.",
           "sourceFact": "Subjects and predicates",
           "tier": "material",
           "questionType": "direct",
@@ -307,7 +307,7 @@
             "runs"
           ],
           "explanation": "The puppy tells who or what the sentence is about.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Find the action first. Ask who or what is doing it. Keep the words that name that person or thing together.",
           "sourceFact": "Subjects and predicates",
           "tier": "material",
           "questionType": "direct",
@@ -332,7 +332,7 @@
             "Our teacher smiles"
           ],
           "explanation": "Our teacher tells who or what the sentence is about.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Find the action first. Ask who or what is doing it. Keep the words that name that person or thing together.",
           "sourceFact": "Subjects and predicates",
           "tier": "material",
           "questionType": "direct",
@@ -378,7 +378,7 @@
             "we like the park."
           ],
           "explanation": "A sentence starts with a capital and needs end punctuation.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Check the first letter and the ending mark. A telling sentence needs a capital and a period.",
           "sourceFact": "Writing clear sentences",
           "tier": "material",
           "questionType": "direct",
@@ -426,7 +426,7 @@
             "8"
           ],
           "explanation": "4 + 4 = 8, so each equal group has 4.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Each part must be the same size. Share one counter at a time between the groups and check they match.",
           "sourceFact": "Daily review \u2022 Day 26",
           "tier": "material",
           "questionType": "direct",
@@ -451,7 +451,7 @@
             "30 + 5"
           ],
           "explanation": "3 tens are 30. Add 5 ones.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Read the tens place, then the ones place. A group of ten is worth more than one single counter.",
           "sourceFact": "Daily review \u2022 Day 26",
           "tier": "material",
           "questionType": "direct",
@@ -476,7 +476,7 @@
             "Ava"
           ],
           "explanation": "Ben read 5 and Ava read 3. 5 \u2212 3 = 2.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Read the chart key. Count each group, then compare the groups named in the question.",
           "sourceFact": "Daily review \u2022 Day 26",
           "tier": "material",
           "questionType": "direct",
@@ -524,7 +524,7 @@
             "Cool down"
           ],
           "explanation": "The prefix pre- means before.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Read the base word first. Does the prefix change when the action happens?",
           "sourceFact": "Daily review \u2022 Day 24",
           "tier": "material",
           "questionType": "direct",
@@ -549,7 +549,7 @@
             "Beth\u2019s flag"
           ],
           "explanation": "Apostrophe-s shows that Beth owns the flag.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Find the owner. Look for the mark that shows something belongs to that person.",
           "sourceFact": "Daily review \u2022 Day 24",
           "tier": "material",
           "questionType": "direct",
@@ -599,7 +599,7 @@
             "38"
           ],
           "explanation": "Add the tens and the ones: 24 + 13 = 37.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Add tens to tens and ones to ones. Trade ten ones for a ten when needed; check the total.",
           "sourceFact": "Math maintenance",
           "tier": "material",
           "questionType": "direct",
@@ -624,7 +624,7 @@
             "11"
           ],
           "explanation": "Take away 13 from 24. Check: 11 + 13 = 24.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Subtract tens and ones. Trade a ten for ten ones when needed, then check by adding back.",
           "sourceFact": "Math maintenance",
           "tier": "material",
           "questionType": "direct",
@@ -649,7 +649,7 @@
             "58"
           ],
           "explanation": "Add the tens and the ones: 32 + 16 = 48.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Add tens to tens and ones to ones. Trade ten ones for a ten when needed; check the total.",
           "sourceFact": "Math maintenance",
           "tier": "material",
           "questionType": "direct",
@@ -674,7 +674,7 @@
             "17"
           ],
           "explanation": "Take away 16 from 32. Check: 16 + 16 = 32.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Subtract tens and ones. Trade a ten for ten ones when needed, then check by adding back.",
           "sourceFact": "Math maintenance",
           "tier": "material",
           "questionType": "direct",
@@ -699,7 +699,7 @@
             "60"
           ],
           "explanation": "Add the tens and the ones: 41 + 18 = 59.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Add tens to tens and ones to ones. Trade ten ones for a ten when needed; check the total.",
           "sourceFact": "Math maintenance",
           "tier": "material",
           "questionType": "direct",
@@ -724,7 +724,7 @@
             "23"
           ],
           "explanation": "Take away 18 from 41. Check: 23 + 18 = 41.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Subtract tens and ones. Trade a ten for ten ones when needed, then check by adding back.",
           "sourceFact": "Math maintenance",
           "tier": "material",
           "questionType": "direct",
@@ -749,7 +749,7 @@
             "87"
           ],
           "explanation": "Add the tens and the ones: 53 + 24 = 77.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Add tens to tens and ones to ones. Trade ten ones for a ten when needed; check the total.",
           "sourceFact": "Math maintenance",
           "tier": "material",
           "questionType": "direct",
@@ -774,7 +774,7 @@
             "30"
           ],
           "explanation": "Take away 24 from 53. Check: 29 + 24 = 53.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Subtract tens and ones. Trade a ten for ten ones when needed, then check by adding back.",
           "sourceFact": "Math maintenance",
           "tier": "material",
           "questionType": "direct",
@@ -799,7 +799,7 @@
             "78"
           ],
           "explanation": "Add the tens and the ones: 62 + 15 = 77.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Add tens to tens and ones to ones. Trade ten ones for a ten when needed; check the total.",
           "sourceFact": "Math maintenance",
           "tier": "material",
           "questionType": "direct",
@@ -824,7 +824,7 @@
             "47"
           ],
           "explanation": "Take away 15 from 62. Check: 47 + 15 = 62.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Subtract tens and ones. Trade a ten for ten ones when needed, then check by adding back.",
           "sourceFact": "Math maintenance",
           "tier": "material",
           "questionType": "direct",
@@ -849,7 +849,7 @@
             "59"
           ],
           "explanation": "Add the tens and the ones: 25 + 24 = 49.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Add tens to tens and ones to ones. Trade ten ones for a ten when needed; check the total.",
           "sourceFact": "Math maintenance",
           "tier": "material",
           "questionType": "direct",
@@ -874,7 +874,7 @@
             "2"
           ],
           "explanation": "Take away 24 from 25. Check: 1 + 24 = 25.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Subtract tens and ones. Trade a ten for ten ones when needed, then check by adding back.",
           "sourceFact": "Math maintenance",
           "tier": "material",
           "questionType": "direct",
@@ -899,7 +899,7 @@
             "11"
           ],
           "explanation": "11 \u2212 4 = 7. Check: 7 + 4 = 11.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Draw the total and circle the part you know. Count the part still needed to reach the total.",
           "sourceFact": "Math maintenance",
           "tier": "material",
           "questionType": "direct",
@@ -945,7 +945,7 @@
             "Delighted"
           ],
           "explanation": "Afraid means feeling fear.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Put each meaning into the sentence. Which one keeps the idea the same?",
           "sourceFact": "Understanding feelings",
           "tier": "material",
           "questionType": "direct",
@@ -995,7 +995,7 @@
             "Pentagon"
           ],
           "explanation": "A triangle has three straight sides.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Trace each edge with a finger. Count only the straight sides, then compare the choices.",
           "sourceFact": "Daily review \u2022 Day 23",
           "tier": "material",
           "questionType": "direct",
@@ -1020,7 +1020,7 @@
             "8"
           ],
           "explanation": "10 \u2212 2 = 8. Each left step subtracts 1.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Start at the given number. Each move left takes away one. Count the moves, not the starting spot.",
           "sourceFact": "Daily review \u2022 Day 23",
           "tier": "material",
           "questionType": "direct",
@@ -1068,7 +1068,7 @@
             "Any two pieces"
           ],
           "explanation": "Both parts must be equal to be halves.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Check both how many parts there are and whether the parts are the same size.",
           "sourceFact": "Daily review \u2022 Day 21",
           "tier": "material",
           "questionType": "direct",
@@ -1093,7 +1093,7 @@
             "2 tens and 8 ones"
           ],
           "explanation": "2 tens are 20, and 20 + 8 = 28.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Read the tens place, then the ones place. A group of ten is worth more than one single counter.",
           "sourceFact": "Daily review \u2022 Day 21",
           "tier": "material",
           "questionType": "direct",
@@ -1143,7 +1143,7 @@
             "Fly in a plane"
           ],
           "explanation": "The passage says the library is in the neighborhood, so walking or biking is possible.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Find the sentence in the story that explains the trip. Choose only what that sentence supports.",
           "sourceFact": "At the Library \u2022 comprehension",
           "tier": "material",
           "questionType": "direct",
@@ -1168,7 +1168,7 @@
             "Playing computer games"
           ],
           "explanation": "The narrator chooses books before using the computer room.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Reread that part of the story. Find the named event, then look at what the narrator does next.",
           "sourceFact": "At the Library \u2022 comprehension",
           "tier": "material",
           "questionType": "direct",
@@ -1193,7 +1193,7 @@
             "A made-up fairy tale"
           ],
           "explanation": "Nonfiction gives factual information about real subjects.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Decide whether the book explains real information or tells an imagined story.",
           "sourceFact": "At the Library \u2022 comprehension",
           "tier": "material",
           "questionType": "direct",
@@ -1241,12 +1241,12 @@
           "answer": "Grace",
           "choices": [
             "Grace",
-            "A boat",
-            "A seed",
-            "A branch"
+            "Faith",
+            "Hope",
+            "A disciple"
           ],
           "explanation": "The Chapter 2 page calls Jesus\u2019 gift of new life grace.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Think about sharing in God’s life. Which lesson word names that special gift of life?",
           "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
           "tier": "material",
           "questionType": "direct",
@@ -1265,13 +1265,13 @@
           "prompt": "Who guides the Church?",
           "answer": "The Holy Spirit",
           "choices": [
-            "A fisherman\u2019s boat",
-            "A tree",
-            "A king\u2019s crown",
+            "Moses",
+            "Noah",
+            "A Roman emperor",
             "The Holy Spirit"
           ],
           "explanation": "The Holy Spirit helps the Church live and love like Jesus.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Remember the helper Jesus promised to his followers. Think about who continues to guide the Church.",
           "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
           "tier": "material",
           "questionType": "direct",
@@ -1290,13 +1290,13 @@
           "prompt": "What does a disciple do?",
           "answer": "Knows, loves, and follows Jesus",
           "choices": [
-            "Never helps anyone",
-            "Only grows plants",
+            "Learns about Jesus but ignores his teaching",
+            "Follows Jesus only when it is easy",
             "Knows, loves, and follows Jesus",
-            "Only watches boats"
+            "Asks for help but never helps others"
           ],
           "explanation": "A disciple lives according to Jesus\u2019 teaching.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Think about what a follower does, not just what that person knows.",
           "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
           "tier": "material",
           "questionType": "direct",
@@ -1315,13 +1315,13 @@
           "prompt": "In the vine and branches comparison, who is the vine?",
           "answer": "Jesus",
           "choices": [
-            "The fruit",
+            "His disciples",
             "Jesus",
-            "The branches",
-            "Our good deeds"
+            "John the Baptist",
+            "A Roman emperor"
           ],
           "explanation": "Jesus is the vine; we are the branches.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "In the comparison, the vine gives life to its branches. Who gives life to the followers?",
           "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
           "tier": "material",
           "questionType": "direct",
@@ -1341,12 +1341,12 @@
           "answer": "Our good deeds",
           "choices": [
             "Our good deeds",
-            "Our toys",
-            "Our shoes",
-            "Our meals"
+            "How many things we own",
+            "The places we travel",
+            "How tall we grow"
           ],
           "explanation": "Good deeds are ways to live closer to Jesus.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "A fruit shows what a plant produces. Think of the loving actions a follower can produce.",
           "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
           "tier": "material",
           "questionType": "direct",
@@ -1365,13 +1365,13 @@
           "prompt": "Which sacrament makes us members of the Church?",
           "answer": "Baptism",
           "choices": [
-            "A birthday",
-            "A school trip",
-            "A game",
+            "Confirmation",
+            "Holy Orders",
+            "Anointing of the Sick",
             "Baptism"
           ],
           "explanation": "Through Baptism we share in Jesus\u2019 life and belong to his Church.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Think of the sacrament at the beginning of life in the Church, when water is used.",
           "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
           "tier": "material",
           "questionType": "direct",
@@ -1390,13 +1390,13 @@
           "prompt": "What do we remember when praying the Sign of the Cross?",
           "answer": "Jesus\u2019 love and that he saved us",
           "choices": [
-            "How to count",
-            "A weather forecast",
+            "That prayer replaces every kind act",
+            "That only adults can pray",
             "Jesus\u2019 love and that he saved us",
-            "Only a school rule"
+            "That God cares only on special days"
           ],
           "explanation": "The cross reminds us of Jesus\u2019 love and saving action.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Think about the shape traced in the prayer and what Jesus did out of love.",
           "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
           "tier": "material",
           "questionType": "direct",
@@ -1415,13 +1415,13 @@
           "prompt": "Who sent Jesus to save us?",
           "answer": "God the Father",
           "choices": [
-            "A gardener",
+            "Noah",
             "God the Father",
-            "A fisherman",
-            "A neighbor"
+            "Moses",
+            "John the Baptist"
           ],
           "explanation": "God the Father sent his Son, Jesus.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Think about the relationship between Jesus and the one who sent him.",
           "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
           "tier": "material",
           "questionType": "direct",
@@ -1441,12 +1441,12 @@
           "answer": "He rose from the dead",
           "choices": [
             "He rose from the dead",
-            "He stopped loving us",
-            "He became a boat",
-            "He forgot his friends"
+            "His followers forgot all his teachings",
+            "He stopped caring about his followers",
+            "His story ended forever"
           ],
           "explanation": "Jesus died and rose from the dead. He is our Savior.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Recall the Easter part of the lesson. Death was not the end of the story.",
           "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
           "tier": "material",
           "questionType": "direct",
@@ -1465,13 +1465,13 @@
           "prompt": "Which action is a good way to follow Jesus?",
           "answer": "Help someone who needs kindness",
           "choices": [
-            "Leave someone out",
-            "Hide a friend\u2019s book",
-            "Laugh when someone falls",
+            "Ignore a classmate who is left out",
+            "Refuse to share when someone needs help",
+            "Only help when a prize is promised",
             "Help someone who needs kindness"
           ],
           "explanation": "Kindness and helping others are good deeds.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Choose an action that shows care for another person, not just a wish to be noticed.",
           "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
           "tier": "material",
           "questionType": "direct",
@@ -1522,7 +1522,7 @@
             "They are tied"
           ],
           "explanation": "Compare first letters: b comes before p and s.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Compare the first letters using the alphabet. If they match, move to the next letter.",
           "sourceFact": "Daily review \u2022 Day 22",
           "tier": "material",
           "questionType": "direct",
@@ -1547,7 +1547,7 @@
             "Jen\u2019s bed"
           ],
           "explanation": "Apostrophe-s after Jen shows ownership.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Find the owner. Look for the mark that shows something belongs to that person.",
           "sourceFact": "Daily review \u2022 Day 22",
           "tier": "material",
           "questionType": "direct",
@@ -1572,7 +1572,7 @@
             "30"
           ],
           "explanation": "There are 60 minutes in an hour.",
-          "hint": "Review the example in this lesson, then try again.",
+          "hint": "Picture the minute hand making one full turn. Count the minutes around the clock.",
           "sourceFact": "Daily review \u2022 Day 22",
           "tier": "material",
           "questionType": "direct",
