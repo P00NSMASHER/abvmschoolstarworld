@@ -689,7 +689,7 @@ function packContentKey(data){
   });
 }
 function validatePackEnvelope(d,u){
-  const p=d?.pack,o=v=>!!v&&typeof v==="object"&&!Array.isArray(v),a=(v,f)=>Array.isArray(v)&&v.every(f),b=()=>{throw Error("Invalid school pack from "+u)},s=d?.sourceLastSeenAt||p?.sourceCapturedAt||p?.generatedAt,f=p?.schoolChangeFeed;
+  const p=d?.pack,o=v=>!!v&&typeof v==="object"&&!Array.isArray(v),a=(v,f)=>Array.isArray(v)&&v.every(f),b=()=>{throw Error("Invalid pack "+u)},s=d?.sourceLastSeenAt||p?.sourceCapturedAt||p?.generatedAt,f=p?.schoolChangeFeed;
   if(!o(d)||!o(p)||p.schemaVersion!==2||p.sourceSufficient!==true||!String(p.sourceHash||"").trim()||!String(p.weekLabel||"").trim()||typeof s!=="string"||Number.isNaN(Date.parse(s)))b();
   if(!"subjects importantDates homework lunchMenu lunchArchive vocabulary questions".split(" ").every(k=>a(p[k],o)))b();
   if(!"reminders parentNotices".split(" ").every(k=>a(p[k],v=>typeof v==="string")))b();
