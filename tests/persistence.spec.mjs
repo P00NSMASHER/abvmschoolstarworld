@@ -22,7 +22,7 @@ test("Study Games learning evidence persists across reload",async({page})=>{
   await expect(page.locator(".game-answer").first()).toBeVisible();
   let before=null;
   for(let attempt=0;attempt<3&&!before;attempt++){
-    await page.locator(".game-answer").first().click();
+    await page.locator(".game-answer:not(:disabled)").first().click();
     before=await page.evaluate(()=>localStorage.getItem("abvm-study-learning:v2"));
   }
   expect(before).toBeTruthy();

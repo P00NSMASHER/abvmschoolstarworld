@@ -95,3 +95,48 @@ test('Study Games support text remains readable on phone and tablet', async ({ p
     expect(overflow).toBeFalsy();
   }
 });
+
+test('tried-wrong answers stay rejected and two distinct misses resolve to remediation', async ({ page }) => {
+  for (const viewport of [{ width: 393, height: 852 }, { width: 768, height: 1024 }]) {
+    await page.setViewportSize(viewport);
+    await page.goto('/?wrong-choice-fixture='+viewport.width+'#games');
+    await expect(page.locator('.study-game-grid')).toBeVisible({ timeout: 10_000 });
+    await page.getByRole('button', { name: /Quick Mix/i }).click();
+    await expect(page.locator('.game-question-card')).toBeVisible();
+
+    const prompt = await page.locator('.game-question-card h2').textContent();
+    const row = await page.evaluate(async currentPrompt => {
+      const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(r => r.json());
+      const sourceKey = window.ABVMStudyGames.sourceKeyFromEnvelope(envelope.pack, envelope);
+      const catalog = window.ABVMStudyGames.buildCatalog(envelope.pack, { sourceKey });
+      const q = catalog.questions.find(item => item.prompt === currentPrompt);
+      return q ? { answer:q.answer, choices:q.choices } : null;
+    }, prompt);
+    expect(row).not.toBeNull();
+    const wrongs=row.choices.map((choice,index)=>choice!==row.answer?index:-1).filter(index=>index>=0);
+    expect(wrongs.length).toBeGreaterThanOrEqual(2);
+
+    const firstWrong=page.locator('.game-answer').nth(wrongs[0]);
+    await firstWrong.click();
+    await expect(firstWrong).toBeDisabled();
+    await expect(firstWrong).toHaveClass(/wrong/);
+    await expect(page.locator('.game-feedback.retry strong')).toContainText('Not yet');
+
+    await firstWrong.evaluate(button=>button.click());
+    await expect(page.locator('[data-game-next]')).toHaveCount(0);
+    await expect(page.locator('.game-feedback.retry strong')).toContainText('Not yet');
+
+    const secondWrong=page.locator('.game-answer').nth(wrongs[1]);
+    await secondWrong.focus();
+    await page.keyboard.press('Enter');
+    await expect(firstWrong).toBeDisabled();
+    await expect(secondWrong).toBeDisabled();
+    await expect(page.locator('.game-feedback.retry strong')).toContainText('model answer');
+    await expect(page.locator('[data-game-next]')).toBeVisible();
+
+    await page.locator('[data-game-next]').click();
+    await expect(page.locator('.game-question-card')).toBeVisible();
+    for (const answerButton of await page.locator('.game-answer').all()) await expect(answerButton).toBeEnabled();
+  }
+});
+
