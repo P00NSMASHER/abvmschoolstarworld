@@ -14,22 +14,23 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-10-04T21:48:15.578Z",
-  "sourceCapturedAt": "2026-10-04T21:48:16.797Z",
+  "sourceLastSeenAt": "2026-10-05T00:19:55.714Z",
+  "sourceCapturedAt": "2026-10-05T00:19:55.714Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
-    "sourceHash": "teacher-pages-1140e20941b1f6f76b8b",
-    "sourceCapturedAt": "2026-10-04T21:48:16.797Z",
-    "generatedAt": "2026-10-04T21:48:16.797Z",
+    "sourceHash": "teacher-pages-49bc1dcf1d6a54be5284",
+    "sourceCapturedAt": "2026-10-05T00:19:55.714Z",
+    "generatedAt": "2026-10-05T00:19:55.714Z",
     "weekLabel": "Week of September 28, 2026",
-    "summary": "Current Grade 2 teacher-site material: Homework lists Reading “Read”, parent task “Cover books”, Reading “Keep Reading Log and Behavior Chart in the HW folder”, and Homework Folder “Return everything in the HW folder”. Upcoming tests include Spelling (short a / long a) / Handwriting on Friday, Oct. 2, Reading on Wednesday, Oct. 7, Spelling (short i / long i) / Handwriting on Friday, Oct. 9, and Grammar (subject & predicate) on Friday, Oct. 9. 17 uploaded school notices are integrated with the teacher pages.",
+    "summary": "Current Grade 2 teacher-site material: Homework lists Religion “Attend Mass”, Reading “Read”, parent task “Cover books”, and Reading “Keep Reading Log and Behavior Chart in the HW folder”. Upcoming tests include Spelling (short a / long a) / Handwriting on Friday, Oct. 2, Reading on Wednesday, Oct. 7, Spelling (short i / long i) / Handwriting on Friday, Oct. 9, and Grammar (subject & predicate) on Friday, Oct. 9. 17 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
       {
         "subject": "Reading / ELA",
         "topics": [
           "Story: Little Flap Learns to Fly",
           "Story: Help! A Story of Friendship",
+          "Story: The Enormous Turnip",
           "Sight words: she, boy, he, small, were, what, girl, here, by, want",
           "Phonics: 2-letter consonant blends, long a (a_e) and short a",
           "Vocabulary: action, afraid, depend, nervously, peered, perfectly, rescue, secret",
@@ -37,12 +38,13 @@
           "Grammar: subject & predicate (test Friday, Oct. 9)"
         ],
         "studyNotes": [
-          "Reading comprehension: Visualize, theme, dialogue",
+          "Reading comprehension: Visualize, theme, dialogue, characters",
           "For CVC words, look for a consonant-vowel-consonant pattern such as map or sit.",
           "Practice building words by adding -ed and -ing to a base word.",
           "For theme, ask what lesson or message the whole story shows.",
           "Visualize by using story details to make a clear mental picture.",
           "Dialogue is the exact speech of characters; quotation marks help show the words they say.",
+          "The main character is the person or animal the story mostly follows.",
           "The subject tells who or what the sentence is about; the predicate tells what the subject does or is.",
           "Practice current high-frequency words in short sentence contexts. Context-cloze performance does not claim spelling or isolated print-recognition mastery."
         ]
@@ -567,6 +569,12 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Thursday, Oct. 15",
+        "label": "Start of winter dress code",
+        "source": "teacher-home",
+        "kind": "school event"
+      },
+      {
         "label": "Schwartz Farm Family Night RSVP due for $5/student voucher",
         "date": "Friday, Oct. 16",
         "kind": "deadline"
@@ -1015,6 +1023,12 @@
     "homework": [
       {
         "day": "Current Homework posting",
+        "subject": "Religion",
+        "task": "Attend Mass",
+        "due": "Current posting"
+      },
+      {
+        "day": "Current Homework posting",
         "subject": "Reading",
         "task": "Read",
         "due": "Current posting"
@@ -1211,7 +1225,7 @@
       "Christmas Caroling date is TBD.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
-    "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+    "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
     "uploadedNoticeHash": "uploaded-notices-26fe2c565e7774d235fd",
     "uploadedNoticeTopics": {
       "reminders": [
@@ -1256,8 +1270,8 @@
     "lunchMenuSource": {
       "status": "current-week",
       "retrievalState": "verified",
-      "checkedAt": "2026-10-02T13:27:05.105Z",
-      "lastAttemptAt": "2026-10-02T13:27:05.105Z",
+      "checkedAt": "2026-10-05T00:19:55.714Z",
+      "lastAttemptAt": "2026-10-05T00:19:55.714Z",
       "provider": "Saint Clair Area School District",
       "school": "Assumption BVM School",
       "feedUrl": "https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu",
@@ -1273,14 +1287,14 @@
           "url": "https://resources.finalsite.net/images/v1787165302/adeducatorsorg/gvzkkrduwn7fce9l3vsw/AugustandSeptlunch26.pdf",
           "contentHash": "6c01fef18e1f589a544713c21e4d6b31b0063ef7fdbfaa4537dd30cc7b6a64eb",
           "reviewedAt": "2026-09-29T05:26:39Z",
-          "checkedAt": "2026-10-02T13:27:05.105Z"
+          "checkedAt": "2026-10-05T00:19:55.714Z"
         },
         {
           "id": "abvm-2026-10-official",
           "url": "https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1790692534/adeducatorsorg/xdbrqzybydptd5srbor0/Octobercalendar.heic",
           "contentHash": "a99ce9385295921c9fff19ae4051732da45f7c38df077d30d9b62577c8c6eb45",
           "reviewedAt": "2026-10-01T00:44:00Z",
-          "checkedAt": "2026-10-02T13:27:05.105Z"
+          "checkedAt": "2026-10-05T00:19:55.714Z"
         }
       ],
       "pendingDocuments": [],
@@ -1775,13 +1789,13 @@
         "sourceId": "abvm-2026-10-official"
       }
     ],
-    "lunchMenuHash": "b7c822c317872e1aea9037c18d99077b3def5bd11c58a5b52bdea19dd156fc87",
+    "lunchMenuHash": "74335ffb53b4ee7d8bc5c7b2ddcf566a491fb9b5b4a111f87a5bc4911203f11a",
     "contentPipeline": {
       "schemaVersion": 2,
       "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-      "generatedAt": "2026-10-02T13:27:05.105Z",
-      "sourceHash": "teacher-pages-1140e20941b1f6f76b8b",
-      "bankFingerprint": "d3c87c01",
+      "generatedAt": "2026-10-05T00:19:55.714Z",
+      "sourceHash": "teacher-pages-49bc1dcf1d6a54be5284",
+      "bankFingerprint": "dceaf9c2",
       "lifecycleStage": "QA_PASSED",
       "safetyState": "SAFE_PARTIAL",
       "sourcePolicy": {
@@ -1792,7 +1806,8 @@
           "DETERMINISTIC_TEMPLATE"
         ],
         "failClosed": true,
-        "requirePageExactLineage": true
+        "requirePageExactLineage": true,
+        "activeCurriculumFeatureFlags": []
       },
       "skills": [
         {
@@ -1814,8 +1829,8 @@
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -1841,8 +1856,8 @@
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -1868,8 +1883,8 @@
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -1895,8 +1910,8 @@
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -1922,11 +1937,11 @@
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -1949,11 +1964,11 @@
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -1976,11 +1991,38 @@
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
+            ]
+          }
+        },
+        {
+          "id": "main-character",
+          "subject": "Reading / ELA",
+          "label": "Main character",
+          "evidence": [
+            ", characters"
+          ],
+          "studyNotes": [
+            "The main character is the person or animal the story mostly follows."
+          ],
+          "standards": [
+            "CCSS.RL.2.3"
+          ],
+          "domain": "Analyzing literary text",
+          "sourceBacked": true,
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Reading Work",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
+            "matchedEvidence": [
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -2004,7 +2046,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d9f45fdf64e3d1f918a0e31cf97b732471585c00f7b27fbb2ba622a08cd8ed4d",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
             "matchedEvidence": [
               "Friday Oct. 9: Grammar (subject & predicate)"
@@ -2042,8 +2084,8 @@
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -2070,7 +2112,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -2097,7 +2139,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -2124,7 +2166,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -2151,7 +2193,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:eaf345011898b7c5bbfc5c6f14f1db7ea6d59b70fbd176bde124554f8ce9e814",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace",
@@ -2179,7 +2221,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -2206,7 +2248,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -2233,7 +2275,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -2260,7 +2302,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -2287,7 +2329,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -2314,7 +2356,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -2341,7 +2383,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -2368,7 +2410,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -2395,7 +2437,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -2424,6 +2466,12 @@
         },
         {
           "topic": "Story: Help! A Story of Friendship",
+          "subject": "Reading / ELA",
+          "status": "NOT_PRACTICED_BY_DESIGN",
+          "reason": "Only the story title is verified here; the pipeline does not invent plot, character, or comprehension facts without passage-level evidence."
+        },
+        {
+          "topic": "Story: The Enormous Turnip",
           "subject": "Reading / ELA",
           "status": "NOT_PRACTICED_BY_DESIGN",
           "reason": "Only the story title is verified here; the pipeline does not invent plot, character, or comprehension facts without passage-level evidence."
@@ -2475,6 +2523,12 @@
           "subject": "Reading / ELA",
           "status": "COVERED",
           "skillId": "dialogue"
+        },
+        {
+          "topic": "Main character",
+          "subject": "Reading / ELA",
+          "status": "COVERED",
+          "skillId": "main-character"
         },
         {
           "topic": "Subject and predicate",
@@ -2578,6 +2632,7 @@
           "For theme, ask what lesson or message the whole story shows.",
           "Visualize by using story details to make a clear mental picture.",
           "Dialogue is the exact speech of characters; quotation marks help show the words they say.",
+          "The main character is the person or animal the story mostly follows.",
           "The subject tells who or what the sentence is about; the predicate tells what the subject does or is.",
           "Practice current high-frequency words in short sentence contexts. Context-cloze performance does not claim spelling or isolated print-recognition mastery."
         ],
@@ -2670,8 +2725,8 @@
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -2750,8 +2805,8 @@
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -2830,8 +2885,8 @@
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -2910,8 +2965,8 @@
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -2990,11 +3045,11 @@
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -3070,11 +3125,11 @@
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -3150,11 +3205,91 @@
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
+            ]
+          }
+        },
+        {
+          "id": "auto-main-character-maya-fdeb06",
+          "templateId": "grade2-main-character-v1",
+          "subject": "Reading / ELA",
+          "skill": "main-character",
+          "assessedSkillIds": [
+            "main-character"
+          ],
+          "prompt": "A story follows Maya as she loses her mitten, searches the playground, and finally finds it. Who is the main character?",
+          "choices": [
+            "the mitten",
+            "Maya",
+            "the playground"
+          ],
+          "answer": "Maya",
+          "explanation": "The story mostly follows Maya and what she does.",
+          "hint": "Choose the person the story follows from beginning to end.",
+          "sourceFact": "Verified Grade 2 skill: Main character",
+          "sourceEvidence": [
+            ", characters"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.RL.2.3"
+          ],
+          "domain": "Analyzing literary text",
+          "dok": 2,
+          "cognitiveDemand": "skill-and-concept-application",
+          "difficulty": 2,
+          "questionType": "direct",
+          "choiceDiagnostics": {
+            "the mitten": {
+              "misconception": "main-character-distractor",
+              "feedback": "Review: Main character. Then use the clue in the question."
+            },
+            "the playground": {
+              "misconception": "main-character-distractor",
+              "feedback": "Review: Main character. Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "the mitten": 0,
+              "the playground": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "main-character"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "091b7e8e",
+          "variantFingerprint": "c7c83fb6",
+          "presentationFingerprint": "190d4d79",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Reading Work",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
+            "matchedEvidence": [
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -3169,8 +3304,8 @@
           "prompt": "In the sentence “The brown puppy chased the ball,” which words are the subject?",
           "choices": [
             "chased the ball",
-            "The brown puppy",
-            "the ball"
+            "the ball",
+            "The brown puppy"
           ],
           "answer": "The brown puppy",
           "explanation": "The subject names who or what the sentence is about: the brown puppy.",
@@ -3225,13 +3360,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "3eaf1eb3",
           "variantFingerprint": "137b6e36",
-          "presentationFingerprint": "fde191cc",
+          "presentationFingerprint": "214fc97a",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d9f45fdf64e3d1f918a0e31cf97b732471585c00f7b27fbb2ba622a08cd8ed4d",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
             "matchedEvidence": [
               "Friday Oct. 9: Grammar (subject & predicate)"
@@ -3248,9 +3383,9 @@
           ],
           "prompt": "Which word correctly completes the sentence? “___ packed her lunch before school.”",
           "choices": [
+            "she",
             "what",
-            "small",
-            "she"
+            "small"
           ],
           "answer": "she",
           "explanation": "“she” makes the sentence grammatically complete and meaningful.",
@@ -3306,13 +3441,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "29ac91af",
           "variantFingerprint": "1ed155b9",
-          "presentationFingerprint": "39ab2e76",
+          "presentationFingerprint": "55daa342",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3329,8 +3464,8 @@
           ],
           "prompt": "Which word correctly completes the sentence? “The ___ carried a blue backpack.”",
           "choices": [
-            "boy",
             "what",
+            "boy",
             "were"
           ],
           "answer": "boy",
@@ -3387,13 +3522,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "628fb2c1",
           "variantFingerprint": "81149537",
-          "presentationFingerprint": "3f273156",
+          "presentationFingerprint": "ef4b7cbe",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3411,8 +3546,8 @@
           "prompt": "Which word correctly completes the sentence? “___ hung his coat by the door.”",
           "choices": [
             "what",
-            "he",
-            "small"
+            "small",
+            "he"
           ],
           "answer": "he",
           "explanation": "“he” makes the sentence grammatically complete and meaningful.",
@@ -3468,13 +3603,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "5d58e664",
           "variantFingerprint": "103fad98",
-          "presentationFingerprint": "1aa97be9",
+          "presentationFingerprint": "34187263",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3491,9 +3626,9 @@
           ],
           "prompt": "Which word correctly completes the sentence? “The ant is very ___.”",
           "choices": [
+            "small",
             "were",
-            "what",
-            "small"
+            "what"
           ],
           "answer": "small",
           "explanation": "“small” makes the sentence grammatically complete and meaningful.",
@@ -3549,13 +3684,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "9950771b",
           "variantFingerprint": "8e950ad3",
-          "presentationFingerprint": "8765dce9",
+          "presentationFingerprint": "20ee44c5",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3572,8 +3707,8 @@
           ],
           "prompt": "Which word correctly completes the sentence? “The boys ___ ready for recess.”",
           "choices": [
-            "were",
             "small",
+            "were",
             "what"
           ],
           "answer": "were",
@@ -3630,13 +3765,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "cf29a02e",
           "variantFingerprint": "f4d7badc",
-          "presentationFingerprint": "7dbeb5fb",
+          "presentationFingerprint": "20ee44c5",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3654,8 +3789,8 @@
           "prompt": "Which word correctly completes the sentence? “___ do you want for lunch?”",
           "choices": [
             "here",
-            "what",
-            "small"
+            "small",
+            "what"
           ],
           "answer": "what",
           "explanation": "“what” makes the sentence grammatically complete and meaningful.",
@@ -3711,13 +3846,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "207d26b3",
           "variantFingerprint": "6a5d32d7",
-          "presentationFingerprint": "4d795110",
+          "presentationFingerprint": "2f6e3db2",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3734,9 +3869,9 @@
           ],
           "prompt": "Which word correctly completes the sentence? “The ___ carried a yellow umbrella.”",
           "choices": [
+            "girl",
             "were",
-            "what",
-            "girl"
+            "what"
           ],
           "answer": "girl",
           "explanation": "“girl” makes the sentence grammatically complete and meaningful.",
@@ -3792,13 +3927,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "486f487f",
           "variantFingerprint": "62d84af7",
-          "presentationFingerprint": "881d976c",
+          "presentationFingerprint": "704f2e1a",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3815,8 +3950,8 @@
           ],
           "prompt": "Which word correctly completes the sentence? “Please come over ___.”",
           "choices": [
-            "here",
             "were",
+            "here",
             "want"
           ],
           "answer": "here",
@@ -3873,13 +4008,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "f2645223",
           "variantFingerprint": "70e941d1",
-          "presentationFingerprint": "7fdc6ae6",
+          "presentationFingerprint": "69f43214",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3897,8 +4032,8 @@
           "prompt": "Which word correctly completes the sentence? “Put your backpack ___ the chair.”",
           "choices": [
             "he",
-            "by",
-            "what"
+            "what",
+            "by"
           ],
           "answer": "by",
           "explanation": "“by” makes the sentence grammatically complete and meaningful.",
@@ -3954,13 +4089,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "c9106d29",
           "variantFingerprint": "2ca1b6f5",
-          "presentationFingerprint": "5f0b894b",
+          "presentationFingerprint": "11dfcbd5",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -3977,9 +4112,9 @@
           ],
           "prompt": "Which word correctly completes the sentence? “I ___ to read this book.”",
           "choices": [
+            "want",
             "were",
-            "by",
-            "want"
+            "by"
           ],
           "answer": "want",
           "explanation": "“want” makes the sentence grammatically complete and meaningful.",
@@ -4035,13 +4170,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "c343dbe4",
           "variantFingerprint": "d0819173",
-          "presentationFingerprint": "fbd4b17d",
+          "presentationFingerprint": "eba88fc9",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:c534f5ea741c0ba19fc486ec6cb60a70e7a2722c8368bf120aeacc7556b963b7",
             "matchedEvidence": [
               "Sight Words: she, boy, he, small, were, what, girl, here, by, want"
@@ -4058,8 +4193,8 @@
           ],
           "prompt": "According to the current Religion lesson, which answer names the three Persons of the Trinity?",
           "choices": [
-            "Father, Son, and Holy Spirit",
             "think, choose, and love",
+            "Father, Son, and Holy Spirit",
             "Jesus, Mary, and disciples"
           ],
           "answer": "Father, Son, and Holy Spirit",
@@ -4115,13 +4250,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "a8dc45c3",
           "variantFingerprint": "37833afb",
-          "presentationFingerprint": "4a7b2983",
+          "presentationFingerprint": "88b12b17",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -4139,8 +4274,8 @@
           "prompt": "According to the current Religion lesson, which three abilities are connected with being made in God's image and likeness?",
           "choices": [
             "Father, Son, and Holy Spirit",
-            "think, choose, and love",
-            "see, hear, and taste"
+            "see, hear, and taste",
+            "think, choose, and love"
           ],
           "answer": "think, choose, and love",
           "explanation": "The current lesson says people are made in God's image and likeness and can think, choose, and love.",
@@ -4195,13 +4330,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "886b64f0",
           "variantFingerprint": "22480364",
-          "presentationFingerprint": "f56621aa",
+          "presentationFingerprint": "1d7e9fae",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -4218,9 +4353,9 @@
           ],
           "prompt": "Which action best applies the current Religion lesson about caring for God's creation?",
           "choices": [
+            "Picking up litter at the park",
             "Leaving trash beside a stream",
-            "Breaking branches for no reason",
-            "Picking up litter at the park"
+            "Breaking branches for no reason"
           ],
           "answer": "Picking up litter at the park",
           "explanation": "Caring for the world around us shows respect for God's gift of creation.",
@@ -4275,13 +4410,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "ad8fbc99",
           "variantFingerprint": "52857af7",
-          "presentationFingerprint": "1c7f1b29",
+          "presentationFingerprint": "cd61cee9",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -4298,8 +4433,8 @@
           ],
           "prompt": "According to the current Religion lesson, why is Jesus called our Savior?",
           "choices": [
-            "He died for our sins and gives us new life in grace.",
             "He tells us about God and teaches us how to live.",
+            "He died for our sins and gives us new life in grace.",
             "We use our senses to enjoy God’s gifts."
           ],
           "answer": "He died for our sins and gives us new life in grace.",
@@ -4355,13 +4490,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "e7ae5655",
           "variantFingerprint": "75a7fd8f",
-          "presentationFingerprint": "e84f4822",
+          "presentationFingerprint": "20d319a4",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:eaf345011898b7c5bbfc5c6f14f1db7ea6d59b70fbd176bde124554f8ce9e814",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace",
@@ -4380,8 +4515,8 @@
           "prompt": "According to the current Religion lesson, what does original sin describe?",
           "choices": [
             "A sacred sign given to the Church by Jesus.",
-            "The human tendency to sin connected with Adam and Eve’s sin.",
-            "The gift that helps us believe."
+            "The gift that helps us believe.",
+            "The human tendency to sin connected with Adam and Eve’s sin."
           ],
           "answer": "The human tendency to sin connected with Adam and Eve’s sin.",
           "explanation": "The current lesson connects original sin with the human tendency to sin resulting from Adam and Eve’s sin.",
@@ -4436,13 +4571,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "41d5f8be",
           "variantFingerprint": "d3d34dee",
-          "presentationFingerprint": "e2b4e35c",
+          "presentationFingerprint": "df0848e4",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -4459,9 +4594,9 @@
           ],
           "prompt": "According to the current Religion lesson, what is faith?",
           "choices": [
+            "A gift from God that helps us believe.",
             "A sacred sign given to the Church by Jesus.",
-            "The human tendency to sin.",
-            "A gift from God that helps us believe."
+            "The human tendency to sin."
           ],
           "answer": "A gift from God that helps us believe.",
           "explanation": "The current lesson defines faith as a gift from God that helps us believe.",
@@ -4516,13 +4651,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "17cac752",
           "variantFingerprint": "6f2e1398",
-          "presentationFingerprint": "fb8f07bd",
+          "presentationFingerprint": "efcd6871",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -4539,8 +4674,8 @@
           ],
           "prompt": "According to the current Religion lesson, what is a sacrament?",
           "choices": [
-            "A sacred sign given to the Church by Jesus.",
             "A gift from God that helps us believe.",
+            "A sacred sign given to the Church by Jesus.",
             "The human tendency to sin."
           ],
           "answer": "A sacred sign given to the Church by Jesus.",
@@ -4596,13 +4731,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "b8bf7900",
           "variantFingerprint": "2398d95c",
-          "presentationFingerprint": "e312ef27",
+          "presentationFingerprint": "efcd6871",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -4620,8 +4755,8 @@
           "prompt": "According to the current Religion lesson, what happens at Baptism?",
           "choices": [
             "We learn the names of the three Persons of the Trinity.",
-            "Original sin is washed away, and we receive the Holy Spirit, faith, and new life in grace.",
-            "We are taught to use our five senses."
+            "We are taught to use our five senses.",
+            "Original sin is washed away, and we receive the Holy Spirit, faith, and new life in grace."
           ],
           "answer": "Original sin is washed away, and we receive the Holy Spirit, faith, and new life in grace.",
           "explanation": "The current lesson connects Baptism with original sin being washed away and with receiving the Holy Spirit, faith, and new life in grace.",
@@ -4676,13 +4811,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "d45b543e",
           "variantFingerprint": "c70a0078",
-          "presentationFingerprint": "27e5153e",
+          "presentationFingerprint": "8f6319ba",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -4699,9 +4834,9 @@
           ],
           "prompt": "According to the current Religion lesson, what are friends and followers of Jesus called?",
           "choices": [
+            "disciples",
             "Trinity",
-            "creation",
-            "disciples"
+            "creation"
           ],
           "answer": "disciples",
           "explanation": "The current lesson says disciples are friends and followers of Jesus.",
@@ -4756,13 +4891,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "91140cde",
           "variantFingerprint": "8cc14e7b",
-          "presentationFingerprint": "f2c8b77d",
+          "presentationFingerprint": "d1881c31",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -4779,8 +4914,8 @@
           ],
           "prompt": "According to the current Religion lesson, which statement is about Mary?",
           "choices": [
-            "Mary is Jesus’ mother and the mother of the Church.",
             "The Trinity is three Persons in one God.",
+            "Mary is Jesus’ mother and the mother of the Church.",
             "We are responsible for caring for God’s gift of creation."
           ],
           "answer": "Mary is Jesus’ mother and the mother of the Church.",
@@ -4836,13 +4971,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "cae577da",
           "variantFingerprint": "de94d13f",
-          "presentationFingerprint": "ff05d625",
+          "presentationFingerprint": "bed1cb2b",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -4860,8 +4995,8 @@
           "prompt": "According to the current Religion lesson, what comparison is made between a seed and Jesus?",
           "choices": [
             "Our senses help us notice and enjoy God’s gifts of creation.",
-            "A seed dies so new life can grow, and Jesus died so we can have new life in grace.",
-            "People are made in God’s image and likeness and can think, choose, and love."
+            "People are made in God’s image and likeness and can think, choose, and love.",
+            "A seed dies so new life can grow, and Jesus died so we can have new life in grace."
           ],
           "answer": "A seed dies so new life can grow, and Jesus died so we can have new life in grace.",
           "explanation": "The lesson uses the seed’s new growth as a comparison for new life in grace through Jesus.",
@@ -4916,13 +5051,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "a34d2779",
           "variantFingerprint": "a4e8cb16",
-          "presentationFingerprint": "5532cd5e",
+          "presentationFingerprint": "95d120f6",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -4939,9 +5074,9 @@
           ],
           "prompt": "According to the current Religion lesson, which statement about the senses is taught?",
           "choices": [
+            "We use our senses to enjoy God’s gifts.",
             "We are made in God’s image and likeness and can think, choose, and love.",
-            "Disciples are friends and followers of Jesus.",
-            "We use our senses to enjoy God’s gifts."
+            "Disciples are friends and followers of Jesus."
           ],
           "answer": "We use our senses to enjoy God’s gifts.",
           "explanation": "The lesson connects our senses with noticing and enjoying God’s gifts of creation.",
@@ -4996,13 +5131,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "289f8d89",
           "variantFingerprint": "125f743d",
-          "presentationFingerprint": "12ff1961",
+          "presentationFingerprint": "b10f722b",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -5019,8 +5154,8 @@
           ],
           "prompt": "According to the current Religion lesson, who is identified as the giver of gifts?",
           "choices": [
-            "God",
             "disciples",
+            "God",
             "our five senses"
           ],
           "answer": "God",
@@ -5076,13 +5211,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "e7b3e9ea",
           "variantFingerprint": "34948f70",
-          "presentationFingerprint": "b028ed00",
+          "presentationFingerprint": "d68e4e2c",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -5100,8 +5235,8 @@
           "prompt": "Which word begins with the same consonant blend as “flag”?",
           "choices": [
             "frog",
-            "flower",
-            "apple"
+            "apple",
+            "flower"
           ],
           "answer": "flower",
           "explanation": "Flag and flower both begin with the blend fl.",
@@ -5156,13 +5291,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "3cb32c4c",
           "variantFingerprint": "d45d9003",
-          "presentationFingerprint": "25176546",
+          "presentationFingerprint": "4a55071e",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -5179,9 +5314,9 @@
           ],
           "prompt": "Why does the beginning of “stop” count as a consonant blend?",
           "choices": [
+            "You can hear both the s and t sounds.",
             "The word has a short vowel.",
-            "The word ends with two consonants.",
-            "You can hear both the s and t sounds."
+            "The word ends with two consonants."
           ],
           "answer": "You can hear both the s and t sounds.",
           "explanation": "In a consonant blend, both consonant sounds are heard.",
@@ -5236,13 +5371,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "01a8d509",
           "variantFingerprint": "0b06aa03",
-          "presentationFingerprint": "867b08fc",
+          "presentationFingerprint": "c49d13b2",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -5259,8 +5394,8 @@
           ],
           "prompt": "Which word begins with the blend br?",
           "choices": [
-            "brush",
             "rush",
+            "brush",
             "apple"
           ],
           "answer": "brush",
@@ -5316,13 +5451,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "a260d94e",
           "variantFingerprint": "29de0fb5",
-          "presentationFingerprint": "dcdb6d9f",
+          "presentationFingerprint": "4dc5d90f",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -5340,8 +5475,8 @@
           "prompt": "Which word begins with the same blend as “plant”?",
           "choices": [
             "flag",
-            "plate",
-            "ant"
+            "ant",
+            "plate"
           ],
           "answer": "plate",
           "explanation": "Plant and plate both begin with pl.",
@@ -5396,13 +5531,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "b73d9e8a",
           "variantFingerprint": "580000f8",
-          "presentationFingerprint": "b7b63922",
+          "presentationFingerprint": "f1eb526a",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -5419,9 +5554,9 @@
           ],
           "prompt": "Which pair begins with the same consonant blend?",
           "choices": [
+            "green and grape",
             "stop and frog",
-            "clap and lamp",
-            "green and grape"
+            "clap and lamp"
           ],
           "answer": "green and grape",
           "explanation": "Both words begin with gr.",
@@ -5476,13 +5611,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "6b5917e7",
           "variantFingerprint": "66f334b8",
-          "presentationFingerprint": "923df2cc",
+          "presentationFingerprint": "79576f68",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -5499,8 +5634,8 @@
           ],
           "prompt": "Why does “clap” begin with a blend?",
           "choices": [
-            "You can hear both c and l sounds.",
             "The letters c and l make one new sound.",
+            "You can hear both c and l sounds.",
             "The word ends with p."
           ],
           "answer": "You can hear both c and l sounds.",
@@ -5556,13 +5691,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "779a9da9",
           "variantFingerprint": "382664e9",
-          "presentationFingerprint": "39ed1169",
+          "presentationFingerprint": "f0786455",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -5580,8 +5715,8 @@
           "prompt": "Which word begins with the consonant blend st?",
           "choices": [
             "apple",
-            "stop",
-            "open"
+            "open",
+            "stop"
           ],
           "answer": "stop",
           "explanation": "Stop begins with the two heard sounds s and t.",
@@ -5636,13 +5771,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "9ec8467b",
           "variantFingerprint": "b384e4cf",
-          "presentationFingerprint": "e1fb3913",
+          "presentationFingerprint": "faa85ab3",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -5659,9 +5794,9 @@
           ],
           "prompt": "Which new word follows the same CVC structure as “map”?",
           "choices": [
+            "sun",
             "rain",
-            "cake",
-            "sun"
+            "cake"
           ],
           "answer": "sun",
           "explanation": "Sun is s-u-n: consonant, vowel, consonant.",
@@ -5716,13 +5851,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "7aa973a7",
           "variantFingerprint": "ea9f421a",
-          "presentationFingerprint": "9a41011f",
+          "presentationFingerprint": "3df6ff0f",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -5739,8 +5874,8 @@
           ],
           "prompt": "Why is “cake” not a simple three-letter CVC word?",
           "choices": [
-            "It has a fourth letter and a final e.",
             "It begins with a consonant.",
+            "It has a fourth letter and a final e.",
             "It contains the letter a."
           ],
           "answer": "It has a fourth letter and a final e.",
@@ -5796,13 +5931,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "2d2c213c",
           "variantFingerprint": "d7f1435d",
-          "presentationFingerprint": "6cd00c0f",
+          "presentationFingerprint": "391d1e6b",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -5820,8 +5955,8 @@
           "prompt": "Which word is a CVC word?",
           "choices": [
             "rain",
-            "pig",
-            "cake"
+            "cake",
+            "pig"
           ],
           "answer": "pig",
           "explanation": "Pig is p-i-g: consonant, vowel, consonant.",
@@ -5876,13 +6011,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "a388115f",
           "variantFingerprint": "1395cf14",
-          "presentationFingerprint": "cdae913d",
+          "presentationFingerprint": "f9726149",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -5899,9 +6034,9 @@
           ],
           "prompt": "Which word has the same CVC structure as “sun”?",
           "choices": [
+            "red",
             "boat",
-            "play",
-            "red"
+            "play"
           ],
           "answer": "red",
           "explanation": "Red is r-e-d, the same consonant-vowel-consonant structure.",
@@ -5956,13 +6091,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "9807e6a3",
           "variantFingerprint": "4ef0bc64",
-          "presentationFingerprint": "61a09db4",
+          "presentationFingerprint": "c37a1b18",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -5979,8 +6114,8 @@
           ],
           "prompt": "Which pair contains two CVC words?",
           "choices": [
-            "hop and fit",
             "rain and boat",
+            "hop and fit",
             "cake and kite"
           ],
           "answer": "hop and fit",
@@ -6036,13 +6171,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "b7951e5a",
           "variantFingerprint": "b0745f9c",
-          "presentationFingerprint": "628a407d",
+          "presentationFingerprint": "05db73cd",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -6060,8 +6195,8 @@
           "prompt": "Why is “boat” not a CVC word?",
           "choices": [
             "It starts with a consonant.",
-            "It has four letters and two vowel letters together.",
-            "It has the letter b."
+            "It has the letter b.",
+            "It has four letters and two vowel letters together."
           ],
           "answer": "It has four letters and two vowel letters together.",
           "explanation": "A simple CVC word has three letters in consonant-vowel-consonant order.",
@@ -6116,13 +6251,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "1565b1ef",
           "variantFingerprint": "3f57cc7b",
-          "presentationFingerprint": "bc5313ce",
+          "presentationFingerprint": "65978e0c",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -6139,9 +6274,9 @@
           ],
           "prompt": "Which explanation proves that “red” is CVC?",
           "choices": [
+            "r is a consonant, e is a vowel, and d is a consonant.",
             "Red names a color.",
-            "Red has a short vowel sound.",
-            "r is a consonant, e is a vowel, and d is a consonant."
+            "Red has a short vowel sound."
           ],
           "answer": "r is a consonant, e is a vowel, and d is a consonant.",
           "explanation": "The letter types directly show the CVC structure.",
@@ -6196,13 +6331,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "db62b6fe",
           "variantFingerprint": "cb28fac7",
-          "presentationFingerprint": "038442d0",
+          "presentationFingerprint": "9a7c44c4",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -6219,8 +6354,8 @@
           ],
           "prompt": "Which pair of words both use the short a sound?",
           "choices": [
-            "cat and map",
             "cake and game",
+            "cat and map",
             "late and cap"
           ],
           "answer": "cat and map",
@@ -6276,13 +6411,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "1774536a",
           "variantFingerprint": "a42833d6",
-          "presentationFingerprint": "e162694a",
+          "presentationFingerprint": "d3f47676",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -6300,8 +6435,8 @@
           "prompt": "Why does the a in “game” have a long sound?",
           "choices": [
             "The g makes every vowel long.",
-            "The final e helps the a say its name.",
-            "Every four-letter word has a long vowel."
+            "Every four-letter word has a long vowel.",
+            "The final e helps the a say its name."
           ],
           "answer": "The final e helps the a say its name.",
           "explanation": "Game follows the a_e pattern in which the final e changes the a sound.",
@@ -6356,13 +6491,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "edf51b1c",
           "variantFingerprint": "d528452a",
-          "presentationFingerprint": "7dce8432",
+          "presentationFingerprint": "cff31f32",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -6379,9 +6514,9 @@
           ],
           "prompt": "Which word has the short a sound?",
           "choices": [
+            "cap",
             "cake",
-            "late",
-            "cap"
+            "late"
           ],
           "answer": "cap",
           "explanation": "Cap uses the short a sound.",
@@ -6436,13 +6571,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "e090abf4",
           "variantFingerprint": "089e3f60",
-          "presentationFingerprint": "064339c3",
+          "presentationFingerprint": "837970f3",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -6459,8 +6594,8 @@
           ],
           "prompt": "Which word uses the a_e pattern to make long a?",
           "choices": [
-            "gate",
             "cat",
+            "gate",
             "map"
           ],
           "answer": "gate",
@@ -6516,13 +6651,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "850f7e0d",
           "variantFingerprint": "934fa41b",
-          "presentationFingerprint": "3af95460",
+          "presentationFingerprint": "ddebdd28",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -6540,8 +6675,8 @@
           "prompt": "Which pair has one short-a word followed by one long-a word?",
           "choices": [
             "game — lake",
-            "pan — plane",
-            "cat — map"
+            "cat — map",
+            "pan — plane"
           ],
           "answer": "pan — plane",
           "explanation": "Pan has short a; plane has long a.",
@@ -6596,13 +6731,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "03937c5a",
           "variantFingerprint": "90e264db",
-          "presentationFingerprint": "d3bde359",
+          "presentationFingerprint": "254662a5",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -6619,9 +6754,9 @@
           ],
           "prompt": "Why does “late” have a different a sound from “lat”?",
           "choices": [
+            "The final e changes the a to its long sound.",
             "The l always makes a long vowel.",
-            "The t changes a into e.",
-            "The final e changes the a to its long sound."
+            "The t changes a into e."
           ],
           "answer": "The final e changes the a to its long sound.",
           "explanation": "The a_e pattern makes the vowel say its long sound.",
@@ -6676,13 +6811,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "9e37c399",
           "variantFingerprint": "2ca9ff5f",
-          "presentationFingerprint": "b0e8c47f",
+          "presentationFingerprint": "27e6ec7b",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -6699,8 +6834,8 @@
           ],
           "prompt": "Which explanation correctly compares “map” and “made”?",
           "choices": [
-            "Map has short a; made has long a because of final e.",
             "Both words have short a.",
+            "Map has short a; made has long a because of final e.",
             "Made has short a because it has four letters."
           ],
           "answer": "Map has short a; made has long a because of final e.",
@@ -6756,13 +6891,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "d1b00c7e",
           "variantFingerprint": "0fbe9aba",
-          "presentationFingerprint": "24f02798",
+          "presentationFingerprint": "bdfceae2",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:2a12549b18edfc36e73f3bee2b0ba6950e1690a6f90ccb442457f86c692883d8",
             "matchedEvidence": [
               "Phonics: 2 letter consonant blends, long a (a_e) and short a"
@@ -6780,8 +6915,8 @@
           "prompt": "Which word correctly completes the sentence “Mia is ___ at recess right now”?",
           "choices": [
             "jumped",
-            "jumping",
-            "jumps"
+            "jumps",
+            "jumping"
           ],
           "answer": "jumping",
           "explanation": "The words “right now” show that the action is happening, so jumping fits.",
@@ -6836,13 +6971,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "3c0beba2",
           "variantFingerprint": "b1a34c01",
-          "presentationFingerprint": "f7830295",
+          "presentationFingerprint": "759ff7b1",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -6859,9 +6994,9 @@
           ],
           "prompt": "What does adding -ed or -ing usually help show about an action word?",
           "choices": [
+            "When or how the action is happening",
             "That the word names a person",
-            "That the base word has no meaning",
-            "When or how the action is happening"
+            "That the base word has no meaning"
           ],
           "answer": "When or how the action is happening",
           "explanation": "The endings -ed and -ing change how the action is described while keeping the base action idea.",
@@ -6916,13 +7051,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "9ef71edb",
           "variantFingerprint": "ca6f5238",
-          "presentationFingerprint": "754170aa",
+          "presentationFingerprint": "c481c062",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -6939,8 +7074,8 @@
           ],
           "prompt": "Which word correctly adds -ed to “jump”?",
           "choices": [
-            "jumped",
             "jumpeded",
+            "jumped",
             "jumpsed"
           ],
           "answer": "jumped",
@@ -6996,13 +7131,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "1f127ee5",
           "variantFingerprint": "093244f2",
-          "presentationFingerprint": "aad82794",
+          "presentationFingerprint": "197cc64e",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -7020,8 +7155,8 @@
           "prompt": "Which word completes “We are ___ at the picture right now”?",
           "choices": [
             "looked",
-            "looking",
-            "looks"
+            "looks",
+            "looking"
           ],
           "answer": "looking",
           "explanation": "Right now shows the action is happening, so looking fits.",
@@ -7076,13 +7211,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "e53382be",
           "variantFingerprint": "2857d287",
-          "presentationFingerprint": "da95ae62",
+          "presentationFingerprint": "f9bcf1aa",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -7099,9 +7234,9 @@
           ],
           "prompt": "Which word best completes “Yesterday we ___ at recess”?",
           "choices": [
+            "played",
             "playing",
-            "plays",
-            "played"
+            "plays"
           ],
           "answer": "played",
           "explanation": "Yesterday signals a completed past action, so played fits.",
@@ -7156,13 +7291,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "5f24bcb6",
           "variantFingerprint": "a7904030",
-          "presentationFingerprint": "a320a9f1",
+          "presentationFingerprint": "65be4dcb",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -7179,8 +7314,8 @@
           ],
           "prompt": "Why does “walked” fit “We walked home yesterday”?",
           "choices": [
-            "-ed helps show the action already happened.",
             "-ed makes the word name a person.",
+            "-ed helps show the action already happened.",
             "-ed always means the action is happening now."
           ],
           "answer": "-ed helps show the action already happened.",
@@ -7236,13 +7371,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "af122ae5",
           "variantFingerprint": "7f7c6ef8",
-          "presentationFingerprint": "919ea4d9",
+          "presentationFingerprint": "3303e431",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -7260,8 +7395,8 @@
           "prompt": "How are “jumped” and “jumping” alike?",
           "choices": [
             "Both mean the action happened yesterday.",
-            "Both keep the base action jump and add an ending.",
-            "Both are plural nouns."
+            "Both are plural nouns.",
+            "Both keep the base action jump and add an ending."
           ],
           "answer": "Both keep the base action jump and add an ending.",
           "explanation": "Both words keep the base word jump while changing how the action is described.",
@@ -7316,13 +7451,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "1a177de0",
           "variantFingerprint": "01d8a340",
-          "presentationFingerprint": "d9846083",
+          "presentationFingerprint": "19e02443",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:1a9de1d880eb04b2584fb7583f56f3f463d9d8e1ac9274f96c5bc5b5da7479ec",
             "matchedEvidence": [
               "Word Structure: cvc words, adding -ed, -ing"
@@ -7339,9 +7474,9 @@
           ],
           "prompt": "Evan keeps changing one fold on his paper airplane until it finally flies. Which theme fits best?",
           "choices": [
+            "Keep trying and learn from mistakes.",
             "Only easy tasks are worth doing.",
-            "Stop after the first mistake.",
-            "Keep trying and learn from mistakes."
+            "Stop after the first mistake."
           ],
           "answer": "Keep trying and learn from mistakes.",
           "explanation": "Evan improves by continuing to try and learning from each attempt.",
@@ -7396,16 +7531,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "dd8fa29a",
           "variantFingerprint": "3e356384",
-          "presentationFingerprint": "7d651973",
+          "presentationFingerprint": "1d361023",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -7419,8 +7554,8 @@
           ],
           "prompt": "Why is “Keep trying and learn from mistakes” a stronger theme than “Paper airplanes can fly”?",
           "choices": [
-            "It states a lesson shown by the character’s actions.",
             "It repeats one object from the story.",
+            "It states a lesson shown by the character’s actions.",
             "It describes only where the story happens."
           ],
           "answer": "It states a lesson shown by the character’s actions.",
@@ -7476,16 +7611,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "c223154c",
           "variantFingerprint": "11ac76de",
-          "presentationFingerprint": "4914eff5",
+          "presentationFingerprint": "b3adb2e9",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -7500,8 +7635,8 @@
           "prompt": "Lena practices tying her shoes each morning until she can do it alone. Which theme fits best?",
           "choices": [
             "Shoes should always be new.",
-            "Practice can help you improve.",
-            "Mornings are the longest part of the day."
+            "Mornings are the longest part of the day.",
+            "Practice can help you improve."
           ],
           "answer": "Practice can help you improve.",
           "explanation": "Lena improves because she keeps practicing.",
@@ -7556,16 +7691,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "1cee5098",
           "variantFingerprint": "5dfb3578",
-          "presentationFingerprint": "6dcdf418",
+          "presentationFingerprint": "5dc41036",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -7579,9 +7714,9 @@
           ],
           "prompt": "Omar notices a classmate dropped crayons, so he stops to help pick them up. Which theme fits?",
           "choices": [
+            "Helping others is a kind choice.",
             "Crayons are difficult to carry.",
-            "Classrooms should have no colors.",
-            "Helping others is a kind choice."
+            "Classrooms should have no colors."
           ],
           "answer": "Helping others is a kind choice.",
           "explanation": "Omar chooses to help someone who needs it.",
@@ -7636,16 +7771,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "e4f398fb",
           "variantFingerprint": "88f2f56a",
-          "presentationFingerprint": "c2af3e74",
+          "presentationFingerprint": "01762fca",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -7659,8 +7794,8 @@
           ],
           "prompt": "Kai is nervous to read aloud but tries anyway and feels proud afterward. Which theme fits?",
           "choices": [
-            "Trying something difficult can build confidence.",
             "Reading should only happen silently.",
+            "Trying something difficult can build confidence.",
             "Feeling nervous means you should always stop."
           ],
           "answer": "Trying something difficult can build confidence.",
@@ -7716,16 +7851,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "e07f56e4",
           "variantFingerprint": "89bbf2f0",
-          "presentationFingerprint": "738f79f4",
+          "presentationFingerprint": "5f4c8e90",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -7740,8 +7875,8 @@
           "prompt": "Why is “Friends can solve problems by working together” a theme instead of a story detail?",
           "choices": [
             "It tells exactly where the story happens.",
-            "It is a broad lesson that can apply to many situations.",
-            "It names one object in the story."
+            "It names one object in the story.",
+            "It is a broad lesson that can apply to many situations."
           ],
           "answer": "It is a broad lesson that can apply to many situations.",
           "explanation": "Themes are broader messages, not single facts.",
@@ -7796,16 +7931,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "3871ce24",
           "variantFingerprint": "afe5027b",
-          "presentationFingerprint": "5cce0f65",
+          "presentationFingerprint": "a20f4b49",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -7819,9 +7954,9 @@
           ],
           "prompt": "A character admits a mistake and fixes what was damaged. Which message is the strongest theme?",
           "choices": [
+            "Taking responsibility helps repair mistakes.",
             "Damaged things are always useless.",
-            "Mistakes should always be hidden.",
-            "Taking responsibility helps repair mistakes."
+            "Mistakes should always be hidden."
           ],
           "answer": "Taking responsibility helps repair mistakes.",
           "explanation": "The character owns the mistake and works to make it right.",
@@ -7876,16 +8011,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "1a67c2ad",
           "variantFingerprint": "11e90fdb",
-          "presentationFingerprint": "d9f94f7e",
+          "presentationFingerprint": "4111d594",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -7899,8 +8034,8 @@
           ],
           "prompt": "Read: “Tiny raindrops tapped the window while gray clouds covered the sky.” Which picture best matches?",
           "choices": [
-            "A gray rainy scene outside a window",
             "A bright beach with large waves",
+            "A gray rainy scene outside a window",
             "A sunny playground with no clouds"
           ],
           "answer": "A gray rainy scene outside a window",
@@ -7956,16 +8091,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "052e81f7",
           "variantFingerprint": "76416bf7",
-          "presentationFingerprint": "ebc65f21",
+          "presentationFingerprint": "5224fb51",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -7980,8 +8115,8 @@
           "prompt": "Which detail is most important for visualizing “golden leaves covered the path like a crunchy blanket”?",
           "choices": [
             "Someone may walk later.",
-            "The path is covered with golden leaves.",
-            "The sentence has many words."
+            "The sentence has many words.",
+            "The path is covered with golden leaves."
           ],
           "answer": "The path is covered with golden leaves.",
           "explanation": "Color and where the leaves are located are concrete details that build the mental picture.",
@@ -8036,16 +8171,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "e55abcc6",
           "variantFingerprint": "85edc1da",
-          "presentationFingerprint": "76160766",
+          "presentationFingerprint": "6b15b65c",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -8059,9 +8194,9 @@
           ],
           "prompt": "Read: “A bright red kite dipped and climbed in the windy blue sky.” What should you picture?",
           "choices": [
+            "A red kite moving in a windy blue sky",
             "A dark cave with a lantern",
-            "A snowy road at night",
-            "A red kite moving in a windy blue sky"
+            "A snowy road at night"
           ],
           "answer": "A red kite moving in a windy blue sky",
           "explanation": "The sentence gives color, movement, wind, and sky details.",
@@ -8116,16 +8251,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "a1fe5834",
           "variantFingerprint": "90909314",
-          "presentationFingerprint": "aeded99d",
+          "presentationFingerprint": "8868f7cf",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -8139,8 +8274,8 @@
           ],
           "prompt": "Read: “Steam curled above the warm soup while rain tapped the kitchen window.” Which picture matches?",
           "choices": [
-            "Warm soup by a rainy window",
             "A dry sandbox in bright sun",
+            "Warm soup by a rainy window",
             "A frozen lake under stars"
           ],
           "answer": "Warm soup by a rainy window",
@@ -8196,16 +8331,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "166a1789",
           "variantFingerprint": "37490c55",
-          "presentationFingerprint": "3b0dab59",
+          "presentationFingerprint": "477b6611",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -8220,8 +8355,8 @@
           "prompt": "Read: “The tiny puppy curled into the soft blue blanket beside the couch.” What should you visualize?",
           "choices": [
             "A horse running across a field",
-            "A small puppy resting in a blue blanket",
-            "A bird sitting on a roof"
+            "A bird sitting on a roof",
+            "A small puppy resting in a blue blanket"
           ],
           "answer": "A small puppy resting in a blue blanket",
           "explanation": "The details describe the puppy, blanket, and location.",
@@ -8276,16 +8411,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "a024f7ef",
           "variantFingerprint": "09e60255",
-          "presentationFingerprint": "1762acdb",
+          "presentationFingerprint": "e59e6991",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -8299,9 +8434,9 @@
           ],
           "prompt": "Which words do the most work in helping you visualize “silver moonlight shimmered across the quiet pond”?",
           "choices": [
+            "silver, shimmered, quiet pond",
             "the, across, the",
-            "moonlight is a word",
-            "silver, shimmered, quiet pond"
+            "moonlight is a word"
           ],
           "answer": "silver, shimmered, quiet pond",
           "explanation": "Those concrete describing words give color, movement, and setting.",
@@ -8356,16 +8491,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "4594a2ed",
           "variantFingerprint": "132f2952",
-          "presentationFingerprint": "2092cc64",
+          "presentationFingerprint": "781b3354",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -8379,8 +8514,8 @@
           ],
           "prompt": "Why does “crunchy brown leaves covered the sidewalk” create a clearer picture than “things were outside”?",
           "choices": [
-            "It gives specific sensory and location details.",
             "It has more letters.",
+            "It gives specific sensory and location details.",
             "It uses the word sidewalk."
           ],
           "answer": "It gives specific sensory and location details.",
@@ -8436,16 +8571,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "47118747",
           "variantFingerprint": "dd4a2430",
-          "presentationFingerprint": "4280d2a6",
+          "presentationFingerprint": "c7228736",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -8460,8 +8595,8 @@
           "prompt": "Which part of this sentence is dialogue: “I found my book!” Lena shouted.",
           "choices": [
             "Lena shouted.",
-            "“I found my book!”",
-            "my book"
+            "my book",
+            "“I found my book!”"
           ],
           "answer": "“I found my book!”",
           "explanation": "Dialogue is the exact speech of a character and is shown inside quotation marks.",
@@ -8516,16 +8651,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "9dc7c5ea",
           "variantFingerprint": "be3ee668",
-          "presentationFingerprint": "8cc1d404",
+          "presentationFingerprint": "e9186132",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -8539,9 +8674,9 @@
           ],
           "prompt": "Why do quotation marks help a reader recognize dialogue?",
           "choices": [
+            "They show the exact words a character says.",
             "They show where the story takes place.",
-            "They tell how many paragraphs are in a story.",
-            "They show the exact words a character says."
+            "They tell how many paragraphs are in a story."
           ],
           "answer": "They show the exact words a character says.",
           "explanation": "Quotation marks separate a character’s spoken words from the narration around them.",
@@ -8596,16 +8731,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "93b9a84e",
           "variantFingerprint": "d35b31e9",
-          "presentationFingerprint": "1e530c7a",
+          "presentationFingerprint": "0480bbbe",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -8619,8 +8754,8 @@
           ],
           "prompt": "Which words are dialogue in: “I can help,” Noah said.",
           "choices": [
-            "“I can help,”",
             "Noah said.",
+            "“I can help,”",
             "help Noah"
           ],
           "answer": "“I can help,”",
@@ -8676,16 +8811,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "25cb53f7",
           "variantFingerprint": "cab7b9f0",
-          "presentationFingerprint": "70e10434",
+          "presentationFingerprint": "8b75538e",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -8700,8 +8835,8 @@
           "prompt": "Read: Ava whispered, “The baby is sleeping.” What did Ava say?",
           "choices": [
             "Ava whispered.",
-            "“The baby is sleeping.”",
-            "The narrator said Ava was loud."
+            "The narrator said Ava was loud.",
+            "“The baby is sleeping.”"
           ],
           "answer": "“The baby is sleeping.”",
           "explanation": "The words inside quotation marks are Ava’s dialogue.",
@@ -8756,16 +8891,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "23eb172d",
           "variantFingerprint": "ab4bc293",
-          "presentationFingerprint": "0e65d5b1",
+          "presentationFingerprint": "b67e6a05",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -8779,9 +8914,9 @@
           ],
           "prompt": "Which sentence uses dialogue correctly?",
           "choices": [
+            "“Let’s go outside,” Ben said.",
             "Let’s go outside, Ben said.",
-            "Ben said lets “go outside”.",
-            "“Let’s go outside,” Ben said."
+            "Ben said lets “go outside”."
           ],
           "answer": "“Let’s go outside,” Ben said.",
           "explanation": "The character’s exact words are placed inside quotation marks.",
@@ -8836,16 +8971,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "7222cde0",
           "variantFingerprint": "ae83c72d",
-          "presentationFingerprint": "7563a1b6",
+          "presentationFingerprint": "a8606a56",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -8859,8 +8994,8 @@
           ],
           "prompt": "In “Wait for me!” Mia called, what do the quotation marks tell the reader?",
           "choices": [
-            "Those are Mia’s exact spoken words.",
             "Mia is the narrator.",
+            "Those are Mia’s exact spoken words.",
             "The story happens outside."
           ],
           "answer": "Those are Mia’s exact spoken words.",
@@ -8916,16 +9051,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "8874a5de",
           "variantFingerprint": "2aba2a9b",
-          "presentationFingerprint": "9b06eeb8",
+          "presentationFingerprint": "8bd7550c",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -8940,8 +9075,8 @@
           "prompt": "Why is “Dad said, ‘Dinner is ready.’” partly dialogue and partly narration?",
           "choices": [
             "Every word is dialogue.",
-            "The quoted words are spoken; “Dad said” tells who spoke.",
-            "None of the words are spoken."
+            "None of the words are spoken.",
+            "The quoted words are spoken; “Dad said” tells who spoke."
           ],
           "answer": "The quoted words are spoken; “Dad said” tells who spoke.",
           "explanation": "Dialogue gives exact speech while narration identifies the speaker.",
@@ -8996,16 +9131,176 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "cf617f7e",
           "variantFingerprint": "eb84eb66",
-          "presentationFingerprint": "440678d7",
+          "presentationFingerprint": "0e86a089",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
-            "evidenceExcerptHash": "sha256:5ea210e2c9de8e7c2f12c81592b0f89f116e096b2d88d4c4ea8c9ab5f131eaf6",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
             "matchedEvidence": [
-              "Reading Comprehension: visualize, theme, dialogue"
+              "Reading Comprehension: visualize, theme, dialogue, characters"
+            ]
+          }
+        },
+        {
+          "id": "auto-main-character-ben-34a10c",
+          "templateId": "grade2-main-character-v1",
+          "subject": "Reading / ELA",
+          "skill": "main-character",
+          "assessedSkillIds": [
+            "main-character"
+          ],
+          "prompt": "A story follows Ben as he trains for a race, worries before the start, and celebrates at the finish. Who is the main character?",
+          "choices": [
+            "Ben",
+            "the race",
+            "the finish line"
+          ],
+          "answer": "Ben",
+          "explanation": "The story follows Ben’s actions and feelings across the whole sequence.",
+          "hint": "Choose the person the story follows most closely.",
+          "sourceFact": "Verified Grade 2 skill: Main character",
+          "sourceEvidence": [
+            ", characters"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.RL.2.3"
+          ],
+          "domain": "Analyzing literary text",
+          "dok": 2,
+          "cognitiveDemand": "skill-and-concept-application",
+          "difficulty": 2,
+          "questionType": "transfer",
+          "choiceDiagnostics": {
+            "the race": {
+              "misconception": "main-character-distractor",
+              "feedback": "Review: Main character. Then use the clue in the question."
+            },
+            "the finish line": {
+              "misconception": "main-character-distractor",
+              "feedback": "Review: Main character. Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "the race": 0,
+              "the finish line": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "main-character"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "ba485212",
+          "variantFingerprint": "bd48f104",
+          "presentationFingerprint": "ebb5d3ca",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Reading Work",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
+            "matchedEvidence": [
+              "Reading Comprehension: visualize, theme, dialogue, characters"
+            ]
+          }
+        },
+        {
+          "id": "auto-main-character-most-of-the-important-events-happen-to-or-because-of-ben-61094e",
+          "templateId": "grade2-main-character-v1",
+          "subject": "Reading / ELA",
+          "skill": "main-character",
+          "assessedSkillIds": [
+            "main-character"
+          ],
+          "prompt": "Why is Ben the main character in a story that follows his problem, choices, and result?",
+          "choices": [
+            "His name has three letters.",
+            "Most of the important events happen to or because of Ben.",
+            "He appears only in the title."
+          ],
+          "answer": "Most of the important events happen to or because of Ben.",
+          "explanation": "The main character is central to the important events and changes in the story.",
+          "hint": "Think about whose actions drive the story.",
+          "sourceFact": "Verified Grade 2 skill: Main character",
+          "sourceEvidence": [
+            ", characters"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.RL.2.3"
+          ],
+          "domain": "Analyzing literary text",
+          "dok": 3,
+          "cognitiveDemand": "strategic-reasoning",
+          "difficulty": 3,
+          "questionType": "reasoning",
+          "choiceDiagnostics": {
+            "His name has three letters.": {
+              "misconception": "main-character-distractor",
+              "feedback": "Review: Main character. Then use the clue in the question."
+            },
+            "He appears only in the title.": {
+              "misconception": "main-character-distractor",
+              "feedback": "Review: Main character. Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "His name has three letters.": 0,
+              "He appears only in the title.": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "main-character"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "bb406884",
+          "variantFingerprint": "b0df1b34",
+          "presentationFingerprint": "b5a0f7c4",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Reading Work",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
+            "sourceCaptureHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
+            "evidenceExcerptHash": "sha256:f793729ad77b5f02d13a644d34fc2a7f68ece2a4b9d3f1dd2072c2ef4785c72e",
+            "matchedEvidence": [
+              "Reading Comprehension: visualize, theme, dialogue, characters"
             ]
           }
         },
@@ -9082,7 +9377,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d9f45fdf64e3d1f918a0e31cf97b732471585c00f7b27fbb2ba622a08cd8ed4d",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
             "matchedEvidence": [
               "Friday Oct. 9: Grammar (subject & predicate)"
@@ -9162,7 +9457,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d9f45fdf64e3d1f918a0e31cf97b732471585c00f7b27fbb2ba622a08cd8ed4d",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
             "matchedEvidence": [
               "Friday Oct. 9: Grammar (subject & predicate)"
@@ -9242,7 +9537,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d9f45fdf64e3d1f918a0e31cf97b732471585c00f7b27fbb2ba622a08cd8ed4d",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
             "matchedEvidence": [
               "Friday Oct. 9: Grammar (subject & predicate)"
@@ -9322,7 +9617,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d9f45fdf64e3d1f918a0e31cf97b732471585c00f7b27fbb2ba622a08cd8ed4d",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
             "matchedEvidence": [
               "Friday Oct. 9: Grammar (subject & predicate)"
@@ -9402,7 +9697,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d9f45fdf64e3d1f918a0e31cf97b732471585c00f7b27fbb2ba622a08cd8ed4d",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
             "matchedEvidence": [
               "Friday Oct. 9: Grammar (subject & predicate)"
@@ -9482,7 +9777,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d9f45fdf64e3d1f918a0e31cf97b732471585c00f7b27fbb2ba622a08cd8ed4d",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
             "matchedEvidence": [
               "Friday Oct. 9: Grammar (subject & predicate)"
@@ -9562,7 +9857,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d9f45fdf64e3d1f918a0e31cf97b732471585c00f7b27fbb2ba622a08cd8ed4d",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:692f816f82e2dbc30cadfc388a797fe176abb8e2c917e82797c8ab726df68348",
             "matchedEvidence": [
               "Friday Oct. 9: Grammar (subject & predicate)"
@@ -9642,7 +9937,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -9722,7 +10017,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -9802,7 +10097,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -9882,7 +10177,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -9962,7 +10257,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -10042,7 +10337,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -10122,7 +10417,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:eaf345011898b7c5bbfc5c6f14f1db7ea6d59b70fbd176bde124554f8ce9e814",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace",
@@ -10203,7 +10498,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:eaf345011898b7c5bbfc5c6f14f1db7ea6d59b70fbd176bde124554f8ce9e814",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace",
@@ -10284,7 +10579,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -10364,7 +10659,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -10444,7 +10739,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -10524,7 +10819,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -10604,7 +10899,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -10684,7 +10979,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -10764,7 +11059,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -10844,7 +11139,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:8d9b2c7765b73da9a9dbaaf77b7bb3176369a186fad93c0960fdd9a3fbd0eb3c",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace"
@@ -10924,7 +11219,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -11004,7 +11299,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -11084,7 +11379,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -11164,7 +11459,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -11244,7 +11539,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -11324,7 +11619,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -11404,7 +11699,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -11484,7 +11779,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -11564,7 +11859,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -11644,7 +11939,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4",
-            "sourceCheckedAt": "2026-10-02T13:27:05.105Z",
+            "sourceCheckedAt": "2026-10-05T00:19:55.714Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -11654,26 +11949,26 @@
       ],
       "qa": {
         "status": "pass",
-        "skillCount": 22,
-        "questionCount": 113,
+        "skillCount": 23,
+        "questionCount": 116,
         "minimumQuestionsPerSkill": 2,
         "duplicatesRemoved": 0,
         "answerPositionCounts": [
-          38,
-          38,
-          37
+          39,
+          39,
+          38
         ],
-        "semanticVariantCount": 113,
+        "semanticVariantCount": 116,
         "maxConsecutiveAnswerPosition": 1,
         "questionTypeCounts": {
-          "direct": 29,
-          "transfer": 47,
-          "reasoning": 37
+          "direct": 30,
+          "transfer": 48,
+          "reasoning": 38
         },
         "dokCounts": {
           "1": 16,
-          "2": 60,
-          "3": 37
+          "2": 62,
+          "3": 38
         },
         "questionsPerSkill": {
           "consonant-blends": 8,
@@ -11683,6 +11978,7 @@
           "theme": 8,
           "visualize": 8,
           "dialogue": 8,
+          "main-character": 3,
           "subject-predicate": 8,
           "high-frequency-word-use": 10,
           "religion-trinity": 3,
@@ -11708,29 +12004,35 @@
         ],
         "sourceInsufficientCount": 3,
         "unsupportedSkillCount": 0,
-        "pageExactLineageCount": 113,
+        "pageExactLineageCount": 116,
         "unresolvedLineageCount": 0
       }
     },
     "recentReviewPipeline": {
       "schemaVersion": 1,
       "retentionDays": 14,
-      "generatedAt": "2026-10-02T13:27:05.105Z",
+      "generatedAt": "2026-10-05T00:19:55.714Z",
       "bankFingerprint": "298a86be532c2f049292ac9e8c2276540db1c7db7f6e272960d812e3a20862f0",
       "skills": [],
       "questions": []
     },
     "schoolChangeFeed": {
       "schemaVersion": 1,
-      "generatedAt": "2026-10-02T13:27:05.105Z",
-      "sourceHash": "teacher-pages-1140e20941b1f6f76b8b",
-      "changed": false,
+      "generatedAt": "2026-10-05T00:19:55.714Z",
+      "sourceHash": "teacher-pages-49bc1dcf1d6a54be5284",
+      "changed": true,
       "items": [
         {
-          "id": "change-56afd30b5fa9",
-          "kind": "unchanged",
+          "id": "change-57c767c94eb2",
+          "kind": "new-skill",
           "subject": "Reading / ELA",
-          "text": "No changes to Reading / ELA."
+          "text": "New: Reading / ELA — Main character"
+        },
+        {
+          "id": "change-8ae527e6c935",
+          "kind": "event",
+          "subject": "School",
+          "text": "Added school event: Start of winter dress code — Thursday, Oct. 15"
         },
         {
           "id": "change-251915f390c9",
@@ -11753,42 +12055,42 @@
       ]
     }
   },
-  "sourceLastCheckedAt": "2026-10-02T13:27:05.105Z",
+  "sourceLastCheckedAt": "2026-10-05T00:19:55.714Z",
   "sourcePages": [
     {
       "title": "Home",
       "url": "https://sites.google.com/view/abvmgr2/home",
-      "checkedAt": "2026-10-02T13:27:05.105Z",
-      "contentHash": "037b7bb8d405dda46b9f318c37535d26b4c8b201cea3bc032b56ac79de54038d"
+      "checkedAt": "2026-10-05T00:19:55.714Z",
+      "contentHash": "5d52a8809c0bb12e2648f4d30fedc24adc52496b5ae1ccbcc3c03db3ec91384c"
     },
     {
       "title": "Homework",
       "url": "https://sites.google.com/view/abvmgr2/homework",
-      "checkedAt": "2026-10-02T13:27:05.105Z",
-      "contentHash": "9aea6322284068d3e4f632e31e80f750459d72553b3b5bced75a8a3130d9f6b3"
+      "checkedAt": "2026-10-05T00:19:55.714Z",
+      "contentHash": "781165f9000ee8a601a3e942f00d95f14d901bcbe65f8c23f707698206f345a9"
     },
     {
       "title": "Reading Work",
       "url": "https://sites.google.com/view/abvmgr2/reading-work",
-      "checkedAt": "2026-10-02T13:27:05.105Z",
-      "contentHash": "cecd840fe0c3e9dccfff4d625b779217b006ecc32827a2d9bf8dd0cab49d4058"
+      "checkedAt": "2026-10-05T00:19:55.714Z",
+      "contentHash": "599222b635e54ad8e45114cef10161280df9dbae2341aeda342f985e1133b4b9"
     },
     {
       "title": "Weekly Spelling List",
       "url": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-      "checkedAt": "2026-10-02T13:27:05.105Z",
+      "checkedAt": "2026-10-05T00:19:55.714Z",
       "contentHash": "d077ca4b2b95d79755f88f5a726e6b5acf3a52c6575c3d986a16ca1c834b5777"
     },
     {
       "title": "Tests",
       "url": "https://sites.google.com/view/abvmgr2/tests",
-      "checkedAt": "2026-10-02T13:27:05.105Z",
+      "checkedAt": "2026-10-05T00:19:55.714Z",
       "contentHash": "d9f45fdf64e3d1f918a0e31cf97b732471585c00f7b27fbb2ba622a08cd8ed4d"
     },
     {
       "title": "Religion",
       "url": "https://sites.google.com/view/abvmgr2/religion",
-      "checkedAt": "2026-10-02T13:27:05.105Z",
+      "checkedAt": "2026-10-05T00:19:55.714Z",
       "contentHash": "0cc72dcb5ba010b8ab1426b0295ea4b388a8b272a931d0957de616d9e66c13b4"
     }
   ],
