@@ -349,8 +349,8 @@ function renderWeek(){
   const events=eventItemsForDate(selectedDay), lunch=lunchForDate(selectedDay), closed=events.some(e=>kindClass(e)==="closed");
   const picker=days.map(d=>'<button type="button" class="'+(sameDay(d,selectedDay)?"active":"")+'" data-day="'+d.toISOString()+'" aria-label="'+esc(fmtDate(d))+'" aria-pressed="'+(sameDay(d,selectedDay)?"true":"false")+'"><span>'+WEEKDAY[d.getDay()].slice(0,3)+'</span><strong>'+d.getDate()+'</strong></button>').join("");
   const eventRows=events.length?events.map(e=>'<div class="event-row"><time>'+esc((e.kind||"School").replace(/\b\w/g,m=>m.toUpperCase()))+'</time><div><strong>'+esc(e.label)+'</strong></div></div>').join(""):'<div class="event-row"><time>School</time><div><strong>No special school events are listed.</strong></div></div>';
-  const sourceWeek=isPackWeek(days), tasks=sourceWeek?(pack?.homework||[]).filter(item=>taskAppliesToDate(item,selectedDay)):[];
-  const checklist=tasks.length?tasks.map(taskHtml).join(""):'<div class="week-empty"><strong>No checklist has been verified for this week yet.</strong><span>Calendar dates still appear below, and new homework will show here after the school source refreshes.</span></div>';
+  const sourceWeek=isPackWeek(days), tasks=sourceWeek?taskRecordsForSurface("week",selectedDay):[];
+  const checklist=tasks.length?tasks.map(({item,index})=>taskHtml(item,index)).join(""):'<div class="week-empty"><strong>No checklist has been verified for this week yet.</strong><span>Calendar dates still appear below, and new homework will show here after the school source refreshes.</span></div>';
   const future=datedImportantEvents().filter(({date})=>date>selectedDay).slice(0,4).map(({item,date})=>({x:item,d:date}));
   const reminder=reminderForDate(selectedDay);
   stack().innerHTML='<div class="screen week-screen" role="region" aria-label="This week">'+
@@ -698,15 +698,40 @@ function packContentKey(data){
     lunchMissingDates:lunchSource.missingDates||[]
   });
 }
+function validatePackEnvelope(d,u){
+  const p=d?.pack,o=v=>!!v&&typeof v==="object"&&!Array.isArray(v),a=(v,f)=>Array.isArray(v)&&v.every(f),bad=()=>{throw Error("Invalid school pack from "+u)},stamp=d?.sourceLastSeenAt||p?.sourceCapturedAt||p?.generatedAt;
+  if(!o(d)||!o(p)||p.schemaVersion!==2||p.sourceSufficient!==true||!String(p.sourceHash||"").trim()||!String(p.weekLabel||"").trim()||typeof stamp!=="string"||Number.isNaN(Date.parse(stamp)))bad();
+  if(!"subjects importantDates homework lunchMenu lunchArchive vocabulary questions".split(" ").every(k=>a(p[k],o)))bad();
+  if(!"reminders parentNotices".split(" ").every(k=>a(p[k],v=>typeof v==="string")))bad();
+  if(!"lunchMenuSource contentPipeline recentReviewPipeline schoolChangeFeed".split(" ").every(k=>o(p[k])))bad();
+  if(![p.lunchMenuSource.sourcePages,p.contentPipeline.skills,p.contentPipeline.questions,p.recentReviewPipeline.skills,p.recentReviewPipeline.questions,p.schoolChangeFeed.items].every(Array.isArray))bad();
+  return d;
+}
 async function readPackUrl(url){
   const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),8000);
   try{
     const response=await fetch(url,{cache:"no-store",signal:controller.signal});
     if(!response.ok)throw new Error("HTTP "+response.status+" for "+url);
-    const data=await response.json();
-    if(!data?.pack?.sourceSufficient)throw new Error("Incomplete pack from "+url);
+    const data=validatePackEnvelope(await response.json(),url);
     return{response,data};
   }finally{clearTimeout(timeout)}
+}
+function promotePackCandidate({response,data}){
+  const previous={envelope,pack,derivedPackCache,studyGameCatalogCache,lastPackFetchAt,lastPackFetchUsedCache,selectedDay,calendarDay};
+  const before=packContentKey(envelope),after=packContentKey(data),changed=!!before&&before!==after;
+  try{
+    envelope=data;pack=data.pack;derivedPackCache=null;
+    if(changed)studyGameCatalogCache=null;
+    lastPackFetchUsedCache=response.headers.get("x-abvm-cache-fallback")==="1";
+    if(!before||changed)render({preserveScroll:!!before});
+    else updateFreshnessUI();
+  }catch(error){
+    ({envelope,pack,derivedPackCache,studyGameCatalogCache,lastPackFetchAt,lastPackFetchUsedCache,selectedDay,calendarDay}=previous);
+    if(pack){try{render({preserveScroll:true})}catch{}}
+    throw error;
+  }
+  lastPackFetchAt=Date.now();
+  return changed;
 }
 async function fetchPack({force=false,notify=false}={}){
   const now=Date.now();
@@ -714,20 +739,15 @@ async function fetchPack({force=false,notify=false}={}){
   if(packRefreshPromise)return packRefreshPromise;
   packRefreshPromise=(async()=>{
     try{
-      let loaded=null,lastError=null;
+      let lastError=null;
       for(const url of [PACK_URL,PACK_FALLBACK_URL]){
-        try{loaded=await readPackUrl(url);break}catch(error){lastError=error}
+        try{
+          const changed=promotePackCandidate(await readPackUrl(url));
+          if(notify&&changed)toast("School info updated");
+          return changed;
+        }catch(error){lastError=error}
       }
-      if(!loaded)throw lastError||new Error("School pack unavailable");
-      const {response:r,data}=loaded;
-      lastPackFetchUsedCache=r.headers.get("x-abvm-cache-fallback")==="1";
-      const before=packContentKey(envelope),after=packContentKey(data),changed=!!before&&before!==after;
-      envelope=data;pack=data.pack;derivedPackCache=null;lastPackFetchAt=Date.now();
-      if(changed)studyGameCatalogCache=null;
-      if(!before||changed)render({preserveScroll:!!before});
-      else updateFreshnessUI();
-      if(notify&&changed)toast("School info updated");
-      return changed;
+      throw lastError||new Error("School pack unavailable");
     }finally{packRefreshPromise=null}
   })();
   return packRefreshPromise;
