@@ -381,7 +381,8 @@ export async function mountStudyHub(
       const primary = questionsForTest(t, unique([...weekly(), ...focused]));
       return primary.length ? primary : questionsForTest(t, star);
     });
-    const missing = tests.filter((t, i) => !groups[i].length);
+    const missing = tests.filter((t, i) => !groups[i].length),
+      supported = tests.map((t, i) => ({ t, i })).filter(({ i }) => groups[i].length);
     let content = "";
     if (round) content = renderRound();
     else if (tab === "weekly") {
@@ -423,7 +424,8 @@ export async function mountStudyHub(
             (missing.length
               ? '<p class="hub-caption">Review the teacher notes below for ' +
                 missing.map((t) => escape(t.label)).join(", ") +
-                ".</p>"
+                ".</p>" +
+                supported.map(({t,i})=>'<button class="hub-primary" data-test-single="'+i+'">Practice '+escape(t.label)+' <span aria-hidden="true">→</span></button>').join("")
               : '<button class="hub-primary" data-test>Start test practice <span aria-hidden="true">→</span></button>') +
             '<button class="hub-text-button" data-complete-test>' +
             (tests.length > 1
@@ -558,6 +560,14 @@ export async function mountStudyHub(
       format = "quiz";
       start(groups, "Test prep", true);
     });
+    host.querySelectorAll("[data-test-single]").forEach((b) =>
+      b.addEventListener("click", () => {
+        const i = Number(b.dataset.testSingle);
+        if (!groups[i]?.length) return;
+        format = "quiz";
+        start([groups[i]], tests[i].label + " practice", true);
+      }),
+    );
     host
       .querySelector("[data-complete-test]")
       ?.addEventListener("click", () => {
