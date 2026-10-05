@@ -1,0 +1,72 @@
+{
+  "candidateId": "curriculum-spelling-handwriting-short-i-long-i-8c547e7fcf",
+  "familyId": "short-i-long-i",
+  "subject": "Spelling / Handwriting",
+  "topic": "short i / long i",
+  "sourceHash": "teacher-pages-09edd6e3f644b6ef3523",
+  "generatedAt": "2026-10-05T19:19:41.665Z",
+  "sourceContext": {
+    "quality": "page-exact",
+    "matchMethod": "exact-topic-phrase",
+    "subject": "Spelling / Handwriting",
+    "topic": "short i / long i",
+    "sourceTitle": "Tests",
+    "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+    "sourceCaptureHash": "c91cc1e62eea30c82595cbad75abd174f3811a4cb56b30097113df6dc487db1f",
+    "sourceCheckedAt": "2026-10-05T19:19:41.665Z",
+    "sourceLine": "Friday Oct. 9: Spelling (short i/long i)/Handwriting",
+    "evidenceExcerptHash": "sha256:ea94e1e33ba7745c304229679407eaef675b76eab01113c2ff3ea0334c9c87d1"
+  },
+  "featureFlag": "curriculum-family:short-i-long-i-candidate",
+  "enabledByDefault": false,
+  "registryMatch": null,
+  "minimumSemanticVariants": 8,
+  "requiredQuestionTypes": [
+    "direct",
+    "transfer",
+    "reasoning"
+  ],
+  "proposedQuestions": [],
+  "authoring": {
+    "status": "AUTHORING_REQUIRED",
+    "generatedQuestionCount": 0,
+    "minimumSemanticVariants": 8,
+    "requiredQuestionTypes": [
+      "direct",
+      "transfer",
+      "reasoning"
+    ],
+    "requiredQuestionFields": [
+      "questionType",
+      "prompt",
+      "choices",
+      "answer",
+      "explanation",
+      "hint",
+      "dok",
+      "difficulty"
+    ]
+  },
+  "rollout": {
+    "featureFlagRequired": true,
+    "automatedQaRequired": true,
+    "safeUsageEvidenceRequired": true,
+    "manualPromotionRequired": true,
+    "automaticPromotion": false
+  },
+  "readiness": {
+    "status": "HOLD",
+    "blockers": [
+      "minimum-semantic-variants:0/8",
+      "question-type-required:direct",
+      "question-type-required:transfer",
+      "question-type-required:reasoning",
+      "automated-qa-required",
+      "safe-usage-evidence-required",
+      "manual-promotion-required"
+    ],
+    "automaticPromotion": false,
+    "automaticDelete": false,
+    "automaticRewrite": false
+  }
+}
