@@ -2,7 +2,7 @@
 
 ## Scope and decision
 
-Searched the complete checked-out hunt ledger at `P00NSMASHER/github-value-hunt-ledger@b1cc47094460ef8ba54566898d7c10e7fe8eeeaa`: 722 Markdown/JSON files containing 2,035 distinct GitHub repository links. Screened the 52 distinct candidates linked from `hunters/25.md` and `lanes/13-games-education-starblox.md`, plus the September 23 StarBlox handoff. This is catalog-wide discovery, not a fresh code audit of all 2,035 repositories. Fresh source/license inspection focused on the three best fits below. No third-party code or test-bank content was incorporated in this release.
+Searched the complete checked-out hunt ledger at `P00NSMASHER/github-value-hunt-ledger@b1cc47094460ef8ba54566898d7c10e7fe8eeeaa`: 722 Markdown/JSON files containing 2,035 distinct GitHub repository links. Screened the 52 distinct candidates linked from `hunters/25.md` and `lanes/13-games-education-starblox.md`, plus the September 23 StarBlox handoff. This is catalog-wide discovery, not a fresh code audit of all 2,035 repositories. Fresh source/license inspection focused on the three best fits below. The first empty-panel release incorporated no third-party code. The follow-up daily-practice release adapts the small SkillCoco SM-2 calculation with its MIT notice; no third-party test-bank content is included.
 
 The immediate defect was in the Study panel renderer, not a missing Math question bank. The app already has original STAR-style Math/Reading questions, hints, worked support, delayed comeback questions, local learning evidence, rotation and a heuristic review priority. Empty subject notes now show original Grade 2 micro-lessons, worked examples and a direct practice action. Teacher content remains primary. An empty Religion panel offers explicitly labelled reading enrichment, not a fabricated Religion assignment. The app does not estimate a STAR score or claim official test alignment/certification.
 
@@ -35,3 +35,13 @@ Renaissance describes Star as assessing reading, math and early-literacy skills 
 ## Release checks
 
 Regression coverage includes all six empty panels, blank/null notes, preserving real teacher notes, direct Math practice navigation, both numerical question variants, offline shell asset inclusion, and iPhone WebKit rendering. Two existing rotating Math defects were corrected: variant 2 asked about a 6 that was absent from its number, and compared two six-tens numbers using a five-tens explanation.
+
+## Authorized follow-up: daily study upgrade
+
+Rechecked current source heads for SkillCoco, MasteryTrace and qti3; all three matched the revisions above. Also searched and screened `open-spaced-repetition/ts-fsrs`, a browser-capable alternative. Chose the small already-inspected SkillCoco SM-2 calculation for a bounded integration with the app's existing independent/assisted answer evidence. FSRS and BKT remain future alternatives requiring a separately evaluated response mapping; adding multiple competing schedulers would not help this release.
+
+Implemented a browser-local schedule stored within existing learning rows: independent correct answers advance at due reviews; hinted/retried/incorrect answers reset to a one-day review; early repeats cannot extend the interval; intervals cap at 30 days. The original 1/6/multiplied-interval behavior comes from the attributed SM-2 calculation. These are practice scheduling decisions, not calibrated mastery or STAR-score estimates.
+
+The new Daily Practice card starts eight questions with up to three due-skill review questions followed by current school work and original fallback practice. It uses only skills with playable catalog items, prefers current-source items for the same skill, preserves hints/rewards, and does not alter existing named games. Completing a daily round changes the card to a calm completion state for the school day, without a streak penalty, timer or notifications. Teacher information and subject details remain available below a compact game chooser.
+
+Regression gates cover schedule boundaries, assisted answers, repeated/early attempts, corrupt storage, legacy progress, school timezone/DST, daily selection, first-use and completed states, 200% text, iPhone WebKit, and offline shell assets. No external learner telemetry or paid infrastructure added.

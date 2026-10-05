@@ -421,10 +421,13 @@ function wordSubjectCard(id,klass,title,words,key){
   const clean=words.filter(w=>typeof w==="string"&&w.trim());
   return '<details id="'+id+'" class="subject-card study-accordion '+klass+'"><summary><span><strong>'+esc(title)+'</strong></span><b aria-hidden="true">+</b></summary>'+(clean.length?'<div class="'+(key==="sight"?'sight-cloud':'word-grid')+'">'+clean.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div>':subjectPracticeHtml(key))+'</details>';
 }
-function weeklyLearningDashboardHtml(){
+function studyLearning(){
   let learning={};
   try{const parsed=JSON.parse(storageGet("abvm-study-learning:v2")||"{}");if(parsed&&typeof parsed==="object")learning=parsed}catch{}
-  return window.ABVMWeeklyLearning?.render({pack,learning,now:Date.now(),timeZone:SCHOOL_TIME_ZONE})||"";
+  return learning;
+}
+function weeklyLearningDashboardHtml(){
+  return window.ABVMWeeklyLearning?.render({pack,learning:studyLearning(),now:Date.now(),timeZone:SCHOOL_TIME_ZONE})||"";
 }
 function renderStudy(){
   const r=readingSubject(), rel=religionSubject(), math=mathSubject(), spell=spellingSubject(), next=currentWeekTest(), spellingTest=nextSpellingTest(), star=currentOrSoonStarAssessment();
@@ -437,8 +440,9 @@ function renderStudy(){
   const vocab=(pack?.vocabulary||[]).map(v=>v.term);
   stack().innerHTML='<div class="screen study-screen" role="region" aria-label="Study room">'+
     header("STUDY","Study room")+
+    window.ABVMStudyReview.render({pack,learning:studyLearning()})+
     '<section class="study-at-a-glance"><div class="quick-look-head"><span class="quick-look-mark" aria-hidden="true">✓</span><div><p>START HERE</p><h2>What matters this week</h2></div></div><ol>'+essentials.map(x=>'<li><time>'+esc(x[0])+'</time><span>'+esc(x[1])+'</span></li>').join("")+'</ol></section>'+
-    '<a class="study-games-cta" href="#games" data-open-games><span>★</span><div><small>5–10 MINUTES</small><strong>Practice with Study Games</strong><p>Current school skills with hints and explanations.</p></div><b aria-hidden="true">›</b></a>'+
+    '<a class="study-games-cta" href="#games" data-open-games><span>★</span><div><small>5–10 MINUTES</small><strong>Choose a study game</strong><p>Current school skills with hints and explanations.</p></div><b aria-hidden="true">›</b></a>'+
     weeklyLearningDashboardHtml()+
     '<div class="study-section-label"><p>SUBJECT DETAILS</p><span>Tap a subject only when you need it.</span></div>'+
     subjectCard("study-religion","religion",rel?.subject||"Religion",rel)+
@@ -455,7 +459,7 @@ function ensureStudyGameEngine(){
   if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
   if(studyEnginePromise)return studyEnginePromise;
   const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.async=true;s.onload=()=>window[key]?resolve():reject(new Error(key+" did not initialize"));s.onerror=()=>reject(new Error(key+" could not be loaded"));document.head.append(s)});
-  studyEnginePromise=Promise.all([load("./study-games.js?v=93","ABVMStudyGames"),load("./study-games-view.js?v=6","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
+  studyEnginePromise=Promise.all([load("./study-games.js?v=94","ABVMStudyGames"),load("./study-games-view.js?v=6","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
   return studyEnginePromise;
 }
 function studyGameCatalog(){
@@ -467,7 +471,7 @@ function studyGameCatalog(){
   }
   return studyGameCatalogCache;
 }
-function gameMode(id){return availableStudyGameModes().find(mode=>mode.id===id)||availableStudyGameModes()[0]}
+function gameMode(id){if(id==="daily")return{id:"daily",title:"Daily Practice",subjects:[],count:8};return availableStudyGameModes().find(mode=>mode.id===id)||availableStudyGameModes()[0]}
 function gameModeQuestionTotal(c,m){
   const s=m?.subjects||[],k=m?.skills||[],x=s.length||k.length;
   const eligible=(c?.questions||[]).filter(q=>(!s.length||s.includes(q.subject))&&(!k.length||k.includes(q.skill)));
@@ -489,7 +493,7 @@ function startStudyGame(modeId){
   const engine=studyGameEngine(),catalog=studyGameCatalog(),mode=gameMode(modeId);
   if(!engine||!catalog)return;
   const sourceKey=currentGameSourceKey(),sessionSeed=engine.nextSessionSeed?.(sourceKey,mode.id)||"session";
-  const questions=engine.selectQuestions(catalog,{subjects:mode.subjects,skills:mode.skills||[],preferredSkills:mode.preferredSkills||[],count:mode.count,seed:sessionSeed,skillStats:engine.loadLearning?.()||{}});
+  const questions=mode.id==="daily"?engine.selectDailyQuestions(catalog,{count:8,seed:sessionSeed,skillStats:engine.loadLearning(),pack}):engine.selectQuestions(catalog,{subjects:mode.subjects,skills:mode.skills||[],preferredSkills:mode.preferredSkills||[],count:mode.count,seed:sessionSeed,skillStats:engine.loadLearning?.()||{}});
   gameState={screen:"play",mode:mode.id,questions,index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,learningRow:null,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null,sourceKey,sessionSeed,learningEvents:[],comebackSucceeded:false,rewardStatus:"idle",rewardAwarded:0,rewardCurrency:"Study Stars",starBalance:0,rewardRevealAmount:0,rewardRevealScheduled:false,tries:0,misses:0,hints:0,retry:0,lastWrong:null};
   activateDueGameComeback();
   renderGames();bindScreen();
@@ -528,7 +532,7 @@ function settleStudyStarRewards(g=gameState){
     .catch(()=>{if(gameState===g){g.rewardStatus="error";renderGames();bindScreen();}});
 }
 function finishStudyGame(){
-  const g=gameState;markGameComebacksNextSession();g.screen="finish";saveGameRecord();settleStudyStarRewards(g);
+  const g=gameState;markGameComebacksNextSession();g.screen="finish";if(g.mode==="daily")window.ABVMStudyReview.complete();saveGameRecord();settleStudyStarRewards(g);
 }
 function advanceStudyGame(){
   const g=gameState;if(!g.answered)return;
