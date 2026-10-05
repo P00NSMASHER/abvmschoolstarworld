@@ -301,12 +301,18 @@ test("Today does not show Attend Mass before the verified Mass date",async({page
   await expect(page.locator(".today-panel .timeline")).not.toContainText(/\bMass\b/);
 });
 
-test("Today shows Attend Mass on the verified Mass date",async({page})=>{
-  await page.clock.setFixedTime(new Date("2026-10-07T12:00:00-04:00"));
-  await page.goto("/#today");
-  await expect(page.locator(".today-panel")).toBeVisible({timeout:10_000});
-  await expect(page.locator(".today-panel .task-list")).toContainText("Attend Mass");
-  await expect(page.locator(".today-panel .timeline")).toContainText(/Mass/);
+test("Today shows Attend Mass on the verified Mass date",async({page,browser})=>{
+  const source=await (await page.request.get("/data/study-pack.json")).json();
+  expect(source.pack.importantDates.some(item=>/Oct\. 7/i.test(item.date||"")&&/\bMass\b/i.test(item.label||""))).toBe(true);
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const fixturePage=await context.newPage();
+  await fixturePage.clock.setFixedTime(new Date("2026-10-07T12:00:00-04:00"));
+  await fixturePage.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:source}));
+  await fixturePage.goto("http://127.0.0.1:4173/#today");
+  await expect(fixturePage.locator(".today-panel")).toBeVisible({timeout:10_000});
+  await expect(fixturePage.locator(".today-panel .task-list")).toContainText("Attend Mass");
+  await expect(fixturePage.locator(".today-panel .timeline")).toContainText(/Mass/);
+  await context.close();
 });
 
 
