@@ -183,8 +183,21 @@ function taskPolicy(item){
   if(/parent|if participating|forms/.test(haystack))return{type:"parent-action",today:false,family:true};
   return{type:"current-action",today:true,family:true};
 }
-function taskRecordsForSurface(surface){
-  return getDerivedPack().homeworkRows.filter(record=>record.policy[surface]!==false);
+function hasVerifiedMassForDate(date){
+  const events=eventItemsForDate(date);
+  if(events.some(event=>kindClass(event)==="closed"||/\bno school\b/i.test(String(event?.label||""))))return false;
+  if(events.some(event=>/\bmass\b/i.test(String(event?.label||""))))return true;
+  const reminders=getDerivedPack().reminderRows;
+  if(reminders.some(row=>row.range&&date>=row.range[0]&&date<=row.range[1]&&/\bmass\b/i.test(String(row.text||""))))return true;
+  const day=WEEKDAY[date.getDay()].slice(0,3).toLowerCase();
+  return getDerivedPack().specials.some(item=>String(item.day||"").toLowerCase()===day&&/\bmass\b/i.test(String(item.label||"")));
+}
+function taskAppliesToDate(item,date){
+  if(!/^attend mass$/i.test(String(item?.task||"").trim()))return true;
+  return hasVerifiedMassForDate(date);
+}
+function taskRecordsForSurface(surface,date=today()){
+  return getDerivedPack().homeworkRows.filter(record=>record.policy[surface]!==false&&taskAppliesToDate(record.item,date));
 }
 function taskHtml(item,index){
   const done=checked(item,index);
@@ -336,7 +349,7 @@ function renderWeek(){
   const events=eventItemsForDate(selectedDay), lunch=lunchForDate(selectedDay), closed=events.some(e=>kindClass(e)==="closed");
   const picker=days.map(d=>'<button type="button" class="'+(sameDay(d,selectedDay)?"active":"")+'" data-day="'+d.toISOString()+'" aria-label="'+esc(fmtDate(d))+'" aria-pressed="'+(sameDay(d,selectedDay)?"true":"false")+'"><span>'+WEEKDAY[d.getDay()].slice(0,3)+'</span><strong>'+d.getDate()+'</strong></button>').join("");
   const eventRows=events.length?events.map(e=>'<div class="event-row"><time>'+esc((e.kind||"School").replace(/\b\w/g,m=>m.toUpperCase()))+'</time><div><strong>'+esc(e.label)+'</strong></div></div>').join(""):'<div class="event-row"><time>School</time><div><strong>No special school events are listed.</strong></div></div>';
-  const sourceWeek=isPackWeek(days), tasks=sourceWeek?(pack?.homework||[]):[];
+  const sourceWeek=isPackWeek(days), tasks=sourceWeek?(pack?.homework||[]).filter(item=>taskAppliesToDate(item,selectedDay)):[];
   const checklist=tasks.length?tasks.map(taskHtml).join(""):'<div class="week-empty"><strong>No checklist has been verified for this week yet.</strong><span>Calendar dates still appear below, and new homework will show here after the school source refreshes.</span></div>';
   const future=datedImportantEvents().filter(({date})=>date>selectedDay).slice(0,4).map(({item,date})=>({x:item,d:date}));
   const reminder=reminderForDate(selectedDay);
