@@ -1,9 +1,11 @@
+import {schoolDay} from "./study-model.mjs";
+import {learningSummaryMarkup} from "./study-experience.mjs";
 /** Child-facing presentation. Never copies, rewrites or transmits school data. */
 const destinations = Object.freeze({
   weekly: { label: 'This week', note: 'What we are learning', icon: 'book', tone: 'blue' },
-  cumulative: { label: 'Cumulative', note: 'Everything I have learned', icon: 'collection', tone: 'purple' },
+  cumulative: { label: 'All my learning', note: 'Everything I have learned', icon: 'collection', tone: 'purple' },
   star: { label: 'STAR practice', note: 'Math & reading skills', icon: 'spark', tone: 'green' },
-  games: { label: 'Study games', note: 'Make your own mix', icon: 'play', tone: 'orange' },
+  games: { label: 'Make a mix', note: 'Make your own mix', icon: 'play', tone: 'orange' },
 });
 const destinationKeys = Object.freeze(Object.keys(destinations));
 const subjects = Object.freeze({
@@ -88,7 +90,7 @@ export function createReadAloud(win) {
   return Object.freeze({ supported, read, stop, dispose });
 }
 
-export function prepareStudyRoom(host) {
+export function prepareStudyRoom(host, {engine, pack = {}, events = [], now = () => Date.now()} = {}) {
   const screen = host.closest('.study-screen');
   if (!screen) return { refresh() {}, dispose() {} };
   const doc = host.ownerDocument, win = doc.defaultView;
@@ -115,11 +117,22 @@ export function prepareStudyRoom(host) {
     const gameLink = legacy.querySelector('.study-games-cta');
     if (gameLink) shelf.after(gameLink);
   }
+  if (legacy && !legacy.querySelector('.room-adults')) {
+    const adults = doc.createElement('details');
+    adults.className = 'room-adults';
+    const title = doc.createElement('summary');
+    title.textContent = 'For grown-ups';
+    adults.append(title);
+    for (const node of [...legacy.children]) {
+      if (node !== sectionLabel && node !== shelf && !node.matches('.study-games-cta')) adults.append(node);
+    }
+    if (adults.children.length > 1) legacy.append(adults);
+  }
   if (sectionLabel) {
     const heading = sectionLabel.querySelector('p');
     const caption = sectionLabel.querySelector('span');
-    if (heading) heading.textContent = 'Explore a subject';
-    if (caption) caption.textContent = 'Tap a card to open your notes.';
+    if (heading) heading.textContent = 'Pick a subject';
+    if (caption) caption.textContent = 'Open your notes. Take one small step.';
   }
   screen.querySelectorAll('.study-accordion').forEach(card => {
     const summary = card.querySelector(':scope > summary');
@@ -132,6 +145,16 @@ export function prepareStudyRoom(host) {
     badge.innerHTML = roomIcon(icon);
     summary.prepend(badge);
   });
+  const spellingCard = screen.querySelector('#study-spelling');
+  const spellingTest = events.filter(e => /spelling/i.test(e.label || '') && e.date >= schoolDay(now())).sort((a,b) => a.date.localeCompare(b.date))[0];
+  const notes = (pack.subjects || []).find(s => /spelling/i.test(s.subject || ''));
+  const listedVowel = spellingTest?.label.match(/short\s+([aeiou])/i)?.[1];
+  const notesVowel = (notes?.topics || []).join(' ').match(/short\s+([aeiou])/i)?.[1];
+  if (spellingCard && listedVowel && notesVowel && listedVowel !== notesVowel && !spellingCard.querySelector('.room-coverage-note')) {
+    const notice=doc.createElement('p'); notice.className='room-coverage-note';
+    notice.textContent='Upcoming test: '+spellingTest.label+' ('+spellingTest.date+'). These saved notes cover an earlier vowel pattern. Check the current teacher list; these notes alone do not establish test coverage.';
+    spellingCard.querySelector(':scope > summary')?.after(notice);
+  }
   let disposed = false, focusToken = null, spokenQuestion = '';
   const readAloud = createReadAloud(win);
   const stopReading = readAloud.stop;
@@ -147,6 +170,15 @@ export function prepareStudyRoom(host) {
   host.addEventListener('click', rememberFocus, true);
   function refresh() {
     if (disposed || !host.isConnected) return;
+    const adults = legacy?.querySelector('.room-adults');
+    if (adults) {
+      let panel = adults.querySelector('[data-learning-panel]');
+      if (!panel) { panel=doc.createElement('div'); panel.dataset.learningPanel='true'; adults.prepend(panel); }
+      // Keep the disclosure's summary first for valid native details semantics.
+      const summary = adults.querySelector(':scope > summary'); if (summary) adults.prepend(summary);
+      const markup=learningSummaryMarkup(engine?.loadLearning?.() || {});
+      if(panel.innerHTML!==markup)panel.innerHTML=markup;
+    }
     const hub = host.querySelector('.study-hub');
     if (!hub) return;
     const active = hub.querySelector('.hub-tabs [aria-pressed="true"]')?.dataset.tab || 'weekly';
@@ -172,7 +204,10 @@ export function prepareStudyRoom(host) {
       summary.textContent = 'Grown-up test options';
       drawer.append(summary);
       options.before(drawer);
+      const restoreFocus = doc.activeElement === options;
+      if (restoreFocus) drawer.open = true;
       drawer.append(options);
+      if (restoreFocus) options.focus({preventScroll: true});
     }
     const round = hub.querySelector('.hub-round');
     if (round) {
@@ -187,7 +222,11 @@ export function prepareStudyRoom(host) {
         read.onclick = () => {
           if (disposed || !round.isConnected) return;
           const choices = [...round.querySelectorAll('[data-answer]')].map(x => x.textContent.trim());
-          readAloud.read([question.textContent || '', ...choices].join('. '));
+          if (!readAloud.read([question.textContent || '', ...choices].join('. '))) {
+            let status = round.querySelector('.room-speech-status');
+            if (!status) { status = doc.createElement('p'); status.className = 'room-speech-status'; status.setAttribute('role', 'status'); read.after(status); }
+            status.textContent = 'Reading aloud is unavailable here. You can still read the question and use a hint.';
+          }
         };
         question.before(read);
       }

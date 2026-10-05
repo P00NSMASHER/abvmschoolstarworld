@@ -7,7 +7,7 @@ const presentations = new WeakMap();
 export async function mountStudyHub(host, options = {}) {
   if (!host?.isConnected) return;
   presentations.get(host)?.dispose();
-  const presentation = prepareStudyRoom(host);
+  const presentation = prepareStudyRoom(host, options);
   presentations.set(host, presentation);
   try {
     await mountController(host, options);

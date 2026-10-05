@@ -1,3 +1,5 @@
+import {createStudyResourceLoader} from "./study-resources.mjs";
+import {adaptivePracticeRound, practiceIdentity} from "./study-experience.mjs";
 import {
   schoolDay,
   weekBounds,
@@ -29,27 +31,12 @@ const safeQuestion = (q) =>
   q.choices.includes(q.answer);
 const names = {
   weekly: "This week",
-  cumulative: "Cumulative",
+  cumulative: "All my learning",
   star: "STAR practice",
-  games: "Study games",
+  games: "Make a mix",
 };
-const resourceCache = new Map();
-async function resource(name) {
-  if (!resourceCache.has(name))
-    resourceCache.set(
-      name,
-      fetch("./data/" + name)
-        .then((r) => {
-          if (!r.ok) throw Error("Study materials could not load.");
-          return r.json();
-        })
-        .catch((e) => {
-          resourceCache.delete(name);
-          throw e;
-        }),
-    );
-  return resourceCache.get(name);
-}
+const resource = createStudyResourceLoader((...args) => fetch(...args));
+const activeMounts = new WeakMap();
 export function questionsForTest(test, questions) {
   const label = test.label.toLowerCase();
   if (/grammar|predicate|subject &/.test(label))
@@ -127,7 +114,10 @@ export async function mountStudyHub(
   host,
   { pack, catalog, events, engine, now = () => Date.now() } = {},
 ) {
-  if (!host.isConnected) return;
+  if (!host?.isConnected) return;
+  const mount = Symbol('study-mount');
+  activeMounts.set(host, mount);
+  const isCurrent = () => host.isConnected && activeMounts.get(host) === mount;
   if (!document.querySelector("link[data-study-hub]")) {
     const link = document.createElement("link");
     link.rel = "stylesheet";
@@ -175,7 +165,7 @@ export async function mountStudyHub(
       resource("study-archive.json"),
     ]);
   } catch {
-    if (host.isConnected) {
+    if (isCurrent()) {
       host.dataset.studyState = "error";
       host.innerHTML =
         '<div class="study-hub"><section class="hub-card hub-error"><p class="hub-eyebrow">STUDY COLLECTION</p><h3>Couldn’t open the full collection</h3><p role="status">Your current subject notes are still below. Check your connection and try again when you’re ready.</p><button class="hub-primary" type="button" data-retry>Try again</button></section></div>';
@@ -184,11 +174,11 @@ export async function mountStudyHub(
     }
     return;
   }
-  if (!host.isConnected) return;
+  if (!isCurrent()) return;
   // The publisher belongs beside its subject notes, not in the weekly hero.
   resource("religion-sources.json")
     .then((religion) => {
-      if (!host.isConnected) return;
+      if (!isCurrent()) return;
       const subject = host.parentElement.querySelector("#study-religion");
       if (!subject || subject.querySelector("[data-religion-review]")) return;
       const topics =
@@ -284,14 +274,16 @@ export async function mountStudyHub(
     const oldSeed = Number(getSaved("abvm-hub-round", 0));
     const seed = String((Number.isFinite(oldSeed) ? oldSeed : 0) + 1);
     save("abvm-hub-round", Number(seed));
+    const learning = engine?.loadLearning?.() || {};
     round = {
-      questions: (strict ? balancedTestRound : balancedRound)(
-        groups,
-        Math.max(8, groups.length * 4),
-        seed,
-      ),
+      questions: strict ? balancedTestRound(groups, 8, seed) : adaptivePracticeRound(groups, 8, seed, {
+        learning,
+        priority: skill => engine?.reviewPriority?.(learning, skill, now()) || 0,
+        recent: Array.isArray(getSaved("abvm-hub-recent:v1", [])) ? getSaved("abvm-hub-recent:v1", []) : [],
+      }),
       title,
     };
+    if (!strict) save("abvm-hub-recent:v1", [...(Array.isArray(getSaved("abvm-hub-recent:v1", [])) ? getSaved("abvm-hub-recent:v1", []) : []), ...round.questions.map(practiceIdentity)].slice(-64));
     index = 0;
     revealed = false;
     selected = null;
@@ -362,7 +354,7 @@ export async function mountStudyHub(
           (hinted
             ? "<p>" +
               escape(
-                q.hint || "Think through the example one step at a time.",
+                q.hint || "Look for the clue in the question. Try one step, then check it.",
               ) +
               "</p>"
             : "")
@@ -381,7 +373,7 @@ export async function mountStudyHub(
     );
   }
   function render() {
-    if (!host.isConnected) return;
+    if (!isCurrent()) return;
     const old = host.parentElement.querySelector("[data-study-legacy]");
     if (old) old.hidden = tab !== "weekly" || !!round;
     const bounds = weekBounds(now()),
@@ -493,6 +485,7 @@ export async function mountStudyHub(
         " questions · " +
         schoolwork.uploadedPhotoCount +
         ' schoolwork photos reviewed</p><p class="hub-caption">Revisit favorite lessons and keep earlier skills fresh.</p><button class="hub-primary" data-practice="cumulative">Practice the collection</button></section>' +
+        '<div class="hub-library-subjects" role="group" aria-label="Practice a saved subject">' + [...new Set(cumulative().map(q => q.subject))].map(subject => '<button type="button" data-library-subject="' + escape(subject) + '">Practice ' + escape(subject) + '</button>').join('') + '</div><p class="hub-caption">Saved schoolwork without a date stays in this collection, not in this week.</p>' +
         allLessons().map(lessonHtml).join("") +
         [...new Set(a.notes.map((n) => n.subject))]
           .map(
@@ -528,7 +521,7 @@ export async function mountStudyHub(
         ' original Grade 2 questions with hints and explanations.</p><div class="hub-actions"><button class="hub-subject-button hub-math" data-star="Math"><span aria-hidden="true">＋</span>Practice math</button><button class="hub-subject-button hub-reading" data-star="Reading / ELA"><span aria-hidden="true">Aa</span>Practice reading</button><button data-practice="star">Mix math & reading</button></div><small>STAR-style skill practice. These are not official STAR test questions and do not predict a STAR score.</small></section><div class="hub-card"><h3>Skills to explore</h3><p>Number sense, operations, shapes, measurement, time, money and data. Reading clues, vocabulary, phonics, sequence and comprehension.</p></div>';
     } else {
       content =
-        '<section class="hub-card hub-games"><p class="hub-eyebrow">MAKE IT YOURS</p><h3>Choose what to play</h3><fieldset><legend>Study material</legend>' +
+        '<section class="hub-card hub-games"><p class="hub-eyebrow">MAKE IT YOURS</p><h3>Make a practice mix</h3><fieldset><legend>Study material</legend>' +
         ["weekly", "cumulative", "star"]
           .map(
             (k) =>
@@ -547,7 +540,7 @@ export async function mountStudyHub(
         (format === "cards" ? "checked" : "") +
         '>Flip cards</label></fieldset><p>Selected sections get equal turns. Questions do not repeat within a round.</p><button class="hub-primary" data-play ' +
         (!picks.size ? "disabled" : "") +
-        '>Let’s play</button></section><a href="#games" class="hub-chapter">More subject games →</a>';
+        '>Let’s play</button></section><a href="#games" class="hub-chapter">Open Study games →</a>';
     }
     host.dataset.studyState = "ready";
     host.innerHTML =
@@ -590,6 +583,10 @@ export async function mountStudyHub(
           );
         }),
     );
+    host.querySelectorAll("[data-library-subject]").forEach(b => b.onclick = () => {
+      format = "quiz";
+      start([cumulative().filter(q => q.subject === b.dataset.librarySubject)], "Saved " + b.dataset.librarySubject + " practice");
+    });
     host.querySelectorAll("[data-star]").forEach(
       (b) =>
         (b.onclick = () => {
@@ -643,7 +640,7 @@ export async function mountStudyHub(
       completionUndo = null;
       completionMessage = "Your test list has been restored.";
       render();
-      host.querySelector("[data-complete-test]")?.focus({ preventScroll: true });
+      host.querySelector("[data-test],[data-test-single],[data-complete-test]")?.focus({ preventScroll: true });
     });
     host.querySelectorAll("[data-restore-test]").forEach((button) =>
       button.addEventListener("click", () => {
@@ -748,7 +745,7 @@ export async function mountStudyHub(
   let lastDay = schoolDay(now()),
     lastTests = JSON.stringify(nextTests(activeEvents(), now()));
   const refresh = () => {
-    if (!host.isConnected) {
+    if (!isCurrent()) {
       document.removeEventListener("visibilitychange", refresh);
       clearInterval(timer);
       return;
@@ -775,7 +772,7 @@ export async function mountStudyHub(
       signal: (() => {
         const c = new AbortController();
         const observer = new MutationObserver(() => {
-          if (!host.isConnected) {
+          if (!isCurrent()) {
             c.abort();
             observer.disconnect();
             clearInterval(timer);

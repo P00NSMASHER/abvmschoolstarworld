@@ -19,6 +19,8 @@ test('Weekly Learning shows only current skills from the last seven days without
     }));
   },{skills,now});
   await page.goto('/#study');
+  await expect(page.locator('#study-hub')).toHaveAttribute('data-study-state','ready');
+  await page.locator('.room-adults > summary').click();
   const card=page.getByRole('region',{name:'Study room'}).locator('section[aria-labelledby="weekly-learning-title"]');
   await expect(card).toBeVisible();
   await expect(card).toContainText('Strong today');
@@ -47,6 +49,8 @@ test('more recent practice evidence moves a skill back to Practice again',async(
     }));
   },{skill,now});
   await page.goto('/#study');
+  await expect(page.locator('#study-hub')).toHaveAttribute('data-study-state','ready');
+  await page.locator('.room-adults > summary').click();
   const card=page.locator('section[aria-labelledby="weekly-learning-title"]');
   const strong=card.locator('.notice-row').filter({hasText:'Strong today'});
   const practice=card.locator('.notice-row').filter({hasText:'Practice again'});

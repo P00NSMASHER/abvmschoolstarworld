@@ -1040,11 +1040,60 @@ function fallbackMath(variant,out){
     add(out,{
       id:row.id+"-v"+variant,subject:"Math",skill:row.skill,tier:"star-fallback",type:row.type,
       prompt:row.prompt,choices:shuffled(row.choices,row.id+variant),answer:row.answer,explanation:row.explanation,
-      hint:row.skill==="two-step-word-problem"?"Solve the first change, write the new amount, then solve the second change.":"Use the math relationship in the question before calculating.",
+      hint:({"addition-within-100":"Add tens, then ones. Trade ten ones for a ten if needed.","subtraction-within-100":"Subtract tens and ones, then check by adding back.","place-value":"Name the digit’s place before choosing its value.","compare-numbers":"Compare tens first, then ones when tens match.","time":"Count forward from the starting time in five-minute steps.","measurement":"Decide whether the ribbon becomes longer or shorter.","data-interpretation":"Compare only the two categories named. Find their difference.","two-step-word-problem":"Find the amount after the first change, then apply the second."})[row.skill],
       sourceFact:"Original Grade 2 STAR-aligned Math practice",dok:row.dok,difficulty:row.difficulty,
       wrongFeedback:row.wrongFeedback,misconception:row.misconception
     });
   }
+}
+
+/** Original grade-level practice. Never presented as current teacher material. */
+function extendedMath(out){
+  const cue={
+    "addition-within-100":"Add tens to tens and ones to ones. Trade ten ones for a ten if needed, then check.",
+    "subtraction-within-100":"Subtract tens and ones. When there are too few ones, trade one ten for ten ones.",
+    "place-value":"Read the position of the digit. Each step left is a place worth ten times as much.",
+    "compare-numbers":"Compare the highest place first. Only compare the next place when the digits match.",
+    "time":"Move the minute hand forward in five-minute steps. Keep track of the hour as you pass twelve.",
+    "measurement":"Decide whether the object gets longer or shorter. Keep the unit with your answer.",
+    "data-interpretation":"Compare the two groups named. Match pairs and count what is left over.",
+    "two-step-word-problem":"Draw the starting amount. Show the first change, then use that result for the second change."
+  };
+  const rows=[];
+  for(const [a,b] of [[26,17],[38,25],[47,16],[54,29]]){
+    const n=a+b;
+    rows.push({skill:"addition-within-100",prompt:`A box has ${a} pencils. Another box has ${b}. How many pencils are there altogether?`,answer:String(n),choices:[n,n-10,n+10].map(String),explanation:`Combine the amounts: ${a} + ${b} = ${n}. Check by subtracting ${b} from ${n}.`,type:"transfer"});
+  }
+  for(const [a,b] of [[52,18],[73,26],[61,34],[84,37]]){
+    const n=a-b;
+    rows.push({skill:"subtraction-within-100",prompt:`There are ${a} stickers. You use ${b}. How many stickers remain?`,answer:String(n),choices:[n,n+10,n-10].map(String),explanation:`Subtract the used stickers: ${a} − ${b} = ${n}. Check: ${n} + ${b} = ${a}.`,type:"transfer"});
+  }
+  for(const [n,d] of [[274,7],[583,8],[391,9],[846,4]]){
+    rows.push({skill:"place-value",prompt:`In the number ${n}, what is the value of the digit ${d}?`,answer:String(d*10),choices:[d*10,d,d*100].map(String),explanation:`The digit ${d} is in the tens place. ${d} tens have a value of ${d*10}.`,type:"direct"});
+  }
+  for(const [a,b,c] of [[218,281,128],[436,463,364],[652,625,562],[709,790,907]]){
+    const choices=[a,b,c].map(String);
+    rows.push({skill:"compare-numbers",prompt:`Which number is greatest: ${a}, ${b}, or ${c}?`,answer:String(Math.max(a,b,c)),choices,explanation:`Compare hundreds, then tens and ones as needed. ${Math.max(a,b,c)} is the greatest number.`,type:"direct"});
+  }
+  for(const [h,m,add] of [[3,10,20],[4,25,15],[5,40,25],[11,45,20]]){
+    const minutes=m+add,end=((h+Math.floor(minutes/60)-1)%12)+1;
+    const time=(hh,mm)=>`${hh}:${String(mm).padStart(2,"0")}`;
+    const answer=time(end,minutes%60),a=time(h,m),b=time(end,(minutes+10)%60);
+    rows.push({skill:"time",prompt:`You start reading at ${time(h,m)} and read for ${add} minutes. What time do you stop?`,answer,choices:[answer,a,b],explanation:`Count ${add} minutes forward from ${time(h,m)}. The clock reaches ${answer}.`,type:"transfer"});
+  }
+  for(const [a,b] of [[42,16],[55,18],[63,27],[74,28]]){
+    const n=a-b;
+    rows.push({skill:"measurement",prompt:`A strip of paper is ${a} centimeters long. You cut off ${b} centimeters. How long is the strip now?`,answer:`${n} centimeters`,choices:[n,a+b,n+10].map(n=>`${n} centimeters`),explanation:`Cutting makes the strip shorter: ${a} − ${b} = ${n} centimeters.`,type:"transfer"});
+  }
+  for(const [a,b] of [[12,7],[15,9],[18,11],[14,6]]){
+    const n=a-b;
+    rows.push({skill:"data-interpretation",prompt:`A chart shows ${a} votes for drawing and ${b} for singing. How many more votes are for drawing?`,answer:String(n),choices:[n,a+b,a].map(String),explanation:`Find the difference, not the total: ${a} − ${b} = ${n} more votes.`,type:"transfer"});
+  }
+  for(const [a,b,c] of [[19,12,8],[23,15,9],[31,14,7],[28,16,9]]){
+    const n=a+b-c;
+    rows.push({skill:"two-step-word-problem",prompt:`You have ${a} beads. A friend gives you ${b} more. You use ${c} on a bracelet. How many beads are left?`,answer:String(n),choices:[n,a+b,a-c].map(String),explanation:`First ${a} + ${b} = ${a+b}. Then ${a+b} − ${c} = ${n}. Both changes matter.`,type:"reasoning"});
+  }
+  rows.forEach((row,i)=>add(out,{...row,id:"grade2-math-variety-"+i,choices:shuffled(row.choices,"grade2-math-variety-"+i),tier:"star-fallback",subject:"Math",hint:cue[row.skill],sourceFact:"Original Grade 2 skill practice; not a teacher test question or official STAR item.",dok:row.type==="direct"?1:2,difficulty:row.type==="reasoning"?3:2,wrongFeedback:cue[row.skill],misconception:"operation-or-place-value"}));
 }
 function validateQuestion(question){
   const issues=[];
@@ -1117,6 +1166,7 @@ function buildCatalog(pack,{sourceKey}={}){
 
   fallbackReading(variant,questions);
   fallbackMath(variant,questions);
+  extendedMath(questions);
   const deduped=[],seen=new Set();
   for(const question of questions){
     const signature=question.prompt+"|"+question.answer;
@@ -1339,14 +1389,13 @@ function pickBalanced(pool,count,seed,skillStats,preferredSkills=[],recentKeys=n
     let candidate=preferredPool[0];
     const representedTypes=new Set(selected.filter(q=>q.skill===candidate.skill).map(q=>q.questionType));
     if(representedTypes.has(candidate.questionType)){
-      const alternate=fresh.find(q=>q.skill===candidate.skill&&!representedTypes.has(q.questionType))
-        ||diversityPool.find(q=>q.skill===candidate.skill&&!representedTypes.has(q.questionType));
+      // Variety must not reintroduce recent items when fresh alternatives exist.
+      const alternate=preferredPool.find(q=>q.skill===candidate.skill&&!representedTypes.has(q.questionType));
       if(alternate)candidate=alternate;
     }
     const last=selected[selected.length-1],before=selected[selected.length-2];
     if(last&&before&&last.questionType===before.questionType){
-      const alternate=fresh.find(q=>q.questionType!==last.questionType)
-        ||diversityPool.find(q=>q.questionType!==last.questionType);
+      const alternate=preferredPool.find(q=>q.questionType!==last.questionType);
       if(alternate)candidate=alternate;
     }
     selected.push(candidate);
