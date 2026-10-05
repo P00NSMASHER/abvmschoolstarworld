@@ -161,7 +161,7 @@ test('Step 9 freezes reward identity and advances all PWA assets together',async
   expect(app).toContain('sourceKey,sessionSeed,learningEvents');
   expect(app).toContain('studyStarRoundId({sourcePack:sourceKey,mode:g.mode,sessionSeed:g.sessionSeed})');
   expect(app).toContain('commitStudyStarRewards({sourcePack:sourceKey,mode:g.mode,sessionSeed:g.sessionSeed,roundId,completed:true,comebackSucceeded:!!g.comebackSucceeded})');
-  expect(app).toContain('tries:0,misses:0,hints:0,retry:0,lastWrong:null');
+  expect(app).toContain('tries:0,misses:0,hints:0,retry:0,wrong:[]');
   expect(app).toContain('./study-games.js?v=94');
   expect(app).toContain('./study-games-view.js?v=6');
   const styleVersion=index.match(/\.\/styles\.css\?v=(\d+)/)?.[1];
