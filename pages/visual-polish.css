@@ -1,7 +1,7 @@
 /* Shared finishing touches. Content and navigation keep their established layout. */
 .app-header h1{font-weight:750;color:#123e70}
 .app-header>div>p{color:#24629a;font-weight:750;letter-spacing:.09em}
-.screen .family-hero{background:linear-gradient(125deg,#edf6ff,#f1edff);border-color:#dbe5f3}
+.screen .family-hero{padding:18px;margin-bottom:12px;background:linear-gradient(125deg,#edf6ff,#f1edff);border-color:#dbe5f3}
 .screen .family-stats{gap:10px}
 .screen .family-stats>div{background:#fff;border:1px solid #e3eaf3;border-radius:18px;padding:15px}
 .screen .family-stats strong{color:#255c91}
