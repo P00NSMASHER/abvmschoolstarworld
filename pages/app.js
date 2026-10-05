@@ -183,9 +183,18 @@ function taskPolicy(item){
   if(/parent|if participating|forms/.test(haystack))return{type:"parent-action",today:false,family:true};
   return{type:"current-action",today:true,family:true};
 }
+function hasVerifiedMassForDate(date){
+  const events=eventItemsForDate(date);
+  if(events.some(event=>kindClass(event)==="closed"||/\bno school\b/i.test(String(event?.label||""))))return false;
+  if(events.some(event=>/\bmass\b/i.test(String(event?.label||""))))return true;
+  const reminders=getDerivedPack().reminderRows;
+  if(reminders.some(row=>row.range&&date>=row.range[0]&&date<=row.range[1]&&/\bmass\b/i.test(String(row.text||""))))return true;
+  const day=WEEKDAY[date.getDay()].slice(0,3).toLowerCase();
+  return getDerivedPack().specials.some(item=>String(item.day||"").toLowerCase()===day&&/\bmass\b/i.test(String(item.label||"")));
+}
 function taskAppliesToDate(item,date){
   if(!/^attend mass$/i.test(String(item?.task||"").trim()))return true;
-  return eventItemsForDate(date).some(event=>/\bmass\b/i.test(String(event?.label||"")));
+  return hasVerifiedMassForDate(date);
 }
 function taskRecordsForSurface(surface,date=today()){
   return getDerivedPack().homeworkRows.filter(record=>record.policy[surface]!==false&&taskAppliesToDate(record.item,date));
