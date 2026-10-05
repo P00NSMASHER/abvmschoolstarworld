@@ -10,6 +10,22 @@ test('valid pack accounts for every photo and rejects answer/date/privacy corrup
  assert.deepEqual(validateSchoolwork(pack(),{requireManifest:true}),{lessons:1,questions:1,photos:1});
  for(const mutate of [p=>p.lessons[0].questions[0].answer='9',p=>p.lessons[0].studiedOn='2026-02-30',p=>p.uploadedPhotoCount=2,p=>p.lessons[0].studentName='Private',p=>p.lessons[0].questions.push({...p.lessons[0].questions[0],id:'q-2'})]){const p=pack();mutate(p);assert.throws(()=>validateSchoolwork(p));}
 });
+test('public schoolwork schema rejects unknown keys at every object level',()=>{
+ const cases=[
+  ['root student metadata',p=>p.childName='Private'],
+  ['root nested metadata',p=>p.metadata={studentFullName:'Private'}],
+  ['lesson private variant',p=>p.lessons[0].studentFullName='Private'],
+  ['lesson OCR variant',p=>p.lessons[0].rawOcrTranscript='Private worksheet text'],
+  ['question teacher mark',p=>p.lessons[0].questions[0].teacherMark='A+'],
+  ['question answer-sheet variant',p=>p.lessons[0].questions[0].answerSheetText='Private response'],
+  ['manifest private URL',p=>p.sourceManifest[0].originalPrivateUrl='https://private.example/item'],
+  ['manifest nested metadata',p=>p.sourceManifest[0].metadata={owner:'Private'}],
+ ];
+ for(const [label,mutate] of cases){
+  const p=pack();mutate(p);
+  assert.throws(()=>validateSchoolwork(p,{requireManifest:true}),/unknown field/,label);
+ }
+});
 test('semantic rephotographs are accounted without duplicating lesson content',()=>{
  const p=pack();p.sourceManifest.push({id:'photo-2.jpeg',sha256:'b'.repeat(64),status:'duplicate',duplicateOf:'photo-1.jpeg',reason:'Same worksheet rephotographed'});p.uploadedPhotoCount=2;p.lessons[0].sources.push('photo-2.jpeg');assert.equal(validateSchoolwork(p).photos,2);
  delete p.sourceManifest[1].reason;assert.throws(()=>validateSchoolwork(p));
