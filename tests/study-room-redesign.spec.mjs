@@ -113,3 +113,71 @@ test('collection failure retains source notes and daily practice without an uplo
   await expect(page.locator('.hub-error [data-retry]')).toBeVisible();
   await expect(page.locator('input[type="file"]')).toHaveCount(0);
 });
+
+
+test('wrong Study Room answers stay rejected and do not consume another attempt',async({page})=>{
+  await openRoom(page);
+  await page.locator('.hub-tabs [data-tab="star"]').click();
+  await page.locator('[data-star="Math"]').click();
+  await expect(page.locator('.hub-round')).toBeVisible();
+
+  const prompt=await page.locator('.hub-round h3').textContent();
+  const row=await page.evaluate(async currentPrompt=>{
+    const envelope=await fetch('./data/study-pack.json',{cache:'no-store'}).then(r=>r.json());
+    const sourceKey=window.ABVMStudyGames.sourceKeyFromEnvelope(envelope.pack,envelope);
+    const catalog=window.ABVMStudyGames.buildCatalog(envelope.pack,{sourceKey});
+    const {buildStarBank}=await import('./star-practice.mjs');
+    const q=[...catalog.questions.filter(item=>item.tier==='star-fallback'),...buildStarBank()]
+      .find(item=>item.prompt===currentPrompt);
+    return q?{answer:q.answer,choices:q.choices,skill:q.skill}:null;
+  },prompt);
+  expect(row).not.toBeNull();
+  const wrongs=row.choices.map((choice,index)=>choice!==row.answer?index:-1).filter(index=>index>=0);
+  const correct=row.choices.indexOf(row.answer);
+  expect(wrongs.length).toBeGreaterThanOrEqual(1);
+
+  const firstWrong=page.locator('[data-answer]').nth(wrongs[0]);
+  await firstWrong.click();
+  await expect(firstWrong).toBeDisabled();
+  await expect(firstWrong).toHaveClass(/hub-rejected/);
+  await expect(page.locator('.hub-try')).toContainText('Try another');
+  await expect(page.locator('[data-next]')).toHaveCount(0);
+
+  await firstWrong.evaluate(button=>button.click());
+  await expect(page.locator('[data-next]')).toHaveCount(0);
+
+  const correctButton=page.locator('[data-answer]').nth(correct);
+  await correctButton.click();
+  await expect(page.locator('.hub-feedback-correct')).toBeVisible();
+  await expect(page.locator('[data-next]')).toBeVisible();
+  await expect(firstWrong).toBeDisabled();
+});
+
+test('test completion has immediate Undo and survives reload with a restore control',async({page})=>{
+  await page.addInitScript(()=>localStorage.removeItem('abvm-completed-tests'));
+  await openRoom(page);
+  const prep=page.locator('.hub-prep');
+  const original=await prep.locator('h3').textContent();
+  expect(original?.trim()).toBeTruthy();
+
+  const grownups=page.locator('.room-test-options');
+  await expect(grownups).toBeVisible();
+  await grownups.locator('summary').click();
+  await page.locator('[data-complete-test]').click();
+  await expect(page.locator('.hub-undo')).toContainText('marked finished');
+  await expect(page.locator('[data-undo-test]')).toBeVisible();
+  await page.locator('[data-undo-test]').click();
+  await expect(page.locator('.hub-undo')).toContainText('restored');
+  await expect(prep.locator('h3')).toHaveText(original||'');
+
+  await page.locator('.room-test-options summary').click();
+  await page.locator('[data-complete-test]').click();
+  await page.reload();
+  await expect(page.locator('#study-hub')).toHaveAttribute('data-study-state','ready',{timeout:15000});
+  const hidden=page.locator('.hub-completed-tests');
+  await expect(hidden).toBeVisible();
+  await hidden.locator('summary').click();
+  await expect(hidden.locator('[data-restore-test]').first()).toBeVisible();
+  await hidden.locator('[data-restore-test]').first().click();
+  await expect(page.locator('.hub-prep h3')).toHaveText(original||'');
+});
