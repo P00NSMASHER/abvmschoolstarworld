@@ -390,7 +390,7 @@ export async function mountStudyHub(
       completedUpcoming = allEvents.filter(
         (t) => doneKeys.has(t.date + "|" + t.label) && t.date >= schoolDay(now()),
       );
-    const groups = tests.map((t) => {
+    const primaryGroups = tests.map((t) => {
       // Current class material leads. Only an explicit chapter/grammar focus
       // makes undated matching worksheets relevant to this test.
       const focused = /chapter\s*\d+|grammar|predicate/i.test(t.label)
@@ -398,7 +398,17 @@ export async function mountStudyHub(
         : [];
       return questionsForTest(t, unique([...weekly(), ...focused]));
     });
-    const missing = tests.filter((t, i) => !groups[i].length),
+    // A named test may use the original Grade 2 bank only when the same
+    // test-mapping function finds an exact subject/skill match. The UI labels
+    // that fallback so grade-level practice is never mistaken for teacher
+    // supplied test material.
+    const groups = tests.map((t, i) =>
+      primaryGroups[i].length ? primaryGroups[i] : questionsForTest(t, star),
+    );
+    const fallbackTests = tests.filter(
+        (t, i) => !primaryGroups[i].length && groups[i].length,
+      ),
+      missing = tests.filter((t, i) => !groups[i].length),
       supported = tests.map((t, i) => ({ t, i })).filter(({ i }) => groups[i].length);
     let content = "";
     if (round) content = renderRound();
@@ -437,6 +447,11 @@ export async function mountStudyHub(
               ? "A little practice for each subject, shared equally."
               : "A short practice round to feel ready.") +
             "</p>" +
+            (fallbackTests.length
+              ? '<p class="hub-caption hub-fallback-note">Grade-level skill practice is used for ' +
+                fallbackTests.map((t) => escape(t.label)).join(", ") +
+                ' because no reviewed test-specific question bank is available yet.</p>'
+              : "") +
             '<div class="hub-prep-actions">' +
             (missing.length
               ? '<p class="hub-caption">Review the teacher notes below for ' +
