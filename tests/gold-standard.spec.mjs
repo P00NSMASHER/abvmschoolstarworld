@@ -173,7 +173,7 @@ test("Study Games uses the StarBlox-style equivalent question engine",async({pag
   expect(await page.locator(".game-answer").count()).toBeGreaterThanOrEqual(2);
 
   for(let attempt=0;attempt<3&&await page.locator(".game-next").count()===0;attempt++){
-    await page.locator(".game-answer").first().click();
+    await page.locator(".game-answer:not(:disabled)").first().click();
     await expect(page.locator(".game-feedback")).toBeVisible();
   }
   await expect(page.locator(".game-next")).toBeVisible();
