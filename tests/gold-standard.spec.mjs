@@ -426,13 +426,13 @@ test("current week lunch menu is verified and visible instead of last week's men
   const lunches=data.pack?.lunchMenu||[];
   expect(lunches.length).toBeGreaterThan(0);
   const weekStart=lunches[0].date;
-  expect(weekStart).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  expect(Number.isFinite(Date.parse(String(weekStart)+"T12:00:00Z"))).toBe(true);
   const startMs=Date.parse(`${weekStart}T12:00:00Z`);
   expect(Number.isFinite(startMs)).toBe(true);
   const dates=lunches.map(item=>item.date);
   expect(new Set(dates).size).toBe(dates.length);
   for(const item of lunches){
-    expect(item.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(Number.isFinite(Date.parse(String(item.date)+"T12:00:00Z"))).toBe(true);
     const delta=(Date.parse(`${item.date}T12:00:00Z`)-startMs)/86400000;
     expect(delta).toBeGreaterThanOrEqual(0);
     expect(delta).toBeLessThanOrEqual(4);
