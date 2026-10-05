@@ -178,7 +178,7 @@ test('Study Hub loading shell keeps the first legacy action stable',async({page}
       await new Promise(resolve=>setTimeout(resolve,700));
       await route.continue();
     });
-    await page.goto('/#study');
+    await page.goto('/?study-loading-fixture='+viewport.width+'#study');
     const host=page.locator('#study-hub');
     await expect(host).toHaveAttribute('data-study-state','loading',{timeout:10_000});
     await expect(host.locator('[role="status"]')).toContainText('Opening your study collection');
