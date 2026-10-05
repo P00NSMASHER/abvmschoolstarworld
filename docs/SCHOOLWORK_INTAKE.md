@@ -72,6 +72,26 @@ lesson. Each lesson requires `id`, `title`, `subject`, `sources`, `skills`, `not
 Religion lessons may include an exact integer `chapter`. Every question requires
 an ID, subject, skill, prompt, answer, choices, explanation, sourceFact and provenance.
 
+Public JSON is fail-closed by object shape. The validator permits only these
+intentional keys:
+
+- root: `schemaVersion`, `uploadedPhotoCount`, `distinctWorksheetNote`,
+  `lessons`, `sourceManifest`
+- lesson: `id`, `title`, `subject`, `sources`, `skills`, `notes`,
+  `studiedOn`, `addedOn`, `dateStatus`, optional `chapter`, `questions`
+- question: `id`, `subject`, `skill`, `prompt`, `answer`, `choices`,
+  `explanation`, optional `hint`, `sourceFact`, optional `tier`,
+  `questionType`, `difficulty`, `dok`, `domain`, `standards`, and
+  `provenance`
+- manifest source: `id`, `sha256`, `status`, optional `duplicateOf`,
+  optional `reason`
+
+Any unknown key at those levels is rejected rather than silently published. This
+blocks accidental metadata variants such as alternate student-name fields, raw OCR
+transcripts, answer-sheet text, teacher marks, private URLs, or nested metadata
+objects. This structural gate does not prove that an allowed free-text value is
+private-data-free, so the manual value-level privacy diff review remains required.
+
 Manifest statuses:
 
 - `integrated`: the source is linked to a lesson.
