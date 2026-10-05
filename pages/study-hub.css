@@ -123,6 +123,16 @@
 .hub-answers .hub-correct::after { content: '✓'; margin-left: auto; font-weight: 750; }
 .hub-answers .hub-incorrect { background: #fff4ed; border-color: #b8855a; color: #784927; }
 .hub-answers .hub-incorrect::after { content: '↻'; margin-left: auto; }
+.hub-answers .hub-rejected { background: #fff7f1; border-color: #c7956c; color: #70472a; opacity: 1; }
+.hub-answers .hub-rejected::after { content: 'Tried'; margin-left: auto; font-size: 13px; font-weight: 700; color: #875f43; }
+.hub-try { background: #fff8f2; border: 1px solid #ead2bd; }
+.hub-try strong { color: #70472a; }
+.hub-undo { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border: 1px solid #dbe3f2; border-radius: 16px; background: #f7f9ff; font-size: 14px; }
+.hub-undo > span { min-width: 0; }
+.study-hub .hub-undo button { min-height: 44px; flex: 0 0 auto; }
+.hub-completed-tests { padding: 16px 18px; border: 1px solid #e0e5ee; border-radius: 18px; background: #fbfcff; }
+.hub-completed-tests > summary { color: #52617a; }
+.hub-completed-tests .hub-text-button { display: flex; width: 100%; justify-content: flex-start; min-height: 44px; padding-inline: 0; }
 .hub-feedback { padding: 18px; margin: 18px 0; border-radius: 16px; background: #f0f3fb; }
 .hub-feedback p { margin-bottom: 0; }
 .hub-feedback .room-feedback-title { margin: 0 0 8px; font-weight: 700; color: #35496c; }
