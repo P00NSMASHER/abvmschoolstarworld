@@ -76,7 +76,11 @@ test('focused practice supports explicit read-aloud without recording an answer'
   expect(await page.evaluate(()=>window.__roomSpeech.spoken[0])).toContain(prompt);
   expect(await page.evaluate(()=>localStorage.getItem('abvm-study-learning:v2'))).toBe(before);
   await expect(page.locator('.hub-feedback')).toHaveCount(0);
-  await page.locator('[data-answer]').first().click();
+  const answer=await visibleAnswer(page);
+  expect(answer).not.toBeNull();
+  const correctIndex=answer.choices.indexOf(answer.answer);
+  expect(correctIndex).toBeGreaterThanOrEqual(0);
+  await page.locator('[data-answer]').nth(correctIndex).click();
   await expect(page.locator('.room-feedback-title')).toBeVisible();
   await expect(page.locator('[data-next]')).toBeVisible();
   await info.attach('study-room-practice',{body:await page.screenshot({fullPage:true}),contentType:'image/png'});
@@ -114,28 +118,50 @@ test('collection failure retains source notes and daily practice without an uplo
   await expect(page.locator('input[type="file"]')).toHaveCount(0);
 });
 
+// Resolve the presented answer from the unchanged school/fallback banks, not
+// from an assumed answer position or the controller's private state.
+async function visibleAnswer(page){
+  const prompt=await page.locator('.hub-round h3').textContent();
+  return page.evaluate(async currentPrompt=>{
+    const envelope=await fetch('./data/study-pack.json',{cache:'no-store'}).then(r=>r.json());
+    const engine=window.ABVMStudyGames;
+    const catalog=engine.buildCatalog(envelope.pack,{sourceKey:engine.sourceKeyFromEnvelope(envelope.pack,envelope)});
+    const {buildStarBank}=await import('./star-practice.mjs');
+    const choices=[...document.querySelectorAll('[data-answer]')].map(b=>b.textContent.trim());
+    const q=[...catalog.questions.filter(item=>item.tier==='star-fallback'),...buildStarBank()]
+      .find(item=>item.prompt===currentPrompt&&item.choices.length===choices.length&&item.choices.every(c=>choices.includes(c)));
+    return q?{answer:q.answer,choices,skill:q.skill}:null;
+  },prompt);
+}
+
+// Controlled event fixtures make recovery assertions independent of a normal
+// teacher-week rollover. Other screen/geometry tests still use unmodified data.
+async function controlledTests(page,events,{emptyBanks=false}={}){
+  const source=await (await page.request.get('/data/study-pack.json')).json();
+  const fixture=structuredClone(source);
+  fixture.pack.importantDates=events;
+  if(emptyBanks){
+    fixture.pack.contentPipeline={...fixture.pack.contentPipeline,skills:[],questions:[]};
+    fixture.pack.recentReviewPipeline={...fixture.pack.recentReviewPipeline,skills:[],questions:[]};
+    const work=await (await page.request.get('/data/schoolwork.json')).json();
+    const archive=await (await page.request.get('/data/study-archive.json')).json();
+    await page.route('**/data/schoolwork.json*',route=>route.fulfill({json:{...work,lessons:[],uploadedPhotoCount:0}}));
+    await page.route('**/data/study-archive.json*',route=>route.fulfill({json:{...archive,questions:[],notes:[],vocabulary:[]}}));
+  }
+  await page.clock.setFixedTime(new Date('2026-10-05T16:00:00Z'));
+  await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({json:fixture}));
+}
 
 test('wrong Study Room answers stay rejected and do not consume another attempt',async({page})=>{
   await openRoom(page);
   await page.locator('.hub-tabs [data-tab="star"]').click();
   await page.locator('[data-star="Math"]').click();
   await expect(page.locator('.hub-round')).toBeVisible();
-
-  const prompt=await page.locator('.hub-round h3').textContent();
-  const row=await page.evaluate(async currentPrompt=>{
-    const envelope=await fetch('./data/study-pack.json',{cache:'no-store'}).then(r=>r.json());
-    const sourceKey=window.ABVMStudyGames.sourceKeyFromEnvelope(envelope.pack,envelope);
-    const catalog=window.ABVMStudyGames.buildCatalog(envelope.pack,{sourceKey});
-    const {buildStarBank}=await import('./star-practice.mjs');
-    const q=[...catalog.questions.filter(item=>item.tier==='star-fallback'),...buildStarBank()]
-      .find(item=>item.prompt===currentPrompt);
-    return q?{answer:q.answer,choices:q.choices,skill:q.skill}:null;
-  },prompt);
+  const row=await visibleAnswer(page);
   expect(row).not.toBeNull();
   const wrongs=row.choices.map((choice,index)=>choice!==row.answer?index:-1).filter(index=>index>=0);
   const correct=row.choices.indexOf(row.answer);
   expect(wrongs.length).toBeGreaterThanOrEqual(1);
-
   const firstWrong=page.locator('[data-answer]').nth(wrongs[0]);
   await firstWrong.click();
   await expect(firstWrong).toBeDisabled();
@@ -148,40 +174,35 @@ test('wrong Study Room answers stay rejected and do not consume another attempt'
   }));
   expect(focusedAfterWrong.answer).not.toBeNull();
   expect(focusedAfterWrong.disabled).toBe(false);
-
   await firstWrong.evaluate(button=>button.click());
   await expect(page.locator('[data-next]')).toHaveCount(0);
-
-  const correctButton=page.locator('[data-answer]').nth(correct);
-  await correctButton.click();
+  await page.locator('[data-answer]').nth(correct).click();
   await expect(page.locator('.hub-feedback-correct')).toBeVisible();
   await expect(page.locator('[data-next]')).toBeVisible();
   await expect(firstWrong).toBeDisabled();
 });
 
 test('test completion has immediate Undo and survives reload with a restore control',async({page})=>{
+  await controlledTests(page,[
+    {date:'Wednesday, Oct. 7',label:'Reading',kind:'test'},
+    {date:'Friday, Oct. 9',label:'Grammar (subject & predicate)',kind:'test'}
+  ]);
   await page.goto('/#today');
   await page.evaluate(()=>localStorage.removeItem('abvm-completed-tests'));
   await openRoom(page);
   const prep=page.locator('.hub-prep');
   const original=await prep.locator('h3').textContent();
-  expect(original?.trim()).toBeTruthy();
-
+  expect(original?.trim()).toBe('Reading');
   const grownups=page.locator('.room-test-options');
   await expect(grownups).toBeVisible();
   await grownups.locator('summary').click();
   await page.locator('[data-complete-test]').click();
   await expect(page.locator('.hub-undo')).toContainText('marked finished');
   await expect(page.locator('[data-undo-test]')).toBeVisible();
-  // The real Oct. 9 spelling test currently has no reviewed test-specific bank.
-  // It may use only exact-skill Grade 2 fallback items, and that substitution
-  // must be disclosed rather than passed off as teacher-authored test material.
-  await expect(page.locator('.hub-fallback-note')).toContainText('Spelling (short i / long i)');
-  await expect(page.locator('.hub-fallback-note')).toContainText('Grade-level skill practice');
+  await expect(prep.locator('h3')).toHaveText('Grammar (subject & predicate)');
   await page.locator('[data-undo-test]').click();
   await expect(page.locator('.hub-undo')).toContainText('restored');
   await expect(prep.locator('h3')).toHaveText(original||'');
-
   await page.locator('.room-test-options summary').click();
   await page.locator('[data-complete-test]').click();
   await page.reload();
@@ -192,4 +213,28 @@ test('test completion has immediate Undo and survives reload with a restore cont
   await expect(hidden.locator('[data-restore-test]').first()).toBeVisible();
   await hidden.locator('[data-restore-test]').first().click();
   await expect(page.locator('.hub-prep h3')).toHaveText(original||'');
+});
+
+test('named fallback is disclosed and never hides another unsupported same-day test',async({page})=>{
+  // Explicit edge-case fixture, not a claim about a future teacher posting.
+  await controlledTests(page,[
+    {date:'Friday, Oct. 9',label:'Spelling (short i / long i)',kind:'test'},
+    {date:'Friday, Oct. 9',label:'History',kind:'test'}
+  ],{emptyBanks:true});
+  await openRoom(page);
+  await expect(page.locator('.hub-fallback-note')).toContainText('Spelling (short i / long i)');
+  await expect(page.locator('.hub-fallback-note')).toContainText('Grade-level skill practice');
+  await expect(page.locator('.hub-prep')).toContainText('Review the teacher notes below for History');
+  await expect(page.locator('[data-test-single]')).toHaveCount(1);
+  await expect(page.locator('[data-test-single]')).toContainText('Spelling (short i / long i)');
+  await expect(page.locator('[data-test]')).toHaveCount(0);
+  await page.locator('[data-test-single]').click();
+  await expect(page.locator('.hub-round')).toBeVisible();
+  const prompt=await page.locator('.hub-round h3').textContent();
+  const matched=await page.evaluate(async text=>{
+    const {buildStarBank}=await import('./star-practice.mjs');
+    const {questionsForTest}=await import('./study-hub.mjs');
+    return questionsForTest({label:'Spelling (short i / long i)'},buildStarBank()).some(q=>q.prompt===text);
+  },prompt);
+  expect(matched).toBe(true);
 });
