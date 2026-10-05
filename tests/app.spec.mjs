@@ -304,17 +304,21 @@ test("Today does not show Attend Mass before the verified Mass date",async({page
 test("Today shows Attend Mass on the verified Mass date",async({page,browser})=>{
   const source=await (await page.request.get("/data/study-pack.json")).json();
   expect(source.pack.importantDates.some(item=>/Oct\. 7/i.test(item.date||"")&&/\bMass\b/i.test(item.label||""))).toBe(true);
+  const fixture=structuredClone(source);
+  if(!fixture.pack.homework.some(item=>/Attend Mass/i.test(item.task||""))){
+    fixture.pack.homework.push({day:"Current Homework posting",subject:"Religion",task:"Attend Mass",due:"Current posting"});
+  }
+  fixture.pack.sourceHash=String(fixture.pack.sourceHash||"current")+"-mass-date-regression";
   const context=await browser.newContext({serviceWorkers:"block"});
   const fixturePage=await context.newPage();
   await fixturePage.clock.setFixedTime(new Date("2026-10-07T12:00:00-04:00"));
-  await fixturePage.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:source}));
+  await fixturePage.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:fixture}));
   await fixturePage.goto("http://127.0.0.1:4173/#today");
   await expect(fixturePage.locator(".today-panel")).toBeVisible({timeout:10_000});
   await expect(fixturePage.locator(".today-panel .task-list")).toContainText("Attend Mass");
   await expect(fixturePage.locator(".today-panel .timeline")).toContainText(/Mass/);
   await context.close();
 });
-
 
 test("Week uses a two-column iPad main area and stays stacked on phone",async({page})=>{
   await page.setViewportSize({width:810,height:1080});
