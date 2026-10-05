@@ -356,7 +356,7 @@ export async function mountStudyHub(
         : '<button class="hub-primary" data-reveal>Turn card over</button>') +
       (!revealed
         ? (wrong.size
-            ? '<div class="hub-feedback hub-try" role="status"><strong>Not quite. Try another.</strong><p>The answer you tried stays marked so you can focus on the choices left.</p></div>'
+            ? '<div class="hub-feedback hub-try" role="status" tabindex="-1"><strong>Not quite. Try another.</strong><p>The answer you tried stays marked so you can focus on the choices left.</p></div>'
             : "") +
           "<button data-hint>Show a hint</button>" +
           (hinted
@@ -368,7 +368,7 @@ export async function mountStudyHub(
             : "")
         : '<div class="hub-feedback ' +
           (q.choices[selected] === q.answer ? "hub-feedback-correct" : "hub-feedback-learn") +
-          '" role="status"><strong>' +
+          '" role="status" tabindex="-1"><strong>' +
           escape(q.answer) +
           "</strong><p>" +
           escape(q.explanation) +
