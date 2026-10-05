@@ -433,7 +433,7 @@ test("Study Games loads lazily and starts a playable round",async({page})=>{
   expect(await page.locator(".game-answer").count()).toBe(3);
 });
 
-test("Family uses a two-column iPad layout and stays stacked on phone",async({page})=>{
+test("Family prioritizes full-width actions with two-column iPad notices and stacked phone cards",async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await page.goto("/#family");
   await expect(page.locator(".family-actions-card")).toBeVisible({timeout:10_000});
@@ -443,16 +443,16 @@ test("Family uses a two-column iPad layout and stays stacked on phone",async({pa
   const notices=await page.locator('[aria-labelledby="family-current-notices"]').boundingBox();
   const more=await page.locator(".unofficial-note").boundingBox();
   for(const box of [hero,stats,actions,notices,more])expect(box).not.toBeNull();
-  expect(Math.abs(actions.y-notices.y)).toBeLessThan(4);
-  expect(notices.x).toBeGreaterThan(actions.x+actions.width/2);
-  expect(hero.width).toBeGreaterThan(actions.width*1.8);
-  expect(stats.width).toBeGreaterThan(actions.width*1.8);
-  expect(more.width).toBeGreaterThan(actions.width*1.8);
+  expect(notices.y).toBeGreaterThan(actions.y+actions.height-2);
+  for(const box of [hero,stats,notices,more])expect(Math.abs(box.width-actions.width)).toBeLessThan(4);
+  const unread=page.locator('.unread-updates');
+  if(await unread.count())expect((await unread.boundingBox()).y).toBeGreaterThan(actions.y+actions.height-2);
+  const noticeRows=page.locator('.static-notice-list > .notice-row');
+  const first=await noticeRows.nth(0).boundingBox(),second=await noticeRows.nth(1).boundingBox();
+  expect(Math.abs(first.y-second.y)).toBeLessThan(4);
+  expect(second.x).toBeGreaterThan(first.x+first.width);
   const schoolChanges=page.locator('[aria-labelledby="school-change-title"]');
-  if(await schoolChanges.count()){
-    const changes=await schoolChanges.boundingBox();
-    expect(changes.width).toBeGreaterThan(actions.width*1.8);
-  }
+  if(await schoolChanges.count())expect(Math.abs((await schoolChanges.boundingBox()).width-actions.width)).toBeLessThan(4);
   const tabletOverflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
   expect(tabletOverflow).toBeFalsy();
 
