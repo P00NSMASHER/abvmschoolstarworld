@@ -16,8 +16,10 @@ test("school date follows Eastern time even when the device is elsewhere",async(
 test("online refresh applies changed school data without losing checklist state",async({browser})=>{
   const context=await browser.newContext({serviceWorkers:"block"});
   const page=await context.newPage();
-  await page.clock.setFixedTime(new Date("2026-09-29T13:00:00Z"));
   const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  const lunchDate=source.pack?.lunchMenu?.[0]?.date;
+  expect(lunchDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  await page.clock.setFixedTime(new Date(`${lunchDate}T17:00:00Z`));
   let current=structuredClone(source);
   await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:current}));
   await page.goto("http://127.0.0.1:4173/#today");
@@ -31,7 +33,7 @@ test("online refresh applies changed school data without losing checklist state"
   current=structuredClone(source);
   current.pack.sourceHash="teacher-pages-live-refresh-regression";
   current.pack.lunchMenuHash="lunch-live-refresh-regression";
-  const lunch=current.pack.lunchMenu.find(item=>item.date==="2026-09-29"||/Tuesday, Sept\. 29/.test(item.day||""));
+  const lunch=current.pack.lunchMenu.find(item=>item.date===lunchDate);
   expect(lunch).toBeTruthy();
   lunch.items=["Freshly updated lunch"];
   current.sourceLastSeenAt=new Date().toISOString();
@@ -268,12 +270,14 @@ test("Week marks a closed weekday as No school",async({browser})=>{
 test("required parent tasks are not mislabeled as if participating",async({browser})=>{
   const context=await browser.newContext({serviceWorkers:"block"});
   const page=await context.newPage();
-  await page.clock.setFixedTime(new Date("2026-09-29T13:00:00Z"));
   const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
+  const schoolDate=source.pack?.lunchMenu?.[0]?.date;
+  expect(schoolDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  await page.clock.setFixedTime(new Date(`${schoolDate}T17:00:00Z`));
   const fixture=structuredClone(source);
   fixture.pack.homework=[
-    {subject:"Parent",task:"Cover books"},
-    {subject:"Parent",task:"Return permission slip if participating"}
+    {day:"Current Homework posting",subject:"Parent",task:"Cover books",due:"Current posting"},
+    {day:"Current Homework posting",subject:"Parent",task:"Return permission slip if participating",due:"Current posting"}
   ];
   await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:fixture}));
   await page.goto("http://127.0.0.1:4173/#week");
@@ -283,7 +287,6 @@ test("required parent tasks are not mislabeled as if participating",async({brows
   await expect(rows.nth(1)).toContainText("IF PARTICIPATING");
   await context.close();
 });
-
 
 test("Study derives spelling review date and STAR reminder from current school dates",async({browser})=>{
   const context=await browser.newContext({serviceWorkers:"block"});

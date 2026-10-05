@@ -53,6 +53,9 @@ test("storage failures fail soft instead of breaking the app",async({browser})=>
 });
 
 test("completion state is keyed by school week and task identity",async({page})=>{
+  const source=await (await page.request.get("/data/study-pack.json")).json();
+  const weekSlug=String(source.pack?.weekLabel||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+  expect(weekSlug).toMatch(/^week-of-/);
   await page.goto("/#today");
   await expect(page.locator("[data-check]").first()).toBeVisible({timeout:10_000});
   const created=await page.evaluate(()=>{
@@ -64,30 +67,34 @@ test("completion state is keyed by school week and task identity",async({page})=
     return after.filter(key=>!before.includes(key));
   });
   expect(created.length).toBe(1);
-  expect(created[0]).toMatch(/^abvm-task:v2:week-of-september-28-2026:/);
+  expect(created[0].startsWith(`abvm-task:v2:${weekSlug}:`)).toBe(true);
   expect(created[0]).not.toContain("teacher-pages-");
 });
 
-
 test("Read completion stays synchronized between Today and Week",async({page})=>{
-  await page.clock.setFixedTime(new Date("2026-09-30T12:00:00-04:00"));
+  const source=await (await page.request.get("/data/study-pack.json")).json();
+  const schoolDate=source.pack?.lunchMenu?.[0]?.date;
+  expect(schoolDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  await page.clock.setFixedTime(new Date(`${schoolDate}T17:00:00Z`));
   await page.goto("/#today");
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
-  const readToday=page.locator("[data-check]").filter({hasText:"Read"}).first();
-  await expect(readToday).toBeVisible();
+  const taskToday=page.locator("[data-check]").first();
+  await expect(taskToday).toBeVisible();
+  const taskId=await taskToday.getAttribute("data-check");
+  expect(taskId).toBeTruthy();
 
-  const wasDone=await readToday.evaluate(el=>el.classList.contains("is-done"));
-  if(!wasDone)await readToday.click();
-  await expect(page.locator("[data-check]").filter({hasText:"Read"}).first()).toHaveClass(/is-done/);
+  const wasDone=await taskToday.evaluate(el=>el.classList.contains("is-done"));
+  if(!wasDone)await taskToday.click();
+  await expect(page.locator(`[data-check="${taskId}"]`).first()).toHaveClass(/is-done/);
 
   await page.getByRole("button",{name:"Week",exact:true}).click();
-  const readWeek=page.locator("[data-check]").filter({hasText:"Read"}).first();
-  await expect(readWeek).toBeVisible();
-  await expect(readWeek).toHaveClass(/is-done/);
+  const taskWeek=page.locator(`[data-check="${taskId}"]`).first();
+  await expect(taskWeek).toBeVisible();
+  await expect(taskWeek).toHaveClass(/is-done/);
 
   if(!wasDone){
-    await readWeek.click();
+    await taskWeek.click();
     await page.getByRole("button",{name:"Today",exact:true}).click();
-    await expect(page.locator("[data-check]").filter({hasText:"Read"}).first()).not.toHaveClass(/is-done/);
+    await expect(page.locator(`[data-check="${taskId}"]`).first()).not.toHaveClass(/is-done/);
   }
 });
