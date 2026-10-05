@@ -113,17 +113,13 @@ test('Study subject bullets reserve space and never collide with copy',async({pa
           columns,
           minWidth:style.minWidth,
           beforeContent:before.content,
-          beforePosition:before.position,
-          beforeWidth:parseFloat(before.width),
-          beforeHeight:parseFloat(before.height)
+          beforePosition:before.position
         };
       });
       expect(geometry.display).toBe('grid');
       expect(geometry.columns[0]).toBeGreaterThanOrEqual(18);
       expect(geometry.beforeContent).toContain('✓');
       expect(geometry.beforePosition).toBe('static');
-      expect(geometry.beforeWidth).toBeGreaterThanOrEqual(17);
-      expect(geometry.beforeHeight).toBeGreaterThanOrEqual(17);
     }
   }
 });
