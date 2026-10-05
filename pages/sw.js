@@ -1,5 +1,5 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v117-date-aware-mass";
+const CACHE = "abvm-grade2-parent-companion-v117-runtime-pack";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=103",
