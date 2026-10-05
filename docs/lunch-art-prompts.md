@@ -1,8 +1,28 @@
 # Lunch artwork prompts
 
-Generated and visually reviewed on 2026-10-05 using the built-in `image_gen` tool. These are illustrative entrée images, not photographs of school-served meals. They must retain an adjacent “Menu illustration” label. No sides, drinks, packaging, logos, or extra ingredients are implied.
+Generated and visually reviewed on 2026-10-05 using the built-in `image_gen` tool. These are illustrative entrée images, not photographs of school-served meals. They must retain an adjacent **Meal illustration** label. No sides, drinks, packaging, logos, or extra ingredients are implied.
 
-All assets are 1254 × 1254 WebP, encoded at quality 84 from the generated PNG originals with ImageMagick. Encoding only; no creative image edits or compositing.
+The three assets documented below are 1254 × 1254 WebP, encoded at quality 84 from the generated PNG originals with ImageMagick. Encoding only; no creative image edits or compositing. Supplementary sets retain their own recorded encoding details.
+
+## Prompt and review index
+
+The 16 October assets have existing prompt and visual-review records across these
+four documents. Consult the matching record before treating provenance as missing
+or generating replacement artwork.
+
+| Record | Assets |
+| --- | --- |
+| This file (3) | `popcorn-chicken.webp`, `cheese-pizza.webp`, `cheesy-breadsticks.webp` |
+| [Supplement A](lunch-art-prompts-extra-a.md) (4) | `buttered-pierogies.webp`, `beef-cheesesteak.webp`, `meatballs-in-sauce.webp`, `hamburger-whole-grain.webp` |
+| [Supplement B](lunch-art-prompts-extra-b.md) (4) | `chicken-taco.webp`, `breaded-chicken.webp`, `hot-ham-cheese.webp`, `pasta-meatballs.webp` |
+| [Supplement C](lunch-art-prompts-extra-c.md) (5) | `chicken-patty-roll.webp`, `chicken-finger-wrap.webp`, `fish-shapes.webp`, `beef-a-roni.webp`, `taco-chips.webp` |
+
+The required adjacent display label for every set is **Meal illustration**, as in
+[the lunch artwork policy](LUNCH_ART.md). Historical supplement wording that says
+“Menu illustration” does not change that label. This index preserves the recorded
+prompts, exclusions, review outcomes and format-only conversion details; it does
+not add a new generation or review claim. If a future record cannot be recovered,
+identify it as unavailable rather than reconstructing it as historical evidence.
 
 ## popcorn-chicken.webp
 
