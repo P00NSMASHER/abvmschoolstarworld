@@ -50,3 +50,61 @@ test('transaction dry-run and invalid write never mutate source',async()=>{
  const invalid=pack();invalid.lessons[0].questions[0].answer='bad';await writeFile(batch,JSON.stringify(invalid));await assert.rejects(integrateFile(target,batch,{write:true}));assert.equal(await readFile(target,'utf8'),before);
  }finally{await rm(dir,{recursive:true,force:true});}
 });
+
+
+test('held source can resolve under the same ID and SHA only with reviewed provenance',()=>{
+ const held=pack();
+ held.lessons=[];
+ held.sourceManifest=[{id:'held-photo.jpeg',sha256:'c'.repeat(64),status:'held',reason:'Image was not readable enough to integrate safely.'}];
+ held.uploadedPhotoCount=1;
+ const resolved=pack();
+ resolved.sourceManifest=[{id:'held-photo.jpeg',sha256:'c'.repeat(64),status:'integrated'}];
+ resolved.lessons[0].sources=['held-photo.jpeg'];
+ const result=mergeSchoolwork(held,resolved);
+ assert.equal(result.sourceManifest[0].status,'integrated');
+ assert.equal(result.lessons.length,1);
+ assert.deepEqual(result.lessons[0].sources,['held-photo.jpeg']);
+ assert.deepEqual(mergeSchoolwork(result,resolved),result);
+
+ const changedDigest=structuredClone(resolved);
+ changedDigest.sourceManifest[0].sha256='d'.repeat(64);
+ assert.throws(()=>mergeSchoolwork(held,changedDigest),/collision/);
+
+ const downgrade=structuredClone(held);
+ assert.throws(()=>mergeSchoolwork(result,downgrade),/collision/);
+});
+
+test('held source may become a duplicate only of an integrated canonical',()=>{
+ const current=pack();
+ current.sourceManifest.push({id:'held-photo.jpeg',sha256:'c'.repeat(64),status:'held',reason:'Initially unreadable.'});
+ current.uploadedPhotoCount=2;
+
+ const batch=pack();
+ batch.sourceManifest.push({id:'held-photo.jpeg',sha256:'c'.repeat(64),status:'duplicate',duplicateOf:'photo-1.jpeg',reason:'Later review confirmed this is the same worksheet.'});
+ batch.uploadedPhotoCount=2;
+ batch.lessons[0].sources.push('held-photo.jpeg');
+
+ const result=mergeSchoolwork(current,batch);
+ const resolved=result.sourceManifest.find(source=>source.id==='held-photo.jpeg');
+ assert.equal(resolved.status,'duplicate');
+ assert.equal(resolved.duplicateOf,'photo-1.jpeg');
+ assert(result.lessons[0].sources.includes('held-photo.jpeg'));
+
+ const chain=structuredClone(result);
+ chain.sourceManifest.push({id:'third.jpeg',sha256:'e'.repeat(64),status:'duplicate',duplicateOf:'held-photo.jpeg',reason:'Invalid duplicate chain.'});
+ chain.uploadedPhotoCount++;
+ chain.lessons[0].sources.push('third.jpeg');
+ assert.throws(()=>validateSchoolwork(chain,{requireManifest:true}),/invalid duplicateOf/);
+});
+
+test('a new source ID never auto-canonicalizes to an unresolved held source',()=>{
+ const held=pack();
+ held.lessons=[];
+ held.sourceManifest=[{id:'held-photo.jpeg',sha256:'c'.repeat(64),status:'held',reason:'Unreadable.'}];
+ held.uploadedPhotoCount=1;
+
+ const renamed=pack();
+ renamed.sourceManifest=[{id:'renamed-photo.jpeg',sha256:'c'.repeat(64),status:'integrated'}];
+ renamed.lessons[0].sources=['renamed-photo.jpeg'];
+ assert.throws(()=>mergeSchoolwork(held,renamed),/repeated hash/);
+});
