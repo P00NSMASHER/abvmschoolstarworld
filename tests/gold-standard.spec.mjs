@@ -119,7 +119,7 @@ test("second requested polish is present",async({page})=>{
   await expect(page.locator(".family-actions-card")).toBeVisible();
   await expect(page.locator('[aria-labelledby="family-current-notices"]')).toBeVisible();
   await expect(page.locator(".notice-row").first()).toBeVisible();
-  await expect(page.locator(".family-more")).toBeVisible();
+  await expect(page.locator(".family-more")).toHaveCount(0);
 });
 
 
@@ -321,7 +321,7 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   const optional=sw.match(/const OPTIONAL_DATA = \[([\s\S]*?)\];/)?.[1]||"";
   expect([...optional.matchAll(/"(\.\/[^\"]+)"/g)].map(match=>match[1])).toEqual([
     "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json",
-    "./study-hub.mjs", "./study-model.mjs", "./star-practice.mjs", "./study-hub.css"
+    "./study-hub.mjs", "./study-model.mjs", "./star-practice.mjs", "./study-hub.css", "./family-view.css?v=1", "./visual-polish.css?v=1", "./lunch-art.js?v=1"
   ]);
 });
 

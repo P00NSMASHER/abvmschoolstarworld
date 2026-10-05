@@ -1,0 +1,608 @@
+{
+  "schemaVersion": 1,
+  "policy": "Reviewed entrée illustrations only. The printed menu remains authoritative. Never infer unspecified ingredients, fruit varieties, portions or sides.",
+  "months": [
+    "2026-09",
+    "2026-10"
+  ],
+  "menus": [
+    {
+      "sourceId": "abvm-2026-09-official",
+      "items": [
+        "Meatballs in sauce",
+        "Whole-grain pasta",
+        "Steamed corn",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-09-01"
+      ],
+      "artwork": null,
+      "status": "needs-art-review",
+      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Meatballs in sauce. Exact printed menu for context: Meatballs in sauce; Whole-grain pasta; Steamed corn; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+    },
+    {
+      "sourceId": "abvm-2026-09-official",
+      "items": [
+        "Cheese pizza",
+        "Garden salad",
+        "Steamed broccoli",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-09-02"
+      ],
+      "artwork": null,
+      "status": "needs-art-review",
+      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Cheese pizza. Exact printed menu for context: Cheese pizza; Garden salad; Steamed broccoli; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+    },
+    {
+      "sourceId": "abvm-2026-09-official",
+      "items": [
+        "Hamburger on a roll",
+        "French fries",
+        "Mixed vegetables",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-09-03"
+      ],
+      "artwork": null,
+      "status": "needs-art-review",
+      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Hamburger on a roll. Exact printed menu for context: Hamburger on a roll; French fries; Mixed vegetables; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+    },
+    {
+      "sourceId": "abvm-2026-09-official",
+      "items": [
+        "Hot ham & cheese",
+        "Pretzel roll",
+        "Tortilla chips",
+        "Steamed peas",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-09-08"
+      ],
+      "artwork": null,
+      "status": "needs-art-review",
+      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Hot ham & cheese. Exact printed menu for context: Hot ham & cheese; Pretzel roll; Tortilla chips; Steamed peas; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+    },
+    {
+      "sourceId": "abvm-2026-09-official",
+      "items": [
+        "Meatballs & whole-grain pasta",
+        "Whole-grain dinner roll",
+        "Steamed carrots",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-09-09"
+      ],
+      "artwork": null,
+      "status": "needs-art-review",
+      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Meatballs & whole-grain pasta. Exact printed menu for context: Meatballs & whole-grain pasta; Whole-grain dinner roll; Steamed carrots; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+    },
+    {
+      "sourceId": "abvm-2026-09-official",
+      "items": [
+        "Chicken patty on a roll",
+        "Baby cake potatoes",
+        "Green beans",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-09-10"
+      ],
+      "artwork": null,
+      "status": "needs-art-review",
+      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Chicken patty on a roll. Exact printed menu for context: Chicken patty on a roll; Baby cake potatoes; Green beans; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+    },
+    {
+      "sourceId": "abvm-2026-09-official",
+      "items": [
+        "Cheesy breadsticks",
+        "Dipping sauce",
+        "Garden salad",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-09-11"
+      ],
+      "artwork": null,
+      "status": "needs-art-review",
+      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Cheesy breadsticks. Exact printed menu for context: Cheesy breadsticks; Dipping sauce; Garden salad; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+    },
+    {
+      "sourceId": "abvm-2026-09-official",
+      "items": [
+        "Chicken finger wrap",
+        "Brown rice",
+        "Steamed corn",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-09-14"
+      ],
+      "artwork": null,
+      "status": "needs-art-review",
+      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Chicken finger wrap. Exact printed menu for context: Chicken finger wrap; Brown rice; Steamed corn; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+    },
+    {
+      "sourceId": "abvm-2026-09-official",
+      "items": [
+        "Taco Tuesday & chips",
+        "Cheese",
+        "Shredded lettuce",
+        "Green beans",
+        "Salsa",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-09-15"
+      ],
+      "artwork": null,
+      "status": "needs-art-review",
+      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Taco Tuesday & chips. Exact printed menu for context: Taco Tuesday & chips; Cheese; Shredded lettuce; Green beans; Salsa; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+    },
+    {
+      "sourceId": "abvm-2026-09-official",
+      "items": [
+        "Fish shapes",
+        "French fries",
+        "Steamed broccoli",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-09-16"
+      ],
+      "artwork": null,
+      "status": "needs-art-review",
+      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Fish shapes. Exact printed menu for context: Fish shapes; French fries; Steamed broccoli; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+    },
+    {
+      "sourceId": "abvm-2026-09-official",
+      "items": [
+        "Beef-a-roni",
+        "Shredded cheese",
+        "Whole-grain roll",
+        "Steamed carrots",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-09-17"
+      ],
+      "artwork": null,
+      "status": "needs-art-review",
+      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Beef-a-roni. Exact printed menu for context: Beef-a-roni; Shredded cheese; Whole-grain roll; Steamed carrots; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+    },
+    {
+      "sourceId": "abvm-2026-09-official",
+      "items": [
+        "Pizza bagel",
+        "Garden salad",
+        "Steamed peas",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-09-18"
+      ],
+      "artwork": null,
+      "status": "needs-art-review",
+      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Pizza bagel. Exact printed menu for context: Pizza bagel; Garden salad; Steamed peas; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+    },
+    {
+      "sourceId": "abvm-2026-09-official",
+      "items": [
+        "Breaded chicken",
+        "Buttered pasta",
+        "Baked beans",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-09-21"
+      ],
+      "artwork": null,
+      "status": "needs-art-review",
+      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Breaded chicken. Exact printed menu for context: Breaded chicken; Buttered pasta; Baked beans; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+    },
+    {
+      "sourceId": "abvm-2026-09-official",
+      "items": [
+        "Meatballs in gravy",
+        "Mashed potatoes",
+        "Garlic stick",
+        "Steamed corn",
+        "French toast sticks",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-09-22"
+      ],
+      "artwork": null,
+      "status": "needs-art-review",
+      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Meatballs in gravy. Exact printed menu for context: Meatballs in gravy; Mashed potatoes; Garlic stick; Steamed corn; French toast sticks; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+    },
+    {
+      "sourceId": "abvm-2026-09-official",
+      "items": [
+        "French toast sticks",
+        "Hash browns",
+        "Sausage patty",
+        "Steamed carrots",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-09-23"
+      ],
+      "artwork": null,
+      "status": "needs-art-review",
+      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: French toast sticks. Exact printed menu for context: French toast sticks; Hash browns; Sausage patty; Steamed carrots; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+    },
+    {
+      "sourceId": "abvm-2026-09-official",
+      "items": [
+        "Macaroni & cheese",
+        "Stewed tomatoes",
+        "Breaded chicken",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-09-24"
+      ],
+      "artwork": null,
+      "status": "needs-art-review",
+      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Macaroni & cheese. Exact printed menu for context: Macaroni & cheese; Stewed tomatoes; Breaded chicken; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+    },
+    {
+      "sourceId": "abvm-2026-09-official",
+      "items": [
+        "Hamburger on WG roll",
+        "French fries",
+        "Steamed peas",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-09-25"
+      ],
+      "artwork": null,
+      "status": "needs-art-review",
+      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Hamburger on WG roll. Exact printed menu for context: Hamburger on WG roll; French fries; Steamed peas; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+    },
+    {
+      "sourceId": "abvm-2026-09-official",
+      "items": [
+        "Breaded chicken",
+        "Brown rice",
+        "Steamed broccoli",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-09-28"
+      ],
+      "artwork": null,
+      "status": "needs-art-review",
+      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Breaded chicken. Exact printed menu for context: Breaded chicken; Brown rice; Steamed broccoli; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+    },
+    {
+      "sourceId": "abvm-2026-09-official",
+      "items": [
+        "Cheese quesadilla wedge",
+        "Garden salad",
+        "Salsa",
+        "Steamed corn",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-09-29"
+      ],
+      "artwork": null,
+      "status": "needs-art-review",
+      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Cheese quesadilla wedge. Exact printed menu for context: Cheese quesadilla wedge; Garden salad; Salsa; Steamed corn; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+    },
+    {
+      "sourceId": "abvm-2026-09-official",
+      "items": [
+        "Breaded fish sandwich",
+        "Baby cake potatoes",
+        "Baked beans",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-09-30"
+      ],
+      "artwork": null,
+      "status": "needs-art-review",
+      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Breaded fish sandwich. Exact printed menu for context: Breaded fish sandwich; Baby cake potatoes; Baked beans; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+    },
+    {
+      "sourceId": "abvm-2026-10-official",
+      "items": [
+        "Baked cheese pizza",
+        "Tortilla chips",
+        "Mixed vegetables",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-10-01"
+      ],
+      "artwork": "assets/lunch-art/cheese-pizza.webp",
+      "status": "ready"
+    },
+    {
+      "sourceId": "abvm-2026-10-official",
+      "items": [
+        "Cheesy breadsticks",
+        "Dipping sauce",
+        "Garden salad",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-10-02"
+      ],
+      "artwork": "assets/lunch-art/cheesy-breadsticks.webp",
+      "status": "ready"
+    },
+    {
+      "sourceId": "abvm-2026-10-official",
+      "items": [
+        "Popcorn chicken",
+        "Mashed potatoes",
+        "Steamed corn",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-10-05"
+      ],
+      "artwork": "assets/lunch-art/popcorn-chicken.webp",
+      "status": "ready"
+    },
+    {
+      "sourceId": "abvm-2026-10-official",
+      "items": [
+        "Taco Tuesday & chips",
+        "Cheese",
+        "Brown rice",
+        "Salsa",
+        "Refried beans",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-10-06"
+      ],
+      "artwork": "assets/lunch-art/taco-chips.webp",
+      "status": "ready"
+    },
+    {
+      "sourceId": "abvm-2026-10-official",
+      "items": [
+        "Buttered pierogies",
+        "Whole-grain roll",
+        "String cheese",
+        "Steamed carrots",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-10-07"
+      ],
+      "artwork": "assets/lunch-art/buttered-pierogies.webp",
+      "status": "ready"
+    },
+    {
+      "sourceId": "abvm-2026-10-official",
+      "items": [
+        "Beef cheesesteak",
+        "Whole-grain roll",
+        "French fries",
+        "Steamed broccoli",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-10-08"
+      ],
+      "artwork": "assets/lunch-art/beef-cheesesteak.webp",
+      "status": "ready"
+    },
+    {
+      "sourceId": "abvm-2026-10-official",
+      "items": [
+        "Meatballs in sauce",
+        "Whole-grain buttered pasta",
+        "Steamed corn",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-10-13"
+      ],
+      "artwork": "assets/lunch-art/meatballs-in-sauce.webp",
+      "status": "ready"
+    },
+    {
+      "sourceId": "abvm-2026-10-official",
+      "items": [
+        "Baked cheese pizza",
+        "Garden salad",
+        "Steamed broccoli",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-10-14"
+      ],
+      "artwork": "assets/lunch-art/cheese-pizza.webp",
+      "status": "ready"
+    },
+    {
+      "sourceId": "abvm-2026-10-official",
+      "items": [
+        "Hamburger on whole-grain roll",
+        "French fries",
+        "Mixed vegetables",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-10-15"
+      ],
+      "artwork": "assets/lunch-art/hamburger-whole-grain.webp",
+      "status": "ready"
+    },
+    {
+      "sourceId": "abvm-2026-10-official",
+      "items": [
+        "Chicken taco",
+        "Brown rice",
+        "Cheese",
+        "Salsa",
+        "Refried beans",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-10-16"
+      ],
+      "artwork": "assets/lunch-art/chicken-taco.webp",
+      "status": "ready"
+    },
+    {
+      "sourceId": "abvm-2026-10-official",
+      "items": [
+        "Breaded chicken",
+        "Buttered pasta",
+        "Steamed broccoli",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-10-19"
+      ],
+      "artwork": "assets/lunch-art/breaded-chicken.webp",
+      "status": "ready"
+    },
+    {
+      "sourceId": "abvm-2026-10-official",
+      "items": [
+        "Hot ham & cheese",
+        "Whole-grain pretzel roll",
+        "Tortilla chips",
+        "Steamed peas",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-10-20"
+      ],
+      "artwork": "assets/lunch-art/hot-ham-cheese.webp",
+      "status": "ready"
+    },
+    {
+      "sourceId": "abvm-2026-10-official",
+      "items": [
+        "Pasta with meatballs",
+        "Whole-grain roll",
+        "Shredded cheese",
+        "Steamed carrots",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-10-21"
+      ],
+      "artwork": "assets/lunch-art/pasta-meatballs.webp",
+      "status": "ready"
+    },
+    {
+      "sourceId": "abvm-2026-10-official",
+      "items": [
+        "Chicken patty on whole-grain roll",
+        "Baby cake potatoes",
+        "Green beans",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-10-22"
+      ],
+      "artwork": "assets/lunch-art/chicken-patty-roll.webp",
+      "status": "ready"
+    },
+    {
+      "sourceId": "abvm-2026-10-official",
+      "items": [
+        "Cheesy breadsticks",
+        "Dipping sauce",
+        "Kidney beans",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-10-23"
+      ],
+      "artwork": "assets/lunch-art/cheesy-breadsticks.webp",
+      "status": "ready"
+    },
+    {
+      "sourceId": "abvm-2026-10-official",
+      "items": [
+        "Chicken finger wrap",
+        "Brown rice",
+        "Steamed corn",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-10-26"
+      ],
+      "artwork": "assets/lunch-art/chicken-finger-wrap.webp",
+      "status": "ready"
+    },
+    {
+      "sourceId": "abvm-2026-10-official",
+      "items": [
+        "Taco Tuesday & chips",
+        "Cheese",
+        "Shredded lettuce",
+        "Green beans",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-10-27"
+      ],
+      "artwork": "assets/lunch-art/taco-chips.webp",
+      "status": "ready"
+    },
+    {
+      "sourceId": "abvm-2026-10-official",
+      "items": [
+        "Fish shapes",
+        "French fries",
+        "Steamed broccoli",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-10-28"
+      ],
+      "artwork": "assets/lunch-art/fish-shapes.webp",
+      "status": "ready"
+    },
+    {
+      "sourceId": "abvm-2026-10-official",
+      "items": [
+        "Beef-a-roni",
+        "Shredded cheese",
+        "Whole-grain roll",
+        "Steamed carrots",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-10-29"
+      ],
+      "artwork": "assets/lunch-art/beef-a-roni.webp",
+      "status": "ready"
+    },
+    {
+      "sourceId": "abvm-2026-10-official",
+      "items": [
+        "Baked cheese pizza",
+        "Garden salad",
+        "Steamed peas",
+        "Fruit"
+      ],
+      "dates": [
+        "2026-10-30"
+      ],
+      "artwork": "assets/lunch-art/cheese-pizza.webp",
+      "status": "ready"
+    }
+  ]
+}

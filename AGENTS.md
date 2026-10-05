@@ -26,3 +26,19 @@ When the user sends schoolwork photos and asks to integrate/update the app, foll
   inspect the result, then `--write`. Run the intake tests and existing QA gates.
   Check current remote state, avoid conflicting work, and verify publication
   before claiming the app is updated. Never weaken gates to get a deployment.
+
+## Lunch menus received in ChatGPT
+
+When the user uploads a lunch menu and asks to integrate/update the app, follow
+`docs/LUNCH_ART.md` in the same run. Menu import includes the missing-illustration
+work automatically; do not wait for a separate artwork request. Verify the exact
+printed menu, update the reviewed lunch catalog, reuse suitable reviewed entrée art
+with explicit new source/menu approvals, generate missing artwork with the built-in
+high-quality image generator, visually inspect it, and run the existing QA before
+publishing through a pull request. Never invent unspecified ingredients. Use
+`pendingArtMenus(plan, currentNewYorkMonth)` from the lunch-art builder to avoid
+expired-month backlog. Preserve existing menu source and closure rules. The enabled
+GitHub merge-event task “Complete lunch artwork” provides a backup for current and
+future missing illustrations after merged PRs; it does not trigger on direct pushes.
+Do not disable or reschedule it. If artwork generation or review is blocked, retain
+accurate text-only cards and report the specific incomplete coverage.

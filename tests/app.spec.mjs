@@ -166,12 +166,11 @@ test("freshness refresh control keeps a 44px touch target",async({page})=>{
   expect(backBox.height,"Back to current month touch target is too short").toBeGreaterThanOrEqual(44);
 
   await openTab(page,"Family");
-  await page.locator(".family-more summary").click();
-  const familyAction=page.locator(".family-more a");
+  const familyAction=page.locator(".notices-card .family-message summary").first();
   await expect(familyAction).toBeVisible();
   const familyActionBox=await familyAction.boundingBox();
   expect(familyActionBox).not.toBeNull();
-  expect(familyActionBox.height,"Family Study Games link touch target is too short").toBeGreaterThanOrEqual(44);
+  expect(familyActionBox.height,"Family notice disclosure touch target is too short").toBeGreaterThanOrEqual(44);
 });
 
 test("visible buttons keep 44px touch targets across primary screens",async({page})=>{
@@ -442,7 +441,7 @@ test("Family uses a two-column iPad layout and stays stacked on phone",async({pa
   const stats=await page.locator(".family-stats").boundingBox();
   const actions=await page.locator(".family-actions-card").boundingBox();
   const notices=await page.locator('[aria-labelledby="family-current-notices"]').boundingBox();
-  const more=await page.locator(".family-more").boundingBox();
+  const more=await page.locator(".unofficial-note").boundingBox();
   for(const box of [hero,stats,actions,notices,more])expect(box).not.toBeNull();
   expect(Math.abs(actions.y-notices.y)).toBeLessThan(4);
   expect(notices.x).toBeGreaterThan(actions.x+actions.width/2);
@@ -466,13 +465,13 @@ test("Family uses a two-column iPad layout and stays stacked on phone",async({pa
   expect(Math.abs(phoneNotices.x-phoneActions.x)).toBeLessThan(4);
 });
 
-test("Family exposes current actions, notices, and app/privacy disclosure",async({page})=>{
+test("Family exposes current actions and notices without the removed privacy box",async({page})=>{
   await openTab(page,"Family");
   await expect(page.locator(".family-hero")).toBeVisible();
   await expect(page.locator(".family-stats")).toBeVisible();
   await expect(page.locator(".family-actions-card")).toBeVisible();
   await expect(page.locator('[aria-labelledby="family-current-notices"]')).toBeVisible();
-  await expect(page.locator(".family-more")).toBeVisible();
+  await expect(page.locator(".family-more")).toHaveCount(0);
 });
 
 test("latest reviewed phone uploads reach Family with a safe registration link",async({page})=>{
@@ -482,6 +481,7 @@ test("latest reviewed phone uploads reach Family with a safe registration link",
   await expect(notices).toContainText("Gift Card Calendar update: two $50 winners");
   await expect(notices).toContainText("Winner and seller names are kept out of the public app");
 
+  await notices.locator(".family-message").filter({hasText:"CYO registration for 2nd graders"}).locator("summary").click();
   const registration=notices.getByRole("link",{
     name:"tools.signupgenius.com/c/st-nicholas-basketball-registration-k-1st-grade-copy"
   });

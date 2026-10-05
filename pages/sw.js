@@ -1,11 +1,11 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v115-runtime-pack";
+const CACHE = "abvm-grade2-parent-companion-v116-runtime-pack";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=103",
   "./study-support.js?v=1",
-  "./app.js?v=113",
-  "./school-updates.js?v=1",
+  "./app.js?v=114",
+  "./school-updates.js?v=2",
   "./weekly-learning.js?v=3",
   "./study-games.js?v=94",
   "./study-games-view.js?v=6",
@@ -14,7 +14,7 @@ const STATIC_SHELL = [
   "./assets/abvm-app-icon-192.png",
   "./assets/abvm-app-icon-512.png"
 ];
-const OPTIONAL_DATA = ["./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./study-hub.mjs", "./study-model.mjs", "./star-practice.mjs", "./study-hub.css"];
+const OPTIONAL_DATA = ["./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./study-hub.mjs", "./study-model.mjs", "./star-practice.mjs", "./study-hub.css", "./family-view.css?v=1", "./visual-polish.css?v=1", "./lunch-art.js?v=1"];
 
 self.addEventListener("install",event=>{
   event.waitUntil((async()=>{

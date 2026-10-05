@@ -1,0 +1,27 @@
+/* Shared finishing touches. Content and navigation keep their established layout. */
+.app-header h1{font-weight:750;color:#123e70}
+.app-header>div>p{color:#24629a;font-weight:750;letter-spacing:.09em}
+.screen .family-hero{background:linear-gradient(125deg,#edf6ff,#f1edff);border-color:#dbe5f3}
+.screen .family-stats{gap:10px}
+.screen .family-stats>div{background:#fff;border:1px solid #e3eaf3;border-radius:18px;padding:15px}
+.screen .family-stats strong{color:#255c91}
+.screen .family-actions-card,.screen .notices-card{border-color:#dee7ef;box-shadow:0 4px 18px #28486605}
+.screen .family-actions-head,.screen .notices-head{padding:18px;gap:12px}
+.screen .family-actions-mark,.screen .notices-mark{width:40px;height:40px;flex:0 0 40px;border-radius:13px;font-size:23px}
+.screen .notices-head small,.screen .family-actions-head small{font-size:10px;letter-spacing:.075em}
+.screen .notices-head h3,.screen .family-actions-head h3{font-size:20px;line-height:1.25;margin-top:4px}
+.screen .family-actions-card li{font-size:15px;line-height:1.55;font-weight:550}
+.screen .notices-card .static-notice-list{padding:0 14px 12px}
+.family-screen>.unread-updates,.family-screen>.updates-status{grid-column:1/-1}
+.family-screen .unofficial-note{font-size:12px;line-height:1.5;color:#657183}
+.screen .lunch-card,.screen .agenda-lunch{background:linear-gradient(125deg,#fff9df,#fffdf2);border-color:#ead898}
+.screen .lunch-card>div,.screen .agenda-lunch>div{min-width:0;flex:1}
+.lunch-art{margin:0;flex:0 0 92px;width:92px;align-self:center;text-align:center}
+.lunch-art img{display:block;width:92px;height:92px;object-fit:contain;border-radius:16px;background:#faf8f2}
+.lunch-art figcaption{margin-top:4px;font-size:9px;line-height:1.3;font-weight:500;color:#71603a}
+.screen .lunch-card:has(.lunch-art),.screen .agenda-lunch:has(.lunch-art){gap:14px;align-items:center}
+.screen .lunch-card:has(.lunch-art)>span,.screen .agenda-lunch:has(.lunch-art)>span{display:none}
+.screen .lunch-card strong{font-size:15px;line-height:1.5}
+.screen .agenda-lunch p{font-size:14px;line-height:1.5}
+@media(max-width:360px){.lunch-art{flex-basis:72px;width:72px}.lunch-art img{width:72px;height:72px}.screen .lunch-card:has(.lunch-art),.screen .agenda-lunch:has(.lunch-art){gap:10px}}
+@media(prefers-reduced-motion:no-preference){.bottom-nav button .nav-icon{transition:background-color .15s,color .15s}.family-message>summary{transition:background-color .15s}.family-message>summary:active{background:#eaf2fc}}

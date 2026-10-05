@@ -116,3 +116,13 @@ what is prepared versus published and the exact failed gate.
 Report photos received, source dispositions, new/reused lessons, question count,
 missing dates or held content, and publication status. Keep the parent-facing answer
 short and explain any genuine limitation instead of implying a background watcher.
+
+
+## Lunch menus in the batch
+
+Lunch menu photos follow `docs/LUNCH_ART.md` as part of this same integration run.
+After the official menu transcription is reviewed, automatically complete its
+illustrations through reviewed asset reuse or built-in high-quality image
+creation, then test and publish the menu and artwork together through a PR. This
+requires no separate parent request. The GitHub merge-event backup checks current
+and future missing artwork; it is not a watcher of private chat attachments.
