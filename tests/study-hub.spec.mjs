@@ -48,7 +48,7 @@ async function mount(page, day, testInfo) {
 }
 test("weekly test prep covers same-day subjects and completion persists", async ({
   page,
-}) => {
+}, testInfo) => {
   await mount(page, "2026-10-04", testInfo);
   const prep = page.locator(".hub-card").first();
   await expect(prep).toContainText("2026-10-07");
@@ -79,7 +79,7 @@ test("weekly test prep covers same-day subjects and completion persists", async 
 });
 test("past tests roll forward; cumulative, STAR and mixed games work without an uploader", async ({
   page,
-}) => {
+}, testInfo) => {
   await mount(page, "2026-10-08", testInfo);
   await expect(page.locator(".hub-card").first()).toContainText("2026-10-09");
   await expect(page.locator(".hub-card").first()).not.toContainText(
