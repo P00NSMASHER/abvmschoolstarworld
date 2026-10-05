@@ -426,6 +426,10 @@ test("Study subject cards use a three-column iPad grid and a compact two-column 
   expect(Math.abs(boxes[3].y-boxes[4].y)).toBeLessThan(4);
   expect(Math.abs(boxes[4].y-boxes[5].y)).toBeLessThan(4);
   await cards.nth(0).locator("summary").click();
+  await expect(cards.nth(0)).toHaveAttribute("open", "");
+  const tabletGrid=await page.locator(".room-subject-grid").boundingBox();
+  const expandedTablet=await cards.nth(0).boundingBox();
+  expect(Math.abs(expandedTablet.width-tabletGrid.width)).toBeLessThan(4);
   const tabletOverflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
   expect(tabletOverflow).toBeFalsy();
 
@@ -433,6 +437,15 @@ test("Study subject cards use a three-column iPad grid and a compact two-column 
   await page.goto("/#study");
   await expect(page.locator("#study-hub")).toHaveAttribute("data-study-state","ready",{timeout:10_000});
   const phoneCards=page.locator(".room-subject-grid > .study-accordion");
+  // Same-hash navigation preserves the expanded subject during rotation.
+  // Check its full-width reflow, then close it before measuring the compact grid.
+  await expect(phoneCards.nth(0)).toHaveAttribute("open", "");
+  const phoneGrid=await page.locator(".room-subject-grid").boundingBox();
+  const expandedPhone=await phoneCards.nth(0).boundingBox();
+  expect(Math.abs(expandedPhone.width-phoneGrid.width)).toBeLessThan(4);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1)).toBe(false);
+  await phoneCards.nth(0).locator("summary").click();
+  await expect(page.locator(".room-subject-grid > .study-accordion[open]")).toHaveCount(0);
   const p0=await phoneCards.nth(0).boundingBox();
   const p1=await phoneCards.nth(1).boundingBox();
   const p2=await phoneCards.nth(2).boundingBox();
