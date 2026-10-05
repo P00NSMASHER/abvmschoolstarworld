@@ -23,6 +23,7 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
   allowedKeys(pack, ROOT_KEYS, 'schoolwork root');
   check(pack?.schemaVersion === 1 && Array.isArray(pack.lessons), 'Unsupported schoolwork schema');
   check(Number.isInteger(pack.uploadedPhotoCount) && pack.uploadedPhotoCount >= 0, 'Invalid uploadedPhotoCount');
+  check(pack.distinctWorksheetNote === undefined || text(pack.distinctWorksheetNote), 'Invalid distinctWorksheetNote');
   unique(pack.lessons.map(l => l.id), 'lesson IDs');
   const questionIds = [], prompts = [], referenced = new Set();
   for (const lesson of pack.lessons) {
@@ -44,6 +45,11 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
       allowedKeys(q, QUESTION_KEYS, `question ${q?.id || '<unknown>'}`);
       for (const key of ['id','subject','skill','prompt','answer','explanation','sourceFact','provenance']) check(text(q[key]), `${lesson.id}: question missing ${key}`);
       check(lesson.skills.includes(q.skill), `${q.id}: question skill is not in lesson`);
+      check(q.hint === undefined || text(q.hint), `${q.id}: invalid hint`);
+      for (const key of ['tier','questionType','domain']) check(q[key] === undefined || text(q[key]), `${q.id}: invalid ${key}`);
+      check(q.difficulty === undefined || (Number.isInteger(q.difficulty) && q.difficulty >= 1 && q.difficulty <= 5), `${q.id}: invalid difficulty`);
+      check(q.dok === undefined || (Number.isInteger(q.dok) && q.dok >= 1 && q.dok <= 4), `${q.id}: invalid dok`);
+      check(q.standards === undefined || (Array.isArray(q.standards) && q.standards.every(text)), `${q.id}: invalid standards`);
       check(Array.isArray(q.choices) && q.choices.length >= 2 && q.choices.length <= 6 && q.choices.every(text), `${q.id}: invalid choices`);
       unique(q.choices.map(c=>c.trim()), `${q.id} choices`);
       check(q.choices.filter(c=>c === q.answer).length === 1, `${q.id}: answer must occur exactly once in choices`);
@@ -64,6 +70,8 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
       check(text(source.id) && /^[a-zA-Z0-9_.-]+$/.test(source.id), 'Invalid non-identifying source ID');
       check(/^[a-f0-9]{64}$/.test(source.sha256), `${source.id}: missing SHA-256`);
       check(['integrated','duplicate','held'].includes(source.status), `${source.id}: invalid source status`);
+      check(source.duplicateOf === undefined || text(source.duplicateOf), `${source.id}: invalid duplicateOf`);
+      check(source.reason === undefined || text(source.reason), `${source.id}: invalid reason`);
       if (source.status === 'duplicate') {
         const canonical=byId.get(source.duplicateOf);
         check(canonical && canonical.id !== source.id && canonical.status !== 'duplicate', `${source.id}: invalid duplicateOf`);
