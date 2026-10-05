@@ -689,13 +689,13 @@ function packContentKey(data){
   });
 }
 function validatePackEnvelope(d,u){
-  const p=d?.pack,o=v=>!!v&&typeof v==="object"&&!Array.isArray(v),a=(v,f)=>Array.isArray(v)&&v.every(f),bad=()=>{throw Error("Invalid school pack from "+u)},stamp=d?.sourceLastSeenAt||p?.sourceCapturedAt||p?.generatedAt;
-  if(!o(d)||!o(p)||p.schemaVersion!==2||p.sourceSufficient!==true||!String(p.sourceHash||"").trim()||!String(p.weekLabel||"").trim()||typeof stamp!=="string"||Number.isNaN(Date.parse(stamp)))bad();
-  if(!"subjects importantDates homework lunchMenu lunchArchive vocabulary questions".split(" ").every(k=>a(p[k],o)))bad();
-  if(!"reminders parentNotices".split(" ").every(k=>a(p[k],v=>typeof v==="string")))bad();
-  if(!"lunchMenuSource contentPipeline recentReviewPipeline".split(" ").every(k=>o(p[k])))bad();
-  if(![p.lunchMenuSource.sourcePages,p.contentPipeline.skills,p.contentPipeline.questions,p.recentReviewPipeline.skills,p.recentReviewPipeline.questions].every(Array.isArray))bad();
-  if(p.schoolChangeFeed!=null&&(!o(p.schoolChangeFeed)||!Array.isArray(p.schoolChangeFeed.items)))bad();
+  const p=d?.pack,o=v=>!!v&&typeof v==="object"&&!Array.isArray(v),a=(v,f)=>Array.isArray(v)&&v.every(f),b=()=>{throw Error("Invalid school pack from "+u)},s=d?.sourceLastSeenAt||p?.sourceCapturedAt||p?.generatedAt,f=p?.schoolChangeFeed;
+  if(!o(d)||!o(p)||p.schemaVersion!==2||p.sourceSufficient!==true||!String(p.sourceHash||"").trim()||!String(p.weekLabel||"").trim()||typeof s!=="string"||Number.isNaN(Date.parse(s)))b();
+  if(!"subjects importantDates homework lunchMenu lunchArchive vocabulary questions".split(" ").every(k=>a(p[k],o)))b();
+  if(!"reminders parentNotices".split(" ").every(k=>a(p[k],v=>typeof v==="string")))b();
+  if(!"lunchMenuSource contentPipeline recentReviewPipeline".split(" ").every(k=>o(p[k])))b();
+  if(![p.lunchMenuSource.sourcePages,p.contentPipeline.skills,p.contentPipeline.questions,p.recentReviewPipeline.skills,p.recentReviewPipeline.questions].every(Array.isArray))b();
+  if(f!=null&&(!o(f)||!Array.isArray(f.items)))b();
   return d;
 }
 async function readPackUrl(url){
