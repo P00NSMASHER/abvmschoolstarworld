@@ -142,6 +142,12 @@ test('wrong Study Room answers stay rejected and do not consume another attempt'
   await expect(firstWrong).toHaveClass(/hub-rejected/);
   await expect(page.locator('.hub-try')).toContainText('Try another');
   await expect(page.locator('[data-next]')).toHaveCount(0);
+  const focusedAfterWrong=await page.evaluate(()=>({
+    answer:document.activeElement?.getAttribute('data-answer'),
+    disabled:document.activeElement?.disabled===true
+  }));
+  expect(focusedAfterWrong.answer).not.toBeNull();
+  expect(focusedAfterWrong.disabled).toBe(false);
 
   await firstWrong.evaluate(button=>button.click());
   await expect(page.locator('[data-next]')).toHaveCount(0);
