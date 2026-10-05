@@ -53,6 +53,7 @@ test('Study Games support text remains readable on phone and tablet', async ({ p
   for (const viewport of [{ width: 393, height: 852 }, { width: 768, height: 1024 }]) {
     await page.setViewportSize(viewport);
     await page.goto('/#games');
+    await page.reload();
     await expect(page.locator('.study-game-grid')).toBeVisible({ timeout: 10_000 });
 
     const privacy = page.locator('.game-privacy-note');
