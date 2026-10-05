@@ -8,6 +8,42 @@
   display: grid;
   gap: 12px;
 }
+.hub-prep {
+  min-height: 250px;
+}
+.hub-prep-actions {
+  min-height: 96px;
+  display: grid;
+  align-content: start;
+}
+.hub-loading-action {
+  place-items: center;
+  align-content: center;
+  color: #53677a;
+}
+.hub-loading-action p {
+  margin: 0;
+  font-size: 0.88rem;
+}
+.hub-tabs-loading span {
+  min-height: 48px;
+  display: grid;
+  place-items: center;
+  padding: 10px 3px;
+  color: #6a7e91;
+  font-size: 0.76rem;
+  line-height: 1.25;
+  text-align: center;
+}
+.hub-error {
+  min-height: 250px;
+  display: grid;
+  align-content: center;
+  gap: 10px;
+}
+.hub-error p {
+  margin: 0;
+}
 .hub-card,
 .hub-lesson {
   padding: 20px;
