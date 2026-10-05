@@ -101,6 +101,15 @@ Manifest statuses:
 - `held`: provide a `reason`; the image is accounted for but its unclear content is
   not invented or silently added to practice.
 
+A held source is not permanently frozen. If a later reviewed pass can safely resolve
+it, keep the **same source ID and exact SHA-256**. A `held → integrated` transition
+must include a valid reviewed lesson that references that source. A
+`held → duplicate` transition must point directly to an `integrated` canonical
+source and include a reason. Digest changes, status downgrades, duplicate chains, and
+renaming the same bytes to work around a held record are rejected. This keeps the
+original provenance identity instead of laundering an uncertain source through a new
+filename.
+
 Each batch must be self-contained for validation. When a new photo adds provenance
 to an existing lesson, include an unchanged reviewed copy of that lesson with the
 new photo source(s). The merger preserves the existing addedOn and unions sources.
