@@ -49,7 +49,7 @@ test("each tab exposes its primary answer in the first viewport",async({page})=>
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
   const targets=[
     ["Today",".hero-card"],["Week",".week-nav"],["Calendar",".calendar-card"],
-    ["Study",".study-at-a-glance"],["Study Games",".study-game-grid"],["Family",".family-hero"]
+    ["Study","#study-hub .hub-content > .hub-card:first-child"],["Study Games",".study-game-grid"],["Family",".family-hero"]
   ];
   for(const [tab,selector] of targets){
     await openDestination(page,tab);

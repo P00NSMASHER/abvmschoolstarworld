@@ -318,7 +318,11 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   const staticShell=sw.match(/const STATIC_SHELL = \[([\s\S]*?)\];/)?.[1]||"";
   const cached=[...staticShell.matchAll(/"\.\/[^\"]+"/g)];
   expect(cached.length).toBeLessThanOrEqual(12);
-  expect(sw).toContain('const OPTIONAL_DATA = ["./data/study-pack-runtime.json"]');
+  const optional=sw.match(/const OPTIONAL_DATA = \[([\s\S]*?)\];/)?.[1]||"";
+  expect([...optional.matchAll(/"(\.\/[^\"]+)"/g)].map(match=>match[1])).toEqual([
+    "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json",
+    "./study-hub.mjs", "./study-model.mjs", "./star-practice.mjs", "./study-hub.css"
+  ]);
 });
 
 

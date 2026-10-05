@@ -222,9 +222,27 @@
   grid-column: 1/-1;
 }
 [data-study-legacy] {
-  display: contents;
+  display: block;
+  grid-column: 1 / -1;
+  min-width: 0;
 }
 @media (min-width: 700px) {
+  /* Preserve subject rows inside the wrapper used for Study section switching. */
+  .study-screen > [data-study-legacy] {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 14px;
+    align-content: start;
+  }
+  .study-screen > [data-study-legacy] > * {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+  .study-screen > [data-study-legacy] > .study-accordion {
+    grid-column: auto;
+    align-self: start;
+    margin-bottom: 12px;
+  }
   .hub-tabs {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
