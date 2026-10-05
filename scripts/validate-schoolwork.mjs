@@ -9,13 +9,27 @@ const text = value => typeof value === 'string' && value.trim().length > 0;
 function unique(values, label) {
   if (new Set(values).size !== values.length) throw new Error(`Duplicate ${label}`);
 }
+const allowedKeys = {
+  root: new Set(['schemaVersion','uploadedPhotoCount','distinctWorksheetNote','lessons','sourceManifest']),
+  lesson: new Set(['id','title','subject','sources','skills','notes','studiedOn','addedOn','dateStatus','questions','chapter']),
+  question: new Set(['id','subject','skill','prompt','answer','choices','explanation','hint','sourceFact','tier','questionType','difficulty','dok','domain','standards','provenance']),
+  source: new Set(['id','sha256','status','duplicateOf','reason'])
+};
+function assertAllowedKeys(value, allowed, label) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error(`${label} must be an object`);
+  for (const key of Object.keys(value)) {
+    if (!allowed.has(key)) throw new Error(`${label}: unknown key ${key}`);
+  }
+}
 export function validateSchoolwork(pack, {requireManifest = false} = {}) {
   const check = (condition, message) => { if (!condition) throw new Error(message); };
-  check(pack?.schemaVersion === 1 && Array.isArray(pack.lessons), 'Unsupported schoolwork schema');
+  assertAllowedKeys(pack, allowedKeys.root, 'Schoolwork root');
+  check(pack.schemaVersion === 1 && Array.isArray(pack.lessons), 'Unsupported schoolwork schema');
   check(Number.isInteger(pack.uploadedPhotoCount) && pack.uploadedPhotoCount >= 0, 'Invalid uploadedPhotoCount');
   unique(pack.lessons.map(l => l.id), 'lesson IDs');
   const questionIds = [], prompts = [], referenced = new Set();
   for (const lesson of pack.lessons) {
+    assertAllowedKeys(lesson, allowedKeys.lesson, 'Lesson');
     check(text(lesson.id) && /^[a-z0-9][a-z0-9-]*$/i.test(lesson.id), 'Invalid lesson ID');
     for (const key of ['title','subject','dateStatus']) check(text(lesson[key]), `${lesson.id}: missing ${key}`);
     check(Array.isArray(lesson.sources) && lesson.sources.length && lesson.sources.every(text), `${lesson.id}: missing sources`);
@@ -30,6 +44,7 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
     check(lesson.chapter === undefined || (Number.isInteger(lesson.chapter) && lesson.chapter >= 1 && lesson.chapter <= 99), `${lesson.id}: invalid chapter`);
     check(Array.isArray(lesson.questions), `${lesson.id}: missing questions array`);
     for (const q of lesson.questions) {
+      assertAllowedKeys(q, allowedKeys.question, `${lesson.id} question`);
       for (const key of ['id','subject','skill','prompt','answer','explanation','sourceFact','provenance']) check(text(q[key]), `${lesson.id}: question missing ${key}`);
       check(lesson.skills.includes(q.skill), `${q.id}: question skill is not in lesson`);
       check(Array.isArray(q.choices) && q.choices.length >= 2 && q.choices.length <= 6 && q.choices.every(text), `${q.id}: invalid choices`);
@@ -48,6 +63,7 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
     const byId = new Map(manifest.map(s=>[s.id,s]));
     const hashes = new Map();
     for (const source of manifest) {
+      assertAllowedKeys(source, allowedKeys.source, 'Manifest source');
       check(text(source.id) && /^[a-zA-Z0-9_.-]+$/.test(source.id), 'Invalid non-identifying source ID');
       check(/^[a-f0-9]{64}$/.test(source.sha256), `${source.id}: missing SHA-256`);
       check(['integrated','duplicate','held'].includes(source.status), `${source.id}: invalid source status`);
