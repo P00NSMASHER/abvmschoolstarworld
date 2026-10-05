@@ -181,7 +181,7 @@ test('Study Hub loading shell keeps the first legacy action stable',async({page}
     await page.goto('/#study');
     const host=page.locator('#study-hub');
     await expect(host).toHaveAttribute('data-study-state','loading',{timeout:10_000});
-    await expect(host.getByRole('status',{name:/Opening your study collection/i})).toBeVisible();
+    await expect(host.locator('[role="status"]')).toContainText('Opening your study collection');
     const legacy=page.locator('.study-at-a-glance');
     await expect(legacy).toBeVisible();
     const before=await legacy.evaluate(el=>el.getBoundingClientRect().top);
