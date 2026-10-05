@@ -20,10 +20,14 @@ test('public schoolwork schema rejects unknown keys at every object level',()=>{
   ['question answer-sheet variant',p=>p.lessons[0].questions[0].answerSheetText='Private response'],
   ['manifest private URL',p=>p.sourceManifest[0].originalPrivateUrl='https://private.example/item'],
   ['manifest nested metadata',p=>p.sourceManifest[0].metadata={owner:'Private'}],
+  ['allowed standards cannot hide metadata',p=>p.lessons[0].questions[0].standards=[{studentFullName:'Private'}]],
+  ['allowed optional hint must stay text',p=>p.lessons[0].questions[0].hint={rawOcrTranscript:'Private'}],
+  ['allowed root note must stay text',p=>p.distinctWorksheetNote={childName:'Private'}],
+  ['allowed manifest reason must stay text',p=>p.sourceManifest[0].reason={originalPrivateUrl:'https://private.example/item'}],
  ];
  for(const [label,mutate] of cases){
   const p=pack();mutate(p);
-  assert.throws(()=>validateSchoolwork(p,{requireManifest:true}),/unknown field/,label);
+  assert.throws(()=>validateSchoolwork(p,{requireManifest:true}),/(unknown field|invalid standards|invalid hint|Invalid distinctWorksheetNote|invalid reason)/,label);
  }
 });
 test('semantic rephotographs are accounted without duplicating lesson content',()=>{
