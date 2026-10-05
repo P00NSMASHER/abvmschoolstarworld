@@ -90,3 +90,80 @@ test('touch navigation reaches the five tabs and Study Games',async({page})=>{
   await page.locator('.study-games-cta').click();
   await expect(page.locator('.study-game-grid')).toBeVisible();
 });
+
+test('Study subject bullets reserve space and never collide with copy',async({page})=>{
+  await page.setViewportSize({width:393,height:852});
+  await page.goto('/#study');
+  await expect(page.locator('.study-accordion')).toHaveCount(6);
+  const cards=page.locator('.study-accordion');
+  for(let i=0;i<await cards.count();i++){
+    const card=cards.nth(i);
+    if(!(await card.getAttribute('open')))await card.locator('summary').click();
+    const items=card.locator('li');
+    for(let j=0;j<await items.count();j++){
+      const item=items.nth(j);
+      const text=(await item.innerText()).trim();
+      expect(text.startsWith('✓'),`subject ${i+1} item ${j+1} duplicates its marker in text`).toBeFalsy();
+      const geometry=await item.evaluate(el=>{
+        const style=getComputedStyle(el);
+        const before=getComputedStyle(el,'::before');
+        const columns=style.gridTemplateColumns.split(/\s+/).map(value=>parseFloat(value)).filter(Number.isFinite);
+        return {
+          display:style.display,
+          columns,
+          minWidth:style.minWidth,
+          beforeContent:before.content,
+          beforePosition:before.position,
+          beforeWidth:parseFloat(before.width),
+          beforeHeight:parseFloat(before.height)
+        };
+      });
+      expect(geometry.display).toBe('grid');
+      expect(geometry.columns[0]).toBeGreaterThanOrEqual(18);
+      expect(geometry.beforeContent).toContain('✓');
+      expect(geometry.beforePosition).toBe('static');
+      expect(geometry.beforeWidth).toBeGreaterThanOrEqual(17);
+      expect(geometry.beforeHeight).toBeGreaterThanOrEqual(17);
+    }
+  }
+});
+
+test('visual integrity audit keeps every primary screen inside the app canvas',async({page})=>{
+  for(const viewport of [{width:393,height:852},{width:820,height:1180}]){
+    await page.setViewportSize(viewport);
+    for(const tab of ['today','week','calendar','study','family']){
+      await page.goto('/#'+tab);
+      const screen=page.locator('.screen');
+      await expect(screen).toBeVisible();
+      const audit=await screen.evaluate(el=>{
+        const root=el.getBoundingClientRect();
+        const offenders=[];
+        const nodes=[...el.querySelectorAll('section,details,.future-card,.lunch-card,.study-games-cta,.calendar-card,.calendar-day-card')];
+        for(const node of nodes){
+          const style=getComputedStyle(node);
+          if(style.display==='none'||style.visibility==='hidden')continue;
+          const rect=node.getBoundingClientRect();
+          if(rect.width<1||rect.height<1)continue;
+          if(rect.left<root.left-2||rect.right>root.right+2||node.scrollWidth>node.clientWidth+2){
+            offenders.push({
+              cls:node.className||node.tagName,
+              left:Math.round(rect.left-root.left),
+              right:Math.round(rect.right-root.right),
+              visible:node.clientWidth,
+              content:node.scrollWidth
+            });
+          }
+        }
+        return {
+          pageOverflow:document.documentElement.scrollWidth>window.innerWidth+1,
+          screenOverflow:el.scrollWidth>el.clientWidth+1,
+          offenders
+        };
+      });
+      expect(audit.pageOverflow,`${tab} page overflows at ${viewport.width}px`).toBeFalsy();
+      expect(audit.screenOverflow,`${tab} screen overflows at ${viewport.width}px`).toBeFalsy();
+      expect(audit.offenders,`${tab} contains clipped or out-of-canvas cards at ${viewport.width}px`).toEqual([]);
+    }
+  }
+});
+
