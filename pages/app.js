@@ -698,31 +698,14 @@ function packContentKey(data){
     lunchMissingDates:lunchSource.missingDates||[]
   });
 }
-function isPackObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value)}
-function validatePackEnvelope(data,url){
-  if(!isPackObject(data)||!isPackObject(data.pack))throw new Error("Invalid pack envelope from "+url);
-  const candidate=data.pack;
-  if(candidate.schemaVersion!==2)throw new Error("Unsupported pack schema from "+url);
-  if(candidate.sourceSufficient!==true)throw new Error("Incomplete pack from "+url);
-  if(typeof candidate.sourceHash!=="string"||!candidate.sourceHash.trim())throw new Error("Missing pack source identity from "+url);
-  if(typeof candidate.weekLabel!=="string"||!candidate.weekLabel.trim())throw new Error("Missing pack week from "+url);
-  const stamp=data.sourceLastSeenAt||candidate.sourceCapturedAt||candidate.generatedAt;
-  if(typeof stamp!=="string"||Number.isNaN(Date.parse(stamp)))throw new Error("Invalid pack verification time from "+url);
-  const objectRows=["subjects","importantDates","homework","lunchMenu","lunchArchive","vocabulary","questions"];
-  for(const key of objectRows){
-    if(!Array.isArray(candidate[key])||candidate[key].some(row=>!isPackObject(row)))throw new Error("Invalid pack array "+key+" from "+url);
-  }
-  for(const key of ["reminders","parentNotices"]){
-    if(!Array.isArray(candidate[key])||candidate[key].some(row=>typeof row!=="string"))throw new Error("Invalid pack array "+key+" from "+url);
-  }
-  for(const key of ["lunchMenuSource","contentPipeline","recentReviewPipeline","schoolChangeFeed"]){
-    if(!isPackObject(candidate[key]))throw new Error("Invalid pack object "+key+" from "+url);
-  }
-  if(!Array.isArray(candidate.lunchMenuSource.sourcePages))throw new Error("Invalid lunch source pages from "+url);
-  if(!Array.isArray(candidate.contentPipeline.skills)||!Array.isArray(candidate.contentPipeline.questions))throw new Error("Invalid content pipeline from "+url);
-  if(!Array.isArray(candidate.recentReviewPipeline.skills)||!Array.isArray(candidate.recentReviewPipeline.questions))throw new Error("Invalid review pipeline from "+url);
-  if(!Array.isArray(candidate.schoolChangeFeed.items))throw new Error("Invalid school change feed from "+url);
-  return data;
+function validatePackEnvelope(d,u){
+  const p=d?.pack,o=v=>!!v&&typeof v==="object"&&!Array.isArray(v),a=(v,f)=>Array.isArray(v)&&v.every(f),bad=()=>{throw Error("Invalid school pack from "+u)},stamp=d?.sourceLastSeenAt||p?.sourceCapturedAt||p?.generatedAt;
+  if(!o(d)||!o(p)||p.schemaVersion!==2||p.sourceSufficient!==true||!String(p.sourceHash||"").trim()||!String(p.weekLabel||"").trim()||typeof stamp!=="string"||Number.isNaN(Date.parse(stamp)))bad();
+  if(!"subjects importantDates homework lunchMenu lunchArchive vocabulary questions".split(" ").every(k=>a(p[k],o)))bad();
+  if(!"reminders parentNotices".split(" ").every(k=>a(p[k],v=>typeof v==="string")))bad();
+  if(!"lunchMenuSource contentPipeline recentReviewPipeline schoolChangeFeed".split(" ").every(k=>o(p[k])))bad();
+  if(![p.lunchMenuSource.sourcePages,p.contentPipeline.skills,p.contentPipeline.questions,p.recentReviewPipeline.skills,p.recentReviewPipeline.questions,p.schoolChangeFeed.items].every(Array.isArray))bad();
+  return d;
 }
 async function readPackUrl(url){
   const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),8000);
