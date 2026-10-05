@@ -74,7 +74,7 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
       check(source.reason === undefined || text(source.reason), `${source.id}: invalid reason`);
       if (source.status === 'duplicate') {
         const canonical=byId.get(source.duplicateOf);
-        check(canonical && canonical.id !== source.id && canonical.status !== 'duplicate', `${source.id}: invalid duplicateOf`);
+        check(canonical && canonical.id !== source.id && canonical.status === 'integrated', `${source.id}: invalid duplicateOf`);
         check(canonical.sha256 === source.sha256 || text(source.reason), `${source.id}: semantic duplicate requires a reason`);
       }
       if (hashes.has(source.sha256)) check(source.status === 'duplicate' || hashes.get(source.sha256).status === 'duplicate', `${source.id}: repeated hash must be recorded as a duplicate`);
