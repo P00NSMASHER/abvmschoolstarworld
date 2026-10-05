@@ -1197,6 +1197,8 @@ function targetDifficultyFor(skillStats,skill){
 }
 function reviewPriority(skillStats,skill,now=Date.now()){
   const row=skillStats?.[skill]||{};
+  const scheduled=window.ABVMStudyReview?.validReview(row,now);
+  if(scheduled)return window.ABVMStudyReview.isDue(row,now)?4+Math.min(3,Math.max(0,(now-scheduled.dueAt)/86400000)):(row.LastResolution?.independent===false?2:.5);
   const seen=Number(row.Seen)||0;
   if(!seen)return 1.5;
   const hasEvidenceFields=Object.prototype.hasOwnProperty.call(row,"IndependentCorrect")||Object.prototype.hasOwnProperty.call(row,"CorrectAfterRetry");
@@ -1392,6 +1394,19 @@ function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillSt
     return orderForVariety(selected.slice(0,count));
   }
   return pickBalanced(pool,count,seed,skillStats,preferredSkills,recent);
+}
+function selectDailyQuestions(catalog,{count=8,seed="daily",skillStats={},pack={},now=Date.now()}={}){
+  const due=window.ABVMStudyReview?.dueSkills(pack,skillStats,now)||[],reviews=[];
+  for(const skill of due){
+    const rows=catalog.questions.filter(q=>q.skill===skill.id);
+    const tier=["material","recent-review","star-fallback"].find(t=>rows.some(q=>q.tier===t));
+    const picked=pickBalanced(rows.filter(q=>q.tier===tier),1,seed+"|review|"+skill.id,skillStats,[],new Set(loadRotation(catalog.sourceKey).recent.map(r=>r.v)))[0];
+    if(picked)reviews.push(picked);
+    if(reviews.length>=Math.min(3,count))break;
+  }
+  const used=new Set(reviews.map(semanticRotationKey));
+  const remaining={...catalog,questions:catalog.questions.filter(q=>!used.has(semanticRotationKey(q)))};
+  return [...reviews,...selectQuestions(remaining,{count:Math.max(0,count-reviews.length),seed,skillStats})].slice(0,count);
 }
 function supportQuestion(catalog,current,{skillStats={},seed="support"}={}){
   if(!current)return null;
@@ -1875,6 +1890,7 @@ function recordLearning(question,correct,{attemptCount=1,incorrectCount=correct?
     row.ConsecutiveCorrect=0;
     if(row.ConsecutiveWrong>=2)row.TargetDifficulty=2;
   }
+  if(window.ABVMStudyReview)row.Review=window.ABVMStudyReview.schedule(row,{correct,independent,now});
   row.LastResolution={correct:!!correct,independent,attemptCount:attempts,incorrectCount:incorrect,hintCount:hints,resolvedAt:now};
   recordItemQuality(question,correct,{attemptCount:attempts,incorrectCount:incorrect,hintCount:hints,kind:"normal",priorMastery});
   all[question.skill]=row;writeLearning(all);return row;
@@ -1959,6 +1975,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,REVIEW_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,validateRichContent,selectQuestions,learningFirstSummary,studyStarPolicy,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,reviewQuestionFamilySafeUsage,questionFamilyRolloutPolicy,reviewQuestionFamilyPromotion,itemQualityKey
+  buildCatalog,validateCatalog,validateRichContent,selectQuestions,selectDailyQuestions,learningFirstSummary,studyStarPolicy,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,reviewQuestionFamilySafeUsage,questionFamilyRolloutPolicy,reviewQuestionFamilyPromotion,itemQualityKey
 });
 })();

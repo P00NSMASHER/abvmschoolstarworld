@@ -78,3 +78,7 @@ console.log("CSS/code hygiene PASS",{
   appBytes:Buffer.byteLength(app,"utf8"),
   calendarCellRuleBlocks,
 });
+
+for(const [file,limit] of [["study-review.css",2000],["study-review.js",8000]]){
+  if(Buffer.byteLength(readFileSync(new URL("../pages/"+file,import.meta.url)),"utf8")>limit)fail(file+" exceeded its Study feature budget");
+}

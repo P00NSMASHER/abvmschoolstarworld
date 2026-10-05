@@ -162,7 +162,7 @@ test('Step 9 freezes reward identity and advances all PWA assets together',async
   expect(app).toContain('studyStarRoundId({sourcePack:sourceKey,mode:g.mode,sessionSeed:g.sessionSeed})');
   expect(app).toContain('commitStudyStarRewards({sourcePack:sourceKey,mode:g.mode,sessionSeed:g.sessionSeed,roundId,completed:true,comebackSucceeded:!!g.comebackSucceeded})');
   expect(app).toContain('tries:0,misses:0,hints:0,retry:0,lastWrong:null');
-  expect(app).toContain('./study-games.js?v=93');
+  expect(app).toContain('./study-games.js?v=94');
   expect(app).toContain('./study-games-view.js?v=6');
   const styleVersion=index.match(/\.\/styles\.css\?v=(\d+)/)?.[1];
   const appVersion=index.match(/\.\/app\.js\?v=(\d+)/)?.[1];
@@ -174,11 +174,11 @@ test('Step 9 freezes reward identity and advances all PWA assets together',async
   expect(cacheVersion).toBe(reloadVersion);
   expect(sw).toContain(`./styles.css?v=${styleVersion}`);
   expect(sw).toContain(`./app.js?v=${appVersion}`);
-  for(const script of ['weekly-learning','school-updates','study-practice']){
+  for(const script of ['weekly-learning','school-updates','study-support']){
     const ref=index.match(new RegExp('\\./'+script+'\\.js\\?v=\\d+'))?.[0];
     expect(ref).toBeTruthy();
     expect(sw).toContain(ref);
   }
-  expect(sw).toContain('./study-games.js?v=93');
+  expect(sw).toContain('./study-games.js?v=94');
   expect(sw).toContain('./study-games-view.js?v=6');
 });
