@@ -564,3 +564,19 @@ test('bad generated question specs are rejected before publication', () => {
   assert.ok(issues.includes('standards-missing'));
   assert.ok(issues.includes('dok-invalid'));
 });
+
+test('teacher characters topic maps to existing original main-character practice without masking new constructs',()=>{
+  for(const topic of ['Reading comprehension: characters','Reading comprehension: characters, setting','Reading comprehension: story characters']){
+    const pack={sourceHash:'characters-alias',subjects:[{subject:'Reading / ELA',topics:[topic],studyNotes:[]}],vocabulary:[]};
+    const pipeline=buildGrade2ContentPipeline(pack,{sourceHash:pack.sourceHash,generatedAt:'2026-10-05T00:00:00Z'});
+    assert.ok(pipeline.skills.some(s=>s.id==='main-character'));
+    assert.ok(pipeline.questions.filter(q=>q.skill==='main-character').length>=2);
+    assert.equal(pipeline.qa.unsupportedSkillCount,0);
+    assert.deepEqual(validateGrade2ContentPipeline(pipeline),[]);
+  }
+  for(const topic of ['character traits','character motivations']){
+    const pipeline=buildGrade2ContentPipeline({subjects:[{subject:'Reading / ELA',topics:['Reading comprehension: '+topic+', setting']}],vocabulary:[]},{generatedAt:'2026-10-05T00:00:00Z'});
+    assert.ok(pipeline.coverage.some(c=>c.status==='GENERATOR_UNSUPPORTED'&&c.topic===topic));
+    assert.ok(!pipeline.skills.some(s=>s.id==='main-character'));
+  }
+});

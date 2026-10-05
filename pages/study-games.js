@@ -1198,7 +1198,7 @@ function targetDifficultyFor(skillStats,skill){
 function reviewPriority(skillStats,skill,now=Date.now()){
   const row=skillStats?.[skill]||{};
   const scheduled=window.ABVMStudyReview?.validReview(row,now);
-  if(scheduled)return window.ABVMStudyReview.isDue(row,now)?4+Math.min(3,Math.max(0,(now-scheduled.dueAt)/86400000)):.5;
+  if(scheduled)return window.ABVMStudyReview.isDue(row,now)?4+Math.min(3,Math.max(0,(now-scheduled.dueAt)/86400000)):(row.LastResolution?.independent===false?2:.5);
   const seen=Number(row.Seen)||0;
   if(!seen)return 1.5;
   const hasEvidenceFields=Object.prototype.hasOwnProperty.call(row,"IndependentCorrect")||Object.prototype.hasOwnProperty.call(row,"CorrectAfterRetry");

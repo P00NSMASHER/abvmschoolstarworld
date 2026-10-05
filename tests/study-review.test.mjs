@@ -67,3 +67,14 @@ test('daily completion is local, school-day scoped, and tolerates storage denial
  storage.set('abvm-daily-practice:v1','broken');assert.equal(r.completion(T),null);
  const bad={get(){throw Error('blocked')},set(){throw Error('blocked')}};const denied=api(bad).review;assert.equal(denied.complete(T),false);assert.equal(denied.completion(T),null);
 });
+test('assisted answers keep higher near-term review priority than independent success',()=>{
+ const {engine:e}=api();const assisted=e.recordLearning({skill:'theme'},true,{incorrectCount:1,attemptCount:2}),independent=e.recordLearning({skill:'inference'},true);
+ assert.ok(e.reviewPriority({theme:assisted},'theme')>e.reviewPriority({inference:independent},'inference'));
+});
+test('offline support bundle contains source modules and keeps the shell within budget',()=>{
+ const read=name=>fs.readFileSync(new URL('../pages/'+name,import.meta.url),'utf8');
+ const bundle=read('study-support.js'),sw=read('sw.js');
+ assert.ok(bundle.includes(read('study-review.js')));assert.ok(bundle.includes(read('study-practice.js')));assert.ok(bundle.includes(JSON.stringify(read('study-review.css'))));
+ assert.ok(sw.includes('./study-support.js?v=1'));assert.ok(read('index.html').includes('./study-support.js?v=1'));
+ const shell=sw.match(/const STATIC_SHELL = \[([\s\S]*?)\];/)[1];assert.ok([...shell.matchAll(/"\.\/[^\"]+"/g)].length<=12);
+});

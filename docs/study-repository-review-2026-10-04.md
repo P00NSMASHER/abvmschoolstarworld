@@ -45,3 +45,9 @@ Implemented a browser-local schedule stored within existing learning rows: indep
 The new Daily Practice card starts eight questions with up to three due-skill review questions followed by current school work and original fallback practice. It uses only skills with playable catalog items, prefers current-source items for the same skill, preserves hints/rewards, and does not alter existing named games. Completing a daily round changes the card to a calm completion state for the school day, without a streak penalty, timer or notifications. Teacher information and subject details remain available below a compact game chooser.
 
 Regression gates cover schedule boundaries, assisted answers, repeated/early attempts, corrupt storage, legacy progress, school timezone/DST, daily selection, first-use and completed states, 200% text, iPhone WebKit, and offline shell assets. No external learner telemetry or paid infrastructure added.
+
+### Release integration repairs
+
+The broader browser suite caught an assisted-answer priority regression; scheduled but assisted resolutions retain higher near-term practice priority than independent success. Source modules and study CSS now compile to one bounded offline support script, preserving the existing 12-file service-worker shell limit and the original CSS/app budgets. The browser screenshot was reviewed at 393 × 852 in WebKit.
+
+A separate live refresh failure was traced to the teacher topic `characters`. The parser now recognizes that exact standalone/list alias through the existing approved main-character practice family. New negative tests keep `character traits` and `character motivations` unsupported instead of falsely accepting them. The teacher-refresh workflow now installs both Chromium and WebKit before running the full candidate QA suite; schedules and curriculum publication gates are unchanged.

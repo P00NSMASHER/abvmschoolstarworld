@@ -3,9 +3,7 @@ const CACHE = "abvm-grade2-parent-companion-v114-runtime-pack";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=103",
-  "./study-practice.js?v=1",
-  "./study-review.js?v=1",
-  "./study-review.css?v=1",
+  "./study-support.js?v=1",
   "./app.js?v=112",
   "./school-updates.js?v=1",
   "./weekly-learning.js?v=3",

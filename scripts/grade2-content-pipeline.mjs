@@ -279,7 +279,7 @@ const BASE_SKILLS = [
     id: 'main-character',
     subject: 'Reading / ELA',
     label: 'Main character',
-    pattern: /main character/i,
+    pattern: /\bmain character\b|(?:^|[:,;|])\s*(?:story\s+)?characters?\s*(?=$|[,;|.])/i,
     standards: ['CCSS.RL.2.3'],
     domain: 'Analyzing literary text',
     studyNotes: ['The main character is the person or animal the story mostly follows.'],
