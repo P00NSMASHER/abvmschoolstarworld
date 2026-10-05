@@ -14,7 +14,7 @@ const STATIC_SHELL = [
   "./assets/abvm-app-icon-192.png",
   "./assets/abvm-app-icon-512.png"
 ];
-const OPTIONAL_DATA = ["./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./study-hub.mjs", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-model.mjs", "./star-practice.mjs", "./study-hub.css", "./study-hub.css?v=2", "./family-view.css?v=1", "./visual-polish.css?v=1", "./lunch-art.js?v=1"];
+const OPTIONAL_DATA = ["./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./study-hub.mjs", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-model.mjs", "./star-practice.mjs", "./study-hub.css?v=2", "./family-view.css?v=1", "./visual-polish.css?v=1", "./lunch-art.js?v=1"];
 
 self.addEventListener("install",event=>{
   event.waitUntil((async()=>{
