@@ -60,18 +60,32 @@ test("weekly test prep covers same-day subjects and completion persists", async 
   await expect(prep).toContainText("Religion Chapter 2 test");
   await page.locator("[data-test]").click();
   const subjects = [];
-  while (await page.locator(".hub-round").count()) {
-    subjects.push(
-      (await page.locator(".hub-round .hub-caption").textContent()).split(
-        " · ",
-      )[1],
-    );
-    await page.locator("[data-answer]").first().click();
+  for (let question = 0; question < 8; question++) {
+    await expect(page.locator(".hub-round")).toBeVisible();
+    const caption = await page.locator(".hub-round .hub-caption").textContent();
+    expect(caption).toContain(`${question + 1} of 8`);
+    subjects.push(caption.split(" · ")[1]);
+    // The bank includes reviewed archive questions, not just the Yes/No fixture.
+    // A wrong answer now offers a retry instead of immediately revealing Next.
+    const choiceCount = await page.locator("[data-answer]").count();
+    for (let attempt = 0; attempt < choiceCount; attempt++) {
+      const available = page.locator("[data-answer]:not(:disabled)");
+      const countBefore = await available.count();
+      expect(countBefore).toBeGreaterThan(0);
+      const answerIndex = await available.first().getAttribute("data-answer");
+      await available.first().click();
+      if (await page.locator("[data-next]").count()) break;
+      await expect(page.locator(`[data-answer="${answerIndex}"]`)).toBeDisabled();
+      await expect(available).toHaveCount(countBefore - 1);
+      await expect(page.locator(".hub-feedback")).toBeVisible();
+    }
+    await expect(page.locator("[data-next]")).toBeVisible();
     await page.locator("[data-next]").click();
   }
-  expect(subjects.filter((s) => s === "Math").length).toBe(
-    subjects.filter((s) => s === "Religion").length,
-  );
+  await expect(page.locator(".hub-round")).toHaveCount(0);
+  await expect(page.locator(".hub-finish")).toBeVisible();
+  expect(subjects.filter((s) => s === "Math")).toHaveLength(4);
+  expect(subjects.filter((s) => s === "Religion")).toHaveLength(4);
   await page.locator("[data-end]").click();
   await page.locator("[data-complete-test]").click();
   await expect(

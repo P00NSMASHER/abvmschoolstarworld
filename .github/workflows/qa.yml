@@ -49,6 +49,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Snapshot tracked candidate source for independent reproduction
+        shell: bash
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/abvm-candidate-source"
+          git archive --format=tar HEAD -o "$RUNNER_TEMP/abvm-candidate-source/source.tar"
+          git rev-parse HEAD > "$RUNNER_TEMP/abvm-candidate-source/tested-commit.txt"
+          printf '%s\n' "$PR_HEAD_SHA" > "$RUNNER_TEMP/abvm-candidate-source/pr-head.txt"
+          cd "$RUNNER_TEMP/abvm-candidate-source"
+          sha256sum source.tar > SHA256SUMS
+
+      - name: Retain tracked source snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: abvm-source-${{ github.run_id }}
+          path: ${{ runner.temp }}/abvm-candidate-source/
+          retention-days: 7
+          if-no-files-found: error
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:

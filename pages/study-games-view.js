@@ -31,14 +31,14 @@ function richVisual(raw){
 
 function play({g,mode,q,teach,retryInstruction,labels}){
   if(!q)return '<section class="game-empty"><h2>No questions are ready for this game yet.</h2><button type="button" data-game-home>Back to games</button></section>';
-  const support=g.supportMode,comeback=g.comebackMode,progress=g.index+1,total=g.questions.length,pct=Math.round((progress/Math.max(1,total))*100),chosen=g.selectedIndex,visual=richVisual(q.richContent);
+  const support=g.supportMode,comeback=g.comebackMode,progress=g.index+1,total=g.questions.length,pct=Math.round((progress/Math.max(1,total))*100),chosen=g.selectedIndex,visual=richVisual(q.richContent),wrong=new Set(g.wrong||[]);
   const answers=q.choices.map((choice,index)=>{
     let klass="";
     if(g.answered){
       if(choice===q.answer)klass=" correct";
-      else if(index===chosen||index===g.lastWrong)klass=" wrong";
-    }else if(g.retry&&index===g.lastWrong)klass=" wrong";
-    return '<button type="button" class="game-answer'+klass+'" data-game-answer="'+index+'" '+(g.answered?'disabled':'')+'><span>'+String.fromCharCode(65+index)+'</span><strong>'+esc(choice)+'</strong></button>';
+      else if(index===chosen||wrong.has(index))klass=" wrong";
+    }else if(wrong.has(index))klass=" wrong";
+    return '<button type="button" class="game-answer'+klass+'" data-game-answer="'+index+'" '+(g.answered||wrong.has(index)?'disabled aria-disabled="true"':'')+'><span>'+String.fromCharCode(65+index)+'</span><strong>'+esc(choice)+'</strong></button>';
   }).join("");
   const selected=chosen===null?null:q.choices[chosen],correct=selected===q.answer,targeted=!correct&&selected?q.choiceDiagnostics?.[selected]?.feedback:null;
   const adaptive=!support&&!comeback&&!correct&&(g.learningRow?.ConsecutiveWrong||0)>=2?'<small class="adaptive-note">A smaller same-skill support step is next. It does not count toward your score.</small>':'';

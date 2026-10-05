@@ -1,0 +1,92 @@
+name: Study QA reproduction bundle
+on:
+  pull_request:
+    paths:
+      - 'pages/study-room*'
+      - 'pages/study-hub*'
+      - 'pages/index.html'
+      - 'pages/sw.js'
+      - 'tests/study-room*'
+      - 'tests/app.spec.mjs'
+      - 'tests/gold-standard.spec.mjs'
+      - 'tests/iphone-polish.spec.mjs'
+      - 'tests/study-stars-learning-finish.spec.mjs'
+      - '.github/workflows/qa-reproduction.yml'
+permissions:
+  contents: read
+concurrency:
+  group: abvm-qa-reproduction-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  independent-reproduction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Snapshot exact candidate source
+        shell: bash
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/abvm-candidate-source"
+          git archive --format=tar HEAD -o "$RUNNER_TEMP/abvm-candidate-source/source.tar"
+          git rev-parse HEAD > "$RUNNER_TEMP/abvm-candidate-source/tested-commit.txt"
+          printf '%s\n' "$PR_HEAD_SHA" > "$RUNNER_TEMP/abvm-candidate-source/pr-head.txt"
+          cd "$RUNNER_TEMP/abvm-candidate-source"
+          sha256sum source.tar > SHA256SUMS
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - name: Static validation
+        run: npm run qa:static
+
+      - name: Unit and lunch-source failure-path tests
+        run: npm run qa:unit
+
+      - name: Yahoo weekly importer parser tests
+        run: python3 -m unittest discover -s tests -p test_yahoo_weekly_import.py
+
+      - name: Install Chromium and WebKit
+        run: npx playwright install --with-deps chromium webkit
+
+      - name: Browser, responsive, accessibility, and Study Room QA
+        run: npm run qa:e2e
+
+      - name: Verify publication checker against candidate app
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --directory pages >/tmp/abvm-preview.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          ABVM_LIVE_URL=http://127.0.0.1:4173/ node scripts/verify-live-lunch.mjs
+
+      - name: Package reproducible independent-QA evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/abvm-independent-qa"
+          cp -R "$RUNNER_TEMP/abvm-candidate-source/." "$RUNNER_TEMP/abvm-independent-qa/"
+          cp package-lock.json "$RUNNER_TEMP/abvm-independent-qa/package-lock.json"
+          sha256sum package-lock.json > "$RUNNER_TEMP/abvm-independent-qa/lock-sha256.txt"
+          if [ -d live-lunch-proof ]; then cp -R live-lunch-proof "$RUNNER_TEMP/abvm-independent-qa/"; fi
+          if [ -d playwright-report ]; then cp -R playwright-report "$RUNNER_TEMP/abvm-independent-qa/"; fi
+          if [ -d test-results ]; then cp -R test-results "$RUNNER_TEMP/abvm-independent-qa/"; fi
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: abvm-study-independent-qa-${{ github.run_id }}
+          path: ${{ runner.temp }}/abvm-independent-qa/
+          retention-days: 14
+          if-no-files-found: error
