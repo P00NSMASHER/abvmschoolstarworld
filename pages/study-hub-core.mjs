@@ -396,8 +396,7 @@ export async function mountStudyHub(
       const focused = /chapter\s*\d+|grammar|predicate/i.test(t.label)
         ? allLessons().flatMap((l) => l.questions || [])
         : [];
-      const primary = questionsForTest(t, unique([...weekly(), ...focused]));
-      return primary.length ? primary : questionsForTest(t, star);
+      return questionsForTest(t, unique([...weekly(), ...focused]));
     });
     const missing = tests.filter((t, i) => !groups[i].length),
       supported = tests.map((t, i) => ({ t, i })).filter(({ i }) => groups[i].length);
