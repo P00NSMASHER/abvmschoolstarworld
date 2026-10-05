@@ -9,7 +9,7 @@ test('long Family and Study cards never clip their content',async({page})=>{
       await expect(page.locator('.screen')).toBeVisible();
       const clipped=await page.locator('.family-actions-card,.notices-card,.study-at-a-glance').evaluateAll(nodes=>nodes.filter(x=>x.scrollHeight>x.clientHeight+2).map(x=>({class:x.className,visible:x.clientHeight,content:x.scrollHeight})));
       expect(clipped).toEqual([]);
-      const last=page.locator(tab==='family'?'.family-more':'.study-accordion').last();
+      const last=page.locator(tab==='family'?'.unofficial-note':'.study-accordion').last();
       await last.scrollIntoViewIfNeeded();
       await expect(last).toBeInViewport();
     }

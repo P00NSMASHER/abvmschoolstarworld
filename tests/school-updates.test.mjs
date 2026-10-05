@@ -30,3 +30,28 @@ test('baseline, persistent unread teacher updates, acknowledgement and storage d
  vm.runInNewContext(fs.readFileSync(new URL('../pages/school-updates.js',import.meta.url),'utf8'),context);
  assert.equal(context.window.ABVMSchoolUpdates.state(pack).available,false);
 });
+test('notice disclosure keeps complete exact source and safely escapes literal previews',()=>{
+ const u=api();
+ const source='Friday, Oct. 9: '+('Bring the permission form and read the school instructions. ').repeat(8)+'<script>alert(1)</script>';
+ const html=u.noticesCard([source]);
+ assert.match(html,/<details class="family-message"><summary>/);
+ assert.ok(html.includes('<div class="family-message-body">'+source.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</div>'));
+ assert.ok(!html.includes('<script>'));
+ assert.ok(!html.includes('status ok'));
+ const summary=html.match(/<strong>(.*?)<\/strong>/)[1];
+ assert.ok(summary.length<=113);
+ assert.ok(summary.endsWith('…'));
+});
+test('long unread collections show three previews and retain remaining disclosures without acknowledging',()=>{
+ const u=api(),pack={parentNotices:[]};
+ u.state(pack);
+ pack.parentNotices=Array.from({length:7},(_,i)=>'School notice '+i);
+ const html=u.card(pack);
+ assert.match(html,/See 4 more updates/);
+ assert.equal((html.match(/class="family-message"/g)||[]).length,7);
+ assert.equal((html.split('class="family-update-overflow"')[0].match(/class="family-message"/g)||[]).length,3);
+ for(const text of pack.parentNotices)assert.ok(html.includes(text));
+ assert.equal(u.state(pack).unread.length,7);
+ u.markRead(pack);
+ assert.equal(u.state(pack).unread.length,0);
+});

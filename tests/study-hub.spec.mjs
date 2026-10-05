@@ -16,7 +16,10 @@ async function mount(page, day, testInfo) {
   }, day + "T16:00:00-04:00");
   await page.goto("/#study");
   await expect(page.locator("#study-hub .hub-tabs")).toBeVisible();
-  await page.screenshot({path:testInfo.outputPath("study-weekly.png"),fullPage:true});
+  await page.screenshot({
+    path: testInfo.outputPath("study-weekly.png"),
+    fullPage: true,
+  });
   await page.evaluate(async () => {
     document.body.innerHTML =
       '<main><div id="fixture-hub"></div><div data-study-legacy></div></main>';
@@ -51,7 +54,8 @@ test("weekly test prep covers same-day subjects and completion persists", async 
 }, testInfo) => {
   await mount(page, "2026-10-04", testInfo);
   const prep = page.locator(".hub-card").first();
-  await expect(prep).toContainText("2026-10-07");
+  await expect(prep.locator("time")).toHaveAttribute("datetime", "2026-10-07");
+  await expect(prep.locator("time")).toHaveText("Wednesday, Oct 7");
   await expect(prep).toContainText("Math test");
   await expect(prep).toContainText("Religion Chapter 2 test");
   await page.locator("[data-test]").click();
@@ -70,7 +74,9 @@ test("weekly test prep covers same-day subjects and completion persists", async 
   );
   await page.locator("[data-end]").click();
   await page.locator("[data-complete-test]").click();
-  await expect(page.locator(".hub-card").first()).toContainText("2026-10-09");
+  await expect(
+    page.locator(".hub-card").first().locator("time"),
+  ).toHaveAttribute("datetime", "2026-10-09");
   expect(
     await page.evaluate(
       () => JSON.parse(localStorage.getItem("abvm-completed-tests")).length,
@@ -81,7 +87,9 @@ test("past tests roll forward; cumulative, STAR and mixed games work without an 
   page,
 }, testInfo) => {
   await mount(page, "2026-10-08", testInfo);
-  await expect(page.locator(".hub-card").first()).toContainText("2026-10-09");
+  await expect(
+    page.locator(".hub-card").first().locator("time"),
+  ).toHaveAttribute("datetime", "2026-10-09");
   await expect(page.locator(".hub-card").first()).not.toContainText(
     "2026-10-07",
   );
@@ -113,4 +121,69 @@ test("past tests roll forward; cumulative, STAR and mixed games work without an 
       .locator(".study-hub")
       .evaluate((el) => el.scrollWidth <= el.clientWidth + 1),
   ).toBeTruthy();
+});
+
+test("Study has clear mobile and tablet layouts across every section", async ({
+  page,
+}, testInfo) => {
+  await page.goto("/#study");
+  const hub = page.locator("#study-hub");
+  await expect(hub.locator(".hub-tabs")).toBeVisible();
+  await expect(hub.locator(".hub-faith")).toHaveCount(0);
+  await expect(hub).not.toContainText("Dated schoolwork this week");
+  for (const width of [390, 820]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const section of ["weekly", "cumulative", "star", "games"]) {
+      await hub.locator(`[data-tab=${section}]`).click();
+      await expect(hub.locator(`[data-tab=${section}]`)).toHaveAttribute(
+        "aria-pressed",
+        "true",
+      );
+      expect(
+        await hub.evaluate((el) => el.scrollWidth <= el.clientWidth + 1),
+      ).toBeTruthy();
+      if (section === "games") {
+        const choices = hub.locator("fieldset").first().locator(".hub-choice");
+        const rows = await choices.evaluateAll((labels) =>
+          labels.map((label) => {
+            const box = label.getBoundingClientRect();
+            const input = label.querySelector("input").getBoundingClientRect();
+            const text = label.querySelector("span").getBoundingClientRect();
+            return {
+              top: box.top,
+              bottom: box.bottom,
+              left: box.left,
+              right: box.right,
+              inputRight: input.right,
+              textLeft: text.left,
+              textTop: text.top,
+              textBottom: text.bottom,
+            };
+          }),
+        );
+        expect(rows).toHaveLength(3);
+        for (let index = 0; index < rows.length; index++) {
+          const row = rows[index];
+          expect(row.textLeft).toBeGreaterThanOrEqual(row.inputRight);
+          expect(row.textTop).toBeGreaterThanOrEqual(row.top);
+          expect(row.textBottom).toBeLessThanOrEqual(row.bottom);
+          if (index)
+            expect(row.top).toBeGreaterThanOrEqual(rows[index - 1].bottom);
+        }
+      }
+      await page.screenshot({
+        path: testInfo.outputPath(`study-${section}-${width}.png`),
+        fullPage: true,
+      });
+    }
+    await hub.locator("[data-tab=star]").click();
+    await hub.locator('[data-star="Math"]').click();
+    await expect(hub.locator(".hub-round")).toBeVisible();
+    await expect(hub.locator("[data-answer]").first()).toBeVisible();
+    await page.screenshot({
+      path: testInfo.outputPath(`study-quiz-${width}.png`),
+      fullPage: true,
+    });
+    await hub.locator("[data-end]").click();
+  }
 });

@@ -1,0 +1,371 @@
+{
+  "schemaVersion": 1,
+  "artworks": [
+    {
+      "id": "popcorn-chicken",
+      "src": "assets/lunch-art/popcorn-chicken.webp",
+      "alt": "Illustration of popcorn chicken",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-05",
+      "generator": "OpenAI image_gen",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration. No sides, labels or garnish. Exact October menus approved; food illustration is not a photograph of the actual meal.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Popcorn chicken",
+            "Mashed potatoes",
+            "Steamed corn",
+            "Fruit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cheese-pizza",
+      "src": "assets/lunch-art/cheese-pizza.webp",
+      "alt": "Illustration of cheese pizza",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-05",
+      "generator": "OpenAI image_gen",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration. No sides, labels or garnish. Exact October menus approved; food illustration is not a photograph of the actual meal.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Baked cheese pizza",
+            "Tortilla chips",
+            "Mixed vegetables",
+            "Fruit"
+          ]
+        },
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Baked cheese pizza",
+            "Garden salad",
+            "Steamed broccoli",
+            "Fruit"
+          ]
+        },
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Baked cheese pizza",
+            "Garden salad",
+            "Steamed peas",
+            "Fruit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cheesy-breadsticks",
+      "src": "assets/lunch-art/cheesy-breadsticks.webp",
+      "alt": "Illustration of cheesy breadsticks",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-05",
+      "generator": "OpenAI image_gen",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration. No sides, labels or garnish. Exact October menus approved; food illustration is not a photograph of the actual meal.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Cheesy breadsticks",
+            "Dipping sauce",
+            "Garden salad",
+            "Fruit"
+          ]
+        },
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Cheesy breadsticks",
+            "Dipping sauce",
+            "Kidney beans",
+            "Fruit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "buttered-pierogies",
+      "src": "assets/lunch-art/buttered-pierogies.webp",
+      "alt": "Illustration of buttered pierogies",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-05",
+      "generator": "OpenAI image_gen",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Buttered pierogies",
+            "Whole-grain roll",
+            "String cheese",
+            "Steamed carrots",
+            "Fruit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "beef-cheesesteak",
+      "src": "assets/lunch-art/beef-cheesesteak.webp",
+      "alt": "Illustration of beef cheesesteak",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-05",
+      "generator": "OpenAI image_gen",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Beef cheesesteak",
+            "Whole-grain roll",
+            "French fries",
+            "Steamed broccoli",
+            "Fruit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "meatballs-in-sauce",
+      "src": "assets/lunch-art/meatballs-in-sauce.webp",
+      "alt": "Illustration of meatballs in sauce",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-05",
+      "generator": "OpenAI image_gen",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Meatballs in sauce",
+            "Whole-grain buttered pasta",
+            "Steamed corn",
+            "Fruit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hamburger-whole-grain",
+      "src": "assets/lunch-art/hamburger-whole-grain.webp",
+      "alt": "Illustration of hamburger on whole-grain roll",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-05",
+      "generator": "OpenAI image_gen",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Hamburger on whole-grain roll",
+            "French fries",
+            "Mixed vegetables",
+            "Fruit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chicken-patty-roll",
+      "src": "assets/lunch-art/chicken-patty-roll.webp",
+      "alt": "Illustration of chicken patty on whole-grain roll",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-05",
+      "generator": "OpenAI image_gen",
+      "reviewNotes": "Visually reviewed illustration; no unlisted sides, garnish or toppings. Taco filling is hidden because the source does not specify it. See docs/lunch-art-prompts-extra-c.md.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Chicken patty on whole-grain roll",
+            "Baby cake potatoes",
+            "Green beans",
+            "Fruit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chicken-finger-wrap",
+      "src": "assets/lunch-art/chicken-finger-wrap.webp",
+      "alt": "Illustration of chicken finger wrap",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-05",
+      "generator": "OpenAI image_gen",
+      "reviewNotes": "Visually reviewed illustration; no unlisted sides, garnish or toppings. Taco filling is hidden because the source does not specify it. See docs/lunch-art-prompts-extra-c.md.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Chicken finger wrap",
+            "Brown rice",
+            "Steamed corn",
+            "Fruit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fish-shapes",
+      "src": "assets/lunch-art/fish-shapes.webp",
+      "alt": "Illustration of fish shapes",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-05",
+      "generator": "OpenAI image_gen",
+      "reviewNotes": "Visually reviewed illustration; no unlisted sides, garnish or toppings. Taco filling is hidden because the source does not specify it. See docs/lunch-art-prompts-extra-c.md.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Fish shapes",
+            "French fries",
+            "Steamed broccoli",
+            "Fruit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "beef-a-roni",
+      "src": "assets/lunch-art/beef-a-roni.webp",
+      "alt": "Illustration of beef-a-roni",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-05",
+      "generator": "OpenAI image_gen",
+      "reviewNotes": "Visually reviewed illustration; no unlisted sides, garnish or toppings. Taco filling is hidden because the source does not specify it. See docs/lunch-art-prompts-extra-c.md.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Beef-a-roni",
+            "Shredded cheese",
+            "Whole-grain roll",
+            "Steamed carrots",
+            "Fruit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "taco-chips",
+      "src": "assets/lunch-art/taco-chips.webp",
+      "alt": "Illustration of taco tuesday & chips",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-05",
+      "generator": "OpenAI image_gen",
+      "reviewNotes": "Visually reviewed illustration; no unlisted sides, garnish or toppings. Taco filling is hidden because the source does not specify it. See docs/lunch-art-prompts-extra-c.md.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Taco Tuesday & chips",
+            "Cheese",
+            "Brown rice",
+            "Salsa",
+            "Refried beans",
+            "Fruit"
+          ]
+        },
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Taco Tuesday & chips",
+            "Cheese",
+            "Shredded lettuce",
+            "Green beans",
+            "Fruit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chicken-taco",
+      "src": "assets/lunch-art/chicken-taco.webp",
+      "alt": "Illustration of chicken taco",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-05",
+      "generator": "OpenAI image_gen",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. Generic pasta, cutlet and tortilla shapes are illustrative; ham and cheese uses the listed pretzel roll. See docs/lunch-art-prompts-extra-b.md.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Chicken taco",
+            "Brown rice",
+            "Cheese",
+            "Salsa",
+            "Refried beans",
+            "Fruit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "breaded-chicken",
+      "src": "assets/lunch-art/breaded-chicken.webp",
+      "alt": "Illustration of breaded chicken",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-05",
+      "generator": "OpenAI image_gen",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. Generic pasta, cutlet and tortilla shapes are illustrative; ham and cheese uses the listed pretzel roll. See docs/lunch-art-prompts-extra-b.md.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Breaded chicken",
+            "Buttered pasta",
+            "Steamed broccoli",
+            "Fruit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hot-ham-cheese",
+      "src": "assets/lunch-art/hot-ham-cheese.webp",
+      "alt": "Illustration of hot ham & cheese",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-05",
+      "generator": "OpenAI image_gen",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. Generic pasta, cutlet and tortilla shapes are illustrative; ham and cheese uses the listed pretzel roll. See docs/lunch-art-prompts-extra-b.md.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Hot ham & cheese",
+            "Whole-grain pretzel roll",
+            "Tortilla chips",
+            "Steamed peas",
+            "Fruit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pasta-meatballs",
+      "src": "assets/lunch-art/pasta-meatballs.webp",
+      "alt": "Illustration of pasta with meatballs",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-05",
+      "generator": "OpenAI image_gen",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. Generic pasta, cutlet and tortilla shapes are illustrative; ham and cheese uses the listed pretzel roll. See docs/lunch-art-prompts-extra-b.md.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Pasta with meatballs",
+            "Whole-grain roll",
+            "Shredded cheese",
+            "Steamed carrots",
+            "Fruit"
+          ]
+        }
+      ]
+    }
+  ]
+}

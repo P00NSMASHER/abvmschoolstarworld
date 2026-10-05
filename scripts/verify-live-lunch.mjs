@@ -1,6 +1,7 @@
 import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { chromium, expect } from '@playwright/test';
+import { publishedMealForDate } from './published-meal.mjs';
 
 const base = process.env.ABVM_LIVE_URL || 'https://p00nsmasher.github.io/abvmschoolstarworld/';
 const expected = JSON.parse(readFileSync(new URL('../pages/data/study-pack.json', import.meta.url), 'utf8'));
@@ -53,7 +54,7 @@ try {
   await page.goto(base + '?lunch-proof=' + Date.now() + '#today');
   await expect(page.locator('.screen')).toBeVisible({ timeout: 20000 });
   const today = eastToday();
-  const todayMeal = data.pack.lunchMenu.find(m => m.date === today);
+  const todayMeal = publishedMealForDate(data.pack, today);
   if (todayMeal?.items.length) {
     for (const item of todayMeal.items) await expect(page.locator('.lunch-card')).toContainText(item);
   } else if (![0, 6].includes(new Date(today + 'T12:00:00Z').getUTCDay())) {

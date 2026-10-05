@@ -241,7 +241,7 @@ function lunchCardHtml(date,lunch){
   if([0,6].includes(date.getDay()))return "";
   const message=closed?"No school lunch":lunch?lunchText(lunch):lunchUnavailableText(date);
   const sourceNote=lunch&&!closed?lunchVerificationNote(lunch):"";
-  return '<section class="lunch-card'+(!lunch&&!closed?' lunch-missing':'')+'"><span aria-hidden="true">🍎</span><div><p>SCHOOL LUNCH</p><strong>'+esc(message)+'</strong>'+(sourceNote?'<small>'+esc(sourceNote)+'</small>':'')+'</div></section>';
+  return '<section class="lunch-card'+(!lunch&&!closed?' lunch-missing':'')+'"><span aria-hidden="true">🍎</span><div><p>SCHOOL LUNCH</p><strong>'+esc(message)+'</strong>'+(sourceNote?'<small>'+esc(sourceNote)+'</small>':'')+'</div>'+(!closed?(window.ABVMLunchArt?.html(lunch)||''):'')+'</section>';
 }
 function currentTest(){
   const now=today();
@@ -366,7 +366,7 @@ function monthGrid(year,month){
 function agendaLunchHtml(date,lunch){
   const events=eventItemsForDate(date),closed=events.some(e=>kindClass(e)==="closed"),weekend=[0,6].includes(date.getDay());
   const text=closed||weekend||lunch?.status==="no-school"?"No school lunch":lunch?lunchText(lunch):lunchUnavailableText(date);
-  return '<div class="agenda-lunch'+(lunch?"":" is-missing")+'"><span>🍎</span><div><b>Lunch</b><p>'+esc(text)+'</p></div></div>';
+  return '<div class="agenda-lunch'+(lunch?"":" is-missing")+'"><span>🍎</span><div><b>Lunch</b><p>'+esc(text)+'</p></div>'+(!closed&&!weekend?(window.ABVMLunchArt?.html(lunch)||''):'')+'</div>';
 }
 function compactMonthCardHtml(month,rows,extraClass){
   const dates=new Map();
@@ -608,11 +608,10 @@ function renderFamily(){
     header("FAMILY","Family dashboard")+freshness()+
     '<section class="family-hero compact"><p>THIS WEEK</p><h2>What needs attention</h2><span>Current school actions and notices in one place.</span></section>'+
     '<div class="family-stats"><div><strong>'+tests+'</strong><span>test days</span></div><div><strong>'+actions.length+'</strong><span>current actions</span></div></div>'+
-    window.ABVMSchoolUpdates.card(pack)+
     '<section class="parent-card family-actions-card"><div class="family-actions-head"><span class="family-actions-mark" aria-hidden="true">✓</span><div><small>TO DO</small><h3>Family actions</h3></div></div><ul>'+actions.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></section>'+
-    '<section class="parent-card sources notices-card" aria-labelledby="family-current-notices"><div class="notices-head"><span class="notices-mark" aria-hidden="true">i</span><div><small>SCHOOL UPDATES & SIGN-UPS</small><h3 id="family-current-notices">Current notices</h3></div></div><div class="static-notice-list" role="list">'+notices.map(x=>'<div class="notice-row" role="listitem"><span class="status ok" aria-hidden="true"></span><p>'+linkedTextHtml(x)+'</p></div>').join("")+'</div></section>'+
+    window.ABVMSchoolUpdates.card(pack)+
+    window.ABVMSchoolUpdates.noticesCard(notices,linkedTextHtml)+
     (window.ABVMWeeklyLearning?.renderChanges?.(pack?.schoolChangeFeed)||"")+
-    '<details class="family-more"><summary><span>App & privacy</span><b aria-hidden="true">+</b></summary><div><p>Study-game progress stays on this device. No student IDs or private classmates’ information are used.</p><a href="#games" data-open-games>Open Study Games</a><p>Verified shows the last successful source check; individual notices may be older.</p><p>To install on iPhone, use Safari’s Share menu → Add to Home Screen.</p></div></details>'+
     '<p class="unofficial-note">Family planning tool based on current ABVM Grade 2 sources.</p>'+
     '</div>';
 }

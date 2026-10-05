@@ -109,7 +109,15 @@ function lessonHtml(lesson) {
     '</summary><p class="hub-caption">' +
     escape(lesson.subject) +
     " · " +
-    escape(lesson.studiedOn || lesson.dateStatus || "Saved schoolwork") +
+    escape(
+      lesson.studiedOn
+        ? new Intl.DateTimeFormat("en-US", {
+            month: "short",
+            day: "numeric",
+            timeZone: "UTC",
+          }).format(new Date(lesson.studiedOn + "T12:00:00Z"))
+        : "Saved schoolwork",
+    ) +
     "</p><ul>" +
     (lesson.notes || []).map((n) => "<li>" + escape(n) + "</li>").join("") +
     "</ul></details>"
@@ -128,12 +136,11 @@ export async function mountStudyHub(
     document.head.append(link);
   }
   host.innerHTML = '<p role="status">Opening your study collection…</p>';
-  let schoolwork, archive, religion;
+  let schoolwork, archive;
   try {
-    [schoolwork, archive, religion] = await Promise.all([
+    [schoolwork, archive] = await Promise.all([
       resource("schoolwork.json"),
       resource("study-archive.json"),
-      resource("religion-sources.json"),
     ]);
   } catch {
     if (host.isConnected) {
@@ -145,6 +152,36 @@ export async function mountStudyHub(
     return;
   }
   if (!host.isConnected) return;
+  // The publisher belongs beside its subject notes, not in the weekly hero.
+  resource("religion-sources.json")
+    .then((religion) => {
+      if (!host.isConnected) return;
+      const subject = host.parentElement.querySelector("#study-religion");
+      if (!subject || subject.querySelector("[data-religion-review]")) return;
+      const topics =
+        (pack.subjects || []).find((s) => s.subject === "Religion")?.topics ||
+        [];
+      const chapter = Number(topics.join(" ").match(/Chapter\s+(\d+)/i)?.[1]);
+      const chapters = Array.isArray(religion.chapters)
+        ? religion.chapters
+        : Object.values(religion.chapters || {});
+      const verified = chapters.find(
+        (c) => c.chapter === chapter && c.available && c.status === "verified",
+      );
+      if (!verified) return;
+      const footer = document.createElement("div");
+      footer.dataset.religionReview = "true";
+      footer.innerHTML =
+        '<a href="' +
+        escape(verified.url) +
+        '" target="_blank" rel="noopener">Chapter ' +
+        chapter +
+        ' online review <span aria-hidden="true">↗</span></a>';
+      subject.append(footer);
+    })
+    .catch(() => {
+      /* Subject notes remain usable offline. */
+    });
   let tab = "weekly",
     round = null,
     index = 0,
@@ -207,49 +244,6 @@ export async function mountStudyHub(
       : source === "cumulative"
         ? cumulative()
         : weekly();
-  const official = () => {
-    const listed =
-      (pack.subjects || []).find((s) => s.subject === "Religion")?.topics || [];
-    const chapter = Number(
-      listed.join(" ").match(/Chapter\s+(\d+)/i)?.[1] || 2,
-    );
-    const chapters = Array.isArray(religion.chapters)
-      ? religion.chapters
-      : Object.values(religion.chapters || {});
-    const verified = chapters.filter(
-      (c) => c.available && c.status === "verified",
-    );
-    if (!verified.length)
-      return '<section class="hub-faith"><h3>Religion review</h3><p>The publisher review is not currently verified. Your saved Religion notes and practice remain available.</p></section>';
-    const primary =
-      verified.find((c) => c.chapter === chapter) ||
-      verified.find((c) => c.chapter === 2) ||
-      verified[0];
-    return (
-      '<section class="hub-faith"><p class="hub-eyebrow">RELIGION · START HERE</p><h3>Christ Our Life chapter review</h3><p>The publisher’s questions are the first choice for Religion. Your uploaded pages cover Chapter 2.</p><a class="hub-primary" href="https://isr.christourlife.com/col_g2_s' +
-      primary.chapter +
-      '" target="_blank" rel="noopener">Open Chapter ' +
-      primary.chapter +
-      " questions ↗</a>" +
-      (verified.length
-        ? "<details><summary>Other verified chapters</summary>" +
-          verified
-            .map(
-              (c) =>
-                '<a class="hub-chapter" target="_blank" rel="noopener" href="https://isr.christourlife.com/col_g2_s' +
-                Number(c.chapter || c.number) +
-                '">Chapter ' +
-                Number(c.chapter || c.number) +
-                "</a>",
-            )
-            .join("") +
-          "</details>"
-        : "") +
-      '<button type="button" data-chapter-two>Practice the uploaded Chapter 2 pages</button><small>' +
-      (primary.stale ? "Publisher availability needs rechecking. " : "") +
-      "Opens the publisher’s review. In-app questions use your schoolwork; publisher scores stay on that site.</small></section>"
-    );
-  };
   function start(groups, title, strict = false) {
     const oldSeed = Number(getSaved("abvm-hub-round", 0));
     const seed = String((Number.isFinite(oldSeed) ? oldSeed : 0) + 1);
@@ -363,48 +357,67 @@ export async function mountStudyHub(
     let content = "";
     if (round) content = renderRound();
     else if (tab === "weekly") {
+      const dated = allLessons().filter(
+        (l) =>
+          l.studiedOn &&
+          l.studiedOn >= bounds.start &&
+          l.studiedOn <= bounds.end,
+      );
+      const dateLabel = tests.length
+        ? new Intl.DateTimeFormat("en-US", {
+            weekday: "long",
+            month: "short",
+            day: "numeric",
+            timeZone: "UTC",
+          }).format(new Date(tests[0].date + "T12:00:00Z"))
+        : "";
       content =
-        '<section class="hub-card"><p class="hub-eyebrow">TEST PREP</p><h3>' +
-        (tests.length ? escape(tests[0].date) : "Room to keep learning") +
-        "</h3>" +
+        '<section class="hub-card hub-prep"><div class="hub-prep-heading"><span class="hub-symbol" aria-hidden="true">✦</span><p class="hub-eyebrow">' +
         (tests.length
-          ? "<ul>" +
-            tests.map((t) => "<li>" + escape(t.label) + "</li>").join("") +
-            "</ul><p>Practice is shared equally across tests on this date.</p>" +
+          ? "NEXT TEST" + (tests.length > 1 ? "S" : "")
+          : "THIS WEEK") +
+        "</p></div>" +
+        (tests.length
+          ? '<time class="hub-date" datetime="' +
+            escape(tests[0].date) +
+            '">' +
+            escape(dateLabel) +
+            "</time><h3>" +
+            tests
+              .map((t) => escape(t.label))
+              .join('<span class="hub-test-divider"> & </span>') +
+            '</h3><p class="hub-prep-description">' +
+            (tests.length > 1
+              ? "A little practice for each subject, shared equally."
+              : "A short practice round to feel ready.") +
+            "</p>" +
             (missing.length
-              ? '<p class="hub-caption">More verified material is needed for: ' +
+              ? '<p class="hub-caption">Review the teacher notes below for ' +
                 missing.map((t) => escape(t.label)).join(", ") +
-                ". Use the teacher notes below.</p>"
-              : '<button class="hub-primary" data-test>Practice for ' +
-                (tests.length > 1 ? "these tests" : "this test") +
-                "</button>") +
-            "<small>Date-only tests stay here through the school day. Mark them finished when they are over.</small><button data-complete-test>These tests are finished</button>"
-          : "<p>No upcoming test is listed. Explore your current school skills below.</p>") +
+                ".</p>"
+              : '<button class="hub-primary" data-test>Start test practice <span aria-hidden="true">→</span></button>') +
+            '<button class="hub-text-button" data-complete-test>' +
+            (tests.length > 1
+              ? "Mark these tests finished"
+              : "Mark test finished") +
+            "</button>"
+          : "<h3>Small steps. Big discoveries.</h3><p>No upcoming test is listed. Your weekly lessons are ready below.</p>") +
         "</section>" +
-        official() +
-        '<details class="hub-card"><summary>Dated schoolwork this week</summary><p class="hub-caption">' +
-        bounds.start +
-        " through " +
-        bounds.end +
-        ". Undated pages stay in Cumulative until their lesson date is known.</p>" +
-        allLessons()
-          .filter(
-            (l) =>
-              l.studiedOn &&
-              l.studiedOn >= bounds.start &&
-              l.studiedOn <= bounds.end,
-          )
-          .map(lessonHtml)
-          .join("") +
-        "</details>";
+        (dated.length
+          ? '<details class="hub-card"><summary>This week’s schoolwork <span class="hub-count">' +
+            dated.length +
+            "</span></summary>" +
+            dated.map(lessonHtml).join("") +
+            "</details>"
+          : "");
     } else if (tab === "cumulative") {
       const a = visibleArchive(archive, now());
       content =
-        '<section class="hub-card"><p class="hub-eyebrow">YOUR GROWING COLLECTION</p><h3>Everything learned, kept together</h3><p>' +
+        '<section class="hub-card hub-collection"><p class="hub-eyebrow">YOUR GROWING COLLECTION</p><h3>Everything learned, kept together</h3><p>' +
         cumulative().length +
         " questions · " +
         schoolwork.uploadedPhotoCount +
-        ' schoolwork photos reviewed</p><p class="hub-caption">Includes recoverable study material from the app’s history. Undated worksheets remain available without guessing when they were taught.</p><button class="hub-primary" data-practice="cumulative">Practice the collection</button></section>' +
+        ' schoolwork photos reviewed</p><p class="hub-caption">Revisit favorite lessons and keep earlier skills fresh.</p><button class="hub-primary" data-practice="cumulative">Practice the collection</button></section>' +
         allLessons().map(lessonHtml).join("") +
         [...new Set(a.notes.map((n) => n.subject))]
           .map(
@@ -435,12 +448,12 @@ export async function mountStudyHub(
           : "");
     } else if (tab === "star") {
       content =
-        '<section class="hub-card hub-star"><p class="hub-eyebrow">CONFIDENCE THROUGH PRACTICE</p><h3>Math & reading, a little every day</h3><p>' +
+        '<section class="hub-card hub-star"><p class="hub-eyebrow">CONFIDENCE THROUGH PRACTICE</p><h3>A little practice. A lot of confidence.</h3><p>' +
         star.length +
-        ' original Grade 2 questions with hints and explanations.</p><div class="hub-actions"><button class="hub-primary" data-star="Math">Practice math</button><button class="hub-primary" data-star="Reading / ELA">Practice reading</button><button data-practice="star">Mix math & reading</button></div><small>STAR-style skill practice. These are not official STAR test questions and do not predict a STAR score.</small></section><div class="hub-card"><h3>Skills to explore</h3><p>Number sense, operations, shapes, measurement, time, money and data. Reading clues, vocabulary, phonics, sequence and comprehension.</p></div>';
+        ' original Grade 2 questions with hints and explanations.</p><div class="hub-actions"><button class="hub-subject-button hub-math" data-star="Math"><span aria-hidden="true">＋</span>Practice math</button><button class="hub-subject-button hub-reading" data-star="Reading / ELA"><span aria-hidden="true">Aa</span>Practice reading</button><button data-practice="star">Mix math & reading</button></div><small>STAR-style skill practice. These are not official STAR test questions and do not predict a STAR score.</small></section><div class="hub-card"><h3>Skills to explore</h3><p>Number sense, operations, shapes, measurement, time, money and data. Reading clues, vocabulary, phonics, sequence and comprehension.</p></div>';
     } else {
       content =
-        '<section class="hub-card"><p class="hub-eyebrow">MAKE IT YOURS</p><h3>Choose what to play</h3><fieldset><legend>Study material</legend>' +
+        '<section class="hub-card hub-games"><p class="hub-eyebrow">MAKE IT YOURS</p><h3>Choose what to play</h3><fieldset><legend>Study material</legend>' +
         ["weekly", "cumulative", "star"]
           .map(
             (k) =>
@@ -455,9 +468,9 @@ export async function mountStudyHub(
           .join("") +
         '</fieldset><fieldset><legend>How to practice</legend><label class="hub-choice"><input type="radio" name="hub-format" value="quiz" ' +
         (format === "quiz" ? "checked" : "") +
-        '>Question Quest</label><label class="hub-choice"><input type="radio" name="hub-format" value="cards" ' +
+        '>Quick quiz</label><label class="hub-choice"><input type="radio" name="hub-format" value="cards" ' +
         (format === "cards" ? "checked" : "") +
-        '>Flip & Learn</label></fieldset><p>Selected sections get equal turns. Questions do not repeat within a round.</p><button class="hub-primary" data-play ' +
+        '>Flip cards</label></fieldset><p>Selected sections get equal turns. Questions do not repeat within a round.</p><button class="hub-primary" data-play ' +
         (!picks.size ? "disabled" : "") +
         '>Let’s play</button></section><a href="#games" class="hub-chapter">More subject games →</a>';
     }
@@ -511,13 +524,6 @@ export async function mountStudyHub(
           );
         }),
     );
-    host.querySelector("[data-chapter-two]")?.addEventListener("click", () => {
-      format = "quiz";
-      start(
-        [schoolwork.lessons.find((l) => l.chapter === 2)?.questions || []],
-        "Chapter 2",
-      );
-    });
     host.querySelector("[data-test]")?.addEventListener("click", () => {
       format = "quiz";
       start(groups, "Test prep", true);
