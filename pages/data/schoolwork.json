@@ -1,0 +1,1694 @@
+{
+  "schemaVersion": 1,
+  "uploadedPhotoCount": 20,
+  "distinctWorksheetNote": "Day 23 appears twice; one lesson is retained.",
+  "lessons": [
+    {
+      "id": "fact-families",
+      "title": "Fact families",
+      "subject": "Math",
+      "sources": [
+        "IMG_2530.jpeg",
+        "IMG_2535.jpeg"
+      ],
+      "skills": [
+        "fact-families"
+      ],
+      "notes": [
+        "A fact family uses the same three numbers for related addition and subtraction facts.",
+        "For 4, 5 and 9: 4 + 5 = 9; 5 + 4 = 9; 9 \u2212 4 = 5; 9 \u2212 5 = 4.",
+        "Start with the whole when subtracting. Swapping subtraction numbers changes the answer."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-10-04",
+      "dateStatus": "Undated schoolwork",
+      "questions": [
+        {
+          "id": "work-fact-families-0",
+          "subject": "Math",
+          "skill": "fact-families",
+          "prompt": "Which subtraction fact belongs with 2 + 5 = 7?",
+          "answer": "7 \u2212 2 = 5",
+          "choices": [
+            "7 \u2212 2 = 5",
+            "2 \u2212 7 = 5",
+            "7 \u2212 5 = 5",
+            "7 + 2 = 5"
+          ],
+          "explanation": "The whole is 7. Taking away 2 leaves 5.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Fact families",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-fact-families-1",
+          "subject": "Math",
+          "skill": "fact-families",
+          "prompt": "Which subtraction fact belongs with 3 + 6 = 9?",
+          "answer": "9 \u2212 3 = 6",
+          "choices": [
+            "3 \u2212 9 = 6",
+            "9 \u2212 6 = 6",
+            "9 + 3 = 6",
+            "9 \u2212 3 = 6"
+          ],
+          "explanation": "The whole is 9. Taking away 3 leaves 6.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Fact families",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-fact-families-2",
+          "subject": "Math",
+          "skill": "fact-families",
+          "prompt": "Which subtraction fact belongs with 4 + 7 = 11?",
+          "answer": "11 \u2212 4 = 7",
+          "choices": [
+            "11 \u2212 7 = 7",
+            "11 + 4 = 7",
+            "11 \u2212 4 = 7",
+            "4 \u2212 11 = 7"
+          ],
+          "explanation": "The whole is 11. Taking away 4 leaves 7.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Fact families",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-fact-families-3",
+          "subject": "Math",
+          "skill": "fact-families",
+          "prompt": "Which subtraction fact belongs with 5 + 8 = 13?",
+          "answer": "13 \u2212 5 = 8",
+          "choices": [
+            "13 + 5 = 8",
+            "13 \u2212 5 = 8",
+            "5 \u2212 13 = 8",
+            "13 \u2212 8 = 8"
+          ],
+          "explanation": "The whole is 13. Taking away 5 leaves 8.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Fact families",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-fact-families-4",
+          "subject": "Math",
+          "skill": "fact-families",
+          "prompt": "Which subtraction fact belongs with 2 + 7 = 9?",
+          "answer": "9 \u2212 2 = 7",
+          "choices": [
+            "9 \u2212 2 = 7",
+            "2 \u2212 9 = 7",
+            "9 \u2212 7 = 7",
+            "9 + 2 = 7"
+          ],
+          "explanation": "The whole is 9. Taking away 2 leaves 7.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Fact families",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-fact-families-5",
+          "subject": "Math",
+          "skill": "fact-families",
+          "prompt": "Which subtraction fact belongs with 3 + 8 = 11?",
+          "answer": "11 \u2212 3 = 8",
+          "choices": [
+            "3 \u2212 11 = 8",
+            "11 \u2212 8 = 8",
+            "11 + 3 = 8",
+            "11 \u2212 3 = 8"
+          ],
+          "explanation": "The whole is 11. Taking away 3 leaves 8.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Fact families",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-fact-families-6",
+          "subject": "Math",
+          "skill": "fact-families",
+          "prompt": "Which subtraction fact belongs with 4 + 9 = 13?",
+          "answer": "13 \u2212 4 = 9",
+          "choices": [
+            "13 \u2212 9 = 9",
+            "13 + 4 = 9",
+            "13 \u2212 4 = 9",
+            "4 \u2212 13 = 9"
+          ],
+          "explanation": "The whole is 13. Taking away 4 leaves 9.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Fact families",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-fact-families-7",
+          "subject": "Math",
+          "skill": "fact-families",
+          "prompt": "Which subtraction fact belongs with 6 + 7 = 13?",
+          "answer": "13 \u2212 6 = 7",
+          "choices": [
+            "13 + 6 = 7",
+            "13 \u2212 6 = 7",
+            "6 \u2212 13 = 7",
+            "13 \u2212 7 = 7"
+          ],
+          "explanation": "The whole is 13. Taking away 6 leaves 7.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Fact families",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "subjects",
+      "title": "Subjects and predicates",
+      "subject": "Reading / ELA",
+      "sources": [
+        "IMG_2531.jpeg"
+      ],
+      "skills": [
+        "subject-predicate"
+      ],
+      "notes": [
+        "The subject tells who or what the sentence is about. The predicate tells what the subject does or is.",
+        "In \u201cThe kitten sleeps,\u201d \u201cThe kitten\u201d is the subject and \u201csleeps\u201d is the predicate.",
+        "Choose a subject that makes sense with the action."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-10-04",
+      "dateStatus": "Undated schoolwork",
+      "questions": [
+        {
+          "id": "work-subjects-0",
+          "subject": "Reading / ELA",
+          "skill": "subject-predicate",
+          "prompt": "What is the subject in \u201cThe rabbit hops\u201d?",
+          "answer": "The rabbit",
+          "choices": [
+            "The rabbit",
+            "hops",
+            "The rabbit hops",
+            "There is no subject"
+          ],
+          "explanation": "The rabbit tells who or what the sentence is about.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Subjects and predicates",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-subjects-1",
+          "subject": "Reading / ELA",
+          "skill": "subject-predicate",
+          "prompt": "What is the subject in \u201cMy friend reads\u201d?",
+          "answer": "My friend",
+          "choices": [
+            "reads",
+            "My friend reads",
+            "There is no subject",
+            "My friend"
+          ],
+          "explanation": "My friend tells who or what the sentence is about.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Subjects and predicates",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-subjects-2",
+          "subject": "Reading / ELA",
+          "skill": "subject-predicate",
+          "prompt": "What is the subject in \u201cThe puppy runs\u201d?",
+          "answer": "The puppy",
+          "choices": [
+            "The puppy runs",
+            "There is no subject",
+            "The puppy",
+            "runs"
+          ],
+          "explanation": "The puppy tells who or what the sentence is about.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Subjects and predicates",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-subjects-3",
+          "subject": "Reading / ELA",
+          "skill": "subject-predicate",
+          "prompt": "What is the subject in \u201cOur teacher smiles\u201d?",
+          "answer": "Our teacher",
+          "choices": [
+            "There is no subject",
+            "Our teacher",
+            "smiles",
+            "Our teacher smiles"
+          ],
+          "explanation": "Our teacher tells who or what the sentence is about.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Subjects and predicates",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "writing",
+      "title": "Writing clear sentences",
+      "subject": "Reading / ELA",
+      "sources": [
+        "IMG_2532.jpeg"
+      ],
+      "skills": [
+        "sentence-types"
+      ],
+      "notes": [
+        "Begin each sentence with a capital letter and end with punctuation.",
+        "Read your sentence aloud to check that it makes sense.",
+        "Check spelling and spaces between words."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-10-04",
+      "dateStatus": "Undated schoolwork",
+      "questions": [
+        {
+          "id": "work-writing-0",
+          "subject": "Reading / ELA",
+          "skill": "sentence-types",
+          "prompt": "Which sentence begins and ends correctly?",
+          "answer": "We like the park.",
+          "choices": [
+            "We like the park.",
+            "we like the park",
+            "We like the park",
+            "we like the park."
+          ],
+          "explanation": "A sentence starts with a capital and needs end punctuation.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Writing clear sentences",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "daily26",
+      "title": "Daily review \u2022 Day 26",
+      "subject": "Math",
+      "sources": [
+        "IMG_2533.jpeg"
+      ],
+      "skills": [
+        "place-value",
+        "data-interpretation",
+        "halves"
+      ],
+      "notes": [
+        "35 is 3 tens and 5 ones, or 30 + 5.",
+        "Half of 4 is 2: each of two equal groups has 2.",
+        "Read the key before counting symbols in a picture graph."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-10-04",
+      "dateStatus": "Undated schoolwork",
+      "questions": [
+        {
+          "id": "work-daily26-0",
+          "subject": "Math",
+          "skill": "halves",
+          "prompt": "Share 8 counters equally into 2 groups. How many in each group?",
+          "answer": "4",
+          "choices": [
+            "4",
+            "2",
+            "6",
+            "8"
+          ],
+          "explanation": "4 + 4 = 8, so each equal group has 4.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Daily review \u2022 Day 26",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-daily26-1",
+          "subject": "Math",
+          "skill": "place-value",
+          "prompt": "What is 35 in expanded form?",
+          "answer": "30 + 5",
+          "choices": [
+            "3 + 5",
+            "30 + 50",
+            "3 + 50",
+            "30 + 5"
+          ],
+          "explanation": "3 tens are 30. Add 5 ones.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Daily review \u2022 Day 26",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-daily26-2",
+          "subject": "Math",
+          "skill": "data-interpretation",
+          "prompt": "A chart shows Ava: \u2605\u2605\u2605, Ben: \u2605\u2605\u2605\u2605\u2605. Each star means 1 book. Who read 2 more books?",
+          "answer": "Ben",
+          "choices": [
+            "Both",
+            "Neither",
+            "Ben",
+            "Ava"
+          ],
+          "explanation": "Ben read 5 and Ava read 3. 5 \u2212 3 = 2.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Daily review \u2022 Day 26",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "daily24",
+      "title": "Daily review \u2022 Day 24",
+      "subject": "Reading / ELA",
+      "sources": [
+        "IMG_2534.jpeg"
+      ],
+      "skills": [
+        "prefix-pre",
+        "possessives",
+        "addition-within-100"
+      ],
+      "notes": [
+        "The prefix pre- means before: premix means mix beforehand.",
+        "Add apostrophe-s to show ownership: Beth\u2019s flag.",
+        "10 more than 7 is 17. Two groups of 3 make 6. A penny is worth one cent."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-10-04",
+      "dateStatus": "Undated schoolwork",
+      "questions": [
+        {
+          "id": "work-daily24-0",
+          "subject": "Reading / ELA",
+          "skill": "prefix-pre",
+          "prompt": "What does preheat mean?",
+          "answer": "Heat beforehand",
+          "choices": [
+            "Heat beforehand",
+            "Heat again",
+            "Stop heating",
+            "Cool down"
+          ],
+          "explanation": "The prefix pre- means before.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Daily review \u2022 Day 24",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-daily24-1",
+          "subject": "Reading / ELA",
+          "skill": "possessives",
+          "prompt": "Which phrase shows that a flag belongs to Beth?",
+          "answer": "Beth\u2019s flag",
+          "choices": [
+            "Beths flag",
+            "B eth flag",
+            "Beth flag",
+            "Beth\u2019s flag"
+          ],
+          "explanation": "Apostrophe-s shows that Beth owns the flag.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Daily review \u2022 Day 24",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "maintenance",
+      "title": "Math maintenance",
+      "subject": "Math",
+      "sources": [
+        "IMG_2536.jpeg"
+      ],
+      "skills": [
+        "addition-within-100",
+        "subtraction-within-100",
+        "compare-numbers",
+        "missing-addend"
+      ],
+      "notes": [
+        "For two-digit arithmetic, line up tens and ones.",
+        "\u201cHow many more?\u201d asks for the difference: 16 \u2212 13 = 3.",
+        "If some cars plus 3 makes 9, subtract 3 from 9 to find the starting amount: 6.",
+        "Compare tens first, then ones. Ordinal numbers tell position: first, second, third, fourth."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-10-04",
+      "dateStatus": "Undated schoolwork",
+      "questions": [
+        {
+          "id": "work-maintenance-0",
+          "subject": "Math",
+          "skill": "addition-within-100",
+          "prompt": "What is 24 + 13?",
+          "answer": "37",
+          "choices": [
+            "37",
+            "47",
+            "27",
+            "38"
+          ],
+          "explanation": "Add the tens and the ones: 24 + 13 = 37.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Math maintenance",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-maintenance-1",
+          "subject": "Math",
+          "skill": "subtraction-within-100",
+          "prompt": "What is 24 \u2212 13?",
+          "answer": "11",
+          "choices": [
+            "21",
+            "12",
+            "37",
+            "11"
+          ],
+          "explanation": "Take away 13 from 24. Check: 11 + 13 = 24.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Math maintenance",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-maintenance-2",
+          "subject": "Math",
+          "skill": "addition-within-100",
+          "prompt": "What is 32 + 16?",
+          "answer": "48",
+          "choices": [
+            "38",
+            "49",
+            "48",
+            "58"
+          ],
+          "explanation": "Add the tens and the ones: 32 + 16 = 48.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Math maintenance",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-maintenance-3",
+          "subject": "Math",
+          "skill": "subtraction-within-100",
+          "prompt": "What is 32 \u2212 16?",
+          "answer": "16",
+          "choices": [
+            "48",
+            "16",
+            "26",
+            "17"
+          ],
+          "explanation": "Take away 16 from 32. Check: 16 + 16 = 32.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Math maintenance",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-maintenance-4",
+          "subject": "Math",
+          "skill": "addition-within-100",
+          "prompt": "What is 41 + 18?",
+          "answer": "59",
+          "choices": [
+            "59",
+            "69",
+            "49",
+            "60"
+          ],
+          "explanation": "Add the tens and the ones: 41 + 18 = 59.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Math maintenance",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-maintenance-5",
+          "subject": "Math",
+          "skill": "subtraction-within-100",
+          "prompt": "What is 41 \u2212 18?",
+          "answer": "23",
+          "choices": [
+            "33",
+            "24",
+            "59",
+            "23"
+          ],
+          "explanation": "Take away 18 from 41. Check: 23 + 18 = 41.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Math maintenance",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-maintenance-6",
+          "subject": "Math",
+          "skill": "addition-within-100",
+          "prompt": "What is 53 + 24?",
+          "answer": "77",
+          "choices": [
+            "67",
+            "78",
+            "77",
+            "87"
+          ],
+          "explanation": "Add the tens and the ones: 53 + 24 = 77.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Math maintenance",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-maintenance-7",
+          "subject": "Math",
+          "skill": "subtraction-within-100",
+          "prompt": "What is 53 \u2212 24?",
+          "answer": "29",
+          "choices": [
+            "77",
+            "29",
+            "39",
+            "30"
+          ],
+          "explanation": "Take away 24 from 53. Check: 29 + 24 = 53.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Math maintenance",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-maintenance-8",
+          "subject": "Math",
+          "skill": "addition-within-100",
+          "prompt": "What is 62 + 15?",
+          "answer": "77",
+          "choices": [
+            "77",
+            "87",
+            "67",
+            "78"
+          ],
+          "explanation": "Add the tens and the ones: 62 + 15 = 77.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Math maintenance",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-maintenance-9",
+          "subject": "Math",
+          "skill": "subtraction-within-100",
+          "prompt": "What is 62 \u2212 15?",
+          "answer": "47",
+          "choices": [
+            "57",
+            "48",
+            "77",
+            "47"
+          ],
+          "explanation": "Take away 15 from 62. Check: 47 + 15 = 62.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Math maintenance",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-maintenance-10",
+          "subject": "Math",
+          "skill": "addition-within-100",
+          "prompt": "What is 25 + 24?",
+          "answer": "49",
+          "choices": [
+            "39",
+            "50",
+            "49",
+            "59"
+          ],
+          "explanation": "Add the tens and the ones: 25 + 24 = 49.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Math maintenance",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-maintenance-11",
+          "subject": "Math",
+          "skill": "subtraction-within-100",
+          "prompt": "What is 25 \u2212 24?",
+          "answer": "1",
+          "choices": [
+            "49",
+            "1",
+            "11",
+            "2"
+          ],
+          "explanation": "Take away 24 from 25. Check: 1 + 24 = 25.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Math maintenance",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-maintenance-12",
+          "subject": "Math",
+          "skill": "missing-addend",
+          "prompt": "Some shells plus 4 makes 11 shells. How many were there at first?",
+          "answer": "7",
+          "choices": [
+            "7",
+            "15",
+            "4",
+            "11"
+          ],
+          "explanation": "11 \u2212 4 = 7. Check: 7 + 4 = 11.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Math maintenance",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "feelings",
+      "title": "Understanding feelings",
+      "subject": "Reading / ELA",
+      "sources": [
+        "IMG_2537.jpeg"
+      ],
+      "skills": [
+        "vocabulary-in-context"
+      ],
+      "notes": [
+        "Afraid means feeling fear.",
+        "Use the words and pictures in a passage to understand how a character feels.",
+        "People may feel differently about the same thing; personal reflection has no single correct answer."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-10-04",
+      "dateStatus": "Undated schoolwork",
+      "questions": [
+        {
+          "id": "work-feelings-0",
+          "subject": "Reading / ELA",
+          "skill": "vocabulary-in-context",
+          "prompt": "A character is afraid. How does the character feel?",
+          "answer": "Fearful",
+          "choices": [
+            "Fearful",
+            "Sleepy",
+            "Hungry",
+            "Delighted"
+          ],
+          "explanation": "Afraid means feeling fear.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Understanding feelings",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "daily23",
+      "title": "Daily review \u2022 Day 23",
+      "subject": "Math",
+      "sources": [
+        "IMG_2538.jpeg",
+        "IMG_2539.jpeg"
+      ],
+      "skills": [
+        "subtraction-within-12",
+        "shapes",
+        "possessives"
+      ],
+      "notes": [
+        "To subtract 2 on a number line, move two steps left.",
+        "A triangle has three straight sides.",
+        "If you need 6 stamps and have 4, you need 2 more: 6 \u2212 4 = 2.",
+        "Apostrophe-s shows ownership: Chet\u2019s dog."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-10-04",
+      "dateStatus": "Undated schoolwork",
+      "questions": [
+        {
+          "id": "work-daily23-0",
+          "subject": "Math",
+          "skill": "shapes",
+          "prompt": "Which shape has exactly three straight sides?",
+          "answer": "Triangle",
+          "choices": [
+            "Triangle",
+            "Circle",
+            "Rectangle",
+            "Pentagon"
+          ],
+          "explanation": "A triangle has three straight sides.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Daily review \u2022 Day 23",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-daily23-1",
+          "subject": "Math",
+          "skill": "subtraction-within-12",
+          "prompt": "Start at 10 on a number line. Move 2 steps left. Where do you land?",
+          "answer": "8",
+          "choices": [
+            "12",
+            "2",
+            "9",
+            "8"
+          ],
+          "explanation": "10 \u2212 2 = 8. Each left step subtracts 1.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Daily review \u2022 Day 23",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "daily21",
+      "title": "Daily review \u2022 Day 21",
+      "subject": "Math",
+      "sources": [
+        "IMG_2540.jpeg"
+      ],
+      "skills": [
+        "halves",
+        "place-value",
+        "data-interpretation"
+      ],
+      "notes": [
+        "Halves are two equal parts of a whole.",
+        "28 is 20 + 8, or 2 tens and 8 ones.",
+        "Read the labels and key on a picture graph before comparing groups."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-10-04",
+      "dateStatus": "Undated schoolwork",
+      "questions": [
+        {
+          "id": "work-daily21-0",
+          "subject": "Math",
+          "skill": "halves",
+          "prompt": "Which describes halves?",
+          "answer": "Two equal parts",
+          "choices": [
+            "Two equal parts",
+            "Two unequal parts",
+            "Three equal parts",
+            "Any two pieces"
+          ],
+          "explanation": "Both parts must be equal to be halves.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Daily review \u2022 Day 21",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-daily21-1",
+          "subject": "Math",
+          "skill": "place-value",
+          "prompt": "How many tens and ones make 28?",
+          "answer": "2 tens and 8 ones",
+          "choices": [
+            "8 tens and 2 ones",
+            "2 tens and 2 ones",
+            "28 tens",
+            "2 tens and 8 ones"
+          ],
+          "explanation": "2 tens are 20, and 20 + 8 = 28.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Daily review \u2022 Day 21",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "library",
+      "title": "At the Library \u2022 comprehension",
+      "subject": "Reading / ELA",
+      "sources": [
+        "IMG_2541.jpeg",
+        "IMG_2542.jpeg"
+      ],
+      "skills": [
+        "text-evidence",
+        "sequence",
+        "vocabulary-in-context"
+      ],
+      "notes": [
+        "The narrator can walk or ride a bike to the neighborhood library.",
+        "Choosing among many books is difficult. The narrator selects fiction and nonfiction.",
+        "After choosing books, the narrator enjoys games in the computer room.",
+        "Find details in the passage to support your answer. Fiction tells imagined stories; nonfiction gives factual information."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-10-04",
+      "dateStatus": "Undated schoolwork",
+      "questions": [
+        {
+          "id": "work-library-0",
+          "subject": "Reading / ELA",
+          "skill": "text-evidence",
+          "prompt": "In At the Library, how does the narrator get to the library?",
+          "answer": "Walk or ride a bike",
+          "choices": [
+            "Walk or ride a bike",
+            "Take a boat",
+            "Ride a train",
+            "Fly in a plane"
+          ],
+          "explanation": "The passage says the library is in the neighborhood, so walking or biking is possible.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "At the Library \u2022 comprehension",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-library-1",
+          "subject": "Reading / ELA",
+          "skill": "sequence",
+          "prompt": "In At the Library, what happens after choosing books?",
+          "answer": "Playing computer games",
+          "choices": [
+            "Buying a bicycle",
+            "Eating lunch",
+            "Swimming",
+            "Playing computer games"
+          ],
+          "explanation": "The narrator chooses books before using the computer room.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "At the Library \u2022 comprehension",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-library-2",
+          "subject": "Reading / ELA",
+          "skill": "vocabulary-in-context",
+          "prompt": "Which kind of book gives factual information?",
+          "answer": "Nonfiction",
+          "choices": [
+            "An imaginary adventure",
+            "A fantasy",
+            "Nonfiction",
+            "A made-up fairy tale"
+          ],
+          "explanation": "Nonfiction gives factual information about real subjects.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "At the Library \u2022 comprehension",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "religion2",
+      "title": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+      "subject": "Religion",
+      "sources": [
+        "IMG_2543.jpeg",
+        "IMG_2544.jpeg",
+        "IMG_2545.jpeg",
+        "IMG_2546.jpeg",
+        "IMG_2547.jpeg",
+        "IMG_2548.jpeg"
+      ],
+      "skills": [
+        "religion-chapter-2"
+      ],
+      "notes": [
+        "God the Father sent Jesus, his Son, to save us. Jesus teaches us about the Father and how to live.",
+        "Grace is the new life Jesus gives us. Jesus died and rose from the dead. He is our Savior.",
+        "A disciple knows, loves, and follows Jesus. Baptism makes us members of his Church. The Holy Spirit guides the Church.",
+        "Jesus compares himself to a vine and us to its branches. Our good deeds are its fruit.",
+        "The Sign of the Cross remembers Jesus\u2019 love and that he saved us. Pray: In the name of the Father, and of the Son, and of the Holy Spirit. Amen."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-10-04",
+      "dateStatus": "Undated schoolwork",
+      "questions": [
+        {
+          "id": "work-religion2-0",
+          "subject": "Religion",
+          "skill": "religion-chapter-2",
+          "prompt": "What is the name for the new life Jesus gives us?",
+          "answer": "Grace",
+          "choices": [
+            "Grace",
+            "A boat",
+            "A seed",
+            "A branch"
+          ],
+          "explanation": "The Chapter 2 page calls Jesus\u2019 gift of new life grace.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-religion2-1",
+          "subject": "Religion",
+          "skill": "religion-chapter-2",
+          "prompt": "Who guides the Church?",
+          "answer": "The Holy Spirit",
+          "choices": [
+            "A fisherman\u2019s boat",
+            "A tree",
+            "A king\u2019s crown",
+            "The Holy Spirit"
+          ],
+          "explanation": "The Holy Spirit helps the Church live and love like Jesus.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-religion2-2",
+          "subject": "Religion",
+          "skill": "religion-chapter-2",
+          "prompt": "What does a disciple do?",
+          "answer": "Knows, loves, and follows Jesus",
+          "choices": [
+            "Never helps anyone",
+            "Only grows plants",
+            "Knows, loves, and follows Jesus",
+            "Only watches boats"
+          ],
+          "explanation": "A disciple lives according to Jesus\u2019 teaching.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-religion2-3",
+          "subject": "Religion",
+          "skill": "religion-chapter-2",
+          "prompt": "In the vine and branches comparison, who is the vine?",
+          "answer": "Jesus",
+          "choices": [
+            "The fruit",
+            "Jesus",
+            "The branches",
+            "Our good deeds"
+          ],
+          "explanation": "Jesus is the vine; we are the branches.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-religion2-4",
+          "subject": "Religion",
+          "skill": "religion-chapter-2",
+          "prompt": "What do the fruits represent in that comparison?",
+          "answer": "Our good deeds",
+          "choices": [
+            "Our good deeds",
+            "Our toys",
+            "Our shoes",
+            "Our meals"
+          ],
+          "explanation": "Good deeds are ways to live closer to Jesus.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-religion2-5",
+          "subject": "Religion",
+          "skill": "religion-chapter-2",
+          "prompt": "Which sacrament makes us members of the Church?",
+          "answer": "Baptism",
+          "choices": [
+            "A birthday",
+            "A school trip",
+            "A game",
+            "Baptism"
+          ],
+          "explanation": "Through Baptism we share in Jesus\u2019 life and belong to his Church.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-religion2-6",
+          "subject": "Religion",
+          "skill": "religion-chapter-2",
+          "prompt": "What do we remember when praying the Sign of the Cross?",
+          "answer": "Jesus\u2019 love and that he saved us",
+          "choices": [
+            "How to count",
+            "A weather forecast",
+            "Jesus\u2019 love and that he saved us",
+            "Only a school rule"
+          ],
+          "explanation": "The cross reminds us of Jesus\u2019 love and saving action.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-religion2-7",
+          "subject": "Religion",
+          "skill": "religion-chapter-2",
+          "prompt": "Who sent Jesus to save us?",
+          "answer": "God the Father",
+          "choices": [
+            "A gardener",
+            "God the Father",
+            "A fisherman",
+            "A neighbor"
+          ],
+          "explanation": "God the Father sent his Son, Jesus.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-religion2-8",
+          "subject": "Religion",
+          "skill": "religion-chapter-2",
+          "prompt": "What happened after Jesus died?",
+          "answer": "He rose from the dead",
+          "choices": [
+            "He rose from the dead",
+            "He stopped loving us",
+            "He became a boat",
+            "He forgot his friends"
+          ],
+          "explanation": "Jesus died and rose from the dead. He is our Savior.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-religion2-9",
+          "subject": "Religion",
+          "skill": "religion-chapter-2",
+          "prompt": "Which action is a good way to follow Jesus?",
+          "answer": "Help someone who needs kindness",
+          "choices": [
+            "Leave someone out",
+            "Hide a friend\u2019s book",
+            "Laugh when someone falls",
+            "Help someone who needs kindness"
+          ],
+          "explanation": "Kindness and helping others are good deeds.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ],
+      "chapter": 2
+    },
+    {
+      "id": "daily22",
+      "title": "Daily review \u2022 Day 22",
+      "subject": "Reading / ELA",
+      "sources": [
+        "IMG_2549.jpeg"
+      ],
+      "skills": [
+        "possessives",
+        "alphabetical-order",
+        "place-value",
+        "time"
+      ],
+      "notes": [
+        "Snug means cozy and warm.",
+        "Alphabetical order: black, plus, sled.",
+        "23 can be written as 2 tens and 3 ones, or 23 ones.",
+        "In a part-whole model, the parts add to the whole."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-10-04",
+      "dateStatus": "Undated schoolwork",
+      "questions": [
+        {
+          "id": "work-daily22-0",
+          "subject": "Reading / ELA",
+          "skill": "alphabetical-order",
+          "prompt": "Which word comes first in ABC order: sled, black, plus?",
+          "answer": "black",
+          "choices": [
+            "black",
+            "sled",
+            "plus",
+            "They are tied"
+          ],
+          "explanation": "Compare first letters: b comes before p and s.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Daily review \u2022 Day 22",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-daily22-1",
+          "subject": "Reading / ELA",
+          "skill": "possessives",
+          "prompt": "Which phrase means the bed belongs to Jen?",
+          "answer": "Jen\u2019s bed",
+          "choices": [
+            "Jens bed",
+            "Jen bed",
+            "Jens\u2019 beds",
+            "Jen\u2019s bed"
+          ],
+          "explanation": "Apostrophe-s after Jen shows ownership.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Daily review \u2022 Day 22",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-daily22-2",
+          "subject": "Reading / ELA",
+          "skill": "time",
+          "prompt": "An hour has how many minutes?",
+          "answer": "60",
+          "choices": [
+            "12",
+            "24",
+            "60",
+            "30"
+          ],
+          "explanation": "There are 60 minutes in an hour.",
+          "hint": "Review the example in this lesson, then try again.",
+          "sourceFact": "Daily review \u2022 Day 22",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    }
+  ],
+  "sourceManifest": [
+    {
+      "id": "IMG_2530.jpeg",
+      "sha256": "8de5453d1e8020de532b735ba2b0bde5474f246685c699d69f7504e14bce6dd1",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2531.jpeg",
+      "sha256": "6cefdb2aa2e515df9109af9a0cd8ba83a166a600e7b38c4079aadcd18673a702",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2532.jpeg",
+      "sha256": "196c53ea0567352707313d2315ea2f8e91a9c973e504f5daf7dc2f8feb7e44df",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2533.jpeg",
+      "sha256": "90cd1052225a007cf5a8861a7a02459fc28c2ebd7bc9fdffbf67a06e9d3d96b6",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2534.jpeg",
+      "sha256": "ab3881d075827636594be30839d084763ed29f7223e6d4ac70eee99076b0e0ec",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2535.jpeg",
+      "sha256": "68ad0204b058b451aa514228b5d7a52682f9e0e7f216188113ec706418062ffc",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2536.jpeg",
+      "sha256": "2e839743563bcc50fcfbd58fed06a5235f8641b65373926738fe6257986f5ee5",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2537.jpeg",
+      "sha256": "b7774b91c20fe7a79cacfc442402695b744bfbffd2b3602bc590198b51f5651e",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2538.jpeg",
+      "sha256": "8d435e78e0d8827418083d009d23f9ae77e51f624b0575f920ac48b61ada4f43",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2539.jpeg",
+      "sha256": "e6a642e13d556e18923645eb6b611629a34930393a89db2a4dbad28832b1ed05",
+      "status": "duplicate",
+      "duplicateOf": "IMG_2538.jpeg",
+      "reason": "Same Day 23 worksheet photographed twice; preserve one lesson."
+    },
+    {
+      "id": "IMG_2540.jpeg",
+      "sha256": "1d9bc9ebcb9d4a26639e8dd1382f1f6fc3d53fd5f1885f0dc84b9c938e6c35dd",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2541.jpeg",
+      "sha256": "97efdc23271174c5de130a8f256b75a55b702439b2fee49adaa85fd7251205a0",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2542.jpeg",
+      "sha256": "491cd1d50032954f702612e04a40ba8444b82edef5dbc6d9ef5bbbbf98b99a29",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2543.jpeg",
+      "sha256": "e859f5a46bef5db959801a708053af5b42bba5999aeb2f4415633af4cc6a3bda",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2544.jpeg",
+      "sha256": "87bb9fa3dc80c3098c403490908cece1066c8fb3c5931ddad5f5072a464af5e9",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2545.jpeg",
+      "sha256": "9baf43346f477f2b08e81b22338323859c2b671f03313ab92aa85a02250d756e",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2546.jpeg",
+      "sha256": "7f630095a37a50b5f47c67e513109a263d5c19867a65fbb813cff0a5bada5166",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2547.jpeg",
+      "sha256": "b7f54b0df9338bced8293cfa669722678ea32041f555f14dd18c13c73ffbbaa6",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2548.jpeg",
+      "sha256": "4b6c965cc6a897cd2fa46070a695c3511b25455a051419f7ff7dfbc574eed40e",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2549.jpeg",
+      "sha256": "bf2137c4f69ae8e3e3c92bb0c184b74fef587b33f20e18036e3a6af41b26ddda",
+      "status": "integrated"
+    }
+  ]
+}

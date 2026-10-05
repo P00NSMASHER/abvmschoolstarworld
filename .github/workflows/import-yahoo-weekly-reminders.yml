@@ -87,7 +87,7 @@ jobs:
             npm run qa:static
             node --test tests/uploaded-notice-integration.test.mjs tests/uploaded-notice-policy.test.mjs
 
-            git add pages/data/uploaded-notices.json pages/data/study-pack.json
+            git add pages/data/uploaded-notices.json pages/data/study-pack.json pages/data/study-archive.json
             git commit -m "Import screened ABVM weekly reminders from Yahoo"
             if git push origin HEAD:main; then
               echo "published=true" >> "$GITHUB_OUTPUT"

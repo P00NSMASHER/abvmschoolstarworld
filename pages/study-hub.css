@@ -1,0 +1,267 @@
+.study-hub {
+  grid-column: 1/-1;
+  min-width: 0;
+  margin: 0 0 20px;
+  color: #183652;
+}
+.hub-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  padding: 5px;
+  border-radius: 18px;
+  background: #eaf0f6;
+  margin-bottom: 18px;
+}
+.hub-tabs button {
+  min-height: 48px;
+  border: 0;
+  border-radius: 13px;
+  background: transparent;
+  color: #38546e;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 650;
+  padding: 10px;
+}
+.hub-tabs button[aria-pressed="true"] {
+  background: white;
+  color: #123e68;
+  box-shadow: 0 2px 6px #123e6814;
+}
+.hub-content {
+  display: grid;
+  gap: 12px;
+}
+.hub-card,
+.hub-faith,
+.hub-lesson {
+  padding: 20px;
+  border: 1px solid #dce5ee;
+  border-radius: 20px;
+  background: white;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.hub-faith {
+  background: #f2f6fc;
+}
+.hub-content h3 {
+  font-size: 1.25rem;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  margin: 5px 0 12px;
+  white-space: pre-line;
+}
+.hub-content p,
+.hub-content li {
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+.hub-content ul {
+  padding-left: 22px;
+}
+.hub-content small,
+.hub-caption {
+  display: block;
+  color: #53677a;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  margin: 12px 0;
+}
+.hub-eyebrow {
+  font-size: 0.7rem !important;
+  letter-spacing: 0.08em;
+  font-weight: 750;
+  color: #526c87;
+  margin: 0 0 8px;
+}
+.study-hub button,
+.hub-primary,
+.hub-chapter {
+  min-height: 46px;
+  border-radius: 12px;
+  padding: 12px 15px;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 1px solid #cedbe7;
+  background: #f5f8fb;
+  color: #173e64;
+  text-align: left;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  line-height: 1.4;
+  max-width: 100%;
+}
+.study-hub .hub-primary {
+  background: #173e64;
+  color: white;
+  border-color: #173e64;
+  font-weight: 650;
+}
+.hub-faith .hub-primary {
+  width: 100%;
+}
+.hub-chapter {
+  margin: 5px;
+}
+.hub-content details summary {
+  font-size: 0.95rem;
+  font-weight: 650;
+  cursor: pointer;
+  min-height: 30px;
+  line-height: 1.5;
+}
+.hub-content details[open] summary {
+  margin-bottom: 12px;
+}
+.hub-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.study-hub fieldset {
+  border: 0;
+  padding: 0;
+  margin: 20px 0;
+}
+.study-hub legend {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.hub-choice {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  min-height: 50px;
+  border-bottom: 1px solid #e7edf3;
+  padding: 8px 0;
+  cursor: pointer;
+}
+.hub-choice input {
+  width: 22px;
+  height: 22px;
+  accent-color: #173e64;
+}
+.hub-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.8rem;
+}
+.hub-round progress {
+  width: 100%;
+  height: 7px;
+  accent-color: #356fa4;
+  margin-top: 18px;
+}
+.hub-answers {
+  display: grid;
+  gap: 10px;
+  margin: 20px 0;
+}
+.hub-answers button {
+  justify-content: flex-start;
+  background: white;
+  padding: 16px;
+}
+.hub-answers .hub-correct {
+  background: #e4f3e9;
+  border-color: #468562;
+  color: #1b5132;
+}
+.hub-answers .hub-incorrect {
+  background: #fff0e9;
+  border-color: #bb8265;
+  color: #754126;
+}
+.hub-feedback {
+  background: #eef4fa;
+  border-radius: 14px;
+  padding: 16px;
+  margin: 16px 0;
+}
+.hub-feedback p {
+  margin-bottom: 0;
+}
+.study-hub button:disabled {
+  cursor: default;
+}
+.study-hub button:focus-visible,
+.study-hub a:focus-visible,
+.study-hub summary:focus-visible {
+  outline: 3px solid #498bd0;
+  outline-offset: 3px;
+}
+.study-hub textarea,
+.study-hub input:not([type="checkbox"]):not([type="radio"]),
+.study-hub select {
+  max-width: 100%;
+  font: inherit;
+  font-size: 16px;
+}
+.study-hub [hidden],
+[data-study-legacy][hidden] {
+  display: none !important;
+}
+.hub-finish {
+  background: #f0f6fc;
+}
+.hub-finish h3 {
+  font-size: 1.5rem;
+}
+.hub-round button[data-next] {
+  width: 100%;
+}
+#study-hub {
+  grid-column: 1/-1;
+}
+[data-study-legacy] {
+  display: block;
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+@media (min-width: 700px) {
+  /* Preserve subject rows inside the wrapper used for Study section switching. */
+  .study-screen > [data-study-legacy] {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 14px;
+    align-content: start;
+  }
+  .study-screen > [data-study-legacy] > * {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+  .study-screen > [data-study-legacy] > .study-accordion {
+    grid-column: auto;
+    align-self: start;
+    margin-bottom: 12px;
+  }
+  .hub-tabs {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .hub-card,
+  .hub-faith {
+    padding: 26px;
+  }
+  .hub-actions > * {
+    flex: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .study-hub * {
+    scroll-behavior: auto;
+    transition: none;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .study-hub {
+    color: #183652;
+  }
+}

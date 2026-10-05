@@ -1,10 +1,10 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v114-runtime-pack";
+const CACHE = "abvm-grade2-parent-companion-v115-runtime-pack";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=103",
   "./study-support.js?v=1",
-  "./app.js?v=112",
+  "./app.js?v=113",
   "./school-updates.js?v=1",
   "./weekly-learning.js?v=3",
   "./study-games.js?v=94",
@@ -14,7 +14,7 @@ const STATIC_SHELL = [
   "./assets/abvm-app-icon-192.png",
   "./assets/abvm-app-icon-512.png"
 ];
-const OPTIONAL_DATA = ["./data/study-pack-runtime.json"];
+const OPTIONAL_DATA = ["./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./study-hub.mjs", "./study-model.mjs", "./star-practice.mjs", "./study-hub.css"];
 
 self.addEventListener("install",event=>{
   event.waitUntil((async()=>{
@@ -94,6 +94,9 @@ self.addEventListener("fetch",event=>{
     event.respondWith(networkFirst(event.request,null,event));
     return;
   }
+  if(/\/data\/(?:study-archive|schoolwork|religion-sources)\.json$/.test(url.pathname)){
+    event.respondWith(networkFirst(event.request,null,event));return;
+  }
   if(event.request.mode==="navigate"){
     event.respondWith(networkFirst(event.request,"./index.html",event));
     return;
@@ -109,7 +112,7 @@ self.addEventListener("fetch",event=>{
     event.respondWith(networkFirst(event.request,null,event));
     return;
   }
-  if(/\.(?:css|js|webp|png|svg)$/.test(url.pathname)){
+  if(/\.(?:css|mjs|js|webp|png|svg)$/.test(url.pathname)){
     event.respondWith(staleWhileRevalidate(event.request,event));
     return;
   }

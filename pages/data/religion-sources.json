@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "publisher": "Loyola Press",
+  "curriculum": "Christ Our Life",
+  "grade": 2,
+  "priority": "publisher-review-first",
+  "integration": "Open the verified publisher review as the primary religion practice. In-app questions are original practice based on uploaded schoolwork; publisher question text is not republished.",
+  "checkedAt": "2026-10-05T03:14:35.432Z",
+  "chapters": [
+    {
+      "chapter": 1,
+      "url": "https://isr.christourlife.com/col_g2_s1",
+      "status": "verified",
+      "available": true,
+      "stale": false,
+      "checkedAt": "2026-10-05T03:14:35.432Z",
+      "lastVerifiedAt": "2026-10-05T03:14:35.432Z",
+      "httpStatus": 200,
+      "dataHttpStatus": 200,
+      "chapterMatched": true,
+      "schemaPresent": true,
+      "pagePresent": true,
+      "questionCount": 11
+    },
+    {
+      "chapter": 2,
+      "url": "https://isr.christourlife.com/col_g2_s2",
+      "status": "verified",
+      "available": true,
+      "stale": false,
+      "checkedAt": "2026-10-05T03:14:35.432Z",
+      "lastVerifiedAt": "2026-10-05T03:14:35.432Z",
+      "httpStatus": 200,
+      "dataHttpStatus": 200,
+      "chapterMatched": true,
+      "schemaPresent": true,
+      "pagePresent": true,
+      "questionCount": 11
+    },
+    {
+      "chapter": 3,
+      "url": "https://isr.christourlife.com/col_g2_s3",
+      "status": "verified",
+      "available": true,
+      "stale": false,
+      "checkedAt": "2026-10-05T03:14:35.432Z",
+      "lastVerifiedAt": "2026-10-05T03:14:35.432Z",
+      "httpStatus": 200,
+      "dataHttpStatus": 200,
+      "chapterMatched": true,
+      "schemaPresent": true,
+      "pagePresent": true,
+      "questionCount": 8
+    },
+    {
+      "chapter": 4,
+      "url": "https://isr.christourlife.com/col_g2_s4",
+      "status": "verified",
+      "available": true,
+      "stale": false,
+      "checkedAt": "2026-10-05T03:14:35.432Z",
+      "lastVerifiedAt": "2026-10-05T03:14:35.432Z",
+      "httpStatus": 200,
+      "dataHttpStatus": 200,
+      "chapterMatched": true,
+      "schemaPresent": true,
+      "pagePresent": true,
+      "questionCount": 11
+    }
+  ]
+}

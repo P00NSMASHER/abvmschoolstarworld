@@ -1,12 +1,13 @@
 import {test,expect} from '@playwright/test';
 test.use({serviceWorkers:'block'});
-test('daily practice is the primary Study action and scales with larger text',async({page},testInfo)=>{
+test('daily practice remains accessible below study collections and scales with larger text',async({page},testInfo)=>{
   for(const width of [320,393,820]){
     await page.setViewportSize({width,height:852});await page.goto('/#study');
     const card=page.locator('.daily-practice');await expect(card).toBeVisible();
     await expect(card).toContainText('No timer');
     const button=card.getByRole('button',{name:'Start 5-minute practice'});
-    await expect(button).toBeInViewport();expect((await button.boundingBox()).height).toBeGreaterThanOrEqual(44);
+    await expect(page.locator('#study-hub .hub-tabs')).toBeVisible();
+    await button.scrollIntoViewIfNeeded();await expect(button).toBeInViewport();expect((await button.boundingBox()).height).toBeGreaterThanOrEqual(44);
     await page.evaluate(()=>document.documentElement.style.fontSize='34px');
     expect(await card.evaluate(e=>e.scrollWidth<=e.clientWidth+1)).toBeTruthy();
     await page.evaluate(()=>document.documentElement.style.fontSize='');

@@ -188,7 +188,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet -- pages/data/study-pack.json; then
+          if git diff --quiet -- pages/data/study-pack.json pages/data/study-archive.json; then
             echo "No school-pack changes."
             exit 0
           fi
@@ -210,12 +210,12 @@ jobs:
               npm run qa
             fi
 
-            if git diff --quiet -- pages/data/study-pack.json; then
+            if git diff --quiet -- pages/data/study-pack.json pages/data/study-archive.json; then
               echo "Latest main already contains the refreshed school pack."
               exit 0
             fi
 
-            git add pages/data/study-pack.json
+            git add pages/data/study-pack.json pages/data/study-archive.json
             git commit -m "Refresh verified ABVM teacher pages"
             if git push origin HEAD:main; then
               exit 0
