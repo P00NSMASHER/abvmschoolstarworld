@@ -19,8 +19,8 @@ async function fetchText(url) {
 }
 export async function refreshSources(document, fetcher = fetchText, now = new Date().toISOString()) {
   for (const item of document.chapters) {
-    // Only the four explicitly verified chapters are eligible; never invent a link.
-    if (![1,2,3,4].includes(item.chapter)) {item.status='unverified'; item.available=false; continue;}
+    // A new chapter requires an explicitly supplied matching publisher URL.
+    if (!Number.isInteger(item.chapter) || item.chapter < 1 || item.chapter > 99 || item.url !== `${origin}/col_g2_s${item.chapter}`) {item.status='unverified'; item.available=false; continue;}
     const pageUrl = `${origin}/col_g2_s${item.chapter}`;
     const dataUrl = `${origin}/scripts/data/col_g2_s${item.chapter}.js`;
     item.checkedAt=now;

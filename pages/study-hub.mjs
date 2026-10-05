@@ -193,8 +193,7 @@ export async function mountStudyHub(
     const bounds = weekBounds(now());
     const added = allLessons().filter(
       (l) =>
-        l.studiedOn && l.studiedOn >= bounds.start &&
-        l.studiedOn <= bounds.end,
+        l.studiedOn && l.studiedOn >= bounds.start && l.studiedOn <= bounds.end,
     );
     return unique([
       ...current(),
@@ -351,9 +350,15 @@ export async function mountStudyHub(
     if (old) old.hidden = tab !== "weekly" || !!round;
     const bounds = weekBounds(now()),
       tests = nextTests(events, now());
-    const groups = tests.map((t) =>
-      questionsForTest(t, unique([...weekly(), ...cumulative(), ...star])),
-    );
+    const groups = tests.map((t) => {
+      // Current class material leads. Only an explicit chapter/grammar focus
+      // makes undated matching worksheets relevant to this test.
+      const focused = /chapter\s*\d+|grammar|predicate/i.test(t.label)
+        ? allLessons().flatMap((l) => l.questions || [])
+        : [];
+      const primary = questionsForTest(t, unique([...weekly(), ...focused]));
+      return primary.length ? primary : questionsForTest(t, star);
+    });
     const missing = tests.filter((t, i) => !groups[i].length);
     let content = "";
     if (round) content = renderRound();
@@ -385,7 +390,8 @@ export async function mountStudyHub(
         allLessons()
           .filter(
             (l) =>
-              l.studiedOn && l.studiedOn >= bounds.start &&
+              l.studiedOn &&
+              l.studiedOn >= bounds.start &&
               l.studiedOn <= bounds.end,
           )
           .map(lessonHtml)

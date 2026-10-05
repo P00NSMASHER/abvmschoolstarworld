@@ -35,8 +35,7 @@
 }
 .hub-card,
 .hub-faith,
-.hub-lesson,
-.hub-upload {
+.hub-lesson {
   padding: 20px;
   border: 1px solid #dce5ee;
   border-radius: 20px;
@@ -109,8 +108,7 @@
 .hub-chapter {
   margin: 5px;
 }
-.hub-content details summary,
-.hub-upload summary {
+.hub-content details summary {
   font-size: 0.95rem;
   font-weight: 650;
   cursor: pointer;
@@ -124,10 +122,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-}
-.hub-upload {
-  margin-top: 16px;
-  background: #f7f9fc;
 }
 .study-hub fieldset {
   border: 0;

@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 test.use({ serviceWorkers: "block" });
-async function mount(page, day) {
+async function mount(page, day, testInfo) {
   await page.addInitScript((iso) => {
     const OriginalDate = Date,
       instant = OriginalDate.parse(iso);
@@ -16,6 +16,7 @@ async function mount(page, day) {
   }, day + "T16:00:00-04:00");
   await page.goto("/#study");
   await expect(page.locator("#study-hub .hub-tabs")).toBeVisible();
+  await page.screenshot({path:testInfo.outputPath("study-weekly.png"),fullPage:true});
   await page.evaluate(async () => {
     document.body.innerHTML =
       '<main><div id="fixture-hub"></div><div data-study-legacy></div></main>';
@@ -48,7 +49,7 @@ async function mount(page, day) {
 test("weekly test prep covers same-day subjects and completion persists", async ({
   page,
 }) => {
-  await mount(page, "2026-10-04");
+  await mount(page, "2026-10-04", testInfo);
   const prep = page.locator(".hub-card").first();
   await expect(prep).toContainText("2026-10-07");
   await expect(prep).toContainText("Math test");
@@ -79,7 +80,7 @@ test("weekly test prep covers same-day subjects and completion persists", async 
 test("past tests roll forward; cumulative, STAR and mixed games work without an uploader", async ({
   page,
 }) => {
-  await mount(page, "2026-10-08");
+  await mount(page, "2026-10-08", testInfo);
   await expect(page.locator(".hub-card").first()).toContainText("2026-10-09");
   await expect(page.locator(".hub-card").first()).not.toContainText(
     "2026-10-07",

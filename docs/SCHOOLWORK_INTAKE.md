@@ -46,6 +46,10 @@ known entry point is https://isr.christourlife.com/col_g2_s2. Check the reposito
 current religion adapter and chapter contracts rather than guessing URL semantics.
 Official review is a prioritized link experience, not a copied third-party bank.
 Keep source-backed original practice available as a clearly labeled fallback.
+For a new chapter, add its exact worksheet-supplied publisher URL and chapter to
+`pages/data/religion-sources.json`, then run `node scripts/check-religion-sources.mjs`.
+The verifier checks the page and matching question-data identity before marking
+it available; a guessed or mismatched URL never qualifies.
 
 ## 3. Prepare a reviewed batch
 
