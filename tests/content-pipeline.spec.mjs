@@ -207,7 +207,7 @@ test('Study Games source identity changes when the certified bank fingerprint ch
 });
 
 
-test('three-step retry ladder teaches before resolving and records one failed learning opportunity', async ({ page }) => {
+test('two distinct misses resolve honestly and record one failed learning opportunity', async ({ page }) => {
   await page.evaluate(() => localStorage.clear());
   await page.getByRole('button', { name: /Quick Mix/i }).click();
   await expect(page.locator('.game-question-card')).toBeVisible();
@@ -223,24 +223,29 @@ test('three-step retry ladder teaches before resolving and records one failed le
   }, prompt);
   expect(question).not.toBeNull();
 
-  const wrongIndex = question.choices.findIndex(choice => choice !== question.answer);
-  await page.locator('.game-answer').nth(wrongIndex).click();
+  const wrongs = question.choices.map((choice,index)=>choice!==question.answer?index:-1).filter(index=>index>=0);
+  expect(wrongs.length).toBeGreaterThanOrEqual(2);
+
+  const firstWrong=page.locator('.game-answer').nth(wrongs[0]);
+  await firstWrong.click();
+  await expect(firstWrong).toBeDisabled();
   await expect(page.locator('.game-feedback.retry')).toContainText('Not yet');
   await expect(page.locator('[data-game-next]')).toHaveCount(0);
 
-  await page.locator('.game-answer').nth(wrongIndex).click();
-  await expect(page.locator('.game-feedback.retry')).toContainText('stronger clue');
+  await firstWrong.evaluate(button=>button.click());
   await expect(page.locator('[data-game-next]')).toHaveCount(0);
 
-  await page.locator('.game-answer').nth(wrongIndex).click();
+  const secondWrong=page.locator('.game-answer').nth(wrongs[1]);
+  await secondWrong.click();
+  await expect(secondWrong).toBeDisabled();
   await expect(page.locator('.game-feedback.retry')).toContainText('model answer');
   await expect(page.locator('[data-game-next]')).toBeVisible();
 
   const stored = await page.evaluate(skill => JSON.parse(localStorage.getItem('abvm-study-learning:v2') || '{}')[skill] || {}, question.skill);
   expect(stored.Seen).toBe(1);
   expect(stored.Wrong).toBe(1);
-  expect(stored.Attempts).toBe(3);
-  expect(stored.IncorrectAttempts).toBe(3);
+  expect(stored.Attempts).toBe(2);
+  expect(stored.IncorrectAttempts).toBe(2);
   expect(stored.Correct).toBe(0);
   expect(stored.LastResolution?.independent).toBe(false);
 });
