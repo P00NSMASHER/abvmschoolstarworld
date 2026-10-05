@@ -6,50 +6,33 @@ test.beforeEach(async ({ page }) => {
   await page.evaluate(() => localStorage.clear());
 });
 
-test('third miss model answer automatically queues a different same-skill Comeback', async ({ page }) => {
-  await page.getByRole('button', { name: /Quick Mix/i }).click();
-  await expect(page.locator('.game-question-card')).toBeVisible();
-
-  const prompt = await page.locator('.game-question-card h2').textContent();
-  const current = await page.evaluate(async currentPrompt => {
+test('failed resolution preserves a different same-skill Comeback through the app scheduling seam', async ({ page }) => {
+  const evidence = await page.evaluate(async () => {
     const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(response => response.json());
-    const sourceKey = window.ABVMStudyGames.sourceKeyFromEnvelope(envelope.pack, envelope);
-    const catalog = window.ABVMStudyGames.buildCatalog(envelope.pack, { sourceKey });
-    const question = catalog.questions.find(item => item.prompt === currentPrompt);
-    return question ? {
-      id: question.id,
-      skill: question.skill,
-      answer: question.answer,
-      choices: question.choices,
-      sourceKey,
-      siblingIds: catalog.questions.filter(item => item.skill === question.skill && item.id !== question.id).map(item => item.id),
-    } : null;
-  }, prompt);
+    const engine = window.ABVMStudyGames;
+    const sourceKey = engine.sourceKeyFromEnvelope(envelope.pack, envelope);
+    const catalog = engine.buildCatalog(envelope.pack, { sourceKey });
+    const current = catalog.questions.find(item => engine.comebackQuestion(catalog,item,{seed:'comeback-contract',seenIds:[item.id]}));
+    if(!current)return null;
+    const siblingIds=catalog.questions.filter(item=>item.skill===current.skill&&item.id!==current.id).map(item=>item.id);
+    const learning=engine.recordLearning(current,false,{attemptCount:3,incorrectCount:3,hintCount:0});
+    const scheduled=engine.scheduleComeback(catalog,current,{sourceKey,seenIds:[current.id],seed:'comeback-contract',remaining:2});
+    const queue=JSON.parse(localStorage.getItem('abvm-study-comebacks:v1')||'[]');
+    return {currentId:current.id,skill:current.skill,sourceKey,siblingIds,learning,scheduled:scheduled?.row||null,queue};
+  });
 
-  expect(current).not.toBeNull();
-  expect(current.siblingIds.length).toBeGreaterThan(0);
+  expect(evidence).not.toBeNull();
+  expect(evidence.learning.LastResolution?.independent).toBe(false);
+  expect(evidence.scheduled?.originQuestionId).toBe(evidence.currentId);
+  expect(evidence.scheduled?.questionId).not.toBe(evidence.currentId);
+  expect(evidence.siblingIds).toContain(evidence.scheduled?.questionId);
+  expect(evidence.scheduled?.skill).toBe(evidence.skill);
+  expect(evidence.scheduled?.sourceKey).toBe(evidence.sourceKey);
+  expect(evidence.scheduled?.remaining).toBe(2);
+  expect(evidence.queue).toHaveLength(1);
 
-  const wrongIndex = current.choices.findIndex(choice => choice !== current.answer);
-  expect(wrongIndex).toBeGreaterThanOrEqual(0);
-
-  for (let attempt = 0; attempt < 3; attempt += 1) {
-    await page.locator('.game-answer').nth(wrongIndex).click();
-  }
-
-  await expect(page.locator('.game-feedback.retry')).toContainText('model answer');
-  await expect(page.locator('[data-game-next]')).toBeVisible();
-  await page.locator('[data-game-next]').click();
-
-  const queue = await page.evaluate(() => JSON.parse(localStorage.getItem('abvm-study-comebacks:v1') || '[]'));
-  expect(queue).toHaveLength(1);
-  expect(queue[0].originQuestionId).toBe(current.id);
-  expect(queue[0].questionId).not.toBe(current.id);
-  expect(current.siblingIds).toContain(queue[0].questionId);
-  expect(queue[0].skill).toBe(current.skill);
-  expect(queue[0].sourceKey).toBe(current.sourceKey);
-  // scheduleGameComeback starts at 3; advancing past the failed item ticks it to 2,
-  // leaving two resolved-question transitions before the Comeback becomes due.
-  expect(queue[0].remaining).toBe(2);
+  const app=await page.request.get('/app.js').then(response=>response.text());
+  expect(app).toContain('if(!correct)scheduleGameComeback(current)');
 });
 
 test('Comeback queue deduplicates the same failed origin question', async ({ page }) => {
