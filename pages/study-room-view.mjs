@@ -90,7 +90,6 @@ export function prepareStudyRoom(host) {
     if (event.detail !== 0) return;
     if (button.hasAttribute('data-tab')) focusToken = ['data-tab', button.dataset.tab];
     else if (button.hasAttribute('data-hint')) focusToken = ['data-hint', ''];
-    else if (button.hasAttribute('data-answer')) focusToken = ['feedback', ''];
   };
   host.addEventListener('click', rememberFocus, true);
   function refresh() {
