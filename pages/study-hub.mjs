@@ -135,7 +135,34 @@ export async function mountStudyHub(
     link.dataset.studyHub = "true";
     document.head.append(link);
   }
-  host.innerHTML = '<p role="status">Opening your study collection…</p>';
+  events = Array.isArray(events) ? events : [];
+  const savedDone = getSaved("abvm-completed-tests", []),
+    done = Array.isArray(savedDone) ? savedDone : [];
+  events = events.filter((t) => !done.includes(t.date + "|" + t.label));
+  const loadingTests = nextTests(events, now());
+  const loadingDate = loadingTests.length
+    ? new Intl.DateTimeFormat("en-US", {
+        weekday: "long",
+        month: "short",
+        day: "numeric",
+        timeZone: "UTC",
+      }).format(new Date(loadingTests[0].date + "T12:00:00Z"))
+    : "";
+  host.dataset.studyState = "loading";
+  host.innerHTML =
+    '<div class="study-hub hub-loading" aria-busy="true"><nav class="hub-tabs hub-tabs-loading" aria-label="Study sections">' +
+    Object.values(names).map((n) => '<span>' + escape(n) + '</span>').join("") +
+    '</nav><div class="hub-content"><section class="hub-card hub-prep"><div class="hub-prep-heading"><span class="hub-symbol" aria-hidden="true">✦</span><p class="hub-eyebrow">' +
+    (loadingTests.length ? "NEXT TEST" + (loadingTests.length > 1 ? "S" : "") : "THIS WEEK") +
+    '</p></div>' +
+    (loadingTests.length
+      ? '<time class="hub-date" datetime="' + escape(loadingTests[0].date) + '">' + escape(loadingDate) + '</time><h3>' +
+        loadingTests.map((t) => escape(t.label)).join('<span class="hub-test-divider"> & </span>') +
+        '</h3><p class="hub-prep-description">' +
+        (loadingTests.length > 1 ? "A little practice for each subject, shared equally." : "A short practice round to feel ready.") +
+        '</p>'
+      : '<h3>Small steps. Big discoveries.</h3><p>No upcoming test is listed. Your weekly lessons are ready below.</p>') +
+    '<div class="hub-prep-actions hub-loading-action"><p role="status">Opening your study collection…</p></div></section></div></div>';
   let schoolwork, archive;
   try {
     [schoolwork, archive] = await Promise.all([
@@ -144,8 +171,9 @@ export async function mountStudyHub(
     ]);
   } catch {
     if (host.isConnected) {
+      host.dataset.studyState = "error";
       host.innerHTML =
-        '<p role="status">Your study collection could not load. Check your connection and try again.</p><button type="button" data-retry>Try again</button>';
+        '<div class="study-hub"><section class="hub-card hub-error"><p class="hub-eyebrow">STUDY COLLECTION</p><h3>Couldn’t open the full collection</h3><p role="status">Your current subject notes are still below. Check your connection and try again when you’re ready.</p><button class="hub-primary" type="button" data-retry>Try again</button></section></div>';
       host.querySelector("[data-retry]").onclick = () =>
         mountStudyHub(host, { pack, catalog, events, engine, now });
     }
@@ -391,6 +419,7 @@ export async function mountStudyHub(
               ? "A little practice for each subject, shared equally."
               : "A short practice round to feel ready.") +
             "</p>" +
+            '<div class="hub-prep-actions">' +
             (missing.length
               ? '<p class="hub-caption">Review the teacher notes below for ' +
                 missing.map((t) => escape(t.label)).join(", ") +
@@ -400,7 +429,7 @@ export async function mountStudyHub(
             (tests.length > 1
               ? "Mark these tests finished"
               : "Mark test finished") +
-            "</button>"
+            "</button></div>"
           : "<h3>Small steps. Big discoveries.</h3><p>No upcoming test is listed. Your weekly lessons are ready below.</p>") +
         "</section>" +
         (dated.length
@@ -474,6 +503,7 @@ export async function mountStudyHub(
         (!picks.size ? "disabled" : "") +
         '>Let’s play</button></section><a href="#games" class="hub-chapter">More subject games →</a>';
     }
+    host.dataset.studyState = "ready";
     host.innerHTML =
       '<div class="study-hub"><nav class="hub-tabs" aria-label="Study sections">' +
       Object.entries(names)
@@ -595,9 +625,6 @@ export async function mountStudyHub(
       host.querySelector(".hub-round h3,.hub-finish h3")?.focus();
     });
   }
-  const savedDone = getSaved("abvm-completed-tests", []),
-    done = Array.isArray(savedDone) ? savedDone : [];
-  events = events.filter((t) => !done.includes(t.date + "|" + t.label));
   render();
   // Recompute date-dependent cards when returning from the publisher, and across midnight.
   let lastDay = schoolDay(now()),
