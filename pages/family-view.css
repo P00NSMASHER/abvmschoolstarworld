@@ -29,3 +29,6 @@
 .family-screen .family-message-body .family-source-lines{list-style:none;margin:0;padding:0}
 .family-screen .family-message-body .family-source-lines li{padding:10px 0;border-bottom:1px solid #e6edf4;font-size:14px;line-height:1.6}
 .family-screen .family-message-body .family-source-lines li:last-child{border-bottom:0}
+
+/* Put actionable family tasks before the unread message collection at every width. */
+.family-screen .family-actions-card{grid-column:1/-1}

@@ -608,8 +608,8 @@ function renderFamily(){
     header("FAMILY","Family dashboard")+freshness()+
     '<section class="family-hero compact"><p>THIS WEEK</p><h2>What needs attention</h2><span>Current school actions and notices in one place.</span></section>'+
     '<div class="family-stats"><div><strong>'+tests+'</strong><span>test days</span></div><div><strong>'+actions.length+'</strong><span>current actions</span></div></div>'+
-    window.ABVMSchoolUpdates.card(pack)+
     '<section class="parent-card family-actions-card"><div class="family-actions-head"><span class="family-actions-mark" aria-hidden="true">✓</span><div><small>TO DO</small><h3>Family actions</h3></div></div><ul>'+actions.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></section>'+
+    window.ABVMSchoolUpdates.card(pack)+
     window.ABVMSchoolUpdates.noticesCard(notices,linkedTextHtml)+
     (window.ABVMWeeklyLearning?.renderChanges?.(pack?.schoolChangeFeed)||"")+
     '<p class="unofficial-note">Family planning tool based on current ABVM Grade 2 sources.</p>'+
