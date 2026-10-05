@@ -97,6 +97,7 @@
   margin-bottom: 8px;
 }
 .hub-choice input {
+  flex: 0 0 22px;
   width: 22px;
   height: 22px;
   accent-color: #173e64;
@@ -362,7 +363,13 @@
   color: #647a8d;
   font-weight: 400;
 }
-.hub-choice {
+.study-hub .hub-choice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 50px;
+  width: 100%;
+  box-sizing: border-box;
   border: 1px solid #e1e7ed;
   border-radius: 12px;
   padding: 12px;

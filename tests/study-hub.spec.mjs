@@ -142,6 +142,35 @@ test("Study has clear mobile and tablet layouts across every section", async ({
       expect(
         await hub.evaluate((el) => el.scrollWidth <= el.clientWidth + 1),
       ).toBeTruthy();
+      if (section === "games") {
+        const choices = hub.locator("fieldset").first().locator(".hub-choice");
+        const rows = await choices.evaluateAll((labels) =>
+          labels.map((label) => {
+            const box = label.getBoundingClientRect();
+            const input = label.querySelector("input").getBoundingClientRect();
+            const text = label.querySelector("span").getBoundingClientRect();
+            return {
+              top: box.top,
+              bottom: box.bottom,
+              left: box.left,
+              right: box.right,
+              inputRight: input.right,
+              textLeft: text.left,
+              textTop: text.top,
+              textBottom: text.bottom,
+            };
+          }),
+        );
+        expect(rows).toHaveLength(3);
+        for (let index = 0; index < rows.length; index++) {
+          const row = rows[index];
+          expect(row.textLeft).toBeGreaterThanOrEqual(row.inputRight);
+          expect(row.textTop).toBeGreaterThanOrEqual(row.top);
+          expect(row.textBottom).toBeLessThanOrEqual(row.bottom);
+          if (index)
+            expect(row.top).toBeGreaterThanOrEqual(rows[index - 1].bottom);
+        }
+      }
       await page.screenshot({
         path: testInfo.outputPath(`study-${section}-${width}.png`),
         fullPage: true,
