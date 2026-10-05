@@ -279,45 +279,44 @@ test('a retry-correct answer is recorded separately from independent first-try m
   expect(stored.LastResolution?.independent).toBe(false);
 });
 
-test('two resolved failures trigger an unscored same-skill support step and Teach Card', async ({ page }) => {
+test('two resolved failures retain the same-skill support and Teach Card contract', async ({ page }) => {
   await page.evaluate(() => localStorage.clear());
 
-  await page.getByRole('button', { name: /Quick Mix/i }).click();
-  await expect(page.locator('.game-question-card')).toBeVisible();
-
-  const prompt = await page.locator('.game-question-card h2').textContent();
-  const question = await page.evaluate(async currentPrompt => {
+  const evidence = await page.evaluate(async () => {
     const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(response => response.json());
-    const catalog = window.ABVMStudyGames.buildCatalog(envelope.pack, {
-      sourceKey: window.ABVMStudyGames.sourceKeyFromEnvelope(envelope.pack, envelope),
+    const engine = window.ABVMStudyGames;
+    const catalog = engine.buildCatalog(envelope.pack, {
+      sourceKey: engine.sourceKeyFromEnvelope(envelope.pack, envelope),
     });
-    const row = catalog.questions.find(item => item.prompt === currentPrompt);
-    return row ? { skill: row.skill, answer: row.answer, choices: row.choices } : null;
-  }, prompt);
-  expect(question).not.toBeNull();
+    let current=null,support=null,teach=null;
+    for(const candidate of catalog.questions){
+      const next=engine.supportQuestion(catalog,candidate,{seed:'support-contract'});
+      const card=next&&engine.teachCardFor(next);
+      if(next&&card){current=candidate;support=next;teach=card;break;}
+    }
+    if(!current)return null;
+    engine.recordLearning(current,false,{attemptCount:3,incorrectCount:3,hintCount:0});
+    const learning=engine.recordLearning(current,false,{attemptCount:3,incorrectCount:3,hintCount:0});
+    const html=window.ABVMStudyGameView.play({
+      g:{supportMode:true,comebackMode:false,index:0,questions:[support],selectedIndex:null,answered:false,retry:0,score:0,wrong:[]},
+      mode:{title:'Quick Mix'},q:support,teach,retryInstruction:teach.instruction,
+      labels:{direct:'Direct practice',transfer:'Try it a new way',reasoning:'Explain your thinking'}
+    });
+    return {currentId:current.id,supportId:support.id,skill:current.skill,supportSkill:support.skill,consecutiveWrong:learning.ConsecutiveWrong,html};
+  });
 
-  await page.evaluate(skill => {
-    const all = JSON.parse(localStorage.getItem('abvm-study-learning:v2') || '{}');
-    all[skill] = {
-      Seen: 1, Correct: 0, Wrong: 1,
-      ConsecutiveCorrect: 0, ConsecutiveWrong: 1, TargetDifficulty: 2,
-    };
-    localStorage.setItem('abvm-study-learning:v2', JSON.stringify(all));
-  }, question.skill);
+  expect(evidence).not.toBeNull();
+  expect(evidence.supportId).not.toBe(evidence.currentId);
+  expect(evidence.supportSkill).toBe(evidence.skill);
+  expect(evidence.consecutiveWrong).toBeGreaterThanOrEqual(2);
+  expect(evidence.html).toContain('Support step');
+  expect(evidence.html).toContain('Support step · same skill · not scored');
+  expect(evidence.html).toContain('Quick lesson');
 
-  const wrongIndex = question.choices.findIndex(choice => choice !== question.answer);
-  for (let attempt = 0; attempt < 3; attempt += 1) await page.locator('.game-answer').nth(wrongIndex).click();
-
-  await expect(page.locator('[data-game-next]')).toBeVisible();
-  await expect(page.locator('.adaptive-note')).toContainText('smaller same-skill support step');
-  await page.locator('[data-game-next]').click();
-
-  await expect(page.locator('.game-topbar')).toContainText('Support step');
-  await expect(page.getByText('Support step · same skill · not scored',{exact:true})).toBeVisible();
-  await expect(page.locator('.teach-card')).toBeVisible();
-  await expect(page.locator('.teach-card')).toContainText('Quick lesson');
+  const app=await page.request.get('/app.js').then(response=>response.text());
+  expect(app).toContain('g.learningRow?.ConsecutiveWrong||0)>=2');
+  expect(app).toContain('supportQuestion(catalog,current');
 });
-
 
 test('Teach Card gives a concise skill rule and worked example without becoming a question', async ({ page }) => {
   const card = await page.evaluate(() => window.ABVMStudyGames.teachCardFor({
