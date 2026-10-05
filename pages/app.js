@@ -722,6 +722,7 @@ function promotePackCandidate({response,data}){
   try{
     envelope=data;pack=data.pack;derivedPackCache=null;
     if(changed)studyGameCatalogCache=null;
+    lastPackFetchUsedCache=response.headers.get("x-abvm-cache-fallback")==="1";
     if(!before||changed)render({preserveScroll:!!before});
     else updateFreshnessUI();
   }catch(error){
@@ -729,7 +730,6 @@ function promotePackCandidate({response,data}){
     if(pack){try{render({preserveScroll:true})}catch{}}
     throw error;
   }
-  lastPackFetchUsedCache=response.headers.get("x-abvm-cache-fallback")==="1";
   lastPackFetchAt=Date.now();
   return changed;
 }
