@@ -1093,7 +1093,7 @@ function extendedMath(out){
     const n=a+b-c;
     rows.push({skill:"two-step-word-problem",prompt:`You have ${a} beads. A friend gives you ${b} more. You use ${c} on a bracelet. How many beads are left?`,answer:String(n),choices:[n,a+b,a-c].map(String),explanation:`First ${a} + ${b} = ${a+b}. Then ${a+b} − ${c} = ${n}. Both changes matter.`,type:"reasoning"});
   }
-  rows.forEach((row,i)=>add(out,{...row,id:"grade2-math-variety-"+i,tier:"star-fallback",subject:"Math",hint:cue[row.skill],sourceFact:"Original Grade 2 skill practice; not a teacher test question or official STAR item.",dok:row.type==="direct"?1:2,difficulty:row.type==="reasoning"?3:2,wrongFeedback:cue[row.skill],misconception:"operation-or-place-value"}));
+  rows.forEach((row,i)=>add(out,{...row,id:"grade2-math-variety-"+i,choices:shuffled(row.choices,"grade2-math-variety-"+i),tier:"star-fallback",subject:"Math",hint:cue[row.skill],sourceFact:"Original Grade 2 skill practice; not a teacher test question or official STAR item.",dok:row.type==="direct"?1:2,difficulty:row.type==="reasoning"?3:2,wrongFeedback:cue[row.skill],misconception:"operation-or-place-value"}));
 }
 function validateQuestion(question){
   const issues=[];

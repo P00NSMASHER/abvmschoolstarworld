@@ -31,6 +31,25 @@ const pack=JSON.parse(readFileSync(new URL('../pages/data/study-pack.json',impor
 const engine=loadEngine(),catalog=engine.buildCatalog(pack),math=catalog.questions.filter(q=>q.subject==='Math'&&q.tier==='star-fallback');
 test('Math fallback has forty or more distinct checked items',()=>{assert(math.length>=40);assert.equal(new Set(math.map(practiceIdentity)).size,math.length);assert.equal(engine.validateCatalog(catalog).length,0)});
 test('new Math remains explicitly original grade-level fallback',()=>{for(const q of math.filter(q=>q.id.startsWith('grade2-math-variety-'))){assert.equal(q.tier,'star-fallback');assert.match(q.sourceFact,/not a teacher test question/);assert.equal(q.originalEquivalent,true)}});
+test('new Math distributes valid answer keys across all choice positions',()=>{
+ const added=loadEngine().buildCatalog(pack).questions.filter(q=>q.id.startsWith('grade2-math-variety-'));
+ assert.equal(added.length,32);
+ const positions=[0,0,0];
+ for(const q of added){
+  assert.equal(q.choices.length,3,q.id);
+  assert.equal(new Set(q.choices).size,3,q.id);
+  assert.equal(q.choices.filter(choice=>choice===q.answer).length,1,q.id);
+  positions[q.choices.indexOf(q.answer)]++;
+ }
+ assert(positions.every(count=>count>0&&count<=added.length/2),`Correct-answer positions must all occur without a majority: ${positions}`);
+});
+test('new Math choice order is deterministic across independent engine loads',()=>{
+ const snapshot=()=>Array.from(loadEngine().buildCatalog(pack).questions.filter(q=>q.id.startsWith('grade2-math-variety-')),q=>({id:q.id,choices:Array.from(q.choices)}));
+ const first=snapshot();
+ assert.equal(first.length,32);
+ assert.deepEqual(snapshot(),first);
+ assert.deepEqual(snapshot(),first);
+});
 test('new arithmetic, time, comparison, chart and measurement keys independently recompute',()=>{
  const added=math.filter(q=>q.id.startsWith('grade2-math-variety-'));assert.equal(added.length,32);
  for(const q of added){

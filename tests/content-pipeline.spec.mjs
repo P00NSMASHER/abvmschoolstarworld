@@ -448,7 +448,7 @@ test('a persisted due Comeback is shown unscored and records RememberedLater aft
   await expect(page.locator('.game-topbar b')).toHaveCount(0);
 
   await page.locator('.game-answer').filter({ hasText: seeded.answer }).click();
-  await expect(page.locator('.game-feedback.correct')).toContainText('Remembered later!');
+  await expect(page.locator('.game-feedback.correct')).toContainText('Skills recalled later!');
   await expect(page.locator('.game-topbar b')).toHaveCount(0);
   await page.locator('[data-game-next]').click();
 
