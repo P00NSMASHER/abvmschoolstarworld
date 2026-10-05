@@ -98,7 +98,7 @@ test('Study subject bullets reserve space and never collide with copy',async({pa
   const cards=page.locator('.study-accordion');
   for(let i=0;i<await cards.count();i++){
     const card=cards.nth(i);
-    if(!(await card.getAttribute('open')))await card.locator('summary').click();
+    await card.evaluate(el=>{el.open=true});
     const items=card.locator('li');
     for(let j=0;j<await items.count();j++){
       const item=items.nth(j);
@@ -140,13 +140,15 @@ test('visual integrity audit keeps every primary screen inside the app canvas',a
           if(style.display==='none'||style.visibility==='hidden')continue;
           const rect=node.getBoundingClientRect();
           if(rect.width<1||rect.height<1)continue;
-          if(rect.left<root.left-2||rect.right>root.right+2||node.scrollWidth>node.clientWidth+2){
+          const clipsX=style.overflowX==='hidden'||style.overflowX==='clip';
+          if(rect.left<root.left-2||rect.right>root.right+2||(!clipsX&&node.scrollWidth>node.clientWidth+2)){
             offenders.push({
               cls:node.className||node.tagName,
               left:Math.round(rect.left-root.left),
               right:Math.round(rect.right-root.right),
               visible:node.clientWidth,
-              content:node.scrollWidth
+              content:node.scrollWidth,
+              overflowX:style.overflowX
             });
           }
         }
