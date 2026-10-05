@@ -293,6 +293,23 @@ test("Today never treats Door Decorating Contest as a test",async({page})=>{
 });
 
 
+test("Today does not show Attend Mass before the verified Mass date",async({page})=>{
+  await page.clock.setFixedTime(new Date("2026-10-05T12:00:00-04:00"));
+  await page.goto("/#today");
+  await expect(page.locator(".today-panel")).toBeVisible({timeout:10_000});
+  await expect(page.locator(".today-panel .task-list")).not.toContainText("Attend Mass");
+  await expect(page.locator(".today-panel .timeline")).not.toContainText(/\bMass\b/);
+});
+
+test("Today shows Attend Mass on the verified Mass date",async({page})=>{
+  await page.clock.setFixedTime(new Date("2026-10-07T12:00:00-04:00"));
+  await page.goto("/#today");
+  await expect(page.locator(".today-panel")).toBeVisible({timeout:10_000});
+  await expect(page.locator(".today-panel .task-list")).toContainText("Attend Mass");
+  await expect(page.locator(".today-panel .timeline")).toContainText(/Mass/);
+});
+
+
 test("Week uses a two-column iPad main area and stays stacked on phone",async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await page.goto("/#week");
