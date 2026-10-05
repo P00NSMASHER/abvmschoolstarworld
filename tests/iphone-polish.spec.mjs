@@ -165,3 +165,46 @@ test('visual integrity audit keeps every primary screen inside the app canvas',a
   }
 });
 
+
+
+test('Study Hub loading shell keeps the first legacy action stable',async({page})=>{
+  for(const viewport of [{width:393,height:852},{width:768,height:1024}]){
+    await page.setViewportSize(viewport);
+    await page.route('**/data/schoolwork.json',async route=>{
+      await new Promise(resolve=>setTimeout(resolve,700));
+      await route.continue();
+    });
+    await page.route('**/data/study-archive.json',async route=>{
+      await new Promise(resolve=>setTimeout(resolve,700));
+      await route.continue();
+    });
+    await page.goto('/#study');
+    const host=page.locator('#study-hub');
+    await expect(host).toHaveAttribute('data-study-state','loading',{timeout:10_000});
+    await expect(host.getByRole('status',{name:/Opening your study collection/i})).toBeVisible();
+    const legacy=page.locator('.study-at-a-glance');
+    await expect(legacy).toBeVisible();
+    const before=await legacy.evaluate(el=>el.getBoundingClientRect().top);
+    await expect(host).toHaveAttribute('data-study-state','ready',{timeout:10_000});
+    await expect(host.locator('.hub-tabs button')).toHaveCount(4);
+    const after=await legacy.evaluate(el=>el.getBoundingClientRect().top);
+    expect(Math.abs(after-before),`Study legacy shift at ${viewport.width}px`).toBeLessThanOrEqual(8);
+    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
+    expect(overflow).toBeFalsy();
+    await page.unroute('**/data/schoolwork.json');
+    await page.unroute('**/data/study-archive.json');
+  }
+});
+
+test('Study Hub load failure keeps legacy study content usable and retry visible',async({page})=>{
+  await page.setViewportSize({width:393,height:852});
+  await page.route('**/data/schoolwork.json',route=>route.abort());
+  await page.goto('/#study');
+  const host=page.locator('#study-hub');
+  await expect(host).toHaveAttribute('data-study-state','error',{timeout:10_000});
+  await expect(host.getByRole('button',{name:'Try again'})).toBeVisible();
+  await expect(page.locator('.study-at-a-glance')).toBeVisible();
+  await expect(page.locator('.study-games-cta')).toBeVisible();
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
+  expect(overflow).toBeFalsy();
+});
