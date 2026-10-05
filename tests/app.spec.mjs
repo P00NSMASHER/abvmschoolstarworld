@@ -444,7 +444,9 @@ test("Family prioritizes full-width actions with two-column iPad notices and sta
   const more=await page.locator(".unofficial-note").boundingBox();
   for(const box of [hero,stats,actions,notices,more])expect(box).not.toBeNull();
   expect(notices.y).toBeGreaterThan(actions.y+actions.height-2);
-  for(const box of [hero,stats,notices,more])expect(Math.abs(box.width-actions.width)).toBeLessThan(4);
+  for(const box of [hero,stats,notices])expect(Math.abs(box.width-actions.width)).toBeLessThan(4);
+  // The footer intentionally has 4px horizontal margins.
+  expect(Math.abs(more.width+8-actions.width)).toBeLessThan(4);
   const unread=page.locator('.unread-updates');
   if(await unread.count())expect((await unread.boundingBox()).y).toBeGreaterThan(actions.y+actions.height-2);
   const noticeRows=page.locator('.static-notice-list > .notice-row');
