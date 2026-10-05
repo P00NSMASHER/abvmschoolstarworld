@@ -326,7 +326,7 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
 });
 
 
-test("Sept 28 task-policy fixture keeps Mass and reading without routine clutter",async({page,browser})=>{
+test("task policy keeps reading daily and Mass only on a verified Mass date",async({page,browser})=>{
   const source=await (await page.request.get("/data/study-pack.json")).json();
   const context=await browser.newContext({serviceWorkers:"block"});
   const fixturePage=await context.newPage();
@@ -341,16 +341,17 @@ test("Sept 28 task-policy fixture keeps Mass and reading without routine clutter
   await fixturePage.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:{...source,pack:{...source.pack,homework}}}));
   await fixturePage.goto("http://127.0.0.1:4173/#today");
   const tasks=fixturePage.locator(".today-panel .check-item");
+  await expect(tasks).toHaveCount(1);
+  await expect(tasks.first()).toContainText("Read");
+  await expect(tasks.first()).toContainText("20 minutes today");
+  await expect(fixturePage.getByText("Attend Mass",{exact:true})).toHaveCount(0);
+  for(const item of homework.slice(2))await expect(fixturePage.getByText(item.task,{exact:true})).toHaveCount(0);
+
+  await fixturePage.clock.setFixedTime(new Date("2026-09-30T12:00:00Z"));
+  await fixturePage.reload();
   await expect(tasks).toHaveCount(2);
   await expect(tasks.nth(0)).toContainText("Attend Mass");
   await expect(tasks.nth(1)).toContainText("Read");
-  await expect(tasks.nth(1)).toContainText("20 minutes today");
-  for(const item of homework.slice(2))await expect(fixturePage.getByText(item.task,{exact:true})).toHaveCount(0);
-  homework.shift();
-  await fixturePage.reload();
-  await expect(tasks).toHaveCount(1);
-  await expect(tasks.first()).toContainText("Read");
-  await expect(fixturePage.getByText("Attend Mass",{exact:true})).toHaveCount(0);
   await context.close();
 });
 
