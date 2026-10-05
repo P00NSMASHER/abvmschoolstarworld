@@ -698,15 +698,57 @@ function packContentKey(data){
     lunchMissingDates:lunchSource.missingDates||[]
   });
 }
+function isPackObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value)}
+function validatePackEnvelope(data,url){
+  if(!isPackObject(data)||!isPackObject(data.pack))throw new Error("Invalid pack envelope from "+url);
+  const candidate=data.pack;
+  if(candidate.schemaVersion!==2)throw new Error("Unsupported pack schema from "+url);
+  if(candidate.sourceSufficient!==true)throw new Error("Incomplete pack from "+url);
+  if(typeof candidate.sourceHash!=="string"||!candidate.sourceHash.trim())throw new Error("Missing pack source identity from "+url);
+  if(typeof candidate.weekLabel!=="string"||!candidate.weekLabel.trim())throw new Error("Missing pack week from "+url);
+  const stamp=data.sourceLastSeenAt||candidate.sourceCapturedAt||candidate.generatedAt;
+  if(typeof stamp!=="string"||Number.isNaN(Date.parse(stamp)))throw new Error("Invalid pack verification time from "+url);
+  const objectRows=["subjects","importantDates","homework","lunchMenu","lunchArchive","vocabulary","questions"];
+  for(const key of objectRows){
+    if(!Array.isArray(candidate[key])||candidate[key].some(row=>!isPackObject(row)))throw new Error("Invalid pack array "+key+" from "+url);
+  }
+  for(const key of ["reminders","parentNotices"]){
+    if(!Array.isArray(candidate[key])||candidate[key].some(row=>typeof row!=="string"))throw new Error("Invalid pack array "+key+" from "+url);
+  }
+  for(const key of ["lunchMenuSource","contentPipeline","recentReviewPipeline","schoolChangeFeed"]){
+    if(!isPackObject(candidate[key]))throw new Error("Invalid pack object "+key+" from "+url);
+  }
+  if(!Array.isArray(candidate.lunchMenuSource.sourcePages))throw new Error("Invalid lunch source pages from "+url);
+  if(!Array.isArray(candidate.contentPipeline.skills)||!Array.isArray(candidate.contentPipeline.questions))throw new Error("Invalid content pipeline from "+url);
+  if(!Array.isArray(candidate.recentReviewPipeline.skills)||!Array.isArray(candidate.recentReviewPipeline.questions))throw new Error("Invalid review pipeline from "+url);
+  if(!Array.isArray(candidate.schoolChangeFeed.items))throw new Error("Invalid school change feed from "+url);
+  return data;
+}
 async function readPackUrl(url){
   const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),8000);
   try{
     const response=await fetch(url,{cache:"no-store",signal:controller.signal});
     if(!response.ok)throw new Error("HTTP "+response.status+" for "+url);
-    const data=await response.json();
-    if(!data?.pack?.sourceSufficient)throw new Error("Incomplete pack from "+url);
+    const data=validatePackEnvelope(await response.json(),url);
     return{response,data};
   }finally{clearTimeout(timeout)}
+}
+function promotePackCandidate({response,data}){
+  const previous={envelope,pack,derivedPackCache,studyGameCatalogCache,lastPackFetchAt,lastPackFetchUsedCache,selectedDay,calendarDay};
+  const before=packContentKey(envelope),after=packContentKey(data),changed=!!before&&before!==after;
+  try{
+    envelope=data;pack=data.pack;derivedPackCache=null;
+    if(changed)studyGameCatalogCache=null;
+    if(!before||changed)render({preserveScroll:!!before});
+    else updateFreshnessUI();
+  }catch(error){
+    ({envelope,pack,derivedPackCache,studyGameCatalogCache,lastPackFetchAt,lastPackFetchUsedCache,selectedDay,calendarDay}=previous);
+    if(pack){try{render({preserveScroll:true})}catch{}}
+    throw error;
+  }
+  lastPackFetchUsedCache=response.headers.get("x-abvm-cache-fallback")==="1";
+  lastPackFetchAt=Date.now();
+  return changed;
 }
 async function fetchPack({force=false,notify=false}={}){
   const now=Date.now();
@@ -714,20 +756,15 @@ async function fetchPack({force=false,notify=false}={}){
   if(packRefreshPromise)return packRefreshPromise;
   packRefreshPromise=(async()=>{
     try{
-      let loaded=null,lastError=null;
+      let lastError=null;
       for(const url of [PACK_URL,PACK_FALLBACK_URL]){
-        try{loaded=await readPackUrl(url);break}catch(error){lastError=error}
+        try{
+          const changed=promotePackCandidate(await readPackUrl(url));
+          if(notify&&changed)toast("School info updated");
+          return changed;
+        }catch(error){lastError=error}
       }
-      if(!loaded)throw lastError||new Error("School pack unavailable");
-      const {response:r,data}=loaded;
-      lastPackFetchUsedCache=r.headers.get("x-abvm-cache-fallback")==="1";
-      const before=packContentKey(envelope),after=packContentKey(data),changed=!!before&&before!==after;
-      envelope=data;pack=data.pack;derivedPackCache=null;lastPackFetchAt=Date.now();
-      if(changed)studyGameCatalogCache=null;
-      if(!before||changed)render({preserveScroll:!!before});
-      else updateFreshnessUI();
-      if(notify&&changed)toast("School info updated");
-      return changed;
+      throw lastError||new Error("School pack unavailable");
     }finally{packRefreshPromise=null}
   })();
   return packRefreshPromise;
