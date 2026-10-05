@@ -22,6 +22,6 @@ export default defineConfig({
   projects:[
     {name:"mobile",use:{viewport:{width:390,height:844},isMobile:true,hasTouch:true}},
     {name:"desktop",use:{viewport:{width:1440,height:900}}},
-    {name:"iphone-webkit",testMatch:["iphone-polish.spec.mjs","study-empty-subjects.spec.mjs","daily-practice.spec.mjs"],use:{browserName:"webkit",viewport:{width:393,height:852},isMobile:true,hasTouch:true}}
+    {name:"iphone-webkit",testMatch:["iphone-polish.spec.mjs","study-empty-subjects.spec.mjs","daily-practice.spec.mjs","study-hub.spec.mjs"],use:{browserName:"webkit",viewport:{width:393,height:852},isMobile:true,hasTouch:true}}
   ]
 });

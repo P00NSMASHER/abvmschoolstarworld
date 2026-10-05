@@ -440,6 +440,7 @@ function renderStudy(){
   const vocab=(pack?.vocabulary||[]).map(v=>v.term);
   stack().innerHTML='<div class="screen study-screen" role="region" aria-label="Study room">'+
     header("STUDY","Study room")+
+    '<div id="study-hub"></div><div data-study-legacy>'+
     window.ABVMStudyReview.render({pack,learning:studyLearning()})+
     '<section class="study-at-a-glance"><div class="quick-look-head"><span class="quick-look-mark" aria-hidden="true">✓</span><div><p>THIS WEEK</p><h2>What matters this week</h2></div></div><ol>'+essentials.map(x=>'<li><time>'+esc(x[0])+'</time><span>'+esc(x[1])+'</span></li>').join("")+'</ol></section>'+
     '<a class="study-games-cta" href="#games" data-open-games><span>★</span><div><small>5–10 MINUTES</small><strong>Choose a study game</strong><p>Current school skills with hints and explanations.</p></div><b aria-hidden="true">›</b></a>'+
@@ -452,7 +453,9 @@ function renderStudy(){
     wordSubjectCard("study-sight","sight","Sight words",sight,"sight")+
     wordSubjectCard("study-vocabulary","reading","Words to know",vocab,"vocabulary")+
     (star?'<section class="calm-card compact"><h3>STAR reminder</h3><p>Normal reading, calm practice, and a good night’s sleep are enough.</p></section>':'')+
-    '</div>';
+    '</div></div>';
+  const host=document.getElementById('study-hub');
+  Promise.all([import('./study-hub.mjs'),ensureStudyGameEngine()]).then(([hub,engine])=>hub.mountStudyHub(host,{pack,catalog:studyGameCatalog(),engine,events:datedImportantEvents().filter(r=>kindClass(r.item)==="test").map(r=>({date:isoDateKey(r.date),label:r.item.label,endsAt:r.item.endsAt}))})).catch(()=>{if(host.isConnected)host.textContent="Study collection is unavailable. Your current subject notes are below."});
 }
 function studyGameEngine(){return window.ABVMStudyGames||null}
 function ensureStudyGameEngine(){

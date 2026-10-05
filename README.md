@@ -60,3 +60,9 @@ The installed app receives versioned shell updates through its service worker.
 On iPhone, install from Safari using **Share → Add to Home Screen**. Physical
 VoiceOver and preferred-text-size checks remain part of device acceptance;
 headless mobile and WebKit checks do not replace those checks.
+
+## Integrating schoolwork from ChatGPT
+
+When asked to integrate uploaded worksheets, start with [AGENTS.md](AGENTS.md)
+and follow [the schoolwork intake process](docs/SCHOOLWORK_INTAKE.md).
+The app has no photo uploader; reviewed content is published through this repository.
