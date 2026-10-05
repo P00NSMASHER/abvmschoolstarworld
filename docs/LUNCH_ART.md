@@ -11,8 +11,10 @@ run: review the menu, reuse suitable approved art, generate missing art with the
 built-in high-quality image generator, inspect it, test, and publish. No second
 artwork request is needed.
 
-The enabled GitHub merge-event task **Complete lunch artwork** is a backup. After
-merged pull requests, it checks for current/future menus needing illustrations,
+The GitHub merge-event task **Complete lunch artwork** is configured as a backup
+but currently paused: enabling it was blocked by the account limit of 15 active
+tasks. Do not describe it as active until enablement succeeds. Once enabled, after
+merged pull requests it checks for current/future menus needing illustrations,
 completes the same review and QA process, and quietly does nothing when coverage is
 complete. It does not trigger on direct pushes. Use PRs for menu changes. It is not
 a private-chat watcher or a paid image API service. If generation is unavailable,

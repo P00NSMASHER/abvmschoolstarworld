@@ -124,5 +124,6 @@ Lunch menu photos follow `docs/LUNCH_ART.md` as part of this same integration ru
 After the official menu transcription is reviewed, automatically complete its
 illustrations through reviewed asset reuse or built-in high-quality image
 creation, then test and publish the menu and artwork together through a PR. This
-requires no separate parent request. The GitHub merge-event backup checks current
-and future missing artwork; it is not a watcher of private chat attachments.
+requires no separate parent request. The GitHub merge-event backup is configured
+but paused at the account task limit; see docs/LUNCH_ART.md. It is not a watcher
+of private chat attachments.
