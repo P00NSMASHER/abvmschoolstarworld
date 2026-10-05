@@ -5,6 +5,12 @@ const destinations = Object.freeze({
   star: { label: 'STAR practice', note: 'Math & reading skills', icon: 'spark', tone: 'green' },
   games: { label: 'Study games', note: 'Make your own mix', icon: 'play', tone: 'orange' },
 });
+const destinationKeys = Object.freeze(Object.keys(destinations));
+const subjects = Object.freeze({
+  'study-religion': ['faith', 'purple'], 'study-reading': ['book', 'blue'],
+  'study-math': ['math', 'green'], 'study-spelling': ['pencil', 'orange'],
+  'study-sight': ['words', 'pink'], 'study-vocabulary': ['collection', 'teal'],
+});
 const paths = Object.freeze({
   book: '<path d="M12 6v15M3 5c4-2 6-1 9 1 3-2 5-3 9-1v14c-4-2-6-1-9 1-3-2-5-3-9-1Z"/>',
   collection: '<rect x="5" y="7" width="14" height="14" rx="3"/><path d="M8 3h8M6 5h12M9 12h6M9 16h4"/>',
@@ -17,16 +23,71 @@ const paths = Object.freeze({
   sound: '<path d="M4 10h4l5-4v12l-5-4H4ZM17 8c3 2 3 6 0 8M20 5c5 4 5 10 0 14"/>',
 });
 export function roomIcon(name) {
-  const path = paths[name] || paths.book;
+  const path = Object.hasOwn(paths, name) ? paths[name] : paths.book;
   return '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + path + '</svg>';
 }
 export function destinationMarkup(key) {
+  if (!Object.hasOwn(destinations, key)) return '';
   const d = destinations[key];
-  if (!d) return '';
   return '<span class="room-destination-icon" aria-hidden="true">' + roomIcon(d.icon) +
     '</span><span class="room-destination-label">' + d.label +
     '</span><span class="room-destination-note" aria-hidden="true">' + d.note + '</span>';
 }
+/** Own one reading at a time without touching answers or learning history. */
+export function createReadAloud(win) {
+  const synthesis = win?.speechSynthesis;
+  const Utterance = win?.SpeechSynthesisUtterance;
+  const supported = typeof synthesis?.speak === 'function' &&
+    typeof synthesis?.cancel === 'function' && typeof Utterance === 'function';
+  let activeUtterance = null;
+  let disposed = false;
+
+  function clearActive(force = false) {
+    const previous = activeUtterance;
+    activeUtterance = null;
+    if (previous) previous.onend = previous.onerror = null;
+    if (!supported || (!previous && !force)) return true;
+    try {
+      synthesis.cancel();
+      return true;
+    } catch {
+      // Optional speech must never prevent navigation or answer handling.
+      return false;
+    }
+  }
+
+  function read(text) {
+    if (disposed || !supported || typeof text !== 'string' || !text.trim()) return false;
+    if (!clearActive(true)) return false;
+    try {
+      const utterance = new Utterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      utterance.onend = utterance.onerror = () => {
+        // Cancellation callbacks may arrive after a newer reading has started.
+        if (activeUtterance === utterance) activeUtterance = null;
+        utterance.onend = utterance.onerror = null;
+      };
+      activeUtterance = utterance;
+      synthesis.speak(utterance);
+      return true;
+    } catch {
+      clearActive();
+      return false;
+    }
+  }
+
+  function stop() {
+    clearActive();
+  }
+  function dispose() {
+    if (disposed) return;
+    disposed = true;
+    stop();
+  }
+  return Object.freeze({ supported, read, stop, dispose });
+}
+
 export function prepareStudyRoom(host) {
   const screen = host.closest('.study-screen');
   if (!screen) return { refresh() {}, dispose() {} };
@@ -60,11 +121,6 @@ export function prepareStudyRoom(host) {
     if (heading) heading.textContent = 'Explore a subject';
     if (caption) caption.textContent = 'Tap a card to open your notes.';
   }
-  const subjects = {
-    'study-religion': ['faith', 'purple'], 'study-reading': ['book', 'blue'],
-    'study-math': ['math', 'green'], 'study-spelling': ['pencil', 'orange'],
-    'study-sight': ['words', 'pink'], 'study-vocabulary': ['collection', 'teal'],
-  };
   screen.querySelectorAll('.study-accordion').forEach(card => {
     const summary = card.querySelector(':scope > summary');
     if (!summary || summary.querySelector('.room-subject-icon')) return;
@@ -76,15 +132,12 @@ export function prepareStudyRoom(host) {
     badge.innerHTML = roomIcon(icon);
     summary.prepend(badge);
   });
-  let disposed = false, focusToken = null, spokenQuestion = '', speaking = false;
-  const canSpeak = !!(win?.speechSynthesis && win?.SpeechSynthesisUtterance);
-  const stopReading = () => {
-    if (speaking) win.speechSynthesis.cancel();
-    speaking = false;
-  };
+  let disposed = false, focusToken = null, spokenQuestion = '';
+  const readAloud = createReadAloud(win);
+  const stopReading = readAloud.stop;
   // Remember keyboard origin before the controller replaces the host tree.
   const rememberFocus = event => {
-    const button = event.target.closest('button');
+    const button = event.target?.closest?.('button');
     if (!button || !host.contains(button)) return;
     if (button.matches('[data-end],[data-tab],[data-next]')) stopReading();
     if (event.detail !== 0) return;
@@ -104,8 +157,8 @@ export function prepareStudyRoom(host) {
     if (nav) {
       nav.hidden = inRound;
       [...nav.children].forEach((node, index) => {
-        const key = node.dataset.tab || Object.keys(destinations)[index];
-        if (!destinations[key] || node.dataset.roomDecorated) return;
+        const key = node.dataset.tab || destinationKeys[index];
+        if (!Object.hasOwn(destinations, key) || node.dataset.roomDecorated) return;
         node.dataset.roomDecorated = 'true';
         node.dataset.roomTone = destinations[key].tone;
         node.innerHTML = destinationMarkup(key);
@@ -126,20 +179,15 @@ export function prepareStudyRoom(host) {
       const question = round.querySelector('h3');
       if (question?.textContent !== spokenQuestion) stopReading();
       spokenQuestion = question?.textContent || '';
-      if (question && canSpeak && !round.querySelector('.room-listen')) {
+      if (question && readAloud.supported && !round.querySelector('.room-listen')) {
         const read = doc.createElement('button');
         read.type = 'button';
         read.className = 'room-listen';
         read.innerHTML = roomIcon('sound') + '<span>Read to me</span>';
         read.onclick = () => {
-          win.speechSynthesis.cancel();
+          if (disposed || !round.isConnected) return;
           const choices = [...round.querySelectorAll('[data-answer]')].map(x => x.textContent.trim());
-          const utterance = new win.SpeechSynthesisUtterance([spokenQuestion, ...choices].join('. '));
-          utterance.lang = 'en-US';
-          utterance.rate = 0.85;
-          speaking = true;
-          utterance.onend = utterance.onerror = () => { speaking = false; };
-          win.speechSynthesis.speak(utterance);
+          readAloud.read([question.textContent || '', ...choices].join('. '));
         };
         question.before(read);
       }
@@ -155,8 +203,8 @@ export function prepareStudyRoom(host) {
     } else stopReading();
     if (focusToken) {
       const [attr, value] = focusToken;
-      const target = attr === 'feedback' ? hub.querySelector('.hub-feedback') :
-        [...hub.querySelectorAll('[' + attr + ']')].find(el => el.getAttribute(attr) === value);
+      const target = [...hub.querySelectorAll('[' + attr + ']')]
+        .find(el => el.getAttribute(attr) === value);
       target?.focus({ preventScroll: true });
       focusToken = null;
     }
@@ -173,7 +221,8 @@ export function prepareStudyRoom(host) {
     observer.disconnect();
     lifetime.disconnect();
     host.removeEventListener('click', rememberFocus, true);
-    stopReading();
+    focusToken = null;
+    readAloud.dispose();
   }
   refresh();
   return { refresh, dispose };

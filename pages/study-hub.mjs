@@ -1,5 +1,5 @@
 // Public Study entry point. Learning, source filtering and persistence remain in
-// the unchanged controller; the presentation layer moves existing live controls.
+// the core controller; the presentation layer moves existing live controls.
 import { mountStudyHub as mountController } from './study-hub-core.mjs';
 import { prepareStudyRoom } from './study-room-view.mjs';
 export { questionsForTest } from './study-hub-core.mjs';
