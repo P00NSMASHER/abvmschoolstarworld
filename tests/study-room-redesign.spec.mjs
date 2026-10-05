@@ -167,6 +167,11 @@ test('test completion has immediate Undo and survives reload with a restore cont
   await page.locator('[data-complete-test]').click();
   await expect(page.locator('.hub-undo')).toContainText('marked finished');
   await expect(page.locator('[data-undo-test]')).toBeVisible();
+  // The real Oct. 9 spelling test currently has no reviewed test-specific bank.
+  // It may use only exact-skill Grade 2 fallback items, and that substitution
+  // must be disclosed rather than passed off as teacher-authored test material.
+  await expect(page.locator('.hub-fallback-note')).toContainText('Spelling (short i / long i)');
+  await expect(page.locator('.hub-fallback-note')).toContainText('Grade-level skill practice');
   await page.locator('[data-undo-test]').click();
   await expect(page.locator('.hub-undo')).toContainText('restored');
   await expect(prep.locator('h3')).toHaveText(original||'');
