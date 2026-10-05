@@ -366,7 +366,9 @@ export async function mountStudyHub(
               ) +
               "</p>"
             : "")
-        : '<div class="hub-feedback" role="status"><strong>' +
+        : '<div class="hub-feedback ' +
+          (q.choices[selected] === q.answer ? "hub-feedback-correct" : "hub-feedback-learn") +
+          '" role="status"><strong>' +
           escape(q.answer) +
           "</strong><p>" +
           escape(q.explanation) +
