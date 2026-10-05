@@ -319,10 +319,13 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   const cached=[...staticShell.matchAll(/"\.\/[^\"]+"/g)];
   expect(cached.length).toBeLessThanOrEqual(12);
   const optional=sw.match(/const OPTIONAL_DATA = \[([\s\S]*?)\];/)?.[1]||"";
-  expect([...optional.matchAll(/"(\.\/[^\"]+)"/g)].map(match=>match[1])).toEqual([
+  const optionalAssets=[...optional.matchAll(/"(\.\/[^\"]+)"/g)].map(match=>match[1]);
+  expect(optionalAssets).toEqual([
     "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json",
-    "./study-hub.mjs", "./study-model.mjs", "./star-practice.mjs", "./study-hub.css", "./family-view.css?v=1", "./visual-polish.css?v=1", "./lunch-art.js?v=1"
+    "./study-hub.mjs", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-model.mjs", "./star-practice.mjs",
+    "./study-hub.css?v=2", "./family-view.css?v=1", "./visual-polish.css?v=1", "./lunch-art.js?v=1"
   ]);
+  expect(new Set(optionalAssets).size).toBe(optionalAssets.length);
 });
 
 

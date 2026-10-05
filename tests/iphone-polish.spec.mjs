@@ -167,7 +167,7 @@ test('visual integrity audit keeps every primary screen inside the app canvas',a
 
 
 
-test('Study Hub loading shell keeps the first legacy action stable',async({page})=>{
+test('Study Room loading shell keeps the primary daily action stable',async({page})=>{
   for(const viewport of [{width:393,height:852},{width:768,height:1024}]){
     await page.setViewportSize(viewport);
     await page.route('**/data/schoolwork.json',async route=>{
@@ -182,13 +182,14 @@ test('Study Hub loading shell keeps the first legacy action stable',async({page}
     const host=page.locator('#study-hub');
     await expect(host).toHaveAttribute('data-study-state','loading',{timeout:10_000});
     await expect(host.locator('[role="status"]')).toContainText('Opening your study collection');
-    const legacy=page.locator('.study-at-a-glance');
-    await expect(legacy).toBeVisible();
-    const before=await legacy.evaluate(el=>el.getBoundingClientRect().top);
+    const daily=page.locator('.room-daily');
+    await expect(daily).toBeVisible();
+    const before=await daily.evaluate(el=>el.getBoundingClientRect().top);
     await expect(host).toHaveAttribute('data-study-state','ready',{timeout:10_000});
     await expect(host.locator('.hub-tabs button')).toHaveCount(4);
-    const after=await legacy.evaluate(el=>el.getBoundingClientRect().top);
-    expect(Math.abs(after-before),`Study legacy shift at ${viewport.width}px`).toBeLessThanOrEqual(8);
+    const after=await daily.evaluate(el=>el.getBoundingClientRect().top);
+    expect(Math.abs(after-before),`Study daily-action shift at ${viewport.width}px`).toBeLessThanOrEqual(8);
+    await expect(daily).toHaveCount(1);
     const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
     expect(overflow).toBeFalsy();
     await page.unroute('**/data/schoolwork.json');

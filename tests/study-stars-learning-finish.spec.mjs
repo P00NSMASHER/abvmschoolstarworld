@@ -167,7 +167,7 @@ test('Step 9 freezes reward identity and advances all PWA assets together',async
   const styleVersion=index.match(/\.\/styles\.css\?v=(\d+)/)?.[1];
   const appVersion=index.match(/\.\/app\.js\?v=(\d+)/)?.[1];
   const reloadVersion=index.match(/abvm-sw-reloaded-v(\d+)/)?.[1];
-  const cacheVersion=sw.match(/abvm-grade2-parent-companion-v(\d+)-runtime-pack/)?.[1];
+  const cacheVersion=sw.match(/abvm-grade2-parent-companion-v(\d+)-[a-z-]+/)?.[1];
   expect(styleVersion).toBeTruthy();
   expect(appVersion).toBeTruthy();
   expect(reloadVersion).toBeTruthy();
