@@ -428,7 +428,7 @@ const studyNotes=subject=>window.ABVMStudyPractice.notes(subject);
 const subjectPracticeHtml=key=>window.ABVMStudyPractice.html(key);
 function subjectCard(id,klass,title,subject,key=klass){
   const notes=studyNotes(subject);
-  return '<details id="'+id+'" class="subject-card study-accordion '+klass+'"><summary><span><small>'+esc(title.toUpperCase())+'</small><strong>'+esc(title)+'</strong></span><b aria-hidden="true">+</b></summary>'+(notes.length?'<ul>'+notes.map(n=>'<li>✓ '+esc(n)+'</li>').join("")+'</ul>':subjectPracticeHtml(key))+'</details>';
+  return '<details id="'+id+'" class="subject-card study-accordion '+klass+'"><summary><span><small>'+esc(title.toUpperCase())+'</small><strong>'+esc(title)+'</strong></span><b aria-hidden="true">+</b></summary>'+(notes.length?'<ul>'+notes.map(n=>'<li>'+esc(n)+'</li>').join("")+'</ul>':subjectPracticeHtml(key))+'</details>';
 }
 function wordSubjectCard(id,klass,title,words,key){
   const clean=words.filter(w=>typeof w==="string"&&w.trim());
