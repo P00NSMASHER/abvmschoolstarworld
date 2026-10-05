@@ -411,9 +411,15 @@ function renderCalendar(){
     compactMonthCardHtml(nextM,nextMonth,"next-month-card")+
     '</div>';
 }
-function subjectCard(id,klass,title,subject){
-  const notes=[...(subject?.topics||[]),...(subject?.studyNotes||[])];
-  return '<details id="'+id+'" class="subject-card study-accordion '+klass+'"><summary><span><small>'+esc(title.toUpperCase())+'</small><strong>'+esc(title)+'</strong></span><b aria-hidden="true">+</b></summary><ul>'+notes.map(n=>'<li>✓ '+esc(n)+'</li>').join("")+'</ul></details>';
+const studyNotes=subject=>window.ABVMStudyPractice.notes(subject);
+const subjectPracticeHtml=key=>window.ABVMStudyPractice.html(key);
+function subjectCard(id,klass,title,subject,key=klass){
+  const notes=studyNotes(subject);
+  return '<details id="'+id+'" class="subject-card study-accordion '+klass+'"><summary><span><small>'+esc(title.toUpperCase())+'</small><strong>'+esc(title)+'</strong></span><b aria-hidden="true">+</b></summary>'+(notes.length?'<ul>'+notes.map(n=>'<li>✓ '+esc(n)+'</li>').join("")+'</ul>':subjectPracticeHtml(key))+'</details>';
+}
+function wordSubjectCard(id,klass,title,words,key){
+  const clean=words.filter(w=>typeof w==="string"&&w.trim());
+  return '<details id="'+id+'" class="subject-card study-accordion '+klass+'"><summary><span><strong>'+esc(title)+'</strong></span><b aria-hidden="true">+</b></summary>'+(clean.length?'<div class="'+(key==="sight"?'sight-cloud':'word-grid')+'">'+clean.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div>':subjectPracticeHtml(key))+'</details>';
 }
 function weeklyLearningDashboardHtml(){
   let learning={};
@@ -439,8 +445,8 @@ function renderStudy(){
     subjectCard("study-reading","reading","Reading",r)+
     subjectCard("study-math","math","Math",math)+
     subjectCard("study-spelling","spelling","Spelling and phonics",spell)+
-    '<details id="study-sight" class="subject-card study-accordion sight"><summary><span><small>SIGHT WORDS</small><strong>Sight words</strong></span><b aria-hidden="true">+</b></summary><div class="sight-cloud">'+sight.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></details>'+
-    '<details class="subject-card study-accordion reading"><summary><span><small>VOCABULARY</small><strong>Words to know</strong></span><b aria-hidden="true">+</b></summary><div class="word-grid">'+vocab.map(w=>'<span>'+esc(w)+'</span>').join("")+'</div></details>'+
+    wordSubjectCard("study-sight","sight","Sight words",sight,"sight")+
+    wordSubjectCard("study-vocabulary","reading","Words to know",vocab,"vocabulary")+
     (star?'<section class="calm-card compact"><h3>STAR reminder</h3><p>Normal reading, calm practice, and a good night’s sleep are enough.</p></section>':'')+
     '</div>';
 }
@@ -449,7 +455,7 @@ function ensureStudyGameEngine(){
   if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
   if(studyEnginePromise)return studyEnginePromise;
   const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.async=true;s.onload=()=>window[key]?resolve():reject(new Error(key+" did not initialize"));s.onerror=()=>reject(new Error(key+" could not be loaded"));document.head.append(s)});
-  studyEnginePromise=Promise.all([load("./study-games.js?v=92","ABVMStudyGames"),load("./study-games-view.js?v=6","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
+  studyEnginePromise=Promise.all([load("./study-games.js?v=93","ABVMStudyGames"),load("./study-games-view.js?v=6","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
   return studyEnginePromise;
 }
 function studyGameCatalog(){
@@ -627,7 +633,7 @@ function updateFreshnessUI(){
 function bindScreen(){
   if(screenEventsBound)return;
   screenEventsBound=true;
-  stack().addEventListener("click",event=>{
+  stack().addEventListener("click",async event=>{
     const target=event.target.closest("button,a");
     if(!target||!stack().contains(target))return;
     if(target.matches("[data-open-family]")){activeTab="family";history.replaceState(null,"","#family");render();return;}
@@ -640,6 +646,12 @@ function bindScreen(){
     if(target.matches("[data-cal-day]")){calendarDay=new Date(target.dataset.calDay);renderCalendar();return;}
     if(target.matches("[data-cal-step]")){calendarOffset+=Number(target.dataset.calStep||0);calendarDay=null;renderCalendar();return;}
     if(target.matches("[data-cal-today]")){calendarOffset=0;calendarDay=null;renderCalendar();return;}
+    if(target.matches("[data-subject-practice]")){
+      const mode=target.dataset.subjectPractice;target.disabled=true;
+      try{await ensureStudyGameEngine();if(!target.isConnected||activeTab!=="study")return;activeTab="games";history.replaceState(null,"","#games");startStudyGame(mode);render();}
+      catch{target.disabled=false;toast("Practice could not load. Please try again.");}
+      return;
+    }
     if(target.matches("[data-game-start]")){startStudyGame(target.dataset.gameStart);return;}
     if(target.matches("[data-study-star-goal]")){studyGameEngine()?.selectStudyStarGoal?.(target.dataset.studyStarGoal);renderGames();return;}
     if(target.matches("[data-game-answer]")){answerStudyGame(Number(target.dataset.gameAnswer));return;}
