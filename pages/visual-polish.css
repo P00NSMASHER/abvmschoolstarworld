@@ -197,3 +197,7 @@ button.freshness.attention{border-color:#e6b2b8;background:#fff0f2;color:#813842
 }
 
 @media(min-width:700px){.games-screen .game-answer{min-height:68px!important}}
+
+.week-overview-row ul{min-width:0;margin:0;padding:0;display:grid;gap:5px;list-style:none}
+.week-overview-row li{color:#344a5f;font-size:12px;line-height:1.4;font-weight:650}
+.week-tests .week-overview-row li::before{content:"";display:inline-block;width:6px;height:6px;margin:0 7px 2px 0;border-radius:50%;background:#df2d78}
