@@ -12,8 +12,8 @@ export const MATH_SUBTRACTION_FAMILY = Object.freeze({
   ]),
   sourcePriority: Object.freeze(['Tests', 'Homework']),
   featureFlag: 'curriculum-family:math-subtraction-v1',
-  rolloutStatus: 'CANDIDATE',
-  enabledByDefault: false,
+  rolloutStatus: 'APPROVED',
+  enabledByDefault: true,
   minimumSemanticVariants: 8,
   requiredQuestionTypes: Object.freeze(['direct', 'transfer', 'reasoning']),
   teachCard: Object.freeze([
