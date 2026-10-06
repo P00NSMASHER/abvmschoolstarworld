@@ -15,8 +15,6 @@ import {
   validateGrade2ContentPipeline,
 } from '../scripts/grade2-content-pipeline.mjs';
 
-const FLAG='curriculum-family:math-subtraction-v1';
-
 function sourcePack(){
   return {
     sourceHash:'teacher-pages-generic-subtraction',
@@ -37,17 +35,15 @@ const sourcePages=[{
   lines:['Thursday Oct. 15: Math (subtraction)','Math: place value'],
 }];
 
-test('generic subtraction stays disabled unless its exact candidate flag is present',()=>{
+test('generic subtraction is approved and enabled by default after evidence review',()=>{
   const family=matchCurriculumFamily('Math','Math (subtraction)');
   assert.ok(family);
   assert.equal(family.id,'math-subtraction');
-  assert.equal(family.rolloutStatus,'CANDIDATE');
-  assert.equal(family.enabledByDefault,false);
-  assert.equal(curriculumFamilyRuntimeEnabled(family),false);
-  assert.equal(curriculumFamilyRuntimeEnabled(family,{activeFeatureFlags:['curriculum-family:other']}),false);
-  assert.equal(curriculumFamilyRuntimeEnabled(family,{activeFeatureFlags:[FLAG]}),true);
-  assert.equal(registeredSupplementalQuestionFamily('math-subtraction').length,0);
-  assert.equal(registeredSupplementalQuestionFamily('math-subtraction',{activeFeatureFlags:[FLAG]}).length,8);
+  assert.equal(family.rolloutStatus,'APPROVED');
+  assert.equal(family.enabledByDefault,true);
+  assert.equal(curriculumFamilyRuntimeEnabled(family),true);
+  assert.equal(curriculumFamilyRuntimeEnabled(family,{activeFeatureFlags:['curriculum-family:other']}),true);
+  assert.equal(registeredSupplementalQuestionFamily('math-subtraction').length,8);
 });
 
 test('coverage autopilot can materialize the generic subtraction family without re-authoring',()=>{
@@ -63,7 +59,7 @@ test('coverage autopilot can materialize the generic subtraction family without 
   assert.equal(plan.unsupportedCount,1);
   const [candidate]=plan.candidates;
   assert.equal(candidate.familyId,'math-subtraction');
-  assert.equal(candidate.registryMatch?.rolloutStatus,'CANDIDATE');
+  assert.equal(candidate.registryMatch?.rolloutStatus,'APPROVED');
   assert.equal(candidate.sourceContext.quality,'page-exact');
   assert.equal(candidate.sourceContext.sourceLine,'Thursday Oct. 15: Math (subtraction)');
   assert.equal(candidate.proposedQuestions.length,9);
@@ -71,7 +67,7 @@ test('coverage autopilot can materialize the generic subtraction family without 
   assert.deepEqual(curriculumCandidateIntrinsicBlockers(candidate),[]);
 });
 
-test('feature-gated generic subtraction closes the exact teacher coverage gap safely',()=>{
+test('approved generic subtraction closes the exact teacher coverage gap safely',()=>{
   const baseline=buildGrade2ContentPipeline(sourcePack(),{
     sourceHash:'baseline-generic-subtraction',
     generatedAt:'2026-10-06T20:06:28.937Z',
@@ -83,7 +79,6 @@ test('feature-gated generic subtraction closes the exact teacher coverage gap sa
     generatedAt:'2026-10-06T20:06:28.937Z',
     sourcePages,
     requirePageExactLineage:true,
-    activeCurriculumFeatureFlags:[FLAG],
   });
   assert.deepEqual(validateGrade2ContentPipeline(preview),[]);
   assert.equal(preview.coverage.some(row=>row.status==='GENERATOR_UNSUPPORTED'),false);
