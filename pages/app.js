@@ -463,45 +463,8 @@ function noteRoundLearning(g,q,kind,correct,independent=false){
   if(kind!=="support")g.learningEvents.push({skill,kind,correct:!!correct,independent:!!independent});
   if(kind==="comeback"&&correct)g.comebackSucceeded=true;
 }
-function scoredGameResult(g,q){
-  if(!q||g.supportMode||g.comebackMode)return null;
-  if(!Array.isArray(g.questionResults))g.questionResults=[];
-  const key=String(q.id||("question-"+g.index));
-  let row=g.questionResults.find(item=>item.key===key);
-  if(!row){
-    row={key,subject:String(q.subject||"Practice"),initialCorrect:null,resolvedCorrect:null,hintUsed:false,attempts:0};
-    g.questionResults.push(row);
-  }
-  return row;
-}
-function answerStudyGame(index){
-  const g=gameState,q=activeGameQuestion(),choice=q?.choices?.[index];if(g.screen!=="play"||g.answered||choice===undefined||g.wrong?.includes(index))return;
-  const correct=choice===q.answer,e=studyGameEngine(),result=scoredGameResult(g,q),firstPrimary=!!result&&result.initialCorrect===null;
-  e?.note?.(q,index);g.tries=(g.tries||0)+1;g.selectedIndex=index;g.hintOpen=false;
-  if(result){
-    result.attempts=Math.max(result.attempts||0,g.tries);
-    result.hintUsed=!!result.hintUsed||(g.hints||0)>0;
-    if(firstPrimary){
-      result.initialCorrect=!!correct;
-      g.firstTryAnswered=(g.firstTryAnswered||0)+1;
-      if(correct)g.firstTryCorrect=(g.firstTryCorrect||0)+1;
-    }
-  }
-  if(g.comebackMode){g.answered=true;g.learningRow=e?.recordComeback?.(q,correct)||null;g.comebackCorrect=correct;noteRoundLearning(g,q,"comeback",correct,false)}
-  else if(g.supportMode){g.answered=true;g.learningRow=e?.recordSupport?.(q,correct)||null;g.supportCorrect=correct}
-  else if(correct){
-    if(result)result.resolvedCorrect=true;
-    g.answered=true;g.retry=0;g.learningRow=e?.recordLearning?.(q,true,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;noteRoundLearning(g,q,q.tier==="recent-review"?"review":"normal",true,g.learningRow?.LastResolution?.independent===true);g.score++;g.streak++;g.bestStreak=Math.max(g.bestStreak,g.streak)
-  }else{
-    g.misses=(g.misses||0)+1;g.wrong.push(index);g.streak=0;
-    if(g.misses<Math.min(2,q.choices.length-1)){g.retry=g.misses;g.selectedIndex=null}
-    else{
-      if(result)result.resolvedCorrect=false;
-      g.answered=true;g.retry=g.misses;g.learningRow=e?.recordLearning?.(q,false,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;noteRoundLearning(g,q,q.tier==="recent-review"?"review":"normal",false,false)
-    }
-  }
-  renderGames();bindScreen();const f=stack().querySelector(g.answered?".game-feedback":".game-answer:not(:disabled)");if(f){if(g.answered)f.tabIndex=-1;f.focus({preventScroll:true})}
-}
+function scoredGameResult(g,q){if(!q||g.supportMode||g.comebackMode)return null;g.questionResults??=[];const k=String(q.id||"question-"+g.index);let r=g.questionResults.find(x=>x.key===k);if(!r){r={key:k,subject:String(q.subject||"Practice"),initialCorrect:null,resolvedCorrect:null,hintUsed:false,attempts:0};g.questionResults.push(r)}return r}
+function answerStudyGame(index){const g=gameState,q=activeGameQuestion(),choice=q?.choices?.[index];if(g.screen!=="play"||g.answered||choice===undefined||g.wrong?.includes(index))return;const correct=choice===q.answer,e=studyGameEngine(),r=scoredGameResult(g,q),first=!!r&&r.initialCorrect===null;e?.note?.(q,index);g.tries=(g.tries||0)+1;g.selectedIndex=index;g.hintOpen=false;if(r){r.attempts=Math.max(r.attempts||0,g.tries);r.hintUsed=!!r.hintUsed||(g.hints||0)>0;if(first){r.initialCorrect=!!correct;g.firstTryAnswered=(g.firstTryAnswered||0)+1;if(correct)g.firstTryCorrect=(g.firstTryCorrect||0)+1}}if(g.comebackMode){g.answered=true;g.learningRow=e?.recordComeback?.(q,correct)||null;g.comebackCorrect=correct;noteRoundLearning(g,q,"comeback",correct,false)}else if(g.supportMode){g.answered=true;g.learningRow=e?.recordSupport?.(q,correct)||null;g.supportCorrect=correct}else if(correct){if(r)r.resolvedCorrect=true;g.answered=true;g.retry=0;g.learningRow=e?.recordLearning?.(q,true,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;noteRoundLearning(g,q,q.tier==="recent-review"?"review":"normal",true,g.learningRow?.LastResolution?.independent===true);g.score++;g.streak++;g.bestStreak=Math.max(g.bestStreak,g.streak)}else{g.misses=(g.misses||0)+1;g.wrong.push(index);g.streak=0;if(g.misses<Math.min(2,q.choices.length-1)){g.retry=g.misses;g.selectedIndex=null}else{if(r)r.resolvedCorrect=false;g.answered=true;g.retry=g.misses;g.learningRow=e?.recordLearning?.(q,false,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;noteRoundLearning(g,q,q.tier==="recent-review"?"review":"normal",false,false)}}renderGames();bindScreen();const f=stack().querySelector(g.answered?".game-feedback":".game-answer:not(:disabled)");if(f){if(g.answered)f.tabIndex=-1;f.focus({preventScroll:true})}}
 function settleStudyStarRewards(g=gameState){
   const e=studyGameEngine();
   if(!e||g.rewardStatus!=="idle"||!g.sessionSeed)return;
