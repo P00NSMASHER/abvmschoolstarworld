@@ -337,7 +337,7 @@ function studySelection(){return studyMaterialsView?.selection()||{source:"weekl
 function ensureStudyMaterials(retry=false){
   if(studyMaterialsPromise?.pack===pack)return studyMaterialsPromise.promise;
   if(currentStudyMaterials()&&!retry)return Promise.resolve(studyMaterials);
-  const data=pack,catalog=studyGameCatalog(),engine=studyGameEngine(),events=datedImportantEvents().filter(r=>kindClass(r.item)==="test").map(r=>({date:isoDateKey(r.date),label:r.item.label,endsAt:r.item.endsAt}));
+  const data=pack,catalog=studyGameCatalog(),engine=studyGameEngine(),events=datedImportantEvents().filter(r=>kindClass(r.item)==="test").map(r=>({date:isoDateKey(r.date),label:r.item.label,kind:r.item.kind,endsAt:r.item.endsAt}));
   const request={pack:data,promise:null};
   request.promise=Promise.all([import("./study-materials.mjs"),import("./study-games-materials-view.mjs")]).then(async([materials,view])=>{
     if(pack===data&&!studyMaterialsView){studyMaterialsView=view.createMaterialsView({onChange:()=>{if(isStudyRoute())renderGames()},onRetry:retryStudyMaterials,onTest:startStudyTest});if(isStudyRoute()&&gameState.screen==="menu")renderGames()}
