@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import {createStudyMaterials, loadStudyMaterials} from '../pages/study-materials.mjs';
+import {resolveVocabularyMeaning} from '../pages/study-games-materials-view.mjs';
 import {createStudyResourceLoader} from '../pages/study-resources.mjs';
 import {practiceIdentity} from '../pages/study-experience.mjs';
 
@@ -38,6 +39,21 @@ const freeze = value => {
   if (value && typeof value === 'object') { Object.freeze(value); Object.values(value).forEach(freeze); }
   return value;
 };
+
+test('current vocabulary uses dictionary definitions instead of teacher-source placeholders',() => {
+  const engine=loadEngine();
+  const placeholder='Current Reading Work vocabulary word; the teacher page does not provide a definition.';
+  assert.equal(engine.vocabularyDefinition('action'),'something a person or thing does');
+  assert.equal(engine.vocabularyDefinition('depend'),'to need or rely on someone or something');
+  assert.equal(engine.vocabularyDefinition('nervously'),'in a worried or uneasy way');
+  assert.equal(engine.vocabularyDefinition('peered'),'looked closely or carefully');
+  assert.equal(engine.vocabularyDefinition('perfectly'),'in exactly the right way or without mistakes');
+  assert.equal(engine.vocabularyDefinition('rescue'),'to save someone or something from danger');
+  assert.equal(engine.vocabularyDefinition('secret'),'something kept hidden or not told to everyone');
+  assert.equal(resolveVocabularyMeaning({term:'depend',meaning:placeholder},engine.vocabularyDefinition),'to need or rely on someone or something');
+  assert.equal(resolveVocabularyMeaning({term:'custom',meaning:'A teacher-provided meaning.'},engine.vocabularyDefinition),'A teacher-provided meaning.');
+  assert.equal(resolveVocabularyMeaning({term:'unknown',meaning:placeholder},engine.vocabularyDefinition),'');
+});
 
 test('weekly and saved banks retain source dates, and never classify undated/future material as current',() => {
   const current = question('teacher','Reading / ELA');

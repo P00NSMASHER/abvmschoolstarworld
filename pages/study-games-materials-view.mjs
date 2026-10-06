@@ -7,6 +7,13 @@ const list = rows => {const clean=(Array.isArray(rows)?rows:[]).filter(nonempty)
 const dateLabel = date => {const value=new Date(date+'T12:00:00Z');return /^\d{4}-\d{2}-\d{2}$/.test(date||'')&&Number.isFinite(value.getTime())
   ? new Intl.DateTimeFormat('en-US',{weekday:'short',month:'short',day:'numeric',timeZone:'UTC'}).format(value) : '';};
 const safeUrl = value => {try{return ['https:','http:'].includes(new URL(value).protocol);}catch{return false;}};
+const missingDefinition = value => /teacher page does not provide a definition|no definition supplied/i.test(String(value ?? ''));
+export function resolveVocabularyMeaning(row,dictionary = () => '') {
+  const supplied = nonempty(row?.meaning) ? String(row.meaning).trim() : '';
+  if (supplied && !missingDefinition(supplied)) return supplied;
+  const resolved = dictionary(row?.term);
+  return nonempty(resolved) ? String(resolved).trim() : '';
+}
 const referenceHtml = link => '<a data-religion-review href="'+esc(link.url)+'" target="_blank" rel="noopener">'+esc(link.label)+'</a>';
 
 /** Compact controls only. The existing Games controller owns every round and result. */
@@ -53,7 +60,7 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
       list(notes.filter(row=>row.subject===subject).map(row=>row.text)) +
       warnings.filter(row=>row.subject===subject).map(row=>'<p class="game-note-warning">'+esc(row.text)+'</p>').join('') +
       links.filter(row=>row.subject===subject).map(referenceHtml).join('') + '</details>').join('');
-    const words = vocabulary.length?'<details class="game-material-lesson"><summary>Words to know</summary><dl>' + vocabulary.map(row=>'<dt>' + esc(row.term) + '</dt>' + (row.meaning?'<dd>' + esc(row.meaning) + '</dd>':'')).join('') + '</dl></details>':'';
+    const words = vocabulary.length?'<details class="game-material-lesson"><summary>Words to know</summary><dl>' + vocabulary.map(row=>{const meaning=resolveVocabularyMeaning(row,term=>win?.ABVMStudyGames?.vocabularyDefinition?.(term));return '<dt>' + esc(row.term) + '</dt>' + (meaning?'<dd>' + esc(meaning) + '</dd>':'');}).join('') + '</dl></details>':'';
     return (source==='saved'?'<p class="game-material-status">Undated schoolwork stays in this collection, not in this week.</p>':'') +
       (lessonRows + noteRows + words || '<p>No lesson notes are included in this selection.</p>');
   }

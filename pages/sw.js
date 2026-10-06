@@ -1,13 +1,13 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v124-streak-bonuses";
+const CACHE = "abvm-grade2-parent-companion-v125-vocabulary-definitions";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=104",
   "./study-support.js?v=2",
-  "./app.js?v=120",
+  "./app.js?v=121",
   "./school-updates.js?v=2",
   "./weekly-learning.js?v=3",
-  "./study-games.js?v=97",
+  "./study-games.js?v=98",
   "./study-games-view.js?v=10",
   "./manifest.webmanifest",
   "./assets/abvm-app-icon-180.png",
