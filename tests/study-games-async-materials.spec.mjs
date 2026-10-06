@@ -210,8 +210,9 @@ test('Math skips an earlier Faith Comeback and strict test practice leaves all q
 });
 
 for(const outcome of ['success','failure']){
-  test(`an active finish shows its own delayed reward ${outcome} after school-pack refresh`,async({page})=>{
+  test(`an active finish shows its own delayed reward ${outcome} after school-pack refresh`,async({page},info)=>{
     test.setTimeout(60_000);
+    await page.setViewportSize({width:393,height:852});
     const fixture=await openFixture(page);
     const hold=await holdReward(page,{stage:outcome==='success'?'balance':'commit',fail:outcome==='failure'});
     try{
@@ -244,6 +245,25 @@ for(const outcome of ['success','failure']){
         expect(ledger).toEqual([]);
       }
       expect(result.calls).toHaveLength(1);
+      await expect(page.locator('[data-reward-reveal]')).toHaveCount(0);
+      const previousFont=await page.evaluate(doubleText=>{
+        const root=document.documentElement,previous=root.style.fontSize;
+        if(doubleText)root.style.fontSize=(parseFloat(getComputedStyle(root).fontSize)*2)+'px';
+        return previous;
+      },outcome==='success');
+      try{
+        expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+        await page.evaluate(()=>window.scrollTo(0,0));
+        const name=outcome==='success'?'games-result-200-percent-iphone':'games-reward-error-iphone';
+        let path=info.outputPath(name+'-top.png');
+        await page.screenshot({path});await info.attach(name+' top',{path,contentType:'image/png'});
+        const actions=page.locator('.game-finish-actions');
+        if(await actions.evaluate(el=>el.getBoundingClientRect().bottom>innerHeight-document.querySelector('.bottom-nav').getBoundingClientRect().height)){
+          await actions.scrollIntoViewIfNeeded();
+          path=info.outputPath(name+'-controls.png');
+          await page.screenshot({path});await info.attach(name+' controls',{path,contentType:'image/png'});
+        }
+      }finally{await page.evaluate(font=>{document.documentElement.style.fontSize=font;},previousFont);}
     }finally{
       await hold.evaluate(fixture=>fixture.release()).catch(()=>{});
       await hold.dispose();

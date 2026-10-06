@@ -14,7 +14,8 @@ async function fixture(page,subjects=[]){
   await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
   await expect(page.locator('[data-study-source]')).toHaveValue('weekly');
 }
-test('missing and blank subjects show honest empty notes while original game practice remains available',async({page})=>{
+test('missing and blank subjects show honest empty notes while original game practice remains available',async({page},info)=>{
+  await page.setViewportSize({width:393,height:852});
   await fixture(page,[{subject:'Math',topics:[' ',null],studyNotes:['']},{subject:'Reading / ELA'}]);
   const tiles=page.locator('.study-game-grid > .study-game-tile');
   await expect(tiles).toHaveCount(4);
@@ -29,6 +30,12 @@ test('missing and blank subjects show honest empty notes while original game pra
   await expect(notes.locator('.game-material-lesson')).toHaveCount(0);
   await expect(page.locator('.study-game-grid [data-game-start="math"]')).toBeEnabled();
   expect(await notes.evaluate(e=>e.scrollWidth<=e.clientWidth+1)).toBeTruthy();
+  await notes.locator(':scope > summary').click();
+  await page.locator('[data-study-source]').selectOption('saved');
+  for(let i=0;i<4;i++)await expect(tiles.nth(i)).toBeDisabled();
+  await expect(tiles).toContainText(['Not ready yet','Not ready yet','Not ready yet','Not ready yet']);
+  const path=info.outputPath('games-empty-saved-iphone.png');
+  await page.screenshot({path,fullPage:true});await info.attach('Empty saved bank with disabled games',{path,contentType:'image/png'});
 });
 test('teacher notes remain the explicit lesson content when notes arrive',async({page})=>{
   await fixture(page,[{subject:'Math',topics:['Compare three-digit numbers'],studyNotes:['Start with the hundreds.']}]);

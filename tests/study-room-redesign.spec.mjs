@@ -126,13 +126,18 @@ test('the existing question player supports explicit read-aloud without recordin
   expect(await page.evaluate(()=>window.__gamesSpeech.cancelled)).toBeGreaterThanOrEqual(2);
 });
 
-test('slow saved-material loading does not move the four primary game controls or replace a round',async({page})=>{
+test('slow saved-material loading does not move the four primary game controls or replace a round',async({page},info)=>{
+  await page.setViewportSize({width:393,height:852});
   let release;
   const pending=new Promise(resolve=>{release=resolve;});
   await page.route('**/data/schoolwork.json*',async route=>{await pending;await route.continue();});
   await page.goto('/#study');
   try{
+    await expect(page.locator('.study-game-grid')).toBeVisible();
     await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','loading');
+    await expect(page.locator('[data-study-source]')).toBeDisabled();
+    await expect(page.locator('.game-material-status[role="status"]')).toContainText('Loading saved materials');
+    await capture(page,info,'games-materials-loading-iphone');
     const before=await page.locator('.study-game-grid').boundingBox();
     expect(before).not.toBeNull();
     await page.locator('[data-game-start="math"]').click();
@@ -148,11 +153,14 @@ test('slow saved-material loading does not move the four primary game controls o
   }finally{release();}
 });
 
-test('saved-material failure retains current notes and playable games without an uploader',async({page})=>{
+test('saved-material failure retains current notes and playable games without an uploader',async({page},info)=>{
+  await page.setViewportSize({width:393,height:852});
   await page.route('**/data/schoolwork.json*',route=>route.abort());
   await page.goto('/#study');
   await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','partial');
   await expect(page.locator('[data-game-start="daily"]')).toBeVisible();
+  await expect(page.locator('[data-study-retry]')).toBeVisible();
+  await capture(page,info,'games-materials-error-iphone');
   await page.locator('[data-study-notes] > summary').click();
   await expect(page.locator('[data-study-notes]')).toContainText('subject');
   await expect(page.locator('[data-study-retry]')).toBeVisible();

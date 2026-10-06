@@ -408,7 +408,7 @@ test("Calendar keeps the current-month summary as concise as next month",async({
   await expect(page.locator(".specials-card")).toBeVisible();
 });
 
-test("the existing four Games tiles retain two columns while optional notes reflow on iPad and phone",async({page})=>{
+test("the existing four Games tiles retain two tablet columns and one phone column while optional notes reflow",async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await page.goto("/#study");
   await expect(page.locator(".games-screen")).toHaveAttribute("data-study-state","ready",{timeout:10_000});
@@ -443,12 +443,14 @@ test("the existing four Games tiles retain two columns while optional notes refl
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1)).toBe(false);
   await notes.locator(':scope > summary').click();
   await expect(notes).not.toHaveAttribute('open','');
-  const p0=await phoneCards.nth(0).boundingBox();
-  const p1=await phoneCards.nth(1).boundingBox();
-  const p2=await phoneCards.nth(2).boundingBox();
-  expect(Math.abs(p0.y-p1.y)).toBeLessThan(4);
-  expect(p1.x).toBeGreaterThan(p0.x+p0.width/2);
-  expect(p2.y).toBeGreaterThan(p0.y+p0.height-2);
+  const phoneBoxes=[];
+  for(let i=0;i<4;i++)phoneBoxes.push(await phoneCards.nth(i).boundingBox());
+  for(let i=0;i<phoneBoxes.length;i++){
+    const box=phoneBoxes[i];expect(box).not.toBeNull();
+    expect(Math.abs(box.x-phoneGrid.x)).toBeLessThan(4);
+    expect(Math.abs(box.width-phoneGrid.width)).toBeLessThan(4);
+    if(i)expect(box.y).toBeGreaterThanOrEqual(phoneBoxes[i-1].y+phoneBoxes[i-1].height-2);
+  }
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1)).toBe(false);
 });
 

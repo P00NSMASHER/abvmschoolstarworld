@@ -50,7 +50,8 @@ test("Games and their saved, STAR and mixed source banks remain playable offline
       fetch('./data/study-archive.json').then(response=>response.json()),
       import('./star-practice.mjs')
     ]);
-    const catalog=window.ABVMStudyGames.buildCatalog(envelope.pack);
+    const engine=window.ABVMStudyGames,sourceKey=engine.sourceKeyFromEnvelope(envelope.pack,envelope);
+    const catalog=engine.buildCatalog(envelope.pack,{sourceKey});
     return {
       saved:[...work.lessons.flatMap(lesson=>lesson.questions),...archive.questions,...catalog.questions.filter(q=>q.tier==='material')],
       star:[...buildStarBank(),...catalog.questions.filter(q=>q.tier==='star-fallback')]

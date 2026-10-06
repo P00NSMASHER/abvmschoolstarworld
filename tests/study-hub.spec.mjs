@@ -17,6 +17,19 @@ async function mount(page,day,testInfo){
 }
 
 test('weekly test prep covers same-day subjects in the existing player and completion persists',async({page},testInfo)=>{
+  const [archive,work]=await Promise.all([
+    page.request.get('/data/study-archive.json').then(response=>response.json()),
+    page.request.get('/data/schoolwork.json').then(response=>response.json())
+  ]);
+  // Oct 4 belongs to the Sep 28–Oct 4 school week. Its actual Math archive
+  // contains three questions; strict prep gives both test banks that quota.
+  const allowed={
+    Math:archive.questions.filter(q=>q.subject==='Math'&&q.provenance.some(source=>source.capturedAt==='2026-09-29')),
+    Religion:work.lessons.filter(lesson=>lesson.subject==='Religion'&&lesson.chapter===2)
+      .flatMap(lesson=>lesson.questions).filter(q=>q.skill==='religion-chapter-2')
+  };
+  expect(allowed.Math).toHaveLength(3);expect(allowed.Religion).toHaveLength(10);
+  const quota=3,total=quota*2;
   await mount(page,'2026-10-04',testInfo);
   const prep=page.locator('[data-study-tests]');
   await expect(prep.locator('time')).toHaveAttribute('datetime','2026-10-07');
@@ -24,11 +37,17 @@ test('weekly test prep covers same-day subjects in the existing player and compl
   await expect(prep).toContainText('Math test');
   await expect(prep).toContainText('Religion Chapter 2 test');
   await page.locator('[data-test]').click();
-  const subjects=[];
-  for(let question=0;question<8;question++){
+  const subjects=[],seen=[];
+  for(let question=0;question<total;question++){
     await expect(page.locator('.game-question-card')).toBeVisible();
-    await expect(page.locator('.game-topbar')).toContainText(`${question+1} of 8`);
-    subjects.push(await page.locator('.game-question-meta > span').innerText());
+    await expect(page.locator('.game-topbar > div > span')).toHaveText('Test practice');
+    await expect(page.locator('.game-topbar')).toContainText(`${question+1} of ${total}`);
+    const subject=await page.locator('.game-question-meta > span').innerText();subjects.push(subject);
+    const prompt=await page.locator('.game-question-card > h2').innerText();
+    const choices=await page.locator('[data-game-answer] strong').allTextContents();
+    const matches=(allowed[subject]||[]).filter(q=>q.prompt===prompt&&q.choices.length===choices.length&&q.choices.every(choice=>choices.includes(choice)));
+    expect(matches,'strict prep must use the dated Math archive or exact Religion Chapter 2 bank').toHaveLength(1);
+    seen.push(subject+'|'+prompt);
     const choiceCount=await page.locator('[data-game-answer]').count();
     for(let attempt=0;attempt<choiceCount;attempt++){
       const available=page.locator('[data-game-answer]:not(:disabled)');
@@ -46,8 +65,9 @@ test('weekly test prep covers same-day subjects in the existing player and compl
   }
   await expect(page.locator('.game-question-card')).toHaveCount(0);
   await expect(page.locator('.game-finish')).toBeVisible();
-  expect(subjects.filter(subject=>subject==='Math')).toHaveLength(4);
-  expect(subjects.filter(subject=>subject==='Religion')).toHaveLength(4);
+  expect(subjects.filter(subject=>subject==='Math')).toHaveLength(quota);
+  expect(subjects.filter(subject=>subject==='Religion')).toHaveLength(quota);
+  expect(new Set(seen).size).toBe(total);
   await page.locator('[data-game-home]').last().click();
   await page.locator('[data-study-test-options] > summary').click();
   await page.locator('[data-complete-test]').click();
@@ -149,7 +169,8 @@ test('the source chooser changes real question banks and a selected mix includes
     const {buildStarBank}=await import('./star-practice.mjs');
     const envelope=await fetch('./data/study-pack-runtime.json').then(response=>response.json());
     const engine=window.ABVMStudyGames;
-    return [...buildStarBank(),...engine.buildCatalog(envelope.pack).questions.filter(q=>q.tier==='star-fallback')];
+    const sourceKey=engine.sourceKeyFromEnvelope(envelope.pack,envelope);
+    return [...buildStarBank(),...engine.buildCatalog(envelope.pack,{sourceKey}).questions.filter(q=>q.tier==='star-fallback')];
   });
   const savedPrompts=new Set(lesson.questions.map(q=>q.prompt));
   const starPrompts=new Set(star.map(q=>q.prompt));

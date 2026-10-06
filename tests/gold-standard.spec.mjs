@@ -90,7 +90,7 @@ test("requested polish is present",async({page})=>{
   await expect(page.locator('[data-game-start="daily"]')).toBeVisible();
   await expectCurrentStudyGameTiles(page);
   await page.locator('[data-study-notes] > summary').click();
-  expect(await page.locator('.game-material-lesson').count()).toBeGreaterThan(0);
+  await expect(page.locator('.game-material-lesson').first()).toBeVisible();
   await expect(page.locator('[data-learning-panel],.study-games-cta')).toHaveCount(0);
 
   await openTab(page,"Family");

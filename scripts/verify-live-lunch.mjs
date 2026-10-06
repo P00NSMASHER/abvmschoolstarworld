@@ -1,5 +1,6 @@
 import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { chromium, expect } from '@playwright/test';
 import { publishedMealForDate } from './published-meal.mjs';
 
@@ -40,8 +41,31 @@ function eastToday() {
   const p = Object.fromEntries(parts.map(x => [x.type, x.value]));
   return `${p.year}-${p.month}-${p.day}`;
 }
+async function liveStudyAssets() {
+  const assets = ['index.html', 'app.js', 'study-games.js', 'study-games-view.js', 'study-materials.mjs', 'study-games-materials-view.mjs', 'study-games-materials.css', 'sw.js'];
+  const digest = bytes => createHash('sha256').update(bytes).digest('hex');
+  return Promise.all(assets.map(async path => {
+    const expectedBytes = readFileSync(new URL('../pages/' + path, import.meta.url));
+    const expectedHash = digest(expectedBytes), deadline = Date.now() + 180000;
+    let detail = 'Live asset has not matched the deployed checkout: ' + path;
+    while (Date.now() < deadline) {
+      try {
+        const response = await fetch(new URL(path + '?study-proof=' + Date.now(), base), {
+          headers: { 'cache-control': 'no-cache' }, signal: AbortSignal.timeout(12000),
+        });
+        if (!response.ok) throw new Error(path + ': HTTP ' + response.status);
+        const bytes = Buffer.from(await response.arrayBuffer()), actualHash = digest(bytes);
+        if (actualHash === expectedHash) return { path, sha256: actualHash, bytes: bytes.length, status: response.status };
+        detail = path + ': expected ' + expectedHash + ', received ' + actualHash;
+      } catch (error) { detail = error.message; }
+      await sleep(5000);
+    }
+    throw new Error(detail);
+  }));
+}
 try {
   const data = await livePack();
+  receipt.studyAssets = await liveStudyAssets();
   writeFileSync(`${out}/deployed-pack.json`, JSON.stringify(data, null, 2));
   receipt.actualLunchHash = data.pack.lunchMenuHash;
   receipt.sourceCheckedAt = data.sourceLastCheckedAt;
@@ -117,8 +141,56 @@ try {
   await page.locator('[data-game-start="quick"]').click();
   await expect(page.locator('.game-question-card')).toBeVisible();
   expect([3, 4]).toContain(await page.locator('.game-answer').count());
-  await page.screenshot({ path: `${out}/study-question.png` });
+  await page.screenshot({ path: `${out}/study-quick-question.png` });
   await page.getByRole('button', { name: 'Back to study games', exact: true }).click();
+  await expect(page.locator('.study-game-tile')).toHaveCount(4);
+  const studySource = await page.evaluate(async () => {
+    const envelope = await fetch('./data/study-pack-runtime.json').then(response => response.json());
+    const engine = window.ABVMStudyGames;
+    const catalog = engine.buildCatalog(envelope.pack, { sourceKey: engine.sourceKeyFromEnvelope(envelope.pack, envelope) });
+    const { loadStudyMaterials } = await import('./study-materials.mjs');
+    const materials = await loadStudyMaterials({ pack: envelope.pack, catalog, engine });
+    const scope = materials.forMode('math', { source: 'weekly' });
+    return { questions: scope.catalog.questions.filter(question => scope.eligibleIds.includes(question.id)), total: Math.min(8, scope.count) };
+  });
+  expect(studySource.total).toBeGreaterThan(0);
+  await page.locator('[data-game-start="math"]').click();
+  const playedQuestions = [];
+  for (let index = 0; index < studySource.total; index++) {
+    await expect(page.locator('.game-topbar')).toContainText(`${index + 1} of ${studySource.total}`);
+    const prompt = await page.locator('.game-question-card > h2').innerText();
+    const choices = await page.locator('[data-game-answer] strong').allTextContents();
+    expect([3, 4]).toContain(choices.length);
+    const question = studySource.questions.find(row => row.prompt === prompt && row.choices.length === choices.length && row.choices.every(choice => choices.includes(choice)));
+    expect(question, 'live question belongs to the selected weekly source').toBeTruthy();
+    const correct = choices.indexOf(question.answer);
+    expect(correct).toBeGreaterThanOrEqual(0);
+    if (index === 0) {
+      await page.screenshot({ path: `${out}/study-question.png` });
+      await page.locator('[data-game-hint]').click();
+      await expect(page.locator('.game-hint')).toBeVisible();
+      const wrong = choices.findIndex(choice => choice !== question.answer);
+      await page.locator('[data-game-answer]').nth(wrong).click();
+      await expect(page.locator('[data-game-answer]').nth(wrong)).toBeDisabled();
+      await expect(page.locator('.game-feedback.retry')).toBeVisible();
+      await expect(page.locator('[data-game-next]')).toHaveCount(0);
+      await page.screenshot({ path: `${out}/study-retry.png` });
+    }
+    await page.locator('[data-game-answer]').nth(correct).click();
+    await expect(page.locator('.game-feedback.correct')).toBeVisible();
+    if (index === 0) {
+      receipt.firstStudyResolution = await page.evaluate(skill => window.ABVMStudyGames.loadLearning()[skill].LastResolution, question.skill);
+      expect(receipt.firstStudyResolution).toEqual(expect.objectContaining({ independent: false, attemptCount: 2, incorrectCount: 1, hintCount: 1 }));
+      await page.screenshot({ path: `${out}/study-correct.png` });
+    }
+    playedQuestions.push(question.id);
+    await page.locator('[data-game-next]').click();
+  }
+  await expect(page.locator('.game-finish')).toBeVisible();
+  await expect(page.locator('.study-star-earned')).toContainText('+10 Study Stars');
+  await page.screenshot({ path: `${out}/study-result.png` });
+  receipt.studyWalkthrough = { mode: 'math', source: 'weekly', questions: playedQuestions, hint: true, retry: true, correct: true, completed: true, earned: await page.locator('.study-star-earned').innerText() };
+  await page.getByRole('button', { name: 'All study games', exact: true }).click();
   await page.evaluate(async () => { if ('serviceWorker' in navigator) await navigator.serviceWorker.ready; });
   await page.reload();
   for (const label of ['Quick Mix', 'Math Dash', 'Word Power', 'Faith Quest']) {
@@ -126,6 +198,8 @@ try {
   }
   await expect(page.locator('.study-game-tile')).toHaveCount(4);
   await expect(page.locator('[data-study-source]')).toBeEnabled({ timeout: 15000 });
+  await expect(page.locator('[data-game-start="math"]')).toContainText(`Best ${studySource.total} / ${studySource.total}`);
+  receipt.studyWalkthrough.returnedAndRecordSurvivedReload = true;
   await page.getByRole('button', { name: 'Today', exact: true }).click();
   if (todayMeal?.items.length) for (const item of todayMeal.items) await expect(page.locator('.lunch-card')).toContainText(item);
   receipt.cacheReloadVerified = true;

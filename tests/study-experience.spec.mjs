@@ -1,5 +1,6 @@
 import {test,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import {writeFile} from 'node:fs/promises';
 test.use({serviceWorkers:'block'});
 async function room(page){
   await page.clock.setFixedTime(new Date('2026-10-05T16:00:00-04:00'));
@@ -30,7 +31,9 @@ for(const size of [{width:393,height:852},{width:768,height:1024},{width:320,hei
     const tileFonts=await cards.locator('.study-game-copy > strong').evaluateAll(titles=>titles.map(title=>({label:title.textContent.trim(),fontSize:parseFloat(getComputedStyle(title).fontSize)})));
     expect(tileFonts).toHaveLength(4);
     for(const title of tileFonts)expect(title.fontSize,`${title.label} title is at least 16px`).toBeGreaterThanOrEqual(16);
-    await info.attach('Games tile text metrics',{body:JSON.stringify({viewport:size,titles:tileFonts},null,2),contentType:'application/json'});
+    const metricsPath=info.outputPath('games-home-text-metrics.json');
+    await writeFile(metricsPath,JSON.stringify({viewport:size,titles:tileFonts},null,2));
+    await info.attach('Games tile text metrics',{path:metricsPath,contentType:'application/json'});
     const geometry=await page.evaluate(()=>{
       const box=s=>document.querySelector(s).getBoundingClientRect().toJSON(),screen=document.querySelector('.screen');
       return {first:box('.study-game-grid > .study-game-tile'),source:box('.game-materials'),daily:box('.game-daily-action'),grid:box('.study-game-grid'),nav:box('.bottom-nav'),overflow:screen.scrollWidth>screen.clientWidth+1};
@@ -89,7 +92,8 @@ test('expanded notes and the selected Saved label fit at 200 percent text size w
   await page.locator('[data-study-source]').scrollIntoViewIfNeeded();
   await page.screenshot({path:info.outputPath('games-saved-200-percent-iphone.png')});
 });
-test('game answers and hints are readable and rejected choices cannot be retried',async({page})=>{
+test('game answers and hints are readable and rejected choices cannot be retried',async({page},info)=>{
+  await page.setViewportSize({width:393,height:852});
   await game(page);
   const progress=page.getByRole('progressbar',{name:'Game progress'});
   await expect(progress).toHaveAttribute('aria-valuenow','13');
@@ -103,6 +107,24 @@ test('game answers and hints are readable and rejected choices cannot be retried
   const first=page.locator('.game-answer').nth(wrongs[0]);await first.click();await expect(first).toBeDisabled();
   await expect(page.locator('.game-answer:not(:disabled)').first()).toBeFocused();
   expect(await page.locator('.game-answer:not(:disabled)').first().evaluate(e=>e.tabIndex)).toBe(0);
+  const previousFont=await page.evaluate(()=>{
+    const root=document.documentElement,previous=root.style.fontSize;
+    root.style.fontSize=(parseFloat(getComputedStyle(root).fontSize)*2)+'px';return previous;
+  });
+  try{
+    await expect(first).toBeDisabled();
+    await expect(page.locator('.game-feedback.retry')).toBeVisible();
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+    await page.evaluate(()=>window.scrollTo(0,0));
+    let path=info.outputPath('games-retry-200-percent-iphone-top.png');
+    await page.screenshot({path});await info.attach('Doubled-text retry question',{path,contentType:'image/png'});
+    const retry=page.locator('.game-feedback.retry');
+    if(await retry.evaluate(el=>el.getBoundingClientRect().bottom>innerHeight-document.querySelector('.bottom-nav').getBoundingClientRect().height)){
+      await retry.scrollIntoViewIfNeeded();
+      path=info.outputPath('games-retry-200-percent-iphone-controls.png');
+      await page.screenshot({path});await info.attach('Doubled-text retry controls',{path,contentType:'image/png'});
+    }
+  }finally{await page.evaluate(font=>{document.documentElement.style.fontSize=font;},previousFont);}
   await first.evaluate(b=>b.click());await expect(page.locator('[data-game-next]')).toHaveCount(0);
   await page.locator('.game-answer').nth(wrongs[1]).click();await expect(page.locator('[data-game-next]')).toBeVisible();
   const row=await page.evaluate(skill=>JSON.parse(localStorage.getItem('abvm-study-learning:v2'))[skill],q.skill);
@@ -157,7 +179,7 @@ test('test completion storage failure leaves the next test recoverable',async({p
  const before=await page.locator('[data-study-tests]').innerText();
  await page.evaluate(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k==='abvm-completed-tests')throw new DOMException('full','QuotaExceededError');return original.call(this,k,v);};});
  await page.locator('[data-study-test-options] > summary').click();await page.locator('[data-complete-test]').click();
- await expect(page.locator('[data-study-tests]')).toHaveText(before);
+ await expect(page.locator('[data-study-tests]')).toHaveText(before,{useInnerText:true});
  await expect(page.locator('.game-test-status')).toContainText('Could not save');
  await expect(page.locator('[data-test]')).toBeVisible();
 });

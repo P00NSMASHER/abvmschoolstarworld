@@ -1,4 +1,5 @@
 import {test,expect} from '@playwright/test';
+import {writeFile} from 'node:fs/promises';
 
 test.use({video:{mode:'on',size:{width:393,height:852}},viewport:{width:393,height:852},isMobile:true,hasTouch:true,serviceWorkers:'block'});
 
@@ -50,13 +51,15 @@ test.describe('recorded Games walkthrough',()=>{
       await page.locator('[data-game-next]').click();
     }
     await expect(page.locator('.game-finish')).toBeVisible();
+    await expect(page.locator('.study-star-earned')).toContainText('+10 Study Stars');
     const finishActions=page.locator('.game-finish-actions > button');
     await expect(finishActions).toHaveText(['Play again','All study games']);
     const actionFonts=await finishActions.evaluateAll(buttons=>buttons.map(button=>({label:button.textContent.trim(),fontSize:parseFloat(getComputedStyle(button).fontSize)})));
     for(const action of actionFonts)expect(action.fontSize,`${action.label} label is at least 16px`).toBeGreaterThanOrEqual(16);
-    await testInfo.attach('Games finish action text metrics',{body:JSON.stringify({viewport:{width:393,height:852},actions:actionFonts},null,2),contentType:'application/json'});
+    const metricsPath=testInfo.outputPath('games-finish-text-metrics.json');
+    await writeFile(metricsPath,JSON.stringify({viewport:{width:393,height:852},actions:actionFonts},null,2));
+    await testInfo.attach('Games finish action text metrics',{path:metricsPath,contentType:'application/json'});
     await expect(page.locator('.learning-summary-note')).toContainText('One round does not prove mastery');
-    await expect(page.locator('.study-star-earned')).toContainText('+10 Study Stars');
     await page.waitForTimeout(350);
     await page.getByRole('button',{name:'All study games',exact:true}).click();
     await expect(page.locator('.study-game-grid > .study-game-tile')).toHaveCount(4);
