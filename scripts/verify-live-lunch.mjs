@@ -187,9 +187,15 @@ try {
     await page.locator('[data-game-next]').click();
   }
   await expect(page.locator('.game-finish')).toBeVisible();
+  const expectedFirstTry = Math.max(0, studySource.total - 1);
+  const expectedPercent = studySource.total ? Math.round((expectedFirstTry / studySource.total) * 100) : 0;
+  await expect(page.locator('.game-score-summary > strong')).toHaveText(`${expectedFirstTry} / ${studySource.total} correct on the first try · ${expectedPercent}%`);
+  await expect(page.locator('.game-score-summary > span')).toContainText('Corrected on retry: 1');
+  await expect(page.locator('.game-score-summary > span')).toContainText('Hints used: 1');
+  await expect(page.locator('.game-section-scores > div').filter({ hasText: 'Math' })).toContainText(`${expectedFirstTry} / ${studySource.total} · ${expectedPercent}%`);
   await expect(page.locator('.study-star-earned')).toContainText('+10 Study Stars');
   await page.screenshot({ path: `${out}/study-result.png` });
-  receipt.studyWalkthrough = { mode: 'math', source: 'weekly', questions: playedQuestions, hint: true, retry: true, correct: true, completed: true, earned: await page.locator('.study-star-earned').innerText() };
+  receipt.studyWalkthrough = { mode: 'math', source: 'weekly', questions: playedQuestions, hint: true, retry: true, correct: true, completed: true, firstTryCorrect: expectedFirstTry, firstTryPercent: expectedPercent, earned: await page.locator('.study-star-earned').innerText() };
   await page.getByRole('button', { name: 'All study games', exact: true }).click();
   await page.evaluate(async () => { if ('serviceWorker' in navigator) await navigator.serviceWorker.ready; });
   await page.reload();
@@ -198,7 +204,7 @@ try {
   }
   await expect(page.locator('.study-game-tile')).toHaveCount(4);
   await expect(page.locator('[data-study-source]')).toBeEnabled({ timeout: 15000 });
-  await expect(page.locator('[data-game-start="math"]')).toContainText(`Best ${studySource.total} / ${studySource.total}`);
+  await expect(page.locator('[data-game-start="math"]')).toContainText(`Best solved ${studySource.total} / ${studySource.total}`);
   receipt.studyWalkthrough.returnedAndRecordSurvivedReload = true;
   await page.getByRole('button', { name: 'Today', exact: true }).click();
   if (todayMeal?.items.length) for (const item of todayMeal.items) await expect(page.locator('.lunch-card')).toContainText(item);
