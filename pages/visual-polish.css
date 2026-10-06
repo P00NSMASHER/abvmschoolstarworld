@@ -86,3 +86,11 @@
   .school-sign-hero{min-height:152px;padding-block:18px}
   .school-sign-hero .hero-copy>p:last-child{display:none}
 }
+
+
+/* Keep the compact approved school photo crisp instead of stretching a thumbnail full-bleed. */
+.family-screen .family-school-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(140px,44%);min-height:158px;background:linear-gradient(145deg,#082f59,#0b3c74);color:#fff}
+.family-screen .family-school-hero::after{display:none}
+.family-screen .family-school-hero>img{position:static;grid-column:2;grid-row:1;width:100%;height:100%;min-height:158px;object-fit:cover;object-position:center}
+.family-screen .family-school-hero>div{position:static;grid-column:1;grid-row:1;align-self:center;padding:18px 10px 18px 18px}
+@media(min-width:700px){.family-screen .family-school-hero{grid-template-columns:minmax(0,1fr) minmax(220px,300px);min-height:190px}.family-screen .family-school-hero>img{min-height:190px}.family-screen .family-school-hero>div{padding:24px}}
