@@ -105,3 +105,18 @@ test('feature-gated generic subtraction closes the exact teacher coverage gap sa
   const numbers=questions.flatMap(row=>(row.prompt.match(/\b\d+\b/g)||[]).map(Number));
   assert.ok(numbers.every(value=>value<=20),'generic subtraction preview must stay conservatively within 20');
 });
+
+
+test('range-specific subtraction remains canonical instead of activating the generic family',()=>{
+  const pack={
+    sourceHash:'range-specific-subtraction',
+    subjects:[{subject:'Math',topics:['Subtraction within 12'],studyNotes:[]}],
+    vocabulary:[],
+  };
+  const pipeline=buildGrade2ContentPipeline(pack,{sourceHash:pack.sourceHash});
+  const ids=new Set(pipeline.skills.map(row=>row.id));
+  assert.ok(ids.has('subtraction-within-12'));
+  assert.equal(ids.has('math-subtraction'),false);
+  assert.equal(pipeline.coverage.some(row=>row.status==='GENERATOR_UNSUPPORTED'),false);
+  assert.deepEqual(validateGrade2ContentPipeline(pipeline),[]);
+});
