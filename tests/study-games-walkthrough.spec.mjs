@@ -1,8 +1,8 @@
 import {test,expect} from '@playwright/test';
 
-test.describe('recorded Games walkthrough',()=>{
-  test.use({video:{mode:'on',size:{width:393,height:852}},viewport:{width:393,height:852},isMobile:true,hasTouch:true,serviceWorkers:'block'});
+test.use({video:{mode:'on',size:{width:393,height:852}},viewport:{width:393,height:852},isMobile:true,hasTouch:true,serviceWorkers:'block'});
 
+test.describe('recorded Games walkthrough',()=>{
   test('iPhone home, question, hint, retry, correct answer, result and return remain one Games experience',async({page},testInfo)=>{
     test.setTimeout(60000);
     const errors=[];page.on('pageerror',error=>errors.push(error.message));
@@ -50,6 +50,11 @@ test.describe('recorded Games walkthrough',()=>{
       await page.locator('[data-game-next]').click();
     }
     await expect(page.locator('.game-finish')).toBeVisible();
+    const finishActions=page.locator('.game-finish-actions > button');
+    await expect(finishActions).toHaveText(['Play again','All study games']);
+    const actionFonts=await finishActions.evaluateAll(buttons=>buttons.map(button=>({label:button.textContent.trim(),fontSize:parseFloat(getComputedStyle(button).fontSize)})));
+    for(const action of actionFonts)expect(action.fontSize,`${action.label} label is at least 16px`).toBeGreaterThanOrEqual(16);
+    await testInfo.attach('Games finish action text metrics',{body:JSON.stringify({viewport:{width:393,height:852},actions:actionFonts},null,2),contentType:'application/json'});
     await expect(page.locator('.learning-summary-note')).toContainText('One round does not prove mastery');
     await expect(page.locator('.study-star-earned')).toContainText('+10 Study Stars');
     await page.waitForTimeout(350);

@@ -27,6 +27,10 @@ for(const size of [{width:393,height:852},{width:768,height:1024},{width:320,hei
  test(`integrated Games geometry at ${size.width}x${size.height}`,async({page},info)=>{
     await page.setViewportSize(size);await room(page);
     const cards=page.locator('.study-game-grid > .study-game-tile');await expect(cards).toHaveCount(4);
+    const tileFonts=await cards.locator('.study-game-copy > strong').evaluateAll(titles=>titles.map(title=>({label:title.textContent.trim(),fontSize:parseFloat(getComputedStyle(title).fontSize)})));
+    expect(tileFonts).toHaveLength(4);
+    for(const title of tileFonts)expect(title.fontSize,`${title.label} title is at least 16px`).toBeGreaterThanOrEqual(16);
+    await info.attach('Games tile text metrics',{body:JSON.stringify({viewport:size,titles:tileFonts},null,2),contentType:'application/json'});
     const geometry=await page.evaluate(()=>{
       const box=s=>document.querySelector(s).getBoundingClientRect().toJSON(),screen=document.querySelector('.screen');
       return {first:box('.study-game-grid > .study-game-tile'),source:box('.game-materials'),daily:box('.game-daily-action'),grid:box('.study-game-grid'),nav:box('.bottom-nav'),overflow:screen.scrollWidth>screen.clientWidth+1};
