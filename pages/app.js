@@ -657,10 +657,10 @@ async function manualRefreshSchoolInfo(){
     const state=freshnessState();
     if(state.state==="offline")toast("You’re offline. Showing saved school info.");
     else if(changed)toast("School info updated");
-    else if(state.state==="current")toast("Latest published school info is loaded");
-    else toast("Checked published school info — no newer verified update is available yet.");
+    else if(state.state==="current")toast("Latest school info is loaded");
+    else toast("No newer school update is available.");
   }catch{
-    toast("Couldn’t check published school info. Try again.");
+    toast("Couldn’t refresh school info. Try again.");
   }finally{
     manualRefreshActive=false;
     updateFreshnessUI();
