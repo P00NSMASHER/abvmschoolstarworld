@@ -45,3 +45,16 @@ test('freshness language answers whether the visible school info is trustworthy'
   expect(label).toMatch(/School info current|Last checked|May be outdated|Offline|status unavailable/i);
   expect(label).not.toMatch(/^Verified\b/);
 });
+
+test('installed app advances final UX assets as one cache identity',async({page})=>{
+  const [index,sw]=await Promise.all([
+    page.request.get('/index.html').then(r=>r.text()),
+    page.request.get('/sw.js').then(r=>r.text())
+  ]);
+  expect(index).toContain('./visual-polish.css?v=5');
+  expect(index).toContain('./school-updates.js?v=4');
+  expect(index).toContain('abvm-sw-reloaded-v130');
+  expect(sw).toContain('abvm-grade2-parent-companion-v130-product-discipline-final');
+  expect(sw).toContain('./visual-polish.css?v=5');
+  expect(sw).toContain('./school-updates.js?v=4');
+});
