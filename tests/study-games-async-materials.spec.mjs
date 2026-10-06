@@ -239,7 +239,7 @@ for(const outcome of ['success','failure']){
       await hold.evaluate(fixture=>fixture.releaseAndWait());
       const result=await hold.evaluate(fixture=>fixture.snapshot());
       await expect(page.locator('.study-star-earned')).not.toContainText('Saving on this device');
-      await expect(page.locator('.game-finish h2')).toHaveText('What you learned');
+      await expect(page.locator('.game-finish h2')).toHaveText('Your score');
       await expect(page.locator('.game-finish [data-game-start="quick"]')).toBeEnabled();
       await expect(page.locator('.game-finish [data-game-home]')).toBeEnabled();
       const ledger=await page.evaluate(()=>window.ABVMStudyGames.loadStudyStarLedger());
