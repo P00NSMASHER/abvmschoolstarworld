@@ -1772,10 +1772,13 @@ function baseSkillRules(curriculumOptions = {}) {
 
 function sourceSubjectsForRule(rule) {
   if (Array.isArray(rule?.sourceSubjects) && rule.sourceSubjects.length) return uniqueText(rule.sourceSubjects);
-  if (rule?.subject === 'Math' || rule?.subject === 'Religion') return [rule.subject];
-  // Reading and spelling skills have historically shared evidence across the
-  // teacher's Reading Work, Tests, and Spelling surfaces.
-  return ['Reading / ELA', 'Spelling / Handwriting'];
+  const subject = text(rule?.subject);
+  if (subject === 'Reading / ELA' || subject === 'Spelling / Handwriting') {
+    // Reading and spelling skills have historically shared evidence across the
+    // teacher's Reading Work, Tests, and Spelling surfaces.
+    return ['Reading / ELA', 'Spelling / Handwriting'];
+  }
+  return subject ? [subject] : [];
 }
 
 function skillRulesForSourceSubject(subject, curriculumOptions = {}) {
