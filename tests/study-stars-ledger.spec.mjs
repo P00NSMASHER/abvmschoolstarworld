@@ -144,3 +144,25 @@ test('reward ledger persists only bounded accounting fields and no exact activit
   expect(JSON.stringify(row)).not.toContain('PRIVATE ANSWER');
   expect(row.eventId).toMatch(/^star-[a-z0-9]+-[a-z0-9]+$/);
 });
+
+test('signed streak adjustments are idempotent and a completed round never subtracts existing balance', async ({ page }) => {
+  const result=await page.evaluate(async()=>{
+    const e=window.ABVMStudyGames;
+    const good=e.studyStarRoundId({sourcePack:'pack-streak-good',mode:'quick',sessionSeed:'good'});
+    const bad=e.studyStarRoundId({sourcePack:'pack-streak-bad',mode:'quick',sessionSeed:'bad'});
+    const first=await e.commitStudyStarRewards({sourcePack:'pack-streak-good',mode:'quick',sessionSeed:'good',roundId:good,completed:true,streakAdjustment:10});
+    const before=await e.studyStarBalance();
+    const second=await e.commitStudyStarRewards({sourcePack:'pack-streak-bad',mode:'quick',sessionSeed:'bad',roundId:bad,completed:true,streakAdjustment:-10});
+    const duplicate=await e.commitStudyStarRewards({sourcePack:'pack-streak-bad',mode:'quick',sessionSeed:'bad',roundId:bad,completed:true,streakAdjustment:-10});
+    return {first,before,second,duplicate,after:await e.studyStarBalance(),rows:await e.loadStudyStarLedger()};
+  });
+  expect(result.first.awardedAmount).toBe(20);
+  expect(result.before).toBe(20);
+  expect(result.second.awardedAmount).toBe(0);
+  expect(result.after).toBe(20);
+  expect(result.duplicate.awardedAmount).toBe(0);
+  expect(result.duplicate.duplicateAmount).toBe(0);
+  expect(result.rows.filter(row=>row.sourcePack==='pack-streak-bad').map(row=>[row.rewardType,row.amount])).toEqual(expect.arrayContaining([
+    ['round-complete',10],['streak-adjustment',-10]
+  ]));
+});

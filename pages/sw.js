@@ -1,20 +1,20 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v123-study-game-accuracy";
+const CACHE = "abvm-grade2-parent-companion-v124-streak-bonuses";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=104",
   "./study-support.js?v=2",
-  "./app.js?v=119",
+  "./app.js?v=120",
   "./school-updates.js?v=2",
   "./weekly-learning.js?v=3",
-  "./study-games.js?v=96",
-  "./study-games-view.js?v=9",
+  "./study-games.js?v=97",
+  "./study-games-view.js?v=10",
   "./manifest.webmanifest",
   "./assets/abvm-app-icon-180.png",
   "./assets/abvm-app-icon-192.png",
   "./assets/abvm-app-icon-512.png"
 ];
-const OPTIONAL_DATA = ["./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./study-materials.mjs", "./study-games-materials-view.mjs", "./study-games-materials.css?v=3", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs","./study-resources.mjs", "./study-clarity.css?v=1", "./study-model.mjs", "./star-practice.mjs", "./family-view.css?v=1", "./visual-polish.css?v=1", "./lunch-art.js?v=1"];
+const OPTIONAL_DATA = ["./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./study-materials.mjs", "./study-games-materials-view.mjs", "./study-games-materials.css?v=4", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs","./study-resources.mjs", "./study-clarity.css?v=1", "./study-model.mjs", "./star-practice.mjs", "./family-view.css?v=1", "./visual-polish.css?v=1", "./lunch-art.js?v=1"];
 
 self.addEventListener("install",event=>{
   event.waitUntil((async()=>{

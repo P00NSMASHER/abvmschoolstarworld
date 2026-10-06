@@ -1,0 +1,69 @@
+import {test,expect} from '@playwright/test';
+
+async function catalog(page){
+  return await page.evaluate(async()=>{
+    const envelope=await fetch('./data/study-pack-runtime.json').then(r=>r.json());
+    const e=window.ABVMStudyGames;
+    return e.buildCatalog(envelope.pack,{sourceKey:e.sourceKeyFromEnvelope(envelope.pack,envelope)}).questions;
+  });
+}
+async function visibleQuestion(page,questions){
+  const prompt=(await page.locator('.game-question-card>h2').innerText()).trim();
+  const choices=(await page.locator('[data-game-answer] strong').allTextContents()).map(x=>x.trim());
+  const q=questions.find(row=>row.prompt===prompt&&row.choices.length===choices.length&&row.choices.every((choice,index)=>choice===choices[index]));
+  if(!q)throw new Error('question not found');
+  return {q,correct:choices.indexOf(q.answer),wrong:choices.findIndex(choice=>choice!==q.answer)};
+}
+
+test.beforeEach(async({page})=>{
+  await page.goto('/#games');
+  await expect(page.locator('.study-game-grid')).toBeVisible({timeout:10_000});
+  await page.evaluate(()=>new Promise((resolve,reject)=>{const req=indexedDB.deleteDatabase('abvm-study-stars-v1');req.onsuccess=()=>resolve();req.onerror=()=>reject(req.error);req.onblocked=()=>reject(new Error('blocked'))}));
+});
+
+test('first-response correct and incorrect streaks progress in opposite directions without retry gaming',async({page})=>{
+  const questions=await catalog(page);
+  await page.getByRole('button',{name:/Quick Mix/i}).click();
+
+  for(let i=1;i<=3;i++){
+    const item=await visibleQuestion(page,questions);
+    await page.locator('[data-game-answer]').nth(item.correct).click();
+    await expect(page.locator('.game-streak')).toContainText(`Correct streak ${i}`);
+    await expect(page.locator('.game-streak')).toContainText(`+${i}`);
+    await page.locator('[data-game-next]').click();
+  }
+
+  const miss1=await visibleQuestion(page,questions);
+  await page.locator('[data-game-answer]').nth(miss1.wrong).click();
+  await expect(page.locator('.game-streak')).toContainText('Miss streak 1');
+  await expect(page.locator('.game-streak')).toContainText('-1');
+  await page.locator('[data-game-answer]').nth(miss1.correct).click();
+  await expect(page.locator('.game-streak')).toContainText('Miss streak 1');
+  await page.locator('[data-game-next]').click();
+
+  const miss2=await visibleQuestion(page,questions);
+  await page.locator('[data-game-answer]').nth(miss2.wrong).click();
+  await expect(page.locator('.game-streak')).toContainText('Miss streak 2');
+  await expect(page.locator('.game-streak')).toContainText('-2');
+  await page.locator('[data-game-answer]').nth(miss2.correct).click();
+  await page.locator('[data-game-next]').click();
+
+  const recovery=await visibleQuestion(page,questions);
+  await page.locator('[data-game-answer]').nth(recovery.correct).click();
+  await expect(page.locator('.game-streak')).toContainText('Correct streak 1');
+  await expect(page.locator('.game-streak')).toContainText('+1');
+});
+
+test('perfect round caps positive streak adjustment at +10 and saves +20 total Study Stars',async({page})=>{
+  const questions=await catalog(page);
+  await page.getByRole('button',{name:/Quick Mix/i}).click();
+  for(let i=0;i<8;i++){
+    const item=await visibleQuestion(page,questions);
+    await page.locator('[data-game-answer]').nth(item.correct).click();
+    await page.locator('[data-game-next]').click();
+  }
+  await expect(page.locator('.game-finish')).toBeVisible();
+  await expect(page.locator('.game-streak-summary')).toContainText('+10 Study Stars');
+  await expect(page.locator('.study-star-earned')).toContainText('+20 Study Stars');
+  expect(await page.evaluate(()=>window.ABVMStudyGames.studyStarBalance())).toBe(20);
+});

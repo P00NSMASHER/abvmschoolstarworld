@@ -193,7 +193,7 @@ try {
   await expect(page.locator('.game-score-summary > span')).toContainText('Corrected on retry: 1');
   await expect(page.locator('.game-score-summary > span')).toContainText('Hints used: 1');
   await expect(page.locator('.game-section-scores > div').filter({ hasText: 'Math' })).toContainText(`${expectedFirstTry} / ${studySource.total} · ${expectedPercent}%`);
-  await expect(page.locator('.study-star-earned')).toContainText('+10 Study Stars');
+  await expect(page.locator('.study-star-earned')).toContainText('+20 Study Stars');
   await page.screenshot({ path: `${out}/study-result.png` });
   receipt.studyWalkthrough = { mode: 'math', source: 'weekly', questions: playedQuestions, hint: true, retry: true, correct: true, completed: true, firstTryCorrect: expectedFirstTry, firstTryPercent: expectedPercent, earned: await page.locator('.study-star-earned').innerText() };
   await page.getByRole('button', { name: 'All study games', exact: true }).click();
