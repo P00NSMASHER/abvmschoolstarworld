@@ -25,3 +25,23 @@
 .screen .agenda-lunch p{font-size:14px;line-height:1.5}
 @media(max-width:360px){.lunch-art{flex-basis:72px;width:72px}.lunch-art img{width:72px;height:72px}.screen .lunch-card:has(.lunch-art),.screen .agenda-lunch:has(.lunch-art){gap:10px}}
 @media(prefers-reduced-motion:no-preference){.bottom-nav button .nav-icon{transition:background-color .15s,color .15s}.family-message>summary{transition:background-color .15s}.family-message>summary:active{background:#eaf2fc}}
+/* Tier A school photography: four approved images only. */
+.school-sign-hero{position:relative;overflow:hidden;padding-right:154px}
+.school-sign-photo{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:126px;height:84px;margin:0;border-radius:14px;overflow:hidden;border:1px solid #ffffffcc;box-shadow:0 4px 16px #173c6620;background:#fff}
+.school-sign-photo img{display:block;width:100%;height:100%;object-fit:cover}
+.family-school-hero{position:relative;grid-column:1/-1;min-height:210px;margin:0 0 16px;border-radius:22px;overflow:hidden;background:#173c66;color:#fff}
+.family-school-hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 54%}
+.family-school-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#071a2b12 28%,#071a2bcf 100%)}
+.family-school-hero>div{position:absolute;z-index:1;left:18px;right:18px;bottom:16px}
+.family-school-hero p{margin:0 0 5px;font-size:10px;font-weight:800;letter-spacing:.11em}
+.family-school-hero h2{margin:0;font-size:1.35rem;line-height:1.15;letter-spacing:-.025em;color:#fff}
+.family-school-hero span{display:block;margin-top:5px;font-size:.76rem;color:#f5f8fb}
+.school-photo-pair{grid-column:1/-1;margin:0 0 18px}
+.school-photo-pair>h2{margin:0 0 10px;font-size:1.06rem;color:#183652}
+.school-photo-pair>div{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.school-photo-pair figure{margin:0;overflow:hidden;border:1px solid #dfe7ef;border-radius:16px;background:#fff}
+.school-photo-pair img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover}
+.school-photo-pair figcaption{padding:9px 10px 10px;font-size:.7rem;font-weight:700;line-height:1.3;color:#38536c}
+@media(max-width:699px){.school-sign-hero{padding-right:118px}.school-sign-photo{right:12px;width:94px;height:70px;border-radius:12px}.family-school-hero{min-height:178px;border-radius:18px}.family-school-hero h2{font-size:1.18rem}}
+@media(max-width:350px){.school-sign-hero{padding-right:92px}.school-sign-photo{width:72px;height:58px}}
+@media(min-width:700px){.family-school-hero{min-height:260px}.family-school-hero>div{left:24px;bottom:22px}.family-school-hero h2{font-size:1.6rem}}
