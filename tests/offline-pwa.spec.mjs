@@ -40,16 +40,60 @@ test("cached app shell and school pack remain usable offline after warm load",as
   await context.setOffline(false);
 });
 
-test("Study Games engine is available offline after warm load",async({page,context})=>{
+test("Games and their saved, STAR and mixed source banks remain playable offline after warm load",async({page,context})=>{
   await page.goto("/#games");
-  await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready',{timeout:10_000});
+  const banks=await page.evaluate(async()=>{
+    const [envelope,work,archive,{buildStarBank}]=await Promise.all([
+      fetch('./data/study-pack-runtime.json').then(response=>response.json()),
+      fetch('./data/schoolwork.json').then(response=>response.json()),
+      fetch('./data/study-archive.json').then(response=>response.json()),
+      import('./star-practice.mjs')
+    ]);
+    const engine=window.ABVMStudyGames,sourceKey=engine.sourceKeyFromEnvelope(envelope.pack,envelope);
+    const catalog=engine.buildCatalog(envelope.pack,{sourceKey});
+    return {
+      saved:[...work.lessons.flatMap(lesson=>lesson.questions),...archive.questions,...catalog.questions.filter(q=>q.tier==='material')],
+      star:[...buildStarBank(),...catalog.questions.filter(q=>q.tier==='star-fallback')]
+    };
+  });
   await page.evaluate(async()=>{if("serviceWorker" in navigator)await navigator.serviceWorker.ready});
   await page.reload();
-  await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready',{timeout:10_000});
   await context.setOffline(true);
-  await page.reload({waitUntil:"domcontentloaded"});
-  await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
-  await context.setOffline(false);
+  try{
+    await page.reload({waitUntil:'domcontentloaded'});
+    await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready',{timeout:10_000});
+    await expect(page.locator('.study-game-grid > .study-game-tile')).toHaveCount(4);
+    for(const source of ['saved','star','mix']){
+      await page.locator('[data-study-source]').selectOption(source);
+      if(source==='mix'){
+        await page.locator('[data-study-pick="weekly"]').uncheck();
+        await page.locator('[data-study-pick="saved"]').check();
+        await page.locator('[data-study-pick="star"]').check();
+      }
+      await page.locator('[data-game-start="math"]').click();
+      const prompt=await page.locator('.game-question-card > h2').innerText();
+      const allowed=source==='mix'?[...banks.saved,...banks.star]:banks[source];
+      const question=allowed.find(row=>row.prompt===prompt);
+      expect(question,`${source} offline question belongs to a warmed selected bank`).toBeTruthy();
+      await page.locator('[data-game-hint]').click();
+      await expect(page.locator('.game-hint')).toBeVisible();
+      const beforeLearning=await page.evaluate(()=>window.ABVMStudyGames.loadLearning());
+      const choices=await page.locator('[data-game-answer] strong').allTextContents();
+      const answerIndex=choices.indexOf(question.answer);expect(answerIndex).toBeGreaterThanOrEqual(0);
+      await page.locator('[data-game-answer]').nth(answerIndex).click();
+      await expect(page.locator('.game-feedback.correct')).toBeVisible();
+      const afterLearning=await page.evaluate(()=>window.ABVMStudyGames.loadLearning());
+      const changed=Object.entries(afterLearning).filter(([skill,row])=>Number(row.Seen)>Number(beforeLearning[skill]?.Seen||0));
+      expect(changed).toHaveLength(1);
+      expect(changed[0][1].LastResolution.correct).toBe(true);
+      await page.locator('[data-game-home]').click();
+    }
+    await page.locator('[data-study-source]').selectOption('saved');
+    await page.locator('[data-study-notes] > summary').click();
+    await expect(page.locator('[data-study-notes]')).toContainText('Undated schoolwork');
+  }finally{await context.setOffline(false);}
 });
 
 test("app recovers cleanly after reconnecting from offline mode",async({page,context})=>{

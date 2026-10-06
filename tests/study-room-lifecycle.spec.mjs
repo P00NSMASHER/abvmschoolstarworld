@@ -17,14 +17,14 @@ async function openSpeechRound(page) {
     };
   });
   await page.goto('/#study');
-  await expect(page.locator('#study-hub')).toHaveAttribute('data-study-state', 'ready', { timeout: 15000 });
-  await page.locator('.hub-tabs [data-tab="star"]').click();
-  await page.locator('[data-star="Math"]').click();
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state', 'ready', { timeout: 15000 });
+  await page.locator('[data-study-source]').selectOption('star');
+  await page.locator('[data-game-start="math"]').click();
   await expect(page.getByRole('button', { name: 'Read to me', exact: true })).toBeVisible();
 }
 
 for (const event of ['onend', 'onerror']) {
-  test(`late speech ${event} cannot prevent Close from stopping the current reading`, async ({ page }) => {
+  test(`late speech ${event} cannot prevent Back to games from stopping the current reading`, async ({ page }) => {
     await openSpeechRound(page);
     const before = await page.evaluate(() => localStorage.getItem('abvm-study-learning:v2'));
     const read = page.getByRole('button', { name: 'Read to me', exact: true });
@@ -33,8 +33,8 @@ for (const event of ['onend', 'onerror']) {
     await read.click();
     await page.evaluate(() => window.__lateSpeechCallback());
     const beforeClose = await page.evaluate(() => window.__roomSpeech.cancelled);
-    await page.locator('[data-end]').click();
-    await expect(page.locator('.hub-tabs')).toBeVisible();
+    await page.locator('[data-game-home]').click();
+    await expect(page.locator('.study-game-grid')).toBeVisible();
     await expect.poll(() => page.evaluate(() => window.__roomSpeech.cancelled)).toBe(beforeClose + 1);
     expect(await page.evaluate(() => localStorage.getItem('abvm-study-learning:v2'))).toBe(before);
   });
@@ -51,16 +51,17 @@ test('leaving Study disposes the active reading without recording an answer', as
   expect(await page.evaluate(() => localStorage.getItem('abvm-study-learning:v2'))).toBe(before);
 });
 
-test('optional speech failure leaves hints and Close usable', async ({ page }) => {
+test('optional speech failure leaves hints and Back to games usable', async ({ page }) => {
   await openSpeechRound(page);
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.evaluate(() => { window.speechSynthesis.speak = () => { throw new Error('Speech temporarily unavailable'); }; });
   await page.getByRole('button', { name: 'Read to me', exact: true }).click();
-  await expect(page.locator('.hub-round')).toBeVisible();
-  await page.locator('[data-hint]').click();
-  await expect(page.locator('[data-end]')).toBeVisible();
-  await page.locator('[data-end]').click();
-  await expect(page.locator('.hub-tabs')).toBeVisible();
+  await expect(page.locator('.game-question-card')).toBeVisible();
+  await page.locator('[data-game-hint]').click();
+  await expect(page.locator('.game-hint')).toBeVisible();
+  await expect(page.locator('[data-game-home]')).toBeVisible();
+  await page.locator('[data-game-home]').click();
+  await expect(page.locator('.study-game-grid')).toBeVisible();
   expect(errors).toEqual([]);
 });

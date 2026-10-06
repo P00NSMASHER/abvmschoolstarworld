@@ -13,17 +13,43 @@ test("one missing same-day bank does not hide supported targeted practice",async
   ];
   await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:fixture}));
   await page.goto("http://127.0.0.1:4173/#study");
-  await expect(page.locator('[data-study-state="ready"]')).toBeVisible({timeout:10_000});
-  await expect(page.locator(".hub-prep")).toContainText("Grammar (subject & predicate)");
-  await expect(page.locator(".hub-prep")).toContainText("Science test");
-  await expect(page.locator(".hub-prep .hub-caption")).toContainText("Review the teacher notes below for Science test");
+  await expect(page.locator('.games-screen[data-study-state="ready"]')).toBeVisible({timeout:10_000});
+  await expect(page.locator("[data-study-tests]")).toContainText("Grammar (subject & predicate)");
+  await expect(page.locator("[data-study-tests]")).toContainText("Science test");
+  await expect(page.locator("[data-study-tests]")).toContainText(/teacher notes/i);
   await expect(page.getByRole("button",{name:/Practice Grammar \(subject & predicate\)/i})).toBeVisible();
   await expect(page.getByRole("button",{name:/Practice Science/i})).toHaveCount(0);
   await expect(page.getByRole("button",{name:/Start test practice/i})).toHaveCount(0);
 
   await page.getByRole("button",{name:/Practice Grammar \(subject & predicate\)/i}).click();
-  await expect(page.locator(".hub-round")).toBeVisible();
-  await expect(page.locator(".hub-row")).toContainText("Grammar (subject & predicate) practice");
-  await expect(page.locator(".hub-round")).not.toContainText("Science test");
+  await expect(page.locator(".game-question-card")).toBeVisible();
+  await expect(page.locator(".game-topbar")).toContainText("Grammar (subject & predicate)");
+  const allowed=await page.evaluate(async()=>{
+    const [envelope,schoolwork,archive]=await Promise.all([
+      fetch('./data/study-pack-runtime.json').then(response=>response.json()),
+      fetch('./data/schoolwork.json').then(response=>response.json()),
+      fetch('./data/study-archive.json').then(response=>response.json())
+    ]);
+    return [...envelope.pack.contentPipeline.questions,...archive.questions,...schoolwork.lessons.flatMap(lesson=>lesson.questions)]
+      .filter(question=>question.skill==='subject-predicate');
+  });
+  expect(allowed.length).toBeGreaterThanOrEqual(8);
+  for(let index=0;index<8;index++){
+    await expect(page.locator('.game-topbar')).toContainText(`${index+1} of 8`);
+    await expect(page.locator('.game-topbar')).not.toContainText(/Support|Comeback|Science/);
+    const prompt=await page.locator('.game-question-card > h2').innerText();
+    const question=allowed.find(row=>row.prompt===prompt);
+    expect(question,'strict test prep must remain in the supported grammar bank').toBeTruthy();
+    const choices=await page.locator('[data-game-answer] strong').allTextContents();
+    const wrongs=choices.map((choice,choiceIndex)=>choice!==question.answer?choiceIndex:-1).filter(choiceIndex=>choiceIndex>=0);
+    // Repeated misses must not insert a support/comeback from a different bank.
+    for(const choiceIndex of wrongs.slice(0,2)){
+      await page.locator('[data-game-answer]').nth(choiceIndex).click();
+      if(await page.locator('[data-game-next]').count())break;
+    }
+    await expect(page.locator('[data-game-next]')).toBeVisible();
+    await page.locator('[data-game-next]').click();
+  }
+  await expect(page.locator('.game-finish')).toBeVisible();
   await context.close();
 });

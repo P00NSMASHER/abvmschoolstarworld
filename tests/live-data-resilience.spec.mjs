@@ -112,16 +112,23 @@ test("index promotes a newly activated service worker before relying on versione
 test("timestamp-only verification refresh does not reset open UI state",async({browser})=>{
   const context=await browser.newContext({serviceWorkers:"block"});
   const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-10-06T13:00:00Z"));
   const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
   let current=structuredClone(source);
+  current.sourceLastSeenAt="2026-10-05T12:00:00.000Z";
   await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:current}));
   await page.goto("http://127.0.0.1:4173/#study");
-  const first=page.locator(".study-accordion").first();
-  await first.locator("summary").click();
+  await expect(page.locator(".games-screen")).toHaveAttribute("data-study-state","ready");
+  await expect(page.locator(".freshness")).toHaveClass(/stale/);
+  const notes=page.locator("[data-study-notes]");
+  await notes.locator(":scope > summary").click();
+  const first=notes.locator(".game-material-lesson").first();
+  await first.locator(":scope > summary").click();
+  await expect(notes).toHaveAttribute("open","");
   await expect(first).toHaveAttribute("open","");
 
   current=structuredClone(source);
-  const stamp=new Date().toISOString();
+  const stamp="2026-10-06T12:59:00.000Z";
   current.sourceLastSeenAt=stamp;
   current.pack.generatedAt=stamp;
   current.pack.sourceCheckedAt=stamp;
@@ -129,6 +136,8 @@ test("timestamp-only verification refresh does not reset open UI state",async({b
   if(current.pack.lunchMenuSource)current.pack.lunchMenuSource.lastAttemptAt=stamp;
 
   await page.evaluate(()=>window.dispatchEvent(new Event("online")));
+  await expect(page.locator(".freshness")).toHaveClass(/current/);
+  await expect(notes).toHaveAttribute("open","");
   await expect(first).toHaveAttribute("open","");
   await expect(page.locator("#toast")).not.toContainText("School info updated");
   await context.close();
@@ -288,24 +297,36 @@ test("required parent tasks are not mislabeled as if participating",async({brows
   await context.close();
 });
 
-test("Study derives spelling review date and STAR reminder from current school dates",async({browser})=>{
+test("Study derives spelling and STAR test dates from the current school calendar",async({browser})=>{
   const context=await browser.newContext({serviceWorkers:"block"});
   const page=await context.newPage();
   await page.clock.setFixedTime(new Date("2026-09-29T13:00:00Z"));
   const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
-  await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:source}));
+  const fixture=structuredClone(source);
+  fixture.pack.importantDates=[
+    {date:"Friday, Oct. 2",label:"Spelling (short a / long a) / Handwriting",kind:"test"},
+    {date:"Tuesday–Friday, Jan. 12–22",label:"STAR Testing window",kind:"assessment"}
+  ];
+  await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:fixture}));
   await page.goto("http://127.0.0.1:4173/#study");
-  await expect(page.locator(".study-at-a-glance")).toContainText("Fri 2");
-  await expect(page.locator(".study-at-a-glance")).toContainText("Spelling / Handwriting review");
-  await expect(page.locator(".calm-card")).toHaveCount(0);
+  const spelling=page.locator("[data-study-tests]");
+  await expect(spelling.locator("time")).toHaveAttribute("datetime","2026-10-02");
+  await expect(spelling.locator("time")).toContainText("Oct 2");
+  await expect(spelling).toContainText("Spelling (short a / long a) / Handwriting");
+  await expect(spelling).not.toContainText("STAR Testing window");
   await context.close();
 
   const starContext=await browser.newContext({serviceWorkers:"block"});
   const starPage=await starContext.newPage();
   await starPage.clock.setFixedTime(new Date("2027-01-10T13:00:00Z"));
-  await starPage.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:source}));
+  await starPage.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:fixture}));
   await starPage.goto("http://127.0.0.1:4173/#study");
-  await expect(starPage.locator(".calm-card")).toContainText("STAR reminder");
+  const star=starPage.locator("[data-study-tests]");
+  await expect(star).toContainText("Next test");
+  await expect(star.locator("time")).toHaveAttribute("datetime","2027-01-12");
+  await expect(star.locator("time")).toContainText("Jan 12");
+  await expect(star).toContainText("STAR Testing window");
+  await expect(star).not.toContainText("Spelling (short a / long a) / Handwriting");
   await starContext.close();
 });
 
@@ -322,7 +343,7 @@ test("Today labels closed events as Closed instead of School",async({browser})=>
   await context.close();
 });
 
-test("Study does not present a distant test as something that matters this week",async({browser})=>{
+test("Study labels a distant test with its actual date and keeps it out of weekly notes",async({browser})=>{
   const context=await browser.newContext({serviceWorkers:"block"});
   const page=await context.newPage();
   await page.clock.setFixedTime(new Date("2026-10-13T13:00:00Z"));
@@ -333,8 +354,17 @@ test("Study does not present a distant test as something that matters this week"
   ];
   await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:fixture}));
   await page.goto("http://127.0.0.1:4173/#study");
-  await expect(page.locator(".study-at-a-glance")).toContainText("Keep up with current class skills");
-  await expect(page.locator(".study-at-a-glance")).not.toContainText("STAR Testing window");
+  const next=page.locator("[data-study-tests]");
+  await expect(next).toContainText("Next test");
+  await expect(next.locator("time")).toHaveAttribute("datetime","2027-01-12");
+  await expect(next.locator("time")).toContainText("Jan 12");
+  await expect(next).toContainText("STAR Testing window");
+  await expect(next).not.toContainText(/this week/i);
+  await expect(page.locator("[data-study-source]")).toHaveValue("weekly");
+  const notes=page.locator("[data-study-notes]");
+  await notes.locator(":scope > summary").click();
+  await expect(notes.locator(".game-material-lesson").first()).toBeVisible();
+  await expect(notes.locator("[data-study-notes-content]")).not.toContainText("STAR Testing window");
   await context.close();
 });
 

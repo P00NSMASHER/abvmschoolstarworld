@@ -10,14 +10,13 @@ const sizes=[
 
 async function openDestination(page,label){
   if(label==="Study Games"){
-    await page.getByRole("button",{name:"Study",exact:true}).click();
-    await page.locator(".study-games-cta").click();
-    await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
+    await page.goto(new URL("#games",page.url()).href);
   }else await page.getByRole("button",{name:label,exact:true}).click();
   await expect(page.locator(".screen")).toBeVisible();
+  if(label==="Study"||label==="Study Games")await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
 }
 
-test("all six core flows remain usable through five primary tabs",async({browser})=>{
+test("all five primary tabs and the Games alias remain usable on phones",async({browser})=>{
   for(const size of sizes){
     const context=await browser.newContext({viewport:{width:size.width,height:size.height},isMobile:true,hasTouch:true});
     const page=await context.newPage();
@@ -49,7 +48,7 @@ test("each tab exposes its primary answer in the first viewport",async({page})=>
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
   const targets=[
     ["Today",".hero-card"],["Week",".week-nav"],["Calendar",".calendar-card"],
-    ["Study","#study-hub .hub-content > .hub-card:first-child"],["Study Games",".study-game-grid"],["Family",".family-hero"]
+    ["Study",".study-game-grid"],["Study Games",".study-game-grid"],["Family",".family-hero"]
   ];
   for(const [tab,selector] of targets){
     await openDestination(page,tab);

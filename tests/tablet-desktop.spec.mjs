@@ -2,11 +2,10 @@ import {test,expect} from "@playwright/test";
 
 async function openDestination(page,label){
   if(label==="Study Games"){
-    await page.getByRole("button",{name:"Study",exact:true}).click();
-    await page.locator(".study-games-cta").click();
-    await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
+    await page.goto(new URL("#games",page.url()).href);
   }else await page.getByRole("button",{name:label,exact:true}).click();
   await expect(page.locator(".screen")).toBeVisible();
+  if(label==="Study"||label==="Study Games")await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
 }
 
 for(const viewport of [

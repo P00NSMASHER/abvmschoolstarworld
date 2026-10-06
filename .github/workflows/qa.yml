@@ -114,3 +114,17 @@ jobs:
             test-results
           retention-days: 14
           if-no-files-found: ignore
+
+      # Keep rendered review evidence directly downloadable when the full report
+      # includes large traces. The complete QA artifact above remains intact.
+      - name: Retain directly reviewable Study Games visuals
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: abvm-games-visuals-${{ github.run_id }}
+          path: |
+            test-results/**/games-*.png
+            test-results/**/games-walkthrough-iphone.webm
+            test-results/**/games-*-metrics.json
+          retention-days: 14
+          if-no-files-found: ignore
