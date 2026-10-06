@@ -25,3 +25,213 @@
 .screen .agenda-lunch p{font-size:14px;line-height:1.5}
 @media(max-width:360px){.lunch-art{flex-basis:72px;width:72px}.lunch-art img{width:72px;height:72px}.screen .lunch-card:has(.lunch-art),.screen .agenda-lunch:has(.lunch-art){gap:10px}}
 @media(prefers-reduced-motion:no-preference){.bottom-nav button .nav-icon{transition:background-color .15s,color .15s}.family-message>summary{transition:background-color .15s}.family-message>summary:active{background:#eaf2fc}}
+
+
+/* Gold standard system — 2026-10-06 */
+:root{
+  --gold-navy:#063d78;
+  --gold-blue:#0878df;
+  --gold-sky:#eaf6ff;
+  --gold-gold:#f0bc2f;
+  --gold-pink:#df2b78;
+  --gold-green:#2ca35b;
+  --gold-purple:#7543c8;
+  --gold-ink:#173653;
+  --gold-muted:#5b7186;
+  --gold-line:#d9e6f2;
+  --gold-surface:#ffffff;
+}
+.screen{
+  background:
+    radial-gradient(circle at 100% 0,rgba(37,159,235,.08),transparent 24rem),
+    linear-gradient(180deg,#fffdf8 0,#f8fcff 46%,#fff 100%);
+}
+.app-header{margin-bottom:14px}
+.app-header h1{color:var(--gold-navy);font-weight:800;letter-spacing:-.04em}
+.app-header>div>p{color:#2172af;font-weight:850}
+.school-mark{border:2px solid #fff;box-shadow:0 5px 16px rgba(6,61,120,.15)}
+button.freshness{
+  color:#37633d;background:#f4fbf1;border-color:#cce5c4;
+  box-shadow:inset 0 1px rgba(255,255,255,.9);
+}
+.today-screen>.app-header,
+.games-screen:not(.is-playing)>.app-header{
+  margin-top:calc(-1 * max(18px,env(safe-area-inset-top)));
+  margin-inline:-16px;
+  padding:max(22px,env(safe-area-inset-top)) 18px 18px;
+  background:
+    radial-gradient(circle at 88% 18%,rgba(62,178,255,.28),transparent 28%),
+    linear-gradient(145deg,#052f61,#07549b);
+  border-radius:0 0 26px 26px;
+  box-shadow:0 10px 28px rgba(4,48,95,.14);
+}
+.today-screen>.app-header h1,
+.games-screen:not(.is-playing)>.app-header h1{color:#fff}
+.today-screen>.app-header>div>p,
+.games-screen:not(.is-playing)>.app-header>div>p{color:#a9dcff}
+.today-screen>.app-header .school-mark,
+.games-screen:not(.is-playing)>.app-header .school-mark{background:#fff}
+.hero-card.school-photo-hero{
+  border-width:2px;
+  border-color:#e9bd43;
+  border-radius:24px;
+  box-shadow:0 12px 28px rgba(7,47,91,.18);
+}
+.priority-card,.today-panel,.day-detail,.calendar-card,.calendar-day-card,
+.family-actions-card,.notices-card,.study-accordion{
+  border-color:var(--gold-line);
+  box-shadow:0 8px 24px rgba(31,74,110,.07);
+}
+.priority-card{
+  background:linear-gradient(135deg,#fffdf5,#fff7da);
+  border-color:#ead88d;
+}
+.date-tile{
+  background:linear-gradient(180deg,#075197,#063b72);
+  box-shadow:0 5px 0 #efc34e;
+}
+.calendar-card{background:rgba(255,255,255,.96)}
+.calendar-grid button{
+  border-color:#dce6ef;background:#fbfdff;
+  transition:transform .12s ease,border-color .12s ease,background-color .12s ease;
+}
+.calendar-grid button.active{
+  background:linear-gradient(180deg,#07569d,#063d78);
+  border-color:#063d78;
+}
+.day-picker button.active{
+  background:linear-gradient(180deg,#07569d,#063d78);
+  box-shadow:0 5px 0 #e8bd3f;
+}
+.bottom-nav{
+  background:rgba(255,255,255,.97);
+  border-top-color:#dce8f2;
+  box-shadow:0 -8px 24px rgba(18,62,103,.06);
+}
+.bottom-nav button.active{color:#064f94}
+.bottom-nav button.active .nav-icon{
+  color:#0878df;
+  background:linear-gradient(180deg,#eaf6ff,#dcedff);
+  box-shadow:inset 0 0 0 1px rgba(8,120,223,.08),0 4px 12px rgba(8,120,223,.1);
+}
+
+/* Week: one compact source-of-truth overview for lunches and tests. */
+.weekly-overview{
+  margin:16px 0 18px;
+  padding:17px;
+  border:1px solid #cae1f2;
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 100% 0,rgba(117,67,200,.08),transparent 36%),
+    linear-gradient(145deg,#f4faff,#fff);
+  box-shadow:0 10px 26px rgba(31,74,110,.07);
+}
+.weekly-overview-head{margin:0 0 13px}
+.weekly-overview-head p{
+  margin:0 0 3px;color:#2270ac;font-size:10px;font-weight:900;letter-spacing:.09em;
+}
+.weekly-overview-head h2{
+  margin:0;color:var(--gold-navy);font-size:20px;line-height:1.2;letter-spacing:-.025em;
+}
+.weekly-overview-grid{display:grid;gap:11px}
+.weekly-overview-card{
+  min-width:0;overflow:hidden;
+  background:#fff;border:1px solid #dce8f2;border-radius:18px;
+}
+.weekly-overview-card-title{
+  display:flex;align-items:center;gap:9px;
+  min-height:52px;padding:10px 13px;border-bottom:1px solid #e7eef4;
+}
+.weekly-overview-card-title span{
+  display:grid;place-items:center;flex:none;width:34px;height:34px;border-radius:11px;
+  font-size:18px;font-weight:900;
+}
+.weekly-overview-card-title h3{
+  margin:0;color:var(--gold-ink);font-size:16px;line-height:1.25;
+}
+.weekly-lunches .weekly-overview-card-title span{background:#fff4bf}
+.weekly-tests .weekly-overview-card-title span{background:#ffe5f1;color:#b81f65}
+.weekly-overview-row{
+  display:grid;grid-template-columns:54px minmax(0,1fr);gap:10px;
+  padding:10px 13px;border-bottom:1px solid #edf1f5;align-items:start;
+}
+.weekly-overview-row:last-child{border-bottom:0}
+.weekly-overview-row time{
+  color:#1767a3;font-size:11px;line-height:1.45;font-weight:850;
+}
+.weekly-overview-row p,.weekly-overview-row li{
+  margin:0;color:#344e64;font-size:13px;line-height:1.45;
+}
+.weekly-overview-row ul{display:grid;gap:5px;margin:0;padding:0;list-style:none}
+.weekly-overview-row li::before{content:"";display:inline-block;width:6px;height:6px;margin:0 7px 2px 0;border-radius:50%;background:var(--gold-pink)}
+.weekly-overview-empty{margin:0;padding:14px;color:#607388;font-size:13px;line-height:1.45}
+
+/* Study Games: stronger subject color with one consistent compact row anatomy. */
+.games-screen:not(.is-playing) .study-games-hero{
+  background:
+    radial-gradient(circle at 90% 18%,rgba(240,188,47,.25),transparent 30%),
+    linear-gradient(145deg,#eef7ff,#f6efff 58%,#fff9db);
+  border-color:#c8dcef;border-radius:22px;
+}
+.games-screen:not(.is-playing) .study-games-mascot{
+  background:linear-gradient(145deg,#7543c8,#5c2f9b);color:#ffe36b;
+}
+.games-screen .study-game-tile{
+  border-color:#d8e5ef;
+  box-shadow:0 5px 16px rgba(24,67,104,.05);
+  transition:transform .12s ease,border-color .12s ease,box-shadow .12s ease;
+}
+.games-screen .study-game-tile:not(:disabled):active{transform:scale(.99)}
+.games-screen .study-game-tile.game-quick{background:linear-gradient(100deg,#f6fbff,#eaf6ff)}
+.games-screen .study-game-tile.game-math{background:linear-gradient(100deg,#fbfffa,#ebfae9)}
+.games-screen .study-game-tile.game-words{background:linear-gradient(100deg,#fffafd,#ffeaf4)}
+.games-screen .study-game-tile.game-faith{background:linear-gradient(100deg,#fdfaff,#f1e9ff)}
+.games-screen .study-game-icon{border:1px solid rgba(255,255,255,.8);box-shadow:0 5px 12px rgba(26,71,109,.08)}
+.games-screen .game-progress{height:9px;background:#e8edf4}
+.games-screen .game-progress>span{background:linear-gradient(90deg,#086fd1,#1c94ef)}
+.games-screen.is-playing{background:linear-gradient(180deg,#f8fcff,#fff)}
+.games-screen .game-question-card{
+  border-color:#cfe0ed;border-radius:24px;
+  box-shadow:0 10px 28px rgba(22,67,105,.08);
+}
+.games-screen .game-question-meta span{
+  color:#075b9f;background:#e8f5ff;border-color:#c8e3f6;
+}
+.games-screen .game-answer{
+  border-color:#d4e1eb;border-radius:16px;background:#fff;
+  box-shadow:0 3px 10px rgba(23,60,92,.035);
+}
+.games-screen .game-answer.correct{border-color:#72bd86;background:#ecfaef}
+.games-screen .game-answer.wrong{border-color:#df8d98;background:#fff1f3}
+.games-screen .game-next{
+  background:linear-gradient(180deg,#0878df,#0664bb);
+  box-shadow:0 7px 18px rgba(8,120,223,.18);
+}
+.games-screen .game-feedback.correct{background:#edfaef;border-color:#a7d9b4}
+.games-screen .game-feedback.retry{background:#fff8df;border-color:#e6ca72}
+.games-screen .game-score-summary{
+  background:linear-gradient(145deg,#f2f9ff,#fff);
+  border-color:#c9e0f0;
+}
+
+/* Family stays information-first while sharing the same bright component finish. */
+.screen .family-stats>div{border-color:#dce8f2;background:linear-gradient(145deg,#fff,#f7fbff)}
+.screen .family-stats strong{color:#1267a8}
+.screen .family-actions-card{background:linear-gradient(180deg,#fff,#fcf9ff)}
+.family-screen .unread-updates{background:linear-gradient(135deg,#eef8ff,#f8f1ff);border-color:#d5e5f4}
+
+@media(min-width:700px){
+  .weekly-overview-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .weekly-overview{padding:20px}
+  .today-screen>.app-header,.games-screen:not(.is-playing)>.app-header{
+    margin-top:0;margin-inline:0;padding:20px 22px;border-radius:24px;
+  }
+}
+@media(max-width:360px){
+  .weekly-overview{padding:13px;border-radius:20px}
+  .weekly-overview-row{grid-template-columns:50px minmax(0,1fr);padding:9px 11px}
+  .weekly-overview-row p,.weekly-overview-row li{font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){
+  .calendar-grid button,.games-screen .study-game-tile{transition:none}
+}
