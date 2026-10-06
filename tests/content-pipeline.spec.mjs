@@ -269,9 +269,9 @@ test('a retry-correct answer is recorded separately from independent first-try m
   const wrongIndex = question.choices.findIndex(choice => choice !== question.answer);
   const correctIndex = question.choices.findIndex(choice => choice === question.answer);
   await page.locator('.game-answer').nth(wrongIndex).click();
-  await expect(page.locator('.game-feedback.retry')).toContainText('Not yet');
+  await expect(page.locator('.game-feedback.incorrect')).toContainText('Incorrect. Try again.');
   await page.locator('.game-answer').nth(correctIndex).click();
-  await expect(page.locator('.game-feedback.correct')).toContainText('worked it out');
+  await expect(page.locator('.game-feedback.correct')).toContainText('Correct on retry');
 
   const stored = await page.evaluate(skill => JSON.parse(localStorage.getItem('abvm-study-learning:v2') || '{}')[skill] || {}, question.skill);
   expect(stored.Seen).toBe(1);
