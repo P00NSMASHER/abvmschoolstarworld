@@ -22,10 +22,10 @@ const GAME_TYPE_LABELS=Object.freeze({
   reasoning:"Explain your thinking"
 });
 const STUDY_GAME_MODES=Object.freeze([
-  Object.freeze({id:"quick",title:"Quick Mix",subjects:[],count:8,copy:"Current school skills mixed into one quick round."}),
-  Object.freeze({id:"math",title:"Math Dash",subjects:["Math"],count:8,copy:"Current math first; STAR-style practice fills verified-data gaps."}),
-  Object.freeze({id:"words",title:"Word Power",subjects:["Reading / ELA","Spelling / Handwriting"],preferredSkills:["long-short-a","suffix-ed-ing"],count:8,copy:"Current spelling-test, phonics, word-building, and reading skills."}),
-  Object.freeze({id:"faith",title:"Faith Quest",subjects:["Religion"],count:8,copy:"Religion practice from the current class material."})
+  Object.freeze({id:"quick",title:"Quick Mix",subjects:[],count:8,copy:"A little bit of everything."}),
+  Object.freeze({id:"math",title:"Math Dash",subjects:["Math"],count:8,copy:"Numbers, problems, and math skills."}),
+  Object.freeze({id:"words",title:"Word Power",subjects:["Reading / ELA","Spelling / Handwriting"],preferredSkills:["long-short-a","suffix-ed-ing"],count:8,copy:"Words, spelling, phonics, and reading."}),
+  Object.freeze({id:"faith",title:"Faith Quest",subjects:["Religion"],count:8,copy:"Religion and faith practice."})
 ]);
 function storageGet(key){try{return localStorage.getItem(key)}catch{return null}}
 function storageSet(key,value){try{localStorage.setItem(key,value);return true}catch{return false}}
@@ -407,7 +407,7 @@ function ensureStudyGameEngine(){
   if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
   if(studyEnginePromise)return studyEnginePromise;
   const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.async=true;s.onload=()=>window[key]?resolve():reject(new Error(key+" did not initialize"));s.onerror=()=>reject(new Error(key+" could not be loaded"));document.head.append(s)});
-  studyEnginePromise=Promise.all([load("./study-games.js?v=98","ABVMStudyGames"),load("./study-games-view.js?v=11","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
+  studyEnginePromise=Promise.all([load("./study-games.js?v=98","ABVMStudyGames"),load("./study-games-view.js?v=12","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
   return studyEnginePromise;
 }
 function studyGameCatalog(){
