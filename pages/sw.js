@@ -1,5 +1,5 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v129-family-discipline";
+const CACHE = "abvm-grade2-parent-companion-v130-product-discipline-final";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=104",
@@ -14,7 +14,7 @@ const STATIC_SHELL = [
   "./assets/abvm-app-icon-192.png",
   "./assets/abvm-app-icon-512.png"
 ];
-const OPTIONAL_DATA = ["./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./study-materials.mjs", "./study-games-materials-view.mjs", "./study-games-materials.css?v=4", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs","./study-resources.mjs", "./study-clarity.css?v=1", "./study-model.mjs", "./star-practice.mjs", "./family-view.css?v=1", "./visual-polish.css?v=4", "./lunch-art.js?v=1", "./school-photos.js?v=1", "./assets/school-sign.webp", "./assets/school-hero.webp", "./assets/school-aerial.webp", "./assets/school-front.webp""];
+const OPTIONAL_DATA = ["./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./study-materials.mjs", "./study-games-materials-view.mjs", "./study-games-materials.css?v=4", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs","./study-resources.mjs", "./study-clarity.css?v=1", "./study-model.mjs", "./star-practice.mjs", "./family-view.css?v=1", "./visual-polish.css?v=5", "./lunch-art.js?v=1", "./school-photos.js?v=1", "./assets/school-sign.webp", "./assets/school-hero.webp", "./assets/school-aerial.webp", "./assets/school-front.webp""];
 
 self.addEventListener("install",event=>{
   event.waitUntil((async()=>{
