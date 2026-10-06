@@ -2219,7 +2219,7 @@ export function validateGeneratedQuestionSpec(question) {
   if (!Array.isArray(question.standards) || question.standards.length === 0) issues.push('standards-missing');
   if (!text(question.domain)) issues.push('domain-missing');
   if (!Number.isInteger(question.dok) || question.dok < 1 || question.dok > 3) issues.push('dok-invalid');
-  if (!Number.isInteger(question.difficulty) || question.difficulty < 1 || question.difficulty > 3) issues.push('difficulty-invalid');
+  if (!Number.isInteger(question.difficulty) || question.difficulty < 2 || question.difficulty > 3) issues.push('difficulty-invalid');
   return [...new Set(issues)];
 }
 
