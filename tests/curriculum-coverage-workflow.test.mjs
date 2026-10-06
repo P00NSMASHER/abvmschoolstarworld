@@ -20,6 +20,11 @@ test('curriculum coverage evidence artifact includes the hidden report and fails
   assert.match(workflow, /if-no-files-found: error/);
 });
 
+test('teacher refresh tracks modular curriculum family changes', () => {
+  const workflow = readFileSync('.github/workflows/sync-study-pack.yml', 'utf8');
+  assert.match(workflow, /scripts\/curriculum-families\/\*\*/);
+});
+
 test('candidate curriculum flags require a separate non-production preview output', () => {
   const refresh = readFileSync('scripts/refresh-teacher-pages.mjs', 'utf8');
   const guard = readFileSync('scripts/curriculum-preview-options.mjs', 'utf8');
