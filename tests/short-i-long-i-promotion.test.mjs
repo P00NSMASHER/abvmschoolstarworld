@@ -17,7 +17,7 @@ function sourcePack() {
     sourceHash: 'teacher-pages-short-i-long-i',
     subjects: [{
       subject: 'Spelling / Handwriting',
-      topics: ['Test focus: short i / long i', 'Test focus: short a / long a'],
+      topics: ['Test focus: short i / long i'],
       studyNotes: [],
     }],
     vocabulary: [],
@@ -30,10 +30,7 @@ const sourcePages = [{
   checkedAt: '2026-10-05T19:19:41.665Z',
   contentHash: 'c91cc1e62eea30c82595cbad75abd174f3811a4cb56b30097113df6dc487db1f',
   lines: [
-    'Test focus: short i / long i',
     'Friday Oct. 9: Spelling (short i/long i)/Handwriting',
-    'Test focus: short a / long a',
-    'Friday Oct. 2: Spelling (short a / long a) / Handwriting',
   ],
 }];
 
@@ -49,7 +46,7 @@ test('short-i/long-i is approved and enabled by default', () => {
   assert.equal(registeredSupplementalQuestionFamily('short-i-long-i').length, 8);
 });
 
-test('approved short-i/long-i closes the teacher coverage gap with exact lineage', () => {
+test('approved short-i/long-i resolves raw teacher slash formatting with exact lineage', () => {
   const pipeline = buildGrade2ContentPipeline(sourcePack(), {
     sourceHash: 'production-short-i-long-i',
     generatedAt: '2026-10-05T19:19:41.665Z',
