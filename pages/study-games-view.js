@@ -38,9 +38,31 @@ function richVisual(raw){
   return "";
 }
 
+function accuracyState(state){
+  const rows=(Array.isArray(state?.questionResults)?state.questionResults:[]).filter(row=>row&&typeof row.initialCorrect==="boolean");
+  const sections=[];
+  const bySubject=new Map();
+  for(const row of rows){
+    const subject=String(row.subject||"Practice");
+    let section=bySubject.get(subject);
+    if(!section){section={subject,answered:0,correct:0};bySubject.set(subject,section);sections.push(section)}
+    section.answered++;
+    if(row.initialCorrect)section.correct++;
+  }
+  return{
+    answered:rows.length,
+    correct:rows.filter(row=>row.initialCorrect).length,
+    corrected:rows.filter(row=>!row.initialCorrect&&row.resolvedCorrect===true).length,
+    hints:rows.filter(row=>row.hintUsed).length,
+    sections
+  };
+}
 function play({g,mode,q,teach,retryInstruction,labels,canRead=false}){
   if(!q)return '<section class="game-empty"><h2>No questions are ready for this game yet.</h2><button type="button" data-game-home>Back to games</button></section>';
-  const support=g.supportMode,comeback=g.comebackMode,progress=g.index+1,total=g.questions.length,pct=Math.round((progress/Math.max(1,total))*100),chosen=g.selectedIndex,visual=richVisual(q.richContent),wrong=new Set(g.wrong||[]);
+  const support=g.supportMode,comeback=g.comebackMode,progress=g.index+1,total=g.questions.length,pct=Math.round((progress/Math.max(1,total))*100),chosen=g.selectedIndex,visual=richVisual(q.richContent),wrong=new Set(g.wrong||[]),accuracy=accuracyState(g);
+  const liveScore=accuracy.answered?accuracy.correct+" / "+accuracy.answered+" first try":"No answers yet";
+  const currentSection=accuracy.sections.find(section=>section.subject===String(q.subject||"Practice"));
+  const sectionScore=currentSection&&currentSection.answered?'<div class="game-question-score"><span>'+esc(currentSection.subject)+' score</span><strong>'+currentSection.correct+' / '+currentSection.answered+' first try</strong></div>':'';
   const answers=q.choices.map((choice,index)=>{
     let klass="";
     if(g.answered){
@@ -51,11 +73,18 @@ function play({g,mode,q,teach,retryInstruction,labels,canRead=false}){
   }).join("");
   const selected=chosen===null?null:q.choices[chosen],correct=selected===q.answer,targeted=!correct&&selected?q.choiceDiagnostics?.[selected]?.feedback:null;
   const adaptive=!g.strict&&!support&&!comeback&&!correct&&(g.learningRow?.ConsecutiveWrong||0)>=2?'<small class="adaptive-note">A smaller same-skill support step is next. It does not count toward your score.</small>':'';
-  const retryClue=!support&&!comeback&&!g.answered&&g.retry?'<section class="game-feedback retry" aria-live="polite"><span>↻</span><div><strong>'+(g.retry===1?'Not yet — use this clue.':'Try once more with a stronger clue.')+'</strong><p>'+esc(g.retry===1?q.hint:(retryInstruction||targeted||q.hint))+'</p></div></section>':'';
-  const feedback=g.answered?'<section class="game-feedback '+(correct?'correct':'retry')+'" aria-live="polite"><span>'+(correct?'✓':'↻')+'</span><div><strong>'+(comeback?(correct?'Skills recalled later!':'Good review — here’s the answer.'):(support?(correct?'Good — keep going!':'Here is the smaller-step answer.'):(correct?(g.misses?'You worked it out!':'Nice work!'):'Here’s the model answer.')))+'</strong><p>'+esc(correct?q.explanation:(targeted||q.explanation))+'</p>'+adaptive+'</div></section><button type="button" class="game-next" data-game-next>'+(support||comeback?'Continue':progress===total?'See my score':'Next question')+' <span>›</span></button>':retryClue+'<div class="game-hint-wrap">'+(comeback?'<small class="adaptive-note">Comeback · same skill · not scored</small>':support?'<small class="adaptive-note">Support step · same skill · not scored</small>':'')+'<button type="button" class="game-hint-button" data-game-hint>'+(g.hintOpen?'Hide hint':'Need a hint?')+'</button>'+(g.hintOpen?'<p class="game-hint">'+esc(q.hint)+'</p>':'')+'</div>';
-  return '<div class="game-topbar"><button type="button" data-game-home aria-label="Back to study games">‹</button><div><span>'+esc(comeback?"Comeback":support?"Support step":mode.title)+'</span><strong>'+(comeback?'Remember this skill later':support?'Same skill · smaller step':progress+' of '+total)+'</strong></div></div>'+
+  const retryClue=!support&&!comeback&&!g.answered&&g.retry?'<section class="game-feedback incorrect" aria-live="polite" aria-atomic="true"><span>✕</span><div><strong>Incorrect. Try again.</strong><p>'+esc(g.retry===1?q.hint:(retryInstruction||targeted||q.hint))+'</p><small>First-try score stays '+accuracy.correct+' / '+accuracy.answered+'.</small></div></section>':'';
+  let verdict="";
+  if(g.answered){
+    const review=support||comeback;
+    const title=correct?(review?"Correct.":g.misses?"Correct on retry.":"Correct."):"Incorrect. The correct answer is "+String(q.answer)+".";
+    const note=review?'Review question · not part of the section score':correct&&g.misses?'First-try score does not increase on a retry.':correct&&g.hints?'Hint used · counted in first-try accuracy, but not independent mastery.':'';
+    verdict='<section class="game-feedback '+(correct?'correct':'incorrect')+'" aria-live="polite" aria-atomic="true"><span>'+(correct?'✓':'✕')+'</span><div><strong>'+esc(title)+'</strong><p>'+esc(correct?q.explanation:(targeted||q.explanation))+'</p>'+(note?'<small>'+esc(note)+'</small>':'')+adaptive+'</div></section><button type="button" class="game-next" data-game-next>'+(review?'Continue':progress===total?'See my score':'Next question')+' <span>›</span></button>';
+  }
+  const feedback=g.answered?verdict:retryClue+'<div class="game-hint-wrap">'+(comeback?'<small class="adaptive-note">Review question · not part of the section score</small>':support?'<small class="adaptive-note">Review question · not part of the section score</small>':'')+'<button type="button" class="game-hint-button" data-game-hint>'+(g.hintOpen?'Hide hint':'Need a hint?')+'</button>'+(g.hintOpen?'<p class="game-hint">'+esc(q.hint)+'</p>':'')+'</div>';
+  return '<div class="game-topbar"><button type="button" data-game-home aria-label="Back to study games">‹</button><div><span>'+esc(comeback?"Comeback":support?"Support step":mode.title)+'</span><strong>'+(comeback?'Remember this skill later':support?'Same skill · smaller step':progress+' of '+total)+'</strong></div><b class="game-live-score">'+esc(liveScore)+'</b></div>'+
     '<div class="game-progress" role="progressbar" aria-label="Game progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><span style="width:'+pct+'%"></span></div>'+
-    '<section class="game-question-card"><div class="game-question-meta"><span>'+esc(q.subject)+'</span><b>'+esc(comeback?"Comeback":support?"Support":q.tier==="recent-review"?"Recent review":q.tier==="star-fallback"?"STAR-style practice":labels[q.questionType]||"Practice")+'</b></div>'+(teach?'<div class="game-hint-wrap teach-card"><small class="adaptive-note">Quick lesson · not scored</small><p class="game-hint">'+esc(teach.instruction)+(teach.example?' '+esc(teach.example):'')+'</p></div>':'')+'<h2>'+esc(q.prompt)+'</h2>'+visual+(canRead?'<button type="button" class="game-read-button" data-game-read>Read to me</button>':'')+'<div class="game-answer-list">'+answers+'</div>'+feedback+'</section>'+
+    '<section class="game-question-card"><div class="game-question-meta"><span>'+esc(q.subject)+'</span><b>'+esc(comeback?"Comeback":support?"Support":q.tier==="recent-review"?"Recent review":q.tier==="star-fallback"?"STAR-style practice":labels[q.questionType]||"Practice")+'</b></div>'+sectionScore+(teach?'<div class="game-hint-wrap teach-card"><small class="adaptive-note">Quick lesson · not scored</small><p class="game-hint">'+esc(teach.instruction)+(teach.example?' '+esc(teach.example):'')+'</p></div>':'')+'<h2>'+esc(q.prompt)+'</h2>'+visual+(canRead?'<button type="button" class="game-read-button" data-game-read>Read to me</button>':'')+'<div class="game-answer-list">'+answers+'</div>'+feedback+'</section>'+
     '<p class="round-persistence-note">Leaving ends this round.</p>';
 }
 function goal({state}){
@@ -71,10 +100,12 @@ function rewardReveal({amount=0}={}){
 }
 
 function finish({mode,state,record,summary={},reward={}}){
-  const total=state.questions.length,pct=total?Math.round((state.score/total)*100):0,stars=pct>=90?3:pct>=70?2:pct>=40?1:0,strong=Math.max(0,Number(summary.strong)||0),remembered=Math.max(0,Number(summary.remembered)||0),practice=Math.max(0,Number(summary.practice)||0);
+  const accuracy=accuracyState(state),answered=accuracy.answered,correct=accuracy.correct,pct=answered?Math.round((correct/answered)*100):null,stars=pct===null?0:pct>=90?3:pct>=70?2:pct>=40?1:0,strong=Math.max(0,Number(summary.strong)||0),remembered=Math.max(0,Number(summary.remembered)||0),practice=Math.max(0,Number(summary.practice)||0),initialWrong=Math.max(0,answered-correct);
+  const scoreTitle=answered?correct+" / "+answered:"Not attempted",scoreCopy=answered?"correct on the first try · "+pct+"%":"No scored answers were submitted.";
+  const sectionHtml=accuracy.sections.length?'<div class="game-section-scores" aria-label="Section scores">'+accuracy.sections.map(section=>{const sectionPct=section.answered?Math.round((section.correct/section.answered)*100):0;return '<div class="game-section-score-row"><span>'+esc(section.subject)+'</span><strong>'+section.correct+' / '+section.answered+' · '+sectionPct+'%</strong></div>'}).join("")+'</div>':'<div class="game-section-scores"><div class="game-section-score-row"><span>Section score</span><strong>Not attempted</strong></div></div>';
   const rewardHtml=reward.status==="pending"?'<div class="study-star-earned secondary" aria-label="Study Stars reward"><span>Study Stars</span><strong>Saving on this device…</strong></div>':reward.status==="done"?'<div class="study-star-earned secondary" aria-label="Study Stars reward"><span>Study Stars</span><strong>'+(Number(reward.awardedAmount)>0?'+'+Math.max(0,Number(reward.awardedAmount)||0)+' Study Stars':'Already saved for this round')+'</strong><small>Balance '+Math.max(0,Number(reward.balance)||0)+'</small></div>':reward.status==="error"?'<div class="study-star-earned secondary" role="status" aria-label="Study Stars reward"><strong>Study Stars could not be confirmed.</strong><small>You can keep practicing.</small></div>':"";
   const starsHtml='<div class="game-finish-stars" aria-label="'+stars+' stars">'+[0,1,2].map(i=>'<span class="'+(i<stars?'earned':'')+'">★</span>').join("")+'</div>';
-  return '<section class="game-finish learning-first"><p>'+esc(mode.title.toUpperCase())+'</p><h2>What you learned</h2><div class="learning-summary" aria-label="Round learning summary"><div><strong>'+strong+'</strong><span>Skills answered independently</span></div><div><strong>'+remembered+'</strong><span>Skills recalled later</span></div><div><strong>'+practice+'</strong><span>Skills to revisit</span></div></div><p class="learning-summary-note">These counts are skills, not questions. One round does not prove mastery or predict a STAR score.</p><small class="round-score">Round score '+state.score+' of '+total+' · Best '+record.best+' of '+total+'</small>'+starsHtml+rewardHtml+'<div class="game-finish-actions"><button type="button" class="primary" data-game-start="'+esc(mode.id)+'">Play again</button><button type="button" data-game-home>All study games</button></div></section>';
+  return '<section class="game-finish learning-first"><p>'+esc(mode.title.toUpperCase())+'</p><h2>Your score</h2><div class="game-accuracy-hero" aria-label="First try accuracy"><strong>'+esc(scoreTitle)+'</strong><span>'+esc(scoreCopy)+'</span></div>'+sectionHtml+'<div class="game-score-detail"><div><strong>'+correct+'</strong><span>Correct first try</span></div><div><strong>'+initialWrong+'</strong><span>Incorrect first try</span></div><div><strong>'+accuracy.corrected+'</strong><span>Corrected on retry</span></div><div><strong>'+accuracy.hints+'</strong><span>Used a hint</span></div></div><p class="learning-summary-note">First-try accuracy is separate from retries, hints, Study Stars, and mastery.</p>'+starsHtml+'<h3 class="game-learning-title">Learning summary</h3><div class="learning-summary" aria-label="Round learning summary"><div><strong>'+strong+'</strong><span>Skills answered independently</span></div><div><strong>'+remembered+'</strong><span>Skills recalled later</span></div><div><strong>'+practice+'</strong><span>Skills to revisit</span></div></div><p class="learning-summary-note">These counts are skills, not questions. One round does not prove mastery or predict a STAR score.</p>'+(record?.plays?'<small class="round-score">Previous best with retries '+record.best+' of '+state.questions.length+'</small>':'')+rewardHtml+'<div class="game-finish-actions"><button type="button" class="primary" data-game-start="'+esc(mode.id)+'">Play again</button><button type="button" data-game-home>All study games</button></div></section>';
 }
 window.ABVMStudyGameView=Object.freeze({icon,play,goal,rewardReveal,finish});
 })();
