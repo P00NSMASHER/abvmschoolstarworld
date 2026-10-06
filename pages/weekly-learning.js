@@ -45,5 +45,36 @@ function renderChanges(feed={}){
   const rows=items.slice(0,8).map(row=>'<div class="notice-row" role="listitem"><span class="status '+(row.kind==="unchanged"?"ok":"warn")+'" aria-hidden="true"></span><p>'+esc(row.text)+'</p></div>').join("");
   return '<section class="parent-card notices-card" aria-labelledby="school-change-title"><div class="notices-head"><span class="notices-mark" aria-hidden="true">↻</span><div><small>LATEST VERIFIED REFRESH</small><h3 id="school-change-title">What changed at school?</h3></div></div><div class="static-notice-list" role="list">'+rows+'</div></section>';
 }
-window.ABVMWeeklyLearning=Object.freeze({snapshot,render,renderChanges});
+
+function renderWeekOverview({days=[],lunchForDate,eventItemsForDate,kindClass,fmtShort,lunchText,lunchUnavailableText}={}){
+  const safeDays=Array.isArray(days)?days:[];
+  const icon=(kind)=>kind==="lunch"
+    ?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v7M4.5 3v4.5C4.5 9 5.5 10 7 10s2.5-1 2.5-2.5V3M7 10v11M15 3v18M15 3c3 1.2 4.5 3.5 4.5 6.5V12H15"/></svg>'
+    :'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10a2 2 0 0 1 2 2v15H5V6a2 2 0 0 1 2-2Z"/><path d="M8 2v4M16 2v4M8 10h8M8 14h5"/></svg>';
+  const lunches=safeDays.map(date=>{
+    const events=typeof eventItemsForDate==="function"?(eventItemsForDate(date)||[]):[];
+    const closed=events.some(item=>typeof kindClass==="function"&&kindClass(item)==="closed");
+    const lunch=typeof lunchForDate==="function"?lunchForDate(date):null;
+    const meal=closed||lunch?.status==="no-school"?"No school":lunch
+      ?(typeof lunchText==="function"?lunchText(lunch):String(lunch?.items||""))
+      :(typeof lunchUnavailableText==="function"?lunchUnavailableText(date):"Lunch not yet verified.");
+    return '<div class="week-overview-row"><time>'+esc(typeof fmtShort==="function"?fmtShort(date):"")+'</time><span>'+esc(meal)+'</span></div>';
+  }).join("");
+  const seen=new Set(),tests=[];
+  for(const date of safeDays){
+    const events=typeof eventItemsForDate==="function"?(eventItemsForDate(date)||[]):[];
+    for(const item of events){
+      if(typeof kindClass!=="function"||kindClass(item)!=="test")continue;
+      const label=String(item?.label||"Test").trim(),day=typeof fmtShort==="function"?fmtShort(date):"";
+      const key=day+"|"+label;
+      if(seen.has(key))continue;
+      seen.add(key);tests.push({day,label});
+    }
+  }
+  const testRows=tests.length?tests.map(row=>'<div class="week-overview-row"><time>'+esc(row.day)+'</time><span>'+esc(row.label)+'</span></div>').join("")
+    :'<p class="week-overview-empty">No verified tests are listed for this school week.</p>';
+  return '<section class="week-overview" aria-labelledby="week-overview-title"><div class="week-overview-heading"><p>WEEKLY SUMMARY</p><h2 id="week-overview-title">This week at a glance</h2></div><div class="week-overview-grid"><section class="week-overview-card week-lunches" aria-labelledby="week-lunches-title"><div class="week-overview-card-head"><span class="week-overview-icon lunch">'+icon("lunch")+'</span><h3 id="week-lunches-title">Lunches this week</h3></div><div class="week-overview-list">'+lunches+'</div></section><section class="week-overview-card week-tests" aria-labelledby="week-tests-title"><div class="week-overview-card-head"><span class="week-overview-icon tests">'+icon("tests")+'</span><h3 id="week-tests-title">Tests this week</h3></div><div class="week-overview-list">'+testRows+'</div></section></div></section>';
+}
+
+window.ABVMWeeklyLearning=Object.freeze({snapshot,render,renderChanges,renderWeekOverview});
 })();
