@@ -72,6 +72,7 @@ test('approved short-i/long-i resolves raw teacher slash formatting with exact l
     ['direct', 'reasoning', 'transfer']
   );
   assert.ok(questions.every(row => row.choices.includes(row.answer)));
+  assert.ok(questions.every(row => Number.isInteger(row.difficulty) && row.difficulty >= 2 && row.difficulty <= 3));
   assert.ok(questions.every(row => row.sourceLineage?.quality === 'page-exact'));
   assert.ok(questions.every(row => row.sourceLineage?.sourceTitle === 'Tests'));
   assert.ok(
