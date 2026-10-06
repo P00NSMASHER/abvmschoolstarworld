@@ -29,7 +29,7 @@ export const MATH_SUBTRACTION_FAMILY = Object.freeze({
     explanation: '12 take away 5 leaves 7.',
     hint: 'Start at 12 and count back 5.',
     dok: 1,
-    difficulty: 1,
+    difficulty: 2,
   }),
   supplementalQuestions: Object.freeze([
     Object.freeze({
@@ -40,7 +40,7 @@ export const MATH_SUBTRACTION_FAMILY = Object.freeze({
       explanation: '15 take away 6 leaves 9.',
       hint: 'Count back 6 from 15.',
       dok: 1,
-      difficulty: 1,
+      difficulty: 2,
     }),
     Object.freeze({
       questionType: 'direct',
@@ -50,7 +50,7 @@ export const MATH_SUBTRACTION_FAMILY = Object.freeze({
       explanation: '10 take away 4 leaves 6.',
       hint: 'Start at 10 and count back 4.',
       dok: 1,
-      difficulty: 1,
+      difficulty: 2,
     }),
     Object.freeze({
       questionType: 'transfer',
