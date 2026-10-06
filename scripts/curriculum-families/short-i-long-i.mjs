@@ -11,8 +11,8 @@ export const SHORT_I_LONG_I_FAMILY = Object.freeze({
   ]),
   sourcePriority: Object.freeze(['Tests']),
   featureFlag: 'curriculum-family:short-i-long-i-v1',
-  rolloutStatus: 'CANDIDATE',
-  enabledByDefault: false,
+  rolloutStatus: 'APPROVED',
+  enabledByDefault: true,
   minimumSemanticVariants: 8,
   requiredQuestionTypes: Object.freeze(['direct', 'transfer', 'reasoning']),
   teachCard: Object.freeze([
