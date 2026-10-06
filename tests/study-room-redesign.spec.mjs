@@ -224,7 +224,7 @@ test('wrong answers stay rejected in source-selected Games and cannot consume an
   await firstWrong.click();
   await expect(firstWrong).toBeDisabled();
   await expect(firstWrong).toHaveClass(/wrong/);
-  await expect(page.locator('.game-feedback.retry')).toBeVisible();
+  await expect(page.locator('.game-feedback.incorrect')).toBeVisible();
   await expect(page.locator('[data-game-next]')).toHaveCount(0);
   const focusedAfterWrong=await page.evaluate(()=>({
     answer:document.activeElement?.getAttribute('data-game-answer'),disabled:document.activeElement?.disabled===true
