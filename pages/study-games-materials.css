@@ -39,6 +39,13 @@
 .games-screen .game-material-secondary p { margin: 4px 0 10px; color: #526579; font-size: .9375rem; line-height: 1.55; }
 .games-screen .game-material-secondary button { margin: 0 6px 10px 0; }
 .games-screen .game-material-secondary h3 { margin: 10px 0 8px; font-size: .9375rem; color: #244e76; }
+.games-screen .game-test-guide-actions { flex: 1 1 100%; display: grid; gap: 7px; }
+.games-screen .game-test-guide-actions .game-guide-button { width: 100%; margin: 0; border-color: #aec8de; background: #eef6fc; color: #174f7c; }
+.games-screen .game-guide-list { display: grid; gap: 8px; margin: 4px 0 12px; }
+.games-screen .game-guide-list .game-guide-button { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 2px 10px; width: 100%; margin: 0; background: #fff; }
+.games-screen .game-guide-list .game-guide-button span { grid-column: 1/-1; color: #60768a; font-size: .75rem; font-weight: 750; letter-spacing: .04em; text-transform: uppercase; }
+.games-screen .game-guide-list .game-guide-button strong { min-width: 0; color: #183f66; font-size: .9375rem; line-height: 1.35; }
+.games-screen .game-guide-list .game-guide-button small { align-self: center; color: #60768a; font-size: .8125rem; white-space: nowrap; }
 .games-screen .game-material-lesson { margin: 0 0 10px; padding: 0 12px; border: 1px solid #dce5ed; border-radius: 12px; background: #fff; }
 .games-screen .game-material-lesson ul { list-style: disc; padding: 0 0 12px 20px; }
 .games-screen .game-material-lesson li, .games-screen .game-material-lesson dl { font-size: 1rem; line-height: 1.6; color: #364d65; }
