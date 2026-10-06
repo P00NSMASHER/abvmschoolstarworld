@@ -196,7 +196,8 @@ test('game answers and hints are readable and rejected choices cannot be retried
   await page.locator('.game-answer').nth(wrongs[1]).click();await expect(page.locator('[data-game-next]')).toBeVisible();
   const row=await page.evaluate(skill=>JSON.parse(localStorage.getItem('abvm-study-learning:v2'))[skill],q.skill);
   expect(row.Attempts).toBe(2);expect(row.IncorrectAttempts).toBe(2);expect(row.LastResolution.independent).toBe(false);
-  await expect(page.locator('.game-streak')).toHaveCount(0);
+  await expect(page.locator('.game-streak')).toContainText('Miss streak 1');
+  await expect(page.locator('.game-streak')).toContainText('-1');
 });
 test('three complete Math games offer twenty-four distinct questions',async({page})=>{
   test.setTimeout(60000);await page.goto('/#games');const prompts=[];

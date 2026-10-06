@@ -246,8 +246,10 @@ for(const outcome of ['success','failure']){
         expect(result.receipt.awardedAmount).toBeGreaterThan(0);
         await expect(page.locator('.study-star-earned')).toContainText('+'+result.receipt.awardedAmount+' Study Stars');
         await expect(page.locator('.study-star-earned')).toContainText('Balance '+result.balance);
-        expect(ledger).toHaveLength(1);
-        expect(ledger[0]).toMatchObject({sourcePack:fixture.catalog.sourceKey,roundId:call.roundId,amount:result.receipt.awardedAmount});
+        expect(ledger).toHaveLength(2);
+        expect(new Set(ledger.map(row=>row.rewardType))).toEqual(new Set(['round-complete','streak-adjustment']));
+        expect(ledger.every(row=>row.sourcePack===fixture.catalog.sourceKey&&row.roundId===call.roundId)).toBe(true);
+        expect(ledger.reduce((sum,row)=>sum+row.amount,0)).toBe(result.receipt.awardedAmount);
       }else{
         await expect(page.locator('.study-star-earned[role="status"]')).toContainText('Study Stars could not be confirmed.');
         await expect(page.locator('.study-star-earned[role="status"]')).toContainText('You can keep practicing.');
