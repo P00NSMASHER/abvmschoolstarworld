@@ -8,7 +8,7 @@ test('teacher refresh opens only draft curriculum candidates and blocks publicat
   assert.match(workflow, /gh pr create --draft/);
   assert.match(workflow, /curriculum-candidate-\$\{SAFE_KEY\}/);
   assert.match(workflow, /Block publication while curriculum candidates are unresolved/);
-  assert.match(workflow, /process\.exit\(1\)/);
+  assert.match(workflow, /assert-curriculum-coverage-resolved\.mjs/);
   assert.doesNotMatch(workflow, /gh pr merge|--auto-merge|enable-auto-merge/i);
 });
 
@@ -98,7 +98,7 @@ test('refresh publication reconciles main races without force-pushing unverified
   assert.match(workflow, /git fetch origin main/);
   assert.match(workflow, /git reset --hard "\$REMOTE_MAIN"/);
   assert.match(workflow, /refresh-teacher-pages\.mjs --autopilot-report=/);
-  assert.match(workflow, /Unresolved curriculum coverage after main advanced/);
+  assert.match(workflow, /--context="Unresolved curriculum coverage after main advanced"/);
   assert.match(workflow, /npm run qa/);
   assert.match(workflow, /git push origin HEAD:main/);
   assert.doesNotMatch(workflow, /git push[^\n]*--force/);
