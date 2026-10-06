@@ -116,6 +116,7 @@ const VOCAB=Object.freeze({
   }
 });
 
+function vocabularyDefinition(term){return VOCAB[text(term).toLowerCase()]?.meaning||""}
 function text(value){return String(value??"").trim()}
 function slug(value){return text(value).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"item"}
 function hash(value){
@@ -2045,6 +2046,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,REVIEW_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,validateRichContent,selectQuestions,selectDailyQuestions,learningFirstSummary,studyStarPolicy,nextStreakBonus,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,reviewQuestionFamilySafeUsage,questionFamilyRolloutPolicy,reviewQuestionFamilyPromotion,itemQualityKey
+  buildCatalog,validateCatalog,validateRichContent,vocabularyDefinition,selectQuestions,selectDailyQuestions,learningFirstSummary,studyStarPolicy,nextStreakBonus,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,reviewQuestionFamilySafeUsage,questionFamilyRolloutPolicy,reviewQuestionFamilyPromotion,itemQualityKey
 });
 })();
