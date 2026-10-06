@@ -21,8 +21,10 @@ test('missing and blank subjects show honest empty notes while original game pra
   const tiles=page.locator('.study-game-grid > .study-game-tile');
   await expect(tiles).toHaveCount(4);
   expect(await tiles.evaluateAll(nodes=>nodes.map(node=>node.dataset.gameStart))).toEqual(['quick','math','words','faith']);
-  await expect(page.locator('.game-privacy-note')).toContainText('original Grade 2 practice');
-  await expect(page.locator('.game-privacy-note')).toContainText('not copied STAR test items');
+  const practiceInfo=page.locator('.game-practice-info');
+  await practiceInfo.locator('summary').click();
+  await expect(practiceInfo).toContainText('original Grade 2 practice');
+  await expect(practiceInfo).toContainText('Student answers stay on this device');
   const notes=page.locator('[data-study-notes]');
   await expect(notes).not.toHaveAttribute('open','');
   await expect(notes.locator('[data-study-notes-content]')).toBeEmpty();

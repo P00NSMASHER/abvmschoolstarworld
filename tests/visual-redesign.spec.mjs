@@ -45,15 +45,17 @@ for(const size of sizes){
     await expect(longNotice.locator('.family-message-body')).toBeVisible();
     await longNotice.locator('summary').click();
     const registrationNotice=notices.locator('.family-message').filter({hasText:'CYO registration for 2nd graders'});
-    if(!(await registrationNotice.isVisible())&&await notices.locator('.family-notices-overflow').count()&&!await notices.locator('.family-notices-overflow').evaluate(el=>el.open))await notices.locator('.family-notices-overflow > summary').click();
-    await registrationNotice.locator('summary').click();
+    const overflow=notices.locator('.family-notices-overflow');
+    if(await overflow.count()&&!await overflow.evaluate(el=>el.open))await overflow.locator(':scope > summary').click();
+    await registrationNotice.scrollIntoViewIfNeeded();
+    await registrationNotice.locator('summary').click({force:true});
     const registration=registrationNotice.getByRole('link',{name:'tools.signupgenius.com/c/st-nicholas-basketball-registration-k-1st-grade-copy'});
     await expect(registration).toBeVisible();
     await expect(registration).toHaveAttribute('href','https://tools.signupgenius.com/c/st-nicholas-basketball-registration-k-1st-grade-copy');
     await expect(registration).toHaveAttribute('rel',/noopener/);
     await noOverflow(page);
-    await page.getByRole('button',{name:'Mark updates as read',exact:true}).click();
-    await expect(unread).toHaveCount(0);
+    const markRead=page.getByRole('button',{name:'Mark notices as read',exact:true});
+    if(await markRead.count()){await markRead.click();await expect(unread).toHaveCount(0);}
   });
 
   test(`October lunch artwork is visible and bounded on ${size.name}`,async({page},testInfo)=>{

@@ -50,9 +50,10 @@ test('six first-try correct and two corrected retries stays 6 of 8 at 75 percent
     expect(overlap,'Study Star confirmation must not cover the score').toBe(false);
   }
   await expect(page.locator('.game-score-summary>strong')).toHaveText('6 / 8 correct on the first try · 75%');
-  await expect(page.locator('.game-score-summary>span')).toContainText('First-try misses: 2');
-  await expect(page.locator('.game-score-summary>span')).toContainText('Corrected on retry: 2');
-  await expect(page.locator('.game-score-summary>span')).toContainText('Hints used: 1');
+  await expect(page.locator('.game-score-summary>span')).toContainText('First try: 6 right');
+  await expect(page.locator('.game-score-summary>span')).toContainText('2 missed');
+  await expect(page.locator('.game-score-summary>span')).toContainText('2 fixed');
+  await expect(page.locator('.game-score-summary>span')).toContainText('1 hint');
   const math=page.locator('.game-section-scores>div').filter({hasText:'Math'});
   await expect(math).toContainText('6 / 8 · 75%');
   await expect(page.locator('.legacy-record')).toContainText('legacy solved-after-retries record');
