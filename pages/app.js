@@ -292,7 +292,7 @@ function renderToday(){
     header("ABVM GRADE 2", "Today")+
     freshness()+
     window.ABVMSchoolUpdates.banner(pack)+
-    '<section class="hero-card school-sign-hero"><div class="hero-copy"><p class="pill">YOUR SCHOOL DAY</p><h2>One thing at a time.</h2><p>Your next deadline, daily plan, and school updates.</p></div><figure class="school-sign-photo"><img src="./assets/school-sign.jpg" width="650" height="433" alt="Assumption BVM School sign beside the school entrance"></figure></section>'+
+    window.ABVMSchoolPhotos.todayHero()+
     '<div class="section-heading today-priority-heading"><h2><span class="heading-dot pink"></span>Up next</h2></div>'+
     (next?'<section class="priority-card"><div class="date-tile"><strong>'+esc(WEEKDAY[next.d.getDay()].slice(0,3).toUpperCase())+'</strong><span>'+next.d.getDate()+'</span></div><div><p>'+(kindClass(next.x)==="due"?"NEXT DEADLINE":"NEXT TEST")+'</p><h3>'+esc(next.x.label)+'</h3><span>'+(kindClass(next.x)==="due"?"Plan ahead for this date.":"Keep review short and focused.")+'</span></div></section>':'<section class="priority-card"><div class="date-tile"><strong>★</strong><span>✓</span></div><div><p>UP NEXT</p><h3>No upcoming test is currently listed</h3><span>Keep up with the posted homework and reading routine.</span></div></section>')+
     '<div class="section-heading today-date-heading"><h2><span class="heading-dot blue"></span>'+esc(fmtDate(d))+'</h2></div>'+
@@ -578,10 +578,10 @@ function renderFamily(){
   const actions=[...new Set([...homeworkActions,...upcomingReminderTexts(today(),6)])].slice(0,6);
   stack().innerHTML='<div class="screen family-screen" role="region" aria-label="Family dashboard">'+
     header("FAMILY","Family dashboard")+freshness()+
-    '<section class="family-school-hero"><img src="./assets/school-hero.jpg" width="1024" height="683" alt="Assumption BVM School building in Pottsville"><div><p>OUR SCHOOL</p><h2>Assumption BVM Catholic School</h2><span>Pottsville, Pennsylvania</span></div></section>'+
+    window.ABVMSchoolPhotos.familyHero()+
     '<section class="family-hero compact"><p>THIS WEEK</p><h2>What needs attention</h2><span>Current school actions and notices in one place.</span></section>'+
     '<div class="family-stats"><div><strong>'+tests+'</strong><span>test days</span></div><div><strong>'+actions.length+'</strong><span>current actions</span></div></div>'+
-    '<section class="school-photo-pair" aria-labelledby="our-school-photos"><h2 id="our-school-photos">Our school</h2><div><figure><img src="./assets/school-aerial.jpg" width="1024" height="683" alt="Aerial view of Assumption BVM School and the surrounding Pottsville neighborhood"><figcaption>ABVM in Pottsville</figcaption></figure><figure><img src="./assets/school-front.jpg" width="1024" height="683" alt="Front facade and main steps of Assumption BVM School"><figcaption>The school building</figcaption></figure></div></section>'+
+    window.ABVMSchoolPhotos.familyPair()+
     '<section class="parent-card family-actions-card"><div class="family-actions-head"><span class="family-actions-mark" aria-hidden="true">✓</span><div><small>TO DO</small><h3>Family actions</h3></div></div><ul>'+actions.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></section>'+
     window.ABVMSchoolUpdates.card(pack)+
     window.ABVMSchoolUpdates.noticesCard(notices,linkedTextHtml)+
