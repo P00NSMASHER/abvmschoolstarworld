@@ -1,4 +1,4 @@
-name: Study QA reproduction bundle
+name: Independent QA reproduction bundle
 on:
   pull_request:
     paths:
@@ -11,6 +11,17 @@ on:
       - 'tests/gold-standard.spec.mjs'
       - 'tests/iphone-polish.spec.mjs'
       - 'tests/study-stars-learning-finish.spec.mjs'
+      - 'scripts/assert-curriculum-coverage-resolved.mjs'
+      - 'scripts/curriculum-coverage-autopilot.mjs'
+      - 'scripts/curriculum-family-registry.mjs'
+      - 'scripts/curriculum-families/**'
+      - 'scripts/grade2-content-pipeline.mjs'
+      - 'scripts/grade2-content-alignment.mjs'
+      - 'tests/curriculum-coverage*.test.mjs'
+      - 'tests/curriculum-continuity.test.mjs'
+      - 'tests/grade2-content-pipeline.test.mjs'
+      - 'tests/*-promotion.test.mjs'
+      - '.github/workflows/sync-study-pack.yml'
       - '.github/workflows/qa-reproduction.yml'
 permissions:
   contents: read
