@@ -60,25 +60,3 @@ button.freshness{font-size:0.7059rem;line-height:1.4;box-shadow:none;min-height:
 .app-header h1{font-weight:700}.family-actions-card li,.sources.notices-card .notice-row p{font-weight:400}.bottom-nav button b{font-weight:600}@media(min-width:700px){.bottom-nav button{min-height:66px}.bottom-nav .nav-icon{width:50px;height:40px}}
 
 .subject-practice{padding:2px 16px 16px;font-size:.8824rem;line-height:1.5}.practice-origin,.practice-source-note{font-size:.76rem;color:#345776}.subject-practice h3{font-size:1rem;margin:0 0 10px}.subject-practice ul{margin:0 0 16px;padding:0}.practice-example{padding:14px;border-radius:14px;background:#ffffffb8}.practice-answer summary{cursor:pointer;min-height:44px;text-decoration:underline}.subject-practice>button{width:100%;min-height:48px;margin-top:14px;padding:12px;border:0;border-radius:12px;background:#123e68;color:white;font:inherit;font-weight:700}
-
-/* study-game explicit feedback and accuracy v1 */
-.game-live-score{justify-self:end;white-space:nowrap;color:#243546;background:#eef3f8;border:1px solid #cbd6df;border-radius:999px;padding:7px 10px;font-size:11px;font-weight:950}
-.game-question-score{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:10px 0 -2px;padding:8px 10px;border-radius:11px;background:#f5f7fa;color:#4f5d69;font-size:12px}
-.game-question-score strong{color:#243546}
-.game-feedback.incorrect{background:#fff0f1;border-color:#d28a8f;color:#7a242c}
-.game-feedback.incorrect>span{background:#bf5d63;color:#fff}
-.game-feedback small{display:block;margin-top:6px;font-size:12px;line-height:1.4;font-weight:800}
-.game-accuracy-hero{margin:10px auto 12px;padding:14px;border-radius:16px;background:#f1f6fb;border:1px solid #c8d7e4}
-.game-accuracy-hero strong{display:block;color:#173a5b;font-size:30px;line-height:1.05}
-.game-accuracy-hero span{display:block;margin-top:5px;color:#4e6475;font-size:14px;font-weight:850}
-.game-section-scores{display:grid;gap:7px;margin:12px 0;text-align:left}
-.game-section-score-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 11px;border:1px solid #d9dde2;border-radius:12px;background:#fff}
-.game-section-score-row span{color:#53616d;font-size:13px;font-weight:800}
-.game-section-score-row strong{color:#243546;font-size:14px}
-.game-score-detail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
-.game-score-detail>div{padding:10px;border-radius:12px;background:#f7f7f9}
-.game-score-detail strong,.game-score-detail span{display:block}
-.game-score-detail strong{color:#243546;font-size:20px}
-.game-score-detail span{margin-top:2px;color:#646d75;font-size:11px;line-height:1.25}
-.game-learning-title{margin:16px 0 8px;color:#243546;font-size:16px}
-@media(width<=390px){.game-topbar{grid-template-columns:44px minmax(0,1fr)}.game-live-score{grid-column:1/-1;justify-self:stretch;text-align:center}.game-question-score{align-items:flex-start;flex-direction:column;gap:2px}.game-accuracy-hero strong{font-size:26px}}
