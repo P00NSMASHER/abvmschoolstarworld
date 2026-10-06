@@ -19,7 +19,7 @@ function sourcePack(){
     sourceHash:'teacher-pages-short-i-long-i-preview',
     subjects:[{
       subject:'Spelling / Handwriting',
-      topics:['short i / long i'],
+      topics:['short i / long i','short a / long a'],
       studyNotes:[],
     }],
     vocabulary:[],
@@ -31,7 +31,7 @@ const sourcePages=[{
   url:'https://sites.google.com/view/abvmgr2/tests',
   checkedAt:'2026-10-05T19:19:41.665Z',
   contentHash:'c91cc1e62eea30c82595cbad75abd174f3811a4cb56b30097113df6dc487db1f',
-  lines:['Friday Oct. 9: Spelling (short i/long i)/Handwriting'],
+  lines:['Friday Oct. 9: Spelling (short i/long i)/Handwriting','Friday Oct. 2: Spelling (short a / long a) / Handwriting'],
 }];
 
 test('short-i/long-i stays disabled unless its exact candidate flag is present',()=>{
