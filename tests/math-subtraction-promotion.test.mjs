@@ -68,28 +68,22 @@ test('coverage autopilot can materialize the generic subtraction family without 
 });
 
 test('approved generic subtraction closes the exact teacher coverage gap safely',()=>{
-  const baseline=buildGrade2ContentPipeline(sourcePack(),{
-    sourceHash:'baseline-generic-subtraction',
-    generatedAt:'2026-10-06T20:06:28.937Z',
-  });
-  assert.ok(baseline.coverage.some(row=>row.status==='GENERATOR_UNSUPPORTED'&&/subtraction/i.test(row.topic)));
-
-  const preview=buildGrade2ContentPipeline(sourcePack(),{
-    sourceHash:'preview-generic-subtraction',
+  const production=buildGrade2ContentPipeline(sourcePack(),{
+    sourceHash:'production-generic-subtraction',
     generatedAt:'2026-10-06T20:06:28.937Z',
     sourcePages,
     requirePageExactLineage:true,
   });
-  assert.deepEqual(validateGrade2ContentPipeline(preview),[]);
-  assert.equal(preview.coverage.some(row=>row.status==='GENERATOR_UNSUPPORTED'),false);
+  assert.deepEqual(validateGrade2ContentPipeline(production),[]);
+  assert.equal(production.coverage.some(row=>row.status==='GENERATOR_UNSUPPORTED'),false);
 
-  const skill=preview.skills.find(row=>row.id==='math-subtraction');
+  const skill=production.skills.find(row=>row.id==='math-subtraction');
   assert.ok(skill);
   assert.deepEqual(skill.standards,['CCSS.2.OA.B.2']);
   assert.equal(skill.domain,'Numbers and operations');
   assert.ok(skill.studyNotes.some(note=>/does not state a numeric range/i.test(note)));
 
-  const questions=preview.questions.filter(row=>row.skill==='math-subtraction');
+  const questions=production.questions.filter(row=>row.skill==='math-subtraction');
   assert.equal(questions.length,9);
   assert.deepEqual([...new Set(questions.map(row=>row.questionType))].sort(),['direct','reasoning','transfer']);
   assert.ok(questions.every(row=>row.choices.includes(row.answer)));
@@ -98,7 +92,7 @@ test('approved generic subtraction closes the exact teacher coverage gap safely'
   assert.ok(questions.every(row=>/Math \(subtraction\)/.test((row.sourceLineage?.matchedEvidence||[]).join(' '))));
 
   const numbers=questions.flatMap(row=>(row.prompt.match(/\b\d+\b/g)||[]).map(Number));
-  assert.ok(numbers.every(value=>value<=20),'generic subtraction preview must stay conservatively within 20');
+  assert.ok(numbers.every(value=>value<=20),'generic subtraction practice must stay conservatively within 20');
 });
 
 
