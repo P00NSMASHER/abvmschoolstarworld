@@ -108,7 +108,7 @@ function questionDraftIssues(question) {
   if (!question?.hint) issues.push('hint-missing');
   if (!REQUIRED_TYPES.includes(question?.questionType)) issues.push('question-type-invalid');
   if (!Number.isInteger(question?.dok) || question.dok < 1 || question.dok > 3) issues.push('dok-invalid');
-  if (!Number.isInteger(question?.difficulty) || question.difficulty < 1 || question.difficulty > 3) issues.push('difficulty-invalid');
+  if (!Number.isInteger(question?.difficulty) || question.difficulty < 2 || question.difficulty > 3) issues.push('difficulty-invalid');
   if (normalize(question?.answer).length >= 4 && normalize(question?.hint).includes(normalize(question?.answer))) issues.push('hint-leaks-answer');
   return [...new Set(issues)];
 }

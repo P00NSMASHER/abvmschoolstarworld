@@ -31,7 +31,7 @@ export const SHORT_I_LONG_I_FAMILY = Object.freeze({
     explanation: 'Fish has short i, like sit. Bike and time have long i, which sounds like the name of the letter i.',
     hint: 'Say each choice slowly. Compare its middle sound with the sound in the example.',
     dok: 1,
-    difficulty: 1,
+    difficulty: 2,
   }),
   supplementalQuestions: Object.freeze([
     Object.freeze({
@@ -42,7 +42,7 @@ export const SHORT_I_LONG_I_FAMILY = Object.freeze({
       explanation: 'Five has long i, like kite. Milk and spin have short i, as in sit.',
       hint: 'Listen for the vowel that sounds like the name of the letter i.',
       dok: 1,
-      difficulty: 1,
+      difficulty: 2,
     }),
     Object.freeze({
       questionType: 'direct',

@@ -87,6 +87,7 @@ test('approved generic subtraction closes the exact teacher coverage gap safely'
   assert.equal(questions.length,9);
   assert.deepEqual([...new Set(questions.map(row=>row.questionType))].sort(),['direct','reasoning','transfer']);
   assert.ok(questions.every(row=>row.choices.includes(row.answer)));
+  assert.ok(questions.every(row=>Number.isInteger(row.difficulty)&&row.difficulty>=2&&row.difficulty<=3));
   assert.ok(questions.every(row=>row.sourceLineage?.quality==='page-exact'));
   assert.ok(questions.every(row=>row.sourceLineage?.sourceTitle==='Tests'));
   assert.ok(questions.every(row=>/Math \(subtraction\)/.test((row.sourceLineage?.matchedEvidence||[]).join(' '))));

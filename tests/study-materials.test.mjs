@@ -6,6 +6,7 @@ import {createStudyMaterials, loadStudyMaterials} from '../pages/study-materials
 import {printableStudyGuideHtml, resolveVocabularyMeaning} from '../pages/study-games-materials-view.mjs';
 import {createStudyResourceLoader} from '../pages/study-resources.mjs';
 import {practiceIdentity} from '../pages/study-experience.mjs';
+import {buildGrade2ContentPipeline} from '../scripts/grade2-content-pipeline.mjs';
 
 const monday = '2026-10-05T16:00:00Z';
 function memory(initial = {}) {
@@ -39,6 +40,27 @@ const freeze = value => {
   if (value && typeof value === 'object') { Object.freeze(value); Object.values(value).forEach(freeze); }
   return value;
 };
+
+test('fresh governed curriculum output satisfies the live Study Games difficulty floor',() => {
+  const pipeline=buildGrade2ContentPipeline({
+    sourceHash:'fresh-governed-curriculum',
+    subjects:[
+      {subject:'Spelling / Handwriting',topics:['Test focus: short i / long i'],studyNotes:[]},
+      {subject:'Math',topics:['Math (subtraction)'],studyNotes:[]},
+    ],
+    vocabulary:[],
+  },{sourceHash:'fresh-governed-curriculum'});
+
+  const governed=pipeline.questions.filter(row=>row.skill==='short-i-long-i'||row.skill==='math-subtraction');
+  assert.equal(governed.length,18);
+  assert.ok(governed.every(row=>Number.isInteger(row.difficulty)&&row.difficulty>=2&&row.difficulty<=3));
+
+  const engine=loadEngine();
+  const built=engine.buildCatalog({sourceHash:'fresh-governed-curriculum',contentPipeline:pipeline});
+  const material=built.questions.filter(row=>row.tier==='material'&&(row.skill==='short-i-long-i'||row.skill==='math-subtraction'));
+  assert.equal(material.length,18);
+  assert.ok(material.every(row=>row.difficulty>=2&&row.difficulty<=3));
+});
 
 test('current vocabulary uses dictionary definitions instead of teacher-source placeholders',() => {
   const engine=loadEngine();

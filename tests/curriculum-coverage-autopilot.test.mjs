@@ -230,6 +230,10 @@ test('candidate promotion requires full family, automated QA, safe usage evidenc
 
   assert.deepEqual(curriculumCandidateIntrinsicBlockers(candidate), []);
 
+  const tooEasy = structuredClone(candidate);
+  tooEasy.proposedQuestions[0].difficulty = 1;
+  assert.ok(curriculumCandidateIntrinsicBlockers(tooEasy).includes('question-1:difficulty-invalid'));
+
   const beforeManual = evaluateCurriculumCandidate(candidate, {
     automatedQaPassed: true,
     safeUsageEvidence: 'sufficient-safe-usage',
