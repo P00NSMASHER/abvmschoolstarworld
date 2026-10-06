@@ -297,8 +297,38 @@ export function createStudyMaterials({
     return state;
   }
 
+  function printableTestState() {
+    const time = instant(), done = completedKeys(), today = schoolDay(time);
+    const instantMs = new Date(time).getTime(), seen = new Set();
+    const tests = allEvents
+      .filter(t => /^\d{4}-\d{2}-\d{2}$/.test(t.date || '') && t.date >= today)
+      .filter(t => !done.has(testKey(t)))
+      .filter(t => !t.endsAt || !Number.isFinite(Date.parse(t.endsAt)) || Date.parse(t.endsAt) > instantMs)
+      .sort((a,b) => a.date.localeCompare(b.date) || a.label.localeCompare(b.label))
+      .filter(t => { const key=testKey(t); if (seen.has(key)) return false; seen.add(key); return true; });
+    const day = materialDay(time), weekly = day.raw.weekly;
+    const primary = tests.map(t => questionsForTest(t,unique([
+      ...weekly,
+      ...(/chapter\s*\d+|grammar|predicate/i.test(t.label) ? day.lessons.flatMap(l => array(l.questions)) : []),
+    ])));
+    const groups = tests.map((t,i) => primary[i].length ? primary[i] : unique(questionsForTest(t,star)));
+    const entries = tests.map((t,index) => ({
+      ...t, key:testKey(t), index, count:groups[index].length,
+      fallback:!primary[index].length && !!groups[index].length,
+    }));
+    return {
+      tests, groups,
+      supported:entries.filter(t => t.count),
+      missing:entries.filter(t => !t.count),
+      fallback:entries.filter(t => t.fallback),
+    };
+  }
+  function printableTests() {
+    const {groups, ...state} = printableTestState();
+    return state;
+  }
   function testGuide(index) {
-    const state = testState(), i = Number(index);
+    const state = printableTestState(), i = Number(index);
     if (!Number.isInteger(i) || i < 0 || i >= state.tests.length) return null;
     const test = state.tests[i], group = unique(state.groups[i] || []);
     const subject = subjectForTest(test,group);
@@ -429,5 +459,5 @@ export function createStudyMaterials({
       links:referenceLinks(), warnings:coverageWarnings(time),
     };
   }
-  return {status, banks, forMode, round, tests, testGuide, testRound, completeTests, undoTests, restoreTest, notes, loadReferences};
+  return {status, banks, forMode, round, tests, printableTests, testGuide, testRound, completeTests, undoTests, restoreTest, notes, loadReferences};
 }
