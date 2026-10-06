@@ -4,6 +4,7 @@ import {questionsForTest} from './study-hub-core.mjs';
 import {adaptivePracticeRound, practiceIdentity} from './study-experience.mjs';
 import {schoolDay, weekBounds, nextTests, visibleArchive, weeklyArchive, balancedTestRound} from './study-model.mjs';
 import {buildStarBank} from './star-practice.mjs';
+import {buildStudyGuide} from './test-study-guide.mjs';
 
 const names = {weekly:'This week', saved:'Saved learning', star:'STAR practice', mix:'Study mix'};
 const modes = {
@@ -251,6 +252,31 @@ export function createStudyMaterials({
     const {groups, ...state} = testState();
     return state;
   }
+  function upcomingGuideTests(time = instant()) {
+    const day = schoolDay(time), instantMs = new Date(time).getTime(), done = completedKeys(), seen = new Set();
+    return allEvents
+      .filter(test => /^\d{4}-\d{2}-\d{2}$/.test(test.date || '') && test.date >= day)
+      .filter(test => !test.endsAt || !Number.isFinite(Date.parse(test.endsAt)) || !Number.isFinite(instantMs) || Date.parse(test.endsAt) > instantMs)
+      .filter(test => !done.has(testKey(test)))
+      .sort((a,b) => a.date.localeCompare(b.date) || a.label.localeCompare(b.label))
+      .filter(test => { const key=testKey(test); if (seen.has(key)) return false; seen.add(key); return true; });
+  }
+  function studyGuides() {
+    const time=instant(), day=materialDay(time), noteData=notes('saved');
+    const savedQuestions=unique([...day.raw.saved,...day.lessons.flatMap(lesson => array(lesson.questions))]);
+    return upcomingGuideTests(time).map(test => {
+      const primary=unique(questionsForTest(test,savedQuestions));
+      const fallbackQuestions=primary.length ? [] : unique(questionsForTest(test,star));
+      return buildStudyGuide({
+        test,pack,questions:primary.length ? primary : fallbackQuestions,
+        notes:noteData.notes,lessons:noteData.lessons,vocabulary:noteData.vocabulary,warnings:noteData.warnings,
+        fallback:!primary.length && !!fallbackQuestions.length,
+      });
+    }).filter(Boolean);
+  }
+  function studyGuide(key) {
+    return studyGuides().find(guide => guide.key === key) || null;
+  }
   function testRound({index, seed} = {}) {
     const state = testState();
     const single = Number.isInteger(index) && index >= 0 && index < state.tests.length;
@@ -348,5 +374,5 @@ export function createStudyMaterials({
       links:referenceLinks(), warnings:coverageWarnings(time),
     };
   }
-  return {status, banks, forMode, round, tests, testRound, completeTests, undoTests, restoreTest, notes, loadReferences};
+  return {status, banks, forMode, round, tests, studyGuides, studyGuide, testRound, completeTests, undoTests, restoreTest, notes, loadReferences};
 }
