@@ -3,7 +3,7 @@ import {test,expect} from '@playwright/test';
 test.use({serviceWorkers:'block'});
 
 for(const viewport of [{width:393,height:852},{width:320,height:740},{width:768,height:1024}]){
-  test(`Tier A school photography fits at ${viewport.width}x${viewport.height}`,async({page})=>{
+  test(`Tier A school photography fits at ${viewport.width}x${viewport.height}`,async({page},info)=>{
     await page.setViewportSize(viewport);
     await page.goto('/#today');
     await expect(page.locator('.school-photo-hero')).toBeVisible();
@@ -12,6 +12,9 @@ for(const viewport of [{width:393,height:852},{width:320,height:740},{width:768,
     await expect(sign).toHaveAttribute('src','./assets/school/abvm-school-sign.webp');
     await expect(sign).toHaveAttribute('alt',/Assumption BVM School sign/);
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+    const todayPath=info.outputPath(`school-today-${viewport.width}x${viewport.height}.png`);
+    await page.screenshot({path:todayPath,fullPage:false});
+    await info.attach('Today school photography',{path:todayPath,contentType:'image/png'});
 
     await page.getByRole('button',{name:'Family',exact:true}).click();
     await expect(page.locator('.school-community-photo')).toHaveAttribute('src','./assets/school/abvm-school-aerial.webp');
@@ -20,6 +23,9 @@ for(const viewport of [{width:393,height:852},{width:320,height:740},{width:768,
     await expect(portrait.locator('img')).toHaveAttribute('src','./assets/school/abvm-school-facade.webp');
     await expect(portrait).toContainText('Assumption BVM School');
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+    const familyPath=info.outputPath(`school-family-${viewport.width}x${viewport.height}.png`);
+    await page.screenshot({path:familyPath,fullPage:false});
+    await info.attach('Family school photography',{path:familyPath,contentType:'image/png'});
   });
 }
 

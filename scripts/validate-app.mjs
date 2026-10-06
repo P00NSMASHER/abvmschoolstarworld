@@ -38,7 +38,20 @@ for(const marker of ["skill-only-equivalent-item-v2","research-quality","buildCa
 if(!app.includes("./data/study-pack-runtime.json")||!app.includes("./data/study-pack.json"))fail("App must prefer runtime pack and retain full-pack fallback");
 if(!sw.includes("./data/study-pack-runtime.json")||!sw.includes("./data/study-pack.json"))fail("Service worker must cache runtime and full school packs");
 if(!app.includes("./assets/abvm-app-icon-192.png"))fail("School seal must use local app asset");
-if(!app.includes("./assets/abvm-app-icon-512.png"))fail("Today hero must use high-resolution local school asset");
+const approvedSchoolPhotos=[
+  "./assets/school/abvm-school-sign.webp",
+  "./assets/school/abvm-school-hero.webp",
+  "./assets/school/abvm-school-aerial.webp",
+  "./assets/school/abvm-school-facade.webp"
+];
+for(const ref of approvedSchoolPhotos){
+  if(!app.includes(ref))fail("Approved school photo must be used by the app: "+ref);
+  if(!sw.includes(ref))fail("Approved school photo must remain available offline: "+ref);
+  if(!exists("pages/"+ref.slice(2)))fail("Approved school photo is missing: "+ref);
+}
+const publishedSchoolPhotos=fs.readdirSync(path.join(root,"pages/assets/school")).filter(name=>/\.webp$/i.test(name)).sort();
+const expectedSchoolPhotos=approvedSchoolPhotos.map(ref=>path.basename(ref)).sort();
+if(JSON.stringify(publishedSchoolPhotos)!==JSON.stringify(expectedSchoolPhotos))fail("Only the four approved Tier A school photos may be published");
 for(const ref of ["pages/assets/abvm-app-icon-180.png","pages/assets/abvm-app-icon-192.png","pages/assets/abvm-app-icon-512.png","pages/data/study-pack.json","pages/styles.css","pages/study-games.js","pages/study-games-view.js","pages/app.js"])if(!exists(ref))fail("Missing rollback asset: "+ref);
 for(const ref of [
   "pages/js/calendar-visuals.js","pages/js/install.js","pages/js/storage.js",
