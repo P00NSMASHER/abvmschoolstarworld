@@ -10,7 +10,7 @@ if(!pack?.pack?.sourceSufficient)fail("study-pack.json must contain a source-suf
 for(const key of ["importantDates","homework","subjects","reminders","parentNotices"])if(!Array.isArray(pack.pack[key]))fail("Missing pack array: "+key);
 if(manifest.display!=="standalone")fail("PWA manifest must remain standalone");
 if(manifest.theme_color!=="#0b3c74")fail("PWA manifest must use ABVM navy theme color");
-const index=read("pages/index.html"),css=read("pages/styles.css"),app=read("pages/app.js"),games=read("pages/study-games.js"),sw=read("pages/sw.js");
+const index=read("pages/index.html"),css=read("pages/styles.css"),app=read("pages/app.js"),games=read("pages/study-games.js"),schoolPhotos=read("pages/school-photos.js"),sw=read("pages/sw.js");
 if(!/<meta name="theme-color" content="#0b3c74">/.test(index))fail("Browser theme color must use ABVM navy");
 if(!/href="\.\/styles\.css(?:\?[^"]*)?"/.test(index))fail("Gold-standard styles.css must be loaded");
 if(!/["']\.\/study-games\.js\?v=\d+["']/.test(app))fail("Versioned Study Games engine must be lazy-loadable from app.js");
@@ -39,7 +39,7 @@ if(!app.includes("./data/study-pack-runtime.json")||!app.includes("./data/study-
 if(!sw.includes("./data/study-pack-runtime.json")||!sw.includes("./data/study-pack.json"))fail("Service worker must cache runtime and full school packs");
 if(!app.includes("./assets/abvm-app-icon-192.png"))fail("School seal must use local app asset");
 for(const ref of ["school-sign.jpg","school-hero.jpg","school-aerial.jpg","school-front.jpg"]){
-  if(!app.includes("./assets/"+ref)||!exists("pages/assets/"+ref))fail("Approved Tier A school photo must be local and rendered: "+ref);
+  if(!schoolPhotos.includes("./assets/"+ref)||!exists("pages/assets/"+ref))fail("Approved Tier A school photo must be local and rendered: "+ref);
 }
 for(const ref of ["pages/assets/abvm-app-icon-180.png","pages/assets/abvm-app-icon-192.png","pages/assets/abvm-app-icon-512.png","pages/data/study-pack.json","pages/styles.css","pages/study-games.js","pages/study-games-view.js","pages/app.js"])if(!exists(ref))fail("Missing rollback asset: "+ref);
 for(const ref of [
