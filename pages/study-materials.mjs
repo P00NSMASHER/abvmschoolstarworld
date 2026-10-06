@@ -301,7 +301,7 @@ export function createStudyMaterials({
     const time = instant(), done = completedKeys(), today = schoolDay(time);
     const instantMs = new Date(time).getTime(), seen = new Set();
     const tests = allEvents
-      .filter(t => String(t.kind || '').toLowerCase() === 'test')
+      .filter(t => String(t.kind || '').toLowerCase() !== 'assessment')
       .filter(t => /^\d{4}-\d{2}-\d{2}$/.test(t.date || '') && t.date >= today)
       .filter(t => !done.has(testKey(t)))
       .filter(t => !t.endsAt || !Number.isFinite(Date.parse(t.endsAt)) || Date.parse(t.endsAt) > instantMs)
