@@ -94,6 +94,27 @@ test('printable study guides stay test-specific, bounded, and honest about missi
   assert.equal(model.testGuide(99),null);
 });
 
+test('printable guide list includes every upcoming test, not only the nearest test date',() => {
+  const events = [
+    {date:'2026-10-05',label:'Math'},
+    {date:'2026-10-07',label:'Reading'},
+    {date:'2026-10-09',label:'Grammar (subject & predicate)'},
+  ];
+  const rows = [
+    ...pool('math-guide-',5,'Math'),
+    ...pool('reading-guide-',5,'Reading / ELA',{skill:'text-evidence'}),
+    ...pool('grammar-guide-',5,'Reading / ELA',{skill:'subject-predicate'}),
+  ];
+  const model = createStudyMaterials(opts({events,catalog:catalog(rows)}));
+  assert.deepEqual(model.tests().tests.map(row=>row.label),['Math'],'practice still prioritizes the nearest test date');
+  assert.deepEqual(model.printableTests().tests.map(row=>row.label),[
+    'Math','Reading','Grammar (subject & predicate)',
+  ]);
+  assert.equal(model.testGuide(0).label,'Math');
+  assert.equal(model.testGuide(1).label,'Reading');
+  assert.equal(model.testGuide(2).label,'Grammar (subject & predicate)');
+});
+
 test('printable study guide document is Letter-sized and resolves vocabulary definitions without source placeholders',() => {
   const placeholder='Current Reading Work vocabulary word; the teacher page does not provide a definition.';
   const html = printableStudyGuideHtml({

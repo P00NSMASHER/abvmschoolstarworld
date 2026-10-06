@@ -70,6 +70,7 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
 
   function actionsHtml({complete=false,loading=true} = {}) {
     const tests = model?.tests(), pending = tests?.tests || [], missing = tests?.missing || [], fallback = tests?.fallback || [];
+    const printable = model?.printableTests?.()?.tests || pending;
     const partial = model?.status?.partial;
     return '<section class="game-material-actions" aria-label="More practice">' +
       '<div class="game-daily-action"><button type="button" data-game-start="daily"' + (model&&!model.forMode('daily',selection()).count?' disabled':'') + '>' + (complete?'Practice a little more':'Daily practice') + '</button><span>' +
@@ -77,7 +78,7 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
       (!model&&loading?'<p class="game-material-status" role="status">Loading saved materials…</p>':'') +
       (model ? '<div class="game-test-action" data-study-tests>' + (pending.length ? '<div><strong>Next test' + (pending.length>1?'s':'') + '</strong><time datetime="' + esc(tests.date) + '">' + esc(dateLabel(tests.date)) + '</time><p>' + pending.map(test=>esc(test.label)).join(' · ') + '</p></div>' +
         (missing.length ? (tests.supported || []).map(test => '<button type="button" data-test-single="' + test.index + '">Practice ' + esc(test.label) + '</button>').join('') : '<button type="button" data-test>Start test practice</button>') +
-        '<div class="game-guide-actions" aria-label="Printable study guides">' + pending.map(test=>'<button type="button" data-test-guide="' + test.index + '">Print guide: ' + esc(test.label) + '</button>').join('') + '</div>' +
+        (printable.length?'<div class="game-guide-actions" aria-label="Printable study guides"><strong>Printable study guides</strong>' + printable.map(test=>'<button type="button" data-test-guide="' + test.index + '">Print guide: ' + esc(test.label) + ' · ' + esc(dateLabel(test.date)) + '</button>').join('') + '</div>':'') +
         (missing.length?'<p class="game-material-status" data-test-missing>Practice is not available for ' + missing.map(test=>esc(test.label)).join(', ') + '. Review the teacher notes.</p>':'') +
         (fallback.length?'<p class="game-material-status" data-test-fallback>Original Grade 2 skill practice for ' + fallback.map(test=>esc(test.label)).join(', ') + '; no reviewed test-specific bank is available yet.</p>':'') : '<p>No upcoming test is listed.</p>') + '</div>' : '') +
       (partial?'<div class="game-material-status" role="status"><p>Some saved materials could not load. The available practice still works.</p><button type="button" data-study-retry>Retry saved materials</button></div>':'') +
