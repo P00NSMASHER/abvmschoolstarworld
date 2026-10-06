@@ -82,7 +82,7 @@ async function finishPerfectRound(page,catalog){
     await page.locator('[data-game-next]').click();
   }
   await expect(page.locator('.game-finish')).toBeVisible();
-  await expect(page.locator('.round-score')).toContainText('Round score 8 of 8');
+  await expect(page.locator('.game-score-summary>strong')).toHaveText('8 / 8 correct on the first try · 100%');
 }
 
 // This JSHandle owns only test coordination. Production APIs still perform the
@@ -191,7 +191,7 @@ test('Math skips an earlier Faith Comeback and strict test practice leaves all q
   await expect(page.locator('.game-topbar > div > span')).toHaveText('Comeback');
   await expect(page.locator('.game-question-meta > span')).toHaveText('Math');
   await expect(page.locator('.game-question-card > h2')).toHaveText(seeded.math.prompt);
-  await expect(page.locator('.adaptive-note')).toContainText('not scored');
+  await expect(page.locator('.adaptive-note')).toContainText('not part of the section score');
   expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),QUEUE)).toEqual(seeded.queue);
   const comeback=await visibleQuestion(page,fixture.catalog.questions);
   await page.locator('[data-game-answer]').nth(comeback.answerIndex).click();
@@ -238,7 +238,7 @@ for(const outcome of ['success','failure']){
       await hold.evaluate(fixture=>fixture.releaseAndWait());
       const result=await hold.evaluate(fixture=>fixture.snapshot());
       await expect(page.locator('.study-star-earned')).not.toContainText('Saving on this device');
-      await expect(page.locator('.game-finish h2')).toHaveText('What you learned');
+      await expect(page.locator('.game-finish h2')).toHaveText('Your score');
       await expect(page.locator('.game-finish [data-game-start="quick"]')).toBeEnabled();
       await expect(page.locator('.game-finish [data-game-home]')).toBeEnabled();
       const ledger=await page.evaluate(()=>window.ABVMStudyGames.loadStudyStarLedger());

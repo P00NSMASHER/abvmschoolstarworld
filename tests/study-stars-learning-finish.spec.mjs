@@ -74,8 +74,8 @@ test('learning-first summary keeps strongest valid evidence for each skill regar
 test('learning-first finish puts learning evidence before secondary rewards',async({page})=>{
   const html=await page.evaluate(()=>window.ABVMStudyGameView.finish({
     mode:{id:'quick',title:'Quick Mix'},
-    state:{questions:Array(8).fill({}),score:6},
-    record:{best:7},
+    state:{questions:Array(8).fill({}),score:6,results:Array.from({length:8},(_,i)=>({counted:true,firstCorrect:i<6,resolvedCorrect:true,correctedOnRetry:i>=6,hintUsed:false,subject:'Math'}))},
+    record:{best:7,plays:1},
     summary:{strong:3,remembered:1,practice:2,total:6},
     reward:{status:'done',awardedAmount:12,currency:'Study Stars',balance:32}
   }));
@@ -83,7 +83,7 @@ test('learning-first finish puts learning evidence before secondary rewards',asy
   expect(html).toContain('Skills answered independently');
   expect(html).toContain('Skills recalled later');
   expect(html).toContain('Skills to revisit');
-  expect(html).toContain('Round score 6 of 8');
+  expect(html).toContain('6 / 8 correct on the first try · 75%');
   expect(html).toContain('+12 Study Stars');
   expect(html.indexOf('learning-summary')).toBeLessThan(html.indexOf('game-finish-stars'));
   expect(html.indexOf('learning-summary')).toBeLessThan(html.indexOf('study-star-earned'));
@@ -109,8 +109,8 @@ test('secondary reward summary stays visually separated and readable',async({pag
 test('learning-first reward summary cannot display a second currency',async({page})=>{
   const html=await page.evaluate(()=>window.ABVMStudyGameView.finish({
     mode:{id:'quick',title:'Quick Mix'},
-    state:{questions:Array(8).fill({}),score:6},
-    record:{best:7},
+    state:{questions:Array(8).fill({}),score:6,results:Array.from({length:8},(_,i)=>({counted:true,firstCorrect:i<6,resolvedCorrect:true,correctedOnRetry:i>=6,hintUsed:false,subject:'Math'}))},
+    record:{best:7,plays:1},
     summary:{strong:3,remembered:1,practice:2,total:6},
     reward:{status:'done',awardedAmount:12,currency:'Coins',balance:32}
   }));

@@ -228,7 +228,7 @@ test('two distinct misses teach before resolving and record one failed learning 
   const firstWrong = page.locator('.game-answer').nth(wrongs[0]);
   await firstWrong.click();
   await expect(firstWrong).toBeDisabled();
-  await expect(page.locator('.game-feedback.retry')).toContainText('Not yet');
+  await expect(page.locator('.game-feedback.retry')).toContainText('Incorrect. Try again.');
   await expect(page.locator('[data-game-next]')).toHaveCount(0);
 
   // Repeat activation of the rejected choice must not burn another attempt.
@@ -238,7 +238,7 @@ test('two distinct misses teach before resolving and record one failed learning 
   const secondWrong = page.locator('.game-answer').nth(wrongs[1]);
   await secondWrong.click();
   await expect(secondWrong).toBeDisabled();
-  await expect(page.locator('.game-feedback.retry')).toContainText('model answer');
+  await expect(page.locator('.game-feedback.retry')).toContainText('Incorrect. The correct answer is');
   await expect(page.locator('[data-game-next]')).toBeVisible();
 
   const stored = await page.evaluate(skill => JSON.parse(localStorage.getItem('abvm-study-learning:v2') || '{}')[skill] || {}, question.skill);
@@ -269,9 +269,9 @@ test('a retry-correct answer is recorded separately from independent first-try m
   const wrongIndex = question.choices.findIndex(choice => choice !== question.answer);
   const correctIndex = question.choices.findIndex(choice => choice === question.answer);
   await page.locator('.game-answer').nth(wrongIndex).click();
-  await expect(page.locator('.game-feedback.retry')).toContainText('Not yet');
+  await expect(page.locator('.game-feedback.retry')).toContainText('Incorrect. Try again.');
   await page.locator('.game-answer').nth(correctIndex).click();
-  await expect(page.locator('.game-feedback.correct')).toContainText('worked it out');
+  await expect(page.locator('.game-feedback.correct')).toContainText('Correct on retry');
 
   const stored = await page.evaluate(skill => JSON.parse(localStorage.getItem('abvm-study-learning:v2') || '{}')[skill] || {}, question.skill);
   expect(stored.Seen).toBe(1);
@@ -315,7 +315,7 @@ test('two resolved failures retain the same-skill support and Teach Card contrac
   expect(evidence.supportSkill).toBe(evidence.skill);
   expect(evidence.consecutiveWrong).toBeGreaterThanOrEqual(2);
   expect(evidence.html).toContain('Support step');
-  expect(evidence.html).toContain('Support step · same skill · not scored');
+  expect(evidence.html).toContain('Review question · not part of the section score');
   expect(evidence.html).toContain('Quick lesson');
 
   const app=await page.request.get('/app.js').then(response=>response.text());
@@ -444,11 +444,11 @@ test('a persisted due Comeback is shown unscored and records RememberedLater aft
 
   await page.getByRole('button', { name: /Quick Mix/i }).click();
   await expect(page.locator('.game-topbar')).toContainText('Comeback');
-  await expect(page.locator('.adaptive-note')).toContainText('not scored');
+  await expect(page.locator('.adaptive-note')).toContainText('not part of the section score');
   await expect(page.locator('.game-topbar b')).toHaveCount(0);
 
   await page.locator('.game-answer').filter({ hasText: seeded.answer }).click();
-  await expect(page.locator('.game-feedback.correct')).toContainText('Skills recalled later!');
+  await expect(page.locator('.game-feedback.correct')).toContainText('Correct');
   await expect(page.locator('.game-topbar b')).toHaveCount(0);
   await page.locator('[data-game-next]').click();
 
