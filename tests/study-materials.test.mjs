@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import {createStudyMaterials, loadStudyMaterials} from '../pages/study-materials.mjs';
-import {resolveVocabularyMeaning} from '../pages/study-games-materials-view.mjs';
+import {printableStudyGuideHtml, resolveVocabularyMeaning} from '../pages/study-games-materials-view.mjs';
 import {createStudyResourceLoader} from '../pages/study-resources.mjs';
 import {practiceIdentity} from '../pages/study-experience.mjs';
 
@@ -53,6 +53,83 @@ test('current vocabulary uses dictionary definitions instead of teacher-source p
   assert.equal(resolveVocabularyMeaning({term:'depend',meaning:placeholder},engine.vocabularyDefinition),'to need or rely on someone or something');
   assert.equal(resolveVocabularyMeaning({term:'custom',meaning:'A teacher-provided meaning.'},engine.vocabularyDefinition),'A teacher-provided meaning.');
   assert.equal(resolveVocabularyMeaning({term:'unknown',meaning:placeholder},engine.vocabularyDefinition),'');
+});
+
+
+test('printable study guides stay test-specific, bounded, and honest about missing coverage',() => {
+  const events = [
+    {date:'2026-10-05',label:'Grammar (subject & predicate)'},
+    {date:'2026-10-05',label:'Spelling (short i / long i) / Handwriting'},
+  ];
+  const grammar = pool('grammar-',6,'Reading / ELA',{
+    skill:'subject-predicate',
+    sourceFact:'The subject tells who or what the sentence is about.',
+    explanation:'The predicate tells what the subject does or is.',
+  });
+  const spelling = pool('short-i-',6,'Spelling / Handwriting',{
+    skill:'long-short-i',
+    sourceFact:'Short i and long i have different vowel sounds.',
+    explanation:'Use the word pattern to decide which i sound you hear.',
+  });
+  const pack = {
+    subjects:[
+      {subject:'Reading / ELA',topics:['Story: unrelated reading selection','Grammar: subject & predicate'],studyNotes:['The subject tells who or what the sentence is about; the predicate tells what it does or is.','Dialogue is what characters say.']},
+      {subject:'Spelling / Handwriting',topics:['Friday test focus: short a / long a'],studyNotes:['Compare short a words like cat with a_e long-a words like game.']},
+    ],
+    vocabulary:[{subject:'Reading / ELA',term:'action',meaning:'something a person or thing does'}],
+  };
+  const model = createStudyMaterials(opts({events,pack,catalog:catalog([...grammar,...spelling])}));
+  const grammarGuide = model.testGuide(0);
+  assert.equal(grammarGuide.subject,'Reading / ELA');
+  assert(grammarGuide.facts.some(row => /subject/i.test(row)));
+  assert(!grammarGuide.facts.some(row => /dialogue/i.test(row)));
+  assert.equal(grammarGuide.vocabulary.length,0,'grammar guide does not pad the sheet with unrelated reading vocabulary');
+  assert(grammarGuide.practice.length <= 4);
+  assert(grammarGuide.facts.length <= 6);
+
+  const spellingGuide = model.testGuide(1);
+  assert.equal(spellingGuide.subject,'Spelling / Handwriting');
+  assert(spellingGuide.practice.every(row => row.skill === 'long-short-i'));
+  assert(!spellingGuide.facts.some(row => /short a|long a/i.test(row)),'an old vowel pattern must not leak into the current test guide');
+  assert.equal(model.testGuide(99),null);
+});
+
+test('printable guide list includes every upcoming test, not only the nearest test date',() => {
+  const events = [
+    {date:'2026-10-05',label:'Math'},
+    {date:'2026-10-07',label:'Reading'},
+    {date:'2026-10-09',label:'Grammar (subject & predicate)'},
+  ];
+  const rows = [
+    ...pool('math-guide-',5,'Math'),
+    ...pool('reading-guide-',5,'Reading / ELA',{skill:'text-evidence'}),
+    ...pool('grammar-guide-',5,'Reading / ELA',{skill:'subject-predicate'}),
+  ];
+  const model = createStudyMaterials(opts({events,catalog:catalog(rows)}));
+  assert.deepEqual(model.tests().tests.map(row=>row.label),['Math'],'practice still prioritizes the nearest test date');
+  assert.deepEqual(model.printableTests().tests.map(row=>row.label),[
+    'Math','Reading','Grammar (subject & predicate)',
+  ]);
+  assert.equal(model.testGuide(0).label,'Math');
+  assert.equal(model.testGuide(1).label,'Reading');
+  assert.equal(model.testGuide(2).label,'Grammar (subject & predicate)');
+});
+
+test('printable study guide document is Letter-sized and resolves vocabulary definitions without source placeholders',() => {
+  const placeholder='Current Reading Work vocabulary word; the teacher page does not provide a definition.';
+  const html = printableStudyGuideHtml({
+    label:'Reading',date:'2026-10-07',subject:'Reading / ELA',
+    facts:['Use story details to support an answer.'],
+    vocabulary:[{term:'depend',meaning:placeholder}],
+    practice:[{prompt:'What detail supports the answer?',answer:'The detail from the story.'}],
+    warnings:[],sourceLabel:'Reviewed ABVM material',
+  },term => term === 'depend' ? 'to need or rely on someone or something' : '');
+  assert.match(html,/@page\{size:Letter portrait/);
+  assert.match(html,/ONE-PAGE STUDY GUIDE/);
+  assert.match(html,/Quick check/);
+  assert.match(html,/to need or rely on someone or something/);
+  assert.doesNotMatch(html,/teacher page does not provide a definition/);
+  assert.match(html,/Automatically generated for this test/);
 });
 
 test('weekly and saved banks retain source dates, and never classify undated/future material as current',() => {

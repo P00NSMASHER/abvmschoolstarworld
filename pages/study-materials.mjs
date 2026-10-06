@@ -86,6 +86,51 @@ function weeklyEligible(rows, modeId) {
   return unique([...current, ...reviewFill, ...star.filter(q => !covered.has(q.subject))]);
 }
 
+function subjectForTest(test, group = []) {
+  const label = String(test?.label || '').toLowerCase();
+  if (/spelling|handwriting/.test(label)) return 'Spelling / Handwriting';
+  if (/grammar|predicate|subject\s*&/.test(label) || /\breading\b|\bela\b/.test(label)) return 'Reading / ELA';
+  if (/religion|faith/.test(label)) return 'Religion';
+  if (/\bmath\b|addition|subtraction/.test(label)) return 'Math';
+  const counts = new Map();
+  array(group).forEach(row => {
+    if (!meaningfulText(row?.subject)) return;
+    counts.set(row.subject,(counts.get(row.subject)||0)+1);
+  });
+  return [...counts.entries()].sort((a,b)=>b[1]-a[1])[0]?.[0] || '';
+}
+function compactGuideText(value, limit = 180) {
+  const text = String(value ?? '').replace(/\s+/g,' ').trim();
+  return text.length <= limit ? text : text.slice(0,Math.max(1,limit-1)).trimEnd() + '…';
+}
+function uniqueGuideText(rows) {
+  const seen = new Set(), out = [];
+  for (const row of rows) {
+    const text = compactGuideText(row);
+    if (!text) continue;
+    const key = text.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key); out.push(text);
+  }
+  return out;
+}
+function noteMatchesTest(text, label, subject) {
+  const value = compactGuideText(text,240), lower = String(label || '').toLowerCase();
+  if (!value) return false;
+  if (subject === 'Reading / ELA' && /grammar|predicate|subject\s*&/.test(lower)) return /\b(?:grammar|subject|predicate)\b/i.test(value);
+  if (subject === 'Spelling / Handwriting') {
+    const focus = lower.match(/short\s+([aeiou])/i)?.[1]?.toLowerCase();
+    const mentioned = [...value.matchAll(/\b(?:short|long)\s+([aeiou])\b/gi)].map(match=>match[1].toLowerCase());
+    if (focus && mentioned.length && !mentioned.includes(focus)) return false;
+    return /spell|handwriting|phonics|vowel|short|long|blend|word|letter/i.test(value);
+  }
+  if (subject === 'Religion') {
+    const chapter = lower.match(/chapter\s*(\d+)/i)?.[1];
+    return chapter ? new RegExp('\\bchapter\\s*' + chapter + '\\b','i').test(value) : true;
+  }
+  return true;
+}
+
 /** Failures stay retryable and cannot prevent the current Games from opening. */
 export async function loadStudyMaterials({resourceLoader = sharedResource, ...options} = {}) {
   const resources = ['schoolwork.json','study-archive.json'];
@@ -251,6 +296,72 @@ export function createStudyMaterials({
     const {groups, ...state} = testState();
     return state;
   }
+
+  function printableTestState() {
+    const time = instant(), done = completedKeys(), today = schoolDay(time);
+    const instantMs = new Date(time).getTime(), seen = new Set();
+    const tests = allEvents
+      .filter(t => /^\d{4}-\d{2}-\d{2}$/.test(t.date || '') && t.date >= today)
+      .filter(t => !done.has(testKey(t)))
+      .filter(t => !t.endsAt || !Number.isFinite(Date.parse(t.endsAt)) || Date.parse(t.endsAt) > instantMs)
+      .sort((a,b) => a.date.localeCompare(b.date) || a.label.localeCompare(b.label))
+      .filter(t => { const key=testKey(t); if (seen.has(key)) return false; seen.add(key); return true; });
+    const day = materialDay(time), weekly = day.raw.weekly;
+    const primary = tests.map(t => questionsForTest(t,unique([
+      ...weekly,
+      ...(/chapter\s*\d+|grammar|predicate/i.test(t.label) ? day.lessons.flatMap(l => array(l.questions)) : []),
+    ])));
+    const groups = tests.map((t,i) => primary[i].length ? primary[i] : unique(questionsForTest(t,star)));
+    const entries = tests.map((t,index) => ({
+      ...t, key:testKey(t), index, count:groups[index].length,
+      fallback:!primary[index].length && !!groups[index].length,
+    }));
+    return {
+      tests, groups,
+      supported:entries.filter(t => t.count),
+      missing:entries.filter(t => !t.count),
+      fallback:entries.filter(t => t.fallback),
+    };
+  }
+  function printableTests() {
+    const {groups, ...state} = printableTestState();
+    return state;
+  }
+  function testGuide(index) {
+    const state = printableTestState(), i = Number(index);
+    if (!Number.isInteger(i) || i < 0 || i >= state.tests.length) return null;
+    const test = state.tests[i], group = unique(state.groups[i] || []);
+    const subject = subjectForTest(test,group);
+    const lower = String(test.label || '').toLowerCase();
+    const sourceSubjects = array(pack.subjects).filter(row => row?.subject === subject);
+    const questionFacts = group.flatMap(row => [row.sourceFact,row.explanation]).filter(meaningfulText);
+    const subjectFacts = sourceSubjects.flatMap(row => [...array(row.topics),...array(row.studyNotes)])
+      .filter(text => noteMatchesTest(text,test.label,subject));
+    const facts = uniqueGuideText([...questionFacts,...subjectFacts]).slice(0,6);
+    const vocabulary = subject === 'Reading / ELA' && !/grammar|predicate|subject\s*&/.test(lower)
+      ? [...new Map(array(pack.vocabulary).filter(row => row?.subject === subject && meaningfulText(row?.term))
+        .map(row => [String(row.term).trim().toLowerCase(),row])).values()].slice(0,8)
+      : [];
+    const practice = group.slice(0,4).map(row => ({
+      prompt:compactGuideText(row.prompt,160),
+      answer:compactGuideText(row.answer,90),
+      skill:compactGuideText(row.skill,60),
+    }));
+    const warnings = [];
+    const fallback = state.fallback.some(row => row.index === i);
+    if (fallback) warnings.push('No reviewed test-specific question bank is available yet. This sheet uses original Grade 2 skill practice and labels it clearly.');
+    if (!group.length) warnings.push('No reviewed practice questions match this test yet. Use the teacher materials sent home together with the verified notes below.');
+    if (subject === 'Spelling / Handwriting') {
+      coverageWarnings(instant()).filter(row => row.subject === subject).forEach(row => warnings.push(row.text));
+    }
+    if (!facts.length) warnings.push('No reviewed test-specific facts are available yet, so this guide does not invent missing material.');
+    return {
+      key:testKey(test), label:compactGuideText(test.label,120), date:test.date, subject:subject || 'Test review',
+      facts, vocabulary, practice, fallback, warnings:uniqueGuideText(warnings).slice(0,3),
+      sourceLabel:'Current ABVM teacher notes, reviewed schoolwork, and checked practice material',
+    };
+  }
+
   function testRound({index, seed} = {}) {
     const state = testState();
     const single = Number.isInteger(index) && index >= 0 && index < state.tests.length;
@@ -348,5 +459,5 @@ export function createStudyMaterials({
       links:referenceLinks(), warnings:coverageWarnings(time),
     };
   }
-  return {status, banks, forMode, round, tests, testRound, completeTests, undoTests, restoreTest, notes, loadReferences};
+  return {status, banks, forMode, round, tests, printableTests, testGuide, testRound, completeTests, undoTests, restoreTest, notes, loadReferences};
 }

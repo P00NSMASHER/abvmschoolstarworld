@@ -30,6 +30,9 @@
 .games-screen .game-test-action strong { color: #254a70; font-size: .875rem; }
 .games-screen .game-test-action time { display: inline-block; margin-left: 8px; font-size: .8125rem; color: #526579; }
 .games-screen .game-test-action p { font-size: .9375rem; line-height: 1.5; color: #364d65; }
+.games-screen .game-guide-actions { flex: 1 0 100%; display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,14rem),1fr)); gap: 8px; }
+.games-screen .game-guide-actions > strong { grid-column: 1/-1; color: #365675; font-size: .8125rem; letter-spacing: .02em; }
+.games-screen .game-guide-actions button { width: 100%; background: #fff; border-color: #b9cbd9; color: #214f77; }
 .games-screen .game-material-status { grid-column: 1/-1; flex-basis: 100%; font-size: .8125rem; line-height: 1.5; color: #526579; margin: 4px 0; }
 .games-screen .game-material-status button { margin-top: 6px; }
 .games-screen .game-test-status { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 8px 0; font-size: .875rem; color: #365675; }
