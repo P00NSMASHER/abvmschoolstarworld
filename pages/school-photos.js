@@ -1,0 +1,6 @@
+(()=>{"use strict";
+const todayHero=()=>'<section class="hero-card school-sign-hero"><div class="hero-copy"><p class="pill">YOUR SCHOOL DAY</p><h2>One thing at a time.</h2><p>Your next deadline, daily plan, and school updates.</p></div><figure class="school-sign-photo"><img src="./assets/school-sign.jpg" width="650" height="433" alt="Assumption BVM School sign beside the school entrance"></figure></section>';
+const familyHero=()=>'<section class="family-school-hero"><img src="./assets/school-hero.jpg" width="1024" height="683" alt="Assumption BVM School building in Pottsville"><div><p>OUR SCHOOL</p><h2>Assumption BVM Catholic School</h2><span>Pottsville, Pennsylvania</span></div></section>';
+const familyPair=()=>'<section class="school-photo-pair" aria-labelledby="our-school-photos"><h2 id="our-school-photos">Our school</h2><div><figure><img src="./assets/school-aerial.jpg" width="1024" height="683" alt="Aerial view of Assumption BVM School and the surrounding Pottsville neighborhood"><figcaption>ABVM in Pottsville</figcaption></figure><figure><img src="./assets/school-front.jpg" width="1024" height="683" alt="Front facade and main steps of Assumption BVM School"><figcaption>The school building</figcaption></figure></div></section>';
+window.ABVMSchoolPhotos=Object.freeze({todayHero,familyHero,familyPair});
+})();
