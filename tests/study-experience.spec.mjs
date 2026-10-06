@@ -163,7 +163,7 @@ test('game answers and hints are readable and rejected choices cannot be retried
   });
   try{
     await expect(first).toBeDisabled();
-    await expect(page.locator('.game-feedback.retry')).toBeVisible();
+    await expect(page.locator('.game-feedback.incorrect')).toBeVisible();
     const tried=await first.evaluate(el=>{
       const style=getComputedStyle(el,'::after'),context=document.createElement('canvas').getContext('2d');
       context.font=style.font||`${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
@@ -185,7 +185,7 @@ test('game answers and hints are readable and rejected choices cannot be retried
     await page.locator('.games-screen').evaluate(el=>{el.scrollTop=0;});
     let path=info.outputPath('games-retry-200-percent-iphone-top.png');
     await page.screenshot({path});await info.attach('Doubled-text retry question',{path,contentType:'image/png'});
-    const retry=page.locator('.game-feedback.retry');
+    const retry=page.locator('.game-feedback.incorrect');
     if(await retry.evaluate(el=>el.getBoundingClientRect().bottom>innerHeight-document.querySelector('.bottom-nav').getBoundingClientRect().height)){
       await retry.scrollIntoViewIfNeeded();
       path=info.outputPath('games-retry-200-percent-iphone-controls.png');
@@ -207,7 +207,7 @@ test('three complete Math games offer twenty-four distinct questions',async({pag
       const texts=await page.locator('.game-answer strong').allTextContents();await page.locator('.game-answer').nth(texts.indexOf(q.answer)).click();
       await page.locator('[data-game-next]').click();
     }
-    await expect(page.locator('.game-finish')).toBeVisible();await expect(page.locator('.game-finish')).toContainText('counts are skills');
+    await expect(page.locator('.game-finish')).toBeVisible();await expect(page.locator('.game-finish')).toContainText('different measures');
     if(round<2)await page.locator('[data-game-home]').last().click();
   }
   expect(new Set(prompts).size).toBe(24);
