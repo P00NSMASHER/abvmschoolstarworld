@@ -37,7 +37,7 @@ test.describe('recorded Games walkthrough',()=>{
         const wrong=choices.findIndex(choice=>choice!==question.answer);
         await page.locator('[data-game-answer]').nth(wrong).click();
         await expect(page.locator('[data-game-answer]').nth(wrong)).toBeDisabled();
-        await expect(page.locator('.game-feedback.retry')).toBeVisible();
+        await expect(page.locator('.game-feedback.incorrect')).toBeVisible();
         await expect(page.locator('[data-game-next]')).toHaveCount(0);
         await page.waitForTimeout(350);
       }
