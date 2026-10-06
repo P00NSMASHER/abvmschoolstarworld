@@ -14,6 +14,39 @@ async function game(page){
   await page.getByRole('button',{name:/Math Dash/}).click();
   await expect(page.locator('.game-question-card')).toBeVisible();
 }
+async function placeValueGame(page){
+  await page.goto('/#games');
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+  const source=await page.evaluate(async()=>{
+    const [envelope,schoolwork]=await Promise.all([
+      fetch('./data/study-pack-runtime.json').then(response=>response.json()),
+      fetch('./data/schoolwork.json').then(response=>response.json())
+    ]);
+    const engine=window.ABVMStudyGames,sourceKey=engine.sourceKeyFromEnvelope(envelope.pack,envelope);
+    const questions=engine.buildCatalog(envelope.pack,{sourceKey}).questions
+      .filter(q=>q.subject==='Math'&&q.skill==='place-value'&&q.richContent?.kind==='place-value').slice(0,5);
+    return {envelope,schoolwork,questions};
+  });
+  expect(source.questions).toHaveLength(5);
+  // Reuse the real original-practice questions, including their validated blank
+  // charts, in an isolated Saved bank. Every possible selection has the figure.
+  for(const key of ['contentPipeline','recentReviewPipeline']){
+    source.envelope.pack[key]={...source.envelope.pack[key],
+      skills:source.envelope.pack[key].skills.filter(row=>row.subject!=='Math'),
+      questions:source.envelope.pack[key].questions.filter(row=>row.subject!=='Math')};
+  }
+  const lesson={id:'public-place-value-practice',title:'Original place-value practice',subject:'Math',
+    sources:[],skills:['place-value'],notes:[],studiedOn:null,dateStatus:'undated',questions:source.questions};
+  await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({json:source.envelope}));
+  await page.route('**/data/study-archive.json*',route=>route.fulfill({json:{notes:[],vocabulary:[],questions:[]}}));
+  await page.route('**/data/schoolwork.json*',route=>route.fulfill({json:{...source.schoolwork,lessons:[lesson]}}));
+  await page.reload();
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+  await page.locator('[data-study-source]').selectOption('saved');
+  await page.getByRole('button',{name:/Math Dash/}).click();
+  await expect(page.locator('.game-topbar > div > strong')).toHaveText('1 of 5');
+  return source.questions;
+}
 async function answerKey(page){
   const prompt=await page.locator('.game-question-card > h2').innerText();
   return page.evaluate(async prompt=>{
@@ -23,6 +56,12 @@ async function answerKey(page){
     if(!q)throw Error('Presented question is not in its source catalog');
     return {answer:q.answer,prompt:q.prompt,skill:q.skill};
   },prompt);
+}
+async function richTextMetrics(page){
+  return page.locator('.rich-place-value small,.rich-place-value figcaption').evaluateAll(nodes=>nodes.map(node=>({
+    text:node.textContent.trim(),fontSize:parseFloat(getComputedStyle(node).fontSize),
+    clipped:node.clientWidth>0&&node.scrollWidth>node.clientWidth+1
+  })));
 }
 for(const size of [{width:393,height:852},{width:768,height:1024},{width:320,height:740},{width:852,height:393}]){
  test(`integrated Games geometry at ${size.width}x${size.height}`,async({page},info)=>{
@@ -94,12 +133,18 @@ test('expanded notes and the selected Saved label fit at 200 percent text size w
 });
 test('game answers and hints are readable and rejected choices cannot be retried',async({page},info)=>{
   await page.setViewportSize({width:393,height:852});
-  await game(page);
+  const questions=await placeValueGame(page);
   const progress=page.getByRole('progressbar',{name:'Game progress'});
-  await expect(progress).toHaveAttribute('aria-valuenow','13');
+  await expect(progress).toHaveAttribute('aria-valuenow','20');
   await expect(progress).toHaveAttribute('aria-valuemin','0');
   await expect(progress).toHaveAttribute('aria-valuemax','100');
-  const q=await answerKey(page),texts=await page.locator('.game-answer strong').allTextContents();
+  const prompt=await page.locator('.game-question-card > h2').innerText();
+  const q=questions.find(question=>question.prompt===prompt);
+  expect(q,'the displayed question comes from the real place-value bank').toBeTruthy();
+  const figure=page.locator('.rich-place-value');await expect(figure).toBeVisible();
+  await expect(figure.locator('small')).toHaveText(['Hundreds','Tens','Ones']);
+  await expect(figure.locator('figcaption')).toHaveText('Use the number in the question to fill the chart');
+  const texts=await page.locator('.game-answer strong').allTextContents();
   const wrongs=texts.map((s,i)=>s===q.answer?-1:i).filter(i=>i>=0);expect(wrongs.length).toBeGreaterThanOrEqual(2);
   await page.locator('[data-game-hint]').click();
   expect(await page.locator('.game-answer strong').first().evaluate(e=>parseFloat(getComputedStyle(e).fontSize))).toBeGreaterThanOrEqual(18);
@@ -107,6 +152,11 @@ test('game answers and hints are readable and rejected choices cannot be retried
   const first=page.locator('.game-answer').nth(wrongs[0]);await first.click();await expect(first).toBeDisabled();
   await expect(page.locator('.game-answer:not(:disabled)').first()).toBeFocused();
   expect(await page.locator('.game-answer:not(:disabled)').first().evaluate(e=>e.tabIndex)).toBe(0);
+  const normalTriedSize=await first.evaluate(el=>parseFloat(getComputedStyle(el,'::after').fontSize));
+  expect(normalTriedSize).toBeGreaterThanOrEqual(14);
+  const normalRich=await richTextMetrics(page);
+  expect(normalRich).toHaveLength(4);
+  for(const row of normalRich){expect(row.fontSize,row.text+' is readable').toBeGreaterThanOrEqual(16);expect(row.clipped).toBe(false);}
   const previousFont=await page.evaluate(()=>{
     const root=document.documentElement,previous=root.style.fontSize;
     root.style.fontSize=(parseFloat(getComputedStyle(root).fontSize)*2)+'px';return previous;
@@ -114,8 +164,25 @@ test('game answers and hints are readable and rejected choices cannot be retried
   try{
     await expect(first).toBeDisabled();
     await expect(page.locator('.game-feedback.retry')).toBeVisible();
+    const tried=await first.evaluate(el=>{
+      const style=getComputedStyle(el,'::after'),context=document.createElement('canvas').getContext('2d');
+      context.font=style.font||`${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+      const text=style.content.replace(/^["']|["']$/g,'');
+      return {text,fontSize:parseFloat(style.fontSize),textWidth:context.measureText(text).width,availableWidth:parseFloat(style.width)};
+    });
+    expect(tried.text).toBe('Tried');expect(tried.fontSize).toBeGreaterThanOrEqual(normalTriedSize*2-.1);
+    expect(tried.textWidth,'Tried fits on one line at doubled text size').toBeLessThanOrEqual(tried.availableWidth+1);
+    const displayedRich=await richTextMetrics(page);
+    expect(displayedRich.map(row=>row.text)).toEqual(normalRich.map(row=>row.text));
+    for(let i=0;i<displayedRich.length;i++){
+      expect(displayedRich[i].fontSize,displayedRich[i].text+' follows the root text size').toBeGreaterThanOrEqual(normalRich[i].fontSize*2-.1);
+      expect(displayedRich[i].clipped,displayedRich[i].text+' is not clipped').toBe(false);
+    }
+    const metricsPath=info.outputPath('games-retry-text-metrics.json');
+    await writeFile(metricsPath,JSON.stringify({viewport:{width:393,height:852},scale:2,prompt:q.prompt,tried,normalRich,displayedRich},null,2));
+    await info.attach('Retry and figure text metrics',{path:metricsPath,contentType:'application/json'});
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
-    await page.evaluate(()=>window.scrollTo(0,0));
+    await page.locator('.games-screen').evaluate(el=>{el.scrollTop=0;});
     let path=info.outputPath('games-retry-200-percent-iphone-top.png');
     await page.screenshot({path});await info.attach('Doubled-text retry question',{path,contentType:'image/png'});
     const retry=page.locator('.game-feedback.retry');

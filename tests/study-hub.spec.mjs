@@ -63,8 +63,9 @@ test('weekly test prep covers same-day subjects in the existing player and compl
     await expect(page.locator('[data-game-next]')).toBeVisible();
     await page.locator('[data-game-next]').click();
   }
-  await expect(page.locator('.game-question-card')).toHaveCount(0);
   await expect(page.locator('.game-finish')).toBeVisible();
+  await expect(page.locator('.game-question-card:not(.study-star-goal)')).toHaveCount(0);
+  await expect(page.locator('[data-game-answer],[data-game-hint],[data-game-next],[data-game-read]')).toHaveCount(0);
   expect(subjects.filter(subject=>subject==='Math')).toHaveLength(quota);
   expect(subjects.filter(subject=>subject==='Religion')).toHaveLength(quota);
   expect(new Set(seen).size).toBe(total);

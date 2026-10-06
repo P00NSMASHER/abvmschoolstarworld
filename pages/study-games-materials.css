@@ -4,6 +4,16 @@
 .games-screen .study-game-copy small { font-size: .875rem; line-height: 1.5; }
 .games-screen .game-finish-actions button, .games-screen .game-empty button, .games-screen [data-retry-games] { font-size: 1rem; line-height: 1.4; min-height: 48px; }
 .games-screen [data-retry-games] { padding: 8px 12px; border: 1px solid #bfd0df; border-radius: 11px; background: #f5f9fc; color: #214f77; cursor: pointer; }
+.games-screen .game-answer.wrong::after { grid-column: 2; grid-row: 2; justify-self: start; white-space: nowrap; }
+.games-screen .game-finish > .learning-summary-note { font-size: 1rem; line-height: 1.55; font-weight: 400; letter-spacing: normal; color: #4c5d73; }
+.games-screen .game-finish .study-star-earned.secondary :is(span,strong,small) { font-size: 1rem; line-height: 1.5; }
+.games-screen .study-game-tile:disabled { cursor: default; background: #f4f6f8; border-color: #d4dce3; }
+.games-screen .study-game-tile:disabled > b { display: none; }
+.games-screen .study-game-tile:disabled .study-game-icon { background: #e8edf1; color: #526579; filter: grayscale(1); }
+.games-screen .study-game-tile:disabled .study-game-copy em { font-size: 1rem; line-height: 1.4; color: #526579; }
+.games-screen .rich-place-value > div { grid-template-columns: repeat(auto-fit,minmax(min(100%,5.5rem),1fr)); }
+.games-screen .rich-place-value small, .games-screen .rich-place-value figcaption { font-size: 1rem; line-height: 1.45; overflow-wrap: normal; }
+.games-screen .rich-place-value small { white-space: nowrap; }
 .games-screen .game-materials { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 14px 0; }
 .games-screen .game-materials > label { max-width: 100%; color: #365675; font-size: .875rem; font-weight: 700; }
 .games-screen .game-materials select { flex: 1 1 12rem; max-width: 100%; min-width: 0; min-height: 44px; padding: 8px 30px 8px 12px; border: 1px solid #bfd0df; border-radius: 12px; background: #fff; color: #1c456c; font-size: 1rem; }

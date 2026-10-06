@@ -1,4 +1,5 @@
 import {test,expect} from '@playwright/test';
+import {writeFile} from 'node:fs/promises';
 
 test.use({serviceWorkers:'block'});
 const APP='http://127.0.0.1:4173';
@@ -144,6 +145,15 @@ async function waitForPendingReward(page,hold,catalog){
   return snapshot.calls[0];
 }
 
+async function finishTextMetrics(page){
+  return page.locator('.game-finish .learning-summary-note,.game-finish .study-star-earned > *').evaluateAll(nodes=>nodes.map(node=>({
+    text:node.textContent.trim(),
+    kind:node.matches('.learning-summary-note')?'mastery':node.matches('.study-star-earned > span,.study-star-earned > small')?'secondary':'primary',
+    fontSize:parseFloat(getComputedStyle(node).fontSize),
+    clipped:node.clientWidth>0&&node.scrollWidth>node.clientWidth+1
+  })));
+}
+
 test('Math skips an earlier Faith Comeback and strict test practice leaves all queued work untouched',async({page})=>{
   const fixture=await openFixture(page);
   const seeded=await page.evaluate(async envelope=>{
@@ -246,14 +256,29 @@ for(const outcome of ['success','failure']){
       }
       expect(result.calls).toHaveLength(1);
       await expect(page.locator('[data-reward-reveal]')).toHaveCount(0);
+      const normalText=await finishTextMetrics(page);
+      expect(normalText.filter(row=>row.kind==='mastery')).toHaveLength(1);
+      for(const row of normalText){
+        expect(row.fontSize,row.text+' is readable at the default text size').toBeGreaterThanOrEqual(row.kind==='secondary'?14:16);
+        expect(row.clipped,row.text+' is not clipped').toBe(false);
+      }
       const previousFont=await page.evaluate(doubleText=>{
         const root=document.documentElement,previous=root.style.fontSize;
         if(doubleText)root.style.fontSize=(parseFloat(getComputedStyle(root).fontSize)*2)+'px';
         return previous;
       },outcome==='success');
       try{
+        const displayedText=await finishTextMetrics(page);
+        expect(displayedText.map(row=>row.text)).toEqual(normalText.map(row=>row.text));
+        for(let i=0;i<displayedText.length;i++){
+          expect(displayedText[i].fontSize,displayedText[i].text+' follows the root text size').toBeGreaterThanOrEqual(normalText[i].fontSize*(outcome==='success'?2:1)-.1);
+          expect(displayedText[i].clipped,displayedText[i].text+' is not clipped').toBe(false);
+        }
+        const metricsPath=info.outputPath(outcome==='success'?'games-result-text-metrics.json':'games-reward-error-text-metrics.json');
+        await writeFile(metricsPath,JSON.stringify({viewport:{width:393,height:852},scale:outcome==='success'?2:1,normal:normalText,displayed:displayedText},null,2));
+        await info.attach('Result text metrics',{path:metricsPath,contentType:'application/json'});
         expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
-        await page.evaluate(()=>window.scrollTo(0,0));
+        await page.locator('.games-screen').evaluate(el=>{el.scrollTop=0;});
         const name=outcome==='success'?'games-result-200-percent-iphone':'games-reward-error-iphone';
         let path=info.outputPath(name+'-top.png');
         await page.screenshot({path});await info.attach(name+' top',{path,contentType:'image/png'});

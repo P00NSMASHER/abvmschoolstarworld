@@ -1,4 +1,5 @@
 import {test,expect} from '@playwright/test';
+import {writeFile} from 'node:fs/promises';
 test.use({serviceWorkers:'block'});
 async function fixture(page,subjects=[]){
   const data=await(await page.request.get('/data/study-pack.json')).json();
@@ -32,8 +33,19 @@ test('missing and blank subjects show honest empty notes while original game pra
   expect(await notes.evaluate(e=>e.scrollWidth<=e.clientWidth+1)).toBeTruthy();
   await notes.locator(':scope > summary').click();
   await page.locator('[data-study-source]').selectOption('saved');
-  for(let i=0;i<4;i++)await expect(tiles.nth(i)).toBeDisabled();
+  for(let i=0;i<4;i++){
+    await expect(tiles.nth(i)).toBeDisabled();
+    await expect(tiles.nth(i).locator(':scope > b')).toBeHidden();
+  }
   await expect(tiles).toContainText(['Not ready yet','Not ready yet','Not ready yet','Not ready yet']);
+  const disabledMetrics=await tiles.evaluateAll(nodes=>nodes.map(node=>{
+    const status=node.querySelector('.study-game-copy em'),chevron=node.querySelector(':scope > b');
+    return {game:node.dataset.gameStart,status:status.textContent.trim(),fontSize:parseFloat(getComputedStyle(status).fontSize),chevronDisplay:chevron?getComputedStyle(chevron).display:'absent'};
+  }));
+  for(const row of disabledMetrics)expect(row.fontSize,row.game+' unavailable status is readable').toBeGreaterThanOrEqual(16);
+  const metricsPath=info.outputPath('games-disabled-tile-metrics.json');
+  await writeFile(metricsPath,JSON.stringify({viewport:{width:393,height:852},tiles:disabledMetrics},null,2));
+  await info.attach('Disabled game text metrics',{path:metricsPath,contentType:'application/json'});
   const path=info.outputPath('games-empty-saved-iphone.png');
   await page.screenshot({path,fullPage:true});await info.attach('Empty saved bank with disabled games',{path,contentType:'image/png'});
 });

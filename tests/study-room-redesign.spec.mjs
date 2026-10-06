@@ -138,6 +138,12 @@ test('slow saved-material loading does not move the four primary game controls o
     await expect(page.locator('[data-study-source]')).toBeDisabled();
     await expect(page.locator('.game-material-status[role="status"]')).toContainText('Loading saved materials');
     await capture(page,info,'games-materials-loading-iphone');
+    const scroll=await page.locator('.games-screen').evaluate(el=>el.scrollTop);
+    const status=page.locator('.game-material-status[role="status"]');
+    await status.scrollIntoViewIfNeeded();
+    await expect(status).toBeInViewport({ratio:1});
+    await capture(page,info,'games-materials-loading-iphone-status');
+    await page.locator('.games-screen').evaluate((el,top)=>{el.scrollTop=top;},scroll);
     const before=await page.locator('.study-game-grid').boundingBox();
     expect(before).not.toBeNull();
     await page.locator('[data-game-start="math"]').click();
@@ -161,6 +167,10 @@ test('saved-material failure retains current notes and playable games without an
   await expect(page.locator('[data-game-start="daily"]')).toBeVisible();
   await expect(page.locator('[data-study-retry]')).toBeVisible();
   await capture(page,info,'games-materials-error-iphone');
+  const retry=page.locator('[data-study-retry]');
+  await retry.scrollIntoViewIfNeeded();
+  await expect(retry).toBeInViewport({ratio:1});
+  await capture(page,info,'games-materials-error-iphone-retry');
   await page.locator('[data-study-notes] > summary').click();
   await expect(page.locator('[data-study-notes]')).toContainText('subject');
   await expect(page.locator('[data-study-retry]')).toBeVisible();
