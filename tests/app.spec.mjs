@@ -3,11 +3,10 @@ import AxeBuilder from "@axe-core/playwright";
 
 async function openTab(page,label){
   if(label==="Study Games"){
-    await page.getByRole("button",{name:"Study",exact:true}).click();
-    await page.locator(".study-games-cta").click();
+    await page.goto("/#games");
   }else await page.getByRole("button",{name:label,exact:true}).click();
   await expect(page.locator(".screen")).toBeVisible();
-  if(label==="Study Games")await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
+  if(label==="Study"||label==="Study Games")await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
 }
 test.beforeEach(async({page})=>{
   await page.goto("/#today");
@@ -409,43 +408,41 @@ test("Calendar keeps the current-month summary as concise as next month",async({
   await expect(page.locator(".specials-card")).toBeVisible();
 });
 
-test("Study subject cards use a three-column iPad grid and a compact two-column phone grid",async({page})=>{
+test("the existing four Games tiles retain two columns while optional notes reflow on iPad and phone",async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await page.goto("/#study");
-  await expect(page.locator(".study-room-v2")).toBeVisible({timeout:10_000});
-  await expect(page.locator("#study-hub")).toHaveAttribute("data-study-state","ready",{timeout:10_000});
-  const cards=page.locator(".room-subject-grid > .study-accordion");
-  await expect(cards).toHaveCount(6);
+  await expect(page.locator(".games-screen")).toHaveAttribute("data-study-state","ready",{timeout:10_000});
+  const cards=page.locator(".study-game-grid > .study-game-tile");
+  await expect(cards).toHaveCount(4);
   const boxes=[];
-  for(let i=0;i<6;i++)boxes.push(await cards.nth(i).boundingBox());
+  for(let i=0;i<4;i++)boxes.push(await cards.nth(i).boundingBox());
   for(const box of boxes)expect(box).not.toBeNull();
   expect(Math.abs(boxes[0].y-boxes[1].y)).toBeLessThan(4);
-  expect(Math.abs(boxes[1].y-boxes[2].y)).toBeLessThan(4);
   expect(boxes[1].x).toBeGreaterThan(boxes[0].x+boxes[0].width/2);
-  expect(boxes[2].x).toBeGreaterThan(boxes[1].x+boxes[1].width/2);
-  expect(Math.abs(boxes[3].y-boxes[4].y)).toBeLessThan(4);
-  expect(Math.abs(boxes[4].y-boxes[5].y)).toBeLessThan(4);
-  await cards.nth(0).locator("summary").click();
-  await expect(cards.nth(0)).toHaveAttribute("open", "");
-  const tabletGrid=await page.locator(".room-subject-grid").boundingBox();
-  const expandedTablet=await cards.nth(0).boundingBox();
+  expect(Math.abs(boxes[2].y-boxes[3].y)).toBeLessThan(4);
+  expect(boxes[2].y).toBeGreaterThanOrEqual(boxes[0].y+boxes[0].height);
+  const notes=page.locator('[data-study-notes]');
+  await notes.locator(':scope > summary').click();
+  const lesson=notes.locator('.game-material-lesson').first();
+  await lesson.locator('summary').click();
+  await expect(lesson).toHaveAttribute('open','');
+  const tabletGrid=await page.locator(".study-game-grid").boundingBox();
+  const expandedTablet=await notes.boundingBox();
   expect(Math.abs(expandedTablet.width-tabletGrid.width)).toBeLessThan(4);
   const tabletOverflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
   expect(tabletOverflow).toBeFalsy();
 
   await page.setViewportSize({width:390,height:844});
-  await page.goto("/#study");
-  await expect(page.locator("#study-hub")).toHaveAttribute("data-study-state","ready",{timeout:10_000});
-  const phoneCards=page.locator(".room-subject-grid > .study-accordion");
-  // Same-hash navigation preserves the expanded subject during rotation.
-  // Check its full-width reflow, then close it before measuring the compact grid.
-  await expect(phoneCards.nth(0)).toHaveAttribute("open", "");
-  const phoneGrid=await page.locator(".room-subject-grid").boundingBox();
-  const expandedPhone=await phoneCards.nth(0).boundingBox();
+  const phoneCards=page.locator(".study-game-grid > .study-game-tile");
+  // Rotation preserves both levels of the on-demand lesson disclosure.
+  await expect(notes).toHaveAttribute('open','');
+  await expect(lesson).toHaveAttribute("open", "");
+  const phoneGrid=await page.locator(".study-game-grid").boundingBox();
+  const expandedPhone=await notes.boundingBox();
   expect(Math.abs(expandedPhone.width-phoneGrid.width)).toBeLessThan(4);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1)).toBe(false);
-  await phoneCards.nth(0).locator("summary").click();
-  await expect(page.locator(".room-subject-grid > .study-accordion[open]")).toHaveCount(0);
+  await notes.locator(':scope > summary').click();
+  await expect(notes).not.toHaveAttribute('open','');
   const p0=await phoneCards.nth(0).boundingBox();
   const p1=await phoneCards.nth(1).boundingBox();
   const p2=await phoneCards.nth(2).boundingBox();
@@ -455,21 +452,21 @@ test("Study subject cards use a three-column iPad grid and a compact two-column 
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1)).toBe(false);
 });
 
-test("Study exposes one primary game CTA and collapsed subject details",async({page})=>{
+test("Study opens the four Games directly with source selection and collapsed notes and test management",async({page})=>{
   await openTab(page,"Study");
-  await expect(page.locator(".room-adults")).not.toHaveAttribute("open");
-  await page.locator(".room-adults > summary").click();
-  await expect(page.locator(".study-at-a-glance")).toBeVisible();
-  await expect(page.locator(".study-games-cta")).toBeVisible();
-  const details=page.locator(".study-accordion");
-  await expect(details).toHaveCount(6);
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+  await expect(page.locator('.study-game-grid > .study-game-tile')).toHaveCount(4);
+  await expect(page.locator('select[data-study-source]')).toBeVisible();
+  await expect(page.locator('.study-games-cta,.study-room-v2,[data-learning-panel]')).toHaveCount(0);
+  const details=page.locator('[data-study-notes],[data-study-test-options]');
+  await expect(details).toHaveCount(2);
   for(let i=0;i<await details.count();i++)await expect(details.nth(i)).not.toHaveAttribute("open");
 });
 
 test("Study Games loads lazily and starts a playable round",async({page})=>{
   await openTab(page,"Study Games");
   const tiles=page.locator(".study-game-tile");
-  expect(await tiles.count()).toBeGreaterThanOrEqual(4);
+  await expect(tiles).toHaveCount(4);
   for(const name of ["Quick Mix","Math Dash","Word Power","Faith Quest"]){
     await expect(page.getByRole("button",{name:new RegExp(name,"i")})).toBeVisible();
   }
@@ -575,22 +572,17 @@ test("Study Games uses the iPad canvas with priority hierarchy and tablet nav",a
   expect(appBox).not.toBeNull();
   expect(appBox.width).toBeGreaterThan(700);
 
-  const readyButton=page.getByRole("button",{name:/Test Ready/i});
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+  await expect(page.locator('.study-game-grid > .study-game-tile')).toHaveCount(4);
   const quick=await page.getByRole("button",{name:/Quick Mix/i}).boundingBox();
   const math=await page.getByRole("button",{name:/Math Dash/i}).boundingBox();
   expect(quick).not.toBeNull();
   expect(math).not.toBeNull();
   expect(Math.abs(quick.y-math.y)).toBeLessThan(4);
-  if(await readyButton.count()){
-    const ready=await readyButton.boundingBox();
-    expect(ready).not.toBeNull();
-    expect(ready.width).toBeGreaterThan(quick.width*1.8);
-    const readyVisual=await readyButton.evaluate(el=>{
-      const svg=el.querySelector(".game-icon-test-ready svg");
-      return {fill:svg.getAttribute("fill"),stroke:svg.getAttribute("stroke"),width:svg.getAttribute("stroke-width")};
-    });
-    expect(readyVisual).toEqual({fill:"none",stroke:"currentColor",width:"2"});
-  }
+  const grid=await page.locator('.study-game-grid').boundingBox();
+  const testActions=await page.locator('[data-study-tests]').boundingBox();
+  expect(testActions.y).toBeGreaterThanOrEqual(grid.y+grid.height);
+  await expect(page.locator('.study-game-grid [data-game-start="test-ready"]')).toHaveCount(0);
 
   const navButton=await page.locator(".bottom-nav button").first().boundingBox();
   const navIcon=await page.locator(".bottom-nav .nav-icon").first().boundingBox();

@@ -16,8 +16,24 @@ if(!/href="\.\/styles\.css(?:\?[^"]*)?"/.test(index))fail("Gold-standard styles.
 if(!/["']\.\/study-games\.js\?v=\d+["']/.test(app))fail("Versioned Study Games engine must be lazy-loadable from app.js");
 if(!/["']\.\/study-games-view\.js\?v=\d+["']/.test(app))fail("Versioned Study Games view must be lazy-loadable from app.js");
 if(!/src="\.\/app\.js(?:\?[^"]*)?"/.test(index))fail("Gold-standard app.js must be loaded");
-for(const marker of ["YOUR SCHOOL PLAN","SCHOOL MONTH AT A GLANCE","Study room","Study games","Family dashboard"])if(!app.includes(marker))fail("Missing core UI marker: "+marker);
-for(const marker of [".app-header",".day-picker",".calendar-card",".study-accordion",".study-games-cta",".study-game-grid",".family-hero",".bottom-nav"])if(!css.includes(marker))fail("Missing core style marker: "+marker);
+for(const marker of ["YOUR SCHOOL PLAN","SCHOOL MONTH AT A GLANCE","Study games","Family dashboard"])if(!app.includes(marker))fail("Missing core UI marker: "+marker);
+for(const marker of [".app-header",".day-picker",".calendar-card",".study-game-tile",".game-question-card",".game-answer",".study-game-grid",".family-hero",".bottom-nav"])if(!css.includes(marker))fail("Missing core style marker: "+marker);
+if(!/study:renderGames\s*,\s*games:renderGames/.test(app))fail("Study and Games must share the existing Games renderer");
+const modeBlock=app.match(/const STUDY_GAME_MODES=Object\.freeze\(\[([\s\S]*?)\]\);/)?.[1]||"";
+const modeIds=[...modeBlock.matchAll(/\bid:"([^"]+)"/g)].map(match=>match[1]);
+if(modeIds.join(",")!=="quick,math,words,faith")fail("The four familiar Games modes must remain intact");
+const materialsView=read("pages/study-games-materials-view.mjs");
+if(!/<select[^>]*data-study-source/.test(materialsView))fail("Study materials must use a native source selector");
+for(const marker of ["data-study-pick","data-study-notes","data-study-test-options","data-test","data-undo-test","data-restore-test"])
+  if(!materialsView.includes(marker))fail("Missing integrated Study control: "+marker);
+for(const marker of ["mountStudyHub","ABVMStudyReview.render(","Learning on this device","room-learning-summary"])
+  if(app.includes(marker)||materialsView.includes(marker))fail("Retired Study dashboard must not be mounted: "+marker);
+for(const file of ["study-materials.mjs","study-games-materials-view.mjs"])
+  if(!app.includes("./"+file)||!sw.includes("./"+file)||!exists("pages/"+file))fail("Integrated Study module must load and remain available offline: "+file);
+const materialsCss=index.match(/href="(\.\/study-games-materials\.css\?v=\d+)"/)?.[1];
+if(!materialsCss||!sw.includes(materialsCss)||!exists("pages/study-games-materials.css"))fail("Integrated Study styles must load and remain available offline");
+for(const ref of [...app.matchAll(/["'](\.\/study-games(?:-view)?\.js\?v=\d+)["']/g)].map(match=>match[1]))
+  if(!sw.includes(ref))fail("Games code and offline cache versions differ: "+ref);
 for(const marker of ["skill-only-equivalent-item-v2","research-quality","buildCatalog","selectQuestions","FORBIDDEN"])if(!games.includes(marker))fail("Missing Study Games engine marker: "+marker);
 if(!app.includes("./data/study-pack-runtime.json")||!app.includes("./data/study-pack.json"))fail("App must prefer runtime pack and retain full-pack fallback");
 if(!sw.includes("./data/study-pack-runtime.json")||!sw.includes("./data/study-pack.json"))fail("Service worker must cache runtime and full school packs");

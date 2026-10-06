@@ -7,11 +7,10 @@ async function waitForApp(page,path="/#today"){
 
 async function openDestination(page,label){
   if(label==="Study Games"){
-    await page.getByRole("button",{name:"Study",exact:true}).click();
-    await page.locator(".study-games-cta").click();
-    await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
+    await page.goto(new URL("#games",page.url()).href);
   }else await page.getByRole("button",{name:label,exact:true}).click();
   await expect(page.locator(".screen")).toBeVisible();
+  if(label==="Study"||label==="Study Games")await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
 }
 
 test("keyboard navigation reaches the skip link and all five primary tabs",async({page})=>{
@@ -36,16 +35,37 @@ test("keyboard navigation reaches the skip link and all five primary tabs",async
   expect(seen).toEqual(new Set(["today","week","calendar","study","family"]));
 });
 
-test("native Study disclosures work from keyboard",async({page})=>{
+test("Study sources, mix choices, and native disclosures work from keyboard",async({page})=>{
   await waitForApp(page,"/#study");
-  const details=page.locator("#study-math");
-  const summary=details.locator(":scope > summary");
-  await summary.focus();
-  await expect(summary).toBeFocused();
-  await page.keyboard.press("Enter");
-  await expect(details).toHaveAttribute("open","");
-  await page.keyboard.press("Enter");
-  await expect(details).not.toHaveAttribute("open","");
+  const source=page.locator("select[data-study-source]");
+  await expect(source).toBeEnabled({timeout:10_000});
+  await source.focus();
+  await expect(source).toBeFocused();
+  await source.press("End");
+  await source.press("Enter");
+  await expect(source).toHaveValue("mix");
+  await expect(source).toBeFocused();
+  const star=page.locator('[data-study-mix] input[data-study-pick="star"]');
+  await expect(star).not.toBeChecked();
+  await star.focus();
+  await page.keyboard.press("Space");
+  await expect(star).toBeChecked();
+  await expect(star).toBeFocused();
+  await page.keyboard.press("Space");
+  await expect(star).not.toBeChecked();
+
+  for(const selector of ["details[data-study-notes]","details[data-study-test-options]"]){
+    const details=page.locator(selector);
+    const summary=details.locator(":scope > summary");
+    await expect(details).not.toHaveAttribute("open","");
+    await summary.focus();
+    await expect(summary).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(details).toHaveAttribute("open","");
+    if(selector.includes("data-study-notes"))await expect(details.locator(".game-material-lesson").first()).toBeVisible();
+    await page.keyboard.press("Enter");
+    await expect(details).not.toHaveAttribute("open","");
+  }
 });
 
 test("checklist completion preserves scroll position and keyboard focus",async({page})=>{

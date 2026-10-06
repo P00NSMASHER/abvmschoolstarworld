@@ -1,15 +1,42 @@
 import {test,expect} from '@playwright/test';
 test.use({serviceWorkers:'block'});
 
+const gameModes=['quick','math','words','faith'];
+
+async function expectGameMenu(page){
+  const grid=page.locator('.study-game-grid');
+  await expect(grid).toBeVisible({timeout:10_000});
+  const tiles=grid.locator(':scope > .study-game-tile');
+  await expect(tiles).toHaveCount(4);
+  expect(await tiles.evaluateAll(nodes=>nodes.map(node=>node.dataset.gameStart))).toEqual(gameModes);
+  return grid;
+}
+
+async function openNotes(page){
+  const source=page.locator('select[data-study-source]');
+  await expect(source).toBeEnabled({timeout:10_000});
+  await source.selectOption('weekly');
+  const notes=page.locator('details[data-study-notes]');
+  if(!await notes.evaluate(node=>node.open))await notes.locator(':scope > summary').click();
+  await expect(notes).toHaveAttribute('open','');
+  const lessons=notes.locator('.game-material-lesson');
+  await expect(lessons.first()).toBeVisible();
+  for(const lesson of await lessons.all()){
+    if(!await lesson.evaluate(node=>node.open))await lesson.locator(':scope > summary').click();
+  }
+  return notes;
+}
+
 test('long Family and Study cards never clip their content',async({page})=>{
   for(const viewport of [{width:320,height:568},{width:393,height:852},{width:820,height:1180},{width:1440,height:900}]){
     await page.setViewportSize(viewport);
     for(const tab of ['family','study']){
       await page.goto('/#'+tab);
       await expect(page.locator('.screen')).toBeVisible();
-      const clipped=await page.locator('.family-actions-card,.notices-card,.study-at-a-glance').evaluateAll(nodes=>nodes.filter(x=>x.scrollHeight>x.clientHeight+2).map(x=>({class:x.className,visible:x.clientHeight,content:x.scrollHeight})));
+      if(tab==='study')await openNotes(page);
+      const clipped=await page.locator('.family-actions-card,.notices-card,.game-materials,.game-material-actions,[data-study-notes],.game-material-lesson').evaluateAll(nodes=>nodes.filter(x=>x.scrollHeight>x.clientHeight+2).map(x=>({class:x.className,visible:x.clientHeight,content:x.scrollHeight})));
       expect(clipped).toEqual([]);
-      const last=page.locator(tab==='family'?'.unofficial-note':'.study-accordion').last();
+      const last=page.locator(tab==='family'?'.unofficial-note':'.game-material-lesson').last();
       await last.scrollIntoViewIfNeeded();
       await expect(last).toBeInViewport();
     }
@@ -58,10 +85,36 @@ test('new source information stays unread until acknowledged',async({page})=>{
   await expect(page.locator('.updates-banner')).toHaveCount(0);
 });
 
-test('empty practice history does not push down the Study action',async({page})=>{
+test('Study Games keeps reports and recommendations absent before and after saved learning',async({page})=>{
+  const data=await(await page.request.get('/data/study-pack.json')).json();
+  const skills=[...new Set(['place-value',...(data.pack.contentPipeline?.skills||[]).map(row=>row.id)])];
+  await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({json:data}));
   await page.goto('/#study');
-  await expect(page.locator('.study-games-cta')).toBeVisible();
-  await expect(page.locator('[aria-labelledby="weekly-learning-title"]')).toHaveCount(0);
+  for(const seeded of [false,true]){
+    if(seeded){
+      await page.evaluate(ids=>{
+        const now=Date.now(),day=24*60*60*1000;
+        const learning=Object.fromEntries(ids.map(id=>[id,{
+          Seen:6,Correct:3,IndependentCorrect:1,AssistedCorrect:2,Wrong:3,
+          LastSeenAt:now,LastIndependentCorrectAt:now-1000,
+          LastResolution:{resolvedAt:now,correct:false,independent:false},
+          ConsecutiveWrong:2,
+          Review:{version:1,repetitions:0,ease:2.5,intervalDays:1,
+            reviewedAt:now-(id==='place-value'?2*day:0),
+            dueAt:now+(id==='place-value'?-day:day)}
+        }]));
+        localStorage.setItem('abvm-study-learning:v2',JSON.stringify(learning));
+      },skills);
+      await page.reload();
+      expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('abvm-study-learning:v2'))['place-value'].Seen)).toBe(6);
+    }
+    const grid=await expectGameMenu(page);
+    await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready',{timeout:10_000});
+    await expect(page.locator('[aria-labelledby="weekly-learning-title"],.room-learning-summary,.daily-practice,[aria-label="Skills to revisit"]')).toHaveCount(0);
+    await expect(page.getByRole('heading',{name:/^(Learning on this device|Weekly learning|Place value)$/i})).toHaveCount(0);
+    const top=await grid.evaluate(node=>node.getBoundingClientRect().top);
+    expect(top).toBeLessThan((page.viewportSize()?.height||844)*.98);
+  }
 });
 
 test('larger preferred text reflows without hiding Family or Study content',async({page})=>{
@@ -69,10 +122,11 @@ test('larger preferred text reflows without hiding Family or Study content',asyn
   for(const tab of ['today','week','calendar','study','family']){
     await page.goto('/#'+tab);
     await expect(page.locator('.screen')).toBeVisible();
+    if(tab==='study')await openNotes(page);
     await page.evaluate(()=>document.documentElement.style.fontSize='34px');
     const overflow=await page.locator('.screen').evaluate(e=>e.scrollWidth>e.clientWidth+1);
     expect(overflow,tab+' with enlarged text').toBeFalsy();
-    const clipped=await page.locator('.family-actions-card,.notices-card,.study-at-a-glance').evaluateAll(nodes=>nodes.some(x=>x.scrollHeight>x.clientHeight+2));
+    const clipped=await page.locator('.family-actions-card,.notices-card,.game-materials,.game-material-actions,[data-study-notes],.game-material-lesson').evaluateAll(nodes=>nodes.some(x=>x.scrollHeight>x.clientHeight+2));
     expect(clipped,tab+' with enlarged text').toBeFalsy();
   }
 });
@@ -87,39 +141,46 @@ test('touch navigation reaches the five tabs and Study Games',async({page})=>{
     await expect(page.locator('.screen')).toBeVisible();
   }
   await page.getByRole('button',{name:'Study',exact:true}).click();
-  await page.locator('.study-games-cta').click();
-  await expect(page.locator('.study-game-grid')).toBeVisible();
+  await expectGameMenu(page);
+  await page.goto('/#games');
+  await expectGameMenu(page);
+  await expect(page.getByRole('button',{name:'Study',exact:true})).toHaveAttribute('aria-current','page');
 });
 
-test('Study subject bullets reserve space and never collide with copy',async({page})=>{
+test('on-demand lesson bullets reserve space and never collide with copy',async({page})=>{
   await page.setViewportSize({width:393,height:852});
   await page.goto('/#study');
-  await expect(page.locator('.study-accordion')).toHaveCount(6);
-  const cards=page.locator('.study-accordion');
+  const notes=await openNotes(page);
+  const cards=notes.locator('.game-material-lesson');
+  expect(await notes.locator('li').count()).toBeGreaterThan(0);
   for(let i=0;i<await cards.count();i++){
     const card=cards.nth(i);
-    await card.evaluate(el=>{el.open=true});
     const items=card.locator('li');
     for(let j=0;j<await items.count();j++){
       const item=items.nth(j);
       const text=(await item.innerText()).trim();
-      expect(text.startsWith('✓'),`subject ${i+1} item ${j+1} duplicates its marker in text`).toBeFalsy();
+      expect(/^[✓•]/.test(text),`lesson ${i+1} item ${j+1} duplicates its marker in text`).toBeFalsy();
       const geometry=await item.evaluate(el=>{
         const style=getComputedStyle(el);
         const before=getComputedStyle(el,'::before');
-        const columns=style.gridTemplateColumns.split(/\s+/).map(value=>parseFloat(value)).filter(Number.isFinite);
+        const list=el.closest('ul');
+        const row=el.getBoundingClientRect();
+        const parent=list.getBoundingClientRect();
         return {
           display:style.display,
-          columns,
-          minWidth:style.minWidth,
+          marker:style.listStyleType,
+          markerPosition:style.listStylePosition,
+          markerSpace:row.left-parent.left,
           beforeContent:before.content,
-          beforePosition:before.position
+          overflows:el.scrollWidth>el.clientWidth+1
         };
       });
-      expect(geometry.display).toBe('grid');
-      expect(geometry.columns[0]).toBeGreaterThanOrEqual(18);
-      expect(geometry.beforeContent).toContain('✓');
-      expect(geometry.beforePosition).toBe('static');
+      expect(geometry.display).toBe('list-item');
+      expect(geometry.marker).toBe('disc');
+      expect(geometry.markerPosition).toBe('outside');
+      expect(geometry.markerSpace).toBeGreaterThanOrEqual(18);
+      expect(geometry.beforeContent).not.toContain('✓');
+      expect(geometry.overflows).toBeFalsy();
     }
   }
 });
@@ -131,10 +192,11 @@ test('visual integrity audit keeps every primary screen inside the app canvas',a
       await page.goto('/#'+tab);
       const screen=page.locator('.screen');
       await expect(screen).toBeVisible();
+      if(tab==='study')await openNotes(page);
       const audit=await screen.evaluate(el=>{
         const root=el.getBoundingClientRect();
         const offenders=[];
-        const nodes=[...el.querySelectorAll('section,details,.future-card,.lunch-card,.study-games-cta,.calendar-card,.calendar-day-card')];
+        const nodes=[...el.querySelectorAll('section,details,.future-card,.lunch-card,.study-game-grid,.study-game-tile,.game-material-secondary,.calendar-card,.calendar-day-card')];
         for(const node of nodes){
           const style=getComputedStyle(node);
           if(style.display==='none'||style.visibility==='hidden')continue;
@@ -167,46 +229,89 @@ test('visual integrity audit keeps every primary screen inside the app canvas',a
 
 
 
-test('Study Room loading shell keeps the primary daily action stable',async({page})=>{
+test('saved-material loading keeps the four Games playable and the grid stable',async({page})=>{
+  const [schoolwork,archive]=await Promise.all([
+    page.request.get('/data/schoolwork.json').then(response=>response.json()),
+    page.request.get('/data/study-archive.json').then(response=>response.json())
+  ]);
   for(const viewport of [{width:393,height:852},{width:768,height:1024}]){
     await page.setViewportSize(viewport);
-    await page.route('**/data/schoolwork.json',async route=>{
-      await new Promise(resolve=>setTimeout(resolve,700));
-      await route.continue();
+    let release;
+    const pending=new Promise(resolve=>{release=resolve});
+    await page.route('**/data/schoolwork.json*',async route=>{
+      await pending;
+      await route.fulfill({json:schoolwork});
     });
-    await page.route('**/data/study-archive.json',async route=>{
-      await new Promise(resolve=>setTimeout(resolve,700));
-      await route.continue();
+    await page.route('**/data/study-archive.json*',async route=>{
+      await pending;
+      await route.fulfill({json:archive});
     });
-    await page.goto('/?study-loading-fixture='+viewport.width+'#study');
-    const host=page.locator('#study-hub');
-    await expect(host).toHaveAttribute('data-study-state','loading',{timeout:10_000});
-    await expect(host.locator('[role="status"]')).toContainText('Opening your study collection');
-    const daily=page.locator('.room-daily');
-    await expect(daily).toBeVisible();
-    const before=await daily.evaluate(el=>el.getBoundingClientRect().top);
-    await expect(host).toHaveAttribute('data-study-state','ready',{timeout:10_000});
-    await expect(host.locator('.hub-tabs button')).toHaveCount(4);
-    const after=await daily.evaluate(el=>el.getBoundingClientRect().top);
-    expect(Math.abs(after-before),`Study daily-action shift at ${viewport.width}px`).toBeLessThanOrEqual(8);
-    await expect(daily).toHaveCount(1);
-    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
-    expect(overflow).toBeFalsy();
-    await page.unroute('**/data/schoolwork.json');
-    await page.unroute('**/data/study-archive.json');
+    try{
+      await page.goto('/?study-loading-fixture='+viewport.width+'#study',{waitUntil:'domcontentloaded'});
+      const host=page.locator('.games-screen');
+      const grid=await expectGameMenu(page);
+      await expect(host).toHaveAttribute('data-study-state','loading',{timeout:10_000});
+      await expect(host.getByRole('status').filter({hasText:'Loading saved materials'})).toBeVisible();
+      for(const mode of gameModes){
+        await expect(host).toHaveAttribute('data-study-state','loading');
+        await grid.locator('[data-game-start="'+mode+'"]').click();
+        await expect(page.locator('.game-question-card')).toBeVisible();
+        await expect(page.locator('.game-question-card [data-game-answer]')).toHaveCount(3);
+        await page.locator('[data-game-home]').click();
+        await expectGameMenu(page);
+      }
+      const before=await grid.evaluate(el=>el.getBoundingClientRect().top);
+      release();
+      await expect(host).toHaveAttribute('data-study-state','ready',{timeout:10_000});
+      await expectGameMenu(page);
+      const after=await grid.evaluate(el=>el.getBoundingClientRect().top);
+      expect(Math.abs(after-before),`Games grid shift at ${viewport.width}px`).toBeLessThanOrEqual(8);
+      await expect(page.locator('select[data-study-source]')).toBeEnabled();
+      const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
+      expect(overflow).toBeFalsy();
+    }finally{
+      release();
+      await page.unroute('**/data/schoolwork.json*');
+      await page.unroute('**/data/study-archive.json*');
+    }
   }
 });
 
-test('Study Hub load failure keeps legacy study content usable and retry visible',async({page})=>{
+test('saved-material failure keeps weekly notes and all four Games usable and retry recovers',async({page})=>{
   await page.setViewportSize({width:393,height:852});
-  await page.route('**/data/schoolwork.json',route=>route.abort());
+  const [data,schoolwork]=await Promise.all([
+    page.request.get('/data/study-pack.json').then(response=>response.json()),
+    page.request.get('/data/schoolwork.json').then(response=>response.json())
+  ]);
+  const note='Compare the hundreds, then the tens and ones.';
+  const math=data.pack.subjects.find(row=>row.subject==='Math');
+  expect(math).toBeTruthy();
+  math.studyNotes=[...(math.studyNotes||[]),note];
+  data.pack.sourceHash=String(data.pack.sourceHash||'current')+'-partial-material-notes';
+  await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({json:data}));
+  let fail=true;
+  await page.route('**/data/schoolwork.json*',route=>fail?route.abort():route.fulfill({json:schoolwork}));
   await page.goto('/#study');
-  const host=page.locator('#study-hub');
-  await expect(host).toHaveAttribute('data-study-state','error',{timeout:10_000});
-  await expect(host.getByRole('button',{name:'Try again'})).toBeVisible();
-  await page.locator('.room-adults > summary').click();
-  await expect(page.locator('.study-at-a-glance')).toBeVisible();
-  await expect(page.locator('.study-games-cta')).toBeVisible();
+  const host=page.locator('.games-screen');
+  await expect(host).toHaveAttribute('data-study-state','partial',{timeout:10_000});
+  await expect(host.locator('[data-study-retry]')).toBeVisible();
+  const notes=await openNotes(page);
+  await expect(notes).toContainText(note);
+  for(const mode of gameModes){
+    const grid=await expectGameMenu(page);
+    await grid.locator('[data-game-start="'+mode+'"]').click();
+    await expect(page.locator('.game-question-card')).toBeVisible();
+    await expect(page.locator('.game-question-card [data-game-answer]')).toHaveCount(3);
+    await page.locator('[data-game-home]').click();
+    await expect(host).toHaveAttribute('data-study-state','partial');
+  }
+  fail=false;
+  await host.locator('[data-study-retry]').click();
+  await expect(host).toHaveAttribute('data-study-state','ready',{timeout:10_000});
+  await expect(host.locator('[data-study-retry]')).toHaveCount(0);
+  await expectGameMenu(page);
+  await openNotes(page);
+  await expect(notes).toContainText(note);
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
   expect(overflow).toBeFalsy();
 });

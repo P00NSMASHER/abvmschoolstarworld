@@ -2,18 +2,21 @@ import {test,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 test.use({serviceWorkers:'block'});
 async function room(page){
+  await page.clock.setFixedTime(new Date('2026-10-05T16:00:00-04:00'));
   await page.goto('/#study');
-  await expect(page.locator('#study-hub')).toHaveAttribute('data-study-state','ready');
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
 }
 async function game(page){
   await page.goto('/#games');
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+  await page.locator('[data-study-source]').selectOption('weekly');
   await page.getByRole('button',{name:/Math Dash/}).click();
   await expect(page.locator('.game-question-card')).toBeVisible();
 }
 async function answerKey(page){
   const prompt=await page.locator('.game-question-card > h2').innerText();
   return page.evaluate(async prompt=>{
-    const envelope=await fetch('./data/study-pack.json').then(r=>r.json());
+    const envelope=await fetch('./data/study-pack-runtime.json').then(r=>r.json());
     const e=window.ABVMStudyGames,c=e.buildCatalog(envelope.pack,{sourceKey:e.sourceKeyFromEnvelope(envelope.pack,envelope)});
     const q=c.questions.find(q=>q.prompt===prompt);
     if(!q)throw Error('Presented question is not in its source catalog');
@@ -21,43 +24,66 @@ async function answerKey(page){
   },prompt);
 }
 for(const size of [{width:393,height:852},{width:768,height:1024},{width:320,height:740},{width:852,height:393}]){
- test(`child-first Study geometry at ${size.width}x${size.height}`,async({page},info)=>{
+ test(`integrated Games geometry at ${size.width}x${size.height}`,async({page},info)=>{
     await page.setViewportSize(size);await room(page);
-    const cards=page.locator('.room-subject-grid > .study-accordion');await expect(cards).toHaveCount(6);
+    const cards=page.locator('.study-game-grid > .study-game-tile');await expect(cards).toHaveCount(4);
     const geometry=await page.evaluate(()=>{
       const box=s=>document.querySelector(s).getBoundingClientRect().toJSON(),screen=document.querySelector('.screen');
-      return {first:box('.room-subject-grid > .study-accordion'),daily:box('.room-daily'),grid:box('.room-subject-grid'),nav:box('.bottom-nav'),overflow:screen.scrollWidth>screen.clientWidth+1};
+      return {first:box('.study-game-grid > .study-game-tile'),source:box('.game-materials'),daily:box('.game-daily-action'),grid:box('.study-game-grid'),nav:box('.bottom-nav'),overflow:screen.scrollWidth>screen.clientWidth+1};
     });
     expect(geometry.overflow).toBe(false);
     expect(geometry.nav.bottom).toBeLessThanOrEqual(size.height+1);
-    expect(Math.abs(geometry.daily.width-geometry.grid.width)).toBeLessThan(2);
+    expect(Math.abs(geometry.source.width-geometry.grid.width)).toBeLessThan(2);
+    expect(geometry.daily.top).toBeGreaterThanOrEqual(geometry.grid.bottom);
     if(size.width===393)expect(geometry.first.bottom).toBeLessThanOrEqual(geometry.nav.top);
     const small=await page.locator('.screen button:visible').evaluateAll(bs=>bs.filter(b=>b.getBoundingClientRect().height<43.5).map(b=>b.textContent));
     expect(small).toEqual([]);
-    await expect(page.getByRole('button',{name:'Practice now',exact:true})).toBeVisible();
-    await info.attach('home',{body:await page.screenshot(),contentType:'image/png'});
+    await expect(page.locator('[data-game-start="daily"]')).toBeVisible();
+    const path=info.outputPath(`games-home-${size.width}x${size.height}.png`);
+    await page.screenshot({path});await info.attach('home',{path,contentType:'image/png'});
  });
 }
-test('disclosed parent history and primary navigation are keyboard operable',async({page})=>{
+test('material selection, notes and test management are keyboard operable',async({page})=>{
   await room(page);
-  for(const key of ['cumulative','star','games','weekly']){
-    const tab=page.locator(`.hub-tabs [data-tab="${key}"]`);await tab.focus();await page.keyboard.press('Enter');
-    await expect(tab).toHaveAttribute('aria-pressed','true');await expect(tab).toBeFocused();
+  const select=page.locator('[data-study-source]');
+  for(const key of ['saved','star','mix','weekly']){
+    await select.focus();await select.selectOption(key);
+    await expect(select).toHaveValue(key);await expect(select).toBeFocused();
   }
-  const drawer=page.locator('.room-adults');await expect(drawer).not.toHaveAttribute('open','');
-  await drawer.locator(':scope > summary').focus();await page.keyboard.press('Enter');await expect(drawer).toHaveAttribute('open','');
-  await expect(page.locator('[data-learning-panel]')).toContainText('No answered practice');
+  for(const selector of ['[data-study-notes]','[data-study-test-options]']){
+    const drawer=page.locator(selector);await expect(drawer).not.toHaveAttribute('open','');
+    const summary=drawer.locator(':scope > summary');
+    await summary.focus();await page.keyboard.press('Enter');await expect(drawer).toHaveAttribute('open','');
+    await expect(summary).toBeFocused();
+  }
+  await expect(page.locator('[data-learning-panel]')).toHaveCount(0);
 });
-test('expanded notes retain readable content at 200 percent zoom with reduced motion',async({page})=>{
+test('expanded notes and the selected Saved label fit at 200 percent text size with reduced motion',async({page},info)=>{
   await page.setViewportSize({width:393,height:852});await page.emulateMedia({reducedMotion:'reduce'});await room(page);
-  await page.locator('#study-reading > summary').click();const before=await page.locator('.room-daily button').evaluate(e=>parseFloat(getComputedStyle(e).fontSize));
+  await page.locator('[data-study-source]').selectOption('saved');
+  await page.locator('[data-study-notes] > summary').click();
+  const lesson=page.locator('.game-material-lesson').first();await lesson.locator('summary').click();
+  const before=await page.locator('[data-game-start="daily"]').evaluate(e=>parseFloat(getComputedStyle(e).fontSize));
   await page.evaluate(()=>document.documentElement.style.fontSize=(parseFloat(getComputedStyle(document.documentElement).fontSize)*2)+'px');
-  const after=await page.locator('.room-daily button').evaluate(e=>parseFloat(getComputedStyle(e).fontSize));
+  const after=await page.locator('[data-game-start="daily"]').evaluate(e=>parseFloat(getComputedStyle(e).fontSize));
   expect(after).toBeGreaterThanOrEqual(before*2);
-  await expect(page.locator('.room-daily button')).toBeVisible();
+  const labelFit=await page.locator('[data-study-source]').evaluate(select=>{
+    const style=getComputedStyle(select),context=document.createElement('canvas').getContext('2d');
+    context.font=style.font||`${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+    const label=select.selectedOptions[0].label;
+    // Right padding reserves the native arrow; the visible text must fit the
+    // remaining content width at the user's doubled root font size.
+    return {label,width:context.measureText(label).width,available:select.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight)};
+  });
+  expect(labelFit.label).toBe('All my learning');
+  expect(labelFit.width).toBeLessThanOrEqual(labelFit.available+1);
+  await expect(page.locator('[data-game-start="daily"]')).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
   expect(await page.locator('.screen').evaluate(e=>e.scrollWidth<=e.clientWidth+1)).toBe(true);
-  await expect(page.locator('#study-reading')).toHaveAttribute('open','');
+  await expect(lesson).toHaveAttribute('open','');
+  await expect(lesson.locator('li').first()).toBeVisible();
+  await page.locator('[data-study-source]').scrollIntoViewIfNeeded();
+  await page.screenshot({path:info.outputPath('games-saved-200-percent-iphone.png')});
 });
 test('game answers and hints are readable and rejected choices cannot be retried',async({page})=>{
   await game(page);
@@ -95,8 +121,10 @@ test('three complete Math games offer twenty-four distinct questions',async({pag
 });
 test('new Study and game surfaces have no serious automated accessibility findings',async({page})=>{
   await room(page);const errors=[];
-  for(const tab of ['weekly','cumulative','star','games']){
-    await page.locator(`.hub-tabs [data-tab="${tab}"]`).click();
+  await page.locator('[data-study-notes] > summary').click();
+  await page.locator('[data-study-test-options] > summary').click();
+  for(const tab of ['weekly','saved','star','mix']){
+    await page.locator('[data-study-source]').selectOption(tab);
     const result=await new AxeBuilder({page}).analyze();errors.push(...result.violations.filter(v=>['serious','critical'].includes(v.impact)).map(v=>({tab,id:v.id})));
   }
   await game(page);await page.locator('[data-game-hint]').click();
@@ -107,28 +135,31 @@ test('new Study and game surfaces have no serious automated accessibility findin
 for(const [name,payload] of [['schoolwork.json',{lessons:'broken'}],['study-archive.json',{notes:'broken'}]]){
  test(`malformed ${name} offers recovery without hiding current notes`,async({page})=>{
   let broken=true;
-  await page.route('**/data/'+name,route=>broken?route.fulfill({json:payload}):route.continue());
+  await page.clock.setFixedTime(new Date('2026-10-05T16:00:00-04:00'));
+  await page.route('**/data/'+name+'*',route=>broken?route.fulfill({json:payload}):route.continue());
   await page.goto('/#study');
-  await expect(page.locator('#study-hub')).toHaveAttribute('data-study-state','error');
-  await expect(page.locator('[data-retry]')).toBeVisible();
-  await expect(page.locator('.room-subject-grid > .study-accordion')).toHaveCount(6);
-  broken=false;await page.locator('[data-retry]').click();
-  await expect(page.locator('#study-hub')).toHaveAttribute('data-study-state','ready');
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','partial');
+  await expect(page.locator('[data-study-retry]')).toBeVisible();
+  await expect(page.locator('.study-game-grid > .study-game-tile')).toHaveCount(4);
+  await page.locator('[data-study-notes] > summary').click();
+  await expect(page.locator('[data-study-notes]')).toContainText('Reading / ELA');
+  broken=false;await page.locator('[data-study-retry]').click();
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
   await expect(page.locator('[data-test]')).toBeVisible();
  });
 }
 test('test completion storage failure leaves the next test recoverable',async({page})=>{
  await room(page);
- const before=await page.locator('.hub-prep h3').innerText();
+ const before=await page.locator('[data-study-tests]').innerText();
  await page.evaluate(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k==='abvm-completed-tests')throw new DOMException('full','QuotaExceededError');return original.call(this,k,v);};});
- await page.locator('.room-test-options > summary').click();await page.locator('[data-complete-test]').click();
- await expect(page.locator('.hub-prep h3')).toHaveText(before);
- await expect(page.locator('.hub-undo')).toContainText('Could not save');
+ await page.locator('[data-study-test-options] > summary').click();await page.locator('[data-complete-test]').click();
+ await expect(page.locator('[data-study-tests]')).toHaveText(before);
+ await expect(page.locator('.game-test-status')).toContainText('Could not save');
  await expect(page.locator('[data-test]')).toBeVisible();
 });
 
 test('Undo returns keyboard focus to visible test practice',async({page})=>{
- await room(page);await page.locator('.room-test-options > summary').click();
+ await room(page);await page.locator('[data-study-test-options] > summary').click();
  await page.locator('[data-complete-test]').click();
  const undo=page.locator('[data-undo-test]');await expect(undo).toBeFocused();await page.keyboard.press('Enter');
  await expect(page.locator('[data-test]')).toBeFocused();await expect(page.locator('[data-test]')).toBeVisible();

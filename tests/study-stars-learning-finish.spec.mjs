@@ -162,8 +162,10 @@ test('Step 9 freezes reward identity and advances all PWA assets together',async
   expect(app).toContain('studyStarRoundId({sourcePack:sourceKey,mode:g.mode,sessionSeed:g.sessionSeed})');
   expect(app).toContain('commitStudyStarRewards({sourcePack:sourceKey,mode:g.mode,sessionSeed:g.sessionSeed,roundId,completed:true,comebackSucceeded:!!g.comebackSucceeded})');
   expect(app).toContain('tries:0,misses:0,hints:0,retry:0,wrong:[]');
-  expect(app).toContain('./study-games.js?v=95');
-  expect(app).toContain('./study-games-view.js?v=7');
+  const gamesUrl=app.match(/\.\/study-games\.js\?v=\d+/)?.[0];
+  const gamesViewUrl=app.match(/\.\/study-games-view\.js\?v=\d+/)?.[0];
+  expect(gamesUrl).toBeTruthy();
+  expect(gamesViewUrl).toBeTruthy();
   const styleVersion=index.match(/\.\/styles\.css\?v=(\d+)/)?.[1];
   const appVersion=index.match(/\.\/app\.js\?v=(\d+)/)?.[1];
   const reloadVersion=index.match(/abvm-sw-reloaded-v(\d+)/)?.[1];
@@ -179,6 +181,11 @@ test('Step 9 freezes reward identity and advances all PWA assets together',async
     expect(ref).toBeTruthy();
     expect(sw).toContain(ref);
   }
-  expect(sw).toContain('./study-games.js?v=95');
-  expect(sw).toContain('./study-games-view.js?v=7');
+  expect(sw).toContain(gamesUrl);
+  expect(sw).toContain(gamesViewUrl);
+  expect(sw).toContain('./study-materials.mjs');
+  expect(sw).toContain('./study-games-materials-view.mjs');
+  const materialsCss=index.match(/\.\/study-games-materials\.css\?v=\d+/)?.[0];
+  expect(materialsCss).toBeTruthy();
+  expect(sw).toContain(materialsCss);
 });

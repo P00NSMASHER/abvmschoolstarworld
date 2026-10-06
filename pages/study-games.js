@@ -1708,7 +1708,7 @@ function safeItemQualityRow(row,order=0){
     Resolved:nonnegativeCount(row?.Resolved),Correct:nonnegativeCount(row?.Correct),Wrong:nonnegativeCount(row?.Wrong),
     NormalResolved:nonnegativeCount(row?.NormalResolved),NormalCorrect:nonnegativeCount(row?.NormalCorrect),NormalWrong:nonnegativeCount(row?.NormalWrong),
     FirstTryCorrect:nonnegativeCount(row?.FirstTryCorrect),
-    ChoicePositions:[0,1,2].map(index=>nonnegativeCount(positions[index])),
+    ChoicePositions:Array.from({length:Math.max(3,Math.min(4,positions.length))},(_,index)=>nonnegativeCount(positions[index])),
     Misconceptions:safeMisconceptionCounts(row?.Misconceptions),
     ResponseBands:{lt5:nonnegativeCount(bands.lt5),"5to15":nonnegativeCount(bands["5to15"]),"15to30":nonnegativeCount(bands["15to30"]),gte30:nonnegativeCount(bands.gte30)},
     HintsUsed:nonnegativeCount(row?.HintsUsed),SupportSeen:nonnegativeCount(row?.SupportSeen),
@@ -1766,14 +1766,14 @@ function itemQualityRow(data,question){
   const id=itemQualityKey(question);
   const row=data.items[id]||{
     Skill:String(question?.skill||""),Subject:String(question?.subject||""),Resolved:0,Correct:0,Wrong:0,
-    NormalResolved:0,NormalCorrect:0,NormalWrong:0,FirstTryCorrect:0,ChoicePositions:[0,0,0],Misconceptions:{},
+    NormalResolved:0,NormalCorrect:0,NormalWrong:0,FirstTryCorrect:0,ChoicePositions:Array.from({length:question?.choices?.length===4?4:3},()=>0),Misconceptions:{},
     ResponseBands:{lt5:0,"5to15":0,"15to30":0,gte30:0},HintsUsed:0,SupportSeen:0,ComebackSeen:0,ComebackCorrect:0,
     AbilityN:0,AbilitySum:0,AbilitySumSq:0,FirstTryAbilitySum:0,Order:0
   };
   return {id,row};
 }
 function noteItemAttempt(question,index){
-  if(!itemQualityKey(question)||!Number.isInteger(index)||index<0||index>2)return null;
+  if(!itemQualityKey(question)||!Array.isArray(question?.choices)||!Number.isInteger(index)||index<0||index>3||index>=question.choices.length)return null;
   const data=loadItemQuality(),{id,row}=itemQualityRow(data,question);
   row.ChoicePositions[index]=(Number(row.ChoicePositions[index])||0)+1;
   const choice=question.choices?.[index];
@@ -2003,9 +2003,10 @@ function deferComebacksToNextSession(sourceKey){
   if(changed)writeComebacks(rows);
   return rows;
 }
-function dueComeback(catalog,sourceKey){
+function dueComeback(catalog,sourceKey,{eligibleIds}={}){
   const rows=readComebacks();
-  const row=rows.find(item=>item.sourceKey===sourceKey&&Number(item.remaining)<=0);
+  const eligible=Array.isArray(eligibleIds)?new Set(eligibleIds):null;
+  const row=rows.find(item=>item.sourceKey===sourceKey&&Number(item.remaining)<=0&&(!eligible||eligible.has(item.questionId)));
   if(!row)return null;
   const question=(catalog?.questions||[]).find(item=>item.id===row.questionId);
   if(!question){writeComebacks(rows.filter(item=>item!==row));return null}

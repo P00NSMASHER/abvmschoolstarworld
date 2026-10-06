@@ -5,7 +5,7 @@ async function currentSkills(page){
   return (envelope.pack?.contentPipeline?.skills||[]).slice(0,4).map(row=>({id:row.id,label:row.label||row.id}));
 }
 
-test('Weekly Learning shows only current skills from the last seven days without grades or percentages',async({page})=>{
+test('removing the Games report preserves current seven-day learning evidence and stored history',async({page})=>{
   const skills=await currentSkills(page);
   expect(skills.length).toBeGreaterThanOrEqual(4);
   const now=Date.now();
@@ -19,24 +19,30 @@ test('Weekly Learning shows only current skills from the last seven days without
     }));
   },{skills,now});
   await page.goto('/#study');
-  await expect(page.locator('#study-hub')).toHaveAttribute('data-study-state','ready');
-  await page.locator('.room-adults > summary').click();
-  const card=page.getByRole('region',{name:'Study room'}).locator('section[aria-labelledby="weekly-learning-title"]');
-  await expect(card).toBeVisible();
-  await expect(card).toContainText('Strong today');
-  await expect(card).toContainText('Remembered later');
-  await expect(card).toContainText('Practice again');
-  await expect(card).toContainText(skills[0].label);
-  await expect(card).toContainText(skills[1].label);
-  await expect(card).toContainText(skills[2].label);
-  await expect(card).not.toContainText(skills[3].label);
-  await expect(card).not.toContainText('not-current-anymore');
-  const text=(await card.textContent())||'';
-  expect(text).not.toMatch(/mastery|ranking|\brank\b|\bscore\b|\bstreak\b|\d+%/i);
-  expect(text).toMatch(/not a grade/i);
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+  await expect(page.locator('[data-learning-panel],section[aria-labelledby="weekly-learning-title"]')).toHaveCount(0);
+  await expect(page.locator('.games-screen')).not.toContainText('Learning on this device');
+  // The report is intentionally gone. Its existing evidence model must still
+  // distinguish independent, recalled and recent unsuccessful learning.
+  const snapshot=await page.evaluate(async now=>{
+    const envelope=await fetch('./data/study-pack.json').then(response=>response.json());
+    return window.ABVMWeeklyLearning.snapshot({pack:envelope.pack,learning:JSON.parse(localStorage.getItem('abvm-study-learning:v2')),now});
+  },now);
+  expect(snapshot.strong.map(row=>row.id)).toEqual([skills[0].id]);
+  expect(snapshot.remembered.map(row=>row.id)).toEqual([skills[1].id]);
+  expect(snapshot.practice.map(row=>row.id)).toEqual([skills[2].id]);
+  const before=await page.evaluate(()=>localStorage.getItem('abvm-study-learning:v2'));
+  await page.locator('[data-study-notes] > summary').click();
+  await page.locator('[data-study-test-options] > summary').click();
+  await expect(page.locator('[data-learning-panel],section[aria-labelledby="weekly-learning-title"]')).toHaveCount(0);
+  await page.reload();
+  expect(await page.evaluate(()=>localStorage.getItem('abvm-study-learning:v2'))).toBe(before);
+  const stored=JSON.parse(before);
+  expect(stored[skills[3].id]).toBeTruthy();
+  expect(stored['not-current-anymore']).toBeTruthy();
 });
 
-test('more recent practice evidence moves a skill back to Practice again',async({page})=>{
+test('more recent unsuccessful practice still supersedes older independent evidence without a report',async({page})=>{
   const [skill]=await currentSkills(page);
   const now=Date.now();
   await page.addInitScript(({skill,now})=>{
@@ -49,11 +55,12 @@ test('more recent practice evidence moves a skill back to Practice again',async(
     }));
   },{skill,now});
   await page.goto('/#study');
-  await expect(page.locator('#study-hub')).toHaveAttribute('data-study-state','ready');
-  await page.locator('.room-adults > summary').click();
-  const card=page.locator('section[aria-labelledby="weekly-learning-title"]');
-  const strong=card.locator('.notice-row').filter({hasText:'Strong today'});
-  const practice=card.locator('.notice-row').filter({hasText:'Practice again'});
-  await expect(practice).toContainText(skill.label);
-  await expect(strong).not.toContainText(skill.label);
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+  const snapshot=await page.evaluate(async now=>{
+    const envelope=await fetch('./data/study-pack.json').then(response=>response.json());
+    return window.ABVMWeeklyLearning.snapshot({pack:envelope.pack,learning:JSON.parse(localStorage.getItem('abvm-study-learning:v2')),now});
+  },now);
+  expect(snapshot.practice.map(row=>row.id)).toEqual([skill.id]);
+  expect(snapshot.strong).toEqual([]);
+  await expect(page.locator('[data-learning-panel],section[aria-labelledby="weekly-learning-title"]')).toHaveCount(0);
 });

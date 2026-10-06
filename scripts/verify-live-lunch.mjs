@@ -102,19 +102,30 @@ try {
   await page.locator('.calendar-day-card').scrollIntoViewIfNeeded();
   await page.screenshot({ path: `${out}/calendar.png` });
   await page.getByRole('button', { name: 'Study', exact: true }).click();
-  await page.locator('.study-games-cta').click();
   for (const label of ['Quick Mix', 'Math Dash', 'Word Power', 'Faith Quest']) {
     await expect(page.getByRole('button', { name: new RegExp(label, 'i') })).toBeVisible({ timeout: 15000 });
   }
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state', 'ready', { timeout: 15000 });
+  await expect(page.locator('[data-study-source]')).toBeEnabled();
+  const sourceOptions = await page.locator('[data-study-source] option').evaluateAll(options => options.map(option => option.value));
+  expect(sourceOptions).toEqual(['weekly', 'saved', 'star', 'mix']);
+  await expect(page.locator('.study-games-cta, .study-at-a-glance, [data-learning-panel]')).toHaveCount(0);
   const modeCount = await page.locator('.study-game-tile').count();
-  expect([4, 5]).toContain(modeCount);
-  receipt.screens.push({ screen: 'Study Games', modeCount });
+  expect(modeCount).toBe(4);
+  await page.screenshot({ path: `${out}/study-games.png` });
+  receipt.screens.push({ screen: 'Study Games', modeCount, sourceOptions });
+  await page.locator('[data-game-start="quick"]').click();
+  await expect(page.locator('.game-question-card')).toBeVisible();
+  expect([3, 4]).toContain(await page.locator('.game-answer').count());
+  await page.screenshot({ path: `${out}/study-question.png` });
+  await page.getByRole('button', { name: 'Back to study games', exact: true }).click();
   await page.evaluate(async () => { if ('serviceWorker' in navigator) await navigator.serviceWorker.ready; });
   await page.reload();
   for (const label of ['Quick Mix', 'Math Dash', 'Word Power', 'Faith Quest']) {
     await expect(page.getByRole('button', { name: new RegExp(label, 'i') })).toBeVisible({ timeout: 15000 });
   }
-  expect([4, 5]).toContain(await page.locator('.study-game-tile').count());
+  await expect(page.locator('.study-game-tile')).toHaveCount(4);
+  await expect(page.locator('[data-study-source]')).toBeEnabled({ timeout: 15000 });
   await page.getByRole('button', { name: 'Today', exact: true }).click();
   if (todayMeal?.items.length) for (const item of todayMeal.items) await expect(page.locator('.lunch-card')).toContainText(item);
   receipt.cacheReloadVerified = true;

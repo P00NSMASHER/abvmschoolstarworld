@@ -1,0 +1,36 @@
+/* Materials controls extend the existing Games layout without changing its cards. */
+.games-screen .game-materials { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 14px 0; }
+.games-screen .game-materials > label { max-width: 100%; color: #365675; font-size: .875rem; font-weight: 700; }
+.games-screen .game-materials select { flex: 1 1 12rem; max-width: 100%; min-width: 0; min-height: 44px; padding: 8px 30px 8px 12px; border: 1px solid #bfd0df; border-radius: 12px; background: #fff; color: #1c456c; font-size: 1rem; }
+.games-screen [data-study-mix] { flex-basis: 100%; min-width: 0; display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 8px 0 0; }
+.games-screen [data-study-mix] legend { color: #526579; font-size: .875rem; }
+.games-screen [data-study-mix] label { display: flex; align-items: center; gap: 8px; min-height: 44px; font-size: .9375rem; cursor: pointer; }
+.games-screen [data-study-mix] input { flex: none; width: 20px; height: 20px; accent-color: #315f95; }
+.games-screen .game-material-actions { margin-top: 14px; padding-top: 4px; }
+.games-screen .game-material-actions button, .games-screen .game-material-secondary button { min-height: 44px; max-width: 100%; padding: 8px 12px; border: 1px solid #bfd0df; border-radius: 11px; background: #f5f9fc; color: #214f77; font-size: .9375rem; font-weight: 650; text-align: left; }
+.games-screen .game-daily-action { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-bottom: 10px; }
+.games-screen .game-daily-action > span { color: #526579; font-size: .8125rem; line-height: 1.5; }
+.games-screen .game-test-action { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; padding: 10px 0; border-top: 1px solid #dce5ed; }
+.games-screen .game-test-action > div { flex: 1 1 180px; min-width: 0; }
+.games-screen .game-test-action strong { color: #254a70; font-size: .875rem; }
+.games-screen .game-test-action time { display: inline-block; margin-left: 8px; font-size: .8125rem; color: #526579; }
+.games-screen .game-test-action p { font-size: .9375rem; line-height: 1.5; color: #364d65; }
+.games-screen .game-material-status { grid-column: 1/-1; flex-basis: 100%; font-size: .8125rem; line-height: 1.5; color: #526579; margin: 4px 0; }
+.games-screen .game-material-status button { margin-top: 6px; }
+.games-screen .game-test-status { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 8px 0; font-size: .875rem; color: #365675; }
+.games-screen .game-material-secondary { margin: 6px 0 12px; }
+.games-screen .game-material-secondary > details { border-top: 1px solid #dce5ed; }
+.games-screen .game-material-secondary summary { min-height: 44px; padding: 10px 2px; color: #244e76; font-size: .9375rem; font-weight: 650; cursor: pointer; }
+.games-screen .game-material-secondary p { margin: 4px 0 10px; color: #526579; font-size: .9375rem; line-height: 1.55; }
+.games-screen .game-material-secondary button { margin: 0 6px 10px 0; }
+.games-screen .game-material-secondary h3 { margin: 10px 0 8px; font-size: .9375rem; color: #244e76; }
+.games-screen .game-material-lesson { margin: 0 0 10px; padding: 0 12px; border: 1px solid #dce5ed; border-radius: 12px; background: #fff; }
+.games-screen .game-material-lesson ul { list-style: disc; padding: 0 0 12px 20px; }
+.games-screen .game-material-lesson li, .games-screen .game-material-lesson dl { font-size: 1rem; line-height: 1.6; color: #364d65; }
+.games-screen .game-material-lesson dt { font-weight: 650; }
+.games-screen .game-material-lesson dd { margin: 0 0 10px; }
+.games-screen .game-material-lesson [data-religion-review] { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 0; font-size: .9375rem; text-decoration: underline; }
+.games-screen .game-material-lesson .game-note-warning { color: #72531d; border-left: 3px solid #d7b166; padding-left: 10px; }
+.games-screen .game-read-button { min-height: 44px; margin: 0 0 10px; color: #365675; font-size: .875rem; padding: 6px 10px; border: 1px solid #d3e0e9; border-radius: 10px; }
+.games-screen .game-materials :is(select,input):focus-visible, .games-screen .game-material-secondary summary:focus-visible { outline: 3px solid #304d9c; outline-offset: 3px; }
+.games-screen :is(.game-materials,.game-material-actions,.game-material-secondary) { min-width: 0; overflow-wrap: anywhere; }

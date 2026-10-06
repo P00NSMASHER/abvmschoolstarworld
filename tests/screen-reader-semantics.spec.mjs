@@ -9,7 +9,7 @@ test("primary views expose stable regions and navigation state",async({page})=>{
   await waitForApp(page,"/#today");
   const tabs=[
     ["Today","Today"],["Week","This week"],["Calendar",/calendar/i],
-    ["Study","Study room"],["Family","Family dashboard"]
+    ["Study","Study games"],["Family","Family dashboard"]
   ];
   for(const [tab,regionName] of tabs){
     await page.getByRole("button",{name:tab,exact:true}).click();
@@ -17,11 +17,14 @@ test("primary views expose stable regions and navigation state",async({page})=>{
     await expect(page.getByRole("region",{name:regionName})).toBeVisible({timeout:10_000});
     await expect(page.locator('.bottom-nav button[data-tab]:not([aria-current="page"])')).toHaveCount(4);
   }
-  await page.getByRole("button",{name:"Study",exact:true}).click();
-  await page.locator(".study-games-cta").click();
-  await expect(page.getByRole("region",{name:"Study games"})).toBeVisible({timeout:10_000});
-  await expect(page.getByRole("button",{name:"Study",exact:true})).toHaveAttribute("aria-current","page");
-  await expect(page.getByRole("navigation",{name:"App navigation"}).getByRole("button",{name:"Study Games",exact:true})).toHaveCount(0);
+  for(const path of ["/#study","/#games"]){
+    await waitForApp(page,path);
+    await expect(page.getByRole("region",{name:"Study games",exact:true})).toBeVisible({timeout:10_000});
+    await expect(page.locator(".study-game-grid > .study-game-tile")).toHaveCount(4);
+    await expect(page.locator("select[data-study-source]")).toHaveAccessibleName("Practice from");
+    await expect(page.getByRole("button",{name:"Study",exact:true})).toHaveAttribute("aria-current","page");
+    await expect(page.getByRole("navigation",{name:"App navigation"}).getByRole("button",{name:"Study Games",exact:true})).toHaveCount(0);
+  }
 });
 
 test("Week day controls retain useful visible accessible names",async({page})=>{

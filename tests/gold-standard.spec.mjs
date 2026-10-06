@@ -3,21 +3,19 @@ import {readPwaVersions} from "./pwa-test-helpers.mjs";
 
 async function openTab(page,label){
   if(label==="Study Games"){
-    await page.getByRole("button",{name:"Study",exact:true}).click();
-    await page.locator(".study-games-cta").click();
+    await page.goto("/#games");
   }else await page.getByRole("button",{name:label,exact:true}).click();
   await expect(page.locator(".screen")).toBeVisible();
+  if(label==="Study"||label==="Study Games")await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
 }
 
 async function expectCurrentStudyGameTiles(page){
   const tiles=page.locator(".study-game-tile");
-  const count=await tiles.count();
-  expect(count).toBeGreaterThanOrEqual(4);
-  expect(count).toBeLessThanOrEqual(5);
+  await expect(tiles).toHaveCount(4);
   for(const name of ["Quick Mix","Math Dash","Word Power","Faith Quest"]){
     await expect(page.getByRole("button",{name:new RegExp(name,"i")})).toBeVisible();
   }
-  if(count===5)await expect(page.getByRole("button",{name:/Test Ready/i})).toBeVisible();
+  expect(await tiles.evaluateAll(nodes=>nodes.map(node=>node.dataset.gameStart).sort())).toEqual(['faith','math','quick','words']);
 }
 
 test.beforeEach(async({page})=>{
@@ -50,11 +48,11 @@ test("historical gold-standard visual hierarchy is restored",async({page})=>{
   await expect(page.locator(".calendar-card")).toBeVisible();
 
   await openTab(page,"Study");
-  await expect(page.locator(".app-header h1")).toHaveText(/Study room/i);
-  await page.locator(".room-adults > summary").click();
-  await expect(page.locator(".study-at-a-glance")).toBeVisible();
-  await expect(page.locator(".study-games-cta")).toBeVisible();
-  await expect(page.locator(".study-accordion")).toHaveCount(6);
+  await expect(page.locator(".app-header h1")).toHaveText(/Study games/i);
+  await expectCurrentStudyGameTiles(page);
+  await expect(page.locator('select[data-study-source]')).toBeVisible();
+  await expect(page.locator('[data-study-notes]')).not.toHaveAttribute('open','');
+  await expect(page.locator('[data-study-test-options]')).not.toHaveAttribute('open','');
 
   await openTab(page,"Family");
   await expect(page.locator(".app-header h1")).toHaveText(/Family dashboard/i);
@@ -89,11 +87,11 @@ test("requested polish is present",async({page})=>{
   await expect(page.locator(".special-row")).toHaveCount(5);
 
   await openTab(page,"Study");
-  await expect(page.getByRole("button",{name:"Practice now",exact:true})).toBeVisible();
-  await expect(page.locator(".room-subject-grid > .study-accordion")).toHaveCount(6);
-  await page.locator(".room-adults > summary").click();
-  await expect(page.locator(".quick-look-head")).toBeVisible();
-  expect(await page.locator(".study-at-a-glance li").count()).toBeGreaterThanOrEqual(3);
+  await expect(page.locator('[data-game-start="daily"]')).toBeVisible();
+  await expectCurrentStudyGameTiles(page);
+  await page.locator('[data-study-notes] > summary').click();
+  expect(await page.locator('.game-material-lesson').count()).toBeGreaterThan(0);
+  await expect(page.locator('[data-learning-panel],.study-games-cta')).toHaveCount(0);
 
   await openTab(page,"Family");
   await expect(page.getByText("Please verify",{exact:true})).toHaveCount(0);
@@ -186,14 +184,11 @@ test("Study Games uses the StarBlox-style equivalent question engine",async({pag
 
 test("all study game entry points stay inside the ABVM app",async({page})=>{
   await openTab(page,"Study");
-  const links=page.locator("[data-open-games]");
-  expect(await links.count()).toBeGreaterThanOrEqual(1);
-  for(let i=0;i<await links.count();i++){
-    await expect(links.nth(i)).toHaveAttribute("href","#games");
-  }
-  await links.first().click();
   await expect(page.locator(".games-screen")).toBeVisible();
-  await expect(page.locator(".study-game-grid")).toBeVisible();
+  await expectCurrentStudyGameTiles(page);
+  await expect(page.locator('[data-open-games],.study-games-cta')).toHaveCount(0);
+  await page.goto('/#games');
+  await expectCurrentStudyGameTiles(page);
   await expect(page).toHaveURL(/#games$/);
 
   const legacy=await page.locator('a[href="./game/"],a[href$="/game/"]').count();
@@ -294,11 +289,11 @@ test("Study Games uses targeted misconception feedback and adaptive evidence",as
 
 test("simplicity pass keeps core actions obvious and reduces rendering overhead",async({page})=>{
   await openTab(page,"Study");
-  await expect(page.locator(".study-games-cta")).toBeVisible();
+  await expectCurrentStudyGameTiles(page);
   await expect(page.locator(".study-jumps")).toHaveCount(0);
   await expect(page.locator(".quest-launcher")).toHaveCount(0);
-  const accordions=page.locator(".study-accordion");
-  expect(await accordions.count()).toBe(6);
+  const accordions=page.locator('[data-study-notes],[data-study-test-options]');
+  expect(await accordions.count()).toBe(2);
   for(let i=0;i<await accordions.count();i++) await expect(accordions.nth(i)).not.toHaveAttribute("open");
 
   await accordions.first().locator("summary").click();
@@ -326,8 +321,8 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   const optionalAssets=[...optional.matchAll(/"(\.\/[^\"]+)"/g)].map(match=>match[1]);
   expect(optionalAssets).toEqual([
     "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json",
-    "./study-hub.mjs", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs", "./study-resources.mjs", "./study-clarity.css?v=1", "./study-model.mjs", "./star-practice.mjs",
-    "./study-hub.css?v=3", "./family-view.css?v=1", "./visual-polish.css?v=1", "./lunch-art.js?v=1"
+    "./study-materials.mjs", "./study-games-materials-view.mjs", "./study-games-materials.css?v=1", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs", "./study-resources.mjs", "./study-clarity.css?v=1", "./study-model.mjs", "./star-practice.mjs",
+    "./family-view.css?v=1", "./visual-polish.css?v=1", "./lunch-art.js?v=1"
   ]);
   expect(new Set(optionalAssets).size).toBe(optionalAssets.length);
 });
