@@ -52,13 +52,17 @@ function disclosure(text,source,renderText=esc){
   return '<details class="family-message"><summary><span class="family-message-copy"><small>'+esc(source)+'</small><strong>'+esc(excerpt(text))+'</strong><span class="family-message-hint">Read full update</span></span><span class="family-message-chevron" aria-hidden="true">›</span></summary><div class="family-message-body">'+renderText(text)+'</div></details>';
 }
 function noticesCard(notices,renderText=esc){
-  return '<section class="parent-card sources notices-card" aria-labelledby="family-current-notices"><div class="notices-head"><span class="notices-mark" aria-hidden="true">i</span><div><small>SCHOOL UPDATES & SIGN-UPS</small><h3 id="family-current-notices">Current notices</h3></div></div><div class="static-notice-list" role="list">'+notices.map(text=>'<div class="notice-row" role="listitem">'+disclosure(text,'School notice',renderText)+'</div>').join('')+'</div></section>';
+  const rows=[...new Set((notices||[]).map(text=>String(text||"").trim()).filter(Boolean))];
+  if(!rows.length)return "";
+  const render=items=>items.map(text=>'<div class="notice-row" role="listitem">'+disclosure(text,'School notice',renderText)+'</div>').join('');
+  const primary=rows.slice(0,3),extra=rows.slice(3);
+  return '<section class="parent-card sources notices-card" aria-labelledby="family-current-notices"><div class="notices-head"><span class="notices-mark" aria-hidden="true">i</span><div><small>SCHOOL</small><h3 id="family-current-notices">Notices</h3></div></div><div class="static-notice-list" role="list">'+render(primary)+'</div>'+(extra.length?'<details class="family-notices-overflow"><summary>See '+extra.length+' more notice'+(extra.length===1?'':'s')+'</summary><div role="list">'+render(extra)+'</div></details>':'')+'</section>';
 }
 function card(pack){
   const {unread,available}=state(pack);
-  if(!unread.length)return '<p class="updates-status">'+(available?'You’re all caught up.':'Update tracking needs browser storage.')+'</p>';
+  if(!unread.length)return available?'':'<p class="updates-status">New-update tracking is unavailable in this browser.</p>';
   const rows=items=>items.map(x=>'<li>'+disclosure(x.text,x.source,()=>x.lines?'<ul class="family-source-lines">'+x.lines.map(line=>'<li>'+esc(line)+'</li>').join('')+'</ul>':esc(x.text))+'</li>').join('');
-  return '<section class="unread-updates" aria-labelledby="unread-title"><div class="unread-heading"><h2 id="unread-title">New for you</h2><span>'+unread.length+'</span></div><p>Updates you haven’t marked as read. Open any item to read more.</p><ul>'+rows(unread.slice(0,3))+'</ul>'+(unread.length>3?'<details class="family-update-overflow"><summary>See '+(unread.length-3)+' more updates</summary><ul>'+rows(unread.slice(3))+'</ul></details>':'')+'<button type="button" data-mark-updates-read>Mark updates as read</button></section>';
+  return '<section class="unread-updates" aria-labelledby="unread-title"><div class="unread-heading"><h2 id="unread-title">New for you</h2><span>'+unread.length+'</span></div><p>New since you last checked.</p><ul>'+rows(unread.slice(0,3))+'</ul>'+(unread.length>3?'<details class="family-update-overflow"><summary>See '+(unread.length-3)+' more updates</summary><ul>'+rows(unread.slice(3))+'</ul></details>':'')+'<button type="button" data-mark-updates-read>Mark updates as read</button></section>';
 }
 window.ABVMSchoolUpdates=Object.freeze({uniqueEvents,uniqueRows,state,markRead,banner,card,noticesCard});
 })();
