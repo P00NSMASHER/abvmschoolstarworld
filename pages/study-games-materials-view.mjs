@@ -1,4 +1,5 @@
 import {createReadAloud} from './study-room-view.mjs';
+import {printStudyGuide} from './test-study-guide.mjs';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sources = Object.freeze({weekly:'This week',saved:'All my learning',star:'STAR practice',mix:'Make a mix'});
@@ -41,6 +42,7 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
       (!model&&loading?'<p class="game-material-status" role="status">Loading saved materials…</p>':'') +
       (model ? '<div class="game-test-action" data-study-tests>' + (pending.length ? '<div><strong>Next test' + (pending.length>1?'s':'') + '</strong><time datetime="' + esc(tests.date) + '">' + esc(dateLabel(tests.date)) + '</time><p>' + pending.map(test=>esc(test.label)).join(' · ') + '</p></div>' +
         (missing.length ? (tests.supported || []).map(test => '<button type="button" data-test-single="' + test.index + '">Practice ' + esc(test.label) + '</button>').join('') : '<button type="button" data-test>Start test practice</button>') +
+        '<div class="game-test-guide-actions">' + pending.map(test => '<button type="button" class="game-guide-button" data-print-test="' + esc(test.date+'|'+test.label) + '">Print one-page guide · ' + esc(test.label) + '</button>').join('') + '</div>' +
         (missing.length?'<p class="game-material-status" data-test-missing>Practice is not available for ' + missing.map(test=>esc(test.label)).join(', ') + '. Review the teacher notes.</p>':'') +
         (fallback.length?'<p class="game-material-status" data-test-fallback>Original Grade 2 skill practice for ' + fallback.map(test=>esc(test.label)).join(', ') + '; no reviewed test-specific bank is available yet.</p>':'') : '<p>No upcoming test is listed.</p>') + '</div>' : '') +
       (partial?'<div class="game-material-status" role="status"><p>Some saved materials could not load. The available practice still works.</p><button type="button" data-study-retry>Retry saved materials</button></div>':'') +
@@ -66,8 +68,10 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
   }
 
   function secondaryHtml() {
-    const tests = model?.tests(), pending = tests?.tests || [], completed = tests?.completed || [];
+    const tests = model?.tests(), pending = tests?.tests || [], completed = tests?.completed || [], guides = model?.studyGuides?.() || [];
     return '<div class="game-material-secondary"><details data-study-notes' + (notesOpen?' open':'') + '><summary>Notes &amp; lessons</summary><div data-study-notes-content>' + (notesOpen?notesContent():'') + '</div></details>' +
+      '<details data-study-guide-options><summary>Printable study guides</summary><p>One page for every upcoming test. Each guide uses the reviewed notes and practice material already in ABVM.</p>' +
+      (guides.length?'<div class="game-guide-list">' + guides.map(guide=>'<button type="button" class="game-guide-button" data-print-test="' + esc(guide.key) + '"><span>Print guide</span><strong>' + esc(guide.label) + '</strong><small>' + esc(dateLabel(guide.date)) + '</small></button>').join('') + '</div>':'<p>No upcoming test is listed.</p>') + '</details>' +
       '<details data-study-test-options' + (testsOpen?' open':'') + '><summary>Manage tests</summary><p>Hide a finished test here. You can restore it on this browser.</p>' +
       (pending.length?'<button type="button" data-complete-test>' + (pending.length>1?'Mark these tests finished':'Mark test finished') + '</button>':'') +
       (completed.length?'<h3>Tests hidden on this device</h3>' + completed.map(test=>'<button type="button" data-restore-test="' + esc(test.key) + '">Restore ' + esc(test.label) + '</button>').join(''):'') +
@@ -103,6 +107,11 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
     host.querySelector('[data-study-test-options]')?.addEventListener('toggle',event=>{testsOpen=event.currentTarget.open;});
     host.querySelector('[data-test]')?.addEventListener('click',()=>onTest?.());
     host.querySelectorAll('[data-test-single]').forEach(button=>button.addEventListener('click',()=>onTest?.(Number(button.dataset.testSingle))));
+    host.querySelectorAll('[data-print-test]').forEach(button=>button.addEventListener('click',()=>{
+      const guide=model?.studyGuide?.(button.dataset.printTest);
+      if (!guide) return;
+      printStudyGuide(win,guide,term=>win?.ABVMStudyGames?.vocabularyDefinition?.(term));
+    }));
     host.querySelector('[data-study-retry]')?.addEventListener('click',()=>onRetry?.());
     host.querySelector('[data-complete-test]')?.addEventListener('click',()=>{
       const result = model?.completeTests(); change(result?.ok?'[data-undo-test]':'[data-complete-test]');
