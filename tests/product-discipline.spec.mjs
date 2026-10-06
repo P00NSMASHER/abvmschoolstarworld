@@ -6,17 +6,22 @@ test('initial shell never presents a blank content area',async({page})=>{
   expect(html).toContain('Loading school information');
 });
 
-test('Study opens child-first with four games and hides adult controls one level deeper',async({page})=>{
+test('Study opens child-first with four games before quieter adult controls',async({page})=>{
   await page.goto('/#games');
-  await expect(page.locator('.study-game-grid')).toBeVisible({timeout:10_000});
+  const grid=page.locator('.study-game-grid');
+  await expect(grid).toBeVisible({timeout:10_000});
   await expect(page.locator('.study-games-hero h2')).toHaveText('What do you want to play?');
-  await expect(page.locator('.study-game-grid > .study-game-tile')).toHaveCount(4);
-  const options=page.locator('.game-practice-options');
-  await expect(options).toBeVisible();
-  await expect(options).not.toHaveAttribute('open','');
-  await expect(page.locator('[data-study-source]')).toBeHidden();
-  await options.locator(':scope > summary').click();
-  await expect(page.locator('[data-study-source]')).toBeVisible();
+  await expect(grid.locator(':scope > .study-game-tile')).toHaveCount(4);
+  const source=page.locator('[data-study-source]');
+  await expect(source).toBeVisible();
+  const order=await page.evaluate(()=>({
+    games:document.querySelector('.study-game-grid').getBoundingClientRect().top,
+    source:document.querySelector('[data-study-source]').getBoundingClientRect().top
+  }));
+  expect(order.source).toBeGreaterThan(order.games);
+  const about=page.locator('.game-practice-info');
+  await expect(about).toBeVisible();
+  await expect(about).not.toHaveAttribute('open','');
   await expect(page.locator('.games-screen')).not.toContainText('Questions prioritize current school skills');
 });
 

@@ -527,8 +527,8 @@ const sources=view?view.sourceHtml():'<section class="game-materials" aria-label
 const actions=view?view.actionsHtml({complete:!!window.ABVMStudyReview?.completion(),loading:studyMaterialsError?.pack!==pack})+view.secondaryHtml():studyMaterialsError?.pack!==pack?'<p class="game-material-status" role="status">Loading practice options…</p>':"";
 const recovery=studyMaterialsError?.pack===pack?'<div class="game-material-status" role="status"><p>Some practice options could not load. The games above still work.</p><button type="button" data-study-retry>Try again</button></div>':"";
 return '<section class="study-games-hero simple child-first"><div class="study-games-mascot">★</div><div><p>STUDY GAMES</p><h2>What do you want to play?</h2></div></section>'+
-games+
-'<details class="game-practice-options"><summary>Practice options</summary>'+sources+actions+recovery+'<p class="game-practice-info">Uses current school skills when available. Extra questions are original Grade 2 practice. Student answers stay on this device.</p></details>';
+games+sources+actions+recovery+
+'<details class="game-practice-info"><summary>About this practice</summary><p>Uses current school skills when available. Extra questions are original Grade 2 practice. Student answers stay on this device.</p></details>';
 }
 function gamePlayHtml(){const g=gameState,q=activeGameQuestion(),e=studyGameEngine();if(q)e?.markQuestionShown?.(q,g.sourceKey||currentGameSourceKey());return window.ABVMStudyGameView.play({g,mode:gameMode(g.mode),q,teach:g.supportMode?e?.teachCardFor?.(q):null,retryInstruction:e?.teachCardFor?.(q)?.instruction,labels:GAME_TYPE_LABELS,canRead:!!studyMaterialsView?.readAloud.supported})}
 function gameFinishHtml(){

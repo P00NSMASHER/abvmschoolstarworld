@@ -42,10 +42,7 @@
 .games-screen .study-games-hero.child-first h2{font-size:clamp(1.5rem,6vw,2rem);margin-bottom:0}
 .games-screen .study-games-hero.child-first .study-games-mascot{transform:none}
 .games-screen .study-game-grid{margin-top:12px}
-.games-screen .game-practice-options{margin:14px 2px 4px;border-top:1px solid #dfe7ef}
-.games-screen .game-practice-options>summary{min-height:48px;display:flex;align-items:center;cursor:pointer;font-size:.84rem;font-weight:850;color:#345674}
-.games-screen .game-practice-options .game-materials{margin-top:2px}
-.games-screen .game-practice-info{margin:12px 2px 4px;color:#53677b;font-size:.78rem;line-height:1.5}
+.games-screen .game-materials{margin-top:18px;padding-top:14px;border-top:1px solid #dfe7ef}\n.games-screen .game-practice-info{margin:12px 2px 4px;color:#53677b;font-size:.78rem;line-height:1.5}\n.games-screen .game-practice-info>summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:800;color:#345674}\n.games-screen .game-practice-info p{margin:4px 0 0}
 .family-screen .family-primary{margin-top:2px}
 .family-screen .family-empty-action{margin:10px 0 2px;color:#526579;font-size:.9rem;line-height:1.5}
 .family-screen .family-notices-overflow{margin:2px 14px 14px;border-top:1px solid #e5ebf0}

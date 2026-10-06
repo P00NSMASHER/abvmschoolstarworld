@@ -37,11 +37,11 @@ for(const [width,height] of [[393,852],[768,1024]]){
       const source=document.querySelector('[data-study-source]').getBoundingClientRect();
       const daily=document.querySelector('[data-game-start="daily"]').getBoundingClientRect();
       const controls=[...document.querySelectorAll('.study-game-grid button,[data-study-source],[data-game-start="daily"],[data-study-notes] > summary,[data-study-test-options] > summary')];
-      return {sourceBeforeGrid:source.bottom<=grid.top+1,dailyAfterGrid:daily.top>=grid.bottom-1,
+      return {sourceAfterGrid:source.top>=grid.bottom-1,dailyAfterGrid:daily.top>=grid.bottom-1,
         smallest:Math.min(...controls.map(el=>el.getBoundingClientRect().height)),
         overflow:document.documentElement.scrollWidth>document.documentElement.clientWidth+2};
     });
-    expect(geometry.sourceBeforeGrid).toBe(true);
+    expect(geometry.sourceAfterGrid).toBe(true);
     expect(geometry.dailyAfterGrid).toBe(true);
     expect(geometry.smallest).toBeGreaterThanOrEqual(44);
     expect(geometry.overflow).toBe(false);
