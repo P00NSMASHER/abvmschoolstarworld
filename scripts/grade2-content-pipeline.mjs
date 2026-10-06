@@ -1551,6 +1551,10 @@ function normalize(value) {
   return text(value).toLowerCase();
 }
 
+function normalizeLineageText(value) {
+  return normalize(value).replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
 function slug(value) {
   return normalize(value).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'item';
 }
@@ -1631,9 +1635,9 @@ function pageLineageForSkill(skill, sourcePages, sourceHash) {
   const pages = normalizedSourcePages(sourcePages);
   const candidates = pages.map(page => {
     const matchedLines = page.lines.filter(line => {
-      const haystack = normalize(line);
+      const haystack = normalizeLineageText(line);
       return evidence.some(item => {
-        const needle = normalize(item);
+        const needle = normalizeLineageText(item);
         return needle.length >= 3 && haystack.includes(needle);
       });
     });
