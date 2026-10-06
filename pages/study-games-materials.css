@@ -49,3 +49,17 @@
 .games-screen .game-read-button { min-height: 44px; margin: 0 0 10px; color: #365675; font-size: .875rem; padding: 6px 10px; border: 1px solid #d3e0e9; border-radius: 10px; }
 .games-screen .game-materials :is(select,input):focus-visible, .games-screen .game-material-secondary summary:focus-visible { outline: 3px solid #304d9c; outline-offset: 3px; }
 .games-screen :is(.game-materials,.game-material-actions,.game-material-secondary) { min-width: 0; overflow-wrap: anywhere; }
+
+.games-screen .game-live-score{display:block;margin-top:3px;color:#526579;font-size:.875rem;line-height:1.4;font-weight:700}
+.games-screen .game-feedback.incorrect{border-color:#e1aaa6;background:#fff4f3;color:#69201a}
+.games-screen .game-feedback.incorrect>span{background:#b42318;color:#fff}
+.games-screen .game-score-summary{display:grid;gap:6px;margin:14px 0;padding:16px;border:1px solid #bfd0df;border-radius:16px;background:#f7fbff;color:#183b5d}
+.games-screen .game-score-summary>strong{font-size:1.25rem;line-height:1.35}
+.games-screen .game-score-summary>span{font-size:1rem;line-height:1.5;color:#445b72}
+.games-screen .game-section-scores{display:grid;gap:8px;margin:14px 0}
+.games-screen .game-section-scores h3,.games-screen .learning-heading{margin:0 0 4px;color:#244e76;font-size:1rem}
+.games-screen .game-section-scores>div{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid #dce5ed;border-radius:12px;background:#fff;font-size:1rem;line-height:1.45}
+.games-screen .game-section-scores>div span{min-width:0;overflow-wrap:anywhere}
+.games-screen .game-section-scores>div strong{flex:none}
+.games-screen .legacy-record{display:block;margin:10px 0;color:#526579;font-size:.875rem;line-height:1.45}
+@media (max-width:360px){.games-screen .game-section-scores>div{align-items:flex-start;flex-direction:column;gap:3px}}
