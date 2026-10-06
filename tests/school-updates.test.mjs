@@ -18,10 +18,13 @@ test('same event on two separate dates remains two events',()=>{
  const u=api(),make=d=>({item:{label:'Mass'},range:[new Date(d),new Date(d)]});
  assert.equal(u.uniqueRows([make('2026-10-07'),make('2026-10-07'),make('2026-10-14')]).length,2);
 });
-test('baseline, persistent unread teacher updates, acknowledgement and storage denial',()=>{
- const storage=new Map(),u=api(storage),pack={subjects:[{subject:'Math',topics:['Addition']}]};
+test('Family unread tracking is communication-only and persists notice acknowledgement',()=>{
+ const storage=new Map(),u=api(storage),pack={subjects:[{subject:'Math',topics:['Addition']}],homework:[{subject:'Math',task:'Worksheet'}],parentNotices:[]};
  assert.equal(u.state(pack).unread.length,0);
  pack.subjects[0].topics=['Subtraction'];
+ pack.homework[0].task='New worksheet';
+ assert.equal(u.state(pack).unread.length,0);
+ pack.parentNotices.push('Picture forms are due Friday.');
  assert.equal(u.state(pack).unread.length,1);
  assert.equal(api(storage).state(pack).unread.length,1);
  assert.equal(u.markRead(pack),true);
@@ -42,15 +45,16 @@ test('notice disclosure keeps complete exact source and safely escapes literal p
  assert.ok(summary.length<=113);
  assert.ok(summary.endsWith('…'));
 });
-test('long unread collections show three previews and retain remaining disclosures without acknowledging',()=>{
+test('unread status stays compact while the notice list progressively discloses detail',()=>{
  const u=api(),pack={parentNotices:[]};
  u.state(pack);
  pack.parentNotices=Array.from({length:7},(_,i)=>'School notice '+i);
- const html=u.card(pack);
- assert.match(html,/See 4 more updates/);
- assert.equal((html.match(/class="family-message"/g)||[]).length,7);
- assert.equal((html.split('class="family-update-overflow"')[0].match(/class="family-message"/g)||[]).length,3);
- for(const text of pack.parentNotices)assert.ok(html.includes(text));
+ const status=u.card(pack),notices=u.noticesCard(pack.parentNotices);
+ assert.match(status,/7 new school notices/);
+ assert.equal((status.match(/class="family-message"/g)||[]).length,0);
+ assert.match(notices,/See 4 more notices/);
+ assert.equal((notices.match(/class="family-message"/g)||[]).length,7);
+ assert.equal((notices.split('class="family-notices-overflow"')[0].match(/class="family-message"/g)||[]).length,3);
  assert.equal(u.state(pack).unread.length,7);
  u.markRead(pack);
  assert.equal(u.state(pack).unread.length,0);

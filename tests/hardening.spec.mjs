@@ -50,7 +50,7 @@ test("freshness states distinguish current, stale, and offline data",async({brow
   });
   await stalePage.goto("http://127.0.0.1:4173/#today");
   await expect(stalePage.locator(".freshness")).toHaveClass(/stale/);
-  await expect(stalePage.locator(".freshness")).toContainText(/Older data/);
+  await expect(stalePage.locator(".freshness")).toContainText(/Last checked/);
   await staleContext.close();
 
   const offlineContext=await browser.newContext();
@@ -62,7 +62,7 @@ test("freshness states distinguish current, stale, and offline data",async({brow
   await offlineContext.setOffline(true);
   await offlinePage.reload({waitUntil:"domcontentloaded"});
   await expect(offlinePage.locator(".freshness")).toHaveClass(/offline/);
-  await expect(offlinePage.locator(".freshness")).toContainText(/Offline · last verified/);
+  await expect(offlinePage.locator(".freshness")).toContainText(/Offline · showing saved info/);
   await offlineContext.setOffline(false);
   await offlineContext.close();
 });

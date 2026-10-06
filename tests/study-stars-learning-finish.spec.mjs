@@ -48,7 +48,7 @@ test.beforeEach(async ({page})=>{
   });
 });
 
-test('learning-first summary counts only independent normal work as Skills answered independently',async({page})=>{
+test('learning-first summary counts only independent normal work as On my own',async({page})=>{
   const summary=await page.evaluate(()=>window.ABVMStudyGames.learningFirstSummary([
     {skill:'math-strong',kind:'normal',correct:true,independent:true},
     {skill:'retry-skill',kind:'normal',correct:true,independent:false},
@@ -80,9 +80,9 @@ test('learning-first finish puts learning evidence before secondary rewards',asy
     reward:{status:'done',awardedAmount:12,currency:'Study Stars',balance:32}
   }));
   expect(html).toContain('What you learned');
-  expect(html).toContain('Skills answered independently');
-  expect(html).toContain('Skills recalled later');
-  expect(html).toContain('Skills to revisit');
+  expect(html).toContain('On my own');
+  expect(html).toContain('Remembered later');
+  expect(html).toContain('Practice again');
   expect(html).toContain('6 / 8 correct on the first try · 75%');
   expect(html).toContain('+12 Study Stars');
   expect(html.indexOf('learning-summary')).toBeLessThan(html.indexOf('game-finish-stars'));

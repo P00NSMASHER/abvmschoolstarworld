@@ -22,10 +22,10 @@ const GAME_TYPE_LABELS=Object.freeze({
   reasoning:"Explain your thinking"
 });
 const STUDY_GAME_MODES=Object.freeze([
-  Object.freeze({id:"quick",title:"Quick Mix",subjects:[],count:8,copy:"Current school skills mixed into one quick round."}),
-  Object.freeze({id:"math",title:"Math Dash",subjects:["Math"],count:8,copy:"Current math first; STAR-style practice fills verified-data gaps."}),
-  Object.freeze({id:"words",title:"Word Power",subjects:["Reading / ELA","Spelling / Handwriting"],preferredSkills:["long-short-a","suffix-ed-ing"],count:8,copy:"Current spelling-test, phonics, word-building, and reading skills."}),
-  Object.freeze({id:"faith",title:"Faith Quest",subjects:["Religion"],count:8,copy:"Religion practice from the current class material."})
+  Object.freeze({id:"quick",title:"Quick Mix",subjects:[],count:8,copy:"A little bit of everything."}),
+  Object.freeze({id:"math",title:"Math Dash",subjects:["Math"],count:8,copy:"Numbers, problems, and math skills."}),
+  Object.freeze({id:"words",title:"Word Power",subjects:["Reading / ELA","Spelling / Handwriting"],preferredSkills:["long-short-a","suffix-ed-ing"],count:8,copy:"Words, spelling, phonics, and reading."}),
+  Object.freeze({id:"faith",title:"Faith Quest",subjects:["Religion"],count:8,copy:"Religion and faith practice."})
 ]);
 function storageGet(key){try{return localStorage.getItem(key)}catch{return null}}
 function storageSet(key,value){try{localStorage.setItem(key,value);return true}catch{return false}}
@@ -112,17 +112,17 @@ function header(kicker,title){
 function freshnessState(){
   const raw=envelope?.sourceLastSeenAt||pack?.sourceCapturedAt||pack?.generatedAt;
   const d=raw?new Date(raw):null;
-  if(!d||Number.isNaN(d.getTime()))return{state:"attention",label:"Source verification unavailable"};
+  if(!d||Number.isNaN(d.getTime()))return{state:"attention",label:"School info status unavailable"};
   const stamp=FRESH_DATE_FORMATTER.format(d)+" at "+FRESH_TIME_FORMATTER.format(d)+" ET";
   const ageHours=(Date.now()-d.getTime())/3600000;
-  if(navigator.onLine===false||lastPackFetchUsedCache)return{state:"offline",label:"Offline · last verified "+stamp};
-  if(ageHours>30)return{state:"attention",label:"Needs refresh · last verified "+stamp};
-  if(ageHours>8)return{state:"stale",label:"Older data · last verified "+stamp};
-  return{state:"current",label:"Verified "+stamp};
+  if(navigator.onLine===false||lastPackFetchUsedCache)return{state:"offline",label:"Offline · showing saved info from "+stamp};
+  if(ageHours>30)return{state:"attention",label:"May be outdated · last checked "+stamp};
+  if(ageHours>8)return{state:"stale",label:"Last checked "+stamp};
+  return{state:"current",label:"School info current · checked "+stamp};
 }
 function freshness(){
-  const state=freshnessState(),label=manualRefreshActive?"Checking published school info…":state.label;
-  const action=manualRefreshActive?"Checking published school information":"Check published school information. "+state.label;
+  const state=freshnessState(),label=manualRefreshActive?"Checking for school updates…":state.label;
+  const action=manualRefreshActive?"Checking for school updates":"Refresh school information. "+state.label;
   return '<button type="button" class="freshness '+state.state+(manualRefreshActive?' is-refreshing':'')+'" data-refresh-pack aria-label="'+esc(action)+'"'+(manualRefreshActive?' disabled':'')+'><span aria-hidden="true"></span><strong>'+esc(label)+'</strong><b aria-hidden="true">↻</b></button>';
 }
 function kindClass(item){
@@ -355,7 +355,7 @@ function ensureStudyGameEngine(){
   if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
   if(studyEnginePromise)return studyEnginePromise;
   const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.async=true;s.onload=()=>window[key]?resolve():reject(new Error(key+" did not initialize"));s.onerror=()=>reject(new Error(key+" could not be loaded"));document.head.append(s)});
-  studyEnginePromise=Promise.all([load("./study-games.js?v=98","ABVMStudyGames"),load("./study-games-view.js?v=10","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
+  studyEnginePromise=Promise.all([load("./study-games.js?v=98","ABVMStudyGames"),load("./study-games-view.js?v=12","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
   return studyEnginePromise;
 }
 function studyGameCatalog(){
@@ -472,15 +472,17 @@ function leaveStudyGame(){markGameComebacksNextSession();gameState.screen="menu"
 function toggleStudyHint(){const g=gameState;if(g.screen==="play"&&!g.answered){g.hintOpen=!g.hintOpen;if(g.hintOpen)g.hints=(g.hints||0)+1;renderGames();bindScreen()}}
 function gameMenuHtml(catalog){
   const modes=STUDY_GAME_MODES,materials=currentStudyMaterials(),view=studyMaterialsView,selection=studySelection();
-  return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Pick a game and start</h2><span>Questions prioritize current school skills, then recent verified review, then original Grade 2 STAR-style practice when a subject still has a gap.</span></div></section>'+
-    (view?view.sourceHtml():'<section class="game-materials" aria-label="Practice materials"><label for="study-source">Practice from</label><select id="study-source" data-study-source disabled><option value="weekly">This week</option></select></section>')+
-    '<div class="study-game-grid">'+modes.map(mode=>{
-      const scope=materials?.forMode(mode.id,selection),record=loadGameRecord(mode.id,scope?.sourceKey||catalog.sourceKey),total=scope?Math.min(8,scope.count):selection.source==="weekly"?gameModeQuestionTotal(catalog,mode):0,disabled=total===0;
-      return '<button type="button" class="study-game-tile game-'+mode.id+'" data-game-start="'+esc(mode.id)+'"'+(disabled?' disabled aria-disabled="true"':'')+'>'+window.ABVMStudyGameView.icon(mode.id)+'<span class="study-game-copy"><strong>'+esc(mode.title)+'</strong><small>'+esc(selection.source==="weekly"?mode.copy:"Practice from "+(scope?.label||"the selected materials")+".")+'</small>'+(disabled?'<em>Not ready yet</em>':record.plays?'<em>Best solved '+record.best+' / '+total+'</em>':'')+'</span><b aria-hidden="true">›</b></button>';
-    }).join("")+'</div>'+
-    (view?view.actionsHtml({complete:!!window.ABVMStudyReview?.completion(),loading:studyMaterialsError?.pack!==pack})+view.secondaryHtml():studyMaterialsError?.pack!==pack?'<p class="game-material-status" role="status">Loading saved materials…</p>':"")+
-    (studyMaterialsError?.pack===pack?'<div class="game-material-status" role="status"><p>Saved materials could not load. Current Games are still available.</p><button type="button" data-study-retry>Retry saved materials</button></div>':"")+
-    '<p class="game-privacy-note">Practice prioritizes verified school skills. STAR-style fallback uses original Grade 2 practice, not copied STAR test items; private student answers and grades are not used.</p>';
+  const games='<div class="study-game-grid">'+modes.map(mode=>{
+    const scope=materials?.forMode(mode.id,selection),record=loadGameRecord(mode.id,scope?.sourceKey||catalog.sourceKey),total=scope?Math.min(8,scope.count):selection.source==="weekly"?gameModeQuestionTotal(catalog,mode):0,disabled=total===0;
+    return '<button type="button" class="study-game-tile game-'+mode.id+'" data-game-start="'+esc(mode.id)+'"'+(disabled?' disabled aria-disabled="true"':'')+'>'+window.ABVMStudyGameView.icon(mode.id)+'<span class="study-game-copy"><strong>'+esc(mode.title)+'</strong><small>'+esc(selection.source==="weekly"?mode.copy:"Practice from "+(scope?.label||"the selected materials")+".")+'</small>'+(disabled?'<em>Not ready yet</em>':record.plays?'<em>Best '+record.best+' / '+total+'</em>':'')+'</span><b aria-hidden="true">›</b></button>';
+  }).join("")+'</div>';
+  const sources=view?view.sourceHtml():'<section class="game-materials" aria-label="Practice materials"><label for="study-source">Practice from</label><select id="study-source" data-study-source disabled><option value="weekly">This week</option></select></section>';
+  return '<section class="study-games-hero simple child-first"><div class="study-games-mascot">★</div><div><p>STUDY GAMES</p><h2>What do you want to play?</h2></div></section>'+
+    games+
+    sources+
+    (view?view.actionsHtml({complete:!!window.ABVMStudyReview?.completion(),loading:studyMaterialsError?.pack!==pack})+view.secondaryHtml():studyMaterialsError?.pack!==pack?'<p class="game-material-status" role="status">Loading practice options…</p>':"")+
+    (studyMaterialsError?.pack===pack?'<div class="game-material-status" role="status"><p>Some practice options could not load. The games above still work.</p><button type="button" data-study-retry>Try again</button></div>':"")+
+    '<details class="game-practice-info"><summary>About this practice</summary><p>Uses current school skills when available. Extra questions are original Grade 2 practice. Student answers stay on this device.</p></details>';
 }
 function gamePlayHtml(){const g=gameState,q=activeGameQuestion(),e=studyGameEngine();if(q)e?.markQuestionShown?.(q,g.sourceKey||currentGameSourceKey());return window.ABVMStudyGameView.play({g,mode:gameMode(g.mode),q,teach:g.supportMode?e?.teachCardFor?.(q):null,retryInstruction:e?.teachCardFor?.(q)?.instruction,labels:GAME_TYPE_LABELS,canRead:!!studyMaterialsView?.readAloud.supported})}
 function gameFinishHtml(){
@@ -516,25 +518,7 @@ function renderGames(){
     setTimeout(()=>{if(gameState!==round)return;round.rewardRevealAmount=0;stack().querySelector("[data-reward-reveal]")?.remove()},1200);
   }
 }
-function renderFamily(){
-  const weekEnd=weekDays()[4],todayDate=today();
-  const tests=new Set(datedImportantEvents()
-    .filter(({item,date})=>kindClass(item)==="test"&&date>=todayDate&&date<=weekEnd)
-    .map(({date})=>isoDateKey(date))).size;
-  const notices=currentNoticeTexts();
-  const homeworkActions=taskRecordsForSurface("family").map(({item})=>item.task);
-  const actions=[...new Set([...homeworkActions,...upcomingReminderTexts(today(),6)])].slice(0,6);
-  stack().innerHTML='<div class="screen family-screen" role="region" aria-label="Family dashboard">'+
-    header("FAMILY","Family dashboard")+freshness()+
-    '<section class="family-hero compact school-community-hero"><p>THIS WEEK</p><h2>What needs attention</h2><span>Current school actions and notices in one place.</span></section>'+
-    '<div class="family-stats"><div><strong>'+tests+'</strong><span>test days</span></div><div><strong>'+actions.length+'</strong><span>current actions</span></div></div>'+
-    '<section class="parent-card family-actions-card"><div class="family-actions-head"><span class="family-actions-mark" aria-hidden="true">✓</span><div><small>TO DO</small><h3>Family actions</h3></div></div><ul>'+actions.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></section>'+'<figure class="school-portrait-card"><figcaption><span>OUR SCHOOL</span><strong>Assumption BVM School</strong><small>Pottsville, Pennsylvania</small></figcaption></figure>'+
-    window.ABVMSchoolUpdates.card(pack)+
-    window.ABVMSchoolUpdates.noticesCard(notices,linkedTextHtml)+
-    (window.ABVMWeeklyLearning?.renderChanges?.(pack?.schoolChangeFeed)||"")+
-    '<p class="unofficial-note">Family planning tool based on current ABVM Grade 2 sources.</p>'+
-    '</div>';
-}
+function renderFamily(){const weekEnd=weekDays()[4],todayDate=today();const tests=new Set(datedImportantEvents().filter(({item,date})=>kindClass(item)==="test"&&date>=todayDate&&date<=weekEnd).map(({date})=>isoDateKey(date))).size;const notices=currentNoticeTexts();const homeworkActions=taskRecordsForSurface("family").map(({item})=>item.task);const actions=[...new Set([...homeworkActions,...upcomingReminderTexts(today(),6)])].slice(0,6);const actionList=actions.length?'<ul>'+actions.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul>':'<p class="family-empty-action">Nothing needs action right now.</p>';stack().innerHTML='<div class="screen family-screen" role="region" aria-label="Family dashboard">'+header("FAMILY","Family dashboard")+freshness()+'<section class="parent-card family-actions-card family-primary"><div class="family-actions-head"><span class="family-actions-mark" aria-hidden="true">✓</span><div><small>THIS WEEK</small><h3>What needs attention</h3></div></div>'+actionList+'</section><div class="family-stats"><div><strong>'+tests+'</strong><span>test days</span></div><div><strong>'+actions.length+'</strong><span>current actions</span></div></div>'+window.ABVMSchoolUpdates.card(pack)+window.ABVMSchoolUpdates.noticesCard(notices,linkedTextHtml)+(window.ABVMWeeklyLearning?.renderChanges?.(pack?.schoolChangeFeed)||"")+'<section class="family-hero school-community-hero"><p>OUR SCHOOL</p><h2>Assumption BVM School</h2><span>Pottsville, Pennsylvania</span></section><figure class="school-portrait-card"><figcaption><span>OUR SCHOOL</span><strong>Assumption BVM School</strong><small>Pottsville, Pennsylvania</small></figcaption></figure><p class="unofficial-note">Family planning tool based on current ABVM Grade 2 sources.</p></div>';}
 function render({preserveScroll=false}={}){
   if(!pack)return;
   screenGeneration++;studyMaterialsView?.readAloud.stop();
@@ -566,7 +550,7 @@ function bindScreen(){
     if(!target||!stack().contains(target))return;
     if(target.matches("[data-open-family]")){activeTab="family";history.replaceState(null,"","#family");render();return;}
     if(target.matches("[data-mark-updates-read]")){const saved=window.ABVMSchoolUpdates.markRead(pack);render({preserveScroll:true});toast(saved?"Updates marked as read":"Could not save read status on this device");return;}
-    if(target.matches("[data-refresh-pack]")){manualRefreshSchoolInfo();return;}
+    if(target.matches("[data-refresh-pack]")){manualRefreshSchoolInfo();return;}if(target.matches("[data-retry-load]")){target.disabled=true;target.textContent="Trying again…";load();return;}
     if(target.matches("[data-check]")){toggleChecked((pack.homework||[])[Number(target.dataset.check)],Number(target.dataset.check));return;}
     if(target.matches("[data-day]")){selectedDay=new Date(target.dataset.day);renderWeek();return;}
     if(target.matches("[data-week-step]")){weekOffset+=Number(target.dataset.weekStep||0);selectedDay=null;renderWeek();return;}
@@ -689,7 +673,7 @@ async function load(){
     if("requestIdleCallback" in window)requestIdleCallback(warmGames,{timeout:2200});
     else setTimeout(warmGames,1400);
   }catch(e){
-    stack().innerHTML='<div class="screen"><section class="error-card"><p>ABVM GRADE 2</p><h1>School info could not be loaded</h1><span>Refresh the page to try again.</span></section></div>';
+    stack().innerHTML='<div class="screen"><section class="error-card"><p>ABVM GRADE 2</p><h1>School info could not be loaded</h1><span>Your saved app is still here. Try loading the latest school information again.</span><button type="button" data-retry-load>Try again</button></section></div>';bindScreen();
   }
 }
 window.addEventListener("hashchange",()=>{
