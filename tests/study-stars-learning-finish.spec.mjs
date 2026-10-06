@@ -74,7 +74,7 @@ test('learning-first summary keeps strongest valid evidence for each skill regar
 test('learning-first finish puts learning evidence before secondary rewards',async({page})=>{
   const html=await page.evaluate(()=>window.ABVMStudyGameView.finish({
     mode:{id:'quick',title:'Quick Mix'},
-    state:{questions:Array(8).fill({}),score:6},
+    state:{questions:Array(8).fill({}),score:6,accuracyRows:[...Array(6)].map((_,i)=>({key:'q'+i,subject:i<3?'Reading':'Math',firstCorrect:true,eventualCorrect:true,hintUsed:false})).concat([{key:'q6',subject:'Reading',firstCorrect:false,eventualCorrect:true,hintUsed:false},{key:'q7',subject:'Math',firstCorrect:false,eventualCorrect:false,hintUsed:false}])},
     record:{best:7},
     summary:{strong:3,remembered:1,practice:2,total:6},
     reward:{status:'done',awardedAmount:12,currency:'Study Stars',balance:32}
@@ -83,7 +83,11 @@ test('learning-first finish puts learning evidence before secondary rewards',asy
   expect(html).toContain('Skills answered independently');
   expect(html).toContain('Skills recalled later');
   expect(html).toContain('Skills to revisit');
-  expect(html).toContain('Round score 6 of 8');
+  expect(html).toContain('6 / 8');
+  expect(html).toContain('75%');
+  expect(html).toContain('Section scores');
+  expect(html).toContain('Reading');
+  expect(html).toContain('Math');
   expect(html).toContain('+12 Study Stars');
   expect(html.indexOf('learning-summary')).toBeLessThan(html.indexOf('game-finish-stars'));
   expect(html.indexOf('learning-summary')).toBeLessThan(html.indexOf('study-star-earned'));
@@ -92,7 +96,7 @@ test('learning-first finish puts learning evidence before secondary rewards',asy
 test('secondary reward summary stays visually separated and readable',async({page})=>{
   const html=await page.evaluate(()=>window.ABVMStudyGameView.finish({
     mode:{id:'quick',title:'Quick Mix'},
-    state:{questions:Array(8).fill({}),score:8},
+    state:{questions:Array(8).fill({}),score:8,accuracyRows:Array.from({length:8},(_,i)=>({key:'q'+i,subject:'Math',firstCorrect:true,eventualCorrect:true,hintUsed:false}))},
     record:{best:8},
     summary:{strong:4,remembered:0,practice:0,total:4},
     reward:{status:'done',awardedAmount:10,currency:'Study Stars',balance:10}
@@ -109,7 +113,7 @@ test('secondary reward summary stays visually separated and readable',async({pag
 test('learning-first reward summary cannot display a second currency',async({page})=>{
   const html=await page.evaluate(()=>window.ABVMStudyGameView.finish({
     mode:{id:'quick',title:'Quick Mix'},
-    state:{questions:Array(8).fill({}),score:6},
+    state:{questions:Array(8).fill({}),score:6,accuracyRows:[...Array(6)].map((_,i)=>({key:'q'+i,subject:i<3?'Reading':'Math',firstCorrect:true,eventualCorrect:true,hintUsed:false})).concat([{key:'q6',subject:'Reading',firstCorrect:false,eventualCorrect:true,hintUsed:false},{key:'q7',subject:'Math',firstCorrect:false,eventualCorrect:false,hintUsed:false}])},
     record:{best:7},
     summary:{strong:3,remembered:1,practice:2,total:6},
     reward:{status:'done',awardedAmount:12,currency:'Coins',balance:32}
