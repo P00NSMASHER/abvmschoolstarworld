@@ -320,6 +320,32 @@ test('test calendar advances in New York, respects explicit endings and never gu
   assert.equal(model.completeTests().ok,false);
 });
 
+test('printable guides cover every upcoming test, not only the nearest test date',() => {
+  const events = [
+    {date:'2026-10-05',label:'Math'},
+    {date:'2026-10-07',label:'Grammar (subject & predicate)'},
+    {date:'2026-10-09',label:'Spelling (short i / long i) / Handwriting'},
+  ];
+  const pack = {subjects:[
+    {subject:'Math',topics:['Add and subtract within 100.'],studyNotes:['Check subtraction by adding back.']},
+    {subject:'Reading / ELA',topics:['Grammar: subject & predicate'],studyNotes:['The subject tells who or what the sentence is about; the predicate tells what the subject does or is.']},
+    {subject:'Spelling / Handwriting',topics:['Earlier test focus: short a / long a'],studyNotes:['Compare short a with long a.']},
+  ]};
+  const rows = [
+    ...pool('math-guide-',8,'Math'),
+    ...pool('grammar-guide-',8,'Reading / ELA',{skill:'subject-predicate',sourceFact:'subject and predicate'}),
+  ];
+  const model = createStudyMaterials(opts({events,pack,catalog:catalog(rows)}));
+  const guides = model.studyGuides();
+  assert.deepEqual(guides.map(guide => guide.label),events.map(event => event.label));
+  assert(guides.every(guide => guide.key === guide.date+'|'+guide.label));
+  assert(model.studyGuide('2026-10-07|Grammar (subject & predicate)').questions.length > 0);
+  const spelling = model.studyGuide('2026-10-09|Spelling (short i / long i) / Handwriting');
+  assert.equal(spelling.fallback,true);
+  assert(spelling.questions.some(question => question.subject === 'Spelling / Handwriting'));
+  assert(!spelling.notes.some(note => /short a|long a/i.test(note)),'an earlier vowel focus must not leak into the current printable guide');
+});
+
 test('completion and Undo preserve exact existing keys; restoration survives reload and handles duplicate events once',() => {
   const initial = ['2026-10-01|Older test','unrelated-existing-key'];
   const storage = memory({'abvm-completed-tests':JSON.stringify(initial)});
