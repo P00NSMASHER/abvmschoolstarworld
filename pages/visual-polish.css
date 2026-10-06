@@ -25,3 +25,40 @@
 .screen .agenda-lunch p{font-size:14px;line-height:1.5}
 @media(max-width:360px){.lunch-art{flex-basis:72px;width:72px}.lunch-art img{width:72px;height:72px}.screen .lunch-card:has(.lunch-art),.screen .agenda-lunch:has(.lunch-art){gap:10px}}
 @media(prefers-reduced-motion:no-preference){.bottom-nav button .nav-icon{transition:background-color .15s,color .15s}.family-message>summary{transition:background-color .15s}.family-message>summary:active{background:#eaf2fc}}
+/* Product-discipline pass: less chrome, clearer hierarchy, explicit loading. */
+.app-loading-screen{padding:20px 16px 120px}
+.app-loading-shell{display:grid;gap:14px}
+.app-loading-brand{display:flex;align-items:center;justify-content:space-between;min-height:58px}
+.app-loading-brand span{position:relative;overflow:hidden;display:block;width:42%;height:12px;border-radius:999px;background:#dfe7ef}
+.app-loading-brand i{display:block;width:44px;height:44px;border-radius:50%;background:#e8edf2}
+.app-loading-card,.app-loading-row{position:relative;overflow:hidden;background:#edf2f6;border-radius:20px}
+.app-loading-card{height:168px}
+.app-loading-row{height:72px}
+.app-loading-card::after,.app-loading-row::after,.app-loading-brand span::after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,#ffffffa8,transparent);animation:abvm-skeleton 1.15s ease-in-out infinite}
+@keyframes abvm-skeleton{to{transform:translateX(100%)}}
+@media(prefers-reduced-motion:reduce){.app-loading-card::after,.app-loading-row::after,.app-loading-brand span::after{animation:none}}
+@media(max-width:520px){.today-screen .app-header .school-mark,.family-screen .app-header .school-mark{display:none}}
+.games-screen .study-games-hero.child-first{min-height:0;padding-block:18px}
+.games-screen .study-games-hero.child-first h2{font-size:clamp(1.5rem,6vw,2rem);margin-bottom:0}
+.games-screen .study-games-hero.child-first .study-games-mascot{transform:none}
+.games-screen .study-game-grid{margin-top:12px}
+.games-screen .game-practice-options{margin:14px 2px 4px;border-top:1px solid #dfe7ef}
+.games-screen .game-practice-options>summary{min-height:48px;display:flex;align-items:center;cursor:pointer;font-size:.84rem;font-weight:850;color:#345674}
+.games-screen .game-practice-options .game-materials{margin-top:2px}
+.games-screen .game-practice-info{margin:12px 2px 4px;color:#53677b;font-size:.78rem;line-height:1.5}
+.family-screen .family-primary{margin-top:2px}
+.family-screen .family-empty-action{margin:10px 0 2px;color:#526579;font-size:.9rem;line-height:1.5}
+.family-screen .family-notices-overflow{margin:2px 14px 14px;border-top:1px solid #e5ebf0}
+.family-screen .family-notices-overflow>summary{min-height:46px;display:flex;align-items:center;cursor:pointer;color:#245c94;font-size:.82rem;font-weight:800}
+.family-screen .unread-updates.compact{padding:13px 14px;border-radius:16px;box-shadow:none}
+.family-screen .unread-updates.compact .unread-heading h2{font-size:1rem;line-height:1.3}
+.family-screen .unread-updates.compact>p{margin:5px 0 10px;font-size:.78rem;line-height:1.45}
+.family-screen .family-stats-secondary{opacity:.88}
+.family-screen .family-secondary-info{margin:4px 0 14px;border:1px solid var(--line);border-radius:16px;background:#fff;overflow:hidden}
+.family-screen .family-secondary-info>summary{min-height:48px;display:flex;align-items:center;padding:0 14px;cursor:pointer;color:#345674;font-size:.84rem;font-weight:850}
+.family-screen .family-secondary-info>.weekly-learning-changes,.family-screen .family-secondary-info>section{margin:0;border:0;border-radius:0;box-shadow:none}
+.family-screen .family-school-secondary{margin-top:4px}
+@media(max-width:699px){
+  .school-photo-hero-simple{min-height:152px;padding-block:18px}
+  .school-photo-hero-simple .hero-copy>p:last-child{display:none}
+}

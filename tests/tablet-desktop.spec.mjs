@@ -21,10 +21,10 @@ for(const viewport of [
     const hero=page.locator(".hero-card");
     await expect(hero).toBeVisible();
     const heroBox=await hero.boundingBox();
-    const brandMark=await hero.locator(".hero-brand-mark").boundingBox();
+    const schoolPhoto=await hero.locator(".school-sign-inset").boundingBox();
     const titleSize=await hero.locator(".hero-copy h2").evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
-    expect(heroBox.height).toBeGreaterThanOrEqual(240);
-    expect(brandMark.width).toBeGreaterThanOrEqual(96);
+    expect(heroBox.height).toBeGreaterThanOrEqual(220);
+    expect(schoolPhoto.width).toBeGreaterThanOrEqual(120);
     expect(titleSize).toBeGreaterThanOrEqual(30);
     for(const tab of ["Calendar","Study","Study Games","Family"]){
       await openDestination(page,tab);

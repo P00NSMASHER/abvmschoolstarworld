@@ -14,9 +14,9 @@
   <link rel="icon" href="./assets/abvm-app-icon-192.png" type="image/png">
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/abvm-app-icon-180.png">
   <link rel="stylesheet" href="./styles.css?v=105">
-  <link rel="stylesheet" href="./school-photos.css?v=1">
+  <link rel="stylesheet" href="./school-photos.css?v=2">
   <link rel="stylesheet" href="./family-view.css?v=1">
-  <link rel="stylesheet" href="./visual-polish.css?v=1">
+  <link rel="stylesheet" href="./visual-polish.css?v=2">
   <link rel="stylesheet" href="./study-clarity.css?v=1">
   <link rel="stylesheet" href="./study-games-materials.css?v=4">
 </head>
@@ -24,7 +24,7 @@
   <main class="site-shell">
     <section class="phone-app" aria-label="ABVM Grade 2 weekly planner">
       <a class="skip-link" href="#app-content">Skip to content</a>
-      <div class="screen-stack" id="app-content"></div>
+      <div class="screen-stack" id="app-content"><div class="app-loading-screen" role="status" aria-live="polite" aria-label="Loading school information"><div class="app-loading-shell"><div class="app-loading-brand"><span></span><i></i></div><div class="app-loading-card"></div><div class="app-loading-row"></div><div class="app-loading-row"></div><div class="app-loading-row"></div></div></div></div>
 
       <nav class="bottom-nav" aria-label="App navigation">
         <button class="active" data-tab="today" aria-current="page" type="button">
@@ -59,7 +59,7 @@
   <script>
     (() => {
       if (!("serviceWorker" in navigator)) return;
-      const reloadKey = "abvm-sw-reloaded-v126";
+      const reloadKey = "abvm-sw-reloaded-v127";
       const hadController = !!navigator.serviceWorker.controller;
       navigator.serviceWorker.addEventListener("controllerchange", () => {
         if (!hadController) return;
@@ -74,10 +74,10 @@
         .catch(() => {});
     })();
   </script>
-  <script src="./school-updates.js?v=2"></script>
+  <script src="./school-updates.js?v=3"></script>
   <script src="./weekly-learning.js?v=3"></script>
   <script src="./study-support.js?v=2"></script>
   <script src="./lunch-art.js?v=1"></script>
-  <script src="./app.js?v=122"></script>
+  <script src="./app.js?v=123"></script>
 </body>
 </html>

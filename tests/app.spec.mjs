@@ -95,12 +95,12 @@ test("all six destinations stay usable in iPad landscape",async({page})=>{
   }
   await openTab(page,"Today");
   const hero=await page.locator(".hero-card").boundingBox();
-  const brand=await page.locator(".hero-brand").boundingBox();
+  const sign=await page.locator(".school-sign-inset").boundingBox();
   expect(hero).not.toBeNull();
-  expect(brand).not.toBeNull();
-  expect(brand.x).toBeGreaterThan(hero.x+hero.width/2);
-  expect(brand.y).toBeGreaterThanOrEqual(hero.y);
-  expect(brand.y+brand.height).toBeLessThanOrEqual(hero.y+hero.height+1);
+  expect(sign).not.toBeNull();
+  expect(sign.x).toBeGreaterThan(hero.x+hero.width/2);
+  expect(sign.y).toBeGreaterThanOrEqual(hero.y);
+  expect(sign.y+sign.height).toBeLessThanOrEqual(hero.y+hero.height+1);
 });
 
 test("all six destinations use the tablet layout on large iPad Pro landscape",async({page})=>{
@@ -219,15 +219,10 @@ test("Today uses a two-column iPad dashboard and stays stacked on phone",async({
 test("Today exposes the weekly priority and focused checklist",async({page})=>{
   const hero=page.locator(".hero-card");
   await expect(hero).toBeVisible();
-  await expect(hero.locator(".hero-brand")).toBeVisible();
-  await expect(hero.locator(".hero-brand img")).toHaveAttribute("src",/abvm-app-icon-192\.png/);
-  await expect(hero.locator(".hero-brand img")).toHaveAttribute("srcset",/abvm-app-icon-512\.png 512w/);
-  await expect(hero.locator(".hero-brand img")).toHaveAttribute("sizes",/min-width:700px/);
-  await expect(hero.locator(".hero-brand img")).toHaveAttribute("width","118");
-  await expect(hero.locator(".hero-brand img")).toHaveAttribute("height","118");
-  await expect(page.locator(".school-mark")).toHaveAttribute("width","52");
-  await expect(page.locator(".school-mark")).toHaveAttribute("height","52");
-  await expect(hero.locator(".hero-brand small")).toHaveText("FAITH AND EDUCATION");
+  const sign=hero.locator(".school-sign-inset img");
+  await expect(sign).toBeVisible();
+  await expect(sign).toHaveAttribute("src",/abvm-school-sign\.webp/);
+  await expect(sign).toHaveAttribute("alt",/Assumption BVM School sign/);
   await expect(page.locator(".book-buddy,.spark")).toHaveCount(0);
   const heroVisual=await hero.evaluate(el=>({background:getComputedStyle(el).backgroundImage,border:getComputedStyle(el).borderColor}));
   expect(heroVisual.background).toContain("rgb(11, 60, 116)");
@@ -238,26 +233,18 @@ test("Today exposes the weekly priority and focused checklist",async({page})=>{
   await expect(page.locator(".check-item").first()).toBeVisible();
 });
 
-test("Today hero uses integrated Assumption branding on iPad",async({page})=>{
+test("Today hero uses the approved school identity photo on iPad",async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await page.goto("/#today");
   const hero=page.locator(".hero-card");
   await expect(hero).toBeVisible({timeout:10_000});
-  const brand=hero.locator(".hero-brand");
-  const mark=hero.locator(".hero-brand-mark");
-  const brandBox=await brand.boundingBox();
-  const markBox=await mark.boundingBox();
-  const style=await brand.evaluate(el=>{
-    const cs=getComputedStyle(el);
-    return {background:cs.backgroundColor,borderTop:cs.borderTopStyle,boxShadow:cs.boxShadow};
-  });
-  expect(brandBox.width).toBeGreaterThanOrEqual(205);
-  expect(markBox.width).toBeGreaterThanOrEqual(116);
-  expect(style.background).toBe("rgba(0, 0, 0, 0)");
-  expect(style.borderTop).toBe("none");
-  expect(style.boxShadow).toBe("none");
-  await expect(brand).toContainText("ASSUMPTION");
-  await expect(brand).toContainText("BVM");
+  const photo=hero.locator(".school-sign-inset");
+  const image=photo.locator("img");
+  await expect(image).toHaveAttribute("src",/abvm-school-sign\.webp/);
+  const box=await photo.boundingBox();
+  expect(box).not.toBeNull();
+  expect(box.width).toBeGreaterThanOrEqual(120);
+  expect(box.height).toBeGreaterThanOrEqual(80);
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
   expect(overflow).toBeFalsy();
 });

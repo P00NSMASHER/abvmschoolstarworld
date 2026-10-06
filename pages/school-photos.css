@@ -41,3 +41,7 @@
   .school-portrait-card{grid-template-columns:210px minmax(0,1fr)}
   .school-portrait-card::before{min-height:154px}
 }
+.school-photo-hero-simple{padding-right:112px}
+.school-photo-hero-simple .school-sign-inset{right:16px;bottom:16px;width:78px}
+@media(max-width:370px){.school-photo-hero-simple{padding-right:92px}.school-photo-hero-simple .school-sign-inset{right:12px;width:64px}}
+@media(min-width:700px){.school-photo-hero-simple{padding-right:190px}.school-photo-hero-simple .school-sign-inset{right:28px;width:132px;bottom:24px}}

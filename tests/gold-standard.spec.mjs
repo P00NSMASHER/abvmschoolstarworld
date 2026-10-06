@@ -322,7 +322,7 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   expect(optionalAssets).toEqual([
     "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json",
     "./study-materials.mjs", "./study-games-materials-view.mjs", "./study-games-materials.css?v=4", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs", "./study-resources.mjs", "./study-clarity.css?v=1", "./study-model.mjs", "./star-practice.mjs",
-    "./family-view.css?v=1", "./visual-polish.css?v=1", "./lunch-art.js?v=1", "./school-photos.css?v=1",
+    "./family-view.css?v=1", "./visual-polish.css?v=2", "./lunch-art.js?v=1", "./school-photos.css?v=2",
     "./assets/school/abvm-school-sign.webp", "./assets/school/abvm-school-hero.webp", "./assets/school/abvm-school-aerial.webp", "./assets/school/abvm-school-facade.webp"
   ]);
   expect(new Set(optionalAssets).size).toBe(optionalAssets.length);
