@@ -7,6 +7,7 @@ on:
       - 'scripts/refresh-teacher-pages.mjs'
       - 'scripts/curriculum-coverage-autopilot.mjs'
       - 'scripts/curriculum-family-registry.mjs'
+      - 'scripts/curriculum-families/**'
       - 'scripts/curriculum-continuity.mjs'
       - 'scripts/school-change-feed.mjs'
       - 'scripts/validate-curriculum-candidates.mjs'
