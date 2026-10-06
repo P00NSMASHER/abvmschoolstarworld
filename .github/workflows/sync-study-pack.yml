@@ -173,7 +173,7 @@ jobs:
       - name: Block publication while curriculum candidates are unresolved
         shell: bash
         run: |
-          node -e 'const p=JSON.parse(require("fs").readFileSync(".curriculum-coverage-plan.json","utf8"));if((p.unsupportedCount||0)>0){console.error("Unresolved curriculum coverage: "+p.candidates.map(c=>c.subject+": "+c.topic).join("; "));process.exit(1)}'
+          node scripts/assert-curriculum-coverage-resolved.mjs --report=.curriculum-coverage-plan.json
 
       - name: Verify refreshed source health
         run: node scripts/check-refresh-health.mjs --require-today --max-age-hours 1
@@ -205,7 +205,7 @@ jobs:
               echo "main advanced during refresh QA; regenerating and revalidating on $REMOTE_MAIN."
               git reset --hard "$REMOTE_MAIN"
               node scripts/refresh-teacher-pages.mjs --autopilot-report=.curriculum-coverage-plan.json
-              node -e 'const p=JSON.parse(require("fs").readFileSync(".curriculum-coverage-plan.json","utf8"));if((p.unsupportedCount||0)>0){console.error("Unresolved curriculum coverage after main advanced: "+p.candidates.map(c=>c.subject+": "+c.topic).join("; "));process.exit(1)}'
+              node scripts/assert-curriculum-coverage-resolved.mjs --report=.curriculum-coverage-plan.json --context="Unresolved curriculum coverage after main advanced"
               node scripts/check-refresh-health.mjs --require-today --max-age-hours 1
               npm run qa
             fi
