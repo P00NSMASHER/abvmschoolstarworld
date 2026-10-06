@@ -33,9 +33,11 @@ test('Family leads with actions and progressively discloses long notice feeds',a
   await expect(actions).toBeVisible();
   const notices=page.locator('.notices-card');
   if(await notices.count()){
-    const immediate=notices.locator('.static-notice-list > .notice-row');
-    const visibleCount=await immediate.evaluateAll(nodes=>nodes.filter(node=>{const box=node.getBoundingClientRect();const style=getComputedStyle(node);return style.display!=='none'&&style.visibility!=='hidden'&&box.width>0&&box.height>0}).length);
-    expect(visibleCount).toBeLessThanOrEqual(3);
+    const immediateCount=await notices.evaluate(node=>{
+      const list=node.querySelector(':scope > .static-notice-list');
+      return list?[...list.children].filter(child=>child.classList.contains('notice-row')).length:0;
+    });
+    expect(immediateCount).toBeLessThanOrEqual(3);
   }
   await expect(page.locator('.family-screen')).not.toContainText('You’re all caught up.');
 });
