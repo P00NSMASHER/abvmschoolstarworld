@@ -321,8 +321,8 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   const optionalAssets=[...optional.matchAll(/"(\.\/[^\"]+)"/g)].map(match=>match[1]);
   expect(optionalAssets).toEqual([
     "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json",
-    "./study-materials.mjs", "./study-games-materials-view.mjs", "./study-games-materials.css?v=4", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs", "./study-resources.mjs", "./study-clarity.css?v=1", "./study-model.mjs", "./star-practice.mjs",
-    "./family-view.css?v=1", "./visual-polish.css?v=1", "./lunch-art.js?v=1", "./school-photos.css?v=1",
+    "./study-materials.mjs", "./study-games-materials-view.mjs", "./study-games-materials.css?v=5", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs", "./study-resources.mjs", "./study-clarity.css?v=1", "./study-model.mjs", "./star-practice.mjs",
+    "./family-view.css?v=1", "./visual-polish.css?v=2", "./lunch-art.js?v=1", "./school-photos.css?v=1",
     "./assets/school/abvm-school-sign.webp", "./assets/school/abvm-school-hero.webp", "./assets/school/abvm-school-aerial.webp", "./assets/school/abvm-school-facade.webp"
   ]);
   expect(new Set(optionalAssets).size).toBe(optionalAssets.length);
@@ -554,4 +554,30 @@ test("game progress reflects the current question instead of starting at zero",a
   await expect(page.locator(".game-question-card")).toBeVisible();
   const width=await page.locator(".game-progress span").getAttribute("style");
   expect(width).toContain("13");
+});
+
+
+test("week summary cleanly lists five lunches and governed weekly tests",async({page})=>{
+  await openTab(page,"Week");
+  await expect(page.getByRole("heading",{name:"This week at a glance"})).toBeVisible();
+  await expect(page.getByRole("heading",{name:"Lunches this week"})).toBeVisible();
+  await expect(page.getByRole("heading",{name:"Tests this week"})).toBeVisible();
+  await expect(page.locator(".week-lunches .week-overview-row")).toHaveCount(5);
+  expect(await page.locator("[data-day]").count()).toBe(5);
+
+  const synthetic=await page.evaluate(()=>{
+    const days=Array.from({length:5},(_,i)=>new Date(2026,9,5+i,12));
+    return window.ABVMWeeklyLearning.renderWeekOverview({
+      days,
+      lunchForDate:date=>({items:["Meal "+date.getDate()]}),
+      eventItemsForDate:date=>date.getDate()===7?[{kind:"test",label:"Math facts quiz"}]:[],
+      kindClass:item=>item.kind,
+      fmtShort:date=>["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][date.getDay()]+" "+date.getDate(),
+      lunchText:lunch=>lunch.items.join(", "),
+      lunchUnavailableText:()=>"Lunch not yet verified."
+    });
+  });
+  expect(synthetic).toContain("Meal 5");
+  expect(synthetic).toContain("Meal 9");
+  expect(synthetic).toContain("Math facts quiz");
 });

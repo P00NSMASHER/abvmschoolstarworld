@@ -25,3 +25,179 @@
 .screen .agenda-lunch p{font-size:14px;line-height:1.5}
 @media(max-width:360px){.lunch-art{flex-basis:72px;width:72px}.lunch-art img{width:72px;height:72px}.screen .lunch-card:has(.lunch-art),.screen .agenda-lunch:has(.lunch-art){gap:10px}}
 @media(prefers-reduced-motion:no-preference){.bottom-nav button .nav-icon{transition:background-color .15s,color .15s}.family-message>summary{transition:background-color .15s}.family-message>summary:active{background:#eaf2fc}}
+
+
+/* Oct. 6, 2026 authoritative ABVM visual gold standard. */
+:root{
+  --navy:#083f78;
+  --royal:#1477c9;
+  --pink:#e92f7f;
+  --pink-dark:#a62664;
+  --lavender:#8b55d7;
+  --yellow:#f3c64f;
+  --sky:#69c8f5;
+  --mint:#4fc978;
+  --cream:#fff8df;
+  --paper:#fbfdff;
+  --ink:#24364a;
+  --muted:#657689;
+  --line:#d9e5f1;
+  --gs-blue-soft:#eaf6ff;
+  --gs-pink-soft:#fff0f7;
+  --gs-green-soft:#eef9ec;
+  --gs-purple-soft:#f6edff;
+  --gs-gold-soft:#fff7d9;
+}
+body{background:linear-gradient(180deg,#f6fbff 0,#fffdf8 52%,#f5faff 100%);}
+.phone-app{background:#fbfdff;border-color:#d7e6f4;box-shadow:0 26px 72px #0c37631f;}
+.screen{background:linear-gradient(180deg,#fff 0,#fbfdff 55%,#f7fbff 100%);}
+.app-header{margin-bottom:14px;}
+.app-header h1{color:#0a4078;font-weight:900;letter-spacing:-.045em;}
+.app-header>div>p{color:#1670b8;font-weight:900;letter-spacing:.12em;}
+.school-mark{background:#fff;border:1px solid #e6d9a6;box-shadow:0 6px 18px #183b5e17;}
+button.freshness{width:100%;justify-content:flex-start;padding:8px 12px;border-color:#badfca;background:#eefaf3;color:#2d6842;}
+button.freshness>b{margin-left:auto;}
+button.freshness.stale,button.freshness.offline{border-color:#ead27a;background:#fff8d9;color:#72580a;}
+button.freshness.attention{border-color:#e6b2b8;background:#fff0f2;color:#813842;}
+
+.hero-card.school-photo-hero{
+  min-height:0;padding:18px 82px 18px 18px;
+  background:
+    linear-gradient(90deg,rgb(11,60,116) 0%,rgba(11,60,116,.78) 48%,rgba(11,60,116,.18) 100%),
+    url("./assets/school/abvm-school-hero.webp") center 48%/cover no-repeat;
+  border:1px solid #e7c661;border-radius:26px;box-shadow:0 14px 30px #0b3c7424;
+}
+.school-photo-hero .hero-copy{align-self:center;max-width:260px;}
+.school-photo-hero .hero-copy .pill{background:#fff2b8;border-color:#f0d16c;color:#5e4704;}
+.school-photo-hero .hero-copy h2{max-width:255px;line-height:1.05;text-shadow:0 2px 10px #00152c4f;}
+.school-photo-hero .hero-copy>p:last-child{max-width:250px;color:#f4f9ff;font-weight:650;}
+.school-photo-hero .school-sign-inset{display:none;}
+
+.priority-card,.today-panel,.day-detail,.calendar-card,.calendar-day-card,.subject-card,.parent-card,
+.family-actions-card,.notices-card,.study-games-hero,.game-question-card,.game-finish,.week-overview-card{
+  border-color:#d9e6f2;box-shadow:0 8px 24px #173d6510;
+}
+.priority-card{background:linear-gradient(135deg,#f6fbff,#fff9e7);border-radius:22px;}
+.date-tile{background:linear-gradient(180deg,#0b3c74,#072b53);box-shadow:0 5px 0 #d9b757;}
+.section-heading h2{font-weight:900;}
+.heading-dot.pink{background:#d8b34e;box-shadow:0 0 0 5px #fff0bd;}
+.heading-dot.blue{background:#1686d5;box-shadow:0 0 0 5px #dff4ff;}
+.check-box{border-color:#df2d78;border-width:2px;}
+.task-tag{background:#e2f2ff;color:#155c92;}
+.task-tag.if-participating{background:#fff1bd;color:#725400;}
+.event-row{background:#f8fbff;border:1px solid #e5eef7;}
+.lunch-card{background:linear-gradient(135deg,#fff8d8,#fffdf0);border-color:#ecd575;}
+.reminder-strip{background:linear-gradient(135deg,#fff0f7,#fff8fb);border-color:#edbdd4;}
+.future-card{background:linear-gradient(135deg,#eef9ff,#f8fcff);border-color:#bcdff1;}
+
+.week-nav,.calendar-month-nav{background:linear-gradient(135deg,#eaf6ff,#f2f9ff);border-color:#a9d4ee;}
+.week-nav button,.calendar-month-nav button{background:#fff;border-color:#8ebedd;color:#0a477f;box-shadow:0 3px 10px #15527f0d;}
+.day-picker button{background:#fff;border-color:#d8e3ed;font-weight:800;}
+.day-picker button.active{background:linear-gradient(180deg,#0c579d,#073c72);border-color:#0a4b87;box-shadow:0 5px 0 #0a315c;}
+.day-detail{background:linear-gradient(180deg,#fafdff,#fff);border-color:#b9d9ee;}
+.day-detail-title>span{background:#e6f4ff;color:#0f5d99;}
+
+.week-overview{margin:0 0 15px;}
+.week-overview-heading{margin:4px 2px 9px;}
+.week-overview-heading p{margin:0 0 2px;color:#176ba7;font-size:10px;font-weight:950;letter-spacing:.11em;}
+.week-overview-heading h2{margin:0;color:#0a4078;font-size:20px;line-height:1.2;letter-spacing:-.025em;}
+.week-overview-grid{display:grid;grid-template-columns:1fr;gap:10px;}
+.week-overview-card{overflow:hidden;background:#fff;border:1px solid #d7e5f1;border-radius:20px;}
+.week-overview-card-head{display:flex;align-items:center;gap:10px;padding:13px 14px 11px;border-bottom:1px solid #e7eef5;}
+.week-overview-card-head h3{margin:0;color:#173f66;font-size:15px;font-weight:900;}
+.week-overview-icon{display:grid;place-items:center;flex:none;width:38px;height:38px;border-radius:12px;}
+.week-overview-icon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
+.week-overview-icon.lunch{color:#8a6600;background:linear-gradient(145deg,#fff6ca,#ffe893);}
+.week-overview-icon.tests{color:#a22667;background:linear-gradient(145deg,#fff0f7,#ffdcec);}
+.week-overview-list{padding:3px 14px 8px;}
+.week-overview-row{display:grid;grid-template-columns:58px minmax(0,1fr);gap:10px;align-items:start;padding:9px 0;border-bottom:1px solid #edf2f6;}
+.week-overview-row:last-child{border-bottom:0;}
+.week-overview-row time{color:#1768a4;font-size:11px;font-weight:900;white-space:nowrap;}
+.week-overview-row span{color:#344a5f;font-size:12px;line-height:1.4;font-weight:650;}
+.week-tests .week-overview-row time{color:#a22667;}
+.week-overview-empty{margin:0;padding:12px 0;color:#687889;font-size:12px;line-height:1.45;}
+
+.calendar-card{border-color:#bad8ea;}
+.calendar-grid button{background:#fff;border-color:#dce7ef;}
+.calendar-grid button.active{background:linear-gradient(180deg,#0c579d,#073c72);border-color:#0a477f;box-shadow:0 4px 0 #0a315c;}
+.calendar-grid button.closed{background:#fff1f2;border-color:#efb8ba;}
+.calendar-day-card{background:linear-gradient(180deg,#edf9ff,#f8fcff);border-color:#aed8ed;}
+.calendar-title-row>span,.calendar-day-heading>span{background:#e4f3ff;color:#155b92;}
+
+.games-screen{background:linear-gradient(180deg,#f8fcff 0,#fff 48%,#f8fbff 100%);}
+.games-screen .app-header h1{font-size:32px;}
+.study-games-hero.simple{background:linear-gradient(135deg,#f1edff 0,#edf8ff 55%,#fff8d9 100%);border-color:#cdb9e5;}
+.study-games-hero.simple .study-games-mascot{background:linear-gradient(145deg,#7542a6,#5d2d8e);color:#ffe45e;box-shadow:inset 0 -7px #341a5a20,0 8px 18px #61349020;}
+.study-game-grid{gap:10px;}
+.study-game-tile{border-width:1px;border-radius:19px;box-shadow:0 7px 20px #173d650d;}
+.study-game-tile.game-quick{background:linear-gradient(110deg,#eef8ff,#fff);border-color:#c9e5f7;}
+.study-game-tile.game-math{background:linear-gradient(110deg,#eef9ec,#fff);border-color:#cce8c7;}
+.study-game-tile.game-words{background:linear-gradient(110deg,#fff0f7,#fff);border-color:#f0cadc;}
+.study-game-tile.game-faith{background:linear-gradient(110deg,#f6edff,#fff);border-color:#dcc8ee;}
+.study-game-copy strong{color:#203b55;font-weight:900;}
+.game-materials select{border-color:#b7d4e8!important;background:#fff!important;box-shadow:0 3px 10px #123c5f08;}
+.games-screen.is-playing{background:linear-gradient(180deg,#f5fbff,#fff 32%,#f8fbff);}
+.game-progress{background:#e3ebf4;height:9px;}
+.game-progress>span{background:linear-gradient(90deg,#2d7de2,#1a9be5);}
+.game-question-card{border-color:#d7e4f1;border-radius:23px;background:#fff;box-shadow:0 10px 28px #173d6511;}
+.game-question-meta>span{background:#e4f3ff!important;color:#0e5fa2!important;}
+.game-question-card>h2{color:#18344f;font-weight:900;letter-spacing:-.025em;}
+.game-answer{background:#fff;border-color:#d6e1eb!important;border-width:1px!important;border-radius:16px!important;box-shadow:0 4px 13px #183d5e08;}
+.game-answer:hover{border-color:#9ec9e4!important;}
+.game-answer.correct{background:#eaf9ee!important;border-color:#65c982!important;color:#175c32!important;}
+.game-answer.wrong{background:#fff0f2!important;border-color:#e98794!important;color:#7d303a!important;}
+.game-feedback.correct{background:linear-gradient(135deg,#e7f9ed,#f3fff6);border-color:#7bd395;}
+.game-feedback.retry{background:linear-gradient(135deg,#fff7da,#fffdf3);border-color:#e5c85d;}
+.game-hint{background:#fff7d7!important;border-color:#e1c457!important;color:#624b05!important;}
+.game-finish{background:#fff;border-color:#d7e4f1;}
+.game-score-summary{background:linear-gradient(135deg,#eef8ff,#f7fbff)!important;border-color:#bbdff3!important;}
+
+.family-screen .family-hero.school-community-hero{
+  min-height:170px;
+  background:
+    linear-gradient(90deg,rgba(4,34,69,.93),rgba(6,55,102,.54)),
+    url("./assets/school/abvm-school-aerial.webp") center 47%/cover no-repeat;
+  border-color:#d6e4f0;
+}
+.family-screen .school-community-hero h2{color:#fff;text-shadow:0 2px 10px #001b35;}
+.family-screen .school-community-hero span{color:#edf7ff;}
+.family-stats>div{background:linear-gradient(145deg,#fff,#f7fbff)!important;border-color:#d9e8f4!important;}
+.family-actions-card{background:linear-gradient(180deg,#fff,#fdfaff);}
+.family-actions-head{background:linear-gradient(110deg,#fff,#f7efff);}
+.notices-head{background:linear-gradient(110deg,#fff,#eef8ff);}
+
+.bottom-nav{background:rgba(255,255,255,.97);border-top-color:#dbe7f2;box-shadow:0 -7px 24px #173d650a;backdrop-filter:blur(16px);}
+.bottom-nav button{color:#697786;}
+.bottom-nav button.active{color:#075da4;}
+.bottom-nav button.active .nav-icon{background:linear-gradient(145deg,#e0f2ff,#cde9ff);color:#075da4;box-shadow:0 3px 10px #0e69ad15;}
+.bottom-nav .nav-icon{border-radius:13px;}
+
+@media(min-width:700px){
+  .week-overview-grid{grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);}
+  .week-overview{grid-column:1/-1;}
+  .hero-card.school-photo-hero{min-height:260px;padding:30px 250px 30px 30px;}
+  .school-photo-hero .hero-copy{max-width:410px;}
+  .school-photo-hero .hero-copy h2{max-width:390px;font-size:38px;}
+  .school-photo-hero .hero-copy>p:last-child{max-width:390px;font-size:16px;}
+}
+@media(max-width:699px){
+  .hero-card.school-photo-hero{min-height:0;padding:18px 82px 18px 18px;}
+  .school-photo-hero .hero-copy .pill{display:none;}
+  .school-photo-hero .hero-copy h2{font-size:23px;line-height:1.08;margin-bottom:7px;}
+  .school-photo-hero .hero-copy>p:last-child{font-size:13px;line-height:1.35;}
+}
+@media(max-width:360px){
+  .week-overview-row{grid-template-columns:52px minmax(0,1fr);gap:7px;}
+  .week-overview-card-head{padding-inline:12px;}
+  .week-overview-list{padding-inline:12px;}
+  .school-photo-hero .hero-copy h2{font-size:25px;}
+}
+@media(prefers-reduced-motion:reduce){
+  .study-game-tile,.game-answer,.bottom-nav .nav-icon,.day-picker button,.calendar-grid button{transition:none!important;transform:none!important;}
+}
+
+@media(min-width:700px){.games-screen .game-answer{min-height:68px!important}}
+
+.week-overview-row ul{min-width:0;margin:0;padding:0;display:grid;gap:5px;list-style:none}
+.week-overview-row li{color:#344a5f;font-size:12px;line-height:1.4;font-weight:650}
+.week-tests .week-overview-row li::before{content:"";display:inline-block;width:6px;height:6px;margin:0 7px 2px 0;border-radius:50%;background:#df2d78}
