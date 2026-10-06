@@ -19,7 +19,7 @@ function sourcePack(){
     sourceHash:'teacher-pages-short-i-long-i-preview',
     subjects:[{
       subject:'Spelling / Handwriting',
-      topics:['short i / long i','short a / long a'],
+      topics:['Test focus: short i / long i','Test focus: short a / long a'],
       studyNotes:[],
     }],
     vocabulary:[],
