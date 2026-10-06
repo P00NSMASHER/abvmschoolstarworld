@@ -1770,9 +1770,19 @@ function baseSkillRules(curriculumOptions = {}) {
   return [...BASE_SKILLS, ...registeredCurriculumFamilyRules(curriculumOptions)];
 }
 
-function skillRulesForSubject(subject, curriculumOptions = {}) {
+function sourceSubjectsForRule(rule) {
+  if (Array.isArray(rule?.sourceSubjects) && rule.sourceSubjects.length) return uniqueText(rule.sourceSubjects);
+  if (rule?.subject === 'Math' || rule?.subject === 'Religion') return [rule.subject];
+  // Reading and spelling skills have historically shared evidence across the
+  // teacher's Reading Work, Tests, and Spelling surfaces.
+  return ['Reading / ELA', 'Spelling / Handwriting'];
+}
+
+function skillRulesForSourceSubject(subject, curriculumOptions = {}) {
   const target = normalize(subject);
-  return baseSkillRules(curriculumOptions).filter(rule => normalize(rule?.subject) === target);
+  return baseSkillRules(curriculumOptions).filter(rule =>
+    sourceSubjectsForRule(rule).some(sourceSubject => normalize(sourceSubject) === target)
+  );
 }
 
 function subjectSourceLines(pack, subject) {
@@ -1782,7 +1792,8 @@ function subjectSourceLines(pack, subject) {
 
 function detectBaseSkills(pack, skills, questions, curriculumOptions = {}) {
   for (const rule of baseSkillRules(curriculumOptions)) {
-    const sourceLine = subjectSourceLines(pack, rule.subject).find(line => rule.pattern.test(line));
+    const sourceLines = uniqueText(sourceSubjectsForRule(rule).flatMap(subject => subjectSourceLines(pack, subject)));
+    const sourceLine = sourceLines.find(line => rule.pattern.test(line));
     if (!sourceLine) continue;
     const matchedEvidence = text(sourceLine).match(rule.pattern)?.[0] || sourceLine;
     const skill = {
@@ -2111,12 +2122,12 @@ function detectUnsupportedExplicitSkills(pack, coverage, curriculumOptions = {})
     const comprehension = line.match(/^Reading comprehension:\s*(.+)$/i);
     if (comprehension) {
       for (const item of comprehension[1].split(/\s*[,;]\s*/).map(text).filter(Boolean)) {
-        if (!skillRulesForSubject('Reading / ELA', curriculumOptions).some(rule => rule.pattern.test(item))) addUnsupported('Reading / ELA', item);
+        if (!skillRulesForSourceSubject('Reading / ELA', curriculumOptions).some(rule => rule.pattern.test(item))) addUnsupported('Reading / ELA', item);
       }
       continue;
     }
     const explicit = line.match(/^(Phonics|Word structure|Grammar):\s*(.+)$/i);
-    if (explicit && !skillRulesForSubject('Reading / ELA', curriculumOptions).some(rule => rule.pattern.test(explicit[2]))) {
+    if (explicit && !skillRulesForSourceSubject('Reading / ELA', curriculumOptions).some(rule => rule.pattern.test(explicit[2]))) {
       addUnsupported('Reading / ELA', explicit[2]);
     }
   }
@@ -2136,7 +2147,7 @@ function detectUnsupportedExplicitSkills(pack, coverage, curriculumOptions = {})
   for (const raw of spelling?.topics || []) {
     const line = text(raw);
     const focus = line.match(/(?:test\s+focus|focus):\s*(.+)$/i);
-    if (focus && !skillRulesForSubject('Spelling / Handwriting', curriculumOptions).some(rule => rule.pattern.test(focus[1]))) {
+    if (focus && !skillRulesForSourceSubject('Spelling / Handwriting', curriculumOptions).some(rule => rule.pattern.test(focus[1]))) {
       addUnsupported('Spelling / Handwriting', focus[1]);
     }
   }
@@ -2159,7 +2170,7 @@ function detectUnsupportedExplicitSkills(pack, coverage, curriculumOptions = {})
     /compare numbers|greater than|less than/i,
     /\btime\b|clock/i,
     /\bmoney\b|coins?|dimes?|nickels?|quarters?/i,
-    ...skillRulesForSubject('Math', curriculumOptions).map(rule => rule.pattern),
+    ...skillRulesForSourceSubject('Math', curriculumOptions).map(rule => rule.pattern),
   ];
   const math = subjectRow(pack, 'Math');
   for (const raw of math?.topics || []) {
