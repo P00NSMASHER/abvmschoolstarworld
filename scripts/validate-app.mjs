@@ -38,7 +38,7 @@ for(const marker of ["skill-only-equivalent-item-v2","research-quality","buildCa
 if(!app.includes("./data/study-pack-runtime.json")||!app.includes("./data/study-pack.json"))fail("App must prefer runtime pack and retain full-pack fallback");
 if(!sw.includes("./data/study-pack-runtime.json")||!sw.includes("./data/study-pack.json"))fail("Service worker must cache runtime and full school packs");
 if(!app.includes("./assets/abvm-app-icon-192.png"))fail("School seal must use local app asset");
-for(const ref of ["school-sign.jpg","school-hero.jpg","school-aerial.jpg","school-front.jpg"]){
+for(const ref of ["school-sign.webp","school-hero.webp","school-aerial.webp","school-front.webp"]){
   if(!schoolPhotos.includes("./assets/"+ref)||!exists("pages/assets/"+ref))fail("Approved Tier A school photo must be local and rendered: "+ref);
 }
 for(const ref of ["pages/assets/abvm-app-icon-180.png","pages/assets/abvm-app-icon-192.png","pages/assets/abvm-app-icon-512.png","pages/data/study-pack.json","pages/styles.css","pages/study-games.js","pages/study-games-view.js","pages/app.js"])if(!exists(ref))fail("Missing rollback asset: "+ref);

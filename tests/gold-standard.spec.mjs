@@ -322,7 +322,7 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   expect(optionalAssets).toEqual([
     "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json",
     "./study-materials.mjs", "./study-games-materials-view.mjs", "./study-games-materials.css?v=4", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs", "./study-resources.mjs", "./study-clarity.css?v=1", "./study-model.mjs", "./star-practice.mjs",
-    "./family-view.css?v=1", "./visual-polish.css?v=2", "./lunch-art.js?v=1", "./school-photos.js?v=1", "./assets/school-sign.jpg", "./assets/school-hero.jpg", "./assets/school-aerial.jpg", "./assets/school-front.jpg"
+    "./family-view.css?v=1", "./visual-polish.css?v=2", "./lunch-art.js?v=1", "./school-photos.js?v=1", "./assets/school-sign.webp", "./assets/school-hero.webp", "./assets/school-aerial.webp", "./assets/school-front.webp"
   ]);
   expect(new Set(optionalAssets).size).toBe(optionalAssets.length);
 });
@@ -557,13 +557,13 @@ test("game progress reflects the current question instead of starting at zero",a
 
 test("Tier A school photography is limited to the four approved placements",async({page})=>{
   await page.goto("/#today");
-  await expect(page.locator(".school-sign-photo img")).toHaveAttribute("src","./assets/school-sign.jpg");
+  await expect(page.locator(".school-sign-photo img")).toHaveAttribute("src","./assets/school-sign.webp");
   await expect(page.locator(".today-screen img[src*='school-']")).toHaveCount(1);
   await page.getByRole("button",{name:"Family",exact:true}).click();
-  await expect(page.locator(".family-school-hero img")).toHaveAttribute("src","./assets/school-hero.jpg");
+  await expect(page.locator(".family-school-hero img")).toHaveAttribute("src","./assets/school-hero.webp");
   await expect(page.locator(".school-photo-pair img")).toHaveCount(2);
-  await expect(page.locator(".school-photo-pair img").nth(0)).toHaveAttribute("src","./assets/school-aerial.jpg");
-  await expect(page.locator(".school-photo-pair img").nth(1)).toHaveAttribute("src","./assets/school-front.jpg");
+  await expect(page.locator(".school-photo-pair img").nth(0)).toHaveAttribute("src","./assets/school-aerial.webp");
+  await expect(page.locator(".school-photo-pair img").nth(1)).toHaveAttribute("src","./assets/school-front.webp");
   await expect(page.locator(".family-screen img[src*='school-']")).toHaveCount(3);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
