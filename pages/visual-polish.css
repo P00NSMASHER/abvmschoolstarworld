@@ -56,8 +56,8 @@ button.freshness{
 }
 .today-screen>.app-header,
 .games-screen:not(.is-playing)>.app-header{
-  margin-top:calc(-1 * max(18px,env(safe-area-inset-top)));
-  margin-inline:-16px;
+  margin-top:calc(0px - max(18px,env(safe-area-inset-top)));
+  margin-inline:-14px;
   padding:max(22px,env(safe-area-inset-top)) 18px 18px;
   background:
     radial-gradient(circle at 88% 18%,rgba(62,178,255,.28),transparent 28%),
