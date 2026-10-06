@@ -1,15 +1,14 @@
 /* Tier A school photography — user-supplied ABVM exterior images only. */
 .hero-card.school-photo-hero{
-  isolation:isolate;display:grid;grid-template-columns:minmax(0,1fr) 112px;align-items:end;gap:14px;
-  min-height:220px;padding:22px;border-color:#d9b757;
-  background:linear-gradient(90deg,rgba(5,26,51,.96) 0%,rgba(7,42,79,.88) 48%,rgba(7,42,79,.48) 100%),url("./assets/school/abvm-school-hero.webp") center 48%/cover no-repeat;
+  isolation:isolate;border-color:#d9b757;
+  background:linear-gradient(90deg,#0b3c74 0%,rgba(7,42,79,.9) 52%,rgba(7,42,79,.55) 100%),url("./assets/school/abvm-school-hero.webp") center 48%/cover no-repeat;
 }
 .hero-card.school-photo-hero::before,.hero-card.school-photo-hero::after{content:none}
 .school-photo-hero .hero-copy{align-self:center}
 .school-photo-hero .hero-copy>p:last-child{max-width:235px}
 .school-sign-inset{
-  z-index:2;align-self:end;width:112px;margin:0;overflow:hidden;background:#fff;
-  border:2px solid rgba(255,255,255,.84);border-radius:14px;box-shadow:0 8px 22px rgba(0,0,0,.28);
+  z-index:3;position:absolute;right:76px;bottom:10px;width:54px;margin:0;overflow:hidden;background:#fff;
+  border:2px solid rgba(255,255,255,.84);border-radius:9px;box-shadow:0 5px 14px rgba(0,0,0,.24);
 }
 .school-sign-inset img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;object-position:23% 50%}
 
@@ -33,15 +32,12 @@
 .school-portrait-card figcaption small{color:var(--muted);font-size:12px;line-height:1.35}
 
 @media(max-width:370px){
-  .hero-card.school-photo-hero{grid-template-columns:minmax(0,1fr) 86px;gap:10px;padding:18px}
-  .school-sign-inset{width:86px}
+  .school-sign-inset{right:68px;width:48px}
   .school-portrait-card{grid-template-columns:108px minmax(0,1fr)}
   .school-portrait-card figcaption{padding:12px}
 }
 @media(min-width:700px){
-  .hero-card.school-photo-hero{grid-template-columns:minmax(0,1fr) 150px;padding:28px 30px;min-height:244px}
-  .school-sign-inset{width:150px}
-  .school-photo-hero .hero-copy h2{font-size:32px;max-width:290px}
+  .school-sign-inset{right:246px;bottom:20px;width:96px}
   .school-portrait-card{grid-template-columns:210px minmax(0,1fr)}
   .school-portrait-card::before{min-height:154px}
 }
