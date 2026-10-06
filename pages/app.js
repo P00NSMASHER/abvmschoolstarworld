@@ -463,30 +463,15 @@ function noteRoundLearning(g,q,kind,correct,independent=false){
   if(kind!=="support")g.learningEvents.push({skill,kind,correct:!!correct,independent:!!independent});
   if(kind==="comeback"&&correct)g.comebackSucceeded=true;
 }
-function gameAccuracyKey(g,q){return String(g.index)+"|"+String(q?.id||q?.prompt||"question")}
-function recordGameFirstAnswer(g,q,correct){
-  if(g.supportMode||g.comebackMode)return null;
-  if(!Array.isArray(g.accuracyRows))g.accuracyRows=[];
-  const key=gameAccuracyKey(g,q),existing=g.accuracyRows.find(row=>row.key===key);
-  if(existing)return existing;
-  const row={key,questionId:String(q?.id||""),subject:String(q?.subject||"Practice"),firstCorrect:!!correct,eventualCorrect:correct?true:null,hintUsed:(g.hints||0)>0,attempts:1};
-  g.accuracyRows.push(row);return row
-}
-function resolveGameAccuracy(g,q,correct){
-  if(g.supportMode||g.comebackMode)return;
-  const key=gameAccuracyKey(g,q),row=(g.accuracyRows||[]).find(item=>item.key===key);
-  if(!row)return;
-  row.eventualCorrect=!!correct;row.attempts=Math.max(Number(row.attempts)||1,Number(g.tries)||1)
-}
 function answerStudyGame(index){
   const g=gameState,q=activeGameQuestion(),choice=q?.choices?.[index];if(g.screen!=="play"||g.answered||choice===undefined||g.wrong?.includes(index))return;
   const correct=choice===q.answer,e=studyGameEngine(),firstPrimary=!g.supportMode&&!g.comebackMode&&(g.tries||0)===0;
   e?.note?.(q,index);g.tries=(g.tries||0)+1;g.selectedIndex=index;g.hintOpen=false;
-  if(firstPrimary)recordGameFirstAnswer(g,q,correct);
+  if(firstPrimary)window.ABVMStudyGameView.recordFirstAnswer(g,q,correct);
   if(g.comebackMode){g.answered=true;g.learningRow=e?.recordComeback?.(q,correct)||null;g.comebackCorrect=correct;noteRoundLearning(g,q,"comeback",correct,false)}
   else if(g.supportMode){g.answered=true;g.learningRow=e?.recordSupport?.(q,correct)||null;g.supportCorrect=correct}
-  else if(correct){g.answered=true;g.retry=0;resolveGameAccuracy(g,q,true);g.learningRow=e?.recordLearning?.(q,true,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;noteRoundLearning(g,q,q.tier==="recent-review"?"review":"normal",true,g.learningRow?.LastResolution?.independent===true);g.score++;g.streak++;g.bestStreak=Math.max(g.bestStreak,g.streak)}
-  else{g.misses=(g.misses||0)+1;g.wrong.push(index);g.streak=0;if(g.misses<Math.min(2,q.choices.length-1)){g.retry=g.misses;g.selectedIndex=null}else{g.answered=true;g.retry=g.misses;resolveGameAccuracy(g,q,false);g.learningRow=e?.recordLearning?.(q,false,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;noteRoundLearning(g,q,q.tier==="recent-review"?"review":"normal",false,false)}}
+  else if(correct){g.answered=true;g.retry=0;window.ABVMStudyGameView.resolveAccuracy(g,q,true);g.learningRow=e?.recordLearning?.(q,true,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;noteRoundLearning(g,q,q.tier==="recent-review"?"review":"normal",true,g.learningRow?.LastResolution?.independent===true);g.score++;g.streak++;g.bestStreak=Math.max(g.bestStreak,g.streak)}
+  else{g.misses=(g.misses||0)+1;g.wrong.push(index);g.streak=0;if(g.misses<Math.min(2,q.choices.length-1)){g.retry=g.misses;g.selectedIndex=null}else{g.answered=true;g.retry=g.misses;window.ABVMStudyGameView.resolveAccuracy(g,q,false);g.learningRow=e?.recordLearning?.(q,false,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;noteRoundLearning(g,q,q.tier==="recent-review"?"review":"normal",false,false)}}
   renderGames();bindScreen();const f=stack().querySelector(g.answered?".game-feedback":".game-answer:not(:disabled)");if(f){if(g.answered)f.tabIndex=-1;f.focus({preventScroll:true})}
 }
 function settleStudyStarRewards(g=gameState){
