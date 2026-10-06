@@ -38,6 +38,8 @@ for(const marker of ["skill-only-equivalent-item-v2","research-quality","buildCa
 if(!app.includes("./data/study-pack-runtime.json")||!app.includes("./data/study-pack.json"))fail("App must prefer runtime pack and retain full-pack fallback");
 if(!sw.includes("./data/study-pack-runtime.json")||!sw.includes("./data/study-pack.json"))fail("Service worker must cache runtime and full school packs");
 if(!app.includes("./assets/abvm-app-icon-192.png"))fail("School seal must use local app asset");
+const schoolPhotoCss=index.match(/href="(\.\/school-photos\.css\?v=\d+)"/)?.[1];
+if(!schoolPhotoCss||!sw.includes(schoolPhotoCss)||!exists("pages/school-photos.css"))fail("School photography styles must load and remain available offline");
 const approvedSchoolPhotos=[
   "./assets/school/abvm-school-sign.webp",
   "./assets/school/abvm-school-hero.webp",
