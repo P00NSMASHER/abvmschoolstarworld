@@ -26,3 +26,34 @@
   .phone-app:has(.study-screen, .games-screen) .bottom-nav { padding-block: 4px calc(4px + env(safe-area-inset-bottom)); }
   .phone-app:has(.study-screen, .games-screen) .bottom-nav button { min-height: 52px; }
 }
+
+
+/* Direct answer verdicts and honest first-try accuracy. */
+.games-screen .game-live-score{white-space:nowrap;font-size:.875rem;line-height:1.2}
+.games-screen .game-feedback.incorrect{background:#fff0f1;border-color:#c66b70;color:#7b3037}
+.games-screen .game-feedback.incorrect>span{background:#bf5d63;color:#fff}
+.games-screen .accuracy-note{display:block;margin-top:6px;font-size:.875rem;line-height:1.45;font-weight:750;color:inherit}
+.games-screen .accuracy-hero{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:6px 10px;margin:14px 0;padding:14px 16px;border:1px solid #bfd0df;border-radius:16px;background:#f6fbff;text-align:left}
+.games-screen .accuracy-hero>strong{font-size:1.75rem;line-height:1;color:#173f67}
+.games-screen .accuracy-hero>span{font-size:1rem;line-height:1.35;color:#415c75}
+.games-screen .accuracy-hero>b{font-size:1.25rem;color:#173f67}
+.games-screen .accuracy-hero.empty{grid-template-columns:1fr;text-align:center}
+.games-screen .accuracy-hero.empty>strong{font-size:1.25rem}
+.games-screen .section-score-list{margin:10px 0 14px;text-align:left}
+.games-screen .section-score-list h3,.games-screen .learning-summary-title{margin:12px 0 8px;color:#263a4d;font-size:1.0625rem}
+.games-screen .section-score-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px;padding:10px 12px;border-top:1px solid #e0e6eb}
+.games-screen .section-score-row:first-of-type{border-top:0}
+.games-screen .section-score-row span{min-width:0;font-size:1rem;line-height:1.35;color:#344b60}
+.games-screen .section-score-row strong,.games-screen .section-score-row b{font-size:1rem;color:#173f67}
+.games-screen .accuracy-details{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0 14px}
+.games-screen .accuracy-details>div{display:grid;gap:3px;padding:10px 6px;border:1px solid #d9e2e8;border-radius:12px;background:#f8fbfd}
+.games-screen .accuracy-details strong{font-size:1.25rem;color:#263a4d}
+.games-screen .accuracy-details span{font-size:.875rem;line-height:1.35;color:#526579}
+.games-screen .legacy-score-note{display:block;margin:8px 0 10px;font-size:.875rem!important;line-height:1.45;color:#65717d}
+@media(max-width:420px){
+  .games-screen .game-topbar{grid-template-columns:44px minmax(0,1fr)}
+  .games-screen .game-live-score{grid-column:1/-1;justify-self:start}
+  .games-screen .accuracy-details{grid-template-columns:1fr}
+  .games-screen .accuracy-hero{grid-template-columns:auto 1fr}
+  .games-screen .accuracy-hero>b{grid-column:1/-1}
+}
