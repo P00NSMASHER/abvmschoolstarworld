@@ -1,7 +1,7 @@
 (() => {
   const WEEKDAY=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
   const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
-  window.weeklyOverviewHtml=function(days){
+  window.WO=function(days){
     const lunchRows=days.map(date=>{
       const events=eventItemsForDate(date),lunch=lunchForDate(date);
       const closed=events.some(item=>kindClass(item)==="closed")||lunch?.status==="no-school";
