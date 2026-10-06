@@ -82,7 +82,8 @@ async function finishPerfectRound(page,catalog){
     await page.locator('[data-game-next]').click();
   }
   await expect(page.locator('.game-finish')).toBeVisible();
-  await expect(page.locator('.round-score')).toContainText('Round score 8 of 8');
+  await expect(page.locator('.accuracy-hero')).toContainText('8 / 8');
+  await expect(page.locator('.accuracy-hero')).toContainText('100%');
 }
 
 // This JSHandle owns only test coordination. Production APIs still perform the
