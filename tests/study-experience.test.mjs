@@ -69,7 +69,7 @@ test('new arithmetic, time, comparison, chart and measurement keys independently
 });
 test('Math rounds stay in subject with no duplicates across four hundred seeds',()=>{for(let seed=0;seed<400;seed++){const round=engine.selectQuestions(catalog,{subjects:['Math'],count:8,seed:String(seed)});assert.equal(round.length,8);assert(round.every(q=>q.subject==='Math'));assert.equal(new Set(round.map(practiceIdentity)).size,8)}});
 test('every reviewed schoolwork item has a non-boilerplate instructional cue',()=>{const data=JSON.parse(readFileSync(new URL('../pages/data/schoolwork.json',import.meta.url),'utf8'));const qs=data.lessons.flatMap(l=>l.questions);assert.equal(qs.length,52);assert(new Set(qs.map(q=>q.hint)).size>=20);for(const q of qs){assert(!q.hint.includes('Review the example in this lesson'));assert(q.hint.length>=35);assert.equal(q.choices.filter(c=>c===q.answer).length,1)}});
-test('new modules and stylesheet are present in offline asset manifest',()=>{const sw=readFileSync(new URL('../pages/sw.js',import.meta.url),'utf8');for(const name of ['study-experience.mjs','study-clarity.css?v=1','study-support.js?v=2','study-games.js?v=96'])assert(sw.includes(name))});
+test('new modules and stylesheet are present in offline asset manifest',()=>{const sw=readFileSync(new URL('../pages/sw.js',import.meta.url),'utf8');for(const name of ['study-experience.mjs','study-clarity.css?v=2','study-support.js?v=2','study-games.js?v=96'])assert(sw.includes(name))});
 
 // Rotation must survive actual display/answer recording, not just new seeds.
 test('three completed Math sessions avoid reusing recently shown questions',()=>{
