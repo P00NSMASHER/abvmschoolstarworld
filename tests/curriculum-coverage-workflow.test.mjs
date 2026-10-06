@@ -80,7 +80,7 @@ test('blocked Actions PR bookkeeping cannot bypass the unresolved coverage gate'
   assert.match(workflow, /if ! create_candidate_pr/);
   assert.match(workflow, /continuing so the explicit unresolved-coverage gate can report the curriculum blocker/);
   assert.match(workflow, /Block publication while curriculum candidates are unresolved/);
-  assert.match(workflow, /Unresolved curriculum coverage:/);
+  assert.match(workflow, /assert-curriculum-coverage-resolved\.mjs --report=\.curriculum-coverage-plan\.json/);
 });
 
 test('candidate branch identity is stable across unrelated source-hash churn', () => {
