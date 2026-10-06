@@ -76,7 +76,7 @@ function play({g,mode,q,teach,retryInstruction,labels,canRead=false}){
       ?(support||comeback?'Correct — review question':g.misses?'Correct on retry':'Correct')
       :(support||comeback?'Incorrect — review question':'Incorrect. The correct answer is '+String(q.answer)+'.');
     const detail=correct?q.explanation:(targeted||q.explanation);
-    const scoreNote=!support&&!comeback&&correct&&g.misses?'<small class="accuracy-note">Good correction. The first-try score does not increase.</small>':'';
+    const scoreNote=!support&&!comeback&&correct?(g.misses?'<small class="accuracy-note">Good correction. The first-try score does not increase.</small>':g.hints?'<small class="accuracy-note">Hint used. This counts as first-try correct, but not independent mastery.</small>':''):'';
     verdict='<section class="game-feedback '+(correct?'correct':'incorrect')+'" aria-live="polite" aria-atomic="true"><span aria-hidden="true">'+(correct?'✓':'✕')+'</span><div><strong>'+esc(title)+'</strong><p>'+esc(detail)+'</p>'+reviewNote+scoreNote+adaptive+'</div></section><button type="button" class="game-next" data-game-next>'+(support||comeback?'Continue':progress===total?'See my score':'Next question')+' <span>›</span></button>';
   }
   const scoreLabel=accuracy.answered?accuracy.correct+' / '+accuracy.answered+' first try':'No answers yet';
