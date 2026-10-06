@@ -2,7 +2,7 @@ export const MATH_SUBTRACTION_FAMILY = Object.freeze({
   id: 'math-subtraction',
   subject: 'Math',
   label: 'Subtraction',
-  patternSource: '\\bsubtraction\\b',
+  patternSource: '\\bsubtraction\\b(?!\\s+(?:to|within)\\s+\\d+)',
   patternFlags: 'i',
   standards: Object.freeze(['CCSS.2.OA.B.2']),
   domain: 'Numbers and operations',
