@@ -35,7 +35,7 @@ test('six first-try correct and two corrected retries stays 6 of 8 at 75 percent
       await expect(page.locator('.game-live-score')).toHaveText(before);
       await page.locator('[data-game-answer]').nth(correct).click();
       await expect(page.locator('.game-feedback')).toContainText('Correct on retry');
-      await expect(page.locator('.game-feedback')).toContainText('First-try score did not increase');
+      await expect(page.locator('.game-feedback')).toContainText('Your first-try score stays the same');
     }else{
       if(i===2){await page.locator('[data-game-hint]').click();await expect(page.locator('.game-hint')).toBeVisible()}
       await page.locator('[data-game-answer]').nth(correct).click();

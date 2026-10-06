@@ -169,12 +169,12 @@ test("tapping the freshness box forces an immediate live pack refresh",async({br
   });
   await page.goto("http://127.0.0.1:4173/#today");
   const status=page.locator("[data-refresh-pack]");
-  await expect(status).toContainText("Older data");
+  await expect(status).toContainText("Last checked");
   await status.click();
-  await expect(page.locator("[data-refresh-pack]")).toContainText("Checking published school info");
+  await expect(page.locator("[data-refresh-pack]")).toContainText("Checking for school updates");
   await expect(page.locator("[data-refresh-pack]")).toBeDisabled();
   await expect(page.locator(".freshness")).toHaveClass(/current/);
-  await expect(page.locator(".freshness")).toContainText("Verified");
+  await expect(page.locator(".freshness")).toContainText("School info current");
   await expect(page.locator("#toast")).toContainText("School info updated");
   expect(calls).toBeGreaterThanOrEqual(2);
   await context.close();
@@ -192,7 +192,7 @@ test("manual refresh explains when no newer verified data exists",async({browser
   await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:stale}));
   await page.goto("http://127.0.0.1:4173/#today");
   await page.locator("[data-refresh-pack]").click();
-  await expect(page.locator("#toast")).toContainText("no newer verified update is available yet");
+  await expect(page.locator("#toast")).toContainText("No newer school update is available.");
   await expect(page.locator(".freshness")).toHaveClass(/stale/);
   await context.close();
 });

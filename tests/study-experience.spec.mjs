@@ -208,7 +208,7 @@ test('three complete Math games offer twenty-four distinct questions',async({pag
       const texts=await page.locator('.game-answer strong').allTextContents();await page.locator('.game-answer').nth(texts.indexOf(q.answer)).click();
       await page.locator('[data-game-next]').click();
     }
-    await expect(page.locator('.game-finish')).toBeVisible();await expect(page.locator('.game-finish')).toContainText('counts are skills');
+    await expect(page.locator('.game-finish')).toBeVisible();await expect(page.locator('.game-finish')).toContainText('What you learned');
     if(round<2)await page.locator('[data-game-home]').last().click();
   }
   expect(new Set(prompts).size).toBe(24);

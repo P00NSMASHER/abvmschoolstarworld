@@ -74,7 +74,7 @@ test('new source information stays unread until acknowledged',async({page})=>{
   await expect(page.locator('.updates-banner')).toHaveCount(0);
   data.pack.parentNotices.push('Friday, Oct. 9: Bring the permission form.');
   await page.reload();
-  await expect(page.locator('.updates-banner')).toContainText('1 new school update');
+  await expect(page.locator('.updates-banner')).toContainText('1 new school notice');
   await page.locator('.updates-banner').click();
   await expect(page.locator('.unread-updates')).toContainText('Bring the permission form');
   await page.reload();

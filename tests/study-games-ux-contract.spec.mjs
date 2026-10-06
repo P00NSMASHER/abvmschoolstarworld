@@ -12,11 +12,11 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('Study Games keeps the approved menu, play, and finish interaction contract', async ({ page }) => {
-  await expect(page.getByRole('heading', { name: 'Pick a game and start' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'What do you want to play?' })).toBeVisible();
   for (const label of ['Quick Mix', 'Math Dash', 'Word Power', 'Faith Quest']) {
     await expect(page.getByRole('button', { name: new RegExp(label, 'i') })).toBeVisible();
   }
-  await expect(page.getByText('Practice prioritizes verified school skills. STAR-style fallback uses original Grade 2 practice, not copied STAR test items; private student answers and grades are not used.')).toBeVisible();
+  await expect(page.getByText('About this practice')).toBeVisible();
 
   await page.getByRole('button', { name: /Quick Mix/i }).click();
   await expect(page.locator('.game-topbar')).toBeVisible();

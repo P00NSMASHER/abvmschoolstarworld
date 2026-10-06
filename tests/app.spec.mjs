@@ -527,7 +527,9 @@ test("latest reviewed phone uploads reach Family with a safe registration link",
   await expect(notices).toContainText("Gift Card Calendar update: two $50 winners");
   await expect(notices).toContainText("Winner and seller names are kept out of the public app");
 
-  await notices.locator(".family-message").filter({hasText:"CYO registration for 2nd graders"}).locator("summary").click();
+  const registrationNotice=notices.locator(".family-message").filter({hasText:"CYO registration for 2nd graders"});
+  if(!(await registrationNotice.isVisible())&&await notices.locator(".family-notices-overflow").count())await notices.locator(".family-notices-overflow > summary").click();
+  await registrationNotice.locator("summary").click();
   const registration=notices.getByRole("link",{
     name:"tools.signupgenius.com/c/st-nicholas-basketball-registration-k-1st-grade-copy"
   });

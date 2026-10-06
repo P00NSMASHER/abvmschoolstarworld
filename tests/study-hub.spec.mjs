@@ -91,7 +91,7 @@ test('past tests roll forward; saved, STAR and mixed practice use Games without 
   for(const [mode,subject] of [['math','Math'],['words','Reading / ELA']]){
     await page.locator(`[data-game-start="${mode}"]`).click();
     await expect(page.locator('.game-question-meta > span')).toHaveText(subject);
-    await expect(page.locator('.game-question-meta')).toContainText('STAR-style practice');
+    await expect(page.locator('.game-question-meta')).toContainText('Extra practice');
     await page.locator('[data-game-home]').click();
   }
   await page.locator('[data-study-source]').selectOption('mix');

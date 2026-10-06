@@ -85,7 +85,7 @@ test("failed refresh keeps the last-known-good pack and never reports an update"
   fallback.pack.parentNotices=["Corrupt fallback notice."];
   await page.locator("[data-refresh-pack]").click();
 
-  await expect(page.locator("#toast")).toContainText("Couldn’t check published school info");
+  await expect(page.locator("#toast")).toContainText("Couldn’t refresh school info");
   await expect(page.locator('[aria-labelledby="family-current-notices"]')).toContainText("Last-known-good family notice.");
   await expect(page.locator('[aria-labelledby="family-current-notices"]')).not.toContainText("Corrupt runtime notice");
   await expect(page.locator('[aria-labelledby="family-current-notices"]')).not.toContainText("Corrupt fallback notice");

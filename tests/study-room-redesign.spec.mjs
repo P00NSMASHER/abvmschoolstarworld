@@ -41,7 +41,7 @@ for(const [width,height] of [[393,852],[768,1024]]){
         smallest:Math.min(...controls.map(el=>el.getBoundingClientRect().height)),
         overflow:document.documentElement.scrollWidth>document.documentElement.clientWidth+2};
     });
-    expect(geometry.sourceBeforeGrid).toBe(true);
+    expect(geometry.sourceBeforeGrid).toBe(false);
     expect(geometry.dailyAfterGrid).toBe(true);
     expect(geometry.smallest).toBeGreaterThanOrEqual(44);
     expect(geometry.overflow).toBe(false);

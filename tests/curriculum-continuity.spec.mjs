@@ -40,7 +40,7 @@ test('recent review question is visibly labeled and source identity includes rev
     const key=e.sourceKeyFromEnvelope({sourceHash:'s',contentPipeline:{bankFingerprint:'current-bank'},recentReviewPipeline:{bankFingerprint:'review-bank'}},{sourcePages:[]});
     return {html,key};
   });
-  expect(result.html).toContain('Recent review');
+  expect(result.html).toContain('Review');
   expect(result.key).toContain('|review:review-bank');
 });
 

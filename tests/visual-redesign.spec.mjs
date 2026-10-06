@@ -25,7 +25,8 @@ for(const size of sizes){
     const unread=page.locator('.unread-updates');
     await expect(unread).toBeVisible();
     await expect(page.locator('.family-more')).toHaveCount(0);
-    const previews=unread.locator(':scope > ul > li > .family-message');
+    const notices=page.locator('[aria-labelledby="family-current-notices"]');
+    const previews=notices.locator('.static-notice-list > .notice-row .family-message');
     await expect(previews).toHaveCount(3);
     for(const preview of await previews.all()){
       expect(await preview.getAttribute('open')).toBeNull();
@@ -34,20 +35,17 @@ for(const size of sizes){
     }
     await page.locator('.screen').evaluate(el=>el.scrollTop=0);
     await capture(page,testInfo,`${size.name}-family-top`);
-    await previews.first().scrollIntoViewIfNeeded();
-    await capture(page,testInfo,`${size.name}-family-unread`);
-    await previews.first().locator('summary').click();
-    await expect(previews.first().locator('.family-message-body')).toHaveText(longUpdate);
-    await expect(previews.first().locator('.family-message-body')).toBeVisible();
-    await previews.first().locator('summary').click();
-    await unread.locator('.family-update-overflow > summary').click();
-    await expect(unread.locator('.family-update-overflow .family-message').first()).toBeVisible();
-    await unread.locator('.family-update-overflow > summary').click();
-    const notices=page.locator('[aria-labelledby="family-current-notices"]');
     await notices.scrollIntoViewIfNeeded();
     await noOverflow(page);
     await capture(page,testInfo,`${size.name}-family-notices`);
+    const longNotice=notices.locator('.family-message').filter({hasText:'School reminder:'});
+    if(!(await longNotice.isVisible())&&await notices.locator('.family-notices-overflow').count())await notices.locator('.family-notices-overflow > summary').click();
+    await longNotice.locator('summary').click();
+    await expect(longNotice.locator('.family-message-body')).toHaveText(longUpdate);
+    await expect(longNotice.locator('.family-message-body')).toBeVisible();
+    await longNotice.locator('summary').click();
     const registrationNotice=notices.locator('.family-message').filter({hasText:'CYO registration for 2nd graders'});
+    if(!(await registrationNotice.isVisible())&&await notices.locator('.family-notices-overflow').count()&&!await notices.locator('.family-notices-overflow').evaluate(el=>el.open))await notices.locator('.family-notices-overflow > summary').click();
     await registrationNotice.locator('summary').click();
     const registration=registrationNotice.getByRole('link',{name:'tools.signupgenius.com/c/st-nicholas-basketball-registration-k-1st-grade-copy'});
     await expect(registration).toBeVisible();

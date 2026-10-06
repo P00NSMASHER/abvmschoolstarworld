@@ -59,7 +59,7 @@ test.describe('recorded Games walkthrough',()=>{
     const metricsPath=testInfo.outputPath('games-finish-text-metrics.json');
     await writeFile(metricsPath,JSON.stringify({viewport:{width:393,height:852},actions:actionFonts},null,2));
     await testInfo.attach('Games finish action text metrics',{path:metricsPath,contentType:'application/json'});
-    await expect(page.locator('.learning-summary-note')).toContainText('One round does not prove mastery');
+    await expect(page.locator('.learning-summary-note')).toContainText('This is practice for this round, not a STAR score.');
     await page.waitForTimeout(350);
     await page.getByRole('button',{name:'All study games',exact:true}).click();
     await expect(page.locator('.study-game-grid > .study-game-tile')).toHaveCount(4);

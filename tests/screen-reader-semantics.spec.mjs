@@ -62,9 +62,10 @@ test("checklist controls communicate action text and completion visually",async(
 
 test("Family notices are static information rather than accidental controls",async({page})=>{
   await waitForApp(page,"/#family");
-  await expect(page.getByRole("heading",{name:"Current notices"})).toBeVisible();
+  await expect(page.getByRole("heading",{name:"Notices"})).toBeVisible();
   await expect(page.locator(".notices-card .notice-row").first()).toBeVisible();
   await expect(page.locator(".notices-card button")).toHaveCount(0);
+  await expect(page.locator(".notices-card .family-message > summary").first()).toBeVisible();
 });
 
 test("freshness and toast status remain available to assistive technology",async({page})=>{
@@ -73,7 +74,7 @@ test("freshness and toast status remain available to assistive technology",async
   await expect(page.locator("#toast")).toHaveAttribute("role","status");
   await expect(page.locator("#toast")).toHaveAttribute("aria-live","polite");
   const freshness=page.locator(".freshness");
-  await expect(freshness).toContainText(/Verified|Older data|Needs refresh|Offline|Source verification unavailable/);
+  await expect(freshness).toContainText(/School info current|Last checked|May be outdated|Offline|status unavailable/);
   await expect(freshness).toHaveRole("button");
-  await expect(freshness).toHaveAttribute("aria-label",/Check published school information/);
+  await expect(freshness).toHaveAttribute("aria-label",/Refresh school information/);
 });

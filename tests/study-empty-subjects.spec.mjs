@@ -67,7 +67,7 @@ test('empty Math opens a playable eight-question round directly',async({page})=>
   await expect(page.locator('.game-question-card')).toBeVisible();
   await expect(page.locator('.game-answer')).toHaveCount(3);
   await expect(page.locator('.game-topbar')).toContainText('1 of 8');
-  await expect(page.locator('.game-question-meta')).toContainText('STAR-style practice');
+  await expect(page.locator('.game-question-meta')).toContainText('Extra practice');
 });
 test('all fallback place-value variants name a present digit and correct value',async({page})=>{
   await page.goto('/#games');await expect(page.locator('.study-game-grid')).toBeVisible();
