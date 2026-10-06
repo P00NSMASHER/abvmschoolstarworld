@@ -1,4 +1,5 @@
 import {test,expect} from '@playwright/test';
+// Exact-head QA re-arm after final assertion repair.
 
 test.use({serviceWorkers:'block'});
 
