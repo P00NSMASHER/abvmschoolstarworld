@@ -1,0 +1,43 @@
+/* Tier A school photography — user-supplied ABVM exterior images only. */
+.hero-card.school-photo-hero{
+  isolation:isolate;border-color:#d9b757;
+  background:linear-gradient(90deg,#0b3c74 0%,rgba(7,42,79,.9) 52%,rgba(7,42,79,.55) 100%),url("./assets/school/abvm-school-hero.webp") center 48%/cover no-repeat;
+}
+.hero-card.school-photo-hero::before,.hero-card.school-photo-hero::after{content:none}
+.school-photo-hero .hero-copy{align-self:center}
+.school-photo-hero .hero-copy>p:last-child{max-width:235px}
+.school-sign-inset{
+  z-index:3;position:absolute;right:76px;bottom:10px;width:54px;margin:0;overflow:hidden;background:#fff;
+  border:2px solid rgba(255,255,255,.84);border-radius:9px;box-shadow:0 5px 14px rgba(0,0,0,.24);
+}
+.school-sign-inset img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;object-position:23% 50%}
+
+.family-screen .family-hero.school-community-hero{
+  isolation:isolate;position:relative;overflow:hidden;min-height:158px;
+  background:linear-gradient(90deg,rgba(5,26,51,.96),rgba(11,60,116,.64)),url("./assets/school/abvm-school-aerial.webp") center 47%/cover no-repeat;
+}
+.family-screen .school-community-hero>p,
+.family-screen .school-community-hero>h2,
+.family-screen .school-community-hero>span{position:relative;z-index:1}
+.family-screen .school-community-hero>p{color:#ffe17a}
+
+.school-portrait-card{
+  overflow:hidden;display:grid;grid-template-columns:132px minmax(0,1fr);align-items:stretch;
+  margin:0 0 13px;background:#fff;border:1px solid var(--line);border-radius:19px;box-shadow:0 6px 18px #0b3c7410;
+}
+.school-portrait-card::before{content:"";display:block;min-height:118px;background:url("./assets/school/abvm-school-facade.webp") center 46%/cover no-repeat}
+.school-portrait-card figcaption{align-content:center;padding:15px 16px;display:grid;gap:4px}
+.school-portrait-card figcaption span{color:var(--royal);letter-spacing:.09em;font-size:10px;font-weight:950}
+.school-portrait-card figcaption strong{color:var(--navy);font-size:16px;line-height:1.25}
+.school-portrait-card figcaption small{color:var(--muted);font-size:12px;line-height:1.35}
+
+@media(max-width:370px){
+  .school-sign-inset{right:68px;width:48px}
+  .school-portrait-card{grid-template-columns:108px minmax(0,1fr)}
+  .school-portrait-card figcaption{padding:12px}
+}
+@media(min-width:700px){
+  .school-sign-inset{right:246px;bottom:20px;width:96px}
+  .school-portrait-card{grid-template-columns:210px minmax(0,1fr)}
+  .school-portrait-card::before{min-height:154px}
+}
