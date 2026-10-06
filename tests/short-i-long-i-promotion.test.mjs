@@ -93,17 +93,14 @@ test('page-exact lineage remains fail-closed for reordered or fuzzy evidence', (
   }];
 
   for (const pages of [reorderedPages, fuzzyPages]) {
-    const pipeline = buildGrade2ContentPipeline(sourcePack(), {
-      sourceHash: 'production-short-i-long-i-negative-lineage',
-      generatedAt: '2026-10-05T19:19:41.665Z',
-      sourcePages: pages,
-      requirePageExactLineage: true,
-    });
-
-    assert.notDeepEqual(validateGrade2ContentPipeline(pipeline), []);
-    assert.equal(
-      pipeline.coverage.some(row => row.status === 'GENERATOR_UNSUPPORTED'),
-      true
+    assert.throws(
+      () => buildGrade2ContentPipeline(sourcePack(), {
+        sourceHash: 'production-short-i-long-i-negative-lineage',
+        generatedAt: '2026-10-05T19:19:41.665Z',
+        sourcePages: pages,
+        requirePageExactLineage: true,
+      }),
+      /skill-lineage-unresolved:short-i-long-i/
     );
   }
 });
