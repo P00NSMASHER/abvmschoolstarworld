@@ -120,18 +120,18 @@ test('tried-wrong answers stay rejected and two distinct misses resolve to remed
     await firstWrong.click();
     await expect(firstWrong).toBeDisabled();
     await expect(firstWrong).toHaveClass(/wrong/);
-    await expect(page.locator('.game-feedback.retry strong')).toContainText('Not yet');
+    await expect(page.locator('.game-feedback.incorrect strong')).toContainText('Incorrect. Try again.');
 
     await firstWrong.evaluate(button=>button.click());
     await expect(page.locator('[data-game-next]')).toHaveCount(0);
-    await expect(page.locator('.game-feedback.retry strong')).toContainText('Not yet');
+    await expect(page.locator('.game-feedback.incorrect strong')).toContainText('Incorrect. Try again.');
 
     const secondWrong=page.locator('.game-answer').nth(wrongs[1]);
     await secondWrong.focus();
     await page.keyboard.press('Enter');
     await expect(firstWrong).toBeDisabled();
     await expect(secondWrong).toBeDisabled();
-    await expect(page.locator('.game-feedback.retry strong')).toContainText('model answer');
+    await expect(page.locator('.game-feedback.incorrect strong')).toContainText('Incorrect. The correct answer is');
     await expect(page.locator('[data-game-next]')).toBeVisible();
 
     await page.locator('[data-game-next]').click();
