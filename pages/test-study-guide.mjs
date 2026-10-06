@@ -135,7 +135,7 @@ function ensurePrintStyle(doc) {
   body>*:not(#abvm-print-guide){display:none!important}
   #abvm-print-guide{display:block!important;box-sizing:border-box;width:100%;max-width:7.74in;height:auto;max-height:10.24in;overflow:hidden;margin:0;color:#172838;background:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
   .abvm-guide-top{display:grid;grid-template-columns:minmax(0,1fr) 1.55in;gap:.2in;align-items:start;border-bottom:2px solid #173f69;padding-bottom:.11in}
-  .abvm-guide-top p{margin:0 0: .03in;color:#5d6c7a;font-size:7.5pt;font-weight:800;letter-spacing:.08em}
+  .abvm-guide-top p{margin:0 0 .03in;color:#5d6c7a;font-size:7.5pt;font-weight:800;letter-spacing:.08em}
   .abvm-guide-top h1{margin:0;font-size:20pt;line-height:1.05;letter-spacing:-.02em}
   .abvm-guide-top span{display:block;margin-top:.04in;font-size:9pt;color:#425568;font-weight:700}
   .abvm-guide-top time{border:1px solid #c8d4df;border-radius:8px;padding:.09in;text-align:center;font-size:9pt;font-weight:800;line-height:1.25}
