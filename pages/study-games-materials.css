@@ -82,3 +82,15 @@
 @media(prefers-reduced-motion:reduce){
   .games-screen .study-star-reveal{animation:none;opacity:1;transform:none}
 }
+
+/* Progressive streak feedback: first submitted answer per scored question only. */
+.games-screen .game-streak{display:block;margin-top:2px;font-size:.875rem;line-height:1.4;font-weight:850}
+.games-screen .game-streak.positive{color:#24723a}
+.games-screen .game-streak.negative{color:#a13a32}
+.games-screen .game-streak.neutral{color:#667788}
+.games-screen .game-streak-summary{display:grid;gap:3px;margin:10px 0;padding:12px 14px;border:1px solid #cbd8e3;border-radius:14px;background:#f8fbfd}
+.games-screen .game-streak-summary span,.games-screen .game-streak-summary small{font-size:.875rem;line-height:1.4}
+.games-screen .game-streak-summary strong{font-size:1.1rem;line-height:1.35}
+.games-screen .game-streak-summary.positive{border-color:#a8d7b4;background:#f1fbf3;color:#225f33}
+.games-screen .game-streak-summary.negative{border-color:#e1aaa6;background:#fff4f3;color:#7b2b24}
+.games-screen .game-streak-summary.neutral{color:#445b72}

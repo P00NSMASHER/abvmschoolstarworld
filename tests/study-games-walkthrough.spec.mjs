@@ -51,7 +51,7 @@ test.describe('recorded Games walkthrough',()=>{
       await page.locator('[data-game-next]').click();
     }
     await expect(page.locator('.game-finish')).toBeVisible();
-    await expect(page.locator('.study-star-earned')).toContainText('+10 Study Stars');
+    await expect(page.locator('.study-star-earned')).toContainText('+20 Study Stars');
     const finishActions=page.locator('.game-finish-actions > button');
     await expect(finishActions).toHaveText(['Play again','All study games']);
     const actionFonts=await finishActions.evaluateAll(buttons=>buttons.map(button=>({label:button.textContent.trim(),fontSize:parseFloat(getComputedStyle(button).fontSize)})));

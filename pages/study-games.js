@@ -1549,13 +1549,33 @@ const STUDY_STAR_POLICY=Object.freeze({
   currency:"Study Stars",
   roundComplete:10,
   comebackSuccess:2,
-  rewardTypes:Object.freeze(["round-complete","comeback-success"]),
-  excludedSignals:Object.freeze(["score","accuracy","first-try","perfect","mastery","streak","speed","hints","teach-card","support"])
+  streakStepCap:5,
+  streakRoundMin:-10,
+  streakRoundMax:10,
+  rewardTypes:Object.freeze(["round-complete","streak-adjustment","comeback-success"]),
+  excludedSignals:Object.freeze(["score","accuracy","first-try","perfect","mastery","speed","hints","teach-card","support"])
 });
 function studyStarPolicy(){return STUDY_STAR_POLICY}
-function studyStarRewardEvents({completed=false,comebackSucceeded=false}={}){
+function boundedStreakAdjustment(value){
+  if(typeof value!=="number"||!Number.isFinite(value))return 0;
+  return Math.max(STUDY_STAR_POLICY.streakRoundMin,Math.min(STUDY_STAR_POLICY.streakRoundMax,Math.trunc(value)));
+}
+function nextStreakBonus({positiveStreak=0,negativeStreak=0,adjustment=0}={},correct){
+  const yes=correct===true,no=correct===false;
+  if(!yes&&!no)return Object.freeze({positiveStreak:Math.max(0,Math.trunc(Number(positiveStreak)||0)),negativeStreak:Math.max(0,Math.trunc(Number(negativeStreak)||0)),delta:0,adjustment:boundedStreakAdjustment(Number(adjustment)||0)});
+  const positive=yes?Math.max(0,Math.trunc(Number(positiveStreak)||0))+1:0;
+  const negative=no?Math.max(0,Math.trunc(Number(negativeStreak)||0))+1:0;
+  const magnitude=Math.min(STUDY_STAR_POLICY.streakStepCap,yes?positive:negative);
+  const delta=yes?magnitude:-magnitude;
+  return Object.freeze({positiveStreak:positive,negativeStreak:negative,delta,adjustment:boundedStreakAdjustment((Number(adjustment)||0)+delta)});
+}
+function studyStarRewardEvents({completed=false,comebackSucceeded=false,streakAdjustment=0}={}){
   const events=[];
-  if(completed===true)events.push(Object.freeze({rewardType:"round-complete",amount:STUDY_STAR_POLICY.roundComplete,currency:STUDY_STAR_POLICY.currency}));
+  if(completed===true){
+    events.push(Object.freeze({rewardType:"round-complete",amount:STUDY_STAR_POLICY.roundComplete,currency:STUDY_STAR_POLICY.currency}));
+    const streak=boundedStreakAdjustment(streakAdjustment);
+    if(streak)events.push(Object.freeze({rewardType:"streak-adjustment",amount:streak,currency:STUDY_STAR_POLICY.currency}));
+  }
   if(comebackSucceeded===true)events.push(Object.freeze({rewardType:"comeback-success",amount:STUDY_STAR_POLICY.comebackSuccess,currency:STUDY_STAR_POLICY.currency}));
   return Object.freeze(events);
 }
@@ -1623,11 +1643,11 @@ function safeStudyStarRow(row){
     amount:Number(row?.amount)||0
   };
 }
-async function commitStudyStarRewards({sourcePack,mode,sessionSeed,roundId,completed=false,comebackSucceeded=false}={}){
+async function commitStudyStarRewards({sourcePack,mode,sessionSeed,roundId,completed=false,comebackSucceeded=false,streakAdjustment=0}={}){
   const source=text(sourcePack),game=text(mode),seed=text(sessionSeed);
   const expectedRound=studyStarRoundId({sourcePack:source,mode:game,sessionSeed:seed}),round=text(roundId||expectedRound);
   if(round!==expectedRound)throw new Error("Study Star ledger roundId must match sourcePack, mode, and sessionSeed");
-  const events=completed===true?studyStarRewardEvents({completed:true,comebackSucceeded:comebackSucceeded===true}):Object.freeze([]);
+  const events=completed===true?studyStarRewardEvents({completed:true,comebackSucceeded:comebackSucceeded===true,streakAdjustment}):Object.freeze([]);
   if(!events.length)return{currency:STUDY_STAR_POLICY.currency,awardedAmount:0,duplicateAmount:0,results:[]};
   const db=await openStudyStarDb();
   return await new Promise((resolve,reject)=>{
@@ -2025,6 +2045,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,REVIEW_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,validateRichContent,selectQuestions,selectDailyQuestions,learningFirstSummary,studyStarPolicy,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,reviewQuestionFamilySafeUsage,questionFamilyRolloutPolicy,reviewQuestionFamilyPromotion,itemQualityKey
+  buildCatalog,validateCatalog,validateRichContent,selectQuestions,selectDailyQuestions,learningFirstSummary,studyStarPolicy,nextStreakBonus,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,reviewQuestionFamilySafeUsage,questionFamilyRolloutPolicy,reviewQuestionFamilyPromotion,itemQualityKey
 });
 })();

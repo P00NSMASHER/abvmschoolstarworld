@@ -138,14 +138,15 @@ test('perfect round auto-saves one completion reward, survives rerender, and rem
   await page.emulateMedia({reducedMotion:'reduce'});
   await answerPerfectRound(page);
   await expect(page.getByRole('heading',{name:'What you learned'})).toBeVisible();
-  await expect(page.locator('.study-star-earned')).toContainText('+10 Study Stars');
-  expect(await page.evaluate(()=>window.ABVMStudyGames.studyStarBalance())).toBe(10);
+  await expect(page.locator('.study-star-earned')).toContainText('+20 Study Stars');
+  await expect(page.locator('.game-streak-summary')).toContainText('+10 Study Stars');
+  expect(await page.evaluate(()=>window.ABVMStudyGames.studyStarBalance())).toBe(20);
 
   const goalButton=page.locator('[data-study-star-goal]');
   await expect(goalButton).toBeVisible();
   await goalButton.click();
   await expect(page.locator('.adaptive-note')).toContainText(/Goal selected|Unlocked/);
-  expect(await page.evaluate(()=>window.ABVMStudyGames.studyStarBalance())).toBe(10);
+  expect(await page.evaluate(()=>window.ABVMStudyGames.studyStarBalance())).toBe(20);
 
   await page.waitForTimeout(1350);
   await expect(page.locator('[data-reward-reveal]')).toHaveCount(0);
@@ -160,8 +161,8 @@ test('Step 9 freezes reward identity and advances all PWA assets together',async
   expect(app).toContain('sourceKey=currentGameSourceKey(),sessionSeed=engine.nextSessionSeed');
   expect(app).toContain('sourceKey,sessionSeed,learningEvents');
   expect(app).toContain('studyStarRoundId({sourcePack:sourceKey,mode:g.mode,sessionSeed:g.sessionSeed})');
-  expect(app).toContain('commitStudyStarRewards({sourcePack:sourceKey,mode:g.mode,sessionSeed:g.sessionSeed,roundId,completed:true,comebackSucceeded:!!g.comebackSucceeded})');
-  expect(app).toContain('tries:0,misses:0,hints:0,retry:0,wrong:[]');
+  expect(app).toContain('commitStudyStarRewards({sourcePack:sourceKey,mode:g.mode,sessionSeed:g.sessionSeed,roundId,completed:true,comebackSucceeded:!!g.comebackSucceeded,streakAdjustment:g.streakAdjustment||0})');
+  expect(app).toContain('lastStreakDelta:0,tries:0,misses:0,hints:0,retry:0,wrong:[]');
   const gamesUrl=app.match(/\.\/study-games\.js\?v=\d+/)?.[0];
   const gamesViewUrl=app.match(/\.\/study-games-view\.js\?v=\d+/)?.[0];
   expect(gamesUrl).toBeTruthy();
