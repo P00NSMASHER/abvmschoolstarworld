@@ -1,0 +1,72 @@
+{
+  "candidateId": "curriculum-math-math-subtraction-78b493881b",
+  "familyId": "math-subtraction",
+  "subject": "Math",
+  "topic": "Math (subtraction)",
+  "sourceHash": "teacher-pages-7f58b7555d1b71750727",
+  "generatedAt": "2026-10-06T17:54:06.734Z",
+  "sourceContext": {
+    "quality": "page-exact",
+    "matchMethod": "exact-topic-phrase",
+    "subject": "Math",
+    "topic": "Math (subtraction)",
+    "sourceTitle": "Tests",
+    "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+    "sourceCaptureHash": "3b6c7c29c8ab66c162fa942f012a9c780392b4bf20b024d91f620efd53eee80c",
+    "sourceCheckedAt": "2026-10-06T17:54:06.734Z",
+    "sourceLine": "Thursday Oct. 15: Math (subtraction)",
+    "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0"
+  },
+  "featureFlag": "curriculum-family:math-subtraction-candidate",
+  "enabledByDefault": false,
+  "registryMatch": null,
+  "minimumSemanticVariants": 8,
+  "requiredQuestionTypes": [
+    "direct",
+    "transfer",
+    "reasoning"
+  ],
+  "proposedQuestions": [],
+  "authoring": {
+    "status": "AUTHORING_REQUIRED",
+    "generatedQuestionCount": 0,
+    "minimumSemanticVariants": 8,
+    "requiredQuestionTypes": [
+      "direct",
+      "transfer",
+      "reasoning"
+    ],
+    "requiredQuestionFields": [
+      "questionType",
+      "prompt",
+      "choices",
+      "answer",
+      "explanation",
+      "hint",
+      "dok",
+      "difficulty"
+    ]
+  },
+  "rollout": {
+    "featureFlagRequired": true,
+    "automatedQaRequired": true,
+    "safeUsageEvidenceRequired": true,
+    "manualPromotionRequired": true,
+    "automaticPromotion": false
+  },
+  "readiness": {
+    "status": "HOLD",
+    "blockers": [
+      "minimum-semantic-variants:0/8",
+      "question-type-required:direct",
+      "question-type-required:transfer",
+      "question-type-required:reasoning",
+      "automated-qa-required",
+      "safe-usage-evidence-required",
+      "manual-promotion-required"
+    ],
+    "automaticPromotion": false,
+    "automaticDelete": false,
+    "automaticRewrite": false
+  }
+}
