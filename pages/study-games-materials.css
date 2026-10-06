@@ -63,3 +63,22 @@
 .games-screen .game-section-scores>div strong{flex:none}
 .games-screen .legacy-record{display:block;margin:10px 0;color:#526579;font-size:.875rem;line-height:1.45}
 @media (max-width:360px){.games-screen .game-section-scores>div{align-items:flex-start;flex-direction:column;gap:3px}}
+
+/* Reward confirmation stays visible without covering the score or answer content. */
+.games-screen .study-star-reveal{
+  position:static;
+  left:auto;
+  top:auto;
+  width:min(100%,18rem);
+  margin:0 auto 12px;
+  transform:none;
+  animation:study-star-flow 1.2s ease both;
+}
+@keyframes study-star-flow{
+  0%{opacity:0;transform:scale(.96)}
+  15%,75%{opacity:1;transform:scale(1)}
+  100%{opacity:0;transform:scale(.98)}
+}
+@media(prefers-reduced-motion:reduce){
+  .games-screen .study-star-reveal{animation:none;opacity:1;transform:none}
+}

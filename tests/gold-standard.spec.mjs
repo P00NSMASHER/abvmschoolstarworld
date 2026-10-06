@@ -321,7 +321,7 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   const optionalAssets=[...optional.matchAll(/"(\.\/[^\"]+)"/g)].map(match=>match[1]);
   expect(optionalAssets).toEqual([
     "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json",
-    "./study-materials.mjs", "./study-games-materials-view.mjs", "./study-games-materials.css?v=2", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs", "./study-resources.mjs", "./study-clarity.css?v=1", "./study-model.mjs", "./star-practice.mjs",
+    "./study-materials.mjs", "./study-games-materials-view.mjs", "./study-games-materials.css?v=3", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs", "./study-resources.mjs", "./study-clarity.css?v=1", "./study-model.mjs", "./star-practice.mjs",
     "./family-view.css?v=1", "./visual-polish.css?v=1", "./lunch-art.js?v=1"
   ]);
   expect(new Set(optionalAssets).size).toBe(optionalAssets.length);

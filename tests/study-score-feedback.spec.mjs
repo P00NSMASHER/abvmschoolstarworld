@@ -44,6 +44,11 @@ test('six first-try correct and two corrected retries stays 6 of 8 at 75 percent
     await page.locator('[data-game-next]').click();
   }
   await expect(page.locator('.game-finish')).toBeVisible();
+  const reveal=page.locator('.study-star-reveal');
+  if(await reveal.count()){
+    const overlap=await page.evaluate(()=>{const reward=document.querySelector('.study-star-reveal')?.getBoundingClientRect(),score=document.querySelector('.game-score-summary')?.getBoundingClientRect();return !!reward&&!!score&&!(reward.bottom<=score.top||reward.top>=score.bottom||reward.right<=score.left||reward.left>=score.right)});
+    expect(overlap,'Study Star confirmation must not cover the score').toBe(false);
+  }
   await expect(page.locator('.game-score-summary>strong')).toHaveText('6 / 8 correct on the first try · 75%');
   await expect(page.locator('.game-score-summary>span')).toContainText('First-try misses: 2');
   await expect(page.locator('.game-score-summary>span')).toContainText('Corrected on retry: 2');
