@@ -61,26 +61,26 @@ button.freshness.stale,button.freshness.offline{border-color:#ead27a;background:
 button.freshness.attention{border-color:#e6b2b8;background:#fff0f2;color:#813842;}
 
 .hero-card.school-photo-hero{
-  min-height:232px;padding:22px 22px 22px;
+  min-height:0;padding:18px 82px 18px 18px;
   background:
-    linear-gradient(90deg,rgba(4,37,75,.93) 0%,rgba(5,52,98,.76) 50%,rgba(5,52,98,.20) 100%),
+    linear-gradient(90deg,rgb(11,60,116) 0%,rgba(11,60,116,.78) 48%,rgba(11,60,116,.18) 100%),
     url("./assets/school/abvm-school-hero.webp") center 48%/cover no-repeat;
   border:1px solid #e7c661;border-radius:26px;box-shadow:0 14px 30px #0b3c7424;
 }
-.school-photo-hero .hero-copy{align-self:end;max-width:260px;}
+.school-photo-hero .hero-copy{align-self:center;max-width:260px;}
 .school-photo-hero .hero-copy .pill{background:#fff2b8;border-color:#f0d16c;color:#5e4704;}
-.school-photo-hero .hero-copy h2{max-width:255px;font-size:29px;line-height:1.02;text-shadow:0 2px 10px #00152c4f;}
+.school-photo-hero .hero-copy h2{max-width:255px;line-height:1.05;text-shadow:0 2px 10px #00152c4f;}
 .school-photo-hero .hero-copy>p:last-child{max-width:250px;color:#f4f9ff;font-weight:650;}
-.school-photo-hero .hero-brand,.school-photo-hero .school-sign-inset{display:none;}
+.school-photo-hero .school-sign-inset{display:none;}
 
 .priority-card,.today-panel,.day-detail,.calendar-card,.calendar-day-card,.subject-card,.parent-card,
 .family-actions-card,.notices-card,.study-games-hero,.game-question-card,.game-finish,.week-overview-card{
   border-color:#d9e6f2;box-shadow:0 8px 24px #173d6510;
 }
 .priority-card{background:linear-gradient(135deg,#f6fbff,#fff9e7);border-radius:22px;}
-.date-tile{background:linear-gradient(180deg,#0d579c,#083d73);box-shadow:0 5px 0 #e4bc49;}
+.date-tile{background:linear-gradient(180deg,#0b3c74,#072b53);box-shadow:0 5px 0 #d9b757;}
 .section-heading h2{font-weight:900;}
-.heading-dot.pink{background:#f0bd42;box-shadow:0 0 0 5px #fff0bd;}
+.heading-dot.pink{background:#d8b34e;box-shadow:0 0 0 5px #fff0bd;}
 .heading-dot.blue{background:#1686d5;box-shadow:0 0 0 5px #dff4ff;}
 .check-box{border-color:#df2d78;border-width:2px;}
 .task-tag{background:#e2f2ff;color:#155c92;}
@@ -175,10 +175,16 @@ button.freshness.attention{border-color:#e6b2b8;background:#fff0f2;color:#813842
 @media(min-width:700px){
   .week-overview-grid{grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);}
   .week-overview{grid-column:1/-1;}
-  .hero-card.school-photo-hero{min-height:280px;padding:30px;}
+  .hero-card.school-photo-hero{min-height:260px;padding:30px 250px 30px 30px;}
   .school-photo-hero .hero-copy{max-width:410px;}
   .school-photo-hero .hero-copy h2{max-width:390px;font-size:38px;}
   .school-photo-hero .hero-copy>p:last-child{max-width:390px;font-size:16px;}
+}
+@media(max-width:699px){
+  .hero-card.school-photo-hero{min-height:0;padding:18px 82px 18px 18px;}
+  .school-photo-hero .hero-copy .pill{display:none;}
+  .school-photo-hero .hero-copy h2{font-size:23px;line-height:1.08;margin-bottom:7px;}
+  .school-photo-hero .hero-copy>p:last-child{font-size:13px;line-height:1.35;}
 }
 @media(max-width:360px){
   .week-overview-row{grid-template-columns:52px minmax(0,1fr);gap:7px;}
@@ -189,3 +195,5 @@ button.freshness.attention{border-color:#e6b2b8;background:#fff0f2;color:#813842
 @media(prefers-reduced-motion:reduce){
   .study-game-tile,.game-answer,.bottom-nav .nav-icon,.day-picker button,.calendar-grid button{transition:none!important;transform:none!important;}
 }
+
+@media(min-width:700px){.games-screen .game-answer{min-height:68px!important}}
