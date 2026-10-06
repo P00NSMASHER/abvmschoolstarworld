@@ -1,3 +1,5 @@
+import { SHORT_I_LONG_I_FAMILY } from './curriculum-families/short-i-long-i.mjs';
+
 const FAMILY_REGISTRY = Object.freeze([
   Object.freeze({
     id: 'subject-predicate',
@@ -123,6 +125,7 @@ const FAMILY_REGISTRY = Object.freeze([
       }),
     ]),
   }),
+  SHORT_I_LONG_I_FAMILY,
 ]);
 
 const clone = value => structuredClone(value);
