@@ -383,6 +383,30 @@ test('test fallback matches the announced vowel and missing banks never become a
   assert.deepEqual(model.testRound({index:-1,seed:1}).questions,[]);
 });
 
+test('source-backed short-i/long-i practice outranks the STAR fallback for the announced test',() => {
+  const events = [{
+    date:'2026-10-05',
+    label:'Spelling (short i / long i) / Handwriting',
+    kind:'test',
+  }];
+  const current = pool('current-short-i-',9,'Spelling / Handwriting',{
+    skill:'short-i-long-i',
+    sourceFact:'Verified teacher test focus: short i / long i.',
+    explanation:'Use the short-i or long-i vowel pattern in the word.',
+  });
+  const model = createStudyMaterials(opts({events,catalog:catalog(current)}));
+  const state = model.tests();
+
+  assert.equal(state.supported.length,1);
+  assert.equal(state.supported[0].fallback,false);
+  assert.deepEqual(state.fallback,[]);
+
+  const round = model.testRound({seed:17});
+  assert.equal(round.questions.length,8);
+  assert(round.questions.every(q => q.skill === 'short-i-long-i'));
+  assert.deepEqual(round.fallback,[]);
+});
+
 test('test calendar advances in New York, respects explicit endings and never guesses a missing date',() => {
   let now = '2026-10-06T03:00:00Z';
   const events = [{date:'2026-10-05',label:'Math',endsAt:'2026-10-06T03:30:00Z'},

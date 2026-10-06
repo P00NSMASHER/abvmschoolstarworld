@@ -8,7 +8,7 @@ test('teacher refresh opens only draft curriculum candidates and blocks publicat
   assert.match(workflow, /gh pr create --draft/);
   assert.match(workflow, /curriculum-candidate-\$\{SAFE_KEY\}/);
   assert.match(workflow, /Block publication while curriculum candidates are unresolved/);
-  assert.match(workflow, /process\.exit\(1\)/);
+  assert.match(workflow, /assert-curriculum-coverage-resolved\.mjs/);
   assert.doesNotMatch(workflow, /gh pr merge|--auto-merge|enable-auto-merge/i);
 });
 
@@ -18,6 +18,11 @@ test('curriculum coverage evidence artifact includes the hidden report and fails
   assert.match(workflow, /path: \.curriculum-coverage-plan\.json/);
   assert.match(workflow, /include-hidden-files: true/);
   assert.match(workflow, /if-no-files-found: error/);
+});
+
+test('teacher refresh tracks modular curriculum family changes', () => {
+  const workflow = readFileSync('.github/workflows/sync-study-pack.yml', 'utf8');
+  assert.match(workflow, /scripts\/curriculum-families\/\*\*/);
 });
 
 test('candidate curriculum flags require a separate non-production preview output', () => {
@@ -80,7 +85,7 @@ test('blocked Actions PR bookkeeping cannot bypass the unresolved coverage gate'
   assert.match(workflow, /if ! create_candidate_pr/);
   assert.match(workflow, /continuing so the explicit unresolved-coverage gate can report the curriculum blocker/);
   assert.match(workflow, /Block publication while curriculum candidates are unresolved/);
-  assert.match(workflow, /Unresolved curriculum coverage:/);
+  assert.match(workflow, /assert-curriculum-coverage-resolved\.mjs --report=\.curriculum-coverage-plan\.json/);
 });
 
 test('candidate branch identity is stable across unrelated source-hash churn', () => {
@@ -98,7 +103,7 @@ test('refresh publication reconciles main races without force-pushing unverified
   assert.match(workflow, /git fetch origin main/);
   assert.match(workflow, /git reset --hard "\$REMOTE_MAIN"/);
   assert.match(workflow, /refresh-teacher-pages\.mjs --autopilot-report=/);
-  assert.match(workflow, /Unresolved curriculum coverage after main advanced/);
+  assert.match(workflow, /--context="Unresolved curriculum coverage after main advanced"/);
   assert.match(workflow, /npm run qa/);
   assert.match(workflow, /git push origin HEAD:main/);
   assert.doesNotMatch(workflow, /git push[^\n]*--force/);
