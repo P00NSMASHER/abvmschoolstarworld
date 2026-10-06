@@ -45,16 +45,17 @@ function renderChanges(feed={}){
   const rows=items.slice(0,8).map(row=>'<div class="notice-row" role="listitem"><span class="status '+(row.kind==="unchanged"?"ok":"warn")+'" aria-hidden="true"></span><p>'+esc(row.text)+'</p></div>').join("");
   return '<section class="parent-card notices-card" aria-labelledby="school-change-title"><div class="notices-head"><span class="notices-mark" aria-hidden="true">↻</span><div><small>LATEST VERIFIED REFRESH</small><h3 id="school-change-title">What changed at school?</h3></div></div><div class="static-notice-list" role="list">'+rows+'</div></section>';
 }
-function weeklyOverviewHtml(days){
-  const WEEKDAY=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+function weeklyOverviewHtml(days,eventsFor,lunchFor,kind){
+  const WEEKDAY=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const iso=date=>date.getFullYear()+"-"+String(date.getMonth()+1).padStart(2,"0")+"-"+String(date.getDate()).padStart(2,"0");
   const lunchRows=days.map(date=>{
-    const events=eventItemsForDate(date),lunch=lunchForDate(date);
-    const closed=events.some(item=>kindClass(item)==="closed")||lunch?.status==="no-school";
-    const meal=closed?"No school lunch":lunch?(lunchText(lunch)||"Lunch menu not yet verified."):lunchUnavailableText(date);
-    return '<div class="weekly-overview-row"><time datetime="'+isoDateKey(date)+'">'+esc(WEEKDAY[date.getDay()]+" "+date.getDate())+'</time><p>'+esc(meal)+'</p></div>';
+    const events=eventsFor(date),lunch=lunchFor(date);
+    const closed=events.some(item=>kind(item)==="closed")||lunch?.status==="no-school";
+    const meal=closed?"No school lunch":lunch?.items?.length?lunch.items.join(", ").replace(/, ([^,]*)$/,", and $1"):"Lunch menu not yet verified for "+MONTHS[date.getMonth()]+" "+date.getDate()+".";
+    return '<div class="weekly-overview-row"><time datetime="'+iso(date)+'">'+esc(WEEKDAY[date.getDay()]+" "+date.getDate())+'</time><p>'+esc(meal)+'</p></div>';
   }).join("");
-  const testGroups=days.map(date=>({date,items:eventItemsForDate(date).filter(item=>kindClass(item)==="test")})).filter(group=>group.items.length);
-  const tests=testGroups.length?testGroups.map(group=>'<div class="weekly-overview-row"><time datetime="'+isoDateKey(group.date)+'">'+esc(WEEKDAY[group.date.getDay()]+" "+group.date.getDate())+'</time><ul>'+group.items.map(item=>'<li>'+esc(item.label)+'</li>').join("")+'</ul></div>').join(""):'<p class="weekly-overview-empty">No tests are currently listed for this week.</p>';
+  const testGroups=days.map(date=>({date,items:eventsFor(date).filter(item=>kind(item)==="test")})).filter(group=>group.items.length);
+  const tests=testGroups.length?testGroups.map(group=>'<div class="weekly-overview-row"><time datetime="'+iso(group.date)+'">'+esc(WEEKDAY[group.date.getDay()]+" "+group.date.getDate())+'</time><ul>'+group.items.map(item=>'<li>'+esc(item.label)+'</li>').join("")+'</ul></div>').join(""):'<p class="weekly-overview-empty">No tests are currently listed for this week.</p>';
   return '<section class="weekly-overview" aria-labelledby="weekly-overview-title"><div class="weekly-overview-head"><p>WEEKLY SUMMARY</p><h2 id="weekly-overview-title">This week at a glance</h2></div><div class="weekly-overview-grid"><section class="weekly-overview-card weekly-lunches" aria-labelledby="weekly-lunches-title"><div class="weekly-overview-card-title"><span aria-hidden="true">🍎</span><h3 id="weekly-lunches-title">Lunches this week</h3></div>'+lunchRows+'</section><section class="weekly-overview-card weekly-tests" aria-labelledby="weekly-tests-title"><div class="weekly-overview-card-title"><span aria-hidden="true">✓</span><h3 id="weekly-tests-title">Tests this week</h3></div>'+tests+'</section></div></section>';
 }
 window.WO=weeklyOverviewHtml;
