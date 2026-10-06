@@ -228,7 +228,7 @@ test('two distinct misses teach before resolving and record one failed learning 
   const firstWrong = page.locator('.game-answer').nth(wrongs[0]);
   await firstWrong.click();
   await expect(firstWrong).toBeDisabled();
-  await expect(page.locator('.game-feedback.retry')).toContainText('Not yet');
+  await expect(page.locator('.game-feedback.incorrect')).toContainText('Incorrect. Try again.');
   await expect(page.locator('[data-game-next]')).toHaveCount(0);
 
   // Repeat activation of the rejected choice must not burn another attempt.
@@ -238,7 +238,7 @@ test('two distinct misses teach before resolving and record one failed learning 
   const secondWrong = page.locator('.game-answer').nth(wrongs[1]);
   await secondWrong.click();
   await expect(secondWrong).toBeDisabled();
-  await expect(page.locator('.game-feedback.retry')).toContainText('model answer');
+  await expect(page.locator('.game-feedback.incorrect')).toContainText('Incorrect. The correct answer is');
   await expect(page.locator('[data-game-next]')).toBeVisible();
 
   const stored = await page.evaluate(skill => JSON.parse(localStorage.getItem('abvm-study-learning:v2') || '{}')[skill] || {}, question.skill);
@@ -445,11 +445,12 @@ test('a persisted due Comeback is shown unscored and records RememberedLater aft
   await page.getByRole('button', { name: /Quick Mix/i }).click();
   await expect(page.locator('.game-topbar')).toContainText('Comeback');
   await expect(page.locator('.adaptive-note')).toContainText('not scored');
-  await expect(page.locator('.game-topbar b')).toHaveCount(0);
+  await expect(page.locator('.game-live-score')).toContainText('No answers yet');
 
   await page.locator('.game-answer').filter({ hasText: seeded.answer }).click();
-  await expect(page.locator('.game-feedback.correct')).toContainText('Skills recalled later!');
-  await expect(page.locator('.game-topbar b')).toHaveCount(0);
+  await expect(page.locator('.game-feedback.correct')).toContainText('Correct — review question');
+  await expect(page.locator('.game-feedback.correct')).toContainText('Review question · not part of the section score');
+  await expect(page.locator('.game-live-score')).toContainText('No answers yet');
   await page.locator('[data-game-next]').click();
 
   const stored = await page.evaluate(skill => ({
