@@ -4,6 +4,7 @@ const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=105",
   "./study-support.js?v=2",
+  "./week-overview.js?v=1",
   "./app.js?v=123",
   "./school-updates.js?v=2",
   "./weekly-learning.js?v=3",
