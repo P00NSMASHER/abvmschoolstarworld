@@ -7,7 +7,7 @@ for(const viewport of [{width:393,height:852},{width:320,height:740},{width:768,
     await page.setViewportSize(viewport);
     await page.goto('/#today');
     await expect(page.locator('.school-photo-hero')).toBeVisible();
-    await expect(page.locator('.school-hero-photo')).toHaveAttribute('src','./assets/school/abvm-school-hero.webp');
+    await expect(page.locator('.school-photo-hero')).toHaveCSS('background-image',/abvm-school-hero\.webp/);
     const sign=page.locator('.school-sign-inset img');
     await expect(sign).toHaveAttribute('src','./assets/school/abvm-school-sign.webp');
     await expect(sign).toHaveAttribute('alt',/Assumption BVM School sign/);
@@ -17,10 +17,11 @@ for(const viewport of [{width:393,height:852},{width:320,height:740},{width:768,
     await info.attach('Today school photography',{path:todayPath,contentType:'image/png'});
 
     await page.getByRole('button',{name:'Family',exact:true}).click();
-    await expect(page.locator('.school-community-photo')).toHaveAttribute('src','./assets/school/abvm-school-aerial.webp');
+    await expect(page.locator('.school-community-hero')).toHaveCSS('background-image',/abvm-school-aerial\.webp/);
     const portrait=page.locator('.school-portrait-card');
     await expect(portrait).toBeVisible();
-    await expect(portrait.locator('img')).toHaveAttribute('src','./assets/school/abvm-school-facade.webp');
+    const facadeBackground=await portrait.evaluate(node=>getComputedStyle(node,'::before').backgroundImage);
+    expect(facadeBackground).toContain('abvm-school-facade.webp');
     await expect(portrait).toContainText('Assumption BVM School');
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
     const familyPath=info.outputPath(`school-family-${viewport.width}x${viewport.height}.png`);

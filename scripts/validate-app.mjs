@@ -40,6 +40,7 @@ if(!sw.includes("./data/study-pack-runtime.json")||!sw.includes("./data/study-pa
 if(!app.includes("./assets/abvm-app-icon-192.png"))fail("School seal must use local app asset");
 const schoolPhotoCss=index.match(/href="(\.\/school-photos\.css\?v=\d+)"/)?.[1];
 if(!schoolPhotoCss||!sw.includes(schoolPhotoCss)||!exists("pages/school-photos.css"))fail("School photography styles must load and remain available offline");
+const schoolPhotoStyles=read("pages/school-photos.css"),photoSources=app+"\n"+schoolPhotoStyles;
 const approvedSchoolPhotos=[
   "./assets/school/abvm-school-sign.webp",
   "./assets/school/abvm-school-hero.webp",
@@ -47,7 +48,7 @@ const approvedSchoolPhotos=[
   "./assets/school/abvm-school-facade.webp"
 ];
 for(const ref of approvedSchoolPhotos){
-  if(!app.includes(ref))fail("Approved school photo must be used by the app: "+ref);
+  if(!photoSources.includes(ref))fail("Approved school photo must be used by the app: "+ref);
   if(!sw.includes(ref))fail("Approved school photo must remain available offline: "+ref);
   if(!exists("pages/"+ref.slice(2)))fail("Approved school photo is missing: "+ref);
 }
