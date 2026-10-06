@@ -30,3 +30,19 @@ test('curriculum coverage gate reports exact governed candidates',()=>{
     /Refresh blocked: Spelling \/ Handwriting: short i \/ long i \(curriculum-spelling-handwriting-short-i-long-i-8c547e7fcf\)/
   );
 });
+
+
+test('curriculum coverage gate fails closed on inconsistent reports',()=>{
+  assert.throws(
+    ()=>unresolvedCurriculumCoverage({unsupportedCount:1,candidates:[]}),
+    /inconsistent: unsupportedCount=1, candidates=0/
+  );
+  assert.throws(
+    ()=>unresolvedCurriculumCoverage({unsupportedCount:0,candidates:[{subject:'Reading',topic:'x'}]}),
+    /inconsistent: unsupportedCount=0, candidates=1/
+  );
+  assert.throws(
+    ()=>unresolvedCurriculumCoverage({candidates:[]}),
+    /invalid unsupportedCount/
+  );
+});
