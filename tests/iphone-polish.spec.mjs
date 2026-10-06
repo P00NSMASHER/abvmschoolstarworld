@@ -80,7 +80,7 @@ test('new source information stays unread until acknowledged',async({page})=>{
   await expect(page.locator('[aria-labelledby="family-current-notices"]')).toContainText('Bring the permission form');
   await page.reload();
   await expect(page.locator('.unread-updates')).toBeVisible();
-  await page.getByRole('button',{name:'Mark updates as read'}).click();
+  await page.getByRole('button',{name:'Mark notices as read'}).click();
   await expect(page.locator('.unread-updates')).toHaveCount(0);
   await page.getByRole('button',{name:'Today',exact:true}).click();
   await expect(page.locator('.updates-banner')).toHaveCount(0);

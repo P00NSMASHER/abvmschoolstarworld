@@ -56,7 +56,7 @@ test('six first-try correct and two corrected retries stays 6 of 8 at 75 percent
   await expect(page.locator('.game-score-summary>span')).toContainText('1 hint');
   const math=page.locator('.game-section-scores>div').filter({hasText:'Math'});
   await expect(math).toContainText('6 / 8 · 75%');
-  await expect(page.locator('.legacy-record')).toContainText('legacy solved-after-retries record');
+  await expect(page.locator('.legacy-record')).toContainText('best solved with retries');
   let path=info.outputPath('score-result-393x852.png');await page.screenshot({path,fullPage:true});await info.attach('Phone score result',{path,contentType:'image/png'});
   await page.setViewportSize({width:768,height:1024});path=info.outputPath('score-result-768x1024.png');await page.screenshot({path,fullPage:true});await info.attach('Tablet score result',{path,contentType:'image/png'});
   await page.setViewportSize({width:852,height:393});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
