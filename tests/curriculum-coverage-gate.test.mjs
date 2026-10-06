@@ -41,8 +41,8 @@ test('curriculum coverage gate fails closed on inconsistent reports',()=>{
     ()=>unresolvedCurriculumCoverage({unsupportedCount:0,candidates:[{subject:'Reading',topic:'x'}]}),
     /inconsistent: unsupportedCount=0, candidates=1/
   );
-  assert.throws(
-    ()=>unresolvedCurriculumCoverage({candidates:[]}),
-    /invalid unsupportedCount/
-  );
+  assert.throws(()=>unresolvedCurriculumCoverage({candidates:[]}),/invalid unsupportedCount/);
+  assert.throws(()=>unresolvedCurriculumCoverage({unsupportedCount:null,candidates:[]}),/invalid unsupportedCount/);
+  assert.throws(()=>unresolvedCurriculumCoverage({unsupportedCount:'0',candidates:[]}),/invalid unsupportedCount/);
+  assert.throws(()=>unresolvedCurriculumCoverage({unsupportedCount:1.5,candidates:[]}),/invalid unsupportedCount/);
 });
