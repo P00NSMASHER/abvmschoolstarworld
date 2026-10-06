@@ -17,6 +17,21 @@ function accuracySummary(state={}){
   }
   return{answered,correct,incorrect,corrected,assisted,percent,sections:order.map(subject=>{const section=map.get(subject);return{...section,percent:section.answered?Math.round((section.correct/section.answered)*100):null}})}
 }
+function accuracyKey(state,q){return String(state.index)+"|"+String(q?.id||q?.prompt||"question")}
+function recordFirstAnswer(state,q,correct){
+  if(state.supportMode||state.comebackMode)return null;
+  if(!Array.isArray(state.accuracyRows))state.accuracyRows=[];
+  const key=accuracyKey(state,q),existing=state.accuracyRows.find(row=>row.key===key);
+  if(existing)return existing;
+  const row={key,questionId:String(q?.id||""),subject:String(q?.subject||"Practice"),firstCorrect:!!correct,eventualCorrect:correct?true:null,hintUsed:(state.hints||0)>0,attempts:1};
+  state.accuracyRows.push(row);return row
+}
+function resolveAccuracy(state,q,correct){
+  if(state.supportMode||state.comebackMode)return;
+  const key=accuracyKey(state,q),row=(state.accuracyRows||[]).find(item=>item.key===key);
+  if(!row)return;
+  row.eventualCorrect=!!correct;row.attempts=Math.max(Number(row.attempts)||1,Number(state.tries)||1)
+}
 function icon(modeId){
   const icons={
     quick:'<svg viewBox="0 0 48 48" aria-hidden="true"><path class="icon-fill" d="m24 6 5.3 10.8 11.9 1.7-8.6 8.4 2 11.8L24 33.1l-10.6 5.6 2-11.8-8.6-8.4 11.9-1.7L24 6Z"/><path class="icon-spark" d="M37.5 7.5v6M34.5 10.5h6"/></svg>',
@@ -110,5 +125,5 @@ function finish({mode,state,record,summary={},reward={}}){
   const legacy=record?.plays?'<small class="legacy-score-note">Legacy best (eventual correct): '+record.best+' / '+legacyTotal+'. This is not first-try accuracy.</small>':'';
   return '<section class="game-finish learning-first"><p>'+esc(mode.title.toUpperCase())+'</p><h2>Your score</h2>'+scoreHero+sectionRows+correctionHtml+'<h3 class="learning-summary-title">What you learned</h3><div class="learning-summary" aria-label="Round learning summary"><div><strong>'+strong+'</strong><span>Skills answered independently</span></div><div><strong>'+remembered+'</strong><span>Skills recalled later</span></div><div><strong>'+practice+'</strong><span>Skills to revisit</span></div></div><p class="learning-summary-note">First-try accuracy, corrections, and skill learning are different measures. One round does not prove mastery or predict a STAR score.</p>'+legacy+starsHtml+rewardHtml+'<div class="game-finish-actions"><button type="button" class="primary" data-game-start="'+esc(mode.id)+'">Play again</button><button type="button" data-game-home>All study games</button></div></section>';
 }
-window.ABVMStudyGameView=Object.freeze({icon,play,goal,rewardReveal,accuracySummary,finish});
+window.ABVMStudyGameView=Object.freeze({icon,play,goal,rewardReveal,recordFirstAnswer,resolveAccuracy,accuracySummary,finish});
 })();
