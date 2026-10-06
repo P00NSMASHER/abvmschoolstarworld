@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 export function unresolvedCurriculumCoverage(plan){
   const candidates=Array.isArray(plan?.candidates)?plan.candidates:[];
-  const count=Number(plan?.unsupportedCount);
+  const count=plan?.unsupportedCount;
   if(!Number.isInteger(count)||count<0){
     throw new Error('Curriculum coverage plan has an invalid unsupportedCount.');
   }
