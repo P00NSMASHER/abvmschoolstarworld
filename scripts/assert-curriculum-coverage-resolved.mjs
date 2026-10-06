@@ -3,8 +3,13 @@ import { fileURLToPath } from 'node:url';
 
 export function unresolvedCurriculumCoverage(plan){
   const candidates=Array.isArray(plan?.candidates)?plan.candidates:[];
-  const count=Number(plan?.unsupportedCount||0);
-  if(count<=0)return [];
+  const count=Number(plan?.unsupportedCount);
+  if(!Number.isInteger(count)||count<0){
+    throw new Error('Curriculum coverage plan has an invalid unsupportedCount.');
+  }
+  if(count!==candidates.length){
+    throw new Error('Curriculum coverage plan is inconsistent: unsupportedCount='+count+', candidates='+candidates.length+'.');
+  }
   return candidates.map(candidate=>({
     subject:String(candidate?.subject||'Unknown subject'),
     topic:String(candidate?.topic||'Unknown topic'),
