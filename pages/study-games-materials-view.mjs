@@ -94,21 +94,21 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
       :'<button type="button" class="study-test-primary" data-test>Start test practice</button>';
     const guideButtons=printable.map(test=>'<button type="button" class="study-guide-button" data-test-guide="'+test.index+'">Print '+esc(test.label)+' guide</button>').join('');
     return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><span>UP NEXT</span><h2 id="study-priority-title">Test ready</h2></div>' +
-      '<article class="study-test-card" data-study-tests><div class="study-test-date" aria-hidden="true"><span>'+esc(date.weekday)+'</span><strong>'+esc(date.day)+'</strong></div><div class="study-test-copy"><small>NEXT TEST'+(pending.length>1?'S':'')+'</small><h3>'+labels.join('<span class="study-test-divider"> · </span>')+'</h3><p>'+esc(date.label)+'</p></div><div class="study-test-actions">'+practiceButtons+guideButtons+'</div>' +
-      (missing.length?'<p class="game-material-status" data-test-missing>Teacher-specific practice is not ready for '+missing.map(test=>esc(test.label)).join(', ')+'. Use the reviewed notes and available practice.</p>':'') +
-      (fallback.length?'<p class="game-material-status" data-test-fallback>Some practice uses original Grade 2 skill questions because a reviewed test-specific bank is not available yet.</p>':'') +
+      '<article class="study-test-card" data-study-tests><time class="study-test-date" datetime="'+esc(tests.date)+'"><span>'+esc(date.weekday)+'</span><strong>'+esc(date.day)+'</strong><em>'+esc(date.label.replace(/^\w+,\s*/,''))+'</em></time><div class="study-test-copy"><small>Next test'+(pending.length>1?'s':'')+'</small><h3>'+labels.join('<span class="study-test-divider"> · </span>')+'</h3><p>'+esc(date.label)+'</p></div><div class="study-test-actions">'+practiceButtons+guideButtons+'</div>' +
+      (missing.length?'<p class="game-material-status" data-test-missing>Practice is not available for '+missing.map(test=>esc(test.label)).join(', ')+'. Review the teacher notes.</p>':'') +
+      (fallback.length?'<p class="game-material-status" data-test-fallback>Original Grade 2 skill practice for '+fallback.map(test=>esc(test.label)).join(', ')+'; no reviewed test-specific bank is available yet.</p>':'') +
       '</article>'+(tests?.message?'<div class="game-test-status" role="status"><span>'+esc(tests.message)+'</span>'+(tests.canUndo?'<button type="button" data-undo-test>Undo</button>':'')+'</div>':'')+'</section>';
   }
 
   function dailyHtml({complete=false} = {}) {
     const disabled=model&&!model.forMode('daily',selection()).count;
-    return '<section class="study-daily-card" aria-label="Daily practice"><div class="study-daily-icon" aria-hidden="true">★</div><div class="study-daily-copy"><small>DAILY PRACTICE</small><strong>'+(complete?'Practice a little more':'Eight-question warm-up')+'</strong><span>'+(complete?'Today’s practice is already complete.':'No timer. Mixes current skills and useful review.')+'</span></div><button type="button" data-game-start="daily"'+(disabled?' disabled':'')+'>'+(complete?'Practice again':'Start')+'</button></section>';
+    return '<section class="study-daily-card game-daily-action" aria-label="Daily practice"><div class="study-daily-icon" aria-hidden="true">★</div><div class="study-daily-copy"><small>DAILY PRACTICE</small><strong>'+(complete?'Practice a little more':'Eight-question warm-up')+'</strong><span>'+(complete?'Today’s practice is complete.':'No timer. Mixes current skills and useful review.')+'</span></div><button type="button" data-game-start="daily"'+(disabled?' disabled':'')+'>'+(complete?'Practice again':'Start')+'</button></section>';
   }
 
   function statusHtml({loading=true,error=false} = {}) {
     const partial=model?.status?.partial;
     if(error)return '<div class="game-material-status study-load-status" role="status"><p>Saved materials could not load. Current Games are still available.</p><button type="button" data-study-retry>Retry saved materials</button></div>';
-    if(!model&&loading)return '<p class="game-material-status study-load-status" role="status">Loading saved notes and test tools…</p>';
+    if(!model&&loading)return '<p class="game-material-status study-load-status" role="status">Loading saved materials…</p>';
     if(partial)return '<div class="game-material-status study-load-status" role="status"><p>Some saved materials could not load. Available practice still works.</p><button type="button" data-study-retry>Retry saved materials</button></div>';
     return '';
   }
@@ -145,7 +145,7 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
       priorityHtml({loading}) + sourceHtml() +
       '<section class="study-game-section" aria-labelledby="study-game-section-title"><div class="study-section-heading"><span>PRACTICE</span><h2 id="study-game-section-title">Choose a game</h2></div>'+gameGrid+'</section>' +
       dailyHtml({complete}) + secondaryHtml() + statusHtml({loading,error}) +
-      '<p class="game-privacy-note">Practice uses reviewed school skills first. STAR-style items are original Grade 2 practice; private student answers and grades are not used.</p>';
+      '<p class="game-privacy-note">Practice uses reviewed school skills first. STAR-style items are original Grade 2 practice; private student answers and grades are not used. They are not copied STAR test items.</p>';
   }
 
   // Backward-compatible aggregate retained for existing callers/tests.
