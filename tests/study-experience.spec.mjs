@@ -23,19 +23,31 @@ async function placeValueGame(page){
     ]);
     const engine=window.ABVMStudyGames,sourceKey=engine.sourceKeyFromEnvelope(envelope.pack,envelope);
     const questions=engine.buildCatalog(envelope.pack,{sourceKey}).questions
-      .filter(q=>q.subject==='Math'&&q.skill==='place-value'&&q.richContent?.kind==='place-value').slice(0,5);
+      .filter(q=>q.subject==='Math'&&q.tier==='star-fallback'&&q.skill==='place-value'&&q.richContent?.kind==='place-value').slice(0,5);
     return {envelope,schoolwork,questions};
   });
   expect(source.questions).toHaveLength(5);
-  // Reuse the real original-practice questions, including their validated blank
-  // charts, in an isolated saved bank. Saved items lead the round before fallback.
+  // This is an explicit QA-only undated schoolwork fixture, built from checked
+  // original practice. Copies have distinct fixture IDs and declared provenance;
+  // the canonical STAR questions and all educational content remain unchanged.
+  const originalQuestions=structuredClone(source.questions);
+  const sourceRef='qa-original-place-value-practice';
+  const fixtureQuestions=source.questions.map(question=>({...question,
+    id:'qa-saved-'+question.id,tier:'material',
+    provenance:[{sourceRef,capturedAt:'2026-10-05'}],
+    originalPractice:{questionId:question.id,tier:question.tier,provenance:question.provenance},
+  }));
+  const content=({id,tier,provenance,originalPractice,...educationalContent})=>educationalContent;
+  expect(fixtureQuestions.map(content)).toEqual(originalQuestions.map(content));
+  expect(source.questions).toEqual(originalQuestions);
+  expect(source.questions.every(question=>question.tier==='star-fallback')).toBe(true);
   for(const key of ['contentPipeline','recentReviewPipeline']){
     source.envelope.pack[key]={...source.envelope.pack[key],
       skills:source.envelope.pack[key].skills.filter(row=>row.subject!=='Math'),
       questions:source.envelope.pack[key].questions.filter(row=>row.subject!=='Math')};
   }
-  const lesson={id:'public-place-value-practice',title:'Original place-value practice',subject:'Math',
-    sources:[],skills:['place-value'],notes:[],studiedOn:null,dateStatus:'undated',questions:source.questions};
+  const lesson={id:'qa-place-value-schoolwork',title:'QA fixture: original place-value practice',subject:'Math',
+    sources:[sourceRef],skills:['place-value'],notes:[],studiedOn:null,dateStatus:'undated',questions:fixtureQuestions};
   await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({json:source.envelope}));
   await page.route('**/data/study-archive.json*',route=>route.fulfill({json:{notes:[],vocabulary:[],questions:[]}}));
   await page.route('**/data/schoolwork.json*',route=>route.fulfill({json:{...source.schoolwork,lessons:[lesson]}}));

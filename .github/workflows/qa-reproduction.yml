@@ -12,6 +12,7 @@ on:
       - 'pages/sw.js'
       - 'tests/study-room*'
       - 'tests/study-experience.test.mjs'
+      - 'tests/study-experience.spec.mjs'
       - 'tests/study-materials.test.mjs'
       - 'tests/study-games*.spec.mjs'
       - 'tests/app.spec.mjs'
