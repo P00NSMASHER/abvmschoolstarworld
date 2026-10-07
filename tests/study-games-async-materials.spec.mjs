@@ -17,7 +17,6 @@ async function openFixture(page){
   await page.route('**/data/study-archive.json*',route=>route.fulfill({json:{notes:[],vocabulary:[],questions:[]}}));
   await page.goto(APP+'/#games');
   await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready',{timeout:10_000});
-  await page.locator('select[data-study-source]').selectOption('weekly');
   await page.evaluate(()=>{
     localStorage.clear();
     return new Promise((resolve,reject)=>{
@@ -141,7 +140,7 @@ async function waitForPendingReward(page,hold,catalog){
   await expect.poll(()=>hold.evaluate(fixture=>fixture.snapshot().phase)).toBe('held');
   const snapshot=await hold.evaluate(fixture=>fixture.snapshot());
   expect(snapshot.calls).toHaveLength(1);
-  expect(snapshot.calls[0]).toMatchObject({sourcePack:catalog.sourceKey,mode:'quick',completed:true,comebackSucceeded:false});
+  expect(snapshot.calls[0]).toMatchObject({sourcePack:catalog.sourceKey,mode:'mix',completed:true,comebackSucceeded:false});
   return snapshot.calls[0];
 }
 
@@ -204,8 +203,8 @@ test('Math skips an earlier Faith Comeback and strict test practice leaves all q
   // Include eligible due/counter rows under the actual strict-test source key.
   await page.evaluate(({key,rows})=>localStorage.setItem(key,JSON.stringify(rows)),{key:QUEUE,rows:seeded.strictQueue});
   await expect(page.locator('[data-study-tests] time')).toHaveAttribute('datetime','2026-10-07');
-  await page.locator('[data-test]').click();
-  await expect(page.locator('.game-topbar > div > span')).toHaveText('Test practice');
+  await page.locator('[data-test-single]').click();
+  await expect(page.locator('.game-topbar > div > span')).toHaveText('Math test practice');
   await expect(page.locator('.game-topbar > div > strong')).toHaveText('1 of 8');
   await expect(page.locator('.game-question-meta > span')).toHaveText('Math');
   expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),QUEUE)).toEqual(seeded.strictQueue);
@@ -214,7 +213,7 @@ test('Math skips an earlier Faith Comeback and strict test practice leaves all q
   for(const index of wrongs.slice(0,2))await page.locator('[data-game-answer]').nth(index).click();
   await expect(page.locator('[data-game-next]')).toBeVisible();
   await page.locator('[data-game-next]').click();
-  await expect(page.locator('.game-topbar > div > span')).toHaveText('Test practice');
+  await expect(page.locator('.game-topbar > div > span')).toHaveText('Math test practice');
   await expect(page.locator('.game-topbar > div > strong')).toHaveText('2 of 8');
   expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),QUEUE)).toEqual(seeded.strictQueue);
 });
@@ -226,7 +225,7 @@ for(const outcome of ['success','failure']){
     const fixture=await openFixture(page);
     const hold=await holdReward(page,{stage:outcome==='success'?'balance':'commit',fail:outcome==='failure'});
     try{
-      await page.locator('.study-game-grid [data-game-start="quick"]').click();
+      await page.locator('.study-game-grid [data-game-start="mix"]').click();
       const first=await visibleQuestion(page,fixture.catalog.questions);
       await fixture.refresh();
       expect((await visibleQuestion(page,fixture.catalog.questions)).id).toBe(first.id);
@@ -239,7 +238,7 @@ for(const outcome of ['success','failure']){
       const result=await hold.evaluate(fixture=>fixture.snapshot());
       await expect(page.locator('.study-star-earned')).not.toContainText('Saving on this device');
       await expect(page.locator('.game-finish h2')).toHaveText('Your score');
-      await expect(page.locator('.game-finish [data-game-start="quick"]')).toBeEnabled();
+      await expect(page.locator('.game-finish [data-game-start="mix"]')).toBeEnabled();
       await expect(page.locator('.game-finish [data-game-home]')).toBeEnabled();
       const ledger=await page.evaluate(()=>window.ABVMStudyGames.loadStudyStarLedger());
       if(outcome==='success'){
@@ -300,7 +299,7 @@ for(const outcome of ['success','failure']){
 
 test('delayed reward success and failure cannot repaint Today or Family after navigation',async({browser})=>{
   test.setTimeout(60_000);
-  for(const {destination,fail} of [{destination:'Today',fail:false},{destination:'Family',fail:true}]){
+  for(const {destination,fail} of [{destination:'Today',fail:false},{destination:'Progress',fail:true}]){
     await test.step(destination,async()=>{
       const context=await browser.newContext({serviceWorkers:'block',baseURL:APP});
       const page=await context.newPage();
@@ -308,7 +307,7 @@ test('delayed reward success and failure cannot repaint Today or Family after na
       try{
         const fixture=await openFixture(page);
         hold=await holdReward(page,{stage:fail?'commit':'balance',fail});
-        await page.locator('.study-game-grid [data-game-start="quick"]').click();
+        await page.locator('.study-game-grid [data-game-start="mix"]').click();
         await fixture.refresh();
         await finishPerfectRound(page,fixture.catalog);
         await waitForPendingReward(page,hold,fixture.catalog);
@@ -323,7 +322,7 @@ test('delayed reward success and failure cannot repaint Today or Family after na
         await expect(screen).toBeVisible();
         await expect(page.locator('.games-screen,.game-finish,.study-star-earned')).toHaveCount(0);
         await expect(page.getByRole('button',{name:destination,exact:true})).toHaveAttribute('aria-current','page');
-        await expect(page).toHaveURL(new RegExp('#'+destination.toLowerCase()+'$'));
+        await expect(page).toHaveURL(new RegExp('#'+(destination==='Progress'?'family':destination.toLowerCase())+'$'));
         await before.dispose();
       }finally{
         if(hold){await hold.evaluate(fixture=>fixture.release()).catch(()=>{});await hold.dispose()}

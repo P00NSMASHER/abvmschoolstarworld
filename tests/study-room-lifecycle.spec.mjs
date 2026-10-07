@@ -18,7 +18,6 @@ async function openSpeechRound(page) {
   });
   await page.goto('/#study');
   await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state', 'ready', { timeout: 15000 });
-  await page.locator('[data-study-source]').selectOption('star');
   await page.locator('[data-game-start="math"]').click();
   await expect(page.getByRole('button', { name: 'Read to me', exact: true })).toBeVisible();
 }
@@ -45,7 +44,7 @@ test('leaving Study disposes the active reading without recording an answer', as
   const before = await page.evaluate(() => localStorage.getItem('abvm-study-learning:v2'));
   await page.getByRole('button', { name: 'Read to me', exact: true }).click();
   const beforeLeave = await page.evaluate(() => window.__roomSpeech.cancelled);
-  await page.getByRole('button', { name: 'Family', exact: true }).click();
+  await page.getByRole('button', { name: 'Progress', exact: true }).click();
   await expect(page.locator('.family-screen')).toBeVisible();
   await expect.poll(() => page.evaluate(() => window.__roomSpeech.cancelled)).toBe(beforeLeave + 1);
   expect(await page.evaluate(() => localStorage.getItem('abvm-study-learning:v2'))).toBe(before);

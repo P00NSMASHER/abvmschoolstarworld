@@ -5,7 +5,7 @@ test.beforeEach(async({page})=>{
   await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
 });
 
-test("subject-constrained selection never pads current material with fallback questions",async({page})=>{
+test("subject practice exhausts current material before original fallback",async({page})=>{
   const result=await page.evaluate(()=>{
     const engine=window.ABVMStudyGames;
     const catalog={questions:[
@@ -17,8 +17,9 @@ test("subject-constrained selection never pads current material with fallback qu
     return engine.selectQuestions(catalog,{subjects:["Math"],count:4,seed:"material-only",skillStats:{}})
       .map(q=>({id:q.id,tier:q.tier}));
   });
-  expect(result).toHaveLength(2);
-  expect(result.every(q=>q.tier==="material")).toBe(true);
+  expect(result).toHaveLength(4);
+  expect(result.slice(0,2).every(q=>q.tier==="material")).toBe(true);
+  expect(result.slice(2).every(q=>q.tier==="star-fallback")).toBe(true);
 });
 
 test("a constrained academic mode with no current or review material uses STAR-style fallback",async({page})=>{
@@ -35,7 +36,7 @@ test("a constrained academic mode with no current or review material uses STAR-s
   expect(result.every(q=>q.tier==="star-fallback")).toBe(true);
 });
 
-test("Quick Mix remains allowed to use fallback after exhausting current material",async({page})=>{
+test("Mix remains allowed to use fallback after exhausting current material",async({page})=>{
   const result=await page.evaluate(()=>{
     const engine=window.ABVMStudyGames;
     const catalog={questions:[

@@ -5,7 +5,7 @@ test.beforeEach(async({page})=>{
   await expect(page.locator('.study-game-grid')).toBeVisible({timeout:10_000});
 });
 
-test('subject mode falls back to recent verified review only when current subject material is absent',async({page})=>{
+test('subject mode orders current material before recent verified review',async({page})=>{
   const result=await page.evaluate(()=>{
     const e=window.ABVMStudyGames;
     const base=q=>({
@@ -28,7 +28,7 @@ test('subject mode falls back to recent verified review only when current subjec
       math:e.selectQuestions(catalog,{subjects:['Math'],count:5,seed:'m'}).map(q=>q.tier)
     };
   });
-  expect(result.reading).toEqual(['material']);
+  expect(result.reading).toEqual(['material','recent-review']);
   expect(result.math).toEqual(['recent-review']);
 });
 
@@ -36,7 +36,7 @@ test('recent review question is visibly labeled and source identity includes rev
   const result=await page.evaluate(()=>{
     const v=window.ABVMStudyGameView,e=window.ABVMStudyGames;
     const q={subject:'Math',skill:'old-math',tier:'recent-review',questionType:'direct',prompt:'Which answer is correct for this recent review question?',choices:['1','2','3'],answer:'1',explanation:'One is correct.',hint:'Use the skill.',choiceDiagnostics:{'2':{feedback:'Try again.'},'3':{feedback:'Try again.'}}};
-    const html=v.play({g:{supportMode:false,comebackMode:false,index:0,questions:[q],selectedIndex:null,answered:false,retry:0,lastWrong:null,score:0,streak:0,bestStreak:0},mode:{title:'Math Dash'},q,teach:null,retryInstruction:'Try.',labels:{direct:'Practice'}});
+    const html=v.play({g:{supportMode:false,comebackMode:false,index:0,questions:[q],selectedIndex:null,answered:false,retry:0,lastWrong:null,score:0,streak:0,bestStreak:0},mode:{title:'Math'},q,teach:null,retryInstruction:'Try.',labels:{direct:'Practice'}});
     const key=e.sourceKeyFromEnvelope({sourceHash:'s',contentPipeline:{bankFingerprint:'current-bank'},recentReviewPipeline:{bankFingerprint:'review-bank'}},{sourcePages:[]});
     return {html,key};
   });

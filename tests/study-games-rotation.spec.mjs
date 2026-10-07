@@ -463,7 +463,7 @@ test('STAR fallback metadata includes direct, transfer, and reasoning practice',
 });
 
 
-test('Quick Mix keeps a fallback-only subject represented without using fallback for covered subjects', async ({ page }) => {
+test('Mix keeps a fallback-only subject represented without using fallback for covered subjects', async ({ page }) => {
   const result = await page.evaluate(() => {
     const engine = window.ABVMStudyGames;
     const material = [

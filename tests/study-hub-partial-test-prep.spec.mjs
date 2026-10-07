@@ -15,13 +15,16 @@ test("one missing same-day bank does not hide supported targeted practice",async
   await page.goto("http://127.0.0.1:4173/#study");
   await expect(page.locator('.games-screen[data-study-state="ready"]')).toBeVisible({timeout:10_000});
   await expect(page.locator("[data-study-tests]")).toContainText("Grammar (subject & predicate)");
-  await expect(page.locator("[data-study-tests]")).toContainText("Science test");
-  await expect(page.locator("[data-study-tests]")).toContainText(/teacher notes/i);
-  await expect(page.getByRole("button",{name:/Practice Grammar \(subject & predicate\)/i})).toBeVisible();
-  await expect(page.getByRole("button",{name:/Practice Science/i})).toHaveCount(0);
-  await expect(page.getByRole("button",{name:/Start test practice/i})).toHaveCount(0);
-
-  await page.getByRole("button",{name:/Practice Grammar \(subject & predicate\)/i}).click();
+  await expect(page.locator('[data-test-select] option')).toHaveText([
+    /Grammar \(subject & predicate\)/,/Science test/
+  ]);
+  await page.locator('[data-test-select]').selectOption('1');
+  await expect(page.locator('[data-study-tests] h3')).toHaveText('Science test');
+  await expect(page.locator('[data-test-missing]')).toContainText('No verified questions match this test yet');
+  await expect(page.locator('[data-test-single]')).toBeDisabled();
+  await page.locator('[data-test-select]').selectOption('0');
+  await expect(page.locator('[data-test-single]')).toBeEnabled();
+  await page.locator('[data-test-single]').click();
   await expect(page.locator(".game-question-card")).toBeVisible();
   await expect(page.locator(".game-topbar")).toContainText("Grammar (subject & predicate)");
   const allowed=await page.evaluate(async()=>{

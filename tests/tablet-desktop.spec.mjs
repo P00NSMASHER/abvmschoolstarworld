@@ -1,6 +1,7 @@
 import {test,expect} from "@playwright/test";
 
 async function openDestination(page,label){
+  if(label==="Calendar")await page.locator('.bottom-nav [data-tab="week"]').click();
   if(label==="Study Games"){
     await page.goto(new URL("#games",page.url()).href);
   }else await page.getByRole("button",{name:label,exact:true}).click();
@@ -12,21 +13,21 @@ for(const viewport of [
   {name:"iPad portrait",width:768,height:1024},
   {name:"large tablet",width:820,height:1180},
 ]){
-  test(`${viewport.name} keeps all five tabs and content usable`,async({browser})=>{
+  test(`${viewport.name} keeps all four destinations and content usable`,async({browser})=>{
     const context=await browser.newContext({viewport:{width:viewport.width,height:viewport.height},hasTouch:true});
     const page=await context.newPage();
     await page.goto("http://127.0.0.1:4173/#today");
     await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
-    await expect(page.locator(".bottom-nav button")).toHaveCount(5);
+    await expect(page.locator(".bottom-nav button")).toHaveCount(4);
     const hero=page.locator(".hero-card");
     await expect(hero).toBeVisible();
     const heroBox=await hero.boundingBox();
-    const brandMark=await hero.locator(".hero-brand-mark").boundingBox();
+    const schoolPhoto=await hero.locator(".hero-photo").boundingBox();
     const titleSize=await hero.locator(".hero-copy h2").evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
     expect(heroBox.height).toBeGreaterThanOrEqual(240);
-    expect(brandMark.width).toBeGreaterThanOrEqual(96);
+    expect(schoolPhoto.width).toBeGreaterThan(100);
     expect(titleSize).toBeGreaterThanOrEqual(30);
-    for(const tab of ["Calendar","Study","Study Games","Family"]){
+    for(const tab of ["Calendar","Study","Study Games","Progress"]){
       await openDestination(page,tab);
       const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
       expect(overflow,viewport.name+" "+tab+" overflow").toBeFalsy();
@@ -61,9 +62,9 @@ test("desktop keeps the centered app, navigation, and long information pages rea
   const shell=await page.locator(".phone-app").evaluate(el=>({width:el.getBoundingClientRect().width,left:el.getBoundingClientRect().left}));
   expect(shell.width).toBeGreaterThan(320);
   expect(shell.width).toBeLessThanOrEqual(1440);
-  await expect(page.locator(".bottom-nav button")).toHaveCount(5);
+  await expect(page.locator(".bottom-nav button")).toHaveCount(4);
   await openDestination(page,"Study Games");
-  await page.getByRole("button",{name:"Family",exact:true}).click();
+  await page.getByRole("button",{name:"Progress",exact:true}).click();
   await expect(page.locator('[aria-labelledby="family-current-notices"]')).toBeVisible();
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
   expect(overflow).toBeFalsy();

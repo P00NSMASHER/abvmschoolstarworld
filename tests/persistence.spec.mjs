@@ -18,7 +18,7 @@ test("Today checklist survives reload and can be restored",async({page})=>{
 test("Study Games learning evidence persists across reload",async({page})=>{
   await page.goto("/#games");
   await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
-  await page.getByRole("button",{name:/Quick Mix/i}).click();
+  await page.getByRole("button",{name:/Mix/i}).click();
   await expect(page.locator(".game-answer").first()).toBeVisible();
   let before=null;
   for(let attempt=0;attempt<3&&!before;attempt++){
@@ -48,7 +48,7 @@ test("storage failures fail soft instead of breaking the app",async({browser})=>
   await expect(page.locator(".screen")).toBeVisible();
   await page.getByRole("button",{name:"Study",exact:true}).click();
   await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
-  await expect(page.locator(".study-game-grid > .study-game-tile")).toHaveCount(4);
+  await expect(page.locator(".study-game-grid > .study-game-tile")).toHaveCount(5);
   await context.close();
 });
 

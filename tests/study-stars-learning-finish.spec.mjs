@@ -26,7 +26,7 @@ async function resolveRenderedQuestion(page){
 }
 
 async function answerPerfectRound(page){
-  await page.getByRole('button',{name:/Quick Mix/i}).click();
+  await page.getByRole('button',{name:/Mix/i}).click();
   for(let i=0;i<8;i++){
     const q=await resolveRenderedQuestion(page);
     expect(q.answerIndex).toBeGreaterThanOrEqual(0);
@@ -73,7 +73,7 @@ test('learning-first summary keeps strongest valid evidence for each skill regar
 
 test('learning-first finish puts learning evidence before secondary rewards',async({page})=>{
   const html=await page.evaluate(()=>window.ABVMStudyGameView.finish({
-    mode:{id:'quick',title:'Quick Mix'},
+    mode:{id:'quick',title:'Mix'},
     state:{questions:Array(8).fill({}),score:6,results:Array.from({length:8},(_,i)=>({counted:true,firstCorrect:i<6,resolvedCorrect:true,correctedOnRetry:i>=6,hintUsed:false,subject:'Math'}))},
     record:{best:7,plays:1},
     summary:{strong:3,remembered:1,practice:2,total:6},
@@ -91,7 +91,7 @@ test('learning-first finish puts learning evidence before secondary rewards',asy
 
 test('secondary reward summary stays visually separated and readable',async({page})=>{
   const html=await page.evaluate(()=>window.ABVMStudyGameView.finish({
-    mode:{id:'quick',title:'Quick Mix'},
+    mode:{id:'quick',title:'Mix'},
     state:{questions:Array(8).fill({}),score:8},
     record:{best:8},
     summary:{strong:4,remembered:0,practice:0,total:4},
@@ -108,7 +108,7 @@ test('secondary reward summary stays visually separated and readable',async({pag
 
 test('learning-first reward summary cannot display a second currency',async({page})=>{
   const html=await page.evaluate(()=>window.ABVMStudyGameView.finish({
-    mode:{id:'quick',title:'Quick Mix'},
+    mode:{id:'quick',title:'Mix'},
     state:{questions:Array(8).fill({}),score:6,results:Array.from({length:8},(_,i)=>({counted:true,firstCorrect:i<6,resolvedCorrect:true,correctedOnRetry:i>=6,hintUsed:false,subject:'Math'}))},
     record:{best:7,plays:1},
     summary:{strong:3,remembered:1,practice:2,total:6},
@@ -119,7 +119,7 @@ test('learning-first reward summary cannot display a second currency',async({pag
 });
 
 test('question retry and hint evidence resets before the next question',async({page})=>{
-  await page.getByRole('button',{name:/Quick Mix/i}).click();
+  await page.getByRole('button',{name:/Mix/i}).click();
   const first=await resolveRenderedQuestion(page);
   const wrong=(first.answerIndex+1)%3;
   await page.locator('.game-question-card [data-game-answer]').nth(wrong).click();

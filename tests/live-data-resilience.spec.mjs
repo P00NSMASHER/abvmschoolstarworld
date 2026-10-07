@@ -7,9 +7,9 @@ test("school date follows Eastern time even when the device is elsewhere",async(
   await page.clock.setFixedTime(new Date("2026-09-29T05:30:00Z"));
   await page.goto("http://127.0.0.1:4173/#today");
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
-  await expect(page.getByRole("heading",{name:"Tuesday, September 29"})).toBeVisible();
-  await expect(page.locator(".today-date-heading")).toHaveText("Tuesday, September 29");
-  await expect(page.locator(".today-date-heading")).not.toContainText("September 28");
+  await expect(page.locator(".hero-copy .eyebrow")).toBeVisible();
+  await expect(page.locator(".hero-copy .eyebrow")).toHaveText("Tuesday, September 29");
+  await expect(page.locator(".hero-copy .eyebrow")).not.toContainText("September 28");
   await context.close();
 });
 
@@ -198,7 +198,7 @@ test("manual refresh explains when no newer verified data exists",async({browser
 });
 
 
-test("Family counts distinct test days instead of individual tests",async({browser})=>{
+test("Week marks distinct test days instead of individual tests",async({browser})=>{
   const context=await browser.newContext({serviceWorkers:"block"});
   const page=await context.newPage();
   await page.clock.setFixedTime(new Date("2026-09-29T13:00:00Z"));
@@ -211,9 +211,9 @@ test("Family counts distinct test days instead of individual tests",async({brows
   ];
   await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:fixture}));
   await page.goto("http://127.0.0.1:4173/#family");
-  const stats=page.locator(".family-stats div").first();
-  await expect(stats).toContainText("2");
-  await expect(stats).toContainText("test days");
+  await page.goto("http://127.0.0.1:4173/#week");
+  await expect(page.locator("[data-day]")).toHaveCount(5);
+  await expect(page.locator("[data-day] .has-test")).toHaveCount(2);
   await context.close();
 });
 
@@ -313,7 +313,7 @@ test("Study derives spelling and STAR test dates from the current school calenda
   await expect(spelling.locator("time")).toHaveAttribute("datetime","2026-10-02");
   await expect(spelling.locator("time")).toContainText("Oct 2");
   await expect(spelling).toContainText("Spelling (short a / long a) / Handwriting");
-  await expect(spelling).not.toContainText("STAR Testing window");
+  await expect(spelling.locator("h3")).not.toContainText("STAR Testing window");
   await context.close();
 
   const starContext=await browser.newContext({serviceWorkers:"block"});
@@ -322,7 +322,7 @@ test("Study derives spelling and STAR test dates from the current school calenda
   await starPage.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:fixture}));
   await starPage.goto("http://127.0.0.1:4173/#study");
   const star=starPage.locator("[data-study-tests]");
-  await expect(star).toContainText("Next test");
+  await expect(star).toContainText("COMING UP");
   await expect(star.locator("time")).toHaveAttribute("datetime","2027-01-12");
   await expect(star.locator("time")).toContainText("Jan 12");
   await expect(star).toContainText("STAR Testing window");
@@ -339,7 +339,7 @@ test("Today labels closed events as Closed instead of School",async({browser})=>
   await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:source}));
   await page.goto("http://127.0.0.1:4173/#today");
   const closedRow=page.locator(".timeline-row").filter({hasText:"No School — Columbus Day"});
-  await expect(closedRow.locator("time")).toHaveText("Closed");
+  await expect(closedRow.locator(".timeline-pin")).toHaveClass(/closed/);
   await context.close();
 });
 
@@ -355,12 +355,12 @@ test("Study labels a distant test with its actual date and keeps it out of weekl
   await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:fixture}));
   await page.goto("http://127.0.0.1:4173/#study");
   const next=page.locator("[data-study-tests]");
-  await expect(next).toContainText("Next test");
+  await expect(next).toContainText("COMING UP");
   await expect(next.locator("time")).toHaveAttribute("datetime","2027-01-12");
   await expect(next.locator("time")).toContainText("Jan 12");
   await expect(next).toContainText("STAR Testing window");
   await expect(next).not.toContainText(/this week/i);
-  await expect(page.locator("[data-study-source]")).toHaveValue("weekly");
+  await expect(page.locator("[data-study-source]")).toHaveCount(0);
   const notes=page.locator("[data-study-notes]");
   await notes.locator(":scope > summary").click();
   await expect(notes.locator(".game-material-lesson").first()).toBeVisible();

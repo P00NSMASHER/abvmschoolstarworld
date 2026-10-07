@@ -12,11 +12,11 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('Study Games keeps the approved menu, play, and finish interaction contract', async ({ page }) => {
-  await expect(page.getByRole('heading', { name: 'Study one thing at a time' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Study' })).toBeVisible();
   for (const label of ['Reading / ELA', 'Spelling / Handwriting', 'Math', 'Religion', 'Mix']) {
     await expect(page.getByRole('button', { name: new RegExp(label, 'i') })).toBeVisible();
   }
-  await expect(page.getByText(/Practice uses current material first/)).toBeVisible();
+  await expect(page.locator('[data-study-source]')).toHaveCount(0);
 
   await page.getByRole('button', { name: /^Mix/i }).click();
   await expect(page.locator('.game-topbar')).toBeVisible();
@@ -44,8 +44,8 @@ test('Study Games keeps the approved menu, play, and finish interaction contract
 
   await expect(page.locator('.game-finish')).toBeVisible();
   await expect(page.locator('.game-finish-stars')).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Play again' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'All study games' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Practice again' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Back to study' })).toBeVisible();
 });
 
 
@@ -67,13 +67,17 @@ test('Study home is subject-first with selectable Test Prep', async ({ page }, t
       games:box('.study-game-section'),
     };
   });
-  expect(boxes.games.bottom).toBeLessThanOrEqual(boxes.priority.top+4);
+  expect(boxes.priority.bottom).toBeLessThanOrEqual(boxes.games.top+4);
 
   const tiles=page.locator('.study-game-tile');
   await expect(tiles).toHaveCount(5);
   const heights=await tiles.evaluateAll(nodes=>nodes.map(node=>Math.round(node.getBoundingClientRect().height)));
-  expect(Math.max(...heights)).toBeLessThanOrEqual(120);
+  expect(Math.max(...heights)).toBeLessThanOrEqual(200);
 
+  const firstSubject=await tiles.first().boundingBox();
+  const navigation=await page.locator('.bottom-nav').boundingBox();
+  const viewport=page.viewportSize();
+  expect(firstSubject.y+firstSubject.height,'one complete subject choice is visible immediately').toBeLessThanOrEqual(viewport.width<744?navigation.y:viewport.height);
   const overflow=await page.locator('.games-screen').evaluate(el=>el.scrollWidth>el.clientWidth+1);
   expect(overflow).toBeFalsy();
 

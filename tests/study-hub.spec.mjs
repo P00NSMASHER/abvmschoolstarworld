@@ -37,47 +37,34 @@ test('weekly test prep covers same-day subjects in the existing player and compl
   });
   const dedupe=rows=>[...new Map(rows.map(q=>[q.prompt+'|'+q.answer,q])).values()];
   const allowed={Math:dedupe([...currentMath,...archivedMath]),Religion:religion};
-  const quota=Math.min(4,allowed.Math.length,allowed.Religion.length),total=quota*2;
-  expect(quota).toBeGreaterThanOrEqual(3);
   const prep=page.locator('[data-study-tests]');
   await expect(prep.locator('time')).toHaveAttribute('datetime','2026-10-07');
-  await expect(prep.locator('time')).toContainText(/Oct(?:ober)?\.? 7/);
-  await expect(prep).toContainText('Math test');
-  await expect(prep).toContainText('Religion Chapter 2 test');
-  await page.locator('[data-test]').click();
-  const subjects=[],seen=[];
-  for(let question=0;question<total;question++){
-    await expect(page.locator('.game-question-card')).toBeVisible();
-    await expect(page.locator('.game-topbar > div > span')).toHaveText('Test practice');
-    await expect(page.locator('.game-topbar')).toContainText(`${question+1} of ${total}`);
-    const subject=await page.locator('.game-question-meta > span').innerText();subjects.push(subject);
-    const prompt=await page.locator('.game-question-card > h2').innerText();
-    const choices=await page.locator('[data-game-answer] strong').allTextContents();
-    const matches=(allowed[subject]||[]).filter(q=>q.prompt===prompt&&q.choices.length===choices.length&&q.choices.every(choice=>choices.includes(choice)));
-    expect(matches,'strict prep must use the dated Math archive or exact Religion Chapter 2 bank').toHaveLength(1);
-    seen.push(subject+'|'+prompt);
-    const choiceCount=await page.locator('[data-game-answer]').count();
-    for(let attempt=0;attempt<choiceCount;attempt++){
-      const available=page.locator('[data-game-answer]:not(:disabled)');
-      const countBefore=await available.count();
-      expect(countBefore).toBeGreaterThan(0);
-      const answerIndex=await available.first().getAttribute('data-game-answer');
-      await available.first().click();
-      if(await page.locator('[data-game-next]').count())break;
-      await expect(page.locator(`[data-game-answer="${answerIndex}"]`)).toBeDisabled();
-      await expect(available).toHaveCount(countBefore-1);
-      await expect(page.locator('.game-feedback')).toBeVisible();
+  await expect(page.locator('[data-test-select] option')).toContainText(['Math test','Religion Chapter 2 test','Math test']);
+  for(const [index,subject] of [[0,'Math'],[1,'Religion']]){
+    await page.locator('[data-test-select]').selectOption(String(index));
+    await expect(prep.locator('h3')).toContainText(subject);await page.locator('[data-test-single]').click();
+    const seen=[];
+    const total=Math.min(8,allowed[subject].length);
+    for(let question=0;question<total;question++){
+      await expect(page.locator('.game-question-card')).toBeVisible();
+      await expect(page.locator('.game-topbar')).toContainText(`${question+1} of ${total}`);
+      await expect(page.locator('.game-question-meta > span')).toHaveText(subject);
+      const prompt=await page.locator('.game-question-card > h2').innerText();
+      const choices=await page.locator('[data-game-answer] strong').allTextContents();
+      const matches=allowed[subject].filter(q=>q.prompt===prompt&&q.choices.length===choices.length&&q.choices.every(choice=>choices.includes(choice)));
+      expect(matches,'test practice must use reviewed Math or exact Religion Chapter 2, never unrelated fallback').toHaveLength(1);seen.push(prompt);
+      const count=await page.locator('[data-game-answer]').count();
+      for(let attempt=0;attempt<count;attempt++){
+        const available=page.locator('[data-game-answer]:not(:disabled)'),before=await available.count();expect(before).toBeGreaterThan(0);
+        const choice=await available.first().getAttribute('data-game-answer');await available.first().click();
+        if(await page.locator('[data-game-next]').count())break;
+        await expect(page.locator(`[data-game-answer="${choice}"]`)).toBeDisabled();await expect(available).toHaveCount(before-1);await expect(page.locator('.game-feedback')).toBeVisible();
+      }
+      await expect(page.locator('[data-game-next]')).toBeVisible();await page.locator('[data-game-next]').click();
     }
-    await expect(page.locator('[data-game-next]')).toBeVisible();
-    await page.locator('[data-game-next]').click();
+    await expect(page.locator('.game-finish')).toBeVisible();await expect(page.locator('[data-game-answer],[data-game-hint],[data-game-next],[data-game-read]')).toHaveCount(0);
+    expect(new Set(seen).size).toBe(total);await page.locator('[data-game-home]').last().click();
   }
-  await expect(page.locator('.game-finish')).toBeVisible();
-  await expect(page.locator('.game-question-card:not(.study-star-goal)')).toHaveCount(0);
-  await expect(page.locator('[data-game-answer],[data-game-hint],[data-game-next],[data-game-read]')).toHaveCount(0);
-  expect(subjects.filter(subject=>subject==='Math')).toHaveLength(quota);
-  expect(subjects.filter(subject=>subject==='Religion')).toHaveLength(quota);
-  expect(new Set(seen).size).toBe(total);
-  await page.locator('[data-game-home]').last().click();
   await page.locator('[data-study-test-options] > summary').click();
   await page.locator('[data-complete-test]').click();
   await expect(prep.locator('time')).toHaveAttribute('datetime','2026-10-09');
@@ -87,139 +74,42 @@ test('weekly test prep covers same-day subjects in the existing player and compl
   await expect(prep.locator('time')).toHaveAttribute('datetime','2026-10-09');
 });
 
-test('past tests roll forward; saved, STAR and mixed practice use Games without an uploader',async({page},testInfo)=>{
-  await mount(page,'2026-10-08',testInfo);
-  const prep=page.locator('[data-study-tests]');
-  await expect(prep.locator('time')).toHaveAttribute('datetime','2026-10-09');
-  await expect(prep).not.toContainText('2026-10-07');
-  await page.locator('[data-study-source]').selectOption('saved');
-  await page.locator('[data-study-notes] > summary').click();
-  await expect(page.locator('[data-study-notes]')).toContainText('Undated schoolwork');
-  await page.locator('[data-study-source]').selectOption('star');
-  for(const [mode,subject] of [['math','Math'],['words','Reading / ELA']]){
-    await page.locator(`[data-game-start="${mode}"]`).click();
-    await expect(page.locator('.game-question-meta > span')).toHaveText(subject);
-    await expect(page.locator('.game-question-meta')).toContainText('STAR-style practice');
-    await page.locator('[data-game-home]').click();
-  }
-  await page.locator('[data-study-source]').selectOption('mix');
-  await page.locator('[data-study-pick="weekly"]').uncheck();
-  await page.locator('[data-study-pick="saved"]').check();
-  await page.locator('[data-study-pick="star"]').check();
-  await page.locator('[data-game-start="quick"]').click();
-  const before=await page.evaluate(()=>localStorage.getItem('abvm-study-learning:v2'));
-  await page.locator('[data-game-hint]').click();
-  await expect(page.locator('.game-hint')).toBeVisible();
-  await expect(page.locator('[data-game-next]')).toHaveCount(0);
-  expect(await page.evaluate(()=>localStorage.getItem('abvm-study-learning:v2'))).toBe(before);
-  await page.locator('[data-game-home]').click();
-  await expect(page.locator('input[type="file"]')).toHaveCount(0);
-  expect(await page.locator('.games-screen').evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true);
+test('past tests roll forward and mixed practice keeps hints separate from answers',async({page},testInfo)=>{
+  await mount(page,'2026-10-08',testInfo);const prep=page.locator('[data-study-tests]');await expect(prep.locator('time')).toHaveAttribute('datetime','2026-10-09');
+  await page.locator('[data-game-start="mix"]').click();const before=await page.evaluate(()=>localStorage.getItem('abvm-study-learning:v2'));
+  await page.locator('[data-game-hint]').click();await expect(page.locator('.game-hint')).toBeVisible();await expect(page.locator('[data-game-next]')).toHaveCount(0);
+  expect(await page.evaluate(()=>localStorage.getItem('abvm-study-learning:v2'))).toBe(before);await page.locator('[data-game-home]').click();await expect(page.locator('input[type="file"]')).toHaveCount(0);
 });
-
-test('Games sources and optional notes have usable phone and tablet layouts',async({page},testInfo)=>{
-  await page.goto('/#study');
-  const games=page.locator('.games-screen');
-  await expect(games).toHaveAttribute('data-study-state','ready');
-  await expect(page.locator('.hub-faith')).toHaveCount(0);
-  await expect(games).not.toContainText('Dated schoolwork this week');
+test('subject menu, native test selection and notes fit phone and tablet',async({page},info)=>{
+  await page.goto('/#study');await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
   for(const width of [390,820]){
-    await page.setViewportSize({width,height:900});
-    for(const source of ['weekly','saved','star','mix']){
-      await page.locator('[data-study-source]').selectOption(source);
-      await expect(page.locator('[data-study-source]')).toHaveValue(source);
-      expect(await games.evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true);
-      if(source==='mix'){
-        const rows=await page.locator('[data-study-mix] label').evaluateAll(labels=>labels.map(label=>{
-          const box=label.getBoundingClientRect(),input=label.querySelector('input').getBoundingClientRect();
-          const text=label.querySelector('span').getBoundingClientRect();
-          return {top:box.top,bottom:box.bottom,inputRight:input.right,textLeft:text.left,textTop:text.top,textBottom:text.bottom};
-        }));
-        expect(rows).toHaveLength(3);
-        for(const row of rows){
-          expect(row.textLeft).toBeGreaterThanOrEqual(row.inputRight);
-          expect(row.textTop).toBeGreaterThanOrEqual(row.top);
-          expect(row.textBottom).toBeLessThanOrEqual(row.bottom);
-        }
-      }
-      await page.screenshot({path:testInfo.outputPath(`games-${source}-${width}.png`),fullPage:true});
-    }
-    await page.locator('[data-study-source]').selectOption('star');
-    await page.locator('[data-game-start="math"]').click();
-    await expect(page.locator('.game-question-card')).toBeVisible();
-    await expect(page.locator('[data-game-answer]').first()).toBeVisible();
-    await page.screenshot({path:testInfo.outputPath(`games-question-${width}.png`),fullPage:true});
-    await page.locator('[data-game-home]').click();
+    await page.setViewportSize({width,height:900});expect(await page.locator('.games-screen').evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true);
+    const select=page.locator('[data-test-select]');await expect(select).toBeVisible();await select.focus();await expect(select).toBeFocused();
+    await page.screenshot({path:info.outputPath(`study-${width}.png`),fullPage:true});await page.locator('[data-game-start="math"]').click();
+    await expect(page.locator('.game-question-card')).toBeVisible();await expect(page.locator('[data-game-answer]').first()).toBeVisible();await page.screenshot({path:info.outputPath(`study-question-${width}.png`),fullPage:true});await page.locator('[data-game-home]').click();
   }
 });
-
-test('the source chooser changes real question banks and a selected mix includes both sources',async({page})=>{
-  test.setTimeout(60000);
-  await page.clock.setFixedTime(new Date('2026-10-05T16:00:00-04:00'));
-  const envelope=await (await page.request.get('/data/study-pack.json')).json();
-  const work=await (await page.request.get('/data/schoolwork.json')).json();
-  const archive=await (await page.request.get('/data/study-archive.json')).json();
-  const lesson=work.lessons.find(row=>row.subject==='Math'&&!row.studiedOn&&row.questions.length>=8);
-  expect(lesson).toBeTruthy();
-  // Isolate a real undated worksheet. It must be selectable as saved learning,
-  // while the current Math game truthfully uses its existing original fallback.
+test('current material is exhausted before saved learning and STAR fallback in the player',async({page})=>{
+  test.setTimeout(60000);await page.clock.setFixedTime(new Date('2026-10-05T16:00:00-04:00'));
+  const envelope=await (await page.request.get('/data/study-pack.json')).json(),work=await (await page.request.get('/data/schoolwork.json')).json();
+  const lesson=work.lessons.find(row=>row.subject==='Math'&&!row.studiedOn&&row.questions.length>=8);expect(lesson).toBeTruthy();
   const fixture=structuredClone(envelope);
-  for(const key of ['contentPipeline','recentReviewPipeline']){
-    fixture.pack[key]={...fixture.pack[key],
-      skills:(fixture.pack[key]?.skills||[]).filter(row=>row.subject!=='Math'),
-      questions:(fixture.pack[key]?.questions||[]).filter(row=>row.subject!=='Math')};
-  }
+  for(const key of ['contentPipeline','recentReviewPipeline'])fixture.pack[key]={...fixture.pack[key],skills:(fixture.pack[key]?.skills||[]).filter(row=>row.subject!=='Math'),questions:(fixture.pack[key]?.questions||[]).filter(row=>row.subject!=='Math')};
+  fixture.pack.questions=(fixture.pack.questions||[]).filter(q=>q.subject!=='Math');
   await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({json:fixture}));
-  await page.route('**/data/schoolwork.json*',route=>route.fulfill({json:{...work,lessons:[lesson]}}));
-  await page.route('**/data/study-archive.json*',route=>route.fulfill({json:{...archive,questions:[],notes:[],vocabulary:[]}}));
-  await page.goto('/#games');
-  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
-  const star=await page.evaluate(async()=>{
-    const {buildStarBank}=await import('./star-practice.mjs');
-    const envelope=await fetch('./data/study-pack-runtime.json').then(response=>response.json());
-    const engine=window.ABVMStudyGames;
-    const sourceKey=engine.sourceKeyFromEnvelope(envelope.pack,envelope);
-    return [...buildStarBank(),...engine.buildCatalog(envelope.pack,{sourceKey}).questions.filter(q=>q.tier==='star-fallback')];
-  });
-  const savedPrompts=new Set(lesson.questions.map(q=>q.prompt));
-  const starPrompts=new Set(star.map(q=>q.prompt));
+  let saved=true;await page.route('**/data/schoolwork.json*',route=>route.fulfill({json:{...work,lessons:saved?[lesson]:[]}}));await page.route('**/data/study-archive.json*',route=>route.fulfill({json:{questions:[],notes:[],vocabulary:[]}}));
+  await page.goto('/#study');await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
   await page.locator('[data-game-start="math"]').click();
-  const weeklyPrompt=await page.locator('.game-question-card > h2').innerText();
-  expect(starPrompts.has(weeklyPrompt)).toBe(true);
-  expect(savedPrompts.has(weeklyPrompt)).toBe(false);
-  await page.locator('[data-game-home]').click();
-  for(const source of ['saved','star','mix']){
-    await page.locator('[data-study-source]').selectOption(source);
-    if(source==='mix'){
-      await page.locator('[data-study-pick="weekly"]').uncheck();
-      await page.locator('[data-study-pick="saved"]').check();
-      await page.locator('[data-study-pick="star"]').check();
-    }
-    await page.locator('[data-game-start="math"]').click();
-    const seen=[];
-    for(let index=0;index<8;index++){
-      await expect(page.locator('.game-topbar')).toContainText(`${index+1} of 8`);
-      const prompt=await page.locator('.game-question-card > h2').innerText();
-      const q=[...lesson.questions,...star].find(row=>row.prompt===prompt);
-      expect(q,`presented ${source} question belongs to a selected public bank`).toBeTruthy();
-      const bank=savedPrompts.has(prompt)?'saved':starPrompts.has(prompt)?'star':'unknown';
-      if(source!=='mix')expect(bank).toBe(source);
-      seen.push(bank);
-      const choices=await page.locator('[data-game-answer] strong').allTextContents();
-      const answerIndex=choices.indexOf(q.answer);
-      expect(answerIndex).toBeGreaterThanOrEqual(0);
-      await page.locator('[data-game-answer]').nth(answerIndex).click();
-      await page.locator('[data-game-next]').click();
-    }
-    await expect(page.locator('.game-finish')).toBeVisible();
-    if(source==='mix'){
-      expect(seen.filter(bank=>bank==='saved')).toHaveLength(4);
-      expect(seen.filter(bank=>bank==='star')).toHaveLength(4);
-    }
-    await page.locator('[data-game-home]').last().click();
+  for(let i=0;i<8;i++){
+    await expect(page.locator('.game-topbar')).toContainText(`${i+1} of 8`);const prompt=await page.locator('.game-question-card > h2').innerText();
+    const q=lesson.questions.find(q=>q.prompt===prompt);expect(q,'saved worksheet is used before STAR when current material is absent').toBeTruthy();
+    const choices=await page.locator('[data-game-answer] strong').allTextContents();await page.locator('[data-game-answer]').nth(choices.indexOf(q.answer)).click();await page.locator('[data-game-next]').click();
   }
+  await expect(page.locator('.game-finish')).toBeVisible();saved=false;await page.reload();await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');await page.locator('[data-game-start="math"]').click();
+  await expect(page.locator('.game-question-meta')).toContainText('STAR-style practice');
+  const prompt=await page.locator('.game-question-card > h2').innerText();
+  expect(lesson.questions.some(q=>q.prompt===prompt)).toBe(false);
 });
-
 test('on-demand subject notes retain the verified chapter review and disclose a spelling coverage mismatch',async({page})=>{
   await page.clock.setFixedTime(new Date('2026-10-05T16:00:00-04:00'));
   const envelope=await (await page.request.get('/data/study-pack.json')).json();
@@ -254,6 +144,23 @@ test('on-demand subject notes retain the verified chapter review and disclose a 
   await expect(spelling.locator('.game-note-warning')).toContainText('Spelling (short i / long i) (2026-10-09)');
   await expect(spelling.locator('.game-note-warning')).toContainText('earlier vowel pattern');
   await expect(spelling.locator('.game-note-warning')).toContainText('do not establish test coverage');
-  await page.locator('[data-study-source]').selectOption('star');
-  await expect(page.locator('[data-religion-review],.game-note-warning')).toHaveCount(0);
+  await page.locator('[data-study-notes] > summary').click();
+  await expect(review).not.toBeVisible();
+});
+
+test('current notes and cumulative reviewed schoolwork remain separately available',async({page})=>{
+  await page.clock.setFixedTime(new Date('2026-10-05T16:00:00-04:00'));
+  const work=await (await page.request.get('/data/schoolwork.json')).json();
+  const lesson=work.lessons.find(row=>!row.studiedOn&&row.notes?.length);expect(lesson).toBeTruthy();
+  await page.route('**/data/schoolwork.json*',route=>route.fulfill({json:{...work,lessons:[lesson]}}));
+  await page.goto('/#study');await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+  await page.locator('[data-study-notes] > summary').click();
+  await expect(page.locator('[data-notes-source="weekly"]')).toHaveAttribute('aria-pressed','true');
+  const notes=page.locator('[data-study-notes-content]');await expect(notes).not.toContainText(lesson.title);
+  await page.locator('[data-notes-source="saved"]').click();await expect(page.locator('[data-notes-source="saved"]')).toHaveAttribute('aria-pressed','true');
+  await expect(notes).toContainText('Undated schoolwork');
+  const reviewed=notes.locator('.game-material-lesson').filter({hasText:lesson.title});await reviewed.locator(':scope > summary').click();
+  await expect(reviewed.locator('li')).toHaveText(lesson.notes);
+  await page.locator('[data-notes-source="weekly"]').click();await expect(notes).not.toContainText(lesson.title);
+  await expect(page.locator('input[type="file"]')).toHaveCount(0);
 });

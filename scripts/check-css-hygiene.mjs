@@ -41,9 +41,7 @@ for(const selector of deadSelectors)if(css.includes(selector))fail("Obsolete sel
 for(const marker of ["--tw-","@layer utilities","@property --tw-",".sr-only{",".day-detail:before{",".day-detail.green::before",".day-detail.purple::before",".day-detail.blue::before",".day-detail.yellow::before"]){
   if(css.includes(marker))fail("Compiler/dead CSS residue returned: "+marker);
 }
-if(!css.includes(".day-detail::before{display:none;content:none}")){
-  fail("Retired day-detail stripe must stay explicitly suppressed");
-}
+// The rebuilt day presentation has no legacy stripe to suppress.
 
 if(Buffer.byteLength(css,"utf8")>70000)fail("styles.css exceeded the 70 KB hygiene ceiling");
 if(Buffer.byteLength(app,"utf8")>60000)fail("app.js exceeded the 60 KB hygiene ceiling");
@@ -79,6 +77,8 @@ console.log("CSS/code hygiene PASS",{
   calendarCellRuleBlocks,
 });
 
-for(const [file,limit] of [["study-review.css",2000],["study-review.js",8000]]){
+for(const [file,limit] of [["study-review.js",8000]]){
   if(Buffer.byteLength(readFileSync(new URL("../pages/"+file,import.meta.url)),"utf8")>limit)fail(file+" exceeded its Study feature budget");
 }
+
+if(readFileSync(new URL("../pages/study-support.js",import.meta.url),"utf8").includes('document.createElement("style")'))fail("Study support must not inject retired visual styles");

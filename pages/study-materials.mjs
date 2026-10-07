@@ -214,14 +214,24 @@ export function createStudyMaterials({
     const cacheKey = source + '|' + picks.join('+');
     if (!day.scopes.has(cacheKey)) {
       const full = source === 'weekly'
-        ? byId([...canonical, ...raw.weekly.map(q => q.tier ? q : {...q,tier:'material'})])
+        ? byId([...canonical, ...raw.weekly.map(q => q.tier ? q : {...q,tier:'material'}), ...raw.saved])
         : byId(picks.flatMap(key => raw[key] || []));
       const key = source === 'weekly' ? sourceKey : sourceKey + '|materials:' + picks.join('+') + ':' + bankKey(full);
       day.scopes.set(cacheKey,{full,key});
     }
     const {full,key} = day.scopes.get(cacheKey);
-    const groups = source === 'weekly'
-      ? [weeklyEligible(full,modeId)]
+    const currentIds = new Set([...canonical.filter(q => q.tier === 'material'), ...raw.weekly].map(q => q.id));
+    const savedIds = new Set(raw.saved.map(q => q.id));
+    // Source stages are selection metadata only. Archived question objects keep
+    // their original tier, dates, evidence, IDs, and answer choices intact.
+    const groups = source === 'weekly' && modeId !== 'daily'
+      ? [
+          full.filter(q => currentIds.has(q.id) && q.tier !== 'star-fallback'),
+          full.filter(q => !currentIds.has(q.id) && q.tier === 'recent-review'),
+          full.filter(q => !currentIds.has(q.id) && q.tier !== 'recent-review' && q.tier !== 'star-fallback' && savedIds.has(q.id)),
+          full.filter(q => q.tier === 'star-fallback' && ['Math','Reading / ELA'].includes(q.subject)),
+        ].map(rows => unique(rows.filter(q => matchesMode(q,modeId))))
+      : source === 'weekly' ? [weeklyEligible(full,modeId)]
       : picks.map(key => unique((raw[key] || []).filter(q => matchesMode(q,modeId))));
     const eligible = unique(groups.flat());
     const fallback = source === 'weekly' ? [...new Set(eligible.filter(q => q.tier === 'star-fallback')
@@ -257,8 +267,23 @@ export function createStudyMaterials({
     if (mode && scope.count) {
       if (scope.source === 'weekly' && modeId === 'daily' && engine?.selectDailyQuestions) {
         questions = engine.selectDailyQuestions(scope.catalog,{count:8, seed:chosenSeed, skillStats:history, pack, now:instant()});
-      } else if (scope.source === 'weekly' && modeId !== 'daily' && engine?.selectQuestions) {
-        questions = engine.selectQuestions(scope.catalog,{subjects:mode.subjects, preferredSkills:mode.preferredSkills || [], count:8, seed:chosenSeed, skillStats:history});
+      } else if (scope.source === 'weekly' && modeId !== 'daily') {
+        const seen = new Set();
+        for (const [stage,group] of scope.groups.entries()) {
+          if (questions.length >= 8) break;
+          const available = group.filter(q => !seen.has(practiceIdentity(q)));
+          const originals = new Map(available.map(q => [q.id,q]));
+          // The engine ranks known tiers. A selection-only copy lets older
+          // reviewed records without a tier participate without relabeling data.
+          const selectionCatalog = {...scope.catalog,questions:available.map(q => q.tier ? q : {...q,tier:'material'})};
+          const chosen = engine?.selectQuestions
+            ? engine.selectQuestions(selectionCatalog,{subjects:mode.subjects, preferredSkills:mode.preferredSkills || [], count:8-questions.length, seed:chosenSeed+'|stage:'+stage, skillStats:history})
+            : adaptive([available],chosenSeed+'|stage:'+stage,history).slice(0,8-questions.length);
+          for (const row of chosen) {
+            const q = originals.get(row.id);
+            if (q && !seen.has(practiceIdentity(q))) { seen.add(practiceIdentity(q)); questions.push(q); }
+          }
+        }
       } else {
         // Passing a mixed union through selectQuestions would discard selected
         // STAR/saved sources when current material exists. Preserve source turns.
@@ -299,11 +324,11 @@ export function createStudyMaterials({
     return state;
   }
 
-  function printableTestState() {
+  function printableTestState(includeAssessments = false) {
     const time = instant(), done = completedKeys(), today = schoolDay(time);
     const instantMs = new Date(time).getTime(), seen = new Set();
     const tests = allEvents
-      .filter(t => String(t.kind || '').toLowerCase() !== 'assessment')
+      .filter(t => includeAssessments || String(t.kind || '').toLowerCase() !== 'assessment')
       .filter(t => /^\d{4}-\d{2}-\d{2}$/.test(t.date || '') && t.date >= today)
       .filter(t => !done.has(testKey(t)))
       .filter(t => !t.endsAt || !Number.isFinite(Date.parse(t.endsAt)) || Date.parse(t.endsAt) > instantMs)
@@ -329,6 +354,10 @@ export function createStudyMaterials({
   function printableTests() {
     const {groups, ...state} = printableTestState();
     return state;
+  }
+  function upcomingTests() {
+    const {groups, ...state} = printableTestState(true);
+    return {...state,canUndo:!!completionUndo,message};
   }
   function testGuide(index) {
     const state = printableTestState(), i = Number(index);
@@ -366,7 +395,7 @@ export function createStudyMaterials({
   }
 
   function testRound({index, seed, upcoming = false} = {}) {
-    const state = upcoming ? printableTestState() : testState();
+    const state = upcoming ? printableTestState(true) : testState();
     const single = Number.isInteger(index) && index >= 0 && index < state.tests.length;
     const groups = index === undefined ? (state.missing.length ? [] : state.groups) : single ? [state.groups[index]] : [];
     const selected = index === undefined ? state.tests : single ? [state.tests[index]] : [];
@@ -462,5 +491,5 @@ export function createStudyMaterials({
       links:referenceLinks(), warnings:coverageWarnings(time),
     };
   }
-  return {status, banks, forMode, round, tests, printableTests, testGuide, testRound, completeTests, undoTests, restoreTest, notes, loadReferences};
+  return {status, banks, forMode, round, tests, printableTests, upcomingTests, testGuide, testRound, completeTests, undoTests, restoreTest, notes, loadReferences};
 }

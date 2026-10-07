@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { questionsForTest } from "../pages/study-hub.mjs";
+import { questionsForTest } from "../pages/study-hub-core.mjs";
 import { buildStarBank } from "../pages/star-practice.mjs";
 import { balancedTestRound } from "../pages/study-model.mjs";
 test("announced short-i spelling test does not receive short-a questions", () => {
@@ -43,7 +43,7 @@ test("all uploaded schoolwork answers have one correct choice and safe source ma
 });
 test("schoolwork integration stays outside the child-facing app", () => {
   const source = fs.readFileSync(
-    new URL("../pages/study-hub.mjs", import.meta.url),
+    new URL("../pages/study-hub-core.mjs", import.meta.url),
     "utf8",
   );
   assert(!source.includes("mountImporter"));

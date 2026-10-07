@@ -20,7 +20,6 @@ async function visibleQuestion(page){
 
 test('six first-try correct and two corrected retries stays 6 of 8 at 75 percent',async({page},info)=>{
   await page.setViewportSize({width:393,height:852});await open(page);
-  await page.locator('[data-study-source]').selectOption('star');
   await page.locator('[data-game-start="math"]').click();
   for(let i=0;i<8;i++){
     const q=await visibleQuestion(page);expect(q).not.toBeNull();
@@ -65,10 +64,9 @@ test('six first-try correct and two corrected retries stays 6 of 8 at 75 percent
   path=info.outputPath('score-result-200-percent.png');await page.screenshot({path,fullPage:true});await info.attach('200 percent score result',{path,contentType:'image/png'});
 });
 
-test('all four named games use explicit Correct feedback through the shared player',async({page})=>{
+test('all five subject choices use explicit Correct feedback through the shared player',async({page})=>{
   await open(page);
-  for(const mode of ['quick','math','words','faith']){
-    await page.locator('[data-study-source]').selectOption('weekly');
+  for(const mode of ['reading','spelling','math','religion','mix']){
     const button=page.locator('[data-game-start="'+mode+'"]');
     if(await button.isDisabled())continue;
     await button.click();

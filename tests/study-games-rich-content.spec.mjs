@@ -36,7 +36,7 @@ test('every supported rich format has an accessible text alternative and keeps t
   for (const richContent of cases) {
     const html = await page.evaluate(content => window.ABVMStudyGameView.play({
       g:{supportMode:false,comebackMode:false,index:0,questions:[1],selectedIndex:null,answered:false,retry:0,lastWrong:null,score:0,streak:0,bestStreak:0,learningRow:{}},
-      mode:{title:'Quick Mix'},
+      mode:{title:'Mix'},
       q:{subject:'Math',questionType:'direct',prompt:'Use the visual, then choose the answer.',choices:['1','2','3'],answer:'2',explanation:'Model explanation.',hint:'Use the visual.',choiceDiagnostics:{'1':{feedback:'Try again.'},'3':{feedback:'Try again.'}},richContent:content},
       teach:null,retryInstruction:'Use the clue.',labels:{direct:'Practice'}
     }), richContent);
@@ -58,7 +58,7 @@ test('place-value support never fills the answer-bearing digit into a labeled pl
     };
     const html = window.ABVMStudyGameView.play({
       g:{supportMode:false,comebackMode:false,index:0,questions:[q],selectedIndex:null,answered:false,retry:0,lastWrong:null,score:0,streak:0,bestStreak:0,learningRow:{}},
-      mode:{title:'Quick Mix'},q,teach:null,retryInstruction:'Use the clue.',labels:{direct:'Practice'}
+      mode:{title:'Mix'},q,teach:null,retryInstruction:'Use the clue.',labels:{direct:'Practice'}
     });
     const host = document.createElement('div');
     host.innerHTML = html;
@@ -84,7 +84,7 @@ test('malformed visuals fail to text-only presentation instead of blocking a que
     const invalid = {kind:'clock',label:'Broken clock',hour:99,minute:15};
     const html = window.ABVMStudyGameView.play({
       g:{supportMode:false,comebackMode:false,index:0,questions:[1],selectedIndex:null,answered:false,retry:0,lastWrong:null,score:0,streak:0,bestStreak:0,learningRow:{}},
-      mode:{title:'Quick Mix'},
+      mode:{title:'Mix'},
       q:{subject:'Math',questionType:'direct',prompt:'This question must stay answerable.',choices:['A','B','C'],answer:'B',explanation:'Explanation.',hint:'Hint.',choiceDiagnostics:{'A':{feedback:'Try again.'},'C':{feedback:'Try again.'}},richContent:invalid},
       teach:null,retryInstruction:'Use the clue.',labels:{direct:'Practice'}
     });
@@ -99,7 +99,7 @@ test('rich visuals remain inside the phone viewport', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 700 });
   const html = await page.evaluate(() => window.ABVMStudyGameView.play({
     g:{supportMode:false,comebackMode:false,index:0,questions:[1],selectedIndex:null,answered:false,retry:0,lastWrong:null,score:0,streak:0,bestStreak:0,learningRow:{}},
-    mode:{title:'Quick Mix'},
+    mode:{title:'Mix'},
     q:{subject:'Math',questionType:'direct',prompt:'Use the chart.',choices:['1','2','3'],answer:'2',explanation:'Explanation.',hint:'Hint.',choiceDiagnostics:{'1':{feedback:'Try again.'},'3':{feedback:'Try again.'}},richContent:{kind:'bar-chart',label:'Votes',entries:[{label:'Apples',value:7},{label:'Bananas',value:5},{label:'Grapes',value:3}]}},
     teach:null,retryInstruction:'Use the clue.',labels:{direct:'Practice'}
   }));
