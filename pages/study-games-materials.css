@@ -317,6 +317,20 @@
 .games-screen .study-tool-card[open]>summary>b{transform:rotate(90deg)}
 .games-screen .study-tool-body{padding:0 11px 11px;border-top:1px solid #edf2f6}
 .games-screen .study-tool-body>p{margin:10px 1px;color:#607184;font-size:.82rem;line-height:1.45}
+.games-screen .study-tool-body>button,
+.games-screen .study-guide-tool-list button{
+  min-height:44px;
+  padding:8px 10px;
+  border:1px solid #bfd0df;
+  border-radius:11px;
+  background:#fff;
+  color:#214f77;
+  font-size:.84rem;
+  line-height:1.35;
+  font-weight:800;
+  text-align:left;
+  cursor:pointer;
+}
 .games-screen .study-tool-body>button{margin:0 6px 7px 0}
 .games-screen .study-tool-body h3{margin:11px 0 7px;color:#244e76;font-size:.86rem}
 .games-screen .study-guide-tool-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:7px;margin-bottom:8px}
