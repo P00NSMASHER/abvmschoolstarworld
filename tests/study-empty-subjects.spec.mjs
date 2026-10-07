@@ -76,6 +76,10 @@ test('long Religion review lists stay optional and every original idea remains r
   const original=panel.locator('.study-notes-original');await original.locator(':scope > summary').click();
   await expect(original.locator('li')).toHaveText(['Chapter 3: Jesus Lives in His Church',...ideas]);
   expect(await panel.evaluate(e=>e.scrollWidth<=e.clientWidth+1)).toBe(true);
+  await page.setViewportSize({width:820,height:1180});
+  const notes=page.locator('[data-study-notes]'),tools=page.locator('.study-tool-list');
+  expect((await notes.boundingBox()).width).toBeGreaterThan((await tools.boundingBox()).width*.95);
+  expect((await page.locator('[data-study-test-options]').boundingBox()).height).toBeLessThan(120);
 });
 test('empty Math opens a playable eight-question round directly',async({page})=>{
   await fixture(page);

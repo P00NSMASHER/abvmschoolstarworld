@@ -168,7 +168,8 @@
   .games-screen .study-game-grid{gap:14px}
   .games-screen .study-game-tile{min-height:200px!important;padding:20px}
   .games-screen .study-tools{max-width:none}
-  .games-screen .study-tool-list{grid-template-columns:1fr 1fr;gap:28px;border:0}
+  .games-screen .study-tool-list{grid-template-columns:1fr 1fr;gap:28px;border:0;align-items:start}
+  .games-screen .study-tool-card[open]{grid-column:1/-1}
 
   .games-screen.is-playing :is(.game-topbar,.game-progress,.game-question-card,.round-persistence-note){max-width:40rem;margin-left:auto;margin-right:auto}
   .games-screen .study-guide-tool-list{grid-template-columns:1fr 1fr}
