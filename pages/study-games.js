@@ -1425,10 +1425,21 @@ function selectSubjectQuestions(pool,count,seed,skillStats,preferredSkills,recen
   const current=pool.filter(q=>q.tier==="material");
   const review=pool.filter(q=>q.tier==="recent-review");
   const star=pool.filter(q=>q.tier==="star-fallback"&&["Math","Reading / ELA"].includes(q.subject));
-  append(current,"current");
-  append(review,"review");
-  append(star,"star");
-  if(selected.length<count)append([...current,...review,...star],"repeat",{freshOnly:false});
+  const primary=current.length?current:review;
+  if(primary.length){
+    append(primary,current.length?"current":"review");
+    // A small first-time verified bank stays focused instead of being padded
+    // with unrelated fallback. Once the learner has seen current material,
+    // fresh review/fallback items prevent immediate repeats.
+    if(recent.size&&selected.length<count){
+      if(current.length)append(review,"review");
+      append(star,"star");
+      if(selected.length<count)append([...current,...review,...star],"repeat",{freshOnly:false});
+    }
+  }else{
+    append(star,"star");
+    if(selected.length<count)append(star,"repeat",{freshOnly:false});
+  }
   return orderForVariety(selected.slice(0,count));
 }
 function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillStats={},preferredSkills=[]}={}){
