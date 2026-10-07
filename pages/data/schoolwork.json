@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "uploadedPhotoCount": 20,
-  "distinctWorksheetNote": "Day 23 appears twice; one lesson is retained.",
+  "uploadedPhotoCount": 26,
+  "distinctWorksheetNote": "Day 23 appears twice; one lesson is retained. Day 25, Day 27 and Day 28 mixed-review worksheets are split into subject-specific lessons; the Baptism project’s visible “Friday Oct. 21” deadline is held as unconfirmed because the weekday/date conflict in 2026.",
   "lessons": [
     {
       "id": "fact-families",
@@ -16,7 +16,7 @@
       ],
       "notes": [
         "A fact family uses the same three numbers for related addition and subtraction facts.",
-        "For 4, 5 and 9: 4 + 5 = 9; 5 + 4 = 9; 9 \u2212 4 = 5; 9 \u2212 5 = 4.",
+        "For 4, 5 and 9: 4 + 5 = 9; 5 + 4 = 9; 9 − 4 = 5; 9 − 5 = 4.",
         "Start with the whole when subtracting. Swapping subtraction numbers changes the answer."
       ],
       "studiedOn": null,
@@ -28,11 +28,11 @@
           "subject": "Math",
           "skill": "fact-families",
           "prompt": "Which subtraction fact belongs with 2 + 5 = 7?",
-          "answer": "7 \u2212 2 = 5",
+          "answer": "7 − 2 = 5",
           "choices": [
-            "7 \u2212 2 = 5",
-            "2 \u2212 7 = 5",
-            "7 \u2212 5 = 5",
+            "7 − 2 = 5",
+            "2 − 7 = 5",
+            "7 − 5 = 5",
             "7 + 2 = 5"
           ],
           "explanation": "The whole is 7. Taking away 2 leaves 5.",
@@ -53,12 +53,12 @@
           "subject": "Math",
           "skill": "fact-families",
           "prompt": "Which subtraction fact belongs with 3 + 6 = 9?",
-          "answer": "9 \u2212 3 = 6",
+          "answer": "9 − 3 = 6",
           "choices": [
-            "3 \u2212 9 = 6",
-            "9 \u2212 6 = 6",
+            "3 − 9 = 6",
+            "9 − 6 = 6",
             "9 + 3 = 6",
-            "9 \u2212 3 = 6"
+            "9 − 3 = 6"
           ],
           "explanation": "The whole is 9. Taking away 3 leaves 6.",
           "hint": "Use the same three numbers. Start a subtraction fact with the whole, then take away one part.",
@@ -78,12 +78,12 @@
           "subject": "Math",
           "skill": "fact-families",
           "prompt": "Which subtraction fact belongs with 4 + 7 = 11?",
-          "answer": "11 \u2212 4 = 7",
+          "answer": "11 − 4 = 7",
           "choices": [
-            "11 \u2212 7 = 7",
+            "11 − 7 = 7",
             "11 + 4 = 7",
-            "11 \u2212 4 = 7",
-            "4 \u2212 11 = 7"
+            "11 − 4 = 7",
+            "4 − 11 = 7"
           ],
           "explanation": "The whole is 11. Taking away 4 leaves 7.",
           "hint": "Use the same three numbers. Start a subtraction fact with the whole, then take away one part.",
@@ -103,12 +103,12 @@
           "subject": "Math",
           "skill": "fact-families",
           "prompt": "Which subtraction fact belongs with 5 + 8 = 13?",
-          "answer": "13 \u2212 5 = 8",
+          "answer": "13 − 5 = 8",
           "choices": [
             "13 + 5 = 8",
-            "13 \u2212 5 = 8",
-            "5 \u2212 13 = 8",
-            "13 \u2212 8 = 8"
+            "13 − 5 = 8",
+            "5 − 13 = 8",
+            "13 − 8 = 8"
           ],
           "explanation": "The whole is 13. Taking away 5 leaves 8.",
           "hint": "Use the same three numbers. Start a subtraction fact with the whole, then take away one part.",
@@ -128,11 +128,11 @@
           "subject": "Math",
           "skill": "fact-families",
           "prompt": "Which subtraction fact belongs with 2 + 7 = 9?",
-          "answer": "9 \u2212 2 = 7",
+          "answer": "9 − 2 = 7",
           "choices": [
-            "9 \u2212 2 = 7",
-            "2 \u2212 9 = 7",
-            "9 \u2212 7 = 7",
+            "9 − 2 = 7",
+            "2 − 9 = 7",
+            "9 − 7 = 7",
             "9 + 2 = 7"
           ],
           "explanation": "The whole is 9. Taking away 2 leaves 7.",
@@ -153,12 +153,12 @@
           "subject": "Math",
           "skill": "fact-families",
           "prompt": "Which subtraction fact belongs with 3 + 8 = 11?",
-          "answer": "11 \u2212 3 = 8",
+          "answer": "11 − 3 = 8",
           "choices": [
-            "3 \u2212 11 = 8",
-            "11 \u2212 8 = 8",
+            "3 − 11 = 8",
+            "11 − 8 = 8",
             "11 + 3 = 8",
-            "11 \u2212 3 = 8"
+            "11 − 3 = 8"
           ],
           "explanation": "The whole is 11. Taking away 3 leaves 8.",
           "hint": "Use the same three numbers. Start a subtraction fact with the whole, then take away one part.",
@@ -178,12 +178,12 @@
           "subject": "Math",
           "skill": "fact-families",
           "prompt": "Which subtraction fact belongs with 4 + 9 = 13?",
-          "answer": "13 \u2212 4 = 9",
+          "answer": "13 − 4 = 9",
           "choices": [
-            "13 \u2212 9 = 9",
+            "13 − 9 = 9",
             "13 + 4 = 9",
-            "13 \u2212 4 = 9",
-            "4 \u2212 13 = 9"
+            "13 − 4 = 9",
+            "4 − 13 = 9"
           ],
           "explanation": "The whole is 13. Taking away 4 leaves 9.",
           "hint": "Use the same three numbers. Start a subtraction fact with the whole, then take away one part.",
@@ -203,12 +203,12 @@
           "subject": "Math",
           "skill": "fact-families",
           "prompt": "Which subtraction fact belongs with 6 + 7 = 13?",
-          "answer": "13 \u2212 6 = 7",
+          "answer": "13 − 6 = 7",
           "choices": [
             "13 + 6 = 7",
-            "13 \u2212 6 = 7",
-            "6 \u2212 13 = 7",
-            "13 \u2212 7 = 7"
+            "13 − 6 = 7",
+            "6 − 13 = 7",
+            "13 − 7 = 7"
           ],
           "explanation": "The whole is 13. Taking away 6 leaves 7.",
           "hint": "Use the same three numbers. Start a subtraction fact with the whole, then take away one part.",
@@ -237,7 +237,7 @@
       ],
       "notes": [
         "The subject tells who or what the sentence is about. The predicate tells what the subject does or is.",
-        "In \u201cThe kitten sleeps,\u201d \u201cThe kitten\u201d is the subject and \u201csleeps\u201d is the predicate.",
+        "In “The kitten sleeps,” “The kitten” is the subject and “sleeps” is the predicate.",
         "Choose a subject that makes sense with the action."
       ],
       "studiedOn": null,
@@ -248,7 +248,7 @@
           "id": "work-subjects-0",
           "subject": "Reading / ELA",
           "skill": "subject-predicate",
-          "prompt": "What is the subject in \u201cThe rabbit hops\u201d?",
+          "prompt": "What is the subject in “The rabbit hops”?",
           "answer": "The rabbit",
           "choices": [
             "The rabbit",
@@ -273,7 +273,7 @@
           "id": "work-subjects-1",
           "subject": "Reading / ELA",
           "skill": "subject-predicate",
-          "prompt": "What is the subject in \u201cMy friend reads\u201d?",
+          "prompt": "What is the subject in “My friend reads”?",
           "answer": "My friend",
           "choices": [
             "reads",
@@ -298,7 +298,7 @@
           "id": "work-subjects-2",
           "subject": "Reading / ELA",
           "skill": "subject-predicate",
-          "prompt": "What is the subject in \u201cThe puppy runs\u201d?",
+          "prompt": "What is the subject in “The puppy runs”?",
           "answer": "The puppy",
           "choices": [
             "The puppy runs",
@@ -323,7 +323,7 @@
           "id": "work-subjects-3",
           "subject": "Reading / ELA",
           "skill": "subject-predicate",
-          "prompt": "What is the subject in \u201cOur teacher smiles\u201d?",
+          "prompt": "What is the subject in “Our teacher smiles”?",
           "answer": "Our teacher",
           "choices": [
             "There is no subject",
@@ -394,7 +394,7 @@
     },
     {
       "id": "daily26",
-      "title": "Daily review \u2022 Day 26",
+      "title": "Daily review • Day 26",
       "subject": "Math",
       "sources": [
         "IMG_2533.jpeg"
@@ -427,7 +427,7 @@
           ],
           "explanation": "4 + 4 = 8, so each equal group has 4.",
           "hint": "Each part must be the same size. Share one counter at a time between the groups and check they match.",
-          "sourceFact": "Daily review \u2022 Day 26",
+          "sourceFact": "Daily review • Day 26",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -452,7 +452,7 @@
           ],
           "explanation": "3 tens are 30. Add 5 ones.",
           "hint": "Read the tens place, then the ones place. A group of ten is worth more than one single counter.",
-          "sourceFact": "Daily review \u2022 Day 26",
+          "sourceFact": "Daily review • Day 26",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -467,7 +467,7 @@
           "id": "work-daily26-2",
           "subject": "Math",
           "skill": "data-interpretation",
-          "prompt": "A chart shows Ava: \u2605\u2605\u2605, Ben: \u2605\u2605\u2605\u2605\u2605. Each star means 1 book. Who read 2 more books?",
+          "prompt": "A chart shows Ava: ★★★, Ben: ★★★★★. Each star means 1 book. Who read 2 more books?",
           "answer": "Ben",
           "choices": [
             "Both",
@@ -475,9 +475,9 @@
             "Ben",
             "Ava"
           ],
-          "explanation": "Ben read 5 and Ava read 3. 5 \u2212 3 = 2.",
+          "explanation": "Ben read 5 and Ava read 3. 5 − 3 = 2.",
           "hint": "Read the chart key. Count each group, then compare the groups named in the question.",
-          "sourceFact": "Daily review \u2022 Day 26",
+          "sourceFact": "Daily review • Day 26",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -492,7 +492,7 @@
     },
     {
       "id": "daily24",
-      "title": "Daily review \u2022 Day 24",
+      "title": "Daily review • Day 24",
       "subject": "Reading / ELA",
       "sources": [
         "IMG_2534.jpeg"
@@ -504,7 +504,7 @@
       ],
       "notes": [
         "The prefix pre- means before: premix means mix beforehand.",
-        "Add apostrophe-s to show ownership: Beth\u2019s flag.",
+        "Add apostrophe-s to show ownership: Beth’s flag.",
         "10 more than 7 is 17. Two groups of 3 make 6. A penny is worth one cent."
       ],
       "studiedOn": null,
@@ -525,7 +525,7 @@
           ],
           "explanation": "The prefix pre- means before.",
           "hint": "Read the base word first. Does the prefix change when the action happens?",
-          "sourceFact": "Daily review \u2022 Day 24",
+          "sourceFact": "Daily review • Day 24",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -541,16 +541,16 @@
           "subject": "Reading / ELA",
           "skill": "possessives",
           "prompt": "Which phrase shows that a flag belongs to Beth?",
-          "answer": "Beth\u2019s flag",
+          "answer": "Beth’s flag",
           "choices": [
             "Beths flag",
             "B eth flag",
             "Beth flag",
-            "Beth\u2019s flag"
+            "Beth’s flag"
           ],
           "explanation": "Apostrophe-s shows that Beth owns the flag.",
           "hint": "Find the owner. Look for the mark that shows something belongs to that person.",
-          "sourceFact": "Daily review \u2022 Day 24",
+          "sourceFact": "Daily review • Day 24",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -578,7 +578,7 @@
       ],
       "notes": [
         "For two-digit arithmetic, line up tens and ones.",
-        "\u201cHow many more?\u201d asks for the difference: 16 \u2212 13 = 3.",
+        "“How many more?” asks for the difference: 16 − 13 = 3.",
         "If some cars plus 3 makes 9, subtract 3 from 9 to find the starting amount: 6.",
         "Compare tens first, then ones. Ordinal numbers tell position: first, second, third, fourth."
       ],
@@ -615,7 +615,7 @@
           "id": "work-maintenance-1",
           "subject": "Math",
           "skill": "subtraction-within-100",
-          "prompt": "What is 24 \u2212 13?",
+          "prompt": "What is 24 − 13?",
           "answer": "11",
           "choices": [
             "21",
@@ -665,7 +665,7 @@
           "id": "work-maintenance-3",
           "subject": "Math",
           "skill": "subtraction-within-100",
-          "prompt": "What is 32 \u2212 16?",
+          "prompt": "What is 32 − 16?",
           "answer": "16",
           "choices": [
             "48",
@@ -715,7 +715,7 @@
           "id": "work-maintenance-5",
           "subject": "Math",
           "skill": "subtraction-within-100",
-          "prompt": "What is 41 \u2212 18?",
+          "prompt": "What is 41 − 18?",
           "answer": "23",
           "choices": [
             "33",
@@ -765,7 +765,7 @@
           "id": "work-maintenance-7",
           "subject": "Math",
           "skill": "subtraction-within-100",
-          "prompt": "What is 53 \u2212 24?",
+          "prompt": "What is 53 − 24?",
           "answer": "29",
           "choices": [
             "77",
@@ -815,7 +815,7 @@
           "id": "work-maintenance-9",
           "subject": "Math",
           "skill": "subtraction-within-100",
-          "prompt": "What is 62 \u2212 15?",
+          "prompt": "What is 62 − 15?",
           "answer": "47",
           "choices": [
             "57",
@@ -865,7 +865,7 @@
           "id": "work-maintenance-11",
           "subject": "Math",
           "skill": "subtraction-within-100",
-          "prompt": "What is 25 \u2212 24?",
+          "prompt": "What is 25 − 24?",
           "answer": "1",
           "choices": [
             "49",
@@ -898,7 +898,7 @@
             "4",
             "11"
           ],
-          "explanation": "11 \u2212 4 = 7. Check: 7 + 4 = 11.",
+          "explanation": "11 − 4 = 7. Check: 7 + 4 = 11.",
           "hint": "Draw the total and circle the part you know. Count the part still needed to reach the total.",
           "sourceFact": "Math maintenance",
           "tier": "material",
@@ -961,7 +961,7 @@
     },
     {
       "id": "daily23",
-      "title": "Daily review \u2022 Day 23",
+      "title": "Daily review • Day 23",
       "subject": "Math",
       "sources": [
         "IMG_2538.jpeg",
@@ -975,8 +975,8 @@
       "notes": [
         "To subtract 2 on a number line, move two steps left.",
         "A triangle has three straight sides.",
-        "If you need 6 stamps and have 4, you need 2 more: 6 \u2212 4 = 2.",
-        "Apostrophe-s shows ownership: Chet\u2019s dog."
+        "If you need 6 stamps and have 4, you need 2 more: 6 − 4 = 2.",
+        "Apostrophe-s shows ownership: Chet’s dog."
       ],
       "studiedOn": null,
       "addedOn": "2026-10-04",
@@ -996,7 +996,7 @@
           ],
           "explanation": "A triangle has three straight sides.",
           "hint": "Trace each edge with a finger. Count only the straight sides, then compare the choices.",
-          "sourceFact": "Daily review \u2022 Day 23",
+          "sourceFact": "Daily review • Day 23",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -1019,9 +1019,9 @@
             "9",
             "8"
           ],
-          "explanation": "10 \u2212 2 = 8. Each left step subtracts 1.",
+          "explanation": "10 − 2 = 8. Each left step subtracts 1.",
           "hint": "Start at the given number. Each move left takes away one. Count the moves, not the starting spot.",
-          "sourceFact": "Daily review \u2022 Day 23",
+          "sourceFact": "Daily review • Day 23",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -1036,7 +1036,7 @@
     },
     {
       "id": "daily21",
-      "title": "Daily review \u2022 Day 21",
+      "title": "Daily review • Day 21",
       "subject": "Math",
       "sources": [
         "IMG_2540.jpeg"
@@ -1069,7 +1069,7 @@
           ],
           "explanation": "Both parts must be equal to be halves.",
           "hint": "Check both how many parts there are and whether the parts are the same size.",
-          "sourceFact": "Daily review \u2022 Day 21",
+          "sourceFact": "Daily review • Day 21",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -1094,7 +1094,7 @@
           ],
           "explanation": "2 tens are 20, and 20 + 8 = 28.",
           "hint": "Read the tens place, then the ones place. A group of ten is worth more than one single counter.",
-          "sourceFact": "Daily review \u2022 Day 21",
+          "sourceFact": "Daily review • Day 21",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -1109,7 +1109,7 @@
     },
     {
       "id": "library",
-      "title": "At the Library \u2022 comprehension",
+      "title": "At the Library • comprehension",
       "subject": "Reading / ELA",
       "sources": [
         "IMG_2541.jpeg",
@@ -1144,7 +1144,7 @@
           ],
           "explanation": "The passage says the library is in the neighborhood, so walking or biking is possible.",
           "hint": "Find the sentence in the story that explains the trip. Choose only what that sentence supports.",
-          "sourceFact": "At the Library \u2022 comprehension",
+          "sourceFact": "At the Library • comprehension",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -1169,7 +1169,7 @@
           ],
           "explanation": "The narrator chooses books before using the computer room.",
           "hint": "Reread that part of the story. Find the named event, then look at what the narrator does next.",
-          "sourceFact": "At the Library \u2022 comprehension",
+          "sourceFact": "At the Library • comprehension",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -1194,7 +1194,7 @@
           ],
           "explanation": "Nonfiction gives factual information about real subjects.",
           "hint": "Decide whether the book explains real information or tells an imagined story.",
-          "sourceFact": "At the Library \u2022 comprehension",
+          "sourceFact": "At the Library • comprehension",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -1209,7 +1209,7 @@
     },
     {
       "id": "religion2",
-      "title": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+      "title": "Chapter 2 • Jesus Is God’s Best Gift",
       "subject": "Religion",
       "sources": [
         "IMG_2543.jpeg",
@@ -1227,7 +1227,7 @@
         "Grace is the new life Jesus gives us. Jesus died and rose from the dead. He is our Savior.",
         "A disciple knows, loves, and follows Jesus. Baptism makes us members of his Church. The Holy Spirit guides the Church.",
         "Jesus compares himself to a vine and us to its branches. Our good deeds are its fruit.",
-        "The Sign of the Cross remembers Jesus\u2019 love and that he saved us. Pray: In the name of the Father, and of the Son, and of the Holy Spirit. Amen."
+        "The Sign of the Cross remembers Jesus’ love and that he saved us. Pray: In the name of the Father, and of the Son, and of the Holy Spirit. Amen."
       ],
       "studiedOn": null,
       "addedOn": "2026-10-04",
@@ -1245,9 +1245,9 @@
             "Hope",
             "A disciple"
           ],
-          "explanation": "The Chapter 2 page calls Jesus\u2019 gift of new life grace.",
+          "explanation": "The Chapter 2 page calls Jesus’ gift of new life grace.",
           "hint": "Think about sharing in God’s life. Which lesson word names that special gift of life?",
-          "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+          "sourceFact": "Chapter 2 • Jesus Is God’s Best Gift",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -1272,7 +1272,7 @@
           ],
           "explanation": "The Holy Spirit helps the Church live and love like Jesus.",
           "hint": "Remember the helper Jesus promised to his followers. Think about who continues to guide the Church.",
-          "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+          "sourceFact": "Chapter 2 • Jesus Is God’s Best Gift",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -1295,9 +1295,9 @@
             "Knows, loves, and follows Jesus",
             "Asks for help but never helps others"
           ],
-          "explanation": "A disciple lives according to Jesus\u2019 teaching.",
+          "explanation": "A disciple lives according to Jesus’ teaching.",
           "hint": "Think about what a follower does, not just what that person knows.",
-          "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+          "sourceFact": "Chapter 2 • Jesus Is God’s Best Gift",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -1322,7 +1322,7 @@
           ],
           "explanation": "Jesus is the vine; we are the branches.",
           "hint": "In the comparison, the vine gives life to its branches. Who gives life to the followers?",
-          "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+          "sourceFact": "Chapter 2 • Jesus Is God’s Best Gift",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -1347,7 +1347,7 @@
           ],
           "explanation": "Good deeds are ways to live closer to Jesus.",
           "hint": "A fruit shows what a plant produces. Think of the loving actions a follower can produce.",
-          "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+          "sourceFact": "Chapter 2 • Jesus Is God’s Best Gift",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -1370,9 +1370,9 @@
             "Anointing of the Sick",
             "Baptism"
           ],
-          "explanation": "Through Baptism we share in Jesus\u2019 life and belong to his Church.",
+          "explanation": "Through Baptism we share in Jesus’ life and belong to his Church.",
           "hint": "Think of the sacrament at the beginning of life in the Church, when water is used.",
-          "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+          "sourceFact": "Chapter 2 • Jesus Is God’s Best Gift",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -1388,16 +1388,16 @@
           "subject": "Religion",
           "skill": "religion-chapter-2",
           "prompt": "What do we remember when praying the Sign of the Cross?",
-          "answer": "Jesus\u2019 love and that he saved us",
+          "answer": "Jesus’ love and that he saved us",
           "choices": [
             "That prayer replaces every kind act",
             "That only adults can pray",
-            "Jesus\u2019 love and that he saved us",
+            "Jesus’ love and that he saved us",
             "That God cares only on special days"
           ],
-          "explanation": "The cross reminds us of Jesus\u2019 love and saving action.",
+          "explanation": "The cross reminds us of Jesus’ love and saving action.",
           "hint": "Think about the shape traced in the prayer and what Jesus did out of love.",
-          "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+          "sourceFact": "Chapter 2 • Jesus Is God’s Best Gift",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -1422,7 +1422,7 @@
           ],
           "explanation": "God the Father sent his Son, Jesus.",
           "hint": "Think about the relationship between Jesus and the one who sent him.",
-          "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+          "sourceFact": "Chapter 2 • Jesus Is God’s Best Gift",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -1447,7 +1447,7 @@
           ],
           "explanation": "Jesus died and rose from the dead. He is our Savior.",
           "hint": "Recall the Easter part of the lesson. Death was not the end of the story.",
-          "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+          "sourceFact": "Chapter 2 • Jesus Is God’s Best Gift",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -1472,7 +1472,7 @@
           ],
           "explanation": "Kindness and helping others are good deeds.",
           "hint": "Choose an action that shows care for another person, not just a wish to be noticed.",
-          "sourceFact": "Chapter 2 \u2022 Jesus Is God\u2019s Best Gift",
+          "sourceFact": "Chapter 2 • Jesus Is God’s Best Gift",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -1488,7 +1488,7 @@
     },
     {
       "id": "daily22",
-      "title": "Daily review \u2022 Day 22",
+      "title": "Daily review • Day 22",
       "subject": "Reading / ELA",
       "sources": [
         "IMG_2549.jpeg"
@@ -1523,7 +1523,7 @@
           ],
           "explanation": "Compare first letters: b comes before p and s.",
           "hint": "Compare the first letters using the alphabet. If they match, move to the next letter.",
-          "sourceFact": "Daily review \u2022 Day 22",
+          "sourceFact": "Daily review • Day 22",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -1539,16 +1539,16 @@
           "subject": "Reading / ELA",
           "skill": "possessives",
           "prompt": "Which phrase means the bed belongs to Jen?",
-          "answer": "Jen\u2019s bed",
+          "answer": "Jen’s bed",
           "choices": [
             "Jens bed",
             "Jen bed",
-            "Jens\u2019 beds",
-            "Jen\u2019s bed"
+            "Jens’ beds",
+            "Jen’s bed"
           ],
           "explanation": "Apostrophe-s after Jen shows ownership.",
           "hint": "Find the owner. Look for the mark that shows something belongs to that person.",
-          "sourceFact": "Daily review \u2022 Day 22",
+          "sourceFact": "Daily review • Day 22",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
@@ -1573,11 +1573,880 @@
           ],
           "explanation": "There are 60 minutes in an hour.",
           "hint": "Picture the minute hand making one full turn. Count the minutes around the clock.",
-          "sourceFact": "Daily review \u2022 Day 22",
+          "sourceFact": "Daily review • Day 22",
           "tier": "material",
           "questionType": "direct",
           "difficulty": 2,
           "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "theme-supporting-details",
+      "title": "Theme and supporting details",
+      "subject": "Reading / ELA",
+      "sources": [
+        "IMG_2983.jpeg"
+      ],
+      "skills": [
+        "theme",
+        "text-evidence"
+      ],
+      "notes": [
+        "A theme is the message or lesson a story communicates; it is broader than one event.",
+        "Supporting details are specific character actions or events that show why a theme fits.",
+        "Use several details from the story to support a theme instead of relying on one isolated detail.",
+        "The uploaded organizer practices identifying a theme and connecting four details to it; the child’s written responses are not treated as an answer key."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-10-06",
+      "dateStatus": "Undated schoolwork",
+      "questions": [
+        {
+          "id": "work-theme-details-0",
+          "subject": "Reading / ELA",
+          "skill": "theme",
+          "prompt": "Which choice is a theme rather than a single story detail?",
+          "answer": "Friends help one another.",
+          "choices": [
+            "Friends help one another.",
+            "A mouse carries a flower.",
+            "A character opens a door.",
+            "The story takes place outside."
+          ],
+          "explanation": "A theme is a message that can apply beyond one moment in the story.",
+          "hint": "Ask which choice sounds like a lesson or message, not one event.",
+          "sourceFact": "Theme and supporting details organizer",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-theme-details-1",
+          "subject": "Reading / ELA",
+          "skill": "text-evidence",
+          "prompt": "Which detail best supports the theme “Friends help one another”?",
+          "answer": "A friend stops to help carry a heavy box.",
+          "choices": [
+            "A friend stops to help carry a heavy box.",
+            "The box is brown.",
+            "The friends walk past a tree.",
+            "It is Tuesday."
+          ],
+          "explanation": "Helping with a problem is evidence for a theme about friends helping.",
+          "hint": "Choose the event that actually shows someone helping.",
+          "sourceFact": "Theme and supporting details organizer",
+          "tier": "material",
+          "questionType": "transfer",
+          "difficulty": 2,
+          "dok": 2,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-theme-details-2",
+          "subject": "Reading / ELA",
+          "skill": "text-evidence",
+          "prompt": "Why is it better to use several details when explaining a story’s theme?",
+          "answer": "Several details show that the message appears across the story.",
+          "choices": [
+            "Several details show that the message appears across the story.",
+            "One detail always proves every possible theme.",
+            "Details are only used to tell where the story happens.",
+            "A theme must be the longest sentence in the story."
+          ],
+          "explanation": "Repeated evidence makes the theme explanation stronger and more accurate.",
+          "hint": "Look for a pattern across the story, not just one moment.",
+          "sourceFact": "Theme and supporting details organizer",
+          "tier": "material",
+          "questionType": "reasoning",
+          "difficulty": 3,
+          "dok": 2,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "baptism-story-project",
+      "title": "My Baptism Story • Trimester 1 project",
+      "subject": "Religion",
+      "sources": [
+        "IMG_2982.jpeg",
+        "IMG_2981.jpeg"
+      ],
+      "skills": [
+        "baptism-project"
+      ],
+      "notes": [
+        "Complete the Baptism story worksheet using accurate family information rather than guessing personal details.",
+        "The worksheet asks about the Baptism date, age, priest, church, whether the child cried, godparents, why the godparents were chosen, clothing, and how the family celebrated.",
+        "The colored project page must include at least one Baptism picture.",
+        "The rubric gives 5 points each for completion, neatness, pictures, and presentation.",
+        "The visible due-date line reads “Friday Oct. 21.” Because October 21, 2026 is a Wednesday, this date is held as unconfirmed and is not promoted to the app calendar without another source."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-10-06",
+      "dateStatus": "Undated schoolwork",
+      "questions": [
+        {
+          "id": "work-baptism-project-0",
+          "subject": "Religion",
+          "skill": "baptism-project",
+          "prompt": "What must be included on the colored paper for the Baptism project?",
+          "answer": "At least one picture from the Baptism.",
+          "choices": [
+            "At least one picture from the Baptism.",
+            "A map of the church.",
+            "A copy of a report card.",
+            "Five vocabulary words."
+          ],
+          "explanation": "The project directions require at least one Baptism picture.",
+          "hint": "Check the project directions for the picture requirement.",
+          "sourceFact": "My Baptism Story project directions",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 1,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-baptism-project-1",
+          "subject": "Religion",
+          "skill": "baptism-project",
+          "prompt": "Which item is one of the project rubric categories?",
+          "answer": "Presentation of the project",
+          "choices": [
+            "Presentation of the project",
+            "Fastest completion time",
+            "Number of pages read",
+            "Perfect handwriting on every letter"
+          ],
+          "explanation": "The rubric lists completion, neatness, pictures, and presentation.",
+          "hint": "Look at the four rubric lines on the project sheet.",
+          "sourceFact": "My Baptism Story project rubric",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 1,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "daily25-ela",
+      "title": "Daily review • Day 25 • Reading / ELA",
+      "subject": "Reading / ELA",
+      "sources": [
+        "IMG_2978.jpeg"
+      ],
+      "skills": [
+        "possessives",
+        "common-nouns",
+        "vocabulary-in-context"
+      ],
+      "notes": [
+        "Apostrophe-s can show ownership: a friend’s pet.",
+        "A common noun names a person, place, animal, or thing.",
+        "On this review, slob means a very messy person, dim means not very bright or clear, and kin means people in your family."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-10-06",
+      "dateStatus": "Undated schoolwork",
+      "questions": [
+        {
+          "id": "work-day25-ela-0",
+          "subject": "Reading / ELA",
+          "skill": "possessives",
+          "prompt": "Which sentence correctly shows that the toy belongs to Mia?",
+          "answer": "Mia’s toy is blue.",
+          "choices": [
+            "Mia’s toy is blue.",
+            "Mias toy is blue.",
+            "Mia toy’s is blue.",
+            "Mias’ toy is blue."
+          ],
+          "explanation": "Apostrophe-s after Mia shows ownership.",
+          "hint": "Add apostrophe-s to the owner’s name.",
+          "sourceFact": "Day 25 possessive-noun review",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-day25-ela-1",
+          "subject": "Reading / ELA",
+          "skill": "common-nouns",
+          "prompt": "What kind of noun is “cat” in the sentence “Can a cat swim?”",
+          "answer": "animal",
+          "choices": [
+            "animal",
+            "person",
+            "place",
+            "thing"
+          ],
+          "explanation": "A cat is an animal.",
+          "hint": "Classify what the noun names.",
+          "sourceFact": "Day 25 noun classification",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 1,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-day25-ela-2",
+          "subject": "Reading / ELA",
+          "skill": "vocabulary-in-context",
+          "prompt": "Which word means “people in your family”?",
+          "answer": "kin",
+          "choices": [
+            "kin",
+            "dim",
+            "slob",
+            "knack"
+          ],
+          "explanation": "Kin means relatives or family members.",
+          "hint": "Think about relatives.",
+          "sourceFact": "Day 25 vocabulary",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "daily25-math",
+      "title": "Daily review • Day 25 • Math",
+      "subject": "Math",
+      "sources": [
+        "IMG_2978.jpeg"
+      ],
+      "skills": [
+        "addition-within-10",
+        "subtraction-within-10",
+        "place-value",
+        "subtraction-word-problems",
+        "compare-length"
+      ],
+      "notes": [
+        "Use basic addition and subtraction facts within 10 accurately.",
+        "20 is 2 tens and 0 ones.",
+        "When a problem gives a total and one part, subtract to find the part that is left.",
+        "Use shorter and longer to compare object lengths."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-10-06",
+      "dateStatus": "Undated schoolwork",
+      "questions": [
+        {
+          "id": "work-day25-math-0",
+          "subject": "Math",
+          "skill": "subtraction-within-10",
+          "prompt": "What is 9 − 3?",
+          "answer": "6",
+          "choices": [
+            "6",
+            "5",
+            "7",
+            "12"
+          ],
+          "explanation": "Taking 3 away from 9 leaves 6.",
+          "hint": "Count back three from 9.",
+          "sourceFact": "Day 25 basic facts",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 1,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-day25-math-1",
+          "subject": "Math",
+          "skill": "place-value",
+          "prompt": "How many tens and ones are in 20?",
+          "answer": "2 tens and 0 ones",
+          "choices": [
+            "2 tens and 0 ones",
+            "0 tens and 2 ones",
+            "1 ten and 10 ones",
+            "20 tens and 0 ones"
+          ],
+          "explanation": "Twenty is two groups of ten with no ones left over.",
+          "hint": "Split 20 into groups of ten.",
+          "sourceFact": "Day 25 place value",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-day25-math-2",
+          "subject": "Math",
+          "skill": "subtraction-word-problems",
+          "prompt": "There are 9 pets. Three are dogs and the rest are fish. How many are fish?",
+          "answer": "6",
+          "choices": [
+            "6",
+            "3",
+            "9",
+            "12"
+          ],
+          "explanation": "Subtract the 3 dogs from the 9 total pets: 9 − 3 = 6.",
+          "hint": "The total is 9 and one part is 3.",
+          "sourceFact": "Day 25 part-whole word problem",
+          "tier": "material",
+          "questionType": "transfer",
+          "difficulty": 2,
+          "dok": 2,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-day25-math-3",
+          "subject": "Math",
+          "skill": "compare-length",
+          "prompt": "A ribbon is 8 inches long and another ribbon is 5 inches long. Which word describes the 5-inch ribbon?",
+          "answer": "shorter",
+          "choices": [
+            "shorter",
+            "longer",
+            "equal",
+            "heavier"
+          ],
+          "explanation": "Five inches is less length than eight inches, so it is shorter.",
+          "hint": "Compare the two lengths.",
+          "sourceFact": "Day 25 length comparison",
+          "tier": "material",
+          "questionType": "transfer",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "daily27-ela",
+      "title": "Daily review • Day 27 • Reading / ELA",
+      "subject": "Reading / ELA",
+      "sources": [
+        "IMG_2979.jpeg"
+      ],
+      "skills": [
+        "proper-nouns",
+        "spelling-blends",
+        "vocabulary-in-context",
+        "antonyms"
+      ],
+      "notes": [
+        "Proper nouns name specific people, places, brands, or titles and begin with capital letters.",
+        "The spelling review sorts words by beginning blends such as dr- and tr-.",
+        "Knack means a special skill or something a person is good at.",
+        "Antonyms are words with opposite meanings."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-10-06",
+      "dateStatus": "Undated schoolwork",
+      "questions": [
+        {
+          "id": "work-day27-ela-0",
+          "subject": "Reading / ELA",
+          "skill": "proper-nouns",
+          "prompt": "Which word should begin with a capital letter because it is a specific place name?",
+          "answer": "Amazon",
+          "choices": [
+            "Amazon",
+            "store",
+            "road",
+            "snack"
+          ],
+          "explanation": "Amazon is a specific name, so it is a proper noun.",
+          "hint": "Specific names are capitalized.",
+          "sourceFact": "Day 27 proper-noun review",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-day27-ela-1",
+          "subject": "Reading / ELA",
+          "skill": "spelling-blends",
+          "prompt": "Which word begins with the dr- blend?",
+          "answer": "drill",
+          "choices": [
+            "drill",
+            "trap",
+            "truck",
+            "snack"
+          ],
+          "explanation": "Drill begins with d and r together.",
+          "hint": "Say the first two sounds slowly.",
+          "sourceFact": "Day 27 spelling blends",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-day27-ela-2",
+          "subject": "Reading / ELA",
+          "skill": "vocabulary-in-context",
+          "prompt": "If Maya has a knack for drawing, what does that mean?",
+          "answer": "She is especially good at drawing.",
+          "choices": [
+            "She is especially good at drawing.",
+            "She dislikes drawing.",
+            "She has never tried drawing.",
+            "She forgot her pencils."
+          ],
+          "explanation": "A knack is a natural or practiced skill.",
+          "hint": "Replace knack with “special skill.”",
+          "sourceFact": "Day 27 vocabulary",
+          "tier": "material",
+          "questionType": "transfer",
+          "difficulty": 2,
+          "dok": 2,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-day27-ela-3",
+          "subject": "Reading / ELA",
+          "skill": "antonyms",
+          "prompt": "Which word is an antonym of “cold”?",
+          "answer": "warm",
+          "choices": [
+            "warm",
+            "chilly",
+            "freezing",
+            "cool"
+          ],
+          "explanation": "Warm has the opposite meaning of cold.",
+          "hint": "An antonym means opposite.",
+          "sourceFact": "Day 27 antonyms",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 1,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "daily27-math",
+      "title": "Daily review • Day 27 • Math",
+      "subject": "Math",
+      "sources": [
+        "IMG_2979.jpeg"
+      ],
+      "skills": [
+        "make-five",
+        "place-value",
+        "time-to-hour",
+        "subtraction-within-10"
+      ],
+      "notes": [
+        "Pairs such as 2 and 3 or 0 and 5 can make 5.",
+        "30 is 3 tens and 0 ones.",
+        "To tell time to the hour, read the number the short hour hand points to when the minute hand is at 12.",
+        "When objects leave a group, subtract to find how many remain."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-10-06",
+      "dateStatus": "Undated schoolwork",
+      "questions": [
+        {
+          "id": "work-day27-math-0",
+          "subject": "Math",
+          "skill": "make-five",
+          "prompt": "Which pair makes 5?",
+          "answer": "2 and 3",
+          "choices": [
+            "2 and 3",
+            "2 and 6",
+            "4 and 3",
+            "1 and 5"
+          ],
+          "explanation": "Two plus three equals five.",
+          "hint": "Add the two numbers in each pair.",
+          "sourceFact": "Day 27 make-five review",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 1,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-day27-math-1",
+          "subject": "Math",
+          "skill": "place-value",
+          "prompt": "How can 30 be written in tens and ones?",
+          "answer": "3 tens and 0 ones",
+          "choices": [
+            "3 tens and 0 ones",
+            "0 tens and 3 ones",
+            "2 tens and 10 ones",
+            "30 tens and 0 ones"
+          ],
+          "explanation": "Three tens equals thirty.",
+          "hint": "Count groups of ten.",
+          "sourceFact": "Day 27 place value",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-day27-math-2",
+          "subject": "Math",
+          "skill": "time-to-hour",
+          "prompt": "When the minute hand points to 12 and the hour hand points to 10, what time is it?",
+          "answer": "10:00",
+          "choices": [
+            "10:00",
+            "12:10",
+            "9:00",
+            "10:30"
+          ],
+          "explanation": "At an exact hour the minute hand is on 12, and the hour hand names the hour.",
+          "hint": "Read the short hand for the hour.",
+          "sourceFact": "Day 27 time to the hour",
+          "tier": "material",
+          "questionType": "transfer",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-day27-math-3",
+          "subject": "Math",
+          "skill": "subtraction-within-10",
+          "prompt": "Eight jets are on the ground. Four fly away. How many are left?",
+          "answer": "4",
+          "choices": [
+            "4",
+            "8",
+            "12",
+            "2"
+          ],
+          "explanation": "Eight minus four equals four.",
+          "hint": "Take away the four that left.",
+          "sourceFact": "Day 27 subtraction word problem",
+          "tier": "material",
+          "questionType": "transfer",
+          "difficulty": 2,
+          "dok": 2,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "daily28-ela",
+      "title": "Daily review • Day 28 • Reading / ELA",
+      "subject": "Reading / ELA",
+      "sources": [
+        "IMG_2980.jpeg"
+      ],
+      "skills": [
+        "proper-nouns",
+        "capitalization",
+        "vocabulary-in-context"
+      ],
+      "notes": [
+        "Capitalize specific names such as a store, person, state, or place.",
+        "A proper noun is the exact name of a person, place, or thing.",
+        "Knack means a special ability or something a person is especially good at."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-10-06",
+      "dateStatus": "Undated schoolwork",
+      "questions": [
+        {
+          "id": "work-day28-ela-0",
+          "subject": "Reading / ELA",
+          "skill": "capitalization",
+          "prompt": "Which sentence uses capitalization correctly?",
+          "answer": "We bought a backpack at Walmart.",
+          "choices": [
+            "We bought a backpack at Walmart.",
+            "We bought a backpack at walmart.",
+            "we bought a backpack at Walmart.",
+            "We Bought A Backpack At Walmart."
+          ],
+          "explanation": "Walmart is a specific name and the sentence begins with a capital letter.",
+          "hint": "Capitalize the first word and specific names.",
+          "sourceFact": "Day 28 proper-noun sentence review",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-day28-ela-1",
+          "subject": "Reading / ELA",
+          "skill": "proper-nouns",
+          "prompt": "Which word is a proper noun?",
+          "answer": "Hawaii",
+          "choices": [
+            "Hawaii",
+            "island",
+            "trip",
+            "snack"
+          ],
+          "explanation": "Hawaii is the specific name of a place.",
+          "hint": "Ask which word names one exact place.",
+          "sourceFact": "Day 28 proper nouns",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 1,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-day28-ela-2",
+          "subject": "Reading / ELA",
+          "skill": "vocabulary-in-context",
+          "prompt": "Which sentence uses “knack” correctly?",
+          "answer": "My teacher has a knack for explaining hard ideas clearly.",
+          "choices": [
+            "My teacher has a knack for explaining hard ideas clearly.",
+            "The knack barked at the mail carrier.",
+            "I put my lunch inside a knack.",
+            "We measured the knack with a ruler."
+          ],
+          "explanation": "Knack means a special skill or ability.",
+          "hint": "Try replacing knack with “special skill.”",
+          "sourceFact": "Day 28 vocabulary",
+          "tier": "material",
+          "questionType": "transfer",
+          "difficulty": 2,
+          "dok": 2,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "daily28-math",
+      "title": "Daily review • Day 28 • Math",
+      "subject": "Math",
+      "sources": [
+        "IMG_2980.jpeg"
+      ],
+      "skills": [
+        "addition-number-line",
+        "number-names",
+        "pentagons",
+        "compare-differences"
+      ],
+      "notes": [
+        "To add 2 on a number line, move two spaces to the right.",
+        "Thirty-four is 34 and thirty-nine is 39.",
+        "A pentagon has 5 straight sides.",
+        "“How many fewer?” asks for the difference between two amounts."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-10-06",
+      "dateStatus": "Undated schoolwork",
+      "questions": [
+        {
+          "id": "work-day28-math-0",
+          "subject": "Math",
+          "skill": "addition-number-line",
+          "prompt": "Start at 6 on a number line and add 2. Where do you land?",
+          "answer": "8",
+          "choices": [
+            "8",
+            "7",
+            "4",
+            "10"
+          ],
+          "explanation": "Move two spaces right from 6: 7, then 8.",
+          "hint": "Adding moves right on the number line.",
+          "sourceFact": "Day 28 number-line addition",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 1,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-day28-math-1",
+          "subject": "Math",
+          "skill": "number-names",
+          "prompt": "Which numeral matches “thirty-nine”?",
+          "answer": "39",
+          "choices": [
+            "39",
+            "93",
+            "29",
+            "309"
+          ],
+          "explanation": "Thirty-nine has 3 tens and 9 ones.",
+          "hint": "Listen for thirty = 3 tens and nine = 9 ones.",
+          "sourceFact": "Day 28 number names",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 1,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-day28-math-2",
+          "subject": "Math",
+          "skill": "pentagons",
+          "prompt": "How many straight sides does a pentagon have?",
+          "answer": "5",
+          "choices": [
+            "5",
+            "4",
+            "6",
+            "3"
+          ],
+          "explanation": "A pentagon is a five-sided polygon.",
+          "hint": "The prefix penta- points to five.",
+          "sourceFact": "Day 28 shapes",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 1,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-day28-math-3",
+          "subject": "Math",
+          "skill": "compare-differences",
+          "prompt": "There are 9 red vans and 5 black vans. How many fewer black vans are there?",
+          "answer": "4",
+          "choices": [
+            "4",
+            "5",
+            "9",
+            "14"
+          ],
+          "explanation": "Find the difference: 9 − 5 = 4.",
+          "hint": "“How many fewer” means compare by subtraction.",
+          "sourceFact": "Day 28 comparison subtraction",
+          "tier": "material",
+          "questionType": "transfer",
+          "difficulty": 2,
+          "dok": 2,
           "domain": "Classroom review",
           "standards": [
             "ABVM.CLASSROOM"
@@ -1688,6 +2557,36 @@
     {
       "id": "IMG_2549.jpeg",
       "sha256": "bf2137c4f69ae8e3e3c92bb0c184b74fef587b33f20e18036e3a6af41b26ddda",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2983.jpeg",
+      "sha256": "424d54a07f6b01154022076b7a15414b46598e57ff0a8fb4d68d214fd3dc423a",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2982.jpeg",
+      "sha256": "d8e7770b3cd91f6606c8721de9037a7b022d204b0ced8a8e66e6489e4e66766e",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2980.jpeg",
+      "sha256": "ce8700e8dfd7b7174935b19b175b87bc2e8219c484e578656a147f8fee3fc4e0",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2979.jpeg",
+      "sha256": "0430965d7b5d04844ea18fa4b30352acf374258a00c18f660c739ac40e5ec2fc",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2978.jpeg",
+      "sha256": "1a4db1fd3089e24ff348a76dcc81bc3a8a715d41c77a4ffd47ad1afbc0143e86",
+      "status": "integrated"
+    },
+    {
+      "id": "IMG_2981.jpeg",
+      "sha256": "8f1c6ff1e2646c835fa6647a6323e1fa4cd34ad5abb1065c97d400ba97ddfcdc",
       "status": "integrated"
     }
   ]
