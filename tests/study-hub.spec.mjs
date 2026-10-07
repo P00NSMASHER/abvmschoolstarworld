@@ -1,10 +1,25 @@
 import {test,expect} from '@playwright/test';
 test.use({serviceWorkers:'block'});
 
-async function mount(page,day,testInfo){
+async function mount(page,day,testInfo,{excludeCurrentSubjects=[]}={}){
   await page.clock.setFixedTime(new Date(day+'T16:00:00-04:00'));
   const envelope=await (await page.request.get('/data/study-pack.json')).json();
   const fixture=structuredClone(envelope);
+  // Historical synthetic fixtures must not silently inherit newer current
+  // teacher-pack material. Otherwise a real future curriculum addition can
+  // change the size/content of a deliberately frozen past test bank.
+  const blocked=new Set(excludeCurrentSubjects);
+  if(blocked.size){
+    for(const key of ['contentPipeline','recentReviewPipeline']){
+      const pipeline=fixture.pack[key];
+      if(!pipeline)continue;
+      fixture.pack[key]={
+        ...pipeline,
+        skills:(pipeline.skills||[]).filter(row=>!blocked.has(row.subject)),
+        questions:(pipeline.questions||[]).filter(row=>!blocked.has(row.subject)),
+      };
+    }
+  }
   fixture.pack.importantDates=[
     {date:'Wednesday, Oct. 7',label:'Math test',kind:'test'},
     {date:'Wednesday, Oct. 7',label:'Religion Chapter 2 test',kind:'test'},
@@ -30,7 +45,7 @@ test('weekly test prep covers same-day subjects in the existing player and compl
   };
   expect(allowed.Math).toHaveLength(3);expect(allowed.Religion).toHaveLength(10);
   const quota=3,total=quota*2;
-  await mount(page,'2026-10-04',testInfo);
+  await mount(page,'2026-10-04',testInfo,{excludeCurrentSubjects:['Math']});
   const prep=page.locator('[data-study-tests]');
   await expect(prep.locator('time')).toHaveAttribute('datetime','2026-10-07');
   await expect(prep.locator('time')).toContainText(/Oct(?:ober)?\.? 7/);
