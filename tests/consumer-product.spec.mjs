@@ -19,7 +19,12 @@ for(const width of sizes){
       await button.click();
       await expect(button).toHaveAttribute('aria-current','page');
       await expect(page.locator('.screen h1')).toBeVisible();
-      if(id==='study')await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+      if(id==='study'){
+        await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+        const picker=page.locator("[data-test-select]");
+        await expect(picker).toBeVisible();
+        expect(await picker.evaluate(el=>parseFloat(getComputedStyle(el).fontSize)),"native selector avoids iOS focus zoom").toBeGreaterThanOrEqual(16);
+      }
       expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),label+' document').toBe(true);
       expect(await page.locator('.screen').evaluate(el=>el.scrollWidth<=el.clientWidth+1),label+' content').toBe(true);
       for(const target of await nav.locator('button').all()){

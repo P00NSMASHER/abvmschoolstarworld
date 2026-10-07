@@ -322,7 +322,8 @@ test("Study derives spelling and STAR test dates from the current school calenda
   await starPage.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:fixture}));
   await starPage.goto("http://127.0.0.1:4173/#study");
   const star=starPage.locator("[data-study-tests]");
-  await expect(star).toContainText("COMING UP");
+  await expect(star).toContainText("No verified practice yet");
+  await expect(star.locator("[data-test-single]")).toBeDisabled();
   await expect(star.locator("time")).toHaveAttribute("datetime","2027-01-12");
   await expect(star.locator("time")).toContainText("Jan 12");
   await expect(star).toContainText("STAR Testing window");
@@ -355,7 +356,8 @@ test("Study labels a distant test with its actual date and keeps it out of weekl
   await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:fixture}));
   await page.goto("http://127.0.0.1:4173/#study");
   const next=page.locator("[data-study-tests]");
-  await expect(next).toContainText("COMING UP");
+  await expect(next).toContainText("No verified practice yet");
+  await expect(next.locator("[data-test-single]")).toBeDisabled();
   await expect(next.locator("time")).toHaveAttribute("datetime","2027-01-12");
   await expect(next.locator("time")).toContainText("Jan 12");
   await expect(next).toContainText("STAR Testing window");
