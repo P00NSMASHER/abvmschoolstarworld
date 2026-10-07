@@ -62,7 +62,8 @@ test('file integration writes only to an external private path',async()=>{
   try{
     const privateDir=path.join(dir,'private'),repoRoot=path.join(dir,'public-repo');
     const history=path.join(privateDir,'history.json'),input=path.join(privateDir,'batch.json');
-    await mkdir(privateDir,{recursive:true});\n    await writeFile(input,JSON.stringify(batch([observation('o1','p1','2026-10-01','incorrect')])));
+    await mkdir(privateDir,{recursive:true});
+    await writeFile(input,JSON.stringify(batch([observation('o1','p1','2026-10-01','incorrect')])));
     const result=await integrateLearningHistory(history,input,{write:true,repoRoot});
     assert.equal(result.changed,true);
     const saved=JSON.parse(await readFile(history,'utf8'));
