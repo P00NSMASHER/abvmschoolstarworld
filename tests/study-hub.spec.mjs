@@ -35,7 +35,7 @@ test('weekly test prep covers same-day subjects in the existing player and compl
     return window.ABVMStudyGames.buildCatalog(envelope.pack,{sourceKey}).questions
       .filter(q=>q.subject==='Math'&&q.tier==='material');
   });
-  const dedupe=rows=>[...new Map(rows.map(q=>[(q.id||'')+'|'+q.prompt+'|'+q.answer,q])).values()];
+  const dedupe=rows=>[...new Map(rows.map(q=>[q.prompt+'|'+q.answer,q])).values()];
   const allowed={Math:dedupe([...currentMath,...archivedMath]),Religion:religion};
   const quota=Math.min(4,allowed.Math.length,allowed.Religion.length),total=quota*2;
   expect(quota).toBeGreaterThanOrEqual(3);
