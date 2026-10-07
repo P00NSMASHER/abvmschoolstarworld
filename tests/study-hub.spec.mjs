@@ -21,16 +21,24 @@ test('weekly test prep covers same-day subjects in the existing player and compl
     page.request.get('/data/study-archive.json').then(response=>response.json()),
     page.request.get('/data/schoolwork.json').then(response=>response.json())
   ]);
-  // Oct 4 belongs to the Sep 28–Oct 4 school week. Its actual Math archive
-  // contains three questions; strict prep gives both test banks that quota.
-  const allowed={
-    Math:archive.questions.filter(q=>q.subject==='Math'&&q.provenance.some(source=>source.capturedAt==='2026-09-29')),
-    Religion:work.lessons.filter(lesson=>lesson.subject==='Religion'&&lesson.chapter===2)
-      .flatMap(lesson=>lesson.questions).filter(q=>q.skill==='religion-chapter-2')
-  };
-  expect(allowed.Math).toHaveLength(3);expect(allowed.Religion).toHaveLength(10);
-  const quota=3,total=quota*2;
+  // Oct 4 belongs to the Sep 28–Oct 4 school week. The reviewed Math bank
+  // can grow when a newly governed current family is published. Strict test prep
+  // may use that current material plus the dated archive, but never STAR fallback.
+  const archivedMath=archive.questions.filter(q=>q.subject==='Math'&&q.provenance.some(source=>source.capturedAt==='2026-09-29'));
+  const religion=work.lessons.filter(lesson=>lesson.subject==='Religion'&&lesson.chapter===2)
+    .flatMap(lesson=>lesson.questions).filter(q=>q.skill==='religion-chapter-2');
+  expect(archivedMath).toHaveLength(3);expect(religion).toHaveLength(10);
   await mount(page,'2026-10-04',testInfo);
+  const currentMath=await page.evaluate(async()=>{
+    const envelope=await fetch('./data/study-pack-runtime.json',{cache:'no-store'}).then(response=>response.json());
+    const sourceKey=window.ABVMStudyGames.sourceKeyFromEnvelope(envelope.pack,envelope);
+    return window.ABVMStudyGames.buildCatalog(envelope.pack,{sourceKey}).questions
+      .filter(q=>q.subject==='Math'&&q.tier==='material');
+  });
+  const dedupe=rows=>[...new Map(rows.map(q=>[q.prompt+'|'+q.answer,q])).values()];
+  const allowed={Math:dedupe([...currentMath,...archivedMath]),Religion:religion};
+  const quota=Math.min(4,allowed.Math.length,allowed.Religion.length),total=quota*2;
+  expect(quota).toBeGreaterThanOrEqual(3);
   const prep=page.locator('[data-study-tests]');
   await expect(prep.locator('time')).toHaveAttribute('datetime','2026-10-07');
   await expect(prep.locator('time')).toContainText(/Oct(?:ober)?\.? 7/);
