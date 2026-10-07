@@ -263,8 +263,12 @@
 .games-screen .study-note-topic .study-note-body{background:white;padding:0 14px 14px}
 .games-screen .study-note-topic ul{list-style:none;padding:0}
 .games-screen .study-note-topic li{list-style:none;font-size:.85rem;line-height:1.5;padding-top:8px}
-.games-screen .study-note-review{margin-top:20px}
-.games-screen .study-note-review h4{margin:0 0 10px;font-size:.85rem}
+.games-screen .study-note-review{margin-top:14px;border:1px solid var(--study-line);border-radius:14px;background:#f5faff;overflow:hidden}
+.games-screen .study-note-review>summary{padding:13px;font-size:.85rem;min-height:48px;cursor:pointer}
+.games-screen .study-note-review>summary>small{float:right;color:var(--study-muted);font-weight:500}
+.games-screen :is(.study-note-review,.study-note-point):not([open])>:not(summary){display:none}
+.games-screen .study-note-review-body{padding:0 14px 14px;background:white}
+.games-screen .study-note-review-body>p{padding-top:12px;font-size:.75rem;color:var(--study-muted)}
 .games-screen .study-note-point{padding:0;border-bottom:1px solid var(--study-line)}
 .games-screen .study-note-point summary{padding:12px 0;min-height:44px;font-size:.85rem;cursor:pointer}
 .games-screen .study-note-point p{padding:0 0 14px;font-size:.85rem;line-height:1.6}

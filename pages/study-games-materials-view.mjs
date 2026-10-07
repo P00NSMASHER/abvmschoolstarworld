@@ -117,10 +117,10 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
         if(!groups.has(label))groups.set(label,[]);groups.get(label).push(text);
       }
       const topicHtml=[...groups].map(([label,rows],groupIndex)=>'<details class="study-note-topic"'+(groupIndex===0?' open':'')+'><summary><strong>'+esc(label==='Story'?'Stories':label)+'</strong><small>'+rows.length+' '+(rows.length===1?'topic':'topics')+'</small></summary><div class="study-note-body">'+list(rows)+'</div></details>').join('');
-      const reviewHtml=review.length?'<section class="study-note-review"><h4>Review one idea</h4>'+review.map(text=>{
+      const reviewHtml=review.length?'<details class="study-note-review"><summary><strong>Practice ideas</strong><small>'+review.length+' '+(review.length===1?'idea':'ideas')+'</small></summary><div class="study-note-review-body"><p>Choose one idea to review.</p>'+review.map(text=>{
         const words=text.trim().split(/\s+/),title=words.slice(0,9).join(' ')+(words.length>9?'…':'');
         return '<details class="study-note-point"><summary>'+esc(title)+'</summary><div class="study-note-body"><p>'+esc(text)+'</p></div></details>';
-      }).join('')+'</section>':'';
+      }).join('')+'</div></details>':'';
       const saved=lessons.filter(lesson=>lesson.subject===subject);
       const lessonRows=saved.length?'<section class="study-note-schoolwork"><h4>Saved schoolwork</h4>'+saved.map(lesson=>'<details class="game-material-lesson"><summary><span>'+esc(lesson.title)+'</span><small>'+esc(lesson.studiedOn?dateLabel(lesson.studiedOn):'Undated schoolwork')+'</small></summary><div class="study-note-body">'+list(lesson.notes||[])+'</div></details>').join('')+'</section>':'';
       const subjectWords=vocabulary.filter(row=>wordSubject(row)===subject);
