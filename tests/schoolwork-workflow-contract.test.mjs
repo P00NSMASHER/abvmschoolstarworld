@@ -30,7 +30,7 @@ test('schoolwork intake keeps the canonical 12-step cumulative workflow in order
 });
 
 test('schoolwork workflow preserves the public/private boundary and cumulative semantics', async () => {
-  const text = (await readFile(workflowPath, 'utf8')).toLowerCase();
+  const text = (await readFile(workflowPath, 'utf8')).toLowerCase().replace(/\\s+/g, ' ');
   for (const phrase of [
     'raw photos, ocr dumps',
     'student responses are evidence for analysis, not public content',
