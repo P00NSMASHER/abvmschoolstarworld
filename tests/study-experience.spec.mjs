@@ -32,10 +32,11 @@ async function placeValueGame(page){
   // the canonical STAR questions and all educational content remain unchanged.
   const originalQuestions=structuredClone(source.questions);
   const sourceRef='qa-original-place-value-practice';
-  const fixtureQuestions=source.questions.map(question=>({...question,
-    id:'qa-saved-'+question.id,tier:'material',
+  // Retain the tierless saved-work shape and distinct IDs introduced in #257.
+  const fixtureQuestions=source.questions.map(({tier,...question})=>({...question,
+    id:'saved-fixture-'+question.id,
     provenance:[{sourceRef,capturedAt:'2026-10-05'}],
-    originalPractice:{questionId:question.id,tier:question.tier,provenance:question.provenance},
+    originalPractice:{questionId:question.id,tier,provenance:question.provenance},
   }));
   const content=({id,tier,provenance,originalPractice,...educationalContent})=>educationalContent;
   expect(fixtureQuestions.map(content)).toEqual(originalQuestions.map(content));
