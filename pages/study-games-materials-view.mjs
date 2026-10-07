@@ -6,6 +6,15 @@ const nonempty = value => typeof value === 'string' && value.trim();
 const list = rows => {const clean=(Array.isArray(rows)?rows:[]).filter(nonempty);return clean.length?'<ul>'+clean.map(row=>'<li>'+esc(row)+'</li>').join('')+'</ul>':'';};
 const dateLabel = date => {const value=new Date(date+'T12:00:00Z');return /^\d{4}-\d{2}-\d{2}$/.test(date||'')&&Number.isFinite(value.getTime())
   ? new Intl.DateTimeFormat('en-US',{weekday:'short',month:'short',day:'numeric',timeZone:'UTC'}).format(value) : '';};
+const dateParts = date => {
+  const value=new Date(date+'T12:00:00Z');
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date||'')||!Number.isFinite(value.getTime()))return{weekday:'',day:'',label:''};
+  return {
+    weekday:new Intl.DateTimeFormat('en-US',{weekday:'short',timeZone:'UTC'}).format(value),
+    day:new Intl.DateTimeFormat('en-US',{day:'numeric',timeZone:'UTC'}).format(value),
+    label:dateLabel(date),
+  };
+};
 const safeUrl = value => {try{return ['https:','http:'].includes(new URL(value).protocol);}catch{return false;}};
 const missingDefinition = value => /teacher page does not provide a definition|no definition supplied/i.test(String(value ?? ''));
 export function resolveVocabularyMeaning(row,dictionary = () => '') {
@@ -61,55 +70,87 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
   }
 
   function sourceHtml() {
-    return '<section class="game-materials" aria-label="Practice materials">' +
-      '<label for="study-source">Practice from</label><select id="study-source" data-study-source' + (!model?' disabled':'') + '>' +
+    return '<section class="game-materials study-source-card" aria-label="Practice materials">' +
+      '<div class="study-source-copy"><span>PRACTICE FROM</span><strong>Choose your material</strong></div>' +
+      '<select id="study-source" aria-label="Practice from" data-study-source' + (!model?' disabled':'') + '>' +
       Object.entries(sources).map(([key,label]) => '<option value="' + key + '"' + (source===key?' selected':'') + '>' + label + '</option>').join('') + '</select>' +
-      (source==='mix' ? '<fieldset data-study-mix><legend>Choose what to include</legend>' + Object.entries(sources).filter(([key])=>key!=='mix').map(([key,label]) =>
+      (source==='mix' ? '<fieldset data-study-mix><legend>Include in this mix</legend>' + Object.entries(sources).filter(([key])=>key!=='mix').map(([key,label]) =>
         '<label><input type="checkbox" data-study-pick="' + key + '"' + (picks.includes(key)?' checked':'') + '><span>' + label + '</span></label>').join('') + '</fieldset>' : '') + '</section>';
   }
 
-  function actionsHtml({complete=false,loading=true} = {}) {
-    const tests = model?.tests(), pending = tests?.tests || [], missing = tests?.missing || [], fallback = tests?.fallback || [];
-    const printable = model?.printableTests?.()?.tests || pending;
-    const partial = model?.status?.partial;
-    return '<section class="game-material-actions" aria-label="More practice">' +
-      '<div class="game-daily-action"><button type="button" data-game-start="daily"' + (model&&!model.forMode('daily',selection()).count?' disabled':'') + '>' + (complete?'Practice a little more':'Daily practice') + '</button><span>' +
-      (complete?'Today’s practice is complete.':'Eight questions. No timer.') + '</span></div>' +
-      (!model&&loading?'<p class="game-material-status" role="status">Loading saved materials…</p>':'') +
-      (model ? '<div class="game-test-action" data-study-tests>' + (pending.length ? '<div><strong>Next test' + (pending.length>1?'s':'') + '</strong><time datetime="' + esc(tests.date) + '">' + esc(dateLabel(tests.date)) + '</time><p>' + pending.map(test=>esc(test.label)).join(' · ') + '</p></div>' +
-        (missing.length ? (tests.supported || []).map(test => '<button type="button" data-test-single="' + test.index + '">Practice ' + esc(test.label) + '</button>').join('') : '<button type="button" data-test>Start test practice</button>') +
-        (printable.length?'<div class="game-guide-actions" aria-label="Printable study guides"><strong>Printable study guides</strong>' + printable.map(test=>'<button type="button" data-test-guide="' + test.index + '">Print guide: ' + esc(test.label) + ' · ' + esc(dateLabel(test.date)) + '</button>').join('') + '</div>':'') +
-        (missing.length?'<p class="game-material-status" data-test-missing>Practice is not available for ' + missing.map(test=>esc(test.label)).join(', ') + '. Review the teacher notes.</p>':'') +
-        (fallback.length?'<p class="game-material-status" data-test-fallback>Original Grade 2 skill practice for ' + fallback.map(test=>esc(test.label)).join(', ') + '; no reviewed test-specific bank is available yet.</p>':'') : '<p>No upcoming test is listed.</p>') + '</div>' : '') +
-      (partial?'<div class="game-material-status" role="status"><p>Some saved materials could not load. The available practice still works.</p><button type="button" data-study-retry>Retry saved materials</button></div>':'') +
-      (tests?.message?'<div class="game-test-status" role="status"><span>' + esc(tests.message) + '</span>' + (tests.canUndo?'<button type="button" data-undo-test>Undo</button>':'') + '</div>':'') +
-      '</section>';
+  function priorityHtml({loading=true} = {}) {
+    const tests=model?.tests(),pending=tests?.tests||[],missing=tests?.missing||[],fallback=tests?.fallback||[];
+    const printable=model?.printableTests?.()?.tests||pending;
+    if(!model&&loading){
+      return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><span>UP NEXT</span><h2 id="study-priority-title">Test ready</h2></div><div class="study-test-card is-loading" role="status"><div class="study-test-copy"><strong>Checking upcoming tests…</strong><p>Getting the latest reviewed study material.</p></div></div></section>';
+    }
+    if(!pending.length){
+      return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><span>UP NEXT</span><h2 id="study-priority-title">Test ready</h2></div><div class="study-test-card is-clear"><div class="study-test-mark" aria-hidden="true">✓</div><div class="study-test-copy"><strong>No upcoming test is listed</strong><p>Use a game below for regular practice.</p></div></div>' +
+        (tests?.message?'<div class="game-test-status" role="status"><span>'+esc(tests.message)+'</span>'+(tests.canUndo?'<button type="button" data-undo-test>Undo</button>':'')+'</div>':'')+'</section>';
+    }
+    const date=dateParts(tests.date),labels=pending.map(test=>esc(test.label));
+    const practiceButtons=missing.length
+      ?(tests.supported||[]).map(test=>'<button type="button" class="study-test-primary" data-test-single="'+test.index+'">Practice '+esc(test.label)+'</button>').join('')
+      :'<button type="button" class="study-test-primary" data-test>Start test practice</button>';
+    const guideButtons=printable.map(test=>'<button type="button" class="study-guide-button" data-test-guide="'+test.index+'">Print '+esc(test.label)+' guide</button>').join('');
+    return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><span>UP NEXT</span><h2 id="study-priority-title">Test ready</h2></div>' +
+      '<article class="study-test-card"><div class="study-test-date" aria-hidden="true"><span>'+esc(date.weekday)+'</span><strong>'+esc(date.day)+'</strong></div><div class="study-test-copy"><small>NEXT TEST'+(pending.length>1?'S':'')+'</small><h3>'+labels.join('<span class="study-test-divider"> · </span>')+'</h3><p>'+esc(date.label)+'</p></div><div class="study-test-actions">'+practiceButtons+guideButtons+'</div>' +
+      (missing.length?'<p class="game-material-status" data-test-missing>Teacher-specific practice is not ready for '+missing.map(test=>esc(test.label)).join(', ')+'. Use the reviewed notes and available practice.</p>':'') +
+      (fallback.length?'<p class="game-material-status" data-test-fallback>Some practice uses original Grade 2 skill questions because a reviewed test-specific bank is not available yet.</p>':'') +
+      '</article>'+(tests?.message?'<div class="game-test-status" role="status"><span>'+esc(tests.message)+'</span>'+(tests.canUndo?'<button type="button" data-undo-test>Undo</button>':'')+'</div>':'')+'</section>';
+  }
+
+  function dailyHtml({complete=false} = {}) {
+    const disabled=model&&!model.forMode('daily',selection()).count;
+    return '<section class="study-daily-card" aria-label="Daily practice"><div class="study-daily-icon" aria-hidden="true">★</div><div class="study-daily-copy"><small>DAILY PRACTICE</small><strong>'+(complete?'Practice a little more':'Eight-question warm-up')+'</strong><span>'+(complete?'Today’s practice is already complete.':'No timer. Mixes current skills and useful review.')+'</span></div><button type="button" data-game-start="daily"'+(disabled?' disabled':'')+'>'+(complete?'Practice again':'Start')+'</button></section>';
+  }
+
+  function statusHtml({loading=true,error=false} = {}) {
+    const partial=model?.status?.partial;
+    if(error)return '<div class="game-material-status study-load-status" role="status"><p>Saved materials could not load. Current Games are still available.</p><button type="button" data-study-retry>Retry saved materials</button></div>';
+    if(!model&&loading)return '<p class="game-material-status study-load-status" role="status">Loading saved notes and test tools…</p>';
+    if(partial)return '<div class="game-material-status study-load-status" role="status"><p>Some saved materials could not load. Available practice still works.</p><button type="button" data-study-retry>Retry saved materials</button></div>';
+    return '';
   }
 
   function notesContent() {
-    const data = model?.notes(source,{sources:picks});
-    if (!data) return '<p>Notes are still loading.</p>';
-    const lessons = data.lessons || [], notes = (data.notes || []).filter(row=>nonempty(row.text)), vocabulary = (data.vocabulary || []).filter(row=>nonempty(row.term));
+    const data=model?.notes(source,{sources:picks});
+    if(!data)return '<p class="game-material-status">Notes are still loading.</p>';
+    const lessons=data.lessons||[],notes=(data.notes||[]).filter(row=>nonempty(row.text)),vocabulary=(data.vocabulary||[]).filter(row=>nonempty(row.term));
     const links=(data.links||[]).filter(link=>safeUrl(link.url)),warnings=data.warnings||[];
-    const subjects = [...new Set([...notes,...links,...warnings].map(row=>row.subject))];
-    const lessonRows = lessons.map(lesson => '<details class="game-material-lesson"><summary>' + esc(lesson.title) + '</summary><p class="game-material-status">' + esc(lesson.subject) + ' · ' +
-      (lesson.studiedOn?esc(dateLabel(lesson.studiedOn)):'Saved schoolwork · undated') + '</p>' + list(lesson.notes || []) + '</details>').join('');
-    const noteRows = subjects.map(subject => '<details class="game-material-lesson" data-note-subject="'+esc(subject)+'"><summary>' + esc(subject || 'Class notes') + '</summary>' +
-      list(notes.filter(row=>row.subject===subject).map(row=>row.text)) +
-      warnings.filter(row=>row.subject===subject).map(row=>'<p class="game-note-warning">'+esc(row.text)+'</p>').join('') +
-      links.filter(row=>row.subject===subject).map(referenceHtml).join('') + '</details>').join('');
-    const words = vocabulary.length?'<details class="game-material-lesson"><summary>Words to know</summary><dl>' + vocabulary.map(row=>{const meaning=resolveVocabularyMeaning(row,term=>win?.ABVMStudyGames?.vocabularyDefinition?.(term));return '<dt>' + esc(row.term) + '</dt>' + (meaning?'<dd>' + esc(meaning) + '</dd>':'');}).join('') + '</dl></details>':'';
-    return (source==='saved'?'<p class="game-material-status">Undated schoolwork stays in this collection, not in this week.</p>':'') +
-      (lessonRows + noteRows + words || '<p>No lesson notes are included in this selection.</p>');
+    const subjects=[...new Set([...notes,...links,...warnings].map(row=>row.subject).filter(nonempty))];
+    const lessonRows=lessons.map(lesson=>'<details class="game-material-lesson"><summary><span>'+esc(lesson.title)+'</span><small>'+esc(lesson.subject)+(lesson.studiedOn?' · '+esc(dateLabel(lesson.studiedOn)):'')+'</small></summary><div class="study-note-body">'+list(lesson.notes||[])+'</div></details>').join('');
+    const noteRows=subjects.map(subject=>'<details class="game-material-lesson" data-note-subject="'+esc(subject)+'"><summary><span>'+esc(subject)+'</span><small>Class notes</small></summary><div class="study-note-body">'+
+      list(notes.filter(row=>row.subject===subject).map(row=>row.text))+
+      warnings.filter(row=>row.subject===subject).map(row=>'<p class="game-note-warning">'+esc(row.text)+'</p>').join('')+
+      links.filter(row=>row.subject===subject).map(referenceHtml).join('')+'</div></details>').join('');
+    const words=vocabulary.length?'<details class="game-material-lesson study-vocabulary"><summary><span>Words to know</span><small>'+vocabulary.length+' word'+(vocabulary.length===1?'':'s')+'</small></summary><div class="study-note-body"><dl>'+vocabulary.map(row=>{const meaning=resolveVocabularyMeaning(row,term=>win?.ABVMStudyGames?.vocabularyDefinition?.(term));return '<div><dt>'+esc(row.term)+'</dt>'+(meaning?'<dd>'+esc(meaning)+'</dd>':'')+'</div>';}).join('')+'</dl></div></details>':'';
+    const body=lessonRows+noteRows+words;
+    return (source==='saved'?'<p class="game-material-status">Undated schoolwork stays in All my learning, not This week.</p>':'')+
+      '<div class="study-notes-grid">'+(body||'<p class="study-tools-empty">No lesson notes are included in this selection.</p>')+'</div>';
   }
 
   function secondaryHtml() {
-    const tests = model?.tests(), pending = tests?.tests || [], completed = tests?.completed || [];
-    return '<div class="game-material-secondary"><details data-study-notes' + (notesOpen?' open':'') + '><summary>Notes &amp; lessons</summary><div data-study-notes-content>' + (notesOpen?notesContent():'') + '</div></details>' +
-      '<details data-study-test-options' + (testsOpen?' open':'') + '><summary>Manage tests</summary><p>Hide a finished test here. You can restore it on this browser.</p>' +
-      (pending.length?'<button type="button" data-complete-test>' + (pending.length>1?'Mark these tests finished':'Mark test finished') + '</button>':'') +
-      (completed.length?'<h3>Tests hidden on this device</h3>' + completed.map(test=>'<button type="button" data-restore-test="' + esc(test.key) + '">Restore ' + esc(test.label) + '</button>').join(''):'') +
-      (!pending.length&&!completed.length?'<p>No tests to manage.</p>':'') + '</details></div>';
+    const tests=model?.tests(),pending=tests?.tests||[],completed=tests?.completed||[];
+    return '<section class="study-tools" aria-labelledby="study-tools-title"><div class="study-section-heading compact"><span>STUDY TOOLS</span><h2 id="study-tools-title">Review &amp; organize</h2></div><div class="study-tool-list">' +
+      '<details class="study-tool-card" data-study-notes'+(notesOpen?' open':'')+'><summary><span class="study-tool-icon notes" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg></span><span class="study-tool-copy"><strong>Notes &amp; lessons</strong><small>Subjects, vocabulary, and reviewed links</small></span><b aria-hidden="true">›</b></summary><div class="study-tool-body" data-study-notes-content>'+(notesOpen?notesContent():'')+'</div></details>' +
+      '<details class="study-tool-card" data-study-test-options'+(testsOpen?' open':'')+'><summary><span class="study-tool-icon tests" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4h10a2 2 0 0 1 2 2v15H5V6a2 2 0 0 1 2-2ZM8 2v4M16 2v4M8 10h8M8 14h5"/></svg></span><span class="study-tool-copy"><strong>Manage tests</strong><small>Hide finished tests or restore them later</small></span><b aria-hidden="true">›</b></summary><div class="study-tool-body"><p>Finished tests are hidden only on this browser.</p>' +
+      (pending.length?'<button type="button" data-complete-test>'+(pending.length>1?'Mark current tests finished':'Mark test finished')+'</button>':'')+
+      (completed.length?'<h3>Hidden tests</h3>'+completed.map(test=>'<button type="button" data-restore-test="'+esc(test.key)+'">Restore '+esc(test.label)+'</button>').join(''):'')+
+      (!pending.length&&!completed.length?'<p>No tests to manage.</p>':'')+'</div></details></div></section>';
+  }
+
+  function homeHtml({gameGrid='',complete=false,loading=true,error=false} = {}) {
+    return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Study one thing at a time</h2><span>Get ready for the next test or pick a quick game.</span></div></section>' +
+      priorityHtml({loading}) + sourceHtml() +
+      '<section class="study-game-section" aria-labelledby="study-game-section-title"><div class="study-section-heading"><span>PRACTICE</span><h2 id="study-game-section-title">Choose a game</h2></div>'+gameGrid+'</section>' +
+      dailyHtml({complete}) + secondaryHtml() + statusHtml({loading,error}) +
+      '<p class="game-privacy-note">Practice uses reviewed school skills first. STAR-style items are original Grade 2 practice; private student answers and grades are not used.</p>';
+  }
+
+  // Backward-compatible aggregate retained for existing callers/tests.
+  function actionsHtml({complete=false,loading=true} = {}) {
+    return priorityHtml({loading})+dailyHtml({complete})+statusHtml({loading});
   }
 
   function bind(host) {
@@ -154,5 +195,5 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
     }));
   }
 
-  return {selection,sourceHtml,actionsHtml,secondaryHtml,bind,readAloud,setModel(value){model=value;}};
+  return {selection,sourceHtml,priorityHtml,dailyHtml,statusHtml,homeHtml,actionsHtml,secondaryHtml,bind,readAloud,setModel(value){model=value;}};
 }
