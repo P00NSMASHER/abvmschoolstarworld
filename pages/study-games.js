@@ -1405,6 +1405,32 @@ function pickBalanced(pool,count,seed,skillStats,preferredSkills=[],recentKeys=n
   }
   return orderForVariety(selected);
 }
+function selectSubjectQuestions(pool,count,seed,skillStats,preferredSkills,recent){
+  const selected=[],usedIds=new Set(),usedVariants=new Set();
+  const append=(rows,label,{freshOnly=true}={})=>{
+    if(selected.length>=count)return;
+    const candidates=rows.filter(q=>{
+      const variant=semanticRotationKey(q);
+      return !usedIds.has(q.id)&&!usedVariants.has(variant)&&(!freshOnly||!recent.has(variant));
+    });
+    if(!candidates.length)return;
+    const picked=pickBalanced(candidates,count-selected.length,seed+"|"+label,skillStats,preferredSkills,freshOnly?new Set():recent);
+    for(const q of picked){
+      const variant=semanticRotationKey(q);
+      if(usedIds.has(q.id)||usedVariants.has(variant))continue;
+      selected.push(q);usedIds.add(q.id);usedVariants.add(variant);
+      if(selected.length>=count)break;
+    }
+  };
+  const current=pool.filter(q=>q.tier==="material");
+  const review=pool.filter(q=>q.tier==="recent-review");
+  const star=pool.filter(q=>q.tier==="star-fallback"&&["Math","Reading / ELA"].includes(q.subject));
+  append(current,"current");
+  append(review,"review");
+  append(star,"star");
+  if(selected.length<count)append([...current,...review,...star],"repeat",{freshOnly:false});
+  return orderForVariety(selected.slice(0,count));
+}
 function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillStats={},preferredSkills=[]}={}){
   let pool=[...(catalog?.questions||[])];
   const wanted=Array.isArray(subjects)?subjects.map(text).filter(Boolean):[];
@@ -1415,8 +1441,7 @@ function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillSt
   if(wantedSkills.length){
     pool=pool.filter(q=>q.tier==="material");
   }else if(wanted.length){
-    const current=pool.filter(q=>q.tier==="material"),review=pool.filter(q=>q.tier==="recent-review"),star=pool.filter(q=>q.tier==="star-fallback"&&["Math","Reading / ELA"].includes(q.subject));
-    pool=current.length?current:review.length?review:star;
+    return selectSubjectQuestions(pool,count,seed,skillStats,preferredSkills,recent);
   }else{
     const current=pool.filter(q=>q.tier==="material"),review=pool.filter(q=>q.tier==="recent-review"),star=pool.filter(q=>q.tier==="star-fallback"&&["Math","Reading / ELA"].includes(q.subject));
     const currentSubjects=new Set(current.map(q=>q.subject));
