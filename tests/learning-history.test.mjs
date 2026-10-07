@@ -54,7 +54,7 @@ test('replay is idempotent and conflicting observation IDs fail closed',()=>{
 test('private history and reviewed batch paths cannot live inside public repo',()=>{
   const repoRoot='/tmp/public-abvm';
   assert.throws(()=>assertPrivatePath('/tmp/public-abvm/private/history.json','History',repoRoot),/outside the public ABVM repository/);
-  assert.equal(assertPrivatePath('/tmp/private-abvm/history.json','History',repoRoot),'/tmp/private-abvm/history.json');
+  assert.equal(assertPrivatePath('/tmp/private-abvm/history.json','History',repoRoot),path.resolve('/tmp/private-abvm/history.json'));
 });
 
 test('file integration writes only to an external private path',async()=>{

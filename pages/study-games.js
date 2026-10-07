@@ -1425,23 +1425,11 @@ function selectSubjectQuestions(pool,count,seed,skillStats,preferredSkills,recen
   const current=pool.filter(q=>q.tier==="material");
   const review=pool.filter(q=>q.tier==="recent-review");
   const star=pool.filter(q=>q.tier==="star-fallback"&&["Math","Reading / ELA"].includes(q.subject));
-  const primary=current.length?current:review;
-  if(primary.length){
-    const primaryHasHistory=primary.some(q=>recent.has(semanticRotationKey(q)));
-    append(primary,current.length?"current":"review");
-    // A small first-time verified bank stays focused instead of being padded
-    // with unrelated fallback. Once this subject's current material has been
-    // seen, fresh review/fallback items prevent immediate repeats.
-    if(primaryHasHistory&&selected.length<count){
-      if(current.length)append(review,"review");
-      append(star,"star");
-      if(selected.length<count)append([...current,...review,...star],"repeat",{freshOnly:false});
-    }
-  }else{
-    append(star,"star");
-    if(selected.length<count)append(star,"repeat",{freshOnly:false});
-  }
-  return orderForVariety(selected.slice(0,count));
+  append(current,"current");
+  if(selected.length<count)append(review,"review");
+  if(selected.length<count)append(star,"star");
+  if(selected.length<count)append([...current,...review,...star],"repeat",{freshOnly:false});
+  return selected.slice(0,count);
 }
 function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillStats={},preferredSkills=[]}={}){
   let pool=[...(catalog?.questions||[])];
@@ -1478,7 +1466,7 @@ function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillSt
       const fill=pickBalanced(remainder,count-selected.length,seed+"|fallback-fill",skillStats,preferredSkills,new Set([...recent,...usedVariants]));
       selected.push(...fill);
     }
-    return orderForVariety(selected.slice(0,count));
+    return selectSubjectQuestions(pool,count,seed,skillStats,preferredSkills,recent);
   }
   return pickBalanced(pool,count,seed,skillStats,preferredSkills,recent);
 }

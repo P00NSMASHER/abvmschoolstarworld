@@ -491,3 +491,4 @@
 .games-screen .game-streak-summary.positive{border-color:#a8d7b4;background:#f1fbf3;color:#225f33}
 .games-screen .game-streak-summary.negative{border-color:#e1aaa6;background:#fff4f3;color:#7b2b24}
 .games-screen .game-streak-summary.neutral{color:#445b72}
+.study-test-picker{display:grid;gap:5px;color:#526579;font-size:9px;font-weight:900;letter-spacing:.04em}.study-test-picker select{width:100%;min-height:44px;border:1px solid #aebfca;border-radius:11px;background:#fff;color:#203b52;padding:8px 10px;font:inherit;letter-spacing:0}.study-test-primary:disabled{opacity:.55;cursor:not-allowed}

@@ -21,11 +21,11 @@ for(const marker of [".app-header",".day-picker",".calendar-card",".study-game-t
 if(!/study:renderGames\s*,\s*games:renderGames/.test(app))fail("Study and Games must share the existing Games renderer");
 const modeBlock=app.match(/const STUDY_GAME_MODES=Object\.freeze\(\[([\s\S]*?)\]\);/)?.[1]||"";
 const modeIds=[...modeBlock.matchAll(/\bid:"([^"]+)"/g)].map(match=>match[1]);
-if(modeIds.join(",")!=="quick,math,words,faith")fail("The four familiar Games modes must remain intact");
+if(modeIds.join(",")!=="reading,spelling,math,religion,mix")fail("Study Games must expose one mode per academic subject plus Mix");
 const materialsView=read("pages/study-games-materials-view.mjs");
-if(!/<select[^>]*data-study-source/.test(materialsView))fail("Study materials must use a native source selector");
-for(const marker of ["data-study-pick","data-study-notes","data-study-test-options","data-test","data-undo-test","data-restore-test"])
-  if(!materialsView.includes(marker))fail("Missing integrated Study control: "+marker);
+if(!/<select[^>]*data-test-select/.test(materialsView))fail("Test Prep must use a native upcoming-test selector");
+for(const marker of ["printableTests","data-test-single","No verified questions match this test yet","current material first"])
+  if(!materialsView.includes(marker))fail("Missing simplified Study control: "+marker);
 for(const marker of ["mountStudyHub","ABVMStudyReview.render(","Learning on this device","room-learning-summary"])
   if(app.includes(marker)||materialsView.includes(marker))fail("Retired Study dashboard must not be mounted: "+marker);
 for(const file of ["study-materials.mjs","study-games-materials-view.mjs"])
@@ -70,7 +70,7 @@ for(const ref of ["netlify.toml","netlify/functions/refresh-study-pack.mjs","net
   if(exists(ref))fail("Obsolete Netlify proxy/fallback source must stay removed: "+ref);
 for(const selector of [".quest-launcher",".mission-picker",".school-star-avatar",".avatar-studio",".shop-grid",".star-league",".purchase-dialog",".ambient",".offline-banner",".calendar-lunch",".calendar-note",".study-intro",".study-jumps",".subject-title",".say-it",".story-line",".word-line",".chip-row",".study-source-warning",".privacy-card",".policy-card",".conflicts",".source-note",".game-controls",".install-card",".error-shell",".reading-policy-card",".game-section-heading",".question-tech-card",".game-engine-stats",".question-quality-note",".month-agenda",".agenda-day",".agenda-event",".agenda-events",".agenda-regular",".study-star-goal-head",".study-star-goal-progress",".study-star-goal-selected"])
   if(css.includes(selector))fail("Obsolete CSS must stay removed: "+selector);
-if(Buffer.byteLength(css,"utf8")>70000)fail("styles.css exceeded the post-cleanup 70 KB ceiling");
+if(Buffer.byteLength(css.replace(/\r\n/g,"\n"),"utf8")>70000)fail("styles.css exceeded the post-cleanup 70 KB ceiling");
 const obsoleteAssetNames=fs.readdirSync(path.join(root,"pages/assets")).filter(name=>
   /^(?:hero-(?:today|week|calendar|study|family)|lunch-(?:monday|tuesday|wednesday|thursday|friday)|calendar-(?:lunch|star|gym|pretzel))\.webp$/.test(name)
 );

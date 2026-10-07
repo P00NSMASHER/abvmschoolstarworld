@@ -51,7 +51,7 @@ export function printableStudyGuideHtml(guide, dictionary = () => '') {
 
 /** Compact controls only. The existing Games controller owns every round and result. */
 export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
-  let model = null, source = 'weekly', picks = ['weekly'], notesOpen = false, testsOpen = false;
+  let model = null, source = 'weekly', picks = ['weekly'], notesOpen = false, testsOpen = false, selectedTest = 0;
   const readAloud = createReadAloud(win);
   const selection = () => ({source,sources:[...picks]});
   const focus = selector => win.document.querySelector(selector)?.focus({preventScroll:true});
@@ -79,7 +79,7 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
   }
 
   function priorityHtml({loading=true} = {}) {
-    const tests=model?.tests(),pending=tests?.tests||[],missing=tests?.missing||[],fallback=tests?.fallback||[];
+    const tests=model?.printableTests?.(),pending=tests?.tests||[],missing=tests?.missing||[],fallback=tests?.fallback||[];
     if(!model&&loading){
       return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><span>UP NEXT</span><h2 id="study-priority-title">Test ready</h2></div><div class="study-test-card is-loading" data-study-tests role="status"><div class="study-test-mark loading" aria-hidden="true">…</div><div class="study-test-copy"><strong>Checking upcoming tests…</strong><p>Getting the latest reviewed study material.</p></div><div class="study-test-actions"><button type="button" disabled>Loading practice…</button></div></div></section>';
     }
@@ -87,14 +87,14 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
       return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><span>UP NEXT</span><h2 id="study-priority-title">Test ready</h2></div><div class="study-test-card is-clear" data-study-tests><div class="study-test-mark" aria-hidden="true">✓</div><div class="study-test-copy"><strong>No upcoming test is listed</strong><p>Use a game below for regular practice.</p></div></div>' +
         (tests?.message?'<div class="game-test-status" role="status"><span>'+esc(tests.message)+'</span>'+(tests.canUndo?'<button type="button" data-undo-test>Undo</button>':'')+'</div>':'')+'</section>';
     }
-    const date=dateParts(tests.date),labels=pending.map(test=>esc(test.label));
-    const practiceButtons=missing.length
-      ?(tests.supported||[]).map(test=>'<button type="button" class="study-test-primary" data-test-single="'+test.index+'">Practice '+esc(test.label)+'</button>').join('')
-      :'<button type="button" class="study-test-primary" data-test>Start test practice</button>';
+    if(selectedTest>=pending.length)selectedTest=0;
+    const chosen=pending[selectedTest],entry=(tests.supported||[]).find(test=>test.index===selectedTest),date=dateParts(chosen.date);
+    const options=pending.map((test,index)=>'<option value="'+index+'"'+(index===selectedTest?' selected':'')+'>'+esc(test.label)+' - '+esc(dateLabel(test.date))+'</option>').join('');
+    const practiceButtons='<label class="study-test-picker">Choose a test<select data-test-select aria-label="Choose an upcoming test">'+options+'</select></label><button type="button" class="study-test-primary" data-test-single="'+selectedTest+'"'+(!entry?' disabled aria-disabled="true"':'')+'>Start test prep</button>';
     return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><span>UP NEXT</span><h2 id="study-priority-title">Test ready</h2></div>' +
-      '<article class="study-test-card" data-study-tests><time class="study-test-date" datetime="'+esc(tests.date)+'"><span>'+esc(date.weekday)+'</span><strong>'+esc(date.day)+'</strong><em>'+esc(date.label.replace(/^\w+,\s*/,''))+'</em></time><div class="study-test-copy"><small>Next test'+(pending.length>1?'s':'')+'</small><h3>'+labels.join('<span class="study-test-divider"> · </span>')+'</h3><p>'+esc(date.label)+'</p></div><div class="study-test-actions">'+practiceButtons+'</div>' +
-      (missing.length?'<p class="game-material-status" data-test-missing>Practice is not available for '+missing.map(test=>esc(test.label)).join(', ')+'. Review the teacher notes.</p>':'') +
-      (fallback.length?'<p class="game-material-status" data-test-fallback>Original Grade 2 skill practice for '+fallback.map(test=>esc(test.label)).join(', ')+'; no reviewed test-specific bank is available yet.</p>':'') +
+      '<article class="study-test-card" data-study-tests><time class="study-test-date" datetime="'+esc(chosen.date)+'"><span>'+esc(date.weekday)+'</span><strong>'+esc(date.day)+'</strong><em>'+esc(date.label.replace(/^\w+,\s*/,''))+'</em></time><div class="study-test-copy"><small>TEST PREP</small><h3>'+esc(chosen.label)+'</h3><p>Questions stay focused on this test\'s mapped material.</p></div><div class="study-test-actions">'+practiceButtons+'</div>' +
+      (missing.some(test=>test.index===selectedTest)?'<p class="game-material-status" data-test-missing>No verified questions match this test yet. Use the teacher materials; the app will not guess.</p>':'') +
+      (fallback.some(test=>test.index===selectedTest)?'<p class="game-material-status" data-test-fallback>Using original Grade 2 skill practice because no reviewed test-specific questions are available.</p>':'') +
       '</article>'+(tests?.message?'<div class="game-test-status" role="status"><span>'+esc(tests.message)+'</span>'+(tests.canUndo?'<button type="button" data-undo-test>Undo</button>':'')+'</div>':'')+'</section>';
   }
 
@@ -143,10 +143,9 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
 
   function homeHtml({gameGrid='',complete=false,loading=true,error=false} = {}) {
     return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Study one thing at a time</h2><span>Get ready for the next test or pick a quick game.</span></div></section>' +
-      priorityHtml({loading}) + sourceHtml() +
-      '<section class="study-game-section" aria-labelledby="study-game-section-title"><div class="study-section-heading"><span>PRACTICE</span><h2 id="study-game-section-title">Choose a game</h2></div>'+gameGrid+'</section>' +
-      dailyHtml({complete}) + secondaryHtml() + statusHtml({loading,error}) +
-      '<p class="game-privacy-note">Practice uses reviewed school skills first. STAR-style items are original Grade 2 practice; private student answers and grades are not used. They are not copied STAR test items.</p>';
+      '<section class="study-game-section" aria-labelledby="study-game-section-title"><div class="study-section-heading"><span>PRACTICE</span><h2 id="study-game-section-title">Choose a subject or mix</h2></div>'+gameGrid+'</section>' +
+      priorityHtml({loading}) + statusHtml({loading,error}) +
+      '<p class="game-privacy-note">Practice uses current material first, then older reviewed material, then original Grade 2 STAR-style items when needed. Private student answers and grades are not used. STAR-style items are not copied test items.</p>';
   }
 
   // Backward-compatible aggregate retained for existing callers/tests.
@@ -155,6 +154,10 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
   }
 
   function bind(host) {
+    host.querySelector('[data-test-select]')?.addEventListener('change',event=>{
+      const next=Number(event.target.value);if(!Number.isInteger(next)||next<0)return;
+      selectedTest=next;change('[data-test-select]');
+    });
     host.querySelector('[data-study-source]')?.addEventListener('change', event => {
       const next = event.target.value;
       if (!Object.hasOwn(sources,next)) return;

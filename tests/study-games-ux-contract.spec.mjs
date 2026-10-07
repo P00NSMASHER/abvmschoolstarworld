@@ -13,12 +13,12 @@ test.beforeEach(async ({ page }) => {
 
 test('Study Games keeps the approved menu, play, and finish interaction contract', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Study one thing at a time' })).toBeVisible();
-  for (const label of ['Quick Mix', 'Math Dash', 'Word Power', 'Faith Quest']) {
+  for (const label of ['Reading / ELA', 'Spelling / Handwriting', 'Math', 'Religion', 'Mix']) {
     await expect(page.getByRole('button', { name: new RegExp(label, 'i') })).toBeVisible();
   }
-  await expect(page.getByText('Practice uses reviewed school skills first. STAR-style items are original Grade 2 practice; private student answers and grades are not used.')).toBeVisible();
+  await expect(page.getByText(/Practice uses current material first/)).toBeVisible();
 
-  await page.getByRole('button', { name: /Quick Mix/i }).click();
+  await page.getByRole('button', { name: /^Mix/i }).click();
   await expect(page.locator('.game-topbar')).toBeVisible();
   await expect(page.locator('.game-progress')).toBeVisible();
   await expect(page.locator('.game-question-card')).toBeVisible();
@@ -49,14 +49,13 @@ test('Study Games keeps the approved menu, play, and finish interaction contract
 });
 
 
-test('Study home is test-first, compact, and keeps secondary tools collapsed', async ({ page }, testInfo) => {
+test('Study home is subject-first with selectable Test Prep', async ({ page }, testInfo) => {
   const priority=page.locator('.study-priority');
-  const source=page.locator('.study-source-card');
   const games=page.locator('.study-game-section');
-  const daily=page.locator('.study-daily-card');
-  const tools=page.locator('.study-tools');
 
-  for(const node of [priority,source,games,daily,tools]) await expect(node).toBeVisible();
+  for(const node of [priority,games]) await expect(node).toBeVisible();
+  await expect(page.locator('[data-study-source]')).toHaveCount(0);
+  await expect(page.locator('[data-test-select]')).toBeVisible();
 
   const boxes=await page.evaluate(() => {
     const box=selector => {
@@ -65,24 +64,15 @@ test('Study home is test-first, compact, and keeps secondary tools collapsed', a
     };
     return {
       priority:box('.study-priority'),
-      source:box('.study-source-card'),
       games:box('.study-game-section'),
-      daily:box('.study-daily-card'),
-      tools:box('.study-tools'),
     };
   });
-  expect(boxes.priority.bottom).toBeLessThanOrEqual(boxes.source.top+4);
-  expect(boxes.source.bottom).toBeLessThanOrEqual(boxes.games.top+4);
-  expect(boxes.games.bottom).toBeLessThanOrEqual(boxes.daily.top+4);
-  expect(boxes.daily.bottom).toBeLessThanOrEqual(boxes.tools.top+4);
+  expect(boxes.games.bottom).toBeLessThanOrEqual(boxes.priority.top+4);
 
   const tiles=page.locator('.study-game-tile');
-  await expect(tiles).toHaveCount(4);
+  await expect(tiles).toHaveCount(5);
   const heights=await tiles.evaluateAll(nodes=>nodes.map(node=>Math.round(node.getBoundingClientRect().height)));
   expect(Math.max(...heights)).toBeLessThanOrEqual(120);
-
-  await expect(page.locator('[data-study-notes]')).not.toHaveAttribute('open','');
-  await expect(page.locator('[data-study-test-options]')).not.toHaveAttribute('open','');
 
   const overflow=await page.locator('.games-screen').evaluate(el=>el.scrollWidth>el.clientWidth+1);
   expect(overflow).toBeFalsy();
@@ -92,12 +82,10 @@ test('Study home is test-first, compact, and keeps secondary tools collapsed', a
   await testInfo.attach('Study cleanup home',{path:shot,contentType:'image/png'});
 });
 
-test('every upcoming printable guide keeps a valid test index in the collapsed tools', async ({ page }) => {
-  const tools=page.locator('[data-study-test-options]');
-  await tools.locator(':scope > summary').click();
-  const guides=tools.locator('[data-test-guide]');
-  expect(await guides.count()).toBeGreaterThan(0);
-  const indexes=await guides.evaluateAll(nodes=>nodes.map(node=>node.dataset.testGuide));
+test('every upcoming test keeps a valid selectable index', async ({ page }) => {
+  const options=page.locator('[data-test-select] option');
+  expect(await options.count()).toBeGreaterThan(0);
+  const indexes=await options.evaluateAll(nodes=>nodes.map(node=>node.value));
   expect(indexes.every(value=>/^\d+$/.test(value))).toBe(true);
   expect(new Set(indexes).size).toBe(indexes.length);
 });
@@ -115,7 +103,7 @@ test('Study Games support text remains readable on phone and tablet', async ({ p
       expect(size).toBeGreaterThanOrEqual(11);
     }
 
-    await page.getByRole('button', { name: /Quick Mix/i }).click();
+    await page.getByRole('button', { name: /^Mix/i }).click();
     await expect(page.locator('.game-question-card')).toBeVisible();
 
     const metaSizes = await page.locator('.game-question-meta span,.game-question-meta b').evaluateAll(nodes =>
@@ -154,7 +142,7 @@ test('tried-wrong answers stay rejected and two distinct misses resolve to remed
     await page.setViewportSize(viewport);
     await page.goto('/?wrong-choice-fixture='+viewport.width+'#games');
     await expect(page.locator('.study-game-grid')).toBeVisible({ timeout: 10_000 });
-    await page.getByRole('button', { name: /Quick Mix/i }).click();
+    await page.getByRole('button', { name: /^Mix/i }).click();
     await expect(page.locator('.game-question-card')).toBeVisible();
 
     const prompt = await page.locator('.game-question-card h2').textContent();

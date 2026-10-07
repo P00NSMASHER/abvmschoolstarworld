@@ -7,10 +7,15 @@ import {buildStarBank} from './star-practice.mjs';
 
 const names = {weekly:'This week', saved:'Saved learning', star:'STAR practice', mix:'Study mix'};
 const modes = {
-  quick:{title:'Quick Mix', subjects:[]},
-  math:{title:'Math Dash', subjects:['Math']},
-  words:{title:'Word Power', subjects:['Reading / ELA','Spelling / Handwriting'], preferredSkills:['long-short-a','suffix-ed-ing']},
-  faith:{title:'Faith Quest', subjects:['Religion']},
+  // Legacy IDs remain engine-compatible for saved sessions and offline caches.
+  quick:{title:'Mix', subjects:[]},
+  words:{title:'Reading / ELA', subjects:['Reading / ELA','Spelling / Handwriting']},
+  faith:{title:'Religion', subjects:['Religion']},
+  reading:{title:'Reading / ELA', subjects:['Reading / ELA']},
+  spelling:{title:'Spelling / Handwriting', subjects:['Spelling / Handwriting']},
+  math:{title:'Math', subjects:['Math']},
+  religion:{title:'Religion', subjects:['Religion']},
+  mix:{title:'Mix', subjects:[]},
   daily:{title:'Daily Practice', subjects:[]},
 };
 const emptyArchive = () => ({questions:[], notes:[], vocabulary:[]});
@@ -79,11 +84,7 @@ function weeklyEligible(rows, modeId) {
   const current = pool.filter(q => q.tier === 'material');
   const review = pool.filter(q => q.tier === 'recent-review');
   const star = pool.filter(q => q.tier === 'star-fallback' && ['Math','Reading / ELA'].includes(q.subject));
-  if (modes[modeId]?.subjects.length) return unique(current.length ? current : review.length ? review : star);
-  const covered = new Set(current.map(q => q.subject));
-  const reviewFill = review.filter(q => !covered.has(q.subject));
-  reviewFill.forEach(q => covered.add(q.subject));
-  return unique([...current, ...reviewFill, ...star.filter(q => !covered.has(q.subject))]);
+  return unique([...current, ...review, ...star]);
 }
 
 function subjectForTest(test, group = []) {
@@ -223,7 +224,8 @@ export function createStudyMaterials({
       ? [weeklyEligible(full,modeId)]
       : picks.map(key => unique((raw[key] || []).filter(q => matchesMode(q,modeId))));
     const eligible = unique(groups.flat());
-    const fallback = source === 'weekly' ? [...new Set(eligible.filter(q => q.tier === 'star-fallback').map(q => q.subject))] : [];
+    const fallback = source === 'weekly' ? [...new Set(eligible.filter(q => q.tier === 'star-fallback')
+      .filter(q => !eligible.some(other => other.subject === q.subject && other.tier !== 'star-fallback')).map(q => q.subject))] : [];
     return {
       catalog:{...catalog, sourceKey:key, questions:full}, groups, count:eligible.length,
       sourceKey:key, label:names[source] || 'Study materials', fallback,
@@ -363,8 +365,8 @@ export function createStudyMaterials({
     };
   }
 
-  function testRound({index, seed} = {}) {
-    const state = testState();
+  function testRound({index, seed, upcoming = false} = {}) {
+    const state = upcoming ? printableTestState() : testState();
     const single = Number.isInteger(index) && index >= 0 && index < state.tests.length;
     const groups = index === undefined ? (state.missing.length ? [] : state.groups) : single ? [state.groups[index]] : [];
     const selected = index === undefined ? state.tests : single ? [state.tests[index]] : [];

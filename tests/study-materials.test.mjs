@@ -183,7 +183,7 @@ test('This week preserves current, then reviewed, then original STAR subject fal
     assert.equal(round.questions.length,8);
     assert(round.questions.every(q => q.id.startsWith(prefix)));
     assert.equal(scope.fallback.includes('Math'),fallback);
-    assert.equal(scope.count,10);
+    assert.equal(scope.count,rows.length);
   }
 });
 
@@ -202,13 +202,12 @@ test('shared material caching refreshes dated banks and scoped source identity a
   assert.deepEqual(model.notes('weekly').lessons.map(l => l.id),['monday','tuesday']);
 });
 
-test('Quick Mix keeps a missing Math subject playable without replacing current reading work',() => {
+test('Mix exhausts current material before using STAR-style material from another subject',() => {
   const rows = [...pool('reading-',12,'Reading / ELA'),...pool('fallback-',12,'Math',{tier:'star-fallback'})];
   const model = createStudyMaterials(opts({catalog:catalog(rows),engine:loadEngine()}));
   const round = model.round('quick',{seed:4});
   assert.equal(round.questions.length,8);
-  assert(round.questions.some(q => q.subject === 'Math' && q.tier === 'star-fallback'));
-  assert(round.questions.some(q => q.subject === 'Reading / ELA' && q.tier === 'material'));
+  assert(round.questions.every(q => q.subject === 'Reading / ELA' && q.tier === 'material'));
   assert.equal(model.forMode('faith').count,0);
   assert.equal(model.round('faith',{seed:4}).questions.length,0);
 });
@@ -217,7 +216,7 @@ test('dated current schoolwork is selectable by existing engine without relabeli
   const row = question('archived-math'); delete row.tier;
   const archive = {questions:[archiveRow(row,'2026-10-05',[{capturedAt:'2026-10-05'}])],notes:[],vocabulary:[]};
   const model = createStudyMaterials(opts({catalog:catalog(pool('fallback-',8,'Math',{tier:'star-fallback'})),archive,engine:loadEngine()}));
-  assert.deepEqual(ids(model.round('math',{seed:0}).questions),['archived-math']);
+  assert.equal(model.round('math',{seed:0}).questions[0].id,'archived-math');
   assert.equal(archive.questions[0].tier,undefined);
   assert.deepEqual(model.round('math',{seed:0}).questions[0].provenance,archive.questions[0].provenance);
 });

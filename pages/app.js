@@ -22,10 +22,11 @@ const GAME_TYPE_LABELS=Object.freeze({
   reasoning:"Explain your thinking"
 });
 const STUDY_GAME_MODES=Object.freeze([
-  Object.freeze({id:"quick",title:"Quick Mix",subjects:[],count:8,copy:"Current school skills mixed into one quick round."}),
-  Object.freeze({id:"math",title:"Math Dash",subjects:["Math"],count:8,copy:"Current math first; STAR-style practice fills verified-data gaps."}),
-  Object.freeze({id:"words",title:"Word Power",subjects:["Reading / ELA","Spelling / Handwriting"],preferredSkills:["long-short-a","suffix-ed-ing"],count:8,copy:"Current spelling-test, phonics, word-building, and reading skills."}),
-  Object.freeze({id:"faith",title:"Faith Quest",subjects:["Religion"],count:8,copy:"Religion practice from the current class material."})
+  Object.freeze({id:"reading",icon:"words",title:"Reading / ELA",subjects:["Reading / ELA"],count:8,copy:"Current reading and language first, then reviewed and STAR-style practice."}),
+  Object.freeze({id:"spelling",icon:"words",title:"Spelling / Handwriting",subjects:["Spelling / Handwriting"],count:8,copy:"Current spelling and handwriting material first, then older reviewed practice."}),
+  Object.freeze({id:"math",icon:"math",title:"Math",subjects:["Math"],count:8,copy:"Current math first, then reviewed and STAR-style practice."}),
+  Object.freeze({id:"religion",icon:"faith",title:"Religion",subjects:["Religion"],count:8,copy:"Current religion material first, then older reviewed practice."}),
+  Object.freeze({id:"mix",icon:"quick",title:"Mix",subjects:[],count:8,copy:"A mix of subjects, always using current material before older review and STAR-style practice."})
 ]);
 function storageGet(key){try{return localStorage.getItem(key)}catch{return null}}
 function storageSet(key,value){try{localStorage.setItem(key,value);return true}catch{return false}}
@@ -333,7 +334,7 @@ function renderCalendar(){
 function isStudyRoute(){return activeTab==="study"||activeTab==="games"}
 function currentStudyScreen(generation,data){return isStudyRoute()&&screenGeneration===generation&&pack===data}
 function currentStudyMaterials(){return studyMaterialsPack===pack?studyMaterials:null}
-function studySelection(){return studyMaterialsView?.selection()||{source:"weekly",sources:["weekly"]}}
+function studySelection(){return{source:"weekly",sources:["weekly"]}}
 function ensureStudyMaterials(retry=false){
   if(studyMaterialsPromise?.pack===pack)return studyMaterialsPromise.promise;
   if(currentStudyMaterials()&&!retry)return Promise.resolve(studyMaterials);
@@ -355,7 +356,7 @@ function ensureStudyGameEngine(){
   if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
   if(studyEnginePromise)return studyEnginePromise;
   const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.async=true;s.onload=()=>window[key]?resolve():reject(new Error(key+" did not initialize"));s.onerror=()=>reject(new Error(key+" could not be loaded"));document.head.append(s)});
-  studyEnginePromise=Promise.all([load("./study-games.js?v=98","ABVMStudyGames"),load("./study-games-view.js?v=10","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
+  studyEnginePromise=Promise.all([load("./study-games.js?v=99","ABVMStudyGames"),load("./study-games-view.js?v=10","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
   return studyEnginePromise;
 }
 function studyGameCatalog(){
@@ -397,7 +398,7 @@ function startStudyGame(modeId){
   const eligibleIds=catalog.questions.filter(q=>!mode.subjects?.length||mode.subjects.includes(q.subject)).map(q=>q.id);
   openStudyRound({questions,catalog,eligibleIds,sourceKey,sessionSeed,strict:false},mode);
 }
-function startStudyTest(index){const round=currentStudyMaterials()?.testRound({index});if(round)openStudyRound(round,{id:"test-ready",title:round.title,subjects:[],count:8},index)}
+function startStudyTest(index){const round=currentStudyMaterials()?.testRound({index,upcoming:true});if(round)openStudyRound(round,{id:"test-ready",title:round.title,subjects:[],count:8},index)}
 function openStudyRound(round,mode,testIndex){
   if(!isStudyRoute()||!round.questions?.length){toast("No questions are ready for that selection.");return}
   const {questions,catalog,sourceKey,sessionSeed,strict,eligibleIds}=round;
@@ -474,7 +475,7 @@ function gameMenuHtml(catalog){
   const modes=STUDY_GAME_MODES,materials=currentStudyMaterials(),view=studyMaterialsView,selection=studySelection();
   const grid='<div class="study-game-grid">'+modes.map(mode=>{
     const scope=materials?.forMode(mode.id,selection),record=loadGameRecord(mode.id,scope?.sourceKey||catalog.sourceKey),total=scope?Math.min(8,scope.count):selection.source==="weekly"?gameModeQuestionTotal(catalog,mode):0,disabled=total===0;
-    return '<button type="button" class="study-game-tile game-'+mode.id+'" data-game-start="'+esc(mode.id)+'"'+(disabled?' disabled aria-disabled="true"':'')+'>'+window.ABVMStudyGameView.icon(mode.id)+'<span class="study-game-copy"><strong>'+esc(mode.title)+'</strong><small>'+esc(selection.source==="weekly"?mode.copy:"Practice from "+(scope?.label||"the selected materials")+".")+'</small>'+(disabled?'<em>Not ready yet</em>':record.plays?'<em>Best solved '+record.best+' / '+total+'</em>':'')+'</span><b aria-hidden="true">›</b></button>';
+    return '<button type="button" class="study-game-tile game-'+mode.icon+'" data-game-start="'+esc(mode.id)+'"'+(disabled?' disabled aria-disabled="true"':'')+'>'+window.ABVMStudyGameView.icon(mode.icon)+'<span class="study-game-copy"><strong>'+esc(mode.title)+'</strong><small>'+esc(mode.copy)+'</small>'+(disabled?'<em>Not ready yet</em>':record.plays?'<em>Best solved '+record.best+' / '+total+'</em>':'')+'</span><b aria-hidden="true">›</b></button>';
   }).join("")+'</div>';
   if(view)return view.homeHtml({gameGrid:grid,complete:!!window.ABVMStudyReview?.completion(),loading:studyMaterialsError?.pack!==pack,error:studyMaterialsError?.pack===pack});
   return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Study one thing at a time</h2><span>Get ready for the next test or pick a quick game.</span></div></section>'+
