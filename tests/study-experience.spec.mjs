@@ -34,8 +34,12 @@ async function placeValueGame(page){
       skills:source.envelope.pack[key].skills.filter(row=>row.subject!=='Math'),
       questions:source.envelope.pack[key].questions.filter(row=>row.subject!=='Math')};
   }
+  // Archived schoolwork questions do not carry a live catalog tier. Keeping the
+  // STAR fallback tier here routes the fixture around the saved-learning stage,
+  // making its first question depend on the current source-key rotation.
+  const savedQuestions=source.questions.map(({tier,...question})=>({...question,id:'saved-fixture-'+question.id}));
   const lesson={id:'public-place-value-practice',title:'Original place-value practice',subject:'Math',
-    sources:[],skills:['place-value'],notes:[],studiedOn:null,dateStatus:'undated',questions:source.questions};
+    sources:[],skills:['place-value'],notes:[],studiedOn:null,dateStatus:'undated',questions:savedQuestions};
   await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({json:source.envelope}));
   await page.route('**/data/study-archive.json*',route=>route.fulfill({json:{notes:[],vocabulary:[],questions:[]}}));
   await page.route('**/data/schoolwork.json*',route=>route.fulfill({json:{...source.schoolwork,lessons:[lesson]}}));
