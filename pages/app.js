@@ -517,7 +517,8 @@ function renderGames(){
   if(studyMaterialsPromise?.pack===pack)studyMaterialsPromise.promise.then(()=>{if(currentStudyScreen(generation,data)&&gameState.screen==="menu")renderGames()}).catch(()=>{if(currentStudyScreen(generation,data)&&gameState.screen==="menu")renderGames()});
   const materials=currentStudyMaterials();studyMaterialsView?.setModel(materials);
   const catalog=studyGameCatalog();
-  const body=gameState.screen==="play"?gamePlayHtml():gameState.screen==="finish"?gameFinishHtml():gameMenuHtml(catalog);
+  const practiceTitle=gameState.screen!=="menu"?'<h1 class="visually-hidden" tabindex="-1">'+esc(gameMode(gameState.mode).title)+(gameState.screen==="finish"?' results':' practice')+'</h1>':"";
+  const body=practiceTitle+(gameState.screen==="play"?gamePlayHtml():gameState.screen==="finish"?gameFinishHtml():gameMenuHtml(catalog));
   const chrome=gameState.screen==="menu"?'<header class="app-header study-hero"><div class="study-hero-copy"><p>ASSUMPTION BVM · GRADE 2</p><h1 class="visually-hidden" tabindex="-1">Study</h1><h2>Let’s learn,<br><span>Emma!</span></h2></div>'+SCHOOL_LOGO_HTML+'<img class="study-hero-art" src="./assets/illustrations/eagle.webp" width="240" height="240" alt=""></header>':"";
   const state=materials?(materials.status.partial?"partial":"ready"):studyMaterialsError?.pack===pack?"partial":"loading";
   stack().innerHTML='<div class="screen games-screen'+(gameState.screen!=="menu"?' is-playing':'')+'" data-study-state="'+state+'" role="region" aria-label="Study games">'+chrome+body+(gameState.screen==="menu"?freshness():"")+'</div>';

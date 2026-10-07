@@ -42,7 +42,7 @@ function eastToday() {
   return `${p.year}-${p.month}-${p.day}`;
 }
 async function liveStudyAssets() {
-  const assets = ['index.html', 'app.js', 'product-view.js', 'styles.css', 'study-teaching.css', 'study-support.js', 'weekly-learning.js', 'assets/school/abvm-school-hero.webp', 'study-games.js', 'study-games-view.js', 'study-materials.mjs', 'study-games-materials-view.mjs', 'study-games-materials.css', 'sw.js'];
+  const assets = ['index.html', 'app.js', 'product-view.js', 'styles.css', 'study-teaching.css', 'study-support.js', 'weekly-learning.js', 'assets/school/abvm-school-hero.webp', 'study-games.js', 'study-games-view.js', 'study-materials.mjs', 'study-games-materials-view.mjs', 'study-games-materials.css', 'sw.js', ...['math', 'reading', 'spelling', 'religion', 'eagle'].map(name => 'assets/illustrations/' + name + '.webp')];
   const digest = bytes => createHash('sha256').update(bytes).digest('hex');
   return Promise.all(assets.map(async path => {
     const expectedBytes = readFileSync(new URL('../pages/' + path, import.meta.url));
@@ -88,6 +88,7 @@ try {
   await page.screenshot({ path: `${out}/today.png` });
   receipt.screens.push({ screen: 'Today', date: today, lunch: await page.locator('.lunch-card').allTextContents() });
 
+  await page.getByRole('button', { name: 'Calendar', exact: true }).click();
   await page.getByRole('button', { name: 'Week', exact: true }).click();
   async function selectWeekDate(date) {
     for (let attempt = 0; attempt < 60; attempt++) {
@@ -126,9 +127,10 @@ try {
   await page.locator('.calendar-day-card').scrollIntoViewIfNeeded();
   await page.screenshot({ path: `${out}/calendar.png` });
   await page.getByRole('button', { name: 'Study', exact: true }).click();
-  for (const label of ['Reading / ELA', 'Spelling', 'Math', 'Religion', 'Mix']) {
+  for (const label of ['Reading', 'Spelling', 'Math', 'Religion', 'Mix']) {
     await expect(page.locator('.study-game-tile').filter({has:page.locator('.study-game-copy > strong', {hasText:new RegExp('^'+label.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'$')})})).toBeVisible({ timeout: 15000 });
   }
+  await expect(page.locator('[data-game-start="reading"]')).toHaveAccessibleName('Reading / ELA');
   await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state', 'ready', { timeout: 15000 });
   await expect(page.locator('[data-study-source]')).toHaveCount(0);
   if(await page.locator('[data-test-select]').count())await expect(page.locator('[data-test-select]')).toHaveAccessibleName('Choose an upcoming test');
@@ -198,7 +200,7 @@ try {
   await page.getByRole('button', { name: 'Back to study', exact: true }).click();
   await page.evaluate(async () => { if ('serviceWorker' in navigator) await navigator.serviceWorker.ready; });
   await page.reload();
-  for (const label of ['Reading / ELA', 'Spelling', 'Math', 'Religion', 'Mix']) {
+  for (const label of ['Reading', 'Spelling', 'Math', 'Religion', 'Mix']) {
     await expect(page.locator('.study-game-tile').filter({has:page.locator('.study-game-copy > strong', {hasText:new RegExp('^'+label.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'$')})})).toBeVisible({ timeout: 15000 });
   }
   await expect(page.locator('.study-game-tile')).toHaveCount(5);
