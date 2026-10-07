@@ -34,6 +34,8 @@ for(const marker of ["mountStudyHub","ABVMStudyReview.render(","Learning on this
   if(app.includes(marker)||materialsView.includes(marker))fail("Retired Study dashboard must not be mounted: "+marker);
 for(const file of ["study-materials.mjs","study-games-materials-view.mjs"])
   if(!app.includes("./"+file)||!sw.includes("./"+file)||!exists("pages/"+file))fail("Integrated Study module must load and remain available offline: "+file);
+for(const ref of [...app.matchAll(/import\("(\.\/study-games-materials-view\.mjs\?v=\d+)"\)/g)].map(match=>match[1]))
+  if(!sw.includes(ref))fail("Study renderer and offline cache versions differ: "+ref);
 const materialsCss=index.match(/href="(\.\/study-games-materials\.css\?v=\d+)"/)?.[1];
 if(!materialsCss||!sw.includes(materialsCss)||!exists("pages/study-games-materials.css"))fail("Integrated Study styles must load and remain available offline");
 for(const ref of [...app.matchAll(/["'](\.\/study-games(?:-view)?\.js\?v=\d+)["']/g)].map(match=>match[1]))

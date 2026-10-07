@@ -2,6 +2,7 @@ import {createReadAloud} from './study-room-view.mjs';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const nonempty = value => typeof value === 'string' && value.trim();
+const distinctNoteText = rows => {const seen=new Set();return rows.filter(text=>{const key=text.trim();if(seen.has(key))return false;seen.add(key);return true;});};
 const list = rows => {const clean=(Array.isArray(rows)?rows:[]).filter(nonempty);return clean.length?'<ul>'+clean.map(row=>'<li>'+esc(row)+'</li>').join('')+'</ul>':'';};
 const dateLabel = date => {const value=new Date(date+'T12:00:00Z');return /^\d{4}-\d{2}-\d{2}$/.test(date||'')&&Number.isFinite(value.getTime())
   ? new Intl.DateTimeFormat('en-US',{weekday:'short',month:'short',day:'numeric',timeZone:'UTC'}).format(value) : '';};
@@ -106,7 +107,7 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
     const subjects=[...new Set([...notes,...links,...warnings].map(row=>row.subject).filter(nonempty))];
     const lessonRows=lessons.map(lesson=>'<details class="game-material-lesson"><summary><span>'+esc(lesson.title)+'</span><small>'+esc(lesson.subject)+(lesson.studiedOn?' · '+esc(dateLabel(lesson.studiedOn)):'')+'</small></summary><div class="study-note-body">'+list(lesson.notes||[])+'</div></details>').join('');
     const noteRows=subjects.map(subject=>'<details class="game-material-lesson" data-note-subject="'+esc(subject)+'"><summary><span>'+esc(subject)+'</span><small>Class notes</small></summary><div class="study-note-body">'+
-      list(notes.filter(row=>row.subject===subject).map(row=>row.text))+
+      list(distinctNoteText(notes.filter(row=>row.subject===subject).map(row=>row.text)))+
       warnings.filter(row=>row.subject===subject).map(row=>'<p class="game-note-warning">'+esc(row.text)+'</p>').join('')+
       links.filter(row=>row.subject===subject).map(referenceHtml).join('')+'</div></details>').join('');
     const words=vocabulary.length?'<details class="game-material-lesson study-vocabulary"><summary><span>Words to know</span><small>'+vocabulary.length+' word'+(vocabulary.length===1?'':'s')+'</small></summary><div class="study-note-body"><dl>'+vocabulary.map(row=>{const meaning=resolveVocabularyMeaning(row,term=>win?.ABVMStudyGames?.vocabularyDefinition?.(term));return '<div><dt>'+esc(row.term)+'</dt>'+(meaning?'<dd>'+esc(meaning)+'</dd>':'')+'</div>';}).join('')+'</dl></div></details>':'';

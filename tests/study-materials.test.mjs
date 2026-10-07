@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import {createStudyMaterials, loadStudyMaterials} from '../pages/study-materials.mjs';
-import {printableStudyGuideHtml, resolveVocabularyMeaning} from '../pages/study-games-materials-view.mjs';
+import {createMaterialsView, printableStudyGuideHtml, resolveVocabularyMeaning} from '../pages/study-games-materials-view.mjs';
 import {createStudyResourceLoader} from '../pages/study-resources.mjs';
 import {practiceIdentity} from '../pages/study-experience.mjs';
 import {buildGrade2ContentPipeline} from '../scripts/grade2-content-pipeline.mjs';
@@ -595,4 +595,32 @@ test('synchronous resource failure also returns a truthful partial model with pl
   assert.equal(model.status.errors.length,2);
   assert.deepEqual(model.status.loaded,{schoolwork:false,archive:false});
   assert.equal(model.round('math',{seed:1}).questions.length,8);
+});
+
+
+test('Class notes display exact repeats once per subject while preserving governed source rows',() => {
+  const shared='Shared exact.';
+  const input=freeze({pack:{sourceHash:'current-teacher',sourceCapturedAt:'2026-10-07T03:00:00Z',subjects:[
+    {subject:'Religion',topics:['  '+shared+'  '],studyNotes:[shared,'Shared exact!']},
+    {subject:'Reading / ELA',topics:[],studyNotes:[shared]},
+  ]},schoolwork:{lessons:[{id:'separate-lesson',title:'Separate lesson',subject:'Religion',studiedOn:'2026-10-05',notes:[shared,shared],questions:[]}]},archive:{questions:[],vocabulary:[],notes:[
+    archiveRow({id:'religion-archive',subject:'Religion',text:shared,kind:'note'},'2026-10-06',[{sourceRef:'archive-evidence',capturedAt:'2026-10-06'}]),
+    archiveRow({id:'math-archive',subject:'Math',text:shared,kind:'note'},'2026-10-06',[{sourceRef:'other-subject-evidence',capturedAt:'2026-10-06'}]),
+  ]}});
+  const before=structuredClone(input),model=createStudyMaterials({...input,now:()=>new Date('2026-10-07T16:00:00Z'),storage:memory()});
+  const original=model.notes('weekly');
+  assert.equal(original.notes.filter(row=>row.subject==='Religion').length,4);
+  const view=createMaterialsView({win:{location:{hash:'#study?notes'}}});view.setModel(model);
+  const html=view.homeHtml({loading:false});
+  const subjectBody=subject=>html.match(new RegExp('data-note-subject="'+subject+'">[\\s\\S]*?<div class="study-note-body">([\\s\\S]*?)</div></details>'))?.[1];
+  const religion=subjectBody('Religion');
+  assert.equal((religion.match(/<li>/g)||[]).length,2,'whitespace-only repetitions collapse, distinct punctuation remains');
+  assert(religion.includes('<li>  Shared exact.  </li>'),'the first source wording and order stay intact');
+  assert(religion.includes('<li>Shared exact!</li>'));
+  for(const subject of ['Reading / ELA','Math'])assert(subjectBody(subject).includes('<li>'+shared+'</li>'),'the same wording remains in a different subject');
+  const lessonBody=html.match(/<span>Separate lesson<\/span>[\s\S]*?<div class="study-note-body">([\s\S]*?)<\/div><\/details>/)?.[1];
+  assert.equal((lessonBody.match(/<li>/g)||[]).length,2,'separate lesson sequences are not deduplicated');
+  assert.deepEqual(model.notes('weekly'),original,'display does not merge source rows or provenance');
+  assert.deepEqual(input,before);
+  assert.equal(model.notes('weekly').notes.find(row=>row.id==='religion-archive'),input.archive.notes[0]);
 });
