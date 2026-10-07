@@ -92,6 +92,16 @@ test('Study home is test-first, compact, and keeps secondary tools collapsed', a
   await testInfo.attach('Study cleanup home',{path:shot,contentType:'image/png'});
 });
 
+test('every upcoming printable guide keeps a valid test index in the collapsed tools', async ({ page }) => {
+  const tools=page.locator('[data-study-test-options]');
+  await tools.locator(':scope > summary').click();
+  const guides=tools.locator('[data-test-guide]');
+  expect(await guides.count()).toBeGreaterThan(0);
+  const indexes=await guides.evaluateAll(nodes=>nodes.map(node=>node.dataset.testGuide));
+  expect(indexes.every(value=>/^\\d+$/.test(value))).toBe(true);
+  expect(new Set(indexes).size).toBe(indexes.length);
+});
+
 test('Study Games support text remains readable on phone and tablet', async ({ page }) => {
   for (const viewport of [{ width: 393, height: 852 }, { width: 768, height: 1024 }]) {
     await page.setViewportSize(viewport);
