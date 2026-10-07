@@ -4,20 +4,20 @@ The October 7 user directive supersedes the October 6 concept board as presentat
 
 ## Product direction
 
-ABVM becomes a calm, warm school companion: ivory canvas, ABVM blue, crisp native typography, thoughtful school photography and controlled subject colors. Useful facts lead; brand decoration and technical status become secondary. The school seal remains genuine.
+The user rejected the muted first implementation and approved the October 7 illustrated previews, then requested navy as the main color instead of vivid blue. The approved direction is navy #102e58, gold #ffca38, crisp white and sky surfaces, bold rounded typography, real school photography, and dimensional subject artwork. Calendar returns as a primary destination. The school seal remains genuine; generated artwork is decorative, never educational evidence or replacement school photography.
 
 Four primary destinations:
 
 - **Today:** school day, nearest verified test (deadlines remain in the daily plan), a focused study action, full lunch and important reminders.
-- **Week:** five-day selector, all verified tests and lunches, full selected-day agenda, homework, reminders and a nested monthly Calendar.
+- **Calendar:** primary Month/Week segmented view. Month shows date events and complete selected-day lunch; Week retains the five-day selector, all verified tests and five lunches, full selected-day agenda, homework and reminders.
 - **Study:** choose a test or a subject. Reading/ELA, Spelling/Handwriting, Math, Religion and Mix replace the mini-game metaphor. Notes, cumulative lessons, official resources, completion controls and printable guides sit below practice.
 - **Progress:** honest practice evidence stored on the device, current class topics, cumulative learning access, family notices and unread teacher updates. No invented mastery, marks, private worksheet analysis or improvement curves.
 
-Existing `#games` and `#family` routes continue to work; `#progress` aliases Progress. `#study?notes` opens learning notes. Calendar remains reachable from Week and by its original deep link.
+Existing `#games` and `#family` routes continue to work; `#progress` aliases Progress. `#study?notes` opens learning notes. The Calendar tab remains selected for both #calendar and #week. Both deep links remain supported.
 
 ## Design system
 
-Shared tokens in `pages/styles.css`: ink `#202c3a`, canvas `#f6f5ef`, paper `#fff`, brand action blue `#254fbd`, brand navy `#173773`, quiet borders `#e0e4e6`. Subjects use accessible coral, teal and lilac; state colors supplement plain labels. A 4px spacing rhythm, 12/20/28px radius family, rare soft shadows, unified stroke icons, readable native typography, 44px targets and reduced-motion support replace the stacked patch layers.
+Shared tokens in `pages/styles.css`: ink/action/navy `#102e58`, canvas `#f5faff`, paper `#fff`, gold `#ffca38`, sky `#e5f3ff`, quiet borders `#dce7f3`. Reading uses warm gold, spelling coral, math sky and religion lilac; state colors supplement plain labels. A 4px spacing rhythm, 12/20/28px radius family, rare soft shadows, unified stroke icons, readable native typography, 44px targets and reduced-motion support replace the stacked patch layers.
 
 Phone uses a compact four-item navigation bar with safe-area padding. Tablet uses a rail and responsive content composition. Desktop caps content width and adds a wider rail. Page titles, source status, notice disclosures, event rows, controls and cards share one language.
 
@@ -33,11 +33,11 @@ Legacy CSS files replaced by the shared system are removed. Exact teaching diagr
 
 Rendered screenshot review is separate from functional checks. Required widths: 375,390,430,744,820,1024,1440; portrait and landscape; main screens, questions, results, notes, notices, loading/error and offline states. Accessibility checks cover contrast, semantics, focus, target sizing, keyboard, reduced motion and 200% text. Static/unit/importer/browser QA and exact-head independent reproduction must pass before the normal Pages release. CI green alone is not aesthetic acceptance.
 
-## Implementation and review
+## Earlier implementation and review
 
 The inherited interface split the school plan across five equal destinations, put technical freshness before useful content, buried notes and printable guides, and repeated headings and broad source controls before a child could start. Multiple visual override sheets competed, and the approved school photograph was too small for tablet presentation.
 
-Today, Week, Progress, the Study launch pad, questions, feedback, results, test chooser, notes, resources and printable guide controls were rebuilt. Calendar is a secondary Week view. Source selection and daily mini-game controls were removed from the launcher; current → recent → cumulative → original Grade 2 fallback is selected automatically. Existing deep links and learning records remain supported.
+Today, Week, Progress, the Study launch pad, questions, feedback, results, test chooser, notes, resources and printable guide controls were rebuilt. Calendar is now a primary destination containing Month and Week views. Source selection and daily mini-game controls were removed from the launcher; current → recent → cumulative → original Grade 2 fallback is selected automatically. Existing deep links and learning records remain supported.
 
 Deleted five retired visual sheets and the abandoned Study hub renderer/style sheet. The old hub and room modules now retain only the pure test-mapping and read-aloud functions used by the live product. The support bundle no longer injects styles. No production package or font dependency was added. The full static app remains the build artifact, with the existing governed runtime pack generated before validation/deployment.
 
@@ -58,3 +58,11 @@ Class notes now display exact trimmed repetitions once within each subject, reta
 The rich place-value browser fixture explicitly declares its undated QA schoolwork copies and retains their original practice identities. Previously it incorrectly copied STAR fallback metadata into saved work, letting a refreshed source seed choose unrelated fallback questions. The repair preserves original question content and every readability, retry, focus and overflow assertion; production source priority and data are unchanged. Changes to this browser spec now trigger the full independent reproduction workflow as well as general QA.
 
 General Study layout checks wait for the existing ready state before measuring controls. The subject grid also appears during loading, so waiting only for the grid could measure detached nodes when saved material finished loading. Target sizes and all accessibility assertions remain unchanged.
+
+## Approved illustrated revision
+
+The October 7 afternoon implementation follows the six approved concept boards with the requested navy substitution. Dimensional reading, math, spelling and religion art and an original eagle were generated with the built-in high-quality image generator, reviewed, and optimized to local 512px transparent WebP assets. Their exact prompts and file hashes are recorded in `pages/assets/illustrations/README.md`. Existing menu artwork remains governed by its existing approvals; preview menus, readiness and scores are never imported into live data.
+
+Navy headers, gold study actions, illustrated subjects, a navy tablet rail, accessible Month/Week controls, selected-day calendar detail, and colorful compact weekly summaries use the functioning controllers. Questions and result statistics remain actual practice evidence. No pipeline or provenance authority is changed.
+
+Final illustrated refinement gives 375px phones four visible subject choices, a compact navy eagle greeting, a gold test chooser, and separate native test selection. The full test label and date remain visible above the picker. Calendar dates occupy at least 44px at 375/390px; 320px uses the available screen width. Month details split at 900px and above, with stacked portrait layouts that preserve date target sizes. Desktop school imagery no longer determines the row height. Progress artwork wraps naturally under enlarged text instead of overflowing. Decorative assets add about 134 KiB, with no font or runtime dependency.

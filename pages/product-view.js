@@ -101,16 +101,11 @@
       header("ASSUMPTION BVM · GRADE 2", "Today") +
       '<section class="hero-card school-photo-hero"><div class="hero-copy"><p class="eyebrow">' +
       esc(fmtDate(d)) +
-      '</p><h2>A good day<br>to learn.</h2><p>Your school day, all together.</p></div><img class="hero-photo" src="./assets/school/abvm-school-hero.webp" width="1024" height="683" fetchpriority="high" alt="Assumption BVM School in Pottsville"><span class="photo-caption">OUR ABVM</span></section>' +
-      banner +
+      '</p><h2>Hi, Emma!</h2><p>A good day to learn.<br>Your school day, all together.</p></div><img class="hero-photo" src="./assets/school/abvm-school-hero.webp" width="1024" height="683" fetchpriority="high" alt="Assumption BVM School in Pottsville"><span class="photo-caption">OUR ABVM</span></section>' +
       '<div class="today-primary">' +
-      sectionHead("Up next") +
-      nextHtml +
-      '<button class="study-invitation" type="button" data-route="study"><span class="feature-icon">' +
-      icon("book") +
-      "</span><span><strong>Start studying</strong><small>A little practice. A little more confidence.</small></span>" +
+      '<button class="study-invitation" type="button" data-route="study"><img src="./assets/illustrations/reading.webp" width="72" height="72" alt=""><span><strong>Start studying</strong><small>A little practice. A little more confidence.</small></span>' +
       icon("arrow") +
-      "</button></div>" +
+      "</button>" + nextHtml + "</div>" +
       lunchHtml +
       '<section class="today-panel">' +
       sectionHead(closed ? "Today’s plan" : "At school today") +
@@ -138,7 +133,7 @@
             .join("") +
           "</section>"
         : "") +
-      freshness() +
+      banner + freshness() +
       "</div>"
     );
   }
@@ -184,12 +179,12 @@
     return (
       '<div class="screen week-screen" role="region" aria-label="This week">' +
       header("THE SCHOOL PLAN", "This week") +
+      c.segments +
       '<div class="week-toolbar"><nav class="week-nav" aria-label="Change displayed week"><button type="button" data-week-step="-1" aria-label="Previous week">‹</button><div aria-live="polite"><span>' +
       (offset === 0 ? "THIS SCHOOL WEEK" : "VIEWING WEEK") +
       "</span><strong>" +
       esc(weekRangeLabel(days)) +
       '</strong></div><button type="button" data-week-step="1" aria-label="Next week">›</button></nav>' +
-      route("calendar", "Calendar") +
       "</div>" +
       (offset !== 0
         ? '<button class="week-today-jump text-button" type="button" data-week-today>Back to this week</button>'
@@ -275,7 +270,7 @@
     return (
       '<div class="screen family-screen progress-screen" role="region" aria-label="Learning progress">' +
       header("THE BIGGER PICTURE", "Progress") +
-      '<section class="family-hero"><h2>Little steps. Lasting learning.</h2><p>Practice on this device helps you choose the next step.</p></section>' +
+      '<section class="family-hero"><div><h2>Growing every week.</h2><p>Small steps. A little more confidence.</p></div><img src="./assets/illustrations/reading.webp" width="112" height="112" alt=""></section>' +
       learningHtml +
       '<section class="learning-library">' +
       sectionHead("In class right now", route("study?notes", "Study notes")) +
@@ -290,7 +285,7 @@
                 ? "religion"
                 : "reading") +
             '">' +
-            icon("book") +
+            '<img src="./assets/illustrations/' + (/math/i.test(s.subject) ? "math" : /religion/i.test(s.subject) ? "religion" : /spell|handwriting|grammar/i.test(s.subject) ? "spelling" : "reading") + '.webp" width="64" height="64" loading="lazy" alt="">' +
             "</span><div><h3>" +
             esc(s.subject) +
             "</h3><p>" +

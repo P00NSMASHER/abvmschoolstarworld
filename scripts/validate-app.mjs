@@ -18,8 +18,9 @@ if(!/href="\.\/styles\.css(?:\?[^"]*)?"/.test(index))fail("Gold-standard styles.
 if(!/["']\.\/study-games\.js\?v=\d+["']/.test(app))fail("Versioned Study Games engine must be lazy-loadable from app.js");
 if(!/["']\.\/study-games-view\.js\?v=\d+["']/.test(app))fail("Versioned Study Games view must be lazy-loadable from app.js");
 if(!/src="\.\/app\.js(?:\?[^"]*)?"/.test(index))fail("Gold-standard app.js must be loaded");
-for(const marker of ["today-screen","week-screen","family-screen"])if(!presentation.includes(marker))fail("Missing primary product view: "+marker);
-for(const destination of ["today","week","study","family"])if(!(index+app).includes('data-tab="'+destination+'"'))fail("Missing primary navigation destination: "+destination);
+for(const marker of ["today-screen","week-screen","calendar-screen","family-screen"])if(!presentation.includes(marker))fail("Missing primary product view: "+marker);
+for(const destination of ["today","calendar","study","family"])if(!(index+app).includes('data-tab="'+destination+'"'))fail("Missing primary navigation destination: "+destination);
+for(const view of ["calendar","week"])if(!presentation.includes('data-route="'+view+'"'))fail("Missing Calendar view control: "+view);
 const renderedStyles=css+"\n"+read("pages/study-games-materials.css")+"\n"+read("pages/study-teaching.css");
 for(const marker of [".app-header",".day-picker",".calendar-card",".study-game-tile",".game-question-card",".game-answer",".study-game-grid",".family-hero",".bottom-nav"])if(!renderedStyles.includes(marker))fail("Missing core style marker: "+marker);
 if(!/study:renderGames\s*,\s*games:renderGames/.test(app))fail("Study and the retained Games route must share one renderer");

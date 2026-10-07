@@ -164,19 +164,22 @@ test('larger preferred text reflows without hiding Family or Study content',asyn
   }
 });
 
-test('touch navigation reaches the four destinations and nested calendar',async({page})=>{
+test('touch navigation reaches the four destinations and both calendar views',async({page})=>{
   await page.goto('/#today');
   await expect(page.locator('.screen')).toBeVisible();
-  for(const label of ['Week','Progress','Study','Today']){
+  for(const label of ['Calendar','Progress','Study','Today']){
     const button=page.getByRole('button',{name:label,exact:true});
     await button.click();
     await expect(button).toHaveAttribute('aria-current','page');
     await expect(page.locator('.screen')).toBeVisible();
   }
-  await page.getByRole('button',{name:'Week',exact:true}).click();
-  await page.getByRole('button',{name:'Calendar',exact:true}).click();
+  await page.locator('.bottom-nav [data-tab="calendar"]').click();
+  await page.locator('[data-route="week"]').click();
+  await expect(page.locator('.week-screen')).toBeVisible();
+  await expect(page.locator('.bottom-nav [data-tab="calendar"]')).toHaveAttribute('aria-current','page');
+  await page.locator('[data-route="calendar"]').click();
   await expect(page.locator('.calendar-screen')).toBeVisible();
-  await expect(page.locator('.bottom-nav [data-tab="week"]')).toHaveAttribute('aria-current','page');
+  await expect(page.locator('.bottom-nav [data-tab="calendar"]')).toHaveAttribute('aria-current','page');
   await page.getByRole('button',{name:'Study',exact:true}).click();
   await expectGameMenu(page);
   await page.goto('/#games');

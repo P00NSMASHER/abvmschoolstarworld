@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#f6f5ef">
+  <meta name="theme-color" content="#102e58">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -13,9 +13,9 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./assets/abvm-app-icon-192.png" type="image/png">
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/abvm-app-icon-180.png">
-  <link rel="stylesheet" href="./styles.css?v=108">
+  <link rel="stylesheet" href="./styles.css?v=109">
   <link rel="stylesheet" href="./study-teaching.css?v=1">
-  <link rel="stylesheet" href="./study-games-materials.css?v=10">
+  <link rel="stylesheet" href="./study-games-materials.css?v=11">
 </head>
 <body>
   <main class="site-shell">
@@ -29,10 +29,10 @@
             <svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/></svg>
           </span><b>Today</b>
         </button>
-        <button data-tab="week" type="button">
+        <button data-tab="calendar" type="button">
           <span class="nav-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 9h16"/><path d="M8 13h2M12 13h2M16 13h1M8 17h2M12 17h2M16 17h1"/></svg>
-          </span><b>Week</b>
+          </span><b>Calendar</b>
         </button>
         <button data-tab="study" type="button">
           <span class="nav-icon" aria-hidden="true">
@@ -51,7 +51,7 @@
   <script>
     (() => {
       if (!("serviceWorker" in navigator)) return;
-      const reloadKey = "abvm-sw-reloaded-v135";
+      const reloadKey = "abvm-sw-reloaded-v136";
       const hadController = !!navigator.serviceWorker.controller;
       navigator.serviceWorker.addEventListener("controllerchange", () => {
         if (!hadController) return;
@@ -70,7 +70,7 @@
   <script src="./weekly-learning.js?v=5"></script>
   <script src="./study-support.js?v=3"></script>
   <script src="./lunch-art.js?v=1"></script>
-  <script src="./product-view.js?v=1"></script>
-  <script src="./app.js?v=128"></script>
+  <script src="./product-view.js?v=2"></script>
+  <script src="./app.js?v=129"></script>
 </body>
 </html>

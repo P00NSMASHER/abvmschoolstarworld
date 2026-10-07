@@ -1,8 +1,10 @@
 import {test,expect} from "@playwright/test";
 
 async function openTab(page,label){
-  if(label==="Calendar")await page.locator('.bottom-nav [data-tab="week"]').click();
-  await page.getByRole("button",{name:label,exact:true}).click();
+  if(label==="Week"){
+    await page.locator('.bottom-nav [data-tab="calendar"]').click();
+    await page.locator('[data-route="week"]').click();
+  }else await page.getByRole("button",{name:label,exact:true}).click();
   await expect(page.locator(".screen")).toBeVisible();
 }
 
