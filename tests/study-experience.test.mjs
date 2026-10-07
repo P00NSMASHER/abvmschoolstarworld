@@ -82,6 +82,50 @@ test('three completed Math sessions avoid reusing recently shown questions',()=>
  assert.equal(new Set(prompts).size,24);
 });
 
+test('a sparse first-time current subject bank is not padded with fallback',()=>{
+ const e=loadEngine();
+ const current={id:'single-current',subject:'Math',skill:'math-subtraction',tier:'material',questionType:'direct',difficulty:2,prompt:'Single current subtraction question',answer:'5',choices:['5','4','6'],variantFingerprint:'single-current'};
+ const star=Array.from({length:8},(_,i)=>({id:'thin-star-'+i,subject:'Math',skill:'place-value',tier:'star-fallback',questionType:'direct',difficulty:2,prompt:'Thin fallback '+i,answer:String(i),choices:[String(i),String(i+1),String(i+2)],variantFingerprint:'thin-star-'+i}));
+ const catalog={sourceKey:'sparse-current-subject',questions:[current,...star]};
+ e.markQuestionShown({id:'prior-reading',subject:'Reading / ELA',skill:'theme',tier:'material',questionType:'direct',difficulty:2,variantFingerprint:'prior-reading'},catalog.sourceKey);
+ const first=e.selectQuestions(catalog,{subjects:['Math'],count:8,seed:'first',skillStats:{}});
+ assert.deepEqual(Array.from(first,q=>q.id),['single-current']);
+ e.markQuestionShown(first[0],catalog.sourceKey);
+ const second=e.selectQuestions(catalog,{subjects:['Math'],count:8,seed:'second',skillStats:{}});
+ assert.equal(second.length,8);
+ assert(second.every(q=>q.tier==='star-fallback'));
+});
+
+test('subject mode uses fresh current material first, then fresh STAR fallback before repeating',()=>{
+ const e=loadEngine();
+ const current=Array.from({length:9},(_,i)=>({
+  id:'current-math-'+i,subject:'Math',skill:'math-subtraction',tier:'material',
+  questionType:['direct','transfer','reasoning'][i%3],difficulty:2,
+  prompt:'Current subtraction question '+i,answer:String(i),
+  choices:[String(i),String(i+1),String(i+2)],variantFingerprint:'current-math-'+i
+ }));
+ const star=Array.from({length:32},(_,i)=>({
+  id:'star-math-'+i,subject:'Math',skill:'place-value',tier:'star-fallback',
+  questionType:['direct','transfer','reasoning'][i%3],difficulty:2,
+  prompt:'Fallback math question '+i,answer:String(i),
+  choices:[String(i),String(i+1),String(i+2)],variantFingerprint:'star-math-'+i
+ }));
+ const catalog={sourceKey:'subject-fallback-rotation',questions:[...current,...star]};
+ const rounds=[];
+ for(let i=0;i<3;i++){
+  const round=e.selectQuestions(catalog,{subjects:['Math'],count:8,seed:String(i),skillStats:{}});
+  assert.equal(round.length,8);
+  rounds.push(round);
+  for(const q of round)e.markQuestionShown(q,catalog.sourceKey);
+ }
+ assert.equal(rounds[0].filter(q=>q.tier==='material').length,8);
+ assert.equal(rounds[1].filter(q=>q.tier==='material').length,1);
+ assert.equal(rounds[1].filter(q=>q.tier==='star-fallback').length,7);
+ assert.equal(rounds[2].filter(q=>q.tier==='star-fallback').length,8);
+ const ids=rounds.flat().map(q=>q.id);
+ assert.equal(new Set(ids).size,24);
+});
+
 test('corrupt optional recent/history state cannot crash non-test selection',()=>{
   for(const learning of [null,[],5,'bad'])for(const recent of [null,{},5])assert.equal(adaptivePracticeRound([pool],8,1,{learning,recent}).length,8);
 });
