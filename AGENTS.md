@@ -3,8 +3,24 @@
 ## Schoolwork received in ChatGPT
 
 When the user sends schoolwork photos and asks to integrate/update the app, follow
-`docs/SCHOOLWORK_INTAKE.md`. This is the canonical intake process. Read the current
-`pages/data/schoolwork.json` and its source manifest before changing content.
+`docs/SCHOOLWORK_INTAKE.md`. It is the canonical **12-step cumulative** intake
+process. Read the current `pages/data/schoolwork.json`, its `sourceManifest`,
+and current longitudinal context before changing content.
+
+The required order is:
+
+1. preserve the original source and SHA-256 identity;
+2. identify the assignment and only source-supported date;
+3. extract the printed questions/task;
+4. identify the student's responses privately;
+5. identify teacher markings/corrections privately;
+6. determine correctness independently and classify interpretable errors;
+7. map every scorable item to stable academic skills;
+8. compare those skills with longitudinal history;
+9. update mastery/confidence state using repeated evidence;
+10. decide whether targeted practice is warranted;
+11. update the cumulative learning record;
+12. update the current week/test-prep views only when supported and relevant.
 
 - If the user is sending a batch and asks you to wait until they say “finished”,
   wait. Do not begin extraction or modifications until that signal and instructions.
@@ -13,19 +29,26 @@ When the user sends schoolwork photos and asks to integrate/update the app, foll
   add redundant permission prompts for reversible edits or established deployment.
 - Inspect every attachment. Preserve source IDs and SHA-256 hashes, and report
   unreadable/missing pages precisely. Never fabricate extracted content.
-- Keep raw photos, OCR dumps, names, grades/marks, student identifiers and personal
-  information out of this public repository. Publish only reviewed educational
-  notes, original checked practice and non-identifying provenance.
+- Keep raw photos, OCR dumps, names, grades/marks, student identifiers, handwritten
+  answers, teacher comments and child-specific performance history out of this
+  public repository. Steps 4-6 may inspect them in the private review context.
+- Public `pages/data/schoolwork.json` is the privacy-safe educational layer, not
+  the student performance ledger. Store child-specific longitudinal evidence only
+  in a configured private archive. If no private archive is configured, prepare a
+  private archive delta and explicitly report persistence as pending rather than
+  publishing private performance data here.
 - Retain cumulative material; do not date undated worksheets as the current week.
+  A single worksheet must not establish mastery or a persistent weakness.
 - Prioritize official Christ Our Life review links for the exact known chapter;
   do not bulk-copy its question bank. Verify supported links and preserve the
   approved original-practice fallback when official material is unavailable.
 - There is no in-app upload control and no autonomous ChatGPT upload watcher.
   Intake runs when requested in a chat with attachments and repository access.
-- Use `scripts/integrate-schoolwork.mjs` for reviewed batches: dry-run first,
-  inspect the result, then `--write`. Run the intake tests and existing QA gates.
-  Check current remote state, avoid conflicting work, and verify publication
-  before claiming the app is updated. Never weaken gates to get a deployment.
+- Use `scripts/integrate-schoolwork.mjs` for the privacy-safe reviewed batch:
+  dry-run first, inspect the result, then `--write`. Run the intake tests and
+  existing QA gates. Check current remote state, avoid conflicting work, and verify
+  publication before claiming the app is updated. Never weaken gates to get a
+  deployment.
 
 ## Lunch menus received in ChatGPT
 
