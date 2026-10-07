@@ -173,8 +173,15 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
       for(const link of owner?.notes(source,{sources:picks}).links||[]){
         if(!safeUrl(link.url))continue;
         let subject=[...body.querySelectorAll('[data-note-subject]')].find(row=>row.dataset.noteSubject===link.subject);
-        if(!subject){subject=win.document.createElement('details');subject.className='game-material-lesson';subject.dataset.noteSubject=link.subject;subject.innerHTML='<summary>'+esc(link.subject)+'</summary>';body.append(subject);}
-        if(!subject.querySelector('[data-religion-review]'))subject.insertAdjacentHTML('beforeend',referenceHtml(link));
+        if(!subject){
+          subject=win.document.createElement('details');
+          subject.className='game-material-lesson';
+          subject.dataset.noteSubject=link.subject;
+          subject.innerHTML='<summary><span>'+esc(link.subject)+'</span><small>Reviewed link</small></summary><div class="study-note-body"></div>';
+          body.append(subject);
+        }
+        const noteBody=subject.querySelector('.study-note-body')||subject;
+        if(!noteBody.querySelector('[data-religion-review]'))noteBody.insertAdjacentHTML('beforeend',referenceHtml(link));
       }
     };
     notes?.addEventListener('toggle',refreshNotes);
