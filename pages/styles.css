@@ -1344,6 +1344,7 @@ img {
   color: var(--muted);
 }
 .calendar-today-jump {
+  min-height: 48px;
   color: var(--royal);
   margin-bottom: 16px;
 }
