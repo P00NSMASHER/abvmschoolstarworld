@@ -100,3 +100,7 @@ test("active rerun falls back to the latest success while it is unresolved",()=>
   const active={id:120,status:"in_progress",conclusion:null,created_at:"2026-10-07T22:40:00Z",updated_at:"2026-10-07T22:40:00Z"};
   assert.equal(selectEffectiveWorkflowRun({latestCreated:active,latestDecisive:success,latestSuccess:success}),success);
 });
+
+test("missing workflow evidence remains unhealthy and does not invent success",()=>{
+  assert.equal(selectEffectiveWorkflowRun({latestCreated:null,latestDecisive:null,latestSuccess:null}),null);
+});
