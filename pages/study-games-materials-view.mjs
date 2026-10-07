@@ -130,7 +130,9 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
 
   function secondaryHtml() {
     const tests=model?.tests(),pending=tests?.tests||[],completed=tests?.completed||[];
-    const printable=model?.printableTests?.()?.tests||pending;
+    const printableState=model?.printableTests?.();
+    const allPrintable=(printableState?.tests||pending).map((test,index)=>({...test,index}));
+    const printable=allPrintable.filter(test=>!tests?.date||test.date===tests.date);
     const guideButtons=printable.map(test=>'<button type="button" class="study-guide-button" data-test-guide="'+test.index+'">Print guide: '+esc(test.label)+' · '+esc(dateLabel(test.date))+'</button>').join('');
     return '<section class="study-tools" aria-labelledby="study-tools-title"><div class="study-section-heading compact"><span>STUDY TOOLS</span><h2 id="study-tools-title">Review &amp; organize</h2></div><div class="study-tool-list">' +
       '<details class="study-tool-card" data-study-notes'+(notesOpen?' open':'')+'><summary><span class="study-tool-icon notes" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg></span><span class="study-tool-copy"><strong>Notes &amp; lessons</strong><small>Subjects, vocabulary, and reviewed links</small></span><b aria-hidden="true">›</b></summary><div class="study-tool-body" data-study-notes-content>'+(notesOpen?notesContent():'')+'</div></details>' +
