@@ -472,15 +472,15 @@ function leaveStudyGame(){markGameComebacksNextSession();gameState.screen="menu"
 function toggleStudyHint(){const g=gameState;if(g.screen==="play"&&!g.answered){g.hintOpen=!g.hintOpen;if(g.hintOpen)g.hints=(g.hints||0)+1;renderGames();bindScreen()}}
 function gameMenuHtml(catalog){
   const modes=STUDY_GAME_MODES,materials=currentStudyMaterials(),view=studyMaterialsView,selection=studySelection();
-  return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Pick a game and start</h2><span>Practice today. Build skills for tomorrow.</span></div></section>'+
-    (view?view.sourceHtml():'<section class="game-materials" aria-label="Practice materials"><label for="study-source">Practice from</label><select id="study-source" data-study-source disabled><option value="weekly">This week</option></select></section>')+
-    '<div class="study-game-grid">'+modes.map(mode=>{
-      const scope=materials?.forMode(mode.id,selection),record=loadGameRecord(mode.id,scope?.sourceKey||catalog.sourceKey),total=scope?Math.min(8,scope.count):selection.source==="weekly"?gameModeQuestionTotal(catalog,mode):0,disabled=total===0;
-      return '<button type="button" class="study-game-tile game-'+mode.id+'" data-game-start="'+esc(mode.id)+'"'+(disabled?' disabled aria-disabled="true"':'')+'>'+window.ABVMStudyGameView.icon(mode.id)+'<span class="study-game-copy"><strong>'+esc(mode.title)+'</strong><small>'+esc(selection.source==="weekly"?mode.copy:"Practice from "+(scope?.label||"the selected materials")+".")+'</small>'+(disabled?'<em>Not ready yet</em>':record.plays?'<em>Best solved '+record.best+' / '+total+'</em>':'')+'</span><b aria-hidden="true">›</b></button>';
-    }).join("")+'</div>'+
-    (view?view.actionsHtml({complete:!!window.ABVMStudyReview?.completion(),loading:studyMaterialsError?.pack!==pack})+view.secondaryHtml():studyMaterialsError?.pack!==pack?'<p class="game-material-status" role="status">Loading saved materials…</p>':"")+
-    (studyMaterialsError?.pack===pack?'<div class="game-material-status" role="status"><p>Saved materials could not load. Current Games are still available.</p><button type="button" data-study-retry>Retry saved materials</button></div>':"")+
-    '<p class="game-privacy-note">Practice prioritizes verified school skills. STAR-style fallback uses original Grade 2 practice, not copied STAR test items; private student answers and grades are not used.</p>';
+  const grid='<div class="study-game-grid">'+modes.map(mode=>{
+    const scope=materials?.forMode(mode.id,selection),record=loadGameRecord(mode.id,scope?.sourceKey||catalog.sourceKey),total=scope?Math.min(8,scope.count):selection.source==="weekly"?gameModeQuestionTotal(catalog,mode):0,disabled=total===0;
+    return '<button type="button" class="study-game-tile game-'+mode.id+'" data-game-start="'+esc(mode.id)+'"'+(disabled?' disabled aria-disabled="true"':'')+'>'+window.ABVMStudyGameView.icon(mode.id)+'<span class="study-game-copy"><strong>'+esc(mode.title)+'</strong><small>'+esc(selection.source==="weekly"?mode.copy:"Practice from "+(scope?.label||"the selected materials")+".")+'</small>'+(disabled?'<em>Not ready yet</em>':record.plays?'<em>Best solved '+record.best+' / '+total+'</em>':'')+'</span><b aria-hidden="true">›</b></button>';
+  }).join("")+'</div>';
+  if(view)return view.homeHtml({gameGrid:grid,complete:!!window.ABVMStudyReview?.completion(),loading:studyMaterialsError?.pack!==pack,error:studyMaterialsError?.pack===pack});
+  return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Study one thing at a time</h2><span>Get ready for the next test or pick a quick game.</span></div></section>'+
+    '<section class="game-materials study-source-card" aria-label="Practice materials"><div class="study-source-copy"><span>PRACTICE FROM</span><strong>Choose your material</strong></div><select id="study-source" data-study-source disabled><option value="weekly">This week</option></select></section>'+
+    '<section class="study-game-section"><div class="study-section-heading"><span>PRACTICE</span><h2>Choose a game</h2></div>'+grid+'</section>'+
+    '<p class="game-material-status" role="status">Loading saved notes and test tools…</p>';
 }
 function gamePlayHtml(){const g=gameState,q=activeGameQuestion(),e=studyGameEngine();if(q)e?.markQuestionShown?.(q,g.sourceKey||currentGameSourceKey());return window.ABVMStudyGameView.play({g,mode:gameMode(g.mode),q,teach:g.supportMode?e?.teachCardFor?.(q):null,retryInstruction:e?.teachCardFor?.(q)?.instruction,labels:GAME_TYPE_LABELS,canRead:!!studyMaterialsView?.readAloud.supported})}
 function gameFinishHtml(){

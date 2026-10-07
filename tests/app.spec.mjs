@@ -583,7 +583,7 @@ test("Study Games uses the iPad canvas with priority hierarchy and tablet nav",a
   expect(Math.abs(quick.y-math.y)).toBeLessThan(4);
   const grid=await page.locator('.study-game-grid').boundingBox();
   const testActions=await page.locator('[data-study-tests]').boundingBox();
-  expect(testActions.y).toBeGreaterThanOrEqual(grid.y+grid.height);
+  expect(testActions.y+testActions.height).toBeLessThanOrEqual(grid.y+4);
   await expect(page.locator('.study-game-grid [data-game-start="test-ready"]')).toHaveCount(0);
 
   const navButton=await page.locator(".bottom-nav button").first().boundingBox();
