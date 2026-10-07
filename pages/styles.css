@@ -1830,7 +1830,7 @@ img {
 .learning-subject .feature-icon { width: 64px; height: 64px; background: transparent; }
 .learning-subject img { width: 64px; height: 64px; object-fit: contain; }
 .study-hero { position: relative; min-height: 138px; padding-bottom: 24px; overflow: hidden; }
-.study-hero-copy { position: relative; z-index: 1; padding-right: 90px; }
+.study-hero .study-hero-copy { position: relative; z-index: 1; padding-right: 90px; min-width: 0; flex: 1 1 0; }
 .study-hero-copy h2 { color: white; font-size: 1.75rem; line-height: 1.12; margin-top: 10px; }
 .study-hero-copy h2 span { color: var(--yellow); }
 @media (max-width: 389px) {
@@ -1849,6 +1849,7 @@ img {
   .today-screen > .lunch-card { margin-top: 24px; }
   .study-hero { min-height: 168px; }
   .study-hero-art { width: 140px; height: 140px; right: 24px; }
+  .study-hero .study-hero-copy { padding-right: 148px; }
   .study-hero-copy h2 { font-size: 2.5rem; }
 }
 @media (min-width: 700px) and (max-width: 899px) {

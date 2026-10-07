@@ -22,6 +22,12 @@ for(const width of sizes){
       await expect(page.locator('.screen h1')).toBeVisible();
       if(id==='study'){
         await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+        const headingRight=await page.locator('.study-hero-copy h2').evaluate(el=>{
+          const range=document.createRange();range.selectNodeContents(el);
+          return Math.max(...Array.from(range.getClientRects(),rect=>rect.right));
+        });
+        const heroArt=await page.locator('.study-hero-art').boundingBox();
+        expect(headingRight,'Study greeting stays clear of the eagle artwork').toBeLessThanOrEqual(heroArt.x);
         const prepLauncher=page.locator('[data-open-prep]');
         await expect(prepLauncher).toBeVisible();
         await expect(page.locator('[data-test-select]')).toHaveCount(0);
