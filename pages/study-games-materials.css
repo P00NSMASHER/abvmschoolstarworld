@@ -120,6 +120,8 @@
   color:#fff;
 }
 .games-screen .study-test-card.is-loading{border-color:#dbe6ef;background:#f8fbfd}
+.games-screen .study-test-mark.loading{width:54px;min-height:64px;background:#eef3f7;color:#718295}
+.games-screen .study-test-card.is-loading .study-test-actions button{cursor:default;background:#f3f6f8;color:#6a7a89}
 .games-screen .study-test-card.is-clear{border-color:#cce5d2;background:linear-gradient(135deg,#f2fbf4,#fff)}
 
 .games-screen .game-test-status{
@@ -231,7 +233,7 @@
 .games-screen .study-game-tile:disabled{cursor:default;background:#f4f7f9;border-color:#d7e0e7}
 .games-screen .study-game-tile:disabled>b{display:none}
 .games-screen .study-game-tile:disabled .study-game-icon{background:#e8edf1;color:#526579;filter:grayscale(1)}
-.games-screen .study-game-tile:disabled .study-game-copy em{color:#526579}
+.games-screen .study-game-tile:disabled .study-game-copy em{color:#526579;font-size:1rem;line-height:1.25}
 
 /* One low-priority daily row after the game choices. */
 .games-screen .study-daily-card{
@@ -316,6 +318,8 @@
 .games-screen .study-tool-body>p{margin:10px 1px;color:#607184;font-size:.82rem;line-height:1.45}
 .games-screen .study-tool-body>button{margin:0 6px 7px 0}
 .games-screen .study-tool-body h3{margin:11px 0 7px;color:#244e76;font-size:.86rem}
+.games-screen .study-guide-tool-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:7px;margin-bottom:8px}
+.games-screen .study-guide-tool-list .study-guide-button{width:100%;margin:0}
 
 .games-screen .study-notes-grid{display:grid;gap:7px;padding-top:9px}
 .games-screen .game-material-lesson{
