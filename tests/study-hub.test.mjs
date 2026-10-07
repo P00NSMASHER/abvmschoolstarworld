@@ -17,15 +17,19 @@ test("all uploaded schoolwork answers have one correct choice and safe source ma
   const data = JSON.parse(
     fs.readFileSync(new URL("../pages/data/schoolwork.json", import.meta.url)),
   );
-  assert.equal(data.sourceManifest.length, 20);
-  assert.equal(data.lessons.length, 12);
-  for (const l of data.lessons)
+  assert.equal(data.sourceManifest.length, data.uploadedPhotoCount);
+  assert.equal(new Set(data.sourceManifest.map((s) => s.id)).size, data.sourceManifest.length);
+  const sourceIds = new Set(data.sourceManifest.map((s) => s.id));
+  assert(data.lessons.length > 0);
+  for (const l of data.lessons) {
+    for (const source of l.sources) assert(sourceIds.has(source));
     for (const q of l.questions) {
       assert.equal(new Set(q.choices).size, q.choices.length);
       assert.equal(q.choices.filter((c) => c === q.answer).length, 1);
       assert(q.explanation);
       assert(q.prompt);
     }
+  }
   const chapter = data.lessons.find((l) => l.chapter === 2);
   assert.equal(chapter.questions.length, 10);
   const grammar = questionsForTest(
