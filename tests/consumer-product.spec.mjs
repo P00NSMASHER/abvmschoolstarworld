@@ -25,6 +25,12 @@ for(const width of sizes){
         const picker=page.locator("[data-test-select]");
         await expect(picker).toBeVisible();
         expect(await picker.evaluate(el=>parseFloat(getComputedStyle(el).fontSize)),"native selector avoids iOS focus zoom").toBeGreaterThanOrEqual(16);
+        for(const tile of await page.locator('.study-game-tile:has(img)').all()){
+          await expect.poll(()=>tile.locator('img').evaluate(img=>img.complete&&img.naturalWidth>0)).toBe(true);
+          const image=await tile.locator('img').boundingBox(),slot=await tile.locator('.study-game-icon').boundingBox(),copy=await tile.locator('.study-game-copy').boundingBox();
+          expect(image.y+image.height,'subject artwork fits its slot').toBeLessThanOrEqual(slot.y+slot.height+1);
+          expect(image.y+image.height,'subject artwork stays above its label').toBeLessThanOrEqual(copy.y);
+        }
       }
       expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),label+' document').toBe(true);
       expect(await page.locator('.screen').evaluate(el=>el.scrollWidth<=el.clientWidth+1),label+' content').toBe(true);
