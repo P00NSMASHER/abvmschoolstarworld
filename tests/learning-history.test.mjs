@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp,readFile,rm,writeFile} from 'node:fs/promises';
+import {mkdir,mkdtemp,readFile,rm,writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {assertPrivatePath,integrateLearningHistory,mergeLearningHistory,validateObservationBatch} from '../scripts/learning-history.mjs';
@@ -62,7 +62,7 @@ test('file integration writes only to an external private path',async()=>{
   try{
     const privateDir=path.join(dir,'private'),repoRoot=path.join(dir,'public-repo');
     const history=path.join(privateDir,'history.json'),input=path.join(privateDir,'batch.json');
-    await writeFile(input,JSON.stringify(batch([observation('o1','p1','2026-10-01','incorrect')])) ,{recursive:false}).catch(async()=>{await import('node:fs/promises').then(fs=>fs.mkdir(privateDir,{recursive:true}));await writeFile(input,JSON.stringify(batch([observation('o1','p1','2026-10-01','incorrect')])));});
+    await mkdir(privateDir,{recursive:true});\n    await writeFile(input,JSON.stringify(batch([observation('o1','p1','2026-10-01','incorrect')])));
     const result=await integrateLearningHistory(history,input,{write:true,repoRoot});
     assert.equal(result.changed,true);
     const saved=JSON.parse(await readFile(history,'utf8'));
