@@ -145,7 +145,13 @@ test('on-demand subject notes retain the verified chapter review and disclose a 
   await expect(spelling.locator('.game-note-warning')).toContainText('earlier vowel pattern');
   await expect(spelling.locator('.game-note-warning')).toContainText('do not establish test coverage');
   await page.locator('[data-study-notes] > summary').click();
+  await expect(page.locator('[data-study-notes]')).not.toHaveAttribute('open','');
   await expect(review).not.toBeVisible();
+  expect(await review.evaluate(el=>el.getClientRects().length),'closed nested notes leave no rendered religion link').toBe(0);
+  await expect(page.getByRole('link',{name:'Chapter 2 online review',exact:true})).toHaveCount(0);
+  expect(await review.evaluate(el=>{el.focus();return document.activeElement===el;}),'closed nested notes cannot receive focus').toBe(false);
+  await page.locator('[data-study-notes] > summary').click();
+  await expect(review).toBeVisible();
 });
 
 test('current notes and cumulative reviewed schoolwork remain separately available',async({page})=>{

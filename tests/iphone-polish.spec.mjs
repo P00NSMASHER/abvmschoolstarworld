@@ -25,6 +25,41 @@ async function openNotes(page){
   return notes;
 }
 
+test('navigation labels reflow at 200 percent text size without overlapping touch targets',async({page},info)=>{
+  await page.emulateMedia({reducedMotion:'reduce'});
+  for(const width of [320,393,820,1440]){
+    await page.setViewportSize({width,height:width>=700?1024:852});
+    await page.goto('/#today');
+    const nav=page.getByRole('navigation',{name:'App navigation'});
+    const normal=await nav.locator('button b').first().evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
+    await page.evaluate(()=>{const root=document.documentElement;root.style.fontSize=2*parseFloat(getComputedStyle(root).fontSize)+'px';});
+    const targets=await nav.locator('button').evaluateAll(nodes=>nodes.map(el=>{
+      const b=el.getBoundingClientRect(),label=el.querySelector('b'),r=label.getBoundingClientRect();
+      return {label:label.textContent,left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height,
+        labelLeft:r.left,labelRight:r.right,labelTop:r.top,labelBottom:r.bottom,fontSize:parseFloat(getComputedStyle(label).fontSize)};
+    }));
+    expect(targets).toHaveLength(4);
+    for(const target of targets){
+      const context=JSON.stringify({width,target});
+      expect(target.width,context).toBeGreaterThanOrEqual(44);expect(target.height,context).toBeGreaterThanOrEqual(44);
+      expect(target.fontSize,context).toBeGreaterThanOrEqual(normal*2-.1);
+      expect(target.labelLeft,context).toBeGreaterThanOrEqual(target.left-1);expect(target.labelRight,context).toBeLessThanOrEqual(target.right+1);
+      expect(target.labelTop,context).toBeGreaterThanOrEqual(target.top-1);expect(target.labelBottom,context).toBeLessThanOrEqual(target.bottom+1);
+      expect(target.left,context).toBeGreaterThanOrEqual(-1);expect(target.right,context).toBeLessThanOrEqual(width+1);
+    }
+    for(let i=0;i<targets.length;i++)for(let j=i+1;j<targets.length;j++){
+      const a=targets[i],b=targets[j];
+      const overlapX=Math.min(a.right,b.right)-Math.max(a.left,b.left),overlapY=Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top);
+      expect(overlapX>1&&overlapY>1,`${width}px: ${a.label} and ${b.label} overlap`).toBe(false);
+    }
+    await nav.getByRole('button',{name:'Study',exact:true}).click();
+    await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+    await expect(nav.getByRole('button',{name:'Study',exact:true})).toHaveAttribute('aria-current','page');
+    await page.screenshot({animations:'disabled',path:info.outputPath(`navigation-200-percent-${width}.png`)});
+    await page.evaluate(()=>document.documentElement.style.fontSize='');
+  }
+});
+
 test('long Family and Study cards never clip their content',async({page})=>{
   for(const viewport of [{width:320,height:568},{width:393,height:852},{width:820,height:1180},{width:1440,height:900}]){
     await page.setViewportSize(viewport);

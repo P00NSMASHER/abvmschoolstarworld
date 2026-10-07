@@ -10,9 +10,9 @@
 .games-screen .study-section-heading{margin:0 0 12px}
 .games-screen .study-section-heading>span{display:block;margin:0 0 5px;color:var(--study-muted);font-size:.65rem;font-weight:750;line-height:1.4;letter-spacing:.1em}
 .games-screen .study-section-heading h2{margin:0;color:var(--study-ink);font-size:1.12rem;font-weight:750;letter-spacing:-.025em;line-height:1.3}
-.games-screen .study-priority{margin:0}
-.games-screen .study-test-card{display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start;padding:16px;border:0;border-radius:24px;background:var(--study-sky);box-shadow:none}
-.games-screen .study-test-date{display:grid;justify-items:center;align-content:center;width:56px;min-height:64px;padding:8px 4px;border:0;border-radius:16px;background:#fff;color:#173773;box-shadow:none}
+.games-screen .study-priority{margin:0;container-type:inline-size;container-name:study-prep}
+.games-screen .study-test-card{display:grid;grid-template-columns:max(56px,3.3rem) minmax(0,1fr);gap:12px;align-items:start;padding:16px;border:0;border-radius:24px;background:var(--study-sky);box-shadow:none}
+.games-screen .study-test-date{display:grid;justify-items:center;align-content:center;width:max(56px,3.3rem);min-height:64px;padding:8px 4px;border:0;border-radius:16px;background:#fff;color:#173773;box-shadow:none}
 .games-screen .study-test-date span{font-size:.65rem;line-height:1.4;font-weight:750;text-transform:uppercase;letter-spacing:.05em}
 .games-screen .study-test-date strong{font-size:1.6rem;line-height:1.1;font-weight:750}
 .games-screen .study-test-date em{margin-top:3px;font-size:.6rem;font-style:normal;line-height:1.3;font-weight:600}
@@ -26,7 +26,8 @@
 .games-screen .study-test-actions{display:grid;gap:8px;grid-column:1/-1;margin-top:0}
 .games-screen .study-test-picker{display:grid;gap:6px;color:#435e80;font-size:.72rem;font-weight:650;letter-spacing:0}
 .games-screen .study-test-picker-label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-.games-screen .study-test-picker select{width:100%;min-width:0;min-height:44px;padding:10px 34px 10px 13px;border:1px solid #b9cce7;border-radius:12px;background:#fff;color:#173773;font:inherit;font-size:.96rem;line-height:1.4;font-weight:650}
+/* Bound the native control’s anonymous text box; its full option picker remains native. */
+.games-screen .study-test-picker select{contain:paint;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%;min-width:0;min-height:44px;padding:10px 34px 10px 13px;border:1px solid #b9cce7;border-radius:12px;background:#fff;color:#173773;font:inherit;font-size:.96rem;line-height:1.4;font-weight:650}
 .games-screen .study-test-actions button{min-height:48px;padding:12px 17px;border:0;border-radius:14px;background:#fff;color:var(--study-brand);font-size:.9rem;line-height:1.35;font-weight:750;text-align:center}
 .games-screen .study-test-actions .study-test-primary{background:var(--study-brand);color:#fff;box-shadow:0 4px 10px #254fbd18}
 .games-screen .study-test-primary:disabled{background:#c4d3e9;color:#415674;box-shadow:none}
@@ -40,7 +41,7 @@
 .games-screen .game-test-status{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:12px 0 0;color:var(--study-muted);font-size:.8rem;line-height:1.4}
 .games-screen .game-test-status button{min-height:44px;border:1px solid var(--study-line);border-radius:10px;background:#fff;color:var(--study-brand);padding:8px 13px;font-weight:700}
 .games-screen .study-game-section{margin:0}
-.games-screen .study-game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px}
+.games-screen .study-game-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,max(8rem,calc(50% - 7px))),1fr))!important;gap:12px}
 .games-screen .study-game-tile{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:10px;width:100%;min-width:0;min-height:138px!important;padding:16px 14px;border:0;border-radius:22px;background:#e8f3f0;box-shadow:none;text-align:left;color:#236456}
 .games-screen .study-game-tile.game-words{background:#f8eae4;color:#a04431}
 .games-screen .study-game-tile.game-faith{background:#eee8f7;color:#65438f}
@@ -60,6 +61,8 @@
 .games-screen .study-tools{margin:32px 0 0}
 .games-screen .study-tool-list{display:grid;border-block:1px solid var(--study-line)}
 .games-screen .study-tool-card{border:0;border-radius:0;background:none;overflow:hidden}
+/* Mirror native closed disclosure semantics for nested links in WebKit. */
+.games-screen :is(.study-tool-card,.game-material-lesson):not([open])>:not(summary){display:none}
 .games-screen .study-tool-card+.study-tool-card{border-top:1px solid var(--study-line)}
 .games-screen .study-tool-card>summary{display:grid;grid-template-columns:26px minmax(0,1fr) 24px;align-items:center;gap:14px;min-height:76px;padding:15px 0;list-style:none;cursor:pointer}
 .games-screen .study-tool-card>summary::-webkit-details-marker,.games-screen .game-material-lesson>summary::-webkit-details-marker{display:none}
@@ -199,7 +202,7 @@
   .games-screen .game-answer{min-height:76px;padding:18px}
 }
 @media(min-width:700px) and (max-width:899px){
-  .games-screen .study-test-card{grid-template-columns:56px minmax(0,1fr) minmax(180px,1fr);align-items:center}
+  .games-screen .study-test-card{grid-template-columns:max(56px,3.3rem) minmax(0,1fr) minmax(180px,1fr);align-items:center}
   .games-screen .study-test-actions{grid-column:3;grid-row:1;margin:0}
   .games-screen .study-test-card>.game-material-status{grid-column:1/-1}
 }
@@ -218,3 +221,12 @@
 .games-screen .game-empty>p{color:var(--study-muted);font-size:.87rem;line-height:1.5}
 @keyframes study-loading-turn{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.games-screen .loading-star svg{animation:none}}
+
+/* At enlarged text sizes, the date becomes a horizontal label and content stacks. */
+@container study-prep (max-width:16rem){
+  .games-screen .study-test-card:not(.is-clear){grid-template-columns:minmax(0,1fr)}
+  .games-screen .study-test-date{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:8px;width:100%;min-height:44px;padding:8px 12px}
+  .games-screen .study-test-date :is(span,em){white-space:nowrap}
+  .games-screen .study-test-date em{margin:0}
+  .games-screen .study-test-actions{grid-column:1;grid-row:auto}
+}

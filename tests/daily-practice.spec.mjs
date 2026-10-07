@@ -5,7 +5,10 @@ test('the simplified Study menu provides five accessible subjects without a comp
     await page.setViewportSize({width,height:852});await page.goto('/#study');await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
     const tiles=page.locator('.study-game-grid > .study-game-tile');await expect(tiles).toHaveCount(5);await expect(page.locator('[data-game-start="daily"]')).toHaveCount(0);
     for(const tile of await tiles.all())expect((await tile.boundingBox()).height).toBeGreaterThanOrEqual(44);
-    await page.evaluate(()=>document.documentElement.style.fontSize='34px');expect(await page.locator('.screen').evaluate(e=>e.scrollWidth<=e.clientWidth+1)).toBe(true);await page.evaluate(()=>document.documentElement.style.fontSize='');
+    await page.evaluate(()=>document.documentElement.style.fontSize='34px');
+    const reflow=await page.locator('.screen').evaluate(e=>({content:e.scrollWidth,available:e.clientWidth}));
+    expect(reflow.content,`${width}px Study at 200 percent text size`).toBeLessThanOrEqual(reflow.available+1);
+    await page.evaluate(()=>document.documentElement.style.fontSize='');
   }
   await page.screenshot({path:info.outputPath('study-subjects-iphone.png')});
 });

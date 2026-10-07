@@ -104,7 +104,8 @@ test('expanded notes reflow at 200 percent text size with reduced motion',async(
   await page.evaluate(()=>document.documentElement.style.fontSize=(parseFloat(getComputedStyle(document.documentElement).fontSize)*2)+'px');
   expect(await title.evaluate(e=>parseFloat(getComputedStyle(e).fontSize))).toBeGreaterThanOrEqual(before*2-.1);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
-  expect(await page.locator('.screen').evaluate(e=>e.scrollWidth<=e.clientWidth+1)).toBe(true);
+  const reflow=await page.locator('.screen').evaluate(e=>({content:e.scrollWidth,available:e.clientWidth}));
+  expect(reflow.content,'expanded notes at 200 percent text size').toBeLessThanOrEqual(reflow.available+1);
   await expect(lesson).toHaveAttribute('open','');await expect(lesson.locator('li').first()).toBeVisible();
   await page.screenshot({animations:"disabled",path:info.outputPath('study-notes-200-percent-iphone.png')});
 });
