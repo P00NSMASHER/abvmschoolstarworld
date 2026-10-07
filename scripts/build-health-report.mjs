@@ -1,5 +1,5 @@
 import {readFileSync,mkdirSync,writeFileSync} from "node:fs";
-import {selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence} from "./health-evidence.mjs";
+import {selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence} from "./health-evidence.mjs";
 
 const packData=JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8"));
 const pkg=JSON.parse(readFileSync(new URL("../package.json",import.meta.url),"utf8"));
@@ -98,15 +98,7 @@ const status={
 const SOURCE_FRESH_HOURS=16;
 const sourceFresh=sourceAgeHours!==null&&sourceAgeHours>=-.25&&sourceAgeHours<=SOURCE_FRESH_HOURS;
 const runAgeHours=run=>run?.created_at?(Date.now()-Date.parse(run.created_at))/3_600_000:null;
-const activeStatuses=new Set(["queued","in_progress","waiting","pending","requested"]);
-const effectiveRun=workflow=>{
-  const newestCreated=workflow.latestCreated;
-  const decisive=workflow.latestDecisive;
-  const newerActive=newestCreated&&activeStatuses.has(newestCreated.status)&&(!decisive||runCreatedAt(newestCreated)>=runCreatedAt(decisive));
-  if(newerActive)return workflow.latestSuccess||decisive;
-  if(newestCreated?.conclusion==="cancelled")return newestCreated;
-  return decisive;
-};
+const effectiveRun=workflow=>selectEffectiveWorkflowRun(workflow);
 const completedRunHealthy=(run,maxAgeHours)=>{
   if(!run||run.conclusion!=="success")return false;
   const age=runAgeHours(run);
