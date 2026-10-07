@@ -61,6 +61,7 @@
 }
 .games-screen .study-test-date span{font-size:.68rem;font-weight:900;letter-spacing:.09em;text-transform:uppercase}
 .games-screen .study-test-date strong{font-size:1.72rem;line-height:1}
+.games-screen .study-test-date em{display:block;margin-top:2px;color:#fff;font-size:.62rem;line-height:1;font-style:normal;font-weight:800}
 .games-screen .study-test-mark{
   display:grid;
   place-items:center;
@@ -75,7 +76,8 @@
 .games-screen .study-test-copy{min-width:0}
 .games-screen .study-test-copy small{
   display:block;
-  color:#866000;
+  color:#765400;
+  text-transform:uppercase;
   font-size:.68rem;
   font-weight:900;
   letter-spacing:.1em;
@@ -181,7 +183,7 @@
   border:0;
   border-top:1px solid #edf2f6;
 }
-.games-screen [data-study-mix] legend{color:#66798a;font-size:.76rem}
+.games-screen [data-study-mix] legend{color:#43586c;font-size:.76rem;font-weight:700}
 .games-screen [data-study-mix] label{display:flex;align-items:center;gap:7px;min-height:40px;color:#41576c;font-size:.85rem;cursor:pointer}
 .games-screen [data-study-mix] input{width:19px;height:19px;accent-color:#176fb4}
 
@@ -268,7 +270,7 @@
   border-radius:12px;
   background:#0d6fb9;
   color:#fff;
-  font-size:.84rem;
+  font-size:1rem;
   font-weight:900;
 }
 .games-screen .study-daily-card button:disabled{background:#c8d3dc;color:#536270}
@@ -337,7 +339,8 @@
 .games-screen .game-material-lesson>summary span{min-width:0;color:#294761;font-size:.86rem;font-weight:850}
 .games-screen .game-material-lesson>summary small{flex:none;color:#748494;font-size:.7rem}
 .games-screen .study-note-body{padding:0 11px 11px;border-top:1px solid #edf2f6}
-.games-screen .study-note-body ul{margin:9px 0 0;padding:0 0 0 18px}
+.games-screen .study-note-body ul{margin:9px 0 0;padding:0 0 0 22px;list-style:disc outside}
+.games-screen .study-note-body li{display:list-item;list-style-type:disc;list-style-position:outside}
 .games-screen .study-note-body li,
 .games-screen .study-note-body dl{color:#3e5368;font-size:.88rem;line-height:1.5}
 .games-screen .study-note-body dl{display:grid;gap:8px;margin:9px 0 0}
@@ -373,7 +376,7 @@
   color:#214f77;
   font-weight:800;
 }
-.games-screen .game-privacy-note{margin:10px 8px 0;color:#788696;text-align:center;font-size:.7rem;line-height:1.45}
+.games-screen .game-privacy-note{margin:10px 8px 0;color:#56697b;text-align:center;font-size:.72rem;line-height:1.45}
 
 .games-screen .game-read-button{min-height:44px;margin:0 0 10px;color:#365675;font-size:.85rem;padding:6px 10px;border:1px solid #d3e0e9;border-radius:10px}
 .games-screen .game-materials :is(select,input):focus-visible,
