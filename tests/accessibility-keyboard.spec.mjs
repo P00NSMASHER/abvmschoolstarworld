@@ -6,8 +6,10 @@ async function waitForApp(page,path="/#today"){
 }
 
 async function openDestination(page,label){
-  if(label==="Calendar")await page.locator('.bottom-nav [data-tab="week"]').click();
-  if(label==="Study Games"){
+  if(label==="Week"){
+    await page.locator('.bottom-nav [data-tab="calendar"]').click();
+    await page.locator('[data-route="week"]').click();
+  }else if(label==="Study Games"){
     await page.goto(new URL("#games",page.url()).href);
   }else await page.getByRole("button",{name:label,exact:true}).click();
   await expect(page.locator(".screen")).toBeVisible();
@@ -33,7 +35,35 @@ test("keyboard navigation reaches the skip link and all four primary destination
     if(tab)seen.add(tab);
     if(seen.size===4)break;
   }
-  expect(seen).toEqual(new Set(["today","week","study","family"]));
+  expect(seen).toEqual(new Set(["today","calendar","study","family"]));
+});
+
+test("Calendar remains primary while Month and Week are keyboard-accessible",async({page})=>{
+  await waitForApp(page,"/#week");
+  const nav=page.getByRole("navigation",{name:"App navigation"});
+  const calendar=nav.getByRole("button",{name:"Calendar",exact:true});
+  await expect(calendar).toHaveAttribute("aria-current","page");
+  await expect(page.locator('[data-route="week"]')).toHaveAttribute("aria-pressed","true");
+  await expect(page.locator('[data-day]')).toHaveCount(5);
+  const views=page.getByRole("navigation",{name:"Calendar view"});
+  for(const target of await views.getByRole("button").all()){
+    const box=await target.boundingBox();
+    expect(box.width).toBeGreaterThanOrEqual(44);expect(box.height).toBeGreaterThanOrEqual(44);
+  }
+  const month=views.getByRole("button",{name:"Month",exact:true});
+  await month.focus();await page.keyboard.press("Enter");
+  await expect(page.locator('.calendar-card')).toBeVisible();
+  await expect(page.locator('[data-route="calendar"]')).toHaveAttribute("aria-pressed","true");
+  await expect(page.locator('[data-route="week"]')).toHaveAttribute("aria-pressed","false");
+  await expect(calendar).toHaveAttribute("aria-current","page");
+  expect(new URL(page.url()).hash).toBe("#calendar");
+  await views.getByRole("button",{name:"Week",exact:true}).focus();
+  await page.keyboard.press("Space");
+  await expect(page.locator('.day-picker')).toBeVisible();
+  await expect(page.locator('[data-route="week"]')).toHaveAttribute("aria-pressed","true");
+  await expect(page.locator('[data-route="calendar"]')).toHaveAttribute("aria-pressed","false");
+  await expect(calendar).toHaveAttribute("aria-current","page");
+  expect(new URL(page.url()).hash).toBe("#week");
 });
 
 test("subject choices, Test Prep selector, and native disclosures work from keyboard",async({page})=>{
@@ -81,7 +111,7 @@ test("checklist completion preserves scroll position and keyboard focus",async({
 
 test("bottom navigation can be activated by keyboard",async({page})=>{
   await waitForApp(page);
-  for(const label of ["Week","Study","Progress","Today"]){
+  for(const label of ["Calendar","Study","Progress","Today"]){
     const button=page.getByRole("button",{name:label,exact:true});
     await button.focus();
     await page.keyboard.press("Enter");

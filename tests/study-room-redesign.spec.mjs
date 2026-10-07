@@ -37,7 +37,8 @@ for(const [width,height] of [[393,852],[768,1024]]){
     await openStudy(page);const before=await page.evaluate(()=>localStorage.getItem('abvm-study-learning:v2'));
     await expect(page.locator('.bottom-nav [data-tab="study"]')).toHaveCount(1);
     await expect(page.locator('[data-study-source],.daily-practice,[data-game-start="daily"],.review-skill-chip,input[type="file"]')).toHaveCount(0);
-    for(const [id,label] of [['reading','Reading / ELA'],['spelling','Spelling'],['math','Math'],['religion','Religion'],['mix','Mix']])await expect(page.locator(`.study-game-grid [data-game-start="${id}"]`)).toContainText(label);
+    for(const [id,label] of [['reading','Reading'],['spelling','Spelling'],['math','Math'],['religion','Religion'],['mix','Mix']])await expect(page.locator(`.study-game-grid [data-game-start="${id}"]`)).toContainText(label);
+    await expect(page.locator('.study-game-grid [data-game-start="reading"]')).toHaveAccessibleName('Reading / ELA');
     await expect(page.locator('[data-study-notes]')).not.toHaveAttribute('open','');
     const geometry=await page.locator('.study-game-tile').evaluateAll(nodes=>({smallest:Math.min(...nodes.map(el=>el.getBoundingClientRect().height)),overflow:document.documentElement.scrollWidth>innerWidth+2}));
     expect(geometry.smallest).toBeGreaterThanOrEqual(44);expect(geometry.overflow).toBe(false);await capture(page,info,`study-home-${width}`);

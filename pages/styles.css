@@ -1,19 +1,19 @@
-/* ABVM design system: warm paper, purposeful subject color, quiet structure. */
+/* ABVM: school navy, sunny gold, dimensional subject art and clear white surfaces. */
 :root {
   color-scheme: light;
-  --navy: #173773;
-  --royal: #254fbd;
-  --ink: #202c3a;
-  --muted: #5d6978;
+  --navy: #102e58;
+  --royal: #102e58;
+  --ink: #102e58;
+  --muted: #52657e;
   --paper: #fff;
-  --canvas: #f6f5ef;
-  --line: #e0e4e6;
-  --cream: #fbf4df;
+  --canvas: #f5faff;
+  --line: #dce7f3;
+  --cream: #fff4cf;
   --pink: #a74357;
   --pink-dark: #873749;
   --lavender: #745398;
-  --yellow: #f0cc64;
-  --sky: #e9f1fe;
+  --yellow: #ffca38;
+  --sky: #e5f3ff;
   --mint: #dff1e8;
   --success: #25644f;
   --warning: #77591a;
@@ -29,7 +29,7 @@
   --r1: 12px;
   --r2: 20px;
   --r3: 28px;
-  --shadow: 0 6px 24px #17377306;
+  --shadow: 0 4px 16px #102e580c;
   font-size: 17px;
 }
 * {
@@ -45,7 +45,7 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
   line-height: 1.5;
@@ -183,19 +183,19 @@ img {
   transform: none;
 }
 .app-header {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+  gap: 16px; padding: calc(22px + env(safe-area-inset-top)) 22px 24px;
+  margin: calc(-24px - env(safe-area-inset-top)) -22px 22px;
+  background: var(--navy); color: white; border-radius: 0 0 28px 28px;
 }
 .app-header > div {
   flex: 1 0 auto;
   min-width: 0;
   max-width: 100%;
 }
-.app-header h1 { overflow-wrap: anywhere; }
+.app-header h1 {
+  margin-top: 5px; color: white; font-size: 2rem; overflow-wrap: anywhere;
+}
 .app-header p,
 .eyebrow {
   font-size: 0.64rem;
@@ -204,24 +204,16 @@ img {
   color: var(--muted);
   text-transform: uppercase;
 }
-.app-header h1 {
-  margin-top: 5px;
-  color: var(--ink);
-}
+
 .school-mark {
-  width: 46px;
-  height: 46px;
-  object-fit: contain;
-  border-radius: 50%;
+  width: 56px; height: 56px; object-fit: contain; border-radius: 50%;
+  background: white; padding: 2px; flex: none;
 }
 .bottom-nav {
-  display: grid;
-  /* Four destinations at default text size; two rows when enlarged labels need space. */
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 4rem), 1fr));
-  padding: 8px 14px calc(8px + env(safe-area-inset-bottom));
-  background: #fff;
-  border-top: 1px solid var(--line);
-  z-index: 3;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 4rem), 1fr));
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+  background: #fffffff5; border-top: 1px solid var(--line); z-index: 3;
+  box-shadow: 0 -4px 20px #102e5807;
 }
 .bottom-nav button {
   position: relative;
@@ -239,11 +231,7 @@ img {
   font-weight: 650;
 }
 .nav-icon {
-  display: grid;
-  place-items: center;
-  width: 50px;
-  height: 30px;
-  border-radius: 14px;
+  display: grid; place-items: center; width: 50px; height: 32px; border-radius: 18px;
 }
 .nav-icon svg {
   width: 23px;
@@ -253,7 +241,7 @@ img {
   color: var(--royal);
 }
 .bottom-nav button.active .nav-icon {
-  background: var(--sky);
+  background: var(--yellow); color: var(--navy);
 }
 .bottom-nav [data-has-updates="true"]::after {
   content: "";
@@ -389,43 +377,25 @@ img {
   color: #923f51;
 }
 .hero-card {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  min-height: 174px;
-  border-radius: var(--r2);
-  overflow: hidden;
-  background: #e9eef7;
+  position: relative; display: grid; grid-template-columns: 1.15fr 1fr;
+  min-height: 190px; border-radius: 24px; overflow: hidden;
+  background: var(--navy); border-bottom: 5px solid var(--yellow);
 }
 .hero-copy {
-  position: relative;
-  z-index: 1;
-  padding: 22px 10px 22px 20px;
+  position: relative; z-index: 1; padding: 22px 8px 22px 18px; align-self: center;
 }
 .hero-copy .eyebrow {
-  font-size: 0.58rem;
-  letter-spacing: 0.055em;
-  color: #4b6080;
+  font-size: 0.58rem; letter-spacing: 0.04em; color: #d3e6ff;
 }
 .hero-copy h2 {
-  font-size: 1.73rem;
-  line-height: 1.08;
-  margin: 10px 0 8px;
-  color: var(--navy);
-  letter-spacing: -0.045em;
+  font-size: 1.9rem; line-height: 1.08; margin: 10px 0; color: white; letter-spacing: -0.045em;
 }
 .hero-copy > p:last-child {
-  font-size: 0.71rem;
-  color: #4b6080;
-  max-width: 160px;
+  font-size: 0.73rem; color: white; max-width: 180px;
 }
 .hero-photo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 55% 50%;
-  align-self: stretch;
-  min-height: 174px;
+  width: 100%; height: 100%; object-fit: cover; object-position: 55% 50%;
+  align-self: stretch; min-height: 190px; border-radius: 42% 0 0 0;
 }
 .photo-caption {
   position: absolute;
@@ -492,16 +462,9 @@ img {
   flex: none;
 }
 .study-invitation {
-  margin-top: 16px;
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  text-align: left;
-  width: 100%;
-  background: #e8eefb;
-  border-radius: var(--r2);
-  padding: 18px;
-  color: var(--navy);
+  margin: 18px 0 14px; display: flex; gap: 12px; align-items: center; text-align: left;
+  width: 100%; background: var(--yellow); border-radius: 22px; padding: 12px 16px;
+  color: var(--navy); box-shadow: 0 4px 0 #e9b725;
 }
 .study-invitation > .feature-icon {
   background: none;
@@ -518,11 +481,7 @@ img {
   font-size: 0.93rem;
 }
 .study-invitation small {
-  display: block;
-  font-size: 0.68rem;
-  line-height: 1.5;
-  color: #52637e;
-  margin-top: 5px;
+  display: block; font-size: 0.68rem; line-height: 1.4; color: var(--navy); margin-top: 3px;
 }
 .study-invitation > svg {
   width: 20px;
@@ -628,15 +587,9 @@ img {
   margin-top: 8px;
 }
 .lunch-card {
-  position: relative;
-  display: grid;
-  grid-template-columns: 32px minmax(0, 1fr) auto;
-  gap: 12px;
-  align-items: center;
-  padding: 20px 16px;
-  margin-top: 26px;
-  border-radius: var(--r2);
-  background: #f9f0d9;
+  position: relative; display: grid; grid-template-columns: 26px minmax(0, 1fr) auto;
+  gap: 10px; align-items: center; padding: 18px 14px; margin-top: 18px;
+  border-radius: var(--r2); background: #fff3cc;
 }
 .lunch-card .meal-icon {
   width: 30px;
@@ -785,14 +738,8 @@ img {
   margin-bottom: 28px;
 }
 .day-picker button {
-  min-height: 88px;
-  display: grid;
-  justify-items: center;
-  align-content: center;
-  gap: 2px;
-  border-radius: 16px;
-  color: var(--muted);
-  background: #eeeee8;
+  min-height: 76px; display: grid; justify-items: center; align-content: center;
+  gap: 2px; border-radius: 16px; color: var(--navy); background: var(--sky);
 }
 .day-picker span {
   font-size: 0.66rem;
@@ -842,7 +789,7 @@ img {
   margin-top: 20px;
 }
 .week-overview-card {
-  min-width: 0;
+  min-width: 0; padding: 16px; border-radius: 22px;
 }
 .week-overview-card-head {
   display: flex;
@@ -864,8 +811,7 @@ img {
   height: 19px;
 }
 .week-overview-icon.tests {
-  background: #f8e9eb;
-  color: var(--pink-dark);
+  background: #d2eaff; color: var(--navy);
 }
 .week-overview-card h3 {
   font-size: 0.94rem;
@@ -997,8 +943,10 @@ img {
   font-size: 0.8rem;
 }
 .family-hero {
-  margin-bottom: 22px;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 18px; margin-bottom: 20px; background: var(--sky); border-radius: 24px;
 }
+.family-hero > div { flex: 1 1 140px; min-width: 0; }
 .family-hero h2 {
   font-size: 1.28rem;
 }
@@ -1048,11 +996,7 @@ img {
   margin-top: 18px;
 }
 .learning-subject {
-  display: flex;
-  align-items: start;
-  gap: 14px;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--line);
+  display: flex; gap: 14px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--line);
 }
 .learning-subject:last-child {
   border: 0;
@@ -1317,11 +1261,7 @@ img {
   margin-top: 12px;
 }
 .calendar-month-nav {
-  display: grid;
-  grid-template-columns: 44px 1fr 44px;
-  gap: 12px;
-  align-items: center;
-  margin-bottom: 24px;
+  display: grid; grid-template-columns: 44px 1fr 44px; gap: 8px; align-items: center; margin-bottom: 14px;
 }
 .calendar-month-nav button {
   background: #fff;
@@ -1349,9 +1289,7 @@ img {
   margin-bottom: 16px;
 }
 .calendar-card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 20px;
+  background: white; padding: 8px; border: 1px solid var(--line); border-radius: 24px;
 }
 .calendar-title-row {
   display: flex;
@@ -1375,7 +1313,7 @@ img {
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 2px;
+  gap: 0;
 }
 .calendar-weekdays span {
   text-align: center;
@@ -1450,15 +1388,14 @@ img {
   align-items: center;
 }
 .calendar-day-card {
-  margin-top: 20px;
+  margin-top: 20px; background: var(--sky); border-radius: 22px; padding: 18px;
 }
 .calendar-day-heading p {
   font-size: 0.6rem;
   color: var(--muted);
 }
 .calendar-day-heading h2 {
-  font-size: 1.3rem;
-  margin-top: 4px;
+  font-size: 1.3rem; margin-top: 4px;
 }
 .calendar-event-list > div {
   display: flex;
@@ -1660,7 +1597,7 @@ img {
   .bottom-nav:before {
     content: "ABVM";
     font-size: 16px;
-    color: var(--navy);
+    color: white;
     font-weight: 800;
     letter-spacing: 0.05em;
     text-align: center;
@@ -1787,13 +1724,9 @@ img {
     width: 40px;
     height: 40px;
   }
-  .calendar-screen {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    align-content: start;
-    grid-auto-rows: max-content;
-  }
+  .calendar-screen { display: block; }
+  .calendar-layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: 22px; align-items: start; }
+  .calendar-layout .calendar-day-card { margin: 0; }
   .calendar-screen > .app-header,
   .calendar-screen > .freshness,
   .calendar-screen > .calendar-month-nav,
@@ -1812,15 +1745,8 @@ img {
   .calendar-grid button {
     min-height: 48px;
   }
-  .calendar-screen > .freshness {
-    grid-row: 9;
-  }
-  .calendar-month-nav {
-    max-width: 480px;
-    width: 100%;
-    justify-self: center;
-    margin: 0;
-  }
+
+  .calendar-month-nav { max-width: 600px; width: 100%; margin: 0 0 18px; }
 }
 @media (min-width: 1100px) {
   .phone-app {
@@ -1841,9 +1767,7 @@ img {
   .bottom-nav button b {
     font-size: 0.81rem;
   }
-  .bottom-nav button.active {
-    background: var(--sky);
-  }
+  .bottom-nav button.active { background: #ffffff14; }
   .bottom-nav:before {
     text-align: left;
     padding-left: 14px;
@@ -1868,6 +1792,9 @@ img {
   }
   .hero-photo {
     min-height: 290px;
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: 55.56%;
   }
   .week-overview-grid {
     gap: 48px;
@@ -1892,6 +1819,8 @@ img {
   .screen {
     padding-inline: 16px;
   }
+  .app-header { margin-inline: -16px; padding-inline: 16px; }
+  .calendar-card { margin-inline: -16px; padding-inline: 4px; }
   .hero-card {
     grid-template-columns: 1.25fr 1fr;
   }
@@ -1974,6 +1903,51 @@ img {
     grid-column: 1/-1;
   }
 }
+
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.app-header > div > p { color: #d3e6ff; }
+.study-invitation > img { width: 64px; height: 64px; object-fit: contain; flex: none; }
+.today-screen .app-header { padding-bottom: 16px; margin-bottom: 16px; }
+.today-screen .app-header h1 { font-size: 1.35rem; }
+.calendar-segments { display: grid; grid-template-columns: 1fr 1fr; padding: 4px; background: var(--sky); border-radius: 20px; margin: 0 0 18px; }
+.calendar-segments button { border-radius: 16px; color: var(--navy); font-size: .9rem; font-weight: 700; min-height: 44px; }
+.calendar-segments [aria-pressed="true"] { background: var(--navy); color: white; box-shadow: 0 3px 8px #102e5818; }
+.calendar-study-action { width: 100%; background: var(--yellow); color: var(--navy); margin-top: 16px; }
+.calendar-layout + .week-overview { margin-top: 28px; }
+.week-tests { background: var(--sky); }
+.week-lunches { background: #fff4d4; }
+.week-overview-row { border-bottom-color: #102e5814; }
+.family-hero img { width: 100px; height: 100px; object-fit: contain; flex: none; }
+.learning-subject .feature-icon { width: 64px; height: 64px; background: transparent; }
+.learning-subject img { width: 64px; height: 64px; object-fit: contain; }
+.study-hero { position: relative; min-height: 190px; padding-bottom: 30px; overflow: hidden; }
+.study-hero-copy { position: relative; z-index: 1; padding-right: 130px; }
+.study-hero-copy h2 { color: white; font-size: 2.05rem; line-height: 1.04; margin-top: 14px; }
+.study-hero-copy h2 span { color: var(--yellow); }
+@media (max-width: 389px) {
+  .study-hero-copy h2 { font-size: 1.85rem; }
+  .study-hero-copy > p { font-size: .57rem; letter-spacing: .09em; }
+}
+.study-hero .school-mark { position: absolute; top: 16px; right: 22px; width: 42px; height: 42px; }
+.study-hero-art { position: absolute; width: 145px; height: 145px; object-fit: contain; right: 6px; bottom: -8px; }
+@media (min-width: 700px) and (min-height: 600px) {
+  .bottom-nav { background: var(--navy); color: white; border: 0; }
+  .bottom-nav button { color: #d3e6ff; }
+  .bottom-nav button.active { color: var(--yellow); }
+  .app-header { margin: 0 0 24px; padding: 22px 24px; border-radius: 24px; }
+  .today-screen .app-header { margin: 0 0 22px; }
+  .today-primary { grid-row: auto; padding-top: 10px; }
+  .today-screen:has(.updates-banner) .today-primary { grid-row: auto; }
+  .today-screen > .lunch-card { margin-top: 24px; }
+  .study-hero { min-height: 210px; }
+  .study-hero-art { width: 200px; height: 200px; right: 24px; }
+  .study-hero-copy h2 { font-size: 2.5rem; }
+}
+@media (min-width: 700px) and (max-width: 899px) {
+  .calendar-layout { grid-template-columns: 1fr; }
+  .calendar-layout .calendar-day-card { margin-top: 18px; }
+}
+.lunch-card .lunch-details { display: block; font-size: .75rem; line-height: 1.5; margin-top: 4px; color: var(--ink); }
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -2017,7 +1991,7 @@ img {
     grid-template-columns: 1.45fr 1fr;
   }
   .hero-copy h2 {
-    font-size: 1.53rem;
+    font-size: 1.9rem;
   }
   .hero-copy {
     padding-block: 20px;
@@ -2039,9 +2013,7 @@ img {
   .week-overview-heading > p:first-child {
     display: none;
   }
-  .study-invitation {
-    padding: 18px;
-  }
+  .study-invitation { padding: 12px 16px; }
   .study-invitation > .feature-icon {
     display: none;
   }

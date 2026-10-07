@@ -2,8 +2,10 @@ import {test,expect} from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 async function openTab(page,label){
-  if(label==="Calendar")await page.locator('.bottom-nav [data-tab="week"]').click();
-  if(label==="Study Games"){
+  if(label==="Week"){
+    await page.locator('.bottom-nav [data-tab="calendar"]').click();
+    await page.locator('[data-route="week"]').click();
+  }else if(label==="Study Games"){
     await page.goto("/#games");
   }else await page.getByRole("button",{name:label,exact:true}).click();
   await expect(page.locator(".screen")).toBeVisible();
@@ -242,8 +244,8 @@ test("Week exposes paging, weekdays, selected-day detail, and reminders",async({
   await expect(page.locator(".reminder-strip")).toBeVisible();
 });
 
-test("Calendar uses a tablet two-column layout without changing phone stacking",async({page})=>{
-  await page.setViewportSize({width:810,height:1080});
+test("Calendar splits on wide tablets and stacks on portrait tablets and phones",async({page})=>{
+  await page.setViewportSize({width:1024,height:768});
   await page.goto("/#calendar");
   await expect(page.locator(".calendar-card")).toBeVisible({timeout:10_000});
   const month=await page.locator(".calendar-card").boundingBox();
@@ -254,19 +256,25 @@ test("Calendar uses a tablet two-column layout without changing phone stacking",
   for(const box of [month,day,summary,specials,next])expect(box).not.toBeNull();
   expect(Math.abs(month.y-day.y)).toBeLessThan(4);
   expect(day.x).toBeGreaterThan(month.x+month.width/2);
-  expect(Math.abs(summary.y-specials.y)).toBeLessThan(4);
-  expect(specials.x).toBeGreaterThan(summary.x+summary.width/2);
-  expect(next.width).toBeGreaterThan(summary.width*1.8);
+  expect(specials.y).toBeGreaterThanOrEqual(summary.y+summary.height-2);
+  expect(next.y).toBeGreaterThanOrEqual(specials.y+specials.height-2);
+  expect(Math.abs(specials.x-summary.x)).toBeLessThan(4);
+  expect(Math.abs(next.width-summary.width)).toBeLessThan(4);
   const tabletOverflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
   expect(tabletOverflow).toBeFalsy();
 
-  await page.setViewportSize({width:390,height:844});
-  await page.goto("/#calendar");
-  await expect(page.locator(".calendar-card")).toBeVisible({timeout:10_000});
-  const phoneMonth=await page.locator(".calendar-card").boundingBox();
-  const phoneDay=await page.locator(".calendar-day-card").boundingBox();
-  expect(phoneDay.y).toBeGreaterThan(phoneMonth.y+phoneMonth.height-2);
-  expect(Math.abs(phoneDay.x-phoneMonth.x)).toBeLessThan(4);
+  for(const viewport of [{width:768,height:1024},{width:390,height:844}]){
+    await page.setViewportSize(viewport);
+    await page.goto("/#calendar");
+    await expect(page.locator(".calendar-card")).toBeVisible({timeout:10_000});
+    const stackedMonth=await page.locator(".calendar-card").boundingBox();
+    const stackedDay=await page.locator(".calendar-day-card").boundingBox();
+    expect(stackedDay.y,viewport.width+"px selected-day details stack below month").toBeGreaterThan(stackedMonth.y+stackedMonth.height-2);
+    expect(Math.abs(stackedDay.x-stackedMonth.x)).toBeLessThan(4);
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+    const targets=await page.locator('[data-cal-day]').evaluateAll(nodes=>nodes.map(node=>node.getBoundingClientRect().toJSON()));
+    for(const target of targets){expect(target.width).toBeGreaterThanOrEqual(44);expect(target.height).toBeGreaterThanOrEqual(44);}
+  }
 });
 
 test("Calendar keeps the current-month summary as concise as next month",async({page})=>{

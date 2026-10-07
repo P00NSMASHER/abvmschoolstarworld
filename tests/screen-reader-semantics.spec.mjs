@@ -8,7 +8,7 @@ async function waitForApp(page,path){
 test("primary views expose stable regions and navigation state",async({page})=>{
   await waitForApp(page,"/#today");
   const tabs=[
-    ["Today","Today"],["Week","This week"],
+    ["Today","Today"],["Calendar",/calendar/i],
     ["Study","Study games"],["Progress","Learning progress"]
   ];
   for(const [tab,regionName] of tabs){

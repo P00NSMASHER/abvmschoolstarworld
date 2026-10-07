@@ -2,7 +2,7 @@ import {test,expect} from '@playwright/test';
 
 test.use({serviceWorkers:'block'});
 const sizes=[375,390,430,744,820,1024,1440];
-const tabs=[['today','Today'],['week','Week'],['study','Study'],['family','Progress']];
+const tabs=[['today','Today'],['calendar','Calendar'],['study','Study'],['family','Progress']];
 
 for(const width of sizes){
   test(`consumer product fits ${width}px and preserves primary destinations`,async({page},info)=>{
@@ -12,7 +12,8 @@ for(const width of sizes){
     await page.goto('/#today');
     const nav=page.getByRole('navigation',{name:'App navigation'});
     await expect(nav.getByRole('button')).toHaveCount(4);
-    await expect(nav.locator('[data-tab="calendar"]')).toHaveCount(0);
+    await expect(nav.locator('[data-tab="calendar"]')).toHaveCount(1);
+    await expect(nav.locator('[data-tab="week"]')).toHaveCount(0);
     for(const [id,label] of tabs){
       const button=nav.locator(`[data-tab="${id}"]`);
       await expect(button).toHaveAccessibleName(label);
@@ -34,10 +35,17 @@ for(const width of sizes){
       await page.screenshot({path,animations:'disabled'});
       await info.attach(label+' '+width,{path,contentType:'image/png'});
     }
-    await nav.locator('[data-tab="week"]').click();
-    await page.getByRole('button',{name:'Calendar',exact:true}).click();
+    await nav.locator('[data-tab="calendar"]').click();
     await expect(page.locator('.calendar-card')).toBeVisible();
-    await expect(nav.locator('[data-tab="week"]')).toHaveAttribute('aria-current','page');
+    await expect(page.locator('[data-route="calendar"]')).toHaveAttribute('aria-pressed','true');
+    await page.locator('[data-route="week"]').click();
+    await expect(page.locator('.week-nav')).toBeVisible();
+    await expect(page.locator('[data-route="week"]')).toHaveAttribute('aria-pressed','true');
+    await expect(nav.locator('[data-tab="calendar"]')).toHaveAttribute('aria-current','page');
+    expect(new URL(page.url()).hash).toBe('#week');
+    await page.locator('[data-route="calendar"]').click();
+    await expect(page.locator('.calendar-card')).toBeVisible();
+    await expect(nav.locator('[data-tab="calendar"]')).toHaveAttribute('aria-current','page');
     expect(errors).toEqual([]);
   });
 }

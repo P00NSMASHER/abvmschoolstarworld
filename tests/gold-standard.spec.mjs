@@ -2,8 +2,10 @@ import {test,expect} from "@playwright/test";
 import {readPwaVersions} from "./pwa-test-helpers.mjs";
 
 async function openTab(page,label){
-  if(label==="Calendar")await page.locator('.bottom-nav [data-tab="week"]').click();
-  if(label==="Study Games"){
+  if(label==="Week"){
+    await page.locator('.bottom-nav [data-tab="calendar"]').click();
+    await page.locator('[data-route="week"]').click();
+  }else if(label==="Study Games"){
     await page.goto("/#games");
   }else await page.getByRole("button",{name:label,exact:true}).click();
   await expect(page.locator(".screen")).toBeVisible();
@@ -44,12 +46,16 @@ test("the current product hierarchy is coherent",async({page})=>{
   await expect(page.locator(".day-detail")).toBeVisible();
 
   await openTab(page,"Calendar");
-  await expect(page.locator(".app-header p")).toContainText("SCHOOL MONTH AT A GLANCE");
-  await expect(page.getByText("Tap any date")).toBeVisible();
+  await expect(page.locator(".app-header p")).toHaveText("ASSUMPTION BVM · GRADE 2");
+  await expect(page.locator(".app-header h1")).toHaveText("Calendar");
+  await expect(page.getByText("Choose a day to see the plan.",{exact:true})).toBeVisible();
   await expect(page.locator(".calendar-card")).toBeVisible();
 
   await openTab(page,"Study");
   await expect(page.locator(".app-header h1")).toHaveText(/Study/i);
+  await expect(page.locator(".study-hero-copy h2")).toHaveText("Let’s learn,Emma!");
+  await expect(page.locator(".study-hero-copy p")).toHaveText("ASSUMPTION BVM · GRADE 2");
+  await expect(page.locator(".study-hero-art")).toBeVisible();
   await expectCurrentStudyGameTiles(page);
   await expect(page.locator('[data-test-select]')).toBeVisible();
   await expect(page.locator('[data-study-notes]')).not.toHaveAttribute('open','');
@@ -356,19 +362,27 @@ test("task policy keeps reading daily and Mass only on a verified Mass date",asy
   await context.close();
 });
 
-test("Study Games uses distinct polished subject icon badges",async({page})=>{
+test("Study Games uses distinct loaded subject artwork and a vector Mix icon",async({page})=>{
   await openTab(page,"Study Games");
   await expectCurrentStudyGameTiles(page);
-  for(const id of ["quick","math","words","faith"]){
-    const icon=page.locator(".game-icon-"+id).first();
+  const sources=new Set();
+  for(const id of ["reading","spelling","math","religion"]){
+    const icon=page.locator(`[data-game-start="${id}"] .study-game-icon`),image=icon.locator("img");
     await expect(icon).toBeVisible();
-    await expect(icon.locator("svg")).toHaveCount(1);
+    await expect(icon).toHaveAttribute("aria-hidden","true");
+    await expect(image).toHaveCount(1);
+    await expect(image).toHaveAttribute("alt","");
+    await expect(image).toHaveAttribute("src",`./assets/illustrations/${id}.webp`);
+    await expect.poll(()=>image.evaluate(el=>el.complete&&el.naturalWidth>0)).toBe(true);
+    sources.add(await image.getAttribute("src"));
+    expect((await icon.innerText()).trim()).toBe("");
   }
-  for(const id of ["reading","spelling","math","religion","mix"]){
-    const svg=page.locator(`[data-game-start="${id}"] .study-game-icon svg`);
-    await expect(page.locator(`[data-game-start="${id}"] .study-game-icon`)).toHaveAttribute("aria-hidden","true");
-    expect(await svg.locator("path,rect,circle").count()).toBeGreaterThan(0);
-  }
+  expect(sources.size).toBe(4);
+  const mix=page.locator('[data-game-start="mix"] .study-game-icon');
+  await expect(mix).toHaveAttribute("aria-hidden","true");
+  await expect(mix.locator("svg")).toHaveCount(1);
+  expect(await mix.locator("svg path,svg rect,svg circle").count()).toBeGreaterThan(0);
+  expect((await mix.innerText()).trim()).toBe("");
 });
 
 

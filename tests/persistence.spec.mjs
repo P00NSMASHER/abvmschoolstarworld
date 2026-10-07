@@ -87,7 +87,8 @@ test("Read completion stays synchronized between Today and Week",async({page})=>
   if(!wasDone)await taskToday.click();
   await expect(page.locator(`[data-check="${taskId}"]`).first()).toHaveClass(/is-done/);
 
-  await page.getByRole("button",{name:"Week",exact:true}).click();
+  await page.locator('.bottom-nav [data-tab="calendar"]').click();
+  await page.locator('[data-route="week"]').click();
   const taskWeek=page.locator(`[data-check="${taskId}"]`).first();
   await expect(taskWeek).toBeVisible();
   await expect(taskWeek).toHaveClass(/is-done/);
