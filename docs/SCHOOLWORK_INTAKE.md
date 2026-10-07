@@ -1,79 +1,196 @@
 # Schoolwork intake through ChatGPT
 
-The parent sends photos in ChatGPT and says:
+The parent sends schoolwork photos in ChatGPT and, when a batch is complete, asks
+for the schoolwork to be integrated into the ABVM app. If the parent says to wait
+until they are finished sending a batch, wait. Intake begins only after that signal.
 
-> Integrate this schoolwork into the ABVM app. I’m finished sending the batch.
+This is the canonical school-photo workflow. It is intentionally cumulative: every
+new page is evaluated against prior evidence so the system can distinguish a one-off
+mistake from a persistent skill need, improvement, retention, or mastery.
 
-If they give a wait-until-finished instruction, collect the batch without beginning
-work until that signal. This process is executed by the next requested agent run;
-it is not an always-on chat watcher. No in-app upload section, paid OCR service,
-new account or background task is required. A future chat must have the photos and
-access to this repository; the agent discovers this process in root `AGENTS.md`.
+The public ABVM repository is not a private student record. Raw photos, OCR dumps,
+student names, handwritten answers, teacher marks, grades/scores, handwriting
+profiles, and child-specific performance histories must not be committed here.
+Steps that inspect those details happen in the private review context. Only
+privacy-safe educational material and non-identifying provenance may be published
+to this repository. If a private longitudinal archive is configured, child-specific
+learning evidence belongs there. If it is not configured, prepare the private
+archive delta separately and do not weaken this boundary just to finish intake.
 
-## 1. Reconcile before extracting
+## The 12-step school-photo workflow
 
-Read root instructions, current remote state, `pages/data/schoolwork.json`,
-its `sourceManifest`, existing weekly sources and the religion source adapter.
-Do not recreate material already integrated. Inspect every supplied photo directly;
-OCR may assist reading but is not evidence of accuracy on its own. Hash the original
-bytes using SHA-256. Record each non-identifying source ID, digest, and disposition.
-Do not put raw images, full OCR transcripts, student names, marks/grades, identifiers,
-handwriting profiles or answer sheets in this public repository.
+### 1. Preserve the original source
 
-A missing or unreadable file stays held with a precise reason; do not silently
-claim all photos were incorporated. If attachments cannot be read, finish other
-available work and report the specific missing filenames.
+Inspect every supplied attachment directly and preserve its source identity before
+doing educational analysis. Compute a SHA-256 digest of the original bytes and
+reconcile it against the existing `sourceManifest`. Exact duplicates and semantic
+rephotographs must be accounted for rather than silently counted twice.
 
-## 2. Review educational content
+Do not commit the raw image itself to this public repository. If an attachment is
+missing or unreadable, keep it held with a precise reason.
 
-Extract the printed topic, source-backed concepts, chapter and any supported date.
-Check answers independently; a child's written answer or teacher mark is never an
-answer key. Write concise notes and original age-appropriate practice, with one
-correct choice, plausible distinct distractors, an explanation and source fact.
-Retain existing cumulative history. Collapse exact repeated photos and semantic
-rephotographs into the same lesson while accounting for every photo in the manifest.
+### 2. Identify the assignment and supported date
 
-`studiedOn` is the supported classroom date or `null`. `addedOn` is the actual intake
-day in America/New_York and does not imply classroom timing. Use “Undated schoolwork”
-when timing is unknown. Only source-supported dates/topic mapping place material in
-the weekly section or a specific test. Never infer upcoming tests from a worksheet
-number, file timestamp or upload date. Test prep follows the existing calendar,
-including equal coverage for multiple tests on the next test day.
+Determine the subject, worksheet or assignment title, assessment type when known,
+chapter/lesson when supported, and any date that is actually evidenced by the page
+or trusted school source.
 
-For Religion, establish the exact chapter from source evidence. Prioritize the
-verified official Christ Our Life interactive review link for that chapter. The
-known entry point is https://isr.christourlife.com/col_g2_s2. Check the repository's
-current religion adapter and chapter contracts rather than guessing URL semantics.
-Official review is a prioritized link experience, not a copied third-party bank.
-Keep source-backed original practice available as a clearly labeled fallback.
-For a new chapter, add its exact worksheet-supplied publisher URL and chapter to
-`pages/data/religion-sources.json`, then run `node scripts/check-religion-sources.mjs`.
-The verifier checks the page and matching question-data identity before marking
-it available; a guessed or mismatched URL never qualifies.
+Do not infer a classroom date from upload time, file metadata, page number, or
+worksheet sequence. `studiedOn` remains `null` when the date is unknown.
 
-## 3. Prepare a reviewed batch
+### 3. Extract the questions and printed task
 
-The batch has the same schema as `pages/data/schoolwork.json`:
+Read the printed questions, directions, diagrams, vocabulary, or task structure
+needed to understand what the page is assessing. OCR may assist, but OCR alone is
+never authoritative.
+
+Extract only what is necessary for educational review. Full OCR dumps and answer
+sheets are private working material and must not be published.
+
+### 4. Identify the student's responses
+
+Privately identify the student's written or selected response for each scorable
+item that can be read confidently. Mark unreadable or ambiguous responses as
+unknown rather than guessing.
+
+Student responses are evidence for analysis, not public content. Do not commit
+handwritten answers or a reconstructed answer sheet to this repository.
+
+### 5. Identify teacher markings and corrections
+
+Privately record visible teacher checks, crosses, circles, corrections, comments,
+or other scoring signals when they are legible. Treat them as evidence about how
+the page was graded, not as the answer key.
+
+Teacher markings, grades, and comments that identify or evaluate the student are
+not published to this public repository.
+
+### 6. Determine correct and incorrect independently
+
+Check each scorable response independently using the underlying academic content.
+A student's answer or a teacher mark is never accepted blindly as the answer key.
+
+For each reviewed item, distinguish at minimum:
+- correct,
+- incorrect,
+- partially correct when the task genuinely permits it,
+- unreadable/insufficient evidence,
+- not scorable.
+
+When an incorrect response is interpretable, classify the likely error as one of:
+knowledge gap, concept gap, procedure error, reading/comprehension, recall,
+careless/attention, or unknown. Error classifications are evidence, not diagnoses.
+
+### 7. Map every scorable problem to academic skills
+
+Map each reviewed item to one or more stable skill IDs at the most useful level of
+specificity. Prefer skills that can recur across assignments, such as regrouping,
+fact families, place value, short-i/long-i discrimination, sentence subjects, or
+reading comprehension, rather than one-off worksheet labels.
+
+Keep the educational content layer separate from the performance layer: public
+ABVM practice may reference the skill, while child-specific success/error evidence
+stays private.
+
+### 8. Compare the skills with longitudinal history
+
+Before deciding what the page means, compare each observed skill with prior
+evidence. Look for:
+- frequency of success and errors,
+- recency,
+- improvement or regression,
+- retention after a gap,
+- transfer to a different question format,
+- repeated error types,
+- evidence across multiple assignments.
+
+One worksheet does not establish mastery or a persistent problem by itself.
+
+### 9. Update mastery and confidence states
+
+For every skill with new evidence, update the longitudinal state using:
+
+`not-enough-evidence -> learning -> improving -> mastered`
+
+A state change must be supported by repeated evidence across separate assignments,
+not a single correct or incorrect item. Track confidence separately from state so
+thin evidence cannot masquerade as certainty.
+
+A later miss after prior mastery should create a retention/review signal rather
+than automatically erasing the whole history.
+
+The child-specific evidence and mastery state belong in the private longitudinal
+archive, not in the public ABVM repository.
+
+### 10. Decide whether targeted practice is warranted
+
+Generate or select practice from the cumulative evidence, not merely from the most
+recent page. Practice should target the smallest useful need and then include one
+or more transfer items to verify that the skill generalizes.
+
+Examples:
+- repeated regrouping errors -> focused regrouping practice plus mixed subtraction,
+- vocabulary recall weakness -> spaced retrieval rather than unrelated reading,
+- isolated careless slip with otherwise strong evidence -> no remediation flood.
+
+Do not turn every wrong answer into a large practice set.
+
+### 11. Update the cumulative ABVM learning record
+
+Update the cumulative record so future schoolwork can be interpreted in context.
+The longitudinal record should preserve, per skill, the evidence timeline,
+mastery state, confidence, recurring error patterns, improvement, retention, and
+the interventions that were tried.
+
+Public `pages/data/schoolwork.json` remains the privacy-safe educational layer:
+reviewed lesson notes, stable skill IDs, original practice, source hashes and
+non-identifying provenance only. It is not the child-specific performance ledger.
+
+If a private archive is available, update it in the same intake run. If it is not,
+produce a private archive delta and explicitly report that persistence is pending;
+never publish private performance history here as a workaround.
+
+### 12. Update the current week and test-prep views only when relevant
+
+Use the newly reviewed material in the current weekly section only when a supported
+classroom date places it in that week. Use it in test prep only when an existing
+verified assessment or trusted school source establishes that the material is
+relevant to that test.
+
+The cumulative archive always retains useful evidence even when the worksheet is
+undated or no longer current. Weekly and test-prep views are projections of that
+history, not the history itself.
+
+## Public reviewed-batch schema
+
+The privacy-safe batch still uses the same public schema as
+`pages/data/schoolwork.json`:
 
 ```json
 {
   "schemaVersion": 1,
   "uploadedPhotoCount": 1,
   "sourceManifest": [
-    {"id": "worksheet-2026-10-12-01.jpeg", "sha256": "<64 lowercase hex characters>", "status": "integrated"}
+    {
+      "id": "worksheet-2026-10-12-01.jpeg",
+      "sha256": "<64 lowercase hex characters>",
+      "status": "integrated"
+    }
   ],
   "lessons": []
 }
 ```
 
-This skeleton is intentionally incomplete: every integrated source needs a reviewed
-lesson. Each lesson requires `id`, `title`, `subject`, `sources`, `skills`, `notes`,
-`studiedOn`, `addedOn`, `dateStatus` and `questions`; match existing question schema.
-Religion lessons may include an exact integer `chapter`. Every question requires
-an ID, subject, skill, prompt, answer, choices, explanation, sourceFact and provenance.
+Every integrated source needs a reviewed lesson. Each lesson requires `id`,
+`title`, `subject`, `sources`, `skills`, `notes`, `studiedOn`,
+`addedOn`, `dateStatus`, and `questions`; Religion lessons may include an exact
+integer `chapter`.
 
-Public JSON is fail-closed by object shape. The validator permits only these
-intentional keys:
+Each question requires an ID, subject, skill, prompt, answer, choices, explanation,
+source fact and provenance. Public practice questions must be original reviewed
+practice, not copied worksheet answers.
+
+Public JSON is fail-closed by object shape. The validator permits only these keys:
 
 - root: `schemaVersion`, `uploadedPhotoCount`, `distinctWorksheetNote`,
   `lessons`, `sourceManifest`
@@ -86,39 +203,44 @@ intentional keys:
 - manifest source: `id`, `sha256`, `status`, optional `duplicateOf`,
   optional `reason`
 
-Any unknown key at those levels is rejected rather than silently published. This
-blocks accidental metadata variants such as alternate student-name fields, raw OCR
-transcripts, answer-sheet text, teacher marks, private URLs, or nested metadata
-objects. This structural gate does not prove that an allowed free-text value is
-private-data-free, so the manual value-level privacy diff review remains required.
+Unknown keys are rejected rather than silently published. This blocks accidental
+metadata variants such as alternate student-name fields, raw OCR transcripts,
+teacher marks, private URLs, or nested metadata objects. Manual privacy review is
+still required because a schema cannot prove that allowed free text is safe.
 
 Manifest statuses:
 
-- `integrated`: the source is linked to a lesson.
-- `duplicate`: link to the canonical source using `duplicateOf`; differing hashes
-  require a `reason`, such as the same worksheet photographed twice. Link both
-  photo IDs to the shared lesson. Duplicate chains are not accepted.
-- `held`: provide a `reason`; the image is accounted for but its unclear content is
-  not invented or silently added to practice.
+- `integrated`: the source is linked to a reviewed lesson.
+- `duplicate`: it links directly to an integrated canonical source using
+  `duplicateOf`; semantic rephotographs require a reason.
+- `held`: the source is accounted for but cannot safely be integrated; include a
+  precise `reason`.
 
-A held source is not permanently frozen. If a later reviewed pass can safely resolve
-it, keep the **same source ID and exact SHA-256**. A `held → integrated` transition
-must include a valid reviewed lesson that references that source. A
-`held → duplicate` transition must point directly to an `integrated` canonical
-source and include a reason. Digest changes, status downgrades, duplicate chains, and
-renaming the same bytes to work around a held record are rejected. This keeps the
-original provenance identity instead of laundering an uncertain source through a new
-filename.
+Held sources may later resolve only under the same source ID and exact SHA-256.
+Digest changes, status downgrades, duplicate chains, and renaming the same bytes to
+launder an uncertain source are rejected.
 
-Each batch must be self-contained for validation. When a new photo adds provenance
-to an existing lesson, include an unchanged reviewed copy of that lesson with the
-new photo source(s). The merger preserves the existing addedOn and unions sources.
-Different educational content under an existing lesson ID is rejected for explicit
-review, not silently overwritten. Potential semantic duplicate lesson titles are
-also held for consolidation. If revisions to an existing lesson are truly needed,
-review a deliberate repository diff and run all the same gates.
+## Religion source handling
 
-## 4. Validate, merge and publish
+For Religion, establish the exact chapter from source evidence. Prioritize the
+verified official Christ Our Life interactive review for that chapter. The known
+entry point is https://isr.christourlife.com/col_g2_s2.
+
+Use the repository's current religion adapter and chapter contracts rather than
+guessing URL semantics. Official review is a prioritized link experience, not a
+copied third-party question bank. Keep source-backed original practice available as
+a clearly labeled fallback.
+
+For a new chapter, add its exact worksheet-supplied publisher URL and chapter to
+`pages/data/religion-sources.json`, then run:
+
+```sh
+node scripts/check-religion-sources.mjs
+```
+
+A guessed or mismatched URL never qualifies.
+
+## Validate, merge and publish
 
 From repository root:
 
@@ -127,32 +249,30 @@ node scripts/integrate-schoolwork.mjs pages/data/schoolwork.json /tmp/reviewed-b
 node scripts/integrate-schoolwork.mjs pages/data/schoolwork.json /tmp/reviewed-batch.json --write
 node scripts/validate-schoolwork.mjs
 node --test tests/schoolwork-intake.test.mjs
+node --test tests/schoolwork-workflow-contract.test.mjs
 npm run qa:static
 npm run qa:unit
 ```
 
 Dry-run is the default. The writer validates before mutation, uses an exclusive
-intake lock, checks for concurrent changes, and atomically renames a temporary file.
-Identical replays are no-ops. Do not commit temporary batches or lock files.
+intake lock, checks for concurrent changes, and atomically renames a temporary
+file. Identical replays are no-ops. Do not commit temporary batches or lock files.
 
 Then run relevant browser tests for cumulative/weekly filtering, next-test rollover,
-religion priority, game selection and mobile layout. Inspect the diff for private
-information manually: schema validation cannot prove privacy or educational accuracy.
-Use the established GitHub workflow, preserving required checks. Verify the deployed
-revision and a live study smoke check before saying it is live. If blocked, report
-what is prepared versus published and the exact failed gate.
+religion priority, practice selection and mobile layout. Inspect the diff manually
+for private information and educational accuracy. Use the established GitHub
+workflow and required checks. Verify the deployed revision and a live study smoke
+check before saying it is live.
 
-Report photos received, source dispositions, new/reused lessons, question count,
-missing dates or held content, and publication status. Keep the parent-facing answer
-short and explain any genuine limitation instead of implying a background watcher.
-
+The parent-facing completion report should cover: photos received, source
+dispositions, lessons added/reused, skills observed, whether any longitudinal
+states changed, targeted-practice changes, missing dates/held content, and
+publication status. Keep private answer-level evidence out of that public commit.
 
 ## Lunch menus in the batch
 
-Lunch menu photos follow `docs/LUNCH_ART.md` as part of this same integration run.
-After the official menu transcription is reviewed, automatically complete its
-illustrations through reviewed asset reuse or built-in high-quality image
-creation, then test and publish the menu and artwork together through a PR. This
-requires no separate parent request. The GitHub merge-event backup is configured
-but paused at the account task limit; see docs/LUNCH_ART.md. It is not a watcher
-of private chat attachments.
+Lunch menu photos still follow `docs/LUNCH_ART.md` as part of the same integration
+run. After the official menu transcription is reviewed, complete its illustrations
+through reviewed asset reuse or built-in high-quality image creation, then test and
+publish menu and artwork together through a pull request. This requires no separate
+parent request.
