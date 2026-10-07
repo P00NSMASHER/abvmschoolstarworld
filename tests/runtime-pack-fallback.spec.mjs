@@ -119,9 +119,9 @@ test("render failure rolls back before the validated fallback is admitted",async
     Object.defineProperty(window,"ABVMSchoolUpdates",{
       configurable:true,
       writable:true,
-      value:Object.freeze({...original,state(pack){
+      value:Object.freeze({...original,noticesCard(...args){
         if(failOnce){failOnce=false;throw new Error("synthetic render failure")}
-        return original.state(pack);
+        return original.noticesCard(...args);
       }})
     });
   });

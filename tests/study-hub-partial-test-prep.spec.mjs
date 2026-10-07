@@ -14,15 +14,19 @@ test("one missing same-day bank does not hide supported targeted practice",async
   await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:fixture}));
   await page.goto("http://127.0.0.1:4173/#study");
   await expect(page.locator('.games-screen[data-study-state="ready"]')).toBeVisible({timeout:10_000});
+  await page.locator('[data-open-prep]').click();
   await expect(page.locator("[data-study-tests]")).toContainText("Grammar (subject & predicate)");
-  await expect(page.locator('[data-test-select] option')).toHaveText([
-    /Grammar \(subject & predicate\)/,/Science test/
+  await expect(page.locator('[data-test-select]')).toHaveText([
+    /Grammar/,/Science test/
   ]);
-  await page.locator('[data-test-select]').selectOption('1');
+  await expect(page.locator('[data-test-select="0"]')).toHaveAccessibleName(/Grammar \(subject & predicate\) - Fri, Oct 9/);
+  await page.locator('[data-test-select="1"]').click();
+  await expect(page.locator('[data-test-select="1"]')).toHaveAttribute('aria-pressed','true');
   await expect(page.locator('[data-study-tests] h3')).toHaveText('Science test');
   await expect(page.locator('[data-test-missing]')).toContainText('No verified questions match this test yet');
   await expect(page.locator('[data-test-single]')).toBeDisabled();
-  await page.locator('[data-test-select]').selectOption('0');
+  await page.locator('[data-test-select="0"]').click();
+  await expect(page.locator('[data-test-select="0"]')).toHaveAttribute('aria-pressed','true');
   await expect(page.locator('[data-test-single]')).toBeEnabled();
   await page.locator('[data-test-single]').click();
   await expect(page.locator(".game-question-card")).toBeVisible();

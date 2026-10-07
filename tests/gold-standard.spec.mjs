@@ -36,7 +36,7 @@ test("gold-standard app boots without runtime errors",async({page})=>{
 });
 
 test("the current product hierarchy is coherent",async({page})=>{
-  await expect(page.locator(".app-header h1")).toBeVisible();
+  await expect(page.locator(".screen h1")).toBeVisible();
   await expect(page.locator(".today-panel")).toBeVisible();
   await expect(page.locator(".bottom-nav")).toBeVisible();
 
@@ -53,11 +53,12 @@ test("the current product hierarchy is coherent",async({page})=>{
 
   await openTab(page,"Study");
   await expect(page.locator(".app-header h1")).toHaveText(/Study/i);
-  await expect(page.locator(".study-hero-copy h2")).toHaveText("Let’s learn,Emma!");
+  await expect(page.locator(".study-hero-copy h2")).toHaveText("Let’s learn, Emma!");
   await expect(page.locator(".study-hero-copy p")).toHaveText("ASSUMPTION BVM · GRADE 2");
   await expect(page.locator(".study-hero-art")).toBeVisible();
   await expectCurrentStudyGameTiles(page);
-  await expect(page.locator('[data-test-select]')).toBeVisible();
+  await expect(page.locator('[data-open-prep]')).toBeVisible();
+  await expect(page.locator('[data-test-select]')).toHaveCount(0);
   await expect(page.locator('[data-study-notes]')).not.toHaveAttribute('open','');
   await expect(page.locator('[data-study-test-options]')).not.toHaveAttribute('open','');
 
@@ -94,10 +95,11 @@ test("requested polish is present",async({page})=>{
   await expect(page.locator(".special-row")).toHaveCount(5);
 
   await openTab(page,"Study");
-  await expect(page.locator('[data-test-single]')).toBeVisible();
   await expectCurrentStudyGameTiles(page);
+  await page.locator('[data-open-prep]').click();await expect(page.locator('[data-test-single]')).toBeVisible();
+  await page.locator('[data-close-prep]').click();
   await page.locator('[data-study-notes] > summary').click();
-  await expect(page.locator('.game-material-lesson').first()).toBeVisible();
+  await expect(page.locator('[data-note-subject]:not([hidden]) .study-notes-original').first()).toBeVisible();
   await expect(page.locator('[data-learning-panel],.study-games-cta')).toHaveCount(0);
 
   await openTab(page,"Progress");

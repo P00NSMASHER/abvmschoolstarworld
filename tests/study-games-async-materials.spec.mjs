@@ -202,6 +202,7 @@ test('Math skips an earlier Faith Comeback and strict test practice leaves all q
   // Due weekly rows alone cannot detect ticking: zero is unchanged by a tick.
   // Include eligible due/counter rows under the actual strict-test source key.
   await page.evaluate(({key,rows})=>localStorage.setItem(key,JSON.stringify(rows)),{key:QUEUE,rows:seeded.strictQueue});
+  await page.locator('[data-open-prep]').click();
   await expect(page.locator('[data-study-tests] time')).toHaveAttribute('datetime','2026-10-07');
   await page.locator('[data-test-single]').click();
   await expect(page.locator('.game-topbar > div > span')).toHaveText('Math test practice');

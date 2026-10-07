@@ -55,7 +55,8 @@ test('Study home is subject-first with selectable Test Prep', async ({ page }, t
 
   for(const node of [priority,games]) await expect(node).toBeVisible();
   await expect(page.locator('[data-study-source]')).toHaveCount(0);
-  await expect(page.locator('[data-test-select]')).toBeVisible();
+  await expect(page.locator('[data-open-prep]')).toBeVisible();
+  await expect(page.locator('[data-test-select]')).toHaveCount(0);
 
   const boxes=await page.evaluate(() => {
     const box=selector => {
@@ -88,9 +89,10 @@ test('Study home is subject-first with selectable Test Prep', async ({ page }, t
 
 test('every upcoming test keeps a valid selectable index', async ({ page }) => {
   await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
-  const options=page.locator('[data-test-select] option');
+  await page.locator('[data-open-prep]').click();
+  const options=page.locator('[data-test-select]');
   expect(await options.count()).toBeGreaterThan(0);
-  const indexes=await options.evaluateAll(nodes=>nodes.map(node=>node.value));
+  const indexes=await options.evaluateAll(nodes=>nodes.map(node=>node.getAttribute('data-test-select')));
   expect(indexes.every(value=>/^\d+$/.test(value))).toBe(true);
   expect(new Set(indexes).size).toBe(indexes.length);
 });

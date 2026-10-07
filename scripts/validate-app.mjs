@@ -28,7 +28,9 @@ const modeBlock=app.match(/const STUDY_GAME_MODES=Object\.freeze\(\[([\s\S]*?)\]
 const modeIds=[...modeBlock.matchAll(/\bid:"([^"]+)"/g)].map(match=>match[1]);
 if(modeIds.join(",")!=="reading,spelling,math,religion,mix")fail("Study Games must expose one mode per academic subject plus Mix");
 const materialsView=read("pages/study-games-materials-view.mjs");
-if(!/<select[^>]*data-test-select/.test(materialsView))fail("Test Prep must use a native upcoming-test selector");
+for(const marker of ['data-open-prep','data-close-prep','data-test-select','aria-pressed'])
+  if(!materialsView.includes(marker))fail('Missing dedicated Test Prep interaction: '+marker);
+if(/<select[^>]*data-test-select/.test(materialsView))fail('Test Prep choices must remain visible buttons with full labels');
 for(const marker of ["printableTests","data-test-single","No verified questions match this test yet"])
   if(!materialsView.includes(marker))fail("Missing simplified Study control: "+marker);
 for(const marker of ["mountStudyHub","ABVMStudyReview.render(","Learning on this device","room-learning-summary"])

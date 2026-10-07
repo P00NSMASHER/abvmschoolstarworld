@@ -42,16 +42,18 @@ for(const [width,height] of [[393,852],[768,1024]]){
     await expect(page.locator('[data-study-notes]')).not.toHaveAttribute('open','');
     const geometry=await page.locator('.study-game-tile').evaluateAll(nodes=>({smallest:Math.min(...nodes.map(el=>el.getBoundingClientRect().height)),overflow:document.documentElement.scrollWidth>innerWidth+2}));
     expect(geometry.smallest).toBeGreaterThanOrEqual(44);expect(geometry.overflow).toBe(false);await capture(page,info,`study-home-${width}`);
-    await page.locator('[data-study-notes] > summary').click();await page.locator('.game-material-lesson').first().locator('summary').click();
+    await page.locator('[data-study-notes] > summary').click();await page.locator('[data-note-subject]:not([hidden]) .study-notes-original').first().locator('summary').click();
     await page.locator('[data-study-test-options] > summary').click();await capture(page,info,`study-notes-guides-${width}`);
     await page.evaluate(()=>document.documentElement.style.zoom='2');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2)).toBe(true);
     await page.emulateMedia({reducedMotion:'reduce'});expect(await page.locator('.study-game-tile').first().evaluate(el=>getComputedStyle(el).transitionDuration)).toBe('0s');
     expect(await page.evaluate(()=>localStorage.getItem('abvm-study-learning:v2'))).toBe(before);await page.evaluate(()=>document.documentElement.style.zoom='');await openStudy(page,'games');
   });
 }
-test('all five subjects and the native test chooser are keyboard operable',async({page})=>{
+test('all five subjects and visible test choices are keyboard operable',async({page})=>{
   await openStudy(page);
-  const select=page.locator('[data-test-select]');await select.focus();await page.keyboard.press('End');await page.keyboard.press('Enter');await expect(select).toBeFocused();
+  await page.locator('[data-open-prep]').focus();await page.keyboard.press('Enter');
+  const choice=page.locator('[data-test-select]').last();await choice.focus();await page.keyboard.press('Space');await expect(choice).toBeFocused();await expect(choice).toHaveAttribute('aria-pressed','true');
+  await page.locator('[data-close-prep]').click();
   for(const id of ['reading','spelling','math','religion','mix']){
     const button=page.locator(`[data-game-start="${id}"]`);await expect(button).toBeEnabled();await button.focus();await page.keyboard.press('Enter');
     await expect(page.locator('.game-question-card')).toBeVisible();await expect(page.locator('[data-game-answer]').first()).toBeVisible();await page.locator('[data-game-home]').click();
@@ -83,15 +85,15 @@ test('wrong choices stay rejected and cannot consume a second attempt',async({pa
 });
 test('test completion can be undone immediately or restored after reload',async({page})=>{
   await controlledTests(page,[{date:'Wednesday, Oct. 7',label:'Reading',kind:'test'},{date:'Friday, Oct. 9',label:'Grammar (subject & predicate)',kind:'test'}]);await openStudy(page);
-  const prep=page.locator('[data-study-tests]');await expect(prep).toContainText('Reading');await page.locator('[data-study-test-options] > summary').click();await page.locator('[data-complete-test]').click();await expect(page.locator('[data-undo-test]')).toBeVisible();
+  await page.locator('[data-open-prep]').click();const prep=page.locator('[data-study-tests]');await expect(prep).toContainText('Reading');await page.locator('[data-study-test-options] > summary').click();await page.locator('[data-complete-test]').click();await expect(page.locator('[data-undo-test]')).toBeVisible();
   await expect(prep).toContainText('Grammar (subject & predicate)');await page.locator('[data-undo-test]').click();await expect(prep).toContainText('Reading');expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('abvm-completed-tests')))).toEqual([]);
   if(!await page.locator('[data-study-test-options]').evaluate(el=>el.open))await page.locator('[data-study-test-options] > summary').click();await page.locator('[data-complete-test]').click();await page.reload();
-  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');await expect(prep).toContainText('Grammar (subject & predicate)');await page.locator('[data-study-test-options] > summary').click();await page.locator('[data-restore-test]').first().click();await expect(prep).toContainText('Reading');
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');await page.locator('[data-open-prep]').click();await expect(prep).toContainText('Grammar (subject & predicate)');await page.locator('[data-study-test-options] > summary').click();await page.locator('[data-restore-test]').first().click();await expect(prep).toContainText('Reading');
 });
 test('selected test discloses fallback while unsupported same-day tests fail closed',async({page})=>{
   await controlledTests(page,[{date:'Friday, Oct. 9',label:'Spelling (short i / long i)',kind:'test'},{date:'Friday, Oct. 9',label:'History',kind:'test'}],{emptyBanks:true});await openStudy(page);
-  const prep=page.locator('[data-study-tests]');await page.locator('[data-test-select]').selectOption({label:'Spelling (short i / long i) - Fri, Oct 9'});await expect(prep.locator('h3')).toHaveText('Spelling (short i / long i)');await expect(prep.locator('[data-test-fallback]')).toContainText('original Grade 2 skill practice');
+  await page.locator('[data-open-prep]').click();const prep=page.locator('[data-study-tests]');await page.getByRole('button',{name:'Spelling (short i / long i) - Fri, Oct 9',exact:true}).click();await expect(prep.locator('h3')).toHaveText('Spelling (short i / long i)');await expect(prep.locator('[data-test-fallback]')).toContainText('original Grade 2 skill practice');
   await page.locator('[data-test-single]').click();await expect(page.locator('.game-question-card')).toBeVisible();const prompt=await page.locator('.game-question-card > h2').textContent();
   expect(await page.evaluate(async text=>{const {buildStarBank}=await import('./star-practice.mjs');const {questionsForTest}=await import('./study-hub-core.mjs');return questionsForTest({label:'Spelling (short i / long i)'},buildStarBank()).some(q=>q.prompt===text);},prompt)).toBe(true);
-  await page.locator('[data-game-home]').click();await page.locator('[data-test-select]').selectOption({label:'History - Fri, Oct 9'});await expect(prep.locator('h3')).toHaveText('History');await expect(prep.locator('[data-test-missing]')).toContainText('No verified questions match');await expect(page.locator('[data-test-single]')).toBeDisabled();
+  await page.locator('[data-game-home]').click();await page.getByRole('button',{name:'History - Fri, Oct 9',exact:true}).click();await expect(prep.locator('h3')).toHaveText('History');await expect(prep.locator('[data-test-missing]')).toContainText('No verified questions match');await expect(page.locator('[data-test-single]')).toBeDisabled();
 });

@@ -311,7 +311,8 @@ test("Study opens the four Games directly with source selection and collapsed no
   await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
   await expect(page.locator('.study-game-grid > .study-game-tile')).toHaveCount(5);
   await expect(page.locator('[data-study-source]')).toHaveCount(0);
-  await expect(page.locator('[data-test-select]')).toBeVisible();
+  await expect(page.locator('[data-open-prep]')).toBeVisible();
+  await expect(page.locator('[data-test-select]')).toHaveCount(0);
   await expect(page.locator('.study-games-cta,.study-room-v2,[data-learning-panel]')).toHaveCount(0);
   const details=page.locator('[data-study-notes],[data-study-test-options]');
   await expect(details).toHaveCount(2);

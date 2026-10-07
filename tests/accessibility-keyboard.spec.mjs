@@ -66,12 +66,16 @@ test("Calendar remains primary while Month and Week are keyboard-accessible",asy
   expect(new URL(page.url()).hash).toBe("#week");
 });
 
-test("subject choices, Test Prep selector, and native disclosures work from keyboard",async({page})=>{
+test("subject choices, Test Prep buttons, and native disclosures work from keyboard",async({page})=>{
   await waitForApp(page,"/#study");
-  const chooser=page.locator('[data-test-select]');
-  await expect(chooser).toBeEnabled({timeout:10000});
-  await chooser.focus();
-  await chooser.press('End');await chooser.press('Enter');await expect(chooser).toBeFocused();
+  await expect(page.locator(".games-screen")).toHaveAttribute("data-study-state","ready");
+  const openPrep=page.locator('[data-open-prep]');
+  await expect(openPrep).toBeEnabled({timeout:10000});await openPrep.focus();await page.keyboard.press('Enter');
+  const chooser=page.locator('[data-test-select]').last();
+  await expect(chooser).toBeEnabled();await chooser.focus();await page.keyboard.press('Space');
+  await expect(chooser).toBeFocused();await expect(chooser).toHaveAttribute('aria-pressed','true');
+  const back=page.locator('[data-close-prep]');await back.focus();await page.keyboard.press('Enter');
+  await expect(openPrep).toBeFocused();
   for(const selector of ['details[data-study-notes]','details[data-study-test-options]']){
     const details=page.locator(selector),summary=details.locator(':scope > summary');
     await expect(details).not.toHaveAttribute('open','');

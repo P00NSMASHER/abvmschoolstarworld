@@ -133,7 +133,13 @@ try {
   await expect(page.locator('[data-game-start="reading"]')).toHaveAccessibleName('Reading / ELA');
   await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state', 'ready', { timeout: 15000 });
   await expect(page.locator('[data-study-source]')).toHaveCount(0);
-  if(await page.locator('[data-test-select]').count())await expect(page.locator('[data-test-select]')).toHaveAccessibleName('Choose an upcoming test');
+  await expect(page.locator('[data-open-prep]')).toHaveAccessibleName(/test prep/i);
+  await page.locator('[data-open-prep]').click();
+  const testChoices=page.locator('[data-test-select]');
+  for(const choice of await testChoices.all()){await expect(choice).toHaveRole('button');await expect(choice).toHaveAttribute('aria-pressed',/true|false/);}
+  await page.screenshot({path:`${out}/test-prep.png`});
+  receipt.screens.push({screen:'Test Prep',testCount:await testChoices.count()});
+  await page.locator('[data-close-prep]').click();
   await expect(page.locator('.study-games-cta, .study-at-a-glance, [data-learning-panel]')).toHaveCount(0);
   const modeCount = await page.locator('.study-game-tile').count();
   expect(modeCount).toBe(5);
