@@ -82,10 +82,10 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
     const tests=model?.tests(),pending=tests?.tests||[],missing=tests?.missing||[],fallback=tests?.fallback||[];
     const printable=model?.printableTests?.()?.tests||pending;
     if(!model&&loading){
-      return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><span>UP NEXT</span><h2 id="study-priority-title">Test ready</h2></div><div class="study-test-card is-loading" role="status"><div class="study-test-copy"><strong>Checking upcoming tests…</strong><p>Getting the latest reviewed study material.</p></div></div></section>';
+      return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><span>UP NEXT</span><h2 id="study-priority-title">Test ready</h2></div><div class="study-test-card is-loading" data-study-tests role="status"><div class="study-test-copy"><strong>Checking upcoming tests…</strong><p>Getting the latest reviewed study material.</p></div></div></section>';
     }
     if(!pending.length){
-      return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><span>UP NEXT</span><h2 id="study-priority-title">Test ready</h2></div><div class="study-test-card is-clear"><div class="study-test-mark" aria-hidden="true">✓</div><div class="study-test-copy"><strong>No upcoming test is listed</strong><p>Use a game below for regular practice.</p></div></div>' +
+      return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><span>UP NEXT</span><h2 id="study-priority-title">Test ready</h2></div><div class="study-test-card is-clear" data-study-tests><div class="study-test-mark" aria-hidden="true">✓</div><div class="study-test-copy"><strong>No upcoming test is listed</strong><p>Use a game below for regular practice.</p></div></div>' +
         (tests?.message?'<div class="game-test-status" role="status"><span>'+esc(tests.message)+'</span>'+(tests.canUndo?'<button type="button" data-undo-test>Undo</button>':'')+'</div>':'')+'</section>';
     }
     const date=dateParts(tests.date),labels=pending.map(test=>esc(test.label));
@@ -94,7 +94,7 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
       :'<button type="button" class="study-test-primary" data-test>Start test practice</button>';
     const guideButtons=printable.map(test=>'<button type="button" class="study-guide-button" data-test-guide="'+test.index+'">Print '+esc(test.label)+' guide</button>').join('');
     return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><span>UP NEXT</span><h2 id="study-priority-title">Test ready</h2></div>' +
-      '<article class="study-test-card"><div class="study-test-date" aria-hidden="true"><span>'+esc(date.weekday)+'</span><strong>'+esc(date.day)+'</strong></div><div class="study-test-copy"><small>NEXT TEST'+(pending.length>1?'S':'')+'</small><h3>'+labels.join('<span class="study-test-divider"> · </span>')+'</h3><p>'+esc(date.label)+'</p></div><div class="study-test-actions">'+practiceButtons+guideButtons+'</div>' +
+      '<article class="study-test-card" data-study-tests><div class="study-test-date" aria-hidden="true"><span>'+esc(date.weekday)+'</span><strong>'+esc(date.day)+'</strong></div><div class="study-test-copy"><small>NEXT TEST'+(pending.length>1?'S':'')+'</small><h3>'+labels.join('<span class="study-test-divider"> · </span>')+'</h3><p>'+esc(date.label)+'</p></div><div class="study-test-actions">'+practiceButtons+guideButtons+'</div>' +
       (missing.length?'<p class="game-material-status" data-test-missing>Teacher-specific practice is not ready for '+missing.map(test=>esc(test.label)).join(', ')+'. Use the reviewed notes and available practice.</p>':'') +
       (fallback.length?'<p class="game-material-status" data-test-fallback>Some practice uses original Grade 2 skill questions because a reviewed test-specific bank is not available yet.</p>':'') +
       '</article>'+(tests?.message?'<div class="game-test-status" role="status"><span>'+esc(tests.message)+'</span>'+(tests.canUndo?'<button type="button" data-undo-test>Undo</button>':'')+'</div>':'')+'</section>';
