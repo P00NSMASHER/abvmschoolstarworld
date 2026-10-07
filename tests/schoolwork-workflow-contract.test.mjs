@@ -30,7 +30,7 @@ test('schoolwork intake keeps the canonical 12-step cumulative workflow in order
 });
 
 test('schoolwork workflow preserves the public/private boundary and cumulative semantics', async () => {
-  const text = (await readFile(workflowPath, 'utf8')).toLowerCase().replace(/\\s+/g, ' ');
+  const text = (await readFile(workflowPath, 'utf8')).toLowerCase().replace(/\s+/g, ' ');
   for (const phrase of [
     'raw photos, ocr dumps',
     'student responses are evidence for analysis, not public content',
@@ -46,7 +46,8 @@ test('schoolwork workflow preserves the public/private boundary and cumulative s
 
 test('root agent instructions route schoolwork photos through the 12-step contract', async () => {
   const text = await readFile(agentsPath, 'utf8');
-  assert(text.includes('canonical **12-step cumulative** intake process'));
+  const compact = text.replace(/\s+/g, ' ');
+  assert(compact.includes('canonical **12-step cumulative** intake process'));
   for (let step = 1; step <= 12; step += 1) assert(new RegExp(`^\\s*${step}\\. `, 'm').test(text));
   assert(/public repository/i.test(text));
   assert(/private archive/i.test(text));
