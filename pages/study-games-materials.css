@@ -418,6 +418,10 @@
 .games-screen .game-finish>.learning-summary-note{font-size:1rem;line-height:1.55;font-weight:400;letter-spacing:normal;color:#4c5d73}
 .games-screen .game-finish .study-star-earned.secondary :is(span,strong,small){font-size:1rem;line-height:1.5}
 
+@media(max-width:699px){
+  .games-screen .study-test-card.is-loading{min-height:158px}
+}
+
 @media(min-width:700px){
   .games-screen .study-game-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .games-screen .study-test-card{grid-template-columns:auto minmax(0,1fr) minmax(180px,.75fr)}
