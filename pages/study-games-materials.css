@@ -6,8 +6,6 @@
 .games-screen button:active:not(:disabled){transform:scale(.985)}
 .games-screen button:disabled{cursor:default}
 .games-screen :is(.study-priority,.study-game-section,.study-tools,.game-question-card,.game-finish){min-width:0;overflow-wrap:anywhere}
-.games-screen .study-games-hero.simple{display:block;margin:4px 0 16px;padding:0;border:0;border-radius:0;background:none;box-shadow:none}
-.games-screen .study-games-hero.simple span{display:block;margin-top:0;color:var(--study-muted);font-size:.95rem;line-height:1.5}
 .games-screen .study-launch-layout{display:grid;gap:22px}
 .games-screen .study-section-heading{margin:0 0 12px}
 .games-screen .study-section-heading>span{display:block;margin:0 0 5px;color:var(--study-muted);font-size:.65rem;font-weight:750;line-height:1.4;letter-spacing:.1em}
@@ -22,6 +20,9 @@
 .games-screen .study-test-copy small{display:block;margin-bottom:5px;color:#395d94;font-size:.6rem;font-weight:750;letter-spacing:.1em}
 .games-screen .study-test-copy h3,.games-screen .study-test-copy>strong{display:block;margin:0;color:#173773;font-size:1.13rem;line-height:1.3;font-weight:750;letter-spacing:-.02em}
 .games-screen .study-test-copy p{margin:8px 0 0;color:#435e80;font-size:.83rem;line-height:1.5}
+.games-screen .study-test-copy .study-test-history{font-size:.72rem;letter-spacing:0;font-weight:650;line-height:1.4}
+.games-screen .study-test-copy .study-test-topics{min-height:2.184rem;margin-top:6px;font-size:.78rem;line-height:1.4;color:#435e80}
+.games-screen .study-test-topics>span{display:inline-block;max-width:100%;vertical-align:top}
 .games-screen .study-test-actions{display:grid;gap:8px;grid-column:1/-1;margin-top:0}
 .games-screen .study-test-picker{display:grid;gap:6px;color:#435e80;font-size:.72rem;font-weight:650;letter-spacing:0}
 .games-screen .study-test-picker-label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
@@ -100,14 +101,14 @@
 .games-screen .game-topbar>div>span{color:var(--study-muted);font-size:.8rem;line-height:1.4;font-weight:650}
 .games-screen .game-topbar>div>strong{color:var(--study-ink);font-size:.9rem;line-height:1.4;font-weight:750}
 .games-screen .game-live-score{display:block;grid-column:1/-1;color:var(--study-muted);font-size:.74rem;font-weight:500;line-height:1.4}
-.games-screen .game-streak{display:block;grid-column:1/-1;color:var(--study-muted);font-size:.68rem;line-height:1.4;font-weight:500;margin:0}
+.games-screen .game-streak{display:block;grid-column:1/-1;color:var(--study-muted);font-size:.75rem;line-height:1.4;font-weight:500;margin:0}
 .games-screen .game-streak.positive{color:#236456}.games-screen .game-streak.negative{color:#a04431}
 .games-screen .game-progress{height:6px;margin:0 0 28px;border:0;border-radius:99px;background:#dce4ef;overflow:hidden}
 .games-screen .game-progress>span{display:block;height:100%;border-radius:99px;background:var(--study-brand);transition:width .18s ease}
 .games-screen .game-question-card{padding:0;border:0;border-radius:0;background:none;box-shadow:none}
 .games-screen .game-question-meta{display:flex;align-items:center;flex-wrap:wrap;gap:8px;color:var(--study-muted);font-size:.72rem;line-height:1.4}
 .games-screen .game-question-meta span{font-weight:750;color:var(--study-brand);font-size:.72rem;letter-spacing:.05em;text-transform:uppercase}
-.games-screen .game-question-meta b{padding:4px 8px;border-radius:6px;background:#edf0f3;color:var(--study-muted);font-size:.65rem;font-weight:600}
+.games-screen .game-question-meta b{padding:4px 8px;border-radius:6px;background:#edf0f3;color:var(--study-muted);font-size:.72rem;font-weight:600}
 .games-screen .game-question-card>h2{max-width:36rem;margin:20px 0 24px;color:var(--study-ink);font-size:clamp(1.35rem,4vw,1.8rem);font-weight:700;line-height:1.4;letter-spacing:-.025em}
 .games-screen .game-answer-list{display:grid;gap:12px;margin-top:12px}
 .games-screen .game-answer{display:grid;grid-template-columns:32px minmax(0,1fr);align-items:center;gap:14px;width:100%;min-height:70px;padding:15px;border:1px solid #ccd5de;border-radius:17px;background:#fff;color:var(--study-ink);box-shadow:none;text-align:left}
@@ -178,15 +179,15 @@
 .games-screen .study-star-earned.secondary :is(span,strong,small){display:block;color:var(--study-muted);font-size:.85rem;line-height:1.6}
 .games-screen .study-star-earned.secondary strong{color:var(--study-ink);font-size:1rem;font-weight:700}
 .games-screen .game-finish-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px}
-.games-screen .game-finish-actions button,.games-screen .game-empty button{min-height:52px;padding:12px;border:1px solid var(--study-line);border-radius:14px;background:#fff;color:var(--study-brand);font-size:.87rem;line-height:1.4;font-weight:700}
+.games-screen .game-finish-actions button,.games-screen .game-empty button{min-height:52px;padding:12px;border:1px solid var(--study-line);border-radius:14px;background:#fff;color:var(--study-brand);font-size:.96rem;line-height:1.4;font-weight:700}
 .games-screen .game-finish-actions button.primary{border-color:var(--study-brand);background:var(--study-brand);color:#fff}
 .games-screen .game-empty{padding:30px 20px;border:1px dashed #bfcbd8;border-radius:22px;background:var(--study-sky)}
 .games-screen .game-empty h2{color:#173773;font-size:1.2rem;line-height:1.5}
-.games-screen .study-star-reveal{position:static;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;width:auto;margin:0 0 16px;padding:12px;border:0;border-radius:12px;background:#fff3d5;color:#795b1f;box-shadow:none;transform:none;animation:study-reward-appear .2s ease both}
+.games-screen .study-star-reveal{position:static;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;width:auto;margin:0 0 16px;padding:12px;border:0;border-radius:12px;background:#fff3d5;color:#795b1f;box-shadow:none;transform:none;pointer-events:none;animation:study-reward-appear 1.2s ease both}
 .games-screen .study-star-reveal>span{font-size:1.2rem}.games-screen .study-star-reveal>strong{font-size:.84rem}.games-screen .study-star-reveal>small{font-size:.7rem}
 .games-screen .study-star-goal{margin-top:20px;padding:20px;border:1px solid var(--study-line);border-radius:18px;background:#fff}
 .games-screen .study-star-goal>h2{font-size:1.2rem}.games-screen .study-star-goal .game-progress{margin-bottom:10px}.games-screen .study-star-goal p{font-size:.84rem}
-@keyframes study-reward-appear{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@keyframes study-reward-appear{0%{opacity:0;transform:translateY(4px)}15%,75%{opacity:1;transform:none}100%{opacity:0;transform:none}}
 @media(min-width:700px){
   .games-screen .study-game-grid{gap:14px}
   .games-screen .study-game-tile{min-height:184px!important;padding:20px}

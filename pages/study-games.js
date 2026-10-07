@@ -1409,12 +1409,16 @@ function selectSubjectQuestions(pool,count,seed,skillStats,preferredSkills,recen
   const selected=[],usedIds=new Set(),usedVariants=new Set();
   const append=(rows,label,{freshOnly=true}={})=>{
     if(selected.length>=count)return;
-    const candidates=rows.filter(q=>{
-      const variant=semanticRotationKey(q);
-      return !usedIds.has(q.id)&&!usedVariants.has(variant)&&(!freshOnly||!recent.has(variant));
-    });
+    const available=rows.filter(q=>!usedIds.has(q.id)&&!usedVariants.has(semanticRotationKey(q)));
+    const fresh=available.filter(q=>!recent.has(semanticRotationKey(q)));
+    let candidates=freshOnly?fresh:available;
+    // A cooldown is a preference, not a reason to show three identical kinds
+    // of work. Relax it only for an alternate representation in this same tier.
+    const repetitive=freshOnly&&count-selected.length>=3&&fresh.length>=3
+      &&new Set(fresh.map(q=>q.skill)).size===1&&new Set(fresh.map(q=>q.questionType)).size===1;
+    if(repetitive)candidates=[...fresh,...available.filter(q=>recent.has(semanticRotationKey(q))&&(q.skill!==fresh[0].skill||q.questionType!==fresh[0].questionType))];
     if(!candidates.length)return;
-    const picked=pickBalanced(candidates,count-selected.length,seed+"|"+label,skillStats,preferredSkills,freshOnly?new Set():recent);
+    const picked=pickBalanced(candidates,count-selected.length,seed+"|"+label,skillStats,preferredSkills,recent);
     for(const q of picked){
       const variant=semanticRotationKey(q);
       if(usedIds.has(q.id)||usedVariants.has(variant))continue;
@@ -1443,30 +1447,12 @@ function selectQuestions(catalog,{subjects,skills,count=8,seed="session",skillSt
   }else if(wanted.length){
     return selectSubjectQuestions(pool,count,seed,skillStats,preferredSkills,recent);
   }else{
-    const current=pool.filter(q=>q.tier==="material"),review=pool.filter(q=>q.tier==="recent-review"),star=pool.filter(q=>q.tier==="star-fallback"&&["Math","Reading / ELA"].includes(q.subject));
-    const currentSubjects=new Set(current.map(q=>q.subject));
-    const reviewFill=review.filter(q=>!currentSubjects.has(q.subject));
-    const covered=new Set([...currentSubjects,...reviewFill.map(q=>q.subject)]);
-    const starFill=star.filter(q=>!covered.has(q.subject));
-    const primary=[...current,...reviewFill];
-    const fallbackSubjects=[...new Set(starFill.map(q=>q.subject).filter(Boolean))];
-    const anchors=[];
-    for(const subjectName of fallbackSubjects){
-      if(anchors.length>=count)break;
-      const subjectPool=starFill.filter(q=>q.subject===subjectName);
-      const anchor=pickBalanced(subjectPool,1,seed+"|fallback-subject|"+subjectName,skillStats,preferredSkills,recent)[0];
-      if(anchor)anchors.push(anchor);
-    }
-    const anchorVariants=new Set(anchors.map(semanticRotationKey));
-    const primarySelected=pickBalanced(primary,Math.max(0,count-anchors.length),seed+"|primary",skillStats,preferredSkills,new Set([...recent,...anchorVariants]));
-    const selected=[...anchors,...primarySelected];
-    if(selected.length<count){
-      const usedIds=new Set(selected.map(q=>q.id)),usedVariants=new Set(selected.map(semanticRotationKey));
-      const remainder=starFill.filter(q=>!usedIds.has(q.id)&&!usedVariants.has(semanticRotationKey(q)));
-      const fill=pickBalanced(remainder,count-selected.length,seed+"|fallback-fill",skillStats,preferredSkills,new Set([...recent,...usedVariants]));
-      selected.push(...fill);
-    }
-    return selectSubjectQuestions(pool,count,seed,skillStats,preferredSkills,recent);
+    // Mixed practice exhausts current/review first. When STAR is needed, prefer
+    // an uncovered subject; subject-specific rounds keep their own fallback.
+    const covered=new Set(pool.filter(q=>q.tier==='material'||q.tier==='recent-review').map(q=>q.subject));
+    const uncovered=pool.some(q=>q.tier==='star-fallback'&&!covered.has(q.subject)&&['Math','Reading / ELA'].includes(q.subject));
+    const mixedPool=uncovered?pool.filter(q=>q.tier!=='star-fallback'||!covered.has(q.subject)):pool;
+    return selectSubjectQuestions(mixedPool,count,seed,skillStats,preferredSkills,recent);
   }
   return pickBalanced(pool,count,seed,skillStats,preferredSkills,recent);
 }

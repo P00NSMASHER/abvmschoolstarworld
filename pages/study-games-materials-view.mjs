@@ -71,7 +71,7 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
   function priorityHtml({loading=true} = {}) {
     const tests=model?.upcomingTests?.()||model?.printableTests?.(),pending=tests?.tests||[],missing=tests?.missing||[],fallback=tests?.fallback||[];
     if(!model&&loading){
-      return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><h2 id="study-priority-title">Test Prep</h2></div><div class="study-test-card is-loading" data-study-tests role="status"><div class="study-test-date" aria-hidden="true"><span>…</span><strong>–</strong><em>…</em></div><div class="study-test-copy"><small>COMING UP</small><strong>Checking tests…</strong></div><div class="study-test-actions"><label class="study-test-picker"><span class="study-test-picker-label">Loading upcoming tests</span><select disabled aria-label="Loading upcoming tests"><option>Loading tests…</option></select></label><button type="button" disabled>Loading practice…</button></div></div></section>';
+      return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><h2 id="study-priority-title">Test Prep</h2></div><div class="study-test-card is-loading" data-study-tests role="status"><div class="study-test-date" aria-hidden="true"><span>…</span><strong>–</strong><em>…</em></div><div class="study-test-copy"><small class="study-test-history">Checking practice…</small><strong>Checking tests…</strong><p class="study-test-topics" aria-hidden="true">Checking topics…</p></div><div class="study-test-actions"><label class="study-test-picker"><span class="study-test-picker-label">Loading upcoming tests</span><select disabled aria-label="Loading upcoming tests"><option>Loading tests…</option></select></label><button type="button" disabled>Loading practice…</button></div></div></section>';
     }
     if(!pending.length){
       return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><h2 id="study-priority-title">Test Prep</h2></div><div class="study-test-card is-clear" data-study-tests><div class="study-test-mark" aria-hidden="true">✓</div><div class="study-test-copy"><strong>No upcoming test is listed</strong><p>Choose a subject below and keep learning.</p></div></div>' +
@@ -79,10 +79,12 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
     }
     if(selectedTest>=pending.length)selectedTest=0;
     const chosen=pending[selectedTest],entry=(tests.supported||[]).find(test=>test.index===selectedTest),date=dateParts(chosen.date);
+    const preview=model?.testPreview?.(selectedTest),history=preview?(preview.total?preview.practice.label:'No verified practice yet'):'COMING UP';
+    const topics=preview?.topics?.length?'<p class="study-test-topics">'+preview.topics.map(topic=>'<span>'+esc(topic)+'</span>').join(' · ')+'</p>':'';
     const options=pending.map((test,index)=>'<option value="'+index+'"'+(index===selectedTest?' selected':'')+'>'+esc(test.label)+' - '+esc(dateLabel(test.date))+'</option>').join('');
     const practiceButtons='<label class="study-test-picker"><span class="study-test-picker-label">Choose a test</span><select data-test-select aria-label="Choose an upcoming test">'+options+'</select></label><button type="button" class="study-test-primary" data-test-single="'+selectedTest+'"'+(!entry?' disabled aria-disabled="true"':'')+'>Start test prep</button>';
     return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><h2 id="study-priority-title">Test Prep</h2></div>' +
-      '<article class="study-test-card" data-study-tests><time class="study-test-date" datetime="'+esc(chosen.date)+'"><span>'+esc(date.weekday)+'</span><strong>'+esc(date.day)+'</strong><em>'+esc(date.label.replace(/^\w+,\s*/,''))+'</em></time><div class="study-test-copy"><small>COMING UP</small><h3>'+esc(chosen.label)+'</h3></div><div class="study-test-actions">'+practiceButtons+'</div>' +
+      '<article class="study-test-card" data-study-tests><time class="study-test-date" datetime="'+esc(chosen.date)+'"><span>'+esc(date.weekday)+'</span><strong>'+esc(date.day)+'</strong><em>'+esc(date.label.replace(/^\w+,\s*/,''))+'</em></time><div class="study-test-copy"><small class="study-test-history" aria-label="'+esc(preview?.practice?.plays?history+'. Includes hints and retries; practice does not predict a test result.':history)+'">'+esc(history)+'</small><h3>'+esc(chosen.label)+'</h3>'+topics+'</div><div class="study-test-actions">'+practiceButtons+'</div>' +
       (missing.some(test=>test.index===selectedTest)?'<p class="game-material-status" data-test-missing>No verified questions match this test yet. Use the teacher materials; the app will not guess.</p>':'') +
       (fallback.some(test=>test.index===selectedTest)?'<p class="game-material-status" data-test-fallback>Using original Grade 2 skill practice because no reviewed test-specific questions are available.</p>':'') +
       '</article>'+(tests?.message?'<div class="game-test-status" role="status"><span>'+esc(tests.message)+'</span>'+(tests.canUndo?'<button type="button" data-undo-test>Undo</button>':'')+'</div>':'')+'</section>';
@@ -127,8 +129,7 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
   }
 
   function homeHtml({gameGrid='',complete=false,loading=true,error=false} = {}) {
-    return '<header class="study-games-hero simple"><span>A little practice. A little more confidence.</span></header>' +
-      '<div class="study-launch-layout">'+priorityHtml({loading}) +
+    return '<div class="study-launch-layout">'+priorityHtml({loading}) +
       '<section class="study-game-section" aria-labelledby="study-game-section-title"><div class="study-section-heading"><h2 id="study-game-section-title">Choose your subject</h2></div>'+gameGrid+'</section></div>' + statusHtml({loading,error}) +
       secondaryHtml() +
       '<p class="game-privacy-note">Current classwork comes first, followed by earlier learning and original Grade 2 STAR-style practice. Private answers and grades are not published. STAR-style practice uses original questions.</p>';

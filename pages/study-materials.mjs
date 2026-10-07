@@ -394,13 +394,29 @@ export function createStudyMaterials({
     };
   }
 
-  function testRound({index, seed, upcoming = false} = {}) {
-    const state = upcoming ? printableTestState(true) : testState();
+  function testScope(state,index) {
     const single = Number.isInteger(index) && index >= 0 && index < state.tests.length;
     const groups = index === undefined ? (state.missing.length ? [] : state.groups) : single ? [state.groups[index]] : [];
     const selected = index === undefined ? state.tests : single ? [state.tests[index]] : [];
     const full = byId(groups.flat());
     const key = sourceKey + '|tests:' + selected.map(testKey).join('+') + ':' + bankKey(full);
+    return {single,groups,selected,full,key};
+  }
+  function testPreview(index) {
+    const state = printableTestState(true), scope = testScope(state,index);
+    if (!scope.single) return null;
+    const labels = new Map([...array(pack.contentPipeline?.skills), ...array(pack.recentReviewPipeline?.skills)]
+      .filter(row => meaningfulText(row?.id) && meaningfulText(row?.label)).map(row => [row.id,row.label.trim()]));
+    const topics = [...new Set(scope.full.flatMap(row => [row.skill,...array(row.assessedSkillIds)]).map(id => labels.get(id)).filter(meaningfulText))].slice(0,2);
+    const total = Math.min(8,unique(scope.full).length);
+    const saved = read(storage,'abvm-study-games:'+scope.key+':test-ready',null);
+    const plays = Number(saved?.plays), best = Number(saved?.best);
+    const recorded = total > 0 && Number.isInteger(plays) && plays > 0 && Number.isInteger(best) && best >= 0 && best <= total;
+    return {sourceKey:scope.key,topics,total,practice:recorded ? {plays,best,label:'Best practice '+best+' / '+total} : {plays:0,best:null,label:'First practice'}};
+  }
+  function testRound({index, seed, upcoming = false} = {}) {
+    const state = upcoming ? printableTestState(true) : testState();
+    const {single,groups,selected,full,key} = testScope(state,index);
     const chosenSeed = sessionSeed(key,'test-ready',seed);
     return {
       questions:balancedTestRound(groups,8,chosenSeed), catalog:{...catalog,sourceKey:key,questions:full},
@@ -491,5 +507,5 @@ export function createStudyMaterials({
       links:referenceLinks(), warnings:coverageWarnings(time),
     };
   }
-  return {status, banks, forMode, round, tests, printableTests, upcomingTests, testGuide, testRound, completeTests, undoTests, restoreTest, notes, loadReferences};
+  return {status, banks, forMode, round, tests, printableTests, upcomingTests, testGuide, testPreview, testRound, completeTests, undoTests, restoreTest, notes, loadReferences};
 }

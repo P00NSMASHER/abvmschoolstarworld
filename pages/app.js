@@ -364,7 +364,7 @@ function ensureStudyGameEngine(){
   if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
   if(studyEnginePromise)return studyEnginePromise;
   const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.async=true;s.onload=()=>window[key]?resolve():reject(new Error(key+" did not initialize"));s.onerror=()=>reject(new Error(key+" could not be loaded"));document.head.append(s)});
-  studyEnginePromise=Promise.all([load("./study-games.js?v=99","ABVMStudyGames"),load("./study-games-view.js?v=11","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
+  studyEnginePromise=Promise.all([load("./study-games.js?v=100","ABVMStudyGames"),load("./study-games-view.js?v=11","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
   return studyEnginePromise;
 }
 function studyGameCatalog(){
@@ -486,8 +486,7 @@ function gameMenuHtml(catalog){
     return '<button type="button" class="study-game-tile game-'+mode.icon+'" data-game-start="'+esc(mode.id)+'"'+(disabled?' disabled aria-disabled="true"':'')+'>'+window.ABVMStudyGameView.icon(mode.icon)+'<span class="study-game-copy"><strong>'+esc(mode.id==="spelling"?"Spelling":mode.title)+'</strong><small>'+esc(mode.copy)+'</small>'+(disabled?'<em>Not ready yet</em>':record.plays?'<em>Practiced before · '+record.best+' / '+total+' best</em>':'')+'</span><b aria-hidden="true">›</b></button>';
   }).join("")+'</div>';
   if(view)return view.homeHtml({gameGrid:grid,complete:!!window.ABVMStudyReview?.completion(),loading:studyMaterialsError?.pack!==pack,error:studyMaterialsError?.pack===pack});
-  return '<section class="study-games-hero simple"><span>A little practice. A little more confidence.</span></section>'+
-    '<section class="study-game-section"><div class="study-section-heading"><h2>Choose your subject</h2></div>'+grid+'</section>'+
+  return '<section class="study-game-section"><div class="study-section-heading"><h2>Choose your subject</h2></div>'+grid+'</section>'+
     '<p class="game-material-status" role="status">Loading notes and test prep…</p>';
 }
 function gamePlayHtml(){const g=gameState,q=activeGameQuestion(),e=studyGameEngine();if(q)e?.markQuestionShown?.(q,g.sourceKey||currentGameSourceKey());return window.ABVMStudyGameView.play({g,mode:gameMode(g.mode),q,teach:g.supportMode?e?.teachCardFor?.(q):null,retryInstruction:e?.teachCardFor?.(q)?.instruction,labels:GAME_TYPE_LABELS,canRead:!!studyMaterialsView?.readAloud.supported})}

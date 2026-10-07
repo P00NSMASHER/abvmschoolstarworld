@@ -1729,7 +1729,7 @@ img {
   }
   .today-screen > .lunch-card {
     grid-column: 2;
-    margin-top: 0;
+    margin-top: 28px;
     margin-bottom: 22px;
   }
   .today-updates-card {
