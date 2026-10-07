@@ -82,6 +82,19 @@ test('three completed Math sessions avoid reusing recently shown questions',()=>
  assert.equal(new Set(prompts).size,24);
 });
 
+test('a sparse first-time current subject bank is not padded with fallback',()=>{
+ const e=loadEngine();
+ const current={id:'single-current',subject:'Math',skill:'math-subtraction',tier:'material',questionType:'direct',difficulty:2,prompt:'Single current subtraction question',answer:'5',choices:['5','4','6'],variantFingerprint:'single-current'};
+ const star=Array.from({length:8},(_,i)=>({id:'thin-star-'+i,subject:'Math',skill:'place-value',tier:'star-fallback',questionType:'direct',difficulty:2,prompt:'Thin fallback '+i,answer:String(i),choices:[String(i),String(i+1),String(i+2)],variantFingerprint:'thin-star-'+i}));
+ const catalog={sourceKey:'sparse-current-subject',questions:[current,...star]};
+ const first=e.selectQuestions(catalog,{subjects:['Math'],count:8,seed:'first',skillStats:{}});
+ assert.deepEqual(first.map(q=>q.id),['single-current']);
+ e.markQuestionShown(first[0],catalog.sourceKey);
+ const second=e.selectQuestions(catalog,{subjects:['Math'],count:8,seed:'second',skillStats:{}});
+ assert.equal(second.length,8);
+ assert(second.every(q=>q.tier==='star-fallback'));
+});
+
 test('subject mode uses fresh current material first, then fresh STAR fallback before repeating',()=>{
  const e=loadEngine();
  const current=Array.from({length:9},(_,i)=>({
