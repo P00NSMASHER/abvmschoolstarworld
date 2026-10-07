@@ -49,7 +49,7 @@ test('Study Games keeps the approved menu, play, and finish interaction contract
 });
 
 
-test('Study home is test-first, compact, and keeps secondary tools collapsed', async ({ page }) => {
+test('Study home is test-first, compact, and keeps secondary tools collapsed', async ({ page }, testInfo) => {
   const priority=page.locator('.study-priority');
   const source=page.locator('.study-source-card');
   const games=page.locator('.study-game-section');
@@ -86,6 +86,10 @@ test('Study home is test-first, compact, and keeps secondary tools collapsed', a
 
   const overflow=await page.locator('.games-screen').evaluate(el=>el.scrollWidth>el.clientWidth+1);
   expect(overflow).toBeFalsy();
+
+  const shot=testInfo.outputPath('study-cleanup-home.png');
+  await page.screenshot({path:shot,fullPage:true});
+  await testInfo.attach('Study cleanup home',{path:shot,contentType:'image/png'});
 });
 
 test('Study Games support text remains readable on phone and tablet', async ({ page }) => {
