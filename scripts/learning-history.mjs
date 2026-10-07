@@ -1,0 +1,184 @@
+import {mkdir,open,readFile,rename,unlink,writeFile} from 'node:fs/promises';
+import path from 'node:path';
+import {fileURLToPath,pathToFileURL} from 'node:url';
+
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const RESULTS=new Set(['correct','incorrect','partial','unknown']);
+const ERRORS=new Set(['knowledge-gap','concept-gap','procedure-error','reading-comprehension','recall','careless-attention','unknown']);
+const INDEPENDENCE=new Set(['independent','hinted','corrected','unknown']);
+const BATCH_KEYS=new Set(['schemaVersion','intakeId','asOf','observations']);
+const OBSERVATION_KEYS=new Set(['id','sourceId','assignmentId','questionId','subject','skill','studiedOn','addedOn','result','errorType','independence','confidence','responseSummary','teacherMarkSummary','note']);
+const HISTORY_KEYS=new Set(['schemaVersion','updatedOn','observations','skills','practiceTargets']);
+
+const text=value=>typeof value==='string'&&value.trim().length>0;
+const day=value=>typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value)&&new Date(value+'T12:00:00Z').toISOString().slice(0,10)===value;
+const score=result=>result==='correct'?1:result==='partial'?0.5:result==='incorrect'?0:null;
+const eventDay=observation=>observation.studiedOn||observation.addedOn;
+const round=value=>Math.round(value*100)/100;
+function allowedKeys(value,allowed,label){
+  if(!value||typeof value!=='object'||Array.isArray(value))throw new Error(label+': expected object');
+  const unknown=Object.keys(value).filter(key=>!allowed.has(key));
+  if(unknown.length)throw new Error(label+': unknown field '+unknown[0]);
+}
+function unique(values,label){if(new Set(values).size!==values.length)throw new Error('Duplicate '+label);}
+function average(values){return values.length?values.reduce((sum,value)=>sum+value,0)/values.length:0;}
+function isInsideRepo(candidate,repoRoot=root){
+  const resolved=path.resolve(candidate),relative=path.relative(path.resolve(repoRoot),resolved);
+  return relative===''||(!relative.startsWith('..'+path.sep)&&relative!=='..'&&!path.isAbsolute(relative));
+}
+export function assertPrivatePath(candidate,label='Private learning file',repoRoot=root){
+  if(isInsideRepo(candidate,repoRoot))throw new Error(label+' must stay outside the public ABVM repository.');
+  return path.resolve(candidate);
+}
+export function validateObservation(observation,label='observation'){
+  allowedKeys(observation,OBSERVATION_KEYS,label);
+  for(const field of ['id','sourceId','subject','skill','addedOn'])if(!text(observation[field]))throw new Error(label+': invalid '+field);
+  if(!day(observation.addedOn))throw new Error(label+': invalid addedOn');
+  if(observation.studiedOn!==null&&observation.studiedOn!==undefined&&!day(observation.studiedOn))throw new Error(label+': invalid studiedOn');
+  if(!RESULTS.has(observation.result))throw new Error(label+': invalid result');
+  if(!ERRORS.has(observation.errorType||'unknown'))throw new Error(label+': invalid errorType');
+  if(!INDEPENDENCE.has(observation.independence||'unknown'))throw new Error(label+': invalid independence');
+  if(observation.confidence!==undefined&&(!Number.isFinite(observation.confidence)||observation.confidence<0||observation.confidence>1))throw new Error(label+': invalid confidence');
+  for(const field of ['assignmentId','questionId','responseSummary','teacherMarkSummary','note'])if(observation[field]!==undefined&&!text(observation[field]))throw new Error(label+': invalid '+field);
+  return observation;
+}
+export function validateObservationBatch(batch){
+  allowedKeys(batch,BATCH_KEYS,'learning batch');
+  if(batch.schemaVersion!==1||!text(batch.intakeId)||!day(batch.asOf)||!Array.isArray(batch.observations))throw new Error('Unsupported learning batch');
+  unique(batch.observations.map(item=>item.id),'observation IDs');
+  batch.observations.forEach((item,index)=>validateObservation(item,'observation '+index));
+  return {observations:batch.observations.length};
+}
+function skillKey(observation){return observation.subject+'\u0000'+observation.skill;}
+function skillSummary(observations,asOf){
+  const groups=new Map();
+  for(const observation of observations){
+    const key=skillKey(observation);
+    const group=groups.get(key)||[];
+    group.push(observation);
+    groups.set(key,group);
+  }
+  const summaries=[];
+  for(const group of groups.values()){
+    group.sort((a,b)=>eventDay(a).localeCompare(eventDay(b))||a.id.localeCompare(b.id));
+    const scored=group.filter(item=>score(item.result)!==null);
+    const recent=scored.slice(-5);
+    const weights=recent.map((_,index)=>index+1);
+    const weighted=recent.reduce((sum,item,index)=>sum+score(item.result)*weights[index],0);
+    const confidence=weights.length?round(weighted/weights.reduce((a,b)=>a+b,0)):0;
+    const lastThree=scored.slice(-3);
+    const mastery=lastThree.length===3&&lastThree.every(item=>item.result==='correct'&&(item.independence||'unknown')==='independent')
+      &&new Set(lastThree.map(item=>item.sourceId)).size>=2
+      &&new Set(lastThree.map(eventDay)).size>=2;
+    let status='not-enough-evidence';
+    if(scored.length>=2)status='learning';
+    if(scored.length>=3&&average(scored.slice(-5).map(item=>score(item.result)))>=0.5)status='improving';
+    if(mastery)status='mastered';
+    let trend='insufficient-data';
+    if(scored.length>=4){
+      const previous=average(scored.slice(-4,-2).map(item=>score(item.result)));
+      const latest=average(scored.slice(-2).map(item=>score(item.result)));
+      trend=latest-previous>0.2?'improving':previous-latest>0.2?'slipping':'steady';
+    }
+    const errors={};
+    for(const item of scored)if(item.result!=='correct'){const type=item.errorType||'unknown';errors[type]=(errors[type]||0)+1;}
+    const latest=group.at(-1);
+    summaries.push({
+      subject:latest.subject,
+      skill:latest.skill,
+      evidenceCount:group.length,
+      scoredCount:scored.length,
+      independentCorrect:scored.filter(item=>item.result==='correct'&&(item.independence||'unknown')==='independent').length,
+      latestObservedOn:eventDay(latest),
+      status,
+      confidence,
+      trend,
+      commonErrorTypes:Object.entries(errors).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).slice(0,3).map(([type,count])=>({type,count}))
+    });
+  }
+  summaries.sort((a,b)=>a.subject.localeCompare(b.subject)||a.skill.localeCompare(b.skill));
+  return summaries;
+}
+function differenceInDays(later,earlier){
+  return Math.floor((Date.parse(later+'T12:00:00Z')-Date.parse(earlier+'T12:00:00Z'))/86400000);
+}
+function practiceTargets(skills,observations,asOf){
+  const latestBySkill=new Map();
+  for(const observation of observations)latestBySkill.set(skillKey(observation),observation);
+  return skills.map(skill=>{
+    const latest=latestBySkill.get(skill.subject+'\u0000'+skill.skill);
+    let priority=0,reason='monitor';
+    if(latest?.result==='incorrect'){priority=100;reason='recent-miss';}
+    else if(latest?.result==='partial'){priority=90;reason='recent-partial';}
+    else if(skill.status==='learning'){priority=75;reason='learning';}
+    else if(skill.status==='not-enough-evidence'){priority=60;reason='collect-more-evidence';}
+    else if(skill.status==='improving'){priority=50;reason='reinforce';}
+    else if(skill.status==='mastered'&&differenceInDays(asOf,skill.latestObservedOn)>=14){priority=20;reason='retention-check';}
+    return {...skill,priority,reason};
+  }).filter(item=>item.priority>0).sort((a,b)=>b.priority-a.priority||a.subject.localeCompare(b.subject)||a.skill.localeCompare(b.skill))
+    .slice(0,8).map(({subject,skill,priority,reason,status,confidence,trend})=>({subject,skill,priority,reason,status,confidence,trend}));
+}
+export function validateLearningHistory(history){
+  allowedKeys(history,HISTORY_KEYS,'learning history');
+  if(history.schemaVersion!==1||!Array.isArray(history.observations)||!Array.isArray(history.skills)||!Array.isArray(history.practiceTargets))throw new Error('Unsupported learning history');
+  if(history.updatedOn!==null&&!day(history.updatedOn))throw new Error('Invalid learning history updatedOn');
+  unique(history.observations.map(item=>item.id),'history observation IDs');
+  history.observations.forEach((item,index)=>validateObservation(item,'history observation '+index));
+  return {observations:history.observations.length,skills:history.skills.length,practiceTargets:history.practiceTargets.length};
+}
+export function mergeLearningHistory(current,batch){
+  validateObservationBatch(batch);
+  const history=current||{schemaVersion:1,updatedOn:null,observations:[],skills:[],practiceTargets:[]};
+  validateLearningHistory(history);
+  const merged=new Map(history.observations.map(item=>[item.id,structuredClone(item)]));
+  for(const observation of batch.observations){
+    const old=merged.get(observation.id);
+    if(old&&JSON.stringify(old)!==JSON.stringify(observation))throw new Error('Observation ID collision: '+observation.id);
+    if(!old)merged.set(observation.id,structuredClone(observation));
+  }
+  const observations=[...merged.values()].sort((a,b)=>eventDay(a).localeCompare(eventDay(b))||a.id.localeCompare(b.id));
+  const skills=skillSummary(observations,batch.asOf);
+  const next={schemaVersion:1,updatedOn:batch.asOf,observations,skills,practiceTargets:practiceTargets(skills,observations,batch.asOf)};
+  validateLearningHistory(next);
+  return next;
+}
+export async function integrateLearningHistory(historyPath,batchPath,{write=false,repoRoot=root}={}){
+  const target=assertPrivatePath(historyPath,'Learning history',repoRoot);
+  const batchFile=assertPrivatePath(batchPath,'Reviewed observation batch',repoRoot);
+  const batch=JSON.parse(await readFile(batchFile,'utf8'));
+  validateObservationBatch(batch);
+  let current=null;
+  try{current=JSON.parse(await readFile(target,'utf8'));}catch(error){if(error.code!=='ENOENT')throw error;}
+  const next=mergeLearningHistory(current,batch);
+  const before=current?JSON.stringify(current):null,after=JSON.stringify(next);
+  const changed=before!==after;
+  let lock,tmp,ownsTmp=false;
+  try{
+    if(write){
+      await mkdir(path.dirname(target),{recursive:true});
+      lock=await open(target+'.lock','wx');
+      if(current){
+        const latest=JSON.parse(await readFile(target,'utf8'));
+        if(JSON.stringify(latest)!==before)throw new Error('Learning history changed during intake; retry against the latest private file.');
+      }
+      if(changed){
+        tmp=target+'.tmp-'+process.pid;
+        await writeFile(tmp,JSON.stringify(next,null,2)+'\n',{flag:'wx'});
+        ownsTmp=true;
+        await rename(tmp,target);
+        ownsTmp=false;
+      }
+    }
+  } finally {
+    if(lock){await lock.close();await unlink(target+'.lock').catch(()=>{});}
+    if(ownsTmp&&tmp)await unlink(tmp).catch(()=>{});
+  }
+  return {mode:write?'write':'dry-run',changed,observations:next.observations.length,skills:next.skills.length,practiceTargets:next.practiceTargets.length,updatedOn:next.updatedOn};
+}
+if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
+  const args=process.argv.slice(2),write=args.includes('--write'),paths=args.filter(arg=>arg!=='--write');
+  try{
+    if(paths.length!==2)throw new Error('Usage: node scripts/learning-history.mjs /private/path/history.json /private/path/reviewed-observations.json [--write]');
+    console.log(JSON.stringify(await integrateLearningHistory(paths[0],paths[1],{write})));
+  }catch(error){console.error(error.message);process.exitCode=1;}
+}
