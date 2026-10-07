@@ -6,7 +6,9 @@ test("manifest remains installable-quality",async({request})=>{
   expect(response.ok()).toBeTruthy();
   const manifest=await response.json();
   expect(manifest.display).toBe("standalone");
-  expect(manifest.theme_color).toBe("#0b3c74");
+  const html=await request.get("/").then(r=>r.text());
+  expect(manifest.theme_color).toMatch(/^#[a-f0-9]{6}$/i);
+  expect(html).toContain('name="theme-color" content="'+manifest.theme_color+'"');
   expect(manifest.start_url).toContain("#today");
   expect(manifest.icons?.length).toBeGreaterThanOrEqual(2);
 });
@@ -23,7 +25,7 @@ test("standalone mode boots the same five-tab app shell",async({browser})=>{
   const page=await context.newPage();
   await page.goto("http://127.0.0.1:4173/#family");
   await expect(page.locator(".family-screen")).toBeVisible({timeout:10_000});
-  await expect(page.locator(".bottom-nav button")).toHaveCount(5);
+  await expect(page.locator(".bottom-nav button")).toHaveCount(4);
   await context.close();
 });
 
@@ -64,19 +66,13 @@ test("Games and their saved, STAR and mixed source banks remain playable offline
   try{
     await page.reload({waitUntil:'domcontentloaded'});
     await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready',{timeout:10_000});
-    await expect(page.locator('.study-game-grid > .study-game-tile')).toHaveCount(4);
-    for(const source of ['saved','star','mix']){
-      await page.locator('[data-study-source]').selectOption(source);
-      if(source==='mix'){
-        await page.locator('[data-study-pick="weekly"]').uncheck();
-        await page.locator('[data-study-pick="saved"]').check();
-        await page.locator('[data-study-pick="star"]').check();
-      }
-      await page.locator('[data-game-start="math"]').click();
+    await expect(page.locator('.study-game-grid > .study-game-tile')).toHaveCount(5);
+    for(const mode of ['math','reading','mix']){
+      await page.locator('[data-game-start="'+mode+'"]').click();
       const prompt=await page.locator('.game-question-card > h2').innerText();
-      const allowed=source==='mix'?[...banks.saved,...banks.star]:banks[source];
+      const allowed=[...banks.saved,...banks.star];
       const question=allowed.find(row=>row.prompt===prompt);
-      expect(question,`${source} offline question belongs to a warmed selected bank`).toBeTruthy();
+      expect(question,`${mode} offline question belongs to a warmed reviewed or original bank`).toBeTruthy();
       await page.locator('[data-game-hint]').click();
       await expect(page.locator('.game-hint')).toBeVisible();
       const beforeLearning=await page.evaluate(()=>window.ABVMStudyGames.loadLearning());
@@ -90,9 +86,8 @@ test("Games and their saved, STAR and mixed source banks remain playable offline
       expect(changed[0][1].LastResolution.correct).toBe(true);
       await page.locator('[data-game-home]').click();
     }
-    await page.locator('[data-study-source]').selectOption('saved');
     await page.locator('[data-study-notes] > summary').click();
-    await expect(page.locator('[data-study-notes]')).toContainText('Undated schoolwork');
+    await expect(page.locator('[data-study-notes]')).toContainText('Reading / ELA');
   }finally{await context.setOffline(false);}
 });
 

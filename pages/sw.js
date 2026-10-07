@@ -1,20 +1,22 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v129-study-cleanup";
+const CACHE = "abvm-grade2-parent-companion-v133-consumer-app";
 const STATIC_SHELL = [
   "./index.html",
-  "./styles.css?v=105",
-  "./study-support.js?v=2",
-  "./app.js?v=124",
+  "./styles.css?v=107",
+  "./study-support.js?v=3",
+  "./app.js?v=127",
+  "./product-view.js?v=1",
+  "./study-teaching.css?v=1",
   "./school-updates.js?v=2",
-  "./weekly-learning.js?v=4",
-  "./study-games.js?v=98",
-  "./study-games-view.js?v=10",
+  "./weekly-learning.js?v=5",
+  "./study-games.js?v=100",
+  "./study-games-view.js?v=11",
   "./manifest.webmanifest",
   "./assets/abvm-app-icon-180.png",
   "./assets/abvm-app-icon-192.png",
   "./assets/abvm-app-icon-512.png"
 ];
-const OPTIONAL_DATA = ["./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./study-materials.mjs", "./study-games-materials-view.mjs", "./study-games-materials.css?v=6", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs","./study-resources.mjs", "./study-clarity.css?v=1", "./study-model.mjs", "./star-practice.mjs", "./family-view.css?v=1", "./visual-polish.css?v=2", "./lunch-art.js?v=1", "./school-photos.css?v=1", "./assets/school/abvm-school-sign.webp", "./assets/school/abvm-school-hero.webp", "./assets/school/abvm-school-aerial.webp", "./assets/school/abvm-school-facade.webp"];
+const OPTIONAL_DATA = ["./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./study-materials.mjs", "./study-games-materials-view.mjs", "./study-games-materials.css?v=10", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs","./study-resources.mjs", "./study-model.mjs", "./star-practice.mjs", "./lunch-art.js?v=1", "./assets/school/abvm-school-sign.webp", "./assets/school/abvm-school-hero.webp", "./assets/school/abvm-school-aerial.webp", "./assets/school/abvm-school-facade.webp"];
 
 self.addEventListener("install",event=>{
   event.waitUntil((async()=>{

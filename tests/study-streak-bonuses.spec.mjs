@@ -23,7 +23,7 @@ test.beforeEach(async({page})=>{
 
 test('first-response correct and incorrect streaks progress in opposite directions without retry gaming',async({page})=>{
   const questions=await catalog(page);
-  await page.getByRole('button',{name:/Quick Mix/i}).click();
+  await page.getByRole('button',{name:/Mix/i}).click();
 
   for(let i=1;i<=3;i++){
     const item=await visibleQuestion(page,questions);
@@ -56,7 +56,7 @@ test('first-response correct and incorrect streaks progress in opposite directio
 
 test('perfect round caps positive streak adjustment at +10 and saves +20 total Study Stars',async({page})=>{
   const questions=await catalog(page);
-  await page.getByRole('button',{name:/Quick Mix/i}).click();
+  await page.getByRole('button',{name:/Mix/i}).click();
   for(let i=0;i<8;i++){
     const item=await visibleQuestion(page,questions);
     await page.locator('[data-game-answer]').nth(item.correct).click();

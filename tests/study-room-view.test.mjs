@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createReadAloud, destinationMarkup, roomIcon } from '../pages/study-room-view.mjs';
+import { createReadAloud } from '../pages/study-room-view.mjs';
 
 function speechFixture() {
   const calls = { cancelled: 0, spoken: [] };
@@ -15,26 +15,6 @@ function speechFixture() {
   };
   return { calls, win, reader: createReadAloud(win) };
 }
-
-test('all four destinations preserve child-facing labels', () => {
-  for (const [key, label] of Object.entries({weekly:'This week',cumulative:'All my learning',star:'STAR practice',games:'Make a mix'})) {
-    assert(destinationMarkup(key).includes(label));
-    assert(destinationMarkup(key).includes('aria-hidden="true"'));
-  }
-});
-
-test('unknown and inherited destination names render no controls', () => {
-  for (const key of ['missing', 'constructor', '__proto__', 'toString', '', null]) {
-    assert.equal(destinationMarkup(key), '');
-  }
-});
-
-test('unknown and inherited icon names use the accessible fallback', () => {
-  for (const key of ['missing', 'constructor', '__proto__', 'toString', null]) {
-    assert.equal(roomIcon(key), roomIcon('book'));
-  }
-  assert(roomIcon('sound').includes('focusable="false"'));
-});
 
 test('unavailable speech remains an inert optional feature', () => {
   for (const win of [undefined, {}, {speechSynthesis:{}}, {speechSynthesis:{speak(){},cancel(){}}}]) {

@@ -209,7 +209,7 @@ test('Study Games source identity changes when the certified bank fingerprint ch
 
 test('two distinct misses teach before resolving and record one failed learning opportunity', async ({ page }) => {
   await page.evaluate(() => localStorage.clear());
-  await page.getByRole('button', { name: /Quick Mix/i }).click();
+  await page.getByRole('button', { name: /Mix/i }).click();
   await expect(page.locator('.game-question-card')).toBeVisible();
 
   const prompt = await page.locator('.game-question-card h2').textContent();
@@ -252,7 +252,7 @@ test('two distinct misses teach before resolving and record one failed learning 
 
 test('a retry-correct answer is recorded separately from independent first-try mastery', async ({ page }) => {
   await page.evaluate(() => localStorage.clear());
-  await page.getByRole('button', { name: /Quick Mix/i }).click();
+  await page.getByRole('button', { name: /Mix/i }).click();
   await expect(page.locator('.game-question-card')).toBeVisible();
 
   const prompt = await page.locator('.game-question-card h2').textContent();
@@ -304,7 +304,7 @@ test('two resolved failures retain the same-skill support and Teach Card contrac
     const learning=engine.recordLearning(current,false,{attemptCount:3,incorrectCount:3,hintCount:0});
     const html=window.ABVMStudyGameView.play({
       g:{supportMode:true,comebackMode:false,index:0,questions:[support],selectedIndex:null,answered:false,retry:0,score:0,wrong:[]},
-      mode:{title:'Quick Mix'},q:support,teach,retryInstruction:teach.instruction,
+      mode:{title:'Mix'},q:support,teach,retryInstruction:teach.instruction,
       labels:{direct:'Direct practice',transfer:'Try it a new way',reasoning:'Explain your thinking'}
     });
     return {currentId:current.id,supportId:support.id,skill:current.skill,supportSkill:support.skill,consecutiveWrong:learning.ConsecutiveWrong,html};
@@ -442,7 +442,7 @@ test('a persisted due Comeback is shown unscored and records RememberedLater aft
   });
   expect(seeded).not.toBeNull();
 
-  await page.getByRole('button', { name: /Quick Mix/i }).click();
+  await page.getByRole('button', { name: /Mix/i }).click();
   await expect(page.locator('.game-topbar')).toContainText('Comeback');
   await expect(page.locator('.adaptive-note')).toContainText('not part of the section score');
   await expect(page.locator('.game-topbar b')).toHaveCount(0);

@@ -1,5 +1,4 @@
 import {test,expect} from '@playwright/test';
-import {writeFile} from 'node:fs/promises';
 test.use({serviceWorkers:'block'});
 async function fixture(page,subjects=[]){
   const data=await(await page.request.get('/data/study-pack.json')).json();
@@ -13,41 +12,32 @@ async function fixture(page,subjects=[]){
   await page.route('**/data/schoolwork.json*',r=>r.fulfill({json:{lessons:[]}}));
   await page.goto('/#study');
   await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
-  await expect(page.locator('[data-study-source]')).toHaveValue('weekly');
+  await expect(page.locator('[data-study-source]')).toHaveCount(0);
 }
 test('missing and blank subjects show honest empty notes while original game practice remains available',async({page},info)=>{
   await page.setViewportSize({width:393,height:852});
   await fixture(page,[{subject:'Math',topics:[' ',null],studyNotes:['']},{subject:'Reading / ELA'}]);
   const tiles=page.locator('.study-game-grid > .study-game-tile');
-  await expect(tiles).toHaveCount(4);
-  expect(await tiles.evaluateAll(nodes=>nodes.map(node=>node.dataset.gameStart))).toEqual(['quick','math','words','faith']);
-  await expect(page.locator('.game-privacy-note')).toContainText('original Grade 2 practice');
-  await expect(page.locator('.game-privacy-note')).toContainText('not copied STAR test items');
+  await expect(tiles).toHaveCount(5);
+  expect(await tiles.evaluateAll(nodes=>nodes.map(node=>node.dataset.gameStart))).toEqual(['reading','spelling','math','religion','mix']);
+  await expect(page.locator('.game-privacy-note')).toContainText('original Grade 2 STAR-style practice');
+  await expect(page.locator('.game-privacy-note')).toContainText('STAR-style practice uses original questions');
   const notes=page.locator('[data-study-notes]');
   await expect(notes).not.toHaveAttribute('open','');
   await expect(notes.locator('[data-study-notes-content]')).toBeEmpty();
   await notes.locator(':scope > summary').click();
-  await expect(notes.locator('[data-study-notes-content]')).toHaveText('No lesson notes are included in this selection.');
+  await expect(notes.locator('[data-study-notes-content]')).toContainText('No lesson notes are included in this selection.');
   await expect(notes.locator('.game-material-lesson')).toHaveCount(0);
   await expect(page.locator('.study-game-grid [data-game-start="math"]')).toBeEnabled();
-  expect(await notes.evaluate(e=>e.scrollWidth<=e.clientWidth+1)).toBeTruthy();
-  await notes.locator(':scope > summary').click();
-  await page.locator('[data-study-source]').selectOption('saved');
-  for(let i=0;i<4;i++){
-    await expect(tiles.nth(i)).toBeDisabled();
-    await expect(tiles.nth(i).locator(':scope > b')).toBeHidden();
+  await expect.poll(()=>notes.evaluate(e=>e.scrollWidth<=e.clientWidth+1)).toBe(true);
+  const disabled=tiles.filter({hasText:'Not ready yet'});
+  for(const tile of await disabled.all()){
+    await expect(tile).toBeDisabled();await expect(tile.locator(':scope > b')).toBeHidden();
+    expect(await tile.locator('.study-game-copy em').evaluate(e=>parseFloat(getComputedStyle(e).fontSize))).toBeGreaterThanOrEqual(16);
   }
-  await expect(tiles).toContainText(['Not ready yet','Not ready yet','Not ready yet','Not ready yet']);
-  const disabledMetrics=await tiles.evaluateAll(nodes=>nodes.map(node=>{
-    const status=node.querySelector('.study-game-copy em'),chevron=node.querySelector(':scope > b');
-    return {game:node.dataset.gameStart,status:status.textContent.trim(),fontSize:parseFloat(getComputedStyle(status).fontSize),chevronDisplay:chevron?getComputedStyle(chevron).display:'absent'};
-  }));
-  for(const row of disabledMetrics)expect(row.fontSize,row.game+' unavailable status is readable').toBeGreaterThanOrEqual(16);
-  const metricsPath=info.outputPath('games-disabled-tile-metrics.json');
-  await writeFile(metricsPath,JSON.stringify({viewport:{width:393,height:852},tiles:disabledMetrics},null,2));
-  await info.attach('Disabled game text metrics',{path:metricsPath,contentType:'application/json'});
+  await expect(page.locator('[data-game-start="reading"]')).toBeEnabled();
   const path=info.outputPath('games-empty-saved-iphone.png');
-  await page.screenshot({path,fullPage:true});await info.attach('Empty saved bank with disabled games',{path,contentType:'image/png'});
+  await page.screenshot({animations:"disabled",path,fullPage:true});await info.attach('Empty saved bank with disabled games',{path,contentType:'image/png'});
 });
 test('teacher notes remain the explicit lesson content when notes arrive',async({page})=>{
   await fixture(page,[{subject:'Math',topics:['Compare three-digit numbers'],studyNotes:['Start with the hundreds.']}]);

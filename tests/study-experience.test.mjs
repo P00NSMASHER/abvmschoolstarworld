@@ -69,7 +69,7 @@ test('new arithmetic, time, comparison, chart and measurement keys independently
 });
 test('Math rounds stay in subject with no duplicates across four hundred seeds',()=>{for(let seed=0;seed<400;seed++){const round=engine.selectQuestions(catalog,{subjects:['Math'],count:8,seed:String(seed)});assert.equal(round.length,8);assert(round.every(q=>q.subject==='Math'));assert.equal(new Set(round.map(practiceIdentity)).size,8)}});
 test('every reviewed schoolwork item has a non-boilerplate instructional cue',()=>{const data=JSON.parse(readFileSync(new URL('../pages/data/schoolwork.json',import.meta.url),'utf8'));const qs=data.lessons.flatMap(l=>l.questions);assert.equal(qs.length,52);assert(new Set(qs.map(q=>q.hint)).size>=20);for(const q of qs){assert(!q.hint.includes('Review the example in this lesson'));assert(q.hint.length>=35);assert.equal(q.choices.filter(c=>c===q.answer).length,1)}});
-test('new modules and stylesheet are present in offline asset manifest',()=>{const sw=readFileSync(new URL('../pages/sw.js',import.meta.url),'utf8');for(const name of ['study-experience.mjs','study-clarity.css?v=1','study-support.js?v=2','study-games.js?v=98'])assert(sw.includes(name))});
+test('new modules and stylesheet are present in offline asset manifest',()=>{const sw=readFileSync(new URL('../pages/sw.js',import.meta.url),'utf8');for(const name of ['study-experience.mjs','study-teaching.css?v=1','study-support.js?v=3','study-games.js?v=100'])assert(sw.includes(name))});
 
 // Rotation must survive actual display/answer recording, not just new seeds.
 test('three completed Math sessions avoid reusing recently shown questions',()=>{
@@ -82,14 +82,16 @@ test('three completed Math sessions avoid reusing recently shown questions',()=>
  assert.equal(new Set(prompts).size,24);
 });
 
-test('a sparse first-time current subject bank is not padded with fallback',()=>{
+test('a sparse current subject bank fills with STAR-style practice only after current material',()=>{
  const e=loadEngine();
  const current={id:'single-current',subject:'Math',skill:'math-subtraction',tier:'material',questionType:'direct',difficulty:2,prompt:'Single current subtraction question',answer:'5',choices:['5','4','6'],variantFingerprint:'single-current'};
  const star=Array.from({length:8},(_,i)=>({id:'thin-star-'+i,subject:'Math',skill:'place-value',tier:'star-fallback',questionType:'direct',difficulty:2,prompt:'Thin fallback '+i,answer:String(i),choices:[String(i),String(i+1),String(i+2)],variantFingerprint:'thin-star-'+i}));
  const catalog={sourceKey:'sparse-current-subject',questions:[current,...star]};
  e.markQuestionShown({id:'prior-reading',subject:'Reading / ELA',skill:'theme',tier:'material',questionType:'direct',difficulty:2,variantFingerprint:'prior-reading'},catalog.sourceKey);
  const first=e.selectQuestions(catalog,{subjects:['Math'],count:8,seed:'first',skillStats:{}});
- assert.deepEqual(Array.from(first,q=>q.id),['single-current']);
+ assert.equal(first.length,8);
+ assert.equal(first[0].id,'single-current');
+ assert(first.slice(1).every(q=>q.tier==='star-fallback'));
  e.markQuestionShown(first[0],catalog.sourceKey);
  const second=e.selectQuestions(catalog,{subjects:['Math'],count:8,seed:'second',skillStats:{}});
  assert.equal(second.length,8);

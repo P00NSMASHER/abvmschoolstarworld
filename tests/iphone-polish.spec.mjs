@@ -1,21 +1,19 @@
 import {test,expect} from '@playwright/test';
 test.use({serviceWorkers:'block'});
 
-const gameModes=['quick','math','words','faith'];
+const gameModes=['reading','spelling','math','religion','mix'];
 
 async function expectGameMenu(page){
   const grid=page.locator('.study-game-grid');
   await expect(grid).toBeVisible({timeout:10_000});
   const tiles=grid.locator(':scope > .study-game-tile');
-  await expect(tiles).toHaveCount(4);
+  await expect(tiles).toHaveCount(5);
   expect(await tiles.evaluateAll(nodes=>nodes.map(node=>node.dataset.gameStart))).toEqual(gameModes);
   return grid;
 }
 
 async function openNotes(page){
-  const source=page.locator('select[data-study-source]');
-  await expect(source).toBeEnabled({timeout:10_000});
-  await source.selectOption('weekly');
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state',/ready|partial/);
   const notes=page.locator('details[data-study-notes]');
   if(!await notes.evaluate(node=>node.open))await notes.locator(':scope > summary').click();
   await expect(notes).toHaveAttribute('open','');
@@ -26,6 +24,41 @@ async function openNotes(page){
   }
   return notes;
 }
+
+test('navigation labels reflow at 200 percent text size without overlapping touch targets',async({page},info)=>{
+  await page.emulateMedia({reducedMotion:'reduce'});
+  for(const width of [320,393,820,1440]){
+    await page.setViewportSize({width,height:width>=700?1024:852});
+    await page.goto('/#today');
+    const nav=page.getByRole('navigation',{name:'App navigation'});
+    const normal=await nav.locator('button b').first().evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
+    await page.evaluate(()=>{const root=document.documentElement;root.style.fontSize=2*parseFloat(getComputedStyle(root).fontSize)+'px';});
+    const targets=await nav.locator('button').evaluateAll(nodes=>nodes.map(el=>{
+      const b=el.getBoundingClientRect(),label=el.querySelector('b'),r=label.getBoundingClientRect();
+      return {label:label.textContent,left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height,
+        labelLeft:r.left,labelRight:r.right,labelTop:r.top,labelBottom:r.bottom,fontSize:parseFloat(getComputedStyle(label).fontSize)};
+    }));
+    expect(targets).toHaveLength(4);
+    for(const target of targets){
+      const context=JSON.stringify({width,target});
+      expect(target.width,context).toBeGreaterThanOrEqual(44);expect(target.height,context).toBeGreaterThanOrEqual(44);
+      expect(target.fontSize,context).toBeGreaterThanOrEqual(normal*2-.1);
+      expect(target.labelLeft,context).toBeGreaterThanOrEqual(target.left-1);expect(target.labelRight,context).toBeLessThanOrEqual(target.right+1);
+      expect(target.labelTop,context).toBeGreaterThanOrEqual(target.top-1);expect(target.labelBottom,context).toBeLessThanOrEqual(target.bottom+1);
+      expect(target.left,context).toBeGreaterThanOrEqual(-1);expect(target.right,context).toBeLessThanOrEqual(width+1);
+    }
+    for(let i=0;i<targets.length;i++)for(let j=i+1;j<targets.length;j++){
+      const a=targets[i],b=targets[j];
+      const overlapX=Math.min(a.right,b.right)-Math.max(a.left,b.left),overlapY=Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top);
+      expect(overlapX>1&&overlapY>1,`${width}px: ${a.label} and ${b.label} overlap`).toBe(false);
+    }
+    await nav.getByRole('button',{name:'Study',exact:true}).click();
+    await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+    await expect(nav.getByRole('button',{name:'Study',exact:true})).toHaveAttribute('aria-current','page');
+    await page.screenshot({animations:'disabled',path:info.outputPath(`navigation-200-percent-${width}.png`)});
+    await page.evaluate(()=>document.documentElement.style.fontSize='');
+  }
+});
 
 test('long Family and Study cards never clip their content',async({page})=>{
   for(const viewport of [{width:320,height:568},{width:393,height:852},{width:820,height:1180},{width:1440,height:900}]){
@@ -47,7 +80,7 @@ test('Sunday Week opens the coming school week and can go back',async({page})=>{
   await page.clock.setFixedTime(new Date('2026-10-04T12:00:00-04:00'));
   await page.goto('/#week');
   await expect(page.locator('.week-nav')).toContainText('Oct 5 – 9');
-  await expect(page.locator('.week-nav')).toContainText('COMING SCHOOL WEEK');
+  await expect(page.locator('.week-nav')).toContainText('THIS SCHOOL WEEK');
   await page.getByRole('button',{name:'Previous week',exact:true}).click();
   await expect(page.locator('.week-nav')).toContainText('Sep 28 – Oct 2');
 });
@@ -131,15 +164,19 @@ test('larger preferred text reflows without hiding Family or Study content',asyn
   }
 });
 
-test('touch navigation reaches the five tabs and Study Games',async({page})=>{
+test('touch navigation reaches the four destinations and nested calendar',async({page})=>{
   await page.goto('/#today');
   await expect(page.locator('.screen')).toBeVisible();
-  for(const label of ['Week','Calendar','Family','Study','Today']){
+  for(const label of ['Week','Progress','Study','Today']){
     const button=page.getByRole('button',{name:label,exact:true});
     await button.click();
     await expect(button).toHaveAttribute('aria-current','page');
     await expect(page.locator('.screen')).toBeVisible();
   }
+  await page.getByRole('button',{name:'Week',exact:true}).click();
+  await page.getByRole('button',{name:'Calendar',exact:true}).click();
+  await expect(page.locator('.calendar-screen')).toBeVisible();
+  await expect(page.locator('.bottom-nav [data-tab="week"]')).toHaveAttribute('aria-current','page');
   await page.getByRole('button',{name:'Study',exact:true}).click();
   await expectGameMenu(page);
   await page.goto('/#games');
@@ -229,7 +266,7 @@ test('visual integrity audit keeps every primary screen inside the app canvas',a
 
 
 
-test('saved-material loading keeps the four Games playable and the grid stable',async({page})=>{
+test('saved-material loading keeps the five subjects playable and the grid stable',async({page})=>{
   const [schoolwork,archive]=await Promise.all([
     page.request.get('/data/schoolwork.json').then(response=>response.json()),
     page.request.get('/data/study-archive.json').then(response=>response.json())
@@ -260,13 +297,13 @@ test('saved-material loading keeps the four Games playable and the grid stable',
         await page.locator('[data-game-home]').click();
         await expectGameMenu(page);
       }
-      const before=await grid.evaluate(el=>el.getBoundingClientRect().top);
+      const before=await grid.evaluate(el=>{const host=el.closest('.screen');return el.getBoundingClientRect().top-host.getBoundingClientRect().top+host.scrollTop;});
       release();
       await expect(host).toHaveAttribute('data-study-state','ready',{timeout:10_000});
       await expectGameMenu(page);
-      const after=await grid.evaluate(el=>el.getBoundingClientRect().top);
+      const after=await grid.evaluate(el=>{const host=el.closest('.screen');return el.getBoundingClientRect().top-host.getBoundingClientRect().top+host.scrollTop;});
       expect(Math.abs(after-before),`Games grid shift at ${viewport.width}px`).toBeLessThanOrEqual(8);
-      await expect(page.locator('select[data-study-source]')).toBeEnabled();
+      await expect(page.locator('select[data-study-source]')).toHaveCount(0);
       const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
       expect(overflow).toBeFalsy();
     }finally{
@@ -277,7 +314,7 @@ test('saved-material loading keeps the four Games playable and the grid stable',
   }
 });
 
-test('saved-material failure keeps weekly notes and all four Games usable and retry recovers',async({page})=>{
+test('saved-material failure keeps weekly notes and all five subjects usable and retry recovers',async({page})=>{
   await page.setViewportSize({width:393,height:852});
   const [data,schoolwork]=await Promise.all([
     page.request.get('/data/study-pack.json').then(response=>response.json()),

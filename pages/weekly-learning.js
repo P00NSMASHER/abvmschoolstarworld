@@ -36,7 +36,7 @@ function render(args={}){
     line("Strong today",data.strong,"No current skills here yet.","ok")+
     line("Remembered later",data.remembered,"No comeback evidence yet.","ok")+
     line("Practice again",data.practice,"No recent practice needs another look.","warn")+
-    '</div><small>Current school skills only · based on Study Games practice on this device · not a grade.</small></section>';
+    '</div><small>Current school skills only · based on practice on this device · not a grade.</small></section>';
 }
 function renderChanges(feed={}){
   const items=Array.isArray(feed?.items)?feed.items:[];
@@ -59,7 +59,7 @@ function renderWeekOverview({days=[],lunchForDate,eventItemsForDate,kindClass,fm
     const meal=closed||lunch?.status==="no-school"?"No school":lunch
       ?(typeof lunchText==="function"?lunchText(lunch):String(lunch?.items||""))
       :(typeof lunchUnavailableText==="function"?lunchUnavailableText(date):"Lunch not yet verified.");
-    return '<div class="week-overview-row"><time datetime="'+dateKey(date)+'">'+esc(typeof fmtShort==="function"?fmtShort(date):"")+'</time><span>'+esc(meal)+'</span></div>';
+    return '<div class="week-overview-row"><time datetime="'+dateKey(date)+'">'+esc(typeof fmtShort==="function"?fmtShort(date):"")+'</time><span>'+esc(closed||lunch?.status==='no-school'?meal:lunch?.items?.[0]||meal)+'</span></div>';
   }).join("");
   const seen=new Set(),groups=[];
   for(const date of safeDays){
@@ -75,7 +75,7 @@ function renderWeekOverview({days=[],lunchForDate,eventItemsForDate,kindClass,fm
   }
   const testRows=groups.length?groups.map(group=>'<div class="week-overview-row"><time datetime="'+dateKey(group.date)+'">'+esc(typeof fmtShort==="function"?fmtShort(group.date):"")+'</time><ul>'+group.labels.map(label=>'<li>'+esc(label)+'</li>').join("")+'</ul></div>').join("")
     :'<p class="week-overview-empty">No verified tests are listed for this school week.</p>';
-  return '<div class="week-overview"><div class="week-overview-heading"><p>WEEKLY SUMMARY</p><h2 id="week-overview-title">This week at a glance</h2></div><div class="week-overview-grid"><div class="week-overview-card week-lunches"><div class="week-overview-card-head"><span class="week-overview-icon lunch">'+icon("lunch")+'</span><h3 id="week-lunches-title">Lunches this week</h3></div><div class="week-overview-list">'+lunches+'</div></div><div class="week-overview-card week-tests"><div class="week-overview-card-head"><span class="week-overview-icon tests">'+icon("tests")+'</span><h3 id="week-tests-title">Tests this week</h3></div><div class="week-overview-list">'+testRows+'</div></div></div></div>';
+  return '<div class="week-overview"><div class="week-overview-heading"><p>WEEKLY SUMMARY</p><h2 id="week-overview-title">This week at a glance</h2><p class="week-overview-hint">Select a day for the full menu and plan.</p></div><div class="week-overview-grid"><div class="week-overview-card week-lunches"><div class="week-overview-card-head"><span class="week-overview-icon lunch">'+icon("lunch")+'</span><h3 id="week-lunches-title">Lunches this week</h3></div><div class="week-overview-list">'+lunches+'</div></div><div class="week-overview-card week-tests"><div class="week-overview-card-head"><span class="week-overview-icon tests">'+icon("tests")+'</span><h3 id="week-tests-title">Tests this week</h3></div><div class="week-overview-list">'+testRows+'</div></div></div></div>';
 }
 
 window.ABVMWeeklyLearning=Object.freeze({snapshot,render,renderChanges,renderWeekOverview});

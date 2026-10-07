@@ -1,6 +1,7 @@
 import {test,expect} from "@playwright/test";
 
 async function openTab(page,label){
+  if(label==="Calendar")await page.locator('.bottom-nav [data-tab="week"]').click();
   await page.getByRole("button",{name:label,exact:true}).click();
   await expect(page.locator(".screen")).toBeVisible();
 }
@@ -80,7 +81,7 @@ test("Week reminders follow the selected day instead of the first reminder",asyn
 });
 
 test("Family reuses the task policy and does not promote background routines",async({page})=>{
-  await openTab(page,"Family");
+  await openTab(page,"Progress");
   const actions=await page.locator(".family-actions-card").innerText();
   expect(actions).not.toContain("Cover books");
   expect(actions).not.toContain("Keep Reading Log and Behavior Chart in the HW folder");

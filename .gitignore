@@ -10,3 +10,6 @@ pages/data/study-pack-runtime.json
 private-learning/
 *.learning-private.json
 reviewed-observations*.json
+
+# Local Python validation artifacts.
+__pycache__/

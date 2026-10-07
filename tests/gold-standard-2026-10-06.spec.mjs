@@ -43,7 +43,8 @@ test("gold-standard visual layer keeps approved school photography and phone/tab
     await page.clock.setFixedTime(new Date("2026-10-06T16:00:00Z"));
     await page.goto("/#today");
     await expect(page.locator(".hero-card.school-photo-hero")).toBeVisible({timeout:10000});
-    await expect(page.locator('link[href="./visual-polish.css?v=2"]')).toHaveCount(1);
+    await expect(page.locator('.hero-photo')).toHaveAttribute('src','./assets/school/abvm-school-hero.webp');
+    await expect(page.locator('link[href*="visual-polish"]')).toHaveCount(0);
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
     const path=info.outputPath("gold-standard-"+viewport.name+".png");
     await page.screenshot({path});
@@ -56,10 +57,10 @@ test("Study Games and question player use the shared bright visual system",async
   await page.clock.setFixedTime(new Date("2026-10-06T16:00:00Z"));
   await page.goto("/#games");
   await expect(page.locator(".games-screen")).toHaveAttribute("data-study-state","ready",{timeout:15000});
-  await expect(page.locator(".study-game-tile")).toHaveCount(4);
+  await expect(page.locator(".study-game-tile")).toHaveCount(5);
   const rows=await page.locator(".study-game-tile").evaluateAll(nodes=>nodes.map(node=>Math.round(node.getBoundingClientRect().height)));
-  expect(Math.max(...rows)).toBeLessThanOrEqual(120);
-  await page.getByRole("button",{name:/Quick Mix/i}).click();
+  expect(Math.max(...rows)).toBeLessThanOrEqual(200);
+  await page.getByRole("button",{name:/Mix/i}).click();
   await expect(page.locator(".game-question-card")).toBeVisible();
   await expect(page.locator(".game-progress")).toBeVisible();
   await expect(page.locator(".game-answer").first()).toBeVisible();

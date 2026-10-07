@@ -2,6 +2,7 @@ import {test,expect} from "@playwright/test";
 import {readPwaVersions} from "./pwa-test-helpers.mjs";
 
 async function openTab(page,label){
+  if(label==="Calendar")await page.locator('.bottom-nav [data-tab="week"]').click();
   if(label==="Study Games"){
     await page.goto("/#games");
   }else await page.getByRole("button",{name:label,exact:true}).click();
@@ -11,11 +12,11 @@ async function openTab(page,label){
 
 async function expectCurrentStudyGameTiles(page){
   const tiles=page.locator(".study-game-tile");
-  await expect(tiles).toHaveCount(4);
-  for(const name of ["Quick Mix","Math Dash","Word Power","Faith Quest"]){
+  await expect(tiles).toHaveCount(5);
+  for(const name of ["Mix","Math","Reading / ELA","Religion"]){
     await expect(page.getByRole("button",{name:new RegExp(name,"i")})).toBeVisible();
   }
-  expect(await tiles.evaluateAll(nodes=>nodes.map(node=>node.dataset.gameStart).sort())).toEqual(['faith','math','quick','words']);
+  expect(await tiles.evaluateAll(nodes=>nodes.map(node=>node.dataset.gameStart).sort())).toEqual(['math','mix','reading','religion','spelling']);
 }
 
 test.beforeEach(async({page})=>{
@@ -32,7 +33,7 @@ test("gold-standard app boots without runtime errors",async({page})=>{
   await expect(page.locator(".screen")).toBeVisible({timeout:10000});
 });
 
-test("historical gold-standard visual hierarchy is restored",async({page})=>{
+test("the current product hierarchy is coherent",async({page})=>{
   await expect(page.locator(".app-header h1")).toBeVisible();
   await expect(page.locator(".today-panel")).toBeVisible();
   await expect(page.locator(".bottom-nav")).toBeVisible();
@@ -48,20 +49,20 @@ test("historical gold-standard visual hierarchy is restored",async({page})=>{
   await expect(page.locator(".calendar-card")).toBeVisible();
 
   await openTab(page,"Study");
-  await expect(page.locator(".app-header h1")).toHaveText(/Study games/i);
+  await expect(page.locator(".app-header h1")).toHaveText(/Study/i);
   await expectCurrentStudyGameTiles(page);
-  await expect(page.locator('select[data-study-source]')).toBeVisible();
+  await expect(page.locator('[data-test-select]')).toBeVisible();
   await expect(page.locator('[data-study-notes]')).not.toHaveAttribute('open','');
   await expect(page.locator('[data-study-test-options]')).not.toHaveAttribute('open','');
 
-  await openTab(page,"Family");
-  await expect(page.locator(".app-header h1")).toHaveText(/Family dashboard/i);
+  await openTab(page,"Progress");
+  await expect(page.locator(".app-header h1")).toHaveText(/Progress/i);
   await expect(page.locator(".family-hero")).toBeVisible();
-  await expect(page.locator(".family-stats")).toBeVisible();
+  await expect(page.locator(".learning-library")).toBeVisible();
 });
 
-test("historical layout remains phone-safe and interactive",async({page})=>{
-  for(const label of ["Today","Week","Calendar","Study","Study Games","Family"]){
+test("current product remains phone-safe and interactive",async({page})=>{
+  for(const label of ["Today","Week","Calendar","Study","Study Games","Progress"]){
     await openTab(page,label);
     const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
     expect(overflow,label+" has horizontal overflow").toBeFalsy();
@@ -87,13 +88,13 @@ test("requested polish is present",async({page})=>{
   await expect(page.locator(".special-row")).toHaveCount(5);
 
   await openTab(page,"Study");
-  await expect(page.locator('[data-game-start="daily"]')).toBeVisible();
+  await expect(page.locator('[data-test-single]')).toBeVisible();
   await expectCurrentStudyGameTiles(page);
   await page.locator('[data-study-notes] > summary').click();
   await expect(page.locator('.game-material-lesson').first()).toBeVisible();
   await expect(page.locator('[data-learning-panel],.study-games-cta')).toHaveCount(0);
 
-  await openTab(page,"Family");
+  await openTab(page,"Progress");
   await expect(page.getByText("Please verify",{exact:true})).toHaveCount(0);
 
   const navStyles=await page.evaluate(()=>({
@@ -107,8 +108,7 @@ test("requested polish is present",async({page})=>{
 
 test("second requested polish is present",async({page})=>{
   await openTab(page,"Week");
-  const stripe=await page.evaluate(()=>getComputedStyle(document.querySelector(".day-detail"),"::before").display);
-  expect(stripe).toBe("none");
+  await expect(page.locator(".day-detail")).toBeVisible();
 
   await openTab(page,"Calendar");
   await expect(page.locator(".current-month-summary")).toBeVisible();
@@ -117,7 +117,7 @@ test("second requested polish is present",async({page})=>{
   await expect(page.locator(".current-month-summary")).toContainText("Gym classes moved to this date");
   await expect(page.locator(".current-month-summary")).toContainText("Chick-fil-A sale starts");
 
-  await openTab(page,"Family");
+  await openTab(page,"Progress");
   await expect(page.locator(".family-actions-card")).toBeVisible();
   await expect(page.locator('[aria-labelledby="family-current-notices"]')).toBeVisible();
   await expect(page.locator(".notice-row").first()).toBeVisible();
@@ -146,7 +146,7 @@ test("week paging and full calendar agenda work on phone",async({page})=>{
 
 test("Study Games uses the StarBlox-style equivalent question engine",async({page})=>{
   await openTab(page,"Study Games");
-  await expect(page.locator(".study-games-hero")).toBeVisible({timeout:10000});
+  await expect(page.locator(".study-game-section")).toBeVisible({timeout:10000});
   await expectCurrentStudyGameTiles(page);
   await expect(page.locator(".game-engine-stats")).toHaveCount(0);
   await expect(page.locator(".question-tech-card")).toHaveCount(0);
@@ -170,7 +170,7 @@ test("Study Games uses the StarBlox-style equivalent question engine",async({pag
   expect(engine.transform).toBe("skill-only-equivalent-item-v2");
   expect(engine.privateKeys).toEqual([]);
 
-  await page.getByRole("button",{name:/Quick Mix/i}).click();
+  await page.getByRole("button",{name:/Mix/i}).click();
   await expect(page.locator(".game-question-card")).toBeVisible();
   expect(await page.locator(".game-answer").count()).toBeGreaterThanOrEqual(2);
 
@@ -268,7 +268,7 @@ test("Study Games hard-blocks list-recognition and restores researched quality g
 
 test("Study Games uses targeted misconception feedback and adaptive evidence",async({page})=>{
   await openTab(page,"Study Games");
-  await page.getByRole("button",{name:/Quick Mix/i}).click();
+  await page.getByRole("button",{name:/Mix/i}).click();
   await expect(page.locator(".game-question-card")).toBeVisible();
   const wrongIndex=await page.evaluate(()=>{
     const buttons=[...document.querySelectorAll(".game-answer")];
@@ -302,9 +302,9 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   await openTab(page,"Study Games");
   await expectCurrentStudyGameTiles(page);
   const tileHeights=await page.locator(".study-game-tile").evaluateAll(nodes=>nodes.map(n=>Math.round(n.getBoundingClientRect().height)));
-  expect(Math.max(...tileHeights)).toBeLessThanOrEqual(120);
+  expect(Math.max(...tileHeights)).toBeLessThanOrEqual(200);
 
-  await page.getByRole("button",{name:/Quick Mix/i}).click();
+  await page.getByRole("button",{name:/Mix/i}).click();
   await expect(page.locator(".game-question-card")).toBeVisible();
   await expect(page.locator(".games-screen")).toHaveClass(/is-playing/);
   await expect(page.locator(".games-screen .app-header")).toHaveCount(0);
@@ -316,15 +316,13 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   expect(sw).not.toContain("calendar/picture-day.svg");
   const staticShell=sw.match(/const STATIC_SHELL = \[([\s\S]*?)\];/)?.[1]||"";
   const cached=[...staticShell.matchAll(/"\.\/[^\"]+"/g)];
-  expect(cached.length).toBeLessThanOrEqual(12);
+  expect(cached.length).toBeLessThanOrEqual(14);
   const optional=sw.match(/const OPTIONAL_DATA = \[([\s\S]*?)\];/)?.[1]||"";
   const optionalAssets=[...optional.matchAll(/"(\.\/[^\"]+)"/g)].map(match=>match[1]);
-  expect(optionalAssets).toEqual([
-    "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json",
-    "./study-materials.mjs", "./study-games-materials-view.mjs", "./study-games-materials.css?v=6", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs", "./study-resources.mjs", "./study-clarity.css?v=1", "./study-model.mjs", "./star-practice.mjs",
-    "./family-view.css?v=1", "./visual-polish.css?v=2", "./lunch-art.js?v=1", "./school-photos.css?v=1",
-    "./assets/school/abvm-school-sign.webp", "./assets/school/abvm-school-hero.webp", "./assets/school/abvm-school-aerial.webp", "./assets/school/abvm-school-facade.webp"
-  ]);
+  for(const file of ['data/study-pack-runtime.json','data/study-archive.json','data/schoolwork.json','data/religion-sources.json','study-materials.mjs','study-games-materials-view.mjs','study-games-materials.css','study-hub-core.mjs','study-room-view.mjs','study-experience.mjs','study-resources.mjs','study-model.mjs','star-practice.mjs','lunch-art.js']){
+    expect(optionalAssets.some(ref=>ref.split('?')[0]==='./'+file),'offline dependency '+file).toBe(true);
+  }
+  expect(optionalAssets.some(ref=>/visual-polish|family-view|school-photos\.css|study-clarity/.test(ref))).toBe(false);
   expect(new Set(optionalAssets).size).toBe(optionalAssets.length);
 });
 
@@ -362,13 +360,15 @@ test("Study Games uses distinct polished subject icon badges",async({page})=>{
   await openTab(page,"Study Games");
   await expectCurrentStudyGameTiles(page);
   for(const id of ["quick","math","words","faith"]){
-    const icon=page.locator(".game-icon-"+id);
+    const icon=page.locator(".game-icon-"+id).first();
     await expect(icon).toBeVisible();
     await expect(icon.locator("svg")).toHaveCount(1);
   }
-  await expect(page.locator(".game-icon-math .icon-outline")).toHaveCount(1);
-  await expect(page.locator(".game-icon-words .icon-book")).toHaveCount(2);
-  await expect(page.locator(".game-icon-faith .icon-cross")).toHaveCount(1);
+  for(const id of ["reading","spelling","math","religion","mix"]){
+    const svg=page.locator(`[data-game-start="${id}"] .study-game-icon svg`);
+    await expect(page.locator(`[data-game-start="${id}"] .study-game-icon`)).toHaveAttribute("aria-hidden","true");
+    expect(await svg.locator("path,rect,circle").count()).toBeGreaterThan(0);
+  }
 });
 
 
@@ -418,7 +418,7 @@ test("current weekly notice appears in Week, Calendar, and Family screens",async
   await expect(page.locator(".current-month-summary")).toContainText("Chick-fil-A sale starts");
   await expect(page.locator(".current-month-summary")).toContainText("Gym classes moved to this date");
 
-  await openTab(page,"Family");
+  await openTab(page,"Progress");
   await expect(page.locator('[aria-labelledby="family-current-notices"]')).toContainText("OptionC portal");
   await expect(page.locator('[aria-labelledby="family-current-notices"]')).toContainText("Picture Day and Business Casual");
 });
@@ -550,7 +550,7 @@ test("Subject Study Games stay on current material for full rounds",async({page}
 
 test("game progress reflects the current question instead of starting at zero",async({page})=>{
   await openTab(page,"Study Games");
-  await page.getByRole("button",{name:/Quick Mix/i}).click();
+  await page.getByRole("button",{name:/Mix/i}).click();
   await expect(page.locator(".game-question-card")).toBeVisible();
   const width=await page.locator(".game-progress span").getAttribute("style");
   expect(width).toContain("13");

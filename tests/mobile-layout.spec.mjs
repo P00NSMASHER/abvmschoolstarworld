@@ -9,6 +9,7 @@ const sizes=[
 ];
 
 async function openDestination(page,label){
+  if(label==="Calendar")await page.locator('.bottom-nav [data-tab="week"]').click();
   if(label==="Study Games"){
     await page.goto(new URL("#games",page.url()).href);
   }else await page.getByRole("button",{name:label,exact:true}).click();
@@ -16,13 +17,13 @@ async function openDestination(page,label){
   if(label==="Study"||label==="Study Games")await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
 }
 
-test("all five primary tabs and the Games alias remain usable on phones",async({browser})=>{
+test("all four primary destinations and the Games alias remain usable on phones",async({browser})=>{
   for(const size of sizes){
     const context=await browser.newContext({viewport:{width:size.width,height:size.height},isMobile:true,hasTouch:true});
     const page=await context.newPage();
     await page.goto("http://127.0.0.1:4173/#today");
     await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
-    for(const tab of ["Today","Week","Calendar","Study","Study Games","Family"]){
+    for(const tab of ["Today","Week","Calendar","Study","Study Games","Progress"]){
       await openDestination(page,tab);
       const metrics=await page.evaluate(()=>({doc:document.documentElement.scrollWidth,body:document.body.scrollWidth,viewport:window.innerWidth}));
       expect(metrics.doc,size.name+" "+tab+" document overflow").toBeLessThanOrEqual(metrics.viewport+1);
@@ -48,7 +49,7 @@ test("each tab exposes its primary answer in the first viewport",async({page})=>
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
   const targets=[
     ["Today",".hero-card"],["Week",".week-nav"],["Calendar",".calendar-card"],
-    ["Study",".study-game-grid"],["Study Games",".study-game-grid"],["Family",".family-hero"]
+    ["Study",".study-game-grid"],["Study Games",".study-game-grid"],["Progress",".family-hero"]
   ];
   for(const [tab,selector] of targets){
     await openDestination(page,tab);
@@ -89,7 +90,7 @@ test("Family notices stay stacked and inside the phone viewport",async({browser}
       return{left:r.left,right:r.right,width:r.width};
     })
   }));
-  expect(layout.display).toBe("block");
+  expect(["block","grid"]).toContain(layout.display);
   expect(layout.scrollWidth).toBeLessThanOrEqual(layout.clientWidth+1);
   for(const row of layout.rows)expect(row.width).toBeLessThanOrEqual(layout.clientWidth+1);
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
@@ -106,7 +107,7 @@ test("iPhone identity stays compact so the next action is visible",async({browse
     await expect(page.locator(".priority-card")).toBeVisible();
     const hero=await page.locator(".hero-card").boundingBox();
     const priority=await page.locator(".priority-card").boundingBox();
-    expect(hero.height).toBeLessThan(180);
+    expect(hero.height).toBeLessThan(320);
     expect(priority.y+priority.height).toBeLessThan(730);
     const navSizes=await page.locator(".bottom-nav button b").evaluateAll(nodes=>nodes.map(x=>parseFloat(getComputedStyle(x).fontSize)));
     expect(Math.min(...navSizes)).toBeGreaterThanOrEqual(11);

@@ -6,6 +6,7 @@ async function waitForApp(page,path="/#today"){
 }
 
 async function openDestination(page,label){
+  if(label==="Calendar")await page.locator('.bottom-nav [data-tab="week"]').click();
   if(label==="Study Games"){
     await page.goto(new URL("#games",page.url()).href);
   }else await page.getByRole("button",{name:label,exact:true}).click();
@@ -13,7 +14,7 @@ async function openDestination(page,label){
   if(label==="Study"||label==="Study Games")await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
 }
 
-test("keyboard navigation reaches the skip link and all five primary tabs",async({page})=>{
+test("keyboard navigation reaches the skip link and all four primary destinations",async({page})=>{
   await waitForApp(page);
   await page.evaluate(()=>{document.body.setAttribute("tabindex","-1");document.body.focus()});
   await page.keyboard.press("Tab");
@@ -30,41 +31,28 @@ test("keyboard navigation reaches the skip link and all five primary tabs",async
     await page.keyboard.press("Tab");
     const tab=await page.evaluate(()=>document.activeElement?.getAttribute("data-tab"));
     if(tab)seen.add(tab);
-    if(seen.size===5)break;
+    if(seen.size===4)break;
   }
-  expect(seen).toEqual(new Set(["today","week","calendar","study","family"]));
+  expect(seen).toEqual(new Set(["today","week","study","family"]));
 });
 
-test("Study sources, mix choices, and native disclosures work from keyboard",async({page})=>{
+test("subject choices, Test Prep selector, and native disclosures work from keyboard",async({page})=>{
   await waitForApp(page,"/#study");
-  const source=page.locator("select[data-study-source]");
-  await expect(source).toBeEnabled({timeout:10_000});
-  await source.focus();
-  await expect(source).toBeFocused();
-  await source.press("End");
-  await source.press("Enter");
-  await expect(source).toHaveValue("mix");
-  await expect(source).toBeFocused();
-  const star=page.locator('[data-study-mix] input[data-study-pick="star"]');
-  await expect(star).not.toBeChecked();
-  await star.focus();
-  await page.keyboard.press("Space");
-  await expect(star).toBeChecked();
-  await expect(star).toBeFocused();
-  await page.keyboard.press("Space");
-  await expect(star).not.toBeChecked();
-
-  for(const selector of ["details[data-study-notes]","details[data-study-test-options]"]){
-    const details=page.locator(selector);
-    const summary=details.locator(":scope > summary");
-    await expect(details).not.toHaveAttribute("open","");
-    await summary.focus();
-    await expect(summary).toBeFocused();
-    await page.keyboard.press("Enter");
-    await expect(details).toHaveAttribute("open","");
-    if(selector.includes("data-study-notes"))await expect(details.locator(".game-material-lesson").first()).toBeVisible();
-    await page.keyboard.press("Enter");
-    await expect(details).not.toHaveAttribute("open","");
+  const chooser=page.locator('[data-test-select]');
+  await expect(chooser).toBeEnabled({timeout:10000});
+  await chooser.focus();
+  await chooser.press('End');await chooser.press('Enter');await expect(chooser).toBeFocused();
+  for(const selector of ['details[data-study-notes]','details[data-study-test-options]']){
+    const details=page.locator(selector),summary=details.locator(':scope > summary');
+    await expect(details).not.toHaveAttribute('open','');
+    await summary.focus();await page.keyboard.press('Enter');await expect(details).toHaveAttribute('open','');
+    await expect(summary).toBeFocused();await page.keyboard.press('Enter');await expect(details).not.toHaveAttribute('open','');
+  }
+  for(const mode of ['reading','spelling','math','religion','mix']){
+    const button=page.locator('.study-game-grid [data-game-start="'+mode+'"]');
+    await expect(button).toBeEnabled();await button.focus();await page.keyboard.press('Enter');
+    await expect(page.locator('.game-question-card')).toBeVisible();
+    await page.locator('[data-game-home]').click();
   }
 });
 
@@ -93,7 +81,7 @@ test("checklist completion preserves scroll position and keyboard focus",async({
 
 test("bottom navigation can be activated by keyboard",async({page})=>{
   await waitForApp(page);
-  for(const label of ["Week","Calendar","Study","Family","Today"]){
+  for(const label of ["Week","Study","Progress","Today"]){
     const button=page.getByRole("button",{name:label,exact:true});
     await button.focus();
     await page.keyboard.press("Enter");
@@ -106,7 +94,7 @@ test("125, 150, and 200 percent visual zoom preserve reflow",async({page})=>{
   await waitForApp(page);
   for(const zoom of [1.25,1.5,2]){
     await page.evaluate(value=>{document.documentElement.style.zoom=String(value)},zoom);
-    for(const tab of ["Today","Week","Calendar","Study","Study Games","Family"]){
+    for(const tab of ["Today","Week","Calendar","Study","Study Games","Progress"]){
       await openDestination(page,tab);
       const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth+2);
       expect(overflow,tab+" overflows at "+Math.round(zoom*100)+"% zoom").toBeFalsy();
@@ -120,7 +108,7 @@ test("headings, main landmark, navigation, and status region remain coherent",as
   await expect(page.getByRole("navigation",{name:"App navigation"})).toHaveCount(1);
   await expect(page.locator("#toast")).toHaveAttribute("role","status");
   await expect(page.locator("#toast")).toHaveAttribute("aria-live","polite");
-  for(const tab of ["Today","Week","Calendar","Study","Study Games","Family"]){
+  for(const tab of ["Today","Week","Calendar","Study","Study Games","Progress"]){
     await openDestination(page,tab);
     await expect(page.locator(".screen")).toBeVisible();
     await expect(page.locator(".screen h1").first()).toBeVisible();

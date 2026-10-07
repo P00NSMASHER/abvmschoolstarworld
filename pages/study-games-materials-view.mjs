@@ -1,7 +1,6 @@
 import {createReadAloud} from './study-room-view.mjs';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const sources = Object.freeze({weekly:'This week',saved:'All my learning',star:'STAR practice',mix:'Make a mix'});
 const nonempty = value => typeof value === 'string' && value.trim();
 const list = rows => {const clean=(Array.isArray(rows)?rows:[]).filter(nonempty);return clean.length?'<ul>'+clean.map(row=>'<li>'+esc(row)+'</li>').join('')+'</ul>':'';};
 const dateLabel = date => {const value=new Date(date+'T12:00:00Z');return /^\d{4}-\d{2}-\d{2}$/.test(date||'')&&Number.isFinite(value.getTime())
@@ -51,9 +50,9 @@ export function printableStudyGuideHtml(guide, dictionary = () => '') {
 
 /** Compact controls only. The existing Games controller owns every round and result. */
 export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
-  let model = null, source = 'weekly', picks = ['weekly'], notesOpen = false, testsOpen = false;
+  let model = null, notesOpen = /(?:^|[?&])notes(?:=1)?(?:&|$)/.test(String(win?.location?.hash || '').split('?')[1] || ''), testsOpen = false, selectedTest = 0, notesSource = 'weekly';
   const readAloud = createReadAloud(win);
-  const selection = () => ({source,sources:[...picks]});
+  const selection = () => ({source:'weekly',sources:['weekly']});
   const focus = selector => win.document.querySelector(selector)?.focus({preventScroll:true});
   const change = selector => { onChange?.(); if (selector) focus(selector); };
   function printGuide(index) {
@@ -69,38 +68,26 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
     else popup.addEventListener('load',()=>win.setTimeout(run,30),{once:true});
   }
 
-  function sourceHtml() {
-    return '<section class="game-materials study-source-card" aria-label="Practice materials">' +
-      '<div class="study-source-copy"><span>PRACTICE FROM</span><strong>Choose your material</strong></div>' +
-      '<select id="study-source" aria-label="Practice from" data-study-source' + (!model?' disabled':'') + '>' +
-      Object.entries(sources).map(([key,label]) => '<option value="' + key + '"' + (source===key?' selected':'') + '>' + label + '</option>').join('') + '</select>' +
-      (source==='mix' ? '<fieldset data-study-mix><legend>Include in this mix</legend>' + Object.entries(sources).filter(([key])=>key!=='mix').map(([key,label]) =>
-        '<label><input type="checkbox" data-study-pick="' + key + '"' + (picks.includes(key)?' checked':'') + '><span>' + label + '</span></label>').join('') + '</fieldset>' : '') + '</section>';
-  }
-
   function priorityHtml({loading=true} = {}) {
-    const tests=model?.tests(),pending=tests?.tests||[],missing=tests?.missing||[],fallback=tests?.fallback||[];
+    const tests=model?.upcomingTests?.()||model?.printableTests?.(),pending=tests?.tests||[],missing=tests?.missing||[],fallback=tests?.fallback||[];
     if(!model&&loading){
-      return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><span>UP NEXT</span><h2 id="study-priority-title">Test ready</h2></div><div class="study-test-card is-loading" data-study-tests role="status"><div class="study-test-mark loading" aria-hidden="true">…</div><div class="study-test-copy"><strong>Checking upcoming tests…</strong><p>Getting the latest reviewed study material.</p></div><div class="study-test-actions"><button type="button" disabled>Loading practice…</button></div></div></section>';
+      return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><h2 id="study-priority-title">Test Prep</h2></div><div class="study-test-card is-loading" data-study-tests role="status"><div class="study-test-date" aria-hidden="true"><span>…</span><strong>–</strong><em>…</em></div><div class="study-test-copy"><small class="study-test-history">Checking practice…</small><strong>Checking tests…</strong><p class="study-test-topics" aria-hidden="true">Checking topics…</p></div><div class="study-test-actions"><label class="study-test-picker"><span class="study-test-picker-label">Loading upcoming tests</span><select disabled aria-label="Loading upcoming tests"><option>Loading tests…</option></select></label><button type="button" disabled>Loading practice…</button></div></div></section>';
     }
     if(!pending.length){
-      return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><span>UP NEXT</span><h2 id="study-priority-title">Test ready</h2></div><div class="study-test-card is-clear" data-study-tests><div class="study-test-mark" aria-hidden="true">✓</div><div class="study-test-copy"><strong>No upcoming test is listed</strong><p>Use a game below for regular practice.</p></div></div>' +
+      return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><h2 id="study-priority-title">Test Prep</h2></div><div class="study-test-card is-clear" data-study-tests><div class="study-test-mark" aria-hidden="true">✓</div><div class="study-test-copy"><strong>No upcoming test is listed</strong><p>Choose a subject below and keep learning.</p></div></div>' +
         (tests?.message?'<div class="game-test-status" role="status"><span>'+esc(tests.message)+'</span>'+(tests.canUndo?'<button type="button" data-undo-test>Undo</button>':'')+'</div>':'')+'</section>';
     }
-    const date=dateParts(tests.date),labels=pending.map(test=>esc(test.label));
-    const practiceButtons=missing.length
-      ?(tests.supported||[]).map(test=>'<button type="button" class="study-test-primary" data-test-single="'+test.index+'">Practice '+esc(test.label)+'</button>').join('')
-      :'<button type="button" class="study-test-primary" data-test>Start test practice</button>';
-    return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><span>UP NEXT</span><h2 id="study-priority-title">Test ready</h2></div>' +
-      '<article class="study-test-card" data-study-tests><time class="study-test-date" datetime="'+esc(tests.date)+'"><span>'+esc(date.weekday)+'</span><strong>'+esc(date.day)+'</strong><em>'+esc(date.label.replace(/^\w+,\s*/,''))+'</em></time><div class="study-test-copy"><small>Next test'+(pending.length>1?'s':'')+'</small><h3>'+labels.join('<span class="study-test-divider"> · </span>')+'</h3><p>'+esc(date.label)+'</p></div><div class="study-test-actions">'+practiceButtons+'</div>' +
-      (missing.length?'<p class="game-material-status" data-test-missing>Practice is not available for '+missing.map(test=>esc(test.label)).join(', ')+'. Review the teacher notes.</p>':'') +
-      (fallback.length?'<p class="game-material-status" data-test-fallback>Original Grade 2 skill practice for '+fallback.map(test=>esc(test.label)).join(', ')+'; no reviewed test-specific bank is available yet.</p>':'') +
+    if(selectedTest>=pending.length)selectedTest=0;
+    const chosen=pending[selectedTest],entry=(tests.supported||[]).find(test=>test.index===selectedTest),date=dateParts(chosen.date);
+    const preview=model?.testPreview?.(selectedTest),history=preview?(preview.total?preview.practice.label:'No verified practice yet'):'COMING UP';
+    const topics=preview?.topics?.length?'<p class="study-test-topics">'+preview.topics.map(topic=>'<span>'+esc(topic)+'</span>').join(' · ')+'</p>':'';
+    const options=pending.map((test,index)=>'<option value="'+index+'"'+(index===selectedTest?' selected':'')+'>'+esc(test.label)+' - '+esc(dateLabel(test.date))+'</option>').join('');
+    const practiceButtons='<label class="study-test-picker"><span class="study-test-picker-label">Choose a test</span><select data-test-select aria-label="Choose an upcoming test">'+options+'</select></label><button type="button" class="study-test-primary" data-test-single="'+selectedTest+'"'+(!entry?' disabled aria-disabled="true"':'')+'>Start test prep</button>';
+    return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><h2 id="study-priority-title">Test Prep</h2></div>' +
+      '<article class="study-test-card" data-study-tests><time class="study-test-date" datetime="'+esc(chosen.date)+'"><span>'+esc(date.weekday)+'</span><strong>'+esc(date.day)+'</strong><em>'+esc(date.label.replace(/^\w+,\s*/,''))+'</em></time><div class="study-test-copy"><small class="study-test-history" aria-label="'+esc(preview?.practice?.plays?history+'. Includes hints and retries; practice does not predict a test result.':history)+'">'+esc(history)+'</small><h3>'+esc(chosen.label)+'</h3>'+topics+'</div><div class="study-test-actions">'+practiceButtons+'</div>' +
+      (missing.some(test=>test.index===selectedTest)?'<p class="game-material-status" data-test-missing>No verified questions match this test yet. Use the teacher materials; the app will not guess.</p>':'') +
+      (fallback.some(test=>test.index===selectedTest)?'<p class="game-material-status" data-test-fallback>Using original Grade 2 skill practice because no reviewed test-specific questions are available.</p>':'') +
       '</article>'+(tests?.message?'<div class="game-test-status" role="status"><span>'+esc(tests.message)+'</span>'+(tests.canUndo?'<button type="button" data-undo-test>Undo</button>':'')+'</div>':'')+'</section>';
-  }
-
-  function dailyHtml({complete=false} = {}) {
-    const disabled=model&&!model.forMode('daily',selection()).count;
-    return '<section class="study-daily-card game-daily-action" aria-label="Daily practice"><div class="study-daily-icon" aria-hidden="true">★</div><div class="study-daily-copy"><small>DAILY PRACTICE</small><strong>'+(complete?'Practice a little more':'Eight-question warm-up')+'</strong><span>'+(complete?'Today’s practice is complete.':'No timer. Mixes current skills and useful review.')+'</span></div><button type="button" data-game-start="daily"'+(disabled?' disabled':'')+'>'+(complete?'Practice again':'Start')+'</button></section>';
   }
 
   function statusHtml({loading=true,error=false} = {}) {
@@ -112,7 +99,7 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
   }
 
   function notesContent() {
-    const data=model?.notes(source,{sources:picks});
+    const data=model?.notes(notesSource);
     if(!data)return '<p class="game-material-status">Notes are still loading.</p>';
     const lessons=data.lessons||[],notes=(data.notes||[]).filter(row=>nonempty(row.text)),vocabulary=(data.vocabulary||[]).filter(row=>nonempty(row.term));
     const links=(data.links||[]).filter(link=>safeUrl(link.url)),warnings=data.warnings||[];
@@ -124,7 +111,7 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
       links.filter(row=>row.subject===subject).map(referenceHtml).join('')+'</div></details>').join('');
     const words=vocabulary.length?'<details class="game-material-lesson study-vocabulary"><summary><span>Words to know</span><small>'+vocabulary.length+' word'+(vocabulary.length===1?'':'s')+'</small></summary><div class="study-note-body"><dl>'+vocabulary.map(row=>{const meaning=resolveVocabularyMeaning(row,term=>win?.ABVMStudyGames?.vocabularyDefinition?.(term));return '<div><dt>'+esc(row.term)+'</dt>'+(meaning?'<dd>'+esc(meaning)+'</dd>':'')+'</div>';}).join('')+'</dl></div></details>':'';
     const body=lessonRows+noteRows+words;
-    return (source==='saved'?'<p class="game-material-status">Undated schoolwork stays in All my learning, not This week.</p>':'')+
+    return '<div class="study-note-scope" role="group" aria-label="Notes to review">'+['weekly','saved'].map(key=>'<button type="button" data-notes-source="'+key+'" aria-pressed="'+(notesSource===key)+'">'+(key==='weekly'?'This week':'All learning')+'</button>').join('')+'</div>'+ (notesSource==='saved'?'<p class="game-material-status">Undated schoolwork stays in All my learning, not This week.</p>':'')+
       '<div class="study-notes-grid">'+(body||'<p class="study-tools-empty">No lesson notes are included in this selection.</p>')+'</div>';
   }
 
@@ -132,9 +119,9 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
     const tests=model?.tests(),pending=tests?.tests||[],completed=tests?.completed||[];
     const printable=(model?.printableTests?.()?.tests||pending).map((test,index)=>({...test,index}));
     const guideButtons=printable.map(test=>'<button type="button" class="study-guide-button" data-test-guide="'+test.index+'">Print guide: '+esc(test.label)+' · '+esc(dateLabel(test.date))+'</button>').join('');
-    return '<section class="study-tools" aria-labelledby="study-tools-title"><div class="study-section-heading compact"><span>STUDY TOOLS</span><h2 id="study-tools-title">Review &amp; organize</h2></div><div class="study-tool-list">' +
+    return '<section class="study-tools" aria-labelledby="study-tools-title"><div class="study-section-heading compact"><span>KEEP LEARNING</span><h2 id="study-tools-title">A little extra help</h2></div><div class="study-tool-list">' +
       '<details class="study-tool-card" data-study-notes'+(notesOpen?' open':'')+'><summary><span class="study-tool-icon notes" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg></span><span class="study-tool-copy"><strong>Notes &amp; lessons</strong><small>Subjects, vocabulary, and reviewed links</small></span><b aria-hidden="true">›</b></summary><div class="study-tool-body" data-study-notes-content>'+(notesOpen?notesContent():'')+'</div></details>' +
-      '<details class="study-tool-card" data-study-test-options'+(testsOpen?' open':'')+'><summary><span class="study-tool-icon tests" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4h10a2 2 0 0 1 2 2v15H5V6a2 2 0 0 1 2-2ZM8 2v4M16 2v4M8 10h8M8 14h5"/></svg></span><span class="study-tool-copy"><strong>Manage tests</strong><small>Hide finished tests or restore them later</small></span><b aria-hidden="true">›</b></summary><div class="study-tool-body"><p>Finished tests are hidden only on this browser.</p>' +
+      '<details class="study-tool-card" data-study-test-options'+(testsOpen?' open':'')+'><summary><span class="study-tool-icon tests" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4h10a2 2 0 0 1 2 2v15H5V6a2 2 0 0 1 2-2ZM8 2v4M16 2v4M8 10h8M8 14h5"/></svg></span><span class="study-tool-copy"><strong>Test guides &amp; history</strong><small>Print a guide or manage finished tests</small></span><b aria-hidden="true">›</b></summary><div class="study-tool-body"><p>Finished tests are hidden only on this browser.</p>' +
       (printable.length?'<h3>Printable study guides</h3><div class="study-guide-tool-list">'+guideButtons+'</div>':'')+
       (pending.length?'<h3>Test list</h3><button type="button" data-complete-test>'+(pending.length>1?'Mark current tests finished':'Mark test finished')+'</button>':'')+
       (completed.length?'<h3>Hidden tests</h3>'+completed.map(test=>'<button type="button" data-restore-test="'+esc(test.key)+'">Restore '+esc(test.label)+'</button>').join(''):'')+
@@ -142,36 +129,24 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
   }
 
   function homeHtml({gameGrid='',complete=false,loading=true,error=false} = {}) {
-    return '<section class="study-games-hero simple"><div class="study-games-mascot">★</div><div><p>SMART PRACTICE</p><h2>Study one thing at a time</h2><span>Get ready for the next test or pick a quick game.</span></div></section>' +
-      priorityHtml({loading}) + sourceHtml() +
-      '<section class="study-game-section" aria-labelledby="study-game-section-title"><div class="study-section-heading"><span>PRACTICE</span><h2 id="study-game-section-title">Choose a game</h2></div>'+gameGrid+'</section>' +
-      dailyHtml({complete}) + secondaryHtml() + statusHtml({loading,error}) +
-      '<p class="game-privacy-note">Practice uses reviewed school skills first. STAR-style items are original Grade 2 practice; private student answers and grades are not used. They are not copied STAR test items.</p>';
-  }
-
-  // Backward-compatible aggregate retained for existing callers/tests.
-  function actionsHtml({complete=false,loading=true} = {}) {
-    return priorityHtml({loading})+dailyHtml({complete})+statusHtml({loading});
+    return '<div class="study-launch-layout">'+priorityHtml({loading}) +
+      '<section class="study-game-section" aria-labelledby="study-game-section-title"><div class="study-section-heading"><h2 id="study-game-section-title">Choose your subject</h2></div>'+gameGrid+'</section></div>' + statusHtml({loading,error}) +
+      secondaryHtml() +
+      '<p class="game-privacy-note">Current classwork comes first, followed by earlier learning and original Grade 2 STAR-style practice. Private answers and grades are not published. STAR-style practice uses original questions.</p>';
   }
 
   function bind(host) {
-    host.querySelector('[data-study-source]')?.addEventListener('change', event => {
-      const next = event.target.value;
-      if (!Object.hasOwn(sources,next)) return;
-      source = next; change('[data-study-source]');
+    host.querySelector('[data-test-select]')?.addEventListener('change',event=>{
+      const next=Number(event.target.value);if(!Number.isInteger(next)||next<0)return;
+      selectedTest=next;change('[data-test-select]');
     });
-    host.querySelectorAll('[data-study-pick]').forEach(input=>input.addEventListener('change',()=>{
-      const key = input.dataset.studyPick;
-      picks = input.checked ? [...new Set([...picks,key])] : picks.filter(value=>value!==key);
-      change('[data-study-pick="' + key + '"]');
-    }));
     const notes=host.querySelector('[data-study-notes]');
     const refreshNotes=async()=>{
       notesOpen=notes.open;if(!notesOpen)return;
       const owner=model,body=notes.querySelector('[data-study-notes-content]');if(!body.hasChildNodes())body.innerHTML=notesContent();
       try{await owner?.loadReferences?.();}catch{}
       if(model!==owner||!notes.isConnected||!notes.open)return;
-      for(const link of owner?.notes(source,{sources:picks}).links||[]){
+      for(const link of owner?.notes(notesSource).links||[]){
         if(!safeUrl(link.url))continue;
         let subject=[...body.querySelectorAll('[data-note-subject]')].find(row=>row.dataset.noteSubject===link.subject);
         if(!subject){
@@ -185,6 +160,7 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
         if(!noteBody.querySelector('[data-religion-review]'))noteBody.insertAdjacentHTML('beforeend',referenceHtml(link));
       }
     };
+    notes?.addEventListener('click',event=>{const button=event.target.closest('[data-notes-source]');if(!button)return;notesSource=button.dataset.notesSource==='saved'?'saved':'weekly';change('[data-notes-source="'+notesSource+'"]');});
     notes?.addEventListener('toggle',refreshNotes);
     if(notes?.open)refreshNotes();
     host.querySelector('[data-study-test-options]')?.addEventListener('toggle',event=>{testsOpen=event.currentTarget.open;});
@@ -203,5 +179,5 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
     }));
   }
 
-  return {selection,sourceHtml,priorityHtml,dailyHtml,statusHtml,homeHtml,actionsHtml,secondaryHtml,bind,readAloud,setModel(value){model=value;}};
+  return {openNotes(){notesOpen=true;change('[data-study-notes] > summary');},selection,priorityHtml,statusHtml,homeHtml,secondaryHtml,bind,readAloud,setModel(value){model=value;}};
 }
