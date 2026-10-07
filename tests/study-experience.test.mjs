@@ -88,7 +88,7 @@ test('a sparse first-time current subject bank is not padded with fallback',()=>
  const star=Array.from({length:8},(_,i)=>({id:'thin-star-'+i,subject:'Math',skill:'place-value',tier:'star-fallback',questionType:'direct',difficulty:2,prompt:'Thin fallback '+i,answer:String(i),choices:[String(i),String(i+1),String(i+2)],variantFingerprint:'thin-star-'+i}));
  const catalog={sourceKey:'sparse-current-subject',questions:[current,...star]};
  const first=e.selectQuestions(catalog,{subjects:['Math'],count:8,seed:'first',skillStats:{}});
- assert.deepEqual(first.map(q=>q.id),['single-current']);
+ assert.deepEqual(Array.from(first,q=>q.id),['single-current']);
  e.markQuestionShown(first[0],catalog.sourceKey);
  const second=e.selectQuestions(catalog,{subjects:['Math'],count:8,seed:'second',skillStats:{}});
  assert.equal(second.length,8);
