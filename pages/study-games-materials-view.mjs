@@ -80,9 +80,8 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
 
   function priorityHtml({loading=true} = {}) {
     const tests=model?.tests(),pending=tests?.tests||[],missing=tests?.missing||[],fallback=tests?.fallback||[];
-    const printable=model?.printableTests?.()?.tests||pending;
     if(!model&&loading){
-      return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><span>UP NEXT</span><h2 id="study-priority-title">Test ready</h2></div><div class="study-test-card is-loading" data-study-tests role="status"><div class="study-test-copy"><strong>Checking upcoming tests…</strong><p>Getting the latest reviewed study material.</p></div></div></section>';
+      return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><span>UP NEXT</span><h2 id="study-priority-title">Test ready</h2></div><div class="study-test-card is-loading" data-study-tests role="status"><div class="study-test-mark loading" aria-hidden="true">…</div><div class="study-test-copy"><strong>Checking upcoming tests…</strong><p>Getting the latest reviewed study material.</p></div><div class="study-test-actions"><button type="button" disabled>Loading practice…</button></div></div></section>';
     }
     if(!pending.length){
       return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><span>UP NEXT</span><h2 id="study-priority-title">Test ready</h2></div><div class="study-test-card is-clear" data-study-tests><div class="study-test-mark" aria-hidden="true">✓</div><div class="study-test-copy"><strong>No upcoming test is listed</strong><p>Use a game below for regular practice.</p></div></div>' +
@@ -92,9 +91,8 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
     const practiceButtons=missing.length
       ?(tests.supported||[]).map(test=>'<button type="button" class="study-test-primary" data-test-single="'+test.index+'">Practice '+esc(test.label)+'</button>').join('')
       :'<button type="button" class="study-test-primary" data-test>Start test practice</button>';
-    const guideButtons=printable.map(test=>'<button type="button" class="study-guide-button" data-test-guide="'+test.index+'">Print '+esc(test.label)+' guide</button>').join('');
     return '<section class="study-priority" aria-labelledby="study-priority-title"><div class="study-section-heading"><span>UP NEXT</span><h2 id="study-priority-title">Test ready</h2></div>' +
-      '<article class="study-test-card" data-study-tests><time class="study-test-date" datetime="'+esc(tests.date)+'"><span>'+esc(date.weekday)+'</span><strong>'+esc(date.day)+'</strong><em>'+esc(date.label.replace(/^\w+,\s*/,''))+'</em></time><div class="study-test-copy"><small>Next test'+(pending.length>1?'s':'')+'</small><h3>'+labels.join('<span class="study-test-divider"> · </span>')+'</h3><p>'+esc(date.label)+'</p></div><div class="study-test-actions">'+practiceButtons+guideButtons+'</div>' +
+      '<article class="study-test-card" data-study-tests><time class="study-test-date" datetime="'+esc(tests.date)+'"><span>'+esc(date.weekday)+'</span><strong>'+esc(date.day)+'</strong><em>'+esc(date.label.replace(/^\w+,\s*/,''))+'</em></time><div class="study-test-copy"><small>Next test'+(pending.length>1?'s':'')+'</small><h3>'+labels.join('<span class="study-test-divider"> · </span>')+'</h3><p>'+esc(date.label)+'</p></div><div class="study-test-actions">'+practiceButtons+'</div>' +
       (missing.length?'<p class="game-material-status" data-test-missing>Practice is not available for '+missing.map(test=>esc(test.label)).join(', ')+'. Review the teacher notes.</p>':'') +
       (fallback.length?'<p class="game-material-status" data-test-fallback>Original Grade 2 skill practice for '+fallback.map(test=>esc(test.label)).join(', ')+'; no reviewed test-specific bank is available yet.</p>':'') +
       '</article>'+(tests?.message?'<div class="game-test-status" role="status"><span>'+esc(tests.message)+'</span>'+(tests.canUndo?'<button type="button" data-undo-test>Undo</button>':'')+'</div>':'')+'</section>';
@@ -132,12 +130,15 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
 
   function secondaryHtml() {
     const tests=model?.tests(),pending=tests?.tests||[],completed=tests?.completed||[];
+    const printable=model?.printableTests?.()?.tests||pending;
+    const guideButtons=printable.map(test=>'<button type="button" class="study-guide-button" data-test-guide="'+test.index+'">Print guide: '+esc(test.label)+' · '+esc(dateLabel(test.date))+'</button>').join('');
     return '<section class="study-tools" aria-labelledby="study-tools-title"><div class="study-section-heading compact"><span>STUDY TOOLS</span><h2 id="study-tools-title">Review &amp; organize</h2></div><div class="study-tool-list">' +
       '<details class="study-tool-card" data-study-notes'+(notesOpen?' open':'')+'><summary><span class="study-tool-icon notes" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg></span><span class="study-tool-copy"><strong>Notes &amp; lessons</strong><small>Subjects, vocabulary, and reviewed links</small></span><b aria-hidden="true">›</b></summary><div class="study-tool-body" data-study-notes-content>'+(notesOpen?notesContent():'')+'</div></details>' +
       '<details class="study-tool-card" data-study-test-options'+(testsOpen?' open':'')+'><summary><span class="study-tool-icon tests" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4h10a2 2 0 0 1 2 2v15H5V6a2 2 0 0 1 2-2ZM8 2v4M16 2v4M8 10h8M8 14h5"/></svg></span><span class="study-tool-copy"><strong>Manage tests</strong><small>Hide finished tests or restore them later</small></span><b aria-hidden="true">›</b></summary><div class="study-tool-body"><p>Finished tests are hidden only on this browser.</p>' +
-      (pending.length?'<button type="button" data-complete-test>'+(pending.length>1?'Mark current tests finished':'Mark test finished')+'</button>':'')+
+      (printable.length?'<h3>Printable study guides</h3><div class="study-guide-tool-list">'+guideButtons+'</div>':'')+
+      (pending.length?'<h3>Test list</h3><button type="button" data-complete-test>'+(pending.length>1?'Mark current tests finished':'Mark test finished')+'</button>':'')+
       (completed.length?'<h3>Hidden tests</h3>'+completed.map(test=>'<button type="button" data-restore-test="'+esc(test.key)+'">Restore '+esc(test.label)+'</button>').join(''):'')+
-      (!pending.length&&!completed.length?'<p>No tests to manage.</p>':'')+'</div></details></div></section>';
+      (!printable.length&&!pending.length&&!completed.length?'<p>No tests to manage.</p>':'')+'</div></details></div></section>';
   }
 
   function homeHtml({gameGrid='',complete=false,loading=true,error=false} = {}) {
