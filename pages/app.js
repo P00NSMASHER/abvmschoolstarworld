@@ -505,6 +505,7 @@ function gameFinishHtml(){
   return reveal+finish+goal;
 }
 function renderGames(){
+  const previousScreen=stack().querySelector(".games-screen"),menuScroll=gameState.screen==="menu"&&previousScreen&&!previousScreen.classList.contains("is-playing")?previousScreen.scrollTop:null;
   if(!isStudyRoute())return;
   studyMaterialsView?.readAloud.stop();
   const engine=studyGameEngine(),generation=++screenGeneration,data=pack;
@@ -517,11 +518,12 @@ function renderGames(){
   if(studyMaterialsPromise?.pack===pack)studyMaterialsPromise.promise.then(()=>{if(currentStudyScreen(generation,data)&&gameState.screen==="menu")renderGames()}).catch(()=>{if(currentStudyScreen(generation,data)&&gameState.screen==="menu")renderGames()});
   const materials=currentStudyMaterials();studyMaterialsView?.setModel(materials);
   const catalog=studyGameCatalog();
-  const practiceTitle=gameState.screen!=="menu"?'<h1 class="visually-hidden" tabindex="-1">'+esc(gameMode(gameState.mode).title)+(gameState.screen==="finish"?' results':' practice')+'</h1>':"";
+  const practiceTitle=gameState.screen!=="menu"?'<h1 class="visually-hidden" tabindex="-1">'+esc(gameMode(gameState.mode).title.replace(/ practice$/i,""))+(gameState.screen==="finish"?' results':' practice')+'</h1>':"";
   const body=practiceTitle+(gameState.screen==="play"?gamePlayHtml():gameState.screen==="finish"?gameFinishHtml():gameMenuHtml(catalog));
   const chrome=gameState.screen==="menu"?'<header class="app-header study-hero"><div class="study-hero-copy"><p>ASSUMPTION BVM · GRADE 2</p><h1 class="visually-hidden" tabindex="-1">Study</h1><h2>Let’s learn,<br><span>Emma!</span></h2></div>'+SCHOOL_LOGO_HTML+'<img class="study-hero-art" src="./assets/illustrations/eagle.webp" width="240" height="240" alt=""></header>':"";
   const state=materials?(materials.status.partial?"partial":"ready"):studyMaterialsError?.pack===pack?"partial":"loading";
   stack().innerHTML='<div class="screen games-screen'+(gameState.screen!=="menu"?' is-playing':'')+'" data-study-state="'+state+'" role="region" aria-label="Study games">'+chrome+body+(gameState.screen==="menu"?freshness():"")+'</div>';
+  if(menuScroll!==null)stack().querySelector(".games-screen").scrollTop=menuScroll;
   if(gameState.screen==="menu"){studyMaterialsView?.bind(stack());if(location.hash.includes("?notes")&&!stack().querySelector("[data-study-notes]")?.open)studyMaterialsView?.openNotes?.();}
   gameState.renderGeneration=generation;
   if(gameState.screen==="finish"&&gameState.rewardRevealAmount>0&&!gameState.rewardRevealScheduled){

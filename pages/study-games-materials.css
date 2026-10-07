@@ -190,7 +190,7 @@
 @keyframes study-reward-appear{0%{opacity:0;transform:translateY(4px)}15%,75%{opacity:1;transform:none}100%{opacity:0;transform:none}}
 @media(min-width:700px){
   .games-screen .study-game-grid{gap:14px}
-  .games-screen .study-game-tile{min-height:214px!important;padding:20px}
+  .games-screen .study-game-tile{min-height:200px!important;padding:20px}
   .games-screen .study-tools{max-width:none}
   .games-screen .study-tool-list{grid-template-columns:1fr 1fr;gap:28px;border:0}
 
