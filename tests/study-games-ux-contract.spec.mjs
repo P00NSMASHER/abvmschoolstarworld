@@ -98,7 +98,7 @@ test('every upcoming printable guide keeps a valid test index in the collapsed t
   const guides=tools.locator('[data-test-guide]');
   expect(await guides.count()).toBeGreaterThan(0);
   const indexes=await guides.evaluateAll(nodes=>nodes.map(node=>node.dataset.testGuide));
-  expect(indexes.every(value=>/^\\d+$/.test(value))).toBe(true);
+  expect(indexes.every(value=>/^\d+$/.test(value))).toBe(true);
   expect(new Set(indexes).size).toBe(indexes.length);
 });
 
