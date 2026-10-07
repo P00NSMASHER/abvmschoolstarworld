@@ -97,7 +97,7 @@ test('secondary reward summary stays visually separated and readable',async({pag
     summary:{strong:4,remembered:0,practice:0,total:4},
     reward:{status:'done',awardedAmount:10,currency:'Study Stars',balance:10}
   }));
-  await page.locator('#app-content').evaluate((node,markup)=>{node.innerHTML=markup},html);
+  await page.locator('#app-content').evaluate((node,markup)=>{node.innerHTML='<div class="screen games-screen">'+markup+'</div>'},html);
   const reward=page.locator('.study-star-earned.secondary');
   await expect(reward).toBeVisible();
   expect(await reward.evaluate(node=>getComputedStyle(node).borderStyle)).toBe('solid');

@@ -34,7 +34,7 @@ test('zero, invalid, negative, and non-finite awards render nothing', async ({ p
 test('reward reveal is noninteractive and respects reduced motion', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   const html=await page.evaluate(()=>window.ABVMStudyGameView.rewardReveal({amount:10}));
-  await page.locator('#app-content').evaluate((node,markup)=>{node.innerHTML=markup},html);
+  await page.locator('#app-content').evaluate((node,markup)=>{node.innerHTML='<div class="screen games-screen">'+markup+'</div>'},html);
   const reveal=page.locator('[data-reward-reveal]');
   await expect(reveal).toBeVisible();
   expect(await reveal.evaluate(node=>getComputedStyle(node).pointerEvents)).toBe('none');
@@ -44,7 +44,7 @@ test('reward reveal is noninteractive and respects reduced motion', async ({ pag
 test('normal motion remains bounded to 1.2 seconds', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   const html=await page.evaluate(()=>window.ABVMStudyGameView.rewardReveal({amount:10}));
-  await page.locator('#app-content').evaluate((node,markup)=>{node.innerHTML=markup},html);
+  await page.locator('#app-content').evaluate((node,markup)=>{node.innerHTML='<div class="screen games-screen">'+markup+'</div>'},html);
   const reveal=page.locator('[data-reward-reveal]');
   expect(await reveal.evaluate(node=>getComputedStyle(node).pointerEvents)).toBe('none');
   expect(await reveal.evaluate(node=>getComputedStyle(node).animationDuration)).toBe('1.2s');

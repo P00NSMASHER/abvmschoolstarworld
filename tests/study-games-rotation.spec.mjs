@@ -463,7 +463,7 @@ test('STAR fallback metadata includes direct, transfer, and reasoning practice',
 });
 
 
-test('Mix keeps a fallback-only subject represented without using fallback for covered subjects', async ({ page }) => {
+test('Mix uses available current material before fallback and fills an uncovered subject after exhaustion', async ({ page }) => {
   const result = await page.evaluate(() => {
     const engine = window.ABVMStudyGames;
     const material = [
@@ -491,15 +491,21 @@ test('Mix keeps a fallback-only subject represented without using fallback for c
       questionType:['direct','transfer','reasoning'][i % 3], tier:'star-fallback',
       difficulty:2, dok:2, variantFingerprint:'star-reading-' + i,
     }));
-    const selected = engine.selectQuestions(
-      { sourceKey:'quick-mix-gap-subject-test', questions:[...material,...starMath,...starReading] },
-      { count:8, seed:'quick-mix-gap-subject-test' }
-    );
-    return selected.map(q => ({ id:q.id, subject:q.subject, tier:q.tier }));
+    const project=rows=>rows.map(q => ({ id:q.id, subject:q.subject, tier:q.tier }));
+    const questions=[...material,...starMath,...starReading];
+    return {
+      full:project(engine.selectQuestions({sourceKey:'mix-current-first',questions},{count:8,seed:'mix-current-first'})),
+      exhausted:project(engine.selectQuestions({sourceKey:'mix-exhausted',questions:[...material.slice(0,3),...starMath,...starReading]},{count:8,seed:'mix-exhausted'})),
+      math:project(engine.selectQuestions({sourceKey:'math-fallback-only',questions},{subjects:['Math'],count:8,seed:'math-fallback-only'})),
+    };
   });
 
-  expect(result).toHaveLength(8);
-  expect(result.some(row => row.subject === 'Math' && row.tier === 'star-fallback')).toBe(true);
-  expect(result.some(row => row.subject === 'Reading / ELA' && row.tier === 'star-fallback')).toBe(false);
-  expect(result.some(row => row.tier === 'material')).toBe(true);
+  expect(result.full).toHaveLength(8);
+  expect(result.full.every(row=>row.tier==='material')).toBe(true);
+  expect(result.exhausted).toHaveLength(8);
+  expect(result.exhausted.filter(row=>row.tier==='material')).toHaveLength(3);
+  expect(result.exhausted.some(row=>row.subject==='Math'&&row.tier==='star-fallback')).toBe(true);
+  expect(result.exhausted.some(row=>row.subject==='Reading / ELA'&&row.tier==='star-fallback')).toBe(false);
+  expect(result.math).toHaveLength(8);
+  expect(result.math.every(row=>row.subject==='Math'&&row.tier==='star-fallback')).toBe(true);
 });

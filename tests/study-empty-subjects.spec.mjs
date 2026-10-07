@@ -37,7 +37,7 @@ test('missing and blank subjects show honest empty notes while original game pra
   }
   await expect(page.locator('[data-game-start="reading"]')).toBeEnabled();
   const path=info.outputPath('games-empty-saved-iphone.png');
-  await page.screenshot({path,fullPage:true});await info.attach('Empty saved bank with disabled games',{path,contentType:'image/png'});
+  await page.screenshot({animations:"disabled",path,fullPage:true});await info.attach('Empty saved bank with disabled games',{path,contentType:'image/png'});
 });
 test('teacher notes remain the explicit lesson content when notes arrive',async({page})=>{
   await fixture(page,[{subject:'Math',topics:['Compare three-digit numbers'],studyNotes:['Start with the hundreds.']}]);

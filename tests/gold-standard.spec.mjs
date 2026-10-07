@@ -366,7 +366,7 @@ test("Study Games uses distinct polished subject icon badges",async({page})=>{
   }
   for(const id of ["reading","spelling","math","religion","mix"]){
     const svg=page.locator(`[data-game-start="${id}"] .study-game-icon svg`);
-    await expect(svg).toHaveAttribute("aria-hidden","true");
+    await expect(page.locator(`[data-game-start="${id}"] .study-game-icon`)).toHaveAttribute("aria-hidden","true");
     expect(await svg.locator("path,rect,circle").count()).toBeGreaterThan(0);
   }
 });

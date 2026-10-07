@@ -6,7 +6,7 @@ async function openStudy(page,hash='study'){
   await expect(page.locator('.study-game-grid > .study-game-tile')).toHaveCount(5);
 }
 async function capture(page,info,name){
-  const path=info.outputPath(name+'.png');await page.screenshot({path,fullPage:true});await info.attach(name,{path,contentType:'image/png'});
+  const path=info.outputPath(name+'.png');await page.screenshot({animations:"disabled",path,fullPage:true});await info.attach(name,{path,contentType:'image/png'});
 }
 async function visibleAnswer(page){
   const prompt=await page.locator('.game-question-card > h2').textContent();

@@ -13,7 +13,7 @@ async function mount(page,day,testInfo){
   await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({json:fixture}));
   await page.goto('/#study');
   await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready',{timeout:15000});
-  await page.screenshot({path:testInfo.outputPath('games-weekly-test-prep.png'),fullPage:true});
+  await page.screenshot({animations:"disabled",path:testInfo.outputPath('games-weekly-test-prep.png'),fullPage:true});
 }
 
 test('weekly test prep covers same-day subjects in the existing player and completion persists',async({page},testInfo)=>{
@@ -85,8 +85,8 @@ test('subject menu, native test selection and notes fit phone and tablet',async(
   for(const width of [390,820]){
     await page.setViewportSize({width,height:900});expect(await page.locator('.games-screen').evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true);
     const select=page.locator('[data-test-select]');await expect(select).toBeVisible();await select.focus();await expect(select).toBeFocused();
-    await page.screenshot({path:info.outputPath(`study-${width}.png`),fullPage:true});await page.locator('[data-game-start="math"]').click();
-    await expect(page.locator('.game-question-card')).toBeVisible();await expect(page.locator('[data-game-answer]').first()).toBeVisible();await page.screenshot({path:info.outputPath(`study-question-${width}.png`),fullPage:true});await page.locator('[data-game-home]').click();
+    await page.screenshot({animations:"disabled",path:info.outputPath(`study-${width}.png`),fullPage:true});await page.locator('[data-game-start="math"]').click();
+    await expect(page.locator('.game-question-card')).toBeVisible();await expect(page.locator('[data-game-answer]').first()).toBeVisible();await page.screenshot({animations:"disabled",path:info.outputPath(`study-question-${width}.png`),fullPage:true});await page.locator('[data-game-home]').click();
   }
 });
 test('current material is exhausted before saved learning and STAR fallback in the player',async({page})=>{

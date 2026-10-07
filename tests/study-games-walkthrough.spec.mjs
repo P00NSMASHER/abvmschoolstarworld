@@ -63,7 +63,7 @@ test.describe('recorded Games walkthrough',()=>{
     await page.waitForTimeout(350);
     await page.getByRole('button',{name:'Back to study',exact:true}).click();
     await expect(page.locator('.study-game-grid > .study-game-tile')).toHaveCount(5);
-    await expect(page.locator('.study-game-grid [data-game-start="math"]')).toContainText('Best solved 8 / 8');
+    await expect(page.locator('.study-game-grid [data-game-start="math"]')).toContainText('Practiced before · 8 / 8 best');
     await page.waitForTimeout(350);
     expect(errors).toEqual([]);
     const video=page.video();

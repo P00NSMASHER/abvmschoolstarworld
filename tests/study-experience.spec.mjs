@@ -82,7 +82,7 @@ for(const size of [{width:393,height:852},{width:768,height:1024},{width:320,hei
     expect(small).toEqual([]);
     await expect(page.locator('[data-study-source],[data-game-start="daily"]')).toHaveCount(0);
     const path=info.outputPath(`games-home-${size.width}x${size.height}.png`);
-    await page.screenshot({path});await info.attach('home',{path,contentType:'image/png'});
+    await page.screenshot({animations:"disabled",path});await info.attach('home',{path,contentType:'image/png'});
  });
 }
 test('material selection, notes and test management are keyboard operable',async({page})=>{
@@ -106,7 +106,7 @@ test('expanded notes reflow at 200 percent text size with reduced motion',async(
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
   expect(await page.locator('.screen').evaluate(e=>e.scrollWidth<=e.clientWidth+1)).toBe(true);
   await expect(lesson).toHaveAttribute('open','');await expect(lesson.locator('li').first()).toBeVisible();
-  await page.screenshot({path:info.outputPath('study-notes-200-percent-iphone.png')});
+  await page.screenshot({animations:"disabled",path:info.outputPath('study-notes-200-percent-iphone.png')});
 });
 test('game answers and hints are readable and rejected choices cannot be retried',async({page},info)=>{
   await page.setViewportSize({width:393,height:852});
@@ -161,12 +161,12 @@ test('game answers and hints are readable and rejected choices cannot be retried
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
     await page.locator('.games-screen').evaluate(el=>{el.scrollTop=0;});
     let path=info.outputPath('games-retry-200-percent-iphone-top.png');
-    await page.screenshot({path});await info.attach('Doubled-text retry question',{path,contentType:'image/png'});
+    await page.screenshot({animations:"disabled",path});await info.attach('Doubled-text retry question',{path,contentType:'image/png'});
     const retry=page.locator('.game-feedback.retry');
     if(await retry.evaluate(el=>el.getBoundingClientRect().bottom>innerHeight-document.querySelector('.bottom-nav').getBoundingClientRect().height)){
       await retry.scrollIntoViewIfNeeded();
       path=info.outputPath('games-retry-200-percent-iphone-controls.png');
-      await page.screenshot({path});await info.attach('Doubled-text retry controls',{path,contentType:'image/png'});
+      await page.screenshot({animations:"disabled",path});await info.attach('Doubled-text retry controls',{path,contentType:'image/png'});
     }
   }finally{await page.evaluate(font=>{document.documentElement.style.fontSize=font;},previousFont);}
   await first.evaluate(b=>b.click());await expect(page.locator('[data-game-next]')).toHaveCount(0);
@@ -199,13 +199,18 @@ test('three complete Math rounds rotate through the available current material',
   expect(new Set(prompts).size).toBe(Math.min(24,pool.length));
 });
 test('new Study and game surfaces have no serious automated accessibility findings',async({page})=>{
+  // Contrast belongs to the visible resting surface. Wait for finite navigation
+  // and disclosure transitions without disabling motion or ignoring any rule.
+  const settle=()=>page.locator('.screen').evaluate(async screen=>{
+    await Promise.all(screen.getAnimations({subtree:true}).filter(animation=>animation.effect?.getComputedTiming().iterations!==Infinity).map(animation=>animation.finished.catch(()=>{})));
+  });
   await room(page);const errors=[];
   await page.locator('[data-study-notes] > summary').click();
   await page.locator('[data-study-test-options] > summary').click();
-  const homeResult=await new AxeBuilder({page}).analyze();
-  errors.push(...homeResult.violations.filter(v=>['serious','critical'].includes(v.impact)).map(v=>({surface:'Study',id:v.id})));
-  await game(page);await page.locator('[data-game-hint]').click();
-  const result=await new AxeBuilder({page}).analyze();errors.push(...result.violations.filter(v=>['serious','critical'].includes(v.impact)).map(v=>({tab:'Math',id:v.id})));
+  await settle();const homeResult=await new AxeBuilder({page}).analyze();
+  errors.push(...homeResult.violations.filter(v=>['serious','critical'].includes(v.impact)).map(v=>({surface:'Study',id:v.id,nodes:v.nodes.map(n=>({target:n.target,summary:n.failureSummary,html:n.html}))})));
+  await game(page);await page.locator('[data-game-hint]').click();await settle();
+  const result=await new AxeBuilder({page}).analyze();errors.push(...result.violations.filter(v=>['serious','critical'].includes(v.impact)).map(v=>({surface:'Math',id:v.id,nodes:v.nodes.map(n=>({target:n.target,summary:n.failureSummary,html:n.html}))})));
   expect(errors).toEqual([]);
 });
 

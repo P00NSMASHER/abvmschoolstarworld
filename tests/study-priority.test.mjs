@@ -33,3 +33,54 @@ test('upcoming test selection includes later assessments with honest unsupported
   assert.deepEqual(model.testRound({upcoming:true,index:1}).questions,[],'an assessment never borrows unrelated subject questions');
   assert.deepEqual(model.printableTests().tests.map(row=>row.label),['Math test','Science test'],'printable-guide indexes retain their separate verified-test authority');
 });
+
+test('same-tier diversity can revisit an alternate representation without semantic duplicates',()=>{
+  const e=engine();
+  const rows=[...['a1','a2','a3'].map(id=>({...q(id,'material'),subject:'Reading / ELA',skill:'theme',variantFingerprint:id})),{...q('b1','material'),subject:'Reading / ELA',skill:'visualize',questionType:'transfer',variantFingerprint:'visual-clue'},{...q('b-shadow','material'),subject:'Reading / ELA',skill:'visualize',questionType:'transfer',variantFingerprint:'visual-clue'}];
+  const before=structuredClone(rows),catalog={sourceKey:'diversity-source',questions:rows};
+  e.markQuestionShown(rows[3],catalog.sourceKey);
+  const chosen=e.selectQuestions(catalog,{count:3,seed:'diversity-relax'});
+  assert.equal(chosen.length,3);
+  assert(chosen.some(row=>row.skill==='visualize'),'a same-source alternate prevents a repetitive three-question run');
+  assert.equal(new Set(Array.from(chosen,row=>row.variantFingerprint)).size,3);
+  for(let i=1;i<chosen.length;i++)assert.notEqual(chosen[i].skill,chosen[i-1].skill);
+  assert.deepEqual(rows,before,'cooldown selection never rewrites source content');
+});
+
+test('diversity never borrows older review or STAR before the current source is exhausted',()=>{
+  const e=engine();
+  const current=['a1','a2','a3'].map(id=>({...q(id,'material'),subject:'Reading / ELA',skill:'theme',variantFingerprint:id}));
+  const older={...q('older','recent-review'),subject:'Reading / ELA',skill:'visualize',questionType:'transfer',variantFingerprint:'older'};
+  const fallback={...q('star','star-fallback'),subject:'Reading / ELA',skill:'inference',questionType:'reasoning',variantFingerprint:'star'};
+  const chosen=e.selectQuestions({sourceKey:'source-boundary',questions:[...current,older,fallback]},{count:3,seed:'source-boundary'});
+  assert.equal(chosen.length,3);
+  assert(chosen.every(row=>row.tier==='material'),'source priority takes precedence over visual variety');
+});
+
+
+test('test preview reads exact governed topics and the matching practice record without writing a session',()=>{
+  const data=new Map(),writes=[];
+  const saved={getItem:k=>data.get(k)||null,setItem:(k,v)=>{writes.push(k);data.set(k,v)}};
+  const rows=Array.from({length:8},(_,i)=>q('addition-'+i,'material'));
+  const before=structuredClone(rows);
+  const pack={contentPipeline:{skills:[{id:'addition-within-100',label:'Addition'},{id:'theme',label:'Theme'}]}};
+  const events=[{date:'2026-10-08',label:'Math test'},{date:'2026-10-09',label:'District benchmark assessment',kind:'assessment'}];
+  const make=sourceKey=>createStudyMaterials({now,storage:saved,pack,catalog:{sourceKey,questions:rows},events});
+  const model=make('verified-bank'),first=model.testPreview(0);
+  assert.deepEqual(first.topics,['Addition'],'labels come only from skills actually matched to this test');
+  assert.equal(first.total,8);
+  assert.equal(first.practice.label,'First practice');
+  assert.deepEqual(writes,[],'merely displaying Test Prep creates no session or local record');
+  const round=model.testRound({upcoming:true,index:0,seed:'explicit-proof'});
+  assert.equal(first.sourceKey,round.sourceKey,'preview and engine use the exact same test and bank identity');
+  data.set('abvm-study-games:'+first.sourceKey+':test-ready',JSON.stringify({plays:2,best:6}));
+  assert.equal(model.testPreview(0).practice.label,'Best practice 6 / 8');
+  assert.equal(make('different-reviewed-bank').testPreview(0).practice.label,'First practice','practice from another governed bank is not attributed to this test');
+  assert.deepEqual(model.testPreview(1).topics,[]);
+  assert.equal(model.testPreview(1).total,0);
+  assert.equal(model.testPreview(20),null);
+  data.set('abvm-study-games:'+first.sourceKey+':test-ready',JSON.stringify({plays:2,best:99}));
+  assert.equal(model.testPreview(0).practice.label,'First practice','invalid record never implies readiness');
+  assert.deepEqual(writes,[]);
+  assert.deepEqual(rows,before,'preview never changes governed question content');
+});

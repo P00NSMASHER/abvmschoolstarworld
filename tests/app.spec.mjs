@@ -350,6 +350,9 @@ test("all primary screens have no serious or critical automated accessibility vi
   const findings=[];
   for(const label of ["Today","Week","Calendar","Study","Study Games","Progress"]){
     await openTab(page,label);
+    if(label==="Study"||label==="Study Games")await expect(page.locator(".games-screen")).toHaveAttribute("data-study-state","ready");
+    // Assess settled navigation content, rather than intermediate opacity frames.
+    await page.locator(".screen").evaluate(async el=>{await Promise.all(el.getAnimations().map(animation=>animation.finished.catch(()=>{})));});
     const results=await new AxeBuilder({page}).analyze();
     for(const violation of results.violations){
       if(violation.impact==="serious"||violation.impact==="critical"){

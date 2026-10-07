@@ -13,7 +13,7 @@ test.beforeEach(async ({ page }) => {
 
 test('Study Games keeps the approved menu, play, and finish interaction contract', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Study' })).toBeVisible();
-  for (const label of ['Reading / ELA', 'Spelling / Handwriting', 'Math', 'Religion', 'Mix']) {
+  for (const label of ['Reading / ELA', 'Spelling', 'Math', 'Religion', 'Mix']) {
     await expect(page.getByRole('button', { name: new RegExp(label, 'i') })).toBeVisible();
   }
   await expect(page.locator('[data-study-source]')).toHaveCount(0);
@@ -60,14 +60,14 @@ test('Study home is subject-first with selectable Test Prep', async ({ page }, t
   const boxes=await page.evaluate(() => {
     const box=selector => {
       const r=document.querySelector(selector)?.getBoundingClientRect();
-      return r?{top:r.top,bottom:r.bottom,height:r.height}:null;
+      return r?{top:r.top,bottom:r.bottom,left:r.left,right:r.right,height:r.height}:null;
     };
     return {
       priority:box('.study-priority'),
       games:box('.study-game-section'),
     };
   });
-  expect(boxes.priority.bottom).toBeLessThanOrEqual(boxes.games.top+4);
+  expect(boxes.priority.bottom<=boxes.games.top+4||boxes.priority.right<=boxes.games.left+4,"Test Prep leads the phone stack or tablet split layout").toBe(true);
 
   const tiles=page.locator('.study-game-tile');
   await expect(tiles).toHaveCount(5);
