@@ -1,10 +1,10 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v138-focused-study";
+const CACHE = "abvm-grade2-parent-companion-v140-focused-study";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=111",
   "./study-support.js?v=3",
-  "./app.js?v=130",
+  "./app.js?v=131",
   "./product-view.js?v=3",
   "./study-teaching.css?v=1",
   "./school-updates.js?v=3",
@@ -16,7 +16,7 @@ const STATIC_SHELL = [
   "./assets/abvm-app-icon-192.png",
   "./assets/abvm-app-icon-512.png"
 ];
-const OPTIONAL_DATA = ["./assets/illustrations/reading.webp", "./assets/illustrations/math.webp", "./assets/illustrations/spelling.webp", "./assets/illustrations/religion.webp", "./assets/illustrations/eagle.webp", "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./study-materials.mjs", "./study-games-materials-view.mjs?v=3", "./study-games-materials.css?v=12", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs","./study-resources.mjs", "./study-model.mjs", "./star-practice.mjs", "./lunch-art.js?v=1", "./assets/school/abvm-school-sign.webp", "./assets/school/abvm-school-hero.webp", "./assets/school/abvm-school-aerial.webp", "./assets/school/abvm-school-facade.webp"];
+const OPTIONAL_DATA = ["./assets/illustrations/reading.webp", "./assets/illustrations/math.webp", "./assets/illustrations/spelling.webp", "./assets/illustrations/religion.webp", "./assets/illustrations/eagle.webp", "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./study-materials.mjs", "./study-games-materials-view.mjs?v=4", "./study-games-materials.css?v=14", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs","./study-resources.mjs", "./study-model.mjs", "./star-practice.mjs", "./lunch-art.js?v=1", "./assets/school/abvm-school-sign.webp", "./assets/school/abvm-school-hero.webp", "./assets/school/abvm-school-aerial.webp", "./assets/school/abvm-school-facade.webp"];
 
 self.addEventListener("install",event=>{
   event.waitUntil((async()=>{
