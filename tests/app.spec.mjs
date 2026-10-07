@@ -7,7 +7,10 @@ async function openTab(page,label){
     await page.goto("/#games");
   }else await page.getByRole("button",{name:label,exact:true}).click();
   await expect(page.locator(".screen")).toBeVisible();
-  if(label==="Study"||label==="Study Games")await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
+  if(label==="Study"||label==="Study Games"){
+    await expect(page.locator(".games-screen")).toHaveAttribute("data-study-state","ready",{timeout:10_000});
+    await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
+  }
 }
 test.beforeEach(async({page})=>{
   await page.goto("/#today");
