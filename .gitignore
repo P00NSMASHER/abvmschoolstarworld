@@ -5,3 +5,8 @@ test-results/
 live-lunch-proof/
 health-output/
 pages/data/study-pack-runtime.json
+
+# Private cumulative learner evidence must never be committed here.
+private-learning/
+*.learning-private.json
+reviewed-observations*.json
