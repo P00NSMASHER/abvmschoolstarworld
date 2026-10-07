@@ -4,6 +4,8 @@ The October 7 user directive supersedes the October 6 concept board as presentat
 
 ## Product direction
 
+The final illustrated delivery described below was rejected on the user’s real iPhone. The **October 7 correction after device feedback** section is the current implementation authority; do not restore the native picker, oversized headers or unread acknowledgement UI.
+
 The user rejected the muted first implementation and approved the October 7 illustrated previews, then requested navy as the main color instead of vivid blue. The approved direction is navy #102e58, gold #ffca38, crisp white and sky surfaces, bold rounded typography, real school photography, and dimensional subject artwork. Calendar returns as a primary destination. The school seal remains genuine; generated artwork is decorative, never educational evidence or replacement school photography.
 
 Four primary destinations:
@@ -11,7 +13,7 @@ Four primary destinations:
 - **Today:** school day, nearest verified test (deadlines remain in the daily plan), a focused study action, full lunch and important reminders.
 - **Calendar:** primary Month/Week segmented view. Month shows date events and complete selected-day lunch; Week retains the five-day selector, all verified tests and five lunches, full selected-day agenda, homework and reminders.
 - **Study:** choose a test or a subject. Reading/ELA, Spelling/Handwriting, Math, Religion and Mix replace the mini-game metaphor. Notes, cumulative lessons, official resources, completion controls and printable guides sit below practice.
-- **Progress:** honest practice evidence stored on the device, current class topics, cumulative learning access, family notices and unread teacher updates. No invented mastery, marks, private worksheet analysis or improvement curves.
+- **Progress:** honest practice evidence stored on the device, current class topics, cumulative learning access, family notices and dated school checks. No invented mastery, marks, private worksheet analysis or improvement curves.
 
 Existing `#games` and `#family` routes continue to work; `#progress` aliases Progress. `#study?notes` opens learning notes. The Calendar tab remains selected for both #calendar and #week. Both deep links remain supported.
 
@@ -66,3 +68,14 @@ The October 7 afternoon implementation follows the six approved concept boards w
 Navy headers, gold study actions, illustrated subjects, a navy tablet rail, accessible Month/Week controls, selected-day calendar detail, and colorful compact weekly summaries use the functioning controllers. Questions and result statistics remain actual practice evidence. No pipeline or provenance authority is changed.
 
 Final illustrated refinement gives 375px phones four visible subject choices, a compact navy eagle greeting, a gold test chooser, and separate native test selection. The full test label and date remain visible above the picker. Calendar dates occupy at least 44px at 375/390px; 320px uses the available screen width. Month details split at 900px and above, with stacked portrait layouts that preserve date target sizes. Desktop school imagery no longer determines the row height. Progress artwork wraps naturally under enlarged text instead of overflowing. Decorative assets add about 134 KiB, with no font or runtime dependency.
+
+
+## October 7 correction after device feedback
+
+The user rejected the delivered illustrated revision: its oversized headers, native dropdown and long class-note lists did not meet the previews. This correction removes the acknowledgement/read-status feature entirely, including browser tracking and navigation dots. The governed change feed shows what changed at its recorded school check; it does not invent original teacher publication times or past changes unavailable in the feed.
+
+Today merges the separate title header into the real-school greeting, bringing study, the next test and lunch into the first viewport. Study keeps a compact greeting, visible Test Prep entry and four bright subject choices. Test Prep is a dedicated view with fully labeled, horizontally browsable test choices, exact selected date/topics, honest practice history, one gold practice action and its matching guide. Unsupported tests remain disabled and original Grade 2 fallbacks remain disclosed. Guide selection shares the assessment-inclusive test identity used by the chooser; existing printable-history indexes remain unchanged.
+
+Class notes use weekly/cumulative scope and a subject selector. Only one subject is displayed at a time, with explicit source-prefix topic groups, individual review ideas, original wording/order available in a closed disclosure, real dated saved lessons and official Religion links. Long practice word problems use legible reading-sized type; short equations use larger display type, numeric choices remain spacious, and teaching diagrams preserve exact data.
+
+Native iPhone review now reserves actual status and home-indicator space within the test viewport. Screenshots are rendered application output, not generated concept art. The selected practice and guide actions must remain reachable without being covered by navigation, and enlarged text may scroll while preserving full content and focus. Existing navy/gold tokens, genuine school imagery, calendar and tablet rail remain. No production dependencies, decorative asset payload or data pipeline changes are introduced.

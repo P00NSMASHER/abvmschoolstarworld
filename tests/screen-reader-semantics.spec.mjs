@@ -19,9 +19,15 @@ test("primary views expose stable regions and navigation state",async({page})=>{
   }
   for(const path of ["/#study","/#games"]){
     await waitForApp(page,path);
+    await expect(page.locator(".games-screen")).toHaveAttribute("data-study-state","ready");
     await expect(page.getByRole("region",{name:"Study games",exact:true})).toBeVisible({timeout:10_000});
     await expect(page.locator(".study-game-grid > .study-game-tile")).toHaveCount(5);
-    await expect(page.locator("[data-test-select]")).toHaveAccessibleName(/test/i);
+    await expect(page.locator('[data-open-prep]')).toHaveAccessibleName(/test prep/i);
+    await page.locator('[data-open-prep]').click();
+    const choices=page.locator('[data-test-select]');
+    expect(await choices.count()).toBeGreaterThan(0);
+    for(const choice of await choices.all()){await expect(choice).toHaveRole('button');await expect(choice).toHaveAttribute('aria-pressed',/true|false/);await expect(choice).toHaveAccessibleName(/\w/);}
+    await page.locator('[data-close-prep]').click();
     await expect(page.getByRole("button",{name:"Study",exact:true})).toHaveAttribute("aria-current","page");
     await expect(page.getByRole("navigation",{name:"App navigation"}).getByRole("button",{name:"Study Games",exact:true})).toHaveCount(0);
   }

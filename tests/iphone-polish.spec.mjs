@@ -17,7 +17,7 @@ async function openNotes(page){
   const notes=page.locator('details[data-study-notes]');
   if(!await notes.evaluate(node=>node.open))await notes.locator(':scope > summary').click();
   await expect(notes).toHaveAttribute('open','');
-  const lessons=notes.locator('.game-material-lesson');
+  const lessons=notes.locator('[data-note-subject]:not([hidden]) details');
   await expect(lessons.first()).toBeVisible();
   for(const lesson of await lessons.all()){
     if(!await lesson.evaluate(node=>node.open))await lesson.locator(':scope > summary').click();
@@ -67,9 +67,9 @@ test('long Family and Study cards never clip their content',async({page})=>{
       await page.goto('/#'+tab);
       await expect(page.locator('.screen')).toBeVisible();
       if(tab==='study')await openNotes(page);
-      const clipped=await page.locator('.family-actions-card,.notices-card,.game-materials,.game-material-actions,[data-study-notes],.game-material-lesson').evaluateAll(nodes=>nodes.filter(x=>x.scrollHeight>x.clientHeight+2).map(x=>({class:x.className,visible:x.clientHeight,content:x.scrollHeight})));
+      const clipped=await page.locator('.family-actions-card,.notices-card,.game-materials,.game-material-actions,[data-study-notes],.game-material-lesson').evaluateAll(nodes=>nodes.filter(x=>x.getClientRects().length&&x.scrollHeight>x.clientHeight+2).map(x=>({class:x.className,visible:x.clientHeight,content:x.scrollHeight})));
       expect(clipped).toEqual([]);
-      const last=page.locator(tab==='family'?'.unofficial-note':'.game-material-lesson').last();
+      const last=page.locator(tab==='family'?'.unofficial-note':'[data-note-subject]:not([hidden]) details').last();
       await last.scrollIntoViewIfNeeded();
       await expect(last).toBeInViewport();
     }
@@ -99,23 +99,20 @@ test('calendar merges repeat notices without losing distinct events',async({page
   expect(closed.join(' ')).toContain('Columbus Day');
 });
 
-test('new source information stays unread until acknowledged',async({page})=>{
+test('school updates are dated source information without read-state controls',async({page})=>{
   const data=await(await page.request.get('/data/study-pack.json')).json();
-  await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({json:data}));
-  await page.goto('/#today');
-  await expect(page.locator('.screen')).toBeVisible();
-  await expect(page.locator('.updates-banner')).toHaveCount(0);
   data.pack.parentNotices.push('Friday, Oct. 9: Bring the permission form.');
+  data.pack.schoolChangeFeed={schemaVersion:1,generatedAt:'2026-10-07T19:32:52.274Z',sourceHash:'dated-notice-check',changed:true,items:[{id:'notice',kind:'event',subject:'School',text:'Added school event: Permission form — Friday, Oct. 9'}]};
+  await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({json:data}));
+  await page.addInitScript(()=>localStorage.setItem('abvm-updates-seen:v1','[]'));
+  await page.goto('/#family');
+  await expect(page.locator('[aria-labelledby="school-change-title"]')).toContainText('Permission form');
+  await expect(page.locator('[aria-labelledby="school-change-title"]')).toContainText('Checked Oct 7, 2026, 3:32 PM EDT');
+  await expect(page.locator('[aria-labelledby="family-current-notices"]')).toContainText('Bring the permission form');
+  await expect(page.locator('.updates-banner,.unread-updates,[data-mark-updates-read],[data-has-updates="true"]')).toHaveCount(0);
   await page.reload();
-  await expect(page.locator('.updates-banner')).toContainText('1 new school update');
-  await page.locator('.updates-banner').click();
-  await expect(page.locator('.unread-updates')).toContainText('Bring the permission form');
-  await page.reload();
-  await expect(page.locator('.unread-updates')).toBeVisible();
-  await page.getByRole('button',{name:'Mark updates as read'}).click();
-  await expect(page.locator('.unread-updates')).toHaveCount(0);
-  await page.getByRole('button',{name:'Today',exact:true}).click();
-  await expect(page.locator('.updates-banner')).toHaveCount(0);
+  await expect(page.locator('[aria-labelledby="school-change-title"]')).toContainText('Permission form');
+  expect(await page.evaluate(()=>localStorage.getItem('abvm-updates-seen:v1'))).toBe('[]');
 });
 
 test('Study Games keeps reports and recommendations absent before and after saved learning',async({page})=>{
@@ -159,7 +156,7 @@ test('larger preferred text reflows without hiding Family or Study content',asyn
     await page.evaluate(()=>document.documentElement.style.fontSize='34px');
     const overflow=await page.locator('.screen').evaluate(e=>e.scrollWidth>e.clientWidth+1);
     expect(overflow,tab+' with enlarged text').toBeFalsy();
-    const clipped=await page.locator('.family-actions-card,.notices-card,.game-materials,.game-material-actions,[data-study-notes],.game-material-lesson').evaluateAll(nodes=>nodes.some(x=>x.scrollHeight>x.clientHeight+2));
+    const clipped=await page.locator('.family-actions-card,.notices-card,.game-materials,.game-material-actions,[data-study-notes],.game-material-lesson').evaluateAll(nodes=>nodes.some(x=>x.getClientRects().length&&x.scrollHeight>x.clientHeight+2));
     expect(clipped,tab+' with enlarged text').toBeFalsy();
   }
 });
@@ -191,8 +188,10 @@ test('on-demand lesson bullets reserve space and never collide with copy',async(
   await page.setViewportSize({width:393,height:852});
   await page.goto('/#study');
   const notes=await openNotes(page);
-  const cards=notes.locator('.game-material-lesson');
-  expect(await notes.locator('li').count()).toBeGreaterThan(0);
+  // Topic groups deliberately use unbulleted short rows. Full original notes
+  // and saved lessons retain conventional lists with reserved marker space.
+  const cards=notes.locator('[data-note-subject]:not([hidden]) .study-notes-original,[data-note-subject]:not([hidden]) .game-material-lesson');
+  expect(await cards.locator('li').count()).toBeGreaterThan(0);
   for(let i=0;i<await cards.count();i++){
     const card=cards.nth(i);
     const items=card.locator('li');

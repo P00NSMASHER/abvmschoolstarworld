@@ -20,33 +20,21 @@ for(const size of sizes){
     const longUpdate='School reminder: '+('Please review the school information with your family. ').repeat(18)+'End of complete source update.';
     data.pack.parentNotices=[longUpdate,...data.pack.parentNotices];
     await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({json:data}));
-    await page.addInitScript(()=>localStorage.setItem('abvm-updates-seen:v1','[]'));
     await page.goto('/#family');
-    const unread=page.locator('.unread-updates');
-    await expect(unread).toBeVisible();
-    await expect(page.locator('.family-more')).toHaveCount(0);
-    const previews=unread.locator(':scope > ul > li > .family-message');
-    await expect(previews).toHaveCount(3);
-    for(const preview of await previews.all()){
-      expect(await preview.getAttribute('open')).toBeNull();
-      const box=await preview.boundingBox();
-      expect(box.height).toBeLessThanOrEqual(180);
-    }
-    await page.locator('.screen').evaluate(el=>el.scrollTop=0);
-    await capture(page,testInfo,`${size.name}-family-top`);
-    await previews.first().scrollIntoViewIfNeeded();
-    await capture(page,testInfo,`${size.name}-family-unread`);
-    await previews.first().locator('summary').click();
-    await expect(previews.first().locator('.family-message-body')).toHaveText(longUpdate);
-    await expect(previews.first().locator('.family-message-body')).toBeVisible();
-    await previews.first().locator('summary').click();
-    await unread.locator('.family-update-overflow > summary').click();
-    await expect(unread.locator('.family-update-overflow .family-message').first()).toBeVisible();
-    await unread.locator('.family-update-overflow > summary').click();
     const notices=page.locator('[aria-labelledby="family-current-notices"]');
-    await notices.scrollIntoViewIfNeeded();
-    await noOverflow(page);
+    await expect(notices).toBeVisible();
+    await expect(page.locator('[data-mark-updates-read],.unread-updates,[data-has-updates="true"]')).toHaveCount(0);
+    const preview=notices.locator('.family-message').first();
+    expect(await preview.getAttribute('open')).toBeNull();
+    await preview.scrollIntoViewIfNeeded();
+    const box=await preview.boundingBox();
+    expect(box.height).toBeLessThanOrEqual(180);
     await capture(page,testInfo,`${size.name}-family-notices`);
+    await preview.locator('summary').click();
+    await expect(preview.locator('.family-message-body')).toHaveText(longUpdate);
+    await expect(preview.locator('.family-message-body')).toBeVisible();
+    await noOverflow(page);
+    await preview.locator('summary').click();
     const registrationNotice=notices.locator('.family-message').filter({hasText:'CYO registration for 2nd graders'});
     await registrationNotice.locator('summary').click();
     const registration=registrationNotice.getByRole('link',{name:'tools.signupgenius.com/c/st-nicholas-basketball-registration-k-1st-grade-copy'});
@@ -54,8 +42,7 @@ for(const size of sizes){
     await expect(registration).toHaveAttribute('href','https://tools.signupgenius.com/c/st-nicholas-basketball-registration-k-1st-grade-copy');
     await expect(registration).toHaveAttribute('rel',/noopener/);
     await noOverflow(page);
-    await page.getByRole('button',{name:'Mark updates as read',exact:true}).click();
-    await expect(unread).toHaveCount(0);
+    await expect(page.getByRole('button',{name:'Mark updates as read',exact:true})).toHaveCount(0);
   });
 
   test(`October lunch artwork is visible and bounded on ${size.name}`,async({page},testInfo)=>{

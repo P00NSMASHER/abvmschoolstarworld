@@ -23,10 +23,10 @@ const GAME_TYPE_LABELS=Object.freeze({
   reasoning:"Explain your thinking"
 });
 const STUDY_GAME_MODES=Object.freeze([
-  Object.freeze({id:"reading",icon:"words",title:"Reading / ELA",subjects:["Reading / ELA"],count:8,copy:"Stories, words & language"}),
-  Object.freeze({id:"spelling",icon:"pencil",title:"Spelling / Handwriting",subjects:["Spelling / Handwriting"],count:8,copy:"Letters, sounds & spelling"}),
-  Object.freeze({id:"math",icon:"math",title:"Math",subjects:["Math"],count:8,copy:"Numbers & problem solving"}),
-  Object.freeze({id:"religion",icon:"faith",title:"Religion",subjects:["Religion"],count:8,copy:"Faith & this week’s lesson"}),
+  Object.freeze({id:"reading",icon:"words",title:"Reading / ELA",subjects:["Reading / ELA"],count:8,copy:"Stories & words"}),
+  Object.freeze({id:"spelling",icon:"pencil",title:"Spelling / Handwriting",subjects:["Spelling / Handwriting"],count:8,copy:"Sounds & spelling"}),
+  Object.freeze({id:"math",icon:"math",title:"Math",subjects:["Math"],count:8,copy:"Numbers & skills"}),
+  Object.freeze({id:"religion",icon:"faith",title:"Religion",subjects:["Religion"],count:8,copy:"Faith & learning"}),
   Object.freeze({id:"mix",icon:"quick",title:"Mix",subjects:[],count:8,copy:"A little of every subject"})
 ]);
 function storageGet(key){try{return localStorage.getItem(key)}catch{return null}}
@@ -289,7 +289,7 @@ function calendarBase(){
 }
 function renderToday(){
  const d=today(),priority=datedImportantEvents().find(({item,date})=>date>=d&&(kindClass(item)==="test"||kindClass(item)==="due"));
- stack().innerHTML=window.ABVMProductView.today({d,pack,header,freshness,taskHtml,kindClass,fmtDate,fmtShort,linkedTextHtml,events:eventItemsForDate(d),tasks:taskRecordsForSurface("today"),next:currentTest()||(priority?{x:priority.item,d:priority.date}:null),reminders:upcomingReminderTexts(d,2),lunchHtml:lunchCardHtml(d,lunchForDate(d)),banner:window.ABVMSchoolUpdates.banner(pack)});
+ stack().innerHTML=window.ABVMProductView.today({d,pack,header,freshness,taskHtml,kindClass,fmtDate,fmtShort,linkedTextHtml,events:eventItemsForDate(d),tasks:taskRecordsForSurface("today"),next:currentTest()||(priority?{x:priority.item,d:priority.date}:null),reminders:upcomingReminderTexts(d,2),lunchHtml:lunchCardHtml(d,lunchForDate(d))});
 }
 function renderWeek(){
  const days=weekDays();
@@ -353,7 +353,7 @@ function ensureStudyMaterials(retry=false){
   if(currentStudyMaterials()&&!retry)return Promise.resolve(studyMaterials);
   const data=pack,catalog=studyGameCatalog(),engine=studyGameEngine(),events=datedImportantEvents().filter(r=>kindClass(r.item)==="test").map(r=>({date:isoDateKey(r.date),label:r.item.label,kind:r.item.kind,endsAt:r.item.endsAt}));
   const request={pack:data,promise:null};
-  request.promise=Promise.all([import("./study-materials.mjs"),import("./study-games-materials-view.mjs?v=2")]).then(async([materials,view])=>{
+  request.promise=Promise.all([import("./study-materials.mjs"),import("./study-games-materials-view.mjs?v=3")]).then(async([materials,view])=>{
     if(pack===data&&!studyMaterialsView){studyMaterialsView=view.createMaterialsView({onChange:()=>{if(isStudyRoute())renderGames()},onRetry:retryStudyMaterials,onTest:startStudyTest});if(isStudyRoute()&&gameState.screen==="menu")renderGames()}
     const model=await materials.loadStudyMaterials({pack:data,catalog,events,engine});
     if(pack===data){
@@ -369,7 +369,7 @@ function ensureStudyGameEngine(){
   if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
   if(studyEnginePromise)return studyEnginePromise;
   const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.async=true;s.onload=()=>window[key]?resolve():reject(new Error(key+" did not initialize"));s.onerror=()=>reject(new Error(key+" could not be loaded"));document.head.append(s)});
-  studyEnginePromise=Promise.all([load("./study-games.js?v=100","ABVMStudyGames"),load("./study-games-view.js?v=12","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
+  studyEnginePromise=Promise.all([load("./study-games.js?v=100","ABVMStudyGames"),load("./study-games-view.js?v=13","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
   return studyEnginePromise;
 }
 function studyGameCatalog(){
@@ -520,7 +520,7 @@ function renderGames(){
   const catalog=studyGameCatalog();
   const practiceTitle=gameState.screen!=="menu"?'<h1 class="visually-hidden" tabindex="-1">'+esc(gameMode(gameState.mode).title.replace(/ practice$/i,""))+(gameState.screen==="finish"?' results':' practice')+'</h1>':"";
   const body=practiceTitle+(gameState.screen==="play"?gamePlayHtml():gameState.screen==="finish"?gameFinishHtml():gameMenuHtml(catalog));
-  const chrome=gameState.screen==="menu"?'<header class="app-header study-hero"><div class="study-hero-copy"><p>ASSUMPTION BVM · GRADE 2</p><h1 class="visually-hidden" tabindex="-1">Study</h1><h2>Let’s learn,<br><span>Emma!</span></h2></div>'+SCHOOL_LOGO_HTML+'<img class="study-hero-art" src="./assets/illustrations/eagle.webp" width="240" height="240" alt=""></header>':"";
+  const chrome=gameState.screen==="menu"&&!studyMaterialsView?.isPrep?.()?'<header class="app-header study-hero"><div class="study-hero-copy"><p>ASSUMPTION BVM · GRADE 2</p><h1 class="visually-hidden" tabindex="-1">Study</h1><h2>Let’s learn, <span>Emma!</span></h2></div>'+SCHOOL_LOGO_HTML+'<img class="study-hero-art" src="./assets/illustrations/eagle.webp" width="240" height="240" alt=""></header>':"";
   const state=materials?(materials.status.partial?"partial":"ready"):studyMaterialsError?.pack===pack?"partial":"loading";
   stack().innerHTML='<div class="screen games-screen'+(gameState.screen!=="menu"?' is-playing':'')+'" data-study-state="'+state+'" role="region" aria-label="Study games">'+chrome+body+(gameState.screen==="menu"?freshness():"")+'</div>';
   if(menuScroll!==null)stack().querySelector(".games-screen").scrollTop=menuScroll;
@@ -541,10 +541,6 @@ function render({preserveScroll=false}={}){
   if(!pack)return;
   screenGeneration++;studyMaterialsView?.readAloud.stop();
   if(!isStudyRoute()&&gameState.screen!=="menu"){markGameComebacksNextSession();gameState.screen="menu"}
-  const pending=window.ABVMSchoolUpdates.state(pack).unread.length;
-  const familyTab=document.querySelector('.bottom-nav [data-tab="family"]');
-  familyTab?.setAttribute("data-has-updates",pending?"true":"false");
-  familyTab?.setAttribute("aria-description",pending?pending+" unread school updates":"");
   const scrollTop=stack().querySelector(".screen")?.scrollTop||0;
   ({today:renderToday,week:renderWeek,calendar:renderCalendar,study:renderGames,games:renderGames,family:renderFamily}[activeTab]||renderToday)();
   const navTab=activeTab==="games"?"study":activeTab==="week"?"calendar":activeTab;
@@ -568,7 +564,6 @@ function bindScreen(){
     if(!target||!stack().contains(target))return;
     if(target.matches("[data-route]")){activeTab=target.dataset.route.split("?")[0];history.replaceState(null,"","#"+target.dataset.route);render();stack().querySelector("h1")?.focus({preventScroll:true});return;}
     if(target.matches("[data-open-family]")){activeTab="family";history.replaceState(null,"","#family");render();return;}
-    if(target.matches("[data-mark-updates-read]")){const saved=window.ABVMSchoolUpdates.markRead(pack);render({preserveScroll:true});toast(saved?"Updates marked as read":"Could not save read status on this device");return;}
     if(target.matches("[data-refresh-pack]")){manualRefreshSchoolInfo();return;}
     if(target.matches("[data-check]")){toggleChecked((pack.homework||[])[Number(target.dataset.check)],Number(target.dataset.check));return;}
     if(target.matches("[data-day]")){selectedDay=new Date(target.dataset.day);renderWeek();return;}

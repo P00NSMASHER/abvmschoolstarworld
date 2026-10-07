@@ -359,8 +359,8 @@ export function createStudyMaterials({
     const {groups, ...state} = printableTestState(true);
     return {...state,canUndo:!!completionUndo,message};
   }
-  function testGuide(index) {
-    const state = printableTestState(), i = Number(index);
+  function testGuide(index, {upcoming = false} = {}) {
+    const state = printableTestState(upcoming), i = Number(index);
     if (!Number.isInteger(i) || i < 0 || i >= state.tests.length) return null;
     const test = state.tests[i], group = unique(state.groups[i] || []);
     const subject = subjectForTest(test,group);

@@ -37,11 +37,13 @@ test('weekly test prep covers same-day subjects in the existing player and compl
   });
   const dedupe=rows=>[...new Map(rows.map(q=>[q.prompt+'|'+q.answer,q])).values()];
   const allowed={Math:dedupe([...currentMath,...archivedMath]),Religion:religion};
+  await page.locator('[data-open-prep]').click();
   const prep=page.locator('[data-study-tests]');
   await expect(prep.locator('time')).toHaveAttribute('datetime','2026-10-07');
-  await expect(page.locator('[data-test-select] option')).toContainText(['Math test','Religion Chapter 2 test','Math test']);
+  await expect(page.locator('[data-test-select]')).toContainText(['Math test','Religion Chapter 2 test','Math test']);
   for(const [index,subject] of [[0,'Math'],[1,'Religion']]){
-    await page.locator('[data-test-select]').selectOption(String(index));
+    await page.locator(`[data-test-select="${index}"]`).click();
+    await expect(page.locator(`[data-test-select="${index}"]`)).toHaveAttribute('aria-pressed','true');
     await expect(prep.locator('h3')).toContainText(subject);await page.locator('[data-test-single]').click();
     const seen=[];
     const total=Math.min(8,allowed[subject].length);
@@ -71,21 +73,24 @@ test('weekly test prep covers same-day subjects in the existing player and compl
   expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('abvm-completed-tests')).length)).toBe(2);
   await page.reload();
   await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+  await page.locator('[data-open-prep]').click();
   await expect(prep.locator('time')).toHaveAttribute('datetime','2026-10-09');
 });
 
 test('past tests roll forward and mixed practice keeps hints separate from answers',async({page},testInfo)=>{
-  await mount(page,'2026-10-08',testInfo);const prep=page.locator('[data-study-tests]');await expect(prep.locator('time')).toHaveAttribute('datetime','2026-10-09');
-  await page.locator('[data-game-start="mix"]').click();const before=await page.evaluate(()=>localStorage.getItem('abvm-study-learning:v2'));
+  await mount(page,'2026-10-08',testInfo);await page.locator('[data-open-prep]').click();const prep=page.locator('[data-study-tests]');await expect(prep.locator('time')).toHaveAttribute('datetime','2026-10-09');
+  await page.locator('[data-close-prep]').click();await page.locator('[data-game-start="mix"]').click();const before=await page.evaluate(()=>localStorage.getItem('abvm-study-learning:v2'));
   await page.locator('[data-game-hint]').click();await expect(page.locator('.game-hint')).toBeVisible();await expect(page.locator('[data-game-next]')).toHaveCount(0);
   expect(await page.evaluate(()=>localStorage.getItem('abvm-study-learning:v2'))).toBe(before);await page.locator('[data-game-home]').click();await expect(page.locator('input[type="file"]')).toHaveCount(0);
 });
-test('subject menu, native test selection and notes fit phone and tablet',async({page},info)=>{
+test('subject menu and dedicated test selection fit phone and tablet',async({page},info)=>{
   await page.goto('/#study');await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
   for(const width of [390,820]){
     await page.setViewportSize({width,height:900});expect(await page.locator('.games-screen').evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true);
-    const select=page.locator('[data-test-select]');await expect(select).toBeVisible();await select.focus();await expect(select).toBeFocused();
-    await page.screenshot({animations:"disabled",path:info.outputPath(`study-${width}.png`),fullPage:true});await page.locator('[data-game-start="math"]').click();
+    await page.locator('[data-open-prep]').click();
+    const choice=page.locator('[data-test-select]').first();await expect(choice).toBeVisible();await choice.focus();await expect(choice).toBeFocused();
+    expect(await page.locator('.games-screen').evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true);
+    await page.screenshot({animations:"disabled",path:info.outputPath(`study-prep-${width}.png`),fullPage:true});await page.locator('[data-close-prep]').click();await page.locator('[data-game-start="math"]').click();
     await expect(page.locator('.game-question-card')).toBeVisible();await expect(page.locator('[data-game-answer]').first()).toBeVisible();await page.screenshot({animations:"disabled",path:info.outputPath(`study-question-${width}.png`),fullPage:true});await page.locator('[data-game-home]').click();
   }
 });
@@ -132,7 +137,8 @@ test('on-demand subject notes retain the verified chapter review and disclose a 
   await expect(page.locator('[data-religion-review],.game-note-warning')).toHaveCount(0);
   await page.locator('[data-study-notes] > summary').click();
   const religion=page.locator('[data-note-subject="Religion"]');
-  await religion.locator(':scope > summary').click();
+  await page.locator('[data-notes-subject]').filter({hasText:/^Religion$/}).click();
+  await expect(religion).toBeVisible();
   const review=religion.locator('[data-religion-review]');
   await expect(review).toHaveAttribute('href',chapter.url);
   await expect(review).toHaveText('Chapter 2 online review');
@@ -140,10 +146,12 @@ test('on-demand subject notes retain the verified chapter review and disclose a 
   await expect(review).toHaveAttribute('rel',/noopener/);
   await expect(review).toBeVisible();
   const spelling=page.locator('[data-note-subject="Spelling / Handwriting"]');
-  await spelling.locator(':scope > summary').click();
+  await page.locator('[data-notes-subject]').filter({hasText:/^Spelling \/ Handwriting$/}).click();
+  await expect(religion).toBeHidden();
   await expect(spelling.locator('.game-note-warning')).toContainText('Spelling (short i / long i) (2026-10-09)');
   await expect(spelling.locator('.game-note-warning')).toContainText('earlier vowel pattern');
   await expect(spelling.locator('.game-note-warning')).toContainText('do not establish test coverage');
+  await page.locator('[data-notes-subject]').filter({hasText:/^Religion$/}).click();
   await page.locator('[data-study-notes] > summary').click();
   await expect(page.locator('[data-study-notes]')).not.toHaveAttribute('open','');
   await expect(review).not.toBeVisible();
@@ -165,6 +173,7 @@ test('current notes and cumulative reviewed schoolwork remain separately availab
   const notes=page.locator('[data-study-notes-content]');await expect(notes).not.toContainText(lesson.title);
   await page.locator('[data-notes-source="saved"]').click();await expect(page.locator('[data-notes-source="saved"]')).toHaveAttribute('aria-pressed','true');
   await expect(notes).toContainText('Undated schoolwork');
+  await page.locator('[data-notes-subject]').filter({hasText:new RegExp('^'+lesson.subject.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'$')}).click();
   const reviewed=notes.locator('.game-material-lesson').filter({hasText:lesson.title});await reviewed.locator(':scope > summary').click();
   await expect(reviewed.locator('li')).toHaveText(lesson.notes);
   await page.locator('[data-notes-source="weekly"]').click();await expect(notes).not.toContainText(lesson.title);

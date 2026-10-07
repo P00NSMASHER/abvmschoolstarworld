@@ -58,7 +58,6 @@
       kindClass,
       fmtDate,
       fmtShort,
-      banner,
     } = c;
     const closed = events.some((e) => kindClass(e) === "closed");
     const nextHtml = next
@@ -98,10 +97,9 @@
       : '<p class="empty-copy">No special school events are listed for today.</p>';
     return (
       '<div class="screen today-screen" role="region" aria-label="Today">' +
-      header("ASSUMPTION BVM · GRADE 2", "Today") +
-      '<section class="hero-card school-photo-hero"><div class="hero-copy"><p class="eyebrow">' +
+      '<h1 class="visually-hidden" tabindex="-1">Today</h1><section class="hero-card school-photo-hero"><div class="hero-copy"><p class="eyebrow">' +
       esc(fmtDate(d)) +
-      '</p><h2>Hi, Emma!</h2><p>A good day to learn.<br>Your school day, all together.</p></div><img class="hero-photo" src="./assets/school/abvm-school-hero.webp" width="1024" height="683" fetchpriority="high" alt="Assumption BVM School in Pottsville"><span class="photo-caption">OUR ABVM</span></section>' +
+      '</p><h2>Hi, Emma!</h2><p>Your school day, all together.</p></div><img class="hero-photo" src="./assets/school/abvm-school-hero.webp" width="1024" height="683" fetchpriority="high" alt="Assumption BVM School in Pottsville"><span class="photo-caption">OUR ABVM</span><img class="today-school-seal" src="./assets/abvm-app-icon-192.png" width="48" height="48" alt="Assumption BVM Catholic School logo"></section>' +
       '<div class="today-primary">' +
       '<button class="study-invitation" type="button" data-route="study"><img src="./assets/illustrations/reading.webp" width="72" height="72" alt=""><span><strong>Start studying</strong><small>A little practice. A little more confidence.</small></span>' +
       icon("arrow") +
@@ -133,7 +131,7 @@
             .join("") +
           "</section>"
         : "") +
-      banner + freshness() +
+      freshness() +
       "</div>"
     );
   }
@@ -305,7 +303,6 @@
       '<details class="school-details" open><summary><span>' +
       icon("bell") +
       'School & family updates</span><b aria-hidden="true">⌄</b></summary><div class="family-updates">' +
-      window.ABVMSchoolUpdates.card(pack) +
       (actions.length
         ? '<section class="parent-card family-actions-card"><h3>Family actions</h3><ul>' +
           actions.map((x) => "<li>" + esc(x) + "</li>").join("") +

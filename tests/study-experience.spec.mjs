@@ -86,7 +86,7 @@ for(const size of [{width:393,height:852},{width:768,height:1024},{width:320,hei
     await info.attach('Games tile text metrics',{path:metricsPath,contentType:'application/json'});
     const geometry=await page.evaluate(()=>{
       const box=s=>document.querySelector(s).getBoundingClientRect().toJSON(),screen=document.querySelector('.screen');
-      return {first:box('.study-test-primary'),grid:box('.study-game-grid'),nav:box('.bottom-nav'),overflow:screen.scrollWidth>screen.clientWidth+1};
+      return {first:box('[data-open-prep]'),grid:box('.study-game-grid'),nav:box('.bottom-nav'),overflow:screen.scrollWidth>screen.clientWidth+1};
     });
     expect(geometry.overflow).toBe(false);
     expect(geometry.nav.bottom).toBeLessThanOrEqual(size.height+1);
@@ -111,7 +111,7 @@ test('material selection, notes and test management are keyboard operable',async
 test('expanded notes reflow at 200 percent text size with reduced motion',async({page},info)=>{
   await page.setViewportSize({width:393,height:852});await page.emulateMedia({reducedMotion:'reduce'});await room(page);
   await page.locator('[data-study-notes] > summary').click();
-  const lesson=page.locator('.game-material-lesson').first();await lesson.locator('summary').click();
+  const lesson=page.locator('[data-note-subject]:not([hidden]) .study-notes-original').first();await lesson.locator('summary').click();
   const title=page.locator('.study-game-copy strong').first();
   const before=await title.evaluate(e=>parseFloat(getComputedStyle(e).fontSize));
   await page.evaluate(()=>document.documentElement.style.fontSize=(parseFloat(getComputedStyle(document.documentElement).fontSize)*2)+'px');
@@ -241,12 +241,12 @@ for(const [name,payload] of [['schoolwork.json',{lessons:'broken'}],['study-arch
   await expect(page.locator('[data-study-notes]')).toContainText('Reading / ELA');
   broken=false;await page.locator('[data-study-retry]').click();
   await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
-  await expect(page.locator('[data-test-single]')).toBeVisible();
+  await page.locator('[data-open-prep]').click();await expect(page.locator('[data-test-single]')).toBeVisible();
  });
 }
 test('test completion storage failure leaves the next test recoverable',async({page})=>{
  await room(page);
- const before=await page.locator('[data-study-tests]').innerText();
+ await page.locator('[data-open-prep]').click();const before=await page.locator('[data-study-tests]').innerText();
  await page.evaluate(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k==='abvm-completed-tests')throw new DOMException('full','QuotaExceededError');return original.call(this,k,v);};});
  await page.locator('[data-study-test-options] > summary').click();await page.locator('[data-complete-test]').click();
  await expect(page.locator('[data-study-tests]')).toHaveText(before,{useInnerText:true});
@@ -255,7 +255,7 @@ test('test completion storage failure leaves the next test recoverable',async({p
 });
 
 test('Undo returns keyboard focus to visible test practice',async({page})=>{
- await room(page);await page.locator('[data-study-test-options] > summary').click();
+ await room(page);await page.locator('[data-open-prep]').click();await page.locator('[data-study-test-options] > summary').click();
  await page.locator('[data-complete-test]').click();
  const undo=page.locator('[data-undo-test]');await expect(undo).toBeFocused();await page.keyboard.press('Enter');
  await expect(page.locator('[data-test-single]')).toBeFocused();await expect(page.locator('[data-test-single]')).toBeVisible();

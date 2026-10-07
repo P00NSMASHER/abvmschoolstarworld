@@ -13,9 +13,9 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./assets/abvm-app-icon-192.png" type="image/png">
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/abvm-app-icon-180.png">
-  <link rel="stylesheet" href="./styles.css?v=109">
+  <link rel="stylesheet" href="./styles.css?v=111">
   <link rel="stylesheet" href="./study-teaching.css?v=1">
-  <link rel="stylesheet" href="./study-games-materials.css?v=11">
+  <link rel="stylesheet" href="./study-games-materials.css?v=12">
 </head>
 <body>
   <main class="site-shell">
@@ -51,7 +51,7 @@
   <script>
     (() => {
       if (!("serviceWorker" in navigator)) return;
-      const reloadKey = "abvm-sw-reloaded-v136";
+      const reloadKey = "abvm-sw-reloaded-v138";
       const hadController = !!navigator.serviceWorker.controller;
       navigator.serviceWorker.addEventListener("controllerchange", () => {
         if (!hadController) return;
@@ -66,11 +66,11 @@
         .catch(() => {});
     })();
   </script>
-  <script src="./school-updates.js?v=2"></script>
-  <script src="./weekly-learning.js?v=5"></script>
+  <script src="./school-updates.js?v=3"></script>
+  <script src="./weekly-learning.js?v=6"></script>
   <script src="./study-support.js?v=3"></script>
   <script src="./lunch-art.js?v=1"></script>
-  <script src="./product-view.js?v=2"></script>
-  <script src="./app.js?v=129"></script>
+  <script src="./product-view.js?v=3"></script>
+  <script src="./app.js?v=130"></script>
 </body>
 </html>

@@ -137,6 +137,22 @@ test('printable guide list includes every upcoming test, not only the nearest te
   assert.equal(model.testGuide(2).label,'Grammar (subject & predicate)');
 });
 
+test('selected guide uses the same assessment-inclusive test identity as Test Prep',() => {
+  const events=[{date:'2026-10-05',label:'STAR Testing window',kind:'assessment'},
+    {date:'2026-10-07',label:'Math',kind:'test'},
+    {date:'2026-10-09',label:'Reading',kind:'test'}];
+  const model=createStudyMaterials(opts({events,catalog:catalog([...pool('guide-math-',5),...pool('guide-reading-',5,'Reading / ELA',{skill:'text-evidence'})])}));
+  const upcoming=model.upcomingTests().tests;
+  assert.equal(upcoming[0].label,'STAR Testing window');
+  for(let index=0;index<upcoming.length;index++){
+    const guide=model.testGuide(index,{upcoming:true});
+    assert.equal(guide.label,upcoming[index].label);
+    assert.equal(guide.date,upcoming[index].date);
+    if(index===0){assert.equal(guide.practice.length,0);assert.ok(guide.warnings.some(row=>/No reviewed practice/.test(row)));}
+  }
+  assert.equal(model.testGuide(0).label,'Math','legacy printable guide indexes still exclude assessment windows');
+});
+
 test('printable study guide document is Letter-sized and resolves vocabulary definitions without source placeholders',() => {
   const placeholder='Current Reading Work vocabulary word; the teacher page does not provide a definition.';
   const html = printableStudyGuideHtml({
@@ -612,7 +628,7 @@ test('Class notes display exact repeats once per subject while preserving govern
   assert.equal(original.notes.filter(row=>row.subject==='Religion').length,4);
   const view=createMaterialsView({win:{location:{hash:'#study?notes'}}});view.setModel(model);
   const html=view.homeHtml({loading:false});
-  const subjectBody=subject=>html.match(new RegExp('data-note-subject="'+subject+'">[\\s\\S]*?<div class="study-note-body">([\\s\\S]*?)</div></details>'))?.[1];
+  const subjectBody=subject=>html.match(new RegExp('data-note-subject="'+subject+'"[\\s\\S]*?class="study-notes-original"[\\s\\S]*?<div class="study-note-body">([\\s\\S]*?)</div></details>'))?.[1];
   const religion=subjectBody('Religion');
   assert.equal((religion.match(/<li>/g)||[]).length,2,'whitespace-only repetitions collapse, distinct punctuation remains');
   assert(religion.includes('<li>  Shared exact.  </li>'),'the first source wording and order stay intact');
@@ -623,4 +639,7 @@ test('Class notes display exact repeats once per subject while preserving govern
   assert.deepEqual(model.notes('weekly'),original,'display does not merge source rows or provenance');
   assert.deepEqual(input,before);
   assert.equal(model.notes('weekly').notes.find(row=>row.id==='religion-archive'),input.archive.notes[0]);
+  assert(html.includes('data-notes-subject="0" aria-pressed="true"'),'one subject is selected immediately');
+  assert(html.includes('data-note-subject="Reading / ELA" hidden'),'other subjects do not create a wall of notes');
+  assert(!html.includes('class="study-notes-original" open'),'original source remains available without dominating the notes');
 });

@@ -39,11 +39,18 @@ function render(args={}){
     '</div><small>Current school skills only · based on practice on this device · not a grade.</small></section>';
 }
 function renderChanges(feed={}){
-  const items=Array.isArray(feed?.items)?feed.items:[];
+  const items=Array.isArray(feed?.items)?feed.items.filter(row=>typeof row?.text==="string"&&row.text.trim()):[];
   if(!items.length)return "";
-  if(items.every(row=>row.kind==="unchanged"))return '<p class="updates-status">Class lessons were unchanged at the last teacher-page check.</p>';
-  const rows=items.slice(0,8).map(row=>'<div class="notice-row" role="listitem"><span class="status '+(row.kind==="unchanged"?"ok":"warn")+'" aria-hidden="true"></span><p>'+esc(row.text)+'</p></div>').join("");
-  return '<section class="parent-card notices-card" aria-labelledby="school-change-title"><div class="notices-head"><span class="notices-mark" aria-hidden="true">↻</span><div><small>LATEST VERIFIED REFRESH</small><h3 id="school-change-title">What changed at school?</h3></div></div><div class="static-notice-list" role="list">'+rows+'</div></section>';
+  const checked=typeof feed?.generatedAt==="string"?new Date(feed.generatedAt):null;
+  const validTime=checked&&Number.isFinite(checked.getTime());
+  const stamp=validTime?new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit",timeZoneName:"short"}).format(checked):"";
+  // This timestamp records a verified source check. It does not establish when
+  // the teacher originally published or changed the material.
+  const checkedHtml=stamp?'<p class="school-update-checked">Checked <time datetime="'+esc(checked.toISOString())+'">'+esc(stamp)+'</time></p>':'<p class="school-update-checked">Check date unavailable</p>';
+  const changed=items.filter(row=>row.kind!=="unchanged"),unchanged=items.filter(row=>row.kind==="unchanged");
+  const rows=list=>'<ul class="school-update-list">'+list.map(row=>'<li><span class="school-update-subject">'+esc(row.subject||"School")+'</span><p>'+esc(row.text)+'</p></li>').join("")+'</ul>';
+  const content=changed.length?'<p class="school-update-label">Changes found at this check</p>'+rows(changed)+(unchanged.length?'<details class="school-update-unchanged"><summary>Still current</summary>'+rows(unchanged)+'</details>':''):'<p class="updates-status">No lesson changes found at this check.</p><details class="school-update-unchanged"><summary>Lessons checked</summary>'+rows(unchanged)+'</details>';
+  return '<section class="parent-card notices-card school-update-feed" aria-labelledby="school-change-title"><div class="notices-head"><span class="notices-mark" aria-hidden="true">↻</span><div><small>LATEST SCHOOL CHECK</small><h3 id="school-change-title">School updates</h3></div></div>'+checkedHtml+content+'</section>';
 }
 
 function renderWeekOverview({days=[],lunchForDate,eventItemsForDate,kindClass,fmtShort,lunchText,lunchUnavailableText}={}){

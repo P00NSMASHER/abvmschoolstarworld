@@ -122,7 +122,7 @@ test("timestamp-only verification refresh does not reset open UI state",async({b
   await expect(page.locator(".freshness")).toHaveClass(/stale/);
   const notes=page.locator("[data-study-notes]");
   await notes.locator(":scope > summary").click();
-  const first=notes.locator(".game-material-lesson").first();
+  const first=notes.locator("[data-note-subject]:not([hidden]) .study-notes-original").first();
   await first.locator(":scope > summary").click();
   await expect(notes).toHaveAttribute("open","");
   await expect(first).toHaveAttribute("open","");
@@ -309,6 +309,7 @@ test("Study derives spelling and STAR test dates from the current school calenda
   ];
   await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:fixture}));
   await page.goto("http://127.0.0.1:4173/#study");
+  await page.locator('[data-open-prep]').click();
   const spelling=page.locator("[data-study-tests]");
   await expect(spelling.locator("time")).toHaveAttribute("datetime","2026-10-02");
   await expect(spelling.locator("time")).toContainText("Oct 2");
@@ -321,9 +322,10 @@ test("Study derives spelling and STAR test dates from the current school calenda
   await starPage.clock.setFixedTime(new Date("2027-01-10T13:00:00Z"));
   await starPage.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:fixture}));
   await starPage.goto("http://127.0.0.1:4173/#study");
+  await starPage.locator('[data-open-prep]').click();
   const star=starPage.locator("[data-study-tests]");
   await expect(star).toContainText("No verified practice yet");
-  await expect(star.locator("[data-test-single]")).toBeDisabled();
+  await expect(starPage.locator("[data-test-single]")).toBeDisabled();
   await expect(star.locator("time")).toHaveAttribute("datetime","2027-01-12");
   await expect(star.locator("time")).toContainText("Jan 12");
   await expect(star).toContainText("STAR Testing window");
@@ -355,9 +357,10 @@ test("Study labels a distant test with its actual date and keeps it out of weekl
   ];
   await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:fixture}));
   await page.goto("http://127.0.0.1:4173/#study");
+  await page.locator('[data-open-prep]').click();
   const next=page.locator("[data-study-tests]");
   await expect(next).toContainText("No verified practice yet");
-  await expect(next.locator("[data-test-single]")).toBeDisabled();
+  await expect(page.locator("[data-test-single]")).toBeDisabled();
   await expect(next.locator("time")).toHaveAttribute("datetime","2027-01-12");
   await expect(next.locator("time")).toContainText("Jan 12");
   await expect(next).toContainText("STAR Testing window");
@@ -365,7 +368,7 @@ test("Study labels a distant test with its actual date and keeps it out of weekl
   await expect(page.locator("[data-study-source]")).toHaveCount(0);
   const notes=page.locator("[data-study-notes]");
   await notes.locator(":scope > summary").click();
-  await expect(notes.locator(".game-material-lesson").first()).toBeVisible();
+  await expect(notes.locator("[data-note-subject]:not([hidden]) .study-notes-original").first()).toBeVisible();
   await expect(notes.locator("[data-study-notes-content]")).not.toContainText("STAR Testing window");
   await context.close();
 });
