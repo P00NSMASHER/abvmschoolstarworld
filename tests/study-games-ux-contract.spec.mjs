@@ -12,11 +12,11 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('Study Games keeps the approved menu, play, and finish interaction contract', async ({ page }) => {
-  await expect(page.getByRole('heading', { name: 'Pick a game and start' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Study one thing at a time' })).toBeVisible();
   for (const label of ['Quick Mix', 'Math Dash', 'Word Power', 'Faith Quest']) {
     await expect(page.getByRole('button', { name: new RegExp(label, 'i') })).toBeVisible();
   }
-  await expect(page.getByText('Practice prioritizes verified school skills. STAR-style fallback uses original Grade 2 practice, not copied STAR test items; private student answers and grades are not used.')).toBeVisible();
+  await expect(page.getByText('Practice uses reviewed school skills first. STAR-style items are original Grade 2 practice; private student answers and grades are not used.')).toBeVisible();
 
   await page.getByRole('button', { name: /Quick Mix/i }).click();
   await expect(page.locator('.game-topbar')).toBeVisible();
@@ -48,6 +48,45 @@ test('Study Games keeps the approved menu, play, and finish interaction contract
   await expect(page.getByRole('button', { name: 'All study games' })).toBeVisible();
 });
 
+
+test('Study home is test-first, compact, and keeps secondary tools collapsed', async ({ page }) => {
+  const priority=page.locator('.study-priority');
+  const source=page.locator('.study-source-card');
+  const games=page.locator('.study-game-section');
+  const daily=page.locator('.study-daily-card');
+  const tools=page.locator('.study-tools');
+
+  for(const node of [priority,source,games,daily,tools]) await expect(node).toBeVisible();
+
+  const boxes=await page.evaluate(() => {
+    const box=selector => {
+      const r=document.querySelector(selector)?.getBoundingClientRect();
+      return r?{top:r.top,bottom:r.bottom,height:r.height}:null;
+    };
+    return {
+      priority:box('.study-priority'),
+      source:box('.study-source-card'),
+      games:box('.study-game-section'),
+      daily:box('.study-daily-card'),
+      tools:box('.study-tools'),
+    };
+  });
+  expect(boxes.priority.bottom).toBeLessThanOrEqual(boxes.source.top+4);
+  expect(boxes.source.bottom).toBeLessThanOrEqual(boxes.games.top+4);
+  expect(boxes.games.bottom).toBeLessThanOrEqual(boxes.daily.top+4);
+  expect(boxes.daily.bottom).toBeLessThanOrEqual(boxes.tools.top+4);
+
+  const tiles=page.locator('.study-game-tile');
+  await expect(tiles).toHaveCount(4);
+  const heights=await tiles.evaluateAll(nodes=>nodes.map(node=>Math.round(node.getBoundingClientRect().height)));
+  expect(Math.max(...heights)).toBeLessThanOrEqual(120);
+
+  await expect(page.locator('[data-study-notes]')).not.toHaveAttribute('open','');
+  await expect(page.locator('[data-study-test-options]')).not.toHaveAttribute('open','');
+
+  const overflow=await page.locator('.games-screen').evaluate(el=>el.scrollWidth>el.clientWidth+1);
+  expect(overflow).toBeFalsy();
+});
 
 test('Study Games support text remains readable on phone and tablet', async ({ page }) => {
   for (const viewport of [{ width: 393, height: 852 }, { width: 768, height: 1024 }]) {
