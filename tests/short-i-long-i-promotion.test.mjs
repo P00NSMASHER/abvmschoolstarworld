@@ -81,3 +81,27 @@ test('approved short-i/long-i resolves raw teacher slash formatting with exact l
     )
   );
 });
+
+
+test('page-exact lineage remains fail-closed for reordered or fuzzy evidence', () => {
+  const reorderedPages = [{
+    ...sourcePages[0],
+    lines: ['Friday Oct. 9: Spelling (long i/short i)/Handwriting'],
+  }];
+  const fuzzyPages = [{
+    ...sourcePages[0],
+    lines: ['Friday Oct. 9: Spelling vowel contrasts and handwriting'],
+  }];
+
+  for (const pages of [reorderedPages, fuzzyPages]) {
+    assert.throws(
+      () => buildGrade2ContentPipeline(sourcePack(), {
+        sourceHash: 'production-short-i-long-i-negative-lineage',
+        generatedAt: '2026-10-05T19:19:41.665Z',
+        sourcePages: pages,
+        requirePageExactLineage: true,
+      }),
+      /skill-lineage-unresolved:short-i-long-i/
+    );
+  }
+});
