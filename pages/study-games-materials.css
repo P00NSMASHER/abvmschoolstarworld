@@ -39,6 +39,7 @@
 .games-screen .study-priority{margin:0 0 14px}
 .games-screen .study-test-card{
   display:grid;
+  min-height:148px;
   grid-template-columns:auto minmax(0,1fr);
   gap:12px;
   align-items:center;
@@ -410,6 +411,11 @@
   .games-screen .study-daily-card{padding:12px 14px}
 }
 @media(max-width:430px){
+  .games-screen .study-games-hero.simple{margin-bottom:8px;padding:7px 10px;gap:8px;border-radius:15px}
+  .games-screen .study-games-hero.simple .study-games-mascot{width:40px;height:40px;border-radius:12px;font-size:22px}
+  .games-screen .study-games-hero.simple p,
+  .games-screen .study-games-hero.simple span{display:none}
+  .games-screen .study-games-hero.simple h2{font-size:1.02rem;line-height:1.15}
   .games-screen .game-materials.study-source-card{grid-template-columns:1fr minmax(8.5rem,9.5rem)}
   .games-screen .study-source-copy strong{font-size:.78rem}
 }
