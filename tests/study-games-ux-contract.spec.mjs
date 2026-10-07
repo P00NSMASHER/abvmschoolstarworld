@@ -87,6 +87,7 @@ test('Study home is subject-first with selectable Test Prep', async ({ page }, t
 });
 
 test('every upcoming test keeps a valid selectable index', async ({ page }) => {
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
   const options=page.locator('[data-test-select] option');
   expect(await options.count()).toBeGreaterThan(0);
   const indexes=await options.evaluateAll(nodes=>nodes.map(node=>node.value));
