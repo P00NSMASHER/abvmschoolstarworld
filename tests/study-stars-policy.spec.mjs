@@ -112,11 +112,19 @@ test('perfect completed first-response scores earn 25 additional stars without c
   expect(rows[6]).toEqual(rows[0]);
 });
 
-test('badge catalog contains six fixed school milestones with stable identities',async({page})=>{
+test('badge catalog expands frequent milestones while preserving all six original ranks',async({page})=>{
   const badges=await page.evaluate(()=>window.ABVMStudyGames.studyBadgeCatalog());
-  expect(badges.map(row=>row.target)).toEqual([50,150,300,600,1000,1500]);
-  expect(badges.map(row=>row.title)).toEqual(['Star Scout','Bright Spark','Junior Scholar','Honor Eagle','Golden Eagle','ABVM Legend']);
-  expect(badges.map(row=>row.id)).toEqual(['starlight-study-badge','bright-spark','rising-scholar','golden-scholar','eagle-achiever','constellation-champion']);
-  expect(badges.map(row=>row.artIndex)).toEqual([0,1,2,3,4,5]);
+  expect(badges).toHaveLength(21);
+  const original=badges.filter(row=>row.legacy);
+  expect(original.map(row=>row.target)).toEqual([50,150,300,600,1000,1500]);
+  expect(original.map(row=>row.title)).toEqual(['Star Scout','Bright Spark','Junior Scholar','Honor Eagle','Golden Eagle','ABVM Legend']);
+  expect(original.map(row=>row.id)).toEqual(['starlight-study-badge','bright-spark','rising-scholar','golden-scholar','eagle-achiever','constellation-champion']);
+  expect(original.map(row=>row.artIndex)).toEqual([0,1,2,3,4,5]);
+  expect(original.map(row=>row.artFile)).toEqual(['starlight.webp','spark.webp','scholar.webp','golden.webp','eagle.webp','champion.webp']);
+  expect(badges.filter(row=>!row.legacy)).toHaveLength(15);
+  expect(badges.filter(row=>!row.legacy).every(row=>row.artFile.endsWith('.svg'))).toBe(true);
   expect(badges.every(row=>row.cosmetic===true)).toBe(true);
+  expect(new Set(badges.map(row=>row.id)).size).toBe(21);
+  expect(new Set(badges.map(row=>row.artFile)).size).toBe(21);
+  expect(badges.every((row,i)=>row.target>(badges[i-1]?.target||0)&&row.target-(badges[i-1]?.target||0)<=100)).toBe(true);
 });

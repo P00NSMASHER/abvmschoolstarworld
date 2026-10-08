@@ -239,7 +239,7 @@ test('concurrent tabs serialize duplicate penalties with reward and badge transa
   await context.close();
 });
 
-test('badges remain unlocked after spending stars and all six milestones are durable',async({page})=>{
+test('badges remain unlocked after spending stars and all 21 promotions are durable',async({page})=>{
   const earned=await page.evaluate(async()=>{
     const e=window.ABVMStudyGames;
     for(let i=0;i<34;i++)await e.commitStudyStarRewards({sourcePack:'all-badges',mode:'mix',sessionSeed:String(i),completed:true,streakAdjustment:10,firstTryCorrect:8,questionCount:8});
@@ -274,8 +274,8 @@ test('version-one ledger preserves historical badge achievements without inventi
   const before=await page.evaluate(async()=>({collection:await window.ABVMStudyGames.studyBadgeCollection(),ledger:await window.ABVMStudyGames.loadStudyStarLedger()}));
   expect(before.collection.balance).toBe(140);expect(before.ledger.map(row=>row.amount).sort((a,b)=>a-b)).toEqual([-20,160]);
   const unlocked=before.collection.badges.filter(row=>row.unlocked);
-  expect(unlocked.map(row=>row.target)).toEqual([50]);expect(unlocked.every(row=>row.earnedAt===null&&row.migrated)).toBe(true);
-  expect(before.collection.latest.id).toBe('starlight-study-badge');expect(before.collection.next.target).toBe(150);
+  expect(unlocked.map(row=>row.target)).toEqual([25,50,75,100]);expect(unlocked.every(row=>row.earnedAt===null&&row.migrated)).toBe(true);
+  expect(before.collection.latest.id).toBe('rank-feather-cadet');expect(before.collection.next.target).toBe(150);
   const after=await page.evaluate(async()=>{
     const e=window.ABVMStudyGames;
     for(let i=0;i<4;i++)await e.commitStudyStarRewards({sourcePack:'post-migration',mode:'mix',sessionSeed:String(i),completed:true,streakAdjustment:10,firstTryCorrect:8,questionCount:8});
@@ -307,7 +307,7 @@ test('new collection starts as Eaglet and a rank never falls after penalties',as
     return {start,promoted,after:await e.studyBadgeCollection()};
   });
   expect(result.start.current).toEqual(expect.objectContaining({id:'eaglet',title:'Eaglet',starter:true,target:0,artIndex:-1,earnedAt:null}));
-  expect(result.start.latest).toBeNull();expect(result.start.next.target).toBe(50);
+  expect(result.start.latest).toBeNull();expect(result.start.next.target).toBe(25);
   expect(result.promoted.current.title).toBe('Star Scout');expect(result.after.balance).toBe(48);expect(result.after.current).toEqual(result.promoted.current);
 });
 
@@ -329,8 +329,45 @@ test('canceled version-one completion rewards cannot fabricate rank achievements
   const result=await page.evaluate(async()=>({collection:await window.ABVMStudyGames.studyBadgeCollection(),rows:await window.ABVMStudyGames.loadStudyStarLedger()}));
   expect(result.rows).toHaveLength(200);
   expect(result.collection.balance).toBe(0);expect(result.collection.current.id).toBe('eaglet');
-  expect(result.collection.latest).toBeNull();expect(result.collection.next.target).toBe(50);
+  expect(result.collection.latest).toBeNull();expect(result.collection.next.target).toBe(25);
   expect(result.collection.badges.every(row=>!row.unlocked&&row.earnedAt===null)).toBe(true);
   await page.reload();await expect(page.locator('.study-game-grid')).toBeVisible();
   expect(await page.evaluate(()=>window.ABVMStudyGames.studyBadgeCollection())).toEqual(result.collection);
+});
+
+test('an existing higher rank backfills only the inserted lower ranks even after penalties',async({page})=>{
+  await page.goto('/manifest.webmanifest');await clearLedger(page);
+  await page.evaluate(()=>new Promise((resolve,reject)=>{
+    const request=indexedDB.open('abvm-study-stars-v1',2);
+    request.onupgradeneeded=()=>{
+      const db=request.result;
+      if(!db.objectStoreNames.contains('reward-ledger'))db.createObjectStore('reward-ledger',{keyPath:['sourcePack','roundId','rewardType']});
+      if(!db.objectStoreNames.contains('badge-achievements'))db.createObjectStore('badge-achievements',{keyPath:'id'});
+    };
+    request.onerror=()=>reject(request.error);
+    request.onsuccess=()=>{
+      const db=request.result,tx=db.transaction(['reward-ledger','badge-achievements'],'readwrite');
+      tx.objectStore('reward-ledger').add({sourcePack:'old',roundId:'old',rewardType:'round-complete',amount:48,currency:'Study Stars',eventId:'original-reward'});
+      const badges=tx.objectStore('badge-achievements');
+      badges.add({id:'starlight-study-badge',earnedAt:'2026-09-30T12:00:00Z',earnedOrder:1});
+      badges.add({id:'bright-spark',earnedAt:'2026-10-01T12:00:00Z',earnedOrder:2});
+      badges.add({id:'collection-state',earnedOrder:2}); // before expansion
+      tx.oncomplete=()=>{db.close();resolve()};
+      tx.onerror=()=>{db.close();reject(tx.error)};
+    };
+  }));
+  await page.goto('/#games');await expect(page.locator('.study-game-grid')).toBeVisible();
+  const initial=await page.evaluate(async()=>({collection:await window.ABVMStudyGames.studyBadgeCollection(),ledger:await window.ABVMStudyGames.loadStudyStarLedger()}));
+  const collection=initial.collection;
+  expect(collection.balance).toBe(48);expect(initial.ledger).toHaveLength(1);
+  expect(collection.current.title).toBe('Bright Spark');
+  expect(collection.latest.title).toBe('Bright Spark');
+  expect(collection.latest.earnedAt).toBe('2026-10-01T12:00:00Z');
+  expect(collection.next.title).toBe('Star Voyager');
+  expect(collection.next.target).toBe(200);
+  const migrated=collection.badges.filter(row=>row.unlocked&&row.migrated);
+  expect(migrated.map(row=>row.target)).toEqual([25,75,100]);
+  expect(migrated.every(row=>row.earnedAt===null&&row.earnedOrder===0)).toBe(true);
+  await page.reload();await expect(page.locator('.study-game-grid')).toBeVisible();
+  expect(await page.evaluate(()=>window.ABVMStudyGames.studyBadgeCollection())).toEqual(collection);
 });

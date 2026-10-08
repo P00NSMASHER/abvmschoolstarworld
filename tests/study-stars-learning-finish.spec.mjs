@@ -151,7 +151,10 @@ test('perfect round auto-saves one completion reward, survives rank navigation, 
   await expect(page.locator('.study-badge-next')).toBeVisible();
   await badgesButton.click();
   await expect(page.locator('.study-badge-grid')).toBeVisible();
-  await expect(page.locator('.study-badge-grid').getByRole('listitem')).toHaveCount(6);
+  // Keep the full ladder visible after a permanent rank is earned.
+  await expect(page.locator('.study-badge-grid').getByRole('listitem')).toHaveCount(21);
+  await expect(page.locator('.study-badge-grid')).toContainText('Star Scout');
+  await expect(page.locator('.study-badge-grid')).toContainText('ABVM Legend');
   expect(await page.evaluate(()=>window.ABVMStudyGames.studyStarBalance())).toBe(45);
   await page.getByRole('button',{name:'Study',exact:true}).click();
   await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');

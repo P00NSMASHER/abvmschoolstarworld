@@ -1,22 +1,22 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v141-study-ranks";
+const CACHE = "abvm-grade2-parent-companion-v143-frequent-ranks-promotion";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=111",
   "./study-support.js?v=3",
-  "./app.js?v=132",
-  "./product-view.js?v=4",
+  "./app.js?v=133",
+  "./product-view.js?v=5",
   "./study-teaching.css?v=1",
   "./school-updates.js?v=3",
   "./weekly-learning.js?v=6",
-  "./study-games.js?v=101",
+  "./study-games.js?v=102",
   "./study-games-view.js?v=14",
   "./manifest.webmanifest",
   "./assets/abvm-app-icon-180.png",
   "./assets/abvm-app-icon-192.png",
   "./assets/abvm-app-icon-512.png"
 ];
-const OPTIONAL_DATA = ["./assets/badges/eaglet.webp", "./assets/badges/starlight.webp", "./assets/badges/spark.webp", "./assets/badges/scholar.webp", "./assets/badges/golden.webp", "./assets/badges/eagle.webp", "./assets/badges/champion.webp", "./assets/illustrations/reading.webp", "./assets/illustrations/math.webp", "./assets/illustrations/spelling.webp", "./assets/illustrations/religion.webp", "./assets/illustrations/eagle.webp", "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./study-materials.mjs", "./study-games-materials-view.mjs?v=4", "./study-games-materials.css?v=15", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs","./study-resources.mjs", "./study-model.mjs", "./star-practice.mjs", "./lunch-art.js?v=1", "./assets/school/abvm-school-sign.webp", "./assets/school/abvm-school-hero.webp", "./assets/school/abvm-school-aerial.webp", "./assets/school/abvm-school-facade.webp"];
+const OPTIONAL_DATA = ["./assets/badges/nest-explorer.svg", "./assets/badges/little-luminary.svg", "./assets/badges/feather-cadet.svg", "./assets/badges/star-voyager.svg", "./assets/badges/sky-scholar.svg", "./assets/badges/wing-leader.svg", "./assets/badges/study-sentinel.svg", "./assets/badges/school-spirit.svg", "./assets/badges/blue-ribbon-ace.svg", "./assets/badges/golden-quill.svg", "./assets/badges/sky-captain.svg", "./assets/badges/eagle-vanguard.svg", "./assets/badges/honor-guardian.svg", "./assets/badges/crown-keeper.svg", "./assets/badges/star-commander.svg", "./assets/badges/eaglet.webp", "./assets/badges/starlight.webp", "./assets/badges/spark.webp", "./assets/badges/scholar.webp", "./assets/badges/golden.webp", "./assets/badges/eagle.webp", "./assets/badges/champion.webp", "./assets/illustrations/reading.webp", "./assets/illustrations/math.webp", "./assets/illustrations/spelling.webp", "./assets/illustrations/religion.webp", "./assets/illustrations/eagle.webp", "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./study-materials.mjs", "./study-games-materials-view.mjs?v=4", "./study-games-materials.css?v=16", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs","./study-resources.mjs", "./study-model.mjs", "./star-practice.mjs", "./lunch-art.js?v=1", "./assets/school/abvm-school-sign.webp", "./assets/school/abvm-school-hero.webp", "./assets/school/abvm-school-aerial.webp", "./assets/school/abvm-school-facade.webp"];
 
 self.addEventListener("install",event=>{
   event.waitUntil((async()=>{

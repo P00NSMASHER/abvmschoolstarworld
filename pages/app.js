@@ -371,7 +371,7 @@ function ensureStudyGameEngine(){
   if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
   if(studyEnginePromise)return studyEnginePromise;
   const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.async=true;s.onload=()=>window[key]?resolve():reject(new Error(key+" did not initialize"));s.onerror=()=>reject(new Error(key+" could not be loaded"));document.head.append(s)});
-  studyEnginePromise=Promise.all([load("./study-games.js?v=101","ABVMStudyGames"),load("./study-games-view.js?v=14","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
+  studyEnginePromise=Promise.all([load("./study-games.js?v=102","ABVMStudyGames"),load("./study-games-view.js?v=14","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
   return studyEnginePromise;
 }
 function studyGameCatalog(){
@@ -461,7 +461,9 @@ function settleStudyStarRewards(g=gameState){
   g.roundId=roundId;
   Promise.all(g.penaltyTasks||[]).then(()=>e.commitStudyStarRewards({sourcePack:sourceKey,mode:g.mode,sessionSeed:g.sessionSeed,roundId,completed:true,comebackSucceeded:!!g.comebackSucceeded,streakAdjustment:g.streakAdjustment||0,firstTryCorrect:window.ABVMStudyGameView.scoreSummary(g).correct,questionCount:g.questions.length}))
     .then(async result=>{
-      const balance=result.balance;g.perfectBonus=result.perfectBonus;g.rankCollection=result.collection;window.ABVMStudyBadges.sync(result.collection);
+      const balance=result.balance;g.perfectBonus=result.perfectBonus;g.rankCollection=result.collection;
+      g.newRanks=(result.newlyUnlocked||[]).map(id=>result.collection.badges.find(b=>b.id===id)).filter(Boolean);
+      window.ABVMStudyBadges.sync(result.collection);
       if(gameState!==g)return;
       g.rewardStatus="done";g.rewardAwarded=Number(result?.awardedAmount)||0;g.rewardCurrency=String(result?.currency||"Study Stars");g.starBalance=Math.max(0,Number(balance)||0);g.starBalanceUnavailable=false;g.rewardRevealAmount=g.rewardAwarded;g.rewardRevealScheduled=false;
       if(isStudyRoute()&&g.screen==="finish"&&g.renderGeneration===screenGeneration){renderGames();bindScreen();}
@@ -512,7 +514,10 @@ function gameFinishHtml(){
   const reveal=g.rewardRevealAmount>0?v.rewardReveal({amount:g.rewardRevealAmount,currency:g.rewardCurrency}):"";
   const finish=v.finish({mode:gameMode(g.mode),state:g,record:loadGameRecord(g.mode,g.sourceKey||currentGameSourceKey()),summary,reward});
   const goal=g.rewardStatus==="done"?window.ABVMStudyBadges.render(g.rankCollection,"finish"):"";
-  return reveal+finish+goal;
+  const promotion=g.rewardStatus==="done"&&g.newRanks?.length?window.ABVMStudyBadges.promotion(g.newRanks):"";
+  // Put newly earned rank first so an iPhone learner sees the promotion
+  // immediately, without scrolling through the entire score report.
+  return reveal+promotion+finish+goal;
 }
 function renderGames(){
   const previousScreen=stack().querySelector(".games-screen"),menuScroll=gameState.screen==="menu"&&previousScreen&&!previousScreen.classList.contains("is-playing")?previousScreen.scrollTop:null;
