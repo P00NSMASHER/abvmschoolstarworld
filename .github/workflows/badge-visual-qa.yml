@@ -1,0 +1,64 @@
+name: ABVM Premium Badge Visual QA
+
+on:
+  push:
+    branches: [feat/frequent-abvm-rank-ladder]
+    paths:
+      - 'pages/assets/badges/**'
+      - '.github/workflows/badge-visual-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  badge-contact-sheet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install static-art rasterization dependencies
+        run: python3 -m pip install --disable-pip-version-check --quiet Pillow cairosvg
+      - name: Render all 22 assets at true phone dimensions
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from PIL import Image, ImageDraw, ImageFont
+          import cairosvg, base64, io, json, os
+          originals=['eaglet','starlight','spark','scholar','golden','eagle','champion']
+          new=['nest-explorer','little-luminary','feather-cadet','star-voyager','sky-scholar','wing-leader','study-sentinel','school-spirit','blue-ribbon-ace','golden-quill','sky-captain','eagle-vanguard','honor-guardian','crown-keeper','star-commander']
+          base='pages/assets/badges/'
+          names=originals+new
+          W=912; TW=228; TH=205; ROWS=(len(names)+3)//4
+          sheet=Image.new('RGB',(W,ROWS*TH),(12,35,72))
+          draw=ImageDraw.Draw(sheet)
+          font=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',14)
+          mini=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',12)
+          entries=[]
+          for i,name in enumerate(names):
+            original=i<len(originals)
+            path=base+name+('.webp' if original else '.svg')
+            if original:
+              img=Image.open(path).convert('RGBA')
+            else:
+              img=Image.open(io.BytesIO(cairosvg.svg2png(url=path,output_width=384,output_height=384))).convert('RGBA')
+            x=(i%4)*TW; y=(i//4)*TH
+            draw.rounded_rectangle((x+6,y+6,x+TW-6,y+TH-6),radius=16,fill=(20,49,89),outline=(68,105,150),width=1)
+            tile=img.resize((96,96),Image.Resampling.LANCZOS)
+            mini_img=img.resize((64,64),Image.Resampling.LANCZOS)
+            sheet.paste(tile,(x+18,y+30),tile)
+            sheet.paste(mini_img,(x+137,y+62),mini_img)
+            draw.text((x+15,y+13),'ORIGINAL' if original else 'NEW SVG',font=mini,fill=(255,205,81) if original else (161,205,245))
+            draw.text((x+15,y+143),name.replace('-',' ').title(),font=font,fill=(246,247,255))
+            draw.text((x+15,y+172),'96 px       64 px',font=mini,fill=(179,202,229))
+            entries.append({'name':name,'kind':'original' if original else 'new', 'dimensions':img.size,'mode':img.mode})
+          out='/tmp/abvm-visual-contact-sheet.jpg'
+          sheet.save(out,'JPEG',quality=84,optimize=True,subsampling=0)
+          encoded=base64.b64encode(open(out,'rb').read()).decode('ascii')
+          print('BADGE_VISUAL_SHA='+os.environ['GITHUB_SHA'])
+          print('BADGE_VISUAL_DATA_START='+str(len(encoded)))
+          for i in range(0,len(encoded),2800):
+            print('BADGE_VISUAL_CHUNK='+encoded[i:i+2800])
+          print('BADGE_VISUAL_DATA_END')
+          print('BADGE_VISUAL_MANIFEST='+json.dumps(entries,separators=(',',':')))
+          PY
