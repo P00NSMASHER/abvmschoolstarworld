@@ -211,7 +211,8 @@
 .games-screen .study-prep-launch>span:nth-child(2){flex:1;min-width:0}
 .games-screen .study-prep-launch strong,.games-screen .study-prep-launch small{display:block}
 .games-screen .study-prep-launch strong{font-size:1rem}
-.games-screen .study-prep-launch small{font-size:.75rem;line-height:1.4;margin-top:3px}
+/* Keep the launch tile height stable when a short loading label becomes a two-line test title. */
+.games-screen .study-prep-launch small{font-size:.75rem;line-height:1.4;margin-top:3px;min-height:2.8em}
 .games-screen .prep-launch-icon{display:grid;place-items:center;width:40px;height:40px;background:#ffffff80;border-radius:12px;flex:none}
 .games-screen .study-prep-launch>b{font-size:1.5rem}
 .games-screen .prep-header{position:relative;margin:calc(-24px - env(safe-area-inset-top)) -22px 0;padding:calc(12px + env(safe-area-inset-top)) 22px 20px;background:var(--study-brand);color:white;overflow:hidden}
