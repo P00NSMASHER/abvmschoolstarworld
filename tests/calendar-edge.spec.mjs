@@ -56,7 +56,8 @@ test("busy date and compact month summary do not cause horizontal overflow",asyn
 test("next-month summary exposes upcoming October school items",async({page})=>{
   await openSeptemberCalendar(page);
   const card=page.locator(".next-month-card");
-  await page.locator(".calendar-more > summary").click();
+  const disclosure=page.locator(".calendar-more");
+  if(!(await disclosure.evaluate(el=>el.open)))await disclosure.locator("summary").click();
   await card.scrollIntoViewIfNeeded();
   await expect(card).toContainText("October");
   const text=await card.textContent();
