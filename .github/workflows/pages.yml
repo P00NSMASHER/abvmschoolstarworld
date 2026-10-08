@@ -25,9 +25,11 @@ permissions:
   pages: write
   id-token: write
 
+# Serialize publications rather than canceling an active release when a
+# teacher-page refresh lands while post-deployment verification is running.
 concurrency:
   group: "pages"
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   deploy:
