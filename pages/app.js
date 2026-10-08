@@ -341,10 +341,11 @@ function renderCalendar(){
       (events.length?'<div class="calendar-event-list">'+events.map(e=>'<div><i class="'+kindClass(e)+'"></i><span><strong>'+esc(e.label)+'</strong></span></div>').join("")+'</div>':'<p class="calendar-empty">No special school events are listed for this date.</p>')+
       agendaLunchHtml(calendarDay,lunch)+'<button class="calendar-study-action primary-button" type="button" data-route="study">Start studying '+window.ABVMProductView.icon("arrow")+'</button>'+
     '</section></div>'+compactMonthCardHtml(m,monthSummary,"current-month-summary")+
-    '<details class="calendar-more"'+(window.matchMedia("(min-width: 700px)").matches?' open':'')+'><summary>Weekly details and upcoming dates <span aria-hidden="true">⌄</span></summary><div class="calendar-more-content">'+
+    '<details class="calendar-more"'+(window.matchMedia("(min-width: 700px)").matches?' open':'')+'><summary>Weekly lunches and tests <span aria-hidden="true">⌄</span></summary><div class="calendar-more-content">'+
     window.ABVMWeeklyLearning.renderWeekOverview({days:weekDays(),lunchForDate,eventItemsForDate,kindClass,fmtShort,lunchText,lunchUnavailableText})+
+    '</div></details>'+
     '<section class="specials-card"><div class="specials-head"><span class="specials-mark" aria-hidden="true">★</span><div><p>WEEKLY ROTATION</p><h2>Specials</h2></div></div><div class="specials-list">'+specials.map(row=>'<div class="special-row"><span>'+esc(row.day)+'</span><strong>'+esc(row.label)+'</strong></div>').join("")+'</div></section>'+
-    compactMonthCardHtml(nextM,nextMonth,"next-month-card")+'</div></details>'+freshness()+
+    compactMonthCardHtml(nextM,nextMonth,"next-month-card")+freshness()+
     '</div>';
 }
 function isStudyRoute(){return activeTab==="study"||activeTab==="games"}
