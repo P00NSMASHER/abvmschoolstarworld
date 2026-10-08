@@ -1,22 +1,22 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v140-focused-study";
+const CACHE = "abvm-grade2-parent-companion-v141-study-ranks";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=111",
   "./study-support.js?v=3",
-  "./app.js?v=131",
-  "./product-view.js?v=3",
+  "./app.js?v=132",
+  "./product-view.js?v=4",
   "./study-teaching.css?v=1",
   "./school-updates.js?v=3",
   "./weekly-learning.js?v=6",
-  "./study-games.js?v=100",
-  "./study-games-view.js?v=13",
+  "./study-games.js?v=101",
+  "./study-games-view.js?v=14",
   "./manifest.webmanifest",
   "./assets/abvm-app-icon-180.png",
   "./assets/abvm-app-icon-192.png",
   "./assets/abvm-app-icon-512.png"
 ];
-const OPTIONAL_DATA = ["./assets/illustrations/reading.webp", "./assets/illustrations/math.webp", "./assets/illustrations/spelling.webp", "./assets/illustrations/religion.webp", "./assets/illustrations/eagle.webp", "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./study-materials.mjs", "./study-games-materials-view.mjs?v=4", "./study-games-materials.css?v=14", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs","./study-resources.mjs", "./study-model.mjs", "./star-practice.mjs", "./lunch-art.js?v=1", "./assets/school/abvm-school-sign.webp", "./assets/school/abvm-school-hero.webp", "./assets/school/abvm-school-aerial.webp", "./assets/school/abvm-school-facade.webp"];
+const OPTIONAL_DATA = ["./assets/badges/eaglet.webp", "./assets/badges/starlight.webp", "./assets/badges/spark.webp", "./assets/badges/scholar.webp", "./assets/badges/golden.webp", "./assets/badges/eagle.webp", "./assets/badges/champion.webp", "./assets/illustrations/reading.webp", "./assets/illustrations/math.webp", "./assets/illustrations/spelling.webp", "./assets/illustrations/religion.webp", "./assets/illustrations/eagle.webp", "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./study-materials.mjs", "./study-games-materials-view.mjs?v=4", "./study-games-materials.css?v=15", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs","./study-resources.mjs", "./study-model.mjs", "./star-practice.mjs", "./lunch-art.js?v=1", "./assets/school/abvm-school-sign.webp", "./assets/school/abvm-school-hero.webp", "./assets/school/abvm-school-aerial.webp", "./assets/school/abvm-school-facade.webp"];
 
 self.addEventListener("install",event=>{
   event.waitUntil((async()=>{

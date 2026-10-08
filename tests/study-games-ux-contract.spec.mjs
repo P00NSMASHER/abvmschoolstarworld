@@ -125,8 +125,10 @@ test('Study Games support text remains readable on phone and tablet', async ({ p
 
     await page.locator('.game-answer').first().click();
     await expect(page.locator('.game-feedback')).toBeVisible();
-    expect(await page.locator('.game-feedback strong').evaluate(el => parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(13);
-    expect(await page.locator('.game-feedback p').evaluate(el => parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(12);
+    await expect(page.locator('.game-feedback strong')).toBeVisible();
+    // The penalty can re-render feedback; poll the live node, not a detached element.
+    await expect.poll(() => page.locator('.game-feedback strong').evaluate(el => parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(13);
+    await expect.poll(() => page.locator('.game-feedback p').evaluate(el => parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(12);
 
     const adaptiveSize = await page.locator('.game-question-card').evaluate(card => {
       const sample = document.createElement('small');
