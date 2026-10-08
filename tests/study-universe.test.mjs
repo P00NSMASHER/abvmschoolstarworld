@@ -63,11 +63,33 @@ test('no-current subject and empty-current pack can use cumulative reviewed mate
   assert.ok(buildStudyUniverse(f).currentSubjectPractice.Math.includes('m-old'));
 });
 test('real reviewed pack, archive, original worksheet practice and STAR are compatible',()=>{
-  const out=buildStudyUniverse(real());assert.ok(out.questions.length>200);
+  const input=real(),out=buildStudyUniverse(input);assert.ok(out.questions.length>200);
   assert.ok(out.questions.some(q=>q.provenance.kind==='reviewed-original-schoolwork'));
-  assert.ok(out.questions.filter(q=>q.provenance.kind==='reviewed-original-schoolwork').every(q=>q.tier==='archive'),'Undated worksheets stay cumulative');
-  assert.ok(out.selectableTestPrep.find(t=>t.label==='Math (subtraction)').questionIds.length>=9);
-  assert.equal(out.selectableTestPrep.find(t=>t.label==='Religion Ch. 3').supported,false);
+  const undated=new Set(input.schoolwork.lessons.filter(l=>!l.studiedOn).map(l=>l.id));
+  assert.ok(out.questions.filter(q=>undated.has(q.provenance.lessonId)).every(q=>q.tier==='archive'),'Undated worksheets stay cumulative');
+  const byId=new Map(out.questions.map(q=>[q.id,q]));
+  for(const t of out.selectableTestPrep){
+    assert.equal(t.supported,t.questionIds.length>0);
+    if(t.label==='Math (subtraction)')assert.ok(t.questionIds.every(id=>byId.get(id).skill.includes('subtraction')));
+    if(t.label==='Religion Ch. 3')assert.ok(t.questionIds.every(id=>byId.get(id).skill==='religion-chapter-3'));
+  }
   assert.doesNotMatch(JSON.stringify(out),/IMG_\d+|learnerResponse|teacherMark|studentName|privateHistory/);
   assert.equal(JSON.stringify(buildStudyUniverse(real())),JSON.stringify(out));
+});
+
+test('conflicting keys remain case-sensitive for capitalization practice',()=>{
+  const f=fixture();Object.assign(f.pack.contentPipeline.questions[0],{choices:['Emma cheers.','emma cheers.'],answer:'Emma cheers.'});
+  f.pack.contentPipeline.questions.push({...f.pack.contentPipeline.questions[0],id:'different-id',answer:'emma cheers.'});
+  assert.throws(()=>buildStudyUniverse(f),/Conflicting answer/);
+});
+test('duplicate equivalent IDs have deterministic output despite reordered choices',()=>{
+  const f=fixture();f.pack.contentPipeline.questions.push({...f.pack.contentPipeline.questions[0],choices:['Wrong','Right']});
+  const a=JSON.stringify(buildStudyUniverse(f));f.pack.contentPipeline.questions.reverse();
+  assert.equal(JSON.stringify(buildStudyUniverse(f)),a);
+});
+test('calendar advancement and newly reviewed chapter coverage do not freeze refreshes',()=>{
+  const f=fixture();f.pack.generatedAt='2026-10-18T12:00:00Z';assert.deepEqual(buildStudyUniverse(f).selectableTestPrep,[]);
+  f.pack.importantDates=[{date:'2026-10-20',label:'Religion Ch. 3',kind:'test'}];
+  f.pack.contentPipeline.questions.push(q('new-ch3','Religion','religion-chapter-3'));
+  assert.deepEqual(buildStudyUniverse(f).selectableTestPrep[0].questionIds,['new-ch3']);
 });

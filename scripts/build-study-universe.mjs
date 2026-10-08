@@ -50,9 +50,9 @@ function unique(rows){
     if(ids.has(q.id)&&ids.get(q.id)!==signature)throw new Error(`Conflicting question ID ${q.id}`);
     ids.set(q.id,signature);
     const prompt=key(q.subject)+'\0'+key(q.prompt);
-    if(prompts.has(prompt)&&prompts.get(prompt)!==key(q.answer))throw new Error(`Conflicting answer for ${q.id}`);
-    prompts.set(prompt,key(q.answer));
-    const fingerprint=prompt+'\0'+key(q.answer);
+    if(prompts.has(prompt)&&prompts.get(prompt)!==q.answer)throw new Error(`Conflicting answer for ${q.id}`);
+    prompts.set(prompt,q.answer);
+    const fingerprint=prompt+'\0'+q.answer;
     if(seen.has(fingerprint))return false;seen.add(fingerprint);return true;
   });
 }
@@ -109,9 +109,9 @@ export function buildStudyUniverse({pack:wrapper,archive={},fallbackQuestions=[]
   // the correct key while references still point to its earlier version.
   unique([...current,...workRows,...archiveRows,...fallback]);
   const questions=unique([
-    ...[...current,...workRows.filter(q=>q.tier==='current')].sort((a,b)=>compare(a.id,b.id)),
-    ...[...archiveRows,...workRows.filter(q=>q.tier==='archive')].sort((a,b)=>compare(a.id,b.id)),
-    ...fallback.sort((a,b)=>compare(a.id,b.id)),
+    ...[...current,...workRows.filter(q=>q.tier==='current')].sort((a,b)=>compare(a.id,b.id)||compare(digest(a),digest(b))),
+    ...[...archiveRows,...workRows.filter(q=>q.tier==='archive')].sort((a,b)=>compare(a.id,b.id)||compare(digest(a),digest(b))),
+    ...fallback.sort((a,b)=>compare(a.id,b.id)||compare(digest(a),digest(b))),
   ]);
   if(!questions.length)throw new Error('Reviewed questions are required');
   const subjects=[...new Set(questions.map(q=>q.subject))].sort(compare);
