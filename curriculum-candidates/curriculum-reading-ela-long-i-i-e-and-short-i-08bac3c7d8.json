@@ -108,7 +108,7 @@
       "prompt": "A bow-making guide says 'bit' and 'bite.' Which explanation best compares their vowel sounds?",
       "choices": [
         "Both have short i because they start with b.",
-        "Bit has long i because it is shorter.",
+        "Adding a silent e changes the consonant sound instead of the vowel.",
         "Bit has short i; the silent e in bite signals long i."
       ],
       "answer": "Bit has short i; the silent e in bite signals long i.",
