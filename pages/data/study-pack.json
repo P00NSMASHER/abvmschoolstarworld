@@ -834,13 +834,6 @@
       },
       {
         "date": "Saturday, Nov. 21",
-        "label": "Reading Royals Game Family Fun Night",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-09-28",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Saturday, Nov. 21",
         "label": "Reading Royals Game Family Fun Night — student anthem performance; ticket link in notices",
         "kind": "school event",
         "sourceDocument": "reading-royals-family-night-2026-11-21",
@@ -1155,7 +1148,6 @@
       "Welcome Back Dance / Movie Night is Saturday, Oct. 3.",
       "S’more Fun at Schwartz Farm is Friday, Oct. 23.",
       "Drama Club Play is Nov. 13–14.",
-      "Reading Royals Game Family Fun Night is Saturday, Nov. 21.",
       "Sunday, Oct. 4: Winter uniform begins.",
       "Thursday, Oct. 8: Progress Reports are issued.",
       "Friday, Oct. 9: Chick-fil-A orders and money are due; orders are $7 each.",
@@ -1309,7 +1301,6 @@
       "No School — Columbus Day is Monday, Oct. 12.",
       "S’more Fun at Schwartz Farm is Friday, Oct. 23.",
       "Drama Club Play is Nov. 13–14.",
-      "Reading Royals Game Family Fun Night is Saturday, Nov. 21.",
       "Oct. 7–26: K–4 flag football permission form is due Oct. 7; the game is Oct. 26 from 1:45–2:30 PM.",
       "Oct. 9–22: Chick-fil-A orders are $7 each and due Oct. 9; delivery/pickup is Oct. 22 from 3:00–4:30 PM, with pickup available at dismissal.",
       "Sunday, Oct. 18: Personal birthday party at Roller Roost Sports Arena from 12:30–3:30 PM. Direct contact information and the street address are kept out of the public app.",
@@ -1331,7 +1322,7 @@
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
     "sourceCheckedAt": "2026-10-08T15:00:17.769Z",
-    "uploadedNoticeHash": "uploaded-notices-2e3f1fbfa288c3ad62a0",
+    "uploadedNoticeHash": "uploaded-notices-ed6c98a22db6f4416282",
     "uploadedNoticeTopics": {
       "reminders": [
         "fundraiser",
@@ -1341,7 +1332,6 @@
         "dance",
         "schwartz",
         "drama",
-        "reading-royals",
         "winter-uniform",
         "progress-report",
         "chick-fil",
@@ -1365,7 +1355,6 @@
         "closed",
         "schwartz",
         "drama",
-        "reading-royals",
         "flag-football",
         "chick-fil",
         "birthday-party",
