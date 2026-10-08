@@ -45,3 +45,25 @@ Shared direction: exceptionally polished tactile 3D school achievement medal, sh
 Primary subject prompt: A small elegant sculpted gold eaglet with tucked wings and proud friendly posture, centered on a round rich navy enamel medallion with a polished gold rim and two neat navy satin ribbon tails. Simpler than a crowned or laurel-wreathed champion, equally premium and shiny.
 
 Shared direction: exceptionally polished tactile 3D school rank achievement medal, physically beautiful reflective gold bevels, deep glossy navy enamel #102e58, school gold #ffca38, frontal view and soft upper-left studio lighting, true transparent square canvas, no text, numbers, school seal, people, extra objects, or background shadow rectangle. Source: `exec-93e94c86-0afc-4535-8ad1-cbae8a1dd551.png`.
+
+## Additional permanent rank emblems (October 8, 2026)
+
+The original generated seven WebP insignia above remain unchanged. These fifteen distinct SVG designs have original navy-and-gold sculpted frames, enamel shading, jeweled details, ribbon tails and embossed symbols. They are editable vectors, not AI raster images or learner evidence. Each remains transparent and text-free.
+
+- `nest-explorer.svg`: Nest Explorer (25 saved stars).
+- `little-luminary.svg`: Little Luminary (75 saved stars).
+- `feather-cadet.svg`: Feather Cadet (100 saved stars).
+- `star-voyager.svg`: Star Voyager (200 saved stars).
+- `sky-scholar.svg`: Sky Scholar (250 saved stars).
+- `wing-leader.svg`: Wing Leader (375 saved stars).
+- `study-sentinel.svg`: Study Sentinel (450 saved stars).
+- `school-spirit.svg`: School Spirit (525 saved stars).
+- `blue-ribbon-ace.svg`: Blue Ribbon Ace (700 saved stars).
+- `golden-quill.svg`: Golden Quill (800 saved stars).
+- `sky-captain.svg`: Sky Captain (900 saved stars).
+- `eagle-vanguard.svg`: Eagle Vanguard (1100 saved stars).
+- `honor-guardian.svg`: Honor Guardian (1200 saved stars).
+- `crown-keeper.svg`: Crown Keeper (1300 saved stars).
+- `star-commander.svg`: Star Commander (1400 saved stars).
+
+All the new ranks live in the original star-ledger and badge-achievements database. Their artwork is cached optionally for offline use; neither private schoolwork nor learner records are embedded in the files.

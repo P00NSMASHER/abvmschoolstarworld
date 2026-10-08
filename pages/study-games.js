@@ -1623,14 +1623,35 @@ function studyStarGoalProgress(balance=0){
   return {goal:STUDY_STAR_GOAL,balance:stars,target,remaining:Math.max(0,target-stars),percent:Math.min(100,Math.floor((progress/target)*100)),progress,unlocked:stars>=target,selected:loadStudyStarGoal().selected};
 }
 
+// Preserve original rank IDs, thresholds and metal artwork; fill the same ladder.
+const HISTORIC_RANK_ART=Object.freeze(["starlight.webp","spark.webp","scholar.webp","golden.webp","eagle.webp","champion.webp"]);
 const STUDY_STAR_BADGES=Object.freeze([
-  ["starlight-study-badge","Star Scout",50],
-  ["bright-spark","Bright Spark",150],
-  ["rising-scholar","Junior Scholar",300],
-  ["golden-scholar","Honor Eagle",600],
-  ["eagle-achiever","Golden Eagle",1000],
-  ["constellation-champion","ABVM Legend",1500]
-].map(([id,title,target],index)=>Object.freeze({id,title,target,art:index,artIndex:index,cosmetic:true})));
+  ["rank-nest-explorer","Nest Explorer",25,"nest-explorer.svg"],
+  ["starlight-study-badge","Star Scout",50,"starlight.webp"],
+  ["rank-little-luminary","Little Luminary",75,"little-luminary.svg"],
+  ["rank-feather-cadet","Feather Cadet",100,"feather-cadet.svg"],
+  ["bright-spark","Bright Spark",150,"spark.webp"],
+  ["rank-star-voyager","Star Voyager",200,"star-voyager.svg"],
+  ["rank-sky-scholar","Sky Scholar",250,"sky-scholar.svg"],
+  ["rising-scholar","Junior Scholar",300,"scholar.webp"],
+  ["rank-wing-leader","Wing Leader",375,"wing-leader.svg"],
+  ["rank-study-sentinel","Study Sentinel",450,"study-sentinel.svg"],
+  ["rank-school-spirit","School Spirit",525,"school-spirit.svg"],
+  ["golden-scholar","Honor Eagle",600,"golden.webp"],
+  ["rank-blue-ribbon-ace","Blue Ribbon Ace",700,"blue-ribbon-ace.svg"],
+  ["rank-golden-quill","Golden Quill",800,"golden-quill.svg"],
+  ["rank-sky-captain","Sky Captain",900,"sky-captain.svg"],
+  ["eagle-achiever","Golden Eagle",1000,"eagle.webp"],
+  ["rank-eagle-vanguard","Eagle Vanguard",1100,"eagle-vanguard.svg"],
+  ["rank-honor-guardian","Honor Guardian",1200,"honor-guardian.svg"],
+  ["rank-crown-keeper","Crown Keeper",1300,"crown-keeper.svg"],
+  ["rank-star-commander","Star Commander",1400,"star-commander.svg"],
+  ["constellation-champion","ABVM Legend",1500,"champion.webp"]
+].map(([id,title,target,artFile])=>{
+  const artIndex=HISTORIC_RANK_ART.indexOf(artFile);
+  return Object.freeze({id,title,target,artFile,legacy:artIndex>=0,art:artIndex,artIndex,cosmetic:true});
+}));
+const STUDY_RANK_LADDER_VERSION=2;
 function studyBadgeCatalog(){return STUDY_STAR_BADGES}
 const STUDY_STAR_DB="abvm-study-stars-v1",STUDY_STAR_STORE="reward-ledger",STUDY_BADGE_STORE="badge-achievements";
 const STUDY_BADGE_STATE="collection-state";
@@ -1681,9 +1702,13 @@ function badgeCollectionFromRows(balance,achievements){
   });
   const latest=badges.filter(badge=>badge.unlocked).sort((a,b)=>b.earnedOrder-a.earnedOrder)[0]||null;
   const current=badges.filter(badge=>badge.unlocked).at(-1)||{id:"eaglet",title:"Eaglet",target:0,art:-1,artIndex:-1,unlocked:true,earnedAt:null,starter:true};
-  const next=badges.find(badge=>!badge.unlocked)||null,target=next?.target||STUDY_STAR_BADGES.at(-1).target;
+  const next=badges.find(badge=>!badge.unlocked&&badge.target>current.target)||null,target=next?.target||STUDY_STAR_BADGES.at(-1).target;
   const progress=Math.min(target,Math.max(0,balance));
-  return {balance,badges,current,latest,next,progress,remaining:next?Math.max(0,target-progress):0,percent:next?Math.min(100,Math.floor(progress/target*100)):100};
+  // Show progress toward the next *individual* rank rather than the whole ladder.
+  const segmentTarget=next?Math.max(1,next.target-current.target):0;
+  const segmentProgress=next?Math.min(segmentTarget,Math.max(0,balance-current.target)):0;
+  const segmentPercent=next?Math.floor(segmentProgress/segmentTarget*100):100;
+  return {balance,badges,current,latest,next,progress,remaining:next?Math.max(0,target-progress):0,percent:next?Math.min(100,Math.floor(progress/target*100)):100,segmentTarget,segmentProgress,segmentPercent};
 }
 // Every read/mutation takes the same two-store transaction. A penalty and a
 // completion in different tabs therefore share one serialized accounting order.
@@ -1709,12 +1734,22 @@ async function transactStudyStars(mutator){
           }
         }
         if(!state){
-          // v1 completion plus bounded streak adjustment could never reduce its
-          // saved balance. Its net ledger balance proves the highest earned
-          // threshold; summing positive entries would count canceled rewards.
-          // Preserve that achievement without inventing an earning date.
+          // A v1 ledger proves only its net balance, never a historical peak.
           unlock(studyStarRowsBalance(rows),true);
-          state={id:STUDY_BADGE_STATE,earnedOrder:order};achievements.push(state);
+          state={id:STUDY_BADGE_STATE,earnedOrder:order,ladderVersion:STUDY_RANK_LADDER_VERSION};
+          achievements.push(state);
+        }else if((Number(state.ladderVersion)||1)<STUDY_RANK_LADDER_VERSION){
+          // Previously earned original ranks prove that inserted lower ranks
+          // were crossed, even when today's spendable stars have decreased.
+          // Historical badge records, their timestamps and order stay intact.
+          const historicPeak=Math.max(0,...achievements.filter(row=>row.id!==STUDY_BADGE_STATE)
+            .map(row=>STUDY_STAR_BADGES.find(badge=>badge.legacy&&badge.id===row.id)?.target||0));
+          for(const badge of STUDY_STAR_BADGES){
+            if(badge.legacy||badge.target>historicPeak||achievements.some(row=>row.id===badge.id))continue;
+            const row={id:badge.id,earnedAt:null,migrated:true,earnedOrder:0};
+            badges.add(row);achievements.push(row);
+          }
+          state.ladderVersion=STUDY_RANK_LADDER_VERSION;
         }
         let balance=studyStarRowsBalance(rows);
         result=mutator?mutator({ledger,rows,balance}):{};
