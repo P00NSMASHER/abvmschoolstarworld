@@ -108,3 +108,43 @@ test('tampering with one question fails the immutable review-packet corresponden
   assert.throws(() => assertPacketMatchesCandidate(candidate, packetSection(candidate.topic)),
     /Answer-key drift/);
 });
+
+test('personalized themes have no brand prerequisite and never activate held curriculum', () => {
+  const allPrompts = new Set();
+  const allThemes = new Set();
+  const requiredTypes = ['direct', 'reasoning', 'transfer'];
+  for (const candidate of candidates) {
+    const design = candidate.personalizationDesign;
+    assert.equal(design?.status, 'EDITORIAL_DRAFT');
+    assert.equal(design?.requiresBrandKnowledge, false);
+    assert.match(design?.privacy || '', /fictional scenarios/i);
+    assert.ok(Array.isArray(design?.themes) && design.themes.length >= 3);
+    design.themes.forEach(theme => allThemes.add(theme));
+    assert.equal(candidate.enabledByDefault, false);
+    assert.equal(candidate.readiness.status, 'HOLD');
+    assert.equal(candidate.rollout.automaticPromotion, false);
+    const types = new Set(candidate.proposedQuestions.map(q => q.questionType));
+    assert.deepEqual([...types].sort(), requiredTypes);
+    assert.equal(candidate.proposedQuestions.length, 8);
+    for (const q of candidate.proposedQuestions) {
+      const prompt = normalize(q.prompt);
+      assert.ok(!allPrompts.has(prompt), 'Repeated question across families: ' + prompt);
+      allPrompts.add(prompt);
+      assert.ok(q.prompt.length >= 20);
+      assert.equal(q.choices.length, 3);
+      assert.equal(new Set(q.choices.map(normalize)).size, 3);
+      assert.ok(q.choices.includes(q.answer));
+      assert.ok(q.explanation.length >= 35, 'Explain the skill, not just state the key');
+      assert.ok(q.hint.length >= 30, 'Give a useful strategy hint');
+      if (normalize(q.answer).length >= 4) {
+        assert.ok(!normalize(q.hint).includes(normalize(q.answer)), 'Hint reveals exact key');
+      }
+      assert.doesNotMatch(q.prompt, /(?:roblox|pusheen|youtube|tiktok)\\b/i,
+        'Brand trivia cannot be required to solve the learning task');
+    }
+  }
+  assert.equal(allPrompts.size, 32);
+  assert.ok(allThemes.size >= 5);
+  assert.match(packet, /fictional practice stories inspired by interests familiar to this learner/i);
+  assert.doesNotMatch(packet, /^\\s*- \\[x\\]/mi, 'Approval must never be pre-checked');
+});
