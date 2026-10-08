@@ -2,6 +2,8 @@ name: Independent QA reproduction bundle
 on:
   pull_request:
     paths:
+      - 'scripts/build-study-universe.mjs'
+      - 'tests/study-universe.test.mjs'
       - 'pages/study-room*'
       - 'pages/study-hub*'
       - 'pages/study-games.js'
