@@ -190,7 +190,6 @@
       '<div class="day-picker">' +
       picker +
       "</div>" +
-      overview +
       '<div class="week-main"><section class="day-detail"><div class="day-detail-title"><div><p class="eyebrow">DAY BY DAY</p><h2>' +
       esc(fmtDate(selectedDay)) +
       "</h2></div><span>" +
@@ -237,6 +236,7 @@
         )
         .join("") +
       "</section></div></div>" +
+      overview +
       freshness() +
       "</div>"
     );

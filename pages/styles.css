@@ -1242,7 +1242,7 @@ img {
   min-height: 48px;
   border-radius: 12px;
   font-size: 0.87rem;
-  gap: 6px;
+  gap: 4px;
 }
 .calendar-grid button.weekend {
   color: var(--muted);
@@ -1958,3 +1958,50 @@ img {
  .bottom-nav button{min-height:52px}
 }
 @media(min-width:700px){.today-screen{padding-top:36px}.today-screen>.hero-card{grid-column:1/-1;grid-row:1}.today-primary{grid-row:2 / span 2}}
+
+/* October 8 audit: primary day details first, with legible, named calendar cues. */
+.calendar-dots{height:14px;gap:2px;align-items:center;justify-content:center}
+.calendar-dots .calendar-mark{display:grid;place-items:center;flex:none;min-width:12px;height:13px;border-radius:4px;font-size:.57rem;line-height:1;font-weight:800;background:var(--navy);color:white}
+.calendar-dots .calendar-mark::before{content:"•";font-size:inherit}
+.calendar-dots .calendar-mark.test::before{content:"T"}
+.calendar-dots .calendar-mark.faith::before{content:"✝"}
+.calendar-dots .calendar-mark.due::before{content:"!"}
+.calendar-dots .calendar-mark.family::before{content:"F"}
+.calendar-dots .calendar-mark.lunch::before{content:"L"}
+.calendar-dots .calendar-mark.closed::before{content:"×"}
+.calendar-dots .calendar-mark.test{background:var(--pink-dark)}
+.calendar-dots .calendar-mark.faith{background:#694b86}
+.calendar-dots .calendar-mark.due{background:#836018}
+.calendar-dots .calendar-mark.family{background:var(--navy)}
+.calendar-dots .calendar-mark.lunch{background:#25644f}
+.calendar-grid .active .calendar-mark{background:white;color:var(--navy)}
+.calendar-legend{font-size:.73rem;gap:12px}
+.calendar-legend i{width:9px;height:9px;flex:none}
+.calendar-title-row>span{font-size:.76rem}
+.calendar-day-heading p,.week-overview-heading p,.priority-card p{font-size:.72rem}
+.freshness{font-size:.78rem}
+.today-screen .eyebrow,.calendar-screen .eyebrow,.week-screen .eyebrow{font-size:.71rem;letter-spacing:.07em}
+.calendar-month-nav span,.day-detail-title>span{font-size:.75rem}
+.week-overview{margin-top:22px}
+.calendar-more{margin-top:22px;border:1px solid var(--line);border-radius:20px;background:#fff;overflow:hidden}
+.calendar-more>summary{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:54px;padding:14px 18px;font-weight:750;font-size:.86rem;color:var(--navy);cursor:pointer}
+.calendar-more>summary span{font-size:1.2rem;transition:transform .15s}
+.calendar-more[open]>summary span{transform:rotate(180deg)}
+.calendar-more-content{padding:0 0 18px}
+.calendar-more-content .week-overview{margin-top:10px}
+.calendar-more-content .specials-card,.calendar-more-content .next-month-card{margin-top:20px}
+.calendar-more-content .week-overview{margin-bottom:16px}
+@media(min-width:700px) and (min-height:600px){
+  /* Two composed desktop columns, with the plan directly below Study. */
+  .today-primary{grid-column:1;grid-row:2;align-self:start}
+  .today-screen>.lunch-card{grid-column:2;grid-row:2;align-self:start}
+  .today-screen>.study-badge-surface{grid-column:2;grid-row:3;align-self:start;min-width:0}
+  .today-panel{grid-column:1;grid-row:3;align-self:start}
+  .today-updates-card{grid-column:1;grid-row:4;align-self:start}
+  .today-screen>.freshness{grid-column:1/-1;grid-row:5}
+}
+@media(max-width:699px){
+  .calendar-more{margin-top:18px}
+  .calendar-more-content{padding:0 0 16px}
+  .calendar-dots .calendar-mark{min-width:11px;height:12px;font-size:.53rem}
+}

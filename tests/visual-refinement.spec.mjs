@@ -1,0 +1,43 @@
+import {test,expect} from '@playwright/test';
+test.use({serviceWorkers:'block'});
+test('calendar reveals secondary school details without losing the date plan',async({page})=>{
+  await page.setViewportSize({width:393,height:852});
+  await page.clock.setFixedTime(new Date('2026-10-08T12:00:00-04:00'));
+  await page.goto('/#calendar');
+  await expect(page.locator('.calendar-day-card')).toBeVisible();
+  const more=page.locator('.calendar-more');
+  await expect(more).not.toHaveAttribute('open','');
+  await expect(page.locator('.specials-card')).toBeVisible();
+  await expect(page.locator('.next-month-card')).toBeVisible();
+  expect(await page.locator('.calendar-mark.test').first().evaluate(el=>getComputedStyle(el,'::before').content)).toBe('"T"');
+  const ninth=page.locator('[data-cal-day]').filter({hasText:/^9$/});
+  await expect(ninth).toHaveCount(1);
+  await ninth.click();
+  await expect(page.locator('.calendar-day-heading h2')).toContainText('9');
+  await more.locator('summary').click();
+  await expect(more).toHaveAttribute('open','');
+  await expect(more.locator('.week-lunches .week-overview-row')).toHaveCount(5);
+  await expect(more.locator('.week-tests')).toContainText('Tests this week');
+  expect(await page.locator('.screen').evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBeTruthy();
+});
+test('week presents selected day ahead of its complete weekly summary',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.clock.setFixedTime(new Date('2026-10-08T12:00:00-04:00'));
+  await page.goto('/#week');
+  await expect(page.locator('.day-detail')).toBeVisible();
+  expect(await page.locator('.week-main').evaluate(el=>!!(el.compareDocumentPosition(document.querySelector('.week-overview'))&Node.DOCUMENT_POSITION_FOLLOWING))).toBeTruthy();
+  await expect(page.locator('.week-overview .week-lunches .week-overview-row')).toHaveCount(5);
+  await expect(page.locator('.week-overview .week-tests')).toContainText('Tests this week');
+});
+test('desktop Today puts day plan beneath study rather than leaving a gap',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await page.clock.setFixedTime(new Date('2026-10-08T12:00:00-04:00'));
+  await page.goto('/#today');
+  await expect(page.locator('.study-badge-surface')).toBeVisible();
+  const p=await page.locator('.today-panel').boundingBox(),s=await page.locator('.today-primary').boundingBox();
+  const l=await page.locator('.today-screen > .lunch-card').boundingBox(),r=await page.locator('.study-badge-surface').boundingBox();
+  expect(p.x).toBeLessThan(r.x);
+  expect(s.x).toBeLessThan(l.x);
+  expect(p.y).toBeGreaterThanOrEqual(s.y);
+  expect(await page.locator('.screen').evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBeTruthy();
+});
