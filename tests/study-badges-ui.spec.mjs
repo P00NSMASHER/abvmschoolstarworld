@@ -207,7 +207,12 @@ test('every original and new premium rank emblem loads, with no horizontal overf
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
   await expect(collection.locator('.rank-current')).toContainText('Eaglet');
   await expect(collection.locator('.badge-progress')).toHaveCount(1);
-  const screenshot=testInfo.outputPath('expanded-rank-ladder-iphone.png');
-  await page.screenshot({path:screenshot,fullPage:true,animations:'disabled'});
-  await testInfo.attach('Expanded rank ladder at iPhone width',{path:screenshot,contentType:'image/png'});
+  for(const width of [393,402]){
+    await page.setViewportSize({width,height:852});
+    await expect.poll(()=>images.evaluateAll(items=>items.every(image=>image.complete&&image.naturalWidth>=384))).toBe(true);
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+    const screenshot=testInfo.outputPath('expanded-rank-ladder-iphone-'+width+'.png');
+    await page.screenshot({path:screenshot,fullPage:true,animations:'disabled'});
+    await testInfo.attach('Expanded rank ladder, iPhone '+width+'px',{path:screenshot,contentType:'image/png'});
+  }
 });
