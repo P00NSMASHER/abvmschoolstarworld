@@ -7,6 +7,25 @@ export function selectPublicationEvidence(deployRun,refreshRun){
   return deployRun||null;
 }
 
+const completedEvidenceTime=run=>{
+  const timestamp=Date.parse(run?.updated_at||"");
+  return Number.isFinite(timestamp)?timestamp:null;
+};
+
+export function selectEffectiveWorkflowRun(workflow){
+  const decisive=workflow?.latestDecisive||null;
+  // A cancelled run can complete after a later-created run; creation order alone is not sufficient.
+  const cancellations=[workflow?.latestCreated,workflow?.latestCompleted]
+    .filter(run=>run?.conclusion==="cancelled");
+  const missingTimestamp=cancellations.find(run=>completedEvidenceTime(run)===null);
+  if(missingTimestamp)return missingTimestamp;
+  const latestCancellation=cancellations.sort((a,b)=>completedEvidenceTime(b)-completedEvidenceTime(a))[0]||null;
+  const decisiveAt=completedEvidenceTime(decisive);
+  if(latestCancellation&&(decisiveAt===null||completedEvidenceTime(latestCancellation)>=decisiveAt))return latestCancellation;
+  // Do not infer success from an active rerun or from an un-timestamped successful completion.
+  if(decisive?.conclusion==="success"&&decisiveAt===null)return null;
+  return decisive;
+}
 
 export function selectRefreshFailureEvidence(runs,refreshJobsData){
   const runId=Number(refreshJobsData?.run_id);
