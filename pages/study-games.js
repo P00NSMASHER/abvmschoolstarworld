@@ -1561,11 +1561,13 @@ const STUDY_STAR_POLICY=Object.freeze({
   currency:"Study Stars",
   roundComplete:10,
   comebackSuccess:2,
+  wrongAnswerPenalty:2,
+  perfectRoundBonus:25,
   streakStepCap:5,
   streakRoundMin:-10,
   streakRoundMax:10,
-  rewardTypes:Object.freeze(["round-complete","streak-adjustment","comeback-success"]),
-  excludedSignals:Object.freeze(["score","accuracy","first-try","perfect","mastery","speed","hints","teach-card","support"])
+  rewardTypes:Object.freeze(["round-complete","streak-adjustment","comeback-success","perfect-round","wrong-answer"]),
+  excludedSignals:Object.freeze(["score","accuracy","mastery","speed","hints","teach-card","support"])
 });
 function studyStarPolicy(){return STUDY_STAR_POLICY}
 function boundedStreakAdjustment(value){
@@ -1581,12 +1583,13 @@ function nextStreakBonus({positiveStreak=0,negativeStreak=0,adjustment=0}={},cor
   const delta=yes?magnitude:-magnitude;
   return Object.freeze({positiveStreak:positive,negativeStreak:negative,delta,adjustment:boundedStreakAdjustment((Number(adjustment)||0)+delta)});
 }
-function studyStarRewardEvents({completed=false,comebackSucceeded=false,streakAdjustment=0}={}){
+function studyStarRewardEvents({completed=false,comebackSucceeded=false,streakAdjustment=0,firstTryCorrect,questionCount}={}){
   const events=[];
   if(completed===true){
     events.push(Object.freeze({rewardType:"round-complete",amount:STUDY_STAR_POLICY.roundComplete,currency:STUDY_STAR_POLICY.currency}));
-    const streak=boundedStreakAdjustment(streakAdjustment);
+    const streak=Math.max(0,boundedStreakAdjustment(streakAdjustment));
     if(streak)events.push(Object.freeze({rewardType:"streak-adjustment",amount:streak,currency:STUDY_STAR_POLICY.currency}));
+    if(Number.isInteger(questionCount)&&questionCount>0&&Number.isInteger(firstTryCorrect)&&firstTryCorrect===questionCount)events.push(Object.freeze({rewardType:"perfect-round",amount:STUDY_STAR_POLICY.perfectRoundBonus,currency:STUDY_STAR_POLICY.currency}));
   }
   if(comebackSucceeded===true)events.push(Object.freeze({rewardType:"comeback-success",amount:STUDY_STAR_POLICY.comebackSuccess,currency:STUDY_STAR_POLICY.currency}));
   return Object.freeze(events);
@@ -1620,7 +1623,17 @@ function studyStarGoalProgress(balance=0){
   return {goal:STUDY_STAR_GOAL,balance:stars,target,remaining:Math.max(0,target-stars),percent:Math.min(100,Math.floor((progress/target)*100)),progress,unlocked:stars>=target,selected:loadStudyStarGoal().selected};
 }
 
-const STUDY_STAR_DB="abvm-study-stars-v1",STUDY_STAR_STORE="reward-ledger";
+const STUDY_STAR_BADGES=Object.freeze([
+  ["starlight-study-badge","Star Scout",50],
+  ["bright-spark","Bright Spark",150],
+  ["rising-scholar","Junior Scholar",300],
+  ["golden-scholar","Honor Eagle",600],
+  ["eagle-achiever","Golden Eagle",1000],
+  ["constellation-champion","ABVM Legend",1500]
+].map(([id,title,target],index)=>Object.freeze({id,title,target,art:index,artIndex:index,cosmetic:true})));
+function studyBadgeCatalog(){return STUDY_STAR_BADGES}
+const STUDY_STAR_DB="abvm-study-stars-v1",STUDY_STAR_STORE="reward-ledger",STUDY_BADGE_STORE="badge-achievements";
+const STUDY_BADGE_STATE="collection-state";
 function studyStarOpaqueId(prefix,value){
   const stable=text(value);
   return prefix+hash(stable).toString(36)+"-"+hash("study-stars|"+stable).toString(36);
@@ -1630,16 +1643,24 @@ function studyStarRoundId({sourcePack,mode,sessionSeed}={}){
   if(!source||!game||!seed)throw new Error("Study Star round identity requires sourcePack, mode, and sessionSeed");
   return studyStarOpaqueId("round-",source+"|"+game+"|"+seed);
 }
+function studyStarIdentity({sourcePack,mode,sessionSeed,roundId}={}){
+  const source=text(sourcePack),game=text(mode),seed=text(sessionSeed);
+  const expectedRound=studyStarRoundId({sourcePack:source,mode:game,sessionSeed:seed}),round=text(roundId||expectedRound);
+  if(round!==expectedRound)throw new Error("Study Star ledger roundId must match sourcePack, mode, and sessionSeed");
+  return {source,round};
+}
 function openStudyStarDb(){
   return new Promise((resolve,reject)=>{
     if(typeof indexedDB==="undefined"){reject(new Error("IndexedDB unavailable"));return}
-    const request=indexedDB.open(STUDY_STAR_DB,1);
+    const request=indexedDB.open(STUDY_STAR_DB,2);
     request.onupgradeneeded=()=>{
       const db=request.result;
       if(!db.objectStoreNames.contains(STUDY_STAR_STORE))db.createObjectStore(STUDY_STAR_STORE,{keyPath:["sourcePack","roundId","rewardType"]});
+      if(!db.objectStoreNames.contains(STUDY_BADGE_STORE))db.createObjectStore(STUDY_BADGE_STORE,{keyPath:"id"});
     };
-    request.onsuccess=()=>resolve(request.result);
+    request.onsuccess=()=>{request.result.onversionchange=()=>request.result.close();resolve(request.result)};
     request.onerror=()=>reject(request.error||new Error("Study Star ledger unavailable"));
+    request.onblocked=()=>reject(new Error("Study Star upgrade is blocked by another open tab"));
   });
 }
 function studyStarEventId(sourcePack,roundId,rewardType){
@@ -1647,44 +1668,97 @@ function studyStarEventId(sourcePack,roundId,rewardType){
 }
 function safeStudyStarRow(row){
   return {
-    sourcePack:text(row?.sourcePack),
-    roundId:text(row?.roundId),
-    rewardType:text(row?.rewardType),
-    eventId:text(row?.eventId),
-    currency:text(row?.currency),
-    amount:Number(row?.amount)||0
+    sourcePack:text(row?.sourcePack),roundId:text(row?.roundId),rewardType:text(row?.rewardType),
+    eventId:text(row?.eventId),currency:text(row?.currency),amount:Number(row?.amount)||0
   };
 }
-async function commitStudyStarRewards({sourcePack,mode,sessionSeed,roundId,completed=false,comebackSucceeded=false,streakAdjustment=0}={}){
-  const source=text(sourcePack),game=text(mode),seed=text(sessionSeed);
-  const expectedRound=studyStarRoundId({sourcePack:source,mode:game,sessionSeed:seed}),round=text(roundId||expectedRound);
-  if(round!==expectedRound)throw new Error("Study Star ledger roundId must match sourcePack, mode, and sessionSeed");
-  const events=completed===true?studyStarRewardEvents({completed:true,comebackSucceeded:comebackSucceeded===true,streakAdjustment}):Object.freeze([]);
-  if(!events.length)return{currency:STUDY_STAR_POLICY.currency,awardedAmount:0,duplicateAmount:0,results:[]};
+function studyStarRowsBalance(rows){return Math.max(0,rows.reduce((sum,row)=>sum+(Number(row.amount)||0),0))}
+function badgeCollectionFromRows(balance,achievements){
+  const owned=new Map(achievements.filter(row=>row.id!==STUDY_BADGE_STATE).map(row=>[row.id,row]));
+  const badges=STUDY_STAR_BADGES.map(badge=>{
+    const row=owned.get(badge.id);
+    return {...badge,unlocked:!!row,earnedAt:row?.earnedAt||null,migrated:row?.migrated===true,earnedOrder:Math.max(0,Number(row?.earnedOrder)||0)};
+  });
+  const latest=badges.filter(badge=>badge.unlocked).sort((a,b)=>b.earnedOrder-a.earnedOrder)[0]||null;
+  const current=badges.filter(badge=>badge.unlocked).at(-1)||{id:"eaglet",title:"Eaglet",target:0,art:-1,artIndex:-1,unlocked:true,earnedAt:null,starter:true};
+  const next=badges.find(badge=>!badge.unlocked)||null,target=next?.target||STUDY_STAR_BADGES.at(-1).target;
+  const progress=Math.min(target,Math.max(0,balance));
+  return {balance,badges,current,latest,next,progress,remaining:next?Math.max(0,target-progress):0,percent:next?Math.min(100,Math.floor(progress/target*100)):100};
+}
+// Every read/mutation takes the same two-store transaction. A penalty and a
+// completion in different tabs therefore share one serialized accounting order.
+async function transactStudyStars(mutator){
   const db=await openStudyStarDb();
   return await new Promise((resolve,reject)=>{
-    const tx=db.transaction(STUDY_STAR_STORE,"readwrite"),store=tx.objectStore(STUDY_STAR_STORE),results=[];
-    let awardedAmount=0,duplicateAmount=0;
-    tx.onerror=()=>{const error=tx.error||new Error("Study Star ledger transaction failed");db.close();reject(error)};
-    tx.onabort=()=>{const error=tx.error||new Error("Study Star ledger transaction aborted");db.close();reject(error)};
-    tx.oncomplete=()=>{db.close();resolve({currency:STUDY_STAR_POLICY.currency,awardedAmount,duplicateAmount,results})};
-    for(const event of events){
-      const key=[source,round,event.rewardType],get=store.get(key);
-      get.onerror=()=>tx.abort();
-      get.onsuccess=()=>{
-        if(get.result){
-          duplicateAmount+=Number(get.result.amount)||0;
-          results.push({rewardType:event.rewardType,amount:Number(get.result.amount)||0,awarded:false,eventId:text(get.result.eventId)});
-          return;
+    const tx=db.transaction([STUDY_STAR_STORE,STUDY_BADGE_STORE],"readwrite"),ledger=tx.objectStore(STUDY_STAR_STORE),badges=tx.objectStore(STUDY_BADGE_STORE);
+    const rowsRequest=ledger.getAll(),badgesRequest=badges.getAll();
+    let rows,achievements,result;
+    const fail=()=>{const error=tx.error||new Error("Study Star ledger transaction failed");db.close();reject(error)};
+    tx.onerror=fail;tx.onabort=fail;
+    tx.oncomplete=()=>{db.close();resolve(result)};
+    function run(){
+      if(!rows||!achievements)return;
+      try{
+        let state=achievements.find(row=>row.id===STUDY_BADGE_STATE);
+        let order=Math.max(0,Number(state?.earnedOrder)||0,...achievements.map(row=>Number(row.earnedOrder)||0));
+        function unlock(balance,migrated){
+          for(const badge of STUDY_STAR_BADGES){
+            if(balance<badge.target||achievements.some(row=>row.id===badge.id))continue;
+            const row={id:badge.id,earnedAt:migrated?null:new Date().toISOString(),migrated,earnedOrder:++order};
+            badges.add(row);achievements.push(row);
+          }
         }
-        const entry={sourcePack:source,roundId:round,rewardType:event.rewardType,eventId:studyStarEventId(source,round,event.rewardType),currency:STUDY_STAR_POLICY.currency,amount:event.amount};
-        const add=store.add(entry);
-        add.onerror=()=>tx.abort();
-        add.onsuccess=()=>{awardedAmount+=event.amount;results.push({rewardType:event.rewardType,amount:event.amount,awarded:true,eventId:entry.eventId})};
-      };
+        if(!state){
+          // v1 completion plus bounded streak adjustment could never reduce its
+          // saved balance. Its net ledger balance proves the highest earned
+          // threshold; summing positive entries would count canceled rewards.
+          // Preserve that achievement without inventing an earning date.
+          unlock(studyStarRowsBalance(rows),true);
+          state={id:STUDY_BADGE_STATE,earnedOrder:order};achievements.push(state);
+        }
+        let balance=studyStarRowsBalance(rows);
+        result=mutator?mutator({ledger,rows,balance}):{};
+        balance=studyStarRowsBalance(rows);
+        unlock(balance,false);state.earnedOrder=order;badges.put(state);
+        result={...result,balance,collection:badgeCollectionFromRows(balance,achievements)};
+      }catch(error){tx.abort();db.close();reject(error)}
     }
+    rowsRequest.onsuccess=()=>{rows=(rowsRequest.result||[]).map(safeStudyStarRow);run()};
+    badgesRequest.onsuccess=()=>{achievements=badgesRequest.result||[];run()};
   });
 }
+async function commitStudyStarRewards({sourcePack,mode,sessionSeed,roundId,completed=false,comebackSucceeded=false,streakAdjustment=0,firstTryCorrect,questionCount}={}){
+  const {source,round}=studyStarIdentity({sourcePack,mode,sessionSeed,roundId});
+  const events=completed===true?studyStarRewardEvents({completed:true,comebackSucceeded:comebackSucceeded===true,streakAdjustment,firstTryCorrect,questionCount}):Object.freeze([]);
+  return await transactStudyStars(({ledger,rows})=>{
+    const results=[];let awardedAmount=0,duplicateAmount=0,perfectBonus=0;
+    for(const event of events){
+      const existing=rows.find(row=>row.sourcePack===source&&row.roundId===round&&row.rewardType===event.rewardType);
+      if(existing){
+        duplicateAmount+=existing.amount;results.push({rewardType:event.rewardType,amount:existing.amount,awarded:false,eventId:existing.eventId});continue;
+      }
+      const entry={sourcePack:source,roundId:round,rewardType:event.rewardType,eventId:studyStarEventId(source,round,event.rewardType),currency:STUDY_STAR_POLICY.currency,amount:event.amount};
+      ledger.add(entry);rows.push(entry);awardedAmount+=event.amount;
+      if(event.rewardType==="perfect-round")perfectBonus+=event.amount;
+      results.push({rewardType:event.rewardType,amount:event.amount,awarded:true,eventId:entry.eventId});
+    }
+    return {currency:STUDY_STAR_POLICY.currency,awardedAmount,duplicateAmount,perfectBonus,results};
+  });
+}
+async function commitStudyStarPenalty({sourcePack,mode,sessionSeed,roundId,attemptId}={}){
+  const {source,round}=studyStarIdentity({sourcePack,mode,sessionSeed,roundId}),attempt=text(attemptId);
+  if(!attempt)throw new Error("Study Star penalty requires a stable question/attempt identity");
+  const rewardType="wrong-answer:"+studyStarOpaqueId("attempt-",attempt);
+  return await transactStudyStars(({ledger,rows,balance})=>{
+    const existing=rows.find(row=>row.sourcePack===source&&row.roundId===round&&row.rewardType===rewardType);
+    if(existing)return {currency:STUDY_STAR_POLICY.currency,deductedAmount:0,duplicateAmount:Math.max(0,-existing.amount),results:[{rewardType,amount:existing.amount,awarded:false,eventId:existing.eventId}]};
+    const deductedAmount=Math.min(STUDY_STAR_POLICY.wrongAnswerPenalty,balance);
+    const entry={sourcePack:source,roundId:round,rewardType,eventId:studyStarEventId(source,round,rewardType),currency:STUDY_STAR_POLICY.currency,amount:deductedAmount?-deductedAmount:0};
+    ledger.add(entry);rows.push(entry);
+    return {currency:STUDY_STAR_POLICY.currency,deductedAmount,duplicateAmount:0,results:[{rewardType,amount:entry.amount,awarded:true,eventId:entry.eventId}]};
+  });
+}
+async function studyBadgeCollection(){return (await transactStudyStars()).collection}
 async function loadStudyStarLedger(){
   const db=await openStudyStarDb();
   return await new Promise((resolve,reject)=>{
@@ -1698,10 +1772,7 @@ async function loadStudyStarLedger(){
     };
   });
 }
-async function studyStarBalance(){
-  const rows=await loadStudyStarLedger();
-  return rows.reduce((sum,row)=>sum+(Number(row.amount)||0),0);
-}
+async function studyStarBalance(){return studyStarRowsBalance(await loadStudyStarLedger())}
 
 const GAME_RECORD_PREFIX="abvm-study-games:";
 function gameRecordKey(sourceKey,modeId){return GAME_RECORD_PREFIX+String(sourceKey||"current")+":"+String(modeId||"quick")}
@@ -2057,6 +2128,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,REVIEW_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,validateRichContent,vocabularyDefinition,selectQuestions,selectDailyQuestions,learningFirstSummary,studyStarPolicy,nextStreakBonus,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,reviewQuestionFamilySafeUsage,questionFamilyRolloutPolicy,reviewQuestionFamilyPromotion,itemQualityKey
+  buildCatalog,validateCatalog,validateRichContent,vocabularyDefinition,selectQuestions,selectDailyQuestions,learningFirstSummary,studyStarPolicy,nextStreakBonus,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,commitStudyStarPenalty,studyBadgeCatalog,studyBadgeCollection,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,reviewQuestionFamilySafeUsage,questionFamilyRolloutPolicy,reviewQuestionFamilyPromotion,itemQualityKey
 });
 })();

@@ -12,6 +12,7 @@ async function clearLedger(page){
 test.beforeEach(async ({ page }) => {
   await page.goto('/#games');
   await expect(page.locator('.study-game-grid')).toBeVisible({ timeout: 10_000 });
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready',{timeout:15000});
   await page.evaluate(()=>localStorage.removeItem('abvm-study-stars-goal:v1'));
   await clearLedger(page);
 });

@@ -29,7 +29,7 @@ test('Study Stars uses one fixed currency with intentionally small bounded rewar
   expect(new Set(result.both.map(row=>row.currency))).toEqual(new Set(['Study Stars']));
 });
 
-test('only explicit streakAdjustment changes Study Star awards and it is bounded', async ({ page }) => {
+test('completion streak rewards are bounded and never repeat immediate wrong-answer penalties', async ({ page }) => {
   const result = await page.evaluate(() => {
     const engine = window.ABVMStudyGames;
     const baseline=engine.studyStarRewardEvents({completed:true,comebackSucceeded:true});
@@ -44,19 +44,16 @@ test('only explicit streakAdjustment changes Study Star awards and it is bounded
   });
   expect(result.noisy).toEqual(result.baseline);
   expect(result.policy.excludedSignals).toEqual(expect.arrayContaining([
-    'score','accuracy','first-try','perfect','mastery','speed','hints','teach-card','support'
+    'score','accuracy','mastery','speed','hints','teach-card','support'
   ]));
   expect(result.policy.excludedSignals).not.toContain('streak');
   expect(result.positive).toEqual([
     {rewardType:'round-complete',amount:10,currency:'Study Stars'},
     {rewardType:'streak-adjustment',amount:10,currency:'Study Stars'}
   ]);
-  expect(result.negative).toEqual([
-    {rewardType:'round-complete',amount:10,currency:'Study Stars'},
-    {rewardType:'streak-adjustment',amount:-10,currency:'Study Stars'}
-  ]);
+  expect(result.negative).toEqual([{rewardType:'round-complete',amount:10,currency:'Study Stars'}]);
   expect(result.text).toEqual([{rewardType:'round-complete',amount:10,currency:'Study Stars'}]);
-  expect(result.negative.reduce((sum,row)=>sum+row.amount,0)).toBe(0);
+  expect(result.negative.reduce((sum,row)=>sum+row.amount,0)).toBe(10);
 });
 
 test('progressive streak steps rise in magnitude and reset when direction changes', async ({ page }) => {
@@ -93,4 +90,33 @@ test('reward policy is deterministic and contains no random or loot-box outcome'
   });
   for(const row of result)expect(row).toEqual(result[0]);
   expect(result.flat().every(event=>['round-complete','comeback-success'].includes(event.rewardType))).toBe(true);
+});
+
+
+test('perfect completed first-response scores earn 25 additional stars without changing learning evidence',async({page})=>{
+  const rows=await page.evaluate(()=>{
+    const e=window.ABVMStudyGames;
+    const inputs=[
+      {completed:true,firstTryCorrect:8,questionCount:8},
+      {completed:true,firstTryCorrect:7,questionCount:8},
+      {completed:true,firstTryCorrect:0,questionCount:0},
+      {completed:false,firstTryCorrect:8,questionCount:8},
+      {completed:true,firstTryCorrect:'8',questionCount:8},
+      {completed:true,firstTryCorrect:8,questionCount:'8'},
+      {completed:true,firstTryCorrect:8,questionCount:8,hints:2},
+    ];
+    return inputs.map(input=>e.studyStarRewardEvents(input));
+  });
+  expect(rows[0].find(row=>row.rewardType==='perfect-round').amount).toBe(25);
+  for(const index of [1,2,3,4,5])expect(rows[index].some(row=>row.rewardType==='perfect-round')).toBe(false);
+  expect(rows[6]).toEqual(rows[0]);
+});
+
+test('badge catalog contains six fixed school milestones with stable identities',async({page})=>{
+  const badges=await page.evaluate(()=>window.ABVMStudyGames.studyBadgeCatalog());
+  expect(badges.map(row=>row.target)).toEqual([50,150,300,600,1000,1500]);
+  expect(badges.map(row=>row.title)).toEqual(['Star Scout','Bright Spark','Junior Scholar','Honor Eagle','Golden Eagle','ABVM Legend']);
+  expect(badges.map(row=>row.id)).toEqual(['starlight-study-badge','bright-spark','rising-scholar','golden-scholar','eagle-achiever','constellation-champion']);
+  expect(badges.map(row=>row.artIndex)).toEqual([0,1,2,3,4,5]);
+  expect(badges.every(row=>row.cosmetic===true)).toBe(true);
 });

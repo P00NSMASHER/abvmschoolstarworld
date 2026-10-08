@@ -38,6 +38,7 @@ async function answerPerfectRound(page){
 test.beforeEach(async ({page})=>{
   await page.goto('/#games');
   await expect(page.locator('.study-game-grid')).toBeVisible({timeout:10_000});
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready',{timeout:15000});
   await clearStarLedger(page);
   await page.evaluate(()=>{
     localStorage.removeItem('abvm-study-stars-goal:v1');
@@ -134,22 +135,29 @@ test('question retry and hint evidence resets before the next question',async({p
   }));
 });
 
-test('perfect round auto-saves one completion reward, survives rerender, and removes reduced-motion reveal',async({page})=>{
+test('perfect round auto-saves one completion reward, survives rank navigation, and removes reduced-motion reveal',async({page})=>{
   await page.emulateMedia({reducedMotion:'reduce'});
   await answerPerfectRound(page);
   await expect(page.getByRole('heading',{name:'What you learned'})).toBeVisible();
-  await expect(page.locator('.study-star-earned')).toContainText('+20 Study Stars');
+  await expect(page.locator('.study-star-earned')).toContainText('+45 Study Stars');
   await expect(page.locator('.game-streak-summary')).toContainText('+10 Study Stars');
-  expect(await page.evaluate(()=>window.ABVMStudyGames.studyStarBalance())).toBe(20);
-
-  const goalButton=page.locator('[data-study-star-goal]');
-  await expect(goalButton).toBeVisible();
-  await goalButton.click();
-  await expect(page.locator('.adaptive-note')).toContainText(/Goal selected|Unlocked/);
-  expect(await page.evaluate(()=>window.ABVMStudyGames.studyStarBalance())).toBe(20);
+  expect(await page.evaluate(()=>window.ABVMStudyGames.studyStarBalance())).toBe(45);
 
   await page.waitForTimeout(1350);
   await expect(page.locator('[data-reward-reveal]')).toHaveCount(0);
+
+  const badgesButton=page.locator('[data-open-badges]').first();
+  await expect(badgesButton).toBeVisible();
+  await expect(page.locator('.study-badge-next')).toBeVisible();
+  await badgesButton.click();
+  await expect(page.locator('.study-badge-grid')).toBeVisible();
+  await expect(page.locator('.study-badge-grid').getByRole('listitem')).toHaveCount(6);
+  expect(await page.evaluate(()=>window.ABVMStudyGames.studyStarBalance())).toBe(45);
+  await page.getByRole('button',{name:'Study',exact:true}).click();
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+  await expect(page.locator('.study-badge-tracker')).toContainText('45 Study Stars');
+  expect(await page.evaluate(()=>window.ABVMStudyGames.studyStarBalance())).toBe(45);
+
 });
 
 test('Step 9 freezes reward identity and advances all PWA assets together',async({page})=>{
@@ -161,8 +169,10 @@ test('Step 9 freezes reward identity and advances all PWA assets together',async
   expect(app).toContain('sourceKey=currentGameSourceKey(),sessionSeed=engine.nextSessionSeed');
   expect(app).toContain('sourceKey,sessionSeed,learningEvents');
   expect(app).toContain('studyStarRoundId({sourcePack:sourceKey,mode:g.mode,sessionSeed:g.sessionSeed})');
-  expect(app).toContain('commitStudyStarRewards({sourcePack:sourceKey,mode:g.mode,sessionSeed:g.sessionSeed,roundId,completed:true,comebackSucceeded:!!g.comebackSucceeded,streakAdjustment:g.streakAdjustment||0})');
-  expect(app).toContain('lastStreakDelta:0,tries:0,misses:0,hints:0,retry:0,wrong:[]');
+  expect(app).toMatch(/commitStudyStarRewards\(\{[^}]*sourcePack:sourceKey[^}]*sessionSeed:g.sessionSeed[^}]*roundId[^}]*completed:true/);
+  expect(app).toMatch(/firstTryCorrect:/);
+  expect(app).toMatch(/questionCount:/);
+  expect(app).toContain('tries:0,misses:0,hints:0,retry:0,wrong:[]');
   const gamesUrl=app.match(/\.\/study-games\.js\?v=\d+/)?.[0];
   const gamesViewUrl=app.match(/\.\/study-games-view\.js\?v=\d+/)?.[0];
   expect(gamesUrl).toBeTruthy();

@@ -161,8 +161,6 @@
 .games-screen .game-empty h2{color:#102e58;font-size:1.2rem;line-height:1.5}
 .games-screen .study-star-reveal{position:static;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;width:auto;margin:0 0 16px;padding:12px;border:0;border-radius:12px;background:#fff3d5;color:#795b1f;box-shadow:none;transform:none;pointer-events:none;animation:study-reward-appear 1.2s ease both}
 .games-screen .study-star-reveal>span{font-size:1.2rem}.games-screen .study-star-reveal>strong{font-size:.84rem}.games-screen .study-star-reveal>small{font-size:.7rem}
-.games-screen .study-star-goal{margin-top:20px;padding:20px;border:1px solid var(--study-line);border-radius:18px;background:#fff}
-.games-screen .study-star-goal>h2{font-size:1.2rem}.games-screen .study-star-goal .game-progress{margin-bottom:10px}.games-screen .study-star-goal p{font-size:.84rem}
 @keyframes study-reward-appear{0%{opacity:0;transform:translateY(4px)}15%,75%{opacity:1;transform:none}100%{opacity:0;transform:none}}
 @media(min-width:700px){
   .games-screen .study-game-grid{gap:14px}
@@ -321,3 +319,58 @@
  .games-screen .prep-topics{margin-block:8px 6px}
  .games-screen .prep-topics>img{height:58px}
 }
+
+.study-badge-surface{min-width:0;margin:16px 0}
+.badge-loading,.badge-storage-error{padding:20px;border:1px solid #dce7f3;border-radius:20px;background:#fff;color:#526782;font-size:.9rem;min-height:88px}
+.study-badge-art{display:block;object-fit:contain;flex:none;max-width:100%;filter:drop-shadow(0 5px 4px #102e5812)}
+.study-badge-latest,.study-badge-tracker{display:flex;align-items:center;gap:12px;width:100%;padding:10px 16px;border:1px solid #e6c772;border-radius:20px;background:#fff6d8;color:#102e58;text-align:left}
+.study-badge-latest>span,.study-badge-tracker>span{display:grid;gap:3px;min-width:0;flex:1}
+.study-badge-latest small,.badge-eyebrow{font-size:.65rem;font-weight:800;letter-spacing:.08em;line-height:1.5;color:#665126}
+.study-badge-latest strong{font-size:1rem;line-height:1.3;font-weight:800}
+.study-badge-latest>span>span,.study-badge-tracker small{color:#526782;font-size:.76rem;line-height:1.5}
+.study-badge-latest>b,.study-badge-tracker>b{font-size:1.8rem;line-height:1;flex:none}
+.study-badge-tracker{padding:6px 12px;background:#fff;border-color:#dce7f3}
+.study-badge-tracker strong{font-size:.93rem;line-height:1.4;font-weight:800}
+.badge-mini-track{height:5px;background:#dfeafa;border-radius:10px;overflow:hidden;margin-top:3px}
+.badge-mini-track i{display:block;height:100%;background:#efb914;border-radius:10px}
+.badge-collection{padding:22px;border-radius:24px;border:1px solid #dce7f3;background:#fff;color:#102e58;min-width:0}
+.badge-collection-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.badge-collection-heading h2{margin:2px 0 0;font-size:1.45rem;line-height:1.25;letter-spacing:-.035em}
+.badge-balance{display:flex;align-items:center;gap:5px;padding:8px 12px;border:1px solid #ead596;border-radius:14px;background:#fff5d2;white-space:nowrap;font-size:1.1rem}
+.badge-balance>span{color:#976900}
+.rank-current{display:flex;align-items:center;gap:16px;margin:0 0 20px;padding:8px 16px;background:#102e58;border-radius:20px;color:#fff}
+.rank-current>.study-badge-art{width:116px;height:132px;max-width:40%}
+.rank-current .badge-eyebrow{color:#ffdf81}
+.rank-current h3{font-size:1.5rem;line-height:1.25;margin:5px 0;letter-spacing:-.025em}
+.rank-current p{font-size:.78rem;line-height:1.5;color:#d6e6fb;margin:0}
+.study-badge-next{display:grid;grid-template-columns:112px minmax(0,1fr);gap:0 12px;align-items:center;padding:14px 16px 20px;border:1px solid #e9d493;border-radius:20px;background:radial-gradient(ellipse at 10% 15%,#fff 0%,#fff7dd 50%,#fff0bf 100%)}
+.study-badge-next>.study-badge-art{width:112px;height:128px}
+.study-badge-next h3{margin:4px 0 6px;font-size:1.15rem;line-height:1.25;letter-spacing:-.02em}
+.study-badge-next p{margin:0;color:#665126;font-size:.78rem;line-height:1.55}
+.badge-progress-label{display:flex;justify-content:space-between;gap:10px;grid-column:1/-1;font-size:.76rem;line-height:1.5;color:#665126;margin:5px 0 8px;flex-wrap:wrap}
+.badge-progress-label strong{color:#102e58}
+.badge-progress{grid-column:1/-1;height:12px;border-radius:20px;background:#d4e3f6;overflow:hidden;box-shadow:inset 0 1px 2px #102e5818}
+.badge-progress>span{display:block;height:100%;border-radius:20px;background:linear-gradient(180deg,#ffda60,#f5bc1a);transition:width .25s ease}
+.badge-complete{grid-column:1/-1;color:#665126;font-size:.85rem;line-height:1.5;margin:8px 0 0}
+.study-badge-grid{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 10px;margin:24px 0 18px;padding:0}
+.study-badge-card{display:flex;align-items:center;flex-direction:column;text-align:center;gap:4px;min-width:0;position:relative;padding-bottom:8px}
+.study-badge-card>.study-badge-art{width:100%;height:92px}
+.study-badge-card strong{font-size:.75rem;line-height:1.3;color:#102e58;font-weight:800}
+.study-badge-card>span{font-size:.7rem;line-height:1.4;color:#526782}
+.study-badge-card small{font-size:.64rem;line-height:1.4;color:#526782;border-radius:12px;padding:3px 7px;background:#edf3fb}
+.study-badge-card.is-earned small{background:#e7f4ec;color:#265d42}
+.study-badge-card.is-next small{background:#fff0bf;color:#665126}
+.study-badge-card.is-locked>.study-badge-art{filter:grayscale(.8);opacity:.45}
+.badge-rules{font-size:.76rem;line-height:1.65;color:#526782;margin:16px 0 6px}
+.badge-device-note{display:block;font-size:.67rem;line-height:1.6;color:#526782}
+.badge-see-all{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:44px;border:0;border-radius:12px;background:#eef5ff;color:#102e58;margin-top:12px;padding:10px 14px;font-size:.87rem;font-weight:750;text-align:left}
+.study-perfect-bonus{display:flex;align-items:center;gap:12px;padding:16px;border-radius:18px;background:#fff0b6;border:1px solid #e4c268;margin:12px 0;color:#102e58}
+.study-perfect-bonus>span{font-size:1.6rem;color:#946900}
+.study-perfect-bonus strong,.study-perfect-bonus small{display:block;line-height:1.5}
+.study-perfect-bonus strong{font-size:1rem}
+.study-perfect-bonus small{font-size:.8rem;color:#665126}
+.study-star-penalty{display:block;margin-top:8px;font-weight:750;font-size:.8rem;line-height:1.5}
+.game-feedback .study-tease{display:block;font-weight:750;margin:6px 0;color:#85402e;font-size:.87rem;line-height:1.5}
+.game-star-balance{font-size:.75rem;line-height:1.4;color:#fff0b6;display:block;margin-top:4px}
+@media(min-width:700px){.badge-collection{padding:28px}.study-badge-next{grid-template-columns:160px minmax(0,1fr);gap:0 24px}.study-badge-next>.study-badge-art{width:160px;height:168px}.study-badge-next h3{font-size:1.55rem}.study-badge-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}.study-badge-card>.study-badge-art{height:100px}.study-badge-card strong{font-size:.8rem}.study-badge-tracker{max-width:600px}}
+@media(prefers-reduced-motion:reduce){.badge-progress>span{transition:none}}

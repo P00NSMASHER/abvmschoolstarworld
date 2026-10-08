@@ -27,7 +27,8 @@ test('six first-try correct and two corrected retries stays 6 of 8 at 75 percent
     if(i<2){
       const wrong=q.choices.findIndex(choice=>choice!==q.answer);expect(q.choices.length).toBeGreaterThanOrEqual(3);
       const wrongButton=page.locator('[data-game-answer]').nth(wrong);await wrongButton.click();
-      await expect(page.locator('.game-feedback')).toContainText('Incorrect. Try again.');
+      await expect(page.locator('.game-feedback')).toContainText('Incorrect');
+      await expect(page.locator('.game-feedback')).not.toContainText(/stupid|dumb|idiot|bad girl|Emma.*(wrong|bad)/i);
       await expect(wrongButton).toBeDisabled();
       const before=await page.locator('.game-live-score').innerText();
       await wrongButton.evaluate(button=>button.click());
