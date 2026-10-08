@@ -28,6 +28,12 @@ For editorial review, note that the question type classifications are *proposed*
 - [ ] Separate governed registry/feature-flag integration prepared and tested
 - [ ] Production hold lifted only through the approved workflow, never by changing the fail-closed publication gate
 
+## Personalization and assessment-quality approach
+
+These are **fictional practice stories inspired by interests familiar to this learner**: cheer teamwork, building-game worlds, cartoon cats, outfit and accessory design, and creative crafts. No real school events, account details, friend names, performance history, or identifiable student records are represented. Correct answers rely entirely on the passage or spelling rule, **never on prior knowledge of a franchise, influencer, app, or game**.
+
+Assessors should check that each question teaches the required Grade 2 skill rather than testing familiarity with the setting. Distractors deliberately include plausible alternate details or common misconceptions, and hints offer a strategy without giving away an answer. Context variety is intentional, not a claim about the learner's observed preferences or mastery.
+
 ## Topic-by-topic item review
 
 ### Ask & answer questions
@@ -40,123 +46,124 @@ For editorial review, note that the question type classifications are *proposed*
 
 #### 1. direct (DOK 1, difficulty 2)
 
-**Question:** Read: 'Lena planted three seeds on Monday. She watered them every morning.' On which day did Lena plant the seeds?
+**Question:** Read: 'At cheer practice, Ava put her silver pom-poms beside a blue water bottle. Then she practiced a jump.' Where did Ava put the pom-poms?
 
-1. Tuesday
-2. Monday
-3. Friday
+1. behind the speaker
+2. beside a water bottle
+3. inside a backpack
 
-**Correct answer:** 2. Monday  
-**Explanation:** The passage states that Lena planted the seeds on Monday. Her watering routine does not change the planting day.  
-**Hint:** Find the sentence that tells when the seeds went into the soil.
+**Correct answer:** 2. beside a water bottle  
+**Explanation:** The passage says Ava put her pom-poms beside a blue water bottle before practicing.  
+**Hint:** For a where question, find the place named next to the item.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 2. direct (DOK 1, difficulty 2)
 
-**Question:** Read: 'Ben visited the animal shelter with Dad. They carried clean towels for the puppies.' Where did Ben go?
+**Question:** Read: 'In a building game, Kai made a bridge over a river. He painted the bridge green.' What color was the bridge?
 
-1. to the zoo
-2. to the park
-3. to the animal shelter
+1. green
+2. purple
+3. blue
 
-**Correct answer:** 3. to the animal shelter  
-**Explanation:** The passage directly names the place Ben visited with Dad.  
-**Hint:** A where question asks for a place named in the first sentence.
+**Correct answer:** 1. green  
+**Explanation:** The second sentence tells the color Kai used on the bridge.  
+**Hint:** Find the sentence that describes what happened after the bridge was built.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 3. transfer (DOK 2, difficulty 2)
 
-**Question:** Read: 'Rain filled the playground with puddles, so the class moved its game into the gym.' Why did the class move?
+**Question:** Read: 'The blender started with a loud buzz. A cartoon kitten named Pip ran behind the sofa.' Why might Pip have hidden?
 
-1. The playground was too wet.
-2. There were too many players.
-3. The teacher lost the ball.
+1. Pip wanted a snack.
+2. Pip saw a bird outside.
+3. The noise may have startled Pip.
 
-**Correct answer:** 1. The playground was too wet.  
-**Explanation:** The puddles made the playground wet, which explains the move inside.  
-**Hint:** For a why question, look for the cause that appears before the action.
+**Correct answer:** 3. The noise may have startled Pip.  
+**Explanation:** The sudden buzzing happened just before Pip hid. That is evidence the kitten may have been frightened by the sound.  
+**Hint:** A why answer can be inferred from what happened immediately before the action.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 4. transfer (DOK 2, difficulty 2)
 
-**Question:** Read: 'On Friday, Kim's class collected empty cans to recycle. They filled two blue bags.' Which answer tells both what the class collected and how many bags they filled?
+**Question:** Read: 'Mila used four silver beads and one blue star charm to make a bracelet.' Which answer tells both how many beads she used and what charm she chose?
 
-1. Empty bottles and three bags
-2. Empty cans and two bags
-3. Paper scraps and one bag
+1. Four silver beads and a blue star
+2. Two silver beads and a blue heart
+3. Four blue beads and a silver star
 
-**Correct answer:** 2. Empty cans and two bags  
-**Explanation:** The first sentence says they collected empty cans. The second tells that they filled two blue bags.  
-**Hint:** Find the collected material in the first sentence and count of bags in the second sentence.
+**Correct answer:** 1. Four silver beads and a blue star  
+**Explanation:** The passage gives two details: four silver beads and a blue star charm.  
+**Hint:** Check both the number and color of the beads and the shape of the charm.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 5. reasoning (DOK 3, difficulty 3)
 
-**Question:** Read: 'Jay packed a red umbrella because dark clouds covered the sky.' Which question can the passage answer?
+**Question:** Read: 'Music stopped during the cheer routine. Nora counted the beats out loud. The squad finished together.' Which detail best explains how Nora helped?
 
-1. Who gave Jay the umbrella?
-2. Why did Jay pack an umbrella?
-3. What did Jay eat for breakfast?
+1. The routine had music.
+2. Nora counted the beats aloud.
+3. The squad wore matching ribbons.
 
-**Correct answer:** 2. Why did Jay pack an umbrella?  
-**Explanation:** The passage gives the reason for packing an umbrella, but does not say who gave it or what Jay ate.  
-**Hint:** Check which question has evidence in the one-sentence passage.
+**Correct answer:** 2. Nora counted the beats aloud.  
+**Explanation:** Nora's counting replaced the missing music beat so the squad could keep moving together.  
+**Hint:** Find the action that helped the group continue after the problem.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 6. reasoning (DOK 3, difficulty 3)
 
-**Question:** Read: 'Rosa walked to the library to borrow a book about whales.' Which answer correctly tells both where Rosa went and why?
+**Question:** Read: 'In a game, Nia walked toward a locked gate wearing red boots. She found a moon-shaped key. After she picked it up, the gate opened.' Which detail is the strongest clue about why the gate opened?
 
-1. To school, to see her teacher.
-2. To the beach, to watch whales.
-3. To the library, to borrow a book.
+1. Nia wore red boots.
+2. Nia walked toward a gate.
+3. Nia picked up a moon-shaped key.
 
-**Correct answer:** 3. To the library, to borrow a book.  
-**Explanation:** The text gives both the destination and the purpose of Rosa's trip.  
-**Hint:** Find a place and an action that are both stated together.
+**Correct answer:** 3. Nia picked up a moon-shaped key.  
+**Explanation:** The gate opened right after Nia picked up the key, making it the strongest clue. Her boots and walking do not explain the change.  
+**Hint:** Which event happened immediately before the gate opened?
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 7. transfer (DOK 2, difficulty 2)
 
-**Question:** Read: 'Noah fed his dog, tied his shoes, and then walked to school.' What did Noah do first?
+**Question:** Read: 'Nina drew a cartoon cat, gave it a purple bow, and placed the drawing on the windowsill to dry.' What did Nina draw, and where did she put it?
 
-1. He fed his dog.
-2. He walked to school.
-3. He tied his shoes.
+1. A cartoon cat; on the windowsill
+2. A cartoon cat; on the bookshelf
+3. A purple flower; on the windowsill
 
-**Correct answer:** 1. He fed his dog.  
-**Explanation:** The events are told in order, so feeding the dog happened before shoes and school.  
-**Hint:** Look for the first action in the sentence rather than the last.
+**Correct answer:** 1. A cartoon cat; on the windowsill  
+**Explanation:** The passage names the picture and its drying spot. Both details must match.  
+**Hint:** Find what she drew first and where she placed it at the end.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 8. reasoning (DOK 3, difficulty 3)
 
-**Question:** Read: 'The turtle rested under a rock while sunlight warmed the sand.' Which words from the text answer 'Where did the turtle rest?'
+**Question:** Read: 'After making a glittery headband, Jo closed the glue bottle and returned the scissors to their box.' Which two details best show that Jo took care of the craft supplies?
 
-1. sunlight warmed
-2. the turtle rested
-3. under a rock
+1. The headband was glittery and Jo used scissors.
+2. Jo made a headband and liked its color.
+3. Jo closed the glue and put the scissors away.
 
-**Correct answer:** 3. under a rock  
-**Explanation:** The location is expressed by the words telling where the turtle was positioned.  
-**Hint:** A where answer should name a location, not an action or weather condition.
+**Correct answer:** 3. Jo closed the glue and put the scissors away.  
+**Explanation:** Closing the glue and returning the scissors are both actions that keep craft supplies safe and organized.  
+**Hint:** Look for two actions that put materials away, not details about the decoration.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
+
 
 ### long i (i_e) and short i
 
@@ -168,123 +175,124 @@ For editorial review, note that the question type classifications are *proposed*
 
 #### 1. direct (DOK 1, difficulty 2)
 
-**Question:** Which word has a long i sound made by an i, a consonant, and silent e?
+**Question:** In a building game, an avatar needs to hide from a pretend dragon. Which word has long i made by silent e?
 
-1. kite
-2. kit
-3. kid
+1. hide
+2. high
+3. hill
 
-**Correct answer:** 1. kite  
-**Explanation:** In kite, the silent e helps the i say its name. The i in kit and kid is short.  
-**Hint:** Look for a final e that changes how the vowel sounds.
+**Correct answer:** 1. hide  
+**Explanation:** Hide uses i-consonant-silent e. High has long i but not this spelling pattern; hill has short i.  
+**Hint:** Look for an i, one consonant, and a final e that is not spoken.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 2. direct (DOK 1, difficulty 2)
 
-**Question:** Which word has the short i sound heard in the word fish?
+**Question:** A cartoon kitten plays with a ribbon and a clip. Which word has the short i sound heard in fish?
 
-1. pine
-2. pin
-3. pie
+1. shine
+2. clip
+3. five
 
-**Correct answer:** 2. pin  
-**Explanation:** Pin has a short i sound. Pine and pie have a long i sound.  
-**Hint:** Try saying each word aloud, listening for the quick vowel in fish.
+**Correct answer:** 2. clip  
+**Explanation:** Clip has the short i sound. Shine and five have the long i sound.  
+**Hint:** Say each word slowly and compare its vowel to the vowel in fish.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 3. transfer (DOK 2, difficulty 2)
 
-**Question:** Complete the sentence: 'I will ____ my bicycle after school.' Which word has the correct long i spelling?
+**Question:** A cheer team stands in a straight ___. Which word both completes the sentence and uses silent e for long i?
 
-1. rid
-2. ride
-3. red
+1. line
+2. lane
+3. lint
 
-**Correct answer:** 2. ride  
-**Explanation:** Ride has the long i sound and fits the meaning of the sentence.  
-**Hint:** Look for the spelling pattern in which the last e makes i say its name.
+**Correct answer:** 1. line  
+**Explanation:** Line is the word for the team's row, and its i-consonant-e spelling makes a long i sound. Lane has long a, and lint does not fit.  
+**Hint:** Think of the word for a row of people, then check its vowel spelling.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 4. transfer (DOK 2, difficulty 2)
 
-**Question:** Choose the word that correctly completes: 'The rabbit will ____ behind the tree.'
+**Question:** In a game, a cartoon cat will ___ behind a castle wall. Which spelling correctly completes the sentence?
 
 1. hid
-2. head
-3. hide
+2. hide
+3. hive
 
-**Correct answer:** 3. hide  
-**Explanation:** Hide is the present form that fits after will, and its i has a long sound because of final e.  
-**Hint:** After will, choose a base verb, then check its vowel sound.
+**Correct answer:** 2. hide  
+**Explanation:** After will, the sentence needs the base verb hide. The silent e makes the i long.  
+**Hint:** Read the complete sentence and check which choice is an action.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 5. reasoning (DOK 3, difficulty 3)
 
-**Question:** Why does the word pine have a long i sound while the word pin has a short i sound?
+**Question:** Two cards for a costume game say 'pin' and 'pine.' Why does the i sound different?
 
-1. The final silent e changes the vowel sound.
-2. Every word beginning with t has a long vowel.
-3. The letter t changes the sound of i.
+1. The letter p makes vowels long.
+2. Adding a silent e changes short i to long i.
+3. Every four-letter word has long i.
 
-**Correct answer:** 1. The final silent e changes the vowel sound.  
-**Explanation:** Pine is pin with a final silent e. This follows the i-consonant-e pattern and changes the i from a short sound to a long sound.  
-**Hint:** Compare pin and pine letter by letter. Look at the final letter.
+**Correct answer:** 2. Adding a silent e changes short i to long i.  
+**Explanation:** Pine adds a final silent e to pin. In this pattern, the i changes from its short sound to its long sound.  
+**Hint:** Compare the two spellings. Only one extra letter appears at the end.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 6. reasoning (DOK 3, difficulty 3)
 
-**Question:** What happens to the vowel sound when the spelling changes from fin to fine?
+**Question:** A bow-making guide says 'bit' and 'bite.' Which explanation best compares their vowel sounds?
 
-1. The vowel changes from short i to long i.
-2. The vowel changes from long i to short i.
-3. The two words keep the same vowel sound.
+1. Both have short i because they start with b.
+2. Bit has long i because it is shorter.
+3. Bit has short i; the silent e in bite signals long i.
 
-**Correct answer:** 1. The vowel changes from short i to long i.  
-**Explanation:** Adding silent e to fin creates fine and usually changes the vowel to its long sound.  
-**Hint:** Read each word aloud and pay attention to the last letter.
+**Correct answer:** 3. Bit has short i; the silent e in bite signals long i.  
+**Explanation:** Bit has short i. Bite adds silent e after the consonant, making the i sound long.  
+**Hint:** Check the final letters before deciding how the vowel changes.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 7. transfer (DOK 2, difficulty 2)
 
-**Question:** Which pair shows a short-i word changed to a long-i word by adding a final e?
+**Question:** A game designer wants a pair that changes from short i to long i by adding a final e. Which pair works?
 
-1. sit → sits
-2. kit → kite
-3. pig → pigs
+1. win → wins
+2. pin → pine
+3. fish → fishes
 
-**Correct answer:** 2. kit → kite  
-**Explanation:** Kit has a short i sound, while kite has a long i sound created by final e.  
-**Hint:** Only one pair changes the vowel sound, rather than making a plural or verb ending.
+**Correct answer:** 2. pin → pine  
+**Explanation:** Pin has short i. Adding silent e makes pine, with long i. The other changes add endings without making this vowel change.  
+**Hint:** Look for one extra e at the end and a changed middle sound.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 8. reasoning (DOK 3, difficulty 3)
 
-**Question:** Which sentence contains a word with a long i sound made by silent e?
+**Question:** A cheer captain writes, 'We will ___ across the mat.' Which choice is an action that fits and uses i-consonant-silent e for long i?
 
-1. The fish swam past the log.
-2. The pig ran across the yard.
-3. The child flew a kite.
+1. slid
+2. side
+3. slide
 
-**Correct answer:** 3. The child flew a kite.  
-**Explanation:** Kite has an i-consonant-e pattern, so the letter i says its name.  
-**Hint:** Scan each sentence for an i followed by a consonant and a final silent e.
+**Correct answer:** 3. slide  
+**Explanation:** Slide is a base-form action after will and uses the i-consonant-silent e pattern. Slid is past tense; side is a noun here.  
+**Hint:** Check both the grammar after will and the silent-e sound pattern.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
+
 
 ### main idea / details
 
@@ -296,123 +304,124 @@ For editorial review, note that the question type classifications are *proposed*
 
 #### 1. direct (DOK 1, difficulty 2)
 
-**Question:** Read: 'Our class puts paper, cans, and plastic bottles in special bins. We use these bins every school day to reduce trash.' What is the main idea?
+**Question:** Read: 'The cheer squad practiced arm motions, counted the beats, and helped new teammates learn jumps.' What is the main idea?
 
-1. The class recycles to reduce trash.
-2. The class puts paper in special bins.
-3. The class puts bottles in special bins.
+1. The squad counted the beats.
+2. The squad practiced several skills together.
+3. New teammates learned jumps.
 
-**Correct answer:** 1. The class recycles to reduce trash.  
-**Explanation:** The two sentences explain that the class sorts several kinds of materials to reduce trash. The other options mention only individual examples.  
-**Hint:** Choose the answer that includes the purpose and all kinds of recycling, not just one item.
+**Correct answer:** 2. The squad practiced several skills together.  
+**Explanation:** Counting, arm motions, and helping with jumps are details about practicing as a team.  
+**Hint:** Choose the statement that includes all of the squad's actions.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 2. direct (DOK 1, difficulty 2)
 
-**Question:** Read: 'Bees visit many flowers. They carry pollen as they fly. This helps some plants grow.' What is the main idea?
+**Question:** Read: 'Pip the cartoon kitten chased a toy mouse, watched birds outside, and slept in a sunny spot.' What is the main idea?
 
-1. Bees carry pollen as they fly.
-2. Bees help plants while visiting flowers.
-3. Bees visit many flowers.
+1. Pip enjoyed different activities at home.
+2. Pip chased a toy mouse.
+3. Pip watched birds through a window.
 
-**Correct answer:** 2. Bees help plants while visiting flowers.  
-**Explanation:** All the details show how bees move among flowers and help plants grow. The other options describe only one detail each.  
-**Hint:** A main idea covers the whole passage; the other choices may describe smaller details.
+**Correct answer:** 1. Pip enjoyed different activities at home.  
+**Explanation:** The passage lists three different activities Pip enjoyed. The other choices mention only one.  
+**Hint:** Think about what every sentence tells you about Pip's day.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 3. transfer (DOK 2, difficulty 2)
 
-**Question:** Read: 'Milo the dog fetched his ball, practiced sitting on command, and ran around the yard.' Which title best fits the whole passage?
+**Question:** Read: 'In a building game, a team made a bridge, planted a garden, and built a treehouse on an island.' Which title best fits the whole passage?
 
-1. Milo Fetches His Ball
-2. Milo Learns to Sit
-3. Milo Practices and Plays
+1. A New Bridge for the Island
+2. A Garden Full of Flowers
+3. Many Creations on the Island
 
-**Correct answer:** 3. Milo Practices and Plays  
-**Explanation:** The passage includes several ways Milo played and practiced skills.  
-**Hint:** Find the title that includes both practicing and playing, not only one action.
+**Correct answer:** 3. Many Creations on the Island  
+**Explanation:** The team made several different things, so a title about all the creations fits better than one project.  
+**Hint:** Choose a title broad enough to include every project mentioned.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 4. transfer (DOK 2, difficulty 2)
 
-**Question:** Read: 'Trees shade people, give birds places to nest, and hold soil with their roots.' Which main idea fits all the details?
+**Question:** Read: 'Mia picked a bright shirt, chose matching sneakers, and clipped a glittery bow in her hair.' Which main idea fits the passage?
 
-1. Trees are useful in several ways.
-2. Birds can build nests in trees.
-3. Tree roots help hold soil in place.
+1. Mia chose a matching outfit.
+2. Mia clipped a bow in her hair.
+3. Mia picked out sneakers.
 
-**Correct answer:** 1. Trees are useful in several ways.  
-**Explanation:** Shade, nesting places, and roots that hold soil are three different useful things trees provide. The other choices each mention just one detail.  
-**Hint:** Which choice describes the whole group of benefits, not one example?
+**Correct answer:** 1. Mia chose a matching outfit.  
+**Explanation:** The shirt, shoes, and hair bow are supporting details about making an outfit.  
+**Hint:** Find the choice covering the whole look, not one piece of it.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 5. reasoning (DOK 3, difficulty 3)
 
-**Question:** The main idea is 'Rain helps a garden grow.' Which supporting detail best fits this idea?
+**Question:** The main idea is 'The cheer team works together to improve.' Which detail best supports it?
 
-1. Some gardens have tall fences.
-2. Rainwater soaks the roots of flowers.
-3. A gardener uses a shovel to make holes.
+1. The team practiced on a blue mat.
+2. Teammates helped each other remember the next motion.
+3. The team had silver ribbons.
 
-**Correct answer:** 2. Rainwater soaks the roots of flowers.  
-**Explanation:** Water reaching flower roots explains how rain helps growth. The other details concern gardens but do not explain the benefit of rain.  
-**Hint:** Find the fact that explains how rain gives water to the plants.
+**Correct answer:** 2. Teammates helped each other remember the next motion.  
+**Explanation:** Helping teammates remember motions is teamwork that supports improvement. The other details describe equipment or appearance.  
+**Hint:** Choose an action that proves people worked together.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 6. reasoning (DOK 3, difficulty 3)
 
-**Question:** Read: 'The librarian labels shelves, arranges books by subject, and helps children find stories.' Which sentence gives the main idea rather than only one detail?
+**Question:** Read: 'At the cat shelter, children filled water bowls, folded soft blankets, and gently brushed the kittens.' Which choice states the main idea instead of one detail?
 
-1. The shelves have labels.
-2. Books can be placed on shelves.
-3. The librarian helps people find organized books.
+1. The children filled water bowls.
+2. The children took care of shelter kittens.
+3. The kittens had soft blankets.
 
-**Correct answer:** 3. The librarian helps people find organized books.  
-**Explanation:** Labels and arranging books are details that support the larger role of organizing and finding books.  
-**Hint:** Pick the statement broad enough to cover the different library tasks.
+**Correct answer:** 2. The children took care of shelter kittens.  
+**Explanation:** All three details describe ways the children cared for the kittens.  
+**Hint:** Choose the statement that combines the feeding, blankets, and brushing.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 7. transfer (DOK 2, difficulty 2)
 
-**Question:** Read: 'Each morning the school bus picks up students. The driver checks that everyone is seated before moving.' Which summary fits best?
+**Question:** Read: 'To make a sparkly headband, Nina chose a ribbon, glued on shiny stars, and let it dry.' Which title best describes the entire project?
 
-1. A bus safely carries children to school.
-2. The bus picks up students each morning.
-3. The driver checks that everyone is seated.
+1. Choosing Ribbon Colors
+2. Letting Glue Dry
+3. Making a Sparkly Headband
 
-**Correct answer:** 1. A bus safely carries children to school.  
-**Explanation:** The best summary connects transporting students with checking their safety. The other choices each mention one detail.  
-**Hint:** Choose the big idea supported by both the pickup and the driver's safety check.
+**Correct answer:** 3. Making a Sparkly Headband  
+**Explanation:** The passage gives steps for completing one whole craft, not just choosing a ribbon or drying glue.  
+**Hint:** A title should name the finished project, not a single step.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 8. reasoning (DOK 3, difficulty 3)
 
-**Question:** Read: 'At the beach, Maya collected shells, watched tiny crabs, and built a sandcastle.' Which sentence tells the main idea instead of one detail?
+**Question:** Read: 'Two game builders shared their blocks, planned the castle rooms together, and fixed a wall that fell.' What is the main idea?
 
-1. Maya built a sandcastle.
-2. Maya watched a crab.
-3. Maya enjoyed several beach activities.
+1. Sharing blocks helps game builders cooperate.
+2. The builders worked together to finish a castle.
+3. One castle wall fell during the game.
 
-**Correct answer:** 3. Maya enjoyed several beach activities.  
-**Explanation:** Collecting shells, watching crabs, and building a castle are details of Maya's many beach activities.  
-**Hint:** Look for a statement that covers all the things Maya did.
+**Correct answer:** 2. The builders worked together to finish a castle.  
+**Explanation:** Sharing, planning, and repairing are all parts of how the builders cooperated to complete their castle. The other choices focus on only one detail.  
+**Hint:** Find the answer that combines the team's plan, sharing, and repair.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
+
 
 ### possessives ('s)
 
@@ -424,123 +433,124 @@ For editorial review, note that the question type classifications are *proposed*
 
 #### 1. direct (DOK 1, difficulty 2)
 
-**Question:** Which phrase shows that a collar belongs to one dog?
+**Question:** A cartoon kitten named Pip owns a tiny bell. Which phrase uses apostrophe-s to show that the bell belongs to Pip?
 
-1. the dogs collar
-2. the dog's collar
-3. the dogs' collars
+1. Pip has bells
+2. Pip's bell
+3. a bell for kittens
 
-**Correct answer:** 2. the dog's collar  
-**Explanation:** Dog's uses an apostrophe and s to show that one dog owns the collar.  
-**Hint:** Find the apostrophe immediately after the name of one owner.
+**Correct answer:** 2. Pip's bell  
+**Explanation:** Pip's uses an apostrophe before s to show that Pip owns the bell.  
+**Hint:** Look for one owner's name followed by an apostrophe and s.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 2. direct (DOK 1, difficulty 2)
 
-**Question:** Which phrase correctly shows that a backpack belongs to one girl?
+**Question:** A cheerleader has one shiny bow for a performance. Which phrase shows that the bow belongs to that cheerleader?
 
-1. the girl's backpack
-2. the girls backpack
-3. the girls' backpacks
+1. the cheerleader's bow
+2. bows for the team
+3. a bow on the mat
 
-**Correct answer:** 1. the girl's backpack  
-**Explanation:** Girl's shows ownership by a single girl, with an apostrophe before s.  
-**Hint:** One owner usually needs an apostrophe followed by s.
+**Correct answer:** 1. the cheerleader's bow  
+**Explanation:** Cheerleader's shows that one cheerleader owns the bow. The other phrases do not name an owner with apostrophe-s.  
+**Hint:** Find the phrase that marks possession after one person's name.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 3. transfer (DOK 2, difficulty 2)
 
-**Question:** Emma owns a pencil. Which phrase correctly shows who owns it?
+**Question:** A fashion designer named Zoe owns silver sneakers. Which label correctly shows whose sneakers they are?
 
-1. Emmas pencil
-2. Emma's pencil
-3. Emma pencil
+1. sneakers for a contest
+2. Zoe is shopping
+3. Zoe's sneakers
 
-**Correct answer:** 2. Emma's pencil  
-**Explanation:** Emma's pencil correctly shows that the pencil belongs to Emma.  
-**Hint:** An apostrophe marks the ownership ending in a singular name.
+**Correct answer:** 3. Zoe's sneakers  
+**Explanation:** Zoe's sneakers uses the singular possessive to name Zoe as the owner.  
+**Hint:** A label showing one owner needs that name plus apostrophe-s.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 4. transfer (DOK 2, difficulty 2)
 
-**Question:** A toy belongs to one cat. Which phrase completes the sentence with the correct owner: '____ toy rolled under the sofa'?
+**Question:** In a game story, Nova owns a blue cape. Which phrase uses a possessive to label it?
 
-1. The child's
-2. The dogs'
-3. The cat's
+1. Nova's cape
+2. a cape for the game
+3. Nova wore a cape
 
-**Correct answer:** 3. The cat's  
-**Explanation:** The cat's shows that one cat owns the toy. The child's refers to a person, and the dogs' refers to more than one dog.  
-**Hint:** Choose the word for one animal that owns the toy, then look for apostrophe-s.
+**Correct answer:** 1. Nova's cape  
+**Explanation:** Nova's cape names the owner using apostrophe-s. The others describe a purpose or an action.  
+**Hint:** Look for the short phrase that labels who owns the object.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 5. reasoning (DOK 3, difficulty 3)
 
-**Question:** What does the apostrophe-s show in the phrase 'Sam's lunch'?
+**Question:** Which cheer sentence uses 's to show ownership, not as a shortened form of 'is'?
 
-1. Sam has several lunches.
-2. The lunch belongs to Sam.
-3. Several children are named Sam.
+1. Mia's practicing her jumps.
+2. Mia's blue pom-poms are on the shelf.
+3. Mia's getting ready for practice.
 
-**Correct answer:** 2. The lunch belongs to Sam.  
-**Explanation:** The apostrophe-s after Sam shows possession: Sam owns the lunch.  
-**Hint:** Ask whose object is being described.
+**Correct answer:** 2. Mia's blue pom-poms are on the shelf.  
+**Explanation:** Mia's blue pom-poms means the pom-poms belong to Mia. In the other sentences, Mia's means Mia is.  
+**Hint:** Try replacing the apostrophe-s with 'is.' Does the sentence still make sense?
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 6. reasoning (DOK 3, difficulty 3)
 
-**Question:** Which sentence uses apostrophe-s to show ownership, not a shortened form of 'is'?
+**Question:** Read: 'The kitten's blanket is purple.' What can you tell from the apostrophe-s?
 
-1. Mia's ready for class.
-2. Mia's eating lunch.
-3. Mia's book is on the desk.
+1. Purple is the kitten's favorite color.
+2. All the kittens have blankets.
+3. One kitten is the owner of the blanket.
 
-**Correct answer:** 3. Mia's book is on the desk.  
-**Explanation:** Mia's book means the book belongs to Mia; in the other sentences, Mia's is short for Mia is.  
-**Hint:** Try replacing apostrophe-s with the two-word phrase 'is'.
+**Correct answer:** 3. One kitten is the owner of the blanket.  
+**Explanation:** Kitten's names one kitten as the owner. The sentence does not tell the kitten's favorite color or what other kittens own.  
+**Hint:** Separate what the sentence actually tells you from guesses it does not support.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 7. transfer (DOK 2, difficulty 2)
 
-**Question:** A single teacher owns a red marker. Which phrase shows that correctly?
+**Question:** On a craft table, Max owns the gold stickers and Nina owns the blue ribbon. Which label correctly shows who owns the stickers?
 
-1. the teachers marker
-2. the teacher's marker
-3. the marker's teacher
+1. Nina's blue ribbon
+2. Max's gold stickers
+3. stickers for everyone
 
-**Correct answer:** 2. the teacher's marker  
-**Explanation:** Teacher's uses an apostrophe before s to show one teacher owns the marker.  
-**Hint:** Mark one owner's name before adding the possession ending.
+**Correct answer:** 2. Max's gold stickers  
+**Explanation:** Max's gold stickers correctly names the owner and matches the item described in the passage.  
+**Hint:** Match the item to the owner, then check that the apostrophe shows possession.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
 #### 8. reasoning (DOK 3, difficulty 3)
 
-**Question:** In 'The dog's leash is blue,' what does the apostrophe-s tell the reader?
+**Question:** A game character writes 'Pip's ribbon' on a prize label. Why does the label use apostrophe-s?
 
-1. The leash is shared by several dogs.
-2. The dog has more than one leash.
-3. The leash belongs to one dog.
+1. It shows that one cat named Pip owns the ribbon.
+2. It tells that Pip is ribbon-shaped.
+3. It means there are several cats named Pip.
 
-**Correct answer:** 3. The leash belongs to one dog.  
-**Explanation:** Dog's names one dog as the owner of the leash. It does not tell whether other dogs share the leash or how many leashes the dog has.  
-**Hint:** Find which answer tells who owns the leash, not how many there are.
+**Correct answer:** 1. It shows that one cat named Pip owns the ribbon.  
+**Explanation:** Pip's ribbon uses the singular possessive to say who owns the ribbon, not how many cats there are.  
+**Hint:** Ask whether the phrase names an owner, an action, or a group.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
+
 
 ## Nonpublication boundary
 
