@@ -122,7 +122,7 @@ test('badge catalog expands frequent milestones while preserving all six origina
   expect(original.map(row=>row.artIndex)).toEqual([0,1,2,3,4,5]);
   expect(original.map(row=>row.artFile)).toEqual(['starlight.webp','spark.webp','scholar.webp','golden.webp','eagle.webp','champion.webp']);
   expect(badges.filter(row=>!row.legacy)).toHaveLength(15);
-  expect(badges.filter(row=>!row.legacy).every(row=>row.artFile.endsWith('.svg'))).toBe(true);
+  expect(badges.filter(row=>!row.legacy).every(row=>row.artFile.endsWith('-premium.webp'))).toBe(true);
   expect(badges.every(row=>row.cosmetic===true)).toBe(true);
   expect(new Set(badges.map(row=>row.id)).size).toBe(21);
   expect(new Set(badges.map(row=>row.artFile)).size).toBe(21);

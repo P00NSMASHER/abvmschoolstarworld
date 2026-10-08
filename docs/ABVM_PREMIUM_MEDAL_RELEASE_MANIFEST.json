@@ -1,0 +1,238 @@
+{
+  "note": "Release candidate only: GitHub not yet updated; original seven WebP assets untouched.",
+  "new_assets": [
+    {
+      "rank": "nest-explorer",
+      "source": "golden_egg_achievement_badge.png",
+      "asset": "pages/assets/badges/nest-explorer-premium.webp",
+      "size_bytes": 47648,
+      "sha256": "0420c646735c0d1f09995b431fd0820590a7f3e82f3bb418c460017921787181",
+      "size_px": [
+        384,
+        384
+      ]
+    },
+    {
+      "rank": "little-luminary",
+      "source": "golden_blue_achievement_medal.png",
+      "asset": "pages/assets/badges/little-luminary-premium.webp",
+      "size_bytes": 44800,
+      "sha256": "5350dc18b923200c14b0050a24c9fab41fdc8b7050f5bf4c9dc6f2bf7fc4dacc",
+      "size_px": [
+        384,
+        384
+      ]
+    },
+    {
+      "rank": "feather-cadet",
+      "source": "golden_winged_quill_achievement_badge.png",
+      "asset": "pages/assets/badges/feather-cadet-premium.webp",
+      "size_bytes": 50930,
+      "sha256": "ed50e70a7f95d26a03fd593d522066dc88accb459d4e1d9e013504b668e78a1e",
+      "size_px": [
+        384,
+        384
+      ]
+    },
+    {
+      "rank": "star-voyager",
+      "source": "golden_planetary_achievement_medal.png",
+      "asset": "pages/assets/badges/star-voyager-premium.webp",
+      "size_bytes": 45872,
+      "sha256": "888eee08a70b0b2de5185f1141700313d6495b9defd2443dc24071928df14296",
+      "size_px": [
+        384,
+        384
+      ]
+    },
+    {
+      "rank": "sky-scholar",
+      "source": "golden_book_achievement_medal.png",
+      "asset": "pages/assets/badges/sky-scholar-premium.webp",
+      "size_bytes": 53678,
+      "sha256": "fb15bbe2d8c1d3cdeb12458dcbffdecd0a7d612ced40eaaee596968f5fa55957",
+      "size_px": [
+        384,
+        384
+      ]
+    },
+    {
+      "rank": "wing-leader",
+      "source": "golden_winged_star_emblem.png",
+      "asset": "pages/assets/badges/wing-leader-premium.webp",
+      "size_bytes": 55190,
+      "sha256": "99e0d73388ece37675c070d642ceae250c5ac3c9fb01fa31c003bc9529102401",
+      "size_px": [
+        384,
+        384
+      ]
+    },
+    {
+      "rank": "study-sentinel",
+      "source": "royal_blue_golden_crest_emblem.png",
+      "asset": "pages/assets/badges/study-sentinel-premium.webp",
+      "size_bytes": 47814,
+      "sha256": "4118b2c402e0909cb7c8744ab0aacf61fd3e5795367c659b7b225aa9ab6b3c53",
+      "size_px": [
+        384,
+        384
+      ]
+    },
+    {
+      "rank": "school-spirit",
+      "source": "golden_torch_laurel_medal_badge.png",
+      "asset": "pages/assets/badges/school-spirit-premium.webp",
+      "size_bytes": 46942,
+      "sha256": "2569b11a6407c17489bed5cd1566de5986cb3dde8c47ca16d5114aebaaf690a5",
+      "size_px": [
+        384,
+        384
+      ]
+    },
+    {
+      "rank": "blue-ribbon-ace",
+      "source": "glossy_gold_star_blue_medal_badge.png",
+      "asset": "pages/assets/badges/blue-ribbon-ace-premium.webp",
+      "size_bytes": 45932,
+      "sha256": "25b589f8ccb6b17db086c974e1bfc2e76a606725017c8a014f613d3e7dd8bd27",
+      "size_px": [
+        384,
+        384
+      ]
+    },
+    {
+      "rank": "golden-quill",
+      "source": "golden_quill_starry_achievement_medal.png",
+      "asset": "pages/assets/badges/golden-quill-premium.webp",
+      "size_bytes": 54148,
+      "sha256": "ed7b7a0a482488e7217e93c4a172333d5ba0b549686c4a8480b02bc3c27f7831",
+      "size_px": [
+        384,
+        384
+      ]
+    },
+    {
+      "rank": "sky-captain",
+      "source": "abvm-premium-badges-batch-2/sky-captain.png",
+      "asset": "pages/assets/badges/sky-captain-premium.webp",
+      "size_bytes": 39672,
+      "sha256": "8468e6b2e759caabb57bc86aea6f5d8fb1a90171e9a6a46f6b8fa1d3fee73561",
+      "size_px": [
+        384,
+        384
+      ]
+    },
+    {
+      "rank": "eagle-vanguard",
+      "source": "abvm-premium-badges-batch-2/eagle-vanguard.png",
+      "asset": "pages/assets/badges/eagle-vanguard-premium.webp",
+      "size_bytes": 38378,
+      "sha256": "505438b0590f341cfde79c66b3f6083ec7b720271ea167e1b95efc5bce74d9ad",
+      "size_px": [
+        384,
+        384
+      ]
+    },
+    {
+      "rank": "honor-guardian",
+      "source": "abvm-premium-badges-batch-2/honor-guardian.png",
+      "asset": "pages/assets/badges/honor-guardian-premium.webp",
+      "size_bytes": 37970,
+      "sha256": "1af6cbb52893d7355945f421d2c5dcc5337551de1d42ed606d0d5eb6688fccfa",
+      "size_px": [
+        384,
+        384
+      ]
+    },
+    {
+      "rank": "crown-keeper",
+      "source": "abvm-premium-badges-batch-2/crown-keeper.png",
+      "asset": "pages/assets/badges/crown-keeper-premium.webp",
+      "size_bytes": 39590,
+      "sha256": "e2fa6b8dab3038dca8ad6006715bd20f4b8f123db7f8a531213adfaa77cac182",
+      "size_px": [
+        384,
+        384
+      ]
+    },
+    {
+      "rank": "star-commander",
+      "source": "abvm-premium-badges-batch-2/star-commander.png",
+      "asset": "pages/assets/badges/star-commander-premium.webp",
+      "size_bytes": 38564,
+      "sha256": "227e1104a139a257a0ec2bc510c4b20937db444e70a16b650e3aa9339b065e36",
+      "size_px": [
+        384,
+        384
+      ]
+    }
+  ],
+  "rank_order": [
+    "Eaglet",
+    "Nest Explorer",
+    "Star Scout",
+    "Little Luminary",
+    "Feather Cadet",
+    "Bright Spark",
+    "Star Voyager",
+    "Sky Scholar",
+    "Junior Scholar",
+    "Wing Leader",
+    "Study Sentinel",
+    "School Spirit",
+    "Honor Eagle",
+    "Blue Ribbon Ace",
+    "Golden Quill",
+    "Sky Captain",
+    "Golden Eagle",
+    "Eagle Vanguard",
+    "Honor Guardian",
+    "Crown Keeper",
+    "Star Commander",
+    "ABVM Legend"
+  ],
+  "source_main_sha_observed": "377c8e831d77757c1c4773e7c00b9ae7555b9ee2",
+  "browser_acceptance": "blocked: local Chromium forbids localhost and intercepted external URLs (net::ERR_BLOCKED_BY_ADMINISTRATOR)",
+  "must_pass_before_merge": [
+    "static QA",
+    "unit QA",
+    "full Playwright Chromium and WebKit",
+    "393px iPhone",
+    "402px iPhone",
+    "migration regression",
+    "exact-source comparison",
+    "post-deploy hash-based asset verification"
+  ],
+  "overlay_sha256": {
+    "pages/app.js": "b4251b9aec8c420cb4374b1134e8d572ba349fcd8bbd0ba6673783778234dbb7",
+    "pages/index.html": "f9dc6336b83293b73ddd567f3b936bd552374e36087c6639171982bc332818db",
+    "pages/sw.js": "b6372f98358b360cbfc54bd5cd1035aa460fb6b480cbb6c35badc20161ee4841",
+    "pages/study-games.js": "ee4675a8edc516d6d4e169fbb400e76348cb1cf99d421a073befd99b5999b969",
+    "tests/study-badges-ui.spec.mjs": "1ad5ef9d31000e24eb485699badc43f25f267f68b55820fe338259016934740b",
+    "tests/study-stars-policy.spec.mjs": "ee99259d478ad13407d8f4d9e7acda0d5c3486ea6c313b4c13ec759cf901ee2c",
+    "pages/assets/badges/nest-explorer-premium.webp": "0420c646735c0d1f09995b431fd0820590a7f3e82f3bb418c460017921787181",
+    "pages/assets/badges/little-luminary-premium.webp": "5350dc18b923200c14b0050a24c9fab41fdc8b7050f5bf4c9dc6f2bf7fc4dacc",
+    "pages/assets/badges/feather-cadet-premium.webp": "ed50e70a7f95d26a03fd593d522066dc88accb459d4e1d9e013504b668e78a1e",
+    "pages/assets/badges/star-voyager-premium.webp": "888eee08a70b0b2de5185f1141700313d6495b9defd2443dc24071928df14296",
+    "pages/assets/badges/sky-scholar-premium.webp": "fb15bbe2d8c1d3cdeb12458dcbffdecd0a7d612ced40eaaee596968f5fa55957",
+    "pages/assets/badges/wing-leader-premium.webp": "99e0d73388ece37675c070d642ceae250c5ac3c9fb01fa31c003bc9529102401",
+    "pages/assets/badges/study-sentinel-premium.webp": "4118b2c402e0909cb7c8744ab0aacf61fd3e5795367c659b7b225aa9ab6b3c53",
+    "pages/assets/badges/school-spirit-premium.webp": "2569b11a6407c17489bed5cd1566de5986cb3dde8c47ca16d5114aebaaf690a5",
+    "pages/assets/badges/blue-ribbon-ace-premium.webp": "25b589f8ccb6b17db086c974e1bfc2e76a606725017c8a014f613d3e7dd8bd27",
+    "pages/assets/badges/golden-quill-premium.webp": "ed7b7a0a482488e7217e93c4a172333d5ba0b549686c4a8480b02bc3c27f7831",
+    "pages/assets/badges/sky-captain-premium.webp": "8468e6b2e759caabb57bc86aea6f5d8fb1a90171e9a6a46f6b8fa1d3fee73561",
+    "pages/assets/badges/eagle-vanguard-premium.webp": "505438b0590f341cfde79c66b3f6083ec7b720271ea167e1b95efc5bce74d9ad",
+    "pages/assets/badges/honor-guardian-premium.webp": "1af6cbb52893d7355945f421d2c5dcc5337551de1d42ed606d0d5eb6688fccfa",
+    "pages/assets/badges/crown-keeper-premium.webp": "e2fa6b8dab3038dca8ad6006715bd20f4b8f123db7f8a531213adfaa77cac182",
+    "pages/assets/badges/star-commander-premium.webp": "227e1104a139a257a0ec2bc510c4b20937db444e70a16b650e3aa9339b065e36"
+  },
+  "originals_sha256": {
+    "eaglet.webp": "64a0bc3223f7f49ccc4124355ae1a864d7237a7db5fbe9bcb385eb7d78585f06",
+    "starlight.webp": "e9a23399a70451a1a2f468bc2b487ea2a41c39a6a972f42a3220a4d5eb9ca7a6",
+    "spark.webp": "8c61c17c379e40efcf34d99a190a4bbbf66173a7d73a8d6785ce121dc6b565b8",
+    "scholar.webp": "c89bfa30d71489ec5a04e85ff8b1879a5b8e5b5382feb57d537b8a0f8690274f",
+    "golden.webp": "e292eb5a82e198cc57c0e0f2120437f49fea3457f0cb2c3b280654c67a6f235c",
+    "eagle.webp": "932cd26c0922a3b83e8fc5e65d032ab29609912eee9890b5ec9263d3ded64629",
+    "champion.webp": "e1c61dac0abf399ae4da8c7bd1351ec8d627ad36304f566f7e3abcb4430db106"
+  }
+}
