@@ -33,12 +33,12 @@
       "prompt": "Read: 'Our class puts paper, cans, and plastic bottles in special bins. We use these bins every school day to reduce trash.' What is the main idea?",
       "choices": [
         "The class recycles to reduce trash.",
-        "The class has blue desks.",
-        "The class plays outside daily."
+        "The class puts paper in special bins.",
+        "The class puts bottles in special bins."
       ],
       "answer": "The class recycles to reduce trash.",
-      "explanation": "Both sentences explain what the class does with reusable waste and why it matters.",
-      "hint": "Choose an idea supported by both sentences rather than one small fact.",
+      "explanation": "The two sentences explain that the class sorts several kinds of materials to reduce trash. The other options mention only individual examples.",
+      "hint": "Choose the answer that includes the purpose and all kinds of recycling, not just one item.",
       "dok": 1,
       "difficulty": 2
     },
@@ -47,13 +47,13 @@
       "questionType": "direct",
       "prompt": "Read: 'Bees visit many flowers. They carry pollen as they fly. This helps some plants grow.' What is the main idea?",
       "choices": [
-        "Bees sleep in trees.",
+        "Bees carry pollen as they fly.",
         "Bees help plants while visiting flowers.",
-        "All flowers are the same color."
+        "Bees visit many flowers."
       ],
       "answer": "Bees help plants while visiting flowers.",
-      "explanation": "The details describe bees moving pollen between flowers and helping plants grow.",
-      "hint": "Think about the important idea that connects every sentence.",
+      "explanation": "All the details show how bees move among flowers and help plants grow. The other options describe only one detail each.",
+      "hint": "A main idea covers the whole passage; the other choices may describe smaller details.",
       "dok": 1,
       "difficulty": 2
     },
@@ -77,13 +77,13 @@
       "questionType": "transfer",
       "prompt": "Read: 'Trees shade people, give birds places to nest, and hold soil with their roots.' Which main idea fits all the details?",
       "choices": [
-        "Trees help many living things.",
-        "Birds are always in nests.",
-        "Tree roots grow only in sand."
+        "Trees are useful in several ways.",
+        "Birds can build nests in trees.",
+        "Tree roots help hold soil in place."
       ],
-      "answer": "Trees help many living things.",
-      "explanation": "Each supporting detail gives a different way trees are useful.",
-      "hint": "Find the broad statement that connects shade, nests, and roots.",
+      "answer": "Trees are useful in several ways.",
+      "explanation": "Shade, nesting places, and roots that hold soil are three different useful things trees provide. The other choices each mention just one detail.",
+      "hint": "Which choice describes the whole group of benefits, not one example?",
       "dok": 2,
       "difficulty": 2
     },
