@@ -338,13 +338,16 @@
 .badge-collection-heading h2{margin:2px 0 0;font-size:1.45rem;line-height:1.25;letter-spacing:-.035em}
 .badge-balance{display:flex;align-items:center;gap:5px;padding:8px 12px;border:1px solid #ead596;border-radius:14px;background:#fff5d2;white-space:nowrap;font-size:1.1rem}
 .badge-balance>span{color:#976900}
-.rank-current{display:flex;align-items:center;gap:16px;margin:0 0 20px;padding:8px 16px;background:#102e58;border-radius:20px;color:#fff}
+.rank-current{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin:0 0 20px;padding:8px 16px;background:#102e58;border-radius:20px;color:#fff}
 .rank-current>.study-badge-art{width:116px;height:132px;max-width:40%}
+.rank-current>div{flex:1 1 160px;min-width:0;overflow-wrap:anywhere}
 .rank-current .badge-eyebrow{color:#ffdf81}
 .rank-current h3{font-size:1.5rem;line-height:1.25;margin:5px 0;letter-spacing:-.025em}
 .rank-current p{font-size:.78rem;line-height:1.5;color:#d6e6fb;margin:0}
 .study-badge-next{display:grid;grid-template-columns:112px minmax(0,1fr);gap:0 12px;align-items:center;padding:14px 16px 20px;border:1px solid #e9d493;border-radius:20px;background:radial-gradient(ellipse at 10% 15%,#fff 0%,#fff7dd 50%,#fff0bf 100%)}
 .study-badge-next>.study-badge-art{width:112px;height:128px}
+.study-badge-next>div{min-width:0;overflow-wrap:anywhere}
+.study-badge-latest strong,.study-badge-tracker strong{overflow-wrap:anywhere}
 .study-badge-next h3{margin:4px 0 6px;font-size:1.15rem;line-height:1.25;letter-spacing:-.02em}
 .study-badge-next p{margin:0;color:#665126;font-size:.78rem;line-height:1.55}
 .badge-progress-label{display:flex;justify-content:space-between;gap:10px;grid-column:1/-1;font-size:.76rem;line-height:1.5;color:#665126;margin:5px 0 8px;flex-wrap:wrap}
