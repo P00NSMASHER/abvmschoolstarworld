@@ -340,7 +340,7 @@
 .badge-balance>span{color:#976900}
 .rank-current{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin:0 0 20px;padding:8px 16px;background:#102e58;border-radius:20px;color:#fff}
 .rank-current>.study-badge-art{width:116px;height:132px;max-width:40%}
-.rank-current>div{flex:1 1 160px;min-width:0;overflow-wrap:anywhere}
+.rank-current>div{flex:1 1 8rem;min-width:0;overflow-wrap:anywhere}
 .rank-current .badge-eyebrow{color:#ffdf81}
 .rank-current h3{font-size:1.5rem;line-height:1.25;margin:5px 0;letter-spacing:-.025em}
 .rank-current p{font-size:.78rem;line-height:1.5;color:#d6e6fb;margin:0}
@@ -358,9 +358,9 @@
 .study-badge-grid{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 10px;margin:24px 0 18px;padding:0}
 .study-badge-card{display:flex;align-items:center;flex-direction:column;text-align:center;gap:4px;min-width:0;position:relative;padding-bottom:8px}
 .study-badge-card>.study-badge-art{width:100%;height:92px}
-.study-badge-card strong{font-size:.75rem;line-height:1.3;color:#102e58;font-weight:800}
-.study-badge-card>span{font-size:.7rem;line-height:1.4;color:#526782}
-.study-badge-card small{font-size:.64rem;line-height:1.4;color:#526782;border-radius:12px;padding:3px 7px;background:#edf3fb}
+.study-badge-card strong{max-width:100%;overflow-wrap:anywhere;font-size:.75rem;line-height:1.3;color:#102e58;font-weight:800}
+.study-badge-card>span{max-width:100%;overflow-wrap:anywhere;font-size:.7rem;line-height:1.4;color:#526782}
+.study-badge-card small{max-width:100%;box-sizing:border-box;overflow-wrap:anywhere;font-size:.64rem;line-height:1.4;color:#526782;border-radius:12px;padding:3px 7px;background:#edf3fb}
 .study-badge-card.is-earned small{background:#e7f4ec;color:#265d42}
 .study-badge-card.is-next small{background:#fff0bf;color:#665126}
 .study-badge-card.is-locked>.study-badge-art{filter:grayscale(.8);opacity:.45}

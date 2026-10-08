@@ -1,8 +1,8 @@
 # ABVM rank emblems
 
-Decorative achievement art generated with the built-in high-quality image generator on October 7, 2026. Original navy/gold school-themed insignia; not copied Call of Duty assets and not educational evidence. No learner or school source content was supplied. Starter Eaglet reuses the existing decorative eagle.
+Decorative achievement art generated with the built-in high-quality image generator on October 7, 2026. Original navy/gold school-themed insignia; not copied Call of Duty assets and not educational evidence. No learner or school source content was supplied. Starter Eaglet has its own matching gold/navy emblem.
 
-Transparent originals were resized to 384px WebP quality84 with preserved alpha for mobile display. Six emblems total approximately157 KiB. Emblems are cached for offline access; names and thresholds are semantic UI text, not raster text.
+Transparent originals were resized to 384px WebP quality84 with preserved alpha for mobile display. Seven emblems total under200 KiB. Emblems are cached for offline access; names and thresholds are semantic UI text, not raster text.
 
 ## starlight
 
@@ -39,3 +39,9 @@ Shared direction: exceptionally polished tactile 3D school achievement medal, sh
 Primary subject prompt: An exquisite gold crown above a navy enamel medallion containing a five-point gold star and tiny constellation dots, polished gold laurel around it, sapphire and gold inset accents, two navy satin ribbon tails.
 
 Shared direction: exceptionally polished tactile 3D school achievement medal, shiny gold sculpted bevels, rich navy enamel #102e58, school gold #ffca38, matching frontal view and soft upper-left studio lighting, isolated transparent square canvas, no text or numbers, no people or school seal. Source: `exec-9cdeeab6-25b7-4ade-b923-3b23d440f980.png`.
+
+## eaglet
+
+Primary subject prompt: A small elegant sculpted gold eaglet with tucked wings and proud friendly posture, centered on a round rich navy enamel medallion with a polished gold rim and two neat navy satin ribbon tails. Simpler than a crowned or laurel-wreathed champion, equally premium and shiny.
+
+Shared direction: exceptionally polished tactile 3D school rank achievement medal, physically beautiful reflective gold bevels, deep glossy navy enamel #102e58, school gold #ffca38, frontal view and soft upper-left studio lighting, true transparent square canvas, no text, numbers, school seal, people, extra objects, or background shadow rectangle. Source: `exec-93e94c86-0afc-4535-8ad1-cbae8a1dd551.png`.
