@@ -1,0 +1,118 @@
+/* ABVM visual polish: a shared navy-and-gold hierarchy, not a new theme.
+   This file loads after the app and Study styles so focused refinements remain
+   together. Do not replace earned ranks, school images, or source-status cues. */
+:root{
+  --abvm-subject-reading:#e5f3ff;
+  --abvm-subject-spelling:#ffefac;
+  --abvm-subject-math:#dff1e8;
+  --abvm-subject-faith:#e6d6ff;
+  --abvm-gold-border:#e6be4e;
+}
+
+/* Better navigation legibility without sacrificing an iPhone's four tabs. */
+.bottom-nav button b{font-size:.74rem;line-height:1.22;letter-spacing:-.015em}
+.bottom-nav button.active .nav-icon{background:var(--yellow);color:var(--navy)}
+.bottom-nav button:focus-visible{outline:3px solid var(--navy);outline-offset:-3px;border-radius:14px}
+@media(max-width:699px){
+  .bottom-nav button{min-height:60px}
+  .bottom-nav button b{font-size:.71rem}
+  .bottom-nav .nav-icon{height:33px}
+}
+@media(max-width:359px){
+  .bottom-nav button b{font-size:.65rem}
+  .bottom-nav button{min-height:58px}
+}
+@media(min-width:700px) and (min-height:600px){
+  .bottom-nav button:focus-visible{outline-color:var(--yellow)}
+}
+
+/* Today: upcoming assessment first, action immediately after, then school
+   schedule. Keep the school photo and the existing no-test state intact. */
+.today-screen .priority-card{
+  border:1px solid #eed4da;
+  background:linear-gradient(115deg,#fff 58%,#fff7f7);
+  box-shadow:0 5px 15px #102e580b;
+}
+.today-screen .priority-card.quiet{border-color:var(--line);background:#fff}
+.today-screen .priority-card h3{font-size:1.03rem;line-height:1.35}
+.today-screen .priority-card p{font-size:.72rem;letter-spacing:.06em}
+.today-screen .priority-card .date-tile{border:1px solid #efdae1}
+.today-screen .study-invitation{margin:14px 0 18px;box-shadow:0 4px 0 #dfaf1b,0 8px 20px #102e580e}
+.today-screen .study-invitation strong{font-size:1.03rem}
+.today-screen .study-invitation small{font-size:.75rem}
+.today-screen .today-panel{min-width:0}
+.today-screen .timeline-row small{font-size:.72rem}
+.today-screen .lunch-card p{font-size:.72rem}
+.today-screen .lunch-card strong{font-size:.9rem}
+.today-screen .today-updates-card .reminder-line{min-width:0}
+
+/* Named calendar symbols are legible without relying on color alone.
+   Wrap multiple signals inside each date instead of overflowing at 320px. */
+.calendar-grid button{min-height:56px}
+.calendar-dots{height:auto;min-height:16px;max-height:32px;gap:2px;flex-wrap:wrap;align-content:center;justify-content:center;max-width:100%}
+.calendar-dots .calendar-mark{min-width:14px;width:14px;height:15px;font-size:.64rem;line-height:1;font-weight:800;border-radius:4px}
+.calendar-legend{font-size:.76rem;gap:10px 13px;line-height:1.4}
+.calendar-legend i{width:11px;height:11px}
+.calendar-title-row>span{font-size:.8rem}
+@media(max-width:359px){
+  .calendar-dots .calendar-mark{min-width:12px;width:12px;height:14px;font-size:.6rem}
+  .calendar-grid button{min-height:54px}
+}
+
+/* One consistent subject meaning from launch tile through its content.
+   Use dark navy labels on pastels for accessible contrast. */
+.games-screen .study-game-tile{border-width:1.5px;box-shadow:0 4px 11px #102e580a}
+.games-screen .study-game-tile[data-game-start="reading"]{
+  background:var(--abvm-subject-reading);border-color:#b5d8f3
+}
+.games-screen .study-game-tile[data-game-start="spelling"]{
+  background:var(--abvm-subject-spelling);border-color:#e8cc74
+}
+.games-screen .study-game-tile[data-game-start="math"]{
+  background:var(--abvm-subject-math);border-color:#a5d7c3
+}
+.games-screen .study-game-tile[data-game-start="religion"]{
+  background:var(--abvm-subject-faith);border-color:#c7b0ea
+}
+.games-screen .study-game-tile[data-game-start="mix"]{
+  background:#eef3ff;border-color:#b9cce9
+}
+.games-screen .study-game-tile:disabled{background:#eeefec;border-color:#c6ccd0}
+.games-screen .study-game-copy strong{font-size:1rem}
+.games-screen .study-game-copy small{font-size:.78rem}
+.games-screen .game-question-card{border:1px solid #d9e8f5}
+.games-screen .game-question-meta span{font-size:.78rem}
+.games-screen .game-answer:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
+
+/* Make earned progress inviting, never suggest that locked rewards are owned. */
+.study-badge-latest{
+  background:linear-gradient(112deg,#fff7d9 15%,#fff0b8 100%);
+  border:1.5px solid var(--abvm-gold-border);
+  box-shadow:0 5px 16px #102e580d;
+  min-height:94px;
+}
+.study-badge-latest .study-badge-art{width:80px;height:80px}
+.study-badge-latest small{font-size:.72rem}
+.study-badge-latest strong{font-size:1.07rem}
+.study-badge-tracker{border-color:#e8d59c;background:#fffaf0}
+.badge-mini-track{height:9px;background:#d9e7f5}
+.badge-mini-track i{background:linear-gradient(90deg,#f3b814,#ffce41)}
+.study-badge-card.is-earned{border-radius:16px;background:#fffaec}
+.study-badge-card.is-next{border-radius:16px;outline:2px solid #e6c46d;outline-offset:1px}
+.study-badge-card.is-locked .study-badge-art{filter:grayscale(.85);opacity:.42}
+.study-badge-next{border-color:var(--abvm-gold-border)}
+.study-badge-latest:focus-visible,.study-badge-tracker:focus-visible,
+.badge-see-all:focus-visible{outline:3px solid var(--navy);outline-offset:3px}
+
+/* Brief, meaningful success feedback. Error presentation remains calm.
+   Native reduced-motion preference disables this animation. */
+@media(prefers-reduced-motion:no-preference){
+  .games-screen .game-feedback:not(.incorrect){animation:abvm-success-in .28s ease-out both}
+  @keyframes abvm-success-in{
+    from{opacity:.7;transform:translateY(4px)}
+    to{opacity:1;transform:none}
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .games-screen .game-feedback,.games-screen .badge-progress>span{animation:none!important;transition:none!important}
+}

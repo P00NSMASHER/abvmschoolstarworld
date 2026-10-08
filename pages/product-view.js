@@ -100,10 +100,10 @@
       '<h1 class="visually-hidden" tabindex="-1">Today</h1><section class="hero-card school-photo-hero"><div class="hero-copy"><p class="eyebrow">' +
       esc(fmtDate(d)) +
       '</p><h2>Hi, Emma!</h2><p>Your school day, all together.</p></div><img class="hero-photo" src="./assets/school/abvm-school-hero.webp" width="1024" height="683" fetchpriority="high" alt="Assumption BVM School in Pottsville"><span class="photo-caption">OUR ABVM</span><img class="today-school-seal" src="./assets/abvm-app-icon-192.png" width="48" height="48" alt="Assumption BVM Catholic School logo"></section>' +
-      '<div class="today-primary">' +
+      '<div class="today-primary">' + nextHtml +
       '<button class="study-invitation" type="button" data-route="study"><img src="./assets/illustrations/reading.webp" width="72" height="72" alt=""><span><strong>Start studying</strong><small>A little practice. A little more confidence.</small></span>' +
       icon("arrow") +
-      "</button>" + nextHtml + "</div>" +
+      "</button></div>" +
       lunchHtml +
       '<section class="today-panel">' +
       sectionHead(closed ? "Today’s plan" : "At school today") +
