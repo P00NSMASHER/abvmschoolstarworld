@@ -1242,7 +1242,7 @@ img {
   min-height: 48px;
   border-radius: 12px;
   font-size: 0.87rem;
-  gap: 6px;
+  gap: 4px;
 }
 .calendar-grid button.weekend {
   color: var(--muted);
@@ -1996,6 +1996,5 @@ img {
 @media(max-width:699px){
   .calendar-more{margin-top:18px}
   .calendar-more-content{padding:0 14px 16px}
-  .calendar-grid button{gap:4px}
-  .calendar-dots .calendar-mark{min-width:11px;height:12px;font-size:.53rem}
+    .calendar-dots .calendar-mark{min-width:11px;height:12px;font-size:.53rem}
 }
