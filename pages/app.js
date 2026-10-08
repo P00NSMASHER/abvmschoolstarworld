@@ -461,7 +461,9 @@ function settleStudyStarRewards(g=gameState){
   g.roundId=roundId;
   Promise.all(g.penaltyTasks||[]).then(()=>e.commitStudyStarRewards({sourcePack:sourceKey,mode:g.mode,sessionSeed:g.sessionSeed,roundId,completed:true,comebackSucceeded:!!g.comebackSucceeded,streakAdjustment:g.streakAdjustment||0,firstTryCorrect:window.ABVMStudyGameView.scoreSummary(g).correct,questionCount:g.questions.length}))
     .then(async result=>{
-      const balance=result.balance;g.perfectBonus=result.perfectBonus;g.rankCollection=result.collection;window.ABVMStudyBadges.sync(result.collection);
+      const balance=result.balance;g.perfectBonus=result.perfectBonus;g.rankCollection=result.collection;
+      g.newRanks=(result.newlyUnlocked||[]).map(id=>result.collection.badges.find(b=>b.id===id)).filter(Boolean);
+      window.ABVMStudyBadges.sync(result.collection);
       if(gameState!==g)return;
       g.rewardStatus="done";g.rewardAwarded=Number(result?.awardedAmount)||0;g.rewardCurrency=String(result?.currency||"Study Stars");g.starBalance=Math.max(0,Number(balance)||0);g.starBalanceUnavailable=false;g.rewardRevealAmount=g.rewardAwarded;g.rewardRevealScheduled=false;
       if(isStudyRoute()&&g.screen==="finish"&&g.renderGeneration===screenGeneration){renderGames();bindScreen();}
@@ -512,7 +514,8 @@ function gameFinishHtml(){
   const reveal=g.rewardRevealAmount>0?v.rewardReveal({amount:g.rewardRevealAmount,currency:g.rewardCurrency}):"";
   const finish=v.finish({mode:gameMode(g.mode),state:g,record:loadGameRecord(g.mode,g.sourceKey||currentGameSourceKey()),summary,reward});
   const goal=g.rewardStatus==="done"?window.ABVMStudyBadges.render(g.rankCollection,"finish"):"";
-  return reveal+finish+goal;
+  const promotion=g.rewardStatus==="done"&&g.newRanks?.length?window.ABVMStudyBadges.promotion(g.newRanks):"";
+  return reveal+finish+promotion+goal;
 }
 function renderGames(){
   const previousScreen=stack().querySelector(".games-screen"),menuScroll=gameState.screen==="menu"&&previousScreen&&!previousScreen.classList.contains("is-playing")?previousScreen.scrollTop:null;

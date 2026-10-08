@@ -1727,11 +1727,13 @@ async function transactStudyStars(mutator){
         let state=achievements.find(row=>row.id===STUDY_BADGE_STATE);
         let order=Math.max(0,Number(state?.earnedOrder)||0,...achievements.map(row=>Number(row.earnedOrder)||0));
         function unlock(balance,migrated){
+          const newIds=[];
           for(const badge of STUDY_STAR_BADGES){
             if(balance<badge.target||achievements.some(row=>row.id===badge.id))continue;
             const row={id:badge.id,earnedAt:migrated?null:new Date().toISOString(),migrated,earnedOrder:++order};
-            badges.add(row);achievements.push(row);
+            badges.add(row);achievements.push(row);newIds.push(badge.id);
           }
+          return newIds;
         }
         if(!state){
           // A v1 ledger proves only its net balance, never a historical peak.
@@ -1754,8 +1756,8 @@ async function transactStudyStars(mutator){
         let balance=studyStarRowsBalance(rows);
         result=mutator?mutator({ledger,rows,balance}):{};
         balance=studyStarRowsBalance(rows);
-        unlock(balance,false);state.earnedOrder=order;badges.put(state);
-        result={...result,balance,collection:badgeCollectionFromRows(balance,achievements)};
+        const newlyUnlocked=unlock(balance,false);state.earnedOrder=order;badges.put(state);
+        result={...result,balance,collection:badgeCollectionFromRows(balance,achievements),newlyUnlocked};
       }catch(error){tx.abort();db.close();reject(error)}
     }
     rowsRequest.onsuccess=()=>{rows=(rowsRequest.result||[]).map(safeStudyStarRow);run()};

@@ -102,8 +102,9 @@ test('a real 100 percent round saves a substantial 25-star bonus alongside learn
   await expect(page.locator('.study-star-earned')).toContainText('+45 Study Stars');
   await expect(page.getByRole('heading',{name:'What you learned'})).toBeVisible();
   await expect.poll(()=>balance(page)).toBe(45);
-  await expect(page.locator('.game-finish')).toContainText('Nest Explorer');
-  await expect(page.locator('.game-finish .study-badge-next')).toContainText('Star Scout');
+  await expect(page.locator('.study-rank-promotion')).toContainText('Nest Explorer');
+  await expect(page.locator('.study-rank-promotion')).toContainText('NEW RANK UNLOCKED');
+  await expect(page.locator('[data-badge-collection] .study-badge-next')).toContainText('Star Scout');
   const perfect=await page.evaluate(async()=>{
     const ledger=await window.ABVMStudyGames.loadStudyStarLedger();
     return ledger.filter(row=>row.rewardType==='perfect-round');

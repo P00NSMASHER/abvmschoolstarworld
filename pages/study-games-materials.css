@@ -377,3 +377,13 @@
 .game-star-balance{font-size:.75rem;line-height:1.4;color:#fff0b6;display:block;margin-top:4px}
 @media(min-width:700px){.badge-collection{padding:28px}.study-badge-next{grid-template-columns:160px minmax(0,1fr);gap:0 24px}.study-badge-next>.study-badge-art{width:160px;height:168px}.study-badge-next h3{font-size:1.55rem}.study-badge-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}.study-badge-card>.study-badge-art{height:100px}.study-badge-card strong{font-size:.8rem}.study-badge-tracker{max-width:600px}}
 @media(prefers-reduced-motion:reduce){.badge-progress>span{transition:none}}
+
+/* Permanent-rank promotions celebrate only newly committed milestones. */
+.study-rank-promotion{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;margin:20px 0;padding:24px 18px 22px;border:2px solid #dba62a;border-radius:24px;background:radial-gradient(ellipse at 48% 10%,#28588e 0%,#122f5d 48%,#061a3e 100%);box-shadow:inset 0 1px 2px #fff9,0 8px 20px #0a254326;color:#fff}
+.study-rank-promotion:before{content:"";pointer-events:none;position:absolute;width:220px;height:150px;top:-90px;border-radius:50%;background:#fff7b5;opacity:.14;filter:blur(25px)}
+.study-rank-promotion .promotion-eyebrow{position:relative;font-size:.75rem;line-height:1.5;font-weight:850;letter-spacing:.13em;color:#ffe29b}
+.study-rank-promotion .study-badge-art{width:min(156px,52vw);height:auto;max-height:156px;filter:drop-shadow(0 10px 12px #0006)}
+.study-rank-promotion h3{font-size:clamp(1.45rem,6vw,2rem);line-height:1.2;margin:0;color:#ffe394;font-weight:850;letter-spacing:-.025em}
+.study-rank-promotion p{color:#eef5ff;font-size:.9rem;line-height:1.45;margin:0 0 5px}
+.study-rank-promotion button{min-height:44px;margin-top:4px;border:1px solid #e6bb54;border-radius:12px;background:linear-gradient(#ffe5a1,#eebd4d);color:#08244c;font-weight:800;padding:11px 17px}
+@media(prefers-reduced-motion:no-preference){.study-rank-promotion .study-badge-art{animation:rank-unlocked-entrance .55s ease-out both}@keyframes rank-unlocked-entrance{from{transform:scale(.82);opacity:.5}to{transform:scale(1);opacity:1}}}
