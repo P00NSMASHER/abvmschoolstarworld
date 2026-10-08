@@ -408,7 +408,10 @@ test("Sept 28 weekly notice is integrated without duplicate stale events",async(
   expect(has("Thursday, Oct. 22","Chick-fil-A pickup")).toBe(true);
   expect(has("Friday, Oct. 23","S’more Fun at Schwartz Farm")).toBe(true);
   expect(has("Friday–Saturday, Nov. 13–14","Drama Club Play")).toBe(true);
-  expect(has("Saturday, Nov. 21","Reading Royals Game Family Fun Night")).toBe(true);
+  const royals=events.filter(e=>e.date==="Saturday, Nov. 21"&&e.label.startsWith("Reading Royals Game Family Fun Night"));
+  expect(royals).toHaveLength(1);
+  expect(royals[0].label).toContain("student anthem performance");
+  expect(royals[0].sourceDocument).toBe("reading-royals-family-night-2026-11-21");
   expect(events.some(e=>e.date==="Friday, Oct. 2"&&/HSA/i.test(e.label||""))).toBe(false);
   expect(data.uploadedNotices.documents.some(d=>d.id==="weekly-reminders-2026-09-28")).toBe(true);
   expect(data.pack.reminders[0]).toContain("Gift Card Calendar Fundraiser");
