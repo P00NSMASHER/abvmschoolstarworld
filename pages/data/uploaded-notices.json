@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "lastIntegratedAt": "2026-10-04T21:48:15.578Z",
+  "lastIntegratedAt": "2026-10-08T16:43:51.480Z",
   "documents": [
     {
       "id": "dress-down-2026-09-25",
@@ -372,6 +372,154 @@
         "reviewedBy": "automated-fixed-event-extraction-v1",
         "reviewedAt": "2026-10-04T21:48:15.578Z"
       }
+    },
+    {
+      "id": "reading-royals-family-night-2026-11-21",
+      "label": "Reading Royals Family Fun Night flyer",
+      "receivedAt": "2026-10-08",
+      "facts": [
+        "Saturday, November 21, 2026: Assumption BVM Reading Royals Family Fun Night.",
+        "ABVM students are invited to sing the National Anthem; a signed parent slip is included for interested student singers.",
+        "Student tickets are free when a $0 student ticket is added at checkout; paid tickets are used for nonstudents.",
+        "$5 from every ticket sold benefits Assumption BVM School.",
+        "Ticket link: https://www.gofevo.com/event/AssumptionBVM2027."
+      ],
+      "provenance": {
+        "factsHash": "eeb21ba5600cc750ff07f3cad26c429101e189c4374dc4e622843e223a3fa424",
+        "sourceContentHash": "e507ceb7e994aa5d20d272f9c189c65a944ca344dc2525df600d89d064b089d9"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "manual-parent-photo-review",
+        "reviewedAt": "2026-10-08T16:43:51.480Z"
+      }
+    },
+    {
+      "id": "cyo-basketball-grades-3-8-2026",
+      "label": "CYO basketball registration flyer — grades 3–8",
+      "receivedAt": "2026-10-08",
+      "facts": [
+        "CYO basketball registration is available for girls and boys in grades 3–8.",
+        "Registration form: https://forms.gle/C5BpMzwk5Uw2b2qXA.",
+        "This grades 3–8 form is separate from the previously reviewed St. Nicholas grades K–2 basketball notice."
+      ],
+      "provenance": {
+        "factsHash": "b766867a2a8645f46ea03c22ee9bac15c9f9c1788596882dd989e6528fbde008",
+        "sourceContentHash": "4ea5bb80a8cc7662d3974ca43107e36f73e2d3585d603c025632bcf1f327999b"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "manual-parent-photo-review",
+        "reviewedAt": "2026-10-08T16:43:51.480Z"
+      }
+    },
+    {
+      "id": "servants-for-all-hygiene-2026-10",
+      "label": "Servants for All hygiene donation flyer",
+      "receivedAt": "2026-10-08",
+      "facts": [
+        "ABVM is collecting hygiene supplies for Servants for All in connection with dress-down and flag football activities mentioned for October 22 and October 29, 2026.",
+        "Requested donations: shampoo and conditioner, deodorant, razors, toothpaste, body wash, and soap.",
+        "The flyer does not assign these dates to individual grade bands; the existing K–4 October 26 flag football notice has not been explicitly cancelled or rescheduled."
+      ],
+      "provenance": {
+        "factsHash": "b9dbc325aab2b5b45a865b49d66d30a97dc15c42bb26d5b42bc0e3e1468b9466",
+        "sourceContentHash": "955e6a4fdc48eccee65c43dba83613256f0d823c988e73691437158ef9a5faf8"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "manual-parent-photo-review",
+        "reviewedAt": "2026-10-08T16:43:51.480Z"
+      }
+    },
+    {
+      "id": "hsa-nut-roll-office-2026",
+      "label": "HSA Fall Nut Roll Sale — office summary sheet",
+      "receivedAt": "2026-10-08",
+      "facts": [
+        "HSA Fall Nut Roll Sale payments and order sheets are due to the office by Friday, October 30, 2026.",
+        "Nut-roll flavors: Nut, Poppy, Apricot, Lekvar, Seedless Raspberry, and Pumpkin Cheese.",
+        "The office tracking sheet states that each nut roll costs $20.",
+        "Parents should retain the order records until the school confirms the order."
+      ],
+      "provenance": {
+        "factsHash": "19b345cce1259c72b479aca2e240bc57f1771b5a7f6858855ad148ed296561e2",
+        "sourceContentHash": "28a1575f1415384ee5af8839d5628da8bbc98b276d5ed8283060fa9d43d21f66"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "manual-parent-photo-review",
+        "reviewedAt": "2026-10-08T16:43:51.480Z"
+      }
+    },
+    {
+      "id": "hsa-nut-roll-order-a-2026",
+      "label": "HSA Fall Nut Roll Sale — seller order sheet",
+      "receivedAt": "2026-10-08",
+      "facts": [
+        "Each HSA Fall Nut Roll costs $20 and must be prepaid by cash or check made out to Assumption B.V.M.",
+        "Orders and money must reach the school office by Friday, October 30, 2026.",
+        "Pickup is Tuesday, November 17, 2026 during a designated pickup window; the flyer does not specify the hour.",
+        "Sellers earn $2 in Tuition Bucks per nut roll sold.",
+        "Families should arrange pickup for November 17; the notice says orders cannot be saved for a later pickup."
+      ],
+      "provenance": {
+        "factsHash": "bcbc4bd4e8ca133d00ce5d937eaeee4515ce26e808dda020783173d4c7c6a735",
+        "sourceContentHash": "06c5f4c51ab2e93aac876e142d2678ba2b01ab515d5bebb856903ee7b7521f2d"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "manual-parent-photo-review",
+        "reviewedAt": "2026-10-08T16:43:51.480Z"
+      }
+    },
+    {
+      "id": "hsa-nut-roll-order-b-2026",
+      "label": "HSA Fall Nut Roll Sale — additional order sheet",
+      "receivedAt": "2026-10-08",
+      "facts": [
+        "The additional HSA Fall Nut Roll Sale sheet confirms prepaid $20 orders due Friday, October 30, 2026 and pickup Tuesday, November 17, 2026.",
+        "Six listed flavors: Nut, Poppy, Apricot, Lekvar, Seedless Raspberry, and Pumpkin Cheese.",
+        "Each nut roll sold earns $2 in Tuition Bucks.",
+        "This is another sheet for the same fundraiser, not a second sale."
+      ],
+      "provenance": {
+        "factsHash": "a55d4c7d37e66fa4a0ef3c0bc3c9e91193207a978d8c3060607d5d7fe7ba5a9c",
+        "sourceContentHash": "01a911d70ac088f97f5685f4cd412da767aadf00bf0d2f5dc22762f19d1d2161"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "manual-parent-photo-review",
+        "reviewedAt": "2026-10-08T16:43:51.480Z"
+      }
+    },
+    {
+      "id": "eucharistic-consecration-2026",
+      "label": "ABVM diocesan Eucharistic Consecration family letter dated October 6",
+      "receivedAt": "2026-10-08",
+      "facts": [
+        "The schools' diocesan Eucharistic Consecration journey runs October 20 through December 8, 2026.",
+        "Consecration occurs Tuesday, December 8 during the ABVM school Mass for the Immaculate Conception.",
+        "Each student and one parent receive complementary age-appropriate reading copies; weekly reading guidance will follow.",
+        "Optional Holy Hours: Thursday, October 22 at 7 PM at Bethlehem Catholic High School; Tuesday, November 3 at 6 PM at Nativity BVM High School, Pottsville; Tuesday, November 17 at 7 PM at Berks Catholic High School.",
+        "Diocesan Family Festival: Sunday, November 1 from noon to 4:30 PM; location: St. Joseph the Worker, Orefield; free family event."
+      ],
+      "provenance": {
+        "factsHash": "c9b9625d652949bc2ea4c53aedbd534b3c2cca1066ab4da10654581567105de1",
+        "sourceContentHash": "72206580b642396f74c157774b6bfb574158647fcff30bcd05d6889823a0814c"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "manual-parent-photo-review",
+        "reviewedAt": "2026-10-08T16:43:51.480Z"
+      }
     }
   ],
   "importantDates": [
@@ -598,12 +746,6 @@
       "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
-      "date": "Saturday, Nov. 21",
-      "label": "Reading Royals Game Family Fun Night",
-      "kind": "school event",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
       "date": "Monday, Oct. 5",
       "label": "Raise Right physical gift card order",
       "kind": "school event",
@@ -824,6 +966,72 @@
       "label": "Gym classes moved to this date",
       "kind": "schedule change",
       "sourceDocument": "school-email-b44b85fd20772d689a49"
+    },
+    {
+      "date": "Thursday, Oct. 22",
+      "label": "Servants for All hygiene donation collection noted with DDD/flag-football activities",
+      "kind": "school event",
+      "sourceDocument": "servants-for-all-hygiene-2026-10"
+    },
+    {
+      "date": "Thursday, Oct. 29",
+      "label": "Servants for All hygiene donation collection noted with DDD/flag-football activities",
+      "kind": "school event",
+      "sourceDocument": "servants-for-all-hygiene-2026-10"
+    },
+    {
+      "date": "Friday, Oct. 30",
+      "label": "HSA Nut Roll Sale — prepaid order forms and money due ($20 each)",
+      "kind": "deadline",
+      "sourceDocument": "hsa-nut-roll-order-a-2026"
+    },
+    {
+      "date": "Tuesday, Nov. 17",
+      "label": "HSA Nut Roll Sale — pickup (time assigned by school)",
+      "kind": "school event",
+      "sourceDocument": "hsa-nut-roll-order-a-2026"
+    },
+    {
+      "date": "Saturday, Nov. 21",
+      "label": "Reading Royals Game Family Fun Night — student anthem performance; ticket link in notices",
+      "kind": "school event",
+      "sourceDocument": "reading-royals-family-night-2026-11-21"
+    },
+    {
+      "date": "Tuesday, Oct. 20",
+      "label": "Diocesan Eucharistic Consecration journey begins (through Dec. 8)",
+      "kind": "school event",
+      "sourceDocument": "eucharistic-consecration-2026"
+    },
+    {
+      "date": "Thursday, Oct. 22",
+      "label": "Optional Eucharistic Holy Hour — 7 PM at Bethlehem Catholic High School",
+      "kind": "school event",
+      "sourceDocument": "eucharistic-consecration-2026"
+    },
+    {
+      "date": "Sunday, Nov. 1",
+      "label": "Free Diocesan Family Festival — noon–4:30 PM, St. Joseph the Worker, Orefield",
+      "kind": "school event",
+      "sourceDocument": "eucharistic-consecration-2026"
+    },
+    {
+      "date": "Tuesday, Nov. 3",
+      "label": "Optional Eucharistic Holy Hour — 6 PM at Nativity BVM High School",
+      "kind": "school event",
+      "sourceDocument": "eucharistic-consecration-2026"
+    },
+    {
+      "date": "Tuesday, Nov. 17",
+      "label": "Optional Eucharistic Holy Hour — 7 PM at Berks Catholic High School",
+      "kind": "school event",
+      "sourceDocument": "eucharistic-consecration-2026"
+    },
+    {
+      "date": "Tuesday, Dec. 8",
+      "label": "Eucharistic Consecration during school Mass — Immaculate Conception",
+      "kind": "school event",
+      "sourceDocument": "eucharistic-consecration-2026"
     }
   ],
   "reminders": [
@@ -860,11 +1068,6 @@
     {
       "text": "Drama Club Play is Nov. 13–14.",
       "topic": "drama",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "text": "Reading Royals Game Family Fun Night is Saturday, Nov. 21.",
-      "topic": "reading-royals",
       "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
@@ -916,6 +1119,26 @@
       "text": "Tuesday, Oct. 13: Dress Down Day supports the Knights of Columbus Thanksgiving Meal.",
       "topic": "knights-thanksgiving-ddd",
       "sourceDocument": "weekly-reminders-2026-10-05"
+    },
+    {
+      "text": "Friday, Oct. 30: Return prepaid HSA Nut Roll Sale orders and payment to the school office. Each roll is $20; pickup is Tuesday, Nov. 17 (school-designated time).",
+      "topic": "nut-roll",
+      "sourceDocument": "hsa-nut-roll-order-a-2026"
+    },
+    {
+      "text": "Saturday, Nov. 21: Reading Royals Family Fun Night; students may sing the National Anthem with a signed parent slip. Student tickets are free using the $0 ticket selection.",
+      "topic": "reading-royals-game",
+      "sourceDocument": "reading-royals-family-night-2026-11-21"
+    },
+    {
+      "text": "Oct. 22 and Oct. 29: ABVM is collecting hygiene donations for Servants for All during DDD/flag-football activities. The separate K–4 flag football flyer still lists Oct. 26.",
+      "topic": "servants-hygiene",
+      "sourceDocument": "servants-for-all-hygiene-2026-10"
+    },
+    {
+      "text": "Tuesday, Dec. 8: ABVM Eucharistic Consecration takes place during the school Mass; family reading journey begins Oct. 20.",
+      "topic": "eucharistic-consecration",
+      "sourceDocument": "eucharistic-consecration-2026"
     }
   ],
   "parentNotices": [
@@ -965,11 +1188,6 @@
       "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
-      "text": "Reading Royals Game Family Fun Night is Saturday, Nov. 21.",
-      "topic": "reading-royals",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
       "text": "Oct. 7–26: K–4 flag football permission form is due Oct. 7; the game is Oct. 26 from 1:45–2:30 PM.",
       "topic": "flag-football",
       "sourceDocument": "flag-football-2026-10"
@@ -1013,6 +1231,36 @@
       "text": "Gift Card Calendar update: two $50 winners were announced for the first two October drawings; the featured businesses were Cracker Barrel and Roman Delight. Winner and seller names are kept out of the public app.",
       "topic": "gift-card-winners",
       "sourceDocument": "gift-card-winners-2026-10-01-02"
+    },
+    {
+      "text": "HSA Fall Nut Roll Sale: prepaid orders and money due Friday, Oct. 30 ($20 per roll; cash or check payable to Assumption B.V.M.). Flavors: Nut, Poppy, Apricot, Lekvar, Seedless Raspberry, Pumpkin Cheese. Pickup Tuesday, Nov. 17 at a school-designated time. Earn $2 in Tuition Bucks per roll sold; orders cannot be held for later pickup.",
+      "topic": "nut-roll",
+      "sourceDocument": "hsa-nut-roll-order-a-2026"
+    },
+    {
+      "text": "Reading Royals Family Fun Night is Saturday, Nov. 21, 2026. ABVM students may sing the National Anthem; return the signed parent participation slip. Student tickets are free by choosing the $0 student ticket in checkout. Each ticket sold earns $5 for ABVM. Tickets: https://www.gofevo.com/event/AssumptionBVM2027",
+      "topic": "reading-royals-game",
+      "sourceDocument": "reading-royals-family-night-2026-11-21"
+    },
+    {
+      "text": "CYO basketball registration for girls and boys in grades 3–8: https://forms.gle/C5BpMzwk5Uw2b2qXA. This is separate from the K–2 St. Nicholas Seahawks form already listed.",
+      "topic": "cyo-basketball-older",
+      "sourceDocument": "cyo-basketball-grades-3-8-2026"
+    },
+    {
+      "text": "ABVM is collecting shampoo/conditioner, deodorant, razors, toothpaste, body wash and soap for Servants for All. The donation flyer mentions Oct. 22 and 29 in connection with dress-down/flag football; an earlier grade K–4 notice lists the game on Oct. 26. The grade-specific game date is unconfirmed by this new flyer; check with the school before treating it as changed.",
+      "topic": "servants-hygiene",
+      "sourceDocument": "servants-for-all-hygiene-2026-10"
+    },
+    {
+      "text": "Eucharistic Consecration at ABVM: Oct. 20–Dec. 8, with Consecration at school Mass on Dec. 8. School provides a student book and a parent copy; weekly reading guidelines follow. Optional Holy Hours: Oct. 22, 7 PM (Bethlehem Catholic High School); Nov. 3, 6 PM (Nativity BVM High School); Nov. 17, 7 PM (Berks Catholic High School).",
+      "topic": "eucharistic-consecration",
+      "sourceDocument": "eucharistic-consecration-2026"
+    },
+    {
+      "text": "Free Diocesan Family Festival: Sunday, Nov. 1, noon–4:30 PM; location: St. Joseph the Worker in Orefield.",
+      "topic": "diocesan-festival",
+      "sourceDocument": "eucharistic-consecration-2026"
     }
   ],
   "replacements": [
