@@ -30,120 +30,120 @@
     {
       "candidateIndex": 1,
       "questionType": "direct",
-      "prompt": "Which word has a long i sound made by an i, a consonant, and silent e?",
+      "prompt": "In a building game, an avatar needs to hide from a pretend dragon. Which word has long i made by silent e?",
       "choices": [
-        "kite",
-        "kit",
-        "kid"
+        "hide",
+        "high",
+        "hill"
       ],
-      "answer": "kite",
-      "explanation": "In kite, the silent e helps the i say its name. The i in kit and kid is short.",
-      "hint": "Look for a final e that changes how the vowel sounds.",
+      "answer": "hide",
+      "explanation": "Hide uses i-consonant-silent e. High has long i but not this spelling pattern; hill has short i.",
+      "hint": "Look for an i, one consonant, and a final e that is not spoken.",
       "dok": 1,
       "difficulty": 2
     },
     {
       "candidateIndex": 2,
       "questionType": "direct",
-      "prompt": "Which word has the short i sound heard in the word fish?",
+      "prompt": "A cartoon kitten plays with a ribbon and a clip. Which word has the short i sound heard in fish?",
       "choices": [
-        "pine",
-        "pin",
-        "pie"
+        "shine",
+        "clip",
+        "five"
       ],
-      "answer": "pin",
-      "explanation": "Pin has a short i sound. Pine and pie have a long i sound.",
-      "hint": "Try saying each word aloud, listening for the quick vowel in fish.",
+      "answer": "clip",
+      "explanation": "Clip has the short i sound. Shine and five have the long i sound.",
+      "hint": "Say each word slowly and compare its vowel to the vowel in fish.",
       "dok": 1,
       "difficulty": 2
     },
     {
       "candidateIndex": 3,
       "questionType": "transfer",
-      "prompt": "Complete the sentence: 'I will ____ my bicycle after school.' Which word has the correct long i spelling?",
+      "prompt": "A cheer team stands in a straight ___. Which word both completes the sentence and uses silent e for long i?",
       "choices": [
-        "rid",
-        "ride",
-        "red"
+        "line",
+        "lane",
+        "lint"
       ],
-      "answer": "ride",
-      "explanation": "Ride has the long i sound and fits the meaning of the sentence.",
-      "hint": "Look for the spelling pattern in which the last e makes i say its name.",
+      "answer": "line",
+      "explanation": "Line is the word for the team's row, and its i-consonant-e spelling makes a long i sound. Lane has long a, and lint does not fit.",
+      "hint": "Think of the word for a row of people, then check its vowel spelling.",
       "dok": 2,
       "difficulty": 2
     },
     {
       "candidateIndex": 4,
       "questionType": "transfer",
-      "prompt": "Choose the word that correctly completes: 'The rabbit will ____ behind the tree.'",
+      "prompt": "In a game, a cartoon cat will ___ behind a castle wall. Which spelling correctly completes the sentence?",
       "choices": [
         "hid",
-        "head",
-        "hide"
+        "hide",
+        "hive"
       ],
       "answer": "hide",
-      "explanation": "Hide is the present form that fits after will, and its i has a long sound because of final e.",
-      "hint": "After will, choose a base verb, then check its vowel sound.",
+      "explanation": "After will, the sentence needs the base verb hide. The silent e makes the i long.",
+      "hint": "Read the complete sentence and check which choice is an action.",
       "dok": 2,
       "difficulty": 2
     },
     {
       "candidateIndex": 5,
       "questionType": "reasoning",
-      "prompt": "Why does the word pine have a long i sound while the word pin has a short i sound?",
+      "prompt": "Two cards for a costume game say 'pin' and 'pine.' Why does the i sound different?",
       "choices": [
-        "The final silent e changes the vowel sound.",
-        "Every word beginning with t has a long vowel.",
-        "The letter t changes the sound of i."
+        "The letter p makes vowels long.",
+        "Adding a silent e changes short i to long i.",
+        "Every four-letter word has long i."
       ],
-      "answer": "The final silent e changes the vowel sound.",
-      "explanation": "Pine is pin with a final silent e. This follows the i-consonant-e pattern and changes the i from a short sound to a long sound.",
-      "hint": "Compare pin and pine letter by letter. Look at the final letter.",
+      "answer": "Adding a silent e changes short i to long i.",
+      "explanation": "Pine adds a final silent e to pin. In this pattern, the i changes from its short sound to its long sound.",
+      "hint": "Compare the two spellings. Only one extra letter appears at the end.",
       "dok": 3,
       "difficulty": 3
     },
     {
       "candidateIndex": 6,
       "questionType": "reasoning",
-      "prompt": "What happens to the vowel sound when the spelling changes from fin to fine?",
+      "prompt": "A bow-making guide says 'bit' and 'bite.' Which explanation best compares their vowel sounds?",
       "choices": [
-        "The vowel changes from short i to long i.",
-        "The vowel changes from long i to short i.",
-        "The two words keep the same vowel sound."
+        "Both have short i because they start with b.",
+        "Bit has long i because it is shorter.",
+        "Bit has short i; the silent e in bite signals long i."
       ],
-      "answer": "The vowel changes from short i to long i.",
-      "explanation": "Adding silent e to fin creates fine and usually changes the vowel to its long sound.",
-      "hint": "Read each word aloud and pay attention to the last letter.",
+      "answer": "Bit has short i; the silent e in bite signals long i.",
+      "explanation": "Bit has short i. Bite adds silent e after the consonant, making the i sound long.",
+      "hint": "Check the final letters before deciding how the vowel changes.",
       "dok": 3,
       "difficulty": 3
     },
     {
       "candidateIndex": 7,
       "questionType": "transfer",
-      "prompt": "Which pair shows a short-i word changed to a long-i word by adding a final e?",
+      "prompt": "A game designer wants a pair that changes from short i to long i by adding a final e. Which pair works?",
       "choices": [
-        "sit → sits",
-        "kit → kite",
-        "pig → pigs"
+        "win → wins",
+        "pin → pine",
+        "fish → fishes"
       ],
-      "answer": "kit → kite",
-      "explanation": "Kit has a short i sound, while kite has a long i sound created by final e.",
-      "hint": "Only one pair changes the vowel sound, rather than making a plural or verb ending.",
+      "answer": "pin → pine",
+      "explanation": "Pin has short i. Adding silent e makes pine, with long i. The other changes add endings without making this vowel change.",
+      "hint": "Look for one extra e at the end and a changed middle sound.",
       "dok": 2,
       "difficulty": 2
     },
     {
       "candidateIndex": 8,
       "questionType": "reasoning",
-      "prompt": "Which sentence contains a word with a long i sound made by silent e?",
+      "prompt": "A cheer captain writes, 'We will ___ across the mat.' Which choice is an action that fits and uses i-consonant-silent e for long i?",
       "choices": [
-        "The fish swam past the log.",
-        "The pig ran across the yard.",
-        "The child flew a kite."
+        "slid",
+        "side",
+        "slide"
       ],
-      "answer": "The child flew a kite.",
-      "explanation": "Kite has an i-consonant-e pattern, so the letter i says its name.",
-      "hint": "Scan each sentence for an i followed by a consonant and a final silent e.",
+      "answer": "slide",
+      "explanation": "Slide is a base-form action after will and uses the i-consonant-silent e pattern. Slid is past tense; side is a noun here.",
+      "hint": "Check both the grammar after will and the silent-e sound pattern.",
       "dok": 3,
       "difficulty": 3
     }
@@ -185,5 +185,16 @@
     "automaticPromotion": false,
     "automaticDelete": false,
     "automaticRewrite": false
+  },
+  "personalizationDesign": {
+    "status": "EDITORIAL_DRAFT",
+    "themes": [
+      "creative building games",
+      "cheer",
+      "cartoon cats",
+      "crafts"
+    ],
+    "privacy": "Fictional scenarios only; no student-specific activity or performance records.",
+    "requiresBrandKnowledge": false
   }
 }
