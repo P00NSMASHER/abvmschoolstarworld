@@ -42,7 +42,7 @@ function eastToday() {
   return `${p.year}-${p.month}-${p.day}`;
 }
 async function liveStudyAssets() {
-  const assets = ['index.html', 'app.js', 'product-view.js', 'styles.css', 'study-teaching.css', 'study-support.js', 'weekly-learning.js', 'assets/school/abvm-school-hero.webp', 'study-games.js', 'study-games-view.js', 'study-materials.mjs', 'study-games-materials-view.mjs', 'study-games-materials.css', 'sw.js', ...['math', 'reading', 'spelling', 'religion', 'eagle'].map(name => 'assets/illustrations/' + name + '.webp')];
+  const assets = ['index.html', 'app.js', 'product-view.js', 'styles.css', 'study-teaching.css', 'study-support.js', 'weekly-learning.js', 'assets/school/abvm-school-hero.webp', 'study-games.js', 'study-games-view.js', 'study-materials.mjs', 'study-games-materials-view.mjs', 'study-games-materials.css', 'sw.js', ...['math', 'reading', 'spelling', 'religion', 'eagle'].map(name => 'assets/illustrations/' + name + '.webp'), ...['eaglet','starlight','spark','scholar','golden','eagle','champion'].map(name=>'assets/badges/'+name+'.webp'), ...['nest-explorer','little-luminary','feather-cadet','star-voyager','sky-scholar','wing-leader','study-sentinel','school-spirit','blue-ribbon-ace','golden-quill','sky-captain','eagle-vanguard','honor-guardian','crown-keeper','star-commander'].map(name=>'assets/badges/'+name+'.svg')];
   const digest = bytes => createHash('sha256').update(bytes).digest('hex');
   return Promise.all(assets.map(async path => {
     const expectedBytes = readFileSync(new URL('../pages/' + path, import.meta.url));
@@ -215,6 +215,25 @@ try {
   receipt.studyWalkthrough.returnedAndRecordSurvivedReload = true;
   await page.getByRole('button', { name: 'Today', exact: true }).click();
   if (todayMeal?.items.length) for (const item of todayMeal.items) await expect(page.locator('.lunch-card')).toContainText(item);
+  // Validate every deployed promotion in a new isolated browser profile, never in the learner's device storage.
+  await expect(page.locator('.study-badge-latest')).toContainText('OF 22', {timeout:15000});
+  await page.locator('.study-badge-latest[data-open-badges]').click();
+  const rankCollection = page.locator('[data-badge-collection]');
+  await expect(rankCollection).toBeVisible();
+  const actualBadges = rankCollection.locator('.study-badge-grid img');
+  await expect(actualBadges).toHaveCount(21);
+  await expect.poll(()=>actualBadges.evaluateAll(images=>images.every(image=>image.complete && image.naturalWidth > 0))).toBe(true);
+  const badgePaths = await actualBadges.evaluateAll(images=>images.map(image=>new URL(image.src).pathname));
+  expect(new Set(badgePaths).size).toBe(21);
+  expect(badgePaths.filter(path=>path.endsWith('.svg')).length).toBe(15);
+  await expect(rankCollection.locator('.study-badge-grid').getByRole('listitem')).toHaveCount(21);
+  await expect(rankCollection.locator('.study-badge-grid')).toContainText('ABVM Legend');
+  await expect(rankCollection.locator('.study-badge-grid')).toContainText('Nest Explorer');
+  const deployedThresholds = await page.evaluate(()=>window.ABVMStudyGames.studyBadgeCatalog().map(badge=>badge.target));
+  expect(deployedThresholds).toEqual([25,50,75,100,150,200,250,300,375,450,525,600,700,800,900,1000,1100,1200,1300,1400,1500]);
+  await page.screenshot({path:`${out}/rank-ladder.png`,animations:'disabled'});
+  receipt.rankLadder = {totalRanks:22,permanentPromotions:21,originalWebpCount:7,newSvgCount:15,thresholds:deployedThresholds,allImagesLoaded:true};
+  receipt.screens.push({screen:'Rank ladder',totalRanks:22});
   receipt.cacheReloadVerified = true;
   expect(receipt.consoleErrors).toEqual([]);
   receipt.verified = true;
