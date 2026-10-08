@@ -26,10 +26,131 @@
     "transfer",
     "reasoning"
   ],
-  "proposedQuestions": [],
+  "proposedQuestions": [
+    {
+      "candidateIndex": 1,
+      "questionType": "direct",
+      "prompt": "Which phrase shows that a collar belongs to one dog?",
+      "choices": [
+        "the dogs collar",
+        "the dog's collar",
+        "the dogs' collars"
+      ],
+      "answer": "the dog's collar",
+      "explanation": "Dog's uses an apostrophe and s to show that one dog owns the collar.",
+      "hint": "Find the apostrophe immediately after the name of one owner.",
+      "dok": 1,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 2,
+      "questionType": "direct",
+      "prompt": "Which phrase correctly shows that a backpack belongs to one girl?",
+      "choices": [
+        "the girl's backpack",
+        "the girls backpack",
+        "the girls' backpacks"
+      ],
+      "answer": "the girl's backpack",
+      "explanation": "Girl's shows ownership by a single girl, with an apostrophe before s.",
+      "hint": "One owner usually needs an apostrophe followed by s.",
+      "dok": 1,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 3,
+      "questionType": "transfer",
+      "prompt": "Emma owns a pencil. Which phrase correctly shows who owns it?",
+      "choices": [
+        "Emmas pencil",
+        "Emma's pencil",
+        "Emmas' pencil"
+      ],
+      "answer": "Emma's pencil",
+      "explanation": "Emma's pencil correctly shows that the pencil belongs to Emma.",
+      "hint": "An apostrophe marks the ownership ending in a singular name.",
+      "dok": 2,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 4,
+      "questionType": "transfer",
+      "prompt": "Complete the sentence for one cat: '____ toy rolled under the sofa.'",
+      "choices": [
+        "The cats'",
+        "The cats",
+        "The cat's"
+      ],
+      "answer": "The cat's",
+      "explanation": "The cat's shows the toy belongs to one cat; the other forms do not show that singular owner correctly.",
+      "hint": "Check whether the apostrophe comes after the name of one animal.",
+      "dok": 2,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 5,
+      "questionType": "reasoning",
+      "prompt": "What does the apostrophe-s show in the phrase 'Sam's lunch'?",
+      "choices": [
+        "Sam has several lunches.",
+        "The lunch belongs to Sam.",
+        "Several children are named Sam."
+      ],
+      "answer": "The lunch belongs to Sam.",
+      "explanation": "The apostrophe-s after Sam shows possession: Sam owns the lunch.",
+      "hint": "Ask whose object is being described.",
+      "dok": 3,
+      "difficulty": 3
+    },
+    {
+      "candidateIndex": 6,
+      "questionType": "reasoning",
+      "prompt": "Which sentence uses apostrophe-s to show ownership, not a shortened form of 'is'?",
+      "choices": [
+        "Mia's ready for class.",
+        "Mia's eating lunch.",
+        "Mia's book is on the desk."
+      ],
+      "answer": "Mia's book is on the desk.",
+      "explanation": "Mia's book means the book belongs to Mia; in the other sentences, Mia's is short for Mia is.",
+      "hint": "Try replacing apostrophe-s with the two-word phrase 'is'.",
+      "dok": 3,
+      "difficulty": 3
+    },
+    {
+      "candidateIndex": 7,
+      "questionType": "transfer",
+      "prompt": "A single teacher owns a red marker. Which phrase shows that correctly?",
+      "choices": [
+        "the teachers marker",
+        "the teacher's marker",
+        "the teachers' marker"
+      ],
+      "answer": "the teacher's marker",
+      "explanation": "Teacher's uses an apostrophe before s to show one teacher owns the marker.",
+      "hint": "Mark one owner's name before adding the possession ending.",
+      "dok": 2,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 8,
+      "questionType": "reasoning",
+      "prompt": "In 'The dog's leash is blue,' what does the apostrophe-s tell the reader?",
+      "choices": [
+        "The dog has become a leash.",
+        "There are two blue leashes.",
+        "The leash belongs to one dog."
+      ],
+      "answer": "The leash belongs to one dog.",
+      "explanation": "Dog's tells us which animal owns the leash, not how many leashes there are.",
+      "hint": "Ask who owns the object, then look at the apostrophe placement.",
+      "dok": 3,
+      "difficulty": 3
+    }
+  ],
   "authoring": {
-    "status": "AUTHORING_REQUIRED",
-    "generatedQuestionCount": 0,
+    "status": "DRAFT_FAMILY_PRESENT",
+    "generatedQuestionCount": 8,
     "minimumSemanticVariants": 8,
     "requiredQuestionTypes": [
       "direct",
@@ -57,10 +178,6 @@
   "readiness": {
     "status": "HOLD",
     "blockers": [
-      "minimum-semantic-variants:0/8",
-      "question-type-required:direct",
-      "question-type-required:transfer",
-      "question-type-required:reasoning",
       "automated-qa-required",
       "safe-usage-evidence-required",
       "manual-promotion-required"
