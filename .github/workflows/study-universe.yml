@@ -1,0 +1,49 @@
+name: Study Universe Contract
+on:
+  pull_request:
+    paths:
+      - 'scripts/build-study-universe.mjs'
+      - 'tests/study-universe.test.mjs'
+      - 'pages/data/study-*.json'
+      - 'pages/data/schoolwork.json'
+      - 'pages/star-practice.mjs'
+      - 'pages/study-hub-core.mjs'
+      - '.github/workflows/study-universe.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/build-study-universe.mjs'
+      - 'tests/study-universe.test.mjs'
+      - 'pages/data/study-*.json'
+      - 'pages/data/schoolwork.json'
+      - 'pages/star-practice.mjs'
+      - 'pages/study-hub-core.mjs'
+      - '.github/workflows/study-universe.yml'
+permissions:
+  contents: read
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --test tests/study-universe.test.mjs
+      - name: Exact-source deterministic content receipt
+        run: |
+          node scripts/build-study-universe.mjs "$RUNNER_TEMP/study-universe.json"
+          node scripts/build-study-universe.mjs "$RUNNER_TEMP/repeated.json"
+          cmp "$RUNNER_TEMP/study-universe.json" "$RUNNER_TEMP/repeated.json"
+          git rev-parse HEAD > "$RUNNER_TEMP/source-sha.txt"
+          sha256sum "$RUNNER_TEMP/study-universe.json" > "$RUNNER_TEMP/content.sha256"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: study-universe-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            ${{ runner.temp }}/study-universe.json
+            ${{ runner.temp }}/source-sha.txt
+            ${{ runner.temp }}/content.sha256
