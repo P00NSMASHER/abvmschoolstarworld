@@ -67,3 +67,14 @@ The original generated seven WebP insignia above remain unchanged. These fifteen
 - `star-commander.svg`: Star Commander (1400 saved stars).
 
 All the new ranks live in the original star-ledger and badge-achievements database. Their artwork is cached optionally for offline use; neither private schoolwork nor learner records are embedded in the files.
+
+
+## Approved production-quality rank artwork (October 8, 2026)
+
+**Current runtime assets:** the seven original glossy WebP medals above remain unchanged. The fifteen inserted intermediate promotions now use independent, transparent 384 × 384 premium WebP artworks named `<rank-slug>-premium.webp`, rather than the earlier SVG placeholders. The existing SVG files are retained for history/reference only and must not be restored as live artwork without visual review.
+
+The runtime `studyBadgeCatalog()` in `study-games.js` owns the unchanged 22-rank identities and thresholds; use its `artFile` mapping, not a second awards or rank table. The Today/Home rank badge, Study next-rank tracker, Progress ladder, and earned-rank celebration all use the same source. Original Eaglet and the six original earned-rank WebPs remain byte-identical.
+
+The approved WebPs use polished gold relief, deep navy enamel, sculpted central symbols and transparent alpha. Render comparative QA at 64, 96, 128 and 256 CSS pixels and inspect real iPhone layouts at 393px and 402px. A passing image-loading assertion alone does not establish aesthetic parity.
+
+Release evidence: PR #265, full ABVM App QA run 37790848020, independent QA run 37790848201, and `docs/ABVM_PREMIUM_MEDAL_RELEASE_MANIFEST.json`. The production Pages workflow verifies the precise published hashes of all 15 premium WebPs and seven original WebPs and checks rank ladder rendering. Learner rewards and educational material are never part of these artwork files.
