@@ -64,7 +64,7 @@
       "choices": [
         "Emmas pencil",
         "Emma's pencil",
-        "Emmas' pencil"
+        "Emma pencil"
       ],
       "answer": "Emma's pencil",
       "explanation": "Emma's pencil correctly shows that the pencil belongs to Emma.",
@@ -78,7 +78,7 @@
       "prompt": "Complete the sentence for one cat: '____ toy rolled under the sofa.'",
       "choices": [
         "The cats'",
-        "The cats",
+        "The cat",
         "The cat's"
       ],
       "answer": "The cat's",
@@ -124,7 +124,7 @@
       "choices": [
         "the teachers marker",
         "the teacher's marker",
-        "the teachers' marker"
+        "the marker's teacher"
       ],
       "answer": "the teacher's marker",
       "explanation": "Teacher's uses an apostrophe before s to show one teacher owns the marker.",
