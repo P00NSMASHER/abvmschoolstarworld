@@ -104,3 +104,41 @@ test("active rerun falls back to the latest success while it is unresolved",()=>
 test("missing workflow evidence remains unhealthy and does not invent success",()=>{
   assert.equal(selectEffectiveWorkflowRun({latestCreated:null,latestDecisive:null,latestSuccess:null}),null);
 });
+
+test("active rerun does not conceal an earlier genuinely failed refresh",()=>{
+  const success={id:118,status:"completed",conclusion:"success",created_at:"2026-10-07T22:02:03Z",updated_at:"2026-10-07T22:39:15Z"};
+  const failure={id:119,status:"completed",conclusion:"failure",created_at:"2026-10-07T22:40:00Z",updated_at:"2026-10-07T22:41:00Z"};
+  const active={id:120,status:"in_progress",conclusion:null,created_at:"2026-10-07T22:42:00Z",updated_at:"2026-10-07T22:42:00Z"};
+  assert.equal(selectEffectiveWorkflowRun({latestCreated:active,latestDecisive:failure,latestSuccess:success}),failure);
+});
+
+test("equal completion timestamps are contradictory and cancellation stays unhealthy",()=>{
+  const timestamp="2026-10-07T22:39:15Z";
+  const success={id:118,status:"completed",conclusion:"success",created_at:"2026-10-07T22:02:03Z",updated_at:timestamp};
+  const cancelled={id:119,status:"completed",conclusion:"cancelled",created_at:"2026-10-07T22:02:10Z",updated_at:timestamp};
+  assert.equal(selectEffectiveWorkflowRun({latestCreated:cancelled,latestDecisive:success,latestCompleted:cancelled}),cancelled);
+});
+
+test("missing cancellation completion timestamp cannot be silently superseded",()=>{
+  const success={id:118,status:"completed",conclusion:"success",created_at:"2026-10-07T22:02:03Z",updated_at:"2026-10-07T22:39:15Z"};
+  const cancelled={id:119,status:"completed",conclusion:"cancelled",created_at:"2026-10-07T22:02:10Z"};
+  assert.equal(selectEffectiveWorkflowRun({latestCreated:cancelled,latestDecisive:success,latestCompleted:cancelled}),cancelled);
+});
+
+test("a late-finished cancellation is detected despite an earlier creation timestamp",()=>{
+  const success={id:118,status:"completed",conclusion:"success",created_at:"2026-10-07T22:40:00Z",updated_at:"2026-10-07T22:45:00Z"};
+  const cancelled={id:119,status:"completed",conclusion:"cancelled",created_at:"2026-10-07T22:39:00Z",updated_at:"2026-10-07T22:46:00Z"};
+  assert.equal(selectEffectiveWorkflowRun({latestCreated:success,latestCompleted:cancelled,latestDecisive:success,latestSuccess:success}),cancelled);
+});
+
+test("an active rerun never masks a completed cancellation",()=>{
+  const success={id:118,status:"completed",conclusion:"success",created_at:"2026-10-07T22:02:03Z",updated_at:"2026-10-07T22:39:15Z"};
+  const cancelled={id:119,status:"completed",conclusion:"cancelled",created_at:"2026-10-07T22:40:00Z",updated_at:"2026-10-07T22:41:00Z"};
+  const active={id:120,status:"in_progress",conclusion:null,created_at:"2026-10-07T22:42:00Z",updated_at:"2026-10-07T22:42:00Z"};
+  assert.equal(selectEffectiveWorkflowRun({latestCreated:active,latestCompleted:cancelled,latestDecisive:success,latestSuccess:success}),cancelled);
+});
+
+test("a successful workflow with missing completion evidence cannot establish health",()=>{
+  const success={id:118,status:"completed",conclusion:"success",created_at:"2026-10-07T22:02:03Z"};
+  assert.equal(selectEffectiveWorkflowRun({latestCreated:success,latestCompleted:success,latestDecisive:success,latestSuccess:success}),null);
+});
