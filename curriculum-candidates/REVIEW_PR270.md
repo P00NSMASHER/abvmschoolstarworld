@@ -328,13 +328,13 @@ For editorial review, note that the question type classifications are *proposed*
 
 **Question:** Read: 'Milo the dog fetched his ball, practiced sitting on command, and ran around the yard.' Which title best fits the whole passage?
 
-1. A Rainy Day at School
-2. The Missing Ball
+1. Milo Fetches His Ball
+2. Milo Learns to Sit
 3. Milo Practices and Plays
 
 **Correct answer:** 3. Milo Practices and Plays  
 **Explanation:** The passage includes several ways Milo played and practiced skills.  
-**Hint:** A good title should fit all three actions, not just one object.
+**Hint:** Find the title that includes both practicing and playing, not only one action.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
@@ -358,13 +358,13 @@ For editorial review, note that the question type classifications are *proposed*
 
 **Question:** The main idea is 'Rain helps a garden grow.' Which supporting detail best fits this idea?
 
-1. A bicycle has two wheels.
+1. Some gardens have tall fences.
 2. Rainwater soaks the roots of flowers.
-3. The library closes at six.
+3. A gardener uses a shovel to make holes.
 
 **Correct answer:** 2. Rainwater soaks the roots of flowers.  
-**Explanation:** Water reaching flower roots explains how rain supports growth.  
-**Hint:** Choose evidence about water and plants, not an unrelated activity.
+**Explanation:** Water reaching flower roots explains how rain helps growth. The other details concern gardens but do not explain the benefit of rain.  
+**Hint:** Find the fact that explains how rain gives water to the plants.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
@@ -389,12 +389,12 @@ For editorial review, note that the question type classifications are *proposed*
 **Question:** Read: 'Each morning the school bus picks up students. The driver checks that everyone is seated before moving.' Which summary fits best?
 
 1. A bus safely carries children to school.
-2. School buses only travel at night.
-3. Every student owns a bus.
+2. The bus picks up students each morning.
+3. The driver checks that everyone is seated.
 
 **Correct answer:** 1. A bus safely carries children to school.  
-**Explanation:** The passage describes transporting students and a safety check before the bus moves.  
-**Hint:** A summary should include the important shared point of both sentences.
+**Explanation:** The best summary connects transporting students with checking their safety. The other choices each mention one detail.  
+**Hint:** Choose the big idea supported by both the pickup and the driver's safety check.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
@@ -469,15 +469,15 @@ For editorial review, note that the question type classifications are *proposed*
 
 #### 4. transfer (DOK 2, difficulty 2)
 
-**Question:** Complete the sentence for one cat: '____ toy rolled under the sofa.'
+**Question:** A toy belongs to one cat. Which phrase completes the sentence with the correct owner: '____ toy rolled under the sofa'?
 
-1. The cats'
-2. The cat
+1. The child's
+2. The dogs'
 3. The cat's
 
 **Correct answer:** 3. The cat's  
-**Explanation:** The cat's shows the toy belongs to one cat; the other forms do not show that singular owner correctly.  
-**Hint:** Check whether the apostrophe comes after the name of one animal.
+**Explanation:** The cat's shows that one cat owns the toy. The child's refers to a person, and the dogs' refers to more than one dog.  
+**Hint:** Choose the word for one animal that owns the toy, then look for apostrophe-s.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
@@ -531,13 +531,13 @@ For editorial review, note that the question type classifications are *proposed*
 
 **Question:** In 'The dog's leash is blue,' what does the apostrophe-s tell the reader?
 
-1. The dog has become a leash.
-2. There are two blue leashes.
+1. The leash is shared by several dogs.
+2. The dog has more than one leash.
 3. The leash belongs to one dog.
 
 **Correct answer:** 3. The leash belongs to one dog.  
-**Explanation:** Dog's tells us which animal owns the leash, not how many leashes there are.  
-**Hint:** Ask who owns the object, then look at the apostrophe placement.
+**Explanation:** Dog's names one dog as the owner of the leash. It does not tell whether other dogs share the leash or how many leashes the dog has.  
+**Hint:** Find which answer tells who owns the leash, not how many there are.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________

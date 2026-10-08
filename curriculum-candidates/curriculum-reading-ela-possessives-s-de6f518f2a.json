@@ -75,15 +75,15 @@
     {
       "candidateIndex": 4,
       "questionType": "transfer",
-      "prompt": "Complete the sentence for one cat: '____ toy rolled under the sofa.'",
+      "prompt": "A toy belongs to one cat. Which phrase completes the sentence with the correct owner: '____ toy rolled under the sofa'?",
       "choices": [
-        "The cats'",
-        "The cat",
+        "The child's",
+        "The dogs'",
         "The cat's"
       ],
       "answer": "The cat's",
-      "explanation": "The cat's shows the toy belongs to one cat; the other forms do not show that singular owner correctly.",
-      "hint": "Check whether the apostrophe comes after the name of one animal.",
+      "explanation": "The cat's shows that one cat owns the toy. The child's refers to a person, and the dogs' refers to more than one dog.",
+      "hint": "Choose the word for one animal that owns the toy, then look for apostrophe-s.",
       "dok": 2,
       "difficulty": 2
     },
@@ -137,13 +137,13 @@
       "questionType": "reasoning",
       "prompt": "In 'The dog's leash is blue,' what does the apostrophe-s tell the reader?",
       "choices": [
-        "The dog has become a leash.",
-        "There are two blue leashes.",
+        "The leash is shared by several dogs.",
+        "The dog has more than one leash.",
         "The leash belongs to one dog."
       ],
       "answer": "The leash belongs to one dog.",
-      "explanation": "Dog's tells us which animal owns the leash, not how many leashes there are.",
-      "hint": "Ask who owns the object, then look at the apostrophe placement.",
+      "explanation": "Dog's names one dog as the owner of the leash. It does not tell whether other dogs share the leash or how many leashes the dog has.",
+      "hint": "Find which answer tells who owns the leash, not how many there are.",
       "dok": 3,
       "difficulty": 3
     }

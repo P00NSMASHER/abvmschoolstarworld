@@ -62,13 +62,13 @@
       "questionType": "transfer",
       "prompt": "Read: 'Milo the dog fetched his ball, practiced sitting on command, and ran around the yard.' Which title best fits the whole passage?",
       "choices": [
-        "A Rainy Day at School",
-        "The Missing Ball",
+        "Milo Fetches His Ball",
+        "Milo Learns to Sit",
         "Milo Practices and Plays"
       ],
       "answer": "Milo Practices and Plays",
       "explanation": "The passage includes several ways Milo played and practiced skills.",
-      "hint": "A good title should fit all three actions, not just one object.",
+      "hint": "Find the title that includes both practicing and playing, not only one action.",
       "dok": 2,
       "difficulty": 2
     },
@@ -92,13 +92,13 @@
       "questionType": "reasoning",
       "prompt": "The main idea is 'Rain helps a garden grow.' Which supporting detail best fits this idea?",
       "choices": [
-        "A bicycle has two wheels.",
+        "Some gardens have tall fences.",
         "Rainwater soaks the roots of flowers.",
-        "The library closes at six."
+        "A gardener uses a shovel to make holes."
       ],
       "answer": "Rainwater soaks the roots of flowers.",
-      "explanation": "Water reaching flower roots explains how rain supports growth.",
-      "hint": "Choose evidence about water and plants, not an unrelated activity.",
+      "explanation": "Water reaching flower roots explains how rain helps growth. The other details concern gardens but do not explain the benefit of rain.",
+      "hint": "Find the fact that explains how rain gives water to the plants.",
       "dok": 3,
       "difficulty": 3
     },
@@ -123,12 +123,12 @@
       "prompt": "Read: 'Each morning the school bus picks up students. The driver checks that everyone is seated before moving.' Which summary fits best?",
       "choices": [
         "A bus safely carries children to school.",
-        "School buses only travel at night.",
-        "Every student owns a bus."
+        "The bus picks up students each morning.",
+        "The driver checks that everyone is seated."
       ],
       "answer": "A bus safely carries children to school.",
-      "explanation": "The passage describes transporting students and a safety check before the bus moves.",
-      "hint": "A summary should include the important shared point of both sentences.",
+      "explanation": "The best summary connects transporting students with checking their safety. The other choices each mention one detail.",
+      "hint": "Choose the big idea supported by both the pickup and the driver's safety check.",
       "dok": 2,
       "difficulty": 2
     },
