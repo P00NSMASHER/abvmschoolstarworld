@@ -37,7 +37,7 @@
         "Friday"
       ],
       "answer": "Monday",
-      "explanation": "The first sentence names the planting day. The watering happened on mornings afterward.",
+      "explanation": "The passage states that Lena planted the seeds on Monday. Her watering routine does not change the planting day.",
       "hint": "Find the sentence that tells when the seeds went into the soil.",
       "dok": 1,
       "difficulty": 2
@@ -75,15 +75,15 @@
     {
       "candidateIndex": 4,
       "questionType": "transfer",
-      "prompt": "Read: 'On Friday, Kim's class collected empty cans to recycle. They filled two blue bags.' What did the class collect?",
+      "prompt": "Read: 'On Friday, Kim's class collected empty cans to recycle. They filled two blue bags.' Which answer tells both what the class collected and how many bags they filled?",
       "choices": [
-        "old toys",
-        "empty cans",
-        "pinecones"
+        "Empty bottles and three bags",
+        "Empty cans and two bags",
+        "Paper scraps and one bag"
       ],
-      "answer": "empty cans",
-      "explanation": "The passage says the class gathered cans for recycling.",
-      "hint": "A what question asks for the object directly named in the passage.",
+      "answer": "Empty cans and two bags",
+      "explanation": "The first sentence says they collected empty cans. The second tells that they filled two blue bags.",
+      "hint": "Find the collected material in the first sentence and count of bags in the second sentence.",
       "dok": 2,
       "difficulty": 2
     },
