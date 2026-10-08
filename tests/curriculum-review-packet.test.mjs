@@ -139,12 +139,12 @@ test('personalized themes have no brand prerequisite and never activate held cur
       if (normalize(q.answer).length >= 4) {
         assert.ok(!normalize(q.hint).includes(normalize(q.answer)), 'Hint reveals exact key');
       }
-      assert.doesNotMatch(q.prompt, /(?:roblox|pusheen|youtube|tiktok)\\b/i,
+      assert.doesNotMatch(q.prompt, /(?:roblox|pusheen|youtube|tiktok)\b/i,
         'Brand trivia cannot be required to solve the learning task');
     }
   }
   assert.equal(allPrompts.size, 32);
   assert.ok(allThemes.size >= 5);
   assert.match(packet, /fictional practice stories inspired by interests familiar to this learner/i);
-  assert.doesNotMatch(packet, /^\\s*- \\[x\\]/mi, 'Approval must never be pre-checked');
+  assert.doesNotMatch(packet, /^\s*- \[[xX]\]/m, 'Approval must never be pre-checked');
 });
