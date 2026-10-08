@@ -138,7 +138,7 @@
       "prompt": "A game character writes 'Pip's ribbon' on a prize label. Why does the label use apostrophe-s?",
       "choices": [
         "It shows that one cat named Pip owns the ribbon.",
-        "It tells that Pip is ribbon-shaped.",
+        "It shortens the words 'Pip is' on the prize label.",
         "It means there are several cats named Pip."
       ],
       "answer": "It shows that one cat named Pip owns the ribbon.",
