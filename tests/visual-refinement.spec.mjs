@@ -7,7 +7,11 @@ test('calendar reveals secondary school details without losing the date plan',as
   await expect(page.locator('.calendar-day-card')).toBeVisible();
   const more=page.locator('.calendar-more');
   await expect(more).not.toHaveAttribute('open','');
-  await expect(page.locator('.calendar-mark.test').first()).toContainText('T');
+  expect(await page.locator('.calendar-mark.test').first().evaluate(el=>getComputedStyle(el,'::before').content)).toBe('"T"');
+  const ninth=page.locator('[data-cal-day]').filter({hasText:/^9$/});
+  await expect(ninth).toHaveCount(1);
+  await ninth.click();
+  await expect(page.locator('.calendar-day-heading h2')).toContainText('9');
   await more.locator('summary').click();
   await expect(more).toHaveAttribute('open','');
   await expect(more.locator('.week-lunches .week-overview-row')).toHaveCount(5);

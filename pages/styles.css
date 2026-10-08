@@ -1962,6 +1962,13 @@ img {
 /* October 8 audit: primary day details first, with legible, named calendar cues. */
 .calendar-dots{height:14px;gap:2px;align-items:center;justify-content:center}
 .calendar-dots .calendar-mark{display:grid;place-items:center;flex:none;min-width:12px;height:13px;border-radius:4px;font-size:.57rem;line-height:1;font-weight:800;background:var(--navy);color:white}
+.calendar-dots .calendar-mark::before{content:"•";font-size:inherit}
+.calendar-dots .calendar-mark.test::before{content:"T"}
+.calendar-dots .calendar-mark.faith::before{content:"✝"}
+.calendar-dots .calendar-mark.due::before{content:"!"}
+.calendar-dots .calendar-mark.family::before{content:"F"}
+.calendar-dots .calendar-mark.lunch::before{content:"L"}
+.calendar-dots .calendar-mark.closed::before{content:"×"}
 .calendar-dots .calendar-mark.test{background:var(--pink-dark)}
 .calendar-dots .calendar-mark.faith{background:#694b86}
 .calendar-dots .calendar-mark.due{background:#836018}
@@ -1980,7 +1987,7 @@ img {
 .calendar-more>summary{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:54px;padding:14px 18px;font-weight:750;font-size:.86rem;color:var(--navy);cursor:pointer}
 .calendar-more>summary span{font-size:1.2rem;transition:transform .15s}
 .calendar-more[open]>summary span{transform:rotate(180deg)}
-.calendar-more-content{padding:0 18px 18px}
+.calendar-more-content{padding:0 0 18px}
 .calendar-more-content .week-overview{margin-top:10px}
 .calendar-more-content .specials-card,.calendar-more-content .next-month-card{margin-top:20px}
 .calendar-more-content .week-overview{margin-bottom:16px}
@@ -1995,6 +2002,6 @@ img {
 }
 @media(max-width:699px){
   .calendar-more{margin-top:18px}
-  .calendar-more-content{padding:0 14px 16px}
-    .calendar-dots .calendar-mark{min-width:11px;height:12px;font-size:.53rem}
+  .calendar-more-content{padding:0 0 16px}
+  .calendar-dots .calendar-mark{min-width:11px;height:12px;font-size:.53rem}
 }
