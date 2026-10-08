@@ -89,7 +89,7 @@ test('wrong-answer penalties survive leaving and reload while an earned badge re
   expect(after.badges.find(badge=>badge.id==='starlight-study-badge')?.unlocked).toBe(true);
 });
 
-test('a real 100 percent round saves a substantial 25-star bonus alongside learning evidence',async({page})=>{
+test('a real 100 percent round saves a substantial 25-star bonus alongside learning evidence',async({page},testInfo)=>{
   await openStudy(page);
   await page.locator('[data-game-start="mix"]').click();
   for(let i=0;i<8;i++){
@@ -105,6 +105,9 @@ test('a real 100 percent round saves a substantial 25-star bonus alongside learn
   await expect(page.locator('.study-rank-promotion')).toContainText('Nest Explorer');
   await expect(page.locator('.study-rank-promotion')).toContainText('NEW RANK UNLOCKED');
   await expect(page.locator('[data-badge-collection] .study-badge-next')).toContainText('Star Scout');
+  const celebration=testInfo.outputPath('rank-promotion-reveal.png');
+  await page.screenshot({path:celebration,fullPage:true,animations:'disabled'});
+  await testInfo.attach('New permanent rank celebration',{path:celebration,contentType:'image/png'});
   const perfect=await page.evaluate(async()=>{
     const ledger=await window.ABVMStudyGames.loadStudyStarLedger();
     return ledger.filter(row=>row.rewardType==='perfect-round');
@@ -189,7 +192,7 @@ test('a saved penalty restores the real player balance after a transient initial
   expect(await balance(page)).toBe(48);
 });
 
-test('every original and new premium rank emblem loads, with no horizontal overflow on an iPhone',async({page})=>{
+test('every original and new premium rank emblem loads, with no horizontal overflow on an iPhone',async({page},testInfo)=>{
   await page.setViewportSize({width:393,height:852});await openStudy(page);
   await page.locator('[data-open-badges]').first().click();
   const collection=page.locator('[data-badge-collection]'),images=collection.locator('.study-badge-grid img');
@@ -201,4 +204,7 @@ test('every original and new premium rank emblem loads, with no horizontal overf
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
   await expect(collection.locator('.rank-current')).toContainText('Eaglet');
   await expect(collection.locator('.badge-progress')).toHaveCount(1);
+  const screenshot=testInfo.outputPath('expanded-rank-ladder-iphone.png');
+  await page.screenshot({path:screenshot,fullPage:true,animations:'disabled'});
+  await testInfo.attach('Expanded rank ladder at iPhone width',{path:screenshot,contentType:'image/png'});
 });
