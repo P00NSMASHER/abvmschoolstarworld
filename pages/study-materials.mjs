@@ -362,6 +362,7 @@ export function createStudyMaterials({
     return {...state,canUndo:!!completionUndo,message};
   }
   function testGuide(index, {upcoming = false} = {}) {
+    const time = instant();
     const state = printableTestState(upcoming), i = Number(index);
     if (!Number.isInteger(i) || i < 0 || i >= state.tests.length) return null;
     const test = state.tests[i], group = unique(state.groups[i] || []);
