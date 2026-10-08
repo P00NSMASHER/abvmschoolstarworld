@@ -30,120 +30,120 @@
     {
       "candidateIndex": 1,
       "questionType": "direct",
-      "prompt": "Read: 'Lena planted three seeds on Monday. She watered them every morning.' On which day did Lena plant the seeds?",
+      "prompt": "Read: 'At cheer practice, Ava put her silver pom-poms beside a blue water bottle. Then she practiced a jump.' Where did Ava put the pom-poms?",
       "choices": [
-        "Tuesday",
-        "Monday",
-        "Friday"
+        "behind the speaker",
+        "beside a water bottle",
+        "inside a backpack"
       ],
-      "answer": "Monday",
-      "explanation": "The passage states that Lena planted the seeds on Monday. Her watering routine does not change the planting day.",
-      "hint": "Find the sentence that tells when the seeds went into the soil.",
+      "answer": "beside a water bottle",
+      "explanation": "The passage says Ava put her pom-poms beside a blue water bottle before practicing.",
+      "hint": "For a where question, find the place named next to the item.",
       "dok": 1,
       "difficulty": 2
     },
     {
       "candidateIndex": 2,
       "questionType": "direct",
-      "prompt": "Read: 'Ben visited the animal shelter with Dad. They carried clean towels for the puppies.' Where did Ben go?",
+      "prompt": "Read: 'In a building game, Kai made a bridge over a river. He painted the bridge green.' What color was the bridge?",
       "choices": [
-        "to the zoo",
-        "to the park",
-        "to the animal shelter"
+        "green",
+        "purple",
+        "blue"
       ],
-      "answer": "to the animal shelter",
-      "explanation": "The passage directly names the place Ben visited with Dad.",
-      "hint": "A where question asks for a place named in the first sentence.",
+      "answer": "green",
+      "explanation": "The second sentence tells the color Kai used on the bridge.",
+      "hint": "Find the sentence that describes what happened after the bridge was built.",
       "dok": 1,
       "difficulty": 2
     },
     {
       "candidateIndex": 3,
       "questionType": "transfer",
-      "prompt": "Read: 'Rain filled the playground with puddles, so the class moved its game into the gym.' Why did the class move?",
+      "prompt": "Read: 'The blender started with a loud buzz. A cartoon kitten named Pip ran behind the sofa.' Why might Pip have hidden?",
       "choices": [
-        "The playground was too wet.",
-        "There were too many players.",
-        "The teacher lost the ball."
+        "Pip wanted a snack.",
+        "Pip saw a bird outside.",
+        "The noise may have startled Pip."
       ],
-      "answer": "The playground was too wet.",
-      "explanation": "The puddles made the playground wet, which explains the move inside.",
-      "hint": "For a why question, look for the cause that appears before the action.",
+      "answer": "The noise may have startled Pip.",
+      "explanation": "The sudden buzzing happened just before Pip hid. That is evidence the kitten may have been frightened by the sound.",
+      "hint": "A why answer can be inferred from what happened immediately before the action.",
       "dok": 2,
       "difficulty": 2
     },
     {
       "candidateIndex": 4,
       "questionType": "transfer",
-      "prompt": "Read: 'On Friday, Kim's class collected empty cans to recycle. They filled two blue bags.' Which answer tells both what the class collected and how many bags they filled?",
+      "prompt": "Read: 'Mila used four silver beads and one blue star charm to make a bracelet.' Which answer tells both how many beads she used and what charm she chose?",
       "choices": [
-        "Empty bottles and three bags",
-        "Empty cans and two bags",
-        "Paper scraps and one bag"
+        "Four silver beads and a blue star",
+        "Two silver beads and a blue heart",
+        "Four blue beads and a silver star"
       ],
-      "answer": "Empty cans and two bags",
-      "explanation": "The first sentence says they collected empty cans. The second tells that they filled two blue bags.",
-      "hint": "Find the collected material in the first sentence and count of bags in the second sentence.",
+      "answer": "Four silver beads and a blue star",
+      "explanation": "The passage gives two details: four silver beads and a blue star charm.",
+      "hint": "Check both the number and color of the beads and the shape of the charm.",
       "dok": 2,
       "difficulty": 2
     },
     {
       "candidateIndex": 5,
       "questionType": "reasoning",
-      "prompt": "Read: 'Jay packed a red umbrella because dark clouds covered the sky.' Which question can the passage answer?",
+      "prompt": "Read: 'Music stopped during the cheer routine. Nora counted the beats out loud. The squad finished together.' Which detail best explains how Nora helped?",
       "choices": [
-        "Who gave Jay the umbrella?",
-        "Why did Jay pack an umbrella?",
-        "What did Jay eat for breakfast?"
+        "The routine had music.",
+        "Nora counted the beats aloud.",
+        "The squad wore matching ribbons."
       ],
-      "answer": "Why did Jay pack an umbrella?",
-      "explanation": "The passage gives the reason for packing an umbrella, but does not say who gave it or what Jay ate.",
-      "hint": "Check which question has evidence in the one-sentence passage.",
+      "answer": "Nora counted the beats aloud.",
+      "explanation": "Nora's counting replaced the missing music beat so the squad could keep moving together.",
+      "hint": "Find the action that helped the group continue after the problem.",
       "dok": 3,
       "difficulty": 3
     },
     {
       "candidateIndex": 6,
       "questionType": "reasoning",
-      "prompt": "Read: 'Rosa walked to the library to borrow a book about whales.' Which answer correctly tells both where Rosa went and why?",
+      "prompt": "Read: 'In a game, Nia walked toward a locked gate wearing red boots. She found a moon-shaped key. After she picked it up, the gate opened.' Which detail is the strongest clue about why the gate opened?",
       "choices": [
-        "To school, to see her teacher.",
-        "To the beach, to watch whales.",
-        "To the library, to borrow a book."
+        "Nia wore red boots.",
+        "Nia walked toward a gate.",
+        "Nia picked up a moon-shaped key."
       ],
-      "answer": "To the library, to borrow a book.",
-      "explanation": "The text gives both the destination and the purpose of Rosa's trip.",
-      "hint": "Find a place and an action that are both stated together.",
+      "answer": "Nia picked up a moon-shaped key.",
+      "explanation": "The gate opened right after Nia picked up the key, making it the strongest clue. Her boots and walking do not explain the change.",
+      "hint": "Which event happened immediately before the gate opened?",
       "dok": 3,
       "difficulty": 3
     },
     {
       "candidateIndex": 7,
       "questionType": "transfer",
-      "prompt": "Read: 'Noah fed his dog, tied his shoes, and then walked to school.' What did Noah do first?",
+      "prompt": "Read: 'Nina drew a cartoon cat, gave it a purple bow, and placed the drawing on the windowsill to dry.' What did Nina draw, and where did she put it?",
       "choices": [
-        "He fed his dog.",
-        "He walked to school.",
-        "He tied his shoes."
+        "A cartoon cat; on the windowsill",
+        "A cartoon cat; on the bookshelf",
+        "A purple flower; on the windowsill"
       ],
-      "answer": "He fed his dog.",
-      "explanation": "The events are told in order, so feeding the dog happened before shoes and school.",
-      "hint": "Look for the first action in the sentence rather than the last.",
+      "answer": "A cartoon cat; on the windowsill",
+      "explanation": "The passage names the picture and its drying spot. Both details must match.",
+      "hint": "Find what she drew first and where she placed it at the end.",
       "dok": 2,
       "difficulty": 2
     },
     {
       "candidateIndex": 8,
       "questionType": "reasoning",
-      "prompt": "Read: 'The turtle rested under a rock while sunlight warmed the sand.' Which words from the text answer 'Where did the turtle rest?'",
+      "prompt": "Read: 'After making a glittery headband, Jo closed the glue bottle and returned the scissors to their box.' Which two details best show that Jo took care of the craft supplies?",
       "choices": [
-        "sunlight warmed",
-        "the turtle rested",
-        "under a rock"
+        "The headband was glittery and Jo used scissors.",
+        "Jo made a headband and liked its color.",
+        "Jo closed the glue and put the scissors away."
       ],
-      "answer": "under a rock",
-      "explanation": "The location is expressed by the words telling where the turtle was positioned.",
-      "hint": "A where answer should name a location, not an action or weather condition.",
+      "answer": "Jo closed the glue and put the scissors away.",
+      "explanation": "Closing the glue and returning the scissors are both actions that keep craft supplies safe and organized.",
+      "hint": "Look for two actions that put materials away, not details about the decoration.",
       "dok": 3,
       "difficulty": 3
     }
@@ -185,5 +185,16 @@
     "automaticPromotion": false,
     "automaticDelete": false,
     "automaticRewrite": false
+  },
+  "personalizationDesign": {
+    "status": "EDITORIAL_DRAFT",
+    "themes": [
+      "cheer and teamwork",
+      "fictional building games",
+      "cartoon cats",
+      "creative jewelry and crafts"
+    ],
+    "privacy": "Fictional scenarios only; no student-specific activity or performance records.",
+    "requiresBrandKnowledge": false
   }
 }
