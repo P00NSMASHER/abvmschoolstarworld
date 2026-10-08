@@ -169,11 +169,13 @@ export function createStudyMaterials({
 
   function allLessons(time) {
     const today = schoolDay(time);
-    return array(schoolwork.lessons).filter(lesson => !lesson.studiedOn || lesson.studiedOn <= today);
+    return array(schoolwork.lessons).filter(lesson =>
+      (!lesson.weekOf || lesson.weekOf <= today) && (!lesson.studiedOn || lesson.studiedOn <= today));
   }
   function datedLessons(time) {
     const {start,end} = weekBounds(time);
-    return allLessons(time).filter(lesson => lesson.studiedOn && lesson.studiedOn >= start && lesson.studiedOn <= end);
+    return allLessons(time).filter(lesson =>
+      lesson.weekOf === start || (lesson.studiedOn && lesson.studiedOn >= start && lesson.studiedOn <= end));
   }
   function weekArchive(time) {
     // An absent capture date must never default to today's date. Use the shared
@@ -369,7 +371,15 @@ export function createStudyMaterials({
     const questionFacts = group.flatMap(row => [row.sourceFact,row.explanation]).filter(meaningfulText);
     const subjectFacts = sourceSubjects.flatMap(row => [...array(row.topics),...array(row.studyNotes)])
       .filter(text => noteMatchesTest(text,test.label,subject));
-    const facts = uniqueGuideText([...questionFacts,...subjectFacts]).slice(0,6);
+    // Only a photo-confirmed week-matched list can outrank general vowel examples.
+    // Do not infer a daily assignment date from a parent's weekly photos.
+    const verifiedWeekNotes = subject === 'Spelling / Handwriting'
+      ? materialDay(time).lessons
+        .filter(lesson => lesson.subject === subject && lesson.weekOf === weekBounds(test.date).start)
+        .flatMap(lesson => array(lesson.notes))
+        .filter(note => /^(?:Photo-confirmed practice words|Short i:|Long a:)/i.test(note))
+      : [];
+    const facts = uniqueGuideText([...verifiedWeekNotes,...questionFacts,...subjectFacts]).slice(0,6);
     const vocabulary = subject === 'Reading / ELA' && !/grammar|predicate|subject\s*&/.test(lower)
       ? [...new Map(array(pack.vocabulary).filter(row => row?.subject === subject && meaningfulText(row?.term))
         .map(row => [String(row.term).trim().toLowerCase(),row])).values()].slice(0,8)
@@ -390,7 +400,9 @@ export function createStudyMaterials({
     return {
       key:testKey(test), label:compactGuideText(test.label,120), date:test.date, subject:subject || 'Test review',
       facts, vocabulary, practice, fallback, warnings:uniqueGuideText(warnings).slice(0,3),
-      sourceLabel:'Current ABVM teacher notes, reviewed schoolwork, and checked practice material',
+      sourceLabel:verifiedWeekNotes.length
+        ? 'Teacher-announced topic with family photo-confirmed homework words; practice is not an official test'
+        : 'Current ABVM teacher notes, reviewed schoolwork, and checked practice material',
     };
   }
 
