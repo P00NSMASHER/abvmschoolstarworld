@@ -327,8 +327,13 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   expect(cached.length).toBeLessThanOrEqual(14);
   const optional=sw.match(/const OPTIONAL_DATA = \[([\s\S]*?)\];/)?.[1]||"";
   const optionalAssets=[...optional.matchAll(/"(\.\/[^\"]+)"/g)].map(match=>match[1]);
+  // Offline dependencies may be required (STATIC_SHELL) or optional;
+  // retaining every dependency is mandatory even when promoted to core cache.
+  const requiredAssets=[...staticShell.matchAll(/"(\.\/[^\"]+)"/g)].map(match=>match[1]);
+  const offlineAssets=[...requiredAssets,...optionalAssets];
+  expect(new Set(offlineAssets).size).toBe(offlineAssets.length);
   for(const file of ['data/study-pack-runtime.json','data/study-archive.json','data/schoolwork.json','data/religion-sources.json','study-materials.mjs','study-games-materials-view.mjs','study-games-materials.css','study-hub-core.mjs','study-room-view.mjs','study-experience.mjs','study-resources.mjs','study-model.mjs','star-practice.mjs','lunch-art.js']){
-    expect(optionalAssets.some(ref=>ref.split('?')[0]==='./'+file),'offline dependency '+file).toBe(true);
+    expect(offlineAssets.some(ref=>ref.split('?')[0]==='./'+file),'offline dependency '+file).toBe(true);
   }
   expect(optionalAssets.some(ref=>/visual-polish|family-view|school-photos\.css|study-clarity/.test(ref))).toBe(false);
   expect(new Set(optionalAssets).size).toBe(optionalAssets.length);
