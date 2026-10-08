@@ -115,7 +115,7 @@ test("service worker cleans only old ABVM caches and precaches the exact shell",
   expect(source).toContain('"'+styleUrl+'"');
   // Every versioned render-critical stylesheet must be usable immediately offline.
   const html = await (await request.get("/index.html")).text();
-  const linkedStyles = [...html.matchAll(/href="(\\.\\/[^"]+\\.css\\?v=[^"]+)"/g)].map(match=>match[1]);
+  const linkedStyles = [...html.matchAll(/href="(\.\/[^"]+\.css\?v=[^"]+)"/g)].map(match=>match[1]);
   const shell = source.slice(source.indexOf("const STATIC_SHELL"), source.indexOf("const OPTIONAL_DATA"));
   for (const linkedStyle of linkedStyles) {
     expect(shell, linkedStyle+" must be precached for first-launch offline use").toContain('"'+linkedStyle+'"');
