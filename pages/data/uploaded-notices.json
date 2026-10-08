@@ -508,10 +508,10 @@
         "Consecration occurs Tuesday, December 8 during the ABVM school Mass for the Immaculate Conception.",
         "Each student and one parent receive complementary age-appropriate reading copies; weekly reading guidance will follow.",
         "Optional Holy Hours: Thursday, October 22 at 7 PM at Bethlehem Catholic High School; Tuesday, November 3 at 6 PM at Nativity BVM High School, Pottsville; Tuesday, November 17 at 7 PM at Berks Catholic High School.",
-        "Diocesan Family Festival: Sunday, November 1 from noon to 4:30 PM at St. Joseph the Worker, Orefield; free family event."
+        "Diocesan Family Festival: Sunday, November 1 from noon to 4:30 PM; location: St. Joseph the Worker, Orefield; free family event."
       ],
       "provenance": {
-        "factsHash": "d41b73e4f45a2b319b26c53a728a1e9e33e2d24ebd4dd19004d53da828e58e5c",
+        "factsHash": "c9b9625d652949bc2ea4c53aedbd534b3c2cca1066ab4da10654581567105de1",
         "sourceContentHash": "72206580b642396f74c157774b6bfb574158647fcff30bcd05d6889823a0814c"
       },
       "review": {
@@ -1274,7 +1274,7 @@
       "sourceDocument": "eucharistic-consecration-2026"
     },
     {
-      "text": "Free Diocesan Family Festival: Sunday, Nov. 1, noon–4:30 PM at St. Joseph the Worker in Orefield.",
+      "text": "Free Diocesan Family Festival: Sunday, Nov. 1, noon–4:30 PM; location: St. Joseph the Worker in Orefield.",
       "topic": "diocesan-festival",
       "sourceDocument": "eucharistic-consecration-2026"
     }
