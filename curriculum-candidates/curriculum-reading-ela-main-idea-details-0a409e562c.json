@@ -30,120 +30,120 @@
     {
       "candidateIndex": 1,
       "questionType": "direct",
-      "prompt": "Read: 'Our class puts paper, cans, and plastic bottles in special bins. We use these bins every school day to reduce trash.' What is the main idea?",
+      "prompt": "Read: 'The cheer squad practiced arm motions, counted the beats, and helped new teammates learn jumps.' What is the main idea?",
       "choices": [
-        "The class recycles to reduce trash.",
-        "The class puts paper in special bins.",
-        "The class puts bottles in special bins."
+        "The squad counted the beats.",
+        "The squad practiced several skills together.",
+        "New teammates learned jumps."
       ],
-      "answer": "The class recycles to reduce trash.",
-      "explanation": "The two sentences explain that the class sorts several kinds of materials to reduce trash. The other options mention only individual examples.",
-      "hint": "Choose the answer that includes the purpose and all kinds of recycling, not just one item.",
+      "answer": "The squad practiced several skills together.",
+      "explanation": "Counting, arm motions, and helping with jumps are details about practicing as a team.",
+      "hint": "Choose the statement that includes all of the squad's actions.",
       "dok": 1,
       "difficulty": 2
     },
     {
       "candidateIndex": 2,
       "questionType": "direct",
-      "prompt": "Read: 'Bees visit many flowers. They carry pollen as they fly. This helps some plants grow.' What is the main idea?",
+      "prompt": "Read: 'Pip the cartoon kitten chased a toy mouse, watched birds outside, and slept in a sunny spot.' What is the main idea?",
       "choices": [
-        "Bees carry pollen as they fly.",
-        "Bees help plants while visiting flowers.",
-        "Bees visit many flowers."
+        "Pip enjoyed different activities at home.",
+        "Pip chased a toy mouse.",
+        "Pip watched birds through a window."
       ],
-      "answer": "Bees help plants while visiting flowers.",
-      "explanation": "All the details show how bees move among flowers and help plants grow. The other options describe only one detail each.",
-      "hint": "A main idea covers the whole passage; the other choices may describe smaller details.",
+      "answer": "Pip enjoyed different activities at home.",
+      "explanation": "The passage lists three different activities Pip enjoyed. The other choices mention only one.",
+      "hint": "Think about what every sentence tells you about Pip's day.",
       "dok": 1,
       "difficulty": 2
     },
     {
       "candidateIndex": 3,
       "questionType": "transfer",
-      "prompt": "Read: 'Milo the dog fetched his ball, practiced sitting on command, and ran around the yard.' Which title best fits the whole passage?",
+      "prompt": "Read: 'In a building game, a team made a bridge, planted a garden, and built a treehouse on an island.' Which title best fits the whole passage?",
       "choices": [
-        "Milo Fetches His Ball",
-        "Milo Learns to Sit",
-        "Milo Practices and Plays"
+        "A New Bridge for the Island",
+        "A Garden Full of Flowers",
+        "Many Creations on the Island"
       ],
-      "answer": "Milo Practices and Plays",
-      "explanation": "The passage includes several ways Milo played and practiced skills.",
-      "hint": "Find the title that includes both practicing and playing, not only one action.",
+      "answer": "Many Creations on the Island",
+      "explanation": "The team made several different things, so a title about all the creations fits better than one project.",
+      "hint": "Choose a title broad enough to include every project mentioned.",
       "dok": 2,
       "difficulty": 2
     },
     {
       "candidateIndex": 4,
       "questionType": "transfer",
-      "prompt": "Read: 'Trees shade people, give birds places to nest, and hold soil with their roots.' Which main idea fits all the details?",
+      "prompt": "Read: 'Mia picked a bright shirt, chose matching sneakers, and clipped a glittery bow in her hair.' Which main idea fits the passage?",
       "choices": [
-        "Trees are useful in several ways.",
-        "Birds can build nests in trees.",
-        "Tree roots help hold soil in place."
+        "Mia chose a matching outfit.",
+        "Mia clipped a bow in her hair.",
+        "Mia picked out sneakers."
       ],
-      "answer": "Trees are useful in several ways.",
-      "explanation": "Shade, nesting places, and roots that hold soil are three different useful things trees provide. The other choices each mention just one detail.",
-      "hint": "Which choice describes the whole group of benefits, not one example?",
+      "answer": "Mia chose a matching outfit.",
+      "explanation": "The shirt, shoes, and hair bow are supporting details about making an outfit.",
+      "hint": "Find the choice covering the whole look, not one piece of it.",
       "dok": 2,
       "difficulty": 2
     },
     {
       "candidateIndex": 5,
       "questionType": "reasoning",
-      "prompt": "The main idea is 'Rain helps a garden grow.' Which supporting detail best fits this idea?",
+      "prompt": "The main idea is 'The cheer team works together to improve.' Which detail best supports it?",
       "choices": [
-        "Some gardens have tall fences.",
-        "Rainwater soaks the roots of flowers.",
-        "A gardener uses a shovel to make holes."
+        "The team practiced on a blue mat.",
+        "Teammates helped each other remember the next motion.",
+        "The team had silver ribbons."
       ],
-      "answer": "Rainwater soaks the roots of flowers.",
-      "explanation": "Water reaching flower roots explains how rain helps growth. The other details concern gardens but do not explain the benefit of rain.",
-      "hint": "Find the fact that explains how rain gives water to the plants.",
+      "answer": "Teammates helped each other remember the next motion.",
+      "explanation": "Helping teammates remember motions is teamwork that supports improvement. The other details describe equipment or appearance.",
+      "hint": "Choose an action that proves people worked together.",
       "dok": 3,
       "difficulty": 3
     },
     {
       "candidateIndex": 6,
       "questionType": "reasoning",
-      "prompt": "Read: 'The librarian labels shelves, arranges books by subject, and helps children find stories.' Which sentence gives the main idea rather than only one detail?",
+      "prompt": "Read: 'At the cat shelter, children filled water bowls, folded soft blankets, and gently brushed the kittens.' Which choice states the main idea instead of one detail?",
       "choices": [
-        "The shelves have labels.",
-        "Books can be placed on shelves.",
-        "The librarian helps people find organized books."
+        "The children filled water bowls.",
+        "The children took care of shelter kittens.",
+        "The kittens had soft blankets."
       ],
-      "answer": "The librarian helps people find organized books.",
-      "explanation": "Labels and arranging books are details that support the larger role of organizing and finding books.",
-      "hint": "Pick the statement broad enough to cover the different library tasks.",
+      "answer": "The children took care of shelter kittens.",
+      "explanation": "All three details describe ways the children cared for the kittens.",
+      "hint": "Choose the statement that combines the feeding, blankets, and brushing.",
       "dok": 3,
       "difficulty": 3
     },
     {
       "candidateIndex": 7,
       "questionType": "transfer",
-      "prompt": "Read: 'Each morning the school bus picks up students. The driver checks that everyone is seated before moving.' Which summary fits best?",
+      "prompt": "Read: 'To make a sparkly headband, Nina chose a ribbon, glued on shiny stars, and let it dry.' Which title best describes the entire project?",
       "choices": [
-        "A bus safely carries children to school.",
-        "The bus picks up students each morning.",
-        "The driver checks that everyone is seated."
+        "Choosing Ribbon Colors",
+        "Letting Glue Dry",
+        "Making a Sparkly Headband"
       ],
-      "answer": "A bus safely carries children to school.",
-      "explanation": "The best summary connects transporting students with checking their safety. The other choices each mention one detail.",
-      "hint": "Choose the big idea supported by both the pickup and the driver's safety check.",
+      "answer": "Making a Sparkly Headband",
+      "explanation": "The passage gives steps for completing one whole craft, not just choosing a ribbon or drying glue.",
+      "hint": "A title should name the finished project, not a single step.",
       "dok": 2,
       "difficulty": 2
     },
     {
       "candidateIndex": 8,
       "questionType": "reasoning",
-      "prompt": "Read: 'At the beach, Maya collected shells, watched tiny crabs, and built a sandcastle.' Which sentence tells the main idea instead of one detail?",
+      "prompt": "Read: 'Two game builders shared their blocks, planned the castle rooms together, and fixed a wall that fell.' What is the main idea?",
       "choices": [
-        "Maya built a sandcastle.",
-        "Maya watched a crab.",
-        "Maya enjoyed several beach activities."
+        "Sharing blocks helps game builders cooperate.",
+        "The builders worked together to finish a castle.",
+        "One castle wall fell during the game."
       ],
-      "answer": "Maya enjoyed several beach activities.",
-      "explanation": "Collecting shells, watching crabs, and building a castle are details of Maya's many beach activities.",
-      "hint": "Look for a statement that covers all the things Maya did.",
+      "answer": "The builders worked together to finish a castle.",
+      "explanation": "Sharing, planning, and repairing are all parts of how the builders cooperated to complete their castle. The other choices focus on only one detail.",
+      "hint": "Find the answer that combines the team's plan, sharing, and repair.",
       "dok": 3,
       "difficulty": 3
     }
@@ -185,5 +185,16 @@
     "automaticPromotion": false,
     "automaticDelete": false,
     "automaticRewrite": false
+  },
+  "personalizationDesign": {
+    "status": "EDITORIAL_DRAFT",
+    "themes": [
+      "cheer and teamwork",
+      "fictional building games",
+      "cartoon cats",
+      "fashion and headband crafts"
+    ],
+    "privacy": "Fictional scenarios only; no student-specific activity or performance records.",
+    "requiresBrandKnowledge": false
   }
 }
