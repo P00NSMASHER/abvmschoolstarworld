@@ -90,15 +90,15 @@
     {
       "candidateIndex": 5,
       "questionType": "reasoning",
-      "prompt": "Why does the word time have a long i sound while the word tin has a short i sound?",
+      "prompt": "Why does the word pine have a long i sound while the word pin has a short i sound?",
       "choices": [
         "The final silent e changes the vowel sound.",
         "Every word beginning with t has a long vowel.",
         "The letter t changes the sound of i."
       ],
       "answer": "The final silent e changes the vowel sound.",
-      "explanation": "Time follows the i-consonant-silent e spelling pattern, which usually makes the i long. Tin does not.",
-      "hint": "Compare the last letters of both words to find the spelling clue.",
+      "explanation": "Pine is pin with a final silent e. This follows the i-consonant-e pattern and changes the i from a short sound to a long sound.",
+      "hint": "Compare pin and pine letter by letter. Look at the final letter.",
       "dok": 3,
       "difficulty": 3
     },
