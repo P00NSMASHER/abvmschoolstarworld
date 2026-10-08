@@ -1,0 +1,72 @@
+{
+  "candidateId": "curriculum-reading-ela-possessives-s-de6f518f2a",
+  "familyId": "possessives-s",
+  "subject": "Reading / ELA",
+  "topic": "possessives ('s)",
+  "sourceHash": "teacher-pages-b3c773500922209e0737",
+  "generatedAt": "2026-10-08T17:14:16.382Z",
+  "sourceContext": {
+    "quality": "page-exact",
+    "matchMethod": "exact-topic-phrase",
+    "subject": "Reading / ELA",
+    "topic": "possessives ('s)",
+    "sourceTitle": "Reading Work",
+    "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
+    "sourceCaptureHash": "0675bd07bb42d58feaff3e43223026f935b26ab56f4ba9c2ca78b7a9c37217b2",
+    "sourceCheckedAt": "2026-10-08T17:14:16.382Z",
+    "sourceLine": "Word Structure: possessives ('s)",
+    "evidenceExcerptHash": "sha256:4e521aa5fa424551741189f4d5985a23d50815298b13d45d660e99c5bb8afa87"
+  },
+  "featureFlag": "curriculum-family:possessives-s-candidate",
+  "enabledByDefault": false,
+  "registryMatch": null,
+  "minimumSemanticVariants": 8,
+  "requiredQuestionTypes": [
+    "direct",
+    "transfer",
+    "reasoning"
+  ],
+  "proposedQuestions": [],
+  "authoring": {
+    "status": "AUTHORING_REQUIRED",
+    "generatedQuestionCount": 0,
+    "minimumSemanticVariants": 8,
+    "requiredQuestionTypes": [
+      "direct",
+      "transfer",
+      "reasoning"
+    ],
+    "requiredQuestionFields": [
+      "questionType",
+      "prompt",
+      "choices",
+      "answer",
+      "explanation",
+      "hint",
+      "dok",
+      "difficulty"
+    ]
+  },
+  "rollout": {
+    "featureFlagRequired": true,
+    "automatedQaRequired": true,
+    "safeUsageEvidenceRequired": true,
+    "manualPromotionRequired": true,
+    "automaticPromotion": false
+  },
+  "readiness": {
+    "status": "HOLD",
+    "blockers": [
+      "minimum-semantic-variants:0/8",
+      "question-type-required:direct",
+      "question-type-required:transfer",
+      "question-type-required:reasoning",
+      "automated-qa-required",
+      "safe-usage-evidence-required",
+      "manual-promotion-required"
+    ],
+    "automaticPromotion": false,
+    "automaticDelete": false,
+    "automaticRewrite": false
+  }
+}
