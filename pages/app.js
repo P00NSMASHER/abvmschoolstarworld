@@ -419,7 +419,7 @@ function openStudyRound(round,mode,testIndex){
   const {questions,catalog,sourceKey,sessionSeed,strict,eligibleIds}=round;
   gameState={screen:"play",mode:mode.id,modeInfo:mode,testIndex,catalog,eligibleIds:Object.freeze([...(eligibleIds||catalog.questions.map(q=>q.id))]),strict:!!strict,questions,index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,learningRow:null,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null,sourceKey,sessionSeed,learningEvents:[],results:[],comebackSucceeded:false,rewardStatus:"idle",rewardAwarded:0,rewardCurrency:"Study Stars",rewardRevealAmount:0,rewardRevealScheduled:false,penaltyTasks:[],starBalance:window.ABVMStudyBadges.snapshot()?.balance??null,tries:0,misses:0,hints:0,retry:0,wrong:[]};
   activateDueGameComeback();
-  const started=gameState;loadStudyRanks().then(c=>{if(gameState===started&&started.screen==="play"){started.starBalance=c.balance;const node=stack().querySelector(".game-star-balance");if(node)node.textContent="★ "+c.balance+" Study Stars"}}).catch(()=>{if(gameState===started&&started.screen==="play"){started.starBalanceUnavailable=true;const node=stack().querySelector(".game-star-balance");if(node)node.textContent="Study Stars unavailable"}});
+  const started=gameState;loadStudyRanks().then(c=>{if(gameState===started&&started.screen==="play"){started.starBalance=c.balance;started.starBalanceUnavailable=false;const node=stack().querySelector(".game-star-balance");if(node)node.textContent="★ "+c.balance+" Study Stars"}}).catch(()=>{if(gameState===started&&started.screen==="play"){started.starBalanceUnavailable=true;const node=stack().querySelector(".game-star-balance");if(node)node.textContent="Study Stars unavailable"}});
   renderGames();bindScreen();
 }
 function noteRoundLearning(g,q,kind,correct,independent=false){
@@ -445,7 +445,7 @@ function answerStudyGame(index){
   if(!correct){
     g.penaltyPending=true;g.lastStarPenalty={status:"pending",amount:0};
     const attemptId=[q.id,g.index,g.tries,g.comebackMode?"comeback":g.supportMode?"support":"primary"].join("|");
-    const penalty=e.commitStudyStarPenalty({sourcePack:g.sourceKey,mode:g.mode,sessionSeed:g.sessionSeed,attemptId}).then(result=>{g.penaltyPending=false;g.lastStarPenalty={status:"done",amount:result.deductedAmount};g.starBalance=result.balance;window.ABVMStudyBadges.sync(result.collection);if(gameState===g&&isStudyRoute()&&g.screen==="play"){renderGames();bindScreen();focusStudyAnswer(g)}}).catch(error=>{g.penaltyPending=false;g.lastStarPenalty={status:"error",amount:0};if(gameState===g&&isStudyRoute()&&g.screen==="play"){renderGames();bindScreen();focusStudyAnswer(g)}throw error});
+    const penalty=e.commitStudyStarPenalty({sourcePack:g.sourceKey,mode:g.mode,sessionSeed:g.sessionSeed,attemptId}).then(result=>{g.penaltyPending=false;g.lastStarPenalty={status:"done",amount:result.deductedAmount};g.starBalance=result.balance;g.starBalanceUnavailable=false;window.ABVMStudyBadges.sync(result.collection);if(gameState===g&&isStudyRoute()&&g.screen==="play"){renderGames();bindScreen();focusStudyAnswer(g)}}).catch(error=>{g.penaltyPending=false;g.lastStarPenalty={status:"error",amount:0};if(gameState===g&&isStudyRoute()&&g.screen==="play"){renderGames();bindScreen();focusStudyAnswer(g)}throw error});
     (g.penaltyTasks||(g.penaltyTasks=[])).push(penalty);penalty.catch(()=>{});
   }
   renderGames();bindScreen();focusStudyAnswer(g)
@@ -463,7 +463,7 @@ function settleStudyStarRewards(g=gameState){
     .then(async result=>{
       const balance=result.balance;g.perfectBonus=result.perfectBonus;g.rankCollection=result.collection;window.ABVMStudyBadges.sync(result.collection);
       if(gameState!==g)return;
-      g.rewardStatus="done";g.rewardAwarded=Number(result?.awardedAmount)||0;g.rewardCurrency=String(result?.currency||"Study Stars");g.starBalance=Math.max(0,Number(balance)||0);g.rewardRevealAmount=g.rewardAwarded;g.rewardRevealScheduled=false;
+      g.rewardStatus="done";g.rewardAwarded=Number(result?.awardedAmount)||0;g.rewardCurrency=String(result?.currency||"Study Stars");g.starBalance=Math.max(0,Number(balance)||0);g.starBalanceUnavailable=false;g.rewardRevealAmount=g.rewardAwarded;g.rewardRevealScheduled=false;
       if(isStudyRoute()&&g.screen==="finish"&&g.renderGeneration===screenGeneration){renderGames();bindScreen();}
     })
     .catch(()=>{if(gameState===g){g.rewardStatus="error";if(isStudyRoute()&&g.screen==="finish"&&g.renderGeneration===screenGeneration){renderGames();bindScreen();}}});

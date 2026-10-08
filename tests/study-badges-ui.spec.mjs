@@ -160,3 +160,27 @@ test('the highest earned rank stays current after a deduction crosses below its 
   await expect(collection).not.toContainText('NaN');
   expect(await balance(page)).toBe(1498);
 });
+
+test('a saved penalty restores the real player balance after a transient initial rank-read failure',async({page})=>{
+  await openStudy(page);await seedStars(page,5);
+  await expect(page.locator('.study-badge-tracker')).toContainText('50 Study Stars');
+  await page.evaluate(()=>{
+    const engine=window.ABVMStudyGames;
+    window.rankRecoveryEngine=engine;
+    window.ABVMStudyGames={...engine,studyBadgeCollection:()=>Promise.reject(new Error('Fixture: transient initial rank read failure'))};
+  });
+  await page.locator('[data-game-start="mix"]').click();
+  await expect(page.locator('.game-star-balance')).toContainText('Study Stars unavailable');
+  await page.evaluate(()=>{window.ABVMStudyGames=window.rankRecoveryEngine;delete window.rankRecoveryEngine});
+  const question=await answerIndexes(page);
+  await page.locator('[data-game-answer]').nth(question.wrong[0]).click();
+  await expect(page.locator('.study-star-penalty')).toContainText('−2 Study Stars');
+  await expect.poll(()=>balance(page)).toBe(48);
+  await expect(page.locator('.game-star-balance')).toContainText('48 Study Stars');
+  await expect(page.locator('.game-star-balance')).not.toContainText('unavailable');
+  await page.locator('[data-game-answer]').nth(question.correct).click();
+  await expect(page.locator('.game-feedback strong')).toHaveText('Correct on retry');
+  await expect(page.locator('.game-live-score')).toContainText('0 / 1');
+  await expect(page.locator('.game-star-balance')).toContainText('48 Study Stars');
+  expect(await balance(page)).toBe(48);
+});
