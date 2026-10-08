@@ -26,10 +26,131 @@
     "transfer",
     "reasoning"
   ],
-  "proposedQuestions": [],
+  "proposedQuestions": [
+    {
+      "candidateIndex": 1,
+      "questionType": "direct",
+      "prompt": "Read: 'Our class puts paper, cans, and plastic bottles in special bins. We use these bins every school day to reduce trash.' What is the main idea?",
+      "choices": [
+        "The class recycles to reduce trash.",
+        "The class has blue desks.",
+        "The class plays outside daily."
+      ],
+      "answer": "The class recycles to reduce trash.",
+      "explanation": "Both sentences explain what the class does with reusable waste and why it matters.",
+      "hint": "Choose an idea supported by both sentences rather than one small fact.",
+      "dok": 1,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 2,
+      "questionType": "direct",
+      "prompt": "Read: 'Bees visit many flowers. They carry pollen as they fly. This helps some plants grow.' What is the main idea?",
+      "choices": [
+        "Bees sleep in trees.",
+        "Bees help plants while visiting flowers.",
+        "All flowers are the same color."
+      ],
+      "answer": "Bees help plants while visiting flowers.",
+      "explanation": "The details describe bees moving pollen between flowers and helping plants grow.",
+      "hint": "Think about the important idea that connects every sentence.",
+      "dok": 1,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 3,
+      "questionType": "transfer",
+      "prompt": "Read: 'Milo the dog fetched his ball, practiced sitting on command, and ran around the yard.' Which title best fits the whole passage?",
+      "choices": [
+        "A Rainy Day at School",
+        "The Missing Ball",
+        "Milo Practices and Plays"
+      ],
+      "answer": "Milo Practices and Plays",
+      "explanation": "The passage includes several ways Milo played and practiced skills.",
+      "hint": "A good title should fit all three actions, not just one object.",
+      "dok": 2,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 4,
+      "questionType": "transfer",
+      "prompt": "Read: 'Trees shade people, give birds places to nest, and hold soil with their roots.' Which main idea fits all the details?",
+      "choices": [
+        "Trees help many living things.",
+        "Birds are always in nests.",
+        "Tree roots grow only in sand."
+      ],
+      "answer": "Trees help many living things.",
+      "explanation": "Each supporting detail gives a different way trees are useful.",
+      "hint": "Find the broad statement that connects shade, nests, and roots.",
+      "dok": 2,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 5,
+      "questionType": "reasoning",
+      "prompt": "The main idea is 'Rain helps a garden grow.' Which supporting detail best fits this idea?",
+      "choices": [
+        "A bicycle has two wheels.",
+        "Rainwater soaks the roots of flowers.",
+        "The library closes at six."
+      ],
+      "answer": "Rainwater soaks the roots of flowers.",
+      "explanation": "Water reaching flower roots explains how rain supports growth.",
+      "hint": "Choose evidence about water and plants, not an unrelated activity.",
+      "dok": 3,
+      "difficulty": 3
+    },
+    {
+      "candidateIndex": 6,
+      "questionType": "reasoning",
+      "prompt": "Read: 'The librarian labels shelves, arranges books by subject, and helps children find stories.' Which sentence gives the main idea rather than only one detail?",
+      "choices": [
+        "The shelves have labels.",
+        "Books can be placed on shelves.",
+        "The librarian helps people find organized books."
+      ],
+      "answer": "The librarian helps people find organized books.",
+      "explanation": "Labels and arranging books are details that support the larger role of organizing and finding books.",
+      "hint": "Pick the statement broad enough to cover the different library tasks.",
+      "dok": 3,
+      "difficulty": 3
+    },
+    {
+      "candidateIndex": 7,
+      "questionType": "transfer",
+      "prompt": "Read: 'Each morning the school bus picks up students. The driver checks that everyone is seated before moving.' Which summary fits best?",
+      "choices": [
+        "A bus safely carries children to school.",
+        "School buses only travel at night.",
+        "Every student owns a bus."
+      ],
+      "answer": "A bus safely carries children to school.",
+      "explanation": "The passage describes transporting students and a safety check before the bus moves.",
+      "hint": "A summary should include the important shared point of both sentences.",
+      "dok": 2,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 8,
+      "questionType": "reasoning",
+      "prompt": "Read: 'At the beach, Maya collected shells, watched tiny crabs, and built a sandcastle.' Which sentence tells the main idea instead of one detail?",
+      "choices": [
+        "Maya built a sandcastle.",
+        "Maya watched a crab.",
+        "Maya enjoyed several beach activities."
+      ],
+      "answer": "Maya enjoyed several beach activities.",
+      "explanation": "Collecting shells, watching crabs, and building a castle are details of Maya's many beach activities.",
+      "hint": "Look for a statement that covers all the things Maya did.",
+      "dok": 3,
+      "difficulty": 3
+    }
+  ],
   "authoring": {
-    "status": "AUTHORING_REQUIRED",
-    "generatedQuestionCount": 0,
+    "status": "DRAFT_FAMILY_PRESENT",
+    "generatedQuestionCount": 8,
     "minimumSemanticVariants": 8,
     "requiredQuestionTypes": [
       "direct",
@@ -57,10 +178,6 @@
   "readiness": {
     "status": "HOLD",
     "blockers": [
-      "minimum-semantic-variants:0/8",
-      "question-type-required:direct",
-      "question-type-required:transfer",
-      "question-type-required:reasoning",
       "automated-qa-required",
       "safe-usage-evidence-required",
       "manual-promotion-required"
