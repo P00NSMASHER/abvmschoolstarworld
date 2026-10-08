@@ -110,7 +110,7 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 
 1. The routine had music.
 2. Nora counted the beats aloud.
-3. The squad wore matching ribbons.
+3. The squad finished the routine together.
 
 **Correct answer:** 2. Nora counted the beats aloud.  
 **Explanation:** Nora's counting replaced the missing music beat so the squad could keep moving together.  
@@ -253,7 +253,7 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 **Question:** A bow-making guide says 'bit' and 'bite.' Which explanation best compares their vowel sounds?
 
 1. Both have short i because they start with b.
-2. Bit has long i because it is shorter.
+2. Adding a silent e changes the consonant sound instead of the vowel.
 3. Bit has short i; the silent e in bite signals long i.
 
 **Correct answer:** 3. Bit has short i; the silent e in bite signals long i.  
@@ -541,7 +541,7 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 **Question:** A game character writes 'Pip's ribbon' on a prize label. Why does the label use apostrophe-s?
 
 1. It shows that one cat named Pip owns the ribbon.
-2. It tells that Pip is ribbon-shaped.
+2. It shortens the words 'Pip is' on the prize label.
 3. It means there are several cats named Pip.
 
 **Correct answer:** 1. It shows that one cat named Pip owns the ribbon.  
