@@ -94,7 +94,7 @@
       "choices": [
         "The routine had music.",
         "Nora counted the beats aloud.",
-        "The squad wore matching ribbons."
+        "The squad finished the routine together."
       ],
       "answer": "Nora counted the beats aloud.",
       "explanation": "Nora's counting replaced the missing music beat so the squad could keep moving together.",
