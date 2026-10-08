@@ -35,20 +35,20 @@ async function answerIndexes(page){
 }
 const balance=page=>page.evaluate(()=>window.ABVMStudyGames.studyStarBalance());
 
-test('rank collection shows all six promotions and an accessible next-rank path without choosing a goal',async({page})=>{
+test('rank collection shows all 21 promotions in the same permanent ladder and an accessible next-rank path without choosing a goal',async({page})=>{
   await openStudy(page);
   await expect(page.locator('.study-badge-tracker')).toBeVisible();
   await page.locator('[data-open-badges]').first().click();
   const collection=page.locator('[data-badge-collection]');
   await expect(collection).toBeVisible();
-  await expect(collection.locator('.study-badge-grid').getByRole('listitem')).toHaveCount(6);
+  await expect(collection.locator('.study-badge-grid').getByRole('listitem')).toHaveCount(21);
   await expect(collection.locator('.rank-current')).toContainText('Eaglet');
-  await expect(collection.locator('.study-badge-next')).toContainText('Star Scout');
+  await expect(collection.locator('.study-badge-next')).toContainText('Nest Explorer');
   const progress=collection.getByRole('progressbar',{name:'Next rank progress'});
   await expect(progress).toHaveAttribute('aria-valuenow','0');
-  await expect(progress).toHaveAttribute('aria-valuemax','50');
+  await expect(progress).toHaveAttribute('aria-valuemax','25');
   const targets=await page.evaluate(()=>window.ABVMStudyGames.studyBadgeCatalog().map(badge=>badge.target));
-  expect(targets).toEqual([50,150,300,600,1000,1500]);
+  expect(targets).toEqual([25,50,75,100,150,200,250,300,375,450,525,600,700,800,900,1000,1100,1200,1300,1400,1500]);
   for(const target of targets)await expect(collection.locator('.study-badge-grid')).toContainText(String(target));
   await expect(page.locator('[data-study-star-goal]')).toHaveCount(0);
   expect(await balance(page)).toBe(0);
@@ -68,7 +68,7 @@ test('wrong-answer penalties survive leaving and reload while an earned badge re
   await page.locator('[data-game-answer]').nth(first.wrong[0]).evaluate(button=>button.click());
   expect(await balance(page)).toBe(48);
   const owned=await page.evaluate(()=>window.ABVMStudyGames.studyBadgeCollection());
-  expect(owned.badges.filter(badge=>badge.unlocked)).toHaveLength(1);
+  expect(owned.badges.filter(badge=>badge.unlocked)).toHaveLength(2);
   expect(owned.latest.id).toBe('starlight-study-badge');
   await page.locator('[data-game-home]').click();
   await page.reload();
@@ -81,11 +81,12 @@ test('wrong-answer penalties survive leaving and reload while an earned badge re
   await page.locator('.study-badge-latest[data-open-badges]').click();
   const collection=page.locator('[data-badge-collection]');
   await expect(collection).toContainText('Star Scout');
-  await expect(collection.locator('.study-badge-next')).toContainText('Bright Spark');
-  await expect(collection.getByRole('progressbar',{name:'Next rank progress'})).toHaveAttribute('aria-valuenow','48');
-  await expect(collection.getByRole('progressbar',{name:'Next rank progress'})).toHaveAttribute('aria-valuemax','150');
+  await expect(collection.locator('.study-badge-next')).toContainText('Little Luminary');
+  await expect(collection.getByRole('progressbar',{name:'Next rank progress'})).toHaveAttribute('aria-valuenow','0');
+  await expect(collection.getByRole('progressbar',{name:'Next rank progress'})).toHaveAttribute('aria-valuemax','25');
   const after=await page.evaluate(()=>window.ABVMStudyGames.studyBadgeCollection());
   expect(after.badges[0].unlocked).toBe(true);
+  expect(after.badges.find(badge=>badge.id==='starlight-study-badge')?.unlocked).toBe(true);
 });
 
 test('a real 100 percent round saves a substantial 25-star bonus alongside learning evidence',async({page})=>{
@@ -101,6 +102,8 @@ test('a real 100 percent round saves a substantial 25-star bonus alongside learn
   await expect(page.locator('.study-star-earned')).toContainText('+45 Study Stars');
   await expect(page.getByRole('heading',{name:'What you learned'})).toBeVisible();
   await expect.poll(()=>balance(page)).toBe(45);
+  await expect(page.locator('.game-finish')).toContainText('Nest Explorer');
+  await expect(page.locator('.game-finish .study-badge-next')).toContainText('Star Scout');
   const perfect=await page.evaluate(async()=>{
     const ledger=await window.ABVMStudyGames.loadStudyStarLedger();
     return ledger.filter(row=>row.rewardType==='perfect-round');
@@ -154,7 +157,7 @@ test('the highest earned rank stays current after a deduction crosses below its 
   await page.locator('[data-open-badges]').first().click();
   const collection=page.locator('[data-badge-collection]');
   await expect(collection.locator('.rank-current')).toContainText('ABVM Legend');
-  await expect(collection.locator('.study-badge-card.is-earned')).toHaveCount(6);
+  await expect(collection.locator('.study-badge-card.is-earned')).toHaveCount(21);
   await expect(collection).toContainText('Top rank reached');
   await expect(collection.getByRole('progressbar',{name:'Next rank progress'})).toHaveCount(0);
   await expect(collection).not.toContainText('NaN');
@@ -183,4 +186,18 @@ test('a saved penalty restores the real player balance after a transient initial
   await expect(page.locator('.game-live-score')).toContainText('0 / 1');
   await expect(page.locator('.game-star-balance')).toContainText('48 Study Stars');
   expect(await balance(page)).toBe(48);
+});
+
+test('every original and new premium rank emblem loads, with no horizontal overflow on an iPhone',async({page})=>{
+  await page.setViewportSize({width:393,height:852});await openStudy(page);
+  await page.locator('[data-open-badges]').first().click();
+  const collection=page.locator('[data-badge-collection]'),images=collection.locator('.study-badge-grid img');
+  await expect(images).toHaveCount(21);
+  await expect.poll(()=>images.evaluateAll(items=>items.every(image=>image.complete&&image.naturalWidth>0))).toBe(true);
+  const paths=await images.evaluateAll(items=>items.map(image=>new URL(image.src).pathname));
+  expect(new Set(paths).size).toBe(21);
+  expect(paths.filter(path=>path.endsWith('.svg'))).toHaveLength(15);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+  await expect(collection.locator('.rank-current')).toContainText('Eaglet');
+  await expect(collection.locator('.badge-progress')).toHaveCount(1);
 });
