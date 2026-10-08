@@ -84,9 +84,9 @@ async function finishPerfectRound(page,catalog){
   await expect(page.locator('.game-score-summary>strong')).toHaveText('8 / 8 correct on the first try · 100%');
 }
 
-// This JSHandle owns only test coordination. Production APIs still perform the
-// real ledger commit/read; no app state or production-only test hook is exposed.
-async function holdReward(page,{stage='balance',fail=false}={}){
+// Hold the atomic ledger commit, which now returns the authoritative saved
+// balance with the reward receipt; no separate balance read is required.
+async function holdReward(page,{stage='commit',fail=false}={}){
   return page.evaluateHandle(({stage,fail})=>{
     const engine=window.ABVMStudyGames;
     let release;
@@ -103,6 +103,8 @@ async function holdReward(page,{stage='balance',fail=false}={}){
         const pending=(async()=>{
           if(stage==='commit')await wait();
           state.receipt=await engine.commitStudyStarRewards(args);
+          state.balance=state.receipt.balance;
+          state.phase='settled';
           return state.receipt;
         })();
         if(stage==='commit')state.pending=pending;
@@ -224,7 +226,7 @@ for(const outcome of ['success','failure']){
     test.setTimeout(60_000);
     await page.setViewportSize({width:393,height:852});
     const fixture=await openFixture(page);
-    const hold=await holdReward(page,{stage:outcome==='success'?'balance':'commit',fail:outcome==='failure'});
+    const hold=await holdReward(page,{stage:'commit',fail:outcome==='failure'});
     try{
       await page.locator('.study-game-grid [data-game-start="mix"]').click();
       const first=await visibleQuestion(page,fixture.catalog.questions);
@@ -247,8 +249,9 @@ for(const outcome of ['success','failure']){
         expect(result.receipt.awardedAmount).toBeGreaterThan(0);
         await expect(page.locator('.study-star-earned')).toContainText('+'+result.receipt.awardedAmount+' Study Stars');
         await expect(page.locator('.study-star-earned')).toContainText('Balance '+result.balance);
-        expect(ledger).toHaveLength(2);
-        expect(new Set(ledger.map(row=>row.rewardType))).toEqual(new Set(['round-complete','streak-adjustment']));
+        expect(ledger).toHaveLength(3);
+         expect(result.receipt.perfectBonus).toBe(25);
+        expect(new Set(ledger.map(row=>row.rewardType))).toEqual(new Set(['round-complete','streak-adjustment','perfect-round']));
         expect(ledger.every(row=>row.sourcePack===fixture.catalog.sourceKey&&row.roundId===call.roundId)).toBe(true);
         expect(ledger.reduce((sum,row)=>sum+row.amount,0)).toBe(result.receipt.awardedAmount);
       }else{
@@ -308,7 +311,7 @@ test('delayed reward success and failure cannot repaint Today or Family after na
       let hold;
       try{
         const fixture=await openFixture(page);
-        hold=await holdReward(page,{stage:fail?'commit':'balance',fail});
+        hold=await holdReward(page,{stage:'commit',fail});
         await page.locator('.study-game-grid [data-game-start="mix"]').click();
         await fixture.refresh();
         await finishPerfectRound(page,fixture.catalog);

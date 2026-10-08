@@ -188,7 +188,10 @@ test('game answers and hints are readable and rejected choices cannot be retried
   const row=await page.evaluate(skill=>JSON.parse(localStorage.getItem('abvm-study-learning:v2'))[skill],q.skill);
   expect(row.Attempts).toBe(2);expect(row.IncorrectAttempts).toBe(2);expect(row.LastResolution.independent).toBe(false);
   await expect(page.locator('.game-streak')).toContainText('Miss streak 1');
-  await expect(page.locator('.game-streak')).toContainText('-1');
+  await expect(page.locator('.game-streak')).toContainText('No stars lost');
+   const savedMisses=await page.evaluate(async()=>(await window.ABVMStudyGames.loadStudyStarLedger())
+     .filter(row=>row.rewardType.startsWith('wrong-answer:')).map(row=>row.amount));
+   expect(savedMisses).toEqual([0,0]); // both attempts are saved, but a zero balance cannot go negative
 });
 test('three complete Math rounds rotate through the available current material',async({page})=>{
   test.setTimeout(60000);await page.goto('/#games');await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');const prompts=[];
