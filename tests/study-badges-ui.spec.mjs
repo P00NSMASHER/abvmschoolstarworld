@@ -104,9 +104,11 @@ test('a real 100 percent round saves a substantial 25-star bonus alongside learn
   await expect.poll(()=>balance(page)).toBe(45);
   await expect(page.locator('.study-rank-promotion')).toContainText('Nest Explorer');
   await expect(page.locator('.study-rank-promotion')).toContainText('NEW RANK UNLOCKED');
+  expect(await page.locator('.study-rank-promotion').evaluate(node=>node.compareDocumentPosition(document.querySelector('.game-finish'))&Node.DOCUMENT_POSITION_FOLLOWING)).toBeTruthy();
   await expect(page.locator('[data-badge-collection] .study-badge-next')).toContainText('Star Scout');
+  await page.locator('.study-rank-promotion').scrollIntoViewIfNeeded();
   const celebration=testInfo.outputPath('rank-promotion-reveal.png');
-  await page.screenshot({path:celebration,fullPage:true,animations:'disabled'});
+  await page.screenshot({path:celebration,animations:'disabled'});
   await testInfo.attach('New permanent rank celebration',{path:celebration,contentType:'image/png'});
   const perfect=await page.evaluate(async()=>{
     const ledger=await window.ABVMStudyGames.loadStudyStarLedger();

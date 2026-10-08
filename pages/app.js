@@ -515,7 +515,9 @@ function gameFinishHtml(){
   const finish=v.finish({mode:gameMode(g.mode),state:g,record:loadGameRecord(g.mode,g.sourceKey||currentGameSourceKey()),summary,reward});
   const goal=g.rewardStatus==="done"?window.ABVMStudyBadges.render(g.rankCollection,"finish"):"";
   const promotion=g.rewardStatus==="done"&&g.newRanks?.length?window.ABVMStudyBadges.promotion(g.newRanks):"";
-  return reveal+finish+promotion+goal;
+  // Put newly earned rank first so an iPhone learner sees the promotion
+  // immediately, without scrolling through the entire score report.
+  return reveal+promotion+finish+goal;
 }
 function renderGames(){
   const previousScreen=stack().querySelector(".games-screen"),menuScroll=gameState.screen==="menu"&&previousScreen&&!previousScreen.classList.contains("is-playing")?previousScreen.scrollTop:null;

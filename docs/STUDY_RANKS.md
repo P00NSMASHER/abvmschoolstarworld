@@ -27,7 +27,7 @@ The existing permanent ABVM rank ladder now has **22 ranks, including 15 added p
 | Star Commander | 1400 | New |
 | ABVM Legend | 1500 | Original |
 
-Today presents the current rank, Study tracks the next promotion, and Progress presents the entire ladder. The next-rank progress meter fills from the current rank threshold to the next, while the numeric label retains the saved-star balance and next threshold.
+Today presents the current rank, Study tracks the next promotion, and Progress presents the entire ladder. Each newly committed promotion is prominently celebrated before the score summary, so the learner sees the actual earned medal rather than hunting below the fold. The next-rank progress meter fills from the current rank threshold to the next, while the numeric label retains the saved-star balance and next threshold.
 
 Completed rounds still award 10 Study Stars, up to 10 extra correct-streak stars, and a 25-star bonus for 100% first-try accuracy. Each submitted wrong answer deducts up to 2 stars (never below zero). Retries do not earn a perfect bonus. Study results and content governance are unchanged.
 
