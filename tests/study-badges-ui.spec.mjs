@@ -202,7 +202,8 @@ test('every original and new premium rank emblem loads, with no horizontal overf
   await expect.poll(()=>images.evaluateAll(items=>items.every(image=>image.complete&&image.naturalWidth>0))).toBe(true);
   const paths=await images.evaluateAll(items=>items.map(image=>new URL(image.src).pathname));
   expect(new Set(paths).size).toBe(21);
-  expect(paths.filter(path=>path.endsWith('.svg'))).toHaveLength(15);
+  expect(paths.filter(path=>path.endsWith('-premium.webp'))).toHaveLength(15);
+  expect(paths.filter(path=>path.endsWith('.webp'))).toHaveLength(21);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
   await expect(collection.locator('.rank-current')).toContainText('Eaglet');
   await expect(collection.locator('.badge-progress')).toHaveCount(1);
