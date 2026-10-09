@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "timeZone": "America/New_York",
+  "sources": [
+    {
+      "id": "ABVM_SCHOOL_FACEBOOK",
+      "organization": "Assumption BVM School",
+      "authority": "school",
+      "shareUrl": "https://www.facebook.com/share/1USvBxRNwD/?mibextid=wwXIfr",
+      "canonicalUrl": null,
+      "pageId": null,
+      "identity": {
+        "status": "pending",
+        "method": "share-link-login-required",
+        "verifiedAt": null,
+        "evidenceUrl": null
+      },
+      "retrieval": {
+        "enabled": false,
+        "method": "graph-api"
+      }
+    },
+    {
+      "id": "ABVM_HSA_FACEBOOK",
+      "organization": "Assumption BVM Home & School Association",
+      "authority": "hsa",
+      "shareUrl": "https://www.facebook.com/share/1MwtxVZMSq/?mibextid=wwXIfr",
+      "canonicalUrl": "https://www.facebook.com/p/Assumption-BVM-Home-School-Association-61552549763989/",
+      "pageId": "61552549763989",
+      "identity": {
+        "status": "verified",
+        "method": "public-share-redirect-and-canonical-page-metadata",
+        "verifiedAt": "2026-10-08",
+        "evidenceUrl": "https://www.facebook.com/share/1MwtxVZMSq/?mibextid=wwXIfr"
+      },
+      "retrieval": {
+        "enabled": false,
+        "method": "graph-api"
+      }
+    }
+  ]
+}
