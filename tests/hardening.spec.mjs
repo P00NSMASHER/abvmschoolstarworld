@@ -46,14 +46,18 @@ test("freshness states distinguish current, stale, and offline data",async({brow
     const response=await route.fetch();
     const body=await response.json();
     const stale=new Date(Date.now()-12*3600_000).toISOString();
-    body.sourceLastSeenAt=stale;
-    body.pack.sourceCapturedAt=stale;
-    body.pack.generatedAt=stale;
+    // Yahoo notices may be new even when the teacher pages are 12 hours old.
+    // Verify freshness against the actual teacher-check clock, not the import.
+    body.sourceLastCheckedAt=stale;
+    body.pack.sourceCheckedAt=stale;
+    body.sourceLastSeenAt=new Date(Date.now()-30_000).toISOString();
+    body.pack.sourceCapturedAt=body.sourceLastSeenAt;
+    body.pack.generatedAt=body.sourceLastSeenAt;
     await route.fulfill({response,json:body});
   });
   await stalePage.goto("http://127.0.0.1:4173/#today");
   await expect(stalePage.locator(".freshness")).toHaveClass(/stale/);
-  await expect(stalePage.locator(".freshness")).toContainText(/Older data/);
+  await expect(stalePage.locator(".freshness")).toContainText(/Teacher pages older/);
   await staleContext.close();
 
   const offlineContext=await browser.newContext();
@@ -65,7 +69,7 @@ test("freshness states distinguish current, stale, and offline data",async({brow
   await offlineContext.setOffline(true);
   await offlinePage.reload({waitUntil:"domcontentloaded"});
   await expect(offlinePage.locator(".freshness")).toHaveClass(/offline/);
-  await expect(offlinePage.locator(".freshness")).toContainText(/Offline · last verified/);
+  await expect(offlinePage.locator(".freshness")).toContainText(/Offline · teacher pages last checked/);
   await offlineContext.setOffline(false);
   await offlineContext.close();
 });
