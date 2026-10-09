@@ -47,8 +47,7 @@
         !['facebook.com','www.facebook.com','m.facebook.com'].includes(url.hostname))return null;
       if(url.pathname.toLowerCase()==='/permalink.php'){
         const story=url.searchParams.get('story_fbid');
-        if(url.searchParams.get('id')!==rule.pageId||!story||
-          (/^\d+$/.test(story)&&story!==postSuffix))return null;
+        if(url.searchParams.get('id')!==rule.pageId||story!==postSuffix)return null;
         return url.href;
       }
       const segments=decodeURIComponent(url.pathname).toLowerCase().split('/').filter(Boolean);
@@ -61,7 +60,7 @@
         (segments.length===5&&segments[0]==='people'&&
           segments[2]===pageId&&segments[3]==='posts');
       const target=segments[segments.length-1]||'';
-      if(!exactPostRoute||!target||(/^\d+$/.test(target)&&target!==postSuffix))return null;
+      if(!exactPostRoute||target!==postSuffix.toLowerCase())return null;
       return url.href;
     }catch{return null;}
   }

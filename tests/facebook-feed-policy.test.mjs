@@ -157,3 +157,15 @@ test('unreviewed and removed records never leak from source history',()=>{
   const empty=buildFacebookFeed(config,{schemaVersion:1,posts:[]},first).feed;
   assert.deepEqual(empty.posts,[]);
 });
+
+test('opaque Facebook identifiers cannot be substituted for the reviewed post ID',()=>{
+  const base=post(school,{id:'101'});
+  const wrongStory={...base,postUrl:'https://www.facebook.com/permalink.php?story_fbid=pfbidOpaqueDifferentPost&id='+school.pageId};
+  assert.throws(()=>normalizeReviewedFacebookPost(wrongStory,school),/does not bind/);
+  const wrongPath={...base,postUrl:'https://www.facebook.com/ABVM11/posts/pfbidOtherOriginal'};
+  assert.throws(()=>normalizeReviewedFacebookPost(wrongPath,school),/does not bind/);
+  const rightStory={...base,postUrl:'https://www.facebook.com/permalink.php?story_fbid=101&id='+school.pageId};
+  assert.equal(normalizeReviewedFacebookPost(rightStory,school).postId,school.pageId+'_101');
+  const rightPath={...base,postUrl:'https://www.facebook.com/ABVM11/posts/101'};
+  assert.equal(normalizeReviewedFacebookPost(rightPath,school).postId,school.pageId+'_101');
+});

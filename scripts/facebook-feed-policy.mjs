@@ -42,8 +42,9 @@ function canonicalPostIsOwned(post,source){
   const suffix=post.postId.slice(source.pageId.length+1);
   if(url.pathname.toLowerCase()==='/permalink.php'){
     const story=url.searchParams.get('story_fbid')||'';
-    return url.searchParams.get('id')===source.pageId&&!!story&&
-      (!/^\d+$/.test(story)||story===suffix);
+    // Opaque pfbid aliases are not proven equivalent to a Graph post ID.
+    // Require exact original post identity, not Page identity alone.
+    return !!suffix&&url.searchParams.get('id')===source.pageId&&story===suffix;
   }
   try{
     const segments=decodeURIComponent(url.pathname).toLowerCase().split('/').filter(Boolean);
@@ -57,7 +58,7 @@ function canonicalPostIsOwned(post,source){
       (segments.length===5&&segments[0]==='people'&&
         segments[2]===source.pageId&&segments[3]==='posts');
     const target=segments[segments.length-1]||'';
-    return ownerPath&&!!target&&(!/^\d+$/.test(target)||target===suffix);
+    return ownerPath&&!!suffix&&target===suffix.toLowerCase();
   }catch{return false;}
 }
 export function validateFacebookSources(config){

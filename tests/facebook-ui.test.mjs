@@ -78,3 +78,9 @@ test('conflicting dates remain explicitly unresolved',()=>{
   assert.match(render(event({summary:'Different schedule dates',sources:[school],conflict:true})),
     /Announcement details conflict/);
 });
+
+test('opaque post URL alias without evidence of exact Graph ID stays hidden',()=>{
+  assert.equal(render(event({sources:[{...school,postUrl:'https://www.facebook.com/ABVM11/posts/pfbidUnverifiedAlias'}]})),'');
+  assert.equal(render(event({sources:[{...hsa,postUrl:'https://www.facebook.com/permalink.php?story_fbid=pfbidUnverifiedAlias&id='+hsaId}]})),'');
+  assert.match(render(event({sources:[{...school,postUrl:'https://www.facebook.com/ABVM11/posts/101'}]})),/ABVM school Facebook/);
+});

@@ -240,3 +240,15 @@ eventKey, the combined card retains only the latest Page post link while
 labels from hiding a legitimate event in the fail-closed browser renderer.
 Different dates, deadlines, statuses, or summaries still produce explicit
 conflicts rather than silent consolidation.
+
+### Opaque Facebook post identifiers and exact reviewed ID binding
+
+A verified Facebook **Page** is insufficient proof that a link points to the
+specific **post** that was reviewed. The importer and the browser renderer both
+require the `story_fbid` query value or `/posts/<id>` route value to match
+the suffix of the reviewed `<pageId>_<postId>` Graph post identifier exactly.
+An opaque `pfbid...` link that does not match that ID is **not imported or
+displayed**, even if the Page slug matches. Such links may be legitimate but
+need independently verifiable alias-to-original-post evidence before any
+future extension of this policy. Do not guess their equivalence from Page name,
+text, or visually similar previews.
