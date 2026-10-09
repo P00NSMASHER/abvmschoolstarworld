@@ -169,7 +169,7 @@ export function validatePublishedFacebookFeed(config,feed){
   requireThat(feed?.schemaVersion===1&&Array.isArray(feed.posts)
     &&Array.isArray(feed.display)&&Array.isArray(feed.conflicts),'published feed schema invalid');
   if(feed.posts.length===0){
-    requireThat(feed.generatedAt===null,'empty feed must not claim ingestion');
+    requireThat(feed.generatedAt===null||iso(feed.generatedAt),'empty feed needs a valid publication/retraction timestamp');
   }else requireThat(iso(feed.generatedAt),'published feed generatedAt missing');
   const recomputed=buildFacebookFeed(config,{schemaVersion:1,posts:feed.posts},feed,
     feed.generatedAt?new Date(feed.generatedAt):new Date('2026-10-08T00:00:00.000Z')).feed;
