@@ -107,8 +107,12 @@ export async function syncFacebookFeeds({
   const state={...previous,quarantines:[...pending.values()].sort((a,b)=>
     (a.sourceId+':'+a.postId).localeCompare(b.sourceId+':'+b.postId)),audit:audit.slice(-200)};
   const result=buildFacebookFeed(config,{schemaVersion:1,posts:safe},state,now);
+  const auditChanged=JSON.stringify(state.audit)!==JSON.stringify(previous.audit||[]);
+  const quarantineChanged=JSON.stringify(state.quarantines)!==JSON.stringify(previous.quarantines||[]);
+  const changed=result.changed||auditChanged||quarantineChanged;
+  if(changed&&!result.changed)result.feed.generatedAt=now.toISOString();
   validatePublishedFacebookFeed(config,result.feed);
-  return {...result,reports,quarantined,reviewedCount:reviewed.posts.length};
+  return {...result,changed,reports,quarantined,reviewedCount:reviewed.posts.length};
 }
 async function main(){
   const config=read('facebook-sources.json');
