@@ -13,7 +13,7 @@ const known=Object.freeze({
   },
   ABVM_HSA_FACEBOOK:{
     shareUrl:'https://www.facebook.com/share/1MwtxVZMSq/?mibextid=wwXIfr',
-    authority:'hsa',organization:'Assumption BVM Home & School Association'
+    authority:'hsa',organization:'Assumption BVM Home & School Association',pageId:'61552549763989'
   }
 });
 const clean=value=>String(value??'').replace(/\s+/g,' ').trim();
@@ -59,6 +59,7 @@ export function validateFacebookSources(config){
     requireThat(['pending','verified'].includes(row.identity?.status),'identity status invalid: '+row.id);
     if(row.identity.status==='verified'){
       requireThat(/^\d{8,25}$/.test(String(row.pageId||'')),'verified source needs numeric Page ID: '+row.id);
+      if(rule.pageId)requireThat(row.pageId===rule.pageId,'verified HSA Page ID cannot be reassigned');
       requireThat(!!facebookUrl(row.canonicalUrl)&&!!facebookUrl(row.identity.evidenceUrl),'verified source needs Facebook identity evidence: '+row.id);
       requireThat(dateOnly(row.identity.verifiedAt),'verified source needs verification date: '+row.id);
       requireThat(clean(row.identity.method).length>=8,'verified source method missing: '+row.id);
@@ -83,26 +84,30 @@ export function normalizeReviewedFacebookPost(row,source,now=new Date(),old=null
   requireThat(/^[0-9a-f]{64}$/.test(String(row.sourceContentHash||'')),'original source evidence hash missing');
   requireThat(typeof row.summary==='string'&&clean(row.summary).length>=5&&clean(row.summary).length<=480,'reviewed summary must be 5–480 characters');
   requireThat(FACEBOOK_CATEGORIES.includes(row.category),'unsupported content category');
+  requireThat(row.category!=='Academic','Facebook may not establish academic instructions');
+  requireThat(['families','students','staff','volunteers','school-community','grade-2'].includes(row.audience),'approved audience is required');
+  requireThat(['high','moderate'].includes(row.confidence),'reviewed confidence required');
+  requireThat(['active','corrected','cancelled'].includes(row.noticeStatus),'reviewed notice status required');
   requireThat(Array.isArray(row.eventDates)&&row.eventDates.length<=10
     &&row.eventDates.every(dateOnly),'event dates must be manually reviewed YYYY-MM-DD');
   const eventDates=[...new Set(row.eventDates)].sort();
-  requireThat(eventDates.length===0||(typeof row.eventKey==='string'&&/^[a-z0-9][a-z0-9-_]{4,100}$/.test(row.eventKey)),
+  requireThat(Array.isArray(row.deadlineDates)&&row.deadlineDates.length<=10
+    &&row.deadlineDates.every(dateOnly),'deadline dates must be reviewed YYYY-MM-DD');
+  const deadlineDates=[...new Set(row.deadlineDates)].sort();
+  requireThat((eventDates.length===0&&deadlineDates.length===0)||(typeof row.eventKey==='string'&&/^[a-z0-9][a-z0-9-_]{4,100}$/.test(row.eventKey)),
     'dated events need a reviewed dedupe key');
-  requireThat(!row.eventKey||eventDates.length>0,'undated posts cannot automatically deduplicate as events');
+  requireThat(!row.eventKey||eventDates.length>0||deadlineDates.length>0,'undated posts cannot automatically deduplicate as events');
   requireThat(row.review?.status==='approved'&&row.review?.piiReviewed===true,'post not privacy-reviewed and approved');
   requireThat(iso(row.review?.reviewedAt)&&clean(row.review?.reviewedBy).length>=3,'review timestamp and reviewer required');
   if(row.editedAt)requireThat(Date.parse(row.review.reviewedAt)>=Date.parse(row.editedAt),
     'edited posts require a new content review');
-  if(row.category==='Academic'){
-    requireThat(source.authority==='school'&&/^https:\/\/sites\.google\.com\/view\/abvmgr2\//.test(String(row.review.teacherEvidenceUrl||'')),
-      'Facebook may not establish academic instructions without verified teacher evidence');
-  }
   const current={
     sourceId:source.id,organization:source.organization,authority:source.authority,
     postId:row.postId,postUrl:row.postUrl,postedAt:row.postedAt,
     editedAt:row.editedAt||null,sourceContentHash:row.sourceContentHash,
-    summary:clean(row.summary),category:row.category,eventDates,
-    eventKey:row.eventKey||null,review:{
+    summary:clean(row.summary),category:row.category,audience:row.audience,
+    confidence:row.confidence,noticeStatus:row.noticeStatus,verificationStatus:'verified-and-reviewed',
+    eventDates,deadlineDates,eventKey:row.eventKey||null,review:{
       status:'approved',piiReviewed:true,reviewedAt:row.review.reviewedAt,
       reviewedBy:row.review.reviewedBy,
       ...(row.review.teacherEvidenceUrl?{teacherEvidenceUrl:row.review.teacherEvidenceUrl}:{})
@@ -122,10 +127,10 @@ function assembleDisplays(posts){
   }
   const display=[],conflicts=[];
   for(const [key,group] of byEvent){
-    const signatures=[...new Set(group.map(p=>p.eventDates.join('|')))];
+    const signatures=[...new Set(group.map(p=>[p.eventDates.join('|'),p.deadlineDates.join('|'),p.noticeStatus].join('::')))];
     if(signatures.length>1){
       conflicts.push({eventKey:key,sourceIds:[...new Set(group.map(p=>p.sourceId))],
-        postIds:group.map(p=>p.postId),eventDateVariants:group.map(p=>({sourceId:p.sourceId,dates:p.eventDates}))});
+        postIds:group.map(p=>p.postId),eventDateVariants:group.map(p=>({sourceId:p.sourceId,dates:p.eventDates,deadlines:p.deadlineDates,status:p.noticeStatus}))});
       for(const post of group)noEvent.push([post]);
     }else noEvent.push(group);
   }
@@ -133,7 +138,9 @@ function assembleDisplays(posts){
     const first=group[0],isConflict=conflicts.some(row=>row.eventKey===first.eventKey);
     display.push({
       id: first.eventKey&&!isConflict?'event:'+first.eventKey:'post:'+first.sourceId+':'+first.postId,
-      summary:first.summary,category:first.category,eventDates:first.eventDates,
+      summary:first.summary,category:first.category,audience:first.audience,
+      confidence:first.confidence,noticeStatus:first.noticeStatus,
+      verificationStatus:'verified-and-reviewed',eventDates:first.eventDates,deadlineDates:first.deadlineDates,
       postedAt:group.reduce((latest,p)=>p.postedAt>latest?p.postedAt:latest,first.postedAt),
       conflict:isConflict,sources:group.map(p=>({
         sourceId:p.sourceId,organization:p.organization,postId:p.postId,postUrl:p.postUrl

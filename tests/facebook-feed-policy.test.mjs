@@ -21,7 +21,8 @@ function post(source,{id='101',summary='School community reminder for the fall e
     postedAt:'2026-10-08T13:00:00.000Z',editedAt:null,
     sourceContentHash:originalPostHash('original message '+id),
     summary,category:category||(source.authority==='hsa'?'HSA event':'School event'),
-    eventDates:date?[date]:[],eventKey:date?key:null,
+    audience:'families',confidence:'high',noticeStatus:'active',
+    eventDates:date?[date]:[],deadlineDates:[],eventKey:date?key:null,
     review:{status:'approved',piiReviewed:true,reviewedBy:'fixture-reviewer',reviewedAt:timestamp}
   };
 }
@@ -39,6 +40,9 @@ test('reviewed HSA announcements remain attributed to HSA and do not change the 
   const {feed}=buildFacebookFeed(config,{schemaVersion:1,posts:[post(hsa)]},{},new Date(timestamp));
   assert.equal(feed.posts[0].sourceId,'ABVM_HSA_FACEBOOK');
   assert.equal(feed.posts[0].authority,'hsa');
+  assert.equal(feed.posts[0].audience,'families');
+  assert.equal(feed.posts[0].confidence,'high');
+  assert.equal(feed.posts[0].verificationStatus,'verified-and-reviewed');
   assert.equal(feed.display[0].sources[0].sourceId,'ABVM_HSA_FACEBOOK');
   assert.equal(JSON.stringify(teacherPack),before);
   assert.equal(validatePublishedFacebookFeed(config,feed),true);
@@ -61,6 +65,7 @@ test('conflicting event dates are explicitly flagged and never silently selected
 });
 test('HSA cannot establish academic instructions without teacher corroboration',()=>{
   assert.throws(()=>normalizeReviewedFacebookPost(post(hsa,{category:'Academic'}),hsa),/academic instructions/);
+  assert.throws(()=>normalizeReviewedFacebookPost(post(school,{category:'Academic'}),school),/academic instructions/);
 });
 test('unverified school identity blocks even reviewed posts',()=>{
   assert.throws(()=>buildFacebookFeed(config,{schemaVersion:1,posts:[post(school)]}),/unverified/);
@@ -94,6 +99,8 @@ test('misidentified another school or unchanged privacy review is rejected',()=>
   assert.throws(()=>normalizeReviewedFacebookPost(bad,hsa),/privacy-reviewed/);
   const wrongOrg=structuredClone(config);wrongOrg.sources[1].organization='Assumption BVM West Grove';
   assert.throws(()=>validateFacebookSources(wrongOrg),/organization/);
+  const swapped=structuredClone(config);swapped.sources[1].pageId='9999999999999';
+  assert.throws(()=>validateFacebookSources(swapped),/cannot be reassigned/);
 });
 test('unreviewed and removed records never leak from source history',()=>{
   assert.throws(()=>buildFacebookFeed(config,{schemaVersion:1,posts:[{...post(hsa),review:{status:'pending'}}]}),/privacy-reviewed/);

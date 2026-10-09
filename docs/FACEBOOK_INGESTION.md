@@ -35,7 +35,8 @@ The school link remains blocked. Neither feed is operating live.
   uploaded-notices.json or curriculum source files.
 - Reviewed posts retain page-specific IDs, publisher, original URL, postedAt,
   optional editedAt, source text SHA-256, collectedAt, classification,
-  original event dates, review details and audit provenance.
+  original event and deadline dates, audience, confidence, correction/cancellation
+  state, verified identity state, review details and audit provenance.
 - No student names, photo contents, personal emails, handwriting, or full raw
   Facebook responses are committed to this public repository.
 - Every approved summary must be manually screened for private student/family
@@ -79,7 +80,11 @@ publish; the school remains blocked until identity resolution. Example fields:
       "sourceContentHash": "<actual SHA-256 of the original source text>",
       "summary": "<human-reviewed, privacy-safe, non-academic summary>",
       "category": "HSA event",
+      "audience": "families",
+      "confidence": "high",
+      "noticeStatus": "active",
       "eventDates": ["2026-10-20"],
+      "deadlineDates": [],
       "eventKey": "2026-10-20-hsa-fall-event",
       "review": {
         "status": "approved",
@@ -107,4 +112,5 @@ review approval, mismatched owner, invalid timestamp, outdated edited-post
 review, or malformed evidence does **not** generate a Facebook announcement.
 Missing social data never blocks legitimate teacher study information.
 Manual summaries are never promoted into the academic study pack.
+Academic-classified social imports are rejected, even when the source claims teacher corroboration.
 There are no new scheduled tasks, push alerts or chat notifications.

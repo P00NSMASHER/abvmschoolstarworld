@@ -35,15 +35,16 @@
   }
   function current(item,view,weekStart,now){
     const dates=Array.isArray(item.eventDates)?item.eventDates:[];
+    const deadlines=Array.isArray(item.deadlineDates)?item.deadlineDates:[];
     const today=ymd(now);
     const publication=ymd(new Date(item.postedAt));
-    if(view==='today')return dates.includes(today)||publication===today;
+    if(view==='today')return dates.includes(today)||deadlines.some(d=>d>=today&&d<=shift(today,7))||publication===today;
     if(view==='week'){
       const start=/^\d{4}-\d\d-\d\d$/.test(weekStart)?weekStart:monday(today);
       const last=shift(start,6);
-      return dates.some(d=>d>=start&&d<=last)||(publication>=start&&publication<=last);
+      return [...dates,...deadlines].some(d=>d>=start&&d<=last)||(publication>=start&&publication<=last);
     }
-    return publication>=shift(today,-14)||dates.some(d=>d>=today&&d<=shift(today,30));
+    return publication>=shift(today,-14)||[...dates,...deadlines].some(d=>d>=today&&d<=shift(today,30));
   }
   function renderFor(input,view='today',weekStart='',now=new Date()){
     if(!input||input.schemaVersion!==1||!Array.isArray(input.display))return '';
@@ -60,8 +61,10 @@
       const links=item.sources.map(source=>
         '<a href="'+esc(verifiedLink(source.postUrl))+'" target="_blank" rel="noopener noreferrer">'+
         esc(labels[source.sourceId])+' post</a>').join(' · ');
-      const when=item.conflict?'Dates conflict · check the original posts':
-        item.eventDates.length?'Event: '+item.eventDates.join(', '):
+      const when=item.conflict?'Dates or status conflict · check original posts':
+        [item.noticeStatus==='cancelled'?'Cancelled':item.noticeStatus==='corrected'?'Corrected':'',
+        item.eventDates?.length?'Event: '+item.eventDates.join(', '):'',
+        item.deadlineDates?.length?'Due: '+item.deadlineDates.join(', '):''].filter(Boolean).join(' · ')||
         'Posted '+ymd(new Date(item.postedAt));
       return '<article class="facebook-update-row"><div class="facebook-update-meta">'+
         '<span>'+esc(tags.join(' · '))+'</span><small>'+esc(item.category||'Community news')+'</small></div>'+

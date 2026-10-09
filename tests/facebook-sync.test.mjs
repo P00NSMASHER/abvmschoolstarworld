@@ -13,7 +13,8 @@ const post=()=>({sourceId:hsa.id,postId:hsa.pageId+'_101',
   postedAt:'2026-10-07T18:00:00Z',editedAt:null,
   sourceContentHash:originalPostHash('reviewed public message'),
   summary:'Approved parent fundraising announcement.',
-  category:'Fundraiser',eventDates:[],eventKey:null,
+  category:'Fundraiser',audience:'families',confidence:'high',noticeStatus:'active',
+  eventDates:[],deadlineDates:[],eventKey:null,
   review:{status:'approved',piiReviewed:true,reviewedAt:'2026-10-08T18:00:00Z',reviewedBy:'fixture-reviewer'}});
 const empty={schemaVersion:1,generatedAt:null,posts:[],display:[],conflicts:[]};
 function graph(results,identity={id:hsa.pageId,name:hsa.organization}){
