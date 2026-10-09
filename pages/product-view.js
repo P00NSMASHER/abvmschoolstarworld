@@ -66,8 +66,8 @@
     const comparableNotice = (value) =>
       String(value ?? "")
         .toLowerCase()
-        .replace(/^(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)\\b[^:]{0,45}:\\s*/i, "")
-        .replace(/\\b(?:is|are|was|were)\\b/g, "")
+        .replace(/^(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b[^:]{0,45}:\s*/i, "")
+        .replace(/\b(?:is|are|was|were)\b/g, "")
         .replace(/[^a-z0-9]+/g, " ")
         .trim();
     const listedEvents = new Set(events.map(e => comparableNotice(e.label)));
