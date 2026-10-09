@@ -391,21 +391,29 @@ test("bottom navigation is a four primary destinations",async({page})=>{
 
 
 test("newly imported Yahoo notices never make older teacher checks appear verified",async({page})=>{
-  await page.clock.setFixedTime(new Date("2026-10-09T16:00:00.000Z"));
+  // Deliberately stay in the 8–30h "older" band. Fixed calendar dates
+  // drifted past 30h during CI and asserted the wrong severity label.
+  // Verify the real teacher-check timestamp, not the newer Yahoo timestamp.
+  const checkedAt=new Date(Date.now()-24*60*60*1000).toISOString();
+  const noticeAt=new Date(Date.now()-60*1000).toISOString();
+  const etDate=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",month:"short",day:"numeric"});
+  const expectedTeacherDay=etDate.format(new Date(checkedAt));
+  const newerNoticeDay=etDate.format(new Date(noticeAt));
+  expect(expectedTeacherDay).not.toBe(newerNoticeDay);
   const data=structuredClone(JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8")));
-  data.sourceLastCheckedAt="2026-10-08T15:00:17.769Z";
-  data.pack.sourceCheckedAt=data.sourceLastCheckedAt;
+  data.sourceLastCheckedAt=checkedAt;
+  data.pack.sourceCheckedAt=checkedAt;
   // Simulate a Yahoo notice arriving minutes ago while the six teacher
   // pages have not been successfully checked again.
-  data.sourceLastSeenAt="2026-10-09T15:59:00.000Z";
-  data.sourceCapturedAt=data.sourceLastSeenAt;
-  data.pack.sourceCapturedAt=data.sourceLastSeenAt;
-  data.pack.generatedAt=data.sourceLastSeenAt;
+  data.sourceLastSeenAt=noticeAt;
+  data.sourceCapturedAt=noticeAt;
+  data.pack.sourceCapturedAt=noticeAt;
+  data.pack.generatedAt=noticeAt;
   await page.route("**/data/study-pack*.json*",route=>route.fulfill({json:data}));
   await page.goto("/#today");
   const freshness=page.locator(".freshness");
   await expect(freshness).toBeVisible();
   await expect(freshness).toContainText("Teacher pages older");
-  await expect(freshness).toContainText("Oct 8");
-  await expect(freshness).not.toContainText("Oct 9");
+  await expect(freshness).toContainText(expectedTeacherDay);
+  await expect(freshness).not.toContainText(newerNoticeDay);
 });
