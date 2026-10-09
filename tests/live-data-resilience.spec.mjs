@@ -182,7 +182,7 @@ test("tapping the freshness box forces an immediate live pack refresh",async({br
   await expect(page.locator("[data-refresh-pack]")).toContainText("Checking published school info");
   await expect(page.locator("[data-refresh-pack]")).toBeDisabled();
   await expect(page.locator(".freshness")).toHaveClass(/current/);
-  await expect(page.locator(".freshness")).toContainText("Verified");
+  await expect(page.locator(".freshness")).toContainText("Teacher pages verified");
   await expect(page.locator("#toast")).toContainText("School info updated");
   expect(calls).toBeGreaterThanOrEqual(2);
   await context.close();
