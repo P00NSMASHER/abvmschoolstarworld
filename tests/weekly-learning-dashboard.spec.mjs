@@ -8,7 +8,10 @@ async function currentSkills(page){
 test('removing the Games report preserves current seven-day learning evidence and stored history',async({page})=>{
   const skills=await currentSkills(page);
   expect(skills.length).toBeGreaterThanOrEqual(4);
-  const now=Date.now();
+  // Keep "today" firmly within the same America/New_York calendar date.
+  // A CI run at 00:04 ET otherwise crosses midnight when subtracting 5 minutes.
+  const now=Date.parse('2026-10-08T12:00:00-04:00');
+  await page.clock.setFixedTime(new Date(now));
   await page.addInitScript(({skills,now})=>{
     localStorage.setItem('abvm-study-learning:v2',JSON.stringify({
       [skills[0].id]:{LastSeenAt:now-300000,LastIndependentCorrectAt:now-300000,LastResolution:{correct:true,independent:true,resolvedAt:now-300000}},
@@ -44,7 +47,10 @@ test('removing the Games report preserves current seven-day learning evidence an
 
 test('more recent unsuccessful practice still supersedes older independent evidence without a report',async({page})=>{
   const [skill]=await currentSkills(page);
-  const now=Date.now();
+  // Keep "today" firmly within the same America/New_York calendar date.
+  // A CI run at 00:04 ET otherwise crosses midnight when subtracting 5 minutes.
+  const now=Date.parse('2026-10-08T12:00:00-04:00');
+  await page.clock.setFixedTime(new Date(now));
   await page.addInitScript(({skill,now})=>{
     localStorage.setItem('abvm-study-learning:v2',JSON.stringify({
       [skill.id]:{
@@ -63,4 +69,23 @@ test('more recent unsuccessful practice still supersedes older independent evide
   expect(snapshot.practice.map(row=>row.id)).toEqual([skill.id]);
   expect(snapshot.strong).toEqual([]);
   await expect(page.locator('[data-learning-panel],section[aria-labelledby="weekly-learning-title"]')).toHaveCount(0);
+});
+
+test('previous-day independent evidence remains practice, not strong today, across midnight ET',async({page})=>{
+  await page.clock.setFixedTime(new Date('2026-10-09T00:02:00-04:00'));
+  await page.goto('/#today');
+  const report=await page.evaluate(()=>{
+    const now=Date.parse('2026-10-09T00:02:00-04:00');
+    const at=now-5*60*1000; // 11:57 PM the previous Eastern school day
+    return window.ABVMWeeklyLearning.snapshot({
+      pack:{contentPipeline:{skills:[{id:'date-boundary-skill',label:'Date boundary',subject:'Reading / ELA'}]}},
+      learning:{'date-boundary-skill':{
+        LastSeenAt:at,LastIndependentCorrectAt:at,
+        LastResolution:{correct:true,independent:true,resolvedAt:at}
+      }},
+      now
+    });
+  });
+  expect(report.strong).toEqual([]);
+  expect(report.practice.map(row=>row.id)).toEqual(['date-boundary-skill']);
 });
