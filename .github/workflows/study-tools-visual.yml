@@ -8,6 +8,7 @@ on:
       - 'pages/sw.js'
       - 'playwright.config.mjs'
       - 'tests/study-tools-premium.spec.mjs'
+      - 'tests/consumer-product.spec.mjs'
       - '.github/workflows/study-tools-visual.yml'
   workflow_dispatch:
 
@@ -33,6 +34,8 @@ jobs:
       - run: npx playwright install --with-deps chromium webkit
       - name: Check new resources and inherited Study components in WebKit and Chromium
         run: npx playwright test tests/study-tools-premium.spec.mjs tests/study-premium.spec.mjs tests/study-player-premium.spec.mjs --project=mobile --project=iphone-webkit --workers=1 --retries=0
+      - name: Enforce above-the-fold Test Prep actions with real phone chrome
+        run: npx playwright test tests/consumer-product.spec.mjs --grep 'phone chrome leaves subjects and Test Prep actions reachable' --project=mobile --project=desktop --workers=1 --retries=0
       - name: Downloadable phone and iPad screenshots with error traces
         if: always()
         uses: actions/upload-artifact@v4

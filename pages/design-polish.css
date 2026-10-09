@@ -1600,3 +1600,73 @@
     border-width:2px;
   }
 }
+
+
+/* Test Prep first-viewport density on short iPhones.
+   Preserve actual assessment labels/topics and native, >=44px actions;
+   remove decorative vertical slack instead of hiding required controls. */
+@media (max-width:699px) and (max-height:860px) {
+  .games-screen:not(.is-playing) .prep-header {
+    min-height:150px;
+    padding-bottom:13px;
+  }
+  .games-screen:not(.is-playing) .prep-header h1 {
+    font-size:clamp(1.63rem,5.3vw,1.83rem);
+    line-height:1.1;
+    margin:3px 0 4px;
+  }
+  /* The test-specific heading already conveys the purpose on phone. */
+  .games-screen:not(.is-playing) .prep-header > p {display:none}
+  .games-screen:not(.is-playing) .prep-header .prep-eagle {
+    width:98px;height:98px;
+  }
+  .games-screen:not(.is-playing) .prep-sheet {
+    padding-top:13px;
+    padding-bottom:17px;
+  }
+  .games-screen:not(.is-playing) .prep-sheet > h2 {
+    margin-bottom:7px;
+  }
+  .games-screen:not(.is-playing) .prep-test-choices {
+    padding-top:2px;
+    padding-bottom:6px;
+    margin-bottom:4px;
+  }
+  .games-screen:not(.is-playing) .prep-test-choice {
+    min-height:74px;
+    padding:9px;
+  }
+  .games-screen:not(.is-playing) .prep-test-choice[aria-pressed="true"] {
+    padding:8px;
+  }
+  .games-screen:not(.is-playing) .prep-test-choice > img {
+    width:37px;height:37px;
+  }
+  .games-screen:not(.is-playing) .prep-test-choice small {margin-top:3px}
+  .games-screen:not(.is-playing) .prep-topic-card {padding:12px}
+  .games-screen:not(.is-playing) .prep-topic-heading {margin-bottom:6px}
+  .games-screen:not(.is-playing) .prep-topic-heading > span {padding:3px 7px}
+  .games-screen:not(.is-playing) .prep-topic-card > h3 {
+    font-size:1.18rem;
+    line-height:1.22;
+  }
+  .games-screen:not(.is-playing) .prep-topic-card > time {margin-top:3px}
+  .games-screen:not(.is-playing) .prep-topics {
+    gap:8px;
+    margin:6px 0 4px;
+  }
+  .games-screen:not(.is-playing) .prep-topics > img {height:74px}
+  .games-screen:not(.is-playing) .prep-topics li {
+    font-size:.82rem;
+    line-height:1.36;
+  }
+  .games-screen:not(.is-playing) .prep-sheet > .prep-start {
+    min-height:52px;
+    margin-top:9px;
+    padding:10px 14px;
+  }
+  .games-screen:not(.is-playing) .prep-sheet > .prep-guide {
+    min-height:48px;
+    margin-top:7px;
+  }
+}
