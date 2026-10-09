@@ -20,6 +20,16 @@ test('Today premium signature: mobile layout and retained source-backed actions'
     await expect(page.locator('.study-invitation')).toBeVisible();
     await expect(page.locator('.today-screen > .lunch-card')).toBeVisible();
     await expect(page.locator('.today-panel')).toBeVisible();
+    // A timeline event must not repeat as a semantically identical reminder,
+    // while additional deadlines and prices stay displayed when distinct.
+    const normalizeNotice = value => String(value).toLowerCase()
+      .replace(/^(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b[^:]{0,45}:\s*/i, '')
+      .replace(/\b(?:is|are|was|were)\b/g, '')
+      .replace(/[^a-z0-9]+/g, ' ').trim();
+    const eventLabels = await page.locator('.timeline-row strong').allTextContents();
+    const reminderLabels = await page.locator('.reminder-line p').allTextContents();
+    expect(reminderLabels.map(normalizeNotice).filter(value =>
+      eventLabels.map(normalizeNotice).includes(value))).toEqual([]);
     await expect(page.locator('.study-badge-latest')).toBeVisible();
     await expect(page.locator('.freshness')).toBeVisible();
 
