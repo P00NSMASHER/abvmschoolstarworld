@@ -23,6 +23,67 @@ bodies, edits or publication timestamps. No Facebook announcement has been
 entered into the reviewed manifest based on a partial public preview.
 The school link remains blocked. Neither feed is operating live.
 
+## Windsor.ai Facebook Organic authorization audit (2026-10-08)
+
+The user's Windsor.ai account is connected, but **the connected Facebook Page
+is RETALLY, not either ABVM source**. A live connector discovery reported:
+
+| Windsor source | Authorized account | ABVM ingest eligibility |
+| --- | --- | --- |
+| `facebook_organic` | `Retally`, Page ID `1423089780881432` | **DENIED: Page ID does not match ABVM source** |
+| `instagram` | `amuhricaaa`, account `17841450188230798` | **DENIED: different platform and identity** |
+| `facebook_organic` ABVM school | No ABVM school account returned | **NOT AUTHORIZED** |
+| `facebook_organic` ABVM HSA | No HSA account returned | **NOT AUTHORIZED** |
+
+Windsor's Facebook Organic connector exposes `account_id`, `account_name`,
+`page_id`, `page_name`, `post_id`, `post_message`,
+`post_created_time` and `permalink_url` fields. A live read of the
+connected RETALLY account for October 1–8 and a separate Page identity
+read returned **no post rows**. These results do not establish that the
+ABVM pages have no posts; they establish that neither ABVM page is among
+the connected accounts. Do not interpret a connected personal Facebook
+login or a RETALLY Page as authorization to fetch the school or HSA Pages.
+
+**Required source-matching rule for any future Windsor handoff:**
+`Windsor account_id/page_id === the verified canonical ABVM source.pageId`,
+and the returned Page name must also identify the same original
+organization. Source IDs must be determined from this match, **never**
+from post text, keywords, reposts, or the currently connected user's
+Facebook profile. The HSA Page is `61552549763989`; the school's Page
+ID is still unknown. Do not import data from `1423089780881432` into
+the ABVM repository.
+
+Windsor's ChatGPT connector reads data on demand. Its ChatGPT connection
+is **not** itself a GitHub Actions secret, a Meta Graph token, or proof
+of an unattended scheduler. This project must not claim daily automated
+Facebook retrieval simply because Windsor can access RETALLY. Keep the
+existing Graph/manual-review gates and current schedules unchanged.
+
+To add an authorized ABVM Page **only if the user has an account permitted
+to manage/read that Page**, the Windsor Facebook Organic OAuth setup is:
+
+https://onboard.windsor.ai/connect?connector=facebook_organic&client=CHATGPT&next=/facebook_organic/authorize
+
+Windsor's provider-specific setup instructions are: Log in with the
+Facebook profile that has access to the Page. When Facebook asks which
+Pages Windsor.ai can access, select the Page. If Facebook says you
+previously logged in to Windsor.ai, click "Edit previous settings"
+(or "Edit settings") and select the Page there: "Continue" alone keeps
+the old Page choice. On a phone, open the link in your browser app
+(Chrome or Safari), not inside the assistant app. Back on Windsor.ai,
+select the Page before clicking "Done, close this tab" or "Finish".
+
+If the user does not have Page access, obtaining an OAuth token for
+RETALLY cannot grant it. Use independently approved public Page access
+or the existing human-reviewed import fallback; never bypass Facebook
+permissions or request administrative school access unnecessarily.
+
+**Verified release status:** Independent QA and full application QA
+completed successfully on PR #274 head `05768fc5d1ed57d264c58a7affdd1fec42d887fc`
+(GitHub runs 37870351430 and 37870351449). This is code quality evidence,
+**not** operational proof of live ABVM Facebook ingestion. Source activation
+remains blocked until exact-Page access and review are established.
+
 ## Authority and privacy
 
 - Teacher pages and reviewed classroom material alone control schoolwork,
