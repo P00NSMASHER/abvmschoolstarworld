@@ -45,6 +45,10 @@
     esc(label) +
     icon("arrow") +
     "</button>";
+  // The Today lunch is above the fold on phones. Render its reviewed image
+  // eagerly while leaving Week/Calendar lunch artwork lazy-loaded.
+  const eagerTodayLunchArt = (markup) =>
+    markup.replace('loading="lazy"', 'loading="eager"');
   function today(c) {
     const {
       d,
@@ -118,7 +122,7 @@
       '<button class="study-invitation" type="button" data-route="study"><img src="./assets/illustrations/reading.webp" width="72" height="72" alt=""><span><strong>Start studying</strong><small>A little practice. A little more confidence.</small></span>' +
       icon("arrow") +
       "</button></div>" +
-      lunchHtml +
+      eagerTodayLunchArt(lunchHtml) +
       '<section class="today-panel">' +
       sectionHead(closed ? "Today’s plan" : "At school today") +
       '<div class="timeline">' +
