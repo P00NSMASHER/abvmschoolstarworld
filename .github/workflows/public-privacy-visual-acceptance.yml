@@ -37,9 +37,9 @@ jobs:
       - name: Offline shell and anonymous copy contracts
         run: node --test tests/public-learner-privacy.test.mjs
       - name: Anonymous iPhone 375-430 Chromium and Safari-WebKit
-        run: npx playwright test tests/public-learner-privacy.spec.mjs --project=mobile --project=iphone-webkit --workers=1 --retries=0
+        run: npx playwright test tests/public-learner-privacy.spec.mjs --project=mobile --project=iphone-webkit --output=test-results/anonymous --workers=1 --retries=0
       - name: Teacher source age cannot be refreshed by a Yahoo notice
-        run: npx playwright test tests/app.spec.mjs --project=mobile --grep "newly imported Yahoo notices" --workers=1 --retries=0
+        run: npx playwright test tests/app.spec.mjs --project=mobile --output=test-results/freshness --grep "newly imported Yahoo notices" --workers=1 --retries=0
       - name: Retain real rendered privacy screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -50,4 +50,4 @@ jobs:
             test-results/**/test-failed-*.png
             playwright-report
           retention-days: 14
-          if-no-files-found: ignore
+          if-no-files-found: error
