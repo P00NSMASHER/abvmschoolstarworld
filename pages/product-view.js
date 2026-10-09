@@ -49,6 +49,13 @@
   // eagerly while leaving Week/Calendar lunch artwork lazy-loaded.
   const eagerTodayLunchArt = (markup) =>
     markup.replace('loading="lazy"', 'loading="eager"');
+  const comparableNotice = (value) =>
+    String(value ?? "")
+      .toLowerCase()
+      .replace(/^(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b[^:]{0,45}:\s*/i, "")
+      .replace(/\b(?:is|are|was|were)\b/g, "")
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim();
   function today(c) {
     const {
       d,
@@ -68,13 +75,6 @@
     // Suppress only equivalent date-prefixed notices already in today's timeline.
     // Keep the full data intact; a price, deadline detail or added instruction
     // makes the notice distinct and therefore remains visible.
-    const comparableNotice = (value) =>
-      String(value ?? "")
-        .toLowerCase()
-        .replace(/^(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b[^:]{0,45}:\s*/i, "")
-        .replace(/\b(?:is|are|was|were)\b/g, "")
-        .replace(/[^a-z0-9]+/g, " ")
-        .trim();
     const listedEvents = new Set(events.map(e => comparableNotice(e.label)));
     const visibleReminders = reminders.filter(x => !listedEvents.has(comparableNotice(x)));
     const nextHtml = next
@@ -170,6 +170,9 @@
       weekRangeLabel,
       overview,
     } = c;
+    const reminder = c.reminder && !events.some(event =>
+      comparableNotice(event.label) === comparableNotice(c.reminder)
+    ) ? c.reminder : "";
     const picker = days
       .map(
         (d) =>
@@ -235,11 +238,11 @@
         : '<p class="week-empty">No checklist is verified for this week yet.</p>') +
       '</section><div class="week-rail">' +
       lunchHtml +
-      (c.reminder
+      (reminder
         ? '<section class="reminder-strip"><span class="feature-icon">' +
           icon("bell") +
           "</span><p><strong>Don’t forget</strong>" +
-          esc(c.reminder) +
+          esc(reminder) +
           "</p></section>"
         : "") +
       '<section class="future-card"><h3>Coming soon</h3>' +

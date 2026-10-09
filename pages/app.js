@@ -306,7 +306,25 @@ function renderWeek(){
  if(!selectedDay||!days.some(d=>sameDay(d,selectedDay)))selectedDay=weekOffset===0?(days.find(d=>sameDay(d,today()))||days[0]):days[0];
  stack().innerHTML=window.ABVMProductView.week({days,selectedDay,offset:weekOffset,header,segments:calendarSegments("week"),freshness,taskHtml,kindClass,fmtDate,fmtShort,weekRangeLabel,eventItemsForDate,events:eventItemsForDate(selectedDay),tasks:isPackWeek(days)?taskRecordsForSurface("week",selectedDay):[],lunchHtml:lunchCardHtml(selectedDay,lunchForDate(selectedDay)),reminder:reminderForDate(selectedDay),future:datedImportantEvents().filter(({date})=>date>selectedDay).slice(0,4).map(({item,date})=>({x:item,d:date})),overview:window.ABVMWeeklyLearning.renderWeekOverview({days,lunchForDate,eventItemsForDate,kindClass,fmtShort,lunchText,lunchUnavailableText})});
 }
-function monthGrid(year,month){const first=new Date(year,month,1,12), last=new Date(year,month+1,0,12), blanks=first.getDay();let html=""; for(let i=0;i<blanks;i++)html+='<span class="calendar-blank"></span>';for(let day=1;day<=last.getDate();day++){const d=new Date(year,month,day,12), events=eventItemsForDate(d), lunch=lunchForDate(d);const dots=[...new Set([...events.map(e=>kindClass(e)),...(lunch?["lunch"]:[])])].slice(0,3);const weekend=[0,6].includes(d.getDay()), closed=events.some(e=>kindClass(e)==="closed");const eventLabel=events.length?": "+events.map(e=>e.label).join(", "):"";html+='<button type="button" class="'+(weekend?"weekend ":"")+(closed?"closed ":"")+(calendarDay&&sameDay(d,calendarDay)?"active":"")+'" data-cal-day="'+d.toISOString()+'" aria-label="'+esc(fmtDate(d)+eventLabel)+'" aria-pressed="'+(calendarDay&&sameDay(d,calendarDay)?"true":"false")+'"><strong>'+day+'</strong><span class="calendar-dots" aria-hidden="true">'+dots.map(k=>'<span class="calendar-mark '+k+'"></span>').join("")+'</span></button>';}return html;}
+function monthGrid(year,month){
+ const first=new Date(year,month,1,12),last=new Date(year,month+1,0,12);
+ let html='<span class="calendar-blank"></span>'.repeat(first.getDay());
+ const priority=["closed","test","due","faith","school","family","lunch"];
+ for(let day=1;day<=last.getDate();day++){
+  const d=new Date(year,month,day,12),events=eventItemsForDate(d),lunch=lunchForDate(d);
+  const meal=!!lunch&&(!lunch.status||lunch.status==="meal")&&!!lunch.items?.length;
+  const indicators=[...new Set([...events.map(e=>kindClass(e)),...(meal?["lunch"]:[])])]
+   .sort((a,b)=>priority.indexOf(a)-priority.indexOf(b)).slice(0,3);
+  const weekend=[0,6].includes(d.getDay()),closed=events.some(e=>kindClass(e)==="closed");
+  const label=fmtDate(d)+(events.length?": "+events.map(e=>e.label).join(", "):"")+(meal?", lunch menu available":"");
+  html+='<button type="button" class="'+(weekend?"weekend ":"")+(closed?"closed ":"")+
+   (calendarDay&&sameDay(d,calendarDay)?"active":"")+'" data-cal-day="'+d.toISOString()+
+   '" aria-label="'+esc(label)+'" aria-pressed="'+(calendarDay&&sameDay(d,calendarDay)?"true":"false")+
+   '"><strong>'+day+'</strong><span class="calendar-dots" aria-hidden="true">'+
+   indicators.map(k=>'<span class="calendar-mark '+k+'"></span>').join("")+'</span></button>';
+ }
+ return html;
+}
 function agendaLunchHtml(date,lunch){
   const events=eventItemsForDate(date),closed=events.some(e=>kindClass(e)==="closed"),weekend=[0,6].includes(date.getDay());
   const text=closed||weekend||lunch?.status==="no-school"?"No school lunch":lunch?lunchText(lunch):lunchUnavailableText(date);
@@ -344,7 +362,7 @@ function renderCalendar(){
     header("ASSUMPTION BVM · GRADE 2","Calendar")+calendarSegments("month")+
     '<nav class="calendar-month-nav" aria-label="Change calendar month"><button type="button" data-cal-step="-1" aria-label="Previous month">‹</button><div aria-live="polite"><strong>'+MONTHS[m]+' '+y+'</strong><span>'+(calendarOffset===0?"Current month":"Browsing calendar")+'</span></div><button type="button" data-cal-step="1" aria-label="Next month">›</button></nav>'+
     (calendarOffset!==0?'<button type="button" class="calendar-today-jump" data-cal-today>Back to current month</button>':'')+
-    '<div class="calendar-layout"><section class="calendar-card"><div class="calendar-title-row"><span>Choose a day to see the plan.</span></div><div class="calendar-weekdays">'+["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(x=>"<span>"+x+"</span>").join("")+'</div><div class="calendar-grid">'+monthGrid(y,m)+'</div><div class="calendar-legend"><span><i class="test"></i>Test</span><span><i class="faith"></i>Faith</span><span><i class="family"></i>Family</span><span><i class="due"></i>Due</span><span><i class="lunch"></i>Lunch</span></div></section>'+
+    '<div class="calendar-layout"><section class="calendar-card"><div class="calendar-title-row"><span>Choose a date to see its plan.</span></div><div class="calendar-weekdays">'+["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(x=>"<span>"+x+"</span>").join("")+'</div><div class="calendar-grid">'+monthGrid(y,m)+'</div><div class="calendar-legend"><span><i class="test"></i>Test</span><span><i class="faith"></i>Faith</span><span><i class="family"></i>Family</span><span><i class="due"></i>Due</span><span><i class="lunch"></i>Lunch</span><span><i class="closed"></i>No school</span></div></section>'+
     '<section class="calendar-day-card" aria-live="polite"><div class="calendar-day-heading"><div><p>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</p><h2>'+MONTHS[calendarDay.getMonth()]+" "+calendarDay.getDate()+'</h2></div></div>'+
       (events.length?'<div class="calendar-event-list">'+events.map(e=>'<div><i class="'+kindClass(e)+'"></i><span><strong>'+esc(e.label)+'</strong></span></div>').join("")+'</div>':'<p class="calendar-empty">No special school events are listed for this date.</p>')+
       agendaLunchHtml(calendarDay,lunch)+'<button class="calendar-study-action primary-button" type="button" data-route="study">Start studying '+window.ABVMProductView.icon("arrow")+'</button>'+

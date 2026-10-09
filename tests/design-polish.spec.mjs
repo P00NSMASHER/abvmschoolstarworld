@@ -30,10 +30,19 @@ test('iPhone navigation and named calendar markers remain readable and fit', asy
   await expect(marks.first()).toBeVisible();
   const marker = await marks.first().evaluate(el => {
     const box = el.getBoundingClientRect(), style = getComputedStyle(el);
-    return { width: box.width, height: box.height, font: parseFloat(style.fontSize) };
+    return { width: box.width, height: box.height, round: style.borderRadius };
   });
-  expect(marker.width).toBeGreaterThanOrEqual(14);
-  expect(marker.font).toBeGreaterThanOrEqual(10);
+  expect(marker.width).toBeGreaterThanOrEqual(7);
+  expect(marker.height).toBeGreaterThanOrEqual(7);
+  expect(marker.round).toBe('50%');
+  await expect(page.locator('.calendar-legend')).toContainText('No school');
+  const dates = await page.locator('.calendar-grid button[data-cal-day]').evaluateAll(nodes =>
+    nodes.map(n => ({ width: n.getBoundingClientRect().width, height: n.getBoundingClientRect().height, label: n.getAttribute('aria-label') })));
+  for (const day of dates) {
+    expect(day.width).toBeGreaterThanOrEqual(44);
+    expect(day.height).toBeGreaterThanOrEqual(44);
+    expect(day.label).not.toBe('');
+  }
   expect(await page.locator('.screen').evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
 });
 

@@ -9,7 +9,11 @@ test('calendar reveals secondary school details without losing the date plan',as
   await expect(more).not.toHaveAttribute('open','');
   await expect(page.locator('.specials-card')).toBeVisible();
   await expect(page.locator('.next-month-card')).toBeVisible();
-  expect(await page.locator('.calendar-mark.test').first().evaluate(el=>getComputedStyle(el,'::before').content)).toBe('"T"');
+  const testMark=page.locator('.calendar-mark.test').first();
+  expect(await testMark.evaluate(el=>getComputedStyle(el,'::before').content)).toBe('none');
+  await expect(page.locator('.calendar-legend')).toContainText('Test');
+  const labelledDate=await testMark.locator('xpath=ancestor::button').getAttribute('aria-label');
+  expect(labelledDate).toContain(',');
   const ninth=page.locator('[data-cal-day]').filter({hasText:/^9$/});
   await expect(ninth).toHaveCount(1);
   await ninth.click();
