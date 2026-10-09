@@ -1,5 +1,5 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v149-teacher-freshness";
+const CACHE = "abvm-grade2-parent-companion-v150-facebook-source-isolation-teacher-freshness";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=113",
@@ -7,16 +7,16 @@ const STATIC_SHELL = [
   "./study-games-materials.css?v=16",
   "./study-support.js?v=3",
   "./app.js?v=137",
-  "./product-view.js?v=7",
+  "./product-view.js?v=8",
   "./study-teaching.css?v=1",
   "./school-updates.js?v=4",
   "./weekly-learning.js?v=6",
   "./study-games.js?v=103",
   "./study-games-view.js?v=14",
   "./manifest.webmanifest",
-  "./assets/abvm-app-icon-192.png"
+  "./facebook-updates.css?v=1"
 ];
-const OPTIONAL_DATA = ["./assets/abvm-app-icon-180.png", "./assets/abvm-app-icon-512.png", "./assets/badges/nest-explorer-premium.webp", "./assets/badges/little-luminary-premium.webp", "./assets/badges/feather-cadet-premium.webp", "./assets/badges/star-voyager-premium.webp", "./assets/badges/sky-scholar-premium.webp", "./assets/badges/wing-leader-premium.webp", "./assets/badges/study-sentinel-premium.webp", "./assets/badges/school-spirit-premium.webp", "./assets/badges/blue-ribbon-ace-premium.webp", "./assets/badges/golden-quill-premium.webp", "./assets/badges/sky-captain-premium.webp", "./assets/badges/eagle-vanguard-premium.webp", "./assets/badges/honor-guardian-premium.webp", "./assets/badges/crown-keeper-premium.webp", "./assets/badges/star-commander-premium.webp", "./assets/badges/eaglet.webp", "./assets/badges/starlight.webp", "./assets/badges/spark.webp", "./assets/badges/scholar.webp", "./assets/badges/golden.webp", "./assets/badges/eagle.webp", "./assets/badges/champion.webp", "./assets/illustrations/reading.webp", "./assets/illustrations/math.webp", "./assets/illustrations/spelling.webp", "./assets/illustrations/religion.webp", "./assets/illustrations/eagle.webp", "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./study-materials.mjs", "./study-games-materials-view.mjs?v=4", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs","./study-resources.mjs", "./study-model.mjs", "./star-practice.mjs", "./lunch-art.js?v=1", "./assets/school/abvm-school-sign.webp", "./assets/school/abvm-school-hero.webp", "./assets/school/abvm-school-aerial.webp", "./assets/school/abvm-school-facade.webp"];
+const OPTIONAL_DATA = ["./assets/abvm-app-icon-192.png", "./facebook-updates.js?v=1", "./assets/abvm-app-icon-180.png", "./assets/abvm-app-icon-512.png", "./assets/badges/nest-explorer-premium.webp", "./assets/badges/little-luminary-premium.webp", "./assets/badges/feather-cadet-premium.webp", "./assets/badges/star-voyager-premium.webp", "./assets/badges/sky-scholar-premium.webp", "./assets/badges/wing-leader-premium.webp", "./assets/badges/study-sentinel-premium.webp", "./assets/badges/school-spirit-premium.webp", "./assets/badges/blue-ribbon-ace-premium.webp", "./assets/badges/golden-quill-premium.webp", "./assets/badges/sky-captain-premium.webp", "./assets/badges/eagle-vanguard-premium.webp", "./assets/badges/honor-guardian-premium.webp", "./assets/badges/crown-keeper-premium.webp", "./assets/badges/star-commander-premium.webp", "./assets/badges/eaglet.webp", "./assets/badges/starlight.webp", "./assets/badges/spark.webp", "./assets/badges/scholar.webp", "./assets/badges/golden.webp", "./assets/badges/eagle.webp", "./assets/badges/champion.webp", "./assets/illustrations/reading.webp", "./assets/illustrations/math.webp", "./assets/illustrations/spelling.webp", "./assets/illustrations/religion.webp", "./assets/illustrations/eagle.webp", "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./study-materials.mjs", "./study-games-materials-view.mjs?v=4", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs","./study-resources.mjs", "./study-model.mjs", "./star-practice.mjs", "./lunch-art.js?v=1", "./assets/school/abvm-school-sign.webp", "./assets/school/abvm-school-hero.webp", "./assets/school/abvm-school-aerial.webp", "./assets/school/abvm-school-facade.webp"];
 
 self.addEventListener("install",event=>{
   event.waitUntil((async()=>{
@@ -96,7 +96,7 @@ self.addEventListener("fetch",event=>{
     event.respondWith(networkFirst(event.request,null,event));
     return;
   }
-  if(/\/data\/(?:study-archive|schoolwork|religion-sources)\.json$/.test(url.pathname)){
+  if(/\/data\/(?:study-archive|schoolwork|religion-sources|facebook-updates)\.json$/.test(url.pathname)){
     event.respondWith(networkFirst(event.request,null,event));return;
   }
   if(event.request.mode==="navigate"){

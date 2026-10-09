@@ -92,5 +92,6 @@ test("Calendar month and week link directly to the current official school calen
   const week=page.locator(".week-screen .calendar-source-link a");
   await expect(week).toHaveCount(1);
   await expect(week).toHaveAttribute("href","https://www.assumptionbvmschool.net/about/calendar");
+  await expect(page.locator('[data-facebook-feed]')).toHaveCount(1);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1)).toBe(false);
 });

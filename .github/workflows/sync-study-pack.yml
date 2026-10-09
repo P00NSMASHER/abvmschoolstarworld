@@ -10,6 +10,15 @@ on:
       - 'scripts/curriculum-families/**'
       - 'scripts/curriculum-continuity.mjs'
       - 'scripts/school-change-feed.mjs'
+      - 'scripts/facebook-feed-policy.mjs'
+      - 'scripts/sync-facebook-feeds.mjs'
+      - 'pages/data/facebook-sources.json'
+      - 'pages/data/facebook-reviewed-posts.json'
+      - 'pages/facebook-updates.js'
+      - 'pages/facebook-updates.css'
+      - 'tests/facebook-feed-policy.test.mjs'
+      - 'tests/facebook-sync.test.mjs'
+      - 'tests/facebook-ui.test.mjs'
       - 'scripts/validate-curriculum-candidates.mjs'
       - 'scripts/grade2-content-pipeline.mjs'
       - 'scripts/grade2-content-alignment.mjs'
@@ -73,6 +82,12 @@ jobs:
 
       - name: Scan and validate the public teacher pages
         run: node scripts/refresh-teacher-pages.mjs --autopilot-report=.curriculum-coverage-plan.json
+
+      - name: Check independently reviewed Facebook sources (never changes classroom data)
+        env:
+          ABVM_SCHOOL_FB_ACCESS_TOKEN: ${{ secrets.ABVM_SCHOOL_FB_ACCESS_TOKEN }}
+          ABVM_HSA_FB_ACCESS_TOKEN: ${{ secrets.ABVM_HSA_FB_ACCESS_TOKEN }}
+        run: node scripts/sync-facebook-feeds.mjs --write
 
       - name: Open governed curriculum candidate PR when coverage gaps exist
         env:
@@ -191,10 +206,13 @@ jobs:
         run: npm run qa
 
       - name: Commit refreshed pack against latest main
+        env:
+          ABVM_SCHOOL_FB_ACCESS_TOKEN: ${{ secrets.ABVM_SCHOOL_FB_ACCESS_TOKEN }}
+          ABVM_HSA_FB_ACCESS_TOKEN: ${{ secrets.ABVM_HSA_FB_ACCESS_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet -- pages/data/study-pack.json pages/data/study-archive.json; then
+          if git diff --quiet -- pages/data/study-pack.json pages/data/study-archive.json pages/data/facebook-updates.json; then
             echo "No school-pack changes."
             exit 0
           fi
@@ -211,17 +229,18 @@ jobs:
               echo "main advanced during refresh QA; regenerating and revalidating on $REMOTE_MAIN."
               git reset --hard "$REMOTE_MAIN"
               node scripts/refresh-teacher-pages.mjs --autopilot-report=.curriculum-coverage-plan.json
+              node scripts/sync-facebook-feeds.mjs --write
               node scripts/assert-curriculum-coverage-resolved.mjs --report=.curriculum-coverage-plan.json --context="Unresolved curriculum coverage after main advanced"
               node scripts/check-refresh-health.mjs --require-today --max-age-hours 1
               npm run qa
             fi
 
-            if git diff --quiet -- pages/data/study-pack.json pages/data/study-archive.json; then
+            if git diff --quiet -- pages/data/study-pack.json pages/data/study-archive.json pages/data/facebook-updates.json; then
               echo "Latest main already contains the refreshed school pack."
               exit 0
             fi
 
-            git add pages/data/study-pack.json pages/data/study-archive.json
+            git add pages/data/study-pack.json pages/data/study-archive.json pages/data/facebook-updates.json
             git commit -m "Refresh verified ABVM teacher pages"
             if git push origin HEAD:main; then
               exit 0

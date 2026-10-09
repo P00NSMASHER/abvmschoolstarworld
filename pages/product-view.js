@@ -131,6 +131,7 @@
             .join("") +
           "</section>"
         : "") +
+      (window.ABVMFacebookUpdates?.slot("today") || "") +
       freshness() +
       "</div>"
     );
@@ -238,6 +239,7 @@
         .join("") +
       "</section></div></div>" +
       overview +
+      (window.ABVMFacebookUpdates?.slot("week", c.days?.[0]?.toISOString().slice(0,10)) || "") +
       freshness() +
       "</div>"
     );
@@ -310,6 +312,7 @@
           "</ul></section>"
         : "") +
       window.ABVMSchoolUpdates.noticesCard(notices, linkedTextHtml) +
+      (window.ABVMFacebookUpdates?.slot("family") || "") +
       (window.ABVMWeeklyLearning.renderChanges(pack.schoolChangeFeed) || "") +
       "</div></details>" +
       freshness() +
