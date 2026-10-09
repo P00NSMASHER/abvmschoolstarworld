@@ -2005,3 +2005,11 @@ img {
   .calendar-more-content{padding:0 0 16px}
   .calendar-dots .calendar-mark{min-width:11px;height:12px;font-size:.53rem}
 }
+
+/* Compact primary-source reference. It does not change reviewed school data. */
+.calendar-source-link{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 16px;margin:0 0 14px;font-size:.79rem;line-height:1.4;color:var(--muted,#52657e)}
+.calendar-source-link>span{flex:1 1 180px}
+.calendar-source-link a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:7px 12px;border:1px solid var(--line,#dce7f3);border-radius:12px;background:var(--surface,#fff);font-size:.81rem;font-weight:750;text-decoration:none;color:var(--navy,#102e58);overflow-wrap:anywhere}
+.calendar-source-link a:hover{text-decoration:underline}
+.calendar-source-link a:focus-visible{outline:3px solid var(--navy,#102e58);outline-offset:3px}
+@media(max-width:420px){.calendar-source-link{font-size:.76rem}.calendar-source-link a{width:100%}}

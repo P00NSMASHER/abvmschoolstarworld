@@ -179,6 +179,7 @@
       '<div class="screen week-screen" role="region" aria-label="This week">' +
       header("THE SCHOOL PLAN", "This week") +
       c.segments +
+      window.ABVMSchoolUpdates.officialCalendarLink() +
       '<div class="week-toolbar"><nav class="week-nav" aria-label="Change displayed week"><button type="button" data-week-step="-1" aria-label="Previous week">‹</button><div aria-live="polite"><span>' +
       (offset === 0 ? "THIS SCHOOL WEEK" : "VIEWING WEEK") +
       "</span><strong>" +

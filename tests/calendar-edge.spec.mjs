@@ -78,3 +78,20 @@ test("school-year date parsing crosses December into January in the actual app",
   await expect(page.locator(".calendar-day-card")).toContainText("New Year");
   await context.close();
 });
+
+test("Calendar month and week link directly to the current official school calendar",async({page})=>{
+  await page.clock.setFixedTime(new Date("2026-10-09T14:00:00Z"));
+  await openCalendar(page);
+  const month=page.locator(".calendar-screen .calendar-source-link a");
+  await expect(month).toHaveCount(1);
+  await expect(month).toContainText("Official ABVM calendar");
+  await expect(month).toHaveAttribute("href","https://www.assumptionbvmschool.net/about/calendar");
+  await expect(month).toHaveAttribute("target","_blank");
+  await expect(month).toHaveAttribute("rel",/noopener noreferrer/);
+  await page.locator('.calendar-segments [data-route="week"]').click();
+  const week=page.locator(".week-screen .calendar-source-link a");
+  await expect(week).toHaveCount(1);
+  await expect(week).toHaveAttribute("href","https://www.assumptionbvmschool.net/about/calendar");
+  await expect(page.locator('[data-facebook-feed]')).toHaveCount(1);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1)).toBe(false);
+});
