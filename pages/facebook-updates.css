@@ -1,0 +1,13 @@
+.facebook-updates-card{margin:14px 0 20px;padding:17px 18px;border:1px solid rgba(17,52,91,.14);border-radius:18px;background:var(--surface,#fff);box-shadow:0 8px 24px rgba(13,38,72,.06)}
+.facebook-updates-card h2{font-size:1.05rem;line-height:1.35;margin:0 0 12px;color:var(--navy,#102e58)}
+.facebook-updates-list{display:grid;gap:11px}
+.facebook-update-row{padding:11px 0;border-top:1px solid rgba(12,41,77,.11)}
+.facebook-update-row:first-child{border-top:0;padding-top:0}
+.facebook-update-meta{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:5px 10px;font-size:.79rem;font-weight:700;color:var(--navy,#102e58)}
+.facebook-update-meta small{font-size:.76rem;font-weight:500;color:#53627a}
+.facebook-update-row p{font-size:.93rem;line-height:1.48;margin:7px 0;color:var(--ink,#172d46);overflow-wrap:anywhere}
+.facebook-update-row>small{display:block;font-size:.78rem;color:#56647a}
+.facebook-update-sources{font-size:.78rem;margin-top:7px;line-height:1.5}
+.facebook-update-sources a{color:#144d9b;text-decoration:underline;text-underline-offset:3px}
+.facebook-update-sources a:focus-visible{outline:2px solid #144d9b;outline-offset:3px;border-radius:2px}
+.facebook-updates-caveat{font-size:.72rem;line-height:1.45;color:#526279;margin:12px 0 0}
