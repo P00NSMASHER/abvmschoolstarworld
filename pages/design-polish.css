@@ -926,7 +926,7 @@
   background:radial-gradient(ellipse at 15% 4%,rgba(255,255,255,.75),transparent 58%),
              linear-gradient(147deg,rgba(255,255,255,.23),transparent 65%,rgba(52,78,116,.055));
 }
-.games-screen:not(.is-playing) .study-game-tile > :is(.study-game-icon,.study-game-copy,b) {
+.games-screen:not(.is-playing) .study-game-tile > :is(.study-game-icon,.study-game-copy) {
   z-index:1;position:relative;
 }
 .games-screen:not(.is-playing) .study-game-tile .study-game-icon {
@@ -954,6 +954,10 @@
 }
 .games-screen:not(.is-playing) .study-game-tile:disabled {
   box-shadow:none;
+}
+/* The chevron is decorative and must not create an extra grid/flex row. */
+.games-screen:not(.is-playing) .study-game-tile[data-game-start="mix"] > b {
+  position:absolute;top:50%;right:11px;transform:translateY(-50%);
 }
 .games-screen:not(.is-playing) .study-launch-layout .study-game-tile[data-game-start="mix"] {
   min-height:79px!important;
