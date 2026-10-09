@@ -1,0 +1,200 @@
+{
+  "candidateId": "curriculum-reading-ela-long-i-i-e-and-short-i-08bac3c7d8",
+  "familyId": "long-i-i-e-and-short-i",
+  "subject": "Reading / ELA",
+  "topic": "long i (i_e) and short i",
+  "sourceHash": "teacher-pages-b3c773500922209e0737",
+  "generatedAt": "2026-10-08T17:14:16.382Z",
+  "sourceContext": {
+    "quality": "page-exact",
+    "matchMethod": "exact-topic-phrase",
+    "subject": "Reading / ELA",
+    "topic": "long i (i_e) and short i",
+    "sourceTitle": "Reading Work",
+    "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
+    "sourceCaptureHash": "0675bd07bb42d58feaff3e43223026f935b26ab56f4ba9c2ca78b7a9c37217b2",
+    "sourceCheckedAt": "2026-10-08T17:14:16.382Z",
+    "sourceLine": "Phonics: long i (i_e) and short i",
+    "evidenceExcerptHash": "sha256:8752cf7ebaad32dd1d8ea2eec3983ff61c97f9637dddd4a7a4755caddcc6e9c5"
+  },
+  "featureFlag": "curriculum-family:long-i-i-e-and-short-i-candidate",
+  "enabledByDefault": false,
+  "registryMatch": null,
+  "minimumSemanticVariants": 8,
+  "requiredQuestionTypes": [
+    "direct",
+    "transfer",
+    "reasoning"
+  ],
+  "proposedQuestions": [
+    {
+      "candidateIndex": 1,
+      "questionType": "direct",
+      "prompt": "In a building game, an avatar needs to hide from a pretend dragon. Which word has long i made by silent e?",
+      "choices": [
+        "hide",
+        "high",
+        "hill"
+      ],
+      "answer": "hide",
+      "explanation": "Hide uses i-consonant-silent e. High has long i but not this spelling pattern; hill has short i.",
+      "hint": "Look for an i, one consonant, and a final e that is not spoken.",
+      "dok": 1,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 2,
+      "questionType": "direct",
+      "prompt": "A cartoon kitten plays with a ribbon and a clip. Which word has the short i sound heard in fish?",
+      "choices": [
+        "shine",
+        "clip",
+        "five"
+      ],
+      "answer": "clip",
+      "explanation": "Clip has the short i sound. Shine and five have the long i sound.",
+      "hint": "Say each word slowly and compare its vowel to the vowel in fish.",
+      "dok": 1,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 3,
+      "questionType": "transfer",
+      "prompt": "A cheer team stands in a straight ___. Which word both completes the sentence and uses silent e for long i?",
+      "choices": [
+        "line",
+        "lane",
+        "lint"
+      ],
+      "answer": "line",
+      "explanation": "Line is the word for the team's row, and its i-consonant-e spelling makes a long i sound. Lane has long a, and lint does not fit.",
+      "hint": "Think of the word for a row of people, then check its vowel spelling.",
+      "dok": 2,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 4,
+      "questionType": "transfer",
+      "prompt": "In a game, a cartoon cat will ___ behind a castle wall. Which spelling correctly completes the sentence?",
+      "choices": [
+        "hid",
+        "hide",
+        "hive"
+      ],
+      "answer": "hide",
+      "explanation": "After will, the sentence needs the base verb hide. The silent e makes the i long.",
+      "hint": "Read the complete sentence and check which choice is an action.",
+      "dok": 2,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 5,
+      "questionType": "reasoning",
+      "prompt": "Two cards for a costume game say 'pin' and 'pine.' Why does the i sound different?",
+      "choices": [
+        "The letter p makes vowels long.",
+        "Adding a silent e changes short i to long i.",
+        "Every four-letter word has long i."
+      ],
+      "answer": "Adding a silent e changes short i to long i.",
+      "explanation": "Pine adds a final silent e to pin. In this pattern, the i changes from its short sound to its long sound.",
+      "hint": "Compare the two spellings. Only one extra letter appears at the end.",
+      "dok": 3,
+      "difficulty": 3
+    },
+    {
+      "candidateIndex": 6,
+      "questionType": "reasoning",
+      "prompt": "A bow-making guide says 'bit' and 'bite.' Which explanation best compares their vowel sounds?",
+      "choices": [
+        "Both have short i because they start with b.",
+        "Adding a silent e changes the consonant sound instead of the vowel.",
+        "Bit has short i; the silent e in bite signals long i."
+      ],
+      "answer": "Bit has short i; the silent e in bite signals long i.",
+      "explanation": "Bit has short i. Bite adds silent e after the consonant, making the i sound long.",
+      "hint": "Check the final letters before deciding how the vowel changes.",
+      "dok": 3,
+      "difficulty": 3
+    },
+    {
+      "candidateIndex": 7,
+      "questionType": "transfer",
+      "prompt": "A game designer wants a pair that changes from short i to long i by adding a final e. Which pair works?",
+      "choices": [
+        "win → wins",
+        "pin → pine",
+        "fish → fishes"
+      ],
+      "answer": "pin → pine",
+      "explanation": "Pin has short i. Adding silent e makes pine, with long i. The other changes add endings without making this vowel change.",
+      "hint": "Look for one extra e at the end and a changed middle sound.",
+      "dok": 2,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 8,
+      "questionType": "reasoning",
+      "prompt": "A cheer captain writes, 'We will ___ across the mat.' Which choice is an action that fits and uses i-consonant-silent e for long i?",
+      "choices": [
+        "slid",
+        "side",
+        "slide"
+      ],
+      "answer": "slide",
+      "explanation": "Slide is a base-form action after will and uses the i-consonant-silent e pattern. Slid is past tense; side is a noun here.",
+      "hint": "Check both the grammar after will and the silent-e sound pattern.",
+      "dok": 3,
+      "difficulty": 3
+    }
+  ],
+  "authoring": {
+    "status": "DRAFT_FAMILY_PRESENT",
+    "generatedQuestionCount": 8,
+    "minimumSemanticVariants": 8,
+    "requiredQuestionTypes": [
+      "direct",
+      "transfer",
+      "reasoning"
+    ],
+    "requiredQuestionFields": [
+      "questionType",
+      "prompt",
+      "choices",
+      "answer",
+      "explanation",
+      "hint",
+      "dok",
+      "difficulty"
+    ]
+  },
+  "rollout": {
+    "featureFlagRequired": true,
+    "automatedQaRequired": true,
+    "safeUsageEvidenceRequired": true,
+    "manualPromotionRequired": true,
+    "automaticPromotion": false
+  },
+  "readiness": {
+    "status": "HOLD",
+    "blockers": [
+      "automated-qa-required",
+      "safe-usage-evidence-required",
+      "manual-promotion-required"
+    ],
+    "automaticPromotion": false,
+    "automaticDelete": false,
+    "automaticRewrite": false
+  },
+  "personalizationDesign": {
+    "status": "EDITORIAL_DRAFT",
+    "themes": [
+      "creative building games",
+      "cheer",
+      "cartoon cats",
+      "crafts"
+    ],
+    "privacy": "Fictional scenarios only; no student-specific activity or performance records.",
+    "requiresBrandKnowledge": false
+  }
+}

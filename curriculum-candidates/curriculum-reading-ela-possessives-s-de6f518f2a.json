@@ -1,0 +1,200 @@
+{
+  "candidateId": "curriculum-reading-ela-possessives-s-de6f518f2a",
+  "familyId": "possessives-s",
+  "subject": "Reading / ELA",
+  "topic": "possessives ('s)",
+  "sourceHash": "teacher-pages-b3c773500922209e0737",
+  "generatedAt": "2026-10-08T17:14:16.382Z",
+  "sourceContext": {
+    "quality": "page-exact",
+    "matchMethod": "exact-topic-phrase",
+    "subject": "Reading / ELA",
+    "topic": "possessives ('s)",
+    "sourceTitle": "Reading Work",
+    "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
+    "sourceCaptureHash": "0675bd07bb42d58feaff3e43223026f935b26ab56f4ba9c2ca78b7a9c37217b2",
+    "sourceCheckedAt": "2026-10-08T17:14:16.382Z",
+    "sourceLine": "Word Structure: possessives ('s)",
+    "evidenceExcerptHash": "sha256:4e521aa5fa424551741189f4d5985a23d50815298b13d45d660e99c5bb8afa87"
+  },
+  "featureFlag": "curriculum-family:possessives-s-candidate",
+  "enabledByDefault": false,
+  "registryMatch": null,
+  "minimumSemanticVariants": 8,
+  "requiredQuestionTypes": [
+    "direct",
+    "transfer",
+    "reasoning"
+  ],
+  "proposedQuestions": [
+    {
+      "candidateIndex": 1,
+      "questionType": "direct",
+      "prompt": "A cartoon kitten named Pip owns a tiny bell. Which phrase uses apostrophe-s to show that the bell belongs to Pip?",
+      "choices": [
+        "Pip has bells",
+        "Pip's bell",
+        "a bell for kittens"
+      ],
+      "answer": "Pip's bell",
+      "explanation": "Pip's uses an apostrophe before s to show that Pip owns the bell.",
+      "hint": "Look for one owner's name followed by an apostrophe and s.",
+      "dok": 1,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 2,
+      "questionType": "direct",
+      "prompt": "A cheerleader has one shiny bow for a performance. Which phrase shows that the bow belongs to that cheerleader?",
+      "choices": [
+        "the cheerleader's bow",
+        "bows for the team",
+        "a bow on the mat"
+      ],
+      "answer": "the cheerleader's bow",
+      "explanation": "Cheerleader's shows that one cheerleader owns the bow. The other phrases do not name an owner with apostrophe-s.",
+      "hint": "Find the phrase that marks possession after one person's name.",
+      "dok": 1,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 3,
+      "questionType": "transfer",
+      "prompt": "A fashion designer named Zoe owns silver sneakers. Which label correctly shows whose sneakers they are?",
+      "choices": [
+        "sneakers for a contest",
+        "Zoe is shopping",
+        "Zoe's sneakers"
+      ],
+      "answer": "Zoe's sneakers",
+      "explanation": "Zoe's sneakers uses the singular possessive to name Zoe as the owner.",
+      "hint": "A label showing one owner needs that name plus apostrophe-s.",
+      "dok": 2,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 4,
+      "questionType": "transfer",
+      "prompt": "In a game story, Nova owns a blue cape. Which phrase uses a possessive to label it?",
+      "choices": [
+        "Nova's cape",
+        "a cape for the game",
+        "Nova wore a cape"
+      ],
+      "answer": "Nova's cape",
+      "explanation": "Nova's cape names the owner using apostrophe-s. The others describe a purpose or an action.",
+      "hint": "Look for the short phrase that labels who owns the object.",
+      "dok": 2,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 5,
+      "questionType": "reasoning",
+      "prompt": "Which cheer sentence uses 's to show ownership, not as a shortened form of 'is'?",
+      "choices": [
+        "Mia's practicing her jumps.",
+        "Mia's blue pom-poms are on the shelf.",
+        "Mia's getting ready for practice."
+      ],
+      "answer": "Mia's blue pom-poms are on the shelf.",
+      "explanation": "Mia's blue pom-poms means the pom-poms belong to Mia. In the other sentences, Mia's means Mia is.",
+      "hint": "Try replacing the apostrophe-s with 'is.' Does the sentence still make sense?",
+      "dok": 3,
+      "difficulty": 3
+    },
+    {
+      "candidateIndex": 6,
+      "questionType": "reasoning",
+      "prompt": "Read: 'The kitten's blanket is purple.' What can you tell from the apostrophe-s?",
+      "choices": [
+        "Purple is the kitten's favorite color.",
+        "All the kittens have blankets.",
+        "One kitten is the owner of the blanket."
+      ],
+      "answer": "One kitten is the owner of the blanket.",
+      "explanation": "Kitten's names one kitten as the owner. The sentence does not tell the kitten's favorite color or what other kittens own.",
+      "hint": "Separate what the sentence actually tells you from guesses it does not support.",
+      "dok": 3,
+      "difficulty": 3
+    },
+    {
+      "candidateIndex": 7,
+      "questionType": "transfer",
+      "prompt": "On a craft table, Max owns the gold stickers and Nina owns the blue ribbon. Which label correctly shows who owns the stickers?",
+      "choices": [
+        "Nina's blue ribbon",
+        "Max's gold stickers",
+        "stickers for everyone"
+      ],
+      "answer": "Max's gold stickers",
+      "explanation": "Max's gold stickers correctly names the owner and matches the item described in the passage.",
+      "hint": "Match the item to the owner, then check that the apostrophe shows possession.",
+      "dok": 2,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 8,
+      "questionType": "reasoning",
+      "prompt": "A game character writes 'Pip's ribbon' on a prize label. Why does the label use apostrophe-s?",
+      "choices": [
+        "It shows that one cat named Pip owns the ribbon.",
+        "It shortens the words 'Pip is' on the prize label.",
+        "It means there are several cats named Pip."
+      ],
+      "answer": "It shows that one cat named Pip owns the ribbon.",
+      "explanation": "Pip's ribbon uses the singular possessive to say who owns the ribbon, not how many cats there are.",
+      "hint": "Ask whether the phrase names an owner, an action, or a group.",
+      "dok": 3,
+      "difficulty": 3
+    }
+  ],
+  "authoring": {
+    "status": "DRAFT_FAMILY_PRESENT",
+    "generatedQuestionCount": 8,
+    "minimumSemanticVariants": 8,
+    "requiredQuestionTypes": [
+      "direct",
+      "transfer",
+      "reasoning"
+    ],
+    "requiredQuestionFields": [
+      "questionType",
+      "prompt",
+      "choices",
+      "answer",
+      "explanation",
+      "hint",
+      "dok",
+      "difficulty"
+    ]
+  },
+  "rollout": {
+    "featureFlagRequired": true,
+    "automatedQaRequired": true,
+    "safeUsageEvidenceRequired": true,
+    "manualPromotionRequired": true,
+    "automaticPromotion": false
+  },
+  "readiness": {
+    "status": "HOLD",
+    "blockers": [
+      "automated-qa-required",
+      "safe-usage-evidence-required",
+      "manual-promotion-required"
+    ],
+    "automaticPromotion": false,
+    "automaticDelete": false,
+    "automaticRewrite": false
+  },
+  "personalizationDesign": {
+    "status": "EDITORIAL_DRAFT",
+    "themes": [
+      "cartoon cats",
+      "cheer accessories",
+      "fashion and sneakers",
+      "creative game characters"
+    ],
+    "privacy": "Fictional scenarios only; no student-specific activity or performance records.",
+    "requiresBrandKnowledge": false
+  }
+}

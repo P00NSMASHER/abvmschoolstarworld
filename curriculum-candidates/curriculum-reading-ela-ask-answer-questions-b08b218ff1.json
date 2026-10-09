@@ -1,0 +1,200 @@
+{
+  "candidateId": "curriculum-reading-ela-ask-answer-questions-b08b218ff1",
+  "familyId": "ask-answer-questions",
+  "subject": "Reading / ELA",
+  "topic": "Ask & answer questions",
+  "sourceHash": "teacher-pages-b3c773500922209e0737",
+  "generatedAt": "2026-10-08T17:14:16.382Z",
+  "sourceContext": {
+    "quality": "page-exact",
+    "matchMethod": "exact-topic-phrase",
+    "subject": "Reading / ELA",
+    "topic": "Ask & answer questions",
+    "sourceTitle": "Reading Work",
+    "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
+    "sourceCaptureHash": "0675bd07bb42d58feaff3e43223026f935b26ab56f4ba9c2ca78b7a9c37217b2",
+    "sourceCheckedAt": "2026-10-08T17:14:16.382Z",
+    "sourceLine": "Reading Comprehension: ask & answer questions; main idea/details",
+    "evidenceExcerptHash": "sha256:d622c06bf70d595f106e51823616b1e4d5cce174523b2ec8a13283d0e9109c0a"
+  },
+  "featureFlag": "curriculum-family:ask-answer-questions-candidate",
+  "enabledByDefault": false,
+  "registryMatch": null,
+  "minimumSemanticVariants": 8,
+  "requiredQuestionTypes": [
+    "direct",
+    "transfer",
+    "reasoning"
+  ],
+  "proposedQuestions": [
+    {
+      "candidateIndex": 1,
+      "questionType": "direct",
+      "prompt": "Read: 'At cheer practice, Ava put her silver pom-poms beside a blue water bottle. Then she practiced a jump.' Where did Ava put the pom-poms?",
+      "choices": [
+        "behind the speaker",
+        "beside a water bottle",
+        "inside a backpack"
+      ],
+      "answer": "beside a water bottle",
+      "explanation": "The passage says Ava put her pom-poms beside a blue water bottle before practicing.",
+      "hint": "For a where question, find the place named next to the item.",
+      "dok": 1,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 2,
+      "questionType": "direct",
+      "prompt": "Read: 'In a building game, Kai made a bridge over a river. He painted the bridge green.' What color was the bridge?",
+      "choices": [
+        "green",
+        "purple",
+        "blue"
+      ],
+      "answer": "green",
+      "explanation": "The second sentence tells the color Kai used on the bridge.",
+      "hint": "Find the sentence that describes what happened after the bridge was built.",
+      "dok": 1,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 3,
+      "questionType": "transfer",
+      "prompt": "Read: 'The blender started with a loud buzz. A cartoon kitten named Pip ran behind the sofa.' Why might Pip have hidden?",
+      "choices": [
+        "Pip wanted a snack.",
+        "Pip saw a bird outside.",
+        "The noise may have startled Pip."
+      ],
+      "answer": "The noise may have startled Pip.",
+      "explanation": "The sudden buzzing happened just before Pip hid. That is evidence the kitten may have been frightened by the sound.",
+      "hint": "A why answer can be inferred from what happened immediately before the action.",
+      "dok": 2,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 4,
+      "questionType": "transfer",
+      "prompt": "Read: 'Mila used four silver beads and one blue star charm to make a bracelet.' Which answer tells both how many beads she used and what charm she chose?",
+      "choices": [
+        "Four silver beads and a blue star",
+        "Two silver beads and a blue heart",
+        "Four blue beads and a silver star"
+      ],
+      "answer": "Four silver beads and a blue star",
+      "explanation": "The passage gives two details: four silver beads and a blue star charm.",
+      "hint": "Check both the number and color of the beads and the shape of the charm.",
+      "dok": 2,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 5,
+      "questionType": "reasoning",
+      "prompt": "Read: 'Music stopped during the cheer routine. Nora counted the beats out loud. The squad finished together.' Which detail best explains how Nora helped?",
+      "choices": [
+        "The routine had music.",
+        "Nora counted the beats aloud.",
+        "The squad finished the routine together."
+      ],
+      "answer": "Nora counted the beats aloud.",
+      "explanation": "Nora's counting replaced the missing music beat so the squad could keep moving together.",
+      "hint": "Find the action that helped the group continue after the problem.",
+      "dok": 3,
+      "difficulty": 3
+    },
+    {
+      "candidateIndex": 6,
+      "questionType": "reasoning",
+      "prompt": "Read: 'In a game, Nia walked toward a locked gate wearing red boots. She found a moon-shaped key. After she picked it up, the gate opened.' Which detail is the strongest clue about why the gate opened?",
+      "choices": [
+        "Nia wore red boots.",
+        "Nia walked toward a gate.",
+        "Nia picked up a moon-shaped key."
+      ],
+      "answer": "Nia picked up a moon-shaped key.",
+      "explanation": "The gate opened right after Nia picked up the key, making it the strongest clue. Her boots and walking do not explain the change.",
+      "hint": "Which event happened immediately before the gate opened?",
+      "dok": 3,
+      "difficulty": 3
+    },
+    {
+      "candidateIndex": 7,
+      "questionType": "transfer",
+      "prompt": "Read: 'Nina drew a cartoon cat, gave it a purple bow, and placed the drawing on the windowsill to dry.' What did Nina draw, and where did she put it?",
+      "choices": [
+        "A cartoon cat; on the windowsill",
+        "A cartoon cat; on the bookshelf",
+        "A purple flower; on the windowsill"
+      ],
+      "answer": "A cartoon cat; on the windowsill",
+      "explanation": "The passage names the picture and its drying spot. Both details must match.",
+      "hint": "Find what she drew first and where she placed it at the end.",
+      "dok": 2,
+      "difficulty": 2
+    },
+    {
+      "candidateIndex": 8,
+      "questionType": "reasoning",
+      "prompt": "Read: 'After making a glittery headband, Jo closed the glue bottle and returned the scissors to their box.' Which two details best show that Jo took care of the craft supplies?",
+      "choices": [
+        "The headband was glittery and Jo used scissors.",
+        "Jo made a headband and liked its color.",
+        "Jo closed the glue and put the scissors away."
+      ],
+      "answer": "Jo closed the glue and put the scissors away.",
+      "explanation": "Closing the glue and returning the scissors are both actions that keep craft supplies safe and organized.",
+      "hint": "Look for two actions that put materials away, not details about the decoration.",
+      "dok": 3,
+      "difficulty": 3
+    }
+  ],
+  "authoring": {
+    "status": "DRAFT_FAMILY_PRESENT",
+    "generatedQuestionCount": 8,
+    "minimumSemanticVariants": 8,
+    "requiredQuestionTypes": [
+      "direct",
+      "transfer",
+      "reasoning"
+    ],
+    "requiredQuestionFields": [
+      "questionType",
+      "prompt",
+      "choices",
+      "answer",
+      "explanation",
+      "hint",
+      "dok",
+      "difficulty"
+    ]
+  },
+  "rollout": {
+    "featureFlagRequired": true,
+    "automatedQaRequired": true,
+    "safeUsageEvidenceRequired": true,
+    "manualPromotionRequired": true,
+    "automaticPromotion": false
+  },
+  "readiness": {
+    "status": "HOLD",
+    "blockers": [
+      "automated-qa-required",
+      "safe-usage-evidence-required",
+      "manual-promotion-required"
+    ],
+    "automaticPromotion": false,
+    "automaticDelete": false,
+    "automaticRewrite": false
+  },
+  "personalizationDesign": {
+    "status": "EDITORIAL_DRAFT",
+    "themes": [
+      "cheer and teamwork",
+      "fictional building games",
+      "cartoon cats",
+      "creative jewelry and crafts"
+    ],
+    "privacy": "Fictional scenarios only; no student-specific activity or performance records.",
+    "requiresBrandKnowledge": false
+  }
+}
