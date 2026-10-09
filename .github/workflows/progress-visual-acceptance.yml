@@ -1,0 +1,48 @@
+name: Progress premium visual acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'pages/design-polish.css'
+      - 'pages/product-view.js'
+      - 'pages/index.html'
+      - 'pages/sw.js'
+      - 'tests/progress-premium.spec.mjs'
+      - 'playwright.config.mjs'
+      - '.github/workflows/progress-visual-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: abvm-progress-visual-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  progress-render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run pack:runtime
+      - run: npx playwright install --with-deps chromium webkit
+      - name: Test Progress render and true learning state in Chromium and WebKit
+        run: npx playwright test tests/progress-premium.spec.mjs --project=mobile --project=iphone-webkit --workers=1 --retries=0
+      - name: Retain real rendered screenshots, traces and accessibility receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: abvm-progress-visual-${{ github.run_id }}
+          path: |
+            test-results/**/progress-premium-*.png
+            test-results/**/test-failed*.png
+            test-results/**/trace.zip
+            playwright-report
+          retention-days: 14
+          if-no-files-found: ignore
