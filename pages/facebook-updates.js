@@ -4,11 +4,18 @@
   const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   }[ch]));
-  const trustedIds=new Set(['ABVM_SCHOOL_FACEBOOK','ABVM_HSA_FACEBOOK']);
-  const labels={
-    ABVM_SCHOOL_FACEBOOK:'ABVM school Facebook',
-    ABVM_HSA_FACEBOOK:'ABVM HSA Facebook'
-  };
+  // Pinned independent Page identities; cross-check against the source registry in QA.
+  const trusted=Object.freeze({
+    ABVM_SCHOOL_FACEBOOK:Object.freeze({
+      label:'ABVM school Facebook',pageId:'100057127132786',
+      organization:'Assumption BVM School',slug:'abvm11'
+    }),
+    ABVM_HSA_FACEBOOK:Object.freeze({
+      label:'ABVM HSA Facebook',pageId:'61552549763989',
+      organization:'Assumption BVM Home & School Association',
+      slug:'assumption-bvm-home-school-association-61552549763989'
+    })
+  });
   let feed=null;
   const ymd=(date)=>{
     const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',
@@ -25,14 +32,45 @@
     const date=new Date(day+'T12:00:00.000Z');
     return shift(day,-((date.getUTCDay()+6)%7));
   };
-  function verifiedLink(value){
+  function verifiedLink(source){
+    // The publisher label is only displayed when its Page, post ID and
+    // permalink agree. A facebook.com hostname by itself is insufficient.
+    const rule=trusted[source?.sourceId];
+    if(!rule||source.organization!==rule.organization||
+      typeof source.postId!=='string'||!source.postId.startsWith(rule.pageId+'_')||
+      !/^[A-Za-z0-9_]+$/.test(source.postId))return null;
+    const postSuffix=source.postId.slice(rule.pageId.length+1);
+    if(!postSuffix)return null;
     try{
-      const url=new URL(value);
-      if(url.protocol==='https:'&&['facebook.com','www.facebook.com','m.facebook.com'].includes(url.hostname)
-        &&!url.username&&!url.password)return url.href;
-    }catch{}
-    return null;
+      const url=new URL(source.postUrl);
+      if(url.protocol!=='https:'||url.username||url.password||
+        !['facebook.com','www.facebook.com','m.facebook.com'].includes(url.hostname))return null;
+      if(url.pathname.toLowerCase()==='/permalink.php'){
+        const story=url.searchParams.get('story_fbid');
+        if(url.searchParams.get('id')!==rule.pageId||!story||
+          (/^\d+$/.test(story)&&story!==postSuffix))return null;
+        return url.href;
+      }
+      const segments=decodeURIComponent(url.pathname).toLowerCase().split('/').filter(Boolean);
+      const slug=rule.slug, pageId=rule.pageId;
+      const exactPostRoute=
+        (segments.length===3&&segments[1]==='posts'&&
+          [slug,pageId].includes(segments[0]))||
+        (segments.length===4&&segments[0]==='p'&&
+          segments[1]===slug&&segments[2]==='posts')||
+        (segments.length===5&&segments[0]==='people'&&
+          segments[2]===pageId&&segments[3]==='posts');
+      const target=segments[segments.length-1]||'';
+      if(!exactPostRoute||!target||(/^\d+$/.test(target)&&target!==postSuffix))return null;
+      return url.href;
+    }catch{return null;}
   }
+  const isoTime=value=>typeof value==='string'&&
+    /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?(?:Z|[+-]\d\d:\d\d)$/.test(value)&&
+    Number.isFinite(Date.parse(value));
+  const reviewedDay=value=>typeof value==='string'&&/^\d{4}-\d\d-\d\d$/.test(value)&&
+    Number.isFinite(Date.parse(value+'T12:00:00.000Z'))&&
+    new Date(value+'T12:00:00.000Z').toISOString().slice(0,10)===value;
   function current(item,view,weekStart,now){
     const dates=Array.isArray(item.eventDates)?item.eventDates:[];
     const deadlines=Array.isArray(item.deadlineDates)?item.deadlineDates:[];
@@ -49,18 +87,23 @@
   function renderFor(input,view='today',weekStart='',now=new Date()){
     if(!input||input.schemaVersion!==1||!Array.isArray(input.display))return '';
     const rows=input.display.filter(item=>
-      item&&Array.isArray(item.sources)&&item.sources.length>0&&
-      item.sources.every(s=>trustedIds.has(s.sourceId)&&verifiedLink(s.postUrl))&&
+      item&&item.verificationStatus==='verified-and-reviewed'&&
+      Array.isArray(item.sources)&&item.sources.length>=1&&item.sources.length<=2&&
+      new Set(item.sources.map(s=>s.sourceId)).size===item.sources.length&&
+      item.sources.every(s=>!!verifiedLink(s))&&
       typeof item.summary==='string'&&item.summary.trim()&&
-      Number.isFinite(Date.parse(item.postedAt))&&current(item,view,weekStart,now)).slice(0,8);
+      isoTime(item.postedAt)&&
+      Array.isArray(item.eventDates)&&item.eventDates.every(reviewedDay)&&
+      Array.isArray(item.deadlineDates)&&item.deadlineDates.every(reviewedDay)&&
+      current(item,view,weekStart,now)).slice(0,8);
     if(rows.length===0)return '';
     const title=view==='today'?'From your school community':
       view==='week'?'School & HSA this week':'Facebook announcements';
     const cards=rows.map(item=>{
-      const tags=[...new Set(item.sources.map(source=>labels[source.sourceId]))];
+      const tags=item.sources.map(source=>trusted[source.sourceId].label);
       const links=item.sources.map(source=>
-        '<a href="'+esc(verifiedLink(source.postUrl))+'" target="_blank" rel="noopener noreferrer">'+
-        esc(labels[source.sourceId])+' post</a>').join(' · ');
+        '<a href="'+esc(verifiedLink(source))+'" target="_blank" rel="noopener noreferrer">'+
+        esc(trusted[source.sourceId].label)+' post</a>').join(' · ');
       const when=item.conflict?'Announcement details conflict · check original posts':
         [item.noticeStatus==='cancelled'?'Cancelled':item.noticeStatus==='corrected'?'Corrected':'',
         item.eventDates?.length?'Event: '+item.eventDates.join(', '):'',

@@ -218,3 +218,18 @@ it does not authorize the user to administer either school Page. A manual
 approved import still requires the post permalink, original publication
 time, privacy screening, author/Page identity and edit evidence. The system
 must never infer an original timestamp from a relative “hours ago” label.
+
+## Client-side Page and permalink validation
+
+The browser renderer independently binds each displayed source label to
+the two verified, pinned Page IDs: school `100057127132786` and HSA
+`61552549763989`. A valid facebook.com hostname alone never establishes
+the author. An announcement must carry the expected source ID, Page-owned
+post ID, original Page organization, verified-and-reviewed status, valid
+absolute publication timestamp, and a Page-bound permalink or exact Page
+posts route. Duplicate source claims, fabricated paths, mismatched numeric
+post IDs, unverified publication dates, and malformed event/deadline dates
+are not displayed. Tests cross-check these pinned values against the reviewed
+source registry. Server-side review and static feed validation remain the
+primary publication gates; client checking provides additional protection
+against incorrectly labeled content at render time.

@@ -45,13 +45,20 @@ function canonicalPostIsOwned(post,source){
     return url.searchParams.get('id')===source.pageId&&!!story&&
       (!/^\d+$/.test(story)||story===suffix);
   }
-  const segments=decodeURIComponent(url.pathname).toLowerCase().split('/').filter(Boolean);
-  const canonical=new URL(source.canonicalUrl).pathname.toLowerCase().split('/').filter(Boolean);
-  const pageSlug=canonical[canonical.length-1]||'';
-  const pageInPath=segments.includes(source.pageId)||segments.includes(pageSlug);
-  const postsAt=segments.indexOf('posts');
-  return pageInPath&&postsAt>=1&&!!segments[postsAt+1]&&
-    postsAt+2===segments.length;
+  try{
+    const segments=decodeURIComponent(url.pathname).toLowerCase().split('/').filter(Boolean);
+    const canonical=new URL(source.canonicalUrl).pathname.toLowerCase().split('/').filter(Boolean);
+    const pageSlug=canonical[canonical.length-1]||'';
+    const ownerPath=
+      (segments.length===3&&segments[1]==='posts'&&
+        [source.pageId,pageSlug].includes(segments[0]))||
+      (segments.length===4&&segments[0]==='p'&&
+        segments[1]===pageSlug&&segments[2]==='posts')||
+      (segments.length===5&&segments[0]==='people'&&
+        segments[2]===source.pageId&&segments[3]==='posts');
+    const target=segments[segments.length-1]||'';
+    return ownerPath&&!!target&&(!/^\d+$/.test(target)||target===suffix);
+  }catch{return false;}
 }
 export function validateFacebookSources(config){
   requireThat(config?.schemaVersion===1,'sources schema must be 1');

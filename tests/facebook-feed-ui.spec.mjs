@@ -4,8 +4,8 @@ const school={
   sourceId:'ABVM_SCHOOL_FACEBOOK',
   organization:'Assumption BVM School',
   category:'School event',
-  postId:'123456789012345_101',
-  postUrl:'https://www.facebook.com/permalink.php?story_fbid=101&id=123456789012345'
+  postId:'100057127132786_101',
+  postUrl:'https://www.facebook.com/permalink.php?story_fbid=101&id=100057127132786'
 };
 const hsa={
   sourceId:'ABVM_HSA_FACEBOOK',
@@ -82,5 +82,29 @@ test('a failed Facebook request never hides the verified school app',async({brow
   await expect(page.locator('.today-screen')).toBeVisible();
   await expect(page.locator('.hero-card')).toBeVisible();
   await expect(page.locator('.facebook-update-row')).toHaveCount(0);
+  await context.close();
+});
+
+test('mobile Today rejects a cross-owned school/HSA post before rendering it',async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:'block'});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date('2026-10-08T16:00:00.000Z'));
+  const malicious=[
+    item({id:'mislabel-school',sources:[{...school,postUrl:hsa.postUrl}]}),
+    item({id:'mislabel-hsa',sources:[{...hsa,postUrl:school.postUrl}]}),
+    item({id:'fabricated-path',sources:[{...school,postUrl:'https://www.facebook.com/another/100057127132786/posts/101'}]}),
+    item({id:'wrong-post-id',sources:[{...hsa,postId:school.postId}]}),
+    item({id:'relative-date',postedAt:'2026-10-08'}),
+    item({id:'valid-official-school',sources:[school]})
+  ];
+  await page.route('**/data/facebook-updates.json*',route=>route.fulfill({json:fixture(malicious)}));
+  await page.goto('/#today');
+  const rows=page.locator('[data-facebook-feed="today"] .facebook-update-row');
+  await expect(rows).toHaveCount(1);
+  await expect(rows).toContainText('Autumn community gathering at school.');
+  const links=rows.locator('a');
+  await expect(links).toHaveCount(1);
+  await expect(links.first()).toHaveAttribute('href',school.postUrl);
+  await expect(rows).not.toContainText('ABVM HSA Facebook');
   await context.close();
 });

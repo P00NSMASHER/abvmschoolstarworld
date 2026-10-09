@@ -106,6 +106,14 @@ test('Graph ownership and external posts are rejected even if the source label l
   assert.throws(()=>normalizeReviewedFacebookPost(wrong,hsa),/does not bind/);
   wrong.postUrl='https://www.facebook.com/fake/'+hsa.pageId+'/something';
   assert.throws(()=>normalizeReviewedFacebookPost(wrong,hsa),/does not bind/);
+  wrong.postUrl='https://www.facebook.com/another/'+hsa.pageId+'/posts/101';
+  assert.throws(()=>normalizeReviewedFacebookPost(wrong,hsa),/does not bind/);
+  wrong.postUrl='https://www.facebook.com/'+hsa.pageId+'/posts/999';
+  assert.throws(()=>normalizeReviewedFacebookPost(wrong,hsa),/does not bind/);
+  wrong.postUrl='https://www.facebook.com/'+hsa.pageId+'/posts/101';
+  assert.equal(normalizeReviewedFacebookPost(wrong,hsa).sourceId,hsa.id);
+  wrong.postUrl='https://www.facebook.com/people/Assumption-BVM-Home-School-Association/'+hsa.pageId+'/posts/101';
+  assert.equal(normalizeReviewedFacebookPost(wrong,hsa).sourceId,hsa.id);
   wrong.postUrl='https://www.facebook.com/permalink.php?story_fbid=999&id='+hsa.pageId;
   assert.throws(()=>normalizeReviewedFacebookPost(wrong,hsa),/does not bind/);
   wrong.postUrl='https://www.facebook.com/permalink.php?id='+hsa.pageId;
