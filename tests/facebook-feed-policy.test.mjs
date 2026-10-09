@@ -63,6 +63,15 @@ test('conflicting event dates are explicitly flagged and never silently selected
   assert.equal(feed.display.length,2);
   assert.ok(feed.display.every(x=>x.conflict));
 });
+test('two notices with matching dates but materially different details cannot silently merge',()=>{
+  const result=buildFacebookFeed(verifiedConfig,{schemaVersion:1,posts:[
+    post(school,{summary:'School concert starts at 6 PM'}),
+    post(hsa,{summary:'School concert starts at 7 PM'})
+  ]},{},new Date(timestamp)).feed;
+  assert.equal(result.display.length,2);
+  assert.equal(result.conflicts.length,1);
+  assert.ok(result.display.every(row=>row.conflict));
+});
 test('HSA cannot establish academic instructions without teacher corroboration',()=>{
   assert.throws(()=>normalizeReviewedFacebookPost(post(hsa,{category:'Academic'}),hsa),/academic instructions/);
   assert.throws(()=>normalizeReviewedFacebookPost(post(school,{category:'Academic'}),school),/academic instructions/);

@@ -127,7 +127,7 @@ function assembleDisplays(posts){
   }
   const display=[],conflicts=[];
   for(const [key,group] of byEvent){
-    const signatures=[...new Set(group.map(p=>[p.eventDates.join('|'),p.deadlineDates.join('|'),p.noticeStatus].join('::')))];
+    const signatures=[...new Set(group.map(p=>[p.eventDates.join('|'),p.deadlineDates.join('|'),p.noticeStatus,clean(p.summary).toLowerCase()].join('::')))];
     if(signatures.length>1){
       conflicts.push({eventKey:key,sourceIds:[...new Set(group.map(p=>p.sourceId))],
         postIds:group.map(p=>p.postId),eventDateVariants:group.map(p=>({sourceId:p.sourceId,dates:p.eventDates,deadlines:p.deadlineDates,status:p.noticeStatus}))});

@@ -103,7 +103,7 @@ Original dates must be explicitly verified; relative dates or partial dates
 must be held for review, never inferred from collection time. A second Page's
 separately approved post may share the reviewed eventKey: the UI shows one
 event with two named source links while source records stay independent.
-Conflicting dates on one eventKey remain distinct with a conflict flag.
+Conflicting dates, status, deadlines, or summary details on one eventKey remain distinct with a conflict flag.
 
 Run npm run qa:static, npm run qa:unit, and
 node scripts/sync-facebook-feeds.mjs --write. Do not edit output JSON by hand.

@@ -61,7 +61,7 @@
       const links=item.sources.map(source=>
         '<a href="'+esc(verifiedLink(source.postUrl))+'" target="_blank" rel="noopener noreferrer">'+
         esc(labels[source.sourceId])+' post</a>').join(' · ');
-      const when=item.conflict?'Dates or status conflict · check original posts':
+      const when=item.conflict?'Announcement details conflict · check original posts':
         [item.noticeStatus==='cancelled'?'Cancelled':item.noticeStatus==='corrected'?'Corrected':'',
         item.eventDates?.length?'Event: '+item.eventDates.join(', '):'',
         item.deadlineDates?.length?'Due: '+item.deadlineDates.join(', '):''].filter(Boolean).join(' · ')||

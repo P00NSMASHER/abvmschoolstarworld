@@ -42,6 +42,6 @@ test('today/week selection derives from original dates, not retrieval/check time
 test('conflicts stay explicitly unresolved on Today',()=>{
   const html=api().renderFor({schemaVersion:1,display:[{summary:'Different schedule dates',
     sources:[school],eventDates:['2026-10-08'],postedAt:day,conflict:true}]},'today','',today);
-  assert.match(html,/Dates or status conflict/);
+  assert.match(html,/Announcement details conflict/);
   assert.doesNotMatch(html,/Confirmed date/i);
 });
