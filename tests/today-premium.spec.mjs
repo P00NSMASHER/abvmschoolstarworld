@@ -17,6 +17,15 @@ test('Today premium signature: mobile layout and retained source-backed actions'
     await expect(page.locator('.school-photo-hero .hero-photo')).toBeVisible();
     await expect(page.locator('.school-photo-hero')).toContainText('Hi, Emma!');
     await expect(page.locator('.today-primary .priority-card')).toHaveCount(1);
+    // The large numeral must not inherit the generic card metadata style.
+    const dateNumber = page.locator('.priority-card .date-tile span');
+    await expect(dateNumber).toHaveText('9');
+    const dateStyle = await dateNumber.evaluate(el => ({
+      font: parseFloat(getComputedStyle(el).fontSize),
+      color: getComputedStyle(el).color,
+    }));
+    expect(dateStyle.font).toBeGreaterThanOrEqual(25);
+    expect(dateStyle.color).toBe('rgb(21, 47, 84)');
     await expect(page.locator('.study-invitation')).toBeVisible();
     await expect(page.locator('.today-screen > .lunch-card')).toBeVisible();
     await expect(page.locator('.today-panel')).toBeVisible();
