@@ -35,15 +35,20 @@
     "</h2>" +
     action +
     "</div>";
-  const route = (tab, label, klass = "text-button") =>
+  const route = (tab, label, klass = "text-button", accessibleLabel = "") =>
     '<button class="' +
     klass +
     '" type="button" data-route="' +
     tab +
-    '">' +
+    '"' + (accessibleLabel ? ' aria-label="' + esc(accessibleLabel) + '"' : "") +
+    '>' +
     esc(label) +
     icon("arrow") +
     "</button>";
+  // The Today lunch is above the fold on phones. Render its reviewed image
+  // eagerly while leaving Week/Calendar lunch artwork lazy-loaded.
+  const eagerTodayLunchArt = (markup) =>
+    markup.replace('loading="lazy"', 'loading="eager"');
   function today(c) {
     const {
       d,
@@ -60,6 +65,18 @@
       fmtShort,
     } = c;
     const closed = events.some((e) => kindClass(e) === "closed");
+    // Suppress only equivalent date-prefixed notices already in today's timeline.
+    // Keep the full data intact; a price, deadline detail or added instruction
+    // makes the notice distinct and therefore remains visible.
+    const comparableNotice = (value) =>
+      String(value ?? "")
+        .toLowerCase()
+        .replace(/^(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b[^:]{0,45}:\s*/i, "")
+        .replace(/\b(?:is|are|was|were)\b/g, "")
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim();
+    const listedEvents = new Set(events.map(e => comparableNotice(e.label)));
+    const visibleReminders = reminders.filter(x => !listedEvents.has(comparableNotice(x)));
     const nextHtml = next
       ? '<section class="priority-card"><div class="date-tile"><strong>' +
         esc(fmtShort(next.d).split(" ")[0]) +
@@ -76,6 +93,7 @@
           kindClass(next.x) === "due" ? "week" : "study",
           "Open",
           "icon-button",
+          (kindClass(next.x) === "due" ? "View school week for " : "Open Study for ") + next.x.label,
         ) +
         "</section>"
       : '<section class="priority-card quiet"><span class="feature-icon">' +
@@ -104,7 +122,7 @@
       '<button class="study-invitation" type="button" data-route="study"><img src="./assets/illustrations/reading.webp" width="72" height="72" alt=""><span><strong>Start studying</strong><small>A little practice. A little more confidence.</small></span>' +
       icon("arrow") +
       "</button></div>" +
-      lunchHtml +
+      eagerTodayLunchArt(lunchHtml) +
       '<section class="today-panel">' +
       sectionHead(closed ? "Today’s plan" : "At school today") +
       '<div class="timeline">' +
@@ -116,10 +134,10 @@
           "</div>"
         : "") +
       "</section>" +
-      (reminders.length
+      (visibleReminders.length
         ? '<section class="today-updates-card">' +
           sectionHead("Worth remembering", route("family", "All updates")) +
-          reminders
+          visibleReminders
             .map(
               (x) =>
                 '<div class="reminder-line"><span aria-hidden="true">' +
@@ -336,7 +354,7 @@ function render(c,kind='collection'){
 function promotion(ranks){const latest=ranks?.at(-1);if(!latest)return "";return '<section class="study-rank-promotion" role="status" aria-label="New ABVM rank earned"><span class="promotion-eyebrow">NEW RANK UNLOCKED</span>'+image(latest,150)+'<h3>'+esc(latest.title)+'</h3><p>'+esc(ranks.length>1?ranks.length+' new ranks earned this round!':'You earned your next ABVM rank!')+'</p><button type="button" data-open-badges>Explore your rank ladder <span aria-hidden="true">›</span></button></section>'}
 function sync(c){const changed=JSON.stringify(saved)!==JSON.stringify(c);saved=c;if(!changed)return c;document.querySelectorAll('[data-badge-surface]').forEach(host=>{host.innerHTML=render(c,host.dataset.badgeSurface)});return c}
 function surface(kind){return '<div class="study-badge-surface" data-badge-surface="'+kind+'">'+render(saved,kind)+'</div>'}
-function mount(root,kind,load){const anchor=root.querySelector(kind==='today'?'.today-panel':kind==='collection'?'.family-hero':'.study-tools');if(!anchor)return;anchor.insertAdjacentHTML(kind==='collection'?'afterend':'beforebegin',surface(kind));refresh(load)}
+function mount(root,kind,load){const anchor=kind==='today'?(root.querySelector('.today-updates-card')||root.querySelector('.today-panel')):root.querySelector(kind==='collection'?'.family-hero':'.study-tools');if(!anchor)return;anchor.insertAdjacentHTML(kind==='collection'||kind==='today'?'afterend':'beforebegin',surface(kind));refresh(load)}
 function refresh(load){if(pending)return pending;pending=Promise.resolve().then(load).then(sync).catch(()=>{saved=null;document.querySelectorAll('[data-badge-surface]').forEach(host=>{host.innerHTML='<p class="badge-storage-error" role="status">Your stars could not be loaded. Practice is still available.</p>'})}).finally(()=>{pending=null});return pending}
 window.ABVMStudyBadges=Object.freeze({render,promotion,surface,mount,refresh,sync,snapshot:()=>saved});
 })();
