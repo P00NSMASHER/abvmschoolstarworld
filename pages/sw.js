@@ -1,5 +1,5 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v146-design-offline";
+const CACHE = "abvm-grade2-parent-companion-v147-facebook-source-isolation";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=112",
@@ -7,7 +7,9 @@ const STATIC_SHELL = [
   "./study-games-materials.css?v=16",
   "./study-support.js?v=3",
   "./app.js?v=135",
-  "./product-view.js?v=6",
+  "./product-view.js?v=7",
+  "./facebook-updates.js?v=1",
+  "./facebook-updates.css?v=1",
   "./study-teaching.css?v=1",
   "./school-updates.js?v=3",
   "./weekly-learning.js?v=6",
@@ -96,7 +98,7 @@ self.addEventListener("fetch",event=>{
     event.respondWith(networkFirst(event.request,null,event));
     return;
   }
-  if(/\/data\/(?:study-archive|schoolwork|religion-sources)\.json$/.test(url.pathname)){
+  if(/\/data\/(?:study-archive|schoolwork|religion-sources|facebook-updates)\.json$/.test(url.pathname)){
     event.respondWith(networkFirst(event.request,null,event));return;
   }
   if(event.request.mode==="navigate"){
