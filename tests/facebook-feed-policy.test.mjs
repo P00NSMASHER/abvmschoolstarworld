@@ -95,6 +95,12 @@ test('Graph ownership and external posts are rejected even if the source label l
   assert.throws(()=>normalizeReviewedFacebookPost(wrong,hsa),/does not bind/);
   wrong.postUrl='https://fake-facebook.example/post/1';
   assert.throws(()=>normalizeReviewedFacebookPost(wrong,hsa),/does not bind/);
+  wrong.postUrl='https://www.facebook.com/fake/'+hsa.pageId+'/something';
+  assert.throws(()=>normalizeReviewedFacebookPost(wrong,hsa),/does not bind/);
+  wrong.postUrl='https://www.facebook.com/permalink.php?story_fbid=999&id='+hsa.pageId;
+  assert.throws(()=>normalizeReviewedFacebookPost(wrong,hsa),/does not bind/);
+  wrong.postUrl='https://www.facebook.com/permalink.php?id='+hsa.pageId;
+  assert.throws(()=>normalizeReviewedFacebookPost(wrong,hsa),/does not bind/);
 });
 test('repeated runs are idempotent and do not rewrite collection time',()=>{
   const reviewed={schemaVersion:1,posts:[post(hsa)]};

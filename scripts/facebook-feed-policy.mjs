@@ -37,12 +37,21 @@ function facebookUrl(value){
 function canonicalPostIsOwned(post,source){
   const url=facebookUrl(post.postUrl);
   if(!url)return false;
-  const linkedId=url.searchParams.get('id');
-  if(linkedId&&linkedId!==source.pageId)return false;
-  const pageSlug=new URL(source.canonicalUrl).pathname.split('/').filter(Boolean).slice(-1)[0]||'';
-  const path=decodeURIComponent(url.pathname).toLowerCase();
-  return (linkedId===source.pageId)||path.includes(source.pageId)||
-    (pageSlug.length>=8&&path.includes(pageSlug.toLowerCase()));
+  // A Facebook hostname alone does not prove authorship. Exact Page binding
+  // is mandatory for both permalink and post-path URL formats.
+  const suffix=post.postId.slice(source.pageId.length+1);
+  if(url.pathname.toLowerCase()==='/permalink.php'){
+    const story=url.searchParams.get('story_fbid')||'';
+    return url.searchParams.get('id')===source.pageId&&!!story&&
+      (!/^\d+$/.test(story)||story===suffix);
+  }
+  const segments=decodeURIComponent(url.pathname).toLowerCase().split('/').filter(Boolean);
+  const canonical=new URL(source.canonicalUrl).pathname.toLowerCase().split('/').filter(Boolean);
+  const pageSlug=canonical[canonical.length-1]||'';
+  const pageInPath=segments.includes(source.pageId)||segments.includes(pageSlug);
+  const postsAt=segments.indexOf('posts');
+  return pageInPath&&postsAt>=1&&!!segments[postsAt+1]&&
+    postsAt+2===segments.length;
 }
 export function validateFacebookSources(config){
   requireThat(config?.schemaVersion===1,'sources schema must be 1');
