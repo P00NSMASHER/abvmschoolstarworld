@@ -388,3 +388,362 @@
 .study-rank-promotion p{color:#eef5ff;font-size:.9rem;line-height:1.45;margin:0 0 5px}
 .study-rank-promotion button{min-height:44px;margin-top:4px;border:1px solid #e6bb54;border-radius:12px;background:linear-gradient(#ffe5a1,#eebd4d);color:#08244c;font-weight:800;padding:11px 17px}
 @media(prefers-reduced-motion:no-preference){.study-rank-promotion .study-badge-art{animation:rank-unlocked-entrance .55s ease-out both}@keyframes rank-unlocked-entrance{from{transform:scale(.82);opacity:.5}to{transform:scale(1);opacity:1}}}
+
+
+/* ==========================================================================
+   Study player signature finish · October 2026
+   CSS-only refinement of the existing governed question/score/feedback DOM.
+   Scope intentionally excludes Study Home and the student badge collection.
+   No study engine, assessment, grading or stored-state modifications.
+   ========================================================================== */
+.games-screen.is-playing {
+  --player-navy: #0a2347;
+  --player-navy-light: #244f82;
+  --player-gold: #ffce45;
+  --player-border: #d8e6f2;
+  --player-shadow: 0 9px 25px rgba(13,44,82,.09), 0 2px 6px rgba(13,44,82,.035);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.games-screen.is-playing .study-player-header {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: #fff;
+  background: linear-gradient(126deg,#315c8e 0%,#133762 39%,#081d3b 100%);
+  border: 1px solid rgba(180,213,246,.25);
+  border-bottom: 3px solid #ffd04c;
+  border-radius: 23px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.24),0 9px 24px rgba(10,35,77,.17);
+}
+.games-screen.is-playing .study-player-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(111deg,rgba(255,255,255,.15),transparent 39%),
+              radial-gradient(ellipse at 92% 5%,rgba(148,204,255,.13),transparent 56%);
+}
+.games-screen.is-playing .study-player-header > * { position: relative; z-index: 1; }
+.games-screen.is-playing .game-topbar { align-items: flex-start; gap: 11px; margin-bottom: 12px; }
+.games-screen.is-playing .game-topbar > button {
+  flex: 0 0 44px;
+  width: 44px; height: 44px; padding: 9px;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(229,240,255,.32);
+  border-radius: 14px;
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.17);
+}
+.games-screen.is-playing .game-topbar > div {
+  min-width: 0;
+  grid-template-columns: minmax(0,1fr) auto;
+  gap: 5px 7px;
+  padding-top: 2px;
+}
+.games-screen.is-playing .game-topbar > div > span {
+  min-width: 0;
+  font-size: 1rem;
+  font-weight: 780;
+  letter-spacing: -.022em;
+  line-height: 1.28;
+  overflow-wrap: anywhere;
+}
+.games-screen.is-playing .game-topbar > div > strong {
+  align-self: center;
+  color: #ffdf88;
+  font-size: .76rem;
+  font-weight: 750;
+  line-height: 1.35;
+  white-space: normal;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+.games-screen.is-playing .game-topbar .game-live-score {
+  grid-column: 1/-1;
+  min-width: 0;
+  color: #ebf5ff;
+  font-size: .75rem;
+  font-weight: 650;
+  line-height: 1.38;
+}
+.games-screen.is-playing .game-topbar .game-streak,
+.games-screen.is-playing .game-topbar .game-star-balance {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  width: fit-content;
+  max-width: 100%;
+  padding: 5px 8px;
+  border: 1px solid rgba(255,255,255,.20);
+  border-radius: 10px;
+  background: rgba(255,255,255,.095);
+  font-size: .7rem;
+  line-height: 1.34;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+.games-screen.is-playing .game-topbar .game-streak { grid-column: 1; }
+.games-screen.is-playing .game-topbar .game-star-balance {
+  grid-column: 2;
+  justify-self: end;
+  text-align: right;
+  color: #ffdf86;
+  border-color: rgba(255,216,124,.3);
+  background: rgba(255,213,100,.09);
+}
+.games-screen.is-playing .game-topbar .game-streak.positive { color: #fff0aa; }
+.games-screen.is-playing .game-topbar .game-streak.negative { color: #ffd7ca; }
+.games-screen.is-playing .game-progress {
+  height: 9px;
+  margin: 0;
+  border: 1px solid rgba(255,255,255,.24);
+  border-radius: 99px;
+  background: rgba(213,234,255,.32);
+  box-shadow: inset 0 1px 2px rgba(6,22,51,.22);
+}
+.games-screen.is-playing .game-progress > span {
+  background: linear-gradient(180deg,#fff0a0,#ffd047 60%,#f3b622);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.55);
+}
+.games-screen.is-playing .game-question-card {
+  min-width: 0;
+  padding: 20px 19px 23px;
+  border: 1px solid var(--player-border);
+  border-radius: 24px;
+  color: #102e58;
+  background: linear-gradient(167deg,#fff 0%,#fbfdff 51%,#f1f7ff 100%);
+  box-shadow: var(--player-shadow),inset 0 1px 0 #fff;
+}
+.games-screen.is-playing .game-question-meta {
+  gap: 6px 8px;
+  color: #536d88;
+}
+.games-screen.is-playing .game-question-meta > span {
+  color: #174373;
+  font-size: .73rem;
+  line-height: 1.32;
+  letter-spacing: .055em;
+  font-weight: 790;
+}
+.games-screen.is-playing .game-question-meta > b {
+  padding: 5px 9px;
+  border: 1px solid #d5e4f3;
+  border-radius: 10px;
+  background: #ecf5ff;
+  color: #3a5979;
+  font-size: .72rem;
+  font-weight: 670;
+  line-height: 1.32;
+}
+.games-screen.is-playing .game-question-card > h2 {
+  margin: 17px 0 18px;
+  font-size: clamp(1.37rem,4.7vw,1.67rem);
+  font-weight: 790;
+  line-height: 1.34;
+  letter-spacing: -.035em;
+  text-wrap: pretty;
+  overflow-wrap: anywhere;
+}
+.games-screen.is-playing .game-answer-list { gap: 10px; margin-top: 10px; }
+.games-screen.is-playing .game-answer {
+  min-width: 0;
+  min-height: 65px;
+  gap: 12px;
+  padding: 11px 13px;
+  border: 1px solid #cfdfef;
+  border-radius: 17px;
+  background: linear-gradient(155deg,#fff 0%,#f5faff 65%,#eaf4ff 100%);
+  color: #17385f;
+  box-shadow: 0 3px 11px rgba(15,49,87,.06),inset 0 1px 0 #fff;
+}
+/* Numeric questions have a more-specific legacy tile selector. Keep their
+   generous numeral sizing while restoring the same unselected material finish. */
+.games-screen.is-playing .game-answer-list.is-numeric .game-answer:not(.correct):not(.wrong) {
+  background: linear-gradient(155deg,#fff 0%,#f6fbff 65%,#edf6ff 100%);
+}
+/* Pointer and simulated-touch hover should retain a dimensional surface.
+   The generic legacy hover rule otherwise switches the background to flat blue. */
+.games-screen.is-playing .game-answer:hover:not(:disabled):not(.correct):not(.wrong) {
+  border-color: #8db8df;
+  background: linear-gradient(155deg,#fff 0%,#f2f9ff 60%,#dfefff 100%);
+  box-shadow: 0 4px 12px rgba(18,67,117,.09),inset 0 1px 0 #fff;
+}
+.games-screen.is-playing .game-answer > span {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #c5d9f0;
+  border-radius: 11px;
+  background: linear-gradient(150deg,#edf6ff,#daecff);
+  color: #153a66;
+  font-size: .82rem;
+  font-weight: 800;
+}
+.games-screen.is-playing .game-answer > strong {
+  min-width: 0;
+  font-size: 1rem;
+  line-height: 1.43;
+  font-weight: 650;
+  letter-spacing: -.009em;
+  overflow-wrap: anywhere;
+}
+.games-screen.is-playing .game-answer:focus-visible {
+  outline: 3px solid #b68a1e;
+  outline-offset: 2px;
+}
+.games-screen.is-playing .game-answer:disabled:not(.correct):not(.wrong) { opacity: .72; }
+/* Keep resolved answers legible. The global button:disabled opacity of .6
+   is appropriate for unavailable controls, not correctness feedback. */
+.games-screen.is-playing .game-answer.correct:disabled,
+.games-screen.is-playing .game-answer.wrong:disabled { opacity: 1; }
+.games-screen.is-playing .game-answer.correct {
+  border-color: #70a78d;
+  background: linear-gradient(150deg,#f4fff8,#e5f5eb);
+  color: #235941;
+  box-shadow: inset 0 1px 0 #fff,0 3px 10px rgba(23,90,57,.08);
+}
+.games-screen.is-playing .game-answer.correct > span {
+  background: #317a5e;
+  border-color: #317a5e;
+  color: #fff;
+}
+.games-screen.is-playing .game-answer.wrong {
+  border-color: #daa99c;
+  background: linear-gradient(155deg,#fffaf8,#fff0eb);
+  color: #813d2e;
+  box-shadow: inset 0 1px 0 #fff,0 3px 10px rgba(136,65,44,.065);
+}
+.games-screen.is-playing .game-answer.wrong > span {
+  background: #9d513f;
+  border-color: #9d513f;
+  color: #fff;
+}
+.games-screen.is-playing .game-hint-wrap { margin-top: 13px; }
+.games-screen.is-playing .game-hint-button,
+.games-screen.is-playing .game-read-button {
+  min-height: 46px;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 13px;
+  font-size: .86rem;
+  font-weight: 730;
+  line-height: 1.3;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+}
+.games-screen.is-playing .game-hint-button {
+  border-color: #e8cb76;
+  background: linear-gradient(145deg,#fff8d9,#ffe9a6);
+}
+.games-screen.is-playing .game-read-button {
+  border-color: #d0e2f3;
+  background: linear-gradient(145deg,#f4faff,#e5f2ff);
+}
+.games-screen.is-playing .game-hint {
+  padding: 13px 14px;
+  border: 1px solid #eddb9c;
+  border-radius: 14px;
+  background: linear-gradient(155deg,#fffdf5,#fff2cc);
+  color: #5b451a;
+  font-size: .95rem;
+  line-height: 1.52;
+}
+.games-screen.is-playing .game-feedback {
+  gap: 11px;
+  margin: 18px 0 12px;
+  padding: 15px;
+  border: 1px solid #8dc4a8;
+  border-radius: 18px;
+  background: linear-gradient(150deg,#f4fff8,#e4f5eb);
+  color: #23583e;
+  box-shadow: inset 0 1px 0 #fff,0 3px 12px rgba(19,87,56,.075);
+}
+.games-screen.is-playing .game-feedback > span {
+  width: 29px;
+  height: 29px;
+  background: #327c5d;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.2);
+}
+.games-screen.is-playing .game-feedback strong {
+  font-size: 1rem;
+  font-weight: 780;
+  line-height: 1.36;
+}
+.games-screen.is-playing .game-feedback p {
+  font-size: .94rem;
+  line-height: 1.48;
+}
+.games-screen.is-playing .game-feedback.incorrect {
+  border-color: #e2ada0;
+  background: linear-gradient(145deg,#fffaf8,#ffefea);
+  color: #7c392c;
+  box-shadow: inset 0 1px 0 #fff,0 3px 11px rgba(125,54,38,.07);
+}
+.games-screen.is-playing .game-feedback.incorrect > span { background: #9f4e39; }
+.games-screen.is-playing .game-next {
+  min-height: 54px;
+  margin-top: 12px;
+  border: 1px solid #ecc044;
+  border-radius: 16px;
+  background: linear-gradient(156deg,#ffe891,#ffd049 56%,#eeb725);
+  color: #102e58;
+  font-size: 1rem;
+  font-weight: 790;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.65),0 4px 0 #d8a61e,0 7px 16px rgba(81,62,16,.075);
+}
+.games-screen.is-playing .round-persistence-note {
+  font-size: .74rem;
+  line-height: 1.4;
+  margin: 13px 0 0;
+  color: #536a83;
+}
+/* Keep instructional diagrams exact; make their native containers legible. */
+.games-screen.is-playing .game-rich-content {
+  border-radius: 16px;
+  border-color: #d5e5f2;
+  background: #fff;
+  box-shadow: inset 0 1px 0 #fff;
+}
+.games-screen.is-playing .study-finish-hero {
+  background: linear-gradient(135deg,#e5f4ff,#d7e9fe);
+  border: 1px solid #c8dff3;
+  box-shadow: inset 0 1px 0 #fff,0 5px 16px rgba(16,46,88,.06);
+}
+@media(max-width:699px){
+  .games-screen.is-playing .study-player-header {
+    margin: calc(-24px - env(safe-area-inset-top)) -18px 0;
+    padding: calc(18px + env(safe-area-inset-top)) 18px 25px;
+    border-radius: 0 0 22px 22px;
+  }
+  .games-screen.is-playing .game-question-card {
+    position: relative;
+    z-index: 1;
+    margin: -12px -18px 0;
+    padding: 20px 18px 22px;
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -3px 12px rgba(6,28,59,.04);
+  }
+}
+@media(max-width:359px){
+  .games-screen.is-playing .game-topbar { gap: 8px; }
+  .games-screen.is-playing .game-topbar > div { gap: 4px 5px; }
+  .games-screen.is-playing .game-topbar > div > span { font-size: .93rem; }
+  .games-screen.is-playing .game-topbar > div > strong { font-size: .69rem; }
+  .games-screen.is-playing .game-topbar .game-streak,
+  .games-screen.is-playing .game-topbar .game-star-balance { font-size: .65rem; padding: 4px 5px; }
+  .games-screen.is-playing .game-answer { gap: 8px; padding: 10px; }
+  .games-screen.is-playing .game-answer > strong { font-size: .94rem; }
+}
+@media(prefers-reduced-motion:no-preference) {
+  .games-screen.is-playing .game-answer,
+  .games-screen.is-playing .game-next {
+    transition: transform .15s ease,box-shadow .15s ease,border-color .15s ease;
+  }
+  .games-screen.is-playing .game-answer:active:not(:disabled),
+  .games-screen.is-playing .game-next:active:not(:disabled) { transform: scale(.987); }
+}
+@media(prefers-contrast:more) {
+  .games-screen.is-playing .game-answer,
+  .games-screen.is-playing .game-feedback,
+  .games-screen.is-playing .game-question-card { border-width: 2px; }
+}

@@ -1,0 +1,53 @@
+name: ABVM public privacy and teacher freshness acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'pages/app.js'
+      - 'pages/product-view.js'
+      - 'pages/index.html'
+      - 'pages/sw.js'
+      - 'tests/public-learner-privacy.spec.mjs'
+      - 'tests/public-learner-privacy.test.mjs'
+      - 'tests/app.spec.mjs'
+      - 'playwright.config.mjs'
+      - '.github/workflows/public-privacy-visual-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: abvm-public-privacy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  anonymous-mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run pack:runtime
+      - run: npx playwright install --with-deps chromium webkit
+      - name: Offline shell and anonymous copy contracts
+        run: node --test tests/public-learner-privacy.test.mjs
+      - name: Anonymous iPhone 375-430 Chromium and Safari-WebKit
+        run: npx playwright test tests/public-learner-privacy.spec.mjs --project=mobile --project=iphone-webkit --output=test-results/anonymous --workers=1 --retries=0
+      - name: Teacher source age cannot be refreshed by a Yahoo notice
+        run: npx playwright test tests/app.spec.mjs --project=mobile --output=test-results/freshness --grep "newly imported Yahoo notices" --workers=1 --retries=0
+      - name: Retain real rendered privacy screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: abvm-anonymous-privacy-${{ github.run_id }}
+          path: |
+            test-results/**/anonymous-*.png
+            test-results/**/test-failed-*.png
+            playwright-report
+          retention-days: 14
+          if-no-files-found: error
