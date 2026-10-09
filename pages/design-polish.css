@@ -689,9 +689,16 @@
 .calendar-screen .calendar-dots .calendar-mark.lunch{background:#30795d}
 .calendar-screen .calendar-dots .calendar-mark.closed{background:#6b7787}
 .calendar-screen .calendar-grid button.active .calendar-mark{
-  outline:1px solid rgba(255,255,255,.6);
-  box-shadow:0 0 0 1px rgba(20,42,72,.2);
+  outline:none;
+  box-shadow:0 0 0 1px rgba(255,255,255,.26);
 }
+.calendar-screen .calendar-grid button.active .calendar-mark.test{background:#ff9db8}
+.calendar-screen .calendar-grid button.active .calendar-mark.faith{background:#dab5ff}
+.calendar-screen .calendar-grid button.active .calendar-mark.due{background:#ffdf94}
+.calendar-screen .calendar-grid button.active .calendar-mark.school,
+.calendar-screen .calendar-grid button.active .calendar-mark.family{background:#d7e7ff}
+.calendar-screen .calendar-grid button.active .calendar-mark.lunch{background:#a9edc5}
+.calendar-screen .calendar-grid button.active .calendar-mark.closed{background:#edf0f5}
 .calendar-screen .calendar-legend{
   display:flex;align-items:center;gap:8px 13px;
   flex-wrap:wrap;margin:14px 3px 0;padding-top:12px;

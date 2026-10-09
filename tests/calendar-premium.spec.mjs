@@ -83,6 +83,8 @@ test('premium Week keeps five lunches, verified tests and selected homework',asy
     await expect(page.locator('.day-picker .active')).toContainText('8');
     await expect(page.locator('.day-detail')).toContainText('Progress Reports Issued');
     await expect(page.locator('.day-detail')).toContainText('Read');
+    // Equivalent event/reminder wording must not appear twice.
+    await expect(page.locator('.week-screen .reminder-strip')).toHaveCount(0);
     await expect(page.locator('.week-overview .week-lunches .week-overview-row')).toHaveCount(5);
     await expect(page.locator('.week-overview .week-tests')).toContainText('Spelling');
     await expect(page.locator('.week-overview .week-lunches')).toContainText('No lunch');
