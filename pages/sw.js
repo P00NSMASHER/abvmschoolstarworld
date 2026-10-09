@@ -1,5 +1,5 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v147-facebook-source-isolation";
+const CACHE = "abvm-grade2-parent-companion-v148-facebook-source-isolation";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=112",

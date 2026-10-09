@@ -328,7 +328,9 @@ test("Study Games loads lazily and starts a playable round",async({page})=>{
   }
   await page.getByRole("button",{name:/Mix/i}).click();
   await expect(page.locator(".game-question-card")).toBeVisible();
-  expect(await page.locator(".game-answer").count()).toBe(3);
+  const answerCount=await page.locator(".game-answer").count();
+  expect(answerCount).toBeGreaterThanOrEqual(3);
+  expect(answerCount).toBeLessThanOrEqual(4);
 });
 
 

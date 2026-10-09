@@ -1,3 +1,4 @@
+import {resolveGovernedBrowserQuestion} from './helpers/governed-browser-questions.mjs';
 import {test,expect} from '@playwright/test';
 
 test.use({serviceWorkers:'block'});
@@ -22,16 +23,8 @@ async function seedStars(page,rounds){
   await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready',{timeout:15000});
 }
 async function answerIndexes(page){
-  const prompt=(await page.locator('.game-question-card>h2').innerText()).trim();
-  const choices=(await page.locator('[data-game-answer] strong').allTextContents()).map(text=>text.trim());
-  return page.evaluate(async({prompt,choices})=>{
-    const envelope=await fetch('./data/study-pack-runtime.json').then(response=>response.json());
-    const engine=window.ABVMStudyGames,{buildStarBank}=await import('./star-practice.mjs');
-    const catalog=engine.buildCatalog(envelope.pack,{sourceKey:engine.sourceKeyFromEnvelope(envelope.pack,envelope)});
-    const question=[...catalog.questions,...buildStarBank()].find(row=>row.prompt===prompt&&row.choices.length===choices.length&&row.choices.every(choice=>choices.includes(choice)));
-    if(!question)throw new Error('Rendered question must resolve to the actual governed catalog');
-    return {correct:choices.indexOf(question.answer),wrong:choices.map((choice,index)=>choice!==question.answer?index:-1).filter(index=>index>=0)};
-  },{prompt,choices});
+  const q=await resolveGovernedBrowserQuestion(page);
+  return {correct:q.correct,wrong:q.wrong};
 }
 const balance=page=>page.evaluate(()=>window.ABVMStudyGames.studyStarBalance());
 

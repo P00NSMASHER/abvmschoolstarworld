@@ -7,7 +7,7 @@ export function isDate(value) {
 }
 const text = value => typeof value === 'string' && value.trim().length > 0;
 const ROOT_KEYS = new Set(['schemaVersion','uploadedPhotoCount','distinctWorksheetNote','lessons','sourceManifest']);
-const LESSON_KEYS = new Set(['id','title','subject','sources','skills','notes','studiedOn','addedOn','dateStatus','chapter','questions']);
+const LESSON_KEYS = new Set(['id','title','subject','sources','skills','notes','studiedOn','weekOf','addedOn','dateStatus','chapter','questions']);
 const QUESTION_KEYS = new Set(['id','subject','skill','prompt','answer','choices','explanation','hint','sourceFact','tier','questionType','difficulty','dok','domain','standards','provenance']);
 const SOURCE_KEYS = new Set(['id','sha256','status','duplicateOf','reason']);
 function allowedKeys(value, allowed, label) {
@@ -37,6 +37,17 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
     unique(lesson.skills, `${lesson.id} skills`);
     check(Array.isArray(lesson.notes) && lesson.notes.length && lesson.notes.every(text), `${lesson.id}: missing notes`);
     check(lesson.studiedOn === null || isDate(lesson.studiedOn), `${lesson.id}: invalid studiedOn`);
+    // A verified school week is evidence of weekly relevance, not an invented day.
+    if (lesson.weekOf !== undefined) {
+      check(isDate(lesson.weekOf), `${lesson.id}: invalid weekOf`);
+      check(new Date(lesson.weekOf + 'T12:00:00Z').getUTCDay() === 1, `${lesson.id}: weekOf must be a Monday`);
+      if (lesson.studiedOn) {
+        const end = new Date(lesson.weekOf + 'T12:00:00Z');
+        end.setUTCDate(end.getUTCDate() + 6);
+        check(lesson.studiedOn >= lesson.weekOf && lesson.studiedOn <= end.toISOString().slice(0,10),
+          `${lesson.id}: studiedOn conflicts with verified week`);
+      }
+    }
     check(isDate(lesson.addedOn), `${lesson.id}: invalid addedOn`);
     check(lesson.studiedOn !== null || /undated|unknown/i.test(lesson.dateStatus), `${lesson.id}: unknown study date must remain labeled undated`);
     check(lesson.chapter === undefined || (Number.isInteger(lesson.chapter) && lesson.chapter >= 1 && lesson.chapter <= 99), `${lesson.id}: invalid chapter`);
