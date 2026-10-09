@@ -35,15 +35,20 @@
     "</h2>" +
     action +
     "</div>";
-  const route = (tab, label, klass = "text-button") =>
+  const route = (tab, label, klass = "text-button", accessibleLabel = "") =>
     '<button class="' +
     klass +
     '" type="button" data-route="' +
     tab +
-    '">' +
+    '"' + (accessibleLabel ? ' aria-label="' + esc(accessibleLabel) + '"' : "") +
+    '>' +
     esc(label) +
     icon("arrow") +
     "</button>";
+  // The Today lunch is above the fold on phones. Render its reviewed image
+  // eagerly while leaving Week/Calendar lunch artwork lazy-loaded.
+  const eagerTodayLunchArt = (markup) =>
+    markup.replace('loading="lazy"', 'loading="eager"');
   function today(c) {
     const {
       d,
@@ -60,6 +65,18 @@
       fmtShort,
     } = c;
     const closed = events.some((e) => kindClass(e) === "closed");
+    // Suppress only equivalent date-prefixed notices already in today's timeline.
+    // Keep the full data intact; a price, deadline detail or added instruction
+    // makes the notice distinct and therefore remains visible.
+    const comparableNotice = (value) =>
+      String(value ?? "")
+        .toLowerCase()
+        .replace(/^(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b[^:]{0,45}:\s*/i, "")
+        .replace(/\b(?:is|are|was|were)\b/g, "")
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim();
+    const listedEvents = new Set(events.map(e => comparableNotice(e.label)));
+    const visibleReminders = reminders.filter(x => !listedEvents.has(comparableNotice(x)));
     const nextHtml = next
       ? '<section class="priority-card"><div class="date-tile"><strong>' +
         esc(fmtShort(next.d).split(" ")[0]) +
@@ -76,6 +93,7 @@
           kindClass(next.x) === "due" ? "week" : "study",
           "Open",
           "icon-button",
+          (kindClass(next.x) === "due" ? "View school week for " : "Open Study for ") + next.x.label,
         ) +
         "</section>"
       : '<section class="priority-card quiet"><span class="feature-icon">' +
@@ -104,7 +122,7 @@
       '<button class="study-invitation" type="button" data-route="study"><img src="./assets/illustrations/reading.webp" width="72" height="72" alt=""><span><strong>Start studying</strong><small>A little practice. A little more confidence.</small></span>' +
       icon("arrow") +
       "</button></div>" +
-      lunchHtml +
+      eagerTodayLunchArt(lunchHtml) +
       '<section class="today-panel">' +
       sectionHead(closed ? "Today’s plan" : "At school today") +
       '<div class="timeline">' +
@@ -116,10 +134,10 @@
           "</div>"
         : "") +
       "</section>" +
-      (reminders.length
+      (visibleReminders.length
         ? '<section class="today-updates-card">' +
           sectionHead("Worth remembering", route("family", "All updates")) +
-          reminders
+          visibleReminders
             .map(
               (x) =>
                 '<div class="reminder-line"><span aria-hidden="true">' +
@@ -282,7 +300,9 @@
               ? "math"
               : /religion/i.test(s.subject)
                 ? "religion"
-                : "reading") +
+                : /spell|handwriting|grammar/i.test(s.subject)
+                  ? "spelling"
+                  : "reading") +
             '">' +
             '<img src="./assets/illustrations/' + (/math/i.test(s.subject) ? "math" : /religion/i.test(s.subject) ? "religion" : /spell|handwriting|grammar/i.test(s.subject) ? "spelling" : "reading") + '.webp" width="64" height="64" loading="lazy" alt="">' +
             "</span><div><h3>" +
@@ -332,12 +352,12 @@ function render(c,kind='collection'){
   if(kind==='today')return '<button type="button" class="study-badge-latest" data-open-badges>'+image(current,80)+'<span><small>'+'YOUR RANK · '+rank+' OF '+total+'</small><strong>'+esc(current.title)+'</strong><span>'+esc(latest?date(latest):'Every eagle starts here.')+'</span></span><b aria-hidden="true">›</b></button>';
   if(kind==='study')return '<button type="button" class="study-badge-tracker" data-open-badges>'+image(current,64)+'<span><strong>'+c.balance+' Study Stars</strong><small>'+esc(next?next.title+' · '+c.remaining+' stars to promote':'ABVM Legend · top rank')+'</small><span class="badge-mini-track" aria-hidden="true"><i style="width:'+Math.min(100,Math.max(0,c.segmentPercent??c.percent))+'%"></i></span></span><b aria-hidden="true">›</b></button>';
   const cards=(c.badges||[]).map(b=>'<li class="study-badge-card '+(b.unlocked?'is-earned':next?.id===b.id?'is-next':'is-locked')+'">'+image(b,120)+'<strong>'+esc(b.title)+'</strong><span>'+b.target+' stars</span><small>'+(b.id===current.id?'Current rank':b.unlocked?'Promoted':next?.id===b.id?'Up next':'Locked')+'</small></li>').join('');
-  return '<section class="study-star-goal badge-collection" data-badge-collection aria-labelledby="badge-title"><div class="badge-collection-heading"><div><span class="badge-eyebrow">EMMA’S RANK JOURNEY</span><h2 id="badge-title">Your rank</h2></div><strong class="badge-balance"><span aria-hidden="true">★</span> '+c.balance+'</strong></div>'+ (kind==='finish'?'':'<div class="rank-current">'+image(current,128)+'<div><span class="badge-eyebrow">RANK '+rank+' OF '+total+'</span><h3>'+esc(current.title)+'</h3><p>'+esc(latest?date(latest):'Every eagle starts here.')+'</p></div></div>')+'<div class="study-badge-next">'+image(featured,144)+'<div><span class="badge-eyebrow">'+(next?'NEXT PROMOTION':'TOP RANK')+'</span><h3>'+esc(featured?.title||'ABVM Legend')+'</h3><p>'+esc(next?'Keep going. This one’s waiting for you.':'You’ve reached the highest ABVM rank.')+'</p></div>'+meter(c)+'</div>'+(kind==='finish'?'<button type="button" class="badge-see-all" data-open-badges>See the rank ladder <span aria-hidden="true">›</span></button>':'<ol class="study-badge-grid" aria-label="Rank milestones">'+cards+'</ol>')+'<p class="badge-rules">Finish a round: +10 stars. Correct streak: up to +10. Perfect first-try score: +25 bonus. Wrong answer: −2, down to zero. Earned ranks stay yours.</p><small class="badge-device-note">Saved on this device. Ranks celebrate practice, not school grades.</small></section>';
+  return '<section class="study-star-goal badge-collection" data-badge-collection aria-labelledby="badge-title"><div class="badge-collection-heading"><div><span class="badge-eyebrow">EMMA’S RANK JOURNEY</span><h2 id="badge-title">Your rank</h2></div><strong class="badge-balance"><span aria-hidden="true">★</span> '+c.balance+'</strong></div>'+ (kind==='finish'?'':'<div class="rank-current">'+image(current,128)+'<div><span class="badge-eyebrow">RANK '+rank+' OF '+total+'</span><h3>'+esc(current.title)+'</h3><p>'+esc(latest?date(latest):'Every eagle starts here.')+'</p></div></div>')+'<div class="study-badge-next">'+image(featured,144)+'<div><span class="badge-eyebrow">'+(next?'NEXT PROMOTION':'TOP RANK')+'</span><h3>'+esc(featured?.title||'ABVM Legend')+'</h3><p>'+esc(next?'Keep going. This one’s waiting for you.':'You’ve reached the highest ABVM rank.')+'</p></div>'+meter(c)+'</div>'+(kind==='finish'?'<button type="button" class="badge-see-all" data-open-badges>See the rank ladder <span aria-hidden="true">›</span></button>':'<p class="badge-rail-hint">Swipe to explore ranks →</p><ol class="study-badge-grid" aria-label="Rank milestones — scroll horizontally to explore" tabindex="0">'+cards+'</ol>')+'<p class="badge-rules">Finish a round: +10 stars. Correct streak: up to +10. Perfect first-try score: +25 bonus. Wrong answer: −2, down to zero. Earned ranks stay yours.</p><small class="badge-device-note">Saved on this device. Ranks celebrate practice, not school grades.</small></section>';
 }
 function promotion(ranks){const latest=ranks?.at(-1);if(!latest)return "";return '<section class="study-rank-promotion" role="status" aria-label="New ABVM rank earned"><span class="promotion-eyebrow">NEW RANK UNLOCKED</span>'+image(latest,150)+'<h3>'+esc(latest.title)+'</h3><p>'+esc(ranks.length>1?ranks.length+' new ranks earned this round!':'You earned your next ABVM rank!')+'</p><button type="button" data-open-badges>Explore your rank ladder <span aria-hidden="true">›</span></button></section>'}
 function sync(c){const changed=JSON.stringify(saved)!==JSON.stringify(c);saved=c;if(!changed)return c;document.querySelectorAll('[data-badge-surface]').forEach(host=>{host.innerHTML=render(c,host.dataset.badgeSurface)});return c}
 function surface(kind){return '<div class="study-badge-surface" data-badge-surface="'+kind+'">'+render(saved,kind)+'</div>'}
-function mount(root,kind,load){const anchor=root.querySelector(kind==='today'?'.today-panel':kind==='collection'?'.family-hero':'.study-tools');if(!anchor)return;anchor.insertAdjacentHTML(kind==='collection'?'afterend':'beforebegin',surface(kind));refresh(load)}
+function mount(root,kind,load){const anchor=kind==='today'?(root.querySelector('.today-updates-card')||root.querySelector('.today-panel')):root.querySelector(kind==='collection'?'.family-hero':'.study-tools');if(!anchor)return;anchor.insertAdjacentHTML(kind==='collection'||kind==='today'?'afterend':'beforebegin',surface(kind));refresh(load)}
 function refresh(load){if(pending)return pending;pending=Promise.resolve().then(load).then(sync).catch(()=>{saved=null;document.querySelectorAll('[data-badge-surface]').forEach(host=>{host.innerHTML='<p class="badge-storage-error" role="status">Your stars could not be loaded. Practice is still available.</p>'})}).finally(()=>{pending=null});return pending}
 window.ABVMStudyBadges=Object.freeze({render,promotion,surface,mount,refresh,sync,snapshot:()=>saved});
 })();
