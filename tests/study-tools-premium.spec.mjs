@@ -19,7 +19,11 @@ async function decoded(locator) {
 }
 async function capture(page,info,name,full=false) {
   if(full)await page.addStyleTag({content:".phone-app{display:block!important;height:auto!important;min-height:100vh!important;overflow:visible!important}.screen-stack,.games-screen{height:auto!important;overflow:visible!important}.bottom-nav{display:none!important}"});
-  await page.screenshot({path:info.outputPath(name+".png"),fullPage:full,animations:"disabled"});
+  const path=info.outputPath(name+".png");
+  await page.screenshot({path,fullPage:full,animations:"disabled"});
+  // Preserve passed WebKit renders in the downloadable HTML report, not only
+  // the ephemeral per-test output directory.
+  await info.attach(name,{path,contentType:"image/png"});
 }
 
 test("real verified Test Prep has premium visuals and no clipped controls on iPhone",async({page},info)=>{
