@@ -28,10 +28,15 @@ async function capture(page,info,name,full=false) {
   await info.attach(name,{path,contentType:"image/png"});
 }
 
-test("real verified Test Prep has premium visuals and no clipped controls on iPhone",async({page},info)=>{
-  await page.emulateMedia({reducedMotion:"reduce"});
+test("real verified Test Prep has premium visuals and no clipped controls on iPhone",async({context},info)=>{
+  // Each viewport must start with a fresh Study page. Navigating to the same
+  // #study hash preserves the legitimately open Test Prep state in the SPA.
+  test.setTimeout(120_000);
   for(const width of [320,375,390,402,430]) {
+    const page=await context.newPage();
+    await page.emulateMedia({reducedMotion:"reduce"});
     await openStudy(page,width);
+    await expect(page.locator("[data-open-prep]")).toBeVisible();
     await page.locator("[data-open-prep]").click();
     await expect(page.locator(".prep-header")).toBeVisible();
     await expect(page.locator(".prep-topic-card > h3")).not.toBeEmpty();
@@ -64,6 +69,7 @@ test("real verified Test Prep has premium visuals and no clipped controls on iPh
       await capture(page,info,"study-tools-prep-390-first");
       await capture(page,info,"study-tools-prep-390-full",true);
     }
+    await page.close();
   }
 });
 
@@ -107,6 +113,7 @@ test("native Test Prep, notes and guide history preserve verified interactions",
 });
 
 test("resource navigation remains accessible at 200% text and tablet size",async({page},info)=>{
+  test.setTimeout(90_000);
   await openStudy(page,375);
   await page.locator("[data-open-prep]").click();
   await page.evaluate(()=>{const e=document.documentElement;e.style.fontSize=2*parseFloat(getComputedStyle(e).fontSize)+"px"});
@@ -127,10 +134,13 @@ test("resource navigation remains accessible at 200% text and tablet size",async
   expect(Math.min(...heights)).toBeGreaterThanOrEqual(44);
   await page.evaluate(()=>{document.documentElement.style.fontSize=""});
   for(const width of [820,1440]) {
-    await openStudy(page,width);
-    await page.locator("[data-open-prep]").click();
-    await expect(page.locator(".prep-topic-card")).toBeVisible();
-    await noOverflow(page,width);
-    if(width===820)await capture(page,info,"study-tools-prep-ipad-820-first");
+    const tablet=await page.context().newPage();
+    await openStudy(tablet,width);
+    await expect(tablet.locator("[data-open-prep]")).toBeVisible();
+    await tablet.locator("[data-open-prep]").click();
+    await expect(tablet.locator(".prep-topic-card")).toBeVisible();
+    await noOverflow(tablet,width);
+    if(width===820)await capture(tablet,info,"study-tools-prep-ipad-820-first");
+    await tablet.close();
   }
 });
