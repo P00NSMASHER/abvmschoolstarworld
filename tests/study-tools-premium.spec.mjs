@@ -4,8 +4,10 @@ const TIME=new Date("2026-10-08T12:00:00-04:00");
 async function openStudy(page,width) {
   await page.clock.setFixedTime(TIME);
   await page.setViewportSize({width,height:width===320?740:852});
-  await page.goto("/#study");
-  await page.reload();
+  // Each scenario already opens a new Study route with its fixed school date.
+  // A second immediate navigation can race WebKit's async material loading.
+  // Retain the original 15s ready-state and every subsequent visual assertion.
+  await page.goto("/#study",{waitUntil:"domcontentloaded"});
   await expect(page.locator(".games-screen")).toHaveAttribute("data-study-state","ready",{timeout:15000});
 }
 async function noOverflow(page,width) {
