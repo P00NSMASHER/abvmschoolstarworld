@@ -1605,7 +1605,7 @@
 /* Test Prep first-viewport density on short iPhones.
    Preserve actual assessment labels/topics and native, >=44px actions;
    remove decorative vertical slack instead of hiding required controls. */
-@media (max-width:699px) and (max-height:860px) {
+@media (max-width:699px) {
   .games-screen:not(.is-playing) .prep-header {
     min-height:150px;
     padding-bottom:13px;
