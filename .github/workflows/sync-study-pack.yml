@@ -85,7 +85,8 @@ jobs:
 
       - name: Check independently reviewed Facebook sources (never changes classroom data)
         env:
-          ABVM_FACEBOOK_ACCESS_TOKEN: ${{ secrets.ABVM_FACEBOOK_ACCESS_TOKEN }}
+          ABVM_SCHOOL_FB_ACCESS_TOKEN: ${{ secrets.ABVM_SCHOOL_FB_ACCESS_TOKEN }}
+          ABVM_HSA_FB_ACCESS_TOKEN: ${{ secrets.ABVM_HSA_FB_ACCESS_TOKEN }}
         run: node scripts/sync-facebook-feeds.mjs --write
 
       - name: Open governed curriculum candidate PR when coverage gaps exist

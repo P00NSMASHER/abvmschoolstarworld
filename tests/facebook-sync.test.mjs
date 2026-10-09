@@ -78,3 +78,28 @@ test('a Page retrieval failure does not relabel an HSA approval',async()=>{
   assert.equal(result.reports[1].status,'source-unavailable');
   assert.equal(result.feed.posts[0].sourceId,hsa.id);
 });
+
+test('page-specific credentials never authorize another Facebook source',async()=>{
+  const originalSchool=sourceData.sources.find(s=>s.id==='ABVM_SCHOOL_FACEBOOK');
+  const school={...originalSchool,pageId:'123456789012345',
+    canonicalUrl:'https://www.facebook.com/p/Assumption-BVM-School-123456789012345/',
+    identity:{status:'verified',method:'independent-public-page-verification',
+      verifiedAt:'2026-10-08',evidenceUrl:originalSchool.shareUrl},
+    retrieval:{method:'graph-api',enabled:true}};
+  const config={...sourceData,sources:[school,active.sources[1]]};
+  const seen=[];
+  const fetcher=async(url,params)=>{
+    seen.push({url,auth:params.headers.authorization});
+    assert.ok(url.includes('/'+hsa.pageId),
+      'school API must never be called using the HSA token');
+    assert.equal(params.headers.authorization,'Bearer hsa-page-only-token');
+    return graph([])(url,params);
+  };
+  const result=await syncFacebookFeeds({config,reviewed:{schemaVersion:1,posts:[]},
+    previous:empty,tokens:{ABVM_HSA_FACEBOOK:'hsa-page-only-token'},
+    now:time,fetcher});
+  assert.equal(result.reports[0].status,'awaiting-authorized-api-token');
+  assert.equal(result.reports[1].status,'checked-authorized-api');
+  assert.equal(seen.length,2);
+  assert.deepEqual(result.feed.posts,[]);
+});

@@ -112,7 +112,10 @@ remains blocked until exact-Page access and review are established.
    in facebook-sources.json; do not reuse the HSA ID.
 2. Obtain an authorized Facebook Graph API access token and any required
    Page Public Content Access / Page permissions. Store it only as the
-   ABVM_FACEBOOK_ACCESS_TOKEN GitHub Actions repository secret. Never commit
+   **source-specific** GitHub Actions repository secrets
+   `ABVM_SCHOOL_FB_ACCESS_TOKEN` and `ABVM_HSA_FB_ACCESS_TOKEN`, respectively.
+   The scheduled production workflow never supplies one shared token.
+   Never commit
    credentials, use private-account scraping or bypass a login wall.
 3. Confirm Graph /{pageId}?fields=id,name returns the exact approved ID/name.
    Set that source's retrieval.enabled to true after authorization. Use an
@@ -180,3 +183,18 @@ Missing social data never blocks legitimate teacher study information.
 Manual summaries are never promoted into the academic study pack.
 Academic-classified social imports are rejected, even when the source claims teacher corroboration.
 There are no new scheduled tasks, push alerts or chat notifications.
+
+## Public school website: useful but not a Facebook credential
+
+The school's official website, https://www.assumptionbvmschool.net/,
+publishes school/HSA news. Its articles can independently corroborate
+dates and community announcements, but they must be labeled as **official
+website sources**, not as Facebook posts or proof of Facebook Page control.
+Do not use this website as a backdoor to infer restricted post content.
+
+Windsor.ai's connected `facebook_organic` account is RETALLY, Page ID
+`1423089780881432`, not an authorized ABVM school or HSA Page. Windsor's
+organic connector requires access to the Page being selected. Using
+RETALLY's access or token in the ABVM collection would violate source
+isolation. Even a legitimately connected Windsor Page does not itself
+provide the unattended Graph API token for the existing GitHub Action.

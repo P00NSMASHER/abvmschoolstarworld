@@ -44,14 +44,17 @@ export async function getAuthorizedFacebookPosts(source,token,fetcher=fetch,now=
   return {entries,count:entries.size,paged:!!response?.paging?.next};
 }
 export async function syncFacebookFeeds({
-  config,reviewed,previous,token='',fetcher=fetch,now=new Date()
+  config,reviewed,previous,token='',tokens={},fetcher=fetch,now=new Date()
 }){
   validateFacebookSources(config);
   validatePublishedFacebookFeed(config,previous);
   if(reviewed?.schemaVersion!==1||!Array.isArray(reviewed.posts))
     throw new Error('Facebook reviewed-post manifest schema invalid.');
   const reports=[],sourceChecks=new Map();
+  // Page-scoped tokens are preferred; the legacy token parameter is retained
+  // for test callers, but production never supplies a shared credential.
   for(const source of config.sources){
+    const pageToken=tokens[source.id]??token;
     if(source.identity.status!=='verified'){
       reports.push({id:source.id,status:'pending-identity',count:0});
       continue;
@@ -60,12 +63,12 @@ export async function syncFacebookFeeds({
       reports.push({id:source.id,status:'manual-review-only',count:0});
       continue;
     }
-    if(!token){
+    if(!pageToken){
       reports.push({id:source.id,status:'awaiting-authorized-api-token',count:0});
       continue;
     }
     try{
-      const result=await getAuthorizedFacebookPosts(source,token,fetcher,now);
+      const result=await getAuthorizedFacebookPosts(source,pageToken,fetcher,now);
       sourceChecks.set(source.id,result.entries);
       reports.push({id:source.id,status:'checked-authorized-api',
         count:result.count,paginationLimited:result.paged});
@@ -127,7 +130,10 @@ async function main(){
   const reviewed=read('facebook-reviewed-posts.json');
   const previous=read('facebook-updates.json');
   const result=await syncFacebookFeeds({config,reviewed,previous,
-    token:process.env.ABVM_FACEBOOK_ACCESS_TOKEN||'',now:new Date()});
+    tokens:{
+      ABVM_SCHOOL_FACEBOOK:process.env.ABVM_SCHOOL_FB_ACCESS_TOKEN||'',
+      ABVM_HSA_FACEBOOK:process.env.ABVM_HSA_FB_ACCESS_TOKEN||''
+    },now:new Date()});
   // Source-specific status only. Never log raw posts or bearer credentials.
   for(const report of result.reports)console.log('Facebook source',JSON.stringify(report));
   console.log('Facebook reviewed summary',JSON.stringify({
