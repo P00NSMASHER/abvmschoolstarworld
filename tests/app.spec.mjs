@@ -390,7 +390,11 @@ test("bottom navigation is a four primary destinations",async({page})=>{
 });
 
 
-test("newly imported Yahoo notices never make older teacher checks appear verified",async({page})=>{
+test("newly imported Yahoo notices never make older teacher checks appear verified",async({browser})=>{
+  // Fresh context prevents the production service worker from bypassing the fixture route.
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  try{
   // Deliberately stay in the 8–30h "older" band. Fixed calendar dates
   // drifted past 30h during CI and asserted the wrong severity label.
   // Verify the real teacher-check timestamp, not the newer Yahoo timestamp.
@@ -409,11 +413,23 @@ test("newly imported Yahoo notices never make older teacher checks appear verifi
   data.sourceCapturedAt=noticeAt;
   data.pack.sourceCapturedAt=noticeAt;
   data.pack.generatedAt=noticeAt;
-  await page.route("**/data/study-pack*.json*",route=>route.fulfill({json:data}));
+  let interceptedPackRequests=0;
+  await page.route("**/data/study-pack*.json*",route=>{
+    interceptedPackRequests++;
+    return route.fulfill({json:data});
+  });
   await page.goto("/#today");
   const freshness=page.locator(".freshness");
   await expect(freshness).toBeVisible();
   await expect(freshness).toContainText("Teacher pages older");
   await expect(freshness).toContainText(expectedTeacherDay);
   await expect(freshness).not.toContainText(newerNoticeDay);
+  await expect(freshness).not.toContainText("Teacher pages verified");
+  await expect(freshness).toHaveClass(/\bstale\b/);
+  // Without this assertion, a service-worker cache could make this test pass or fail
+  // against unrelated live pack data rather than our synthetic teacher timestamps.
+  expect(interceptedPackRequests).toBeGreaterThan(0);
+  }finally{
+    await context.close();
+  }
 });
