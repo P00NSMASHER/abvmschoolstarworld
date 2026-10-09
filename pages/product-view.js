@@ -35,12 +35,13 @@
     "</h2>" +
     action +
     "</div>";
-  const route = (tab, label, klass = "text-button") =>
+  const route = (tab, label, klass = "text-button", accessibleLabel = "") =>
     '<button class="' +
     klass +
     '" type="button" data-route="' +
     tab +
-    '">' +
+    '"' + (accessibleLabel ? ' aria-label="' + esc(accessibleLabel) + '"' : "") +
+    '>' +
     esc(label) +
     icon("arrow") +
     "</button>";
@@ -88,6 +89,7 @@
           kindClass(next.x) === "due" ? "week" : "study",
           "Open",
           "icon-button",
+          (kindClass(next.x) === "due" ? "View school week for " : "Open Study for ") + next.x.label,
         ) +
         "</section>"
       : '<section class="priority-card quiet"><span class="feature-icon">' +
