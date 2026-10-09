@@ -257,10 +257,13 @@
   color: #654413;
   letter-spacing: .08em;
 }
-.today-screen .date-tile span {
+.today-screen .priority-card .date-tile span {
+  display: block;
   color: #152f54;
   font-size: 1.64rem;
-  margin-top: 0;
+  font-weight: 770;
+  line-height: 1.08;
+  margin-top: 3px;
 }
 .today-screen .priority-card p {
   color: #ffe29a;
