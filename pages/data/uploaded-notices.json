@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "lastIntegratedAt": "2026-10-08T16:43:51.480Z",
+  "lastIntegratedAt": "2026-10-09T16:39:13.044Z",
   "documents": [
     {
       "id": "dress-down-2026-09-25",
@@ -520,6 +520,35 @@
         "reviewedBy": "manual-parent-photo-review",
         "reviewedAt": "2026-10-08T16:43:51.480Z"
       }
+    },
+    {
+      "id": "weekly-reminders-2026-10-12",
+      "label": "Weekly reminders for week of 2026-10-12",
+      "receivedAt": "2026-10-09",
+      "facts": [
+        "Monday, Oct. 12: No School.",
+        "Tuesday, Oct. 13: Dress Down Day.",
+        "Wednesday, Oct. 14: Mass.",
+        "Wednesday, Oct. 14: Communication Folder.",
+        "Wednesday, Oct. 14: Progress Reports.",
+        "Friday, Oct. 16: Parent-Teacher Conferences.",
+        "Friday, Oct. 16: Chick-fil-A.",
+        "Monday, Oct. 19: Dress Down Day.",
+        "Monday, Oct. 19: Lego Club.",
+        "Monday, Oct. 19: Flag football.",
+        "Thursday, Oct. 29: Dress Down Day.",
+        "Thursday, Oct. 29: Flag football."
+      ],
+      "provenance": {
+        "factsHash": "10b6b256bf91d7ac555f76a540e1e79b4657b04f1fb5b96019fcfd3ee2a84114",
+        "sourceContentHash": "9ca8916f883175e72d07561a9e0b9cf505169824c4686f808d7ad1c80da98a6c"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "automated-fixed-event-extraction-v1",
+        "reviewedAt": "2026-10-09T16:39:13.044Z"
+      }
     }
   ],
   "importantDates": [
@@ -1032,6 +1061,78 @@
       "label": "Eucharistic Consecration during school Mass — Immaculate Conception",
       "kind": "school event",
       "sourceDocument": "eucharistic-consecration-2026"
+    },
+    {
+      "date": "Monday, Oct. 12",
+      "label": "No School",
+      "kind": "holiday",
+      "sourceDocument": "weekly-reminders-2026-10-12"
+    },
+    {
+      "date": "Tuesday, Oct. 13",
+      "label": "Dress Down Day",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-12"
+    },
+    {
+      "date": "Wednesday, Oct. 14",
+      "label": "Mass",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-12"
+    },
+    {
+      "date": "Wednesday, Oct. 14",
+      "label": "Communication Folder",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-12"
+    },
+    {
+      "date": "Wednesday, Oct. 14",
+      "label": "Progress Reports",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-12"
+    },
+    {
+      "date": "Friday, Oct. 16",
+      "label": "Parent-Teacher Conferences",
+      "kind": "conference",
+      "sourceDocument": "weekly-reminders-2026-10-12"
+    },
+    {
+      "date": "Friday, Oct. 16",
+      "label": "Chick-fil-A",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-12"
+    },
+    {
+      "date": "Monday, Oct. 19",
+      "label": "Dress Down Day",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-12"
+    },
+    {
+      "date": "Monday, Oct. 19",
+      "label": "Lego Club",
+      "kind": "club",
+      "sourceDocument": "weekly-reminders-2026-10-12"
+    },
+    {
+      "date": "Monday, Oct. 19",
+      "label": "Flag football",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-12"
+    },
+    {
+      "date": "Thursday, Oct. 29",
+      "label": "Dress Down Day",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-12"
+    },
+    {
+      "date": "Thursday, Oct. 29",
+      "label": "Flag football",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-12"
     }
   ],
   "reminders": [
