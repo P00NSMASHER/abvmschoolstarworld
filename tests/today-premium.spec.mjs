@@ -33,6 +33,17 @@ test('Today premium signature: mobile layout and retained source-backed actions'
     expect(dateStyle.color).toBe('rgb(21, 47, 84)');
     await expect(page.locator('.study-invitation')).toBeVisible();
     await expect(page.locator('.today-screen > .lunch-card')).toBeVisible();
+    // The verified meal illustration is visible in the first viewport.
+    // Screenshots must not accidentally approve an empty lazy-load placeholder.
+    const lunchArtwork = page.locator('.today-screen > .lunch-card .lunch-art img');
+    await expect(lunchArtwork).toHaveCount(1);
+    await expect(lunchArtwork).toHaveAttribute('loading', 'eager');
+    await expect.poll(
+      () => lunchArtwork.evaluate(img => img.complete && img.naturalWidth > 0),
+      { timeout: 15000 },
+    ).toBe(true);
+    await lunchArtwork.evaluate(img => img.decode());
+
     await expect(page.locator('.today-panel')).toBeVisible();
     // A timeline event must not repeat as a semantically identical reminder,
     // while additional deadlines and prices stay displayed when distinct.
