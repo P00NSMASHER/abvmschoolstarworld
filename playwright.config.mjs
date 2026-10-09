@@ -22,6 +22,6 @@ export default defineConfig({
   projects:[
     {name:"mobile",use:{viewport:{width:390,height:844},isMobile:true,hasTouch:true}},
     {name:"desktop",use:{viewport:{width:1440,height:900}}},
-    {name:"iphone-webkit",testMatch:["iphone-polish.spec.mjs","study-empty-subjects.spec.mjs","daily-practice.spec.mjs","study-hub.spec.mjs","visual-redesign.spec.mjs","study-experience.spec.mjs","study-badges-ui.spec.mjs","study-ranks-enlarged-text.spec.mjs","study-stars-ledger.spec.mjs","study-streak-bonuses.spec.mjs","today-premium.spec.mjs","calendar-premium.spec.mjs","study-premium.spec.mjs","study-player-premium.spec.mjs","study-tools-premium.spec.mjs"],use:{browserName:"webkit",viewport:{width:393,height:852},isMobile:true,hasTouch:true}}
+    {name:"iphone-webkit",testMatch:["iphone-polish.spec.mjs","study-empty-subjects.spec.mjs","daily-practice.spec.mjs","study-hub.spec.mjs","visual-redesign.spec.mjs","study-experience.spec.mjs","study-badges-ui.spec.mjs","study-ranks-enlarged-text.spec.mjs","study-stars-ledger.spec.mjs","study-streak-bonuses.spec.mjs","today-premium.spec.mjs","calendar-premium.spec.mjs","study-premium.spec.mjs","study-player-premium.spec.mjs","study-tools-premium.spec.mjs","progress-premium.spec.mjs","integrated-premium.spec.mjs"],use:{browserName:"webkit",viewport:{width:393,height:852},isMobile:true,hasTouch:true}}
   ]
 });
