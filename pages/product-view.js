@@ -60,6 +60,18 @@
       fmtShort,
     } = c;
     const closed = events.some((e) => kindClass(e) === "closed");
+    // Suppress only equivalent date-prefixed notices already in today's timeline.
+    // Keep the full data intact; a price, deadline detail or added instruction
+    // makes the notice distinct and therefore remains visible.
+    const comparableNotice = (value) =>
+      String(value ?? "")
+        .toLowerCase()
+        .replace(/^(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)\\b[^:]{0,45}:\\s*/i, "")
+        .replace(/\\b(?:is|are|was|were)\\b/g, "")
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim();
+    const listedEvents = new Set(events.map(e => comparableNotice(e.label)));
+    const visibleReminders = reminders.filter(x => !listedEvents.has(comparableNotice(x)));
     const nextHtml = next
       ? '<section class="priority-card"><div class="date-tile"><strong>' +
         esc(fmtShort(next.d).split(" ")[0]) +
@@ -116,10 +128,10 @@
           "</div>"
         : "") +
       "</section>" +
-      (reminders.length
+      (visibleReminders.length
         ? '<section class="today-updates-card">' +
           sectionHead("Worth remembering", route("family", "All updates")) +
-          reminders
+          visibleReminders
             .map(
               (x) =>
                 '<div class="reminder-line"><span aria-hidden="true">' +
