@@ -9,7 +9,7 @@ test("Premium Today, Calendar, Study, Test Prep and Progress form one coherent i
   await page.setViewportSize({width:390,height:852});
   await page.goto("/#today");
   await expect(page.locator(".today-screen")).toBeVisible();
-  await expect(page.locator(".school-photo-hero")).toContainText("Hi, Emma!");
+  await expect(page.locator(".school-photo-hero")).toContainText("Ready for today?");
   await expect(page.locator(".today-primary .priority-card")).toContainText("Spelling");
   await page.locator(".bottom-nav [data-tab=calendar]").click();
   await expect(page.locator(".calendar-screen")).toBeVisible();

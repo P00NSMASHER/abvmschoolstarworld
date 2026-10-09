@@ -35,7 +35,7 @@ test('Today premium signature: mobile layout and retained source-backed actions'
     const screen = page.locator('.today-screen');
     await expect(screen).toBeVisible();
     await expect(page.locator('.school-photo-hero .hero-photo')).toBeVisible();
-    await expect(page.locator('.school-photo-hero')).toContainText('Hi, Emma!');
+    await expect(page.locator('.school-photo-hero')).toContainText('Ready for today?');
     await expect(page.locator('.today-primary .priority-card')).toHaveCount(1);
     // Icon-only assessment control must identify its verified destination.
     const assessmentArrow = page.locator('.priority-card .icon-button');

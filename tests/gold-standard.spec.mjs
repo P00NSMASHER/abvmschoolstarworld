@@ -53,7 +53,7 @@ test("the current product hierarchy is coherent",async({page})=>{
 
   await openTab(page,"Study");
   await expect(page.locator(".app-header h1")).toHaveText(/Study/i);
-  await expect(page.locator(".study-hero-copy h2")).toHaveText("Let’s learn, Emma!");
+  await expect(page.locator(".study-hero-copy h2")).toHaveText("Let’s learn, eagle!");
   await expect(page.locator(".study-hero-copy p")).toHaveText("ASSUMPTION BVM · GRADE 2");
   await expect(page.locator(".study-hero-art")).toBeVisible();
   await expectCurrentStudyGameTiles(page);
