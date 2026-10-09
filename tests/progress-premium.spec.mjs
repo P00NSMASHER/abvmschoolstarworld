@@ -28,14 +28,14 @@ async function assertFit(page, width) {
     scrollWidth: root.scrollWidth,
     clientWidth: root.clientWidth,
     heading: getComputedStyle(root.querySelector(".badge-collection-heading h2")).fontSize,
-    rankPosition: root.querySelector(".rank-current").getBoundingClientRect(),
-    nextPosition: root.querySelector(".study-badge-next").getBoundingClientRect(),
-    heroPosition: root.querySelector(".family-hero").getBoundingClientRect(),
+    rankTop: root.querySelector(".rank-current").getBoundingClientRect().top,
+    nextTop: root.querySelector(".study-badge-next").getBoundingClientRect().top,
+    heroTop: root.querySelector(".family-hero").getBoundingClientRect().top,
   }));
   expect(metrics.scrollWidth, width + "px: horizontal overflow").toBeLessThanOrEqual(metrics.clientWidth + 1);
   expect(parseFloat(metrics.heading)).toBeGreaterThanOrEqual(20);
-  expect(metrics.rankPosition.top).toBeGreaterThan(metrics.heroPosition.top);
-  expect(metrics.nextPosition.top).toBeGreaterThan(metrics.rankPosition.top);
+  expect(metrics.rankTop).toBeGreaterThan(metrics.heroTop);
+  expect(metrics.nextTop).toBeGreaterThan(metrics.rankTop);
 }
 
 async function capture(page, info, name, full = false) {
@@ -62,12 +62,13 @@ test("Progress uses verified Eaglet data, a real rank meter and all 21 promotion
     await expect(page.locator(".badge-balance")).toContainText(String(saved.balance));
     await expect(page.locator(".study-badge-next")).toContainText(saved.next?.title || currentTitle);
     const bar = page.getByRole("progressbar", { name: "Next rank progress" });
-    await expect(bar).toHaveAttribute("aria-valuenow", String(saved.segmentProgress));
-    await expect(bar).toHaveAttribute("aria-valuemax", String(saved.segmentTarget));
+    await expect(bar).toHaveAttribute("aria-valuenow", String(saved.segmentProgress ?? 0));
+    await expect(bar).toHaveAttribute("aria-valuemax", String(saved.segmentTarget ?? 1));
 
     const cards = page.locator(".progress-screen .study-badge-grid li");
     await expect(cards).toHaveCount(21);
-    await expect(cards.first()).toContainText("Locked");
+    await expect(cards.first()).toContainText("Up next");
+    expect(await page.locator(".progress-screen .study-badge-card.is-locked").count()).toBeGreaterThan(0);
     const children = await cards.locator("img").count();
     expect(children).toBe(21);
     await assertFit(page, width);
