@@ -54,6 +54,8 @@ test('same approved event from two pages consolidates display only and retains b
   assert.deepEqual(new Set(feed.display[0].sources.map(x=>x.sourceId)),new Set([school.id,hsa.id]));
   assert.equal(feed.display[0].category,'School event',
     'HSA categorization must not silently replace the official school classification');
+  assert.equal(feed.display[0].sources[0].sourceId,school.id,
+    'official school evidence must appear before HSA corroboration in a combined card');
   assert.equal(feed.display[0].sources.find(s=>s.sourceId===hsa.id).category,'HSA event',
     'the original HSA category must remain visible in provenance');
   assert.equal(feed.display[0].sources.find(s=>s.sourceId===school.id).category,'School event');

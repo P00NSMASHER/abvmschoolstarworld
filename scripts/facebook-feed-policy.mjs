@@ -148,7 +148,8 @@ function assembleDisplays(posts){
       conflict:isConflict,sources:group.map(p=>({
         sourceId:p.sourceId,organization:p.organization,postId:p.postId,postUrl:p.postUrl,
         category:p.category,audience:p.audience,confidence:p.confidence,noticeStatus:p.noticeStatus
-      }))
+      })).sort((a,b)=>Number(b.sourceId==='ABVM_SCHOOL_FACEBOOK')-
+        Number(a.sourceId==='ABVM_SCHOOL_FACEBOOK'))
     });
   }
   display.sort((a,b)=>b.postedAt.localeCompare(a.postedAt)||a.id.localeCompare(b.id));
