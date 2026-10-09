@@ -7,13 +7,13 @@
       "organization": "Assumption BVM School",
       "authority": "school",
       "shareUrl": "https://www.facebook.com/share/1USvBxRNwD/?mibextid=wwXIfr",
-      "canonicalUrl": null,
-      "pageId": null,
+      "canonicalUrl": "https://www.facebook.com/ABVM11/",
+      "pageId": "100057127132786",
       "identity": {
-        "status": "pending",
-        "method": "share-link-login-required",
-        "verifiedAt": null,
-        "evidenceUrl": null
+        "status": "verified",
+        "method": "public-share-redirect-and-readonly-browser-page-metadata",
+        "verifiedAt": "2026-10-08",
+        "evidenceUrl": "https://www.facebook.com/share/1USvBxRNwD/?mibextid=wwXIfr"
       },
       "retrieval": {
         "enabled": false,

@@ -8,11 +8,14 @@ import {
 
 const config=JSON.parse(readFileSync(new URL('../pages/data/facebook-sources.json',import.meta.url),'utf8'));
 const hsa=config.sources.find(x=>x.id==='ABVM_HSA_FACEBOOK');
-const school={...config.sources.find(x=>x.id==='ABVM_SCHOOL_FACEBOOK'),
-  pageId:'123456789012345',canonicalUrl:'https://www.facebook.com/p/Assumption-BVM-School-123456789012345/',
-  identity:{status:'verified',method:'independent-public-page-identity-verification',verifiedAt:'2026-10-08',
-    evidenceUrl:'https://www.facebook.com/share/1USvBxRNwD/?mibextid=wwXIfr'}};
-const verifiedConfig={...config,sources:[school,hsa]};
+const school=config.sources.find(x=>x.id==='ABVM_SCHOOL_FACEBOOK');
+const verifiedConfig=config;
+const pendingSchool={
+  ...school,pageId:null,canonicalUrl:null,
+  identity:{status:'pending',method:'fixture-unverified',verifiedAt:null,evidenceUrl:null},
+  retrieval:{method:'graph-api',enabled:false}
+};
+const pendingConfig={...config,sources:[pendingSchool,hsa]};
 const timestamp='2026-10-08T18:00:00.000Z';
 function post(source,{id='101',summary='School community reminder for the fall event.',date='2026-10-12',key='fall-school-event',category}={}){
   return {
@@ -26,12 +29,18 @@ function post(source,{id='101',summary='School community reminder for the fall e
     review:{status:'approved',piiReviewed:true,reviewedBy:'fixture-reviewer',reviewedAt:timestamp}
   };
 }
-test('source IDs, share URLs, authoritative organizations, and disabled unverified source are immutable',()=>{
+test('exact school/HSA source identities and source-specific Page IDs are pinned',()=>{
   assert.equal(validateFacebookSources(config),true);
+  assert.equal(school.pageId,'100057127132786');
+  assert.equal(school.canonicalUrl,'https://www.facebook.com/ABVM11/');
+  assert.equal(school.identity.status,'verified');
+  assert.equal(school.retrieval.enabled,false,'browser identity proof is not API access');
   const switched=structuredClone(config);
   switched.sources[0].shareUrl=switched.sources[1].shareUrl;
   assert.throws(()=>validateFacebookSources(switched),/share link mismatch/);
-  const enabled=structuredClone(config); enabled.sources[0].retrieval.enabled=true;
+  const different=structuredClone(config);different.sources[0].pageId=hsa.pageId;
+  assert.throws(()=>validateFacebookSources(different),/cannot be reassigned/);
+  const enabled=structuredClone(pendingConfig);enabled.sources[0].retrieval.enabled=true;
   assert.throws(()=>validateFacebookSources(enabled),/pending source/);
 });
 test('reviewed HSA announcements remain attributed to HSA and do not change the teacher pack',()=>{
@@ -83,8 +92,8 @@ test('HSA cannot establish academic instructions without teacher corroboration',
   assert.throws(()=>normalizeReviewedFacebookPost(post(hsa,{category:'Academic'}),hsa),/academic instructions/);
   assert.throws(()=>normalizeReviewedFacebookPost(post(school,{category:'Academic'}),school),/academic instructions/);
 });
-test('unverified school identity blocks even reviewed posts',()=>{
-  assert.throws(()=>buildFacebookFeed(config,{schemaVersion:1,posts:[post(school)]}),/unverified/);
+test('a source without verified identity still cannot publish school posts',()=>{
+  assert.throws(()=>buildFacebookFeed(pendingConfig,{schemaVersion:1,posts:[post(school)]}),/unverified/);
 });
 test('edited posts require a newer review and cannot update silently',()=>{
   const modified=post(hsa);modified.editedAt='2026-10-08T19:00:00.000Z';

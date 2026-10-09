@@ -9,7 +9,7 @@ export const FACEBOOK_CATEGORIES=Object.freeze([
 const known=Object.freeze({
   ABVM_SCHOOL_FACEBOOK:{
     shareUrl:'https://www.facebook.com/share/1USvBxRNwD/?mibextid=wwXIfr',
-    authority:'school',organization:'Assumption BVM School'
+    authority:'school',organization:'Assumption BVM School',pageId:'100057127132786'
   },
   ABVM_HSA_FACEBOOK:{
     shareUrl:'https://www.facebook.com/share/1MwtxVZMSq/?mibextid=wwXIfr',
@@ -68,7 +68,7 @@ export function validateFacebookSources(config){
     requireThat(['pending','verified'].includes(row.identity?.status),'identity status invalid: '+row.id);
     if(row.identity.status==='verified'){
       requireThat(/^\d{8,25}$/.test(String(row.pageId||'')),'verified source needs numeric Page ID: '+row.id);
-      if(rule.pageId)requireThat(row.pageId===rule.pageId,'verified HSA Page ID cannot be reassigned');
+      if(rule.pageId)requireThat(row.pageId===rule.pageId,'verified Facebook Page ID cannot be reassigned');
       requireThat(!!facebookUrl(row.canonicalUrl)&&!!facebookUrl(row.identity.evidenceUrl),'verified source needs Facebook identity evidence: '+row.id);
       requireThat(dateOnly(row.identity.verifiedAt),'verified source needs verification date: '+row.id);
       requireThat(clean(row.identity.method).length>=8,'verified source method missing: '+row.id);

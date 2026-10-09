@@ -22,10 +22,10 @@ function graph(results,identity={id:hsa.pageId,name:hsa.organization}){
   const fetcher=async()=>({ok:true,json:async()=>++reads===1?identity:{data:results}});
   return fetcher;
 }
-test('one missing identity and one unavailable token stay source-isolated and do not publish guesses',async()=>{
+test('verified-but-disabled school and HSA missing token remain source-isolated',async()=>{
   const result=await syncFacebookFeeds({config:active,reviewed:{schemaVersion:1,posts:[]},
     previous:empty,token:'',now:time,fetcher:()=>{throw Error('No calls expected');}});
-  assert.deepEqual(result.reports.map(r=>r.status),['pending-identity','awaiting-authorized-api-token']);
+  assert.deepEqual(result.reports.map(r=>r.status),['manual-review-only','awaiting-authorized-api-token']);
   assert.deepEqual(result.feed.posts,[]);
 });
 test('authorized Graph API must return exact Page ID/name before reading any posts',async()=>{
@@ -81,11 +81,7 @@ test('a Page retrieval failure does not relabel an HSA approval',async()=>{
 
 test('page-specific credentials never authorize another Facebook source',async()=>{
   const originalSchool=sourceData.sources.find(s=>s.id==='ABVM_SCHOOL_FACEBOOK');
-  const school={...originalSchool,pageId:'123456789012345',
-    canonicalUrl:'https://www.facebook.com/p/Assumption-BVM-School-123456789012345/',
-    identity:{status:'verified',method:'independent-public-page-verification',
-      verifiedAt:'2026-10-08',evidenceUrl:originalSchool.shareUrl},
-    retrieval:{method:'graph-api',enabled:true}};
+  const school={...originalSchool,retrieval:{method:'graph-api',enabled:true}};
   const config={...sourceData,sources:[school,active.sources[1]]};
   const seen=[];
   const respond=graph([]);

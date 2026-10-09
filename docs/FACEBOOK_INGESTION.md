@@ -7,9 +7,16 @@ source-specific results in pages/data/facebook-updates.json.
 
 ## Current source verification (2026-10-08)
 
-- ABVM_SCHOOL_FACEBOOK: share URL https://www.facebook.com/share/1USvBxRNwD/?mibextid=wwXIfr.
-  Facebook blocked independent resolution behind login. **Pending identity**.
-  Do not guess that another page (including ABVM11) is this exact share target.
+- ABVM_SCHOOL_FACEBOOK: the exact share URL
+  https://www.facebook.com/share/1USvBxRNwD/?mibextid=wwXIfr
+  was followed in a public, read-only browser. It resolved to
+  **Assumption BVM School**, https://www.facebook.com/ABVM11/,
+  numeric Page ID **100057127132786**. The public canonical Page metadata
+  independently identifies the school as the Pottsville, PA school.
+  **Identity verified; automatic retrieval remains disabled.**
+  Some public preview text was visible, but only relative publication
+  labels (such as "10 hours ago"), not reliable original post timestamps.
+  This is identity evidence, **not** full post retrieval authorization.
 - ABVM_HSA_FACEBOOK: share URL https://www.facebook.com/share/1MwtxVZMSq/?mibextid=wwXIfr.
   Public share redirect resolves to the Pottsville **Assumption BVM Home &
   School Association** page, canonical URL
@@ -18,10 +25,11 @@ source-specific results in pages/data/facebook-updates.json.
   school's HSA. Page identity is verified by public URL/metadata, not by
   privileged account access. **Retrieval remains disabled**.
 
-The public HSA preview exposed some post links but not reliable complete post
-bodies, edits or publication timestamps. No Facebook announcement has been
-entered into the reviewed manifest based on a partial public preview.
-The school link remains blocked. Neither feed is operating live.
+Both exact user-supplied share links now have verified, distinct canonical
+identities. Public Facebook views expose incomplete post content and relative
+time labels, so **no post was imported**. The HSA preview still lacks complete
+post text and original publication timestamps. Both feeds remain disabled
+for automatic retrieval until authorized access is established.
 
 ## Windsor.ai Facebook Organic authorization audit (2026-10-08)
 
@@ -49,8 +57,7 @@ login or a RETALLY Page as authorization to fetch the school or HSA Pages.
 and the returned Page name must also identify the same original
 organization. Source IDs must be determined from this match, **never**
 from post text, keywords, reposts, or the currently connected user's
-Facebook profile. The HSA Page is `61552549763989`; the school's Page
-ID is still unknown. Do not import data from `1423089780881432` into
+Facebook profile. The HSA Page is `61552549763989`; the school's Page ID is `100057127132786`. Do not import data from `1423089780881432` into
 the ABVM repository.
 
 Windsor's ChatGPT connector reads data on demand. Its ChatGPT connection
@@ -107,9 +114,9 @@ remains blocked until exact-Page access and review are established.
 
 ## Enabling authorized retrieval
 
-1. Independently resolve the *exact supplied school share URL* to a canonical
-   Page and numeric Page ID, with verifiable evidence. Update only that source
-   in facebook-sources.json; do not reuse the HSA ID.
+1. The original school share URL has now been resolved and pinned to
+   `100057127132786`; HSA is independently pinned to `61552549763989`.
+   Preserve both identities and never reuse one Page ID for the other.
 2. Obtain an authorized Facebook Graph API access token and any required
    Page Public Content Access / Page permissions. Store it only as the
    **source-specific** GitHub Actions repository secrets
@@ -138,7 +145,8 @@ remains blocked until exact-Page access and review are established.
 
 Where authorized API retrieval is unavailable, add a **reviewed, sanitized**
 entry to pages/data/facebook-reviewed-posts.json. Only a *verified* source can
-publish; the school remains blocked until identity resolution. Example fields:
+publish; both identity records are now verified, but each reviewed post still
+requires complete dated evidence and privacy approval. Example fields:
 
     {
       "sourceId": "ABVM_HSA_FACEBOOK",
@@ -198,3 +206,15 @@ organic connector requires access to the Page being selected. Using
 RETALLY's access or token in the ABVM collection would violate source
 isolation. Even a legitimately connected Windsor Page does not itself
 provide the unattended Graph API token for the existing GitHub Action.
+
+## Dedicated browser access (identity and login boundaries)
+
+A dedicated TinyFish browser profile was created outside GitHub for the account
+owner to sign into Facebook directly using a secure, private setup session.
+Never commit its handoff link, cookies, password, session tokens, or browser
+storage to this public repository. A signed-in browser session can help
+review visible public content; it is **not** a GitHub Actions Graph token, and
+it does not authorize the user to administer either school Page. A manual
+approved import still requires the post permalink, original publication
+time, privacy screening, author/Page identity and edit evidence. The system
+must never infer an original timestamp from a relative “hours ago” label.
