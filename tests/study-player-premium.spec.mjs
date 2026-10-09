@@ -10,7 +10,11 @@ async function round(page,width) {
   await page.clock.setFixedTime(FIXED);
   await page.emulateMedia({reducedMotion:"reduce"});
   await page.goto("/#study");
+  // Navigating to the same SPA hash can preserve an active round between
+  // viewport iterations. Explicit reload tests a clean real Study entry.
+  await page.reload({waitUntil:"domcontentloaded"});
   await expect(page.locator(".games-screen")).toHaveAttribute("data-study-state","ready",{timeout:15000});
+  await expect(page.locator('[data-game-start="mix"]')).toBeVisible({timeout:15000});
   await page.locator('[data-game-start="mix"]').click();
   await expect(page.locator(".games-screen.is-playing .game-question-card")).toBeVisible();
 }
