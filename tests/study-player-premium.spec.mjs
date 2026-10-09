@@ -101,9 +101,14 @@ test("hint, wrong-answer retry and correct explanation keep meaning and readable
   await expect(page.locator(".game-feedback.correct p")).not.toBeEmpty();
   await capture(page,info,"study-player-correct-390-full",{full:true});
   const semanticColors=await page.locator(".game-feedback.correct,.game-answer.correct,.game-answer.wrong").evaluateAll(nodes=>nodes.map(el=>({
-    background:getComputedStyle(el).backgroundImage,border:getComputedStyle(el).borderColor
+    background:getComputedStyle(el).backgroundImage,
+    border:getComputedStyle(el).borderColor,
+    opacity:Number(getComputedStyle(el).opacity)
   })));
-  for(const s of semanticColors)expect(s.background).toContain("gradient");
+  for(const s of semanticColors){
+    expect(s.background).toContain("gradient");
+    expect(s.opacity,"Resolved answer choices must remain readable").toBeGreaterThanOrEqual(.95);
+  }
   await noOverflow(page,390);
   await page.locator("[data-game-next]").click();
   await expect(page.locator(".game-question-card")).toBeVisible();

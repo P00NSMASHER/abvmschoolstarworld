@@ -593,6 +593,10 @@
   outline-offset: 2px;
 }
 .games-screen.is-playing .game-answer:disabled:not(.correct):not(.wrong) { opacity: .72; }
+/* Keep resolved answers legible. The global button:disabled opacity of .6
+   is appropriate for unavailable controls, not correctness feedback. */
+.games-screen.is-playing .game-answer.correct:disabled,
+.games-screen.is-playing .game-answer.wrong:disabled { opacity: 1; }
 .games-screen.is-playing .game-answer.correct {
   border-color: #70a78d;
   background: linear-gradient(150deg,#f4fff8,#e5f5eb);
