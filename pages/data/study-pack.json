@@ -14,16 +14,16 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-10-08T16:43:51.480Z",
-  "sourceCapturedAt": "2026-10-08T16:43:51.480Z",
+  "sourceLastSeenAt": "2026-10-09T16:39:13.044Z",
+  "sourceCapturedAt": "2026-10-09T16:39:13.186Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-43dda9e1caba8dc64b2e",
-    "sourceCapturedAt": "2026-10-08T16:43:51.480Z",
-    "generatedAt": "2026-10-08T16:43:51.480Z",
+    "sourceCapturedAt": "2026-10-09T16:39:13.186Z",
+    "generatedAt": "2026-10-09T16:39:13.186Z",
     "weekLabel": "Week of October 5, 2026",
-    "summary": "Current Grade 2 teacher-site material: Homework lists Reading “Read”, parent task “Cover books”, Reading “Keep Reading Log and Behavior Chart in the HW folder”, and Homework Folder “Return everything in the HW folder”. Upcoming tests include Spelling (short i / long i) / Handwriting on Friday, Oct. 9, Grammar (subject & predicate) on Friday, Oct. 9, Math (subtraction) on Thursday, Oct. 15, and Religion Ch. 3 on Thursday, Oct. 15. 24 uploaded school notices are integrated with the teacher pages.",
+    "summary": "Current Grade 2 teacher-site material: Homework lists Reading “Read”, parent task “Cover books”, Reading “Keep Reading Log and Behavior Chart in the HW folder”, and Homework Folder “Return everything in the HW folder”. Upcoming tests include Spelling (short i / long i) / Handwriting on Friday, Oct. 9, Grammar (subject & predicate) on Friday, Oct. 9, Math (subtraction) on Thursday, Oct. 15, and Religion Ch. 3 on Thursday, Oct. 15. 25 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
       {
         "subject": "Reading / ELA",
@@ -547,10 +547,24 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Monday, Oct. 12",
+        "label": "No School",
+        "kind": "holiday",
+        "sourceDocument": "weekly-reminders-2026-10-12",
+        "source": "uploaded-notice"
+      },
+      {
         "date": "Tuesday, Oct. 13",
         "label": "Dress Down Day — Knights of Columbus Thanksgiving Meal",
         "kind": "school event",
         "sourceDocument": "weekly-reminders-2026-10-05",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Oct. 13",
+        "label": "Dress Down Day",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-12",
         "source": "uploaded-notice"
       },
       {
@@ -581,6 +595,27 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Wednesday, Oct. 14",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-12",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 14",
+        "label": "Communication Folder",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-12",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 14",
+        "label": "Progress Reports",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-12",
+        "source": "uploaded-notice"
+      },
+      {
         "date": "Thursday, Oct. 15",
         "label": "Scholastic book orders due (online code: GZJYN)",
         "source": "teacher-home",
@@ -603,6 +638,20 @@
         "label": "Religion Ch. 3",
         "kind": "test",
         "source": "teacher-tests"
+      },
+      {
+        "date": "Friday, Oct. 16",
+        "label": "Parent-Teacher Conferences",
+        "kind": "conference",
+        "sourceDocument": "weekly-reminders-2026-10-12",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Oct. 16",
+        "label": "Chick-fil-A",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-12",
+        "source": "uploaded-notice"
       },
       {
         "label": "Schwartz Farm Family Night RSVP due for $5/student voucher",
@@ -640,6 +689,27 @@
         "label": "Parent-Teacher Conferences",
         "kind": "conference",
         "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Oct. 19",
+        "label": "Dress Down Day",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-12",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Oct. 19",
+        "label": "Lego Club",
+        "kind": "club",
+        "sourceDocument": "weekly-reminders-2026-10-12",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Oct. 19",
+        "label": "Flag football",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-12",
         "source": "uploaded-notice"
       },
       {
@@ -770,6 +840,20 @@
         "label": "Servants for All hygiene donation collection noted with DDD/flag-football activities",
         "kind": "school event",
         "sourceDocument": "servants-for-all-hygiene-2026-10",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Thursday, Oct. 29",
+        "label": "Dress Down Day",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-12",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Thursday, Oct. 29",
+        "label": "Flag football",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-12",
         "source": "uploaded-notice"
       },
       {
@@ -1322,7 +1406,7 @@
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
     "sourceCheckedAt": "2026-10-08T15:00:17.769Z",
-    "uploadedNoticeHash": "uploaded-notices-ed6c98a22db6f4416282",
+    "uploadedNoticeHash": "uploaded-notices-fb318f1d04c13e5a9209",
     "uploadedNoticeTopics": {
       "reminders": [
         "fundraiser",
@@ -13701,8 +13785,8 @@
     }
   ],
   "uploadedNotices": {
-    "count": 24,
-    "latestIntegratedAt": "2026-10-08T16:43:51.480Z",
+    "count": 25,
+    "latestIntegratedAt": "2026-10-09T16:39:13.044Z",
     "documents": [
       {
         "id": "dress-down-2026-09-25",
@@ -13823,6 +13907,11 @@
         "id": "eucharistic-consecration-2026",
         "label": "ABVM diocesan Eucharistic Consecration family letter dated October 6",
         "receivedAt": "2026-10-08"
+      },
+      {
+        "id": "weekly-reminders-2026-10-12",
+        "label": "Weekly reminders for week of 2026-10-12",
+        "receivedAt": "2026-10-09"
       }
     ]
   }
