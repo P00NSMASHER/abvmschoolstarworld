@@ -7,6 +7,7 @@ on:
       - 'pages/index.html'
       - 'pages/sw.js'
       - 'tests/calendar-premium.spec.mjs'
+      - 'playwright.config.mjs'
       - '.github/workflows/calendar-visual-acceptance.yml'
   workflow_dispatch:
 
