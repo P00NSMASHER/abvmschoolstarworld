@@ -8,16 +8,21 @@ export function questionsForTest(test, questions) {
     const focus = vowel
       ? new RegExp("(?:long|short)[ -]" + vowel[1] + "|" + vowel[1] + "_e", "i")
       : null;
+    const date = /^\d{4}-\d{2}-\d{2}$/.test(test.date || '') ? test.date : null;
     return questions
       .filter(
         (q) =>
           /Spelling|phonics/i.test(q.subject) ||
-          /long-short|consonant-blend|suffix/.test(q.skill),
+          /long-short|short-i-long-i|consonant-blend|suffix/.test(q.skill),
       )
-      .filter(
-        (q) =>
-          !focus || focus.test(q.skill + " " + q.sourceFact + " " + q.prompt),
-      );
+      .filter((q) => {
+        // A photo-confirmed weekly list stays bound to its own dated test.
+        // The extra long-a and high-frequency homework words are not erased
+        // just because the teacher's Test page mentions short-i / long-i.
+        const scoped = String(q.sourceFact || '').match(/^Photo-confirmed weekly spelling words for (\d{4}-\d{2}-\d{2})$/);
+        if (scoped) return date === scoped[1];
+        return !focus || focus.test(q.skill + ' ' + q.sourceFact + ' ' + q.prompt);
+      });
   }
   if (/religion|faith/.test(label)) {
     const c = label.match(/chapter\s*(\d+)/);

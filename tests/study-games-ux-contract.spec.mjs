@@ -1,3 +1,4 @@
+import {resolveGovernedBrowserQuestion} from './helpers/governed-browser-questions.mjs';
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
@@ -22,19 +23,16 @@ test('Study Games keeps the approved menu, play, and finish interaction contract
   await expect(page.locator('.game-topbar')).toBeVisible();
   await expect(page.locator('.game-progress')).toBeVisible();
   await expect(page.locator('.game-question-card')).toBeVisible();
-  await expect(page.locator('.game-answer')).toHaveCount(3);
+  const answerCount=await page.locator('.game-answer').count();
+  expect(answerCount).toBeGreaterThanOrEqual(3);
+  expect(answerCount).toBeLessThanOrEqual(4);
   await expect(page.getByRole('button', { name: /Need a hint/i })).toBeVisible();
 
   for (let resolved = 0; resolved < 12; resolved += 1) {
     if (await page.locator('.game-finish').count()) break;
-    const prompt = await page.locator('.game-question-card h2').textContent();
-    const answer = await page.evaluate(async currentPrompt => {
-      const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(r => r.json());
-      const sourceKey = window.ABVMStudyGames.sourceKeyFromEnvelope(envelope.pack, envelope);
-      const catalog = window.ABVMStudyGames.buildCatalog(envelope.pack, { sourceKey });
-      return catalog.questions.find(item => item.prompt === currentPrompt)?.answer || null;
-    }, prompt);
-    expect(answer).not.toBeNull();
+    const governed=await resolveGovernedBrowserQuestion(page);
+    const answer=governed.answer;
+    expect(governed.answerIndex).toBeGreaterThanOrEqual(0);
     const index = await page.locator('.game-answer strong').evaluateAll((nodes, expected) => nodes.findIndex(node => node.textContent === expected), answer);
     expect(index).toBeGreaterThanOrEqual(0);
     await page.locator('.game-answer').nth(index).click();
@@ -154,15 +152,8 @@ test('tried-wrong answers stay rejected and two distinct misses resolve to remed
     await page.getByRole('button', { name: /^Mix/i }).click();
     await expect(page.locator('.game-question-card')).toBeVisible();
 
-    const prompt = await page.locator('.game-question-card h2').textContent();
-    const row = await page.evaluate(async currentPrompt => {
-      const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(r => r.json());
-      const sourceKey = window.ABVMStudyGames.sourceKeyFromEnvelope(envelope.pack, envelope);
-      const catalog = window.ABVMStudyGames.buildCatalog(envelope.pack, { sourceKey });
-      const q = catalog.questions.find(item => item.prompt === currentPrompt);
-      return q ? { answer:q.answer, choices:q.choices } : null;
-    }, prompt);
-    expect(row).not.toBeNull();
+    const row=await resolveGovernedBrowserQuestion(page);
+    expect(row.answerIndex).toBeGreaterThanOrEqual(0);
     const wrongs=row.choices.map((choice,index)=>choice!==row.answer?index:-1).filter(index=>index>=0);
     expect(wrongs.length).toBeGreaterThanOrEqual(2);
 

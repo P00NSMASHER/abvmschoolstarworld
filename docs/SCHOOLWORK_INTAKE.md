@@ -180,6 +180,14 @@ Every integrated source needs a reviewed lesson. Each lesson requires `id`, `tit
 `dateStatus` and `questions`; match the existing question schema. Religion lessons
 may include an exact integer `chapter`.
 
+A dated *week* may be supplied through optional `weekOf` (ISO date for that
+week's Monday) **only** when the parent or source independently identifies the
+school week. Leave `studiedOn: null` when no exact homework day is known, and
+write a `dateStatus` mentioning the unknown day. For example, the photographed
+October 9 spelling practice confirms the week of 2026-10-05 but not the day.
+This week-only evidence enters weekly review during that week and remains
+cumulative afterward. It must not be relabeled as an exact Monday assignment.
+
 Every question requires an ID, subject, skill, prompt, answer, choices, explanation,
 sourceFact and provenance.
 
@@ -188,7 +196,7 @@ Public JSON remains fail-closed by object shape. The validator permits only:
 - root: `schemaVersion`, `uploadedPhotoCount`, `distinctWorksheetNote`,
   `lessons`, `sourceManifest`
 - lesson: `id`, `title`, `subject`, `sources`, `skills`, `notes`,
-  `studiedOn`, `addedOn`, `dateStatus`, optional `chapter`, `questions`
+  `studiedOn`, optional verified Monday `weekOf`, `addedOn`, `dateStatus`, optional `chapter`, `questions`
 - question: `id`, `subject`, `skill`, `prompt`, `answer`, `choices`,
   `explanation`, optional `hint`, `sourceFact`, optional `tier`,
   `questionType`, `difficulty`, `dok`, `domain`, `standards`, and
