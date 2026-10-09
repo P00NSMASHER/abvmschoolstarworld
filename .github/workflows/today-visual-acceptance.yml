@@ -9,6 +9,7 @@ on:
       - 'pages/product-view.js'
       - 'pages/sw.js'
       - 'tests/today-premium.spec.mjs'
+      - 'tests/weekly-learning-dashboard.spec.mjs'
       - 'tests/tablet-desktop.spec.mjs'
       - 'playwright.config.mjs'
       - '.github/workflows/today-visual-acceptance.yml'
@@ -38,6 +39,8 @@ jobs:
         run: npx playwright test tests/today-premium.spec.mjs --project=mobile --project=iphone-webkit --workers=1 --retries=0
       - name: iPad portrait and large-tablet hero size regression
         run: npx playwright test tests/tablet-desktop.spec.mjs --project=desktop --grep 'iPad portrait|large tablet' --workers=1 --retries=0
+      - name: Verify seven-day learning evidence across Eastern midnight
+        run: npx playwright test tests/weekly-learning-dashboard.spec.mjs --project=mobile --workers=1 --retries=0
       - name: Directly downloadable rendered screenshots
         if: always()
         uses: actions/upload-artifact@v4
