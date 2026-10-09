@@ -72,15 +72,41 @@ export async function syncFacebookFeeds({
         reason:String(error.message||error).slice(0,160),count:0});
     }
   }
-  const safe=reviewed.posts.filter(row=>{
-    const entries=sourceChecks.get(row.sourceId);
-    if(!entries||!entries.has(row.postId))return true;
-    // A changed Facebook message is never replaced by old approved wording:
-    // discard the now-stale approval until a human approves the new revision.
-    return entries.get(row.postId).hash===row.sourceContentHash;
-  });
+  // Persist a content-hash quarantine across API outages. Otherwise a rejected
+  // edit would silently reappear as soon as Facebook becomes unavailable again.
+  const pending=new Map((previous.quarantines||[]).map(q=>[q.sourceId+':'+q.postId,q]));
+  const audit=[...(previous.audit||[])],safe=[];
+  for(const row of reviewed.posts){
+    const key=row.sourceId+':'+row.postId;
+    const observed=sourceChecks.get(row.sourceId)?.get(row.postId);
+    const old=pending.get(key);
+    if(observed&&observed.hash!==row.sourceContentHash){
+      if(!old||old.observedHash!==observed.hash){
+        const detectedAt=now.toISOString();
+        pending.set(key,{sourceId:row.sourceId,postId:row.postId,
+          rejectedHash:row.sourceContentHash,observedHash:observed.hash,detectedAt});
+        audit.push({kind:'quarantined',sourceId:row.sourceId,postId:row.postId,
+          at:detectedAt,contentHash:observed.hash});
+      }
+      continue;
+    }
+    if(old){
+      // A new verified original-source hash AND a newer human review
+      // are both necessary. Failed checks never lift a previous quarantine.
+      const cleared=observed&&observed.hash===old.observedHash&&
+        row.sourceContentHash===observed.hash&&row.review?.status==='approved'&&
+        Date.parse(row.review?.reviewedAt)>Date.parse(old.detectedAt);
+      if(!cleared)continue;
+      pending.delete(key);
+      audit.push({kind:'review-restored',sourceId:row.sourceId,postId:row.postId,
+        at:now.toISOString(),contentHash:observed.hash});
+    }
+    safe.push(row);
+  }
   const quarantined=reviewed.posts.length-safe.length;
-  const result=buildFacebookFeed(config,{schemaVersion:1,posts:safe},previous,now);
+  const state={...previous,quarantines:[...pending.values()].sort((a,b)=>
+    (a.sourceId+':'+a.postId).localeCompare(b.sourceId+':'+b.postId)),audit:audit.slice(-200)};
+  const result=buildFacebookFeed(config,{schemaVersion:1,posts:safe},state,now);
   validatePublishedFacebookFeed(config,result.feed);
   return {...result,reports,quarantined,reviewedCount:reviewed.posts.length};
 }

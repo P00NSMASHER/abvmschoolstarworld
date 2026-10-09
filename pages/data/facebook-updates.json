@@ -3,5 +3,7 @@
   "generatedAt": null,
   "posts": [],
   "display": [],
-  "conflicts": []
+  "conflicts": [],
+  "quarantines": [],
+  "audit": []
 }

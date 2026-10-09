@@ -166,15 +166,37 @@ export function buildFacebookFeed(config,reviewed,previous={},now=new Date()){
   }
   posts.sort((a,b)=>a.sourceId.localeCompare(b.sourceId)||a.postId.localeCompare(b.postId));
   const {display,conflicts}=assembleDisplays(posts);
-  const content={posts,display,conflicts};
+  const quarantines=previous.quarantines||[],audit=previous.audit||[];
+  const content={posts,display,conflicts,quarantines,audit};
   const same=JSON.stringify(content)===JSON.stringify({
-    posts:previous?.posts||[],display:previous?.display||[],conflicts:previous?.conflicts||[]
+    posts:previous?.posts||[],display:previous?.display||[],conflicts:previous?.conflicts||[],
+    quarantines:previous?.quarantines||[],audit:previous?.audit||[]
   });
   return {changed:!same,feed:{schemaVersion:1,generatedAt:same?(previous.generatedAt||null):new Date(now).toISOString(),...content}};
 }
 export function validatePublishedFacebookFeed(config,feed){
   requireThat(feed?.schemaVersion===1&&Array.isArray(feed.posts)
     &&Array.isArray(feed.display)&&Array.isArray(feed.conflicts),'published feed schema invalid');
+  const quarantines=feed.quarantines||[],audit=feed.audit||[];
+  requireThat(Array.isArray(quarantines)&&Array.isArray(audit)&&audit.length<=200,'quarantine/audit schema invalid');
+  const sources=new Map(config.sources.map(source=>[source.id,source]));
+  const seen=new Set();
+  for(const item of quarantines){
+    const source=sources.get(item.sourceId),key=item.sourceId+':'+item.postId;
+    requireThat(source?.identity.status==='verified'&&item.postId?.startsWith(source.pageId+'_'),
+      'quarantine is bound to an unknown Facebook Page');
+    requireThat(!seen.has(key),'duplicate quarantine ID');
+    seen.add(key);
+    requireThat(iso(item.detectedAt)&&/^[0-9a-f]{64}$/.test(item.observedHash||'')&&
+      /^[0-9a-f]{64}$/.test(item.rejectedHash||''),'invalid edit quarantine evidence');
+    requireThat(!feed.posts.some(p=>p.sourceId===item.sourceId&&p.postId===item.postId),
+      'quarantined Facebook post cannot be published');
+  }
+  for(const item of audit){
+    requireThat(['quarantined','review-restored'].includes(item.kind)&&
+      sources.has(item.sourceId)&&typeof item.postId==='string'&&iso(item.at)&&
+      /^[0-9a-f]{64}$/.test(item.contentHash||''),'invalid audit entry');
+  }
   if(feed.posts.length===0){
     requireThat(feed.generatedAt===null||iso(feed.generatedAt),'empty feed needs a valid publication/retraction timestamp');
   }else requireThat(iso(feed.generatedAt),'published feed generatedAt missing');
@@ -183,6 +205,8 @@ export function validatePublishedFacebookFeed(config,feed){
   requireThat(JSON.stringify(recomputed.posts)===JSON.stringify(feed.posts),'published post provenance failed validation');
   requireThat(JSON.stringify(recomputed.display)===JSON.stringify(feed.display),'published display/source merge failed validation');
   requireThat(JSON.stringify(recomputed.conflicts)===JSON.stringify(feed.conflicts),'published conflicts failed validation');
+  requireThat(JSON.stringify(recomputed.quarantines)===JSON.stringify(quarantines),'quarantine receipt failed validation');
+  requireThat(JSON.stringify(recomputed.audit)===JSON.stringify(audit),'audit receipt failed validation');
   return true;
 }
 export function originalPostHash(rawMessage){return sha256(String(rawMessage??''));}

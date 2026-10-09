@@ -46,6 +46,20 @@ test('an edited message removes outdated review instead of silently overwriting 
     fetcher:graph([{id:hsa.pageId+'_101',message:'unapproved changed message'}])});
   assert.equal(result.quarantined,1);
   assert.equal(result.feed.posts.length,0);
+  assert.equal(result.feed.quarantines.length,1);
+  const second=await syncFacebookFeeds({config:active,reviewed,previous:result.feed,
+    token:'token',now:new Date('2026-10-09T18:00:00Z'),fetcher:async()=>{throw Error('API temporarily unavailable');}});
+  assert.equal(second.feed.posts.length,0,'a transient API failure must never republish previously quarantined content');
+  assert.equal(second.feed.quarantines.length,1);
+  const corrected=post();
+  corrected.sourceContentHash=originalPostHash('unapproved changed message');
+  corrected.review.reviewedAt='2026-10-10T18:00:00.000Z';
+  const third=await syncFacebookFeeds({config:active,reviewed:{schemaVersion:1,posts:[corrected]},
+    previous:second.feed,token:'token',now:new Date('2026-10-11T18:00:00Z'),
+    fetcher:graph([{id:hsa.pageId+'_101',message:'unapproved changed message'}])});
+  assert.equal(third.feed.posts.length,1);
+  assert.equal(third.feed.quarantines.length,0);
+  assert.deepEqual(third.feed.audit.map(a=>a.kind),['quarantined','review-restored']);
 });
 test('a Page retrieval failure does not relabel an HSA approval',async()=>{
   const reviewed={schemaVersion:1,posts:[post()]};
