@@ -88,12 +88,13 @@ test('page-specific credentials never authorize another Facebook source',async()
     retrieval:{method:'graph-api',enabled:true}};
   const config={...sourceData,sources:[school,active.sources[1]]};
   const seen=[];
+  const respond=graph([]);
   const fetcher=async(url,params)=>{
     seen.push({url,auth:params.headers.authorization});
     assert.ok(url.includes('/'+hsa.pageId),
       'school API must never be called using the HSA token');
     assert.equal(params.headers.authorization,'Bearer hsa-page-only-token');
-    return graph([])(url,params);
+    return respond(url,params);
   };
   const result=await syncFacebookFeeds({config,reviewed:{schemaVersion:1,posts:[]},
     previous:empty,tokens:{ABVM_HSA_FACEBOOK:'hsa-page-only-token'},
