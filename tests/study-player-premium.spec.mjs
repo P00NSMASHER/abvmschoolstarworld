@@ -9,10 +9,11 @@ async function round(page,width) {
   await page.setViewportSize({width,height:width===320?740:852});
   await page.clock.setFixedTime(FIXED);
   await page.emulateMedia({reducedMotion:"reduce"});
-  await page.goto("/#study");
-  // Navigating to the same SPA hash can preserve an active round between
-  // viewport iterations. Explicit reload tests a clean real Study entry.
-  await page.reload({waitUntil:"domcontentloaded"});
+  // Every width is already a fresh browser page. Reloading immediately after
+  // initial navigation doubled asynchronous requests and occasionally left
+  // WebKit waiting for a transient loading screen under concurrent CI load.
+  // Keep the unchanged ready-state assertion and interactive checks.
+  await page.goto("/#study",{waitUntil:"domcontentloaded"});
   await expect(page.locator(".games-screen")).toHaveAttribute("data-study-state","ready",{timeout:15000});
   await expect(page.locator('[data-game-start="mix"]')).toBeVisible({timeout:15000});
   await page.locator('[data-game-start="mix"]').click();
