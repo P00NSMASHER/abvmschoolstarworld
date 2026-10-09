@@ -520,8 +520,9 @@
   .today-screen .study-invitation > img { width: 44px; height: 44px; }
 }
 @media (min-width: 700px) {
-  .today-screen > .hero-card { min-height: 235px; }
-  .today-screen .hero-photo { min-height: 235px; }
+  /* Clear the iPad 240px minimum with real layout margin, not a rounded assertion. */
+  .today-screen > .hero-card { min-height: 244px; }
+  .today-screen .hero-photo { min-height: 244px; }
   .today-screen .hero-copy { padding: 27px; }
   .today-screen .hero-copy h2 { font-size: clamp(2.25rem, 3vw, 2.9rem); }
   .today-screen .hero-copy > p:last-child { max-width: none; }
