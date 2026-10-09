@@ -113,7 +113,7 @@ test("Rank ladder, school updates and important text remain readable at 200% siz
   expect(layout.balance.width).toBeGreaterThan(0);
   expect(layout.rank.width).toBeGreaterThan(0);
   await expect(page.locator(".badge-device-note")).toBeVisible();
-  await expect(page.locator(".school-details summary")).toBeVisible();
+  await expect(page.locator(".school-details > summary")).toBeVisible();
 });
 
 test("Progress remains readable on iPad and wide desktop", async ({ page }) => {
