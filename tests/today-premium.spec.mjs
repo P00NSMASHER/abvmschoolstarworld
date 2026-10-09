@@ -2,6 +2,26 @@ import { test, expect } from '@playwright/test';
 
 test.use({ serviceWorkers: 'block' });
 
+// A visible <img> can still be empty during load or contain a tiny fallback.
+// Check decoded intrinsic resolution against the actual display size.
+async function expectDecodedRetinaImage(locator, label) {
+  await expect(locator, label).toBeVisible();
+  await expect.poll(
+    () => locator.evaluate(img => img.complete && img.naturalWidth > 0),
+    { message: label + ' did not load', timeout: 15000 },
+  ).toBe(true);
+  await locator.evaluate(img => img.decode());
+  const dimensions = await locator.evaluate(img => {
+    const box = img.getBoundingClientRect();
+    return { width: box.width, height: box.height,
+      intrinsicWidth: img.naturalWidth, intrinsicHeight: img.naturalHeight };
+  });
+  expect(dimensions.width, label).toBeGreaterThan(0);
+  expect(dimensions.height, label).toBeGreaterThan(0);
+  expect(dimensions.intrinsicWidth, label + ' looks blurry').toBeGreaterThanOrEqual(Math.ceil(dimensions.width * 2));
+  expect(dimensions.intrinsicHeight, label + ' looks blurry').toBeGreaterThanOrEqual(Math.ceil(dimensions.height * 2));
+}
+
 // Candidate screenshots are generated from the real, data-backed application
 // at the tested branch. The historical iPhone uploads remain the baseline.
 test('Today premium signature: mobile layout and retained source-backed actions', async ({ page }, info) => {
@@ -56,6 +76,14 @@ test('Today premium signature: mobile layout and retained source-backed actions'
     expect(reminderLabels.map(normalizeNotice).filter(value =>
       eventLabels.map(normalizeNotice).includes(value))).toEqual([]);
     await expect(page.locator('.study-badge-latest')).toBeVisible();
+    // No screenshot is acceptable while any key school/learning image is blank.
+    for (const [selector, name] of [
+      ['.school-photo-hero img.hero-photo', 'School photograph'],
+      ['.school-photo-hero img.today-school-seal', 'School seal'],
+      ['.study-invitation > img', 'Reading illustration'],
+      ['.lunch-card .lunch-art img', 'Verified lunch artwork'],
+      ['.study-badge-latest img.study-badge-art', 'Eaglet medal'],
+    ]) await expectDecodedRetinaImage(page.locator(selector), name);
     await expect(page.locator('.freshness')).toBeVisible();
 
     const metrics = await screen.evaluate(el => {
@@ -134,4 +162,19 @@ test('Today remains operable with long verified titles and larger interface text
   await expect(page.locator('.today-panel')).toBeVisible();
   await page.locator('.study-badge-latest').click();
   await expect(page.locator('.badge-collection')).toBeVisible();
+});
+
+test('Today preserves accurate meal details if reviewed artwork cannot be loaded', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-10-08T12:00:00-04:00'));
+  await page.setViewportSize({ width: 390, height: 852 });
+  await page.route('**/assets/lunch-art/beef-cheesesteak.webp', route =>
+    route.fulfill({ status: 404, contentType: 'image/webp', body: '' }));
+  await page.goto('/#today');
+  const lunch = page.locator('.today-screen > .lunch-card');
+  await expect(lunch).toContainText('Beef cheesesteak');
+  await expect(lunch).toContainText('Steamed broccoli');
+  await expect(lunch.locator('.lunch-art')).toHaveCount(0);
+  await expect(page.locator('.study-invitation')).toBeVisible();
+  await expect(page.locator('.today-panel')).toBeVisible();
+  expect(await page.locator('.today-screen').evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
 });

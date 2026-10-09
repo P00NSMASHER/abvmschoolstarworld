@@ -291,6 +291,14 @@ function loadStudyRanks(){return ensureStudyGameEngine().then(e=>e.studyBadgeCol
 function renderToday(){
  const d=today(),priority=datedImportantEvents().find(({item,date})=>date>=d&&(kindClass(item)==="test"||kindClass(item)==="due"));
  stack().innerHTML=window.ABVMProductView.today({d,pack,header,freshness,taskHtml,kindClass,fmtDate,fmtShort,linkedTextHtml,events:eventItemsForDate(d),tasks:taskRecordsForSurface("today"),next:currentTest()||(priority?{x:priority.item,d:priority.date}:null),reminders:upcomingReminderTexts(d,2),lunchHtml:lunchCardHtml(d,lunchForDate(d))});
+ // If a reviewed illustration fails, retain the complete accurate lunch
+ // description and remove the broken image frame (never substitute invented art).
+ const mealArt=stack().querySelector(".today-screen .lunch-art img");
+ if(mealArt){
+   const hideBrokenArt=()=>mealArt.closest(".lunch-art")?.remove();
+   mealArt.addEventListener("error",hideBrokenArt,{once:true});
+   if(mealArt.complete&&mealArt.naturalWidth===0)hideBrokenArt();
+ }
  window.ABVMStudyBadges.mount(stack(),"today",loadStudyRanks);
 }
 function renderWeek(){
