@@ -1,9 +1,9 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v150-lunch-art-fallback";
+const CACHE = "abvm-grade2-parent-companion-v151-calendar-premium";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=112",
-  "./design-polish.css?v=2",
+  "./design-polish.css?v=3",
   "./study-games-materials.css?v=16",
   "./study-support.js?v=3",
   "./app.js?v=136",
