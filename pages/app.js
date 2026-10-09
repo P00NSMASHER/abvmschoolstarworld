@@ -115,15 +115,19 @@ function calendarSegments(view){
   return '<nav class="calendar-segments" aria-label="Calendar view"><button type="button" data-route="calendar" aria-pressed="'+(view==="month")+'">Month</button><button type="button" data-route="week" aria-pressed="'+(view==="week")+'">Week</button></nav>';
 }
 function freshnessState(){
-  const raw=envelope?.sourceLastSeenAt||pack?.sourceCapturedAt||pack?.generatedAt;
+  // Imported Yahoo notices can be newer than verified teacher-page checks.
+  // Never use sourceLastSeenAt, generatedAt, or sourceCapturedAt as proof
+  // that Homework/Tests/Spelling and the other teacher pages were rechecked.
+  const raw=envelope?.sourceLastCheckedAt||pack?.sourceCheckedAt;
   const d=raw?new Date(raw):null;
-  if(!d||Number.isNaN(d.getTime()))return{state:"attention",label:"Source verification unavailable"};
+  if(!d||Number.isNaN(d.getTime()))return{state:"attention",label:"Teacher page check unavailable"};
   const stamp=FRESH_DATE_FORMATTER.format(d)+" at "+FRESH_TIME_FORMATTER.format(d)+" ET";
   const ageHours=(Date.now()-d.getTime())/3600000;
-  if(navigator.onLine===false||lastPackFetchUsedCache)return{state:"offline",label:"Offline · last verified "+stamp};
-  if(ageHours>30)return{state:"attention",label:"Needs refresh · last verified "+stamp};
-  if(ageHours>8)return{state:"stale",label:"Older data · last verified "+stamp};
-  return{state:"current",label:"Verified "+stamp};
+  if(navigator.onLine===false||lastPackFetchUsedCache)return{state:"offline",label:"Offline · teacher pages last checked "+stamp};
+  if(ageHours<-.25)return{state:"attention",label:"Teacher page check time invalid"};
+  if(ageHours>30)return{state:"attention",label:"Teacher pages need refresh · last checked "+stamp};
+  if(ageHours>8)return{state:"stale",label:"Teacher pages older · last checked "+stamp};
+  return{state:"current",label:"Teacher pages verified "+stamp};
 }
 function freshness(){
   const state=freshnessState(),label=manualRefreshActive?"Checking published school info…":state.label;
