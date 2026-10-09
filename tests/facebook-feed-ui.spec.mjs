@@ -70,7 +70,7 @@ test('source conflicts remain visible, and hostile text cannot become markup',as
   await expect(page.locator('[data-facebook-feed="today"] .facebook-update-row')).toHaveCount(2);
   await expect(page.locator('[data-facebook-feed="today"]')).toContainText('Announcement details conflict');
   expect(await page.evaluate(()=>Boolean(window.evil))).toBe(false);
-  await expect(page.locator('script')).not.toContainText('window.evil=1');
+  await expect(page.locator('script').filter({hasText:'window.evil=1'})).toHaveCount(0);
   await context.close();
 });
 
