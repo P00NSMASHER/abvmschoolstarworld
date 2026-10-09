@@ -16,13 +16,19 @@ test("health classifier changes trigger an immediate main-branch dashboard run",
   ]) assert.ok(workflow.includes(path),path);
 });
 
-test("operational dashboard waits for the post-deploy watchdog",()=>{
+test("operational dashboard runs for completed main watchdog even if the watchdog failed",()=>{
   const workflowRun=workflow.match(/workflow_run:\n([\s\S]*?)\n  schedule:/)?.[1]||"";
   assert.match(workflowRun,/Monitor ABVM refresh health/);
   assert.doesNotMatch(workflowRun,/ABVM App QA/);
   assert.doesNotMatch(workflowRun,/Deploy ABVM to GitHub Pages/);
   assert.doesNotMatch(workflowRun,/Refresh ABVM teacher pages/);
-  assert.match(workflow,/github\.event\.workflow_run\.conclusion == 'success'/);
+  const dashboardGate=workflow.match(/jobs:\n\s+dashboard:\n\s+if: ([^\n]+)/)?.[1]||"";
+  assert.equal(dashboardGate,"github.event_name != 'workflow_run' || github.event.workflow_run.head_branch == 'main'");
+  assert.doesNotMatch(dashboardGate,/workflow_run\.conclusion/);
+  assert.match(workflow,/workflow_run:\n[\s\S]*?types: \[completed\]/);
+  assert.match(workflow,/- name: Publish dashboard to job summary\n\s+if: always\(\)/);
+  assert.match(workflow,/- name: Upload machine-readable health artifact\n\s+if: always\(\)/);
+  assert.doesNotMatch(workflow, /continue-on-error:\s*true/);
   assert.match(workflow,/github\.event\.workflow_run\.head_branch == 'main'/);
 });
 
