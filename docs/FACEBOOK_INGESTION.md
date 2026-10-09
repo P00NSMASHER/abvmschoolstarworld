@@ -64,7 +64,8 @@ The school link remains blocked. Neither feed is operating live.
 5. The API does **not auto-publish** raw post content. It verifies previously
    approved content hashes and quarantines changed messages until re-review.
    New posts require review in facebook-reviewed-posts.json.
-   Edited posts are quarantined with hashes and a privacy-safe audit trail;
+   Edited posts are quarantined on message-hash or newer updated_time changes,
+   with hashes, edit timestamps and a privacy-safe audit trail;
    an API outage cannot re-publish a previously quarantined revision.
    Restoring a post requires a fresh review plus an authorized check against
    the updated original message.

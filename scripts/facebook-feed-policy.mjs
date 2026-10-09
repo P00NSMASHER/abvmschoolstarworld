@@ -135,7 +135,10 @@ function assembleDisplays(posts){
     }else noEvent.push(group);
   }
   for(const group of noEvent){
-    const first=group[0],isConflict=conflicts.some(row=>row.eventKey===first.eventKey);
+    // Never let an HSA repost supply the canonical event classification when an
+    // independently approved official school post belongs to the same event.
+    const first=group.find(p=>p.sourceId==='ABVM_SCHOOL_FACEBOOK')||group[0];
+    const isConflict=conflicts.some(row=>row.eventKey===first.eventKey);
     display.push({
       id: first.eventKey&&!isConflict?'event:'+first.eventKey:'post:'+first.sourceId+':'+first.postId,
       summary:first.summary,category:first.category,audience:first.audience,
@@ -143,7 +146,8 @@ function assembleDisplays(posts){
       verificationStatus:'verified-and-reviewed',eventDates:first.eventDates,deadlineDates:first.deadlineDates,
       postedAt:group.reduce((latest,p)=>p.postedAt>latest?p.postedAt:latest,first.postedAt),
       conflict:isConflict,sources:group.map(p=>({
-        sourceId:p.sourceId,organization:p.organization,postId:p.postId,postUrl:p.postUrl
+        sourceId:p.sourceId,organization:p.organization,postId:p.postId,postUrl:p.postUrl,
+        category:p.category,audience:p.audience,confidence:p.confidence,noticeStatus:p.noticeStatus
       }))
     });
   }
@@ -189,6 +193,8 @@ export function validatePublishedFacebookFeed(config,feed){
     seen.add(key);
     requireThat(iso(item.detectedAt)&&/^[0-9a-f]{64}$/.test(item.observedHash||'')&&
       /^[0-9a-f]{64}$/.test(item.rejectedHash||''),'invalid edit quarantine evidence');
+    requireThat(item.observedEditedAt===null||item.observedEditedAt===undefined||
+      iso(item.observedEditedAt),'invalid quarantined edit timestamp');
     requireThat(!feed.posts.some(p=>p.sourceId===item.sourceId&&p.postId===item.postId),
       'quarantined Facebook post cannot be published');
   }

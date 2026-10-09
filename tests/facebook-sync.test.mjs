@@ -61,6 +61,16 @@ test('an edited message removes outdated review instead of silently overwriting 
   assert.equal(third.feed.quarantines.length,0);
   assert.deepEqual(third.feed.audit.map(a=>a.kind),['quarantined','review-restored']);
 });
+test('a newer Meta updated_time quarantines even when the text is unchanged',async()=>{
+  const reviewed={schemaVersion:1,posts:[post()]};
+  const previous=buildFacebookFeed(sourceData,reviewed,{},time).feed;
+  const result=await syncFacebookFeeds({config:active,reviewed,previous,token:'token',now:time,
+    fetcher:graph([{id:hsa.pageId+'_101',message:'reviewed public message',
+      updated_time:'2026-10-08T19:00:00+0000'}])});
+  assert.equal(result.feed.posts.length,0);
+  assert.equal(result.quarantined,1);
+  assert.equal(result.feed.quarantines[0].observedEditedAt,'2026-10-08T19:00:00.000Z');
+});
 test('a Page retrieval failure does not relabel an HSA approval',async()=>{
   const reviewed={schemaVersion:1,posts:[post()]};
   const result=await syncFacebookFeeds({config:active,reviewed,previous:empty,token:'token',now:time,

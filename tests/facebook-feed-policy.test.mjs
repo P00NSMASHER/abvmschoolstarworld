@@ -52,6 +52,11 @@ test('same approved event from two pages consolidates display only and retains b
   assert.equal(feed.posts.length,2);
   assert.equal(feed.display.length,1);
   assert.deepEqual(new Set(feed.display[0].sources.map(x=>x.sourceId)),new Set([school.id,hsa.id]));
+  assert.equal(feed.display[0].category,'School event',
+    'HSA categorization must not silently replace the official school classification');
+  assert.equal(feed.display[0].sources.find(s=>s.sourceId===hsa.id).category,'HSA event',
+    'the original HSA category must remain visible in provenance');
+  assert.equal(feed.display[0].sources.find(s=>s.sourceId===school.id).category,'School event');
   assert.equal(feed.conflicts.length,0);
   assert.equal(validatePublishedFacebookFeed(verifiedConfig,feed),true);
 });

@@ -37,7 +37,9 @@ export async function getAuthorizedFacebookPosts(source,token,fetcher=fetch,now=
   const entries=new Map();
   for(const row of response.data){
     if(typeof row?.id!=='string'||!row.id.startsWith(source.pageId+'_'))continue;
-    entries.set(row.id,{hash:originalPostHash(row.message||''),updatedAt:row.updated_time||null});
+    const updatedAt=Number.isFinite(Date.parse(row.updated_time||''))?
+      new Date(row.updated_time).toISOString():null;
+    entries.set(row.id,{hash:originalPostHash(row.message||''),updatedAt});
   }
   return {entries,count:entries.size,paged:!!response?.paging?.next};
 }
@@ -80,11 +82,16 @@ export async function syncFacebookFeeds({
     const key=row.sourceId+':'+row.postId;
     const observed=sourceChecks.get(row.sourceId)?.get(row.postId);
     const old=pending.get(key);
-    if(observed&&observed.hash!==row.sourceContentHash){
-      if(!old||old.observedHash!==observed.hash){
+    // Meta may revise a post without altering text (for example attached-media
+    // changes); any update newer than approval requires another human review.
+    const newerEdit=observed?.updatedAt&&
+      Date.parse(observed.updatedAt)>Date.parse(row.review?.reviewedAt||'');
+    if(observed&&(observed.hash!==row.sourceContentHash||newerEdit)){
+      if(!old||old.observedHash!==observed.hash||old.observedEditedAt!==observed.updatedAt){
         const detectedAt=now.toISOString();
         pending.set(key,{sourceId:row.sourceId,postId:row.postId,
-          rejectedHash:row.sourceContentHash,observedHash:observed.hash,detectedAt});
+          rejectedHash:row.sourceContentHash,observedHash:observed.hash,
+          observedEditedAt:observed.updatedAt,detectedAt});
         audit.push({kind:'quarantined',sourceId:row.sourceId,postId:row.postId,
           at:detectedAt,contentHash:observed.hash});
       }
@@ -95,7 +102,8 @@ export async function syncFacebookFeeds({
       // are both necessary. Failed checks never lift a previous quarantine.
       const cleared=observed&&observed.hash===old.observedHash&&
         row.sourceContentHash===observed.hash&&row.review?.status==='approved'&&
-        Date.parse(row.review?.reviewedAt)>Date.parse(old.detectedAt);
+        Date.parse(row.review?.reviewedAt)>Date.parse(old.detectedAt)&&
+        (!observed.updatedAt||Date.parse(row.review.reviewedAt)>=Date.parse(observed.updatedAt));
       if(!cleared)continue;
       pending.delete(key);
       audit.push({kind:'review-restored',sourceId:row.sourceId,postId:row.postId,
