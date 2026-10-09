@@ -896,7 +896,7 @@
   .week-screen .day-picker{gap:5px}
 }
 @media(max-width:359px){
-  .calendar-screen .calendar-card{margin-inline:0;padding-inline:7px}
+  .calendar-screen .calendar-card{margin-inline:-16px;padding-inline:3px}
   .calendar-screen .calendar-grid button{min-height:46px}
   .calendar-screen .calendar-legend{gap:7px 9px;font-size:.65rem}
   .calendar-screen .agenda-lunch{padding:10px}
