@@ -1670,3 +1670,328 @@
     margin-top:7px;
   }
 }
+
+/* ==========================================================================
+   Premium Progress · visual-only surfaces, real on-device learning evidence.
+   Keep the source-backed badge ledger, lesson labels, and notices untouched.
+   ========================================================================== */
+.progress-screen {
+  --progress-navy:#102e58;
+  --progress-line:#dbe7f2;
+  --progress-shadow:0 9px 26px rgba(13,43,82,.075),0 2px 7px rgba(13,43,82,.025);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--progress-navy);
+}
+.progress-screen > .app-header {
+  isolation:isolate;position:relative;overflow:hidden;
+  margin-bottom:14px;
+  padding:calc(16px + env(safe-area-inset-top)) 20px 19px;
+  border:1px solid rgba(183,213,244,.27);border-top:0;
+  border-radius:0 0 27px 27px;
+  background:linear-gradient(125deg,#2b578b 0%,#133761 44%,#091e3d 100%);
+  box-shadow:0 10px 28px rgba(5,31,64,.18),inset 0 1px 0 rgba(255,255,255,.24);
+}
+.progress-screen > .app-header::before {
+  content:"";pointer-events:none;position:absolute;inset:0;z-index:-1;
+  background:radial-gradient(ellipse at 86% 0%,rgba(150,202,243,.22),transparent 49%),
+             linear-gradient(115deg,rgba(255,255,255,.13),transparent 40%);
+}
+.progress-screen > .app-header h1 {
+  color:#fff;font-size:clamp(1.9rem,5.7vw,2.44rem);
+  font-weight:790;line-height:1.1;letter-spacing:-.048em;
+  margin:6px 0 0;overflow-wrap:normal;
+}
+.progress-screen > .app-header p {
+  color:#dceaff;font-size:.7rem;font-weight:720;
+  line-height:1.4;letter-spacing:.09em;
+}
+.progress-screen > .app-header .school-mark {
+  width:49px;height:49px;border:2px solid #fff;padding:2px;
+  box-shadow:0 4px 13px rgba(0,15,35,.2);
+}
+.progress-screen .family-hero {
+  min-width:0;gap:10px;margin:0 0 12px;padding:15px 17px;
+  border:1px solid #ccdfef;border-radius:23px;
+  background:linear-gradient(135deg,#e9f6ff,#dceeff 70%,#d3e8fb);
+  box-shadow:var(--progress-shadow),inset 0 1px 0 #fff;
+}
+.progress-screen .family-hero>div {min-width:0;flex:1 1 160px}
+.progress-screen .family-hero h2 {
+  font-size:1.15rem;line-height:1.22;font-weight:790;letter-spacing:-.035em;
+}
+.progress-screen .family-hero p {
+  margin-top:5px;font-size:.8rem;line-height:1.39;color:#48647f;
+}
+.progress-screen .family-hero img {
+  display:block;width:83px;height:83px;object-fit:contain;flex:none;
+  filter:drop-shadow(0 6px 7px rgba(14,51,89,.16));
+}
+.progress-screen .progress-empty {
+  min-width:0;align-items:center;gap:13px;padding:17px;
+  margin:0 0 14px;border:1px solid #d5e4f4;border-radius:22px;
+  background:linear-gradient(145deg,#f7fbff,#eaf5ff);
+  box-shadow:0 5px 18px rgba(15,44,81,.055);
+}
+.progress-screen .progress-orbit {
+  width:48px;height:48px;border:1px solid #c5dbef;
+  border-radius:15px;background:linear-gradient(#fff,#dcefff);
+  color:#163d69;box-shadow:inset 0 1px 0 #fff;
+}
+.progress-screen .progress-empty h2 {
+  margin:3px 0 5px;font-size:1.13rem;line-height:1.22;
+  font-weight:790;letter-spacing:-.032em;
+}
+.progress-screen .progress-empty .eyebrow {
+  font-size:.64rem;letter-spacing:.07em;color:#536b87;
+}
+.progress-screen .progress-empty p:not(.eyebrow) {
+  color:#526981;font-size:.8rem;line-height:1.45;
+}
+.progress-screen .progress-empty .primary-button {
+  min-height:45px;margin-top:11px;padding:9px 13px;
+  border:1px solid #e4b633;border-radius:13px;
+  color:#102e58;background:linear-gradient(165deg,#ffe782,#ffd145 65%,#f5bc2a);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 3px 0 #dba71b;
+  font-size:.82rem;font-weight:740;
+}
+.progress-screen .parent-card {
+  min-width:0;margin-top:12px;padding:16px;
+  border:1px solid #d9e6f3;border-radius:21px;
+  background:linear-gradient(155deg,#fff,#f9fcff);
+  box-shadow:0 5px 18px rgba(12,42,78,.045);
+}
+.progress-screen .notices-head {margin-bottom:9px;gap:11px}
+.progress-screen .notices-head h3 {font-size:1.02rem;font-weight:775}
+.progress-screen .notices-head small {font-size:.65rem;letter-spacing:.075em}
+.progress-screen .notices-mark {
+  width:38px;height:38px;
+  border:1px solid #d6e6f5;border-radius:13px;
+  background:linear-gradient(#f9fcff,#e3f1ff);color:#183b68;
+}
+.progress-screen .notice-row {
+  padding:10px 0;gap:10px;border-color:#e2ebf3;
+}
+.progress-screen .notice-row>p {font-size:.82rem;line-height:1.45}
+.progress-screen .notice-row strong {color:#173960}
+.progress-screen .status {margin-top:7px}
+.progress-screen .study-badge-surface {min-width:0;margin:0 0 15px}
+.progress-screen .badge-collection {
+  min-width:0;padding:15px 14px 14px;
+  border:1px solid #e5cb80;border-radius:23px;
+  background:linear-gradient(160deg,#fff9e8,#fff7db 38%,#fffdf6);
+  box-shadow:0 9px 27px rgba(83,61,16,.085),inset 0 1px 0 #fff;
+}
+.progress-screen .badge-collection-heading {gap:8px;margin-bottom:10px}
+.progress-screen .badge-collection-heading h2 {
+  font-size:1.17rem;margin-top:3px;letter-spacing:-.035em;
+}
+.progress-screen .badge-eyebrow {font-size:.66rem;letter-spacing:.075em;color:#765d27}
+.progress-screen .badge-balance {
+  flex:none;padding:7px 10px;border:1px solid #e5ca7c;border-radius:12px;
+  background:linear-gradient(#fff,#fff4cf);font-size:.94rem;color:#102e58;
+}
+.progress-screen .rank-current {
+  min-width:0;gap:10px;flex-wrap:nowrap;
+  margin:0 0 10px;padding:10px 12px;border:1px solid #3e669a;
+  border-radius:18px;color:white;
+  background:linear-gradient(125deg,#2c5484,#102e58 66%,#0a2145);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 5px 12px rgba(12,45,89,.12);
+}
+.progress-screen .rank-current>.study-badge-art {
+  flex:none;width:73px;height:79px;max-width:29%;
+  filter:drop-shadow(0 6px 6px rgba(0,12,40,.23));
+}
+.progress-screen .rank-current>div {min-width:0;flex:1 1 auto}
+.progress-screen .rank-current .badge-eyebrow {color:#ffdf82}
+.progress-screen .rank-current h3 {
+  margin:4px 0 3px;font-size:1.2rem;letter-spacing:-.023em;
+}
+.progress-screen .rank-current p {font-size:.74rem;line-height:1.38;color:#e6f0ff}
+.progress-screen .study-badge-next {
+  min-width:0;grid-template-columns:74px minmax(0,1fr);gap:4px 11px;
+  padding:11px 12px 13px;margin:0;
+  border:1px solid #e3c46f;border-radius:18px;
+  background:linear-gradient(142deg,#fff,#fff7dc 65%,#ffefc1);
+}
+.progress-screen .study-badge-next>.study-badge-art {
+  width:74px;height:88px;object-fit:contain;filter:drop-shadow(0 4px 6px rgba(35,55,81,.1));
+}
+.progress-screen .study-badge-next h3 {font-size:1rem;line-height:1.22;margin:3px 0 4px}
+.progress-screen .study-badge-next p {font-size:.72rem;line-height:1.4}
+.progress-screen .badge-progress-label {
+  gap:8px;font-size:.73rem;margin:5px 0 3px;
+}
+.progress-screen .badge-progress {height:10px;margin-bottom:1px}
+.progress-screen .badge-rail-hint {
+  margin:11px 0 4px;font-size:.73rem;line-height:1.4;
+  font-weight:700;color:#6f5626;
+}
+.progress-screen .study-badge-grid {
+  display:flex;flex-wrap:nowrap;gap:9px;align-items:stretch;
+  margin:0 -3px 6px;padding:8px 3px 13px;
+  max-width:100%;overflow-x:auto;overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+  scroll-snap-type:x proximity;scroll-padding-inline:3px;
+  scrollbar-width:thin;scrollbar-color:#c5a95c #fff8e4;
+}
+.progress-screen .study-badge-grid:focus-visible {
+  outline:3px solid #133e6b;outline-offset:1px;border-radius:8px;
+}
+.progress-screen .study-badge-grid>.study-badge-card {
+  flex:0 0 104px;min-width:0;max-width:104px;scroll-snap-align:start;
+  gap:4px;padding:10px 6px 8px;border:1px solid #e4d8b6;
+  border-radius:15px;background:#fffefa;
+}
+.progress-screen .study-badge-grid>.study-badge-card.is-next {
+  background:#fff2ce;border-color:#d7ad45;
+}
+.progress-screen .study-badge-grid>.study-badge-card.is-earned {
+  background:#fff8df;border-color:#e3c477;
+}
+.progress-screen .study-badge-grid .study-badge-art {
+  height:66px;max-height:66px;object-fit:contain;
+}
+.progress-screen .study-badge-grid strong {
+  font-size:.71rem;line-height:1.26;font-weight:770;
+}
+.progress-screen .study-badge-grid>li>span {font-size:.67rem}
+.progress-screen .study-badge-grid small {
+  border-radius:8px;font-size:.63rem;line-height:1.3;
+}
+.progress-screen .badge-rules {
+  color:#526884;font-size:.73rem;line-height:1.49;margin:8px 0 6px;
+}
+.progress-screen .badge-device-note {color:#63758a;font-size:.68rem}
+.progress-screen .learning-library {min-width:0;margin:14px 0 0}
+.progress-screen .section-heading {
+  gap:8px;margin:13px 0 9px;
+}
+.progress-screen .section-heading h2 {
+  font-size:1.22rem;line-height:1.23;letter-spacing:-.037em;
+  font-weight:790;color:#102e58;
+}
+.progress-screen .section-heading .text-button {
+  flex:none;min-height:44px;font-size:.78rem;font-weight:710;
+}
+.progress-screen .learning-subjects {
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.progress-screen .learning-subject {
+  display:flex;flex-direction:column;align-items:start;
+  min-width:0;min-height:128px;gap:6px;margin:0;padding:12px;
+  border:1px solid #d9e7f3;border-radius:19px;
+  background:linear-gradient(145deg,#fff,#f5faff);
+  box-shadow:0 4px 15px rgba(9,39,77,.045);
+}
+.progress-screen .learning-subject:nth-child(4n+1) {
+  background:linear-gradient(155deg,#f7fcff,#e8f5ff);
+  border-color:#cce6f7;
+}
+.progress-screen .learning-subject:nth-child(4n+2) {
+  background:linear-gradient(155deg,#fffdf6,#fff2cb);
+  border-color:#eddba9;
+}
+.progress-screen .learning-subject:nth-child(4n+3) {
+  background:linear-gradient(155deg,#fafffc,#e3f5ed);
+  border-color:#c8e7da;
+}
+.progress-screen .learning-subject:nth-child(4n+4) {
+  background:linear-gradient(155deg,#fffaff,#f0e7ff);
+  border-color:#e0d0f8;
+}
+.progress-screen .learning-subject .feature-icon {
+  display:grid;place-items:center;width:49px;height:47px;
+  border:0;flex:none;background:transparent;
+}
+.progress-screen .learning-subject img {
+  width:49px;height:47px;max-width:100%;object-fit:contain;
+  filter:drop-shadow(0 4px 4px rgba(15,42,77,.10));
+}
+.progress-screen .learning-subject>div {min-width:0}
+.progress-screen .learning-subject h3 {
+  margin:0;font-size:.87rem;font-weight:765;
+  line-height:1.27;letter-spacing:-.024em;overflow-wrap:anywhere;
+}
+.progress-screen .learning-subject p {
+  margin-top:5px;font-size:.73rem;line-height:1.41;
+  color:#4c6480;overflow-wrap:anywhere;
+}
+.progress-screen .device-note {
+  margin-top:11px;font-size:.71rem;line-height:1.48;color:#526986;
+}
+.progress-screen .school-work-history {
+  min-width:0;margin:16px 0;padding:14px 16px;
+  border:1px solid #dae7f2;border-radius:20px;
+  background:linear-gradient(140deg,#fff,#f8fbff);
+  box-shadow:0 4px 15px rgba(9,39,77,.035);
+}
+.progress-screen .school-work-history .section-heading {margin:0 0 6px}
+.progress-screen .school-work-history>p {
+  font-size:.81rem;line-height:1.44;color:#536982;
+}
+.progress-screen .school-work-history .text-button {
+  min-height:44px;margin-top:8px;font-size:.85rem;font-weight:710;
+}
+.progress-screen .school-details {
+  margin:14px 0 0;padding:0 14px 13px;
+  border:1px solid #dce7f2;border-radius:20px;
+  background:linear-gradient(#fff,#fbfdff);
+}
+.progress-screen .school-details>summary {
+  min-height:59px;padding:8px 1px;
+  font-size:.91rem;font-weight:755;color:#18375b;
+}
+.progress-screen .school-details>summary svg {width:20px;height:20px}
+.progress-screen .family-updates {gap:11px}
+.progress-screen .family-updates .parent-card {
+  margin:0 0 11px;padding:14px;
+}
+.progress-screen .unofficial-note {
+  margin:12px 0 0;font-size:.68rem;color:#63748c;
+}
+.progress-screen>.freshness {
+  margin-top:14px;padding:10px 0;border-top-color:#dce7f2;font-size:.72rem;
+}
+@media(max-width:699px){
+  .progress-screen {
+    padding-top:calc(14px + env(safe-area-inset-top));
+  }
+  .progress-screen>.app-header {
+    margin:calc(-14px - env(safe-area-inset-top)) -18px 14px;
+  }
+}
+@media(max-width:359px){
+  .progress-screen .family-hero {padding:12px;gap:6px}
+  .progress-screen .family-hero img {width:69px;height:69px}
+  .progress-screen .progress-empty {padding:12px;gap:8px}
+  .progress-screen .progress-orbit {width:40px;height:40px}
+  .progress-screen .badge-collection {padding:12px 10px}
+  .progress-screen .learning-subjects {gap:7px}
+  .progress-screen .learning-subject {padding:10px;min-height:134px}
+  .progress-screen .learning-subject p {font-size:.69rem}
+}
+@media(min-width:700px) and (min-height:600px){
+  .progress-screen>.app-header {
+    margin:0 0 20px;padding:24px 26px;
+    border:1px solid rgba(183,213,244,.27);border-radius:25px;
+  }
+  .progress-screen .family-hero {padding:18px 22px}
+  .progress-screen .family-hero img {width:100px;height:100px}
+  .progress-screen .learning-subjects {grid-template-columns:repeat(2,minmax(0,1fr))}
+  .progress-screen .learning-subject {flex-direction:row;min-height:110px;align-items:center}
+  .progress-screen .badge-collection {padding:20px}
+  .progress-screen .study-badge-grid>.study-badge-card {flex-basis:125px;max-width:125px}
+  .progress-screen .study-badge-grid .study-badge-art {height:84px;max-height:84px}
+}
+@media(prefers-reduced-motion:no-preference){
+  .progress-screen .progress-empty .primary-button,
+  .progress-screen .school-work-history .text-button {transition:transform .16s ease,box-shadow .16s ease}
+  .progress-screen .progress-empty .primary-button:active {transform:scale(.985)}
+}
+@media(prefers-contrast:more){
+  .progress-screen .study-badge-grid>.study-badge-card,
+  .progress-screen .progress-empty,
+  .progress-screen .learning-subject,
+  .progress-screen .school-details {border-width:2px}
+}

@@ -3,7 +3,7 @@ name: Progress premium visual acceptance
 on:
   pull_request:
     paths:
-      - 'pages/progress-premium.css'
+      - 'pages/design-polish.css'
       - 'pages/product-view.js'
       - 'pages/index.html'
       - 'pages/sw.js'
