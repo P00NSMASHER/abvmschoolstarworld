@@ -641,8 +641,10 @@
 }
 .calendar-screen .calendar-dots .calendar-mark{
   display:grid;place-items:center;flex:none;
-  width:clamp(10px,3vw,12px);min-width:clamp(10px,3vw,12px);
-  height:14px;font-size:.57rem;font-weight:800;line-height:1;border-radius:4px;
+  /* 14px physical floor preserves the existing accessibility contract.
+     Rem widths grow at larger system text sizes; markers wrap instead of clipping. */
+  width:max(14px,.824rem);min-width:14px;
+  height:max(16px,.95rem);font-size:max(10px,.61rem);font-weight:800;line-height:1;border-radius:4px;
   box-shadow:0 1px 2px #102e5810;
 }
 .calendar-screen .calendar-grid .active .calendar-mark{background:white;color:#12325a;box-shadow:none}

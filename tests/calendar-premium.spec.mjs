@@ -47,6 +47,51 @@ test("Month: source-backed day grid, legend and premium layout on iPhone", async
       expect(b.width, JSON.stringify({width, b})).toBeGreaterThanOrEqual(32);
       expect(b.height, JSON.stringify({width, b})).toBeGreaterThanOrEqual(44);
     }
+    // Verify actual glyph geometry, not just the month grid container.
+    // Busy days may wrap markers; none may shrink or protrude outside a date.
+    const markers = await page.locator(".calendar-grid button[data-cal-day]").evaluateAll(buttons =>
+      buttons.map(button => {
+        const parent = button.getBoundingClientRect();
+        const children = Array.from(button.querySelectorAll(".calendar-mark"));
+        return {
+          date: button.querySelector("strong")?.textContent,
+          gridOverflow: button.scrollWidth - button.clientWidth,
+          icons: children.map(icon => {
+            const rect = icon.getBoundingClientRect();
+            return {
+              left: rect.left - parent.left,
+              right: rect.right - parent.left,
+              top: rect.top - parent.top,
+              bottom: rect.bottom - parent.top,
+              width: rect.width,
+              height: rect.height,
+              font: parseFloat(getComputedStyle(icon).fontSize)
+            };
+          }),
+          parentWidth: parent.width
+        };
+      })
+    );
+    expect(markers.some(day => day.icons.length === 3)).toBe(true);
+    for (const day of markers) {
+      expect(day.gridOverflow, width + "px calendar date " + day.date).toBeLessThanOrEqual(1);
+      for (const icon of day.icons) {
+        const context = JSON.stringify({ width, date: day.date, icon });
+        expect(icon.width, context).toBeGreaterThanOrEqual(14);
+        expect(icon.height, context).toBeGreaterThanOrEqual(14);
+        expect(icon.font, context).toBeGreaterThanOrEqual(10);
+        expect(icon.left, context).toBeGreaterThanOrEqual(-1);
+        expect(icon.right, context).toBeLessThanOrEqual(day.parentWidth + 1);
+      }
+      for (let i = 0; i < day.icons.length; i++) {
+        for (let j = i + 1; j < day.icons.length; j++) {
+          const a = day.icons[i], b = day.icons[j];
+          const overlapX = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+          const overlapY = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+          expect(overlapX > 1 && overlapY > 1, "Overlapping markers on " + day.date).toBe(false);
+        }
+      }
+    }
     const legend = page.locator(".calendar-legend");
     for (const title of ["Test", "Faith", "Family", "Due", "Lunch"]) await expect(legend).toContainText(title);
     expect(await legend.locator("i.test").evaluate(el => getComputedStyle(el, "::before").content)).toBe('"T"');
