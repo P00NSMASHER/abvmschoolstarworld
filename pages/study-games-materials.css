@@ -563,6 +563,13 @@
 .games-screen.is-playing .game-answer-list.is-numeric .game-answer:not(.correct):not(.wrong) {
   background: linear-gradient(155deg,#fff 0%,#f6fbff 65%,#edf6ff 100%);
 }
+/* Pointer and simulated-touch hover should retain a dimensional surface.
+   The generic legacy hover rule otherwise switches the background to flat blue. */
+.games-screen.is-playing .game-answer:hover:not(:disabled):not(.correct):not(.wrong) {
+  border-color: #8db8df;
+  background: linear-gradient(155deg,#fff 0%,#f2f9ff 60%,#dfefff 100%);
+  box-shadow: 0 4px 12px rgba(18,67,117,.09),inset 0 1px 0 #fff;
+}
 .games-screen.is-playing .game-answer > span {
   width: 32px;
   height: 32px;
