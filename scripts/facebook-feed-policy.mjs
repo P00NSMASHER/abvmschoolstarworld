@@ -151,17 +151,27 @@ function assembleDisplays(posts){
     }else noEvent.push(group);
   }
   for(const group of noEvent){
+    // One card only cites the latest approved post from each Page. Preserve
+    // every reviewed original in feed.posts, including superseded reminders.
+    const newestBySource=new Map();
+    for(const post of group){
+      const prior=newestBySource.get(post.sourceId);
+      if(!prior||post.postedAt>prior.postedAt||
+        (post.postedAt===prior.postedAt&&post.postId>prior.postId))
+        newestBySource.set(post.sourceId,post);
+    }
+    const visible=[...newestBySource.values()];
     // Never let an HSA repost supply the canonical event classification when an
     // independently approved official school post belongs to the same event.
-    const first=group.find(p=>p.sourceId==='ABVM_SCHOOL_FACEBOOK')||group[0];
+    const first=visible.find(p=>p.sourceId==='ABVM_SCHOOL_FACEBOOK')||visible[0];
     const isConflict=conflicts.some(row=>row.eventKey===first.eventKey);
     display.push({
       id: first.eventKey&&!isConflict?'event:'+first.eventKey:'post:'+first.sourceId+':'+first.postId,
       summary:first.summary,category:first.category,audience:first.audience,
       confidence:first.confidence,noticeStatus:first.noticeStatus,
       verificationStatus:'verified-and-reviewed',eventDates:first.eventDates,deadlineDates:first.deadlineDates,
-      postedAt:group.reduce((latest,p)=>p.postedAt>latest?p.postedAt:latest,first.postedAt),
-      conflict:isConflict,sources:group.map(p=>({
+      postedAt:visible.reduce((latest,p)=>p.postedAt>latest?p.postedAt:latest,first.postedAt),
+      conflict:isConflict,sources:visible.map(p=>({
         sourceId:p.sourceId,organization:p.organization,postId:p.postId,postUrl:p.postUrl,
         category:p.category,audience:p.audience,confidence:p.confidence,noticeStatus:p.noticeStatus
       })).sort((a,b)=>Number(b.sourceId==='ABVM_SCHOOL_FACEBOOK')-

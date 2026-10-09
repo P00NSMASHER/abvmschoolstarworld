@@ -71,6 +71,16 @@ test('same approved event from two pages consolidates display only and retains b
   assert.equal(feed.conflicts.length,0);
   assert.equal(validatePublishedFacebookFeed(verifiedConfig,feed),true);
 });
+test('repeated approved notices from one Page remain in provenance but do not duplicate display source labels',()=>{
+  const original=post(hsa,{id:'101'});
+  const reminder=post(hsa,{id:'102'});
+  const {feed}=buildFacebookFeed(config,{schemaVersion:1,posts:[original,reminder]},{},new Date(timestamp));
+  assert.equal(feed.posts.length,2,'both original posts must remain audited');
+  assert.equal(feed.display.length,1,'identical reviewed event keys should not create duplicate cards');
+  assert.equal(feed.display[0].sources.length,1,'one source link per verified Page in the rendered card');
+  assert.equal(feed.display[0].sources[0].postId,hsa.pageId+'_102','prefer the newest approved Page post');
+  assert.equal(validatePublishedFacebookFeed(config,feed),true);
+});
 test('conflicting event dates are explicitly flagged and never silently selected',()=>{
   const {feed}=buildFacebookFeed(verifiedConfig,{schemaVersion:1,posts:[
     post(school,{date:'2026-10-12'}),post(hsa,{date:'2026-10-13'})

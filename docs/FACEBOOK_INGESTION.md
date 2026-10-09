@@ -233,3 +233,10 @@ are not displayed. Tests cross-check these pinned values against the reviewed
 source registry. Server-side review and static feed validation remain the
 primary publication gates; client checking provides additional protection
 against incorrectly labeled content at render time.
+
+For multiple identical, reviewed posts on the same Page with the same
+eventKey, the combined card retains only the latest Page post link while
+`feed.posts` preserves all approved originals. This prevents redundant Page
+labels from hiding a legitimate event in the fail-closed browser renderer.
+Different dates, deadlines, statuses, or summaries still produce explicit
+conflicts rather than silent consolidation.
