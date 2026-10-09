@@ -47,12 +47,12 @@
       "questionType": "direct",
       "prompt": "Read: 'Pip the cartoon kitten chased a toy mouse, watched birds outside, and slept in a sunny spot.' What is the main idea?",
       "choices": [
-        "Pip enjoyed different activities at home.",
+        "Pip did several different activities.",
         "Pip chased a toy mouse.",
-        "Pip watched birds through a window."
+        "Pip watched birds outside."
       ],
-      "answer": "Pip enjoyed different activities at home.",
-      "explanation": "The passage lists three different activities Pip enjoyed. The other choices mention only one.",
+      "answer": "Pip did several different activities.",
+      "explanation": "The passage describes Pip playing, watching birds, and sleeping. The other choices name just one activity.",
       "hint": "Think about what every sentence tells you about Pip's day.",
       "dok": 1,
       "difficulty": 2
@@ -138,11 +138,11 @@
       "prompt": "Read: 'Two game builders shared their blocks, planned the castle rooms together, and fixed a wall that fell.' What is the main idea?",
       "choices": [
         "Sharing blocks helps game builders cooperate.",
-        "The builders worked together to finish a castle.",
+        "The builders worked together on a castle.",
         "One castle wall fell during the game."
       ],
-      "answer": "The builders worked together to finish a castle.",
-      "explanation": "Sharing, planning, and repairing are all parts of how the builders cooperated to complete their castle. The other choices focus on only one detail.",
+      "answer": "The builders worked together on a castle.",
+      "explanation": "Sharing, planning, and repairing show how the builders worked together on their castle. The other choices focus on only one detail.",
       "hint": "Find the answer that combines the team's plan, sharing, and repair.",
       "dok": 3,
       "difficulty": 3

@@ -148,3 +148,19 @@ test('personalized themes have no brand prerequisite and never activate held cur
   assert.match(packet, /fictional practice stories inspired by interests familiar to this learner/i);
   assert.doesNotMatch(packet, /^\s*- \[[xX]\]/m, 'Approval must never be pre-checked');
 });
+
+test('main-idea candidates avoid claims absent from the supplied passages',()=>{
+  const family=JSON.parse(readFileSync(new URL('../curriculum-candidates/curriculum-reading-ela-main-idea-details-0a409e562c.json',import.meta.url),'utf8'));
+  const kitten=family.proposedQuestions.find(q=>q.prompt.includes('Pip the cartoon kitten'));
+  const builders=family.proposedQuestions.find(q=>q.prompt.includes('Two game builders'));
+  assert.ok(kitten&&builders);
+  assert.equal(kitten.answer,'Pip did several different activities.');
+  assert.ok(!kitten.choices.some(c=>/at home|through a window/i.test(c)),
+    'the kitten passage never establishes those locations');
+  assert.equal(builders.answer,'The builders worked together on a castle.');
+  assert.ok(!builders.choices.some(c=>/finish(?:ed)? a castle/i.test(c)),
+    'the builders passage does not establish completion');
+  assert.equal(family.enabledByDefault,false);
+  assert.equal(family.readiness.status,'HOLD');
+  assert.equal(family.readiness.automaticPromotion,false);
+});

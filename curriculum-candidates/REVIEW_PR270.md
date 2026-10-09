@@ -321,12 +321,12 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 
 **Question:** Read: 'Pip the cartoon kitten chased a toy mouse, watched birds outside, and slept in a sunny spot.' What is the main idea?
 
-1. Pip enjoyed different activities at home.
+1. Pip did several different activities.
 2. Pip chased a toy mouse.
-3. Pip watched birds through a window.
+3. Pip watched birds outside.
 
-**Correct answer:** 1. Pip enjoyed different activities at home.  
-**Explanation:** The passage lists three different activities Pip enjoyed. The other choices mention only one.  
+**Correct answer:** 1. Pip did several different activities.  
+**Explanation:** The passage describes Pip playing, watching birds, and sleeping. The other choices name just one activity.  
 **Hint:** Think about what every sentence tells you about Pip's day.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
@@ -412,11 +412,11 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 **Question:** Read: 'Two game builders shared their blocks, planned the castle rooms together, and fixed a wall that fell.' What is the main idea?
 
 1. Sharing blocks helps game builders cooperate.
-2. The builders worked together to finish a castle.
+2. The builders worked together on a castle.
 3. One castle wall fell during the game.
 
-**Correct answer:** 2. The builders worked together to finish a castle.  
-**Explanation:** Sharing, planning, and repairing are all parts of how the builders cooperated to complete their castle. The other choices focus on only one detail.  
+**Correct answer:** 2. The builders worked together on a castle.  
+**Explanation:** Sharing, planning, and repairing show how the builders worked together on their castle. The other choices focus on only one detail.  
 **Hint:** Find the answer that combines the team's plan, sharing, and repair.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
