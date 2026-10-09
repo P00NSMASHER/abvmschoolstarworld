@@ -35,7 +35,7 @@ test("real verified Test Prep has premium visuals and no clipped controls on iPh
     await decoded(page.locator(".prep-test-choice[aria-pressed=true] img").first());
     const surfaces=await page.locator(".prep-header,.prep-topic-card,.prep-test-choice[aria-pressed=true],.prep-sheet > .prep-start").evaluateAll(nodes=>nodes.map(el=>({background:getComputedStyle(el).backgroundImage,border:getComputedStyle(el).borderColor})));
     for(const surface of surfaces)expect(surface.background,JSON.stringify(surface)).toContain("gradient");
-    const buttons=await page.locator(".prep-back,.prep-test-choice,.prep-start,.prep-guide").evaluateAll(nodes=>nodes.map(el=>{
+    const buttons=await page.locator(".prep-back,.prep-test-choice[aria-pressed=true],.prep-start,.prep-guide").evaluateAll(nodes=>nodes.map(el=>{
       const box=el.getBoundingClientRect();return {left:box.left,right:box.right,height:box.height,scroll:el.scrollWidth,client:el.clientWidth};
     }));
     for(const box of buttons) {
@@ -44,6 +44,15 @@ test("real verified Test Prep has premium visuals and no clipped controls on iPh
       expect(box.right,JSON.stringify({width,box})).toBeLessThanOrEqual(width+1);
       expect(box.scroll,JSON.stringify({width,box})).toBeLessThanOrEqual(box.client+1);
     }
+    // A horizontal carousel may contain off-screen choices without making the
+    // entire page overflow. Its own viewport must remain bounded and scrollable.
+    const rail=await page.locator(".prep-test-choices").evaluate(el=>{
+      const b=el.getBoundingClientRect();
+      return {left:b.left,right:b.right,client:el.clientWidth,scroll:el.scrollWidth};
+    });
+    expect(rail.left).toBeGreaterThanOrEqual(-1);
+    expect(rail.right).toBeLessThanOrEqual(width+1);
+    expect(rail.client).toBeGreaterThan(150);
     await noOverflow(page,width);
     if(width===390) {
       await capture(page,info,"study-tools-prep-390-first");
@@ -96,7 +105,7 @@ test("resource navigation remains accessible at 200% text and tablet size",async
   await page.locator("[data-open-prep]").click();
   await page.evaluate(()=>{const e=document.documentElement;e.style.fontSize=2*parseFloat(getComputedStyle(e).fontSize)+"px"});
   await noOverflow(page,375);
-  for(const b of await page.locator(".prep-back,.prep-test-choice,.prep-start,.prep-guide").evaluateAll(nodes=>nodes.map(el=>{
+  for(const b of await page.locator(".prep-back,.prep-test-choice[aria-pressed=true],.prep-start,.prep-guide").evaluateAll(nodes=>nodes.map(el=>{
     const r=el.getBoundingClientRect();return {left:r.left,right:r.right,height:r.height};
   }))){
     expect(b.height,JSON.stringify(b)).toBeGreaterThanOrEqual(44);
