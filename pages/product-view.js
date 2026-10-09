@@ -299,7 +299,9 @@
               ? "math"
               : /religion/i.test(s.subject)
                 ? "religion"
-                : "reading") +
+                : /spell|handwriting|grammar/i.test(s.subject)
+                  ? "spelling"
+                  : "reading") +
             '">' +
             '<img src="./assets/illustrations/' + (/math/i.test(s.subject) ? "math" : /religion/i.test(s.subject) ? "religion" : /spell|handwriting|grammar/i.test(s.subject) ? "spelling" : "reading") + '.webp" width="64" height="64" loading="lazy" alt="">' +
             "</span><div><h3>" +

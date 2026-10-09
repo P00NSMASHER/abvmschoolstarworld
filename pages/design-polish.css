@@ -1095,326 +1095,578 @@
 
 
 /* ==========================================================================
-   Premium Progress · visual-only surfaces, real on-device learning evidence.
-   Keep the source-backed badge ledger, lesson labels, and notices untouched.
+   Study Resources · Premium Test Prep and Guides
+   Scoped to the existing materials UI; content and saved state remain native.
    ========================================================================== */
-.progress-screen {
-  --progress-navy:#102e58;
-  --progress-line:#dbe7f2;
-  --progress-shadow:0 9px 26px rgba(13,43,82,.075),0 2px 7px rgba(13,43,82,.025);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:var(--progress-navy);
+.games-screen:not(.is-playing) {
+  --prep-edge: #d6e5f1;
+  --prep-text: #102e58;
+  --prep-soft-shadow: 0 10px 26px rgba(11,39,80,.085), 0 2px 5px rgba(11,39,80,.035);
 }
-.progress-screen > .app-header {
-  isolation:isolate;position:relative;overflow:hidden;
-  margin-bottom:14px;
-  padding:calc(16px + env(safe-area-inset-top)) 20px 19px;
-  border:1px solid rgba(183,213,244,.27);border-top:0;
-  border-radius:0 0 27px 27px;
-  background:linear-gradient(125deg,#2b578b 0%,#133761 44%,#091e3d 100%);
-  box-shadow:0 10px 28px rgba(5,31,64,.18),inset 0 1px 0 rgba(255,255,255,.24);
+.games-screen:not(.is-playing) .prep-header {
+  isolation: isolate;
+  border-bottom: 4px solid #ffca38;
+  background: linear-gradient(125deg, #2b5589 0%,#173963 35%,#071c3c 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.21),0 10px 26px rgba(5,26,56,.18);
+  min-height: 191px;
 }
-.progress-screen > .app-header::before {
-  content:"";pointer-events:none;position:absolute;inset:0;z-index:-1;
-  background:radial-gradient(ellipse at 86% 0%,rgba(150,202,243,.22),transparent 49%),
-             linear-gradient(115deg,rgba(255,255,255,.13),transparent 40%);
+.games-screen:not(.is-playing) .prep-header:before {
+  content:"";
+  pointer-events:none;
+  position:absolute;
+  inset:0;
+  z-index:0;
+  background:
+    linear-gradient(115deg,rgba(255,255,255,.15) 0%,transparent 36%),
+    radial-gradient(ellipse at 82% 12%,rgba(156,202,245,.14) 0%,transparent 55%);
 }
-.progress-screen > .app-header h1 {
-  color:#fff;font-size:clamp(1.9rem,5.7vw,2.44rem);
-  font-weight:790;line-height:1.1;letter-spacing:-.048em;
-  margin:6px 0 0;overflow-wrap:normal;
+.games-screen:not(.is-playing) .prep-header:after {
+  content:"";
+  pointer-events:none;
+  position:absolute;
+  inset:0 1px auto;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.42),transparent);
 }
-.progress-screen > .app-header p {
-  color:#dceaff;font-size:.7rem;font-weight:720;
-  line-height:1.4;letter-spacing:.09em;
+.games-screen:not(.is-playing) .prep-header .prep-back {
+  position:relative;
+  z-index:2;
+  min-height:44px;
+  padding:8px 9px;
+  margin-left:-9px;
+  border:1px solid transparent;
+  border-radius:12px;
+  font-size:.86rem;
+  font-weight:700;
+  color:#eaf3ff;
+  line-height:1.25;
 }
-.progress-screen > .app-header .school-mark {
-  width:49px;height:49px;border:2px solid #fff;padding:2px;
-  box-shadow:0 4px 13px rgba(0,15,35,.2);
+.games-screen:not(.is-playing) .prep-header .prep-back:focus-visible {
+  outline-color:#ffe595;
 }
-.progress-screen .family-hero {
-  min-width:0;gap:10px;margin:0 0 12px;padding:15px 17px;
-  border:1px solid #ccdfef;border-radius:23px;
-  background:linear-gradient(135deg,#e9f6ff,#dceeff 70%,#d3e8fb);
-  box-shadow:var(--progress-shadow),inset 0 1px 0 #fff;
+.games-screen:not(.is-playing) .prep-header h1 {
+  position:relative;
+  z-index:2;
+  margin:6px 0 7px;
+  max-width:15.5rem;
+  color:#fff;
+  font-size:clamp(1.8rem,5.6vw,2.25rem);
+  font-weight:780;
+  letter-spacing:-.05em;
+  line-height:1.1;
 }
-.progress-screen .family-hero>div {min-width:0;flex:1 1 160px}
-.progress-screen .family-hero h2 {
-  font-size:1.15rem;line-height:1.22;font-weight:790;letter-spacing:-.035em;
+.games-screen:not(.is-playing) .prep-header h1 > span {
+  color:#ffdf78;
 }
-.progress-screen .family-hero p {
-  margin-top:5px;font-size:.8rem;line-height:1.39;color:#48647f;
+.games-screen:not(.is-playing) .prep-header p {
+  position:relative;
+  z-index:2;
+  font-size:.78rem;
+  line-height:1.43;
+  color:#e3effd;
 }
-.progress-screen .family-hero img {
-  display:block;width:83px;height:83px;object-fit:contain;flex:none;
-  filter:drop-shadow(0 6px 7px rgba(14,51,89,.16));
+.games-screen:not(.is-playing) .prep-header .prep-seal {
+  z-index:2;
+  border:2px solid #fff;
+  box-shadow:0 3px 12px rgba(0,14,41,.25);
 }
-.progress-screen .progress-empty {
-  min-width:0;align-items:center;gap:13px;padding:17px;
-  margin:0 0 14px;border:1px solid #d5e4f4;border-radius:22px;
-  background:linear-gradient(145deg,#f7fbff,#eaf5ff);
-  box-shadow:0 5px 18px rgba(15,44,81,.055);
+.games-screen:not(.is-playing) .prep-header .prep-eagle {
+  z-index:1;
+  object-fit:contain;
+  filter:drop-shadow(0 8px 10px rgba(4,17,37,.2));
 }
-.progress-screen .progress-orbit {
-  width:48px;height:48px;border:1px solid #c5dbef;
-  border-radius:15px;background:linear-gradient(#fff,#dcefff);
-  color:#163d69;box-shadow:inset 0 1px 0 #fff;
+.games-screen:not(.is-playing) .prep-sheet {
+  min-width:0;
+  padding:21px 18px 23px;
+  border:1px solid #dbe7f2;
+  border-top-color:#eef5ff;
+  border-radius:25px 25px 0 0;
+  background:linear-gradient(163deg,#fff 0%,#fff 70%,#f9fcff 100%);
+  box-shadow:0 -3px 16px rgba(7,29,61,.045);
 }
-.progress-screen .progress-empty h2 {
-  margin:3px 0 5px;font-size:1.13rem;line-height:1.22;
-  font-weight:790;letter-spacing:-.032em;
+.games-screen:not(.is-playing) .prep-sheet > h2 {
+  margin:0 0 12px;
+  color:var(--prep-text);
+  font-size:1.11rem;
+  font-weight:790;
+  letter-spacing:-.03em;
+  line-height:1.3;
 }
-.progress-screen .progress-empty .eyebrow {
-  font-size:.64rem;letter-spacing:.07em;color:#536b87;
-}
-.progress-screen .progress-empty p:not(.eyebrow) {
-  color:#526981;font-size:.8rem;line-height:1.45;
-}
-.progress-screen .progress-empty .primary-button {
-  min-height:45px;margin-top:11px;padding:9px 13px;
-  border:1px solid #e4b633;border-radius:13px;
-  color:#102e58;background:linear-gradient(165deg,#ffe782,#ffd145 65%,#f5bc2a);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 3px 0 #dba71b;
-  font-size:.82rem;font-weight:740;
-}
-.progress-screen .parent-card {
-  min-width:0;margin-top:12px;padding:16px;
-  border:1px solid #d9e6f3;border-radius:21px;
-  background:linear-gradient(155deg,#fff,#f9fcff);
-  box-shadow:0 5px 18px rgba(12,42,78,.045);
-}
-.progress-screen .notices-head {margin-bottom:9px;gap:11px}
-.progress-screen .notices-head h3 {font-size:1.02rem;font-weight:775}
-.progress-screen .notices-head small {font-size:.65rem;letter-spacing:.075em}
-.progress-screen .notices-mark {
-  width:38px;height:38px;
-  border:1px solid #d6e6f5;border-radius:13px;
-  background:linear-gradient(#f9fcff,#e3f1ff);color:#183b68;
-}
-.progress-screen .notice-row {
-  padding:10px 0;gap:10px;border-color:#e2ebf3;
-}
-.progress-screen .notice-row>p {font-size:.82rem;line-height:1.45}
-.progress-screen .notice-row strong {color:#173960}
-.progress-screen .status {margin-top:7px}
-.progress-screen .study-badge-surface {min-width:0;margin:0 0 15px}
-.progress-screen .badge-collection {
-  min-width:0;padding:15px 14px 14px;
-  border:1px solid #e5cb80;border-radius:23px;
-  background:linear-gradient(160deg,#fff9e8,#fff7db 38%,#fffdf6);
-  box-shadow:0 9px 27px rgba(83,61,16,.085),inset 0 1px 0 #fff;
-}
-.progress-screen .badge-collection-heading {gap:8px;margin-bottom:10px}
-.progress-screen .badge-collection-heading h2 {
-  font-size:1.17rem;margin-top:3px;letter-spacing:-.035em;
-}
-.progress-screen .badge-eyebrow {font-size:.66rem;letter-spacing:.075em;color:#765d27}
-.progress-screen .badge-balance {
-  flex:none;padding:7px 10px;border:1px solid #e5ca7c;border-radius:12px;
-  background:linear-gradient(#fff,#fff4cf);font-size:.94rem;color:#102e58;
-}
-.progress-screen .rank-current {
-  min-width:0;gap:10px;flex-wrap:nowrap;
-  margin:0 0 10px;padding:10px 12px;border:1px solid #3e669a;
-  border-radius:18px;color:white;
-  background:linear-gradient(125deg,#2c5484,#102e58 66%,#0a2145);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 5px 12px rgba(12,45,89,.12);
-}
-.progress-screen .rank-current>.study-badge-art {
-  flex:none;width:73px;height:79px;max-width:29%;
-  filter:drop-shadow(0 6px 6px rgba(0,12,40,.23));
-}
-.progress-screen .rank-current>div {min-width:0;flex:1 1 auto}
-.progress-screen .rank-current .badge-eyebrow {color:#ffdf82}
-.progress-screen .rank-current h3 {
-  margin:4px 0 3px;font-size:1.2rem;letter-spacing:-.023em;
-}
-.progress-screen .rank-current p {font-size:.74rem;line-height:1.38;color:#e6f0ff}
-.progress-screen .study-badge-next {
-  min-width:0;grid-template-columns:74px minmax(0,1fr);gap:4px 11px;
-  padding:11px 12px 13px;margin:0;
-  border:1px solid #e3c46f;border-radius:18px;
-  background:linear-gradient(142deg,#fff,#fff7dc 65%,#ffefc1);
-}
-.progress-screen .study-badge-next>.study-badge-art {
-  width:74px;height:88px;object-fit:contain;filter:drop-shadow(0 4px 6px rgba(35,55,81,.1));
-}
-.progress-screen .study-badge-next h3 {font-size:1rem;line-height:1.22;margin:3px 0 4px}
-.progress-screen .study-badge-next p {font-size:.72rem;line-height:1.4}
-.progress-screen .badge-progress-label {
-  gap:8px;font-size:.73rem;margin:5px 0 3px;
-}
-.progress-screen .badge-progress {height:10px;margin-bottom:1px}
-.progress-screen .badge-rail-hint {
-  margin:11px 0 4px;font-size:.73rem;line-height:1.4;
-  font-weight:700;color:#6f5626;
-}
-.progress-screen .study-badge-grid {
-  display:flex;flex-wrap:nowrap;gap:9px;align-items:stretch;
-  margin:0 -3px 6px;padding:8px 3px 13px;
-  max-width:100%;overflow-x:auto;overflow-y:hidden;
-  -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
-  scroll-snap-type:x proximity;scroll-padding-inline:3px;
-  scrollbar-width:thin;scrollbar-color:#c5a95c #fff8e4;
-}
-.progress-screen .study-badge-grid:focus-visible {
-  outline:3px solid #133e6b;outline-offset:1px;border-radius:8px;
-}
-.progress-screen .study-badge-grid>.study-badge-card {
-  flex:0 0 104px;min-width:0;max-width:104px;scroll-snap-align:start;
-  gap:4px;padding:10px 6px 8px;border:1px solid #e4d8b6;
-  border-radius:15px;background:#fffefa;
-}
-.progress-screen .study-badge-grid>.study-badge-card.is-next {
-  background:#fff2ce;border-color:#d7ad45;
-}
-.progress-screen .study-badge-grid>.study-badge-card.is-earned {
-  background:#fff8df;border-color:#e3c477;
-}
-.progress-screen .study-badge-grid .study-badge-art {
-  height:66px;max-height:66px;object-fit:contain;
-}
-.progress-screen .study-badge-grid strong {
-  font-size:.71rem;line-height:1.26;font-weight:770;
-}
-.progress-screen .study-badge-grid>li>span {font-size:.67rem}
-.progress-screen .study-badge-grid small {
-  border-radius:8px;font-size:.63rem;line-height:1.3;
-}
-.progress-screen .badge-rules {
-  color:#526884;font-size:.73rem;line-height:1.49;margin:8px 0 6px;
-}
-.progress-screen .badge-device-note {color:#63758a;font-size:.68rem}
-.progress-screen .learning-library {min-width:0;margin:14px 0 0}
-.progress-screen .section-heading {
-  gap:8px;margin:13px 0 9px;
-}
-.progress-screen .section-heading h2 {
-  font-size:1.22rem;line-height:1.23;letter-spacing:-.037em;
-  font-weight:790;color:#102e58;
-}
-.progress-screen .section-heading .text-button {
-  flex:none;min-height:44px;font-size:.78rem;font-weight:710;
-}
-.progress-screen .learning-subjects {
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+.games-screen:not(.is-playing) .prep-test-choices {
+  display:flex;
   gap:10px;
+  min-width:0;
+  padding:4px 5px 12px;
+  margin:0 -5px 8px;
+  scroll-snap-type:x proximity;
+  scroll-padding-inline:5px;
+  overscroll-behavior-inline:contain;
 }
-.progress-screen .learning-subject {
-  display:flex;flex-direction:column;align-items:start;
-  min-width:0;min-height:128px;gap:6px;margin:0;padding:12px;
-  border:1px solid #d9e7f3;border-radius:19px;
-  background:linear-gradient(145deg,#fff,#f5faff);
-  box-shadow:0 4px 15px rgba(9,39,77,.045);
+.games-screen:not(.is-playing) .prep-test-choice {
+  position:relative;
+  flex:0 0 83%;
+  gap:10px;
+  min-height:88px;
+  padding:12px;
+  border:1px solid #d8e5f2;
+  border-radius:18px;
+  color:#16375e;
+  background:linear-gradient(145deg,#fff,#f8fbff);
+  box-shadow:0 4px 12px rgba(11,48,92,.055),inset 0 1px 0 #fff;
+  scroll-snap-align:start;
 }
-.progress-screen .learning-subject:nth-child(4n+1) {
-  background:linear-gradient(155deg,#f7fcff,#e8f5ff);
-  border-color:#cce6f7;
+.games-screen:not(.is-playing) .prep-test-choice[aria-pressed="true"] {
+  padding:11px;
+  border:2px solid #28568b;
+  background:linear-gradient(145deg,#f7fbff,#e9f4ff);
+  box-shadow:0 4px 14px rgba(12,57,108,.105),inset 0 1px 0 #fff;
 }
-.progress-screen .learning-subject:nth-child(4n+2) {
-  background:linear-gradient(155deg,#fffdf6,#fff2cb);
-  border-color:#eddba9;
+.games-screen:not(.is-playing) .prep-test-choice > img {
+  width:43px;
+  height:43px;
+  padding:3px;
+  flex:none;
+  border-radius:12px;
+  background:#f0f7ff;
+  object-fit:contain;
 }
-.progress-screen .learning-subject:nth-child(4n+3) {
-  background:linear-gradient(155deg,#fafffc,#e3f5ed);
-  border-color:#c8e7da;
+.games-screen:not(.is-playing) .prep-test-choice strong {
+  color:#102e58;
+  font-size:.91rem;
+  font-weight:760;
+  line-height:1.35;
+  overflow-wrap:anywhere;
 }
-.progress-screen .learning-subject:nth-child(4n+4) {
-  background:linear-gradient(155deg,#fffaff,#f0e7ff);
-  border-color:#e0d0f8;
+.games-screen:not(.is-playing) .prep-test-choice small {
+  color:#536a85;
+  font-size:.75rem;
+  line-height:1.38;
+  margin-top:5px;
 }
-.progress-screen .learning-subject .feature-icon {
-  display:grid;place-items:center;width:49px;height:47px;
-  border:0;flex:none;background:transparent;
+.games-screen:not(.is-playing) .prep-test-choice > b {
+  width:26px;
+  height:26px;
+  min-width:26px;
+  border:1px solid #c7d8e9;
+  border-radius:50%;
+  background:#fff;
+  color:#fff;
+  font-size:.78rem;
 }
-.progress-screen .learning-subject img {
-  width:49px;height:47px;max-width:100%;object-fit:contain;
-  filter:drop-shadow(0 4px 4px rgba(15,42,77,.10));
+.games-screen:not(.is-playing) .prep-test-choice[aria-pressed="true"] > b {
+  border-color:#123862;
+  background:linear-gradient(147deg,#36659b,#102e58);
+  color:#fff;
+  box-shadow:inset 0 1px 0 #ffffff33;
 }
-.progress-screen .learning-subject>div {min-width:0}
-.progress-screen .learning-subject h3 {
-  margin:0;font-size:.87rem;font-weight:765;
-  line-height:1.27;letter-spacing:-.024em;overflow-wrap:anywhere;
+.games-screen:not(.is-playing) .prep-topic-card {
+  min-width:0;
+  padding:17px;
+  border:1px solid #c6def1;
+  border-radius:22px;
+  background:linear-gradient(150deg,#edf8ff,#dbedff 78%,#d4e8fc);
+  box-shadow:inset 0 1px 0 #fff,0 6px 16px rgba(18,53,96,.06);
 }
-.progress-screen .learning-subject p {
-  margin-top:5px;font-size:.73rem;line-height:1.41;
-  color:#4c6480;overflow-wrap:anywhere;
+.games-screen:not(.is-playing) .prep-topic-heading {
+  margin-bottom:10px;
+  align-items:center;
+  gap:6px 9px;
 }
-.progress-screen .device-note {
-  margin-top:11px;font-size:.71rem;line-height:1.48;color:#526986;
+.games-screen:not(.is-playing) .prep-topic-heading > p {
+  font-size:.72rem;
+  font-weight:780;
+  line-height:1.32;
+  letter-spacing:.065em;
+  color:#25466d;
 }
-.progress-screen .school-work-history {
-  min-width:0;margin:16px 0;padding:14px 16px;
-  border:1px solid #dae7f2;border-radius:20px;
-  background:linear-gradient(140deg,#fff,#f8fbff);
-  box-shadow:0 4px 15px rgba(9,39,77,.035);
+.games-screen:not(.is-playing) .prep-topic-heading > span {
+  display:inline-block;
+  min-width:0;
+  padding:5px 9px;
+  border:1px solid #bfdaee;
+  border-radius:999px;
+  background:#ffffffba;
+  color:#3c5877;
+  font-size:.67rem;
+  font-weight:680;
+  line-height:1.32;
 }
-.progress-screen .school-work-history .section-heading {margin:0 0 6px}
-.progress-screen .school-work-history>p {
-  font-size:.81rem;line-height:1.44;color:#536982;
+.games-screen:not(.is-playing) .prep-topic-card > h3 {
+  font-size:1.25rem;
+  line-height:1.27;
+  font-weight:790;
+  letter-spacing:-.035em;
+  color:#0f2e57;
+  overflow-wrap:anywhere;
 }
-.progress-screen .school-work-history .text-button {
-  min-height:44px;margin-top:8px;font-size:.85rem;font-weight:710;
+.games-screen:not(.is-playing) .prep-topic-card > time {
+  display:block;
+  margin-top:5px;
+  color:#4a6784;
+  font-size:.82rem;
 }
-.progress-screen .school-details {
-  margin:14px 0 0;padding:0 14px 13px;
-  border:1px solid #dce7f2;border-radius:20px;
-  background:linear-gradient(#fff,#fbfdff);
+.games-screen:not(.is-playing) .prep-topics {
+  min-width:0;
+  grid-template-columns:minmax(0,1fr) minmax(70px,96px);
+  gap:10px;
+  align-items:center;
+  margin:12px 0 9px;
 }
-.progress-screen .school-details>summary {
-  min-height:59px;padding:8px 1px;
-  font-size:.91rem;font-weight:755;color:#18375b;
+.games-screen:not(.is-playing) .prep-topics p {
+  font-size:.76rem;
+  font-weight:680;
+  color:#48627d;
 }
-.progress-screen .school-details>summary svg {width:20px;height:20px}
-.progress-screen .family-updates {gap:11px}
-.progress-screen .family-updates .parent-card {
-  margin:0 0 11px;padding:14px;
+.games-screen:not(.is-playing) .prep-topics li {
+  min-width:0;
+  margin:0;
+  padding-left:22px;
+  font-size:.84rem;
+  line-height:1.42;
+  color:#17395d;
+  overflow-wrap:anywhere;
 }
-.progress-screen .unofficial-note {
-  margin:12px 0 0;font-size:.68rem;color:#63748c;
+.games-screen:not(.is-playing) .prep-topics li:before {
+  color:#1c684f;
 }
-.progress-screen>.freshness {
-  margin-top:14px;padding:10px 0;border-top-color:#dce7f2;font-size:.72rem;
+.games-screen:not(.is-playing) .prep-topics > img {
+  width:100%;
+  height:100px;
+  padding:3px;
+  object-fit:contain;
+  filter:drop-shadow(0 5px 7px rgba(21,47,77,.10));
 }
-@media(max-width:699px){
-  .progress-screen {
-    padding-top:calc(14px + env(safe-area-inset-top));
+.games-screen:not(.is-playing) .study-test-history {
+  color:#45627e;
+  font-size:.76rem;
+  font-weight:650;
+  line-height:1.4;
+}
+.games-screen:not(.is-playing) .prep-topic-card :is([data-test-fallback],[data-test-missing]) {
+  margin-top:12px;
+  padding:9px 11px;
+  border:1px solid #d5e4ef;
+  border-left:3px solid #be9030;
+  border-radius:10px;
+  background:#fffef4;
+  color:#5e4a20;
+  font-size:.77rem;
+  line-height:1.45;
+}
+.games-screen:not(.is-playing) .prep-sheet > .prep-start {
+  min-height:54px;
+  margin-top:15px;
+  padding:13px 15px;
+  border:1px solid #edbf39;
+  border-radius:17px;
+  background:linear-gradient(155deg,#fff1a6,#ffcd42 59%,#f2b92b);
+  box-shadow:inset 0 1px 0 #ffffffcc,0 4px 0 #d5a022,0 10px 18px rgba(93,66,8,.095);
+  color:#122f52;
+  font-size:1.03rem;
+  font-weight:790;
+  letter-spacing:-.015em;
+}
+.games-screen:not(.is-playing) .prep-sheet > .prep-start:disabled {
+  box-shadow:none;
+  background:#edf1f5;
+  border-color:#d3dce5;
+  color:#647080;
+}
+.games-screen:not(.is-playing) .prep-sheet > .prep-guide {
+  min-height:50px;
+  margin-top:13px;
+  border:1px solid #d4e2ef;
+  border-radius:17px;
+  background:linear-gradient(160deg,#fff,#f0f7ff);
+  color:#173b66;
+  font-size:.88rem;
+  font-weight:760;
+  box-shadow:0 3px 9px rgba(16,52,91,.045),inset 0 1px 0 #fff;
+}
+.games-screen:not(.is-playing) .prep-sheet > .prep-guide svg {
+  width:21px;
+  height:21px;
+  stroke-width:1.6;
+}
+/* Keep learning: expanded disclosures are quiet editorial cards, not dashboards. */
+.games-screen:not(.is-playing) .study-tool-card[open] {
+  border-color:#cbdff0;
+  background:#fff;
+  box-shadow:var(--prep-soft-shadow);
+}
+.games-screen:not(.is-playing) .study-tool-card[open] > summary {
+  border-bottom:1px solid #e1eaf3;
+  background:linear-gradient(160deg,#fff,#f8fbff);
+}
+.games-screen:not(.is-playing) .study-tool-card > .study-tool-body {
+  min-width:0;
+  padding:13px 15px 17px;
+  background:#fff;
+}
+.games-screen:not(.is-playing) .study-tool-body > p {
+  color:#526983;
+  font-size:.8rem;
+  line-height:1.5;
+}
+.games-screen:not(.is-playing) .study-tool-body > h3 {
+  margin:15px 0 8px;
+  color:#15355d;
+  font-size:.94rem;
+  font-weight:760;
+  letter-spacing:-.02em;
+}
+.games-screen:not(.is-playing) .study-note-scope {
+  margin:0 0 11px;
+  padding:4px;
+  border:1px solid #d7e5f3;
+  border-radius:16px;
+  background:linear-gradient(#eef7ff,#e7f2fc);
+}
+.games-screen:not(.is-playing) .study-note-scope button {
+  min-height:44px;
+  border-radius:12px;
+  color:#426081;
+  font-size:.78rem;
+  font-weight:720;
+}
+.games-screen:not(.is-playing) .study-note-scope button[aria-pressed="true"] {
+  background:linear-gradient(#fff,#fafcff);
+  box-shadow:inset 0 1px 0 #fff,0 2px 7px rgba(17,59,108,.09);
+  color:#102e58;
+}
+.games-screen:not(.is-playing) .study-note-subjects {
+  gap:7px;
+  margin:0 -2px;
+  padding:3px 2px 12px;
+  scroll-padding-inline:2px;
+  overscroll-behavior-inline:contain;
+}
+.games-screen:not(.is-playing) .study-note-subjects button {
+  min-height:44px;
+  border:1px solid #d5e4f1;
+  border-radius:14px;
+  background:#f5f9ff;
+  color:#49647f;
+  padding:9px 13px;
+  font-size:.78rem;
+  font-weight:700;
+  line-height:1.35;
+}
+.games-screen:not(.is-playing) .study-note-subjects button[aria-pressed="true"] {
+  border-color:#315f92;
+  background:linear-gradient(155deg,#315f92,#102e58);
+  color:#fff;
+  box-shadow:inset 0 1px 0 #ffffff3b,0 3px 8px #173d6926;
+}
+.games-screen:not(.is-playing) .study-note-panel:not([hidden]) {
+  min-width:0;
+  padding:12px;
+  border:1px solid #dce9f3;
+  border-radius:17px;
+  background:linear-gradient(#fbfdff,#f7fbff);
+}
+.games-screen:not(.is-playing) .study-note-heading {
+  margin:2px 0 13px;
+}
+.games-screen:not(.is-playing) .study-note-heading h3 {
+  color:#13345a;
+  font-size:1.18rem;
+  font-weight:790;
+  line-height:1.25;
+  letter-spacing:-.027em;
+}
+.games-screen:not(.is-playing) .study-note-heading small {
+  display:block;
+  color:#5c7088;
+  font-size:.72rem;
+  margin:0 0 4px;
+}
+.games-screen:not(.is-playing) :is(.study-note-topic,.game-material-lesson,.study-note-review) {
+  border:1px solid #d8e5f1;
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 2px 7px rgba(11,45,80,.025);
+  overflow:hidden;
+}
+.games-screen:not(.is-playing) :is(.study-note-topic,.game-material-lesson,.study-note-review) > summary {
+  min-width:0;
+  min-height:48px;
+  border-radius:13px;
+  background:linear-gradient(#fff,#f8fbff);
+  color:#18385f;
+  font-size:.86rem;
+  font-weight:730;
+  line-height:1.45;
+  cursor:pointer;
+}
+.games-screen:not(.is-playing) .study-note-topic > summary {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+}
+.games-screen:not(.is-playing) .study-note-topic > summary small {
+  flex:none;
+  font-size:.72rem;
+  color:#586e87;
+}
+.games-screen:not(.is-playing) .study-note-point summary {
+  color:#21476f;
+  font-size:.84rem;
+  line-height:1.45;
+}
+.games-screen:not(.is-playing) .study-note-body {
+  color:#203e60;
+  font-size:.83rem;
+  line-height:1.55;
+}
+.games-screen:not(.is-playing) .study-note-body li {
+  line-height:1.55;
+  overflow-wrap:anywhere;
+}
+.games-screen:not(.is-playing) .study-note-body dt {
+  color:#102e58;
+  font-weight:780;
+}
+.games-screen:not(.is-playing) .study-note-body dd {
+  color:#506881;
+  line-height:1.5;
+}
+.games-screen:not(.is-playing) .study-guide-tool-list {
+  gap:8px;
+}
+.games-screen:not(.is-playing) .study-guide-tool-list .study-guide-button {
+  display:flex;
+  align-items:center;
+  width:100%;
+  min-width:0;
+  min-height:50px;
+  margin:0;
+  padding:12px 14px;
+  border:1px solid #d6e4f0;
+  border-radius:14px;
+  background:linear-gradient(145deg,#fff,#f1f8ff);
+  color:#16375c;
+  font-size:.83rem;
+  font-weight:700;
+  line-height:1.42;
+  box-shadow:inset 0 1px 0 #fff,0 2px 8px rgba(12,45,83,.035);
+}
+.games-screen:not(.is-playing) .study-tool-body button[data-complete-test],
+.games-screen:not(.is-playing) .study-tool-body button[data-restore-test] {
+  min-height:44px;
+  border-color:#cedfeb;
+  background:#fff;
+  color:#193d66;
+  font-size:.81rem;
+  line-height:1.4;
+}
+.games-screen:not(.is-playing) .study-tool-card summary:focus-visible,
+.games-screen:not(.is-playing) .prep-test-choice:focus-visible,
+.games-screen:not(.is-playing) .prep-guide:focus-visible {
+  outline:3px solid #ba8d20;
+  outline-offset:2px;
+}
+@media(max-width:359px) {
+  .games-screen:not(.is-playing) .prep-header h1 {font-size:1.7rem;max-width:13.4rem}
+  .games-screen:not(.is-playing) .prep-header .prep-eagle {width:94px;height:94px}
+  .games-screen:not(.is-playing) .prep-test-choice {flex-basis:91%;padding:10px;gap:8px}
+  .games-screen:not(.is-playing) .prep-test-choice[aria-pressed="true"] {padding:9px}
+  .games-screen:not(.is-playing) .prep-topic-card {padding:12px}
+  .games-screen:not(.is-playing) .prep-topics {grid-template-columns:minmax(0,1fr) 68px}
+  .games-screen:not(.is-playing) .prep-topics > img {height:80px}
+  .games-screen:not(.is-playing) .prep-sheet {padding-inline:14px}
+  .games-screen:not(.is-playing) .study-tool-card > .study-tool-body {padding-inline:10px}
+}
+@media(min-width:700px) {
+  .games-screen:not(.is-playing) .prep-header {min-height:224px}
+  .games-screen:not(.is-playing) .prep-header h1 {font-size:2.32rem}
+  .games-screen:not(.is-playing) .prep-sheet {padding:27px}
+  .games-screen:not(.is-playing) .prep-test-choice {flex-basis:47%}
+  .games-screen:not(.is-playing) .prep-topics {grid-template-columns:minmax(0,1fr) 140px}
+  .games-screen:not(.is-playing) .prep-topics > img {height:142px}
+  .games-screen:not(.is-playing) .study-tool-card > .study-tool-body {padding:18px}
+}
+@media(prefers-reduced-motion:no-preference) {
+  .games-screen:not(.is-playing) :is(.prep-test-choice,.prep-guide,.prep-start,.study-guide-button) {
+    transition:transform .16s ease,box-shadow .16s ease,background .16s ease;
   }
-  .progress-screen>.app-header {
-    margin:calc(-14px - env(safe-area-inset-top)) -18px 14px;
+  .games-screen:not(.is-playing) :is(.prep-test-choice,.prep-guide,.prep-start,.study-guide-button):active:not(:disabled) {
+    transform:scale(.985);
   }
 }
-@media(max-width:359px){
-  .progress-screen .family-hero {padding:12px;gap:6px}
-  .progress-screen .family-hero img {width:69px;height:69px}
-  .progress-screen .progress-empty {padding:12px;gap:8px}
-  .progress-screen .progress-orbit {width:40px;height:40px}
-  .progress-screen .badge-collection {padding:12px 10px}
-  .progress-screen .learning-subjects {gap:7px}
-  .progress-screen .learning-subject {padding:10px;min-height:134px}
-  .progress-screen .learning-subject p {font-size:.69rem}
-}
-@media(min-width:700px) and (min-height:600px){
-  .progress-screen>.app-header {
-    margin:0 0 20px;padding:24px 26px;
-    border:1px solid rgba(183,213,244,.27);border-radius:25px;
+@media(prefers-contrast:more) {
+  .games-screen:not(.is-playing) :is(.prep-test-choice,.prep-topic-card,.study-note-panel,.study-tool-card) {
+    border-width:2px;
   }
-  .progress-screen .family-hero {padding:18px 22px}
-  .progress-screen .family-hero img {width:100px;height:100px}
-  .progress-screen .learning-subjects {grid-template-columns:repeat(2,minmax(0,1fr))}
-  .progress-screen .learning-subject {flex-direction:row;min-height:110px;align-items:center}
-  .progress-screen .badge-collection {padding:20px}
-  .progress-screen .study-badge-grid>.study-badge-card {flex-basis:125px;max-width:125px}
-  .progress-screen .study-badge-grid .study-badge-art {height:84px;max-height:84px}
 }
-@media(prefers-reduced-motion:no-preference){
-  .progress-screen .progress-empty .primary-button,
-  .progress-screen .school-work-history .text-button {transition:transform .16s ease,box-shadow .16s ease}
-  .progress-screen .progress-empty .primary-button:active {transform:scale(.985)}
-}
-@media(prefers-contrast:more){
-  .progress-screen .study-badge-grid>.study-badge-card,
-  .progress-screen .progress-empty,
-  .progress-screen .learning-subject,
-  .progress-screen .school-details {border-width:2px}
+
+
+/* Test Prep first-viewport density on short iPhones.
+   Preserve actual assessment labels/topics and native, >=44px actions;
+   remove decorative vertical slack instead of hiding required controls. */
+@media (max-width:699px) {
+  .games-screen:not(.is-playing) .prep-header {
+    min-height:150px;
+    padding-bottom:13px;
+  }
+  .games-screen:not(.is-playing) .prep-header h1 {
+    font-size:clamp(1.63rem,5.3vw,1.83rem);
+    line-height:1.1;
+    margin:3px 0 4px;
+  }
+  /* The test-specific heading already conveys the purpose on phone. */
+  .games-screen:not(.is-playing) .prep-header > p {display:none}
+  .games-screen:not(.is-playing) .prep-header .prep-eagle {
+    width:98px;height:98px;
+  }
+  .games-screen:not(.is-playing) .prep-sheet {
+    padding-top:13px;
+    padding-bottom:17px;
+  }
+  .games-screen:not(.is-playing) .prep-sheet > h2 {
+    margin-bottom:7px;
+  }
+  .games-screen:not(.is-playing) .prep-test-choices {
+    padding-top:2px;
+    padding-bottom:6px;
+    margin-bottom:4px;
+  }
+  .games-screen:not(.is-playing) .prep-test-choice {
+    min-height:74px;
+    padding:9px;
+  }
+  .games-screen:not(.is-playing) .prep-test-choice[aria-pressed="true"] {
+    padding:8px;
+  }
+  .games-screen:not(.is-playing) .prep-test-choice > img {
+    width:37px;height:37px;
+  }
+  .games-screen:not(.is-playing) .prep-test-choice small {margin-top:3px}
+  .games-screen:not(.is-playing) .prep-topic-card {padding:12px}
+  .games-screen:not(.is-playing) .prep-topic-heading {margin-bottom:6px}
+  .games-screen:not(.is-playing) .prep-topic-heading > span {padding:3px 7px}
+  .games-screen:not(.is-playing) .prep-topic-card > h3 {
+    font-size:1.18rem;
+    line-height:1.22;
+  }
+  .games-screen:not(.is-playing) .prep-topic-card > time {margin-top:3px}
+  .games-screen:not(.is-playing) .prep-topics {
+    gap:8px;
+    margin:6px 0 4px;
+  }
+  .games-screen:not(.is-playing) .prep-topics > img {height:74px}
+  .games-screen:not(.is-playing) .prep-topics li {
+    font-size:.82rem;
+    line-height:1.36;
+  }
+  .games-screen:not(.is-playing) .prep-sheet > .prep-start {
+    min-height:52px;
+    margin-top:9px;
+    padding:10px 14px;
+  }
+  .games-screen:not(.is-playing) .prep-sheet > .prep-guide {
+    min-height:48px;
+    margin-top:7px;
+  }
 }
