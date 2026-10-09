@@ -17,6 +17,11 @@ test('Today premium signature: mobile layout and retained source-backed actions'
     await expect(page.locator('.school-photo-hero .hero-photo')).toBeVisible();
     await expect(page.locator('.school-photo-hero')).toContainText('Hi, Emma!');
     await expect(page.locator('.today-primary .priority-card')).toHaveCount(1);
+    // Icon-only assessment control must identify its verified destination.
+    const assessmentArrow = page.locator('.priority-card .icon-button');
+    await expect(assessmentArrow).toHaveAttribute('data-route', 'study');
+    await expect(assessmentArrow).toHaveAttribute('aria-label', /Open Study for Spelling/);
+
     // The large numeral must not inherit the generic card metadata style.
     const dateNumber = page.locator('.priority-card .date-tile span');
     await expect(dateNumber).toHaveText('9');
