@@ -56,6 +56,10 @@ test("Premium Progress retains rank evidence and 21 browsable milestones on five
     expect(geometry.right).toBeLessThanOrEqual(width + 1);
     await rail.evaluate(el => { el.scrollLeft = el.scrollWidth; });
     expect(await rail.evaluate(el => el.scrollLeft)).toBeGreaterThan(0);
+    // Preserve the genuine first-open viewport in screenshot evidence.
+    await rail.evaluate(el => { el.scrollLeft = 0; });
+    expect(await rail.evaluate(el => el.scrollLeft)).toBe(0);
+    await expect(rail.getByRole("listitem").first()).toContainText("Nest Explorer");
 
     const cards = screen.locator(".learning-subject");
     expect(await cards.count()).toBeGreaterThanOrEqual(3);
@@ -144,7 +148,9 @@ test("Progress retains readable evidence cards when verified practice exists",as
   },{skill,now});
   await openProgress(page,390);
   await expect(page.locator(".progress-screen")).toContainText("Strong today",{timeout:15000});
-  await expect(page.locator(".progress-screen .notices-head")).toBeVisible();
+  // Multiple independent notice cards legitimately have this header class.
+  // Target only the source-backed weekly learning evidence card.
+  await expect(page.locator('.progress-screen .parent-card[aria-labelledby="weekly-learning-title"] .notices-head')).toBeVisible();
   await expect(page.locator(".progress-screen .progress-empty")).toHaveCount(0);
   await noOverflow(page,390);
 });
