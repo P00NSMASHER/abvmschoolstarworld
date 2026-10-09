@@ -26,8 +26,9 @@ test("operational dashboard runs for completed main watchdog even if the watchdo
   assert.equal(dashboardGate,"github.event_name != 'workflow_run' || github.event.workflow_run.head_branch == 'main'");
   assert.doesNotMatch(dashboardGate,/workflow_run\.conclusion/);
   assert.match(workflow,/workflow_run:\n[\s\S]*?types: \[completed\]/);
-  assert.match(workflow,/if: always\(\)[\s\S]*?Upload machine-readable health artifact/);
-  assert.match(workflow,/if: always\(\)[\s\S]*?Publish dashboard to job summary/);
+  assert.match(workflow,/- name: Publish dashboard to job summary\n\s+if: always\(\)/);
+  assert.match(workflow,/- name: Upload machine-readable health artifact\n\s+if: always\(\)/);
+  assert.doesNotMatch(workflow, /continue-on-error:\s*true/);
   assert.match(workflow,/github\.event\.workflow_run\.head_branch == 'main'/);
 });
 
