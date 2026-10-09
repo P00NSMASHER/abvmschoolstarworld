@@ -100,3 +100,20 @@ test('page-specific credentials never authorize another Facebook source',async()
   assert.equal(seen.length,2);
   assert.deepEqual(result.feed.posts,[]);
 });
+
+test('retrying after main advances retains both isolated Facebook API secrets',()=>{
+  const workflow=readFileSync(new URL('../.github/workflows/sync-study-pack.yml',import.meta.url),'utf8');
+  const first='- name: Check independently reviewed Facebook sources (never changes classroom data)';
+  const retry='- name: Commit refreshed pack against latest main';
+  const firstAt=workflow.indexOf(first),retryAt=workflow.indexOf(retry);
+  assert.ok(firstAt>=0&&retryAt>firstAt,'expected only the existing teacher refresh workflow');
+  const initial=workflow.slice(firstAt,workflow.indexOf('run: node scripts/sync-facebook-feeds.mjs --write',firstAt));
+  const retryEnv=workflow.slice(retryAt,workflow.indexOf('shell: bash',retryAt));
+  for(const secret of ['ABVM_SCHOOL_FB_ACCESS_TOKEN','ABVM_HSA_FB_ACCESS_TOKEN']){
+    const expected=secret+': $'+'{{ secrets.'+secret+' }}';
+    assert.ok(initial.includes(expected),'initial source check missing '+secret);
+    assert.ok(retryEnv.includes(expected),'main-race retry missing '+secret);
+  }
+  assert.match(workflow.slice(retryAt),/node scripts\/sync-facebook-feeds\.mjs --write/,
+    'the main-race retry must recheck reviewed Facebook sources');
+});

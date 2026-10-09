@@ -206,6 +206,9 @@ jobs:
         run: npm run qa
 
       - name: Commit refreshed pack against latest main
+        env:
+          ABVM_SCHOOL_FB_ACCESS_TOKEN: ${{ secrets.ABVM_SCHOOL_FB_ACCESS_TOKEN }}
+          ABVM_HSA_FB_ACCESS_TOKEN: ${{ secrets.ABVM_HSA_FB_ACCESS_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
