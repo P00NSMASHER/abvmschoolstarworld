@@ -1,0 +1,47 @@
+name: Study premium visual acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'pages/design-polish.css'
+      - 'pages/index.html'
+      - 'pages/sw.js'
+      - 'tests/study-premium.spec.mjs'
+      - 'playwright.config.mjs'
+      - '.github/workflows/study-visual-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: abvm-study-visual-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  study-render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run pack:runtime
+      - run: npx playwright install --with-deps chromium webkit
+      - name: Verify Study launch, modes and Test Prep in Chromium and Safari-WebKit
+        run: npx playwright test tests/study-premium.spec.mjs --project=mobile --project=iphone-webkit --workers=1 --retries=0
+      - name: Upload real iPhone Study screenshots and reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: abvm-study-premium-visual-${{ github.run_id }}
+          path: |
+            test-results/**/study-premium-*.png
+            test-results/**/test-failed*.png
+            test-results/**/trace.zip
+            playwright-report
+          retention-days: 14
+          if-no-files-found: ignore
