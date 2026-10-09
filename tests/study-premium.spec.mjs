@@ -52,6 +52,27 @@ test("premium Study retains five source-backed modes, artwork, and subject-color
       expect(box.gloss,context).toContain("gradient");
       expect(box.shadow,context).not.toBe("none");
     }
+    // Affordances are positioned within the tile, not as a sixth flex item.
+    const arrows=await tiles.evaluateAll(nodes=>nodes.map(node=>{
+      const outer=node.getBoundingClientRect(), arrow=node.querySelector(":scope > b"),
+        inner=arrow.getBoundingClientRect();
+      return {
+        position:getComputedStyle(arrow).position,
+        right:outer.right-inner.right,
+        top:inner.top-outer.top,
+        centerOffset:(inner.top+inner.height/2)-(outer.top+outer.height/2)
+      };
+    }));
+    arrows.forEach((arrow,index)=>{
+      const context=JSON.stringify({width,index,arrow});
+      expect(arrow.position,context).toBe("absolute");
+      expect(arrow.right,context).toBeGreaterThanOrEqual(3);
+      expect(arrow.right,context).toBeLessThanOrEqual(23);
+      if(index<4){
+        expect(arrow.top,context).toBeGreaterThanOrEqual(3);
+        expect(arrow.top,context).toBeLessThanOrEqual(24);
+      }else expect(Math.abs(arrow.centerOffset),context).toBeLessThanOrEqual(5);
+    });
     for(const selector of [
       ".study-hero .school-mark",
       ".study-hero-art",
