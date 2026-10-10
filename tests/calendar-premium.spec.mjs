@@ -36,6 +36,8 @@ test("Month: source-backed day grid, legend and premium layout on iPhone", async
     await expect(page.locator(".calendar-month-nav strong")).toHaveText("October 2026");
     await expect(page.locator(".calendar-grid button[data-cal-day]")).toHaveCount(31);
     await expect(page.locator(".calendar-day-card")).toContainText("Progress Reports Issued");
+    await expect(page.locator(".calendar-peek")).toContainText("Progress Reports Issued");
+    await expect(page.locator(".calendar-peek-date")).toHaveText("8");
     await expect(page.locator(".calendar-day-card")).toContainText("Beef cheesesteak");
     await expect(page.locator(".calendar-segments [data-route=calendar]")).toHaveAttribute("aria-pressed", "true");
     await sealReady(page);
@@ -148,6 +150,7 @@ test("Calendar navigation, school closure and enlarged text remain functional", 
   const day12 = page.locator("[data-cal-day]").filter({ hasText: /^12$/ });
   await day12.click();
   await expect(page.locator(".calendar-day-card")).toContainText("Columbus Day");
+  await expect(page.locator(".calendar-peek")).toContainText("Columbus Day");
   await expect(page.locator(".calendar-day-card .agenda-lunch")).toContainText("No school lunch");
   await page.evaluate(() => { document.documentElement.style.fontSize = "34px"; });
   await noOverflow(page, ".calendar-screen", 375);
@@ -186,6 +189,7 @@ test("Month/Week view switch keeps the selected school date and Today is one tap
 
   await page.locator(".calendar-grid button[data-cal-day]").filter({hasText:/^12$/}).click();
   await expect(page.locator(".calendar-day-card")).toContainText("Columbus Day");
+  await expect(page.locator(".calendar-peek")).toContainText("Columbus Day");
   await expect(page.locator(".calendar-day-status")).toContainText("school event");
   await page.locator(".calendar-segments [data-route=week]").click();
   await expect(page.locator(".week-nav strong")).toContainText("Oct 12 – 16");

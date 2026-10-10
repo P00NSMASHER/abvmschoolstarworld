@@ -40,5 +40,15 @@ function monthGrid({year,month,selected,current,eventsForDate,lunchForDate,kindC
  }
  return html;
 }
-window.ABVMCalendarNavigation=Object.freeze({weekForDate,monthForDate,monthGrid});
+
+function dayPreview({date,events,months,weekdays,esc}){
+ const shortDate=weekdays[date.getDay()].slice(0,3)+" · "+months[date.getMonth()].slice(0,3)+" "+date.getDate();
+ const firstEvent=events[0]?.label;
+ const detail=firstEvent
+  ?firstEvent+(events.length>1?" · +"+(events.length-1)+" more":"")
+  :"No special school events listed";
+ return '<span class="calendar-peek-date" aria-hidden="true">'+date.getDate()+'</span>'+
+  '<span class="calendar-peek-copy"><strong>'+esc(shortDate)+'</strong><span>'+esc(detail)+'</span></span>';
+}
+window.ABVMCalendarNavigation=Object.freeze({weekForDate,monthForDate,monthGrid,dayPreview});
 })();
