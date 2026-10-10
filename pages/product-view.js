@@ -336,7 +336,29 @@
       '<p class="unofficial-note">Your family companion for ABVM Grade 2.</p></div>'
     );
   }
-  window.ABVMProductView = Object.freeze({ today, week, progress, icon });
+  // UI-only date navigation: a weekend maps to its Mon-Fri school week.
+  // Compare UTC day ordinals so daylight-saving changes cannot offset a week.
+  function plannerDate(to,from,monthDay,weekDay,now,firstWeekDay){
+    if(to==="week"&&from==="calendar"&&monthDay){
+      const mon=new Date(monthDay);
+      mon.setHours(12,0,0,0);
+      const weekday=mon.getDay();
+      mon.setDate(mon.getDate()-(weekday===0?6:weekday-1));
+      const ordinal=d=>Date.UTC(d.getFullYear(),d.getMonth(),d.getDate());
+      return {
+        weekOffset:Math.round((ordinal(mon)-ordinal(firstWeekDay))/604800000),
+        selectedDay:[0,6].includes(weekday)?mon:new Date(monthDay)
+      };
+    }
+    if(to==="calendar"&&from==="week"&&weekDay){
+      return {
+        calendarOffset:(weekDay.getFullYear()-now.getFullYear())*12+weekDay.getMonth()-now.getMonth(),
+        calendarDay:new Date(weekDay)
+      };
+    }
+    return null;
+  }
+  window.ABVMProductView = Object.freeze({ today, week, progress, icon, plannerDate });
 })();
 
 (()=>{"use strict";

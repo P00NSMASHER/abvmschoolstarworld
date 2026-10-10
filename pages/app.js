@@ -584,7 +584,7 @@ function updateFreshnessUI(){
   if(node)node.outerHTML=freshness();
 }
 function carryPlannerDate(next){
-  const state=window.ABVMWeeklyLearning.plannerDate(next,activeTab,calendarDay,selectedDay,today(),weekDays(0)[0]);
+  const state=window.ABVMProductView.plannerDate(next,activeTab,calendarDay,selectedDay,today(),weekDays(0)[0]);
   if(state)({calendarDay,selectedDay,weekOffset,calendarOffset}={calendarDay,selectedDay,weekOffset,calendarOffset,...state});
 }
 // Keep the reading position and keyboard target across Month/Week redraws.
