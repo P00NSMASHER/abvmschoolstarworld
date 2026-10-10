@@ -139,7 +139,9 @@ owner-only permissions (0600) on POSIX systems. Explicit `--write` replays
 also tighten the mode of an unchanged legacy history file. It cannot repair permissions
 on pre-existing directories; keep those private too. The processor is
 idempotent and fails closed if the same observation ID is reused for different
-evidence.
+evidence. An identical observation may be reserialized with its JSON fields
+in another order without becoming a collision; changes to any evidence field
+under an existing observation ID still fail closed.
 
 An explicit `--write` intake acquires the exclusive `.lock` **before** reading
 the current ledger, so a second intake cannot calculate against an outdated
