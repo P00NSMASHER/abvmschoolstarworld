@@ -338,6 +338,14 @@
   }
   // UI-only date navigation: a weekend maps to its Mon-Fri school week.
   // Compare UTC day ordinals so daylight-saving changes cannot offset a week.
+  // Presentation only: every row and label comes from the governed controller.
+  function compactMonthCard(monthName, rows, extraClass) {
+    return '<section class="'+esc(extraClass)+' compact-month-card"><h2>Coming in '+
+      esc(monthName)+'</h2>'+rows.map(({date,labels})=>
+        '<div><span>'+esc(date)+'</span><ul role="list">'+
+        labels.map(label=>'<li>'+esc(label)+'</li>').join("")+'</ul></div>'
+      ).join("")+'</section>';
+  }
   function plannerDate(to,from,monthDay,weekDay,now,firstWeekDay){
     if(to==="week"&&from==="calendar"&&monthDay){
       const mon=new Date(monthDay);
@@ -358,7 +366,7 @@
     }
     return null;
   }
-  window.ABVMProductView = Object.freeze({ today, week, progress, icon, plannerDate });
+  window.ABVMProductView = Object.freeze({ today, week, progress, icon, plannerDate, compactMonthCard });
 })();
 
 (()=>{"use strict";

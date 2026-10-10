@@ -132,6 +132,16 @@ test("Week: five-day study plan and verified lunch/test information", async ({ p
       expect(b.width, JSON.stringify({width, b})).toBeGreaterThanOrEqual(44);
       expect(b.height, JSON.stringify({width, b})).toBeGreaterThanOrEqual(44);
     }
+    // The Week meal illustration is lazy-loaded below the initial viewport.
+    // Capture its real rendered pixels instead of a transient blank frame.
+    if (width === 390) {
+      const art = page.locator(".week-screen .week-rail .lunch-art img");
+      await expect(art).toHaveCount(1);
+      await art.scrollIntoViewIfNeeded();
+      await expect.poll(() => art.evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
+      await art.evaluate(img => img.decode());
+      await page.locator(".week-screen").evaluate(el => { el.scrollTop = 0; });
+    }
     await capture(page, info, "calendar-week-" + width + "-first");
     if (width === 390) await capture(page, info, "calendar-week-390-full", true);
   }
@@ -320,5 +330,41 @@ test("Selected-day actions scroll fully clear of the bottom bar on compact phone
     expect(week.taskTop, JSON.stringify({ viewport, week })).toBeGreaterThanOrEqual(0);
     expect(week.taskBottom, JSON.stringify({ viewport, week })).toBeLessThanOrEqual(week.navTop - 2);
     await page.screenshot({ path: info.outputPath(`calendar-clearance-${viewport.width}x${viewport.height}-week.png`), animations: "disabled" });
+  }
+});
+
+test("Month summaries separate every reviewed same-day event into an accessible list", async ({ page }, info) => {
+  await page.clock.setFixedTime(date);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const expected = [
+    "Chick-fil-A orders and money due — $7 each",
+    "12:00 dismissal",
+    "Conference schedule portal closes",
+    "Spelling (short i / long i) / Handwriting",
+    "Grammar (subject & predicate)",
+  ];
+  for (const width of [375, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto("/#calendar");
+    await expect(page.locator(".calendar-screen")).toBeVisible();
+    const busyDay = page.locator(".current-month-summary > div").filter({
+      has: page.locator("span", { hasText: "Fri 9" }),
+    });
+    await expect(busyDay).toHaveCount(1);
+    const items = busyDay.locator('ul[role="list"] > li');
+    await expect(items).toHaveText(expected);
+    await expect(page.locator(".current-month-summary p")).toHaveCount(0);
+    const geometry = await items.evaluateAll(nodes => nodes.map(node => {
+      const r = node.getBoundingClientRect(), c = getComputedStyle(node);
+      return { top: r.top, bottom: r.bottom, font: parseFloat(c.fontSize) };
+    }));
+    for (let i = 0; i < geometry.length; i++) {
+      expect(geometry[i].font, width + "px event text").toBeGreaterThanOrEqual(13);
+      if (i) expect(geometry[i].top, width + "px events overlap").toBeGreaterThanOrEqual(geometry[i-1].bottom + 3);
+    }
+    await noOverflow(page, ".calendar-screen", width);
+    await expect(page.locator(".next-month-card ul[role='list'] > li").first()).toContainText(/./);
+    await busyDay.scrollIntoViewIfNeeded();
+    await busyDay.screenshot({ path: info.outputPath("calendar-month-events-" + width + ".png"), animations: "disabled" });
   }
 });
