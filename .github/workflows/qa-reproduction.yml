@@ -36,6 +36,12 @@ on:
       - 'tests/grade2-content-pipeline.test.mjs'
       - 'tests/*-promotion.test.mjs'
       - '.github/workflows/sync-study-pack.yml'
+      # Cumulative schoolwork and source-manifest changes need independent QA.
+      - 'pages/data/schoolwork.json'
+      - 'scripts/validate-schoolwork.mjs'
+      - 'scripts/integrate-schoolwork.mjs'
+      - 'tests/schoolwork-intake.test.mjs'
+      - 'tests/schoolwork-cross-layer.test.mjs'
       - '.github/workflows/qa-reproduction.yml'
 permissions:
   contents: read
