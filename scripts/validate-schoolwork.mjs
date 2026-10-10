@@ -128,6 +128,8 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const path=process.argv[2] || 'pages/data/schoolwork.json';
-  try { console.log(JSON.stringify(validateSchoolwork(JSON.parse(await readFile(path,'utf8'))))); }
+  // The public release gate never accepts a pack without reviewed photo evidence.
+  // Keep the library's optional legacy mode separate from CLI publication checks.
+  try { console.log(JSON.stringify(validateSchoolwork(JSON.parse(await readFile(path,'utf8')),{requireManifest:true}))); }
   catch(error) { console.error(error.message); process.exitCode=1; }
 }
