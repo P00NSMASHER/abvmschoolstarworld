@@ -6,6 +6,8 @@ on:
       - 'pages/data/study-pack.json'
       - 'scripts/build-study-universe.mjs'
       - 'tests/study-universe.test.mjs'
+      - 'scripts/learning-history.mjs'
+      - 'tests/learning-history.test.mjs'
       - 'pages/study-room*'
       - 'pages/study-hub*'
       - 'pages/study-games.js'
