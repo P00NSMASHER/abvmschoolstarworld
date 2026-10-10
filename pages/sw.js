@@ -1,12 +1,12 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v160-premium-planner-focus";
+const CACHE = "abvm-grade2-parent-companion-v161-premium-planner-wayfinding";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=113",
-  "./design-polish.css?v=6",
+  "./design-polish.css?v=7",
   "./study-games-materials.css?v=17",
   "./study-support.js?v=3",
-  "./app.js?v=140",
+  "./app.js?v=141",
   "./product-view.js?v=9",
   "./study-teaching.css?v=1",
   "./school-updates.js?v=4",

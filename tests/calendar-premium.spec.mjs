@@ -216,3 +216,39 @@ test("Month and Week keyboard selections preserve the reading position and focus
   await expect(nextWeek).toBeFocused();
   expect(Math.abs(await scrollWeek() - weekBefore)).toBeLessThanOrEqual(2);
 });
+
+test("Month and Week retain the chosen weekday across their view switch, including another month", async ({ page }) => {
+  await page.clock.setFixedTime(date);
+  await page.setViewportSize({ width: 390, height: 852 });
+  await page.goto("/#calendar");
+  await expect(page.locator(".calendar-screen")).toBeVisible();
+  await page.locator(".calendar-grid button[data-cal-day]").nth(15).click(); // October 16
+  await expect(page.locator(".calendar-day-heading")).toContainText("October 16");
+  await page.locator(".calendar-segments [data-route=week]").click();
+  await expect(page.locator(".week-nav strong")).toContainText("Oct 12 – 16");
+  await expect(page.locator(".day-picker button[aria-pressed=true] strong")).toHaveText("16");
+  await page.locator(".calendar-segments [data-route=calendar]").click();
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("October 2026");
+  await expect(page.locator(".calendar-grid button.active strong")).toHaveText("16");
+
+  await page.getByRole("button", { name: "Next month" }).click();
+  await page.locator(".calendar-grid button[data-cal-day]").nth(5).click(); // November 6
+  await page.locator(".calendar-segments [data-route=week]").click();
+  await expect(page.locator(".week-nav strong")).toContainText("Nov 2 – 6");
+  await expect(page.locator(".day-picker button[aria-pressed=true] strong")).toHaveText("6");
+  await page.locator(".calendar-segments [data-route=calendar]").click();
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("November 2026");
+  await expect(page.locator(".calendar-grid button.active strong")).toHaveText("6");
+});
+
+test("Today's gold date is distinct from the selected day and is announced as current", async ({ page }) => {
+  await page.clock.setFixedTime(date);
+  await page.setViewportSize({ width: 375, height: 852 });
+  await page.goto("/#calendar");
+  await expect(page.locator(".calendar-grid button[aria-current=date] strong")).toHaveText("8");
+  await page.locator(".calendar-grid button[data-cal-day]").nth(11).click(); // October 12
+  await expect(page.locator(".calendar-grid button.active strong")).toHaveText("12");
+  await expect(page.locator(".calendar-grid button[aria-current=date]")).toHaveAttribute("aria-pressed", "false");
+  await expect(page.locator(".calendar-grid button[aria-current=date]")).toHaveClass(/is-today/);
+  await noOverflow(page, ".calendar-screen", 375);
+});

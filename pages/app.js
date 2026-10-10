@@ -310,7 +310,7 @@ function renderWeek(){
  if(!selectedDay||!days.some(d=>sameDay(d,selectedDay)))selectedDay=weekOffset===0?(days.find(d=>sameDay(d,today()))||days[0]):days[0];
  stack().innerHTML=window.ABVMProductView.week({days,selectedDay,offset:weekOffset,header,segments:calendarSegments("week"),freshness,taskHtml,kindClass,fmtDate,fmtShort,weekRangeLabel,eventItemsForDate,events:eventItemsForDate(selectedDay),tasks:isPackWeek(days)?taskRecordsForSurface("week",selectedDay):[],lunchHtml:lunchCardHtml(selectedDay,lunchForDate(selectedDay)),reminder:reminderForDate(selectedDay),future:datedImportantEvents().filter(({date})=>date>selectedDay).slice(0,4).map(({item,date})=>({x:item,d:date})),overview:window.ABVMWeeklyLearning.renderWeekOverview({days,lunchForDate,eventItemsForDate,kindClass,fmtShort,lunchText,lunchUnavailableText})});
 }
-function monthGrid(year,month){const first=new Date(year,month,1,12), last=new Date(year,month+1,0,12), blanks=first.getDay();let html=""; for(let i=0;i<blanks;i++)html+='<span class="calendar-blank"></span>';for(let day=1;day<=last.getDate();day++){const d=new Date(year,month,day,12), events=eventItemsForDate(d), lunch=lunchForDate(d);const dots=[...new Set([...events.map(e=>kindClass(e)),...(lunch?["lunch"]:[])])].slice(0,3);const weekend=[0,6].includes(d.getDay()), closed=events.some(e=>kindClass(e)==="closed");const eventLabel=events.length?": "+events.map(e=>e.label).join(", "):"";html+='<button type="button" class="'+(weekend?"weekend ":"")+(closed?"closed ":"")+(calendarDay&&sameDay(d,calendarDay)?"active":"")+'" data-cal-day="'+d.toISOString()+'" aria-label="'+esc(fmtDate(d)+eventLabel)+'" aria-pressed="'+(calendarDay&&sameDay(d,calendarDay)?"true":"false")+'"><strong>'+day+'</strong><span class="calendar-dots" aria-hidden="true">'+dots.map(k=>'<span class="calendar-mark '+k+'"></span>').join("")+'</span></button>';}return html;}
+function monthGrid(year,month){const todayDate=today(),first=new Date(year,month,1,12), last=new Date(year,month+1,0,12), blanks=first.getDay();let html=""; for(let i=0;i<blanks;i++)html+='<span class="calendar-blank"></span>';for(let day=1;day<=last.getDate();day++){const d=new Date(year,month,day,12), events=eventItemsForDate(d), lunch=lunchForDate(d);const dots=[...new Set([...events.map(e=>kindClass(e)),...(lunch?["lunch"]:[])])].slice(0,3);const weekend=[0,6].includes(d.getDay()), closed=events.some(e=>kindClass(e)==="closed");const eventLabel=events.length?": "+events.map(e=>e.label).join(", "):"";html+='<button type="button" class="'+(weekend?"weekend ":"")+(closed?"closed ":"")+(sameDay(d,todayDate)?"is-today ":"")+(calendarDay&&sameDay(d,calendarDay)?"active":"")+'" data-cal-day="'+d.toISOString()+'" aria-label="'+esc(fmtDate(d)+eventLabel)+'" aria-pressed="'+(calendarDay&&sameDay(d,calendarDay)?"true":"false")+'"'+(sameDay(d,todayDate)?' aria-current="date"':'')+'><strong>'+day+'</strong><span class="calendar-dots" aria-hidden="true">'+dots.map(k=>'<span class="calendar-mark '+k+'"></span>').join("")+'</span></button>';}return html;}
 function agendaLunchHtml(date,lunch){
   const events=eventItemsForDate(date),closed=events.some(e=>kindClass(e)==="closed"),weekend=[0,6].includes(date.getDay());
   const text=closed||weekend||lunch?.status==="no-school"?"No school lunch":lunch?lunchText(lunch):lunchUnavailableText(date);
@@ -587,6 +587,20 @@ function updateFreshnessUI(){
   const node=stack().querySelector(".freshness");
   if(node)node.outerHTML=freshness();
 }
+// Month and Week are two views of the same chosen school date. A weekend in
+// Month maps to Monday in Week because that strip intentionally shows Mon-Fri.
+function carryPlannerDate(next){
+  if(next==="week"&&activeTab==="calendar"&&calendarDay){
+    const monday=mondayFor(calendarDay),anchor=weekDays(0)[0];
+    const utcDay=d=>Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/86400000;
+    weekOffset=Math.round((utcDay(monday)-utcDay(anchor))/7);
+    selectedDay=[0,6].includes(calendarDay.getDay())?monday:new Date(calendarDay);
+  }else if(next==="calendar"&&activeTab==="week"&&selectedDay){
+    const now=today();
+    calendarOffset=(selectedDay.getFullYear()-now.getFullYear())*12+selectedDay.getMonth()-now.getMonth();
+    calendarDay=new Date(selectedDay);
+  }
+}
 // Keep the reading position and keyboard target across Month/Week redraws.
 function redrawPlanner(draw,selector){
   const old=stack().firstElementChild,top=old?.scrollTop||0;
@@ -600,7 +614,7 @@ function bindScreen(){
   stack().addEventListener("click",async event=>{
     const target=event.target.closest("button,a");
     if(!target||!stack().contains(target))return;
-    if(target.matches("[data-route]")){activeTab=target.dataset.route.split("?")[0];history.replaceState(null,"","#"+target.dataset.route);render();stack().querySelector("h1")?.focus({preventScroll:true});return;}
+    if(target.matches("[data-route]")){const next=target.dataset.route.split("?")[0];carryPlannerDate(next);activeTab=next;history.replaceState(null,"","#"+target.dataset.route);render();stack().querySelector("h1")?.focus({preventScroll:true});return;}
     if(target.matches("[data-open-badges]")){activeTab="family";history.replaceState(null,"","#family");render();const title=stack().querySelector("#badge-title");if(title){title.tabIndex=-1;title.focus();title.scrollIntoView({block:"start"})}return;}
     if(target.matches("[data-open-family]")){activeTab="family";history.replaceState(null,"","#family");render();return;}
     if(target.matches("[data-refresh-pack]")){manualRefreshSchoolInfo();return;}
@@ -732,6 +746,7 @@ async function load(){
 window.addEventListener("hashchange",()=>{
   const next=location.hash.slice(1)==="progress"?"family":location.hash.slice(1).split("?")[0];
   if(["today","week","calendar","study","games","family"].includes(next)&&next!==activeTab){
+    carryPlannerDate(next);
     activeTab=next;
     if(next==="games"||next==="study"){markGameComebacksNextSession();gameState.screen="menu"}
     render();

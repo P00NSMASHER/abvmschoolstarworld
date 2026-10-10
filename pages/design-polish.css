@@ -632,6 +632,17 @@
   box-shadow:inset 0 1px 0 #ffffff33,0 3px 8px #102e582c;
 }
 .calendar-screen .calendar-grid button.active strong{color:white}
+/* A restrained gold date badge anchors the real school day without
+   competing with the selected navy date or the academic event markers. */
+.calendar-screen .calendar-grid button.is-today:not(.active) strong{
+  display:grid;place-items:center;min-width:27px;min-height:27px;padding:0 4px;
+  border-radius:999px;color:#102e58;
+  background:linear-gradient(145deg,#ffe9a5,#ffca38);
+  box-shadow:inset 0 1px 0 #fff9df,0 2px 6px #8d681d2c;
+}
+.calendar-screen .calendar-grid button.is-today.active{
+  box-shadow:inset 0 1px 0 #ffffff55,0 0 0 2px #ffca38,0 4px 11px #102e583b;
+}
 .calendar-screen .calendar-grid button:focus-visible,.week-screen .day-picker button:focus-visible{
   outline:3px solid #c0941a;outline-offset:1px;position:relative;z-index:1;
 }
