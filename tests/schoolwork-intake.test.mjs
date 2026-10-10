@@ -1,8 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {spawnSync} from 'node:child_process';
 import {mkdtemp,writeFile,readFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import {validateSchoolwork} from '../scripts/validate-schoolwork.mjs';
 import {mergeSchoolwork,integrateFile} from '../scripts/integrate-schoolwork.mjs';
 const pack=()=>({schemaVersion:1,uploadedPhotoCount:1,sourceManifest:[{id:'photo-1.jpeg',sha256:'a'.repeat(64),status:'integrated'}],lessons:[{id:'fact-families',title:'Fact families',subject:'Math',sources:['photo-1.jpeg'],skills:['fact-families'],notes:['Addition and subtraction facts share numbers.'],studiedOn:null,addedOn:'2026-10-04',dateStatus:'Undated schoolwork',questions:[{id:'q-1',subject:'Math',skill:'fact-families',prompt:'What is 2 + 5?',answer:'7',choices:['7','8'],explanation:'Two plus five equals seven.',sourceFact:'Addition',provenance:'original-practice-from-uploaded-schoolwork'}]}]});
@@ -168,4 +170,26 @@ test('integrated and held sources cannot pretend to be duplicate records',()=>{
  held.sourceManifest[0].duplicateOf='another-photo.jpeg';
  assert.throws(()=>validateSchoolwork(held,{requireManifest:true}),
    /duplicateOf is only valid for duplicate sources/);
+});
+
+test('standalone public release validator never accepts a missing source manifest',async()=>{
+ const dir=await mkdtemp(join(tmpdir(),'abvm-public-manifest-gate-'));
+ try{
+  const input=join(dir,'schoolwork.json'),script=fileURLToPath(new URL('../scripts/validate-schoolwork.mjs',import.meta.url));
+  const withoutManifest=pack();
+  delete withoutManifest.sourceManifest;
+  // Legacy library consumers can explicitly opt into a less strict shape,
+  // but the command used by public release QA must always fail closed.
+  assert.equal(validateSchoolwork(withoutManifest).photos,1);
+  const bytes=JSON.stringify(withoutManifest);
+  await writeFile(input,bytes);
+  const rejected=spawnSync(process.execPath,[script,input],{encoding:'utf8'});
+  assert.notEqual(rejected.status,0);
+  assert.match(rejected.stderr,/Reviewed intake requires a sourceManifest/);
+  assert.equal(await readFile(input,'utf8'),bytes);
+  await writeFile(input,JSON.stringify(pack()));
+  const accepted=spawnSync(process.execPath,[script,input],{encoding:'utf8'});
+  assert.equal(accepted.status,0,accepted.stderr);
+  assert.deepEqual(JSON.parse(accepted.stdout),{lessons:1,questions:1,photos:1});
+ }finally{await rm(dir,{recursive:true,force:true});}
 });
