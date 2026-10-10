@@ -180,6 +180,11 @@ Every integrated source needs a reviewed lesson. Each lesson requires `id`, `tit
 `dateStatus` and `questions`; match the existing question schema. Religion lessons
 may include an exact integer `chapter`.
 
+The standalone release validator (`node scripts/validate-schoolwork.mjs`) **requires**
+`sourceManifest` even if a legacy library caller explicitly uses the validator's
+optional no-manifest mode. Never publish a manifest-free JSON pack merely because
+the lesson source count appears to match `uploadedPhotoCount`.
+
 A dated *week* may be supplied through optional `weekOf` (ISO date for that
 week's Monday) **only** when the parent or source independently identifies the
 school week. Leave `studiedOn: null` when no exact homework day is known, and
