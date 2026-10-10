@@ -94,7 +94,8 @@ test('unknown worksheet dates cannot create mastery or a chronological improveme
   assert.equal(result.skills[0].status,'learning');
   assert.equal(result.skills[0].trend,'insufficient-data');
   assert.equal(result.skills[0].confidence>0,true);
-  assert.equal(result.practiceTargets[0].reason,'learning');
+  // Undated mistakes are reviewed without pretending they happened recently.
+  assert.equal(result.practiceTargets[0].reason,'review-undated');
 });
 
 test('verified assignment dates, not merely intake dates, support chronological improvement',()=>{
