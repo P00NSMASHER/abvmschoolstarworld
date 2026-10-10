@@ -623,7 +623,7 @@ function bindScreen(){
     if(target.matches("[data-open-games]")){event.preventDefault();activeTab="games";history.replaceState(null,"","#games");gameState.screen="menu";render();return;}
   });
 }
-$$(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.tab==="study"){markGameComebacksNextSession();gameState.screen="menu"}activeTab=b.dataset.tab;history.replaceState(null,"","#"+activeTab);render();}));
+$$(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.tab==="study"){markGameComebacksNextSession();gameState.screen="menu"}carryPlannerDate(b.dataset.tab);activeTab=b.dataset.tab;history.replaceState(null,"","#"+activeTab);render();}));
 function packContentKey(data){
   const p=data?.pack||{},lunchSource=p.lunchMenuSource||{};
   return JSON.stringify({

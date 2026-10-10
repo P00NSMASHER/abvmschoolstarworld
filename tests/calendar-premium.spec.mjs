@@ -258,3 +258,26 @@ test("Today's gold date is distinct from the selected day and is announced as cu
   await expect(page.locator(".calendar-grid button[aria-current=date]")).toHaveClass(/is-today/);
   await noOverflow(page, ".calendar-screen", 375);
 });
+
+test("Bottom Calendar navigation retains the Week date, and weekend selection maps to the school week", async ({ page }) => {
+  await page.clock.setFixedTime(date);
+  await page.setViewportSize({ width: 390, height: 852 });
+  await page.goto("/#week");
+  await expect(page.locator(".week-screen")).toBeVisible();
+
+  await page.getByRole("button", { name: "Next week" }).click();
+  await expect(page.locator(".week-nav strong")).toContainText("Oct 12 – 16");
+  await page.locator(".day-picker button").nth(3).click(); // Thursday, Oct 15
+  await page.locator(".bottom-nav button[data-tab=calendar]").click();
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("October 2026");
+  await expect(page.locator(".calendar-grid button.active strong")).toHaveText("15");
+  await expect(page.locator(".calendar-day-heading")).toContainText("October 15");
+
+  await page.locator(".calendar-grid button[data-cal-day]").nth(17).click(); // Sunday, Oct 18
+  await expect(page.locator(".calendar-grid button.active strong")).toHaveText("18");
+  await page.locator(".calendar-segments [data-route=week]").click();
+  await expect(page.locator(".week-nav strong")).toContainText("Oct 12 – 16");
+  await expect(page.locator(".day-picker button[aria-pressed=true] strong")).toHaveText("12");
+  await page.locator(".bottom-nav button[data-tab=calendar]").click();
+  await expect(page.locator(".calendar-grid button.active strong")).toHaveText("12");
+});
