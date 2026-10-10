@@ -197,36 +197,35 @@ export async function integrateLearningHistory(historyPath,batchPath,{write=fals
   const batchFile=await assertPrivateRealPath(batchPath,'Reviewed observation batch',repoRoot);
   const batch=JSON.parse(await readFile(batchFile,'utf8'));
   validateObservationBatch(batch);
-  let current=null;
-  try{current=JSON.parse(await readFile(target,'utf8'));}catch(error){if(error.code!=='ENOENT')throw error;}
-  const next=mergeLearningHistory(current,batch);
-  const before=current?JSON.stringify(current):null,after=JSON.stringify(next);
-  const changed=before!==after;
   let lock,tmp,ownsTmp=false;
   try{
+    // A writer must lock BEFORE reading the current ledger. Otherwise, two
+    // independent intakes could compute against the same stale initial state.
     if(write){
       await mkdir(path.dirname(target),{recursive:true,mode:0o700});
       lock=await open(target+'.lock','wx',0o600);
-      if(current){
-        const latest=JSON.parse(await readFile(target,'utf8'));
-        if(JSON.stringify(latest)!==before)throw new Error('Learning history changed during intake; retry against the latest private file.');
-      }
+    }
+    let current=null;
+    try{current=JSON.parse(await readFile(target,'utf8'));}catch(error){if(error.code!=='ENOENT')throw error;}
+    const next=mergeLearningHistory(current,batch);
+    const changed=(current?JSON.stringify(current):null)!==JSON.stringify(next);
+    if(write){
       if(changed){
         tmp=target+'.tmp-'+process.pid;
         await writeFile(tmp,JSON.stringify(next,null,2)+'\n',{flag:'wx',mode:0o600});
         ownsTmp=true;
         await rename(tmp,target);
         ownsTmp=false;
-      } else if(current && process.platform!=='win32'){
-        // Even a content-identical replay should repair legacy 0644 permissions.
+      }else if(current&&process.platform!=='win32'){
+        // Replays also repair old 0644 permissions without modifying evidence.
         await chmod(target,0o600);
       }
     }
-  } finally {
+    return {mode:write?'write':'dry-run',changed,observations:next.observations.length,skills:next.skills.length,practiceTargets:next.practiceTargets.length,updatedOn:next.updatedOn};
+  }finally{
     if(lock){await lock.close();await unlink(target+'.lock').catch(()=>{});}
     if(ownsTmp&&tmp)await unlink(tmp).catch(()=>{});
   }
-  return {mode:write?'write':'dry-run',changed,observations:next.observations.length,skills:next.skills.length,practiceTargets:next.practiceTargets.length,updatedOn:next.updatedOn};
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
   const args=process.argv.slice(2),write=args.includes('--write'),paths=args.filter(arg=>arg!=='--write');
