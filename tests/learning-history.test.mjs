@@ -367,3 +367,34 @@ test('undated mistake received on or after mastery remains a conservative review
   ],'2026-10-08'));
   assert.equal(later.practiceTargets[0].reason,'review-undated');
 });
+
+test('reordered JSON fields replay the same observation without a false identity collision',()=>{
+  const original=observation('field-order','school-photo.jpeg','2026-10-05','correct',{
+    assignmentId:'math-page-7',questionId:'4',responseSummary:'Private reviewed answer'
+  });
+  const existing=mergeLearningHistory(null,batch([original],'2026-10-06'));
+  const shuffled=Object.fromEntries(Object.entries(original).reverse());
+  assert.deepEqual(mergeLearningHistory(existing,batch([shuffled],'2026-10-06')),existing);
+  const changed={...shuffled,result:'incorrect',errorType:'procedure-error'};
+  assert.throws(()=>mergeLearningHistory(existing,batch([changed],'2026-10-06')),/Observation ID collision/);
+});
+
+test('file-based replay is idempotent across observation field serialization order',async()=>{
+  const dir=await mkdtemp(path.join(tmpdir(),'abvm-replay-order-'));
+  try{
+    const target=path.join(dir,'history.json'),source=path.join(dir,'reviewed-batch.json');
+    const original=observation('stable-field-order','schoolwork.jpeg','2026-10-03','correct',{
+      assignmentId:'math-review',questionId:'2',note:'Private reviewer note'
+    });
+    await writeFile(source,JSON.stringify(batch([original],'2026-10-05')));
+    const first=await integrateLearningHistory(target,source,{write:true,repoRoot:path.join(dir,'public-repo')});
+    assert.equal(first.changed,true);
+    const bytes=await readFile(target,'utf8');
+    await writeFile(source,JSON.stringify(batch([
+      Object.fromEntries(Object.entries(original).reverse())
+    ],'2026-10-05')));
+    const replay=await integrateLearningHistory(target,source,{write:true,repoRoot:path.join(dir,'public-repo')});
+    assert.equal(replay.changed,false);
+    assert.equal(await readFile(target,'utf8'),bytes);
+  }finally{await rm(dir,{recursive:true,force:true});}
+});
