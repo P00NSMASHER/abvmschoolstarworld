@@ -40,11 +40,19 @@ dates, correctness observations still support targeted practice, but the
 processor cannot assert chronological improvement, slipping, or mastery.
 A later upload of older undated work does not reverse already verified
 chronological mastery or reset the retention clock. With fully dated scored
-work, the private confidence heuristic retains its chronological weighting
-over the five most recent scored items. If any scored observations are
-undated, all scored items receive equal weight instead: changing the
-upload order must not inflate a confidence estimate. This confidence
-value is a household planning aid, not a grade or calibrated probability. Dated observations alone
+work, the private confidence heuristic groups answers by their verified
+assessment date, averages answers within each date, then weights the five
+most recent assessment **days** chronologically. This avoids treating a
+worksheet's arbitrary question/observation IDs as a sequence of separate
+assessment times. If any scored observations are undated, all scored
+items receive equal weight instead: changing their upload order must
+not inflate a confidence estimate. Improvement/slipping trends likewise
+compare averages for verified assessment days, not item-ID order. When a
+verified day contains both correct and incorrect answers, the incorrect
+answer takes priority in the private practice queue and blocks claiming
+mastery while unresolved; a partial response takes priority over a
+correct response on the same date. This confidence value is a household
+planning aid, not a grade or calibrated probability. Dated observations alone
 set the chronological order; an undated incorrect/partial item remains
 eligible for a separately labeled private `review-undated` practice target,
 not a claim of a recent miss. That review target is considered resolved
