@@ -198,3 +198,51 @@ test('future-dated study observations and intake-after-review dates fail closed'
   assert.throws(()=>mergeLearningHistory(existing,batch([laterIntake],'2026-10-08')));
   assert.deepEqual(existing,snapshot);
 });
+
+test('an existing exclusive writer lock blocks history reads and leaves records unchanged',async()=>{
+  const dir=await mkdtemp(path.join(tmpdir(),'abvm-history-lock-'));
+  try{
+    const history=path.join(dir,'history.json'),source=path.join(dir,'batch.json');
+    const repoRoot=path.join(dir,'public');
+    // An active writer may temporarily be preparing or replacing the ledger.
+    await writeFile(history,'{"partially-written":');
+    await writeFile(history+'.lock','other writer');
+    await writeFile(source,JSON.stringify(batch([observation('lock-1','p1','2026-10-01')])));
+    await assert.rejects(
+      integrateLearningHistory(history,source,{write:true,repoRoot}),
+      error=>error.code==='EEXIST'
+    );
+    assert.equal(await readFile(history,'utf8'),'{"partially-written":');
+    // A dry-run is nonmutating, so it can still report invalid external state.
+    await assert.rejects(integrateLearningHistory(history,source,{repoRoot}),SyntaxError);
+    await rm(history+'.lock');
+    await rm(history);
+    const result=await integrateLearningHistory(history,source,{write:true,repoRoot});
+    assert.equal(result.observations,1);
+  }finally{await rm(dir,{recursive:true,force:true});}
+});
+
+test('simultaneous private intakes either serialize or explicitly fail for safe retry',async()=>{
+  const dir=await mkdtemp(path.join(tmpdir(),'abvm-history-parallel-'));
+  try{
+    const history=path.join(dir,'history.json'),repoRoot=path.join(dir,'public');
+    const batches=['first','second'].map((name,i)=>({
+      file:path.join(dir,name+'.json'),
+      value:batch([observation(name,'source-'+name,'2026-10-0'+(i+1))],'2026-10-09')
+    }));
+    for(const item of batches)await writeFile(item.file,JSON.stringify(item.value));
+    const results=await Promise.allSettled(batches.map(item=>
+      integrateLearningHistory(history,item.file,{write:true,repoRoot})
+    ));
+    const succeeded=results.filter(result=>result.status==='fulfilled').length;
+    assert.ok(succeeded>=1);
+    for(const result of results)if(result.status==='rejected')assert.equal(result.reason.code,'EEXIST');
+    const initial=JSON.parse(await readFile(history,'utf8'));
+    assert.equal(initial.observations.length,succeeded,'no successful intake may be lost');
+    // Retry each original intake; existing observations remain idempotent.
+    for(const item of batches)await integrateLearningHistory(history,item.file,{write:true,repoRoot});
+    const complete=JSON.parse(await readFile(history,'utf8'));
+    assert.equal(complete.observations.length,2);
+    assert.deepEqual(new Set(complete.observations.map(item=>item.id)),new Set(['first','second']));
+  }finally{await rm(dir,{recursive:true,force:true});}
+});
