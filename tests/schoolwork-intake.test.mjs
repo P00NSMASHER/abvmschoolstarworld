@@ -108,3 +108,64 @@ test('a new source ID never auto-canonicalizes to an unresolved held source',()=
  renamed.lessons[0].sources=['renamed-photo.jpeg'];
  assert.throws(()=>mergeSchoolwork(held,renamed),/repeated hash/);
 });
+
+test('held evidence cannot authorize public lesson notes or practice',()=>{
+ const rejected=pack();
+ rejected.sourceManifest[0].status='held';
+ rejected.sourceManifest[0].reason='The photo is unreadable and has not been approved.';
+ assert.throws(()=>validateSchoolwork(rejected,{requireManifest:true}),/held source cannot support published lessons/);
+ const accounted=structuredClone(rejected);
+ accounted.lessons=[];
+ assert.deepEqual(validateSchoolwork(accounted,{requireManifest:true}),{lessons:0,questions:0,photos:1});
+ // The same source may later be resolved without changing its ID or digest.
+ const resolved=mergeSchoolwork(accounted,pack());
+ assert.equal(resolved.sourceManifest[0].status,'integrated');
+ assert.equal(resolved.lessons.length,1);
+});
+
+test('semantic rephotographs cannot be used to publish unrelated independent lessons',()=>{
+ const p=pack();
+ p.sourceManifest.push({id:'photo-2.jpeg',sha256:'b'.repeat(64),status:'duplicate',
+   duplicateOf:'photo-1.jpeg',reason:'Reviewed as another picture of the same worksheet.'});
+ p.uploadedPhotoCount=2;
+ p.lessons.push({...structuredClone(p.lessons[0]),id:'independent-review',
+   title:'New lesson from a duplicate photo',sources:['photo-2.jpeg'],
+   questions:[{...p.lessons[0].questions[0],id:'q-2',prompt:'What is 1 + 6?'}]});
+ assert.throws(()=>validateSchoolwork(p,{requireManifest:true}),
+   /duplicate photo-2.jpeg must share its lesson with photo-1.jpeg/);
+ // A duplicate may be attached to the exact already-reviewed canonical lesson.
+ p.lessons.pop();
+ p.lessons[0].sources.push('photo-2.jpeg');
+ assert.equal(validateSchoolwork(p,{requireManifest:true}).photos,2);
+});
+
+test('one SHA-256 can have only one integrated canonical regardless of manifest order',()=>{
+ const p=pack(),canonical=p.sourceManifest[0];
+ const second={id:'photo-2.jpeg',sha256:canonical.sha256,status:'integrated'};
+ const duplicate={id:'photo-3.jpeg',sha256:canonical.sha256,status:'duplicate',
+   duplicateOf:canonical.id,reason:'Exact duplicate'};
+ // This ordering bypassed the old first-seen hash test.
+ p.sourceManifest=[duplicate,second,canonical];
+ p.uploadedPhotoCount=3;
+ p.lessons[0].sources=[canonical.id,second.id,duplicate.id];
+ assert.throws(()=>validateSchoolwork(p,{requireManifest:true}),
+   /SHA-256 already integrated as/);
+ p.sourceManifest=[canonical,duplicate];
+ p.uploadedPhotoCount=2;
+ p.lessons[0].sources=[canonical.id,duplicate.id];
+ assert.equal(validateSchoolwork(p,{requireManifest:true}).photos,2);
+});
+
+test('integrated and held sources cannot pretend to be duplicate records',()=>{
+ const p=pack();
+ p.sourceManifest[0].duplicateOf='another-photo.jpeg';
+ assert.throws(()=>validateSchoolwork(p,{requireManifest:true}),
+   /duplicateOf is only valid for duplicate sources/);
+ const held=pack();
+ held.lessons=[];
+ held.sourceManifest[0].status='held';
+ held.sourceManifest[0].reason='Not yet reviewed.';
+ held.sourceManifest[0].duplicateOf='another-photo.jpeg';
+ assert.throws(()=>validateSchoolwork(held,{requireManifest:true}),
+   /duplicateOf is only valid for duplicate sources/);
+});
