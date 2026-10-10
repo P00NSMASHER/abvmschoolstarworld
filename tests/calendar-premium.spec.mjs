@@ -153,6 +153,9 @@ test("Calendar navigation, school closure and enlarged text remain functional", 
   await noOverflow(page, ".calendar-screen", 375);
   await page.locator(".calendar-segments [data-route=week]").click();
   await expect(page.locator(".week-screen")).toBeVisible();
+  // Month retained October 12; explicitly return to the current week before
+  // verifying this week's spelling and the next-week navigation.
+  await page.getByRole("button", { name: "Back to this week" }).click();
   await noOverflow(page, ".week-screen", 375);
   await page.evaluate(() => { document.documentElement.style.fontSize = ""; });
   const friday = page.locator(".day-picker button").last();
@@ -194,6 +197,9 @@ test("Month and Week keyboard selections preserve the reading position and focus
   expect(Math.abs(await scrollMonth() - monthBefore)).toBeLessThanOrEqual(2);
 
   await page.goto("/#week");
+  // Start a fresh Week screen for this isolated focus/scroll test. The
+  // preceding Month interaction intentionally retains its browsing date.
+  await page.reload();
   const weekScreen = page.locator(".week-screen");
   await expect(weekScreen).toBeVisible();
   const scrollWeek = async () => weekScreen.evaluate(el => el.scrollTop);
