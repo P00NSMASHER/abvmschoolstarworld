@@ -398,3 +398,64 @@ test('file-based replay is idempotent across observation field serialization ord
     assert.equal(await readFile(target,'utf8'),bytes);
   }finally{await rm(dir,{recursive:true,force:true});}
 });
+
+test('same-day error cannot be hidden by a correctly answered item with a later ID',()=>{
+  const earlier=[
+    observation('p1','a.jpeg','2026-10-01','correct',{assignmentId:'page-1',questionId:'1'}),
+    observation('p2','b.jpeg','2026-10-03','correct',{assignmentId:'page-2',questionId:'1'})
+  ];
+  const sameDay=[
+    observation('a-miss','c.jpeg','2026-10-05','incorrect',{assignmentId:'page-3',questionId:'1'}),
+    observation('z-correct','c.jpeg','2026-10-05','correct',{assignmentId:'page-3',questionId:'2'})
+  ];
+  const forward=mergeLearningHistory(null,batch([...earlier,...sameDay],'2026-10-06'));
+  assert.notEqual(forward.skills[0].status,'mastered');
+  assert.equal(forward.practiceTargets[0].reason,'recent-miss');
+  const reversedNames=sameDay.map((item,i)=>({...item,id:i===0?'z-miss':'a-correct'}));
+  const reversed=mergeLearningHistory(null,batch([...earlier,...reversedNames],'2026-10-06'));
+  assert.equal(reversed.practiceTargets[0].reason,'recent-miss');
+  assert.equal(reversed.skills[0].status,forward.skills[0].status);
+  assert.equal(reversed.skills[0].confidence,forward.skills[0].confidence);
+});
+
+test('same-day incorrect takes priority over partial or correct regardless of IDs',()=>{
+  const all=[
+    observation('z-partial','a.jpeg','2026-10-05','partial',{assignmentId:'sheet-1',questionId:'1'}),
+    observation('a-incorrect','a.jpeg','2026-10-05','incorrect',{assignmentId:'sheet-1',questionId:'2'}),
+    observation('q-correct','a.jpeg','2026-10-05','correct',{assignmentId:'sheet-1',questionId:'3'})
+  ];
+  const result=mergeLearningHistory(null,batch(all,'2026-10-06'));
+  assert.equal(result.practiceTargets[0].reason,'recent-miss');
+  const partialOnly=mergeLearningHistory(null,batch([all[0],all[2]],'2026-10-06'));
+  assert.equal(partialOnly.practiceTargets[0].reason,'recent-partial');
+});
+
+test('same-day score aggregation makes confidence and trends ID-order invariant',()=>{
+  const records=[
+    observation('one','p1.jpeg','2026-10-01','incorrect',{assignmentId:'one',questionId:'1'}),
+    observation('two','p2.jpeg','2026-10-03','correct',{assignmentId:'two',questionId:'1'}),
+    observation('a-fail','p3.jpeg','2026-10-05','incorrect',{assignmentId:'three',questionId:'1'}),
+    observation('z-pass','p3.jpeg','2026-10-05','correct',{assignmentId:'three',questionId:'2'})
+  ];
+  const first=mergeLearningHistory(null,batch(records,'2026-10-06'));
+  assert.equal(first.skills[0].confidence,0.58);
+  const altered=records.map((item,i)=>({...item,id:i===2?'z-fail':i===3?'a-pass':item.id}));
+  const second=mergeLearningHistory(null,batch(altered,'2026-10-06'));
+  assert.equal(second.skills[0].confidence,0.58);
+  assert.equal(second.practiceTargets[0].reason,first.practiceTargets[0].reason);
+  const fourDays=[
+    observation('d1','d1.jpeg','2026-10-01','incorrect'),
+    observation('d2','d2.jpeg','2026-10-02','incorrect'),
+    observation('d3','d3.jpeg','2026-10-03','correct'),
+    observation('d4a','d4.jpeg','2026-10-04','incorrect',{assignmentId:'day-4',questionId:'1'}),
+    observation('d4z','d4.jpeg','2026-10-04','correct',{assignmentId:'day-4',questionId:'2'})
+  ];
+  const progress=mergeLearningHistory(null,batch(fourDays,'2026-10-05'));
+  assert.equal(progress.skills[0].trend,'improving');
+  const swapped=fourDays.map(item=>({
+    ...item,id:item.id==='d4a'?'d4z':item.id==='d4z'?'d4a':item.id
+  }));
+  const rerun=mergeLearningHistory(null,batch(swapped,'2026-10-05'));
+  assert.equal(rerun.skills[0].trend,progress.skills[0].trend);
+  assert.equal(rerun.skills[0].confidence,progress.skills[0].confidence);
+});
