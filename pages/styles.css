@@ -1373,7 +1373,7 @@ img {
   font-size: 0.69rem;
   color: var(--muted);
 }
-.compact-month-card li,
+.compact-month-card p,
 .special-row strong {
   font-size: 0.8rem;
   font-weight: 500;

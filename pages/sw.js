@@ -2,7 +2,7 @@ const CACHE_PREFIX = "abvm-grade2-parent-companion-";
 const CACHE = "abvm-grade2-parent-companion-v165-premium-planner-agenda";
 const STATIC_SHELL = [
   "./index.html",
-  "./styles.css?v=114",
+  "./styles.css?v=113",
   "./design-polish.css?v=8",
   "./study-games-materials.css?v=17",
   "./study-support.js?v=3",
