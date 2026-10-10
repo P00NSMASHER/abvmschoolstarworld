@@ -164,3 +164,55 @@ test("Calendar navigation, school closure and enlarged text remain functional", 
   await page.locator(".calendar-segments [data-route=calendar]").click();
   await expect(page.locator(".calendar-screen")).toBeVisible();
 });
+
+test("Month and Week keyboard selections preserve the reading position and focused control", async ({ page }) => {
+  await page.clock.setFixedTime(date);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.setViewportSize({ width: 390, height: 667 });
+  await page.goto("/#calendar");
+  await expect(page.locator(".calendar-screen")).toBeVisible();
+
+  const monthScreen = page.locator(".calendar-screen");
+  const scrollMonth = async () => monthScreen.evaluate(el => el.scrollTop);
+  await monthScreen.evaluate(el => { el.scrollTop = 120; });
+  const monthBefore = await scrollMonth();
+  expect(monthBefore).toBeGreaterThan(40);
+
+  const day12 = page.locator(".calendar-grid button[data-cal-day]").nth(11);
+  await day12.evaluate(el => el.focus({ preventScroll: true }));
+  await page.keyboard.press("Enter");
+  await expect(day12).toBeFocused();
+  await expect(day12).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".calendar-day-card")).toContainText("Columbus Day");
+  expect(Math.abs(await scrollMonth() - monthBefore)).toBeLessThanOrEqual(2);
+
+  const nextMonth = page.getByRole("button", { name: "Next month" });
+  await nextMonth.evaluate(el => el.focus({ preventScroll: true }));
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("November 2026");
+  await expect(nextMonth).toBeFocused();
+  expect(Math.abs(await scrollMonth() - monthBefore)).toBeLessThanOrEqual(2);
+
+  await page.goto("/#week");
+  const weekScreen = page.locator(".week-screen");
+  await expect(weekScreen).toBeVisible();
+  const scrollWeek = async () => weekScreen.evaluate(el => el.scrollTop);
+  await weekScreen.evaluate(el => { el.scrollTop = 120; });
+  const weekBefore = await scrollWeek();
+  expect(weekBefore).toBeGreaterThan(40);
+
+  const friday = page.locator(".day-picker button").last();
+  await friday.evaluate(el => el.focus({ preventScroll: true }));
+  await page.keyboard.press("Enter");
+  await expect(friday).toBeFocused();
+  await expect(friday).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".day-detail")).toContainText("Spelling");
+  expect(Math.abs(await scrollWeek() - weekBefore)).toBeLessThanOrEqual(2);
+
+  const nextWeek = page.getByRole("button", { name: "Next week" });
+  await nextWeek.evaluate(el => el.focus({ preventScroll: true }));
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".week-nav strong")).toContainText("Oct 12 – 16");
+  await expect(nextWeek).toBeFocused();
+  expect(Math.abs(await scrollWeek() - weekBefore)).toBeLessThanOrEqual(2);
+});
