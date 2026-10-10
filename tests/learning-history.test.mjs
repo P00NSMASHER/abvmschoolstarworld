@@ -170,3 +170,31 @@ test('new and replaced private histories are owner-only even under a permissive 
     assert.equal((await stat(target)).mode&0o777,0o600);
   }finally{await rm(dir,{recursive:true,force:true});}
 });
+
+test('mastery requires distinct assignments, not rephotographs of one worksheet',()=>{
+  const sameSheet=[
+    observation('a1','camera-1.jpeg','2026-10-01','correct',{assignmentId:'Math Page 9',questionId:'1'}),
+    observation('a2','camera-2.jpeg','2026-10-02','correct',{assignmentId:' math page 9 ',questionId:'2'}),
+    observation('a3','camera-3.jpeg','2026-10-03','correct',{assignmentId:'MATH PAGE 9',questionId:'3'})
+  ];
+  const oneAssignment=mergeLearningHistory(null,batch(sameSheet,'2026-10-03'));
+  assert.equal(oneAssignment.skills[0].scoredCount,3);
+  assert.notEqual(oneAssignment.skills[0].status,'mastered');
+  // A genuinely separate assignment supplies independent evidence.
+  const later=mergeLearningHistory(oneAssignment,batch([
+    observation('b1','camera-4.jpeg','2026-10-04','correct',{assignmentId:'Math Page 10',questionId:'1'})
+  ],'2026-10-04'));
+  assert.equal(later.skills[0].status,'mastered');
+});
+
+test('future-dated study observations and intake-after-review dates fail closed',()=>{
+  const studiedAfterIntake=observation('future','p1','2026-10-09','correct',{addedOn:'2026-10-07'});
+  assert.throws(()=>validateObservationBatch(batch([studiedAfterIntake],'2026-10-10')),/studiedOn cannot be after addedOn/);
+  const laterIntake=observation('late','p2','2026-10-09','correct');
+  assert.throws(()=>validateObservationBatch(batch([laterIntake],'2026-10-08')),/addedOn cannot be after batch asOf/);
+  // Rejection cannot mutate a previously accepted private learning ledger.
+  const existing=mergeLearningHistory(null,batch([observation('o1','p1','2026-10-01')],'2026-10-05'));
+  const snapshot=structuredClone(existing);
+  assert.throws(()=>mergeLearningHistory(existing,batch([laterIntake],'2026-10-08')));
+  assert.deepEqual(existing,snapshot);
+});
