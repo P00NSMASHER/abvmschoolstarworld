@@ -120,7 +120,11 @@ function skillSummary(observations,asOf){
     // Only verified study dates participate in chronological mastery and trends.
     const datedScored=scored.filter(item=>item.studiedOn);
     const lastThree=datedScored.slice(-3);
-    const mastery=lastThree.length===3&&lastThree.every(item=>item.result==='correct'&&(item.independence||'unknown')==='independent'&&item.studiedOn)
+    const latestDatedDay=datedScored.at(-1)?.studiedOn;
+    // ID order must never hide a miss on the latest verified assessment day.
+    const unresolvedLatestDay=datedScored.some(item=>
+      item.studiedOn===latestDatedDay&&item.result!=='correct');
+    const mastery=!unresolvedLatestDay&&lastThree.length===3&&lastThree.every(item=>item.result==='correct'&&(item.independence||'unknown')==='independent'&&item.studiedOn)
       &&new Set(lastThree.map(workKey)).size>=2
       &&new Set(lastThree.map(item=>item.studiedOn)).size>=2;
     let status='not-enough-evidence';
@@ -159,10 +163,16 @@ function differenceInDays(later,earlier){
 }
 function practiceTargets(skills,observations,asOf){
   const latestVerified=new Map(),undatedErrors=new Map();
+  const severity=item=>item.result==='incorrect'?3:item.result==='partial'?2:1;
   for(const observation of observations){
     const key=skillKey(observation);
-    if(observation.studiedOn)latestVerified.set(key,observation);
-    else if(observation.result==='incorrect'||observation.result==='partial'){
+    if(observation.studiedOn&&score(observation.result)!==null){
+      const prior=latestVerified.get(key);
+      if(!prior||observation.studiedOn>prior.studiedOn||
+        (observation.studiedOn===prior.studiedOn&&severity(observation)>severity(prior))){
+        latestVerified.set(key,observation);
+      }
+    }else if(!observation.studiedOn&&(observation.result==='incorrect'||observation.result==='partial')){
       const previous=undatedErrors.get(key);
       if(!previous||observation.addedOn>previous)undatedErrors.set(key,observation.addedOn);
     }
