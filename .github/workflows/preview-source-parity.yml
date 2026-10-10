@@ -1,0 +1,37 @@
+name: ABVM premium preview source parity
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: abvm-preview-parity-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-parity:
+    # Validate both integration heads and all three explicitly authorized review layers.
+    # Every nested Calendar PR must execute the authoritative school-source gate.
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'release/abvm-unified-preview-20261009' || github.base_ref == 'release/abvm-unified-preview-20261009' || github.base_ref == 'ux/calendar-focus-scroll-20261010' || github.base_ref == 'ux/calendar-date-wayfinding-20261010' || github.head_ref == 'release/abvm-premium-privacy-integration-20261010'
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Checkout exact preview head (not auto-merge artifact)
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || 'release/abvm-unified-preview-20261009' }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Fetch latest main for source comparison
+        run: git fetch --no-tags origin +refs/heads/main:refs/remotes/origin/main
+      - name: Compare all authoritative school sources and teacher-check clocks
+        env:
+          ABVM_MAIN_REF: refs/remotes/origin/main
+          ABVM_PREVIEW_REF: HEAD
+        run: node scripts/assert-release-preview-parity.mjs
+      - name: Confirm production stays unchanged
+        run: echo "Read-only parity gate completed; no production release."

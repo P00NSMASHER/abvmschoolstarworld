@@ -1,0 +1,47 @@
+name: Study player premium visual acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'pages/study-games-materials.css'
+      - 'pages/index.html'
+      - 'pages/sw.js'
+      - 'playwright.config.mjs'
+      - 'tests/study-player-premium.spec.mjs'
+      - '.github/workflows/study-player-visual-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: abvm-study-player-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  player-render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run pack:runtime
+      - run: npx playwright install --with-deps chromium webkit
+      - name: Real question, hint, feedback and test-prep states in Chromium and WebKit
+        run: npx playwright test tests/study-player-premium.spec.mjs --project=mobile --project=iphone-webkit --workers=1 --retries=0
+      - name: Keep downloadable rendered evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: abvm-study-player-${{ github.run_id }}
+          path: |
+            test-results/**/study-player-*.png
+            playwright-report
+            test-results/**/trace.zip
+            test-results/**/test-failed*.png
+          retention-days: 14
+          if-no-files-found: ignore

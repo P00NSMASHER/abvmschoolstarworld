@@ -54,7 +54,6 @@ test("the current product hierarchy is coherent",async({page})=>{
   await openTab(page,"Study");
   await expect(page.locator(".app-header h1")).toHaveText(/Study/i);
   await expect(page.locator(".study-hero-copy h2")).toHaveText("Let’s learn, eagle!");
-  await expect(page.locator(".study-hero-copy h2")).not.toContainText("Emma");
   await expect(page.locator(".study-hero-copy p")).toHaveText("ASSUMPTION BVM · GRADE 2");
   await expect(page.locator(".study-hero-art")).toBeVisible();
   await expectCurrentStudyGameTiles(page);
@@ -146,6 +145,12 @@ test("week paging and full calendar agenda work on phone",async({page})=>{
   expect(firstAfter).not.toBe(firstBefore);
 
   await openTab(page,"Calendar");
+  // Returning from the October school week retains its selected Oct 5 date.
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("October 2026");
+  await expect(page.locator(".calendar-grid button.active strong")).toHaveText("5");
+  // Historical September events remain intact when explicitly browsing back.
+  await page.getByRole("button",{name:"Previous month"}).click();
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("September 2026");
   await expect(page.locator(".current-month-summary > div > span")).toHaveText(["Mon 28","Tue 29","Wed 30"]);
   await expect(page.locator(".current-month-summary .agenda-lunch")).toHaveCount(0);
   await expect(page.locator(".calendar-day-card .agenda-lunch")).toBeVisible();
@@ -440,6 +445,12 @@ test("current weekly notice appears in Week, Calendar, and Family screens",async
   await expect(page.locator(".day-detail")).toContainText("HSA virtual meeting");
 
   await openTab(page,"Calendar");
+  // The selected Oct 1 school day determines the visible Month.
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("October 2026");
+  await expect(page.locator(".calendar-grid button.active strong")).toHaveText("1");
+  // The verified September notices still exist, but are a month behind.
+  await page.getByRole("button",{name:"Previous month"}).click();
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("September 2026");
   await expect(page.locator(".current-month-summary")).toContainText("Chick-fil-A sale starts");
   await expect(page.locator(".current-month-summary")).toContainText("Gym classes moved to this date");
 
