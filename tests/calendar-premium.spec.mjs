@@ -153,6 +153,9 @@ test("Calendar navigation, school closure and enlarged text remain functional", 
   await noOverflow(page, ".calendar-screen", 375);
   await page.locator(".calendar-segments [data-route=week]").click();
   await expect(page.locator(".week-screen")).toBeVisible();
+  // Month retained October 12; explicitly return to the current week before
+  // verifying this week's spelling and the next-week navigation.
+  await page.getByRole("button", { name: "Back to this week" }).click();
   await noOverflow(page, ".week-screen", 375);
   await page.evaluate(() => { document.documentElement.style.fontSize = ""; });
   const friday = page.locator(".day-picker button").last();
@@ -194,6 +197,9 @@ test("Month and Week keyboard selections preserve the reading position and focus
   expect(Math.abs(await scrollMonth() - monthBefore)).toBeLessThanOrEqual(2);
 
   await page.goto("/#week");
+  // Start a fresh Week screen for this isolated focus/scroll test. The
+  // preceding Month interaction intentionally retains its browsing date.
+  await page.reload();
   const weekScreen = page.locator(".week-screen");
   await expect(weekScreen).toBeVisible();
   const scrollWeek = async () => weekScreen.evaluate(el => el.scrollTop);
@@ -215,4 +221,104 @@ test("Month and Week keyboard selections preserve the reading position and focus
   await expect(page.locator(".week-nav strong")).toContainText("Oct 12 – 16");
   await expect(nextWeek).toBeFocused();
   expect(Math.abs(await scrollWeek() - weekBefore)).toBeLessThanOrEqual(2);
+});
+
+test("Month and Week retain the chosen weekday across their view switch, including another month", async ({ page }) => {
+  await page.clock.setFixedTime(date);
+  await page.setViewportSize({ width: 390, height: 852 });
+  await page.goto("/#calendar");
+  await expect(page.locator(".calendar-screen")).toBeVisible();
+  await page.locator(".calendar-grid button[data-cal-day]").nth(15).click(); // October 16
+  await expect(page.locator(".calendar-day-heading")).toContainText("October 16");
+  await page.locator(".calendar-segments [data-route=week]").click();
+  await expect(page.locator(".week-nav strong")).toContainText("Oct 12 – 16");
+  await expect(page.locator(".day-picker button[aria-pressed=true] strong")).toHaveText("16");
+  await page.locator(".calendar-segments [data-route=calendar]").click();
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("October 2026");
+  await expect(page.locator(".calendar-grid button.active strong")).toHaveText("16");
+
+  await page.getByRole("button", { name: "Next month" }).click();
+  await page.locator(".calendar-grid button[data-cal-day]").nth(5).click(); // November 6
+  await page.locator(".calendar-segments [data-route=week]").click();
+  await expect(page.locator(".week-nav strong")).toContainText("Nov 2 – 6");
+  await expect(page.locator(".day-picker button[aria-pressed=true] strong")).toHaveText("6");
+  await page.locator(".calendar-segments [data-route=calendar]").click();
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("November 2026");
+  await expect(page.locator(".calendar-grid button.active strong")).toHaveText("6");
+});
+
+test("Today's gold date is distinct from the selected day and is announced as current", async ({ page }) => {
+  await page.clock.setFixedTime(date);
+  await page.setViewportSize({ width: 375, height: 852 });
+  await page.goto("/#calendar");
+  await expect(page.locator(".calendar-grid button[aria-current=date] strong")).toHaveText("8");
+  await page.locator(".calendar-grid button[data-cal-day]").nth(11).click(); // October 12
+  await expect(page.locator(".calendar-grid button.active strong")).toHaveText("12");
+  await expect(page.locator(".calendar-grid button[aria-current=date]")).toHaveAttribute("aria-pressed", "false");
+  await expect(page.locator(".calendar-grid button[aria-current=date]")).toHaveClass(/is-today/);
+  await noOverflow(page, ".calendar-screen", 375);
+});
+
+test("Bottom Calendar navigation retains the Week date, and weekend selection maps to the school week", async ({ page }) => {
+  await page.clock.setFixedTime(date);
+  await page.setViewportSize({ width: 390, height: 852 });
+  await page.goto("/#week");
+  await expect(page.locator(".week-screen")).toBeVisible();
+
+  await page.getByRole("button", { name: "Next week" }).click();
+  await expect(page.locator(".week-nav strong")).toContainText("Oct 12 – 16");
+  await page.locator(".day-picker button").nth(3).click(); // Thursday, Oct 15
+  await page.locator(".bottom-nav button[data-tab=calendar]").click();
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("October 2026");
+  await expect(page.locator(".calendar-grid button.active strong")).toHaveText("15");
+  await expect(page.locator(".calendar-day-heading")).toContainText("October 15");
+
+  await page.locator(".calendar-grid button[data-cal-day]").nth(17).click(); // Sunday, Oct 18
+  await expect(page.locator(".calendar-grid button.active strong")).toHaveText("18");
+  await page.locator(".calendar-segments [data-route=week]").click();
+  await expect(page.locator(".week-nav strong")).toContainText("Oct 12 – 16");
+  await expect(page.locator(".day-picker button[aria-pressed=true] strong")).toHaveText("12");
+  await page.locator(".bottom-nav button[data-tab=calendar]").click();
+  await expect(page.locator(".calendar-grid button.active strong")).toHaveText("12");
+});
+
+test("Selected-day actions scroll fully clear of the bottom bar on compact phones", async ({ page }, info) => {
+  await page.clock.setFixedTime(date);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const viewport of [{ width: 390, height: 844 }, { width: 375, height: 667 }]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/#calendar");
+    await expect(page.locator(".calendar-screen")).toBeVisible();
+    const action = page.locator(".calendar-study-action");
+    await action.evaluate(node => node.scrollIntoView({ block: "center" }));
+    await expect(action).toBeVisible();
+    const month = await page.evaluate(() => {
+      const nav = document.querySelector(".bottom-nav").getBoundingClientRect();
+      const action = document.querySelector(".calendar-study-action").getBoundingClientRect();
+      const screen = document.querySelector(".calendar-screen");
+      return { navTop: nav.top, actionTop: action.top, actionBottom: action.bottom, scrolled: screen.scrollTop };
+    });
+    expect(month.scrolled, JSON.stringify({ viewport, month })).toBeGreaterThan(0);
+    expect(month.actionTop, JSON.stringify({ viewport, month })).toBeGreaterThanOrEqual(0);
+    expect(month.actionBottom, JSON.stringify({ viewport, month })).toBeLessThanOrEqual(month.navTop - 2);
+    await page.screenshot({ path: info.outputPath(`calendar-clearance-${viewport.width}x${viewport.height}-month.png`), animations: "disabled" });
+
+    // Navigate to a fresh Week view so the selected school date is deterministic.
+    await page.goto("/#week");
+    await page.reload();
+    await expect(page.locator(".week-screen")).toBeVisible();
+    const task = page.locator(".day-detail .check-item").first();
+    await expect(task).toBeVisible();
+    await task.evaluate(node => node.scrollIntoView({ block: "center" }));
+    const week = await page.evaluate(() => {
+      const nav = document.querySelector(".bottom-nav").getBoundingClientRect();
+      const task = document.querySelector(".day-detail .check-item").getBoundingClientRect();
+      const screen = document.querySelector(".week-screen");
+      return { navTop: nav.top, taskTop: task.top, taskBottom: task.bottom, scrolled: screen.scrollTop };
+    });
+    expect(week.scrolled, JSON.stringify({ viewport, week })).toBeGreaterThan(0);
+    expect(week.taskTop, JSON.stringify({ viewport, week })).toBeGreaterThanOrEqual(0);
+    expect(week.taskBottom, JSON.stringify({ viewport, week })).toBeLessThanOrEqual(week.navTop - 2);
+    await page.screenshot({ path: info.outputPath(`calendar-clearance-${viewport.width}x${viewport.height}-week.png`), animations: "disabled" });
+  }
 });

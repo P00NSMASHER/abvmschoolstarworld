@@ -14,9 +14,9 @@ concurrency:
 
 jobs:
   source-parity:
-    # Validate the integration branch AND direct stacked PRs targeting it.
-    # A stacked PR must not silently skip the authoritative school-source gate.
-    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'release/abvm-unified-preview-20261009' || github.base_ref == 'release/abvm-unified-preview-20261009'
+    # Validate the integration branch and the two explicitly authorized review layers.
+    # Every nested Calendar PR must execute the authoritative school-source gate.
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'release/abvm-unified-preview-20261009' || github.base_ref == 'release/abvm-unified-preview-20261009' || github.base_ref == 'ux/calendar-focus-scroll-20261010'
     runs-on: ubuntu-latest
     timeout-minutes: 6
     steps:

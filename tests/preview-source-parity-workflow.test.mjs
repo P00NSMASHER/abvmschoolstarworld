@@ -7,6 +7,7 @@ const source=readFileSync(
   "utf8",
 );
 const previewBranch="release/abvm-unified-preview-20261009";
+const calendarReviewBranch="ux/calendar-focus-scroll-20261010";
 
 test("authoritative source parity covers the premium release preview and its directly stacked review PRs",()=>{
   const condition=source.match(/^\s+if:\s*(.+)$/m)?.[1]||"";
@@ -14,6 +15,8 @@ test("authoritative source parity covers the premium release preview and its dir
     "the unified release preview head must run source parity");
   assert.ok(condition.includes("github.base_ref == '"+previewBranch+"'"),
     "review PRs based on the unified preview must not skip school-source parity");
+  assert.ok(condition.includes("github.base_ref == '"+calendarReviewBranch+"'"),
+    "nested calendar review PRs must not skip the school-source gate");
   assert.ok(condition.includes("github.event_name == 'workflow_dispatch'"),
     "maintainers retain the manual source-parity verification path");
   assert.ok(!/\bmain\b/.test(condition),
