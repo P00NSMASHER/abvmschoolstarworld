@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdir,mkdtemp,readFile,rm,writeFile} from 'node:fs/promises';
+import {chmod,mkdir,mkdtemp,readFile,rm,stat,symlink,writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {assertPrivatePath,integrateLearningHistory,mergeLearningHistory,validateObservationBatch} from '../scripts/learning-history.mjs';
@@ -117,4 +117,52 @@ test('replaying older approved evidence cannot rewind the private history date',
     observation('o1','p1','2026-10-01','correct')
   ],'2026-10-01'));
   assert.deepEqual(replay,first);
+});
+
+test('private history and batch cannot escape through symlinked files or parent folders',{skip:process.platform==='win32'},async()=>{
+  const dir=await mkdtemp(path.join(tmpdir(),'abvm-private-paths-'));
+  try{
+    const publicRoot=path.join(dir,'public'),privateRoot=path.join(dir,'private');
+    await mkdir(publicRoot);await mkdir(privateRoot);
+    const safeBatch=path.join(privateRoot,'batch.json');
+    await writeFile(safeBatch,JSON.stringify(batch([observation('o1','p1','2026-10-01')])));
+    const shortcut=path.join(privateRoot,'public-link');
+    await symlink(publicRoot,shortcut,'dir');
+    await assert.rejects(
+      integrateLearningHistory(path.join(shortcut,'history.json'),safeBatch,{write:true,repoRoot:publicRoot}),
+      /outside the public ABVM repository/
+    );
+    const exposedBatch=path.join(publicRoot,'reviewed-batch.json');
+    await writeFile(exposedBatch,await readFile(safeBatch));
+    await symlink(exposedBatch,path.join(privateRoot,'source-shortcut.json'),'file');
+    await assert.rejects(
+      integrateLearningHistory(path.join(privateRoot,'history.json'),path.join(privateRoot,'source-shortcut.json'),{write:true,repoRoot:publicRoot}),
+      /outside the public ABVM repository/
+    );
+    const exposedHistory=path.join(publicRoot,'history.json');
+    await writeFile(exposedHistory,'DO NOT OVERWRITE');
+    await symlink(exposedHistory,path.join(privateRoot,'history-shortcut.json'),'file');
+    await assert.rejects(
+      integrateLearningHistory(path.join(privateRoot,'history-shortcut.json'),safeBatch,{write:true,repoRoot:publicRoot}),
+      /outside the public ABVM repository/
+    );
+    assert.equal(await readFile(exposedHistory,'utf8'),'DO NOT OVERWRITE');
+  }finally{await rm(dir,{recursive:true,force:true});}
+});
+
+test('new and replaced private histories are owner-only even under a permissive umask',{skip:process.platform==='win32'},async()=>{
+  const dir=await mkdtemp(path.join(tmpdir(),'abvm-private-permissions-'));
+  try{
+    const privateDir=path.join(dir,'nested','history'),target=path.join(privateDir,'history.json');
+    const source=path.join(dir,'batch.json'),publicRoot=path.join(dir,'public');
+    await writeFile(source,JSON.stringify(batch([observation('o1','p1','2026-10-01')],'2026-10-07')));
+    await integrateLearningHistory(target,source,{write:true,repoRoot:publicRoot});
+    assert.equal((await stat(privateDir)).mode&0o777,0o700);
+    assert.equal((await stat(target)).mode&0o777,0o600);
+    await chmod(target,0o644); // simulate a previously over-permissive history file
+    await writeFile(source,JSON.stringify(batch([observation('o2','p2','2026-10-03')],'2026-10-08')));
+    await integrateLearningHistory(target,source,{write:true,repoRoot:publicRoot});
+    assert.equal((await stat(target)).mode&0o777,0o600);
+    assert.equal(JSON.parse(await readFile(target,'utf8')).observations.length,2);
+  }finally{await rm(dir,{recursive:true,force:true});}
 });
