@@ -47,7 +47,11 @@ upload order must not inflate a confidence estimate. This confidence
 value is a household planning aid, not a grade or calibrated probability. Dated observations alone
 set the chronological order; an undated incorrect/partial item remains
 eligible for a separately labeled private `review-undated` practice target,
-not a claim of a recent miss.
+not a claim of a recent miss. That review target is considered resolved
+only when independently dated mastery is established at a study date
+**strictly after** the undated worksheet's intake date. A same-day
+assessment, or old work uploaded after mastery, retains the conservative
+review target. The original private observation is never deleted.
 
 When a worksheet is photographed again, reuse the original observation IDs.
 Use stable `assignmentId` and `questionId` in reviewed private observations to
