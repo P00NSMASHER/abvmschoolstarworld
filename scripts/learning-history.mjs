@@ -55,7 +55,8 @@ function skillKey(observation){return observation.subject+'\u0000'+observation.s
 // Older records without an assignment ID can still be checked within a photo.
 function assessmentKey(item){
   if(!item.questionId)return null;
-  return JSON.stringify([item.subject,item.skill,item.assignmentId||null,item.assignmentId?null:item.sourceId,item.questionId]);
+  const normalize=value=>String(value).normalize('NFKC').trim().toLowerCase().replace(/\s+/g,' ');
+  return JSON.stringify([item.subject,item.skill,item.assignmentId?normalize(item.assignmentId):null,item.assignmentId?null:item.sourceId,normalize(item.questionId)]);
 }
 function assertDistinctAssessments(observations){
   const seen=new Map();
