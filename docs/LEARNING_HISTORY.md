@@ -38,6 +38,11 @@ without an assignment ID), and two independently verified `studiedOn` dates. An 
 is **not** evidence of when a worksheet was completed. Without verified studied
 dates, correctness observations still support targeted practice, but the
 processor cannot assert chronological improvement, slipping, or mastery.
+A later upload of older undated work does not reverse already verified
+chronological mastery or reset the retention clock. Dated observations alone
+set the chronological order; an undated incorrect/partial item remains
+eligible for a separately labeled private `review-undated` practice target,
+not a claim of a recent miss.
 
 When a worksheet is photographed again, reuse the original observation IDs.
 Use stable `assignmentId` and `questionId` in reviewed private observations to
