@@ -1,6 +1,7 @@
 import {chmod,mkdir,open,readFile,realpath,rename,unlink,writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
+import {isDeepStrictEqual} from 'node:util';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const RESULTS=new Set(['correct','incorrect','partial','unknown']);
@@ -201,7 +202,7 @@ export function mergeLearningHistory(current,batch){
   const merged=new Map(history.observations.map(item=>[item.id,structuredClone(item)]));
   for(const observation of batch.observations){
     const old=merged.get(observation.id);
-    if(old&&JSON.stringify(old)!==JSON.stringify(observation))throw new Error('Observation ID collision: '+observation.id);
+    if(old&&!isDeepStrictEqual(old,observation))throw new Error('Observation ID collision: '+observation.id);
     if(!old)merged.set(observation.id,structuredClone(observation));
   }
   const observations=[...merged.values()].sort((a,b)=>eventDay(a).localeCompare(eventDay(b))||a.id.localeCompare(b.id));
