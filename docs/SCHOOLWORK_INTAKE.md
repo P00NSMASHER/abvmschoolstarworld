@@ -180,6 +180,11 @@ Every integrated source needs a reviewed lesson. Each lesson requires `id`, `tit
 `dateStatus` and `questions`; match the existing question schema. Religion lessons
 may include an exact integer `chapter`.
 
+The standalone release validator (`node scripts/validate-schoolwork.mjs`) **requires**
+`sourceManifest` even if a legacy library caller explicitly uses the validator's
+optional no-manifest mode. Never publish a manifest-free JSON pack merely because
+the lesson source count appears to match `uploadedPhotoCount`.
+
 A dated *week* may be supplied through optional `weekOf` (ISO date for that
 week's Monday) **only** when the parent or source independently identifies the
 school week. Leave `studiedOn: null` when no exact homework day is known, and
@@ -211,12 +216,18 @@ private-data-free, so manual value-level privacy review remains required.
 
 Manifest statuses:
 
-- `integrated`: the source is linked to a lesson.
-- `duplicate`: link to the canonical source using `duplicateOf`; differing hashes
-  require a `reason`, such as the same worksheet photographed twice. Link both
-  source IDs to the shared lesson. Duplicate chains are not accepted.
-- `held`: provide a `reason`; the image is accounted for but unclear content is
-  not invented or silently added to practice.
+- `integrated`: the source must be linked to a reviewed lesson, and its exact
+  SHA-256 may have only one `integrated` canonical ID, regardless of manifest
+  ordering. The canonical identity cannot be duplicated under another name.
+- `duplicate`: link directly to an `integrated` canonical using `duplicateOf`;
+  differing hashes require a `reason` (semantic rephotograph). Every lesson
+  citing the duplicate must also cite that canonical ID. A duplicate does not
+  authorize a separate lesson, question bank, or invented source coverage.
+  Duplicate chains are not accepted.
+- `held`: provide a `reason`; the image is accounted for but **must not**
+  appear in any published lesson's `sources`. Its unclear content cannot
+  justify public notes, questions, weekly materials, or test preparation.
+  Only duplicate entries may contain `duplicateOf`.
 
 A held source is not permanently frozen. If later review can safely resolve it, keep
 the **same source ID and exact SHA-256**. A `held → integrated` transition must include
