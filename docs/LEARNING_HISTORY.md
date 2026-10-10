@@ -127,6 +127,15 @@ on pre-existing directories; keep those private too. The processor is
 idempotent and fails closed if the same observation ID is reused for different
 evidence.
 
+An explicit `--write` intake acquires the exclusive `.lock` **before** reading
+the current ledger, so a second intake cannot calculate against an outdated
+pre-lock snapshot. The updated ledger replaces the file atomically; failed
+temporary writes are cleaned before releasing the lock. A concurrent invocation
+may fail with `EEXIST` while the lock is held: retry that reviewed batch
+after the first writer finishes. A dry-run does not acquire a lock or mutate
+history, and is an informational snapshot rather than a reservation to write.
+Do not manually remove an active writer's lock.
+
 The generated private history contains the chronological evidence ledger, derived
 skill summaries, common error categories, trend, confidence, and a short prioritized
 practice queue. Use that queue to author privacy-safe original practice in the normal
