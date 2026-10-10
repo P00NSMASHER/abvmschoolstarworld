@@ -327,3 +327,43 @@ test('fully dated assessments retain the original recent-weighted confidence',()
   ],'2026-10-04'));
   assert.equal(later.skills[0].confidence,0.7);
 });
+
+test('later independently dated mastery resolves older undated review without erasing history',()=>{
+  const prior=mergeLearningHistory(null,batch([
+    observation('old-miss','old.jpeg','2026-10-01','incorrect',{
+      studiedOn:null,assignmentId:'archived-math',questionId:'1'
+    })
+  ],'2026-10-01'));
+  assert.equal(prior.practiceTargets[0].reason,'review-undated');
+  const recovered=mergeLearningHistory(prior,batch([
+    observation('later-1','dated-1.jpeg','2026-10-03','correct',{assignmentId:'math-review-a',questionId:'1'}),
+    observation('later-2','dated-2.jpeg','2026-10-05','correct',{assignmentId:'math-review-b',questionId:'1'}),
+    observation('later-3','dated-3.jpeg','2026-10-07','correct',{assignmentId:'math-review-c',questionId:'1'})
+  ],'2026-10-07'));
+  assert.equal(recovered.skills[0].status,'mastered');
+  assert.equal(recovered.skills[0].scoredCount,4);
+  assert.equal(recovered.practiceTargets.length,0,'old undated mistake is not an endless high-priority review');
+  assert.equal(recovered.observations.length,4,'historical miss remains in private ledger');
+});
+
+test('undated mistake received on or after mastery remains a conservative review target',()=>{
+  const three=[
+    observation('good-a','p1.jpeg','2026-10-01','correct'),
+    observation('good-b','p2.jpeg','2026-10-03','correct'),
+    observation('good-c','p3.jpeg','2026-10-05','correct')
+  ];
+  const original=mergeLearningHistory(null,batch(three,'2026-10-05'));
+  const sameDay=mergeLearningHistory(original,batch([
+    observation('undated-same-day','archived.jpeg','2026-10-05','incorrect',{
+      studiedOn:null,assignmentId:'unknown-practice',questionId:'1'
+    })
+  ],'2026-10-05'));
+  assert.equal(sameDay.skills[0].status,'mastered');
+  assert.equal(sameDay.practiceTargets[0].reason,'review-undated');
+  const later=mergeLearningHistory(original,batch([
+    observation('undated-after','archived-2.jpeg','2026-10-08','partial',{
+      studiedOn:null,assignmentId:'unknown-practice-2',questionId:'1'
+    })
+  ],'2026-10-08'));
+  assert.equal(later.practiceTargets[0].reason,'review-undated');
+});
