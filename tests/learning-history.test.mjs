@@ -164,5 +164,9 @@ test('new and replaced private histories are owner-only even under a permissive 
     await integrateLearningHistory(target,source,{write:true,repoRoot:publicRoot});
     assert.equal((await stat(target)).mode&0o777,0o600);
     assert.equal(JSON.parse(await readFile(target,'utf8')).observations.length,2);
+    await chmod(target,0o644); // legacy permissions on content-identical replay
+    const replay=await integrateLearningHistory(target,source,{write:true,repoRoot:publicRoot});
+    assert.equal(replay.changed,false);
+    assert.equal((await stat(target)).mode&0o777,0o600);
   }finally{await rm(dir,{recursive:true,force:true});}
 });
