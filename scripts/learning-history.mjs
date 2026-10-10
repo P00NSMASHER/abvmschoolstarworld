@@ -1,4 +1,4 @@
-import {mkdir,open,readFile,realpath,rename,unlink,writeFile} from 'node:fs/promises';
+import {chmod,mkdir,open,readFile,realpath,rename,unlink,writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 
@@ -211,6 +211,9 @@ export async function integrateLearningHistory(historyPath,batchPath,{write=fals
         ownsTmp=true;
         await rename(tmp,target);
         ownsTmp=false;
+      } else if(current && process.platform!=='win32'){
+        // Even a content-identical replay should repair legacy 0644 permissions.
+        await chmod(target,0o600);
       }
     }
   } finally {
