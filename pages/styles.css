@@ -2013,3 +2013,11 @@ img {
 .calendar-source-link a:hover{text-decoration:underline}
 .calendar-source-link a:focus-visible{outline:3px solid var(--navy,#102e58);outline-offset:3px}
 @media(max-width:420px){.calendar-source-link{font-size:.76rem}.calendar-source-link a{width:100%}}
+
+/* Direct source fallback is shown only while the governed teacher pack is stale.
+   It never changes the teacher-page check timestamp or source authority. */
+.teacher-live-source{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:fit-content;min-height:44px;max-width:100%;padding:8px 14px;margin:6px 0 6px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--navy);font-weight:750;font-size:.81rem;text-decoration:none;overflow-wrap:anywhere}
+.teacher-live-source:hover{text-decoration:underline}
+.teacher-live-source:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
+.today-screen>.teacher-live-source{grid-column:1/-1;grid-row:6;justify-self:start}
+@media(max-width:420px){.teacher-live-source{width:100%}}

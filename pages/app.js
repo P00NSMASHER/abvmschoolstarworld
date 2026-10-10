@@ -132,7 +132,13 @@ function freshnessState(){
 function freshness(){
   const state=freshnessState(),label=manualRefreshActive?"Checking published school info…":state.label;
   const action=manualRefreshActive?"Checking published school information":"Check published school information. "+state.label;
-  return '<button type="button" class="freshness '+state.state+(manualRefreshActive?' is-refreshing':'')+'" data-refresh-pack aria-label="'+esc(action)+'"'+(manualRefreshActive?' disabled':'')+'><span aria-hidden="true"></span><strong>'+esc(label)+'</strong><b aria-hidden="true">↻</b></button>';
+  const button='<button type="button" class="freshness '+state.state+(manualRefreshActive?' is-refreshing':'')+'" data-refresh-pack aria-label="'+esc(action)+'"'+(manualRefreshActive?' disabled':'')+'><span aria-hidden="true"></span><strong>'+esc(label)+'</strong><b aria-hidden="true">↻</b></button>';
+  // A blocked governed refresh must never strand families with only stale dates.
+  // This is a direct source link, not a new verification or an imported update.
+  const direct=(state.state==='attention'||state.state==='stale')&&navigator.onLine!==false
+    ?'<a class="teacher-live-source" href="https://sites.google.com/view/abvmgr2/home" target="_blank" rel="noopener noreferrer">View live teacher page <span aria-hidden="true">↗</span></a>'
+    :'';
+  return button+direct;
 }
 function kindClass(item){
   const k=(item?.kind||"").toLowerCase(), l=(item?.label||"").toLowerCase();
