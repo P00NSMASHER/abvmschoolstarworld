@@ -157,19 +157,27 @@ function differenceInDays(later,earlier){
   return Math.floor((Date.parse(later+'T12:00:00Z')-Date.parse(earlier+'T12:00:00Z'))/86400000);
 }
 function practiceTargets(skills,observations,asOf){
-  const latestVerified=new Map(),undatedErrors=new Set();
+  const latestVerified=new Map(),undatedErrors=new Map();
   for(const observation of observations){
     const key=skillKey(observation);
     if(observation.studiedOn)latestVerified.set(key,observation);
-    else if(observation.result==='incorrect'||observation.result==='partial')undatedErrors.add(key);
+    else if(observation.result==='incorrect'||observation.result==='partial'){
+      const previous=undatedErrors.get(key);
+      if(!previous||observation.addedOn>previous)undatedErrors.set(key,observation.addedOn);
+    }
   }
   return skills.map(skill=>{
     const key=skill.subject+'\u0000'+skill.skill;
     const latest=latestVerified.get(key);
+    // Later verified mastery can close an older undated-review concern.
+    // Same-day evidence or an undated photo uploaded after mastery stays held.
+    const unresolvedUndated=undatedErrors.has(key)&&!(
+      skill.status==='mastered'&&latest?.studiedOn>undatedErrors.get(key)
+    );
     let priority=0,reason='monitor';
     if(latest?.result==='incorrect'){priority=100;reason='recent-miss';}
     else if(latest?.result==='partial'){priority=90;reason='recent-partial';}
-    else if(undatedErrors.has(key)){priority=80;reason='review-undated';}
+    else if(unresolvedUndated){priority=80;reason='review-undated';}
     else if(skill.status==='learning'){priority=75;reason='learning';}
     else if(skill.status==='not-enough-evidence'){priority=60;reason='collect-more-evidence';}
     else if(skill.status==='improving'){priority=50;reason='reinforce';}
