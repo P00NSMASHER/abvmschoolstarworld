@@ -132,7 +132,13 @@ function freshnessState(){
 function freshness(){
   const state=freshnessState(),label=manualRefreshActive?"Checking published school info…":state.label;
   const action=manualRefreshActive?"Checking published school information":"Check published school information. "+state.label;
-  return '<button type="button" class="freshness '+state.state+(manualRefreshActive?' is-refreshing':'')+'" data-refresh-pack aria-label="'+esc(action)+'"'+(manualRefreshActive?' disabled':'')+'><span aria-hidden="true"></span><strong>'+esc(label)+'</strong><b aria-hidden="true">↻</b></button>';
+  const button='<button type="button" class="freshness '+state.state+(manualRefreshActive?' is-refreshing':'')+'" data-refresh-pack aria-label="'+esc(action)+'"'+(manualRefreshActive?' disabled':'')+'><span aria-hidden="true"></span><strong>'+esc(label)+'</strong><b aria-hidden="true">↻</b></button>';
+  // A blocked governed refresh must never strand families with only stale dates.
+  // This is a direct source link, not a new verification or an imported update.
+  const direct=(state.state==='attention'||state.state==='stale')&&navigator.onLine!==false
+    ?'<a class="teacher-live-source" href="https://sites.google.com/view/abvmgr2/home" target="_blank" rel="noopener noreferrer">View live teacher page <span aria-hidden="true">↗</span></a>'
+    :'';
+  return button+direct;
 }
 function kindClass(item){
   const k=(item?.kind||"").toLowerCase(), l=(item?.label||"").toLowerCase();
@@ -577,7 +583,13 @@ function render({preserveScroll=false}={}){
 }
 function updateFreshnessUI(){
   const node=stack().querySelector(".freshness");
-  if(node)node.outerHTML=freshness();
+  if(!node)return;
+  // The optional source link is a sibling of the button. Replace the pair
+  // atomically so retry/offline/stale-to-current updates cannot accumulate
+  // duplicate links or leave an obsolete link once checks are current.
+  const prior=node.nextElementSibling;
+  if(prior?.matches(".teacher-live-source"))prior.remove();
+  node.outerHTML=freshness();
 }
 function bindScreen(){
   if(screenEventsBound)return;

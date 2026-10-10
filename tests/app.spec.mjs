@@ -390,6 +390,12 @@ test("bottom navigation is a four primary destinations",async({page})=>{
 });
 
 
+// The fixtures must reach the network layer, not an earlier app service-worker
+// cache. Limit this to source-provenance tests; dedicated PWA tests still run
+// with service workers enabled and exercise offline fallback behavior.
+test.describe("teacher-source verification with deterministic network fixtures",()=>{
+  test.use({serviceWorkers:"block"});
+
 test("newly imported Yahoo notices never make older teacher checks appear verified",async({page})=>{
   await page.clock.setFixedTime(new Date("2026-10-09T16:00:00.000Z"));
   const data=structuredClone(JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8")));
@@ -401,11 +407,99 @@ test("newly imported Yahoo notices never make older teacher checks appear verifi
   data.sourceCapturedAt=data.sourceLastSeenAt;
   data.pack.sourceCapturedAt=data.sourceLastSeenAt;
   data.pack.generatedAt=data.sourceLastSeenAt;
-  await page.route("**/data/study-pack*.json*",route=>route.fulfill({json:data}));
-  await page.goto("/#today");
+  // beforeEach already loaded /#today. Navigating to the same hash is
+  // a same-document navigation and will NOT re-fetch this mocked pack.
+  // Reload to exercise the actual freshness logic against the fixture.
+  let fixtureReads=0;
+  await page.route("**/data/study-pack*.json*",route=>{
+    fixtureReads++;
+    return route.fulfill({json:data});
+  });
+  await page.reload();
+  expect(fixtureReads).toBeGreaterThan(0);
   const freshness=page.locator(".freshness");
   await expect(freshness).toBeVisible();
   await expect(freshness).toContainText("Teacher pages older");
   await expect(freshness).toContainText("Oct 8");
   await expect(freshness).not.toContainText("Oct 9");
+});
+
+test("stale teacher pages offer an official live source link without rewriting check dates",async({page})=>{
+  await page.clock.setFixedTime(new Date("2026-10-10T00:00:00.000Z"));
+  const data=structuredClone(JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8")));
+  data.sourceLastCheckedAt="2026-10-08T15:00:17.769Z";
+  data.pack.sourceCheckedAt=data.sourceLastCheckedAt;
+  data.sourceLastSeenAt="2026-10-09T22:00:00.000Z";
+  // beforeEach already loaded /#today. Navigating to the same hash is
+  // a same-document navigation and will NOT re-fetch this mocked pack.
+  // Reload to exercise the actual freshness logic against the fixture.
+  let fixtureReads=0;
+  await page.route("**/data/study-pack*.json*",route=>{
+    fixtureReads++;
+    return route.fulfill({json:data});
+  });
+  await page.reload();
+  expect(fixtureReads).toBeGreaterThan(0);
+  const button=page.locator(".today-screen .freshness");
+  await expect(button).toContainText("Teacher pages need refresh");
+  const source=page.locator(".today-screen a.teacher-live-source");
+  await expect(source).toHaveCount(1);
+  await expect(source).toHaveAttribute("href","https://sites.google.com/view/abvmgr2/home");
+  await expect(source).toHaveAttribute("target","_blank");
+  await expect(source).toHaveAttribute("rel","noopener noreferrer");
+  const box=await source.boundingBox();
+  expect(box).not.toBeNull();
+  expect(box.height).toBeGreaterThanOrEqual(44);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1)).toBe(false);
+  // A more recent non-teacher notice never makes the old teacher-page time current.
+  await expect(button).toContainText("Oct 8");
+  await expect(button).not.toContainText("Oct 9");
+});
+test("current verified teacher data does not add an unnecessary fallback link",async({page})=>{
+  await page.clock.setFixedTime(new Date("2026-10-09T16:00:00.000Z"));
+  const data=structuredClone(JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8")));
+  data.sourceLastCheckedAt="2026-10-09T14:00:00.000Z";
+  data.pack.sourceCheckedAt=data.sourceLastCheckedAt;
+  // beforeEach already loaded /#today. Navigating to the same hash is
+  // a same-document navigation and will NOT re-fetch this mocked pack.
+  // Reload to exercise the actual freshness logic against the fixture.
+  let fixtureReads=0;
+  await page.route("**/data/study-pack*.json*",route=>{
+    fixtureReads++;
+    return route.fulfill({json:data});
+  });
+  await page.reload();
+  expect(fixtureReads).toBeGreaterThan(0);
+  await expect(page.locator(".freshness")).toContainText("Teacher pages verified");
+  await expect(page.locator(".teacher-live-source")).toHaveCount(0);
+});
+
+test("source-link state remains unique through repeated stale checks and disappears when teacher verification recovers",async({page})=>{
+  await page.clock.setFixedTime(new Date("2026-10-09T16:00:00.000Z"));
+  const stale=structuredClone(JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8")));
+  stale.sourceLastCheckedAt="2026-10-08T15:00:17.769Z";
+  stale.pack.sourceCheckedAt=stale.sourceLastCheckedAt;
+  const current=structuredClone(stale);
+  current.sourceLastCheckedAt="2026-10-09T14:00:00.000Z";
+  current.pack.sourceCheckedAt=current.sourceLastCheckedAt;
+  let served=0,active=stale;
+  await page.route("**/data/study-pack*.json*",route=>{
+    served++;
+    return route.fulfill({json:active});
+  });
+  // beforeEach already rendered /#today, so force a real new request.
+  await page.reload();
+  await expect(page.locator(".freshness")).toContainText("Teacher pages older");
+  const link=page.locator(".teacher-live-source");
+  await expect(link).toHaveCount(1);
+  // The same content and timestamp can be checked again without cloning links.
+  await page.locator(".freshness").click();
+  await expect(page.locator(".freshness")).toContainText("Teacher pages older");
+  await expect(link).toHaveCount(1);
+  active=current;
+  await page.locator(".freshness").click();
+  await expect(page.locator(".freshness")).toContainText("Teacher pages verified");
+  await expect(link).toHaveCount(0);
+  expect(served).toBeGreaterThanOrEqual(3);
+});
 });
