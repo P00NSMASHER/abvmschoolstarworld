@@ -827,3 +827,81 @@
   }
   .calendar-screen .calendar-day-card,.week-screen .day-detail{border-width:2px}
 }
+
+
+
+/* ABVM Calendar v2 · high-polish context and accessible date wayfinding.
+   Keep Month/Week controllers authoritative; use color AND a text label. */
+.calendar-screen .calendar-month-nav,.week-screen .week-nav{
+  margin-bottom:12px;
+}
+.calendar-screen .calendar-month-nav button,.week-screen .week-nav button{
+  background:linear-gradient(158deg,#ffffff 4%,#f0f7ff 74%,#dfedfc);
+  border-color:#cadff2;
+  box-shadow:inset 0 1px 0 #fff,0 5px 10px #102e581b,0 1px 2px #102e5808;
+}
+.calendar-screen .calendar-month-nav button:active,.week-screen .week-nav button:active{
+  background:linear-gradient(160deg,#e4f3ff,#fff);
+}
+.calendar-screen .calendar-today-jump{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:44px;margin:-1px 0 13px;padding:9px 15px;
+  border:1px solid #d4bc74;border-radius:999px;
+  color:#17385e;font-size:.84rem;line-height:1.2;font-weight:780;
+  background:linear-gradient(155deg,#fffaf0,#ffebb1);
+  box-shadow:inset 0 1px 0 #fff,0 3px 11px #977b3c1c;
+}
+.calendar-screen .calendar-today-jump span:first-child{font-size:1.2rem;line-height:1;color:#967019}
+.calendar-screen .calendar-today-jump span:last-child{font-size:1rem}
+.calendar-screen .calendar-card{
+  background:linear-gradient(150deg,#fff,#fcfeff 55%,#f3f9ff);
+  box-shadow:0 16px 33px #0b326018,0 2px 8px #0a32600a,inset 0 1px 0 white;
+}
+.calendar-screen .calendar-grid button.is-today:not(.active){
+  border:2px solid #d6a730;
+  color:#123863;
+  background:linear-gradient(155deg,#fffdf7,#fff1c5);
+  box-shadow:inset 0 1px 0 #fff,0 2px 9px #b78b2820;
+}
+.calendar-screen .calendar-grid button.is-today.active{
+  border:2px solid #f6d56c;
+  box-shadow:0 0 0 2px #e9b83c66,inset 0 1px 0 #ffffff45,0 3px 9px #102e5829;
+}
+.calendar-screen .calendar-day-card{
+  border-color:#bfd9f0;
+  background:linear-gradient(145deg,#f1f8ff 5%,#e2f1ff 50%,#daeafa);
+  box-shadow:0 12px 24px #12375a12,inset 0 1px 0 #fff;
+}
+.calendar-screen .calendar-day-heading{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  padding-bottom:12px;border-bottom:1px solid #c5dcef;
+}
+.calendar-screen .calendar-day-heading>div{min-width:0;flex:1}
+.calendar-screen .calendar-day-heading p{
+  font-size:.69rem;font-weight:790;letter-spacing:.08em;color:#566b85;
+}
+.calendar-screen .calendar-day-heading h2{
+  font-size:clamp(1.35rem,5.2vw,1.8rem);color:#102f57;line-height:1.17;
+}
+.calendar-screen .calendar-day-status{
+  display:inline-flex;align-items:center;justify-content:center;
+  max-width:100%;min-height:30px;padding:5px 10px;
+  border:1px solid #d5e4f0;border-radius:999px;
+  background:#fff;color:#3e5874;font-size:.72rem;font-weight:760;
+  line-height:1.25;overflow-wrap:anywhere;
+}
+.calendar-screen .calendar-day-card .calendar-empty{padding:10px 0 0;line-height:1.5}
+.calendar-screen .calendar-grid button:focus-visible,
+.calendar-screen .calendar-today-jump:focus-visible,
+.week-screen .day-picker button:focus-visible{
+  outline:3px solid #b6891e;outline-offset:2px;
+}
+@media(max-width:390px){
+  .calendar-screen .calendar-day-card{padding:14px}
+  .calendar-screen .calendar-day-status{font-size:.68rem}
+  .calendar-screen .calendar-title-row>span{font-size:.76rem}
+}
+@media(prefers-reduced-transparency:reduce){
+  .calendar-screen .calendar-card,.calendar-screen .calendar-day-card,
+  .calendar-screen .calendar-today-jump{backdrop-filter:none}
+}

@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'pages/design-polish.css'
+      - 'pages/app.js'
       - 'pages/index.html'
       - 'pages/sw.js'
       - 'tests/calendar-premium.spec.mjs'

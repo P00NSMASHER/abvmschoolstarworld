@@ -164,3 +164,49 @@ test("Calendar navigation, school closure and enlarged text remain functional", 
   await page.locator(".calendar-segments [data-route=calendar]").click();
   await expect(page.locator(".calendar-screen")).toBeVisible();
 });
+
+
+// Apple Calendar-style continuity is essential to understanding the school
+// schedule: switching Month ⇄ Week must not silently discard the selected day.
+test("Month/Week view switch keeps the selected school date and Today is one tap away",async({page})=>{
+  await page.clock.setFixedTime(date);
+  await page.setViewportSize({width:390,height:852});
+  await page.goto("/#calendar");
+  const selected=page.locator(".calendar-grid button[data-cal-day][aria-pressed=true]");
+  await expect(selected).toContainText("8");
+  await expect(page.locator(".calendar-grid button.is-today")).toHaveAttribute("aria-current","date");
+
+  await page.getByRole("button",{name:"Next month"}).click();
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("November 2026");
+  await page.getByRole("button",{name:"Jump to today in the school calendar"}).click();
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("October 2026");
+  await expect(page.locator(".calendar-day-card h2")).toHaveText("October 8");
+
+  await page.locator(".calendar-grid button[data-cal-day]").filter({hasText:/^12$/}).click();
+  await expect(page.locator(".calendar-day-card")).toContainText("Columbus Day");
+  await expect(page.locator(".calendar-day-status")).toContainText("school event");
+  await page.locator(".calendar-segments [data-route=week]").click();
+  await expect(page.locator(".week-nav strong")).toContainText("Oct 12 – 16");
+  await expect(page.locator(".day-picker button[aria-pressed=true]")).toContainText("12");
+  await page.locator(".day-picker button").last().click();
+  await expect(page.locator(".day-detail")).toContainText("Spelling");
+  await page.locator(".calendar-segments [data-route=calendar]").click();
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("October 2026");
+  await expect(page.locator(".calendar-day-card h2")).toHaveText("October 16");
+  await expect(page.locator(".calendar-grid button[aria-pressed=true] strong")).toHaveText("16");
+  await page.getByRole("button",{name:"Jump to today in the school calendar"}).click();
+  await expect(page.locator(".calendar-day-card h2")).toHaveText("October 8");
+  await expect(page.locator(".calendar-today-jump")).toHaveCount(0);
+});
+
+test("Weekend month dates open the next school Monday in Week view",async({page})=>{
+  await page.clock.setFixedTime(date);
+  await page.setViewportSize({width:375,height:852});
+  await page.goto("/#calendar");
+  await page.locator(".calendar-grid button[data-cal-day]").filter({hasText:/^11$/}).click();
+  await expect(page.locator(".calendar-day-card h2")).toHaveText("October 11");
+  await page.locator(".calendar-segments [data-route=week]").click();
+  await expect(page.locator(".week-nav strong")).toContainText("Oct 12 – 16");
+  await expect(page.locator(".day-picker button[aria-pressed=true]")).toContainText("12");
+  await expect(page.locator(".week-screen")).toBeVisible();
+});
