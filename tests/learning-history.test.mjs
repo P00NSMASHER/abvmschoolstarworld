@@ -246,3 +246,50 @@ test('simultaneous private intakes either serialize or explicitly fail for safe 
     assert.deepEqual(new Set(complete.observations.map(item=>item.id)),new Set(['first','second']));
   }finally{await rm(dir,{recursive:true,force:true});}
 });
+
+test('uploading an old undated miss does not become a dated recent miss or erase verified mastery',()=>{
+  const completed=[
+    observation('master-1','p1','2026-10-01','correct',{assignmentId:'math-1',questionId:'1'}),
+    observation('master-2','p2','2026-10-03','correct',{assignmentId:'math-2',questionId:'1'}),
+    observation('master-3','p3','2026-10-05','correct',{assignmentId:'math-3',questionId:'1'})
+  ];
+  const original=mergeLearningHistory(null,batch(completed,'2026-10-05'));
+  assert.equal(original.skills[0].status,'mastered');
+  const oldUndated=observation('older-photo','old-work.jpeg','2026-10-09','incorrect',{
+    studiedOn:null,assignmentId:'old-worksheet',questionId:'3'
+  });
+  const result=mergeLearningHistory(original,batch([oldUndated],'2026-10-10'));
+  assert.equal(result.skills[0].status,'mastered');
+  assert.equal(result.skills[0].scoredCount,4);
+  assert.equal(result.practiceTargets[0].reason,'review-undated');
+  assert.notEqual(result.practiceTargets[0].reason,'recent-miss');
+});
+
+test('new undated uploads do not create an improving timeline or hide a verified latest miss',()=>{
+  const reviewed=[
+    observation('dated-1','dated-1.jpeg','2026-10-01','correct'),
+    observation('dated-2','dated-2.jpeg','2026-10-03','incorrect'),
+    observation('photo-3','third.jpeg','2026-10-09','correct',{studiedOn:null}),
+    observation('photo-4','fourth.jpeg','2026-10-10','correct',{studiedOn:null})
+  ];
+  const result=mergeLearningHistory(null,batch(reviewed,'2026-10-10'));
+  assert.equal(result.skills[0].status,'learning');
+  assert.equal(result.skills[0].trend,'insufficient-data');
+  assert.equal(result.practiceTargets[0].reason,'recent-miss');
+  assert.equal(result.skills[0].scoredCount,4);
+});
+
+test('mastered retention age uses last verified study date rather than upload time',()=>{
+  const completed=[
+    observation('dated-a','a.jpeg','2026-10-01','correct'),
+    observation('dated-b','b.jpeg','2026-10-03','correct'),
+    observation('dated-c','c.jpeg','2026-10-05','correct')
+  ];
+  const reviewed=[...completed,observation('undated-later','archival.jpeg','2026-10-24','correct',{
+    studiedOn:null,assignmentId:'old-math-practice',questionId:'6'
+  })];
+  const result=mergeLearningHistory(null,batch(reviewed,'2026-10-25'));
+  assert.equal(result.skills[0].status,'mastered');
+  assert.equal(result.practiceTargets[0].reason,'retention-check');
+  assert.equal(result.practiceTargets[0].priority,20);
+});
