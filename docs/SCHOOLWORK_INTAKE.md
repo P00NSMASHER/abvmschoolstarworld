@@ -116,7 +116,10 @@ Compare the newly mapped skills with all prior reviewed observations. Look for:
 
 Do not turn a single worksheet into a trend. Separate verified `studiedOn`
 dates from intake-only `addedOn` dates; uploading old work on multiple days
-must never establish a new assessment date or mastery. Supply stable private
+must never establish a new assessment date or mastery. A verified `studiedOn`
+date cannot fall after the `addedOn` intake date, and no observation can have
+`addedOn` later than its batch's `asOf`. Distinct photographs of the same
+identified assignment do not count as distinct assignments toward mastery. Supply stable private
 `assignmentId` and `questionId` identifiers where the reviewed page supports
 them, even when different photographs show the same question.
 
