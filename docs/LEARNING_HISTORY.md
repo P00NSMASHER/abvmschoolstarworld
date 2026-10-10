@@ -120,7 +120,8 @@ Both paths must resolve outside this public repository, including through
 symbolic links and existing parent directories. The processor resolves physical
 paths before reading/writing private files, creates new history directories
 with owner-only permissions (0700), and writes new/replaced history JSON with
-owner-only permissions (0600) on POSIX systems. It cannot repair permissions
+owner-only permissions (0600) on POSIX systems. Explicit `--write` replays
+also tighten the mode of an unchanged legacy history file. It cannot repair permissions
 on pre-existing directories; keep those private too. The processor is
 idempotent and fails closed if the same observation ID is reused for different
 evidence.
