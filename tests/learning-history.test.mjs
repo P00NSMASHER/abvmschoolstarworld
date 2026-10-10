@@ -71,3 +71,50 @@ test('file integration writes only to an external private path',async()=>{
     assert.equal(saved.practiceTargets[0].reason,'recent-miss');
   } finally { await rm(dir,{recursive:true,force:true}); }
 });
+
+test('a rephotographed assignment item cannot count as a new assessment',()=>{
+  const first=mergeLearningHistory(null,batch([
+    observation('o1','original.jpeg','2026-10-01','correct',{assignmentId:'Math Page 42',questionId:'4'})
+  ],'2026-10-01'));
+  const rephoto=batch([
+    observation('o2','second-photo.jpeg','2026-10-05','correct',{assignmentId:'  math page 42 ',questionId:'4'})
+  ],'2026-10-05');
+  assert.throws(()=>mergeLearningHistory(first,rephoto),/Repeated assessment item.*o2 duplicates o1/);
+  assert.deepEqual(mergeLearningHistory(first,batch([
+    observation('o2','second-photo.jpeg','2026-10-05','correct',{assignmentId:'math page 42',questionId:'5'})
+  ],'2026-10-05')).skills[0].scoredCount,2);
+});
+
+test('unknown worksheet dates cannot create mastery or a chronological improvement trend',()=>{
+  const undated=[1,2,3,4].map((n)=>observation('u'+n,'source-'+n+'.jpeg','2026-10-0'+n,n===1?'incorrect':'correct',{
+    studiedOn:null,addedOn:'2026-10-0'+n,assignmentId:'worksheet-'+n,questionId:'1'
+  }));
+  const result=mergeLearningHistory(null,batch(undated,'2026-10-08'));
+  assert.equal(result.skills[0].scoredCount,4);
+  assert.equal(result.skills[0].status,'learning');
+  assert.equal(result.skills[0].trend,'insufficient-data');
+  assert.equal(result.skills[0].confidence>0,true);
+  assert.equal(result.practiceTargets[0].reason,'learning');
+});
+
+test('verified assignment dates, not merely intake dates, support chronological improvement',()=>{
+  const items=[
+    observation('d1','p1','2026-10-01','incorrect'),
+    observation('d2','p2','2026-10-02','incorrect'),
+    observation('d3','p3','2026-10-03','correct'),
+    observation('d4','p4','2026-10-05','correct')
+  ];
+  const result=mergeLearningHistory(null,batch(items,'2026-10-09'));
+  assert.equal(result.skills[0].trend,'improving');
+  assert.equal(result.skills[0].status,'improving');
+});
+
+test('replaying older approved evidence cannot rewind the private history date',()=>{
+  const first=mergeLearningHistory(null,batch([
+    observation('o1','p1','2026-10-01','correct')
+  ],'2026-10-09'));
+  const replay=mergeLearningHistory(first,batch([
+    observation('o1','p1','2026-10-01','correct')
+  ],'2026-10-01'));
+  assert.deepEqual(replay,first);
+});
