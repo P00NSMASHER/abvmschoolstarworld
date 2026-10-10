@@ -108,17 +108,23 @@ function skillSummary(observations,asOf){
   for(const group of groups.values()){
     group.sort((a,b)=>eventDay(a).localeCompare(eventDay(b))||a.id.localeCompare(b.id));
     const scored=group.filter(item=>score(item.result)!==null);
-    const recent=scored.slice(-5);
-    const weights=recent.map((_,index)=>index+1);
-    const weighted=recent.reduce((sum,item,index)=>sum+score(item.result)*weights[index],0);
-    // Without verified dates, upload order has no educational time meaning.
-    // Give all scored work equal weight rather than boosting re-uploaded sheets.
+    // Each verified assessment day is one time point. Item IDs and their
+    // arbitrary ordering cannot change time-weighted confidence or trends.
+    const datedScored=scored.filter(item=>item.studiedOn);
+    const byDay=new Map();
+    for(const item of datedScored){
+      const items=byDay.get(item.studiedOn)||[];
+      items.push(score(item.result));byDay.set(item.studiedOn,items);
+    }
+    const dayMeans=[...byDay].sort(([a],[b])=>a.localeCompare(b))
+      .map(([day,values])=>({day,mean:average(values)}));
+    const recentDays=dayMeans.slice(-5);
+    const weights=recentDays.map((_,index)=>index+1);
+    // Undated work retains evidence weight but cannot gain recency weight.
     const confidence=scored.some(item=>!item.studiedOn)
       ?round(average(scored.map(item=>score(item.result))))
-      :weights.length?round(weighted/weights.reduce((a,b)=>a+b,0)):0;
-    // Upload order cannot determine when undated worksheets were completed.
-    // Only verified study dates participate in chronological mastery and trends.
-    const datedScored=scored.filter(item=>item.studiedOn);
+      :weights.length?round(recentDays.reduce((sum,item,index)=>sum+item.mean*weights[index],0)
+        /weights.reduce((a,b)=>a+b,0)):0;
     const lastThree=datedScored.slice(-3);
     const latestDatedDay=datedScored.at(-1)?.studiedOn;
     // ID order must never hide a miss on the latest verified assessment day.
@@ -130,13 +136,12 @@ function skillSummary(observations,asOf){
     let status='not-enough-evidence';
     if(scored.length>=2)status='learning';
     // Intake dates are not verified assessment dates; they cannot establish progress.
-    const verifiedDates=new Set(datedScored.map(item=>item.studiedOn));
-    if(datedScored.length>=3&&verifiedDates.size>=2&&average(datedScored.slice(-5).map(item=>score(item.result)))>=0.5)status='improving';
+    if(datedScored.length>=3&&dayMeans.length>=2&&average(recentDays.map(item=>item.mean))>=0.5)status='improving';
     if(mastery)status='mastered';
     let trend='insufficient-data';
-    if(datedScored.length>=4&&new Set(datedScored.slice(-4).map(item=>item.studiedOn)).size>=2){
-      const previous=average(datedScored.slice(-4,-2).map(item=>score(item.result)));
-      const latest=average(datedScored.slice(-2).map(item=>score(item.result)));
+    if(dayMeans.length>=4){
+      const previous=average(dayMeans.slice(-4,-2).map(item=>item.mean));
+      const latest=average(dayMeans.slice(-2).map(item=>item.mean));
       trend=latest-previous>0.2?'improving':previous-latest>0.2?'slipping':'steady';
     }
     const errors={};
