@@ -33,7 +33,19 @@ The private operational states are:
 
 "Mastered" is deliberately conservative: the processor requires three most-recent
 scored observations to be independently correct, spanning at least two source photos
-and two observed dates. It is a household study-planning flag, not a diagnosis,
+and two independently verified `studiedOn` dates. An `addedOn` upload/intake date
+is **not** evidence of when a worksheet was completed. Without verified studied
+dates, correctness observations still support targeted practice, but the
+processor cannot assert chronological improvement, slipping, or mastery.
+
+When a worksheet is photographed again, reuse the original observation IDs.
+Use stable `assignmentId` and `questionId` in reviewed private observations to
+identify an item across source photos; the processor rejects the same assignment
+item under a new observation ID, including harmless case/spacing variations.
+When assignment identity cannot be established, keep the evidence provisional:
+the processor cannot infer that two differently named photos are distinct items.
+
+"Mastered" is a household study-planning flag, not a diagnosis,
 standardized score, school grade, or psychometric claim.
 
 ## Error taxonomy
