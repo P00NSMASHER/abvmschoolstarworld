@@ -223,8 +223,9 @@ export async function integrateLearningHistory(historyPath,batchPath,{write=fals
     }
     return {mode:write?'write':'dry-run',changed,observations:next.observations.length,skills:next.skills.length,practiceTargets:next.practiceTargets.length,updatedOn:next.updatedOn};
   }finally{
-    if(lock){await lock.close();await unlink(target+'.lock').catch(()=>{});}
+    // Clean a failed temporary replacement before another writer takes the lock.
     if(ownsTmp&&tmp)await unlink(tmp).catch(()=>{});
+    if(lock){await lock.close();await unlink(target+'.lock').catch(()=>{});}
   }
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
