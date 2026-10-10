@@ -189,7 +189,9 @@ test("Month/Week view switch keeps the selected school date and Today is one tap
   await expect(page.locator(".week-nav strong")).toContainText("Oct 12 – 16");
   await expect(page.locator(".day-picker button[aria-pressed=true]")).toContainText("12");
   await page.locator(".day-picker button").last().click();
-  await expect(page.locator(".day-detail")).toContainText("Spelling");
+  // A browsed future Friday may have no verified test on that date; the
+  // calendar must preserve the selected day, never invent an assessment.
+  await expect(page.locator(".day-detail")).toContainText("Friday, October 16");
   await page.locator(".calendar-segments [data-route=calendar]").click();
   await expect(page.locator(".calendar-month-nav strong")).toHaveText("October 2026");
   await expect(page.locator(".calendar-day-card h2")).toHaveText("October 16");
