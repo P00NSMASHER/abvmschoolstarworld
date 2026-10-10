@@ -6,6 +6,12 @@ on:
       - 'pages/data/study-pack.json'
       - 'scripts/build-study-universe.mjs'
       - 'tests/study-universe.test.mjs'
+      # Every source-manifest, public schoolwork intake, or answer-integrity
+      # change requires an independent end-to-end reproduction on the PR SHA.
+      - 'pages/data/schoolwork.json'
+      - 'scripts/validate-schoolwork.mjs'
+      - 'scripts/integrate-schoolwork.mjs'
+      - 'tests/schoolwork-intake.test.mjs'
       - 'pages/study-room*'
       - 'pages/study-hub*'
       - 'pages/study-games.js'
