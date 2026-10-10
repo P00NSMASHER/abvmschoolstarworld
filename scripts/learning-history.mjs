@@ -1,4 +1,4 @@
-import {mkdir,open,readFile,rename,unlink,writeFile} from 'node:fs/promises';
+import {mkdir,open,readFile,realpath,rename,unlink,writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 
@@ -29,6 +29,27 @@ function isInsideRepo(candidate,repoRoot=root){
 export function assertPrivatePath(candidate,label='Private learning file',repoRoot=root){
   if(isInsideRepo(candidate,repoRoot))throw new Error(label+' must stay outside the public ABVM repository.');
   return path.resolve(candidate);
+}
+// Resolve existing paths and ancestor symlinks before any private data read/write.
+// Newly created target files still resolve through their physical parent directory.
+async function physicalPath(candidate){
+  let current=path.resolve(candidate),missing=[];
+  while(true){
+    try{return path.resolve(await realpath(current),...missing.reverse());}
+    catch(error){
+      if(error.code!=='ENOENT')throw error;
+      const parent=path.dirname(current);
+      if(parent===current)throw error;
+      missing.push(path.basename(current));
+      current=parent;
+    }
+  }
+}
+export async function assertPrivateRealPath(candidate,label='Private learning file',repoRoot=root){
+  const lexical=assertPrivatePath(candidate,label,repoRoot);
+  const [physical,publicRoot]=await Promise.all([physicalPath(lexical),physicalPath(repoRoot)]);
+  if(isInsideRepo(physical,publicRoot))throw new Error(label+' must stay outside the public ABVM repository.');
+  return physical;
 }
 export function validateObservation(observation,label='observation'){
   allowedKeys(observation,OBSERVATION_KEYS,label);
@@ -166,8 +187,8 @@ export function mergeLearningHistory(current,batch){
   return next;
 }
 export async function integrateLearningHistory(historyPath,batchPath,{write=false,repoRoot=root}={}){
-  const target=assertPrivatePath(historyPath,'Learning history',repoRoot);
-  const batchFile=assertPrivatePath(batchPath,'Reviewed observation batch',repoRoot);
+  const target=await assertPrivateRealPath(historyPath,'Learning history',repoRoot);
+  const batchFile=await assertPrivateRealPath(batchPath,'Reviewed observation batch',repoRoot);
   const batch=JSON.parse(await readFile(batchFile,'utf8'));
   validateObservationBatch(batch);
   let current=null;
@@ -178,15 +199,15 @@ export async function integrateLearningHistory(historyPath,batchPath,{write=fals
   let lock,tmp,ownsTmp=false;
   try{
     if(write){
-      await mkdir(path.dirname(target),{recursive:true});
-      lock=await open(target+'.lock','wx');
+      await mkdir(path.dirname(target),{recursive:true,mode:0o700});
+      lock=await open(target+'.lock','wx',0o600);
       if(current){
         const latest=JSON.parse(await readFile(target,'utf8'));
         if(JSON.stringify(latest)!==before)throw new Error('Learning history changed during intake; retry against the latest private file.');
       }
       if(changed){
         tmp=target+'.tmp-'+process.pid;
-        await writeFile(tmp,JSON.stringify(next,null,2)+'\n',{flag:'wx'});
+        await writeFile(tmp,JSON.stringify(next,null,2)+'\n',{flag:'wx',mode:0o600});
         ownsTmp=true;
         await rename(tmp,target);
         ownsTmp=false;
