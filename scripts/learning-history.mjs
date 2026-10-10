@@ -111,20 +111,23 @@ function skillSummary(observations,asOf){
     const weights=recent.map((_,index)=>index+1);
     const weighted=recent.reduce((sum,item,index)=>sum+score(item.result)*weights[index],0);
     const confidence=weights.length?round(weighted/weights.reduce((a,b)=>a+b,0)):0;
-    const lastThree=scored.slice(-3);
+    // Upload order cannot determine when undated worksheets were completed.
+    // Only verified study dates participate in chronological mastery and trends.
+    const datedScored=scored.filter(item=>item.studiedOn);
+    const lastThree=datedScored.slice(-3);
     const mastery=lastThree.length===3&&lastThree.every(item=>item.result==='correct'&&(item.independence||'unknown')==='independent'&&item.studiedOn)
       &&new Set(lastThree.map(workKey)).size>=2
       &&new Set(lastThree.map(item=>item.studiedOn)).size>=2;
     let status='not-enough-evidence';
     if(scored.length>=2)status='learning';
     // Intake dates are not verified assessment dates; they cannot establish progress.
-    const verifiedDates=new Set(scored.filter(item=>item.studiedOn).map(item=>item.studiedOn));
-    if(scored.length>=3&&verifiedDates.size>=2&&average(scored.slice(-5).map(item=>score(item.result)))>=0.5)status='improving';
+    const verifiedDates=new Set(datedScored.map(item=>item.studiedOn));
+    if(datedScored.length>=3&&verifiedDates.size>=2&&average(datedScored.slice(-5).map(item=>score(item.result)))>=0.5)status='improving';
     if(mastery)status='mastered';
     let trend='insufficient-data';
-    if(scored.length>=4&&scored.slice(-4).every(item=>item.studiedOn)&&new Set(scored.slice(-4).map(item=>item.studiedOn)).size>=2){
-      const previous=average(scored.slice(-4,-2).map(item=>score(item.result)));
-      const latest=average(scored.slice(-2).map(item=>score(item.result)));
+    if(datedScored.length>=4&&new Set(datedScored.slice(-4).map(item=>item.studiedOn)).size>=2){
+      const previous=average(datedScored.slice(-4,-2).map(item=>score(item.result)));
+      const latest=average(datedScored.slice(-2).map(item=>score(item.result)));
       trend=latest-previous>0.2?'improving':previous-latest>0.2?'slipping':'steady';
     }
     const errors={};
@@ -150,17 +153,23 @@ function differenceInDays(later,earlier){
   return Math.floor((Date.parse(later+'T12:00:00Z')-Date.parse(earlier+'T12:00:00Z'))/86400000);
 }
 function practiceTargets(skills,observations,asOf){
-  const latestBySkill=new Map();
-  for(const observation of observations)latestBySkill.set(skillKey(observation),observation);
+  const latestVerified=new Map(),undatedErrors=new Set();
+  for(const observation of observations){
+    const key=skillKey(observation);
+    if(observation.studiedOn)latestVerified.set(key,observation);
+    else if(observation.result==='incorrect'||observation.result==='partial')undatedErrors.add(key);
+  }
   return skills.map(skill=>{
-    const latest=latestBySkill.get(skill.subject+'\u0000'+skill.skill);
+    const key=skill.subject+'\u0000'+skill.skill;
+    const latest=latestVerified.get(key);
     let priority=0,reason='monitor';
     if(latest?.result==='incorrect'){priority=100;reason='recent-miss';}
     else if(latest?.result==='partial'){priority=90;reason='recent-partial';}
+    else if(undatedErrors.has(key)){priority=80;reason='review-undated';}
     else if(skill.status==='learning'){priority=75;reason='learning';}
     else if(skill.status==='not-enough-evidence'){priority=60;reason='collect-more-evidence';}
     else if(skill.status==='improving'){priority=50;reason='reinforce';}
-    else if(skill.status==='mastered'&&differenceInDays(asOf,skill.latestObservedOn)>=14){priority=20;reason='retention-check';}
+    else if(skill.status==='mastered'&&latest?.studiedOn&&differenceInDays(asOf,latest.studiedOn)>=14){priority=20;reason='retention-check';}
     return {...skill,priority,reason};
   }).filter(item=>item.priority>0).sort((a,b)=>b.priority-a.priority||a.subject.localeCompare(b.subject)||a.skill.localeCompare(b.skill))
     .slice(0,8).map(({subject,skill,priority,reason,status,confidence,trend})=>({subject,skill,priority,reason,status,confidence,trend}));
