@@ -401,8 +401,16 @@ test("newly imported Yahoo notices never make older teacher checks appear verifi
   data.sourceCapturedAt=data.sourceLastSeenAt;
   data.pack.sourceCapturedAt=data.sourceLastSeenAt;
   data.pack.generatedAt=data.sourceLastSeenAt;
-  await page.route("**/data/study-pack*.json*",route=>route.fulfill({json:data}));
-  await page.goto("/#today");
+  // beforeEach already loaded /#today. Navigating to the same hash is
+  // a same-document navigation and will NOT re-fetch this mocked pack.
+  // Reload to exercise the actual freshness logic against the fixture.
+  let fixtureReads=0;
+  await page.route("**/data/study-pack*.json*",route=>{
+    fixtureReads++;
+    return route.fulfill({json:data});
+  });
+  await page.reload();
+  expect(fixtureReads).toBeGreaterThan(0);
   const freshness=page.locator(".freshness");
   await expect(freshness).toBeVisible();
   await expect(freshness).toContainText("Teacher pages older");
@@ -416,8 +424,16 @@ test("stale teacher pages offer an official live source link without rewriting c
   data.sourceLastCheckedAt="2026-10-08T15:00:17.769Z";
   data.pack.sourceCheckedAt=data.sourceLastCheckedAt;
   data.sourceLastSeenAt="2026-10-09T22:00:00.000Z";
-  await page.route("**/data/study-pack*.json*",route=>route.fulfill({json:data}));
-  await page.goto("/#today");
+  // beforeEach already loaded /#today. Navigating to the same hash is
+  // a same-document navigation and will NOT re-fetch this mocked pack.
+  // Reload to exercise the actual freshness logic against the fixture.
+  let fixtureReads=0;
+  await page.route("**/data/study-pack*.json*",route=>{
+    fixtureReads++;
+    return route.fulfill({json:data});
+  });
+  await page.reload();
+  expect(fixtureReads).toBeGreaterThan(0);
   const button=page.locator(".today-screen .freshness");
   await expect(button).toContainText("Teacher pages need refresh");
   const source=page.locator(".today-screen a.teacher-live-source");
@@ -438,8 +454,16 @@ test("current verified teacher data does not add an unnecessary fallback link",a
   const data=structuredClone(JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8")));
   data.sourceLastCheckedAt="2026-10-09T14:00:00.000Z";
   data.pack.sourceCheckedAt=data.sourceLastCheckedAt;
-  await page.route("**/data/study-pack*.json*",route=>route.fulfill({json:data}));
-  await page.goto("/#today");
+  // beforeEach already loaded /#today. Navigating to the same hash is
+  // a same-document navigation and will NOT re-fetch this mocked pack.
+  // Reload to exercise the actual freshness logic against the fixture.
+  let fixtureReads=0;
+  await page.route("**/data/study-pack*.json*",route=>{
+    fixtureReads++;
+    return route.fulfill({json:data});
+  });
+  await page.reload();
+  expect(fixtureReads).toBeGreaterThan(0);
   await expect(page.locator(".freshness")).toContainText("Teacher pages verified");
   await expect(page.locator(".teacher-live-source")).toHaveCount(0);
 });
