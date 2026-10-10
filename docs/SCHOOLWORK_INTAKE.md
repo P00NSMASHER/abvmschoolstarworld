@@ -105,6 +105,8 @@ available; a guessed or mismatched URL never qualifies.
 
 Compare the newly mapped skills with all prior reviewed observations. Look for:
 
+- duplicate photographs of the **same assignment item** (reuse the private
+  observation ID; do not score it again)
 - repeated misses
 - improvement over time
 - retention after apparent mastery
@@ -112,7 +114,11 @@ Compare the newly mapped skills with all prior reviewed observations. Look for:
 - generalization across different assignments
 - skills with too little evidence to classify
 
-Do not turn a single worksheet into a trend.
+Do not turn a single worksheet into a trend. Separate verified `studiedOn`
+dates from intake-only `addedOn` dates; uploading old work on multiple days
+must never establish a new assessment date or mastery. Supply stable private
+`assignmentId` and `questionId` identifiers where the reviewed page supports
+them, even when different photographs show the same question.
 
 ### 9. Update private learning state
 
