@@ -115,9 +115,7 @@ function calendarSegments(view){
   return '<nav class="calendar-segments" aria-label="Calendar view"><button type="button" data-route="calendar" aria-pressed="'+(view==="month")+'">Month</button><button type="button" data-route="week" aria-pressed="'+(view==="week")+'">Week</button></nav>';
 }
 function freshnessState(){
-  // Imported Yahoo notices can be newer than verified teacher-page checks.
-  // Never use sourceLastSeenAt, generatedAt, or sourceCapturedAt as proof
-  // that Homework/Tests/Spelling and the other teacher pages were rechecked.
+  // A newer Yahoo notice is not proof of a new teacher-page check.
   const raw=envelope?.sourceLastCheckedAt||pack?.sourceCheckedAt;
   const d=raw?new Date(raw):null;
   if(!d||Number.isNaN(d.getTime()))return{state:"attention",label:"Teacher page check unavailable"};
@@ -295,8 +293,7 @@ function loadStudyRanks(){return ensureStudyGameEngine().then(e=>e.studyBadgeCol
 function renderToday(){
  const d=today(),priority=datedImportantEvents().find(({item,date})=>date>=d&&(kindClass(item)==="test"||kindClass(item)==="due"));
  stack().innerHTML=window.ABVMProductView.today({d,pack,header,freshness,taskHtml,kindClass,fmtDate,fmtShort,linkedTextHtml,events:eventItemsForDate(d),tasks:taskRecordsForSurface("today"),next:currentTest()||(priority?{x:priority.item,d:priority.date}:null),reminders:upcomingReminderTexts(d,2),lunchHtml:lunchCardHtml(d,lunchForDate(d))});
- // If a reviewed illustration fails, retain the complete accurate lunch
- // description and remove the broken image frame (never substitute invented art).
+ // Hide broken art, but preserve verified lunch text.
  const mealArt=stack().querySelector(".today-screen .lunch-art img");
  if(mealArt){
    const hideBrokenArt=()=>mealArt.closest(".lunch-art")?.remove();
@@ -529,8 +526,7 @@ function gameFinishHtml(){
   const finish=v.finish({mode:gameMode(g.mode),state:g,record:loadGameRecord(g.mode,g.sourceKey||currentGameSourceKey()),summary,reward});
   const goal=g.rewardStatus==="done"?window.ABVMStudyBadges.render(g.rankCollection,"finish"):"";
   const promotion=g.rewardStatus==="done"&&g.newRanks?.length?window.ABVMStudyBadges.promotion(g.newRanks):"";
-  // Put newly earned rank first so an iPhone learner sees the promotion
-  // immediately, without scrolling through the entire score report.
+  // Put a newly earned rank first in the score report.
   return reveal+promotion+finish+goal;
 }
 function renderGames(){
@@ -587,19 +583,9 @@ function updateFreshnessUI(){
   const node=stack().querySelector(".freshness");
   if(node)node.outerHTML=freshness();
 }
-// Month and Week are two views of the same chosen school date. A weekend in
-// Month maps to Monday in Week because that strip intentionally shows Mon-Fri.
 function carryPlannerDate(next){
-  if(next==="week"&&activeTab==="calendar"&&calendarDay){
-    const monday=mondayFor(calendarDay),anchor=weekDays(0)[0];
-    const utcDay=d=>Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/86400000;
-    weekOffset=Math.round((utcDay(monday)-utcDay(anchor))/7);
-    selectedDay=[0,6].includes(calendarDay.getDay())?monday:new Date(calendarDay);
-  }else if(next==="calendar"&&activeTab==="week"&&selectedDay){
-    const now=today();
-    calendarOffset=(selectedDay.getFullYear()-now.getFullYear())*12+selectedDay.getMonth()-now.getMonth();
-    calendarDay=new Date(selectedDay);
-  }
+  const state=window.ABVMWeeklyLearning.plannerDate(next,activeTab,calendarDay,selectedDay,today(),weekDays(0)[0]);
+  if(state)({calendarDay,selectedDay,weekOffset,calendarOffset}={calendarDay,selectedDay,weekOffset,calendarOffset,...state});
 }
 // Keep the reading position and keyboard target across Month/Week redraws.
 function redrawPlanner(draw,selector){
