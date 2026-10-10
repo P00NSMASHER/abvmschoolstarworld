@@ -105,6 +105,8 @@ available; a guessed or mismatched URL never qualifies.
 
 Compare the newly mapped skills with all prior reviewed observations. Look for:
 
+- duplicate photographs of the **same assignment item** (reuse the private
+  observation ID; do not score it again)
 - repeated misses
 - improvement over time
 - retention after apparent mastery
@@ -112,7 +114,18 @@ Compare the newly mapped skills with all prior reviewed observations. Look for:
 - generalization across different assignments
 - skills with too little evidence to classify
 
-Do not turn a single worksheet into a trend.
+Do not turn a single worksheet into a trend. Separate verified `studiedOn`
+dates from intake-only `addedOn` dates; uploading old work on multiple days
+must never establish a new assessment date or mastery. Likewise, uploading
+an older undated worksheet cannot become a verified recent miss or reset a
+retention review interval. Keep undated misses visible in the private
+`review-undated` queue without assigning an unsupported schoolwork date.
+A verified `studiedOn` date cannot fall after the `addedOn` intake date,
+and no observation can have
+`addedOn` later than its batch's `asOf`. Distinct photographs of the same
+identified assignment do not count as distinct assignments toward mastery. Supply stable private
+`assignmentId` and `questionId` identifiers where the reviewed page supports
+them, even when different photographs show the same question.
 
 ### 9. Update private learning state
 
@@ -126,6 +139,12 @@ Run the private learning-history processor. It maintains the operational states:
 “Mastered” is a conservative household study-planning flag, not a diagnosis, school
 grade, standardized score or psychometric claim. See `docs/LEARNING_HISTORY.md` for
 the exact evidence rule.
+
+The private history and observation batch must resolve outside the public
+repository even when paths pass through symbolic links. The processor creates
+new history files with owner-only 0600 permissions and new directories with
+0700 permissions on POSIX systems; secure existing private folders separately.
+Never place a private batch in the public repository.
 
 The private history must resolve outside this public repository:
 
