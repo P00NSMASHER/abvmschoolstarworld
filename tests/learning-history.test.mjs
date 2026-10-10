@@ -294,3 +294,36 @@ test('mastered retention age uses last verified study date rather than upload ti
   assert.equal(result.practiceTargets[0].reason,'retention-check');
   assert.equal(result.practiceTargets[0].priority,20);
 });
+
+test('undated uploads do not alter confidence when their upload order changes',()=>{
+  const evidence=[
+    observation('known-correct','verified.jpeg','2026-10-02','correct'),
+    observation('known-miss','verified-2.jpeg','2026-10-03','incorrect'),
+    observation('old-right','old-correct.jpeg','2026-10-08','correct',{studiedOn:null}),
+    observation('old-wrong','old-incorrect.jpeg','2026-10-09','incorrect',{studiedOn:null})
+  ];
+  const first=mergeLearningHistory(null,batch(evidence,'2026-10-10'));
+  const shifted=evidence.map(item=>({...item}));
+  shifted[2].addedOn='2026-10-09';
+  shifted[3].addedOn='2026-10-08';
+  const second=mergeLearningHistory(null,batch(shifted,'2026-10-10'));
+  assert.equal(first.skills[0].scoredCount,4);
+  assert.equal(first.skills[0].confidence,0.5);
+  assert.equal(second.skills[0].confidence,first.skills[0].confidence);
+  assert.equal(second.skills[0].status,first.skills[0].status);
+});
+
+test('fully dated assessments retain the original recent-weighted confidence',()=>{
+  const evidence=[
+    observation('weight-1','w1.jpeg','2026-10-01','incorrect'),
+    observation('weight-2','w2.jpeg','2026-10-02','incorrect'),
+    observation('weight-3','w3.jpeg','2026-10-03','correct')
+  ];
+  const result=mergeLearningHistory(null,batch(evidence,'2026-10-04'));
+  // Chronological weights 1,2,3 give 3/6 rather than a fabricated upload signal.
+  assert.equal(result.skills[0].confidence,0.5);
+  const later=mergeLearningHistory(result,batch([
+    observation('weight-4','w4.jpeg','2026-10-04','correct')
+  ],'2026-10-04'));
+  assert.equal(later.skills[0].confidence,0.7);
+});
