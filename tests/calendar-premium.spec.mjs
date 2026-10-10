@@ -160,7 +160,9 @@ test("Calendar navigation, school closure and enlarged text remain functional", 
   await expect(friday).toHaveAttribute("aria-pressed", "true");
   await expect(page.locator(".day-detail")).toContainText("Spelling");
   await page.getByRole("button", { name: "Next week" }).click();
-  await expect(page.locator(".week-nav strong")).toContainText("Oct 12 – 16");
+  // Week view now preserves the selected October 12 date from Month view:
+  // "next" must advance to the following week, not reset to current week.
+  await expect(page.locator(".week-nav strong")).toContainText("Oct 19 – 23");
   await page.locator(".calendar-segments [data-route=calendar]").click();
   await expect(page.locator(".calendar-screen")).toBeVisible();
 });
