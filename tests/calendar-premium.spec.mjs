@@ -132,6 +132,16 @@ test("Week: five-day study plan and verified lunch/test information", async ({ p
       expect(b.width, JSON.stringify({width, b})).toBeGreaterThanOrEqual(44);
       expect(b.height, JSON.stringify({width, b})).toBeGreaterThanOrEqual(44);
     }
+    // The Week meal illustration is lazy-loaded below the initial viewport.
+    // Capture its real rendered pixels instead of a transient blank frame.
+    if (width === 390) {
+      const art = page.locator(".week-screen .week-rail .lunch-art img");
+      await expect(art).toHaveCount(1);
+      await art.scrollIntoViewIfNeeded();
+      await expect.poll(() => art.evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
+      await art.evaluate(img => img.decode());
+      await page.locator(".week-screen").evaluate(el => { el.scrollTop = 0; });
+    }
     await capture(page, info, "calendar-week-" + width + "-first");
     if (width === 390) await capture(page, info, "calendar-week-390-full", true);
   }
@@ -355,6 +365,6 @@ test("Month summaries separate every reviewed same-day event into an accessible 
     await noOverflow(page, ".calendar-screen", width);
     await expect(page.locator(".next-month-card ul[role='list'] > li").first()).toContainText(/./);
     await busyDay.scrollIntoViewIfNeeded();
-    await busyDay.screenshot({ path: info.outputPath("month-events-" + width + ".png"), animations: "disabled" });
+    await busyDay.screenshot({ path: info.outputPath("calendar-month-events-" + width + ".png"), animations: "disabled" });
   }
 });
