@@ -281,3 +281,44 @@ test("Bottom Calendar navigation retains the Week date, and weekend selection ma
   await page.locator(".bottom-nav button[data-tab=calendar]").click();
   await expect(page.locator(".calendar-grid button.active strong")).toHaveText("12");
 });
+
+test("Selected-day actions scroll fully clear of the bottom bar on compact phones", async ({ page }, info) => {
+  await page.clock.setFixedTime(date);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const viewport of [{ width: 390, height: 844 }, { width: 375, height: 667 }]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/#calendar");
+    await expect(page.locator(".calendar-screen")).toBeVisible();
+    const action = page.locator(".calendar-study-action");
+    await action.evaluate(node => node.scrollIntoView({ block: "center" }));
+    await expect(action).toBeVisible();
+    const month = await page.evaluate(() => {
+      const nav = document.querySelector(".bottom-nav").getBoundingClientRect();
+      const action = document.querySelector(".calendar-study-action").getBoundingClientRect();
+      const screen = document.querySelector(".calendar-screen");
+      return { navTop: nav.top, actionTop: action.top, actionBottom: action.bottom, scrolled: screen.scrollTop };
+    });
+    expect(month.scrolled, JSON.stringify({ viewport, month })).toBeGreaterThan(0);
+    expect(month.actionTop, JSON.stringify({ viewport, month })).toBeGreaterThanOrEqual(0);
+    expect(month.actionBottom, JSON.stringify({ viewport, month })).toBeLessThanOrEqual(month.navTop - 2);
+    await page.screenshot({ path: info.outputPath(`calendar-clearance-${viewport.width}x${viewport.height}-month.png`), animations: "disabled" });
+
+    // Navigate to a fresh Week view so the selected school date is deterministic.
+    await page.goto("/#week");
+    await page.reload();
+    await expect(page.locator(".week-screen")).toBeVisible();
+    const task = page.locator(".day-detail .check-item").first();
+    await expect(task).toBeVisible();
+    await task.evaluate(node => node.scrollIntoView({ block: "center" }));
+    const week = await page.evaluate(() => {
+      const nav = document.querySelector(".bottom-nav").getBoundingClientRect();
+      const task = document.querySelector(".day-detail .check-item").getBoundingClientRect();
+      const screen = document.querySelector(".week-screen");
+      return { navTop: nav.top, taskTop: task.top, taskBottom: task.bottom, scrolled: screen.scrollTop };
+    });
+    expect(week.scrolled, JSON.stringify({ viewport, week })).toBeGreaterThan(0);
+    expect(week.taskTop, JSON.stringify({ viewport, week })).toBeGreaterThanOrEqual(0);
+    expect(week.taskBottom, JSON.stringify({ viewport, week })).toBeLessThanOrEqual(week.navTop - 2);
+    await page.screenshot({ path: info.outputPath(`calendar-clearance-${viewport.width}x${viewport.height}-week.png`), animations: "disabled" });
+  }
+});
