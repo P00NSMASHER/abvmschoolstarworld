@@ -467,3 +467,32 @@ test("current verified teacher data does not add an unnecessary fallback link",a
   await expect(page.locator(".freshness")).toContainText("Teacher pages verified");
   await expect(page.locator(".teacher-live-source")).toHaveCount(0);
 });
+
+test("source-link state remains unique through repeated stale checks and disappears when teacher verification recovers",async({page})=>{
+  await page.clock.setFixedTime(new Date("2026-10-09T16:00:00.000Z"));
+  const stale=structuredClone(JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8")));
+  stale.sourceLastCheckedAt="2026-10-08T15:00:17.769Z";
+  stale.pack.sourceCheckedAt=stale.sourceLastCheckedAt;
+  const current=structuredClone(stale);
+  current.sourceLastCheckedAt="2026-10-09T14:00:00.000Z";
+  current.pack.sourceCheckedAt=current.sourceLastCheckedAt;
+  let served=0,active=stale;
+  await page.route("**/data/study-pack*.json*",route=>{
+    served++;
+    return route.fulfill({json:active});
+  });
+  // beforeEach already rendered /#today, so force a real new request.
+  await page.reload();
+  await expect(page.locator(".freshness")).toContainText("Teacher pages older");
+  const link=page.locator(".teacher-live-source");
+  await expect(link).toHaveCount(1);
+  // The same content and timestamp can be checked again without cloning links.
+  await page.locator(".freshness").click();
+  await expect(page.locator(".freshness")).toContainText("Teacher pages older");
+  await expect(link).toHaveCount(1);
+  active=current;
+  await page.locator(".freshness").click();
+  await expect(page.locator(".freshness")).toContainText("Teacher pages verified");
+  await expect(link).toHaveCount(0);
+  expect(served).toBeGreaterThanOrEqual(3);
+});

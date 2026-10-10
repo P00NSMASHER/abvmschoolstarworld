@@ -583,7 +583,13 @@ function render({preserveScroll=false}={}){
 }
 function updateFreshnessUI(){
   const node=stack().querySelector(".freshness");
-  if(node)node.outerHTML=freshness();
+  if(!node)return;
+  // The optional source link is a sibling of the button. Replace the pair
+  // atomically so retry/offline/stale-to-current updates cannot accumulate
+  // duplicate links or leave an obsolete link once checks are current.
+  const prior=node.nextElementSibling;
+  if(prior?.matches(".teacher-live-source"))prior.remove();
+  node.outerHTML=freshness();
 }
 function bindScreen(){
   if(screenEventsBound)return;
