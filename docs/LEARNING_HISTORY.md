@@ -32,8 +32,9 @@ The private operational states are:
 - `mastered`
 
 "Mastered" is deliberately conservative: the processor requires three most-recent
-scored observations to be independently correct, spanning at least two source photos
-and two independently verified `studiedOn` dates. An `addedOn` upload/intake date
+scored observations to be independently correct, spanning at least two distinct
+reviewed assignments (falling back to source-photo IDs for legacy observations
+without an assignment ID), and two independently verified `studiedOn` dates. An `addedOn` upload/intake date
 is **not** evidence of when a worksheet was completed. Without verified studied
 dates, correctness observations still support targeted practice, but the
 processor cannot assert chronological improvement, slipping, or mastery.
