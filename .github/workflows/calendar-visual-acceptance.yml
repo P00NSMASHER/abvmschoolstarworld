@@ -1,0 +1,50 @@
+name: Calendar premium visual acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'pages/design-polish.css'
+      - 'pages/app.js'
+      - 'pages/calendar-navigation.js'
+      - 'pages/index.html'
+      - 'pages/sw.js'
+      - 'tests/calendar-premium.spec.mjs'
+      - 'tests/design-polish.spec.mjs'
+      - 'playwright.config.mjs'
+      - '.github/workflows/calendar-visual-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: abvm-calendar-visual-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  calendar-render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run pack:runtime
+      - run: npx playwright install --with-deps chromium webkit
+      - name: Test Month and Week in Chromium and Safari-WebKit
+        run: npx playwright test tests/calendar-premium.spec.mjs tests/design-polish.spec.mjs --project=mobile --project=iphone-webkit --workers=1 --retries=0
+      - name: Retain first-viewport and full-content screenshot artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: abvm-calendar-visual-${{ github.run_id }}
+          path: |
+            test-results/**/calendar-*.png
+            playwright-report
+            test-results/**/trace.zip
+            test-results/**/test-failed*.png
+          retention-days: 14
+          if-no-files-found: ignore

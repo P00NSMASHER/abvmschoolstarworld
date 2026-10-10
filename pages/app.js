@@ -226,6 +226,15 @@ function weekDays(offset=weekOffset){
   const now=today(),mon=mondayFor(now); mon.setDate(mon.getDate()+(([0,6].includes(now.getDay())?1:0)+offset)*7);
   return Array.from({length:5},(_,i)=>{const x=new Date(mon);x.setDate(mon.getDate()+i);return x;});
 }
+// Date transitions are isolated in the compact CalendarNavigation module.
+function moveWeekToCalendarDate(date){
+  const target=window.ABVMCalendarNavigation.weekForDate(date,weekDays(0)[0]);
+  weekOffset=target.offset;selectedDay=target.selected;
+}
+function moveMonthToCalendarDate(date){
+  const target=window.ABVMCalendarNavigation.monthForDate(date,today());
+  calendarOffset=target.offset;calendarDay=target.selected;
+}
 function weekRangeLabel(days){
   const first=days[0],last=days[days.length-1];
   const a=MONTHS[first.getMonth()].slice(0,3)+" "+first.getDate();
@@ -306,7 +315,12 @@ function renderWeek(){
  if(!selectedDay||!days.some(d=>sameDay(d,selectedDay)))selectedDay=weekOffset===0?(days.find(d=>sameDay(d,today()))||days[0]):days[0];
  stack().innerHTML=window.ABVMProductView.week({days,selectedDay,offset:weekOffset,header,segments:calendarSegments("week"),freshness,taskHtml,kindClass,fmtDate,fmtShort,weekRangeLabel,eventItemsForDate,events:eventItemsForDate(selectedDay),tasks:isPackWeek(days)?taskRecordsForSurface("week",selectedDay):[],lunchHtml:lunchCardHtml(selectedDay,lunchForDate(selectedDay)),reminder:reminderForDate(selectedDay),future:datedImportantEvents().filter(({date})=>date>selectedDay).slice(0,4).map(({item,date})=>({x:item,d:date})),overview:window.ABVMWeeklyLearning.renderWeekOverview({days,lunchForDate,eventItemsForDate,kindClass,fmtShort,lunchText,lunchUnavailableText})});
 }
-function monthGrid(year,month){const first=new Date(year,month,1,12), last=new Date(year,month+1,0,12), blanks=first.getDay();let html=""; for(let i=0;i<blanks;i++)html+='<span class="calendar-blank"></span>';for(let day=1;day<=last.getDate();day++){const d=new Date(year,month,day,12), events=eventItemsForDate(d), lunch=lunchForDate(d);const dots=[...new Set([...events.map(e=>kindClass(e)),...(lunch?["lunch"]:[])])].slice(0,3);const weekend=[0,6].includes(d.getDay()), closed=events.some(e=>kindClass(e)==="closed");const eventLabel=events.length?": "+events.map(e=>e.label).join(", "):"";html+='<button type="button" class="'+(weekend?"weekend ":"")+(closed?"closed ":"")+(calendarDay&&sameDay(d,calendarDay)?"active":"")+'" data-cal-day="'+d.toISOString()+'" aria-label="'+esc(fmtDate(d)+eventLabel)+'" aria-pressed="'+(calendarDay&&sameDay(d,calendarDay)?"true":"false")+'"><strong>'+day+'</strong><span class="calendar-dots" aria-hidden="true">'+dots.map(k=>'<span class="calendar-mark '+k+'"></span>').join("")+'</span></button>';}return html;}
+function monthGrid(year,month){
+ return window.ABVMCalendarNavigation.monthGrid({
+  year,month,selected:calendarDay,current:today(),
+  eventsForDate:eventItemsForDate,lunchForDate,kindClass,fmtDate,esc
+ });
+}
 function agendaLunchHtml(date,lunch){
   const events=eventItemsForDate(date),closed=events.some(e=>kindClass(e)==="closed"),weekend=[0,6].includes(date.getDay());
   const text=closed||weekend||lunch?.status==="no-school"?"No school lunch":lunch?lunchText(lunch):lunchUnavailableText(date);
@@ -332,6 +346,8 @@ function renderCalendar(){
     calendarDay=calendarOffset===0?new Date(now):new Date(y,m,1,12);
   }
   const events=eventItemsForDate(calendarDay),lunch=lunchForDate(calendarDay);
+  const isTodaySelected=!!sameDay(calendarDay,today());
+  const eventCount=events.length===1?"1 school event":events.length+" school events";
   const monthSummary=datedImportantEvents()
     .filter(({date})=>date.getMonth()===m&&date.getFullYear()===y&&(calendarOffset!==0||date>=today()))
     .map(({item,date})=>({x:item,d:date}));
@@ -343,9 +359,9 @@ function renderCalendar(){
   stack().innerHTML='<div class="screen calendar-screen" role="region" aria-label="'+MONTHS[m]+' calendar">'+
     header("ASSUMPTION BVM · GRADE 2","Calendar")+calendarSegments("month")+
     '<nav class="calendar-month-nav" aria-label="Change calendar month"><button type="button" data-cal-step="-1" aria-label="Previous month">‹</button><div aria-live="polite"><strong>'+MONTHS[m]+' '+y+'</strong><span>'+(calendarOffset===0?"Current month":"Browsing calendar")+'</span></div><button type="button" data-cal-step="1" aria-label="Next month">›</button></nav>'+
-    (calendarOffset!==0?'<button type="button" class="calendar-today-jump" data-cal-today>Back to current month</button>':'')+
-    '<div class="calendar-layout"><section class="calendar-card"><div class="calendar-title-row"><span>Choose a day to see the plan.</span></div><div class="calendar-weekdays">'+["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(x=>"<span>"+x+"</span>").join("")+'</div><div class="calendar-grid">'+monthGrid(y,m)+'</div><div class="calendar-legend"><span><i class="test"></i>Test</span><span><i class="faith"></i>Faith</span><span><i class="family"></i>Family</span><span><i class="due"></i>Due</span><span><i class="lunch"></i>Lunch</span></div></section>'+
-    '<section class="calendar-day-card" aria-live="polite"><div class="calendar-day-heading"><div><p>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</p><h2>'+MONTHS[calendarDay.getMonth()]+" "+calendarDay.getDate()+'</h2></div></div>'+
+    (!isTodaySelected?'<button type="button" class="calendar-today-jump" data-cal-today aria-label="Jump to today in the school calendar"><span aria-hidden="true">◎</span> Today <span aria-hidden="true">→</span></button>':'')+
+    '<div class="calendar-layout"><section class="calendar-card"><div class="calendar-title-row calendar-peek" aria-label="Selected school day preview">'+window.ABVMCalendarNavigation.dayPreview({date:calendarDay,events,months:MONTHS,weekdays:WEEKDAY,esc})+'</div><div class="calendar-weekdays">'+["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(x=>"<span>"+x+"</span>").join("")+'</div><div class="calendar-grid">'+monthGrid(y,m)+'</div><div class="calendar-legend"><span><i class="test"></i>Test</span><span><i class="faith"></i>Faith</span><span><i class="family"></i>Family</span><span><i class="due"></i>Due</span><span><i class="lunch"></i>Lunch</span></div></section>'+
+    '<section class="calendar-day-card" aria-live="polite"><div class="calendar-day-heading"><div><p>SELECTED DAY · '+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</p><h2>'+MONTHS[calendarDay.getMonth()]+" "+calendarDay.getDate()+'</h2></div><span class="calendar-day-status">'+(events.length?esc(eventCount):"No listed events")+'</span></div>'+
       (events.length?'<div class="calendar-event-list">'+events.map(e=>'<div><i class="'+kindClass(e)+'"></i><span><strong>'+esc(e.label)+'</strong></span></div>').join("")+'</div>':'<p class="calendar-empty">No special school events are listed for this date.</p>')+
       agendaLunchHtml(calendarDay,lunch)+'<button class="calendar-study-action primary-button" type="button" data-route="study">Start studying '+window.ABVMProductView.icon("arrow")+'</button>'+
     '</section></div>'+compactMonthCardHtml(m,monthSummary,"current-month-summary")+
@@ -589,7 +605,15 @@ function bindScreen(){
   stack().addEventListener("click",async event=>{
     const target=event.target.closest("button,a");
     if(!target||!stack().contains(target))return;
-    if(target.matches("[data-route]")){activeTab=target.dataset.route.split("?")[0];history.replaceState(null,"","#"+target.dataset.route);render();stack().querySelector("h1")?.focus({preventScroll:true});return;}
+    if(target.matches("[data-route]")){
+      const next=target.dataset.route.split("?")[0];
+      // A month date must never silently jump back to this week just because
+      // the parent switches the segmented view. Return keeps that same date.
+      if(activeTab==="calendar"&&next==="week")moveWeekToCalendarDate(calendarDay||today());
+      else if(activeTab==="week"&&next==="calendar")moveMonthToCalendarDate(selectedDay||today());
+      activeTab=next;history.replaceState(null,"","#"+target.dataset.route);
+      render();stack().querySelector("h1")?.focus({preventScroll:true});return;
+    }
     if(target.matches("[data-open-badges]")){activeTab="family";history.replaceState(null,"","#family");render();const title=stack().querySelector("#badge-title");if(title){title.tabIndex=-1;title.focus();title.scrollIntoView({block:"start"})}return;}
     if(target.matches("[data-open-family]")){activeTab="family";history.replaceState(null,"","#family");render();return;}
     if(target.matches("[data-refresh-pack]")){manualRefreshSchoolInfo();return;}
