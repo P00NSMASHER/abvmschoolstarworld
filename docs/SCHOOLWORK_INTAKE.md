@@ -133,6 +133,12 @@ Run the private learning-history processor. It maintains the operational states:
 grade, standardized score or psychometric claim. See `docs/LEARNING_HISTORY.md` for
 the exact evidence rule.
 
+The private history and observation batch must resolve outside the public
+repository even when paths pass through symbolic links. The processor creates
+new history files with owner-only 0600 permissions and new directories with
+0700 permissions on POSIX systems; secure existing private folders separately.
+Never place a private batch in the public repository.
+
 The private history must resolve outside this public repository:
 
 ```sh
