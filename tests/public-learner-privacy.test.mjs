@@ -28,14 +28,17 @@ test("gamified ranks are clearly study ranks and never presented as school grade
 });
 
 test("privacy copy deployment keeps service-worker shell and reload versions aligned",()=>{
-  for(const path of ["./app.js?v=139","./product-view.js?v=9"]){
-    assert.ok(index.includes(path),path+" missing in HTML");
-    assert.ok(sw.includes(path),path+" missing in SW shell");
+  for(const asset of [/\.\/app\.js\?v=\d+/,/\.\/product-view\.js\?v=\d+/]){
+    const url=asset.exec(index)?.[0];
+    assert.ok(url,"versioned script missing in HTML: "+asset);
+    assert.ok(sw.includes('"'+url+'"'),url+" missing in SW shell");
   }
   assert.ok(app.includes("./study-games-view.js?v=15"));
   assert.ok(sw.includes("./study-games-view.js?v=15"));
-  assert.match(index,/abvm-sw-reloaded-v159/);
-  assert.match(sw,/abvm-grade2-parent-companion-v159-premium-anonymous-preview/);
+  const reload=index.match(/abvm-sw-reloaded-v(\d+)/)?.[1];
+  const cache=sw.match(/abvm-grade2-parent-companion-v(\d+)-/)?.[1];
+  assert.ok(reload,"SW reload revision missing from HTML");
+  assert.equal(cache,reload,"SW cache and HTML reload revisions must match");
   const shell=sw.match(/const STATIC_SHELL = \[([\s\S]*?)\];/)?.[1]||"";
   assert.equal((shell.match(/"\.\//g)||[]).length,14,"existing offline shell footprint changed");
 });

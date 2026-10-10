@@ -587,6 +587,13 @@ function updateFreshnessUI(){
   const node=stack().querySelector(".freshness");
   if(node)node.outerHTML=freshness();
 }
+// Keep the reading position and keyboard target across Month/Week redraws.
+function redrawPlanner(draw,selector){
+  const old=stack().firstElementChild,top=old?.scrollTop||0;
+  draw();
+  const current=stack().firstElementChild;
+  if(current){current.scrollTop=top;current.querySelector(selector)?.focus({preventScroll:true});}
+}
 function bindScreen(){
   if(screenEventsBound)return;
   screenEventsBound=true;
@@ -598,12 +605,12 @@ function bindScreen(){
     if(target.matches("[data-open-family]")){activeTab="family";history.replaceState(null,"","#family");render();return;}
     if(target.matches("[data-refresh-pack]")){manualRefreshSchoolInfo();return;}
     if(target.matches("[data-check]")){toggleChecked((pack.homework||[])[Number(target.dataset.check)],Number(target.dataset.check));return;}
-    if(target.matches("[data-day]")){selectedDay=new Date(target.dataset.day);renderWeek();return;}
-    if(target.matches("[data-week-step]")){weekOffset+=Number(target.dataset.weekStep||0);selectedDay=null;renderWeek();return;}
-    if(target.matches("[data-week-today]")){weekOffset=0;selectedDay=null;renderWeek();return;}
-    if(target.matches("[data-cal-day]")){calendarDay=new Date(target.dataset.calDay);renderCalendar();return;}
-    if(target.matches("[data-cal-step]")){calendarOffset+=Number(target.dataset.calStep||0);calendarDay=null;renderCalendar();return;}
-    if(target.matches("[data-cal-today]")){calendarOffset=0;calendarDay=null;renderCalendar();return;}
+    if(target.matches("[data-day]")){selectedDay=new Date(target.dataset.day);redrawPlanner(renderWeek,'[data-day="'+target.dataset.day+'"]');return;}
+    if(target.matches("[data-week-step]")){weekOffset+=Number(target.dataset.weekStep||0);selectedDay=null;redrawPlanner(renderWeek,'[data-week-step="'+target.dataset.weekStep+'"]');return;}
+    if(target.matches("[data-week-today]")){weekOffset=0;selectedDay=null;redrawPlanner(renderWeek,".day-picker button.active");return;}
+    if(target.matches("[data-cal-day]")){calendarDay=new Date(target.dataset.calDay);redrawPlanner(renderCalendar,'[data-cal-day="'+target.dataset.calDay+'"]');return;}
+    if(target.matches("[data-cal-step]")){calendarOffset+=Number(target.dataset.calStep||0);calendarDay=null;redrawPlanner(renderCalendar,'[data-cal-step="'+target.dataset.calStep+'"]');return;}
+    if(target.matches("[data-cal-today]")){calendarOffset=0;calendarDay=null;redrawPlanner(renderCalendar,".calendar-grid button.active");return;}
     if(target.matches("[data-study-retry]")){if(!studyMaterialsView)retryStudyMaterials();return;}
     if(target.matches("[data-retry-games]")){renderGames();return;}
     if(target.matches("[data-game-read]")){const q=activeGameQuestion();if(q&&!studyMaterialsView?.readAloud.read(q.prompt+". "+q.choices.map((choice,i)=>String.fromCharCode(65+i)+". "+choice).join(". ")))toast("Read aloud is unavailable. You can keep practicing.");return;}
