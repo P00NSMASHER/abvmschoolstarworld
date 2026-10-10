@@ -56,6 +56,7 @@ export function validateObservation(observation,label='observation'){
   for(const field of ['id','sourceId','subject','skill','addedOn'])if(!text(observation[field]))throw new Error(label+': invalid '+field);
   if(!day(observation.addedOn))throw new Error(label+': invalid addedOn');
   if(observation.studiedOn!==null&&observation.studiedOn!==undefined&&!day(observation.studiedOn))throw new Error(label+': invalid studiedOn');
+  if(observation.studiedOn&&observation.studiedOn>observation.addedOn)throw new Error(label+': studiedOn cannot be after addedOn');
   if(!RESULTS.has(observation.result))throw new Error(label+': invalid result');
   if(!ERRORS.has(observation.errorType||'unknown'))throw new Error(label+': invalid errorType');
   if(!INDEPENDENCE.has(observation.independence||'unknown'))throw new Error(label+': invalid independence');
@@ -67,18 +68,23 @@ export function validateObservationBatch(batch){
   allowedKeys(batch,BATCH_KEYS,'learning batch');
   if(batch.schemaVersion!==1||!text(batch.intakeId)||!day(batch.asOf)||!Array.isArray(batch.observations))throw new Error('Unsupported learning batch');
   unique(batch.observations.map(item=>item.id),'observation IDs');
-  batch.observations.forEach((item,index)=>validateObservation(item,'observation '+index));
+  batch.observations.forEach((item,index)=>{
+    validateObservation(item,'observation '+index);
+    if(item.addedOn>batch.asOf)throw new Error('observation '+index+': addedOn cannot be after batch asOf');
+  });
   return {observations:batch.observations.length};
 }
 function skillKey(observation){return observation.subject+'\u0000'+observation.skill;}
 // Rephotographing a worksheet does not constitute a second assessment.
 // Assignment + question identify a reviewed item across different photo IDs.
 // Older records without an assignment ID can still be checked within a photo.
+const normalizeIdentity=value=>String(value).normalize('NFKC').trim().toLowerCase().replace(/\s+/g,' ');
 function assessmentKey(item){
   if(!item.questionId)return null;
-  const normalize=value=>String(value).normalize('NFKC').trim().toLowerCase().replace(/\s+/g,' ');
-  return JSON.stringify([item.subject,item.skill,item.assignmentId?normalize(item.assignmentId):null,item.assignmentId?null:item.sourceId,normalize(item.questionId)]);
+  return JSON.stringify([item.subject,item.skill,item.assignmentId?normalizeIdentity(item.assignmentId):null,item.assignmentId?null:item.sourceId,normalizeIdentity(item.questionId)]);
 }
+// Distinct photos of one worksheet are one body of work for mastery purposes.
+function workKey(item){return item.assignmentId?normalizeIdentity(item.assignmentId):item.sourceId;}
 function assertDistinctAssessments(observations){
   const seen=new Map();
   for(const item of observations){
@@ -107,7 +113,7 @@ function skillSummary(observations,asOf){
     const confidence=weights.length?round(weighted/weights.reduce((a,b)=>a+b,0)):0;
     const lastThree=scored.slice(-3);
     const mastery=lastThree.length===3&&lastThree.every(item=>item.result==='correct'&&(item.independence||'unknown')==='independent'&&item.studiedOn)
-      &&new Set(lastThree.map(item=>item.sourceId)).size>=2
+      &&new Set(lastThree.map(workKey)).size>=2
       &&new Set(lastThree.map(item=>item.studiedOn)).size>=2;
     let status='not-enough-evidence';
     if(scored.length>=2)status='learning';
