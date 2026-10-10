@@ -41,6 +41,7 @@ on:
       - 'scripts/validate-schoolwork.mjs'
       - 'scripts/integrate-schoolwork.mjs'
       - 'tests/schoolwork-intake.test.mjs'
+      - 'tests/schoolwork-cross-layer.test.mjs'
       - '.github/workflows/qa-reproduction.yml'
 permissions:
   contents: read
