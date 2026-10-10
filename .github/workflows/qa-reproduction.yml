@@ -6,12 +6,6 @@ on:
       - 'pages/data/study-pack.json'
       - 'scripts/build-study-universe.mjs'
       - 'tests/study-universe.test.mjs'
-      # Every source-manifest, public schoolwork intake, or answer-integrity
-      # change requires an independent end-to-end reproduction on the PR SHA.
-      - 'pages/data/schoolwork.json'
-      - 'scripts/validate-schoolwork.mjs'
-      - 'scripts/integrate-schoolwork.mjs'
-      - 'tests/schoolwork-intake.test.mjs'
       - 'pages/study-room*'
       - 'pages/study-hub*'
       - 'pages/study-games.js'
@@ -40,6 +34,12 @@ on:
       - 'tests/grade2-content-pipeline.test.mjs'
       - 'tests/*-promotion.test.mjs'
       - '.github/workflows/sync-study-pack.yml'
+      # Every source-manifest, public schoolwork intake, or answer-integrity
+      # change requires an independent end-to-end reproduction on the PR SHA.
+      - 'pages/data/schoolwork.json'
+      - 'scripts/validate-schoolwork.mjs'
+      - 'scripts/integrate-schoolwork.mjs'
+      - 'tests/schoolwork-intake.test.mjs'
       - '.github/workflows/qa-reproduction.yml'
 permissions:
   contents: read
