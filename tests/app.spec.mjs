@@ -390,6 +390,12 @@ test("bottom navigation is a four primary destinations",async({page})=>{
 });
 
 
+// The fixtures must reach the network layer, not an earlier app service-worker
+// cache. Limit this to source-provenance tests; dedicated PWA tests still run
+// with service workers enabled and exercise offline fallback behavior.
+test.describe("teacher-source verification with deterministic network fixtures",()=>{
+  test.use({serviceWorkers:"block"});
+
 test("newly imported Yahoo notices never make older teacher checks appear verified",async({page})=>{
   await page.clock.setFixedTime(new Date("2026-10-09T16:00:00.000Z"));
   const data=structuredClone(JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8")));
@@ -495,4 +501,5 @@ test("source-link state remains unique through repeated stale checks and disappe
   await expect(page.locator(".freshness")).toContainText("Teacher pages verified");
   await expect(link).toHaveCount(0);
   expect(served).toBeGreaterThanOrEqual(3);
+});
 });
