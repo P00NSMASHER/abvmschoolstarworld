@@ -226,20 +226,14 @@ function weekDays(offset=weekOffset){
   const now=today(),mon=mondayFor(now); mon.setDate(mon.getDate()+(([0,6].includes(now.getDay())?1:0)+offset)*7);
   return Array.from({length:5},(_,i)=>{const x=new Date(mon);x.setDate(mon.getDate()+i);return x;});
 }
-// Month ⇄ Week behaves as ONE calendar: the displayed date survives a mode
-// change. For a weekend, Week sensibly opens the following school Monday.
-// Date calculations stay at local noon to avoid DST/midnight shifts.
+// Date transitions are isolated in the compact CalendarNavigation module.
 function moveWeekToCalendarDate(date){
-  const wanted=new Date(date), monday=mondayFor(wanted);
-  if([0,6].includes(wanted.getDay()))monday.setDate(monday.getDate()+7);
-  const referenceMonday=weekDays(0)[0];
-  weekOffset=Math.round((monday-referenceMonday)/604800000);
-  selectedDay=[0,6].includes(wanted.getDay())?new Date(monday):wanted;
+  const target=window.ABVMCalendarNavigation.weekForDate(date,weekDays(0)[0]);
+  weekOffset=target.offset;selectedDay=target.selected;
 }
 function moveMonthToCalendarDate(date){
-  const chosen=new Date(date), now=today();
-  calendarOffset=(chosen.getFullYear()-now.getFullYear())*12+chosen.getMonth()-now.getMonth();
-  calendarDay=chosen;
+  const target=window.ABVMCalendarNavigation.monthForDate(date,today());
+  calendarOffset=target.offset;calendarDay=target.selected;
 }
 function weekRangeLabel(days){
   const first=days[0],last=days[days.length-1];
@@ -322,24 +316,10 @@ function renderWeek(){
  stack().innerHTML=window.ABVMProductView.week({days,selectedDay,offset:weekOffset,header,segments:calendarSegments("week"),freshness,taskHtml,kindClass,fmtDate,fmtShort,weekRangeLabel,eventItemsForDate,events:eventItemsForDate(selectedDay),tasks:isPackWeek(days)?taskRecordsForSurface("week",selectedDay):[],lunchHtml:lunchCardHtml(selectedDay,lunchForDate(selectedDay)),reminder:reminderForDate(selectedDay),future:datedImportantEvents().filter(({date})=>date>selectedDay).slice(0,4).map(({item,date})=>({x:item,d:date})),overview:window.ABVMWeeklyLearning.renderWeekOverview({days,lunchForDate,eventItemsForDate,kindClass,fmtShort,lunchText,lunchUnavailableText})});
 }
 function monthGrid(year,month){
-  const first=new Date(year,month,1,12),last=new Date(year,month+1,0,12),blanks=first.getDay();
-  const current=today();
-  let html="";
-  for(let i=0;i<blanks;i++)html+='<span class="calendar-blank" aria-hidden="true"></span>';
-  for(let day=1;day<=last.getDate();day++){
-    const d=new Date(year,month,day,12),events=eventItemsForDate(d),lunch=lunchForDate(d);
-    const dots=[...new Set([...events.map(e=>kindClass(e)),...(lunch?["lunch"]:[])])].slice(0,3);
-    const weekend=[0,6].includes(d.getDay()),closed=events.some(e=>kindClass(e)==="closed");
-    const isCurrent=!!sameDay(d,current),isSelected=!!sameDay(d,calendarDay);
-    const eventLabel=events.length?": "+events.map(e=>e.label).join(", "):"";
-    html+='<button type="button" class="'+(weekend?"weekend ":"")+
-      (closed?"closed ":"")+(isCurrent?"is-today ":"")+(isSelected?"active":"")+
-      '" data-cal-day="'+d.toISOString()+'" aria-label="'+esc((isCurrent?"Today, ":"")+fmtDate(d)+eventLabel)+
-      '" aria-current="'+(isCurrent?"date":"false")+'" aria-pressed="'+isSelected+
-      '"><strong>'+day+'</strong><span class="calendar-dots" aria-hidden="true">'+
-      dots.map(k=>'<span class="calendar-mark '+k+'"></span>').join("")+'</span></button>';
-  }
-  return html;
+ return window.ABVMCalendarNavigation.monthGrid({
+  year,month,selected:calendarDay,current:today(),
+  eventsForDate:eventItemsForDate,lunchForDate,kindClass,fmtDate,esc
+ });
 }
 function agendaLunchHtml(date,lunch){
   const events=eventItemsForDate(date),closed=events.some(e=>kindClass(e)==="closed"),weekend=[0,6].includes(date.getDay());

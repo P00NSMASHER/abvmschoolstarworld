@@ -5,6 +5,7 @@ on:
     paths:
       - 'pages/design-polish.css'
       - 'pages/app.js'
+      - 'pages/calendar-navigation.js'
       - 'pages/index.html'
       - 'pages/sw.js'
       - 'tests/calendar-premium.spec.mjs'
