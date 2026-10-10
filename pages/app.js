@@ -324,7 +324,8 @@ function compactMonthCardHtml(month,rows,extraClass){
     const group=dates.get(key);
     if(!group.labels.includes(x.label))group.labels.push(x.label);
   }
-  return '<section class="'+extraClass+' compact-month-card"><h2>Coming in '+MONTHS[month]+'</h2>'+[...dates.values()].map(o=>'<div><span>'+esc(fmtShort(o.d))+'</span><p>'+o.labels.map(esc).join("<br>")+'</p></div>').join("")+'</section>';
+  return window.ABVMProductView.compactMonthCard(MONTHS[month],
+    [...dates.values()].map(o=>({date:fmtShort(o.d),labels:o.labels})),extraClass);
 }
 function renderCalendar(){
   const base=calendarBase(),y=base.getFullYear(),m=base.getMonth();

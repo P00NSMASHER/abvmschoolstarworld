@@ -722,8 +722,16 @@
 .calendar-screen .compact-month-card>div>span,.calendar-screen .special-row>span{
   font-size:.73rem;color:#576e89;line-height:1.45;
 }
-.calendar-screen .compact-month-card p,.calendar-screen .special-row strong{
+.calendar-screen .compact-month-card>div>ul>li,.calendar-screen .special-row strong{
   font-size:.84rem;font-weight:600;line-height:1.42;color:#18365d;overflow-wrap:anywhere;
+}
+.calendar-screen .compact-month-card>div>ul{
+  min-width:0;margin:0;padding:0;list-style:none;display:grid;gap:6px;
+}
+.calendar-screen .compact-month-card>div>ul>li{position:relative;padding-left:13px}
+.calendar-screen .compact-month-card>div>ul>li::before{
+  content:"";position:absolute;left:0;top:.61em;width:5px;height:5px;
+  border-radius:50%;background:#bd8e1a;
 }
 .calendar-screen .specials-head p{font-size:.69rem}
 .calendar-screen .calendar-more{
