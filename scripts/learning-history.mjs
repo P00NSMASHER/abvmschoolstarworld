@@ -50,6 +50,23 @@ export function validateObservationBatch(batch){
   return {observations:batch.observations.length};
 }
 function skillKey(observation){return observation.subject+'\u0000'+observation.skill;}
+// Rephotographing a worksheet does not constitute a second assessment.
+// Assignment + question identify a reviewed item across different photo IDs.
+// Older records without an assignment ID can still be checked within a photo.
+function assessmentKey(item){
+  if(!item.questionId)return null;
+  return JSON.stringify([item.subject,item.skill,item.assignmentId||null,item.assignmentId?null:item.sourceId,item.questionId]);
+}
+function assertDistinctAssessments(observations){
+  const seen=new Map();
+  for(const item of observations){
+    const key=assessmentKey(item);
+    if(!key)continue;
+    const prior=seen.get(key);
+    if(prior&&prior!==item.id)throw new Error('Repeated assessment item: '+item.id+' duplicates '+prior+'. Consolidate rephotographed responses under the original observation ID.');
+    seen.set(key,item.id);
+  }
+}
 function skillSummary(observations,asOf){
   const groups=new Map();
   for(const observation of observations){
@@ -67,15 +84,17 @@ function skillSummary(observations,asOf){
     const weighted=recent.reduce((sum,item,index)=>sum+score(item.result)*weights[index],0);
     const confidence=weights.length?round(weighted/weights.reduce((a,b)=>a+b,0)):0;
     const lastThree=scored.slice(-3);
-    const mastery=lastThree.length===3&&lastThree.every(item=>item.result==='correct'&&(item.independence||'unknown')==='independent')
+    const mastery=lastThree.length===3&&lastThree.every(item=>item.result==='correct'&&(item.independence||'unknown')==='independent'&&item.studiedOn)
       &&new Set(lastThree.map(item=>item.sourceId)).size>=2
-      &&new Set(lastThree.map(eventDay)).size>=2;
+      &&new Set(lastThree.map(item=>item.studiedOn)).size>=2;
     let status='not-enough-evidence';
     if(scored.length>=2)status='learning';
-    if(scored.length>=3&&average(scored.slice(-5).map(item=>score(item.result)))>=0.5)status='improving';
+    // Intake dates are not verified assessment dates; they cannot establish progress.
+    const verifiedDates=new Set(scored.filter(item=>item.studiedOn).map(item=>item.studiedOn));
+    if(scored.length>=3&&verifiedDates.size>=2&&average(scored.slice(-5).map(item=>score(item.result)))>=0.5)status='improving';
     if(mastery)status='mastered';
     let trend='insufficient-data';
-    if(scored.length>=4){
+    if(scored.length>=4&&scored.slice(-4).every(item=>item.studiedOn)&&new Set(scored.slice(-4).map(item=>item.studiedOn)).size>=2){
       const previous=average(scored.slice(-4,-2).map(item=>score(item.result)));
       const latest=average(scored.slice(-2).map(item=>score(item.result)));
       trend=latest-previous>0.2?'improving':previous-latest>0.2?'slipping':'steady';
@@ -137,8 +156,11 @@ export function mergeLearningHistory(current,batch){
     if(!old)merged.set(observation.id,structuredClone(observation));
   }
   const observations=[...merged.values()].sort((a,b)=>eventDay(a).localeCompare(eventDay(b))||a.id.localeCompare(b.id));
-  const skills=skillSummary(observations,batch.asOf);
-  const next={schemaVersion:1,updatedOn:batch.asOf,observations,skills,practiceTargets:practiceTargets(skills,observations,batch.asOf)};
+  assertDistinctAssessments(observations);
+  // Replaying an older photo batch must not rewind retention review or the ledger date.
+  const asOf=history.updatedOn&&history.updatedOn>batch.asOf?history.updatedOn:batch.asOf;
+  const skills=skillSummary(observations,asOf);
+  const next={schemaVersion:1,updatedOn:asOf,observations,skills,practiceTargets:practiceTargets(skills,observations,asOf)};
   validateLearningHistory(next);
   return next;
 }
