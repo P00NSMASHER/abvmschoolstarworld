@@ -110,7 +110,11 @@ function skillSummary(observations,asOf){
     const recent=scored.slice(-5);
     const weights=recent.map((_,index)=>index+1);
     const weighted=recent.reduce((sum,item,index)=>sum+score(item.result)*weights[index],0);
-    const confidence=weights.length?round(weighted/weights.reduce((a,b)=>a+b,0)):0;
+    // Without verified dates, upload order has no educational time meaning.
+    // Give all scored work equal weight rather than boosting re-uploaded sheets.
+    const confidence=scored.some(item=>!item.studiedOn)
+      ?round(average(scored.map(item=>score(item.result))))
+      :weights.length?round(weighted/weights.reduce((a,b)=>a+b,0)):0;
     // Upload order cannot determine when undated worksheets were completed.
     // Only verified study dates participate in chronological mastery and trends.
     const datedScored=scored.filter(item=>item.studiedOn);
