@@ -81,3 +81,43 @@ test('rephotographed public provenance does not create independent private maste
   assert.equal(JSON.stringify(merged).includes('first-reviewed-batch'),false);
   assert.equal(JSON.stringify(merged).includes('independence'),false);
 });
+
+const reorderedObjectFields=value=>Array.isArray(value)
+  ?value.map(reorderedObjectFields)
+  :value&&typeof value==='object'
+    ?Object.fromEntries(Object.entries(value).reverse()
+      .map(([key,item])=>[key,reorderedObjectFields(item)]))
+    :value;
+
+test('reserialized reviewed evidence preserves public provenance and private slipping status',()=>{
+  const approved=mergeSchoolwork(held(),reviewed());
+  const replayed=mergeSchoolwork(approved,reorderedObjectFields(reviewed()));
+  assert.deepEqual(replayed,approved);
+  assert.deepEqual(validateSchoolwork(replayed,{requireManifest:true}),
+    {lessons:1,questions:1,photos:1});
+
+  const dated=['correct','correct','partial','partial'].map((result,index)=>({
+    id:'assessment-'+index,sourceId:'photo-'+index+'.jpeg',
+    assignmentId:'math-facts-sheet-'+index,questionId:'1',
+    subject:'Math',skill:'addition-facts',
+    studiedOn:'2026-10-0'+(index+1),addedOn:'2026-10-10',
+    result,errorType:result==='correct'?'unknown':'procedure-error',
+    independence:'independent'
+  }));
+  const history=mergeLearningHistory(null,privateBatch(dated,'first-private-review'));
+  assert.equal(history.skills[0].trend,'slipping');
+  assert.equal(history.skills[0].status,'learning');
+  const privateReplay=mergeLearningHistory(history,
+    privateBatch(dated.map(reorderedObjectFields),'same-facts-new-object-order'));
+  assert.deepEqual(privateReplay,history);
+  const changedPublic=reorderedObjectFields(reviewed());
+  changedPublic.lessons[0].questions[0].answer='Eight';
+  assert.throws(()=>mergeSchoolwork(approved,changedPublic),/Lesson ID collision/);
+  const changedPrivate={...dated[0],result:'incorrect'};
+  assert.throws(()=>mergeLearningHistory(history,
+    privateBatch([changedPrivate],'conflicting-private-evidence')),/Observation ID collision/);
+  // No private responses, trends or assessment status can flow to the public pack.
+  assert.equal(JSON.stringify(replayed).includes('slipping'),false);
+  assert.equal(JSON.stringify(replayed).includes('procedure-error'),false);
+  assert.equal(JSON.stringify(replayed).includes('first-private-review'),false);
+});
