@@ -111,6 +111,9 @@ function skillSummary(observations,asOf){
     // Each verified assessment day is one time point. Item IDs and their
     // arbitrary ordering cannot change time-weighted confidence or trends.
     const datedScored=scored.filter(item=>item.studiedOn);
+    // Unknown results are unscored, but their verified assessment dates
+    // still matter for whether an apparent mastery claim is settled.
+    const datedEvidence=group.filter(item=>item.studiedOn);
     const byDay=new Map();
     for(const item of datedScored){
       const items=byDay.get(item.studiedOn)||[];
@@ -126,9 +129,10 @@ function skillSummary(observations,asOf){
       :weights.length?round(recentDays.reduce((sum,item,index)=>sum+item.mean*weights[index],0)
         /weights.reduce((a,b)=>a+b,0)):0;
     const lastThree=datedScored.slice(-3);
-    const latestDatedDay=datedScored.at(-1)?.studiedOn;
-    // ID order must never hide a miss on the latest verified assessment day.
-    const unresolvedLatestDay=datedScored.some(item=>
+    const latestDatedDay=datedEvidence.at(-1)?.studiedOn;
+    // Even if the last scored answers were correct, an unknown result on the
+    // latest verified day cannot silently count as resolved or mastered.
+    const unresolvedLatestDay=datedEvidence.some(item=>
       item.studiedOn===latestDatedDay&&item.result!=='correct');
     const mastery=!unresolvedLatestDay&&lastThree.length===3&&lastThree.every(item=>item.result==='correct'&&(item.independence||'unknown')==='independent'&&item.studiedOn)
       &&new Set(lastThree.map(workKey)).size>=2
@@ -169,7 +173,7 @@ function differenceInDays(later,earlier){
   return Math.floor((Date.parse(later+'T12:00:00Z')-Date.parse(earlier+'T12:00:00Z'))/86400000);
 }
 function practiceTargets(skills,observations,asOf){
-  const latestVerified=new Map(),undatedErrors=new Map();
+  const latestVerified=new Map(),latestUnscored=new Map(),undatedErrors=new Map();
   const severity=item=>item.result==='incorrect'?3:item.result==='partial'?2:1;
   for(const observation of observations){
     const key=skillKey(observation);
@@ -179,6 +183,9 @@ function practiceTargets(skills,observations,asOf){
         (observation.studiedOn===prior.studiedOn&&severity(observation)>severity(prior))){
         latestVerified.set(key,observation);
       }
+    }else if(observation.studiedOn&&observation.result==='unknown'){
+      const prior=latestUnscored.get(key);
+      if(!prior||observation.studiedOn>prior)latestUnscored.set(key,observation.studiedOn);
     }else if(!observation.studiedOn&&(observation.result==='incorrect'||observation.result==='partial')){
       const previous=undatedErrors.get(key);
       if(!previous||observation.addedOn>previous)undatedErrors.set(key,observation.addedOn);
@@ -187,6 +194,10 @@ function practiceTargets(skills,observations,asOf){
   return skills.map(skill=>{
     const key=skill.subject+'\u0000'+skill.skill;
     const latest=latestVerified.get(key);
+    // This is a private *review* request, not a failed assessment or a child
+    // practice weakness. A later scored day resolves an older unknown day.
+    const unresolvedUnscored=latestUnscored.has(key)&&
+      (!latest||latestUnscored.get(key)>=latest.studiedOn);
     // Later verified mastery can close an older undated-review concern.
     // Same-day evidence or an undated photo uploaded after mastery stays held.
     const unresolvedUndated=undatedErrors.has(key)&&!(
@@ -195,6 +206,7 @@ function practiceTargets(skills,observations,asOf){
     let priority=0,reason='monitor';
     if(latest?.result==='incorrect'){priority=100;reason='recent-miss';}
     else if(latest?.result==='partial'){priority=90;reason='recent-partial';}
+    else if(unresolvedUnscored){priority=85;reason='review-unscored';}
     else if(unresolvedUndated){priority=80;reason='review-undated';}
     else if(skill.status==='learning'){priority=75;reason='learning';}
     else if(skill.status==='not-enough-evidence'){priority=60;reason='collect-more-evidence';}
