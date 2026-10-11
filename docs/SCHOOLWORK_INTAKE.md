@@ -116,7 +116,10 @@ Compare the newly mapped skills with all prior reviewed observations. Look for:
 
 Do not turn a single worksheet into a trend. Separate verified `studiedOn`
 dates from intake-only `addedOn` dates; uploading old work on multiple days
-must never establish a new assessment date or mastery. Likewise, uploading
+must never establish a new assessment date or mastery. A positive average by
+itself is not evidence of `improving`: require the private history's actual
+upward trend across four verified assessment days. Steady or slipping results
+must not receive an `improving` label. Likewise, uploading
 an older undated worksheet cannot become a verified recent miss or reset a
 retention review interval. Keep undated misses visible in the private
 `review-undated` queue without assigning an unsupported schoolwork date.

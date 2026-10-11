@@ -133,17 +133,19 @@ function skillSummary(observations,asOf){
     const mastery=!unresolvedLatestDay&&lastThree.length===3&&lastThree.every(item=>item.result==='correct'&&(item.independence||'unknown')==='independent'&&item.studiedOn)
       &&new Set(lastThree.map(workKey)).size>=2
       &&new Set(lastThree.map(item=>item.studiedOn)).size>=2;
-    let status='not-enough-evidence';
-    if(scored.length>=2)status='learning';
-    // Intake dates are not verified assessment dates; they cannot establish progress.
-    if(datedScored.length>=3&&dayMeans.length>=2&&average(recentDays.map(item=>item.mean))>=0.5)status='improving';
-    if(mastery)status='mastered';
     let trend='insufficient-data';
     if(dayMeans.length>=4){
       const previous=average(dayMeans.slice(-4,-2).map(item=>item.mean));
       const latest=average(dayMeans.slice(-2).map(item=>item.mean));
       trend=latest-previous>0.2?'improving':previous-latest>0.2?'slipping':'steady';
     }
+    let status='not-enough-evidence';
+    if(scored.length>=2)status='learning';
+    // A positive overall average is not evidence of progress. "Improving"
+    // requires the independently dated, day-level trend to be improving.
+    // Fewer than four verified days remain learning/insufficient-data.
+    if(datedScored.length>=3&&trend==='improving'&&average(recentDays.map(item=>item.mean))>=0.5)status='improving';
+    if(mastery)status='mastered';
     const errors={};
     for(const item of scored)if(item.result!=='correct'){const type=item.errorType||'unknown';errors[type]=(errors[type]||0)+1;}
     const latest=group.at(-1);
