@@ -51,7 +51,18 @@ compare averages for verified assessment days, not item-ID order. When a
 verified day contains both correct and incorrect answers, the incorrect
 answer takes priority in the private practice queue and blocks claiming
 mastery while unresolved; a partial response takes priority over a
-correct response on the same date. This confidence value is a household
+correct response on the same date. A latest **verified study day** with
+an `unknown` item also suspends the private mastery claim until later
+independently dated, scored success resolves that uncertainty, even if
+earlier scored items were all correct. The unknown result is **not**
+counted as wrong, does not lower scored confidence, and receives a
+private `review-unscored` reason (priority 85) when it is as recent
+as the latest scored assessment. A confirmed latest-day miss or partial
+answer takes precedence over this review reason. An unknown on an older
+verified date, or an undated unknown uploaded later, does not erase
+newer dated mastery; all evidence remains in the private ledger.
+These reasons are reviewer triage, not labels to publish about a child.
+This confidence value is a household
 planning aid, not a grade or calibrated probability.
 
 The private `improving` status is **not** awarded merely because the overall
