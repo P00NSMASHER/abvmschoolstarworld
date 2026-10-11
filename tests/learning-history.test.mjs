@@ -113,7 +113,9 @@ test('verified assignment dates, not merely intake dates, support chronological 
 test('positive score averages do not turn slipping or steady dated work into improving',()=>{
   const scenarios=[
     {name:'slipping',results:['correct','correct','incorrect','incorrect'],trend:'slipping',status:'learning'},
+    {name:'slipping despite 75 percent average',results:['correct','correct','partial','partial'],trend:'slipping',status:'learning'},
     {name:'steady',results:['partial','partial','partial','partial'],trend:'steady',status:'learning'},
+    {name:'mastered with steady perfect scores',results:['correct','correct','correct','correct'],trend:'steady',status:'mastered'},
     {name:'genuine upward evidence',results:['incorrect','incorrect','correct','correct'],trend:'improving',status:'improving'},
     {name:'three verified dates',results:['incorrect','incorrect','correct'],trend:'insufficient-data',status:'learning'}
   ];
