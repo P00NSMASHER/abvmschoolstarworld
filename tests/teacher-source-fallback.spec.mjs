@@ -85,3 +85,51 @@ test("current verified teacher pages do not show an unnecessary fallback",async(
   await expect(page.locator(".freshness")).toContainText("Teacher pages verified");
   await expect(page.locator(".teacher-live-source")).toHaveCount(0);
 });
+
+// The status link is useful only when families can reach and activate it.
+// A nominally visible element can still sit under the bottom navigation,
+// especially on compact iPhones and when iOS text size is enlarged.
+test("live teacher link clears the bottom bar on compact and enlarged-text phones",async({page},info)=>{
+  test.setTimeout(120_000);
+  await page.emulateMedia({reducedMotion:"reduce"});
+  await openWithPack(page,mockPack(staleAt));
+
+  for(const viewport of [{width:375,height:667},{width:390,height:844}]){
+    await page.setViewportSize(viewport);
+    for(const enlarged of [false,true]){
+      await page.evaluate(enlarge=>{
+        document.documentElement.style.fontSize=enlarge?"32px":"";
+      },enlarged);
+      for(const tab of ["today","calendar","week","study","family"]){
+        await page.goto("/#"+tab);
+        const link=page.locator("a.teacher-live-source");
+        await expect(link).toBeVisible();
+        await expect(link).toHaveAttribute("aria-label",/official Grade 2 teacher page/i);
+        await link.evaluate(el=>el.scrollIntoView({block:"center",behavior:"auto"}));
+        const measured=await link.evaluate(el=>{
+          const target=el.getBoundingClientRect();
+          const nav=document.querySelector(".bottom-nav")?.getBoundingClientRect();
+          const screen=el.closest(".screen");
+          const surface=screen?.getBoundingClientRect();
+          return {
+            left:target.left,right:target.right,top:target.top,bottom:target.bottom,
+            height:target.height,navTop:nav?.top ?? innerHeight,
+            screenTop:surface?.top ?? 0,
+            screenWidth:screen?.clientWidth,scrollWidth:screen?.scrollWidth
+          };
+        });
+        const context=JSON.stringify({viewport,enlarged,tab,measured});
+        expect(measured.height,context).toBeGreaterThanOrEqual(44);
+        expect(measured.left,context).toBeGreaterThanOrEqual(-1);
+        expect(measured.right,context).toBeLessThanOrEqual(viewport.width+1);
+        expect(measured.top,context).toBeGreaterThanOrEqual(measured.screenTop-1);
+        expect(measured.bottom,context).toBeLessThanOrEqual(measured.navTop-2);
+        expect(measured.scrollWidth,context).toBeLessThanOrEqual(measured.screenWidth+1);
+        if(viewport.width===375 && enlarged && tab==="today"){
+          await page.screenshot({path:info.outputPath("teacher-source-clearance-375-enlarged.png"),animations:"disabled"});
+        }
+      }
+    }
+  }
+  await page.evaluate(()=>{document.documentElement.style.fontSize="";});
+});
