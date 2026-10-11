@@ -121,7 +121,11 @@ Compare the newly mapped skills with all prior reviewed observations. Look for:
 
 Do not turn a single worksheet into a trend. Separate verified `studiedOn`
 dates from intake-only `addedOn` dates; uploading old work on multiple days
-must never establish a new assessment date or mastery. A positive average by
+must never establish a new assessment date or mastery. A latest verified-day
+`unknown` answer is not a miss, but must enter private `review-unscored`
+triage instead of silently preserving a mastery claim; do not publish this
+review status as a child's weakness. Earlier or undated unknown work does not
+overrule newer verified independent mastery. A positive average by
 itself is not evidence of `improving`: require the private history's actual
 upward trend across four verified assessment days. Steady or slipping results
 must not receive an `improving` label. Likewise, uploading
@@ -174,6 +178,10 @@ Dry-run first. Review the derived status/trend/practice queue, then write.
 Use the private practice queue to decide what practice is useful now. Prefer small,
 specific practice sets aimed at the evidenced skill rather than generic subject-wide
 worksheets. Include retention checks for older mastered skills when appropriate.
+A `review-unscored` target is **for the parent/reviewer to verify unclear
+evidence first**; it is not evidence of a learning deficit or permission to
+generate remedial practice from an unverified answer. Leave the source
+unresolved until its correctness can be independently reviewed.
 
 The private reason for targeting a skill is not published. Public ABVM content may
 contain original practice for the skill, but it must not say that the learner is weak,
