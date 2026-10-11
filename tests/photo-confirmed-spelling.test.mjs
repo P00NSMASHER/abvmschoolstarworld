@@ -41,13 +41,18 @@ test('every supplied weekly spelling photo is accounted without publishing handw
   }
 });
 
-test('only a verified Monday week anchor can make week-dated material current',()=>{
+test('only a source-consistent Monday week anchor can make week-dated material current',()=>{
   const schoolwork=read('schoolwork.json');
+  // The reviewed October 5 week precedes the actual October 8 intake.
+  assert.doesNotThrow(()=>validateSchoolwork(schoolwork,{requireManifest:true}));
   for(const weekOf of ['2026-10-08','2026-02-31','sometime','2026-10-12']){
     const changed=structuredClone(schoolwork);
     changed.lessons.find(l=>l.id==='spelling-oct-09-2026').weekOf=weekOf;
-    if(weekOf!=='2026-10-12')assert.throws(()=>validateSchoolwork(changed,{requireManifest:true}));
-    else assert.doesNotThrow(()=>validateSchoolwork(changed,{requireManifest:true}));
+    if(weekOf==='2026-10-12'){
+      // A different valid Monday still cannot begin after the image was received.
+      assert.throws(()=>validateSchoolwork(changed,{requireManifest:true}),
+        /weekOf cannot begin after addedOn/);
+    }else assert.throws(()=>validateSchoolwork(changed,{requireManifest:true}));
   }
 });
 
