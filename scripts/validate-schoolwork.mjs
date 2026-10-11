@@ -136,12 +136,29 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
     for (const id of referenced) check(byId.has(id), `${id}: lesson references missing source manifest entry`);
   } else check(referenced.size === pack.uploadedPhotoCount, 'All uploaded photos must be accounted for in lesson sources');
   const forbidden = /^(studentName|studentId|birthDate|gradeReceived|scoreReceived|rawImage|imageBase64|imageBytes|ocrText|handwrittenAnswers)$/i;
+  // Structural allowlists cannot stop a private value hidden in an allowed
+  // public string. Reject unmistakable direct identifiers without attempting
+  // to infer whether a normal name or classroom story is private.
+  const directIdentifierPatterns = [
+    [/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i, 'email address'],
+    [/(?<![A-Za-z0-9])(?:\+1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}(?![A-Za-z0-9])/, 'phone number'],
+    [/(?<!\d)\d{3}[- ]\d{2}[- ]\d{4}(?!\d)/, 'government ID'],
+    [/data:(?:image|application|audio|video|text)\/[\w.+-]+/i, 'embedded data URI']
+  ];
   function inspect(value) {
     if (!value || typeof value !== 'object') return;
     for (const [key,item] of Object.entries(value)) {
-      check(!forbidden.test(key), `Do not publish private field ${key}`);
-      if (typeof item === 'string') check(!/^data:image\//.test(item), 'Do not publish raw image data');
-      else inspect(item);
+      check(!forbidden.test(key), 'Do not publish private field ' + key);
+      if (typeof item === 'string') {
+        check(!/^data:image\//i.test(item), 'Do not publish raw image data');
+        // Cryptographic source digests are verified above and can accidentally
+        // resemble ten-digit phone numbers. They are not human-readable text.
+        if (key !== 'sha256') {
+          for (const [pattern,label] of directIdentifierPatterns) {
+            check(!pattern.test(item), 'Do not publish ' + label + ' in public schoolwork text');
+          }
+        }
+      } else inspect(item);
     }
   }
   inspect(pack);
