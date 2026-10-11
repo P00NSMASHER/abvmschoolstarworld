@@ -8,6 +8,9 @@ on:
       - 'pages/index.html'
       - 'pages/product-view.js'
       - 'pages/sw.js'
+      - 'pages/app.js'
+      - 'pages/school-updates.js'
+      - 'tests/teacher-source-fallback.spec.mjs'
       - 'tests/today-premium.spec.mjs'
       - 'tests/weekly-learning-dashboard.spec.mjs'
       - 'tests/tablet-desktop.spec.mjs'
@@ -43,7 +46,7 @@ jobs:
       - run: npm run pack:runtime
       - run: npx playwright install --with-deps chromium webkit
       - name: Real iPhone-width Chromium and Safari-WebKit visual acceptance
-        run: npx playwright test tests/today-premium.spec.mjs --project=mobile --project=iphone-webkit --workers=1 --retries=0
+        run: npx playwright test tests/today-premium.spec.mjs tests/teacher-source-fallback.spec.mjs --project=mobile --project=iphone-webkit --workers=1 --retries=0
       - name: iPad portrait and large-tablet hero size regression
         run: npx playwright test tests/tablet-desktop.spec.mjs --project=desktop --grep 'iPad portrait|large tablet' --workers=1 --retries=0
       - name: Verify seven-day learning evidence across Eastern midnight
@@ -55,6 +58,7 @@ jobs:
           name: abvm-today-visual-${{ github.run_id }}
           path: |
             test-results/**/today-premium-*.png
+            test-results/**/teacher-source-*.png
             playwright-report
             test-results/**/trace.zip
             test-results/**/test-failed-*.png
