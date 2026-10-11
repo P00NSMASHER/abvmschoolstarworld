@@ -16,7 +16,7 @@ jobs:
   source-parity:
     # Validate both integration heads and all three explicitly authorized review layers.
     # Every nested Calendar PR must execute the authoritative school-source gate.
-    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'release/abvm-unified-preview-20261009' || github.base_ref == 'release/abvm-unified-preview-20261009' || github.base_ref == 'ux/calendar-focus-scroll-20261010' || github.base_ref == 'ux/calendar-date-wayfinding-20261010' || github.head_ref == 'release/abvm-premium-privacy-integration-20261010'
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'release/abvm-unified-preview-20261009' || github.base_ref == 'release/abvm-unified-preview-20261009' || github.base_ref == 'ux/calendar-focus-scroll-20261010' || github.base_ref == 'ux/calendar-date-wayfinding-20261010' || github.head_ref == 'release/abvm-premium-privacy-integration-20261010' || github.base_ref == 'release/abvm-premium-privacy-integration-20261010'
     runs-on: ubuntu-latest
     timeout-minutes: 6
     steps:

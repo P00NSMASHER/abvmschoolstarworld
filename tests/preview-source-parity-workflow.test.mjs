@@ -23,6 +23,8 @@ test("authoritative source parity covers the premium release preview and its dir
     "agenda-polish PRs stacked on date wayfinding must not skip school-source parity");
   assert.ok(condition.includes("github.head_ref == '"+integratedPrivacyBranch+"'"),
     "reconciled production-privacy integration must run protected source parity");
+  assert.ok(condition.includes("github.base_ref == '"+integratedPrivacyBranch+"'"),
+    "review PRs stacked on the privacy integration must not skip source parity");
   assert.ok(condition.includes("github.event_name == 'workflow_dispatch'"),
     "maintainers retain the manual source-parity verification path");
   assert.ok(!/\bmain\b/.test(condition),
