@@ -11,6 +11,7 @@ const calendarReviewBranch="ux/calendar-focus-scroll-20261010";
 const calendarDateBranch="ux/calendar-date-wayfinding-20261010";
 const integratedPrivacyBranch="release/abvm-premium-privacy-integration-20261010";
 const consolidatedReviewBranch="release/abvm-premium-single-release-review-20261011";
+const jointIntegrationBranch="integration/abvm-premium-schoolwork-review-20261011";
 
 test("authoritative source parity covers the premium release preview and its directly stacked review PRs",()=>{
   const condition=source.match(/^\s+if:\s*(.+)$/m)?.[1]||"";
@@ -32,6 +33,10 @@ test("authoritative source parity covers the premium release preview and its dir
     "single-PR consolidated release candidate must run protected source parity");
   assert.ok(condition.includes("github.base_ref == '"+consolidatedReviewBranch+"'"),
     "further release-review PRs must not skip protected source parity");
+  assert.ok(condition.includes("github.head_ref == '"+jointIntegrationBranch+"'"),
+    "cross-release integration PR head must run protected source parity");
+  assert.ok(condition.includes("github.base_ref == '"+jointIntegrationBranch+"'"),
+    "further compatibility review PRs must run protected source parity");
   assert.ok(condition.includes("github.event_name == 'workflow_dispatch'"),
     "maintainers retain the manual source-parity verification path");
   assert.ok(!/\bmain\b/.test(condition),

@@ -49,6 +49,13 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
       }
     }
     check(isDate(lesson.addedOn), `${lesson.id}: invalid addedOn`);
+    // Upload/intake dates never prove a later classroom assessment date.
+    // A future verified day or verified school week must be held for review,
+    // not routed into weekly practice as if a future worksheet were completed.
+    check(!lesson.studiedOn || lesson.studiedOn <= lesson.addedOn,
+      `${lesson.id}: studiedOn cannot be after addedOn`);
+    check(lesson.weekOf === undefined || lesson.weekOf <= lesson.addedOn,
+      `${lesson.id}: weekOf cannot begin after addedOn`);
     check(lesson.studiedOn !== null || /undated|unknown/i.test(lesson.dateStatus), `${lesson.id}: unknown study date must remain labeled undated`);
     check(lesson.chapter === undefined || (Number.isInteger(lesson.chapter) && lesson.chapter >= 1 && lesson.chapter <= 99), `${lesson.id}: invalid chapter`);
     check(Array.isArray(lesson.questions), `${lesson.id}: missing questions array`);
@@ -75,7 +82,7 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
     unique(manifest.map(s=>s.id),'source IDs');
     check(pack.uploadedPhotoCount === manifest.length, 'uploadedPhotoCount must account for every manifest photo');
     const byId = new Map(manifest.map(s=>[s.id,s]));
-    const hashes = new Map();
+    const hashes = new Map(), integratedHashes = new Map();
     for (const source of manifest) {
       allowedKeys(source, SOURCE_KEYS, `source ${source?.id || '<unknown>'}`);
       check(text(source.id) && /^[a-zA-Z0-9_.-]+$/.test(source.id), 'Invalid non-identifying source ID');
@@ -83,15 +90,48 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
       check(['integrated','duplicate','held'].includes(source.status), `${source.id}: invalid source status`);
       check(source.duplicateOf === undefined || text(source.duplicateOf), `${source.id}: invalid duplicateOf`);
       check(source.reason === undefined || text(source.reason), `${source.id}: invalid reason`);
+      // A held photo is accounted for, but never authorizes publishing a lesson.
+      check(source.status !== 'held' || !referenced.has(source.id),
+        `${source.id}: held source cannot support published lessons`);
+      check(source.status === 'duplicate' || source.duplicateOf === undefined,
+        `${source.id}: duplicateOf is only valid for duplicate sources`);
+      // Order-independent SHA identity: one canonical integrated record per image.
+      if (source.status === 'integrated') {
+        check(!integratedHashes.has(source.sha256),
+          `${source.id}: SHA-256 already integrated as ${integratedHashes.get(source.sha256)}`);
+        integratedHashes.set(source.sha256,source.id);
+      }
       if (source.status === 'duplicate') {
         const canonical=byId.get(source.duplicateOf);
         check(canonical && canonical.id !== source.id && canonical.status === 'integrated', `${source.id}: invalid duplicateOf`);
         check(canonical.sha256 === source.sha256 || text(source.reason), `${source.id}: semantic duplicate requires a reason`);
+        // Rephotographs are provenance on the same reviewed lesson, not an
+        // independent authorization to generate different academic content.
+        for (const lesson of pack.lessons) {
+          if (lesson.sources.includes(source.id)) {
+            check(lesson.sources.includes(canonical.id),
+              `${lesson.id}: duplicate ${source.id} must share its lesson with ${canonical.id}`);
+          }
+        }
       }
       if (hashes.has(source.sha256)) check(source.status === 'duplicate' || hashes.get(source.sha256).status === 'duplicate', `${source.id}: repeated hash must be recorded as a duplicate`);
       else hashes.set(source.sha256,source);
       check(source.status === 'held' || referenced.has(source.id), `${source.id}: photo is not accounted for by a lesson`);
       if (source.status === 'held') check(text(source.reason), `${source.id}: held source requires reason`);
+    }
+    // Exact image bytes have one reviewed authority, even when a source has
+    // a free-text semantic-rephotograph reason. Perform this check after
+    // scanning the full manifest so duplicate-first ordering cannot bypass it.
+    const unresolvedHeldByHash=new Map(manifest.filter(s=>s.status==='held').map(s=>[s.sha256,s.id]));
+    for (const source of manifest) {
+      if (source.status==='held') continue;
+      const heldId=unresolvedHeldByHash.get(source.sha256);
+      check(!heldId, `${source.id}: SHA-256 belongs to unresolved held source ${heldId}`);
+      if (source.status==='duplicate') {
+        const exactCanonical=integratedHashes.get(source.sha256);
+        check(!exactCanonical || source.duplicateOf===exactCanonical,
+          `${source.id}: exact SHA-256 duplicate must reference ${exactCanonical}`);
+      }
     }
     for (const id of referenced) check(byId.has(id), `${id}: lesson references missing source manifest entry`);
   } else check(referenced.size === pack.uploadedPhotoCount, 'All uploaded photos must be accounted for in lesson sources');
@@ -109,6 +149,8 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const path=process.argv[2] || 'pages/data/schoolwork.json';
-  try { console.log(JSON.stringify(validateSchoolwork(JSON.parse(await readFile(path,'utf8'))))); }
+  // The public release gate never accepts a pack without reviewed photo evidence.
+  // Keep the library's optional legacy mode separate from CLI publication checks.
+  try { console.log(JSON.stringify(validateSchoolwork(JSON.parse(await readFile(path,'utf8')),{requireManifest:true}))); }
   catch(error) { console.error(error.message); process.exitCode=1; }
 }

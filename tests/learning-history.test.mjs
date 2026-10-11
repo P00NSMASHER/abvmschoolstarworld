@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdir,mkdtemp,readFile,rm,writeFile} from 'node:fs/promises';
+import {chmod,mkdir,mkdtemp,readFile,rm,stat,symlink,writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {assertPrivatePath,integrateLearningHistory,mergeLearningHistory,validateObservationBatch} from '../scripts/learning-history.mjs';
@@ -30,6 +30,91 @@ test('mastery requires repeated independent success across sources and dates',()
   ],'2026-10-05'));
   assert.equal(second.skills[0].status,'mastered');
   assert.equal(second.skills[0].trend,'improving');
+});
+
+test('a newer verified unknown result holds mastery for review without counting as a miss',()=>{
+  const correct=[1,2,3].map(n=>observation(
+    'correct-'+n,'review-'+n+'.jpeg','2026-10-0'+n,'correct',
+    {assignmentId:'independent-sheet-'+n,questionId:'1'}
+  ));
+  const established=mergeLearningHistory(null,batch(correct,'2026-10-03'));
+  assert.equal(established.skills[0].status,'mastered');
+  assert.equal(established.skills[0].confidence,1);
+  assert.deepEqual(established.practiceTargets,[]);
+
+  const uncertain=observation('unreadable','unreadable.jpeg','2026-10-04','unknown',{
+    assignmentId:'unreadable-sheet',questionId:'1',
+    errorType:'unknown',independence:'unknown'
+  });
+  const needsReview=mergeLearningHistory(established,batch([uncertain],'2026-10-04'));
+  assert.equal(needsReview.observations.length,4);
+  assert.equal(needsReview.skills[0].scoredCount,3,'unknown is not a scored failure');
+  assert.equal(needsReview.skills[0].confidence,1,'uncertainty must not invent a low score');
+  assert.equal(needsReview.skills[0].status,'learning','latest unscored date cannot assert mastery');
+  assert.equal(needsReview.practiceTargets[0].reason,'review-unscored');
+  assert.equal(needsReview.practiceTargets[0].priority,85);
+  assert.equal(established.skills[0].status,'mastered','old ledger stays intact');
+
+  const freshSuccess=observation('next-independent','fresh.jpeg','2026-10-05','correct',{
+    assignmentId:'fresh-sheet',questionId:'1'
+  });
+  const resolved=mergeLearningHistory(needsReview,batch([freshSuccess],'2026-10-05'));
+  assert.equal(resolved.skills[0].status,'mastered');
+  assert.equal(resolved.practiceTargets.length,0);
+  assert.equal(resolved.observations.length,5,'unscored history is retained');
+});
+
+test('latest-day unknowns never gain mastery from ID order or an earlier scored correct item',()=>{
+  const correct=[1,2,3].map(n=>observation(
+    'c-'+n,'photo-'+n+'.jpeg','2026-10-0'+n,'correct',
+    {assignmentId:'sheet-'+n,questionId:'1'}
+  ));
+  const uncertain=observation('z-unknown','photo-3.jpeg','2026-10-03','unknown',{
+    assignmentId:'sheet-3',questionId:'2',
+    errorType:'unknown',independence:'unknown'
+  });
+  for(const id of ['a-unknown','z-unknown']){
+    const variant={...uncertain,id};
+    const result=mergeLearningHistory(null,batch([...correct,variant],'2026-10-03'));
+    assert.notEqual(result.skills[0].status,'mastered');
+    assert.equal(result.practiceTargets[0].reason,'review-unscored');
+    assert.equal(result.skills[0].scoredCount,3);
+  }
+});
+
+test('older dated unknowns and newly uploaded undated unknowns do not erase later verified mastery',()=>{
+  const uncertainEarlier=observation('old-unknown','old.jpeg','2026-10-01','unknown',{
+    assignmentId:'old-sheet',questionId:'1',errorType:'unknown',independence:'unknown'
+  });
+  const laterCorrect=[2,3,4].map(n=>observation(
+    'd-'+n,'scored-'+n+'.jpeg','2026-10-0'+n,'correct',
+    {assignmentId:'dated-sheet-'+n,questionId:'1'}
+  ));
+  const history=mergeLearningHistory(null,batch([uncertainEarlier,...laterCorrect],'2026-10-04'));
+  assert.equal(history.skills[0].status,'mastered');
+  assert.equal(history.practiceTargets.length,0);
+  const oldUndated=observation('undated-unknown','late-photo.jpeg','2026-10-05','unknown',{
+    studiedOn:null,assignmentId:'old-photo-sheet',questionId:'1',
+    errorType:'unknown',independence:'unknown'
+  });
+  const replay=mergeLearningHistory(history,batch([oldUndated],'2026-10-05'));
+  assert.equal(replay.skills[0].status,'mastered');
+  assert.equal(replay.practiceTargets.length,0);
+  assert.equal(replay.observations.length,5);
+});
+
+test('a confirmed latest-day miss outranks an unscored review request',()=>{
+  const result=mergeLearningHistory(null,batch([
+    observation('miss','miss.jpeg','2026-10-04','incorrect',{
+      assignmentId:'sheet-a',questionId:'1'
+    }),
+    observation('unknown','unknown.jpeg','2026-10-04','unknown',{
+      assignmentId:'sheet-b',questionId:'1',
+      errorType:'unknown',independence:'unknown'
+    })
+  ],'2026-10-04'));
+  assert.equal(result.practiceTargets[0].reason,'recent-miss');
+  assert.equal(result.skills[0].scoredCount,1);
 });
 
 test('recent misses outrank generic reinforcement and retain error taxonomy',()=>{
@@ -70,4 +155,526 @@ test('file integration writes only to an external private path',async()=>{
     assert.equal(saved.observations.length,1);
     assert.equal(saved.practiceTargets[0].reason,'recent-miss');
   } finally { await rm(dir,{recursive:true,force:true}); }
+});
+
+test('a rephotographed assignment item cannot count as a new assessment',()=>{
+  const first=mergeLearningHistory(null,batch([
+    observation('o1','original.jpeg','2026-10-01','correct',{assignmentId:'Math Page 42',questionId:'4'})
+  ],'2026-10-01'));
+  const rephoto=batch([
+    observation('o2','second-photo.jpeg','2026-10-05','correct',{assignmentId:'  math page 42 ',questionId:'4'})
+  ],'2026-10-05');
+  assert.throws(()=>mergeLearningHistory(first,rephoto),/Repeated assessment item.*o2 duplicates o1/);
+  assert.deepEqual(mergeLearningHistory(first,batch([
+    observation('o2','second-photo.jpeg','2026-10-05','correct',{assignmentId:'math page 42',questionId:'5'})
+  ],'2026-10-05')).skills[0].scoredCount,2);
+});
+
+test('unknown worksheet dates cannot create mastery or a chronological improvement trend',()=>{
+  const undated=[1,2,3,4].map((n)=>observation('u'+n,'source-'+n+'.jpeg','2026-10-0'+n,n===1?'incorrect':'correct',{
+    studiedOn:null,addedOn:'2026-10-0'+n,assignmentId:'worksheet-'+n,questionId:'1'
+  }));
+  const result=mergeLearningHistory(null,batch(undated,'2026-10-08'));
+  assert.equal(result.skills[0].scoredCount,4);
+  assert.equal(result.skills[0].status,'learning');
+  assert.equal(result.skills[0].trend,'insufficient-data');
+  assert.equal(result.skills[0].confidence>0,true);
+  // Undated mistakes are reviewed without pretending they happened recently.
+  assert.equal(result.practiceTargets[0].reason,'review-undated');
+});
+
+test('verified assignment dates, not merely intake dates, support chronological improvement',()=>{
+  const items=[
+    observation('d1','p1','2026-10-01','incorrect'),
+    observation('d2','p2','2026-10-02','incorrect'),
+    observation('d3','p3','2026-10-03','correct'),
+    observation('d4','p4','2026-10-05','correct')
+  ];
+  const result=mergeLearningHistory(null,batch(items,'2026-10-09'));
+  assert.equal(result.skills[0].trend,'improving');
+  assert.equal(result.skills[0].status,'improving');
+});
+
+test('positive score averages do not turn slipping or steady dated work into improving',()=>{
+  const scenarios=[
+    {name:'slipping',results:['correct','correct','incorrect','incorrect'],trend:'slipping',status:'learning'},
+    {name:'slipping despite 75 percent average',results:['correct','correct','partial','partial'],trend:'slipping',status:'learning'},
+    {name:'steady',results:['partial','partial','partial','partial'],trend:'steady',status:'learning'},
+    {name:'mastered with steady perfect scores',results:['correct','correct','correct','correct'],trend:'steady',status:'mastered'},
+    {name:'genuine upward evidence',results:['incorrect','incorrect','correct','correct'],trend:'improving',status:'improving'},
+    {name:'three verified dates',results:['incorrect','incorrect','correct'],trend:'insufficient-data',status:'learning'}
+  ];
+  for(const {name,results,trend,status} of scenarios){
+    const observations=results.map((result,index)=>observation(
+      name+'-'+index,'dated-photo-'+index+'.jpeg','2026-10-0'+(index+1),result,
+      {assignmentId:'dated-sheet-'+index,questionId:'1'}
+    ));
+    const skill=mergeLearningHistory(null,batch(observations,'2026-10-06')).skills[0];
+    assert.equal(skill.trend,trend,name+' trend');
+    assert.equal(skill.status,status,name+' status');
+  }
+});
+
+test('undated correctness cannot disguise verified slipping as improving',()=>{
+  const dated=['correct','correct','incorrect','incorrect'].map((result,index)=>observation(
+    'dated-'+index,'dated-'+index+'.jpeg','2026-10-0'+(index+1),result,
+    {assignmentId:'worksheet-'+index,questionId:'1'}
+  ));
+  const undated=Array.from({length:5},(_,index)=>observation(
+    'undated-'+index,'undated-'+index+'.jpeg','2026-10-06','correct',
+    {studiedOn:null,assignmentId:'old-worksheet-'+index,questionId:'1'}
+  ));
+  const skill=mergeLearningHistory(null,batch([...dated,...undated],'2026-10-06')).skills[0];
+  assert.equal(skill.scoredCount,9);
+  assert.equal(skill.trend,'slipping');
+  assert.equal(skill.status,'learning');
+});
+
+test('replaying older approved evidence cannot rewind the private history date',()=>{
+  const first=mergeLearningHistory(null,batch([
+    observation('o1','p1','2026-10-01','correct')
+  ],'2026-10-09'));
+  const replay=mergeLearningHistory(first,batch([
+    observation('o1','p1','2026-10-01','correct')
+  ],'2026-10-01'));
+  assert.deepEqual(replay,first);
+});
+
+test('private history and batch cannot escape through symlinked files or parent folders',{skip:process.platform==='win32'},async()=>{
+  const dir=await mkdtemp(path.join(tmpdir(),'abvm-private-paths-'));
+  try{
+    const publicRoot=path.join(dir,'public'),privateRoot=path.join(dir,'private');
+    await mkdir(publicRoot);await mkdir(privateRoot);
+    const safeBatch=path.join(privateRoot,'batch.json');
+    await writeFile(safeBatch,JSON.stringify(batch([observation('o1','p1','2026-10-01')])));
+    const shortcut=path.join(privateRoot,'public-link');
+    await symlink(publicRoot,shortcut,'dir');
+    await assert.rejects(
+      integrateLearningHistory(path.join(shortcut,'history.json'),safeBatch,{write:true,repoRoot:publicRoot}),
+      /outside the public ABVM repository/
+    );
+    const exposedBatch=path.join(publicRoot,'reviewed-batch.json');
+    await writeFile(exposedBatch,await readFile(safeBatch));
+    await symlink(exposedBatch,path.join(privateRoot,'source-shortcut.json'),'file');
+    await assert.rejects(
+      integrateLearningHistory(path.join(privateRoot,'history.json'),path.join(privateRoot,'source-shortcut.json'),{write:true,repoRoot:publicRoot}),
+      /outside the public ABVM repository/
+    );
+    const exposedHistory=path.join(publicRoot,'history.json');
+    await writeFile(exposedHistory,'DO NOT OVERWRITE');
+    await symlink(exposedHistory,path.join(privateRoot,'history-shortcut.json'),'file');
+    await assert.rejects(
+      integrateLearningHistory(path.join(privateRoot,'history-shortcut.json'),safeBatch,{write:true,repoRoot:publicRoot}),
+      /outside the public ABVM repository/
+    );
+    assert.equal(await readFile(exposedHistory,'utf8'),'DO NOT OVERWRITE');
+  }finally{await rm(dir,{recursive:true,force:true});}
+});
+
+test('new and replaced private histories are owner-only even under a permissive umask',{skip:process.platform==='win32'},async()=>{
+  const dir=await mkdtemp(path.join(tmpdir(),'abvm-private-permissions-'));
+  try{
+    const privateDir=path.join(dir,'nested','history'),target=path.join(privateDir,'history.json');
+    const source=path.join(dir,'batch.json'),publicRoot=path.join(dir,'public');
+    await writeFile(source,JSON.stringify(batch([observation('o1','p1','2026-10-01')],'2026-10-07')));
+    await integrateLearningHistory(target,source,{write:true,repoRoot:publicRoot});
+    assert.equal((await stat(privateDir)).mode&0o777,0o700);
+    assert.equal((await stat(target)).mode&0o777,0o600);
+    await chmod(target,0o644); // simulate a previously over-permissive history file
+    await writeFile(source,JSON.stringify(batch([observation('o2','p2','2026-10-03')],'2026-10-08')));
+    await integrateLearningHistory(target,source,{write:true,repoRoot:publicRoot});
+    assert.equal((await stat(target)).mode&0o777,0o600);
+    assert.equal(JSON.parse(await readFile(target,'utf8')).observations.length,2);
+    await chmod(target,0o644); // legacy permissions on content-identical replay
+    const replay=await integrateLearningHistory(target,source,{write:true,repoRoot:publicRoot});
+    assert.equal(replay.changed,false);
+    assert.equal((await stat(target)).mode&0o777,0o600);
+  }finally{await rm(dir,{recursive:true,force:true});}
+});
+
+test('mixed assignment-aware and legacy observations from one worksheet cannot manufacture mastery',()=>{
+  const sameWork=[
+    observation('sheet-1','photo-A.jpeg','2026-10-01','correct',{
+      assignmentId:' Math Page 42 ',questionId:'1'
+    }),
+    observation('sheet-2','photo-A.jpeg','2026-10-02','correct',{
+      questionId:'2'
+    }),
+    observation('sheet-3','photo-B.jpeg','2026-10-03','correct',{
+      assignmentId:'math page 42',questionId:'3'
+    })
+  ];
+  const history=mergeLearningHistory(null,batch(sameWork,'2026-10-03'));
+  assert.equal(history.skills[0].scoredCount,3);
+  assert.equal(history.skills[0].independentCorrect,3);
+  assert.equal(history.skills[0].confidence,1);
+  assert.notEqual(history.skills[0].status,'mastered',
+    'photo-only records must link to the reviewed assignment identity');
+  const independent=observation('next-sheet','photo-C.jpeg','2026-10-04','correct',{
+    assignmentId:'math page 43',questionId:'1'
+  });
+  const followed=mergeLearningHistory(history,batch([independent],'2026-10-04'));
+  assert.equal(followed.skills[0].status,'mastered');
+});
+
+test('same question in the same photo cannot be reimported once with and once without assignment ID',()=>{
+  const identified=observation('assigned','same-photo.jpeg','2026-10-01','correct',{
+    assignmentId:'Math Page 42',questionId:'4'
+  });
+  const legacy=observation('legacy','same-photo.jpeg','2026-10-02','correct',{
+    questionId:'4'
+  });
+  for(const order of [[identified,legacy],[legacy,identified]]){
+    assert.throws(()=>mergeLearningHistory(null,batch(order,'2026-10-03')),
+      /Repeated assessment item/, 'reject either intake order');
+  }
+  const existing=mergeLearningHistory(null,batch([identified],'2026-10-01'));
+  const snapshot=structuredClone(existing);
+  assert.throws(()=>mergeLearningHistory(existing,batch([legacy],'2026-10-03')),
+    /Repeated assessment item/);
+  assert.deepEqual(existing,snapshot,'reject without mutating previously reviewed evidence');
+});
+
+test('mixed-identity duplicate rejection preserves a private ledger byte-for-byte',async()=>{
+  const dir=await mkdtemp(path.join(tmpdir(),'abvm-mixed-identity-'));
+  try{
+    const target=path.join(dir,'history.json'),input=path.join(dir,'batch.json');
+    const repoRoot=path.join(dir,'public-repo');
+    const assigned=observation('canonical','original-photo.jpeg','2026-10-01','correct',{
+      assignmentId:'math page 42',questionId:'4'
+    });
+    await writeFile(input,JSON.stringify(batch([assigned],'2026-10-01')));
+    const original=await integrateLearningHistory(target,input,{write:true,repoRoot});
+    assert.equal(original.observations,1);
+    const before=await readFile(target,'utf8');
+    const duplicate=observation('legacy-photo','original-photo.jpeg','2026-10-02','correct',{
+      questionId:'4'
+    });
+    await writeFile(input,JSON.stringify(batch([duplicate],'2026-10-02')));
+    await assert.rejects(integrateLearningHistory(target,input,{write:true,repoRoot}),
+      /Repeated assessment item/);
+    assert.equal(await readFile(target,'utf8'),before);
+  }finally{await rm(dir,{recursive:true,force:true});}
+});
+
+test('one photo of multiple assignments is conservatively one independent work capture',()=>{
+  const samePhoto=[1,2,3].map(n=>observation(
+    'multiple-'+n,'one-camera.jpeg','2026-10-0'+n,'correct',{
+      assignmentId:'Separate Page '+n,questionId:'1'
+    }
+  ));
+  const history=mergeLearningHistory(null,batch(samePhoto,'2026-10-03'));
+  assert.notEqual(history.skills[0].status,'mastered');
+  const independent=observation('independent-photo','other-camera.jpeg','2026-10-04','correct',{
+    assignmentId:'Separate Page 4',questionId:'1'
+  });
+  assert.equal(mergeLearningHistory(history,batch([independent],'2026-10-04'))
+    .skills[0].status,'mastered');
+});
+
+test('older assignment-photo bridge cannot be bypassed by the latest three evidence records',()=>{
+  const history=mergeLearningHistory(null,batch([
+    observation('earliest-bridge','bridge-photo.jpeg','2026-10-01','correct',{
+      assignmentId:'Shared Homework',questionId:'1'
+    }),
+    observation('recent-1','photo-A.jpeg','2026-10-02','correct',{
+      assignmentId:'shared homework',questionId:'2'
+    }),
+    observation('recent-2','bridge-photo.jpeg','2026-10-03','correct',{
+      questionId:'3'
+    }),
+    observation('recent-3','photo-B.jpeg','2026-10-04','correct',{
+      assignmentId:'SHARED HOMEWORK',questionId:'4'
+    })
+  ],'2026-10-04'));
+  assert.notEqual(history.skills[0].status,'mastered',
+    'older reviewed provenance must still link otherwise distinct photos');
+});
+
+test('mastery requires distinct assignments, not rephotographs of one worksheet',()=>{
+  const sameSheet=[
+    observation('a1','camera-1.jpeg','2026-10-01','correct',{assignmentId:'Math Page 9',questionId:'1'}),
+    observation('a2','camera-2.jpeg','2026-10-02','correct',{assignmentId:' math page 9 ',questionId:'2'}),
+    observation('a3','camera-3.jpeg','2026-10-03','correct',{assignmentId:'MATH PAGE 9',questionId:'3'})
+  ];
+  const oneAssignment=mergeLearningHistory(null,batch(sameSheet,'2026-10-03'));
+  assert.equal(oneAssignment.skills[0].scoredCount,3);
+  assert.notEqual(oneAssignment.skills[0].status,'mastered');
+  // A genuinely separate assignment supplies independent evidence.
+  const later=mergeLearningHistory(oneAssignment,batch([
+    observation('b1','camera-4.jpeg','2026-10-04','correct',{assignmentId:'Math Page 10',questionId:'1'})
+  ],'2026-10-04'));
+  assert.equal(later.skills[0].status,'mastered');
+});
+
+test('future-dated study observations and intake-after-review dates fail closed',()=>{
+  const studiedAfterIntake=observation('future','p1','2026-10-09','correct',{addedOn:'2026-10-07'});
+  assert.throws(()=>validateObservationBatch(batch([studiedAfterIntake],'2026-10-10')),/studiedOn cannot be after addedOn/);
+  const laterIntake=observation('late','p2','2026-10-09','correct');
+  assert.throws(()=>validateObservationBatch(batch([laterIntake],'2026-10-08')),/addedOn cannot be after batch asOf/);
+  // Rejection cannot mutate a previously accepted private learning ledger.
+  const existing=mergeLearningHistory(null,batch([observation('o1','p1','2026-10-01')],'2026-10-05'));
+  const snapshot=structuredClone(existing);
+  assert.throws(()=>mergeLearningHistory(existing,batch([laterIntake],'2026-10-08')));
+  assert.deepEqual(existing,snapshot);
+});
+
+test('an existing exclusive writer lock blocks history reads and leaves records unchanged',async()=>{
+  const dir=await mkdtemp(path.join(tmpdir(),'abvm-history-lock-'));
+  try{
+    const history=path.join(dir,'history.json'),source=path.join(dir,'batch.json');
+    const repoRoot=path.join(dir,'public');
+    // An active writer may temporarily be preparing or replacing the ledger.
+    await writeFile(history,'{"partially-written":');
+    await writeFile(history+'.lock','other writer');
+    await writeFile(source,JSON.stringify(batch([observation('lock-1','p1','2026-10-01')])));
+    await assert.rejects(
+      integrateLearningHistory(history,source,{write:true,repoRoot}),
+      error=>error.code==='EEXIST'
+    );
+    assert.equal(await readFile(history,'utf8'),'{"partially-written":');
+    // A dry-run is nonmutating, so it can still report invalid external state.
+    await assert.rejects(integrateLearningHistory(history,source,{repoRoot}),SyntaxError);
+    await rm(history+'.lock');
+    await rm(history);
+    const result=await integrateLearningHistory(history,source,{write:true,repoRoot});
+    assert.equal(result.observations,1);
+  }finally{await rm(dir,{recursive:true,force:true});}
+});
+
+test('simultaneous private intakes either serialize or explicitly fail for safe retry',async()=>{
+  const dir=await mkdtemp(path.join(tmpdir(),'abvm-history-parallel-'));
+  try{
+    const history=path.join(dir,'history.json'),repoRoot=path.join(dir,'public');
+    const batches=['first','second'].map((name,i)=>({
+      file:path.join(dir,name+'.json'),
+      value:batch([observation(name,'source-'+name,'2026-10-0'+(i+1))],'2026-10-09')
+    }));
+    for(const item of batches)await writeFile(item.file,JSON.stringify(item.value));
+    const results=await Promise.allSettled(batches.map(item=>
+      integrateLearningHistory(history,item.file,{write:true,repoRoot})
+    ));
+    const succeeded=results.filter(result=>result.status==='fulfilled').length;
+    assert.ok(succeeded>=1);
+    for(const result of results)if(result.status==='rejected')assert.equal(result.reason.code,'EEXIST');
+    const initial=JSON.parse(await readFile(history,'utf8'));
+    assert.equal(initial.observations.length,succeeded,'no successful intake may be lost');
+    // Retry each original intake; existing observations remain idempotent.
+    for(const item of batches)await integrateLearningHistory(history,item.file,{write:true,repoRoot});
+    const complete=JSON.parse(await readFile(history,'utf8'));
+    assert.equal(complete.observations.length,2);
+    assert.deepEqual(new Set(complete.observations.map(item=>item.id)),new Set(['first','second']));
+  }finally{await rm(dir,{recursive:true,force:true});}
+});
+
+test('uploading an old undated miss does not become a dated recent miss or erase verified mastery',()=>{
+  const completed=[
+    observation('master-1','p1','2026-10-01','correct',{assignmentId:'math-1',questionId:'1'}),
+    observation('master-2','p2','2026-10-03','correct',{assignmentId:'math-2',questionId:'1'}),
+    observation('master-3','p3','2026-10-05','correct',{assignmentId:'math-3',questionId:'1'})
+  ];
+  const original=mergeLearningHistory(null,batch(completed,'2026-10-05'));
+  assert.equal(original.skills[0].status,'mastered');
+  const oldUndated=observation('older-photo','old-work.jpeg','2026-10-09','incorrect',{
+    studiedOn:null,assignmentId:'old-worksheet',questionId:'3'
+  });
+  const result=mergeLearningHistory(original,batch([oldUndated],'2026-10-10'));
+  assert.equal(result.skills[0].status,'mastered');
+  assert.equal(result.skills[0].scoredCount,4);
+  assert.equal(result.practiceTargets[0].reason,'review-undated');
+  assert.notEqual(result.practiceTargets[0].reason,'recent-miss');
+});
+
+test('new undated uploads do not create an improving timeline or hide a verified latest miss',()=>{
+  const reviewed=[
+    observation('dated-1','dated-1.jpeg','2026-10-01','correct'),
+    observation('dated-2','dated-2.jpeg','2026-10-03','incorrect'),
+    observation('photo-3','third.jpeg','2026-10-09','correct',{studiedOn:null}),
+    observation('photo-4','fourth.jpeg','2026-10-10','correct',{studiedOn:null})
+  ];
+  const result=mergeLearningHistory(null,batch(reviewed,'2026-10-10'));
+  assert.equal(result.skills[0].status,'learning');
+  assert.equal(result.skills[0].trend,'insufficient-data');
+  assert.equal(result.practiceTargets[0].reason,'recent-miss');
+  assert.equal(result.skills[0].scoredCount,4);
+});
+
+test('mastered retention age uses last verified study date rather than upload time',()=>{
+  const completed=[
+    observation('dated-a','a.jpeg','2026-10-01','correct'),
+    observation('dated-b','b.jpeg','2026-10-03','correct'),
+    observation('dated-c','c.jpeg','2026-10-05','correct')
+  ];
+  const reviewed=[...completed,observation('undated-later','archival.jpeg','2026-10-24','correct',{
+    studiedOn:null,assignmentId:'old-math-practice',questionId:'6'
+  })];
+  const result=mergeLearningHistory(null,batch(reviewed,'2026-10-25'));
+  assert.equal(result.skills[0].status,'mastered');
+  assert.equal(result.practiceTargets[0].reason,'retention-check');
+  assert.equal(result.practiceTargets[0].priority,20);
+});
+
+test('undated uploads do not alter confidence when their upload order changes',()=>{
+  const evidence=[
+    observation('known-correct','verified.jpeg','2026-10-02','correct'),
+    observation('known-miss','verified-2.jpeg','2026-10-03','incorrect'),
+    observation('old-right','old-correct.jpeg','2026-10-08','correct',{studiedOn:null}),
+    observation('old-wrong','old-incorrect.jpeg','2026-10-09','incorrect',{studiedOn:null})
+  ];
+  const first=mergeLearningHistory(null,batch(evidence,'2026-10-10'));
+  const shifted=evidence.map(item=>({...item}));
+  shifted[2].addedOn='2026-10-09';
+  shifted[3].addedOn='2026-10-08';
+  const second=mergeLearningHistory(null,batch(shifted,'2026-10-10'));
+  assert.equal(first.skills[0].scoredCount,4);
+  assert.equal(first.skills[0].confidence,0.5);
+  assert.equal(second.skills[0].confidence,first.skills[0].confidence);
+  assert.equal(second.skills[0].status,first.skills[0].status);
+});
+
+test('fully dated assessments retain the original recent-weighted confidence',()=>{
+  const evidence=[
+    observation('weight-1','w1.jpeg','2026-10-01','incorrect'),
+    observation('weight-2','w2.jpeg','2026-10-02','incorrect'),
+    observation('weight-3','w3.jpeg','2026-10-03','correct')
+  ];
+  const result=mergeLearningHistory(null,batch(evidence,'2026-10-04'));
+  // Chronological weights 1,2,3 give 3/6 rather than a fabricated upload signal.
+  assert.equal(result.skills[0].confidence,0.5);
+  const later=mergeLearningHistory(result,batch([
+    observation('weight-4','w4.jpeg','2026-10-04','correct')
+  ],'2026-10-04'));
+  assert.equal(later.skills[0].confidence,0.7);
+});
+
+test('later independently dated mastery resolves older undated review without erasing history',()=>{
+  const prior=mergeLearningHistory(null,batch([
+    observation('old-miss','old.jpeg','2026-10-01','incorrect',{
+      studiedOn:null,assignmentId:'archived-math',questionId:'1'
+    })
+  ],'2026-10-01'));
+  assert.equal(prior.practiceTargets[0].reason,'review-undated');
+  const recovered=mergeLearningHistory(prior,batch([
+    observation('later-1','dated-1.jpeg','2026-10-03','correct',{assignmentId:'math-review-a',questionId:'1'}),
+    observation('later-2','dated-2.jpeg','2026-10-05','correct',{assignmentId:'math-review-b',questionId:'1'}),
+    observation('later-3','dated-3.jpeg','2026-10-07','correct',{assignmentId:'math-review-c',questionId:'1'})
+  ],'2026-10-07'));
+  assert.equal(recovered.skills[0].status,'mastered');
+  assert.equal(recovered.skills[0].scoredCount,4);
+  assert.equal(recovered.practiceTargets.length,0,'old undated mistake is not an endless high-priority review');
+  assert.equal(recovered.observations.length,4,'historical miss remains in private ledger');
+});
+
+test('undated mistake received on or after mastery remains a conservative review target',()=>{
+  const three=[
+    observation('good-a','p1.jpeg','2026-10-01','correct'),
+    observation('good-b','p2.jpeg','2026-10-03','correct'),
+    observation('good-c','p3.jpeg','2026-10-05','correct')
+  ];
+  const original=mergeLearningHistory(null,batch(three,'2026-10-05'));
+  const sameDay=mergeLearningHistory(original,batch([
+    observation('undated-same-day','archived.jpeg','2026-10-05','incorrect',{
+      studiedOn:null,assignmentId:'unknown-practice',questionId:'1'
+    })
+  ],'2026-10-05'));
+  assert.equal(sameDay.skills[0].status,'mastered');
+  assert.equal(sameDay.practiceTargets[0].reason,'review-undated');
+  const later=mergeLearningHistory(original,batch([
+    observation('undated-after','archived-2.jpeg','2026-10-08','partial',{
+      studiedOn:null,assignmentId:'unknown-practice-2',questionId:'1'
+    })
+  ],'2026-10-08'));
+  assert.equal(later.practiceTargets[0].reason,'review-undated');
+});
+
+test('reordered JSON fields replay the same observation without a false identity collision',()=>{
+  const original=observation('field-order','school-photo.jpeg','2026-10-05','correct',{
+    assignmentId:'math-page-7',questionId:'4',responseSummary:'Private reviewed answer'
+  });
+  const existing=mergeLearningHistory(null,batch([original],'2026-10-06'));
+  const shuffled=Object.fromEntries(Object.entries(original).reverse());
+  assert.deepEqual(mergeLearningHistory(existing,batch([shuffled],'2026-10-06')),existing);
+  const changed={...shuffled,result:'incorrect',errorType:'procedure-error'};
+  assert.throws(()=>mergeLearningHistory(existing,batch([changed],'2026-10-06')),/Observation ID collision/);
+});
+
+test('file-based replay is idempotent across observation field serialization order',async()=>{
+  const dir=await mkdtemp(path.join(tmpdir(),'abvm-replay-order-'));
+  try{
+    const target=path.join(dir,'history.json'),source=path.join(dir,'reviewed-batch.json');
+    const original=observation('stable-field-order','schoolwork.jpeg','2026-10-03','correct',{
+      assignmentId:'math-review',questionId:'2',note:'Private reviewer note'
+    });
+    await writeFile(source,JSON.stringify(batch([original],'2026-10-05')));
+    const first=await integrateLearningHistory(target,source,{write:true,repoRoot:path.join(dir,'public-repo')});
+    assert.equal(first.changed,true);
+    const bytes=await readFile(target,'utf8');
+    await writeFile(source,JSON.stringify(batch([
+      Object.fromEntries(Object.entries(original).reverse())
+    ],'2026-10-05')));
+    const replay=await integrateLearningHistory(target,source,{write:true,repoRoot:path.join(dir,'public-repo')});
+    assert.equal(replay.changed,false);
+    assert.equal(await readFile(target,'utf8'),bytes);
+  }finally{await rm(dir,{recursive:true,force:true});}
+});
+
+test('same-day error cannot be hidden by a correctly answered item with a later ID',()=>{
+  const earlier=[
+    observation('p1','a.jpeg','2026-10-01','correct',{assignmentId:'page-1',questionId:'1'}),
+    observation('p2','b.jpeg','2026-10-03','correct',{assignmentId:'page-2',questionId:'1'})
+  ];
+  const sameDay=[
+    observation('a-miss','c.jpeg','2026-10-05','incorrect',{assignmentId:'page-3',questionId:'1'}),
+    observation('z-correct','c.jpeg','2026-10-05','correct',{assignmentId:'page-3',questionId:'2'})
+  ];
+  const forward=mergeLearningHistory(null,batch([...earlier,...sameDay],'2026-10-06'));
+  assert.notEqual(forward.skills[0].status,'mastered');
+  assert.equal(forward.practiceTargets[0].reason,'recent-miss');
+  const reversedNames=sameDay.map((item,i)=>({...item,id:i===0?'z-miss':'a-correct'}));
+  const reversed=mergeLearningHistory(null,batch([...earlier,...reversedNames],'2026-10-06'));
+  assert.equal(reversed.practiceTargets[0].reason,'recent-miss');
+  assert.equal(reversed.skills[0].status,forward.skills[0].status);
+  assert.equal(reversed.skills[0].confidence,forward.skills[0].confidence);
+});
+
+test('same-day incorrect takes priority over partial or correct regardless of IDs',()=>{
+  const all=[
+    observation('z-partial','a.jpeg','2026-10-05','partial',{assignmentId:'sheet-1',questionId:'1'}),
+    observation('a-incorrect','a.jpeg','2026-10-05','incorrect',{assignmentId:'sheet-1',questionId:'2'}),
+    observation('q-correct','a.jpeg','2026-10-05','correct',{assignmentId:'sheet-1',questionId:'3'})
+  ];
+  const result=mergeLearningHistory(null,batch(all,'2026-10-06'));
+  assert.equal(result.practiceTargets[0].reason,'recent-miss');
+  const partialOnly=mergeLearningHistory(null,batch([all[0],all[2]],'2026-10-06'));
+  assert.equal(partialOnly.practiceTargets[0].reason,'recent-partial');
+});
+
+test('same-day score aggregation makes confidence and trends ID-order invariant',()=>{
+  const records=[
+    observation('one','p1.jpeg','2026-10-01','incorrect',{assignmentId:'one',questionId:'1'}),
+    observation('two','p2.jpeg','2026-10-03','correct',{assignmentId:'two',questionId:'1'}),
+    observation('a-fail','p3.jpeg','2026-10-05','incorrect',{assignmentId:'three',questionId:'1'}),
+    observation('z-pass','p3.jpeg','2026-10-05','correct',{assignmentId:'three',questionId:'2'})
+  ];
+  const first=mergeLearningHistory(null,batch(records,'2026-10-06'));
+  assert.equal(first.skills[0].confidence,0.58);
+  const altered=records.map((item,i)=>({...item,id:i===2?'z-fail':i===3?'a-pass':item.id}));
+  const second=mergeLearningHistory(null,batch(altered,'2026-10-06'));
+  assert.equal(second.skills[0].confidence,0.58);
+  assert.equal(second.practiceTargets[0].reason,first.practiceTargets[0].reason);
+  const fourDays=[
+    observation('d1','d1.jpeg','2026-10-01','incorrect'),
+    observation('d2','d2.jpeg','2026-10-02','incorrect'),
+    observation('d3','d3.jpeg','2026-10-03','correct'),
+    observation('d4a','d4.jpeg','2026-10-04','incorrect',{assignmentId:'day-4',questionId:'1'}),
+    observation('d4z','d4.jpeg','2026-10-04','correct',{assignmentId:'day-4',questionId:'2'})
+  ];
+  const progress=mergeLearningHistory(null,batch(fourDays,'2026-10-05'));
+  assert.equal(progress.skills[0].trend,'improving');
+  const swapped=fourDays.map(item=>({
+    ...item,id:item.id==='d4a'?'d4z':item.id==='d4z'?'d4a':item.id
+  }));
+  const rerun=mergeLearningHistory(null,batch(swapped,'2026-10-05'));
+  assert.equal(rerun.skills[0].trend,progress.skills[0].trend);
+  assert.equal(rerun.skills[0].confidence,progress.skills[0].confidence);
 });
