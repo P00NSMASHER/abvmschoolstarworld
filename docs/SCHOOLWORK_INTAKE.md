@@ -241,14 +241,20 @@ Manifest statuses:
 - `integrated`: the source must be linked to a reviewed lesson, and its exact
   SHA-256 may have only one `integrated` canonical ID, regardless of manifest
   ordering. The canonical identity cannot be duplicated under another name.
-- `duplicate`: link directly to an `integrated` canonical using `duplicateOf`;
-  differing hashes require a `reason` (semantic rephotograph). Every lesson
+- `duplicate`: link directly to an `integrated` canonical using `duplicateOf`.
+  When a duplicate has **exactly the same SHA-256** as a reviewed integrated
+  source, it **must** identify that exact source as its canonical, regardless
+  of manifest ordering or a supplied free-text `reason`. Differing hashes
+  require a human-reviewed `reason` (semantic rephotograph). Every lesson
   citing the duplicate must also cite that canonical ID. A duplicate does not
   authorize a separate lesson, question bank, or invented source coverage.
   Duplicate chains are not accepted.
 - `held`: provide a `reason`; the image is accounted for but **must not**
   appear in any published lesson's `sources`. Its unclear content cannot
   justify public notes, questions, weekly materials, or test preparation.
+  No second source ID with the **same exact SHA-256** may be integrated or
+  cited as a duplicate while the original is held. Resolve the original
+  reviewed source under its existing ID and digest before publication.
   Only duplicate entries may contain `duplicateOf`.
 
 A held source is not permanently frozen. If later review can safely resolve it, keep
