@@ -12,6 +12,41 @@ test('valid pack accounts for every photo and rejects answer/date/privacy corrup
  assert.deepEqual(validateSchoolwork(pack(),{requireManifest:true}),{lessons:1,questions:1,photos:1});
  for(const mutate of [p=>p.lessons[0].questions[0].answer='9',p=>p.lessons[0].studiedOn='2026-02-30',p=>p.uploadedPhotoCount=2,p=>p.lessons[0].studentName='Private',p=>p.lessons[0].questions.push({...p.lessons[0].questions[0],id:'q-2'})]){const p=pack();mutate(p);assert.throws(()=>validateSchoolwork(p));}
 });
+test('verified classroom dates and school weeks cannot begin after intake',async()=>{
+ const valid=pack();
+ valid.lessons[0].studiedOn='2026-10-03';
+ valid.lessons[0].weekOf='2026-09-28';
+ valid.lessons[0].dateStatus='Verified worksheet date';
+ assert.deepEqual(validateSchoolwork(valid,{requireManifest:true}),
+   {lessons:1,questions:1,photos:1});
+
+ const futureDay=structuredClone(valid);
+ futureDay.lessons[0].studiedOn='2026-10-05';
+ delete futureDay.lessons[0].weekOf;
+ assert.throws(()=>validateSchoolwork(futureDay,{requireManifest:true}),
+   /studiedOn cannot be after addedOn/);
+
+ const futureWeek=pack();
+ futureWeek.lessons[0].weekOf='2026-10-05';
+ assert.throws(()=>validateSchoolwork(futureWeek,{requireManifest:true}),
+   /weekOf cannot begin after addedOn/);
+
+ const dir=await mkdtemp(join(tmpdir(),'schoolwork-date-authority-'));
+ try{
+  const target=join(dir,'schoolwork.json'),input=join(dir,'reviewed-batch.json');
+  const before=JSON.stringify(pack(),null,2)+'\n';
+  await writeFile(target,before);
+  for(const [invalid,reason] of [
+   [futureDay,/studiedOn cannot be after addedOn/],
+   [futureWeek,/weekOf cannot begin after addedOn/]
+  ]){
+   await writeFile(input,JSON.stringify(invalid));
+   await assert.rejects(integrateFile(target,input,{write:true}),reason);
+   assert.equal(await readFile(target,'utf8'),before);
+  }
+ }finally{await rm(dir,{recursive:true,force:true});}
+});
+
 test('public schoolwork schema rejects unknown keys at every object level',()=>{
  const cases=[
   ['root student metadata',p=>p.childName='Private'],

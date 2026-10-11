@@ -46,7 +46,12 @@ For each readable source, identify only what the source supports:
 
 `studiedOn` is the supported classroom date or `null`. `addedOn` is the actual
 intake day in America/New_York and does not imply classroom timing. Use
-“Undated schoolwork” when timing is unknown.
+“Undated schoolwork” when timing is unknown. A confirmed classroom
+`studiedOn` date cannot be later than `addedOn`, and a verified Monday
+`weekOf` cannot begin after that intake date. The public source validator
+rejects either contradiction. Hold the affected photo for date review
+instead of inventing a date, changing its intake timestamp, or placing it
+into upcoming weekly study or test preparation.
 
 ### 3. Extract the printed questions/tasks
 

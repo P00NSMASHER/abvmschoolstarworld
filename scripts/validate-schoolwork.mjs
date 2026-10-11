@@ -49,6 +49,13 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
       }
     }
     check(isDate(lesson.addedOn), `${lesson.id}: invalid addedOn`);
+    // Upload/intake dates never prove a later classroom assessment date.
+    // A future verified day or verified school week must be held for review,
+    // not routed into weekly practice as if a future worksheet were completed.
+    check(!lesson.studiedOn || lesson.studiedOn <= lesson.addedOn,
+      `${lesson.id}: studiedOn cannot be after addedOn`);
+    check(lesson.weekOf === undefined || lesson.weekOf <= lesson.addedOn,
+      `${lesson.id}: weekOf cannot begin after addedOn`);
     check(lesson.studiedOn !== null || /undated|unknown/i.test(lesson.dateStatus), `${lesson.id}: unknown study date must remain labeled undated`);
     check(lesson.chapter === undefined || (Number.isInteger(lesson.chapter) && lesson.chapter >= 1 && lesson.chapter <= 99), `${lesson.id}: invalid chapter`);
     check(Array.isArray(lesson.questions), `${lesson.id}: missing questions array`);
