@@ -137,7 +137,12 @@ and no observation can have
 `addedOn` later than its batch's `asOf`. Distinct photographs of the same
 identified assignment do not count as distinct assignments toward mastery. Supply stable private
 `assignmentId` and `questionId` identifiers where the reviewed page supports
-them, even when different photographs show the same question.
+them, even when different photographs show the same question. A legacy observation
+without an assignment ID and a newer assignment-aware observation from the
+**same source photo** must not be scored twice for the same question, nor may
+the mixed identifiers count as independent assignments for mastery. The
+processor conservatively links these identities across cumulative history;
+a photo showing multiple worksheets alone is not proof of independent work.
 
 ### 9. Update private learning state
 
