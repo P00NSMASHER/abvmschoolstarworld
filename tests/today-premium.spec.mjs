@@ -1,0 +1,180 @@
+import { test, expect } from '@playwright/test';
+
+test.use({ serviceWorkers: 'block' });
+
+// A visible <img> can still be empty during load or contain a tiny fallback.
+// Check decoded intrinsic resolution against the actual display size.
+async function expectDecodedRetinaImage(locator, label) {
+  await expect(locator, label).toBeVisible();
+  await expect.poll(
+    () => locator.evaluate(img => img.complete && img.naturalWidth > 0),
+    { message: label + ' did not load', timeout: 15000 },
+  ).toBe(true);
+  await locator.evaluate(img => img.decode());
+  const dimensions = await locator.evaluate(img => {
+    const box = img.getBoundingClientRect();
+    return { width: box.width, height: box.height,
+      intrinsicWidth: img.naturalWidth, intrinsicHeight: img.naturalHeight };
+  });
+  expect(dimensions.width, label).toBeGreaterThan(0);
+  expect(dimensions.height, label).toBeGreaterThan(0);
+  expect(dimensions.intrinsicWidth, label + ' looks blurry').toBeGreaterThanOrEqual(Math.ceil(dimensions.width * 2));
+  expect(dimensions.intrinsicHeight, label + ' looks blurry').toBeGreaterThanOrEqual(Math.ceil(dimensions.height * 2));
+}
+
+// Candidate screenshots are generated from the real, data-backed application
+// at the tested branch. The historical iPhone uploads remain the baseline.
+test('Today premium signature: mobile layout and retained source-backed actions', async ({ page }, info) => {
+  await page.clock.setFixedTime(new Date('2026-10-08T12:00:00-04:00'));
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+
+  for (const width of [375, 390, 402, 430]) {
+    await page.setViewportSize({ width, height: 852 });
+    await page.goto('/#today');
+
+    const screen = page.locator('.today-screen');
+    await expect(screen).toBeVisible();
+    await expect(page.locator('.school-photo-hero .hero-photo')).toBeVisible();
+    await expect(page.locator('.school-photo-hero')).toContainText('Ready for today?');
+    await expect(page.locator('.today-primary .priority-card')).toHaveCount(1);
+    // Icon-only assessment control must identify its verified destination.
+    const assessmentArrow = page.locator('.priority-card .icon-button');
+    await expect(assessmentArrow).toHaveAttribute('data-route', 'study');
+    await expect(assessmentArrow).toHaveAttribute('aria-label', /Open Study for Spelling/);
+
+    // The large numeral must not inherit the generic card metadata style.
+    const dateNumber = page.locator('.priority-card .date-tile span');
+    await expect(dateNumber).toHaveText('9');
+    const dateStyle = await dateNumber.evaluate(el => ({
+      font: parseFloat(getComputedStyle(el).fontSize),
+      color: getComputedStyle(el).color,
+    }));
+    expect(dateStyle.font).toBeGreaterThanOrEqual(25);
+    expect(dateStyle.color).toBe('rgb(21, 47, 84)');
+    await expect(page.locator('.study-invitation')).toBeVisible();
+    await expect(page.locator('.today-screen > .lunch-card')).toBeVisible();
+    // The verified meal illustration is visible in the first viewport.
+    // Screenshots must not accidentally approve an empty lazy-load placeholder.
+    const lunchArtwork = page.locator('.today-screen > .lunch-card .lunch-art img');
+    await expect(lunchArtwork).toHaveCount(1);
+    await expect(lunchArtwork).toHaveAttribute('loading', 'eager');
+    await expect.poll(
+      () => lunchArtwork.evaluate(img => img.complete && img.naturalWidth > 0),
+      { timeout: 15000 },
+    ).toBe(true);
+    await lunchArtwork.evaluate(img => img.decode());
+
+    await expect(page.locator('.today-panel')).toBeVisible();
+    // A timeline event must not repeat as a semantically identical reminder,
+    // while additional deadlines and prices stay displayed when distinct.
+    const normalizeNotice = value => String(value).toLowerCase()
+      .replace(/^(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b[^:]{0,45}:\s*/i, '')
+      .replace(/\b(?:is|are|was|were)\b/g, '')
+      .replace(/[^a-z0-9]+/g, ' ').trim();
+    const eventLabels = await page.locator('.timeline-row strong').allTextContents();
+    const reminderLabels = await page.locator('.reminder-line p').allTextContents();
+    expect(reminderLabels.map(normalizeNotice).filter(value =>
+      eventLabels.map(normalizeNotice).includes(value))).toEqual([]);
+    await expect(page.locator('.study-badge-latest')).toBeVisible();
+    // No screenshot is acceptable while any key school/learning image is blank.
+    for (const [selector, name] of [
+      ['.school-photo-hero img.hero-photo', 'School photograph'],
+      ['.school-photo-hero img.today-school-seal', 'School seal'],
+      ['.study-invitation > img', 'Reading illustration'],
+      ['.lunch-card .lunch-art img', 'Verified lunch artwork'],
+      ['.study-badge-latest img.study-badge-art', 'Eaglet medal'],
+    ]) await expectDecodedRetinaImage(page.locator(selector), name);
+    await expect(page.locator('.freshness')).toBeVisible();
+
+    const metrics = await screen.evaluate(el => {
+      const rect = node => {
+        const r = node.getBoundingClientRect();
+        return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, width: r.width, height: r.height };
+      };
+      const hero = el.querySelector('.school-photo-hero');
+      const title = hero.querySelector('.hero-copy h2');
+      const priority = el.querySelector('.priority-card');
+      const study = el.querySelector('.study-invitation');
+      const lunch = el.querySelector('.lunch-card');
+      const plan = el.querySelector('.today-panel');
+      const badge = el.querySelector('.study-badge-surface');
+      const actions = [
+        el.querySelector('.priority-card .icon-button'),
+        study,
+        el.querySelector('.study-badge-latest'),
+      ].filter(Boolean);
+      return {
+        screenWidth: el.clientWidth, scrollWidth: el.scrollWidth,
+        font: getComputedStyle(title).fontFamily,
+        titleFont: parseFloat(getComputedStyle(title).fontSize),
+        hero: rect(hero), priority: rect(priority), study: rect(study),
+        lunch: rect(lunch), plan: rect(plan), badge: rect(badge),
+        actions: actions.map(rect)
+      };
+    });
+
+    expect(metrics.scrollWidth, JSON.stringify({ width, metrics })).toBeLessThanOrEqual(metrics.screenWidth + 1);
+    expect(metrics.titleFont).toBeGreaterThanOrEqual(28);
+    expect(metrics.font).toMatch(/-apple-system|BlinkMacSystemFont|Segoe UI/);
+    expect(metrics.priority.top).toBeGreaterThan(metrics.hero.top);
+    expect(metrics.study.top).toBeGreaterThan(metrics.priority.top);
+    expect(metrics.lunch.top).toBeGreaterThan(metrics.study.top);
+    expect(metrics.plan.top).toBeGreaterThan(metrics.lunch.top);
+    expect(metrics.badge.top).toBeGreaterThan(metrics.plan.top);
+    for (const action of metrics.actions) {
+      expect(action.width, JSON.stringify({ width, action })).toBeGreaterThanOrEqual(44);
+      expect(action.height, JSON.stringify({ width, action })).toBeGreaterThanOrEqual(44);
+      expect(action.left).toBeGreaterThanOrEqual(-1);
+      expect(action.right).toBeLessThanOrEqual(width + 1);
+    }
+    if (width === 390) {
+      await page.screenshot({ path: info.outputPath('today-premium-390-first-viewport.png'), animations: 'disabled' });
+      // Expand the existing scroll surface only for an honest full-content capture.
+      await page.addStyleTag({ content: '.phone-app{display:block!important;height:auto!important;min-height:100vh!important;overflow:visible!important}.screen-stack,.today-screen{height:auto!important;overflow:visible!important}.bottom-nav{display:none!important}' });
+      await page.screenshot({ path: info.outputPath('today-premium-390-full-content.png'), fullPage: true, animations: 'disabled' });
+    }
+  }
+});
+
+test('Today remains operable with long verified titles and larger interface text', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-10-08T12:00:00-04:00'));
+  await page.setViewportSize({ width: 375, height: 852 });
+  await page.goto('/#today');
+  await expect(page.locator('.today-primary .priority-card')).toBeVisible();
+
+  await page.locator('.priority-card h3').evaluate(el => {
+    el.textContent = 'Spelling, handwriting, sentence types and punctuation review for our classroom';
+  });
+  expect(await page.locator('.today-screen').evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
+
+  await page.evaluate(() => {
+    const root = document.documentElement;
+    root.style.fontSize = (parseFloat(getComputedStyle(root).fontSize) * 2) + 'px';
+  });
+  const screen = page.locator('.today-screen');
+  expect(await screen.evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
+  await expect(page.getByRole('navigation', { name: 'App navigation' }).getByRole('button', { name: 'Study' })).toBeVisible();
+  await page.evaluate(() => { document.documentElement.style.fontSize = ''; });
+
+  await page.getByRole('button', { name: 'Start studying' }).click();
+  await expect(page.locator('.games-screen')).toBeVisible();
+  await page.getByRole('button', { name: 'Today', exact: true }).click();
+  await expect(page.locator('.today-panel')).toBeVisible();
+  await page.locator('.study-badge-latest').click();
+  await expect(page.locator('.badge-collection')).toBeVisible();
+});
+
+test('Today preserves accurate meal details if reviewed artwork cannot be loaded', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-10-08T12:00:00-04:00'));
+  await page.setViewportSize({ width: 390, height: 852 });
+  await page.route('**/assets/lunch-art/beef-cheesesteak.webp', route =>
+    route.fulfill({ status: 404, contentType: 'image/webp', body: '' }));
+  await page.goto('/#today');
+  const lunch = page.locator('.today-screen > .lunch-card');
+  await expect(lunch).toContainText('Beef cheesesteak');
+  await expect(lunch).toContainText('Steamed broccoli');
+  await expect(lunch.locator('.lunch-art')).toHaveCount(0);
+  await expect(page.locator('.study-invitation')).toBeVisible();
+  await expect(page.locator('.today-panel')).toBeVisible();
+  expect(await page.locator('.today-screen').evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
+});
