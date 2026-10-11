@@ -110,6 +110,39 @@ test('verified assignment dates, not merely intake dates, support chronological 
   assert.equal(result.skills[0].status,'improving');
 });
 
+test('positive score averages do not turn slipping or steady dated work into improving',()=>{
+  const scenarios=[
+    {name:'slipping',results:['correct','correct','incorrect','incorrect'],trend:'slipping',status:'learning'},
+    {name:'steady',results:['partial','partial','partial','partial'],trend:'steady',status:'learning'},
+    {name:'genuine upward evidence',results:['incorrect','incorrect','correct','correct'],trend:'improving',status:'improving'},
+    {name:'three verified dates',results:['incorrect','incorrect','correct'],trend:'insufficient-data',status:'learning'}
+  ];
+  for(const {name,results,trend,status} of scenarios){
+    const observations=results.map((result,index)=>observation(
+      name+'-'+index,'dated-photo-'+index+'.jpeg','2026-10-0'+(index+1),result,
+      {assignmentId:'dated-sheet-'+index,questionId:'1'}
+    ));
+    const skill=mergeLearningHistory(null,batch(observations,'2026-10-06')).skills[0];
+    assert.equal(skill.trend,trend,name+' trend');
+    assert.equal(skill.status,status,name+' status');
+  }
+});
+
+test('undated correctness cannot disguise verified slipping as improving',()=>{
+  const dated=['correct','correct','incorrect','incorrect'].map((result,index)=>observation(
+    'dated-'+index,'dated-'+index+'.jpeg','2026-10-0'+(index+1),result,
+    {assignmentId:'worksheet-'+index,questionId:'1'}
+  ));
+  const undated=Array.from({length:5},(_,index)=>observation(
+    'undated-'+index,'undated-'+index+'.jpeg','2026-10-06','correct',
+    {studiedOn:null,assignmentId:'old-worksheet-'+index,questionId:'1'}
+  ));
+  const skill=mergeLearningHistory(null,batch([...dated,...undated],'2026-10-06')).skills[0];
+  assert.equal(skill.scoredCount,9);
+  assert.equal(skill.trend,'slipping');
+  assert.equal(skill.status,'learning');
+});
+
 test('replaying older approved evidence cannot rewind the private history date',()=>{
   const first=mergeLearningHistory(null,batch([
     observation('o1','p1','2026-10-01','correct')
