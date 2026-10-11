@@ -94,7 +94,13 @@ When a worksheet is photographed again, reuse the original observation IDs.
 Use stable `assignmentId` and `questionId` in reviewed private observations to
 identify an item across source photos; the processor rejects the same assignment
 item under a new observation ID, including harmless case/spacing variations.
-When assignment identity cannot be established, keep the evidence provisional:
+It also rejects two different observation IDs for the same `sourceId`,
+`subject`, `skill` and normalized `questionId` when either entry is missing
+`assignmentId`. This closes the mixed legacy/new identity replay loophole
+without rejecting independently identified questions on two assignments
+pictured together. Reconcile conflicting IDs privately instead of changing
+the original learner's answer. When assignment identity cannot be established,
+keep the evidence provisional:
 the processor cannot infer that two differently named photos are distinct items.
 
 "Mastered" is a household study-planning flag, not a diagnosis,
