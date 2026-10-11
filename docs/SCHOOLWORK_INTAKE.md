@@ -121,7 +121,11 @@ Compare the newly mapped skills with all prior reviewed observations. Look for:
 
 Do not turn a single worksheet into a trend. Separate verified `studiedOn`
 dates from intake-only `addedOn` dates; uploading old work on multiple days
-must never establish a new assessment date or mastery. A positive average by
+must never establish a new assessment date or mastery. A latest verified-day
+`unknown` answer is not a miss, but must enter private `review-unscored`
+triage instead of silently preserving a mastery claim; do not publish this
+review status as a child's weakness. Earlier or undated unknown work does not
+overrule newer verified independent mastery. A positive average by
 itself is not evidence of `improving`: require the private history's actual
 upward trend across four verified assessment days. Steady or slipping results
 must not receive an `improving` label. Likewise, uploading
