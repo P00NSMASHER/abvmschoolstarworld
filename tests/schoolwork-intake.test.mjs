@@ -57,7 +57,7 @@ test('reviewed replays with different JSON property order do not create false so
  const dir=await mkdtemp(join(tmpdir(),'schoolwork-replay-order-'));
  try{
   const target=join(dir,'schoolwork.json'),batch=join(dir,'reviewed-batch.json');
-  const before=JSON.stringify(current,null,2)+'\\n';
+  const before=JSON.stringify(current,null,2)+'\n';
   await writeFile(target,before);
   await writeFile(batch,JSON.stringify(replay));
   assert.deepEqual(await integrateFile(target,batch),{mode:'dry-run',changed:false,lessons:1,questions:1,photos:1});
