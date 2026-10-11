@@ -2014,3 +2014,20 @@
   .progress-screen .learning-subject,
   .progress-screen .school-details {border-width:2px}
 }
+
+/* When a teacher verification is stale, provide a clearly source-labeled exit.
+   Kept in the premium visual layer, not the protected school-source CSS. */
+.teacher-live-source{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:46px;width:fit-content;max-width:100%;margin:6px 0 8px;
+  padding:10px 16px;border:1px solid #c6d9ed;border-radius:14px;
+  background:linear-gradient(180deg,#fff 0%,#ebf3fc 100%);
+  box-shadow:0 5px 14px rgba(16,46,88,.09),inset 0 1px rgba(255,255,255,.97);
+  color:#123866;font-size:.86rem;font-weight:760;line-height:1.4;
+  text-align:center;text-decoration:none;overflow-wrap:anywhere;
+}
+.teacher-live-source:hover{text-decoration:underline;border-color:#7c9fcb}
+.teacher-live-source:focus-visible{outline:3px solid #174c89;outline-offset:3px}
+.today-screen>.teacher-live-source{grid-column:1/-1;justify-self:start}
+@media(max-width:699px){.teacher-live-source{width:100%}}
+@media(prefers-contrast:more){.teacher-live-source{border:2px solid currentColor}}

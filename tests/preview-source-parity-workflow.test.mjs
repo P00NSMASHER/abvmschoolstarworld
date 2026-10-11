@@ -25,6 +25,8 @@ test("authoritative source parity covers the premium release preview and its dir
     "reconciled production-privacy integration must run protected source parity");
   assert.ok(condition.includes("github.base_ref == '"+integratedPrivacyBranch+"'"),
     "review PRs stacked on the privacy integration must not skip source parity");
+  assert.ok(condition.includes("github.base_ref == 'qa/abvm-exact-review-head-20261010'"),
+    "verified exact-head QA stack must retain authoritative source parity");
   assert.ok(condition.includes("github.event_name == 'workflow_dispatch'"),
     "maintainers retain the manual source-parity verification path");
   assert.ok(!/\bmain\b/.test(condition),
