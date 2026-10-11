@@ -38,8 +38,8 @@ test("authoritative source parity covers the premium release preview and its dir
     "source parity must remain scoped to the release-preview review lane");
 });
 test("source parity compares exact review head to latest main in read-only mode",()=>{
-  assert.match(source,/github\.event\.pull_request\.head\.sha/,
-    "checkout must select the actual review head, not GitHub's synthetic merge ref");
+  assert.match(source,/ref:\s*\$\{\{\s*github\.event\.pull_request\.head\.sha\s*\|\|\s*github\.sha\s*\}\}/,
+    "checkout must select the exact PR head or the explicitly chosen workflow_dispatch commit, never a stale preview branch");
   assert.match(source,/git fetch --no-tags origin \+refs\/heads\/main:refs\/remotes\/origin\/main/,
     "reference main must be refreshed before comparison");
   assert.match(source,/ABVM_MAIN_REF: refs\/remotes\/origin\/main/);

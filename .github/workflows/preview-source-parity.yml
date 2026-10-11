@@ -23,7 +23,7 @@ jobs:
       - name: Checkout exact preview head (not auto-merge artifact)
         uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.pull_request.head.sha || 'release/abvm-unified-preview-20261009' }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
           persist-credentials: false
       - name: Fetch latest main for source comparison
