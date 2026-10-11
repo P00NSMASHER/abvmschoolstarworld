@@ -293,8 +293,11 @@ npm run qa:unit
 
 Dry-run is the default. The public writer validates before mutation, uses an exclusive
 intake lock, checks for concurrent changes, and atomically renames a temporary file.
-Identical replays are no-ops. Do not commit temporary batches, private observation
-batches, private histories or lock files.
+Identical replays are no-ops, including when reviewed JSON has been reserialized
+with a different object-field order. Actual changes to the same source ID, SHA-256,
+or lesson educational content still fail closed as collisions; do not silently
+overwrite previously reviewed academic facts. Do not commit temporary batches,
+private observation batches, private histories or lock files.
 
 Then run relevant browser tests. Inspect the diff for private information manually:
 schema validation cannot prove privacy or educational accuracy. Use the established
