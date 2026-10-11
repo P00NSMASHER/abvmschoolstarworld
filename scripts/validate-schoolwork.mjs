@@ -63,6 +63,9 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
       allowedKeys(q, QUESTION_KEYS, `question ${q?.id || '<unknown>'}`);
       for (const key of ['id','subject','skill','prompt','answer','explanation','sourceFact','provenance']) check(text(q[key]), `${lesson.id}: question missing ${key}`);
       check(lesson.skills.includes(q.skill), `${q.id}: question skill is not in lesson`);
+      check(q.subject === lesson.subject, `${q.id}: question subject must match lesson subject`);
+      check(q.provenance === 'original-practice-from-uploaded-schoolwork',
+        `${q.id}: unsupported provenance for uploaded schoolwork`);
       check(q.hint === undefined || text(q.hint), `${q.id}: invalid hint`);
       for (const key of ['tier','questionType','domain']) check(q[key] === undefined || text(q[key]), `${q.id}: invalid ${key}`);
       check(q.difficulty === undefined || (Number.isInteger(q.difficulty) && q.difficulty >= 1 && q.difficulty <= 5), `${q.id}: invalid difficulty`);

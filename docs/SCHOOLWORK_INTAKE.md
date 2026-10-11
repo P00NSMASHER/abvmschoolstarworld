@@ -294,6 +294,31 @@ sources. Different educational content under an existing lesson ID is rejected f
 explicit review, not silently overwritten. Potential semantic duplicate lesson titles
 are also held for consolidation.
 
+## Read-only source-to-question release review
+
+Run `node scripts/schoolwork-review-report.mjs pages/data/schoolwork.json`
+to receive a deterministic JSON reconciliation of public source IDs, canonical and
+semantic rephotographs, lesson IDs, question IDs, and which lesson dates are
+verified days, verified school weeks only, or undated. The command **never reads
+private answer/teacher-mark files, modifies the pack, or accesses original photo
+bytes**. It excludes question wording, lesson notes, private responses and free-text
+source reasons from the output. Do not publish the report externally without
+checking that the already-public source/lesson IDs are appropriate to share.
+
+A valid public `sourceManifest` or green CI is not original-photo transcription
+approval. The report's release status is deliberately always
+`HOLD_EXTERNAL_SIGNOFF`: original photo/source comparison, public-text child
+privacy, educator/source rights, required physical Safari checks and exact-scope
+release authorization remain separate human decisions. An undated lesson is a
+**date-authority review item**, not automatic evidence of a current school week,
+a missed assessment, or defective learning. Held sources remain visible but
+cannot support published lessons.
+
+Schoolwork question `subject` must match the containing lesson and its
+`provenance` must be exactly `original-practice-from-uploaded-schoolwork`.
+This public schoolwork stream does not claim teacher-authored test items, licensed
+question-bank copies, or official STAR questions.
+
 ### 12. Update weekly and test-prep surfaces only when warranted
 
 Only source-supported dates/topic mapping place material in the weekly section or a
