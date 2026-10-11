@@ -251,8 +251,13 @@ Public JSON remains fail-closed by object shape. The validator permits only:
 
 Unknown keys are rejected rather than silently published. This blocks accidental
 student-name fields, raw OCR transcripts, answer-sheet text, teacher marks, private
-URLs and nested metadata. Structural validation does not prove allowed free text is
-private-data-free, so manual value-level privacy review remains required.
+URLs and nested metadata. Structural validation also rejects obvious direct identifiers embedded in
+allowed strings (email addresses, phone numbers, government-ID-shaped numbers and
+embedded data URIs). Source SHA-256 digests are excluded from those text-pattern
+checks because hexadecimal digests are not human-readable contact information.
+These deterministic checks cannot establish that free text has no student names,
+grades, handwriting details, subtle identity clues or source-rights problems:
+manual value-level privacy, academic and provenance review **remains required**.
 
 Manifest statuses:
 
