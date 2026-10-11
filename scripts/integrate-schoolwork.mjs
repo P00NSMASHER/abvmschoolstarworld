@@ -1,12 +1,13 @@
 import {readFile,writeFile,rename,unlink,open} from 'node:fs/promises';
 import {resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
+import {isDeepStrictEqual} from 'node:util';
 import {validateSchoolwork,normalize} from './validate-schoolwork.mjs';
 
 // Input must be a human/agent-reviewed, source-backed batch. This does not OCR images.
-function content(lesson) {
+function comparableContent(lesson) {
   const {sources,addedOn,...rest}=lesson;
-  return JSON.stringify(rest);
+  return rest;
 }
 export function mergeSchoolwork(current,batch) {
   validateSchoolwork(current,{requireManifest:true});
@@ -19,7 +20,7 @@ export function mergeSchoolwork(current,batch) {
       const sameHash=old.sha256===source.sha256;
       const replayOfAutomaticDuplicate=sameHash&&old.status==='duplicate'&&old.reason==='Exact SHA-256 duplicate of an existing source.'&&source.status==='integrated';
       const resolveHeld=sameHash&&old.status==='held'&&(source.status==='integrated'||source.status==='duplicate');
-      if (JSON.stringify(old)!==JSON.stringify(source) && !replayOfAutomaticDuplicate && !resolveHeld) throw new Error(`Source ID collision: ${source.id}; preserve the existing record or resolve a held source with the same ID and SHA-256.`);
+      if (!isDeepStrictEqual(old,source) && !replayOfAutomaticDuplicate && !resolveHeld) throw new Error(`Source ID collision: ${source.id}; preserve the existing record or resolve a held source with the same ID and SHA-256.`);
       if(resolveHeld)manifest.set(source.id,structuredClone(source));
       continue;
     }
@@ -32,7 +33,7 @@ export function mergeSchoolwork(current,batch) {
   for (const lesson of batch.lessons) {
     const old=lessons.get(lesson.id);
     if (old) {
-      if(content(old)!==content(lesson)) throw new Error(`Lesson ID collision: ${lesson.id}; review the existing lesson explicitly instead of overwriting cumulative history.`);
+      if(!isDeepStrictEqual(comparableContent(old),comparableContent(lesson))) throw new Error(`Lesson ID collision: ${lesson.id}; review the existing lesson explicitly instead of overwriting cumulative history.`);
       old.sources=[...new Set([...old.sources,...lesson.sources])];
     } else {
       const semantic=[...lessons.values()].find(l=>normalize(l.title)===normalize(lesson.title) && normalize(l.subject)===normalize(lesson.subject) && l.studiedOn===lesson.studiedOn);
