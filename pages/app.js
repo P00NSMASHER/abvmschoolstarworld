@@ -128,9 +128,11 @@ function freshnessState(){
   return{state:"current",label:"Teacher pages verified "+stamp};
 }
 function freshness(){
-  const state=freshnessState(),label=manualRefreshActive?"Checking published school info…":state.label;
-  const action=manualRefreshActive?"Checking published school information":"Check published school information. "+state.label;
-  return '<button type="button" class="freshness '+state.state+(manualRefreshActive?' is-refreshing':'')+'" data-refresh-pack aria-label="'+esc(action)+'"'+(manualRefreshActive?' disabled':'')+'><span aria-hidden="true"></span><strong>'+esc(label)+'</strong><b aria-hidden="true">↻</b></button>';
+  const s=freshnessState();
+  return window.ABVMProductView.freshnessControl({
+    state:s.state,label:manualRefreshActive?"Checking published school info…":s.label,
+    pending:manualRefreshActive,online:navigator.onLine!==false
+  });
 }
 function kindClass(item){
   const k=(item?.kind||"").toLowerCase(), l=(item?.label||"").toLowerCase();
@@ -582,7 +584,7 @@ function render({preserveScroll=false}={}){
 }
 function updateFreshnessUI(){
   const node=stack().querySelector(".freshness");
-  if(node)node.outerHTML=freshness();
+  if(node)window.ABVMProductView.replaceFreshness(node,freshness());
 }
 function carryPlannerDate(next){
   const state=window.ABVMProductView.plannerDate(next,activeTab,calendarDay,selectedDay,today(),weekDays(0)[0]);
