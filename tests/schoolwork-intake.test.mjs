@@ -34,7 +34,7 @@ test('verified classroom dates and school weeks cannot begin after intake',async
  const dir=await mkdtemp(join(tmpdir(),'schoolwork-date-authority-'));
  try{
   const target=join(dir,'schoolwork.json'),input=join(dir,'reviewed-batch.json');
-  const before=JSON.stringify(pack(),null,2)+'\\n';
+  const before=JSON.stringify(pack(),null,2)+'\n';
   await writeFile(target,before);
   for(const [invalid,reason] of [
    [futureDay,/studiedOn cannot be after addedOn/],
