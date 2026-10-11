@@ -102,10 +102,15 @@ test("live teacher link clears the bottom bar on compact and enlarged-text phone
       },enlarged);
       for(const tab of ["today","calendar","week","study","family"]){
         await page.goto("/#"+tab);
+        // Study can finish an asynchronous materials render after the route
+        // changes; scrolling its temporary DOM is not a reachability check.
+        if(tab==="study"){
+          await expect(page.locator(".games-screen")).toHaveAttribute("data-study-state","ready",{timeout:15000});
+        }
         const link=page.locator("a.teacher-live-source");
         await expect(link).toBeVisible();
         await expect(link).toHaveAttribute("aria-label",/official Grade 2 teacher page/i);
-        await link.evaluate(el=>el.scrollIntoView({block:"center",behavior:"auto"}));
+        await link.scrollIntoViewIfNeeded();
         const measured=await link.evaluate(el=>{
           const target=el.getBoundingClientRect();
           const nav=document.querySelector(".bottom-nav")?.getBoundingClientRect();
