@@ -41,6 +41,37 @@ test('replay is idempotent and lesson collisions fail closed',()=>{
  const b=pack();b.lessons[0].notes=['Changed content'];assert.throws(()=>mergeSchoolwork(pack(),b),/collision/);
  const sourceCollision=pack();sourceCollision.sourceManifest[0].sha256='b'.repeat(64);assert.throws(()=>mergeSchoolwork(pack(),sourceCollision),/collision/);
 });
+test('reviewed replays with different JSON property order do not create false source or lesson collisions',async()=>{
+ const current=pack();
+ // Reviewed JSON may be reserialized with the exact same facts in a new key order.
+ const reordered=value=>Array.isArray(value)?value.map(reordered):
+   value&&typeof value==='object'
+     ?Object.fromEntries(Object.entries(value).reverse().map(([key,item])=>[key,reordered(item)]))
+     :value;
+ const replay=reordered(current);
+ assert.deepEqual(replay,current);
+ assert.notEqual(JSON.stringify(replay.sourceManifest[0]),JSON.stringify(current.sourceManifest[0]));
+ assert.notEqual(JSON.stringify(replay.lessons[0]),JSON.stringify(current.lessons[0]));
+ assert.deepEqual(mergeSchoolwork(current,replay),current);
+
+ const dir=await mkdtemp(join(tmpdir(),'schoolwork-replay-order-'));
+ try{
+  const target=join(dir,'schoolwork.json'),batch=join(dir,'reviewed-batch.json');
+  const before=JSON.stringify(current,null,2)+'\\n';
+  await writeFile(target,before);
+  await writeFile(batch,JSON.stringify(replay));
+  assert.deepEqual(await integrateFile(target,batch),{mode:'dry-run',changed:false,lessons:1,questions:1,photos:1});
+  assert.deepEqual(await integrateFile(target,batch,{write:true}),{mode:'write',changed:false,lessons:1,questions:1,photos:1});
+  assert.equal(await readFile(target,'utf8'),before);
+ }finally{await rm(dir,{recursive:true,force:true});}
+
+ const changedAnswer=structuredClone(replay);
+ changedAnswer.lessons[0].questions[0].answer='8';
+ assert.throws(()=>mergeSchoolwork(current,changedAnswer),/Lesson ID collision/);
+ const changedDigest=structuredClone(replay);
+ changedDigest.sourceManifest[0].sha256='b'.repeat(64);
+ assert.throws(()=>mergeSchoolwork(current,changedDigest),/Source ID collision/);
+});
 test('new duplicate hash merges provenance and preserves original addedOn',()=>{
  const b=pack();b.sourceManifest[0].id='photo-2.jpeg';b.lessons[0].sources=['photo-2.jpeg'];b.lessons[0].addedOn='2026-10-05';
  const result=mergeSchoolwork(pack(),b);assert.equal(result.lessons.length,1);assert.equal(result.lessons[0].addedOn,'2026-10-04');assert.equal(result.sourceManifest[1].duplicateOf,'photo-1.jpeg');assert.deepEqual(mergeSchoolwork(result,b),result);
