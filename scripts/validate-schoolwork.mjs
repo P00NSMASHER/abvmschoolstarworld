@@ -112,6 +112,20 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
       check(source.status === 'held' || referenced.has(source.id), `${source.id}: photo is not accounted for by a lesson`);
       if (source.status === 'held') check(text(source.reason), `${source.id}: held source requires reason`);
     }
+    // Exact image bytes have one reviewed authority, even when a source has
+    // a free-text semantic-rephotograph reason. Perform this check after
+    // scanning the full manifest so duplicate-first ordering cannot bypass it.
+    const unresolvedHeldByHash=new Map(manifest.filter(s=>s.status==='held').map(s=>[s.sha256,s.id]));
+    for (const source of manifest) {
+      if (source.status==='held') continue;
+      const heldId=unresolvedHeldByHash.get(source.sha256);
+      check(!heldId, `${source.id}: SHA-256 belongs to unresolved held source ${heldId}`);
+      if (source.status==='duplicate') {
+        const exactCanonical=integratedHashes.get(source.sha256);
+        check(!exactCanonical || source.duplicateOf===exactCanonical,
+          `${source.id}: exact SHA-256 duplicate must reference ${exactCanonical}`);
+      }
+    }
     for (const id of referenced) check(byId.has(id), `${id}: lesson references missing source manifest entry`);
   } else check(referenced.size === pack.uploadedPhotoCount, 'All uploaded photos must be accounted for in lesson sources');
   const forbidden = /^(studentName|studentId|birthDate|gradeReceived|scoreReceived|rawImage|imageBase64|imageBytes|ocrText|handwrittenAnswers)$/i;
