@@ -6,8 +6,13 @@ const source=readFileSync(
   new URL("../.github/workflows/preview-source-parity.yml",import.meta.url),
   "utf8",
 );
+const calendarSource=readFileSync(
+  new URL("../.github/workflows/calendar-visual-acceptance.yml",import.meta.url),
+  "utf8",
+);
 const previewBranch="release/abvm-unified-preview-20261009";
 const calendarReviewBranch="ux/calendar-focus-scroll-20261010";
+const calendarDateBranch="ux/calendar-date-wayfinding-20261010";
 
 test("authoritative source parity covers the premium release preview and its directly stacked review PRs",()=>{
   const condition=source.match(/^\s+if:\s*(.+)$/m)?.[1]||"";
@@ -17,6 +22,8 @@ test("authoritative source parity covers the premium release preview and its dir
     "review PRs based on the unified preview must not skip school-source parity");
   assert.ok(condition.includes("github.base_ref == '"+calendarReviewBranch+"'"),
     "nested calendar review PRs must not skip the school-source gate");
+  assert.ok(condition.includes("github.base_ref == '"+calendarDateBranch+"'"),
+    "agenda-polish PRs stacked on date wayfinding must not skip school-source parity");
   assert.ok(condition.includes("github.event_name == 'workflow_dispatch'"),
     "maintainers retain the manual source-parity verification path");
   assert.ok(!/\bmain\b/.test(condition),
@@ -32,4 +39,14 @@ test("source parity compares exact review head to latest main in read-only mode"
   assert.match(source,/node scripts\/assert-release-preview-parity\.mjs/);
   assert.match(source,/permissions:\s*\n\s+contents: read/,
     "workflow must keep read-only repository permissions");
+});
+test("Calendar controller and presentation changes cannot skip focused WebKit review",()=>{
+  assert.match(calendarSource,/paths:\s*\n(?:\s+- .+\n)*\s+- 'pages\/app\.js'/,
+    "Calendar controller changes must trigger focused visual acceptance");
+  assert.match(calendarSource,/paths:\s*\n(?:\s+- .+\n)*\s+- 'pages\/product-view\.js'/,
+    "Calendar presentation changes must trigger focused visual acceptance");
+  assert.match(calendarSource,/permissions:\s*\n\s+contents: read/,
+    "focused Calendar acceptance must keep read-only repository permissions");
+  assert.match(calendarSource,/--project=mobile --project=iphone-webkit/,
+    "focused acceptance must cover Chromium mobile and Safari WebKit");
 });

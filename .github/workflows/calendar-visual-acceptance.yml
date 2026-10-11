@@ -3,6 +3,8 @@ name: Calendar premium visual acceptance
 on:
   pull_request:
     paths:
+      - 'pages/app.js'
+      - 'pages/product-view.js'
       - 'pages/design-polish.css'
       - 'pages/index.html'
       - 'pages/sw.js'
