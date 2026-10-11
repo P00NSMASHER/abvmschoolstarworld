@@ -1,6 +1,20 @@
 import { test, expect } from "@playwright/test";
 test.use({ serviceWorkers: "block" });
 const SCHOOL_DATE = new Date("2026-10-08T12:00:00-04:00");
+// Tab transitions render the badge markup before all asynchronous SVG/WebP
+// artwork has decoded. Missing images must never pass as release screenshots.
+async function assertBadgeArtworkDecoded(screen) {
+  const art=screen.locator(".rank-current img.study-badge-art,.study-badge-next img.study-badge-art,.study-badge-grid > li img.study-badge-art");
+  // One current rank, one next rank and all 21 browsable milestones.
+  await expect(art).toHaveCount(23);
+  for(let i=0;i<23;i++) {
+    const item=art.nth(i);
+    await expect.poll(()=>item.evaluate(img=>img.complete && img.naturalWidth>0 && img.naturalHeight>0),{
+      message:"Rank artwork "+(i+1)+" did not finish loading",timeout:15000
+    }).toBe(true);
+    await item.evaluate(img=>img.decode());
+  }
+}
 
 test("Premium Today, Calendar, Study, Test Prep and Progress form one coherent iPhone journey",async({page},info)=>{
   test.setTimeout(90_000);
@@ -41,6 +55,7 @@ test("Premium Today, Calendar, Study, Test Prep and Progress form one coherent i
   const spelling=screen.locator(".learning-subject").filter({hasText:/Spelling/i}).first();
   await expect(spelling.locator(".feature-icon")).toHaveClass(/spelling/);
   expect(await screen.evaluate(el=>el.scrollWidth-el.clientWidth)).toBeLessThanOrEqual(1);
+  await assertBadgeArtworkDecoded(screen);
   await screen.evaluate(el=>{el.scrollTop=0});
   const shot=info.outputPath("integrated-premium-progress-390-first.png");
   await page.screenshot({path:shot,animations:"disabled"});
