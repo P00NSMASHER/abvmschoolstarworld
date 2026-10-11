@@ -129,7 +129,7 @@ function freshnessState(){
 }
 function freshness(){
   const s=freshnessState();
-  return window.ABVMSchoolUpdates.freshnessControl({
+  return window.ABVMProductView.freshnessControl({
     state:s.state,label:manualRefreshActive?"Checking published school info…":s.label,
     pending:manualRefreshActive,online:navigator.onLine!==false
   });
@@ -584,7 +584,7 @@ function render({preserveScroll=false}={}){
 }
 function updateFreshnessUI(){
   const node=stack().querySelector(".freshness");
-  if(node)window.ABVMSchoolUpdates.replaceFreshness(node,freshness());
+  if(node)window.ABVMProductView.replaceFreshness(node,freshness());
 }
 function carryPlannerDate(next){
   const state=window.ABVMProductView.plannerDate(next,activeTab,calendarDay,selectedDay,today(),weekDays(0)[0]);

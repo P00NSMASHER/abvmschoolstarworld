@@ -366,7 +366,25 @@
     }
     return null;
   }
-  window.ABVMProductView = Object.freeze({ today, week, progress, icon, plannerDate, compactMonthCard });
+  // The verified teacher pack may be stale even when the public teacher site is live.
+  // This is an external destination, never a new verification or publication.
+  const OFFICIAL_TEACHER_HOME = "https://sites.google.com/view/abvmgr2/home";
+  function teacherSourceLink(state, online) {
+    if (!online || (state !== "stale" && state !== "attention")) return "";
+    return '<a class="teacher-live-source" href="' + OFFICIAL_TEACHER_HOME + '" target="_blank" rel="noopener noreferrer" aria-label="View official Grade 2 teacher page in a new tab; app verification stays unchanged">View live teacher page <span aria-hidden="true">↗</span></a>';
+  }
+  function freshnessControl({ state, label, pending = false, online = true }) {
+    const action = pending ? "Checking published school information" : "Check published school information. " + label;
+    const button = '<button type="button" class="freshness ' + state + (pending ? ' is-refreshing' : '') + '" data-refresh-pack aria-label="' + esc(action) + '"' + (pending ? ' disabled' : '') + '><span aria-hidden="true"></span><strong>' + esc(label) + '</strong><b aria-hidden="true">↻</b></button>';
+    return button + teacherSourceLink(state, online);
+  }
+  function replaceFreshness(node, markup) {
+    // Replacing both siblings avoids duplicate links on stale retries and
+    // clears the link when verification succeeds or the device goes offline.
+    if (node.nextElementSibling?.matches(".teacher-live-source")) node.nextElementSibling.remove();
+    node.outerHTML = markup;
+  }
+  window.ABVMProductView = Object.freeze({ today, week, progress, icon, plannerDate, compactMonthCard, freshnessControl, replaceFreshness });
 })();
 
 (()=>{"use strict";

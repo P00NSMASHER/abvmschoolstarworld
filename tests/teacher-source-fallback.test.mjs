@@ -4,8 +4,8 @@ import { readFileSync } from "node:fs";
 import { runInNewContext } from "node:vm";
 
 const context={window:{}};
-runInNewContext(readFileSync(new URL("../pages/school-updates.js",import.meta.url),"utf8"),context);
-const view=context.window.ABVMSchoolUpdates;
+runInNewContext(readFileSync(new URL("../pages/product-view.js",import.meta.url),"utf8"),context);
+const view=context.window.ABVMProductView;
 
 for(const state of ["stale","attention"]){
   test("teacher source link is provided only for online "+state+" verification",()=>{

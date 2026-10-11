@@ -46,25 +46,5 @@ function officialCalendarLink(){
     '<a href="https://www.assumptionbvmschool.net/about/calendar" target="_blank" rel="noopener noreferrer">'+
     'Official ABVM calendar <span aria-hidden="true">↗</span></a></div>';
 }
-// A published pack can remain old while the teacher's live site has newer material.
-// This is an external reference only: opening it never changes the approval
-// gate, teacher verification timestamp, or published lesson catalog.
-const OFFICIAL_TEACHER_HOME="https://sites.google.com/view/abvmgr2/home";
-function teacherSourceLink(state,online){
-  if(!online||(state!=="stale"&&state!=="attention"))return "";
-  return '<a class="teacher-live-source" href="'+OFFICIAL_TEACHER_HOME+'" target="_blank" rel="noopener noreferrer" aria-label="View official Grade 2 teacher page in a new tab; app verification stays unchanged">View live teacher page <span aria-hidden="true">↗</span></a>';
-}
-function freshnessControl({state,label,pending=false,online=true}){
-  const action=pending?"Checking published school information":"Check published school information. "+label;
-  const button='<button type="button" class="freshness '+state+(pending?' is-refreshing':'')+'" data-refresh-pack aria-label="'+esc(action)+'"'+(pending?' disabled':'')+'><span aria-hidden="true"></span><strong>'+esc(label)+'</strong><b aria-hidden="true">↻</b></button>';
-  return button+teacherSourceLink(state,online);
-}
-function replaceFreshness(node,markup){
-  // The link is a sibling, not part of the refresh button. Replace both so a
-  // repeated stale retry does not duplicate it, and a fresh/offline state
-  // removes an obsolete link without redrawing the entire app.
-  if(node.nextElementSibling?.matches(".teacher-live-source"))node.nextElementSibling.remove();
-  node.outerHTML=markup;
-}
-window.ABVMSchoolUpdates=Object.freeze({uniqueEvents,uniqueRows,noticesCard,officialCalendarLink,teacherSourceLink,freshnessControl,replaceFreshness});
+window.ABVMSchoolUpdates=Object.freeze({uniqueEvents,uniqueRows,noticesCard,officialCalendarLink});
 })();
