@@ -299,7 +299,9 @@ test("Calendar keeps the current-month summary as concise as next month",async({
     const rows=card.locator(":scope > div");
     for(let i=0;i<await rows.count();i++){
       await expect(rows.nth(i).locator(":scope > span")).toHaveCount(1);
-      await expect(rows.nth(i).locator(":scope > p")).toHaveCount(1);
+      const events=rows.nth(i).locator(':scope > ul[role="list"] > li');
+      expect(await events.count()).toBeGreaterThan(0);
+      for(const event of await events.all())await expect(event).not.toBeEmpty();
     }
   }
   await expect(page.locator(".specials-card")).toBeVisible();

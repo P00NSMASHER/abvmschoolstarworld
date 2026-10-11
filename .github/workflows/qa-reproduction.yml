@@ -47,6 +47,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
 
       - name: Snapshot exact candidate source
@@ -56,6 +57,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/abvm-candidate-source"
+          test "$(git rev-parse HEAD)" = "$PR_HEAD_SHA"
           git archive --format=tar HEAD -o "$RUNNER_TEMP/abvm-candidate-source/source.tar"
           git rev-parse HEAD > "$RUNNER_TEMP/abvm-candidate-source/tested-commit.txt"
           printf '%s\n' "$PR_HEAD_SHA" > "$RUNNER_TEMP/abvm-candidate-source/pr-head.txt"
