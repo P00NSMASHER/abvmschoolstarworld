@@ -52,7 +52,19 @@ verified day contains both correct and incorrect answers, the incorrect
 answer takes priority in the private practice queue and blocks claiming
 mastery while unresolved; a partial response takes priority over a
 correct response on the same date. This confidence value is a household
-planning aid, not a grade or calibrated probability. Dated observations alone
+planning aid, not a grade or calibrated probability.
+
+The private `improving` status is **not** awarded merely because the overall
+score average is at least 50%. It requires a verified upward `improving`
+trend: at least four distinct independently supported assessment dates,
+the average of the latest two assessment days more than 0.2 higher than
+the previous two, at least three dated scored items, and an average of
+at least 0.5 across the latest (up to five) assessment days. Steady,
+slipping, undated-only, or shorter histories remain `learning` if sufficient
+practice evidence exists, unless the separately defined mastery rule
+applies. Only verified `studiedOn` days contribute to this comparison.
+
+Dated observations alone
 set the chronological order; an undated incorrect/partial item remains
 eligible for a separately labeled private `review-undated` practice target,
 not a claim of a recent miss. That review target is considered resolved
