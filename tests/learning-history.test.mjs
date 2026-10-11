@@ -32,6 +32,91 @@ test('mastery requires repeated independent success across sources and dates',()
   assert.equal(second.skills[0].trend,'improving');
 });
 
+test('a newer verified unknown result holds mastery for review without counting as a miss',()=>{
+  const correct=[1,2,3].map(n=>observation(
+    'correct-'+n,'review-'+n+'.jpeg','2026-10-0'+n,'correct',
+    {assignmentId:'independent-sheet-'+n,questionId:'1'}
+  ));
+  const established=mergeLearningHistory(null,batch(correct,'2026-10-03'));
+  assert.equal(established.skills[0].status,'mastered');
+  assert.equal(established.skills[0].confidence,1);
+  assert.deepEqual(established.practiceTargets,[]);
+
+  const uncertain=observation('unreadable','unreadable.jpeg','2026-10-04','unknown',{
+    assignmentId:'unreadable-sheet',questionId:'1',
+    errorType:'unknown',independence:'unknown'
+  });
+  const needsReview=mergeLearningHistory(established,batch([uncertain],'2026-10-04'));
+  assert.equal(needsReview.observations.length,4);
+  assert.equal(needsReview.skills[0].scoredCount,3,'unknown is not a scored failure');
+  assert.equal(needsReview.skills[0].confidence,1,'uncertainty must not invent a low score');
+  assert.equal(needsReview.skills[0].status,'learning','latest unscored date cannot assert mastery');
+  assert.equal(needsReview.practiceTargets[0].reason,'review-unscored');
+  assert.equal(needsReview.practiceTargets[0].priority,85);
+  assert.equal(established.skills[0].status,'mastered','old ledger stays intact');
+
+  const freshSuccess=observation('next-independent','fresh.jpeg','2026-10-05','correct',{
+    assignmentId:'fresh-sheet',questionId:'1'
+  });
+  const resolved=mergeLearningHistory(needsReview,batch([freshSuccess],'2026-10-05'));
+  assert.equal(resolved.skills[0].status,'mastered');
+  assert.equal(resolved.practiceTargets.length,0);
+  assert.equal(resolved.observations.length,5,'unscored history is retained');
+});
+
+test('latest-day unknowns never gain mastery from ID order or an earlier scored correct item',()=>{
+  const correct=[1,2,3].map(n=>observation(
+    'c-'+n,'photo-'+n+'.jpeg','2026-10-0'+n,'correct',
+    {assignmentId:'sheet-'+n,questionId:'1'}
+  ));
+  const uncertain=observation('z-unknown','photo-3.jpeg','2026-10-03','unknown',{
+    assignmentId:'sheet-3',questionId:'2',
+    errorType:'unknown',independence:'unknown'
+  });
+  for(const id of ['a-unknown','z-unknown']){
+    const variant={...uncertain,id};
+    const result=mergeLearningHistory(null,batch([...correct,variant],'2026-10-03'));
+    assert.notEqual(result.skills[0].status,'mastered');
+    assert.equal(result.practiceTargets[0].reason,'review-unscored');
+    assert.equal(result.skills[0].scoredCount,3);
+  }
+});
+
+test('older dated unknowns and newly uploaded undated unknowns do not erase later verified mastery',()=>{
+  const uncertainEarlier=observation('old-unknown','old.jpeg','2026-10-01','unknown',{
+    assignmentId:'old-sheet',questionId:'1',errorType:'unknown',independence:'unknown'
+  });
+  const laterCorrect=[2,3,4].map(n=>observation(
+    'd-'+n,'scored-'+n+'.jpeg','2026-10-0'+n,'correct',
+    {assignmentId:'dated-sheet-'+n,questionId:'1'}
+  ));
+  const history=mergeLearningHistory(null,batch([uncertainEarlier,...laterCorrect],'2026-10-04'));
+  assert.equal(history.skills[0].status,'mastered');
+  assert.equal(history.practiceTargets.length,0);
+  const oldUndated=observation('undated-unknown','late-photo.jpeg','2026-10-05','unknown',{
+    studiedOn:null,assignmentId:'old-photo-sheet',questionId:'1',
+    errorType:'unknown',independence:'unknown'
+  });
+  const replay=mergeLearningHistory(history,batch([oldUndated],'2026-10-05'));
+  assert.equal(replay.skills[0].status,'mastered');
+  assert.equal(replay.practiceTargets.length,0);
+  assert.equal(replay.observations.length,5);
+});
+
+test('a confirmed latest-day miss outranks an unscored review request',()=>{
+  const result=mergeLearningHistory(null,batch([
+    observation('miss','miss.jpeg','2026-10-04','incorrect',{
+      assignmentId:'sheet-a',questionId:'1'
+    }),
+    observation('unknown','unknown.jpeg','2026-10-04','unknown',{
+      assignmentId:'sheet-b',questionId:'1',
+      errorType:'unknown',independence:'unknown'
+    })
+  ],'2026-10-04'));
+  assert.equal(result.practiceTargets[0].reason,'recent-miss');
+  assert.equal(result.skills[0].scoredCount,1);
+});
+
 test('recent misses outrank generic reinforcement and retain error taxonomy',()=>{
   const result=mergeLearningHistory(null,batch([
     observation('o1','p1','2026-10-01','correct'),
