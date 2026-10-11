@@ -189,6 +189,82 @@ test('one SHA-256 can have only one integrated canonical regardless of manifest 
  assert.equal(validateSchoolwork(p,{requireManifest:true}).photos,2);
 });
 
+test('identical SHA-256 cannot be attributed to the wrong integrated worksheet',async()=>{
+ const p=pack(),original=p.sourceManifest[0];
+ const second={id:'photo-2.jpeg',sha256:'b'.repeat(64),status:'integrated'};
+ const impersonator={id:'photo-3.jpeg',sha256:original.sha256,status:'duplicate',
+   duplicateOf:second.id,reason:'Claimed to be another picture of the second worksheet.'};
+ p.sourceManifest.push(second,impersonator);
+ p.lessons.push({...structuredClone(p.lessons[0]),id:'triangle-review',
+   title:'Triangle review',sources:[second.id,impersonator.id],
+   skills:['triangles'],notes:['A triangle has three sides.'],
+   questions:[{...p.lessons[0].questions[0],id:'q-2',
+     prompt:'How many sides does a triangle have?',answer:'3',choices:['3','4'],
+     explanation:'A triangle has three sides.',sourceFact:'Triangle sides',skill:'triangles'}]});
+ p.uploadedPhotoCount=3;
+ // Former behavior accepted the fabricated semantic-duplicate explanation.
+ // Canonical attribution must be independent of manifest ordering.
+ for(const manifest of [
+   [original,second,impersonator],
+   [impersonator,second,original],
+   [second,original,impersonator]
+ ]){
+   const invalid={...p,sourceManifest:manifest};
+   assert.throws(()=>validateSchoolwork(invalid,{requireManifest:true}),
+     /exact SHA-256 duplicate must reference photo-1.jpeg/);
+   assert.throws(()=>mergeSchoolwork(pack(),invalid),
+     /exact SHA-256 duplicate must reference photo-1.jpeg/);
+ }
+ const semantic=structuredClone(p);
+ semantic.sourceManifest[2].sha256='c'.repeat(64);
+ assert.deepEqual(validateSchoolwork(semantic,{requireManifest:true}),
+   {lessons:2,questions:2,photos:3});
+ const exactCorrect=structuredClone(p);
+ exactCorrect.sourceManifest[2].sha256=second.sha256;
+ assert.deepEqual(validateSchoolwork(exactCorrect,{requireManifest:true}),
+   {lessons:2,questions:2,photos:3});
+
+ const dir=await mkdtemp(join(tmpdir(),'schoolwork-wrong-digest-owner-'));
+ try{
+   const target=join(dir,'schoolwork.json'),reviewedBatch=join(dir,'batch.json');
+   const before=JSON.stringify(pack(),null,2)+'\n';
+   await writeFile(target,before);
+   await writeFile(reviewedBatch,JSON.stringify(p));
+   await assert.rejects(integrateFile(target,reviewedBatch,{write:true}),
+     /exact SHA-256 duplicate must reference photo-1.jpeg/);
+   assert.equal(await readFile(target,'utf8'),before);
+ }finally{await rm(dir,{recursive:true,force:true});}
+});
+
+test('held photo bytes cannot escape quarantine under a second source ID',()=>{
+ const p=pack(),canonical=p.sourceManifest[0];
+ const held={id:'unreadable.jpeg',sha256:'c'.repeat(64),status:'held',
+   reason:'Cannot confirm the printed question.'};
+ const alias={id:'renamed.jpeg',sha256:held.sha256,status:'duplicate',
+   duplicateOf:canonical.id,reason:'Claimed semantic match while original is held.'};
+ p.sourceManifest.push(held,alias);
+ p.lessons[0].sources.push(alias.id);
+ p.uploadedPhotoCount=3;
+ for(const manifest of [
+   [canonical,held,alias],
+   [canonical,alias,held],
+   [alias,held,canonical]
+ ]){
+   assert.throws(()=>validateSchoolwork({...p,sourceManifest:manifest},{requireManifest:true}),
+     /SHA-256 belongs to unresolved held source unreadable.jpeg/);
+ }
+ const differentBytes=structuredClone(p);
+ differentBytes.sourceManifest[2].sha256='d'.repeat(64);
+ assert.deepEqual(validateSchoolwork(differentBytes,{requireManifest:true}),
+   {lessons:1,questions:1,photos:3});
+ const heldOnly=structuredClone(p);
+ heldOnly.sourceManifest.pop();
+ heldOnly.lessons[0].sources.pop();
+ heldOnly.uploadedPhotoCount=2;
+ assert.deepEqual(validateSchoolwork(heldOnly,{requireManifest:true}),
+   {lessons:1,questions:1,photos:2});
+});
+
 test('integrated and held sources cannot pretend to be duplicate records',()=>{
  const p=pack();
  p.sourceManifest[0].duplicateOf='another-photo.jpeg';
