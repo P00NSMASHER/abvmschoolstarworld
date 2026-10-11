@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 test.use({ serviceWorkers: "block" });
 const SCHOOL_DATE = new Date("2026-10-08T12:00:00-04:00");
+
 // Tab transitions render the badge markup before all asynchronous SVG/WebP
 // artwork has decoded. Missing images must never pass as release screenshots.
 async function assertBadgeArtworkDecoded(screen) {
