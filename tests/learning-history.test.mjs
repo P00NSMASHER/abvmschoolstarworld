@@ -335,6 +335,28 @@ test('same question in the same photo cannot be reimported once with and once wi
   assert.deepEqual(existing,snapshot,'reject without mutating previously reviewed evidence');
 });
 
+test('mixed-identity duplicate rejection preserves a private ledger byte-for-byte',async()=>{
+  const dir=await mkdtemp(path.join(tmpdir(),'abvm-mixed-identity-'));
+  try{
+    const target=path.join(dir,'history.json'),input=path.join(dir,'batch.json');
+    const repoRoot=path.join(dir,'public-repo');
+    const assigned=observation('canonical','original-photo.jpeg','2026-10-01','correct',{
+      assignmentId:'math page 42',questionId:'4'
+    });
+    await writeFile(input,JSON.stringify(batch([assigned],'2026-10-01')));
+    const original=await integrateLearningHistory(target,input,{write:true,repoRoot});
+    assert.equal(original.observations,1);
+    const before=await readFile(target,'utf8');
+    const duplicate=observation('legacy-photo','original-photo.jpeg','2026-10-02','correct',{
+      questionId:'4'
+    });
+    await writeFile(input,JSON.stringify(batch([duplicate],'2026-10-02')));
+    await assert.rejects(integrateLearningHistory(target,input,{write:true,repoRoot}),
+      /Repeated assessment item/);
+    assert.equal(await readFile(target,'utf8'),before);
+  }finally{await rm(dir,{recursive:true,force:true});}
+});
+
 test('one photo of multiple assignments is conservatively one independent work capture',()=>{
   const samePhoto=[1,2,3].map(n=>observation(
     'multiple-'+n,'one-camera.jpeg','2026-10-0'+n,'correct',{
