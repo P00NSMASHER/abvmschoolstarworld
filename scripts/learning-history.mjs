@@ -84,16 +84,45 @@ function assessmentKey(item){
   if(!item.questionId)return null;
   return JSON.stringify([item.subject,item.skill,item.assignmentId?normalizeIdentity(item.assignmentId):null,item.assignmentId?null:item.sourceId,normalizeIdentity(item.questionId)]);
 }
-// Distinct photos of one worksheet are one body of work for mastery purposes.
-function workKey(item){return item.assignmentId?normalizeIdentity(item.assignmentId):item.sourceId;}
+// An identified assignment can span multiple photos; one photo can also
+// contain older observations without assignmentId. Both identities must be
+// linked before deciding whether recent success is independent. Treating the
+// same image as two work sources merely because metadata is mixed is unsafe.
+function independentWorkCount(recent,group){
+  const parents=new Map();
+  function root(key){
+    if(!parents.has(key)){parents.set(key,key);return key;}
+    const parent=parents.get(key);
+    if(parent!==key)parents.set(key,root(parent));
+    return parents.get(key);
+  }
+  function link(a,b){
+    const aRoot=root(a),bRoot=root(b);
+    if(aRoot!==bRoot)parents.set(bRoot,aRoot);
+  }
+  for(const item of group){
+    if(item.assignmentId)link('photo:'+item.sourceId,'assignment:'+normalizeIdentity(item.assignmentId));
+  }
+  // One photo containing different assignments is conservatively one
+  // evidence capture until they can be independently observed elsewhere.
+  return new Set(recent.map(item=>root('photo:'+item.sourceId))).size;
+}
 function assertDistinctAssessments(observations){
-  const seen=new Map();
+  const seen=new Map(),seenInPhoto=new Map();
   for(const item of observations){
     const key=assessmentKey(item);
     if(!key)continue;
     const prior=seen.get(key);
     if(prior&&prior!==item.id)throw new Error('Repeated assessment item: '+item.id+' duplicates '+prior+'. Consolidate rephotographed responses under the original observation ID.');
     seen.set(key,item.id);
+    // The old photo-only and newer assignment-aware identity schemes must
+    // not both score the same numbered item in one source image.
+    const photoKey=JSON.stringify([item.subject,item.skill,item.sourceId,normalizeIdentity(item.questionId)]);
+    const priorPhoto=seenInPhoto.get(photoKey);
+    if(priorPhoto&&priorPhoto.id!==item.id&&(!priorPhoto.assignmentId||!item.assignmentId)){
+      throw new Error('Repeated assessment item: '+item.id+' duplicates '+priorPhoto.id+'. Consolidate mixed-identity records for the same source photo.');
+    }
+    if(!priorPhoto)seenInPhoto.set(photoKey,item);
   }
 }
 function skillSummary(observations,asOf){
@@ -135,7 +164,7 @@ function skillSummary(observations,asOf){
     const unresolvedLatestDay=datedEvidence.some(item=>
       item.studiedOn===latestDatedDay&&item.result!=='correct');
     const mastery=!unresolvedLatestDay&&lastThree.length===3&&lastThree.every(item=>item.result==='correct'&&(item.independence||'unknown')==='independent'&&item.studiedOn)
-      &&new Set(lastThree.map(workKey)).size>=2
+      &&independentWorkCount(lastThree,group)>=2
       &&new Set(lastThree.map(item=>item.studiedOn)).size>=2;
     let trend='insufficient-data';
     if(dayMeans.length>=4){

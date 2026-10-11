@@ -32,9 +32,15 @@ The private operational states are:
 - `mastered`
 
 "Mastered" is deliberately conservative: the processor requires three most-recent
-scored observations to be independently correct, spanning at least two distinct
-reviewed assignments (falling back to source-photo IDs for legacy observations
-without an assignment ID), and two independently verified `studiedOn` dates. An `addedOn` upload/intake date
+scored observations to be independently correct, spanning at least two genuinely
+independent work groups and two independently verified `studiedOn` dates.
+Assignment IDs connect rephotographs of the same assignment, while stable
+source-photo IDs also connect older observations lacking an assignment ID.
+Those photo/assignment connections are evaluated across the **entire reviewed
+history**, not just the latest three items, so mixed legacy and newer metadata
+cannot turn one worksheet into two separate assignments. A single source photo
+containing multiple labeled assignments conservatively counts as one evidence
+capture until independent work is confirmed elsewhere. An `addedOn` upload/intake date
 is **not** evidence of when a worksheet was completed. Without verified studied
 dates, correctness observations still support targeted practice, but the
 processor cannot assert chronological improvement, slipping, or mastery.
@@ -88,7 +94,13 @@ When a worksheet is photographed again, reuse the original observation IDs.
 Use stable `assignmentId` and `questionId` in reviewed private observations to
 identify an item across source photos; the processor rejects the same assignment
 item under a new observation ID, including harmless case/spacing variations.
-When assignment identity cannot be established, keep the evidence provisional:
+It also rejects two different observation IDs for the same `sourceId`,
+`subject`, `skill` and normalized `questionId` when either entry is missing
+`assignmentId`. This closes the mixed legacy/new identity replay loophole
+without rejecting independently identified questions on two assignments
+pictured together. Reconcile conflicting IDs privately instead of changing
+the original learner's answer. When assignment identity cannot be established,
+keep the evidence provisional:
 the processor cannot infer that two differently named photos are distinct items.
 
 "Mastered" is a household study-planning flag, not a diagnosis,

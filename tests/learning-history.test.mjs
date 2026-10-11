@@ -292,6 +292,105 @@ test('new and replaced private histories are owner-only even under a permissive 
   }finally{await rm(dir,{recursive:true,force:true});}
 });
 
+test('mixed assignment-aware and legacy observations from one worksheet cannot manufacture mastery',()=>{
+  const sameWork=[
+    observation('sheet-1','photo-A.jpeg','2026-10-01','correct',{
+      assignmentId:' Math Page 42 ',questionId:'1'
+    }),
+    observation('sheet-2','photo-A.jpeg','2026-10-02','correct',{
+      questionId:'2'
+    }),
+    observation('sheet-3','photo-B.jpeg','2026-10-03','correct',{
+      assignmentId:'math page 42',questionId:'3'
+    })
+  ];
+  const history=mergeLearningHistory(null,batch(sameWork,'2026-10-03'));
+  assert.equal(history.skills[0].scoredCount,3);
+  assert.equal(history.skills[0].independentCorrect,3);
+  assert.equal(history.skills[0].confidence,1);
+  assert.notEqual(history.skills[0].status,'mastered',
+    'photo-only records must link to the reviewed assignment identity');
+  const independent=observation('next-sheet','photo-C.jpeg','2026-10-04','correct',{
+    assignmentId:'math page 43',questionId:'1'
+  });
+  const followed=mergeLearningHistory(history,batch([independent],'2026-10-04'));
+  assert.equal(followed.skills[0].status,'mastered');
+});
+
+test('same question in the same photo cannot be reimported once with and once without assignment ID',()=>{
+  const identified=observation('assigned','same-photo.jpeg','2026-10-01','correct',{
+    assignmentId:'Math Page 42',questionId:'4'
+  });
+  const legacy=observation('legacy','same-photo.jpeg','2026-10-02','correct',{
+    questionId:'4'
+  });
+  for(const order of [[identified,legacy],[legacy,identified]]){
+    assert.throws(()=>mergeLearningHistory(null,batch(order,'2026-10-03')),
+      /Repeated assessment item/, 'reject either intake order');
+  }
+  const existing=mergeLearningHistory(null,batch([identified],'2026-10-01'));
+  const snapshot=structuredClone(existing);
+  assert.throws(()=>mergeLearningHistory(existing,batch([legacy],'2026-10-03')),
+    /Repeated assessment item/);
+  assert.deepEqual(existing,snapshot,'reject without mutating previously reviewed evidence');
+});
+
+test('mixed-identity duplicate rejection preserves a private ledger byte-for-byte',async()=>{
+  const dir=await mkdtemp(path.join(tmpdir(),'abvm-mixed-identity-'));
+  try{
+    const target=path.join(dir,'history.json'),input=path.join(dir,'batch.json');
+    const repoRoot=path.join(dir,'public-repo');
+    const assigned=observation('canonical','original-photo.jpeg','2026-10-01','correct',{
+      assignmentId:'math page 42',questionId:'4'
+    });
+    await writeFile(input,JSON.stringify(batch([assigned],'2026-10-01')));
+    const original=await integrateLearningHistory(target,input,{write:true,repoRoot});
+    assert.equal(original.observations,1);
+    const before=await readFile(target,'utf8');
+    const duplicate=observation('legacy-photo','original-photo.jpeg','2026-10-02','correct',{
+      questionId:'4'
+    });
+    await writeFile(input,JSON.stringify(batch([duplicate],'2026-10-02')));
+    await assert.rejects(integrateLearningHistory(target,input,{write:true,repoRoot}),
+      /Repeated assessment item/);
+    assert.equal(await readFile(target,'utf8'),before);
+  }finally{await rm(dir,{recursive:true,force:true});}
+});
+
+test('one photo of multiple assignments is conservatively one independent work capture',()=>{
+  const samePhoto=[1,2,3].map(n=>observation(
+    'multiple-'+n,'one-camera.jpeg','2026-10-0'+n,'correct',{
+      assignmentId:'Separate Page '+n,questionId:'1'
+    }
+  ));
+  const history=mergeLearningHistory(null,batch(samePhoto,'2026-10-03'));
+  assert.notEqual(history.skills[0].status,'mastered');
+  const independent=observation('independent-photo','other-camera.jpeg','2026-10-04','correct',{
+    assignmentId:'Separate Page 4',questionId:'1'
+  });
+  assert.equal(mergeLearningHistory(history,batch([independent],'2026-10-04'))
+    .skills[0].status,'mastered');
+});
+
+test('older assignment-photo bridge cannot be bypassed by the latest three evidence records',()=>{
+  const history=mergeLearningHistory(null,batch([
+    observation('earliest-bridge','bridge-photo.jpeg','2026-10-01','correct',{
+      assignmentId:'Shared Homework',questionId:'1'
+    }),
+    observation('recent-1','photo-A.jpeg','2026-10-02','correct',{
+      assignmentId:'shared homework',questionId:'2'
+    }),
+    observation('recent-2','bridge-photo.jpeg','2026-10-03','correct',{
+      questionId:'3'
+    }),
+    observation('recent-3','photo-B.jpeg','2026-10-04','correct',{
+      assignmentId:'SHARED HOMEWORK',questionId:'4'
+    })
+  ],'2026-10-04'));
+  assert.notEqual(history.skills[0].status,'mastered',
+    'older reviewed provenance must still link otherwise distinct photos');
+});
+
 test('mastery requires distinct assignments, not rephotographs of one worksheet',()=>{
   const sameSheet=[
     observation('a1','camera-1.jpeg','2026-10-01','correct',{assignmentId:'Math Page 9',questionId:'1'}),
