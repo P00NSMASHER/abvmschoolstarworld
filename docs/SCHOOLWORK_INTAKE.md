@@ -319,6 +319,33 @@ Schoolwork question `subject` must match the containing lesson and its
 This public schoolwork stream does not claim teacher-authored test items, licensed
 question-bank copies, or official STAR questions.
 
+## Printable offline curriculum comparison workbook
+
+Generate a **private, printable HTML review workbook** from the public
+source manifest and original practice questions:
+
+```sh
+node scripts/build-schoolwork-review-workbook.mjs pages/data/schoolwork.json /PRIVATE/abvm-schoolwork-review.html
+```
+
+The command requires an **absolute destination outside the public repository**,
+creates an owner-only (0600) HTML file on POSIX systems, and never overwrites
+an existing workbook. The deterministic cover identifies the exact source/lesson
+content fingerprint. The workbook lists all 23 photo source IDs and SHA-256
+digests, links them to 13 lessons, and includes the 67 public original practice
+questions, choices, correct answers, explanations and teaching notes.
+
+The workbook has no original photo bytes, private student answers, teacher marks,
+network resources, scripts or upload controls. It is printable in black and white.
+Open actual private photos separately for comparison. Questions associated with a
+lesson are **not automatically claimed to appear in each linked photo**. Source
+accuracy, educational correctness, privacy, rights and any uncertain dates remain
+human review responsibilities. Paper checkboxes are not authenticated signoff.
+
+Every workbook is marked `HOLD_EXTERNAL_SIGNOFF`, including if fully annotated.
+Neither this output nor a valid photo receipt changes schoolwork, publishes held
+curriculum, or authorizes a production merge. Keep any annotated workbook private
+and out of the public GitHub repository and CI artifacts.
 ## Private original-photo comparison (review-only)
 
 The public `sourceManifest` includes only SHA-256 hashes, not the original private

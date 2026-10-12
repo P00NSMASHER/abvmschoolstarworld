@@ -46,6 +46,8 @@ on:
       - 'tests/schoolwork-review-report.test.mjs'
       - 'scripts/verify-schoolwork-photo-reviews.mjs'
       - 'tests/schoolwork-photo-verification.test.mjs'
+      - 'scripts/build-schoolwork-review-workbook.mjs'
+      - 'tests/schoolwork-review-workbook.test.mjs'
       - '.github/workflows/qa-reproduction.yml'
 permissions:
   contents: read
