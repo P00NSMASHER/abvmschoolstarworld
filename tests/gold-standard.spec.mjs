@@ -415,9 +415,14 @@ test("Sept 28 weekly notice is integrated without duplicate stale events",async(
   expect(has("Saturday, Oct. 3","Movie Night (Grades 5–8) — 6–8 PM")).toBe(true);
   expect(has("Friday, Oct. 9","12:00 dismissal")).toBe(true);
   expect(has("Monday, Oct. 12","No School — Columbus Day")).toBe(true);
-  expect(has("Monday–Tuesday, Oct. 19–20","Parent-Teacher Conferences")).toBe(true);
-  expect(has("Thursday, Oct. 22","Chick-fil-A pickup")).toBe(true);
-  expect(has("Friday, Oct. 23","S’more Fun at Schwartz Farm")).toBe(true);
+  // Latest Melissa planner plus explicit Grade 2 confirmation supersede the
+  // older generic multi-grade conference reminder; keep the no-school scope.
+  expect(has("Tuesday, Oct. 20","Grade 2 / K–4: No School — Parent-Teacher Conferences")).toBe(true);
+  expect(has("Wednesday, Oct. 14","Progress Reports Sent Home — Sign & Return")).toBe(true);
+  expect(has("Friday, Oct. 23","Lego Club (time not stated in latest planner)")).toBe(true);
+  expect(events.some(e=>e.date==="Monday–Tuesday, Oct. 19–20"&&e.label==="Parent-Teacher Conferences")).toBe(false);
+  expect(has("Thursday, Oct. 22","Chick-fil-A Delivery")).toBe(true);
+  expect(has("Friday, Oct. 23","S’mores Family")).toBe(true);
   expect(has("Friday–Saturday, Nov. 13–14","Drama Club Play")).toBe(true);
   const royals=events.filter(e=>e.date==="Saturday, Nov. 21"&&e.label.startsWith("Reading Royals Game Family Fun Night"));
   expect(royals).toHaveLength(1);
