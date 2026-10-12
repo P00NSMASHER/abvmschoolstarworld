@@ -319,6 +319,57 @@ Schoolwork question `subject` must match the containing lesson and its
 This public schoolwork stream does not claim teacher-authored test items, licensed
 question-bank copies, or official STAR questions.
 
+## Private original-photograph review receipt (manual gate)
+
+The public source-to-question audit above is an index, not proof that original
+photographs were compared against the educational content. To make independent
+human verification reproducible, use the **private** photo review packet tool:
+
+```sh
+# From the ABVM repo; keep output OUTSIDE the public repository.
+node scripts/schoolwork-photo-review.mjs create \
+  pages/data/schoolwork.json /private/abvm-review/photo-review.json
+
+# Check ACTUAL original image bytes against the manifest-declared SHA-256.
+# Repeat with each available private original image and public source ID.
+node scripts/schoolwork-photo-review.mjs photo \
+  pages/data/schoolwork.json IMG_2530.jpeg /private/photos/IMG_2530.jpeg
+
+# Independently compare printed tasks, answers, dates and source rights.
+# Change only pending -> confirmed or pending -> blocked in private JSON.
+node scripts/schoolwork-photo-review.mjs check \
+  pages/data/schoolwork.json /private/abvm-review/photo-review.json
+```
+
+The generated packet is an exclusively created, owner-only (0600 on POSIX)
+private file. It cannot overwrite a prior review. It includes already-public
+source IDs/digests, lesson notes/date authority, questions, answer options,
+explanations, and explicit **pending** reviewer statuses. It does **not**
+contain original image bytes, learner responses, teacher markings or private
+performance history. **Never commit a private receipt to GitHub**, place it
+in a CI artifact, or include it in the public app. There is no upload watcher.
+
+Allowed statuses are `pending`, `confirmed` and `blocked`. The `photo` command
+streams a separately available local original image and reports only whether
+its bytes match the declared digest; it does not perform OCR or educational
+review, and a mismatch exits unsuccessfully. The `check` command reports
+counts without printing source images, learner data or question text.
+
+Each review packet is bound to a canonical SHA-256 of the complete public
+schoolwork pack, source hashes, and lesson/question content. Any changed
+question answer, schoolwork date, lesson note or manifest entry makes the
+existing packet stale **even if its statuses were confirmed**. Create a new
+private packet under a different filename and repeat the necessary human
+reviews; do not auto-transfer checks or edit digests to force a match.
+
+These statuses are **self-attested**, not cryptographic signatures from an
+approved reviewer. Even a completely confirmed checklist cannot authorize
+publication, source promotion or curriculum approval. The tool always
+returns `HOLD_EXTERNAL_SIGNOFF`; original-photo transcription, educator/source
+rights, public child privacy, real-device Safari acceptance if required, and
+explicit authorization of the exact release scope remain separate human
+decisions. Leave all existing HOLDs in place.
+
 ### 12. Update weekly and test-prep surfaces only when warranted
 
 Only source-supported dates/topic mapping place material in the weekly section or a
