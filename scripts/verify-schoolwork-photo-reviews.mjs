@@ -7,6 +7,18 @@ import {validateSchoolwork,isDate} from './validate-schoolwork.mjs';
 import {assertPrivateRealPath} from './learning-history.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+// Schoolwork intake dates are New York calendar days, not UTC dates.
+export function newYorkSchoolDay(instant=new Date()){
+  const parts=Object.fromEntries(
+    new Intl.DateTimeFormat('en-US',{
+      timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'
+    }).formatToParts(instant)
+      .filter(part=>['year','month','day'].includes(part.type))
+      .map(part=>[part.type,part.value])
+  );
+  return parts.year+'-'+parts.month+'-'+parts.day;
+}
+
 const CHECKS=[
   'originalPhotoInspected',
   'printedWorkCompared',
@@ -114,7 +126,7 @@ async function checkPrivatePhoto(directory,sourceId){
 
 // Reads real photographs only from an explicitly supplied private directory.
 // All output is metadata-only. No checks can sign off a production release.
-export async function verifySchoolworkPhotoReviews(pack,photoDirectory,receiptPath,{repoRoot=root,asOfDay=new Date().toISOString().slice(0,10)}={}){
+export async function verifySchoolworkPhotoReviews(pack,photoDirectory,receiptPath,{repoRoot=root,asOfDay=newYorkSchoolDay()}={}){
   if(!isDate(asOfDay))throw new Error('Invalid verification date');
   const checklist=buildSchoolworkPhotoChecklist(pack);
   const photos=await assertPrivateRealPath(photoDirectory,'Private source photo directory',repoRoot);

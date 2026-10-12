@@ -4,7 +4,7 @@ import {mkdtemp,mkdir,readFile,rm,symlink,writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
-import {buildSchoolworkPhotoChecklist,buildPrivatePhotoReviewTemplate,verifySchoolworkPhotoReviews} from '../scripts/verify-schoolwork-photo-reviews.mjs';
+import {buildSchoolworkPhotoChecklist,buildPrivatePhotoReviewTemplate,verifySchoolworkPhotoReviews,newYorkSchoolDay} from '../scripts/verify-schoolwork-photo-reviews.mjs';
 import {validateSchoolwork} from '../scripts/validate-schoolwork.mjs';
 
 const hash=value=>createHash('sha256').update(value).digest('hex');
@@ -196,4 +196,9 @@ test('symlinked originals cannot substitute unapproved files',{skip:process.plat
     const report=await verifySchoolworkPhotoReviews(pack,env.photoDir,env.receiptPath,{repoRoot:env.repoRoot,asOfDay:'2026-10-11'});
     assert.equal(report.sources[0].status,'UNSAFE_PHOTO_FILE');
   }finally{await rm(env.dir,{recursive:true,force:true});}
+});
+
+test('default review date follows the New York school day across UTC midnight',()=>{
+  assert.equal(newYorkSchoolDay(new Date('2026-10-12T01:00:00Z')),'2026-10-11');
+  assert.equal(newYorkSchoolDay(new Date('2026-10-12T04:05:00Z')),'2026-10-12');
 });
