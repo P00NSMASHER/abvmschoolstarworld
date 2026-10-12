@@ -157,6 +157,12 @@ test("Week: five-day study plan and verified lunch/test information", async ({ p
     await expect(page.locator(".week-nav strong")).toContainText("Oct 12 – 16");
     await page.locator(".day-picker button").nth(2).click(); // Wed, Oct 14
     await expect(page.locator(".day-detail")).toContainText("Progress Reports Sent Home — Sign & Return");
+    // Each viewport reuses this browser context. Restore the historical week
+    // and original Thursday selection before testing the next phone width.
+    await page.getByRole("button", { name: "Previous week" }).click();
+    await expect(page.locator(".week-nav strong")).toContainText("Oct 5 – 9");
+    await page.locator(".day-picker button").nth(3).click(); // Thu, Oct 8
+    await expect(page.locator(".day-detail")).toContainText("Thursday, October 8");
   }
 });
 
