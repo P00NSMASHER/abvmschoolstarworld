@@ -35,7 +35,12 @@ test("Month: source-backed day grid, legend and premium layout on iPhone", async
     await expect(page.locator(".calendar-screen")).toBeVisible();
     await expect(page.locator(".calendar-month-nav strong")).toHaveText("October 2026");
     await expect(page.locator(".calendar-grid button[data-cal-day]")).toHaveCount(31);
-    await expect(page.locator(".calendar-day-card")).toContainText("Progress Reports Issued");
+    // Melissa's latest reviewed planner moved progress reports from Oct 8
+    // to Oct 14; keep the original Oct 8 lunch and visual layout checks.
+    await expect(page.locator(".calendar-day-card")).not.toContainText("Progress Reports Issued");
+    await page.locator(".calendar-grid button[data-cal-day]").nth(13).click(); // Oct 14
+    await expect(page.locator(".calendar-day-card")).toContainText("Progress Reports Sent Home — Sign & Return");
+    await page.locator(".calendar-grid button[data-cal-day]").nth(7).click(); // Oct 8
     await expect(page.locator(".calendar-day-card")).toContainText("Beef cheesesteak");
     await expect(page.locator(".calendar-segments [data-route=calendar]")).toHaveAttribute("aria-pressed", "true");
     await sealReady(page);
@@ -119,7 +124,9 @@ test("Week: five-day study plan and verified lunch/test information", async ({ p
     await expect(page.locator(".week-nav strong")).toContainText("Oct 5 – 9");
     await expect(page.locator(".day-picker button")).toHaveCount(5);
     await expect(page.locator(".calendar-segments [data-route=week]")).toHaveAttribute("aria-pressed", "true");
-    await expect(page.locator(".day-detail")).toContainText("Progress Reports Issued");
+    // An Oct 8 school day no longer reports progress reports as issued.
+    await expect(page.locator(".day-detail")).not.toContainText("Progress Reports Issued");
+    await expect(page.locator(".day-detail")).toContainText("Thursday, October 8");
     await expect(page.locator(".day-detail")).toContainText("Read");
     await expect(page.locator(".week-overview .week-lunches .week-overview-row")).toHaveCount(5);
     await expect(page.locator(".week-overview .week-tests")).toContainText("Spelling");
@@ -144,6 +151,12 @@ test("Week: five-day study plan and verified lunch/test information", async ({ p
     }
     await capture(page, info, "calendar-week-" + width + "-first");
     if (width === 390) await capture(page, info, "calendar-week-390-full", true);
+    // Verify the corrected future week without changing the original Week
+    // screenshot/meal/test layout assertions for October 5–9.
+    await page.getByRole("button", { name: "Next week" }).click();
+    await expect(page.locator(".week-nav strong")).toContainText("Oct 12 – 16");
+    await page.locator(".day-picker button").nth(2).click(); // Wed, Oct 14
+    await expect(page.locator(".day-detail")).toContainText("Progress Reports Sent Home — Sign & Return");
   }
 });
 
