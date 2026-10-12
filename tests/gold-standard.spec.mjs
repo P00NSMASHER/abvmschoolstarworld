@@ -416,8 +416,8 @@ test("Sept 28 weekly notice is integrated without duplicate stale events",async(
   expect(has("Wednesday, Oct. 14","Progress Reports Sent Home — Sign & Return")).toBe(true);
   expect(has("Friday, Oct. 23","Lego Club (time not stated in latest planner)")).toBe(true);
   expect(events.some(e=>e.date==="Monday–Tuesday, Oct. 19–20"&&e.label==="Parent-Teacher Conferences")).toBe(false);
-  expect(has("Thursday, Oct. 22","Chick-fil-A pickup")).toBe(true);
-  expect(has("Friday, Oct. 23","S’more Fun at Schwartz Farm")).toBe(true);
+  expect(has("Thursday, Oct. 22","Chick-fil-A Delivery")).toBe(true);
+  expect(has("Friday, Oct. 23","S’mores Family")).toBe(true);
   expect(has("Friday–Saturday, Nov. 13–14","Drama Club Play")).toBe(true);
   const royals=events.filter(e=>e.date==="Saturday, Nov. 21"&&e.label.startsWith("Reading Royals Game Family Fun Night"));
   expect(royals).toHaveLength(1);
