@@ -38,3 +38,15 @@ test('only the four approved Tier A school photos are registered for offline del
     './assets/school/abvm-school-facade.webp'
   ]);
 });
+
+
+test('restored Howard Avenue sign photo decodes completely on supported browsers',async({page})=>{
+  await page.goto('/#today');
+  const decoded=await page.evaluate(async()=>{
+    const photo=new Image();
+    photo.src='./assets/school/abvm-school-sign.webp';
+    await photo.decode();
+    return {complete:photo.complete,width:photo.naturalWidth,height:photo.naturalHeight};
+  });
+  expect(decoded).toEqual({complete:true,width:420,height:280});
+});
