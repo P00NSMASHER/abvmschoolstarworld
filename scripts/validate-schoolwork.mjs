@@ -88,7 +88,7 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
     const hashes = new Map(), integratedHashes = new Map();
     for (const source of manifest) {
       allowedKeys(source, SOURCE_KEYS, `source ${source?.id || '<unknown>'}`);
-      check(text(source.id) && /^[a-zA-Z0-9_.-]+$/.test(source.id), 'Invalid non-identifying source ID');
+      check(text(source.id) && source.id !== '.' && source.id !== '..' && /^[a-zA-Z0-9_.-]+$/.test(source.id), 'Invalid non-identifying source ID');
       check(/^[a-f0-9]{64}$/.test(source.sha256), `${source.id}: missing SHA-256`);
       check(['integrated','duplicate','held'].includes(source.status), `${source.id}: invalid source status`);
       check(source.duplicateOf === undefined || text(source.duplicateOf), `${source.id}: invalid duplicateOf`);
