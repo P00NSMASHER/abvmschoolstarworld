@@ -319,6 +319,47 @@ Schoolwork question `subject` must match the containing lesson and its
 This public schoolwork stream does not claim teacher-authored test items, licensed
 question-bank copies, or official STAR questions.
 
+## Private original-photo comparison (review-only)
+
+The public `sourceManifest` includes only SHA-256 hashes, not the original private
+photos. Structural CI cannot certify the 23 existing photo transcriptions. Use
+`scripts/verify-schoolwork-photo-reviews.mjs` to prepare a **read-only**
+per-photo checklist tied to the exact published lesson/question content:
+
+```sh
+node scripts/verify-schoolwork-photo-reviews.mjs --checklist pages/data/schoolwork.json
+node scripts/verify-schoolwork-photo-reviews.mjs --template pages/data/schoolwork.json > /PRIVATE/abvm-photo-receipts.json
+chmod 600 /PRIVATE/abvm-photo-receipts.json
+# Move the 23 original photos into a separate private folder using exactly the
+# source IDs in the public manifest. Never store these files in GitHub.
+node scripts/verify-schoolwork-photo-reviews.mjs --verify pages/data/schoolwork.json /PRIVATE/abvm-photos /PRIVATE/abvm-photo-receipts.json
+```
+
+The template deliberately begins with `reviewedOn: null`,
+`reviewerId: null`, and five false manual checklist flags. A person must
+compare each **original** photograph with its mapped lesson/skills/notes,
+independently check the original practice answers, inspect child privacy, and
+confirm permission/educator source status before filling in any approval flag.
+No AI-generated receipt, template or CI pass constitutes that human review.
+
+The verifier opens photos only from a folder **outside** the public repository,
+computes each file's exact SHA-256, and compares it to the public manifest.
+Each private review receipt is bound to the source SHA and a stable digest of
+every referenced public lesson including notes, question choices, answers and
+explanations. Editing content, changing an image, using a missing source,
+rephotographing a held item, recording a review before intake, or leaving a
+review checkbox false produces an unresolved result. Duplicate receipt IDs,
+unknown fields, unsafe photo paths and receipts for held photos fail closed.
+`--verify` exits with code 2 for unresolved sources and prints only source
+IDs and status codes, **never private photos, reviewer IDs or answers**.
+
+Even with all receipts matching, the output is
+`HOLD_EXTERNAL_SIGNOFF`: receipt assertions are not independently authenticated
+human approval. Educator/source rights, child privacy, physical iPhone Safari
+acceptance when required, and explicit approval of the exact production release
+still need separate human decisions. Do not publish original photos or receipts
+to the public repository, CI logs, Pages, or Roblox exports.
+
 ### 12. Update weekly and test-prep surfaces only when warranted
 
 Only source-supported dates/topic mapping place material in the weekly section or a
