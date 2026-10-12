@@ -100,6 +100,7 @@ test('calendar merges repeat notices without losing distinct events',async({page
 });
 
 test('school updates are dated source information without read-state controls',async({page})=>{
+  await page.clock.setFixedTime(new Date('2026-10-08T12:00:00-04:00'));
   const data=await(await page.request.get('/data/study-pack.json')).json();
   data.pack.parentNotices.push('Friday, Oct. 9: Bring the permission form.');
   data.pack.schoolChangeFeed={schemaVersion:1,generatedAt:'2026-10-07T19:32:52.274Z',sourceHash:'dated-notice-check',changed:true,items:[{id:'notice',kind:'event',subject:'School',text:'Added school event: Permission form — Friday, Oct. 9'}]};
