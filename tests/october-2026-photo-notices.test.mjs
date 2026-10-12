@@ -23,7 +23,7 @@ test("fundraiser deadlines, consecration, Mass, family events and optional Holy 
 });
 test("new donation notice does not silently replace the K-4 flag football date",()=>{
  assert.ok(dates.some(d=>d.date.includes("Oct. 26")&&/flag football/i.test(d.label)));
- assert.ok(data.pack.parentNotices.some(text=>text.includes("Oct. 22 and 29")&&text.includes("Oct. 26")));
+ assert.ok(data.pack.parentNotices.some(text=>/(?:Oct\.|October)\s*22\s+and\s+29/i.test(text)&&/(?:Oct\.|October)\s*26/i.test(text)));
 });
 test("links and no made-up basketball date, ticket prices or pickup time",()=>{
  const parents=data.pack.parentNotices.join("\\n");
