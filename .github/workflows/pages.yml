@@ -39,10 +39,48 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - name: Checkout deploy ref
+      # Only the current protected-main commit may publish. Caller-supplied
+      # refs must be immutable SHAs; no branch/tag/PR may select site content.
+      - name: Admit exact current protected-main commit
+        id: admit
+        shell: bash
+        env:
+          TRIGGER_REF: ${{ github.ref }}
+          TRIGGER_SHA: ${{ github.sha }}
+          REQUESTED_REF: ${{ inputs.ref || '' }}
+        run: |
+          set -euo pipefail
+          if [[ "$TRIGGER_REF" != 'refs/heads/main' ]]; then
+            echo "::error::Pages publication requires a main-branch trigger/caller."
+            exit 1
+          fi
+          current_main="$(git ls-remote "https://github.com/${GITHUB_REPOSITORY}.git" refs/heads/main | cut -f1)"
+          [[ "$current_main" =~ ^[0-9a-f]{40}$ ]] || {
+            echo "::error::Could not verify protected-main HEAD."
+            exit 1
+          }
+          case "$REQUESTED_REF" in
+            ''|main) candidate="$TRIGGER_SHA" ;;
+            *) candidate="$REQUESTED_REF" ;;
+          esac
+          if [[ ! "$candidate" =~ ^[0-9a-f]{40}$ || "$candidate" != "$current_main" ]]; then
+            echo "::error::Requested release is not the exact current protected-main commit."
+            exit 1
+          fi
+          echo "sha=$candidate" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout admitted release commit
         uses: actions/checkout@v6
         with:
-          ref: ${{ inputs.ref || github.sha }}
+          ref: ${{ steps.admit.outputs.sha }}
+
+      - name: Verify checked-out source identity
+        shell: bash
+        env:
+          ADMITTED_SHA: ${{ steps.admit.outputs.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$ADMITTED_SHA"
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -78,6 +116,18 @@ jobs:
         with:
           path: _site
           name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Recheck protected-main before publishing
+        shell: bash
+        env:
+          ADMITTED_SHA: ${{ steps.admit.outputs.sha }}
+        run: |
+          set -euo pipefail
+          latest="$(git ls-remote origin refs/heads/main | cut -f1)"
+          if [[ "$latest" != "$ADMITTED_SHA" ]]; then
+            echo "::error::Main advanced while QA ran; do not publish a stale release."
+            exit 1
+          fi
 
       - name: Deploy
         id: deployment
