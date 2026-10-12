@@ -33,3 +33,26 @@ test("links and no made-up basketball date, ticket prices or pickup time",()=>{
  assert.ok(parents.includes("$0 student ticket"));
  assert.equal(dates.filter(d=>d.sourceDocument==="cyo-basketball-grades-3-8-2026").length,0);
 });
+
+test("latest Melissa weekly planner governs conflicting Grade 2 dates",()=>{
+ const id="melissa-weekly-planner-2026-10-12-user-reviewed";
+ assert.equal(notices.sourcePrecedence?.authoritativeCurrentDocument,id);
+ assert.match(notices.sourcePrecedence.rule,/most recent dated email/i);
+ assert.ok(notices.documents.some(doc=>doc.id===id&&doc.review?.status==="reviewed"));
+ const required=[
+  ["Wednesday, Oct. 14",/Progress Reports Sent Home/i],
+  ["Tuesday, Oct. 20",/Grade 2.*No School.*Parent-Teacher Conferences/i],
+  ["Thursday, Oct. 22",/Chick-fil-A Delivery/i],
+  ["Friday, Oct. 23",/Lego Club/i],
+  ["Friday, Oct. 23",/S.mores Family/i],
+  ["Monday, Oct. 26",/K.4 Dress Down.*Flag Football/i]
+ ];
+ for(const [date,label] of required)assert.ok(dates.some(x=>x.date===date&&label.test(x.label)),date+" "+label);
+ const outdated=dates.filter(x=>
+  (x.date==="Thursday, Oct. 8"&&/progress report/i.test(x.label))||
+  (x.date==="Friday, Oct. 16"&&/parent-teacher conference|chick-fil-a/i.test(x.label))||
+  (x.date==="Monday, Oct. 19"&&/lego club|flag football|dress down/i.test(x.label))||
+  (x.date==="Thursday, Oct. 23"&&/chick-fil-a/i.test(x.label))
+ );
+ assert.deepEqual(outdated,[],"older, contradicted events must not reappear");
+});
