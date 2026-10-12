@@ -24,3 +24,24 @@ for (const file of acceptanceWorkflows) {
     assert.match(source, /test "\$\(git rev-parse HEAD\)" = "\$PR_HEAD_SHA"/);
   });
 }
+
+// A binary school-asset revision can change offline rendering without touching
+// CSS or JS. It must trigger every premium browser visual/privacy lane on the
+// exact PR head, never silently reuse checks from a previous asset tree.
+const schoolPhotoVisualWorkflows = [
+  "calendar-visual-acceptance.yml",
+  "today-visual-acceptance.yml",
+  "study-visual-acceptance.yml",
+  "study-player-visual-acceptance.yml",
+  "study-tools-visual.yml",
+  "progress-visual-acceptance.yml",
+  "public-privacy-visual-acceptance.yml",
+];
+
+for (const file of schoolPhotoVisualWorkflows) {
+  test(file + " runs on approved school-photo asset changes", () => {
+    const source = readFileSync(new URL("../.github/workflows/" + file, import.meta.url), "utf8");
+    const pullRequestPaths = source.split(/^  workflow_dispatch:/m)[0];
+    assert.match(pullRequestPaths, /^\s+- 'pages\/assets\/school\/\*\*'$/m);
+  });
+}

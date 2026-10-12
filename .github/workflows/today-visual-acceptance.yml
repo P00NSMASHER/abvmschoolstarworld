@@ -8,6 +8,7 @@ on:
       - 'pages/index.html'
       - 'pages/product-view.js'
       - 'pages/sw.js'
+      - 'pages/assets/school/**'
       - 'pages/app.js'
       - 'pages/assets/school/abvm-school-sign.webp'
       - 'tests/school-photos.spec.mjs'

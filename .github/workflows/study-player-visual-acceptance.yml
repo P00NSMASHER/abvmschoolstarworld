@@ -6,6 +6,7 @@ on:
       - 'pages/study-games-materials.css'
       - 'pages/index.html'
       - 'pages/sw.js'
+      - 'pages/assets/school/**'
       - 'playwright.config.mjs'
       - 'tests/study-player-premium.spec.mjs'
       - '.github/workflows/study-player-visual-acceptance.yml'

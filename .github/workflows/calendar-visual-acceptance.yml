@@ -6,6 +6,7 @@ on:
       - 'pages/design-polish.css'
       - 'pages/index.html'
       - 'pages/sw.js'
+      - 'pages/assets/school/**'
       - 'tests/calendar-premium.spec.mjs'
       - 'tests/design-polish.spec.mjs'
       - 'playwright.config.mjs'

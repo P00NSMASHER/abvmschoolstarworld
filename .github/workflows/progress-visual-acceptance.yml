@@ -7,6 +7,7 @@ on:
       - 'pages/product-view.js'
       - 'pages/index.html'
       - 'pages/sw.js'
+      - 'pages/assets/school/**'
       - 'tests/progress-premium.spec.mjs'
       - 'tests/integrated-premium.spec.mjs'
       - 'playwright.config.mjs'
