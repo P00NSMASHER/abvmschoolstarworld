@@ -35,7 +35,8 @@ test("Month: source-backed day grid, legend and premium layout on iPhone", async
     await expect(page.locator(".calendar-screen")).toBeVisible();
     await expect(page.locator(".calendar-month-nav strong")).toHaveText("October 2026");
     await expect(page.locator(".calendar-grid button[data-cal-day]")).toHaveCount(31);
-    await expect(page.locator(".calendar-day-card")).toContainText("Progress Reports Issued");
+    // October 8 report event was superseded by Melissa's latest source.
+    await expect(page.locator(".calendar-day-card")).not.toContainText("Progress Reports Issued");
     await expect(page.locator(".calendar-day-card")).toContainText("Beef cheesesteak");
     await expect(page.locator(".calendar-segments [data-route=calendar]")).toHaveAttribute("aria-pressed", "true");
     await sealReady(page);
@@ -119,7 +120,7 @@ test("Week: five-day study plan and verified lunch/test information", async ({ p
     await expect(page.locator(".week-nav strong")).toContainText("Oct 5 – 9");
     await expect(page.locator(".day-picker button")).toHaveCount(5);
     await expect(page.locator(".calendar-segments [data-route=week]")).toHaveAttribute("aria-pressed", "true");
-    await expect(page.locator(".day-detail")).toContainText("Progress Reports Issued");
+    await expect(page.locator(".day-detail")).not.toContainText("Progress Reports Issued");
     await expect(page.locator(".day-detail")).toContainText("Read");
     await expect(page.locator(".week-overview .week-lunches .week-overview-row")).toHaveCount(5);
     await expect(page.locator(".week-overview .week-tests")).toContainText("Spelling");
@@ -367,4 +368,30 @@ test("Month summaries separate every reviewed same-day event into an accessible 
     await busyDay.scrollIntoViewIfNeeded();
     await busyDay.screenshot({ path: info.outputPath("calendar-month-events-" + width + ".png"), animations: "disabled" });
   }
+});
+
+
+test("Melissa-reviewed Grade 2 dates appear in premium Month and Week",async({page})=>{
+  await page.clock.setFixedTime(new Date("2026-10-14T12:00:00-04:00"));
+  await page.setViewportSize({width:390,height:852});
+  await page.goto("/#calendar");
+  await expect(page.locator(".calendar-screen")).toBeVisible();
+  const pick=async day=>page.locator(".calendar-grid button[data-cal-day]")
+    .filter({hasText:new RegExp("^"+day+"$")}).click();
+  await pick(14);
+  await expect(page.locator(".calendar-day-card")).toContainText("Progress Reports Sent Home");
+  await expect(page.locator(".calendar-day-card")).not.toContainText("Progress Reports Issued");
+  await pick(20);
+  await expect(page.locator(".calendar-day-card")).toContainText("No School");
+  await expect(page.locator(".calendar-day-card")).toContainText("Parent-Teacher Conferences");
+  await pick(23);
+  await expect(page.locator(".calendar-day-card")).toContainText("Lego Club");
+  await expect(page.locator(".calendar-day-card")).toContainText("S’mores Family");
+  await pick(26);
+  await expect(page.locator(".calendar-day-card")).toContainText("Flag Football");
+  await page.goto("/#week");
+  await expect(page.locator(".week-screen")).toBeVisible();
+  await expect(page.locator(".week-nav strong")).toContainText("Oct 12 – 16");
+  await page.locator(".day-picker button").nth(2).click();
+  await expect(page.locator(".day-detail")).toContainText("Progress Reports Sent Home");
 });
