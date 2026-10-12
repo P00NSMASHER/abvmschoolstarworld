@@ -31,7 +31,7 @@ const nonempty=value=>typeof value==='string'&&value.trim().length>0;
 const compare=(a,b)=>a<b?-1:a>b?1:0;
 function assertShape(value,allowed,label){
   if(!value||typeof value!=='object'||Array.isArray(value))throw new Error(label+': expected object');
-  for(const key of Object.keys(value))if(!allowed.includes(key))throw new Error(label+': unknown field '+key);
+  for(const key of Object.keys(value))if(!allowed.includes(key))throw new Error(label+': unexpected private review field');
 }
 function stableJson(value){
   if(Array.isArray(value))return '['+value.map(stableJson).join(',')+']';
@@ -120,7 +120,7 @@ async function checkPrivatePhoto(directory,sourceId){
     return {status:'PHOTO_READ',sha256:await shaFile(candidate)};
   }catch(error){
     if(error.code==='ENOENT')return {status:'PHOTO_FILE_MISSING'};
-    throw error;
+    return {status:'PHOTO_FILE_UNREADABLE'};
   }
 }
 
@@ -129,10 +129,20 @@ async function checkPrivatePhoto(directory,sourceId){
 export async function verifySchoolworkPhotoReviews(pack,photoDirectory,receiptPath,{repoRoot=root,asOfDay=newYorkSchoolDay()}={}){
   if(!isDate(asOfDay))throw new Error('Invalid verification date');
   const checklist=buildSchoolworkPhotoChecklist(pack);
-  const photos=await assertPrivateRealPath(photoDirectory,'Private source photo directory',repoRoot);
-  const privateReceipts=await assertPrivateRealPath(receiptPath,'Private review receipt book',repoRoot);
-  if(!(await stat(photos)).isDirectory())throw new Error('Private photo directory must be a directory');
-  const receipts=checkReceipts(JSON.parse(await readFile(privateReceipts,'utf8')),checklist);
+  let photos,privateReceipts;
+  try{
+    photos=await assertPrivateRealPath(photoDirectory,'Private source photo directory',repoRoot);
+    privateReceipts=await assertPrivateRealPath(receiptPath,'Private review receipt book',repoRoot);
+  }catch(error){
+    if(error.message.includes('outside the public ABVM repository'))throw error;
+    throw new Error('Private photo or receipt path is inaccessible');
+  }
+  let photoInfo,book;
+  try{photoInfo=await stat(photos);}catch{throw new Error('Private photo directory is unavailable');}
+  if(!photoInfo.isDirectory())throw new Error('Private photo directory must be a directory');
+  try{book=JSON.parse(await readFile(privateReceipts,'utf8'));}
+  catch{throw new Error('Private review receipt book is unavailable or invalid JSON');}
+  const receipts=checkReceipts(book,checklist);
   const sources=[];
   for(const entry of checklist.entries){
     let status='SOURCE_HELD';

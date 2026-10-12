@@ -165,7 +165,7 @@ test('malformed and duplicate private receipts are rejected, without exposing th
     await assert.rejects(verifySchoolworkPhotoReviews(pack,env.photoDir,env.receiptPath,{repoRoot:env.repoRoot,asOfDay:'2026-10-11'}),/Duplicate source review receipt/);
     const extra=reviewed(pack);extra.receipts[0].privateAnswer='SYNTHETIC_PRIVATE_ANSWER';
     await writeFile(env.receiptPath,JSON.stringify(extra));
-    await assert.rejects(verifySchoolworkPhotoReviews(pack,env.photoDir,env.receiptPath,{repoRoot:env.repoRoot,asOfDay:'2026-10-11'}),/unknown field privateAnswer/);
+    await assert.rejects(verifySchoolworkPhotoReviews(pack,env.photoDir,env.receiptPath,{repoRoot:env.repoRoot,asOfDay:'2026-10-11'}),/unexpected private review field/);
   }finally{await rm(env.dir,{recursive:true,force:true});}
 });
 
@@ -201,4 +201,32 @@ test('symlinked originals cannot substitute unapproved files',{skip:process.plat
 test('default review date follows the New York school day across UTC midnight',()=>{
   assert.equal(newYorkSchoolDay(new Date('2026-10-12T01:00:00Z')),'2026-10-11');
   assert.equal(newYorkSchoolDay(new Date('2026-10-12T04:05:00Z')),'2026-10-12');
+});
+
+test('private error paths and private JSON fragments are never printed',async()=>{
+  const env=await makeEnv();
+  try{
+    const pack=sample();
+    await writeFile(path.join(env.photoDir,'worksheet.jpeg'),'photo-bytes');
+    const secret='SYNTHETIC_SECRET_VALUE_NOT_FOR_LOGS';
+    await writeFile(env.receiptPath,'{"schemaVersion":1,"receipts":['+secret);
+    await assert.rejects(
+      verifySchoolworkPhotoReviews(pack,env.photoDir,env.receiptPath,{repoRoot:env.repoRoot,asOfDay:'2026-10-11'}),
+      error=>error.message==='Private review receipt book is unavailable or invalid JSON'&&
+        !error.message.includes(secret)&&!error.message.includes(env.dir)
+    );
+    await rm(env.receiptPath);
+    await assert.rejects(
+      verifySchoolworkPhotoReviews(pack,env.photoDir,env.receiptPath,{repoRoot:env.repoRoot,asOfDay:'2026-10-11'}),
+      error=>error.message==='Private review receipt book is unavailable or invalid JSON'&&
+        !error.message.includes(env.dir)
+    );
+    const modified=reviewed(pack);
+    modified.receipts[0][secret]='never publish me';
+    await writeFile(env.receiptPath,JSON.stringify(modified));
+    await assert.rejects(
+      verifySchoolworkPhotoReviews(pack,env.photoDir,env.receiptPath,{repoRoot:env.repoRoot,asOfDay:'2026-10-11'}),
+      error=>/unexpected private review field/.test(error.message)&&!error.message.includes(secret)
+    );
+  }finally{await rm(env.dir,{recursive:true,force:true});}
 });
