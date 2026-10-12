@@ -39,6 +39,10 @@ content.
   integration before `--write`. Run both intake test suites and existing QA gates.
   Check current remote state, avoid conflicting work, and verify publication before
   claiming the app is updated. Never weaken gates to get a deployment.
+- For manual photo/source review, follow the private receipt workflow in
+  `docs/SCHOOLWORK_INTAKE.md` (`scripts/schoolwork-photo-review.mjs`). Its
+  checklist is stored outside GitHub, never auto-authorizes release, and must
+  be invalidated if source or academic content changes.
 
 ## Lunch menus received in ChatGPT
 
