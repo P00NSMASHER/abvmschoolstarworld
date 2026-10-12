@@ -391,6 +391,10 @@ test("Melissa-reviewed Grade 2 dates appear in premium Month and Week",async({pa
   await expect(page.locator(".calendar-day-card")).toContainText("Flag Football");
   await page.goto("/#week");
   await expect(page.locator(".week-screen")).toBeVisible();
+  // Month→Week deliberately keeps the Oct 26 selection. Return to the
+  // fixed Oct 14 current week explicitly before verifying its events.
+  await expect(page.locator(".week-nav strong")).toContainText("Oct 26 – 30");
+  await page.getByRole("button",{name:"Back to this week"}).click();
   await expect(page.locator(".week-nav strong")).toContainText("Oct 12 – 16");
   await page.locator(".day-picker button").nth(2).click();
   await expect(page.locator(".day-detail")).toContainText("Progress Reports Sent Home");
