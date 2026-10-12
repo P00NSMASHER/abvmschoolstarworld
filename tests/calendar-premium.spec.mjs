@@ -100,7 +100,7 @@ test("Month: source-backed day grid, legend and premium layout on iPhone", async
     if (width === 390) {
       const art = page.locator(".calendar-day-card .agenda-lunch .lunch-art img");
       await expect(art).toHaveCount(1);
-      await art.scrollIntoViewIfNeeded();
+      await art.evaluate(img => img.scrollIntoView({ block: "center", inline: "nearest" }));
       await expect.poll(() => art.evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
       await art.evaluate(img => img.decode());
       await page.locator(".calendar-screen").evaluate(el => { el.scrollTop = 0; });
@@ -138,7 +138,7 @@ test("Week: five-day study plan and verified lunch/test information", async ({ p
     if (width === 390) {
       const art = page.locator(".week-screen .week-rail .lunch-art img");
       await expect(art).toHaveCount(1);
-      await art.scrollIntoViewIfNeeded();
+      await art.evaluate(img => img.scrollIntoView({ block: "center", inline: "nearest" }));
       await expect.poll(() => art.evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
       await art.evaluate(img => img.decode());
       await page.locator(".week-screen").evaluate(el => { el.scrollTop = 0; });
