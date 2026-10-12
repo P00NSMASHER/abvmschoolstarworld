@@ -22,6 +22,10 @@ on:
       - 'tests/app.spec.mjs'
       - 'tests/gold-standard.spec.mjs'
       - 'tests/iphone-polish.spec.mjs'
+      # Exact approved school photography must independently reproduce after repair.
+      - 'pages/assets/school/**'
+      - 'tests/school-photos.spec.mjs'
+      - 'tests/approved-school-sign.test.mjs'
       - 'tests/study-stars-learning-finish.spec.mjs'
       - 'scripts/assert-curriculum-coverage-resolved.mjs'
       - 'scripts/curriculum-coverage-autopilot.mjs'
