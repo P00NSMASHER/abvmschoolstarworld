@@ -11,6 +11,7 @@ const calendarReviewBranch="ux/calendar-focus-scroll-20261010";
 const calendarDateBranch="ux/calendar-date-wayfinding-20261010";
 const integratedPrivacyBranch="release/abvm-premium-privacy-integration-20261010";
 const consolidatedReviewBranch="release/abvm-premium-single-release-review-20261011";
+const signReviewBranch="integration/abvm-reviewed-sign-20261012";
 const schoolworkPremiumReviewBranch="integration/abvm-premium-schoolwork-qa-20261011";
 
 test("authoritative source parity covers the premium release preview and its directly stacked review PRs",()=>{
@@ -37,6 +38,10 @@ test("authoritative source parity covers the premium release preview and its dir
     "joint premium + schoolwork integration head must execute authoritative source parity");
   assert.ok(condition.includes("github.base_ref == '"+schoolworkPremiumReviewBranch+"'"),
     "further joint integration review branches cannot silently skip source parity");
+  assert.ok(condition.includes("github.head_ref == '"+signReviewBranch+"'"),
+    "reviewed sign repair must actively run source parity");
+  assert.ok(condition.includes("github.base_ref == '"+signReviewBranch+"'"),
+    "stacked sign-review changes must not skip parity");
   assert.ok(condition.includes("github.event_name == 'workflow_dispatch'"),
     "maintainers retain the manual source-parity verification path");
   assert.ok(!/\bmain\b/.test(condition),
@@ -52,4 +57,14 @@ test("source parity compares exact review head to latest main in read-only mode"
   assert.match(source,/node scripts\/assert-release-preview-parity\.mjs/);
   assert.match(source,/permissions:\s*\n\s+contents: read/,
     "workflow must keep read-only repository permissions");
+});
+
+test("approved school-sign exception is restricted to the exact review head",()=>{
+  assert.match(source,/ABVM_APPROVED_SIGN_RESTORE:\s*\$\{\{ github\.head_ref == 'integration\/abvm-reviewed-sign-20261012' && '1' \|\| '0' \}\}/,
+    "the protected-asset permission cannot apply to other branches or main");
+  const parityScript=readFileSync(new URL("../scripts/assert-release-preview-parity.mjs",import.meta.url),"utf8");
+  assert.match(parityScript,/verifyApprovedSchoolSignRestoration/);
+  assert.match(parityScript,/if\(diff\)\{/);
+  assert.match(parityScript,/if\(!signRestorationReview\)fail/);
+  assert.match(parityScript,/if\(signRestorationReview&&!restoredApprovedSign\)/);
 });

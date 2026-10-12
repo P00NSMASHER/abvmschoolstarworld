@@ -9,6 +9,8 @@ on:
       - 'pages/product-view.js'
       - 'pages/sw.js'
       - 'pages/app.js'
+      - 'pages/assets/school/abvm-school-sign.webp'
+      - 'tests/school-photos.spec.mjs'
       - 'pages/school-updates.js'
       - 'tests/teacher-source-fallback.spec.mjs'
       - 'tests/today-premium.spec.mjs'
