@@ -6,6 +6,7 @@ on:
       - 'pages/design-polish.css'
       - 'pages/index.html'
       - 'pages/sw.js'
+      - 'pages/assets/school/**'
       - 'tests/study-premium.spec.mjs'
       - 'playwright.config.mjs'
       - '.github/workflows/study-visual-acceptance.yml'

@@ -3,6 +3,7 @@
 import { execFileSync } from "node:child_process";
 import { appendFileSync, existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
+import {SCHOOL_SIGN,verifyApprovedSchoolSignRestoration} from "./verify-approved-school-sign-parity.mjs";
 import { fileURLToPath } from "node:url";
 const root=resolve(dirname(fileURLToPath(import.meta.url)),"..");
 const base=process.env.ABVM_MAIN_REF || "origin/main";
@@ -19,8 +20,22 @@ const mainSha=git("rev-parse","--verify",base+"^{commit}");
 const previewSha=git("rev-parse","--verify",candidate+"^{commit}");
 if(mainSha===previewSha)fail("candidate is main, not a review-only preview");
 const diff=git("diff","--no-renames","--name-status",mainSha,previewSha,"--",...protectedPaths);
-if(diff)fail("these authoritative school files differ from the latest main:\n"+diff+
-  "\nReconcile, preserve main's newer source data and rerun checks.");
+const signRestorationReview=process.env.ABVM_APPROVED_SIGN_RESTORE==="1";
+let restoredApprovedSign=null;
+if(diff){
+  if(!signRestorationReview)fail("these authoritative school files differ from the latest main:\n"+diff+
+    "\nReconcile, preserve main's newer source data and rerun checks.");
+  try {
+    restoredApprovedSign=verifyApprovedSchoolSignRestoration({
+      diff,
+      mainBlob:git("rev-parse",mainSha+":"+SCHOOL_SIGN),
+      previewBlob:git("rev-parse",previewSha+":"+SCHOOL_SIGN),
+      bytes:readFileSync(resolve(root,SCHOOL_SIGN))
+    });
+  } catch(error) { fail("the sole permitted sign repair is not exactly approved: "+error.message); }
+}
+if(signRestorationReview&&!restoredApprovedSign)
+  fail("sign-restoration review must contain exactly the approved school-sign repair; main may have advanced");
 const entries=git("ls-tree","-r","--name-only",mainSha,"--",...protectedPaths).split("\n").filter(Boolean);
 if(entries.length<10||!entries.includes("pages/data/study-pack.json"))fail("protected school source inventory is incomplete");
 const data=JSON.parse(readFileSync(resolve(root,"pages/data/study-pack.json"),"utf8"));
@@ -39,7 +54,7 @@ if(/const raw\s*=[^\n]*(sourceLastSeenAt|sourceCapturedAt|generatedAt)/.test(fre
 console.log(["ABVM RELEASE PREVIEW SOURCE PARITY PASS",
   "Main: "+mainSha,"Preview: "+previewSha,
   "Protected files: "+entries.length,"Teacher pages last checked: "+checked,
-  "Last notice arrival: "+(notice||"unavailable"),"No school data or artwork replaced."].join("\n"));
+  "Last notice arrival: "+(notice||"unavailable"),restoredApprovedSign ? "Exactly one approved school-sign image restored: "+restoredApprovedSign.sha256 : "No school data or artwork replaced."].join("\n"));
 if(process.env.GITHUB_STEP_SUMMARY&&existsSync(process.env.GITHUB_STEP_SUMMARY)){
   appendFileSync(process.env.GITHUB_STEP_SUMMARY,"### ABVM preview source parity\n\n"+
   "| Main SHA | "+mainSha+" |\n|---|---|\n"+
@@ -47,5 +62,5 @@ if(process.env.GITHUB_STEP_SUMMARY&&existsSync(process.env.GITHUB_STEP_SUMMARY))
   "| Unchanged protected files | "+entries.length+" |\n"+
   "| Teacher page check | "+checked+" |\n"+
   "| Notice arrival (not teacher verification) | "+(notice||"unavailable")+" |\n\n"+
-  "PASS: Read-only, no release or data mutation.\n");
+  "PASS: Read-only; no release/data mutation. "+(restoredApprovedSign ? "Only exact reviewed school-sign repair differs from main." : "All protected sources and artwork match main.")+"\n");
 }
