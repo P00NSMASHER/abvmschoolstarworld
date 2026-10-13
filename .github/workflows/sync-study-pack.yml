@@ -15,6 +15,8 @@ on:
       - 'scripts/grade2-content-alignment.mjs'
       - 'scripts/teacher-page-parsers.mjs'
       - 'scripts/lunch-publication.mjs'
+      - 'scripts/refresh-reviewed-lunch.mjs'
+      - 'tests/refresh-reviewed-lunch.test.mjs'
       - 'pages/study-games.js'
       - 'pages/study-materials.mjs'
       - 'pages/study-experience.mjs'
@@ -239,3 +241,50 @@ jobs:
     uses: ./.github/workflows/pages.yml
     with:
       ref: main
+  reviewed-lunch:
+    name: Refresh reviewed lunch week independently of held curriculum
+    needs: refresh
+    if: always() && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout latest main without using unapproved teacher data
+        uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Refresh only previously reviewed source-backed lunch fields
+        run: node scripts/refresh-reviewed-lunch.mjs --write
+      - name: Prove lunch isolation and negative-case integrity
+        run: node --test tests/lunch-publication.test.mjs tests/refresh-reviewed-lunch.test.mjs
+      - name: Independent full app QA before any main write
+        run: |
+          npx playwright install --with-deps chromium webkit
+          npm run qa
+      - name: Commit only verified changed lunch pack on exact main
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- pages/data/study-pack.json; then
+            echo 'Already current; no lunch-only change.'
+            exit 0
+          fi
+          EXPECTED="$(git rev-parse HEAD)"
+          git fetch --no-tags origin main
+          CURRENT="$(git rev-parse refs/remotes/origin/main)"
+          test "$EXPECTED" = "$CURRENT" || { echo 'Main moved; refusing stale lunch write.' >&2; exit 1; }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add pages/data/study-pack.json
+          git commit -m 'data: roll forward independently reviewed lunch week'
+          REMOTE="$(git ls-remote --exit-code origin refs/heads/main | cut -f1)"
+          test "$REMOTE" = "$EXPECTED" || { echo 'Main advanced; refusing lunch write.' >&2; exit 1; }
+          git push origin HEAD:main

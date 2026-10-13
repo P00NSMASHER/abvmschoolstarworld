@@ -14,11 +14,23 @@ Run "node scripts/audit-held-curriculum-pilot.mjs" and "node --test tests/curric
 
 These checks exercise all 32 questions with 96 deterministic synthetic answer selections (32 keyed correct, 64 incorrect) and inspect all 32 hints. The synthetic checks detect malformed manifests, missing sources, duplicate options, broken answer references, questionable DOK labels and release-gate tampering. They do **not** test real student comprehension, grade-level reading fluency, educational suitability, or the live learning interface. All results are aggregate, ephemeral and free of learner information.
 
-### Offline practice preview for an authorized educator
+## Printable source-locked kit
 
-From a private local checkout run `node scripts/build-private-curriculum-pilot.mjs`. The command emits a temporary, owner-only `educator-pilot.html` outside the repository. Open that file locally in a browser; it uses only embedded data/styles/scripts, a locked-down Content Security Policy, no networking, no service worker, no browser storage and no telemetry. Practice choices and hint/explanation toggles exist only in the currently open tab and clear on refresh or the Reset button. The file contains **no real pilot observations**. Its content fingerprint is displayed for matching the exact questions to the separately retained educator review.
+The following three HTML files are self-contained, printable in black and white and do not load external resources or store student responses:
 
-Never upload the preview to the public app, host it online, or store filled-in student results in the repository. The script refuses to write under this Git checkout and refuses to overwrite an existing output file. Only qualified, permissioned human observations retained privately can contribute to genuine safe-usage evidence.
+- `pilot-kit/PR270_STUDENT_PRACTICE.html` — 32 original questions and three choices each; no highlighted answers, hints or explanations.
+- `pilot-kit/PR270_EDUCATOR_KEY.html` — separate 32-answer key, explanations, and strategies.
+- `pilot-kit/PR270_OBSERVATION.html` — blank item-level educator observation sheet, with no personal fields or recorded outcomes.
+
+All three are generated from the four held candidate manifests by `node scripts/build-held-curriculum-pilot-kit.mjs`. Exact-source snapshots are checked by `tests/curriculum-pilot-kit.test.mjs`. Printing these materials is not permission to collect student records, and a generated printable is not real pilot evidence.
+
+### Optional local interactive educator preview (not a public app)
+
+From a **private local checkout**, run `node scripts/build-private-curriculum-pilot.mjs`. This creates a temporary `educator-pilot.html` **outside the repository and GitHub Pages**. Open it locally to test each original draft question with accessible answer options, hints, explanations, next/previous navigation, and reset. A strict content-security policy blocks remote requests and embedded third-party resources; the file uses no analytics, persistent storage or service worker.
+
+Responses exist only in the browser tab and clear when the tab reloads or the reviewer resets. Its immutable content fingerprint must match the approved revised question packet. Never host or commit the generated preview, or copy learner-identifying data into public GitHub.
+
+Interaction QA verifies the preview works; it does **not** establish a genuine supervised student pilot, a qualified educator sign-off or release permission. Those requirements stay separate and must be privately documented.
 
 ## 2 — Private human pilot (cannot be simulated into existence)
 
