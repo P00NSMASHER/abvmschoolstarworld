@@ -79,7 +79,8 @@ function reviewedPlannerDateConflicts(uploaded){
       errors.push("notice "+doc.id+" has invalid receivedAt");
       continue;
     }
-    if(docTime<authorityTime)continue; // Preserve older evidence, not as current authority.
+    // Older evidence stays in document history, but cannot re-enter the current calendar
+    // at a conflicting date through a delayed/out-of-order import.
     const topic=schoolEventTopic(entry.label);
     if(!topic||!canonical.has(topic))continue;
     const confirmed=nearestSchoolDate(canonical.get(topic),authorityTime);

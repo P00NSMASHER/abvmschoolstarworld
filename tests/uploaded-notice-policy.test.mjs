@@ -67,3 +67,13 @@ test("school source precedence requires a real manually-reviewed authority",()=>
   authority.review.reviewedBy="automated-fixed-event-extraction-v1";
   assert.throws(()=>validateUploadedNoticePolicy(automated),/manually reviewed/);
 });
+
+
+test("delayed import of an older reminder cannot revive a superseded school event",()=>{
+  const copy=structuredClone(source);
+  const prior=copy.documents.find(d=>d.id==="weekly-reminders-2026-10-12");
+  assert.ok(prior);
+  copy.importantDates.push({date:"Monday, Oct. 19",label:"Lego Club",
+    kind:"club",sourceDocument:prior.id});
+  assert.throws(()=>validateUploadedNoticePolicy(copy),/conflicts with parent-confirmed Lego Club date/);
+});
