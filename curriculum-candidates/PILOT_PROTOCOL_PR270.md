@@ -14,6 +14,12 @@ Run "node scripts/audit-held-curriculum-pilot.mjs" and "node --test tests/curric
 
 These checks exercise all 32 questions with 96 deterministic synthetic answer selections (32 keyed correct, 64 incorrect) and inspect all 32 hints. The synthetic checks detect malformed manifests, missing sources, duplicate options, broken answer references, questionable DOK labels and release-gate tampering. They do **not** test real student comprehension, grade-level reading fluency, educational suitability, or the live learning interface. All results are aggregate, ephemeral and free of learner information.
 
+### Offline practice preview for an authorized educator
+
+From a private local checkout run `node scripts/build-private-curriculum-pilot.mjs`. The command emits a temporary, owner-only `educator-pilot.html` outside the repository. Open that file locally in a browser; it uses only embedded data/styles/scripts, a locked-down Content Security Policy, no networking, no service worker, no browser storage and no telemetry. Practice choices and hint/explanation toggles exist only in the currently open tab and clear on refresh or the Reset button. The file contains **no real pilot observations**. Its content fingerprint is displayed for matching the exact questions to the separately retained educator review.
+
+Never upload the preview to the public app, host it online, or store filled-in student results in the repository. The script refuses to write under this Git checkout and refuses to overwrite an existing output file. Only qualified, permissioned human observations retained privately can contribute to genuine safe-usage evidence.
+
 ## 2 — Private human pilot (cannot be simulated into existence)
 
 Only an authorized educator/guardian should decide whether and how to conduct a short, supervised pilot in a suitable private environment. No experimental curriculum is placed in the public app. The examiner should use the exact revised packet, manually review every question, and assess comprehension, reading load, distractor plausibility, answer explanations and strategy hints.
