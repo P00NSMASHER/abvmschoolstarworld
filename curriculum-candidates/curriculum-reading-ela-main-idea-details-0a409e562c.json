@@ -77,13 +77,13 @@
       "questionType": "transfer",
       "prompt": "Read: 'Mia picked a bright shirt, chose matching sneakers, and clipped a glittery bow in her hair.' Which main idea fits the passage?",
       "choices": [
-        "Mia chose a matching outfit.",
+        "Mia put together an outfit.",
         "Mia clipped a bow in her hair.",
         "Mia picked out sneakers."
       ],
-      "answer": "Mia chose a matching outfit.",
-      "explanation": "The shirt, shoes, and hair bow are supporting details about making an outfit.",
-      "hint": "Find the choice covering the whole look, not one piece of it.",
+      "answer": "Mia put together an outfit.",
+      "explanation": "The shirt, sneakers, and hair bow are details about Mia putting together an outfit; the passage does not say every item matches.",
+      "hint": "Look for the choice that includes the whole outfit without adding facts.",
       "dok": 2,
       "difficulty": 2
     },
@@ -99,7 +99,7 @@
       "answer": "Teammates helped each other remember the next motion.",
       "explanation": "Helping teammates remember motions is teamwork that supports improvement. The other details describe equipment or appearance.",
       "hint": "Choose an action that proves people worked together.",
-      "dok": 3,
+      "dok": 2,
       "difficulty": 3
     },
     {
@@ -114,7 +114,7 @@
       "answer": "The children took care of shelter kittens.",
       "explanation": "All three details describe ways the children cared for the kittens.",
       "hint": "Choose the statement that combines the feeding, blankets, and brushing.",
-      "dok": 3,
+      "dok": 2,
       "difficulty": 3
     },
     {
@@ -144,7 +144,7 @@
       "answer": "The builders worked together on a castle.",
       "explanation": "Sharing, planning, and repairing show how the builders worked together on their castle. The other choices focus on only one detail.",
       "hint": "Find the answer that combines the team's plan, sharing, and repair.",
-      "dok": 3,
+      "dok": 2,
       "difficulty": 3
     }
   ],

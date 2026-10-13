@@ -164,3 +164,34 @@ test('main-idea candidates avoid claims absent from the supplied passages',()=>{
   assert.equal(family.readiness.status,'HOLD');
   assert.equal(family.readiness.automaticPromotion,false);
 });
+
+
+test('review refinements are source-faithful and conservatively label multiple-choice reasoning', () => {
+  const longI = candidates.find(c => c.familyId === 'long-i-i-e-and-short-i');
+  const mainIdea = candidates.find(c => c.familyId === 'main-idea-details');
+  const possessives = candidates.find(c => c.familyId === 'possessives-s');
+  assert.ok(longI && mainIdea && possessives);
+  const phonics = longI.proposedQuestions[3];
+  assert.match(phonics.prompt, /silent e.*long i/i);
+  assert.equal(phonics.answer, 'hide');
+  const differentPair = longI.proposedQuestions[6];
+  assert.equal(differentPair.answer, 'kit → kite');
+  assert.ok(!differentPair.choices.some(c => /pin → pine/.test(c)));
+  assert.equal(mainIdea.proposedQuestions[3].answer, 'Mia put together an outfit.');
+  assert.ok(!mainIdea.proposedQuestions[3].choices.some(c => /matching outfit/i.test(c)));
+  for (const item of possessives.proposedQuestions.slice(0, 4)) {
+    assert.equal(item.choices.filter(choice => choice.includes("'s ")).length, 3,
+      'Possessive practice must not be solved by locating the only apostrophe');
+  }
+  for (const candidate of candidates) {
+    for (const item of candidate.proposedQuestions) {
+      if (item.questionType === 'reasoning') {
+        assert.equal(item.dok, 2, 'Single-answer reasoning does not demonstrate DOK 3 evidence');
+      }
+    }
+    assert.equal(candidate.readiness.status, 'HOLD');
+    assert.equal(candidate.enabledByDefault, false);
+    assert.equal(candidate.rollout.automaticPromotion, false);
+  }
+  assert.match(packet, /updated items require renewed human review and release sign-off/i);
+});

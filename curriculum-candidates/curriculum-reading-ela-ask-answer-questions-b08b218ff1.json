@@ -99,7 +99,7 @@
       "answer": "Nora counted the beats aloud.",
       "explanation": "Nora's counting replaced the missing music beat so the squad could keep moving together.",
       "hint": "Find the action that helped the group continue after the problem.",
-      "dok": 3,
+      "dok": 2,
       "difficulty": 3
     },
     {
@@ -114,7 +114,7 @@
       "answer": "Nia picked up a moon-shaped key.",
       "explanation": "The gate opened right after Nia picked up the key, making it the strongest clue. Her boots and walking do not explain the change.",
       "hint": "Which event happened immediately before the gate opened?",
-      "dok": 3,
+      "dok": 2,
       "difficulty": 3
     },
     {
@@ -144,7 +144,7 @@
       "answer": "Jo closed the glue and put the scissors away.",
       "explanation": "Closing the glue and returning the scissors are both actions that keep craft supplies safe and organized.",
       "hint": "Look for two actions that put materials away, not details about the decoration.",
-      "dok": 3,
+      "dok": 2,
       "difficulty": 3
     }
   ],

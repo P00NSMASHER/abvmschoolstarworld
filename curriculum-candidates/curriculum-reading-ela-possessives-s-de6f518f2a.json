@@ -32,13 +32,13 @@
       "questionType": "direct",
       "prompt": "A cartoon kitten named Pip owns a tiny bell. Which phrase uses apostrophe-s to show that the bell belongs to Pip?",
       "choices": [
-        "Pip has bells",
+        "Mia's bell",
         "Pip's bell",
-        "a bell for kittens"
+        "Pip's ribbon"
       ],
       "answer": "Pip's bell",
-      "explanation": "Pip's uses an apostrophe before s to show that Pip owns the bell.",
-      "hint": "Look for one owner's name followed by an apostrophe and s.",
+      "explanation": "Pip's bell matches both the owner, Pip, and the object, the bell. The other labels name a different owner or item.",
+      "hint": "More than one label has apostrophe-s. Match both the owner and the object.",
       "dok": 1,
       "difficulty": 2
     },
@@ -48,12 +48,12 @@
       "prompt": "A cheerleader has one shiny bow for a performance. Which phrase shows that the bow belongs to that cheerleader?",
       "choices": [
         "the cheerleader's bow",
-        "bows for the team",
-        "a bow on the mat"
+        "the coach's bow",
+        "the cheerleader's shoes"
       ],
       "answer": "the cheerleader's bow",
-      "explanation": "Cheerleader's shows that one cheerleader owns the bow. The other phrases do not name an owner with apostrophe-s.",
-      "hint": "Find the phrase that marks possession after one person's name.",
+      "explanation": "The cheerleader's bow names the correct owner and the bow. The other phrases name a different owner or object.",
+      "hint": "All three labels show ownership, so check whose item it is and which item.",
       "dok": 1,
       "difficulty": 2
     },
@@ -62,13 +62,13 @@
       "questionType": "transfer",
       "prompt": "A fashion designer named Zoe owns silver sneakers. Which label correctly shows whose sneakers they are?",
       "choices": [
-        "sneakers for a contest",
-        "Zoe is shopping",
+        "Mia's sneakers",
+        "Zoe's hat",
         "Zoe's sneakers"
       ],
       "answer": "Zoe's sneakers",
-      "explanation": "Zoe's sneakers uses the singular possessive to name Zoe as the owner.",
-      "hint": "A label showing one owner needs that name plus apostrophe-s.",
+      "explanation": "Zoe's sneakers labels both the right owner and the sneakers. The other labels change the owner or the item.",
+      "hint": "An apostrophe alone is not enough: match the person's name and the item.",
       "dok": 2,
       "difficulty": 2
     },
@@ -78,12 +78,12 @@
       "prompt": "In a game story, Nova owns a blue cape. Which phrase uses a possessive to label it?",
       "choices": [
         "Nova's cape",
-        "a cape for the game",
-        "Nova wore a cape"
+        "Nova's boots",
+        "Kai's cape"
       ],
       "answer": "Nova's cape",
-      "explanation": "Nova's cape names the owner using apostrophe-s. The others describe a purpose or an action.",
-      "hint": "Look for the short phrase that labels who owns the object.",
+      "explanation": "Nova's cape identifies the owner and the object in the story. The other phrases change the item or the owner.",
+      "hint": "Check the owner and object together, even when every label uses apostrophe-s.",
       "dok": 2,
       "difficulty": 2
     },
@@ -99,7 +99,7 @@
       "answer": "Mia's blue pom-poms are on the shelf.",
       "explanation": "Mia's blue pom-poms means the pom-poms belong to Mia. In the other sentences, Mia's means Mia is.",
       "hint": "Try replacing the apostrophe-s with 'is.' Does the sentence still make sense?",
-      "dok": 3,
+      "dok": 2,
       "difficulty": 3
     },
     {
@@ -114,7 +114,7 @@
       "answer": "One kitten is the owner of the blanket.",
       "explanation": "Kitten's names one kitten as the owner. The sentence does not tell the kitten's favorite color or what other kittens own.",
       "hint": "Separate what the sentence actually tells you from guesses it does not support.",
-      "dok": 3,
+      "dok": 2,
       "difficulty": 3
     },
     {
@@ -144,7 +144,7 @@
       "answer": "It shows that one cat named Pip owns the ribbon.",
       "explanation": "Pip's ribbon uses the singular possessive to say who owns the ribbon, not how many cats there are.",
       "hint": "Ask whether the phrase names an owner, an action, or a group.",
-      "dok": 3,
+      "dok": 2,
       "difficulty": 3
     }
   ],

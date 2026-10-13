@@ -75,15 +75,15 @@
     {
       "candidateIndex": 4,
       "questionType": "transfer",
-      "prompt": "In a game, a cartoon cat will ___ behind a castle wall. Which spelling correctly completes the sentence?",
+      "prompt": "In a game, a cartoon cat will ___ behind a castle wall. Which word both completes the sentence and has a silent e that makes the long i sound?",
       "choices": [
         "hid",
         "hide",
         "hive"
       ],
       "answer": "hide",
-      "explanation": "After will, the sentence needs the base verb hide. The silent e makes the i long.",
-      "hint": "Read the complete sentence and check which choice is an action.",
+      "explanation": "Hide is the action word that fits after will. Its silent e makes the i long; hid is past tense with short i, and hive does not fit the action.",
+      "hint": "Read the sentence after will, then look for an action word with the i-consonant-silent e pattern.",
       "dok": 2,
       "difficulty": 2
     },
@@ -99,7 +99,7 @@
       "answer": "Adding a silent e changes short i to long i.",
       "explanation": "Pine adds a final silent e to pin. In this pattern, the i changes from its short sound to its long sound.",
       "hint": "Compare the two spellings. Only one extra letter appears at the end.",
-      "dok": 3,
+      "dok": 2,
       "difficulty": 3
     },
     {
@@ -114,7 +114,7 @@
       "answer": "Bit has short i; the silent e in bite signals long i.",
       "explanation": "Bit has short i. Bite adds silent e after the consonant, making the i sound long.",
       "hint": "Check the final letters before deciding how the vowel changes.",
-      "dok": 3,
+      "dok": 2,
       "difficulty": 3
     },
     {
@@ -122,13 +122,13 @@
       "questionType": "transfer",
       "prompt": "A game designer wants a pair that changes from short i to long i by adding a final e. Which pair works?",
       "choices": [
-        "win → wins",
-        "pin → pine",
-        "fish → fishes"
+        "sit → sits",
+        "kit → kite",
+        "lip → lips"
       ],
-      "answer": "pin → pine",
-      "explanation": "Pin has short i. Adding silent e makes pine, with long i. The other changes add endings without making this vowel change.",
-      "hint": "Look for one extra e at the end and a changed middle sound.",
+      "answer": "kit → kite",
+      "explanation": "Kit has short i. Adding only silent e makes kite, which has long i. The other pairs add s and do not change the vowel sound.",
+      "hint": "Look for a pair that adds only a final e and changes the middle vowel sound.",
       "dok": 2,
       "difficulty": 2
     },
@@ -144,7 +144,7 @@
       "answer": "slide",
       "explanation": "Slide is a base-form action after will and uses the i-consonant-silent e pattern. Slid is past tense; side is a noun here.",
       "hint": "Check both the grammar after will and the silent-e sound pattern.",
-      "dok": 3,
+      "dok": 2,
       "difficulty": 3
     }
   ],

@@ -34,6 +34,10 @@ These are **fictional practice stories inspired by interests familiar to this le
 
 Assessors should check that each question teaches the required Grade 2 skill rather than testing familiarity with the setting. Distractors deliberately include plausible alternate details or common misconceptions, and hints offer a strategy without giving away an answer. Context variety is intentional, not a claim about the learner's observed preferences or mastery.
 
+### October 13, 2026 editorial revision notice
+
+The answer choices and explanations for selected questions have been refined for clearer phonics, faithful main ideas, and stronger possessive distractors. Twelve single-response reasoning items are now conservatively labeled DOK 2 rather than DOK 3; their proposed question-type labels and relative difficulty fields are unchanged. **Earlier owner-reported teacher feedback and owner approval apply to the previous immutable version only. The updated items require renewed human review and release sign-off.** All decisions below remain unchecked, all four candidate families remain HOLD, and no student/pilot evidence is asserted here.
+
 ## Topic-by-topic item review
 
 ### Ask & answer questions
@@ -104,7 +108,7 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
-#### 5. reasoning (DOK 3, difficulty 3)
+#### 5. reasoning (DOK 2, difficulty 3)
 
 **Question:** Read: 'Music stopped during the cheer routine. Nora counted the beats out loud. The squad finished together.' Which detail best explains how Nora helped?
 
@@ -119,7 +123,7 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
-#### 6. reasoning (DOK 3, difficulty 3)
+#### 6. reasoning (DOK 2, difficulty 3)
 
 **Question:** Read: 'In a game, Nia walked toward a locked gate wearing red boots. She found a moon-shaped key. After she picked it up, the gate opened.' Which detail is the strongest clue about why the gate opened?
 
@@ -149,7 +153,7 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
-#### 8. reasoning (DOK 3, difficulty 3)
+#### 8. reasoning (DOK 2, difficulty 3)
 
 **Question:** Read: 'After making a glittery headband, Jo closed the glue bottle and returned the scissors to their box.' Which two details best show that Jo took care of the craft supplies?
 
@@ -220,20 +224,20 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 
 #### 4. transfer (DOK 2, difficulty 2)
 
-**Question:** In a game, a cartoon cat will ___ behind a castle wall. Which spelling correctly completes the sentence?
+**Question:** In a game, a cartoon cat will ___ behind a castle wall. Which word both completes the sentence and has a silent e that makes the long i sound?
 
 1. hid
 2. hide
 3. hive
 
 **Correct answer:** 2. hide  
-**Explanation:** After will, the sentence needs the base verb hide. The silent e makes the i long.  
-**Hint:** Read the complete sentence and check which choice is an action.
+**Explanation:** Hide is the action word that fits after will. Its silent e makes the i long; hid is past tense with short i, and hive does not fit the action.  
+**Hint:** Read the sentence after will, then look for an action word with the i-consonant-silent e pattern.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
-#### 5. reasoning (DOK 3, difficulty 3)
+#### 5. reasoning (DOK 2, difficulty 3)
 
 **Question:** Two cards for a costume game say 'pin' and 'pine.' Why does the i sound different?
 
@@ -248,7 +252,7 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
-#### 6. reasoning (DOK 3, difficulty 3)
+#### 6. reasoning (DOK 2, difficulty 3)
 
 **Question:** A bow-making guide says 'bit' and 'bite.' Which explanation best compares their vowel sounds?
 
@@ -267,18 +271,18 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 
 **Question:** A game designer wants a pair that changes from short i to long i by adding a final e. Which pair works?
 
-1. win → wins
-2. pin → pine
-3. fish → fishes
+1. sit → sits
+2. kit → kite
+3. lip → lips
 
-**Correct answer:** 2. pin → pine  
-**Explanation:** Pin has short i. Adding silent e makes pine, with long i. The other changes add endings without making this vowel change.  
-**Hint:** Look for one extra e at the end and a changed middle sound.
+**Correct answer:** 2. kit → kite  
+**Explanation:** Kit has short i. Adding only silent e makes kite, which has long i. The other pairs add s and do not change the vowel sound.  
+**Hint:** Look for a pair that adds only a final e and changes the middle vowel sound.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
-#### 8. reasoning (DOK 3, difficulty 3)
+#### 8. reasoning (DOK 2, difficulty 3)
 
 **Question:** A cheer captain writes, 'We will ___ across the mat.' Which choice is an action that fits and uses i-consonant-silent e for long i?
 
@@ -351,18 +355,18 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 
 **Question:** Read: 'Mia picked a bright shirt, chose matching sneakers, and clipped a glittery bow in her hair.' Which main idea fits the passage?
 
-1. Mia chose a matching outfit.
+1. Mia put together an outfit.
 2. Mia clipped a bow in her hair.
 3. Mia picked out sneakers.
 
-**Correct answer:** 1. Mia chose a matching outfit.  
-**Explanation:** The shirt, shoes, and hair bow are supporting details about making an outfit.  
-**Hint:** Find the choice covering the whole look, not one piece of it.
+**Correct answer:** 1. Mia put together an outfit.  
+**Explanation:** The shirt, sneakers, and hair bow are details about Mia putting together an outfit; the passage does not say every item matches.  
+**Hint:** Look for the choice that includes the whole outfit without adding facts.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
-#### 5. reasoning (DOK 3, difficulty 3)
+#### 5. reasoning (DOK 2, difficulty 3)
 
 **Question:** The main idea is 'The cheer team works together to improve.' Which detail best supports it?
 
@@ -377,7 +381,7 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
-#### 6. reasoning (DOK 3, difficulty 3)
+#### 6. reasoning (DOK 2, difficulty 3)
 
 **Question:** Read: 'At the cat shelter, children filled water bowls, folded soft blankets, and gently brushed the kittens.' Which choice states the main idea instead of one detail?
 
@@ -407,7 +411,7 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
-#### 8. reasoning (DOK 3, difficulty 3)
+#### 8. reasoning (DOK 2, difficulty 3)
 
 **Question:** Read: 'Two game builders shared their blocks, planned the castle rooms together, and fixed a wall that fell.' What is the main idea?
 
@@ -435,13 +439,13 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 
 **Question:** A cartoon kitten named Pip owns a tiny bell. Which phrase uses apostrophe-s to show that the bell belongs to Pip?
 
-1. Pip has bells
+1. Mia's bell
 2. Pip's bell
-3. a bell for kittens
+3. Pip's ribbon
 
 **Correct answer:** 2. Pip's bell  
-**Explanation:** Pip's uses an apostrophe before s to show that Pip owns the bell.  
-**Hint:** Look for one owner's name followed by an apostrophe and s.
+**Explanation:** Pip's bell matches both the owner, Pip, and the object, the bell. The other labels name a different owner or item.  
+**Hint:** More than one label has apostrophe-s. Match both the owner and the object.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
@@ -451,12 +455,12 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 **Question:** A cheerleader has one shiny bow for a performance. Which phrase shows that the bow belongs to that cheerleader?
 
 1. the cheerleader's bow
-2. bows for the team
-3. a bow on the mat
+2. the coach's bow
+3. the cheerleader's shoes
 
 **Correct answer:** 1. the cheerleader's bow  
-**Explanation:** Cheerleader's shows that one cheerleader owns the bow. The other phrases do not name an owner with apostrophe-s.  
-**Hint:** Find the phrase that marks possession after one person's name.
+**Explanation:** The cheerleader's bow names the correct owner and the bow. The other phrases name a different owner or object.  
+**Hint:** All three labels show ownership, so check whose item it is and which item.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
@@ -465,13 +469,13 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 
 **Question:** A fashion designer named Zoe owns silver sneakers. Which label correctly shows whose sneakers they are?
 
-1. sneakers for a contest
-2. Zoe is shopping
+1. Mia's sneakers
+2. Zoe's hat
 3. Zoe's sneakers
 
 **Correct answer:** 3. Zoe's sneakers  
-**Explanation:** Zoe's sneakers uses the singular possessive to name Zoe as the owner.  
-**Hint:** A label showing one owner needs that name plus apostrophe-s.
+**Explanation:** Zoe's sneakers labels both the right owner and the sneakers. The other labels change the owner or the item.  
+**Hint:** An apostrophe alone is not enough: match the person's name and the item.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
@@ -481,17 +485,17 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 **Question:** In a game story, Nova owns a blue cape. Which phrase uses a possessive to label it?
 
 1. Nova's cape
-2. a cape for the game
-3. Nova wore a cape
+2. Nova's boots
+3. Kai's cape
 
 **Correct answer:** 1. Nova's cape  
-**Explanation:** Nova's cape names the owner using apostrophe-s. The others describe a purpose or an action.  
-**Hint:** Look for the short phrase that labels who owns the object.
+**Explanation:** Nova's cape identifies the owner and the object in the story. The other phrases change the item or the owner.  
+**Hint:** Check the owner and object together, even when every label uses apostrophe-s.
 
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
-#### 5. reasoning (DOK 3, difficulty 3)
+#### 5. reasoning (DOK 2, difficulty 3)
 
 **Question:** Which cheer sentence uses 's to show ownership, not as a shortened form of 'is'?
 
@@ -506,7 +510,7 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
-#### 6. reasoning (DOK 3, difficulty 3)
+#### 6. reasoning (DOK 2, difficulty 3)
 
 **Question:** Read: 'The kitten's blanket is purple.' What can you tell from the apostrophe-s?
 
@@ -536,7 +540,7 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 - [ ] Approve  - [ ] Revise  - [ ] Reject  
 **Reviewer notes / suggested edits:** ____________________________________
 
-#### 8. reasoning (DOK 3, difficulty 3)
+#### 8. reasoning (DOK 2, difficulty 3)
 
 **Question:** A game character writes 'Pip's ribbon' on a prize label. Why does the label use apostrophe-s?
 
