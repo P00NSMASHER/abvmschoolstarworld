@@ -52,6 +52,12 @@ on:
       - 'tests/schoolwork-photo-verification.test.mjs'
       - 'scripts/build-schoolwork-review-workbook.mjs'
       - 'tests/schoolwork-review-workbook.test.mjs'
+      # Independently reproduce held curriculum candidate and pilot-kit changes.
+      - 'curriculum-candidates/**'
+      - 'scripts/audit-held-curriculum-pilot.mjs'
+      - 'scripts/build-held-curriculum-pilot-kit.mjs'
+      - 'tests/curriculum-*.test.mjs'
+      - '.github/workflows/preview-source-parity.yml'
       - '.github/workflows/qa-reproduction.yml'
 permissions:
   contents: read
@@ -61,7 +67,7 @@ concurrency:
 jobs:
   independent-reproduction:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v6
         with:
@@ -97,6 +103,14 @@ jobs:
 
       - name: Yahoo weekly importer parser tests
         run: python3 -m unittest discover -s tests -p test_yahoo_weekly_import.py
+
+      - name: Independently validate held curriculum and synthetic pilot separation
+        if: ${{ hashFiles('curriculum-candidates/REVIEW_PR270.md') != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tests/curriculum-pilot-gates.test.mjs tests/curriculum-pilot-kit.test.mjs tests/curriculum-review-packet.test.mjs tests/curriculum-review-source-parity.test.mjs
+          node scripts/audit-held-curriculum-pilot.mjs
 
       - name: Install Chromium and WebKit
         run: npx playwright install --with-deps chromium webkit

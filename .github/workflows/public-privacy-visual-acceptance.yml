@@ -11,6 +11,11 @@ on:
       - 'tests/public-learner-privacy.test.mjs'
       - 'tests/app.spec.mjs'
       - 'playwright.config.mjs'
+      # Include offline educator pilot changes in privacy acceptance.
+      - 'curriculum-candidates/**'
+      - 'scripts/audit-held-curriculum-pilot.mjs'
+      - 'scripts/build-held-curriculum-pilot-kit.mjs'
+      - 'tests/curriculum-*.test.mjs'
       - '.github/workflows/public-privacy-visual-acceptance.yml'
   workflow_dispatch:
 
@@ -39,6 +44,13 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci --no-audit --no-fund
+      - name: Verify held curriculum materials cannot impersonate student or teacher evidence
+        if: ${{ hashFiles('curriculum-candidates/REVIEW_PR270.md') != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tests/curriculum-pilot-gates.test.mjs tests/curriculum-pilot-kit.test.mjs tests/curriculum-review-packet.test.mjs tests/curriculum-review-source-parity.test.mjs
+
       - run: npm run pack:runtime
       - run: npx playwright install --with-deps chromium webkit
       - name: Offline shell and anonymous copy contracts
@@ -56,5 +68,13 @@ jobs:
             test-results/**/anonymous-*.png
             test-results/**/test-failed-*.png
             playwright-report
+          retention-days: 14
+          if-no-files-found: error
+      - name: Retain exact printable offline educator kit when present
+        if: ${{ hashFiles('curriculum-candidates/pilot-kit/PR270_STUDENT_PRACTICE.html') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: abvm-held-educator-kit-${{ github.run_id }}
+          path: curriculum-candidates/pilot-kit/*.html
           retention-days: 14
           if-no-files-found: error
