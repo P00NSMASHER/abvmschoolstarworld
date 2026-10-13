@@ -84,7 +84,7 @@ test('real reviewed pack, archive, original worksheet practice and STAR are comp
     if(t.label==='Math (subtraction)')assert.ok(t.questionIds.every(id=>byId.get(id).skill.includes('subtraction')));
     if(t.label==='Religion Ch. 3')assert.ok(t.questionIds.every(id=>{
       const raw=rawById.get(id);
-      return raw&&raw.subject==='Religion'&&raw.sourceLineage.matchedEvidence.some(value=>/\\bChapter\\s+3\\s*:/i.test(value));
+      return raw&&raw.subject==='Religion'&&raw.sourceLineage.matchedEvidence.some(value=>/\bChapter\s+3\s*:/i.test(value));
     }));
   }
   assert.doesNotMatch(JSON.stringify(out),/IMG_\d+|learnerResponse|teacherMark|studentName|privateHistory/);
