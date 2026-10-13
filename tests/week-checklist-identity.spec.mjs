@@ -1,12 +1,13 @@
 import {test,expect} from "@playwright/test";
+import {reviewedSchoolMonday} from "./reviewed-week-fixture.mjs";
 
 test("Week keeps filtered homework bound to its original task identity",async({browser})=>{
   const context=await browser.newContext({serviceWorkers:"block"});
   const page=await context.newPage();
   const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
   const fixture=structuredClone(source);
-  const schoolDate=fixture.pack?.lunchMenu?.[0]?.date;
-  expect(Number.isFinite(Date.parse(String(schoolDate)+"T12:00:00Z"))).toBe(true);
+  // Synthetic homework must be exercised against its own teacher-week window.
+  const schoolDate=reviewedSchoolMonday(fixture);
 
   fixture.pack.homework=[
     {day:"Current Homework posting",subject:"Religion",task:"Attend Mass",due:"Current posting"},

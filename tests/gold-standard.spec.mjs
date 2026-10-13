@@ -480,7 +480,11 @@ test("current week lunch menu is verified and visible instead of last week's men
     const delta=(Date.parse(`${item.date}T12:00:00Z`)-startMs)/86400000;
     expect(delta).toBeGreaterThanOrEqual(0);
     expect(delta).toBeLessThanOrEqual(4);
-    expect(Array.isArray(item.items)&&item.items.length>0).toBe(true);
+    if(item.status==="no-school"){
+      expect(item.items).toEqual([]);
+    }else{
+      expect(Array.isArray(item.items)&&item.items.length>0).toBe(true);
+    }
   }
   expect(data.pack.lunchMenuSource.provider).toBe("Saint Clair Area School District");
   expect(data.pack.lunchMenuSource.school).toBe("Assumption BVM School");
@@ -491,7 +495,12 @@ test("current week lunch menu is verified and visible instead of last week's men
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
 
   await openTab(page,"Today");
-  for(const item of lunches[0].items)await expect(page.locator(".lunch-card")).toContainText(item);
+  if(lunches[0].status==="no-school"){
+    await expect(page.locator(".lunch-card")).toContainText(/No school/i);
+    await expect(page.locator(".lunch-card")).not.toContainText("Meatballs in sauce");
+  }else{
+    for(const item of lunches[0].items)await expect(page.locator(".lunch-card")).toContainText(item);
+  }
   await expect(page.locator(".lunch-card")).not.toContainText("automated source check");
 
   await openTab(page,"Week");
