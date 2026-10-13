@@ -115,20 +115,24 @@ function calendarSegments(view){
   return '<nav class="calendar-segments" aria-label="Calendar view"><button type="button" data-route="calendar" aria-pressed="'+(view==="month")+'">Month</button><button type="button" data-route="week" aria-pressed="'+(view==="week")+'">Week</button></nav>';
 }
 function freshnessState(){
-  const raw=envelope?.sourceLastSeenAt||pack?.sourceCapturedAt||pack?.generatedAt;
+  // A newer Yahoo notice is not proof of a new teacher-page check.
+  const raw=envelope?.sourceLastCheckedAt||pack?.sourceCheckedAt;
   const d=raw?new Date(raw):null;
-  if(!d||Number.isNaN(d.getTime()))return{state:"attention",label:"Source verification unavailable"};
+  if(!d||Number.isNaN(d.getTime()))return{state:"attention",label:"Teacher page check unavailable"};
   const stamp=FRESH_DATE_FORMATTER.format(d)+" at "+FRESH_TIME_FORMATTER.format(d)+" ET";
   const ageHours=(Date.now()-d.getTime())/3600000;
-  if(navigator.onLine===false||lastPackFetchUsedCache)return{state:"offline",label:"Offline · last verified "+stamp};
-  if(ageHours>30)return{state:"attention",label:"Needs refresh · last verified "+stamp};
-  if(ageHours>8)return{state:"stale",label:"Older data · last verified "+stamp};
-  return{state:"current",label:"Verified "+stamp};
+  if(navigator.onLine===false||lastPackFetchUsedCache)return{state:"offline",label:"Offline · teacher pages last checked "+stamp};
+  if(ageHours<-.25)return{state:"attention",label:"Teacher page check time invalid"};
+  if(ageHours>30)return{state:"attention",label:"Teacher pages need refresh · last checked "+stamp};
+  if(ageHours>8)return{state:"stale",label:"Teacher pages older · last checked "+stamp};
+  return{state:"current",label:"Teacher pages verified "+stamp};
 }
 function freshness(){
-  const state=freshnessState(),label=manualRefreshActive?"Checking published school info…":state.label;
-  const action=manualRefreshActive?"Checking published school information":"Check published school information. "+state.label;
-  return '<button type="button" class="freshness '+state.state+(manualRefreshActive?' is-refreshing':'')+'" data-refresh-pack aria-label="'+esc(action)+'"'+(manualRefreshActive?' disabled':'')+'><span aria-hidden="true"></span><strong>'+esc(label)+'</strong><b aria-hidden="true">↻</b></button>';
+  const s=freshnessState();
+  return window.ABVMProductView.freshnessControl({
+    state:s.state,label:manualRefreshActive?"Checking published school info…":s.label,
+    pending:manualRefreshActive,online:navigator.onLine!==false
+  });
 }
 function kindClass(item){
   const k=(item?.kind||"").toLowerCase(), l=(item?.label||"").toLowerCase();
@@ -291,6 +295,13 @@ function loadStudyRanks(){return ensureStudyGameEngine().then(e=>e.studyBadgeCol
 function renderToday(){
  const d=today(),priority=datedImportantEvents().find(({item,date})=>date>=d&&(kindClass(item)==="test"||kindClass(item)==="due"));
  stack().innerHTML=window.ABVMProductView.today({d,pack,header,freshness,taskHtml,kindClass,fmtDate,fmtShort,linkedTextHtml,events:eventItemsForDate(d),tasks:taskRecordsForSurface("today"),next:currentTest()||(priority?{x:priority.item,d:priority.date}:null),reminders:upcomingReminderTexts(d,2),lunchHtml:lunchCardHtml(d,lunchForDate(d))});
+ // Hide broken art, but preserve verified lunch text.
+ const mealArt=stack().querySelector(".today-screen .lunch-art img");
+ if(mealArt){
+   const hideBrokenArt=()=>mealArt.closest(".lunch-art")?.remove();
+   mealArt.addEventListener("error",hideBrokenArt,{once:true});
+   if(mealArt.complete&&mealArt.naturalWidth===0)hideBrokenArt();
+ }
  window.ABVMStudyBadges.mount(stack(),"today",loadStudyRanks);
 }
 function renderWeek(){
@@ -298,7 +309,6 @@ function renderWeek(){
  if(!selectedDay||!days.some(d=>sameDay(d,selectedDay)))selectedDay=weekOffset===0?(days.find(d=>sameDay(d,today()))||days[0]):days[0];
  stack().innerHTML=window.ABVMProductView.week({days,selectedDay,offset:weekOffset,header,segments:calendarSegments("week"),freshness,taskHtml,kindClass,fmtDate,fmtShort,weekRangeLabel,eventItemsForDate,events:eventItemsForDate(selectedDay),tasks:isPackWeek(days)?taskRecordsForSurface("week",selectedDay):[],lunchHtml:lunchCardHtml(selectedDay,lunchForDate(selectedDay)),reminder:reminderForDate(selectedDay),future:datedImportantEvents().filter(({date})=>date>selectedDay).slice(0,4).map(({item,date})=>({x:item,d:date})),overview:window.ABVMWeeklyLearning.renderWeekOverview({days,lunchForDate,eventItemsForDate,kindClass,fmtShort,lunchText,lunchUnavailableText})});
 }
-function monthGrid(year,month){const first=new Date(year,month,1,12), last=new Date(year,month+1,0,12), blanks=first.getDay();let html=""; for(let i=0;i<blanks;i++)html+='<span class="calendar-blank"></span>';for(let day=1;day<=last.getDate();day++){const d=new Date(year,month,day,12), events=eventItemsForDate(d), lunch=lunchForDate(d);const dots=[...new Set([...events.map(e=>kindClass(e)),...(lunch?["lunch"]:[])])].slice(0,3);const weekend=[0,6].includes(d.getDay()), closed=events.some(e=>kindClass(e)==="closed");const eventLabel=events.length?": "+events.map(e=>e.label).join(", "):"";html+='<button type="button" class="'+(weekend?"weekend ":"")+(closed?"closed ":"")+(calendarDay&&sameDay(d,calendarDay)?"active":"")+'" data-cal-day="'+d.toISOString()+'" aria-label="'+esc(fmtDate(d)+eventLabel)+'" aria-pressed="'+(calendarDay&&sameDay(d,calendarDay)?"true":"false")+'"><strong>'+day+'</strong><span class="calendar-dots" aria-hidden="true">'+dots.map(k=>'<i class="'+k+'"></i>').join("")+'</span></button>';}return html;}
 function agendaLunchHtml(date,lunch){
   const events=eventItemsForDate(date),closed=events.some(e=>kindClass(e)==="closed"),weekend=[0,6].includes(date.getDay());
   const text=closed||weekend||lunch?.status==="no-school"?"No school lunch":lunch?lunchText(lunch):lunchUnavailableText(date);
@@ -315,7 +325,8 @@ function compactMonthCardHtml(month,rows,extraClass){
     const group=dates.get(key);
     if(!group.labels.includes(x.label))group.labels.push(x.label);
   }
-  return '<section class="'+extraClass+' compact-month-card"><h2>Coming in '+MONTHS[month]+'</h2>'+[...dates.values()].map(o=>'<div><span>'+esc(fmtShort(o.d))+'</span><p>'+o.labels.map(esc).join("<br>")+'</p></div>').join("")+'</section>';
+  return window.ABVMProductView.compactMonthCard(MONTHS[month],
+    [...dates.values()].map(o=>({date:fmtShort(o.d),dayKey:isoDateKey(o.d),labels:o.labels})),extraClass);
 }
 function renderCalendar(){
   const base=calendarBase(),y=base.getFullYear(),m=base.getMonth();
@@ -332,19 +343,21 @@ function renderCalendar(){
     .filter(({date})=>date.getMonth()===nextM&&date.getFullYear()===nextY)
     .map(({item,date})=>({x:item,d:date}));
   const specials=specialsRows();
-  stack().innerHTML='<div class="screen calendar-screen" role="region" aria-label="'+MONTHS[m]+' calendar">'+
-    header("ASSUMPTION BVM · GRADE 2","Calendar")+calendarSegments("month")+
-    '<nav class="calendar-month-nav" aria-label="Change calendar month"><button type="button" data-cal-step="-1" aria-label="Previous month">‹</button><div aria-live="polite"><strong>'+MONTHS[m]+' '+y+'</strong><span>'+(calendarOffset===0?"Current month":"Browsing calendar")+'</span></div><button type="button" data-cal-step="1" aria-label="Next month">›</button></nav>'+
-    (calendarOffset!==0?'<button type="button" class="calendar-today-jump" data-cal-today>Back to current month</button>':'')+
-    '<div class="calendar-layout"><section class="calendar-card"><div class="calendar-title-row"><span>Choose a day to see the plan.</span></div><div class="calendar-weekdays">'+["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(x=>"<span>"+x+"</span>").join("")+'</div><div class="calendar-grid">'+monthGrid(y,m)+'</div><div class="calendar-legend"><span><i class="test"></i>Test</span><span><i class="faith"></i>Faith</span><span><i class="family"></i>Family</span><span><i class="due"></i>Due</span><span><i class="lunch"></i>Lunch</span></div></section>'+
-    '<section class="calendar-day-card" aria-live="polite"><div class="calendar-day-heading"><div><p>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</p><h2>'+MONTHS[calendarDay.getMonth()]+" "+calendarDay.getDate()+'</h2></div></div>'+
-      (events.length?'<div class="calendar-event-list">'+events.map(e=>'<div><i class="'+kindClass(e)+'"></i><span><strong>'+esc(e.label)+'</strong></span></div>').join("")+'</div>':'<p class="calendar-empty">No special school events are listed for this date.</p>')+
-      agendaLunchHtml(calendarDay,lunch)+'<button class="calendar-study-action primary-button" type="button" data-route="study">Start studying '+window.ABVMProductView.icon("arrow")+'</button>'+
-    '</section></div>'+window.ABVMWeeklyLearning.renderWeekOverview({days:weekDays(),lunchForDate,eventItemsForDate,kindClass,fmtShort,lunchText,lunchUnavailableText})+
-    compactMonthCardHtml(m,monthSummary,"current-month-summary")+
-    '<section class="specials-card"><div class="specials-head"><span class="specials-mark" aria-hidden="true">★</span><div><p>WEEKLY ROTATION</p><h2>Specials</h2></div></div><div class="specials-list">'+specials.map(row=>'<div class="special-row"><span>'+esc(row.day)+'</span><strong>'+esc(row.label)+'</strong></div>').join("")+'</div></section>'+
-    compactMonthCardHtml(nextM,nextMonth,"next-month-card")+freshness()+
-    '</div>';
+  stack().innerHTML=window.ABVMProductView.calendar({
+    year:y,month:m,selected:calendarDay,now:today(),events,kindClass,fmtDate,eventItemsForDate,
+    segments:calendarSegments("month"),logo:SCHOOL_LOGO_HTML,lunchHtml:agendaLunchHtml(calendarDay,lunch),
+    summaryHtml:compactMonthCardHtml(m,monthSummary,"current-month-summary"),
+    weeklyHtml:window.ABVMWeeklyLearning.renderWeekOverview({days:weekDays(),lunchForDate,eventItemsForDate,kindClass,fmtShort,lunchText,lunchUnavailableText}),
+    specialsHtml:window.ABVMProductView.calendarSpecials(specials),
+    nextHtml:compactMonthCardHtml(nextM,nextMonth,"next-month-card"),
+    sourceHtml:window.ABVMSchoolUpdates.officialCalendarLink(),freshnessHtml:freshness()
+  });
+}
+function selectCalendarDate(date,selector){
+  if(!date||!Number.isFinite(date.getTime()))return;
+  const now=today();calendarDay=date;
+  calendarOffset=(date.getFullYear()-now.getFullYear())*12+date.getMonth()-now.getMonth();
+  redrawPlanner(renderCalendar,selector||'[data-cal-day="'+isoDateKey(date)+'"]');
 }
 function isStudyRoute(){return activeTab==="study"||activeTab==="games"}
 function currentStudyScreen(generation,data){return isStudyRoute()&&screenGeneration===generation&&pack===data}
@@ -371,7 +384,7 @@ function ensureStudyGameEngine(){
   if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
   if(studyEnginePromise)return studyEnginePromise;
   const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.async=true;s.onload=()=>window[key]?resolve():reject(new Error(key+" did not initialize"));s.onerror=()=>reject(new Error(key+" could not be loaded"));document.head.append(s)});
-  studyEnginePromise=Promise.all([load("./study-games.js?v=103","ABVMStudyGames"),load("./study-games-view.js?v=14","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
+  studyEnginePromise=Promise.all([load("./study-games.js?v=103","ABVMStudyGames"),load("./study-games-view.js?v=15","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
   return studyEnginePromise;
 }
 function studyGameCatalog(){
@@ -515,8 +528,7 @@ function gameFinishHtml(){
   const finish=v.finish({mode:gameMode(g.mode),state:g,record:loadGameRecord(g.mode,g.sourceKey||currentGameSourceKey()),summary,reward});
   const goal=g.rewardStatus==="done"?window.ABVMStudyBadges.render(g.rankCollection,"finish"):"";
   const promotion=g.rewardStatus==="done"&&g.newRanks?.length?window.ABVMStudyBadges.promotion(g.newRanks):"";
-  // Put newly earned rank first so an iPhone learner sees the promotion
-  // immediately, without scrolling through the entire score report.
+  // Put a newly earned rank first in the score report.
   return reveal+promotion+finish+goal;
 }
 function renderGames(){
@@ -535,7 +547,7 @@ function renderGames(){
   const catalog=studyGameCatalog();
   const practiceTitle=gameState.screen!=="menu"?'<h1 class="visually-hidden" tabindex="-1">'+esc(gameMode(gameState.mode).title.replace(/ practice$/i,""))+(gameState.screen==="finish"?' results':' practice')+'</h1>':"";
   const body=practiceTitle+(gameState.screen==="play"?gamePlayHtml():gameState.screen==="finish"?gameFinishHtml():gameMenuHtml(catalog));
-  const chrome=gameState.screen==="menu"&&!studyMaterialsView?.isPrep?.()?'<header class="app-header study-hero"><div class="study-hero-copy"><p>ASSUMPTION BVM · GRADE 2</p><h1 class="visually-hidden" tabindex="-1">Study</h1><h2>Let’s learn, <span>Emma!</span></h2></div>'+SCHOOL_LOGO_HTML+'<img class="study-hero-art" src="./assets/illustrations/eagle.webp" width="240" height="240" alt=""></header>':"";
+  const chrome=gameState.screen==="menu"&&!studyMaterialsView?.isPrep?.()?'<header class="app-header study-hero"><div class="study-hero-copy"><p>ASSUMPTION BVM · GRADE 2</p><h1 class="visually-hidden" tabindex="-1">Study</h1><h2>Let’s learn, <span>eagle!</span></h2></div>'+SCHOOL_LOGO_HTML+'<img class="study-hero-art" src="./assets/illustrations/eagle.webp" width="240" height="240" alt=""></header>':"";
   const state=materials?(materials.status.partial?"partial":"ready"):studyMaterialsError?.pack===pack?"partial":"loading";
   stack().innerHTML='<div class="screen games-screen'+(gameState.screen!=="menu"?' is-playing':'')+'" data-study-state="'+state+'" role="region" aria-label="Study games">'+chrome+body+(gameState.screen==="menu"?freshness():"")+'</div>';
   if(gameState.screen==="menu")window.ABVMStudyBadges.mount(stack(),"study",loadStudyRanks);
@@ -571,25 +583,35 @@ function render({preserveScroll=false}={}){
 }
 function updateFreshnessUI(){
   const node=stack().querySelector(".freshness");
-  if(node)node.outerHTML=freshness();
+  if(node)window.ABVMProductView.replaceFreshness(node,freshness());
+}
+function carryPlannerDate(next){
+  const state=window.ABVMProductView.plannerDate(next,activeTab,calendarDay,selectedDay,today(),weekDays(0)[0]);
+  if(state)({calendarDay,selectedDay,weekOffset,calendarOffset}={calendarDay,selectedDay,weekOffset,calendarOffset,...state});
+}
+// Keep the reading position and keyboard target across Month/Week redraws.
+function redrawPlanner(draw,selector){
+  const old=stack().firstElementChild,top=old?.scrollTop||0;
+  draw();
+  const current=stack().firstElementChild;
+  if(current){current.scrollTop=top;current.querySelector(selector)?.focus({preventScroll:true});}
 }
 function bindScreen(){
   if(screenEventsBound)return;
   screenEventsBound=true;
+  window.ABVMProductView.bindCalendar(stack(),{getDate:()=>calendarDay||today(),selectDate:selectCalendarDate,shiftMonth:(amount,selector)=>selectCalendarDate(window.ABVMProductView.calendarShift(calendarDay||today(),amount),selector)});
   stack().addEventListener("click",async event=>{
     const target=event.target.closest("button,a");
     if(!target||!stack().contains(target))return;
-    if(target.matches("[data-route]")){activeTab=target.dataset.route.split("?")[0];history.replaceState(null,"","#"+target.dataset.route);render();stack().querySelector("h1")?.focus({preventScroll:true});return;}
+    if(target.matches("[data-route]")){const next=target.dataset.route.split("?")[0];carryPlannerDate(next);activeTab=next;history.replaceState(null,"","#"+target.dataset.route);render();stack().querySelector("h1")?.focus({preventScroll:true});return;}
     if(target.matches("[data-open-badges]")){activeTab="family";history.replaceState(null,"","#family");render();const title=stack().querySelector("#badge-title");if(title){title.tabIndex=-1;title.focus();title.scrollIntoView({block:"start"})}return;}
     if(target.matches("[data-open-family]")){activeTab="family";history.replaceState(null,"","#family");render();return;}
     if(target.matches("[data-refresh-pack]")){manualRefreshSchoolInfo();return;}
     if(target.matches("[data-check]")){toggleChecked((pack.homework||[])[Number(target.dataset.check)],Number(target.dataset.check));return;}
-    if(target.matches("[data-day]")){selectedDay=new Date(target.dataset.day);renderWeek();return;}
-    if(target.matches("[data-week-step]")){weekOffset+=Number(target.dataset.weekStep||0);selectedDay=null;renderWeek();return;}
-    if(target.matches("[data-week-today]")){weekOffset=0;selectedDay=null;renderWeek();return;}
-    if(target.matches("[data-cal-day]")){calendarDay=new Date(target.dataset.calDay);renderCalendar();return;}
-    if(target.matches("[data-cal-step]")){calendarOffset+=Number(target.dataset.calStep||0);calendarDay=null;renderCalendar();return;}
-    if(target.matches("[data-cal-today]")){calendarOffset=0;calendarDay=null;renderCalendar();return;}
+    if(target.matches("[data-day]")){selectedDay=new Date(target.dataset.day);redrawPlanner(renderWeek,'[data-day="'+target.dataset.day+'"]');return;}
+    if(target.matches("[data-week-step]")){weekOffset+=Number(target.dataset.weekStep||0);selectedDay=null;redrawPlanner(renderWeek,'[data-week-step="'+target.dataset.weekStep+'"]');return;}
+    if(target.matches("[data-week-today]")){weekOffset=0;selectedDay=null;redrawPlanner(renderWeek,".day-picker button.active");return;}
+    if(target.matches("[data-cal-today]")){calendarOffset=0;calendarDay=null;redrawPlanner(renderCalendar,".calendar-grid button.active");return;}
     if(target.matches("[data-study-retry]")){if(!studyMaterialsView)retryStudyMaterials();return;}
     if(target.matches("[data-retry-games]")){renderGames();return;}
     if(target.matches("[data-game-read]")){const q=activeGameQuestion();if(q&&!studyMaterialsView?.readAloud.read(q.prompt+". "+q.choices.map((choice,i)=>String.fromCharCode(65+i)+". "+choice).join(". ")))toast("Read aloud is unavailable. You can keep practicing.");return;}
@@ -602,7 +624,7 @@ function bindScreen(){
     if(target.matches("[data-open-games]")){event.preventDefault();activeTab="games";history.replaceState(null,"","#games");gameState.screen="menu";render();return;}
   });
 }
-$$(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.tab==="study"){markGameComebacksNextSession();gameState.screen="menu"}activeTab=b.dataset.tab;history.replaceState(null,"","#"+activeTab);render();}));
+$$(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.tab==="study"){markGameComebacksNextSession();gameState.screen="menu"}carryPlannerDate(b.dataset.tab);activeTab=b.dataset.tab;history.replaceState(null,"","#"+activeTab);render();}));
 function packContentKey(data){
   const p=data?.pack||{},lunchSource=p.lunchMenuSource||{};
   return JSON.stringify({
@@ -711,6 +733,7 @@ async function load(){
 window.addEventListener("hashchange",()=>{
   const next=location.hash.slice(1)==="progress"?"family":location.hash.slice(1).split("?")[0];
   if(["today","week","calendar","study","games","family"].includes(next)&&next!==activeTab){
+    carryPlannerDate(next);
     activeTab=next;
     if(next==="games"||next==="study"){markGameComebacksNextSession();gameState.screen="menu"}
     render();

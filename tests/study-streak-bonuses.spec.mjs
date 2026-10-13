@@ -1,17 +1,15 @@
+import {governedBrowserQuestions} from './helpers/governed-browser-questions.mjs';
 import {test,expect} from '@playwright/test';
 
 async function catalog(page){
-  return await page.evaluate(async()=>{
-    const envelope=await fetch('./data/study-pack-runtime.json').then(r=>r.json());
-    const e=window.ABVMStudyGames;
-    return e.buildCatalog(envelope.pack,{sourceKey:e.sourceKeyFromEnvelope(envelope.pack,envelope)}).questions;
-  });
+  return governedBrowserQuestions(page);
 }
 async function visibleQuestion(page,questions){
   const prompt=(await page.locator('.game-question-card>h2').innerText()).trim();
   const choices=(await page.locator('[data-game-answer] strong').allTextContents()).map(x=>x.trim());
-  const q=questions.find(row=>row.prompt===prompt&&row.choices.length===choices.length&&row.choices.every((choice,index)=>choice===choices[index]));
-  if(!q)throw new Error('question not found');
+  const matching=questions.filter(row=>row.prompt===prompt&&row.choices.length===choices.length&&row.choices.every(choice=>choices.includes(choice)));
+  if(new Set(matching.map(row=>row.answer)).size!==1)throw new Error('question not found or conflicting governed answers');
+  const q=matching[0];
   return {q,correct:choices.indexOf(q.answer),wrong:choices.findIndex(choice=>choice!==q.answer)};
 }
 

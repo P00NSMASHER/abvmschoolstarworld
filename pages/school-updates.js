@@ -40,5 +40,11 @@ function disclosure(text,source,renderText=esc){
 function noticesCard(notices,renderText=esc){
   return '<section class="parent-card sources notices-card" aria-labelledby="family-current-notices"><div class="notices-head"><span class="notices-mark" aria-hidden="true">i</span><div><small>SCHOOL UPDATES & SIGN-UPS</small><h3 id="family-current-notices">Current notices</h3></div></div><div class="static-notice-list" role="list">'+notices.map(text=>'<div class="notice-row" role="listitem">'+disclosure(text,'School notice',renderText)+'</div>').join('')+'</div></section>';
 }
-window.ABVMSchoolUpdates=Object.freeze({uniqueEvents,uniqueRows,noticesCard});
+// Direct independent school-calendar reference, never Facebook or classwork evidence.
+function officialCalendarLink(){
+  return '<div class="calendar-source-link"><span>School dates may change. Check the live school calendar.</span>'+
+    '<a href="https://www.assumptionbvmschool.net/about/calendar" target="_blank" rel="noopener noreferrer">'+
+    'Official ABVM calendar <span aria-hidden="true">↗</span></a></div>';
+}
+window.ABVMSchoolUpdates=Object.freeze({uniqueEvents,uniqueRows,noticesCard,officialCalendarLink});
 })();

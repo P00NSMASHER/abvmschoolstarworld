@@ -56,6 +56,8 @@ test("busy date and compact month summary do not cause horizontal overflow",asyn
 test("next-month summary exposes upcoming October school items",async({page})=>{
   await openSeptemberCalendar(page);
   const card=page.locator(".next-month-card");
+  const disclosure=page.locator(".calendar-more");
+  if(!(await disclosure.evaluate(el=>el.open)))await disclosure.locator("summary").click();
   await card.scrollIntoViewIfNeeded();
   await expect(card).toContainText("October");
   const text=await card.textContent();
@@ -75,4 +77,20 @@ test("school-year date parsing crosses December into January in the actual app",
   await page.locator('[data-cal-day^="2027-01-01"]').click();
   await expect(page.locator(".calendar-day-card")).toContainText("New Year");
   await context.close();
+});
+
+test("Calendar month and week link directly to the current official school calendar",async({page})=>{
+  await page.clock.setFixedTime(new Date("2026-10-09T14:00:00Z"));
+  await openCalendar(page);
+  const month=page.locator(".calendar-screen .calendar-source-link a");
+  await expect(month).toHaveCount(1);
+  await expect(month).toContainText("Official ABVM calendar");
+  await expect(month).toHaveAttribute("href","https://www.assumptionbvmschool.net/about/calendar");
+  await expect(month).toHaveAttribute("target","_blank");
+  await expect(month).toHaveAttribute("rel",/noopener noreferrer/);
+  await page.locator('.calendar-segments [data-route="week"]').click();
+  const week=page.locator(".week-screen .calendar-source-link a");
+  await expect(week).toHaveCount(1);
+  await expect(week).toHaveAttribute("href","https://www.assumptionbvmschool.net/about/calendar");
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1)).toBe(false);
 });

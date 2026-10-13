@@ -46,14 +46,14 @@ test("the current product hierarchy is coherent",async({page})=>{
   await expect(page.locator(".day-detail")).toBeVisible();
 
   await openTab(page,"Calendar");
-  await expect(page.locator(".app-header p")).toHaveText("ASSUMPTION BVM · GRADE 2");
-  await expect(page.locator(".app-header h1")).toHaveText("Calendar");
-  await expect(page.getByText("Choose a day to see the plan.",{exact:true})).toBeVisible();
+  await expect(page.locator(".cal-identity p")).toHaveText("ABVM · GRADE 2");
+  await expect(page.locator(".cal-identity h1")).toHaveText("Calendar");
+  await expect(page.locator(".cal-grid-hint")).toContainText("Tap a day for the full plan");
   await expect(page.locator(".calendar-card")).toBeVisible();
 
   await openTab(page,"Study");
   await expect(page.locator(".app-header h1")).toHaveText(/Study/i);
-  await expect(page.locator(".study-hero-copy h2")).toHaveText("Let’s learn, Emma!");
+  await expect(page.locator(".study-hero-copy h2")).toHaveText("Let’s learn, eagle!");
   await expect(page.locator(".study-hero-copy p")).toHaveText("ASSUMPTION BVM · GRADE 2");
   await expect(page.locator(".study-hero-art")).toBeVisible();
   await expectCurrentStudyGameTiles(page);
@@ -145,10 +145,16 @@ test("week paging and full calendar agenda work on phone",async({page})=>{
   expect(firstAfter).not.toBe(firstBefore);
 
   await openTab(page,"Calendar");
+  // Returning from the October school week retains its selected Oct 5 date.
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("October 2026");
+  await expect(page.locator(".calendar-grid button.active strong")).toHaveText("5");
+  // Historical September events remain intact when explicitly browsing back.
+  await page.getByRole("button",{name:"Previous month"}).click();
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("September 2026");
   await expect(page.locator(".current-month-summary > div > span")).toHaveText(["Mon 28","Tue 29","Wed 30"]);
   await expect(page.locator(".current-month-summary .agenda-lunch")).toHaveCount(0);
   await expect(page.locator(".calendar-day-card .agenda-lunch")).toBeVisible();
-  await expect(page.locator(".calendar-legend")).toContainText("Lunch");
+  await expect(page.locator(".calendar-day-card .agenda-lunch b")).toHaveText("Lunch");
 });
 
 
@@ -327,8 +333,13 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   expect(cached.length).toBeLessThanOrEqual(14);
   const optional=sw.match(/const OPTIONAL_DATA = \[([\s\S]*?)\];/)?.[1]||"";
   const optionalAssets=[...optional.matchAll(/"(\.\/[^\"]+)"/g)].map(match=>match[1]);
+  // Offline dependencies may be required (STATIC_SHELL) or optional;
+  // retaining every dependency is mandatory even when promoted to core cache.
+  const requiredAssets=[...staticShell.matchAll(/"(\.\/[^\"]+)"/g)].map(match=>match[1]);
+  const offlineAssets=[...requiredAssets,...optionalAssets];
+  expect(new Set(offlineAssets).size).toBe(offlineAssets.length);
   for(const file of ['data/study-pack-runtime.json','data/study-archive.json','data/schoolwork.json','data/religion-sources.json','study-materials.mjs','study-games-materials-view.mjs','study-games-materials.css','study-hub-core.mjs','study-room-view.mjs','study-experience.mjs','study-resources.mjs','study-model.mjs','star-practice.mjs','lunch-art.js']){
-    expect(optionalAssets.some(ref=>ref.split('?')[0]==='./'+file),'offline dependency '+file).toBe(true);
+    expect(offlineAssets.some(ref=>ref.split('?')[0]==='./'+file),'offline dependency '+file).toBe(true);
   }
   expect(optionalAssets.some(ref=>/visual-polish|family-view|school-photos\.css|study-clarity/.test(ref))).toBe(false);
   expect(new Set(optionalAssets).size).toBe(optionalAssets.length);
@@ -404,9 +415,14 @@ test("Sept 28 weekly notice is integrated without duplicate stale events",async(
   expect(has("Saturday, Oct. 3","Movie Night (Grades 5–8) — 6–8 PM")).toBe(true);
   expect(has("Friday, Oct. 9","12:00 dismissal")).toBe(true);
   expect(has("Monday, Oct. 12","No School — Columbus Day")).toBe(true);
-  expect(has("Monday–Tuesday, Oct. 19–20","Parent-Teacher Conferences")).toBe(true);
-  expect(has("Thursday, Oct. 22","Chick-fil-A pickup")).toBe(true);
-  expect(has("Friday, Oct. 23","S’more Fun at Schwartz Farm")).toBe(true);
+  // Latest Melissa planner plus explicit Grade 2 confirmation supersede the
+  // older generic multi-grade conference reminder; keep the no-school scope.
+  expect(has("Tuesday, Oct. 20","Grade 2 / K–4: No School — Parent-Teacher Conferences")).toBe(true);
+  expect(has("Wednesday, Oct. 14","Progress Reports Sent Home — Sign & Return")).toBe(true);
+  expect(has("Friday, Oct. 23","Lego Club (time not stated in latest planner)")).toBe(true);
+  expect(events.some(e=>e.date==="Monday–Tuesday, Oct. 19–20"&&e.label==="Parent-Teacher Conferences")).toBe(false);
+  expect(has("Thursday, Oct. 22","Chick-fil-A Delivery")).toBe(true);
+  expect(has("Friday, Oct. 23","S’mores Family")).toBe(true);
   expect(has("Friday–Saturday, Nov. 13–14","Drama Club Play")).toBe(true);
   const royals=events.filter(e=>e.date==="Saturday, Nov. 21"&&e.label.startsWith("Reading Royals Game Family Fun Night"));
   expect(royals).toHaveLength(1);
@@ -434,6 +450,12 @@ test("current weekly notice appears in Week, Calendar, and Family screens",async
   await expect(page.locator(".day-detail")).toContainText("HSA virtual meeting");
 
   await openTab(page,"Calendar");
+  // The selected Oct 1 school day determines the visible Month.
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("October 2026");
+  await expect(page.locator(".calendar-grid button.active strong")).toHaveText("1");
+  // The verified September notices still exist, but are a month behind.
+  await page.getByRole("button",{name:"Previous month"}).click();
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("September 2026");
   await expect(page.locator(".current-month-summary")).toContainText("Chick-fil-A sale starts");
   await expect(page.locator(".current-month-summary")).toContainText("Gym classes moved to this date");
 

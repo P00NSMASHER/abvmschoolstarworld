@@ -79,6 +79,7 @@ const status={
     partiallyCoveredCount:partiallyCoveredTopics.length,
     notPracticedByDesignCount:notPracticedByDesignTopics.length,
     unsupportedSkillCount:pipelineUnsupportedCount,
+    snapshotScope:"last-published-pack",
     lineageRequired:contentPipeline?.sourcePolicy?.requirePageExactLineage===true,
     pageExactLineageCount:Number(contentPipeline?.qa?.pageExactLineageCount||0),
     unresolvedLineageCount:Number(contentPipeline?.qa?.unresolvedLineageCount||0),
@@ -113,6 +114,15 @@ status.publicationEvidence=effectivePublicationRun();
 const effectiveRefreshRun=effectiveRun(status.workflows.refresh);
 const curriculumHoldRefreshRun=selectRefreshFailureEvidence(productionRuns,refreshJobsData);
 status.curriculumHold=selectGovernedCurriculumHold(curriculumHoldRefreshRun,refreshJobsData,openPulls);
+// The last published pack and the latest teacher refresh are different snapshots.
+// A published-pack generator count of zero must not imply a blocked refresh
+// has no new gaps or that an educator approved unpublished curriculum.
+status.curriculumReview={
+  state:status.curriculumHold?"approval-blocked":"not-established",
+  evidence:status.curriculumHold?"exact-failed-refresh-step-and-open-draft":"not-available",
+  candidatePrNumber:status.curriculumHold?.candidatePrNumber||null,
+  automatedPromotion:false,
+};
 const refreshDisplayRun=status.curriculumHold?curriculumHoldRefreshRun:effectiveRefreshRun;
 const refreshHealthy=completedHealthy(status.workflows.refresh,30);
 const refreshOperationallyHealthy=refreshHealthy||Boolean(status.curriculumHold);
@@ -180,8 +190,9 @@ const md=[
   `- **Partially covered study topics:** ${status.contentPipeline.partiallyCoveredTopics.join(", ")||"none"}`,
   `- **Source-insufficient study topics:** ${status.contentPipeline.sourceInsufficientTopics.join(", ")||"none"}`,
   `- **Intentionally not practiced:** ${status.contentPipeline.notPracticedByDesignTopics.join(", ")||"none"}`,
-  `- **Unsupported teacher skills:** ${status.contentPipeline.unsupportedTopics.join(", ")||"none"}`,
-  `- **Curriculum hold:** ${status.curriculumHold?"draft PR #"+status.curriculumHold.candidatePrNumber+"; publication intentionally blocked":"none"}`,
+  `- **Published-pack generator-unsupported topics (snapshot):** ${status.contentPipeline.unsupportedTopics.join(", ")||"none in last published pack"}; NOT a claim about the newest teacher refresh`,
+  `- **Latest refresh curriculum gate:** ${status.curriculumReview.state==="approval-blocked"?"BLOCKED — pending educator review in draft PR #"+status.curriculumReview.candidatePrNumber:"No verified hold evidence; newest teacher coverage is not established by the last published pack"}`,
+  `- **Curriculum hold:** ${status.curriculumHold?"draft PR #"+status.curriculumHold.candidatePrNumber+"; publication intentionally blocked":"none verified in available workflow evidence"}`,
   `- **App version:** ${status.appVersion}`,
   `- **Service worker cache:** ${status.serviceWorkerCache}`,
   `- **Git SHA:** ${status.gitSha||"unknown"}`,

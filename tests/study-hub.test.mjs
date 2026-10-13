@@ -17,8 +17,9 @@ test("all uploaded schoolwork answers have one correct choice and safe source ma
   const data = JSON.parse(
     fs.readFileSync(new URL("../pages/data/schoolwork.json", import.meta.url)),
   );
-  assert.equal(data.sourceManifest.length, 20);
-  assert.equal(data.lessons.length, 12);
+  assert.equal(data.sourceManifest.length, data.uploadedPhotoCount);
+  assert(data.sourceManifest.length >= 20, 'existing evidence must not be lost');
+  assert(data.lessons.length >= 12, 'existing reviewed lessons must not be lost');
   for (const l of data.lessons)
     for (const q of l.questions) {
       assert.equal(new Set(q.choices).size, q.choices.length);

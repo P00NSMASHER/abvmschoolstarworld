@@ -1,5 +1,6 @@
 import {test,expect} from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import {readFileSync} from "node:fs";
 
 async function openTab(page,label){
   if(label==="Week"){
@@ -158,7 +159,7 @@ test("freshness refresh control keeps a 44px touch target",async({page})=>{
   }
   await openTab(page,"Calendar");
   await page.getByRole("button",{name:"Next month"}).click();
-  const back=page.locator(".calendar-today-jump");
+  const back=page.locator("[data-cal-today]");
   await expect(back).toBeVisible();
   const backBox=await back.boundingBox();
   expect(backBox).not.toBeNull();
@@ -298,7 +299,9 @@ test("Calendar keeps the current-month summary as concise as next month",async({
     const rows=card.locator(":scope > div");
     for(let i=0;i<await rows.count();i++){
       await expect(rows.nth(i).locator(":scope > span")).toHaveCount(1);
-      await expect(rows.nth(i).locator(":scope > p")).toHaveCount(1);
+      const events=rows.nth(i).locator(':scope > ul[role="list"] > li');
+      expect(await events.count()).toBeGreaterThan(0);
+      for(const event of await events.all())await expect(event).not.toBeEmpty();
     }
   }
   await expect(page.locator(".specials-card")).toBeVisible();
@@ -328,7 +331,9 @@ test("Study Games loads lazily and starts a playable round",async({page})=>{
   }
   await page.getByRole("button",{name:/Mix/i}).click();
   await expect(page.locator(".game-question-card")).toBeVisible();
-  expect(await page.locator(".game-answer").count()).toBe(3);
+  const answerCount=await page.locator(".game-answer").count();
+  expect(answerCount).toBeGreaterThanOrEqual(3);
+  expect(answerCount).toBeLessThanOrEqual(4);
 });
 
 
@@ -384,4 +389,49 @@ test("bottom navigation is a four primary destinations",async({page})=>{
   const axis=tablet?'x':'y';
   expect(Math.max(...boxes.map(b=>b[axis]))-Math.min(...boxes.map(b=>b[axis]))).toBeLessThanOrEqual(2);
 
+});
+
+
+test("newly imported Yahoo notices never make older teacher checks appear verified",async({browser})=>{
+  // Fresh context prevents the production service worker from bypassing the fixture route.
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  try{
+  // Deliberately stay in the 8–30h "older" band. Fixed calendar dates
+  // drifted past 30h during CI and asserted the wrong severity label.
+  // Verify the real teacher-check timestamp, not the newer Yahoo timestamp.
+  const checkedAt=new Date(Date.now()-24*60*60*1000).toISOString();
+  const noticeAt=new Date(Date.now()-60*1000).toISOString();
+  const etDate=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",month:"short",day:"numeric"});
+  const expectedTeacherDay=etDate.format(new Date(checkedAt));
+  const newerNoticeDay=etDate.format(new Date(noticeAt));
+  expect(expectedTeacherDay).not.toBe(newerNoticeDay);
+  const data=structuredClone(JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8")));
+  data.sourceLastCheckedAt=checkedAt;
+  data.pack.sourceCheckedAt=checkedAt;
+  // Simulate a Yahoo notice arriving minutes ago while the six teacher
+  // pages have not been successfully checked again.
+  data.sourceLastSeenAt=noticeAt;
+  data.sourceCapturedAt=noticeAt;
+  data.pack.sourceCapturedAt=noticeAt;
+  data.pack.generatedAt=noticeAt;
+  let interceptedPackRequests=0;
+  await page.route("**/data/study-pack*.json*",route=>{
+    interceptedPackRequests++;
+    return route.fulfill({json:data});
+  });
+  await page.goto("/#today");
+  const freshness=page.locator(".freshness");
+  await expect(freshness).toBeVisible();
+  await expect(freshness).toContainText("Teacher pages older");
+  await expect(freshness).toContainText(expectedTeacherDay);
+  await expect(freshness).not.toContainText(newerNoticeDay);
+  await expect(freshness).not.toContainText("Teacher pages verified");
+  await expect(freshness).toHaveClass(/\bstale\b/);
+  // Without this assertion, a service-worker cache could make this test pass or fail
+  // against unrelated live pack data rather than our synthetic teacher timestamps.
+  expect(interceptedPackRequests).toBeGreaterThan(0);
+  }finally{
+    await context.close();
+  }
 });

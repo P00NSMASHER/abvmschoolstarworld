@@ -65,7 +65,7 @@ test('no-current subject and empty-current pack can use cumulative reviewed mate
 test('real reviewed pack, archive, original worksheet practice and STAR are compatible',()=>{
   const input=real(),out=buildStudyUniverse(input);assert.ok(out.questions.length>200);
   assert.ok(out.questions.some(q=>q.provenance.kind==='reviewed-original-schoolwork'));
-  const undated=new Set(input.schoolwork.lessons.filter(l=>!l.studiedOn).map(l=>l.id));
+  const undated=new Set(input.schoolwork.lessons.filter(l=>!l.studiedOn && !l.weekOf).map(l=>l.id));
   assert.ok(out.questions.filter(q=>undated.has(q.provenance.lessonId)).every(q=>q.tier==='archive'),'Undated worksheets stay cumulative');
   const byId=new Map(out.questions.map(q=>[q.id,q]));
   for(const t of out.selectableTestPrep){

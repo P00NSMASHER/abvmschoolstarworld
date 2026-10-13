@@ -115,7 +115,9 @@ test("timestamp-only verification refresh does not reset open UI state",async({b
   await page.clock.setFixedTime(new Date("2026-10-06T13:00:00Z"));
   const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
   let current=structuredClone(source);
-  current.sourceLastSeenAt="2026-10-05T12:00:00.000Z";
+  current.sourceLastCheckedAt="2026-10-05T12:00:00.000Z";
+  current.pack.sourceCheckedAt=current.sourceLastCheckedAt;
+  current.sourceLastSeenAt="2026-10-06T12:59:00.000Z";
   await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:current}));
   await page.goto("http://127.0.0.1:4173/#study");
   await expect(page.locator(".games-screen")).toHaveAttribute("data-study-state","ready");
@@ -129,9 +131,10 @@ test("timestamp-only verification refresh does not reset open UI state",async({b
 
   current=structuredClone(source);
   const stamp="2026-10-06T12:59:00.000Z";
+  current.sourceLastCheckedAt=stamp;
+  current.pack.sourceCheckedAt=stamp;
   current.sourceLastSeenAt=stamp;
   current.pack.generatedAt=stamp;
-  current.pack.sourceCheckedAt=stamp;
   current.pack.lunchMenuHash="metadata-only-hash-change";
   if(current.pack.lunchMenuSource)current.pack.lunchMenuSource.lastAttemptAt=stamp;
 
@@ -150,13 +153,18 @@ test("tapping the freshness box forces an immediate live pack refresh",async({br
   await page.clock.setFixedTime(new Date("2026-09-29T15:34:00Z"));
   const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
   const stale=structuredClone(source);
-  stale.sourceLastSeenAt="2026-09-29T05:53:00.000Z";
-  stale.pack.sourceCapturedAt="2026-09-29T05:53:00.000Z";
-  stale.pack.generatedAt="2026-09-29T05:53:00.000Z";
+  stale.sourceLastCheckedAt="2026-09-29T05:53:00.000Z";
+  stale.pack.sourceCheckedAt=stale.sourceLastCheckedAt;
+  // A newer notice import must not be treated as verification of teacher pages.
+  stale.sourceLastSeenAt="2026-09-29T15:33:00.000Z";
+  stale.pack.sourceCapturedAt=stale.sourceLastSeenAt;
+  stale.pack.generatedAt=stale.sourceLastSeenAt;
   const fresh=structuredClone(stale);
-  fresh.sourceLastSeenAt="2026-09-29T15:33:00.000Z";
-  fresh.pack.sourceCapturedAt="2026-09-29T15:33:00.000Z";
-  fresh.pack.generatedAt="2026-09-29T15:33:00.000Z";
+  fresh.sourceLastCheckedAt="2026-09-29T15:33:00.000Z";
+  fresh.pack.sourceCheckedAt=fresh.sourceLastCheckedAt;
+  fresh.sourceLastSeenAt=fresh.sourceLastCheckedAt;
+  fresh.pack.sourceCapturedAt=fresh.sourceLastSeenAt;
+  fresh.pack.generatedAt=fresh.sourceLastSeenAt;
   fresh.pack.sourceHash="teacher-pages-manual-refresh-regression";
 
   let calls=0;
@@ -169,12 +177,12 @@ test("tapping the freshness box forces an immediate live pack refresh",async({br
   });
   await page.goto("http://127.0.0.1:4173/#today");
   const status=page.locator("[data-refresh-pack]");
-  await expect(status).toContainText("Older data");
+  await expect(status).toContainText("Teacher pages older");
   await status.click();
   await expect(page.locator("[data-refresh-pack]")).toContainText("Checking published school info");
   await expect(page.locator("[data-refresh-pack]")).toBeDisabled();
   await expect(page.locator(".freshness")).toHaveClass(/current/);
-  await expect(page.locator(".freshness")).toContainText("Verified");
+  await expect(page.locator(".freshness")).toContainText("Teacher pages verified");
   await expect(page.locator("#toast")).toContainText("School info updated");
   expect(calls).toBeGreaterThanOrEqual(2);
   await context.close();
@@ -186,9 +194,12 @@ test("manual refresh explains when no newer verified data exists",async({browser
   await page.clock.setFixedTime(new Date("2026-09-29T15:34:00Z"));
   const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
   const stale=structuredClone(source);
-  stale.sourceLastSeenAt="2026-09-29T05:53:00.000Z";
-  stale.pack.sourceCapturedAt="2026-09-29T05:53:00.000Z";
-  stale.pack.generatedAt="2026-09-29T05:53:00.000Z";
+  stale.sourceLastCheckedAt="2026-09-29T05:53:00.000Z";
+  stale.pack.sourceCheckedAt=stale.sourceLastCheckedAt;
+  // A newer notice import must not be treated as verification of teacher pages.
+  stale.sourceLastSeenAt="2026-09-29T15:33:00.000Z";
+  stale.pack.sourceCapturedAt=stale.sourceLastSeenAt;
+  stale.pack.generatedAt=stale.sourceLastSeenAt;
   await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:stale}));
   await page.goto("http://127.0.0.1:4173/#today");
   await page.locator("[data-refresh-pack]").click();

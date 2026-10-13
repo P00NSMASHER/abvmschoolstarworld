@@ -1,3 +1,4 @@
+import {resolveGovernedBrowserQuestion} from './helpers/governed-browser-questions.mjs';
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
@@ -212,16 +213,8 @@ test('two distinct misses teach before resolving and record one failed learning 
   await page.getByRole('button', { name: /Mix/i }).click();
   await expect(page.locator('.game-question-card')).toBeVisible();
 
-  const prompt = await page.locator('.game-question-card h2').textContent();
-  const question = await page.evaluate(async currentPrompt => {
-    const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(response => response.json());
-    const catalog = window.ABVMStudyGames.buildCatalog(envelope.pack, {
-      sourceKey: window.ABVMStudyGames.sourceKeyFromEnvelope(envelope.pack, envelope),
-    });
-    const row = catalog.questions.find(item => item.prompt === currentPrompt);
-    return row ? { skill: row.skill, answer: row.answer, choices: row.choices } : null;
-  }, prompt);
-  expect(question).not.toBeNull();
+  const question = await resolveGovernedBrowserQuestion(page);
+  expect(question.answerIndex).toBeGreaterThanOrEqual(0);
 
   const wrongs = question.choices.map((choice,index)=>choice!==question.answer?index:-1).filter(index=>index>=0);
   expect(wrongs.length).toBeGreaterThanOrEqual(2);
@@ -255,16 +248,8 @@ test('a retry-correct answer is recorded separately from independent first-try m
   await page.getByRole('button', { name: /Mix/i }).click();
   await expect(page.locator('.game-question-card')).toBeVisible();
 
-  const prompt = await page.locator('.game-question-card h2').textContent();
-  const question = await page.evaluate(async currentPrompt => {
-    const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(response => response.json());
-    const catalog = window.ABVMStudyGames.buildCatalog(envelope.pack, {
-      sourceKey: window.ABVMStudyGames.sourceKeyFromEnvelope(envelope.pack, envelope),
-    });
-    const row = catalog.questions.find(item => item.prompt === currentPrompt);
-    return row ? { skill: row.skill, answer: row.answer, choices: row.choices } : null;
-  }, prompt);
-  expect(question).not.toBeNull();
+  const question = await resolveGovernedBrowserQuestion(page);
+  expect(question.answerIndex).toBeGreaterThanOrEqual(0);
 
   const wrongIndex = question.choices.findIndex(choice => choice !== question.answer);
   const correctIndex = question.choices.findIndex(choice => choice === question.answer);

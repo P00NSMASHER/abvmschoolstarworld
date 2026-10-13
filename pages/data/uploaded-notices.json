@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "lastIntegratedAt": "2026-10-08T16:43:51.480Z",
+  "lastIntegratedAt": "2026-10-12T12:58:00.790Z",
   "documents": [
     {
       "id": "dress-down-2026-09-25",
@@ -520,6 +520,64 @@
         "reviewedBy": "manual-parent-photo-review",
         "reviewedAt": "2026-10-08T16:43:51.480Z"
       }
+    },
+    {
+      "id": "weekly-reminders-2026-10-12",
+      "label": "Weekly reminders for week of 2026-10-12",
+      "receivedAt": "2026-10-09",
+      "facts": [
+        "Monday, Oct. 12: No School.",
+        "Tuesday, Oct. 13: Dress Down Day.",
+        "Wednesday, Oct. 14: Mass.",
+        "Wednesday, Oct. 14: Communication Folder.",
+        "Wednesday, Oct. 14: Progress Reports.",
+        "Friday, Oct. 16: Parent-Teacher Conferences.",
+        "Friday, Oct. 16: Chick-fil-A.",
+        "Monday, Oct. 19: Dress Down Day.",
+        "Monday, Oct. 19: Lego Club.",
+        "Monday, Oct. 19: Flag football.",
+        "Thursday, Oct. 29: Dress Down Day.",
+        "Thursday, Oct. 29: Flag football."
+      ],
+      "provenance": {
+        "factsHash": "10b6b256bf91d7ac555f76a540e1e79b4657b04f1fb5b96019fcfd3ee2a84114",
+        "sourceContentHash": "9ca8916f883175e72d07561a9e0b9cf505169824c4686f808d7ad1c80da98a6c"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "automated-fixed-event-extraction-v1",
+        "reviewedAt": "2026-10-09T16:39:13.044Z"
+      }
+    },
+    {
+      "id": "melissa-weekly-planner-2026-10-12-user-reviewed",
+      "label": "Melissa Thompson weekly planner — Oct 12–16, 2026 (user-supplied screenshot)",
+      "receivedAt": "2026-10-12",
+      "facts": [
+        "Monday, October 12: No school.",
+        "Tuesday, October 13: Dress Down Day benefits the Knights of Columbus Thanksgiving meal; Rotary Club matches the donation.",
+        "Wednesday, October 14: Mass and Communication Folder; progress reports sent home, families must sign and return them.",
+        "Thursday, October 15: Winter uniform begins.",
+        "Friday, October 16: Student Council announces Halloween bucket-of-candy chances starting Monday, October 19 and ending October 30; $1 per chance.",
+        "October 19–20: Parent-teacher conferences; Grade 2 has no school October 20 (user-confirmed).",
+        "October 21: Mass.",
+        "October 22: Chick-fil-A delivery.",
+        "October 23: Lego Club and S'mores Family.",
+        "October 26: K–4 Dress Down Day and flag football.",
+        "October 29: Grades 5–8 Dress Down Day and flag football.",
+        "October 30: Halloween celebration."
+      ],
+      "provenance": {
+        "factsHash": "6e7530e1fc772c04f3fda2566277a2480bd4d9fe44bd69422844822c2469dff4",
+        "sourceContentHash": "f367f12562773468901a78646060b3858cd08ca77bb781824265bc4404f29da7"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "user-confirmed-Melissa-planner",
+        "reviewedAt": "2026-10-12"
+      }
     }
   ],
   "importantDates": [
@@ -620,12 +678,6 @@
       "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
-      "date": "Sunday, Oct. 4",
-      "label": "Winter uniform begins",
-      "kind": "school event",
-      "sourceDocument": "october-calendar-2026"
-    },
-    {
       "date": "Wednesday, Oct. 7",
       "label": "K–4 flag football permission form due",
       "kind": "deadline",
@@ -668,39 +720,9 @@
       "sourceDocument": "birthday-party-2026-10-18"
     },
     {
-      "date": "Monday–Tuesday, Oct. 19–20",
-      "label": "Parent-Teacher Conferences",
-      "kind": "conference",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "date": "Tuesday, Oct. 20",
-      "label": "K–4 No School — Parent-Teacher Conferences",
-      "kind": "holiday",
-      "sourceDocument": "october-calendar-2026"
-    },
-    {
       "date": "Wednesday, Oct. 21",
       "label": "Mass",
       "kind": "school event",
-      "sourceDocument": "october-calendar-2026"
-    },
-    {
-      "date": "Thursday, Oct. 22",
-      "label": "Chick-fil-A pickup",
-      "kind": "school event",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "date": "Friday, Oct. 23",
-      "label": "S’more Fun at Schwartz Farm",
-      "kind": "school event",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "date": "Friday, Oct. 23",
-      "label": "Lego Club — 3:00–4:00 PM",
-      "kind": "club",
       "sourceDocument": "october-calendar-2026"
     },
     {
@@ -766,12 +788,6 @@
     {
       "date": "Wednesday, Oct. 7",
       "label": "Mass — St. John the Baptist, 9 AM",
-      "kind": "school event",
-      "sourceDocument": "weekly-reminders-2026-10-05"
-    },
-    {
-      "date": "Thursday, Oct. 8",
-      "label": "Progress Reports Issued",
       "kind": "school event",
       "sourceDocument": "weekly-reminders-2026-10-05"
     },
@@ -887,18 +903,6 @@
       "date": "Monday, Oct. 12",
       "label": "No School",
       "kind": "holiday",
-      "sourceDocument": "weekly-reminders-2026-09-07"
-    },
-    {
-      "date": "Monday, Oct. 19",
-      "label": "Parent-Teacher Conferences",
-      "kind": "conference",
-      "sourceDocument": "weekly-reminders-2026-09-07"
-    },
-    {
-      "date": "Tuesday, Oct. 20",
-      "label": "Parent-Teacher Conferences",
-      "kind": "conference",
       "sourceDocument": "weekly-reminders-2026-09-07"
     },
     {
@@ -1032,6 +1036,84 @@
       "label": "Eucharistic Consecration during school Mass — Immaculate Conception",
       "kind": "school event",
       "sourceDocument": "eucharistic-consecration-2026"
+    },
+    {
+      "date": "Monday, Oct. 12",
+      "label": "No School",
+      "kind": "holiday",
+      "sourceDocument": "weekly-reminders-2026-10-12"
+    },
+    {
+      "date": "Tuesday, Oct. 13",
+      "label": "Dress Down Day",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-12"
+    },
+    {
+      "date": "Wednesday, Oct. 14",
+      "label": "Mass",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-12"
+    },
+    {
+      "date": "Wednesday, Oct. 14",
+      "label": "Communication Folder",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-12"
+    },
+    {
+      "date": "Thursday, Oct. 29",
+      "label": "Dress Down Day",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-12"
+    },
+    {
+      "date": "Thursday, Oct. 29",
+      "label": "Flag football",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-12"
+    },
+    {
+      "date": "Wednesday, Oct. 14",
+      "label": "Progress Reports Sent Home — Sign & Return",
+      "kind": "school event",
+      "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed"
+    },
+    {
+      "date": "Tuesday, Oct. 20",
+      "label": "Grade 2 / K–4: No School — Parent-Teacher Conferences",
+      "kind": "holiday",
+      "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed"
+    },
+    {
+      "date": "Thursday, Oct. 22",
+      "label": "Chick-fil-A Delivery",
+      "kind": "school event",
+      "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed"
+    },
+    {
+      "date": "Friday, Oct. 23",
+      "label": "Lego Club (time not stated in latest planner)",
+      "kind": "club",
+      "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed"
+    },
+    {
+      "date": "Friday, Oct. 23",
+      "label": "S’mores Family",
+      "kind": "school event",
+      "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed"
+    },
+    {
+      "date": "Monday, Oct. 19",
+      "label": "Student Council Halloween Candy Chance Begins ($1)",
+      "kind": "school event",
+      "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed"
+    },
+    {
+      "date": "Friday, Oct. 30",
+      "label": "Student Council Halloween Candy Chance Ends",
+      "kind": "school event",
+      "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed"
     }
   ],
   "reminders": [
@@ -1061,24 +1143,9 @@
       "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
-      "text": "S’more Fun at Schwartz Farm is Friday, Oct. 23.",
-      "topic": "schwartz",
-      "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
       "text": "Drama Club Play is Nov. 13–14.",
       "topic": "drama",
       "sourceDocument": "weekly-reminders-2026-09-28"
-    },
-    {
-      "text": "Sunday, Oct. 4: Winter uniform begins.",
-      "topic": "winter-uniform",
-      "sourceDocument": "october-calendar-2026"
-    },
-    {
-      "text": "Thursday, Oct. 8: Progress Reports are issued.",
-      "topic": "progress-report",
-      "sourceDocument": "october-calendar-2026"
     },
     {
       "text": "Friday, Oct. 9: Chick-fil-A orders and money are due; orders are $7 each.",
@@ -1089,11 +1156,6 @@
       "text": "Saturday, Oct. 10: RSVP deadline for the Oct. 18 birthday party at Roller Roost Sports Arena.",
       "topic": "birthday-party",
       "sourceDocument": "birthday-party-2026-10-18"
-    },
-    {
-      "text": "Tuesday, Oct. 20: K–4 has no school for Parent-Teacher Conferences.",
-      "topic": "conference",
-      "sourceDocument": "october-calendar-2026"
     },
     {
       "text": "Thursday, Oct. 22: Chick-fil-A delivery/pickup is 3:00–4:30 PM; pickup is available at dismissal.",
@@ -1131,14 +1193,44 @@
       "sourceDocument": "reading-royals-family-night-2026-11-21"
     },
     {
-      "text": "Oct. 22 and Oct. 29: ABVM is collecting hygiene donations for Servants for All during DDD/flag-football activities. The separate K–4 flag football flyer still lists Oct. 26.",
-      "topic": "servants-hygiene",
-      "sourceDocument": "servants-for-all-hygiene-2026-10"
-    },
-    {
       "text": "Tuesday, Dec. 8: ABVM Eucharistic Consecration takes place during the school Mass; family reading journey begins Oct. 20.",
       "topic": "eucharistic-consecration",
       "sourceDocument": "eucharistic-consecration-2026"
+    },
+    {
+      "text": "Wednesday, Oct. 14: Progress reports are sent home. Sign and return them.",
+      "topic": "progress-report",
+      "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed"
+    },
+    {
+      "text": "Thursday, Oct. 15: Winter uniform begins.",
+      "topic": "winter-uniform",
+      "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed"
+    },
+    {
+      "text": "October 19–20: Parent-teacher conferences. Grade 2 has no school Tuesday, Oct. 20.",
+      "topic": "conference",
+      "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed"
+    },
+    {
+      "text": "Thursday, Oct. 22: Chick-fil-A delivery.",
+      "topic": "chick-fil",
+      "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed"
+    },
+    {
+      "text": "Friday, Oct. 23: Lego Club and S’mores Family. Club time and eligibility are not specified in this planner.",
+      "topic": "lego-club",
+      "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed"
+    },
+    {
+      "text": "Monday, Oct. 26: K–4 Dress Down Day and flag football.",
+      "topic": "flag-football",
+      "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed"
+    },
+    {
+      "text": "October 19–30: Halloween bucket-of-candy chance fundraiser; $1 per chance.",
+      "topic": "halloween-fundraiser",
+      "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed"
     }
   ],
   "parentNotices": [
@@ -1248,7 +1340,7 @@
       "sourceDocument": "cyo-basketball-grades-3-8-2026"
     },
     {
-      "text": "ABVM is collecting shampoo/conditioner, deodorant, razors, toothpaste, body wash and soap for Servants for All. The donation flyer mentions Oct. 22 and 29 in connection with dress-down/flag football; an earlier grade K–4 notice lists the game on Oct. 26. The grade-specific game date is unconfirmed by this new flyer; check with the school before treating it as changed.",
+      "text": "ABVM is collecting hygiene donations for Servants for All; the October 22 and 29 donation flyer refers to grade-specific activities, and Melissa's latest planner confirms K–4 dress down/flag football on October 26.",
       "topic": "servants-hygiene",
       "sourceDocument": "servants-for-all-hygiene-2026-10"
     },
@@ -1282,15 +1374,37 @@
     },
     {
       "topic": "start-winter-dress",
-      "date": "Monday, Oct. 5"
+      "date": "Thursday, Oct. 15"
     },
     {
       "topic": "term-progress-reports",
-      "date": "Thursday, Oct. 8"
+      "date": "Wednesday, Oct. 14"
     },
     {
       "topic": "halloween-party",
       "date": "Friday, Oct. 30"
+    },
+    {
+      "topic": "grade2-conferences",
+      "date": "Tuesday, Oct. 20"
+    },
+    {
+      "topic": "lego-club",
+      "date": "Friday, Oct. 23"
+    },
+    {
+      "topic": "chick-fil-a-delivery",
+      "date": "Thursday, Oct. 22"
+    },
+    {
+      "topic": "k4-dressdown-flag-football",
+      "date": "Monday, Oct. 26"
     }
-  ]
+  ],
+  "sourcePrecedence": {
+    "scope": "ABVM Grade 2 dates",
+    "rule": "When dates conflict, use Melissa Thompson's most recent dated email/planner; explicitly confirmed Grade 2 guidance from the parent takes precedence. Do not infer club times or eligibility from a notice that does not state them.",
+    "approvedOn": "2026-10-12",
+    "authoritativeCurrentDocument": "melissa-weekly-planner-2026-10-12-user-reviewed"
+  }
 }

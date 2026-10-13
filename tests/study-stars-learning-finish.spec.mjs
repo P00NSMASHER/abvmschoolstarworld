@@ -1,3 +1,4 @@
+import {resolveGovernedBrowserQuestion} from './helpers/governed-browser-questions.mjs';
 import { test, expect } from '@playwright/test';
 
 async function clearStarLedger(page){
@@ -10,19 +11,8 @@ async function clearStarLedger(page){
 }
 
 async function resolveRenderedQuestion(page){
-  const card=page.locator('.game-question-card');
-  await expect(card).toBeVisible();
-  const prompt=(await card.locator('h2').innerText()).trim();
-  const choices=(await card.locator('[data-game-answer] strong').allTextContents()).map(x=>x.trim());
-  return await page.evaluate(async ({prompt,choices})=>{
-    const envelope=await fetch('./data/study-pack.json',{cache:'no-store'}).then(r=>r.json());
-    const engine=window.ABVMStudyGames;
-    const sourceKey=engine.sourceKeyFromEnvelope(envelope.pack,envelope);
-    const catalog=engine.buildCatalog(envelope.pack,{sourceKey});
-    const question=catalog.questions.find(q=>q.prompt===prompt&&q.choices.length===choices.length&&q.choices.every((choice,index)=>choice===choices[index]));
-    if(!question)throw new Error('Could not resolve rendered question');
-    return {answerIndex:question.choices.indexOf(question.answer),skill:question.skill};
-  },{prompt,choices});
+  const q=await resolveGovernedBrowserQuestion(page);
+  return {answerIndex:q.answerIndex,skill:q.skill};
 }
 
 async function answerPerfectRound(page){

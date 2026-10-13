@@ -29,7 +29,9 @@ export runs, but that evidence must stay in the private layer described in
 The exporter consumes the same QA-passed teacher pack, provenance-backed cumulative
 archive, reviewed original `schoolwork.json` practice, and original `buildStarBank`
 used by the web app. Undated worksheets remain cumulative; they are never relabeled
-as this week's lessons. Raw worksheets, source photo names/hashes, response history,
+as this week's lessons. A parent-confirmed school `weekOf` is separately
+reviewed evidence of weekly relevance without inventing an exact practice
+day; questions in that week are current until the week ends, then cumulative. Raw worksheets, source photo names/hashes, response history,
 grades, and private targeting reasons do not enter the bundle.
 
 Every subject packet and the mixed queue contains the complete pool in strict

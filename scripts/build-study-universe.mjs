@@ -96,8 +96,9 @@ export function buildStudyUniverse({pack:wrapper,archive={},fallbackQuestions=[]
     validateSchoolwork(schoolwork,{requireManifest:true});
     const {start,end}=weekBounds(generatedAt);
     for(const lesson of schoolwork.lessons){
-      if(lesson.studiedOn&&lesson.studiedOn>asOfDay)continue;
-      const tier=lesson.studiedOn&&lesson.studiedOn>=start&&lesson.studiedOn<=end?'current':'archive';
+      if((lesson.weekOf&&lesson.weekOf>asOfDay)||(lesson.studiedOn&&lesson.studiedOn>asOfDay))continue;
+      const isWeek=lesson.weekOf===start || (lesson.studiedOn&&lesson.studiedOn>=start&&lesson.studiedOn<=end);
+      const tier=isWeek?'current':'archive';
       for(const row of lesson.questions)workRows.push(checkedQuestion(row,tier,{kind:'reviewed-original-schoolwork',lessonId:lesson.id}));
     }
   }

@@ -69,3 +69,12 @@ test('missing or invalid check date stays unavailable and no feed row is discard
  assert.doesNotMatch(html,/<time/);
  for(const row of items)assert.ok(html.includes(row.text));
 });
+
+test('official calendar source is directly accessible without claiming Facebook or teacher provenance',()=>{
+ const html=api().officialCalendarLink();
+ assert.match(html,/Official ABVM calendar/);
+ assert.match(html,/https:\/\/www\.assumptionbvmschool\.net\/about\/calendar/);
+ assert.match(html,/rel="noopener noreferrer"/);
+ assert.match(html,/target="_blank"/);
+ assert.doesNotMatch(html,/facebook\.com|teacher-verified|published post/i);
+});

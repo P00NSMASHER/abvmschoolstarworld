@@ -7,7 +7,7 @@ export function isDate(value) {
 }
 const text = value => typeof value === 'string' && value.trim().length > 0;
 const ROOT_KEYS = new Set(['schemaVersion','uploadedPhotoCount','distinctWorksheetNote','lessons','sourceManifest']);
-const LESSON_KEYS = new Set(['id','title','subject','sources','skills','notes','studiedOn','addedOn','dateStatus','chapter','questions']);
+const LESSON_KEYS = new Set(['id','title','subject','sources','skills','notes','studiedOn','weekOf','addedOn','dateStatus','chapter','questions']);
 const QUESTION_KEYS = new Set(['id','subject','skill','prompt','answer','choices','explanation','hint','sourceFact','tier','questionType','difficulty','dok','domain','standards','provenance']);
 const SOURCE_KEYS = new Set(['id','sha256','status','duplicateOf','reason']);
 function allowedKeys(value, allowed, label) {
@@ -37,7 +37,25 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
     unique(lesson.skills, `${lesson.id} skills`);
     check(Array.isArray(lesson.notes) && lesson.notes.length && lesson.notes.every(text), `${lesson.id}: missing notes`);
     check(lesson.studiedOn === null || isDate(lesson.studiedOn), `${lesson.id}: invalid studiedOn`);
+    // A verified school week is evidence of weekly relevance, not an invented day.
+    if (lesson.weekOf !== undefined) {
+      check(isDate(lesson.weekOf), `${lesson.id}: invalid weekOf`);
+      check(new Date(lesson.weekOf + 'T12:00:00Z').getUTCDay() === 1, `${lesson.id}: weekOf must be a Monday`);
+      if (lesson.studiedOn) {
+        const end = new Date(lesson.weekOf + 'T12:00:00Z');
+        end.setUTCDate(end.getUTCDate() + 6);
+        check(lesson.studiedOn >= lesson.weekOf && lesson.studiedOn <= end.toISOString().slice(0,10),
+          `${lesson.id}: studiedOn conflicts with verified week`);
+      }
+    }
     check(isDate(lesson.addedOn), `${lesson.id}: invalid addedOn`);
+    // Upload/intake dates never prove a later classroom assessment date.
+    // A future verified day or verified school week must be held for review,
+    // not routed into weekly practice as if a future worksheet were completed.
+    check(!lesson.studiedOn || lesson.studiedOn <= lesson.addedOn,
+      `${lesson.id}: studiedOn cannot be after addedOn`);
+    check(lesson.weekOf === undefined || lesson.weekOf <= lesson.addedOn,
+      `${lesson.id}: weekOf cannot begin after addedOn`);
     check(lesson.studiedOn !== null || /undated|unknown/i.test(lesson.dateStatus), `${lesson.id}: unknown study date must remain labeled undated`);
     check(lesson.chapter === undefined || (Number.isInteger(lesson.chapter) && lesson.chapter >= 1 && lesson.chapter <= 99), `${lesson.id}: invalid chapter`);
     check(Array.isArray(lesson.questions), `${lesson.id}: missing questions array`);
@@ -45,6 +63,9 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
       allowedKeys(q, QUESTION_KEYS, `question ${q?.id || '<unknown>'}`);
       for (const key of ['id','subject','skill','prompt','answer','explanation','sourceFact','provenance']) check(text(q[key]), `${lesson.id}: question missing ${key}`);
       check(lesson.skills.includes(q.skill), `${q.id}: question skill is not in lesson`);
+      check(q.subject === lesson.subject, `${q.id}: question subject must match lesson subject`);
+      check(q.provenance === 'original-practice-from-uploaded-schoolwork',
+        `${q.id}: unsupported provenance for uploaded schoolwork`);
       check(q.hint === undefined || text(q.hint), `${q.id}: invalid hint`);
       for (const key of ['tier','questionType','domain']) check(q[key] === undefined || text(q[key]), `${q.id}: invalid ${key}`);
       check(q.difficulty === undefined || (Number.isInteger(q.difficulty) && q.difficulty >= 1 && q.difficulty <= 5), `${q.id}: invalid difficulty`);
@@ -64,33 +85,83 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
     unique(manifest.map(s=>s.id),'source IDs');
     check(pack.uploadedPhotoCount === manifest.length, 'uploadedPhotoCount must account for every manifest photo');
     const byId = new Map(manifest.map(s=>[s.id,s]));
-    const hashes = new Map();
+    const hashes = new Map(), integratedHashes = new Map();
     for (const source of manifest) {
       allowedKeys(source, SOURCE_KEYS, `source ${source?.id || '<unknown>'}`);
-      check(text(source.id) && /^[a-zA-Z0-9_.-]+$/.test(source.id), 'Invalid non-identifying source ID');
+      check(text(source.id) && source.id !== '.' && source.id !== '..' && /^[a-zA-Z0-9_.-]+$/.test(source.id), 'Invalid non-identifying source ID');
       check(/^[a-f0-9]{64}$/.test(source.sha256), `${source.id}: missing SHA-256`);
       check(['integrated','duplicate','held'].includes(source.status), `${source.id}: invalid source status`);
       check(source.duplicateOf === undefined || text(source.duplicateOf), `${source.id}: invalid duplicateOf`);
       check(source.reason === undefined || text(source.reason), `${source.id}: invalid reason`);
+      // A held photo is accounted for, but never authorizes publishing a lesson.
+      check(source.status !== 'held' || !referenced.has(source.id),
+        `${source.id}: held source cannot support published lessons`);
+      check(source.status === 'duplicate' || source.duplicateOf === undefined,
+        `${source.id}: duplicateOf is only valid for duplicate sources`);
+      // Order-independent SHA identity: one canonical integrated record per image.
+      if (source.status === 'integrated') {
+        check(!integratedHashes.has(source.sha256),
+          `${source.id}: SHA-256 already integrated as ${integratedHashes.get(source.sha256)}`);
+        integratedHashes.set(source.sha256,source.id);
+      }
       if (source.status === 'duplicate') {
         const canonical=byId.get(source.duplicateOf);
         check(canonical && canonical.id !== source.id && canonical.status === 'integrated', `${source.id}: invalid duplicateOf`);
         check(canonical.sha256 === source.sha256 || text(source.reason), `${source.id}: semantic duplicate requires a reason`);
+        // Rephotographs are provenance on the same reviewed lesson, not an
+        // independent authorization to generate different academic content.
+        for (const lesson of pack.lessons) {
+          if (lesson.sources.includes(source.id)) {
+            check(lesson.sources.includes(canonical.id),
+              `${lesson.id}: duplicate ${source.id} must share its lesson with ${canonical.id}`);
+          }
+        }
       }
       if (hashes.has(source.sha256)) check(source.status === 'duplicate' || hashes.get(source.sha256).status === 'duplicate', `${source.id}: repeated hash must be recorded as a duplicate`);
       else hashes.set(source.sha256,source);
       check(source.status === 'held' || referenced.has(source.id), `${source.id}: photo is not accounted for by a lesson`);
       if (source.status === 'held') check(text(source.reason), `${source.id}: held source requires reason`);
     }
+    // Exact image bytes have one reviewed authority, even when a source has
+    // a free-text semantic-rephotograph reason. Perform this check after
+    // scanning the full manifest so duplicate-first ordering cannot bypass it.
+    const unresolvedHeldByHash=new Map(manifest.filter(s=>s.status==='held').map(s=>[s.sha256,s.id]));
+    for (const source of manifest) {
+      if (source.status==='held') continue;
+      const heldId=unresolvedHeldByHash.get(source.sha256);
+      check(!heldId, `${source.id}: SHA-256 belongs to unresolved held source ${heldId}`);
+      if (source.status==='duplicate') {
+        const exactCanonical=integratedHashes.get(source.sha256);
+        check(!exactCanonical || source.duplicateOf===exactCanonical,
+          `${source.id}: exact SHA-256 duplicate must reference ${exactCanonical}`);
+      }
+    }
     for (const id of referenced) check(byId.has(id), `${id}: lesson references missing source manifest entry`);
   } else check(referenced.size === pack.uploadedPhotoCount, 'All uploaded photos must be accounted for in lesson sources');
   const forbidden = /^(studentName|studentId|birthDate|gradeReceived|scoreReceived|rawImage|imageBase64|imageBytes|ocrText|handwrittenAnswers)$/i;
+  // Structural allowlists cannot stop a private value hidden in an allowed
+  // public string. Reject unmistakable direct identifiers without attempting
+  // to infer whether a normal name or classroom story is private.
+  const directIdentifierPatterns = [
+    [/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i, 'email address'],
+    [/(?<![A-Za-z0-9])(?:\+1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}(?![A-Za-z0-9])/, 'phone number'],
+    [/(?<!\d)\d{3}[- ]\d{2}[- ]\d{4}(?!\d)/, 'government ID'],
+    [/data:(?:image|application|audio|video|text)\/[\w.+-]+/i, 'embedded data URI']
+  ];
   function inspect(value) {
     if (!value || typeof value !== 'object') return;
     for (const [key,item] of Object.entries(value)) {
-      check(!forbidden.test(key), `Do not publish private field ${key}`);
-      if (typeof item === 'string') check(!/^data:image\//.test(item), 'Do not publish raw image data');
-      else inspect(item);
+      check(!forbidden.test(key), 'Do not publish private field ' + key);
+      if (typeof item === 'string') {
+        check(!/^data:image\//i.test(item), 'Do not publish raw image data');
+        // Cryptographic source digests are verified above and can accidentally
+        // resemble ten-digit phone numbers. They are not human-readable text.
+        if (key !== 'sha256') {
+          for (const [pattern,label] of directIdentifierPatterns) {
+            check(!pattern.test(item), 'Do not publish ' + label + ' in public schoolwork text');
+          }
+        }
+      } else inspect(item);
     }
   }
   inspect(pack);
@@ -98,6 +169,8 @@ export function validateSchoolwork(pack, {requireManifest = false} = {}) {
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const path=process.argv[2] || 'pages/data/schoolwork.json';
-  try { console.log(JSON.stringify(validateSchoolwork(JSON.parse(await readFile(path,'utf8'))))); }
+  // The public release gate never accepts a pack without reviewed photo evidence.
+  // Keep the library's optional legacy mode separate from CLI publication checks.
+  try { console.log(JSON.stringify(validateSchoolwork(JSON.parse(await readFile(path,'utf8')),{requireManifest:true}))); }
   catch(error) { console.error(error.message); process.exitCode=1; }
 }

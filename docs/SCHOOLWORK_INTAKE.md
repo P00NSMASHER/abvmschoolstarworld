@@ -46,7 +46,12 @@ For each readable source, identify only what the source supports:
 
 `studiedOn` is the supported classroom date or `null`. `addedOn` is the actual
 intake day in America/New_York and does not imply classroom timing. Use
-“Undated schoolwork” when timing is unknown.
+“Undated schoolwork” when timing is unknown. A confirmed classroom
+`studiedOn` date cannot be later than `addedOn`, and a verified Monday
+`weekOf` cannot begin after that intake date. The public source validator
+rejects either contradiction. Hold the affected photo for date review
+instead of inventing a date, changing its intake timestamp, or placing it
+into upcoming weekly study or test preparation.
 
 ### 3. Extract the printed questions/tasks
 
@@ -105,6 +110,8 @@ available; a guessed or mismatched URL never qualifies.
 
 Compare the newly mapped skills with all prior reviewed observations. Look for:
 
+- duplicate photographs of the **same assignment item** (reuse the private
+  observation ID; do not score it again)
 - repeated misses
 - improvement over time
 - retention after apparent mastery
@@ -112,7 +119,30 @@ Compare the newly mapped skills with all prior reviewed observations. Look for:
 - generalization across different assignments
 - skills with too little evidence to classify
 
-Do not turn a single worksheet into a trend.
+Do not turn a single worksheet into a trend. Separate verified `studiedOn`
+dates from intake-only `addedOn` dates; uploading old work on multiple days
+must never establish a new assessment date or mastery. A latest verified-day
+`unknown` answer is not a miss, but must enter private `review-unscored`
+triage instead of silently preserving a mastery claim; do not publish this
+review status as a child's weakness. Earlier or undated unknown work does not
+overrule newer verified independent mastery. A positive average by
+itself is not evidence of `improving`: require the private history's actual
+upward trend across four verified assessment days. Steady or slipping results
+must not receive an `improving` label. Likewise, uploading
+an older undated worksheet cannot become a verified recent miss or reset a
+retention review interval. Keep undated misses visible in the private
+`review-undated` queue without assigning an unsupported schoolwork date.
+A verified `studiedOn` date cannot fall after the `addedOn` intake date,
+and no observation can have
+`addedOn` later than its batch's `asOf`. Distinct photographs of the same
+identified assignment do not count as distinct assignments toward mastery. Supply stable private
+`assignmentId` and `questionId` identifiers where the reviewed page supports
+them, even when different photographs show the same question. A legacy observation
+without an assignment ID and a newer assignment-aware observation from the
+**same source photo** must not be scored twice for the same question, nor may
+the mixed identifiers count as independent assignments for mastery. The
+processor conservatively links these identities across cumulative history;
+a photo showing multiple worksheets alone is not proof of independent work.
 
 ### 9. Update private learning state
 
@@ -126,6 +156,12 @@ Run the private learning-history processor. It maintains the operational states:
 “Mastered” is a conservative household study-planning flag, not a diagnosis, school
 grade, standardized score or psychometric claim. See `docs/LEARNING_HISTORY.md` for
 the exact evidence rule.
+
+The private history and observation batch must resolve outside the public
+repository even when paths pass through symbolic links. The processor creates
+new history files with owner-only 0600 permissions and new directories with
+0700 permissions on POSIX systems; secure existing private folders separately.
+Never place a private batch in the public repository.
 
 The private history must resolve outside this public repository:
 
@@ -147,6 +183,10 @@ Dry-run first. Review the derived status/trend/practice queue, then write.
 Use the private practice queue to decide what practice is useful now. Prefer small,
 specific practice sets aimed at the evidenced skill rather than generic subject-wide
 worksheets. Include retention checks for older mastered skills when appropriate.
+A `review-unscored` target is **for the parent/reviewer to verify unclear
+evidence first**; it is not evidence of a learning deficit or permission to
+generate remedial practice from an unverified answer. Leave the source
+unresolved until its correctness can be independently reviewed.
 
 The private reason for targeting a skill is not published. Public ABVM content may
 contain original practice for the skill, but it must not say that the learner is weak,
@@ -180,6 +220,19 @@ Every integrated source needs a reviewed lesson. Each lesson requires `id`, `tit
 `dateStatus` and `questions`; match the existing question schema. Religion lessons
 may include an exact integer `chapter`.
 
+The standalone release validator (`node scripts/validate-schoolwork.mjs`) **requires**
+`sourceManifest` even if a legacy library caller explicitly uses the validator's
+optional no-manifest mode. Never publish a manifest-free JSON pack merely because
+the lesson source count appears to match `uploadedPhotoCount`.
+
+A dated *week* may be supplied through optional `weekOf` (ISO date for that
+week's Monday) **only** when the parent or source independently identifies the
+school week. Leave `studiedOn: null` when no exact homework day is known, and
+write a `dateStatus` mentioning the unknown day. For example, the photographed
+October 9 spelling practice confirms the week of 2026-10-05 but not the day.
+This week-only evidence enters weekly review during that week and remains
+cumulative afterward. It must not be relabeled as an exact Monday assignment.
+
 Every question requires an ID, subject, skill, prompt, answer, choices, explanation,
 sourceFact and provenance.
 
@@ -188,7 +241,7 @@ Public JSON remains fail-closed by object shape. The validator permits only:
 - root: `schemaVersion`, `uploadedPhotoCount`, `distinctWorksheetNote`,
   `lessons`, `sourceManifest`
 - lesson: `id`, `title`, `subject`, `sources`, `skills`, `notes`,
-  `studiedOn`, `addedOn`, `dateStatus`, optional `chapter`, `questions`
+  `studiedOn`, optional verified Monday `weekOf`, `addedOn`, `dateStatus`, optional `chapter`, `questions`
 - question: `id`, `subject`, `skill`, `prompt`, `answer`, `choices`,
   `explanation`, optional `hint`, `sourceFact`, optional `tier`,
   `questionType`, `difficulty`, `dok`, `domain`, `standards`, and
@@ -198,17 +251,34 @@ Public JSON remains fail-closed by object shape. The validator permits only:
 
 Unknown keys are rejected rather than silently published. This blocks accidental
 student-name fields, raw OCR transcripts, answer-sheet text, teacher marks, private
-URLs and nested metadata. Structural validation does not prove allowed free text is
-private-data-free, so manual value-level privacy review remains required.
+URLs and nested metadata. Structural validation also rejects obvious direct identifiers embedded in
+allowed strings (email addresses, phone numbers, government-ID-shaped numbers and
+embedded data URIs). Source SHA-256 digests are excluded from those text-pattern
+checks because hexadecimal digests are not human-readable contact information.
+These deterministic checks cannot establish that free text has no student names,
+grades, handwriting details, subtle identity clues or source-rights problems:
+manual value-level privacy, academic and provenance review **remains required**.
 
 Manifest statuses:
 
-- `integrated`: the source is linked to a lesson.
-- `duplicate`: link to the canonical source using `duplicateOf`; differing hashes
-  require a `reason`, such as the same worksheet photographed twice. Link both
-  source IDs to the shared lesson. Duplicate chains are not accepted.
-- `held`: provide a `reason`; the image is accounted for but unclear content is
-  not invented or silently added to practice.
+- `integrated`: the source must be linked to a reviewed lesson, and its exact
+  SHA-256 may have only one `integrated` canonical ID, regardless of manifest
+  ordering. The canonical identity cannot be duplicated under another name.
+- `duplicate`: link directly to an `integrated` canonical using `duplicateOf`.
+  When a duplicate has **exactly the same SHA-256** as a reviewed integrated
+  source, it **must** identify that exact source as its canonical, regardless
+  of manifest ordering or a supplied free-text `reason`. Differing hashes
+  require a human-reviewed `reason` (semantic rephotograph). Every lesson
+  citing the duplicate must also cite that canonical ID. A duplicate does not
+  authorize a separate lesson, question bank, or invented source coverage.
+  Duplicate chains are not accepted.
+- `held`: provide a `reason`; the image is accounted for but **must not**
+  appear in any published lesson's `sources`. Its unclear content cannot
+  justify public notes, questions, weekly materials, or test preparation.
+  No second source ID with the **same exact SHA-256** may be integrated or
+  cited as a duplicate while the original is held. Resolve the original
+  reviewed source under its existing ID and digest before publication.
+  Only duplicate entries may contain `duplicateOf`.
 
 A held source is not permanently frozen. If later review can safely resolve it, keep
 the **same source ID and exact SHA-256**. A `held → integrated` transition must include
@@ -223,6 +293,99 @@ with the new source(s). The merger preserves the existing `addedOn` and unions
 sources. Different educational content under an existing lesson ID is rejected for
 explicit review, not silently overwritten. Potential semantic duplicate lesson titles
 are also held for consolidation.
+
+## Read-only source-to-question release review
+
+Run `node scripts/schoolwork-review-report.mjs pages/data/schoolwork.json`
+to receive a deterministic JSON reconciliation of public source IDs, canonical and
+semantic rephotographs, lesson IDs, question IDs, and which lesson dates are
+verified days, verified school weeks only, or undated. The command **never reads
+private answer/teacher-mark files, modifies the pack, or accesses original photo
+bytes**. It excludes question wording, lesson notes, private responses and free-text
+source reasons from the output. Do not publish the report externally without
+checking that the already-public source/lesson IDs are appropriate to share.
+
+A valid public `sourceManifest` or green CI is not original-photo transcription
+approval. The report's release status is deliberately always
+`HOLD_EXTERNAL_SIGNOFF`: original photo/source comparison, public-text child
+privacy, educator/source rights, required physical Safari checks and exact-scope
+release authorization remain separate human decisions. An undated lesson is a
+**date-authority review item**, not automatic evidence of a current school week,
+a missed assessment, or defective learning. Held sources remain visible but
+cannot support published lessons.
+
+Schoolwork question `subject` must match the containing lesson and its
+`provenance` must be exactly `original-practice-from-uploaded-schoolwork`.
+This public schoolwork stream does not claim teacher-authored test items, licensed
+question-bank copies, or official STAR questions.
+
+## Printable offline curriculum comparison workbook
+
+Generate a **private, printable HTML review workbook** from the public
+source manifest and original practice questions:
+
+```sh
+node scripts/build-schoolwork-review-workbook.mjs pages/data/schoolwork.json /PRIVATE/abvm-schoolwork-review.html
+```
+
+The command requires an **absolute destination outside the public repository**,
+creates an owner-only (0600) HTML file on POSIX systems, and never overwrites
+an existing workbook. The deterministic cover identifies the exact source/lesson
+content fingerprint. The workbook lists all 23 photo source IDs and SHA-256
+digests, links them to 13 lessons, and includes the 67 public original practice
+questions, choices, correct answers, explanations and teaching notes.
+
+The workbook has no original photo bytes, private student answers, teacher marks,
+network resources, scripts or upload controls. It is printable in black and white.
+Open actual private photos separately for comparison. Questions associated with a
+lesson are **not automatically claimed to appear in each linked photo**. Source
+accuracy, educational correctness, privacy, rights and any uncertain dates remain
+human review responsibilities. Paper checkboxes are not authenticated signoff.
+
+Every workbook is marked `HOLD_EXTERNAL_SIGNOFF`, including if fully annotated.
+Neither this output nor a valid photo receipt changes schoolwork, publishes held
+curriculum, or authorizes a production merge. Keep any annotated workbook private
+and out of the public GitHub repository and CI artifacts.
+## Private original-photo comparison (review-only)
+
+The public `sourceManifest` includes only SHA-256 hashes, not the original private
+photos. Structural CI cannot certify the 23 existing photo transcriptions. Use
+`scripts/verify-schoolwork-photo-reviews.mjs` to prepare a **read-only**
+per-photo checklist tied to the exact published lesson/question content:
+
+```sh
+node scripts/verify-schoolwork-photo-reviews.mjs --checklist pages/data/schoolwork.json
+node scripts/verify-schoolwork-photo-reviews.mjs --template pages/data/schoolwork.json > /PRIVATE/abvm-photo-receipts.json
+chmod 600 /PRIVATE/abvm-photo-receipts.json
+# Move the 23 original photos into a separate private folder using exactly the
+# source IDs in the public manifest. Never store these files in GitHub.
+node scripts/verify-schoolwork-photo-reviews.mjs --verify pages/data/schoolwork.json /PRIVATE/abvm-photos /PRIVATE/abvm-photo-receipts.json
+```
+
+The template deliberately begins with `reviewedOn: null`,
+`reviewerId: null`, and five false manual checklist flags. A person must
+compare each **original** photograph with its mapped lesson/skills/notes,
+independently check the original practice answers, inspect child privacy, and
+confirm permission/educator source status before filling in any approval flag.
+No AI-generated receipt, template or CI pass constitutes that human review.
+
+The verifier opens photos only from a folder **outside** the public repository,
+computes each file's exact SHA-256, and compares it to the public manifest.
+Each private review receipt is bound to the source SHA and a stable digest of
+every referenced public lesson including notes, question choices, answers and
+explanations. Editing content, changing an image, using a missing source,
+rephotographing a held item, recording a review before intake, or leaving a
+review checkbox false produces an unresolved result. Duplicate receipt IDs,
+unknown fields, unsafe photo paths and receipts for held photos fail closed.
+`--verify` exits with code 2 for unresolved sources and prints only source
+IDs and status codes, **never private photos, reviewer IDs or answers**.
+
+Even with all receipts matching, the output is
+`HOLD_EXTERNAL_SIGNOFF`: receipt assertions are not independently authenticated
+human approval. Educator/source rights, child privacy, physical iPhone Safari
+acceptance when required, and explicit approval of the exact production release
+still need separate human decisions. Do not publish original photos or receipts
+to the public repository, CI logs, Pages, or Roblox exports.
 
 ### 12. Update weekly and test-prep surfaces only when warranted
 
@@ -252,8 +415,11 @@ npm run qa:unit
 
 Dry-run is the default. The public writer validates before mutation, uses an exclusive
 intake lock, checks for concurrent changes, and atomically renames a temporary file.
-Identical replays are no-ops. Do not commit temporary batches, private observation
-batches, private histories or lock files.
+Identical replays are no-ops, including when reviewed JSON has been reserialized
+with a different object-field order. Actual changes to the same source ID, SHA-256,
+or lesson educational content still fail closed as collisions; do not silently
+overwrite previously reviewed academic facts. Do not commit temporary batches,
+private observation batches, private histories or lock files.
 
 Then run relevant browser tests. Inspect the diff for private information manually:
 schema validation cannot prove privacy or educational accuracy. Use the established
