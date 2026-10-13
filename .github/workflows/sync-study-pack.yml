@@ -241,7 +241,7 @@ jobs:
     uses: ./.github/workflows/pages.yml
     with:
       ref: main
-reviewed-lunch:
+  reviewed-lunch:
     name: Refresh reviewed lunch week independently of held curriculum
     needs: refresh
     if: always() && github.ref == 'refs/heads/main'
