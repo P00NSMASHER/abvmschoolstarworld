@@ -382,7 +382,8 @@
   function calendarEvent(event,kind) {
     kind=calendarKind(kind);
     const source=event.source==='uploaded-notice'?'Reviewed school notice':event.source==='teacher-page'?'Teacher page':'Published school information';
-    const timing=typeof event.time==='string'&&event.time.trim()?event.time:event.allDay===true?'All day':'Time not listed';
+    const titleHasTime=/\b(?:\d{1,2}:\d{2}|\d{1,2}\s*[ap]\.?m\.?|noon)\b/i.test(event.label||'');
+    const timing=typeof event.time==='string'&&event.time.trim()?event.time:event.allDay===true?'All day':titleHasTime?'See event title':'Time not listed';
     const sourceUrl=event.sourceUrl||event.url||'';
     const link=/^https?:\/\/[^\s"<>]+$/i.test(sourceUrl)?'<a href="'+esc(sourceUrl)+'" target="_blank" rel="noopener noreferrer">Open recorded source ↗</a>':'';
     return '<details class="cal-event '+kind+'"><summary><span class="cal-event-accent" aria-hidden="true"></span><span class="cal-event-copy"><small>'+esc(calendarKinds[kind])+'</small><strong>'+esc(event.label)+'</strong></span><span class="cal-event-chevron" aria-hidden="true">›</span></summary><div class="cal-event-provenance"><p><b>Date</b><span>'+esc(event.date||'See selected day')+'</span></p><p><b>Time</b><span>'+esc(timing)+'</span></p><p><b>Source</b><span>'+esc(source)+'</span></p>'+(event.sourceDocument?'<p><b>Record</b><span>'+esc(event.sourceDocument)+'</span></p>':'')+link+'</div></details>';

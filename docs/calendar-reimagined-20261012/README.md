@@ -26,7 +26,7 @@ This branch is added to the existing read-only, fail-closed source-parity compar
 
 ## Verification recorded before submission
 
-- New date/grid/source-escaping/parity unit tests: 9 passed, after first observing their expected failures.
+- New date/grid/source-escaping/parity unit tests: 10 passed, after first observing their expected failures.
 - Focused Chromium/iPhone-WebKit visual and interaction run: 47 passed, 1 explicitly scoped skip, 0 failures. Coverage includes 320/375/390/430/820/1440px, enlarged text, accessibility/contrast, focus, swipes, busy and empty days, leap February, year-boundary month stepping, cross-timezone/DST dates, source disclosure and bottom-navigation clearance.
 - Static validation: passed.
 - Local whole-unit run on Windows exposed two POSIX-only release-admission tests that require the Linux CI environment. They are unchanged and must pass remotely.

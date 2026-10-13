@@ -66,3 +66,9 @@ test('calendar redesign is admitted to unchanged fail-closed source parity',()=>
   assert.ok(workflow.includes('node scripts/assert-release-preview-parity.mjs'));
   assert.ok(workflow.includes('persist-credentials: false'));
 });
+
+test('an event with a time in its source title is not falsely described as missing a time',()=>{
+  const html=view.calendarEvent({label:'12:00 dismissal',kind:'school event',date:'Friday, Oct. 9'},'family');
+  assert.match(html,/See event title/);
+  assert.doesNotMatch(html,/Time not listed/);
+});
