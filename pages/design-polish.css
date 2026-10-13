@@ -553,7 +553,7 @@
 .calendar-studio {
   --cal-ink:#203b3c; --cal-muted:#586c6c; --cal-line:#dce5e2;
   --cal-action:#17665d; --cal-soft:#eaf4f0; --cal-today:#b3473b;
-  background:#f7f9f7;color:var(--cal-ink);
+  background:#f7f9f7;color:var(--cal-ink);animation:none;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   padding:calc(12px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right)) calc(32px + env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-left));
   scroll-padding-block:16px;
@@ -565,7 +565,7 @@
 .calendar-studio .cal-identity h1 {font-size:1.19rem;letter-spacing:-.045em;color:var(--cal-ink);line-height:1.22;}
 .calendar-studio .cal-header-actions {display:flex;gap:7px;align-items:center;}
 .calendar-studio .calendar-segments {display:flex;min-height:44px;padding:3px;margin:0;gap:0;border:1px solid var(--cal-line);border-radius:12px;background:#eaf0ec;box-shadow:none;}
-.calendar-studio .calendar-segments button {min-height:44px;padding:0 9px;border:0;border-radius:9px;font-size:.72rem;line-height:1.2;font-weight:650;letter-spacing:0;color:var(--cal-muted);background:transparent;box-shadow:none;}
+.calendar-studio .calendar-segments button {min-height:44px;padding:0 9px;border:0;border-radius:9px;font-size:.72rem;line-height:1.2;font-weight:650;letter-spacing:0;color:#304e48;background:transparent;box-shadow:none;}
 .calendar-studio .calendar-segments [aria-pressed="true"] {background:white;color:var(--cal-ink);box-shadow:0 1px 4px #203b3c16;}
 .calendar-studio .calendar-segments [aria-pressed="true"]::before {content:none;}
 .calendar-studio .cal-today {min-width:48px;min-height:46px;padding:0 7px;border:1px solid #c3d9d1;border-radius:11px;color:var(--cal-action);background:#fff;font-size:.74rem;font-weight:700;}
@@ -582,8 +582,8 @@
 .calendar-studio .calendar-grid {display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-auto-rows:minmax(65px,auto);gap:0;margin:0;padding:0 3px;touch-action:pan-y;}
 .calendar-studio .calendar-grid button {position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;width:100%;min-width:0;min-height:65px;padding:4px 1px 3px;gap:0;border:0;border-radius:0;border-bottom:1px solid #edf1ef;color:var(--cal-ink);background:transparent;box-shadow:none;line-height:1.2;touch-action:pan-y;}
 .calendar-studio .calendar-grid button strong {display:grid;place-items:center;flex:none;width:30px;height:30px;min-height:30px;min-width:30px;padding:0;border-radius:50%;font-size:1rem;font-weight:650;line-height:1;color:inherit;background:transparent;box-shadow:none;}
-.calendar-studio .calendar-grid button.weekend {background:#fafcfb;color:#647573;}
-.calendar-studio .calendar-grid button.outside {color:#62756d;}
+.calendar-studio .calendar-grid button.weekend {background:#fafcfb;color:#3c584e;}
+.calendar-studio .calendar-grid button.outside {color:#3c584e;}
 .calendar-studio .calendar-grid button.outside .cal-cell-note,.calendar-studio .calendar-grid button.outside .cal-cell-count {visibility:hidden;}
 .calendar-studio .calendar-grid button.active {background:#edf5f1;color:var(--cal-ink);border-color:#e3ece7;box-shadow:none;}
 .calendar-studio .calendar-grid button.active strong {color:#fff;background:var(--cal-action);box-shadow:0 2px 5px #17665d20;}
@@ -646,8 +646,8 @@
 .calendar-studio .cal-section-icon {display:grid;place-items:center;flex:none;width:43px;height:43px;border-radius:13px;color:#17665d;background:#e8f3ee;}
 .calendar-studio .cal-section-icon svg {width:23px;height:23px;}
 .calendar-studio .cal-card-heading h2 {margin:0;color:#203b3c;font-size:1.08rem;font-weight:745;line-height:1.2;}
-.calendar-studio .cal-card-heading p,.calendar-studio .cal-heading-copy small {display:block;margin:3px 0 0;color:#536f69;font-size:.71rem;line-height:1.4;}
-.calendar-studio .cal-card-heading .cal-section-eyebrow {margin:0 0 2px;font-size:.60rem;letter-spacing:.07em;font-weight:700;color:#60766e;}
+.calendar-studio .cal-card-heading p,.calendar-studio .cal-heading-copy small {display:block;margin:3px 0 0;color:#36574f;font-size:.71rem;line-height:1.4;}
+.calendar-studio .cal-card-heading .cal-section-eyebrow {margin:0 0 2px;font-size:.60rem;letter-spacing:.07em;font-weight:700;color:#36574f;}
 .calendar-studio .cal-date-row {display:grid;grid-template-columns:55px minmax(0,1fr);gap:12px;align-items:start;padding:12px 0;border-top:1px solid #edf1ee;}
 .calendar-studio .cal-date-row:first-of-type {border-top:0;padding-top:3px;}
 .calendar-studio .cal-date-row>span {font-weight:650;color:#526c68;font-size:.73rem;line-height:1.4;}
