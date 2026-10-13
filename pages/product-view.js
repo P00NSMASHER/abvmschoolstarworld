@@ -340,12 +340,116 @@
   // UI-only date navigation: a weekend maps to its Mon-Fri school week.
   // Compare UTC day ordinals so daylight-saving changes cannot offset a week.
   // Presentation only: every row and label comes from the governed controller.
+  // Calendar presentation uses civil days, never UTC-parsed date-only strings.
+  const calendarKey = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  const calendarMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const calendarKinds = {closed:'No school',test:'Test',faith:'Faith',due:'Due',family:'School event',lunch:'Lunch'};
+  const calendarKind = kind => Object.hasOwn(calendarKinds,kind) ? kind : 'family';
+  function calendarDate(value) {
+    if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return null;
+    const [year,month,day]=value.split('-').map(Number);
+    if(year<100||month<1||month>12||day<1||day>31)return null;
+    const d=new Date(year,month-1,day,12);
+    return d.getFullYear()===year&&d.getMonth()===month-1&&d.getDate()===day?d:null;
+  }
+  function calendarShift(date,amount) {
+    const target=new Date(date.getFullYear(),date.getMonth()+amount,1,12);
+    target.setDate(Math.min(date.getDate(),new Date(target.getFullYear(),target.getMonth()+1,0,12).getDate()));
+    return target;
+  }
+  function calendarBrief(events,kindClass) {
+    if(!events.length)return '';
+    if(events.some(e=>kindClass(e)==='closed'))return 'No school';
+    const tests=events.filter(e=>kindClass(e)==='test').length;
+    if(tests)return tests===1?'Test':tests+' tests';
+    const names=[[/progress report/i,'Reports'],[/dress.down/i,'Dress down'],[/uniform/i,'Uniforms'],[/conference/i,'Conference'],[/mass/i,'Mass'],[/lego/i,'LEGO'],[/chick.fil/i,'Chick-fil-A'],[/picture/i,'Pictures'],[/communication folder/i,'Folder']];
+    for(const [pattern,label] of names)if(events.some(e=>pattern.test(e.label)))return label;
+    return kindClass(events[0])==='family'?'Event':calendarKinds[calendarKind(kindClass(events[0]))];
+  }
+  function calendarGrid({year,month,now,selected,eventItemsForDate,kindClass,fmtDate}) {
+    const first=new Date(year,month,1,12),count=new Date(year,month+1,0,12).getDate();
+    const length=Math.ceil((first.getDay()+count)/7)*7;
+    const selectedKey=calendarKey(selected),todayKey=calendarKey(now);
+    return Array.from({length},(_,i)=>{
+      const d=new Date(year,month,i-first.getDay()+1,12),key=calendarKey(d),inside=d.getMonth()===month;
+      const events=eventItemsForDate(d),on=key===selectedKey,current=key===todayKey;
+      const mainKind=events.some(e=>kindClass(e)==='closed')?'closed':events.some(e=>kindClass(e)==='test')?'test':calendarKind(kindClass(events[0]||{}));
+      const extra=events.length>2?'<span class="cal-overflow">+'+(events.length-2)+' more</span>':'';
+      const classes=[!inside?'outside':'',[0,6].includes(d.getDay())?'weekend':'',mainKind==='closed'?'closed':'',on?'active':'',current?'is-today':''].filter(Boolean).join(' ');
+      return '<button type="button" class="'+classes+'" '+(inside?'data-cal-day':'data-cal-jump')+'="'+key+'" tabindex="'+(on?'0':'-1')+'" aria-pressed="'+on+'"'+(current?' aria-current="date"':'')+' aria-label="'+esc(fmtDate(d)+(events.length?': '+events.map(e=>e.label).join(', '):'')+(inside?'':' · adjacent month'))+'"><strong>'+d.getDate()+'</strong><span class="cal-cell-note '+mainKind+'" aria-hidden="true">'+esc(calendarBrief(events,kindClass))+'</span><span class="cal-cell-count" aria-hidden="true">'+(events.length>1?'+'+(events.length-1):'')+'</span><span class="cal-cell-events" aria-hidden="true">'+events.slice(0,2).map(e=>'<span class="cal-event-preview '+calendarKind(kindClass(e))+'">'+esc(e.label)+'</span>').join('')+extra+'</span></button>';
+    }).join('');
+  }
+  function calendarEvent(event,kind) {
+    kind=calendarKind(kind);
+    const source=event.source==='uploaded-notice'?'Reviewed school notice':event.source==='teacher-page'?'Teacher page':'Published school information';
+    const titleHasTime=/\b(?:\d{1,2}:\d{2}|\d{1,2}\s*[ap]\.?m\.?|noon)\b/i.test(event.label||'');
+    const timing=typeof event.time==='string'&&event.time.trim()?event.time:event.allDay===true?'All day':titleHasTime?'See event title':'Time not listed';
+    const sourceUrl=event.sourceUrl||event.url||'';
+    const link=/^https?:\/\/[^\s"<>]+$/i.test(sourceUrl)?'<a href="'+esc(sourceUrl)+'" target="_blank" rel="noopener noreferrer">Open recorded source ↗</a>':'';
+    return '<details class="cal-event '+kind+'"><summary><span class="cal-event-accent" aria-hidden="true"></span><span class="cal-event-copy"><small>'+esc(calendarKinds[kind])+'</small><strong>'+esc(event.label)+'</strong></span><span class="cal-event-chevron" aria-hidden="true">›</span></summary><div class="cal-event-provenance"><p><b>Date</b><span>'+esc(event.date||'See selected day')+'</span></p><p><b>Time</b><span>'+esc(timing)+'</span></p><p><b>Source</b><span>'+esc(source)+'</span></p>'+(event.sourceDocument?'<p><b>Record</b><span>'+esc(event.sourceDocument)+'</span></p>':'')+link+'</div></details>';
+  }
+  function calendarPicker(year,month) {
+    return '<p class="cal-picker-label">Choose a month</p><div class="cal-month-options">'+calendarMonths.map((name,index)=>'<button type="button" data-cal-month="'+year+'-'+String(index+1).padStart(2,'0')+'-01" aria-pressed="'+(index===month)+'">'+name.slice(0,3)+'</button>').join('')+'</div><button class="cal-picker-close" type="button" data-cal-picker-close>Close month picker</button>';
+  }
+  function calendar(c) {
+    const {year,month,selected,now,events,kindClass,fmtDate,segments,logo,lunchHtml,summaryHtml,weeklyHtml,specialsHtml,nextHtml,sourceHtml,freshnessHtml}=c;
+    const closed=events.some(e=>kindClass(e)==='closed');
+    return '<div class="screen calendar-screen calendar-studio" role="region" aria-label="'+calendarMonths[month]+' calendar"><header class="cal-header"><div class="cal-identity">'+logo+'<div><p>ABVM · GRADE 2</p><h1 tabindex="-1">Calendar</h1></div></div><div class="cal-header-actions">'+segments+'<button class="cal-today" type="button" data-cal-today aria-label="Jump to today">Today</button></div></header><nav class="calendar-month-nav" aria-label="Change calendar month"><button type="button" data-cal-step="-1" aria-label="Previous month">‹</button><button class="cal-month-title" type="button" data-cal-picker-toggle aria-expanded="false" aria-controls="cal-month-picker" aria-label="Choose month"><strong>'+calendarMonths[month]+' '+year+'</strong><span aria-hidden="true">⌄</span></button><button type="button" data-cal-step="1" aria-label="Next month">›</button></nav><section id="cal-month-picker" class="cal-picker" aria-label="Choose month" hidden>'+calendarPicker(year,month)+'</section><div class="calendar-layout"><section class="calendar-card" aria-label="Month dates"><div class="calendar-weekdays" aria-hidden="true">'+['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(x=>'<span>'+x+'</span>').join('')+'</div><div class="calendar-grid" aria-label="'+calendarMonths[month]+' '+year+' dates">'+calendarGrid({...c,now,selected})+'</div><p class="cal-grid-hint">Tap a day for the full plan<span>Swipe to change month</span></p></section><section class="calendar-day-card" aria-live="polite" aria-atomic="false" aria-label="Selected day"><div class="calendar-day-heading"><div><p>'+esc(fmtDate(selected).split(',')[0])+'</p><h2>'+calendarMonths[selected.getMonth()]+' '+selected.getDate()+'</h2></div><span class="cal-day-count '+(closed?'closed':'')+'">'+(closed?'No school':events.length===1?'1 event':events.length+' events')+'</span></div>'+(events.length?'<div class="calendar-event-list">'+events.map(e=>calendarEvent(e,kindClass(e))).join('')+'</div>':'<div class="cal-empty-state"><span aria-hidden="true">'+icon('calendar')+'</span><p class="calendar-empty">No special school events are listed for this date.</p></div>')+lunchHtml+'<button class="calendar-study-action" type="button" data-route="study">Start studying '+icon('arrow')+'</button></section></div><div class="cal-secondary">'+summaryHtml+'<details class="calendar-more" open><summary class="cal-weekly-heading"><span class="cal-section-icon" aria-hidden="true">'+icon('chart')+'</span><span class="cal-heading-copy"><strong>Weekly lunches and tests</strong><small>This week at a glance</small></span><span class="cal-open-indicator" aria-hidden="true">⌄</span></summary><div class="calendar-more-content">'+weeklyHtml+'</div></details>'+specialsHtml+nextHtml+'</div><footer class="cal-source-footer">'+sourceHtml+freshnessHtml+'</footer></div>';
+  }
+  // One delegated listener set survives controller redraws and cached-pack refreshes.
+  function bindCalendar(root,{getDate,selectDate,shiftMonth}) {
+    let gesture=null,suppressClickUntil=0;
+    const closePicker=()=>{const picker=root.querySelector('#cal-month-picker'),button=root.querySelector('[data-cal-picker-toggle]');if(picker)picker.hidden=true;if(button){button.setAttribute('aria-expanded','false');button.focus({preventScroll:true});}};
+    root.addEventListener('click',event=>{
+      const button=event.target.closest('button');
+      if(!button?.closest('.calendar-studio'))return;
+      if(Date.now()<suppressClickUntil&&button.closest('.calendar-grid')){event.preventDefault();event.stopImmediatePropagation();return;}
+      const attr=button.dataset;
+      if('calPickerToggle' in attr){const picker=root.querySelector('#cal-month-picker');picker.hidden=!picker.hidden;button.setAttribute('aria-expanded',String(!picker.hidden));if(!picker.hidden)picker.querySelector('[aria-pressed="true"]')?.focus({preventScroll:true});}
+      else if('calPickerClose' in attr)closePicker();
+      else if('calMonth' in attr){const d=calendarDate(attr.calMonth);if(d){d.setDate(Math.min(getDate().getDate(),new Date(d.getFullYear(),d.getMonth()+1,0,12).getDate()));selectDate(d,'[data-cal-picker-toggle]');}}
+      else if('calDay' in attr||'calJump' in attr){const d=calendarDate(attr.calDay||attr.calJump);if(d)selectDate(d);}
+      else if('calStep' in attr)shiftMonth(Number(attr.calStep),'[data-cal-step="'+attr.calStep+'"]');
+      else return;
+      event.preventDefault();event.stopImmediatePropagation();
+    },true);
+    root.addEventListener('keydown',event=>{
+      if(event.key==='Escape'&&root.querySelector('#cal-month-picker:not([hidden])')){event.preventDefault();closePicker();return;}
+      const button=event.target.closest('[data-cal-day],[data-cal-jump]');if(!button)return;
+      const d=calendarDate(button.dataset.calDay||button.dataset.calJump);if(!d)return;
+      const steps={ArrowLeft:-1,ArrowRight:1,ArrowUp:-7,ArrowDown:7};
+      if(Object.hasOwn(steps,event.key))d.setDate(d.getDate()+steps[event.key]);
+      else if(event.key==='Home')d.setDate(d.getDate()-d.getDay());
+      else if(event.key==='End')d.setDate(d.getDate()+6-d.getDay());
+      else if(event.key==='PageUp'||event.key==='PageDown'){event.preventDefault();selectDate(calendarShift(d,event.key==='PageUp'?-1:1));return;}
+      else return;
+      event.preventDefault();selectDate(d);
+    });
+    root.addEventListener('pointerdown',event=>{if(event.pointerType==='touch'&&event.target.closest('.calendar-grid'))gesture={id:event.pointerId,x:event.clientX,y:event.clientY,at:Date.now()};});
+    root.addEventListener('pointercancel',()=>{gesture=null;});
+    root.addEventListener('pointerup',event=>{
+      const start=gesture;gesture=null;if(!start||event.pointerId!==start.id)return;
+      const dx=event.clientX-start.x,dy=event.clientY-start.y;
+      if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.6&&Date.now()-start.at<1000){suppressClickUntil=Date.now()+400;event.preventDefault();shiftMonth(dx<0?1:-1,'.calendar-grid button.active');}
+    });
+  }
+
   function compactMonthCard(monthName, rows, extraClass) {
-    return '<section class="'+esc(extraClass)+' compact-month-card"><h2>Coming in '+
-      esc(monthName)+'</h2>'+rows.map(({date,labels})=>
-        '<div><span>'+esc(date)+'</span><ul role="list">'+
-        labels.map(label=>'<li>'+esc(label)+'</li>').join("")+'</ul></div>'
-      ).join("")+'</section>';
+    const current=extraClass==='current-month-summary';
+    const intro=current?'Important dates and reminders':'Looking ahead';
+    const heading='<header class="cal-card-heading"><span class="cal-section-icon" aria-hidden="true">'+icon('calendar')+'</span><div><h2>Coming in '+esc(monthName)+'</h2><p>'+intro+'</p></div></header>';
+    const dates=rows.map(({date,labels})=>
+      '<div class="cal-date-row"><span>'+esc(date)+'</span><ul role="list">'+
+      labels.map(label=>'<li>'+esc(label)+'</li>').join('')+'</ul></div>'
+    ).join('');
+    return '<section class="'+esc(extraClass)+' compact-month-card">'+heading+dates+
+      (rows.length?'':'<p class="cal-empty-events">No additional school events are listed for this month.</p>')+'</section>';
+  }
+  function calendarSpecials(rows) {
+    const heading='<header class="cal-card-heading"><span class="cal-section-icon" aria-hidden="true">'+
+      icon('book')+'</span><div><p class="cal-section-eyebrow">WEEKLY ROTATION</p><h2>Specials</h2><p>Class schedule at a glance</p></div></header>';
+    const list=rows.map(row=>'<div class="special-row"><span>'+esc(row.day)+'</span><strong>'+esc(row.label)+'</strong></div>').join('');
+    return '<section class="specials-card">'+heading+'<div class="specials-list">'+list+'</div></section>';
   }
   function plannerDate(to,from,monthDay,weekDay,now,firstWeekDay){
     if(to==="week"&&from==="calendar"&&monthDay){
@@ -385,7 +489,7 @@
     if (node.nextElementSibling?.matches(".teacher-live-source")) node.nextElementSibling.remove();
     node.outerHTML = markup;
   }
-  window.ABVMProductView = Object.freeze({ today, week, progress, icon, plannerDate, compactMonthCard, freshnessControl, replaceFreshness });
+  window.ABVMProductView = Object.freeze({ today, week, progress, icon, plannerDate, compactMonthCard, calendarSpecials, freshnessControl, replaceFreshness, calendar, calendarDate, calendarShift, calendarGrid, calendarEvent, bindCalendar });
 })();
 
 (()=>{"use strict";

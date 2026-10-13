@@ -51,7 +51,7 @@ for(const size of sizes){
     for(const tab of ['today','week','calendar']){
       await page.goto('/#'+tab);
       await expect(page.locator('.screen')).toBeVisible();
-      if(tab==='calendar')await page.locator('[data-cal-day]').filter({hasText:/^5$/}).click();
+      if(tab==='calendar')await page.locator('[data-cal-day="2026-10-05"]').click();
       const art=page.locator('.lunch-art').first();
       await expect(art).toBeVisible();
       await art.scrollIntoViewIfNeeded();

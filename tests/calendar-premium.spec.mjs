@@ -26,7 +26,7 @@ async function sealReady(page) {
   await seal.evaluate(img => img.decode());
 }
 
-test("Month: source-backed day grid, legend and premium layout on iPhone", async ({ page }, info) => {
+test("Month: source-backed day grid, meaningful labels and compact layout on iPhone", async ({ page }, info) => {
   await page.clock.setFixedTime(date);
   await page.emulateMedia({ reducedMotion: "reduce" });
   for (const width of widths) {
@@ -52,54 +52,22 @@ test("Month: source-backed day grid, legend and premium layout on iPhone", async
       expect(b.width, JSON.stringify({width, b})).toBeGreaterThanOrEqual(32);
       expect(b.height, JSON.stringify({width, b})).toBeGreaterThanOrEqual(44);
     }
-    // Verify actual glyph geometry, not just the month grid container.
-    // Busy days may wrap markers; none may shrink or protrude outside a date.
-    const markers = await page.locator(".calendar-grid button[data-cal-day]").evaluateAll(buttons =>
-      buttons.map(button => {
-        const parent = button.getBoundingClientRect();
-        const children = Array.from(button.querySelectorAll(".calendar-mark"));
-        return {
-          date: button.querySelector("strong")?.textContent,
-          gridOverflow: button.scrollWidth - button.clientWidth,
-          icons: children.map(icon => {
-            const rect = icon.getBoundingClientRect();
-            return {
-              left: rect.left - parent.left,
-              right: rect.right - parent.left,
-              top: rect.top - parent.top,
-              bottom: rect.bottom - parent.top,
-              width: rect.width,
-              height: rect.height,
-              font: parseFloat(getComputedStyle(icon).fontSize)
-            };
-          }),
-          parentWidth: parent.width
-        };
-      })
-    );
-    expect(markers.some(day => day.icons.length === 3)).toBe(true);
-    for (const day of markers) {
-      expect(day.gridOverflow, width + "px calendar date " + day.date).toBeLessThanOrEqual(1);
-      for (const icon of day.icons) {
-        const context = JSON.stringify({ width, date: day.date, icon });
-        expect(icon.width, context).toBeGreaterThanOrEqual(14);
-        expect(icon.height, context).toBeGreaterThanOrEqual(14);
-        expect(icon.font, context).toBeGreaterThanOrEqual(10);
-        expect(icon.left, context).toBeGreaterThanOrEqual(-1);
-        expect(icon.right, context).toBeLessThanOrEqual(day.parentWidth + 1);
-      }
-      for (let i = 0; i < day.icons.length; i++) {
-        for (let j = i + 1; j < day.icons.length; j++) {
-          const a = day.icons[i], b = day.icons[j];
-          const overlapX = Math.min(a.right, b.right) - Math.max(a.left, b.left);
-          const overlapY = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
-          expect(overlapX > 1 && overlapY > 1, "Overlapping markers on " + day.date).toBe(false);
-        }
-      }
+    // Meaningful text replaces the retired letter-glyph legend. Date targets,
+    // full accessible titles, and clipped previews must still fit at every width.
+    const labels = await page.locator('.calendar-grid [data-cal-day]').evaluateAll(buttons => buttons.map(button => {
+      const label=button.querySelector('.cal-cell-note'),r=button.getBoundingClientRect(),l=label.getBoundingClientRect();
+      return {text:label.textContent,font:parseFloat(getComputedStyle(label).fontSize),width:r.width,left:l.left-r.left,right:l.right-r.left,overflow:button.scrollWidth-button.clientWidth,accessible:button.getAttribute('aria-label')};
+    }));
+    expect(labels.some(item=>item.text==='No school')).toBe(true);
+    expect(labels.some(item=>/test/i.test(item.text))).toBe(true);
+    for(const item of labels){
+      expect(item.font).toBeGreaterThanOrEqual(10);
+      expect(item.overflow).toBeLessThanOrEqual(1);
+      expect(item.left).toBeGreaterThanOrEqual(-1);
+      expect(item.right).toBeLessThanOrEqual(item.width+1);
+      expect(item.accessible).toMatch(/October/);
     }
-    const legend = page.locator(".calendar-legend");
-    for (const title of ["Test", "Faith", "Family", "Due", "Lunch"]) await expect(legend).toContainText(title);
-    expect(await legend.locator("i.test").evaluate(el => getComputedStyle(el, "::before").content)).toBe('"T"');
+    await expect(page.locator('.calendar-dots,.calendar-legend')).toHaveCount(0);
     await noOverflow(page, ".calendar-screen", width);
     if (width === 390) {
       const art = page.locator(".calendar-day-card .agenda-lunch .lunch-art img");
@@ -174,7 +142,7 @@ test("Calendar navigation, school closure and enlarged text remain functional", 
   await expect(page.locator(".calendar-month-nav strong")).toHaveText("November 2026");
   await page.getByRole("button", { name: "Previous month" }).click();
   await expect(page.locator(".calendar-month-nav strong")).toHaveText("October 2026");
-  const day12 = page.locator("[data-cal-day]").filter({ hasText: /^12$/ });
+  const day12 = page.locator('[data-cal-day="2026-10-12"]');
   await day12.click();
   await expect(page.locator(".calendar-day-card")).toContainText("Columbus Day");
   await expect(page.locator(".calendar-day-card .agenda-lunch")).toContainText("No school lunch");
@@ -276,7 +244,7 @@ test("Month and Week retain the chosen weekday across their view switch, includi
   await expect(page.locator(".calendar-grid button.active strong")).toHaveText("6");
 });
 
-test("Today's gold date is distinct from the selected day and is announced as current", async ({ page }) => {
+test("Today's highlighted date is distinct from the selected day and is announced as current", async ({ page }) => {
   await page.clock.setFixedTime(date);
   await page.setViewportSize({ width: 375, height: 852 });
   await page.goto("/#calendar");
@@ -372,7 +340,8 @@ test("Month summaries separate every reviewed same-day event into an accessible 
     await expect(busyDay).toHaveCount(1);
     const items = busyDay.locator('ul[role="list"] > li');
     await expect(items).toHaveText(expected);
-    await expect(page.locator(".current-month-summary p")).toHaveCount(0);
+    await expect(page.locator(".current-month-summary .cal-card-heading p")).toHaveCount(1);
+    await expect(page.locator(".current-month-summary .cal-date-row p")).toHaveCount(0);
     const geometry = await items.evaluateAll(nodes => nodes.map(node => {
       const r = node.getBoundingClientRect(), c = getComputedStyle(node);
       return { top: r.top, bottom: r.bottom, font: parseFloat(c.fontSize) };

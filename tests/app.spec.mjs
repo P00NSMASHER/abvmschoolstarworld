@@ -159,7 +159,7 @@ test("freshness refresh control keeps a 44px touch target",async({page})=>{
   }
   await openTab(page,"Calendar");
   await page.getByRole("button",{name:"Next month"}).click();
-  const back=page.locator(".calendar-today-jump");
+  const back=page.locator("[data-cal-today]");
   await expect(back).toBeVisible();
   const backBox=await back.boundingBox();
   expect(backBox).not.toBeNull();

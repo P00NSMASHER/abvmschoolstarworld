@@ -46,9 +46,9 @@ test("the current product hierarchy is coherent",async({page})=>{
   await expect(page.locator(".day-detail")).toBeVisible();
 
   await openTab(page,"Calendar");
-  await expect(page.locator(".app-header p")).toHaveText("ASSUMPTION BVM · GRADE 2");
-  await expect(page.locator(".app-header h1")).toHaveText("Calendar");
-  await expect(page.getByText("Choose a day to see the plan.",{exact:true})).toBeVisible();
+  await expect(page.locator(".cal-identity p")).toHaveText("ABVM · GRADE 2");
+  await expect(page.locator(".cal-identity h1")).toHaveText("Calendar");
+  await expect(page.locator(".cal-grid-hint")).toContainText("Tap a day for the full plan");
   await expect(page.locator(".calendar-card")).toBeVisible();
 
   await openTab(page,"Study");
@@ -154,7 +154,7 @@ test("week paging and full calendar agenda work on phone",async({page})=>{
   await expect(page.locator(".current-month-summary > div > span")).toHaveText(["Mon 28","Tue 29","Wed 30"]);
   await expect(page.locator(".current-month-summary .agenda-lunch")).toHaveCount(0);
   await expect(page.locator(".calendar-day-card .agenda-lunch")).toBeVisible();
-  await expect(page.locator(".calendar-legend")).toContainText("Lunch");
+  await expect(page.locator(".calendar-day-card .agenda-lunch b")).toHaveText("Lunch");
 });
 
 

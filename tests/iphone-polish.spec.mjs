@@ -88,12 +88,12 @@ test('Sunday Week opens the coming school week and can go back',async({page})=>{
 test('calendar merges repeat notices without losing distinct events',async({page})=>{
   await page.clock.setFixedTime(new Date('2026-10-04T12:00:00-04:00'));
   await page.goto('/#calendar');
-  await page.locator('[data-cal-day]').filter({hasText:/^9$/}).click();
+  await page.locator('[data-cal-day="2026-10-09"]').click();
   const labels=await page.locator('.calendar-event-list strong').allTextContents();
   expect(labels.filter(x=>x==='12:00 dismissal')).toHaveLength(1);
   expect(labels.some(x=>x.includes('Chick-fil-A orders'))).toBeTruthy();
   expect(labels.some(x=>x.includes('Grammar'))).toBeTruthy();
-  await page.locator('[data-cal-day]').filter({hasText:/^12$/}).click();
+  await page.locator('[data-cal-day="2026-10-12"]').click();
   const closed=await page.locator('.calendar-event-list strong').allTextContents();
   expect(closed.filter(x=>/^No School/.test(x))).toHaveLength(1);
   expect(closed.join(' ')).toContain('Columbus Day');
