@@ -408,6 +408,18 @@
       if('calPickerToggle' in attr){const picker=root.querySelector('#cal-month-picker');picker.hidden=!picker.hidden;button.setAttribute('aria-expanded',String(!picker.hidden));if(!picker.hidden)picker.querySelector('[aria-pressed="true"]')?.focus({preventScroll:true});}
       else if('calPickerClose' in attr)closePicker();
       else if('calMonth' in attr){const d=calendarDate(attr.calMonth);if(d){d.setDate(Math.min(getDate().getDate(),new Date(d.getFullYear(),d.getMonth()+1,0,12).getDate()));selectDate(d,'[data-cal-picker-toggle]');}}
+      else if('calOpenDate' in attr){
+        const day=calendarDate(attr.calOpenDate);
+        if(day){
+          selectDate(day);
+          const agenda=root.querySelector('.calendar-day-card');
+          if(agenda){
+            const title=agenda.querySelector('.calendar-day-heading h2');
+            if(title){title.tabIndex=-1;title.focus({preventScroll:true});}
+            agenda.scrollIntoView({block:'start',behavior:'instant'});
+          }
+        }
+      }
       else if('calDay' in attr||'calJump' in attr){const d=calendarDate(attr.calDay||attr.calJump);if(d)selectDate(d);}
       else if('calStep' in attr)shiftMonth(Number(attr.calStep),'[data-cal-step="'+attr.calStep+'"]');
       else return;
@@ -438,10 +450,12 @@
     const current=extraClass==='current-month-summary';
     const intro=current?'Important dates and reminders':'Looking ahead';
     const heading='<header class="cal-card-heading"><span class="cal-section-icon" aria-hidden="true">'+icon('calendar')+'</span><div><h2>Coming in '+esc(monthName)+'</h2><p>'+intro+'</p></div></header>';
-    const dates=rows.map(({date,labels})=>
-      '<div class="cal-date-row"><span>'+esc(date)+'</span><ul role="list">'+
-      labels.map(label=>'<li>'+esc(label)+'</li>').join('')+'</ul></div>'
-    ).join('');
+    const dates=rows.map(({date,dayKey,labels})=>{
+      const valid=calendarDate(dayKey);
+      const heading=valid?'<button type="button" data-cal-open-date="'+esc(dayKey)+'" aria-label="View '+esc(monthName)+' '+valid.getDate()+' agenda">'+esc(date)+'</button>':esc(date);
+      return '<div class="cal-date-row"><span>'+heading+'</span><ul role="list">'+
+        labels.map(label=>'<li>'+esc(label)+'</li>').join('')+'</ul></div>';
+    }).join('');
     return '<section class="'+esc(extraClass)+' compact-month-card">'+heading+dates+
       (rows.length?'':'<p class="cal-empty-events">No additional school events are listed for this month.</p>')+'</section>';
   }
