@@ -1,4 +1,5 @@
 import {test,expect} from "@playwright/test";
+import {reviewedSchoolMonday} from "./reviewed-week-fixture.mjs";
 
 test("Today checklist survives reload and can be restored",async({page})=>{
   await page.goto("/#today");
@@ -73,8 +74,8 @@ test("completion state is keyed by school week and task identity",async({page})=
 
 test("Read completion stays synchronized between Today and Week",async({page})=>{
   const source=await (await page.request.get("/data/study-pack.json")).json();
-  const schoolDate=source.pack?.lunchMenu?.[0]?.date;
-  expect(schoolDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  // Teacher homework evidence remains dated to its own reviewed posting week.
+  const schoolDate=reviewedSchoolMonday(source);
   await page.clock.setFixedTime(new Date(`${schoolDate}T17:00:00Z`));
   await page.goto("/#today");
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
