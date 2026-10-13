@@ -348,7 +348,7 @@ function renderCalendar(){
     segments:calendarSegments("month"),logo:SCHOOL_LOGO_HTML,lunchHtml:agendaLunchHtml(calendarDay,lunch),
     summaryHtml:compactMonthCardHtml(m,monthSummary,"current-month-summary"),
     weeklyHtml:window.ABVMWeeklyLearning.renderWeekOverview({days:weekDays(),lunchForDate,eventItemsForDate,kindClass,fmtShort,lunchText,lunchUnavailableText}),
-    specialsHtml:'<section class="specials-card"><div class="specials-head"><span class="specials-mark" aria-hidden="true">★</span><div><p>WEEKLY ROTATION</p><h2>Specials</h2></div></div><div class="specials-list">'+specials.map(row=>'<div class="special-row"><span>'+esc(row.day)+'</span><strong>'+esc(row.label)+'</strong></div>').join("")+'</div></section>',
+    specialsHtml:window.ABVMProductView.calendarSpecials(specials),
     nextHtml:compactMonthCardHtml(nextM,nextMonth,"next-month-card"),
     sourceHtml:window.ABVMSchoolUpdates.officialCalendarLink(),freshnessHtml:freshness()
   });

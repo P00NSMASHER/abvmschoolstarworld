@@ -394,7 +394,7 @@
   function calendar(c) {
     const {year,month,selected,now,events,kindClass,fmtDate,segments,logo,lunchHtml,summaryHtml,weeklyHtml,specialsHtml,nextHtml,sourceHtml,freshnessHtml}=c;
     const closed=events.some(e=>kindClass(e)==='closed');
-    return '<div class="screen calendar-screen calendar-studio" role="region" aria-label="'+calendarMonths[month]+' calendar"><header class="cal-header"><div class="cal-identity">'+logo+'<div><p>ABVM · GRADE 2</p><h1 tabindex="-1">Calendar</h1></div></div><div class="cal-header-actions">'+segments+'<button class="cal-today" type="button" data-cal-today aria-label="Jump to today">Today</button></div></header><nav class="calendar-month-nav" aria-label="Change calendar month"><button type="button" data-cal-step="-1" aria-label="Previous month">‹</button><button class="cal-month-title" type="button" data-cal-picker-toggle aria-expanded="false" aria-controls="cal-month-picker" aria-label="Choose month"><strong>'+calendarMonths[month]+' '+year+'</strong><span aria-hidden="true">⌄</span></button><button type="button" data-cal-step="1" aria-label="Next month">›</button></nav><section id="cal-month-picker" class="cal-picker" aria-label="Choose month" hidden>'+calendarPicker(year,month)+'</section><div class="calendar-layout"><section class="calendar-card" aria-label="Month dates"><div class="calendar-weekdays" aria-hidden="true">'+['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(x=>'<span>'+x+'</span>').join('')+'</div><div class="calendar-grid" aria-label="'+calendarMonths[month]+' '+year+' dates">'+calendarGrid({...c,now,selected})+'</div><p class="cal-grid-hint">Tap a day for the full plan<span>Swipe to change month</span></p></section><section class="calendar-day-card" aria-live="polite" aria-atomic="false" aria-label="Selected day"><div class="calendar-day-heading"><div><p>'+esc(fmtDate(selected).split(',')[0])+'</p><h2>'+calendarMonths[selected.getMonth()]+' '+selected.getDate()+'</h2></div><span class="cal-day-count '+(closed?'closed':'')+'">'+(closed?'No school':events.length===1?'1 event':events.length+' events')+'</span></div>'+(events.length?'<div class="calendar-event-list">'+events.map(e=>calendarEvent(e,kindClass(e))).join('')+'</div>':'<div class="cal-empty-state"><span aria-hidden="true">'+icon('calendar')+'</span><p class="calendar-empty">No special school events are listed for this date.</p></div>')+lunchHtml+'<button class="calendar-study-action" type="button" data-route="study">Start studying '+icon('arrow')+'</button></section></div><div class="cal-secondary">'+summaryHtml+'<details class="calendar-more"><summary>Weekly lunches and tests <span aria-hidden="true">⌄</span></summary><div class="calendar-more-content">'+weeklyHtml+'</div></details>'+specialsHtml+nextHtml+'</div><footer class="cal-source-footer">'+sourceHtml+freshnessHtml+'</footer></div>';
+    return '<div class="screen calendar-screen calendar-studio" role="region" aria-label="'+calendarMonths[month]+' calendar"><header class="cal-header"><div class="cal-identity">'+logo+'<div><p>ABVM · GRADE 2</p><h1 tabindex="-1">Calendar</h1></div></div><div class="cal-header-actions">'+segments+'<button class="cal-today" type="button" data-cal-today aria-label="Jump to today">Today</button></div></header><nav class="calendar-month-nav" aria-label="Change calendar month"><button type="button" data-cal-step="-1" aria-label="Previous month">‹</button><button class="cal-month-title" type="button" data-cal-picker-toggle aria-expanded="false" aria-controls="cal-month-picker" aria-label="Choose month"><strong>'+calendarMonths[month]+' '+year+'</strong><span aria-hidden="true">⌄</span></button><button type="button" data-cal-step="1" aria-label="Next month">›</button></nav><section id="cal-month-picker" class="cal-picker" aria-label="Choose month" hidden>'+calendarPicker(year,month)+'</section><div class="calendar-layout"><section class="calendar-card" aria-label="Month dates"><div class="calendar-weekdays" aria-hidden="true">'+['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(x=>'<span>'+x+'</span>').join('')+'</div><div class="calendar-grid" aria-label="'+calendarMonths[month]+' '+year+' dates">'+calendarGrid({...c,now,selected})+'</div><p class="cal-grid-hint">Tap a day for the full plan<span>Swipe to change month</span></p></section><section class="calendar-day-card" aria-live="polite" aria-atomic="false" aria-label="Selected day"><div class="calendar-day-heading"><div><p>'+esc(fmtDate(selected).split(',')[0])+'</p><h2>'+calendarMonths[selected.getMonth()]+' '+selected.getDate()+'</h2></div><span class="cal-day-count '+(closed?'closed':'')+'">'+(closed?'No school':events.length===1?'1 event':events.length+' events')+'</span></div>'+(events.length?'<div class="calendar-event-list">'+events.map(e=>calendarEvent(e,kindClass(e))).join('')+'</div>':'<div class="cal-empty-state"><span aria-hidden="true">'+icon('calendar')+'</span><p class="calendar-empty">No special school events are listed for this date.</p></div>')+lunchHtml+'<button class="calendar-study-action" type="button" data-route="study">Start studying '+icon('arrow')+'</button></section></div><div class="cal-secondary">'+summaryHtml+'<details class="calendar-more" open><summary class="cal-weekly-heading"><span class="cal-section-icon" aria-hidden="true">'+icon('chart')+'</span><span class="cal-heading-copy"><strong>Weekly lunches and tests</strong><small>This week at a glance</small></span><span class="cal-open-indicator" aria-hidden="true">⌄</span></summary><div class="calendar-more-content">'+weeklyHtml+'</div></details>'+specialsHtml+nextHtml+'</div><footer class="cal-source-footer">'+sourceHtml+freshnessHtml+'</footer></div>';
   }
   // One delegated listener set survives controller redraws and cached-pack refreshes.
   function bindCalendar(root,{getDate,selectDate,shiftMonth}) {
@@ -435,11 +435,21 @@
   }
 
   function compactMonthCard(monthName, rows, extraClass) {
-    return '<section class="'+esc(extraClass)+' compact-month-card"><h2>Coming in '+
-      esc(monthName)+'</h2>'+rows.map(({date,labels})=>
-        '<div><span>'+esc(date)+'</span><ul role="list">'+
-        labels.map(label=>'<li>'+esc(label)+'</li>').join("")+'</ul></div>'
-      ).join("")+'</section>';
+    const current=extraClass==='current-month-summary';
+    const intro=current?'Important dates and reminders':'Looking ahead';
+    const heading='<header class="cal-card-heading"><span class="cal-section-icon" aria-hidden="true">'+icon('calendar')+'</span><div><h2>Coming in '+esc(monthName)+'</h2><p>'+intro+'</p></div></header>';
+    const dates=rows.map(({date,labels})=>
+      '<div class="cal-date-row"><span>'+esc(date)+'</span><ul role="list">'+
+      labels.map(label=>'<li>'+esc(label)+'</li>').join('')+'</ul></div>'
+    ).join('');
+    return '<section class="'+esc(extraClass)+' compact-month-card">'+heading+dates+
+      (rows.length?'':'<p class="cal-empty-events">No additional school events are listed for this month.</p>')+'</section>';
+  }
+  function calendarSpecials(rows) {
+    const heading='<header class="cal-card-heading"><span class="cal-section-icon" aria-hidden="true">'+
+      icon('book')+'</span><div><p class="cal-section-eyebrow">WEEKLY ROTATION</p><h2>Specials</h2><p>Class schedule at a glance</p></div></header>';
+    const list=rows.map(row=>'<div class="special-row"><span>'+esc(row.day)+'</span><strong>'+esc(row.label)+'</strong></div>').join('');
+    return '<section class="specials-card">'+heading+'<div class="specials-list">'+list+'</div></section>';
   }
   function plannerDate(to,from,monthDay,weekDay,now,firstWeekDay){
     if(to==="week"&&from==="calendar"&&monthDay){
@@ -479,7 +489,7 @@
     if (node.nextElementSibling?.matches(".teacher-live-source")) node.nextElementSibling.remove();
     node.outerHTML = markup;
   }
-  window.ABVMProductView = Object.freeze({ today, week, progress, icon, plannerDate, compactMonthCard, freshnessControl, replaceFreshness, calendar, calendarDate, calendarShift, calendarGrid, calendarEvent, bindCalendar });
+  window.ABVMProductView = Object.freeze({ today, week, progress, icon, plannerDate, compactMonthCard, calendarSpecials, freshnessControl, replaceFreshness, calendar, calendarDate, calendarShift, calendarGrid, calendarEvent, bindCalendar });
 })();
 
 (()=>{"use strict";

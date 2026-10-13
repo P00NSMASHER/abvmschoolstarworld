@@ -31,7 +31,7 @@ test("Calendar can browse months and return to the current month",async({page})=
   const initial=(await heading.textContent())?.trim();
   await page.getByRole("button",{name:"Next month"}).click();
   await expect(heading).not.toHaveText(initial||"");
-  await expect(page.locator(".calendar-today-jump")).toBeVisible();
+  await expect(page.locator("[data-cal-today]")).toBeVisible();
   await page.getByRole("button",{name:"Previous month"}).click();
   await expect(heading).toHaveText(initial||"");
   await page.getByRole("button",{name:"Next month"}).click();

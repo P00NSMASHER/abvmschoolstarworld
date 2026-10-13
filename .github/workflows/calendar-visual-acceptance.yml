@@ -9,6 +9,7 @@ on:
       - 'pages/app.js'
       - 'pages/product-view.js'
       - 'tests/calendar-reimagined.spec.mjs'
+      - 'tests/calendar-bottom-premium.spec.mjs'
       - 'tests/calendar-reimagined.test.mjs'
       - 'tests/calendar-premium.spec.mjs'
       - 'tests/design-polish.spec.mjs'
@@ -44,7 +45,7 @@ jobs:
       - run: npm run pack:runtime
       - run: npx playwright install --with-deps chromium webkit
       - name: Test Month and Week in Chromium and Safari-WebKit
-        run: npx playwright test tests/calendar-reimagined.spec.mjs tests/calendar-premium.spec.mjs tests/design-polish.spec.mjs --project=mobile --project=iphone-webkit --workers=1 --retries=0
+        run: npx playwright test tests/calendar-reimagined.spec.mjs tests/calendar-bottom-premium.spec.mjs tests/calendar-premium.spec.mjs tests/design-polish.spec.mjs --project=mobile --project=iphone-webkit --workers=1 --retries=0
       - name: Retain first-viewport and full-content screenshot artifacts
         if: always()
         uses: actions/upload-artifact@v4

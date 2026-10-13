@@ -340,7 +340,8 @@ test("Month summaries separate every reviewed same-day event into an accessible 
     await expect(busyDay).toHaveCount(1);
     const items = busyDay.locator('ul[role="list"] > li');
     await expect(items).toHaveText(expected);
-    await expect(page.locator(".current-month-summary p")).toHaveCount(0);
+    await expect(page.locator(".current-month-summary .cal-card-heading p")).toHaveCount(1);
+    await expect(page.locator(".current-month-summary .cal-date-row p")).toHaveCount(0);
     const geometry = await items.evaluateAll(nodes => nodes.map(node => {
       const r = node.getBoundingClientRect(), c = getComputedStyle(node);
       return { top: r.top, bottom: r.bottom, font: parseFloat(c.fontSize) };
