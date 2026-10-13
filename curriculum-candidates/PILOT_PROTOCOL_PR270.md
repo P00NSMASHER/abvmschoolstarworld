@@ -24,6 +24,14 @@ The following three HTML files are self-contained, printable in black and white 
 
 All three are generated from the four held candidate manifests by `node scripts/build-held-curriculum-pilot-kit.mjs`. Exact-source snapshots are checked by `tests/curriculum-pilot-kit.test.mjs`. Printing these materials is not permission to collect student records, and a generated printable is not real pilot evidence.
 
+### Optional local interactive educator preview (not a public app)
+
+From a **private local checkout**, run `node scripts/build-private-curriculum-pilot.mjs`. This creates a temporary `educator-pilot.html` **outside the repository and GitHub Pages**. Open it locally to test each original draft question with accessible answer options, hints, explanations, next/previous navigation, and reset. A strict content-security policy blocks remote requests and embedded third-party resources; the file uses no analytics, persistent storage or service worker.
+
+Responses exist only in the browser tab and clear when the tab reloads or the reviewer resets. Its immutable content fingerprint must match the approved revised question packet. Never host or commit the generated preview, or copy learner-identifying data into public GitHub.
+
+Interaction QA verifies the preview works; it does **not** establish a genuine supervised student pilot, a qualified educator sign-off or release permission. Those requirements stay separate and must be privately documented.
+
 ## 2 — Private human pilot (cannot be simulated into existence)
 
 Only an authorized educator/guardian should decide whether and how to conduct a short, supervised pilot in a suitable private environment. No experimental curriculum is placed in the public app. The examiner should use the exact revised packet, manually review every question, and assess comprehension, reading load, distractor plausibility, answer explanations and strategy hints.

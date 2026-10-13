@@ -56,6 +56,8 @@ on:
       - 'curriculum-candidates/**'
       - 'scripts/audit-held-curriculum-pilot.mjs'
       - 'scripts/build-held-curriculum-pilot-kit.mjs'
+      - 'scripts/build-private-curriculum-pilot.mjs'
+      - 'tests/private-curriculum-pilot.*'
       - 'tests/curriculum-*.test.mjs'
       - '.github/workflows/preview-source-parity.yml'
       - '.github/workflows/qa-reproduction.yml'

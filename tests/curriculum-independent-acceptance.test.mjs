@@ -11,6 +11,8 @@ const triggeredPaths = [
   "'scripts/audit-held-curriculum-pilot.mjs'",
   "'scripts/build-held-curriculum-pilot-kit.mjs'",
   "'tests/curriculum-*.test.mjs'",
+  "'scripts/build-private-curriculum-pilot.mjs'",
+  "'tests/private-curriculum-pilot.*'",
 ];
 
 test('candidate-only changes trigger independent exact-head full QA', () => {
@@ -46,6 +48,7 @@ test('held candidates independently trigger privacy acceptance without dropping 
   assert.ok(privacy.includes("hashFiles('curriculum-candidates/REVIEW_PR270.md') != ''"));
   assert.ok(privacy.includes('tests/curriculum-pilot-kit.test.mjs'));
   assert.ok(privacy.includes('abvm-held-educator-kit-$' + '{{ github.run_id }}'));
+  assert.ok(privacy.includes('node --test tests/private-curriculum-pilot.test.mjs'), 'Private preview safety step required');
   assert.ok(!privacy.includes('continue-on-error: true'));
 });
 

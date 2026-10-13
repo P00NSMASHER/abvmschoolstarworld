@@ -15,6 +15,8 @@ on:
       - 'curriculum-candidates/**'
       - 'scripts/audit-held-curriculum-pilot.mjs'
       - 'scripts/build-held-curriculum-pilot-kit.mjs'
+      - 'scripts/build-private-curriculum-pilot.mjs'
+      - 'tests/private-curriculum-pilot.*'
       - 'tests/curriculum-*.test.mjs'
       - '.github/workflows/public-privacy-visual-acceptance.yml'
   workflow_dispatch:
@@ -51,6 +53,9 @@ jobs:
           set -euo pipefail
           node --test tests/curriculum-pilot-gates.test.mjs tests/curriculum-pilot-kit.test.mjs tests/curriculum-review-packet.test.mjs tests/curriculum-review-source-parity.test.mjs
 
+      - name: Confirm private pilot preview has no network or stored learner results
+        if: ${{ hashFiles('scripts/build-private-curriculum-pilot.mjs') != '' }}
+        run: node --test tests/private-curriculum-pilot.test.mjs
       - run: npm run pack:runtime
       - run: npx playwright install --with-deps chromium webkit
       - name: Offline shell and anonymous copy contracts
