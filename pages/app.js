@@ -309,7 +309,6 @@ function renderWeek(){
  if(!selectedDay||!days.some(d=>sameDay(d,selectedDay)))selectedDay=weekOffset===0?(days.find(d=>sameDay(d,today()))||days[0]):days[0];
  stack().innerHTML=window.ABVMProductView.week({days,selectedDay,offset:weekOffset,header,segments:calendarSegments("week"),freshness,taskHtml,kindClass,fmtDate,fmtShort,weekRangeLabel,eventItemsForDate,events:eventItemsForDate(selectedDay),tasks:isPackWeek(days)?taskRecordsForSurface("week",selectedDay):[],lunchHtml:lunchCardHtml(selectedDay,lunchForDate(selectedDay)),reminder:reminderForDate(selectedDay),future:datedImportantEvents().filter(({date})=>date>selectedDay).slice(0,4).map(({item,date})=>({x:item,d:date})),overview:window.ABVMWeeklyLearning.renderWeekOverview({days,lunchForDate,eventItemsForDate,kindClass,fmtShort,lunchText,lunchUnavailableText})});
 }
-function monthGrid(year,month){const todayDate=today(),first=new Date(year,month,1,12), last=new Date(year,month+1,0,12), blanks=first.getDay();let html=""; for(let i=0;i<blanks;i++)html+='<span class="calendar-blank"></span>';for(let day=1;day<=last.getDate();day++){const d=new Date(year,month,day,12), events=eventItemsForDate(d), lunch=lunchForDate(d);const dots=[...new Set([...events.map(e=>kindClass(e)),...(lunch?["lunch"]:[])])].slice(0,3);const weekend=[0,6].includes(d.getDay()), closed=events.some(e=>kindClass(e)==="closed");const eventLabel=events.length?": "+events.map(e=>e.label).join(", "):"";html+='<button type="button" class="'+(weekend?"weekend ":"")+(closed?"closed ":"")+(sameDay(d,todayDate)?"is-today ":"")+(calendarDay&&sameDay(d,calendarDay)?"active":"")+'" data-cal-day="'+d.toISOString()+'" aria-label="'+esc(fmtDate(d)+eventLabel)+'" aria-pressed="'+(calendarDay&&sameDay(d,calendarDay)?"true":"false")+'"'+(sameDay(d,todayDate)?' aria-current="date"':'')+'><strong>'+day+'</strong><span class="calendar-dots" aria-hidden="true">'+dots.map(k=>'<span class="calendar-mark '+k+'"></span>').join("")+'</span></button>';}return html;}
 function agendaLunchHtml(date,lunch){
   const events=eventItemsForDate(date),closed=events.some(e=>kindClass(e)==="closed"),weekend=[0,6].includes(date.getDay());
   const text=closed||weekend||lunch?.status==="no-school"?"No school lunch":lunch?lunchText(lunch):lunchUnavailableText(date);
@@ -344,21 +343,21 @@ function renderCalendar(){
     .filter(({date})=>date.getMonth()===nextM&&date.getFullYear()===nextY)
     .map(({item,date})=>({x:item,d:date}));
   const specials=specialsRows();
-  stack().innerHTML='<div class="screen calendar-screen" role="region" aria-label="'+MONTHS[m]+' calendar">'+
-    header("ASSUMPTION BVM · GRADE 2","Calendar")+calendarSegments("month")+window.ABVMSchoolUpdates.officialCalendarLink()+
-    '<nav class="calendar-month-nav" aria-label="Change calendar month"><button type="button" data-cal-step="-1" aria-label="Previous month">‹</button><div aria-live="polite"><strong>'+MONTHS[m]+' '+y+'</strong><span>'+(calendarOffset===0?"Current month":"Browsing calendar")+'</span></div><button type="button" data-cal-step="1" aria-label="Next month">›</button></nav>'+
-    (calendarOffset!==0?'<button type="button" class="calendar-today-jump" data-cal-today>Back to current month</button>':'')+
-    '<div class="calendar-layout"><section class="calendar-card"><div class="calendar-title-row"><span>Choose a day to see the plan.</span></div><div class="calendar-weekdays">'+["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(x=>"<span>"+x+"</span>").join("")+'</div><div class="calendar-grid">'+monthGrid(y,m)+'</div><div class="calendar-legend"><span><i class="test"></i>Test</span><span><i class="faith"></i>Faith</span><span><i class="family"></i>Family</span><span><i class="due"></i>Due</span><span><i class="lunch"></i>Lunch</span></div></section>'+
-    '<section class="calendar-day-card" aria-live="polite"><div class="calendar-day-heading"><div><p>'+WEEKDAY[calendarDay.getDay()].toUpperCase()+'</p><h2>'+MONTHS[calendarDay.getMonth()]+" "+calendarDay.getDate()+'</h2></div></div>'+
-      (events.length?'<div class="calendar-event-list">'+events.map(e=>'<div><i class="'+kindClass(e)+'"></i><span><strong>'+esc(e.label)+'</strong></span></div>').join("")+'</div>':'<p class="calendar-empty">No special school events are listed for this date.</p>')+
-      agendaLunchHtml(calendarDay,lunch)+'<button class="calendar-study-action primary-button" type="button" data-route="study">Start studying '+window.ABVMProductView.icon("arrow")+'</button>'+
-    '</section></div>'+compactMonthCardHtml(m,monthSummary,"current-month-summary")+
-    '<details class="calendar-more"'+(window.matchMedia("(min-width: 700px)").matches?' open':'')+'><summary>Weekly lunches and tests <span aria-hidden="true">⌄</span></summary><div class="calendar-more-content">'+
-    window.ABVMWeeklyLearning.renderWeekOverview({days:weekDays(),lunchForDate,eventItemsForDate,kindClass,fmtShort,lunchText,lunchUnavailableText})+
-    '</div></details>'+
-    '<section class="specials-card"><div class="specials-head"><span class="specials-mark" aria-hidden="true">★</span><div><p>WEEKLY ROTATION</p><h2>Specials</h2></div></div><div class="specials-list">'+specials.map(row=>'<div class="special-row"><span>'+esc(row.day)+'</span><strong>'+esc(row.label)+'</strong></div>').join("")+'</div></section>'+
-    compactMonthCardHtml(nextM,nextMonth,"next-month-card")+freshness()+
-    '</div>';
+  stack().innerHTML=window.ABVMProductView.calendar({
+    year:y,month:m,selected:calendarDay,now:today(),events,kindClass,fmtDate,eventItemsForDate,
+    segments:calendarSegments("month"),logo:SCHOOL_LOGO_HTML,lunchHtml:agendaLunchHtml(calendarDay,lunch),
+    summaryHtml:compactMonthCardHtml(m,monthSummary,"current-month-summary"),
+    weeklyHtml:window.ABVMWeeklyLearning.renderWeekOverview({days:weekDays(),lunchForDate,eventItemsForDate,kindClass,fmtShort,lunchText,lunchUnavailableText}),
+    specialsHtml:'<section class="specials-card"><div class="specials-head"><span class="specials-mark" aria-hidden="true">★</span><div><p>WEEKLY ROTATION</p><h2>Specials</h2></div></div><div class="specials-list">'+specials.map(row=>'<div class="special-row"><span>'+esc(row.day)+'</span><strong>'+esc(row.label)+'</strong></div>').join("")+'</div></section>',
+    nextHtml:compactMonthCardHtml(nextM,nextMonth,"next-month-card"),
+    sourceHtml:window.ABVMSchoolUpdates.officialCalendarLink(),freshnessHtml:freshness()
+  });
+}
+function selectCalendarDate(date,selector){
+  if(!date||!Number.isFinite(date.getTime()))return;
+  const now=today();calendarDay=date;
+  calendarOffset=(date.getFullYear()-now.getFullYear())*12+date.getMonth()-now.getMonth();
+  redrawPlanner(renderCalendar,selector||'[data-cal-day="'+isoDateKey(date)+'"]');
 }
 function isStudyRoute(){return activeTab==="study"||activeTab==="games"}
 function currentStudyScreen(generation,data){return isStudyRoute()&&screenGeneration===generation&&pack===data}
@@ -600,6 +599,7 @@ function redrawPlanner(draw,selector){
 function bindScreen(){
   if(screenEventsBound)return;
   screenEventsBound=true;
+  window.ABVMProductView.bindCalendar(stack(),{getDate:()=>calendarDay||today(),selectDate:selectCalendarDate,shiftMonth:(amount,selector)=>selectCalendarDate(window.ABVMProductView.calendarShift(calendarDay||today(),amount),selector)});
   stack().addEventListener("click",async event=>{
     const target=event.target.closest("button,a");
     if(!target||!stack().contains(target))return;
@@ -611,8 +611,6 @@ function bindScreen(){
     if(target.matches("[data-day]")){selectedDay=new Date(target.dataset.day);redrawPlanner(renderWeek,'[data-day="'+target.dataset.day+'"]');return;}
     if(target.matches("[data-week-step]")){weekOffset+=Number(target.dataset.weekStep||0);selectedDay=null;redrawPlanner(renderWeek,'[data-week-step="'+target.dataset.weekStep+'"]');return;}
     if(target.matches("[data-week-today]")){weekOffset=0;selectedDay=null;redrawPlanner(renderWeek,".day-picker button.active");return;}
-    if(target.matches("[data-cal-day]")){calendarDay=new Date(target.dataset.calDay);redrawPlanner(renderCalendar,'[data-cal-day="'+target.dataset.calDay+'"]');return;}
-    if(target.matches("[data-cal-step]")){calendarOffset+=Number(target.dataset.calStep||0);calendarDay=null;redrawPlanner(renderCalendar,'[data-cal-step="'+target.dataset.calStep+'"]');return;}
     if(target.matches("[data-cal-today]")){calendarOffset=0;calendarDay=null;redrawPlanner(renderCalendar,".calendar-grid button.active");return;}
     if(target.matches("[data-study-retry]")){if(!studyMaterialsView)retryStudyMaterials();return;}
     if(target.matches("[data-retry-games]")){renderGames();return;}

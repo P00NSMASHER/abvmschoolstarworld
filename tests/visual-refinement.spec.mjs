@@ -9,8 +9,8 @@ test('calendar reveals secondary school details without losing the date plan',as
   await expect(more).not.toHaveAttribute('open','');
   await expect(page.locator('.specials-card')).toBeVisible();
   await expect(page.locator('.next-month-card')).toBeVisible();
-  expect(await page.locator('.calendar-mark.test').first().evaluate(el=>getComputedStyle(el,'::before').content)).toBe('"T"');
-  const ninth=page.locator('[data-cal-day]').filter({hasText:/^9$/});
+  await expect(page.locator('[data-cal-day="2026-10-09"] .cal-cell-note')).toHaveText('2 tests');
+  const ninth=page.locator('[data-cal-day="2026-10-09"]');
   await expect(ninth).toHaveCount(1);
   await ninth.click();
   await expect(page.locator('.calendar-day-heading h2')).toContainText('9');

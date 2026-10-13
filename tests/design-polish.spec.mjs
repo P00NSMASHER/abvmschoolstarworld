@@ -18,7 +18,7 @@ test('Today prioritizes the next school event before studying without changing t
   expect(parseFloat(goldBorder)).toBeGreaterThanOrEqual(1);
 });
 
-test('iPhone navigation and named calendar markers remain readable and fit', async ({ page }) => {
+test('iPhone navigation and calendar event labels remain readable and fit', async ({ page }) => {
   await page.setViewportSize({ width: 393, height: 852 });
   await page.goto('/#today');
   const fontSize = await page.locator('.bottom-nav button b').first().evaluate(el =>
@@ -26,13 +26,10 @@ test('iPhone navigation and named calendar markers remain readable and fit', asy
   expect(fontSize).toBeGreaterThanOrEqual(12);
   await page.getByRole('button', { name: 'Calendar', exact: true }).click();
   await expect(page.locator('.calendar-card')).toBeVisible();
-  const marks = page.locator('.calendar-dots .calendar-mark');
-  await expect(marks.first()).toBeVisible();
-  const marker = await marks.first().evaluate(el => {
-    const box = el.getBoundingClientRect(), style = getComputedStyle(el);
-    return { width: box.width, height: box.height, font: parseFloat(style.fontSize) };
-  });
-  expect(marker.width).toBeGreaterThanOrEqual(14);
+  const label=page.locator('.calendar-grid [data-cal-day] .cal-cell-note').filter({hasText:/Test|Reports|Mass|Event|No school/}).first();
+  await expect(label).toBeVisible();
+  const marker=await label.evaluate(el=>({width:el.getBoundingClientRect().width,font:parseFloat(getComputedStyle(el).fontSize)}));
+  expect(marker.width).toBeGreaterThanOrEqual(32);
   expect(marker.font).toBeGreaterThanOrEqual(10);
   expect(await page.locator('.screen').evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
 });
