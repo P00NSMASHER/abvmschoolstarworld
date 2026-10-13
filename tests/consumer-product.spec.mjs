@@ -127,7 +127,13 @@ test('Progress shows recent independent, recalled and reinforcement evidence wit
 });
 
 
-for(const viewport of [{width:375,height:812},{width:390,height:852}]){
+for(const viewport of [
+  {width:375,height:812},
+  {width:390,height:852},
+  {width:402,height:874},
+  {width:416,height:896},
+  {width:430,height:932}
+]){
   test(`phone chrome leaves subjects and Test Prep actions reachable at ${viewport.width}px`,async({page},info)=>{
     await page.setViewportSize(viewport);
     await page.clock.setFixedTime(new Date('2026-10-07T12:00:00-04:00'));

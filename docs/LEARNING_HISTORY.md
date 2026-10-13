@@ -32,8 +32,78 @@ The private operational states are:
 - `mastered`
 
 "Mastered" is deliberately conservative: the processor requires three most-recent
-scored observations to be independently correct, spanning at least two source photos
-and two observed dates. It is a household study-planning flag, not a diagnosis,
+scored observations to be independently correct, spanning at least two genuinely
+independent work groups and two independently verified `studiedOn` dates.
+Assignment IDs connect rephotographs of the same assignment, while stable
+source-photo IDs also connect older observations lacking an assignment ID.
+Those photo/assignment connections are evaluated across the **entire reviewed
+history**, not just the latest three items, so mixed legacy and newer metadata
+cannot turn one worksheet into two separate assignments. A single source photo
+containing multiple labeled assignments conservatively counts as one evidence
+capture until independent work is confirmed elsewhere. An `addedOn` upload/intake date
+is **not** evidence of when a worksheet was completed. Without verified studied
+dates, correctness observations still support targeted practice, but the
+processor cannot assert chronological improvement, slipping, or mastery.
+A later upload of older undated work does not reverse already verified
+chronological mastery or reset the retention clock. With fully dated scored
+work, the private confidence heuristic groups answers by their verified
+assessment date, averages answers within each date, then weights the five
+most recent assessment **days** chronologically. This avoids treating a
+worksheet's arbitrary question/observation IDs as a sequence of separate
+assessment times. If any scored observations are undated, all scored
+items receive equal weight instead: changing their upload order must
+not inflate a confidence estimate. Improvement/slipping trends likewise
+compare averages for verified assessment days, not item-ID order. When a
+verified day contains both correct and incorrect answers, the incorrect
+answer takes priority in the private practice queue and blocks claiming
+mastery while unresolved; a partial response takes priority over a
+correct response on the same date. A latest **verified study day** with
+an `unknown` item also suspends the private mastery claim until later
+independently dated, scored success resolves that uncertainty, even if
+earlier scored items were all correct. The unknown result is **not**
+counted as wrong, does not lower scored confidence, and receives a
+private `review-unscored` reason (priority 85) when it is as recent
+as the latest scored assessment. A confirmed latest-day miss or partial
+answer takes precedence over this review reason. An unknown on an older
+verified date, or an undated unknown uploaded later, does not erase
+newer dated mastery; all evidence remains in the private ledger.
+These reasons are reviewer triage, not labels to publish about a child.
+This confidence value is a household
+planning aid, not a grade or calibrated probability.
+
+The private `improving` status is **not** awarded merely because the overall
+score average is at least 50%. It requires a verified upward `improving`
+trend: at least four distinct independently supported assessment dates,
+the average of the latest two assessment days more than 0.2 higher than
+the previous two, at least three dated scored items, and an average of
+at least 0.5 across the latest (up to five) assessment days. Steady,
+slipping, undated-only, or shorter histories remain `learning` if sufficient
+practice evidence exists, unless the separately defined mastery rule
+applies. Only verified `studiedOn` days contribute to this comparison.
+
+Dated observations alone
+set the chronological order; an undated incorrect/partial item remains
+eligible for a separately labeled private `review-undated` practice target,
+not a claim of a recent miss. That review target is considered resolved
+only when independently dated mastery is established at a study date
+**strictly after** the undated worksheet's intake date. A same-day
+assessment, or old work uploaded after mastery, retains the conservative
+review target. The original private observation is never deleted.
+
+When a worksheet is photographed again, reuse the original observation IDs.
+Use stable `assignmentId` and `questionId` in reviewed private observations to
+identify an item across source photos; the processor rejects the same assignment
+item under a new observation ID, including harmless case/spacing variations.
+It also rejects two different observation IDs for the same `sourceId`,
+`subject`, `skill` and normalized `questionId` when either entry is missing
+`assignmentId`. This closes the mixed legacy/new identity replay loophole
+without rejecting independently identified questions on two assignments
+pictured together. Reconcile conflicting IDs privately instead of changing
+the original learner's answer. When assignment identity cannot be established,
+keep the evidence provisional:
+the processor cannot infer that two differently named photos are distinct items.
+
+"Mastered" is a household study-planning flag, not a diagnosis,
 standardized score, school grade, or psychometric claim.
 
 ## Error taxonomy
@@ -104,9 +174,26 @@ node scripts/learning-history.mjs \
   --write
 ```
 
-Both paths are required to resolve outside this public repository. The processor is
+Both paths must resolve outside this public repository, including through
+symbolic links and existing parent directories. The processor resolves physical
+paths before reading/writing private files, creates new history directories
+with owner-only permissions (0700), and writes new/replaced history JSON with
+owner-only permissions (0600) on POSIX systems. Explicit `--write` replays
+also tighten the mode of an unchanged legacy history file. It cannot repair permissions
+on pre-existing directories; keep those private too. The processor is
 idempotent and fails closed if the same observation ID is reused for different
-evidence.
+evidence. An identical observation may be reserialized with its JSON fields
+in another order without becoming a collision; changes to any evidence field
+under an existing observation ID still fail closed.
+
+An explicit `--write` intake acquires the exclusive `.lock` **before** reading
+the current ledger, so a second intake cannot calculate against an outdated
+pre-lock snapshot. The updated ledger replaces the file atomically; failed
+temporary writes are cleaned before releasing the lock. A concurrent invocation
+may fail with `EEXIST` while the lock is held: retry that reviewed batch
+after the first writer finishes. A dry-run does not acquire a lock or mutate
+history, and is an informational snapshot rather than a reservation to write.
+Do not manually remove an active writer's lock.
 
 The generated private history contains the chronological evidence ledger, derived
 skill summaries, common error categories, trend, confidence, and a short prioritized

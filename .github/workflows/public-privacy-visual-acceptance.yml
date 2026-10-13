@@ -27,6 +27,13 @@ jobs:
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Verify exact review-head commit
+        shell: bash
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$PR_HEAD_SHA"
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -37,9 +44,9 @@ jobs:
       - name: Offline shell and anonymous copy contracts
         run: node --test tests/public-learner-privacy.test.mjs
       - name: Anonymous iPhone 375-430 Chromium and Safari-WebKit
-        run: npx playwright test tests/public-learner-privacy.spec.mjs --project=mobile --project=iphone-webkit --workers=1 --retries=0
+        run: npx playwright test tests/public-learner-privacy.spec.mjs --project=mobile --project=iphone-webkit --output=test-results/anonymous --workers=1 --retries=0
       - name: Teacher source age cannot be refreshed by a Yahoo notice
-        run: npx playwright test tests/app.spec.mjs --project=mobile --grep "newly imported Yahoo notices" --workers=1 --retries=0
+        run: npx playwright test tests/app.spec.mjs --project=mobile --output=test-results/freshness --grep "newly imported Yahoo notices" --workers=1 --retries=0
       - name: Retain real rendered privacy screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -50,4 +57,4 @@ jobs:
             test-results/**/test-failed-*.png
             playwright-report
           retention-days: 14
-          if-no-files-found: ignore
+          if-no-files-found: error
