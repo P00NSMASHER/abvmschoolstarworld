@@ -141,11 +141,107 @@
     ],
     "importantDates": [
       {
+        "date": "Wednesday, Sep. 2",
+        "label": "Communication Folder",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-08-31",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Sep. 4",
+        "label": "No School",
+        "kind": "holiday",
+        "sourceDocument": "weekly-reminders-2026-08-31",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Sep. 7",
+        "label": "No School",
+        "kind": "holiday",
+        "sourceDocument": "weekly-reminders-2026-08-31",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Sep. 7",
+        "label": "No School",
+        "kind": "holiday",
+        "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Sep. 8",
+        "label": "STAR testing",
+        "kind": "assessment",
+        "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Sep. 9",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Thursday, Sep. 10",
+        "label": "Communication Folder",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Sep. 15",
+        "label": "STAR testing",
+        "kind": "assessment",
+        "sourceDocument": "weekly-reminders-2026-09-14",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Sep. 16",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-08-31",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Sep. 16",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Sep. 16",
+        "label": "Communication Folder",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Sep. 16",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-14",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Sep. 16",
+        "label": "Communication Folder",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-14",
+        "source": "uploaded-notice"
+      },
+      {
         "date": "Monday–Friday, Sept. 21–25",
         "label": "STAR testing continues this week",
         "kind": "assessment",
         "sourceDocument": "weekly-reminders-2026-09-21",
         "source": "uploaded-notice"
+      },
+      {
+        "label": "Chapter 1A (addition) test",
+        "date": "Tuesday, Sept. 22",
+        "kind": "test"
       },
       {
         "date": "Wednesday, Sept. 23",
@@ -159,6 +255,20 @@
         "label": "Pretzel delivery",
         "kind": "school event",
         "sourceDocument": "weekly-reminders-2026-09-21",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Thursday, Sep. 24",
+        "label": "Pretzel delivery",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Thursday, Sep. 24",
+        "label": "Pretzel delivery",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-14",
         "source": "uploaded-notice"
       },
       {
@@ -176,10 +286,38 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Friday, Sep. 25",
+        "label": "Lego Club",
+        "kind": "club",
+        "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Sep. 25",
+        "label": "Lego Club",
+        "kind": "club",
+        "sourceDocument": "weekly-reminders-2026-09-14",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Sep. 25",
+        "label": "Dress Down Day",
+        "kind": "school event",
+        "sourceDocument": "school-flyer-ca26241222dca1cf4795",
+        "source": "uploaded-notice"
+      },
+      {
         "date": "Monday, Sept. 28",
         "label": "October Gift Card Calendar Fundraiser money and calendar bottoms due",
         "kind": "deadline",
         "sourceDocument": "weekly-reminders-2026-09-28",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Sep. 28",
+        "label": "Gym classes moved to this date",
+        "kind": "schedule change",
+        "sourceDocument": "school-email-b44b85fd20772d689a49",
         "source": "uploaded-notice"
       },
       {
@@ -232,11 +370,24 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Thursday, Oct. 1",
+        "label": "Picture Day",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-14",
+        "source": "uploaded-notice"
+      },
+      {
         "date": "Friday, Oct. 2",
         "label": "Door Decorating Contest starts",
         "kind": "school event",
         "sourceDocument": "october-calendar-2026",
         "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Oct. 2",
+        "label": "Spelling (short a / long a) / Handwriting",
+        "kind": "test",
+        "source": "teacher-tests"
       },
       {
         "date": "Saturday, Oct. 3",
@@ -248,111 +399,6 @@
       {
         "date": "Saturday, Oct. 3",
         "label": "Movie Night (Grades 5–8) — 6–8 PM",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-09-28",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Oct. 7",
-        "label": "K–4 flag football permission form due",
-        "kind": "deadline",
-        "sourceDocument": "flag-football-2026-10",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Friday, Oct. 9",
-        "label": "Chick-fil-A orders and money due — $7 each",
-        "kind": "deadline",
-        "sourceDocument": "chick-fil-a-order-form-2026-10",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Monday, Oct. 12",
-        "label": "No School — Columbus Day",
-        "kind": "holiday",
-        "sourceDocument": "october-calendar-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Oct. 14",
-        "label": "Mass",
-        "kind": "school event",
-        "sourceDocument": "october-calendar-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Oct. 14",
-        "label": "Communication Folder",
-        "kind": "school event",
-        "sourceDocument": "october-calendar-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Oct. 14",
-        "label": "Student Council Meeting",
-        "kind": "school event",
-        "sourceDocument": "october-calendar-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Sunday, Oct. 18",
-        "label": "Birthday party at Roller Roost Sports Arena — 12:30–3:30 PM",
-        "kind": "family",
-        "sourceDocument": "birthday-party-2026-10-18",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Oct. 21",
-        "label": "Mass",
-        "kind": "school event",
-        "sourceDocument": "october-calendar-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Friday, Oct. 23",
-        "label": "Red Ribbon Week begins",
-        "kind": "school event",
-        "sourceDocument": "october-calendar-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Monday, Oct. 26",
-        "label": "K–4 Dress Down & Flag Football — 1:45–2:30 PM; food-bank item or $5 donation",
-        "kind": "school event",
-        "sourceDocument": "flag-football-2026-10",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Tuesday, Oct. 27",
-        "label": "Door Decorating Judging",
-        "kind": "school event",
-        "sourceDocument": "october-calendar-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Oct. 28",
-        "label": "Mass",
-        "kind": "school event",
-        "sourceDocument": "october-calendar-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Oct. 28",
-        "label": "Communication Folder",
-        "kind": "school event",
-        "sourceDocument": "october-calendar-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Friday, Oct. 30",
-        "label": "Halloween Celebration",
-        "kind": "school event",
-        "sourceDocument": "october-calendar-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Friday–Saturday, Nov. 13–14",
-        "label": "Drama Club Play",
         "kind": "school event",
         "sourceDocument": "weekly-reminders-2026-09-28",
         "source": "uploaded-notice"
@@ -380,9 +426,29 @@
       },
       {
         "date": "Wednesday, Oct. 7",
+        "label": "K–4 flag football permission form due",
+        "kind": "deadline",
+        "sourceDocument": "flag-football-2026-10",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 7",
         "label": "Mass — St. John the Baptist, 9 AM",
         "kind": "school event",
         "sourceDocument": "weekly-reminders-2026-10-05",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 7",
+        "label": "Reading",
+        "kind": "test",
+        "source": "teacher-tests"
+      },
+      {
+        "date": "Friday, Oct. 9",
+        "label": "Chick-fil-A orders and money due — $7 each",
+        "kind": "deadline",
+        "sourceDocument": "chick-fil-a-order-form-2026-10",
         "source": "uploaded-notice"
       },
       {
@@ -400,108 +466,10 @@
         "source": "uploaded-notice"
       },
       {
-        "date": "Tuesday, Oct. 13",
-        "label": "Dress Down Day — Knights of Columbus Thanksgiving Meal",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-10-05",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Thursday, Oct. 29",
-        "label": "Grades 5–8 Dress Down Day & Flag Football",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-10-05",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Sep. 2",
-        "label": "Communication Folder",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-08-31",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Monday, Sep. 7",
-        "label": "No School",
-        "kind": "holiday",
-        "sourceDocument": "weekly-reminders-2026-08-31",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Sep. 16",
-        "label": "Mass",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-08-31",
-        "source": "uploaded-notice"
-      },
-      {
         "date": "Friday, Oct. 9",
         "label": "12:00 dismissal",
         "kind": "schedule change",
         "sourceDocument": "weekly-reminders-2026-08-31",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Monday, Oct. 12",
-        "label": "No School",
-        "kind": "holiday",
-        "sourceDocument": "weekly-reminders-2026-08-31",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Friday, Sep. 4",
-        "label": "No School",
-        "kind": "holiday",
-        "sourceDocument": "weekly-reminders-2026-08-31",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Monday, Sep. 7",
-        "label": "No School",
-        "kind": "holiday",
-        "sourceDocument": "weekly-reminders-2026-09-07",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Tuesday, Sep. 8",
-        "label": "STAR testing",
-        "kind": "assessment",
-        "sourceDocument": "weekly-reminders-2026-09-07",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Sep. 9",
-        "label": "Mass",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-09-07",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Sep. 16",
-        "label": "Mass",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-09-07",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Sep. 16",
-        "label": "Communication Folder",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-09-07",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Thursday, Sep. 24",
-        "label": "Pretzel delivery",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-09-07",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Friday, Sep. 25",
-        "label": "Lego Club",
-        "kind": "club",
-        "sourceDocument": "weekly-reminders-2026-09-07",
         "source": "uploaded-notice"
       },
       {
@@ -512,273 +480,11 @@
         "source": "uploaded-notice"
       },
       {
-        "date": "Monday, Oct. 12",
-        "label": "No School",
-        "kind": "holiday",
-        "sourceDocument": "weekly-reminders-2026-09-07",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Thursday, Sep. 10",
-        "label": "Communication Folder",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-09-07",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Tuesday, Sep. 15",
-        "label": "STAR testing",
-        "kind": "assessment",
-        "sourceDocument": "weekly-reminders-2026-09-14",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Sep. 16",
-        "label": "Mass",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-09-14",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Sep. 16",
-        "label": "Communication Folder",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-09-14",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Thursday, Sep. 24",
-        "label": "Pretzel delivery",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-09-14",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Friday, Sep. 25",
-        "label": "Lego Club",
-        "kind": "club",
-        "sourceDocument": "weekly-reminders-2026-09-14",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Thursday, Oct. 1",
-        "label": "Picture Day",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-09-14",
-        "source": "uploaded-notice"
-      },
-      {
         "date": "Friday, Oct. 9",
         "label": "12:00 dismissal",
         "kind": "schedule change",
         "sourceDocument": "weekly-reminders-2026-09-14",
         "source": "uploaded-notice"
-      },
-      {
-        "date": "Monday, Oct. 12",
-        "label": "No School",
-        "kind": "holiday",
-        "sourceDocument": "weekly-reminders-2026-09-14",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Friday, Sep. 25",
-        "label": "Dress Down Day",
-        "kind": "school event",
-        "sourceDocument": "school-flyer-ca26241222dca1cf4795",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Monday, Sep. 28",
-        "label": "Gym classes moved to this date",
-        "kind": "schedule change",
-        "sourceDocument": "school-email-b44b85fd20772d689a49",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Thursday, Oct. 22",
-        "label": "Servants for All hygiene donation collection noted with DDD/flag-football activities",
-        "kind": "school event",
-        "sourceDocument": "servants-for-all-hygiene-2026-10",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Thursday, Oct. 29",
-        "label": "Servants for All hygiene donation collection noted with DDD/flag-football activities",
-        "kind": "school event",
-        "sourceDocument": "servants-for-all-hygiene-2026-10",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Friday, Oct. 30",
-        "label": "HSA Nut Roll Sale — prepaid order forms and money due ($20 each)",
-        "kind": "deadline",
-        "sourceDocument": "hsa-nut-roll-order-a-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Tuesday, Nov. 17",
-        "label": "HSA Nut Roll Sale — pickup (time assigned by school)",
-        "kind": "school event",
-        "sourceDocument": "hsa-nut-roll-order-a-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Saturday, Nov. 21",
-        "label": "Reading Royals Game Family Fun Night — student anthem performance; ticket link in notices",
-        "kind": "school event",
-        "sourceDocument": "reading-royals-family-night-2026-11-21",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Tuesday, Oct. 20",
-        "label": "Diocesan Eucharistic Consecration journey begins (through Dec. 8)",
-        "kind": "school event",
-        "sourceDocument": "eucharistic-consecration-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Thursday, Oct. 22",
-        "label": "Optional Eucharistic Holy Hour — 7 PM at Bethlehem Catholic High School",
-        "kind": "school event",
-        "sourceDocument": "eucharistic-consecration-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Sunday, Nov. 1",
-        "label": "Free Diocesan Family Festival — noon–4:30 PM, St. Joseph the Worker, Orefield",
-        "kind": "school event",
-        "sourceDocument": "eucharistic-consecration-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Tuesday, Nov. 3",
-        "label": "Optional Eucharistic Holy Hour — 6 PM at Nativity BVM High School",
-        "kind": "school event",
-        "sourceDocument": "eucharistic-consecration-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Tuesday, Nov. 17",
-        "label": "Optional Eucharistic Holy Hour — 7 PM at Berks Catholic High School",
-        "kind": "school event",
-        "sourceDocument": "eucharistic-consecration-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Tuesday, Dec. 8",
-        "label": "Eucharistic Consecration during school Mass — Immaculate Conception",
-        "kind": "school event",
-        "sourceDocument": "eucharistic-consecration-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Monday, Oct. 12",
-        "label": "No School",
-        "kind": "holiday",
-        "sourceDocument": "weekly-reminders-2026-10-12",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Tuesday, Oct. 13",
-        "label": "Dress Down Day",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-10-12",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Oct. 14",
-        "label": "Mass",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-10-12",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Oct. 14",
-        "label": "Communication Folder",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-10-12",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Thursday, Oct. 29",
-        "label": "Dress Down Day",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-10-12",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Thursday, Oct. 29",
-        "label": "Flag football",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-10-12",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Oct. 14",
-        "label": "Progress Reports Sent Home — Sign & Return",
-        "kind": "school event",
-        "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Tuesday, Oct. 20",
-        "label": "Grade 2 / K–4: No School — Parent-Teacher Conferences",
-        "kind": "holiday",
-        "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Thursday, Oct. 22",
-        "label": "Chick-fil-A Delivery",
-        "kind": "school event",
-        "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Friday, Oct. 23",
-        "label": "Lego Club (time not stated in latest planner)",
-        "kind": "club",
-        "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Friday, Oct. 23",
-        "label": "S’mores Family",
-        "kind": "school event",
-        "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Monday, Oct. 19",
-        "label": "Student Council Halloween Candy Chance Begins ($1)",
-        "kind": "school event",
-        "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Friday, Oct. 30",
-        "label": "Student Council Halloween Candy Chance Ends",
-        "kind": "school event",
-        "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed",
-        "source": "uploaded-notice"
-      },
-      {
-        "label": "Chapter 1A (addition) test",
-        "date": "Tuesday, Sept. 22",
-        "kind": "test"
-      },
-      {
-        "date": "Friday, Oct. 2",
-        "label": "Spelling (short a / long a) / Handwriting",
-        "kind": "test",
-        "source": "teacher-tests"
-      },
-      {
-        "date": "Wednesday, Oct. 7",
-        "label": "Reading",
-        "kind": "test",
-        "source": "teacher-tests"
       },
       {
         "date": "Friday, Oct. 9",
@@ -793,10 +499,101 @@
         "source": "teacher-tests"
       },
       {
+        "date": "Monday, Oct. 12",
+        "label": "No School — Columbus Day",
+        "kind": "holiday",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Oct. 12",
+        "label": "No School",
+        "kind": "holiday",
+        "sourceDocument": "weekly-reminders-2026-08-31",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Oct. 12",
+        "label": "No School",
+        "kind": "holiday",
+        "sourceDocument": "weekly-reminders-2026-09-07",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Oct. 12",
+        "label": "No School",
+        "kind": "holiday",
+        "sourceDocument": "weekly-reminders-2026-09-14",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Oct. 12",
+        "label": "No School",
+        "kind": "holiday",
+        "sourceDocument": "weekly-reminders-2026-10-12",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Oct. 13",
+        "label": "Dress Down Day — Knights of Columbus Thanksgiving Meal",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-05",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Oct. 13",
+        "label": "Dress Down Day",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-12",
+        "source": "uploaded-notice"
+      },
+      {
         "date": "Tuesday, Oct. 13",
         "label": "Charity DDD (KofC Thanksgiving meals)",
         "source": "teacher-home",
         "kind": "school event"
+      },
+      {
+        "date": "Wednesday, Oct. 14",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 14",
+        "label": "Communication Folder",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 14",
+        "label": "Student Council Meeting",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 14",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-12",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 14",
+        "label": "Communication Folder",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-12",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 14",
+        "label": "Progress Reports Sent Home — Sign & Return",
+        "kind": "school event",
+        "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed",
+        "source": "uploaded-notice"
       },
       {
         "date": "Thursday, Oct. 15",
@@ -840,10 +637,178 @@
         "source": "teacher-tests"
       },
       {
+        "date": "Sunday, Oct. 18",
+        "label": "Birthday party at Roller Roost Sports Arena — 12:30–3:30 PM",
+        "kind": "family",
+        "sourceDocument": "birthday-party-2026-10-18",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Oct. 19",
+        "label": "Student Council Halloween Candy Chance Begins ($1)",
+        "kind": "school event",
+        "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Oct. 20",
+        "label": "Diocesan Eucharistic Consecration journey begins (through Dec. 8)",
+        "kind": "school event",
+        "sourceDocument": "eucharistic-consecration-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Oct. 20",
+        "label": "Grade 2 / K–4: No School — Parent-Teacher Conferences",
+        "kind": "holiday",
+        "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 21",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
         "date": "Wednesday, Oct. 21",
         "label": "Religion projects due",
         "source": "teacher-home",
         "kind": "deadline"
+      },
+      {
+        "date": "Thursday, Oct. 22",
+        "label": "Servants for All hygiene donation collection noted with DDD/flag-football activities",
+        "kind": "school event",
+        "sourceDocument": "servants-for-all-hygiene-2026-10",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Thursday, Oct. 22",
+        "label": "Optional Eucharistic Holy Hour — 7 PM at Bethlehem Catholic High School",
+        "kind": "school event",
+        "sourceDocument": "eucharistic-consecration-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Thursday, Oct. 22",
+        "label": "Chick-fil-A Delivery",
+        "kind": "school event",
+        "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Oct. 23",
+        "label": "Red Ribbon Week begins",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Oct. 23",
+        "label": "Lego Club (time not stated in latest planner)",
+        "kind": "club",
+        "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Oct. 23",
+        "label": "S’mores Family",
+        "kind": "school event",
+        "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Oct. 26",
+        "label": "K–4 Dress Down & Flag Football — 1:45–2:30 PM; food-bank item or $5 donation",
+        "kind": "school event",
+        "sourceDocument": "flag-football-2026-10",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Oct. 27",
+        "label": "Door Decorating Judging",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 28",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 28",
+        "label": "Communication Folder",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Thursday, Oct. 29",
+        "label": "Grades 5–8 Dress Down Day & Flag Football",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-05",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Thursday, Oct. 29",
+        "label": "Servants for All hygiene donation collection noted with DDD/flag-football activities",
+        "kind": "school event",
+        "sourceDocument": "servants-for-all-hygiene-2026-10",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Thursday, Oct. 29",
+        "label": "Dress Down Day",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-12",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Thursday, Oct. 29",
+        "label": "Flag football",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-12",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Oct. 30",
+        "label": "Halloween Celebration",
+        "kind": "school event",
+        "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Oct. 30",
+        "label": "HSA Nut Roll Sale — prepaid order forms and money due ($20 each)",
+        "kind": "deadline",
+        "sourceDocument": "hsa-nut-roll-order-a-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Oct. 30",
+        "label": "Student Council Halloween Candy Chance Ends",
+        "kind": "school event",
+        "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Sunday, Nov. 1",
+        "label": "Free Diocesan Family Festival — noon–4:30 PM, St. Joseph the Worker, Orefield",
+        "kind": "school event",
+        "sourceDocument": "eucharistic-consecration-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Nov. 3",
+        "label": "Optional Eucharistic Holy Hour — 6 PM at Nativity BVM High School",
+        "kind": "school event",
+        "sourceDocument": "eucharistic-consecration-2026",
+        "source": "uploaded-notice"
       },
       {
         "date": "Thursday, Nov. 5",
@@ -855,6 +820,34 @@
         "label": "12:00 dismissal — Articulation Meeting",
         "date": "Friday, Nov. 6",
         "kind": "schedule change"
+      },
+      {
+        "date": "Friday–Saturday, Nov. 13–14",
+        "label": "Drama Club Play",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-09-28",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Nov. 17",
+        "label": "HSA Nut Roll Sale — pickup (time assigned by school)",
+        "kind": "school event",
+        "sourceDocument": "hsa-nut-roll-order-a-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Nov. 17",
+        "label": "Optional Eucharistic Holy Hour — 7 PM at Berks Catholic High School",
+        "kind": "school event",
+        "sourceDocument": "eucharistic-consecration-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Saturday, Nov. 21",
+        "label": "Reading Royals Game Family Fun Night — student anthem performance; ticket link in notices",
+        "kind": "school event",
+        "sourceDocument": "reading-royals-family-night-2026-11-21",
+        "source": "uploaded-notice"
       },
       {
         "label": "2nd Trimester starts",
@@ -871,6 +864,13 @@
         "label": "HSA meeting",
         "source": "teacher-home",
         "kind": "meeting"
+      },
+      {
+        "date": "Tuesday, Dec. 8",
+        "label": "Eucharistic Consecration during school Mass — Immaculate Conception",
+        "kind": "school event",
+        "sourceDocument": "eucharistic-consecration-2026",
+        "source": "uploaded-notice"
       },
       {
         "label": "Santa Workshop",
