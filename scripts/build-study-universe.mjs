@@ -62,11 +62,22 @@ function roundRobin(rows){
   while(pools.some(p=>p.length))for(const pool of pools)if(pool.length)out.push(pool.shift());
   return out;
 }
+function exactReligionChapters(row){
+  const evidence=row?.sourceLineage?.matchedEvidence;
+  if(!Array.isArray(evidence))return [];
+  return [...new Set(evidence.flatMap(value=>{
+    if(typeof value!=='string')return [];
+    return [...value.matchAll(/\bChapter\s+(\d+)\s*:/gi)].map(match=>match[1]);
+  }))].sort(compare);
+}
 // Reuse the web app's test boundaries. Tighten operation scope and support the
 // teacher's Ch. spelling; never infer a chapter from unrelated religion topics.
-function forTest(test,rows){
+function forTest(test,rows,religionChaptersById=new Map()){
   const label=test.label.replace(/\bCh\.?\s*(\d+)/gi,'Chapter $1');
-  let matched=questionsForTest({...test,label},rows);
+  const religionChapter=label.match(/\breligion\b.*\bchapter\s*(\d+)\b/i);
+  let matched=religionChapter
+    ? rows.filter(q=>q.subject==='Religion'&&(q.skill===`religion-chapter-${religionChapter[1]}`||(religionChaptersById.get(q.id)||[]).includes(religionChapter[1])))
+    : questionsForTest({...test,label},rows);
   if(/\bmath\b/i.test(label)&&/subtraction|addition/i.test(label)){
     const operation=/subtraction/i.test(label)?'subtraction':'addition';
     matched=matched.filter(q=>q.skill.includes(operation));
@@ -81,9 +92,11 @@ export function buildStudyUniverse({pack:wrapper,archive={},fallbackQuestions=[]
   const generatedAt=text(pack.generatedAt||pack.sourceCapturedAt,'generatedAt');
   if(!Number.isFinite(Date.parse(generatedAt)))throw new Error('Invalid generatedAt');
   const asOfDay=schoolDay(generatedAt),year=Number(asOfDay.slice(0,4)),sourceHash=text(pack.sourceHash,'sourceHash');
+  const religionChaptersById=new Map();
   const current=(pack.contentPipeline.questions||[]).map(row=>{
     const l=row.sourceLineage;
     if(l?.quality!=='page-exact'||!/^https:\/\/sites\.google\.com\//.test(l.sourceUrl||'')||!/^\w{64}$/.test(l.sourceCaptureHash||'')||!/^sha256:[a-f0-9]{64}$/.test(l.evidenceExcerptHash||''))throw new Error(`Missing governed lineage for ${row.id}`);
+    religionChaptersById.set(row.id,exactReligionChapters(row));
     return checkedQuestion(row,'current',{kind:'teacher-page',sourceHash,captureHash:l.sourceCaptureHash,evidenceHash:l.evidenceExcerptHash,sourceUrl:l.sourceUrl});
   });
   const archiveRows=(archive.questions||[]).filter(row=>!row.firstSeenAt||schoolDay(row.firstSeenAt)<=asOfDay).map(row=>{
@@ -122,7 +135,7 @@ export function buildStudyUniverse({pack:wrapper,archive={},fallbackQuestions=[]
     .filter(t=>t.date&&t.date>=asOfDay).sort((a,b)=>compare(a.date,b.date)||compare(a.label,b.label))
     .filter(t=>{const id=t.date+'|'+t.label;if(seenTests.has(id))return false;seenTests.add(id);return true;});
   const selectableTestPrep=tests.map(t=>{
-    const questionIds=forTest(t,questions).map(q=>q.id);
+    const questionIds=forTest(t,questions,religionChaptersById).map(q=>q.id);
     return {id:`test-${t.date}-${slug(t.label)}`,date:t.date,label:t.label,source:t.source,questionIds,supported:questionIds.length>0,
       disclaimer:'Original reviewed skill practice; not hidden teacher-test content or official STAR items.'};
   });
