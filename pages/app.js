@@ -394,15 +394,10 @@ function ensureStudyMaterials(retry=false){
 }
 function retryStudyMaterials(){studyMaterialsError=null;ensureStudyMaterials(true).catch(()=>{});renderGames()}
 async function refreshTestGuideSources(){
-  let fresh = navigator.onLine !== false;
-  if(fresh){
-    try{ await fetchPack({force:true}); if(lastPackFetchUsedCache)fresh=false; }
-    catch{ fresh=false; }
-  }
-  // Schoolwork and archived lessons are independent of the public curriculum
-  // envelope. Re-fetch them at preview time, even if the pack hash is unchanged.
+  let ok=navigator.onLine!==false;
+  if(ok)try{await fetchPack({force:true})}catch{ok=false}
   await ensureStudyMaterials(true);
-  return fresh;
+  return ok&&!lastPackFetchUsedCache;
 }
 
 function studyGameEngine(){return window.ABVMStudyGames||null}
@@ -615,7 +610,6 @@ function carryPlannerDate(next){
   const state=window.ABVMProductView.plannerDate(next,activeTab,calendarDay,selectedDay,today(),weekDays(0)[0]);
   if(state)({calendarDay,selectedDay,weekOffset,calendarOffset}={calendarDay,selectedDay,weekOffset,calendarOffset,...state});
 }
-// Keep the reading position and keyboard target across Month/Week redraws.
 function redrawPlanner(draw,selector){
   const old=stack().firstElementChild,top=old?.scrollTop||0;
   draw();
@@ -661,10 +655,10 @@ function packContentKey(data){
     importantDates:p.importantDates||[],
     homework:p.homework||[],
     subjects:p.subjects||[],
-    vocabulary:p.vocabulary||[],
-    questions:p.questions||[],
-    contentPipeline:p.contentPipeline||{},
-    recentReviewPipeline:p.recentReviewPipeline||{},
+    v:p.vocabulary||[],
+    q:p.questions||[],
+    cp:p.contentPipeline||{},
+    rp:p.recentReviewPipeline||{},
     reminders:p.reminders||[],
     parentNotices:p.parentNotices||[],
     lunchMenu:p.lunchMenu||[],
