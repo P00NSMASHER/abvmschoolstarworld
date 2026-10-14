@@ -549,7 +549,6 @@ function gameFinishHtml(){
   const finish=v.finish({mode:gameMode(g.mode),state:g,record:loadGameRecord(g.mode,g.sourceKey||currentGameSourceKey()),summary,reward});
   const goal=g.rewardStatus==="done"?window.ABVMStudyBadges.render(g.rankCollection,"finish"):"";
   const promotion=g.rewardStatus==="done"&&g.newRanks?.length?window.ABVMStudyBadges.promotion(g.newRanks):"";
-  // Put a newly earned rank first in the score report.
   return reveal+promotion+finish+goal;
 }
 function renderGames(){
