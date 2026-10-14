@@ -1,6 +1,6 @@
 /** Material selection for the existing Games player. This module owns no DOM or answers. */
 import {createStudyResourceLoader, validStudyResource} from './study-resources.mjs';
-import {questionsForTest} from './study-hub-core.mjs';
+import {questionsForTest,religionChapterScopes} from './study-hub-core.mjs';
 import {adaptivePracticeRound, practiceIdentity} from './study-experience.mjs';
 import {schoolDay, weekBounds, nextTests, visibleArchive, weeklyArchive, balancedTestRound} from './study-model.mjs';
 import {buildStarBank} from './star-practice.mjs';
@@ -156,7 +156,15 @@ export function createStudyMaterials({
   status = {ready:true, partial:false, errors:[], loaded:{schoolwork:true, archive:true}},
 } = {}) {
   const instant = () => typeof now === 'function' ? now() : now;
-  const canonical = byId(array(catalog.questions));
+  // The engine deliberately omits audit lineage from questions. Rejoin only
+  // the compact, reviewed chapter numbers by stable current-material IDs.
+  const scopesById=new Map(array(pack?.contentPipeline?.questions)
+    .filter(row=>row?.subject==='Religion'&&typeof row.id==='string')
+    .map(row=>[row.id,religionChapterScopes(row)]));
+  const canonical = byId(array(catalog.questions)).map(q=>
+    q.tier==='material'&&scopesById.has(q.id)
+      ? {...q,sourceChapters:scopesById.get(q.id)}
+      : q);
   const current = canonical.filter(q => q.tier === 'material');
   const star = byId([...canonical.filter(q => q.tier === 'star-fallback'), ...buildStarBank().map(normalizedStar)]);
   const sourceKey = String(catalog.sourceKey || pack.sourceHash || 'abvm-current');
