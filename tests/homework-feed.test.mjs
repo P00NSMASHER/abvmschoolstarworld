@@ -36,3 +36,28 @@ test('standing chores cannot be published as actionable homework',()=>{
     assert.throws(()=>model.validate({...verifiedPosting,assignments:[row]}),/Invalid/);
   }
 });
+
+test('unchanged Tuesday posting rechecked Wednesday is not newly assigned on Wednesday',()=>{
+  const rechecked={...verifiedPosting,checkedAt:'2026-10-14T12:00:00-04:00'};
+  const actual=model.forDate(rechecked,'2026-10-14',new Date('2026-10-14T13:00:00-04:00'));
+  assert.equal(actual.state,'outdated');
+  assert.equal(actual.firstObservedAt,verifiedPosting.firstObservedAt);
+  assert.deepEqual([...actual.assignments],[]);
+});
+test('newly observed Wednesday assignments remain available with Math and Spelling intact',()=>{
+  const fresh={...verifiedPosting,checkedAt:'2026-10-14T12:00:00-04:00',
+    firstObservedAt:'2026-10-14T09:00:00-04:00',contentHash:'b'.repeat(64)};
+  const actual=model.forDate(fresh,'2026-10-14',new Date('2026-10-14T13:00:00-04:00'));
+  assert.equal(actual.state,'assignments');
+  assert.deepEqual([...actual.assignments].map(item=>item.subject),['Math','Spelling']);
+  assert.deepEqual([...actual.assignments].map(item=>item.task),['Page 22','Spelling Choice Board activity']);
+});
+test('Eastern school date, not UTC calendar date, determines whether homework is current',()=>{
+  const evening={...verifiedPosting,checkedAt:'2026-10-14T00:05:00.000Z',
+    firstObservedAt:'2026-10-14T00:05:00.000Z'};
+  assert.equal(model.forDate(evening,'2026-10-13',new Date('2026-10-14T00:30:00.000Z')).state,'assignments');
+  const nextMorning={...evening,checkedAt:'2026-10-14T13:30:00.000Z'};
+  const view=model.forDate(nextMorning,'2026-10-14',new Date('2026-10-14T14:00:00.000Z'));
+  assert.equal(view.state,'outdated');
+  assert.deepEqual([...view.assignments],[]);
+});

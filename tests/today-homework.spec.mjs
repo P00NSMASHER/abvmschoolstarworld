@@ -65,3 +65,46 @@ test('Today remains usable if the independently cached Homework helper cannot lo
   await expect(page.locator('.today-panel')).toBeVisible();
   await expect(page.locator('.today-screen > .lunch-card')).toBeVisible();
 });
+
+test('unchanged undated Tuesday homework rechecked Wednesday stays out of Today and Week',async({page})=>{
+  await page.route('**/data/homework-current.json*',async route=>{
+    const response=await route.fetch();
+    const source=await response.json();
+    await route.fulfill({response,json:{...source,firstObservedAt:'2026-10-14T00:32:53.326Z',
+      checkedAt:'2026-10-14T12:00:00-04:00'}});
+  });
+  await page.clock.setFixedTime(new Date('2026-10-14T13:00:00-04:00'));
+  await page.goto('/#today');
+  const today=page.locator('.today-homework');
+  await expect(today).toContainText("Homework needs today's teacher verification");
+  await expect(today).not.toContainText(/Page 22|Choice Board activity/);
+  await expect(today.locator('.homework-task-list .check-item')).toHaveCount(0);
+  await expect(today.locator('a')).toHaveAttribute('href','https://sites.google.com/view/abvmgr2/homework');
+  await page.getByRole('button',{name:'Calendar'}).click();
+  await page.locator('.calendar-segments [data-route="week"]').click();
+  const week=page.locator('.week-homework-card');
+  await expect(week).toContainText("Homework needs today's teacher verification");
+  await expect(week).not.toContainText(/Page 22|Choice Board activity/);
+  await expect(week.locator('.homework-task-list .check-item')).toHaveCount(0);
+});
+test('new Wednesday teacher posting shows Math and Spelling consistently in Today and Week',async({page})=>{
+  await page.route('**/data/homework-current.json*',async route=>{
+    const response=await route.fetch();
+    const source=await response.json();
+    await route.fulfill({response,json:{...source,firstObservedAt:'2026-10-14T09:00:00-04:00',
+      checkedAt:'2026-10-14T12:00:00-04:00',contentHash:'b'.repeat(64)}});
+  });
+  await page.clock.setFixedTime(new Date('2026-10-14T13:00:00-04:00'));
+  await page.goto('/#today');
+  const today=page.locator('.today-homework');
+  await expect(today.locator('.homework-task-list .check-item')).toHaveCount(2);
+  await expect(today).toContainText('Page 22');
+  await expect(today).toContainText('Spelling Choice Board activity');
+  await expect(today).not.toContainText(/cover books|reading log|behavior chart|return everything/i);
+  await page.getByRole('button',{name:'Calendar'}).click();
+  await page.locator('.calendar-segments [data-route="week"]').click();
+  const week=page.locator('.week-homework-card');
+  await expect(week.locator('.homework-task-list .check-item')).toHaveCount(2);
+  await expect(week).toContainText('Page 22');
+  await expect(week).toContainText('Spelling Choice Board activity');
+});
