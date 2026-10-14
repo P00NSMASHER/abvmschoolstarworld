@@ -60,7 +60,7 @@ function itemMode(item,kind) {
   const prompt=clean(item?.prompt),answer=clean(item?.answer);
   const quoted=[...prompt.matchAll(/["“]([^"”]{6,230})["”]/g)].map(match=>match[1]);
   const sentence=answer.length>1&&quoted.find(row=>row.toLowerCase().includes(answer.toLowerCase()));
-  if(kind==='grammar'&&sentence&&/complete\s+(?:subject|predicate)/i.test(prompt))return {
+  if(kind==='grammar'&&sentence&&/(?:complete\s+)?(?:subject|predicate)/i.test(prompt))return {
     mode:'underline',prompt:sentence,detail:/predicate/i.test(prompt)?'Underline the complete predicate.':'Underline the complete subject.'};
   if(kind==='grammar'&&/^(statement|question|command|exclamation)$/i.test(answer)&&quoted.length)
     return {mode:'sentence-type',prompt:quoted[0].replace(/[.?!]\s*$/,''),detail:'Write the end mark and the letter: S, Q, C, or E.'};
