@@ -125,6 +125,7 @@ test("interactive day and checklist controls expose selected/completion state",a
   await installFreshHomeworkFixture(page);
   await page.clock.setFixedTime(HOMEWORK_E2E_NOW);
   await page.reload();
+  await openTab(page,"Today");
   const check=page.locator("[data-homework-check]").first();
   await expect(check).toBeVisible();
   await expect(check).toHaveAttribute("aria-label",/Mark complete|Completed/);
