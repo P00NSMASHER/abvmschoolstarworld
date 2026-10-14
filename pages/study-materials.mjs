@@ -387,17 +387,27 @@ export function createStudyMaterials({
       ? materialDay(time).lessons
         .filter(lesson => lesson.subject === subject && lesson.weekOf === weekBounds(test.date).start)
         .flatMap(lesson => array(lesson.notes))
-        .filter(note => /^(?:Photo-confirmed practice words|Short i:|Long a:)/i.test(note))
+        .filter(note => /^(?:Photo-confirmed practice words|Verified spelling words|Teacher spelling words|Spelling words|Short i:|Long a:)/i.test(note))
       : [];
     const facts = uniqueGuideText([...verifiedWeekNotes,...questionFacts,...subjectFacts]).slice(0,6);
     const vocabulary = subject === 'Reading / ELA' && !/grammar|predicate|subject\s*&/.test(lower)
       ? [...new Map(array(pack.vocabulary).filter(row => row?.subject === subject && meaningfulText(row?.term))
         .map(row => [String(row.term).trim().toLowerCase(),row])).values()].slice(0,8)
       : [];
-    const practice = group.slice(0,4).map(row => ({
-      prompt:compactGuideText(row.prompt,160),
-      answer:compactGuideText(row.answer,90),
+    const wordNote = verifiedWeekNotes.find(note =>
+      /^(?:Photo-confirmed practice words in the recorded order|Verified spelling words|Teacher spelling words|Spelling words)\s*:/i.test(note));
+    const spellingWords = wordNote
+      ? [...new Set(wordNote.slice(wordNote.indexOf(':') + 1).split(',')
+        .map(word => word.replace(/[.\s]+$/,'').trim()).filter(word => /^[a-z][a-z'-]*$/i.test(word)))].slice(0,30)
+      : [];
+    // Print the actual checked choices, but never mix in private responses,
+    // teacher markings or answers on the student's test page.
+    const practice = group.slice(0,subject === 'Math' ? 8 : 10).map(row => ({
+      prompt:compactGuideText(row.prompt,320),
+      answer:compactGuideText(row.answer,140),
+      choices:array(row.choices).map(choice => compactGuideText(choice,160)),
       skill:compactGuideText(row.skill,60),
+      questionType:compactGuideText(row.questionType,40),
     }));
     const warnings = [];
     const fallback = state.fallback.some(row => row.index === i);
@@ -405,11 +415,12 @@ export function createStudyMaterials({
     if (!group.length) warnings.push('No reviewed practice questions match this test yet. Use the teacher materials sent home together with the verified notes below.');
     if (subject === 'Spelling / Handwriting') {
       coverageWarnings(instant()).filter(row => row.subject === subject).forEach(row => warnings.push(row.text));
+      if (!spellingWords.length) warnings.push('No verified word list matches this test week. Older weeks\' spelling words are not substituted.');
     }
     if (!facts.length) warnings.push('No reviewed test-specific facts are available yet, so this guide does not invent missing material.');
     return {
       key:testKey(test), label:compactGuideText(test.label,120), date:test.date, subject:subject || 'Test review',
-      facts, vocabulary, practice, fallback, warnings:uniqueGuideText(warnings).slice(0,3),
+      facts, vocabulary, practice, spellingWords, fallback, warnings:uniqueGuideText(warnings).slice(0,3),
       sourceLabel:verifiedWeekNotes.length
         ? 'Teacher-announced topic with family photo-confirmed homework words; practice is not an official test'
         : 'Current ABVM teacher notes, reviewed schoolwork, and checked practice material',
