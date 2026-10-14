@@ -30,13 +30,15 @@ export function questionsForTest(test, questions) {
       if (q.subject !== "Religion") return false;
       if (!c) return true;
       if (q.skill === "religion-chapter-" + c[1]) return true;
+      if (Array.isArray(q.reviewedChapters) && q.reviewedChapters.includes(c[1]))
+        return true;
       const evidence = q.sourceLineage?.matchedEvidence;
       return (
         Array.isArray(evidence) &&
         evidence.some(
           (value) =>
             typeof value === "string" &&
-            new RegExp("\\bChapter\\s+" + c[1] + "\\s*:", "i").test(value),
+            new RegExp("^\\s*Chapter\\s+" + c[1] + "\\s*:", "i").test(value),
         )
       );
     });
