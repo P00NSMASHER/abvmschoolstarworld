@@ -17,8 +17,13 @@ export function religionChapterScopes(question) {
 /** Match practice to an announced test without inventing scope or altering sources. */
 export function questionsForTest(test, questions) {
   const label = test.label.toLowerCase();
-  if (/grammar|predicate|subject &/.test(label))
-    return questions.filter((q) => q.skill === "subject-predicate");
+  if (/grammar|predicate|subject &|sentence types|punctuation/.test(label)) {
+    if (/subject|predicate/.test(label))
+      return questions.filter(q => q.skill === "subject-predicate");
+    if (/sentence types|punctuation/.test(label))
+      return questions.filter(q => q.skill === "sentence-types");
+    return questions.filter(q => ["subject-predicate","sentence-types"].includes(q.skill));
+  }
   if (/spelling|handwriting/.test(label)) {
     const vowel = label.match(/short\s+([aeiou])/);
     const focus = vowel
@@ -50,7 +55,12 @@ export function questionsForTest(test, questions) {
         religionChapterScopes(q).includes(number);
     });
   }
-  if (/math/.test(label)) return questions.filter((q) => q.subject === "Math");
+  if (/math|subtraction|addition/.test(label)) {
+    const scope = /subtraction|subtract|difference|minus/.test(label) ? /subtraction|subtract|difference|minus/
+      : /addition|add|sum/.test(label) ? /addition|add|sum/ : null;
+    return questions.filter(q => q.subject === "Math" &&
+      (!scope || scope.test(String(q.skill || '')+' '+String(q.prompt || '')+' '+String(q.sourceFact || ''))));
+  }
   if (/reading|ela/.test(label))
     return questions.filter(
       (q) =>
