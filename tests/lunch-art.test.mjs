@@ -47,13 +47,14 @@ test('automatic queue includes current and future menus without expired-month ch
   assert.equal(pendingArtMenus(future, '2026-10').length, 20);
 });
 
-test('published October registry covers every meal and leaves all closures text-only', () => {
+test('published October registry renders only exact approved meals and leaves closures and amendments text-only', () => {
   const published = JSON.parse(readFileSync(new URL('../pages/data/lunch-art-registry.json', import.meta.url), 'utf8'));
   const meals = catalogMeals();
   const map = approvedArtwork(meals, published);
   const october = meals.filter(meal => meal.date.startsWith('2026-10'));
-  assert.equal(october.filter(meal => renderLunchArtwork(meal, map)).length, 20);
+  assert.equal(october.filter(meal => renderLunchArtwork(meal, map)).length, 19);
   assert.equal(october.filter(meal => !hasLunch(meal)).length, 2);
   assert.ok(october.filter(meal => !hasLunch(meal)).every(meal => renderLunchArtwork(meal, map) === ''));
-  assert.equal(pendingArtMenus(buildArtPlan(CATALOG, published), '2026-10').length, 0);
+  assert.equal(renderLunchArtwork(october.find(meal => meal.date === '2026-10-15'), map), '');
+  assert.equal(pendingArtMenus(buildArtPlan(CATALOG, published), '2026-10').length, 1);
 });
