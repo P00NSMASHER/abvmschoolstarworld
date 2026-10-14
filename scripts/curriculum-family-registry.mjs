@@ -1,6 +1,7 @@
 import { MATH_SUBTRACTION_FAMILY } from './curriculum-families/math-subtraction.mjs';
 import { SHORT_I_LONG_I_FAMILY } from './curriculum-families/short-i-long-i.mjs';
 import { APPROVED_PR270_FAMILIES } from './curriculum-families/approved-pr270.mjs';
+import { READING_CHARTS_FAMILY } from './curriculum-families/reading-charts.mjs';
 
 const FAMILY_REGISTRY = Object.freeze([
   Object.freeze({
@@ -130,6 +131,7 @@ const FAMILY_REGISTRY = Object.freeze([
   SHORT_I_LONG_I_FAMILY,
   MATH_SUBTRACTION_FAMILY,
   ...APPROVED_PR270_FAMILIES,
+  READING_CHARTS_FAMILY,
 ]);
 
 const clone = value => structuredClone(value);
