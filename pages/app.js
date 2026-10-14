@@ -309,7 +309,6 @@ function loadStudyRanks(){return ensureStudyGameEngine().then(e=>e.studyBadgeCol
 function renderToday(){
  const d=today(),priority=datedImportantEvents().find(({item,date})=>date>=d&&(kindClass(item)==="test"||kindClass(item)==="due"));
  stack().innerHTML=window.ABVMProductView.today({d,pack,header,freshness,taskHtml,kindClass,fmtDate,fmtShort,linkedTextHtml,events:eventItemsForDate(d),tasks:taskRecordsForSurface("today"),homeworkHtml:homeworkCardForDate(d),next:currentTest()||(priority?{x:priority.item,d:priority.date}:null),reminders:upcomingReminderTexts(d,2),lunchHtml:lunchCardHtml(d,lunchForDate(d))});
- // Hide broken art, but preserve verified lunch text.
  const mealArt=stack().querySelector(".today-screen .lunch-art img");
  if(mealArt){
    const hideBrokenArt=()=>mealArt.closest(".lunch-art")?.remove();
