@@ -2,14 +2,21 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
-test('teacher refresh opens only draft curriculum candidates and blocks publication on unresolved coverage', () => {
+test('teacher refresh isolates held candidate questions but continues with verified teacher data', () => {
   const workflow = readFileSync('.github/workflows/sync-study-pack.yml', 'utf8');
   assert.match(workflow, /--autopilot-report=\.curriculum-coverage-plan\.json/);
   assert.match(workflow, /gh pr create --draft/);
   assert.match(workflow, /curriculum-candidate-\$\{SAFE_KEY\}/);
-  assert.match(workflow, /Block publication while curriculum candidates are unresolved/);
-  assert.match(workflow, /assert-curriculum-coverage-resolved\.mjs/);
+  assert.match(workflow, /Verify page-exact source parity and isolate unsupported curriculum/);
+  assert.match(workflow, /assert-safe-teacher-refresh\.mjs --report=\.curriculum-coverage-plan\.json/);
+  assert.doesNotMatch(workflow, /node scripts\/assert-curriculum-coverage-resolved\.mjs/);
   assert.doesNotMatch(workflow, /gh pr merge|--auto-merge|enable-auto-merge/i);
+});
+
+test('teacher refresh CI reruns when its isolated-source safety guard or regressions change', () => {
+  const workflow = readFileSync('.github/workflows/sync-study-pack.yml', 'utf8');
+  assert.match(workflow, /scripts\/assert-safe-teacher-refresh\.mjs/);
+  assert.match(workflow, /tests\/assert-safe-teacher-refresh\.test\.mjs/);
 });
 
 test('curriculum coverage evidence artifact includes the hidden report and fails closed if it disappears', () => {
@@ -78,14 +85,14 @@ test('candidate PR lifecycle cannot stall on a pre-existing branch or closed dra
   assert.match(workflow, /retry-\$\{GITHUB_RUN_ID\}/);
   assert.doesNotMatch(workflow, /gh pr merge|--auto-merge|enable-auto-merge/i);
 });
-test('blocked Actions PR bookkeeping cannot bypass the unresolved coverage gate', () => {
+test('blocked Actions candidate PR bookkeeping cannot bypass source-safe isolation', () => {
   const workflow = readFileSync('.github/workflows/sync-study-pack.yml', 'utf8');
   assert.match(workflow, /if gh pr create --draft/);
   assert.match(workflow, /GitHub Actions could not create the governed draft PR/);
   assert.match(workflow, /if ! create_candidate_pr/);
-  assert.match(workflow, /continuing so the explicit unresolved-coverage gate can report the curriculum blocker/);
-  assert.match(workflow, /Block publication while curriculum candidates are unresolved/);
-  assert.match(workflow, /assert-curriculum-coverage-resolved\.mjs --report=\.curriculum-coverage-plan\.json/);
+  assert.match(workflow, /continuing to the source-safe isolation gate; candidate questions remain disabled/);
+  assert.match(workflow, /Verify page-exact source parity and isolate unsupported curriculum/);
+  assert.match(workflow, /assert-safe-teacher-refresh\.mjs --report=\.curriculum-coverage-plan\.json/);
 });
 
 test('candidate branch identity is stable across unrelated source-hash churn', () => {
@@ -103,7 +110,7 @@ test('refresh publication reconciles main races without force-pushing unverified
   assert.match(workflow, /git fetch origin main/);
   assert.match(workflow, /git reset --hard "\$REMOTE_MAIN"/);
   assert.match(workflow, /refresh-teacher-pages\.mjs --autopilot-report=/);
-  assert.match(workflow, /--context="Unresolved curriculum coverage after main advanced"/);
+  assert.match(workflow, /node scripts\/assert-safe-teacher-refresh\.mjs --report=\.curriculum-coverage-plan\.json/);
   assert.match(workflow, /npm run qa/);
   assert.match(workflow, /git push origin HEAD:main/);
   assert.doesNotMatch(workflow, /git push[^\n]*--force/);
