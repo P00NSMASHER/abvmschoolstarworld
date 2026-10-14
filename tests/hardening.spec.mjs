@@ -61,7 +61,7 @@ test("freshness states distinguish current, stale, and offline data",async({brow
   await expect(stalePage.locator(".freshness")).toContainText(/Teacher pages older/);
   await staleContext.close();
 
-  const offlineContext=await browser.newContext();
+  const offlineContext=await browser.newContext({serviceWorkers:"allow"});
   const offlinePage=await offlineContext.newPage();
   await offlinePage.goto("http://127.0.0.1:4173/#today");
   await expect(offlinePage.locator(".screen")).toBeVisible({timeout:10_000});
@@ -124,7 +124,7 @@ test("interactive day and checklist controls expose selected/completion state",a
   // Interact with the real current homework button rather than a hidden daily routine.
   await installFreshHomeworkFixture(page);
   await page.clock.setFixedTime(HOMEWORK_E2E_NOW);
-  await page.goto("/#today");
+  await page.reload();
   const check=page.locator("[data-homework-check]").first();
   await expect(check).toBeVisible();
   await expect(check).toHaveAttribute("aria-label",/Mark complete|Completed/);
