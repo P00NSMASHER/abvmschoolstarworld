@@ -455,19 +455,16 @@ test('test practice balances complete equal quotas and freezes only mapped test 
   assert.notEqual(round.sourceKey,model.forMode('quick').sourceKey);
 });
 
-test('test fallback matches the announced vowel and missing banks never become a misleading combined round',() => {
+test('test prep never substitutes older STAR curriculum or unrelated vowel questions',() => {
   const events = [{date:'2026-10-05',label:'Spelling (short i / long i) / Handwriting'},{date:'2026-10-05',label:'Science'}];
   const model = createStudyMaterials(opts({events,catalog:catalog(pool('short-a-',8,'Spelling / Handwriting',{skill:'long-short-a',sourceFact:'short a / long a'}))}));
   const state = model.tests();
   assert.equal(state.date,'2026-10-05');
-  assert.equal(state.supported.length,1);
-  assert.equal(state.supported[0].fallback,true);
-  assert.equal(state.missing[0].label,'Science');
+  assert.equal(state.supported.length,0);
+  assert.deepEqual(state.missing.map(row=>row.label),events.map(row=>row.label));
+  assert.deepEqual(state.fallback,[]);
   assert.deepEqual(model.testRound({seed:1}).questions,[]);
-  const supported = model.testRound({index:state.supported[0].index,seed:1});
-  assert.equal(supported.questions.length,8);
-  assert(supported.questions.every(q => q.skill === 'long-short-i'));
-  assert.equal(supported.fallback.length,1);
+  assert.deepEqual(model.testRound({index:0,seed:1}).questions,[]);
   assert.deepEqual(model.testRound({index:1,seed:1}).questions,[]);
   assert.deepEqual(model.testRound({index:-1,seed:1}).questions,[]);
 });
