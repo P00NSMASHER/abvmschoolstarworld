@@ -118,12 +118,13 @@
       '<h1 class="visually-hidden" tabindex="-1">Today</h1><section class="hero-card school-photo-hero"><div class="hero-copy"><p class="eyebrow">' +
       esc(fmtDate(d)) +
       '</p><h2>Ready for today?</h2><p>Your school day, all together.</p></div><img class="hero-photo" src="./assets/school/abvm-school-hero.webp" width="1024" height="683" fetchpriority="high" alt="Assumption BVM School in Pottsville"><span class="photo-caption">OUR ABVM</span><img class="today-school-seal" src="./assets/abvm-app-icon-192.png" width="48" height="48" alt="Assumption BVM Catholic School logo"></section>' +
-      c.homeworkHtml + '<figure class="school-sign-card"><img class="school-sign-photo" src="./assets/school/abvm-school-sign.webp" width="420" height="280" loading="eager" decoding="async" alt="Original photograph of the Assumption BVM school sign on Howard Avenue"><figcaption><strong>Our school sign</strong><span>Assumption BVM · Howard Avenue</span></figcaption></figure>' +
+      c.homeworkHtml +
       '<div class="today-primary">' + nextHtml +
       '<button class="study-invitation" type="button" data-route="study"><img src="./assets/illustrations/reading.webp" width="72" height="72" alt=""><span><strong>Start studying</strong><small>A little practice. A little more confidence.</small></span>' +
       icon("arrow") +
       "</button></div>" +
       eagerTodayLunchArt(lunchHtml) +
+      '<figure class="school-sign-card"><img class="school-sign-photo" src="./assets/school/abvm-school-sign.webp" width="420" height="280" loading="eager" decoding="async" alt="Original photograph of the Assumption BVM school sign on Howard Avenue"><figcaption><strong>Our school sign</strong><span>Assumption BVM · Howard Avenue</span></figcaption></figure>' +
       '<section class="today-panel">' +
       sectionHead(closed ? "Today’s plan" : "At school today") +
       '<div class="timeline">' +

@@ -298,7 +298,7 @@ test("required parent tasks are not mislabeled as if participating",async({brows
   await page.clock.setFixedTime(new Date(`${schoolDate}T17:00:00Z`));
   const fixture=structuredClone(source);
   fixture.pack.homework=[
-    {day:"Current Homework posting",subject:"Parent",task:"Cover books",due:"Current posting"},
+    {day:"Current Homework posting",subject:"Parent",task:"Sign required reading permission form",due:"Current posting"},
     {day:"Current Homework posting",subject:"Parent",task:"Return permission slip if participating",due:"Current posting"}
   ];
   await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:fixture}));

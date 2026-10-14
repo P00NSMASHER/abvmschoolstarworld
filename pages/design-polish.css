@@ -2012,9 +2012,9 @@
 }
 @media(min-width:700px){
   .today-screen>.today-homework{grid-column:1/-1;grid-row:2}
-  .today-screen>.school-sign-card{grid-column:1/-1;grid-row:3}
-  .today-screen .today-primary{grid-column:1;grid-row:4}
-  .today-screen>.lunch-card{grid-column:2;grid-row:4}
+  .today-screen>.school-sign-card{grid-column:1/-1;grid-row:4}
+  .today-screen .today-primary{grid-column:1;grid-row:3}
+  .today-screen>.lunch-card{grid-column:2;grid-row:3}
   .today-screen .today-panel{grid-column:1;grid-row:5}
   .today-screen>.study-badge-surface{grid-column:2;grid-row:5}
   .today-screen .today-updates-card{grid-column:1;grid-row:6}
