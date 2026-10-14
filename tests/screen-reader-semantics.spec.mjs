@@ -55,14 +55,15 @@ test("Calendar date controls remain buttons with visible day numbers",async({pag
 });
 
 test("checklist controls communicate action text and completion visually",async({page})=>{
+  await page.clock.setFixedTime(new Date("2026-10-13T21:00:00-04:00"));
   await waitForApp(page,"/#today");
-  const check=page.locator("[data-check]").first();
+  const check=page.locator("[data-homework-check]").first();
   await expect(check).toBeVisible();
   const label=(await check.innerText()).trim();
   expect(label.length).toBeGreaterThan(3);
   const before=await check.evaluate(el=>el.classList.contains("is-done"));
   await check.click();
-  const after=await page.locator("[data-check]").first().evaluate(el=>el.classList.contains("is-done"));
+  const after=await page.locator("[data-homework-check]").first().evaluate(el=>el.classList.contains("is-done"));
   expect(after).toBe(!before);
 });
 
