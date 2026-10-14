@@ -41,7 +41,7 @@ function fixture({gap = true} = {}) {
     sourcePages: pages,
     pack: {sourceSufficient: true, sourceHash, sourceCheckedAt: checkedAt, contentPipeline: pipeline},
   };
-  const plan = buildCurriculumCoveragePlan({pipeline, sourcePages: pages, sourceHash, generatedAt: checkedAt});
+  const plan = structuredClone(buildCurriculumCoveragePlan({pipeline, sourcePages: pages, sourceHash, generatedAt: checkedAt}));
   return {pack, plan};
 }
 
