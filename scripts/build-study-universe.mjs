@@ -93,15 +93,17 @@ function forTest(test,rows,religionChaptersById=new Map()){
 function balancedGuideQuestions(rows,limit=6){
   const pools=new Map();
   for(const row of rows){
-    const grouping=row.skill+'|'+row.questionType;
-    if(!pools.has(grouping))pools.set(grouping,[]);
-    pools.get(grouping).push(row);
+    if(!pools.has(row.skill))pools.set(row.skill,[]);
+    pools.get(row.skill).push(row);
   }
-  const keys=[...pools.keys()].sort(compare),selected=[];
-  while(selected.length<limit&&keys.some(k=>pools.get(k).length)){
-    for(const key of keys){
-      const next=pools.get(key).shift();
-      if(next)selected.push(next);
+  const skills=[...pools.keys()].sort(compare),selected=[];
+  const types=['direct','transfer','reasoning'];
+  for(let round=0;selected.length<limit&&skills.some(skill=>pools.get(skill).length);round++){
+    for(const skill of skills){
+      const pool=pools.get(skill);
+      if(!pool.length)continue;
+      const match=pool.findIndex(row=>row.questionType===types[round%types.length]);
+      selected.push(pool.splice(match>=0?match:0,1)[0]);
       if(selected.length>=limit)break;
     }
   }
