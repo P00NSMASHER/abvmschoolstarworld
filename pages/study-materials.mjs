@@ -126,8 +126,9 @@ function noteMatchesTest(text, label, subject) {
     return /spell|handwriting|phonics|vowel|short|long|blend|word|letter/i.test(value);
   }
   if (subject === 'Religion') {
-    const chapter = lower.match(/chapter\s*(\d+)/i)?.[1];
-    return chapter ? new RegExp('\\bchapter\\s*' + chapter + '\\b','i').test(value) : true;
+    const chapter = lower.match(/\b(?:chapter|ch\.?)\s*([1-9]\d*)\b/i)?.[1];
+    // A named chapter's notes must begin with its own chapter header.
+    return chapter ? new RegExp('^\\s*Chapter\\s+' + chapter + '\\s*:','i').test(value) : true;
   }
   return true;
 }
