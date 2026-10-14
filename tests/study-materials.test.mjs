@@ -7,6 +7,8 @@ import {createMaterialsView, printableStudyGuideHtml, resolveVocabularyMeaning} 
 import {createStudyResourceLoader} from '../pages/study-resources.mjs';
 import {practiceIdentity} from '../pages/study-experience.mjs';
 import {buildGrade2ContentPipeline} from '../scripts/grade2-content-pipeline.mjs';
+import {buildRuntimePack} from '../scripts/build-runtime-pack.mjs';
+import {religionChapterScopes} from '../pages/study-hub-core.mjs';
 
 const monday = '2026-10-05T16:00:00Z';
 function memory(initial = {}) {
@@ -642,4 +644,36 @@ test('Class notes display exact repeats once per subject while preserving govern
   assert(html.includes('data-notes-subject="0" aria-pressed="true"'),'one subject is selected immediately');
   assert(html.includes('data-note-subject="Reading / ELA" hidden'),'other subjects do not create a wall of notes');
   assert(!html.includes('class="study-notes-original" open'),'original source remains available without dominating the notes');
+});
+
+test("actual October 15 Chapter 3 live Test Prep works with compact runtime and full-pack fallback",()=>{
+  const full=JSON.parse(readFileSync(new URL('../pages/data/study-pack.json',import.meta.url),'utf8'));
+  const runtime=buildRuntimePack(full);
+  const reviewed=full.pack.contentPipeline.questions.filter(row=>religionChapterScopes(row).includes(3));
+  const allowed=new Set(reviewed.map(q=>q.id));
+  assert.equal(allowed.size,18);
+  const excluded=full.pack.contentPipeline.questions.filter(q=>q.subject==='Religion'&&!allowed.has(q.id));
+  assert.equal(excluded.length,21);
+  const engine=loadEngine();
+  for(const envelope of [runtime,full]){
+    const pack=envelope.pack;
+    const built=engine.buildCatalog(pack,{sourceKey:'religion-ch3-live-validation'});
+    const model=createStudyMaterials({
+      pack,catalog:built,storage:memory(),
+      now:()=>Date.parse('2026-10-13T20:00:00Z'),
+      events:[{date:'2026-10-15',label:'Religion Ch. 3',kind:'test'}],
+    });
+    const state=model.printableTests();
+    const listed=state.supported.find(row=>row.label==='Religion Ch. 3');
+    assert.ok(listed,'Chapter 3 must be enabled in Test Prep, not shown as unsupported');
+    assert.equal(listed.count,18);
+    const round=model.testRound({index:0,upcoming:true,seed:'chapter3-regression'});
+    assert.equal(round.questions.length,8);
+    assert.ok(round.questions.every(q=>allowed.has(q.id)),'only the reviewed Chapter 3 questions are selectable');
+    assert.ok(round.questions.every(q=>q.subject==='Religion'));
+    const guide=model.testGuide(0,{upcoming:true});
+    assert.equal(guide.label,'Religion Ch. 3');
+    assert.ok(guide.practice.length>0);
+    assert.equal(state.missing.length,0);
+  }
 });
