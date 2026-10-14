@@ -211,7 +211,7 @@ test("Today does not show Attend Mass before the verified Mass date",async({page
   await page.clock.setFixedTime(new Date("2026-10-05T12:00:00-04:00"));
   await page.goto("/#today");
   await expect(page.locator(".today-panel")).toBeVisible({timeout:10_000});
-  await expect(page.locator(".today-panel .task-list")).not.toContainText("Attend Mass");
+  await expect(page.locator(".today-panel .check-item")).toHaveCount(0);
   await expect(page.locator(".today-panel .timeline")).not.toContainText(/\bMass\b/);
 });
 

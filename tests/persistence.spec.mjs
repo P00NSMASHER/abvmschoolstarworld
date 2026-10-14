@@ -1,18 +1,19 @@
 import {test,expect} from "@playwright/test";
 
-test("Today checklist survives reload and can be restored",async({page})=>{
+test("Today's academic homework checklist survives reload and can be restored",async({page})=>{
+  await page.clock.setFixedTime(new Date("2026-10-13T21:00:00-04:00"));
   await page.goto("/#today");
-  const item=page.locator("[data-check]").first();
+  const item=page.locator("[data-homework-check]").first();
   await expect(item).toBeVisible({timeout:10_000});
   const wasDone=await item.evaluate(el=>el.classList.contains("is-done"));
   await item.click();
-  await expect(page.locator("[data-check]").first()).toHaveClass(wasDone?/^(?!.*is-done)/:/is-done/);
+  await expect(page.locator("[data-homework-check]").first()).toHaveClass(wasDone?/^(?!.*is-done)/:/is-done/);
   await page.reload();
-  const reloaded=page.locator("[data-check]").first();
+  const reloaded=page.locator("[data-homework-check]").first();
   await expect(reloaded).toBeVisible({timeout:10_000});
   expect(await reloaded.evaluate(el=>el.classList.contains("is-done"))).toBe(!wasDone);
   await reloaded.click();
-  expect(await page.locator("[data-check]").first().evaluate(el=>el.classList.contains("is-done"))).toBe(wasDone);
+  expect(await page.locator("[data-homework-check]").first().evaluate(el=>el.classList.contains("is-done"))).toBe(wasDone);
 });
 
 test("Study Games learning evidence persists across reload",async({page})=>{
@@ -41,10 +42,11 @@ test("storage failures fail soft instead of breaking the app",async({browser})=>
     Object.defineProperty(Storage.prototype,"removeItem",{value:thrower,configurable:true});
   });
   const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-10-13T21:00:00-04:00"));
   await page.goto("http://127.0.0.1:4173/#today");
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
-  await expect(page.locator("[data-check]").first()).toBeVisible();
-  await page.locator("[data-check]").first().click();
+  await expect(page.locator("[data-homework-check]").first()).toBeVisible();
+  await page.locator("[data-homework-check]").first().click();
   await expect(page.locator(".screen")).toBeVisible();
   await page.getByRole("button",{name:"Study",exact:true}).click();
   await expect(page.locator(".study-game-grid")).toBeVisible({timeout:10_000});
@@ -52,50 +54,37 @@ test("storage failures fail soft instead of breaking the app",async({browser})=>
   await context.close();
 });
 
-test("completion state is keyed by school week and task identity",async({page})=>{
-  const source=await (await page.request.get("/data/study-pack.json")).json();
-  const weekSlug=String(source.pack?.weekLabel||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
-  expect(weekSlug).toMatch(/^week-of-/);
+test("homework completion is keyed by school date and exact assignment identity",async({page})=>{
+  await page.clock.setFixedTime(new Date("2026-10-13T21:00:00-04:00"));
   await page.goto("/#today");
-  await expect(page.locator("[data-check]").first()).toBeVisible({timeout:10_000});
+  await expect(page.locator("[data-homework-check]").first()).toBeVisible({timeout:10000});
   const created=await page.evaluate(()=>{
-    for(const key of Object.keys(localStorage))if(key.startsWith("abvm-task:v2:"))localStorage.removeItem(key);
-    const task=document.querySelector("[data-check]");
+    for(const key of Object.keys(localStorage))if(key.startsWith("abvm-homework:v1:"))localStorage.removeItem(key);
+    const task=document.querySelector("[data-homework-check]");
     const before=Object.keys(localStorage);
     task?.click();
-    const after=Object.keys(localStorage);
-    return after.filter(key=>!before.includes(key));
+    return Object.keys(localStorage).filter(key=>!before.includes(key));
   });
-  expect(created.length).toBe(1);
-  expect(created[0].startsWith(`abvm-task:v2:${weekSlug}:`)).toBe(true);
-  expect(created[0]).not.toContain("teacher-pages-");
+  expect(created).toHaveLength(1);
+  expect(created[0]).toBe("abvm-homework:v1:2026-10-13:math:page-22");
 });
 
-test("Read completion stays synchronized between Today and Week",async({page})=>{
-  const source=await (await page.request.get("/data/study-pack.json")).json();
-  const schoolDate=source.pack?.lunchMenu?.[0]?.date;
-  expect(schoolDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-  await page.clock.setFixedTime(new Date(`${schoolDate}T17:00:00Z`));
+test("verified homework completion stays synchronized between Today and Week",async({page})=>{
+  await page.clock.setFixedTime(new Date("2026-10-13T21:00:00-04:00"));
   await page.goto("/#today");
-  await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
-  const taskToday=page.locator("[data-check]").first();
-  await expect(taskToday).toBeVisible();
-  const taskId=await taskToday.getAttribute("data-check");
-  expect(taskId).toBeTruthy();
-
-  const wasDone=await taskToday.evaluate(el=>el.classList.contains("is-done"));
-  if(!wasDone)await taskToday.click();
-  await expect(page.locator(`[data-check="${taskId}"]`).first()).toHaveClass(/is-done/);
-
+  await expect(page.locator(".today-homework [data-homework-check='0']")).toBeVisible({timeout:10000});
+  const item=page.locator(".today-homework [data-homework-check='0']");
+  const wasDone=await item.evaluate(el=>el.classList.contains("is-done"));
+  if(!wasDone)await item.click();
+  await expect(page.locator(".today-homework [data-homework-check='0']")).toHaveClass(/is-done/);
   await page.locator('.bottom-nav [data-tab="calendar"]').click();
   await page.locator('[data-route="week"]').click();
-  const taskWeek=page.locator(`[data-check="${taskId}"]`).first();
-  await expect(taskWeek).toBeVisible();
-  await expect(taskWeek).toHaveClass(/is-done/);
-
+  const selected=page.locator(".week-homework-card [data-homework-check='0']");
+  await expect(selected).toBeVisible();
+  await expect(selected).toHaveClass(/is-done/);
   if(!wasDone){
-    await taskWeek.click();
+    await selected.click();
     await page.getByRole("button",{name:"Today",exact:true}).click();
-    await expect(page.locator(`[data-check="${taskId}"]`).first()).not.toHaveClass(/is-done/);
+    await expect(page.locator(".today-homework [data-homework-check='0']")).not.toHaveClass(/is-done/);
   }
 });

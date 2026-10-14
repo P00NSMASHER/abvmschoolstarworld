@@ -20,6 +20,8 @@ test("online refresh applies changed school data without losing checklist state"
   const lunchDate=source.pack?.lunchMenu?.[0]?.date;
   expect(lunchDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   await page.clock.setFixedTime(new Date(`${lunchDate}T17:00:00Z`));
+  // Preserve a legitimate source-backed school checklist action; Read is a hidden daily habit.
+  source.pack.homework.push({day:"Current Homework posting",subject:"School",task:"Return signed permission form",due:"Current posting"});
   let current=structuredClone(source);
   await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:current}));
   await page.goto("http://127.0.0.1:4173/#today");
@@ -296,7 +298,7 @@ test("required parent tasks are not mislabeled as if participating",async({brows
   await page.clock.setFixedTime(new Date(`${schoolDate}T17:00:00Z`));
   const fixture=structuredClone(source);
   fixture.pack.homework=[
-    {day:"Current Homework posting",subject:"Parent",task:"Cover books",due:"Current posting"},
+    {day:"Current Homework posting",subject:"Parent",task:"Sign required reading permission form",due:"Current posting"},
     {day:"Current Homework posting",subject:"Parent",task:"Return permission slip if participating",due:"Current posting"}
   ];
   await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:fixture}));

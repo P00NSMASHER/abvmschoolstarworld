@@ -91,22 +91,20 @@ test("subject choices, Test Prep buttons, and native disclosures work from keybo
 });
 
 test("checklist completion preserves scroll position and keyboard focus",async({page})=>{
-  const source=await (await page.request.get("/data/study-pack.json")).json();
-  const schoolDate=source.pack?.lunchMenu?.[0]?.date;
-  expect(Number.isFinite(Date.parse(String(schoolDate)+"T12:00:00Z"))).toBe(true);
-  await page.clock.setFixedTime(new Date(`${schoolDate}T17:00:00Z`));
+  // Measure real academic homework, not the retired daily Read routine.
+  await page.clock.setFixedTime(new Date("2026-10-13T21:00:00-04:00"));
   await page.setViewportSize({width:390,height:480});
   await waitForApp(page,"/#week");
-  const checks=page.locator("[data-check]");
+  const checks=page.locator("[data-homework-check]");
   expect(await checks.count()).toBeGreaterThan(1);
   const target=checks.last();
-  const index=await target.getAttribute("data-check");
+  const index=await target.getAttribute("data-homework-check");
   await target.scrollIntoViewIfNeeded();
   await target.focus();
   const before=await page.locator(".screen").evaluate(el=>el.scrollTop);
   expect(before).toBeGreaterThan(0);
   await page.keyboard.press("Enter");
-  const updated=page.locator(`[data-check="${index}"]`);
+  const updated=page.locator(`[data-homework-check="${index}"]`);
   await expect(updated).toBeFocused();
   const after=await page.locator(".screen").evaluate(el=>el.scrollTop);
   expect(Math.abs(after-before)).toBeLessThanOrEqual(4);
