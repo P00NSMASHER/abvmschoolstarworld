@@ -2,16 +2,12 @@ import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import {SYNTHETIC_HOMEWORK} from './homework-e2e-fixture.mjs';
 
 const context={window:{},Intl,Date};
 vm.runInNewContext(readFileSync(new URL('../pages/homework-feed.js',import.meta.url),'utf8'),context);
 const model=context.window.ABVMHomeworkFeed;
-const currentSource=JSON.parse(readFileSync(new URL('../pages/data/homework-current.json',import.meta.url),'utf8'));
-const verifiedPosting={
-  ...currentSource,
-  checkedAt:'2026-10-14T00:32:53.326Z',
-  firstObservedAt:'2026-10-14T00:32:53.326Z'
-};
+const verifiedPosting={...SYNTHETIC_HOMEWORK};
 test('current verified posting lists only actionable assignments on its school date',()=>{
   const now=new Date('2026-10-14T01:00:00Z');
   const view=model.forDate(verifiedPosting,'2026-10-13',now);
@@ -60,4 +56,16 @@ test('Eastern school date, not UTC calendar date, determines whether homework is
   const view=model.forDate(nextMorning,'2026-10-14',new Date('2026-10-14T14:00:00.000Z'));
   assert.equal(view.state,'outdated');
   assert.deepEqual([...view.assignments],[]);
+});
+
+test('published teacher data may change without invalidating historical Math/Spelling regression fixtures',()=>{
+  const published=JSON.parse(readFileSync(new URL('../pages/data/homework-current.json',import.meta.url),'utf8'));
+  assert.doesNotThrow(()=>model.validate(published));
+  const checked=new Date(published.checkedAt);
+  const schoolDate=model.schoolKey(checked);
+  const sameDate=model.schoolKey(new Date(published.firstObservedAt))===schoolDate;
+  const view=model.forDate(published,schoolDate,new Date(checked.getTime()+1000));
+  assert.equal(view.state,sameDate?published.status:'outdated');
+  assert.deepEqual([...view.assignments],sameDate?published.assignments:[]);
+  assert.ok(view.assignments.every(item=>!/cover books|reading log|return everything/i.test(item.task)));
 });
