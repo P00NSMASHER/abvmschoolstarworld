@@ -108,7 +108,7 @@ test('printable study guides stay test-specific, bounded, and honest about missi
   assert(grammarGuide.facts.some(row => /subject/i.test(row)));
   assert(!grammarGuide.facts.some(row => /dialogue/i.test(row)));
   assert.equal(grammarGuide.vocabulary.length,0,'grammar guide does not pad the sheet with unrelated reading vocabulary');
-  assert(grammarGuide.practice.length <= 4);
+  assert(grammarGuide.practice.length <= 10);
   assert(grammarGuide.facts.length <= 6);
 
   const spellingGuide = model.testGuide(1);
@@ -116,6 +116,56 @@ test('printable study guides stay test-specific, bounded, and honest about missi
   assert(spellingGuide.practice.every(row => row.skill === 'long-short-i'));
   assert(!spellingGuide.facts.some(row => /short a|long a/i.test(row)),'an old vowel pattern must not leak into the current test guide');
   assert.equal(model.testGuide(99),null);
+});
+
+
+test('test-week spelling guide uses only the photographed matching-week word list',() => {
+  const events=[{date:'2026-10-09',label:'Spelling (short i / long i) / Handwriting'}];
+  const schoolwork={lessons:[
+    {id:'old',subject:'Spelling / Handwriting',weekOf:'2026-09-28',studiedOn:null,
+      notes:['Photo-confirmed practice words in the recorded order: cat, can, hat.'],questions:[]},
+    {id:'current',subject:'Spelling / Handwriting',weekOf:'2026-10-05',studiedOn:null,
+      notes:['Photo-confirmed practice words in the recorded order: did, fin, pick, line, tip, pipe, mix, five, side, cape, hike, made, all, any, says.'],questions:[]},
+  ]};
+  const model=createStudyMaterials(opts({events,schoolwork,catalog:catalog([]),pack:{subjects:[]}}));
+  const guide=model.testGuide(0);
+  assert.deepEqual(guide.spellingWords,[
+    'did','fin','pick','line','tip','pipe','mix','five','side','cape','hike','made','all','any','says']);
+  const printed=printableStudyGuideHtml(guide);
+  assert.match(printed,/Spelling Word Study/);
+  assert.match(printed,/Cheer-the-letters/);
+  assert.match(printed,/Roblox word builder/);
+  assert.doesNotMatch(printed,/>cat</);
+  assert.doesNotMatch(printed,/Parent Answer Key/);
+  assert.doesNotMatch(printed,/class="choices"/);
+});
+test('unknown spelling lists do not invent words from matching multiple-choice answers',() => {
+  const events=[{date:'2026-10-09',label:'Spelling (short i / long i) / Handwriting'}];
+  const spelling=pool('unknown-spelling-',3,'Spelling / Handwriting',{skill:'short-i-long-i',answer:'kite',choices:['kite','kit','kitey']});
+  const model=createStudyMaterials(opts({events,catalog:catalog(spelling)}));
+  const guide=model.testGuide(0);
+  assert.deepEqual(guide.spellingWords,[]);
+  const html=printableStudyGuideHtml(guide);
+  assert.match(html,/No confirmed word list/);
+  assert.doesNotMatch(html,/<strong>kite<\/strong>/);
+});
+test('test-style printable sheets hide answers on the student page and show a separate key',() => {
+  const events=[{date:'2026-10-05',label:'Math (subtraction)'}];
+  const rows=[
+    {id:'math1',subject:'Math',skill:'math-subtraction',prompt:'What is 13 - 5?',answer:'8',choices:['7','8','9'],tier:'material'},
+    {id:'math2',subject:'Math',skill:'math-subtraction',prompt:'What is 15 - 3?',answer:'12',choices:['13','11','12'],tier:'material'},
+  ];
+  const model=createStudyMaterials(opts({events,catalog:catalog(rows)}));
+  const guide=model.testGuide(0);
+  const html=printableStudyGuideHtml(guide);
+  assert.match(html,/Math Practice Test/);
+  assert.match(html,/math-grid/);
+  assert.match(html,/Show your work/);
+  assert.match(html,/Parent Answer Key/);
+  const student=html.split('<section class="sheet adult-key">')[0];
+  assert.doesNotMatch(student,/>8<\/li>/);
+  assert.doesNotMatch(student,/>12<\/li>/);
+  assert.match(html,/@page\{size:Letter portrait/);
 });
 
 test('printable guide list includes every upcoming test, not only the nearest test date',() => {
@@ -165,8 +215,8 @@ test('printable study guide document is Letter-sized and resolves vocabulary def
     warnings:[],sourceLabel:'Reviewed ABVM material',
   },term => term === 'depend' ? 'to need or rely on someone or something' : '');
   assert.match(html,/@page\{size:Letter portrait/);
-  assert.match(html,/ONE-PAGE STUDY GUIDE/);
-  assert.match(html,/Quick check/);
+  assert.match(html,/Reading Practice Test/);
+  assert.match(html,/Reading comprehension and word skills/);
   assert.match(html,/to need or rely on someone or something/);
   assert.doesNotMatch(html,/teacher page does not provide a definition/);
   assert.match(html,/Automatically generated for this test/);
