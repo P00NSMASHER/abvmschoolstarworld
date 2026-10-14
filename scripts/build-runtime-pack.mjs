@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import {religionChapterScopes} from "../pages/study-hub-core.mjs";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 
@@ -6,16 +7,27 @@ const INPUT=new URL("../pages/data/study-pack.json",import.meta.url);
 const OUTPUT=new URL("../pages/data/study-pack-runtime.json",import.meta.url);
 export const RUNTIME_QUESTION_FIELDS=Object.freeze([
   "id","subject","skill","questionType","prompt","choices","answer","explanation","hint","sourceFact",
-  "dok","difficulty","standards","domain","contentFingerprint","variantFingerprint","richContent","choiceDiagnostics"
+  "dok","difficulty","standards","domain","contentFingerprint","variantFingerprint","richContent","choiceDiagnostics","sourceChapters"
 ]);
 
 function clone(value){return JSON.parse(JSON.stringify(value));}
 function pickQuestion(question){
-  return Object.fromEntries(
+  // This public pack gets compact chapter numbers, never teacher evidence text.
+  const picked=Object.fromEntries(
     RUNTIME_QUESTION_FIELDS
-      .filter(key=>Object.prototype.hasOwnProperty.call(question||{},key))
+      .filter(key=>key!=="sourceChapters"&&Object.prototype.hasOwnProperty.call(question||{},key))
       .map(key=>[key,question[key]])
   );
+  const l=question?.sourceLineage;
+  const validLineage=l?.quality==="page-exact" &&
+    /^https:\/\/sites\.google\.com\//.test(l.sourceUrl||"") &&
+    /^[a-fA-F0-9]{64}$/.test(l.sourceCaptureHash||"") &&
+    /^sha256:[a-f0-9]{64}$/.test(l.evidenceExcerptHash||"");
+  if(question?.subject==="Religion"&&validLineage){
+    const scopes=religionChapterScopes({subject:"Religion",sourceLineage:l});
+    if(scopes.length)picked.sourceChapters=scopes;
+  }
+  return picked;
 }
 export function buildRuntimePack(envelope){
   if(!envelope?.pack?.sourceSufficient)throw new Error("Full study pack is not source-sufficient");
