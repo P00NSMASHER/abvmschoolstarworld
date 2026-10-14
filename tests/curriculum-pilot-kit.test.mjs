@@ -20,7 +20,7 @@ const OBSERVATION = 'curriculum-candidates/pilot-kit/PR270_OBSERVATION.html';
 test('a source-locked, deterministic, black-and-white printable pilot kit is in sync', () => {
   assert.deepEqual(Object.keys(output).sort(), [STUDENT, KEY, OBSERVATION].sort());
   for (const [path, text] of Object.entries(output)) {
-    const versioned = readFileSync(new URL('../' + path, import.meta.url), 'utf8');
+    const versioned = readFileSync(new URL('../' + path, import.meta.url), 'utf8').replace(/\r\n/g, '\n');
     assert.equal(versioned, text, 'Stale or altered file: ' + path);
     assert.ok(text.startsWith('<!doctype html>'));
     assert.match(text, /@media print/);

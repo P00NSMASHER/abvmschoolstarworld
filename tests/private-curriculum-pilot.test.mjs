@@ -67,7 +67,8 @@ test('private reviewer file is generated outside the repository and never overwr
     assert.equal(first.evidenceClass,'SYNTHETIC_TEST_ONLY');
     assert.deepEqual(readdirSync(dir),['educator-pilot.html']);
     assert.equal(readFileSync(first.path,'utf8'),buildPrivateCurriculumPilotHtml());
-    assert.equal(statSync(first.path).mode & 0o777,0o600);
+    // Windows does not implement POSIX owner/group/other permission bits.
+    if (process.platform !== 'win32') assert.equal(statSync(first.path).mode & 0o777,0o600);
     assert.throws(()=>writePrivateCurriculumPilot({directory:dir}),/EEXIST/);
   } finally { rmSync(dir,{force:true,recursive:true}); }
 });

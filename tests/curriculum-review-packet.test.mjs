@@ -12,7 +12,7 @@ const CANDIDATE_FILES = [
   'curriculum-reading-ela-possessives-s-de6f518f2a.json',
 ];
 
-const packet = readFileSync(PACKET_PATH, 'utf8');
+const packet = readFileSync(PACKET_PATH, 'utf8').replace(/\r\n/g, '\n');
 const candidates = CANDIDATE_FILES.map(name =>
   JSON.parse(readFileSync(new URL('curriculum-candidates/' + name, ROOT), 'utf8'))
 );

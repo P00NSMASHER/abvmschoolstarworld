@@ -18,7 +18,7 @@ const acceptanceWorkflows = [
 
 for (const file of acceptanceWorkflows) {
   test(file + " checks out and verifies the exact PR head", () => {
-    const source = readFileSync(new URL("../.github/workflows/" + file, import.meta.url), "utf8");
+    const source = readFileSync(new URL("../.github/workflows/" + file, import.meta.url), "utf8").replace(/\r\n/g, "\n");
     assert.match(source, /uses: actions\/checkout@v6\n\s+with:\n\s+ref: \$\{\{ github\.event\.pull_request\.head\.sha \|\| github\.sha \}\}/);
     assert.match(source, /PR_HEAD_SHA: \$\{\{ github\.event\.pull_request\.head\.sha \|\| github\.sha \}\}/);
     assert.match(source, /test "\$\(git rev-parse HEAD\)" = "\$PR_HEAD_SHA"/);
