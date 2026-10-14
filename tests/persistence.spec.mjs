@@ -1,7 +1,10 @@
 import {test,expect} from "@playwright/test";
+import {HOMEWORK_E2E_NOW,installFreshHomeworkFixture} from "./homework-e2e-fixture.mjs";
+test.use({serviceWorkers:"block"});
 
 test("Today's academic homework checklist survives reload and can be restored",async({page})=>{
-  await page.clock.setFixedTime(new Date("2026-10-13T21:00:00-04:00"));
+  await installFreshHomeworkFixture(page);
+  await page.clock.setFixedTime(HOMEWORK_E2E_NOW);
   await page.goto("/#today");
   const item=page.locator("[data-homework-check]").first();
   await expect(item).toBeVisible({timeout:10_000});
@@ -34,7 +37,7 @@ test("Study Games learning evidence persists across reload",async({page})=>{
 });
 
 test("storage failures fail soft instead of breaking the app",async({browser})=>{
-  const context=await browser.newContext();
+  const context=await browser.newContext({serviceWorkers:"block"});
   await context.addInitScript(()=>{
     const thrower=()=>{throw new Error("storage disabled")};
     Object.defineProperty(Storage.prototype,"getItem",{value:thrower,configurable:true});
@@ -42,7 +45,8 @@ test("storage failures fail soft instead of breaking the app",async({browser})=>
     Object.defineProperty(Storage.prototype,"removeItem",{value:thrower,configurable:true});
   });
   const page=await context.newPage();
-  await page.clock.setFixedTime(new Date("2026-10-13T21:00:00-04:00"));
+  await installFreshHomeworkFixture(page);
+  await page.clock.setFixedTime(HOMEWORK_E2E_NOW);
   await page.goto("http://127.0.0.1:4173/#today");
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
   await expect(page.locator("[data-homework-check]").first()).toBeVisible();
@@ -55,7 +59,8 @@ test("storage failures fail soft instead of breaking the app",async({browser})=>
 });
 
 test("homework completion is keyed by school date and exact assignment identity",async({page})=>{
-  await page.clock.setFixedTime(new Date("2026-10-13T21:00:00-04:00"));
+  await installFreshHomeworkFixture(page);
+  await page.clock.setFixedTime(HOMEWORK_E2E_NOW);
   await page.goto("/#today");
   await expect(page.locator("[data-homework-check]").first()).toBeVisible({timeout:10000});
   const created=await page.evaluate(()=>{
@@ -70,7 +75,8 @@ test("homework completion is keyed by school date and exact assignment identity"
 });
 
 test("verified homework completion stays synchronized between Today and Week",async({page})=>{
-  await page.clock.setFixedTime(new Date("2026-10-13T21:00:00-04:00"));
+  await installFreshHomeworkFixture(page);
+  await page.clock.setFixedTime(HOMEWORK_E2E_NOW);
   await page.goto("/#today");
   await expect(page.locator(".today-homework [data-homework-check='0']")).toBeVisible({timeout:10000});
   const item=page.locator(".today-homework [data-homework-check='0']");
