@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {matchCurriculumFamily} from '../scripts/curriculum-family-registry.mjs';
 import {buildGrade2ContentPipeline} from '../scripts/grade2-content-pipeline.mjs';
 import {questionsForTest} from '../pages/study-hub-core.mjs';
@@ -62,4 +63,16 @@ test('source-covered chart, long-o, and short-vowel practice flows into current 
   assert.equal(phonics.length,8);
   assert(phonics.every(q=>q.skill==='short-vowels'));
   assert(!out.questions.some(q=>q.sourceLineage?.quality!=='page-exact'));
+});
+
+
+test('service worker returns current test-routing modules online while preserving offline cache fallback', () => {
+  const sw=readFileSync(new URL('../pages/sw.js',import.meta.url),'utf8');
+  assert.match(sw,/study-hub-core\|study-materials/);
+  const start=sw.indexOf('// Source/current test routing must update immediately online');
+  const end=sw.indexOf('// Versioned code must never be satisfied',start);
+  assert(start>0&&end>start);
+  const branch=sw.slice(start,end);
+  assert.match(branch,/networkFirst\(event.request,null,event\)/);
+  assert.match(sw,/cachedFallback\(request,fallback\)/);
 });
