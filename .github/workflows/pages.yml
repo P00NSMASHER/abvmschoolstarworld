@@ -5,6 +5,10 @@ on:
     branches: [main]
     paths:
       - 'pages/**'
+      # Fixes to release-blocking homework QA must be able to publish validated main.
+      - 'tests/homework-feed.test.mjs'
+      - 'tests/homework-e2e-fixture.mjs'
+      - 'tests/today-homework.spec.mjs'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
     inputs:

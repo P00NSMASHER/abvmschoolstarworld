@@ -6,12 +6,25 @@ import test from 'node:test';
 const context={window:{},Intl,Date};
 vm.runInNewContext(readFileSync(new URL('../pages/homework-feed.js',import.meta.url),'utf8'),context);
 const model=context.window.ABVMHomeworkFeed;
-const currentSource=JSON.parse(readFileSync(new URL('../pages/data/homework-current.json',import.meta.url),'utf8'));
+// The published teacher feed can legitimately change throughout the school day.
+// Keep a separate historical fixture for deterministic freshness tests.
+const publishedFeed=JSON.parse(readFileSync(new URL('../pages/data/homework-current.json',import.meta.url),'utf8'));
 const verifiedPosting={
-  ...currentSource,
+  schemaVersion:1,
+  sourceUrl:model.sourceUrl,
+  sourceDateProvided:false,
+  status:'assignments',
   checkedAt:'2026-10-14T00:32:53.326Z',
-  firstObservedAt:'2026-10-14T00:32:53.326Z'
+  firstObservedAt:'2026-10-14T00:32:53.326Z',
+  contentHash:'5632e315601ca9969a13a72c942f0abe52861d76793c51040678f4e8175b2e6a',
+  assignments:[
+    {subject:'Math',task:'Page 22'},
+    {subject:'Spelling',task:'Spelling Choice Board activity'}
+  ]
 };
+test('latest teacher feed stays schema-valid without pinning subjects or assignments',()=>{
+  assert.doesNotThrow(()=>model.validate(publishedFeed));
+});
 test('current verified posting lists only actionable assignments on its school date',()=>{
   const now=new Date('2026-10-14T01:00:00Z');
   const view=model.forDate(verifiedPosting,'2026-10-13',now);
