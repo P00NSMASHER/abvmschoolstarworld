@@ -118,7 +118,15 @@ function uniqueGuideText(rows) {
 function noteMatchesTest(text, label, subject) {
   const value = compactGuideText(text,240), lower = String(label || '').toLowerCase();
   if (!value) return false;
-  if (subject === 'Reading / ELA' && /grammar|predicate|subject\s*&/.test(lower)) return /\b(?:grammar|subject|predicate)\b/i.test(value);
+  if (subject === 'Reading / ELA' && /grammar|predicate|subject\s*&|sentence types|punctuation/.test(lower)) {
+    if (/subject|predicate/.test(lower)) return /\b(?:subject|predicate)\b/i.test(value);
+    if (/sentence types|punctuation/.test(lower)) return /sentence type|statement|question|command|exclamation|punctuation|end mark/i.test(value);
+    return /\b(?:grammar|subject|predicate|sentence type|punctuation)\b/i.test(value);
+  }
+  if (subject === 'Math' && /subtraction|subtract|difference|minus/.test(lower))
+    return /subtraction|subtract|difference|minus/i.test(value);
+  if (subject === 'Math' && /addition|add|sum/.test(lower))
+    return /addition|add|sum/i.test(value);
   if (subject === 'Spelling / Handwriting') {
     const focus = lower.match(/short\s+([aeiou])/i)?.[1]?.toLowerCase();
     const mentioned = [...value.matchAll(/\b(?:short|long)\s+([aeiou])\b/gi)].map(match=>match[1].toLowerCase());
@@ -318,8 +326,8 @@ export function createStudyMaterials({
       ...weekly,
       ...(/chapter\s*\d+|grammar|predicate/i.test(t.label) ? day.lessons.flatMap(l => array(l.questions)) : []),
     ])));
-    const groups = tests.map((t,i) => primary[i].length ? primary[i] : unique(questionsForTest(t,star)));
-    const entries = tests.map((t,index) => ({...t, key:testKey(t), index, count:groups[index].length, fallback:!primary[index].length && !!groups[index].length}));
+    const groups = primary;
+    const entries = tests.map((t,index) => ({...t, key:testKey(t), index, count:groups[index].length, fallback:false}));
     const seen = new Set();
     const completed = allEvents.filter(t => done.has(testKey(t)) && /^\d{4}-\d{2}-\d{2}$/.test(t.date || '') && t.date >= schoolDay(time))
       .filter(t => !seen.has(testKey(t)) && seen.add(testKey(t))).map(t => ({...t,key:testKey(t)}));
@@ -350,10 +358,10 @@ export function createStudyMaterials({
       ...weekly,
       ...(/chapter\s*\d+|grammar|predicate/i.test(t.label) ? day.lessons.flatMap(l => array(l.questions)) : []),
     ])));
-    const groups = tests.map((t,i) => primary[i].length ? primary[i] : unique(questionsForTest(t,star)));
+    const groups = primary;
     const entries = tests.map((t,index) => ({
       ...t, key:testKey(t), index, count:groups[index].length,
-      fallback:!primary[index].length && !!groups[index].length,
+      fallback:false,
     }));
     return {
       tests, groups,
@@ -411,8 +419,8 @@ export function createStudyMaterials({
     }));
     const warnings = [];
     const fallback = state.fallback.some(row => row.index === i);
-    if (fallback) warnings.push('No reviewed test-specific question bank is available yet. This sheet uses original Grade 2 skill practice and labels it clearly.');
-    if (!group.length) warnings.push('No reviewed practice questions match this test yet. Use the teacher materials sent home together with the verified notes below.');
+    if (fallback) warnings.push('This practice requires current, matching class material. Earlier Grade 2 topics are not substituted.');
+    if (!group.length) warnings.push('No current, matching test questions are available. Review the announced classroom material; unrelated older questions are not substituted.');
     if (subject === 'Spelling / Handwriting') {
       coverageWarnings(instant()).filter(row => row.subject === subject).forEach(row => warnings.push(row.text));
       if (!spellingWords.length) warnings.push('No verified word list matches this test week. Older weeks\' spelling words are not substituted.');
