@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "lastIntegratedAt": "2026-10-12T12:58:00.790Z",
+  "lastIntegratedAt": "2026-10-14T09:45:56Z",
   "documents": [
     {
       "id": "dress-down-2026-09-25",
@@ -577,6 +577,26 @@
         "piiReviewed": true,
         "reviewedBy": "user-confirmed-Melissa-planner",
         "reviewedAt": "2026-10-12"
+      }
+    },
+    {
+      "id": "lunch-revision-2026-10-15",
+      "label": "Lunch menu revision for Thursday, October 15, 2026",
+      "receivedAt": "2026-10-13",
+      "facts": [
+        "For Thursday, October 15, 2026, chicken patty on a roll replaces the published hamburger.",
+        "All other menu items for October 15 remain unchanged.",
+        "This is a meal substitution notice; it does not change any other lunch date."
+      ],
+      "provenance": {
+        "factsHash": "c2cfe8f5111e79ed19f66946f9169e5eba454749a94d679041decdfa237742a9",
+        "sourceContentHash": "f94a773df280e45523c370f77f54ccb0e8b0ac59a0b5e2c7cd9a051af83a7634"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "manual-school-notice-review",
+        "reviewedAt": "2026-10-14T09:45:56Z"
       }
     }
   ],
