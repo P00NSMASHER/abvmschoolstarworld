@@ -52,3 +52,13 @@ test('when teacher data belongs to yesterday or is missing, Today never mislabel
   await expect(card).not.toContainText('Choice Board activity');
   await expect(card.locator('a')).toHaveAttribute('href','https://sites.google.com/view/abvmgr2/homework');
 });
+
+test('Today remains usable if the independently cached Homework helper cannot load offline',async({page})=>{
+  await page.clock.setFixedTime(TUESDAY);
+  await page.route('**/homework-feed.js*',route=>route.abort('failed'));
+  await page.goto('/#today');
+  await expect(page.locator('.today-screen')).toBeVisible({timeout:10000});
+  await expect(page.locator('.today-homework')).toContainText('not yet verified');
+  await expect(page.locator('.today-panel')).toBeVisible();
+  await expect(page.locator('.today-screen > .lunch-card')).toBeVisible();
+});

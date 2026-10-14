@@ -209,7 +209,10 @@ function taskRecordsForSurface(surface,date=today()){
   return getDerivedPack().homeworkRows.filter(record=>record.policy[surface]!==false&&taskAppliesToDate(record.item,date));
 }
 function homeworkForDate(date){
-  return window.ABVMHomeworkFeed.forDate(homeworkFeed,isoDateKey(date),new Date());
+  // Homework is an optional independently cached source. An offline miss cannot
+  // prevent the governed school planner, lunch and Study screens from rendering.
+  return window.ABVMHomeworkFeed?.forDate?.(homeworkFeed,isoDateKey(date),new Date())
+    || {state:"unverified",assignments:[]};
 }
 function homeworkCardForDate(date,{compact=false}={}){
   const state=homeworkForDate(date);
