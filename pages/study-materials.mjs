@@ -318,14 +318,22 @@ export function createStudyMaterials({
   function completedKeys() {
     return new Set(array(read(storage,'abvm-completed-tests',[])).filter(key => typeof key === 'string'));
   }
+  function currentTestQuestions(test,time) {
+    const day = materialDay(time), testWeek = weekBounds(test.date), thisWeek = weekBounds(time);
+    // Explicitly match each future test's school week. An undated or older
+    // worksheet is saved learning, not proof of this test's current curriculum.
+    const matchedLessons = day.lessons.filter(lesson =>
+      lesson.weekOf === testWeek.start ||
+      (lesson.studiedOn && lesson.studiedOn >= testWeek.start && lesson.studiedOn <= testWeek.end));
+    const recent = testWeek.start === thisWeek.start ? day.week.questions : [];
+    return questionsForTest(test,unique([
+      ...current,...recent,...matchedLessons.flatMap(lesson => array(lesson.questions)),
+    ]));
+  }
   function testState() {
     const time = instant(), done = completedKeys();
     const tests = nextTests(allEvents.filter(t => !done.has(testKey(t))),time);
-    const day = materialDay(time), weekly = day.raw.weekly;
-    const primary = tests.map(t => questionsForTest(t,unique([
-      ...weekly,
-      ...(/chapter\s*\d+|grammar|predicate/i.test(t.label) ? day.lessons.flatMap(l => array(l.questions)) : []),
-    ])));
+    const primary = tests.map(t => currentTestQuestions(t,time));
     const groups = primary;
     const entries = tests.map((t,index) => ({...t, key:testKey(t), index, count:groups[index].length, fallback:false}));
     const seen = new Set();
@@ -353,11 +361,7 @@ export function createStudyMaterials({
       .filter(t => !t.endsAt || !Number.isFinite(Date.parse(t.endsAt)) || Date.parse(t.endsAt) > instantMs)
       .sort((a,b) => a.date.localeCompare(b.date) || a.label.localeCompare(b.label))
       .filter(t => { const key=testKey(t); if (seen.has(key)) return false; seen.add(key); return true; });
-    const day = materialDay(time), weekly = day.raw.weekly;
-    const primary = tests.map(t => questionsForTest(t,unique([
-      ...weekly,
-      ...(/chapter\s*\d+|grammar|predicate/i.test(t.label) ? day.lessons.flatMap(l => array(l.questions)) : []),
-    ])));
+    const primary = tests.map(t => currentTestQuestions(t,time));
     const groups = primary;
     const entries = tests.map((t,index) => ({
       ...t, key:testKey(t), index, count:groups[index].length,
