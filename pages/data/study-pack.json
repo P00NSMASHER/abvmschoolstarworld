@@ -1026,58 +1026,55 @@
     ],
     "lunchMenu": [
       {
-        "date": "2026-10-05",
-        "day": "Monday, Oct. 5",
+        "date": "2026-10-12",
+        "day": "Monday, Oct. 12",
+        "items": [],
+        "status": "no-school",
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-13",
+        "day": "Tuesday, Oct. 13",
         "items": [
-          "Popcorn chicken",
-          "Mashed potatoes",
+          "Meatballs in sauce",
+          "Whole-grain buttered pasta",
           "Steamed corn",
           "Fruit"
         ],
         "sourceId": "abvm-2026-10-official"
       },
       {
-        "date": "2026-10-06",
-        "day": "Tuesday, Oct. 6",
+        "date": "2026-10-14",
+        "day": "Wednesday, Oct. 14",
         "items": [
-          "Taco Tuesday & chips",
-          "Cheese",
-          "Brown rice",
-          "Salsa",
-          "Refried beans",
-          "Fruit"
-        ],
-        "sourceId": "abvm-2026-10-official"
-      },
-      {
-        "date": "2026-10-07",
-        "day": "Wednesday, Oct. 7",
-        "items": [
-          "Buttered pierogies",
-          "Whole-grain roll",
-          "String cheese",
-          "Steamed carrots",
-          "Fruit"
-        ],
-        "sourceId": "abvm-2026-10-official"
-      },
-      {
-        "date": "2026-10-08",
-        "day": "Thursday, Oct. 8",
-        "items": [
-          "Beef cheesesteak",
-          "Whole-grain roll",
-          "French fries",
+          "Baked cheese pizza",
+          "Garden salad",
           "Steamed broccoli",
           "Fruit"
         ],
         "sourceId": "abvm-2026-10-official"
       },
       {
-        "date": "2026-10-09",
-        "day": "Friday, Oct. 9",
+        "date": "2026-10-15",
+        "day": "Thursday, Oct. 15",
         "items": [
-          "No lunch — noon dismissal"
+          "Chicken patty on a roll",
+          "French fries",
+          "Mixed vegetables",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-15-school-notice"
+      },
+      {
+        "date": "2026-10-16",
+        "day": "Friday, Oct. 16",
+        "items": [
+          "Chicken taco",
+          "Brown rice",
+          "Cheese",
+          "Salsa",
+          "Refried beans",
+          "Fruit"
         ],
         "sourceId": "abvm-2026-10-official"
       }
@@ -1386,24 +1383,35 @@
     "lunchMenuSource": {
       "status": "current-week",
       "retrievalState": "verified",
-      "checkedAt": "2026-10-08T15:00:17.769Z",
-      "lastAttemptAt": "2026-10-08T15:00:17.769Z",
+      "checkedAt": "2026-10-14T13:27:01.774Z",
+      "lastAttemptAt": "2026-10-14T13:27:01.774Z",
       "provider": "Saint Clair Area School District",
       "school": "Assumption BVM School",
       "feedUrl": "https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu",
-      "verificationMode": "direct-official-source",
+      "verificationMode": "direct-official-source+reviewed-notice",
       "parentResourcesUrl": "https://www.assumptionbvmschool.net/parent-resources",
-      "weekStart": "2026-10-05",
-      "weekEnd": "2026-10-09",
-      "coverageThrough": "2026-10-09",
+      "weekStart": "2026-10-12",
+      "weekEnd": "2026-10-16",
+      "coverageThrough": "2026-10-16",
       "missingDates": [],
       "sourcePages": [
         {
           "id": "abvm-2026-10-official",
           "url": "https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1790692534/adeducatorsorg/xdbrqzybydptd5srbor0/Octobercalendar.heic",
           "contentHash": "a99ce9385295921c9fff19ae4051732da45f7c38df077d30d9b62577c8c6eb45",
+          "proofMode": "pinned-url",
           "reviewedAt": "2026-10-01T00:44:00Z",
-          "checkedAt": "2026-10-08T15:00:17.769Z"
+          "checkedAt": "2026-10-14T13:27:01.774Z",
+          "state": "verified"
+        },
+        {
+          "id": "abvm-2026-10-15-school-notice",
+          "sourceDocument": "lunch-revision-2026-10-15",
+          "contentHash": "f94a773df280e45523c370f77f54ccb0e8b0ac59a0b5e2c7cd9a051af83a7634",
+          "proofMode": "reviewed-notice",
+          "reviewedAt": "2026-10-14T09:45:56Z",
+          "checkedAt": "2026-10-14T13:27:01.774Z",
+          "state": "reviewed-notice"
         }
       ],
       "pendingDocuments": [],
@@ -1763,12 +1771,12 @@
         "date": "2026-10-15",
         "day": "Thursday, Oct. 15",
         "items": [
-          "Hamburger on whole-grain roll",
+          "Chicken patty on a roll",
           "French fries",
           "Mixed vegetables",
           "Fruit"
         ],
-        "sourceId": "abvm-2026-10-official"
+        "sourceId": "abvm-2026-10-15-school-notice"
       },
       {
         "date": "2026-10-16",
@@ -1898,7 +1906,7 @@
         "sourceId": "abvm-2026-10-official"
       }
     ],
-    "lunchMenuHash": "a2d9b30516b2e5d4d128c6766239c3208a7a335fbe3dd20499f83def0f161c10",
+    "lunchMenuHash": "59ea020a8908f460e77409c2cc7d3acedc77a75b26e1798fad14ee967d9390e9",
     "contentPipeline": {
       "schemaVersion": 2,
       "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
