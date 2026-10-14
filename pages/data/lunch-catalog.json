@@ -311,15 +311,6 @@
           ]
         },
         {
-          "date": "2026-10-15",
-          "items": [
-            "Hamburger on whole-grain roll",
-            "French fries",
-            "Mixed vegetables",
-            "Fruit"
-          ]
-        },
-        {
           "date": "2026-10-16",
           "items": [
             "Chicken taco",
@@ -421,6 +412,31 @@
             "Baked cheese pizza",
             "Garden salad",
             "Steamed peas",
+            "Fruit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "abvm-2026-10-15-school-notice",
+      "sourceDocument": "lunch-revision-2026-10-15",
+      "contentHash": "f94a773df280e45523c370f77f54ccb0e8b0ac59a0b5e2c7cd9a051af83a7634",
+      "proofMode": "reviewed-notice",
+      "reviewedAt": "2026-10-14T09:45:56Z",
+      "reviewMethod": "Privacy-safe facts extracted from a SchoolMessenger notice from Melissa Thompson received 2026-10-13T18:58:24Z; raw message, addresses, recipient, and footer are not stored.",
+      "coverageStart": "2026-10-15",
+      "coverageEnd": "2026-10-15",
+      "supersedes": {
+        "sourceId": "abvm-2026-10-official",
+        "date": "2026-10-15"
+      },
+      "meals": [
+        {
+          "date": "2026-10-15",
+          "items": [
+            "Chicken patty on a roll",
+            "French fries",
+            "Mixed vegetables",
             "Fruit"
           ]
         }

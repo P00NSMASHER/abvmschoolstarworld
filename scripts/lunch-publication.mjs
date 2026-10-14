@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 
 export const LUNCH_FEED_URL = 'https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu';
 export const CATALOG = JSON.parse(readFileSync(new URL('../pages/data/lunch-catalog.json', import.meta.url), 'utf8'));
+export const UPLOADED_NOTICES = JSON.parse(readFileSync(new URL('../pages/data/uploaded-notices.json', import.meta.url), 'utf8'));
 const MONTHS = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'];
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -26,7 +27,23 @@ export function catalogMeals(catalog = CATALOG) {
   const dates = new Set();
   return catalog.sources.flatMap(source => {
     const proofMode = source.proofMode || 'sha256-bytes';
-    if (!/^[a-f0-9]{64}$/.test(source.contentHash) || !source.url.startsWith('https://resources.finalsite.net/') || !['sha256-bytes','pinned-url'].includes(proofMode) || !validIsoDate(source.coverageStart) || !validIsoDate(source.coverageEnd) || Number.isNaN(Date.parse(source.reviewedAt))) throw new Error('Invalid reviewed lunch source');
+    const validBase = /^[a-f0-9]{64}$/.test(source.contentHash) &&
+      ['sha256-bytes', 'pinned-url', 'reviewed-notice'].includes(proofMode) &&
+      validIsoDate(source.coverageStart) && validIsoDate(source.coverageEnd) &&
+      !Number.isNaN(Date.parse(source.reviewedAt));
+    if (!validBase) throw new Error('Invalid reviewed lunch source');
+    if (proofMode === 'reviewed-notice') {
+      const notice = UPLOADED_NOTICES.documents.find(document => document.id === source.sourceDocument);
+      const superseded = catalog.sources.find(candidate => candidate.id === source.supersedes?.sourceId);
+      if (source.url !== undefined || !notice || notice.review?.status !== 'reviewed' ||
+          notice.review?.piiReviewed !== true || notice.provenance?.sourceContentHash !== source.contentHash ||
+          !superseded || !validIsoDate(source.supersedes?.date) ||
+          !source.meals.some(meal => meal.date === source.supersedes.date)) {
+        throw new Error('Invalid reviewed lunch notice proof');
+      }
+    } else if (typeof source.url !== 'string' || !source.url.startsWith('https://resources.finalsite.net/')) {
+      throw new Error('Invalid reviewed lunch source');
+    }
     if (proofMode === 'pinned-url' && createHash('sha256').update(source.url).digest('hex') !== source.contentHash) throw new Error('Invalid pinned lunch source proof');
     return source.meals.map(meal => {
       if (!validIsoDate(meal.date) || meal.date < source.coverageStart || meal.date > source.coverageEnd || dates.has(meal.date) || !Array.isArray(meal.items) || (!meal.items.length && meal.status !== 'no-school') || meal.items.some(x => typeof x !== 'string' || !x.trim())) throw new Error('Invalid or duplicate lunch row');
@@ -51,10 +68,15 @@ export function validateLunchFeed(feed, { now = new Date(), catalog = CATALOG } 
   if (JSON.stringify([...feed.missingDates].sort()) !== JSON.stringify(missing)) throw new Error('Lunch gap disclosure mismatch');
   for (const source of catalog.sources.filter(s => expected.some(m => m.sourceId === s.id))) {
     const proof = feed.sourcePages.find(s => s.id === source.id);
-    if (!proof || proof.contentHash !== source.contentHash || proof.url !== source.url) throw new Error('Lunch source proof mismatch');
+    const proofMode = source.proofMode || 'sha256-bytes';
+    if (!proof || proof.contentHash !== source.contentHash ||
+        (proofMode === 'reviewed-notice' ? proof.sourceDocument !== source.sourceDocument : proof.url !== source.url)) {
+      throw new Error('Lunch source proof mismatch');
+    }
     if (feed.retrievalState === 'verified') {
       const age = now.getTime() - Date.parse(proof.checkedAt || '');
-      if (proof.state !== 'verified' || !Number.isFinite(age) || age < -60000 || age > 3600000) throw new Error('Lunch verification is stale or invalid');
+      const expectedState = proofMode === 'reviewed-notice' ? 'reviewed-notice' : 'verified';
+      if (proof.state !== expectedState || !Number.isFinite(age) || age < -60000 || age > 3600000) throw new Error('Lunch verification is stale or invalid');
     }
   }
   return { dates, expected, missing };
@@ -70,6 +92,16 @@ export async function verifyCatalogSources({ fetchImpl = fetch, now = new Date()
   const checkedAt = now.toISOString();
   const sourcePages = [];
   for (const source of sources) {
+    if (source.proofMode === 'reviewed-notice') {
+      sourcePages.push({
+        id: source.id,
+        sourceDocument: source.sourceDocument,
+        contentHash: source.contentHash,
+        checkedAt,
+        state: 'reviewed-notice',
+      });
+      continue;
+    }
     const response = await fetchImpl(source.url, {
       headers: { accept: '*/*', 'cache-control': 'no-cache' },
       signal: AbortSignal.timeout(22000),
@@ -111,7 +143,7 @@ export async function verifyCatalogSources({ fetchImpl = fetch, now = new Date()
     pendingDocuments: [],
     gaps: missingDates.map(date => 'No reviewed school lunch menu is available for ' + date + '.'),
     sourcePages,
-    verificationMode: 'direct-official-source',
+    verificationMode: sources.some(source => source.proofMode === 'reviewed-notice') ? 'direct-official-source+reviewed-notice' : 'direct-official-source',
   };
   validateLunchFeed(feed, { now, catalog });
   return feed;
@@ -175,7 +207,16 @@ export async function refreshLunchPublication(pack, { now = new Date(), fetchImp
     weekStart: dates[0], weekEnd: dates[4],
     coverageThrough: meals.at(-1)?.date || null,
     missingDates,
-    sourcePages: sources.map(s => ({ id: s.id, url: s.url, contentHash: s.contentHash, reviewedAt: s.reviewedAt, checkedAt: feed?.sourcePages.find(p => p.id === s.id)?.checkedAt || oldProofs.get(s.id)?.checkedAt || null })),
+    sourcePages: sources.map(s => ({
+      id: s.id,
+      ...(s.url ? { url: s.url } : {}),
+      ...(s.sourceDocument ? { sourceDocument: s.sourceDocument } : {}),
+      contentHash: s.contentHash,
+      proofMode: s.proofMode || 'sha256-bytes',
+      reviewedAt: s.reviewedAt,
+      checkedAt: feed?.sourcePages.find(p => p.id === s.id)?.checkedAt || oldProofs.get(s.id)?.checkedAt || null,
+      state: feed?.sourcePages.find(p => p.id === s.id)?.state || oldProofs.get(s.id)?.state || null,
+    })),
     pendingDocuments: feed?.pendingDocuments || [],
     gaps: [
       ...missingDates.map(date => `No reviewed school lunch menu is available for ${date}.`),

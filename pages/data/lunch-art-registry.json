@@ -8,7 +8,7 @@
       "status": "reviewed",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration. No sides, labels or garnish. Exact October menus approved; food illustration is not a photograph of the actual meal.",
+      "reviewNotes": "Visually reviewed entrée-only illustration. No sides, labels or garnish. Exact October menus approved; food illustration is not a photograph of the actual meal.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -28,7 +28,7 @@
       "status": "reviewed",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration. No sides, labels or garnish. Exact October menus approved; food illustration is not a photograph of the actual meal.",
+      "reviewNotes": "Visually reviewed entrée-only illustration. No sides, labels or garnish. Exact October menus approved; food illustration is not a photograph of the actual meal.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -66,7 +66,7 @@
       "status": "reviewed",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration. No sides, labels or garnish. Exact October menus approved; food illustration is not a photograph of the actual meal.",
+      "reviewNotes": "Visually reviewed entrée-only illustration. No sides, labels or garnish. Exact October menus approved; food illustration is not a photograph of the actual meal.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -95,7 +95,7 @@
       "status": "reviewed",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
+      "reviewNotes": "Visually reviewed entrée-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -116,7 +116,7 @@
       "status": "reviewed",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
+      "reviewNotes": "Visually reviewed entrée-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -137,7 +137,7 @@
       "status": "reviewed",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
+      "reviewNotes": "Visually reviewed entrée-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -154,10 +154,10 @@
       "id": "hamburger-whole-grain",
       "src": "assets/lunch-art/hamburger-whole-grain.webp",
       "alt": "Illustration of hamburger on whole-grain roll",
-      "status": "reviewed",
+      "status": "retired",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
+      "reviewNotes": "Visually reviewed entrée-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -168,7 +168,9 @@
             "Fruit"
           ]
         }
-      ]
+      ],
+      "retiredAt": "2026-10-14T09:45:56Z",
+      "retirementReason": "The October 15 school notice replaced this exact hamburger menu; artwork approval remains historical and must not transfer to the amended meal."
     },
     {
       "id": "chicken-patty-roll",
@@ -290,7 +292,7 @@
       "status": "reviewed",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. Generic pasta, cutlet and tortilla shapes are illustrative; ham and cheese uses the listed pretzel roll. See docs/lunch-art-prompts-extra-b.md.",
+      "reviewNotes": "Visually reviewed entrée-only illustration; no unlisted sides, garnish or toppings. Generic pasta, cutlet and tortilla shapes are illustrative; ham and cheese uses the listed pretzel roll. See docs/lunch-art-prompts-extra-b.md.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -312,7 +314,7 @@
       "status": "reviewed",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. Generic pasta, cutlet and tortilla shapes are illustrative; ham and cheese uses the listed pretzel roll. See docs/lunch-art-prompts-extra-b.md.",
+      "reviewNotes": "Visually reviewed entrée-only illustration; no unlisted sides, garnish or toppings. Generic pasta, cutlet and tortilla shapes are illustrative; ham and cheese uses the listed pretzel roll. See docs/lunch-art-prompts-extra-b.md.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -332,7 +334,7 @@
       "status": "reviewed",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. Generic pasta, cutlet and tortilla shapes are illustrative; ham and cheese uses the listed pretzel roll. See docs/lunch-art-prompts-extra-b.md.",
+      "reviewNotes": "Visually reviewed entrée-only illustration; no unlisted sides, garnish or toppings. Generic pasta, cutlet and tortilla shapes are illustrative; ham and cheese uses the listed pretzel roll. See docs/lunch-art-prompts-extra-b.md.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -353,7 +355,7 @@
       "status": "reviewed",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. Generic pasta, cutlet and tortilla shapes are illustrative; ham and cheese uses the listed pretzel roll. See docs/lunch-art-prompts-extra-b.md.",
+      "reviewNotes": "Visually reviewed entrée-only illustration; no unlisted sides, garnish or toppings. Generic pasta, cutlet and tortilla shapes are illustrative; ham and cheese uses the listed pretzel roll. See docs/lunch-art-prompts-extra-b.md.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
