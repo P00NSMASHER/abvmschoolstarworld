@@ -1,5 +1,5 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v172-study-guide-preview";
+const CACHE = "abvm-grade2-parent-companion-v173-religion-ch3-runtime";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=113",
