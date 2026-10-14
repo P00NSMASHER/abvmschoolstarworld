@@ -219,7 +219,8 @@ function validateRichContent(input){return input==null||!!normalizeRichContent(i
 function makeQuestion({
   id,subject,skill,tier,type,prompt,choices,answer,explanation,hint,sourceFact,
   dok=2,difficulty=2,standards,domain,wrongFeedback,misconception,richContent=null,
-  contentFingerprint="",variantFingerprint="",reviewVerifiedAt="",reviewExpiresAt=""
+  contentFingerprint="",variantFingerprint="",reviewVerifiedAt="",reviewExpiresAt="",
+  reviewedChapters=[]
 }){
   const cleanChoices=[...choices].map(text);
   return {
@@ -246,7 +247,8 @@ function makeQuestion({
     variantFingerprint:text(variantFingerprint),
     richContent:normalizeRichContent(richContent),
     reviewVerifiedAt:text(reviewVerifiedAt),
-    reviewExpiresAt:text(reviewExpiresAt)
+    reviewExpiresAt:text(reviewExpiresAt),
+    ...(reviewedChapters.length ? {reviewedChapters:[...new Set(reviewedChapters)]} : {})
   };
 }
 function addTriad(out,prefix,base,items){
@@ -257,6 +259,17 @@ function addTriad(out,prefix,base,items){
   })));
 }
 function add(out,question){out.push(makeQuestion(question))}
+// Only page-exact teacher evidence headers may scope a named Religion chapter.
+// Export chapter numbers, never entire source excerpts, into the browser catalog.
+function reviewedReligionChapters(spec){
+  const lineage=spec?.sourceLineage, evidence=lineage?.matchedEvidence;
+  if(spec?.subject!=="Religion"||lineage?.quality!=="page-exact"||!Array.isArray(evidence))return [];
+  return [...new Set(evidence.flatMap(value=>{
+    if(typeof value!=="string")return [];
+    const match=/^\s*Chapter\s+(\d+)\s*:/i.exec(value);
+    return match?[match[1]]:[];
+  }))].sort();
+}
 function materialContentPipeline(pack,out){
   const specs=Array.isArray(pack?.contentPipeline?.questions)?pack.contentPipeline.questions:[];
   for(const spec of specs){
@@ -272,6 +285,7 @@ function materialContentPipeline(pack,out){
       domain:spec.domain,
       contentFingerprint:spec.contentFingerprint,
       variantFingerprint:spec.variantFingerprint,
+      reviewedChapters:reviewedReligionChapters(spec),
       richContent:spec.richContent,
       wrongFeedback:choice=>text(diagnostics?.[choice]?.feedback||"Review the target skill and use the hint before choosing again."),
       misconception:choice=>text(diagnostics?.[choice]?.misconception||"pipeline-generated-distractor")
