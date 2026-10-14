@@ -248,6 +248,11 @@
             .join("")
         : '<p class="empty-copy">No special events are listed for this day.</p>') +
       "</div>" + c.homeworkHtml +
+      (tasks.length
+        ? '<section class="week-school-actions" aria-label="Other school actions"><h3>Other school actions</h3><div class="task-list">' +
+          tasks.map(({item,index})=>taskHtml(item,index)).join("") +
+          '</div></section>'
+        : "") +
       '</section><div class="week-rail">' +
       lunchHtml +
       (c.reminder
