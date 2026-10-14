@@ -307,7 +307,7 @@ export function createStudyMaterials({
     const day = materialDay(time), weekly = day.raw.weekly;
     const primary = tests.map(t => questionsForTest(t,unique([
       ...weekly,
-      ...(/chapter\s*\d+|grammar|predicate/i.test(t.label) ? day.lessons.flatMap(l => array(l.questions)) : []),
+      ...(/(?:chapter|ch\.?)\s*\d+|grammar|predicate/i.test(t.label) ? day.lessons.flatMap(l => array(l.questions)) : []),
     ])));
     const groups = tests.map((t,i) => primary[i].length ? primary[i] : unique(questionsForTest(t,star)));
     const entries = tests.map((t,index) => ({...t, key:testKey(t), index, count:groups[index].length, fallback:!primary[index].length && !!groups[index].length}));
@@ -339,7 +339,7 @@ export function createStudyMaterials({
     const day = materialDay(time), weekly = day.raw.weekly;
     const primary = tests.map(t => questionsForTest(t,unique([
       ...weekly,
-      ...(/chapter\s*\d+|grammar|predicate/i.test(t.label) ? day.lessons.flatMap(l => array(l.questions)) : []),
+      ...(/(?:chapter|ch\.?)\s*\d+|grammar|predicate/i.test(t.label) ? day.lessons.flatMap(l => array(l.questions)) : []),
     ])));
     const groups = tests.map((t,i) => primary[i].length ? primary[i] : unique(questionsForTest(t,star)));
     const entries = tests.map((t,index) => ({
