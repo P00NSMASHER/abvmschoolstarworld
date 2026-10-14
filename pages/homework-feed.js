@@ -23,6 +23,8 @@ function validate(data){
       !row.task.trim()||row.task.length>220||routine(row.task))throw Error("Invalid or standing Homework item");
   }
   if((data.status==="assignments")!==(data.assignments.length>0))throw Error("Homework posting status is inconsistent");
+  if(Date.parse(data.firstObservedAt)>Date.parse(data.checkedAt))
+    throw Error("Invalid verified Homework observation order");
   return data;
 }
 function forDate(data,dateKey,now=new Date()){
