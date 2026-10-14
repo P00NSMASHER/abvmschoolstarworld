@@ -125,6 +125,10 @@ function noteMatchesTest(text, label, subject) {
     if (focus && mentioned.length && !mentioned.includes(focus)) return false;
     return /spell|handwriting|phonics|vowel|short|long|blend|word|letter/i.test(value);
   }
+  if (subject === 'Math') {
+    if (/subtraction/.test(lower)) return /subtraction|subtract|difference|take away|related addition facts to check subtraction/i.test(value);
+    if (/addition/.test(lower)) return /addition|add|sum|total/i.test(value) && !/subtraction-only/i.test(value);
+  }
   if (subject === 'Religion') {
     const chapter = lower.match(/\b(?:chapter|ch\.?)\s*([1-9]\d*)\b/i)?.[1];
     // A named chapter's notes must begin with its own chapter header.
@@ -400,6 +404,14 @@ export function createStudyMaterials({
       skill:compactGuideText(row.skill,60),
     }));
     const warnings = [];
+    // A guide can be viewed offline after the last successful teacher refresh.
+    // Never describe an old source snapshot as today's verified curriculum.
+    if (pack.sourceCheckedAt && schoolDay(pack.sourceCheckedAt) !== schoolDay(time)) {
+      warnings.push('Teacher pages were last checked on ' + schoolDay(pack.sourceCheckedAt) + '. Current school topics may have changed; check the linked teacher page for updates.');
+    }
+    if (subject === 'Spelling / Handwriting' && /\bshort\s*\)/i.test(test.label)) {
+      warnings.push('The teacher test label does not name the short vowel. Practice here covers only named sounds; no missing spelling words are guessed.');
+    }
     const fallback = state.fallback.some(row => row.index === i);
     if (fallback) warnings.push('No reviewed test-specific question bank is available yet. This sheet uses original Grade 2 skill practice and labels it clearly.');
     if (!group.length) warnings.push('No reviewed practice questions match this test yet. Use the teacher materials sent home together with the verified notes below.');
