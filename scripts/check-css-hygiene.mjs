@@ -1,5 +1,6 @@
 import {readFileSync} from "node:fs";
 
+const canonicalBytes=value=>Buffer.byteLength(value.replace(/\r\n/g,"\n"),"utf8");
 const css=readFileSync(new URL("../pages/styles.css",import.meta.url),"utf8");
 const app=readFileSync(new URL("../pages/app.js",import.meta.url),"utf8");
 const fail=message=>{throw new Error(message)};
@@ -43,8 +44,8 @@ for(const marker of ["--tw-","@layer utilities","@property --tw-",".sr-only{",".
 }
 // The rebuilt day presentation has no legacy stripe to suppress.
 
-if(Buffer.byteLength(css,"utf8")>70000)fail("styles.css exceeded the 70 KB hygiene ceiling");
-if(Buffer.byteLength(app,"utf8")>60000)fail("app.js exceeded the 60 KB hygiene ceiling");
+if(canonicalBytes(css)>70000)fail("styles.css exceeded the 70 KB hygiene ceiling");
+if(canonicalBytes(app)>60000)fail("app.js exceeded the 60 KB hygiene ceiling");
 
 const calendarCellRuleBlocks=(css.match(/\.calendar-grid button\s*\{/g)||[]).length;
 if(calendarCellRuleBlocks>2)fail("Calendar cell CSS has accumulated duplicate rule blocks");
