@@ -25,7 +25,18 @@ export function summarizeTeacherHomework(lines,checkedAt=new Date().toISOString(
   return {schemaVersion:1,sourceUrl:HOMEWORK_SOURCE_URL,sourceDateProvided:false,
     status,checkedAt,firstObservedAt,contentHash,assignments:unique};
 }
+const easternDay=value=>{
+  const date=new Date(value);
+  if(!Number.isFinite(date.getTime()))return '';
+  const parts=Object.fromEntries(new Intl.DateTimeFormat('en-US',{
+    timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'
+  }).formatToParts(date).map(part=>[part.type,part.value]));
+  return parts.year+'-'+parts.month+'-'+parts.day;
+};
 export function shouldPublishHomework(candidate,previous,{hours=18}={}) {
-  if(!previous || previous.schemaVersion!==1 || previous.contentHash!==candidate.contentHash) return true;
+  if(!previous || previous.schemaVersion!==1 || previous.contentHash!==candidate.contentHash)return true;
+  // Never leave yesterday's validated posting hidden all morning merely because
+  // its last publication was fewer than 18 hours ago.
+  if(easternDay(candidate.checkedAt)!==easternDay(previous.checkedAt))return true;
   return Date.parse(candidate.checkedAt)-Date.parse(previous.checkedAt)>=hours*3600000;
 }

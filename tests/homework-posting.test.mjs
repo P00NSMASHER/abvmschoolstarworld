@@ -37,3 +37,11 @@ test('unchanged posting updates daily, or immediately when assignments change',(
   const changed=summarizeTeacherHomework(['Homework','Math pg. 23',...routine],'2026-10-14T00:00:00.000Z',first);
   assert.equal(shouldPublishHomework(changed,first),true);
 });
+
+test('same assignments still publish after Eastern midnight before school starts',()=>{
+  const first=summarizeTeacherHomework(['Homework','Math pg. 22',...routine],'2026-10-14T00:32:00.000Z');
+  const rechecked=summarizeTeacherHomework(['Homework','Math pg. 22',...routine],'2026-10-14T10:23:00.000Z',first);
+  assert.equal(rechecked.firstObservedAt,first.firstObservedAt);
+  assert.equal(shouldPublishHomework(rechecked,first),true,
+    'a new Eastern school date requires verified morning publication even when the homework text is unchanged');
+});
