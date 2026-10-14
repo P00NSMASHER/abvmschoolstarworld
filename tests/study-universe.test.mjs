@@ -20,12 +20,14 @@ test('test scope distinguishes grammar, operations, exact-evidence chapters and 
   const f=fixture();
   const chapter3={...lineage,matchedEvidence:['Chapter 3: original sin, faith, sacraments, and Baptism']};
   const chapter2={...lineage,matchedEvidence:['Chapter 2: Jesus is God’s Best Gift']};
+  const chapter2CrossRef={...lineage,matchedEvidence:['Chapter 2: recap may mention Chapter 3: but is not Chapter 3 material']};
   f.pack.contentPipeline.questions.push(
     q('religion-other','Religion','religion-gifts-choices'),
     q('ch2','Religion','religion-chapter-2'),
     q('ch3','Religion','religion-chapter-3'),
     q('ch3-exact','Religion','religion-original-sin',{sourceLineage:chapter3}),
     q('ch2-exact','Religion','religion-jesus-savior',{sourceLineage:chapter2}),
+    q('ch2-crossref','Religion','religion-future-reference',{sourceLineage:chapter2CrossRef}),
   );
   const out=buildStudyUniverse(f);const get=label=>out.selectableTestPrep.find(t=>t.label===label);
   assert.deepEqual(get('Grammar (subject & predicate)').questionIds,['r1']);
@@ -82,10 +84,13 @@ test('real reviewed pack, archive, original worksheet practice and STAR are comp
   for(const t of out.selectableTestPrep){
     assert.equal(t.supported,t.questionIds.length>0);
     if(t.label==='Math (subtraction)')assert.ok(t.questionIds.every(id=>byId.get(id).skill.includes('subtraction')));
-    if(t.label==='Religion Ch. 3')assert.ok(t.questionIds.every(id=>{
+    if(t.label==='Religion Ch. 3'){
+      assert.ok(t.questionIds.length>0,'Governed Chapter 3 test requires nonzero reviewed practice');
+      assert.ok(t.questionIds.every(id=>{
       const raw=rawById.get(id);
-      return raw&&raw.subject==='Religion'&&raw.sourceLineage.matchedEvidence.some(value=>/\bChapter\s+3\s*:/i.test(value));
-    }));
+      return raw&&raw.subject==='Religion'&&raw.sourceLineage.matchedEvidence.some(value=>/^Chapter\s+3\s*:/i.test(value.trim()));
+      }));
+    }
   }
   assert.doesNotMatch(JSON.stringify(out),/IMG_\d+|learnerResponse|teacherMark|studentName|privateHistory/);
   assert.equal(JSON.stringify(buildStudyUniverse(real())),JSON.stringify(out));
