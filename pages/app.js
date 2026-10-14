@@ -5,6 +5,8 @@ if(location.hash==="#progress")history.replaceState(null,"","#family");
 let envelope=null, pack=null, activeTab=(["today","week","calendar","study","games","family"].includes(location.hash.slice(1).split("?")[0])?location.hash.slice(1).split("?")[0]:"today"), selectedDay=null, calendarDay=null, weekOffset=0, calendarOffset=0;
 let studyGameCatalogCache=null, derivedPackCache=null, studyEnginePromise=null, screenEventsBound=false, lastPackFetchAt=0, packRefreshPromise=null, manualRefreshActive=false, lastPackFetchUsedCache=false, gameState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,negativeStreak:0,bestStreak:0,streakAdjustment:0,lastStreakDelta:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null,sourceKey:"",sessionSeed:"",learningEvents:[],results:[],comebackSucceeded:false,rewardStatus:"idle",rewardAwarded:0,rewardCurrency:"Study Stars",starBalance:0,rewardRevealAmount:0,rewardRevealScheduled:false,tries:0,misses:0,hints:0,retry:0,wrong:[]};
 let studyMaterials=null,studyMaterialsPack=null,studyMaterialsPromise=null,studyMaterialsError=null,studyMaterialsView=null,screenGeneration=0;
+let homeworkFeed=null,homeworkFetchPromise=null,lastHomeworkFetchAt=0;
+const HOMEWORK_FEED_URL='./data/homework-current.json',HOMEWORK_REFRESH_MS=45*60*1000;
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 function linkedTextHtml(value){return esc(value).replace(/https?:\/\/[^\s<]+/g,url=>'<a href="'+url+'" target="_blank" rel="noopener">'+url.replace(/^https?:\/\//,"")+'</a>')}
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -161,31 +163,32 @@ function lunchForDate(date){
 }
 function keyPart(value){return String(value||"").trim().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,90)||"item";}
 function taskWeekKey(){return keyPart(pack?.weekLabel||"current-week");}
-function checkKey(item){return "abvm-task:v2:"+taskWeekKey()+":"+keyPart(item?._sourceSubject||item?.subject)+":"+keyPart(item?.task||item?.label);}
+function checkKey(item){if(item?._homeworkDay)return "abvm-homework:v1:"+item._homeworkDay+":"+keyPart(item.subject)+":"+keyPart(item.task);return "abvm-task:v2:"+taskWeekKey()+":"+keyPart(item?._sourceSubject||item?.subject)+":"+keyPart(item?.task||item?.label);}
 function legacyCheckKey(item,index){return "abvm-old-look:"+String(pack?.sourceHash||"pack")+":"+index+":"+(item?.task||item?.label||"");}
 function checked(item,index){
   const key=checkKey(item);
   if(storageGet(key)==="1")return true;
-  if(storageGet(legacyCheckKey(item,index))==="1"){storageSet(key,"1");return true;}
+  if(!item?._homeworkDay&&storageGet(legacyCheckKey(item,index))==="1"){storageSet(key,"1");return true;}
   return false;
 }
 function toggleChecked(item,index){
-  const key=checkKey(item),legacy=legacyCheckKey(item,index);
+  const key=checkKey(item),legacy=item?._homeworkDay?null:legacyCheckKey(item,index);
   const wasDone=checked(item,index);
-  if(wasDone){storageRemove(key);storageRemove(legacy);}
+  if(wasDone){storageRemove(key);if(legacy)storageRemove(legacy);}
   else storageSet(key,"1");
   render({preserveScroll:true});
-  stack().querySelector(`[data-check="${index}"]`)?.focus({preventScroll:true});
+  stack().querySelector(`[${item?._homeworkDay?"data-homework-check":"data-check"}="${index}"]`)?.focus({preventScroll:true});
   toast(`${wasDone?"Marked incomplete":"Completed"}: ${item?.task||item?.label||"Task"}`);
 }
 function taskPolicy(item){
   const task=String(item?.task||"").trim(),subject=String(item?.subject||"").trim();
   const haystack=(subject+" "+task).toLowerCase();
   if(/cover books|reading log and behavior chart|return everything in the hw folder/.test(haystack)){
-    return{type:"background-routine",today:false,family:false};
+    return{type:"background-routine",today:false,week:false,family:false};
   }
-  if(/^read$/i.test(task))return{type:"daily-habit",today:true,family:false,subject:"20 minutes today"};
+  if(/^read$/i.test(task))return{type:"background-routine",today:false,week:false,family:false};
   if(/^attend mass$/i.test(task))return{type:"current-action",today:true,family:false};
+  if(["Math","Spelling","Reading","Religion"].includes(subject))return{type:"academic-uses-homework-feed",today:false,week:false,family:false};
   if(/parent|if participating|forms/.test(haystack))return{type:"parent-action",today:false,family:true};
   return{type:"current-action",today:true,family:true};
 }
@@ -205,12 +208,20 @@ function taskAppliesToDate(item,date){
 function taskRecordsForSurface(surface,date=today()){
   return getDerivedPack().homeworkRows.filter(record=>record.policy[surface]!==false&&taskAppliesToDate(record.item,date));
 }
+function homeworkForDate(date){
+  return window.ABVMHomeworkFeed.forDate(homeworkFeed,isoDateKey(date),new Date());
+}
+function homeworkCardForDate(date,{compact=false}={}){
+  const state=homeworkForDate(date);
+  const items=state.assignments.map((row,index)=>({index,item:{...row,_homeworkDay:isoDateKey(date)}}));
+  return window.ABVMProductView.homeworkCard({state,items,compact,taskHtml,isToday:sameDay(date,today())});
+}
 function taskHtml(item,index){
   const done=checked(item,index);
   const optional=/\bif participating\b|\boptional\b/i.test((item.subject||"")+" "+(item.task||""));
   const tag=optional?"IF PARTICIPATING":"REQUIRED";
   const action=(done?"Completed: ":"Mark complete: ")+(item.task||"Task");
-  return '<button type="button" class="check-item'+(done?' is-done':'')+'" data-check="'+index+'" aria-pressed="'+(done?"true":"false")+'" aria-label="'+esc(action)+'"><span class="check-box" aria-hidden="true">'+(done?"✓":"")+'</span><span class="check-copy"><span class="task-tag '+(optional?"if-participating":"required")+'">'+tag+'</span><strong>'+esc(item.task||"Task")+'</strong>'+(item.subject?'<small>'+esc(item.subject)+'</small>':'')+'</span></button>';
+  return '<button type="button" class="check-item'+(done?' is-done':'')+'" '+(item?._homeworkDay?'data-homework-check':'data-check')+'="'+index+'" aria-pressed="'+(done?"true":"false")+'" aria-label="'+esc(action)+'"><span class="check-box" aria-hidden="true">'+(done?"✓":"")+'</span><span class="check-copy"><span class="task-tag '+(optional?"if-participating":"required")+'">'+tag+'</span><strong>'+esc(item.task||"Task")+'</strong>'+(item.subject?'<small>'+esc(item.subject)+'</small>':'')+'</span></button>';
 }
 function schoolDateParts(value=new Date()){
   const parts=SCHOOL_DATE_FORMATTER.formatToParts(value);
@@ -294,7 +305,7 @@ function calendarBase(){
 function loadStudyRanks(){return ensureStudyGameEngine().then(e=>e.studyBadgeCollection())}
 function renderToday(){
  const d=today(),priority=datedImportantEvents().find(({item,date})=>date>=d&&(kindClass(item)==="test"||kindClass(item)==="due"));
- stack().innerHTML=window.ABVMProductView.today({d,pack,header,freshness,taskHtml,kindClass,fmtDate,fmtShort,linkedTextHtml,events:eventItemsForDate(d),tasks:taskRecordsForSurface("today"),next:currentTest()||(priority?{x:priority.item,d:priority.date}:null),reminders:upcomingReminderTexts(d,2),lunchHtml:lunchCardHtml(d,lunchForDate(d))});
+ stack().innerHTML=window.ABVMProductView.today({d,pack,header,freshness,taskHtml,kindClass,fmtDate,fmtShort,linkedTextHtml,events:eventItemsForDate(d),tasks:taskRecordsForSurface("today"),homeworkHtml:homeworkCardForDate(d),next:currentTest()||(priority?{x:priority.item,d:priority.date}:null),reminders:upcomingReminderTexts(d,2),lunchHtml:lunchCardHtml(d,lunchForDate(d))});
  // Hide broken art, but preserve verified lunch text.
  const mealArt=stack().querySelector(".today-screen .lunch-art img");
  if(mealArt){
@@ -307,7 +318,7 @@ function renderToday(){
 function renderWeek(){
  const days=weekDays();
  if(!selectedDay||!days.some(d=>sameDay(d,selectedDay)))selectedDay=weekOffset===0?(days.find(d=>sameDay(d,today()))||days[0]):days[0];
- stack().innerHTML=window.ABVMProductView.week({days,selectedDay,offset:weekOffset,header,segments:calendarSegments("week"),freshness,taskHtml,kindClass,fmtDate,fmtShort,weekRangeLabel,eventItemsForDate,events:eventItemsForDate(selectedDay),tasks:isPackWeek(days)?taskRecordsForSurface("week",selectedDay):[],lunchHtml:lunchCardHtml(selectedDay,lunchForDate(selectedDay)),reminder:reminderForDate(selectedDay),future:datedImportantEvents().filter(({date})=>date>selectedDay).slice(0,4).map(({item,date})=>({x:item,d:date})),overview:window.ABVMWeeklyLearning.renderWeekOverview({days,lunchForDate,eventItemsForDate,kindClass,fmtShort,lunchText,lunchUnavailableText})});
+ stack().innerHTML=window.ABVMProductView.week({days,selectedDay,offset:weekOffset,header,segments:calendarSegments("week"),freshness,taskHtml,kindClass,fmtDate,fmtShort,weekRangeLabel,eventItemsForDate,events:eventItemsForDate(selectedDay),tasks:isPackWeek(days)?taskRecordsForSurface("week",selectedDay):[],homeworkHtml:homeworkCardForDate(selectedDay,{compact:true}),lunchHtml:lunchCardHtml(selectedDay,lunchForDate(selectedDay)),reminder:reminderForDate(selectedDay),future:datedImportantEvents().filter(({date})=>date>selectedDay).slice(0,4).map(({item,date})=>({x:item,d:date})),overview:window.ABVMWeeklyLearning.renderWeekOverview({days,lunchForDate,eventItemsForDate,kindClass,fmtShort,lunchText,lunchUnavailableText})});
 }
 function agendaLunchHtml(date,lunch){
   const events=eventItemsForDate(date),closed=events.some(e=>kindClass(e)==="closed"),weekend=[0,6].includes(date.getDay());
@@ -607,6 +618,7 @@ function bindScreen(){
     if(target.matches("[data-open-badges]")){activeTab="family";history.replaceState(null,"","#family");render();const title=stack().querySelector("#badge-title");if(title){title.tabIndex=-1;title.focus();title.scrollIntoView({block:"start"})}return;}
     if(target.matches("[data-open-family]")){activeTab="family";history.replaceState(null,"","#family");render();return;}
     if(target.matches("[data-refresh-pack]")){manualRefreshSchoolInfo();return;}
+    if(target.matches("[data-homework-check]")){const index=Number(target.dataset.homeworkCheck),day=activeTab==="week"?(selectedDay||today()):today(),row=homeworkForDate(day).assignments[index];if(row)toggleChecked({...row,_homeworkDay:isoDateKey(day)},index);return;}
     if(target.matches("[data-check]")){toggleChecked((pack.homework||[])[Number(target.dataset.check)],Number(target.dataset.check));return;}
     if(target.matches("[data-day]")){selectedDay=new Date(target.dataset.day);redrawPlanner(renderWeek,'[data-day="'+target.dataset.day+'"]');return;}
     if(target.matches("[data-week-step]")){weekOffset+=Number(target.dataset.weekStep||0);selectedDay=null;redrawPlanner(renderWeek,'[data-week-step="'+target.dataset.weekStep+'"]');return;}
@@ -697,6 +709,24 @@ async function fetchPack({force=false,notify=false}={}){
   })();
   return packRefreshPromise;
 }
+async function fetchHomeworkFeed({force=false}={}){
+  if(!force&&homeworkFeed&&Date.now()-lastHomeworkFetchAt<HOMEWORK_REFRESH_MS)return false;
+  if(homeworkFetchPromise)return homeworkFetchPromise;
+  homeworkFetchPromise=(async()=>{
+    const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),8000);
+    try{
+      const response=await fetch(HOMEWORK_FEED_URL,{cache:"no-store",signal:controller.signal});
+      if(!response.ok)throw Error("Current teacher Homework feed unavailable: "+response.status);
+      const next=window.ABVMHomeworkFeed.validate(await response.json());
+      const changed=JSON.stringify(next)!==JSON.stringify(homeworkFeed);
+      homeworkFeed=next;
+      lastHomeworkFetchAt=Date.now();
+      if(changed&&pack)render({preserveScroll:true});
+      return changed;
+    }finally{clearTimeout(timeout);}
+  })().finally(()=>{homeworkFetchPromise=null;});
+  return homeworkFetchPromise;
+}
 async function manualRefreshSchoolInfo(){
   if(manualRefreshActive)return;
   if(navigator.onLine===false){
@@ -707,7 +737,9 @@ async function manualRefreshSchoolInfo(){
   manualRefreshActive=true;
   updateFreshnessUI();
   try{
-    const changed=await fetchPack({force:true,notify:false});
+    const results=await Promise.allSettled([fetchPack({force:true,notify:false}),fetchHomeworkFeed({force:true})]);
+    if(results.every(row=>row.status==="rejected"))throw Error("No published sources could be refreshed");
+    const changed=results.some(row=>row.status==="fulfilled"&&row.value===true);
     const state=freshnessState();
     if(state.state==="offline")toast("You’re offline. Showing saved school info.");
     else if(changed)toast("School info updated");
@@ -722,7 +754,8 @@ async function manualRefreshSchoolInfo(){
 }
 async function load(){
   try{
-    await fetchPack({force:true});
+    const checked=await Promise.allSettled([fetchPack({force:true}),fetchHomeworkFeed({force:true})]);
+    if(!pack)throw (checked[0].status==="rejected"?checked[0].reason:Error("School pack unavailable"));
     const warmGames=()=>ensureStudyGameEngine().catch(()=>{});
     if("requestIdleCallback" in window)requestIdleCallback(warmGames,{timeout:2200});
     else setTimeout(warmGames,1400);
@@ -739,13 +772,13 @@ window.addEventListener("hashchange",()=>{
     render();
   }
 });
-window.addEventListener("online",()=>{lastPackFetchUsedCache=false;if(pack)fetchPack({force:true,notify:true}).catch(()=>updateFreshnessUI())});
+window.addEventListener("online",()=>{lastPackFetchUsedCache=false;if(pack){fetchPack({force:true,notify:true}).catch(()=>updateFreshnessUI());fetchHomeworkFeed({force:true}).catch(()=>{});}});
 window.addEventListener("offline",()=>{lastPackFetchUsedCache=true;if(pack)updateFreshnessUI()});
 document.addEventListener("visibilitychange",()=>{
-  if(document.visibilityState==="visible"&&pack)fetchPack({notify:true}).catch(()=>{});
+  if(document.visibilityState==="visible"&&pack){fetchPack({notify:true}).catch(()=>{});fetchHomeworkFeed().catch(()=>{});}
 });
 window.addEventListener("pageshow",event=>{
-  if(event.persisted&&pack)fetchPack({force:true,notify:true}).catch(()=>{});
+  if(event.persisted&&pack){fetchPack({force:true,notify:true}).catch(()=>{});fetchHomeworkFeed({force:true}).catch(()=>{});}
 });
 load();
 })();

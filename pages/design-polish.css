@@ -1975,3 +1975,48 @@
 .today-screen .school-sign-card figcaption span{color:#4a617b;font-size:.75rem;overflow-wrap:anywhere}
 @media(max-width:375px){.today-screen .school-sign-card{gap:10px}.today-screen .school-sign-photo{flex-basis:85px;width:85px;height:60px}}
 @media(prefers-contrast:more){.today-screen .school-sign-card{border:2px solid currentColor}}
+
+
+/* Time-critical, source-verified Homework sits directly beneath Today's hero. */
+.today-screen .today-homework,.week-screen .week-homework-card{
+  min-width:0;margin:12px 0 14px;padding:15px;border:1px solid #bfd4ee;
+  border-left:5px solid #ffca38;border-radius:19px;background:linear-gradient(130deg,#fff,#f5f9ff);
+  box-shadow:0 8px 22px rgba(11,42,79,.095);
+}
+.today-homework .homework-heading,.week-homework-card .homework-heading{
+  display:flex;align-items:center;justify-content:space-between;gap:8px 14px;margin-bottom:8px;
+}
+.homework-heading>div{min-width:0}
+.homework-heading .homework-eyebrow{display:block;font-size:.63rem;font-weight:820;letter-spacing:.075em;color:#506c8b}
+.homework-heading h2{margin:2px 0 0;color:#102e58;font-size:1.31rem;line-height:1.15;letter-spacing:-.025em}
+.homework-heading>a{display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;padding:8px 11px;
+  border:1px solid #b7cfe7;border-radius:11px;background:#fff;color:#153e70;font-size:.79rem;font-weight:760;text-decoration:none}
+.homework-heading>a:focus-visible{outline:3px solid #174c89;outline-offset:2px}
+.homework-task-list{display:grid;gap:8px}
+.homework-task-list .check-item{
+  display:flex;width:100%;min-height:58px;margin:0;padding:10px 12px;text-align:left;
+  border:1px solid #d5e2ef;border-radius:14px;background:#fff;
+}
+.homework-task-list .check-copy{min-width:0}
+.homework-task-list .check-copy strong{font-size:.98rem;line-height:1.32;overflow-wrap:anywhere}
+.homework-task-list .check-copy small{color:#45668a;font-weight:750}
+.homework-task-list .task-tag{display:none}
+.homework-source,.homework-empty{margin:9px 0 0;color:#4c657f;font-size:.73rem;line-height:1.4}
+.homework-empty{font-size:.83rem}
+.today-homework.needs-verification,.week-homework-card.needs-verification{border-left-color:#a5b5c8;background:#fff}
+.week-screen .week-homework-card{margin-top:14px;box-shadow:none}
+@media(max-width:359px){
+  .today-screen .today-homework{padding:11px}
+  .homework-heading h2{font-size:1.15rem}
+  .homework-heading>a{padding:7px 8px;font-size:.72rem}
+}
+@media(min-width:700px){
+  .today-screen>.today-homework{grid-column:1/-1;grid-row:2}
+  .today-screen>.school-sign-card{grid-column:1/-1;grid-row:3}
+  .today-screen .today-primary{grid-column:1;grid-row:4}
+  .today-screen>.lunch-card{grid-column:2;grid-row:4}
+  .today-screen .today-panel{grid-column:1;grid-row:5}
+  .today-screen>.study-badge-surface{grid-column:2;grid-row:5}
+  .today-screen .today-updates-card{grid-column:1;grid-row:6}
+  .today-screen>.freshness{grid-column:1/-1;grid-row:7}
+}

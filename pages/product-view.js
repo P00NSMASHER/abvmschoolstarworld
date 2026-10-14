@@ -118,7 +118,7 @@
       '<h1 class="visually-hidden" tabindex="-1">Today</h1><section class="hero-card school-photo-hero"><div class="hero-copy"><p class="eyebrow">' +
       esc(fmtDate(d)) +
       '</p><h2>Ready for today?</h2><p>Your school day, all together.</p></div><img class="hero-photo" src="./assets/school/abvm-school-hero.webp" width="1024" height="683" fetchpriority="high" alt="Assumption BVM School in Pottsville"><span class="photo-caption">OUR ABVM</span><img class="today-school-seal" src="./assets/abvm-app-icon-192.png" width="48" height="48" alt="Assumption BVM Catholic School logo"></section>' +
-      '<figure class="school-sign-card"><img class="school-sign-photo" src="./assets/school/abvm-school-sign.webp" width="420" height="280" loading="eager" decoding="async" alt="Original photograph of the Assumption BVM school sign on Howard Avenue"><figcaption><strong>Our school sign</strong><span>Assumption BVM · Howard Avenue</span></figcaption></figure>' +
+      c.homeworkHtml + '<figure class="school-sign-card"><img class="school-sign-photo" src="./assets/school/abvm-school-sign.webp" width="420" height="280" loading="eager" decoding="async" alt="Original photograph of the Assumption BVM school sign on Howard Avenue"><figcaption><strong>Our school sign</strong><span>Assumption BVM · Howard Avenue</span></figcaption></figure>' +
       '<div class="today-primary">' + nextHtml +
       '<button class="study-invitation" type="button" data-route="study"><img src="./assets/illustrations/reading.webp" width="72" height="72" alt=""><span><strong>Start studying</strong><small>A little practice. A little more confidence.</small></span>' +
       icon("arrow") +
@@ -153,6 +153,22 @@
       freshness() +
       "</div>"
     );
+  }
+  function homeworkCard({state,items=[],compact=false,taskHtml,isToday=true}) {
+    const status=state?.state||"unverified";
+    const stamp=state?.checkedAt?new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}).format(new Date(state.checkedAt)):"";
+    const live=status==="assignments"||status==="no-homework"||status==="no-specific-posting";
+    const text=status==="assignments"?"Current teacher posting · checked "+stamp+" ET · no date shown on page"
+      :status==="no-homework"?"Teacher explicitly posted no homework · checked "+stamp+" ET"
+      :status==="no-specific-posting"?"No specific assignment is currently listed · checked "+stamp+" ET"
+      :status==="other-day"?"The teacher does not date assignments; only today's verified posting is shown."
+      :status==="outdated"?"Homework needs today's teacher verification. Last checked "+stamp+" ET."
+      :"Today's homework is not yet verified in the app.";
+    const rows=status==="assignments"
+      ?'<div class="homework-task-list">'+items.map(({item,index})=>taskHtml(item,index)).join("")+'</div>'
+      :'<p class="homework-empty">'+esc(text)+'</p>';
+    const heading='<div class="homework-heading"><div><span class="homework-eyebrow">ASSIGNMENTS TO COMPLETE</span><h2>Homework</h2></div><a href="https://sites.google.com/view/abvmgr2/homework" target="_blank" rel="noopener noreferrer" aria-label="View the official Grade 2 teacher Homework page">Teacher page ↗</a></div>';
+    return '<section class="'+(compact?'week-homework-card':'today-homework')+(live?' is-verified':' needs-verification')+'" aria-labelledby="'+(compact?'week-homework-heading':'today-homework-heading')+'">'+heading.replace('<h2>Homework</h2>','<h2 id="'+(compact?'week-homework-heading':'today-homework-heading')+'">Homework</h2>')+rows+(status==="assignments"?'<p class="homework-source">'+esc(text)+'</p>':'')+'</section>';
   }
   function week(c) {
     const {
@@ -231,10 +247,7 @@
             )
             .join("")
         : '<p class="empty-copy">No special events are listed for this day.</p>') +
-      "</div><h3>Homework & routines</h3>" +
-      (tasks.length
-        ? tasks.map(({ item, index }) => taskHtml(item, index)).join("")
-        : '<p class="week-empty">No checklist is verified for this week yet.</p>') +
+      "</div>" + c.homeworkHtml +
       '</section><div class="week-rail">' +
       lunchHtml +
       (c.reminder
@@ -503,7 +516,7 @@
     if (node.nextElementSibling?.matches(".teacher-live-source")) node.nextElementSibling.remove();
     node.outerHTML = markup;
   }
-  window.ABVMProductView = Object.freeze({ today, week, progress, icon, plannerDate, compactMonthCard, calendarSpecials, freshnessControl, replaceFreshness, calendar, calendarDate, calendarShift, calendarGrid, calendarEvent, bindCalendar });
+  window.ABVMProductView = Object.freeze({ today, week, homeworkCard, progress, icon, plannerDate, compactMonthCard, calendarSpecials, freshnessControl, replaceFreshness, calendar, calendarDate, calendarShift, calendarGrid, calendarEvent, bindCalendar });
 })();
 
 (()=>{"use strict";
