@@ -38,8 +38,12 @@ export function questionsForTest(test, questions) {
         if (photographed) return date === photographed[1];
         if (!focus.length) return !/\b(?:short|long)\s*\)/.test(label);
         const evidence = String(q.skill || '') + ' ' + String(q.sourceFact || '');
-        return focus.some(({sound,vowel}) =>
-          new RegExp('\\b' + sound + '[- ]' + vowel + '\\b|\\blong-short-' + vowel + '\\b|\\bshort-' + vowel + '-long-' + vowel + '\\b','i').test(evidence));
+        return focus.some(({sound,vowel}) => {
+          const pairConfirmed = focus.some(row => row.vowel === vowel && row.sound !== sound);
+          const solo = new RegExp('\\b' + sound + '[- ]' + vowel + '\\b','i').test(evidence);
+          const pair = pairConfirmed && new RegExp('\\b(?:long-short-' + vowel + '|short-' + vowel + '-long-' + vowel + ')\\b','i').test(evidence);
+          return solo && !/\blong-short-|\bshort-[aeiou]-long-/.test(String(q.skill || '')) || pair;
+        });
       });
   }
   if (/religion|faith/.test(label)) {
