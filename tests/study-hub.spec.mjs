@@ -36,7 +36,15 @@ test('weekly test prep covers same-day subjects in the existing player and compl
       .filter(q=>q.subject==='Math'&&q.tier==='material');
   });
   const dedupe=rows=>[...new Map(rows.map(q=>[q.prompt+'|'+q.answer,q])).values()];
-  const allowed={Math:dedupe([...currentMath,...archivedMath]),Religion:religion};
+  // Current reviewed Religion questions can carry both Chapter 2 and 3 headers.
+  // Permit them in Chapter 2 practice only when the governed entry explicitly
+  // starts with Chapter 2, never by a cross-reference or unrelated subject.
+  const full=await page.request.get('/data/study-pack.json').then(r=>r.json());
+  const currentChapter2=full.pack.contentPipeline.questions.filter(q=>
+    q.subject==='Religion'&&q.sourceLineage?.quality==='page-exact'&&
+    q.sourceLineage.matchedEvidence?.some(value=>
+      typeof value==='string'&&/^\s*Chapter\s+2\s*:/i.test(value)));
+  const allowed={Math:dedupe([...currentMath,...archivedMath]),Religion:dedupe([...religion,...currentChapter2])};
   await page.locator('[data-open-prep]').click();
   const prep=page.locator('[data-study-tests]');
   await expect(prep.locator('time')).toHaveAttribute('datetime','2026-10-07');
@@ -188,7 +196,7 @@ test('October 15 Religion Chapter 3 Test Prep uses only reviewed source-backed q
   ]);
   const reviewed=source.pack.contentPipeline.questions.filter(q=>
     q.subject==='Religion'&&q.sourceLineage?.matchedEvidence?.some(value=>
-      typeof value==='string'&&/^\\s*Chapter\\s+3\\s*:/i.test(value)));
+      typeof value==='string'&&/^\s*Chapter\s+3\s*:/i.test(value)));
   const allowed=new Map(reviewed.map(q=>[q.prompt,q]));
   expect(allowed.size).toBe(18);
   expect(runtime.pack.contentPipeline.questions.filter(q=>q.sourceChapters?.includes(3))).toHaveLength(18);
