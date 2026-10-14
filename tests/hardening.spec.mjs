@@ -13,10 +13,9 @@ test.beforeEach(async({page})=>{
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
 });
 
-test("Today uses permanent task policy instead of date-specific housekeeping",async({page})=>{
+test("Today excludes permanent routines from the academic homework checklist",async({page})=>{
   const text=await page.locator(".today-panel").innerText();
-  expect(text).toContain("Read");
-  expect(text).toContain("20 minutes today");
+  expect(text).not.toContain("20 minutes today");
   expect(text).not.toContain("Cover books");
   expect(text).not.toContain("Keep Reading Log and Behavior Chart in the HW folder");
   expect(text).not.toContain("Return everything in the HW folder");
@@ -120,8 +119,11 @@ test("interactive day and checklist controls expose selected/completion state",a
   const cal=page.locator("[data-cal-day]").first();
   await expect(cal).toHaveAttribute("aria-label",/.+/);
   await expect(cal).toHaveAttribute("aria-pressed",/true|false/);
-  await openTab(page,"Today");
-  const check=page.locator("[data-check]").first();
+  // Interact with the real current homework button rather than a hidden daily routine.
+  await page.clock.setFixedTime(new Date("2026-10-13T21:00:00-04:00"));
+  await page.goto("/#today");
+  const check=page.locator("[data-homework-check]").first();
+  await expect(check).toBeVisible();
   await expect(check).toHaveAttribute("aria-label",/Mark complete|Completed/);
   await expect(check).toHaveAttribute("aria-pressed",/true|false/);
   expect(await page.locator("#app-content").getAttribute("aria-live")).toBeNull();

@@ -95,7 +95,9 @@ test("Week: five-day study plan and verified lunch/test information", async ({ p
     // An Oct 8 school day no longer reports progress reports as issued.
     await expect(page.locator(".day-detail")).not.toContainText("Progress Reports Issued");
     await expect(page.locator(".day-detail")).toContainText("Thursday, October 8");
-    await expect(page.locator(".day-detail")).toContainText("Read");
+    // The standing Read/reading-log/book-cover routines are not daily assignments.
+    await expect(page.locator(".day-detail")).not.toContainText(/cover books|reading log|return everything in the HW folder/i);
+    await expect(page.locator(".day-detail .week-homework-card")).toContainText("teacher");
     await expect(page.locator(".week-overview .week-lunches .week-overview-row")).toHaveCount(5);
     await expect(page.locator(".week-overview .week-tests")).toContainText("Spelling");
     await sealReady(page);
@@ -304,12 +306,15 @@ test("Selected-day actions scroll fully clear of the bottom bar on compact phone
     await page.goto("/#week");
     await page.reload();
     await expect(page.locator(".week-screen")).toBeVisible();
-    const task = page.locator(".day-detail .check-item").first();
+    // The teacher page link remains actionable even for an undated historical
+    // day where no verified checkbox may be displayed.
+    const task = page.locator(".day-detail .week-homework-card a").first();
     await expect(task).toBeVisible();
+    await expect(task).toHaveAttribute("href", "https://sites.google.com/view/abvmgr2/homework");
     await task.evaluate(node => node.scrollIntoView({ block: "center" }));
     const week = await page.evaluate(() => {
       const nav = document.querySelector(".bottom-nav").getBoundingClientRect();
-      const task = document.querySelector(".day-detail .check-item").getBoundingClientRect();
+      const task = document.querySelector(".day-detail .week-homework-card a").getBoundingClientRect();
       const screen = document.querySelector(".week-screen");
       return { navTop: nav.top, taskTop: task.top, taskBottom: task.bottom, scrolled: screen.scrollTop };
     });

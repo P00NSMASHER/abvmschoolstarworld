@@ -56,6 +56,20 @@
 .games-screen .study-guide-tool-list{display:grid;gap:8px;margin:0 0 10px}
 .games-screen .study-tool-body button{min-height:46px;padding:10px 12px;margin:0 5px 7px 0;border:1px solid var(--study-line);border-radius:12px;background:#fff;color:var(--study-brand);font-size:.8rem;line-height:1.4;font-weight:650;text-align:left}
 .games-screen .study-guide-tool-list button{width:100%;margin:0}
+
+/* Dismissible study guide preview, independent of the Study screen scroll. */
+.study-guide-dialog:not([open]){display:none}
+.study-guide-dialog[open]{position:fixed;inset:0;width:100%;max-width:none;height:100dvh;max-height:none;margin:0;padding:0;box-sizing:border-box;display:flex;flex-direction:column;border:0;border-radius:0;background:#eff5fc;color:#102e58;box-shadow:0 12px 50px #001b3e55}
+.study-guide-dialog::backdrop{background:rgba(6,25,52,.74)}
+.study-guide-modal-bar{display:flex;align-items:center;gap:8px;min-height:68px;box-sizing:border-box;padding:calc(10px + env(safe-area-inset-top, 0px)) 12px 12px;background:#fff;border-bottom:1px solid #dce7f3}
+.study-guide-modal-bar strong{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;font-size:.9rem;font-weight:800}
+.study-guide-modal-bar button{flex:none;min-width:62px;min-height:44px;padding:8px 12px;border:1px solid #dce7f3;border-radius:12px;background:#f1f6fb;color:#102e58;font-size:.88rem;font-weight:750;cursor:pointer}
+.study-guide-modal-bar button[data-guide-print]{background:#ffca38;border-color:#e9b124}
+.study-guide-modal-bar button:disabled{opacity:.5;cursor:wait}
+.study-guide-modal-bar button:focus-visible{outline:3px solid #316bb4;outline-offset:2px}
+.study-guide-frame{display:block;width:100%;flex:1;min-height:0;border:0;background:#fff}
+@media(min-width:720px){.study-guide-dialog[open]{width:min(840px,94vw);height:94dvh;inset:3vh;margin:auto;border-radius:18px;overflow:hidden}.study-guide-modal-bar{padding:12px 18px}}
+
 .games-screen .study-notes-grid{display:grid;gap:10px}
 .games-screen .game-material-lesson{margin:0;padding:0;border:1px solid var(--study-line);border-radius:14px;background:#fff}
 .games-screen .game-material-lesson>summary{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:5px 10px;min-height:52px;padding:13px 15px;list-style:none;cursor:pointer}

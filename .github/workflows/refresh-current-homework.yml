@@ -1,0 +1,88 @@
+name: Refresh current ABVM homework
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/refresh-current-homework.mjs'
+      - 'scripts/homework-posting.mjs'
+      - 'scripts/teacher-page-parsers.mjs'
+      - '.github/workflows/refresh-current-homework.yml'
+  schedule:
+    # School-evening posts are time-critical; check through 9 PM Eastern.
+    - cron: '23 6,9,12,15-21 * * *'
+      timezone: 'America/New_York'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: abvm-homework-source
+  cancel-in-progress: false
+
+jobs:
+  homework:
+    name: Verify Homework independently of study-curriculum promotion
+    runs-on: ubuntu-latest
+    outputs:
+      published: ${{ steps.publish.outputs.published }}
+      release_sha: ${{ steps.publish.outputs.release_sha }}
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test teacher parser and Homework source publication
+        run: |
+          node --check scripts/refresh-current-homework.mjs
+          node --test tests/teacher-page-parsers.test.mjs tests/homework-posting.test.mjs tests/homework-feed.test.mjs
+      - name: Fetch and verify public teacher Homework posting
+        run: node scripts/refresh-current-homework.mjs
+      - name: Commit only independently verified homework updates
+        id: publish
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- pages/data/homework-current.json; then
+            echo "Homework was verified; no new publication required."
+            echo "published=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            remote="$(git rev-parse origin/main)"
+            if [[ "$(git rev-parse HEAD)" != "$remote" ]]; then
+              git reset --hard "$remote"
+              node scripts/refresh-current-homework.mjs
+              node --test tests/teacher-page-parsers.test.mjs tests/homework-posting.test.mjs tests/homework-feed.test.mjs
+            fi
+            if git diff --quiet -- pages/data/homework-current.json; then
+              echo "published=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            git add pages/data/homework-current.json
+            git commit -m "Refresh independently verified ABVM homework"
+            if git push origin HEAD:main; then
+              echo "published=true" >> "$GITHUB_OUTPUT"
+              echo "release_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            echo "Main advanced during Homework publication; retrying verified source."
+          done
+          echo "Could not publish verified Homework data." >&2
+          exit 1
+
+  deploy:
+    name: Verify and deploy independently refreshed Homework
+    needs: homework
+    if: needs.homework.outputs.published == 'true'
+    uses: ./.github/workflows/pages.yml
+    with:
+      ref: ${{ needs.homework.outputs.release_sha }}
