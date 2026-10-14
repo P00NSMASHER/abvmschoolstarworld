@@ -1,5 +1,5 @@
 import {createReadAloud} from './study-room-view.mjs';
-import {renderClassroomStudyGuide} from './classroom-test-guide.mjs';
+import {renderClassroomStudyGuide} from './classroom-test-guide.mjs?v=1';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const nonempty = value => typeof value === 'string' && value.trim();
@@ -31,7 +31,7 @@ export function printableStudyGuideHtml(guide, dictionary = () => '') {
 }
 
 /** Compact controls only. The existing Games controller owns every round and result. */
-export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
+export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=window} = {}) {
   let model = null, notesOpen = /(?:^|[?&])notes(?:=1)?(?:&|$)/.test(String(win?.location?.hash || '').split('?')[1] || ''), testsOpen = false, selectedTest = 0, notesSource = 'weekly', notesSubject = '';
   const readAloud = createReadAloud(win);
   let prepOpen = /(?:^|[?&])prep(?:=1)?(?:&|$)/.test(String(win?.location?.hash || '').split('?')[1] || '');
@@ -39,9 +39,20 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
   const focus = selector => win.document.querySelector(selector)?.focus({preventScroll:true});
   const change = selector => { onChange?.(); if (selector) focus(selector); };
   // Opening a guide must never launch the OS print sheet.
-  function openGuide(index, upcoming = false, trigger = null) {
-    const guide = model?.testGuide?.(index,{upcoming});
-    if (!guide) return;
+  async function openGuide(index, upcoming = false, trigger = null) {
+    let current = true;
+    if (onGuideRefresh) {
+      if (trigger) trigger.disabled = true;
+      try { current = (await onGuideRefresh()) !== false; }
+      catch { current = false; }
+      finally { if (trigger?.isConnected) trigger.disabled = false; }
+    }
+    const freshGuide = model?.testGuide?.(index,{upcoming});
+    if (!freshGuide) return;
+    const guide = current ? freshGuide : {...freshGuide,warnings:[
+      'Live curriculum could not be checked. This is the last saved study material; confirm the announced test topic before studying.',
+      ...freshGuide.warnings,
+    ].slice(0,3)};
     const doc = win.document;
     doc.querySelector('[data-study-guide-dialog]')?.close();
     const dialog = doc.createElement('dialog');
