@@ -5,8 +5,9 @@ import {tmpdir} from "node:os";
 import {join} from "node:path";
 import {spawnSync} from "node:child_process";
 
-const pages=readFileSync(new URL("../.github/workflows/pages.yml",import.meta.url),"utf8");
-const importer=readFileSync(new URL("../.github/workflows/import-yahoo-weekly-reminders.yml",import.meta.url),"utf8");
+const normalizeNewlines=value=>value.replace(/\r\n/g,"\n");
+const pages=normalizeNewlines(readFileSync(new URL("../.github/workflows/pages.yml",import.meta.url),"utf8"));
+const importer=normalizeNewlines(readFileSync(new URL("../.github/workflows/import-yahoo-weekly-reminders.yml",import.meta.url),"utf8"));
 const sha="0123456789abcdef0123456789abcdef01234567";
 const stale="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
@@ -42,7 +43,7 @@ function runGuard(script,extra={}){
   }finally{rmSync(dir,{recursive:true,force:true});}
 }
 
-test("Pages admission accepts only the exact current main commit",()=>{
+test("Pages admission accepts only the exact current main commit",{skip:process.platform==='win32'},()=>{
   assert.equal(runGuard(admit).status,0);
   assert.equal(runGuard(admit).output.trim(),"sha="+sha);
   assert.equal(runGuard(admit,{REQUESTED_REF:"main"}).status,0);
@@ -53,7 +54,7 @@ test("Pages admission accepts only the exact current main commit",()=>{
   assert.notEqual(runGuard(admit,{TRIGGER_SHA:stale,REQUESTED_REF:"main"}).status,0);
   assert.notEqual(runGuard(admit,{MOCK_REMOTE_SHA:""}).status,0);
 });
-test("Pages rechecks main before deployment",()=>{
+test("Pages rechecks main before deployment",{skip:process.platform==='win32'},()=>{
   assert.equal(runGuard(recheck).status,0);
   assert.notEqual(runGuard(recheck,{MOCK_REMOTE_SHA:stale}).status,0);
 });

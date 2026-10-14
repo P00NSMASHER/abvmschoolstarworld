@@ -72,7 +72,7 @@ test('assisted answers keep higher near-term review priority than independent su
  assert.ok(e.reviewPriority({theme:assisted},'theme')>e.reviewPriority({inference:independent},'inference'));
 });
 test('offline support bundle contains source modules and keeps the shell within budget',()=>{
- const read=name=>fs.readFileSync(new URL('../pages/'+name,import.meta.url),'utf8');
+ const read=name=>fs.readFileSync(new URL('../pages/'+name,import.meta.url),'utf8').replace(/\r\n/g,'\n');
  const bundle=read('study-support.js'),sw=read('sw.js');
  assert.ok(bundle.includes(read('study-review.js')));assert.ok(bundle.includes(read('study-practice.js')));assert.equal(bundle.includes('document.createElement("style")'),false);
  assert.equal(fs.existsSync(new URL('../pages/study-review.css',import.meta.url)),false);
