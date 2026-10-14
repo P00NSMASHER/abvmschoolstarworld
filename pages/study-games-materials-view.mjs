@@ -201,8 +201,18 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
     notes?.addEventListener('toggle',refreshNotes);
     if(notes?.open)refreshNotes();
     host.querySelector('[data-study-test-options]')?.addEventListener('toggle',event=>{testsOpen=event.currentTarget.open;});
-    host.querySelector('[data-test]')?.addEventListener('click',()=>onTest?.());
-    host.querySelectorAll('[data-test-single]').forEach(button=>button.addEventListener('click',()=>onTest?.(Number(button.dataset.testSingle))));
+    host.querySelector('[data-test]')?.addEventListener('click',async()=>{
+      try{await onGuideRefresh?.();}catch{}
+      onTest?.();
+    });
+    host.querySelectorAll('[data-test-single]').forEach(button=>button.addEventListener('click',async()=>{
+      const original = model?.upcomingTests?.().tests[Number(button.dataset.testSingle)];
+      if(!original)return;
+      try{await onGuideRefresh?.();}catch{}
+      const key=original.date+'|'+original.label;
+      const current=(model?.upcomingTests?.().tests||[]).findIndex(test=>test.date+'|'+test.label===key);
+      if(current>=0)onTest?.(current);
+    }));
     host.querySelectorAll('[data-test-guide]').forEach(button=>button.addEventListener('click',()=>openGuide(Number(button.dataset.testGuide),button.dataset.guideUpcoming==='true',button)));
     host.querySelector('[data-study-retry]')?.addEventListener('click',()=>onRetry?.());
     host.querySelector('[data-complete-test]')?.addEventListener('click',()=>{
