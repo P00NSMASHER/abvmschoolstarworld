@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import {buildRuntimePack,RUNTIME_QUESTION_FIELDS,runtimePackJson} from "../scripts/build-runtime-pack.mjs";
+import {religionChapterScopes} from "../pages/study-hub-core.mjs";
 
 const source=JSON.parse(fs.readFileSync("pages/data/study-pack.json","utf8"));
 const runtime=buildRuntimePack(source);
@@ -29,4 +30,19 @@ test("runtime pack preserves live data and strips audit-only question metadata",
   const fullBytes=Buffer.byteLength(JSON.stringify(source),"utf8");
   const runtimeBytes=Buffer.byteLength(runtimePackJson(source),"utf8");
   assert.ok(runtimeBytes<fullBytes*.7,{fullBytes,runtimeBytes});
+});
+
+test("real runtime pack retains only 18 source-verified Chapter 3 identifiers, not teacher evidence",()=>{
+  const all=source.pack.contentPipeline.questions;
+  const expected=all.filter(q=>religionChapterScopes(q).includes(3)).map(q=>q.id).sort();
+  const encoded=runtime.pack.contentPipeline.questions.filter(q=>
+    Array.isArray(q.sourceChapters)&&q.sourceChapters.includes(3)).map(q=>q.id).sort();
+  assert.equal(expected.length,18,"Reviewed Chapter 3 content count must be intentional");
+  assert.deepEqual(encoded,expected);
+  assert.ok(runtime.pack.contentPipeline.questions.every(q=>
+    !Object.hasOwn(q,"sourceChapters")||
+    (q.subject==="Religion"&&Array.isArray(q.sourceChapters)&&
+      q.sourceChapters.every(v=>Number.isInteger(v)&&v>0&&v<100))));
+  assert.ok(runtime.pack.contentPipeline.questions.every(q=>!Object.hasOwn(q,"sourceLineage")));
+  assert.doesNotMatch(JSON.stringify(runtime.pack.contentPipeline.questions),/matchedEvidence|sourceCaptureHash|evidenceExcerptHash|learnerResponse|studentName|privateHistory/);
 });
