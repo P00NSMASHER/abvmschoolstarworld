@@ -742,6 +742,12 @@ async function manualRefreshSchoolInfo(){
   try{
     const results=await Promise.allSettled([fetchPack({force:true,notify:false}),fetchHomeworkFeed({force:true})]);
     if(results.every(row=>row.status==="rejected"))throw Error("No published sources could be refreshed");
+    if(results[0].status==="rejected"){
+      toast(results[1].status==="fulfilled"
+        ?"Couldn’t check published school info. Homework checked separately."
+        :"Couldn’t check published school info. Try again.");
+      return;
+    }
     const changed=results.some(row=>row.status==="fulfilled"&&row.value===true);
     const state=freshnessState();
     if(state.state==="offline")toast("You’re offline. Showing saved school info.");

@@ -36,7 +36,7 @@ test('homework completion persists on one device without showing routine items',
   await page.reload();
   await expect(page.locator('.today-homework [data-homework-check="0"]')).toHaveAttribute('aria-pressed','true',{timeout:10000});
   await page.getByRole('button',{name:'Calendar'}).click();
-  await page.getByRole('button',{name:'Week'}).click();
+  await page.locator('.calendar-segments [data-route="week"]').click();
   const week=page.locator('.week-homework-card');
   await expect(week).toContainText('Page 22');
   await expect(week).toContainText('Spelling Choice Board activity');
