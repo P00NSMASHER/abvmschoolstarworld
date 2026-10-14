@@ -135,7 +135,7 @@ test('Math paper and choice board appear together on Today and Week with current
   await installHomeworkFixture(page,{
     firstObservedAt:'2026-10-14T20:59:00.000Z',
     checkedAt:'2026-10-14T21:00:00.000Z',
-    contentHash:'c'.repeat(64),
+    contentHash:'bd51d924fea3faae7ac4ebbb1c9f9b465e8b14852c9f4d8b1102065616421809',
     assignments:[
       {subject:'Math',task:'Math paper'},
       {subject:'Spelling',task:'Spelling Choice Board activity'}
