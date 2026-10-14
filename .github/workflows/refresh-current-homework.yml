@@ -9,13 +9,8 @@ on:
       - 'scripts/teacher-page-parsers.mjs'
       - '.github/workflows/refresh-current-homework.yml'
   schedule:
-    - cron: '23 6 * * *'
-      timezone: 'America/New_York'
-    - cron: '53 9 * * *'
-      timezone: 'America/New_York'
-    - cron: '23 13 * * *'
-      timezone: 'America/New_York'
-    - cron: '53 15 * * *'
+    # School-evening posts are time-critical; check through 9 PM Eastern.
+    - cron: '23 6,9,12,15-21 * * *'
       timezone: 'America/New_York'
   workflow_dispatch:
 
