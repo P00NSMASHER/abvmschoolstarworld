@@ -33,11 +33,19 @@ test("Religion Ch. test stays bound to exact chapter evidence", () => {
       },
     },
     { id: "other-religion", subject: "Religion", skill: "religion-gifts-choices" },
+    { id: "chapter2-cross-reference", subject: "Religion", skill: "religion-future",
+      sourceLineage:{matchedEvidence:["Chapter 2: preview Chapter 3: Baptism later"]} },
+    { id: "prose-reference", subject: "Religion", skill: "religion-future",
+      sourceLineage:{matchedEvidence:["Review note may refer to Chapter 3: without a chapter header"]} },
+    { id: "chapter30", subject: "Religion", skill: "religion-future",
+      sourceLineage:{matchedEvidence:["Chapter 30: unrelated lesson"]} },
+    { id: "safe-runtime-encoded", subject: "Religion", skill: "religion-baptism-grace",
+      sourceChapters:[3] },
   ];
   for (const label of ["Religion Ch. 3", "Religion Chapter 3"]) {
     assert.deepEqual(
       questionsForTest({ label }, questions).map((q) => q.id),
-      ["chapter3-synthetic", "chapter3-exact"],
+      ["chapter3-synthetic", "chapter3-exact", "safe-runtime-encoded"],
     );
   }
 });
