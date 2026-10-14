@@ -1,4 +1,5 @@
 import {test,expect} from "@playwright/test";
+import {reviewedSchoolMonday} from "./reviewed-week-fixture.mjs";
 import {readPwaVersions} from "./pwa-test-helpers.mjs";
 
 test("school date follows Eastern time even when the device is elsewhere",async({browser})=>{
@@ -17,7 +18,7 @@ test("online refresh applies changed school data without losing checklist state"
   const context=await browser.newContext({serviceWorkers:"block"});
   const page=await context.newPage();
   const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
-  const lunchDate=source.pack?.lunchMenu?.[0]?.date;
+  const lunchDate=source.pack?.lunchMenu?.find(row=>row.status!=="no-school" && row.items?.length>0)?.date;
   expect(lunchDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   await page.clock.setFixedTime(new Date(`${lunchDate}T17:00:00Z`));
   // Preserve a legitimate source-backed school checklist action; Read is a hidden daily habit.
@@ -293,8 +294,7 @@ test("required parent tasks are not mislabeled as if participating",async({brows
   const context=await browser.newContext({serviceWorkers:"block"});
   const page=await context.newPage();
   const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
-  const schoolDate=source.pack?.lunchMenu?.[0]?.date;
-  expect(schoolDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  const schoolDate=reviewedSchoolMonday(source);
   await page.clock.setFixedTime(new Date(`${schoolDate}T17:00:00Z`));
   const fixture=structuredClone(source);
   fixture.pack.homework=[
