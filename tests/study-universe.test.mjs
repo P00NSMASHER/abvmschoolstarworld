@@ -26,6 +26,9 @@ test('test scope distinguishes grammar, operations, exact-evidence chapters and 
     q('ch3','Religion','religion-chapter-3'),
     q('ch3-exact','Religion','religion-original-sin',{sourceLineage:chapter3}),
     q('ch2-exact','Religion','religion-jesus-savior',{sourceLineage:chapter2}),
+    q('ch2-mentions-ch3','Religion','religion-jesus-savior',{sourceLineage:{...lineage,matchedEvidence:['Chapter 2: look ahead to Chapter 3: Baptism']}}),
+    q('prose-mentions-ch3','Religion','religion-jesus-savior',{sourceLineage:{...lineage,matchedEvidence:['Review note references Chapter 3: without chapter header']}}),
+    q('ch30-exact','Religion','religion-jesus-savior',{sourceLineage:{...lineage,matchedEvidence:['Chapter 30: not Chapter 3']}}),
   );
   const out=buildStudyUniverse(f);const get=label=>out.selectableTestPrep.find(t=>t.label===label);
   assert.deepEqual(get('Grammar (subject & predicate)').questionIds,['r1']);
@@ -82,10 +85,18 @@ test('real reviewed pack, archive, original worksheet practice and STAR are comp
   for(const t of out.selectableTestPrep){
     assert.equal(t.supported,t.questionIds.length>0);
     if(t.label==='Math (subtraction)')assert.ok(t.questionIds.every(id=>byId.get(id).skill.includes('subtraction')));
-    if(t.label==='Religion Ch. 3')assert.ok(t.questionIds.every(id=>{
-      const raw=rawById.get(id);
-      return raw&&raw.subject==='Religion'&&raw.sourceLineage.matchedEvidence.some(value=>/\bChapter\s+3\s*:/i.test(value));
-    }));
+    if(t.label==='Religion Ch. 3'){
+      assert.ok(t.questionIds.length>0,'The confirmed Religion Chapter 3 test must have reviewed practice');
+      assert.ok(t.questionIds.every(id=>{
+        const raw=rawById.get(id);
+        return raw&&raw.subject==='Religion'&&raw.sourceLineage.matchedEvidence.some(value=>
+          typeof value==='string'&&/^\s*Chapter\s+3\s*:/i.test(value));
+      }),'Every Chapter 3 question must have an exact governed Chapter 3 header');
+      const otherChapterIds=[...rawById.values()].filter(q=>q.subject==='Religion'&&
+        !q.sourceLineage?.matchedEvidence?.some(value=>typeof value==='string'&&/^\s*Chapter\s+3\s*:/i.test(value)))
+        .map(q=>q.id);
+      assert.ok(otherChapterIds.every(id=>!t.questionIds.includes(id)),'Other Religion chapters must stay out of Chapter 3 test prep');
+    }
   }
   assert.doesNotMatch(JSON.stringify(out),/IMG_\d+|learnerResponse|teacherMark|studentName|privateHistory/);
   assert.equal(JSON.stringify(buildStudyUniverse(real())),JSON.stringify(out));
