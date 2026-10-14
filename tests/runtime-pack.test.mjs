@@ -80,7 +80,8 @@ test("retained original review questions stay date-bound, chapter-exact and free
   assert.deepEqual(candidate.choices,original.choices);
   assert.equal(candidate.answer,original.answer);
   assert.equal(candidate.variantFingerprint,original.variantFingerprint||original.contentFingerprint);
-  assert.deepEqual(candidate.sourceChapters,[3]);
+  assert.deepEqual(candidate.sourceChapters,religionChapterScopes(original));
+  assert.ok(candidate.sourceChapters.includes(3),"reviewed Chapter 3 scope is preserved");
   assert.deepEqual([candidate.reviewVerifiedAt,candidate.reviewExpiresAt,candidate.reviewSourceHash],
     [reviewVerifiedAt,reviewExpiresAt,reviewSourceHash]);
   for(const field of ["sourceLineage","sourceFact","contentFingerprint","rubric","evidenceContract","sourceEvidence","provenance"]){
