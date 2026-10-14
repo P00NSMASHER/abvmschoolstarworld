@@ -67,7 +67,9 @@ function exactReligionChapters(row){
   if(!Array.isArray(evidence))return [];
   return [...new Set(evidence.flatMap(value=>{
     if(typeof value!=='string')return [];
-    return [...value.matchAll(/\bChapter\s+(\d+)\s*:/gi)].map(match=>match[1]);
+    // A chapter header must start its evidence entry; incidental mentions do not count.
+    const match=/^\s*Chapter\s+(\d+)\s*:/i.exec(value);
+    return match?[match[1]]:[];
   }))].sort(compare);
 }
 // Reuse the web app's test boundaries. Tighten operation scope and support the
