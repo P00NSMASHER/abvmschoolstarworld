@@ -47,6 +47,6 @@ test('unannounced charts never enter study packs and cannot be inferred from gen
 });
 
 test('announced charts fail closed when their public teacher source lineage is unavailable',()=>{
-  assert.throws(()=>lesson({sourcePages:[{...page,lines:['Reading Work but no charts source line'] }]}),
+  assert.throws(()=>lesson({sourcePages:[{...page,lines:['Reading Work without a comprehension statement'] }]}),
     /pipeline validation failed|lineage/i);
 });
