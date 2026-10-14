@@ -169,6 +169,21 @@ test('test-style printable sheets hide answers on the student page and show a se
 });
 
 
+
+test('historical and undated schoolwork cannot enter a newly announced test paper',()=>{
+  const events=[{date:'2026-10-09',label:'Grammar (subject & predicate)'}];
+  const grammar=pool('new-grammar-',2,'Reading / ELA',{skill:'subject-predicate'});
+  const old=pool('old-grammar-',2,'Reading / ELA',{skill:'subject-predicate'});
+  const undated=pool('undated-grammar-',2,'Reading / ELA',{skill:'subject-predicate'});
+  const schoolwork={lessons:[
+    lesson('old',old,'2026-09-29'),
+    lesson('unknown',undated),
+    lesson('current',grammar,'2026-10-07'),
+  ]};
+  const model=createStudyMaterials(opts({events,schoolwork,catalog:catalog([])}));
+  assert.deepEqual(model.testGuide(0).practice.map(p=>p.prompt),grammar.map(q=>q.prompt));
+});
+
 test('new same-week teacher spelling words supersede previous photographic homework words',()=>{
   const events=[{date:'2026-10-09',label:'Spelling (short i / long i) / Handwriting'}];
   const schoolwork={lessons:[{
@@ -468,7 +483,7 @@ test('Daily Practice uses existing due-skill selection and exposes its complete 
 
 test('test practice balances complete equal quotas and freezes only mapped test banks',() => {
   const events = [{date:'2026-10-05',label:'Math'},{date:'2026-10-05',label:'Religion Chapter 2'}];
-  const model = createStudyMaterials(opts({events,catalog:catalog([...pool('math-',8),...pool('reading-',8,'Reading / ELA')]),schoolwork:{lessons:[lesson('chapter-2',pool('religion-',6,'Religion',{skill:'religion-chapter-2'}))]}}));
+  const model = createStudyMaterials(opts({events,catalog:catalog([...pool('math-',8),...pool('reading-',8,'Reading / ELA')]),schoolwork:{lessons:[lesson('chapter-2',pool('religion-',6,'Religion',{skill:'religion-chapter-2'}),'2026-10-05')]}}));
   const round = model.testRound({seed:5});
   assert.equal(round.strict,true);
   assert.equal(round.questions.length,8);
