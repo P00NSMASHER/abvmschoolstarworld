@@ -45,3 +45,20 @@ test('same assignments still publish after Eastern midnight before school starts
   assert.equal(shouldPublishHomework(rechecked,first),true,
     'a new Eastern school date requires verified morning publication even when the homework text is unchanged');
 });
+
+test('corrected current Math paper is published alongside Spelling and excludes routine chores',()=>{
+  const prior=summarizeTeacherHomework(['Homework','Spelling Choice Board activity',...routine],
+    '2026-10-14T20:14:38.266Z');
+  const next=summarizeTeacherHomework(['Homework','Math paper','Spelling Choice Board activity',...routine],
+    '2026-10-14T21:00:00.000Z',prior);
+  assert.equal(next.status,'assignments');
+  assert.deepEqual(next.assignments,[
+    {subject:'Math',task:'Math paper'},
+    {subject:'Spelling',task:'Spelling Choice Board activity'}
+  ]);
+  assert.equal(next.firstObservedAt,next.checkedAt,
+    'a materially changed teacher posting becomes newly observed');
+  assert.notEqual(next.contentHash,prior.contentHash);
+  assert.equal(shouldPublishHomework(next,prior),true);
+  assert.equal(next.assignments.some(a=>/cover books|reading log|return everything|^Read$/i.test(a.task)),false);
+});

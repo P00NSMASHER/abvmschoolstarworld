@@ -2,16 +2,12 @@ import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import {HISTORICAL_HOMEWORK_POSTING} from './homework-e2e-fixture.mjs';
 
 const context={window:{},Intl,Date};
 vm.runInNewContext(readFileSync(new URL('../pages/homework-feed.js',import.meta.url),'utf8'),context);
 const model=context.window.ABVMHomeworkFeed;
-const currentSource=JSON.parse(readFileSync(new URL('../pages/data/homework-current.json',import.meta.url),'utf8'));
-const verifiedPosting={
-  ...currentSource,
-  checkedAt:'2026-10-14T00:32:53.326Z',
-  firstObservedAt:'2026-10-14T00:32:53.326Z'
-};
+const verifiedPosting=HISTORICAL_HOMEWORK_POSTING;
 test('current verified posting lists only actionable assignments on its school date',()=>{
   const now=new Date('2026-10-14T01:00:00Z');
   const view=model.forDate(verifiedPosting,'2026-10-13',now);
@@ -60,4 +56,24 @@ test('Eastern school date, not UTC calendar date, determines whether homework is
   const view=model.forDate(nextMorning,'2026-10-14',new Date('2026-10-14T14:00:00.000Z'));
   assert.equal(view.state,'outdated');
   assert.deepEqual([...view.assignments],[]);
+});
+
+test('a fresh Spelling-only posting does not invent yesterday’s Math assignment',()=>{
+  const posting={...verifiedPosting,
+    checkedAt:'2026-10-14T20:14:38.266Z',firstObservedAt:'2026-10-14T20:14:38.266Z',
+    contentHash:'e700a368c203e18400393285b677038ea55cd9f4daf668565491f7264f97f6fe',
+    assignments:[{subject:'Spelling',task:'Spelling Choice Board activity'}]};
+  const view=model.forDate(posting,'2026-10-14',new Date('2026-10-14T17:00:00-04:00'));
+  assert.equal(view.state,'assignments');
+  assert.deepEqual([...view.assignments].map(row=>row.subject),['Spelling']);
+  assert.deepEqual([...view.assignments].map(row=>row.task),['Spelling Choice Board activity']);
+});
+test('published teacher feed stays schema-validated without requiring a fixed Math task',()=>{
+  const current=JSON.parse(readFileSync(new URL('../pages/data/homework-current.json',import.meta.url),'utf8'));
+  assert.doesNotThrow(()=>model.validate(current));
+});
+test('observations occurring after their claimed source checks fail closed',()=>{
+  assert.throws(()=>model.validate({...verifiedPosting,
+    firstObservedAt:'2026-10-14T01:00:00.000Z',
+    checkedAt:'2026-10-14T00:32:53.326Z'}),/Invalid/);
 });

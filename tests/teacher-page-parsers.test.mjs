@@ -152,3 +152,27 @@ test('parseHomework reads the official teacher page’s undelimited math and spe
     ['Spelling', 'Spelling Choice Board activity'],
   ]);
 });
+
+test('current official Math paper and Spelling choice board survive parsing, unlike recurring chores',()=>{
+  const html='<h1>Homework</h1><p>Homework</p><p>Math paper</p><p>Spelling Choice Board activity</p>'
+    +'<p>Read</p><p>Parents: cover books</p>'
+    +'<p>Reading log (please keep Reading log &amp; Behavior chart in the HW folder)</p>'
+    +'<p>Everything should be returned in the HW folder</p>';
+  const rows=parseHomework(pageLines(html));
+  assert.deepEqual(rows.filter(row=>['Math','Spelling'].includes(row.subject))
+    .map(row=>[row.subject,row.task]),[
+      ['Math','Math paper'],['Spelling','Spelling Choice Board activity']
+    ]);
+});
+test('Math paper variants remain explicit without weakening textbook page parsing',()=>{
+  const rows=parseHomework(['Homework','Math: paper','Math packet','Math pg. 22','Spelling Choice Board activity']);
+  assert.deepEqual(rows.filter(row=>row.subject==='Math').map(row=>row.task),[
+    'Math paper','Packet','Page 22'
+  ]);
+});
+test('unknown Math assignment never disappears silently behind a valid Spelling line',()=>{
+  assert.throws(
+    ()=>parseHomework(['Homework','Math take-home assessment','Spelling Choice Board activity']),
+    /Unrecognized Math assignment/
+  );
+});

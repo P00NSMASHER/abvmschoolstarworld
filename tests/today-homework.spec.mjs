@@ -1,5 +1,5 @@
 import {test,expect} from '@playwright/test';
-import {HOMEWORK_E2E_NOW,installFreshHomeworkFixture} from './homework-e2e-fixture.mjs';
+import {HOMEWORK_E2E_NOW,installFreshHomeworkFixture,installHomeworkFixture} from './homework-e2e-fixture.mjs';
 test.use({serviceWorkers:'block'});
 const TUESDAY=HOMEWORK_E2E_NOW;
 
@@ -46,6 +46,10 @@ test('homework completion persists on one device without showing routine items',
 });
 
 test('when teacher data belongs to yesterday or is missing, Today never mislabels it as homework today',async({page})=>{
+  await installHomeworkFixture(page,{
+    checkedAt:'2026-10-14T07:45:00-04:00',
+    firstObservedAt:'2026-10-14T00:32:53.326Z'
+  });
   await page.clock.setFixedTime(new Date('2026-10-14T08:00:00-04:00'));
   await page.goto('/#today');
   const card=page.locator('.today-homework');
@@ -67,11 +71,9 @@ test('Today remains usable if the independently cached Homework helper cannot lo
 });
 
 test('unchanged undated Tuesday homework rechecked Wednesday stays out of Today and Week',async({page})=>{
-  await page.route('**/data/homework-current.json*',async route=>{
-    const response=await route.fetch();
-    const source=await response.json();
-    await route.fulfill({response,json:{...source,firstObservedAt:'2026-10-14T00:32:53.326Z',
-      checkedAt:'2026-10-14T12:00:00-04:00'}});
+  await installHomeworkFixture(page,{
+    firstObservedAt:'2026-10-14T00:32:53.326Z',
+    checkedAt:'2026-10-14T12:00:00-04:00'
   });
   await page.clock.setFixedTime(new Date('2026-10-14T13:00:00-04:00'));
   await page.goto('/#today');
@@ -88,11 +90,10 @@ test('unchanged undated Tuesday homework rechecked Wednesday stays out of Today 
   await expect(week.locator('.homework-task-list .check-item')).toHaveCount(0);
 });
 test('new Wednesday teacher posting shows Math and Spelling consistently in Today and Week',async({page})=>{
-  await page.route('**/data/homework-current.json*',async route=>{
-    const response=await route.fetch();
-    const source=await response.json();
-    await route.fulfill({response,json:{...source,firstObservedAt:'2026-10-14T09:00:00-04:00',
-      checkedAt:'2026-10-14T12:00:00-04:00',contentHash:'b'.repeat(64)}});
+  await installHomeworkFixture(page,{
+    firstObservedAt:'2026-10-14T09:00:00-04:00',
+    checkedAt:'2026-10-14T12:00:00-04:00',
+    contentHash:'b'.repeat(64)
   });
   await page.clock.setFixedTime(new Date('2026-10-14T13:00:00-04:00'));
   await page.goto('/#today');
@@ -106,5 +107,51 @@ test('new Wednesday teacher posting shows Math and Spelling consistently in Toda
   const week=page.locator('.week-homework-card');
   await expect(week.locator('.homework-task-list .check-item')).toHaveCount(2);
   await expect(week).toContainText('Page 22');
+  await expect(week).toContainText('Spelling Choice Board activity');
+});
+
+test('a newly observed Spelling-only posting never shows an old Math task on Today or Week',async({page})=>{
+  await installHomeworkFixture(page,{
+    firstObservedAt:'2026-10-14T20:14:38.266Z',
+    checkedAt:'2026-10-14T20:14:38.266Z',
+    contentHash:'e700a368c203e18400393285b677038ea55cd9f4daf668565491f7264f97f6fe',
+    assignments:[{subject:'Spelling',task:'Spelling Choice Board activity'}]
+  });
+  await page.clock.setFixedTime(new Date('2026-10-14T17:00:00-04:00'));
+  await page.goto('/#today');
+  const today=page.locator('.today-homework');
+  await expect(today.locator('.homework-task-list .check-item')).toHaveCount(1,{timeout:15000});
+  await expect(today).toContainText('Spelling Choice Board activity');
+  await expect(today).not.toContainText('Page 22');
+  await page.getByRole('button',{name:'Calendar'}).click();
+  await page.locator('.calendar-segments [data-route="week"]').click();
+  const week=page.locator('.week-homework-card');
+  await expect(week.locator('.homework-task-list .check-item')).toHaveCount(1);
+  await expect(week).toContainText('Spelling Choice Board activity');
+  await expect(week).not.toContainText('Page 22');
+});
+
+test('Math paper and choice board appear together on Today and Week with current teacher evidence',async({page})=>{
+  await installHomeworkFixture(page,{
+    firstObservedAt:'2026-10-14T20:59:00.000Z',
+    checkedAt:'2026-10-14T21:00:00.000Z',
+    contentHash:'bd51d924fea3faae7ac4ebbb1c9f9b465e8b14852c9f4d8b1102065616421809',
+    assignments:[
+      {subject:'Math',task:'Math paper'},
+      {subject:'Spelling',task:'Spelling Choice Board activity'}
+    ]
+  });
+  await page.clock.setFixedTime(new Date('2026-10-14T17:02:00-04:00'));
+  await page.goto('/#today');
+  const today=page.locator('.today-homework');
+  await expect(today.locator('.homework-task-list .check-item')).toHaveCount(2,{timeout:15000});
+  await expect(today).toContainText('Math paper');
+  await expect(today).toContainText('Spelling Choice Board activity');
+  await expect(today).not.toContainText(/cover books|reading log|behavior chart|return everything/i);
+  await page.getByRole('button',{name:'Calendar'}).click();
+  await page.locator('.calendar-segments [data-route="week"]').click();
+  const week=page.locator('.week-homework-card');
+  await expect(week.locator('.homework-task-list .check-item')).toHaveCount(2);
+  await expect(week).toContainText('Math paper');
   await expect(week).toContainText('Spelling Choice Board activity');
 });
