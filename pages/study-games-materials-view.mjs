@@ -40,6 +40,8 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
   const change = selector => { onChange?.(); if (selector) focus(selector); };
   // Opening a guide must never launch the OS print sheet.
   async function openGuide(index, upcoming = false, trigger = null) {
+    const requestedKey = model?.testGuide?.(index,{upcoming})?.key;
+    if (!requestedKey) return;
     let current = true;
     if (onGuideRefresh) {
       if (trigger) trigger.disabled = true;
@@ -47,8 +49,11 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
       catch { current = false; }
       finally { if (trigger?.isConnected) trigger.disabled = false; }
     }
-    const freshGuide = model?.testGuide?.(index,{upcoming});
-    if (!freshGuide) return;
+    const currentTests = upcoming ? model?.upcomingTests?.().tests : model?.printableTests?.().tests;
+    const matchingIndex = (currentTests || []).findIndex(test => test.date+'|'+test.label === requestedKey);
+    if (matchingIndex < 0) return; // The announcement changed: never substitute another test.
+    const freshGuide = model?.testGuide?.(matchingIndex,{upcoming});
+    if (!freshGuide || freshGuide.key !== requestedKey) return;
     const guide = current ? freshGuide : {...freshGuide,warnings:[
       'Live curriculum could not be checked. This is the last saved study material; confirm the announced test topic before studying.',
       ...freshGuide.warnings,
