@@ -677,3 +677,20 @@ test("actual October 15 Chapter 3 live Test Prep works with compact runtime and 
     assert.equal(state.missing.length,0);
   }
 });
+
+test("Chapter 3 guide does not mix in Chapter 1 or Chapter 2 subject notes",()=>{
+  const row=question('chapter3-guide','Religion',{
+    skill:'religion-chapter-3',sourceFact:'Baptism washes away original sin.',
+    explanation:'Faith is a gift from God that helps us believe.'
+  });
+  const model=createStudyMaterials(opts({
+    pack:{subjects:[{subject:'Religion',
+      topics:['Chapter 1: creation and five senses','Chapter 2: disciples','Chapter 3: original sin and Baptism'],
+      studyNotes:['Chapter 1: Trinity review']}]},
+    catalog:catalog([row]),events:[{date:'2026-10-07',label:'Religion Ch. 3',kind:'test'}]
+  }));
+  const guide=model.testGuide(0);
+  assert.ok(guide.facts.some(row=>/Chapter 3:/.test(row)));
+  assert.ok(guide.facts.every(row=>!/^Chapter [12]:/.test(row)));
+  assert.ok(guide.practice.some(item=>item.skill==='religion-chapter-3'));
+});
