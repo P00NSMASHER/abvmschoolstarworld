@@ -2,16 +2,17 @@ import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import {HISTORICAL_HOMEWORK_POSTING} from './homework-e2e-fixture.mjs';
 
 const context={window:{},Intl,Date};
 vm.runInNewContext(readFileSync(new URL('../pages/homework-feed.js',import.meta.url),'utf8'),context);
 const model=context.window.ABVMHomeworkFeed;
 const currentSource=JSON.parse(readFileSync(new URL('../pages/data/homework-current.json',import.meta.url),'utf8'));
-const verifiedPosting={
-  ...currentSource,
-  checkedAt:'2026-10-14T00:32:53.326Z',
-  firstObservedAt:'2026-10-14T00:32:53.326Z'
-};
+// Historical Math and Spelling are fixed test evidence, not a live assignment claim.
+const verifiedPosting=HISTORICAL_HOMEWORK_POSTING;
+test('independently refreshed published homework still passes the strict feed schema',()=>{
+  assert.doesNotThrow(()=>model.validate(currentSource));
+});
 test('current verified posting lists only actionable assignments on its school date',()=>{
   const now=new Date('2026-10-14T01:00:00Z');
   const view=model.forDate(verifiedPosting,'2026-10-13',now);

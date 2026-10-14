@@ -1,5 +1,5 @@
 import {test,expect} from '@playwright/test';
-import {HOMEWORK_E2E_NOW,installFreshHomeworkFixture} from './homework-e2e-fixture.mjs';
+import {HOMEWORK_E2E_NOW,installFreshHomeworkFixture,HISTORICAL_HOMEWORK_POSTING} from './homework-e2e-fixture.mjs';
 test.use({serviceWorkers:'block'});
 const TUESDAY=HOMEWORK_E2E_NOW;
 
@@ -46,6 +46,7 @@ test('homework completion persists on one device without showing routine items',
 });
 
 test('when teacher data belongs to yesterday or is missing, Today never mislabels it as homework today',async({page})=>{
+  await installFreshHomeworkFixture(page);
   await page.clock.setFixedTime(new Date('2026-10-14T08:00:00-04:00'));
   await page.goto('/#today');
   const card=page.locator('.today-homework');
@@ -68,10 +69,9 @@ test('Today remains usable if the independently cached Homework helper cannot lo
 
 test('unchanged undated Tuesday homework rechecked Wednesday stays out of Today and Week',async({page})=>{
   await page.route('**/data/homework-current.json*',async route=>{
-    const response=await route.fetch();
-    const source=await response.json();
-    await route.fulfill({response,json:{...source,firstObservedAt:'2026-10-14T00:32:53.326Z',
-      checkedAt:'2026-10-14T12:00:00-04:00'}});
+    await route.fulfill({status:200,contentType:'application/json',
+      body:JSON.stringify({...HISTORICAL_HOMEWORK_POSTING,firstObservedAt:'2026-10-14T00:32:53.326Z',
+      checkedAt:'2026-10-14T12:00:00-04:00'})});
   });
   await page.clock.setFixedTime(new Date('2026-10-14T13:00:00-04:00'));
   await page.goto('/#today');
@@ -89,10 +89,9 @@ test('unchanged undated Tuesday homework rechecked Wednesday stays out of Today 
 });
 test('new Wednesday teacher posting shows Math and Spelling consistently in Today and Week',async({page})=>{
   await page.route('**/data/homework-current.json*',async route=>{
-    const response=await route.fetch();
-    const source=await response.json();
-    await route.fulfill({response,json:{...source,firstObservedAt:'2026-10-14T09:00:00-04:00',
-      checkedAt:'2026-10-14T12:00:00-04:00',contentHash:'b'.repeat(64)}});
+    await route.fulfill({status:200,contentType:'application/json',
+      body:JSON.stringify({...HISTORICAL_HOMEWORK_POSTING,firstObservedAt:'2026-10-14T09:00:00-04:00',
+      checkedAt:'2026-10-14T12:00:00-04:00',contentHash:'b'.repeat(64)})});
   });
   await page.clock.setFixedTime(new Date('2026-10-14T13:00:00-04:00'));
   await page.goto('/#today');
