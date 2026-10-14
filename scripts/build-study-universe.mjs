@@ -67,7 +67,8 @@ function exactReligionChapters(row){
   if(!Array.isArray(evidence))return [];
   return [...new Set(evidence.flatMap(value=>{
     if(typeof value!=='string')return [];
-    return [...value.matchAll(/\bChapter\s+(\d+)\s*:/gi)].map(match=>match[1]);
+    const match=value.trim().match(/^Chapter\s+(\d+)\s*:/i);
+    return match?[match[1]]:[];
   }))].sort(compare);
 }
 // Reuse the web app's test boundaries. Tighten operation scope and support the
