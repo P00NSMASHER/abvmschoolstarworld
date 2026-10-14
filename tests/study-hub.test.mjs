@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import vm from "node:vm";
+import { createStudyMaterials } from "../pages/study-materials.mjs";
 import { questionsForTest } from "../pages/study-hub-core.mjs";
 import { buildStarBank } from "../pages/star-practice.mjs";
 import { balancedTestRound } from "../pages/study-model.mjs";
@@ -40,6 +42,40 @@ test("Religion Ch. test stays bound to exact chapter evidence", () => {
       ["chapter3-synthetic", "chapter3-exact"],
     );
   }
+});
+
+test("real browser catalog supports only source-backed Religion Chapter 3 questions", () => {
+  const env = JSON.parse(fs.readFileSync(new URL("../pages/data/study-pack.json", import.meta.url)));
+  const pack = env.pack || env;
+  const context = { window: {}, localStorage: {getItem: () => null, setItem: () => {}} };
+  for (const name of ["study-practice", "study-games"]) {
+    vm.runInNewContext(
+      fs.readFileSync(new URL("../pages/" + name + ".js", import.meta.url), "utf8"),
+      context,
+    );
+  }
+  const catalog = context.window.ABVMStudyGames.buildCatalog(pack, {sourceKey:pack.sourceHash});
+  const approved = new Set((pack.contentPipeline?.questions || [])
+    .filter(q => q.subject === "Religion" &&
+      q.sourceLineage?.quality === "page-exact" &&
+      q.sourceLineage.matchedEvidence?.some(value =>
+        typeof value === "string" && /^\\s*Chapter\\s+3\\s*:/i.test(value)))
+    .map(q => q.id));
+  assert(approved.size >= 10, "governed Chapter 3 material must be present");
+  const scoped = questionsForTest({label:"Religion Ch. 3"}, catalog.questions);
+  assert(scoped.length > 0, "browser test must offer Chapter 3 questions");
+  assert(scoped.every(q => approved.has(q.id) && q.reviewedChapters?.includes("3")),
+    "no unrelated or unreviewed Religion content can enter the named test");
+  const model = createStudyMaterials({
+    pack, catalog, events:[{date:"2026-10-15",label:"Religion Ch. 3",kind:"test"}],
+    now:() => Date.parse("2026-10-14T12:00:00-04:00"),
+  });
+  assert(model.tests().supported.some(row => row.label === "Religion Ch. 3" && row.count > 0),
+    "the actual dated Study UI must offer the assessment");
+  const round = model.testRound({index:0,seed:"religion-chapter-3"});
+  assert(round.questions.length > 0, "the user must receive an answerable round");
+  assert(round.questions.every(q => approved.has(q.id)),
+    "test-round rotation must stay inside the governed Chapter 3 bank");
 });
 
 test("all uploaded schoolwork answers have one correct choice and safe source mapping", () => {
