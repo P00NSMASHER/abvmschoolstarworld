@@ -402,8 +402,17 @@ export function createStudyMaterials({
       ? [...new Map(array(pack.vocabulary).filter(row => row?.subject === subject && meaningfulText(row?.term))
         .map(row => [String(row.term).trim().toLowerCase(),row])).values()].slice(0,8)
       : [];
-    const wordNote = verifiedWeekNotes.find(note =>
-      /^(?:Photo-confirmed practice words in the recorded order|Verified spelling words|Teacher spelling words|Spelling words)\s*:/i.test(note));
+    // A new teacher-published spelling list can replace old photo lists only if
+    // the pack identifies the same school week as this specific test.
+    const announcedWeek = String(pack.weekLabel || '').match(/week of\s+([a-z]+\s+\d{1,2},?\s+\d{4})/i);
+    const teacherWeek = announcedWeek && Number.isFinite(Date.parse(announcedWeek[1] + ' 12:00 GMT'))
+      ? new Date(Date.parse(announcedWeek[1] + ' 12:00 GMT')).toISOString().slice(0,10) : '';
+    const teacherLists = subject === 'Spelling / Handwriting' && teacherWeek === weekBounds(test.date).start
+      ? sourceSubjects.flatMap(row => [...array(row.studyNotes), ...array(row.topics)])
+        .filter(note => /^(?:Weekly spelling words|Spelling words|Teacher spelling words|Verified spelling words|Words for spelling test)\s*:/i.test(note))
+      : [];
+    const wordNote = [...teacherLists,...verifiedWeekNotes].find(note =>
+      /^(?:Photo-confirmed practice words in the recorded order|Weekly spelling words|Spelling words|Teacher spelling words|Verified spelling words|Words for spelling test)\s*:/i.test(note));
     const spellingWords = wordNote
       ? [...new Set(wordNote.slice(wordNote.indexOf(':') + 1).split(',')
         .map(word => word.replace(/[.\s]+$/,'').trim()).filter(word => /^[a-z][a-z'-]*$/i.test(word)))].slice(0,30)
@@ -429,9 +438,11 @@ export function createStudyMaterials({
     return {
       key:testKey(test), label:compactGuideText(test.label,120), date:test.date, subject:subject || 'Test review',
       facts, vocabulary, practice, spellingWords, fallback, warnings:uniqueGuideText(warnings).slice(0,3),
-      sourceLabel:verifiedWeekNotes.length
-        ? 'Teacher-announced topic with family photo-confirmed homework words; practice is not an official test'
-        : 'Current ABVM teacher notes, reviewed schoolwork, and checked practice material',
+      sourceLabel:teacherLists.length
+        ? 'Current school-week teacher spelling words with parent-created practice'
+        : verifiedWeekNotes.length
+          ? 'Teacher-announced topic with family photo-confirmed homework words; practice is not an official test'
+          : 'Current published ABVM topics and checked original practice',
     };
   }
 
