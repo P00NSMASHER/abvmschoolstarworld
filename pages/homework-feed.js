@@ -31,9 +31,12 @@ function forDate(data,dateKey,now=new Date()){
   if(!data)return{state:"unverified",assignments:[]};
   let feed;
   try{feed=validate(data);}catch{return{state:"unverified",assignments:[]};}
-  const checked=new Date(feed.checkedAt),age=now.getTime()-checked.getTime();
-  if(schoolKey(checked)!==current||age< -5*60*1000||age>30*60*60*1000)
-    return{state:"outdated",checkedAt:feed.checkedAt,assignments:[]};
+  const checked=new Date(feed.checkedAt),firstObserved=new Date(feed.firstObservedAt),age=now.getTime()-checked.getTime();
+  // An undated posting is safe to treat as today's homework only on the
+  // Eastern school day when this exact content was first observed. Rechecking
+  // unchanged text tomorrow proves source availability, not a new assignment.
+  if(schoolKey(firstObserved)!==current||schoolKey(checked)!==current||age< -5*60*1000||age>30*60*60*1000)
+    return{state:"outdated",checkedAt:feed.checkedAt,firstObservedAt:feed.firstObservedAt,assignments:[]};
   return{state:feed.status,checkedAt:feed.checkedAt,firstObservedAt:feed.firstObservedAt,
     assignments:feed.assignments};
 }
