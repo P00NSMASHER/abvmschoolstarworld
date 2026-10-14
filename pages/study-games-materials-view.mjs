@@ -39,9 +39,9 @@ export function printableStudyGuideHtml(guide, dictionary = () => '') {
   const answerHtml = practice.length ? practice.map((row,index)=>'<span><b>'+(index+1)+'.</b> '+esc(row.answer)+'</span>').join('') : '<span>Teacher materials required.</span>';
   const warningHtml = warnings.length ? '<aside><strong>Coverage note</strong>' + warnings.map(row=>'<p>'+esc(row)+'</p>').join('') + '</aside>' : '';
   const date = dateLabel(guide?.date) || String(guide?.date || '');
-  return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
+  return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
     '<title>'+esc(guide?.label || 'ABVM Study Guide')+'</title><style>' +
-    '@page{size:Letter portrait;margin:.32in}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff;color:#1c2f45;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{font-size:10.25pt;line-height:1.28}.sheet{max-width:7.86in;margin:0 auto}.top{display:flex;justify-content:space-between;gap:.18in;align-items:flex-start;border-bottom:2px solid #244e76;padding:0 0 .12in}.brand{font-size:8.5pt;font-weight:800;letter-spacing:.08em;color:#526579}.top h1{margin:.025in 0 .02in;font-size:19pt;line-height:1.05;color:#183b5d}.meta{text-align:right;min-width:1.6in}.meta strong{display:block;font-size:11pt}.meta span{display:block;color:#526579;margin-top:2px}.grid{display:grid;grid-template-columns:1.14fr .86fr;gap:.12in;margin-top:.12in}.box{border:1px solid #cfdbe5;border-radius:10px;padding:.11in .12in;break-inside:avoid}.box h2{margin:0 0 .06in;font-size:11.5pt;color:#244e76}.box ul,.box ol{margin:.02in 0 0;padding-left:.2in}.box li{margin:0 0 .045in}.words dl{display:grid;grid-template-columns:1fr 1fr;gap:.045in .1in;margin:0}.words dl>div{break-inside:avoid}.words dt{font-weight:800}.words dd{margin:0;color:#425a70;font-size:9.2pt}.answers{display:grid;grid-template-columns:1fr 1fr;gap:3px 12px;font-size:9.2pt}.plan ol{margin-bottom:0}.empty{margin:0;color:#6a7784;font-style:italic}aside{margin-top:.1in;padding:.08in .1in;border-left:4px solid #d1a44c;background:#fff8e9;font-size:8.8pt;line-height:1.25;break-inside:avoid}aside strong{color:#6e511a}aside p{margin:2px 0}.footer{display:flex;justify-content:space-between;gap:.1in;margin-top:.09in;padding-top:.07in;border-top:1px solid #d8e1e9;color:#607080;font-size:7.8pt}.footer span:last-child{text-align:right}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.sheet{width:100%}}@media screen{body{padding:20px;background:#eef3f7}.sheet{background:#fff;padding:.32in;box-shadow:0 8px 28px #0002}}' +
+    '@page{size:Letter portrait;margin:.32in}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff;color:#1c2f45;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{font-size:10.25pt;line-height:1.28}.sheet{max-width:7.86in;margin:0 auto}.top{display:flex;justify-content:space-between;gap:.18in;align-items:flex-start;border-bottom:2px solid #244e76;padding:0 0 .12in}.brand{font-size:8.5pt;font-weight:800;letter-spacing:.08em;color:#526579}.top h1{margin:.025in 0 .02in;font-size:19pt;line-height:1.05;color:#183b5d}.meta{text-align:right;min-width:1.6in}.meta strong{display:block;font-size:11pt}.meta span{display:block;color:#526579;margin-top:2px}.grid{display:grid;grid-template-columns:1.14fr .86fr;gap:.12in;margin-top:.12in}.box{border:1px solid #cfdbe5;border-radius:10px;padding:.11in .12in;break-inside:avoid}.box h2{margin:0 0 .06in;font-size:11.5pt;color:#244e76}.box ul,.box ol{margin:.02in 0 0;padding-left:.2in}.box li{margin:0 0 .045in}.words dl{display:grid;grid-template-columns:1fr 1fr;gap:.045in .1in;margin:0}.words dl>div{break-inside:avoid}.words dt{font-weight:800}.words dd{margin:0;color:#425a70;font-size:9.2pt}.answers{display:grid;grid-template-columns:1fr 1fr;gap:3px 12px;font-size:9.2pt}.plan ol{margin-bottom:0}.empty{margin:0;color:#6a7784;font-style:italic}aside{margin-top:.1in;padding:.08in .1in;border-left:4px solid #d1a44c;background:#fff8e9;font-size:8.8pt;line-height:1.25;break-inside:avoid}aside strong{color:#6e511a}aside p{margin:2px 0}.footer{display:flex;justify-content:space-between;gap:.1in;margin-top:.09in;padding-top:.07in;border-top:1px solid #d8e1e9;color:#607080;font-size:7.8pt}.footer span:last-child{text-align:right}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.sheet{width:100%}}@media screen{body{padding:20px;background:#eef3f7}.sheet{background:#fff;padding:.32in;box-shadow:0 8px 28px #0002}}@media screen and (max-width:640px){body{padding:12px;font-size:12pt}.sheet{padding:16px;border-radius:12px;box-shadow:none}.top{flex-direction:column;gap:8px}.top h1{font-size:22pt}.meta{text-align:left}.grid{grid-template-columns:minmax(0,1fr);gap:10px}.box{padding:12px;overflow-wrap:anywhere}.box[style]{grid-column:1!important}.footer{flex-direction:column;gap:4px}.answers{grid-template-columns:minmax(0,1fr)}}' +
     '</style></head><body><main class="sheet"><header class="top"><div><div class="brand">ABVM · GRADE 2 · ONE-PAGE STUDY GUIDE</div><h1>'+esc(guide?.label || 'Upcoming test')+'</h1><span>'+esc(guide?.subject || 'Test review')+'</span></div><div class="meta"><strong>'+esc(date)+'</strong><span>Read · Recall · Check</span></div></header>' +
     warningHtml + '<div class="grid"><section class="box"><h2>What to know</h2>'+factHtml+'</section><section class="box words"><h2>Words to know</h2>'+wordHtml+'</section>' +
     '<section class="box"><h2>Quick check</h2>'+checkHtml+'</section><section class="box plan"><h2>3-step review</h2><ol><li>Read the key facts aloud.</li><li>Cover them and explain each one in your own words.</li><li>Answer the quick check, then use the key below.</li></ol></section>' +
@@ -57,17 +57,33 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
   const selection = () => ({source:'weekly',sources:['weekly']});
   const focus = selector => win.document.querySelector(selector)?.focus({preventScroll:true});
   const change = selector => { onChange?.(); if (selector) focus(selector); };
-  function printGuide(index, upcoming = false) {
+  // Opening a guide must never launch the OS print sheet.
+  function openGuide(index, upcoming = false, trigger = null) {
     const guide = model?.testGuide?.(index,{upcoming});
     if (!guide) return;
-    const popup = win.open?.('','_blank');
-    if (!popup?.document) return;
-    popup.document.open();
-    popup.document.write(printableStudyGuideHtml(guide,term=>win?.ABVMStudyGames?.vocabularyDefinition?.(term)));
-    popup.document.close();
-    const run = () => { try { popup.focus(); popup.print(); } catch {} };
-    if (popup.document.readyState === 'complete') win.setTimeout(run,30);
-    else popup.addEventListener('load',()=>win.setTimeout(run,30),{once:true});
+    const doc = win.document;
+    doc.querySelector('[data-study-guide-dialog]')?.close();
+    const dialog = doc.createElement('dialog');
+    dialog.className = 'study-guide-dialog';
+    dialog.setAttribute('data-study-guide-dialog','');
+    dialog.setAttribute('aria-labelledby','study-guide-modal-title');
+    dialog.innerHTML = '<header class="study-guide-modal-bar"><button type="button" data-guide-close>Close</button><strong id="study-guide-modal-title">'+esc(guide.label || 'Study guide')+'</strong><button type="button" data-guide-print disabled>Print</button></header><iframe class="study-guide-frame" title="Study guide preview"></iframe>';
+    const closeButton = dialog.querySelector('[data-guide-close]');
+    const printButton = dialog.querySelector('[data-guide-print]');
+    const frame = dialog.querySelector('.study-guide-frame');
+    frame.addEventListener('load', () => { printButton.disabled = false; }, {once:true});
+    frame.srcdoc = printableStudyGuideHtml(guide, term => win?.ABVMStudyGames?.vocabularyDefinition?.(term));
+    closeButton.addEventListener('click', () => dialog.close());
+    printButton.addEventListener('click', () => {
+      try { frame.contentWindow?.focus(); frame.contentWindow?.print(); } catch {}
+    });
+    dialog.addEventListener('close', () => {
+      dialog.remove();
+      if (trigger?.isConnected) trigger.focus({preventScroll:true});
+    }, {once:true});
+    doc.body.append(dialog);
+    dialog.showModal();
+    closeButton.focus({preventScroll:true});
   }
 
   const shortTestLabel = label => String(label||'').replace(/\s*\([^)]*\)/g,'').replace(/\s*\/\s*Handwriting/i,' & handwriting').trim();
@@ -138,7 +154,7 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
   function secondaryHtml() {
     const tests=model?.tests(),pending=tests?.tests||[],completed=tests?.completed||[];
     const printable=(model?.printableTests?.()?.tests||pending).map((test,index)=>({...test,index}));
-    const guideButtons=printable.map(test=>'<button type="button" class="study-guide-button" data-test-guide="'+test.index+'">Print guide: '+esc(test.label)+' · '+esc(dateLabel(test.date))+'</button>').join('');
+    const guideButtons=printable.map(test=>'<button type="button" class="study-guide-button" data-test-guide="'+test.index+'">View guide: '+esc(test.label)+' · '+esc(dateLabel(test.date))+'</button>').join('');
     return '<section class="study-tools" aria-labelledby="study-tools-title"><div class="study-section-heading compact"><span>KEEP LEARNING</span><h2 id="study-tools-title">A little extra help</h2></div><div class="study-tool-list">' +
       '<details class="study-tool-card" data-study-notes'+(notesOpen?' open':'')+'><summary><span class="study-tool-icon notes" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg></span><span class="study-tool-copy"><strong>Notes &amp; study guides</strong><small>Class notes, words &amp; official reviews</small></span><b aria-hidden="true">›</b></summary><div class="study-tool-body" data-study-notes-content>'+(notesOpen?notesContent():'')+'</div></details>' +
       '<details class="study-tool-card" data-study-test-options'+(testsOpen?' open':'')+'><summary><span class="study-tool-icon tests" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4h10a2 2 0 0 1 2 2v15H5V6a2 2 0 0 1 2-2ZM8 2v4M16 2v4M8 10h8M8 14h5"/></svg></span><span class="study-tool-copy"><strong>Test guides &amp; history</strong><small>Print a guide or manage finished tests</small></span><b aria-hidden="true">›</b></summary><div class="study-tool-body"><p>Finished tests are hidden only on this browser.</p>' +
@@ -190,7 +206,7 @@ export function createMaterialsView({onChange,onRetry,onTest,win=window} = {}) {
     host.querySelector('[data-study-test-options]')?.addEventListener('toggle',event=>{testsOpen=event.currentTarget.open;});
     host.querySelector('[data-test]')?.addEventListener('click',()=>onTest?.());
     host.querySelectorAll('[data-test-single]').forEach(button=>button.addEventListener('click',()=>onTest?.(Number(button.dataset.testSingle))));
-    host.querySelectorAll('[data-test-guide]').forEach(button=>button.addEventListener('click',()=>printGuide(Number(button.dataset.testGuide),button.dataset.guideUpcoming==='true')));
+    host.querySelectorAll('[data-test-guide]').forEach(button=>button.addEventListener('click',()=>openGuide(Number(button.dataset.testGuide),button.dataset.guideUpcoming==='true',button)));
     host.querySelector('[data-study-retry]')?.addEventListener('click',()=>onRetry?.());
     host.querySelector('[data-complete-test]')?.addEventListener('click',()=>{
       const result = model?.completeTests(); change(result?.ok?'[data-undo-test]':'[data-complete-test]');
