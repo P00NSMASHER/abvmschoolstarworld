@@ -1,4 +1,5 @@
 import {test,expect} from "@playwright/test";
+import {HOMEWORK_E2E_NOW,installFreshHomeworkFixture} from "./homework-e2e-fixture.mjs";
 
 const sizes=[
   {name:"320x568",width:320,height:568},
@@ -103,9 +104,10 @@ test("Family notices stay stacked and inside the phone viewport",async({browser}
 
 test("iPhone shows specific homework first without clipping the next school action",async({browser})=>{
   for(const width of [280,320,390,430]){
-    const context=await browser.newContext({viewport:{width,height:844},isMobile:true,hasTouch:true});
+    const context=await browser.newContext({viewport:{width,height:844},isMobile:true,hasTouch:true,serviceWorkers:"block"});
     const page=await context.newPage();
-    await page.clock.setFixedTime(new Date("2026-10-13T21:00:00-04:00"));
+    await installFreshHomeworkFixture(page);
+    await page.clock.setFixedTime(HOMEWORK_E2E_NOW);
     await page.goto("http://127.0.0.1:4173/#today");
     const homework=page.locator(".today-homework");
     await expect(homework.locator("[data-homework-check]")).toHaveCount(2);
