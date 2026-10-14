@@ -18,7 +18,8 @@ test("runtime pack preserves live data and strips audit-only question metadata",
 
   const forbidden=[
     "sourceLineage","evidenceContract","rubric","generatorVersion","provenance","templateId",
-    "cognitiveDemand","sourceEvidence","sourceMode","supportType","assessedSkillIds","presentationFingerprint"
+    "cognitiveDemand","sourceEvidence","sourceMode","supportType","assessedSkillIds","presentationFingerprint",
+    "sourceFact","contentFingerprint"
   ];
   for(const question of runtime.pack.contentPipeline.questions){
     for(const field of Object.keys(question))assert.ok(RUNTIME_QUESTION_FIELDS.includes(field),"unexpected runtime question field: "+field);
@@ -30,6 +31,21 @@ test("runtime pack preserves live data and strips audit-only question metadata",
   const fullBytes=Buffer.byteLength(JSON.stringify(source),"utf8");
   const runtimeBytes=Buffer.byteLength(runtimePackJson(source),"utf8");
   assert.ok(runtimeBytes<fullBytes*.7,{fullBytes,runtimeBytes});
+});
+
+
+test("runtime pack compacts redundant per-question provenance without losing stable item identity",()=>{
+  const sourceById=new Map(source.pack.contentPipeline.questions.map(question=>[question.id,question]));
+  assert.ok(source.pack.contentPipeline.questions.some(question=>Object.hasOwn(question,"sourceFact")),"full governed pack must retain source facts");
+  assert.ok(source.pack.contentPipeline.questions.some(question=>Object.hasOwn(question,"contentFingerprint")),"full governed pack must retain content fingerprints");
+  for(const question of runtime.pack.contentPipeline.questions){
+    const full=sourceById.get(question.id);
+    assert.ok(full,"runtime question must correspond to governed source question: "+question.id);
+    assert.equal(Object.hasOwn(question,"sourceFact"),false,"runtime must not duplicate full-pack source fact");
+    assert.equal(Object.hasOwn(question,"contentFingerprint"),false,"runtime must not duplicate full-pack content fingerprint");
+    const stable=full.variantFingerprint||full.contentFingerprint;
+    if(stable)assert.equal(question.variantFingerprint,stable,"stable runtime item identity changed: "+question.id);
+  }
 });
 
 test("real runtime pack retains only 18 source-verified Chapter 3 identifiers, not teacher evidence",()=>{

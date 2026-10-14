@@ -28,6 +28,7 @@ import {
 import { buildSchoolChangeFeed, validateSchoolChangeFeed } from './school-change-feed.mjs';
 import { curriculumFamilyRegistrySnapshot } from './curriculum-family-registry.mjs';
 import { parseCurriculumPreviewOptions } from './curriculum-preview-options.mjs';
+import { upcomingTeacherTests } from './teacher-test-focus.mjs';
 
 const DATA_PATH = new URL('../pages/data/study-pack.json', import.meta.url);
 const UPLOADED_NOTICES_PATH = new URL('../pages/data/uploaded-notices.json', import.meta.url);
@@ -319,13 +320,18 @@ const contentChanged = pack.sourceHash !== sourceHash || pack.uploadedNoticeHash
 const capturedAt = contentChanged ? checkedAt : (data.sourceCapturedAt || pack.sourceCapturedAt || checkedAt);
 
 const subjects = Array.isArray(pack.subjects) ? [...pack.subjects] : [];
-const grammarTest = testItems.find(item => /grammar|types of sentences/i.test(item.label));
+// Teacher Tests pages retain expired exams. Select only future dated tests so
+// yesterday's spelling/grammar focus never replaces tomorrow's study guide.
+const currentTests = upcomingTeacherTests(testItems, checkedAt, item => eventTime(item.date, new Date(checkedAt)));
+const grammarTest = currentTests.find(item => /grammar|types of sentences/i.test(item.label));
+const phonicsTest = currentTests.find(item => /^phonics\b/i.test(item.label));
 upsertSubject(subjects, /Reading \/ ELA/i, {
   subject: 'Reading / ELA',
   topics: [
     ...stories.map(story => `Story: ${story}`),
     `Sight words: ${sightWords}`,
     `Phonics: ${phonics.replace(/2 letter/i, '2-letter')}`,
+    ...(phonicsTest ? [`Phonics: ${phonicsTest.label.match(/\(([^)]+)\)/)?.[1] || phonicsTest.label} (test ${phonicsTest.date})`] : []),
     `Vocabulary: ${vocabulary}`,
     `Word structure: ${wordStructure.replace(/\bcvc\b/gi, 'CVC')}`,
     ...(grammarTest ? [`Grammar: ${grammarTest.label.match(/\(([^)]+)\)/)?.[1] || grammarTest.label} (test ${grammarTest.date})`] : []),
@@ -335,7 +341,7 @@ upsertSubject(subjects, /Reading \/ ELA/i, {
     : ['The current Reading Work page does not list a reading-comprehension skill.'],
 });
 
-const spellingTest = testItems.find(item => /spelling/i.test(item.label));
+const spellingTest = currentTests.find(item => /spelling/i.test(item.label));
 upsertSubject(subjects, /Spelling/i, {
   subject: 'Spelling / Handwriting',
   topics: spellingTest ? [`${spellingTest.date} test focus: ${spellingTest.label.replace(/^Spelling\s*/i, '').replace(/\s*\/\s*Handwriting$/i, '').replace(/^\(([^)]+)\)$/, '$1')}`] : [`Phonics: ${phonics}`],
@@ -361,7 +367,7 @@ upsertSubject(subjects, /^Religion$/i, {
     .replace(/\bresponsiblity\b/i, 'responsibility'))),
 });
 
-const mathTest = testItems.find(item => /subtraction|addition|math/i.test(item.label));
+const mathTest = currentTests.find(item => /subtraction|addition|math/i.test(item.label));
 const mathHomework = homework.find(item => item.subject === 'Math');
 upsertSubject(subjects, /^Math$/i, {
   subject: 'Math',

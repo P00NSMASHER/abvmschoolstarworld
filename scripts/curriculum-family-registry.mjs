@@ -1,6 +1,9 @@
 import { MATH_SUBTRACTION_FAMILY } from './curriculum-families/math-subtraction.mjs';
 import { SHORT_I_LONG_I_FAMILY } from './curriculum-families/short-i-long-i.mjs';
 import { APPROVED_PR270_FAMILIES } from './curriculum-families/approved-pr270.mjs';
+import { CHART_READING_FAMILY } from './curriculum-families/charts.mjs';
+import { LONG_O_FAMILY } from './curriculum-families/long-o.mjs';
+import { SHORT_VOWELS_FAMILY } from './curriculum-families/short-vowels.mjs';
 
 const FAMILY_REGISTRY = Object.freeze([
   Object.freeze({
@@ -129,6 +132,9 @@ const FAMILY_REGISTRY = Object.freeze([
   }),
   SHORT_I_LONG_I_FAMILY,
   MATH_SUBTRACTION_FAMILY,
+  CHART_READING_FAMILY,
+  LONG_O_FAMILY,
+  SHORT_VOWELS_FAMILY,
   ...APPROVED_PR270_FAMILIES,
 ]);
 

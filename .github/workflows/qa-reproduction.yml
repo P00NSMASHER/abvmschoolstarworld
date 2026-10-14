@@ -4,6 +4,9 @@ on:
     paths:
       - 'pages/data/uploaded-notices.json'
       - 'pages/data/study-pack.json'
+      - 'scripts/build-runtime-pack.mjs'
+      - 'tests/runtime-pack.test.mjs'
+      - 'tests/runtime-pack-fallback.spec.mjs'
       - 'scripts/build-study-universe.mjs'
       - 'tests/study-universe.test.mjs'
       - 'pages/study-room*'

@@ -1,5 +1,5 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v177-classroom-test-guides";
+const CACHE = "abvm-grade2-parent-companion-v178-current-curriculum-classroom-guides";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=113",
@@ -105,6 +105,14 @@ self.addEventListener("fetch",event=>{
   }
 
   if(url.pathname.endsWith(".webmanifest")){
+    event.respondWith(networkFirst(event.request,null,event));
+    return;
+  }
+
+  // Source/current test routing must update immediately online, not one visit
+  // behind the previous stale-while-revalidate ESM module cache. Offline keeps
+  // the last known working copy through networkFirst cache fallback.
+  if(/\/(?:study-hub-core|study-materials)\.mjs$/.test(url.pathname)){
     event.respondWith(networkFirst(event.request,null,event));
     return;
   }

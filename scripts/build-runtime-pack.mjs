@@ -6,8 +6,8 @@ import {fileURLToPath} from "node:url";
 const INPUT=new URL("../pages/data/study-pack.json",import.meta.url);
 const OUTPUT=new URL("../pages/data/study-pack-runtime.json",import.meta.url);
 export const RUNTIME_QUESTION_FIELDS=Object.freeze([
-  "id","subject","skill","questionType","prompt","choices","answer","explanation","hint","sourceFact",
-  "dok","difficulty","standards","domain","contentFingerprint","variantFingerprint","richContent","choiceDiagnostics","sourceChapters"
+  "id","subject","skill","questionType","prompt","choices","answer","explanation","hint",
+  "dok","difficulty","standards","domain","variantFingerprint","richContent","choiceDiagnostics","sourceChapters"
 ]);
 
 function clone(value){return JSON.parse(JSON.stringify(value));}
@@ -18,6 +18,10 @@ function pickQuestion(question){
       .filter(key=>key!=="sourceChapters"&&Object.prototype.hasOwnProperty.call(question||{},key))
       .map(key=>[key,question[key]])
   );
+  // contentFingerprint and sourceFact remain in the governed full pack. The browser
+  // does not consume sourceFact, and variantFingerprint is its stable item identity.
+  // Preserve that identity if an older row only has contentFingerprint.
+  if(!picked.variantFingerprint&&question?.contentFingerprint)picked.variantFingerprint=question.contentFingerprint;
   const l=question?.sourceLineage;
   const validLineage=l?.quality==="page-exact" &&
     /^https:\/\/sites\.google\.com\//.test(l.sourceUrl||"") &&
@@ -47,7 +51,10 @@ if(isDirect){
   const output=runtimePackJson(source);
   const fullBytes=Buffer.byteLength(JSON.stringify(source),"utf8");
   const runtimeBytes=Buffer.byteLength(output,"utf8");
-  if(runtimeBytes>=fullBytes*.7)throw new Error("Runtime study pack did not shrink by at least 30%");
+  if(runtimeBytes>=fullBytes*.7){
+    const reductionPercent=Math.round((1-runtimeBytes/fullBytes)*1000)/10;
+    throw new Error(`Runtime study pack did not shrink by at least 30% (fullBytes=${fullBytes}, runtimeBytes=${runtimeBytes}, reductionPercent=${reductionPercent})`);
+  }
   fs.writeFileSync(OUTPUT,output,"utf8");
   console.log("Runtime study pack generated",{fullBytes,runtimeBytes,reductionPercent:Math.round((1-runtimeBytes/fullBytes)*1000)/10});
 }

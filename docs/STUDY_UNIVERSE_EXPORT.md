@@ -41,6 +41,17 @@ must not randomly weight all three tiers together. Duplicate IDs with different
 content and conflicting keys for the same prompt fail. Reordered choices keep the
 same identity. Capitalization choices remain distinct when the skill requires it.
 
+The printable guide list begins with a **separate one-page input for each upcoming
+dated test**, followed by the existing general-subject guides. Each test guide
+uses only that test's scoped original practice IDs (up to six across different
+skills/question types), answer explanations, verified source hash and exact date.
+An unsupported chapter or missing topic generates an explicitly unavailable
+test guide rather than an unrelated STAR substitution or invented teacher facts.
+The bundle also records the **actual teacher source-last-checked timestamp**;
+its generated time alone never establishes that the school content is fresh.
+No educator sign-off is required for original questions in this private companion.
+Automated answer integrity, source lineage, privacy and normal release QA remain.
+
 Named test IDs include date and the full teacher announcement. The existing web
 matcher supplies the grammar/spelling/reading/chapter boundaries; the export also
 restricts named arithmetic to the announced operation and recognizes `Ch. 3`.

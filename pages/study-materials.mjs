@@ -124,9 +124,9 @@ function noteMatchesTest(text, label, subject) {
     return /\b(?:grammar|subject|predicate|sentence type|punctuation)\b/i.test(value);
   }
   if (subject === 'Math' && /subtraction|subtract|difference|minus/.test(lower))
-    return /subtraction|subtract|difference|minus/i.test(value);
+    return /subtraction|subtract|difference|minus|take away|related addition facts to check subtraction/i.test(value);
   if (subject === 'Math' && /addition|add|sum/.test(lower))
-    return /addition|add|sum/i.test(value);
+    return /addition|add|sum|total/i.test(value) && !/subtraction-only/i.test(value);
   if (subject === 'Spelling / Handwriting') {
     const focus = lower.match(/short\s+([aeiou])/i)?.[1]?.toLowerCase();
     const mentioned = [...value.matchAll(/\b(?:short|long)\s+([aeiou])\b/gi)].map(match=>match[1].toLowerCase());
@@ -431,6 +431,12 @@ export function createStudyMaterials({
       questionType:compactGuideText(row.questionType,40),
     }));
     const warnings = [];
+    if (pack.sourceCheckedAt && schoolDay(pack.sourceCheckedAt) !== schoolDay(time)) {
+      warnings.push('Teacher pages were last checked on '+schoolDay(pack.sourceCheckedAt)+'. Current school topics may have changed; check the linked teacher page for updates.');
+    }
+    if(subject==='Spelling / Handwriting' && /\bshort\s*\)/i.test(test.label)) {
+      warnings.push('The teacher test label does not name the short vowel. Practice here covers only named sounds; no missing spelling words are guessed.');
+    }
     const fallback = state.fallback.some(row => row.index === i);
     if (fallback) warnings.push('This practice requires current, matching class material. Earlier Grade 2 topics are not substituted.');
     if (!group.length) warnings.push('No current, matching test questions are available. Review the announced classroom material; unrelated older questions are not substituted.');

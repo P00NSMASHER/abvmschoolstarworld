@@ -87,6 +87,37 @@ function forTest(test,rows,religionChaptersById=new Map()){
   if(/spelling/i.test(label)&&/short\s*\)/i.test(label))return [];
   return matched.filter(q=>q.tier!=='star-fallback');
 }
+
+/** Spread a short printed test guide across the supported skills and question
+ * types instead of printing the first six IDs from a single bank. */
+function balancedGuideQuestions(rows,limit=6){
+  const pools=new Map();
+  for(const row of rows){
+    if(!pools.has(row.skill))pools.set(row.skill,[]);
+    pools.get(row.skill).push(row);
+  }
+  const skills=[...pools.keys()].sort(compare),selected=[];
+  const types=['direct','transfer','reasoning'];
+  for(let round=0;selected.length<limit&&skills.some(skill=>pools.get(skill).length);round++){
+    for(const skill of skills){
+      const pool=pools.get(skill);
+      if(!pool.length)continue;
+      const match=pool.findIndex(row=>row.questionType===types[round%types.length]);
+      selected.push(pool.splice(match>=0?match:0,1)[0]);
+      if(selected.length>=limit)break;
+    }
+  }
+  return selected;
+}
+function testGuideSubject(test,questions){
+  if(questions[0]?.subject)return questions[0].subject;
+  if(/religion|faith/i.test(test.label))return 'Religion';
+  if(/spelling|handwriting/i.test(test.label))return 'Spelling / Handwriting';
+  if(/math|addition|subtraction/i.test(test.label))return 'Math';
+  if(/grammar|reading|ela/i.test(test.label))return 'Reading / ELA';
+  return null;
+}
+
 export function buildStudyUniverse({pack:wrapper,archive={},fallbackQuestions=[],schoolwork}={}){
   const pack=wrapper?.pack||wrapper;
   if(pack?.sourceSufficient!==true||pack?.contentPipeline?.qa?.status!=='pass')throw new Error('A source-sufficient, QA-passed study pack is required');
@@ -140,12 +171,33 @@ export function buildStudyUniverse({pack:wrapper,archive={},fallbackQuestions=[]
     return {id:`test-${t.date}-${slug(t.label)}`,date:t.date,label:t.label,source:t.source,questionIds,supported:questionIds.length>0,
       disclaimer:'Original reviewed skill practice; not hidden teacher-test content or official STAR items.'};
   });
-  const printableGuides=subjects.map(subject=>({id:`guide-${slug(subject)}`,subject,title:`${subject} one-page study guide`,
-    focusSkills:[...new Set(questions.filter(q=>q.subject===subject).map(q=>q.skill))].slice(0,6),questionIds:practice[subject].slice(0,6)}));
+  const subjectGuides=subjects.map(subject=>({id:`guide-${slug(subject)}`,subject,title:`${subject} one-page study guide`,
+    focusSkills:[...new Set(questions.filter(q=>q.subject===subject).map(q=>q.skill))].slice(0,6),questionIds:practice[subject].slice(0,6),kind:'subject'}));
+  // Test guides are generated from the SAME exact announced-date bank as
+  // selectable Test Prep. Never fill missing chapter/topic scope with STAR or
+  // unrelated archive questions, or claim this is an official teacher test.
+  const byQuestionId=new Map(questions.map(row=>[row.id,row]));
+  const testGuides=selectableTestPrep.map(test=>{
+    const matched=test.questionIds.map(id=>byQuestionId.get(id)).filter(Boolean);
+    const selected=balancedGuideQuestions(matched);
+    const subject=testGuideSubject(test,matched);
+    return {
+      id:`guide-${test.id}`,kind:'test',subject,title:`${test.label} — one-page test study guide`,
+      label:test.label,date:test.date,source:test.source,sourceHash,
+      status:matched.length?'SOURCE_BACKED_PRACTICE':'NO_MATCHING_SOURCE_BACKED_PRACTICE',
+      focusSkills:[...new Set(selected.map(q=>q.skill))],
+      teachingPoints:[...new Set(selected.map(q=>q.explanation))].slice(0,6),
+      questionIds:selected.map(q=>q.id),
+      practice:selected.map(q=>({id:q.id,prompt:q.prompt,choices:[...q.choices],answer:q.answer,explanation:q.explanation,skill:q.skill})),
+      answerKey:selected.map(q=>({id:q.id,answer:q.answer,explanation:q.explanation})),
+      disclaimer:'Original skill practice from verified material; not hidden teacher-test content or official STAR items.',
+    };
+  });
+  const printableGuides=[...testGuides,...subjectGuides];
   const verticalScripts=subjects.map(subject=>({id:`vertical-${slug(subject)}`,subject,title:`60-second ${subject} practice`,format:'9:16 storyboard',
     beats:practice[subject].slice(0,3).map((id,index)=>{const q=questions.find(q=>q.id===id);return {seconds:['0-18','18-38','38-58'][index],prompt:q.prompt,pause:'Pause and choose an answer.',answer:q.answer,explanation:q.explanation};})}));
   const curriculumPackets=subjects.map(subject=>({id:`roblox-${slug(subject)}`,subject,questionIds:practice[subject],answerAuthority:'server-only',sourceOrder:['current','archive','star-fallback']}));
-  const out={schemaVersion:2,contentOnly:true,generatedAt,schoolTimeZone:'America/New_York',source:{repository:'P00NSMASHER/abvmschoolstarworld',sourceHash,weekLabel:text(pack.weekLabel,'weekLabel')},
+  const out={schemaVersion:2,contentOnly:true,generatedAt,schoolTimeZone:'America/New_York',source:{repository:'P00NSMASHER/abvmschoolstarworld',sourceHash,weekLabel:text(pack.weekLabel,'weekLabel'),sourceCheckedAt:typeof wrapper?.sourceLastCheckedAt==='string'?wrapper.sourceLastCheckedAt:(pack.sourceCheckedAt||null)},
     policy:{priorityOrder:['current-school-material','cumulative-reviewed-material','original-star-style-fallback'],privateLearnerDataIncluded:false,officialStarItems:false,hiddenTeacherTestItemsClaimed:false},
     questions,currentSubjectPractice:practice,mixedReview:['current','archive','star-fallback'].flatMap(tier=>roundRobin(questions.filter(q=>q.tier===tier)).map(q=>q.id)),selectableTestPrep,printableGuides,verticalScripts,curriculumPackets};
   return {...out,contentSha256:digest(out)};

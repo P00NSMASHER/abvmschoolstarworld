@@ -112,3 +112,60 @@ test('calendar advancement and newly reviewed chapter coverage do not freeze ref
   f.pack.contentPipeline.questions.push(q('new-ch3','Religion','religion-chapter-3'));
   assert.deepEqual(buildStudyUniverse(f).selectableTestPrep[0].questionIds,['new-ch3']);
 });
+
+test('printable one-page guides prioritize each upcoming dated test with a bounded answer key',()=>{
+  const out=buildStudyUniverse(fixture());
+  const testGuides=out.printableGuides.filter(row=>row.kind==='test');
+  assert.equal(testGuides.length,out.selectableTestPrep.length);
+  assert.deepEqual(testGuides.map(row=>[row.label,row.date]),
+    out.selectableTestPrep.map(row=>[row.label,row.date]));
+  for(const [index,guide] of testGuides.entries()){
+    const allowed=new Set(out.selectableTestPrep[index].questionIds);
+    assert(guide.questionIds.every(id=>allowed.has(id)));
+    assert(guide.questionIds.length<=6);
+    assert.deepEqual(guide.questionIds,guide.practice.map(row=>row.id));
+    assert.deepEqual(guide.questionIds,guide.answerKey.map(row=>row.id));
+    assert(guide.practice.every(row=>row.choices.filter(choice=>choice===row.answer).length===1));
+    assert.match(guide.disclaimer,/Original skill practice/);
+    assert.equal(guide.sourceHash,'reviewed-source');
+  }
+  const grammar=testGuides.find(row=>row.label==='Grammar (subject & predicate)');
+  assert.deepEqual(grammar.questionIds,['r1']);
+  assert.equal(grammar.subject,'Reading / ELA');
+  const math=testGuides.find(row=>row.label==='Math (subtraction)');
+  assert.deepEqual(math.questionIds,['m1']);
+  assert.equal(math.date,'2026-10-15');
+  const religion=testGuides.find(row=>row.label==='Religion Ch. 3');
+  assert.deepEqual(religion.questionIds,[]);
+  assert.equal(religion.status,'NO_MATCHING_SOURCE_BACKED_PRACTICE');
+  assert(!religion.answerKey.length,'Unsupported chapter never gets a fabricated answer key');
+});
+test('short study guides spread across verified skills instead of printing one skill repeatedly',()=>{
+  const f=fixture();f.pack.importantDates=[{date:'2026-10-15',label:'Reading',kind:'test'}];
+  f.pack.contentPipeline.questions=['theme','main-character','visualize'].flatMap(skill=>
+    Array.from({length:5},(_,i)=>q(skill+'-'+i,'Reading / ELA',skill,{
+      questionType:['direct','transfer','reasoning'][i%3],
+    })));
+  const guide=buildStudyUniverse(f).printableGuides.find(row=>row.kind==='test');
+  assert.equal(guide.questionIds.length,6);
+  assert.deepEqual(new Set(guide.focusSkills),new Set(['theme','main-character','visualize']));
+  assert.deepEqual(new Set(guide.practice.map(row=>row.skill)),new Set(guide.focusSkills));
+});
+test('chapter-number changes regenerate test-specific guide without bleeding other religion chapters',()=>{
+  const f=fixture();const ch3={...lineage,matchedEvidence:['Chapter 3: original sin and Baptism']};
+  const ch2={...lineage,matchedEvidence:['Chapter 2: Gift of Jesus mentions another chapter']};
+  f.pack.contentPipeline.questions.push(
+    q('ch3-guide','Religion','religion-original-sin',{sourceLineage:ch3}),
+    q('ch2-guide','Religion','religion-jesus-savior',{sourceLineage:ch2}),
+  );
+  const guide=buildStudyUniverse(f).printableGuides.find(row=>row.label==='Religion Ch. 3');
+  assert.deepEqual(guide.questionIds,['ch3-guide']);
+  assert.equal(guide.answerKey[0].answer,'Right');
+  f.pack.generatedAt='2026-10-18T12:00:00Z';
+  assert.equal(buildStudyUniverse(f).printableGuides.filter(row=>row.kind==='test').length,0);
+});
+test('export identifies actual teacher-check timestamp rather than the unrelated pack regeneration time',()=>{
+  const f=fixture(),original=f.pack;
+  f.pack={sourceLastCheckedAt:'2026-10-07T10:00:00Z',pack:original};
+  assert.equal(buildStudyUniverse(f).source.sourceCheckedAt,'2026-10-07T10:00:00Z');
+});
