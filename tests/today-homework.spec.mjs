@@ -11,7 +11,7 @@ test('Today puts real teacher homework directly after the hero, without daily ro
   await expect(card).toContainText('Page 22');
   await expect(card).toContainText('Spelling Choice Board activity');
   await expect(card).not.toContainText(/cover books|reading log|behavior chart|return everything|read 20 minutes/i);
-  await expect(page.locator('.today-panel .task-list')).not.toContainText(/\bRead\b|cover books|reading log|return everything/i);
+  await expect(page.locator('.today-panel .check-item')).toHaveCount(0);
   const order=await page.evaluate(()=>{
     const rect=selector=>document.querySelector(selector).getBoundingClientRect();
     return {heroBottom:rect('.school-photo-hero').bottom,homeworkTop:rect('.today-homework').top,
