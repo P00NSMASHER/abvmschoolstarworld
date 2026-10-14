@@ -62,12 +62,12 @@ function inlineAcademicAssignment(line) {
   if (match) return ['Spelling', 'Spelling ' + match[1]];
 
   match = normalized.match(/^(?:Math|Mathematics)\s*(?::|-|—)\s*(.+)$/i);
-  if (!match) match = normalized.match(/^(?:Math|Mathematics)\s+(p(?:g|age)\.?\s*\d+\b.*|work(?:sheet|book)\b.+)$/i);
+  if (!match) match = normalized.match(/^(?:Math|Mathematics)\s+(p(?:g|age)\.?\s*\d+\b.*|work(?:sheet|book)\b.*|paper\b.*|packet\b.*|sheet\b.*)$/i);
   if (match) {
     const raw = match[1];
     const task = /^p(?:g|age)\.?\s*(\d+)/i.test(raw)
       ? raw.replace(/^p(?:g|age)\.?/i, 'Page')
-      : raw;
+      : /^paper\b/i.test(raw) ? 'Math ' + raw : raw;
     return ['Math', task];
   }
 
@@ -128,6 +128,12 @@ export function parseHomework(lines) {
       entries.push(assignment(day, inline[0], inline[1]));
       pendingSubject = null;
       continue;
+    }
+
+    // Do not silently drop unfamiliar Math lines while accepting other subjects.
+    // An incomplete assignment list is less trustworthy than a source-warning state.
+    if (/^(?:Math|Mathematics)\s+\S/i.test(line)) {
+      throw new Error('Unrecognized Math assignment on Homework page: ' + line.slice(0, 150));
     }
 
     const header = subjectHeader(line);

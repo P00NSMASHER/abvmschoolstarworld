@@ -130,3 +130,28 @@ test('a newly observed Spelling-only posting never shows an old Math task on Tod
   await expect(week).toContainText('Spelling Choice Board activity');
   await expect(week).not.toContainText('Page 22');
 });
+
+test('Math paper and choice board appear together on Today and Week with current teacher evidence',async({page})=>{
+  await installHomeworkFixture(page,{
+    firstObservedAt:'2026-10-14T20:59:00.000Z',
+    checkedAt:'2026-10-14T21:00:00.000Z',
+    contentHash:'c'.repeat(64),
+    assignments:[
+      {subject:'Math',task:'Math paper'},
+      {subject:'Spelling',task:'Spelling Choice Board activity'}
+    ]
+  });
+  await page.clock.setFixedTime(new Date('2026-10-14T17:02:00-04:00'));
+  await page.goto('/#today');
+  const today=page.locator('.today-homework');
+  await expect(today.locator('.homework-task-list .check-item')).toHaveCount(2,{timeout:15000});
+  await expect(today).toContainText('Math paper');
+  await expect(today).toContainText('Spelling Choice Board activity');
+  await expect(today).not.toContainText(/cover books|reading log|behavior chart|return everything/i);
+  await page.getByRole('button',{name:'Calendar'}).click();
+  await page.locator('.calendar-segments [data-route="week"]').click();
+  const week=page.locator('.week-homework-card');
+  await expect(week.locator('.homework-task-list .check-item')).toHaveCount(2);
+  await expect(week).toContainText('Math paper');
+  await expect(week).toContainText('Spelling Choice Board activity');
+});
