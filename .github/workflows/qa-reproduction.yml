@@ -14,6 +14,8 @@ on:
       - 'pages/study-experience.mjs'
       - 'pages/index.html'
       - 'pages/sw.js'
+      # Any JavaScript QA corpus change must reproduce at the exact review head.
+      - 'tests/**/*.mjs'
       - 'tests/study-room*'
       - 'tests/study-experience.test.mjs'
       - 'tests/study-experience.spec.mjs'
