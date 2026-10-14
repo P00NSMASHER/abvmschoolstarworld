@@ -62,3 +62,57 @@ test("real runtime pack retains only 18 source-verified Chapter 3 identifiers, n
   assert.ok(runtime.pack.contentPipeline.questions.every(q=>!Object.hasOwn(q,"sourceLineage")));
   assert.doesNotMatch(JSON.stringify(runtime.pack.contentPipeline.questions),/matchedEvidence|sourceCaptureHash|evidenceExcerptHash|learnerResponse|studentName|privateHistory/);
 });
+
+
+test("retained original review questions stay date-bound, chapter-exact and free of audit-only text",()=>{
+  const original=source.pack.contentPipeline.questions.find(q=>
+    q.subject==="Religion"&&religionChapterScopes(q).includes(3));
+  assert.ok(original,"governed Chapter 3 question is required for a faithful review fixture");
+  const envelope=structuredClone(source);
+  const reviewVerifiedAt="2026-10-08T15:00:17.769Z";
+  const reviewExpiresAt="2026-10-22T15:00:17.769Z";
+  const reviewSourceHash=source.pack.sourceHash;
+  envelope.pack.recentReviewPipeline.questions=[{
+    ...original,reviewVerifiedAt,reviewExpiresAt,reviewSourceHash,
+  }];
+  const [candidate]=buildRuntimePack(envelope).pack.recentReviewPipeline.questions;
+  assert.equal(candidate.id,original.id);
+  assert.deepEqual(candidate.choices,original.choices);
+  assert.equal(candidate.answer,original.answer);
+  assert.equal(candidate.variantFingerprint,original.variantFingerprint||original.contentFingerprint);
+  assert.deepEqual(candidate.sourceChapters,[3]);
+  assert.deepEqual([candidate.reviewVerifiedAt,candidate.reviewExpiresAt,candidate.reviewSourceHash],
+    [reviewVerifiedAt,reviewExpiresAt,reviewSourceHash]);
+  for(const field of ["sourceLineage","sourceFact","contentFingerprint","rubric","evidenceContract","sourceEvidence","provenance"]){
+    assert.equal(Object.hasOwn(candidate,field),false,"recent-review browser payload includes audit field: "+field);
+  }
+  const bad=structuredClone(envelope);
+  delete bad.pack.recentReviewPipeline.questions[0].reviewExpiresAt;
+  assert.throws(()=>buildRuntimePack(bad),/missing its verified source or expiry window/);
+});
+
+test("curriculum turnover cannot defeat the 30 percent runtime budget with retired full-evidence questions",()=>{
+  const envelope=structuredClone(source);
+  const retiredSkills=envelope.pack.contentPipeline.skills.filter((_,index)=>index%3===0);
+  const retiredIds=new Set(retiredSkills.map(skill=>skill.id));
+  const retired=envelope.pack.contentPipeline.questions.filter(q=>retiredIds.has(q.skill));
+  const current=envelope.pack.contentPipeline.questions.filter(q=>!retiredIds.has(q.skill));
+  assert.ok(retired.length>0&&current.length>0,"both current and review questions are needed");
+  const reviewVerifiedAt="2026-10-08T15:00:17.769Z";
+  const reviewExpiresAt="2026-10-22T15:00:17.769Z";
+  const reviewSourceHash=source.pack.sourceHash;
+  envelope.pack.contentPipeline.skills=envelope.pack.contentPipeline.skills.filter(skill=>!retiredIds.has(skill.id));
+  envelope.pack.contentPipeline.questions=current;
+  envelope.pack.recentReviewPipeline.skills=retiredSkills.map(skill=>({
+    ...skill,reviewVerifiedAt,reviewExpiresAt,reviewSourceHash,
+  }));
+  envelope.pack.recentReviewPipeline.questions=retired.map(question=>({
+    ...question,reviewVerifiedAt,reviewExpiresAt,reviewSourceHash,
+  }));
+  const packed=buildRuntimePack(envelope);
+  assert.equal(packed.pack.recentReviewPipeline.questions.length,retired.length);
+  assert.equal(packed.pack.contentPipeline.questions.length,current.length);
+  const fullBytes=Buffer.byteLength(JSON.stringify(envelope),"utf8");
+  const runtimeBytes=Buffer.byteLength(runtimePackJson(envelope),"utf8");
+  assert.ok(runtimeBytes<fullBytes*.7,{fullBytes,runtimeBytes});
+});
