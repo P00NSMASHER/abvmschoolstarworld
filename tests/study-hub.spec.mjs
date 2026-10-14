@@ -36,7 +36,15 @@ test('weekly test prep covers same-day subjects in the existing player and compl
       .filter(q=>q.subject==='Math'&&q.tier==='material');
   });
   const dedupe=rows=>[...new Map(rows.map(q=>[q.prompt+'|'+q.answer,q])).values()];
-  const allowed={Math:dedupe([...currentMath,...archivedMath]),Religion:religion};
+  // Current reviewed Religion questions can carry both Chapter 2 and 3 headers.
+  // Permit them in Chapter 2 practice only when the governed entry explicitly
+  // starts with Chapter 2, never by a cross-reference or unrelated subject.
+  const full=await page.request.get('/data/study-pack.json').then(r=>r.json());
+  const currentChapter2=full.pack.contentPipeline.questions.filter(q=>
+    q.subject==='Religion'&&q.sourceLineage?.quality==='page-exact'&&
+    q.sourceLineage.matchedEvidence?.some(value=>
+      typeof value==='string'&&/^\s*Chapter\s+2\s*:/i.test(value)));
+  const allowed={Math:dedupe([...currentMath,...archivedMath]),Religion:dedupe([...religion,...currentChapter2])};
   await page.locator('[data-open-prep]').click();
   const prep=page.locator('[data-study-tests]');
   await expect(prep.locator('time')).toHaveAttribute('datetime','2026-10-07');
@@ -178,4 +186,47 @@ test('current notes and cumulative reviewed schoolwork remain separately availab
   await expect(reviewed.locator('li')).toHaveText(lesson.notes);
   await page.locator('[data-notes-source="weekly"]').click();await expect(notes).not.toContainText(lesson.title);
   await expect(page.locator('input[type="file"]')).toHaveCount(0);
+});
+
+test('October 15 Religion Chapter 3 Test Prep uses only reviewed source-backed questions in the actual browser',async({page})=>{
+  await page.clock.setFixedTime(new Date('2026-10-13T20:00:00-04:00'));
+  const [source,runtime]=await Promise.all([
+    page.request.get('/data/study-pack.json').then(response=>response.json()),
+    page.request.get('/data/study-pack-runtime.json').then(response=>response.json())
+  ]);
+  const reviewed=source.pack.contentPipeline.questions.filter(q=>
+    q.subject==='Religion'&&q.sourceLineage?.matchedEvidence?.some(value=>
+      typeof value==='string'&&/^\s*Chapter\s+3\s*:/i.test(value)));
+  const allowed=new Map(reviewed.map(q=>[q.prompt,q]));
+  expect(allowed.size).toBe(18);
+  expect(runtime.pack.contentPipeline.questions.filter(q=>q.sourceChapters?.includes(3))).toHaveLength(18);
+  expect(runtime.pack.contentPipeline.questions.every(q=>!Object.hasOwn(q,'sourceLineage'))).toBe(true);
+
+  await page.goto('/#study');
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready',{timeout:15000});
+  await page.locator('[data-open-prep]').click();
+  const religion=page.locator('[data-test-select]').filter({hasText:'Religion Ch. 3'});
+  await expect(religion).toHaveCount(1);
+  await religion.click();
+  await expect(page.locator('[data-study-tests] h3')).toContainText('Religion Ch. 3');
+  await expect(page.locator('[data-test-missing]')).toHaveCount(0);
+  await expect(page.locator('[data-test-single]')).toBeEnabled();
+  await page.locator('[data-test-single]').click();
+  const seen=[];
+  for(let i=0;i<8;i++){
+    await expect(page.locator('.game-question-card')).toBeVisible();
+    const prompt=await page.locator('.game-question-card > h2').innerText();
+    const q=allowed.get(prompt);
+    expect(q,'only reviewed Chapter 3 questions may appear in the live player').toBeTruthy();
+    const choices=await page.locator('[data-game-answer] strong').allTextContents();
+    expect([...choices].sort()).toEqual([...q.choices].sort());
+    const index=choices.indexOf(q.answer);
+    expect(index).toBeGreaterThanOrEqual(0);
+    seen.push(prompt);
+    await page.locator('[data-game-answer]').nth(index).click();
+    await expect(page.locator('[data-game-next]')).toBeVisible();
+    await page.locator('[data-game-next]').click();
+  }
+  expect(new Set(seen).size).toBe(8);
+  await expect(page.locator('.game-finish')).toBeVisible();
 });
