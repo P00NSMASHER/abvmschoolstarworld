@@ -180,7 +180,7 @@ test('historical and undated schoolwork cannot enter a newly announced test pape
     lesson('unknown',undated),
     lesson('current',grammar,'2026-10-07'),
   ]};
-  const model=createStudyMaterials(opts({events,schoolwork,catalog:catalog([])}));
+  const model=createStudyMaterials(opts({events,schoolwork,catalog:catalog([]),now:()=>Date.parse('2026-10-08T12:00:00Z')}));
   assert.deepEqual(model.testGuide(0).practice.map(p=>p.prompt),grammar.map(q=>q.prompt));
 });
 
