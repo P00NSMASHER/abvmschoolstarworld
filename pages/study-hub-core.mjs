@@ -19,25 +19,27 @@ export function questionsForTest(test, questions) {
   const label = test.label.toLowerCase();
   if (/grammar|predicate|subject &/.test(label))
     return questions.filter((q) => q.skill === "subject-predicate");
+  if (/phonics/.test(label) && /\bshort\s+vowels?\b/.test(label)) {
+    return questions.filter(q => q.subject === 'Reading / ELA' && q.skill === 'short-vowels');
+  }
   if (/spelling|handwriting/.test(label)) {
-    const vowel = label.match(/short\s+([aeiou])/);
-    const focus = vowel
-      ? new RegExp("(?:long|short)[ -]" + vowel[1] + "|" + vowel[1] + "_e", "i")
-      : null;
+    // The teacher page may name a new long vowel but leave a second short
+    // vowel unspecified, e.g. "long o / Short )". Never reuse last week's
+    // unrelated i/a practice to make this test appear ready.
+    const focus = [...label.matchAll(/\b(short|long)\s+([aeiou])\b/g)]
+      .map(match => ({sound:match[1],vowel:match[2]}));
     const date = /^\d{4}-\d{2}-\d{2}$/.test(test.date || '') ? test.date : null;
     return questions
-      .filter(
-        (q) =>
-          /Spelling|phonics/i.test(q.subject) ||
-          /long-short|short-i-long-i|consonant-blend|suffix/.test(q.skill),
-      )
-      .filter((q) => {
-        // A photo-confirmed weekly list stays bound to its own dated test.
-        // The extra long-a and high-frequency homework words are not erased
-        // just because the teacher's Test page mentions short-i / long-i.
-        const scoped = String(q.sourceFact || '').match(/^Photo-confirmed weekly spelling words for (\d{4}-\d{2}-\d{2})$/);
-        if (scoped) return date === scoped[1];
-        return !focus || focus.test(q.skill + ' ' + q.sourceFact + ' ' + q.prompt);
+      .filter(q => /Spelling|phonics/i.test(q.subject) ||
+        /long-short|short-i-long-i|consonant-blend|suffix|long-[aeiou]/.test(q.skill))
+      .filter(q => {
+        const photographed = String(q.sourceFact || '')
+          .match(/^Photo-confirmed weekly spelling words for (\d{4}-\d{2}-\d{2})$/);
+        if (photographed) return date === photographed[1];
+        if (!focus.length) return !/\b(?:short|long)\s*\)/.test(label);
+        const evidence = String(q.skill || '') + ' ' + String(q.sourceFact || '');
+        return focus.some(({sound,vowel}) =>
+          new RegExp('\\b' + sound + '[- ]' + vowel + '\\b|\\blong-short-' + vowel + '\\b|\\bshort-' + vowel + '-long-' + vowel + '\\b','i').test(evidence));
       });
   }
   if (/religion|faith/.test(label)) {
@@ -50,7 +52,11 @@ export function questionsForTest(test, questions) {
         religionChapterScopes(q).includes(number);
     });
   }
-  if (/math/.test(label)) return questions.filter((q) => q.subject === "Math");
+  if (/math/.test(label)) {
+    const operations = [...label.matchAll(/\b(addition|subtraction)\b/g)].map(match => match[1]);
+    return questions.filter(q => q.subject === 'Math' &&
+      (!operations.length || operations.some(operation => String(q.skill || '').includes(operation))));
+  }
   if (/reading|ela/.test(label))
     return questions.filter(
       (q) =>
