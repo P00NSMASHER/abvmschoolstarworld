@@ -382,8 +382,8 @@ function ensureStudyMaterials(retry=false){
   if(currentStudyMaterials()&&!retry)return Promise.resolve(studyMaterials);
   const data=pack,catalog=studyGameCatalog(),engine=studyGameEngine(),events=datedImportantEvents().filter(r=>kindClass(r.item)==="test").map(r=>({date:isoDateKey(r.date),label:r.item.label,kind:r.item.kind,endsAt:r.item.endsAt}));
   const request={pack:data,promise:null};
-  request.promise=Promise.all([import("./study-materials.mjs"),import("./study-games-materials-view.mjs?v=5")]).then(async([materials,view])=>{
-    if(pack===data&&!studyMaterialsView){studyMaterialsView=view.createMaterialsView({onChange:()=>{if(isStudyRoute())renderGames()},onRetry:retryStudyMaterials,onTest:startStudyTest});if(isStudyRoute()&&gameState.screen==="menu")renderGames()}
+  request.promise=Promise.all([import("./study-materials.mjs"),import("./study-games-materials-view.mjs?v=6")]).then(async([materials,view])=>{
+    if(pack===data&&!studyMaterialsView){studyMaterialsView=view.createMaterialsView({onChange:()=>{if(isStudyRoute())renderGames()},onRetry:retryStudyMaterials,onTest:startStudyTest,onGuideRefresh:refreshTestGuideSources});if(isStudyRoute()&&gameState.screen==="menu")renderGames()}
     const model=await materials.loadStudyMaterials({pack:data,catalog,events,engine});
     if(pack===data){
       studyMaterials=model;studyMaterialsPack=data;studyMaterialsError=null;studyMaterialsView.setModel(model);
@@ -393,6 +393,18 @@ function ensureStudyMaterials(retry=false){
   studyMaterialsPromise=request;return request.promise;
 }
 function retryStudyMaterials(){studyMaterialsError=null;ensureStudyMaterials(true).catch(()=>{});renderGames()}
+async function refreshTestGuideSources(){
+  let fresh = navigator.onLine !== false;
+  if(fresh){
+    try{ await fetchPack({force:true}); if(lastPackFetchUsedCache)fresh=false; }
+    catch{ fresh=false; }
+  }
+  // Schoolwork and archived lessons are independent of the public curriculum
+  // envelope. Re-fetch them at preview time, even if the pack hash is unchanged.
+  await ensureStudyMaterials(true);
+  return fresh;
+}
+
 function studyGameEngine(){return window.ABVMStudyGames||null}
 function ensureStudyGameEngine(){
   if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
@@ -649,6 +661,10 @@ function packContentKey(data){
     importantDates:p.importantDates||[],
     homework:p.homework||[],
     subjects:p.subjects||[],
+    vocabulary:p.vocabulary||[],
+    questions:p.questions||[],
+    contentPipeline:p.contentPipeline||{},
+    recentReviewPipeline:p.recentReviewPipeline||{},
     reminders:p.reminders||[],
     parentNotices:p.parentNotices||[],
     lunchMenu:p.lunchMenu||[],
