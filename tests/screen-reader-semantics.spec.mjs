@@ -1,4 +1,6 @@
 import {test,expect} from "@playwright/test";
+import {HOMEWORK_E2E_NOW,installFreshHomeworkFixture} from "./homework-e2e-fixture.mjs";
+test.use({serviceWorkers:"block"});
 
 async function waitForApp(page,path){
   await page.goto(path);
@@ -55,7 +57,8 @@ test("Calendar date controls remain buttons with visible day numbers",async({pag
 });
 
 test("checklist controls communicate action text and completion visually",async({page})=>{
-  await page.clock.setFixedTime(new Date("2026-10-13T21:00:00-04:00"));
+  await installFreshHomeworkFixture(page);
+  await page.clock.setFixedTime(HOMEWORK_E2E_NOW);
   await waitForApp(page,"/#today");
   const check=page.locator("[data-homework-check]").first();
   await expect(check).toBeVisible();

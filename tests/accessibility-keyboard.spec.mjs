@@ -1,4 +1,6 @@
 import {test,expect} from "@playwright/test";
+import {HOMEWORK_E2E_NOW,installFreshHomeworkFixture} from "./homework-e2e-fixture.mjs";
+test.use({serviceWorkers:"block"});
 
 async function waitForApp(page,path="/#today"){
   await page.goto(path);
@@ -92,7 +94,8 @@ test("subject choices, Test Prep buttons, and native disclosures work from keybo
 
 test("checklist completion preserves scroll position and keyboard focus",async({page})=>{
   // Measure real academic homework, not the retired daily Read routine.
-  await page.clock.setFixedTime(new Date("2026-10-13T21:00:00-04:00"));
+  await installFreshHomeworkFixture(page);
+  await page.clock.setFixedTime(HOMEWORK_E2E_NOW);
   await page.setViewportSize({width:390,height:480});
   await waitForApp(page,"/#week");
   const checks=page.locator("[data-homework-check]");

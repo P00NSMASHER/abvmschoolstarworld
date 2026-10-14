@@ -1,4 +1,6 @@
 import {test,expect} from "@playwright/test";
+import {HOMEWORK_E2E_NOW,installFreshHomeworkFixture} from "./homework-e2e-fixture.mjs";
+test.use({serviceWorkers:"block"});
 
 async function openTab(page,label){
   if(label==="Week"){
@@ -59,7 +61,7 @@ test("freshness states distinguish current, stale, and offline data",async({brow
   await expect(stalePage.locator(".freshness")).toContainText(/Teacher pages older/);
   await staleContext.close();
 
-  const offlineContext=await browser.newContext();
+  const offlineContext=await browser.newContext({serviceWorkers:"allow"});
   const offlinePage=await offlineContext.newPage();
   await offlinePage.goto("http://127.0.0.1:4173/#today");
   await expect(offlinePage.locator(".screen")).toBeVisible({timeout:10_000});
@@ -120,8 +122,10 @@ test("interactive day and checklist controls expose selected/completion state",a
   await expect(cal).toHaveAttribute("aria-label",/.+/);
   await expect(cal).toHaveAttribute("aria-pressed",/true|false/);
   // Interact with the real current homework button rather than a hidden daily routine.
-  await page.clock.setFixedTime(new Date("2026-10-13T21:00:00-04:00"));
-  await page.goto("/#today");
+  await installFreshHomeworkFixture(page);
+  await page.clock.setFixedTime(HOMEWORK_E2E_NOW);
+  await page.reload();
+  await openTab(page,"Today");
   const check=page.locator("[data-homework-check]").first();
   await expect(check).toBeVisible();
   await expect(check).toHaveAttribute("aria-label",/Mark complete|Completed/);
