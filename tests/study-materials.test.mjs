@@ -168,6 +168,31 @@ test('test-style printable sheets hide answers on the student page and show a se
   assert.match(html,/@page\{size:Letter portrait/);
 });
 
+
+test('new same-week teacher spelling words supersede previous photographic homework words',()=>{
+  const events=[{date:'2026-10-09',label:'Spelling (short i / long i) / Handwriting'}];
+  const schoolwork={lessons:[{
+    id:'photo-spelling',subject:'Spelling / Handwriting',weekOf:'2026-10-05',studiedOn:null,
+    notes:['Photo-confirmed practice words in the recorded order: did, fin, pick.'],questions:[],
+  }]};
+  const teacher={subjects:[{subject:'Spelling / Handwriting',studyNotes:['Spelling words: kite, lime, ride, time.']}],weekLabel:'Week of October 5, 2026'};
+  const model=createStudyMaterials(opts({events,schoolwork,pack:teacher}));
+  assert.deepEqual(model.testGuide(0).spellingWords,['kite','lime','ride','time']);
+  const outdated=createStudyMaterials(opts({events,schoolwork,pack:{...teacher,weekLabel:'Week of September 28, 2026'}}));
+  assert.deepEqual(outdated.testGuide(0).spellingWords,['did','fin','pick']);
+});
+test('explicit subtraction test cannot use additions from the current Math bank',()=>{
+  const events=[{date:'2026-10-05',label:'Math (subtraction)'}];
+  const rows=[
+    question('old-addition','Math',{skill:'math-addition',prompt:'Solve 4 + 5',answer:'9',choices:['8','9','10']}),
+    question('new-subtraction','Math',{skill:'math-subtraction',prompt:'Solve 12 - 5',answer:'7',choices:['6','7','8']}),
+  ];
+  const model=createStudyMaterials(opts({events,catalog:catalog(rows)}));
+  const guide=model.testGuide(0),round=model.testRound({seed:1});
+  assert.deepEqual(guide.practice.map(row=>row.answer),['7']);
+  assert.deepEqual(round.questions.map(row=>row.answer),['7']);
+});
+
 test('printable guide list includes every upcoming test, not only the nearest test date',() => {
   const events = [
     {date:'2026-10-05',label:'Math'},
@@ -200,7 +225,7 @@ test('selected guide uses the same assessment-inclusive test identity as Test Pr
     const guide=model.testGuide(index,{upcoming:true});
     assert.equal(guide.label,upcoming[index].label);
     assert.equal(guide.date,upcoming[index].date);
-    if(index===0){assert.equal(guide.practice.length,0);assert.ok(guide.warnings.some(row=>/No reviewed practice/.test(row)));}
+    if(index===0){assert.equal(guide.practice.length,0);assert.ok(guide.warnings.some(row=>/No current, matching test questions/.test(row)));}
   }
   assert.equal(model.testGuide(0).label,'Math','legacy printable guide indexes still exclude assessment windows');
 });
