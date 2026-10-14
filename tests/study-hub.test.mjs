@@ -59,7 +59,7 @@ test("real browser catalog supports only source-backed Religion Chapter 3 questi
     .filter(q => q.subject === "Religion" &&
       q.sourceLineage?.quality === "page-exact" &&
       q.sourceLineage.matchedEvidence?.some(value =>
-        typeof value === "string" && /^\\s*Chapter\\s+3\\s*:/i.test(value)))
+        typeof value === "string" && /^\s*Chapter\s+3\s*:/i.test(value)))
     .map(q => q.id));
   assert(approved.size >= 10, "governed Chapter 3 material must be present");
   const scoped = questionsForTest({label:"Religion Ch. 3"}, catalog.questions);
