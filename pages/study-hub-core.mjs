@@ -1,3 +1,19 @@
+/** A chapter must be the heading of an individual reviewed evidence entry. */
+export function religionChapterScopes(question) {
+  if (question?.subject !== "Religion") return [];
+  const scopes = new Set();
+  const safe = question?.sourceChapters;
+  if (Array.isArray(safe)) for (const chapter of safe) {
+    if (Number.isInteger(chapter) && chapter >= 1 && chapter <= 99) scopes.add(chapter);
+  }
+  const evidence = question?.sourceLineage?.matchedEvidence;
+  if (Array.isArray(evidence)) for (const entry of evidence) {
+    if (typeof entry !== "string") continue;
+    const match = /^\s*Chapter\s+([1-9]\d*)\s*:/i.exec(entry);
+    if (match && Number(match[1]) <= 99) scopes.add(Number(match[1]));
+  }
+  return [...scopes].sort((a,b) => a-b);
+}
 /** Match practice to an announced test without inventing scope or altering sources. */
 export function questionsForTest(test, questions) {
   const label = test.label.toLowerCase();
@@ -25,20 +41,13 @@ export function questionsForTest(test, questions) {
       });
   }
   if (/religion|faith/.test(label)) {
-    const c = label.match(/(?:chapter|ch\.?)\s*(\d+)/);
-    return questions.filter((q) => {
+    const chapter = label.match(/\b(?:chapter|ch\.?)\s*([1-9]\d*)\b/);
+    return questions.filter(q => {
       if (q.subject !== "Religion") return false;
-      if (!c) return true;
-      if (q.skill === "religion-chapter-" + c[1]) return true;
-      const evidence = q.sourceLineage?.matchedEvidence;
-      return (
-        Array.isArray(evidence) &&
-        evidence.some(
-          (value) =>
-            typeof value === "string" &&
-            new RegExp("\\bChapter\\s+" + c[1] + "\\s*:", "i").test(value),
-        )
-      );
+      if (!chapter) return true;
+      const number = Number(chapter[1]);
+      return q.skill === "religion-chapter-" + number ||
+        religionChapterScopes(q).includes(number);
     });
   }
   if (/math/.test(label)) return questions.filter((q) => q.subject === "Math");
