@@ -13,7 +13,11 @@ test("runtime pack preserves live data and strips audit-only question metadata",
   assert.deepEqual(runtime.pack.importantDates,source.pack.importantDates);
   assert.deepEqual(runtime.pack.homework,source.pack.homework);
   assert.deepEqual(runtime.pack.subjects,source.pack.subjects);
-  assert.deepEqual(runtime.pack.contentPipeline.skills,source.pack.contentPipeline.skills);
+  assert.deepEqual(
+    runtime.pack.contentPipeline.skills,
+    source.pack.contentPipeline.skills.map(({sourceLineage,evidenceContract,...skill})=>skill),
+    "runtime skill labels, notes, standards and other study fields must remain unchanged"
+  );
   assert.equal(runtime.pack.contentPipeline.questions.length,source.pack.contentPipeline.questions.length);
 
   const forbidden=[
@@ -61,4 +65,22 @@ test("real runtime pack retains only 18 source-verified Chapter 3 identifiers, n
       q.sourceChapters.every(v=>Number.isInteger(v)&&v>0&&v<100))));
   assert.ok(runtime.pack.contentPipeline.questions.every(q=>!Object.hasOwn(q,"sourceLineage")));
   assert.doesNotMatch(JSON.stringify(runtime.pack.contentPipeline.questions),/matchedEvidence|sourceCaptureHash|evidenceExcerptHash|learnerResponse|studentName|privateHistory/);
+});
+
+
+test("skill audit lineage stays in full pack and is omitted only from the runtime",()=>{
+  const full=source.pack.contentPipeline.skills;
+  const small=runtime.pack.contentPipeline.skills;
+  assert.equal(small.length,full.length);
+  assert.ok(full.some(skill=>skill.sourceLineage?.quality==="page-exact"));
+  const fullBytes=Buffer.byteLength(JSON.stringify(full),"utf8");
+  const runtimeBytes=Buffer.byteLength(JSON.stringify(small),"utf8");
+  assert.ok(fullBytes-runtimeBytes>12000,"remove enough redundant per-skill audit hashes for newly refreshed question banks");
+  for(let i=0;i<full.length;i++){
+    assert.equal(Object.hasOwn(small[i],"sourceLineage"),false,"browser skill must not carry teacher capture hashes");
+    assert.equal(Object.hasOwn(small[i],"evidenceContract"),false,"browser skill must not repeat the QA contract");
+    for(const key of Object.keys(small[i])){
+      assert.deepEqual(small[i][key],full[i][key],"displayed skill data changed: "+full[i].id+"."+key);
+    }
+  }
 });
