@@ -25,12 +25,21 @@ export function questionsForTest(test, questions) {
       });
   }
   if (/religion|faith/.test(label)) {
-    const c = label.match(/chapter\s*(\d+)/);
-    return questions.filter(
-      (q) =>
-        q.subject === "Religion" &&
-        (!c || q.skill === "religion-chapter-" + c[1]),
-    );
+    const c = label.match(/(?:chapter|ch\.?)\s*(\d+)/);
+    return questions.filter((q) => {
+      if (q.subject !== "Religion") return false;
+      if (!c) return true;
+      if (q.skill === "religion-chapter-" + c[1]) return true;
+      const evidence = q.sourceLineage?.matchedEvidence;
+      return (
+        Array.isArray(evidence) &&
+        evidence.some(
+          (value) =>
+            typeof value === "string" &&
+            new RegExp("\\bChapter\\s+" + c[1] + "\\s*:", "i").test(value),
+        )
+      );
+    });
   }
   if (/math/.test(label)) return questions.filter((q) => q.subject === "Math");
   if (/reading|ela/.test(label))
