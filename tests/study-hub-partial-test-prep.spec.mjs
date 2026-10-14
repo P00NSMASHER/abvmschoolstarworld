@@ -60,3 +60,33 @@ test("one missing same-day bank does not hide supported targeted practice",async
   await expect(page.locator('.game-finish')).toBeVisible();
   await context.close();
 });
+
+test("October 15 Religion Chapter 3 opens real source-scoped browser practice",async({browser})=>{
+  const context=await browser.newContext({serviceWorkers:"block"});
+  const page=await context.newPage();
+  await page.clock.setFixedTime(new Date("2026-10-14T12:00:00-04:00"));
+  await page.goto("http://127.0.0.1:4173/#study");
+  await expect(page.locator('.games-screen[data-study-state="ready"]')).toBeVisible({timeout:15000});
+  await page.locator('[data-open-prep]').click();
+  const religion=page.locator('[data-test-select]').filter({hasText:"Religion Ch. 3"});
+  await expect(religion).toBeVisible();
+  await religion.click();
+  await expect(page.locator('[data-study-tests] h3')).toHaveText("Religion Ch. 3");
+  await expect(page.locator('[data-study-tests] [data-test-missing]')).toHaveCount(0);
+  await expect(page.locator('[data-test-single]')).toBeEnabled();
+  const approvedPrompts=await page.evaluate(async()=>{
+    const envelope=await fetch("./data/study-pack.json",{cache:"no-store"}).then(r=>r.json());
+    const pack=envelope.pack||envelope;
+    return pack.contentPipeline.questions
+      .filter(q=>q.subject==="Religion"&&q.sourceLineage?.quality==="page-exact"&&
+        q.sourceLineage.matchedEvidence?.some(e=>typeof e==="string"&&/^\s*Chapter\s+3\s*:/i.test(e)))
+      .map(q=>q.prompt);
+  });
+  expect(approvedPrompts.length).toBeGreaterThanOrEqual(10);
+  await page.locator('[data-test-single]').click();
+  await expect(page.locator(".game-question-card")).toBeVisible();
+  await expect(page.locator(".game-topbar")).toContainText("Religion Ch. 3");
+  const prompt=await page.locator(".game-question-card > h2").innerText();
+  expect(approvedPrompts).toContain(prompt);
+  await context.close();
+});
