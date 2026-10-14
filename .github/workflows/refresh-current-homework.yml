@@ -1,0 +1,73 @@
+name: Refresh current ABVM homework
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/refresh-current-homework.mjs'
+      - 'scripts/homework-posting.mjs'
+      - 'scripts/teacher-page-parsers.mjs'
+      - '.github/workflows/refresh-current-homework.yml'
+  schedule:
+    - cron: '23 6 * * *'
+      timezone: 'America/New_York'
+    - cron: '53 9 * * *'
+      timezone: 'America/New_York'
+    - cron: '23 13 * * *'
+      timezone: 'America/New_York'
+    - cron: '53 15 * * *'
+      timezone: 'America/New_York'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: abvm-homework-source
+  cancel-in-progress: false
+
+jobs:
+  homework:
+    name: Verify Homework independently of study-curriculum promotion
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test teacher parser and Homework source publication
+        run: |
+          node --check scripts/refresh-current-homework.mjs
+          node --test tests/teacher-page-parsers.test.mjs tests/homework-posting.test.mjs tests/homework-feed.test.mjs
+      - name: Fetch and verify public teacher Homework posting
+        run: node scripts/refresh-current-homework.mjs
+      - name: Commit only independently verified homework updates
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- pages/data/homework-current.json; then
+            echo "Homework was verified; no new publication required."
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            remote="$(git rev-parse origin/main)"
+            if [[ "$(git rev-parse HEAD)" != "$remote" ]]; then
+              git reset --hard "$remote"
+              node scripts/refresh-current-homework.mjs
+              node --test tests/teacher-page-parsers.test.mjs tests/homework-posting.test.mjs tests/homework-feed.test.mjs
+            fi
+            if git diff --quiet -- pages/data/homework-current.json; then
+              exit 0
+            fi
+            git add pages/data/homework-current.json
+            git commit -m "Refresh independently verified ABVM homework"
+            if git push origin HEAD:main; then exit 0; fi
+            echo "Main advanced during Homework publication; retrying verified source."
+          done
+          echo "Could not publish verified Homework data." >&2
+          exit 1

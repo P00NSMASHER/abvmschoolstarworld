@@ -58,9 +58,11 @@ function subjectHeader(line) {
 function inlineAcademicAssignment(line) {
   const normalized = String(line || '').trim();
   let match = normalized.match(/^(?:Spelling|Word Study|Phonics)\s*(?::|-|—)\s*(.+)$/i);
+  if (!match) match = normalized.match(/^(?:Spelling|Word Study|Phonics)\s+(.+)$/i);
   if (match) return ['Spelling', 'Spelling ' + match[1]];
 
   match = normalized.match(/^(?:Math|Mathematics)\s*(?::|-|—)\s*(.+)$/i);
+  if (!match) match = normalized.match(/^(?:Math|Mathematics)\s+(p(?:g|age)\.?\s*\d+\b.*|work(?:sheet|book)\b.+)$/i);
   if (match) {
     const raw = match[1];
     const task = /^p(?:g|age)\.?\s*(\d+)/i.test(raw)

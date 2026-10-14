@@ -136,3 +136,19 @@ test('parseStoryTitles handles malformed mixed story quotes from the live teache
     ['Little Flap Learns to Fly', 'Help! A Story of Friendship']
   );
 });
+
+test('parseHomework reads the official teacher page’s undelimited math and spelling lines', () => {
+  const rows = parseHomework([
+    'Homework',
+    'Math pg. 22',
+    'Spelling Choice Board activity',
+    'Read',
+    'Parents: cover books',
+    'Reading log (please keep Reading log & Behavior chart in the HW folder)',
+    'Everything should be returned in the HW folder',
+  ]);
+  assert.deepEqual(rows.slice(0, 2).map(row => [row.subject, row.task]), [
+    ['Math', 'Page 22'],
+    ['Spelling', 'Spelling Choice Board activity'],
+  ]);
+});
