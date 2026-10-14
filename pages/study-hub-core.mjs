@@ -50,12 +50,21 @@ export function questionsForTest(test, questions) {
         religionChapterScopes(q).includes(number);
     });
   }
-  if (/math/.test(label)) return questions.filter((q) => q.subject === "Math");
-  if (/reading|ela/.test(label))
-    return questions.filter(
-      (q) =>
-        q.subject === "Reading / ELA" &&
-        !/subject-predicate|sentence-types|long-short|possessive/.test(q.skill),
-    );
+  if (/math/.test(label)) {
+    // Explicitly announced operations take precedence over generic math banks.
+    const operation = /\bsubtraction\b/.test(label) ? "subtraction" :
+      /\baddition\b/.test(label) ? "addition" : null;
+    return questions.filter(q => q.subject === "Math" &&
+      (!operation || String(q.skill || "").includes(operation)));
+  }
+  if (/reading|ela/.test(label)) {
+    // A chart-only assessment must not become generic reading comprehension.
+    const chartsOnly = /\bcharts?\b/.test(label) &&
+      !/\bmain idea\b|ask\s*(?:&|and)\s*answer/.test(label);
+    return questions.filter(q =>
+      q.subject === "Reading / ELA" &&
+      !/subject-predicate|sentence-types|long-short|possessive/.test(q.skill) &&
+      (!chartsOnly || q.skill === "reading-charts"));
+  }
   return [];
 }
