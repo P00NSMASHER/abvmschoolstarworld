@@ -118,6 +118,47 @@ test('printable study guides stay test-specific, bounded, and honest about missi
   assert.equal(model.testGuide(99),null);
 });
 
+test('upcoming test study guides use only announced Math, long-o and short-vowel material', () => {
+  const events = [
+    {date:'2026-10-15',label:'Math (subtraction)',kind:'test'},
+    {date:'2026-10-16',label:'Spelling (long o / Short ) / Handwriting',kind:'test'},
+    {date:'2026-10-16',label:'Phonics (short vowels)',kind:'test'},
+  ];
+  const rows = [
+    ...pool('sub-',8,'Math',{skill:'math-subtraction',sourceFact:'Grade 2 subtraction within 20'}),
+    ...pool('add-',8,'Math',{skill:'math-addition',sourceFact:'Addition is combining groups'}),
+    ...pool('long-o-',8,'Spelling / Handwriting',{skill:'long-o',sourceFact:'Original long o practice'}),
+    ...pool('short-i-',8,'Spelling / Handwriting',{skill:'long-short-i',sourceFact:'Last week short i practice'}),
+    ...pool('vowels-',8,'Reading / ELA',{skill:'short-vowels',sourceFact:'Original five short vowel sounds'}),
+  ];
+  const model = createStudyMaterials({
+    ...opts(),
+    now:()=> '2026-10-14T23:00:00Z',
+    events,catalog:catalog(rows),pack:{
+      sourceCheckedAt:'2026-10-08T15:00:17Z',
+      subjects:[
+        {subject:'Math',topics:['Math (subtraction)','Math (addition)'],studyNotes:['Use subtraction facts within 20.','Extra addition exercise only.']},
+        {subject:'Spelling / Handwriting',topics:['Last week short i and long i','New long o sound'],studyNotes:['Long o practice words such as home and boat.']},
+        {subject:'Reading / ELA',topics:['Phonics: short vowels'],studyNotes:['Short vowels are the sounds in cat, bed, sit, hot, sun.']},
+      ],
+    },
+  });
+  const available=model.printableTests().tests;
+  function guide(label){const i=available.findIndex(item=>item.label===label);assert(i>=0);return model.testGuide(i);}
+  const math=guide('Math (subtraction)');
+  assert(math.practice.length);
+  assert(math.practice.every(q=>q.skill==='math-subtraction'));
+  assert(!math.facts.some(row=>/extra addition exercise only/i.test(row)));
+  const spelling=guide('Spelling (long o / Short ) / Handwriting');
+  assert(spelling.practice.length);
+  assert(spelling.practice.every(q=>q.skill==='long-o'));
+  assert(spelling.warnings.some(row=>/does not name the short vowel/i.test(row)));
+  assert(spelling.warnings.some(row=>/last checked on 2026-10-08/i.test(row)));
+  const phonics=guide('Phonics (short vowels)');
+  assert(phonics.practice.length);
+  assert(phonics.practice.every(q=>q.skill==='short-vowels'));
+});
+
 test('printable guide list includes every upcoming test, not only the nearest test date',() => {
   const events = [
     {date:'2026-10-05',label:'Math'},
