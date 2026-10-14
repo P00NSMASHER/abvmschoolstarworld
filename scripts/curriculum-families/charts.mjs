@@ -6,7 +6,6 @@ export const CHART_READING_FAMILY = Object.freeze({
   "patternSource": "\\bcharts?\\b",
   "patternFlags": "i",
   "standards": [
-    "CCSS.2.MD.D.10",
     "CCSS.RI.2.7"
   ],
   "domain": "Informational text features and data interpretation",
