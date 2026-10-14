@@ -1,8 +1,10 @@
 import {test,expect} from '@playwright/test';
+import {HOMEWORK_E2E_NOW,installFreshHomeworkFixture} from './homework-e2e-fixture.mjs';
 test.use({serviceWorkers:'block'});
-const TUESDAY=new Date('2026-10-13T21:00:00-04:00');
+const TUESDAY=HOMEWORK_E2E_NOW;
 
 test('Today puts real teacher homework directly after the hero, without daily routines',async({page})=>{
+  await installFreshHomeworkFixture(page);
   await page.clock.setFixedTime(TUESDAY);
   await page.setViewportSize({width:390,height:852});
   await page.goto('/#today');
@@ -27,6 +29,7 @@ test('Today puts real teacher homework directly after the hero, without daily ro
 });
 
 test('homework completion persists on one device without showing routine items',async({page})=>{
+  await installFreshHomeworkFixture(page);
   await page.clock.setFixedTime(TUESDAY);
   await page.goto('/#today');
   const first=page.locator('.today-homework [data-homework-check="0"]');
