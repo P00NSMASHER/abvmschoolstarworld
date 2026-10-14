@@ -13,6 +13,35 @@ test("announced short-i spelling test does not receive short-a questions", () =>
   assert.equal(q.length, 8);
   assert(q.every((x) => x.skill === "long-short-i"));
 });
+test("Religion Ch. test stays bound to exact chapter evidence", () => {
+  const questions = [
+    { id: "chapter3-synthetic", subject: "Religion", skill: "religion-chapter-3" },
+    {
+      id: "chapter3-exact",
+      subject: "Religion",
+      skill: "religion-original-sin",
+      sourceLineage: {
+        matchedEvidence: ["Chapter 3: original sin, faith, sacraments, and Baptism"],
+      },
+    },
+    {
+      id: "chapter2-exact",
+      subject: "Religion",
+      skill: "religion-jesus-savior",
+      sourceLineage: {
+        matchedEvidence: ["Chapter 2: Jesus is God's Best Gift"],
+      },
+    },
+    { id: "other-religion", subject: "Religion", skill: "religion-gifts-choices" },
+  ];
+  for (const label of ["Religion Ch. 3", "Religion Chapter 3"]) {
+    assert.deepEqual(
+      questionsForTest({ label }, questions).map((q) => q.id),
+      ["chapter3-synthetic", "chapter3-exact"],
+    );
+  }
+});
+
 test("all uploaded schoolwork answers have one correct choice and safe source mapping", () => {
   const data = JSON.parse(
     fs.readFileSync(new URL("../pages/data/schoolwork.json", import.meta.url)),
