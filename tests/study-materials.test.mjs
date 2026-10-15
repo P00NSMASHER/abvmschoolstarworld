@@ -341,7 +341,8 @@ test('every test has both an instructional study guide and an independent worksh
   assert.match(tested,/Math Practice Test/);
   assert.match(tested,/Show your work/);
   assert.doesNotMatch(learned,/Math Practice Test/);
-  const science=model.testGuide(5);
+  const scienceIndex=model.printableTests().tests.findIndex(test=>test.label==='Science');
+  const science=model.testGuide(scienceIndex);
   assert.equal(science.practice.length,0);
   assert.match(printableStudyGuideHtml(science),/Additional verified facts have not been published yet/);
   assert.match(printableWorksheetHtml(science),/Topic Practice Worksheet/);
