@@ -26,5 +26,5 @@ if(process.argv.includes('--dry-run')){
   writeFileSync(destination,JSON.stringify(posting,null,2)+'\n','utf8');
   console.log('Verified official Homework posting: '+posting.status+'; '+posting.assignments.length+' specific assignment(s).');
 }else{
-  console.log('Homework content unchanged; source checked successfully, within 18-hour freshness interval.');
+  console.log('Homework content unchanged; source checked successfully, within one-hour publication interval.');
 }
