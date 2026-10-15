@@ -43,6 +43,48 @@ const freeze = value => {
   return value;
 };
 
+test('test papers represent later current skills rather than taking the first bank rows', () => {
+  const rows = [
+    ...pool('early-',12,'Reading / ELA',{skill:'text-evidence',sourceFact:'Find supporting details.'}),
+    ...pool('later-',4,'Reading / ELA',{skill:'reading-charts',sourceFact:'Read the chart labels and counts.'}),
+  ];
+  const pack = {sourceHash:'current-source',sourceCheckedAt:monday,subjects:[]};
+  const model = createStudyMaterials(opts({pack,events:[{date:'2026-10-05',label:'Reading'}],catalog:catalog(rows)}));
+  const guide = model.testGuide(0);
+  assert.deepEqual(new Set(guide.practice.map(q=>q.skill)),new Set(['text-evidence','reading-charts']));
+  assert.equal(guide.sourceHash,'current-source');
+  assert.equal(guide.sourceCheckedAt,monday);
+  assert.equal(guide.coverage.missingSkills.length,0);
+  assert.match(printableStudyGuideHtml(guide),/Question later-/);
+  assert.match(printableWorksheetHtml(guide),/Question later-/);
+});
+
+test('bounded papers expose incomplete skill coverage without substituting unrelated material', () => {
+  const rows=Array.from({length:12},(_,i)=>question('coverage-'+i,'Reading / ELA',{skill:'current-skill-'+i}));
+  rows.push(question('old-only','Reading / ELA',{skill:'old-skill',tier:'star-fallback'}));
+  const model=createStudyMaterials(opts({events:[{date:'2026-10-05',label:'Reading'}],catalog:catalog(rows)}));
+  const guide=model.testGuide(0);
+  assert.equal(guide.practice.length,10);
+  assert.equal(guide.coverage.missingSkills.length,2);
+  assert.ok(guide.warnings.some(w=>/does not cover every verified skill/.test(w)));
+  assert.ok(!guide.practice.some(q=>q.skill==='old-skill'));
+  for(const html of [printableStudyGuideHtml(guide),printableWorksheetHtml(guide)])
+    assert.match(html,/does not cover every verified skill/);
+});
+
+test('instructional guide retains examples beyond the first four selected skills', () => {
+  const guide={label:'Reading',subject:'Reading / ELA',date:'2026-10-05',facts:[],warnings:[],
+    practice:Array.from({length:6},(_,i)=>({prompt:'Current skill '+i,answer:'Answer '+i,skill:'skill-'+i,choices:['Other','Answer '+i]}))};
+  const html=printableStudyGuideHtml(guide);
+  for(let i=0;i<6;i++)assert.ok(html.includes('Current skill '+i));
+});
+
+test('live publication verifies the runtime curriculum, homework, and both printable renderers', () => {
+  const verifier=readFileSync(new URL('../scripts/verify-live-lunch.mjs',import.meta.url),'utf8');
+  for(const path of ['data/study-pack-runtime.json','data/homework-current.json','test-study-pair.mjs','classroom-test-guide.mjs'])
+    assert.ok(verifier.includes("'"+path+"'"),path+' must be checked against exact published bytes');
+});
+
 test('fresh governed curriculum output satisfies the live Study Games difficulty floor',() => {
   const pipeline=buildGrade2ContentPipeline({
     sourceHash:'fresh-governed-curriculum',

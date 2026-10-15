@@ -38,6 +38,24 @@ function unique(rows) {
   const seen = new Set();
   return byId(rows).filter(q => !seen.has(practiceIdentity(q)) && seen.add(practiceIdentity(q)));
 }
+// Banks are ordered by generator. Take one from each verified skill before
+// repeating a skill, so a large first family cannot hide later test topics.
+function representativePractice(rows, limit) {
+  const buckets = new Map();
+  for (const row of rows) {
+    if (!buckets.has(row.skill)) buckets.set(row.skill, []);
+    buckets.get(row.skill).push(row);
+  }
+  const selected = [];
+  for (let turn = 0; selected.length < limit; turn++) {
+    let added = false;
+    for (const bucket of buckets.values()) {
+      if (bucket[turn] && selected.length < limit) { selected.push(bucket[turn]); added = true; }
+    }
+    if (!added) break;
+  }
+  return selected;
+}
 function defaultStorage() {
   try { return globalThis.localStorage; } catch { return undefined; }
 }
@@ -390,7 +408,8 @@ export function createStudyMaterials({
     const subject = subjectForTest(test,group);
     const lower = String(test.label || '').toLowerCase();
     const sourceSubjects = array(pack.subjects).filter(row => row?.subject === subject);
-    const questionFacts = group.flatMap(row => [row.sourceFact,row.explanation]).filter(meaningfulText);
+    const selectedPractice = representativePractice(group, subject === 'Math' ? 8 : 10);
+    const questionFacts = selectedPractice.flatMap(row => [row.sourceFact,row.explanation]).filter(meaningfulText);
     const subjectFacts = sourceSubjects.flatMap(row => [...array(row.topics),...array(row.studyNotes)])
       .filter(text => noteMatchesTest(text,test.label,subject));
     // Only a photo-confirmed week-matched list can outrank general vowel examples.
@@ -423,7 +442,7 @@ export function createStudyMaterials({
       : [];
     // Print the actual checked choices, but never mix in private responses,
     // teacher markings or answers on the student's test page.
-    const practice = group.slice(0,subject === 'Math' ? 8 : 10).map(row => ({
+    const practice = selectedPractice.map(row => ({
       prompt:compactGuideText(row.prompt,320),
       answer:compactGuideText(row.answer,140),
       choices:array(row.choices).map(choice => compactGuideText(choice,160)),
@@ -432,7 +451,11 @@ export function createStudyMaterials({
       explanation:compactGuideText(row.explanation,240),
       hint:compactGuideText(row.hint,160),
     }));
-    const warnings = [];
+    const availableSkills = [...new Set(group.map(row => row.skill))];
+    const representedSkills = [...new Set(selectedPractice.map(row => row.skill))];
+    const missingSkills = availableSkills.filter(skill => !representedSkills.includes(skill));
+    const warnings = missingSkills.length
+      ? ['This bounded practice paper does not cover every verified skill for this test. Continue with the current class notes and in-app practice.'] : [];
     if (pack.sourceCheckedAt && schoolDay(pack.sourceCheckedAt) !== schoolDay(time)) {
       warnings.push('Teacher pages were last checked on '+schoolDay(pack.sourceCheckedAt)+'. Current school topics may have changed; check the linked teacher page for updates.');
     }
@@ -450,6 +473,8 @@ export function createStudyMaterials({
     return {
       key:testKey(test), label:compactGuideText(test.label,120), date:test.date, subject:subject || 'Test review',
       facts, vocabulary, practice, spellingWords, fallback, warnings:uniqueGuideText(warnings).slice(0,3),
+      sourceHash:pack.sourceHash || null, sourceCheckedAt:pack.sourceCheckedAt || null,
+      coverage:{availableSkills,representedSkills,missingSkills},
       sourceLabel:teacherLists.length
         ? 'Current school-week teacher spelling words with parent-created practice'
         : verifiedWeekNotes.length

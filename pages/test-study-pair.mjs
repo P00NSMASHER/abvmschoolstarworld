@@ -115,7 +115,7 @@ export function renderTestStudyGuide(guide,dictionary=()=> ''){
   const kind=kindOf(guide),facts=unique(guide?.facts).slice(0,6);
   const questions=rows(guide?.practice).filter(q=>clean(q?.prompt)&&clean(q?.answer));
   const first=questions.slice(0,Math.min(2,questions.length));
-  const recall=questions.slice(2,4);
+  const recall=questions.slice(2);
   const vocabulary=rows(guide?.vocabulary).slice(0,8).map(word=>{
     const term=clean(word?.term),supplied=clean(word?.meaning);
     const meaning=supplied&&!/teacher page does not provide a definition|no definition supplied/i.test(supplied)?supplied:clean(dictionary(term));

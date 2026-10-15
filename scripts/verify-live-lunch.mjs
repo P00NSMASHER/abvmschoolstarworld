@@ -43,6 +43,10 @@ function eastToday() {
 }
 async function liveStudyAssets() {
   const assets = ['index.html', 'app.js', 'product-view.js', 'styles.css', 'study-teaching.css', 'study-support.js', 'weekly-learning.js', 'assets/school/abvm-school-hero.webp', 'study-games.js', 'study-games-view.js', 'study-materials.mjs', 'study-games-materials-view.mjs', 'study-games-materials.css', 'sw.js', ...['math', 'reading', 'spelling', 'religion', 'eagle'].map(name => 'assets/illustrations/' + name + '.webp'), ...['eaglet','starlight','spark','scholar','golden','eagle','champion'].map(name=>'assets/badges/'+name+'.webp'), ...['nest-explorer','little-luminary','feather-cadet','star-voyager','sky-scholar','wing-leader','study-sentinel','school-spirit','blue-ribbon-ace','golden-quill','sky-captain','eagle-vanguard','honor-guardian','crown-keeper','star-commander'].map(name=>'assets/badges/'+name+'-premium.webp')];
+  // These are the actual inputs/renderers used by questions and printable
+  // materials. A fresh full pack alone cannot prove the shipped runtime is fresh.
+  assets.push('data/study-pack-runtime.json', 'data/homework-current.json',
+    'test-study-pair.mjs', 'classroom-test-guide.mjs');
   const digest = bytes => createHash('sha256').update(bytes).digest('hex');
   return Promise.all(assets.map(async path => {
     const expectedBytes = readFileSync(new URL('../pages/' + path, import.meta.url));
