@@ -157,7 +157,7 @@ for(const viewport of [
     await page.screenshot({path:menuShot,animations:'disabled'});await info.attach('Subjects with phone chrome',{path:menuShot,contentType:'image/png'});
     await page.locator('[data-open-prep]').click();
     await expect(page.locator('[data-study-tests]')).toBeVisible();
-    for(const selector of ['[data-test-single]','.prep-sheet > [data-test-guide]']){
+    for(const selector of ['[data-test-single]','.prep-material-actions > [data-test-guide]','.prep-material-actions > [data-test-worksheet]']){
       const action=page.locator(selector);await expect(action).toBeVisible();
       const box=await action.boundingBox();
       expect(box.height).toBeGreaterThanOrEqual(44);

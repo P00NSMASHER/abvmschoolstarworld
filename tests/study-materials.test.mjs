@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import {createStudyMaterials, loadStudyMaterials} from '../pages/study-materials.mjs';
-import {createMaterialsView, printableStudyGuideHtml, resolveVocabularyMeaning} from '../pages/study-games-materials-view.mjs';
+import {createMaterialsView, printableStudyGuideHtml, printableWorksheetHtml, resolveVocabularyMeaning} from '../pages/study-games-materials-view.mjs';
 import {createStudyResourceLoader} from '../pages/study-resources.mjs';
 import {practiceIdentity} from '../pages/study-experience.mjs';
 import {buildGrade2ContentPipeline} from '../scripts/grade2-content-pipeline.mjs';
@@ -108,7 +108,7 @@ test('printable study guides stay test-specific, bounded, and honest about missi
   assert(grammarGuide.facts.some(row => /subject/i.test(row)));
   assert(!grammarGuide.facts.some(row => /dialogue/i.test(row)));
   assert.equal(grammarGuide.vocabulary.length,0,'grammar guide does not pad the sheet with unrelated reading vocabulary');
-  assert(grammarGuide.practice.length <= 4);
+  assert(grammarGuide.practice.length <= 10);
   assert(grammarGuide.facts.length <= 6);
 
   const spellingGuide = model.testGuide(1);
@@ -116,6 +116,96 @@ test('printable study guides stay test-specific, bounded, and honest about missi
   assert(spellingGuide.practice.every(row => row.skill === 'long-short-i'));
   assert(!spellingGuide.facts.some(row => /short a|long a/i.test(row)),'an old vowel pattern must not leak into the current test guide');
   assert.equal(model.testGuide(99),null);
+});
+
+
+test('test-week spelling guide uses only the photographed matching-week word list',() => {
+  const events=[{date:'2026-10-09',label:'Spelling (short i / long i) / Handwriting'}];
+  const schoolwork={lessons:[
+    {id:'old',subject:'Spelling / Handwriting',weekOf:'2026-09-28',studiedOn:null,
+      notes:['Photo-confirmed practice words in the recorded order: cat, can, hat.'],questions:[]},
+    {id:'current',subject:'Spelling / Handwriting',weekOf:'2026-10-05',studiedOn:null,
+      notes:['Photo-confirmed practice words in the recorded order: did, fin, pick, line, tip, pipe, mix, five, side, cape, hike, made, all, any, says.'],questions:[]},
+  ]};
+  const model=createStudyMaterials(opts({events,schoolwork,catalog:catalog([]),pack:{subjects:[]}}));
+  const guide=model.testGuide(0);
+  assert.deepEqual(guide.spellingWords,[
+    'did','fin','pick','line','tip','pipe','mix','five','side','cape','hike','made','all','any','says']);
+  const printed=printableStudyGuideHtml(guide);
+  assert.match(printed,/Spelling Word Study/);
+  assert.match(printed,/Cheer-the-letters/);
+  assert.match(printed,/Roblox word builder/);
+  assert.doesNotMatch(printed,/>cat</);
+  assert.doesNotMatch(printed,/Parent Answer Key/);
+  assert.doesNotMatch(printed,/class="choices"/);
+});
+test('unknown spelling lists do not invent words from matching multiple-choice answers',() => {
+  const events=[{date:'2026-10-09',label:'Spelling (short i / long i) / Handwriting'}];
+  const spelling=pool('unknown-spelling-',3,'Spelling / Handwriting',{skill:'short-i-long-i',answer:'kite',choices:['kite','kit','kitey']});
+  const model=createStudyMaterials(opts({events,catalog:catalog(spelling)}));
+  const guide=model.testGuide(0);
+  assert.deepEqual(guide.spellingWords,[]);
+  const html=printableStudyGuideHtml(guide);
+  assert.match(html,/No confirmed word list/);
+  assert.doesNotMatch(html,/<strong>kite<\/strong>/);
+});
+test('test-style printable sheets hide answers on the student page and show a separate key',() => {
+  const events=[{date:'2026-10-05',label:'Math (subtraction)'}];
+  const rows=[
+    {id:'math1',subject:'Math',skill:'math-subtraction',prompt:'What is 13 - 5?',answer:'8',choices:['7','8','9'],tier:'material'},
+    {id:'math2',subject:'Math',skill:'math-subtraction',prompt:'What is 15 - 3?',answer:'12',choices:['13','11','12'],tier:'material'},
+  ];
+  const model=createStudyMaterials(opts({events,catalog:catalog(rows)}));
+  const guide=model.testGuide(0);
+  const html=printableWorksheetHtml(guide);
+  assert.match(html,/Math Practice Test/);
+  assert.match(html,/math-grid/);
+  assert.match(html,/Show your work/);
+  assert.match(html,/Parent Answer Key/);
+  const student=html.split('<section class="sheet adult-key">')[0];
+  assert.doesNotMatch(student,/>8<\/li>/);
+  assert.doesNotMatch(student,/>12<\/li>/);
+  assert.match(html,/@page\{size:Letter portrait/);
+});
+
+
+
+test('historical and undated schoolwork cannot enter a newly announced test paper',()=>{
+  const events=[{date:'2026-10-09',label:'Grammar (subject & predicate)'}];
+  const grammar=pool('new-grammar-',2,'Reading / ELA',{skill:'subject-predicate'});
+  const old=pool('old-grammar-',2,'Reading / ELA',{skill:'subject-predicate'});
+  const undated=pool('undated-grammar-',2,'Reading / ELA',{skill:'subject-predicate'});
+  const schoolwork={lessons:[
+    lesson('old',old,'2026-09-29'),
+    lesson('unknown',undated),
+    lesson('current',grammar,'2026-10-07'),
+  ]};
+  const model=createStudyMaterials(opts({events,schoolwork,catalog:catalog([]),now:()=>Date.parse('2026-10-08T12:00:00Z')}));
+  assert.deepEqual(model.testGuide(0).practice.map(p=>p.prompt),grammar.map(q=>q.prompt));
+});
+
+test('new same-week teacher spelling words supersede previous photographic homework words',()=>{
+  const events=[{date:'2026-10-09',label:'Spelling (short i / long i) / Handwriting'}];
+  const schoolwork={lessons:[{
+    id:'photo-spelling',subject:'Spelling / Handwriting',weekOf:'2026-10-05',studiedOn:null,
+    notes:['Photo-confirmed practice words in the recorded order: did, fin, pick.'],questions:[],
+  }]};
+  const teacher={subjects:[{subject:'Spelling / Handwriting',studyNotes:['Spelling words: kite, lime, ride, time.']}],weekLabel:'Week of October 5, 2026'};
+  const model=createStudyMaterials(opts({events,schoolwork,pack:teacher}));
+  assert.deepEqual(model.testGuide(0).spellingWords,['kite','lime','ride','time']);
+  const outdated=createStudyMaterials(opts({events,schoolwork,pack:{...teacher,weekLabel:'Week of September 28, 2026'}}));
+  assert.deepEqual(outdated.testGuide(0).spellingWords,['did','fin','pick']);
+});
+test('explicit subtraction test cannot use additions from the current Math bank',()=>{
+  const events=[{date:'2026-10-05',label:'Math (subtraction)'}];
+  const rows=[
+    question('old-addition','Math',{skill:'math-addition',prompt:'Solve 4 + 5',answer:'9',choices:['8','9','10']}),
+    question('new-subtraction','Math',{skill:'math-subtraction',prompt:'Solve 12 - 5',answer:'7',choices:['6','7','8']}),
+  ];
+  const model=createStudyMaterials(opts({events,catalog:catalog(rows)}));
+  const guide=model.testGuide(0),round=model.testRound({seed:1});
+  assert.deepEqual(guide.practice.map(row=>row.answer),['7']);
+  assert.deepEqual(round.questions.map(row=>row.answer),['7']);
 });
 
 test('upcoming test study guides use only announced Math, long-o and short-vowel material', () => {
@@ -191,7 +281,7 @@ test('selected guide uses the same assessment-inclusive test identity as Test Pr
     const guide=model.testGuide(index,{upcoming:true});
     assert.equal(guide.label,upcoming[index].label);
     assert.equal(guide.date,upcoming[index].date);
-    if(index===0){assert.equal(guide.practice.length,0);assert.ok(guide.warnings.some(row=>/No reviewed practice/.test(row)));}
+    if(index===0){assert.equal(guide.practice.length,0);assert.ok(guide.warnings.some(row=>/No current, matching test questions/.test(row)));}
   }
   assert.equal(model.testGuide(0).label,'Math','legacy printable guide indexes still exclude assessment windows');
 });
@@ -206,11 +296,90 @@ test('printable study guide document is Letter-sized and resolves vocabulary def
     warnings:[],sourceLabel:'Reviewed ABVM material',
   },term => term === 'depend' ? 'to need or rely on someone or something' : '');
   assert.match(html,/@page\{size:Letter portrait/);
-  assert.match(html,/ONE-PAGE STUDY GUIDE/);
-  assert.match(html,/Quick check/);
+  assert.match(html,/<h1>Study Guide<\/h1>/);
+  assert.match(html,/What I need to know/);
+  assert.match(html,/How to remember it/);
+  assert.match(html,/Learn from a worked example/);
   assert.match(html,/to need or rely on someone or something/);
   assert.doesNotMatch(html,/teacher page does not provide a definition/);
-  assert.match(html,/Automatically generated for this test/);
+  assert.doesNotMatch(html,/Parent Answer Key/);
+  assert.match(html,/Original home practice/);
+});
+
+
+test('every test has both an instructional study guide and an independent worksheet',()=>{
+  const events=[
+    {date:'2026-10-05',label:'Math (subtraction)'},
+    {date:'2026-10-06',label:'Grammar (subject & predicate)'},
+    {date:'2026-10-07',label:'Reading'},
+    {date:'2026-10-08',label:'Religion Ch. 3'},
+    {date:'2026-10-09',label:'Spelling (short i / long i) / Handwriting'},
+    {date:'2026-10-09',label:'Science'},
+  ];
+  const rows=[
+    ...pool('math-current-',3,'Math',{skill:'math-subtraction',prompt:'Solve 15 - 6.',answer:'9',choices:['8','9','10'],explanation:'Subtract six from fifteen to get nine.'}),
+    ...pool('grammar-current-',3,'Reading / ELA',{skill:'subject-predicate',sourceFact:'Subject tells who or what the sentence is about.'}),
+    ...pool('reading-current-',3,'Reading / ELA',{skill:'text-evidence',sourceFact:'Use text evidence from the passage.'}),
+    ...pool('religion-current-',3,'Religion',{skill:'religion-chapter-3',sourceFact:'Chapter 3: Church life and Baptism.'}),
+  ];
+  const model=createStudyMaterials(opts({events,catalog:catalog(rows)}));
+  for(let i=0;i<events.length;i++){
+    const guide=model.testGuide(i),study=printableStudyGuideHtml(guide),worksheet=printableWorksheetHtml(guide);
+    assert(guide,'the announced test must have study materials');
+    assert.match(study,/<main class="sheet/);
+    assert.match(worksheet,/<main class="sheet/);
+    assert.notEqual(study,worksheet,'the learning guide must not repeat the worksheet');
+    assert.match(study,/@page\{size:Letter portrait/);
+    assert.match(worksheet,/@page\{size:Letter portrait/);
+    assert(study.includes(guide.label.replaceAll('&','&amp;')) || study.includes('Spelling Word Study'));
+  }
+  const math=model.testGuide(0);
+  assert.equal(math.practice[0].explanation,'Subtract six from fifteen to get nine.');
+  const learned=printableStudyGuideHtml(math),tested=printableWorksheetHtml(math);
+  assert.match(learned,/Subtract six from fifteen to get nine/);
+  assert.match(learned,/How to remember it/);
+  assert.match(tested,/Math Practice Test/);
+  assert.match(tested,/Show your work/);
+  assert.doesNotMatch(learned,/Math Practice Test/);
+  const scienceIndex=model.printableTests().tests.findIndex(test=>test.label==='Science');
+  const science=model.testGuide(scienceIndex);
+  assert.equal(science.practice.length,0);
+  assert.match(printableStudyGuideHtml(science),/Additional verified facts have not been published yet/);
+  assert.match(printableWorksheetHtml(science),/Topic Practice Worksheet/);
+  assert.match(printableWorksheetHtml(science),/not a reproduction of the teacher test/);
+});
+test('spelling worksheet uses blank dictation lines and separates the current word list',()=>{
+  const events=[{date:'2026-10-09',label:'Spelling (short i / long i) / Handwriting'}];
+  const schoolwork={lessons:[{id:'spelling',subject:'Spelling / Handwriting',weekOf:'2026-10-05',
+    notes:['Photo-confirmed practice words in the recorded order: did, fin, pick, line, tip, pipe, mix, five, side, cape, hike, made, all, any, says.'],questions:[]}]};
+  const model=createStudyMaterials(opts({events,schoolwork}));
+  const guide=model.testGuide(0),study=printableStudyGuideHtml(guide),worksheet=printableWorksheetHtml(guide);
+  assert.match(study,/Spelling Word Study/);
+  assert.match(study,/Cheer-the-letters/);
+  assert.match(worksheet,/Spelling Dictation/);
+  assert.equal((worksheet.match(/class="dictation-item"/g)||[]).length,15);
+  const student=worksheet.split('<section class="sheet adult-key">')[0];
+  assert.doesNotMatch(student,/<li>did<\/li>/);
+  assert.doesNotMatch(student,/<strong>did<\/strong>/);
+  assert.doesNotMatch(student,/>five</);
+  assert.match(worksheet,/Adult Dictation List/);
+  assert.match(worksheet,/<li>did<\/li>/);
+  assert.match(worksheet,/<li>says<\/li>/);
+  const unknown=printableWorksheetHtml({...guide,spellingWords:[],warnings:[]});
+  assert.equal((unknown.match(/class="dictation-item"/g)||[]).length,15);
+  assert.doesNotMatch(unknown,/Adult Dictation List/);
+  assert.match(unknown,/current spelling list is not yet confirmed/);
+});
+test('printable guide and worksheet escape untrusted teacher labels and practice prompts',()=>{
+  const input={label:'Reading <script>bad</script>',subject:'Reading / ELA',date:'2026-10-09',
+    facts:['Focus on <img src=x onerror=alert(1)>'],practice:[{
+      prompt:'Which is correct? <script>bad</script>',answer:'It is <safe>',choices:['wrong','It is <safe>']
+    }],warnings:[]};
+  for(const html of [printableStudyGuideHtml(input),printableWorksheetHtml(input)]){
+    assert.doesNotMatch(html,/<script>bad<\/script>/);
+    assert.doesNotMatch(html,/<img src=x onerror=/);
+    assert.match(html,/&lt;script&gt;bad&lt;\/script&gt;/);
+  }
 });
 
 test('weekly and saved banks retain source dates, and never classify undated/future material as current',() => {
@@ -434,7 +603,7 @@ test('Daily Practice uses existing due-skill selection and exposes its complete 
 
 test('test practice balances complete equal quotas and freezes only mapped test banks',() => {
   const events = [{date:'2026-10-05',label:'Math'},{date:'2026-10-05',label:'Religion Chapter 2'}];
-  const model = createStudyMaterials(opts({events,catalog:catalog([...pool('math-',8),...pool('reading-',8,'Reading / ELA')]),schoolwork:{lessons:[lesson('chapter-2',pool('religion-',6,'Religion',{skill:'religion-chapter-2'}))]}}));
+  const model = createStudyMaterials(opts({events,catalog:catalog([...pool('math-',8),...pool('reading-',8,'Reading / ELA')]),schoolwork:{lessons:[lesson('chapter-2',pool('religion-',6,'Religion',{skill:'religion-chapter-2'}),'2026-10-05')]}}));
   const round = model.testRound({seed:5});
   assert.equal(round.strict,true);
   assert.equal(round.questions.length,8);
@@ -446,19 +615,16 @@ test('test practice balances complete equal quotas and freezes only mapped test 
   assert.notEqual(round.sourceKey,model.forMode('quick').sourceKey);
 });
 
-test('test fallback matches the announced vowel and missing banks never become a misleading combined round',() => {
+test('test prep never substitutes older STAR curriculum or unrelated vowel questions',() => {
   const events = [{date:'2026-10-05',label:'Spelling (short i / long i) / Handwriting'},{date:'2026-10-05',label:'Science'}];
   const model = createStudyMaterials(opts({events,catalog:catalog(pool('short-a-',8,'Spelling / Handwriting',{skill:'long-short-a',sourceFact:'short a / long a'}))}));
   const state = model.tests();
   assert.equal(state.date,'2026-10-05');
-  assert.equal(state.supported.length,1);
-  assert.equal(state.supported[0].fallback,true);
-  assert.equal(state.missing[0].label,'Science');
+  assert.equal(state.supported.length,0);
+  assert.deepEqual(state.missing.map(row=>row.label),events.map(row=>row.label));
+  assert.deepEqual(state.fallback,[]);
   assert.deepEqual(model.testRound({seed:1}).questions,[]);
-  const supported = model.testRound({index:state.supported[0].index,seed:1});
-  assert.equal(supported.questions.length,8);
-  assert(supported.questions.every(q => q.skill === 'long-short-i'));
-  assert.equal(supported.fallback.length,1);
+  assert.deepEqual(model.testRound({index:0,seed:1}).questions,[]);
   assert.deepEqual(model.testRound({index:1,seed:1}).questions,[]);
   assert.deepEqual(model.testRound({index:-1,seed:1}).questions,[]);
 });

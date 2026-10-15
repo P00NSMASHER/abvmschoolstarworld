@@ -1,12 +1,12 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v177-current-curriculum-guides";
+const CACHE = "abvm-grade2-parent-companion-v179-paired-test-materials";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=113",
   "./design-polish.css?v=15",
-  "./study-games-materials.css?v=18",
+  "./study-games-materials.css?v=19",
   "./study-support.js?v=3",
-  "./app.js?v=151",
+  "./app.js?v=153",
   "./product-view.js?v=17",
   "./study-teaching.css?v=1",
   "./school-updates.js?v=4",
@@ -16,7 +16,7 @@ const STATIC_SHELL = [
   "./manifest.webmanifest",
   "./assets/abvm-app-icon-192.png"
 ];
-const OPTIONAL_DATA = ["./assets/abvm-app-icon-180.png", "./assets/abvm-app-icon-512.png", "./assets/badges/nest-explorer-premium.webp", "./assets/badges/little-luminary-premium.webp", "./assets/badges/feather-cadet-premium.webp", "./assets/badges/star-voyager-premium.webp", "./assets/badges/sky-scholar-premium.webp", "./assets/badges/wing-leader-premium.webp", "./assets/badges/study-sentinel-premium.webp", "./assets/badges/school-spirit-premium.webp", "./assets/badges/blue-ribbon-ace-premium.webp", "./assets/badges/golden-quill-premium.webp", "./assets/badges/sky-captain-premium.webp", "./assets/badges/eagle-vanguard-premium.webp", "./assets/badges/honor-guardian-premium.webp", "./assets/badges/crown-keeper-premium.webp", "./assets/badges/star-commander-premium.webp", "./assets/badges/eaglet.webp", "./assets/badges/starlight.webp", "./assets/badges/spark.webp", "./assets/badges/scholar.webp", "./assets/badges/golden.webp", "./assets/badges/eagle.webp", "./assets/badges/champion.webp", "./assets/illustrations/reading.webp", "./assets/illustrations/math.webp", "./assets/illustrations/spelling.webp", "./assets/illustrations/religion.webp", "./assets/illustrations/eagle.webp", "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./data/homework-current.json", "./homework-feed.js?v=3", "./study-materials.mjs", "./study-games-materials-view.mjs?v=5", "./study-hub-core.mjs", "./study-room-view.mjs", "./study-experience.mjs","./study-resources.mjs", "./study-model.mjs", "./star-practice.mjs", "./lunch-art.js?v=1", "./assets/school/abvm-school-sign.webp", "./assets/school/abvm-school-hero.webp", "./assets/school/abvm-school-aerial.webp", "./assets/school/abvm-school-facade.webp"];
+const OPTIONAL_DATA = ["./assets/abvm-app-icon-180.png", "./assets/abvm-app-icon-512.png", "./assets/badges/nest-explorer-premium.webp", "./assets/badges/little-luminary-premium.webp", "./assets/badges/feather-cadet-premium.webp", "./assets/badges/star-voyager-premium.webp", "./assets/badges/sky-scholar-premium.webp", "./assets/badges/wing-leader-premium.webp", "./assets/badges/study-sentinel-premium.webp", "./assets/badges/school-spirit-premium.webp", "./assets/badges/blue-ribbon-ace-premium.webp", "./assets/badges/golden-quill-premium.webp", "./assets/badges/sky-captain-premium.webp", "./assets/badges/eagle-vanguard-premium.webp", "./assets/badges/honor-guardian-premium.webp", "./assets/badges/crown-keeper-premium.webp", "./assets/badges/star-commander-premium.webp", "./assets/badges/eaglet.webp", "./assets/badges/starlight.webp", "./assets/badges/spark.webp", "./assets/badges/scholar.webp", "./assets/badges/golden.webp", "./assets/badges/eagle.webp", "./assets/badges/champion.webp", "./assets/illustrations/reading.webp", "./assets/illustrations/math.webp", "./assets/illustrations/spelling.webp", "./assets/illustrations/religion.webp", "./assets/illustrations/eagle.webp", "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./data/homework-current.json", "./homework-feed.js?v=3", "./study-materials.mjs", "./study-games-materials-view.mjs?v=7", "./study-hub-core.mjs", "./study-room-view.mjs", "./classroom-test-guide.mjs?v=1", "./test-study-pair.mjs?v=1", "./study-experience.mjs","./study-resources.mjs", "./study-model.mjs", "./star-practice.mjs", "./lunch-art.js?v=1", "./assets/school/abvm-school-sign.webp", "./assets/school/abvm-school-hero.webp", "./assets/school/abvm-school-aerial.webp", "./assets/school/abvm-school-facade.webp"];
 
 self.addEventListener("install",event=>{
   event.waitUntil((async()=>{

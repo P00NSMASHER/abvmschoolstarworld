@@ -309,7 +309,6 @@ function loadStudyRanks(){return ensureStudyGameEngine().then(e=>e.studyBadgeCol
 function renderToday(){
  const d=today(),priority=datedImportantEvents().find(({item,date})=>date>=d&&(kindClass(item)==="test"||kindClass(item)==="due"));
  stack().innerHTML=window.ABVMProductView.today({d,pack,header,freshness,taskHtml,kindClass,fmtDate,fmtShort,linkedTextHtml,events:eventItemsForDate(d),tasks:taskRecordsForSurface("today"),homeworkHtml:homeworkCardForDate(d),next:currentTest()||(priority?{x:priority.item,d:priority.date}:null),reminders:upcomingReminderTexts(d,2),lunchHtml:lunchCardHtml(d,lunchForDate(d))});
- // Hide broken art, but preserve verified lunch text.
  const mealArt=stack().querySelector(".today-screen .lunch-art img");
  if(mealArt){
    const hideBrokenArt=()=>mealArt.closest(".lunch-art")?.remove();
@@ -382,8 +381,8 @@ function ensureStudyMaterials(retry=false){
   if(currentStudyMaterials()&&!retry)return Promise.resolve(studyMaterials);
   const data=pack,catalog=studyGameCatalog(),engine=studyGameEngine(),events=datedImportantEvents().filter(r=>kindClass(r.item)==="test").map(r=>({date:isoDateKey(r.date),label:r.item.label,kind:r.item.kind,endsAt:r.item.endsAt}));
   const request={pack:data,promise:null};
-  request.promise=Promise.all([import("./study-materials.mjs"),import("./study-games-materials-view.mjs?v=5")]).then(async([materials,view])=>{
-    if(pack===data&&!studyMaterialsView){studyMaterialsView=view.createMaterialsView({onChange:()=>{if(isStudyRoute())renderGames()},onRetry:retryStudyMaterials,onTest:startStudyTest});if(isStudyRoute()&&gameState.screen==="menu")renderGames()}
+  request.promise=Promise.all([import("./study-materials.mjs"),import("./study-games-materials-view.mjs?v=7")]).then(async([materials,view])=>{
+    if(pack===data&&!studyMaterialsView){studyMaterialsView=view.createMaterialsView({onChange:()=>{if(isStudyRoute())renderGames()},onRetry:retryStudyMaterials,onTest:startStudyTest,onGuideRefresh:refreshTestGuideSources});if(isStudyRoute()&&gameState.screen==="menu")renderGames()}
     const model=await materials.loadStudyMaterials({pack:data,catalog,events,engine});
     if(pack===data){
       studyMaterials=model;studyMaterialsPack=data;studyMaterialsError=null;studyMaterialsView.setModel(model);
@@ -393,6 +392,13 @@ function ensureStudyMaterials(retry=false){
   studyMaterialsPromise=request;return request.promise;
 }
 function retryStudyMaterials(){studyMaterialsError=null;ensureStudyMaterials(true).catch(()=>{});renderGames()}
+async function refreshTestGuideSources(){
+  let ok=navigator.onLine!==false;
+  if(ok)try{await fetchPack({force:true})}catch{ok=false}
+  await ensureStudyMaterials(true);
+  return ok&&!lastPackFetchUsedCache;
+}
+
 function studyGameEngine(){return window.ABVMStudyGames||null}
 function ensureStudyGameEngine(){
   if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
@@ -542,7 +548,6 @@ function gameFinishHtml(){
   const finish=v.finish({mode:gameMode(g.mode),state:g,record:loadGameRecord(g.mode,g.sourceKey||currentGameSourceKey()),summary,reward});
   const goal=g.rewardStatus==="done"?window.ABVMStudyBadges.render(g.rankCollection,"finish"):"";
   const promotion=g.rewardStatus==="done"&&g.newRanks?.length?window.ABVMStudyBadges.promotion(g.newRanks):"";
-  // Put a newly earned rank first in the score report.
   return reveal+promotion+finish+goal;
 }
 function renderGames(){
@@ -603,7 +608,6 @@ function carryPlannerDate(next){
   const state=window.ABVMProductView.plannerDate(next,activeTab,calendarDay,selectedDay,today(),weekDays(0)[0]);
   if(state)({calendarDay,selectedDay,weekOffset,calendarOffset}={calendarDay,selectedDay,weekOffset,calendarOffset,...state});
 }
-// Keep the reading position and keyboard target across Month/Week redraws.
 function redrawPlanner(draw,selector){
   const old=stack().firstElementChild,top=old?.scrollTop||0;
   draw();
@@ -649,6 +653,10 @@ function packContentKey(data){
     importantDates:p.importantDates||[],
     homework:p.homework||[],
     subjects:p.subjects||[],
+    v:p.vocabulary||[],
+    q:p.questions||[],
+    cp:p.contentPipeline||{},
+    rp:p.recentReviewPipeline||{},
     reminders:p.reminders||[],
     parentNotices:p.parentNotices||[],
     lunchMenu:p.lunchMenu||[],

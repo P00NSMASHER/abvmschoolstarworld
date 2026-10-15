@@ -41,6 +41,41 @@ test('View study guide opens an in-app preview that can be closed on iPhones',as
   }
 });
 
+
+test('every announced test has separate study-guide and practice-worksheet previews without automatic printing',async({page})=>{
+  await openStudy(page,390);
+  await page.locator('[data-open-prep]').click();
+  const pair=page.locator('.prep-material-actions');
+  await expect(pair.locator('[data-test-guide]')).toHaveCount(1);
+  await expect(pair.locator('[data-test-worksheet]')).toHaveCount(1);
+  await page.evaluate(()=>{window.__unexpectedPrints=0;window.print=()=>{window.__unexpectedPrints++;};});
+  const worksheet=pair.locator('[data-test-worksheet]');
+  await worksheet.click();
+  const modal=page.locator('dialog[data-study-guide-dialog]');
+  await expect(modal).toBeVisible();
+  await expect(modal.locator('#study-guide-modal-title')).toContainText('Worksheet:');
+  await expect(modal.frameLocator('.study-guide-frame').locator('main.sheet')).toBeVisible();
+  await expect(modal.frameLocator('.study-guide-frame').locator('main.sheet h1')).toContainText(/Practice|Dictation|Worksheet/);
+  await expect(modal.locator('[data-guide-print]')).toBeEnabled();
+  expect(await page.evaluate(()=>window.__unexpectedPrints)).toBe(0);
+  await modal.locator('[data-guide-close]').click();
+  await expect(worksheet).toBeFocused();
+  await pair.locator('[data-test-guide]').click();
+  await expect(modal).toBeVisible();
+  await expect(modal.locator('#study-guide-modal-title')).toContainText('Study guide:');
+  await expect(modal.frameLocator('.study-guide-frame').locator('main.sheet h1')).toContainText(/Study Guide|Spelling Word Study/);
+  await page.keyboard.press('Escape');
+  await expect(modal).toHaveCount(0);
+  await expect(pair.locator('[data-test-guide]')).toBeFocused();
+  const history=page.locator('details[data-study-test-options]');
+  // Back to the Study home where the historical list lives.
+  await page.locator('[data-close-prep]').click();
+  await history.locator(':scope > summary').click();
+  const cards=history.locator('.study-material-pair');
+  await expect(cards.first().locator('[data-test-guide]')).toBeVisible();
+  await expect(cards.first().locator('[data-test-worksheet]')).toBeVisible();
+});
+
 test('Historical guides preview first and print only on an explicit tap',async({page})=>{
   await openStudy(page);
   const history=page.locator('details[data-study-test-options]');

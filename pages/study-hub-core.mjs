@@ -17,8 +17,11 @@ export function religionChapterScopes(question) {
 /** Match practice to an announced test without inventing scope or altering sources. */
 export function questionsForTest(test, questions) {
   const label = test.label.toLowerCase();
-  if (/grammar|predicate|subject &/.test(label))
-    return questions.filter((q) => q.skill === "subject-predicate");
+  if (/grammar|predicate|subject &|sentence types|punctuation/.test(label)) {
+    if (/subject|predicate/.test(label)) return questions.filter(q=>q.skill==="subject-predicate");
+    if (/sentence types|punctuation/.test(label)) return questions.filter(q=>q.skill==="sentence-types");
+    return questions.filter(q=>["subject-predicate","sentence-types"].includes(q.skill));
+  }
   if (/phonics/.test(label) && /\bshort\s+vowels?\b/.test(label)) {
     return questions.filter(q => q.subject === 'Reading / ELA' && q.skill === 'short-vowels');
   }
