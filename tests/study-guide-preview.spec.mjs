@@ -55,7 +55,7 @@ test('every announced test has separate study-guide and practice-worksheet previ
   await expect(modal).toBeVisible();
   await expect(modal.locator('#study-guide-modal-title')).toContainText('Worksheet:');
   await expect(modal.frameLocator('.study-guide-frame').locator('main.sheet')).toBeVisible();
-  await expect(modal.frameLocator('.study-guide-frame').locator('h1')).toContainText(/Practice|Dictation|Worksheet/);
+  await expect(modal.frameLocator('.study-guide-frame').locator('main.sheet h1')).toContainText(/Practice|Dictation|Worksheet/);
   await expect(modal.locator('[data-guide-print]')).toBeEnabled();
   expect(await page.evaluate(()=>window.__unexpectedPrints)).toBe(0);
   await modal.locator('[data-guide-close]').click();
