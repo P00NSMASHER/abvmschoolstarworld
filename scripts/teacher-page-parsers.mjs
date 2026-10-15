@@ -30,6 +30,23 @@ export function pageLines(html) {
   return [...new Set(lines)];
 }
 
+// The official Weekly Spelling List uses Google Sites <small> rows with
+// nested <span> cells rather than <p>, <li> or <td>. Keep this extraction
+// scoped to that page, so navigational "Home" cannot erase the word "home".
+export function spellingSourceLines(html) {
+  const safe = String(html || '').replace(/<(script|style|svg)\b[\s\S]*?<\/\1>/gi, ' ');
+  const inline = [...safe.matchAll(/<small\b[^>]*>([\s\S]*?)<\/small>/gi)]
+    .flatMap(row => [...row[1].matchAll(/<span\b[^>]*>([\s\S]*?)<\/span>/gi)])
+    .map(match => decodeHtml(match[1].replace(/<[^>]*>/g, ' ')).replace(/\s+/g, ' ').trim())
+    .filter(Boolean);
+  if (!inline.some(line => /^Basic Words$/i.test(line))) {
+    return teacherContentLines(pageLines(safe), 'Weekly Spelling List');
+  }
+  const words = inline.filter(line => /^[a-z]+(?:['-][a-z]+)*$/i.test(line));
+  if (!words.length) throw new Error('Teacher spelling list has headings but no verifiable words.');
+  return inline;
+}
+
 export function cleanTeacherText(value) {
   const cleaned = String(value || '')
     .replace(/Handwrititng/gi, 'Handwriting')
