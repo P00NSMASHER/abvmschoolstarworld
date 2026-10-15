@@ -59,6 +59,8 @@ test('corrected current Math paper is published alongside Spelling and excludes 
   ]);
   assert.equal(next.firstObservedAt,next.checkedAt,
     'a materially changed teacher posting becomes newly observed');
+  assert.equal(next.contentChangedAt,next.checkedAt,
+    'a materially changed teacher posting records its own change time');
   assert.notEqual(next.contentHash,prior.contentHash);
   assert.equal(shouldPublishHomework(next,prior),true);
   assert.equal(next.assignments.some(a=>/cover books|reading log|return everything|^Read$/i.test(a.task)),false);
