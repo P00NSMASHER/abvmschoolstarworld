@@ -40,7 +40,18 @@ test('Today premium signature: mobile layout and retained source-backed actions'
     // Icon-only assessment control must identify its verified destination.
     const assessmentArrow = page.locator('.priority-card .icon-button');
     await expect(assessmentArrow).toHaveAttribute('data-route', 'study');
-    await expect(assessmentArrow).toHaveAttribute('aria-label', /Open Study for Spelling/);
+    const sourceTests = await page.evaluate(async () => {
+      const response = await fetch('./data/study-pack.json', {cache:'no-store'});
+      if (!response.ok) throw new Error('School pack unavailable in Today QA');
+      const data = await response.json();
+      return (data.pack?.importantDates || [])
+        .filter(item => item.source === 'teacher-tests' && /\bOct(?:ober)?\.?\s*9\b/i.test(item.date || '') && item.kind === 'test')
+        .map(item => item.label);
+    });
+    expect(sourceTests.length).toBeGreaterThan(0);
+    const sourceBackedTitle = (await page.locator('.priority-card h3').textContent()).trim();
+    expect(sourceTests).toContain(sourceBackedTitle);
+    await expect(assessmentArrow).toHaveAttribute('aria-label', 'Open Study for ' + sourceBackedTitle);
 
     // The large numeral must not inherit the generic card metadata style.
     const dateNumber = page.locator('.priority-card .date-tile span');
