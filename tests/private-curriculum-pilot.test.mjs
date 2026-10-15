@@ -88,7 +88,7 @@ test('held-default or answer-key tampering fails before rendering any pilot',()=
 test('a full pilot preview contains no actual result, permission or educator verification claims',()=>{
   const html=buildPrivateCurriculumPilotHtml();
   assert.match(html,/not published/i);
-  assert.match(html,/Reviewer sign-off and genuine permissioned pilot observations/);
+  assert.match(html,/neither is required to promote an independently verified question family/);
   assert.match(html,/not be placed in Pages/);
   assert.doesNotMatch(html,/\b(?:pilot passed|learner verified|educator approved automatically)\b/i);
 });
