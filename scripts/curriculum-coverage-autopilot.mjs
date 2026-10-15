@@ -113,10 +113,10 @@ function questionDraftIssues(question) {
   return [...new Set(issues)];
 }
 
+// Promotion is decided by automated evidence, never a teacher, educator,
+// owner, or pilot participant approval. An incomplete family remains isolated.
 export function evaluateCurriculumCandidate(candidate, {
   automatedQaPassed = false,
-  safeUsageEvidence = 'insufficient-evidence',
-  manualApproval = false,
 } = {}) {
   const blockers = [];
   const questions = Array.isArray(candidate?.proposedQuestions) ? candidate.proposedQuestions : [];
@@ -133,14 +133,14 @@ export function evaluateCurriculumCandidate(candidate, {
   if (questions.length < minVariants) blockers.push(`minimum-semantic-variants:${questions.length}/${minVariants}`);
   for (const type of requiredTypes) if (!types.has(type)) blockers.push(`question-type-required:${type}`);
   if (invalidQuestions.length) blockers.push(...invalidQuestions);
+  // QA must run on the exact complete family, not merely a snapshot with
+  // source labels. No real-learner data or permission gate is needed.
   if (!automatedQaPassed) blockers.push('automated-qa-required');
-  if (safeUsageEvidence !== 'sufficient-safe-usage') blockers.push('safe-usage-evidence-required');
-  if (!manualApproval) blockers.push('manual-promotion-required');
 
   return Object.freeze({
-    status: blockers.length ? 'HOLD' : 'READY_FOR_MANUAL_PROMOTION',
+    status: blockers.length ? 'HOLD' : 'READY_FOR_AUTOMATIC_PROMOTION',
     blockers: Object.freeze(blockers),
-    automaticPromotion: false,
+    automaticPromotion: blockers.length === 0,
     automaticDelete: false,
     automaticRewrite: false,
   });
@@ -149,8 +149,6 @@ export function evaluateCurriculumCandidate(candidate, {
 export function curriculumCandidateIntrinsicBlockers(candidate) {
   return [...evaluateCurriculumCandidate(candidate, {
     automatedQaPassed: true,
-    safeUsageEvidence: 'sufficient-safe-usage',
-    manualApproval: true,
   }).blockers];
 }
 
@@ -203,11 +201,13 @@ export function buildCurriculumCoveragePlan({
         requiredQuestionFields: ['questionType', 'prompt', 'choices', 'answer', 'explanation', 'hint', 'dok', 'difficulty'],
       },
       rollout: {
-        featureFlagRequired: true,
+        // Explicit flags remain available for isolated previews, never as a
+        // human approval prerequisite for complete, source-backed families.
+        featureFlagRequired: false,
         automatedQaRequired: true,
-        safeUsageEvidenceRequired: true,
-        manualPromotionRequired: true,
-        automaticPromotion: false,
+        safeUsageEvidenceRequired: false,
+        manualPromotionRequired: false,
+        automaticPromotion: true,
       },
     };
     return {
@@ -245,11 +245,11 @@ export function validateCurriculumCandidateManifest(candidate) {
   if (JSON.stringify(candidate?.authoring?.requiredQuestionTypes || []) !== JSON.stringify(candidate?.requiredQuestionTypes || [])) issues.push(`${id}:authoring-types-mismatch`);
   if (!Array.isArray(candidate?.authoring?.requiredQuestionFields) || candidate.authoring.requiredQuestionFields.length < 8) issues.push(`${id}:authoring-contract-incomplete`);
   if (candidate?.enabledByDefault !== false) issues.push(`${id}:candidate-must-start-disabled`);
-  if (candidate?.rollout?.featureFlagRequired !== true) issues.push(`${id}:feature-flag-gate-required`);
+  if (candidate?.rollout?.featureFlagRequired !== false) issues.push(`${id}:manual-feature-flag-gate-present`);
   if (candidate?.rollout?.automatedQaRequired !== true) issues.push(`${id}:automated-qa-gate-required`);
-  if (candidate?.rollout?.safeUsageEvidenceRequired !== true) issues.push(`${id}:safe-usage-gate-required`);
-  if (candidate?.rollout?.manualPromotionRequired !== true) issues.push(`${id}:manual-promotion-gate-required`);
-  if (candidate?.rollout?.automaticPromotion !== false) issues.push(`${id}:automatic-promotion-must-stay-disabled`);
+  if (candidate?.rollout?.safeUsageEvidenceRequired !== false) issues.push(`${id}:manual-safe-usage-gate-present`);
+  if (candidate?.rollout?.manualPromotionRequired !== false) issues.push(`${id}:manual-promotion-gate-present`);
+  if (candidate?.rollout?.automaticPromotion !== true) issues.push(`${id}:automatic-promotion-policy-missing`);
   if (!['page-exact', 'unresolved'].includes(candidate?.sourceContext?.quality)) issues.push(`${id}:source-context-quality-invalid`);
   if (candidate?.sourceContext?.quality === 'page-exact') {
     if (!['exact-topic-phrase', 'all-topic-tokens'].includes(candidate.sourceContext.matchMethod)) issues.push(`${id}:source-match-method-invalid`);
@@ -259,8 +259,18 @@ export function validateCurriculumCandidateManifest(candidate) {
     if (!text(candidate.sourceContext.sourceLine)) issues.push(`${id}:source-line-missing`);
     if (!text(candidate.sourceContext.evidenceExcerptHash)) issues.push(`${id}:evidence-excerpt-hash-missing`);
   }
-  if (!candidate?.readiness || candidate.readiness.status !== 'HOLD') issues.push(`${id}:draft-readiness-must-hold`);
-  if (candidate?.readiness?.automaticPromotion !== false) issues.push(`${id}:readiness-auto-promotion-must-stay-disabled`);
+  // A saved manifest is a *candidate*, not an automatic QA result.
+  // Its live readiness must match the mechanically recomputed review.
+  const expectedReadiness = evaluateCurriculumCandidate(candidate);
+  if (!candidate?.readiness || candidate.readiness.status !== expectedReadiness.status) {
+    issues.push(`${id}:candidate-readiness-status-mismatch`);
+  }
+  if (candidate?.readiness?.automaticPromotion !== expectedReadiness.automaticPromotion) {
+    issues.push(`${id}:candidate-readiness-promotion-mismatch`);
+  }
+  if (JSON.stringify(candidate?.readiness?.blockers || []) !== JSON.stringify(expectedReadiness.blockers)) {
+    issues.push(`${id}:candidate-readiness-blockers-mismatch`);
+  }
   return [...new Set(issues)];
 }
 
