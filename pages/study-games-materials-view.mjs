@@ -1,5 +1,5 @@
 import {createReadAloud} from './study-room-view.mjs';
-import {renderTestStudyGuide,renderTestWorksheet} from './test-study-pair.mjs?v=1';
+import {renderTestStudyGuide,renderTestWorksheet} from './test-study-pair.mjs?v=2';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const nonempty = value => typeof value === 'string' && value.trim();
