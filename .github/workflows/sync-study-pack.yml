@@ -123,7 +123,7 @@ jobs:
             Exact unsupported teacher skills:
             $CANDIDATE_SUMMARY
 
-            Candidate questions are disabled by default. Do not promote until page-exact source context, an original complete semantic family, direct/transfer/reasoning coverage, independent QA, sufficient safe-usage evidence, and app-owner-controlled promotion are all present. No school/educator approval is required for this private companion app. This workflow never auto-merges or auto-promotes a family."; then
+            Candidate questions start isolated. Complete source-matched families can enter production automatically after original semantic variants and full independent source, privacy, accessibility and browser QA pass. Unsupported or incomplete families remain isolated while verified daily teacher data and homework continue updating. No teacher, school, educator, parent or owner approval or real-learner pilot is required. This workflow never bypasses quality gates."; then
               return 0
             fi
             echo "::warning::GitHub Actions could not create the governed draft PR. Candidate branch $CANDIDATE_BRANCH remains preserved; the source-safe isolation gate will still verify that no candidate questions are published."
