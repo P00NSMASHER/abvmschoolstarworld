@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import {createStudyMaterials, loadStudyMaterials} from '../pages/study-materials.mjs';
-import {createMaterialsView, printableStudyGuideHtml, resolveVocabularyMeaning} from '../pages/study-games-materials-view.mjs';
+import {createMaterialsView, printableStudyGuideHtml, printableWorksheetHtml, resolveVocabularyMeaning} from '../pages/study-games-materials-view.mjs';
 import {createStudyResourceLoader} from '../pages/study-resources.mjs';
 import {practiceIdentity} from '../pages/study-experience.mjs';
 import {buildGrade2ContentPipeline} from '../scripts/grade2-content-pipeline.mjs';
@@ -157,7 +157,7 @@ test('test-style printable sheets hide answers on the student page and show a se
   ];
   const model=createStudyMaterials(opts({events,catalog:catalog(rows)}));
   const guide=model.testGuide(0);
-  const html=printableStudyGuideHtml(guide);
+  const html=printableWorksheetHtml(guide);
   assert.match(html,/Math Practice Test/);
   assert.match(html,/math-grid/);
   assert.match(html,/Show your work/);
@@ -296,11 +296,89 @@ test('printable study guide document is Letter-sized and resolves vocabulary def
     warnings:[],sourceLabel:'Reviewed ABVM material',
   },term => term === 'depend' ? 'to need or rely on someone or something' : '');
   assert.match(html,/@page\{size:Letter portrait/);
-  assert.match(html,/Reading Practice Test/);
-  assert.match(html,/Reading comprehension and word skills/);
+  assert.match(html,/<h1>Study Guide<\/h1>/);
+  assert.match(html,/What I need to know/);
+  assert.match(html,/How to remember it/);
+  assert.match(html,/Learn from a worked example/);
   assert.match(html,/to need or rely on someone or something/);
   assert.doesNotMatch(html,/teacher page does not provide a definition/);
-  assert.match(html,/Automatically generated for this test/);
+  assert.doesNotMatch(html,/Parent Answer Key/);
+  assert.match(html,/Original home practice/);
+});
+
+
+test('every test has both an instructional study guide and an independent worksheet',()=>{
+  const events=[
+    {date:'2026-10-05',label:'Math (subtraction)'},
+    {date:'2026-10-06',label:'Grammar (subject & predicate)'},
+    {date:'2026-10-07',label:'Reading'},
+    {date:'2026-10-08',label:'Religion Ch. 3'},
+    {date:'2026-10-09',label:'Spelling (short i / long i) / Handwriting'},
+    {date:'2026-10-09',label:'Science'},
+  ];
+  const rows=[
+    ...pool('math-current-',3,'Math',{skill:'math-subtraction',prompt:'Solve 15 - 6.',answer:'9',choices:['8','9','10'],explanation:'Subtract six from fifteen to get nine.'}),
+    ...pool('grammar-current-',3,'Reading / ELA',{skill:'subject-predicate',sourceFact:'Subject tells who or what the sentence is about.'}),
+    ...pool('reading-current-',3,'Reading / ELA',{skill:'text-evidence',sourceFact:'Use text evidence from the passage.'}),
+    ...pool('religion-current-',3,'Religion',{skill:'religion-chapter-3',sourceFact:'Chapter 3: Church life and Baptism.'}),
+  ];
+  const model=createStudyMaterials(opts({events,catalog:catalog(rows)}));
+  for(let i=0;i<events.length;i++){
+    const guide=model.testGuide(i),study=printableStudyGuideHtml(guide),worksheet=printableWorksheetHtml(guide);
+    assert(guide,'the announced test must have study materials');
+    assert.match(study,/<main class="sheet/);
+    assert.match(worksheet,/<main class="sheet/);
+    assert.notEqual(study,worksheet,'the learning guide must not repeat the worksheet');
+    assert.match(study,/@page\{size:Letter portrait/);
+    assert.match(worksheet,/@page\{size:Letter portrait/);
+    assert(study.includes(guide.label) || study.includes('Spelling Word Study'));
+  }
+  const math=model.testGuide(0);
+  assert.equal(math.practice[0].explanation,'Subtract six from fifteen to get nine.');
+  const learned=printableStudyGuideHtml(math),tested=printableWorksheetHtml(math);
+  assert.match(learned,/Subtract six from fifteen to get nine/);
+  assert.match(learned,/How to remember it/);
+  assert.match(tested,/Math Practice Test/);
+  assert.match(tested,/Show your work/);
+  assert.doesNotMatch(learned,/Math Practice Test/);
+  const science=model.testGuide(5);
+  assert.equal(science.practice.length,0);
+  assert.match(printableStudyGuideHtml(science),/Additional verified facts have not been published yet/);
+  assert.match(printableWorksheetHtml(science),/Topic Practice Worksheet/);
+  assert.match(printableWorksheetHtml(science),/not a reproduction of the teacher test/);
+});
+test('spelling worksheet uses blank dictation lines and separates the current word list',()=>{
+  const events=[{date:'2026-10-09',label:'Spelling (short i / long i) / Handwriting'}];
+  const schoolwork={lessons:[{id:'spelling',subject:'Spelling / Handwriting',weekOf:'2026-10-05',
+    notes:['Photo-confirmed practice words in the recorded order: did, fin, pick, line, tip, pipe, mix, five, side, cape, hike, made, all, any, says.'],questions:[]}]};
+  const model=createStudyMaterials(opts({events,schoolwork}));
+  const guide=model.testGuide(0),study=printableStudyGuideHtml(guide),worksheet=printableWorksheetHtml(guide);
+  assert.match(study,/Spelling Word Study/);
+  assert.match(study,/Cheer-the-letters/);
+  assert.match(worksheet,/Spelling Dictation/);
+  assert.equal((worksheet.match(/class="dictation-item"/g)||[]).length,15);
+  const student=worksheet.split('<section class="sheet adult-key">')[0];
+  assert.doesNotMatch(student,/<li>did<\/li>/);
+  assert.doesNotMatch(student,/<strong>did<\/strong>/);
+  assert.doesNotMatch(student,/>five</);
+  assert.match(worksheet,/Adult Dictation List/);
+  assert.match(worksheet,/<li>did<\/li>/);
+  assert.match(worksheet,/<li>says<\/li>/);
+  const unknown=printableWorksheetHtml({...guide,spellingWords:[],warnings:[]});
+  assert.equal((unknown.match(/class="dictation-item"/g)||[]).length,15);
+  assert.doesNotMatch(unknown,/Adult Dictation List/);
+  assert.match(unknown,/current spelling list is not yet confirmed/);
+});
+test('printable guide and worksheet escape untrusted teacher labels and practice prompts',()=>{
+  const input={label:'Reading <script>bad</script>',subject:'Reading / ELA',date:'2026-10-09',
+    facts:['Focus on <img src=x onerror=alert(1)>'],practice:[{
+      prompt:'Which is correct? <script>bad</script>',answer:'It is <safe>',choices:['wrong','It is <safe>']
+    }],warnings:[]};
+  for(const html of [printableStudyGuideHtml(input),printableWorksheetHtml(input)]){
+    assert.doesNotMatch(html,/<script>bad<\/script>/);
+    assert.doesNotMatch(html,/<img src=x onerror=/);
+    assert.match(html,/&lt;script&gt;bad&lt;\/script&gt;/);
+  }
 });
 
 test('weekly and saved banks retain source dates, and never classify undated/future material as current',() => {
