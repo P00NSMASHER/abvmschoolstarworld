@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import {cleanTeacherText, pageLines, parseHomework, parseStoryTitles, teacherContentLines} from '../scripts/teacher-page-parsers.mjs';
+import {cleanTeacherText, pageLines, parseHomework, parseStoryTitles, spellingSourceLines, teacherContentLines} from '../scripts/teacher-page-parsers.mjs';
 
 test('pageLines reads current Google Sites text containers without scripts', () => {
   const html = `
@@ -16,6 +16,37 @@ test('pageLines reads current Google Sites text containers without scripts', () 
     'pg. 42',
     'Reading: Read 20 minutes',
   ]);
+});
+
+test('official Google Sites small/span spelling rows preserve all 15 words including home', () => {
+  const rows = [
+    '<small class="zfr3Q"><span>Skill: short and long</span></small>',
+    '<small class="zfr3Q"><span>Basic Words</span><span class="Apple-tab-span"> </span><span>Review Words</span></small>',
+    '<small class="zfr3Q"><span>box</span><span class="Apple-tab-span"> </span><span>side</span></small>',
+    '<small class="zfr3Q"><span>fox</span><span class="Apple-tab-span"> </span><span>line</span></small>',
+    '<small class="zfr3Q"><span>dog</span></small>',
+    '<small class="zfr3Q"><span>lock</span></small>',
+    '<small class="zfr3Q"><span>pot</span><span>High Frequency Words</span></small>',
+    '<small class="zfr3Q"><span>cone</span><span>have</span></small>',
+    '<small class="zfr3Q"><span>home</span><span>off</span></small>',
+    '<small class="zfr3Q"><span>nose</span><span>took</span></small>',
+    '<small class="zfr3Q"><span>poke</span></small>',
+    '<small class="zfr3Q"><span>rope</span></small>',
+  ];
+  const html = '<h1>Weekly Spelling List</h1><p>Home</p>'
+    + rows.join('') + '<script><small><span>secret</span></small></script>';
+  assert.deepEqual(pageLines(html), ['Weekly Spelling List', 'Home']);
+  const notes = spellingSourceLines(html);
+  assert.deepEqual(notes, [
+    'Skill: short and long', 'Basic Words', 'Review Words',
+    'box', 'side', 'fox', 'line', 'dog', 'lock', 'pot',
+    'High Frequency Words', 'cone', 'have', 'home', 'off',
+    'nose', 'took', 'poke', 'rope',
+  ]);
+  assert.equal(notes.filter(line => /^(?:box|fox|dog|lock|pot|cone|home|nose|poke|rope|side|line|have|off|took)$/.test(line)).length, 15);
+  assert(!notes.includes('secret'));
+  // Navigation "Home" must never silently remove the spelling word "home".
+  assert(notes.includes('home'));
 });
 
 test('parseHomework accepts inline subject assignments with colon dash or em dash', () => {
