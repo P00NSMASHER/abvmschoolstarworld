@@ -37,10 +37,10 @@ const easternDay=value=>{
   }).formatToParts(date).map(part=>[part.type,part.value]));
   return parts.year+'-'+parts.month+'-'+parts.day;
 };
-export function shouldPublishHomework(candidate,previous,{hours=18}={}) {
+export function shouldPublishHomework(candidate,previous,{hours=1}={}) {
   if(!previous || previous.schemaVersion!==1 || previous.contentHash!==candidate.contentHash)return true;
-  // Never leave yesterday's validated posting hidden all morning merely because
-  // its last publication was fewer than 18 hours ago.
+  // Publish each successful hourly observation so checkedAt remains an actual
+  // source check while firstObservedAt/contentChangedAt preserve provenance.
   if(easternDay(candidate.checkedAt)!==easternDay(previous.checkedAt))return true;
   return Date.parse(candidate.checkedAt)-Date.parse(previous.checkedAt)>=hours*3600000;
 }

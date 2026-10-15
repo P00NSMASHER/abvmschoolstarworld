@@ -27,15 +27,17 @@ test('missing heading and unparseable page fail closed',()=>{
   assert.throws(()=>summarizeTeacherHomework(['Different page','Math pg. 22'],checkedAt),/heading/);
   assert.throws(()=>summarizeTeacherHomework(['Homework','Unrelated notice only'],checkedAt),/verifiable academic/);
 });
-test('unchanged posting updates daily, or immediately when assignments change',()=>{
+test('unchanged posting publishes hourly while preserving observation and change provenance',()=>{
   const first=summarizeTeacherHomework(['Homework','Math pg. 22',...routine],checkedAt);
-  const same=summarizeTeacherHomework(['Homework','Math pg. 22',...routine],'2026-10-14T01:00:00.000Z',first);
-  assert.equal(same.firstObservedAt,checkedAt);
-  assert.equal(same.contentChangedAt,checkedAt);
-  assert.equal(shouldPublishHomework(same,first),false);
-  const tomorrow=summarizeTeacherHomework(['Homework','Math pg. 22',...routine],'2026-10-14T18:00:00.000Z',first);
-  assert.equal(shouldPublishHomework(tomorrow,first),true);
-  const changed=summarizeTeacherHomework(['Homework','Math pg. 23',...routine],'2026-10-14T00:00:00.000Z',first);
+  const beforeHour=summarizeTeacherHomework(['Homework','Math pg. 22',...routine],'2026-10-13T23:59:59.999Z',first);
+  assert.equal(beforeHour.firstObservedAt,checkedAt);
+  assert.equal(beforeHour.contentChangedAt,checkedAt);
+  assert.equal(shouldPublishHomework(beforeHour,first),false);
+  const atHour=summarizeTeacherHomework(['Homework','Math pg. 22',...routine],'2026-10-14T00:00:00.000Z',first);
+  assert.equal(atHour.firstObservedAt,checkedAt);
+  assert.equal(atHour.contentChangedAt,checkedAt);
+  assert.equal(shouldPublishHomework(atHour,first),true);
+  const changed=summarizeTeacherHomework(['Homework','Math pg. 23',...routine],'2026-10-13T23:01:00.000Z',first);
   assert.equal(shouldPublishHomework(changed,first),true);
 });
 
