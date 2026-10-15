@@ -157,6 +157,80 @@ function noteMatchesTest(text, label, subject) {
   return true;
 }
 
+function polishedReligionFact(value) {
+  let text = compactGuideText(value,320)
+    .replace(/\borignial\b|\boirginal\b/gi,'original')
+    .replace(/\btendancy\b/gi,'tendency')
+    .replace(/\brecieve\b/gi,'receive')
+    .replace(/\btht\b/gi,'that')
+    .replace(/\bgod\b/gi,'God')
+    .replace(/\s*\/\s*/g,' and ')
+    .replace(/\s*;\s*/g,'; ')
+    .trim();
+  if (/^Church members\s*\/|^Church members and Christians/i.test(value))
+    text = text.replace(/^Church members and Christians/i,'Church members (Christians)');
+  if (/^Pope Leo\s*;\s*Bishop Schlert/i.test(text))
+    return 'Church leaders named in class: Pope Leo and Bishop Schlert.';
+  if (/^Steps to Baptism:/i.test(text)) {
+    return 'Steps to Baptism: the priest welcomes the person; parents and godparents make promises; the Bible is read; water is poured; a white garment is given; a candle is lit.';
+  }
+  text=text.charAt(0).toUpperCase()+text.slice(1);
+  return /[.!?]$/.test(text) ? text : text + '.';
+}
+
+function religionChapterFacts(group,test,pack) {
+  const chapter=String(test?.label||'').match(/\b(?:chapter|ch\.?)\s*([1-9]\d*)\b/i)?.[1];
+  if(!chapter)return [];
+  const exact=new RegExp('^\\s*Chapter\\s+'+chapter+'\\s*:','i');
+  const skillRows=[...array(pack?.contentPipeline?.skills),...array(pack?.recentReviewPipeline?.skills)];
+  const lines=[...new Set([...group,...skillRows]
+    .flatMap(row=>array(row?.sourceLineage?.matchedEvidence))
+    .filter(row=>meaningfulText(row)&&exact.test(row)).map(row=>row.trim()))];
+  const scoped=array(pack?.testGuideFacts?.religionChapters?.[chapter]);
+  const facts=[...scoped,...lines.flatMap(line=>line.split(/\s*\*\s*/).slice(1))]
+    .map(polishedReligionFact).filter(Boolean);
+  const hasDetailedRite=facts.some(row=>/^Steps to Baptism:/i.test(row));
+  return uniqueGuideText(facts.filter(row=>!(hasDetailedRite&&/^The Rite \(steps\) of Baptism\.?$/i.test(row))));
+}
+
+function readableSkillLabel(skill,questions,skillById) {
+  const published=compactGuideText(skillById.get(skill)?.label,120);
+  if(published)return published;
+  const source=questions.map(row=>compactGuideText(row.sourceFact,120))
+    .find(row=>/^Verified Grade 2 skill:\s*/i.test(row));
+  if(source)return source.replace(/^Verified Grade 2 skill:\s*/i,'');
+  return String(skill||'Test topic').replace(/^(?:religion|math|reading|grammar|spelling)-/,'')
+    .split('-').filter(Boolean).map(word=>word.charAt(0).toUpperCase()+word.slice(1)).join(' ')||'Test topic';
+}
+
+function guideReviewTopics(group,practiceRows,pack) {
+  const skillRows=[...array(pack.contentPipeline?.skills),...array(pack.recentReviewPipeline?.skills)];
+  const skillById=new Map(skillRows.filter(row=>meaningfulText(row?.id)).map(row=>[row.id,row]));
+  const skills=[];
+  for(const row of group)for(const skill of [row.skill,...array(row.assessedSkillIds)])
+    if(meaningfulText(skill)&&!skills.includes(skill))skills.push(skill);
+  return skills.map(skill=>{
+    const matching=practiceRows.filter(row=>row.skill===skill||array(row.assessedSkillIds).includes(skill));
+    const metadata=skillById.get(skill);
+    const summary=uniqueGuideText([
+      ...array(metadata?.studyNotes),
+      ...matching.map(row=>row.explanation),
+      ...matching.map(row=>row.answer),
+    ]).find(meaningfulText)||'';
+    const checks=matching.filter(row=>meaningfulText(row?.prompt)&&meaningfulText(row?.answer)).map(row=>({
+      prompt:compactGuideText(row.prompt,320),answer:compactGuideText(row.answer,180),
+    }));
+    return {
+      id:skill,
+      label:readableSkillLabel(skill,matching,skillById),
+      summary:compactGuideText(summary,320),
+      questionCount:matching.length,
+      check:checks[0]||null,
+      checks,
+    };
+  });
+}
+
 /** Failures stay retryable and cannot prevent the current Games from opening. */
 export async function loadStudyMaterials({resourceLoader = sharedResource, ...options} = {}) {
   const resources = ['schoolwork.json','study-archive.json'];
@@ -420,6 +494,8 @@ export function createStudyMaterials({
       : [];
     // Keep every source-matched fact in a printable guide; page layout owns pagination.
     const facts = uniqueGuideText([...verifiedWeekNotes,...questionFacts,...subjectFacts]);
+    const teacherFacts = subject === 'Religion' ? religionChapterFacts(group,test,pack) : [];
+    const reviewTopics = guideReviewTopics(group,practiceRows,pack);
     const vocabulary = subject === 'Reading / ELA' && !/grammar|predicate|subject\s*&/.test(lower)
       ? [...new Map(array(pack.vocabulary).filter(row => row?.subject === subject && meaningfulText(row?.term))
         .map(row => [String(row.term).trim().toLowerCase(),row])).values()].slice(0,8)
@@ -452,9 +528,11 @@ export function createStudyMaterials({
       explanation:compactGuideText(row.explanation,240),
       hint:compactGuideText(row.hint,160),
     }));
-    const availableSkills = [...new Set(group.map(row => row.skill))];
+    const availableSkills = [...new Set(group.flatMap(row=>[row.skill,...array(row.assessedSkillIds)]).filter(meaningfulText))];
     const representedSkills = [...new Set(practiceRows.map(row => row.skill))];
     const missingSkills = availableSkills.filter(skill => !representedSkills.includes(skill));
+    const guideSkills = reviewTopics.map(row=>row.id);
+    const missingGuideSkills = availableSkills.filter(skill=>!guideSkills.includes(skill));
     const warnings = [];
     if (missingSkills.length) warnings.push('Some current verified skills are missing from this paper. Check the linked teacher page and use in-app practice.');
     if (pack.sourceCheckedAt && schoolDay(pack.sourceCheckedAt) !== schoolDay(time)) {
@@ -473,9 +551,9 @@ export function createStudyMaterials({
     if (!facts.length) warnings.push('No reviewed test-specific facts are available yet, so this guide does not invent missing material.');
     return {
       key:testKey(test), label:compactGuideText(test.label,120), date:test.date, subject:subject || 'Test review',
-      facts, vocabulary, practice, spellingWords, fallback, warnings:uniqueGuideText(warnings).slice(0,3),
+      facts, teacherFacts, reviewTopics, vocabulary, practice, spellingWords, fallback, warnings:uniqueGuideText(warnings).slice(0,3),
       sourceHash:pack.sourceHash || null, sourceCheckedAt:pack.sourceCheckedAt || null,
-      coverage:{availableSkills,representedSkills,missingSkills},
+      coverage:{availableSkills,representedSkills,missingSkills,guideSkills,missingGuideSkills},
       sourceLabel:teacherLists.length
         ? (teacherLists.some(note => /page undated/i.test(note))
           ? 'Teacher spelling words verified this week (teacher page undated); original home practice'

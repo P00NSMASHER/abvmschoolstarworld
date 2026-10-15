@@ -36,6 +36,22 @@ const baseCss=[
   '.section h2 .index{font-size:9.5pt;letter-spacing:.06em;color:#536575;margin-right:5px}',
   '.focus-note{border:1px solid #526774;border-left:5px solid #344b5b;padding:.10in .13in;margin:.14in 0;font-size:10pt}',
   '.focus-note strong{display:block;font-size:9pt;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}',
+  '.guide-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.08in;margin:.14in 0}',
+  '.guide-summary div{border:1px solid #aeb9c0;border-radius:7px;padding:.075in .1in}',
+  '.guide-summary b{display:block;font-size:12pt}.guide-summary span{font-size:8.5pt;color:#465761}',
+  '.topic-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.11in}',
+  '.topic-card{border:1px solid #aeb9c0;border-top:4px solid #344b5b;border-radius:7px;padding:.11in .13in;break-inside:avoid}',
+  '.topic-card h3{font-size:11.2pt;line-height:1.25;margin:0 0 .055in}.topic-card>p{margin:.035in 0}',
+  '.say-it{margin-top:.09in;padding-top:.075in;border-top:1px solid #c4ccd1}',
+  '.say-it .prompt-label,.cover-answer span{display:block;font-size:8pt;letter-spacing:.055em;text-transform:uppercase;font-weight:800;color:#52636d}',
+  '.say-it p{margin:.035in 0}.cover-answer{background:#f0f3f5;border-left:3px solid #526774;padding:.065in .08in;font-size:9.2pt}',
+  '.teacher-checklist{columns:2;column-gap:.25in;margin:.05in 0;padding-left:.2in}',
+  '.teacher-checklist li{break-inside:avoid;margin:0 0 .075in}',
+  '.study-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.09in;counter-reset:step;list-style:none;padding:0;margin:.04in 0}',
+  '.study-steps li{border:1px solid #b7c0c8;border-radius:7px;padding:.08in .1in;counter-increment:step}',
+  '.study-steps li:before{content:counter(step);display:inline-grid;place-items:center;width:19px;height:19px;border-radius:50%;background:#182d3c;color:#fff;font-weight:800;font-size:8.5pt;margin-right:6px}',
+  '.ready-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.065in .12in}',
+  '.ready-item{display:flex;gap:7px;align-items:flex-start;font-size:9.3pt;break-inside:avoid}',
   '.columns{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);gap:.12in}',
   '.card{border:1px solid #bfc8ce;border-radius:7px;padding:.11in .13in;break-inside:avoid}',
   '.card ul,.card ol{padding-left:.18in;margin:.07in 0 .02in}',
@@ -75,7 +91,7 @@ const baseCss=[
   '.adult-key h2{font-size:17pt;margin:.14in 0}.adult-key ol{columns:2;font-size:11pt;line-height:1.85}',
   '.adult-key li{break-inside:avoid}',
   '@media screen{body{background:#eef2f4;padding:16px}.sheet{background:#fff;box-shadow:0 5px 25px #0002;padding:.42in;margin-bottom:16px;border-radius:8px}.adult-key{break-before:auto}}',
-  '@media screen and (max-width:620px){body{padding:8px}.sheet{padding:14px;box-shadow:none}.columns,.vocabulary{grid-template-columns:1fr}.checklist{grid-template-columns:1fr}h1{font-size:19pt}.eyebrow{font-size:8pt}}',
+  '@media screen and (max-width:620px){body{padding:8px}.sheet{padding:14px;box-shadow:none}.columns,.vocabulary,.topic-grid,.guide-summary,.study-steps,.ready-grid{grid-template-columns:1fr}.teacher-checklist{columns:1}.checklist{grid-template-columns:1fr}h1{font-size:19pt}.eyebrow{font-size:8pt}}',
   '@media print{body{background:#fff}.sheet{width:100%;max-width:none}.adult-key{break-before:page}.section,.card,.worked,.organizer-prompt{break-inside:avoid}}',
 ].join('');
 const htmlHead=(guide,title)=>'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+
@@ -116,44 +132,47 @@ export function renderTestStudyGuide(guide,dictionary=()=> ''){
   if(kindOf(guide)==='spelling')return renderClassroomStudyGuide(guide,dictionary);
   const kind=kindOf(guide),facts=unique(guide?.facts);
   const questions=rows(guide?.practice).filter(q=>clean(q?.prompt)&&clean(q?.answer));
-  const first=questions.slice(0,Math.min(2,questions.length));
-  const recall=questions.slice(2,4);
+  const suppliedTopics=rows(guide?.reviewTopics).filter(topic=>clean(topic?.label));
+  const fallbackTopics=new Map();
+  for(const q of questions){
+    const id=clean(q.skill)||clean(q.prompt),existing=fallbackTopics.get(id);
+    const check={prompt:clean(q.prompt),answer:clean(q.answer)};
+    if(existing){existing.checks.push(check);existing.questionCount+=1;continue;}
+    fallbackTopics.set(id,{id,label:clean(q.skill).replace(/-/g,' ')||'Test topic',
+      summary:clean(q.explanation)||clean(q.answer),questionCount:1,check,checks:[check]});
+  }
+  const topics=suppliedTopics.length?suppliedTopics:[...fallbackTopics.values()];
+  const teacherFacts=unique(guide?.teacherFacts);
   const vocabulary=rows(guide?.vocabulary).map(word=>{
     const term=clean(word?.term),supplied=clean(word?.meaning);
     const meaning=supplied&&!/teacher page does not provide a definition|no definition supplied/i.test(supplied)?supplied:clean(dictionary(term));
     return {term,meaning};
   }).filter(word=>word.term);
   const steps=strategies(guide,kind);
-  const factContent=facts.length?'<ul>'+facts.map(f=>'<li>'+esc(f)+'</li>').join('')+'</ul>':
+  const topicHtml=topics.length?'<div class="topic-grid">'+topics.map(topic=>'<article class="topic-card" data-guide-skill="'+esc(topic.id||topic.label)+'">'+
+    '<h3>'+esc(topic.label)+'</h3><p>'+esc(topic.summary||'Review this tested idea in the current class materials.')+'</p>'+
+    rows(topic.checks?.length?topic.checks:(topic.check?[topic.check]:[])).map((check,index)=>'<div class="say-it"><span class="prompt-label">'+
+      (index?'Try another way':'Say it without looking')+'</span><p>'+esc(check.prompt)+'</p>'+
+      '<p class="cover-answer"><span>Cover, then check</span>'+esc(check.answer)+'</p></div>').join('')+'</article>').join('')+'</div>':
     '<p>Use the classroom materials for this announced test. Additional verified facts have not been published yet.</p>';
-  const howTo='<ol class="strategy-list">'+steps.map((step,index)=>'<li><b>'+(index+1)+'</b><span>'+esc(step)+'</span></li>').join('')+'</ol>';
-  const exampleHtml=first.length?first.map((q,index)=>'<article class="worked"><div class="caption">Worked example '+(index+1)+'</div>'+
-    '<p>'+esc(q.prompt)+'</p><p class="answer">Answer: '+esc(q.answer)+'</p>'+
-    (clean(q.explanation)?'<p class="why"><b>Why:</b> '+esc(q.explanation)+'</p>':clean(q.hint)?'<p class="why"><b>Clue:</b> '+esc(q.hint)+'</p>':'')+
-    '</article>').join(''):'<div class="worked"><p>Practice a classroom example with an adult. The app will add a solved example when current matching questions are available.</p></div>';
-  const recallHtml=recall.length?'<section class="section"><h2><span class="index">04</span> Cover and recall</h2><div class="self-check">'+
-    recall.map(q=>'<div class="question"><p>'+esc(q.prompt)+'</p><p class="small-answer">Check after answering: <b>'+esc(q.answer)+'</b></p></div>').join('')+
-    '</div></section>':'';
-  // The remaining verified practice must be represented in the study guide too.
-  // It is intentionally not truncated at a page count: print CSS paginates it.
-  const remaining=questions.slice(4);
-  const extraReview=remaining.length?'<section class="section full-review"><h2>More matching practice to know</h2><ol class="review-list">'+
-    remaining.map(q=>'<li class="review-item"><strong>'+esc(q.prompt)+'</strong><p>Answer: '+esc(q.answer)+'</p>'+
-      (clean(q.explanation)?'<small>'+esc(q.explanation)+'</small>':'')+'</li>').join('')+'</ol></section>':'';
+  const completeFacts=teacherFacts.length?teacherFacts:facts.filter(f=>!/^Verified Grade 2 skill:/i.test(f));
+  const checklistHtml=completeFacts.length?'<section class="section"><h2><span class="index">02</span> Complete class checklist</h2>'+
+    '<p class="subtitle">Read every line, then explain it in your own words. This list is kept with the matching test.</p><ul class="teacher-checklist">'+
+    completeFacts.map(f=>'<li>'+esc(f)+'</li>').join('')+'</ul></section>':'';
   const vocabHtml=vocabulary.length?'<section class="section"><h2><span class="index">03</span> Words to know</h2><dl class="vocabulary">'+
     vocabulary.map(q=>'<div><dt>'+esc(q.term)+'</dt>'+(q.meaning?'<dd>'+esc(q.meaning)+'</dd>':'')+'</div>').join('')+'</dl></section>':'';
+  const missing=rows(guide?.coverage?.missingGuideSkills);
+  const coverageWarning=missing.length?'<p class="warning">This guide is missing '+missing.length+' tested topic'+(missing.length===1?'':'s')+'. Use the current classroom materials until the guide refreshes.</p>':'';
   return decoratePaper(htmlHead(guide,'Study guide')+'<main class="sheet study-guide">'+
     header(guide,'Study Guide',clean(guide?.label)||'Upcoming class test')+
-    '<div class="badge-row"><span>01 LEARN</span><span>02 SEE AN EXAMPLE</span><span>03 PRACTICE</span></div>'+
+    '<div class="guide-summary"><div><b>'+topics.length+'</b><span>tested topic'+(topics.length===1?'':'s')+'</span></div><div><b>'+questions.length+'</b><span>matching practice question'+(questions.length===1?'':'s')+'</span></div><div><b>'+esc(when(guide?.date)||'Current')+'</b><span>test date</span></div></div>'+
     '<div class="focus-note"><strong>My learning goal</strong>'+esc(goal(guide,kind))+'</div>'+
-    '<div class="columns"><section class="section card"><h2><span class="index">01</span> What I need to know</h2>'+factContent+'</section>'+
-    '<section class="section card"><h2><span class="index">02</span> How to remember it</h2>'+howTo+'</section></div>'+
-    '<section class="section"><h2><span class="index">03</span> Learn from a worked example</h2>'+exampleHtml+'</section>'+
-    vocabHtml+recallHtml+extraReview+
-    '<div class="checklist"><label><i class="checkbox" aria-hidden="true"></i>I can explain the main idea.</label>'+
-    '<label><i class="checkbox" aria-hidden="true"></i>I can solve an example.</label>'+
-    '<label><i class="checkbox" aria-hidden="true"></i>I am ready for my worksheet.</label></div>'+
-    warningHtml(guide)+footer(guide)+'</main></body></html>',kind);
+    '<section class="section"><h2><span class="index">01</span> What I need to know</h2>'+topicHtml+'</section>'+checklistHtml+vocabHtml+
+    '<section class="section"><h2><span class="index">'+(vocabulary.length?'04':'03')+'</span> How to remember it</h2><ol class="study-steps">'+
+    steps.map(step=>'<li>'+esc(step)+'</li>').join('')+'</ol></section>'+
+    (topics.length?'<section class="section"><h2><span class="index">'+(vocabulary.length?'05':'04')+'</span> Ready check</h2><div class="ready-grid">'+
+      topics.map(topic=>'<label class="ready-item"><i class="checkbox" aria-hidden="true"></i><span>I can explain <b>'+esc(topic.label)+'</b>.</span></label>').join('')+'</div></section>':'')+
+    coverageWarning+warningHtml(guide)+footer(guide)+'</main></body></html>',kind);
 }
 function dictationWorksheet(guide){
   const words=unique(guide?.spellingWords).filter(word=>/^[a-z][a-z'-]*$/i.test(word));

@@ -356,7 +356,7 @@ test('printable study guide document is Letter-sized and resolves vocabulary def
   assert.match(html,/<h1>Study Guide<\/h1>/);
   assert.match(html,/What I need to know/);
   assert.match(html,/How to remember it/);
-  assert.match(html,/Learn from a worked example/);
+  assert.match(html,/Say it without looking/);
   assert.match(html,/to need or rely on someone or something/);
   assert.doesNotMatch(html,/teacher page does not provide a definition/);
   assert.doesNotMatch(html,/Parent Answer Key/);
@@ -938,6 +938,17 @@ test("actual October 15 Chapter 3 live Test Prep works with compact runtime and 
     const guide=model.testGuide(0,{upcoming:true});
     assert.equal(guide.label,'Religion Ch. 3');
     assert.equal(guide.practice.length,18,'do not reduce 18 verified Chapter 3 facts to the old 10-question worksheet cap');
+    assert.deepEqual(guide.coverage.missingGuideSkills,[],'every tested skill must have a named study-guide section');
+    assert.equal(guide.reviewTopics.length,6,'near-duplicate practice questions are grouped into six clear tested concepts');
+    assert.equal(guide.reviewTopics.reduce((sum,row)=>sum+row.checks.length,0),18,'every matching practice question remains available inside its concept');
+    for(const fact of [
+      'Original sin','Faith: gift from God','Sacrament: sacred sign','At Baptism',
+      'Church members (Christians)','Jesus is the head of the Church','Pope Leo and Bishop Schlert',
+      'the priest welcomes the person','a white garment is given','a candle is lit',
+    ])assert.ok(guide.teacherFacts.some(row=>row.includes(fact)),`complete Chapter 3 checklist is missing: ${fact}`);
+    const html=printableStudyGuideHtml(guide);
+    for(const topic of guide.reviewTopics)assert.match(html,new RegExp('data-guide-skill="'+topic.id+'"'));
+    assert.doesNotMatch(html,/>religion-[a-z-]+</,'internal skill IDs must not appear as student-facing labels');
     assert.equal(state.missing.length,0);
   }
 });
