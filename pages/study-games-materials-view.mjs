@@ -1,5 +1,5 @@
 import {createReadAloud} from './study-room-view.mjs';
-import {renderClassroomStudyGuide} from './classroom-test-guide.mjs?v=1';
+import {renderTestStudyGuide,renderTestWorksheet} from './test-study-pair.mjs?v=1';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const nonempty = value => typeof value === 'string' && value.trim();
@@ -27,7 +27,10 @@ export function resolveVocabularyMeaning(row,dictionary = () => '') {
 const referenceHtml = link => '<a data-religion-review href="'+esc(link.url)+'" target="_blank" rel="noopener">'+esc(link.label)+'</a>';
 
 export function printableStudyGuideHtml(guide, dictionary = () => '') {
-  return renderClassroomStudyGuide(guide, dictionary);
+  return renderTestStudyGuide(guide, dictionary);
+}
+export function printableWorksheetHtml(guide, dictionary = () => '') {
+  return renderTestWorksheet(guide, dictionary);
 }
 
 /** Compact controls only. The existing Games controller owns every round and result. */
@@ -39,7 +42,7 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
   const focus = selector => win.document.querySelector(selector)?.focus({preventScroll:true});
   const change = selector => { onChange?.(); if (selector) focus(selector); };
   // Opening a guide must never launch the OS print sheet.
-  async function openGuide(index, upcoming = false, trigger = null) {
+  async function openGuide(index, upcoming = false, trigger = null, kind = 'guide') {
     const requestedKey = model?.testGuide?.(index,{upcoming})?.key;
     if (!requestedKey) return;
     let current = true;
@@ -58,18 +61,20 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
       'Live curriculum could not be checked. This is the last saved study material; confirm the announced test topic before studying.',
       ...freshGuide.warnings,
     ].slice(0,3)};
+    const isWorksheet = kind === 'worksheet';
     const doc = win.document;
     doc.querySelector('[data-study-guide-dialog]')?.close();
     const dialog = doc.createElement('dialog');
     dialog.className = 'study-guide-dialog';
     dialog.setAttribute('data-study-guide-dialog','');
     dialog.setAttribute('aria-labelledby','study-guide-modal-title');
-    dialog.innerHTML = '<header class="study-guide-modal-bar"><button type="button" data-guide-close>Close</button><strong id="study-guide-modal-title">'+esc(guide.label || 'Study guide')+'</strong><button type="button" data-guide-print disabled>Print</button></header><iframe class="study-guide-frame" title="Study guide preview"></iframe>';
+    dialog.innerHTML = '<header class="study-guide-modal-bar"><button type="button" data-guide-close>Close</button><strong id="study-guide-modal-title">'+esc((isWorksheet?'Worksheet: ':'Study guide: ')+(guide.label || 'Upcoming test'))+'</strong><button type="button" data-guide-print disabled>Print</button></header><iframe class="study-guide-frame" title="'+(isWorksheet?'Practice worksheet':'Study guide')+' preview"></iframe>';
     const closeButton = dialog.querySelector('[data-guide-close]');
     const printButton = dialog.querySelector('[data-guide-print]');
     const frame = dialog.querySelector('.study-guide-frame');
     frame.addEventListener('load', () => { printButton.disabled = false; }, {once:true});
-    frame.srcdoc = printableStudyGuideHtml(guide, term => win?.ABVMStudyGames?.vocabularyDefinition?.(term));
+    const createSheet = isWorksheet ? printableWorksheetHtml : printableStudyGuideHtml;
+    frame.srcdoc = createSheet(guide, term => win?.ABVMStudyGames?.vocabularyDefinition?.(term));
     closeButton.addEventListener('click', () => dialog.close());
     printButton.addEventListener('click', () => {
       try { frame.contentWindow?.focus(); frame.contentWindow?.print(); } catch {}
@@ -99,7 +104,7 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
     const history=preview?(preview.total?preview.practice.label:'No verified practice yet'):'Practice';
     const choices=pending.map((test,index)=>'<button type="button" class="prep-test-choice" data-test-select="'+index+'" aria-pressed="'+(index===selectedTest)+'" aria-label="'+esc(test.label+' - '+dateLabel(test.date))+'"><img src="./assets/illustrations/'+testArt(test.subject||test.label)+'.webp" width="40" height="40" alt=""><span><strong>'+esc(shortTestLabel(test.label))+'</strong><small>'+esc(dateLabel(test.date))+'</small></span><b aria-hidden="true">'+(index===selectedTest?'✓':'')+'</b></button>').join('');
     const topics=preview?.topics?.length?list(preview.topics):'<p class="prep-no-topics">Topics will appear when matching practice is verified.</p>';
-    return header+'<section class="prep-sheet" aria-labelledby="study-priority-title"><h2 id="study-priority-title">Choose a test to prepare for</h2><div class="prep-test-choices" role="group" aria-label="Upcoming tests">'+choices+'</div><article class="prep-topic-card" data-study-tests><div class="prep-topic-heading"><p>'+esc(chosen.subject||'Test Prep')+'</p><span>'+esc(!entry?'Practice unavailable':fallback.some(test=>test.index===selectedTest)?'Grade 2 skill practice':'Verified test practice')+'</span></div><h3>'+esc(chosen.label)+'</h3><time datetime="'+esc(chosen.date)+'">'+esc(dateLabel(chosen.date))+'</time><div class="prep-topics"><div><p>Topics in this practice</p>'+topics+'</div><img src="./assets/illustrations/'+art+'.webp" alt="" width="150" height="150"></div><small class="study-test-history" aria-label="'+esc(history+'. Practice does not predict a test result.')+'">'+esc(history)+'</small>'+ (missing.some(test=>test.index===selectedTest)?'<p class="game-material-status" data-test-missing>No verified questions match this test yet. Use the teacher materials; the app will not guess.</p>':'')+(fallback.some(test=>test.index===selectedTest)?'<p class="game-material-status" data-test-fallback>Using original Grade 2 skill practice because no reviewed test-specific questions are available.</p>':'')+'</article><button type="button" class="prep-start" aria-label="Start test prep" data-test-single="'+selectedTest+'"'+(!entry?' disabled aria-disabled="true"':'')+'>Start '+(preview?.total||'')+' questions <span aria-hidden="true">→</span></button><button type="button" class="prep-guide" data-test-guide="'+selectedTest+'" data-guide-upcoming="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1m0-15c3-2 6-2 9-1v15c-3-1-6-1-9 1V5"/></svg>View study guide</button>'+testStatus(tests)+'</section>';
+    return header+'<section class="prep-sheet" aria-labelledby="study-priority-title"><h2 id="study-priority-title">Choose a test to prepare for</h2><div class="prep-test-choices" role="group" aria-label="Upcoming tests">'+choices+'</div><article class="prep-topic-card" data-study-tests><div class="prep-topic-heading"><p>'+esc(chosen.subject||'Test Prep')+'</p><span>'+esc(!entry?'Practice unavailable':fallback.some(test=>test.index===selectedTest)?'Grade 2 skill practice':'Verified test practice')+'</span></div><h3>'+esc(chosen.label)+'</h3><time datetime="'+esc(chosen.date)+'">'+esc(dateLabel(chosen.date))+'</time><div class="prep-topics"><div><p>Topics in this practice</p>'+topics+'</div><img src="./assets/illustrations/'+art+'.webp" alt="" width="150" height="150"></div><small class="study-test-history" aria-label="'+esc(history+'. Practice does not predict a test result.')+'">'+esc(history)+'</small>'+ (missing.some(test=>test.index===selectedTest)?'<p class="game-material-status" data-test-missing>No verified questions match this test yet. Use the teacher materials; the app will not guess.</p>':'')+(fallback.some(test=>test.index===selectedTest)?'<p class="game-material-status" data-test-fallback>Using original Grade 2 skill practice because no reviewed test-specific questions are available.</p>':'')+'</article><button type="button" class="prep-start" aria-label="Start test prep" data-test-single="'+selectedTest+'"'+(!entry?' disabled aria-disabled="true"':'')+'>Start '+(preview?.total||'')+' questions <span aria-hidden="true">→</span></button><div class="prep-material-actions" role="group" aria-label="Printable test materials"><button type="button" class="prep-guide" data-test-guide="'+selectedTest+'" data-guide-upcoming="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1m0-15c3-2 6-2 9-1v15c-3-1-6-1-9 1V5"/></svg>Study guide</button><button type="button" class="prep-guide prep-worksheet" data-test-worksheet="'+selectedTest+'" data-guide-upcoming="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM15 3v5h4M9 12h7M9 16h7"/></svg>Practice worksheet</button></div>'+testStatus(tests)+'</section>';
   }
   function testStatus(tests){return tests?.message?'<div class="game-test-status" role="status"><span>'+esc(tests.message)+'</span>'+(tests.canUndo?'<button type="button" data-undo-test>Undo</button>':'')+'</div>':'';}
 
@@ -151,11 +156,11 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
   function secondaryHtml() {
     const tests=model?.tests(),pending=tests?.tests||[],completed=tests?.completed||[];
     const printable=(model?.printableTests?.()?.tests||pending).map((test,index)=>({...test,index}));
-    const guideButtons=printable.map(test=>'<button type="button" class="study-guide-button" data-test-guide="'+test.index+'">View guide: '+esc(test.label)+' · '+esc(dateLabel(test.date))+'</button>').join('');
+    const guideButtons=printable.map(test=>'<article class="study-material-pair"><strong>'+esc(test.label)+'</strong><small>'+esc(dateLabel(test.date))+'</small><div class="study-material-pair-buttons"><button type="button" class="study-guide-button" data-test-guide="'+test.index+'">Study guide</button><button type="button" class="study-guide-button" data-test-worksheet="'+test.index+'">Practice worksheet</button></div></article>').join('');
     return '<section class="study-tools" aria-labelledby="study-tools-title"><div class="study-section-heading compact"><span>KEEP LEARNING</span><h2 id="study-tools-title">A little extra help</h2></div><div class="study-tool-list">' +
       '<details class="study-tool-card" data-study-notes'+(notesOpen?' open':'')+'><summary><span class="study-tool-icon notes" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg></span><span class="study-tool-copy"><strong>Notes &amp; study guides</strong><small>Class notes, words &amp; official reviews</small></span><b aria-hidden="true">›</b></summary><div class="study-tool-body" data-study-notes-content>'+(notesOpen?notesContent():'')+'</div></details>' +
-      '<details class="study-tool-card" data-study-test-options'+(testsOpen?' open':'')+'><summary><span class="study-tool-icon tests" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4h10a2 2 0 0 1 2 2v15H5V6a2 2 0 0 1 2-2ZM8 2v4M16 2v4M8 10h8M8 14h5"/></svg></span><span class="study-tool-copy"><strong>Test guides &amp; history</strong><small>Print a guide or manage finished tests</small></span><b aria-hidden="true">›</b></summary><div class="study-tool-body"><p>Finished tests are hidden only on this browser.</p>' +
-      (printable.length?'<h3>Printable study guides</h3><div class="study-guide-tool-list">'+guideButtons+'</div>':'')+
+      '<details class="study-tool-card" data-study-test-options'+(testsOpen?' open':'')+'><summary><span class="study-tool-icon tests" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4h10a2 2 0 0 1 2 2v15H5V6a2 2 0 0 1 2-2ZM8 2v4M16 2v4M8 10h8M8 14h5"/></svg></span><span class="study-tool-copy"><strong>Guides, worksheets &amp; history</strong><small>Study first, then practice on paper</small></span><b aria-hidden="true">›</b></summary><div class="study-tool-body"><p>Finished tests are hidden only on this browser.</p>' +
+      (printable.length?'<h3>Printable materials for every test</h3><div class="study-guide-tool-list">'+guideButtons+'</div>':'')+
       (pending.length?'<h3>Test list</h3><button type="button" data-complete-test>'+(pending.length>1?'Mark current tests finished':'Mark test finished')+'</button>':'')+
       (completed.length?'<h3>Hidden tests</h3>'+completed.map(test=>'<button type="button" data-restore-test="'+esc(test.key)+'">Restore '+esc(test.label)+'</button>').join(''):'')+
       (!printable.length&&!pending.length&&!completed.length?'<p>No tests to manage.</p>':'')+'</div></details></div></section>';
@@ -214,6 +219,7 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
       if(current>=0)onTest?.(current);
     }));
     host.querySelectorAll('[data-test-guide]').forEach(button=>button.addEventListener('click',()=>openGuide(Number(button.dataset.testGuide),button.dataset.guideUpcoming==='true',button)));
+    host.querySelectorAll('[data-test-worksheet]').forEach(button=>button.addEventListener('click',()=>openGuide(Number(button.dataset.testWorksheet),button.dataset.guideUpcoming==='true',button,'worksheet')));
     host.querySelector('[data-study-retry]')?.addEventListener('click',()=>onRetry?.());
     host.querySelector('[data-complete-test]')?.addEventListener('click',()=>{
       const result = model?.completeTests(); change(result?.ok?'[data-undo-test]':'[data-complete-test]');
