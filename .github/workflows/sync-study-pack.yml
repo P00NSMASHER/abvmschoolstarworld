@@ -41,6 +41,10 @@ on:
       - 'tests/curriculum-continuity.spec.mjs'
       - 'tests/school-change-feed.test.mjs'
       - 'tests/school-change-feed.spec.mjs'
+      - 'tests/iphone-polish.spec.mjs'
+      - 'tests/source-freshness-recovery.test.mjs'
+      - 'scripts/source-freshness-recovery.mjs'
+      - '.github/workflows/daily-source-recovery.yml'
       - '.github/workflows/sync-study-pack.yml'
   schedule:
     - cron: '17 6 * * *'
