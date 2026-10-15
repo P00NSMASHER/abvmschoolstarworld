@@ -1009,3 +1009,29 @@ test('premium test packets print every matched current skill with existing Image
   // Source update and homework logic are not in the presentation layer.
   assert.doesNotMatch(study,/\.github\/workflows\/refresh-current-homework/);
 });
+
+test('short-vowel phonics guide excludes unrelated reading notes and vocabulary',()=>{
+  const row=question('short-vowel-guide','Reading / ELA',{
+    skill:'short-vowels',sourceFact:'short-vowels',
+    prompt:'Which word has short a?',answer:'Cat',choices:['Cat','Cake','Rain'],
+    explanation:'Cat has the short a sound.',
+  });
+  const model=createStudyMaterials(opts({
+    events:[{date:'2026-10-09',label:'Phonics (short vowels)',kind:'test'}],
+    catalog:catalog([row]),
+    pack:{subjects:[{subject:'Reading / ELA',topics:[
+      'Story: Families Work','Phonics: short vowels (test Friday)',
+      'Phonics: long i (i_e) and short i','Word structure: possessives',
+    ],studyNotes:['Compare chart values.','Short vowels include a in cat and e in bed.']}],
+    vocabulary:[{subject:'Reading / ELA',term:'customers'}]},
+  }));
+  const guide=model.testGuide(0),html=printableStudyGuideHtml(guide);
+  assert.equal(guide.practice.length,1);
+  assert.ok(guide.facts.some(text=>text.includes('Short vowels include')));
+  assert.ok(guide.facts.some(text=>text.includes('Phonics: short vowels')));
+  assert.deepEqual(guide.vocabulary,[]);
+  assert.doesNotMatch(html,/Families Work|possessives|chart values|customers|i_e/);
+  assert.doesNotMatch(html,/>short-vowels</);
+  assert.match(html,/Which word has short a\?/);
+  assert.match(html,/Cat has the short a sound/);
+});

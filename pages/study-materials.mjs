@@ -139,6 +139,8 @@ function noteMatchesTest(text, label, subject) {
     if (/sentence types|punctuation/.test(lower)) return /sentence type|statement|question|command|exclamation|punctuation|end mark/i.test(value);
     return /\b(?:grammar|subject|predicate|sentence type|punctuation)\b/i.test(value);
   }
+  if (subject === 'Reading / ELA' && /phonics/.test(lower) && /short[ -]vowels?/.test(lower))
+    return /short[ -]vowels?/i.test(value);
   if (subject === 'Math' && /subtraction|subtract|difference|minus/.test(lower))
     return /subtraction|subtract|difference|minus|take away|related addition facts to check subtraction/i.test(value);
   if (subject === 'Math' && /addition|add|sum/.test(lower))
@@ -481,7 +483,7 @@ export function createStudyMaterials({
     const lower = String(test.label || '').toLowerCase();
     const sourceSubjects = array(pack.subjects).filter(row => row?.subject === subject);
     const practiceRows = representativePractice(group);
-    const questionFacts = practiceRows.flatMap(row => [row.sourceFact,row.explanation]).filter(meaningfulText);
+    const questionFacts = practiceRows.flatMap(row => [row.sourceFact === row.skill ? null : row.sourceFact,row.explanation]).filter(meaningfulText);
     const subjectFacts = sourceSubjects.flatMap(row => [...array(row.topics),...array(row.studyNotes)])
       .filter(text => noteMatchesTest(text,test.label,subject));
     // Only a photo-confirmed week-matched list can outrank general vowel examples.
@@ -496,7 +498,7 @@ export function createStudyMaterials({
     const facts = uniqueGuideText([...verifiedWeekNotes,...questionFacts,...subjectFacts]);
     const teacherFacts = subject === 'Religion' ? religionChapterFacts(group,test,pack) : [];
     const reviewTopics = guideReviewTopics(group,practiceRows,pack);
-    const vocabulary = subject === 'Reading / ELA' && !/grammar|predicate|subject\s*&/.test(lower)
+    const vocabulary = subject === 'Reading / ELA' && !/grammar|predicate|subject\s*&|phonics/.test(lower)
       ? [...new Map(array(pack.vocabulary).filter(row => row?.subject === subject && meaningfulText(row?.term))
         .map(row => [String(row.term).trim().toLowerCase(),row])).values()].slice(0,8)
       : [];
