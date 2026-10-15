@@ -55,6 +55,7 @@ function pageHeader(title,guide,adult=false) {
 }
 function sourceNote(guide) {
   return '<footer class="source-note">'+escape(guide?.sourceLabel || 'Current reviewed material and original practice')+
+    (guide?.sourceCheckedAt ? ' · Teacher source checked '+escape(String(guide.sourceCheckedAt).slice(0,10)) : '')+
     ' · Not a school-issued assessment. Automatically generated for this test.</footer>';
 }
 function itemMode(item,kind) {
@@ -99,7 +100,9 @@ function spellingSheet(guide) {
   if(words.includes('says'))tips.push('<li><b>says:</b> It sounds like “sez”; remember the surprising A-Y. Say S-A-Y-S.</li>');
   if(!tips.length)tips.push('<li>Circle the tricky letters. Group words that share a vowel sound or ending.</li>');
   const list=words.length
-    ? '<p class="instruction">Words confirmed from matching-week schoolwork. The teacher may dictate them in a different order.</p>'+
+    ? '<p class="instruction">'+escape(/teacher page undated/i.test(String(guide?.sourceLabel || ''))
+      ? "Words observed on the teacher’s public spelling page this week (page undated). The teacher may dictate them in a different order."
+      : 'Words confirmed from matching-week schoolwork. The teacher may dictate them in a different order.')+'</p>'+
       '<ol class="word-list">'+words.map((word,index)=>'<li><span class="word-number">'+(index+1)+'.</span><strong>'+escape(word)+'</strong><span class="word-check" aria-hidden="true">□</span></li>').join('')+'</ol>'
     : '<p class="caution">No confirmed word list is available for this test. Older spelling words are not substituted for the current list.</p>';
   return '<main class="sheet spelling-sheet">'+pageHeader('Spelling Word Study',guide)+

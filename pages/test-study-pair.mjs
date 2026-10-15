@@ -83,6 +83,7 @@ const htmlHead=(guide,title)=>'<!doctype html><html lang="en"><head><meta charse
 const header=(guide,title,subtitle)=>'<header class="header"><div class="eyebrow"><span>ABVM GRADE 2 · TEST PREP</span><span class="date">'+esc(when(guide?.date))+'</span></div>'+
   '<h1>'+esc(title)+'</h1><p class="subtitle">'+esc(subtitle)+'</p></header>';
 const footer=guide=>'<footer class="footer">'+esc(guide?.sourceLabel||'Current reviewed class material')+
+  (guide?.sourceCheckedAt ? ' · Teacher source checked '+esc(String(guide.sourceCheckedAt).slice(0,10)) : '')+
   ' · Original home practice · Not a school-issued test.</footer>';
 const warningHtml=guide=>rows(guide?.warnings).slice(0,3).filter(Boolean).map(w=>'<p class="warning">'+esc(w)+'</p>').join('');
 function strategies(guide,kind){

@@ -43,6 +43,63 @@ const freeze = value => {
   return value;
 };
 
+
+test('full current test bank interleaves skills and prints every verified question',() => {
+  const rows=[
+    ...pool('first-',12,'Reading / ELA',{skill:'text-evidence',sourceFact:'Use details from the story.'}),
+    ...pool('chart-',4,'Reading / ELA',{skill:'reading-charts',sourceFact:'Check labels and counts on a chart.'}),
+  ];
+  const pack={sourceHash:'teacher-pages-test',sourceCheckedAt:monday,subjects:[]};
+  const model=createStudyMaterials(opts({pack,events:[{date:'2026-10-05',label:'Reading'}],catalog:catalog(rows)}));
+  const guide=model.testGuide(0);
+  assert.equal(guide.practice.length,16,'premium printouts cannot drop later current questions');
+  assert.deepEqual(guide.practice.slice(0,2).map(q=>q.skill),['text-evidence','reading-charts']);
+  assert.deepEqual(guide.coverage.availableSkills,['text-evidence','reading-charts']);
+  assert.deepEqual(guide.coverage.missingSkills,[]);
+  assert.equal(guide.sourceHash,'teacher-pages-test');
+  assert.equal(guide.sourceCheckedAt,monday);
+  for (const html of [printableStudyGuideHtml(guide),printableWorksheetHtml(guide)]) {
+    assert.match(html,/Question first-11/);
+    assert.match(html,/Question chart-3/);
+    assert.match(html,/Teacher source checked 2026-10-05/);
+  }
+});
+
+test('all official undated spelling words reach this-week guide and adult dictation key only',() => {
+  const words=['box','side','fox','line','dog','lock','pot','cone','have','home','off','nose','took','poke','rope'];
+  const pack={
+    sourceHash:'teacher-pages-spelling-checked',sourceCheckedAt:'2026-10-15T11:00:22.453Z',
+    weekLabel:'Week of October 12, 2026',
+    subjects:[{subject:'Spelling / Handwriting',
+      topics:['Friday, Oct. 16 test focus: long o / Short '],
+      studyNotes:['Teacher-posted spelling words (page undated): '+words.join(', ')]}],
+  };
+  const events=[{date:'2026-10-16',label:'Spelling (long o / Short ) / Handwriting',kind:'test'}];
+  const options={events,pack,catalog:catalog([]),now:()=> '2026-10-15T14:00:00Z'};
+  const guide=createStudyMaterials(opts(options)).testGuide(0);
+  assert.deepEqual(guide.spellingWords,words);
+  assert.match(guide.sourceLabel,/teacher page undated/);
+  const study=printableStudyGuideHtml(guide);
+  const worksheet=printableWorksheetHtml(guide);
+  for(const word of words)assert.match(study,new RegExp('<strong>'+word+'</strong>'));
+  assert.match(worksheet,/Adult Dictation List/);
+  const student=worksheet.split('</style></head><body>').at(-1).split('<section class="sheet adult-key">')[0];
+  assert.doesNotMatch(student,/<strong>\s*(?:box|cone|rope|home)\s*<\/strong>/i,
+    'the student dictation page must contain blank lines, not spelling answers');
+  const adult=worksheet.split('<section class="sheet adult-key">')[1];
+  for(const word of words)assert.match(adult,new RegExp('<li>'+word+'</li>'));
+  assert.match(worksheet,/Teacher source checked 2026-10-15/);
+  const previous=createStudyMaterials(opts({...options,pack:{...pack,weekLabel:'Week of October 5, 2026'}})).testGuide(0);
+  assert.deepEqual(previous.spellingWords,[],'a teacher page without dated words cannot silently certify a different week');
+});
+
+test('live release gate compares actual runtime, homework, premium theme and paper renderers',() => {
+  const source=readFileSync(new URL('../scripts/verify-live-lunch.mjs',import.meta.url),'utf8');
+  for(const path of ['data/study-pack-runtime.json','data/homework-current.json',
+    'test-study-pair.mjs','classroom-test-guide.mjs','premium-paper-theme.mjs'])
+    assert.ok(source.includes("'"+path+"'"),path+' must be exact-byte verified on the live site');
+});
+
 test('fresh governed curriculum output satisfies the live Study Games difficulty floor',() => {
   const pipeline=buildGrade2ContentPipeline({
     sourceHash:'fresh-governed-curriculum',
