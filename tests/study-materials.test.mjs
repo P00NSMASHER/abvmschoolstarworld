@@ -80,7 +80,7 @@ test('current vocabulary uses dictionary definitions instead of teacher-source p
 });
 
 
-test('printable study guides stay test-specific, bounded, and honest about missing coverage',() => {
+test('printable study guides stay test-specific, complete, and honest about missing coverage',() => {
   const events = [
     {date:'2026-10-05',label:'Grammar (subject & predicate)'},
     {date:'2026-10-05',label:'Spelling (short i / long i) / Handwriting'},
@@ -108,8 +108,8 @@ test('printable study guides stay test-specific, bounded, and honest about missi
   assert(grammarGuide.facts.some(row => /subject/i.test(row)));
   assert(!grammarGuide.facts.some(row => /dialogue/i.test(row)));
   assert.equal(grammarGuide.vocabulary.length,0,'grammar guide does not pad the sheet with unrelated reading vocabulary');
-  assert(grammarGuide.practice.length <= 10);
-  assert(grammarGuide.facts.length <= 6);
+  assert.equal(grammarGuide.practice.length,grammar.length,'keep all current matching practice');
+  assert.ok(grammarGuide.facts.length >= 2,'keep the verified source ideas');
 
   const spellingGuide = model.testGuide(1);
   assert.equal(spellingGuide.subject,'Spelling / Handwriting');
@@ -880,7 +880,7 @@ test("actual October 15 Chapter 3 live Test Prep works with compact runtime and 
     assert.ok(round.questions.every(q=>q.subject==='Religion'));
     const guide=model.testGuide(0,{upcoming:true});
     assert.equal(guide.label,'Religion Ch. 3');
-    assert.ok(guide.practice.length>0);
+    assert.equal(guide.practice.length,18,'do not reduce 18 verified Chapter 3 facts to the old 10-question worksheet cap');
     assert.equal(state.missing.length,0);
   }
 });
@@ -900,4 +900,44 @@ test("Chapter 3 guide does not mix in Chapter 1 or Chapter 2 subject notes",()=>
   assert.ok(guide.facts.some(row=>/Chapter 3:/.test(row)));
   assert.ok(guide.facts.every(row=>!/^Chapter [12]:/.test(row)));
   assert.ok(guide.practice.some(item=>item.skill==='religion-chapter-3'));
+});
+
+test('premium test packets print every matched current skill with existing ImageGen art and matching answers',() => {
+  const events=[{date:'2026-10-15',label:'Math (subtraction)',kind:'test'}];
+  const currentRows=Array.from({length:18},(_,index)=>{
+    const first=20-index,answer=String(first-1);
+    return question('subtract-full-'+index,'Math',{
+      skill:'math-subtraction',
+      prompt:'What is '+first+' - 1?',
+      answer,
+      choices:[String(first),answer,String(first-2)],
+      sourceFact:'Reviewed subtraction fact '+(index+1)+'.',
+      explanation:'Taking away one from '+first+' leaves '+answer+'.',
+    });
+  });
+  const model=createStudyMaterials(opts({
+    now:()=> '2026-10-14T12:00:00Z',
+    events,catalog:catalog(currentRows),
+    pack:{subjects:[{subject:'Math',topics:['Math (subtraction)'],studyNotes:[]}]},
+  }));
+  const guide=model.testGuide(0),study=printableStudyGuideHtml(guide),sheet=printableWorksheetHtml(guide);
+  assert.equal(guide.practice.length,18,'all source-matched questions must reach presentation');
+  assert.ok(guide.facts.length >= 18,'all distinct source-matched facts must reach the guide');
+  for(const row of guide.practice){
+    assert.ok(study.includes(row.prompt),'guide omitted '+row.prompt);
+    assert.ok(sheet.includes(row.prompt),'worksheet omitted '+row.prompt);
+  }
+  const student=sheet.split('<section class="sheet adult-key">')[0];
+  assert.equal((student.match(/class="problem /g)||[]).length,18);
+  assert.equal((sheet.match(/<li><b>\d+\.<\/b>/g)||[]).length,18);
+  assert.doesNotMatch(student,/Parent Answer Key/);
+  for(const page of [study,sheet]){
+    assert.match(page,/body class="premium-paper paper-math"/);
+    assert.match(page,/assets\/illustrations\/math\.webp/);
+    assert.match(page,/premium-mini-art/);
+    assert.match(page,/print-color-adjust:exact/);
+    assert.match(page,/@page\{size:Letter portrait/);
+  }
+  // Source update and homework logic are not in the presentation layer.
+  assert.doesNotMatch(study,/\.github\/workflows\/refresh-current-homework/);
 });
