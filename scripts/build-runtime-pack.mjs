@@ -39,6 +39,12 @@ export function buildRuntimePack(envelope){
   const questions=runtime.pack?.contentPipeline?.questions;
   if(!Array.isArray(questions))throw new Error("Full study pack is missing contentPipeline.questions");
   runtime.pack.contentPipeline.questions=questions.map(pickQuestion);
+  const skills=runtime.pack.contentPipeline.skills;
+  if(!Array.isArray(skills))throw new Error("Full study pack is missing contentPipeline.skills");
+  // Audit lineage and assessment contracts stay intact in the governed full pack.
+  // Phone/tablet clients use the skill ID, label and teaching notes, not hashes
+  // or raw teacher evidence repeated once for every skill in the runtime pack.
+  runtime.pack.contentPipeline.skills=skills.map(({sourceLineage,evidenceContract,...skill})=>skill);
   // The 14-day review bank may retain previously verified question families.
   // Those full records carry large governance-only source/evidence fields;
   // compact them exactly like current questions, but keep dated expiry proof.
