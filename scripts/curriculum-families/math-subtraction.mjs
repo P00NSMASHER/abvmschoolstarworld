@@ -94,7 +94,7 @@ export const MATH_SUBTRACTION_FAMILY = Object.freeze({
     }),
     Object.freeze({
       questionType: 'reasoning',
-      prompt: 'Sam says 9 - 4 = 6. Which fact shows that his answer is one too high?',
+      prompt: 'Sam says 9 - 4 = 6. Which addition fact checks the correct difference?',
       choices: Object.freeze(['5 + 4 = 9', '6 + 4 = 10', '9 + 4 = 13']),
       answer: '5 + 4 = 9',
       explanation: 'The related addition fact 5 + 4 = 9 shows that 9 - 4 = 5.',
