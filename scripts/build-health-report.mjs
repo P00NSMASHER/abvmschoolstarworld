@@ -118,14 +118,14 @@ status.curriculumHold=selectGovernedCurriculumHold(curriculumHoldRefreshRun,refr
 // A published-pack generator count of zero must not imply a blocked refresh
 // has no new gaps or that an educator approved unpublished curriculum.
 status.curriculumReview={
-  state:status.curriculumHold?"approval-blocked":"not-established",
+  state:status.curriculumHold?"automated-qa-hold":"not-established",
   evidence:status.curriculumHold?"exact-failed-refresh-step-and-open-draft":"not-available",
   candidatePrNumber:status.curriculumHold?.candidatePrNumber||null,
   automatedPromotion:false,
 };
 const refreshDisplayRun=status.curriculumHold?curriculumHoldRefreshRun:effectiveRefreshRun;
 const refreshHealthy=completedHealthy(status.workflows.refresh,30);
-const refreshOperationallyHealthy=refreshHealthy||Boolean(status.curriculumHold);
+const refreshOperationallyHealthy=refreshHealthy;
 const pipelineHealthy=Boolean(
   status.contentPipeline.present &&
   status.contentPipeline.qaStatus==="pass" &&
@@ -165,7 +165,7 @@ const criticalHealthy=Boolean(
 );
 const warnings=[];
 if(status.curriculumHold){
-  warnings.push("Teacher refresh is intentionally holding publication for governed curriculum candidate PR #"+status.curriculumHold.candidatePrNumber+".");
+  warnings.push("Teacher refresh is awaiting automated curriculum quality checks for candidate PR #"+status.curriculumHold.candidatePrNumber+"; no educator or owner approval is required.");
 }
 if(!lunchVerified&&lunchOperationallyUsable){
   warnings.push("Lunch source bridge is unavailable; complete previously reviewed coverage remains usable"+(status.lunch.lastError?" ("+status.lunch.lastError+")":"")+".");
@@ -191,7 +191,7 @@ const md=[
   `- **Source-insufficient study topics:** ${status.contentPipeline.sourceInsufficientTopics.join(", ")||"none"}`,
   `- **Intentionally not practiced:** ${status.contentPipeline.notPracticedByDesignTopics.join(", ")||"none"}`,
   `- **Published-pack generator-unsupported topics (snapshot):** ${status.contentPipeline.unsupportedTopics.join(", ")||"none in last published pack"}; NOT a claim about the newest teacher refresh`,
-  `- **Latest refresh curriculum gate:** ${status.curriculumReview.state==="approval-blocked"?"BLOCKED — pending educator review in draft PR #"+status.curriculumReview.candidatePrNumber:"No verified hold evidence; newest teacher coverage is not established by the last published pack"}`,
+  `- **Latest refresh curriculum gate:** ${status.curriculumReview.state==="automated-qa-hold"?"AUTOMATED QA HOLD — unresolved candidate PR #"+status.curriculumReview.candidatePrNumber:"No verified hold evidence; newest teacher coverage is not established by the last published pack"}`,
   `- **Curriculum hold:** ${status.curriculumHold?"draft PR #"+status.curriculumHold.candidatePrNumber+"; publication intentionally blocked":"none verified in available workflow evidence"}`,
   `- **App version:** ${status.appVersion}`,
   `- **Service worker cache:** ${status.serviceWorkerCache}`,
