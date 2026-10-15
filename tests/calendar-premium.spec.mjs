@@ -344,7 +344,12 @@ test("Month summaries separate every reviewed same-day event into an accessible 
     });
     await expect(busyDay).toHaveCount(1);
     const items = busyDay.locator('ul[role="list"] > li');
-    await expect(items).toHaveText(expected);
+    // Preserve every exact source-backed event; cross-source date merges
+    // may reorder independently authored same-day entries without losing any.
+    await expect(items).toHaveCount(expected.length);
+    const actual = (await items.allTextContents()).map(value => value.trim());
+    expect(new Set(actual).size, 'Repeated same-day entries').toBe(actual.length);
+    expect([...actual].sort()).toEqual([...expected].sort());
     await expect(page.locator(".current-month-summary .cal-card-heading p")).toHaveCount(1);
     await expect(page.locator(".current-month-summary .cal-date-row p")).toHaveCount(0);
     const geometry = await items.evaluateAll(nodes => nodes.map(node => {

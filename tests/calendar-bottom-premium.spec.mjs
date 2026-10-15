@@ -46,7 +46,23 @@ test('specials are clean and sourced with all five days intact',async({page})=>{
 test('footer retains truthful teacher check state and real official links',async({page})=>{
   await load(page);
   const footer=page.locator('.cal-source-footer');
-  await expect(footer.locator('.freshness')).toContainText('Teacher pages need refresh');
+  // The historical test clock may precede a newly refreshed pack. Check the
+  // truthful freshness classification from the actual source timestamp rather
+  // than hard-coding what a previous week's pack happened to display.
+  const expectedFreshness = await page.evaluate(async testedTime => {
+    const response = await fetch('./data/study-pack.json', {cache:'no-store'});
+    if (!response.ok) throw new Error('School pack unavailable during freshness QA');
+    const envelope = await response.json();
+    const raw = envelope.sourceLastCheckedAt || envelope.pack?.sourceCheckedAt;
+    const checkedMs = Date.parse(raw || '');
+    if (!Number.isFinite(checkedMs)) return 'Teacher page check unavailable';
+    const hours = (Date.parse(testedTime) - checkedMs) / 3600000;
+    if (hours < -0.25) return 'Teacher page check time invalid';
+    if (hours > 30) return 'Teacher pages need refresh';
+    if (hours > 8) return 'Teacher pages older';
+    return 'Teacher pages verified';
+  }, fixed.toISOString());
+  await expect(footer.locator('.freshness')).toContainText(expectedFreshness);
   await expect(footer.locator('.teacher-live-source')).toHaveAttribute('href','https://sites.google.com/view/abvmgr2/home');
   await expect(footer.locator('.calendar-source-link a')).toHaveAttribute('href','https://www.assumptionbvmschool.net/about/calendar');
   await expect(footer.locator('.teacher-live-source')).toHaveAttribute('rel',/noopener noreferrer/);

@@ -84,6 +84,12 @@ test('legacy reading material cannot outrank the verified pipeline with unlisted
       questions: [],
       coverage: [],
     };
+    // An isolated engine authorization test must not depend on the live week's
+    // reading topics, which can rotate without changing these policy rules.
+    pack.subjects = [
+      ...(pack.subjects || []).filter(subject => subject.subject !== 'Reading / ELA'),
+      { subject: 'Reading / ELA', topics: ['Reading comprehension: theme and visualize'], studyNotes: [] },
+    ];
     const catalog = window.ABVMStudyGames.buildCatalog(pack, { sourceKey: 'reading-filter-test' });
     return catalog.questions
       .filter(question => question.tier === 'material' && question.subject === 'Reading / ELA')
@@ -451,7 +457,27 @@ test('Study Games honors pipeline authorization for high-frequency word practice
   const result = await page.evaluate(async () => {
     const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(response => response.json());
 
+    // These synthetic source topics exercise authorization, not current
+    // teacher curriculum. No synthetic content is written into the study pack.
+    const readingFixture = {
+      subject: 'Reading / ELA',
+      topics: [
+        'Sight words: she, boy, he, small, were, what, girl, here, by, want',
+        'Reading comprehension: theme and visualize',
+      ],
+      studyNotes: [],
+    };
+    const withReadingFixture = pack => {
+      pack.subjects = [
+        ...(pack.subjects || []).filter(subject => subject.subject !== 'Reading / ELA'),
+        structuredClone(readingFixture),
+      ];
+    };
     const allowed = structuredClone(envelope.pack);
+    withReadingFixture(allowed);
+    // Source-authorization tests exclude the separately governed historical
+    // review tier, which may legitimately retain lessons from last week.
+    allowed.recentReviewPipeline = {questions: []};
     allowed.contentPipeline = {
       schemaVersion: 2,
       sourceHash: 'sight-authorized',
@@ -463,6 +489,8 @@ test('Study Games honors pipeline authorization for high-frequency word practice
     const allowedCatalog = window.ABVMStudyGames.buildCatalog(allowed, { sourceKey: 'sight-authorized' });
 
     const blocked = structuredClone(envelope.pack);
+    withReadingFixture(blocked);
+    blocked.recentReviewPipeline = {questions: []};
     blocked.contentPipeline = {
       schemaVersion: 2,
       sourceHash: 'sight-blocked',
