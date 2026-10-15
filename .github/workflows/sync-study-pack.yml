@@ -89,12 +89,17 @@ jobs:
       - name: Scan and validate the public teacher pages
         run: node scripts/refresh-teacher-pages.mjs --autopilot-report=.curriculum-coverage-plan.json
 
+      # Candidate PR bookkeeping cannot block verified current lessons.
+      # Unsupported question families stay isolated by the later hard QA gate.
       - name: Open governed curriculum candidate PR when coverage gaps exist
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
+          # Always restore main, even when draft-PR bookkeeping fails halfway.
+          trap 'git switch main >/dev/null 2>&1 || true' EXIT
           COUNT="$(node -e 'const p=JSON.parse(require("fs").readFileSync(".curriculum-coverage-plan.json","utf8"));process.stdout.write(String(p.unsupportedCount||0))')"
           if [ "$COUNT" -eq 0 ]; then
             echo "Curriculum coverage is complete; no candidate PR required."
@@ -194,6 +199,8 @@ jobs:
       - name: Verify page-exact source parity and isolate unsupported curriculum
         shell: bash
         run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = main
           node scripts/assert-safe-teacher-refresh.mjs --report=.curriculum-coverage-plan.json
 
       - name: Verify refreshed source health
