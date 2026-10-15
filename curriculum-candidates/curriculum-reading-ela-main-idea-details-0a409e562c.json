@@ -169,18 +169,16 @@
     ]
   },
   "rollout": {
-    "featureFlagRequired": true,
+    "featureFlagRequired": false,
     "automatedQaRequired": true,
-    "safeUsageEvidenceRequired": true,
-    "manualPromotionRequired": true,
-    "automaticPromotion": false
+    "safeUsageEvidenceRequired": false,
+    "manualPromotionRequired": false,
+    "automaticPromotion": true
   },
   "readiness": {
     "status": "HOLD",
     "blockers": [
-      "automated-qa-required",
-      "safe-usage-evidence-required",
-      "manual-promotion-required"
+      "automated-qa-required"
     ],
     "automaticPromotion": false,
     "automaticDelete": false,

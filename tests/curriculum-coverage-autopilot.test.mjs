@@ -11,6 +11,7 @@ import {
   matchCurriculumFamily,
   curriculumFamilyRegistrySnapshot,
   curriculumFamilyRuntimeEnabled,
+  automaticCurriculumFamilyEligible,
   registeredCurriculumFamilyRules,
 } from '../scripts/curriculum-family-registry.mjs';
 import {
@@ -18,7 +19,7 @@ import {
   validateGrade2ContentPipeline,
 } from '../scripts/grade2-content-pipeline.mjs';
 
-test('candidate curriculum families require their exact explicit feature flag', () => {
+test('incomplete candidate families stay isolated except in explicitly scoped previews', () => {
   const approved = {
     rolloutStatus:'APPROVED',
     enabledByDefault:true,
@@ -34,6 +35,31 @@ test('candidate curriculum families require their exact explicit feature flag', 
   assert.equal(curriculumFamilyRuntimeEnabled(candidate), false);
   assert.equal(curriculumFamilyRuntimeEnabled(candidate, {activeFeatureFlags:['curriculum-family:other']}), false);
   assert.equal(curriculumFamilyRuntimeEnabled(candidate, {activeFeatureFlags:['curriculum-family:test-candidate']}), true);
+});
+
+test('complete source-aligned candidate family auto-enables without a manual promotion or feature flag', () => {
+  const proven = matchCurriculumFamily('Reading / ELA', 'subject & predicate');
+  const candidate = {
+    ...proven,
+    rolloutStatus: 'CANDIDATE',
+    enabledByDefault: false,
+    patternSource: 'subject\\s*(?:&|and)\\s*predicate',
+  };
+  assert.equal(automaticCurriculumFamilyEligible(candidate), true);
+  assert.equal(curriculumFamilyRuntimeEnabled(candidate), true);
+
+  const missingQuestions = {...candidate, supplementalQuestions: candidate.supplementalQuestions.slice(0, 2)};
+  assert.equal(automaticCurriculumFamilyEligible(missingQuestions), false);
+  assert.equal(curriculumFamilyRuntimeEnabled(missingQuestions), false);
+
+  const altered = structuredClone(candidate);
+  altered.baseQuestion.answer = 'unlisted answer';
+  assert.equal(automaticCurriculumFamilyEligible(altered), false);
+  assert.equal(curriculumFamilyRuntimeEnabled(altered), false);
+
+  const duplicate = structuredClone(candidate);
+  duplicate.supplementalQuestions[0].prompt = candidate.baseQuestion.prompt;
+  assert.equal(automaticCurriculumFamilyEligible(duplicate), false);
 });
 
 test('unknown curriculum feature flags do not change the production generator', () => {
@@ -105,7 +131,7 @@ test('unsupported teacher skill becomes a disabled source-grounded candidate ins
   assert.equal(candidate.sourceContext.matchMethod, 'exact-topic-phrase');
   assert.equal(candidate.sourceContext.sourceTitle, 'Tests');
   assert.match(candidate.sourceContext.sourceLine, /syllable types/i);
-  assert.equal(candidate.rollout.automaticPromotion, false);
+  assert.equal(candidate.rollout.automaticPromotion, true);
   assert.equal(candidate.authoring.status, 'AUTHORING_REQUIRED');
   assert.equal(candidate.authoring.generatedQuestionCount, 0);
   assert.deepEqual(curriculumCandidateIntrinsicBlockers(candidate), [
@@ -116,8 +142,9 @@ test('unsupported teacher skill becomes a disabled source-grounded candidate ins
   ]);
   assert.equal(candidate.readiness.status, 'HOLD');
   assert.ok(candidate.readiness.blockers.includes('automated-qa-required'));
-  assert.ok(candidate.readiness.blockers.includes('safe-usage-evidence-required'));
-  assert.ok(candidate.readiness.blockers.includes('manual-promotion-required'));
+  assert.equal(candidate.rollout.manualPromotionRequired, false);
+  assert.equal(candidate.rollout.safeUsageEvidenceRequired, false);
+  assert.ok(!candidate.readiness.blockers.some(reason => /manual|safe-usage/.test(reason)));
 });
 
 test('candidate manifest rejects stale authoring metadata that overstates its question family', () => {
@@ -194,7 +221,7 @@ test('approved subject-predicate registry family is absorbed by normal refresh g
   );
 });
 
-test('candidate promotion requires full family, automated QA, safe usage evidence, and manual approval', () => {
+test('candidate promotion requires complete source-backed family and automated QA, without manual approval', () => {
   const family = matchCurriculumFamily('Reading / ELA', 'subject & predicate');
   assert.ok(family);
   const questions = [family.baseQuestion, ...family.supplementalQuestions].map((question, index) => ({
@@ -234,23 +261,17 @@ test('candidate promotion requires full family, automated QA, safe usage evidenc
   tooEasy.proposedQuestions[0].difficulty = 1;
   assert.ok(curriculumCandidateIntrinsicBlockers(tooEasy).includes('question-1:difficulty-invalid'));
 
-  const beforeManual = evaluateCurriculumCandidate(candidate, {
-    automatedQaPassed: true,
-    safeUsageEvidence: 'sufficient-safe-usage',
-    manualApproval: false,
-  });
-  assert.equal(beforeManual.status, 'HOLD');
-  assert.deepEqual(beforeManual.blockers, ['manual-promotion-required']);
-  assert.equal(beforeManual.automaticPromotion, false);
+  const beforeQa = evaluateCurriculumCandidate(candidate);
+  assert.equal(beforeQa.status, 'HOLD');
+  assert.deepEqual(beforeQa.blockers, ['automated-qa-required']);
+  assert.equal(beforeQa.automaticPromotion, false);
 
-  const ready = evaluateCurriculumCandidate(candidate, {
-    automatedQaPassed: true,
-    safeUsageEvidence: 'sufficient-safe-usage',
-    manualApproval: true,
-  });
-  assert.equal(ready.status, 'READY_FOR_MANUAL_PROMOTION');
+  // No manual, teacher, school, educator or pilot approval is required.
+  const ready = evaluateCurriculumCandidate(candidate, {automatedQaPassed: true});
+  assert.equal(ready.status, 'READY_FOR_AUTOMATIC_PROMOTION');
   assert.deepEqual(ready.blockers, []);
-  assert.equal(ready.automaticPromotion, false);
+  assert.equal(ready.automaticPromotion, true);
+  assert.equal(ready.automaticDelete, false);
 });
 
 test('registry exposes feature flags and never treats draft candidates as production inventory', () => {

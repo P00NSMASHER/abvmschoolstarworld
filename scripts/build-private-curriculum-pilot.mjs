@@ -79,7 +79,7 @@ export function buildPrivateCurriculumPilotHtml(candidates = readHeldCandidates(
     '</section>',
     '<footer>',
     '<p>Content fingerprint: <code>' + escapeHtml(report.contentFingerprint) + '</code></p>',
-    '<p>Reviewer sign-off and genuine permissioned pilot observations must be retained privately outside GitHub.',
+    '<p>Optional review notes and any real learner observations must be kept private; neither is required to promote an independently verified question family.',
     ' This file must not be placed in Pages, shared publicly, or treated as evidence of student performance.</p>',
     '</footer></main>',
     '<script id="pilot-payload" type="application/json">' + inertJSON(payload) + '</script>',

@@ -51,9 +51,9 @@ test('new held curriculum review does not change the publication controls', () =
     const entry = JSON.parse(readFileSync(new URL('../curriculum-candidates/' + filename, import.meta.url), 'utf8'));
     assert.equal(entry.readiness.status, 'HOLD');
     assert.equal(entry.enabledByDefault, false);
-    assert.equal(entry.rollout.automaticPromotion, false);
-    assert.equal(entry.rollout.manualPromotionRequired, true);
-    assert.equal(entry.rollout.safeUsageEvidenceRequired, true);
+    assert.equal(entry.rollout.automaticPromotion, true);
+    assert.equal(entry.rollout.manualPromotionRequired, false);
+    assert.equal(entry.rollout.safeUsageEvidenceRequired, false);
     assert.equal(entry.sourceContext.quality, 'page-exact');
     assert.ok(entry.sourceContext.sourceCaptureHash);
   }

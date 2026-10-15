@@ -62,7 +62,7 @@ test('rejects dishonest and unisolated curriculum coverage', () => {
   for (const mutate of [
     ({plan}) => { plan.unsupportedCount = 0; },
     ({plan}) => { plan.candidates[0].enabledByDefault = true; },
-    ({plan}) => { plan.candidates[0].readiness.status = 'READY_FOR_MANUAL_PROMOTION'; },
+    ({plan}) => { plan.candidates[0].readiness.status = 'READY_FOR_AUTOMATIC_PROMOTION'; },
     ({pack}) => { pack.pack.contentPipeline.qa.unsupportedSkillCount = 0; },
     ({pack}) => { pack.pack.contentPipeline.coverage[1].status = 'COVERED'; },
     ({pack}) => { pack.pack.contentPipeline.questions[0].skill = 'charts'; },

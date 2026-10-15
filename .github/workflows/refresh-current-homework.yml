@@ -7,10 +7,12 @@ on:
       - 'scripts/refresh-current-homework.mjs'
       - 'scripts/homework-posting.mjs'
       - 'scripts/teacher-page-parsers.mjs'
+      - 'scripts/source-freshness-recovery.mjs'
+      - '.github/workflows/daily-source-recovery.yml'
       - '.github/workflows/refresh-current-homework.yml'
   schedule:
-    # School-evening posts are time-critical; check through 9 PM Eastern.
-    - cron: '23 6,9,12,15-21 * * *'
+    # School-evening posts are time-critical; verify through 11 PM Eastern.
+    - cron: '23 6,9,12,15-23 * * *'
       timezone: 'America/New_York'
   workflow_dispatch:
 

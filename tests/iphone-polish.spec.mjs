@@ -19,9 +19,20 @@ async function openNotes(page){
   await expect(notes).toHaveAttribute('open','');
   const lessons=notes.locator('[data-note-subject]:not([hidden]) details');
   await expect(lessons.first()).toBeVisible();
-  for(const lesson of await lessons.all()){
-    if(!await lesson.evaluate(node=>node.open))await lesson.locator(':scope > summary').click();
-  }
+  // Verify that a real disclosure can be opened by tapping its summary.
+  // The clipping test then expands the full set directly: dozens of
+  // successive off-screen WebKit clicks can exceed the test timeout while
+  // testing scroll animation rather than text clipping.
+  const first=lessons.first();
+  if(!await first.evaluate(node=>node.open))await first.locator(':scope > summary').click();
+  await expect(first).toHaveAttribute('open','');
+  const count=await lessons.count();
+  expect(count).toBeGreaterThan(0);
+  const expanded=await lessons.evaluateAll(nodes=>{
+    for(const node of nodes) node.open=true;
+    return nodes.every(node=>node.open);
+  });
+  expect(expanded,'All lesson bodies must be expanded for overflow inspection').toBe(true);
   return notes;
 }
 

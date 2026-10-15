@@ -41,12 +41,12 @@ function runFixture({withHold}){
 test("a held new curriculum refresh cannot be erased by the historical published-pack unsupported count",()=>{
   const {status,summary}=runFixture({withHold:true});
   assert.equal(status.contentPipeline.snapshotScope,"last-published-pack");
-  assert.equal(status.curriculumReview.state,"approval-blocked");
+  assert.equal(status.curriculumReview.state,"automated-qa-hold");
   assert.equal(status.curriculumReview.candidatePrNumber,270);
   assert.equal(status.curriculumReview.automatedPromotion,false);
   assert.match(summary,/Published-pack generator-unsupported topics \(snapshot\)/);
   assert.match(summary,/NOT a claim about the newest teacher refresh/);
-  assert.match(summary,/Latest refresh curriculum gate:.*BLOCKED.*draft PR #270/);
+  assert.match(summary,/Latest refresh curriculum gate:.*AUTOMATED QA HOLD.*candidate PR #270/);
   assert.doesNotMatch(summary,/Unsupported teacher skills:\*\* none/);
   assert.equal(status.overall,"critical","the hold cannot hide stale source data");
 });

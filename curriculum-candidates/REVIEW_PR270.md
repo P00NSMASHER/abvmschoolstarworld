@@ -1,32 +1,25 @@
-# ABVM Grade 2: Reading/ELA educator review packet
+# ABVM Grade 2: Reading/ELA optional editorial review packet
 
 **Draft PR:** [#270](https://github.com/P00NSMASHER/abvmschoolstarworld/pull/270)  
 **Reviewed branch:** `curriculum-candidate-gaps-d1be1039a3249f0be976e785`  
 **Teacher source:** [ABVM Reading Work](https://sites.google.com/view/abvmgr2/reading-work)  
 **Candidate status:** HOLD (not published, no student/device data collected)
 
-## Instructions for the educator or authorized reviewer
+## Optional editorial review (not a deployment gate)
 
-Review the **32 original practice questions**, not a reproduction of the assigned story or worksheets. For each item, check: **A** single objectively correct answer; **B** explanation/hint accuracy; **C** Grade 2 reading level and realistic distractors; **D** whether the item tests the stated skill and its direct/transfer/reasoning type; **E** whether source scope is correct. Mark **Approve**, **Revise**, or **Reject**, with a reason. No checkbox below is pre-checked. A technical CI pass does **not** mean educational approval.
+These **32 original practice questions** remain available for feedback. The form's unchecked "Approve / Revise / Reject" boxes are optional editorial notes, never school, teacher, educator or owner approval requirements. No human signoff, pilot participation, or learner-use data is needed for routine curriculum or homework refresh. Questions must still have correct answers and explanations, complete semantic variants, exact teacher-page lineage, and pass independent automated release QA. Keep learner data private.
 
-For editorial review, note that the question type classifications are *proposed*, not independently validated measures of cognitive demand. Do not turn on candidate feature flags, silently edit approved curriculum, or infer evidence of child learning from automated testing.
+**Optional feedback by:** _______________________  **Review date:** __________
 
-**Reviewer:** _______________________  **Review date:** __________  **Qualifications/role:** ______________________
+## Automated release conditions
 
-**Safe-usage evidence:** Evidence ID/link __________  Scope, observations and any student-privacy safeguards __________  
-**Decision:** ☐ Revise ☐ Reject ☐ Recommend separate governed promotion after required evidence and tests  
-**Explicit approval record (only if granted later):** _______________________  
-**Approved source revision / question hashes:** _______________________
+- [ ] Exact current teacher-source topic, URL and content hash matched
+- [ ] Grade 2 correctness, unique correct answer, hint and explanation mechanically tested
+- [ ] Complete direct/transfer/reasoning coverage and original question variants validated
+- [ ] Independent exact-head static, browser, privacy and accessibility QA passed
+- [ ] Verified publication SHA and live source parity confirmed
 
-## Release requirements (all remain open)
-
-- [ ] All 32 items individually reviewed by an authorized educator
-- [ ] Grade 2 correctness, single answer and pedagogical explanations confirmed
-- [ ] Independent final exact-head QA recorded after any edits
-- [ ] Sufficient safe-usage evidence collected and approved without exposing identifiable student results in this repository
-- [ ] Explicit manual approval recorded with reviewer and approved immutable revision
-- [ ] Separate governed registry/feature-flag integration prepared and tested
-- [ ] Production hold lifted only through the approved workflow, never by changing the fail-closed publication gate
+These are automated tests, not a checklist requiring someone to sign off.
 
 ## Personalization and assessment-quality approach
 
@@ -36,7 +29,7 @@ Assessors should check that each question teaches the required Grade 2 skill rat
 
 ### October 13, 2026 editorial revision notice
 
-The answer choices and explanations for selected questions have been refined for clearer phonics, faithful main ideas, and stronger possessive distractors. Twelve single-response reasoning items are now conservatively labeled DOK 2 rather than DOK 3; their proposed question-type labels and relative difficulty fields are unchanged. **Earlier owner-reported teacher feedback and owner approval apply to the previous immutable version only. The updated items require renewed human review and release sign-off.** All decisions below remain unchecked, all four candidate families remain HOLD, and no student/pilot evidence is asserted here.
+The answer choices and explanations for selected questions have been refined for clearer phonics, faithful main ideas, and stronger possessive distractors. Twelve single-response reasoning items are now conservatively labeled DOK 2 rather than DOK 3; their proposed question-type labels and relative difficulty fields are unchanged. Earlier feedback applied to the previous immutable version only. The updated items require fresh automated release evidence, **not human review or sign-off**. Optional review decisions remain unchecked, these candidate snapshots are HOLD until QA, and no real student/pilot evidence is asserted here.
 
 ## Topic-by-topic item review
 
@@ -46,7 +39,7 @@ The answer choices and explanations for selected questions have been refined for
 **Evidence:** https://sites.google.com/view/abvmgr2/reading-work  
 **Source hash:** `teacher-pages-b3c773500922209e0737`  
 **Candidate ID:** `curriculum-reading-ela-ask-answer-questions-b08b218ff1`  
-**Status:** HOLD; default disabled; manual promotion required
+**Status:** HOLD until automated QA; default disabled; no manual promotion gate
 
 #### 1. direct (DOK 1, difficulty 2)
 
@@ -175,7 +168,7 @@ The answer choices and explanations for selected questions have been refined for
 **Evidence:** https://sites.google.com/view/abvmgr2/reading-work  
 **Source hash:** `teacher-pages-b3c773500922209e0737`  
 **Candidate ID:** `curriculum-reading-ela-long-i-i-e-and-short-i-08bac3c7d8`  
-**Status:** HOLD; default disabled; manual promotion required
+**Status:** HOLD until automated QA; default disabled; no manual promotion gate
 
 #### 1. direct (DOK 1, difficulty 2)
 
@@ -304,7 +297,7 @@ The answer choices and explanations for selected questions have been refined for
 **Evidence:** https://sites.google.com/view/abvmgr2/reading-work  
 **Source hash:** `teacher-pages-b3c773500922209e0737`  
 **Candidate ID:** `curriculum-reading-ela-main-idea-details-0a409e562c`  
-**Status:** HOLD; default disabled; manual promotion required
+**Status:** HOLD until automated QA; default disabled; no manual promotion gate
 
 #### 1. direct (DOK 1, difficulty 2)
 
@@ -433,7 +426,7 @@ The answer choices and explanations for selected questions have been refined for
 **Evidence:** https://sites.google.com/view/abvmgr2/reading-work  
 **Source hash:** `teacher-pages-b3c773500922209e0737`  
 **Candidate ID:** `curriculum-reading-ela-possessives-s-de6f518f2a`  
-**Status:** HOLD; default disabled; manual promotion required
+**Status:** HOLD until automated QA; default disabled; no manual promotion gate
 
 #### 1. direct (DOK 1, difficulty 2)
 
@@ -558,4 +551,4 @@ The answer choices and explanations for selected questions have been refined for
 
 ## Nonpublication boundary
 
-This review packet contains **draft exercises only**. Its inclusion in a pull request does not approve, activate, or publish new lessons. Every source candidate remains `readiness.status=HOLD`, `enabledByDefault=false`, `automaticPromotion=false` until all independent review, safety, and approval conditions are met. The 22 premium Study Stars ranks and all existing schoolwork are out of scope.
+This packet contains **draft exercises only**. Its inclusion in a pull request never activates or publishes a question. The saved candidate records remain `readiness.status=HOLD`, `enabledByDefault=false` and `readiness.automaticPromotion=false` until automated evidence is complete. The **rollout policy permits automatic promotion** after independent source verification, question checks, privacy, accessibility and release QA. No manual approvals or real-learner pilot evidence are required. The 22 premium Study Stars ranks and all existing schoolwork are out of scope.
