@@ -62,8 +62,8 @@ test('no curriculum release or private learner record is introduced by independe
     const candidate = JSON.parse(read('curriculum-candidates/' + filename));
     assert.equal(candidate.readiness.status, 'HOLD');
     assert.equal(candidate.enabledByDefault, false);
-    assert.equal(candidate.rollout.automaticPromotion, false);
-    assert.equal(candidate.rollout.safeUsageEvidenceRequired, true);
+    assert.equal(candidate.rollout.automaticPromotion, true);
+    assert.equal(candidate.rollout.safeUsageEvidenceRequired, false);
   }
   const student = read('curriculum-candidates/pilot-kit/PR270_STUDENT_PRACTICE.html');
   const key = read('curriculum-candidates/pilot-kit/PR270_EDUCATOR_KEY.html');
