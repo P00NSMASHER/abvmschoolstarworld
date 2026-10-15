@@ -7,6 +7,7 @@ import {
   pageLines,
   parseHomework,
   parseStoryTitles,
+  spellingSourceLines,
   teacherContentLines,
 } from './teacher-page-parsers.mjs';
 import { validateUploadedNoticePolicy } from './uploaded-notice-policy.mjs';
@@ -71,14 +72,17 @@ async function fetchPage(path, title) {
       if (new URL(response.url).hostname === 'accounts.google.com' || /<title>\s*Sign in(?:\s|<)/i.test(html)) {
         throw new Error(`${title} unexpectedly requires Google sign-in.`);
       }
-      const lines = pageLines(html);
+      const baseLines = pageLines(html);
+      const spellingLines = title === 'Weekly Spelling List' ? spellingSourceLines(html) : null;
+      // Hash and audit the same verified spelling words that are published.
+      const lines = spellingLines?.length ? [...new Set([...baseLines, ...spellingLines])] : baseLines;
       const hasExpectedHeading = title === 'Home'
         ? lines.some(line => /Mrs\.\s*Benulis.*ABVM Grade 2/i.test(line))
         : lines.some(line => line.toLowerCase() === title.toLowerCase());
       if (!hasExpectedHeading) {
         throw new Error(`${title} did not contain its expected page heading.`);
       }
-      return { title, url, lines };
+      return { title, url, lines, spellingLines };
     } catch (error) {
       lastError = error;
       if (attempt < 3) await new Promise(resolve => setTimeout(resolve, attempt * 1_500));
@@ -298,7 +302,7 @@ const testItems = parseDatedLines(pages.Tests.lines).map(item => ({ ...item, kin
 if (testItems.length < 2) throw new Error('Tests page did not contain enough dated tests to publish safely.');
 
 const religionLines = teacherContentLines(pages.Religion.lines, 'Religion');
-const spellingLines = teacherContentLines(pages['Weekly Spelling List'].lines, 'Weekly Spelling List');
+const spellingLines = pages['Weekly Spelling List'].spellingLines ?? teacherContentLines(pages['Weekly Spelling List'].lines, 'Weekly Spelling List');
 if (!religionLines.some(line => /^Unit\s/i.test(line)) || !religionLines.some(line => /^Chapter\s/i.test(line))) {
   throw new Error('Religion page did not contain the expected unit and chapter material.');
 }
@@ -445,7 +449,7 @@ pack.sourceCapturedAt = capturedAt;
 pack.sourceCheckedAt = checkedAt;
 pack.generatedAt = checkedAt;
 pack.weekLabel = schoolWeekLabel(new Date(checkedAt));
-pack.summary = `Current Grade 2 teacher-site material: Homework lists ${readableList(homework.slice(0, 4).map(item => item.subject === 'Parent' ? `parent task “${item.task}”` : `${item.subject} “${item.task}”`))}. Upcoming tests include ${readableList(testItems.slice(0, 4).map(item => `${item.label} on ${item.date}`))}. ${uploadedNotices.documents.length} uploaded school notices are integrated with the teacher pages.`;
+pack.summary = `Current Grade 2 teacher-site material: Homework lists ${readableList(homework.slice(0, 4).map(item => item.subject === 'Parent' ? `parent task “${item.task}”` : `${item.subject} “${item.task}”`))}. Upcoming tests include ${readableList(currentTests.slice(0, 4).map(item => `${item.label} on ${item.date}`))}. ${uploadedNotices.documents.length} uploaded school notices are integrated with the teacher pages.`;
 pack.sourceSufficient = true;
 pack.gaps = (pack.gaps || []).filter(item => !/source bridge|four-hour|does not show a date|spelling-word list|weekly spelling|reading work page leaves/i.test(item));
 pack.gaps = [...new Set([...pack.gaps,
