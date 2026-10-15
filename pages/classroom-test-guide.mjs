@@ -1,4 +1,5 @@
-/** Photo-informed black-and-white Grade 2 practice pages. Original questions only. */
+/** Print-friendly, photo-informed original Grade 2 practice, never teacher test copies. */
+import {premiumPaperCss,decoratePaper} from './premium-paper-theme.mjs?v=1';
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clean = value => String(value ?? '').replace(/\s+/g,' ').trim();
 const arr = value => Array.isArray(value) ? value : [];
@@ -54,6 +55,7 @@ function pageHeader(title,guide,adult=false) {
 }
 function sourceNote(guide) {
   return '<footer class="source-note">'+escape(guide?.sourceLabel || 'Current reviewed material and original practice')+
+    (guide?.sourceCheckedAt ? ' · Teacher source checked '+escape(String(guide.sourceCheckedAt).slice(0,10)) : '')+
     ' · Not a school-issued assessment. Automatically generated for this test.</footer>';
 }
 function itemMode(item,kind) {
@@ -88,7 +90,7 @@ function keyHtml(item,index,kind) {
   return '<li><b>'+(index+1)+'.</b> '+escape(item.answer)+'</li>';
 }
 function spellingSheet(guide) {
-  const words=unique(guide?.spellingWords).filter(word=>/^[a-z][a-z'-]*$/i.test(word)).slice(0,30);
+  const words=unique(guide?.spellingWords).filter(word=>/^[a-z][a-z'-]*$/i.test(word));
   const silent=words.filter(word=>/[aeiou][^aeiou]e$/i.test(word)),shortI=words.filter(word=>/i[^aeiou]+$/i.test(word));
   const tips=[];
   if(silent.length)tips.push('<li><b>Magic e:</b> '+silent.map(escape).join(', ')+'. The final e makes the vowel say its name.</li>');
@@ -98,7 +100,9 @@ function spellingSheet(guide) {
   if(words.includes('says'))tips.push('<li><b>says:</b> It sounds like “sez”; remember the surprising A-Y. Say S-A-Y-S.</li>');
   if(!tips.length)tips.push('<li>Circle the tricky letters. Group words that share a vowel sound or ending.</li>');
   const list=words.length
-    ? '<p class="instruction">Words confirmed from matching-week schoolwork. The teacher may dictate them in a different order.</p>'+
+    ? '<p class="instruction">'+escape(/teacher page undated/i.test(String(guide?.sourceLabel || ''))
+      ? "Words observed on the teacher’s public spelling page this week (page undated). The teacher may dictate them in a different order."
+      : 'Words confirmed from matching-week schoolwork. The teacher may dictate them in a different order.')+'</p>'+
       '<ol class="word-list">'+words.map((word,index)=>'<li><span class="word-number">'+(index+1)+'.</span><strong>'+escape(word)+'</strong><span class="word-check" aria-hidden="true">□</span></li>').join('')+'</ol>'
     : '<p class="caution">No confirmed word list is available for this test. Older spelling words are not substituted for the current list.</p>';
   return '<main class="sheet spelling-sheet">'+pageHeader('Spelling Word Study',guide)+
@@ -114,9 +118,10 @@ function spellingSheet(guide) {
 export function renderClassroomStudyGuide(guide,dictionary=()=> '') {
   const kind=subjectKind(guide),titles={math:'Math Practice Test',grammar:'Grammar Practice Test',reading:'Reading Practice Test',religion:'Religion Practice Test'};
   const head='<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+
-    escape(guide?.label || 'Study Guide')+'</title><style>'+styles+'</style></head><body>';
-  if(kind==='spelling')return head+spellingSheet(guide)+'</body></html>';
-  const questions=arr(guide?.practice).slice(0,kind==='math'?8:10);
+    escape(guide?.label || 'Study Guide')+'</title><style>'+styles+premiumPaperCss+'</style></head><body>';
+  if(kind==='spelling')return decoratePaper(head+spellingSheet(guide)+'</body></html>',kind);
+  // A test packet must not silently drop verified topics or checked practice questions.
+  const questions=arr(guide?.practice);
   const instructions={math:'Solve each problem. Show your work in the boxes. Write your answer clearly.',
     grammar:'Read each question. Underline, mark, or circle the answer as directed.',
     reading:'Read each question. Circle the best answer using what you learned.',
@@ -131,9 +136,9 @@ export function renderClassroomStudyGuide(guide,dictionary=()=> '') {
       questions.map((row,i)=>questionHtml(row,i,kind)).join('')+'</ol>'
       :'<p class="caution">No matching original-practice questions are available for this assessment. Review the available class notes.</p>')+
     arr(guide?.warnings).slice(0,3).map(note=>'<p class="caution">'+escape(note)+'</p>').join('')+sourceNote(guide)+'</main>';
-  if(!questions.length)return head+student+'</body></html>';
-  const facts=unique(guide?.facts).slice(0,6);
-  const words=arr(guide?.vocabulary).slice(0,8).map(row=>{
+  if(!questions.length)return decoratePaper(head+student+'</body></html>',kind);
+  const facts=unique(guide?.facts);
+  const words=arr(guide?.vocabulary).map(row=>{
     const term=clean(row?.term),supplied=clean(row?.meaning);
     const meaning=supplied&&!/teacher page does not provide a definition|no definition supplied/i.test(supplied)?supplied:clean(dictionary(term));
     return {term,meaning};
@@ -145,5 +150,5 @@ export function renderClassroomStudyGuide(guide,dictionary=()=> '') {
     '<h2>Answers</h2><ol class="key-list">'+questions.map((row,i)=>keyHtml(row,i,kind)).join('')+'</ol>'+
     (factsHtml||wordsHtml?'<section class="key-notes">'+factsHtml+wordsHtml+'</section>':'')+
     sourceNote(guide)+'</section>';
-  return head+student+key+'</body></html>';
+  return decoratePaper(head+student+key+'</body></html>',kind);
 }

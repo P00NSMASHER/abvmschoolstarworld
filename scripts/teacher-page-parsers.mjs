@@ -30,6 +30,36 @@ export function pageLines(html) {
   return [...new Set(lines)];
 }
 
+// Google Sites renders the teacher's spelling table as <small><span> text,
+// not the paragraphs and table cells used by the other teacher pages.
+// Keep this extraction scoped to the visible spelling block so that "home"
+// (an actual spelling word) is never mistaken for a navigation label.
+export function parseGoogleSitesSpellingList(html) {
+  const withoutScripts = String(html || '').replace(/<(script|style|svg)\b[\s\S]*?<\/\1>/gi, ' ');
+  const tokens = [];
+  for (const small of withoutScripts.matchAll(/<small\b([^>]*)>([\s\S]*?)<\/small>/gi)) {
+    if (!/\bzfr3Q\b/i.test(small[1]) || !/\bTMjjoe\b/i.test(small[1])) continue;
+    for (const span of small[2].matchAll(/<span\b([^>]*)>([\s\S]*?)<\/span>/gi)) {
+      if (!/\bC9DxTc\b/.test(span[1])) continue;
+      const text = decodeHtml(span[2].replace(/<[^>]*>/g, ' ')).replace(/\s+/g, ' ').trim();
+      if (text) tokens.push(text);
+    }
+  }
+
+  const basicStart = tokens.findIndex(line => /^Basic Words\s*:?$/i.test(line));
+  const skill = tokens.find(line => /^Skill\s*:/i.test(line)) || '';
+  if (basicStart < 0) return { skill, words: [] };
+
+  const words = [];
+  for (const line of tokens.slice(basicStart + 1)) {
+    if (/^(?:Basic|Review|High Frequency)\s+Words\s*:?$/i.test(line)) continue;
+    if (/^(?:Google Sites|Report abuse)$/i.test(line)) break;
+    if (/^[a-z]+(?:['-][a-z]+)*$/i.test(line)) words.push(line.toLowerCase());
+  }
+  if (words.length > 40) throw new Error('Implausibly large teacher spelling list; inspect source layout.');
+  return { skill, words: [...new Set(words)] };
+}
+
 export function cleanTeacherText(value) {
   const cleaned = String(value || '')
     .replace(/Handwrititng/gi, 'Handwriting')

@@ -1,5 +1,6 @@
 /** Separate current-curriculum learning notes and assessment-style practice papers. */
-import {renderClassroomStudyGuide} from './classroom-test-guide.mjs?v=1';
+import {renderClassroomStudyGuide} from './classroom-test-guide.mjs?v=2';
+import {premiumPaperCss,decoratePaper} from './premium-paper-theme.mjs?v=1';
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clean=value=>String(value??'').replace(/\s+/g,' ').trim();
@@ -78,10 +79,11 @@ const baseCss=[
   '@media print{body{background:#fff}.sheet{width:100%;max-width:none}.adult-key{break-before:page}.section,.card,.worked,.organizer-prompt{break-inside:avoid}}',
 ].join('');
 const htmlHead=(guide,title)=>'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+
-  esc(title+' · '+clean(guide?.label))+'</title><style>'+baseCss+'</style></head><body>';
+  esc(title+' · '+clean(guide?.label))+'</title><style>'+baseCss+premiumPaperCss+'</style></head><body>';
 const header=(guide,title,subtitle)=>'<header class="header"><div class="eyebrow"><span>ABVM GRADE 2 · TEST PREP</span><span class="date">'+esc(when(guide?.date))+'</span></div>'+
   '<h1>'+esc(title)+'</h1><p class="subtitle">'+esc(subtitle)+'</p></header>';
 const footer=guide=>'<footer class="footer">'+esc(guide?.sourceLabel||'Current reviewed class material')+
+  (guide?.sourceCheckedAt ? ' · Teacher source checked '+esc(String(guide.sourceCheckedAt).slice(0,10)) : '')+
   ' · Original home practice · Not a school-issued test.</footer>';
 const warningHtml=guide=>rows(guide?.warnings).slice(0,3).filter(Boolean).map(w=>'<p class="warning">'+esc(w)+'</p>').join('');
 function strategies(guide,kind){
@@ -112,11 +114,11 @@ function goal(guide,kind){
 }
 export function renderTestStudyGuide(guide,dictionary=()=> ''){
   if(kindOf(guide)==='spelling')return renderClassroomStudyGuide(guide,dictionary);
-  const kind=kindOf(guide),facts=unique(guide?.facts).slice(0,6);
+  const kind=kindOf(guide),facts=unique(guide?.facts);
   const questions=rows(guide?.practice).filter(q=>clean(q?.prompt)&&clean(q?.answer));
   const first=questions.slice(0,Math.min(2,questions.length));
-  const recall=questions.slice(2);
-  const vocabulary=rows(guide?.vocabulary).slice(0,8).map(word=>{
+  const recall=questions.slice(2,4);
+  const vocabulary=rows(guide?.vocabulary).map(word=>{
     const term=clean(word?.term),supplied=clean(word?.meaning);
     const meaning=supplied&&!/teacher page does not provide a definition|no definition supplied/i.test(supplied)?supplied:clean(dictionary(term));
     return {term,meaning};
@@ -132,23 +134,29 @@ export function renderTestStudyGuide(guide,dictionary=()=> ''){
   const recallHtml=recall.length?'<section class="section"><h2><span class="index">04</span> Cover and recall</h2><div class="self-check">'+
     recall.map(q=>'<div class="question"><p>'+esc(q.prompt)+'</p><p class="small-answer">Check after answering: <b>'+esc(q.answer)+'</b></p></div>').join('')+
     '</div></section>':'';
+  // The remaining verified practice must be represented in the study guide too.
+  // It is intentionally not truncated at a page count: print CSS paginates it.
+  const remaining=questions.slice(4);
+  const extraReview=remaining.length?'<section class="section full-review"><h2>More matching practice to know</h2><ol class="review-list">'+
+    remaining.map(q=>'<li class="review-item"><strong>'+esc(q.prompt)+'</strong><p>Answer: '+esc(q.answer)+'</p>'+
+      (clean(q.explanation)?'<small>'+esc(q.explanation)+'</small>':'')+'</li>').join('')+'</ol></section>':'';
   const vocabHtml=vocabulary.length?'<section class="section"><h2><span class="index">03</span> Words to know</h2><dl class="vocabulary">'+
     vocabulary.map(q=>'<div><dt>'+esc(q.term)+'</dt>'+(q.meaning?'<dd>'+esc(q.meaning)+'</dd>':'')+'</div>').join('')+'</dl></section>':'';
-  return htmlHead(guide,'Study guide')+'<main class="sheet study-guide">'+
+  return decoratePaper(htmlHead(guide,'Study guide')+'<main class="sheet study-guide">'+
     header(guide,'Study Guide',clean(guide?.label)||'Upcoming class test')+
     '<div class="badge-row"><span>01 LEARN</span><span>02 SEE AN EXAMPLE</span><span>03 PRACTICE</span></div>'+
     '<div class="focus-note"><strong>My learning goal</strong>'+esc(goal(guide,kind))+'</div>'+
     '<div class="columns"><section class="section card"><h2><span class="index">01</span> What I need to know</h2>'+factContent+'</section>'+
     '<section class="section card"><h2><span class="index">02</span> How to remember it</h2>'+howTo+'</section></div>'+
     '<section class="section"><h2><span class="index">03</span> Learn from a worked example</h2>'+exampleHtml+'</section>'+
-    vocabHtml+recallHtml+
+    vocabHtml+recallHtml+extraReview+
     '<div class="checklist"><label><i class="checkbox" aria-hidden="true"></i>I can explain the main idea.</label>'+
     '<label><i class="checkbox" aria-hidden="true"></i>I can solve an example.</label>'+
     '<label><i class="checkbox" aria-hidden="true"></i>I am ready for my worksheet.</label></div>'+
-    warningHtml(guide)+footer(guide)+'</main></body></html>';
+    warningHtml(guide)+footer(guide)+'</main></body></html>',kind);
 }
 function dictationWorksheet(guide){
-  const words=unique(guide?.spellingWords).filter(word=>/^[a-z][a-z'-]*$/i.test(word)).slice(0,30);
+  const words=unique(guide?.spellingWords).filter(word=>/^[a-z][a-z'-]*$/i.test(word));
   const count=words.length||15;
   const lines=Array.from({length:count},(_,index)=>'<div class="dictation-item"><span class="n">'+(index+1)+'.</span>'+
     '<span class="hand-line" aria-label="Write word '+(index+1)+'"></span></div>').join('');
@@ -161,22 +169,26 @@ function dictationWorksheet(guide){
   const key=words.length?'<section class="sheet adult-key">'+header(guide,'Adult Dictation List','Keep this page separate from the student worksheet.')+
     '<p>Read each verified word aloud. Repeat it once if needed; do not show this sheet until the student finishes.</p>'+
     '<ol>'+words.map(word=>'<li>'+esc(word)+'</li>').join('')+'</ol>'+footer(guide)+'</section>':'';
-  return htmlHead(guide,'Spelling dictation worksheet')+student+key+'</body></html>';
+  return decoratePaper(htmlHead(guide,'Spelling dictation worksheet')+student+key+'</body></html>','spelling');
 }
 function noBankWorksheet(guide){
   const topic=clean(guide?.label)||'this test';
-  const questions=[
-    'Write one important fact you learned about '+topic+'.',
-    'Write or draw an example from your current class notes.',
-    'Explain something about '+topic+' that you could teach someone else.',
-  ];
+  const knownFacts=unique(guide?.facts);
+  const questions=knownFacts.length
+    ? knownFacts.map(fact=>'Explain this verified class idea in your own words: '+fact)
+    : ['Write one important fact you learned about '+topic+'.',
+      'Write or draw an example from your current class notes.',
+      'Explain something about '+topic+' that you could teach someone else.'];
+  rows(guide?.vocabulary).forEach(entry=>{
+    if(clean(entry?.term))questions.push('What does '+clean(entry.term)+' mean?');
+  });
   const paper='<main class="sheet organizer-sheet">'+header(guide,'Topic Practice Worksheet',topic)+
     '<div class="name-row">Name: <span></span> Date: <span></span></div>'+
     '<p class="warning">The matching question bank is not yet available. This is a class-topic organizer, not a reproduction of the teacher test.</p>'+
     questions.map((q,i)=>'<section class="organizer-prompt"><h2>'+(i+1)+'. '+esc(q)+'</h2>'+
       '<div class="writing-lines"><span></span><span></span><span></span></div></section>').join('')+
     warningHtml(guide)+footer(guide)+'</main>';
-  return htmlHead(guide,'Practice worksheet')+paper+'</body></html>';
+  return decoratePaper(htmlHead(guide,'Practice worksheet')+paper+'</body></html>',kindOf(guide));
 }
 export function renderTestWorksheet(guide,dictionary=()=> ''){
   if(kindOf(guide)==='spelling')return dictationWorksheet(guide);
