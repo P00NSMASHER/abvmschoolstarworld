@@ -11,8 +11,9 @@ on:
       - '.github/workflows/daily-source-recovery.yml'
       - '.github/workflows/refresh-current-homework.yml'
   schedule:
-    # School-evening posts are time-critical; verify through 11 PM Eastern.
-    - cron: '23 6,9,12,15-23 * * *'
+    # Poll hourly while families and teachers are active. Scheduled Actions can
+    # start late, so the next hourly run must close any missed-update window.
+    - cron: '23 6-23 * * *'
       timezone: 'America/New_York'
   workflow_dispatch:
 

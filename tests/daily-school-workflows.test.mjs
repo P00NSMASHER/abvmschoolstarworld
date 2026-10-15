@@ -12,7 +12,7 @@ test('both school sources have scheduled Eastern daily runs and no teacher/educa
   assert.match(teacher, /cron: '17 6 \* \* \*'/);
   assert.match(teacher, /cron: '47 15 \* \* \*'/);
   assert.match(homework, /name: Refresh current ABVM homework/);
-  assert.match(homework, /cron: '23 6,9,12,15-23 \* \* \*'/);
+  assert.match(homework, /cron: '23 6-23 \* \* \*'/);
   for (const workflow of [teacher, homework, recovery]) {
     assert.match(workflow,/timezone: 'America\/New_York'/);
     assert.doesNotMatch(workflow,/needs:\s*(?:educator|teacher-approval|manual-approval|parent-signoff)/i);
