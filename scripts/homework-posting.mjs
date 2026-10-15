@@ -19,11 +19,15 @@ export function summarizeTeacherHomework(lines,checkedAt=new Date().toISOString(
   const explicitNoHomework=rows.some(row=>row.subject==='Homework' && /^no homework assigned$/i.test(row.task));
   const status=unique.length?'assignments':explicitNoHomework?'no-homework':'no-specific-posting';
   const contentHash=createHash('sha256').update(JSON.stringify({status,assignments:unique})).digest('hex');
+  const unchanged=previous?.contentHash===contentHash;
   const priorDate=Date.parse(previous?.firstObservedAt||'');
-  const firstObservedAt=previous?.contentHash===contentHash&&Number.isFinite(priorDate)
+  const priorChange=Date.parse(previous?.contentChangedAt||previous?.firstObservedAt||'');
+  const firstObservedAt=unchanged&&Number.isFinite(priorDate)
     ? previous.firstObservedAt : checkedAt;
+  const contentChangedAt=unchanged&&Number.isFinite(priorChange)
+    ? (previous.contentChangedAt||previous.firstObservedAt) : checkedAt;
   return {schemaVersion:1,sourceUrl:HOMEWORK_SOURCE_URL,sourceDateProvided:false,
-    status,checkedAt,firstObservedAt,contentHash,assignments:unique};
+    status,checkedAt,firstObservedAt,contentChangedAt,contentHash,assignments:unique};
 }
 const easternDay=value=>{
   const date=new Date(value);
