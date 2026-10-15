@@ -1,3 +1,5 @@
+import {assessDailySchoolSources} from './source-freshness-recovery.mjs';
+
 export function workflowEvidenceAt(run){
   return Date.parse(run?.updated_at||run?.created_at||0)||0;
 }
@@ -52,5 +54,18 @@ export function selectGovernedCurriculumHold(refreshRun,refreshJobsData,openPull
     candidatePrNumber:Number(candidate.number),
     candidatePrUrl:String(candidate.html_url||""),
     candidateBranch:String(candidate.head.ref),
+  };
+}
+
+export function assessHomeworkHealth(posting, now) {
+  const checked=Date.parse(posting?.checkedAt||'');
+  const current=Date.parse(now);
+  const ageHours=Number.isFinite(checked)&&Number.isFinite(current)
+    ?(current-checked)/3_600_000:null;
+  return {
+    checkedAt:posting?.checkedAt||null,
+    ageHours:ageHours===null?null:Number(ageHours.toFixed(2)),
+    status:posting?.status||'missing',
+    healthy:assessDailySchoolSources({now,homework:posting}).homeworkFresh,
   };
 }
