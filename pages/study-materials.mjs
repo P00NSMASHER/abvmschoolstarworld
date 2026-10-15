@@ -401,7 +401,8 @@ export function createStudyMaterials({
         .flatMap(lesson => array(lesson.notes))
         .filter(note => /^(?:Photo-confirmed practice words|Verified spelling words|Teacher spelling words|Spelling words|Short i:|Long a:)/i.test(note))
       : [];
-    const facts = uniqueGuideText([...verifiedWeekNotes,...questionFacts,...subjectFacts]).slice(0,6);
+    // Keep every source-matched fact in a printable guide; page layout owns pagination.
+    const facts = uniqueGuideText([...verifiedWeekNotes,...questionFacts,...subjectFacts]);
     const vocabulary = subject === 'Reading / ELA' && !/grammar|predicate|subject\s*&/.test(lower)
       ? [...new Map(array(pack.vocabulary).filter(row => row?.subject === subject && meaningfulText(row?.term))
         .map(row => [String(row.term).trim().toLowerCase(),row])).values()].slice(0,8)
@@ -423,7 +424,9 @@ export function createStudyMaterials({
       : [];
     // Print the actual checked choices, but never mix in private responses,
     // teacher markings or answers on the student's test page.
-    const practice = group.slice(0,subject === 'Math' ? 8 : 10).map(row => ({
+    // Preserve the complete verified question set for both printable resources.
+    // This presentation-only expansion does not change study rounds or refresh.
+    const practice = group.map(row => ({
       prompt:compactGuideText(row.prompt,320),
       answer:compactGuideText(row.answer,140),
       choices:array(row.choices).map(choice => compactGuideText(choice,160)),
