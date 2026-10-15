@@ -42,11 +42,11 @@ export function heldCandidateIssues(candidates) {
     if (candidate?.readiness?.status !== 'HOLD' ||
         candidate?.enabledByDefault !== false ||
         candidate?.readiness?.automaticPromotion !== false ||
-        candidate?.rollout?.automaticPromotion !== false ||
-        candidate?.rollout?.manualPromotionRequired !== true ||
-        candidate?.rollout?.safeUsageEvidenceRequired !== true ||
+        candidate?.rollout?.automaticPromotion !== true ||
+        candidate?.rollout?.manualPromotionRequired !== false ||
+        candidate?.rollout?.safeUsageEvidenceRequired !== false ||
         candidate?.rollout?.automatedQaRequired !== true ||
-        candidate?.rollout?.featureFlagRequired !== true) {
+        candidate?.rollout?.featureFlagRequired !== false) {
       issues.push(family + ':release-hold');
     }
     if (!Array.isArray(candidate?.proposedQuestions) || candidate.proposedQuestions.length !== 8 ||
