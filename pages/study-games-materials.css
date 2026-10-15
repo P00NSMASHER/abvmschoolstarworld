@@ -265,8 +265,8 @@
 .games-screen .prep-start>span{margin-left:12px}
 .games-screen .prep-guide{display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid var(--study-line);background:#f8fcff;font-size:.9rem;min-height:48px}
 /* Two clearly separated printable resources belong to every test. */
-.games-screen .prep-material-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
-.games-screen .prep-material-actions .prep-guide{min-width:0;margin:0;min-height:58px;line-height:1.25;padding:10px 8px;text-align:center;flex-wrap:wrap}
+.games-screen .prep-material-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:8px}
+.games-screen .prep-material-actions .prep-guide{min-width:0;margin:0;min-height:48px;line-height:1.25;padding:9px 7px;text-align:center;flex-wrap:wrap}
 .games-screen .prep-material-actions .prep-guide svg{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .games-screen .prep-material-actions .prep-worksheet{background:#edf4ff;border-color:#b2cee8}
 .games-screen .study-material-pair{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 8px;padding:13px;border:1px solid var(--study-line);border-radius:14px;background:#fff}
