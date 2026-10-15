@@ -39,14 +39,20 @@ test('a fabricated choice cannot be scored as a legitimate trial', () => {
 });
 
 test('every curriculum family remains disabled and on hold', () => {
-  for (const field of ['enabledByDefault', 'readiness.status', 'readiness.automaticPromotion', 'rollout.automaticPromotion']) {
+  for (const [field, invalid] of [
+    ['enabledByDefault', true],
+    ['readiness.status', 'READY_FOR_AUTOMATIC_PROMOTION'],
+    ['readiness.automaticPromotion', true],
+    ['rollout.automaticPromotion', false],
+    ['rollout.manualPromotionRequired', true],
+  ]) {
     const records = copy();
     const [candidate] = records;
     if (field.includes('.')) {
       const [section, key] = field.split('.');
-      candidate[section][key] = key === 'status' ? 'READY_FOR_MANUAL_PROMOTION' : true;
+      candidate[section][key] = invalid;
     } else {
-      candidate[field] = true;
+      candidate[field] = invalid;
     }
     assert.ok(heldCandidateIssues(records).some(issue => issue.includes('release-hold')), field);
     assert.throws(() => auditHeldCurriculumPilot(records), /release-hold/);
