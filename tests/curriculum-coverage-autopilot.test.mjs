@@ -11,6 +11,7 @@ import {
   matchCurriculumFamily,
   curriculumFamilyRegistrySnapshot,
   curriculumFamilyRuntimeEnabled,
+  automaticCurriculumFamilyEligible,
   registeredCurriculumFamilyRules,
 } from '../scripts/curriculum-family-registry.mjs';
 import {
@@ -34,6 +35,31 @@ test('incomplete candidate families stay isolated except in explicitly scoped pr
   assert.equal(curriculumFamilyRuntimeEnabled(candidate), false);
   assert.equal(curriculumFamilyRuntimeEnabled(candidate, {activeFeatureFlags:['curriculum-family:other']}), false);
   assert.equal(curriculumFamilyRuntimeEnabled(candidate, {activeFeatureFlags:['curriculum-family:test-candidate']}), true);
+});
+
+test('complete source-aligned candidate family auto-enables without a manual promotion or feature flag', () => {
+  const proven = matchCurriculumFamily('Reading / ELA', 'subject & predicate');
+  const candidate = {
+    ...proven,
+    rolloutStatus: 'CANDIDATE',
+    enabledByDefault: false,
+    patternSource: 'subject\\s*(?:&|and)\\s*predicate',
+  };
+  assert.equal(automaticCurriculumFamilyEligible(candidate), true);
+  assert.equal(curriculumFamilyRuntimeEnabled(candidate), true);
+
+  const missingQuestions = {...candidate, supplementalQuestions: candidate.supplementalQuestions.slice(0, 2)};
+  assert.equal(automaticCurriculumFamilyEligible(missingQuestions), false);
+  assert.equal(curriculumFamilyRuntimeEnabled(missingQuestions), false);
+
+  const altered = structuredClone(candidate);
+  altered.baseQuestion.answer = 'unlisted answer';
+  assert.equal(automaticCurriculumFamilyEligible(altered), false);
+  assert.equal(curriculumFamilyRuntimeEnabled(altered), false);
+
+  const duplicate = structuredClone(candidate);
+  duplicate.supplementalQuestions[0].prompt = candidate.baseQuestion.prompt;
+  assert.equal(automaticCurriculumFamilyEligible(duplicate), false);
 });
 
 test('unknown curriculum feature flags do not change the production generator', () => {
