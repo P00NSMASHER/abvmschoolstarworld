@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import {createHash} from 'node:crypto';
+import {readFileSync} from 'node:fs';
 
-import {cleanTeacherText, pageLines, parseHomework, parseStoryTitles, teacherContentLines} from '../scripts/teacher-page-parsers.mjs';
+import {cleanTeacherText, pageLines, parseGoogleSitesSpellingList, parseHomework, parseStoryTitles, teacherContentLines} from '../scripts/teacher-page-parsers.mjs';
 
 test('pageLines reads current Google Sites text containers without scripts', () => {
   const html = `
@@ -16,6 +18,54 @@ test('pageLines reads current Google Sites text containers without scripts', () 
     'pg. 42',
     'Reading: Read 20 minutes',
   ]);
+});
+
+
+test('official Google Sites spelling columns are captured without losing the real word home', () => {
+  const span = value => '<small dir="ltr" class="zfr3Q TMjjoe CDt4Ke ">'
+    + '<span class="C9DxTc ">' + value + '</span></small>';
+  const teacherTokens = [
+    'Skill: short and long', 'Basic Words', 'Review Words',
+    'box', 'side', 'fox', 'line', 'dog', 'lock', 'pot',
+    'High Frequency Words', 'cone', 'have', 'home', 'off',
+    'nose', 'took', 'poke', 'rope',
+  ];
+  const html = '<nav>' + span('Home') + span('Homework') + '</nav>'
+    + '<h1>Weekly Spelling List</h1>'
+    + '<div class="tyJCtd mGzaTb Depvyb baZpAe">'
+    + teacherTokens.map(span).join('') + '</div>'
+    + '<script>' + span('should-not-leak') + '</script>'
+    + '<footer>' + span('Google Sites') + span('Report abuse') + '</footer>';
+  const result = parseGoogleSitesSpellingList(html);
+  assert.equal(result.skill, 'Skill: short and long');
+  assert.deepEqual([...result.words].sort(), [
+    'box', 'fox', 'dog', 'lock', 'pot', 'cone', 'home', 'nose', 'poke', 'rope',
+    'side', 'line', 'have', 'off', 'took',
+  ].sort());
+  assert.equal(result.words.length, 15);
+  assert(!result.words.includes('homework'), 'navigation cannot enter the word list');
+  assert(!result.words.includes('should-not-leak'));
+  assert(!pageLines(html).includes('box'), 'older paragraph-only scanner misses these official words');
+
+  // Spelling-source identity must change when any teacher-posted word changes.
+  const revised = parseGoogleSitesSpellingList(html.replace(span('fox'), span('fix')));
+  const hash = words => createHash('sha256').update(words.map(word => 'Official spelling word: ' + word).join('\n')).digest('hex');
+  assert.notEqual(hash(result.words), hash(revised.words));
+  assert(revised.words.includes('fix'));
+});
+
+test('the spelling block remains optional when the teacher publishes no word list', () => {
+  const html = '<h1>Weekly Spelling List</h1><small class="zfr3Q TMjjoe CDt4Ke">'
+    + '<span class="C9DxTc">Home</span></small>';
+  assert.deepEqual(parseGoogleSitesSpellingList(html), {skill:'', words:[]});
+});
+
+test('teacher refresh includes spelling span data in source hashing and shows only upcoming tests in summary', () => {
+  const source = readFileSync(new URL('../scripts/refresh-teacher-pages.mjs', import.meta.url), 'utf8');
+  assert.match(source, /parseGoogleSitesSpellingList\(html\)/);
+  assert.match(source, /lines\.push\(\.\.\.spellingList\.words\.map/);
+  assert.match(source, /Teacher-posted spelling words \(page undated\)/);
+  assert.match(source, /readableList\(currentTests\.slice\(0, 4\)/);
 });
 
 test('parseHomework accepts inline subject assignments with colon dash or em dash', () => {
