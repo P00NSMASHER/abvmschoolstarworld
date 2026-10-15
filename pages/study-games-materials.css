@@ -264,6 +264,19 @@
 .games-screen .prep-start,.games-screen .prep-guide{width:100%;min-height:52px;border-radius:16px;padding:12px;font-size:1.05rem;font-weight:750;margin-top:12px;background:var(--study-gold);color:var(--study-ink)}
 .games-screen .prep-start>span{margin-left:12px}
 .games-screen .prep-guide{display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid var(--study-line);background:#f8fcff;font-size:.9rem;min-height:48px}
+/* Two clearly separated printable resources belong to every test. */
+.games-screen .prep-material-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.games-screen .prep-material-actions .prep-guide{min-width:0;margin:0;min-height:58px;line-height:1.25;padding:10px 8px;text-align:center;flex-wrap:wrap}
+.games-screen .prep-material-actions .prep-guide svg{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.games-screen .prep-material-actions .prep-worksheet{background:#edf4ff;border-color:#b2cee8}
+.games-screen .study-material-pair{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 8px;padding:13px;border:1px solid var(--study-line);border-radius:14px;background:#fff}
+.games-screen .study-material-pair strong{min-width:0;font-size:.9rem;line-height:1.35;color:var(--study-ink);overflow-wrap:anywhere}
+.games-screen .study-material-pair small{font-size:.75rem;white-space:nowrap;color:var(--study-muted);text-align:right}
+.games-screen .study-material-pair-buttons{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:9px}
+.games-screen .study-material-pair-buttons button{width:100%;min-width:0;margin:0;min-height:48px;text-align:center;font-weight:750}
+.games-screen .study-material-pair-buttons [data-test-worksheet]{background:#edf4ff;border-color:#b2cee8}
+@media(max-width:359px){.games-screen .prep-material-actions,.games-screen .study-material-pair-buttons{grid-template-columns:minmax(0,1fr)}.games-screen .study-material-pair{grid-template-columns:minmax(0,1fr)}.games-screen .study-material-pair small{text-align:left}}
+
 .games-screen .study-note-subjects{display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px;margin:0 -2px}
 .games-screen .study-note-subjects button{flex:none;max-width:100%;margin:0;border-radius:99px;padding:10px 14px;background:#f1f6fb;color:var(--study-muted)}
 .games-screen .study-note-subjects button[aria-pressed="true"]{background:var(--study-brand);color:white;border-color:var(--study-brand)}
