@@ -142,3 +142,65 @@ test("a successful workflow with missing completion evidence cannot establish he
   const success={id:118,status:"completed",conclusion:"success",created_at:"2026-10-07T22:02:03Z"};
   assert.equal(selectEffectiveWorkflowRun({latestCreated:success,latestCompleted:success,latestDecisive:success,latestSuccess:success}),null);
 });
+
+test('homework freshness is required even when all curriculum checks pass',async()=>{
+  const {assessHomeworkHealth}=await import('../scripts/health-evidence.mjs');
+  const now='2026-10-15T23:30:00Z';
+  const posting={schemaVersion:1,status:'assignments',checkedAt:'2026-10-15T23:00:00Z'};
+  assert.equal(typeof assessHomeworkHealth,'function');
+  assert.equal(assessHomeworkHealth(posting,now).healthy,true);
+  for(const changed of [
+    {...posting,checkedAt:'2026-10-15T14:00:00Z'},
+    {...posting,checkedAt:'invalid'},
+    {...posting,checkedAt:'2026-10-16T00:00:00Z'},
+    {...posting,status:'unknown'},
+    {...posting,schemaVersion:0},
+  ])assert.equal(assessHomeworkHealth(changed,now).healthy,false);
+  assert.equal(assessHomeworkHealth(null,now).healthy,false);
+  assert.equal(assessHomeworkHealth(posting,'invalid').healthy,false);
+});
+
+test('the complete dashboard turns critical for stale homework despite healthy workflow evidence',async()=>{
+  const {mkdtempSync,mkdirSync,copyFileSync,readFileSync,writeFileSync,rmSync}=await import('node:fs');
+  const {tmpdir}=await import('node:os');
+  const {join}=await import('node:path');
+  const {spawnSync}=await import('node:child_process');
+  const root=mkdtempSync(join(tmpdir(),'abvm-health-'));
+  try{
+    for(const dir of ['scripts','pages/data'])mkdirSync(join(root,dir),{recursive:true});
+    for(const file of ['scripts/build-health-report.mjs','scripts/health-evidence.mjs',
+      'scripts/source-freshness-recovery.mjs','pages/sw.js','package.json']){
+      copyFileSync(new URL('../'+file,import.meta.url),join(root,file));
+    }
+    const now=new Date().toISOString();
+    const pack=JSON.parse(readFileSync(new URL('../pages/data/study-pack.json',import.meta.url),'utf8'));
+    pack.sourceLastCheckedAt=now;
+    pack.pack.lunchMenuSource.retrievalState='verified';
+    writeFileSync(join(root,'pages/data/study-pack.json'),JSON.stringify(pack));
+    const names=['Refresh ABVM teacher pages','ABVM App QA','Deploy ABVM to GitHub Pages','Monitor ABVM refresh health'];
+    const workflowFile=join(root,'runs.json');
+    writeFileSync(workflowFile,JSON.stringify({workflow_runs:names.map((name,id)=>({
+      id,name,head_branch:'main',event:'schedule',status:'completed',conclusion:'success',
+      created_at:now,updated_at:now,html_url:'https://example.invalid/run/'+id,
+    }))}));
+    const postingPath=join(root,'pages/data/homework-current.json');
+    const posting={schemaVersion:1,status:'assignments',checkedAt:now};
+    const run=()=>{
+      const result=spawnSync(process.execPath,['scripts/build-health-report.mjs'],{
+        cwd:root,encoding:'utf8',env:{...process.env,WORKFLOW_RUNS_FILE:workflowFile,
+          REFRESH_JOBS_FILE:'',OPEN_PULLS_FILE:''},
+      });
+      const report=JSON.parse(readFileSync(join(root,'health-output/abvm-health-status.json'),'utf8'));
+      return {result,report};
+    };
+    writeFileSync(postingPath,JSON.stringify(posting));
+    const fresh=run();
+    assert.equal(fresh.result.status,0,fresh.result.stderr);
+    assert.equal(fresh.report.homework.healthy,true);
+    writeFileSync(postingPath,JSON.stringify({...posting,checkedAt:new Date(Date.now()-9*3600000).toISOString()}));
+    const stale=run();
+    assert.equal(stale.result.status,1);
+    assert.equal(stale.report.overall,'critical');
+    assert.equal(stale.report.homework.healthy,false);
+  }finally{rmSync(root,{recursive:true,force:true});}
+});

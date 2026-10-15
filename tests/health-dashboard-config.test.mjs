@@ -125,3 +125,8 @@ test("curriculum QA holds remain critical until a successful real teacher refres
   assert.match(report,/Curriculum hold:/);
   assert.match(report,/status\.overall=criticalHealthy\?\(warnings\.length\?"attention":"healthy"\):"critical"/);
 });
+
+test('homework publication completion triggers the freshness watchdog and dashboard chain',()=>{
+  const watched=refreshHealthWorkflow.match(/workflow_run:\n([\s\S]*?)\n  schedule:/)?.[1]||'';
+  assert.match(watched,/- Refresh current ABVM homework/);
+});
