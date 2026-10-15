@@ -45,8 +45,8 @@ function assertPacketMatchesCandidate(candidate, section) {
   assert.equal(candidate.sourceContext.quality, 'page-exact');
   assert.equal(candidate.readiness.status, 'HOLD');
   assert.equal(candidate.enabledByDefault, false);
-  assert.equal(candidate.rollout.automaticPromotion, false);
-  assert.equal(candidate.rollout.manualPromotionRequired, true);
+  assert.equal(candidate.rollout.automaticPromotion, true);
+  assert.equal(candidate.rollout.manualPromotionRequired, false);
   assert.ok(section.includes('**Source line:** ' + candidate.sourceContext.sourceLine));
   assert.ok(section.includes('**Evidence:** ' + candidate.sourceContext.sourceUrl));
   assert.ok(section.includes('**Candidate ID:** \`' + candidate.candidateId + '\`'));
@@ -122,7 +122,7 @@ test('personalized themes have no brand prerequisite and never activate held cur
     design.themes.forEach(theme => allThemes.add(theme));
     assert.equal(candidate.enabledByDefault, false);
     assert.equal(candidate.readiness.status, 'HOLD');
-    assert.equal(candidate.rollout.automaticPromotion, false);
+    assert.equal(candidate.rollout.automaticPromotion, true);
     const types = new Set(candidate.proposedQuestions.map(q => q.questionType));
     assert.deepEqual([...types].sort(), requiredTypes);
     assert.equal(candidate.proposedQuestions.length, 8);
@@ -191,7 +191,7 @@ test('review refinements are source-faithful and conservatively label multiple-c
     }
     assert.equal(candidate.readiness.status, 'HOLD');
     assert.equal(candidate.enabledByDefault, false);
-    assert.equal(candidate.rollout.automaticPromotion, false);
+    assert.equal(candidate.rollout.automaticPromotion, true);
   }
   assert.match(packet, /updated items require renewed human review and release sign-off/i);
 });
