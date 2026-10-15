@@ -45,6 +45,20 @@ export function buildRuntimePack(envelope){
   // Phone/tablet clients use the skill ID, label and teaching notes, not hashes
   // or raw teacher evidence repeated once for every skill in the runtime pack.
   runtime.pack.contentPipeline.skills=skills.map(({sourceLineage,evidenceContract,...skill})=>skill);
+  // The 14-day review bank may retain previously verified question families.
+  // Those full records carry large governance-only source/evidence fields;
+  // compact them exactly like current questions, but keep dated expiry proof.
+  const reviewQuestions=runtime.pack?.recentReviewPipeline?.questions;
+  if(!Array.isArray(reviewQuestions))throw new Error("Full study pack is missing recentReviewPipeline.questions");
+  runtime.pack.recentReviewPipeline.questions=reviewQuestions.map(question=>{
+    if(!["reviewVerifiedAt","reviewExpiresAt","reviewSourceHash"].every(field=>
+      typeof question?.[field]==="string"&&question[field].trim())){
+      throw new Error("Recent-review question is missing its verified source or expiry window");
+    }
+    const picked=pickQuestion(question);
+    for(const field of ["reviewVerifiedAt","reviewExpiresAt","reviewSourceHash"])picked[field]=question[field];
+    return picked;
+  });
   return runtime;
 }
 export function runtimePackJson(envelope){
