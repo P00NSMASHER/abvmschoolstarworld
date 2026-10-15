@@ -11,10 +11,10 @@ function deny(reason) {
 }
 
 /**
- * Candidate topics are NOT approved study questions. Allow independent, freshly
- * checked teacher pages to publish even while a new topic awaits original
- * question authoring. This guard checks that the published question bank contains
- * only already-supported, page-exact skills; it never promotes a candidate.
+ * Allow independently verified teacher pages to publish even if a novel topic
+ * lacks a validated question generator. Fully checked existing families are
+ * automatically eligible without any teacher, educator, parent or owner approval.
+ * A candidate lacking the automated release evidence stays isolated.
  */
 export function assertSafeTeacherRefresh(plan, envelope) {
   const issues = validateCurriculumCoveragePlan(plan);
@@ -64,8 +64,11 @@ export function assertSafeTeacherRefresh(plan, envelope) {
     deny('unsupported teacher topics are not fully accounted for');
   }
   for (const candidate of plan.candidates) {
+    // Automatic promotion is the policy, not a bypass: no unsupported question
+    // is active without complete family QA and page-exact source lineage.
     if (candidate.enabledByDefault !== false || candidate.readiness?.status !== 'HOLD' ||
-        candidate.rollout?.automaticPromotion !== false) {
+        candidate.readiness?.automaticPromotion !== false ||
+        candidate.rollout?.automaticPromotion !== true) {
       deny('an unsupported curriculum candidate is active');
     }
   }
@@ -79,7 +82,7 @@ export function assertSafeTeacherRefresh(plan, envelope) {
         !page || lineage.sourceCaptureHash !== page.contentHash ||
         lineage.sourceCheckedAt !== checkedAt ||
         !/^sha256:[a-f0-9]{64}$/i.test(String(lineage.evidenceExcerptHash || ''))) {
-      deny('an unapproved or untraceable question would be published: ' + String(question?.id || '?'));
+      deny('an unverified or untraceable question would be published: ' + String(question?.id || '?'));
     }
   }
   return {unsupportedCount: gaps.length, questionCount: questions.length};
