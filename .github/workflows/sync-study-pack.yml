@@ -65,6 +65,8 @@ concurrency:
 
 jobs:
   refresh:
+    outputs:
+      published_sha: ${{ steps.confirm-published-sha.outputs.sha }}
     timeout-minutes: 25
     runs-on: ubuntu-latest
     steps:
@@ -242,12 +244,26 @@ jobs:
           echo "Could not publish the verified school pack after 3 main-race retries." >&2
           exit 1
 
+      - name: Confirm exact published main SHA for gated Pages handoff
+        id: confirm-published-sha
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          EXPECTED="$(git rev-parse refs/remotes/origin/main)"
+          CURRENT="$(git ls-remote --exit-code origin refs/heads/main | cut -f1)"
+          test "$EXPECTED" = "$CURRENT" || { echo 'Main moved during release SHA handoff.' >&2; exit 1; }
+          test "${#CURRENT}" -eq 40 || { echo 'Invalid release SHA.' >&2; exit 1; }
+          echo "sha=$CURRENT" >> "$GITHUB_OUTPUT"
+
   deploy:
     name: deploy verified refresh through Pages workflow
     needs: refresh
     uses: ./.github/workflows/pages.yml
     with:
-      ref: main
+      # Pass the exact newly-published commit, not the original push SHA.
+      # The Pages workflow independently verifies this SHA remains main HEAD.
+      ref: ${{ needs.refresh.outputs.published_sha }}
   reviewed-lunch:
     name: Refresh reviewed lunch week independently of held curriculum
     needs: refresh
