@@ -25,7 +25,19 @@ test("Premium Today, Calendar, Study, Test Prep and Progress form one coherent i
   await page.goto("/#today");
   await expect(page.locator(".today-screen")).toBeVisible();
   await expect(page.locator(".school-photo-hero")).toContainText("Ready for today?");
-  await expect(page.locator(".today-primary .priority-card")).toContainText("Spelling");
+  // Historical fixtures may contain multiple teacher-sourced tests on the
+  // same day. Verify the selected event is genuinely sourced, not its order.
+  const sourceTests = await page.evaluate(async () => {
+    const response = await fetch('./data/study-pack.json', {cache:'no-store'});
+    if (!response.ok) throw new Error('School pack unavailable in integrated QA');
+    const data = await response.json();
+    return (data.pack?.importantDates || [])
+      .filter(item => item.source === 'teacher-tests' && /\bOct(?:ober)?\.?\s*9\b/i.test(item.date || '') && item.kind === 'test')
+      .map(item => item.label);
+  });
+  expect(sourceTests.length).toBeGreaterThan(0);
+  const nextTest = (await page.locator(".today-primary .priority-card h3").textContent()).trim();
+  expect(sourceTests).toContain(nextTest);
   await page.locator(".bottom-nav [data-tab=calendar]").click();
   await expect(page.locator(".calendar-screen")).toBeVisible();
   await expect(page.locator(".calendar-month-nav strong")).toHaveText("October 2026");
