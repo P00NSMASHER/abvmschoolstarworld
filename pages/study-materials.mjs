@@ -429,6 +429,8 @@ export function createStudyMaterials({
       choices:array(row.choices).map(choice => compactGuideText(choice,160)),
       skill:compactGuideText(row.skill,60),
       questionType:compactGuideText(row.questionType,40),
+      explanation:compactGuideText(row.explanation,240),
+      hint:compactGuideText(row.hint,160),
     }));
     const warnings = [];
     if (pack.sourceCheckedAt && schoolDay(pack.sourceCheckedAt) !== schoolDay(time)) {
