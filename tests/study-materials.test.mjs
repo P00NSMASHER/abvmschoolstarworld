@@ -331,7 +331,7 @@ test('every test has both an instructional study guide and an independent worksh
     assert.notEqual(study,worksheet,'the learning guide must not repeat the worksheet');
     assert.match(study,/@page\{size:Letter portrait/);
     assert.match(worksheet,/@page\{size:Letter portrait/);
-    assert(study.includes(guide.label) || study.includes('Spelling Word Study'));
+    assert(study.includes(guide.label.replaceAll('&','&amp;')) || study.includes('Spelling Word Study'));
   }
   const math=model.testGuide(0);
   assert.equal(math.practice[0].explanation,'Subtract six from fifteen to get nine.');
