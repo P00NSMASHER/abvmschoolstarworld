@@ -10,6 +10,7 @@ import {
   teacherContentLines,
 } from './teacher-page-parsers.mjs';
 import { validateUploadedNoticePolicy } from './uploaded-notice-policy.mjs';
+import { supersededByReviewedPlanner } from './teacher-event-precedence.mjs';
 import { refreshLunchPublication } from './lunch-publication.mjs';
 import {
   buildGrade2ContentPipeline,
@@ -185,6 +186,9 @@ function mergeUploadedEvents(existing, uploaded) {
   const replacementKeys = new Set(uploaded.replacements.map(item => `${dateKey(item.date)}:${item.topic}`));
   const kept = existing.filter(item => {
     if (item.source === 'uploaded-notice') return false;
+    // An undated, older teacher Home entry cannot reintroduce a calendar date
+    // explicitly superseded by the user's newer reviewed weekly planner.
+    if (supersededByReviewedPlanner(item, uploaded)) return false;
     const key = `${dateKey(item.date)}:${topicKey(item.label)}`;
     return !incomingKeys.has(key) && !replacementKeys.has(key);
   });
