@@ -98,3 +98,36 @@ test('Historical guides preview first and print only on an explicit tap',async({
   await expect(history).toHaveAttribute('open','');
   await expect(trigger).toBeFocused();
 });
+
+test('illustrated guides and worksheets render with decoded subject art at phone and tablet sizes',async({context})=>{
+  test.setTimeout(120000);
+  for(const width of [390,768]){
+    const page=await context.newPage();
+    await openStudy(page,width);
+    await page.locator('[data-open-prep]').click();
+    const guideButton=page.locator('.prep-guide[data-test-guide]');
+    await guideButton.click();
+    const modal=page.locator('dialog[data-study-guide-dialog]');
+    const frame=modal.frameLocator('.study-guide-frame');
+    const body=frame.locator('body.premium-paper');
+    await expect(body).toBeVisible();
+    const art=frame.locator('img.premium-paper-hero').first();
+    await expect(art).toBeVisible();
+    await expect.poll(()=>art.evaluate(img=>img.complete&&img.naturalWidth>0)).toBe(true);
+    await expect(frame.locator('.premium-mini-art').first()).toBeVisible();
+    const overflow=await frame.locator('body').evaluate(el=>el.scrollWidth-el.clientWidth);
+    expect(overflow,'premium guide must fit viewport '+width).toBeLessThanOrEqual(1);
+    const guideShot=test.info().outputPath('premium-guide-'+width+'.png');
+    await page.screenshot({path:guideShot,animations:'disabled'});
+    await test.info().attach('premium-guide-'+width,{path:guideShot,contentType:'image/png'});
+    await modal.locator('[data-guide-close]').click();
+    await page.locator('.prep-worksheet[data-test-worksheet]').click();
+    await expect(frame.locator('body.premium-paper')).toBeVisible();
+    await expect(frame.locator('.premium-mini-art').first()).toBeVisible();
+    await expect.poll(()=>frame.locator('.premium-paper-hero').first().evaluate(img=>img.complete&&img.naturalWidth>0)).toBe(true);
+    const worksheetShot=test.info().outputPath('premium-worksheet-'+width+'.png');
+    await page.screenshot({path:worksheetShot,animations:'disabled'});
+    await test.info().attach('premium-worksheet-'+width,{path:worksheetShot,contentType:'image/png'});
+    await page.close();
+  }
+});
