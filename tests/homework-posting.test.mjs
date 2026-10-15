@@ -31,6 +31,7 @@ test('unchanged posting updates daily, or immediately when assignments change',(
   const first=summarizeTeacherHomework(['Homework','Math pg. 22',...routine],checkedAt);
   const same=summarizeTeacherHomework(['Homework','Math pg. 22',...routine],'2026-10-14T01:00:00.000Z',first);
   assert.equal(same.firstObservedAt,checkedAt);
+  assert.equal(same.contentChangedAt,checkedAt);
   assert.equal(shouldPublishHomework(same,first),false);
   const tomorrow=summarizeTeacherHomework(['Homework','Math pg. 22',...routine],'2026-10-14T18:00:00.000Z',first);
   assert.equal(shouldPublishHomework(tomorrow,first),true);
