@@ -98,3 +98,38 @@ test('Eastern calendar days are preserved through midnight and daylight-saving c
   assert.equal(easternSchoolDay('2026-11-01T05:30:00Z'),'2026-11-01');
   assert.equal(easternSchoolDay('2026-11-01T06:30:00Z'),'2026-11-01');
 });
+
+// Execute the actual workflow dispatcher with a local GitHub CLI substitute.
+// Successful owner dispatches must not exhaust the bounded failure budget.
+import {readFileSync} from 'node:fs';
+import {spawnSync} from 'node:child_process';
+function dispatchRecovery(runs) {
+  const workflow=readFileSync(new URL('../.github/workflows/daily-source-recovery.yml',import.meta.url),'utf8');
+  const start=workflow.indexOf('          maybe_dispatch()');
+  const end=workflow.indexOf('          curriculum=',start);
+  const body=workflow.slice(start,end).split('\n').map(line=>line.slice(10)).join('\n');
+  return spawnSync('bash',['-c',`set -euo pipefail
+    gh() { if [[ "$1" == run ]]; then printf '%s' "$RUNS"; else echo DISPATCHED; fi; }
+    ${body}
+    maybe_dispatch refresh-current-homework.yml true`],{
+      encoding:'utf8',env:{...process.env,RUNS:JSON.stringify(runs)},
+    });
+}
+const recoveryRun=(conclusion,event='workflow_dispatch',status='completed')=>({
+  status,event,conclusion,createdAt:new Date().toISOString(),
+});
+test('successful manual checks do not spend failed-recovery budget',()=>{
+  const result=dispatchRecovery([recoveryRun('success'),recoveryRun('success')]);
+  assert.equal(result.status,0,result.stdout+result.stderr);
+  assert.match(result.stdout,/DISPATCHED/);
+});
+test('two failed dispatches retain the daily retry bound',()=>{
+  const result=dispatchRecovery([recoveryRun('failure'),recoveryRun('cancelled')]);
+  assert.equal(result.status,1);
+  assert.doesNotMatch(result.stdout,/DISPATCHED/);
+});
+test('an active source refresh prevents duplicate recovery dispatch',()=>{
+  const result=dispatchRecovery([recoveryRun(null,'schedule','in_progress')]);
+  assert.equal(result.status,0);
+  assert.doesNotMatch(result.stdout,/DISPATCHED/);
+});
