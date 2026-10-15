@@ -83,8 +83,11 @@ test('all official undated spelling words reach this-week guide and adult dictat
   const worksheet=printableWorksheetHtml(guide);
   for(const word of words)assert.match(study,new RegExp('<strong>'+word+'</strong>'));
   assert.match(worksheet,/Adult Dictation List/);
-  const student=worksheet.split('<section class="sheet adult-key">')[0];
-  assert.doesNotMatch(student,/box|cone|rope|home/);
+  const student=worksheet.split('</style></head><body>').at(-1).split('<section class="sheet adult-key">')[0];
+  assert.doesNotMatch(student,/<strong>\s*(?:box|cone|rope|home)\s*<\/strong>/i,
+    'the student dictation page must contain blank lines, not spelling answers');
+  const adult=worksheet.split('<section class="sheet adult-key">')[1];
+  for(const word of words)assert.match(adult,new RegExp('<li>'+word+'</li>'));
   assert.match(worksheet,/Teacher source checked 2026-10-15/);
   const previous=createStudyMaterials(opts({...options,pack:{...pack,weekLabel:'Week of October 5, 2026'}})).testGuide(0);
   assert.deepEqual(previous.spellingWords,[],'a teacher page without dated words cannot silently certify a different week');
