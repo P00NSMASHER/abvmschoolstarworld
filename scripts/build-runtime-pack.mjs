@@ -11,8 +11,20 @@ export const RUNTIME_QUESTION_FIELDS=Object.freeze([
 ]);
 
 function clone(value){return JSON.parse(JSON.stringify(value));}
+function religionGuideFacts(skills){
+  const chapters=new Map();
+  for(const skill of skills||[])for(const evidence of skill?.sourceLineage?.matchedEvidence||[]){
+    const match=String(evidence).match(/^\s*Chapter\s+([1-9]\d*)\s*:/i);
+    if(!match)continue;
+    const facts=String(evidence).split(/\s*\*\s*/).slice(1).map(value=>value.trim()).filter(Boolean);
+    if(!chapters.has(match[1]))chapters.set(match[1],[]);
+    const saved=chapters.get(match[1]);
+    for(const fact of facts)if(!saved.includes(fact))saved.push(fact);
+  }
+  return Object.fromEntries([...chapters.entries()].sort((a,b)=>Number(a[0])-Number(b[0])));
+}
 function pickQuestion(question){
-  // This public pack gets compact chapter numbers, never teacher evidence text.
+  // This public pack gets compact instructional content, never governance metadata.
   const picked=Object.fromEntries(
     RUNTIME_QUESTION_FIELDS
       .filter(key=>key!=="sourceChapters"&&Object.prototype.hasOwnProperty.call(question||{},key))
@@ -44,6 +56,8 @@ export function buildRuntimePack(envelope){
   // Audit lineage and assessment contracts stay intact in the governed full pack.
   // Phone/tablet clients use the skill ID, label and teaching notes, not hashes
   // or raw teacher evidence repeated once for every skill in the runtime pack.
+  const scopedReligionFacts=religionGuideFacts(envelope.pack.contentPipeline.skills);
+  if(Object.keys(scopedReligionFacts).length)runtime.pack.testGuideFacts={religionChapters:scopedReligionFacts};
   runtime.pack.contentPipeline.skills=skills.map(({sourceLineage,evidenceContract,...skill})=>skill);
   // The 14-day review bank may retain previously verified question families.
   // Those full records carry large governance-only source/evidence fields;

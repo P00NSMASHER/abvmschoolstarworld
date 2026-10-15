@@ -67,6 +67,15 @@ test("real runtime pack retains only 18 source-verified Chapter 3 identifiers, n
   assert.doesNotMatch(JSON.stringify(runtime.pack.contentPipeline.questions),/matchedEvidence|sourceCaptureHash|evidenceExcerptHash|learnerResponse|studentName|privateHistory/);
 });
 
+test("runtime keeps a compact chapter-scoped study-guide checklist without audit lineage",()=>{
+  const facts=runtime.pack.testGuideFacts?.religionChapters?.["3"];
+  assert.ok(Array.isArray(facts)&&facts.length>=9,"Chapter 3 guide facts must survive runtime compaction");
+  assert.ok(facts.some(row=>/(?:original|orignial|oirginal) sin/i.test(row)),"missing compact original-sin guide fact");
+  for(const phrase of ["Church members","Pope Leo","Steps to Baptism"])
+    assert.ok(facts.some(row=>row.toLowerCase().includes(phrase.toLowerCase())),"missing compact guide fact: "+phrase);
+  assert.doesNotMatch(JSON.stringify(runtime.pack.testGuideFacts),/sourceCaptureHash|evidenceExcerptHash|learnerResponse|studentName|privateHistory/);
+});
+
 
 test("skill audit lineage stays in full pack and is omitted only from the runtime",()=>{
   const full=source.pack.contentPipeline.skills;
