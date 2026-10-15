@@ -193,5 +193,5 @@ test('review refinements are source-faithful and conservatively label multiple-c
     assert.equal(candidate.enabledByDefault, false);
     assert.equal(candidate.rollout.automaticPromotion, true);
   }
-  assert.match(packet, /updated items require renewed human review and release sign-off/i);
+  assert.match(packet, /updated items require fresh automated release evidence/i);
 });
