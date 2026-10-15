@@ -71,7 +71,9 @@ jobs:
   refresh:
     outputs:
       published_sha: ${{ steps.confirm-published-sha.outputs.sha }}
-    timeout-minutes: 25
+    # Full source scan, Chromium/WebKit QA, and a bounded main-race revalidation
+    # can legitimately exceed 25 minutes without indicating a stuck refresh.
+    timeout-minutes: 45
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6

@@ -115,3 +115,11 @@ test('refresh publication reconciles main races without force-pushing unverified
   assert.match(workflow, /git push origin HEAD:main/);
   assert.doesNotMatch(workflow, /git push[^\n]*--force/);
 });
+
+test('teacher refresh timeout covers full dual-browser QA plus bounded main-race revalidation', () => {
+  const workflow = readFileSync('.github/workflows/sync-study-pack.yml', 'utf8');
+  const refreshJob = workflow.match(/jobs:\n  refresh:\n([\s\S]*?)\n  deploy:/)?.[1] || '';
+  assert.match(refreshJob, /timeout-minutes:\s*45/);
+  assert.match(refreshJob, /Install Chromium and WebKit for candidate QA/);
+  assert.match(refreshJob, /for ATTEMPT in 1 2 3/);
+});
