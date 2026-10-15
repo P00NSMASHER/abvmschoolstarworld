@@ -17,13 +17,15 @@ function validate(data){
     !Array.isArray(data.assignments)||data.assignments.length>20||
     !/^[a-f0-9]{64}$/i.test(String(data.contentHash||""))||
     !Number.isFinite(Date.parse(data.checkedAt))||
-    !Number.isFinite(Date.parse(data.firstObservedAt)))throw Error("Invalid verified Homework feed");
+    !Number.isFinite(Date.parse(data.firstObservedAt))||
+    !Number.isFinite(Date.parse(data.contentChangedAt)))throw Error("Invalid verified Homework feed");
   for(const row of data.assignments){
     if(!row||!SUBJECTS.has(row.subject)||typeof row.task!=="string"||
       !row.task.trim()||row.task.length>220||routine(row.task))throw Error("Invalid or standing Homework item");
   }
   if((data.status==="assignments")!==(data.assignments.length>0))throw Error("Homework posting status is inconsistent");
-  if(Date.parse(data.firstObservedAt)>Date.parse(data.checkedAt))
+  if(Date.parse(data.firstObservedAt)>Date.parse(data.checkedAt)||
+    Date.parse(data.contentChangedAt)>Date.parse(data.checkedAt))
     throw Error("Invalid verified Homework observation order");
   return data;
 }
@@ -38,9 +40,10 @@ function forDate(data,dateKey,now=new Date()){
   // Eastern school day when this exact content was first observed. Rechecking
   // unchanged text tomorrow proves source availability, not a new assignment.
   if(schoolKey(firstObserved)!==current||schoolKey(checked)!==current||age< -5*60*1000||age>30*60*60*1000)
-    return{state:"outdated",checkedAt:feed.checkedAt,firstObservedAt:feed.firstObservedAt,assignments:[]};
+    return{state:"outdated",checkedAt:feed.checkedAt,firstObservedAt:feed.firstObservedAt,
+      contentChangedAt:feed.contentChangedAt,assignments:[]};
   return{state:feed.status,checkedAt:feed.checkedAt,firstObservedAt:feed.firstObservedAt,
-    assignments:feed.assignments};
+    contentChangedAt:feed.contentChangedAt,assignments:feed.assignments};
 }
 window.ABVMHomeworkFeed=Object.freeze({validate,forDate,schoolKey,sourceUrl:SOURCE_URL});
 })();

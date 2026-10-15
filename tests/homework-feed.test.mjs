@@ -50,7 +50,8 @@ test('newly observed Wednesday assignments remain available with Math and Spelli
 });
 test('Eastern school date, not UTC calendar date, determines whether homework is current',()=>{
   const evening={...verifiedPosting,checkedAt:'2026-10-14T00:05:00.000Z',
-    firstObservedAt:'2026-10-14T00:05:00.000Z'};
+    firstObservedAt:'2026-10-14T00:05:00.000Z',
+    contentChangedAt:'2026-10-14T00:05:00.000Z'};
   assert.equal(model.forDate(evening,'2026-10-13',new Date('2026-10-14T00:30:00.000Z')).state,'assignments');
   const nextMorning={...evening,checkedAt:'2026-10-14T13:30:00.000Z'};
   const view=model.forDate(nextMorning,'2026-10-14',new Date('2026-10-14T14:00:00.000Z'));
@@ -72,8 +73,11 @@ test('published teacher feed stays schema-validated without requiring a fixed Ma
   const current=JSON.parse(readFileSync(new URL('../pages/data/homework-current.json',import.meta.url),'utf8'));
   assert.doesNotThrow(()=>model.validate(current));
 });
-test('observations occurring after their claimed source checks fail closed',()=>{
+test('observations or content changes occurring after their source checks fail closed',()=>{
   assert.throws(()=>model.validate({...verifiedPosting,
     firstObservedAt:'2026-10-14T01:00:00.000Z',
+    checkedAt:'2026-10-14T00:32:53.326Z'}),/Invalid/);
+  assert.throws(()=>model.validate({...verifiedPosting,
+    contentChangedAt:'2026-10-14T01:00:00.000Z',
     checkedAt:'2026-10-14T00:32:53.326Z'}),/Invalid/);
 });

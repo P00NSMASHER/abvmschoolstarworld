@@ -7,6 +7,7 @@ export const HISTORICAL_HOMEWORK_POSTING=Object.freeze({
   status:'assignments',
   checkedAt:'2026-10-14T00:32:53.326Z',
   firstObservedAt:'2026-10-14T00:32:53.326Z',
+  contentChangedAt:'2026-10-14T00:32:53.326Z',
   contentHash:'5632e315601ca9969a13a72c942f0abe52861d76793c51040678f4e8175b2e6a',
   assignments:Object.freeze([
     Object.freeze({subject:'Math',task:'Page 22'}),
