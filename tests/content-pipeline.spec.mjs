@@ -475,6 +475,9 @@ test('Study Games honors pipeline authorization for high-frequency word practice
     };
     const allowed = structuredClone(envelope.pack);
     withReadingFixture(allowed);
+    // Source-authorization tests exclude the separately governed historical
+    // review tier, which may legitimately retain lessons from last week.
+    allowed.recentReviewPipeline = {questions: []};
     allowed.contentPipeline = {
       schemaVersion: 2,
       sourceHash: 'sight-authorized',
@@ -487,6 +490,7 @@ test('Study Games honors pipeline authorization for high-frequency word practice
 
     const blocked = structuredClone(envelope.pack);
     withReadingFixture(blocked);
+    blocked.recentReviewPipeline = {questions: []};
     blocked.contentPipeline = {
       schemaVersion: 2,
       sourceHash: 'sight-blocked',
