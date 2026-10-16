@@ -36,8 +36,8 @@ test("Premium Today, Calendar, Study, Test Prep and Progress form one coherent i
       .map(item => item.label);
   });
   expect(sourceTests.length).toBeGreaterThan(0);
-  const nextTest = (await page.locator(".today-primary .priority-card h3").textContent()).trim();
-  expect(sourceTests).toContain(nextTest);
+  const nextTests = await page.locator(".today-primary .priority-card .assessment-title").allTextContents();
+  expect([...nextTests].sort()).toEqual([...sourceTests].sort());
   await page.locator(".bottom-nav [data-tab=calendar]").click();
   await expect(page.locator(".calendar-screen")).toBeVisible();
   await expect(page.locator(".calendar-month-nav strong")).toHaveText("October 2026");

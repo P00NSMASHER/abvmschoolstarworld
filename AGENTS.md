@@ -51,9 +51,10 @@ high-quality image generator, visually inspect it, and run the existing QA befor
 publishing through a pull request. Never invent unspecified ingredients. Use
 `pendingArtMenus(plan, currentNewYorkMonth)` from the lunch-art builder to avoid
 expired-month backlog. Preserve existing menu source and closure rules. The
-GitHub merge-event task “Complete lunch artwork” is configured but paused because
-the account has 15 active tasks. Once enabled it provides a backup for current and
-future missing illustrations after merged PRs; it does not trigger on direct pushes.
+GitHub merge-event task “Complete lunch artwork” was verified enabled October 15,
+2026 for current/future missing illustrations after merged PRs; it does not
+trigger on direct pushes. Follow the pending photorealistic tray revision in
+`docs/LUNCH_ART.md`; the two reference photos have not yet arrived.
 Do not change unrelated tasks to make room. If artwork generation or review is blocked,
 retain accurate text-only cards and report the specific incomplete coverage.
 

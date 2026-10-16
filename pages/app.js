@@ -278,11 +278,6 @@ function lunchCardHtml(date,lunch){
   const remaining=message.startsWith(main)?message.slice(main.length).replace(/^,\s*/,""):"";
   return '<section class="lunch-card'+(!lunch&&!closed?' lunch-missing':'')+'"><span class="meal-icon" aria-hidden="true">'+window.ABVMProductView.icon("lunch")+'</span><div><p>SCHOOL LUNCH</p><strong>'+esc(main)+'</strong>'+(remaining?' <span class="lunch-details">'+esc(remaining)+'</span>':'')+(sourceNote?'<small>'+esc(sourceNote)+'</small>':'')+'</div>'+(!closed?(window.ABVMLunchArt?.html(lunch)||''):'')+'</section>';
 }
-function currentTest(){
-  const now=today();
-  const row=datedImportantEvents().find(({item,date})=>date>=now&&kindClass(item)==="test");
-  return row?{x:row.item,d:row.date}:null;
-}
 function reminderForDate(date){
   const rows=getDerivedPack().reminderRows;
   const exact=rows.find(row=>date>=row.range[0]&&date<=row.range[1]);
@@ -307,8 +302,8 @@ function calendarBase(){
 }
 function loadStudyRanks(){return ensureStudyGameEngine().then(e=>e.studyBadgeCollection())}
 function renderToday(){
- const d=today(),priority=datedImportantEvents().find(({item,date})=>date>=d&&(kindClass(item)==="test"||kindClass(item)==="due"));
- stack().innerHTML=window.ABVMProductView.today({d,pack,header,freshness,taskHtml,kindClass,fmtDate,fmtShort,linkedTextHtml,events:eventItemsForDate(d),tasks:taskRecordsForSurface("today"),homeworkHtml:homeworkCardForDate(d),next:currentTest()||(priority?{x:priority.item,d:priority.date}:null),reminders:upcomingReminderTexts(d,2),lunchHtml:lunchCardHtml(d,lunchForDate(d))});
+ const d=today();
+ stack().innerHTML=window.ABVMProductView.today({d,pack,header,freshness,taskHtml,kindClass,fmtDate,fmtShort,linkedTextHtml,events:eventItemsForDate(d),tasks:taskRecordsForSurface("today"),homeworkHtml:homeworkCardForDate(d),next:window.ABVMProductView.nextAssessments(datedImportantEvents(),kindClass),reminders:upcomingReminderTexts(d,2),lunchHtml:lunchCardHtml(d,lunchForDate(d))});
  const mealArt=stack().querySelector(".today-screen .lunch-art img");
  if(mealArt){
    const hideBrokenArt=()=>mealArt.closest(".lunch-art")?.remove();
@@ -797,5 +792,6 @@ document.addEventListener("visibilitychange",()=>{
 window.addEventListener("pageshow",event=>{
   if(event.persisted&&pack){fetchPack({force:true,notify:true}).catch(()=>{});fetchHomeworkFeed({force:true}).catch(()=>{});}
 });
+window.ABVMProductView.watchSchoolClock(()=>{if(pack&&activeTab==="today")render({preserveScroll:true})});
 load();
 })();
