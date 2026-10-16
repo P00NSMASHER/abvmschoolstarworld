@@ -27,7 +27,7 @@ export function approvedArtwork(meals, registry) {
       if (result[key]) throw new Error('Duplicate artwork approval');
       const tray=art.styleId===TRAY_STYLE_ID;
       if(art.styleId&&!tray)throw new Error('Unknown reviewed artwork style');
-      if(tray&&(!Number.isInteger(art.width)||art.width<768||!Number.isInteger(art.height)||art.height<512||Math.abs(art.width/art.height-1.5)>.02||!/^[a-f0-9]{64}$/.test(art.sha256||'')||art.omissionNote!==trayMenuSpec(menu).omissionNote))throw new Error('Invalid reviewed tray artwork metadata');
+      if(tray&&(!Number.isInteger(art.width)||art.width<1200||!Number.isInteger(art.height)||art.height<800||Math.abs(art.width/art.height-1.5)>.02||!/^[a-f0-9]{64}$/.test(art.sha256||'')||art.omissionNote!==trayMenuSpec(menu).omissionNote))throw new Error('Invalid reviewed tray artwork metadata');
       result[key] = { src: art.src, alt: art.alt, label: 'Meal illustration', ...(tray?{styleId:art.styleId,width:art.width,height:art.height,omissionNote:art.omissionNote}:{}) };
     }
   }

@@ -9,8 +9,8 @@
       "reviewedAt": "2026-10-16",
       "generator": "OpenAI image_gen",
       "styleId": "abvm-maroon-tray-v1",
-      "width": 1024,
-      "height": 683,
+      "width": 1280,
+      "height": 853,
       "omissionNote": "Fruit variety not specified; fruit not pictured.",
       "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
       "approvedMenus": [
@@ -24,7 +24,7 @@
           ]
         }
       ],
-      "sha256": "d18a6621d6eb7b5d183bcc4230b7ebfad69b4310388a6b1d974e281f9b125de8"
+      "sha256": "212867a15fe7bfd23c4d3fa8dfd14a496ddc9e0ffb91f51a1c0f73640377e2a2"
     },
     {
       "id": "tray-2026-10-02-v1",
@@ -34,8 +34,8 @@
       "reviewedAt": "2026-10-16",
       "generator": "OpenAI image_gen",
       "styleId": "abvm-maroon-tray-v1",
-      "width": 1024,
-      "height": 683,
+      "width": 1280,
+      "height": 853,
       "omissionNote": "Dipping sauce variety not specified; sauce not pictured. Fruit variety not specified; fruit not pictured.",
       "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
       "approvedMenus": [
@@ -49,7 +49,7 @@
           ]
         }
       ],
-      "sha256": "4d0f36758a33ccdec6cf478f4bc946d4271bc82847b108d969a39cfed799077a"
+      "sha256": "f498d0787ffe574b3d759afddbbdc01288ccdef2a1a2848b53a3bc4c2a403303"
     },
     {
       "id": "tray-2026-10-05-v1",
@@ -59,8 +59,8 @@
       "reviewedAt": "2026-10-16",
       "generator": "OpenAI image_gen",
       "styleId": "abvm-maroon-tray-v1",
-      "width": 1024,
-      "height": 683,
+      "width": 1280,
+      "height": 853,
       "omissionNote": "Fruit variety not specified; fruit not pictured.",
       "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
       "approvedMenus": [
@@ -74,7 +74,7 @@
           ]
         }
       ],
-      "sha256": "1831ed973be86e35a828f8cf57bea1cd4b7b0716238fb8fcadb846dee152a2f9"
+      "sha256": "80b6aaa267a241ca9fc955b9dde2ecc3491deeb44235903cc0722e3a0a8d20ed"
     },
     {
       "id": "tray-2026-10-06-v1",
@@ -84,8 +84,8 @@
       "reviewedAt": "2026-10-16",
       "generator": "OpenAI image_gen",
       "styleId": "abvm-maroon-tray-v1",
-      "width": 1024,
-      "height": 683,
+      "width": 1280,
+      "height": 853,
       "omissionNote": "Taco filling not specified; chips and named sides shown. Fruit variety not specified; fruit not pictured.",
       "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
       "approvedMenus": [
@@ -101,7 +101,7 @@
           ]
         }
       ],
-      "sha256": "4836d261250083ba9d778b4bb436ee4d7f5a65b8814b2c2900f6c7ff1e3c2963"
+      "sha256": "122861a152e20ad9e5a4930eb297d3e44fddbde2393f3f78aec1dbbe17f30933"
     },
     {
       "id": "tray-2026-10-07-v1",
@@ -111,8 +111,8 @@
       "reviewedAt": "2026-10-16",
       "generator": "OpenAI image_gen",
       "styleId": "abvm-maroon-tray-v1",
-      "width": 1024,
-      "height": 683,
+      "width": 1280,
+      "height": 853,
       "omissionNote": "Fruit variety not specified; fruit not pictured.",
       "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
       "approvedMenus": [
@@ -127,7 +127,7 @@
           ]
         }
       ],
-      "sha256": "df7693e4653a1a0148c2333e4209621f1c25bbdc2f4381ffd21e4909784323b2"
+      "sha256": "3a1e9deb63ad0b770b7f18eccf0211a16f45acb763506848458859b8021f7c92"
     },
     {
       "id": "tray-2026-10-08-v1",
@@ -137,8 +137,8 @@
       "reviewedAt": "2026-10-16",
       "generator": "OpenAI image_gen",
       "styleId": "abvm-maroon-tray-v1",
-      "width": 1024,
-      "height": 683,
+      "width": 1280,
+      "height": 853,
       "omissionNote": "Fruit variety not specified; fruit not pictured.",
       "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
       "approvedMenus": [
@@ -153,7 +153,7 @@
           ]
         }
       ],
-      "sha256": "178712330e75872de5e6cea1e439509356520e02e04c52afae671d1388812bde"
+      "sha256": "70b9eec478dd79ae007ba40859ae67db5cabc4b0df9c26c9c3c9b747c4695537"
     },
     {
       "id": "tray-2026-10-13-v1",
@@ -163,8 +163,8 @@
       "reviewedAt": "2026-10-16",
       "generator": "OpenAI image_gen",
       "styleId": "abvm-maroon-tray-v1",
-      "width": 1024,
-      "height": 683,
+      "width": 1280,
+      "height": 853,
       "omissionNote": "Fruit variety not specified; fruit not pictured.",
       "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
       "approvedMenus": [
@@ -178,7 +178,7 @@
           ]
         }
       ],
-      "sha256": "4a74b378fa30949460e1caadc61e1aa491635c4432efe37a297cdbfcb91298b2"
+      "sha256": "77c92f6449bfe6bba7c70b4ace98a247e9d6fa0a42e9c44c564df860bc85b0e0"
     },
     {
       "id": "tray-2026-10-14-v1",
@@ -188,8 +188,8 @@
       "reviewedAt": "2026-10-16",
       "generator": "OpenAI image_gen",
       "styleId": "abvm-maroon-tray-v1",
-      "width": 1024,
-      "height": 683,
+      "width": 1280,
+      "height": 853,
       "omissionNote": "Fruit variety not specified; fruit not pictured.",
       "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
       "approvedMenus": [
@@ -203,7 +203,7 @@
           ]
         }
       ],
-      "sha256": "fc528c5d8dd50017bdbe01892d1c2926fd9da95a6a5768519c2be82d03d063de"
+      "sha256": "abbe224b4ca3cce156c972d76597c16cb2b988122836883f34f363a0e66b5d5d"
     },
     {
       "id": "tray-2026-10-15-v1",
@@ -213,8 +213,8 @@
       "reviewedAt": "2026-10-16",
       "generator": "OpenAI image_gen",
       "styleId": "abvm-maroon-tray-v1",
-      "width": 1024,
-      "height": 683,
+      "width": 1280,
+      "height": 853,
       "omissionNote": "Fruit variety not specified; fruit not pictured.",
       "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
       "approvedMenus": [
@@ -228,7 +228,7 @@
           ]
         }
       ],
-      "sha256": "2c5138e209c5c70e7863c422fee50eeee4a7d22ef86ae620dfef371465a3a250"
+      "sha256": "82ed942139874c76ef2f43f1cd73d9b5285afe0d9bf00832d0aa7826f07c477b"
     },
     {
       "id": "tray-2026-10-16-v1",
@@ -238,8 +238,8 @@
       "reviewedAt": "2026-10-16",
       "generator": "OpenAI image_gen",
       "styleId": "abvm-maroon-tray-v1",
-      "width": 1024,
-      "height": 683,
+      "width": 1280,
+      "height": 853,
       "omissionNote": "Fruit variety not specified; fruit not pictured.",
       "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
       "approvedMenus": [
@@ -255,7 +255,7 @@
           ]
         }
       ],
-      "sha256": "52dd8b6cc95079e280ac86441dda49db7fbc9c2eed2630b232e993c5a0156c45"
+      "sha256": "06e2291329bbbf805d2c308be4af7596f9588cd65073b7edab43ec918e6ee977"
     },
     {
       "id": "tray-2026-10-19-v1",
@@ -265,8 +265,8 @@
       "reviewedAt": "2026-10-16",
       "generator": "OpenAI image_gen",
       "styleId": "abvm-maroon-tray-v1",
-      "width": 1024,
-      "height": 683,
+      "width": 1280,
+      "height": 853,
       "omissionNote": "Fruit variety not specified; fruit not pictured.",
       "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
       "approvedMenus": [
@@ -280,7 +280,7 @@
           ]
         }
       ],
-      "sha256": "44625c59e3d4e160016fa12bd053afb59a0bfa50c1cbe6cf9e32d829cda98aab"
+      "sha256": "49cdd003cfebd7c5f3359cfaa234b6e5fabc6fa51e890f69de29e3e42d2406aa"
     },
     {
       "id": "tray-2026-10-20-v1",
@@ -290,8 +290,8 @@
       "reviewedAt": "2026-10-16",
       "generator": "OpenAI image_gen",
       "styleId": "abvm-maroon-tray-v1",
-      "width": 1024,
-      "height": 683,
+      "width": 1280,
+      "height": 853,
       "omissionNote": "Fruit variety not specified; fruit not pictured.",
       "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
       "approvedMenus": [
@@ -306,7 +306,7 @@
           ]
         }
       ],
-      "sha256": "eaba83d40398db7beb4f1940945abb2fc0318eee05b1f48b2b9dee8edf1fddb4"
+      "sha256": "386a9a638a3da9ef5e2bf283196cd164a21fbe48772f4f01287bbd3238cbca34"
     },
     {
       "id": "tray-2026-10-21-v1",
@@ -316,8 +316,8 @@
       "reviewedAt": "2026-10-16",
       "generator": "OpenAI image_gen",
       "styleId": "abvm-maroon-tray-v1",
-      "width": 1024,
-      "height": 683,
+      "width": 1280,
+      "height": 853,
       "omissionNote": "Fruit variety not specified; fruit not pictured.",
       "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
       "approvedMenus": [
@@ -332,7 +332,7 @@
           ]
         }
       ],
-      "sha256": "4d116cd50c7cdedca68d724baffe505f731dc50830d62ab81ccc3f9a3558f9c3"
+      "sha256": "06860cae9c66941e8a6023b2bdc9f787e824ed4e5394e38e394f7d3d6195fdc9"
     },
     {
       "id": "tray-2026-10-22-v1",
@@ -342,8 +342,8 @@
       "reviewedAt": "2026-10-16",
       "generator": "OpenAI image_gen",
       "styleId": "abvm-maroon-tray-v1",
-      "width": 1024,
-      "height": 683,
+      "width": 1280,
+      "height": 853,
       "omissionNote": "Fruit variety not specified; fruit not pictured.",
       "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
       "approvedMenus": [
@@ -357,7 +357,7 @@
           ]
         }
       ],
-      "sha256": "244bed7dc122ec0572c8ca0f8e6c992b56853b9a43bcf8f6f664d02ca67c1151"
+      "sha256": "cdc53f5a260fa4ba9990bea699ee3032c3403d2bbf3cbcdcc3014f26507d0471"
     },
     {
       "id": "tray-2026-10-23-v1",
@@ -367,8 +367,8 @@
       "reviewedAt": "2026-10-16",
       "generator": "OpenAI image_gen",
       "styleId": "abvm-maroon-tray-v1",
-      "width": 1024,
-      "height": 683,
+      "width": 1280,
+      "height": 853,
       "omissionNote": "Dipping sauce variety not specified; sauce not pictured. Fruit variety not specified; fruit not pictured.",
       "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
       "approvedMenus": [
@@ -382,7 +382,7 @@
           ]
         }
       ],
-      "sha256": "08eb407f7ce523be9695abf5ae1c499cbaac3ce4e6b8be728ecb4bd2eecde1cf"
+      "sha256": "5e86a9be671f91493185915182747c4cbf5478b3d3831b561b68e82c1b000f0a"
     },
     {
       "id": "tray-2026-10-26-v1",
@@ -392,8 +392,8 @@
       "reviewedAt": "2026-10-16",
       "generator": "OpenAI image_gen",
       "styleId": "abvm-maroon-tray-v1",
-      "width": 1024,
-      "height": 683,
+      "width": 1280,
+      "height": 853,
       "omissionNote": "Fruit variety not specified; fruit not pictured.",
       "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
       "approvedMenus": [
@@ -407,7 +407,7 @@
           ]
         }
       ],
-      "sha256": "a0d2b0a1ac98d89043b0a1bde9d8b8cfb80f911bf59d47e656cc6df2e3e3ca7e"
+      "sha256": "58cacff6e7a7b1632268b23919fb0889158817583fa7fb244547c4b7b82bae64"
     },
     {
       "id": "tray-2026-10-27-v1",
@@ -417,8 +417,8 @@
       "reviewedAt": "2026-10-16",
       "generator": "OpenAI image_gen",
       "styleId": "abvm-maroon-tray-v1",
-      "width": 1024,
-      "height": 683,
+      "width": 1280,
+      "height": 853,
       "omissionNote": "Taco filling not specified; chips and named sides shown. Fruit variety not specified; fruit not pictured.",
       "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
       "approvedMenus": [
@@ -433,7 +433,7 @@
           ]
         }
       ],
-      "sha256": "ba4db834ffbe594d61946c33b8a09b4950756d7e1940b1d64e822994708157b0"
+      "sha256": "3a9be91d2d1e139d0ea1289321e657140c64df290bdab33955acfb3934277ef0"
     },
     {
       "id": "tray-2026-10-28-v1",
@@ -443,8 +443,8 @@
       "reviewedAt": "2026-10-16",
       "generator": "OpenAI image_gen",
       "styleId": "abvm-maroon-tray-v1",
-      "width": 1024,
-      "height": 683,
+      "width": 1280,
+      "height": 853,
       "omissionNote": "Fruit variety not specified; fruit not pictured.",
       "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
       "approvedMenus": [
@@ -458,7 +458,7 @@
           ]
         }
       ],
-      "sha256": "3edc05f7e75b76175775ce77c814ad08563be39d0dadd0da69dcb3d48fce8376"
+      "sha256": "540aa869a430bfe9aa9e5e6b6ef84367767b9e972153a33cc82ff8554cafc238"
     },
     {
       "id": "tray-2026-10-29-v1",
@@ -468,8 +468,8 @@
       "reviewedAt": "2026-10-16",
       "generator": "OpenAI image_gen",
       "styleId": "abvm-maroon-tray-v1",
-      "width": 1024,
-      "height": 683,
+      "width": 1280,
+      "height": 853,
       "omissionNote": "Fruit variety not specified; fruit not pictured.",
       "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
       "approvedMenus": [
@@ -484,7 +484,7 @@
           ]
         }
       ],
-      "sha256": "adc261d3f8a838a0435cc0acdd758217175d4235fa3b8c7874090e138350b9f9"
+      "sha256": "c2c5e6e2b9209e37d842ac7af9a779b37a29dad3732a61425caeaf341803e94c"
     },
     {
       "id": "tray-2026-10-30-v1",
@@ -494,8 +494,8 @@
       "reviewedAt": "2026-10-16",
       "generator": "OpenAI image_gen",
       "styleId": "abvm-maroon-tray-v1",
-      "width": 1024,
-      "height": 683,
+      "width": 1280,
+      "height": 853,
       "omissionNote": "Fruit variety not specified; fruit not pictured.",
       "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
       "approvedMenus": [
@@ -509,7 +509,7 @@
           ]
         }
       ],
-      "sha256": "01be838181993c6c80cbd413c4b2309085ed805495e9b174be977b17f880a34f"
+      "sha256": "11f70599070c5e865f510d31077adab348ba8053270808f39949de27d7ac35d9"
     }
   ],
   "archivedArtworks": [
@@ -520,7 +520,7 @@
       "status": "reviewed",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entrée-only illustration. No sides, labels or garnish. Exact October menus approved; food illustration is not a photograph of the actual meal.",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration. No sides, labels or garnish. Exact October menus approved; food illustration is not a photograph of the actual meal.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -540,7 +540,7 @@
       "status": "reviewed",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entrée-only illustration. No sides, labels or garnish. Exact October menus approved; food illustration is not a photograph of the actual meal.",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration. No sides, labels or garnish. Exact October menus approved; food illustration is not a photograph of the actual meal.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -578,7 +578,7 @@
       "status": "reviewed",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entrée-only illustration. No sides, labels or garnish. Exact October menus approved; food illustration is not a photograph of the actual meal.",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration. No sides, labels or garnish. Exact October menus approved; food illustration is not a photograph of the actual meal.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -607,7 +607,7 @@
       "status": "reviewed",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entrée-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -628,7 +628,7 @@
       "status": "reviewed",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entrée-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -649,7 +649,7 @@
       "status": "reviewed",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entrée-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -669,7 +669,7 @@
       "status": "retired",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entrée-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -804,7 +804,7 @@
       "status": "reviewed",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entrée-only illustration; no unlisted sides, garnish or toppings. Generic pasta, cutlet and tortilla shapes are illustrative; ham and cheese uses the listed pretzel roll. See docs/lunch-art-prompts-extra-b.md.",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. Generic pasta, cutlet and tortilla shapes are illustrative; ham and cheese uses the listed pretzel roll. See docs/lunch-art-prompts-extra-b.md.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -826,7 +826,7 @@
       "status": "reviewed",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entrée-only illustration; no unlisted sides, garnish or toppings. Generic pasta, cutlet and tortilla shapes are illustrative; ham and cheese uses the listed pretzel roll. See docs/lunch-art-prompts-extra-b.md.",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. Generic pasta, cutlet and tortilla shapes are illustrative; ham and cheese uses the listed pretzel roll. See docs/lunch-art-prompts-extra-b.md.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -846,7 +846,7 @@
       "status": "reviewed",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entrée-only illustration; no unlisted sides, garnish or toppings. Generic pasta, cutlet and tortilla shapes are illustrative; ham and cheese uses the listed pretzel roll. See docs/lunch-art-prompts-extra-b.md.",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. Generic pasta, cutlet and tortilla shapes are illustrative; ham and cheese uses the listed pretzel roll. See docs/lunch-art-prompts-extra-b.md.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -867,7 +867,7 @@
       "status": "reviewed",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
-      "reviewNotes": "Visually reviewed entrée-only illustration; no unlisted sides, garnish or toppings. Generic pasta, cutlet and tortilla shapes are illustrative; ham and cheese uses the listed pretzel roll. See docs/lunch-art-prompts-extra-b.md.",
+      "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. Generic pasta, cutlet and tortilla shapes are illustrative; ham and cheese uses the listed pretzel roll. See docs/lunch-art-prompts-extra-b.md.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",

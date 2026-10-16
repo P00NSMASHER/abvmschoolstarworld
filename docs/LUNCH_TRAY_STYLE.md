@@ -37,7 +37,7 @@ October review corrected an unlisted potato side and herb garnish before export.
 Never interpret a successful generation call as visual approval.
 
 Twenty October menu assets were generated with the built-in image tool, inspected,
-and exported to immutable local 1024px WebP files. Exact prompts, byte hashes and
+and exported to immutable local 1280px WebP files. Exact prompts, byte hashes and
 review records are in [the prompt manifest](lunch-tray-prompts-2026-10.json).
 The registry pins source ID, full menu, approved style, dimensions, omission note
 and SHA-256. Builder checks cap each asset at 256 KiB and reject changed/missing

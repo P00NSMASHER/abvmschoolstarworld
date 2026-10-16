@@ -16,7 +16,7 @@ test('reviewed photoreal tray and complete menu remain readable across phone, iP
   await expect(card).toContainText('French fries, Mixed vegetables, and Fruit');
   const art=card.locator('.lunch-art-tray'),image=art.locator('img');
   await expect(image).toHaveAttribute('src','assets/lunch-art/tray-2026-10-15-v1.webp');
-  await expect.poll(()=>image.evaluate(img=>img.complete&&img.naturalWidth>=768)).toBe(true);
+  await expect.poll(()=>image.evaluate(img=>img.complete&&img.naturalWidth>=1200)).toBe(true);
   const dimensions=await image.evaluate(img=>({width:img.getBoundingClientRect().width,height:img.getBoundingClientRect().height,natural:img.naturalWidth}));
   expect(dimensions.natural).toBeGreaterThanOrEqual(dimensions.width*2);
   expect(dimensions.width/dimensions.height).toBeCloseTo(1.5,1);
