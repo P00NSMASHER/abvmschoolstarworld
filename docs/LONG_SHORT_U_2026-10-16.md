@@ -2,8 +2,10 @@
 
 The October 16 teacher scan reported one unsupported skill: Spelling /
 Handwriting, long / short u, for Friday October 23. The existing generated
-candidate records the exact Tests-page line and source hashes; retain it as the
-original isolated intake evidence. It does not itself authorize publication.
+candidate records the exact Tests-page line and source hashes; retain its exact
+source context while filling its proposed bank with the same nine original
+questions as the runtime family. The saved manifest still holds on automated
+QA and does not itself authorize publication.
 
 The registered family provides nine original examples: three direct, three
 transfer and three reasoning questions, with three choices, checked answers,
@@ -23,7 +25,7 @@ mismatched source line cannot authorize its questions.
 Tests first reproduced the missing skill. The positive regression checks all
 nine unique prompts, direct/transfer/reasoning coverage, complete answer choices,
 teaching notes and exact Tests-page lineage. Negative cases reject unrelated
-subjects/topics and mismatched page evidence. All 606 local unit cases and
+subjects/topics and mismatched page evidence. All 607 local unit cases and
 static/syntax/hygiene pass. Full exact-head browser, independent reproduction and
 fresh-source acceptance remain required before integration, followed by actual
 automatic teacher refresh, Pages publication and live source parity.

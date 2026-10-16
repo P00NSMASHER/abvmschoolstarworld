@@ -30,3 +30,15 @@ test('the long/short-u family cannot enter unrelated subjects or infer an unprin
  const p=pack();p.subjects[0].topics=['long / short u'];
  assert.throws(()=>buildGrade2ContentPipeline(p,{sourcePages:[{...sourcePages[0],lines:['Friday Oct. 23: Spelling (long/short o)/Handwriting']}],requirePageExactLineage:true}),/skill-lineage-unresolved:long-short-u/);
 });
+
+test('saved candidate and runtime bank stay identical while automated acceptance remains pending',async()=>{
+ const {readFileSync}=await import('node:fs');
+ const {curriculumCandidateIntrinsicBlockers,validateCurriculumCandidateManifest}=await import('../scripts/curriculum-coverage-autopilot.mjs');
+ const {LONG_SHORT_U_FAMILY:family}=await import('../scripts/curriculum-families/long-short-u.mjs');
+ const candidate=JSON.parse(readFileSync(new URL('../curriculum-candidates/curriculum-spelling-handwriting-long-short-u-b5341c4e17.json',import.meta.url),'utf8'));
+ assert.deepEqual(candidate.proposedQuestions,[family.baseQuestion,...family.supplementalQuestions]);
+ assert.deepEqual(curriculumCandidateIntrinsicBlockers(candidate),[]);
+ assert.deepEqual(validateCurriculumCandidateManifest(candidate),[]);
+ assert.deepEqual(candidate.readiness.blockers,['automated-qa-required']);
+ assert.equal(candidate.readiness.automaticPromotion,false);
+});
