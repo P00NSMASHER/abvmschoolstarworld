@@ -23,6 +23,11 @@ test('all next-day tests replace today at 3pm without reloading, including offli
  await expect(page.locator('.priority-card .assessment-title')).toHaveText(['QA fixture: Friday Spelling','QA fixture: Friday Religion']);
  await expect(page.locator('.priority-card p')).toHaveText('NEXT TESTS');
  await expect(page.locator('.study-invitation')).toHaveCount(0);
+ // Offline assertions precede an online reload for complete visual evidence.
+ await context.setOffline(false);await page.reload();
+ await expect(page.locator('.priority-card .assessment-title')).toHaveText(['QA fixture: Friday Spelling','QA fixture: Friday Religion']);
+ await expect(page.locator('.study-badge-latest img')).toBeVisible();
+ await expect.poll(()=>page.locator('img').evaluateAll(images=>images.filter(img=>img.loading!=='lazy').every(img=>img.complete&&img.naturalWidth>0))).toBe(true);
  for(const width of [375,390,430,744,820,1024,1440]){
   await page.setViewportSize({width,height:900});
   expect(await page.locator('.today-screen').evaluate(el=>el.scrollWidth-el.clientWidth)).toBeLessThanOrEqual(1);
