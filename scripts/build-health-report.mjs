@@ -8,18 +8,20 @@ const cache=(sw.match(/const CACHE = "([^"]+)"/)||[])[1]||"unknown";
 const runsPath=process.env.WORKFLOW_RUNS_FILE;
 const refreshJobsPath=process.env.REFRESH_JOBS_FILE;
 const openPullsPath=process.env.OPEN_PULLS_FILE;
+const publicationsPath=process.env.HOMEWORK_PUBLICATIONS_FILE;
 const runs=runsPath?JSON.parse(readFileSync(runsPath,"utf8")).workflow_runs||[]:[];
 const refreshJobsData=refreshJobsPath?JSON.parse(readFileSync(refreshJobsPath,"utf8")):{run_id:null,jobs:[]};
 const openPulls=openPullsPath?JSON.parse(readFileSync(openPullsPath,"utf8")):[];
+const homeworkPublications=publicationsPath?JSON.parse(readFileSync(publicationsPath,"utf8")):[];
 
 const productionRuns=runs.filter(run=>run.head_branch==="main"||run.event==="schedule");
 
 const workflowNames={
   refresh:"Refresh ABVM teacher pages",
-  homework:"Refresh current ABVM homework",
   qa:"ABVM App QA",
   deploy:"Deploy ABVM to GitHub Pages",
   watchdog:"Monitor ABVM refresh health",
+  homework:"Refresh current ABVM homework",
 };
 const runEvidenceAt=run=>Date.parse(run?.updated_at||run?.created_at||0)||0;
 const runCreatedAt=run=>Date.parse(run?.created_at||0)||0;
@@ -112,7 +114,8 @@ const completedHealthy=(workflow,maxAgeHours)=>completedRunHealthy(effectiveRun(
 const effectivePublicationRun=()=>selectPublicationEvidence(
   effectiveRun(status.workflows.deploy),
   effectiveRun(status.workflows.refresh),
-  effectiveRun(status.workflows.homework)
+  homeworkPublications.filter(run=>run.head_branch==="main"&&run.name===workflowNames.homework&&
+    Number.isInteger(run.publisherJobId)).sort((a,b)=>runEvidenceAt(b)-runEvidenceAt(a))[0]||null
 );
 status.publicationEvidence=effectivePublicationRun();
 const effectiveRefreshRun=effectiveRun(status.workflows.refresh);
@@ -169,11 +172,11 @@ const criticalHealthy=Boolean(
   pipelineHealthy
 );
 const warnings=[];
-if(status.curriculumHold){
-  warnings.push("Teacher refresh is awaiting automated curriculum quality checks for candidate PR #"+status.curriculumHold.candidatePrNumber+"; no educator or owner approval is required.");
-}
 if(status.contentPipeline.unsupportedSkillCount>0){
   warnings.push("Practice questions remain isolated for "+status.contentPipeline.unsupportedSkillCount+" verified topic(s): "+(status.contentPipeline.unsupportedTopics.join(", ")||"details unavailable")+". Verified source facts remain publishable.");
+}
+if(status.curriculumHold){
+  warnings.push("Teacher refresh is awaiting automated curriculum quality checks for candidate PR #"+status.curriculumHold.candidatePrNumber+"; no educator or owner approval is required.");
 }
 if(!lunchVerified&&lunchOperationallyUsable){
   warnings.push("Lunch source bridge is unavailable; complete previously reviewed coverage remains usable"+(status.lunch.lastError?" ("+status.lunch.lastError+")":"")+".");
