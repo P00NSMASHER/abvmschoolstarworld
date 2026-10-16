@@ -2013,3 +2013,24 @@ img {
 .calendar-source-link a:hover{text-decoration:underline}
 .calendar-source-link a:focus-visible{outline:3px solid var(--navy,#102e58);outline-offset:3px}
 @media(max-width:420px){.calendar-source-link{font-size:.76rem}.calendar-source-link a{width:100%}}
+
+/* Shared Calendar search stays beside the Month/Week navigation on every size. */
+.cal-search{margin:0 0 16px;min-width:0;color:var(--ink,#102e58)}
+.cal-search-field{display:flex;align-items:center;gap:10px;min-height:50px;padding:0 8px 0 14px;background:#fff;border:1px solid #cbd9e8;border-radius:14px;box-shadow:0 2px 8px #102e5807}
+.cal-search-field:focus-within{outline:3px solid #ffca38;outline-offset:2px;border-color:#102e58}
+.cal-search-field>svg{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.cal-search-field input{width:100%;min-width:0;min-height:48px;padding:8px 0;border:0;background:transparent;color:#102e58;font:inherit;font-size:16px;outline:none;border-radius:0;box-shadow:none}
+.cal-search-field input::placeholder{color:#53677e;opacity:1}
+.cal-search-field input::-webkit-search-cancel-button{display:none}
+.cal-search-field button{flex:none;min-width:44px;min-height:44px;padding:8px;background:transparent;color:#102e58;border:0;border-radius:10px;font:inherit;font-size:14px;font-weight:700}
+.cal-search-field button[hidden]{display:none}
+.cal-search>p{margin:8px 4px;color:#465b73;font-size:.8rem;line-height:1.5}
+.cal-search-list{list-style:none;padding:0;margin:10px 0 0;max-height:26rem;max-height:min(55svh,26rem);overflow:auto;overscroll-behavior:contain;border:1px solid #dce7f3;border-radius:16px;background:#fff}
+.cal-search-list li+li{border-top:1px solid #dce7f3}
+.cal-search-list button{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;min-height:64px;padding:14px 16px;border:0;background:#fff;color:#102e58;text-align:left;font:inherit}
+.cal-search-list button:hover{background:#f1f7ff}
+.cal-search-list button:focus-visible{outline:3px solid #102e58;outline-offset:-4px;background:#e5f3ff}
+.cal-search-list button>span{min-width:0;display:grid;gap:4px;overflow-wrap:anywhere}
+.cal-search-list time,.cal-search-list small{font-size:.78rem;color:#465b73;line-height:1.4}
+.cal-search-list strong{font-size:1rem;line-height:1.4}
+.cal-search-list svg{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8}

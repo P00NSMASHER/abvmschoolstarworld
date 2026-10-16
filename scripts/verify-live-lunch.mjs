@@ -239,6 +239,25 @@ try {
   await page.screenshot({path:`${out}/rank-ladder.png`,animations:'disabled'});
   receipt.rankLadder = {totalRanks:22,permanentPromotions:21,originalWebpCount:7,newPremiumWebpCount:15,thresholds:deployedThresholds,allImagesLoaded:true};
   receipt.screens.push({screen:'Rank ladder',totalRanks:22});
+  // Search a real published event after the normal cache-reload walkthrough.
+  // No dated fixture or invented school event enters production acceptance.
+  await page.getByRole('button', { name: 'Calendar', exact: true }).click();
+  const search = page.getByRole('searchbox', { name: 'Search calendar events' });
+  await expect(search).toBeVisible();
+  const searchable = data.pack.importantDates.find(row => row.label && /Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec/i.test(row.date || ''));
+  expect(searchable, 'a published dated event is required for live search acceptance').toBeTruthy();
+  const query = searchable.label.slice(0, 80);
+  await search.fill(query);
+  const result = page.locator('.cal-search-list button').filter({ hasText: searchable.label }).first();
+  await expect(result).toBeVisible();
+  const selectedDate = await result.getAttribute('data-cal-search-date');
+  expect(selectedDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  await page.screenshot({path:`${out}/calendar-search.png`,animations:'disabled'});
+  await result.click();
+  await expect(page.locator(`[data-cal-day="${selectedDate}"]`)).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.calendar-day-card .cal-event[open]')).toContainText(searchable.label);
+  receipt.calendarSearch = { query, selectedDate, openedEvent: searchable.label, verified: true };
+  receipt.screens.push({screen:'Calendar search',selectedDate});
   receipt.cacheReloadVerified = true;
   expect(receipt.consoleErrors).toEqual([]);
   receipt.verified = true;
