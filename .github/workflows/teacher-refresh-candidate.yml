@@ -16,6 +16,13 @@ on:
       - 'tests/content-pipeline.spec.mjs'
       - 'tests/integrated-premium.spec.mjs'
       - 'tests/today-premium.spec.mjs'
+      - 'tests/study-experience.spec.mjs'
+      - 'tests/study-games-async-materials.spec.mjs'
+      - 'tests/study-hub.spec.mjs'
+      - 'tests/study-score-feedback.spec.mjs'
+      - 'tests/source-math-withdrawal.test.mjs'
+      - 'tests/helpers/original-math-fixture.mjs'
+      - 'tests/fixtures/math-original-practice.json'
       - '.github/workflows/sync-study-pack.yml'
       - '.github/workflows/teacher-refresh-candidate.yml'
   workflow_dispatch:
@@ -67,6 +74,11 @@ jobs:
 
       - name: Install Chromium and WebKit
         run: npx playwright install --with-deps chromium webkit
+
+      - name: Verify interaction fixtures survive a legitimate teacher-topic withdrawal
+        run: |
+          node --test tests/source-math-withdrawal.test.mjs
+          npx playwright test tests/study-experience.spec.mjs tests/study-games-async-materials.spec.mjs tests/study-hub.spec.mjs tests/study-score-feedback.spec.mjs --grep 'three complete Math rounds|Math skips an earlier Faith|weekly test prep covers same-day|all five subject choices' --workers=2
 
       - name: Run full static, unit, responsive-browser, accessibility and privacy QA on the GENERATED pack
         run: npm run qa

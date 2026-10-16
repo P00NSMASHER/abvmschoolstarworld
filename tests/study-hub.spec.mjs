@@ -1,16 +1,17 @@
+import {withOriginalMathFixture} from './helpers/original-math-fixture.mjs';
 import {test,expect} from '@playwright/test';
 test.use({serviceWorkers:'block'});
 
 async function mount(page,day,testInfo){
   await page.clock.setFixedTime(new Date(day+'T16:00:00-04:00'));
   const envelope=await (await page.request.get('/data/study-pack.json')).json();
-  const fixture=structuredClone(envelope);
+  const fixture=withOriginalMathFixture(envelope);
   fixture.pack.importantDates=[
     {date:'Wednesday, Oct. 7',label:'Math test',kind:'test'},
     {date:'Wednesday, Oct. 7',label:'Religion Chapter 2 test',kind:'test'},
     {date:'Friday, Oct. 9',label:'Math test',kind:'test'}
   ];
-  await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({json:fixture}));
+  await page.route('**/data/study-pack*.json*',route=>route.fulfill({json:fixture}));
   await page.goto('/#study');
   await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready',{timeout:15000});
   await page.screenshot({animations:"disabled",path:testInfo.outputPath('games-weekly-test-prep.png'),fullPage:true});
@@ -106,10 +107,10 @@ test('current material is exhausted before saved learning and STAR fallback in t
   test.setTimeout(60000);await page.clock.setFixedTime(new Date('2026-10-05T16:00:00-04:00'));
   const envelope=await (await page.request.get('/data/study-pack.json')).json(),work=await (await page.request.get('/data/schoolwork.json')).json();
   const lesson=work.lessons.find(row=>row.subject==='Math'&&!row.studiedOn&&row.questions.length>=8);expect(lesson).toBeTruthy();
-  const fixture=structuredClone(envelope);
+  const fixture=withOriginalMathFixture(envelope);
   for(const key of ['contentPipeline','recentReviewPipeline'])fixture.pack[key]={...fixture.pack[key],skills:(fixture.pack[key]?.skills||[]).filter(row=>row.subject!=='Math'),questions:(fixture.pack[key]?.questions||[]).filter(row=>row.subject!=='Math')};
   fixture.pack.questions=(fixture.pack.questions||[]).filter(q=>q.subject!=='Math');
-  await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({json:fixture}));
+  await page.route('**/data/study-pack*.json*',route=>route.fulfill({json:fixture}));
   let saved=true;await page.route('**/data/schoolwork.json*',route=>route.fulfill({json:{...work,lessons:saved?[lesson]:[]}}));await page.route('**/data/study-archive.json*',route=>route.fulfill({json:{questions:[],notes:[],vocabulary:[]}}));
   await page.goto('/#study');await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
   await page.locator('[data-game-start="math"]').click();
@@ -129,14 +130,14 @@ test('on-demand subject notes retain the verified chapter review and disclose a 
   const references=await (await page.request.get('/data/religion-sources.json')).json();
   const chapter=references.chapters.find(row=>row.chapter===2&&row.status==='verified'&&row.available);
   expect(chapter).toBeTruthy();
-  const fixture=structuredClone(envelope);
+  const fixture=withOriginalMathFixture(envelope);
   fixture.pack.subjects=[
     ...fixture.pack.subjects.filter(subject=>subject.subject!=='Religion'&&!/spelling/i.test(subject.subject)),
     {subject:'Religion',topics:['Chapter 2: Jesus is God’s Best Gift'],studyNotes:['Jesus gave us the new life of grace.']},
     {subject:'Spelling / Handwriting',topics:['Spelling: short a / long a'],studyNotes:['Compare short a with a_e long-a words.']}
   ];
   fixture.pack.importantDates=[{date:'Friday, Oct. 9',label:'Spelling (short i / long i)',kind:'test'}];
-  await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({json:fixture}));
+  await page.route('**/data/study-pack*.json*',route=>route.fulfill({json:fixture}));
   let referenceReads=0;
   await page.route('**/data/religion-sources.json*',route=>{referenceReads++;return route.fulfill({json:references});});
   await page.goto('/#study');
