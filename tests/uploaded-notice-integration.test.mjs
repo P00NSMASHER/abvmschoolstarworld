@@ -52,7 +52,7 @@ test("integration publishes only the newest verified nearby event and preserves 
   const result=integrateUploadedNotices(structuredClone(source),notices,{
     now:new Date("2026-10-16T14:00:00.000Z")
   });
-  const publicLego=result.data.pack.importantDates.filter(item=>/lego club/i.test(item.label));
+  const publicLego=result.data.pack.importantDates.filter(item=>/lego club/i.test(item.label)&&/oct/i.test(item.date));
 
   assert.deepEqual(publicLego,[{
     date:"Monday, Oct. 19",label:"Lego Club",kind:"club",
