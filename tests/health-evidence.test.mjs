@@ -220,6 +220,18 @@ test('the complete dashboard turns critical for stale homework despite healthy w
     const fresh=run();
     assert.equal(fresh.result.status,0,fresh.result.stderr);
     assert.equal(fresh.report.homework.healthy,true);
+
+    pack.pack.contentPipeline.coverage.push({
+      subject:'Spelling / Handwriting',topic:'long / short u',status:'GENERATOR_UNSUPPORTED',
+    });
+    pack.pack.contentPipeline.qa.unsupportedSkillCount=1;
+    pack.pack.contentPipeline.safetyState='SAFE_PARTIAL';
+    writeFileSync(join(root,'pages/data/study-pack.json'),JSON.stringify(pack));
+    const isolated=run();
+    assert.equal(isolated.result.status,0,isolated.result.stderr);
+    assert.equal(isolated.report.overall,'attention');
+    assert.match(isolated.report.warnings.join(' '),/Verified source facts remain publishable/);
+
     writeFileSync(postingPath,JSON.stringify({...posting,checkedAt:new Date(Date.now()-9*3600000).toISOString()}));
     const stale=run();
     assert.equal(stale.result.status,1);
