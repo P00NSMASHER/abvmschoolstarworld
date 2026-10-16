@@ -165,7 +165,7 @@ test('open Test Prep advances all same-day assessments at 3pm without losing tom
   for(const width of [390,820]){
     await page.setViewportSize({width,height:1000});
     await noOverflow(page,width);
-    await page.screenshot({path:info.outputPath('study-after-dismissal-'+width+'.png'),fullPage:true});
+    await page.screenshot({path:info.outputPath('study-premium-after-dismissal-'+width+'.png'),fullPage:true});
   }
 });
 

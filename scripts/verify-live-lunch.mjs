@@ -241,7 +241,14 @@ try {
   }
   await expect(page.locator('.study-game-tile')).toHaveCount(5);
   await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready', { timeout: 15000 });
-  await expect(page.locator('[data-game-start="math"]')).toContainText(`Practiced before · ${studySource.total} / ${studySource.total} best`);
+  await expect(page.locator('[data-game-start="math"]')).toContainText(`Practiced before · Best solved: ${studySource.total} / ${studySource.total} (includes retries)`);
+  receipt.savedSolvedLabel=await page.locator('[data-game-start="math"] em').innerText();
+  for(const width of [390,820]){
+    await page.setViewportSize({width,height:width===390?844:1080});
+    await page.locator('[data-game-start="math"]').scrollIntoViewIfNeeded();
+    await page.screenshot({path:`${out}/study-saved-score-${width}.png`});
+  }
+  await page.setViewportSize({width:390,height:844});
   receipt.studyWalkthrough.returnedAndRecordSurvivedReload = true;
   await page.getByRole('button', { name: 'Today', exact: true }).click();
   if (todayMeal?.items.length) for (const item of todayMeal.items) await expect(page.locator('.lunch-card')).toContainText(item);
