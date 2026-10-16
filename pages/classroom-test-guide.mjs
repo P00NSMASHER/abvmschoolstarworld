@@ -1,5 +1,5 @@
 /** Print-friendly, photo-informed original Grade 2 practice, never teacher test copies. */
-import {premiumPaperCss,decoratePaper} from './premium-paper-theme.mjs?v=1';
+import {premiumPaperCss,decoratePaper} from './premium-paper-theme.mjs?v=2';
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clean = value => String(value ?? '').replace(/\s+/g,' ').trim();
 const arr = value => Array.isArray(value) ? value : [];
@@ -72,28 +72,57 @@ function itemMode(item,kind) {
     return {mode:'write',prompt,detail:'Write the missing word.'};
   return {mode:arr(item?.choices).length>1?'choices':'write',prompt,detail:''};
 }
+function questionSkill(item) {
+  const skill=clean(item?.skill).replace(/[-_]+/g,' ').replace(/\s+/g,' ');
+  if (!skill) return '';
+  return '<div class="question-topline"><span class="question-skill">'+escape(skill)+'</span></div>';
+}
 function questionHtml(item,index,kind) {
-  const mode=itemMode(item,kind),text='<p class="prompt"><span class="number">'+(index+1)+'.</span> '+escape(mode.prompt)+'</p>';
-  if(mode.mode==='sentence-type')return '<li class="problem sentence-task">'+text+'<p class="instruction">'+escape(mode.detail)+'</p>'+
+  const mode=itemMode(item,kind);
+  const text='<p class="prompt"><span class="number">'+(index+1)+'.</span> '+escape(mode.prompt)+'</p>';
+  const skill=questionSkill(item);
+  if(mode.mode==='sentence-type')return '<li class="problem sentence-task">'+skill+text+
+    '<p class="instruction">'+escape(mode.detail)+'</p>'+
     '<div class="sentence-answer"><span>End mark: ______</span><span>Type: ______</span></div></li>';
-  if(mode.mode==='underline')return '<li class="problem sentence-task"><p class="instruction">'+escape(mode.detail)+'</p>'+text+'</li>';
-  if(mode.mode==='write')return '<li class="problem '+(kind==='math'?'math-problem':'write-problem')+'">'+text+
-    '<p class="instruction">'+escape(mode.detail)+'</p><div class="work-area"><div class="answer-rule"></div></div></li>';
-  return '<li class="problem pick-problem">'+text+'<div class="choices">'+arr(item?.choices).slice(0,4).map((choice,j)=>
-    '<div class="choice"><span class="bubble" aria-hidden="true"></span><span>'+String.fromCharCode(65+j)+'. '+escape(choice)+'</span></div>').join('')+'</div></li>';
+  if(mode.mode==='underline')return '<li class="problem sentence-task">'+skill+
+    '<p class="instruction">'+escape(mode.detail)+'</p>'+text+'</li>';
+  if(mode.mode==='write'&&kind==='math')return '<li class="problem math-problem">'+skill+text+
+    '<p class="instruction">'+escape(mode.detail||'Show your thinking.')+'</p>'+
+    '<div class="work-area math-work-area"><div class="math-work-canvas" aria-hidden="true"></div>'+
+    '<div class="math-answer">Answer <span class="answer-rule"></span></div></div></li>';
+  if(mode.mode==='write'){
+    const extended=/\b(explain|why|describe|tell|how|sentence|detail|compare)\b/i.test(mode.prompt)||
+      clean(item?.answer).length>36;
+    const numberOfLines=extended?3:1;
+    return '<li class="problem write-problem">'+skill+text+
+      (mode.detail?'<p class="instruction">'+escape(mode.detail)+'</p>':'')+
+      '<div class="response-lines'+(extended?' extended':'')+'" aria-label="Write your answer">'+
+      Array.from({length:numberOfLines},()=>'<span aria-hidden="true"></span>').join('')+'</div></li>';
+  }
+  return '<li class="problem pick-problem">'+skill+text+
+    '<p class="instruction">Circle one answer.</p><div class="choices">'+arr(item?.choices).map((choice,j)=>
+    '<div class="choice"><span class="bubble" aria-hidden="true"></span><span>'+
+      String.fromCharCode(65+j)+'. '+escape(choice)+'</span></div>').join('')+'</div></li>';
 }
 function keyHtml(item,index,kind) {
-  if(itemMode(item,kind).mode==='sentence-type'){
-    const letters={statement:'S / .',question:'Q / ?',command:'C / .',exclamation:'E / !'};
-    return '<li><b>'+(index+1)+'.</b> '+escape(letters[clean(item.answer).toLowerCase()] || item.answer)+'</li>';
-  }
-  return '<li><b>'+(index+1)+'.</b> '+escape(item.answer)+'</li>';
+  const mode=itemMode(item,kind);
+  const letters={statement:'S / .',question:'Q / ?',command:'C / .',exclamation:'E / !'};
+  const answer=mode.mode==='sentence-type'
+    ? letters[clean(item?.answer).toLowerCase()] || clean(item?.answer)
+    : clean(item?.answer);
+  const explanation=clean(item?.explanation);
+  return '<li><b>'+(index+1)+'.</b> '+escape(answer)+
+    (explanation&&explanation!==clean(item?.answer)?'<small class="answer-why">Why: '+escape(explanation)+'</small>':'')+'</li>';
 }
 function spellingSheet(guide) {
   const words=unique(guide?.spellingWords).filter(word=>/^[a-z][a-z'-]*$/i.test(word));
-  const silent=words.filter(word=>/[aeiou][^aeiou]e$/i.test(word)),shortI=words.filter(word=>/i[^aeiou]+$/i.test(word));
+  const silentEExceptions=new Set(['have','give','love','some','come','one','done','gone','live','move','prove','shove','above']);
+  const silent=words.filter(word=>/[aeiou][^aeiou]e$/i.test(word)&&!silentEExceptions.has(word.toLowerCase()));
+  const watchOut=words.filter(word=>silentEExceptions.has(word.toLowerCase()));
+  const shortI=words.filter(word=>/i[^aeiou]+$/i.test(word));
   const tips=[];
-  if(silent.length)tips.push('<li><b>Magic e:</b> '+silent.map(escape).join(', ')+'. The final e makes the vowel say its name.</li>');
+  if(silent.length)tips.push('<li><b>Magic e:</b> '+silent.map(escape).join(', ')+'. The final e usually helps the vowel say its name.</li>');
+  if(watchOut.length)tips.push('<li><b>Watch out:</b> '+watchOut.map(escape).join(', ')+'. These words do not follow the usual magic-e sound rule.</li>');
   if(shortI.length)tips.push('<li><b>Short-i beat:</b> '+shortI.map(escape).join(', ')+'. Say the quick i sound, then spell every letter.</li>');
   if(words.includes('all'))tips.push('<li><b>all:</b> One a, then two l letters. Clap A-L-L.</li>');
   if(words.includes('any'))tips.push('<li><b>any:</b> It sounds like “eh-nee” but starts with a. Say A-N-Y.</li>');
@@ -135,6 +164,7 @@ export function renderClassroomStudyGuide(guide,dictionary=()=> '') {
     (questions.length?'<h2 class="section-title">'+escape(subjectHeading[kind])+'</h2><ol class="paper-problems '+(kind==='math'?'math-grid':'')+'">'+
       questions.map((row,i)=>questionHtml(row,i,kind)).join('')+'</ol>'
       :'<p class="caution">No matching original-practice questions are available for this assessment. Review the available class notes.</p>')+
+    '<div class="student-self-check"><strong>Before I finish</strong><span>□ I answered every question.</span><span>□ I checked my work.</span></div>'+
     arr(guide?.warnings).slice(0,3).map(note=>'<p class="caution">'+escape(note)+'</p>').join('')+sourceNote(guide)+'</main>';
   if(!questions.length)return decoratePaper(head+student+'</body></html>',kind);
   const facts=unique(guide?.facts);
