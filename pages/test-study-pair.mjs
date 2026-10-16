@@ -113,7 +113,7 @@ function strategies(guide,kind){
   if(kind==='grammar'&&/sentence.?types|punctuation/.test(label+' '+skills))
     return ['Decide whether the sentence tells, asks, directs, or shows strong feeling.','Choose the matching end mark: period, question mark, or exclamation mark.','Read the sentence aloud to double-check.'];
   if(/short.vowels?/.test(label+' '+skills))
-    return ['Say the vowel sound slowly in the word.','Compare the sound to a short-vowel anchor: apple, egg, itch, octopus, up.','Say the whole word again to confirm the sound.'];
+    return ['Say the vowel sound slowly in the word.','Remember the five sounds in order: cat (a), bed (e), pig (i), hot (o), sun (u).','Say the whole word again to confirm the sound.'];
   if(kind==='religion')
     return ['Read the chapter facts and important words aloud.','Explain each idea in your own words, without peeking.','Check your explanation against the reviewed class notes.'];
   if(kind==='reading')
