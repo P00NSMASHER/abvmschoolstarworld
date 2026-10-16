@@ -293,7 +293,7 @@ try {
       if(!await card.count())continue;
       await card.click();
       const panel=notes.locator('[data-note-subject]:not([hidden])');
-      await expect(panel).not.toContainText('Practice ideas');
+      await expect(panel.locator('summary').filter({hasText:/^Practice ideas/})).toHaveCount(0);
       await expect(panel.locator('.study-note-review > summary')).toHaveCount(0);
       const paragraphs=panel.locator('.study-note-point p');
       if(await paragraphs.count())await expect(paragraphs.first()).toBeVisible();

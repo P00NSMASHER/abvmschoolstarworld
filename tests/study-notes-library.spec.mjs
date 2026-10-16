@@ -11,6 +11,7 @@ async function study(page,width=390){
  const notes=page.locator('[data-study-notes]');
  if(!await notes.evaluate(node=>node.open))await notes.locator(':scope > summary').click();
  await expect(notes).toHaveAttribute('open','');
+ await expect(notes.locator('.notes-library')).toBeVisible();
 }
 async function capture(page,info,name){
  const path=info.outputPath(name+'.png');await page.screenshot({path,animations:'disabled'});await info.attach(name,{path,contentType:'image/png'});
