@@ -98,3 +98,9 @@ test('every published tray has verified optimized bytes and preserves full menu 
   for(const paths of monthAssets.values())assert.ok([...paths].reduce((n,path)=>n+readFileSync(new URL('../pages/'+path,import.meta.url)).length,0)<8*1024*1024);
   assert.equal(pendingArtMenus(buildArtPlan(CATALOG,r),'2026-10',{styleId:TRAY_STYLE_ID}).length,0);
 });
+
+test('specialized potato terminology does not become whole potatoes or an unlisted side on other menus',async()=>{
+  const {trayMenuSpec}=await import('../scripts/lunch-art-style.mjs');
+  assert.match(trayMenuSpec({items:['Chicken patty on whole-grain roll','Baby cake potatoes','Fruit']}).prompt,/mini potato cakes/);
+  assert.doesNotMatch(trayMenuSpec({items:['Baked cheese pizza','Steamed peas','Fruit']}).prompt,/mini potato cakes/);
+});

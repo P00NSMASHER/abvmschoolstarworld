@@ -76,3 +76,9 @@ The existing hourly School Data Intake lane provides bounded missing-art recover
 after its primary teacher/homework work if the merge event was missed or stopped.
 It reuses the canonical artwork PR/owner, preserves schedules and all release
 gates, and never makes art a prerequisite for school-data publication.
+
+Food terminology review corrected Baby cake potatoes from whole baby potatoes
+to mini potato cakes. The [manufacturer description](https://mccainusafoodservice.com/products/details/mccain-babycakes-seasoned-mini-potato-pancakes-648-oz/)
+was used only to recognize the food term; it is not evidence of the school's
+supplier, recipe, brand, portion or allergens. School menu wording is unchanged.
+The prompt hint applies only when that specific menu item occurs.

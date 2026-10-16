@@ -345,7 +345,7 @@
       "width": 1280,
       "height": 853,
       "omissionNote": "Fruit variety not specified; fruit not pictured.",
-      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative. Food terminology corrected: Baby cake potatoes are illustrated as mini potato cakes, not whole baby potatoes; no school supplier or brand is asserted.",
       "approvedMenus": [
         {
           "sourceId": "abvm-2026-10-official",
@@ -357,7 +357,7 @@
           ]
         }
       ],
-      "sha256": "cdc53f5a260fa4ba9990bea699ee3032c3403d2bbf3cbcdcc3014f26507d0471"
+      "sha256": "56f50f87b138b01e8dcb90b9e4aba861149a6ccc2986944f3c81dd8999757180"
     },
     {
       "id": "tray-2026-10-23-v1",

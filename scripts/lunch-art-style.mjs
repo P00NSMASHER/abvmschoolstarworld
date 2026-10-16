@@ -18,5 +18,6 @@ export function trayMenuContents(menu) {
 }
 export function trayMenuSpec(menu){
   const {foods,omissionNote}=trayMenuContents(menu);
-  return {foods,omissionNote,prompt:TRAY_STYLE_PROMPT+' Replace ALL food in the style reference with ONLY: '+foods.join('; ')+'. No unlisted foods, toppings, herbs, garnishes or condiments. '+omissionNote+' Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.'};
+  const dishNote=(menu.items||[]).some(item=>/\bbaby\s*cakes?\s+potatoes\b/i.test(item))?' Baby cake potatoes means mini potato cakes / small flat shredded-potato pancakes, not whole baby potatoes; do not infer a brand.':'';
+  return {foods,omissionNote,prompt:TRAY_STYLE_PROMPT+dishNote+' Replace ALL food in the style reference with ONLY: '+foods.join('; ')+'. No unlisted foods, toppings, herbs, garnishes or condiments. '+omissionNote+' Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.'};
 }
