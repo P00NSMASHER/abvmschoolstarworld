@@ -45,16 +45,18 @@ content.
 When the user uploads a lunch menu and asks to integrate/update the app, follow
 `docs/LUNCH_ART.md` in the same run. Menu import includes the missing-illustration
 work automatically; do not wait for a separate artwork request. Verify the exact
-printed menu, update the reviewed lunch catalog, reuse suitable reviewed entrée art
-with explicit new source/menu approvals, generate missing artwork with the built-in
+printed menu, update the reviewed lunch catalog, reuse exact reviewed meal art in the approved tray style
+with explicit new source/full-menu approvals, generate missing artwork with the built-in
 high-quality image generator, visually inspect it, and run the existing QA before
 publishing through a pull request. Never invent unspecified ingredients. Use
-`pendingArtMenus(plan, currentNewYorkMonth)` from the lunch-art builder to avoid
+`pendingArtMenus(plan, currentNewYorkMonth, {styleId:TRAY_STYLE_ID})` from the lunch-art builder to avoid
 expired-month backlog. Preserve existing menu source and closure rules. The
 GitHub merge-event task “Complete lunch artwork” was verified enabled October 15,
 2026 for current/future missing illustrations after merged PRs; it does not
-trigger on direct pushes. Follow the pending photorealistic tray revision in
-`docs/LUNCH_ART.md`; the two reference photos have not yet arrived.
+trigger on direct pushes. Follow the approved photorealistic tray revision in
+`docs/LUNCH_ART.md` and `docs/LUNCH_TRAY_STYLE.md`; references were received and
+inspected October 15, 2026. Use only the privacy-safe generated reference for
+future menus, the style-aware queue, exact full-menu approvals and disclosed omissions.
 Do not change unrelated tasks to make room. If artwork generation or review is blocked,
 retain accurate text-only cards and report the specific incomplete coverage.
 

@@ -2,6 +2,10 @@ name: Independent QA reproduction bundle
 on:
   pull_request:
     paths:
+      - 'pages/data/lunch-art-registry.json'
+      - 'pages/assets/lunch-art/**'
+      - 'scripts/build-lunch-art-plan.mjs'
+      - 'scripts/lunch-art-style.mjs'
       - 'pages/data/uploaded-notices.json'
       - 'pages/data/study-pack.json'
       - 'scripts/build-runtime-pack.mjs'

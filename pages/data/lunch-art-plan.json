@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
-  "policy": "Reviewed entrée illustrations only. The printed menu remains authoritative. Never infer unspecified ingredients, fruit varieties, portions or sides.",
+  "policy": "Reviewed photorealistic maroon-tray illustrations of verified menu components. Exact menu text remains authoritative. Disclose unpictured unspecified fruit, sauce or taco filling; never infer ingredients or actual portions.",
+  "targetStyleId": "abvm-maroon-tray-v1",
   "months": [
     "2026-09",
     "2026-10"
@@ -18,8 +19,10 @@
         "2026-09-01"
       ],
       "artwork": null,
+      "styleId": null,
       "status": "needs-art-review",
-      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Meatballs in sauce. Exact printed menu for context: Meatballs in sauce; Whole-grain pasta; Steamed corn; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+      "prompt": "High-quality photorealistic food illustration, landscape 3:2. Entire burgundy/maroon molded cafeteria tray, rounded corners, thick raised rolled rim, subtle speckled plastic and shallow divided wells, on a cobalt-blue laminate table. Elevated three-quarter overhead view, soft neutral daylight, crisp natural food texture. Small plain clear unbranded side cups are permitted. No people, private reference pixels, room landmarks, text, logos, branded cartons or drinks. The white disposable bowl in the original references is not the requested tray. Illustrative appearance and portions, never an actual school-meal photograph. Replace ALL food in the style reference with ONLY: Meatballs in sauce; Whole-grain pasta; Steamed corn. No unlisted foods, toppings, herbs, garnishes or condiments. Fruit variety not specified; fruit not pictured. Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.",
+      "omissionNote": "Fruit variety not specified; fruit not pictured."
     },
     {
       "sourceId": "abvm-2026-09-official",
@@ -33,8 +36,10 @@
         "2026-09-02"
       ],
       "artwork": null,
+      "styleId": null,
       "status": "needs-art-review",
-      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Cheese pizza. Exact printed menu for context: Cheese pizza; Garden salad; Steamed broccoli; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+      "prompt": "High-quality photorealistic food illustration, landscape 3:2. Entire burgundy/maroon molded cafeteria tray, rounded corners, thick raised rolled rim, subtle speckled plastic and shallow divided wells, on a cobalt-blue laminate table. Elevated three-quarter overhead view, soft neutral daylight, crisp natural food texture. Small plain clear unbranded side cups are permitted. No people, private reference pixels, room landmarks, text, logos, branded cartons or drinks. The white disposable bowl in the original references is not the requested tray. Illustrative appearance and portions, never an actual school-meal photograph. Replace ALL food in the style reference with ONLY: Cheese pizza; Garden salad; Steamed broccoli. No unlisted foods, toppings, herbs, garnishes or condiments. Fruit variety not specified; fruit not pictured. Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.",
+      "omissionNote": "Fruit variety not specified; fruit not pictured."
     },
     {
       "sourceId": "abvm-2026-09-official",
@@ -48,8 +53,10 @@
         "2026-09-03"
       ],
       "artwork": null,
+      "styleId": null,
       "status": "needs-art-review",
-      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Hamburger on a roll. Exact printed menu for context: Hamburger on a roll; French fries; Mixed vegetables; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+      "prompt": "High-quality photorealistic food illustration, landscape 3:2. Entire burgundy/maroon molded cafeteria tray, rounded corners, thick raised rolled rim, subtle speckled plastic and shallow divided wells, on a cobalt-blue laminate table. Elevated three-quarter overhead view, soft neutral daylight, crisp natural food texture. Small plain clear unbranded side cups are permitted. No people, private reference pixels, room landmarks, text, logos, branded cartons or drinks. The white disposable bowl in the original references is not the requested tray. Illustrative appearance and portions, never an actual school-meal photograph. Replace ALL food in the style reference with ONLY: Hamburger on a roll; French fries; Mixed vegetables. No unlisted foods, toppings, herbs, garnishes or condiments. Fruit variety not specified; fruit not pictured. Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.",
+      "omissionNote": "Fruit variety not specified; fruit not pictured."
     },
     {
       "sourceId": "abvm-2026-09-official",
@@ -64,8 +71,10 @@
         "2026-09-08"
       ],
       "artwork": null,
+      "styleId": null,
       "status": "needs-art-review",
-      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Hot ham & cheese. Exact printed menu for context: Hot ham & cheese; Pretzel roll; Tortilla chips; Steamed peas; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+      "prompt": "High-quality photorealistic food illustration, landscape 3:2. Entire burgundy/maroon molded cafeteria tray, rounded corners, thick raised rolled rim, subtle speckled plastic and shallow divided wells, on a cobalt-blue laminate table. Elevated three-quarter overhead view, soft neutral daylight, crisp natural food texture. Small plain clear unbranded side cups are permitted. No people, private reference pixels, room landmarks, text, logos, branded cartons or drinks. The white disposable bowl in the original references is not the requested tray. Illustrative appearance and portions, never an actual school-meal photograph. Replace ALL food in the style reference with ONLY: Hot ham & cheese; Pretzel roll; Tortilla chips; Steamed peas. No unlisted foods, toppings, herbs, garnishes or condiments. Fruit variety not specified; fruit not pictured. Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.",
+      "omissionNote": "Fruit variety not specified; fruit not pictured."
     },
     {
       "sourceId": "abvm-2026-09-official",
@@ -79,8 +88,10 @@
         "2026-09-09"
       ],
       "artwork": null,
+      "styleId": null,
       "status": "needs-art-review",
-      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Meatballs & whole-grain pasta. Exact printed menu for context: Meatballs & whole-grain pasta; Whole-grain dinner roll; Steamed carrots; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+      "prompt": "High-quality photorealistic food illustration, landscape 3:2. Entire burgundy/maroon molded cafeteria tray, rounded corners, thick raised rolled rim, subtle speckled plastic and shallow divided wells, on a cobalt-blue laminate table. Elevated three-quarter overhead view, soft neutral daylight, crisp natural food texture. Small plain clear unbranded side cups are permitted. No people, private reference pixels, room landmarks, text, logos, branded cartons or drinks. The white disposable bowl in the original references is not the requested tray. Illustrative appearance and portions, never an actual school-meal photograph. Replace ALL food in the style reference with ONLY: Meatballs & whole-grain pasta; Whole-grain dinner roll; Steamed carrots. No unlisted foods, toppings, herbs, garnishes or condiments. Fruit variety not specified; fruit not pictured. Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.",
+      "omissionNote": "Fruit variety not specified; fruit not pictured."
     },
     {
       "sourceId": "abvm-2026-09-official",
@@ -94,8 +105,10 @@
         "2026-09-10"
       ],
       "artwork": null,
+      "styleId": null,
       "status": "needs-art-review",
-      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Chicken patty on a roll. Exact printed menu for context: Chicken patty on a roll; Baby cake potatoes; Green beans; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+      "prompt": "High-quality photorealistic food illustration, landscape 3:2. Entire burgundy/maroon molded cafeteria tray, rounded corners, thick raised rolled rim, subtle speckled plastic and shallow divided wells, on a cobalt-blue laminate table. Elevated three-quarter overhead view, soft neutral daylight, crisp natural food texture. Small plain clear unbranded side cups are permitted. No people, private reference pixels, room landmarks, text, logos, branded cartons or drinks. The white disposable bowl in the original references is not the requested tray. Illustrative appearance and portions, never an actual school-meal photograph. Replace ALL food in the style reference with ONLY: Chicken patty on a roll; Baby cake potatoes; Green beans. No unlisted foods, toppings, herbs, garnishes or condiments. Fruit variety not specified; fruit not pictured. Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.",
+      "omissionNote": "Fruit variety not specified; fruit not pictured."
     },
     {
       "sourceId": "abvm-2026-09-official",
@@ -109,8 +122,10 @@
         "2026-09-11"
       ],
       "artwork": null,
+      "styleId": null,
       "status": "needs-art-review",
-      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Cheesy breadsticks. Exact printed menu for context: Cheesy breadsticks; Dipping sauce; Garden salad; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+      "prompt": "High-quality photorealistic food illustration, landscape 3:2. Entire burgundy/maroon molded cafeteria tray, rounded corners, thick raised rolled rim, subtle speckled plastic and shallow divided wells, on a cobalt-blue laminate table. Elevated three-quarter overhead view, soft neutral daylight, crisp natural food texture. Small plain clear unbranded side cups are permitted. No people, private reference pixels, room landmarks, text, logos, branded cartons or drinks. The white disposable bowl in the original references is not the requested tray. Illustrative appearance and portions, never an actual school-meal photograph. Replace ALL food in the style reference with ONLY: Cheesy breadsticks; Garden salad. No unlisted foods, toppings, herbs, garnishes or condiments. Dipping sauce variety not specified; sauce not pictured. Fruit variety not specified; fruit not pictured. Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.",
+      "omissionNote": "Dipping sauce variety not specified; sauce not pictured. Fruit variety not specified; fruit not pictured."
     },
     {
       "sourceId": "abvm-2026-09-official",
@@ -124,8 +139,10 @@
         "2026-09-14"
       ],
       "artwork": null,
+      "styleId": null,
       "status": "needs-art-review",
-      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Chicken finger wrap. Exact printed menu for context: Chicken finger wrap; Brown rice; Steamed corn; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+      "prompt": "High-quality photorealistic food illustration, landscape 3:2. Entire burgundy/maroon molded cafeteria tray, rounded corners, thick raised rolled rim, subtle speckled plastic and shallow divided wells, on a cobalt-blue laminate table. Elevated three-quarter overhead view, soft neutral daylight, crisp natural food texture. Small plain clear unbranded side cups are permitted. No people, private reference pixels, room landmarks, text, logos, branded cartons or drinks. The white disposable bowl in the original references is not the requested tray. Illustrative appearance and portions, never an actual school-meal photograph. Replace ALL food in the style reference with ONLY: Chicken finger wrap; Brown rice; Steamed corn. No unlisted foods, toppings, herbs, garnishes or condiments. Fruit variety not specified; fruit not pictured. Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.",
+      "omissionNote": "Fruit variety not specified; fruit not pictured."
     },
     {
       "sourceId": "abvm-2026-09-official",
@@ -141,8 +158,10 @@
         "2026-09-15"
       ],
       "artwork": null,
+      "styleId": null,
       "status": "needs-art-review",
-      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Taco Tuesday & chips. Exact printed menu for context: Taco Tuesday & chips; Cheese; Shredded lettuce; Green beans; Salsa; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+      "prompt": "High-quality photorealistic food illustration, landscape 3:2. Entire burgundy/maroon molded cafeteria tray, rounded corners, thick raised rolled rim, subtle speckled plastic and shallow divided wells, on a cobalt-blue laminate table. Elevated three-quarter overhead view, soft neutral daylight, crisp natural food texture. Small plain clear unbranded side cups are permitted. No people, private reference pixels, room landmarks, text, logos, branded cartons or drinks. The white disposable bowl in the original references is not the requested tray. Illustrative appearance and portions, never an actual school-meal photograph. Replace ALL food in the style reference with ONLY: Tortilla chips; Cheese; Shredded lettuce; Green beans; Salsa. No unlisted foods, toppings, herbs, garnishes or condiments. Taco filling not specified; chips and named sides shown. Fruit variety not specified; fruit not pictured. Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.",
+      "omissionNote": "Taco filling not specified; chips and named sides shown. Fruit variety not specified; fruit not pictured."
     },
     {
       "sourceId": "abvm-2026-09-official",
@@ -156,8 +175,10 @@
         "2026-09-16"
       ],
       "artwork": null,
+      "styleId": null,
       "status": "needs-art-review",
-      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Fish shapes. Exact printed menu for context: Fish shapes; French fries; Steamed broccoli; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+      "prompt": "High-quality photorealistic food illustration, landscape 3:2. Entire burgundy/maroon molded cafeteria tray, rounded corners, thick raised rolled rim, subtle speckled plastic and shallow divided wells, on a cobalt-blue laminate table. Elevated three-quarter overhead view, soft neutral daylight, crisp natural food texture. Small plain clear unbranded side cups are permitted. No people, private reference pixels, room landmarks, text, logos, branded cartons or drinks. The white disposable bowl in the original references is not the requested tray. Illustrative appearance and portions, never an actual school-meal photograph. Replace ALL food in the style reference with ONLY: Fish shapes; French fries; Steamed broccoli. No unlisted foods, toppings, herbs, garnishes or condiments. Fruit variety not specified; fruit not pictured. Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.",
+      "omissionNote": "Fruit variety not specified; fruit not pictured."
     },
     {
       "sourceId": "abvm-2026-09-official",
@@ -172,8 +193,10 @@
         "2026-09-17"
       ],
       "artwork": null,
+      "styleId": null,
       "status": "needs-art-review",
-      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Beef-a-roni. Exact printed menu for context: Beef-a-roni; Shredded cheese; Whole-grain roll; Steamed carrots; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+      "prompt": "High-quality photorealistic food illustration, landscape 3:2. Entire burgundy/maroon molded cafeteria tray, rounded corners, thick raised rolled rim, subtle speckled plastic and shallow divided wells, on a cobalt-blue laminate table. Elevated three-quarter overhead view, soft neutral daylight, crisp natural food texture. Small plain clear unbranded side cups are permitted. No people, private reference pixels, room landmarks, text, logos, branded cartons or drinks. The white disposable bowl in the original references is not the requested tray. Illustrative appearance and portions, never an actual school-meal photograph. Replace ALL food in the style reference with ONLY: Beef-a-roni; Shredded cheese; Whole-grain roll; Steamed carrots. No unlisted foods, toppings, herbs, garnishes or condiments. Fruit variety not specified; fruit not pictured. Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.",
+      "omissionNote": "Fruit variety not specified; fruit not pictured."
     },
     {
       "sourceId": "abvm-2026-09-official",
@@ -187,8 +210,10 @@
         "2026-09-18"
       ],
       "artwork": null,
+      "styleId": null,
       "status": "needs-art-review",
-      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Pizza bagel. Exact printed menu for context: Pizza bagel; Garden salad; Steamed peas; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+      "prompt": "High-quality photorealistic food illustration, landscape 3:2. Entire burgundy/maroon molded cafeteria tray, rounded corners, thick raised rolled rim, subtle speckled plastic and shallow divided wells, on a cobalt-blue laminate table. Elevated three-quarter overhead view, soft neutral daylight, crisp natural food texture. Small plain clear unbranded side cups are permitted. No people, private reference pixels, room landmarks, text, logos, branded cartons or drinks. The white disposable bowl in the original references is not the requested tray. Illustrative appearance and portions, never an actual school-meal photograph. Replace ALL food in the style reference with ONLY: Pizza bagel; Garden salad; Steamed peas. No unlisted foods, toppings, herbs, garnishes or condiments. Fruit variety not specified; fruit not pictured. Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.",
+      "omissionNote": "Fruit variety not specified; fruit not pictured."
     },
     {
       "sourceId": "abvm-2026-09-official",
@@ -202,8 +227,10 @@
         "2026-09-21"
       ],
       "artwork": null,
+      "styleId": null,
       "status": "needs-art-review",
-      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Breaded chicken. Exact printed menu for context: Breaded chicken; Buttered pasta; Baked beans; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+      "prompt": "High-quality photorealistic food illustration, landscape 3:2. Entire burgundy/maroon molded cafeteria tray, rounded corners, thick raised rolled rim, subtle speckled plastic and shallow divided wells, on a cobalt-blue laminate table. Elevated three-quarter overhead view, soft neutral daylight, crisp natural food texture. Small plain clear unbranded side cups are permitted. No people, private reference pixels, room landmarks, text, logos, branded cartons or drinks. The white disposable bowl in the original references is not the requested tray. Illustrative appearance and portions, never an actual school-meal photograph. Replace ALL food in the style reference with ONLY: Breaded chicken; Buttered pasta; Baked beans. No unlisted foods, toppings, herbs, garnishes or condiments. Fruit variety not specified; fruit not pictured. Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.",
+      "omissionNote": "Fruit variety not specified; fruit not pictured."
     },
     {
       "sourceId": "abvm-2026-09-official",
@@ -219,8 +246,10 @@
         "2026-09-22"
       ],
       "artwork": null,
+      "styleId": null,
       "status": "needs-art-review",
-      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Meatballs in gravy. Exact printed menu for context: Meatballs in gravy; Mashed potatoes; Garlic stick; Steamed corn; French toast sticks; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+      "prompt": "High-quality photorealistic food illustration, landscape 3:2. Entire burgundy/maroon molded cafeteria tray, rounded corners, thick raised rolled rim, subtle speckled plastic and shallow divided wells, on a cobalt-blue laminate table. Elevated three-quarter overhead view, soft neutral daylight, crisp natural food texture. Small plain clear unbranded side cups are permitted. No people, private reference pixels, room landmarks, text, logos, branded cartons or drinks. The white disposable bowl in the original references is not the requested tray. Illustrative appearance and portions, never an actual school-meal photograph. Replace ALL food in the style reference with ONLY: Meatballs in gravy; Mashed potatoes; Garlic stick; Steamed corn; French toast sticks. No unlisted foods, toppings, herbs, garnishes or condiments. Fruit variety not specified; fruit not pictured. Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.",
+      "omissionNote": "Fruit variety not specified; fruit not pictured."
     },
     {
       "sourceId": "abvm-2026-09-official",
@@ -235,8 +264,10 @@
         "2026-09-23"
       ],
       "artwork": null,
+      "styleId": null,
       "status": "needs-art-review",
-      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: French toast sticks. Exact printed menu for context: French toast sticks; Hash browns; Sausage patty; Steamed carrots; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+      "prompt": "High-quality photorealistic food illustration, landscape 3:2. Entire burgundy/maroon molded cafeteria tray, rounded corners, thick raised rolled rim, subtle speckled plastic and shallow divided wells, on a cobalt-blue laminate table. Elevated three-quarter overhead view, soft neutral daylight, crisp natural food texture. Small plain clear unbranded side cups are permitted. No people, private reference pixels, room landmarks, text, logos, branded cartons or drinks. The white disposable bowl in the original references is not the requested tray. Illustrative appearance and portions, never an actual school-meal photograph. Replace ALL food in the style reference with ONLY: French toast sticks; Hash browns; Sausage patty; Steamed carrots. No unlisted foods, toppings, herbs, garnishes or condiments. Fruit variety not specified; fruit not pictured. Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.",
+      "omissionNote": "Fruit variety not specified; fruit not pictured."
     },
     {
       "sourceId": "abvm-2026-09-official",
@@ -250,8 +281,10 @@
         "2026-09-24"
       ],
       "artwork": null,
+      "styleId": null,
       "status": "needs-art-review",
-      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Macaroni & cheese. Exact printed menu for context: Macaroni & cheese; Stewed tomatoes; Breaded chicken; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+      "prompt": "High-quality photorealistic food illustration, landscape 3:2. Entire burgundy/maroon molded cafeteria tray, rounded corners, thick raised rolled rim, subtle speckled plastic and shallow divided wells, on a cobalt-blue laminate table. Elevated three-quarter overhead view, soft neutral daylight, crisp natural food texture. Small plain clear unbranded side cups are permitted. No people, private reference pixels, room landmarks, text, logos, branded cartons or drinks. The white disposable bowl in the original references is not the requested tray. Illustrative appearance and portions, never an actual school-meal photograph. Replace ALL food in the style reference with ONLY: Macaroni & cheese; Stewed tomatoes; Breaded chicken. No unlisted foods, toppings, herbs, garnishes or condiments. Fruit variety not specified; fruit not pictured. Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.",
+      "omissionNote": "Fruit variety not specified; fruit not pictured."
     },
     {
       "sourceId": "abvm-2026-09-official",
@@ -265,8 +298,10 @@
         "2026-09-25"
       ],
       "artwork": null,
+      "styleId": null,
       "status": "needs-art-review",
-      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Hamburger on WG roll. Exact printed menu for context: Hamburger on WG roll; French fries; Steamed peas; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+      "prompt": "High-quality photorealistic food illustration, landscape 3:2. Entire burgundy/maroon molded cafeteria tray, rounded corners, thick raised rolled rim, subtle speckled plastic and shallow divided wells, on a cobalt-blue laminate table. Elevated three-quarter overhead view, soft neutral daylight, crisp natural food texture. Small plain clear unbranded side cups are permitted. No people, private reference pixels, room landmarks, text, logos, branded cartons or drinks. The white disposable bowl in the original references is not the requested tray. Illustrative appearance and portions, never an actual school-meal photograph. Replace ALL food in the style reference with ONLY: Hamburger on WG roll; French fries; Steamed peas. No unlisted foods, toppings, herbs, garnishes or condiments. Fruit variety not specified; fruit not pictured. Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.",
+      "omissionNote": "Fruit variety not specified; fruit not pictured."
     },
     {
       "sourceId": "abvm-2026-09-official",
@@ -280,8 +315,10 @@
         "2026-09-28"
       ],
       "artwork": null,
+      "styleId": null,
       "status": "needs-art-review",
-      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Breaded chicken. Exact printed menu for context: Breaded chicken; Brown rice; Steamed broccoli; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+      "prompt": "High-quality photorealistic food illustration, landscape 3:2. Entire burgundy/maroon molded cafeteria tray, rounded corners, thick raised rolled rim, subtle speckled plastic and shallow divided wells, on a cobalt-blue laminate table. Elevated three-quarter overhead view, soft neutral daylight, crisp natural food texture. Small plain clear unbranded side cups are permitted. No people, private reference pixels, room landmarks, text, logos, branded cartons or drinks. The white disposable bowl in the original references is not the requested tray. Illustrative appearance and portions, never an actual school-meal photograph. Replace ALL food in the style reference with ONLY: Breaded chicken; Brown rice; Steamed broccoli. No unlisted foods, toppings, herbs, garnishes or condiments. Fruit variety not specified; fruit not pictured. Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.",
+      "omissionNote": "Fruit variety not specified; fruit not pictured."
     },
     {
       "sourceId": "abvm-2026-09-official",
@@ -296,8 +333,10 @@
         "2026-09-29"
       ],
       "artwork": null,
+      "styleId": null,
       "status": "needs-art-review",
-      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Cheese quesadilla wedge. Exact printed menu for context: Cheese quesadilla wedge; Garden salad; Salsa; Steamed corn; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+      "prompt": "High-quality photorealistic food illustration, landscape 3:2. Entire burgundy/maroon molded cafeteria tray, rounded corners, thick raised rolled rim, subtle speckled plastic and shallow divided wells, on a cobalt-blue laminate table. Elevated three-quarter overhead view, soft neutral daylight, crisp natural food texture. Small plain clear unbranded side cups are permitted. No people, private reference pixels, room landmarks, text, logos, branded cartons or drinks. The white disposable bowl in the original references is not the requested tray. Illustrative appearance and portions, never an actual school-meal photograph. Replace ALL food in the style reference with ONLY: Cheese quesadilla wedge; Garden salad; Salsa; Steamed corn. No unlisted foods, toppings, herbs, garnishes or condiments. Fruit variety not specified; fruit not pictured. Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.",
+      "omissionNote": "Fruit variety not specified; fruit not pictured."
     },
     {
       "sourceId": "abvm-2026-09-official",
@@ -311,8 +350,10 @@
         "2026-09-30"
       ],
       "artwork": null,
+      "styleId": null,
       "status": "needs-art-review",
-      "prompt": "Create a bright, polished food illustration of only the explicitly named entrée: Breaded fish sandwich. Exact printed menu for context: Breaded fish sandwich; Baby cake potatoes; Baked beans; Fruit. Do not add sides, drinks, fruit, garnishes or ingredients not named. If the entrée is ambiguous, stop for human review rather than inventing ingredients. Clean pale background, no lettering, no logos, no people. This is an illustration, not a photograph of the actual school meal."
+      "prompt": "High-quality photorealistic food illustration, landscape 3:2. Entire burgundy/maroon molded cafeteria tray, rounded corners, thick raised rolled rim, subtle speckled plastic and shallow divided wells, on a cobalt-blue laminate table. Elevated three-quarter overhead view, soft neutral daylight, crisp natural food texture. Small plain clear unbranded side cups are permitted. No people, private reference pixels, room landmarks, text, logos, branded cartons or drinks. The white disposable bowl in the original references is not the requested tray. Illustrative appearance and portions, never an actual school-meal photograph. Replace ALL food in the style reference with ONLY: Breaded fish sandwich; Baby cake potatoes; Baked beans. No unlisted foods, toppings, herbs, garnishes or condiments. Fruit variety not specified; fruit not pictured. Keep ambiguous ingredients unpictured; never invent their identity. Inspect every output against this exact menu before approval, correcting any extra or missing named food. Use the approved generated reference asset for tray/camera consistency; never publish private reference photos.",
+      "omissionNote": "Fruit variety not specified; fruit not pictured."
     },
     {
       "sourceId": "abvm-2026-10-official",
@@ -325,7 +366,8 @@
       "dates": [
         "2026-10-01"
       ],
-      "artwork": "assets/lunch-art/cheese-pizza.webp",
+      "artwork": "assets/lunch-art/tray-2026-10-01-v1.webp",
+      "styleId": "abvm-maroon-tray-v1",
       "status": "ready"
     },
     {
@@ -339,7 +381,8 @@
       "dates": [
         "2026-10-02"
       ],
-      "artwork": "assets/lunch-art/cheesy-breadsticks.webp",
+      "artwork": "assets/lunch-art/tray-2026-10-02-v1.webp",
+      "styleId": "abvm-maroon-tray-v1",
       "status": "ready"
     },
     {
@@ -353,7 +396,8 @@
       "dates": [
         "2026-10-05"
       ],
-      "artwork": "assets/lunch-art/popcorn-chicken.webp",
+      "artwork": "assets/lunch-art/tray-2026-10-05-v1.webp",
+      "styleId": "abvm-maroon-tray-v1",
       "status": "ready"
     },
     {
@@ -369,7 +413,8 @@
       "dates": [
         "2026-10-06"
       ],
-      "artwork": "assets/lunch-art/taco-chips.webp",
+      "artwork": "assets/lunch-art/tray-2026-10-06-v1.webp",
+      "styleId": "abvm-maroon-tray-v1",
       "status": "ready"
     },
     {
@@ -384,7 +429,8 @@
       "dates": [
         "2026-10-07"
       ],
-      "artwork": "assets/lunch-art/buttered-pierogies.webp",
+      "artwork": "assets/lunch-art/tray-2026-10-07-v1.webp",
+      "styleId": "abvm-maroon-tray-v1",
       "status": "ready"
     },
     {
@@ -399,7 +445,8 @@
       "dates": [
         "2026-10-08"
       ],
-      "artwork": "assets/lunch-art/beef-cheesesteak.webp",
+      "artwork": "assets/lunch-art/tray-2026-10-08-v1.webp",
+      "styleId": "abvm-maroon-tray-v1",
       "status": "ready"
     },
     {
@@ -413,7 +460,8 @@
       "dates": [
         "2026-10-13"
       ],
-      "artwork": "assets/lunch-art/meatballs-in-sauce.webp",
+      "artwork": "assets/lunch-art/tray-2026-10-13-v1.webp",
+      "styleId": "abvm-maroon-tray-v1",
       "status": "ready"
     },
     {
@@ -427,13 +475,14 @@
       "dates": [
         "2026-10-14"
       ],
-      "artwork": "assets/lunch-art/cheese-pizza.webp",
+      "artwork": "assets/lunch-art/tray-2026-10-14-v1.webp",
+      "styleId": "abvm-maroon-tray-v1",
       "status": "ready"
     },
     {
-      "sourceId": "abvm-2026-10-official",
+      "sourceId": "abvm-2026-10-15-school-notice",
       "items": [
-        "Hamburger on whole-grain roll",
+        "Chicken patty on a roll",
         "French fries",
         "Mixed vegetables",
         "Fruit"
@@ -441,7 +490,8 @@
       "dates": [
         "2026-10-15"
       ],
-      "artwork": "assets/lunch-art/hamburger-whole-grain.webp",
+      "artwork": "assets/lunch-art/tray-2026-10-15-v1.webp",
+      "styleId": "abvm-maroon-tray-v1",
       "status": "ready"
     },
     {
@@ -457,7 +507,8 @@
       "dates": [
         "2026-10-16"
       ],
-      "artwork": "assets/lunch-art/chicken-taco.webp",
+      "artwork": "assets/lunch-art/tray-2026-10-16-v1.webp",
+      "styleId": "abvm-maroon-tray-v1",
       "status": "ready"
     },
     {
@@ -471,7 +522,8 @@
       "dates": [
         "2026-10-19"
       ],
-      "artwork": "assets/lunch-art/breaded-chicken.webp",
+      "artwork": "assets/lunch-art/tray-2026-10-19-v1.webp",
+      "styleId": "abvm-maroon-tray-v1",
       "status": "ready"
     },
     {
@@ -486,7 +538,8 @@
       "dates": [
         "2026-10-20"
       ],
-      "artwork": "assets/lunch-art/hot-ham-cheese.webp",
+      "artwork": "assets/lunch-art/tray-2026-10-20-v1.webp",
+      "styleId": "abvm-maroon-tray-v1",
       "status": "ready"
     },
     {
@@ -501,7 +554,8 @@
       "dates": [
         "2026-10-21"
       ],
-      "artwork": "assets/lunch-art/pasta-meatballs.webp",
+      "artwork": "assets/lunch-art/tray-2026-10-21-v1.webp",
+      "styleId": "abvm-maroon-tray-v1",
       "status": "ready"
     },
     {
@@ -515,7 +569,8 @@
       "dates": [
         "2026-10-22"
       ],
-      "artwork": "assets/lunch-art/chicken-patty-roll.webp",
+      "artwork": "assets/lunch-art/tray-2026-10-22-v1.webp",
+      "styleId": "abvm-maroon-tray-v1",
       "status": "ready"
     },
     {
@@ -529,7 +584,8 @@
       "dates": [
         "2026-10-23"
       ],
-      "artwork": "assets/lunch-art/cheesy-breadsticks.webp",
+      "artwork": "assets/lunch-art/tray-2026-10-23-v1.webp",
+      "styleId": "abvm-maroon-tray-v1",
       "status": "ready"
     },
     {
@@ -543,7 +599,8 @@
       "dates": [
         "2026-10-26"
       ],
-      "artwork": "assets/lunch-art/chicken-finger-wrap.webp",
+      "artwork": "assets/lunch-art/tray-2026-10-26-v1.webp",
+      "styleId": "abvm-maroon-tray-v1",
       "status": "ready"
     },
     {
@@ -558,7 +615,8 @@
       "dates": [
         "2026-10-27"
       ],
-      "artwork": "assets/lunch-art/taco-chips.webp",
+      "artwork": "assets/lunch-art/tray-2026-10-27-v1.webp",
+      "styleId": "abvm-maroon-tray-v1",
       "status": "ready"
     },
     {
@@ -572,7 +630,8 @@
       "dates": [
         "2026-10-28"
       ],
-      "artwork": "assets/lunch-art/fish-shapes.webp",
+      "artwork": "assets/lunch-art/tray-2026-10-28-v1.webp",
+      "styleId": "abvm-maroon-tray-v1",
       "status": "ready"
     },
     {
@@ -587,7 +646,8 @@
       "dates": [
         "2026-10-29"
       ],
-      "artwork": "assets/lunch-art/beef-a-roni.webp",
+      "artwork": "assets/lunch-art/tray-2026-10-29-v1.webp",
+      "styleId": "abvm-maroon-tray-v1",
       "status": "ready"
     },
     {
@@ -601,7 +661,8 @@
       "dates": [
         "2026-10-30"
       ],
-      "artwork": "assets/lunch-art/cheese-pizza.webp",
+      "artwork": "assets/lunch-art/tray-2026-10-30-v1.webp",
+      "styleId": "abvm-maroon-tray-v1",
       "status": "ready"
     }
   ]

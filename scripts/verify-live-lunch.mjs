@@ -42,7 +42,8 @@ function eastToday() {
   return `${p.year}-${p.month}-${p.day}`;
 }
 async function liveStudyAssets() {
-  const assets = ['index.html', 'app.js', 'product-view.js', 'styles.css', 'study-teaching.css', 'study-review.js', 'weekly-learning.js', 'assets/school/abvm-school-hero.webp', 'study-games.js', 'study-games-view.js', 'study-materials.mjs', 'study-games-materials-view.mjs', 'study-games-materials.css', 'sw.js', ...['math', 'reading', 'spelling', 'religion', 'eagle'].map(name => 'assets/illustrations/' + name + '.webp'), ...['eaglet','starlight','spark','scholar','golden','eagle','champion'].map(name=>'assets/badges/'+name+'.webp'), ...['nest-explorer','little-luminary','feather-cadet','star-voyager','sky-scholar','wing-leader','study-sentinel','school-spirit','blue-ribbon-ace','golden-quill','sky-captain','eagle-vanguard','honor-guardian','crown-keeper','star-commander'].map(name=>'assets/badges/'+name+'-premium.webp')];
+  const artRegistry=JSON.parse(readFileSync(new URL('../pages/data/lunch-art-registry.json',import.meta.url),'utf8'));
+  const assets = ['lunch-art.js','data/lunch-art-registry.json',...artRegistry.artworks.filter(art=>art.status==='reviewed').map(art=>art.src),'index.html', 'app.js', 'product-view.js', 'styles.css', 'study-teaching.css', 'study-review.js', 'weekly-learning.js', 'assets/school/abvm-school-hero.webp', 'study-games.js', 'study-games-view.js', 'study-materials.mjs', 'study-games-materials-view.mjs', 'study-games-materials.css', 'sw.js', ...['math', 'reading', 'spelling', 'religion', 'eagle'].map(name => 'assets/illustrations/' + name + '.webp'), ...['eaglet','starlight','spark','scholar','golden','eagle','champion'].map(name=>'assets/badges/'+name+'.webp'), ...['nest-explorer','little-luminary','feather-cadet','star-voyager','sky-scholar','wing-leader','study-sentinel','school-spirit','blue-ribbon-ace','golden-quill','sky-captain','eagle-vanguard','honor-guardian','crown-keeper','star-commander'].map(name=>'assets/badges/'+name+'-premium.webp')];
   // A live source timestamp is insufficient if the published question bank,
   // Homework feed, or printable renderers still contain an earlier build.
   assets.push('data/study-pack-runtime.json', 'data/homework-current.json',
@@ -90,6 +91,8 @@ try {
     await expect(page.locator('.lunch-card')).toContainText(/No school lunch|Lunch menu not yet verified/);
   }
   if (await page.locator('.lunch-card').count()) await page.locator('.lunch-card').first().scrollIntoViewIfNeeded();
+  const mealArt=page.locator('.today-screen .lunch-art-tray img');
+  if(await mealArt.count()){await expect.poll(()=>mealArt.evaluate(img=>img.complete&&img.naturalWidth>=768)).toBe(true);await expect(page.locator('.lunch-art-tray figcaption')).toContainText('Meal illustration');receipt.todayTrayImage={src:await mealArt.getAttribute('src'),decoded:true};}
   await page.screenshot({ path: `${out}/today.png` });
   receipt.screens.push({ screen: 'Today', date: today, lunch: await page.locator('.lunch-card').allTextContents() });
 
