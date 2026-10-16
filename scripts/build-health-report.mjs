@@ -16,6 +16,7 @@ const productionRuns=runs.filter(run=>run.head_branch==="main"||run.event==="sch
 
 const workflowNames={
   refresh:"Refresh ABVM teacher pages",
+  homework:"Refresh current ABVM homework",
   qa:"ABVM App QA",
   deploy:"Deploy ABVM to GitHub Pages",
   watchdog:"Monitor ABVM refresh health",
@@ -91,6 +92,7 @@ const status={
   },
   workflows:{
     refresh:{latest:latest(workflowNames.refresh),latestCreated:latestCreated(workflowNames.refresh),latestCompleted:latestCompleted(workflowNames.refresh),latestDecisive:latestDecisive(workflowNames.refresh),latestSuccess:latestSuccess(workflowNames.refresh)},
+    homework:{latest:latest(workflowNames.homework),latestCreated:latestCreated(workflowNames.homework),latestCompleted:latestCompleted(workflowNames.homework),latestDecisive:latestDecisive(workflowNames.homework),latestSuccess:latestSuccess(workflowNames.homework)},
     qa:{latest:latest(workflowNames.qa),latestCreated:latestCreated(workflowNames.qa),latestCompleted:latestCompleted(workflowNames.qa),latestDecisive:latestDecisive(workflowNames.qa),latestSuccess:latestSuccess(workflowNames.qa)},
     deploy:{latest:latest(workflowNames.deploy),latestCreated:latestCreated(workflowNames.deploy),latestCompleted:latestCompleted(workflowNames.deploy),latestDecisive:latestDecisive(workflowNames.deploy),latestSuccess:latestSuccess(workflowNames.deploy)},
     watchdog:{latest:latest(workflowNames.watchdog),latestCreated:latestCreated(workflowNames.watchdog),latestCompleted:latestCompleted(workflowNames.watchdog),latestDecisive:latestDecisive(workflowNames.watchdog),latestSuccess:latestSuccess(workflowNames.watchdog)},
@@ -109,7 +111,8 @@ const completedRunHealthy=(run,maxAgeHours)=>{
 const completedHealthy=(workflow,maxAgeHours)=>completedRunHealthy(effectiveRun(workflow),maxAgeHours);
 const effectivePublicationRun=()=>selectPublicationEvidence(
   effectiveRun(status.workflows.deploy),
-  effectiveRun(status.workflows.refresh)
+  effectiveRun(status.workflows.refresh),
+  effectiveRun(status.workflows.homework)
 );
 status.publicationEvidence=effectivePublicationRun();
 const effectiveRefreshRun=effectiveRun(status.workflows.refresh);
@@ -203,6 +206,7 @@ const md=[
   ...(warnings.length?["## Attention items",...warnings.map(w=>"- "+w),""]:[]),
   "## Workflow evidence used for health verdict",
   line("Teacher refresh",refreshDisplayRun),
+  line("Homework refresh",effectiveRun(status.workflows.homework)),
   line("App QA",effectiveRun(status.workflows.qa)),
   line("Publication evidence",status.publicationEvidence),
   line("Standalone Pages deploy",effectiveRun(status.workflows.deploy)),
