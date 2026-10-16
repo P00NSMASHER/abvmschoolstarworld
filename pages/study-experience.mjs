@@ -1,7 +1,6 @@
 /** Pure presentation/selection helpers. Existing engines own all learning writes. */
 export const practiceIdentity = q => JSON.stringify([q.prompt, q.answer]);
 const cleanCount = value => Number.isFinite(Number(value)) ? Math.max(0, Math.floor(Number(value))) : 0;
-const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function hash(s) { let n=2166136261;for (const c of String(s)) n=Math.imul(n^c.charCodeAt(0),16777619);return n>>>0; }
 /** Preserve source turns; prefer due/missed skills, reserve unseen work, avoid recent items. */
 export function adaptivePracticeRound(groups, count=8, seed=0, {learning={}, priority=()=>0, recent=[]}={}) {
@@ -26,17 +25,4 @@ export function adaptivePracticeRound(groups, count=8, seed=0, {learning={}, pri
     if(!progressed)break;
   }
   return result;
-}
-export function learningRows(learning={}) {
-  if(!learning||typeof learning!=='object'||Array.isArray(learning))return [];
-  return Object.entries(learning).filter(([,r])=>r&&cleanCount(r.Seen)>0).map(([skill,r])=>{
-    const answered=cleanCount(r.Seen),independent=Math.min(answered,cleanCount(r.IndependentCorrect));
-    const assisted=Math.min(answered-independent,cleanCount(r.CorrectAfterRetry));
-    return {skill,label:skill.replace(/-/g,' '),answered,independent,assisted,review:!r.LastResolution?.independent};
-  }).sort((a,b)=>Number(b.review)-Number(a.review)||a.label.localeCompare(b.label));
-}
-export function learningSummaryMarkup(learning={}) {
-  const rows=learningRows(learning);
-  if(!rows.length)return '<section class="room-learning-summary"><h3>Learning on this device</h3><p>No answered practice is saved yet. A short round will add a starting point.</p></section>';
-  return '<section class="room-learning-summary"><h3>Learning on this device</h3><p>These are answered questions within each skill, not grades or proof of mastery. Hints and retries count as supported practice.</p><ul>'+rows.slice(0,8).map(r=>'<li><strong>'+esc(r.label)+'</strong><span>'+r.answered+' answered · '+r.independent+' independently · '+r.assisted+' with support</span><small>'+(r.review?'Revisit with a short practice.':'Try again on another day to check recall.')+'</small></li>').join('')+'</ul><p>No names or results are sent to school. These results do not predict a STAR score.</p></section>';
 }

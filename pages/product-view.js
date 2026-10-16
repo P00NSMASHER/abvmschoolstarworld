@@ -56,7 +56,6 @@
       tasks,
       next,
       reminders,
-      header,
       freshness,
       taskHtml,
       lunchHtml,

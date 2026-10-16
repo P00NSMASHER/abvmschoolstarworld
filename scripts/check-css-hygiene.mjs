@@ -72,14 +72,13 @@ for(const stalePattern of [
   if(app.includes(stalePattern))fail("Repeated school-data scan returned: "+stalePattern);
 }
 
-console.log("CSS/code hygiene PASS",{
-  cssBytes:Buffer.byteLength(css,"utf8"),
-  appBytes:Buffer.byteLength(app,"utf8"),
-  calendarCellRuleBlocks,
-});
-
-for(const [file,limit] of [["study-review.js",8000]]){
-  if(Buffer.byteLength(readFileSync(new URL("../pages/"+file,import.meta.url)),"utf8")>limit)fail(file+" exceeded its Study feature budget");
+const review=readFileSync(new URL('../pages/study-review.js',import.meta.url),'utf8');
+if(canonicalBytes(review)>6000)fail('Review engine exceeded its 6 KB runtime budget');
+if(review.includes('document.createElement("style")'))fail('Review engine must not inject retired visual styles');
+for(const retired of ['ABVMStudyPractice','room-learning-summary','daily-practice-title']){
+  if(review.includes(retired))fail('Retired Study dashboard code returned: '+retired);
 }
 
-if(readFileSync(new URL("../pages/study-support.js",import.meta.url),"utf8").includes('document.createElement("style")'))fail("Study support must not inject retired visual styles");
+console.log('CSS/code hygiene PASS',{
+  cssBytes:canonicalBytes(css),appBytes:canonicalBytes(app),reviewBytes:canonicalBytes(review),calendarCellRuleBlocks
+});

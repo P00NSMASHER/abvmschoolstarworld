@@ -7,15 +7,6 @@ const distinctNoteText = rows => {const seen=new Set();return rows.filter(text=>
 const list = rows => {const clean=(Array.isArray(rows)?rows:[]).filter(nonempty);return clean.length?'<ul>'+clean.map(row=>'<li>'+esc(row)+'</li>').join('')+'</ul>':'';};
 const dateLabel = date => {const value=new Date(date+'T12:00:00Z');return /^\d{4}-\d{2}-\d{2}$/.test(date||'')&&Number.isFinite(value.getTime())
   ? new Intl.DateTimeFormat('en-US',{weekday:'short',month:'short',day:'numeric',timeZone:'UTC'}).format(value) : '';};
-const dateParts = date => {
-  const value=new Date(date+'T12:00:00Z');
-  if(!/^\d{4}-\d{2}-\d{2}$/.test(date||'')||!Number.isFinite(value.getTime()))return{weekday:'',day:'',label:''};
-  return {
-    weekday:new Intl.DateTimeFormat('en-US',{weekday:'short',timeZone:'UTC'}).format(value),
-    day:new Intl.DateTimeFormat('en-US',{day:'numeric',timeZone:'UTC'}).format(value),
-    label:dateLabel(date),
-  };
-};
 const safeUrl = value => {try{return ['https:','http:'].includes(new URL(value).protocol);}catch{return false;}};
 const missingDefinition = value => /teacher page does not provide a definition|no definition supplied/i.test(String(value ?? ''));
 export function resolveVocabularyMeaning(row,dictionary = () => '') {
