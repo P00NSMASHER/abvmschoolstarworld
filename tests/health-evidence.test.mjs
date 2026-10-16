@@ -27,6 +27,29 @@ test("successful refresh is valid publication evidence when no standalone deploy
   assert.equal(selectPublicationEvidence(null,refresh),refresh);
 });
 
+test("newer successful homework publication supersedes an older guarded Pages failure",()=>{
+  const deploy=run("Deploy ABVM to GitHub Pages","failure","2026-10-16T15:05:47Z");
+  const refresh=run("Refresh ABVM teacher pages","failure","2026-10-16T15:27:01Z");
+  const homework=run("Refresh current ABVM homework","success","2026-10-16T15:21:23Z");
+  assert.equal(selectPublicationEvidence(deploy,refresh,homework),homework);
+});
+
+test("failed or unresolved homework runs cannot replace standalone publication evidence",()=>{
+  const deploy=run("Deploy ABVM to GitHub Pages","success","2026-10-16T15:05:47Z");
+  const refresh=run("Refresh ABVM teacher pages","failure","2026-10-16T15:27:01Z");
+  for(const conclusion of ["failure",null]){
+    const homework=run("Refresh current ABVM homework",conclusion,"2026-10-16T15:21:23Z");
+    assert.equal(selectPublicationEvidence(deploy,refresh,homework),deploy);
+  }
+});
+
+test("the newest successful source-bound publication wins when both source workflows succeed",()=>{
+  const deploy=run("Deploy ABVM to GitHub Pages","failure","2026-10-16T15:05:47Z");
+  const refresh=run("Refresh ABVM teacher pages","success","2026-10-16T15:18:00Z");
+  const homework=run("Refresh current ABVM homework","success","2026-10-16T15:21:23Z");
+  assert.equal(selectPublicationEvidence(deploy,refresh,homework),homework);
+});
+
 
 test("governed curriculum hold requires the exact unresolved-coverage failed step and an open draft candidate",()=>{
   const refresh={id:42,name:"Refresh ABVM teacher pages",conclusion:"failure",created_at:"2026-10-02T16:00:00Z"};
