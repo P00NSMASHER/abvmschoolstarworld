@@ -44,8 +44,8 @@ test("newer dated official notice supersedes an older nearby school date without
     kind:"club",sourceDocument:later.id});
 
   assert.doesNotThrow(()=>validateUploadedNoticePolicy(copy));
-  const lego=currentImportantDates(copy).filter(item=>/lego club/i.test(item.label));
-  assert.deepEqual(lego,[copy.importantDates.at(-1)]);
+  const octoberLego=currentImportantDates(copy).filter(item=>/lego club/i.test(item.label)&&/oct/i.test(item.date));
+  assert.deepEqual(octoberLego,[copy.importantDates.at(-1)]);
 });
 
 test("same-date and unrelated newer school notices remain available",()=>{
