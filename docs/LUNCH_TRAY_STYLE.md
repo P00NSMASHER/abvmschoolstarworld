@@ -45,15 +45,16 @@ bytes or dishonest omissions. Old reviewed entree records remain archived for
 provenance, outside active mappings. Calendar closure precedence still wins even
 when the district catalog lists a meal, including Grade 2's October 20 closure.
 
-The enabled Complete lunch artwork merge-event task audits current/future menu
-changes, reuses only an exact matching reviewed meal and style, generates and
-reviews missing assets, and uses the normal independent QA/PR/Pages workflow.
-No private reference is needed on future runs. Unchanged art is never regenerated
-for activity. Source or provider failure retains accurate text and an unfinished
-checkpoint; bounded retries and all release/privacy gates remain. No new spending,
-paid API, credentials, contacts, Work-credit workflow or manual curriculum
-promotion is introduced. Ongoing automation cannot guarantee perpetual provider
-availability.
+All 20 October tray images are complete. Future missing illustrations are handled
+by the existing ABVM School Data Intake task and normal menu-import workflow,
+using exact reviewed menu/style matches and normal independent QA/PR/Pages gates.
+The former dedicated artwork merge task now protects ABVM learning reliability.
+No private reference is needed on future runs. Unchanged suitable art is never
+regenerated for activity. Source or provider failure retains accurate text and an
+unfinished checkpoint; bounded retries and all release/privacy gates remain.
+No new spending, paid API, credentials, contacts, Work-credit workflow or manual
+curriculum promotion is introduced. Ongoing automation cannot guarantee perpetual
+provider availability.
 
 ## Updates in an already-open app
 

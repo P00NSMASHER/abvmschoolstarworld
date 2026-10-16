@@ -48,7 +48,6 @@ test('teacher notes remain the explicit lesson content when notes arrive',async(
   await expect(math).toBeVisible();
   await expect(math.locator('.study-note-topic li')).toHaveText(['Compare three-digit numbers']);
   await math.locator('.study-note-review > summary').click();
-  await math.locator('.study-note-point > summary').click();
   await expect(math.locator('.study-note-point p')).toHaveText('Start with the hundreds.');
   const original=math.locator('.study-notes-original');
   await expect(original).not.toHaveAttribute('open','');
@@ -68,10 +67,10 @@ test('long Religion review lists stay optional and every original idea remains r
   await expect(review).not.toHaveAttribute('open','');
   await expect(review.locator(':scope > summary')).toHaveText('Practice ideas35 ideas');
   await expect(review.locator('.study-note-point')).toHaveCount(35);
-  await expect(review.locator('.study-note-point > summary').first()).toBeHidden();
+  await expect(review.locator('.study-note-point p').first()).toBeHidden();
   const summary=review.locator(':scope > summary');await summary.focus();await page.keyboard.press('Enter');
   await expect(review).toHaveAttribute('open','');
-  const last=review.locator('.study-note-point').last();await expect(last.locator('p')).toBeHidden();await last.locator(':scope > summary').focus();await page.keyboard.press('Enter');
+  const last=review.locator('.study-note-point').last();
   await expect(last.locator('p')).toHaveText(ideas[34]);await expect(last.locator('p')).toBeVisible();
   const original=panel.locator('.study-notes-original');await original.locator(':scope > summary').click();
   await expect(original.locator('li')).toHaveText(['Chapter 3: Jesus Lives in His Church',...ideas]);

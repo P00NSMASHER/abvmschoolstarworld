@@ -47,7 +47,7 @@ async function liveStudyAssets() {
   // A live source timestamp is insufficient if the published question bank,
   // Homework feed, or printable renderers still contain an earlier build.
   assets.push('data/study-pack-runtime.json', 'data/study-archive.json', 'data/homework-current.json',
-    'test-study-pair.mjs', 'classroom-test-guide.mjs', 'premium-paper-theme.mjs');
+    'test-study-pair.mjs', 'classroom-test-guide.mjs', 'premium-paper-theme.mjs', 'study-notes-library.mjs');
   const digest = bytes => createHash('sha256').update(bytes).digest('hex');
   return Promise.all(assets.map(async path => {
     const expectedBytes = readFileSync(new URL('../pages/' + path, import.meta.url));
@@ -250,6 +250,42 @@ try {
   }
   await page.setViewportSize({width:390,height:844});
   receipt.studyWalkthrough.returnedAndRecordSurvivedReload = true;
+  // Exercise the actual published notes, without assuming any particular topic
+  // or chapter must remain current forever. This browser profile is isolated.
+  const printHistory=page.locator('[data-study-test-options]');
+  const printHistoryBefore=await printHistory.innerHTML();
+  await page.locator('[data-study-notes] > summary').click();
+  const notes=page.locator('[data-study-notes]');
+  const noteSearch=notes.getByRole('searchbox',{name:'Search study notes'});
+  await expect(noteSearch).toBeVisible();
+  let noteSubject=null,noteQuery=null;
+  for(const width of [390,820]){
+    await page.setViewportSize({width,height:width===390?844:1080});
+    if(await notes.locator('.notes-reader').isVisible())await notes.locator('[data-notes-back]').click();
+    await notes.locator('.notes-library-heading').scrollIntoViewIfNeeded();
+    await page.screenshot({path:`${out}/notes-library-${width}.png`,animations:'disabled'});
+    const card=notes.locator('[data-notes-subject]').first();
+    if(await card.count()){
+      noteSubject=await card.getAttribute('aria-label');
+      await card.click();
+      const reader=notes.locator('[data-note-subject]:not([hidden])');
+      await expect(reader.locator('h3')).toHaveText(noteSubject);
+      noteQuery=await reader.locator('.study-note-topic li').first().count()
+        ? (await reader.locator('.study-note-topic li').first().innerText()).slice(0,100) : noteSubject.slice(0,100);
+      await noteSearch.fill(noteQuery);
+      await expect(noteSearch).toBeFocused();
+      await expect(noteSearch).toHaveValue(noteQuery);
+      await notes.getByRole('button',{name:noteSubject,exact:true}).click();
+      await expect(reader.locator('h3')).toHaveText(noteSubject);
+      await notes.locator('[data-notes-back]').scrollIntoViewIfNeeded();
+      await page.screenshot({path:`${out}/notes-reader-${width}.png`,animations:'disabled'});
+      await notes.getByRole('button',{name:'Clear note search',exact:true}).click();
+      await expect(noteSearch).toHaveValue('');
+    }else await expect(notes.locator('.study-tools-empty')).toContainText('No lesson notes');
+  }
+  expect(await printHistory.innerHTML()).toBe(printHistoryBefore);
+  receipt.notesLibrary={verified:true,subject:noteSubject,query:noteQuery,historyUnchanged:true};
+  await page.setViewportSize({width:390,height:844});
   await page.getByRole('button', { name: 'Today', exact: true }).click();
   if (todayMeal?.items.length) for (const item of todayMeal.items) await expect(page.locator('.lunch-card')).toContainText(item);
   // Validate every deployed promotion in a new isolated browser profile, never in the learner's device storage.

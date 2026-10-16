@@ -1,3 +1,4 @@
+import {openNoteSubject} from './helpers/study-notes.mjs';
 import {withOriginalMathFixture} from './helpers/original-math-fixture.mjs';
 import {test,expect} from '@playwright/test';
 test.use({serviceWorkers:'block'});
@@ -146,7 +147,7 @@ test('on-demand subject notes retain the verified chapter review and disclose a 
   await expect(page.locator('[data-religion-review],.game-note-warning')).toHaveCount(0);
   await page.locator('[data-study-notes] > summary').click();
   const religion=page.locator('[data-note-subject="Religion"]');
-  await page.locator('[data-notes-subject]').filter({hasText:/^Religion$/}).click();
+  await openNoteSubject(page,'Religion');
   await expect(religion).toBeVisible();
   const review=religion.locator('[data-religion-review]');
   await expect(review).toHaveAttribute('href',chapter.url);
@@ -155,12 +156,12 @@ test('on-demand subject notes retain the verified chapter review and disclose a 
   await expect(review).toHaveAttribute('rel',/noopener/);
   await expect(review).toBeVisible();
   const spelling=page.locator('[data-note-subject="Spelling / Handwriting"]');
-  await page.locator('[data-notes-subject]').filter({hasText:/^Spelling \/ Handwriting$/}).click();
+  await openNoteSubject(page,'Spelling / Handwriting');
   await expect(religion).toBeHidden();
   await expect(spelling.locator('.game-note-warning')).toContainText('Spelling (short i / long i) (2026-10-09)');
   await expect(spelling.locator('.game-note-warning')).toContainText('earlier vowel pattern');
   await expect(spelling.locator('.game-note-warning')).toContainText('do not establish test coverage');
-  await page.locator('[data-notes-subject]').filter({hasText:/^Religion$/}).click();
+  await openNoteSubject(page,'Religion');
   await page.locator('[data-study-notes] > summary').click();
   await expect(page.locator('[data-study-notes]')).not.toHaveAttribute('open','');
   await expect(review).not.toBeVisible();
@@ -182,7 +183,7 @@ test('current notes and cumulative reviewed schoolwork remain separately availab
   const notes=page.locator('[data-study-notes-content]');await expect(notes).not.toContainText(lesson.title);
   await page.locator('[data-notes-source="saved"]').click();await expect(page.locator('[data-notes-source="saved"]')).toHaveAttribute('aria-pressed','true');
   await expect(notes).toContainText('Undated schoolwork');
-  await page.locator('[data-notes-subject]').filter({hasText:new RegExp('^'+lesson.subject.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'$')}).click();
+  await openNoteSubject(page,lesson.subject);
   const reviewed=notes.locator('.game-material-lesson').filter({hasText:lesson.title});await reviewed.locator(':scope > summary').click();
   await expect(reviewed.locator('li')).toHaveText(lesson.notes);
   await page.locator('[data-notes-source="weekly"]').click();await expect(notes).not.toContainText(lesson.title);

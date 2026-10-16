@@ -195,9 +195,6 @@
 .games-screen .study-game-tile[data-game-start="spelling"]{background:#ffdad5;border-color:#f1bfb6;color:var(--study-ink)}
 .games-screen .study-game-tile[data-game-start="mix"]{grid-column:1/-1;display:grid;grid-template-columns:54px minmax(0,1fr);align-items:center;gap:14px;min-height:92px!important;padding:16px 48px 16px 16px}
 .games-screen .study-game-tile[data-game-start="mix"]>b{top:50%;transform:translateY(-50%)}
-.games-screen .study-note-scope{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;padding:4px;margin:0 0 14px;border-radius:13px;background:#e8edf2}
-.games-screen .study-note-scope button{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere;min-height:44px;margin:0;padding:9px 12px;border:0;border-radius:10px;background:none;color:var(--study-muted);font-size:.8rem;font-weight:650;text-align:center}
-.games-screen .study-note-scope button[aria-pressed="true"]{background:#fff;color:#102e58;box-shadow:0 1px 4px #102e5810}
 .games-screen.game-loading{display:grid;align-content:center;min-height:65dvh}
 .games-screen .loading-star{display:block;width:38px;height:38px;margin:0 auto 14px;color:var(--study-brand)}
 .games-screen .loading-star svg{display:block;width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.5;stroke-dasharray:35 16;animation:study-loading-turn 1.4s linear infinite}
@@ -277,31 +274,6 @@
 .games-screen .study-material-pair-buttons [data-test-worksheet]{background:#edf4ff;border-color:#b2cee8}
 @media(max-width:359px){.games-screen .prep-material-actions,.games-screen .study-material-pair-buttons{grid-template-columns:minmax(0,1fr)}.games-screen .study-material-pair{grid-template-columns:minmax(0,1fr)}.games-screen .study-material-pair small{text-align:left}}
 
-.games-screen .study-note-subjects{display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px;margin:0 -2px}
-.games-screen .study-note-subjects button{flex:none;max-width:100%;margin:0;border-radius:99px;padding:10px 14px;background:#f1f6fb;color:var(--study-muted)}
-.games-screen .study-note-subjects button[aria-pressed="true"]{background:var(--study-brand);color:white;border-color:var(--study-brand)}
-.games-screen .study-note-heading{margin:8px 0 16px}
-.games-screen .study-note-heading h3{font-size:1.25rem;margin:0}
-.games-screen .study-note-heading p{font-size:.72rem;color:var(--study-muted);margin-top:4px}
-.games-screen .study-note-topic-grid{display:grid;gap:10px}
-.games-screen .study-note-topic{border:1px solid var(--study-line);border-radius:14px;overflow:hidden;background:#f5faff}
-.games-screen .study-note-topic summary{padding:13px;font-weight:750;font-size:.85rem;min-height:48px;cursor:pointer}
-.games-screen .study-note-topic summary>small{float:right;color:var(--study-muted);font-weight:500}
-.games-screen .study-note-topic .study-note-body{background:white;padding:0 14px 14px}
-.games-screen .study-note-topic ul{list-style:none;padding:0}
-.games-screen .study-note-topic li{list-style:none;font-size:.85rem;line-height:1.5;padding-top:8px}
-.games-screen .study-note-review{margin-top:14px;border:1px solid var(--study-line);border-radius:14px;background:#f5faff;overflow:hidden}
-.games-screen .study-note-review>summary{padding:13px;font-size:.85rem;min-height:48px;cursor:pointer}
-.games-screen .study-note-review>summary>small{float:right;color:var(--study-muted);font-weight:500}
-.games-screen :is(.study-note-review,.study-note-point):not([open])>:not(summary){display:none}
-.games-screen .study-note-review-body{padding:0 14px 14px;background:white}
-.games-screen .study-note-review-body>p{padding-top:12px;font-size:.75rem;color:var(--study-muted)}
-.games-screen .study-note-point{padding:0;border-bottom:1px solid var(--study-line)}
-.games-screen .study-note-point summary{padding:12px 0;min-height:44px;font-size:.85rem;cursor:pointer}
-.games-screen .study-note-point p{padding:0 0 14px;font-size:.85rem;line-height:1.6}
-.games-screen .study-notes-original{margin-top:20px;color:var(--study-muted)}
-.games-screen .study-notes-original>summary{min-height:44px;cursor:pointer;font-size:.72rem;padding:10px 0}
-.games-screen .study-note-schoolwork{margin-top:16px}
 @media(min-width:700px){
   .games-screen .prep-header{margin:-36px -30px 0;padding:26px 30px 32px}
   .games-screen .prep-header h1{font-size:2.3rem;max-width:25rem}
@@ -310,11 +282,70 @@
   .games-screen .prep-test-choice{flex-basis:44%}
   .games-screen .prep-topics{grid-template-columns:minmax(0,1fr) 180px}
   .games-screen .prep-topics>img{height:170px}
-  .games-screen .study-note-topic-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:360px){.games-screen .prep-header h1{font-size:1.7rem}.games-screen .prep-eagle{width:95px;height:95px}.games-screen .prep-topics{grid-template-columns:minmax(0,1fr) 80px}}
 
 /* Practice keeps the question, choices and help in one quiet composition. */
+/* Notes is a two-level library. Only the chosen subject becomes a reading surface. */
+.games-screen [data-study-notes] [hidden]{display:none}
+.games-screen [data-study-notes] .notes-library{min-width:0;padding:4px 0 0}
+.games-screen [data-study-notes] .notes-library-heading{margin:2px 0 18px}
+.games-screen [data-study-notes] .notes-library-heading h3{margin:0;color:var(--study-ink);font-size:1.2rem;font-weight:800;line-height:1.3;letter-spacing:-.025em}
+.games-screen [data-study-notes] .notes-library-heading p{margin:6px 0 0;color:var(--study-muted);font-size:.88rem;line-height:1.5}
+.games-screen [data-study-notes] .study-note-scope{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;margin:0 0 14px;padding:4px;border:1px solid var(--study-line);border-radius:15px;background:#f0f5fa}
+.games-screen [data-study-notes] .study-note-scope button{min-width:0;min-height:46px;margin:0;padding:9px 10px;border:0;border-radius:11px;background:transparent;color:var(--study-muted);font-size:.92rem;text-align:center}
+.games-screen [data-study-notes] .study-note-scope button[aria-pressed="true"]{background:white;color:var(--study-ink);box-shadow:0 2px 5px #102e5810}
+.games-screen [data-study-notes] .notes-search{display:flex;align-items:center;gap:4px;min-width:0;border:1px solid #bfd1e2;border-radius:14px;background:#f8fbfe;overflow:hidden}
+.games-screen [data-study-notes] .notes-search:focus-within{outline:3px solid var(--study-brand);outline-offset:3px}
+.games-screen [data-study-notes] .notes-search input{flex:1;width:100%;min-width:0;min-height:52px;margin:0;padding:13px 14px;border:0;border-radius:0;background:transparent;color:var(--study-ink);font:inherit;font-size:1rem;line-height:1.5;outline:none;box-shadow:none}
+.games-screen [data-study-notes] .notes-search input::placeholder{color:#526981;opacity:1}
+.games-screen [data-study-notes] .notes-search button{flex:none;min-width:48px;min-height:48px;margin:0 4px 0 0;padding:8px;border:0;background:transparent;color:var(--study-brand);font-size:.85rem}
+.games-screen [data-study-notes] .notes-search-status{min-height:1.5em;margin:9px 1px 16px;color:var(--study-muted);font-size:.82rem;line-height:1.5}
+.games-screen [data-study-notes] .notes-subject-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,max(9rem,calc(50% - 6px))),1fr));align-items:stretch;gap:12px;margin:0;padding:0;overflow:visible}
+.games-screen [data-study-notes] .notes-subject-card{display:grid;grid-template-columns:minmax(0,1fr) 20px;align-content:start;align-items:center;gap:10px 5px;min-width:0;min-height:148px;margin:0;padding:16px;border:1px solid var(--study-line);border-radius:18px;background:#f8fbff;color:var(--study-ink);text-align:left;box-shadow:none}
+.games-screen [data-study-notes] .notes-subject-card:hover{background:#edf5ff;border-color:#83a4ca}
+.games-screen [data-study-notes] .notes-subject-card img{grid-column:1/-1;width:48px;height:48px;object-fit:contain}
+.games-screen [data-study-notes] .notes-subject-card span{min-width:0}
+.games-screen [data-study-notes] .notes-subject-card strong{display:block;font-size:1rem;line-height:1.3;font-weight:780;overflow-wrap:anywhere}
+.games-screen [data-study-notes] .notes-subject-card small{display:block;margin-top:5px;font-size:.78rem;line-height:1.45;color:var(--study-muted)}
+.games-screen [data-study-notes] .notes-subject-card b{font-size:1.5rem;font-weight:500;line-height:1}
+.games-screen [data-study-notes] .notes-reader{max-width:48rem;margin-inline:auto}
+.games-screen [data-study-notes] .notes-back{display:inline-flex;align-items:center;min-height:46px;margin:0 0 14px;padding:8px 2px;border:0;border-radius:6px;background:transparent;color:var(--study-brand);font-size:.95rem}
+.games-screen [data-study-notes] .study-note-panel{min-width:0;padding:0;border:0;background:white;box-shadow:none}
+.games-screen [data-study-notes] .study-note-heading{display:flex;align-items:center;gap:14px;margin:0 0 18px;padding:16px;border:1px solid var(--study-line);border-radius:18px;background:#edf6ff}
+.games-screen [data-study-notes] .study-note-heading img{flex:none;width:56px;height:56px;object-fit:contain}
+.games-screen [data-study-notes] .study-note-heading div{min-width:0}
+.games-screen [data-study-notes] .study-note-heading small{display:block;margin-bottom:5px;color:var(--study-muted);font-size:.78rem;line-height:1.45}
+.games-screen [data-study-notes] .study-note-heading h3{margin:0;font-size:1.4rem;line-height:1.25;letter-spacing:-.025em;overflow-wrap:anywhere}
+.games-screen [data-study-notes] .study-note-topic-grid{display:grid;grid-template-columns:minmax(0,1fr);align-items:start;gap:10px}
+.games-screen [data-study-notes] :is(.study-note-topic,.study-note-review,.game-material-lesson){min-width:0;margin:0 0 12px;border:1px solid var(--study-line);border-radius:15px;background:white;box-shadow:none;overflow:hidden}
+.games-screen [data-study-notes] details:not([open])>:not(summary){display:none}
+.games-screen [data-study-notes] :is(.study-note-topic,.study-note-review,.game-material-lesson)>summary{display:list-item;min-height:52px;padding:14px 16px;background:#f8fbfe;color:var(--study-ink);font-size:.98rem;line-height:1.45;cursor:pointer;list-style:disclosure-closed inside}
+.games-screen [data-study-notes] :is(.study-note-topic,.study-note-review,.game-material-lesson)[open]>summary{list-style-type:disclosure-open}
+.games-screen [data-study-notes] :is(.study-note-topic,.study-note-review,.game-material-lesson)>summary::-webkit-details-marker{display:revert}
+.games-screen [data-study-notes] summary :is(span,strong){min-width:0;font:inherit;font-weight:720;overflow-wrap:anywhere}
+.games-screen [data-study-notes] summary small{float:none;min-width:0;font-size:.78rem;font-weight:500;color:var(--study-muted);white-space:normal}
+.games-screen [data-study-notes] .study-note-body{padding:0 16px 17px;background:white;border-top:1px solid #edf2f7}
+.games-screen [data-study-notes] .study-note-body ul{margin:14px 0 0;padding-left:19px;list-style:disc}
+.games-screen [data-study-notes] .study-note-body li{display:list-item;padding:0;margin:9px 0 0;list-style:disc;font-size:1rem;line-height:1.65}
+.games-screen [data-study-notes] .study-note-body dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:14px;margin-top:16px;font-size:1rem;line-height:1.6}
+.games-screen [data-study-notes] .study-note-body dl>div{padding:12px;border-radius:12px;background:#f5f9fe}
+.games-screen [data-study-notes] .study-note-body dd{margin:4px 0 0}
+.games-screen [data-study-notes] .study-note-review-body{padding:0 16px 4px}
+.games-screen [data-study-notes] .study-note-point{margin:0;padding:14px 0;border-bottom:1px solid #e6edf5}
+.games-screen [data-study-notes] .study-note-point:last-child{border-bottom:0}
+.games-screen [data-study-notes] .study-note-point p{margin:0;padding:0;font-size:1rem;line-height:1.65}
+.games-screen [data-study-notes] .study-notes-original{margin-top:22px;border-top:1px solid var(--study-line);color:var(--study-muted)}
+.games-screen [data-study-notes] .study-notes-original>summary{min-height:48px;padding:14px 0;font-size:.86rem;line-height:1.5;cursor:pointer}
+.games-screen [data-study-notes] .study-notes-original>summary small{display:block;padding-top:3px}
+.games-screen [data-study-notes] .study-note-schoolwork h4{margin:20px 0 12px;font-size:1.05rem}
+.games-screen [data-study-notes] .study-note-references{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.games-screen [data-study-notes] .study-note-references:empty{display:none}
+.games-screen [data-study-notes] [data-religion-review]{display:flex;align-items:center;gap:8px;min-height:48px;margin:0;padding:10px 14px;border:1px solid #d5c4ee;border-radius:12px;background:#f8f3ff;color:#503377;font-size:.92rem;font-weight:650;line-height:1.4;text-decoration:none}
+.games-screen [data-study-notes] .study-tools-empty{margin:10px 0;padding:20px;border:1px dashed var(--study-line);border-radius:15px;color:var(--study-muted);font-size:1rem;line-height:1.6}
+@media(min-width:1000px){.games-screen [data-study-notes] .notes-subject-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(prefers-contrast:more){.games-screen [data-study-notes] :is(.notes-subject-card,.study-note-topic,.study-note-heading){border-width:2px}}
+
 .games-screen .game-question-art{width:128px;height:128px;object-fit:contain;margin:6px auto 24px}
 .games-screen .game-question-card.is-equation>h2{text-align:center;font-size:clamp(1.8rem,8vw,2.7rem);line-height:1.2}
 .games-screen .game-answer-list.is-numeric .game-answer{min-height:94px;background:#ffffffd9;border-radius:18px}

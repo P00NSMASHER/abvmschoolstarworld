@@ -12,14 +12,16 @@ run: review the menu, reuse exact reviewed meal art in the approved tray style, 
 built-in high-quality image generator, inspect it, test, and publish. No second
 artwork request is needed.
 
-The **Complete lunch artwork** GitHub merge-event task was verified enabled on
-October 15, 2026 (America/New_York). It checks current/future exact-menu coverage
-after merged repository PRs, reuses active work, preserves independent QA, and
-verifies actual publication. No separate active hourly artwork lane was present
-in the connected task inventory; earlier documentation claiming one was stale.
-It does not trigger on direct pushes and is not a private-chat upload watcher or
-a paid image API service. Use PRs for menu changes. If generation is unavailable,
-retain accurate menu text and record the precise missing coverage.
+The 20 October tray illustrations are complete and production-verified in PR #378.
+On October 16, 2026 the former **Complete lunch artwork** task was repurposed as
+**Protect ABVM learning reliability**. It retains the existing repository merge
+trigger and now prioritizes source/publication failures and broken learning flows.
+Future missing-menu images remain part of the existing hourly **ABVM School Data
+Intake** task and the menu-import process below. No dedicated artwork task or new
+schedule is required. Reuse active work, exact menu/style approvals and normal
+independent QA/Pages gates. If generation is unavailable, retain accurate menu text
+and record precise incomplete coverage. No private-chat upload watcher or paid
+image API service is introduced.
 
 ### Photorealistic tray revision
 
