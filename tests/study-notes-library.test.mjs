@@ -35,3 +35,30 @@ test('library and reader escape source text and preserve accurate empty and unda
  assert.ok(renderNotesLibrary(data,{subject:'Math'}).includes('Undated schoolwork'));
  assert.ok(renderNotesLibrary({notes:[]}).includes('No lesson notes are included in this selection.'));
 });
+
+test('confirmed subtraction topics get useful original study notes without inventing teacher content',()=>{
+ const source={notes:[{subject:'Math',kind:'topic',text:'Math (subtraction)'}]};
+ const row=notesLibraryData(source)[0];
+ assert.ok(row.explanations.some(section=>section.title==='Subtraction, step by step'));
+ const html=renderNotesLibrary(source,{subject:'Math'});
+ assert.ok(html.includes('12 − 5 = 7'));assert.ok(html.includes('7 + 5 = 12'));
+ assert.ok(html.includes('ABVM worked example'));assert.deepEqual(row.original,['Math (subtraction)']);
+ assert.equal(notesLibraryData({notes:[{subject:'Math',kind:'topic',text:'Time'}]})[0].explanations.length,0);
+ assert.equal(notesLibraryData(source,{query:'difference'})[0].subject,'Math');
+});
+test('chapter explanations stay scoped, searchable and separate from exact source wording',()=>{
+ const source={notes:[{subject:'Religion',kind:'topic',text:'Chapter 3: Church'},{subject:'Religion',kind:'topic',text:'Chapter 1: Gifts'}],
+ explanations:[{subject:'Religion',topic:'Chapter 3: Church',title:'Chapter 3',paragraphs:['Baptism gives new life in grace.'],label:'Class review'}]};
+ const row=notesLibraryData(source,{query:'Baptism'})[0];
+ assert.deepEqual(row.topics,['Chapter 3: Church']);assert.equal(row.explanations.length,1);
+ assert.deepEqual(row.original,['Chapter 3: Church','Chapter 1: Gifts']);
+ assert.ok(renderNotesLibrary(source,{subject:'Religion'}).includes('Baptism gives new life in grace.'));
+});
+
+
+test('study-note paragraphs are fully consolidated and visible without a practice panel',()=>{
+ const html=renderNotesLibrary({notes:[{subject:'Math',kind:'topic',text:'Compare numbers'},{subject:'Math',kind:'study-note',text:'Compare hundreds, then tens, then ones.'}]},{subject:'Math'});
+ assert.ok(html.includes('<p>Compare hundreds, then tens, then ones.</p>'));
+ assert.ok(!html.includes('Practice ideas'));assert.ok(!html.includes('-ideas'));
+ assert.ok(!/study-note-review[^>]*><summary/.test(html));
+});

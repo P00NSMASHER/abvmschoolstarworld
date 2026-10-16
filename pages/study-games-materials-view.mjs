@@ -1,4 +1,4 @@
-import {createNotesLibrary} from './study-notes-library.mjs?v=1';
+import {createNotesLibrary} from './study-notes-library.mjs?v=2';
 import {createReadAloud} from './study-room-view.mjs';
 import {renderTestStudyGuide,renderTestWorksheet} from './test-study-pair.mjs?v=4';
 

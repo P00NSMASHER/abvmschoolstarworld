@@ -317,11 +317,11 @@
 .games-screen [data-study-notes] .study-note-heading small{display:block;margin-bottom:5px;color:var(--study-muted);font-size:.78rem;line-height:1.45}
 .games-screen [data-study-notes] .study-note-heading h3{margin:0;font-size:1.4rem;line-height:1.25;letter-spacing:-.025em;overflow-wrap:anywhere}
 .games-screen [data-study-notes] .study-note-topic-grid{display:grid;grid-template-columns:minmax(0,1fr);align-items:start;gap:10px}
-.games-screen [data-study-notes] :is(.study-note-topic,.study-note-review,.game-material-lesson){min-width:0;margin:0 0 12px;border:1px solid var(--study-line);border-radius:15px;background:white;box-shadow:none;overflow:hidden}
+.games-screen [data-study-notes] :is(.study-note-topic,.game-material-lesson){min-width:0;margin:0 0 12px;border:1px solid var(--study-line);border-radius:15px;background:white;box-shadow:none;overflow:hidden}
 .games-screen [data-study-notes] details:not([open])>:not(summary){display:none}
-.games-screen [data-study-notes] :is(.study-note-topic,.study-note-review,.game-material-lesson)>summary{display:list-item;min-height:52px;padding:14px 16px;background:#f8fbfe;color:var(--study-ink);font-size:.98rem;line-height:1.45;cursor:pointer;list-style:disclosure-closed inside}
-.games-screen [data-study-notes] :is(.study-note-topic,.study-note-review,.game-material-lesson)[open]>summary{list-style-type:disclosure-open}
-.games-screen [data-study-notes] :is(.study-note-topic,.study-note-review,.game-material-lesson)>summary::-webkit-details-marker{display:revert}
+.games-screen [data-study-notes] :is(.study-note-topic,.game-material-lesson)>summary{display:list-item;min-height:52px;padding:14px 16px;background:#f8fbfe;color:var(--study-ink);font-size:.98rem;line-height:1.45;cursor:pointer;list-style:disclosure-closed inside}
+.games-screen [data-study-notes] :is(.study-note-topic,.game-material-lesson)[open]>summary{list-style-type:disclosure-open}
+.games-screen [data-study-notes] :is(.study-note-topic,.game-material-lesson)>summary::-webkit-details-marker{display:revert}
 .games-screen [data-study-notes] summary :is(span,strong){min-width:0;font:inherit;font-weight:720;overflow-wrap:anywhere}
 .games-screen [data-study-notes] summary small{float:none;min-width:0;margin-left:8px;font-size:.78rem;font-weight:500;color:var(--study-muted);white-space:normal}
 .games-screen [data-study-notes] .study-note-body{padding:0 16px 17px;background:white;border-top:1px solid #edf2f7}
@@ -330,7 +330,7 @@
 .games-screen [data-study-notes] .study-note-body dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:14px;margin-top:16px;font-size:1rem;line-height:1.6}
 .games-screen [data-study-notes] .study-note-body dl>div{padding:12px;border-radius:12px;background:#f5f9fe}
 .games-screen [data-study-notes] .study-note-body dd{margin:4px 0 0}
-.games-screen [data-study-notes] .study-note-review-body{padding:0 16px 4px}
+.games-screen [data-study-notes] .study-note-review-body{padding:0}
 .games-screen [data-study-notes] .study-note-point{margin:0;padding:14px 0;border-bottom:1px solid #e6edf5}
 .games-screen [data-study-notes] .study-note-point:last-child{border-bottom:0}
 .games-screen [data-study-notes] .study-note-point p{margin:0;padding:0;font-size:1rem;line-height:1.65}
@@ -804,3 +804,10 @@
   .games-screen.is-playing .game-feedback,
   .games-screen.is-playing .game-question-card { border-width: 2px; }
 }
+
+.games-screen [data-study-notes] .notes-worked-lesson{margin:0 0 18px;padding:18px;border:1px solid var(--study-line);border-radius:15px;background:#f8fbff}
+.games-screen [data-study-notes] .notes-worked-lesson h4{margin:0 0 10px;font-size:1.1rem;line-height:1.4}
+.games-screen [data-study-notes] .notes-explanation>small{display:block;margin-top:14px;color:var(--study-muted);font-size:.78rem;font-weight:650;line-height:1.5}
+.games-screen [data-study-notes] .notes-explanation p{margin:12px 0 0;font-size:1rem;line-height:1.65}
+
+.games-screen [data-study-notes] .study-note-review{margin:16px 0 0;padding:0;border:0;background:none;box-shadow:none}

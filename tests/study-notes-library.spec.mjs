@@ -42,7 +42,7 @@ test('search reaches notes, words and saved work without losing typed text, care
  await notes.locator('[data-notes-source=saved]').click();await expect(notes.locator('.notes-search-status')).toContainText('Undated work stays here');
  await expect(notes.locator('[data-notes-source=saved]')).toHaveAttribute('aria-pressed','true');
 });
-test('review ideas need only one disclosure and original source wording remains intact',async({page})=>{
+test('all class notes are directly readable without a practice-ideas panel and exact originals remain intact',async({page})=>{
  const envelope=await(await page.request.get('/data/study-pack.json')).json();
  envelope.pack.subjects=[{subject:'Math',topics:['Place value'],studyNotes:['Read the hundreds first.','Then compare tens.']}];
  envelope.pack.vocabulary=[];
@@ -51,8 +51,10 @@ test('review ideas need only one disclosure and original source wording remains 
  await page.route('**/data/schoolwork.json*',route=>route.fulfill({json:{lessons:[]}}));
  await study(page);
  const panel=page.locator('[data-note-subject="Math"]');
- await panel.locator('.study-note-review > summary').click();
+ await expect(panel.locator('.study-note-review > summary')).toHaveCount(0);
+ await expect(panel).not.toContainText('Practice ideas');
  await expect(panel.locator('.study-note-point p')).toHaveText(['Read the hundreds first.','Then compare tens.']);
+ await expect(panel.locator('.study-note-point p').last()).toBeVisible();
  await expect(panel.locator('.study-note-point details,.study-note-point summary')).toHaveCount(0);
  await panel.locator('.study-notes-original > summary').click();
  await expect(panel.locator('.study-notes-original li')).toHaveText(['Place value','Read the hundreds first.','Then compare tens.']);
@@ -78,5 +80,39 @@ test('rendered library and reader stay readable on phone, tablet and desktop inc
    await page.evaluate(()=>document.documentElement.style.fontSize='');
   }
   await notes.locator('[data-notes-back]').click();
+ }
+});
+
+test('words use matching disclosure styling, Math follows Spelling, and chapter/Math notes teach more than titles',async({page},info)=>{
+ const envelope=await(await page.request.get('/data/study-pack-runtime.json')).json();
+ envelope.pack.subjects=[
+  {subject:'Religion',topics:['Chapter 3: Jesus Lives in His Church','Chapter 1: Gifts'],studyNotes:['Exact original class note.']},
+  {subject:'Reading / ELA',topics:['Phonics: Short vowels'],studyNotes:[]},
+  {subject:'Spelling / Handwriting',topics:['Short i'],studyNotes:[]},
+  {subject:'Math',topics:['Math (subtraction)'],studyNotes:[]}
+ ];
+ envelope.pack.vocabulary=[{subject:'Reading / ELA',term:'cat',meaning:'A small animal.'}];
+ envelope.pack.testGuideFacts={religionChapters:{'3':['Faith is a gift from God.','A sacrament is a sacred sign given to the Church by Jesus.'],'1':['We care for creation.']}};
+ await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({json:envelope}));
+ await page.route('**/data/study-archive.json*',route=>route.fulfill({json:{notes:[],vocabulary:[],questions:[]}}));
+ await page.route('**/data/schoolwork.json*',route=>route.fulfill({json:{lessons:[]}}));
+ for(const width of [390,820]){
+  await study(page,width);
+  const notes=page.locator('[data-study-notes]');
+  expect(await notes.locator('[data-notes-subject]').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('aria-label')))).toEqual(['Reading / ELA','Spelling / Handwriting','Math','Religion']);
+  await openNoteSubject(page,'Reading / ELA');
+  const panel=notes.locator('[data-note-subject]:not([hidden])');
+  const styles=await panel.locator('.study-note-topic > summary').evaluateAll(nodes=>nodes.map(node=>{const s=getComputedStyle(node),title=getComputedStyle(node.querySelector('strong'));return {border:s.borderRadius,padding:s.padding,font:s.fontSize,weight:title.fontWeight,background:s.backgroundColor};}));
+  expect(styles).toHaveLength(2);expect(styles[0]).toEqual(styles[1]);
+  await panel.locator('.study-vocabulary > summary').scrollIntoViewIfNeeded();await capture(page,info,'notes-words-'+width);
+  await openNoteSubject(page,'Religion');
+  const church=panel.locator('.study-note-topic').filter({hasText:'Chapter 3'});
+  await expect(church).toHaveAttribute('open','');await expect(church.locator('.notes-explanation')).toContainText('Faith is a gift from God');
+  await expect(church).not.toContainText('care for creation');await expect(panel.locator('.notes-explanation').first()).toBeVisible();
+  await capture(page,info,'notes-religion-'+width);
+  await openNoteSubject(page,'Math');
+  await expect(panel.locator('.notes-worked-lesson')).toContainText('12 − 5 = 7');await expect(panel.locator('.notes-worked-lesson')).toContainText('7 + 5 = 12');
+  await expect(panel.locator('.notes-worked-lesson')).toContainText('ABVM worked example');
+  await capture(page,info,'notes-math-'+width);
  }
 });

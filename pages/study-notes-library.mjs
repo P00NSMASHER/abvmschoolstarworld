@@ -10,6 +10,20 @@ const art=subject=>/math/i.test(subject)?'math':/religion/i.test(subject)?'relig
 const shortSubject=subject=>subject==='Reading / ELA'?'Reading':subject==='Spelling / Handwriting'?'Spelling':subject;
 const dateLabel=value=>/^\d{4}-\d{2}-\d{2}$/.test(value||'')?new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'}).format(new Date(value+'T12:00:00Z')):'Undated schoolwork';
 
+// Original teaching support follows only a subtraction topic in this selection.
+// It does not claim a teacher question, worksheet range, chapter, or assessment.
+function mathExplanations(subject,topics){
+ if(subject!=='Math'||!topics.some(topic=>/\bsubtraction\b|\bsubtract(?:ing)?\b/i.test(topic)))return [];
+ return [{subject,topic:null,title:'Subtraction, step by step',label:'ABVM worked example',paragraphs:[
+  'Subtraction tells how many are left or finds the difference between amounts.',
+  'In 12 − 5 = 7, start with 12, take away 5, and 7 are left. The difference is 7.',
+  'Count back one number for each item taken away. You can also count up from 5 to 12: seven steps gives the same difference.',
+  'Check with addition: 7 + 5 = 12, so 12 − 5 = 7.',
+  'For a missing part, use the related addition fact. In 9 − __ = 5, think 5 + 4 = 9. The missing part is 4.',
+  'Order matters. Start with the whole when taking away: 12 − 5 and 5 − 12 are different calculations.'
+ ]}];
+}
+
 export function notesLibraryData(data={}, {query='',meaning=row=>row.meaning||''}={}) {
  const notes=(data.notes||[]).filter(row=>text(row.text));
  const words=(data.vocabulary||[]).filter(row=>text(row.term));
@@ -23,36 +37,42 @@ export function notesLibraryData(data={}, {query='',meaning=row=>row.meaning||''
   const index=Array.from(subject).map(value=>value.codePointAt(0).toString(16)).join('-');
   const source=notes.filter(row=>row.subject===subject),all=matches(subject),keep=value=>all||matches(subject+' '+value);
   const original=unique(source.map(row=>row.text));
-  const topics=unique(source.filter(row=>row.kind==='topic').map(row=>row.text)).filter(keep);
+  const allTopics=unique(source.filter(row=>row.kind==='topic').map(row=>row.text));
+  const sections=[...(data.explanations||[]).filter(row=>row.subject===subject&&allTopics.includes(row.topic)),...mathExplanations(subject,allTopics)];
+  const explanations=sections.map(row=>({...row,paragraphs:(Array.isArray(row.paragraphs)?row.paragraphs:[]).filter(value=>all||matches(subject+' '+row.title+' '+(row.topic||'')+' '+value))})).filter(row=>row.paragraphs.length);
+  const topics=allTopics.filter(value=>keep(value)||explanations.some(row=>row.topic===value));
   const review=unique(source.filter(row=>row.kind!=='topic').map(row=>row.text)).filter(keep);
   const subjectWords=words.filter(row=>wordSubject(row)===subject&&keep(row.term+' '+meaning(row)));
   const saved=lessons.filter(row=>row.subject===subject&&keep([row.title,...(row.notes||[])].join(' ')));
   const references=links.filter(row=>row.subject===subject&&keep(row.label));
   const notices=warnings.filter(row=>row.subject===subject&&keep(row.text));
-  return {subject,index,original,topics,review,words:subjectWords,lessons:saved,links:references,warnings:notices,count:topics.length+review.length+subjectWords.length+saved.length+references.length+notices.length};
+  return {subject,index,original,topics,explanations,review,words:subjectWords,lessons:saved,links:references,warnings:notices,count:explanations.reduce((sum,row)=>sum+row.paragraphs.length,0)+topics.length+review.length+subjectWords.length+saved.length+references.length+notices.length};
  }).filter(row=>!tokens.length||row.count>0);
 }
 
 function detailHtml(row,{source,meaning}) {
  const groups=new Map();
  for(const topic of row.topics){const prefix=topic.match(/^\s*([^:]{1,45}):\s*(.+)$/),label=prefix?prefix[1]:'Class topics';if(!groups.has(label))groups.set(label,[]);groups.get(label).push(topic);}
- const topics=[...groups].map(([label,rows],i)=>'<details class="study-note-topic" data-note-disclosure="'+row.index+'-topic-'+i+'"'+(i===0?' open':'')+'><summary><strong>'+esc(label==='Story'?'Stories':label)+'</strong><small>'+rows.length+' '+(rows.length===1?'topic':'topics')+'</small></summary><div class="study-note-body">'+list(rows)+'</div></details>').join('');
- const words=row.words.length?'<details class="game-material-lesson study-vocabulary" data-note-disclosure="'+row.index+'-words"><summary><span>Words to know</span><small>'+row.words.length+' words</small></summary><div class="study-note-body"><dl>'+row.words.map(word=>{const definition=meaning(word);return '<div><dt>'+esc(word.term)+'</dt>'+(definition?'<dd>'+esc(definition)+'</dd>':'')+'</div>';}).join('')+'</dl></div></details>':'';
- const ideas=row.review.length?'<details class="study-note-review" data-note-disclosure="'+row.index+'-ideas"><summary><strong>Practice ideas</strong><small>'+row.review.length+' '+(row.review.length===1?'idea':'ideas')+'</small></summary><div class="study-note-review-body">'+row.review.map(value=>'<article class="study-note-point"><p>'+esc(value)+'</p></article>').join('')+'</div></details>':'';
+ const explained=row.explanations.filter(section=>section.topic),firstExplained=[...groups].findIndex(([,rows])=>explained.some(section=>rows.includes(section.topic)));
+ const paragraphs=section=>'<div class="notes-explanation"><small>'+esc(section.label)+'</small>'+section.paragraphs.map(value=>'<p>'+esc(value)+'</p>').join('')+'</div>';
+ const topics=[...groups].map(([label,rows],i)=>'<details class="study-note-topic" data-note-disclosure="'+row.index+'-topic-'+Array.from(label).map(value=>value.codePointAt(0).toString(16)).join('-')+'"'+(i===(firstExplained<0?0:firstExplained)?' open':'')+'><summary><strong>'+esc(label==='Story'?'Stories':label)+'</strong><small>'+rows.length+' '+(rows.length===1?'topic':'topics')+'</small></summary><div class="study-note-body">'+list(rows)+explained.filter(section=>rows.includes(section.topic)).map(paragraphs).join('')+'</div></details>').join('');
+ const words=row.words.length?'<details class="study-note-topic study-vocabulary" data-note-disclosure="'+row.index+'-words"><summary><strong>Words to know</strong><small>'+row.words.length+' words</small></summary><div class="study-note-body"><dl>'+row.words.map(word=>{const definition=meaning(word);return '<div><dt>'+esc(word.term)+'</dt>'+(definition?'<dd>'+esc(definition)+'</dd>':'')+'</div>';}).join('')+'</dl></div></details>':'';
+ const classNotes=row.review.length?'<div class="study-note-review" aria-label="Class notes"><div class="study-note-review-body">'+row.review.map(value=>'<article class="study-note-point"><p>'+esc(value)+'</p></article>').join('')+'</div></div>':'';
  const saved=row.lessons.length?'<section class="study-note-schoolwork"><h4>Saved schoolwork</h4>'+row.lessons.map((lesson,i)=>'<details class="game-material-lesson" data-note-disclosure="'+row.index+'-saved-'+i+'"><summary><span>'+esc(lesson.title)+'</span><small>'+esc(dateLabel(lesson.studiedOn))+'</small></summary><div class="study-note-body">'+list((lesson.notes||[]).filter(text))+'</div></details>').join('')+'</section>':'';
  const original=row.original.length?'<details class="study-notes-original" data-note-disclosure="'+row.index+'-original"><summary>Original class notes <small>Complete wording, in source order</small></summary><div class="study-note-body">'+list(row.original)+'</div></details>':'';
  return '<header class="study-note-heading"><img src="./assets/illustrations/'+art(row.subject)+'.webp" alt="" width="64" height="64"><div><small>'+esc(source==='saved'?'Current notes & saved learning':'This week’s class notes')+'</small><h3 id="study-notes-title-'+row.index+'" tabindex="-1">'+esc(row.subject)+'</h3></div></header>'+
   '<div class="study-note-references">'+row.links.map(link=>'<a data-religion-review href="'+esc(link.url)+'" target="_blank" rel="noopener">'+esc(link.label)+'</a>').join('')+'</div>'+
   row.warnings.map(value=>'<p class="game-note-warning">'+esc(value.text)+'</p>').join('')+
-  '<div class="study-note-topic-grid">'+topics+'</div>'+words+ideas+saved+original;
+  row.explanations.filter(section=>!section.topic).map(section=>'<section class="notes-worked-lesson"><h4>'+esc(section.title)+'</h4>'+paragraphs(section)+'</section>').join('')+
+  '<div class="study-note-topic-grid">'+topics+'</div>'+words+classNotes+saved+original;
 }
 
 export function renderNotesLibrary(data,{source='weekly',subject='',query='',overview=false,meaning=row=>row.meaning||''}={}) {
  const rows=notesLibraryData(data,{query,meaning}),selected=rows.find(row=>row.subject===subject)||(!overview&&rows.length===1&&!query.trim()?rows[0]:null);
  const queryText=query.slice(0,120),count=rows.reduce((sum,row)=>sum+row.count,0);
  const cards=rows.map(row=>{
-  const parts=[row.topics.length?row.topics.length+' '+(row.topics.length===1?'topic':'topics'):'',row.words.length?row.words.length+' words':'',row.lessons.length?row.lessons.length+' saved '+(row.lessons.length===1?'lesson':'lessons'):''].filter(Boolean);
-  const caption=parts.slice(0,2).join(' · ')||(row.review.length?row.review.length+' review '+(row.review.length===1?'idea':'ideas'):row.links.length?'Official reviews':'Source information');
+  const parts=[row.explanations.length?row.explanations.reduce((sum,section)=>sum+section.paragraphs.length,0)+' study notes':'',row.topics.length?row.topics.length+' '+(row.topics.length===1?'topic':'topics'):'',row.words.length?row.words.length+' words':'',row.lessons.length?row.lessons.length+' saved '+(row.lessons.length===1?'lesson':'lessons'):''].filter(Boolean);
+  const caption=parts.slice(0,2).join(' · ')||(row.review.length?row.review.length+' class '+(row.review.length===1?'note':'notes'):row.links.length?'Official reviews':'Source information');
   return '<button type="button" class="notes-subject-card" data-notes-subject="'+row.index+'" aria-pressed="'+Boolean(selected?.subject===row.subject)+'" aria-controls="study-notes-panel-'+row.index+'" aria-label="'+esc(row.subject)+'"><img src="./assets/illustrations/'+art(row.subject)+'.webp" alt="" width="64" height="64"><span><strong>'+esc(shortSubject(row.subject))+'</strong><small>'+esc(caption)+'</small></span><b aria-hidden="true">›</b></button>';
  }).join('');
  return '<div class="notes-library"><div class="notes-library-heading"><h3>Study library</h3></div>'+

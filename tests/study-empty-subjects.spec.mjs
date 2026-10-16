@@ -47,7 +47,7 @@ test('teacher notes remain the explicit lesson content when notes arrive',async(
   const math=notes.locator('[data-note-subject="Math"]');
   await expect(math).toBeVisible();
   await expect(math.locator('.study-note-topic li')).toHaveText(['Compare three-digit numbers']);
-  await math.locator('.study-note-review > summary').click();
+  await expect(math.locator('.study-note-review > summary')).toHaveCount(0);
   await expect(math.locator('.study-note-point p')).toHaveText('Start with the hundreds.');
   const original=math.locator('.study-notes-original');
   await expect(original).not.toHaveAttribute('open','');
@@ -58,18 +58,16 @@ test('teacher notes remain the explicit lesson content when notes arrive',async(
   expect(await math.evaluate(e=>e.scrollWidth<=e.clientWidth+1)).toBeTruthy();
 });
 
-test('long Religion review lists stay optional and every original idea remains reachable by keyboard',async({page})=>{
+test('all Religion class notes are directly readable and every exact original remains available',async({page})=>{
   await page.setViewportSize({width:375,height:852});
   const ideas=Array.from({length:35},(_,i)=>`Reviewed Religion idea ${i+1}: full original wording.`);
   await fixture(page,[{subject:'Religion',topics:['Chapter 3: Jesus Lives in His Church'],studyNotes:ideas}]);
   await page.locator('[data-study-notes] > summary').click();
   const panel=page.locator('[data-note-subject="Religion"]'),review=panel.locator('.study-note-review');
-  await expect(review).not.toHaveAttribute('open','');
-  await expect(review.locator(':scope > summary')).toHaveText('Practice ideas35 ideas');
+  await expect(review.locator(':scope > summary')).toHaveCount(0);
+  await expect(panel).not.toContainText('Practice ideas');
   await expect(review.locator('.study-note-point')).toHaveCount(35);
-  await expect(review.locator('.study-note-point p').first()).toBeHidden();
-  const summary=review.locator(':scope > summary');await summary.focus();await page.keyboard.press('Enter');
-  await expect(review).toHaveAttribute('open','');
+  await expect(review.locator('.study-note-point p').first()).toBeVisible();
   const last=review.locator('.study-note-point').last();
   await expect(last.locator('p')).toHaveText(ideas[34]);await expect(last.locator('p')).toBeVisible();
   const original=panel.locator('.study-notes-original');await original.locator(':scope > summary').click();

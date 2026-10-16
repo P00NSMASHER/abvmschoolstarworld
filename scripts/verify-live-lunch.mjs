@@ -283,8 +283,30 @@ try {
       await expect(noteSearch).toHaveValue('');
     }else await expect(notes.locator('.study-tools-empty')).toContainText('No lesson notes');
   }
+  const subjectEvidence=[];
+  for(const width of [390,820]){
+    await page.setViewportSize({width,height:width===390?844:1080});
+    for(const subject of ['Reading / ELA','Math','Religion']){
+      await noteSearch.fill('');
+      if(await notes.locator('.notes-reader').isVisible())await notes.locator('[data-notes-back]').click();
+      const card=notes.getByRole('button',{name:subject,exact:true});
+      if(!await card.count())continue;
+      await card.click();
+      const panel=notes.locator('[data-note-subject]:not([hidden])');
+      await expect(panel).not.toContainText('Practice ideas');
+      await expect(panel.locator('.study-note-review > summary')).toHaveCount(0);
+      const paragraphs=panel.locator('.study-note-point p');
+      if(await paragraphs.count())await expect(paragraphs.first()).toBeVisible();
+      const worked=panel.locator('.notes-worked-lesson');
+      if(subject==='Math'&&await panel.locator('.study-note-topic').allTextContents().then(rows=>rows.some(text=>/\bsubtraction\b/i.test(text)))){
+        await expect(worked).toContainText('12 − 5 = 7');await expect(worked).toContainText('7 + 5 = 12');
+      }
+      await page.screenshot({path:`${out}/notes-${subject.startsWith('Reading')?'reading':subject.toLowerCase()}-${width}.png`,animations:'disabled'});
+      subjectEvidence.push({width,subject,classNoteParagraphs:await paragraphs.count(),chapterExplanationParagraphs:await panel.locator('.study-note-topic .notes-explanation p').count(),workedExamples:await worked.count()});
+    }
+  }
   expect(await printHistory.innerHTML()).toBe(printHistoryBefore);
-  receipt.notesLibrary={verified:true,subject:noteSubject,query:noteQuery,historyUnchanged:true};
+  receipt.notesLibrary={verified:true,subject:noteSubject,query:noteQuery,historyUnchanged:true,subjects:subjectEvidence};
   await page.setViewportSize({width:390,height:844});
   await page.getByRole('button', { name: 'Today', exact: true }).click();
   if (todayMeal?.items.length) for (const item of todayMeal.items) await expect(page.locator('.lunch-card')).toContainText(item);
