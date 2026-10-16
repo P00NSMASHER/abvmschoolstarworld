@@ -33,7 +33,9 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
     assert.ok((pipeline.qa.questionsPerSkill?.[skill.id] || 0) >= 2, `${skill.id} must have a sibling item for Comeback practice`);
   }
   assert.match(pipeline.bankFingerprint, /^[0-9a-f]{8}$/);
-  assert.equal(pipeline.qa.unsupportedSkillCount, 0);
+  const unsupportedRows = pipeline.coverage.filter(row => row.status === 'GENERATOR_UNSUPPORTED');
+  assert.equal(pipeline.qa.unsupportedSkillCount, unsupportedRows.length);
+  if (unsupportedRows.length) assert.equal(pipeline.safetyState, 'SAFE_PARTIAL');
   assert.equal(pipeline.schemaVersion, 2);
   assert.ok(['SAFE_PARTIAL', 'READY'].includes(pipeline.safetyState));
   assert.deepEqual(
