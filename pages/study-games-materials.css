@@ -291,7 +291,6 @@
 .games-screen [data-study-notes] .notes-library{min-width:0;padding:4px 0 0}
 .games-screen [data-study-notes] .notes-library-heading{margin:2px 0 18px}
 .games-screen [data-study-notes] .notes-library-heading h3{margin:0;color:var(--study-ink);font-size:1.2rem;font-weight:800;line-height:1.3;letter-spacing:-.025em}
-.games-screen [data-study-notes] .notes-library-heading p{margin:6px 0 0;color:var(--study-muted);font-size:.88rem;line-height:1.5}
 .games-screen [data-study-notes] .study-note-scope{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;margin:0 0 14px;padding:4px;border:1px solid var(--study-line);border-radius:15px;background:#f0f5fa}
 .games-screen [data-study-notes] .study-note-scope button{min-width:0;min-height:46px;margin:0;padding:9px 10px;border:0;border-radius:11px;background:transparent;color:var(--study-muted);font-size:.92rem;text-align:center}
 .games-screen [data-study-notes] .study-note-scope button[aria-pressed="true"]{background:white;color:var(--study-ink);box-shadow:0 2px 5px #102e5810}

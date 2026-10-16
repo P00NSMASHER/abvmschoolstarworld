@@ -50,7 +50,7 @@ with explicit new source/full-menu approvals, generate missing artwork with the 
 high-quality image generator, visually inspect it, and run the existing QA before
 publishing through a pull request. Never invent unspecified ingredients. Use
 `pendingArtMenus(plan, currentNewYorkMonth, {styleId:TRAY_STYLE_ID})` from the lunch-art builder to avoid
-expired-month backlog. Preserve existing menu source and closure rules. The
+expired-month backlog. Preserve existing menu source and closure rules.
 The 20 October tray illustrations were completed and production-verified in PR #378.
 The former “Complete lunch artwork” merge-event task was repurposed on October 16,
 2026 as “Protect ABVM learning reliability”, preserving its existing repository
