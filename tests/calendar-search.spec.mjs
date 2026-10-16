@@ -1,5 +1,6 @@
 import {test,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import {readFileSync} from 'node:fs';
 test.use({serviceWorkers:'block'});
 const fixed=new Date('2026-10-15T16:00:00-04:00');
 async function load(page,route='calendar'){
@@ -7,13 +8,13 @@ async function load(page,route='calendar'){
   // Isolated response copies keep future source changes from retiring test data.
   // These clearly labeled fixtures never alter repository or published events.
   await page.route('**/data/study-pack*.json*',async request=>{
-    const response=await request.fetch();
-    const data=await response.json();
+    const file=new URL(request.request().url()).pathname.endsWith('study-pack-runtime.json')?'study-pack-runtime.json':'study-pack.json';
+    const data=JSON.parse(readFileSync(new URL('../pages/data/'+file,import.meta.url),'utf8'));
     data.pack.importantDates=[...(data.pack.importantDates||[]),
       {date:'Nov. 21',label:'Search QA fixture: Reading Night',kind:'School event'},
       {date:'Oct. 22',label:'Search QA fixture: Chick-fil-A',kind:'School event'},
     ];
-    await request.fulfill({response,json:data});
+    await request.fulfill({json:data});
   });
   await page.goto('/#'+route);
   await expect(page.getByRole('searchbox',{name:'Search calendar events'})).toBeVisible();
@@ -35,8 +36,8 @@ test('Week shares search; clearing and Escape restore the normal calendar withou
   await load(page,'week');
   const input=page.getByRole('searchbox',{name:'Search calendar events'});
   await input.fill('chickfila');
-  await expect(page.locator('[data-cal-search-date="2026-10-22"]')).toContainText('Chick-fil-A');
-  await page.locator('[data-cal-search-date="2026-10-22"]').click();
+  await expect(page.locator('[data-cal-search-date="2026-10-22"]').filter({hasText:'Search QA fixture: Chick-fil-A'})).toContainText('Chick-fil-A');
+  await page.locator('[data-cal-search-date="2026-10-22"]').filter({hasText:'Search QA fixture: Chick-fil-A'}).click();
   await expect(page).toHaveURL(/#calendar$/);
   await expect(page.locator('.calendar-day-heading h2')).toHaveText('October 22');
   await page.getByRole('button',{name:'Clear calendar search'}).click();
