@@ -5,6 +5,7 @@ test.use({serviceWorkers:'block'});
 const fixed=new Date('2026-10-15T16:00:00-04:00');
 async function load(page,route='calendar'){
   await page.clock.setFixedTime(fixed);
+  let extraEvents=[];
   // Isolated response copies keep future source changes from retiring test data.
   // These clearly labeled fixtures never alter repository or published events.
   await page.route('**/data/study-pack*.json*',async request=>{
@@ -13,11 +14,13 @@ async function load(page,route='calendar'){
     data.pack.importantDates=[...(data.pack.importantDates||[]),
       {date:'Nov. 21',label:'Search QA fixture: Reading Night',kind:'School event'},
       {date:'Oct. 22',label:'Search QA fixture: Chick-fil-A',kind:'School event'},
+      ...extraEvents,
     ];
     await request.fulfill({json:data});
   });
   await page.goto('/#'+route);
   await expect(page.getByRole('searchbox',{name:'Search calendar events'})).toBeVisible();
+  return rows=>{extraEvents=rows;};
 }
 test('event search finds another month and opens the exact event with keyboard focus',async({page})=>{
   await load(page);
@@ -71,4 +74,18 @@ test('loaded calendar search works with the network offline',async({page,context
   await page.locator('[data-cal-search-date="2026-11-21"]').click();
   await expect(page.locator('.calendar-day-heading h2')).toHaveText('November 21');
   await context.setOffline(false);
+});
+
+test('fresh school data updates a typed search without dismissing its focus or selection',async({page})=>{
+  const update=await load(page);
+  const input=page.getByRole('searchbox',{name:'Search calendar events'});
+  await input.fill('refreshneedle');
+  await expect(page.locator('#cal-search-status')).toContainText('No matching events');
+  await input.focus();await input.evaluate(el=>el.setSelectionRange(2,5));
+  update([{date:'Nov. 22',label:'Search QA fixture: refreshneedle',kind:'School event'}]);
+  await page.evaluate(()=>window.dispatchEvent(new Event('online')));
+  await expect(page.locator('[data-cal-search-date="2026-11-22"]')).toContainText('refreshneedle');
+  await expect(input).toHaveValue('refreshneedle');
+  await expect(input).toBeFocused();
+  expect(await input.evaluate(el=>[el.selectionStart,el.selectionEnd])).toEqual([2,5]);
 });

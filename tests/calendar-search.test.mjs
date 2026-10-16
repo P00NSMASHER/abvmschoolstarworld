@@ -44,3 +44,31 @@ test('a new source snapshot updates search results without reusing the old index
   assert.equal(view.searchCalendarEvents(refreshed,'lego').length,1);
   assert.equal(view.searchCalendarEvents(first,'lego').length,0);
 });
+
+test('background calendar redraw restores search focus and text selection after replacement',()=>{
+  const jobs=[],calls=[];
+  const old={matches:selector=>selector==='.cal-search input',isConnected:true,selectionStart:2,selectionEnd:5};
+  const input={focus:options=>calls.push(['focus',options.preventScroll]),setSelectionRange:(start,end)=>calls.push(['selection',start,end])};
+  const document={activeElement:old,body:{},querySelector:()=>input};
+  const scope={window:{},document,queueMicrotask:job=>jobs.push(job),Date,Intl};
+  vm.runInNewContext(readFileSync(new URL('../pages/product-view.js',import.meta.url),'utf8'),scope);
+  scope.window.ABVMProductView.calendarSearch('royals',rows);
+  assert.equal(calls.length,0,'never focus an input before the replacement exists');
+  assert.equal(jobs.length,1);
+  old.isConnected=false;document.activeElement=document.body;
+  jobs[0]();
+  assert.deepEqual(calls,[['focus',true],['selection',2,5]]);
+});
+
+test('refresh focus restoration never steals intentional event or navigation focus',()=>{
+  const jobs=[],calls=[];
+  const old={matches:()=>true,isConnected:true,selectionStart:0,selectionEnd:0};
+  const input={focus:()=>calls.push('focus'),setSelectionRange:()=>calls.push('selection')};
+  const document={activeElement:old,body:{},querySelector:()=>input};
+  const scope={window:{},document,queueMicrotask:job=>jobs.push(job),Date,Intl};
+  vm.runInNewContext(readFileSync(new URL('../pages/product-view.js',import.meta.url),'utf8'),scope);
+  scope.window.ABVMProductView.calendarSearch('royals',rows);
+  old.isConnected=false;document.activeElement={tagName:'SUMMARY'};
+  jobs[0]();
+  assert.deepEqual(calls,[]);
+});

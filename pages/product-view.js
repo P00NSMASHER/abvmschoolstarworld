@@ -444,6 +444,16 @@
       html:active&&matches.length?'<ul class="cal-search-list">'+matches.map(({item,date})=>'<li><button type="button" data-cal-search-date="'+calendarKey(date)+'" data-cal-search-label="'+esc(item.label)+'"><span><time datetime="'+calendarKey(date)+'">'+esc(searchDateLabel(date))+'</time><strong>'+esc(item.label)+'</strong>'+(item.date&&/–|\bto\b/.test(item.date)?'<small>'+esc(item.date)+'</small>':'')+'</span>'+icon('arrow')+'</button></li>').join('')+'</ul>':''};
   }
   function calendarSearch(query=calendarSearchQuery,rows=readSearchEvents()) {
+    // A background pack/homework refresh replaces the planner DOM. Keep an
+    // active search keyboard and selection without stealing deliberate focus.
+    const focused=typeof document!=='undefined'&&document.activeElement?.matches('.cal-search input')?document.activeElement:null;
+    if(focused){
+      const start=focused.selectionStart,end=focused.selectionEnd;
+      queueMicrotask(()=>{
+        const input=document.querySelector('.cal-search input');
+        if(input&&input!==focused&&!focused.isConnected&&(!document.activeElement||document.activeElement===document.body)){input.focus({preventScroll:true});input.setSelectionRange(start,end);}
+      });
+    }
     const results=calendarSearchResults(query,rows);
     return '<section class="cal-search" role="search" aria-label="Calendar events"><div class="cal-search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 5 5"></path></svg><input type="search" aria-label="Search calendar events" placeholder="Search events" maxlength="120" autocomplete="off" spellcheck="false" value="'+esc(query)+'" aria-controls="cal-search-results" aria-describedby="cal-search-status"><button type="button" data-cal-search-clear aria-label="Clear calendar search"'+(query?'':' hidden')+'>Clear</button></div><p id="cal-search-status" role="status" aria-live="polite">'+esc(results.status)+'</p><div id="cal-search-results">'+results.html+'</div></section>';
   }
