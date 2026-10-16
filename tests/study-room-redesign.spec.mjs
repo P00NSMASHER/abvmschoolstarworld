@@ -1,3 +1,4 @@
+import {openNoteSubject} from './helpers/study-notes.mjs';
 import {test,expect} from '@playwright/test';
 test.use({serviceWorkers:'block'});
 async function openStudy(page,hash='study'){
@@ -42,7 +43,7 @@ for(const [width,height] of [[393,852],[768,1024]]){
     await expect(page.locator('[data-study-notes]')).not.toHaveAttribute('open','');
     const geometry=await page.locator('.study-game-tile').evaluateAll(nodes=>({smallest:Math.min(...nodes.map(el=>el.getBoundingClientRect().height)),overflow:document.documentElement.scrollWidth>innerWidth+2}));
     expect(geometry.smallest).toBeGreaterThanOrEqual(44);expect(geometry.overflow).toBe(false);await capture(page,info,`study-home-${width}`);
-    await page.locator('[data-study-notes] > summary').click();await page.locator('[data-note-subject]:not([hidden]) .study-notes-original').first().locator('summary').click();
+    await openNoteSubject(page);await page.locator('[data-note-subject]:not([hidden]) .study-notes-original').first().locator('summary').click();
     await page.locator('[data-study-test-options] > summary').click();await capture(page,info,`study-notes-guides-${width}`);
     await page.evaluate(()=>document.documentElement.style.zoom='2');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2)).toBe(true);
     await page.emulateMedia({reducedMotion:'reduce'});expect(await page.locator('.study-game-tile').first().evaluate(el=>getComputedStyle(el).transitionDuration)).toBe('0s');

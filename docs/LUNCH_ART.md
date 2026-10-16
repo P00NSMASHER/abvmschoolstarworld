@@ -1,8 +1,9 @@
 # Monthly lunch illustrations
 
 The verified school menu is always the source of truth. Illustrations are a visual
-extra; the exact menu text, dates, closures and source links remain visible. Every
-image is labeled **Meal illustration**. It is not a photograph of the actual meal.
+extra; exact menu text, dates, closures and source links remain visible. Each image
+has accessible alt text identifying it as an illustration; no visible footnote
+appears beneath the photo. These are not photographs of actual school servings.
 
 ## Automatic intake and menu-update artwork
 
@@ -11,14 +12,16 @@ run: review the menu, reuse exact reviewed meal art in the approved tray style, 
 built-in high-quality image generator, inspect it, test, and publish. No second
 artwork request is needed.
 
-The **Complete lunch artwork** GitHub merge-event task was verified enabled on
-October 15, 2026 (America/New_York). It checks current/future exact-menu coverage
-after merged repository PRs, reuses active work, preserves independent QA, and
-verifies actual publication. No separate active hourly artwork lane was present
-in the connected task inventory; earlier documentation claiming one was stale.
-It does not trigger on direct pushes and is not a private-chat upload watcher or
-a paid image API service. Use PRs for menu changes. If generation is unavailable,
-retain accurate menu text and record the precise missing coverage.
+The 20 October tray illustrations are complete and production-verified in PR #378.
+On October 16, 2026 the former **Complete lunch artwork** task was repurposed as
+**Protect ABVM learning reliability**. It retains the existing repository merge
+trigger and now prioritizes source/publication failures and broken learning flows.
+Future missing-menu images remain part of the existing hourly **ABVM School Data
+Intake** task and the menu-import process below. No dedicated artwork task or new
+schedule is required. Reuse active work, exact menu/style approvals and normal
+independent QA/Pages gates. If generation is unavailable, retain accurate menu text
+and record precise incomplete coverage. No private-chat upload watcher or paid
+image API service is introduced.
 
 ### Photorealistic tray revision
 
@@ -28,7 +31,8 @@ in [LUNCH_TRAY_STYLE.md](LUNCH_TRAY_STYLE.md). New artwork follows this style;
 private reference originals and people never enter this repository. All 20 exact
 October menus have reviewed photorealistic tray illustrations of the known menu
 components. Fruit variety, generic dipping sauce and unspecified taco filling
-remain unpictured and explicitly disclosed; complete menu text stays visible.
+remain unpictured and documented in approved artwork metadata; complete verified
+menu text stays visible without an image footnote.
 Use the style-aware pending-art queue to replace legacy entree-only coverage.
 
 ## When a new month arrives
@@ -75,7 +79,9 @@ remaining plan entries are historical September menus and are excluded from the
 automatic current/future queue. Other months do not receive images without explicit
 source/menu approval. No-school, missing and no-lunch days never receive food art.
 
-`ABVMLunchArt.html(lunch)` returns a labeled figure for an exact approved source and
-menu match, or an empty string. The call does not modify the official menu. The
-renderer escapes descriptive strings and limits approved image paths to local
-assets. The build rejects unknown menus, duplicate approvals and missing files.
+`ABVMLunchArt.html(lunch)` returns an image-only figure with descriptive alt text
+for an exact approved source and menu match, or an empty string. No visible caption
+or omission disclaimer renders beneath the image; the full menu remains above it.
+The call does not modify the official menu. The renderer escapes descriptive
+strings and limits approved image paths to local assets. The build rejects unknown
+menus, duplicate approvals and missing files. Omission records remain in the registry.

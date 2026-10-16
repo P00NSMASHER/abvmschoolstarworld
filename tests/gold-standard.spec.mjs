@@ -1,3 +1,4 @@
+import {openNoteSubject} from './helpers/study-notes.mjs';
 import {test,expect} from "@playwright/test";
 import {readPwaVersions} from "./pwa-test-helpers.mjs";
 
@@ -98,7 +99,7 @@ test("requested polish is present",async({page})=>{
   await expectCurrentStudyGameTiles(page);
   await page.locator('[data-open-prep]').click();await expect(page.locator('[data-test-single]')).toBeVisible();
   await page.locator('[data-close-prep]').click();
-  await page.locator('[data-study-notes] > summary').click();
+  await openNoteSubject(page);
   await expect(page.locator('[data-note-subject]:not([hidden]) .study-notes-original').first()).toBeVisible();
   await expect(page.locator('[data-learning-panel],.study-games-cta')).toHaveCount(0);
 

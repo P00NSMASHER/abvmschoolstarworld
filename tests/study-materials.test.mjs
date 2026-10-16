@@ -905,7 +905,7 @@ test('Class notes display exact repeats once per subject while preserving govern
   assert.deepEqual(model.notes('weekly'),original,'display does not merge source rows or provenance');
   assert.deepEqual(input,before);
   assert.equal(model.notes('weekly').notes.find(row=>row.id==='religion-archive'),input.archive.notes[0]);
-  assert(html.includes('data-notes-subject="0" aria-pressed="true"'),'one subject is selected immediately');
+  assert(html.includes('class="notes-subject-card"'),'subjects are directly available in the library overview');
   assert(html.includes('data-note-subject="Reading / ELA" hidden'),'other subjects do not create a wall of notes');
   assert(!html.includes('class="study-notes-original" open'),'original source remains available without dominating the notes');
 });
@@ -1049,4 +1049,17 @@ test('test prep, study guides and worksheets share the 3pm school-day retirement
   assert.ok(state.tests.every(t=>t.date==='2026-10-16'));
  }
  assert.equal(events.length,4);
+});
+
+test('notes expose only explicitly sourced chapter explanations in full and compact packs',()=>{
+  const pack={sourceSufficient:true,subjects:[{subject:'Religion',topics:['Chapter 3: Church','Chapter 1: Gifts','Chapter 9: Unknown'],studyNotes:['Unscoped class note.']}],
+    contentPipeline:{questions:[],skills:[{id:'religion-chapter-3',subject:'Religion',sourceLineage:{matchedEvidence:['Chapter 3: Church * Faith is a gift from God. * A sacrament is a sacred sign.']}},{id:'religion-chapter-1',subject:'Religion',sourceLineage:{matchedEvidence:['Chapter 1: Gifts * We care for creation.']}}]},recentReviewPipeline:{questions:[]}};
+  for(const input of [pack,buildRuntimePack({pack}).pack]){
+    const data=createStudyMaterials(opts({pack:input})).notes('weekly');
+    assert.deepEqual(data.explanations.map(row=>row.topic),['Chapter 3: Church','Chapter 1: Gifts']);
+    assert.ok(data.explanations[0].paragraphs.some(row=>row.includes('Faith is a gift from God')));
+    assert.ok(!data.explanations[0].paragraphs.some(row=>row.includes('creation')));
+    assert.ok(!data.explanations.some(row=>row.topic.includes('Chapter 9')));
+    assert.equal(data.notes.find(row=>row.kind==='study-note').text,'Unscoped class note.');
+  }
 });

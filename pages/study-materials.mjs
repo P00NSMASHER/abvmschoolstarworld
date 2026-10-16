@@ -675,9 +675,19 @@ export function createStudyMaterials({
       ...array(subject.topics).filter(meaningfulText).map(text => ({subject:subject.subject,text,kind:'topic'})),
       ...array(subject.studyNotes).filter(meaningfulText).map(text => ({subject:subject.subject,text,kind:'study-note'})),
     ]).map(note => ({...note,sourceHash:pack.sourceHash,sourceCapturedAt:pack.sourceCapturedAt}));
+    const notes=[...sourceNotes,...history.notes].filter(note => meaningfulText(note?.text));
+    // Reuse the same independently sourced, chapter-scoped facts as print guides.
+    // Never assign unscoped notes to a chapter by position or a keyword guess.
+    const explanations=[...new Map(notes.filter(note=>note.subject==='Religion'&&note.kind==='topic').map(note=>[note.text,note])).values()]
+      .flatMap(note=>{
+        const chapter=note.text.match(/^\s*Chapter\s+([1-9]\d*)\s*:/i)?.[1];
+        const paragraphs=chapter?religionChapterFacts([],{label:'Religion Chapter '+chapter},pack):[];
+        return paragraphs.length?[{subject:'Religion',topic:note.text,title:'Chapter '+chapter,paragraphs,label:'Class review'}]:[];
+      });
     return {
       lessons:saved ? day.lessons : day.dated,
-      notes:[...sourceNotes,...history.notes].filter(note => meaningfulText(note?.text)),
+      explanations,
+      notes,
       vocabulary:[...array(pack.vocabulary),...history.vocabulary].filter(word => meaningfulText(word?.term)),
       links:referenceLinks(), warnings:coverageWarnings(time),
     };

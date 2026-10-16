@@ -50,13 +50,15 @@ with explicit new source/full-menu approvals, generate missing artwork with the 
 high-quality image generator, visually inspect it, and run the existing QA before
 publishing through a pull request. Never invent unspecified ingredients. Use
 `pendingArtMenus(plan, currentNewYorkMonth, {styleId:TRAY_STYLE_ID})` from the lunch-art builder to avoid
-expired-month backlog. Preserve existing menu source and closure rules. The
-GitHub merge-event task “Complete lunch artwork” was verified enabled October 15,
-2026 for current/future missing illustrations after merged PRs; it does not
-trigger on direct pushes. Follow the approved photorealistic tray revision in
-`docs/LUNCH_ART.md` and `docs/LUNCH_TRAY_STYLE.md`; references were received and
-inspected October 15, 2026. Use only the privacy-safe generated reference for
-future menus, the style-aware queue, exact full-menu approvals and disclosed omissions.
+expired-month backlog. Preserve existing menu source and closure rules.
+The 20 October tray illustrations were completed and production-verified in PR #378.
+The former “Complete lunch artwork” merge-event task was repurposed on October 16,
+2026 as “Protect ABVM learning reliability”, preserving its existing repository
+merge trigger. Future missing-menu artwork remains part of the existing hourly
+ABVM School Data Intake task and normal menu-import workflow; no new task is needed.
+Follow `docs/LUNCH_ART.md` and `docs/LUNCH_TRAY_STYLE.md`, the style-aware queue,
+exact full-menu approvals and privacy-safe generated references. Private originals
+and people never enter this repository.
 Do not change unrelated tasks to make room. If artwork generation or review is blocked,
 retain accurate text-only cards and report the specific incomplete coverage.
 

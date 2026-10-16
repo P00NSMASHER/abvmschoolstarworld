@@ -590,12 +590,6 @@ img {
   height: 76px;
   object-fit: contain;
 }
-.lunch-art figcaption {
-  font-size: 0.46rem;
-  color: #69582d;
-  text-align: center;
-  margin-top: 3px;
-}
 .reminder-line {
   display: flex;
   gap: 12px;

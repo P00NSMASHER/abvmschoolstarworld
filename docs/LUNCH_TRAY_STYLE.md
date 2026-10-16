@@ -17,15 +17,15 @@ when generating a different menu. Style ID: `abvm-maroon-tray-v1`.
 Use high-quality natural photorealism, a landscape 3:2 composition with the entire
 tray visible, elevated three-quarter overhead framing, soft neutral daylight,
 crisp natural food texture and no text/logos/drinks/extra food. Small clear plain
-side cups match the visible reference. Images are **Meal illustration**, with
-illustrative appearance and portions, never actual photographs or evidence of
-exact school servings. Keep the complete verified menu text visible.
+side cups match the visible reference. Images are illustrations with descriptive
+alt text, not actual photographs or evidence of exact school servings. Keep the
+complete verified menu text visible; do not render a caption beneath the image.
 
 Source details remain authoritative. Do not invent fruit varieties, taco filling,
 dipping sauce, toppings, condiments or allergens. The current generic Fruit is
-not pictured, with that omission explicitly disclosed. For Taco Tuesday & chips,
-show chips and explicitly named sides only, disclosing the unspecified taco
-filling. Generic Dipping sauce is omitted with disclosure. These choices allow
+not pictured; its omission remains recorded in reviewed registry metadata. For
+Taco Tuesday & chips, show chips and explicitly named sides only, recording the
+unspecified filling. Generic Dipping sauce is omitted and recorded. These choices allow
 ongoing artwork completion without requiring an educator approval or inventing
 food content. Named meals/sides otherwise remain visually represented.
 
@@ -45,15 +45,16 @@ bytes or dishonest omissions. Old reviewed entree records remain archived for
 provenance, outside active mappings. Calendar closure precedence still wins even
 when the district catalog lists a meal, including Grade 2's October 20 closure.
 
-The enabled Complete lunch artwork merge-event task audits current/future menu
-changes, reuses only an exact matching reviewed meal and style, generates and
-reviews missing assets, and uses the normal independent QA/PR/Pages workflow.
-No private reference is needed on future runs. Unchanged art is never regenerated
-for activity. Source or provider failure retains accurate text and an unfinished
-checkpoint; bounded retries and all release/privacy gates remain. No new spending,
-paid API, credentials, contacts, Work-credit workflow or manual curriculum
-promotion is introduced. Ongoing automation cannot guarantee perpetual provider
-availability.
+All 20 October tray images are complete. Future missing illustrations are handled
+by the existing ABVM School Data Intake task and normal menu-import workflow,
+using exact reviewed menu/style matches and normal independent QA/PR/Pages gates.
+The former dedicated artwork merge task now protects ABVM learning reliability.
+No private reference is needed on future runs. Unchanged suitable art is never
+regenerated for activity. Source or provider failure retains accurate text and an
+unfinished checkpoint; bounded retries and all release/privacy gates remain.
+No new spending, paid API, credentials, contacts, Work-credit workflow or manual
+curriculum promotion is introduced. Ongoing automation cannot guarantee perpetual
+provider availability.
 
 ## Updates in an already-open app
 

@@ -47,7 +47,7 @@ async function liveStudyAssets() {
   // A live source timestamp is insufficient if the published question bank,
   // Homework feed, or printable renderers still contain an earlier build.
   assets.push('data/study-pack-runtime.json', 'data/study-archive.json', 'data/homework-current.json',
-    'test-study-pair.mjs', 'classroom-test-guide.mjs', 'premium-paper-theme.mjs');
+    'test-study-pair.mjs', 'classroom-test-guide.mjs', 'premium-paper-theme.mjs', 'study-notes-library.mjs');
   const digest = bytes => createHash('sha256').update(bytes).digest('hex');
   return Promise.all(assets.map(async path => {
     const expectedBytes = readFileSync(new URL('../pages/' + path, import.meta.url));
@@ -97,7 +97,7 @@ try {
   }
   if (await page.locator('.lunch-card').count()) await page.locator('.lunch-card').first().scrollIntoViewIfNeeded();
   const mealArt=page.locator('.today-screen .lunch-art-tray img');
-  if(await mealArt.count()){await expect.poll(()=>mealArt.evaluate(img=>img.complete&&img.naturalWidth>=1200)).toBe(true);await expect(page.locator('.lunch-art-tray figcaption')).toContainText('Meal illustration');receipt.todayTrayImage={src:await mealArt.getAttribute('src'),decoded:true};}
+  if(await mealArt.count()){await expect.poll(()=>mealArt.evaluate(img=>img.complete&&img.naturalWidth>=1200)).toBe(true);await expect(mealArt).toHaveAttribute('alt',/^Illustration of/);await expect(page.locator('.lunch-art-tray figcaption')).toHaveCount(0);receipt.todayTrayImage={src:await mealArt.getAttribute('src'),decoded:true};}
   await page.screenshot({ path: `${out}/today.png` });
   receipt.screens.push({ screen: 'Today', date: today, lunch: await page.locator('.lunch-card').allTextContents() });
 
@@ -250,6 +250,64 @@ try {
   }
   await page.setViewportSize({width:390,height:844});
   receipt.studyWalkthrough.returnedAndRecordSurvivedReload = true;
+  // Exercise the actual published notes, without assuming any particular topic
+  // or chapter must remain current forever. This browser profile is isolated.
+  const printHistory=page.locator('[data-study-test-options]');
+  const printHistoryBefore=await printHistory.innerHTML();
+  await page.locator('[data-study-notes] > summary').click();
+  const notes=page.locator('[data-study-notes]');
+  const noteSearch=notes.getByRole('searchbox',{name:'Search study notes'});
+  await expect(noteSearch).toBeVisible();
+  let noteSubject=null,noteQuery=null;
+  for(const width of [390,820]){
+    await page.setViewportSize({width,height:width===390?844:1080});
+    if(await notes.locator('.notes-reader').isVisible())await notes.locator('[data-notes-back]').click();
+    await notes.locator('.notes-library-heading').scrollIntoViewIfNeeded();
+    await page.screenshot({path:`${out}/notes-library-${width}.png`,animations:'disabled'});
+    const card=notes.locator('[data-notes-subject]').first();
+    if(await card.count()){
+      noteSubject=await card.getAttribute('aria-label');
+      await card.click();
+      const reader=notes.locator('[data-note-subject]:not([hidden])');
+      await expect(reader.locator('h3')).toHaveText(noteSubject);
+      noteQuery=await reader.locator('.study-note-topic li').first().count()
+        ? (await reader.locator('.study-note-topic li').first().innerText()).slice(0,100) : noteSubject.slice(0,100);
+      await noteSearch.fill(noteQuery);
+      await expect(noteSearch).toBeFocused();
+      await expect(noteSearch).toHaveValue(noteQuery);
+      await notes.getByRole('button',{name:noteSubject,exact:true}).click();
+      await expect(reader.locator('h3')).toHaveText(noteSubject);
+      await notes.locator('[data-notes-back]').scrollIntoViewIfNeeded();
+      await page.screenshot({path:`${out}/notes-reader-${width}.png`,animations:'disabled'});
+      await notes.getByRole('button',{name:'Clear note search',exact:true}).click();
+      await expect(noteSearch).toHaveValue('');
+    }else await expect(notes.locator('.study-tools-empty')).toContainText('No lesson notes');
+  }
+  const subjectEvidence=[];
+  for(const width of [390,820]){
+    await page.setViewportSize({width,height:width===390?844:1080});
+    for(const subject of ['Reading / ELA','Math','Religion']){
+      await noteSearch.fill('');
+      if(await notes.locator('.notes-reader').isVisible())await notes.locator('[data-notes-back]').click();
+      const card=notes.getByRole('button',{name:subject,exact:true});
+      if(!await card.count())continue;
+      await card.click();
+      const panel=notes.locator('[data-note-subject]:not([hidden])');
+      await expect(panel.locator('summary').filter({hasText:/^Practice ideas/})).toHaveCount(0);
+      await expect(panel.locator('.study-note-review > summary')).toHaveCount(0);
+      const paragraphs=panel.locator('.study-note-point p');
+      if(await paragraphs.count())await expect(paragraphs.first()).toBeVisible();
+      const worked=panel.locator('.notes-worked-lesson');
+      if(subject==='Math'&&await panel.locator('.study-note-topic').allTextContents().then(rows=>rows.some(text=>/\bsubtraction\b/i.test(text)))){
+        await expect(worked).toContainText('12 − 5 = 7');await expect(worked).toContainText('7 + 5 = 12');
+      }
+      await page.screenshot({path:`${out}/notes-${subject.startsWith('Reading')?'reading':subject.toLowerCase()}-${width}.png`,animations:'disabled'});
+      subjectEvidence.push({width,subject,classNoteParagraphs:await paragraphs.count(),chapterExplanationParagraphs:await panel.locator('.study-note-topic .notes-explanation p').count(),workedExamples:await worked.count()});
+    }
+  }
+  expect(await printHistory.innerHTML()).toBe(printHistoryBefore);
+  receipt.notesLibrary={verified:true,subject:noteSubject,query:noteQuery,historyUnchanged:true,subjects:subjectEvidence};
+  await page.setViewportSize({width:390,height:844});
   await page.getByRole('button', { name: 'Today', exact: true }).click();
   if (todayMeal?.items.length) for (const item of todayMeal.items) await expect(page.locator('.lunch-card')).toContainText(item);
   // Validate every deployed promotion in a new isolated browser profile, never in the learner's device storage.

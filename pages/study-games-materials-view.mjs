@@ -1,13 +1,12 @@
+import {createNotesLibrary} from './study-notes-library.mjs?v=2';
 import {createReadAloud} from './study-room-view.mjs';
 import {renderTestStudyGuide,renderTestWorksheet} from './test-study-pair.mjs?v=4';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const nonempty = value => typeof value === 'string' && value.trim();
-const distinctNoteText = rows => {const seen=new Set();return rows.filter(text=>{const key=text.trim();if(seen.has(key))return false;seen.add(key);return true;});};
 const list = rows => {const clean=(Array.isArray(rows)?rows:[]).filter(nonempty);return clean.length?'<ul>'+clean.map(row=>'<li>'+esc(row)+'</li>').join('')+'</ul>':'';};
 const dateLabel = date => {const value=new Date(date+'T12:00:00Z');return /^\d{4}-\d{2}-\d{2}$/.test(date||'')&&Number.isFinite(value.getTime())
   ? new Intl.DateTimeFormat('en-US',{weekday:'short',month:'short',day:'numeric',timeZone:'UTC'}).format(value) : '';};
-const safeUrl = value => {try{return ['https:','http:'].includes(new URL(value).protocol);}catch{return false;}};
 const missingDefinition = value => /teacher page does not provide a definition|no definition supplied/i.test(String(value ?? ''));
 export function resolveVocabularyMeaning(row,dictionary = () => '') {
   const supplied = nonempty(row?.meaning) ? String(row.meaning).trim() : '';
@@ -15,7 +14,6 @@ export function resolveVocabularyMeaning(row,dictionary = () => '') {
   const resolved = dictionary(row?.term);
   return nonempty(resolved) ? String(resolved).trim() : '';
 }
-const referenceHtml = link => '<a data-religion-review href="'+esc(link.url)+'" target="_blank" rel="noopener">'+esc(link.label)+'</a>';
 
 export function printableStudyGuideHtml(guide, dictionary = () => '') {
   return renderTestStudyGuide(guide, dictionary);
@@ -26,8 +24,9 @@ export function printableWorksheetHtml(guide, dictionary = () => '') {
 
 /** Compact controls only. The existing Games controller owns every round and result. */
 export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=window} = {}) {
-  let model = null, notesOpen = /(?:^|[?&])notes(?:=1)?(?:&|$)/.test(String(win?.location?.hash || '').split('?')[1] || ''), testsOpen = false, selectedTest = 0, notesSource = 'weekly', notesSubject = '';
+  let model = null, notesOpen = /(?:^|[?&])notes(?:=1)?(?:&|$)/.test(String(win?.location?.hash || '').split('?')[1] || ''), testsOpen = false, selectedTest = 0;
   const readAloud = createReadAloud(win);
+  const notesLibrary=createNotesLibrary({getModel:()=>model,win,meaning:row=>resolveVocabularyMeaning(row,term=>win?.ABVMStudyGames?.vocabularyDefinition?.(term))});
   let prepOpen = /(?:^|[?&])prep(?:=1)?(?:&|$)/.test(String(win?.location?.hash || '').split('?')[1] || '');
   const selection = () => ({source:'weekly',sources:['weekly']});
   const focus = selector => win.document.querySelector(selector)?.focus({preventScroll:true});
@@ -108,42 +107,7 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
     return '';
   }
 
-  function notesContent() {
-    const data=model?.notes(notesSource);
-    if(!data)return '<p class="game-material-status">Notes are still loading.</p>';
-    const lessons=data.lessons||[],notes=(data.notes||[]).filter(row=>nonempty(row.text)),vocabulary=(data.vocabulary||[]).filter(row=>nonempty(row.term));
-    const links=(data.links||[]).filter(link=>safeUrl(link.url)),warnings=data.warnings||[];
-    const wordSubject=row=>nonempty(row.subject)?row.subject:'Words to know';
-    const subjects=[...new Set([...notes,...links,...warnings,...lessons,...vocabulary.map(row=>({subject:wordSubject(row)}))].map(row=>row.subject).filter(nonempty))];
-    if(!subjects.includes(notesSubject))notesSubject=subjects[0]||'';
-    const subjectButtons=subjects.map((subject,index)=>'<button type="button" data-notes-subject="'+index+'" aria-pressed="'+(subject===notesSubject)+'" aria-controls="study-notes-panel-'+index+'">'+esc(subject)+'</button>').join('');
-    const noteRows=subjects.map((subject,index)=>{
-      const subjectNotes=notes.filter(row=>row.subject===subject),original=distinctNoteText(subjectNotes.map(row=>row.text));
-      const topics=subjectNotes.filter(row=>row.kind==='topic'),review=distinctNoteText(subjectNotes.filter(row=>row.kind!=='topic').map(row=>row.text));
-      // Group only by an explicit source prefix. No inferred chapter, skill, or date associations.
-      const groups=new Map();
-      for(const text of distinctNoteText(topics.map(row=>row.text))){
-        const prefix=text.match(/^\s*([^:]{1,45}):\s*(.+)$/),label=prefix?prefix[1]:'Class topics';
-        if(!groups.has(label))groups.set(label,[]);groups.get(label).push(text);
-      }
-      const topicHtml=[...groups].map(([label,rows],groupIndex)=>'<details class="study-note-topic"'+(groupIndex===0?' open':'')+'><summary><strong>'+esc(label==='Story'?'Stories':label)+'</strong><small>'+rows.length+' '+(rows.length===1?'topic':'topics')+'</small></summary><div class="study-note-body">'+list(rows)+'</div></details>').join('');
-      const reviewHtml=review.length?'<details class="study-note-review"><summary><strong>Practice ideas</strong><small>'+review.length+' '+(review.length===1?'idea':'ideas')+'</small></summary><div class="study-note-review-body"><p>Choose one idea to review.</p>'+review.map(text=>{
-        const words=text.trim().split(/\s+/),title=words.slice(0,9).join(' ')+(words.length>9?'…':'');
-        return '<details class="study-note-point"><summary>'+esc(title)+'</summary><div class="study-note-body"><p>'+esc(text)+'</p></div></details>';
-      }).join('')+'</div></details>':'';
-      const saved=lessons.filter(lesson=>lesson.subject===subject);
-      const lessonRows=saved.length?'<section class="study-note-schoolwork"><h4>Saved schoolwork</h4>'+saved.map(lesson=>'<details class="game-material-lesson"><summary><span>'+esc(lesson.title)+'</span><small>'+esc(lesson.studiedOn?dateLabel(lesson.studiedOn):'Undated schoolwork')+'</small></summary><div class="study-note-body">'+list(lesson.notes||[])+'</div></details>').join('')+'</section>':'';
-      const subjectWords=vocabulary.filter(row=>wordSubject(row)===subject);
-      const wordsHtml=subjectWords.length?'<details class="game-material-lesson study-vocabulary"><summary><span>Words to know</span><small>'+subjectWords.length+' words</small></summary><div class="study-note-body"><dl>'+subjectWords.map(row=>{const meaning=resolveVocabularyMeaning(row,term=>win?.ABVMStudyGames?.vocabularyDefinition?.(term));return '<div><dt>'+esc(row.term)+'</dt>'+(meaning?'<dd>'+esc(meaning)+'</dd>':'')+'</div>';}).join('')+'</dl></div></details>':'';
-      const sourceHtml=original.length?'<details class="study-notes-original"><summary>Original class notes <small>Full wording, in source order</small></summary><div class="study-note-body">'+list(original)+'</div></details>':'';
-      return '<section class="study-note-panel" id="study-notes-panel-'+index+'" data-note-subject="'+esc(subject)+'"'+(subject!==notesSubject?' hidden':'')+' aria-labelledby="study-notes-title-'+index+'"><header class="study-note-heading"><small>'+esc(notesSource==='weekly'?'This week’s class notes':'Current notes & saved learning')+'</small><h3 id="study-notes-title-'+index+'">'+esc(subject)+'</h3></header>'+
-        warnings.filter(row=>row.subject===subject).map(row=>'<p class="game-note-warning">'+esc(row.text)+'</p>').join('')+
-        '<div class="study-note-topic-grid">'+topicHtml+'</div>'+wordsHtml+reviewHtml+lessonRows+sourceHtml+
-        '<div class="study-note-references">'+links.filter(row=>row.subject===subject).map(referenceHtml).join('')+'</div></section>';
-    }).join('');
-    return '<div class="study-note-scope" role="group" aria-label="Notes to review">'+['weekly','saved'].map(key=>'<button type="button" data-notes-source="'+key+'" aria-pressed="'+(notesSource===key)+'">'+(key==='weekly'?'This week':'All learning')+'</button>').join('')+'</div>'+ (notesSource==='saved'?'<p class="game-material-status">Undated schoolwork stays in All my learning, not This week.</p>':'')+
-      '<div class="study-note-subjects" role="group" aria-label="Choose a subject">'+subjectButtons+'</div><div class="study-notes-grid">'+(noteRows||'<p class="study-tools-empty">No lesson notes are included in this selection.</p>')+'</div>';
-  }
+  const notesContent=()=>notesLibrary.html();
 
   function secondaryHtml() {
     const tests=model?.tests(),pending=tests?.tests||[],completed=tests?.completed||[];
@@ -173,30 +137,8 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
       const selected=win.document.querySelector('[data-test-select="'+next+'"]'),rail=selected?.parentElement;if(rail)rail.scrollLeft=selected.offsetLeft-rail.offsetLeft;
     }));
     const notes=host.querySelector('[data-study-notes]');
-    const refreshNotes=async()=>{
-      notesOpen=notes.open;if(!notesOpen)return;
-      const owner=model,scope=notesSource,body=notes.querySelector('[data-study-notes-content]');if(!body.hasChildNodes())body.innerHTML=notesContent();
-      try{await owner?.loadReferences?.();}catch{}
-      if(model!==owner||scope!==notesSource||!notes.isConnected||!notes.open)return;
-      const available=(owner?.notes(notesSource).links||[]).filter(link=>safeUrl(link.url));
-      const subjects=[...body.querySelectorAll('[data-note-subject]')];
-      if(available.some(link=>!subjects.some(row=>row.dataset.noteSubject===link.subject))){body.innerHTML=notesContent();return;}
-      for(const subject of subjects){
-        const referenceBody=subject.querySelector('.study-note-references');
-        if(referenceBody)referenceBody.innerHTML=available.filter(link=>link.subject===subject.dataset.noteSubject).map(referenceHtml).join('');
-      }
-    };
-    notes?.addEventListener('click',event=>{
-      const scope=event.target.closest('[data-notes-source]');
-      if(scope){notesSource=scope.dataset.notesSource==='saved'?'saved':'weekly';change('[data-notes-source="'+notesSource+'"]');return;}
-      const button=event.target.closest('[data-notes-subject]');if(!button)return;
-      const panel=notes.querySelector('#'+button.getAttribute('aria-controls'));if(!panel)return;
-      notesSubject=panel.dataset.noteSubject;
-      notes.querySelectorAll('[data-notes-subject]').forEach(row=>row.setAttribute('aria-pressed',String(row===button)));
-      notes.querySelectorAll('[data-note-subject]').forEach(row=>{row.hidden=row!==panel;});
-    });
-    notes?.addEventListener('toggle',refreshNotes);
-    if(notes?.open)refreshNotes();
+    notes?.addEventListener('toggle',()=>{notesOpen=notes.open;});
+    notesLibrary.bind(notes);
     host.querySelector('[data-study-test-options]')?.addEventListener('toggle',event=>{testsOpen=event.currentTarget.open;});
     host.querySelector('[data-test]')?.addEventListener('click',async()=>{
       try{await onGuideRefresh?.();}catch{}

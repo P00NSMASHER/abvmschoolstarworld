@@ -1,3 +1,4 @@
+import {openNoteSubject} from './helpers/study-notes.mjs';
 import {test,expect} from '@playwright/test';
 test.use({serviceWorkers:'block'});
 
@@ -17,6 +18,7 @@ async function openNotes(page){
   const notes=page.locator('details[data-study-notes]');
   if(!await notes.evaluate(node=>node.open))await notes.locator(':scope > summary').click();
   await expect(notes).toHaveAttribute('open','');
+  await openNoteSubject(page);
   const lessons=notes.locator('[data-note-subject]:not([hidden]) details');
   await expect(lessons.first()).toBeVisible();
   // Verify that a real disclosure can be opened by tapping its summary.

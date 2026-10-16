@@ -20,9 +20,19 @@ test('reviewed photoreal tray and complete menu remain readable across phone, iP
   const dimensions=await image.evaluate(img=>({width:img.getBoundingClientRect().width,height:img.getBoundingClientRect().height,natural:img.naturalWidth}));
   expect(dimensions.natural).toBeGreaterThanOrEqual(dimensions.width*2);
   expect(dimensions.width/dimensions.height).toBeCloseTo(1.5,1);
-  await expect(art).toContainText('Meal illustration');await expect(art).toContainText('Fruit variety not specified; fruit not pictured.');
+  await expect(image).toHaveAttribute('alt', /^Illustration of/);
+  await expect(art.locator('figcaption')).toHaveCount(0);
   expect(await card.evaluate(el=>el.scrollWidth-el.clientWidth)).toBeLessThanOrEqual(1);
   if(width===390||width===820){await card.scrollIntoViewIfNeeded();await page.screenshot({path:info.outputPath('lunch-trays-'+width+'.png')});}
+ }
+});
+test('lunch image footnotes stay absent on Today, Week and Calendar',async({page})=>{
+ for(const tab of ['today','week','calendar']){
+  await open(page,tab);
+  const cards=page.locator(tab==='calendar'?'.calendar-day-card .agenda-lunch':tab==='today'?'.today-screen > .lunch-card':'.week-rail .lunch-card');
+  const card=cards.filter({hasText:'Chicken patty on a roll'}).first();
+  await expect(card.locator('.lunch-art-tray img')).toHaveAttribute('alt',/^Illustration of/);
+  await expect(card.locator('.lunch-art figcaption')).toHaveCount(0);
  }
 });
 test('failed image requests preserve the exact menu on Today, Week and Calendar',async({page})=>{
@@ -37,11 +47,15 @@ test('failed image requests preserve the exact menu on Today, Week and Calendar'
 test('unknown fillings remain unpictured and no-school precedence still suppresses food imagery',async({page})=>{
  await open(page,'calendar','2026-10-27');
  const card=page.locator('.calendar-day-card .agenda-lunch');
- await expect(card).toContainText('Taco Tuesday & chips');await expect(card).toContainText('Taco filling not specified; chips and named sides shown.');
+ await expect(card).toContainText('Taco Tuesday & chips');
+ const image=card.locator('.lunch-art-tray img');
+ await expect(image).toHaveAttribute('alt', /^Illustration of/);
+ await expect(image).not.toHaveAttribute('alt', /beef|chicken/i);
+ await expect(card.locator('.lunch-art-tray figcaption')).toHaveCount(0);
  await page.locator('[data-cal-day="2026-10-20"]').click();
  await expect(card).toContainText('No school lunch');await expect(card.locator('.lunch-art')).toHaveCount(0);
 });
-test('loaded tray remains available offline and its disclosure has no serious accessibility findings',async({page,context})=>{
+test('loaded tray remains available offline and its accessible description has no serious accessibility findings',async({page,context})=>{
  await open(page);const art=page.locator('.today-screen .lunch-art-tray');
  await expect.poll(()=>art.locator('img').evaluate(img=>img.complete&&img.naturalWidth>0)).toBe(true);
  await context.setOffline(true);await expect(art).toBeVisible();
