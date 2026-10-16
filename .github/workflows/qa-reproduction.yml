@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'pages/data/lunch-art-registry.json'
+      - 'pages/data/lunch-art-current.json'
+      - 'pages/lunch-art.js'
       - 'pages/assets/lunch-art/**'
       - 'scripts/build-lunch-art-plan.mjs'
       - 'scripts/lunch-art-style.mjs'

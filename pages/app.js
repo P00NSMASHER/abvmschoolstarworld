@@ -691,6 +691,7 @@ function promotePackCandidate({response,data}){
   return changed;
 }
 async function fetchPack({force=false,notify=false}={}){
+  window.ABVMLunchArt?.refresh?.(()=>{if(pack&&["today","week","calendar"].includes(activeTab))render({preserveScroll:true})});
   const now=Date.now();
   if(!force&&pack&&(now-lastPackFetchAt)<PACK_REFRESH_MS)return false;
   if(packRefreshPromise)return packRefreshPromise;
@@ -787,5 +788,6 @@ window.addEventListener("pageshow",event=>{
   if(event.persisted&&pack){fetchPack({force:true,notify:true}).catch(()=>{});fetchHomeworkFeed({force:true}).catch(()=>{});}
 });
 window.ABVMProductView.watchSchoolClock(()=>{if(pack&&activeTab==="today")render({preserveScroll:true})});
+setInterval(()=>{if(pack&&document.visibilityState==="visible"&&!isStudyRoute()){fetchPack({notify:true}).catch(()=>{});fetchHomeworkFeed().catch(()=>{})}},PACK_REFRESH_MS);
 load();
 })();

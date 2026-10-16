@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { createHash } from 'node:crypto';
-import { TRAY_STYLE_ID, trayMenuSpec } from './lunch-art-style.mjs';
+import { TRAY_STYLE_ID, trayMenuSpec, trayMenuContents } from './lunch-art-style.mjs';
 import { catalogMeals, CATALOG } from './lunch-publication.mjs';
 
 export function mealSignature(meal) {
@@ -27,7 +27,7 @@ export function approvedArtwork(meals, registry) {
       if (result[key]) throw new Error('Duplicate artwork approval');
       const tray=art.styleId===TRAY_STYLE_ID;
       if(art.styleId&&!tray)throw new Error('Unknown reviewed artwork style');
-      if(tray&&(!Number.isInteger(art.width)||art.width<1200||!Number.isInteger(art.height)||art.height<800||Math.abs(art.width/art.height-1.5)>.02||!/^[a-f0-9]{64}$/.test(art.sha256||'')||art.omissionNote!==trayMenuSpec(menu).omissionNote))throw new Error('Invalid reviewed tray artwork metadata');
+      if(tray&&(!Number.isInteger(art.width)||art.width<1200||art.width>1600||!Number.isInteger(art.height)||art.height<800||art.height>1100||Math.abs(art.width/art.height-1.5)>.02||!/^[a-f0-9]{64}$/.test(art.sha256||'')||art.omissionNote!==trayMenuSpec(menu).omissionNote))throw new Error('Invalid reviewed tray artwork metadata');
       result[key] = { src: art.src, alt: art.alt, label: 'Meal illustration', ...(tray?{styleId:art.styleId,width:art.width,height:art.height,omissionNote:art.omissionNote}:{}) };
     }
   }
@@ -65,6 +65,44 @@ export function renderLunchArtwork(meal, approved) {
   const escape = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
   return `<figure class="lunch-art${art.styleId?' lunch-art-tray':''}"><img src="${escape(art.src)}" alt="${escape(art.alt)}" width="${art.width||320}" height="${art.height||320}" loading="lazy" decoding="async"><figcaption>${escape(art.label)}${art.styleId?'<span>Illustrative appearance and portions. '+escape(art.omissionNote)+'</span>':''}</figcaption></figure>`;
 }
+// Keep a fast reviewed map at startup and refresh it independently of app code.
+export function installLunchArtwork(initial,host,styleId='abvm-maroon-tray-v1') {
+  let approved=initial,inFlight=null,lastAttempt=0,onChange=null;
+  function validate(data){
+    if(data?.schemaVersion!==1||!data.approved||typeof data.approved!=="object"||Array.isArray(data.approved))throw Error("Invalid lunch artwork update");
+    const next={};
+    for(const [key,art] of Object.entries(data.approved)){
+      const [sourceId,items]=JSON.parse(key);
+      if(typeof sourceId!=="string"||!sourceId||!hasLunch({items})||mealSignature({sourceId,items})!==key||
+        !/^assets\/lunch-art\/[a-z0-9-]+\.webp$/.test(art?.src||'')||typeof art.alt!=="string"||!art.alt||art.alt.length>1000||
+        art.styleId!==styleId||art.label!=="Meal illustration"||!Number.isInteger(art.width)||art.width<1200||art.width>1600||
+        !Number.isInteger(art.height)||art.height<800||art.height>1100||Math.abs(art.width/art.height-1.5)>.02||
+        art.omissionNote!==trayMenuContents({items}).omissionNote)throw Error("Unreviewed lunch artwork update");
+      next[key]={src:art.src,alt:art.alt,label:art.label,styleId:art.styleId,width:art.width,height:art.height,omissionNote:art.omissionNote};
+    }
+    return next;
+  }
+  function refresh(changed){
+    if(typeof changed==="function")onChange=changed;
+    if(inFlight)return inFlight;
+    const now=Date.now(),age=now-lastAttempt;
+    if(lastAttempt&&age>=0&&age<300000)return Promise.resolve(false);
+    lastAttempt=now;
+    inFlight=(async()=>{
+      const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);
+      try{
+        const response=await host.fetch('./data/lunch-art-current.json',{cache:'no-store',signal:controller.signal});
+        if(!response.ok)throw Error('Lunch artwork update unavailable');
+        const next=validate(await response.json());
+        if(JSON.stringify(next)===JSON.stringify(approved))return false;
+        approved=next;onChange?.();return true;
+      }catch{return false}finally{clearTimeout(timer)}
+    })().finally(()=>{inFlight=null});
+    return inFlight;
+  }
+  host.document?.addEventListener("error",event=>{if(event.target?.matches?.(".lunch-art img"))event.target.closest(".lunch-art")?.remove()},true);
+  host.ABVMLunchArt=Object.freeze({html:meal=>renderLunchArtwork(meal,approved),refresh});
+}
 export function buildLunchArt() {
   const registry = JSON.parse(readFileSync(new URL('../pages/data/lunch-art-registry.json', import.meta.url), 'utf8'));
   const approved = approvedArtwork(catalogMeals(), registry);
@@ -76,7 +114,8 @@ export function buildLunchArt() {
   }
   const plan = buildArtPlan(CATALOG, registry);
   writeFileSync(new URL('../pages/data/lunch-art-plan.json', import.meta.url), JSON.stringify(plan, null, 2) + '\n');
-  writeFileSync(new URL('../pages/lunch-art.js', import.meta.url), `// Generated by scripts/build-lunch-art-plan.mjs. Edit the reviewed registry instead.\n(() => {\nconst approved = ${JSON.stringify(approved)};\n${mealSignature.toString()}\n${hasLunch.toString()}\n${renderLunchArtwork.toString()}\nglobalThis.document?.addEventListener("error", event => { if(event.target?.matches?.(".lunch-art img"))event.target.closest(".lunch-art")?.remove(); }, true);\nglobalThis.ABVMLunchArt = Object.freeze({ html: meal => renderLunchArtwork(meal, approved) });\n})();\n`);
+  writeFileSync(new URL('../pages/data/lunch-art-current.json',import.meta.url),JSON.stringify({schemaVersion:1,approved},null,2)+'\n');
+  writeFileSync(new URL('../pages/lunch-art.js', import.meta.url), `// Generated by scripts/build-lunch-art-plan.mjs. Edit the reviewed registry instead.\n(() => {\n${mealSignature.toString()}\n${hasLunch.toString()}\n${renderLunchArtwork.toString()}\n${trayMenuContents.toString()}\n${installLunchArtwork.toString()}\ninstallLunchArtwork(${JSON.stringify(approved)},globalThis);\n})();\n`);
   return plan;
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

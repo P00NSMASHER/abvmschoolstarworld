@@ -50,3 +50,19 @@ test('loaded tray remains available offline and its disclosure has no serious ac
  expect(a11y.violations.filter(v=>['serious','critical'].includes(v.impact))).toEqual([]);
  await context.setOffline(false);
 });
+
+test('an already-open app picks up newly published reviewed artwork without a reload',async({page})=>{
+ const {readFileSync}=await import('node:fs');
+ const data=JSON.parse(readFileSync(new URL('../pages/data/lunch-art-current.json',import.meta.url),'utf8'));
+ const script=readFileSync(new URL('../pages/lunch-art.js',import.meta.url),'utf8');let published=false;
+ // Isolated prior-release response copies, never edits to published school data.
+ await page.route('**/lunch-art.js*',route=>route.fulfill({contentType:'text/javascript',body:script.replace(/\ninstallLunchArtwork\([^\n]+\);/,'\ninstallLunchArtwork({},globalThis);')}));
+ await page.route('**/data/lunch-art-current.json*',route=>route.fulfill({json:published?data:{schemaVersion:1,approved:{}}}));
+ await open(page);await expect(page.locator('.today-screen > .lunch-card')).toContainText('Chicken patty on a roll');
+ await expect(page.locator('.today-screen .lunch-art')).toHaveCount(0);
+ published=true;await page.clock.setFixedTime(new Date(when.getTime()+360000));
+ await page.evaluate(()=>window.dispatchEvent(new Event('online')));
+ const image=page.locator('.today-screen .lunch-art-tray img');
+ await expect(image).toHaveAttribute('src','assets/lunch-art/tray-2026-10-15-v1.webp');
+ await expect.poll(()=>image.evaluate(img=>img.complete&&img.naturalWidth>=1200)).toBe(true);
+});

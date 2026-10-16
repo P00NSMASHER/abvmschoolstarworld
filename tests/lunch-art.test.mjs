@@ -80,7 +80,7 @@ test('every published tray has verified optimized bytes and preserves full menu 
   const {TRAY_STYLE_ID}=await import('../scripts/lunch-art-style.mjs');
   const r=JSON.parse(readFileSync(new URL('../pages/data/lunch-art-registry.json',import.meta.url),'utf8'));
   const approved=approvedArtwork(catalogMeals(),r);let bytes=0;
-  assert.equal(r.artworks.length,20);
+  assert.ok(r.artworks.length>=20);
   for(const art of r.artworks){
     const asset=readFileSync(new URL('../pages/'+art.src,import.meta.url));bytes+=asset.length;
     assert.equal(asset.subarray(0,4).toString(),'RIFF');
@@ -89,6 +89,12 @@ test('every published tray has verified optimized bytes and preserves full menu 
     assert.equal(art.styleId,TRAY_STYLE_ID);
     assert.match(renderLunchArtwork(art.approvedMenus[0],approved),/Fruit variety not specified/);
   }
-  assert.ok(bytes<4*1024*1024);
+  // Retained historical months must not block later monthly publication.
+  const monthAssets=new Map();
+  for(const meal of catalogMeals()){
+    const art=approved[JSON.stringify([meal.sourceId,meal.items])];if(!art)continue;
+    const month=meal.date.slice(0,7);if(!monthAssets.has(month))monthAssets.set(month,new Set());monthAssets.get(month).add(art.src);
+  }
+  for(const paths of monthAssets.values())assert.ok([...paths].reduce((n,path)=>n+readFileSync(new URL('../pages/'+path,import.meta.url)).length,0)<8*1024*1024);
   assert.equal(pendingArtMenus(buildArtPlan(CATALOG,r),'2026-10',{styleId:TRAY_STYLE_ID}).length,0);
 });

@@ -54,3 +54,25 @@ checkpoint; bounded retries and all release/privacy gates remain. No new spendin
 paid API, credentials, contacts, Work-credit workflow or manual curriculum
 promotion is introduced. Ongoing automation cannot guarantee perpetual provider
 availability.
+
+## Updates in an already-open app
+
+The startup renderer includes a fast reviewed map, then nonblocking checks refresh
+`data/lunch-art-current.json` through the service worker's network-first path.
+New map data must retain exact source/menu keys, local safe asset paths, approved
+style, 1200–1600px width, landscape dimensions and canonical omission notes. Bad
+or offline updates preserve the last reviewed map. Requests coalesce, time out
+after eight seconds and are throttled to one attempt per five minutes.
+
+Visible planner views check the existing source and homework feeds every five
+minutes through their established throttles and verification functions. Study
+sessions are excluded from this new periodic repaint path. Artwork refresh is
+independent of source success and never delays it; changed reviewed maps repaint
+Today/Week/Calendar without a reload. Full text remains authoritative before art
+arrives. Loaded images use the existing static cache; missing images fall back
+to text on every route.
+
+The existing hourly School Data Intake lane provides bounded missing-art recovery
+after its primary teacher/homework work if the merge event was missed or stopped.
+It reuses the canonical artwork PR/owner, preserves schedules and all release
+gates, and never makes art a prerequisite for school-data publication.
