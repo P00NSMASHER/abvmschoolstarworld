@@ -175,6 +175,11 @@ test('the complete dashboard turns critical for stale homework despite healthy w
     const now=new Date().toISOString();
     const pack=JSON.parse(readFileSync(new URL('../pages/data/study-pack.json',import.meta.url),'utf8'));
     pack.sourceLastCheckedAt=now;
+    // This test controls health inputs; a future teacher topic must not alter
+    // its intentionally healthy pipeline baseline.
+    pack.pack.contentPipeline={safetyState:'SAFE',coverage:[],
+      sourcePolicy:{requirePageExactLineage:true},qa:{status:'pass',skillCount:1,
+        questionCount:1,unsupportedSkillCount:0,pageExactLineageCount:1,unresolvedLineageCount:0}};
     pack.pack.lunchMenuSource.retrievalState='verified';
     writeFileSync(join(root,'pages/data/study-pack.json'),JSON.stringify(pack));
     const names=['Refresh ABVM teacher pages','ABVM App QA','Deploy ABVM to GitHub Pages','Monitor ABVM refresh health'];
@@ -188,15 +193,37 @@ test('the complete dashboard turns critical for stale homework despite healthy w
     const run=()=>{
       const result=spawnSync(process.execPath,['scripts/build-health-report.mjs'],{
         cwd:root,encoding:'utf8',env:{...process.env,WORKFLOW_RUNS_FILE:workflowFile,
-          REFRESH_JOBS_FILE:'',OPEN_PULLS_FILE:''},
+          REFRESH_JOBS_FILE:'',OPEN_PULLS_FILE:'',HOMEWORK_PUBLICATIONS_FILE:join(root,'publications.json')},
       });
       const report=JSON.parse(readFileSync(join(root,'health-output/abvm-health-status.json'),'utf8'));
       return {result,report};
     };
     writeFileSync(postingPath,JSON.stringify(posting));
+    writeFileSync(join(root,'publications.json'),'[]');
     const fresh=run();
     assert.equal(fresh.result.status,0,fresh.result.stderr);
     assert.equal(fresh.report.homework.healthy,true);
+    const history=JSON.parse(readFileSync(workflowFile,'utf8'));
+    const deploy=history.workflow_runs.find(r=>r.name==='Deploy ABVM to GitHub Pages');
+    deploy.conclusion='failure';
+    deploy.updated_at=new Date(Date.now()-60000).toISOString();
+    history.workflow_runs.find(r=>r.name==='Refresh ABVM teacher pages').updated_at=new Date(Date.now()-120000).toISOString();
+    writeFileSync(workflowFile,JSON.stringify(history));
+    writeFileSync(join(root,'publications.json'),JSON.stringify([{
+      id:77,name:'Refresh current ABVM homework',head_branch:'main',status:'completed',
+      conclusion:'success',created_at:now,updated_at:now,publisherJobId:88,
+    }]));
+    const recovered=run();
+    assert.equal(recovered.result.status,0,recovered.result.stderr);
+    assert.equal(recovered.report.publicationEvidence.id,77);
+    assert.equal(recovered.report.overall,'healthy');
+    pack.pack.contentPipeline.qa.unsupportedSkillCount=1;
+    writeFileSync(join(root,'pages/data/study-pack.json'),JSON.stringify(pack));
+    const unsupported=run();
+    assert.equal(unsupported.result.status,1);
+    assert.equal(unsupported.report.overall,'critical');
+    pack.pack.contentPipeline.qa.unsupportedSkillCount=0;
+    writeFileSync(join(root,'pages/data/study-pack.json'),JSON.stringify(pack));
     writeFileSync(postingPath,JSON.stringify({...posting,checkedAt:new Date(Date.now()-9*3600000).toISOString()}));
     const stale=run();
     assert.equal(stale.result.status,1);

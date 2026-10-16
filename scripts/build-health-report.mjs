@@ -8,9 +8,11 @@ const cache=(sw.match(/const CACHE = "([^"]+)"/)||[])[1]||"unknown";
 const runsPath=process.env.WORKFLOW_RUNS_FILE;
 const refreshJobsPath=process.env.REFRESH_JOBS_FILE;
 const openPullsPath=process.env.OPEN_PULLS_FILE;
+const publicationsPath=process.env.HOMEWORK_PUBLICATIONS_FILE;
 const runs=runsPath?JSON.parse(readFileSync(runsPath,"utf8")).workflow_runs||[]:[];
 const refreshJobsData=refreshJobsPath?JSON.parse(readFileSync(refreshJobsPath,"utf8")):{run_id:null,jobs:[]};
 const openPulls=openPullsPath?JSON.parse(readFileSync(openPullsPath,"utf8")):[];
+const homeworkPublications=publicationsPath?JSON.parse(readFileSync(publicationsPath,"utf8")):[];
 
 const productionRuns=runs.filter(run=>run.head_branch==="main"||run.event==="schedule");
 
@@ -19,6 +21,7 @@ const workflowNames={
   qa:"ABVM App QA",
   deploy:"Deploy ABVM to GitHub Pages",
   watchdog:"Monitor ABVM refresh health",
+  homework:"Refresh current ABVM homework",
 };
 const runEvidenceAt=run=>Date.parse(run?.updated_at||run?.created_at||0)||0;
 const runCreatedAt=run=>Date.parse(run?.created_at||0)||0;
@@ -109,7 +112,9 @@ const completedRunHealthy=(run,maxAgeHours)=>{
 const completedHealthy=(workflow,maxAgeHours)=>completedRunHealthy(effectiveRun(workflow),maxAgeHours);
 const effectivePublicationRun=()=>selectPublicationEvidence(
   effectiveRun(status.workflows.deploy),
-  effectiveRun(status.workflows.refresh)
+  effectiveRun(status.workflows.refresh),
+  homeworkPublications.filter(run=>run.head_branch==="main"&&run.name===workflowNames.homework&&
+    Number.isInteger(run.publisherJobId)).sort((a,b)=>runEvidenceAt(b)-runEvidenceAt(a))[0]||null
 );
 status.publicationEvidence=effectivePublicationRun();
 const effectiveRefreshRun=effectiveRun(status.workflows.refresh);

@@ -4,9 +4,31 @@ export function workflowEvidenceAt(run){
   return Date.parse(run?.updated_at||run?.created_at||0)||0;
 }
 
-export function selectPublicationEvidence(deployRun,refreshRun){
-  if(refreshRun?.conclusion==="success"&&(!deployRun||workflowEvidenceAt(refreshRun)>workflowEvidenceAt(deployRun)))return refreshRun;
-  return deployRun||null;
+export function selectPublicationEvidence(deployRun,refreshRun,homeworkPublication=null){
+  let publication=deployRun||null;
+  if(refreshRun?.conclusion==="success"&&(!publication||workflowEvidenceAt(refreshRun)>workflowEvidenceAt(publication)))publication=refreshRun;
+  if(homeworkPublication&&(!publication||workflowEvidenceAt(homeworkPublication)>workflowEvidenceAt(publication)))publication=homeworkPublication;
+  return publication;
+}
+
+// A successful source check may skip Pages. Only the actual nested release job
+// can establish publication; missing successful gates remain unhealthy.
+export function publicationRunFromJobs(run,evidence){
+  if(run?.name!=="Refresh current ABVM homework"||run.head_branch!=="main"||
+     run.status!=="completed"||Number(evidence?.run_id)!==Number(run.id))return null;
+  const job=(evidence.jobs||[]).find(job=>Number(job.run_id)===Number(run.id)&&
+    job.name==="Verify and deploy independently refreshed Homework / deploy"&&
+    job.status==="completed"&&job.conclusion!=="skipped");
+  if(!job)return null;
+  const required=["Admit exact current protected-main commit","Verify checked-out source identity",
+    "Run release QA","Recheck protected-main before publishing","Deploy",
+    "Verify live lunch data and visible mobile flows","Retain exact live publication proof"];
+  const verified=run.conclusion==="success"&&job.conclusion==="success"&&
+    Number.isFinite(Date.parse(job.completed_at||""))&&required.every(name=>
+    (job.steps||[]).some(step=>step.name===name&&step.status==="completed"&&step.conclusion==="success"));
+  return {...run,conclusion:verified?"success":job.conclusion==="success"?"action_required":job.conclusion,
+    publisherJobId:job.id,created_at:job.started_at||run.created_at,
+    updated_at:job.completed_at||run.updated_at};
 }
 
 const completedEvidenceTime=run=>{

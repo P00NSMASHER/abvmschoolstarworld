@@ -109,7 +109,7 @@ test("operational health treats complete reviewed lunch coverage as attention, n
 
 test("health dashboard fetches exact refresh failure steps and open draft candidate PRs",()=>{
   assert.match(workflow,/pull-requests: read/);
-  assert.match(workflow,/actions\/runs\/\$\{REFRESH_RUN_ID\}\/jobs/);
+  assert.match(workflow,/node scripts\/fetch-health-history\.mjs/);
   assert.match(workflow,/pulls\?state=open&per_page=100/);
   assert.match(workflow,/REFRESH_JOBS_FILE: refresh-jobs\.json/);
   assert.match(workflow,/OPEN_PULLS_FILE: open-pulls\.json/);
