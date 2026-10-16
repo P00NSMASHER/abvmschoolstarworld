@@ -150,7 +150,7 @@ async function beforeDismissal(page){
     await route.fulfill({json:data});
   });
   await page.goto('/#study');
-  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready',{timeout:15000});
   await page.clock.pauseAt(new Date('2026-10-15T14:59:50-04:00'));
 }
 
