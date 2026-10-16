@@ -57,7 +57,7 @@ for(const size of sizes){
       await art.scrollIntoViewIfNeeded();
       const image=art.locator('img');
       await expect.poll(()=>image.evaluate(el=>el.complete&&el.naturalWidth>0)).toBeTruthy();
-      await expect(art).toContainText('Meal illustration');
+      await expect(art.locator('figcaption')).toHaveCount(0);
       expect(await image.getAttribute('alt')).toMatch(/^Illustration of /);
       const bounded=await art.evaluate(el=>{
         const frame=el.closest('.lunch-card,.agenda-lunch').getBoundingClientRect();
