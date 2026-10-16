@@ -1,3 +1,4 @@
+import { LONG_SHORT_U_FAMILY } from './curriculum-families/long-short-u.mjs';
 import { MATH_SUBTRACTION_FAMILY } from './curriculum-families/math-subtraction.mjs';
 import { SHORT_I_LONG_I_FAMILY } from './curriculum-families/short-i-long-i.mjs';
 import { APPROVED_PR270_FAMILIES } from './curriculum-families/approved-pr270.mjs';
@@ -135,6 +136,7 @@ const FAMILY_REGISTRY = Object.freeze([
   CHART_READING_FAMILY,
   LONG_O_FAMILY,
   SHORT_VOWELS_FAMILY,
+  LONG_SHORT_U_FAMILY,
   ...APPROVED_PR270_FAMILIES,
 ]);
 

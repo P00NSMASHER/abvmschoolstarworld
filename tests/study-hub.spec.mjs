@@ -65,13 +65,19 @@ test('weekly test prep covers same-day subjects in the existing player and compl
       const choices=await page.locator('[data-game-answer] strong').allTextContents();
       const matches=allowed[subject].filter(q=>q.prompt===prompt&&q.choices.length===choices.length&&q.choices.every(choice=>choices.includes(choice)));
       expect(matches,'test practice must use reviewed Math or exact Religion Chapter 2, never unrelated fallback').toHaveLength(1);seen.push(prompt);
-      const count=await page.locator('[data-game-answer]').count();
-      for(let attempt=0;attempt<count;attempt++){
-        const available=page.locator('[data-game-answer]:not(:disabled)'),before=await available.count();expect(before).toBeGreaterThan(0);
-        const choice=await available.first().getAttribute('data-game-answer');await available.first().click();
-        if(await page.locator('[data-game-next]').count())break;
-        await expect(page.locator(`[data-game-answer="${choice}"]`)).toBeDisabled();await expect(available).toHaveCount(before-1);await expect(page.locator('.game-feedback')).toBeVisible();
+      const answers=page.locator('[data-game-answer]');
+      const correct=choices.indexOf(matches[0].answer);expect(correct).toBeGreaterThanOrEqual(0);
+      // Check retry state once per subject, then use the checked source answer.
+      // Exhausting every choice on all 16 items needlessly races WebKit's
+      // unchanged 30-second test budget; scoring/retry cases are separate.
+      if(question===0){
+        const wrong=choices.findIndex(choice=>choice!==matches[0].answer);
+        const available=page.locator('[data-game-answer]:not(:disabled)'),before=await available.count();
+        await answers.nth(wrong).click();
+        await expect(answers.nth(wrong)).toBeDisabled();await expect(available).toHaveCount(before-1);
+        await expect(page.locator('.game-feedback')).toBeVisible();await expect(page.locator('[data-game-next]')).toHaveCount(0);
       }
+      await answers.nth(correct).click();
       await expect(page.locator('[data-game-next]')).toBeVisible();await page.locator('[data-game-next]').click();
     }
     await expect(page.locator('.game-finish')).toBeVisible();await expect(page.locator('[data-game-answer],[data-game-hint],[data-game-next],[data-game-read]')).toHaveCount(0);
