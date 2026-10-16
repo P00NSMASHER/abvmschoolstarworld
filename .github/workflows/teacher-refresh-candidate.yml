@@ -3,6 +3,9 @@ name: Fresh ABVM teacher curriculum candidate acceptance
 on:
   pull_request:
     paths:
+      - 'scripts/curriculum-family-registry.mjs'
+      - 'scripts/curriculum-families/**'
+      - 'tests/*-promotion.test.mjs'
       - 'scripts/refresh-teacher-pages.mjs'
       - 'scripts/teacher-event-precedence.mjs'
       - 'scripts/grade2-content-pipeline.mjs'
