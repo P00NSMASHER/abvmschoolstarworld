@@ -617,7 +617,7 @@ function redrawPlanner(draw,selector){
 function bindScreen(){
   if(screenEventsBound)return;
   screenEventsBound=true;
-  window.ABVMProductView.bindCalendar(stack(),{getDate:()=>calendarDay||today(),selectDate:selectCalendarDate,shiftMonth:(amount,selector)=>selectCalendarDate(window.ABVMProductView.calendarShift(calendarDay||today(),amount),selector)});
+  window.ABVMProductView.bindCalendar(stack(),{getEvents:datedImportantEvents,getDate:()=>calendarDay||today(),selectDate:selectCalendarDate,shiftMonth:(step,focus)=>selectCalendarDate(window.ABVMProductView.calendarShift(calendarDay||today(),step),focus)});
   stack().addEventListener("click",async event=>{
     const target=event.target.closest("button,a");
     if(!target||!stack().contains(target))return;
