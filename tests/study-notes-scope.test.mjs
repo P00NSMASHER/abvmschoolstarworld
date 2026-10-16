@@ -39,10 +39,15 @@ test('explicit subject study dates include only that subject and expire at the n
  assert.deepEqual(weeklySourceNotes(dated,[],'2026-10-19',()=>[]),[]);
 });
 
-test('actual shared Religion skills cannot promote another chapter into this week',async()=>{
- const {readFileSync}=await import('node:fs');
+test('shared Religion evidence cannot promote another chapter into this week',async()=>{
  const {questionsForTest}=await import('../pages/study-hub-core.mjs');
- const actual=JSON.parse(readFileSync(new URL('../pages/data/study-pack.json',import.meta.url))).pack;
+ // Minimized October 16 source shape: one shared skill has Chapter 3 and
+ // Chapter 2 evidence. Keep the regression independent of tomorrow's curriculum.
+ const chapter3='Chapter 3: Jesus Lives in His Church',chapter2="Chapter 2: Jesus is God's Best Gift";
+ const faith='Faith is a gift from God that helps us believe.',shared='Jesus is our Savior; class notes connect his death and Resurrection with new life in grace.';
+ const lineage=lines=>({quality:'page-exact',sourceUrl:'https://sites.google.com/view/abvmgr2/religion',sourceCaptureHash:'a'.repeat(64),evidenceExcerptHash:'sha256:'+'b'.repeat(64),matchedEvidence:lines});
+ const skills=[{id:'religion-faith-gift',subject:'Religion',label:'Faith',studyNotes:[faith],sourceLineage:lineage([chapter3+' * Faith is a gift.'])},{id:'religion-jesus-savior',subject:'Religion',label:'Jesus our Savior',studyNotes:[shared],sourceLineage:lineage([chapter3+' * New life of grace.',chapter2+' * Jesus is our Savior.'])}];
+ const actual={sourceSufficient:true,subjects:[{subject:'Religion',topics:[chapter3,chapter2],studyNotes:[faith,shared]}],contentPipeline:{skills,questions:skills.map((skill,index)=>({id:'fixture-'+index,subject:'Religion',skill:skill.id,prompt:'Synthetic fixture prompt '+index,answer:'Yes',choices:['Yes','No'],sourceLineage:skill.sourceLineage}))},recentReviewPipeline:{questions:[]}};
  const rows=weeklySourceNotes(actual,[{date:'2026-10-15',label:'Religion Chapter 3 test'}],'2026-10-16',event=>questionsForTest(event,actual.contentPipeline.questions));
  const topics=rows.filter(row=>row.kind==='topic');
  assert.deepEqual(topics.map(row=>row.text),['Chapter 3: Jesus Lives in His Church']);
