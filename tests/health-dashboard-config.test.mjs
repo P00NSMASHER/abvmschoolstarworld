@@ -56,6 +56,7 @@ test("health verdict uses the unit-tested effective workflow evidence selector",
 test("health summary displays the same effective evidence used by the verdict",()=>{
   assert.match(report,/## Workflow evidence used for health verdict/);
   assert.match(report,/line\("Teacher refresh",refreshDisplayRun\)/);
+  assert.match(report,/line\("Homework refresh",effectiveRun\(status\.workflows\.homework\)\)/);
   assert.match(report,/line\("App QA",effectiveRun\(status\.workflows\.qa\)\)/);
   assert.match(report,/line\("Publication evidence",status\.publicationEvidence\)/);
   assert.match(report,/line\("Standalone Pages deploy",effectiveRun\(status\.workflows\.deploy\)\)/);
@@ -67,6 +68,8 @@ test("operational health uses the tested publication evidence selector",()=>{
   assert.match(report,/selectPublicationEvidence/);
   assert.match(report,/effectiveRun\(status\.workflows\.deploy\)/);
   assert.match(report,/effectiveRun\(status\.workflows\.refresh\)/);
+  assert.match(report,/effectiveRun\(status\.workflows\.homework\)/);
+  assert.match(report,/homework:"Refresh current ABVM homework"/);
   assert.match(report,/status\.publicationEvidence=effectivePublicationRun\(\)/);
   assert.match(report,/completedRunHealthy\(status\.publicationEvidence,48\)/);
 });
