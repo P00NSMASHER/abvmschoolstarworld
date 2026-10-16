@@ -14,16 +14,16 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-10-16T01:45:51.948Z",
+  "sourceLastSeenAt": "2026-10-16T05:45:11.224Z",
   "sourceCapturedAt": "2026-10-15T13:16:33.856Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-0b18dde9c46594212a54",
     "sourceCapturedAt": "2026-10-15T13:16:33.856Z",
-    "generatedAt": "2026-10-16T01:45:51.948Z",
+    "generatedAt": "2026-10-16T05:45:11.224Z",
     "weekLabel": "Week of October 12, 2026",
-    "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity”, Reading “Read”, parent task “Cover books”, and Reading “Keep Reading Log and Behavior Chart in the HW folder”. Upcoming tests include Math (subtraction) on Thursday, Oct. 15, Religion Ch. 3 on Thursday, Oct. 15, Spelling (long o / Short ) / Handwriting on Friday, Oct. 16, and Phonics (short vowels) on Friday, Oct. 16. 27 uploaded school notices are integrated with the teacher pages.",
+    "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity”, Reading “Read”, parent task “Cover books”, and Reading “Keep Reading Log and Behavior Chart in the HW folder”. Upcoming tests include Spelling (long o / Short ) / Handwriting on Friday, Oct. 16, Phonics (short vowels) on Friday, Oct. 16, Reading (Unit 1 Text Set 3) on Wednesday, Oct. 21, and Spelling (long / short u) / Handwriting on Friday, Oct. 23. 27 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
       {
         "subject": "Reading / ELA",
@@ -107,14 +107,8 @@
       },
       {
         "subject": "Math",
-        "topics": [
-          "Math (subtraction)"
-        ],
-        "studyNotes": [
-          "The Tests page lists Math (subtraction) for Thursday, Oct. 15.",
-          "Practice Grade 2 subtraction facts and use related addition facts to check subtraction.",
-          "The teacher source names subtraction but does not state a numeric range, so this practice stays conservatively within 20."
-        ]
+        "topics": [],
+        "studyNotes": []
       },
       {
         "subject": "Specials",
@@ -1370,7 +1364,7 @@
       "Christmas Caroling date is TBD.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
-    "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+    "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
     "uploadedNoticeHash": "uploaded-notices-b065b74561086b39e2ed",
     "uploadedNoticeTopics": {
       "reminders": [
@@ -1423,8 +1417,8 @@
     "lunchMenuSource": {
       "status": "current-week",
       "retrievalState": "verified",
-      "checkedAt": "2026-10-16T01:45:51.948Z",
-      "lastAttemptAt": "2026-10-16T01:45:51.948Z",
+      "checkedAt": "2026-10-16T05:45:11.224Z",
+      "lastAttemptAt": "2026-10-16T05:45:11.224Z",
       "provider": "Saint Clair Area School District",
       "school": "Assumption BVM School",
       "feedUrl": "https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu",
@@ -1441,7 +1435,7 @@
           "contentHash": "a99ce9385295921c9fff19ae4051732da45f7c38df077d30d9b62577c8c6eb45",
           "proofMode": "pinned-url",
           "reviewedAt": "2026-10-01T00:44:00Z",
-          "checkedAt": "2026-10-16T01:45:51.948Z",
+          "checkedAt": "2026-10-16T05:45:11.224Z",
           "state": "verified"
         },
         {
@@ -1450,7 +1444,7 @@
           "contentHash": "f94a773df280e45523c370f77f54ccb0e8b0ac59a0b5e2c7cd9a051af83a7634",
           "proofMode": "reviewed-notice",
           "reviewedAt": "2026-10-14T09:45:56Z",
-          "checkedAt": "2026-10-16T01:45:51.948Z",
+          "checkedAt": "2026-10-16T05:45:11.224Z",
           "state": "reviewed-notice"
         }
       ],
@@ -1946,13 +1940,13 @@
         "sourceId": "abvm-2026-10-official"
       }
     ],
-    "lunchMenuHash": "330f6cec174253f487dbb34367bbb035aac34c497e6c8706b7fe2681daf0b06f",
+    "lunchMenuHash": "7b3cbc7172c573a39f0dfe23946c085605488ac9e6b3b249186b00effe966043",
     "contentPipeline": {
       "schemaVersion": 2,
       "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-      "generatedAt": "2026-10-16T01:45:51.948Z",
+      "generatedAt": "2026-10-16T05:45:11.224Z",
       "sourceHash": "teacher-pages-0b18dde9c46594212a54",
-      "bankFingerprint": "506902d2",
+      "bankFingerprint": "93704c05",
       "lifecycleStage": "QA_PASSED",
       "safetyState": "SAFE_PARTIAL",
       "sourcePolicy": {
@@ -1987,38 +1981,10 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "1f29cbaa5a7fc2b761836bd7ce097e76d3bc828cdfdebfb1265447526e5e15ff",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:03dec18311485b440a0e340f2e447384e9ed8d607b09aea3e0ae215a98ca52ea",
             "matchedEvidence": [
               "Skill: short and long"
-            ]
-          }
-        },
-        {
-          "id": "math-subtraction",
-          "subject": "Math",
-          "label": "Subtraction",
-          "evidence": [
-            "subtraction"
-          ],
-          "studyNotes": [
-            "Practice Grade 2 subtraction facts and use related addition facts to check subtraction.",
-            "The teacher source names subtraction but does not state a numeric range, so this practice stays conservatively within 20."
-          ],
-          "standards": [
-            "CCSS.2.OA.B.2"
-          ],
-          "domain": "Numbers and operations",
-          "sourceBacked": true,
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Tests",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
-            "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
-            "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
-            "matchedEvidence": [
-              "Thursday Oct. 15: Math (subtraction)"
             ]
           }
         },
@@ -2043,7 +2009,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -2071,7 +2037,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:8b04486776eafdc7d75abb26a240d57be9c68a1113c0603223b0f4d56eb16551",
             "matchedEvidence": [
               "Friday Oct. 16: Spelling (long o/Short )/Handwriting"
@@ -2099,7 +2065,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:21595cd392fa23fe44b565a80bfa41f0025cbaa57160aa3ef9cc5f699acf9b67",
             "matchedEvidence": [
               "Friday Oct. 16: Phonics (short vowels)"
@@ -2127,7 +2093,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -2154,7 +2120,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:8752cf7ebaad32dd1d8ea2eec3983ff61c97f9637dddd4a7a4755caddcc6e9c5",
             "matchedEvidence": [
               "Phonics: long i (i_e) and short i"
@@ -2182,7 +2148,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -2209,7 +2175,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:4e521aa5fa424551741189f4d5985a23d50815298b13d45d660e99c5bb8afa87",
             "matchedEvidence": [
               "Word Structure: possessives ('s)"
@@ -2236,7 +2202,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -2263,7 +2229,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -2290,7 +2256,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -2317,7 +2283,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:ac2300eab0a6f0c63efeedf37faae7d1585484b3821c607b099359d76da0721f",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit",
@@ -2345,7 +2311,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -2372,7 +2338,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -2399,7 +2365,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -2426,7 +2392,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -2453,7 +2419,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -2480,7 +2446,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -2507,7 +2473,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -2534,7 +2500,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -2561,7 +2527,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -2599,12 +2565,6 @@
           "subject": "Spelling / Handwriting",
           "status": "COVERED",
           "skillId": "long-short-a"
-        },
-        {
-          "topic": "Subtraction",
-          "subject": "Math",
-          "status": "COVERED",
-          "skillId": "math-subtraction"
         },
         {
           "topic": "Read and interpret charts",
@@ -2733,10 +2693,6 @@
           "Long o sounds like the letter name in go, home, and boat. These are original examples, not an official spelling list.",
           "If a teacher test label also says “short” without naming the vowel, do not guess which short-vowel pattern is included."
         ],
-        "Math": [
-          "Practice Grade 2 subtraction facts and use related addition facts to check subtraction.",
-          "The teacher source names subtraction but does not state a numeric range, so this practice stays conservatively within 20."
-        ],
         "Reading / ELA": [
           "A chart organizes information into rows or groups. Read its labels and counts before answering a question.",
           "Compare chart values by finding the greatest, least, total, or difference.",
@@ -2837,90 +2793,10 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "1f29cbaa5a7fc2b761836bd7ce097e76d3bc828cdfdebfb1265447526e5e15ff",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:03dec18311485b440a0e340f2e447384e9ed8d607b09aea3e0ae215a98ca52ea",
             "matchedEvidence": [
               "Skill: short and long"
-            ]
-          }
-        },
-        {
-          "id": "auto-math-subtraction-7-7b19b7",
-          "templateId": "grade2-math-subtraction-v1",
-          "subject": "Math",
-          "skill": "math-subtraction",
-          "assessedSkillIds": [
-            "math-subtraction"
-          ],
-          "prompt": "Solve 12 - 5. What is the difference?",
-          "choices": [
-            "6",
-            "7",
-            "8"
-          ],
-          "answer": "7",
-          "explanation": "12 take away 5 leaves 7.",
-          "hint": "Start at 12 and count back 5.",
-          "sourceFact": "Verified Grade 2 skill: Subtraction",
-          "sourceEvidence": [
-            "subtraction"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.2.OA.B.2"
-          ],
-          "domain": "Numbers and operations",
-          "dok": 1,
-          "cognitiveDemand": "recall-and-fluency",
-          "difficulty": 2,
-          "questionType": "direct",
-          "choiceDiagnostics": {
-            "6": {
-              "misconception": "math-subtraction-distractor",
-              "feedback": "Review: Subtraction. Then use the clue in the question."
-            },
-            "8": {
-              "misconception": "math-subtraction-distractor",
-              "feedback": "Review: Subtraction. Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "6": 0,
-              "8": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "math-subtraction"
-            ],
-            "strongestClaim": "practice-performance-on-this-skill",
-            "doesNotClaim": [
-              "standardized-test-score",
-              "global-subject-mastery"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "5c806880",
-          "variantFingerprint": "1befb2b4",
-          "presentationFingerprint": "ffdeb0ec",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Tests",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
-            "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
-            "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
-            "matchedEvidence": [
-              "Thursday Oct. 15: Math (subtraction)"
             ]
           }
         },
@@ -2935,8 +2811,8 @@
           "prompt": "A class chart lists apples 6, bananas 4, and oranges 3. Which fruit has the most votes?",
           "choices": [
             "Bananas",
-            "Oranges",
-            "Apples"
+            "Apples",
+            "Oranges"
           ],
           "answer": "Apples",
           "explanation": "Six apple votes are more than four banana votes or three orange votes.",
@@ -2991,13 +2867,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "156bce3d",
           "variantFingerprint": "1bc81cfd",
-          "presentationFingerprint": "908ef447",
+          "presentationFingerprint": "ff4770a5",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -3014,9 +2890,9 @@
           ],
           "prompt": "Which word has the long o sound, like the o sound in home?",
           "choices": [
-            "Rope",
             "Hop",
-            "Hot"
+            "Hot",
+            "Rope"
           ],
           "answer": "Rope",
           "explanation": "Rope has the long o sound; hop and hot use short o.",
@@ -3071,13 +2947,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "ceb19ced",
           "variantFingerprint": "2336b628",
-          "presentationFingerprint": "40d261f1",
+          "presentationFingerprint": "a8579959",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:8b04486776eafdc7d75abb26a240d57be9c68a1113c0603223b0f4d56eb16551",
             "matchedEvidence": [
               "Friday Oct. 16: Spelling (long o/Short )/Handwriting"
@@ -3094,8 +2970,8 @@
           ],
           "prompt": "Which word has the short a sound, like cat?",
           "choices": [
-            "Cake",
             "Map",
+            "Cake",
             "Rain"
           ],
           "answer": "Map",
@@ -3151,13 +3027,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "4d630e9d",
           "variantFingerprint": "f8caba07",
-          "presentationFingerprint": "64ee672f",
+          "presentationFingerprint": "915b708b",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:21595cd392fa23fe44b565a80bfa41f0025cbaa57160aa3ef9cc5f699acf9b67",
             "matchedEvidence": [
               "Friday Oct. 16: Phonics (short vowels)"
@@ -3175,8 +3051,8 @@
           "prompt": "Read: 'At cheer practice, Ava put her silver pom-poms beside a blue water bottle. Then she practiced a jump.' Where did Ava put the pom-poms?",
           "choices": [
             "behind the speaker",
-            "inside a backpack",
-            "beside a water bottle"
+            "beside a water bottle",
+            "inside a backpack"
           ],
           "answer": "beside a water bottle",
           "explanation": "The passage says Ava put her pom-poms beside a blue water bottle before practicing.",
@@ -3232,13 +3108,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "e7d182da",
           "variantFingerprint": "cd7b1286",
-          "presentationFingerprint": "74867856",
+          "presentationFingerprint": "546495f2",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -3255,9 +3131,9 @@
           ],
           "prompt": "In a building game, an avatar needs to hide from a pretend dragon. Which word has long i made by silent e?",
           "choices": [
-            "hide",
             "high",
-            "hill"
+            "hill",
+            "hide"
           ],
           "answer": "hide",
           "explanation": "Hide uses i-consonant-silent e. High has long i but not this spelling pattern; hill has short i.",
@@ -3312,13 +3188,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "a10e03f6",
           "variantFingerprint": "057cebe3",
-          "presentationFingerprint": "1403393e",
+          "presentationFingerprint": "a994bf04",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:8752cf7ebaad32dd1d8ea2eec3983ff61c97f9637dddd4a7a4755caddcc6e9c5",
             "matchedEvidence": [
               "Phonics: long i (i_e) and short i"
@@ -3335,8 +3211,8 @@
           ],
           "prompt": "Read: 'The cheer squad practiced arm motions, counted the beats, and helped new teammates learn jumps.' What is the main idea?",
           "choices": [
-            "The squad counted the beats.",
             "The squad practiced several skills together.",
+            "The squad counted the beats.",
             "New teammates learned jumps."
           ],
           "answer": "The squad practiced several skills together.",
@@ -3393,13 +3269,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "e34f323f",
           "variantFingerprint": "33d936de",
-          "presentationFingerprint": "6bdbd4e1",
+          "presentationFingerprint": "46687a83",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -3417,8 +3293,8 @@
           "prompt": "A cartoon kitten named Pip owns a tiny bell. Which phrase uses apostrophe-s to show that the bell belongs to Pip?",
           "choices": [
             "Mia's bell",
-            "Pip's ribbon",
-            "Pip's bell"
+            "Pip's bell",
+            "Pip's ribbon"
           ],
           "answer": "Pip's bell",
           "explanation": "Pip's bell matches both the owner, Pip, and the object, the bell. The other labels name a different owner or item.",
@@ -3473,13 +3349,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "c63617dd",
           "variantFingerprint": "33942c3e",
-          "presentationFingerprint": "7ab896fe",
+          "presentationFingerprint": "6289dacc",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:4e521aa5fa424551741189f4d5985a23d50815298b13d45d660e99c5bb8afa87",
             "matchedEvidence": [
               "Word Structure: possessives ('s)"
@@ -3496,9 +3372,9 @@
           ],
           "prompt": "According to the current Religion lesson, which answer names the three Persons of the Trinity?",
           "choices": [
-            "Father, Son, and Holy Spirit",
             "think, choose, and love",
-            "Jesus, Mary, and disciples"
+            "Jesus, Mary, and disciples",
+            "Father, Son, and Holy Spirit"
           ],
           "answer": "Father, Son, and Holy Spirit",
           "explanation": "The Trinity is Father, Son, and Holy Spirit: three Persons in one God.",
@@ -3553,13 +3429,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "a8dc45c3",
           "variantFingerprint": "37833afb",
-          "presentationFingerprint": "4a7b2983",
+          "presentationFingerprint": "4356cd83",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -3576,8 +3452,8 @@
           ],
           "prompt": "According to the current Religion lesson, which three abilities are connected with being made in God's image and likeness?",
           "choices": [
-            "Father, Son, and Holy Spirit",
             "think, choose, and love",
+            "Father, Son, and Holy Spirit",
             "see, hear, and taste"
           ],
           "answer": "think, choose, and love",
@@ -3633,13 +3509,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "886b64f0",
           "variantFingerprint": "22480364",
-          "presentationFingerprint": "f56621aa",
+          "presentationFingerprint": "f73fa93e",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -3657,8 +3533,8 @@
           "prompt": "Which action best applies the current Religion lesson about caring for God's creation?",
           "choices": [
             "Leaving trash beside a stream",
-            "Breaking branches for no reason",
-            "Picking up litter at the park"
+            "Picking up litter at the park",
+            "Breaking branches for no reason"
           ],
           "answer": "Picking up litter at the park",
           "explanation": "Caring for the world around us shows respect for God's gift of creation.",
@@ -3713,13 +3589,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "ad8fbc99",
           "variantFingerprint": "52857af7",
-          "presentationFingerprint": "1c7f1b29",
+          "presentationFingerprint": "d0b047fd",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -3736,9 +3612,9 @@
           ],
           "prompt": "According to the current Religion lesson, why is Jesus called our Savior?",
           "choices": [
-            "He died for our sins and gives us new life in grace.",
             "He tells us about God and teaches us how to live.",
-            "We use our senses to enjoy God’s gifts."
+            "We use our senses to enjoy God’s gifts.",
+            "He died for our sins and gives us new life in grace."
           ],
           "answer": "He died for our sins and gives us new life in grace.",
           "explanation": "The Religion lesson teaches that Jesus died for our sins and gives us new life in grace.",
@@ -3793,13 +3669,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "e7ae5655",
           "variantFingerprint": "75a7fd8f",
-          "presentationFingerprint": "e84f4822",
+          "presentationFingerprint": "3770730e",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:ac2300eab0a6f0c63efeedf37faae7d1585484b3821c607b099359d76da0721f",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit",
@@ -3817,8 +3693,8 @@
           ],
           "prompt": "According to the current Religion lesson, what does original sin describe?",
           "choices": [
-            "A sacred sign given to the Church by Jesus.",
             "The human tendency to sin connected with Adam and Eve’s sin.",
+            "A sacred sign given to the Church by Jesus.",
             "The gift that helps us believe."
           ],
           "answer": "The human tendency to sin connected with Adam and Eve’s sin.",
@@ -3874,13 +3750,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "41d5f8be",
           "variantFingerprint": "d3d34dee",
-          "presentationFingerprint": "e2b4e35c",
+          "presentationFingerprint": "957e872e",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -3898,8 +3774,8 @@
           "prompt": "According to the current Religion lesson, what is faith?",
           "choices": [
             "A sacred sign given to the Church by Jesus.",
-            "The human tendency to sin.",
-            "A gift from God that helps us believe."
+            "A gift from God that helps us believe.",
+            "The human tendency to sin."
           ],
           "answer": "A gift from God that helps us believe.",
           "explanation": "The current lesson defines faith as a gift from God that helps us believe.",
@@ -3954,13 +3830,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "17cac752",
           "variantFingerprint": "6f2e1398",
-          "presentationFingerprint": "fb8f07bd",
+          "presentationFingerprint": "e312ef27",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -3977,9 +3853,9 @@
           ],
           "prompt": "According to the current Religion lesson, what is a sacrament?",
           "choices": [
-            "A sacred sign given to the Church by Jesus.",
             "A gift from God that helps us believe.",
-            "The human tendency to sin."
+            "The human tendency to sin.",
+            "A sacred sign given to the Church by Jesus."
           ],
           "answer": "A sacred sign given to the Church by Jesus.",
           "explanation": "The current lesson defines a sacrament as a sacred sign given to the Church by Jesus.",
@@ -4034,13 +3910,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "b8bf7900",
           "variantFingerprint": "2398d95c",
-          "presentationFingerprint": "e312ef27",
+          "presentationFingerprint": "4bbff26b",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -4057,8 +3933,8 @@
           ],
           "prompt": "According to the current Religion lesson, what happens at Baptism?",
           "choices": [
-            "We learn the names of the three Persons of the Trinity.",
             "Original sin is washed away, and we receive the Holy Spirit, faith, and new life in grace.",
+            "We learn the names of the three Persons of the Trinity.",
             "We are taught to use our five senses."
           ],
           "answer": "Original sin is washed away, and we receive the Holy Spirit, faith, and new life in grace.",
@@ -4114,13 +3990,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "d45b543e",
           "variantFingerprint": "c70a0078",
-          "presentationFingerprint": "27e5153e",
+          "presentationFingerprint": "e3ddd43a",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -4138,8 +4014,8 @@
           "prompt": "According to the current Religion lesson, what are friends and followers of Jesus called?",
           "choices": [
             "Trinity",
-            "creation",
-            "disciples"
+            "disciples",
+            "creation"
           ],
           "answer": "disciples",
           "explanation": "The current lesson says disciples are friends and followers of Jesus.",
@@ -4194,13 +4070,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "91140cde",
           "variantFingerprint": "8cc14e7b",
-          "presentationFingerprint": "f2c8b77d",
+          "presentationFingerprint": "77bea8a1",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -4217,9 +4093,9 @@
           ],
           "prompt": "According to the current Religion lesson, which statement is about Mary?",
           "choices": [
-            "Mary is Jesus’ mother and the mother of the Church.",
             "The Trinity is three Persons in one God.",
-            "We are responsible for caring for God’s gift of creation."
+            "We are responsible for caring for God’s gift of creation.",
+            "Mary is Jesus’ mother and the mother of the Church."
           ],
           "answer": "Mary is Jesus’ mother and the mother of the Church.",
           "explanation": "The current lesson identifies Mary as Jesus’ mother and the mother of the Church.",
@@ -4274,13 +4150,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "cae577da",
           "variantFingerprint": "de94d13f",
-          "presentationFingerprint": "ff05d625",
+          "presentationFingerprint": "1bff14a3",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -4297,8 +4173,8 @@
           ],
           "prompt": "According to the current Religion lesson, what comparison is made between a seed and Jesus?",
           "choices": [
-            "Our senses help us notice and enjoy God’s gifts of creation.",
             "A seed dies so new life can grow, and Jesus died so we can have new life in grace.",
+            "Our senses help us notice and enjoy God’s gifts of creation.",
             "People are made in God’s image and likeness and can think, choose, and love."
           ],
           "answer": "A seed dies so new life can grow, and Jesus died so we can have new life in grace.",
@@ -4354,13 +4230,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "a34d2779",
           "variantFingerprint": "a4e8cb16",
-          "presentationFingerprint": "5532cd5e",
+          "presentationFingerprint": "4306e7c8",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -4378,8 +4254,8 @@
           "prompt": "According to the current Religion lesson, which statement about the senses is taught?",
           "choices": [
             "We are made in God’s image and likeness and can think, choose, and love.",
-            "Disciples are friends and followers of Jesus.",
-            "We use our senses to enjoy God’s gifts."
+            "We use our senses to enjoy God’s gifts.",
+            "Disciples are friends and followers of Jesus."
           ],
           "answer": "We use our senses to enjoy God’s gifts.",
           "explanation": "The lesson connects our senses with noticing and enjoying God’s gifts of creation.",
@@ -4434,13 +4310,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "289f8d89",
           "variantFingerprint": "125f743d",
-          "presentationFingerprint": "12ff1961",
+          "presentationFingerprint": "4ba7ea11",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -4457,9 +4333,9 @@
           ],
           "prompt": "According to the current Religion lesson, who is identified as the giver of gifts?",
           "choices": [
-            "God",
             "disciples",
-            "our five senses"
+            "our five senses",
+            "God"
           ],
           "answer": "God",
           "explanation": "The current lesson names Chapter 1 “God is the Giver of Gifts” and lists Gifts from God.",
@@ -4514,13 +4390,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "e7b3e9ea",
           "variantFingerprint": "34948f70",
-          "presentationFingerprint": "b028ed00",
+          "presentationFingerprint": "82f6fc34",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -4537,8 +4413,8 @@
           ],
           "prompt": "Which pair of words both use the short a sound?",
           "choices": [
-            "cake and game",
             "cat and map",
+            "cake and game",
             "late and cap"
           ],
           "answer": "cat and map",
@@ -4594,13 +4470,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "1774536a",
           "variantFingerprint": "a42833d6",
-          "presentationFingerprint": "d3f47676",
+          "presentationFingerprint": "e162694a",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "1f29cbaa5a7fc2b761836bd7ce097e76d3bc828cdfdebfb1265447526e5e15ff",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:03dec18311485b440a0e340f2e447384e9ed8d607b09aea3e0ae215a98ca52ea",
             "matchedEvidence": [
               "Skill: short and long"
@@ -4618,8 +4494,8 @@
           "prompt": "Why does the a in “game” have a long sound?",
           "choices": [
             "The g makes every vowel long.",
-            "Every four-letter word has a long vowel.",
-            "The final e helps the a say its name."
+            "The final e helps the a say its name.",
+            "Every four-letter word has a long vowel."
           ],
           "answer": "The final e helps the a say its name.",
           "explanation": "Game follows the a_e pattern in which the final e changes the a sound.",
@@ -4674,13 +4550,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "edf51b1c",
           "variantFingerprint": "d528452a",
-          "presentationFingerprint": "cff31f32",
+          "presentationFingerprint": "7dce8432",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "1f29cbaa5a7fc2b761836bd7ce097e76d3bc828cdfdebfb1265447526e5e15ff",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:03dec18311485b440a0e340f2e447384e9ed8d607b09aea3e0ae215a98ca52ea",
             "matchedEvidence": [
               "Skill: short and long"
@@ -4697,9 +4573,9 @@
           ],
           "prompt": "Which word has the short a sound?",
           "choices": [
-            "cap",
             "cake",
-            "late"
+            "late",
+            "cap"
           ],
           "answer": "cap",
           "explanation": "Cap uses the short a sound.",
@@ -4754,13 +4630,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "e090abf4",
           "variantFingerprint": "089e3f60",
-          "presentationFingerprint": "837970f3",
+          "presentationFingerprint": "064339c3",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "1f29cbaa5a7fc2b761836bd7ce097e76d3bc828cdfdebfb1265447526e5e15ff",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:03dec18311485b440a0e340f2e447384e9ed8d607b09aea3e0ae215a98ca52ea",
             "matchedEvidence": [
               "Skill: short and long"
@@ -4777,8 +4653,8 @@
           ],
           "prompt": "Which word uses the a_e pattern to make long a?",
           "choices": [
-            "cat",
             "gate",
+            "cat",
             "map"
           ],
           "answer": "gate",
@@ -4834,13 +4710,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "850f7e0d",
           "variantFingerprint": "934fa41b",
-          "presentationFingerprint": "ddebdd28",
+          "presentationFingerprint": "3af95460",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "1f29cbaa5a7fc2b761836bd7ce097e76d3bc828cdfdebfb1265447526e5e15ff",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:03dec18311485b440a0e340f2e447384e9ed8d607b09aea3e0ae215a98ca52ea",
             "matchedEvidence": [
               "Skill: short and long"
@@ -4858,8 +4734,8 @@
           "prompt": "Which pair has one short-a word followed by one long-a word?",
           "choices": [
             "game — lake",
-            "cat — map",
-            "pan — plane"
+            "pan — plane",
+            "cat — map"
           ],
           "answer": "pan — plane",
           "explanation": "Pan has short a; plane has long a.",
@@ -4914,13 +4790,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "03937c5a",
           "variantFingerprint": "90e264db",
-          "presentationFingerprint": "254662a5",
+          "presentationFingerprint": "d3bde359",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "1f29cbaa5a7fc2b761836bd7ce097e76d3bc828cdfdebfb1265447526e5e15ff",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:03dec18311485b440a0e340f2e447384e9ed8d607b09aea3e0ae215a98ca52ea",
             "matchedEvidence": [
               "Skill: short and long"
@@ -4937,9 +4813,9 @@
           ],
           "prompt": "Why does “late” have a different a sound from “lat”?",
           "choices": [
-            "The final e changes the a to its long sound.",
             "The l always makes a long vowel.",
-            "The t changes a into e."
+            "The t changes a into e.",
+            "The final e changes the a to its long sound."
           ],
           "answer": "The final e changes the a to its long sound.",
           "explanation": "The a_e pattern makes the vowel say its long sound.",
@@ -4994,13 +4870,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "9e37c399",
           "variantFingerprint": "2ca9ff5f",
-          "presentationFingerprint": "27e6ec7b",
+          "presentationFingerprint": "b0e8c47f",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "1f29cbaa5a7fc2b761836bd7ce097e76d3bc828cdfdebfb1265447526e5e15ff",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:03dec18311485b440a0e340f2e447384e9ed8d607b09aea3e0ae215a98ca52ea",
             "matchedEvidence": [
               "Skill: short and long"
@@ -5017,8 +4893,8 @@
           ],
           "prompt": "Which explanation correctly compares “map” and “made”?",
           "choices": [
-            "Both words have short a.",
             "Map has short a; made has long a because of final e.",
+            "Both words have short a.",
             "Made has short a because it has four letters."
           ],
           "answer": "Map has short a; made has long a because of final e.",
@@ -5074,656 +4950,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "d1b00c7e",
           "variantFingerprint": "0fbe9aba",
-          "presentationFingerprint": "bdfceae2",
+          "presentationFingerprint": "24f02798",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "1f29cbaa5a7fc2b761836bd7ce097e76d3bc828cdfdebfb1265447526e5e15ff",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:03dec18311485b440a0e340f2e447384e9ed8d607b09aea3e0ae215a98ca52ea",
             "matchedEvidence": [
               "Skill: short and long"
-            ]
-          }
-        },
-        {
-          "id": "auto-math-subtraction-9-aefa5b",
-          "templateId": "grade2-math-subtraction-v1",
-          "subject": "Math",
-          "skill": "math-subtraction",
-          "assessedSkillIds": [
-            "math-subtraction"
-          ],
-          "prompt": "Solve 15 - 6. What is the difference?",
-          "choices": [
-            "8",
-            "10",
-            "9"
-          ],
-          "answer": "9",
-          "explanation": "15 take away 6 leaves 9.",
-          "hint": "Count back 6 from 15.",
-          "sourceFact": "Verified Grade 2 skill: Subtraction",
-          "sourceEvidence": [
-            "subtraction"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.2.OA.B.2"
-          ],
-          "domain": "Numbers and operations",
-          "dok": 1,
-          "cognitiveDemand": "recall-and-fluency",
-          "difficulty": 2,
-          "questionType": "direct",
-          "choiceDiagnostics": {
-            "8": {
-              "misconception": "math-subtraction-distractor",
-              "feedback": "Review: Subtraction. Then use the clue in the question."
-            },
-            "10": {
-              "misconception": "math-subtraction-distractor",
-              "feedback": "Review: Subtraction. Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "8": 0,
-              "10": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "math-subtraction"
-            ],
-            "strongestClaim": "practice-performance-on-this-skill",
-            "doesNotClaim": [
-              "standardized-test-score",
-              "global-subject-mastery"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "28433564",
-          "variantFingerprint": "97dcb6ef",
-          "presentationFingerprint": "853273b7",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Tests",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
-            "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
-            "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
-            "matchedEvidence": [
-              "Thursday Oct. 15: Math (subtraction)"
-            ]
-          }
-        },
-        {
-          "id": "auto-math-subtraction-6-0267c4",
-          "templateId": "grade2-math-subtraction-v1",
-          "subject": "Math",
-          "skill": "math-subtraction",
-          "assessedSkillIds": [
-            "math-subtraction"
-          ],
-          "prompt": "Solve 10 - 4. What is the difference?",
-          "choices": [
-            "6",
-            "5",
-            "7"
-          ],
-          "answer": "6",
-          "explanation": "10 take away 4 leaves 6.",
-          "hint": "Start at 10 and count back 4.",
-          "sourceFact": "Verified Grade 2 skill: Subtraction",
-          "sourceEvidence": [
-            "subtraction"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.2.OA.B.2"
-          ],
-          "domain": "Numbers and operations",
-          "dok": 1,
-          "cognitiveDemand": "recall-and-fluency",
-          "difficulty": 2,
-          "questionType": "direct",
-          "choiceDiagnostics": {
-            "5": {
-              "misconception": "math-subtraction-distractor",
-              "feedback": "Review: Subtraction. Then use the clue in the question."
-            },
-            "7": {
-              "misconception": "math-subtraction-distractor",
-              "feedback": "Review: Subtraction. Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "5": 0,
-              "7": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "math-subtraction"
-            ],
-            "strongestClaim": "practice-performance-on-this-skill",
-            "doesNotClaim": [
-              "standardized-test-score",
-              "global-subject-mastery"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "597bff43",
-          "variantFingerprint": "4eb68387",
-          "presentationFingerprint": "cff9aeb3",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Tests",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
-            "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
-            "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
-            "matchedEvidence": [
-              "Thursday Oct. 15: Math (subtraction)"
-            ]
-          }
-        },
-        {
-          "id": "auto-math-subtraction-9-0f1872",
-          "templateId": "grade2-math-subtraction-v1",
-          "subject": "Math",
-          "skill": "math-subtraction",
-          "assessedSkillIds": [
-            "math-subtraction"
-          ],
-          "prompt": "Mia has 14 stickers and gives 5 away. How many stickers does she have left?",
-          "choices": [
-            "8",
-            "9",
-            "10"
-          ],
-          "answer": "9",
-          "explanation": "14 - 5 = 9, so Mia has 9 stickers left.",
-          "hint": "Start with 14 and take away 5.",
-          "sourceFact": "Verified Grade 2 skill: Subtraction",
-          "sourceEvidence": [
-            "subtraction"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.2.OA.B.2"
-          ],
-          "domain": "Numbers and operations",
-          "dok": 2,
-          "cognitiveDemand": "skill-and-concept-application",
-          "difficulty": 2,
-          "questionType": "transfer",
-          "choiceDiagnostics": {
-            "8": {
-              "misconception": "math-subtraction-distractor",
-              "feedback": "Review: Subtraction. Then use the clue in the question."
-            },
-            "10": {
-              "misconception": "math-subtraction-distractor",
-              "feedback": "Review: Subtraction. Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "8": 0,
-              "10": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "math-subtraction"
-            ],
-            "strongestClaim": "practice-performance-on-this-skill",
-            "doesNotClaim": [
-              "standardized-test-score",
-              "global-subject-mastery"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "dcfdfa83",
-          "variantFingerprint": "022af3c8",
-          "presentationFingerprint": "b05e0f25",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Tests",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
-            "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
-            "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
-            "matchedEvidence": [
-              "Thursday Oct. 15: Math (subtraction)"
-            ]
-          }
-        },
-        {
-          "id": "auto-math-subtraction-9-f11516",
-          "templateId": "grade2-math-subtraction-v1",
-          "subject": "Math",
-          "skill": "math-subtraction",
-          "assessedSkillIds": [
-            "math-subtraction"
-          ],
-          "prompt": "There are 13 birds on a fence. Four fly away. How many birds remain?",
-          "choices": [
-            "8",
-            "10",
-            "9"
-          ],
-          "answer": "9",
-          "explanation": "13 - 4 = 9, so 9 birds remain.",
-          "hint": "Take 4 away from 13.",
-          "sourceFact": "Verified Grade 2 skill: Subtraction",
-          "sourceEvidence": [
-            "subtraction"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.2.OA.B.2"
-          ],
-          "domain": "Numbers and operations",
-          "dok": 2,
-          "cognitiveDemand": "skill-and-concept-application",
-          "difficulty": 2,
-          "questionType": "transfer",
-          "choiceDiagnostics": {
-            "8": {
-              "misconception": "math-subtraction-distractor",
-              "feedback": "Review: Subtraction. Then use the clue in the question."
-            },
-            "10": {
-              "misconception": "math-subtraction-distractor",
-              "feedback": "Review: Subtraction. Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "8": 0,
-              "10": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "math-subtraction"
-            ],
-            "strongestClaim": "practice-performance-on-this-skill",
-            "doesNotClaim": [
-              "standardized-test-score",
-              "global-subject-mastery"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "c36de4d5",
-          "variantFingerprint": "e9cae136",
-          "presentationFingerprint": "853273b7",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Tests",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
-            "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
-            "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
-            "matchedEvidence": [
-              "Thursday Oct. 15: Math (subtraction)"
-            ]
-          }
-        },
-        {
-          "id": "auto-math-subtraction-9-5b2cb6",
-          "templateId": "grade2-math-subtraction-v1",
-          "subject": "Math",
-          "skill": "math-subtraction",
-          "assessedSkillIds": [
-            "math-subtraction"
-          ],
-          "prompt": "A box has 16 blocks. Seven blocks are put away. How many blocks are still in the box?",
-          "choices": [
-            "9",
-            "8",
-            "10"
-          ],
-          "answer": "9",
-          "explanation": "16 - 7 = 9, so 9 blocks are still in the box.",
-          "hint": "Subtract the 7 blocks that were put away from 16.",
-          "sourceFact": "Verified Grade 2 skill: Subtraction",
-          "sourceEvidence": [
-            "subtraction"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.2.OA.B.2"
-          ],
-          "domain": "Numbers and operations",
-          "dok": 2,
-          "cognitiveDemand": "skill-and-concept-application",
-          "difficulty": 2,
-          "questionType": "transfer",
-          "choiceDiagnostics": {
-            "8": {
-              "misconception": "math-subtraction-distractor",
-              "feedback": "Review: Subtraction. Then use the clue in the question."
-            },
-            "10": {
-              "misconception": "math-subtraction-distractor",
-              "feedback": "Review: Subtraction. Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "8": 0,
-              "10": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "math-subtraction"
-            ],
-            "strongestClaim": "practice-performance-on-this-skill",
-            "doesNotClaim": [
-              "standardized-test-score",
-              "global-subject-mastery"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "c2eec2a9",
-          "variantFingerprint": "b1d2ca40",
-          "presentationFingerprint": "d09f3cdd",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Tests",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
-            "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
-            "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
-            "matchedEvidence": [
-              "Thursday Oct. 15: Math (subtraction)"
-            ]
-          }
-        },
-        {
-          "id": "auto-math-subtraction-8-3-11-b6c78e",
-          "templateId": "grade2-math-subtraction-v1",
-          "subject": "Math",
-          "skill": "math-subtraction",
-          "assessedSkillIds": [
-            "math-subtraction"
-          ],
-          "prompt": "Which addition fact correctly checks 11 - 3 = 8?",
-          "choices": [
-            "11 + 3 = 14",
-            "8 + 3 = 11",
-            "8 + 11 = 19"
-          ],
-          "answer": "8 + 3 = 11",
-          "explanation": "The difference plus the amount taken away should equal the starting number.",
-          "hint": "Use the same three numbers to build a related addition fact.",
-          "sourceFact": "Verified Grade 2 skill: Subtraction",
-          "sourceEvidence": [
-            "subtraction"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.2.OA.B.2"
-          ],
-          "domain": "Numbers and operations",
-          "dok": 3,
-          "cognitiveDemand": "strategic-reasoning",
-          "difficulty": 2,
-          "questionType": "reasoning",
-          "choiceDiagnostics": {
-            "11 + 3 = 14": {
-              "misconception": "math-subtraction-distractor",
-              "feedback": "Review: Subtraction. Then use the clue in the question."
-            },
-            "8 + 11 = 19": {
-              "misconception": "math-subtraction-distractor",
-              "feedback": "Review: Subtraction. Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "11 + 3 = 14": 0,
-              "8 + 11 = 19": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "math-subtraction"
-            ],
-            "strongestClaim": "practice-performance-on-this-skill",
-            "doesNotClaim": [
-              "standardized-test-score",
-              "global-subject-mastery"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "6f3ae16f",
-          "variantFingerprint": "a141b636",
-          "presentationFingerprint": "db61f980",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Tests",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
-            "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
-            "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
-            "matchedEvidence": [
-              "Thursday Oct. 15: Math (subtraction)"
-            ]
-          }
-        },
-        {
-          "id": "auto-math-subtraction-5-4-9-3c0d03",
-          "templateId": "grade2-math-subtraction-v1",
-          "subject": "Math",
-          "skill": "math-subtraction",
-          "assessedSkillIds": [
-            "math-subtraction"
-          ],
-          "prompt": "Sam says 9 - 4 = 6. Which fact shows that his answer is one too high?",
-          "choices": [
-            "6 + 4 = 10",
-            "9 + 4 = 13",
-            "5 + 4 = 9"
-          ],
-          "answer": "5 + 4 = 9",
-          "explanation": "The related addition fact 5 + 4 = 9 shows that 9 - 4 = 5.",
-          "hint": "Find the number that plus 4 makes 9.",
-          "sourceFact": "Verified Grade 2 skill: Subtraction",
-          "sourceEvidence": [
-            "subtraction"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.2.OA.B.2"
-          ],
-          "domain": "Numbers and operations",
-          "dok": 3,
-          "cognitiveDemand": "strategic-reasoning",
-          "difficulty": 2,
-          "questionType": "reasoning",
-          "choiceDiagnostics": {
-            "6 + 4 = 10": {
-              "misconception": "math-subtraction-distractor",
-              "feedback": "Review: Subtraction. Then use the clue in the question."
-            },
-            "9 + 4 = 13": {
-              "misconception": "math-subtraction-distractor",
-              "feedback": "Review: Subtraction. Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "6 + 4 = 10": 0,
-              "9 + 4 = 13": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "math-subtraction"
-            ],
-            "strongestClaim": "practice-performance-on-this-skill",
-            "doesNotClaim": [
-              "standardized-test-score",
-              "global-subject-mastery"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "5630a833",
-          "variantFingerprint": "254dde50",
-          "presentationFingerprint": "990edbf1",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Tests",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
-            "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
-            "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
-            "matchedEvidence": [
-              "Thursday Oct. 15: Math (subtraction)"
-            ]
-          }
-        },
-        {
-          "id": "auto-math-subtraction-eight-blocks-are-on-a-table-three-are-put-away-and-five-remain-650883",
-          "templateId": "grade2-math-subtraction-v1",
-          "subject": "Math",
-          "skill": "math-subtraction",
-          "assessedSkillIds": [
-            "math-subtraction"
-          ],
-          "prompt": "Which story problem matches the subtraction fact 8 - 3?",
-          "choices": [
-            "Eight blocks are on a table, three are put away, and five remain.",
-            "Three blocks are on a table and eight more are added.",
-            "Eight blocks are split into eight equal groups."
-          ],
-          "answer": "Eight blocks are on a table, three are put away, and five remain.",
-          "explanation": "The story starts with 8 and removes 3, which matches 8 - 3.",
-          "hint": "Look for a story that starts with 8 and takes 3 away.",
-          "sourceFact": "Verified Grade 2 skill: Subtraction",
-          "sourceEvidence": [
-            "subtraction"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.2.OA.B.2"
-          ],
-          "domain": "Numbers and operations",
-          "dok": 3,
-          "cognitiveDemand": "strategic-reasoning",
-          "difficulty": 2,
-          "questionType": "reasoning",
-          "choiceDiagnostics": {
-            "Three blocks are on a table and eight more are added.": {
-              "misconception": "math-subtraction-distractor",
-              "feedback": "Review: Subtraction. Then use the clue in the question."
-            },
-            "Eight blocks are split into eight equal groups.": {
-              "misconception": "math-subtraction-distractor",
-              "feedback": "Review: Subtraction. Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "Three blocks are on a table and eight more are added.": 0,
-              "Eight blocks are split into eight equal groups.": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "math-subtraction"
-            ],
-            "strongestClaim": "practice-performance-on-this-skill",
-            "doesNotClaim": [
-              "standardized-test-score",
-              "global-subject-mastery"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "b57abf46",
-          "variantFingerprint": "3915836c",
-          "presentationFingerprint": "b759f8b5",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Tests",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
-            "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
-            "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
-            "matchedEvidence": [
-              "Thursday Oct. 15: Math (subtraction)"
             ]
           }
         },
@@ -5800,7 +5036,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -5880,7 +5116,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -5960,7 +5196,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -6040,7 +5276,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -6120,7 +5356,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -6200,7 +5436,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -6280,7 +5516,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -6360,7 +5596,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:8b04486776eafdc7d75abb26a240d57be9c68a1113c0603223b0f4d56eb16551",
             "matchedEvidence": [
               "Friday Oct. 16: Spelling (long o/Short )/Handwriting"
@@ -6440,7 +5676,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:8b04486776eafdc7d75abb26a240d57be9c68a1113c0603223b0f4d56eb16551",
             "matchedEvidence": [
               "Friday Oct. 16: Spelling (long o/Short )/Handwriting"
@@ -6520,7 +5756,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:8b04486776eafdc7d75abb26a240d57be9c68a1113c0603223b0f4d56eb16551",
             "matchedEvidence": [
               "Friday Oct. 16: Spelling (long o/Short )/Handwriting"
@@ -6600,7 +5836,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:8b04486776eafdc7d75abb26a240d57be9c68a1113c0603223b0f4d56eb16551",
             "matchedEvidence": [
               "Friday Oct. 16: Spelling (long o/Short )/Handwriting"
@@ -6680,7 +5916,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:8b04486776eafdc7d75abb26a240d57be9c68a1113c0603223b0f4d56eb16551",
             "matchedEvidence": [
               "Friday Oct. 16: Spelling (long o/Short )/Handwriting"
@@ -6760,7 +5996,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:8b04486776eafdc7d75abb26a240d57be9c68a1113c0603223b0f4d56eb16551",
             "matchedEvidence": [
               "Friday Oct. 16: Spelling (long o/Short )/Handwriting"
@@ -6840,7 +6076,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:8b04486776eafdc7d75abb26a240d57be9c68a1113c0603223b0f4d56eb16551",
             "matchedEvidence": [
               "Friday Oct. 16: Spelling (long o/Short )/Handwriting"
@@ -6920,7 +6156,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:21595cd392fa23fe44b565a80bfa41f0025cbaa57160aa3ef9cc5f699acf9b67",
             "matchedEvidence": [
               "Friday Oct. 16: Phonics (short vowels)"
@@ -7000,7 +6236,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:21595cd392fa23fe44b565a80bfa41f0025cbaa57160aa3ef9cc5f699acf9b67",
             "matchedEvidence": [
               "Friday Oct. 16: Phonics (short vowels)"
@@ -7080,7 +6316,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:21595cd392fa23fe44b565a80bfa41f0025cbaa57160aa3ef9cc5f699acf9b67",
             "matchedEvidence": [
               "Friday Oct. 16: Phonics (short vowels)"
@@ -7160,7 +6396,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:21595cd392fa23fe44b565a80bfa41f0025cbaa57160aa3ef9cc5f699acf9b67",
             "matchedEvidence": [
               "Friday Oct. 16: Phonics (short vowels)"
@@ -7240,7 +6476,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:21595cd392fa23fe44b565a80bfa41f0025cbaa57160aa3ef9cc5f699acf9b67",
             "matchedEvidence": [
               "Friday Oct. 16: Phonics (short vowels)"
@@ -7320,7 +6556,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:21595cd392fa23fe44b565a80bfa41f0025cbaa57160aa3ef9cc5f699acf9b67",
             "matchedEvidence": [
               "Friday Oct. 16: Phonics (short vowels)"
@@ -7400,7 +6636,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:21595cd392fa23fe44b565a80bfa41f0025cbaa57160aa3ef9cc5f699acf9b67",
             "matchedEvidence": [
               "Friday Oct. 16: Phonics (short vowels)"
@@ -7481,7 +6717,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -7562,7 +6798,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -7643,7 +6879,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -7724,7 +6960,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -7805,7 +7041,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -7886,7 +7122,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -7967,7 +7203,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -8047,7 +7283,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:8752cf7ebaad32dd1d8ea2eec3983ff61c97f9637dddd4a7a4755caddcc6e9c5",
             "matchedEvidence": [
               "Phonics: long i (i_e) and short i"
@@ -8127,7 +7363,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:8752cf7ebaad32dd1d8ea2eec3983ff61c97f9637dddd4a7a4755caddcc6e9c5",
             "matchedEvidence": [
               "Phonics: long i (i_e) and short i"
@@ -8207,7 +7443,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:8752cf7ebaad32dd1d8ea2eec3983ff61c97f9637dddd4a7a4755caddcc6e9c5",
             "matchedEvidence": [
               "Phonics: long i (i_e) and short i"
@@ -8287,7 +7523,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:8752cf7ebaad32dd1d8ea2eec3983ff61c97f9637dddd4a7a4755caddcc6e9c5",
             "matchedEvidence": [
               "Phonics: long i (i_e) and short i"
@@ -8367,7 +7603,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:8752cf7ebaad32dd1d8ea2eec3983ff61c97f9637dddd4a7a4755caddcc6e9c5",
             "matchedEvidence": [
               "Phonics: long i (i_e) and short i"
@@ -8447,7 +7683,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:8752cf7ebaad32dd1d8ea2eec3983ff61c97f9637dddd4a7a4755caddcc6e9c5",
             "matchedEvidence": [
               "Phonics: long i (i_e) and short i"
@@ -8527,7 +7763,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:8752cf7ebaad32dd1d8ea2eec3983ff61c97f9637dddd4a7a4755caddcc6e9c5",
             "matchedEvidence": [
               "Phonics: long i (i_e) and short i"
@@ -8608,7 +7844,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -8689,7 +7925,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -8770,7 +8006,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -8851,7 +8087,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -8932,7 +8168,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -9013,7 +8249,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -9094,7 +8330,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:053392bb336881536d1bc8a90b5548ac47f9f4fcc92099360fca8b3b71b9abd3",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts"
@@ -9174,7 +8410,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:4e521aa5fa424551741189f4d5985a23d50815298b13d45d660e99c5bb8afa87",
             "matchedEvidence": [
               "Word Structure: possessives ('s)"
@@ -9254,7 +8490,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:4e521aa5fa424551741189f4d5985a23d50815298b13d45d660e99c5bb8afa87",
             "matchedEvidence": [
               "Word Structure: possessives ('s)"
@@ -9334,7 +8570,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:4e521aa5fa424551741189f4d5985a23d50815298b13d45d660e99c5bb8afa87",
             "matchedEvidence": [
               "Word Structure: possessives ('s)"
@@ -9414,7 +8650,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:4e521aa5fa424551741189f4d5985a23d50815298b13d45d660e99c5bb8afa87",
             "matchedEvidence": [
               "Word Structure: possessives ('s)"
@@ -9494,7 +8730,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:4e521aa5fa424551741189f4d5985a23d50815298b13d45d660e99c5bb8afa87",
             "matchedEvidence": [
               "Word Structure: possessives ('s)"
@@ -9574,7 +8810,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:4e521aa5fa424551741189f4d5985a23d50815298b13d45d660e99c5bb8afa87",
             "matchedEvidence": [
               "Word Structure: possessives ('s)"
@@ -9654,7 +8890,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:4e521aa5fa424551741189f4d5985a23d50815298b13d45d660e99c5bb8afa87",
             "matchedEvidence": [
               "Word Structure: possessives ('s)"
@@ -9734,7 +8970,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -9814,7 +9050,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -9894,7 +9130,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -9974,7 +9210,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -10054,7 +9290,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -10134,7 +9370,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -10214,7 +9450,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:ac2300eab0a6f0c63efeedf37faae7d1585484b3821c607b099359d76da0721f",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit",
@@ -10295,7 +9531,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:ac2300eab0a6f0c63efeedf37faae7d1585484b3821c607b099359d76da0721f",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit",
@@ -10376,7 +9612,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -10456,7 +9692,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -10536,7 +9772,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -10616,7 +9852,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -10696,7 +9932,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -10776,7 +10012,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -10856,7 +10092,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -10936,7 +10172,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -11016,7 +10252,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -11096,7 +10332,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -11176,7 +10412,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -11256,7 +10492,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -11336,7 +10572,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -11416,7 +10652,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -11496,7 +10732,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -11576,7 +10812,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -11656,7 +10892,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -11736,7 +10972,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "sourceCheckedAt": "2026-10-16T05:45:11.224Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -11746,30 +10982,29 @@
       ],
       "qa": {
         "status": "pass",
-        "skillCount": 22,
-        "questionCount": 112,
+        "skillCount": 21,
+        "questionCount": 103,
         "minimumQuestionsPerSkill": 2,
         "duplicatesRemoved": 0,
         "answerPositionCounts": [
-          38,
-          37,
-          37
+          35,
+          34,
+          34
         ],
-        "semanticVariantCount": 112,
+        "semanticVariantCount": 103,
         "maxConsecutiveAnswerPosition": 1,
         "questionTypeCounts": {
-          "direct": 37,
-          "transfer": 39,
-          "reasoning": 36
+          "direct": 34,
+          "transfer": 36,
+          "reasoning": 33
         },
         "dokCounts": {
-          "1": 32,
-          "2": 56,
-          "3": 24
+          "1": 29,
+          "2": 53,
+          "3": 21
         },
         "questionsPerSkill": {
           "long-short-a": 8,
-          "math-subtraction": 9,
           "reading-charts": 8,
           "long-o": 8,
           "short-vowels": 8,
@@ -11794,23 +11029,53 @@
         "rejectedCount": 0,
         "rejected": [],
         "subjectCoverage": [
-          "Math",
           "Reading / ELA",
           "Religion",
           "Spelling / Handwriting"
         ],
         "sourceInsufficientCount": 3,
         "unsupportedSkillCount": 0,
-        "pageExactLineageCount": 112,
+        "pageExactLineageCount": 103,
         "unresolvedLineageCount": 0
       }
     },
     "recentReviewPipeline": {
       "schemaVersion": 1,
       "retentionDays": 14,
-      "generatedAt": "2026-10-16T01:45:51.948Z",
-      "bankFingerprint": "54ebfed06efb58bf509b21ad7eef897442e0c20ab855ab8606d3ffe621dc08b3",
+      "generatedAt": "2026-10-16T05:45:11.224Z",
+      "bankFingerprint": "22d23e166885e12491def740c905616f21690e81de124dae5e8b50d878592276",
       "skills": [
+        {
+          "id": "math-subtraction",
+          "subject": "Math",
+          "label": "Subtraction",
+          "evidence": [
+            "subtraction"
+          ],
+          "studyNotes": [
+            "Practice Grade 2 subtraction facts and use related addition facts to check subtraction.",
+            "The teacher source names subtraction but does not state a numeric range, so this practice stays conservatively within 20."
+          ],
+          "standards": [
+            "CCSS.2.OA.B.2"
+          ],
+          "domain": "Numbers and operations",
+          "sourceBacked": true,
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
+            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
+            "matchedEvidence": [
+              "Thursday Oct. 15: Math (subtraction)"
+            ]
+          },
+          "reviewVerifiedAt": "2026-10-16T01:45:51.948Z",
+          "reviewExpiresAt": "2026-10-30T01:45:51.948Z",
+          "reviewSourceHash": "teacher-pages-0b18dde9c46594212a54"
+        },
         {
           "id": "consonant-blends",
           "subject": "Spelling / Handwriting",
@@ -12125,6 +11390,753 @@
         }
       ],
       "questions": [
+        {
+          "id": "auto-math-subtraction-7-7b19b7",
+          "templateId": "grade2-math-subtraction-v1",
+          "subject": "Math",
+          "skill": "math-subtraction",
+          "assessedSkillIds": [
+            "math-subtraction"
+          ],
+          "prompt": "Solve 12 - 5. What is the difference?",
+          "choices": [
+            "6",
+            "7",
+            "8"
+          ],
+          "answer": "7",
+          "explanation": "12 take away 5 leaves 7.",
+          "hint": "Start at 12 and count back 5.",
+          "sourceFact": "Verified Grade 2 skill: Subtraction",
+          "sourceEvidence": [
+            "subtraction"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.2.OA.B.2"
+          ],
+          "domain": "Numbers and operations",
+          "dok": 1,
+          "cognitiveDemand": "recall-and-fluency",
+          "difficulty": 2,
+          "questionType": "direct",
+          "choiceDiagnostics": {
+            "6": {
+              "misconception": "math-subtraction-distractor",
+              "feedback": "Review: Subtraction. Then use the clue in the question."
+            },
+            "8": {
+              "misconception": "math-subtraction-distractor",
+              "feedback": "Review: Subtraction. Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "6": 0,
+              "8": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "math-subtraction"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "5c806880",
+          "variantFingerprint": "1befb2b4",
+          "presentationFingerprint": "ffdeb0ec",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
+            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
+            "matchedEvidence": [
+              "Thursday Oct. 15: Math (subtraction)"
+            ]
+          },
+          "reviewVerifiedAt": "2026-10-16T01:45:51.948Z",
+          "reviewExpiresAt": "2026-10-30T01:45:51.948Z",
+          "reviewSourceHash": "teacher-pages-0b18dde9c46594212a54"
+        },
+        {
+          "id": "auto-math-subtraction-9-aefa5b",
+          "templateId": "grade2-math-subtraction-v1",
+          "subject": "Math",
+          "skill": "math-subtraction",
+          "assessedSkillIds": [
+            "math-subtraction"
+          ],
+          "prompt": "Solve 15 - 6. What is the difference?",
+          "choices": [
+            "8",
+            "10",
+            "9"
+          ],
+          "answer": "9",
+          "explanation": "15 take away 6 leaves 9.",
+          "hint": "Count back 6 from 15.",
+          "sourceFact": "Verified Grade 2 skill: Subtraction",
+          "sourceEvidence": [
+            "subtraction"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.2.OA.B.2"
+          ],
+          "domain": "Numbers and operations",
+          "dok": 1,
+          "cognitiveDemand": "recall-and-fluency",
+          "difficulty": 2,
+          "questionType": "direct",
+          "choiceDiagnostics": {
+            "8": {
+              "misconception": "math-subtraction-distractor",
+              "feedback": "Review: Subtraction. Then use the clue in the question."
+            },
+            "10": {
+              "misconception": "math-subtraction-distractor",
+              "feedback": "Review: Subtraction. Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "8": 0,
+              "10": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "math-subtraction"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "28433564",
+          "variantFingerprint": "97dcb6ef",
+          "presentationFingerprint": "853273b7",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
+            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
+            "matchedEvidence": [
+              "Thursday Oct. 15: Math (subtraction)"
+            ]
+          },
+          "reviewVerifiedAt": "2026-10-16T01:45:51.948Z",
+          "reviewExpiresAt": "2026-10-30T01:45:51.948Z",
+          "reviewSourceHash": "teacher-pages-0b18dde9c46594212a54"
+        },
+        {
+          "id": "auto-math-subtraction-6-0267c4",
+          "templateId": "grade2-math-subtraction-v1",
+          "subject": "Math",
+          "skill": "math-subtraction",
+          "assessedSkillIds": [
+            "math-subtraction"
+          ],
+          "prompt": "Solve 10 - 4. What is the difference?",
+          "choices": [
+            "6",
+            "5",
+            "7"
+          ],
+          "answer": "6",
+          "explanation": "10 take away 4 leaves 6.",
+          "hint": "Start at 10 and count back 4.",
+          "sourceFact": "Verified Grade 2 skill: Subtraction",
+          "sourceEvidence": [
+            "subtraction"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.2.OA.B.2"
+          ],
+          "domain": "Numbers and operations",
+          "dok": 1,
+          "cognitiveDemand": "recall-and-fluency",
+          "difficulty": 2,
+          "questionType": "direct",
+          "choiceDiagnostics": {
+            "5": {
+              "misconception": "math-subtraction-distractor",
+              "feedback": "Review: Subtraction. Then use the clue in the question."
+            },
+            "7": {
+              "misconception": "math-subtraction-distractor",
+              "feedback": "Review: Subtraction. Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "5": 0,
+              "7": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "math-subtraction"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "597bff43",
+          "variantFingerprint": "4eb68387",
+          "presentationFingerprint": "cff9aeb3",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
+            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
+            "matchedEvidence": [
+              "Thursday Oct. 15: Math (subtraction)"
+            ]
+          },
+          "reviewVerifiedAt": "2026-10-16T01:45:51.948Z",
+          "reviewExpiresAt": "2026-10-30T01:45:51.948Z",
+          "reviewSourceHash": "teacher-pages-0b18dde9c46594212a54"
+        },
+        {
+          "id": "auto-math-subtraction-9-0f1872",
+          "templateId": "grade2-math-subtraction-v1",
+          "subject": "Math",
+          "skill": "math-subtraction",
+          "assessedSkillIds": [
+            "math-subtraction"
+          ],
+          "prompt": "Mia has 14 stickers and gives 5 away. How many stickers does she have left?",
+          "choices": [
+            "8",
+            "9",
+            "10"
+          ],
+          "answer": "9",
+          "explanation": "14 - 5 = 9, so Mia has 9 stickers left.",
+          "hint": "Start with 14 and take away 5.",
+          "sourceFact": "Verified Grade 2 skill: Subtraction",
+          "sourceEvidence": [
+            "subtraction"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.2.OA.B.2"
+          ],
+          "domain": "Numbers and operations",
+          "dok": 2,
+          "cognitiveDemand": "skill-and-concept-application",
+          "difficulty": 2,
+          "questionType": "transfer",
+          "choiceDiagnostics": {
+            "8": {
+              "misconception": "math-subtraction-distractor",
+              "feedback": "Review: Subtraction. Then use the clue in the question."
+            },
+            "10": {
+              "misconception": "math-subtraction-distractor",
+              "feedback": "Review: Subtraction. Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "8": 0,
+              "10": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "math-subtraction"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "dcfdfa83",
+          "variantFingerprint": "022af3c8",
+          "presentationFingerprint": "b05e0f25",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
+            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
+            "matchedEvidence": [
+              "Thursday Oct. 15: Math (subtraction)"
+            ]
+          },
+          "reviewVerifiedAt": "2026-10-16T01:45:51.948Z",
+          "reviewExpiresAt": "2026-10-30T01:45:51.948Z",
+          "reviewSourceHash": "teacher-pages-0b18dde9c46594212a54"
+        },
+        {
+          "id": "auto-math-subtraction-9-f11516",
+          "templateId": "grade2-math-subtraction-v1",
+          "subject": "Math",
+          "skill": "math-subtraction",
+          "assessedSkillIds": [
+            "math-subtraction"
+          ],
+          "prompt": "There are 13 birds on a fence. Four fly away. How many birds remain?",
+          "choices": [
+            "8",
+            "10",
+            "9"
+          ],
+          "answer": "9",
+          "explanation": "13 - 4 = 9, so 9 birds remain.",
+          "hint": "Take 4 away from 13.",
+          "sourceFact": "Verified Grade 2 skill: Subtraction",
+          "sourceEvidence": [
+            "subtraction"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.2.OA.B.2"
+          ],
+          "domain": "Numbers and operations",
+          "dok": 2,
+          "cognitiveDemand": "skill-and-concept-application",
+          "difficulty": 2,
+          "questionType": "transfer",
+          "choiceDiagnostics": {
+            "8": {
+              "misconception": "math-subtraction-distractor",
+              "feedback": "Review: Subtraction. Then use the clue in the question."
+            },
+            "10": {
+              "misconception": "math-subtraction-distractor",
+              "feedback": "Review: Subtraction. Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "8": 0,
+              "10": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "math-subtraction"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "c36de4d5",
+          "variantFingerprint": "e9cae136",
+          "presentationFingerprint": "853273b7",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
+            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
+            "matchedEvidence": [
+              "Thursday Oct. 15: Math (subtraction)"
+            ]
+          },
+          "reviewVerifiedAt": "2026-10-16T01:45:51.948Z",
+          "reviewExpiresAt": "2026-10-30T01:45:51.948Z",
+          "reviewSourceHash": "teacher-pages-0b18dde9c46594212a54"
+        },
+        {
+          "id": "auto-math-subtraction-9-5b2cb6",
+          "templateId": "grade2-math-subtraction-v1",
+          "subject": "Math",
+          "skill": "math-subtraction",
+          "assessedSkillIds": [
+            "math-subtraction"
+          ],
+          "prompt": "A box has 16 blocks. Seven blocks are put away. How many blocks are still in the box?",
+          "choices": [
+            "9",
+            "8",
+            "10"
+          ],
+          "answer": "9",
+          "explanation": "16 - 7 = 9, so 9 blocks are still in the box.",
+          "hint": "Subtract the 7 blocks that were put away from 16.",
+          "sourceFact": "Verified Grade 2 skill: Subtraction",
+          "sourceEvidence": [
+            "subtraction"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.2.OA.B.2"
+          ],
+          "domain": "Numbers and operations",
+          "dok": 2,
+          "cognitiveDemand": "skill-and-concept-application",
+          "difficulty": 2,
+          "questionType": "transfer",
+          "choiceDiagnostics": {
+            "8": {
+              "misconception": "math-subtraction-distractor",
+              "feedback": "Review: Subtraction. Then use the clue in the question."
+            },
+            "10": {
+              "misconception": "math-subtraction-distractor",
+              "feedback": "Review: Subtraction. Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "8": 0,
+              "10": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "math-subtraction"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "c2eec2a9",
+          "variantFingerprint": "b1d2ca40",
+          "presentationFingerprint": "d09f3cdd",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
+            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
+            "matchedEvidence": [
+              "Thursday Oct. 15: Math (subtraction)"
+            ]
+          },
+          "reviewVerifiedAt": "2026-10-16T01:45:51.948Z",
+          "reviewExpiresAt": "2026-10-30T01:45:51.948Z",
+          "reviewSourceHash": "teacher-pages-0b18dde9c46594212a54"
+        },
+        {
+          "id": "auto-math-subtraction-8-3-11-b6c78e",
+          "templateId": "grade2-math-subtraction-v1",
+          "subject": "Math",
+          "skill": "math-subtraction",
+          "assessedSkillIds": [
+            "math-subtraction"
+          ],
+          "prompt": "Which addition fact correctly checks 11 - 3 = 8?",
+          "choices": [
+            "11 + 3 = 14",
+            "8 + 3 = 11",
+            "8 + 11 = 19"
+          ],
+          "answer": "8 + 3 = 11",
+          "explanation": "The difference plus the amount taken away should equal the starting number.",
+          "hint": "Use the same three numbers to build a related addition fact.",
+          "sourceFact": "Verified Grade 2 skill: Subtraction",
+          "sourceEvidence": [
+            "subtraction"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.2.OA.B.2"
+          ],
+          "domain": "Numbers and operations",
+          "dok": 3,
+          "cognitiveDemand": "strategic-reasoning",
+          "difficulty": 2,
+          "questionType": "reasoning",
+          "choiceDiagnostics": {
+            "11 + 3 = 14": {
+              "misconception": "math-subtraction-distractor",
+              "feedback": "Review: Subtraction. Then use the clue in the question."
+            },
+            "8 + 11 = 19": {
+              "misconception": "math-subtraction-distractor",
+              "feedback": "Review: Subtraction. Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "11 + 3 = 14": 0,
+              "8 + 11 = 19": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "math-subtraction"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "6f3ae16f",
+          "variantFingerprint": "a141b636",
+          "presentationFingerprint": "db61f980",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
+            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
+            "matchedEvidence": [
+              "Thursday Oct. 15: Math (subtraction)"
+            ]
+          },
+          "reviewVerifiedAt": "2026-10-16T01:45:51.948Z",
+          "reviewExpiresAt": "2026-10-30T01:45:51.948Z",
+          "reviewSourceHash": "teacher-pages-0b18dde9c46594212a54"
+        },
+        {
+          "id": "auto-math-subtraction-5-4-9-3c0d03",
+          "templateId": "grade2-math-subtraction-v1",
+          "subject": "Math",
+          "skill": "math-subtraction",
+          "assessedSkillIds": [
+            "math-subtraction"
+          ],
+          "prompt": "Sam says 9 - 4 = 6. Which fact shows that his answer is one too high?",
+          "choices": [
+            "6 + 4 = 10",
+            "9 + 4 = 13",
+            "5 + 4 = 9"
+          ],
+          "answer": "5 + 4 = 9",
+          "explanation": "The related addition fact 5 + 4 = 9 shows that 9 - 4 = 5.",
+          "hint": "Find the number that plus 4 makes 9.",
+          "sourceFact": "Verified Grade 2 skill: Subtraction",
+          "sourceEvidence": [
+            "subtraction"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.2.OA.B.2"
+          ],
+          "domain": "Numbers and operations",
+          "dok": 3,
+          "cognitiveDemand": "strategic-reasoning",
+          "difficulty": 2,
+          "questionType": "reasoning",
+          "choiceDiagnostics": {
+            "6 + 4 = 10": {
+              "misconception": "math-subtraction-distractor",
+              "feedback": "Review: Subtraction. Then use the clue in the question."
+            },
+            "9 + 4 = 13": {
+              "misconception": "math-subtraction-distractor",
+              "feedback": "Review: Subtraction. Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "6 + 4 = 10": 0,
+              "9 + 4 = 13": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "math-subtraction"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "5630a833",
+          "variantFingerprint": "254dde50",
+          "presentationFingerprint": "990edbf1",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
+            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
+            "matchedEvidence": [
+              "Thursday Oct. 15: Math (subtraction)"
+            ]
+          },
+          "reviewVerifiedAt": "2026-10-16T01:45:51.948Z",
+          "reviewExpiresAt": "2026-10-30T01:45:51.948Z",
+          "reviewSourceHash": "teacher-pages-0b18dde9c46594212a54"
+        },
+        {
+          "id": "auto-math-subtraction-eight-blocks-are-on-a-table-three-are-put-away-and-five-remain-650883",
+          "templateId": "grade2-math-subtraction-v1",
+          "subject": "Math",
+          "skill": "math-subtraction",
+          "assessedSkillIds": [
+            "math-subtraction"
+          ],
+          "prompt": "Which story problem matches the subtraction fact 8 - 3?",
+          "choices": [
+            "Eight blocks are on a table, three are put away, and five remain.",
+            "Three blocks are on a table and eight more are added.",
+            "Eight blocks are split into eight equal groups."
+          ],
+          "answer": "Eight blocks are on a table, three are put away, and five remain.",
+          "explanation": "The story starts with 8 and removes 3, which matches 8 - 3.",
+          "hint": "Look for a story that starts with 8 and takes 3 away.",
+          "sourceFact": "Verified Grade 2 skill: Subtraction",
+          "sourceEvidence": [
+            "subtraction"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.2.OA.B.2"
+          ],
+          "domain": "Numbers and operations",
+          "dok": 3,
+          "cognitiveDemand": "strategic-reasoning",
+          "difficulty": 2,
+          "questionType": "reasoning",
+          "choiceDiagnostics": {
+            "Three blocks are on a table and eight more are added.": {
+              "misconception": "math-subtraction-distractor",
+              "feedback": "Review: Subtraction. Then use the clue in the question."
+            },
+            "Eight blocks are split into eight equal groups.": {
+              "misconception": "math-subtraction-distractor",
+              "feedback": "Review: Subtraction. Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "Three blocks are on a table and eight more are added.": 0,
+              "Eight blocks are split into eight equal groups.": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "math-subtraction"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "b57abf46",
+          "variantFingerprint": "3915836c",
+          "presentationFingerprint": "b759f8b5",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
+            "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+            "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
+            "matchedEvidence": [
+              "Thursday Oct. 15: Math (subtraction)"
+            ]
+          },
+          "reviewVerifiedAt": "2026-10-16T01:45:51.948Z",
+          "reviewExpiresAt": "2026-10-30T01:45:51.948Z",
+          "reviewSourceHash": "teacher-pages-0b18dde9c46594212a54"
+        },
         {
           "id": "auto-consonant-blends-frog-edb24a",
           "templateId": "grade2-consonant-blends-v1",
@@ -18613,10 +18625,16 @@
     },
     "schoolChangeFeed": {
       "schemaVersion": 1,
-      "generatedAt": "2026-10-16T01:45:51.948Z",
+      "generatedAt": "2026-10-16T05:45:11.224Z",
       "sourceHash": "teacher-pages-0b18dde9c46594212a54",
-      "changed": false,
+      "changed": true,
       "items": [
+        {
+          "id": "change-457ff9006109",
+          "kind": "review-skill",
+          "subject": "Math",
+          "text": "Moved to recent review: Math — Subtraction"
+        },
         {
           "id": "change-56afd30b5fa9",
           "kind": "unchanged",
@@ -18628,12 +18646,6 @@
           "kind": "unchanged",
           "subject": "Spelling / Handwriting",
           "text": "No changes to Spelling / Handwriting."
-        },
-        {
-          "id": "change-a3b58d6f4906",
-          "kind": "unchanged",
-          "subject": "Math",
-          "text": "No changes to Math."
         },
         {
           "id": "change-c91c235819ed",
@@ -18652,42 +18664,42 @@
       "notes": "October 20 no school for Grade 2; newer screenshot supersedes Oct 16/19 conflicts. Club hours and eligibility unspecified."
     }
   },
-  "sourceLastCheckedAt": "2026-10-16T01:45:51.948Z",
+  "sourceLastCheckedAt": "2026-10-16T05:45:11.224Z",
   "sourcePages": [
     {
       "title": "Home",
       "url": "https://sites.google.com/view/abvmgr2/home",
-      "checkedAt": "2026-10-16T01:45:51.948Z",
+      "checkedAt": "2026-10-16T05:45:11.224Z",
       "contentHash": "6e39aba1f3063fe63be42cb4fe7ccc00df3a9e60b41d7cc58fbf2e654b9adf89"
     },
     {
       "title": "Homework",
       "url": "https://sites.google.com/view/abvmgr2/homework",
-      "checkedAt": "2026-10-16T01:45:51.948Z",
+      "checkedAt": "2026-10-16T05:45:11.224Z",
       "contentHash": "faabffa7a06fe6eeefa98e3204993203dd9d2f2a623f5b70ba1b7ac55ef04fde"
     },
     {
       "title": "Reading Work",
       "url": "https://sites.google.com/view/abvmgr2/reading-work",
-      "checkedAt": "2026-10-16T01:45:51.948Z",
+      "checkedAt": "2026-10-16T05:45:11.224Z",
       "contentHash": "ea28951c96c0e9f3275a435e4bb19d10953778d7537f9fb5df638279803b3066"
     },
     {
       "title": "Weekly Spelling List",
       "url": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-      "checkedAt": "2026-10-16T01:45:51.948Z",
+      "checkedAt": "2026-10-16T05:45:11.224Z",
       "contentHash": "1f29cbaa5a7fc2b761836bd7ce097e76d3bc828cdfdebfb1265447526e5e15ff"
     },
     {
       "title": "Tests",
       "url": "https://sites.google.com/view/abvmgr2/tests",
-      "checkedAt": "2026-10-16T01:45:51.948Z",
+      "checkedAt": "2026-10-16T05:45:11.224Z",
       "contentHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4"
     },
     {
       "title": "Religion",
       "url": "https://sites.google.com/view/abvmgr2/religion",
-      "checkedAt": "2026-10-16T01:45:51.948Z",
+      "checkedAt": "2026-10-16T05:45:11.224Z",
       "contentHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f"
     }
   ],
