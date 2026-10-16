@@ -6,9 +6,11 @@ test.use({serviceWorkers:'block'});
 async function study(page,width=390){
  await page.clock.setFixedTime(new Date('2026-10-16T12:00:00-04:00'));
  await page.setViewportSize({width,height:width>=700?1180:852});
- await page.goto('/#study?notes');
+ await page.goto('/#study');
  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state',/ready|partial/,{timeout:15000});
- await expect(page.locator('[data-study-notes]')).toHaveAttribute('open','');
+ const notes=page.locator('[data-study-notes]');
+ if(!await notes.evaluate(node=>node.open))await notes.locator(':scope > summary').click();
+ await expect(notes).toHaveAttribute('open','');
 }
 async function capture(page,info,name){
  const path=info.outputPath(name+'.png');await page.screenshot({path,animations:'disabled'});await info.attach(name,{path,contentType:'image/png'});

@@ -88,6 +88,16 @@ test("Games and their saved, STAR and mixed source banks remain playable offline
     }
     await page.locator('[data-study-notes] > summary').click();
     await expect(page.locator('[data-study-notes]')).toContainText('Reading / ELA');
+    const notes=page.locator('[data-study-notes]');
+    const subject=await notes.locator('[data-notes-subject]').first().getAttribute('aria-label');
+    await notes.locator('[data-notes-subject]').first().click();
+    await expect(notes.locator('[data-note-subject]:not([hidden]) h3')).toHaveText(subject);
+    const search=notes.getByRole('searchbox',{name:'Search study notes'});
+    await search.fill(subject);await expect(search).toBeFocused();
+    await notes.getByRole('button',{name:subject,exact:true}).click();
+    await expect(notes.locator('[data-note-subject]:not([hidden]) h3')).toHaveText(subject);
+    await notes.locator('[data-notes-back]').click();
+    await expect(notes.locator('.notes-subject-browser')).toBeVisible();
   }finally{await context.setOffline(false);}
 });
 

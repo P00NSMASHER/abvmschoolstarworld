@@ -324,7 +324,7 @@
 .games-screen [data-study-notes] :is(.study-note-topic,.study-note-review,.game-material-lesson)[open]>summary{list-style-type:disclosure-open}
 .games-screen [data-study-notes] :is(.study-note-topic,.study-note-review,.game-material-lesson)>summary::-webkit-details-marker{display:revert}
 .games-screen [data-study-notes] summary :is(span,strong){min-width:0;font:inherit;font-weight:720;overflow-wrap:anywhere}
-.games-screen [data-study-notes] summary small{float:none;min-width:0;font-size:.78rem;font-weight:500;color:var(--study-muted);white-space:normal}
+.games-screen [data-study-notes] summary small{float:none;min-width:0;margin-left:8px;font-size:.78rem;font-weight:500;color:var(--study-muted);white-space:normal}
 .games-screen [data-study-notes] .study-note-body{padding:0 16px 17px;background:white;border-top:1px solid #edf2f7}
 .games-screen [data-study-notes] .study-note-body ul{margin:14px 0 0;padding-left:19px;list-style:disc}
 .games-screen [data-study-notes] .study-note-body li{display:list-item;padding:0;margin:9px 0 0;list-style:disc;font-size:1rem;line-height:1.65}

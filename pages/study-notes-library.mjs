@@ -14,7 +14,9 @@ export function notesLibraryData(data={}, {query='',meaning=row=>row.meaning||''
  const notes=(data.notes||[]).filter(row=>text(row.text));
  const words=(data.vocabulary||[]).filter(row=>text(row.term));
  const lessons=data.lessons||[],links=(data.links||[]).filter(row=>safeLink(row.url)),warnings=data.warnings||[];
- const subjects=unique([...notes,...links,...warnings,...lessons,...words.map(row=>({...row,subject:wordSubject(row)}))].map(row=>row.subject));
+ const priority=['Reading / ELA','Spelling / Handwriting','Math','Religion'];
+ const rank=subject=>priority.includes(subject)?priority.indexOf(subject):priority.length;
+ const subjects=unique([...notes,...links,...warnings,...lessons,...words.map(row=>({...row,subject:wordSubject(row)}))].map(row=>row.subject)).sort((a,b)=>rank(a)-rank(b));
  const tokens=normalized(query.slice(0,120)).trim().split(/\s+/).filter(Boolean);
  const matches=value=>tokens.every(token=>normalized(value).includes(token));
  return subjects.map(subject=>{
@@ -53,10 +55,10 @@ export function renderNotesLibrary(data,{source='weekly',subject='',query='',ove
   const caption=parts.slice(0,2).join(' · ')||(row.review.length?row.review.length+' review '+(row.review.length===1?'idea':'ideas'):row.links.length?'Official reviews':'Source information');
   return '<button type="button" class="notes-subject-card" data-notes-subject="'+row.index+'" aria-pressed="'+Boolean(selected?.subject===row.subject)+'" aria-controls="study-notes-panel-'+row.index+'" aria-label="'+esc(row.subject)+'"><img src="./assets/illustrations/'+art(row.subject)+'.webp" alt="" width="64" height="64"><span><strong>'+esc(shortSubject(row.subject))+'</strong><small>'+esc(caption)+'</small></span><b aria-hidden="true">›</b></button>';
  }).join('');
- return '<div class="notes-library"><div class="notes-library-heading"><h3>One subject. A little at a time.</h3><p>Class notes, useful words and trusted reviews.</p></div>'+
+ return '<div class="notes-library"><div class="notes-library-heading"><h3>Study library</h3></div>'+
   '<div class="study-note-scope" role="group" aria-label="Notes to review">'+['weekly','saved'].map(key=>'<button type="button" data-notes-source="'+key+'" aria-pressed="'+(source===key)+'">'+(key==='weekly'?'This week':'All learning')+'</button>').join('')+'</div>'+
   '<div class="notes-search"><label class="visually-hidden" for="study-notes-search">Search study notes</label><input id="study-notes-search" type="search" data-notes-search placeholder="Search notes, words or topics" value="'+esc(queryText)+'" maxlength="120" autocomplete="off" enterkeyhint="search">'+(queryText?'<button type="button" data-notes-clear aria-label="Clear note search">Clear</button>':'')+'</div>'+
-  '<p class="notes-search-status" role="status" aria-live="polite">'+esc(queryText?count+' '+(count===1?'match':'matches')+' across '+rows.length+' '+(rows.length===1?'subject':'subjects'):source==='saved'?'Includes saved lessons. Undated work stays here, not in This week.':'Choose a subject to start reviewing.')+'</p>'+
+  '<p class="notes-search-status" role="status" aria-live="polite">'+esc(queryText?count+' '+(count===1?'match':'matches')+' across '+rows.length+' '+(rows.length===1?'subject':'subjects'):source==='saved'?'Includes saved lessons. Undated work stays here, not in This week.':rows.length+' '+(rows.length===1?'subject':'subjects')+' to explore')+'</p>'+
   '<div class="notes-subject-browser"'+(selected?' hidden':'')+'><div class="study-note-subjects notes-subject-grid" role="group" aria-label="Choose a subject">'+cards+'</div>'+(!rows.length?'<p class="study-tools-empty">'+(queryText?'No matching notes. Try another word or clear your search.':'No lesson notes are included in this selection.')+'</p>':'')+'</div>'+
   '<div class="notes-reader"'+(!selected?' hidden':'')+'><button type="button" class="notes-back" data-notes-back>‹ Back to subjects</button><div class="study-notes-grid">'+rows.map(row=>'<section class="study-note-panel" id="study-notes-panel-'+row.index+'" data-note-subject="'+esc(row.subject)+'"'+(row.subject!==selected?.subject?' hidden':'')+' aria-labelledby="study-notes-title-'+row.index+'">'+detailHtml(row,{source,meaning})+'</section>').join('')+'</div></div></div>';
 }
@@ -90,18 +92,22 @@ export function createNotesLibrary({getModel,win,meaning}={}) {
  }
  function bind(node){
   host=node;if(!node||bound.has(node))return;bound.add(node);
-  node.addEventListener('toggle',()=>{if(!node.open)return;if(!node.querySelector('[data-study-notes-content]').hasChildNodes())paint();references();});
+  let userOpening=false;
+  node.addEventListener('toggle',()=>{if(!node.open)return;if(!node.querySelector('[data-study-notes-content]').hasChildNodes())paint();references();if(userOpening){node.scrollIntoView({block:'start',behavior:'auto'});userOpening=false;}});
   node.addEventListener('input',event=>{if(!event.target.matches('[data-notes-search]'))return;query=event.target.value.slice(0,120);subject='';overview=true;paint();});
   node.addEventListener('click',event=>{
+   if(event.target.closest('summary')===node.querySelector(':scope > summary')){userOpening=!node.open;return;}
    const scope=event.target.closest('[data-notes-source]');
    if(scope){source=scope.dataset.notesSource==='saved'?'saved':'weekly';subject='';overview=false;paint('[data-notes-source="'+source+'"]');references();return;}
    if(event.target.closest('[data-notes-clear]')){query='';subject='';overview=true;paint('[data-notes-search]');return;}
    if(event.target.closest('[data-notes-back]')){const previous=subject;subject='';const value=data();const rows=notesLibraryData(value||{},{query,meaning});
     overview=true;paint();
-    node.querySelector('[data-notes-subject="'+(rows.find(row=>row.subject===previous)?.index??rows[0]?.index)+'"]')?.focus({preventScroll:true});return;}
+    const card=node.querySelector('[data-notes-subject="'+(rows.find(row=>row.subject===previous)?.index??rows[0]?.index)+'"]');
+    card?.focus({preventScroll:true});card?.scrollIntoView({block:'nearest',behavior:'auto'});return;}
    const card=event.target.closest('[data-notes-subject]');if(!card)return;
    const row=notesLibraryData(data()||{},{query,meaning}).find(row=>String(row.index)===card.dataset.notesSubject);if(!row)return;
    subject=row.subject;overview=false;paint('#study-notes-title-'+row.index);
+   node.querySelector('.notes-reader')?.scrollIntoView({block:'start',behavior:'auto'});
   });
   if(node.open){if(!node.querySelector('[data-study-notes-content]').hasChildNodes())paint();references();}
  }
