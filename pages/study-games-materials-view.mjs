@@ -7,15 +7,6 @@ const distinctNoteText = rows => {const seen=new Set();return rows.filter(text=>
 const list = rows => {const clean=(Array.isArray(rows)?rows:[]).filter(nonempty);return clean.length?'<ul>'+clean.map(row=>'<li>'+esc(row)+'</li>').join('')+'</ul>':'';};
 const dateLabel = date => {const value=new Date(date+'T12:00:00Z');return /^\d{4}-\d{2}-\d{2}$/.test(date||'')&&Number.isFinite(value.getTime())
   ? new Intl.DateTimeFormat('en-US',{weekday:'short',month:'short',day:'numeric',timeZone:'UTC'}).format(value) : '';};
-const dateParts = date => {
-  const value=new Date(date+'T12:00:00Z');
-  if(!/^\d{4}-\d{2}-\d{2}$/.test(date||'')||!Number.isFinite(value.getTime()))return{weekday:'',day:'',label:''};
-  return {
-    weekday:new Intl.DateTimeFormat('en-US',{weekday:'short',timeZone:'UTC'}).format(value),
-    day:new Intl.DateTimeFormat('en-US',{day:'numeric',timeZone:'UTC'}).format(value),
-    label:dateLabel(date),
-  };
-};
 const safeUrl = value => {try{return ['https:','http:'].includes(new URL(value).protocol);}catch{return false;}};
 const missingDefinition = value => /teacher page does not provide a definition|no definition supplied/i.test(String(value ?? ''));
 export function resolveVocabularyMeaning(row,dictionary = () => '') {
@@ -43,7 +34,7 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
   const change = selector => { onChange?.(); if (selector) focus(selector); };
   // Opening a guide must never launch the OS print sheet.
   async function openGuide(index, upcoming = false, trigger = null, kind = 'guide') {
-    const requestedKey = model?.testGuide?.(index,{upcoming})?.key;
+    const requestedKey = trigger?.dataset.testKey || model?.testGuide?.(index,{upcoming})?.key;
     if (!requestedKey) return;
     let current = true;
     if (onGuideRefresh) {
@@ -54,7 +45,7 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
     }
     const currentTests = upcoming ? model?.upcomingTests?.().tests : model?.printableTests?.().tests;
     const matchingIndex = (currentTests || []).findIndex(test => test.date+'|'+test.label === requestedKey);
-    if (matchingIndex < 0) return; // The announcement changed: never substitute another test.
+    if (matchingIndex < 0) { change('.prep-header h1'); return; } // Never substitute another test.
     const freshGuide = model?.testGuide?.(matchingIndex,{upcoming});
     if (!freshGuide || freshGuide.key !== requestedKey) return;
     const guide = current ? freshGuide : {...freshGuide,warnings:[
@@ -82,6 +73,7 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
     dialog.addEventListener('close', () => {
       dialog.remove();
       if (trigger?.isConnected) trigger.focus({preventScroll:true});
+      else focus('.games-screen h1');
     }, {once:true});
     doc.body.append(dialog);
     dialog.showModal();
@@ -102,9 +94,9 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
     if(selectedTest>=pending.length)selectedTest=0;
     const chosen=pending[selectedTest],entry=(tests.supported||[]).find(test=>test.index===selectedTest),preview=model?.testPreview?.(selectedTest),art=testArt(chosen.subject||chosen.label);
     const history=preview?(preview.total?preview.practice.label:'No verified practice yet'):'Practice';
-    const choices=pending.map((test,index)=>'<button type="button" class="prep-test-choice" data-test-select="'+index+'" aria-pressed="'+(index===selectedTest)+'" aria-label="'+esc(test.label+' - '+dateLabel(test.date))+'"><img src="./assets/illustrations/'+testArt(test.subject||test.label)+'.webp" width="40" height="40" alt=""><span><strong>'+esc(shortTestLabel(test.label))+'</strong><small>'+esc(dateLabel(test.date))+'</small></span><b aria-hidden="true">'+(index===selectedTest?'✓':'')+'</b></button>').join('');
+    const choices=pending.map((test,index)=>'<button type="button" class="prep-test-choice" data-test-select="'+index+'" data-test-key="'+esc(test.date+'|'+test.label)+'" aria-pressed="'+(index===selectedTest)+'" aria-label="'+esc(test.label+' - '+dateLabel(test.date))+'"><img src="./assets/illustrations/'+testArt(test.subject||test.label)+'.webp" width="40" height="40" alt=""><span><strong>'+esc(shortTestLabel(test.label))+'</strong><small>'+esc(dateLabel(test.date))+'</small></span><b aria-hidden="true">'+(index===selectedTest?'✓':'')+'</b></button>').join('');
     const topics=preview?.topics?.length?list(preview.topics):'<p class="prep-no-topics">Topics will appear when matching practice is verified.</p>';
-    return header+'<section class="prep-sheet" aria-labelledby="study-priority-title"><h2 id="study-priority-title">Choose a test to prepare for</h2><div class="prep-test-choices" role="group" aria-label="Upcoming tests">'+choices+'</div><article class="prep-topic-card" data-study-tests><div class="prep-topic-heading"><p>'+esc(chosen.subject||'Test Prep')+'</p><span>'+esc(!entry?'Practice unavailable':fallback.some(test=>test.index===selectedTest)?'Grade 2 skill practice':'Verified test practice')+'</span></div><h3>'+esc(chosen.label)+'</h3><time datetime="'+esc(chosen.date)+'">'+esc(dateLabel(chosen.date))+'</time><div class="prep-topics"><div><p>Topics in this practice</p>'+topics+'</div><img src="./assets/illustrations/'+art+'.webp" alt="" width="150" height="150"></div><small class="study-test-history" aria-label="'+esc(history+'. Practice does not predict a test result.')+'">'+esc(history)+'</small>'+ (missing.some(test=>test.index===selectedTest)?'<p class="game-material-status" data-test-missing>No verified questions match this test yet. Use the teacher materials; the app will not guess.</p>':'')+(fallback.some(test=>test.index===selectedTest)?'<p class="game-material-status" data-test-fallback>Using original Grade 2 skill practice because no reviewed test-specific questions are available.</p>':'')+'</article><button type="button" class="prep-start" aria-label="Start test prep" data-test-single="'+selectedTest+'"'+(!entry?' disabled aria-disabled="true"':'')+'>Start '+(preview?.total||'')+' questions <span aria-hidden="true">→</span></button><div class="prep-material-actions" role="group" aria-label="Printable test materials"><button type="button" class="prep-guide" data-test-guide="'+selectedTest+'" data-guide-upcoming="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1m0-15c3-2 6-2 9-1v15c-3-1-6-1-9 1V5"/></svg>Study guide</button><button type="button" class="prep-guide prep-worksheet" data-test-worksheet="'+selectedTest+'" data-guide-upcoming="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM15 3v5h4M9 12h7M9 16h7"/></svg>Practice worksheet</button></div>'+testStatus(tests)+'</section>';
+    return header+'<section class="prep-sheet" aria-labelledby="study-priority-title"><h2 id="study-priority-title">Choose a test to prepare for</h2><div class="prep-test-choices" role="group" aria-label="Upcoming tests">'+choices+'</div><article class="prep-topic-card" data-study-tests><div class="prep-topic-heading"><p>'+esc(chosen.subject||'Test Prep')+'</p><span>'+esc(!entry?'Practice unavailable':fallback.some(test=>test.index===selectedTest)?'Grade 2 skill practice':'Verified test practice')+'</span></div><h3>'+esc(chosen.label)+'</h3><time datetime="'+esc(chosen.date)+'">'+esc(dateLabel(chosen.date))+'</time><div class="prep-topics"><div><p>Topics in this practice</p>'+topics+'</div><img src="./assets/illustrations/'+art+'.webp" alt="" width="150" height="150"></div><small class="study-test-history" aria-label="'+esc(history+'. Practice does not predict a test result.')+'">'+esc(history)+'</small>'+ (missing.some(test=>test.index===selectedTest)?'<p class="game-material-status" data-test-missing>No verified questions match this test yet. Use the teacher materials; the app will not guess.</p>':'')+(fallback.some(test=>test.index===selectedTest)?'<p class="game-material-status" data-test-fallback>Using original Grade 2 skill practice because no reviewed test-specific questions are available.</p>':'')+'</article><button type="button" class="prep-start" aria-label="Start test prep" data-test-single="'+selectedTest+'" data-test-key="'+esc(chosen.date+'|'+chosen.label)+'"'+(!entry?' disabled aria-disabled="true"':'')+'>Start '+(preview?.total||'')+' questions <span aria-hidden="true">→</span></button><div class="prep-material-actions" role="group" aria-label="Printable test materials"><button type="button" class="prep-guide" data-test-guide="'+selectedTest+'" data-guide-upcoming="true" data-test-key="'+esc(chosen.date+'|'+chosen.label)+'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1m0-15c3-2 6-2 9-1v15c-3-1-6-1-9 1V5"/></svg>Study guide</button><button type="button" class="prep-guide prep-worksheet" data-test-worksheet="'+selectedTest+'" data-guide-upcoming="true" data-test-key="'+esc(chosen.date+'|'+chosen.label)+'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM15 3v5h4M9 12h7M9 16h7"/></svg>Practice worksheet</button></div>'+testStatus(tests)+'</section>';
   }
   function testStatus(tests){return tests?.message?'<div class="game-test-status" role="status"><span>'+esc(tests.message)+'</span>'+(tests.canUndo?'<button type="button" data-undo-test>Undo</button>':'')+'</div>':'';}
 
@@ -156,7 +148,7 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
   function secondaryHtml() {
     const tests=model?.tests(),pending=tests?.tests||[],completed=tests?.completed||[];
     const printable=(model?.printableTests?.()?.tests||pending).map((test,index)=>({...test,index}));
-    const guideButtons=printable.map(test=>'<article class="study-material-pair"><strong>'+esc(test.label)+'</strong><small>'+esc(dateLabel(test.date))+'</small><div class="study-material-pair-buttons"><button type="button" class="study-guide-button" data-test-guide="'+test.index+'">Study guide</button><button type="button" class="study-guide-button" data-test-worksheet="'+test.index+'">Practice worksheet</button></div></article>').join('');
+    const guideButtons=printable.map(test=>'<article class="study-material-pair"><strong>'+esc(test.label)+'</strong><small>'+esc(dateLabel(test.date))+'</small><div class="study-material-pair-buttons"><button type="button" class="study-guide-button" data-test-guide="'+test.index+'" data-test-key="'+esc(test.date+'|'+test.label)+'">Study guide</button><button type="button" class="study-guide-button" data-test-worksheet="'+test.index+'" data-test-key="'+esc(test.date+'|'+test.label)+'">Practice worksheet</button></div></article>').join('');
     return '<section class="study-tools" aria-labelledby="study-tools-title"><div class="study-section-heading compact"><span>KEEP LEARNING</span><h2 id="study-tools-title">A little extra help</h2></div><div class="study-tool-list">' +
       '<details class="study-tool-card" data-study-notes'+(notesOpen?' open':'')+'><summary><span class="study-tool-icon notes" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg></span><span class="study-tool-copy"><strong>Notes &amp; study guides</strong><small>Class notes, words &amp; official reviews</small></span><b aria-hidden="true">›</b></summary><div class="study-tool-body" data-study-notes-content>'+(notesOpen?notesContent():'')+'</div></details>' +
       '<details class="study-tool-card" data-study-test-options'+(testsOpen?' open':'')+'><summary><span class="study-tool-icon tests" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4h10a2 2 0 0 1 2 2v15H5V6a2 2 0 0 1 2-2ZM8 2v4M16 2v4M8 10h8M8 14h5"/></svg></span><span class="study-tool-copy"><strong>Guides, worksheets &amp; history</strong><small>Study first, then practice on paper</small></span><b aria-hidden="true">›</b></summary><div class="study-tool-body"><p>Finished tests are hidden only on this browser.</p>' +
@@ -176,7 +168,7 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
     host.querySelector('[data-open-prep]')?.addEventListener('click',()=>{prepOpen=true;change('.prep-header h1');win.document.querySelector('.games-screen')?.scrollTo(0,0);});
     host.querySelectorAll('[data-close-prep]').forEach(button=>button.addEventListener('click',()=>{prepOpen=false;change('[data-open-prep]');win.document.querySelector('.games-screen')?.scrollTo(0,0);}));
     host.querySelectorAll('[data-test-select]').forEach(button=>button.addEventListener('click',()=>{
-      const next=Number(button.dataset.testSelect);if(!Number.isInteger(next)||next<0)return;
+      const next=(model?.upcomingTests?.().tests||[]).findIndex(test=>test.date+'|'+test.label===button.dataset.testKey);if(next<0){change('.prep-header h1');return;}
       selectedTest=next;change('[data-test-select="'+next+'"]');
       const selected=win.document.querySelector('[data-test-select="'+next+'"]'),rail=selected?.parentElement;if(rail)rail.scrollLeft=selected.offsetLeft-rail.offsetLeft;
     }));
@@ -211,12 +203,12 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
       onTest?.();
     });
     host.querySelectorAll('[data-test-single]').forEach(button=>button.addEventListener('click',async()=>{
-      const original = model?.upcomingTests?.().tests[Number(button.dataset.testSingle)];
-      if(!original)return;
+      const original = (model?.upcomingTests?.().tests||[]).find(test=>test.date+'|'+test.label===button.dataset.testKey);
+      if(!original){change('.prep-header h1');return;}
       try{await onGuideRefresh?.();}catch{}
       const key=original.date+'|'+original.label;
       const current=(model?.upcomingTests?.().tests||[]).findIndex(test=>test.date+'|'+test.label===key);
-      if(current>=0)onTest?.(current);
+      if(current>=0)onTest?.(current);else change('.prep-header h1');
     }));
     host.querySelectorAll('[data-test-guide]').forEach(button=>button.addEventListener('click',()=>openGuide(Number(button.dataset.testGuide),button.dataset.guideUpcoming==='true',button)));
     host.querySelectorAll('[data-test-worksheet]').forEach(button=>button.addEventListener('click',()=>openGuide(Number(button.dataset.testWorksheet),button.dataset.guideUpcoming==='true',button,'worksheet')));

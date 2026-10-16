@@ -95,8 +95,7 @@ export function buildStarBank() {
       2,
     );
   for (const n of [143, 268, 352, 417, 589, 624, 731, 856, 962, 195]) {
-    const h = Math.floor(n / 100),
-      t = Math.floor(n / 10) % 10,
+    const t = Math.floor(n / 10) % 10,
       o = n % 10;
     math(
       "Place value",

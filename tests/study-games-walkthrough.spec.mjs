@@ -64,7 +64,22 @@ test.describe('recorded Games walkthrough',()=>{
     await page.getByRole('button',{name:'Back to study',exact:true}).click();
     await expect(page.locator('.study-game-grid > .study-game-tile')).toHaveCount(5);
     await expect(page.locator('.study-game-grid [data-game-start="math"]')).toContainText('Practiced before · Best solved: 8 / 8 (includes retries)');
-    await page.waitForTimeout(350);
+    await page.reload();
+    await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+    const savedMath=page.locator('.study-game-grid [data-game-start="math"]');
+    await expect(savedMath).toContainText('Best solved: 8 / 8 (includes retries)');
+    for(const width of [393,820]){
+      await page.setViewportSize({width,height:1000});
+      await savedMath.scrollIntoViewIfNeeded();
+      const bounds=await savedMath.evaluate(tile=>{
+        const label=tile.querySelector('em'),rect=label.getBoundingClientRect(),card=tile.getBoundingClientRect();
+        return {left:rect.left,right:rect.right,cardLeft:card.left,cardRight:card.right,scrollWidth:label.scrollWidth,width:label.clientWidth};
+      });
+      expect(bounds.left).toBeGreaterThanOrEqual(bounds.cardLeft);
+      expect(bounds.right).toBeLessThanOrEqual(bounds.cardRight);
+      expect(bounds.scrollWidth).toBeLessThanOrEqual(bounds.width+1);
+      await page.screenshot({path:testInfo.outputPath(`saved-solved-score-${width}.png`),fullPage:true});
+    }
     expect(errors).toEqual([]);
     const video=page.video();
     expect(video).not.toBeNull();

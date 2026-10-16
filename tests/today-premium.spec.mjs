@@ -49,8 +49,9 @@ test('Today premium signature: mobile layout and retained source-backed actions'
         .map(item => item.label);
     });
     expect(sourceTests.length).toBeGreaterThan(0);
-    const sourceBackedTitle = (await page.locator('.priority-card h3').textContent()).trim();
-    expect(sourceTests).toContain(sourceBackedTitle);
+    const titles = await page.locator('.priority-card .assessment-title').allTextContents();
+    expect([...titles].sort()).toEqual([...sourceTests].sort());
+    const sourceBackedTitle = titles.join('; ');
     await expect(assessmentArrow).toHaveAttribute('aria-label', 'Open Study for ' + sourceBackedTitle);
 
     // The large numeral must not inherit the generic card metadata style.
@@ -62,7 +63,7 @@ test('Today premium signature: mobile layout and retained source-backed actions'
     }));
     expect(dateStyle.font).toBeGreaterThanOrEqual(25);
     expect(dateStyle.color).toBe('rgb(21, 47, 84)');
-    await expect(page.locator('.study-invitation')).toBeVisible();
+    await expect(page.locator('.study-invitation')).toHaveCount(0);
     await expect(page.locator('.today-screen > .lunch-card')).toBeVisible();
     // The verified meal illustration is visible in the first viewport.
     // Screenshots must not accidentally approve an empty lazy-load placeholder.
@@ -91,7 +92,6 @@ test('Today premium signature: mobile layout and retained source-backed actions'
     for (const [selector, name] of [
       ['.school-photo-hero img.hero-photo', 'School photograph'],
       ['.school-photo-hero img.today-school-seal', 'School seal'],
-      ['.study-invitation > img', 'Reading illustration'],
       ['.lunch-card .lunch-art img', 'Verified lunch artwork'],
       ['.study-badge-latest img.study-badge-art', 'Eaglet medal'],
     ]) await expectDecodedRetinaImage(page.locator(selector), name);
@@ -105,20 +105,18 @@ test('Today premium signature: mobile layout and retained source-backed actions'
       const hero = el.querySelector('.school-photo-hero');
       const title = hero.querySelector('.hero-copy h2');
       const priority = el.querySelector('.priority-card');
-      const study = el.querySelector('.study-invitation');
       const lunch = el.querySelector('.lunch-card');
       const plan = el.querySelector('.today-panel');
       const badge = el.querySelector('.study-badge-surface');
       const actions = [
         el.querySelector('.priority-card .icon-button'),
-        study,
         el.querySelector('.study-badge-latest'),
       ].filter(Boolean);
       return {
         screenWidth: el.clientWidth, scrollWidth: el.scrollWidth,
         font: getComputedStyle(title).fontFamily,
         titleFont: parseFloat(getComputedStyle(title).fontSize),
-        hero: rect(hero), priority: rect(priority), study: rect(study),
+        hero: rect(hero), priority: rect(priority),
         lunch: rect(lunch), plan: rect(plan), badge: rect(badge),
         actions: actions.map(rect)
       };
@@ -128,8 +126,7 @@ test('Today premium signature: mobile layout and retained source-backed actions'
     expect(metrics.titleFont).toBeGreaterThanOrEqual(28);
     expect(metrics.font).toMatch(/-apple-system|BlinkMacSystemFont|Segoe UI/);
     expect(metrics.priority.top).toBeGreaterThan(metrics.hero.top);
-    expect(metrics.study.top).toBeGreaterThan(metrics.priority.top);
-    expect(metrics.lunch.top).toBeGreaterThan(metrics.study.top);
+    expect(metrics.lunch.top).toBeGreaterThan(metrics.priority.top);
     expect(metrics.plan.top).toBeGreaterThan(metrics.lunch.top);
     expect(metrics.badge.top).toBeGreaterThan(metrics.plan.top);
     for (const action of metrics.actions) {
@@ -167,7 +164,7 @@ test('Today remains operable with long verified titles and larger interface text
   await expect(page.getByRole('navigation', { name: 'App navigation' }).getByRole('button', { name: 'Study' })).toBeVisible();
   await page.evaluate(() => { document.documentElement.style.fontSize = ''; });
 
-  await page.getByRole('button', { name: 'Start studying' }).click();
+  await page.getByRole('navigation', { name: 'App navigation' }).getByRole('button', { name: 'Study' }).click();
   await expect(page.locator('.games-screen')).toBeVisible();
   await page.getByRole('button', { name: 'Today', exact: true }).click();
   await expect(page.locator('.today-panel')).toBeVisible();
@@ -178,14 +175,14 @@ test('Today remains operable with long verified titles and larger interface text
 test('Today preserves accurate meal details if reviewed artwork cannot be loaded', async ({ page }) => {
   await page.clock.setFixedTime(new Date('2026-10-08T12:00:00-04:00'));
   await page.setViewportSize({ width: 390, height: 852 });
-  await page.route('**/assets/lunch-art/beef-cheesesteak.webp', route =>
+  await page.route('**/assets/lunch-art/tray-2026-10-08-v1.webp', route =>
     route.fulfill({ status: 404, contentType: 'image/webp', body: '' }));
   await page.goto('/#today');
   const lunch = page.locator('.today-screen > .lunch-card');
   await expect(lunch).toContainText('Beef cheesesteak');
   await expect(lunch).toContainText('Steamed broccoli');
   await expect(lunch.locator('.lunch-art')).toHaveCount(0);
-  await expect(page.locator('.study-invitation')).toBeVisible();
+  await expect(page.locator('.study-invitation')).toHaveCount(0);
   await expect(page.locator('.today-panel')).toBeVisible();
   expect(await page.locator('.today-screen').evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
 });

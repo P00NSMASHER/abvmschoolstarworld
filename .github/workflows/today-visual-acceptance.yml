@@ -3,6 +3,12 @@ name: Today premium visual acceptance
 on:
   pull_request:
     paths:
+      - 'pages/data/lunch-art-registry.json'
+      - 'pages/data/lunch-art-current.json'
+      - 'pages/lunch-art.js'
+      - 'pages/assets/lunch-art/**'
+      - 'scripts/build-lunch-art-plan.mjs'
+      - 'scripts/lunch-art-style.mjs'
       - 'pages/design-polish.css'
       - 'pages/styles.css'
       - 'pages/index.html'
@@ -12,6 +18,7 @@ on:
       - 'pages/school-updates.js'
       - 'tests/teacher-source-fallback.spec.mjs'
       - 'tests/today-premium.spec.mjs'
+      - 'tests/today-assessments.spec.mjs'
       - 'tests/weekly-learning-dashboard.spec.mjs'
       - 'tests/tablet-desktop.spec.mjs'
       - 'playwright.config.mjs'
@@ -46,7 +53,7 @@ jobs:
       - run: npm run pack:runtime
       - run: npx playwright install --with-deps chromium webkit
       - name: Real iPhone-width Chromium and Safari-WebKit visual acceptance
-        run: npx playwright test tests/today-premium.spec.mjs tests/teacher-source-fallback.spec.mjs --project=mobile --project=iphone-webkit --workers=1 --retries=0
+        run: npx playwright test tests/today-premium.spec.mjs tests/today-assessments.spec.mjs tests/lunch-trays.spec.mjs tests/teacher-source-fallback.spec.mjs --project=mobile --project=iphone-webkit --workers=1 --retries=0
       - name: Preserve phone visual evidence before subsequent Playwright runs
         if: always()
         shell: bash
@@ -74,6 +81,8 @@ jobs:
           name: abvm-today-visual-${{ github.run_id }}
           path: |
             test-results-today/**/today-premium-*.png
+            test-results-today/**/today-assessments-*.png
+            test-results-today/**/lunch-trays-*.png
             test-results-today/**/teacher-source-*.png
             playwright-report-today
             test-results-today/**/trace.zip

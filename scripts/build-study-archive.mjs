@@ -3,28 +3,41 @@ import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
+import {correctOriginalQuestion,knownSubtractionCheck} from './question-corrections.mjs';
 import {weekBounds,schoolDay} from '../pages/study-model.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const normalize=v=>String(v||'').normalize('NFKC').replace(/\s+/g,' ').trim();
 const hash=v=>createHash('sha256').update(JSON.stringify(v)).digest('hex').slice(0,20);
 const questionFields = ['id','subject','skill','assessedSkillIds','prompt','choices','answer','explanation','hint','sourceFact','difficulty','questionType','richContent','passage','image','media','chapter','sourceUrl'];
-function compactQuestion(q) { return Object.fromEntries(questionFields.filter(k=>q[k]!==undefined).map(k=>[k,q[k]])); }
+function compactQuestion(q) { q=correctOriginalQuestion(q);return Object.fromEntries(questionFields.filter(k=>q[k]!==undefined).map(k=>[k,q[k]])); }
 function compactProvenance(entries) {
   const weeks=new Map();
   for(const p of entries){const key=weekBounds(p.capturedAt).start;const group=weeks.get(key)||[];group.push(p);weeks.set(key,group);}
   return [...weeks.values()].flatMap(group=>{group.sort((a,b)=>a.capturedAt.localeCompare(b.capturedAt));return group.length===1?[group[0]]:[group[0],group.at(-1)];});
+}
+function repairOriginalArchive(archive){
+  const questions=[];
+  for(const row of archive.questions||[]){
+    const q=correctOriginalQuestion(row),old=knownSubtractionCheck(q)&&questions.find(knownSubtractionCheck);
+    if(!old){questions.push(q);continue;}
+    old.firstSeenAt=old.firstSeenAt<q.firstSeenAt?old.firstSeenAt:q.firstSeenAt;
+    old.lastSeenAt=old.lastSeenAt>q.lastSeenAt?old.lastSeenAt:q.lastSeenAt;
+    old.provenance=compactProvenance([...new Map([...old.provenance,...q.provenance].map(p=>[JSON.stringify(p),p])).values()]);
+  }
+  archive.questions=questions;
 }
 export function mergeStudyPack(archive,wrapper,{commit,capturedAt}={}) {
   const pack=wrapper.pack||wrapper;
   const at=capturedAt||pack.sourceCapturedAt||pack.generatedAt||wrapper.sourceCapturedAt;
   if(!at||!Number.isFinite(Date.parse(at))) return archive;
   const stamp=new Date(at).toISOString();
+  repairOriginalArchive(archive);
   archive.sources ||= {};
   const source={sourceHash:pack.sourceHash||'unknown',weekLabel:pack.weekLabel||'',...(commit?{commit}:{})};
   const sourceRef=hash([source.sourceHash,source.weekLabel]).slice(0,10);archive.sources[sourceRef] ||= source;
   const provenance={sourceRef,capturedAt:schoolDay(stamp)};
   function merge(kind,entry,key){
-    const id=`archive-${hash([kind,...key])}`,items=archive[kind];let old=items.find(x=>(x.archiveId||x.id)===id);
+    const id=`archive-${hash([kind,...key])}`,items=archive[kind];let old=items.find(x=>(x.archiveId||x.id)===id||(kind==='questions'&&knownSubtractionCheck(entry)&&knownSubtractionCheck(x)));
     if(!old){old={...entry,...(kind==='questions'?{archiveId:id}:{id}),firstSeenAt:stamp,lastSeenAt:stamp,provenance:[]};items.push(old);}
     old.firstSeenAt=old.firstSeenAt<stamp?old.firstSeenAt:stamp;old.lastSeenAt=old.lastSeenAt>stamp?old.lastSeenAt:stamp;
     if(!old.provenance.some(p=>p.sourceRef===provenance.sourceRef&&p.capturedAt===provenance.capturedAt))old.provenance.push(provenance);

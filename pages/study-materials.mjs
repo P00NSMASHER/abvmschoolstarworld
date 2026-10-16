@@ -2,7 +2,7 @@
 import {createStudyResourceLoader, validStudyResource} from './study-resources.mjs';
 import {questionsForTest,religionChapterScopes} from './study-hub-core.mjs';
 import {adaptivePracticeRound, practiceIdentity} from './study-experience.mjs';
-import {schoolDay, weekBounds, nextTests, visibleArchive, weeklyArchive, balancedTestRound} from './study-model.mjs';
+import {schoolDay, studyAssessmentDay, weekBounds, nextTests, visibleArchive, weeklyArchive, balancedTestRound} from './study-model.mjs';
 import {buildStarBank} from './star-practice.mjs';
 
 const names = {weekly:'This week', saved:'Saved learning', star:'STAR practice', mix:'Study mix'};
@@ -139,6 +139,8 @@ function noteMatchesTest(text, label, subject) {
     if (/sentence types|punctuation/.test(lower)) return /sentence type|statement|question|command|exclamation|punctuation|end mark/i.test(value);
     return /\b(?:grammar|subject|predicate|sentence type|punctuation)\b/i.test(value);
   }
+  if (subject === 'Reading / ELA' && /phonics/.test(lower) && /short[ -]vowels?/.test(lower))
+    return /short[ -]vowels?/i.test(value);
   if (subject === 'Math' && /subtraction|subtract|difference|minus/.test(lower))
     return /subtraction|subtract|difference|minus|take away|related addition facts to check subtraction/i.test(value);
   if (subject === 'Math' && /addition|add|sum/.test(lower))
@@ -442,7 +444,7 @@ export function createStudyMaterials({
   }
 
   function printableTestState(includeAssessments = false) {
-    const time = instant(), done = completedKeys(), today = schoolDay(time);
+    const time = instant(), done = completedKeys(), today = studyAssessmentDay(time);
     const instantMs = new Date(time).getTime(), seen = new Set();
     const tests = allEvents
       .filter(t => includeAssessments || String(t.kind || '').toLowerCase() !== 'assessment')
@@ -481,7 +483,7 @@ export function createStudyMaterials({
     const lower = String(test.label || '').toLowerCase();
     const sourceSubjects = array(pack.subjects).filter(row => row?.subject === subject);
     const practiceRows = representativePractice(group);
-    const questionFacts = practiceRows.flatMap(row => [row.sourceFact,row.explanation]).filter(meaningfulText);
+    const questionFacts = practiceRows.flatMap(row => [row.sourceFact === row.skill ? null : row.sourceFact,row.explanation]).filter(meaningfulText);
     const subjectFacts = sourceSubjects.flatMap(row => [...array(row.topics),...array(row.studyNotes)])
       .filter(text => noteMatchesTest(text,test.label,subject));
     // Only a photo-confirmed week-matched list can outrank general vowel examples.
@@ -496,7 +498,7 @@ export function createStudyMaterials({
     const facts = uniqueGuideText([...verifiedWeekNotes,...questionFacts,...subjectFacts]);
     const teacherFacts = subject === 'Religion' ? religionChapterFacts(group,test,pack) : [];
     const reviewTopics = guideReviewTopics(group,practiceRows,pack);
-    const vocabulary = subject === 'Reading / ELA' && !/grammar|predicate|subject\s*&/.test(lower)
+    const vocabulary = subject === 'Reading / ELA' && !/grammar|predicate|subject\s*&|phonics/.test(lower)
       ? [...new Map(array(pack.vocabulary).filter(row => row?.subject === subject && meaningfulText(row?.term))
         .map(row => [String(row.term).trim().toLowerCase(),row])).values()].slice(0,8)
       : [];
@@ -586,7 +588,7 @@ export function createStudyMaterials({
   }
   function testRound({index, seed, upcoming = false} = {}) {
     const state = upcoming ? printableTestState(true) : testState();
-    const {single,groups,selected,full,key} = testScope(state,index);
+    const {single,groups,full,key} = testScope(state,index);
     const chosenSeed = sessionSeed(key,'test-ready',seed);
     return {
       questions:balancedTestRound(groups,8,chosenSeed), catalog:{...catalog,sourceKey:key,questions:full},

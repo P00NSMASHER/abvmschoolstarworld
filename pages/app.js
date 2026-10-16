@@ -278,11 +278,6 @@ function lunchCardHtml(date,lunch){
   const remaining=message.startsWith(main)?message.slice(main.length).replace(/^,\s*/,""):"";
   return '<section class="lunch-card'+(!lunch&&!closed?' lunch-missing':'')+'"><span class="meal-icon" aria-hidden="true">'+window.ABVMProductView.icon("lunch")+'</span><div><p>SCHOOL LUNCH</p><strong>'+esc(main)+'</strong>'+(remaining?' <span class="lunch-details">'+esc(remaining)+'</span>':'')+(sourceNote?'<small>'+esc(sourceNote)+'</small>':'')+'</div>'+(!closed?(window.ABVMLunchArt?.html(lunch)||''):'')+'</section>';
 }
-function currentTest(){
-  const now=today();
-  const row=datedImportantEvents().find(({item,date})=>date>=now&&kindClass(item)==="test");
-  return row?{x:row.item,d:row.date}:null;
-}
 function reminderForDate(date){
   const rows=getDerivedPack().reminderRows;
   const exact=rows.find(row=>date>=row.range[0]&&date<=row.range[1]);
@@ -307,14 +302,8 @@ function calendarBase(){
 }
 function loadStudyRanks(){return ensureStudyGameEngine().then(e=>e.studyBadgeCollection())}
 function renderToday(){
- const d=today(),priority=datedImportantEvents().find(({item,date})=>date>=d&&(kindClass(item)==="test"||kindClass(item)==="due"));
- stack().innerHTML=window.ABVMProductView.today({d,pack,header,freshness,taskHtml,kindClass,fmtDate,fmtShort,linkedTextHtml,events:eventItemsForDate(d),tasks:taskRecordsForSurface("today"),homeworkHtml:homeworkCardForDate(d),next:currentTest()||(priority?{x:priority.item,d:priority.date}:null),reminders:upcomingReminderTexts(d,2),lunchHtml:lunchCardHtml(d,lunchForDate(d))});
- const mealArt=stack().querySelector(".today-screen .lunch-art img");
- if(mealArt){
-   const hideBrokenArt=()=>mealArt.closest(".lunch-art")?.remove();
-   mealArt.addEventListener("error",hideBrokenArt,{once:true});
-   if(mealArt.complete&&mealArt.naturalWidth===0)hideBrokenArt();
- }
+ const d=today();
+ stack().innerHTML=window.ABVMProductView.today({d,pack,header,freshness,taskHtml,kindClass,fmtDate,fmtShort,linkedTextHtml,events:eventItemsForDate(d),tasks:taskRecordsForSurface("today"),homeworkHtml:homeworkCardForDate(d),next:window.ABVMProductView.nextAssessments(datedImportantEvents(),kindClass),reminders:upcomingReminderTexts(d,2),lunchHtml:lunchCardHtml(d,lunchForDate(d))});
  window.ABVMStudyBadges.mount(stack(),"today",loadStudyRanks);
 }
 function renderWeek(){
@@ -381,7 +370,7 @@ function ensureStudyMaterials(retry=false){
   if(currentStudyMaterials()&&!retry)return Promise.resolve(studyMaterials);
   const data=pack,catalog=studyGameCatalog(),engine=studyGameEngine(),events=datedImportantEvents().filter(r=>kindClass(r.item)==="test").map(r=>({date:isoDateKey(r.date),label:r.item.label,kind:r.item.kind,endsAt:r.item.endsAt}));
   const request={pack:data,promise:null};
-  request.promise=Promise.all([import("./study-materials.mjs"),import("./study-games-materials-view.mjs?v=9")]).then(async([materials,view])=>{
+  request.promise=Promise.all([import("./study-materials.mjs"),import("./study-games-materials-view.mjs?v=11")]).then(async([materials,view])=>{
     if(pack===data&&!studyMaterialsView){studyMaterialsView=view.createMaterialsView({onChange:()=>{if(isStudyRoute())renderGames()},onRetry:retryStudyMaterials,onTest:startStudyTest,onGuideRefresh:refreshTestGuideSources});if(isStudyRoute()&&gameState.screen==="menu")renderGames()}
     const model=await materials.loadStudyMaterials({pack:data,catalog,events,engine});
     if(pack===data){
@@ -617,7 +606,7 @@ function redrawPlanner(draw,selector){
 function bindScreen(){
   if(screenEventsBound)return;
   screenEventsBound=true;
-  window.ABVMProductView.bindCalendar(stack(),{getDate:()=>calendarDay||today(),selectDate:selectCalendarDate,shiftMonth:(amount,selector)=>selectCalendarDate(window.ABVMProductView.calendarShift(calendarDay||today(),amount),selector)});
+  window.ABVMProductView.bindCalendar(stack(),{getEvents:datedImportantEvents,getDate:()=>calendarDay||today(),selectDate:selectCalendarDate,shiftMonth:(step,focus)=>selectCalendarDate(window.ABVMProductView.calendarShift(calendarDay||today(),step),focus)});
   stack().addEventListener("click",async event=>{
     const target=event.target.closest("button,a");
     if(!target||!stack().contains(target))return;
@@ -702,6 +691,7 @@ function promotePackCandidate({response,data}){
   return changed;
 }
 async function fetchPack({force=false,notify=false}={}){
+  window.ABVMLunchArt?.refresh?.(()=>{if(pack&&["today","week","calendar"].includes(activeTab))render({preserveScroll:true})});
   const now=Date.now();
   if(!force&&pack&&(now-lastPackFetchAt)<PACK_REFRESH_MS)return false;
   if(packRefreshPromise)return packRefreshPromise;
@@ -776,7 +766,7 @@ async function load(){
     const warmGames=()=>ensureStudyGameEngine().catch(()=>{});
     if("requestIdleCallback" in window)requestIdleCallback(warmGames,{timeout:2200});
     else setTimeout(warmGames,1400);
-  }catch(e){
+  }catch{
     stack().innerHTML='<div class="screen"><section class="error-card"><p>ABVM GRADE 2</p><h1>School info could not be loaded</h1><span>Refresh the page to try again.</span></section></div>';
   }
 }
@@ -797,5 +787,7 @@ document.addEventListener("visibilitychange",()=>{
 window.addEventListener("pageshow",event=>{
   if(event.persisted&&pack){fetchPack({force:true,notify:true}).catch(()=>{});fetchHomeworkFeed({force:true}).catch(()=>{});}
 });
+window.ABVMProductView.watchSchoolClock(()=>{if(pack&&(activeTab==="today"||isStudyRoute()&&gameState.screen==="menu"&&!document.querySelector("dialog[open]")&&!window.speechSynthesis?.speaking))render({preserveScroll:true});else if(isStudyRoute())return false});
+setInterval(()=>{if(pack&&document.visibilityState==="visible"&&!isStudyRoute()){fetchPack({notify:true}).catch(()=>{});fetchHomeworkFeed().catch(()=>{})}},PACK_REFRESH_MS);
 load();
 })();

@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {schoolDay,weekBounds,nextTests,balancedRound,balancedTestRound,visibleArchive,weeklyArchive} from '../pages/study-model.mjs';
+import {readFileSync} from 'node:fs';
+import vm from 'node:vm';
+import {schoolDay,studyAssessmentDay,weekBounds,nextTests,balancedRound,balancedTestRound,visibleArchive,weeklyArchive} from '../pages/study-model.mjs';
 import {mergeStudyPack} from '../scripts/build-study-archive.mjs';
 test('New York calendar honors midnight and both DST changes',()=>{
   assert.equal(schoolDay('2026-03-08T04:59:00Z'),'2026-03-07');
@@ -12,7 +14,7 @@ test('New York calendar honors midnight and both DST changes',()=>{
 });
 test('nearest date covers all tests and precise ends roll immediately',()=>{
  const events=[{date:'2026-10-09',label:'Grammar'},{date:'2026-10-09',label:'Spelling'},{date:'2026-10-12',label:'Math'}];
- assert.equal(nextTests(events,'2026-10-09T20:00:00Z').length,2);
+ assert.equal(nextTests(events,'2026-10-09T18:59:59Z').length,2);
  assert.equal(nextTests(events,'2026-10-10T04:00:00Z')[0].label,'Math');
  assert.equal(nextTests(events.map(e=>({...e,endsAt:e.date==='2026-10-09'?'2026-10-09T15:00:00Z':undefined})),'2026-10-09T15:00:00Z')[0].label,'Math');
  assert.deepEqual(nextTests([]),[]);
@@ -55,4 +57,27 @@ test('archive keeps rich question content and week coverage while compacting pol
  assert.equal(a.notes[0].provenance.length,3);assert.equal(Object.keys(a.sources).length,1);
  assert.equal(weeklyArchive(a,'2026-09-29').questions.length,1);assert.equal(weeklyArchive(a,'2026-10-05').questions.length,1);
  assert.equal(a.sources[a.notes[0].provenance[0].sourceRef].sourceHash,'stable');
+});
+
+test('study test selection retires all of today’s tests at 3pm Eastern on school weekdays',()=>{
+ const events=[{date:'2026-10-15',label:'Math'},{date:'2026-10-15',label:'Reading'},{date:'2026-10-16',label:'Spelling'},{date:'2026-10-16',label:'Phonics'}];
+ assert.deepEqual(nextTests(events,'2026-10-15T18:59:59Z').map(x=>x.label),['Math','Reading']);
+ assert.deepEqual(nextTests(events,'2026-10-15T19:00:00Z').map(x=>x.label),['Spelling','Phonics']);
+ assert.deepEqual(nextTests(events,'2026-10-15').map(x=>x.label),['Math','Reading']);
+ const winter=[{date:'2026-11-02',label:'Today'},{date:'2026-11-03',label:'Tomorrow'}];
+ assert.equal(nextTests(winter,'2026-11-02T19:59:59Z')[0].label,'Today');
+ assert.equal(nextTests(winter,'2026-11-02T20:00:00Z')[0].label,'Tomorrow');
+ const weekend=[{date:'2026-10-17',label:'Published weekend event'}];
+ assert.equal(nextTests(weekend,'2026-10-17T21:00:00Z')[0].label,'Published weekend event');
+});
+
+
+test('Home and Study keep the same Eastern dismissal boundary across DST and device zones',()=>{
+ const window={};vm.runInNewContext(readFileSync(new URL('../pages/product-view.js',import.meta.url),'utf8'),{window,Intl,Date});
+ for(const instant of ['2026-10-15T18:59:59Z','2026-10-15T19:00:00Z','2026-10-16T23:00:00Z','2026-10-17T23:00:00Z','2026-11-02T19:59:59Z','2026-11-02T20:00:00Z','2027-03-15T18:59:59Z','2027-03-15T19:00:00Z']){
+  const {day,afterSchool}=window.ABVMProductView.assessmentWindow(new Date(instant));
+  day.setDate(day.getDate()+Number(afterSchool));
+  const expected=day.getFullYear()+'-'+String(day.getMonth()+1).padStart(2,'0')+'-'+String(day.getDate()).padStart(2,'0');
+  assert.equal(studyAssessmentDay(instant),expected,instant);
+ }
 });

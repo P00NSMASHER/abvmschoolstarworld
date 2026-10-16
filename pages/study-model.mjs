@@ -1,5 +1,6 @@
 /** Calendar and sampling rules shared by every Study surface. */
 const zone = 'America/New_York';
+const schoolClock=new Intl.DateTimeFormat('en-US',{timeZone:zone,hour:'numeric',hourCycle:'h23'});
 export function schoolDay(now = new Date()) {
   if (typeof now === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(now)) return now;
   const d = new Date(now);
@@ -8,12 +9,19 @@ export function schoolDay(now = new Date()) {
   return `${p.year}-${p.month}-${p.day}`;
 }
 function shift(day,n) { const d = new Date(`${day}T12:00:00Z`); d.setUTCDate(d.getUTCDate()+n); return d.toISOString().slice(0,10); }
+/** A date alone has no dismissal time; an instant retires weekday tests at 3pm. */
+export function studyAssessmentDay(now=new Date()) {
+  const day=schoolDay(now);
+  if(typeof now==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(now))return day;
+  const weekday=new Date(day+'T12:00:00Z').getUTCDay();
+  return weekday>0&&weekday<6&&Number(schoolClock.format(new Date(now)))>=15?shift(day,1):day;
+}
 export function weekBounds(now = new Date()) {
   const day=schoolDay(now), weekday=new Date(`${day}T12:00:00Z`).getUTCDay();
   const start=shift(day,-((weekday+6)%7)); return {start,end:shift(start,6)};
 }
 export function nextTests(events = [], now = new Date()) {
-  const day=schoolDay(now), instant=new Date(now).getTime();
+  const day=studyAssessmentDay(now), instant=new Date(now).getTime();
   const eligible=events.filter(e=> /^\d{4}-\d{2}-\d{2}$/.test(e.date||'') && e.date>=day && (!e.endsAt || !Number.isFinite(Date.parse(e.endsAt)) || Date.parse(e.endsAt)>instant));
   const first=eligible.map(e=>e.date).sort()[0];
   const seen=new Set();

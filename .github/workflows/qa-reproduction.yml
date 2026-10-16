@@ -2,6 +2,12 @@ name: Independent QA reproduction bundle
 on:
   pull_request:
     paths:
+      - 'pages/data/lunch-art-registry.json'
+      - 'pages/data/lunch-art-current.json'
+      - 'pages/lunch-art.js'
+      - 'pages/assets/lunch-art/**'
+      - 'scripts/build-lunch-art-plan.mjs'
+      - 'scripts/lunch-art-style.mjs'
       - 'pages/data/uploaded-notices.json'
       - 'pages/data/study-pack.json'
       - 'scripts/build-runtime-pack.mjs'
@@ -23,6 +29,7 @@ on:
       - 'pages/sw.js'
       # Any JavaScript QA corpus change must reproduce at the exact review head.
       - 'tests/**/*.mjs'
+      - 'tests/fixtures/math-original-practice.json'
       - 'tests/study-room*'
       - 'tests/study-experience.test.mjs'
       - 'tests/study-experience.spec.mjs'
@@ -41,6 +48,9 @@ on:
       - 'scripts/curriculum-family-registry.mjs'
       - 'scripts/curriculum-families/**'
       - 'scripts/grade2-content-pipeline.mjs'
+      - 'scripts/question-corrections.mjs'
+      - 'scripts/build-study-archive.mjs'
+      - 'tests/question-corrections.test.mjs'
       - 'scripts/grade2-content-alignment.mjs'
       - 'tests/curriculum-coverage*.test.mjs'
       - 'tests/curriculum-continuity.test.mjs'

@@ -1,3 +1,4 @@
+import {withOriginalMathFixture} from './helpers/original-math-fixture.mjs';
 import { test, expect } from "@playwright/test";
 
 test.use({ serviceWorkers: "block" });
@@ -135,4 +136,73 @@ test("200-percent Study text remains fully readable without clipped controls",as
     expect(box.right,context).toBeLessThanOrEqual(376);
     expect(box.scroll,context).toBeLessThanOrEqual(box.width+1);
   }
+});
+
+async function beforeDismissal(page){
+  const {readFileSync}=await import('node:fs');
+  await page.clock.install({time:new Date('2026-10-15T14:58:00-04:00')});
+  await page.route('**/data/study-pack*.json*',async route=>{
+    const file=new URL(route.request().url()).pathname.endsWith('study-pack-runtime.json')?'study-pack-runtime.json':'study-pack.json';
+    const data=withOriginalMathFixture(JSON.parse(readFileSync(new URL('../pages/data/'+file,import.meta.url),'utf8')));
+    // Explicit isolated planner fixture; public teacher data and questions stay untouched.
+    data.pack.importantDates=(data.pack.importantDates||[]).filter(item=>item.kind!=='test');
+    data.pack.importantDates.push(...[['Oct. 15','QA fixture: Thursday Math'],['Oct. 16','QA fixture: Friday Spelling'],['Oct. 16','QA fixture: Friday Phonics']].map(([date,label])=>({date,label,kind:'test'})));
+    await route.fulfill({json:data});
+  });
+  await page.goto('/#study');
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+  await page.clock.pauseAt(new Date('2026-10-15T14:59:50-04:00'));
+}
+
+test('open Test Prep advances all same-day assessments at 3pm without losing tomorrow’s tests',async({page},info)=>{
+  await beforeDismissal(page);
+  await page.locator('[data-open-prep]').click();
+  await expect(page.locator('.prep-topic-card time')).toHaveAttribute('datetime','2026-10-15');
+  await page.clock.fastForward(15000);
+  await expect(page.locator('.prep-topic-card time')).toHaveAttribute('datetime','2026-10-16');
+  await expect(page.locator('.prep-test-choice')).toHaveCount(2);
+  for(const label of ['QA fixture: Friday Spelling','QA fixture: Friday Phonics'])await expect(page.getByRole('button',{name:new RegExp(label+' -')})).toBeVisible();
+  for(const width of [390,820]){
+    await page.setViewportSize({width,height:1000});
+    await noOverflow(page,width);
+    await page.screenshot({path:info.outputPath('study-after-dismissal-'+width+'.png'),fullPage:true});
+  }
+});
+
+test('3pm retirement leaves an active practice question and its answer state intact',async({page})=>{
+  await beforeDismissal(page);
+  await page.locator('[data-game-start="math"]').click();
+  const question=page.locator('.game-question-card > h2');
+  await expect(question).toBeVisible();
+  const prompt=await question.innerText();
+  await page.locator('[data-game-hint]').click();
+  await expect(page.locator('.game-hint')).toBeVisible();
+  await page.clock.fastForward(15000);
+  await expect(question).toHaveText(prompt);
+  await expect(page.locator('.game-hint')).toBeVisible();
+  await expect(page.locator('.game-topbar')).toContainText('1 of 8');
+});
+
+for(const action of ['data-test-single','data-test-guide','data-test-worksheet'])test('a retired '+action+' control cannot silently switch to another assessment',async({page})=>{
+  await beforeDismissal(page);
+  await page.locator('[data-open-prep]').click();
+  await expect(page.locator('.prep-topic-card time')).toHaveAttribute('datetime','2026-10-15');
+  // A suspended/render-delayed page can retain yesterday's controls. Advance the
+  // date without firing repaint timers and exercise that exact stale control.
+  await page.clock.setSystemTime(new Date('2026-10-15T15:00:01-04:00'));
+  await page.locator('.prep-sheet ['+action+']').click();
+  await expect(page.locator('.prep-topic-card time')).toHaveAttribute('datetime','2026-10-16');
+  await expect(page.locator('.games-screen.is-playing')).toHaveCount(0);
+  await expect(page.locator('[data-study-guide-dialog]')).toHaveCount(0);
+});
+
+test('an open guide survives dismissal and closing it catches Test Prep up immediately',async({page})=>{
+ await beforeDismissal(page);await page.locator('[data-open-prep]').click();
+ await page.locator('.prep-sheet [data-test-guide]').click();
+ const dialog=page.locator('[data-study-guide-dialog]');await expect(dialog).toBeVisible();
+ await page.clock.fastForward(15000);await expect(dialog).toBeVisible();
+ await page.locator('[data-guide-close]').click();
+ await expect(dialog).toHaveCount(0);
+ await expect(page.locator('.prep-topic-card time')).toHaveAttribute('datetime','2026-10-16');
+ await expect(page.locator('.games-screen h1').first()).toBeFocused();
 });

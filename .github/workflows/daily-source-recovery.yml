@@ -55,19 +55,19 @@ jobs:
               return 0
             fi
             local recent running count today
-            recent="$(gh run list --workflow "$workflow" --branch main --limit 70 --json status,event,createdAt)"
+            recent="$(gh run list --workflow "$workflow" --branch main --limit 70 --json status,event,createdAt,conclusion)"
             running="$(jq '[.[] | select(.status == "in_progress" or .status == "queued" or .status == "pending" or .status == "waiting" or .status == "requested")] | length' <<< "$recent")"
             if (( running > 0 )); then
               echo "Recovery already in progress: $workflow"
               return 0
             fi
             today="$(date -u +%Y-%m-%d)"
-            count="$(jq -r --arg day "$today" '[.[] | select(.event == "workflow_dispatch" and (.createdAt | startswith($day)))] | length' <<< "$recent")"
+            count="$(jq -r --arg day "$today" '[.[] | select(.event == "workflow_dispatch" and .status == "completed" and .conclusion != "success" and (.createdAt | startswith($day)))] | length' <<< "$recent")"
             if (( count >= 2 )); then
-              echo "::error::Daily recovery budget reached for $workflow; data remains stale. Do not bypass verification."
+              echo "::error::Daily failed-recovery budget reached for $workflow; data remains stale. Do not bypass verification."
               return 1
             fi
-            echo "Dispatching verified-source recovery: $workflow (retry $((count+1))/2 UTC day)"
+            echo "Dispatching verified-source recovery: $workflow (failed-attempt budget $((count+1))/2 UTC day)"
             gh workflow run "$workflow" --ref main
           }
 

@@ -56,7 +56,6 @@
       tasks,
       next,
       reminders,
-      header,
       freshness,
       taskHtml,
       lunchHtml,
@@ -83,9 +82,9 @@
         "</strong><span>" +
         next.d.getDate() +
         "</span></div><div><p>" +
-        (kindClass(next.x) === "due" ? "NEXT DEADLINE" : "NEXT TEST") +
+        (kindClass(next.x) === "due" ? "NEXT DEADLINE" : (next.items?.length>1 ? "NEXT TESTS" : "NEXT TEST")) +
         "</p><h3>" +
-        esc(next.x.label) +
+        (next.items||[next.x]).map(item=>'<span class="assessment-title">'+esc(item.label)+"</span>").join("") +
         "</h3><span>" +
         esc(fmtDate(next.d)) +
         "</span></div>" +
@@ -93,7 +92,7 @@
           kindClass(next.x) === "due" ? "week" : "study",
           "Open",
           "icon-button",
-          (kindClass(next.x) === "due" ? "View school week for " : "Open Study for ") + next.x.label,
+          (kindClass(next.x) === "due" ? "View school week for " : "Open Study for ") + (next.items||[next.x]).map(item=>item.label).join("; "),
         ) +
         "</section>"
       : '<section class="priority-card quiet"><span class="feature-icon">' +
@@ -120,9 +119,7 @@
       '</p><h2>Ready for today?</h2><p>Your school day, all together.</p></div><img class="hero-photo" src="./assets/school/abvm-school-hero.webp" width="1024" height="683" fetchpriority="high" alt="Assumption BVM School in Pottsville"><span class="photo-caption">OUR ABVM</span><img class="today-school-seal" src="./assets/abvm-app-icon-192.png" width="48" height="48" alt="Assumption BVM Catholic School logo"></section>' +
       c.homeworkHtml +
       '<div class="today-primary">' + nextHtml +
-      '<button class="study-invitation" type="button" data-route="study"><img src="./assets/illustrations/reading.webp" width="72" height="72" alt=""><span><strong>Start studying</strong><small>A little practice. A little more confidence.</small></span>' +
-      icon("arrow") +
-      "</button></div>" +
+      "</div>" +
       eagerTodayLunchArt(lunchHtml) +
       '<figure class="school-sign-card"><img class="school-sign-photo" src="./assets/school/abvm-school-sign.webp" width="420" height="280" loading="eager" decoding="async" alt="Original photograph of the Assumption BVM school sign on Howard Avenue"><figcaption><strong>Our school sign</strong><span>Assumption BVM · Howard Avenue</span></figcaption></figure>' +
       '<section class="today-panel">' +
@@ -213,7 +210,7 @@
     return (
       '<div class="screen week-screen" role="region" aria-label="This week">' +
       header("THE SCHOOL PLAN", "This week") +
-      c.segments +
+      c.segments + calendarSearch() +
       window.ABVMSchoolUpdates.officialCalendarLink() +
       '<div class="week-toolbar"><nav class="week-nav" aria-label="Change displayed week"><button type="button" data-week-step="-1" aria-label="Previous week">‹</button><div aria-live="polite"><span>' +
       (offset === 0 ? "THIS SCHOOL WEEK" : "VIEWING WEEK") +
@@ -410,21 +407,92 @@
   function calendarPicker(year,month) {
     return '<p class="cal-picker-label">Choose a month</p><div class="cal-month-options">'+calendarMonths.map((name,index)=>'<button type="button" data-cal-month="'+year+'-'+String(index+1).padStart(2,'0')+'-01" aria-pressed="'+(index===month)+'">'+name.slice(0,3)+'</button>').join('')+'</div><button class="cal-picker-close" type="button" data-cal-picker-close>Close month picker</button>';
   }
+  // Search only canonical calendar rows. Rebuild the in-memory index when the
+  // governed pack changes; no requests, analytics or stored search history.
+  let calendarSearchQuery='',readSearchEvents=()=>[];
+  const calendarSearchIndexes=new WeakMap();
+  const searchText=value=>String(value??'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/['’]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+  const searchDateLabel=date=>date.toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric',year:'numeric'});
+  function searchCalendarEvents(rows,query) {
+    const terms=searchText(query).split(/\s+/).filter(Boolean);
+    if(!terms.length||!Array.isArray(rows))return [];
+    let index=calendarSearchIndexes.get(rows);
+    if(!index){
+      const seen=new Set();
+      index=rows.filter(row=>row?.date&&Number.isFinite(row.date.getTime())&&typeof row.item?.label==='string').filter(row=>{
+        const key=calendarKey(row.date)+'|'+row.item.kind+'|'+row.item.label;
+        if(seen.has(key))return false;seen.add(key);return true;
+      }).map(row=>{
+        const end=row.range?.[1],dates=[];
+        for(const day=new Date(row.date);Number.isFinite(day.getTime());day.setDate(day.getDate()+1)){
+          dates.push(calendarKey(day),searchDateLabel(day),day.toLocaleDateString('en-US',{month:'short',day:'numeric'}));
+          if(!end||!Number.isFinite(end.getTime())||day>=end)break;
+        }
+        const text=searchText([row.item.label,row.item.kind,row.item.time,row.item.location,...dates].filter(Boolean).join(' '));
+        return {row,text,compact:text.replace(/ /g,'')};
+      }).sort((a,b)=>a.row.date-b.row.date||a.row.item.label.localeCompare(b.row.item.label));
+      calendarSearchIndexes.set(rows,index);
+    }
+    return index.filter(({text,compact})=>terms.every(term=>text.includes(term)||compact.includes(term))).map(({row})=>row);
+  }
+  function calendarSearchResults(query,rows) {
+    const matches=searchCalendarEvents(rows,query),active=Boolean(searchText(query));
+    return {status:active?(matches.length?matches.length+' matching event'+(matches.length===1?'':'s'):'No matching events. Try another event name or date.'):'Search all saved dates, including past events.',
+      html:active&&matches.length?'<ul class="cal-search-list">'+matches.map(({item,date})=>'<li><button type="button" data-cal-search-date="'+calendarKey(date)+'" data-cal-search-label="'+esc(item.label)+'"><span><time datetime="'+calendarKey(date)+'">'+esc(searchDateLabel(date))+'</time><strong>'+esc(item.label)+'</strong>'+(item.date&&/–|\bto\b/.test(item.date)?'<small>'+esc(item.date)+'</small>':'')+'</span>'+icon('arrow')+'</button></li>').join('')+'</ul>':''};
+  }
+  function calendarSearch(query=calendarSearchQuery,rows=readSearchEvents()) {
+    // A background pack/homework refresh replaces the planner DOM. Keep an
+    // active search keyboard and selection without stealing deliberate focus.
+    const focused=typeof document!=='undefined'&&document.activeElement?.matches('.cal-search input')?document.activeElement:null;
+    if(focused){
+      const start=focused.selectionStart,end=focused.selectionEnd;
+      queueMicrotask(()=>{
+        const input=document.querySelector('.cal-search input');
+        if(input&&input!==focused&&!focused.isConnected&&(!document.activeElement||document.activeElement===document.body)){input.focus({preventScroll:true});input.setSelectionRange(start,end);}
+      });
+    }
+    const results=calendarSearchResults(query,rows);
+    return '<section class="cal-search" role="search" aria-label="Calendar events"><div class="cal-search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 5 5"></path></svg><input type="search" aria-label="Search calendar events" placeholder="Search events" maxlength="120" autocomplete="off" spellcheck="false" value="'+esc(query)+'" aria-controls="cal-search-results" aria-describedby="cal-search-status"><button type="button" data-cal-search-clear aria-label="Clear calendar search"'+(query?'':' hidden')+'>Clear</button></div><p id="cal-search-status" role="status" aria-live="polite">'+esc(results.status)+'</p><div id="cal-search-results">'+results.html+'</div></section>';
+  }
+
   function calendar(c) {
     const {year,month,selected,now,events,kindClass,fmtDate,segments,logo,lunchHtml,summaryHtml,weeklyHtml,specialsHtml,nextHtml,sourceHtml,freshnessHtml}=c;
     const closed=events.some(e=>kindClass(e)==='closed');
-    return '<div class="screen calendar-screen calendar-studio" role="region" aria-label="'+calendarMonths[month]+' calendar"><header class="cal-header"><div class="cal-identity">'+logo+'<div><p>ABVM · GRADE 2</p><h1 tabindex="-1">Calendar</h1></div></div><div class="cal-header-actions">'+segments+'<button class="cal-today" type="button" data-cal-today aria-label="Jump to today">Today</button></div></header><nav class="calendar-month-nav" aria-label="Change calendar month"><button type="button" data-cal-step="-1" aria-label="Previous month">‹</button><button class="cal-month-title" type="button" data-cal-picker-toggle aria-expanded="false" aria-controls="cal-month-picker" aria-label="Choose month"><strong>'+calendarMonths[month]+' '+year+'</strong><span aria-hidden="true">⌄</span></button><button type="button" data-cal-step="1" aria-label="Next month">›</button></nav><section id="cal-month-picker" class="cal-picker" aria-label="Choose month" hidden>'+calendarPicker(year,month)+'</section><div class="calendar-layout"><section class="calendar-card" aria-label="Month dates"><div class="calendar-weekdays" aria-hidden="true">'+['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(x=>'<span>'+x+'</span>').join('')+'</div><div class="calendar-grid" aria-label="'+calendarMonths[month]+' '+year+' dates">'+calendarGrid({...c,now,selected})+'</div><p class="cal-grid-hint">Tap a day for the full plan<span>Swipe to change month</span></p></section><section class="calendar-day-card" aria-live="polite" aria-atomic="false" aria-label="Selected day"><div class="calendar-day-heading"><div><p>'+esc(fmtDate(selected).split(',')[0])+'</p><h2>'+calendarMonths[selected.getMonth()]+' '+selected.getDate()+'</h2></div><span class="cal-day-count '+(closed?'closed':'')+'">'+(closed?'No school':events.length===1?'1 event':events.length+' events')+'</span></div>'+(events.length?'<div class="calendar-event-list">'+events.map(e=>calendarEvent(e,kindClass(e))).join('')+'</div>':'<div class="cal-empty-state"><span aria-hidden="true">'+icon('calendar')+'</span><p class="calendar-empty">No special school events are listed for this date.</p></div>')+lunchHtml+'<button class="calendar-study-action" type="button" data-route="study">Start studying '+icon('arrow')+'</button></section></div><div class="cal-secondary">'+summaryHtml+'<details class="calendar-more" open><summary class="cal-weekly-heading"><span class="cal-section-icon" aria-hidden="true">'+icon('chart')+'</span><span class="cal-heading-copy"><strong>Weekly lunches and tests</strong><small>This week at a glance</small></span><span class="cal-open-indicator" aria-hidden="true">⌄</span></summary><div class="calendar-more-content">'+weeklyHtml+'</div></details>'+specialsHtml+nextHtml+'</div><footer class="cal-source-footer">'+sourceHtml+freshnessHtml+'</footer></div>';
+    return '<div class="screen calendar-screen calendar-studio" role="region" aria-label="'+calendarMonths[month]+' calendar"><header class="cal-header"><div class="cal-identity">'+logo+'<div><p>ABVM · GRADE 2</p><h1 tabindex="-1">Calendar</h1></div></div><div class="cal-header-actions">'+segments+'<button class="cal-today" type="button" data-cal-today aria-label="Jump to today">Today</button></div></header>'+calendarSearch()+'<nav class="calendar-month-nav" aria-label="Change calendar month"><button type="button" data-cal-step="-1" aria-label="Previous month">‹</button><button class="cal-month-title" type="button" data-cal-picker-toggle aria-expanded="false" aria-controls="cal-month-picker" aria-label="Choose month"><strong>'+calendarMonths[month]+' '+year+'</strong><span aria-hidden="true">⌄</span></button><button type="button" data-cal-step="1" aria-label="Next month">›</button></nav><section id="cal-month-picker" class="cal-picker" aria-label="Choose month" hidden>'+calendarPicker(year,month)+'</section><div class="calendar-layout"><section class="calendar-card" aria-label="Month dates"><div class="calendar-weekdays" aria-hidden="true">'+['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(x=>'<span>'+x+'</span>').join('')+'</div><div class="calendar-grid" aria-label="'+calendarMonths[month]+' '+year+' dates">'+calendarGrid({...c,now,selected})+'</div><p class="cal-grid-hint">Tap a day for the full plan<span>Swipe to change month</span></p></section><section class="calendar-day-card" aria-live="polite" aria-atomic="false" aria-label="Selected day"><div class="calendar-day-heading"><div><p>'+esc(fmtDate(selected).split(',')[0])+'</p><h2>'+calendarMonths[selected.getMonth()]+' '+selected.getDate()+'</h2></div><span class="cal-day-count '+(closed?'closed':'')+'">'+(closed?'No school':events.length===1?'1 event':events.length+' events')+'</span></div>'+(events.length?'<div class="calendar-event-list">'+events.map(e=>calendarEvent(e,kindClass(e))).join('')+'</div>':'<div class="cal-empty-state"><span aria-hidden="true">'+icon('calendar')+'</span><p class="calendar-empty">No special school events are listed for this date.</p></div>')+lunchHtml+'<button class="calendar-study-action" type="button" data-route="study">Start studying '+icon('arrow')+'</button></section></div><div class="cal-secondary">'+summaryHtml+'<details class="calendar-more" open><summary class="cal-weekly-heading"><span class="cal-section-icon" aria-hidden="true">'+icon('chart')+'</span><span class="cal-heading-copy"><strong>Weekly lunches and tests</strong><small>This week at a glance</small></span><span class="cal-open-indicator" aria-hidden="true">⌄</span></summary><div class="calendar-more-content">'+weeklyHtml+'</div></details>'+specialsHtml+nextHtml+'</div><footer class="cal-source-footer">'+sourceHtml+freshnessHtml+'</footer></div>';
   }
   // One delegated listener set survives controller redraws and cached-pack refreshes.
-  function bindCalendar(root,{getDate,selectDate,shiftMonth}) {
+  function bindCalendar(root,{getDate,selectDate,shiftMonth,getEvents}) {
+    readSearchEvents=getEvents||(()=>[]);
+    const updateSearch=()=>{
+      const input=root.querySelector('.cal-search input');if(!input)return;
+      calendarSearchQuery=input.value.slice(0,120);
+      const results=calendarSearchResults(calendarSearchQuery,readSearchEvents());
+      root.querySelector('#cal-search-status').textContent=results.status;
+      root.querySelector('#cal-search-results').innerHTML=results.html;
+      root.querySelector('[data-cal-search-clear]').hidden=!calendarSearchQuery;
+    };
+    updateSearch();
+    root.addEventListener('input',event=>{if(event.target.matches('.cal-search input'))updateSearch();});
+    root.addEventListener('keydown',event=>{if(event.key==='Escape'&&event.target.closest('.cal-search')){event.preventDefault();const input=root.querySelector('.cal-search input');input.value='';updateSearch();input.focus();}});
     let gesture=null,suppressClickUntil=0;
     const closePicker=()=>{const picker=root.querySelector('#cal-month-picker'),button=root.querySelector('[data-cal-picker-toggle]');if(picker)picker.hidden=true;if(button){button.setAttribute('aria-expanded','false');button.focus({preventScroll:true});}};
     root.addEventListener('click',event=>{
       const button=event.target.closest('button');
-      if(!button?.closest('.calendar-studio'))return;
+      if(!button?.closest('.calendar-studio')&&!button?.matches('[data-cal-search-date],[data-cal-search-clear]'))return;
       if(Date.now()<suppressClickUntil&&button.closest('.calendar-grid')){event.preventDefault();event.stopImmediatePropagation();return;}
       const attr=button.dataset;
-      if('calPickerToggle' in attr){const picker=root.querySelector('#cal-month-picker');picker.hidden=!picker.hidden;button.setAttribute('aria-expanded',String(!picker.hidden));if(!picker.hidden)picker.querySelector('[aria-pressed="true"]')?.focus({preventScroll:true});}
+      if('calSearchClear' in attr){const input=root.querySelector('.cal-search input');input.value='';updateSearch();input.focus();}
+      else if('calSearchDate' in attr){
+        const day=calendarDate(attr.calSearchDate);if(!day)return;
+        if(button.closest('.week-screen'))root.querySelector('[data-route=calendar]')?.click();
+        selectDate(day);
+        const agenda=root.querySelector('.calendar-day-card');
+        const matched=[...(agenda?.querySelectorAll('.cal-event')||[])].find(el=>el.querySelector('strong')?.textContent===attr.calSearchLabel);
+        if(matched)matched.open=true;
+        const target=matched?.querySelector('summary')||agenda?.querySelector('h2');
+        if(target){if(target.tagName!=='SUMMARY')target.tabIndex=-1;target.focus({preventScroll:true});target.scrollIntoView({block:'center',behavior:'instant'});}
+      }
+      else if('calPickerToggle' in attr){const picker=root.querySelector('#cal-month-picker');picker.hidden=!picker.hidden;button.setAttribute('aria-expanded',String(!picker.hidden));if(!picker.hidden)picker.querySelector('[aria-pressed="true"]')?.focus({preventScroll:true});}
       else if('calPickerClose' in attr)closePicker();
       else if('calMonth' in attr){const d=calendarDate(attr.calMonth);if(d){d.setDate(Math.min(getDate().getDate(),new Date(d.getFullYear(),d.getMonth()+1,0,12).getDate()));selectDate(d,'[data-cal-picker-toggle]');}}
       else if('calOpenDate' in attr){
@@ -522,7 +590,32 @@
     if (node.nextElementSibling?.matches(".teacher-live-source")) node.nextElementSibling.remove();
     node.outerHTML = markup;
   }
-  window.ABVMProductView = Object.freeze({ today, week, homeworkCard, progress, icon, plannerDate, compactMonthCard, calendarSpecials, freshnessControl, replaceFreshness, calendar, calendarDate, calendarShift, calendarGrid, calendarEvent, bindCalendar });
+  // Compare school civil dates, independent of the device timezone and DST.
+  const schoolClock = new Intl.DateTimeFormat("en-US", {timeZone:"America/New_York",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",hourCycle:"h23"});
+  function assessmentWindow(now=new Date()) {
+    const p=Object.fromEntries(schoolClock.formatToParts(now).map(p=>[p.type,p.value]));
+    const day=new Date(+p.year,+p.month-1,+p.day,12);
+    const afterSchool=day.getDay()>0&&day.getDay()<6&&+p.hour>=15;
+    return {day,afterSchool,key:p.year+p.month+p.day+":"+afterSchool};
+  }
+  function nextAssessments(rows,kindClass,now=new Date()) {
+    const {day,afterSchool}=assessmentWindow(now);
+    const tests=rows.filter(({date,item})=>kindClass(item)==="test"&&(date>day||(!afterSchool&&+date===+day)));
+    const first=tests[0];
+    if(first)return {x:first.item,d:first.date,items:tests.filter(row=>+row.date===+first.date).map(row=>row.item)};
+    const due=rows.find(({date,item})=>date>=day&&kindClass(item)==="due");
+    return due?{x:due.item,d:due.date,items:[due.item]}:null;
+  }
+  function watchSchoolClock(refresh) {
+    let key=assessmentWindow().key;
+    const check=()=>{const next=assessmentWindow().key;if(next!==key){try{if(refresh()!==false)key=next}catch{}}};
+    const tick=()=>{check();setTimeout(tick,60000-Date.now()%60000)};
+    setTimeout(tick,60000-Date.now()%60000);
+    document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")check()});
+    window.addEventListener("pageshow",check);
+    document.addEventListener("close",check,true);
+  }
+  window.ABVMProductView = Object.freeze({ nextAssessments, assessmentWindow, watchSchoolClock, today, week, homeworkCard, progress, icon, plannerDate, compactMonthCard, calendarSpecials, freshnessControl, replaceFreshness, calendar, calendarDate, calendarShift, calendarGrid, calendarEvent, bindCalendar, searchCalendarEvents, calendarSearch });
 })();
 
 (()=>{"use strict";

@@ -110,3 +110,20 @@ test('range-specific subtraction remains canonical instead of activating the gen
   assert.equal(pipeline.coverage.some(row=>row.status==='GENERATOR_UNSUPPORTED'),false);
   assert.deepEqual(validateGrade2ContentPipeline(pipeline),[]);
 });
+
+test('subtraction error-analysis asks for the correct difference rather than rejecting a valid error check',()=>{
+  const pipeline=buildGrade2ContentPipeline(sourcePack(),{
+    generatedAt:'2026-10-15T23:00:00Z',sourceHash:'subtraction-wording-regression',
+    sourcePages,requirePageExactLineage:true,
+  });
+  const question=pipeline.questions.find(row=>row.prompt.startsWith('Sam says 9 - 4 = 6.'));
+  assert.ok(question);
+  // 6 + 4 = 10 genuinely shows the claimed answer is one too high.
+  // Ask instead which fact checks the correct difference, for which only 5 + 4 = 9 qualifies.
+  assert.match(question.prompt,/checks the correct difference/);
+  const checksOriginalTotal=question.choices.filter(choice=>{
+    const match=choice.match(/^(\d+) \+ (\d+) = (\d+)$/);
+    return match&&Number(match[1])+Number(match[2])===9&&Number(match[3])===9;
+  });
+  assert.deepEqual(checksOriginalTotal,[question.answer]);
+});
