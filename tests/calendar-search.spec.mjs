@@ -1,23 +1,35 @@
 import {test,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+test.use({serviceWorkers:'block'});
 const fixed=new Date('2026-10-15T16:00:00-04:00');
 async function load(page,route='calendar'){
   await page.clock.setFixedTime(fixed);
+  // Isolated response copies keep future source changes from retiring test data.
+  // These clearly labeled fixtures never alter repository or published events.
+  await page.route('**/data/study-pack*.json*',async request=>{
+    const response=await request.fetch();
+    const data=await response.json();
+    data.pack.importantDates=[...(data.pack.importantDates||[]),
+      {date:'Nov. 21',label:'Search QA fixture: Reading Night',kind:'School event'},
+      {date:'Oct. 22',label:'Search QA fixture: Chick-fil-A',kind:'School event'},
+    ];
+    await request.fulfill({response,json:data});
+  });
   await page.goto('/#'+route);
   await expect(page.getByRole('searchbox',{name:'Search calendar events'})).toBeVisible();
 }
 test('event search finds another month and opens the exact event with keyboard focus',async({page})=>{
   await load(page);
   const input=page.getByRole('searchbox',{name:'Search calendar events'});
-  await input.fill('royals');
+  await input.fill('readingnight');
   const result=page.locator('[data-cal-search-date="2026-11-21"]');
-  await expect(result).toContainText('Reading Royals');
+  await expect(result).toContainText('Search QA fixture: Reading Night');
   await result.focus();await page.keyboard.press('Enter');
   await expect(page.locator('.calendar-month-nav strong')).toHaveText('November 2026');
-  const event=page.locator('.calendar-day-card details').filter({hasText:'Reading Royals'});
+  const event=page.locator('.calendar-day-card details').filter({hasText:'Search QA fixture: Reading Night'});
   await expect(event).toHaveAttribute('open','');
   await expect(event.locator('summary')).toBeFocused();
-  await expect(input).toHaveValue('royals');
+  await expect(input).toHaveValue('readingnight');
 });
 test('Week shares search; clearing and Escape restore the normal calendar without losing focus',async({page})=>{
   await load(page,'week');
@@ -53,7 +65,7 @@ test('search is usable on phone, iPad and desktop without overflow or serious ac
 });
 test('loaded calendar search works with the network offline',async({page,context})=>{
   await load(page);await context.setOffline(true);
-  await page.getByRole('searchbox',{name:'Search calendar events'}).fill('royals');
+  await page.getByRole('searchbox',{name:'Search calendar events'}).fill('readingnight');
   await expect(page.locator('[data-cal-search-date="2026-11-21"]')).toBeVisible();
   await page.locator('[data-cal-search-date="2026-11-21"]').click();
   await expect(page.locator('.calendar-day-heading h2')).toHaveText('November 21');
