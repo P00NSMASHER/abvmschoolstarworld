@@ -35,6 +35,15 @@ on:
       - 'tests/gold-standard.spec.mjs'
       - 'tests/study-experience.test.mjs'
       - 'tests/study-materials.test.mjs'
+      # Correcting the QA corpus that held a source refresh must automatically
+      # revalidate fresh teacher data, without waiting for the next school slot.
+      - 'tests/study-experience.spec.mjs'
+      - 'tests/study-games-async-materials.spec.mjs'
+      - 'tests/study-hub.spec.mjs'
+      - 'tests/study-score-feedback.spec.mjs'
+      - 'tests/source-math-withdrawal.test.mjs'
+      - 'tests/helpers/original-math-fixture.mjs'
+      - 'tests/fixtures/math-original-practice.json'
       - 'tests/recovered-learning-loop.spec.mjs'
       - 'tests/study-games-rich-content.spec.mjs'
       - 'tests/curriculum-continuity.test.mjs'
@@ -268,6 +277,17 @@ jobs:
           test "$EXPECTED" = "$CURRENT" || { echo 'Main moved during release SHA handoff.' >&2; exit 1; }
           test "${#CURRENT}" -eq 40 || { echo 'Invalid release SHA.' >&2; exit 1; }
           echo "sha=$CURRENT" >> "$GITHUB_OUTPUT"
+
+      - name: Retain failed candidate QA evidence for bounded recovery
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: teacher-refresh-qa-failure-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            playwright-report
+            test-results
+          retention-days: 14
+          if-no-files-found: ignore
 
   deploy:
     name: deploy verified refresh through Pages workflow
