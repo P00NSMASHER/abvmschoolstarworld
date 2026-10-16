@@ -234,7 +234,7 @@ test('new Study and game surfaces have no serious automated accessibility findin
 });
 
 for(const [name,payload] of [['schoolwork.json',{lessons:'broken'}],['study-archive.json',{notes:'broken'}]]){
- test(`malformed ${name} offers recovery without hiding current notes`,async({page})=>{
+ test(`malformed ${name} offers recovery without hiding saved source notes`,async({page})=>{
   let broken=true;
   await page.clock.setFixedTime(new Date('2026-10-05T16:00:00-04:00'));
   await page.route('**/data/'+name+'*',route=>broken?route.fulfill({json:payload}):route.continue());
@@ -243,6 +243,9 @@ for(const [name,payload] of [['schoolwork.json',{lessons:'broken'}],['study-arch
   await expect(page.locator('[data-study-retry]')).toBeVisible();
   await expect(page.locator('.study-game-grid > .study-game-tile')).toHaveCount(5);
   await page.locator('[data-study-notes] > summary').click();
+  await expect(page.locator('[data-notes-source=weekly]')).toHaveAttribute('aria-pressed','true');
+  await page.locator('[data-notes-source=saved]').click();
+  await expect(page.locator('[data-notes-source=saved]')).toHaveAttribute('aria-pressed','true');
   await expect(page.locator('[data-study-notes]')).toContainText('Reading / ELA');
   broken=false;await page.locator('[data-study-retry]').click();
   await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
