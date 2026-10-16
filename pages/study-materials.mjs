@@ -588,7 +588,7 @@ export function createStudyMaterials({
   }
   function testRound({index, seed, upcoming = false} = {}) {
     const state = upcoming ? printableTestState(true) : testState();
-    const {single,groups,selected,full,key} = testScope(state,index);
+    const {single,groups,full,key} = testScope(state,index);
     const chosenSeed = sessionSeed(key,'test-ready',seed);
     return {
       questions:balancedTestRound(groups,8,chosenSeed), catalog:{...catalog,sourceKey:key,questions:full},
