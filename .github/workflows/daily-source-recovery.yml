@@ -1,0 +1,94 @@
+name: ABVM daily source self-recovery
+
+# Neither teacher/educator permission nor an owner signoff is needed to
+# refresh already verified private companion-app school information.
+# Integrity, source attribution and release QA still gate publication.
+on:
+  schedule:
+    - cron: '11 7,11,16,20,23 * * *'
+      timezone: 'America/New_York'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: abvm-daily-source-self-recovery
+  cancel-in-progress: false
+
+jobs:
+  check-and-recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prove decisions preserve verified source identity and date
+        run: node --test tests/source-freshness-recovery.test.mjs
+
+      - name: Inspect source freshness and published-site parity
+        run: node scripts/source-freshness-recovery.mjs --report=source-recovery-plan.json
+
+      - name: Recover stale sources or mismatched publication without manual approval
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          plan=source-recovery-plan.json
+          jq -e . "$plan" >/dev/null
+          if jq -e '.caution | length > 0' "$plan" >/dev/null; then
+            echo "::warning::Live-file verification incomplete; never invent a successful deployment."
+          fi
+
+          maybe_dispatch() {
+            local workflow="$1" needed="$2"
+            if [[ "$needed" != true ]]; then
+              echo "Already current: $workflow"
+              return 0
+            fi
+            local recent running count today
+            recent="$(gh run list --workflow "$workflow" --branch main --limit 70 --json status,event,createdAt,conclusion)"
+            running="$(jq '[.[] | select(.status == "in_progress" or .status == "queued" or .status == "pending" or .status == "waiting" or .status == "requested")] | length' <<< "$recent")"
+            if (( running > 0 )); then
+              echo "Recovery already in progress: $workflow"
+              return 0
+            fi
+            today="$(date -u +%Y-%m-%d)"
+            count="$(jq -r --arg day "$today" '[.[] | select(.event == "workflow_dispatch" and .status == "completed" and .conclusion != "success" and (.createdAt | startswith($day)))] | length' <<< "$recent")"
+            if (( count >= 2 )); then
+              echo "::error::Daily failed-recovery budget reached for $workflow; data remains stale. Do not bypass verification."
+              return 1
+            fi
+            echo "Dispatching verified-source recovery: $workflow (failed-attempt budget $((count+1))/2 UTC day)"
+            gh workflow run "$workflow" --ref main
+          }
+
+          curriculum="$(jq -r '.refreshCurriculum' "$plan")"
+          homework="$(jq -r '.refreshHomework' "$plan")"
+          deploy="$(jq -r '.redeploy' "$plan")"
+          result=0
+          maybe_dispatch sync-study-pack.yml "$curriculum" || result=1
+          maybe_dispatch refresh-current-homework.yml "$homework" || result=1
+          # Pages may be re-dispatched ONLY if repository sources are current.
+          # Its independent exact-main SHA and full QA safeguards remain active.
+          if [[ "$curriculum" == false && "$homework" == false ]]; then
+            maybe_dispatch pages.yml "$deploy" || result=1
+          fi
+          exit "$result"
+
+      - name: Retain machine-readable daily source verdict
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: abvm-daily-source-recovery-${{ github.run_id }}
+          path: source-recovery-plan.json
+          retention-days: 14
+          if-no-files-found: ignore

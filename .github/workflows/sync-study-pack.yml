@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - 'scripts/refresh-teacher-pages.mjs'
+      - 'scripts/build-runtime-pack.mjs'
+      - 'tests/runtime-pack.test.mjs'
+      - 'scripts/assert-safe-teacher-refresh.mjs'
       - 'scripts/curriculum-coverage-autopilot.mjs'
       - 'scripts/curriculum-family-registry.mjs'
       - 'scripts/curriculum-families/**'
@@ -12,9 +15,18 @@ on:
       - 'scripts/school-change-feed.mjs'
       - 'scripts/validate-curriculum-candidates.mjs'
       - 'scripts/grade2-content-pipeline.mjs'
+      - 'scripts/question-corrections.mjs'
+      - 'scripts/build-study-archive.mjs'
+      - 'tests/question-corrections.test.mjs'
       - 'scripts/grade2-content-alignment.mjs'
       - 'scripts/teacher-page-parsers.mjs'
       - 'scripts/lunch-publication.mjs'
+      - 'scripts/build-runtime-pack.mjs'
+      - 'tests/runtime-pack.test.mjs'
+      - 'tests/runtime-pack-fallback.spec.mjs'
+      - 'scripts/refresh-reviewed-lunch.mjs'
+      - 'tests/refresh-reviewed-lunch.test.mjs'
+      - 'tests/assert-safe-teacher-refresh.test.mjs'
       - 'pages/study-games.js'
       - 'pages/study-materials.mjs'
       - 'pages/study-experience.mjs'
@@ -26,12 +38,25 @@ on:
       - 'tests/gold-standard.spec.mjs'
       - 'tests/study-experience.test.mjs'
       - 'tests/study-materials.test.mjs'
+      # Correcting the QA corpus that held a source refresh must automatically
+      # revalidate fresh teacher data, without waiting for the next school slot.
+      - 'tests/study-experience.spec.mjs'
+      - 'tests/study-games-async-materials.spec.mjs'
+      - 'tests/study-hub.spec.mjs'
+      - 'tests/study-score-feedback.spec.mjs'
+      - 'tests/source-math-withdrawal.test.mjs'
+      - 'tests/helpers/original-math-fixture.mjs'
+      - 'tests/fixtures/math-original-practice.json'
       - 'tests/recovered-learning-loop.spec.mjs'
       - 'tests/study-games-rich-content.spec.mjs'
       - 'tests/curriculum-continuity.test.mjs'
       - 'tests/curriculum-continuity.spec.mjs'
       - 'tests/school-change-feed.test.mjs'
       - 'tests/school-change-feed.spec.mjs'
+      - 'tests/iphone-polish.spec.mjs'
+      - 'tests/source-freshness-recovery.test.mjs'
+      - 'scripts/source-freshness-recovery.mjs'
+      - '.github/workflows/daily-source-recovery.yml'
       - '.github/workflows/sync-study-pack.yml'
   schedule:
     - cron: '17 6 * * *'
@@ -56,7 +81,11 @@ concurrency:
 
 jobs:
   refresh:
-    timeout-minutes: 25
+    outputs:
+      published_sha: ${{ steps.confirm-published-sha.outputs.sha }}
+    # Full source scan, Chromium/WebKit QA, and a bounded main-race revalidation
+    # can legitimately exceed 25 minutes without indicating a stuck refresh.
+    timeout-minutes: 45
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -74,12 +103,17 @@ jobs:
       - name: Scan and validate the public teacher pages
         run: node scripts/refresh-teacher-pages.mjs --autopilot-report=.curriculum-coverage-plan.json
 
+      # Candidate PR bookkeeping cannot block verified current lessons.
+      # Unsupported question families stay isolated by the later hard QA gate.
       - name: Open governed curriculum candidate PR when coverage gaps exist
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
+          # Always restore main, even when draft-PR bookkeeping fails halfway.
+          trap 'git switch main >/dev/null 2>&1 || true' EXIT
           COUNT="$(node -e 'const p=JSON.parse(require("fs").readFileSync(".curriculum-coverage-plan.json","utf8"));process.stdout.write(String(p.unsupportedCount||0))')"
           if [ "$COUNT" -eq 0 ]; then
             echo "Curriculum coverage is complete; no candidate PR required."
@@ -103,10 +137,10 @@ jobs:
             Exact unsupported teacher skills:
             $CANDIDATE_SUMMARY
 
-            Candidates are disabled by default. Do not promote until page-exact source context, the minimum semantic family, direct/transfer/reasoning coverage, full automated QA, sufficient safe-usage evidence, and manual approval are all present. This workflow never auto-merges or auto-promotes a family."; then
+            Candidate questions start isolated. Complete source-matched families can enter production automatically after original semantic variants and full independent source, privacy, accessibility and browser QA pass. Unsupported or incomplete families remain isolated while verified daily teacher data and homework continue updating. No teacher, school, educator, parent or owner approval or real-learner pilot is required. This workflow never bypasses quality gates."; then
               return 0
             fi
-            echo "::warning::GitHub Actions could not create the governed draft PR. Candidate branch $CANDIDATE_BRANCH remains preserved; the unresolved-coverage gate will still block publication."
+            echo "::warning::GitHub Actions could not create the governed draft PR. Candidate branch $CANDIDATE_BRANCH remains preserved; the source-safe isolation gate will still verify that no candidate questions are published."
             return 1
           }
 
@@ -115,7 +149,7 @@ jobs:
             if [ -z "$PR_NUMBER" ]; then
               echo "Candidate branch exists without a PR; recreating the governed draft PR."
               if ! create_candidate_pr; then
-                echo "Candidate PR bookkeeping is blocked; continuing so the explicit unresolved-coverage gate can report the curriculum blocker."
+                echo "Candidate PR bookkeeping is blocked; continuing to the source-safe isolation gate; candidate questions remain disabled."
               fi
               exit 0
             fi
@@ -127,7 +161,7 @@ jobs:
             if [ "$PR_STATE" = "OPEN" ]; then
               if [ "$PR_IS_DRAFT" != "true" ]; then
                 if ! gh pr ready "$PR_NUMBER" --undo; then
-                  echo "::warning::Could not return candidate PR #$PR_NUMBER to draft state; publication remains blocked while coverage is unresolved."
+                  echo "::warning::Could not return candidate PR #$PR_NUMBER to draft state; candidate questions remain disabled while coverage is unresolved."
                 fi
               fi
               echo "Candidate PR #$PR_NUMBER is open; leaving the governed candidate in place."
@@ -137,13 +171,13 @@ jobs:
             if [ -z "$PR_MERGED_AT" ]; then
               echo "Candidate PR #$PR_NUMBER was closed while coverage is still unresolved; reopening it."
               if ! gh pr reopen "$PR_NUMBER"; then
-                echo "::warning::Could not reopen candidate PR #$PR_NUMBER; publication remains blocked while coverage is unresolved."
+                echo "::warning::Could not reopen candidate PR #$PR_NUMBER; candidate questions remain disabled while coverage is unresolved."
                 exit 0
               fi
               PR_IS_DRAFT="$(gh pr view "$PR_NUMBER" --json isDraft --jq .isDraft)"
               if [ "$PR_IS_DRAFT" != "true" ]; then
                 if ! gh pr ready "$PR_NUMBER" --undo; then
-                  echo "::warning::Could not return reopened candidate PR #$PR_NUMBER to draft state; publication remains blocked while coverage is unresolved."
+                  echo "::warning::Could not return reopened candidate PR #$PR_NUMBER to draft state; candidate questions remain disabled while coverage is unresolved."
                 fi
               fi
               exit 0
@@ -161,7 +195,7 @@ jobs:
           git commit -m "Draft curriculum coverage candidates for $SOURCE_HASH"
           git push origin "$CANDIDATE_BRANCH"
           if ! create_candidate_pr; then
-            echo "Candidate branch $CANDIDATE_BRANCH is preserved without a PR; continuing to the explicit unresolved-coverage gate."
+            echo "Candidate branch $CANDIDATE_BRANCH is preserved without a PR; continuing to the source-safe isolation gate."
           fi
 
           git checkout main
@@ -176,10 +210,12 @@ jobs:
           retention-days: 30
           if-no-files-found: error
 
-      - name: Block publication while curriculum candidates are unresolved
+      - name: Verify page-exact source parity and isolate unsupported curriculum
         shell: bash
         run: |
-          node scripts/assert-curriculum-coverage-resolved.mjs --report=.curriculum-coverage-plan.json
+          set -euo pipefail
+          test "$(git branch --show-current)" = main
+          node scripts/assert-safe-teacher-refresh.mjs --report=.curriculum-coverage-plan.json
 
       - name: Verify refreshed source health
         run: node scripts/check-refresh-health.mjs --require-today --max-age-hours 1
@@ -211,7 +247,7 @@ jobs:
               echo "main advanced during refresh QA; regenerating and revalidating on $REMOTE_MAIN."
               git reset --hard "$REMOTE_MAIN"
               node scripts/refresh-teacher-pages.mjs --autopilot-report=.curriculum-coverage-plan.json
-              node scripts/assert-curriculum-coverage-resolved.mjs --report=.curriculum-coverage-plan.json --context="Unresolved curriculum coverage after main advanced"
+              node scripts/assert-safe-teacher-refresh.mjs --report=.curriculum-coverage-plan.json
               node scripts/check-refresh-health.mjs --require-today --max-age-hours 1
               npm run qa
             fi
@@ -233,9 +269,81 @@ jobs:
           echo "Could not publish the verified school pack after 3 main-race retries." >&2
           exit 1
 
+      - name: Confirm exact published main SHA for gated Pages handoff
+        id: confirm-published-sha
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          EXPECTED="$(git rev-parse refs/remotes/origin/main)"
+          CURRENT="$(git ls-remote --exit-code origin refs/heads/main | cut -f1)"
+          test "$EXPECTED" = "$CURRENT" || { echo 'Main moved during release SHA handoff.' >&2; exit 1; }
+          test "${#CURRENT}" -eq 40 || { echo 'Invalid release SHA.' >&2; exit 1; }
+          echo "sha=$CURRENT" >> "$GITHUB_OUTPUT"
+
+      - name: Retain failed candidate QA evidence for bounded recovery
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: teacher-refresh-qa-failure-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            playwright-report
+            test-results
+          retention-days: 14
+          if-no-files-found: ignore
+
   deploy:
     name: deploy verified refresh through Pages workflow
     needs: refresh
     uses: ./.github/workflows/pages.yml
     with:
-      ref: main
+      # Pass the exact newly-published commit, not the original push SHA.
+      # The Pages workflow independently verifies this SHA remains main HEAD.
+      ref: ${{ needs.refresh.outputs.published_sha }}
+  reviewed-lunch:
+    name: Refresh reviewed lunch week independently of held curriculum
+    needs: refresh
+    if: always() && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout latest main without using unapproved teacher data
+        uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Refresh only previously reviewed source-backed lunch fields
+        run: node scripts/refresh-reviewed-lunch.mjs --write
+      - name: Prove lunch isolation and negative-case integrity
+        run: node --test tests/lunch-publication.test.mjs tests/refresh-reviewed-lunch.test.mjs
+      - name: Independent full app QA before any main write
+        run: |
+          npx playwright install --with-deps chromium webkit
+          npm run qa
+      - name: Commit only verified changed lunch pack on exact main
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- pages/data/study-pack.json; then
+            echo 'Already current; no lunch-only change.'
+            exit 0
+          fi
+          EXPECTED="$(git rev-parse HEAD)"
+          git fetch --no-tags origin main
+          CURRENT="$(git rev-parse refs/remotes/origin/main)"
+          test "$EXPECTED" = "$CURRENT" || { echo 'Main moved; refusing stale lunch write.' >&2; exit 1; }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add pages/data/study-pack.json
+          git commit -m 'data: roll forward independently reviewed lunch week'
+          REMOTE="$(git ls-remote --exit-code origin refs/heads/main | cut -f1)"
+          test "$REMOTE" = "$EXPECTED" || { echo 'Main advanced; refusing lunch write.' >&2; exit 1; }
+          git push origin HEAD:main

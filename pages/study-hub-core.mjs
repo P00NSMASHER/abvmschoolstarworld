@@ -1,38 +1,69 @@
+/** A chapter must be the heading of an individual reviewed evidence entry. */
+export function religionChapterScopes(question) {
+  if (question?.subject !== "Religion") return [];
+  const scopes = new Set();
+  const safe = question?.sourceChapters;
+  if (Array.isArray(safe)) for (const chapter of safe) {
+    if (Number.isInteger(chapter) && chapter >= 1 && chapter <= 99) scopes.add(chapter);
+  }
+  const evidence = question?.sourceLineage?.matchedEvidence;
+  if (Array.isArray(evidence)) for (const entry of evidence) {
+    if (typeof entry !== "string") continue;
+    const match = /^\s*Chapter\s+([1-9]\d*)\s*:/i.exec(entry);
+    if (match && Number(match[1]) <= 99) scopes.add(Number(match[1]));
+  }
+  return [...scopes].sort((a,b) => a-b);
+}
 /** Match practice to an announced test without inventing scope or altering sources. */
 export function questionsForTest(test, questions) {
   const label = test.label.toLowerCase();
-  if (/grammar|predicate|subject &/.test(label))
-    return questions.filter((q) => q.skill === "subject-predicate");
+  if (/grammar|predicate|subject &|sentence types|punctuation/.test(label)) {
+    if (/subject|predicate/.test(label)) return questions.filter(q=>q.skill==="subject-predicate");
+    if (/sentence types|punctuation/.test(label)) return questions.filter(q=>q.skill==="sentence-types");
+    return questions.filter(q=>["subject-predicate","sentence-types"].includes(q.skill));
+  }
+  if (/phonics/.test(label) && /\bshort\s+vowels?\b/.test(label)) {
+    return questions.filter(q => q.subject === 'Reading / ELA' && q.skill === 'short-vowels');
+  }
   if (/spelling|handwriting/.test(label)) {
-    const vowel = label.match(/short\s+([aeiou])/);
-    const focus = vowel
-      ? new RegExp("(?:long|short)[ -]" + vowel[1] + "|" + vowel[1] + "_e", "i")
-      : null;
+    // The teacher page may name a new long vowel but leave a second short
+    // vowel unspecified, e.g. "long o / Short )". Never reuse last week's
+    // unrelated i/a practice to make this test appear ready.
+    const focus = [...label.matchAll(/\b(short|long)\s+([aeiou])\b/g)]
+      .map(match => ({sound:match[1],vowel:match[2]}));
     const date = /^\d{4}-\d{2}-\d{2}$/.test(test.date || '') ? test.date : null;
     return questions
-      .filter(
-        (q) =>
-          /Spelling|phonics/i.test(q.subject) ||
-          /long-short|short-i-long-i|consonant-blend|suffix/.test(q.skill),
-      )
-      .filter((q) => {
-        // A photo-confirmed weekly list stays bound to its own dated test.
-        // The extra long-a and high-frequency homework words are not erased
-        // just because the teacher's Test page mentions short-i / long-i.
-        const scoped = String(q.sourceFact || '').match(/^Photo-confirmed weekly spelling words for (\d{4}-\d{2}-\d{2})$/);
-        if (scoped) return date === scoped[1];
-        return !focus || focus.test(q.skill + ' ' + q.sourceFact + ' ' + q.prompt);
+      .filter(q => /Spelling|phonics/i.test(q.subject) ||
+        /long-short|short-i-long-i|consonant-blend|suffix|long-[aeiou]/.test(q.skill))
+      .filter(q => {
+        const photographed = String(q.sourceFact || '')
+          .match(/^Photo-confirmed weekly spelling words for (\d{4}-\d{2}-\d{2})$/);
+        if (photographed) return date === photographed[1];
+        if (!focus.length) return !/\b(?:short|long)\s*\)/.test(label);
+        const evidence = String(q.skill || '') + ' ' + String(q.sourceFact || '');
+        return focus.some(({sound,vowel}) => {
+          const pairConfirmed = focus.some(row => row.vowel === vowel && row.sound !== sound);
+          const solo = new RegExp('\\b' + sound + '[- ]' + vowel + '\\b','i').test(evidence);
+          const pair = pairConfirmed && new RegExp('\\b(?:long-short-' + vowel + '|short-' + vowel + '-long-' + vowel + ')\\b','i').test(evidence);
+          return solo && !/\blong-short-|\bshort-[aeiou]-long-/.test(String(q.skill || '')) || pair;
+        });
       });
   }
   if (/religion|faith/.test(label)) {
-    const c = label.match(/chapter\s*(\d+)/);
-    return questions.filter(
-      (q) =>
-        q.subject === "Religion" &&
-        (!c || q.skill === "religion-chapter-" + c[1]),
-    );
+    const chapter = label.match(/\b(?:chapter|ch\.?)\s*([1-9]\d*)\b/);
+    return questions.filter(q => {
+      if (q.subject !== "Religion") return false;
+      if (!chapter) return true;
+      const number = Number(chapter[1]);
+      return q.skill === "religion-chapter-" + number ||
+        religionChapterScopes(q).includes(number);
+    });
   }
-  if (/math/.test(label)) return questions.filter((q) => q.subject === "Math");
+  if (/math/.test(label)) {
+    const operations = [...label.matchAll(/\b(addition|subtraction)\b/g)].map(match => match[1]);
+    return questions.filter(q => q.subject === 'Math' &&
+      (!operations.length || operations.some(operation => String(q.skill || '').includes(operation))));
+  }
   if (/reading|ela/.test(label))
     return questions.filter(
       (q) =>

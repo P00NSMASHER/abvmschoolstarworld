@@ -1,3 +1,4 @@
+import {SUBTRACTION_CHECK_PROMPT} from './question-corrections.mjs';
 import { createHash } from 'node:crypto';
 
 import { validateGrade2PipelineAlignment } from './grade2-content-alignment.mjs';
@@ -1444,7 +1445,7 @@ const RENEWABLE_EXTENSION_FAMILIES = Object.freeze({
     {questionType:'direct',prompt:'Solve the subtraction fact 11 - 4. What is the difference?',choices:['7','6','8'],answer:'7',explanation:'Eleven take away four leaves seven.',hint:'Start at 11 and count back 4.',dok:1,difficulty:2},
     {questionType:'transfer',prompt:'Mia has 10 stickers and gives 3 away. How many stickers remain?',choices:['7','6','13'],answer:'7',explanation:'10 - 3 = 7.',hint:'Start with 10 and take away 3.',dok:2,difficulty:2},
     {questionType:'transfer',prompt:'There are 12 birds. Five fly away. How many are left?',choices:['7','8','6'],answer:'7',explanation:'12 - 5 = 7.',hint:'Take 5 away from 12.',dok:2,difficulty:2},
-    {questionType:'reasoning',prompt:'Sam says 9 - 4 = 6. Which fact shows his answer is one too high?',choices:['5 + 4 = 9','6 + 4 = 10','9 + 4 = 13'],answer:'5 + 4 = 9',explanation:'The related addition fact shows the correct difference is 5.',hint:'Find the number that plus 4 makes 9.',dok:3,difficulty:3},
+    {questionType:'reasoning',prompt:SUBTRACTION_CHECK_PROMPT,choices:['5 + 4 = 9','6 + 4 = 10','9 + 4 = 13'],answer:'5 + 4 = 9',explanation:'The related addition fact shows the correct difference is 5.',hint:'Find the number that plus 4 makes 9.',dok:3,difficulty:3},
     {questionType:'reasoning',prompt:'Which story matches 8 - 3?',choices:['Eight blocks, three are put away, five remain.','Three blocks, eight more are added.','Eight blocks are split into eight groups.'],answer:'Eight blocks, three are put away, five remain.',explanation:'The story starts with 8 and removes 3, matching subtraction.',hint:'Look for a starting amount and something taken away.',dok:3,difficulty:3},
   ],
 });

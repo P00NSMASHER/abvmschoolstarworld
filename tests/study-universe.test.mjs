@@ -16,13 +16,24 @@ test('all practice surfaces preserve complete current → archive → STAR pools
   }
   assert.equal(out.mixedReview.length,out.questions.length);
 });
-test('test scope distinguishes grammar, operations, chapters and unsupported tests',()=>{
-  const f=fixture();f.pack.contentPipeline.questions.push(q('religion-other','Religion','religion-gifts-choices'),q('ch2','Religion','religion-chapter-2'),q('ch3','Religion','religion-chapter-3'));
+test('test scope distinguishes grammar, operations, exact-evidence chapters and unsupported tests',()=>{
+  const f=fixture();
+  const chapter3={...lineage,matchedEvidence:['Chapter 3: original sin, faith, sacraments, and Baptism']};
+  const chapter2={...lineage,matchedEvidence:['Chapter 2: Jesus is God’s Best Gift']};
+  const chapter2CrossRef={...lineage,matchedEvidence:['Chapter 2: recap may mention Chapter 3: but is not Chapter 3 material']};
+  f.pack.contentPipeline.questions.push(
+    q('religion-other','Religion','religion-gifts-choices'),
+    q('ch2','Religion','religion-chapter-2'),
+    q('ch3','Religion','religion-chapter-3'),
+    q('ch3-exact','Religion','religion-original-sin',{sourceLineage:chapter3}),
+    q('ch2-exact','Religion','religion-jesus-savior',{sourceLineage:chapter2}),
+    q('ch2-crossref','Religion','religion-future-reference',{sourceLineage:chapter2CrossRef}),
+  );
   const out=buildStudyUniverse(f);const get=label=>out.selectableTestPrep.find(t=>t.label===label);
   assert.deepEqual(get('Grammar (subject & predicate)').questionIds,['r1']);
   assert.deepEqual(get('Math (subtraction)').questionIds,['m1']);
-  assert.deepEqual(get('Religion Ch. 3').questionIds,['ch3']);
-  f.pack.contentPipeline.questions=f.pack.contentPipeline.questions.filter(q=>q.id!=='ch3');
+  assert.deepEqual(get('Religion Ch. 3').questionIds,['ch3','ch3-exact']);
+  f.pack.contentPipeline.questions=f.pack.contentPipeline.questions.filter(q=>!['ch3','ch3-exact'].includes(q.id));
   assert.equal(buildStudyUniverse(f).selectableTestPrep.find(t=>t.label==='Religion Ch. 3').supported,false);
 });
 test('malformed answers, duplicate normalized choices, object coercion and numeric metadata fail closed',()=>{
@@ -68,10 +79,18 @@ test('real reviewed pack, archive, original worksheet practice and STAR are comp
   const undated=new Set(input.schoolwork.lessons.filter(l=>!l.studiedOn && !l.weekOf).map(l=>l.id));
   assert.ok(out.questions.filter(q=>undated.has(q.provenance.lessonId)).every(q=>q.tier==='archive'),'Undated worksheets stay cumulative');
   const byId=new Map(out.questions.map(q=>[q.id,q]));
+  const reviewedPack=input.pack.pack||input.pack;
+  const rawById=new Map(reviewedPack.contentPipeline.questions.map(q=>[q.id,q]));
   for(const t of out.selectableTestPrep){
     assert.equal(t.supported,t.questionIds.length>0);
     if(t.label==='Math (subtraction)')assert.ok(t.questionIds.every(id=>byId.get(id).skill.includes('subtraction')));
-    if(t.label==='Religion Ch. 3')assert.ok(t.questionIds.every(id=>byId.get(id).skill==='religion-chapter-3'));
+    if(t.label==='Religion Ch. 3'){
+      assert.ok(t.questionIds.length>0,'Governed Chapter 3 test requires nonzero reviewed practice');
+      assert.ok(t.questionIds.every(id=>{
+      const raw=rawById.get(id);
+      return raw&&raw.subject==='Religion'&&raw.sourceLineage.matchedEvidence.some(value=>/^Chapter\s+3\s*:/i.test(value.trim()));
+      }));
+    }
   }
   assert.doesNotMatch(JSON.stringify(out),/IMG_\d+|learnerResponse|teacherMark|studentName|privateHistory/);
   assert.equal(JSON.stringify(buildStudyUniverse(real())),JSON.stringify(out));
@@ -92,4 +111,61 @@ test('calendar advancement and newly reviewed chapter coverage do not freeze ref
   f.pack.importantDates=[{date:'2026-10-20',label:'Religion Ch. 3',kind:'test'}];
   f.pack.contentPipeline.questions.push(q('new-ch3','Religion','religion-chapter-3'));
   assert.deepEqual(buildStudyUniverse(f).selectableTestPrep[0].questionIds,['new-ch3']);
+});
+
+test('printable one-page guides prioritize each upcoming dated test with a bounded answer key',()=>{
+  const out=buildStudyUniverse(fixture());
+  const testGuides=out.printableGuides.filter(row=>row.kind==='test');
+  assert.equal(testGuides.length,out.selectableTestPrep.length);
+  assert.deepEqual(testGuides.map(row=>[row.label,row.date]),
+    out.selectableTestPrep.map(row=>[row.label,row.date]));
+  for(const [index,guide] of testGuides.entries()){
+    const allowed=new Set(out.selectableTestPrep[index].questionIds);
+    assert(guide.questionIds.every(id=>allowed.has(id)));
+    assert(guide.questionIds.length<=6);
+    assert.deepEqual(guide.questionIds,guide.practice.map(row=>row.id));
+    assert.deepEqual(guide.questionIds,guide.answerKey.map(row=>row.id));
+    assert(guide.practice.every(row=>row.choices.filter(choice=>choice===row.answer).length===1));
+    assert.match(guide.disclaimer,/Original skill practice/);
+    assert.equal(guide.sourceHash,'reviewed-source');
+  }
+  const grammar=testGuides.find(row=>row.label==='Grammar (subject & predicate)');
+  assert.deepEqual(grammar.questionIds,['r1']);
+  assert.equal(grammar.subject,'Reading / ELA');
+  const math=testGuides.find(row=>row.label==='Math (subtraction)');
+  assert.deepEqual(math.questionIds,['m1']);
+  assert.equal(math.date,'2026-10-15');
+  const religion=testGuides.find(row=>row.label==='Religion Ch. 3');
+  assert.deepEqual(religion.questionIds,[]);
+  assert.equal(religion.status,'NO_MATCHING_SOURCE_BACKED_PRACTICE');
+  assert(!religion.answerKey.length,'Unsupported chapter never gets a fabricated answer key');
+});
+test('short study guides spread across verified skills instead of printing one skill repeatedly',()=>{
+  const f=fixture();f.pack.importantDates=[{date:'2026-10-15',label:'Reading',kind:'test'}];
+  f.pack.contentPipeline.questions=['theme','main-character','visualize'].flatMap(skill=>
+    Array.from({length:5},(_,i)=>q(skill+'-'+i,'Reading / ELA',skill,{
+      questionType:['direct','transfer','reasoning'][i%3],
+    })));
+  const guide=buildStudyUniverse(f).printableGuides.find(row=>row.kind==='test');
+  assert.equal(guide.questionIds.length,6);
+  assert.deepEqual(new Set(guide.focusSkills),new Set(['theme','main-character','visualize']));
+  assert.deepEqual(new Set(guide.practice.map(row=>row.skill)),new Set(guide.focusSkills));
+});
+test('chapter-number changes regenerate test-specific guide without bleeding other religion chapters',()=>{
+  const f=fixture();const ch3={...lineage,matchedEvidence:['Chapter 3: original sin and Baptism']};
+  const ch2={...lineage,matchedEvidence:['Chapter 2: Gift of Jesus mentions another chapter']};
+  f.pack.contentPipeline.questions.push(
+    q('ch3-guide','Religion','religion-original-sin',{sourceLineage:ch3}),
+    q('ch2-guide','Religion','religion-jesus-savior',{sourceLineage:ch2}),
+  );
+  const guide=buildStudyUniverse(f).printableGuides.find(row=>row.label==='Religion Ch. 3');
+  assert.deepEqual(guide.questionIds,['ch3-guide']);
+  assert.equal(guide.answerKey[0].answer,'Right');
+  f.pack.generatedAt='2026-10-18T12:00:00Z';
+  assert.equal(buildStudyUniverse(f).printableGuides.filter(row=>row.kind==='test').length,0);
+});
+test('export identifies actual teacher-check timestamp rather than the unrelated pack regeneration time',()=>{
+  const f=fixture(),original=f.pack;
+  f.pack={sourceLastCheckedAt:'2026-10-07T10:00:00Z',pack:original};
+  assert.equal(buildStudyUniverse(f).source.sourceCheckedAt,'2026-10-07T10:00:00Z');
 });

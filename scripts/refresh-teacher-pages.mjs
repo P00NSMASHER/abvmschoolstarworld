@@ -5,11 +5,13 @@ import { fileURLToPath } from 'node:url';
 import {
   cleanTeacherText,
   pageLines,
+  parseGoogleSitesSpellingList,
   parseHomework,
   parseStoryTitles,
   teacherContentLines,
 } from './teacher-page-parsers.mjs';
 import { validateUploadedNoticePolicy } from './uploaded-notice-policy.mjs';
+import { supersededByReviewedPlanner } from './teacher-event-precedence.mjs';
 import { refreshLunchPublication } from './lunch-publication.mjs';
 import {
   buildGrade2ContentPipeline,
@@ -28,6 +30,7 @@ import {
 import { buildSchoolChangeFeed, validateSchoolChangeFeed } from './school-change-feed.mjs';
 import { curriculumFamilyRegistrySnapshot } from './curriculum-family-registry.mjs';
 import { parseCurriculumPreviewOptions } from './curriculum-preview-options.mjs';
+import { upcomingTeacherTests } from './teacher-test-focus.mjs';
 
 const DATA_PATH = new URL('../pages/data/study-pack.json', import.meta.url);
 const UPLOADED_NOTICES_PATH = new URL('../pages/data/uploaded-notices.json', import.meta.url);
@@ -70,13 +73,20 @@ async function fetchPage(path, title) {
         throw new Error(`${title} unexpectedly requires Google sign-in.`);
       }
       const lines = pageLines(html);
+      const spellingList = title === 'Weekly Spelling List' ? parseGoogleSitesSpellingList(html) : null;
+      // Include the teacher's actual Google Sites <small><span> words in source
+      // hashes, so changing a spelling word triggers a real curriculum update.
+      if (spellingList?.words.length) {
+        lines.push(...spellingList.words.map(word => `Official spelling word: ${word}`));
+        if (spellingList.skill) lines.push(spellingList.skill);
+      }
       const hasExpectedHeading = title === 'Home'
         ? lines.some(line => /Mrs\.\s*Benulis.*ABVM Grade 2/i.test(line))
         : lines.some(line => line.toLowerCase() === title.toLowerCase());
       if (!hasExpectedHeading) {
         throw new Error(`${title} did not contain its expected page heading.`);
       }
-      return { title, url, lines };
+      return { title, url, lines, spellingList };
     } catch (error) {
       lastError = error;
       if (attempt < 3) await new Promise(resolve => setTimeout(resolve, attempt * 1_500));
@@ -184,6 +194,9 @@ function mergeUploadedEvents(existing, uploaded) {
   const replacementKeys = new Set(uploaded.replacements.map(item => `${dateKey(item.date)}:${item.topic}`));
   const kept = existing.filter(item => {
     if (item.source === 'uploaded-notice') return false;
+    // An undated, older teacher Home entry cannot reintroduce a calendar date
+    // explicitly superseded by the user's newer reviewed weekly planner.
+    if (supersededByReviewedPlanner(item, uploaded)) return false;
     const key = `${dateKey(item.date)}:${topicKey(item.label)}`;
     return !incomingKeys.has(key) && !replacementKeys.has(key);
   });
@@ -293,7 +306,14 @@ const testItems = parseDatedLines(pages.Tests.lines).map(item => ({ ...item, kin
 if (testItems.length < 2) throw new Error('Tests page did not contain enough dated tests to publish safely.');
 
 const religionLines = teacherContentLines(pages.Religion.lines, 'Religion');
-const spellingLines = teacherContentLines(pages['Weekly Spelling List'].lines, 'Weekly Spelling List');
+const weeklySpelling = pages['Weekly Spelling List'];
+const spellingLines = [
+  ...teacherContentLines(weeklySpelling.lines, 'Weekly Spelling List')
+    .filter(line => !line.startsWith('Official spelling word: ')),
+  ...(weeklySpelling.spellingList?.words.length
+    ? [`Teacher-posted spelling words (page undated): ${weeklySpelling.spellingList.words.join(', ')}`]
+    : []),
+];
 if (!religionLines.some(line => /^Unit\s/i.test(line)) || !religionLines.some(line => /^Chapter\s/i.test(line))) {
   throw new Error('Religion page did not contain the expected unit and chapter material.');
 }
@@ -319,13 +339,18 @@ const contentChanged = pack.sourceHash !== sourceHash || pack.uploadedNoticeHash
 const capturedAt = contentChanged ? checkedAt : (data.sourceCapturedAt || pack.sourceCapturedAt || checkedAt);
 
 const subjects = Array.isArray(pack.subjects) ? [...pack.subjects] : [];
-const grammarTest = testItems.find(item => /grammar|types of sentences/i.test(item.label));
+// Teacher Tests pages retain expired exams. Select only future dated tests so
+// yesterday's spelling/grammar focus never replaces tomorrow's study guide.
+const currentTests = upcomingTeacherTests(testItems, checkedAt, item => eventTime(item.date, new Date(checkedAt)));
+const grammarTest = currentTests.find(item => /grammar|types of sentences/i.test(item.label));
+const phonicsTest = currentTests.find(item => /^phonics\b/i.test(item.label));
 upsertSubject(subjects, /Reading \/ ELA/i, {
   subject: 'Reading / ELA',
   topics: [
     ...stories.map(story => `Story: ${story}`),
     `Sight words: ${sightWords}`,
     `Phonics: ${phonics.replace(/2 letter/i, '2-letter')}`,
+    ...(phonicsTest ? [`Phonics: ${phonicsTest.label.match(/\(([^)]+)\)/)?.[1] || phonicsTest.label} (test ${phonicsTest.date})`] : []),
     `Vocabulary: ${vocabulary}`,
     `Word structure: ${wordStructure.replace(/\bcvc\b/gi, 'CVC')}`,
     ...(grammarTest ? [`Grammar: ${grammarTest.label.match(/\(([^)]+)\)/)?.[1] || grammarTest.label} (test ${grammarTest.date})`] : []),
@@ -335,7 +360,7 @@ upsertSubject(subjects, /Reading \/ ELA/i, {
     : ['The current Reading Work page does not list a reading-comprehension skill.'],
 });
 
-const spellingTest = testItems.find(item => /spelling/i.test(item.label));
+const spellingTest = currentTests.find(item => /spelling/i.test(item.label));
 upsertSubject(subjects, /Spelling/i, {
   subject: 'Spelling / Handwriting',
   topics: spellingTest ? [`${spellingTest.date} test focus: ${spellingTest.label.replace(/^Spelling\s*/i, '').replace(/\s*\/\s*Handwriting$/i, '').replace(/^\(([^)]+)\)$/, '$1')}`] : [`Phonics: ${phonics}`],
@@ -361,7 +386,7 @@ upsertSubject(subjects, /^Religion$/i, {
     .replace(/\bresponsiblity\b/i, 'responsibility'))),
 });
 
-const mathTest = testItems.find(item => /subtraction|addition|math/i.test(item.label));
+const mathTest = currentTests.find(item => /subtraction|addition|math/i.test(item.label));
 const mathHomework = homework.find(item => item.subject === 'Math');
 upsertSubject(subjects, /^Math$/i, {
   subject: 'Math',
@@ -435,7 +460,7 @@ pack.sourceCapturedAt = capturedAt;
 pack.sourceCheckedAt = checkedAt;
 pack.generatedAt = checkedAt;
 pack.weekLabel = schoolWeekLabel(new Date(checkedAt));
-pack.summary = `Current Grade 2 teacher-site material: Homework lists ${readableList(homework.slice(0, 4).map(item => item.subject === 'Parent' ? `parent task “${item.task}”` : `${item.subject} “${item.task}”`))}. Upcoming tests include ${readableList(testItems.slice(0, 4).map(item => `${item.label} on ${item.date}`))}. ${uploadedNotices.documents.length} uploaded school notices are integrated with the teacher pages.`;
+pack.summary = `Current Grade 2 teacher-site material: Homework lists ${readableList(homework.slice(0, 4).map(item => item.subject === 'Parent' ? `parent task “${item.task}”` : `${item.subject} “${item.task}”`))}. Upcoming tests include ${readableList(currentTests.slice(0, 4).map(item => `${item.label} on ${item.date}`))}. ${uploadedNotices.documents.length} uploaded school notices are integrated with the teacher pages.`;
 pack.sourceSufficient = true;
 pack.gaps = (pack.gaps || []).filter(item => !/source bridge|four-hour|does not show a date|spelling-word list|weekly spelling|reading work page leaves/i.test(item));
 pack.gaps = [...new Set([...pack.gaps,

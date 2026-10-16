@@ -11,6 +11,13 @@ on:
       - 'tests/public-learner-privacy.test.mjs'
       - 'tests/app.spec.mjs'
       - 'playwright.config.mjs'
+      # Include offline educator pilot changes in privacy acceptance.
+      - 'curriculum-candidates/**'
+      - 'scripts/audit-held-curriculum-pilot.mjs'
+      - 'scripts/build-held-curriculum-pilot-kit.mjs'
+      - 'scripts/build-private-curriculum-pilot.mjs'
+      - 'tests/private-curriculum-pilot.*'
+      - 'tests/curriculum-*.test.mjs'
       - '.github/workflows/public-privacy-visual-acceptance.yml'
   workflow_dispatch:
 
@@ -27,19 +34,36 @@ jobs:
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Verify exact review-head commit
+        shell: bash
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$PR_HEAD_SHA"
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
       - run: npm ci --no-audit --no-fund
+      - name: Verify held curriculum materials cannot impersonate student or teacher evidence
+        if: ${{ hashFiles('curriculum-candidates/REVIEW_PR270.md') != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tests/curriculum-pilot-gates.test.mjs tests/curriculum-pilot-kit.test.mjs tests/curriculum-review-packet.test.mjs tests/curriculum-review-source-parity.test.mjs
+
+      - name: Confirm private pilot preview has no network or stored learner results
+        if: ${{ hashFiles('scripts/build-private-curriculum-pilot.mjs') != '' }}
+        run: node --test tests/private-curriculum-pilot.test.mjs
       - run: npm run pack:runtime
       - run: npx playwright install --with-deps chromium webkit
       - name: Offline shell and anonymous copy contracts
         run: node --test tests/public-learner-privacy.test.mjs
       - name: Anonymous iPhone 375-430 Chromium and Safari-WebKit
-        run: npx playwright test tests/public-learner-privacy.spec.mjs --project=mobile --project=iphone-webkit --workers=1 --retries=0
+        run: npx playwright test tests/public-learner-privacy.spec.mjs --project=mobile --project=iphone-webkit --output=test-results/anonymous --workers=1 --retries=0
       - name: Teacher source age cannot be refreshed by a Yahoo notice
-        run: npx playwright test tests/app.spec.mjs --project=mobile --grep "newly imported Yahoo notices" --workers=1 --retries=0
+        run: npx playwright test tests/app.spec.mjs --project=mobile --output=test-results/freshness --grep "newly imported Yahoo notices" --workers=1 --retries=0
       - name: Retain real rendered privacy screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -50,4 +74,12 @@ jobs:
             test-results/**/test-failed-*.png
             playwright-report
           retention-days: 14
-          if-no-files-found: ignore
+          if-no-files-found: error
+      - name: Retain exact printable offline educator kit when present
+        if: ${{ hashFiles('curriculum-candidates/pilot-kit/PR270_STUDENT_PRACTICE.html') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: abvm-held-educator-kit-${{ github.run_id }}
+          path: curriculum-candidates/pilot-kit/*.html
+          retention-days: 14
+          if-no-files-found: error

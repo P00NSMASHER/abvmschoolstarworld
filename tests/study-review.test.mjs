@@ -71,11 +71,26 @@ test('assisted answers keep higher near-term review priority than independent su
  const {engine:e}=api();const assisted=e.recordLearning({skill:'theme'},true,{incorrectCount:1,attemptCount:2}),independent=e.recordLearning({skill:'inference'},true);
  assert.ok(e.reviewPriority({theme:assisted},'theme')>e.reviewPriority({inference:independent},'inference'));
 });
-test('offline support bundle contains source modules and keeps the shell within budget',()=>{
- const read=name=>fs.readFileSync(new URL('../pages/'+name,import.meta.url),'utf8');
- const bundle=read('study-support.js'),sw=read('sw.js');
- assert.ok(bundle.includes(read('study-review.js')));assert.ok(bundle.includes(read('study-practice.js')));assert.equal(bundle.includes('document.createElement("style")'),false);
+test('offline review entry point stays version-aligned and within the shell budget',()=>{
+ const read=name=>fs.readFileSync(new URL('../pages/'+name,import.meta.url),'utf8').replace(/\r\n/g,'\n');
+ const review=read('study-review.js'),sw=read('sw.js');
+ assert.equal(review.includes('document.createElement("style")'),false);
  assert.equal(fs.existsSync(new URL('../pages/study-review.css',import.meta.url)),false);
- assert.ok(sw.includes('./study-support.js?v=3'));assert.ok(read('index.html').includes('./study-support.js?v=3'));
+ assert.ok(sw.includes('./study-review.js?v=4'));assert.ok(read('index.html').includes('./study-review.js?v=4'));
  const shell=sw.match(/const STATIC_SHELL = \[([\s\S]*?)\];/)[1];assert.ok([...shell.matchAll(/"\.\/[^\"]+"/g)].length<=14);
+});
+
+// The shipped entry point must contain only the active review engine.
+test('runtime support exposes the review engine without retired dashboard renderers',()=>{
+ const ctx={window:{},localStorage:{getItem:()=>null,setItem:()=>{}}};
+ vm.runInNewContext(fs.readFileSync(new URL('../pages/study-review.js',import.meta.url),'utf8'),ctx);
+ assert.equal(ctx.window.ABVMStudyPractice,undefined);
+ assert.equal(ctx.window.ABVMStudyReview.render,undefined);
+ assert.equal(ctx.window.ABVMStudyReview.schedule({}, {correct:true,independent:true,now:T}).intervalDays,1);
+ assert.equal(ctx.window.ABVMStudyReview.isDue({LastSeenAt:T-DAY},T),true);
+});
+
+test('one review entry point avoids generated copies and retired build steps',()=>{
+ assert.equal(fs.existsSync(new URL('../pages/study-support.js',import.meta.url)),false);
+ assert.equal(fs.existsSync(new URL('../scripts/build-study-support.mjs',import.meta.url)),false);
 });

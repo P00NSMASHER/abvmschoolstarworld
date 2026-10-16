@@ -1,33 +1,39 @@
 # Monthly lunch illustrations
 
 The verified school menu is always the source of truth. Illustrations are a visual
-extra; the exact menu text, dates, closures and source links remain visible. Every
-image is labeled **Meal illustration**. It is not a photograph of the actual meal.
+extra; exact menu text, dates, closures and source links remain visible. Each image
+has accessible alt text identifying it as an illustration; no visible footnote
+appears beneath the photo. These are not photographs of actual school servings.
 
-## Automatic intake, hourly audit and backup
+## Automatic intake and menu-update artwork
 
 A lunch menu upload plus “integrate into the app” includes artwork in that same
-run: review the menu, reuse suitable approved art, generate missing art with the
+run: review the menu, reuse exact reviewed meal art in the approved tray style, generate missing art with the
 built-in high-quality image generator, inspect it, test, and publish. No second
 artwork request is needed.
 
-The active hourly **ABVM Lunch Artwork** lane coordinates through the
-[current delivery board](https://github.com/P00NSMASHER/abvmschoolstarworld/issues/204).
-It checks current/future exact-menu coverage when menu or artwork inputs change,
-using the same plan, review and QA process below. When coverage is complete, it
-can take the board's unowned provenance/documentation work; it must not regenerate
-already-reviewed artwork just to produce activity. Check live ownership before
-writing and publish through the normal pull-request workflow.
+The 20 October tray illustrations are complete and production-verified in PR #378.
+On October 16, 2026 the former **Complete lunch artwork** task was repurposed as
+**Protect ABVM learning reliability**. It retains the existing repository merge
+trigger and now prioritizes source/publication failures and broken learning flows.
+Future missing-menu images remain part of the existing hourly **ABVM School Data
+Intake** task and the menu-import process below. No dedicated artwork task or new
+schedule is required. Reuse active work, exact menu/style approvals and normal
+independent QA/Pages gates. If generation is unavailable, retain accurate menu text
+and record precise incomplete coverage. No private-chat upload watcher or paid
+image API service is introduced.
 
-The GitHub merge-event task **Complete lunch artwork** is configured as a backup
-but currently paused: enabling it was blocked by the account limit of 15 active
-tasks. This separate paused backup does not describe the active hourly lane.
-Do not describe the backup as active until enablement succeeds. Once enabled, after
-merged pull requests it checks for current/future menus needing illustrations,
-completes the same review and QA process, and quietly does nothing when coverage is
-complete. It does not trigger on direct pushes. Use PRs for menu changes. It is not
-a private-chat watcher or a paid image API service. If generation is unavailable,
-retain the accurate menu text and report the precise missing coverage.
+### Photorealistic tray revision
+
+The two reference photos have now been received and inspected. The approved
+privacy-safe style, exact omission policy and reusable generated reference are
+in [LUNCH_TRAY_STYLE.md](LUNCH_TRAY_STYLE.md). New artwork follows this style;
+private reference originals and people never enter this repository. All 20 exact
+October menus have reviewed photorealistic tray illustrations of the known menu
+components. Fruit variety, generic dipping sauce and unspecified taco filling
+remain unpictured and documented in approved artwork metadata; complete verified
+menu text stays visible without an image footnote.
+Use the style-aware pending-art queue to replace legacy entree-only coverage.
 
 ## When a new month arrives
 
@@ -38,20 +44,21 @@ retain the accurate menu text and report the precise missing coverage.
    dates, existing approved assets, and missing-art prompts. It also compiles the
    small synchronous `pages/lunch-art.js` renderer, so cards do not wait for a
    second data fetch. The plan is deterministic and can run with every runtime
-   pack build. `pendingArtMenus(plan, month)` selects missing current and future
+   pack build. `pendingArtMenus(plan, month, {styleId:TRAY_STYLE_ID})` selects missing current and future
    menus using `YYYY-MM` in the school’s America/New_York timezone; expired
    September menus do not create a recurring backlog. There is no paid API job.
-3. Reuse a reviewed entrée-only image when the new menu explicitly names the same
-   entrée, after reviewing that exact menu. Add its source ID and full, unchanged
-   item list to `approvedMenus`. Side changes require a new explicit approval even
-   when the same entrée image remains suitable. A changed source or menu never
-   silently inherits an old picture.
-4. For missing images, group identical entrées and use the built-in high-quality
-   image generator. Generate only named foods, on a clean pale background, without
-   logos or lettering. Prioritize frequently repeated meals and the coming week.
-   Never infer the meat in “Taco Tuesday & chips”, the variety of “Fruit”, toppings,
-   drinks, sides, allergens, or portion size. If the entrée cannot be illustrated
-   accurately, keep the text-only card until reviewed.
+3. Reuse an existing reviewed tray image only when every depicted food and the
+   complete new verified menu match. Add the exact new source ID and full item
+   list to `approvedMenus`; never inherit a picture from a changed source/menu.
+   Keep the approved tray style and disclosures. Legacy entree-only coverage does
+   not satisfy the requested tray revision.
+4. For missing images, use the built-in high-quality image generator with the
+   shared style/prompt in `scripts/lunch-art-style.mjs` and the approved generated
+   reference in `docs/LUNCH_TRAY_STYLE.md`. Group identical complete menus, never
+   just entrees with different sides. Never infer unspecified meats, fruit,
+   sauces, toppings, drinks or allergens. Omit and disclose unknown components;
+   retain accurate text when an image cannot be reviewed faithfully. No routine
+   educator or user approval is required for this authorized workflow.
 5. Inspect each generated image. Store approved images under
    `pages/assets/lunch-art/` as optimized WebP files. Record the prompt and image
    review in `docs/lunch-art-prompts.md` or an explicitly linked supplement in its
@@ -67,12 +74,14 @@ retain the accurate menu text and report the precise missing coverage.
 
 The October catalog contains 20 lunch days, one no-lunch/noon-dismissal day and one
 no-school day. It contains 16 unique entrée labels but 20 distinct full menus.
-Sixteen reviewed reusable illustrations cover all 20 October lunch dates. The
+Twenty reviewed photorealistic tray illustrations cover all 20 October catalog menus. The
 remaining plan entries are historical September menus and are excluded from the
 automatic current/future queue. Other months do not receive images without explicit
 source/menu approval. No-school, missing and no-lunch days never receive food art.
 
-`ABVMLunchArt.html(lunch)` returns a labeled figure for an exact approved source and
-menu match, or an empty string. The call does not modify the official menu. The
-renderer escapes descriptive strings and limits approved image paths to local
-assets. The build rejects unknown menus, duplicate approvals and missing files.
+`ABVMLunchArt.html(lunch)` returns an image-only figure with descriptive alt text
+for an exact approved source and menu match, or an empty string. No visible caption
+or omission disclaimer renders beneath the image; the full menu remains above it.
+The call does not modify the official menu. The renderer escapes descriptive
+strings and limits approved image paths to local assets. The build rejects unknown
+menus, duplicate approvals and missing files. Omission records remain in the registry.

@@ -156,6 +156,54 @@ def get_pdf(url, week, filename=None):
     return data
 
 
+def isolated_calendar_regions(regions, anchors, words, page_width):
+    """Separate touching cards at observed columns without cutting OCR words."""
+    if len(anchors) < 5:
+        return regions
+    columns=[]
+    for x,_ in sorted(anchors):
+        if columns and abs(x-sum(columns[-1])/len(columns[-1])) < page_width*.06:
+            columns[-1].append(x)
+        else:
+            columns.append([x])
+    centers=[sum(group)/len(group) for group in columns]
+    if not 2 <= len(centers) <= 4:
+        return regions
+    edges=[(left+right)/2 for left,right in zip(centers,centers[1:])]
+    isolated=[]
+    for left,top,right,bottom in regions:
+        cuts=[]
+        for edge in edges:
+            if not left+page_width*.12 < edge < right-page_width*.12:
+                continue
+            nearby=[box for box in words if box[1]<bottom and box[3]>top]
+            candidates=[x for x in range(int(edge-page_width*.035),int(edge+page_width*.035)+1)
+                        if left+page_width*.12 < x < right-page_width*.12
+                        and not any(box[0]-3 <= x <= box[2]+3 for box in nearby)]
+            if not candidates:
+                raise ValueError('Cannot safely isolate touching calendar cards; source review required')
+            cuts.append(min(candidates,key=lambda x:abs(x-edge)))
+        boundaries=[left,*sorted(set(cuts)),right]
+        isolated.extend((a,top,b,bottom) for a,b in zip(boundaries,boundaries[1:]))
+    if len(isolated)>20:
+        raise ValueError('Too many calendar regions to isolate safely; source review required')
+    return isolated
+
+
+def grade_two_closure(context):
+    """An explicitly upper-grade closure must never become Grade 2 no-school."""
+    value=str(context)
+    ranges=re.finditer(r"\b(K|[1-8])(?:st|nd|rd|th)?\s*[-–]\s*([1-8])(?:st|nd|rd|th)?\b",value,re.I)
+    scopes=[]
+    for match in ranges:
+        before=value[max(0,match.start()-12):match.start()]
+        after=value[match.end():match.end()+12]
+        if re.search(r'grades?\s*$',before,re.I) or re.match(r'''[\s"'”]*grades?\b''',after,re.I):
+            start=0 if match[1].upper()=='K' else int(match[1])
+            scopes.append((start,int(match[2])))
+    return not scopes or any(start<=2<=end for start,end in scopes)
+
+
 def ocr_blocks(pdf):
     """Read detected calendar cells separately; never join adjacent day cells."""
     from PIL import Image
@@ -183,13 +231,18 @@ def ocr_blocks(pdf):
             if image.width * .12 < width < image.width * .55 and image.height * .035 < height < image.height * .65:
                 regions.append((horizontal.start, vertical.start, horizontal.stop, vertical.stop))
         anchors = []
+        words = []
         result = subprocess.run(["tesseract", str(image_path), "stdout", "--psm", "6", "tsv"],
                                 check=True, capture_output=True, text=True, timeout=30, env=env)
         for row in csv.DictReader(io.StringIO(result.stdout), delimiter="\t"):
+            if row["text"].strip():
+                x,y=int(row["left"]),int(row["top"])
+                words.append((x,y,x+int(row["width"]),y+int(row["height"])))
             if row["text"].lower() in ("monday", "tuesday", "wednesday", "thursday", "friday") and float(row["conf"]) >= 60:
                 anchors.append((int(row["left"]) + int(row["width"]) / 2, int(row["top"])))
         if not 5 <= len(regions) <= 15:
             raise ValueError("Unrecognized calendar cells; manual review required")
+        regions = isolated_calendar_regions(regions,anchors,words,image.width)
         blocks = []
         for index, (left, top, right, bottom) in enumerate(regions):
             nearby = [y for x, y in anchors if left <= x <= right and 0 < top - y < image.height * .2]
@@ -217,6 +270,8 @@ def extract_events(pdf, week):
 def events_from_text(text, week, required=True):
     # Ignore decorative OCR prefixes around validated weekday headings.
     text = re.sub(r"(?im)^.*?\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b", r"\1", text)
+    # A decorative OCR “s” before a reminder date is not part of that date.
+    text = re.sub(r"(?im)^\s*s\s+(?=\d{1,2}/\d{1,2}\b)", "", text)
     text = re.sub(r"(?m)(\d{1,2}/\d)!", r"\g<1>1", text)
     text = re.sub(r"(?im)^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\s*\n\s*[: ]*(?=\d)", r"\1 ", text)
     text = re.sub(r"(?i)(\d)(?:st|nd|rd|th)\b", r"\1", text)
@@ -258,7 +313,18 @@ def events_from_text(text, week, required=True):
         for date in dates:
             for pattern, label, kind in EVENTS:
                 if pattern.search(context):
-                    found.append({"date": f"{date.strftime('%A')}, {date.strftime('%b')}. {date.day}", "label": label, "kind": kind})
+                    if label == "No School" and not grade_two_closure(context):
+                        continue
+                    football_scope=re.search(r"\bflag football\s+(?:for\s+)?(K|[1-8])\s*[-–]\s*([1-8])\b(?!\s*(?:[ap]\.?m\.?)\b)",context,re.I)
+                    event_label=label
+                    if football_scope and label in ("Flag football","Dress Down Day"):
+                        start,end=football_scope.groups()
+                        scope=start.upper()+"–"+end
+                        if start.upper()=="K" and label=="Flag football":
+                            event_label=scope+" Flag football"
+                        elif start.upper()!="K":
+                            event_label=label+" ("+("Flag football " if label=="Dress Down Day" else "")+"for "+scope+")"
+                    found.append({"date": f"{date.strftime('%A')}, {date.strftime('%b')}. {date.day}", "label": event_label, "kind": kind})
     unique = {(item["date"], item["label"]): item for item in found}
     if required and not unique:
         raise ValueError("No recognized dated school events in a new weekly PDF; manual review required")

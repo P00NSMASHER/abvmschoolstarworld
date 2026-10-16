@@ -159,7 +159,7 @@ test("freshness refresh control keeps a 44px touch target",async({page})=>{
   }
   await openTab(page,"Calendar");
   await page.getByRole("button",{name:"Next month"}).click();
-  const back=page.locator(".calendar-today-jump");
+  const back=page.locator("[data-cal-today]");
   await expect(back).toBeVisible();
   const backBox=await back.boundingBox();
   expect(backBox).not.toBeNull();
@@ -211,7 +211,7 @@ test("Today does not show Attend Mass before the verified Mass date",async({page
   await page.clock.setFixedTime(new Date("2026-10-05T12:00:00-04:00"));
   await page.goto("/#today");
   await expect(page.locator(".today-panel")).toBeVisible({timeout:10_000});
-  await expect(page.locator(".today-panel .task-list")).not.toContainText("Attend Mass");
+  await expect(page.locator(".today-panel .check-item")).toHaveCount(0);
   await expect(page.locator(".today-panel .timeline")).not.toContainText(/\bMass\b/);
 });
 
@@ -299,7 +299,9 @@ test("Calendar keeps the current-month summary as concise as next month",async({
     const rows=card.locator(":scope > div");
     for(let i=0;i<await rows.count();i++){
       await expect(rows.nth(i).locator(":scope > span")).toHaveCount(1);
-      await expect(rows.nth(i).locator(":scope > p")).toHaveCount(1);
+      const events=rows.nth(i).locator(':scope > ul[role="list"] > li');
+      expect(await events.count()).toBeGreaterThan(0);
+      for(const event of await events.all())await expect(event).not.toBeEmpty();
     }
   }
   await expect(page.locator(".specials-card")).toBeVisible();

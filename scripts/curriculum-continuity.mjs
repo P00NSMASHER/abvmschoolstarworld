@@ -1,3 +1,4 @@
+import {correctOriginalQuestion} from './question-corrections.mjs';
 import { createHash } from 'node:crypto';
 
 export const RECENT_REVIEW_RETENTION_DAYS = 14;
@@ -74,7 +75,7 @@ export function buildRecentReviewPipeline({
   }));
   const allowed = new Set(skills.map(skill => skill.id));
   const questions = rows.flatMap(row => row.questions.map(question => ({
-    ...question,
+    ...correctOriginalQuestion(question),
     reviewVerifiedAt: row.verifiedAt,
     reviewExpiresAt: row.expiresAt,
     reviewSourceHash: row.sourceHash,

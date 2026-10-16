@@ -45,15 +45,20 @@ content.
 When the user uploads a lunch menu and asks to integrate/update the app, follow
 `docs/LUNCH_ART.md` in the same run. Menu import includes the missing-illustration
 work automatically; do not wait for a separate artwork request. Verify the exact
-printed menu, update the reviewed lunch catalog, reuse suitable reviewed entrée art
-with explicit new source/menu approvals, generate missing artwork with the built-in
+printed menu, update the reviewed lunch catalog, reuse exact reviewed meal art in the approved tray style
+with explicit new source/full-menu approvals, generate missing artwork with the built-in
 high-quality image generator, visually inspect it, and run the existing QA before
 publishing through a pull request. Never invent unspecified ingredients. Use
-`pendingArtMenus(plan, currentNewYorkMonth)` from the lunch-art builder to avoid
-expired-month backlog. Preserve existing menu source and closure rules. The
-GitHub merge-event task “Complete lunch artwork” is configured but paused because
-the account has 15 active tasks. Once enabled it provides a backup for current and
-future missing illustrations after merged PRs; it does not trigger on direct pushes.
+`pendingArtMenus(plan, currentNewYorkMonth, {styleId:TRAY_STYLE_ID})` from the lunch-art builder to avoid
+expired-month backlog. Preserve existing menu source and closure rules.
+The 20 October tray illustrations were completed and production-verified in PR #378.
+The former “Complete lunch artwork” merge-event task was repurposed on October 16,
+2026 as “Protect ABVM learning reliability”, preserving its existing repository
+merge trigger. Future missing-menu artwork remains part of the existing hourly
+ABVM School Data Intake task and normal menu-import workflow; no new task is needed.
+Follow `docs/LUNCH_ART.md` and `docs/LUNCH_TRAY_STYLE.md`, the style-aware queue,
+exact full-menu approvals and privacy-safe generated references. Private originals
+and people never enter this repository.
 Do not change unrelated tasks to make room. If artwork generation or review is blocked,
 retain accurate text-only cards and report the specific incomplete coverage.
 

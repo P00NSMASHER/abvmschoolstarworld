@@ -1,4 +1,6 @@
+import {openNoteSubject} from './helpers/study-notes.mjs';
 import {test,expect} from "@playwright/test";
+import {reviewedSchoolMonday} from "./reviewed-week-fixture.mjs";
 import {readPwaVersions} from "./pwa-test-helpers.mjs";
 
 test("school date follows Eastern time even when the device is elsewhere",async({browser})=>{
@@ -17,9 +19,11 @@ test("online refresh applies changed school data without losing checklist state"
   const context=await browser.newContext({serviceWorkers:"block"});
   const page=await context.newPage();
   const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
-  const lunchDate=source.pack?.lunchMenu?.[0]?.date;
+  const lunchDate=source.pack?.lunchMenu?.find(row=>row.status!=="no-school" && row.items?.length>0)?.date;
   expect(lunchDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   await page.clock.setFixedTime(new Date(`${lunchDate}T17:00:00Z`));
+  // Preserve a legitimate source-backed school checklist action; Read is a hidden daily habit.
+  source.pack.homework.push({day:"Current Homework posting",subject:"School",task:"Return signed permission form",due:"Current posting"});
   let current=structuredClone(source);
   await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:current}));
   await page.goto("http://127.0.0.1:4173/#today");
@@ -123,7 +127,7 @@ test("timestamp-only verification refresh does not reset open UI state",async({b
   await expect(page.locator(".games-screen")).toHaveAttribute("data-study-state","ready");
   await expect(page.locator(".freshness")).toHaveClass(/stale/);
   const notes=page.locator("[data-study-notes]");
-  await notes.locator(":scope > summary").click();
+  await openNoteSubject(page);
   const first=notes.locator("[data-note-subject]:not([hidden]) .study-notes-original").first();
   await first.locator(":scope > summary").click();
   await expect(notes).toHaveAttribute("open","");
@@ -291,12 +295,11 @@ test("required parent tasks are not mislabeled as if participating",async({brows
   const context=await browser.newContext({serviceWorkers:"block"});
   const page=await context.newPage();
   const source=await (await page.request.get("http://127.0.0.1:4173/data/study-pack.json")).json();
-  const schoolDate=source.pack?.lunchMenu?.[0]?.date;
-  expect(schoolDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  const schoolDate=reviewedSchoolMonday(source);
   await page.clock.setFixedTime(new Date(`${schoolDate}T17:00:00Z`));
   const fixture=structuredClone(source);
   fixture.pack.homework=[
-    {day:"Current Homework posting",subject:"Parent",task:"Cover books",due:"Current posting"},
+    {day:"Current Homework posting",subject:"Parent",task:"Sign required reading permission form",due:"Current posting"},
     {day:"Current Homework posting",subject:"Parent",task:"Return permission slip if participating",due:"Current posting"}
   ];
   await page.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:fixture}));
@@ -378,7 +381,7 @@ test("Study labels a distant test with its actual date and keeps it out of weekl
   await expect(next).not.toContainText(/this week/i);
   await expect(page.locator("[data-study-source]")).toHaveCount(0);
   const notes=page.locator("[data-study-notes]");
-  await notes.locator(":scope > summary").click();
+  await openNoteSubject(page);
   await expect(notes.locator("[data-note-subject]:not([hidden]) .study-notes-original").first()).toBeVisible();
   await expect(notes.locator("[data-study-notes-content]")).not.toContainText("STAR Testing window");
   await context.close();

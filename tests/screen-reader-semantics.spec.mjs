@@ -1,4 +1,6 @@
 import {test,expect} from "@playwright/test";
+import {HOMEWORK_E2E_NOW,installFreshHomeworkFixture} from "./homework-e2e-fixture.mjs";
+test.use({serviceWorkers:"block"});
 
 async function waitForApp(page,path){
   await page.goto(path);
@@ -55,14 +57,16 @@ test("Calendar date controls remain buttons with visible day numbers",async({pag
 });
 
 test("checklist controls communicate action text and completion visually",async({page})=>{
+  await installFreshHomeworkFixture(page);
+  await page.clock.setFixedTime(HOMEWORK_E2E_NOW);
   await waitForApp(page,"/#today");
-  const check=page.locator("[data-check]").first();
+  const check=page.locator("[data-homework-check]").first();
   await expect(check).toBeVisible();
   const label=(await check.innerText()).trim();
   expect(label.length).toBeGreaterThan(3);
   const before=await check.evaluate(el=>el.classList.contains("is-done"));
   await check.click();
-  const after=await page.locator("[data-check]").first().evaluate(el=>el.classList.contains("is-done"));
+  const after=await page.locator("[data-homework-check]").first().evaluate(el=>el.classList.contains("is-done"));
   expect(after).toBe(!before);
 });
 

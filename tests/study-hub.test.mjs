@@ -13,6 +13,72 @@ test("announced short-i spelling test does not receive short-a questions", () =>
   assert.equal(q.length, 8);
   assert(q.every((x) => x.skill === "long-short-i"));
 });
+test('October 16 partial long-o test never reuses last week short-i/a bank', () => {
+  const pool = [
+    {id:'old-i',subject:'Spelling / Handwriting',skill:'short-i-long-i',sourceFact:'Short i / long i'},
+    {id:'old-a',subject:'Spelling / Handwriting',skill:'long-short-a',sourceFact:'Short a / long a'},
+    {id:'current-o',subject:'Spelling / Handwriting',skill:'long-o',sourceFact:'Original Grade 2 long o practice'},
+    {id:'unconfirmed-short-o',subject:'Spelling / Handwriting',skill:'long-short-o',sourceFact:'Short o sound'},
+  ];
+  assert.deepEqual(
+    questionsForTest({label:'Spelling (long o / Short ) / Handwriting',date:'2026-10-16'},pool).map(q=>q.id),
+    ['current-o','unconfirmed-short-o'].filter(x=>x==='current-o'),
+  );
+  assert.deepEqual(
+    questionsForTest({label:'Spelling (short i / long i)'},pool).map(q=>q.id),
+    ['old-i'],
+  );
+});
+
+test('Phonics short-vowel and Math subtraction tests do not absorb unrelated skills', () => {
+  const pool = [
+    {id:'vowels',subject:'Reading / ELA',skill:'short-vowels'},
+    {id:'grammar',subject:'Reading / ELA',skill:'subject-predicate'},
+    {id:'addition',subject:'Math',skill:'math-addition'},
+    {id:'subtraction',subject:'Math',skill:'math-subtraction'},
+  ];
+  assert.deepEqual(questionsForTest({label:'Phonics (short vowels)'},pool).map(q=>q.id),['vowels']);
+  assert.deepEqual(questionsForTest({label:'Math (subtraction)'},pool).map(q=>q.id),['subtraction']);
+  assert.deepEqual(questionsForTest({label:'Math'},pool).map(q=>q.id),['addition','subtraction']);
+});
+
+test("Religion Ch. test stays bound to exact chapter evidence", () => {
+  const questions = [
+    { id: "chapter3-synthetic", subject: "Religion", skill: "religion-chapter-3" },
+    {
+      id: "chapter3-exact",
+      subject: "Religion",
+      skill: "religion-original-sin",
+      sourceLineage: {
+        matchedEvidence: ["Chapter 3: original sin, faith, sacraments, and Baptism"],
+      },
+    },
+    {
+      id: "chapter2-exact",
+      subject: "Religion",
+      skill: "religion-jesus-savior",
+      sourceLineage: {
+        matchedEvidence: ["Chapter 2: Jesus is God's Best Gift"],
+      },
+    },
+    { id: "other-religion", subject: "Religion", skill: "religion-gifts-choices" },
+    { id: "chapter2-cross-reference", subject: "Religion", skill: "religion-future",
+      sourceLineage:{matchedEvidence:["Chapter 2: preview Chapter 3: Baptism later"]} },
+    { id: "prose-reference", subject: "Religion", skill: "religion-future",
+      sourceLineage:{matchedEvidence:["Review note may refer to Chapter 3: without a chapter header"]} },
+    { id: "chapter30", subject: "Religion", skill: "religion-future",
+      sourceLineage:{matchedEvidence:["Chapter 30: unrelated lesson"]} },
+    { id: "safe-runtime-encoded", subject: "Religion", skill: "religion-baptism-grace",
+      sourceChapters:[3] },
+  ];
+  for (const label of ["Religion Ch. 3", "Religion Chapter 3"]) {
+    assert.deepEqual(
+      questionsForTest({ label }, questions).map((q) => q.id),
+      ["chapter3-synthetic", "chapter3-exact", "safe-runtime-encoded"],
+    );
+  }
+});
+
 test("all uploaded schoolwork answers have one correct choice and safe source mapping", () => {
   const data = JSON.parse(
     fs.readFileSync(new URL("../pages/data/schoolwork.json", import.meta.url)),

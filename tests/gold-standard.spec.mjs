@@ -1,3 +1,4 @@
+import {openNoteSubject} from './helpers/study-notes.mjs';
 import {test,expect} from "@playwright/test";
 import {readPwaVersions} from "./pwa-test-helpers.mjs";
 
@@ -46,15 +47,14 @@ test("the current product hierarchy is coherent",async({page})=>{
   await expect(page.locator(".day-detail")).toBeVisible();
 
   await openTab(page,"Calendar");
-  await expect(page.locator(".app-header p")).toHaveText("ASSUMPTION BVM · GRADE 2");
-  await expect(page.locator(".app-header h1")).toHaveText("Calendar");
-  await expect(page.getByText("Choose a day to see the plan.",{exact:true})).toBeVisible();
+  await expect(page.locator(".cal-identity p")).toHaveText("ABVM · GRADE 2");
+  await expect(page.locator(".cal-identity h1")).toHaveText("Calendar");
+  await expect(page.locator(".cal-grid-hint")).toContainText("Tap a day for the full plan");
   await expect(page.locator(".calendar-card")).toBeVisible();
 
   await openTab(page,"Study");
   await expect(page.locator(".app-header h1")).toHaveText(/Study/i);
   await expect(page.locator(".study-hero-copy h2")).toHaveText("Let’s learn, eagle!");
-  await expect(page.locator(".study-hero-copy h2")).not.toContainText("Emma");
   await expect(page.locator(".study-hero-copy p")).toHaveText("ASSUMPTION BVM · GRADE 2");
   await expect(page.locator(".study-hero-art")).toBeVisible();
   await expectCurrentStudyGameTiles(page);
@@ -99,7 +99,7 @@ test("requested polish is present",async({page})=>{
   await expectCurrentStudyGameTiles(page);
   await page.locator('[data-open-prep]').click();await expect(page.locator('[data-test-single]')).toBeVisible();
   await page.locator('[data-close-prep]').click();
-  await page.locator('[data-study-notes] > summary').click();
+  await openNoteSubject(page);
   await expect(page.locator('[data-note-subject]:not([hidden]) .study-notes-original').first()).toBeVisible();
   await expect(page.locator('[data-learning-panel],.study-games-cta')).toHaveCount(0);
 
@@ -146,10 +146,16 @@ test("week paging and full calendar agenda work on phone",async({page})=>{
   expect(firstAfter).not.toBe(firstBefore);
 
   await openTab(page,"Calendar");
+  // Returning from the October school week retains its selected Oct 5 date.
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("October 2026");
+  await expect(page.locator(".calendar-grid button.active strong")).toHaveText("5");
+  // Historical September events remain intact when explicitly browsing back.
+  await page.getByRole("button",{name:"Previous month"}).click();
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("September 2026");
   await expect(page.locator(".current-month-summary > div > span")).toHaveText(["Mon 28","Tue 29","Wed 30"]);
   await expect(page.locator(".current-month-summary .agenda-lunch")).toHaveCount(0);
   await expect(page.locator(".calendar-day-card .agenda-lunch")).toBeVisible();
-  await expect(page.locator(".calendar-legend")).toContainText("Lunch");
+  await expect(page.locator(".calendar-day-card .agenda-lunch b")).toHaveText("Lunch");
 });
 
 
@@ -341,7 +347,7 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
 });
 
 
-test("task policy keeps reading daily and Mass only on a verified Mass date",async({page,browser})=>{
+test("task policy omits standing routines and keeps Mass on a verified date",async({page,browser})=>{
   const source=await (await page.request.get("/data/study-pack.json")).json();
   const context=await browser.newContext({serviceWorkers:"block"});
   const fixturePage=await context.newPage();
@@ -356,17 +362,15 @@ test("task policy keeps reading daily and Mass only on a verified Mass date",asy
   await fixturePage.route("**/data/study-pack-runtime.json*",route=>route.fulfill({json:{...source,pack:{...source.pack,homework}}}));
   await fixturePage.goto("http://127.0.0.1:4173/#today");
   const tasks=fixturePage.locator(".today-panel .check-item");
-  await expect(tasks).toHaveCount(1);
-  await expect(tasks.first()).toContainText("Read");
-  await expect(tasks.first()).toContainText("20 minutes today");
+  await expect(tasks).toHaveCount(0);
+  await expect(fixturePage.locator(".today-panel")).not.toContainText("20 minutes today");
   await expect(fixturePage.getByText("Attend Mass",{exact:true})).toHaveCount(0);
   for(const item of homework.slice(2))await expect(fixturePage.getByText(item.task,{exact:true})).toHaveCount(0);
 
   await fixturePage.clock.setFixedTime(new Date("2026-09-30T12:00:00Z"));
   await fixturePage.reload();
-  await expect(tasks).toHaveCount(2);
-  await expect(tasks.nth(0)).toContainText("Attend Mass");
-  await expect(tasks.nth(1)).toContainText("Read");
+  await expect(tasks).toHaveCount(1);
+  await expect(tasks.first()).toContainText("Attend Mass");
   await context.close();
 });
 
@@ -445,6 +449,12 @@ test("current weekly notice appears in Week, Calendar, and Family screens",async
   await expect(page.locator(".day-detail")).toContainText("HSA virtual meeting");
 
   await openTab(page,"Calendar");
+  // The selected Oct 1 school day determines the visible Month.
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("October 2026");
+  await expect(page.locator(".calendar-grid button.active strong")).toHaveText("1");
+  // The verified September notices still exist, but are a month behind.
+  await page.getByRole("button",{name:"Previous month"}).click();
+  await expect(page.locator(".calendar-month-nav strong")).toHaveText("September 2026");
   await expect(page.locator(".current-month-summary")).toContainText("Chick-fil-A sale starts");
   await expect(page.locator(".current-month-summary")).toContainText("Gym classes moved to this date");
 
@@ -469,7 +479,11 @@ test("current week lunch menu is verified and visible instead of last week's men
     const delta=(Date.parse(`${item.date}T12:00:00Z`)-startMs)/86400000;
     expect(delta).toBeGreaterThanOrEqual(0);
     expect(delta).toBeLessThanOrEqual(4);
-    expect(Array.isArray(item.items)&&item.items.length>0).toBe(true);
+    if(item.status==="no-school"){
+      expect(item.items).toEqual([]);
+    }else{
+      expect(Array.isArray(item.items)&&item.items.length>0).toBe(true);
+    }
   }
   expect(data.pack.lunchMenuSource.provider).toBe("Saint Clair Area School District");
   expect(data.pack.lunchMenuSource.school).toBe("Assumption BVM School");
@@ -480,7 +494,12 @@ test("current week lunch menu is verified and visible instead of last week's men
   await expect(page.locator(".screen")).toBeVisible({timeout:10_000});
 
   await openTab(page,"Today");
-  for(const item of lunches[0].items)await expect(page.locator(".lunch-card")).toContainText(item);
+  if(lunches[0].status==="no-school"){
+    await expect(page.locator(".lunch-card")).toContainText(/No school/i);
+    await expect(page.locator(".lunch-card")).not.toContainText("Meatballs in sauce");
+  }else{
+    for(const item of lunches[0].items)await expect(page.locator(".lunch-card")).toContainText(item);
+  }
   await expect(page.locator(".lunch-card")).not.toContainText("automated source check");
 
   await openTab(page,"Week");

@@ -2,6 +2,518 @@
   "schemaVersion": 1,
   "artworks": [
     {
+      "id": "tray-2026-10-01-v1",
+      "src": "assets/lunch-art/tray-2026-10-01-v1.webp",
+      "alt": "Illustration of Baked cheese pizza, Tortilla chips, Mixed vegetables on a maroon cafeteria tray",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-16",
+      "generator": "OpenAI image_gen",
+      "styleId": "abvm-maroon-tray-v1",
+      "width": 1280,
+      "height": 853,
+      "omissionNote": "Fruit variety not specified; fruit not pictured.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Baked cheese pizza",
+            "Tortilla chips",
+            "Mixed vegetables",
+            "Fruit"
+          ]
+        }
+      ],
+      "sha256": "212867a15fe7bfd23c4d3fa8dfd14a496ddc9e0ffb91f51a1c0f73640377e2a2"
+    },
+    {
+      "id": "tray-2026-10-02-v1",
+      "src": "assets/lunch-art/tray-2026-10-02-v1.webp",
+      "alt": "Illustration of Cheesy breadsticks, Garden salad on a maroon cafeteria tray",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-16",
+      "generator": "OpenAI image_gen",
+      "styleId": "abvm-maroon-tray-v1",
+      "width": 1280,
+      "height": 853,
+      "omissionNote": "Dipping sauce variety not specified; sauce not pictured. Fruit variety not specified; fruit not pictured.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Cheesy breadsticks",
+            "Dipping sauce",
+            "Garden salad",
+            "Fruit"
+          ]
+        }
+      ],
+      "sha256": "f498d0787ffe574b3d759afddbbdc01288ccdef2a1a2848b53a3bc4c2a403303"
+    },
+    {
+      "id": "tray-2026-10-05-v1",
+      "src": "assets/lunch-art/tray-2026-10-05-v1.webp",
+      "alt": "Illustration of Popcorn chicken, Mashed potatoes, Steamed corn on a maroon cafeteria tray",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-16",
+      "generator": "OpenAI image_gen",
+      "styleId": "abvm-maroon-tray-v1",
+      "width": 1280,
+      "height": 853,
+      "omissionNote": "Fruit variety not specified; fruit not pictured.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Popcorn chicken",
+            "Mashed potatoes",
+            "Steamed corn",
+            "Fruit"
+          ]
+        }
+      ],
+      "sha256": "80b6aaa267a241ca9fc955b9dde2ecc3491deeb44235903cc0722e3a0a8d20ed"
+    },
+    {
+      "id": "tray-2026-10-06-v1",
+      "src": "assets/lunch-art/tray-2026-10-06-v1.webp",
+      "alt": "Illustration of Tortilla chips, Cheese, Brown rice, Salsa, Refried beans on a maroon cafeteria tray",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-16",
+      "generator": "OpenAI image_gen",
+      "styleId": "abvm-maroon-tray-v1",
+      "width": 1280,
+      "height": 853,
+      "omissionNote": "Taco filling not specified; chips and named sides shown. Fruit variety not specified; fruit not pictured.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Taco Tuesday & chips",
+            "Cheese",
+            "Brown rice",
+            "Salsa",
+            "Refried beans",
+            "Fruit"
+          ]
+        }
+      ],
+      "sha256": "122861a152e20ad9e5a4930eb297d3e44fddbde2393f3f78aec1dbbe17f30933"
+    },
+    {
+      "id": "tray-2026-10-07-v1",
+      "src": "assets/lunch-art/tray-2026-10-07-v1.webp",
+      "alt": "Illustration of Buttered pierogies, Whole-grain roll, String cheese, Steamed carrots on a maroon cafeteria tray",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-16",
+      "generator": "OpenAI image_gen",
+      "styleId": "abvm-maroon-tray-v1",
+      "width": 1280,
+      "height": 853,
+      "omissionNote": "Fruit variety not specified; fruit not pictured.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Buttered pierogies",
+            "Whole-grain roll",
+            "String cheese",
+            "Steamed carrots",
+            "Fruit"
+          ]
+        }
+      ],
+      "sha256": "3a1e9deb63ad0b770b7f18eccf0211a16f45acb763506848458859b8021f7c92"
+    },
+    {
+      "id": "tray-2026-10-08-v1",
+      "src": "assets/lunch-art/tray-2026-10-08-v1.webp",
+      "alt": "Illustration of Beef cheesesteak, Whole-grain roll, French fries, Steamed broccoli on a maroon cafeteria tray",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-16",
+      "generator": "OpenAI image_gen",
+      "styleId": "abvm-maroon-tray-v1",
+      "width": 1280,
+      "height": 853,
+      "omissionNote": "Fruit variety not specified; fruit not pictured.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Beef cheesesteak",
+            "Whole-grain roll",
+            "French fries",
+            "Steamed broccoli",
+            "Fruit"
+          ]
+        }
+      ],
+      "sha256": "70b9eec478dd79ae007ba40859ae67db5cabc4b0df9c26c9c3c9b747c4695537"
+    },
+    {
+      "id": "tray-2026-10-13-v1",
+      "src": "assets/lunch-art/tray-2026-10-13-v1.webp",
+      "alt": "Illustration of Meatballs in sauce, Whole-grain buttered pasta, Steamed corn on a maroon cafeteria tray",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-16",
+      "generator": "OpenAI image_gen",
+      "styleId": "abvm-maroon-tray-v1",
+      "width": 1280,
+      "height": 853,
+      "omissionNote": "Fruit variety not specified; fruit not pictured.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Meatballs in sauce",
+            "Whole-grain buttered pasta",
+            "Steamed corn",
+            "Fruit"
+          ]
+        }
+      ],
+      "sha256": "77c92f6449bfe6bba7c70b4ace98a247e9d6fa0a42e9c44c564df860bc85b0e0"
+    },
+    {
+      "id": "tray-2026-10-14-v1",
+      "src": "assets/lunch-art/tray-2026-10-14-v1.webp",
+      "alt": "Illustration of Baked cheese pizza, Garden salad, Steamed broccoli on a maroon cafeteria tray",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-16",
+      "generator": "OpenAI image_gen",
+      "styleId": "abvm-maroon-tray-v1",
+      "width": 1280,
+      "height": 853,
+      "omissionNote": "Fruit variety not specified; fruit not pictured.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Baked cheese pizza",
+            "Garden salad",
+            "Steamed broccoli",
+            "Fruit"
+          ]
+        }
+      ],
+      "sha256": "abbe224b4ca3cce156c972d76597c16cb2b988122836883f34f363a0e66b5d5d"
+    },
+    {
+      "id": "tray-2026-10-15-v1",
+      "src": "assets/lunch-art/tray-2026-10-15-v1.webp",
+      "alt": "Illustration of Chicken patty on a roll, French fries, Mixed vegetables on a maroon cafeteria tray",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-16",
+      "generator": "OpenAI image_gen",
+      "styleId": "abvm-maroon-tray-v1",
+      "width": 1280,
+      "height": 853,
+      "omissionNote": "Fruit variety not specified; fruit not pictured.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-15-school-notice",
+          "items": [
+            "Chicken patty on a roll",
+            "French fries",
+            "Mixed vegetables",
+            "Fruit"
+          ]
+        }
+      ],
+      "sha256": "82ed942139874c76ef2f43f1cd73d9b5285afe0d9bf00832d0aa7826f07c477b"
+    },
+    {
+      "id": "tray-2026-10-16-v1",
+      "src": "assets/lunch-art/tray-2026-10-16-v1.webp",
+      "alt": "Illustration of Chicken taco, Brown rice, Cheese, Salsa, Refried beans on a maroon cafeteria tray",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-16",
+      "generator": "OpenAI image_gen",
+      "styleId": "abvm-maroon-tray-v1",
+      "width": 1280,
+      "height": 853,
+      "omissionNote": "Fruit variety not specified; fruit not pictured.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Chicken taco",
+            "Brown rice",
+            "Cheese",
+            "Salsa",
+            "Refried beans",
+            "Fruit"
+          ]
+        }
+      ],
+      "sha256": "06e2291329bbbf805d2c308be4af7596f9588cd65073b7edab43ec918e6ee977"
+    },
+    {
+      "id": "tray-2026-10-19-v1",
+      "src": "assets/lunch-art/tray-2026-10-19-v1.webp",
+      "alt": "Illustration of Breaded chicken, Buttered pasta, Steamed broccoli on a maroon cafeteria tray",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-16",
+      "generator": "OpenAI image_gen",
+      "styleId": "abvm-maroon-tray-v1",
+      "width": 1280,
+      "height": 853,
+      "omissionNote": "Fruit variety not specified; fruit not pictured.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Breaded chicken",
+            "Buttered pasta",
+            "Steamed broccoli",
+            "Fruit"
+          ]
+        }
+      ],
+      "sha256": "49cdd003cfebd7c5f3359cfaa234b6e5fabc6fa51e890f69de29e3e42d2406aa"
+    },
+    {
+      "id": "tray-2026-10-20-v1",
+      "src": "assets/lunch-art/tray-2026-10-20-v1.webp",
+      "alt": "Illustration of Hot ham & cheese, Whole-grain pretzel roll, Tortilla chips, Steamed peas on a maroon cafeteria tray",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-16",
+      "generator": "OpenAI image_gen",
+      "styleId": "abvm-maroon-tray-v1",
+      "width": 1280,
+      "height": 853,
+      "omissionNote": "Fruit variety not specified; fruit not pictured.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Hot ham & cheese",
+            "Whole-grain pretzel roll",
+            "Tortilla chips",
+            "Steamed peas",
+            "Fruit"
+          ]
+        }
+      ],
+      "sha256": "386a9a638a3da9ef5e2bf283196cd164a21fbe48772f4f01287bbd3238cbca34"
+    },
+    {
+      "id": "tray-2026-10-21-v1",
+      "src": "assets/lunch-art/tray-2026-10-21-v1.webp",
+      "alt": "Illustration of Pasta with meatballs, Whole-grain roll, Shredded cheese, Steamed carrots on a maroon cafeteria tray",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-16",
+      "generator": "OpenAI image_gen",
+      "styleId": "abvm-maroon-tray-v1",
+      "width": 1280,
+      "height": 853,
+      "omissionNote": "Fruit variety not specified; fruit not pictured.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Pasta with meatballs",
+            "Whole-grain roll",
+            "Shredded cheese",
+            "Steamed carrots",
+            "Fruit"
+          ]
+        }
+      ],
+      "sha256": "06860cae9c66941e8a6023b2bdc9f787e824ed4e5394e38e394f7d3d6195fdc9"
+    },
+    {
+      "id": "tray-2026-10-22-v1",
+      "src": "assets/lunch-art/tray-2026-10-22-v1.webp",
+      "alt": "Illustration of Chicken patty on whole-grain roll, Baby cake potatoes, Green beans on a maroon cafeteria tray",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-16",
+      "generator": "OpenAI image_gen",
+      "styleId": "abvm-maroon-tray-v1",
+      "width": 1280,
+      "height": 853,
+      "omissionNote": "Fruit variety not specified; fruit not pictured.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative. Food terminology corrected: Baby cake potatoes are illustrated as mini potato cakes, not whole baby potatoes; no school supplier or brand is asserted.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Chicken patty on whole-grain roll",
+            "Baby cake potatoes",
+            "Green beans",
+            "Fruit"
+          ]
+        }
+      ],
+      "sha256": "56f50f87b138b01e8dcb90b9e4aba861149a6ccc2986944f3c81dd8999757180"
+    },
+    {
+      "id": "tray-2026-10-23-v1",
+      "src": "assets/lunch-art/tray-2026-10-23-v1.webp",
+      "alt": "Illustration of Cheesy breadsticks, Kidney beans on a maroon cafeteria tray",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-16",
+      "generator": "OpenAI image_gen",
+      "styleId": "abvm-maroon-tray-v1",
+      "width": 1280,
+      "height": 853,
+      "omissionNote": "Dipping sauce variety not specified; sauce not pictured. Fruit variety not specified; fruit not pictured.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Cheesy breadsticks",
+            "Dipping sauce",
+            "Kidney beans",
+            "Fruit"
+          ]
+        }
+      ],
+      "sha256": "5e86a9be671f91493185915182747c4cbf5478b3d3831b561b68e82c1b000f0a"
+    },
+    {
+      "id": "tray-2026-10-26-v1",
+      "src": "assets/lunch-art/tray-2026-10-26-v1.webp",
+      "alt": "Illustration of Chicken finger wrap, Brown rice, Steamed corn on a maroon cafeteria tray",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-16",
+      "generator": "OpenAI image_gen",
+      "styleId": "abvm-maroon-tray-v1",
+      "width": 1280,
+      "height": 853,
+      "omissionNote": "Fruit variety not specified; fruit not pictured.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Chicken finger wrap",
+            "Brown rice",
+            "Steamed corn",
+            "Fruit"
+          ]
+        }
+      ],
+      "sha256": "58cacff6e7a7b1632268b23919fb0889158817583fa7fb244547c4b7b82bae64"
+    },
+    {
+      "id": "tray-2026-10-27-v1",
+      "src": "assets/lunch-art/tray-2026-10-27-v1.webp",
+      "alt": "Illustration of Tortilla chips, Cheese, Shredded lettuce, Green beans on a maroon cafeteria tray",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-16",
+      "generator": "OpenAI image_gen",
+      "styleId": "abvm-maroon-tray-v1",
+      "width": 1280,
+      "height": 853,
+      "omissionNote": "Taco filling not specified; chips and named sides shown. Fruit variety not specified; fruit not pictured.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Taco Tuesday & chips",
+            "Cheese",
+            "Shredded lettuce",
+            "Green beans",
+            "Fruit"
+          ]
+        }
+      ],
+      "sha256": "3a9be91d2d1e139d0ea1289321e657140c64df290bdab33955acfb3934277ef0"
+    },
+    {
+      "id": "tray-2026-10-28-v1",
+      "src": "assets/lunch-art/tray-2026-10-28-v1.webp",
+      "alt": "Illustration of Fish shapes, French fries, Steamed broccoli on a maroon cafeteria tray",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-16",
+      "generator": "OpenAI image_gen",
+      "styleId": "abvm-maroon-tray-v1",
+      "width": 1280,
+      "height": 853,
+      "omissionNote": "Fruit variety not specified; fruit not pictured.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Fish shapes",
+            "French fries",
+            "Steamed broccoli",
+            "Fruit"
+          ]
+        }
+      ],
+      "sha256": "540aa869a430bfe9aa9e5e6b6ef84367767b9e972153a33cc82ff8554cafc238"
+    },
+    {
+      "id": "tray-2026-10-29-v1",
+      "src": "assets/lunch-art/tray-2026-10-29-v1.webp",
+      "alt": "Illustration of Beef-a-roni, Shredded cheese, Whole-grain roll, Steamed carrots on a maroon cafeteria tray",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-16",
+      "generator": "OpenAI image_gen",
+      "styleId": "abvm-maroon-tray-v1",
+      "width": 1280,
+      "height": 853,
+      "omissionNote": "Fruit variety not specified; fruit not pictured.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Beef-a-roni",
+            "Shredded cheese",
+            "Whole-grain roll",
+            "Steamed carrots",
+            "Fruit"
+          ]
+        }
+      ],
+      "sha256": "c2c5e6e2b9209e37d842ac7af9a779b37a29dad3732a61425caeaf341803e94c"
+    },
+    {
+      "id": "tray-2026-10-30-v1",
+      "src": "assets/lunch-art/tray-2026-10-30-v1.webp",
+      "alt": "Illustration of Baked cheese pizza, Garden salad, Steamed peas on a maroon cafeteria tray",
+      "status": "reviewed",
+      "reviewedAt": "2026-10-16",
+      "generator": "OpenAI image_gen",
+      "styleId": "abvm-maroon-tray-v1",
+      "width": 1280,
+      "height": 853,
+      "omissionNote": "Fruit variety not specified; fruit not pictured.",
+      "reviewNotes": "Visually reviewed against exact printed menu. Photorealistic generated illustration; no people, logos or private reference pixels. Not an actual school meal photograph or exact portion claim. Unspecified fruit, dipping sauce and taco filling omitted. The full verified menu text remains authoritative.",
+      "approvedMenus": [
+        {
+          "sourceId": "abvm-2026-10-official",
+          "items": [
+            "Baked cheese pizza",
+            "Garden salad",
+            "Steamed peas",
+            "Fruit"
+          ]
+        }
+      ],
+      "sha256": "11f70599070c5e865f510d31077adab348ba8053270808f39949de27d7ac35d9"
+    }
+  ],
+  "archivedArtworks": [
+    {
       "id": "popcorn-chicken",
       "src": "assets/lunch-art/popcorn-chicken.webp",
       "alt": "Illustration of popcorn chicken",
@@ -154,7 +666,7 @@
       "id": "hamburger-whole-grain",
       "src": "assets/lunch-art/hamburger-whole-grain.webp",
       "alt": "Illustration of hamburger on whole-grain roll",
-      "status": "reviewed",
+      "status": "retired",
       "reviewedAt": "2026-10-05",
       "generator": "OpenAI image_gen",
       "reviewNotes": "Visually reviewed entr\u00e9e-only illustration; no unlisted sides, garnish or toppings. See docs/lunch-art-prompts-extra-a.md.",
@@ -168,7 +680,9 @@
             "Fruit"
           ]
         }
-      ]
+      ],
+      "retiredAt": "2026-10-14T09:45:56Z",
+      "retirementReason": "The October 15 school notice replaced this exact hamburger menu; artwork approval remains historical and must not transfer to the amended meal."
     },
     {
       "id": "chicken-patty-roll",

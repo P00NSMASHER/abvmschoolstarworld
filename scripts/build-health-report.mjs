@@ -1,5 +1,5 @@
 import {readFileSync,mkdirSync,writeFileSync} from "node:fs";
-import {selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence} from "./health-evidence.mjs";
+import {assessHomeworkHealth,selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence} from "./health-evidence.mjs";
 
 const packData=JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8"));
 const pkg=JSON.parse(readFileSync(new URL("../package.json",import.meta.url),"utf8"));
@@ -59,6 +59,7 @@ const status={
     sourcePages:packData.sourcePages?.length||0,
     sourceHash:packData.pack?.sourceHash||null,
   },
+  homework:assessHomeworkHealth(JSON.parse(readFileSync(new URL("../pages/data/homework-current.json",import.meta.url),"utf8")),now),
   lunch:{
     status:packData.pack?.lunchMenuSource?.status||"unknown",
     retrievalState:packData.pack?.lunchMenuSource?.retrievalState||"unknown",
@@ -118,14 +119,14 @@ status.curriculumHold=selectGovernedCurriculumHold(curriculumHoldRefreshRun,refr
 // A published-pack generator count of zero must not imply a blocked refresh
 // has no new gaps or that an educator approved unpublished curriculum.
 status.curriculumReview={
-  state:status.curriculumHold?"approval-blocked":"not-established",
+  state:status.curriculumHold?"automated-qa-hold":"not-established",
   evidence:status.curriculumHold?"exact-failed-refresh-step-and-open-draft":"not-available",
   candidatePrNumber:status.curriculumHold?.candidatePrNumber||null,
   automatedPromotion:false,
 };
 const refreshDisplayRun=status.curriculumHold?curriculumHoldRefreshRun:effectiveRefreshRun;
 const refreshHealthy=completedHealthy(status.workflows.refresh,30);
-const refreshOperationallyHealthy=refreshHealthy||Boolean(status.curriculumHold);
+const refreshOperationallyHealthy=refreshHealthy;
 const pipelineHealthy=Boolean(
   status.contentPipeline.present &&
   status.contentPipeline.qaStatus==="pass" &&
@@ -156,6 +157,7 @@ const criticalHealthy=Boolean(
   status.schoolData.sourceSufficient &&
   status.schoolData.sourcePages===6 &&
   sourceFresh &&
+  status.homework.healthy &&
   lunchOperationallyUsable &&
   completedHealthy(status.workflows.qa,48) &&
   completedRunHealthy(status.publicationEvidence,48) &&
@@ -165,7 +167,7 @@ const criticalHealthy=Boolean(
 );
 const warnings=[];
 if(status.curriculumHold){
-  warnings.push("Teacher refresh is intentionally holding publication for governed curriculum candidate PR #"+status.curriculumHold.candidatePrNumber+".");
+  warnings.push("Teacher refresh is awaiting automated curriculum quality checks for candidate PR #"+status.curriculumHold.candidatePrNumber+"; no educator or owner approval is required.");
 }
 if(!lunchVerified&&lunchOperationallyUsable){
   warnings.push("Lunch source bridge is unavailable; complete previously reviewed coverage remains usable"+(status.lunch.lastError?" ("+status.lunch.lastError+")":"")+".");
@@ -184,6 +186,7 @@ const md=[
   "",
   `- **School data checked:** ${sourceCheckedAt||"missing"}${sourceAgeHours===null?"":` (${sourceAgeHours.toFixed(1)}h old)`}`,
   `- **Source coverage:** ${status.schoolData.sourcePages}/6 teacher pages; source sufficient = ${status.schoolData.sourceSufficient}; fresh <=${SOURCE_FRESH_HOURS}h = ${sourceFresh}`,
+  `- **Homework checked:** ${status.homework.checkedAt||"missing"}; status ${status.homework.status}; same Eastern day and <=8h = ${status.homework.healthy}`,
   `- **Lunch source:** ${status.lunch.retrievalState}; ${status.lunch.days} reviewed days; complete reviewed coverage = ${lunchReviewedCoverageComplete}; missing dates: ${status.lunch.missingDates.join(", ")||"none"}`,
   `- **Grade 2 content pipeline:** QA ${status.contentPipeline.qaStatus}; safety ${status.contentPipeline.safetyState}; ${status.contentPipeline.skillCount} skills; ${status.contentPipeline.questionCount} questions; partial ${status.contentPipeline.partiallyCoveredCount}; source-insufficient ${status.contentPipeline.sourceInsufficientCount}; not-practiced-by-design ${status.contentPipeline.notPracticedByDesignCount}; unsupported ${status.contentPipeline.unsupportedSkillCount}`,
   `- **Question lineage:** required = ${status.contentPipeline.lineageRequired}; page-exact ${status.contentPipeline.pageExactLineageCount}/${status.contentPipeline.questionCount}; unresolved ${status.contentPipeline.unresolvedLineageCount}`,
@@ -191,7 +194,7 @@ const md=[
   `- **Source-insufficient study topics:** ${status.contentPipeline.sourceInsufficientTopics.join(", ")||"none"}`,
   `- **Intentionally not practiced:** ${status.contentPipeline.notPracticedByDesignTopics.join(", ")||"none"}`,
   `- **Published-pack generator-unsupported topics (snapshot):** ${status.contentPipeline.unsupportedTopics.join(", ")||"none in last published pack"}; NOT a claim about the newest teacher refresh`,
-  `- **Latest refresh curriculum gate:** ${status.curriculumReview.state==="approval-blocked"?"BLOCKED — pending educator review in draft PR #"+status.curriculumReview.candidatePrNumber:"No verified hold evidence; newest teacher coverage is not established by the last published pack"}`,
+  `- **Latest refresh curriculum gate:** ${status.curriculumReview.state==="automated-qa-hold"?"AUTOMATED QA HOLD — unresolved candidate PR #"+status.curriculumReview.candidatePrNumber:"No verified hold evidence; newest teacher coverage is not established by the last published pack"}`,
   `- **Curriculum hold:** ${status.curriculumHold?"draft PR #"+status.curriculumHold.candidatePrNumber+"; publication intentionally blocked":"none verified in available workflow evidence"}`,
   `- **App version:** ${status.appVersion}`,
   `- **Service worker cache:** ${status.serviceWorkerCache}`,

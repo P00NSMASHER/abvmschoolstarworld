@@ -1,8 +1,8 @@
 /** Material selection for the existing Games player. This module owns no DOM or answers. */
 import {createStudyResourceLoader, validStudyResource} from './study-resources.mjs';
-import {questionsForTest} from './study-hub-core.mjs';
+import {questionsForTest,religionChapterScopes} from './study-hub-core.mjs';
 import {adaptivePracticeRound, practiceIdentity} from './study-experience.mjs';
-import {schoolDay, weekBounds, nextTests, visibleArchive, weeklyArchive, balancedTestRound} from './study-model.mjs';
+import {schoolDay, studyAssessmentDay, weekBounds, nextTests, visibleArchive, weeklyArchive, balancedTestRound} from './study-model.mjs';
 import {buildStarBank} from './star-practice.mjs';
 
 const names = {weekly:'This week', saved:'Saved learning', star:'STAR practice', mix:'Study mix'};
@@ -37,6 +37,22 @@ function byId(rows) {
 function unique(rows) {
   const seen = new Set();
   return byId(rows).filter(q => !seen.has(practiceIdentity(q)) && seen.add(practiceIdentity(q)));
+}
+// Keep the full verified question set, but interleave skills so a large
+// generator family cannot push another current test topic to the last page.
+function representativePractice(rows) {
+  const buckets = new Map();
+  for (const question of rows) {
+    if (!buckets.has(question.skill)) buckets.set(question.skill, []);
+    buckets.get(question.skill).push(question);
+  }
+  const ordered = [];
+  for (let turn = 0; ordered.length < rows.length; turn++) {
+    for (const bucket of buckets.values()) {
+      if (bucket[turn]) ordered.push(bucket[turn]);
+    }
+  }
+  return ordered;
 }
 function defaultStorage() {
   try { return globalThis.localStorage; } catch { return undefined; }
@@ -118,7 +134,17 @@ function uniqueGuideText(rows) {
 function noteMatchesTest(text, label, subject) {
   const value = compactGuideText(text,240), lower = String(label || '').toLowerCase();
   if (!value) return false;
-  if (subject === 'Reading / ELA' && /grammar|predicate|subject\s*&/.test(lower)) return /\b(?:grammar|subject|predicate)\b/i.test(value);
+  if (subject === 'Reading / ELA' && /grammar|predicate|subject\s*&|sentence types|punctuation/.test(lower)) {
+    if (/subject|predicate/.test(lower)) return /\b(?:subject|predicate)\b/i.test(value);
+    if (/sentence types|punctuation/.test(lower)) return /sentence type|statement|question|command|exclamation|punctuation|end mark/i.test(value);
+    return /\b(?:grammar|subject|predicate|sentence type|punctuation)\b/i.test(value);
+  }
+  if (subject === 'Reading / ELA' && /phonics/.test(lower) && /short[ -]vowels?/.test(lower))
+    return /short[ -]vowels?/i.test(value);
+  if (subject === 'Math' && /subtraction|subtract|difference|minus/.test(lower))
+    return /subtraction|subtract|difference|minus|take away|related addition facts to check subtraction/i.test(value);
+  if (subject === 'Math' && /addition|add|sum/.test(lower))
+    return /addition|add|sum|total/i.test(value) && !/subtraction-only/i.test(value);
   if (subject === 'Spelling / Handwriting') {
     const focus = lower.match(/short\s+([aeiou])/i)?.[1]?.toLowerCase();
     const mentioned = [...value.matchAll(/\b(?:short|long)\s+([aeiou])\b/gi)].map(match=>match[1].toLowerCase());
@@ -126,10 +152,85 @@ function noteMatchesTest(text, label, subject) {
     return /spell|handwriting|phonics|vowel|short|long|blend|word|letter/i.test(value);
   }
   if (subject === 'Religion') {
-    const chapter = lower.match(/chapter\s*(\d+)/i)?.[1];
-    return chapter ? new RegExp('\\bchapter\\s*' + chapter + '\\b','i').test(value) : true;
+    const chapter = lower.match(/\b(?:chapter|ch\.?)\s*([1-9]\d*)\b/i)?.[1];
+    // A named chapter's notes must begin with its own chapter header.
+    return chapter ? new RegExp('^\\s*Chapter\\s+' + chapter + '\\s*:','i').test(value) : true;
   }
   return true;
+}
+
+function polishedReligionFact(value) {
+  let text = compactGuideText(value,320)
+    .replace(/\borignial\b|\boirginal\b/gi,'original')
+    .replace(/\btendancy\b/gi,'tendency')
+    .replace(/\brecieve\b/gi,'receive')
+    .replace(/\btht\b/gi,'that')
+    .replace(/\bgod\b/gi,'God')
+    .replace(/\s*\/\s*/g,' and ')
+    .replace(/\s*;\s*/g,'; ')
+    .trim();
+  if (/^Church members\s*\/|^Church members and Christians/i.test(value))
+    text = text.replace(/^Church members and Christians/i,'Church members (Christians)');
+  if (/^Pope Leo\s*;\s*Bishop Schlert/i.test(text))
+    return 'Church leaders named in class: Pope Leo and Bishop Schlert.';
+  if (/^Steps to Baptism:/i.test(text)) {
+    return 'Steps to Baptism: the priest welcomes the person; parents and godparents make promises; the Bible is read; water is poured; a white garment is given; a candle is lit.';
+  }
+  text=text.charAt(0).toUpperCase()+text.slice(1);
+  return /[.!?]$/.test(text) ? text : text + '.';
+}
+
+function religionChapterFacts(group,test,pack) {
+  const chapter=String(test?.label||'').match(/\b(?:chapter|ch\.?)\s*([1-9]\d*)\b/i)?.[1];
+  if(!chapter)return [];
+  const exact=new RegExp('^\\s*Chapter\\s+'+chapter+'\\s*:','i');
+  const skillRows=[...array(pack?.contentPipeline?.skills),...array(pack?.recentReviewPipeline?.skills)];
+  const lines=[...new Set([...group,...skillRows]
+    .flatMap(row=>array(row?.sourceLineage?.matchedEvidence))
+    .filter(row=>meaningfulText(row)&&exact.test(row)).map(row=>row.trim()))];
+  const scoped=array(pack?.testGuideFacts?.religionChapters?.[chapter]);
+  const facts=[...scoped,...lines.flatMap(line=>line.split(/\s*\*\s*/).slice(1))]
+    .map(polishedReligionFact).filter(Boolean);
+  const hasDetailedRite=facts.some(row=>/^Steps to Baptism:/i.test(row));
+  return uniqueGuideText(facts.filter(row=>!(hasDetailedRite&&/^The Rite \(steps\) of Baptism\.?$/i.test(row))));
+}
+
+function readableSkillLabel(skill,questions,skillById) {
+  const published=compactGuideText(skillById.get(skill)?.label,120);
+  if(published)return published;
+  const source=questions.map(row=>compactGuideText(row.sourceFact,120))
+    .find(row=>/^Verified Grade 2 skill:\s*/i.test(row));
+  if(source)return source.replace(/^Verified Grade 2 skill:\s*/i,'');
+  return String(skill||'Test topic').replace(/^(?:religion|math|reading|grammar|spelling)-/,'')
+    .split('-').filter(Boolean).map(word=>word.charAt(0).toUpperCase()+word.slice(1)).join(' ')||'Test topic';
+}
+
+function guideReviewTopics(group,practiceRows,pack) {
+  const skillRows=[...array(pack.contentPipeline?.skills),...array(pack.recentReviewPipeline?.skills)];
+  const skillById=new Map(skillRows.filter(row=>meaningfulText(row?.id)).map(row=>[row.id,row]));
+  const skills=[];
+  for(const row of group)for(const skill of [row.skill,...array(row.assessedSkillIds)])
+    if(meaningfulText(skill)&&!skills.includes(skill))skills.push(skill);
+  return skills.map(skill=>{
+    const matching=practiceRows.filter(row=>row.skill===skill||array(row.assessedSkillIds).includes(skill));
+    const metadata=skillById.get(skill);
+    const summary=uniqueGuideText([
+      ...array(metadata?.studyNotes),
+      ...matching.map(row=>row.explanation),
+      ...matching.map(row=>row.answer),
+    ]).find(meaningfulText)||'';
+    const checks=matching.filter(row=>meaningfulText(row?.prompt)&&meaningfulText(row?.answer)).map(row=>({
+      prompt:compactGuideText(row.prompt,320),answer:compactGuideText(row.answer,180),
+    }));
+    return {
+      id:skill,
+      label:readableSkillLabel(skill,matching,skillById),
+      summary:compactGuideText(summary,320),
+      questionCount:matching.length,
+      check:checks[0]||null,
+      checks,
+    };
+  });
 }
 
 /** Failures stay retryable and cannot prevent the current Games from opening. */
@@ -156,7 +257,18 @@ export function createStudyMaterials({
   status = {ready:true, partial:false, errors:[], loaded:{schoolwork:true, archive:true}},
 } = {}) {
   const instant = () => typeof now === 'function' ? now() : now;
-  const canonical = byId(array(catalog.questions));
+  const repair=engine?.correctOriginalQuestion||((q)=>q);
+  archive={...archive,questions:array(archive.questions).map(repair)};
+  schoolwork={...schoolwork,lessons:array(schoolwork.lessons).map(lesson=>({...lesson,questions:array(lesson.questions).map(repair)}))};
+  // The engine deliberately omits audit lineage from questions. Rejoin only
+  // the compact, reviewed chapter numbers by stable current-material IDs.
+  const scopesById=new Map(array(pack?.contentPipeline?.questions)
+    .filter(row=>row?.subject==='Religion'&&typeof row.id==='string')
+    .map(row=>[row.id,religionChapterScopes(row)]));
+  const canonical = byId(array(catalog.questions)).map(q=>
+    q.tier==='material'&&scopesById.has(q.id)
+      ? {...q,sourceChapters:scopesById.get(q.id)}
+      : q);
   const current = canonical.filter(q => q.tier === 'material');
   const star = byId([...canonical.filter(q => q.tier === 'star-fallback'), ...buildStarBank().map(normalizedStar)]);
   const sourceKey = String(catalog.sourceKey || pack.sourceHash || 'abvm-current');
@@ -301,16 +413,24 @@ export function createStudyMaterials({
   function completedKeys() {
     return new Set(array(read(storage,'abvm-completed-tests',[])).filter(key => typeof key === 'string'));
   }
+  function currentTestQuestions(test,time) {
+    const day = materialDay(time), testWeek = weekBounds(test.date), thisWeek = weekBounds(time);
+    // Explicitly match each future test's school week. An undated or older
+    // worksheet is saved learning, not proof of this test's current curriculum.
+    const matchedLessons = day.lessons.filter(lesson =>
+      lesson.weekOf === testWeek.start ||
+      (lesson.studiedOn && lesson.studiedOn >= testWeek.start && lesson.studiedOn <= testWeek.end));
+    const recent = testWeek.start === thisWeek.start ? day.week.questions : [];
+    return questionsForTest(test,unique([
+      ...current,...recent,...matchedLessons.flatMap(lesson => array(lesson.questions)),
+    ]));
+  }
   function testState() {
     const time = instant(), done = completedKeys();
     const tests = nextTests(allEvents.filter(t => !done.has(testKey(t))),time);
-    const day = materialDay(time), weekly = day.raw.weekly;
-    const primary = tests.map(t => questionsForTest(t,unique([
-      ...weekly,
-      ...(/chapter\s*\d+|grammar|predicate/i.test(t.label) ? day.lessons.flatMap(l => array(l.questions)) : []),
-    ])));
-    const groups = tests.map((t,i) => primary[i].length ? primary[i] : unique(questionsForTest(t,star)));
-    const entries = tests.map((t,index) => ({...t, key:testKey(t), index, count:groups[index].length, fallback:!primary[index].length && !!groups[index].length}));
+    const primary = tests.map(t => currentTestQuestions(t,time));
+    const groups = primary;
+    const entries = tests.map((t,index) => ({...t, key:testKey(t), index, count:groups[index].length, fallback:false}));
     const seen = new Set();
     const completed = allEvents.filter(t => done.has(testKey(t)) && /^\d{4}-\d{2}-\d{2}$/.test(t.date || '') && t.date >= schoolDay(time))
       .filter(t => !seen.has(testKey(t)) && seen.add(testKey(t))).map(t => ({...t,key:testKey(t)}));
@@ -327,7 +447,7 @@ export function createStudyMaterials({
   }
 
   function printableTestState(includeAssessments = false) {
-    const time = instant(), done = completedKeys(), today = schoolDay(time);
+    const time = instant(), done = completedKeys(), today = studyAssessmentDay(time);
     const instantMs = new Date(time).getTime(), seen = new Set();
     const tests = allEvents
       .filter(t => includeAssessments || String(t.kind || '').toLowerCase() !== 'assessment')
@@ -336,15 +456,11 @@ export function createStudyMaterials({
       .filter(t => !t.endsAt || !Number.isFinite(Date.parse(t.endsAt)) || Date.parse(t.endsAt) > instantMs)
       .sort((a,b) => a.date.localeCompare(b.date) || a.label.localeCompare(b.label))
       .filter(t => { const key=testKey(t); if (seen.has(key)) return false; seen.add(key); return true; });
-    const day = materialDay(time), weekly = day.raw.weekly;
-    const primary = tests.map(t => questionsForTest(t,unique([
-      ...weekly,
-      ...(/chapter\s*\d+|grammar|predicate/i.test(t.label) ? day.lessons.flatMap(l => array(l.questions)) : []),
-    ])));
-    const groups = tests.map((t,i) => primary[i].length ? primary[i] : unique(questionsForTest(t,star)));
+    const primary = tests.map(t => currentTestQuestions(t,time));
+    const groups = primary;
     const entries = tests.map((t,index) => ({
       ...t, key:testKey(t), index, count:groups[index].length,
-      fallback:!primary[index].length && !!groups[index].length,
+      fallback:false,
     }));
     return {
       tests, groups,
@@ -369,7 +485,8 @@ export function createStudyMaterials({
     const subject = subjectForTest(test,group);
     const lower = String(test.label || '').toLowerCase();
     const sourceSubjects = array(pack.subjects).filter(row => row?.subject === subject);
-    const questionFacts = group.flatMap(row => [row.sourceFact,row.explanation]).filter(meaningfulText);
+    const practiceRows = representativePractice(group);
+    const questionFacts = practiceRows.flatMap(row => [row.sourceFact === row.skill ? null : row.sourceFact,row.explanation]).filter(meaningfulText);
     const subjectFacts = sourceSubjects.flatMap(row => [...array(row.topics),...array(row.studyNotes)])
       .filter(text => noteMatchesTest(text,test.label,subject));
     // Only a photo-confirmed week-matched list can outrank general vowel examples.
@@ -378,32 +495,77 @@ export function createStudyMaterials({
       ? materialDay(time).lessons
         .filter(lesson => lesson.subject === subject && lesson.weekOf === weekBounds(test.date).start)
         .flatMap(lesson => array(lesson.notes))
-        .filter(note => /^(?:Photo-confirmed practice words|Short i:|Long a:)/i.test(note))
+        .filter(note => /^(?:Photo-confirmed practice words|Verified spelling words|Teacher spelling words|Spelling words|Short i:|Long a:)/i.test(note))
       : [];
-    const facts = uniqueGuideText([...verifiedWeekNotes,...questionFacts,...subjectFacts]).slice(0,6);
-    const vocabulary = subject === 'Reading / ELA' && !/grammar|predicate|subject\s*&/.test(lower)
+    // Keep every source-matched fact in a printable guide; page layout owns pagination.
+    const facts = uniqueGuideText([...verifiedWeekNotes,...questionFacts,...subjectFacts]);
+    const teacherFacts = subject === 'Religion' ? religionChapterFacts(group,test,pack) : [];
+    const reviewTopics = guideReviewTopics(group,practiceRows,pack);
+    const vocabulary = subject === 'Reading / ELA' && !/grammar|predicate|subject\s*&|phonics/.test(lower)
       ? [...new Map(array(pack.vocabulary).filter(row => row?.subject === subject && meaningfulText(row?.term))
         .map(row => [String(row.term).trim().toLowerCase(),row])).values()].slice(0,8)
       : [];
-    const practice = group.slice(0,4).map(row => ({
-      prompt:compactGuideText(row.prompt,160),
-      answer:compactGuideText(row.answer,90),
+    // A new teacher-published spelling list can replace old photo lists only if
+    // the pack identifies the same school week as this specific test.
+    const announcedWeek = String(pack.weekLabel || '').match(/week of\s+([a-z]+\s+\d{1,2},?\s+\d{4})/i);
+    const teacherWeek = announcedWeek && Number.isFinite(Date.parse(announcedWeek[1] + ' 12:00 GMT'))
+      ? new Date(Date.parse(announcedWeek[1] + ' 12:00 GMT')).toISOString().slice(0,10) : '';
+    const teacherLists = subject === 'Spelling / Handwriting' && teacherWeek === weekBounds(test.date).start
+      ? sourceSubjects.flatMap(row => [...array(row.studyNotes), ...array(row.topics)])
+        .filter(note => /^(?:Weekly spelling words|Spelling words|Teacher spelling words|Teacher-posted spelling words(?: \(page undated\))?|Verified spelling words|Words for spelling test)\s*:/i.test(note))
+      : [];
+    const wordNote = [...teacherLists,...verifiedWeekNotes].find(note =>
+      /^(?:Photo-confirmed practice words in the recorded order|Weekly spelling words|Spelling words|Teacher spelling words|Teacher-posted spelling words(?: \(page undated\))?|Verified spelling words|Words for spelling test)\s*:/i.test(note));
+    const spellingWords = wordNote
+      ? [...new Set(wordNote.slice(wordNote.indexOf(':') + 1).split(',')
+        .map(word => word.replace(/[.\s]+$/,'').trim()).filter(word => /^[a-z][a-z'-]*$/i.test(word)))].slice(0,30)
+      : [];
+    // Print the actual checked choices, but never mix in private responses,
+    // teacher markings or answers on the student's test page.
+    // Preserve the complete verified question set for both printable resources.
+    // This presentation-only expansion does not change study rounds or refresh.
+    const practice = practiceRows.map(row => ({
+      prompt:compactGuideText(row.prompt,320),
+      answer:compactGuideText(row.answer,140),
+      choices:array(row.choices).map(choice => compactGuideText(choice,160)),
       skill:compactGuideText(row.skill,60),
+      questionType:compactGuideText(row.questionType,40),
+      explanation:compactGuideText(row.explanation,240),
+      hint:compactGuideText(row.hint,160),
     }));
+    const availableSkills = [...new Set(group.flatMap(row=>[row.skill,...array(row.assessedSkillIds)]).filter(meaningfulText))];
+    const representedSkills = [...new Set(practiceRows.map(row => row.skill))];
+    const missingSkills = availableSkills.filter(skill => !representedSkills.includes(skill));
+    const guideSkills = reviewTopics.map(row=>row.id);
+    const missingGuideSkills = availableSkills.filter(skill=>!guideSkills.includes(skill));
     const warnings = [];
+    if (missingSkills.length) warnings.push('Some current verified skills are missing from this paper. Check the linked teacher page and use in-app practice.');
+    if (pack.sourceCheckedAt && schoolDay(pack.sourceCheckedAt) !== schoolDay(time)) {
+      warnings.push('Teacher pages were last checked on '+schoolDay(pack.sourceCheckedAt)+'. Current school topics may have changed; check the linked teacher page for updates.');
+    }
+    if(subject==='Spelling / Handwriting' && /\bshort\s*\)/i.test(test.label)) {
+      warnings.push('The teacher test label does not name the short vowel. Practice here covers only named sounds; no missing spelling words are guessed.');
+    }
     const fallback = state.fallback.some(row => row.index === i);
-    if (fallback) warnings.push('No reviewed test-specific question bank is available yet. This sheet uses original Grade 2 skill practice and labels it clearly.');
-    if (!group.length) warnings.push('No reviewed practice questions match this test yet. Use the teacher materials sent home together with the verified notes below.');
+    if (fallback) warnings.push('This practice requires current, matching class material. Earlier Grade 2 topics are not substituted.');
+    if (!group.length) warnings.push('No current, matching test questions are available. Review the announced classroom material; unrelated older questions are not substituted.');
     if (subject === 'Spelling / Handwriting') {
       coverageWarnings(instant()).filter(row => row.subject === subject).forEach(row => warnings.push(row.text));
+      if (!spellingWords.length) warnings.push('No verified word list matches this test week. Older weeks\' spelling words are not substituted.');
     }
     if (!facts.length) warnings.push('No reviewed test-specific facts are available yet, so this guide does not invent missing material.');
     return {
       key:testKey(test), label:compactGuideText(test.label,120), date:test.date, subject:subject || 'Test review',
-      facts, vocabulary, practice, fallback, warnings:uniqueGuideText(warnings).slice(0,3),
-      sourceLabel:verifiedWeekNotes.length
-        ? 'Teacher-announced topic with family photo-confirmed homework words; practice is not an official test'
-        : 'Current ABVM teacher notes, reviewed schoolwork, and checked practice material',
+      facts, teacherFacts, reviewTopics, vocabulary, practice, spellingWords, fallback, warnings:uniqueGuideText(warnings).slice(0,3),
+      sourceHash:pack.sourceHash || null, sourceCheckedAt:pack.sourceCheckedAt || null,
+      coverage:{availableSkills,representedSkills,missingSkills,guideSkills,missingGuideSkills},
+      sourceLabel:teacherLists.length
+        ? (teacherLists.some(note => /page undated/i.test(note))
+          ? 'Teacher spelling words verified this week (teacher page undated); original home practice'
+          : 'Current school-week teacher spelling words with parent-created practice')
+        : verifiedWeekNotes.length
+          ? 'Teacher-announced topic with family photo-confirmed homework words; practice is not an official test'
+          : 'Current published ABVM topics and checked original practice',
     };
   }
 
@@ -429,7 +591,7 @@ export function createStudyMaterials({
   }
   function testRound({index, seed, upcoming = false} = {}) {
     const state = upcoming ? printableTestState(true) : testState();
-    const {single,groups,selected,full,key} = testScope(state,index);
+    const {single,groups,full,key} = testScope(state,index);
     const chosenSeed = sessionSeed(key,'test-ready',seed);
     return {
       questions:balancedTestRound(groups,8,chosenSeed), catalog:{...catalog,sourceKey:key,questions:full},
@@ -513,9 +675,19 @@ export function createStudyMaterials({
       ...array(subject.topics).filter(meaningfulText).map(text => ({subject:subject.subject,text,kind:'topic'})),
       ...array(subject.studyNotes).filter(meaningfulText).map(text => ({subject:subject.subject,text,kind:'study-note'})),
     ]).map(note => ({...note,sourceHash:pack.sourceHash,sourceCapturedAt:pack.sourceCapturedAt}));
+    const notes=[...sourceNotes,...history.notes].filter(note => meaningfulText(note?.text));
+    // Reuse the same independently sourced, chapter-scoped facts as print guides.
+    // Never assign unscoped notes to a chapter by position or a keyword guess.
+    const explanations=[...new Map(notes.filter(note=>note.subject==='Religion'&&note.kind==='topic').map(note=>[note.text,note])).values()]
+      .flatMap(note=>{
+        const chapter=note.text.match(/^\s*Chapter\s+([1-9]\d*)\s*:/i)?.[1];
+        const paragraphs=chapter?religionChapterFacts([],{label:'Religion Chapter '+chapter},pack):[];
+        return paragraphs.length?[{subject:'Religion',topic:note.text,title:'Chapter '+chapter,paragraphs,label:'Class review'}]:[];
+      });
     return {
       lessons:saved ? day.lessons : day.dated,
-      notes:[...sourceNotes,...history.notes].filter(note => meaningfulText(note?.text)),
+      explanations,
+      notes,
       vocabulary:[...array(pack.vocabulary),...history.vocabulary].filter(word => meaningfulText(word?.term)),
       links:referenceLinks(), warnings:coverageWarnings(time),
     };

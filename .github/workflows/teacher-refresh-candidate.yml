@@ -1,0 +1,114 @@
+name: Fresh ABVM teacher curriculum candidate acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/refresh-teacher-pages.mjs'
+      - 'scripts/teacher-event-precedence.mjs'
+      - 'scripts/grade2-content-pipeline.mjs'
+      - 'scripts/question-corrections.mjs'
+      - 'scripts/build-study-archive.mjs'
+      - 'tests/question-corrections.test.mjs'
+      - 'scripts/teacher-page-parsers.mjs'
+      - 'pages/study-games.js'
+      - 'pages/study-notes-library.mjs'
+      - 'tests/study-notes-library.spec.mjs'
+      - 'tests/helpers/study-notes.mjs'
+      - 'pages/data/uploaded-notices.json'
+      - 'tests/teacher-event-precedence.test.mjs'
+      - 'tests/october-2026-photo-notices.test.mjs'
+      - 'tests/calendar-bottom-premium.spec.mjs'
+      - 'tests/calendar-premium.spec.mjs'
+      - 'tests/content-pipeline.spec.mjs'
+      - 'tests/integrated-premium.spec.mjs'
+      - 'tests/today-premium.spec.mjs'
+      - 'tests/study-experience.spec.mjs'
+      - 'tests/study-games-async-materials.spec.mjs'
+      - 'tests/study-hub.spec.mjs'
+      - 'tests/study-score-feedback.spec.mjs'
+      - 'tests/source-math-withdrawal.test.mjs'
+      - 'tests/helpers/original-math-fixture.mjs'
+      - 'tests/fixtures/math-original-practice.json'
+      - '.github/workflows/sync-study-pack.yml'
+      - '.github/workflows/teacher-refresh-candidate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: abvm-fresh-teacher-candidate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-fresh-teacher-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact review head
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Verify exact source commit
+        shell: bash
+        env:
+          REVIEW_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$REVIEW_SHA"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Generate a fresh candidate from all verified teacher pages
+        run: node scripts/refresh-teacher-pages.mjs --autopilot-report=.curriculum-coverage-plan.json
+
+      - name: Reject unverified curriculum and source-lineage gaps
+        run: node scripts/assert-safe-teacher-refresh.mjs --report=.curriculum-coverage-plan.json
+
+      - name: Verify fresh teacher check, not just a recent notice import
+        run: node scripts/check-refresh-health.mjs --require-today --max-age-hours 1
+
+      - name: Independently execute reviewed calendar precedence regressions
+        run: node --test tests/teacher-event-precedence.test.mjs tests/october-2026-photo-notices.test.mjs
+
+      - name: Install Chromium and WebKit
+        run: npx playwright install --with-deps chromium webkit
+
+      - name: Verify interaction fixtures survive a legitimate teacher-topic withdrawal
+        run: |
+          npm run pack:runtime
+          node --test tests/source-math-withdrawal.test.mjs
+          npx playwright test tests/study-experience.spec.mjs tests/study-games-async-materials.spec.mjs tests/study-hub.spec.mjs tests/study-score-feedback.spec.mjs --grep 'three complete Math rounds|Math skips an earlier Faith|weekly test prep covers same-day|all five subject choices' --workers=2
+
+      - name: Run full static, unit, responsive-browser, accessibility and privacy QA on the GENERATED pack
+        run: npm run qa
+
+      - name: Independently verify publication checker against candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --directory pages >/tmp/abvm-refresh-candidate.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          ABVM_LIVE_URL=http://127.0.0.1:4173/ node scripts/verify-live-lunch.mjs
+
+      - name: Retain exact-head candidate QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: abvm-fresh-teacher-candidate-${{ github.run_id }}
+          path: |
+            .curriculum-coverage-plan.json
+            playwright-report
+            test-results
+            live-lunch-proof
+          include-hidden-files: true
+          retention-days: 14
+          if-no-files-found: ignore

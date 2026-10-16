@@ -1,16 +1,18 @@
+import {openNoteSubject} from './helpers/study-notes.mjs';
+import {withOriginalMathFixture} from './helpers/original-math-fixture.mjs';
 import {test,expect} from '@playwright/test';
 test.use({serviceWorkers:'block'});
 
 async function mount(page,day,testInfo){
   await page.clock.setFixedTime(new Date(day+'T16:00:00-04:00'));
   const envelope=await (await page.request.get('/data/study-pack.json')).json();
-  const fixture=structuredClone(envelope);
+  const fixture=withOriginalMathFixture(envelope);
   fixture.pack.importantDates=[
     {date:'Wednesday, Oct. 7',label:'Math test',kind:'test'},
     {date:'Wednesday, Oct. 7',label:'Religion Chapter 2 test',kind:'test'},
     {date:'Friday, Oct. 9',label:'Math test',kind:'test'}
   ];
-  await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({json:fixture}));
+  await page.route('**/data/study-pack*.json*',route=>route.fulfill({json:fixture}));
   await page.goto('/#study');
   await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready',{timeout:15000});
   await page.screenshot({animations:"disabled",path:testInfo.outputPath('games-weekly-test-prep.png'),fullPage:true});
@@ -36,7 +38,15 @@ test('weekly test prep covers same-day subjects in the existing player and compl
       .filter(q=>q.subject==='Math'&&q.tier==='material');
   });
   const dedupe=rows=>[...new Map(rows.map(q=>[q.prompt+'|'+q.answer,q])).values()];
-  const allowed={Math:dedupe([...currentMath,...archivedMath]),Religion:religion};
+  // Current reviewed Religion questions can carry both Chapter 2 and 3 headers.
+  // Permit them in Chapter 2 practice only when the governed entry explicitly
+  // starts with Chapter 2, never by a cross-reference or unrelated subject.
+  const full=await page.request.get('/data/study-pack.json').then(r=>r.json());
+  const currentChapter2=full.pack.contentPipeline.questions.filter(q=>
+    q.subject==='Religion'&&q.sourceLineage?.quality==='page-exact'&&
+    q.sourceLineage.matchedEvidence?.some(value=>
+      typeof value==='string'&&/^\s*Chapter\s+2\s*:/i.test(value)));
+  const allowed={Math:dedupe([...currentMath,...archivedMath]),Religion:dedupe([...religion,...currentChapter2])};
   await page.locator('[data-open-prep]').click();
   const prep=page.locator('[data-study-tests]');
   await expect(prep.locator('time')).toHaveAttribute('datetime','2026-10-07');
@@ -98,10 +108,10 @@ test('current material is exhausted before saved learning and STAR fallback in t
   test.setTimeout(60000);await page.clock.setFixedTime(new Date('2026-10-05T16:00:00-04:00'));
   const envelope=await (await page.request.get('/data/study-pack.json')).json(),work=await (await page.request.get('/data/schoolwork.json')).json();
   const lesson=work.lessons.find(row=>row.subject==='Math'&&!row.studiedOn&&row.questions.length>=8);expect(lesson).toBeTruthy();
-  const fixture=structuredClone(envelope);
+  const fixture=withOriginalMathFixture(envelope);
   for(const key of ['contentPipeline','recentReviewPipeline'])fixture.pack[key]={...fixture.pack[key],skills:(fixture.pack[key]?.skills||[]).filter(row=>row.subject!=='Math'),questions:(fixture.pack[key]?.questions||[]).filter(row=>row.subject!=='Math')};
   fixture.pack.questions=(fixture.pack.questions||[]).filter(q=>q.subject!=='Math');
-  await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({json:fixture}));
+  await page.route('**/data/study-pack*.json*',route=>route.fulfill({json:fixture}));
   let saved=true;await page.route('**/data/schoolwork.json*',route=>route.fulfill({json:{...work,lessons:saved?[lesson]:[]}}));await page.route('**/data/study-archive.json*',route=>route.fulfill({json:{questions:[],notes:[],vocabulary:[]}}));
   await page.goto('/#study');await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
   await page.locator('[data-game-start="math"]').click();
@@ -121,14 +131,14 @@ test('on-demand subject notes retain the verified chapter review and disclose a 
   const references=await (await page.request.get('/data/religion-sources.json')).json();
   const chapter=references.chapters.find(row=>row.chapter===2&&row.status==='verified'&&row.available);
   expect(chapter).toBeTruthy();
-  const fixture=structuredClone(envelope);
+  const fixture=withOriginalMathFixture(envelope);
   fixture.pack.subjects=[
     ...fixture.pack.subjects.filter(subject=>subject.subject!=='Religion'&&!/spelling/i.test(subject.subject)),
     {subject:'Religion',topics:['Chapter 2: Jesus is God’s Best Gift'],studyNotes:['Jesus gave us the new life of grace.']},
     {subject:'Spelling / Handwriting',topics:['Spelling: short a / long a'],studyNotes:['Compare short a with a_e long-a words.']}
   ];
   fixture.pack.importantDates=[{date:'Friday, Oct. 9',label:'Spelling (short i / long i)',kind:'test'}];
-  await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({json:fixture}));
+  await page.route('**/data/study-pack*.json*',route=>route.fulfill({json:fixture}));
   let referenceReads=0;
   await page.route('**/data/religion-sources.json*',route=>{referenceReads++;return route.fulfill({json:references});});
   await page.goto('/#study');
@@ -137,7 +147,7 @@ test('on-demand subject notes retain the verified chapter review and disclose a 
   await expect(page.locator('[data-religion-review],.game-note-warning')).toHaveCount(0);
   await page.locator('[data-study-notes] > summary').click();
   const religion=page.locator('[data-note-subject="Religion"]');
-  await page.locator('[data-notes-subject]').filter({hasText:/^Religion$/}).click();
+  await openNoteSubject(page,'Religion');
   await expect(religion).toBeVisible();
   const review=religion.locator('[data-religion-review]');
   await expect(review).toHaveAttribute('href',chapter.url);
@@ -146,12 +156,12 @@ test('on-demand subject notes retain the verified chapter review and disclose a 
   await expect(review).toHaveAttribute('rel',/noopener/);
   await expect(review).toBeVisible();
   const spelling=page.locator('[data-note-subject="Spelling / Handwriting"]');
-  await page.locator('[data-notes-subject]').filter({hasText:/^Spelling \/ Handwriting$/}).click();
+  await openNoteSubject(page,'Spelling / Handwriting');
   await expect(religion).toBeHidden();
   await expect(spelling.locator('.game-note-warning')).toContainText('Spelling (short i / long i) (2026-10-09)');
   await expect(spelling.locator('.game-note-warning')).toContainText('earlier vowel pattern');
   await expect(spelling.locator('.game-note-warning')).toContainText('do not establish test coverage');
-  await page.locator('[data-notes-subject]').filter({hasText:/^Religion$/}).click();
+  await openNoteSubject(page,'Religion');
   await page.locator('[data-study-notes] > summary').click();
   await expect(page.locator('[data-study-notes]')).not.toHaveAttribute('open','');
   await expect(review).not.toBeVisible();
@@ -173,9 +183,52 @@ test('current notes and cumulative reviewed schoolwork remain separately availab
   const notes=page.locator('[data-study-notes-content]');await expect(notes).not.toContainText(lesson.title);
   await page.locator('[data-notes-source="saved"]').click();await expect(page.locator('[data-notes-source="saved"]')).toHaveAttribute('aria-pressed','true');
   await expect(notes).toContainText('Undated schoolwork');
-  await page.locator('[data-notes-subject]').filter({hasText:new RegExp('^'+lesson.subject.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'$')}).click();
+  await openNoteSubject(page,lesson.subject);
   const reviewed=notes.locator('.game-material-lesson').filter({hasText:lesson.title});await reviewed.locator(':scope > summary').click();
   await expect(reviewed.locator('li')).toHaveText(lesson.notes);
   await page.locator('[data-notes-source="weekly"]').click();await expect(notes).not.toContainText(lesson.title);
   await expect(page.locator('input[type="file"]')).toHaveCount(0);
+});
+
+test('October 15 Religion Chapter 3 Test Prep uses only reviewed source-backed questions in the actual browser',async({page})=>{
+  await page.clock.setFixedTime(new Date('2026-10-13T20:00:00-04:00'));
+  const [source,runtime]=await Promise.all([
+    page.request.get('/data/study-pack.json').then(response=>response.json()),
+    page.request.get('/data/study-pack-runtime.json').then(response=>response.json())
+  ]);
+  const reviewed=source.pack.contentPipeline.questions.filter(q=>
+    q.subject==='Religion'&&q.sourceLineage?.matchedEvidence?.some(value=>
+      typeof value==='string'&&/^\s*Chapter\s+3\s*:/i.test(value)));
+  const allowed=new Map(reviewed.map(q=>[q.prompt,q]));
+  expect(allowed.size).toBe(18);
+  expect(runtime.pack.contentPipeline.questions.filter(q=>q.sourceChapters?.includes(3))).toHaveLength(18);
+  expect(runtime.pack.contentPipeline.questions.every(q=>!Object.hasOwn(q,'sourceLineage'))).toBe(true);
+
+  await page.goto('/#study');
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready',{timeout:15000});
+  await page.locator('[data-open-prep]').click();
+  const religion=page.locator('[data-test-select]').filter({hasText:'Religion Ch. 3'});
+  await expect(religion).toHaveCount(1);
+  await religion.click();
+  await expect(page.locator('[data-study-tests] h3')).toContainText('Religion Ch. 3');
+  await expect(page.locator('[data-test-missing]')).toHaveCount(0);
+  await expect(page.locator('[data-test-single]')).toBeEnabled();
+  await page.locator('[data-test-single]').click();
+  const seen=[];
+  for(let i=0;i<8;i++){
+    await expect(page.locator('.game-question-card')).toBeVisible();
+    const prompt=await page.locator('.game-question-card > h2').innerText();
+    const q=allowed.get(prompt);
+    expect(q,'only reviewed Chapter 3 questions may appear in the live player').toBeTruthy();
+    const choices=await page.locator('[data-game-answer] strong').allTextContents();
+    expect([...choices].sort()).toEqual([...q.choices].sort());
+    const index=choices.indexOf(q.answer);
+    expect(index).toBeGreaterThanOrEqual(0);
+    seen.push(prompt);
+    await page.locator('[data-game-answer]').nth(index).click();
+    await expect(page.locator('[data-game-next]')).toBeVisible();
+    await page.locator('[data-game-next]').click();
+  }
+  expect(new Set(seen).size).toBe(8);
+  await expect(page.locator('.game-finish')).toBeVisible();
 });

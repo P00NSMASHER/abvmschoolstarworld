@@ -1,5 +1,9 @@
 import { MATH_SUBTRACTION_FAMILY } from './curriculum-families/math-subtraction.mjs';
 import { SHORT_I_LONG_I_FAMILY } from './curriculum-families/short-i-long-i.mjs';
+import { APPROVED_PR270_FAMILIES } from './curriculum-families/approved-pr270.mjs';
+import { CHART_READING_FAMILY } from './curriculum-families/charts.mjs';
+import { LONG_O_FAMILY } from './curriculum-families/long-o.mjs';
+import { SHORT_VOWELS_FAMILY } from './curriculum-families/short-vowels.mjs';
 
 const FAMILY_REGISTRY = Object.freeze([
   Object.freeze({
@@ -128,6 +132,10 @@ const FAMILY_REGISTRY = Object.freeze([
   }),
   SHORT_I_LONG_I_FAMILY,
   MATH_SUBTRACTION_FAMILY,
+  CHART_READING_FAMILY,
+  LONG_O_FAMILY,
+  SHORT_VOWELS_FAMILY,
+  ...APPROVED_PR270_FAMILIES,
 ]);
 
 const clone = value => structuredClone(value);
@@ -138,10 +146,45 @@ const featureFlagSet = value => new Set(
   value ? [String(value)] : []
 );
 
+// This check authorizes a fully-authored candidate *without human approval*.
+// The independent pipeline still requires a current, page-exact source match
+// and the full static, browser, privacy and accessibility release gates.
+export function automaticCurriculumFamilyEligible(family) {
+  if (!family || family.rolloutStatus !== 'CANDIDATE' || family.enabledByDefault) return false;
+  if (!family.id || !family.subject || !family.patternSource ||
+      !family.domain || !Array.isArray(family.standards) || !family.standards.length) return false;
+  const questions = [family.baseQuestion, ...(family.supplementalQuestions || [])];
+  const minimum = Number(family.minimumSemanticVariants);
+  if (!Number.isInteger(minimum) || minimum < 8 || questions.length < minimum) return false;
+  const requiredTypes = family.requiredQuestionTypes || ['direct', 'transfer', 'reasoning'];
+  if (!['direct', 'transfer', 'reasoning'].every(type => requiredTypes.includes(type) &&
+      questions.some(question => question?.questionType === type))) return false;
+  const normalized = text => String(text ?? '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  const prompts = new Set();
+  for (const q of questions) {
+    if (!q || String(q.prompt || '').trim().length < 20 || !Array.isArray(q.choices) ||
+        q.choices.length !== 3 || new Set(q.choices.map(normalized)).size !== 3 ||
+        !q.choices.includes(q.answer) || !q.explanation || !q.hint ||
+        !requiredTypes.includes(q.questionType) ||
+        !Number.isInteger(q.dok) || q.dok < 1 || q.dok > 3 ||
+        !Number.isInteger(q.difficulty) || q.difficulty < 2 || q.difficulty > 3) return false;
+    const prompt = normalized(q.prompt);
+    if (prompts.has(prompt)) return false;
+    prompts.add(prompt);
+    const answer = normalized(q.answer), hint = normalized(q.hint);
+    if (answer.length >= 4 && hint.includes(answer)) return false;
+  }
+  return true;
+}
+
 export function curriculumFamilyRuntimeEnabled(family, { activeFeatureFlags = [] } = {}) {
   if (!family) return false;
   if (family.rolloutStatus === 'APPROVED' && family.enabledByDefault) return true;
   if (family.rolloutStatus !== 'CANDIDATE' || family.enabledByDefault) return false;
+  // A complete deterministic family is eligible automatically; an explicit
+  // flag is only an optional isolated preview override, never required for
+  // routine production curriculum refresh.
+  if (automaticCurriculumFamilyEligible(family)) return true;
   const flag = String(family.featureFlag || '');
   return !!flag && featureFlagSet(activeFeatureFlags).has(flag);
 }

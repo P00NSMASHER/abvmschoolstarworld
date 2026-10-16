@@ -5,6 +5,7 @@ on:
     workflows:
       - Deploy ABVM to GitHub Pages
       - Refresh ABVM teacher pages
+      - Refresh current ABVM homework
     types: [completed]
   schedule:
     - cron: '29 16 * * *'

@@ -1,0 +1,768 @@
+{
+  "fixtureOnly": true,
+  "originCommit": "2eda2f0e5155d16f5de9a76ecf8a866c1626af80",
+  "description": "Historical reviewed ORIGINAL Math practice for isolated interaction tests. Never a current teacher-source assertion or publication input.",
+  "subject": {
+    "subject": "Math",
+    "topics": [
+      "Math (subtraction)"
+    ],
+    "studyNotes": [
+      "The Tests page lists Math (subtraction) for Thursday, Oct. 15.",
+      "Practice Grade 2 subtraction facts and use related addition facts to check subtraction.",
+      "The teacher source names subtraction but does not state a numeric range, so this practice stays conservatively within 20."
+    ]
+  },
+  "skills": [
+    {
+      "id": "math-subtraction",
+      "subject": "Math",
+      "label": "Subtraction",
+      "evidence": [
+        "subtraction"
+      ],
+      "studyNotes": [
+        "Practice Grade 2 subtraction facts and use related addition facts to check subtraction.",
+        "The teacher source names subtraction but does not state a numeric range, so this practice stays conservatively within 20."
+      ],
+      "standards": [
+        "CCSS.2.OA.B.2"
+      ],
+      "domain": "Numbers and operations",
+      "sourceBacked": true,
+      "sourceLineage": {
+        "quality": "page-exact",
+        "sourceTitle": "Tests",
+        "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+        "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
+        "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+        "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
+        "matchedEvidence": [
+          "Thursday Oct. 15: Math (subtraction)"
+        ]
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "auto-math-subtraction-7-7b19b7",
+      "templateId": "grade2-math-subtraction-v1",
+      "subject": "Math",
+      "skill": "math-subtraction",
+      "assessedSkillIds": [
+        "math-subtraction"
+      ],
+      "prompt": "Solve 12 - 5. What is the difference?",
+      "choices": [
+        "6",
+        "7",
+        "8"
+      ],
+      "answer": "7",
+      "explanation": "12 take away 5 leaves 7.",
+      "hint": "Start at 12 and count back 5.",
+      "sourceFact": "Verified Grade 2 skill: Subtraction",
+      "sourceEvidence": [
+        "subtraction"
+      ],
+      "sourceMode": "DETERMINISTIC_TEMPLATE",
+      "supportType": "deterministic_transform",
+      "provenance": "verified-abvm-skill-template",
+      "standards": [
+        "CCSS.2.OA.B.2"
+      ],
+      "domain": "Numbers and operations",
+      "dok": 1,
+      "cognitiveDemand": "recall-and-fluency",
+      "difficulty": 2,
+      "questionType": "direct",
+      "choiceDiagnostics": {
+        "6": {
+          "misconception": "math-subtraction-distractor",
+          "feedback": "Review: Subtraction. Then use the clue in the question."
+        },
+        "8": {
+          "misconception": "math-subtraction-distractor",
+          "feedback": "Review: Subtraction. Then use the clue in the question."
+        }
+      },
+      "rubric": {
+        "maxPoints": 2,
+        "criteria": [
+          "Selects the correct answer using the target Grade 2 skill.",
+          "Uses the clue, rule, or evidence required by the item."
+        ],
+        "partialCredit": {
+          "6": 0,
+          "8": 0
+        }
+      },
+      "evidenceContract": {
+        "evidenceType": "DIRECT_TARGET",
+        "supports": [
+          "math-subtraction"
+        ],
+        "strongestClaim": "practice-performance-on-this-skill",
+        "doesNotClaim": [
+          "standardized-test-score",
+          "global-subject-mastery"
+        ]
+      },
+      "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+      "contentFingerprint": "5c806880",
+      "variantFingerprint": "1befb2b4",
+      "presentationFingerprint": "ffdeb0ec",
+      "sourceLineage": {
+        "quality": "page-exact",
+        "sourceTitle": "Tests",
+        "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+        "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
+        "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+        "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
+        "matchedEvidence": [
+          "Thursday Oct. 15: Math (subtraction)"
+        ]
+      }
+    },
+    {
+      "id": "auto-math-subtraction-9-aefa5b",
+      "templateId": "grade2-math-subtraction-v1",
+      "subject": "Math",
+      "skill": "math-subtraction",
+      "assessedSkillIds": [
+        "math-subtraction"
+      ],
+      "prompt": "Solve 15 - 6. What is the difference?",
+      "choices": [
+        "8",
+        "10",
+        "9"
+      ],
+      "answer": "9",
+      "explanation": "15 take away 6 leaves 9.",
+      "hint": "Count back 6 from 15.",
+      "sourceFact": "Verified Grade 2 skill: Subtraction",
+      "sourceEvidence": [
+        "subtraction"
+      ],
+      "sourceMode": "DETERMINISTIC_TEMPLATE",
+      "supportType": "deterministic_transform",
+      "provenance": "verified-abvm-skill-template",
+      "standards": [
+        "CCSS.2.OA.B.2"
+      ],
+      "domain": "Numbers and operations",
+      "dok": 1,
+      "cognitiveDemand": "recall-and-fluency",
+      "difficulty": 2,
+      "questionType": "direct",
+      "choiceDiagnostics": {
+        "8": {
+          "misconception": "math-subtraction-distractor",
+          "feedback": "Review: Subtraction. Then use the clue in the question."
+        },
+        "10": {
+          "misconception": "math-subtraction-distractor",
+          "feedback": "Review: Subtraction. Then use the clue in the question."
+        }
+      },
+      "rubric": {
+        "maxPoints": 2,
+        "criteria": [
+          "Selects the correct answer using the target Grade 2 skill.",
+          "Uses the clue, rule, or evidence required by the item."
+        ],
+        "partialCredit": {
+          "8": 0,
+          "10": 0
+        }
+      },
+      "evidenceContract": {
+        "evidenceType": "DIRECT_TARGET",
+        "supports": [
+          "math-subtraction"
+        ],
+        "strongestClaim": "practice-performance-on-this-skill",
+        "doesNotClaim": [
+          "standardized-test-score",
+          "global-subject-mastery"
+        ]
+      },
+      "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+      "contentFingerprint": "28433564",
+      "variantFingerprint": "97dcb6ef",
+      "presentationFingerprint": "853273b7",
+      "sourceLineage": {
+        "quality": "page-exact",
+        "sourceTitle": "Tests",
+        "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+        "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
+        "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+        "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
+        "matchedEvidence": [
+          "Thursday Oct. 15: Math (subtraction)"
+        ]
+      }
+    },
+    {
+      "id": "auto-math-subtraction-6-0267c4",
+      "templateId": "grade2-math-subtraction-v1",
+      "subject": "Math",
+      "skill": "math-subtraction",
+      "assessedSkillIds": [
+        "math-subtraction"
+      ],
+      "prompt": "Solve 10 - 4. What is the difference?",
+      "choices": [
+        "6",
+        "5",
+        "7"
+      ],
+      "answer": "6",
+      "explanation": "10 take away 4 leaves 6.",
+      "hint": "Start at 10 and count back 4.",
+      "sourceFact": "Verified Grade 2 skill: Subtraction",
+      "sourceEvidence": [
+        "subtraction"
+      ],
+      "sourceMode": "DETERMINISTIC_TEMPLATE",
+      "supportType": "deterministic_transform",
+      "provenance": "verified-abvm-skill-template",
+      "standards": [
+        "CCSS.2.OA.B.2"
+      ],
+      "domain": "Numbers and operations",
+      "dok": 1,
+      "cognitiveDemand": "recall-and-fluency",
+      "difficulty": 2,
+      "questionType": "direct",
+      "choiceDiagnostics": {
+        "5": {
+          "misconception": "math-subtraction-distractor",
+          "feedback": "Review: Subtraction. Then use the clue in the question."
+        },
+        "7": {
+          "misconception": "math-subtraction-distractor",
+          "feedback": "Review: Subtraction. Then use the clue in the question."
+        }
+      },
+      "rubric": {
+        "maxPoints": 2,
+        "criteria": [
+          "Selects the correct answer using the target Grade 2 skill.",
+          "Uses the clue, rule, or evidence required by the item."
+        ],
+        "partialCredit": {
+          "5": 0,
+          "7": 0
+        }
+      },
+      "evidenceContract": {
+        "evidenceType": "DIRECT_TARGET",
+        "supports": [
+          "math-subtraction"
+        ],
+        "strongestClaim": "practice-performance-on-this-skill",
+        "doesNotClaim": [
+          "standardized-test-score",
+          "global-subject-mastery"
+        ]
+      },
+      "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+      "contentFingerprint": "597bff43",
+      "variantFingerprint": "4eb68387",
+      "presentationFingerprint": "cff9aeb3",
+      "sourceLineage": {
+        "quality": "page-exact",
+        "sourceTitle": "Tests",
+        "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+        "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
+        "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+        "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
+        "matchedEvidence": [
+          "Thursday Oct. 15: Math (subtraction)"
+        ]
+      }
+    },
+    {
+      "id": "auto-math-subtraction-9-0f1872",
+      "templateId": "grade2-math-subtraction-v1",
+      "subject": "Math",
+      "skill": "math-subtraction",
+      "assessedSkillIds": [
+        "math-subtraction"
+      ],
+      "prompt": "Mia has 14 stickers and gives 5 away. How many stickers does she have left?",
+      "choices": [
+        "8",
+        "9",
+        "10"
+      ],
+      "answer": "9",
+      "explanation": "14 - 5 = 9, so Mia has 9 stickers left.",
+      "hint": "Start with 14 and take away 5.",
+      "sourceFact": "Verified Grade 2 skill: Subtraction",
+      "sourceEvidence": [
+        "subtraction"
+      ],
+      "sourceMode": "DETERMINISTIC_TEMPLATE",
+      "supportType": "deterministic_transform",
+      "provenance": "verified-abvm-skill-template",
+      "standards": [
+        "CCSS.2.OA.B.2"
+      ],
+      "domain": "Numbers and operations",
+      "dok": 2,
+      "cognitiveDemand": "skill-and-concept-application",
+      "difficulty": 2,
+      "questionType": "transfer",
+      "choiceDiagnostics": {
+        "8": {
+          "misconception": "math-subtraction-distractor",
+          "feedback": "Review: Subtraction. Then use the clue in the question."
+        },
+        "10": {
+          "misconception": "math-subtraction-distractor",
+          "feedback": "Review: Subtraction. Then use the clue in the question."
+        }
+      },
+      "rubric": {
+        "maxPoints": 2,
+        "criteria": [
+          "Selects the correct answer using the target Grade 2 skill.",
+          "Uses the clue, rule, or evidence required by the item."
+        ],
+        "partialCredit": {
+          "8": 0,
+          "10": 0
+        }
+      },
+      "evidenceContract": {
+        "evidenceType": "DIRECT_TARGET",
+        "supports": [
+          "math-subtraction"
+        ],
+        "strongestClaim": "practice-performance-on-this-skill",
+        "doesNotClaim": [
+          "standardized-test-score",
+          "global-subject-mastery"
+        ]
+      },
+      "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+      "contentFingerprint": "dcfdfa83",
+      "variantFingerprint": "022af3c8",
+      "presentationFingerprint": "b05e0f25",
+      "sourceLineage": {
+        "quality": "page-exact",
+        "sourceTitle": "Tests",
+        "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+        "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
+        "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+        "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
+        "matchedEvidence": [
+          "Thursday Oct. 15: Math (subtraction)"
+        ]
+      }
+    },
+    {
+      "id": "auto-math-subtraction-9-f11516",
+      "templateId": "grade2-math-subtraction-v1",
+      "subject": "Math",
+      "skill": "math-subtraction",
+      "assessedSkillIds": [
+        "math-subtraction"
+      ],
+      "prompt": "There are 13 birds on a fence. Four fly away. How many birds remain?",
+      "choices": [
+        "8",
+        "10",
+        "9"
+      ],
+      "answer": "9",
+      "explanation": "13 - 4 = 9, so 9 birds remain.",
+      "hint": "Take 4 away from 13.",
+      "sourceFact": "Verified Grade 2 skill: Subtraction",
+      "sourceEvidence": [
+        "subtraction"
+      ],
+      "sourceMode": "DETERMINISTIC_TEMPLATE",
+      "supportType": "deterministic_transform",
+      "provenance": "verified-abvm-skill-template",
+      "standards": [
+        "CCSS.2.OA.B.2"
+      ],
+      "domain": "Numbers and operations",
+      "dok": 2,
+      "cognitiveDemand": "skill-and-concept-application",
+      "difficulty": 2,
+      "questionType": "transfer",
+      "choiceDiagnostics": {
+        "8": {
+          "misconception": "math-subtraction-distractor",
+          "feedback": "Review: Subtraction. Then use the clue in the question."
+        },
+        "10": {
+          "misconception": "math-subtraction-distractor",
+          "feedback": "Review: Subtraction. Then use the clue in the question."
+        }
+      },
+      "rubric": {
+        "maxPoints": 2,
+        "criteria": [
+          "Selects the correct answer using the target Grade 2 skill.",
+          "Uses the clue, rule, or evidence required by the item."
+        ],
+        "partialCredit": {
+          "8": 0,
+          "10": 0
+        }
+      },
+      "evidenceContract": {
+        "evidenceType": "DIRECT_TARGET",
+        "supports": [
+          "math-subtraction"
+        ],
+        "strongestClaim": "practice-performance-on-this-skill",
+        "doesNotClaim": [
+          "standardized-test-score",
+          "global-subject-mastery"
+        ]
+      },
+      "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+      "contentFingerprint": "c36de4d5",
+      "variantFingerprint": "e9cae136",
+      "presentationFingerprint": "853273b7",
+      "sourceLineage": {
+        "quality": "page-exact",
+        "sourceTitle": "Tests",
+        "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+        "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
+        "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+        "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
+        "matchedEvidence": [
+          "Thursday Oct. 15: Math (subtraction)"
+        ]
+      }
+    },
+    {
+      "id": "auto-math-subtraction-9-5b2cb6",
+      "templateId": "grade2-math-subtraction-v1",
+      "subject": "Math",
+      "skill": "math-subtraction",
+      "assessedSkillIds": [
+        "math-subtraction"
+      ],
+      "prompt": "A box has 16 blocks. Seven blocks are put away. How many blocks are still in the box?",
+      "choices": [
+        "9",
+        "8",
+        "10"
+      ],
+      "answer": "9",
+      "explanation": "16 - 7 = 9, so 9 blocks are still in the box.",
+      "hint": "Subtract the 7 blocks that were put away from 16.",
+      "sourceFact": "Verified Grade 2 skill: Subtraction",
+      "sourceEvidence": [
+        "subtraction"
+      ],
+      "sourceMode": "DETERMINISTIC_TEMPLATE",
+      "supportType": "deterministic_transform",
+      "provenance": "verified-abvm-skill-template",
+      "standards": [
+        "CCSS.2.OA.B.2"
+      ],
+      "domain": "Numbers and operations",
+      "dok": 2,
+      "cognitiveDemand": "skill-and-concept-application",
+      "difficulty": 2,
+      "questionType": "transfer",
+      "choiceDiagnostics": {
+        "8": {
+          "misconception": "math-subtraction-distractor",
+          "feedback": "Review: Subtraction. Then use the clue in the question."
+        },
+        "10": {
+          "misconception": "math-subtraction-distractor",
+          "feedback": "Review: Subtraction. Then use the clue in the question."
+        }
+      },
+      "rubric": {
+        "maxPoints": 2,
+        "criteria": [
+          "Selects the correct answer using the target Grade 2 skill.",
+          "Uses the clue, rule, or evidence required by the item."
+        ],
+        "partialCredit": {
+          "8": 0,
+          "10": 0
+        }
+      },
+      "evidenceContract": {
+        "evidenceType": "DIRECT_TARGET",
+        "supports": [
+          "math-subtraction"
+        ],
+        "strongestClaim": "practice-performance-on-this-skill",
+        "doesNotClaim": [
+          "standardized-test-score",
+          "global-subject-mastery"
+        ]
+      },
+      "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+      "contentFingerprint": "c2eec2a9",
+      "variantFingerprint": "b1d2ca40",
+      "presentationFingerprint": "d09f3cdd",
+      "sourceLineage": {
+        "quality": "page-exact",
+        "sourceTitle": "Tests",
+        "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+        "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
+        "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+        "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
+        "matchedEvidence": [
+          "Thursday Oct. 15: Math (subtraction)"
+        ]
+      }
+    },
+    {
+      "id": "auto-math-subtraction-8-3-11-b6c78e",
+      "templateId": "grade2-math-subtraction-v1",
+      "subject": "Math",
+      "skill": "math-subtraction",
+      "assessedSkillIds": [
+        "math-subtraction"
+      ],
+      "prompt": "Which addition fact correctly checks 11 - 3 = 8?",
+      "choices": [
+        "11 + 3 = 14",
+        "8 + 3 = 11",
+        "8 + 11 = 19"
+      ],
+      "answer": "8 + 3 = 11",
+      "explanation": "The difference plus the amount taken away should equal the starting number.",
+      "hint": "Use the same three numbers to build a related addition fact.",
+      "sourceFact": "Verified Grade 2 skill: Subtraction",
+      "sourceEvidence": [
+        "subtraction"
+      ],
+      "sourceMode": "DETERMINISTIC_TEMPLATE",
+      "supportType": "deterministic_transform",
+      "provenance": "verified-abvm-skill-template",
+      "standards": [
+        "CCSS.2.OA.B.2"
+      ],
+      "domain": "Numbers and operations",
+      "dok": 3,
+      "cognitiveDemand": "strategic-reasoning",
+      "difficulty": 2,
+      "questionType": "reasoning",
+      "choiceDiagnostics": {
+        "11 + 3 = 14": {
+          "misconception": "math-subtraction-distractor",
+          "feedback": "Review: Subtraction. Then use the clue in the question."
+        },
+        "8 + 11 = 19": {
+          "misconception": "math-subtraction-distractor",
+          "feedback": "Review: Subtraction. Then use the clue in the question."
+        }
+      },
+      "rubric": {
+        "maxPoints": 2,
+        "criteria": [
+          "Selects the correct answer using the target Grade 2 skill.",
+          "Uses the clue, rule, or evidence required by the item."
+        ],
+        "partialCredit": {
+          "11 + 3 = 14": 0,
+          "8 + 11 = 19": 0
+        }
+      },
+      "evidenceContract": {
+        "evidenceType": "DIRECT_TARGET",
+        "supports": [
+          "math-subtraction"
+        ],
+        "strongestClaim": "practice-performance-on-this-skill",
+        "doesNotClaim": [
+          "standardized-test-score",
+          "global-subject-mastery"
+        ]
+      },
+      "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+      "contentFingerprint": "6f3ae16f",
+      "variantFingerprint": "a141b636",
+      "presentationFingerprint": "db61f980",
+      "sourceLineage": {
+        "quality": "page-exact",
+        "sourceTitle": "Tests",
+        "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+        "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
+        "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+        "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
+        "matchedEvidence": [
+          "Thursday Oct. 15: Math (subtraction)"
+        ]
+      }
+    },
+    {
+      "id": "auto-math-subtraction-5-4-9-3c0d03",
+      "templateId": "grade2-math-subtraction-v1",
+      "subject": "Math",
+      "skill": "math-subtraction",
+      "assessedSkillIds": [
+        "math-subtraction"
+      ],
+      "prompt": "Sam says 9 - 4 = 6. Which fact shows that his answer is one too high?",
+      "choices": [
+        "6 + 4 = 10",
+        "9 + 4 = 13",
+        "5 + 4 = 9"
+      ],
+      "answer": "5 + 4 = 9",
+      "explanation": "The related addition fact 5 + 4 = 9 shows that 9 - 4 = 5.",
+      "hint": "Find the number that plus 4 makes 9.",
+      "sourceFact": "Verified Grade 2 skill: Subtraction",
+      "sourceEvidence": [
+        "subtraction"
+      ],
+      "sourceMode": "DETERMINISTIC_TEMPLATE",
+      "supportType": "deterministic_transform",
+      "provenance": "verified-abvm-skill-template",
+      "standards": [
+        "CCSS.2.OA.B.2"
+      ],
+      "domain": "Numbers and operations",
+      "dok": 3,
+      "cognitiveDemand": "strategic-reasoning",
+      "difficulty": 2,
+      "questionType": "reasoning",
+      "choiceDiagnostics": {
+        "6 + 4 = 10": {
+          "misconception": "math-subtraction-distractor",
+          "feedback": "Review: Subtraction. Then use the clue in the question."
+        },
+        "9 + 4 = 13": {
+          "misconception": "math-subtraction-distractor",
+          "feedback": "Review: Subtraction. Then use the clue in the question."
+        }
+      },
+      "rubric": {
+        "maxPoints": 2,
+        "criteria": [
+          "Selects the correct answer using the target Grade 2 skill.",
+          "Uses the clue, rule, or evidence required by the item."
+        ],
+        "partialCredit": {
+          "6 + 4 = 10": 0,
+          "9 + 4 = 13": 0
+        }
+      },
+      "evidenceContract": {
+        "evidenceType": "DIRECT_TARGET",
+        "supports": [
+          "math-subtraction"
+        ],
+        "strongestClaim": "practice-performance-on-this-skill",
+        "doesNotClaim": [
+          "standardized-test-score",
+          "global-subject-mastery"
+        ]
+      },
+      "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+      "contentFingerprint": "5630a833",
+      "variantFingerprint": "254dde50",
+      "presentationFingerprint": "990edbf1",
+      "sourceLineage": {
+        "quality": "page-exact",
+        "sourceTitle": "Tests",
+        "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+        "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
+        "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+        "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
+        "matchedEvidence": [
+          "Thursday Oct. 15: Math (subtraction)"
+        ]
+      }
+    },
+    {
+      "id": "auto-math-subtraction-eight-blocks-are-on-a-table-three-are-put-away-and-five-remain-650883",
+      "templateId": "grade2-math-subtraction-v1",
+      "subject": "Math",
+      "skill": "math-subtraction",
+      "assessedSkillIds": [
+        "math-subtraction"
+      ],
+      "prompt": "Which story problem matches the subtraction fact 8 - 3?",
+      "choices": [
+        "Eight blocks are on a table, three are put away, and five remain.",
+        "Three blocks are on a table and eight more are added.",
+        "Eight blocks are split into eight equal groups."
+      ],
+      "answer": "Eight blocks are on a table, three are put away, and five remain.",
+      "explanation": "The story starts with 8 and removes 3, which matches 8 - 3.",
+      "hint": "Look for a story that starts with 8 and takes 3 away.",
+      "sourceFact": "Verified Grade 2 skill: Subtraction",
+      "sourceEvidence": [
+        "subtraction"
+      ],
+      "sourceMode": "DETERMINISTIC_TEMPLATE",
+      "supportType": "deterministic_transform",
+      "provenance": "verified-abvm-skill-template",
+      "standards": [
+        "CCSS.2.OA.B.2"
+      ],
+      "domain": "Numbers and operations",
+      "dok": 3,
+      "cognitiveDemand": "strategic-reasoning",
+      "difficulty": 2,
+      "questionType": "reasoning",
+      "choiceDiagnostics": {
+        "Three blocks are on a table and eight more are added.": {
+          "misconception": "math-subtraction-distractor",
+          "feedback": "Review: Subtraction. Then use the clue in the question."
+        },
+        "Eight blocks are split into eight equal groups.": {
+          "misconception": "math-subtraction-distractor",
+          "feedback": "Review: Subtraction. Then use the clue in the question."
+        }
+      },
+      "rubric": {
+        "maxPoints": 2,
+        "criteria": [
+          "Selects the correct answer using the target Grade 2 skill.",
+          "Uses the clue, rule, or evidence required by the item."
+        ],
+        "partialCredit": {
+          "Three blocks are on a table and eight more are added.": 0,
+          "Eight blocks are split into eight equal groups.": 0
+        }
+      },
+      "evidenceContract": {
+        "evidenceType": "DIRECT_TARGET",
+        "supports": [
+          "math-subtraction"
+        ],
+        "strongestClaim": "practice-performance-on-this-skill",
+        "doesNotClaim": [
+          "standardized-test-score",
+          "global-subject-mastery"
+        ]
+      },
+      "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+      "contentFingerprint": "b57abf46",
+      "variantFingerprint": "3915836c",
+      "presentationFingerprint": "b759f8b5",
+      "sourceLineage": {
+        "quality": "page-exact",
+        "sourceTitle": "Tests",
+        "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+        "sourceCaptureHash": "6261e40784631f75bc02fa8f5e95cb393d25ab09048b1e9d2746b6494249d7f4",
+        "sourceCheckedAt": "2026-10-16T01:45:51.948Z",
+        "evidenceExcerptHash": "sha256:40984f4c60bb5ff0a50dc580c40d4ccafa1f04d60fce95ec15ab95c5c68e62c0",
+        "matchedEvidence": [
+          "Thursday Oct. 15: Math (subtraction)"
+        ]
+      }
+    }
+  ]
+}

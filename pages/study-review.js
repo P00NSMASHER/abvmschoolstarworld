@@ -32,7 +32,6 @@ function afterDays(now,days){
   // Noon UTC is safely within the intended Eastern school date, including DST.
   return Date.UTC(Number(p.year),Number(p.month)-1,Number(p.day)+days,12);
 }
-const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const FALLBACK=Object.freeze({"two-step-word-problem":"Two-step problems","place-value":"Place value","compare-numbers":"Comparing numbers",time:"Time",measurement:"Measurement","data-interpretation":"Reading charts","addition-within-100":"Addition","subtraction-within-100":"Subtraction",inference:"Reading clues",theme:"Story lessons","text-evidence":"Finding evidence","author-purpose":"Why authors write","word-choice":"Word meanings","cause-effect":"Cause and effect"});
 const finite=(value,fallback)=>Number.isFinite(Number(value))?Number(value):fallback;
 function sm2(quality,repetitions=0,ease=2.5,interval=0){
@@ -75,11 +74,5 @@ function completion(now=Date.now()){
 function complete(now=Date.now()){
   try{localStorage.setItem(DONE_KEY,JSON.stringify({day:day(now),completedAt:now}));return true}catch{return false}
 }
-function render({pack={},learning={},now=Date.now()}={}){
-  const due=dueSkills(pack,learning,now),done=completion(now),count=due.length;
-  const title=done?"Today’s practice is complete":"Let’s practice";
-  const copy=done?"Nice work. Come back tomorrow, or keep exploring at your own pace. No timer.":count?count+' skill'+(count===1?' is':'s are')+' ready for another look. We’ll mix a short review with school skills. No timer.':"Eight questions. No timer.";
-  return '<section class="daily-practice" aria-labelledby="daily-practice-title"><p class="daily-eyebrow">'+(done?'DONE FOR TODAY':'YOUR DAILY PRACTICE')+'</p><h2 id="daily-practice-title">'+title+'</h2><p>'+copy+'</p>'+(count&&!done?'<ul aria-label="Skills to revisit">'+due.slice(0,3).map(s=>'<li>'+esc(s.label)+'</li>').join('')+'</ul>':'')+'<button type="button" data-subject-practice="daily">'+(done?'Practice a little more':'Practice now')+'<span aria-hidden="true">›</span></button></section>';
-}
-window.ABVMStudyReview=Object.freeze({sm2,schedule,validReview,dueAt,isDue,dueSkills,complete,completion,render});
+window.ABVMStudyReview=Object.freeze({sm2,schedule,validReview,dueAt,isDue,dueSkills,complete,completion});
 })();

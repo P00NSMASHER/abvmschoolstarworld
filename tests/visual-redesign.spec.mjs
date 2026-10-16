@@ -51,13 +51,13 @@ for(const size of sizes){
     for(const tab of ['today','week','calendar']){
       await page.goto('/#'+tab);
       await expect(page.locator('.screen')).toBeVisible();
-      if(tab==='calendar')await page.locator('[data-cal-day]').filter({hasText:/^5$/}).click();
+      if(tab==='calendar')await page.locator('[data-cal-day="2026-10-05"]').click();
       const art=page.locator('.lunch-art').first();
       await expect(art).toBeVisible();
       await art.scrollIntoViewIfNeeded();
       const image=art.locator('img');
       await expect.poll(()=>image.evaluate(el=>el.complete&&el.naturalWidth>0)).toBeTruthy();
-      await expect(art).toContainText('Meal illustration');
+      await expect(art.locator('figcaption')).toHaveCount(0);
       expect(await image.getAttribute('alt')).toMatch(/^Illustration of /);
       const bounded=await art.evaluate(el=>{
         const frame=el.closest('.lunch-card,.agenda-lunch').getBoundingClientRect();

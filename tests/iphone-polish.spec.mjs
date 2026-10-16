@@ -1,3 +1,4 @@
+import {openNoteSubject} from './helpers/study-notes.mjs';
 import {test,expect} from '@playwright/test';
 test.use({serviceWorkers:'block'});
 
@@ -17,11 +18,23 @@ async function openNotes(page){
   const notes=page.locator('details[data-study-notes]');
   if(!await notes.evaluate(node=>node.open))await notes.locator(':scope > summary').click();
   await expect(notes).toHaveAttribute('open','');
+  await openNoteSubject(page);
   const lessons=notes.locator('[data-note-subject]:not([hidden]) details');
   await expect(lessons.first()).toBeVisible();
-  for(const lesson of await lessons.all()){
-    if(!await lesson.evaluate(node=>node.open))await lesson.locator(':scope > summary').click();
-  }
+  // Verify that a real disclosure can be opened by tapping its summary.
+  // The clipping test then expands the full set directly: dozens of
+  // successive off-screen WebKit clicks can exceed the test timeout while
+  // testing scroll animation rather than text clipping.
+  const first=lessons.first();
+  if(!await first.evaluate(node=>node.open))await first.locator(':scope > summary').click();
+  await expect(first).toHaveAttribute('open','');
+  const count=await lessons.count();
+  expect(count).toBeGreaterThan(0);
+  const expanded=await lessons.evaluateAll(nodes=>{
+    for(const node of nodes) node.open=true;
+    return nodes.every(node=>node.open);
+  });
+  expect(expanded,'All lesson bodies must be expanded for overflow inspection').toBe(true);
   return notes;
 }
 
@@ -88,20 +101,20 @@ test('Sunday Week opens the coming school week and can go back',async({page})=>{
 test('calendar merges repeat notices without losing distinct events',async({page})=>{
   await page.clock.setFixedTime(new Date('2026-10-04T12:00:00-04:00'));
   await page.goto('/#calendar');
-  await page.locator('[data-cal-day]').filter({hasText:/^9$/}).click();
+  await page.locator('[data-cal-day="2026-10-09"]').click();
   const labels=await page.locator('.calendar-event-list strong').allTextContents();
   expect(labels.filter(x=>x==='12:00 dismissal')).toHaveLength(1);
   expect(labels.some(x=>x.includes('Chick-fil-A orders'))).toBeTruthy();
   expect(labels.some(x=>x.includes('Grammar'))).toBeTruthy();
-  await page.locator('[data-cal-day]').filter({hasText:/^12$/}).click();
+  await page.locator('[data-cal-day="2026-10-12"]').click();
   const closed=await page.locator('.calendar-event-list strong').allTextContents();
   expect(closed.filter(x=>/^No School/.test(x))).toHaveLength(1);
   expect(closed.join(' ')).toContain('Columbus Day');
 });
 
 test('school updates are dated source information without read-state controls',async({page})=>{
-  // The synthetic Oct. 9 permission reminder should be tested before expiry,
-  // not against the CI wall clock. Do not alter actual notice expiration rules.
+  // The reviewed fixture is dated Oct 7 and its Oct 9 reminder expires afterward.
+  // Fix the school-day clock so a future CI run cannot make it disappear.
   await page.clock.setFixedTime(new Date('2026-10-08T12:00:00-04:00'));
   const data=await(await page.request.get('/data/study-pack.json')).json();
   data.pack.parentNotices.push('Friday, Oct. 9: Bring the permission form.');
@@ -116,6 +129,12 @@ test('school updates are dated source information without read-state controls',a
   await page.reload();
   await expect(page.locator('[aria-labelledby="school-change-title"]')).toContainText('Permission form');
   expect(await page.evaluate(()=>localStorage.getItem('abvm-updates-seen:v1'))).toBe('[]');
+  // Once the as-of date moves past Oct 9, the expired notice must disappear;
+  // the historic dated source-change entry must still be available.
+  await page.clock.setFixedTime(new Date('2026-10-10T12:00:00-04:00'));
+  await page.reload();
+  await expect(page.locator('[aria-labelledby="family-current-notices"]')).not.toContainText('Bring the permission form');
+  await expect(page.locator('[aria-labelledby="school-change-title"]')).toContainText('Permission form');
 });
 
 test('Study Games keeps reports and recommendations absent before and after saved learning',async({page})=>{
