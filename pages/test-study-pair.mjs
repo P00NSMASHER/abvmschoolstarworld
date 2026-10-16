@@ -1,6 +1,6 @@
 /** Separate current-curriculum learning notes and assessment-style practice papers. */
-import {renderClassroomStudyGuide} from './classroom-test-guide.mjs?v=2';
-import {premiumPaperCss,decoratePaper} from './premium-paper-theme.mjs?v=1';
+import {renderClassroomStudyGuide} from './classroom-test-guide.mjs?v=3';
+import {premiumPaperCss,decoratePaper} from './premium-paper-theme.mjs?v=2';
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clean=value=>String(value??'').replace(/\s+/g,' ').trim();
@@ -40,9 +40,9 @@ const baseCss=[
   '.guide-summary div{border:1px solid #aeb9c0;border-radius:7px;padding:.075in .1in}',
   '.guide-summary b{display:block;font-size:12pt}.guide-summary span{font-size:8.5pt;color:#465761}',
   '.topic-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.11in}',
-  '.topic-card{border:1px solid #aeb9c0;border-top:4px solid #344b5b;border-radius:7px;padding:.11in .13in;break-inside:avoid}',
+  '.topic-card{border:1px solid #aeb9c0;border-top:4px solid #344b5b;border-radius:7px;padding:.11in .13in;break-inside:auto}',
   '.topic-card h3{font-size:11.2pt;line-height:1.25;margin:0 0 .055in}.topic-card>p{margin:.035in 0}',
-  '.say-it{margin-top:.09in;padding-top:.075in;border-top:1px solid #c4ccd1}',
+  '.say-it{margin-top:.09in;padding-top:.075in;border-top:1px solid #c4ccd1;break-inside:avoid}',
   '.say-it .prompt-label,.cover-answer span{display:block;font-size:8pt;letter-spacing:.055em;text-transform:uppercase;font-weight:800;color:#52636d}',
   '.say-it p{margin:.035in 0}.cover-answer{background:#f0f3f5;border-left:3px solid #526774;padding:.065in .08in;font-size:9.2pt}',
   '.teacher-checklist{columns:2;column-gap:.25in;margin:.05in 0;padding-left:.2in}',
@@ -128,6 +128,24 @@ function goal(guide,kind){
   if(/phonics/i.test(name))return 'I can hear and recognize the sounds named in '+name+'.';
   return 'I can use the class skills in '+name+' and explain what I know.';
 }
+/**
+ * A five-anchor picture prompt, only for verified short-vowel test scopes.
+ * Never add this activity to an unrelated reading or long-vowel assessment.
+ */
+const isShortVowelGuide=(guide,topics,questions)=>
+  /(^|[^a-z])short[- ]vowels?([^a-z]|$)/i.test([
+    clean(guide?.label),...topics.map(topic=>clean(topic?.id||topic?.label)),
+    ...questions.map(question=>clean(question?.skill)),
+  ].join(' '));
+const vowelStory=()=>'<aside class="vowel-story" aria-label="Short vowel memory picture">'+
+  '<strong>Picture the five short vowels</strong>'+
+  '<p>Imagine a <b>cat</b> on a <b>bed</b>, with a <b>pig</b> underneath, in the <b>hot sun</b>.</p>'+
+  '<div class="vowel-cards">'+[
+    ['a','cat'],['e','bed'],['i','pig'],['o','hot'],['u','sun'],
+  ].map(([letter,word])=>'<span class="vowel-card"><b class="vowel-letter">'+letter.toUpperCase()+
+    '</b><span>'+word+'</span></span>').join('')+'</div>'+
+  '<small>Say the five words in order: cat, bed, pig, hot, sun.</small></aside>';
+
 export function renderTestStudyGuide(guide,dictionary=()=> ''){
   if(kindOf(guide)==='spelling')return renderClassroomStudyGuide(guide,dictionary);
   const kind=kindOf(guide),facts=unique(guide?.facts);
@@ -150,7 +168,7 @@ export function renderTestStudyGuide(guide,dictionary=()=> ''){
   }).filter(word=>word.term);
   const steps=strategies(guide,kind);
   const topicHtml=topics.length?'<div class="topic-grid">'+topics.map(topic=>'<article class="topic-card" data-guide-skill="'+esc(topic.id||topic.label)+'">'+
-    '<h3>'+esc(topic.label)+'</h3><p>'+esc(topic.summary||'Review this tested idea in the current class materials.')+'</p>'+
+    '<div class="topic-topline"><h3>'+esc(topic.label)+'</h3><span class="topic-count">'+rows(topic.checks?.length?topic.checks:(topic.check?[topic.check]:[])).length+' check(s)</span></div><p>'+esc(topic.summary||'Review this tested idea in the current class materials.')+'</p>'+
     rows(topic.checks?.length?topic.checks:(topic.check?[topic.check]:[])).map((check,index)=>'<div class="say-it"><span class="prompt-label">'+
       (index?'Try another way':'Say it without looking')+'</span><p>'+esc(check.prompt)+'</p>'+
       '<p class="cover-answer"><span>Cover, then check</span>'+esc(check.answer)+'</p></div>').join('')+'</article>').join('')+'</div>':
@@ -166,7 +184,7 @@ export function renderTestStudyGuide(guide,dictionary=()=> ''){
   return decoratePaper(htmlHead(guide,'Study guide')+'<main class="sheet study-guide">'+
     header(guide,'Study Guide',clean(guide?.label)||'Upcoming class test')+
     '<div class="guide-summary"><div><b>'+topics.length+'</b><span>tested topic'+(topics.length===1?'':'s')+'</span></div><div><b>'+questions.length+'</b><span>matching practice question'+(questions.length===1?'':'s')+'</span></div><div><b>'+esc(when(guide?.date)||'Current')+'</b><span>test date</span></div></div>'+
-    '<div class="focus-note"><strong>My learning goal</strong>'+esc(goal(guide,kind))+'</div>'+
+    '<div class="focus-note"><strong>My learning goal</strong>'+esc(goal(guide,kind))+'</div>'+    (kind==='reading'&&isShortVowelGuide(guide,topics,questions)?vowelStory():'')+
     '<section class="section"><h2><span class="index">01</span> What I need to know</h2>'+topicHtml+'</section>'+checklistHtml+vocabHtml+
     '<section class="section"><h2><span class="index">'+(vocabulary.length?'04':'03')+'</span> How to remember it</h2><ol class="study-steps">'+
     steps.map(step=>'<li>'+esc(step)+'</li>').join('')+'</ol></section>'+
