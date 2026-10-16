@@ -2,7 +2,7 @@ import {readFileSync} from "node:fs";
 import {resolve} from "node:path";
 import {fileURLToPath} from "node:url";
 import {noticeHash} from "./integrate-uploaded-notices.mjs";
-import {validateUploadedNoticePolicy} from "./uploaded-notice-policy.mjs";
+import {currentImportantDates,validateUploadedNoticePolicy} from "./uploaded-notice-policy.mjs";
 
 const NOTICES_PATH=new URL("../pages/data/uploaded-notices.json",import.meta.url);
 const PACK_PATH=new URL("../pages/data/study-pack.json",import.meta.url);
@@ -20,9 +20,14 @@ export function validateUploadedNoticeIntegration(data,uploaded){
   const expectedDocuments=uploaded.documents.map(({id,label,receivedAt})=>({id,label,receivedAt}));
   if(JSON.stringify(metadata.documents||[])!==JSON.stringify(expectedDocuments))errors.push("study-pack uploaded notice document receipt is stale");
 
-  const dates=new Set((pack.importantDates||[]).map(item=>[item.date,item.label,item.sourceDocument].join("\u0000")));
-  for(const item of uploaded.importantDates||[]){
-    if(!dates.has([item.date,item.label,item.sourceDocument].join("\u0000")))errors.push(`missing important date from ${item.sourceDocument}: ${item.label}`);
+  const dateKey=item=>[item.date,item.label,item.sourceDocument].join("\u0000");
+  const expectedDates=new Set(currentImportantDates(uploaded).map(dateKey));
+  const actualDates=new Set((pack.importantDates||[]).filter(item=>item.source==="uploaded-notice").map(dateKey));
+  for(const key of expectedDates){
+    if(!actualDates.has(key))errors.push(`missing current important date: ${key.replaceAll("\u0000"," / ")}`);
+  }
+  for(const key of actualDates){
+    if(!expectedDates.has(key))errors.push(`superseded important date remains published: ${key.replaceAll("\u0000"," / ")}`);
   }
   const reminders=new Set(pack.reminders||[]),parentNotices=new Set(pack.parentNotices||[]);
   for(const item of uploaded.reminders||[])if(!reminders.has(item.text))errors.push(`missing reminder topic: ${item.topic}`);
