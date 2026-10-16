@@ -74,7 +74,7 @@ export function currentImportantDates(uploaded){
       const otherReceived=Date.parse(documents.get(other.sourceDocument)?.receivedAt||"");
       if(!Number.isFinite(otherReceived))return false;
       const otherDate=nearestSchoolDate(other.date,otherReceived);
-      if(otherDate===null||Math.abs(otherDate-eventDate)>SCHOOL_EVENT_WINDOW_MS)return false;
+      if(otherDate===null||otherDate===eventDate||Math.abs(otherDate-eventDate)>SCHOOL_EVENT_WINDOW_MS)return false;
       if(otherReceived!==received)return otherReceived>received;
       const otherIsAuthority=other.sourceDocument===authorityId;
       const entryIsAuthority=entry.sourceDocument===authorityId;
