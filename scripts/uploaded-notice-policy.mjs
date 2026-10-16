@@ -20,10 +20,10 @@ function allPublishedText(uploaded){
   ].join("\n");
 }
 
-// A newer automated notice must not silently reverse a parent-confirmed
-// Grade 2 date from the currently reviewed teacher planner. A genuine
-// correction requires a new reviewed sourcePrecedence receipt.
+// Keep every verified source record, while resolving the public calendar to
+// the newest dated official evidence for the same nearby school event.
 const MONTH_INDEX={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,sept:8,oct:9,nov:10,dec:11};
+const SCHOOL_EVENT_WINDOW_MS=14*86400000;
 function schoolEventTopic(value){
   const text=String(value||"").toLowerCase();
   if(/progress reports?/.test(text))return "progress reports";
@@ -48,51 +48,41 @@ function nearestSchoolDate(value,anchor){
   if(!choices)return null;
   return choices.reduce((best,day)=>Math.abs(day-anchor)<Math.abs(best-anchor)?day:best);
 }
-function reviewedPlannerDateConflicts(uploaded){
+function sourcePrecedenceErrors(uploaded){
   const precedence=uploaded?.sourcePrecedence;
   if(!precedence)return [];
-  const errors=[];
-  const documents=uploaded.documents||[];
   const id=precedence.authoritativeCurrentDocument;
-  const authority=documents.find(doc=>doc.id===id);
-  if(!id||!authority||authority.review?.status!=="reviewed"||
-     /^automated-/i.test(String(authority.review?.reviewedBy||""))){
-    return ["sourcePrecedence must name an existing, manually reviewed teacher/parent authority"];
+  const authority=(uploaded.documents||[]).find(doc=>doc.id===id);
+  if(!id||!authority||!["reviewed","legacy-reviewed"].includes(authority.review?.status)){
+    return ["sourcePrecedence must name an existing approved authority"];
   }
-  const authorityTime=Date.parse(authority.receivedAt);
-  if(!Number.isFinite(authorityTime))return ["authoritative planner receivedAt is invalid"];
-  const canonical=new Map();
-  for(const entry of (uploaded.importantDates||[]).filter(x=>x.sourceDocument===id)){
+  return [];
+}
+export function currentImportantDates(uploaded){
+  const entries=uploaded?.importantDates||[];
+  const documents=new Map((uploaded?.documents||[]).map(doc=>[doc.id,doc]));
+  const authorityId=uploaded?.sourcePrecedence?.authoritativeCurrentDocument;
+  return entries.filter((entry,index)=>{
     const topic=schoolEventTopic(entry.label);
-    if(topic)canonical.set(topic,entry.date);
-  }
-  for(const entry of (uploaded.reminders||[]).filter(x=>x.sourceDocument===id)){
-    const topic=schoolEventTopic(entry.text);
-    if(topic&&!canonical.has(topic))canonical.set(topic,entry.text);
-  }
-  for(const entry of uploaded.importantDates||[]){
-    if(entry.sourceDocument===id)continue;
-    const doc=documents.find(d=>d.id===entry.sourceDocument);
-    if(!doc)continue; // Other existing document-reference checks remain separate.
-    const docTime=Date.parse(doc.receivedAt);
-    if(!Number.isFinite(docTime)){
-      errors.push("notice "+doc.id+" has invalid receivedAt");
-      continue;
-    }
-    // Older evidence stays in document history, but cannot re-enter the current calendar
-    // at a conflicting date through a delayed/out-of-order import.
-    const topic=schoolEventTopic(entry.label);
-    if(!topic||!canonical.has(topic))continue;
-    const confirmed=nearestSchoolDate(canonical.get(topic),authorityTime);
-    const proposed=nearestSchoolDate(entry.date,authorityTime);
-    if(confirmed===null||proposed===null){
-      errors.push("cannot reconcile newer "+topic+" date without human review");
-    }else if(proposed!==confirmed&&Math.abs(proposed-confirmed)<=14*86400000){
-      errors.push("newer "+doc.id+" conflicts with parent-confirmed "+topic+
-        " date; review teacher source and update sourcePrecedence before publication");
-    }
-  }
-  return errors;
+    if(!topic)return true;
+    const received=Date.parse(documents.get(entry.sourceDocument)?.receivedAt||"");
+    if(!Number.isFinite(received))return true; // Policy rejects invalid timestamps.
+    const eventDate=nearestSchoolDate(entry.date,received);
+    if(eventDate===null)return true;
+    return !entries.some((other,otherIndex)=>{
+      if(otherIndex===index||schoolEventTopic(other.label)!==topic)return false;
+      const otherReceived=Date.parse(documents.get(other.sourceDocument)?.receivedAt||"");
+      if(!Number.isFinite(otherReceived))return false;
+      const otherDate=nearestSchoolDate(other.date,otherReceived);
+      if(otherDate===null||Math.abs(otherDate-eventDate)>SCHOOL_EVENT_WINDOW_MS)return false;
+      if(otherReceived!==received)return otherReceived>received;
+      const otherIsAuthority=other.sourceDocument===authorityId;
+      const entryIsAuthority=entry.sourceDocument===authorityId;
+      if(otherIsAuthority!==entryIsAuthority)return otherIsAuthority;
+      // Equal receipts are stable and deterministic; keep the first record.
+      return otherIndex<index;
+    });
+  });
 }
 
 export function validateUploadedNoticePolicy(uploaded){
@@ -103,6 +93,7 @@ export function validateUploadedNoticePolicy(uploaded){
     if(!doc.id||!doc.label||!doc.receivedAt||!Array.isArray(doc.facts)||!doc.facts.length){
       errors.push(`document ${doc.id||"unknown"} is incomplete`);continue;
     }
+    if(Number.isNaN(Date.parse(doc.receivedAt)))errors.push(`document ${doc.id} receivedAt is invalid`);
     const expected=factsHash(doc.facts);
     if(doc.provenance?.factsHash!==expected)errors.push(`document ${doc.id} factsHash does not match reviewed facts`);
     const sourceHash=doc.provenance?.sourceContentHash;
@@ -113,11 +104,11 @@ export function validateUploadedNoticePolicy(uploaded){
     if(!["reviewed","legacy-reviewed"].includes(doc.review?.status))errors.push(`document ${doc.id} review status is not approved`);
     if(!doc.review?.reviewedBy||Number.isNaN(Date.parse(doc.review?.reviewedAt||"")))errors.push(`document ${doc.id} review receipt is incomplete`);
   }
-  errors.push(...reviewedPlannerDateConflicts(uploaded));
+  errors.push(...sourcePrecedenceErrors(uploaded));
   const text=allPublishedText(uploaded||{documents:[],importantDates:[],reminders:[],parentNotices:[]});
   for(const [name,pattern] of HIGH_CONFIDENCE_PII){
     if(pattern.test(text))errors.push(`uploaded notice content contains possible ${name}; manual redaction is required`);
   }
   if(errors.length)throw new Error("Uploaded notice policy failed:\n- "+errors.join("\n- "));
-  return{documents:uploaded.documents.length,policy:"provenance+pii-review-v1"};
+  return{documents:uploaded.documents.length,policy:"provenance+pii+dated-precedence-v2"};
 }
