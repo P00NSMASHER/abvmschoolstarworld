@@ -87,8 +87,12 @@ test("Games and their saved, STAR and mixed source banks remain playable offline
       await page.locator('[data-game-home]').click();
     }
     await page.locator('[data-study-notes] > summary').click();
-    await expect(page.locator('[data-study-notes]')).toContainText('Reading / ELA');
     const notes=page.locator('[data-study-notes]');
+    await expect(notes.locator('[data-notes-source=weekly]')).toHaveAttribute('aria-pressed','true');
+    // Undated reading belongs to Cumulative even offline; do not restore the old weekly leak.
+    await notes.locator('[data-notes-source=saved]').click();
+    await expect(notes.locator('[data-notes-source=saved]')).toHaveAttribute('aria-pressed','true');
+    await expect(notes).toContainText('Reading / ELA');
     const subject=await notes.locator('[data-notes-subject]').first().getAttribute('aria-label');
     await notes.locator('[data-notes-subject]').first().click();
     await expect(notes.locator('[data-note-subject]:not([hidden]) h3')).toHaveText(subject);
