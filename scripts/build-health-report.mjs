@@ -8,9 +8,11 @@ const cache=(sw.match(/const CACHE = "([^"]+)"/)||[])[1]||"unknown";
 const runsPath=process.env.WORKFLOW_RUNS_FILE;
 const refreshJobsPath=process.env.REFRESH_JOBS_FILE;
 const openPullsPath=process.env.OPEN_PULLS_FILE;
+const publicationsPath=process.env.HOMEWORK_PUBLICATIONS_FILE;
 const runs=runsPath?JSON.parse(readFileSync(runsPath,"utf8")).workflow_runs||[]:[];
 const refreshJobsData=refreshJobsPath?JSON.parse(readFileSync(refreshJobsPath,"utf8")):{run_id:null,jobs:[]};
 const openPulls=openPullsPath?JSON.parse(readFileSync(openPullsPath,"utf8")):[];
+const homeworkPublications=publicationsPath?JSON.parse(readFileSync(publicationsPath,"utf8")):[];
 
 const productionRuns=runs.filter(run=>run.head_branch==="main"||run.event==="schedule");
 
@@ -19,6 +21,7 @@ const workflowNames={
   qa:"ABVM App QA",
   deploy:"Deploy ABVM to GitHub Pages",
   watchdog:"Monitor ABVM refresh health",
+  homework:"Refresh current ABVM homework",
 };
 const runEvidenceAt=run=>Date.parse(run?.updated_at||run?.created_at||0)||0;
 const runCreatedAt=run=>Date.parse(run?.created_at||0)||0;
@@ -91,6 +94,7 @@ const status={
   },
   workflows:{
     refresh:{latest:latest(workflowNames.refresh),latestCreated:latestCreated(workflowNames.refresh),latestCompleted:latestCompleted(workflowNames.refresh),latestDecisive:latestDecisive(workflowNames.refresh),latestSuccess:latestSuccess(workflowNames.refresh)},
+    homework:{latest:latest(workflowNames.homework),latestCreated:latestCreated(workflowNames.homework),latestCompleted:latestCompleted(workflowNames.homework),latestDecisive:latestDecisive(workflowNames.homework),latestSuccess:latestSuccess(workflowNames.homework)},
     qa:{latest:latest(workflowNames.qa),latestCreated:latestCreated(workflowNames.qa),latestCompleted:latestCompleted(workflowNames.qa),latestDecisive:latestDecisive(workflowNames.qa),latestSuccess:latestSuccess(workflowNames.qa)},
     deploy:{latest:latest(workflowNames.deploy),latestCreated:latestCreated(workflowNames.deploy),latestCompleted:latestCompleted(workflowNames.deploy),latestDecisive:latestDecisive(workflowNames.deploy),latestSuccess:latestSuccess(workflowNames.deploy)},
     watchdog:{latest:latest(workflowNames.watchdog),latestCreated:latestCreated(workflowNames.watchdog),latestCompleted:latestCompleted(workflowNames.watchdog),latestDecisive:latestDecisive(workflowNames.watchdog),latestSuccess:latestSuccess(workflowNames.watchdog)},
@@ -109,7 +113,9 @@ const completedRunHealthy=(run,maxAgeHours)=>{
 const completedHealthy=(workflow,maxAgeHours)=>completedRunHealthy(effectiveRun(workflow),maxAgeHours);
 const effectivePublicationRun=()=>selectPublicationEvidence(
   effectiveRun(status.workflows.deploy),
-  effectiveRun(status.workflows.refresh)
+  effectiveRun(status.workflows.refresh),
+  homeworkPublications.filter(run=>run.head_branch==="main"&&run.name===workflowNames.homework&&
+    Number.isInteger(run.publisherJobId)).sort((a,b)=>runEvidenceAt(b)-runEvidenceAt(a))[0]||null
 );
 status.publicationEvidence=effectivePublicationRun();
 const effectiveRefreshRun=effectiveRun(status.workflows.refresh);
@@ -130,7 +136,7 @@ const refreshOperationallyHealthy=refreshHealthy;
 const pipelineHealthy=Boolean(
   status.contentPipeline.present &&
   status.contentPipeline.qaStatus==="pass" &&
-  status.contentPipeline.unsupportedSkillCount===0 &&
+  ["SAFE_PARTIAL","READY"].includes(status.contentPipeline.safetyState) &&
   (!status.contentPipeline.lineageRequired || (
     status.contentPipeline.unresolvedLineageCount===0 &&
     status.contentPipeline.pageExactLineageCount===status.contentPipeline.questionCount
@@ -166,6 +172,9 @@ const criticalHealthy=Boolean(
   pipelineHealthy
 );
 const warnings=[];
+if(status.contentPipeline.unsupportedSkillCount>0){
+  warnings.push("Practice questions remain isolated for "+status.contentPipeline.unsupportedSkillCount+" verified topic(s): "+(status.contentPipeline.unsupportedTopics.join(", ")||"details unavailable")+". Verified source facts remain publishable.");
+}
 if(status.curriculumHold){
   warnings.push("Teacher refresh is awaiting automated curriculum quality checks for candidate PR #"+status.curriculumHold.candidatePrNumber+"; no educator or owner approval is required.");
 }
@@ -203,6 +212,7 @@ const md=[
   ...(warnings.length?["## Attention items",...warnings.map(w=>"- "+w),""]:[]),
   "## Workflow evidence used for health verdict",
   line("Teacher refresh",refreshDisplayRun),
+  line("Homework refresh",effectiveRun(status.workflows.homework)),
   line("App QA",effectiveRun(status.workflows.qa)),
   line("Publication evidence",status.publicationEvidence),
   line("Standalone Pages deploy",effectiveRun(status.workflows.deploy)),

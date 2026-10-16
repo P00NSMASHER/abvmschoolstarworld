@@ -56,6 +56,7 @@ test("health verdict uses the unit-tested effective workflow evidence selector",
 test("health summary displays the same effective evidence used by the verdict",()=>{
   assert.match(report,/## Workflow evidence used for health verdict/);
   assert.match(report,/line\("Teacher refresh",refreshDisplayRun\)/);
+  assert.match(report,/line\("Homework refresh",effectiveRun\(status\.workflows\.homework\)\)/);
   assert.match(report,/line\("App QA",effectiveRun\(status\.workflows\.qa\)\)/);
   assert.match(report,/line\("Publication evidence",status\.publicationEvidence\)/);
   assert.match(report,/line\("Standalone Pages deploy",effectiveRun\(status\.workflows\.deploy\)\)/);
@@ -67,6 +68,8 @@ test("operational health uses the tested publication evidence selector",()=>{
   assert.match(report,/selectPublicationEvidence/);
   assert.match(report,/effectiveRun\(status\.workflows\.deploy\)/);
   assert.match(report,/effectiveRun\(status\.workflows\.refresh\)/);
+  assert.match(report,/effectiveRun\(status\.workflows\.homework\)/);
+  assert.match(report,/homework:"Refresh current ABVM homework"/);
   assert.match(report,/status\.publicationEvidence=effectivePublicationRun\(\)/);
   assert.match(report,/completedRunHealthy\(status\.publicationEvidence,48\)/);
 });
@@ -75,7 +78,10 @@ test("operational health uses the tested publication evidence selector",()=>{
 test("operational health surfaces Grade 2 pipeline coverage without treating known source gaps as unsupported",()=>{
   assert.match(report,/const contentPipeline=packData\.pack\?\.contentPipeline\|\|null/);
   assert.match(report,/status\.contentPipeline\.qaStatus==="pass"/);
-  assert.match(report,/status\.contentPipeline\.unsupportedSkillCount===0/);
+  assert.match(report,/\["SAFE_PARTIAL","READY"\]\.includes\(status\.contentPipeline\.safetyState\)/);
+  assert.doesNotMatch(report,/status\.contentPipeline\.unsupportedSkillCount===0/);
+  assert.match(report,/Practice questions remain isolated/);
+  assert.match(report,/Verified source facts remain publishable/);
   assert.match(report,/status\.contentPipeline\.unresolvedLineageCount===0/);
   assert.match(report,/status\.contentPipeline\.pageExactLineageCount===status\.contentPipeline\.questionCount/);
   assert.match(report,/Grade 2 content pipeline/);
@@ -109,7 +115,7 @@ test("operational health treats complete reviewed lunch coverage as attention, n
 
 test("health dashboard fetches exact refresh failure steps and open draft candidate PRs",()=>{
   assert.match(workflow,/pull-requests: read/);
-  assert.match(workflow,/actions\/runs\/\$\{REFRESH_RUN_ID\}\/jobs/);
+  assert.match(workflow,/node scripts\/fetch-health-history\.mjs/);
   assert.match(workflow,/pulls\?state=open&per_page=100/);
   assert.match(workflow,/REFRESH_JOBS_FILE: refresh-jobs\.json/);
   assert.match(workflow,/OPEN_PULLS_FILE: open-pulls\.json/);
