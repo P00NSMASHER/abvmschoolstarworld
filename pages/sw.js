@@ -2,8 +2,8 @@ const CACHE_PREFIX = "abvm-grade2-parent-companion-";
 const CACHE = "abvm-grade2-parent-companion-v191-study-notes-library";
 const STATIC_SHELL = [
   "./index.html",
-  "./styles.css?v=115",
-  "./design-polish.css?v=16",
+  "./styles.css?v=116",
+  "./design-polish.css?v=18",
   "./study-games-materials.css?v=21",
   "./study-review.js?v=4",
   "./app.js?v=162",
