@@ -11,23 +11,36 @@ run: review the menu, reuse suitable approved art, generate missing art with the
 built-in high-quality image generator, inspect it, test, and publish. No second
 artwork request is needed.
 
-The active hourly **ABVM Lunch Artwork** lane coordinates through the
-[current delivery board](https://github.com/P00NSMASHER/abvmschoolstarworld/issues/204).
-It checks current/future exact-menu coverage when menu or artwork inputs change,
-using the same plan, review and QA process below. When coverage is complete, it
-can take the board's unowned provenance/documentation work; it must not regenerate
-already-reviewed artwork just to produce activity. Check live ownership before
-writing and publish through the normal pull-request workflow.
+The **Complete lunch artwork** GitHub merge-event task was verified enabled on
+October 15, 2026 (America/New_York). It checks current/future exact-menu coverage
+after merged repository PRs, reuses active work, preserves independent QA, and
+verifies actual publication. No separate active hourly artwork lane was present
+in the connected task inventory; earlier documentation claiming one was stale.
+It does not trigger on direct pushes and is not a private-chat upload watcher or
+a paid image API service. Use PRs for menu changes. If generation is unavailable,
+retain accurate menu text and record the precise missing coverage.
 
-The GitHub merge-event task **Complete lunch artwork** is configured as a backup
-but currently paused: enabling it was blocked by the account limit of 15 active
-tasks. This separate paused backup does not describe the active hourly lane.
-Do not describe the backup as active until enablement succeeds. Once enabled, after
-merged pull requests it checks for current/future menus needing illustrations,
-completes the same review and QA process, and quietly does nothing when coverage is
-complete. It does not trigger on direct pushes. Use PRs for menu changes. It is not
-a private-chat watcher or a paid image API service. If generation is unavailable,
-retain the accurate menu text and report the precise missing coverage.
+### Requested photorealistic tray revision — references pending
+
+The October 15 user request supersedes the entree-only visual direction for new
+full-meal artwork: high-quality photorealistic illustrations on the school's
+maroon trays, using the trays on the right of two user-supplied reference photos.
+Only a home-screen screenshot arrived; neither tray reference has been received
+or inspected. Do not fabricate their geometry or mark matching tray art approved.
+Preserve current reviewed art until the references are available. Capture only a
+privacy-safe tray/style description and provenance; never publish photos of
+students or private reference originals. Images remain labeled **Meal illustration**.
+
+After the references are inspected, record the approved style here and generate
+current/future exact-menu replacements in the same authorized workflow. Review
+all depicted foods against the verified menu. Unspecified fruit varieties, meats,
+toppings, drinks, portions and allergens must not be asserted; ambiguous menus
+retain accurate text or suitable approved entree art. Full-meal images require
+new immutable assets and exact full-menu approvals; entree-only coverage is not
+proof that this requested revision is complete. Reuse unchanged reviewed complete
+meals; regenerate only when the actual depicted menu changes. Automation must
+remain honest about unavailable generation, review or publication and cannot
+promise perpetual provider availability.
 
 ## When a new month arrives
 
