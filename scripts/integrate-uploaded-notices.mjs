@@ -44,7 +44,13 @@ function eventTime(value,now=new Date()){
   return Date.UTC(year,month,Number(m[2]));
 }
 function mergeEvents(existing,uploaded,now){
-  const incoming=uploaded.importantDates.map(item=>({...item,source:"uploaded-notice"}));
+  const incomingByKey=new Map();
+  for(const item of uploaded.importantDates){
+    const event={...item,source:"uploaded-notice"};
+    const key=`${dateKey(event.date)}:${String(event.label||"").normalize("NFC").trim().toLowerCase().replace(/\\s+/g," ")}`;
+    incomingByKey.set(key,event);
+  }
+  const incoming=[...incomingByKey.values()];
   const incomingKeys=new Set(incoming.map(item=>`${dateKey(item.date)}:${topicKey(item.label)}`));
   const replacementKeys=new Set(uploaded.replacements.map(item=>`${dateKey(item.date)}:${item.topic}`));
   const kept=(existing||[]).filter(item=>{
