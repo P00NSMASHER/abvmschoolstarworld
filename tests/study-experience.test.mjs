@@ -1,8 +1,9 @@
 import test from 'node:test';
+import * as experience from '../pages/study-experience.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
-import {adaptivePracticeRound,practiceIdentity,learningRows,learningSummaryMarkup} from '../pages/study-experience.mjs';
+import {adaptivePracticeRound,practiceIdentity} from '../pages/study-experience.mjs';
 const question=(n,skill='addition')=>({id:String(n),prompt:`Question ${n}`,answer:String(n),skill,choices:[String(n),'other']});
 const pool=Array.from({length:24},(_,i)=>question(i));
 
@@ -17,10 +18,6 @@ test('three rounds can cover twenty-four distinct eligible items',()=>{let recen
 for(const value of [null,{},[],[null],[[null]],[[undefined]]])test(`invalid or empty groups are safe: ${JSON.stringify(value)}`,()=>assert.deepEqual(adaptivePracticeRound(value),[]));
 test('failing optional priority does not break practice',()=>assert.equal(adaptivePracticeRound([pool],8,1,{priority(){throw Error('unavailable')}}).length,8));
 test('question arrays are never mutated',()=>{const before=structuredClone(pool);adaptivePracticeRound([pool],8);assert.deepEqual(pool,before)});
-test('summary counts questions within skills, never inflated mastery',()=>{const row=learningRows({addition:{Seen:8,IndependentCorrect:3,CorrectAfterRetry:2,LastResolution:{independent:false}}})[0];assert.equal(row.answered,8);assert.equal(row.independent,3);assert.equal(row.assisted,2);assert.equal(row.review,true)});
-test('corrupt counts cannot produce Infinity or negative display',()=>{assert.deepEqual(learningRows({bad:{Seen:Infinity}}),[]);const row=learningRows({x:{Seen:4,IndependentCorrect:999,CorrectAfterRetry:99}})[0];assert.equal(row.independent,4);assert.equal(row.assisted,0)});
-test('summary escapes unexpected saved labels',()=>assert(!learningSummaryMarkup({'<script>':{Seen:1}}).includes('<script>')));
-test('empty history is honestly labeled',()=>assert(learningSummaryMarkup({}).includes('No answered practice')));
 
 function loadEngine(){
  const storage=new Map();const window={};const ctx=vm.createContext({window,console,Date,Intl,localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,String(v)),removeItem:k=>storage.delete(k)}});
@@ -74,7 +71,7 @@ test('new modules and stylesheet are present in offline asset manifest',()=>{
  const app=readFileSync(new URL('../pages/app.js',import.meta.url),'utf8');
  const loaded=app.match(/load\("(\.\/study-games\.js\?v=\d+)","ABVMStudyGames"\)/);
  assert(loaded,'the app must load a versioned Study Games engine');
- for(const name of ['study-experience.mjs','study-teaching.css?v=1','study-support.js?v=3',loaded[1]])assert(sw.includes(name),name);
+ for(const name of ['study-experience.mjs','study-teaching.css?v=1','study-review.js?v=4',loaded[1]])assert(sw.includes(name),name);
 });
 
 // Rotation must survive actual display/answer recording, not just new seeds.
@@ -136,4 +133,8 @@ test('subject mode uses fresh current material first, then fresh STAR fallback b
 
 test('corrupt optional recent/history state cannot crash non-test selection',()=>{
   for(const learning of [null,[],5,'bad'])for(const recent of [null,{},5])assert.equal(adaptivePracticeRound([pool],8,1,{learning,recent}).length,8);
+});
+
+test('practice selection module exports only its active selection API',()=>{
+ assert.deepEqual(Object.keys(experience).sort(),['adaptivePracticeRound','practiceIdentity']);
 });
