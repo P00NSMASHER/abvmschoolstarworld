@@ -46,7 +46,7 @@ async function liveStudyAssets() {
   const assets = ['lunch-art.js','data/lunch-art-current.json','data/lunch-art-registry.json',...artRegistry.artworks.filter(art=>art.status==='reviewed').map(art=>art.src),'index.html', 'app.js', 'product-view.js', 'styles.css', 'study-teaching.css', 'study-review.js', 'weekly-learning.js', 'assets/school/abvm-school-hero.webp', 'study-games.js', 'study-games-view.js', 'study-materials.mjs', 'study-games-materials-view.mjs', 'study-games-materials.css', 'sw.js', ...['math', 'reading', 'spelling', 'religion', 'eagle'].map(name => 'assets/illustrations/' + name + '.webp'), ...['eaglet','starlight','spark','scholar','golden','eagle','champion'].map(name=>'assets/badges/'+name+'.webp'), ...['nest-explorer','little-luminary','feather-cadet','star-voyager','sky-scholar','wing-leader','study-sentinel','school-spirit','blue-ribbon-ace','golden-quill','sky-captain','eagle-vanguard','honor-guardian','crown-keeper','star-commander'].map(name=>'assets/badges/'+name+'-premium.webp')];
   // A live source timestamp is insufficient if the published question bank,
   // Homework feed, or printable renderers still contain an earlier build.
-  assets.push('data/study-pack-runtime.json', 'data/homework-current.json',
+  assets.push('data/study-pack-runtime.json', 'data/study-archive.json', 'data/homework-current.json',
     'test-study-pair.mjs', 'classroom-test-guide.mjs', 'premium-paper-theme.mjs');
   const digest = bytes => createHash('sha256').update(bytes).digest('hex');
   return Promise.all(assets.map(async path => {
@@ -241,7 +241,14 @@ try {
   }
   await expect(page.locator('.study-game-tile')).toHaveCount(5);
   await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready', { timeout: 15000 });
-  await expect(page.locator('[data-game-start="math"]')).toContainText(`Practiced before · ${studySource.total} / ${studySource.total} best`);
+  await expect(page.locator('[data-game-start="math"]')).toContainText(`Practiced before · Best solved: ${studySource.total} / ${studySource.total} (includes retries)`);
+  receipt.savedSolvedLabel=await page.locator('[data-game-start="math"] em').innerText();
+  for(const width of [390,820]){
+    await page.setViewportSize({width,height:width===390?844:1080});
+    await page.locator('[data-game-start="math"]').scrollIntoViewIfNeeded();
+    await page.screenshot({path:`${out}/study-saved-score-${width}.png`});
+  }
+  await page.setViewportSize({width:390,height:844});
   receipt.studyWalkthrough.returnedAndRecordSurvivedReload = true;
   await page.getByRole('button', { name: 'Today', exact: true }).click();
   if (todayMeal?.items.length) for (const item of todayMeal.items) await expect(page.locator('.lunch-card')).toContainText(item);

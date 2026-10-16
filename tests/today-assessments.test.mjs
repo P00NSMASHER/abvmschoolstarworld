@@ -36,3 +36,15 @@ test('school-clock watcher refreshes once per boundary and on resume without a s
  listeners.pageshow();assert.equal(refreshes,1);
  now=Date.parse('2026-10-16T08:00:00-04:00');listeners.visibilitychange();assert.equal(refreshes,2);
 });
+
+test('dismissal refresh retries deferred or failed paints and catches up when a guide closes',()=>{
+ let now=Date.parse('2026-10-15T14:59:59-04:00'),timer,calls=0,mode='defer';
+ class Clock extends Date{constructor(...args){super(...(args.length?args:[now]))}static now(){return now}}
+ const listeners={},win={addEventListener:(name,fn)=>listeners[name]=fn};
+ vm.runInNewContext(source,{window:win,Intl,Date:Clock,document:{visibilityState:'visible',addEventListener:(name,fn)=>listeners[name]=fn},setTimeout:fn=>timer=fn});
+ win.ABVMProductView.watchSchoolClock(()=>{calls++;if(mode==='defer')return false;if(mode==='fail')throw Error('temporary paint failure')});
+ now+=1000;timer();assert.equal(calls,1);
+ mode='fail';timer();assert.equal(calls,2);assert.equal(typeof timer,'function');
+ mode='ready';listeners.close();assert.equal(calls,3);
+ listeners.pageshow();assert.equal(calls,3);
+});

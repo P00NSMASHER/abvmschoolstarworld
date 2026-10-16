@@ -1,3 +1,4 @@
+import {correctOriginalQuestion} from '../scripts/question-corrections.mjs';
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -38,8 +39,8 @@ test("runtime pack preserves live data and strips audit-only question metadata",
 });
 
 
-test("runtime pack compacts redundant per-question provenance without losing stable item identity",()=>{
-  const sourceById=new Map(source.pack.contentPipeline.questions.map(question=>[question.id,question]));
+test("runtime pack compacts provenance while retaining governed or explicitly corrected item identity",()=>{
+  const sourceById=new Map(source.pack.contentPipeline.questions.map(correctOriginalQuestion).map(question=>[question.id,question]));
   assert.ok(source.pack.contentPipeline.questions.some(question=>Object.hasOwn(question,"sourceFact")),"full governed pack must retain source facts");
   assert.ok(source.pack.contentPipeline.questions.some(question=>Object.hasOwn(question,"contentFingerprint")),"full governed pack must retain content fingerprints");
   for(const question of runtime.pack.contentPipeline.questions){

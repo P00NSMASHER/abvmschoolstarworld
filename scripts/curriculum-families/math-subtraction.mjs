@@ -1,3 +1,4 @@
+import {SUBTRACTION_CHECK_PROMPT} from '../question-corrections.mjs';
 export const MATH_SUBTRACTION_FAMILY = Object.freeze({
   id: 'math-subtraction',
   subject: 'Math',
@@ -94,7 +95,7 @@ export const MATH_SUBTRACTION_FAMILY = Object.freeze({
     }),
     Object.freeze({
       questionType: 'reasoning',
-      prompt: 'Sam says 9 - 4 = 6. Which fact shows that his answer is one too high?',
+      prompt: SUBTRACTION_CHECK_PROMPT,
       choices: Object.freeze(['5 + 4 = 9', '6 + 4 = 10', '9 + 4 = 13']),
       answer: '5 + 4 = 9',
       explanation: 'The related addition fact 5 + 4 = 9 shows that 9 - 4 = 5.',

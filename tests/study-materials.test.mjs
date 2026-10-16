@@ -711,12 +711,12 @@ test('source-backed short-i/long-i practice outranks the STAR fallback for the a
 });
 
 test('test calendar advances in New York, respects explicit endings and never guesses a missing date',() => {
-  let now = '2026-10-06T03:00:00Z';
-  const events = [{date:'2026-10-05',label:'Math',endsAt:'2026-10-06T03:30:00Z'},
+  let now = '2026-10-05T15:00:00Z';
+  const events = [{date:'2026-10-05',label:'Math',endsAt:'2026-10-05T15:30:00Z'},
     {date:'2026-10-06',label:'Reading'}, {label:'Grammar (subject & predicate)'}];
   const model = createStudyMaterials({now:() => now,events,storage:memory()});
   assert.equal(model.tests().date,'2026-10-05');
-  now = '2026-10-06T03:30:00Z';
+  now = '2026-10-05T15:30:00Z';
   assert.equal(model.tests().date,'2026-10-06');
   now = '2026-10-07T04:01:00Z';
   assert.equal(model.tests().date,null);
@@ -1034,4 +1034,19 @@ test('short-vowel phonics guide excludes unrelated reading notes and vocabulary'
   assert.doesNotMatch(html,/>short-vowels</);
   assert.match(html,/Which word has short a\?/);
   assert.match(html,/Cat has the short a sound/);
+});
+
+test('test prep, study guides and worksheets share the 3pm school-day retirement',()=>{
+ let now='2026-10-15T18:59:59Z';
+ const events=[{date:'2026-10-15',label:'Math'},{date:'2026-10-15',label:'Reading'},{date:'2026-10-16',label:'Spelling'},{date:'2026-10-16',label:'Phonics'}];
+ const model=createStudyMaterials({now:()=>now,events,storage:memory()});
+ assert.deepEqual(model.tests().tests.map(t=>t.label),['Math','Reading']);
+ assert.equal(model.printableTests().tests.length,4);
+ assert.equal(model.upcomingTests().tests.length,4);
+ now='2026-10-15T19:00:00Z';
+ for(const state of [model.tests(),model.printableTests(),model.upcomingTests()]){
+  assert.equal(state.tests.length,2);
+  assert.ok(state.tests.every(t=>t.date==='2026-10-16'));
+ }
+ assert.equal(events.length,4);
 });

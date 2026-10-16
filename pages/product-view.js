@@ -608,11 +608,12 @@
   }
   function watchSchoolClock(refresh) {
     let key=assessmentWindow().key;
-    const check=()=>{const next=assessmentWindow().key;if(next!==key){key=next;refresh()}};
+    const check=()=>{const next=assessmentWindow().key;if(next!==key){try{if(refresh()!==false)key=next}catch{}}};
     const tick=()=>{check();setTimeout(tick,60000-Date.now()%60000)};
     setTimeout(tick,60000-Date.now()%60000);
     document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")check()});
     window.addEventListener("pageshow",check);
+    document.addEventListener("close",check,true);
   }
   window.ABVMProductView = Object.freeze({ nextAssessments, assessmentWindow, watchSchoolClock, today, week, homeworkCard, progress, icon, plannerDate, compactMonthCard, calendarSpecials, freshnessControl, replaceFreshness, calendar, calendarDate, calendarShift, calendarGrid, calendarEvent, bindCalendar, searchCalendarEvents, calendarSearch });
 })();

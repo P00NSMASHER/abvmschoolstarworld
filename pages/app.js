@@ -370,7 +370,7 @@ function ensureStudyMaterials(retry=false){
   if(currentStudyMaterials()&&!retry)return Promise.resolve(studyMaterials);
   const data=pack,catalog=studyGameCatalog(),engine=studyGameEngine(),events=datedImportantEvents().filter(r=>kindClass(r.item)==="test").map(r=>({date:isoDateKey(r.date),label:r.item.label,kind:r.item.kind,endsAt:r.item.endsAt}));
   const request={pack:data,promise:null};
-  request.promise=Promise.all([import("./study-materials.mjs"),import("./study-games-materials-view.mjs?v=10")]).then(async([materials,view])=>{
+  request.promise=Promise.all([import("./study-materials.mjs"),import("./study-games-materials-view.mjs?v=11")]).then(async([materials,view])=>{
     if(pack===data&&!studyMaterialsView){studyMaterialsView=view.createMaterialsView({onChange:()=>{if(isStudyRoute())renderGames()},onRetry:retryStudyMaterials,onTest:startStudyTest,onGuideRefresh:refreshTestGuideSources});if(isStudyRoute()&&gameState.screen==="menu")renderGames()}
     const model=await materials.loadStudyMaterials({pack:data,catalog,events,engine});
     if(pack===data){
@@ -393,7 +393,7 @@ function ensureStudyGameEngine(){
   if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
   if(studyEnginePromise)return studyEnginePromise;
   const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.async=true;s.onload=()=>window[key]?resolve():reject(new Error(key+" did not initialize"));s.onerror=()=>reject(new Error(key+" could not be loaded"));document.head.append(s)});
-  studyEnginePromise=Promise.all([load("./study-games.js?v=103","ABVMStudyGames"),load("./study-games-view.js?v=15","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
+  studyEnginePromise=Promise.all([load("./study-games.js?v=104","ABVMStudyGames"),load("./study-games-view.js?v=15","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
   return studyEnginePromise;
 }
 function studyGameCatalog(){
@@ -522,7 +522,7 @@ function gameMenuHtml(catalog){
   const modes=STUDY_GAME_MODES,materials=currentStudyMaterials(),view=studyMaterialsView,selection=studySelection();
   const grid='<div class="study-game-grid">'+modes.map(mode=>{
     const scope=materials?.forMode(mode.id,selection),record=loadGameRecord(mode.id,scope?.sourceKey||catalog.sourceKey),total=scope?Math.min(8,scope.count):selection.source==="weekly"?gameModeQuestionTotal(catalog,mode):0,disabled=total===0;
-    return '<button type="button" class="study-game-tile game-'+mode.icon+'" data-game-start="'+esc(mode.id)+'"'+(mode.id==="reading"?' aria-label="Reading / ELA"':'')+(disabled?' disabled aria-disabled="true"':'')+'>'+window.ABVMStudyGameView.icon(mode.icon)+'<span class="study-game-copy"><strong>'+esc(mode.id==="spelling"?"Spelling":mode.id==="reading"?"Reading":mode.title)+'</strong><small>'+esc(mode.copy)+'</small>'+(disabled?'<em>Not ready yet</em>':record.plays?'<em>Practiced before · '+record.best+' / '+total+' best</em>':'')+'</span><b aria-hidden="true">›</b></button>';
+    return '<button type="button" class="study-game-tile game-'+mode.icon+'" data-game-start="'+esc(mode.id)+'"'+(mode.id==="reading"?' aria-label="Reading / ELA"':'')+(disabled?' disabled aria-disabled="true"':'')+'>'+window.ABVMStudyGameView.icon(mode.icon)+'<span class="study-game-copy"><strong>'+esc(mode.id==="spelling"?"Spelling":mode.id==="reading"?"Reading":mode.title)+'</strong><small>'+esc(mode.copy)+'</small>'+(disabled?'<em>Not ready yet</em>':record.plays?'<em>Practiced before · Best solved: '+record.best+' / '+total+' (includes retries)</em>':'')+'</span><b aria-hidden="true">›</b></button>';
   }).join("")+'</div>';
   if(view)return view.homeHtml({gameGrid:grid,complete:!!window.ABVMStudyReview?.completion(),loading:studyMaterialsError?.pack!==pack,error:studyMaterialsError?.pack===pack});
   return '<section class="study-game-section"><div class="study-section-heading"><h2>Choose your subject</h2></div>'+grid+'</section>'+
@@ -787,7 +787,7 @@ document.addEventListener("visibilitychange",()=>{
 window.addEventListener("pageshow",event=>{
   if(event.persisted&&pack){fetchPack({force:true,notify:true}).catch(()=>{});fetchHomeworkFeed({force:true}).catch(()=>{});}
 });
-window.ABVMProductView.watchSchoolClock(()=>{if(pack&&activeTab==="today")render({preserveScroll:true})});
+window.ABVMProductView.watchSchoolClock(()=>{if(pack&&(activeTab==="today"||isStudyRoute()&&gameState.screen==="menu"&&!document.querySelector("dialog[open]")&&!window.speechSynthesis?.speaking))render({preserveScroll:true});else if(isStudyRoute())return false});
 setInterval(()=>{if(pack&&document.visibilityState==="visible"&&!isStudyRoute()){fetchPack({notify:true}).catch(()=>{});fetchHomeworkFeed().catch(()=>{})}},PACK_REFRESH_MS);
 load();
 })();

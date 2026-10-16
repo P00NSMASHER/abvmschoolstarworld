@@ -1,3 +1,4 @@
+import {correctOriginalQuestion} from '../../scripts/question-corrections.mjs';
 import {readFileSync} from 'node:fs';
 // Interaction tests require a stable checked bank, not a permanent assumption
 // that the live teacher still assigns Math. Only isolated Playwright responses
@@ -10,7 +11,7 @@ export function withOriginalMathFixture(envelope){
   pack.subjects=[...(pack.subjects||[]).filter(row=>row.subject!=='Math'),structuredClone(snapshot.subject)];
   const pipeline=pack.contentPipeline;
   pipeline.skills=[...pipeline.skills.filter(row=>row.subject!=='Math'),...structuredClone(snapshot.skills)];
-  pipeline.questions=[...pipeline.questions.filter(row=>row.subject!=='Math'),...structuredClone(snapshot.questions)];
+  pipeline.questions=[...pipeline.questions.filter(row=>row.subject!=='Math'),...structuredClone(snapshot.questions).map(correctOriginalQuestion)];
   pipeline.qa={...pipeline.qa,skillCount:pipeline.skills.length,questionCount:pipeline.questions.length,subjectCoverage:[...new Set(pipeline.questions.map(q=>q.subject))]};
   return fixture;
 }
