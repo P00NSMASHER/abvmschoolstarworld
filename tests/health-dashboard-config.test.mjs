@@ -78,7 +78,10 @@ test("operational health uses the tested publication evidence selector",()=>{
 test("operational health surfaces Grade 2 pipeline coverage without treating known source gaps as unsupported",()=>{
   assert.match(report,/const contentPipeline=packData\.pack\?\.contentPipeline\|\|null/);
   assert.match(report,/status\.contentPipeline\.qaStatus==="pass"/);
-  assert.match(report,/status\.contentPipeline\.unsupportedSkillCount===0/);
+  assert.match(report,/\["SAFE_PARTIAL","READY"\]\.includes\(status\.contentPipeline\.safetyState\)/);
+  assert.doesNotMatch(report,/status\.contentPipeline\.unsupportedSkillCount===0/);
+  assert.match(report,/Practice questions remain isolated/);
+  assert.match(report,/Verified source facts remain publishable/);
   assert.match(report,/status\.contentPipeline\.unresolvedLineageCount===0/);
   assert.match(report,/status\.contentPipeline\.pageExactLineageCount===status\.contentPipeline\.questionCount/);
   assert.match(report,/Grade 2 content pipeline/);
