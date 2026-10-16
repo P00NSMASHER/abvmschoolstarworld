@@ -324,11 +324,29 @@ jobs:
         run: node scripts/refresh-reviewed-lunch.mjs --write
       - name: Prove lunch isolation and negative-case integrity
         run: node --test tests/lunch-publication.test.mjs tests/refresh-reviewed-lunch.test.mjs
+      # Source isolation and negative-case checks run on every attempt.
+      # The lunch preparer emits no file change for an unchanged reviewed week.
+      # Running 1,000+ full browser tests for that no-op delays true releases
+      # without adding evidence, so reserve independent full QA for a changed pack.
+      - name: Detect verified lunch publication changes
+        id: lunch-change
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- pages/data/study-pack.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Reviewed lunch unchanged; no publication or full release QA needed."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Reviewed lunch changed; independent full release QA required."
+          fi
       - name: Independent full app QA before any main write
+        if: steps.lunch-change.outputs.changed == 'true'
         run: |
           npx playwright install --with-deps chromium webkit
           npm run qa
       - name: Commit only verified changed lunch pack on exact main
+        if: steps.lunch-change.outputs.changed == 'true'
         shell: bash
         run: |
           set -euo pipefail
