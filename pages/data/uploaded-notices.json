@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "lastIntegratedAt": "2026-10-14T09:45:56Z",
+  "lastIntegratedAt": "2026-10-16T16:02:06.807Z",
   "documents": [
     {
       "id": "dress-down-2026-09-25",
@@ -598,6 +598,33 @@
         "reviewedBy": "manual-school-notice-review",
         "reviewedAt": "2026-10-14T09:45:56Z"
       }
+    },
+    {
+      "id": "weekly-reminders-2026-10-19",
+      "label": "Weekly reminders for week of 2026-10-19",
+      "receivedAt": "2026-10-16",
+      "facts": [
+        "Tuesday, Oct. 20: No School.",
+        "Wednesday, Oct. 21: Mass.",
+        "Friday, Oct. 23: Lego Club.",
+        "Monday, Oct. 26: Dress Down Day.",
+        "Monday, Oct. 26: K–4 Flag football.",
+        "Wednesday, Oct. 28: Mass.",
+        "Thursday, Oct. 29: Dress Down Day (Flag football for 5–8).",
+        "Thursday, Oct. 29: Flag football (for 5–8).",
+        "Friday, Nov. 6: 12:00 dismissal.",
+        "Thursday, Oct. 22: Chick-fil-A."
+      ],
+      "provenance": {
+        "factsHash": "d94c764ebdf3b392288493457c0c45689b5b71182dfca5d949cd49c5d557ddba",
+        "sourceContentHash": "8547ef5adaf4d45264fa71f05083843e67d12ed3e79f5e2b390dad5af0634fa1"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "automated-fixed-event-extraction-v1",
+        "reviewedAt": "2026-10-16T16:02:06.807Z"
+      }
     }
   ],
   "importantDates": [
@@ -1134,6 +1161,66 @@
       "label": "Student Council Halloween Candy Chance Ends",
       "kind": "school event",
       "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed"
+    },
+    {
+      "date": "Tuesday, Oct. 20",
+      "label": "No School",
+      "kind": "holiday",
+      "sourceDocument": "weekly-reminders-2026-10-19"
+    },
+    {
+      "date": "Wednesday, Oct. 21",
+      "label": "Mass",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-19"
+    },
+    {
+      "date": "Friday, Oct. 23",
+      "label": "Lego Club",
+      "kind": "club",
+      "sourceDocument": "weekly-reminders-2026-10-19"
+    },
+    {
+      "date": "Monday, Oct. 26",
+      "label": "Dress Down Day",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-19"
+    },
+    {
+      "date": "Monday, Oct. 26",
+      "label": "K–4 Flag football",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-19"
+    },
+    {
+      "date": "Wednesday, Oct. 28",
+      "label": "Mass",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-19"
+    },
+    {
+      "date": "Thursday, Oct. 29",
+      "label": "Dress Down Day (Flag football for 5–8)",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-19"
+    },
+    {
+      "date": "Thursday, Oct. 29",
+      "label": "Flag football (for 5–8)",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-19"
+    },
+    {
+      "date": "Friday, Nov. 6",
+      "label": "12:00 dismissal",
+      "kind": "schedule change",
+      "sourceDocument": "weekly-reminders-2026-10-19"
+    },
+    {
+      "date": "Thursday, Oct. 22",
+      "label": "Chick-fil-A",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-19"
     }
   ],
   "reminders": [

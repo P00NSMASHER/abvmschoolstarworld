@@ -14,16 +14,16 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-10-16T07:23:45.715Z",
-  "sourceCapturedAt": "2026-10-15T13:16:33.856Z",
+  "sourceLastSeenAt": "2026-10-16T16:02:06.807Z",
+  "sourceCapturedAt": "2026-10-16T16:02:06.916Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-0b18dde9c46594212a54",
-    "sourceCapturedAt": "2026-10-15T13:16:33.856Z",
-    "generatedAt": "2026-10-16T07:23:45.715Z",
+    "sourceCapturedAt": "2026-10-16T16:02:06.916Z",
+    "generatedAt": "2026-10-16T16:02:06.916Z",
     "weekLabel": "Week of October 12, 2026",
-    "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity”, Reading “Read”, parent task “Cover books”, and Reading “Keep Reading Log and Behavior Chart in the HW folder”. Upcoming tests include Spelling (long o / Short ) / Handwriting on Friday, Oct. 16, Phonics (short vowels) on Friday, Oct. 16, Reading (Unit 1 Text Set 3) on Wednesday, Oct. 21, and Spelling (long / short u) / Handwriting on Friday, Oct. 23. 27 uploaded school notices are integrated with the teacher pages.",
+    "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity”, Reading “Read”, parent task “Cover books”, and Reading “Keep Reading Log and Behavior Chart in the HW folder”. Upcoming tests include Spelling (long o / Short ) / Handwriting on Friday, Oct. 16, Phonics (short vowels) on Friday, Oct. 16, Reading (Unit 1 Text Set 3) on Wednesday, Oct. 21, and Spelling (long / short u) / Handwriting on Friday, Oct. 23. 28 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
       {
         "subject": "Reading / ELA",
@@ -664,10 +664,24 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Tuesday, Oct. 20",
+        "label": "No School",
+        "kind": "holiday",
+        "sourceDocument": "weekly-reminders-2026-10-19",
+        "source": "uploaded-notice"
+      },
+      {
         "date": "Wednesday, Oct. 21",
         "label": "Mass",
         "kind": "school event",
         "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 21",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-19",
         "source": "uploaded-notice"
       },
       {
@@ -704,6 +718,13 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Thursday, Oct. 22",
+        "label": "Chick-fil-A",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-19",
+        "source": "uploaded-notice"
+      },
+      {
         "date": "Friday, Oct. 23",
         "label": "Red Ribbon Week begins",
         "kind": "school event",
@@ -726,6 +747,13 @@
       },
       {
         "date": "Friday, Oct. 23",
+        "label": "Lego Club",
+        "kind": "club",
+        "sourceDocument": "weekly-reminders-2026-10-19",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Oct. 23",
         "label": "Spelling (long / short u) / Handwriting",
         "kind": "test",
         "source": "teacher-tests"
@@ -739,9 +767,17 @@
       },
       {
         "date": "Monday, Oct. 26",
-        "label": "DDD K-4 flag football game",
-        "source": "teacher-home",
-        "kind": "school event"
+        "label": "Dress Down Day",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-19",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Oct. 26",
+        "label": "K–4 Flag football",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-19",
+        "source": "uploaded-notice"
       },
       {
         "date": "Tuesday, Oct. 27",
@@ -762,6 +798,13 @@
         "label": "Communication Folder",
         "kind": "school event",
         "sourceDocument": "october-calendar-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Oct. 28",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-19",
         "source": "uploaded-notice"
       },
       {
@@ -790,6 +833,20 @@
         "label": "Flag football",
         "kind": "school event",
         "sourceDocument": "weekly-reminders-2026-10-12",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Thursday, Oct. 29",
+        "label": "Dress Down Day (Flag football for 5–8)",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-19",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Thursday, Oct. 29",
+        "label": "Flag football (for 5–8)",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-19",
         "source": "uploaded-notice"
       },
       {
@@ -840,9 +897,11 @@
         "kind": "meeting"
       },
       {
-        "label": "12:00 dismissal — Articulation Meeting",
         "date": "Friday, Nov. 6",
-        "kind": "schedule change"
+        "label": "12:00 dismissal",
+        "kind": "schedule change",
+        "sourceDocument": "weekly-reminders-2026-10-19",
+        "source": "uploaded-notice"
       },
       {
         "date": "Friday–Saturday, Nov. 13–14",
@@ -1365,7 +1424,7 @@
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
     "sourceCheckedAt": "2026-10-16T07:23:45.715Z",
-    "uploadedNoticeHash": "uploaded-notices-b065b74561086b39e2ed",
+    "uploadedNoticeHash": "uploaded-notices-b565f57cd128382433cc",
     "uploadedNoticeTopics": {
       "reminders": [
         "fundraiser",
@@ -18704,8 +18763,8 @@
     }
   ],
   "uploadedNotices": {
-    "count": 27,
-    "latestIntegratedAt": "2026-10-14T09:45:56Z",
+    "count": 28,
+    "latestIntegratedAt": "2026-10-16T16:02:06.807Z",
     "documents": [
       {
         "id": "dress-down-2026-09-25",
@@ -18841,6 +18900,11 @@
         "id": "lunch-revision-2026-10-15",
         "label": "Lunch menu revision for Thursday, October 15, 2026",
         "receivedAt": "2026-10-13"
+      },
+      {
+        "id": "weekly-reminders-2026-10-19",
+        "label": "Weekly reminders for week of 2026-10-19",
+        "receivedAt": "2026-10-16"
       }
     ]
   }
