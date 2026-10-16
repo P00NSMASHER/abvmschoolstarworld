@@ -1,3 +1,4 @@
+import {exactSkillTopics} from '../pages/study-notes-scope.mjs';
 import {correctOriginalQuestion} from './question-corrections.mjs';
 import fs from "node:fs";
 import {religionChapterScopes} from "../pages/study-hub-core.mjs";
@@ -60,7 +61,7 @@ export function buildRuntimePack(envelope){
   // or raw teacher evidence repeated once for every skill in the runtime pack.
   const scopedReligionFacts=religionGuideFacts(envelope.pack.contentPipeline.skills);
   if(Object.keys(scopedReligionFacts).length)runtime.pack.testGuideFacts={religionChapters:scopedReligionFacts};
-  runtime.pack.contentPipeline.skills=skills.map(({sourceLineage,evidenceContract,...skill})=>skill);
+  runtime.pack.contentPipeline.skills=skills.map(({sourceLineage,evidenceContract,...skill})=>({...skill,noteTopics:exactSkillTopics(envelope.pack,{...skill,sourceLineage})}));
   // The 14-day review bank may retain previously verified question families.
   // Those full records carry large governance-only source/evidence fields;
   // compact them exactly like current questions, but keep dated expiry proof.

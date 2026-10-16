@@ -18,7 +18,7 @@ async function openNotes(page){
   const notes=page.locator('details[data-study-notes]');
   if(!await notes.evaluate(node=>node.open))await notes.locator(':scope > summary').click();
   await expect(notes).toHaveAttribute('open','');
-  await openNoteSubject(page);
+  await openNoteSubject(page,null,'saved');
   const lessons=notes.locator('[data-note-subject]:not([hidden]) details');
   await expect(lessons.first()).toBeVisible();
   // Verify that a real disclosure can be opened by tapping its summary.
@@ -210,9 +210,8 @@ test('on-demand lesson bullets reserve space and never collide with copy',async(
   await page.setViewportSize({width:393,height:852});
   await page.goto('/#study');
   const notes=await openNotes(page);
-  // Topic groups deliberately use unbulleted short rows. Full original notes
-  // and saved lessons retain conventional lists with reserved marker space.
-  const cards=notes.locator('[data-note-subject]:not([hidden]) .study-notes-original,[data-note-subject]:not([hidden]) .game-material-lesson');
+  // Every topic, class note and saved lesson uses conventional bullets with marker space.
+  const cards=notes.locator('[data-note-subject]:not([hidden]) .study-note-topic');
   expect(await cards.locator('li').count()).toBeGreaterThan(0);
   for(let i=0;i<await cards.count();i++){
     const card=cards.nth(i);

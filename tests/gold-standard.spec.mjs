@@ -99,8 +99,8 @@ test("requested polish is present",async({page})=>{
   await expectCurrentStudyGameTiles(page);
   await page.locator('[data-open-prep]').click();await expect(page.locator('[data-test-single]')).toBeVisible();
   await page.locator('[data-close-prep]').click();
-  await openNoteSubject(page);
-  await expect(page.locator('[data-note-subject]:not([hidden]) .study-notes-original').first()).toBeVisible();
+  await openNoteSubject(page,null,'saved');
+  await expect(page.locator('[data-note-subject]:not([hidden]) .study-note-topic').first()).toBeVisible();
   await expect(page.locator('[data-learning-panel],.study-games-cta')).toHaveCount(0);
 
   await openTab(page,"Progress");

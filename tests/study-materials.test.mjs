@@ -8,6 +8,7 @@ import {createStudyResourceLoader} from '../pages/study-resources.mjs';
 import {practiceIdentity} from '../pages/study-experience.mjs';
 import {buildGrade2ContentPipeline} from '../scripts/grade2-content-pipeline.mjs';
 import {buildRuntimePack} from '../scripts/build-runtime-pack.mjs';
+import {notesLibraryData} from '../pages/study-notes-library.mjs';
 import {religionChapterScopes} from '../pages/study-hub-core.mjs';
 
 const monday = '2026-10-05T16:00:00Z';
@@ -783,11 +784,12 @@ test('notes retain exact valid text and provenance, remove blank optional rows a
   const pack = {sourceHash:'teacher-source',sourceCapturedAt:'2026-10-05T05:00:00Z',subjects:[{subject:'Reading / ELA',topics:['Exact topic.','',null],studyNotes:['  Exact source spaces.  ',42,'   ']}],vocabulary:[{term:'word',meaning:'No definition supplied.'},{term:''},null]};
   const model = createStudyMaterials(opts({pack,archive:{questions:[],notes:[note],vocabulary:[word]}}));
   const weekly = model.notes('weekly'), saved = model.notes('saved');
-  assert.deepEqual(weekly.notes.map(n => n.text),['Exact topic.','  Exact source spaces.  ']);
-  assert.equal(weekly.notes[0].sourceHash,'teacher-source');
+  assert.deepEqual(weekly.notes,[],'undated teacher pages are cumulative even after a fresh crawl');
+  assert.deepEqual(saved.notes.slice(0,2).map(n => n.text),['Exact topic.','  Exact source spaces.  ']);
+  assert.equal(saved.notes[0].sourceHash,'teacher-source');
   assert.equal(saved.notes.at(-1),note);
   assert.equal(saved.vocabulary.at(-1),word);
-  assert.equal(weekly.vocabulary.length,1);
+  assert.equal(weekly.vocabulary.length,0);
   assert.deepEqual(model.notes('star'),{lessons:[],notes:[],vocabulary:[],links:[],warnings:[]});
   assert.deepEqual(model.notes('mix',{sources:['star']}),{lessons:[],notes:[],vocabulary:[],links:[],warnings:[]});
   assert.deepEqual(model.notes('mix',{sources:['saved','weekly']}),saved);
@@ -890,24 +892,17 @@ test('Class notes display exact repeats once per subject while preserving govern
     archiveRow({id:'math-archive',subject:'Math',text:shared,kind:'note'},'2026-10-06',[{sourceRef:'other-subject-evidence',capturedAt:'2026-10-06'}]),
   ]}});
   const before=structuredClone(input),model=createStudyMaterials({...input,now:()=>new Date('2026-10-07T16:00:00Z'),storage:memory()});
-  const original=model.notes('weekly');
+  const original=model.notes('saved');
   assert.equal(original.notes.filter(row=>row.subject==='Religion').length,4);
-  const view=createMaterialsView({win:{location:{hash:'#study?notes'}}});view.setModel(model);
-  const html=view.homeHtml({loading:false});
-  const subjectBody=subject=>html.match(new RegExp('data-note-subject="'+subject+'"[\\s\\S]*?class="study-notes-original"[\\s\\S]*?<div class="study-note-body">([\\s\\S]*?)</div></details>'))?.[1];
-  const religion=subjectBody('Religion');
-  assert.equal((religion.match(/<li>/g)||[]).length,2,'whitespace-only repetitions collapse, distinct punctuation remains');
-  assert(religion.includes('<li>  Shared exact.  </li>'),'the first source wording and order stay intact');
-  assert(religion.includes('<li>Shared exact!</li>'));
-  for(const subject of ['Reading / ELA','Math'])assert(subjectBody(subject).includes('<li>'+shared+'</li>'),'the same wording remains in a different subject');
-  const lessonBody=html.match(/<span>Separate lesson<\/span>[\s\S]*?<div class="study-note-body">([\s\S]*?)<\/div><\/details>/)?.[1];
-  assert.equal((lessonBody.match(/<li>/g)||[]).length,2,'separate lesson sequences are not deduplicated');
-  assert.deepEqual(model.notes('weekly'),original,'display does not merge source rows or provenance');
+  const rows=notesLibraryData(original),religion=rows.find(row=>row.subject==='Religion');
+  assert.deepEqual(religion.original,['  Shared exact.  ','Shared exact!']);
+  for(const subject of ['Reading / ELA','Math'])assert(rows.find(row=>row.subject===subject).original.includes(shared));
+  assert.deepEqual(religion.lessons[0].notes,[shared,shared],'separate lesson sequences stay intact');
+  assert.deepEqual(model.notes('saved'),original);
   assert.deepEqual(input,before);
-  assert.equal(model.notes('weekly').notes.find(row=>row.id==='religion-archive'),input.archive.notes[0]);
-  assert(html.includes('class="notes-subject-card"'),'subjects are directly available in the library overview');
-  assert(html.includes('data-note-subject="Reading / ELA" hidden'),'other subjects do not create a wall of notes');
-  assert(!html.includes('class="study-notes-original" open'),'original source remains available without dominating the notes');
+  assert.equal(original.notes.find(row=>row.id==='religion-archive'),input.archive.notes[0]);
+  assert.deepEqual(model.notes('weekly').notes,[],'a recent capture cannot date undated notes');
+
 });
 
 test("actual October 15 Chapter 3 live Test Prep works with compact runtime and full-pack fallback",()=>{
@@ -1055,7 +1050,7 @@ test('notes expose only explicitly sourced chapter explanations in full and comp
   const pack={sourceSufficient:true,subjects:[{subject:'Religion',topics:['Chapter 3: Church','Chapter 1: Gifts','Chapter 9: Unknown'],studyNotes:['Unscoped class note.']}],
     contentPipeline:{questions:[],skills:[{id:'religion-chapter-3',subject:'Religion',sourceLineage:{matchedEvidence:['Chapter 3: Church * Faith is a gift from God. * A sacrament is a sacred sign.']}},{id:'religion-chapter-1',subject:'Religion',sourceLineage:{matchedEvidence:['Chapter 1: Gifts * We care for creation.']}}]},recentReviewPipeline:{questions:[]}};
   for(const input of [pack,buildRuntimePack({pack}).pack]){
-    const data=createStudyMaterials(opts({pack:input})).notes('weekly');
+    const data=createStudyMaterials(opts({pack:input})).notes('saved');
     assert.deepEqual(data.explanations.map(row=>row.topic),['Chapter 3: Church','Chapter 1: Gifts']);
     assert.ok(data.explanations[0].paragraphs.some(row=>row.includes('Faith is a gift from God')));
     assert.ok(!data.explanations[0].paragraphs.some(row=>row.includes('creation')));

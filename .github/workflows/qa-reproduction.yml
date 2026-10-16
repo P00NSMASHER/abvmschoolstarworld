@@ -23,6 +23,7 @@ on:
       - 'pages/study-games-view.js'
       - 'pages/study-materials.mjs'
       - 'pages/study-notes-library.mjs'
+      - 'pages/study-notes-scope.mjs'
       - 'pages/study-games-materials-view.mjs'
       - 'pages/study-games-materials.css'
       - 'pages/study-experience.mjs'

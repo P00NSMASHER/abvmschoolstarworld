@@ -14,7 +14,7 @@ const dateLabel=value=>/^\d{4}-\d{2}-\d{2}$/.test(value||'')?new Intl.DateTimeFo
 // It does not claim a teacher question, worksheet range, chapter, or assessment.
 function mathExplanations(subject,topics){
  if(subject!=='Math'||!topics.some(topic=>/\bsubtraction\b|\bsubtract(?:ing)?\b/i.test(topic)))return [];
- return [{subject,topic:null,title:'Subtraction, step by step',label:'ABVM worked example',paragraphs:[
+ return [{subject,topic:topics.find(topic=>/\bsubtraction\b|\bsubtract(?:ing)?\b/i.test(topic)),title:'Subtraction, step by step',label:'ABVM worked example',paragraphs:[
   'Subtraction tells how many are left or finds the difference between amounts.',
   'In 12 − 5 = 7, start with 12, take away 5, and 7 are left. The difference is 7.',
   'Count back one number for each item taken away. You can also count up from 5 to 12: seven steps gives the same difference.',
@@ -38,10 +38,11 @@ export function notesLibraryData(data={}, {query='',meaning=row=>row.meaning||''
   const source=notes.filter(row=>row.subject===subject),all=matches(subject),keep=value=>all||matches(subject+' '+value);
   const original=unique(source.map(row=>row.text));
   const allTopics=unique(source.filter(row=>row.kind==='topic').map(row=>row.text));
-  const sections=[...(data.explanations||[]).filter(row=>row.subject===subject&&allTopics.includes(row.topic)),...mathExplanations(subject,allTopics)];
+  const linked=allTopics.map(topic=>({subject,topic,title:topic,label:'Class notes',paragraphs:unique(source.filter(row=>row.kind!=='topic'&&(row.topic===topic||row.topics?.includes(topic))).map(row=>row.text))})).filter(row=>row.paragraphs.length);
+  const sections=[...linked,...(data.explanations||[]).filter(row=>row.subject===subject&&allTopics.includes(row.topic)),...mathExplanations(subject,allTopics)];
   const explanations=sections.map(row=>({...row,paragraphs:(Array.isArray(row.paragraphs)?row.paragraphs:[]).filter(value=>all||matches(subject+' '+row.title+' '+(row.topic||'')+' '+value))})).filter(row=>row.paragraphs.length);
   const topics=allTopics.filter(value=>keep(value)||explanations.some(row=>row.topic===value));
-  const review=unique(source.filter(row=>row.kind!=='topic').map(row=>row.text)).filter(keep);
+  const review=unique(source.filter(row=>row.kind!=='topic'&&!allTopics.some(topic=>row.topic===topic||row.topics?.includes(topic))).map(row=>row.text)).filter(keep);
   const subjectWords=words.filter(row=>wordSubject(row)===subject&&keep(row.term+' '+meaning(row)));
   const saved=lessons.filter(row=>row.subject===subject&&keep([row.title,...(row.notes||[])].join(' ')));
   const references=links.filter(row=>row.subject===subject&&keep(row.label));
@@ -51,20 +52,21 @@ export function notesLibraryData(data={}, {query='',meaning=row=>row.meaning||''
 }
 
 function detailHtml(row,{source,meaning}) {
- const groups=new Map();
- for(const topic of row.topics){const prefix=topic.match(/^\s*([^:]{1,45}):\s*(.+)$/),label=prefix?prefix[1]:'Class topics';if(!groups.has(label))groups.set(label,[]);groups.get(label).push(topic);}
- const explained=row.explanations.filter(section=>section.topic),firstExplained=[...groups].findIndex(([,rows])=>explained.some(section=>rows.includes(section.topic)));
- const paragraphs=section=>'<div class="notes-explanation"><small>'+esc(section.label)+'</small>'+section.paragraphs.map(value=>'<p>'+esc(value)+'</p>').join('')+'</div>';
- const topics=[...groups].map(([label,rows],i)=>'<details class="study-note-topic" data-note-disclosure="'+row.index+'-topic-'+Array.from(label).map(value=>value.codePointAt(0).toString(16)).join('-')+'"'+(i===(firstExplained<0?0:firstExplained)?' open':'')+'><summary><strong>'+esc(label==='Story'?'Stories':label)+'</strong><small>'+rows.length+' '+(rows.length===1?'topic':'topics')+'</small></summary><div class="study-note-body">'+list(rows)+explained.filter(section=>rows.includes(section.topic)).map(paragraphs).join('')+'</div></details>').join('');
- const words=row.words.length?'<details class="study-note-topic study-vocabulary" data-note-disclosure="'+row.index+'-words"><summary><strong>Words to know</strong><small>'+row.words.length+' '+(row.words.length===1?'word':'words')+'</small></summary><div class="study-note-body"><dl>'+row.words.map(word=>{const definition=meaning(word);return '<div><dt>'+esc(word.term)+'</dt>'+(definition?'<dd>'+esc(definition)+'</dd>':'')+'</div>';}).join('')+'</dl></div></details>':'';
- const classNotes=row.review.length?'<div class="study-note-review" aria-label="Class notes"><div class="study-note-review-body">'+row.review.map(value=>'<article class="study-note-point"><p>'+esc(value)+'</p></article>').join('')+'</div></div>':'';
- const saved=row.lessons.length?'<section class="study-note-schoolwork"><h4>Saved schoolwork</h4>'+row.lessons.map((lesson,i)=>'<details class="game-material-lesson" data-note-disclosure="'+row.index+'-saved-'+i+'"><summary><span>'+esc(lesson.title)+'</span><small>'+esc(dateLabel(lesson.studiedOn))+'</small></summary><div class="study-note-body">'+list((lesson.notes||[]).filter(text))+'</div></details>').join('')+'</section>':'';
- const original=row.original.length?'<details class="study-notes-original" data-note-disclosure="'+row.index+'-original"><summary>Original class notes <small>Complete wording, in source order</small></summary><div class="study-note-body">'+list(row.original)+'</div></details>':'';
- return '<header class="study-note-heading"><img src="./assets/illustrations/'+art(row.subject)+'.webp" alt="" width="64" height="64"><div><small>'+esc(source==='saved'?'Current notes & saved learning':'This week’s class notes')+'</small><h3 id="study-notes-title-'+row.index+'" tabindex="-1">'+esc(row.subject)+'</h3></div></header>'+
-  '<div class="study-note-references">'+row.links.map(link=>'<a data-religion-review href="'+esc(link.url)+'" target="_blank" rel="noopener">'+esc(link.label)+'</a>').join('')+'</div>'+
+ // A source note without an explicit topic association stays in its subject's
+ // Class notes card. Never guess a chapter from keywords or source order.
+ const paragraphs=section=>'<div class="notes-explanation"><small>'+esc(section.label)+'</small>'+list(section.paragraphs)+'</div>';
+ const topics=row.topics.map((topic,i)=>{
+  const sections=row.explanations.filter(section=>section.topic===topic);
+  return '<details class="study-note-topic" data-note-disclosure="'+row.index+'-topic-'+i+'" open><summary><strong>'+esc(topic)+'</strong></summary><div class="study-note-body">'+
+   (sections.length?sections.map(paragraphs).join(''):list([topic]))+'</div></details>';
+ }).join('');
+ const classNotes=row.review.length?'<details class="study-note-topic" data-note-disclosure="'+row.index+'-class-notes" open><summary><strong>Class notes</strong></summary><div class="study-note-body">'+list(row.review)+'</div></details>':'';
+ const words=row.words.length?'<details class="study-note-topic study-vocabulary" data-note-disclosure="'+row.index+'-words" open><summary><strong>Words to know</strong><small>'+row.words.length+' '+(row.words.length===1?'word':'words')+'</small></summary><div class="study-note-body"><ul>'+row.words.map(word=>{const definition=meaning(word);return '<li><strong>'+esc(word.term)+'</strong>'+(definition?' — '+esc(definition):'')+'</li>';}).join('')+'</ul></div></details>':'';
+ const saved=row.lessons.map((lesson,i)=>'<details class="study-note-topic game-material-lesson" data-note-disclosure="'+row.index+'-saved-'+i+'" open><summary><strong>'+esc(lesson.title)+'</strong><small>'+esc(dateLabel(lesson.studiedOn))+'</small></summary><div class="study-note-body">'+list((lesson.notes||[]).filter(text))+'</div></details>').join('');
+ return '<header class="study-note-heading"><img src="./assets/illustrations/'+art(row.subject)+'.webp" alt="" width="64" height="64"><div><small>'+esc(source==='saved'?'Cumulative learning':'This week’s confirmed material')+'</small><h3 id="study-notes-title-'+row.index+'" tabindex="-1">'+esc(row.subject)+'</h3></div></header>'+
   row.warnings.map(value=>'<p class="game-note-warning">'+esc(value.text)+'</p>').join('')+
-  row.explanations.filter(section=>!section.topic).map(section=>'<section class="notes-worked-lesson"><h4>'+esc(section.title)+'</h4>'+paragraphs(section)+'</section>').join('')+
-  '<div class="study-note-topic-grid">'+topics+'</div>'+words+classNotes+saved+original;
+  '<div class="study-note-topic-grid">'+topics+classNotes+words+saved+'</div>'+
+  '<div class="study-note-references">'+row.links.map(link=>'<a data-religion-review href="'+esc(link.url)+'" target="_blank" rel="noopener">'+esc(link.label)+'</a>').join('')+'</div>';
 }
 
 export function renderNotesLibrary(data,{source='weekly',subject='',query='',overview=false,meaning=row=>row.meaning||''}={}) {
@@ -76,9 +78,9 @@ export function renderNotesLibrary(data,{source='weekly',subject='',query='',ove
   return '<button type="button" class="notes-subject-card" data-notes-subject="'+row.index+'" aria-pressed="'+Boolean(selected?.subject===row.subject)+'" aria-controls="study-notes-panel-'+row.index+'" aria-label="'+esc(row.subject)+'"><img src="./assets/illustrations/'+art(row.subject)+'.webp" alt="" width="64" height="64"><span><strong>'+esc(shortSubject(row.subject))+'</strong><small>'+esc(caption)+'</small></span><b aria-hidden="true">›</b></button>';
  }).join('');
  return '<div class="notes-library"><div class="notes-library-heading"><h3>Study library</h3></div>'+
-  '<div class="study-note-scope" role="group" aria-label="Notes to review">'+['weekly','saved'].map(key=>'<button type="button" data-notes-source="'+key+'" aria-pressed="'+(source===key)+'">'+(key==='weekly'?'This week':'All learning')+'</button>').join('')+'</div>'+
+  '<div class="study-note-scope" role="group" aria-label="Notes to review">'+['weekly','saved'].map(key=>'<button type="button" data-notes-source="'+key+'" aria-pressed="'+(source===key)+'">'+(key==='weekly'?'This week':'Cumulative')+'</button>').join('')+'</div>'+
   '<div class="notes-search"><label class="visually-hidden" for="study-notes-search">Search study notes</label><input id="study-notes-search" type="search" data-notes-search placeholder="Search notes, words or topics" value="'+esc(queryText)+'" maxlength="120" autocomplete="off" enterkeyhint="search">'+(queryText?'<button type="button" data-notes-clear aria-label="Clear note search">Clear</button>':'')+'</div>'+
-  '<p class="notes-search-status" role="status" aria-live="polite">'+esc(queryText?count+' '+(count===1?'match':'matches')+' across '+rows.length+' '+(rows.length===1?'subject':'subjects'):source==='saved'?'Includes saved lessons. Undated work stays here, not in This week.':rows.length+' '+(rows.length===1?'subject':'subjects')+' to explore')+'</p>'+
+  '<p class="notes-search-status" role="status" aria-live="polite">'+esc(queryText?count+' '+(count===1?'match':'matches')+' across '+rows.length+' '+(rows.length===1?'subject':'subjects'):source==='saved'?'Includes saved lessons. Undated work stays here, not in This week.':'Confirmed for this school week. Undated and earlier material stays in Cumulative.')+'</p>'+
   '<div class="notes-subject-browser"'+(selected?' hidden':'')+'><div class="study-note-subjects notes-subject-grid" role="group" aria-label="Choose a subject">'+cards+'</div>'+(!rows.length?'<p class="study-tools-empty">'+(queryText?'No matching notes. Try another word or clear your search.':'No lesson notes are included in this selection.')+'</p>':'')+'</div>'+
   '<div class="notes-reader"'+(!selected?' hidden':'')+'><button type="button" class="notes-back" data-notes-back>‹ Back to subjects</button><div class="study-notes-grid">'+rows.map(row=>'<section class="study-note-panel" id="study-notes-panel-'+row.index+'" data-note-subject="'+esc(row.subject)+'"'+(row.subject!==selected?.subject?' hidden':'')+' aria-labelledby="study-notes-title-'+row.index+'">'+detailHtml(row,{source,meaning})+'</section>').join('')+'</div></div></div>';
 }

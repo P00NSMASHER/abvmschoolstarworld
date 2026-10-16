@@ -112,8 +112,8 @@ test('material selection, notes and test management are keyboard operable',async
 });
 test('expanded notes reflow at 200 percent text size with reduced motion',async({page},info)=>{
   await page.setViewportSize({width:393,height:852});await page.emulateMedia({reducedMotion:'reduce'});await room(page);
-  await openNoteSubject(page);
-  const lesson=page.locator('[data-note-subject]:not([hidden]) .study-notes-original').first();await lesson.locator('summary').click();
+  await openNoteSubject(page,null,'saved');
+  const lesson=page.locator('[data-note-subject]:not([hidden]) .study-note-topic').first();
   const title=page.locator('.study-game-copy strong').first();
   const before=await title.evaluate(e=>parseFloat(getComputedStyle(e).fontSize));
   await page.evaluate(()=>document.documentElement.style.fontSize=(parseFloat(getComputedStyle(document.documentElement).fontSize)*2)+'px');

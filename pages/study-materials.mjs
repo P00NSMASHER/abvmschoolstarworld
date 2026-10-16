@@ -3,6 +3,7 @@ import {createStudyResourceLoader, validStudyResource} from './study-resources.m
 import {questionsForTest,religionChapterScopes} from './study-hub-core.mjs';
 import {adaptivePracticeRound, practiceIdentity} from './study-experience.mjs';
 import {schoolDay, studyAssessmentDay, weekBounds, nextTests, visibleArchive, weeklyArchive, balancedTestRound} from './study-model.mjs';
+import {sourceStudyNotes,weeklySourceNotes,explicitlyInWeek} from './study-notes-scope.mjs';
 import {buildStarBank} from './star-practice.mjs';
 
 const names = {weekly:'This week', saved:'Saved learning', star:'STAR practice', mix:'Study mix'};
@@ -670,12 +671,9 @@ export function createStudyMaterials({
   function notes(source = 'weekly', {sources} = {}) {
     const picks = selectedSources(source,sources), time = instant();
     if (!picks.some(key => key === 'weekly' || key === 'saved')) return {lessons:[],notes:[],vocabulary:[],links:[],warnings:[]};
-    const day = materialDay(time), saved = picks.includes('saved'), history = saved ? day.visible : day.week;
-    const sourceNotes = array(pack.subjects).flatMap(subject => [
-      ...array(subject.topics).filter(meaningfulText).map(text => ({subject:subject.subject,text,kind:'topic'})),
-      ...array(subject.studyNotes).filter(meaningfulText).map(text => ({subject:subject.subject,text,kind:'study-note'})),
-    ]).map(note => ({...note,sourceHash:pack.sourceHash,sourceCapturedAt:pack.sourceCapturedAt}));
-    const notes=[...sourceNotes,...history.notes].filter(note => meaningfulText(note?.text));
+    const day = materialDay(time), saved = picks.includes('saved'), history = day.visible;
+    const sourceNotes = saved ? sourceStudyNotes(pack) : weeklySourceNotes(pack,allEvents,time,test=>currentTestQuestions(test,time));
+    const notes=[...sourceNotes,...history.notes.filter(note=>saved||explicitlyInWeek(note,time))].filter(note => meaningfulText(note?.text));
     // Reuse the same independently sourced, chapter-scoped facts as print guides.
     // Never assign unscoped notes to a chapter by position or a keyword guess.
     const explanations=[...new Map(notes.filter(note=>note.subject==='Religion'&&note.kind==='topic').map(note=>[note.text,note])).values()]
@@ -685,11 +683,11 @@ export function createStudyMaterials({
         return paragraphs.length?[{subject:'Religion',topic:note.text,title:'Chapter '+chapter,paragraphs,label:'Class review'}]:[];
       });
     return {
-      lessons:saved ? day.lessons : day.dated,
+      lessons:saved ? day.lessons : day.lessons.filter(lesson=>explicitlyInWeek(lesson,time)),
       explanations,
       notes,
-      vocabulary:[...array(pack.vocabulary),...history.vocabulary].filter(word => meaningfulText(word?.term)),
-      links:referenceLinks(), warnings:coverageWarnings(time),
+      vocabulary:[...array(pack.vocabulary),...history.vocabulary].filter(word => meaningfulText(word?.term)&&(saved||explicitlyInWeek(word,time))),
+      links:referenceLinks().filter(link=>saved||notes.some(note=>note.subject==='Religion'&&note.kind==='topic'&&new RegExp('^\\s*Chapter\\s+'+link.chapter+'\\s*:','i').test(note.text))), warnings:coverageWarnings(time),
     };
   }
   return {status, banks, forMode, round, tests, printableTests, upcomingTests, testGuide, testPreview, testRound, completeTests, undoTests, restoreTest, notes, loadReferences};
