@@ -81,6 +81,7 @@ try {
   page.on('pageerror', error => receipt.consoleErrors.push(error.message));
   await page.goto(base + '?lunch-proof=' + Date.now() + '#today');
   await expect(page.locator('.screen')).toBeVisible({ timeout: 20000 });
+  await expect(page.locator('.today-screen .study-invitation')).toHaveCount(0);
   const today = eastToday();
   const todayMeal = publishedMealForDate(data.pack, today);
   if (todayMeal?.items.length) {

@@ -82,9 +82,9 @@
         "</strong><span>" +
         next.d.getDate() +
         "</span></div><div><p>" +
-        (kindClass(next.x) === "due" ? "NEXT DEADLINE" : "NEXT TEST") +
+        (kindClass(next.x) === "due" ? "NEXT DEADLINE" : (next.items?.length>1 ? "NEXT TESTS" : "NEXT TEST")) +
         "</p><h3>" +
-        esc(next.x.label) +
+        (next.items||[next.x]).map(item=>'<span class="assessment-title">'+esc(item.label)+"</span>").join("") +
         "</h3><span>" +
         esc(fmtDate(next.d)) +
         "</span></div>" +
@@ -92,7 +92,7 @@
           kindClass(next.x) === "due" ? "week" : "study",
           "Open",
           "icon-button",
-          (kindClass(next.x) === "due" ? "View school week for " : "Open Study for ") + next.x.label,
+          (kindClass(next.x) === "due" ? "View school week for " : "Open Study for ") + (next.items||[next.x]).map(item=>item.label).join("; "),
         ) +
         "</section>"
       : '<section class="priority-card quiet"><span class="feature-icon">' +
@@ -119,9 +119,7 @@
       '</p><h2>Ready for today?</h2><p>Your school day, all together.</p></div><img class="hero-photo" src="./assets/school/abvm-school-hero.webp" width="1024" height="683" fetchpriority="high" alt="Assumption BVM School in Pottsville"><span class="photo-caption">OUR ABVM</span><img class="today-school-seal" src="./assets/abvm-app-icon-192.png" width="48" height="48" alt="Assumption BVM Catholic School logo"></section>' +
       c.homeworkHtml +
       '<div class="today-primary">' + nextHtml +
-      '<button class="study-invitation" type="button" data-route="study"><img src="./assets/illustrations/reading.webp" width="72" height="72" alt=""><span><strong>Start studying</strong><small>A little practice. A little more confidence.</small></span>' +
-      icon("arrow") +
-      "</button></div>" +
+      "</div>" +
       eagerTodayLunchArt(lunchHtml) +
       '<figure class="school-sign-card"><img class="school-sign-photo" src="./assets/school/abvm-school-sign.webp" width="420" height="280" loading="eager" decoding="async" alt="Original photograph of the Assumption BVM school sign on Howard Avenue"><figcaption><strong>Our school sign</strong><span>Assumption BVM · Howard Avenue</span></figcaption></figure>' +
       '<section class="today-panel">' +
@@ -592,7 +590,31 @@
     if (node.nextElementSibling?.matches(".teacher-live-source")) node.nextElementSibling.remove();
     node.outerHTML = markup;
   }
-  window.ABVMProductView = Object.freeze({ today, week, homeworkCard, progress, icon, plannerDate, compactMonthCard, calendarSpecials, freshnessControl, replaceFreshness, calendar, calendarDate, calendarShift, calendarGrid, calendarEvent, bindCalendar, searchCalendarEvents, calendarSearch });
+  // Compare school civil dates, independent of the device timezone and DST.
+  const schoolClock = new Intl.DateTimeFormat("en-US", {timeZone:"America/New_York",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",hourCycle:"h23"});
+  function assessmentWindow(now=new Date()) {
+    const p=Object.fromEntries(schoolClock.formatToParts(now).map(p=>[p.type,p.value]));
+    const day=new Date(+p.year,+p.month-1,+p.day,12);
+    const afterSchool=day.getDay()>0&&day.getDay()<6&&+p.hour>=15;
+    return {day,afterSchool,key:p.year+p.month+p.day+":"+afterSchool};
+  }
+  function nextAssessments(rows,kindClass,now=new Date()) {
+    const {day,afterSchool}=assessmentWindow(now);
+    const tests=rows.filter(({date,item})=>kindClass(item)==="test"&&(date>day||(!afterSchool&&+date===+day)));
+    const first=tests[0];
+    if(first)return {x:first.item,d:first.date,items:tests.filter(row=>+row.date===+first.date).map(row=>row.item)};
+    const due=rows.find(({date,item})=>date>=day&&kindClass(item)==="due");
+    return due?{x:due.item,d:due.date,items:[due.item]}:null;
+  }
+  function watchSchoolClock(refresh) {
+    let key=assessmentWindow().key;
+    const check=()=>{const next=assessmentWindow().key;if(next!==key){key=next;refresh()}};
+    const tick=()=>{check();setTimeout(tick,60000-Date.now()%60000)};
+    setTimeout(tick,60000-Date.now()%60000);
+    document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")check()});
+    window.addEventListener("pageshow",check);
+  }
+  window.ABVMProductView = Object.freeze({ nextAssessments, assessmentWindow, watchSchoolClock, today, week, homeworkCard, progress, icon, plannerDate, compactMonthCard, calendarSpecials, freshnessControl, replaceFreshness, calendar, calendarDate, calendarShift, calendarGrid, calendarEvent, bindCalendar, searchCalendarEvents, calendarSearch });
 })();
 
 (()=>{"use strict";

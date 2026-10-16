@@ -7,7 +7,7 @@ test('Today prioritizes the next school event before studying without changing t
   await page.clock.setFixedTime(new Date('2026-10-08T12:00:00-04:00'));
   await page.goto('/#today');
   await expect(page.locator('.today-primary > .priority-card')).toHaveCount(1);
-  await expect(page.locator('.today-primary > .study-invitation')).toHaveCount(1);
+  await expect(page.locator('.today-primary > .study-invitation')).toHaveCount(0);
   const priorityFirst = await page.locator('.today-primary').evaluate(el =>
     el.firstElementChild?.classList.contains('priority-card'));
   expect(priorityFirst).toBe(true);
