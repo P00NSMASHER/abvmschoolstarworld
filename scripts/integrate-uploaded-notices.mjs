@@ -48,7 +48,11 @@ function mergeEvents(existing,uploaded,now){
   for(const item of uploaded.importantDates){
     const event={...item,source:"uploaded-notice"};
     const key=`${dateKey(event.date)}:${String(event.label||"").normalize("NFC").trim().toLowerCase().replace(/\\s+/g," ")}`;
-    incomingByKey.set(key,event);
+    const current=incomingByKey.get(key);
+    if(current){
+      const sourceDocuments=[...new Set([...(current.sourceDocuments||[]),current.sourceDocument,...(event.sourceDocuments||[]),event.sourceDocument].filter(Boolean))];
+      incomingByKey.set(key,{...event,sourceDocuments});
+    }else incomingByKey.set(key,event);
   }
   const incoming=[...incomingByKey.values()];
   const incomingKeys=new Set(incoming.map(item=>`${dateKey(item.date)}:${topicKey(item.label)}`));
