@@ -1,0 +1,70 @@
+{
+  "candidateId": "curriculum-spelling-handwriting-long-short-u-b5341c4e17",
+  "familyId": "long-short-u",
+  "subject": "Spelling / Handwriting",
+  "topic": "long / short u",
+  "sourceHash": "teacher-pages-1d26807b4ca33bb8133e",
+  "generatedAt": "2026-10-16T15:27:09.726Z",
+  "sourceContext": {
+    "quality": "page-exact",
+    "matchMethod": "exact-topic-phrase",
+    "subject": "Spelling / Handwriting",
+    "topic": "long / short u",
+    "sourceTitle": "Tests",
+    "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+    "sourceCaptureHash": "3b3888d4e1a9cf81c83a6abb3d9c34248608c67246f8b78eb4a88d668cfb1b4d",
+    "sourceCheckedAt": "2026-10-16T15:27:09.726Z",
+    "sourceLine": "Friday Oct. 23: Spelling (long/short u)/Handwriting",
+    "evidenceExcerptHash": "sha256:f6d7fa8aafaa70c221bb32b63e294e2afad208d5145b4a6ea8b901eb020aa6c0"
+  },
+  "featureFlag": "curriculum-family:long-short-u-candidate",
+  "enabledByDefault": false,
+  "registryMatch": null,
+  "minimumSemanticVariants": 8,
+  "requiredQuestionTypes": [
+    "direct",
+    "transfer",
+    "reasoning"
+  ],
+  "proposedQuestions": [],
+  "authoring": {
+    "status": "AUTHORING_REQUIRED",
+    "generatedQuestionCount": 0,
+    "minimumSemanticVariants": 8,
+    "requiredQuestionTypes": [
+      "direct",
+      "transfer",
+      "reasoning"
+    ],
+    "requiredQuestionFields": [
+      "questionType",
+      "prompt",
+      "choices",
+      "answer",
+      "explanation",
+      "hint",
+      "dok",
+      "difficulty"
+    ]
+  },
+  "rollout": {
+    "featureFlagRequired": false,
+    "automatedQaRequired": true,
+    "safeUsageEvidenceRequired": false,
+    "manualPromotionRequired": false,
+    "automaticPromotion": true
+  },
+  "readiness": {
+    "status": "HOLD",
+    "blockers": [
+      "minimum-semantic-variants:0/8",
+      "question-type-required:direct",
+      "question-type-required:transfer",
+      "question-type-required:reasoning",
+      "automated-qa-required"
+    ],
+    "automaticPromotion": false,
+    "automaticDelete": false,
+    "automaticRewrite": false
+  }
+}
