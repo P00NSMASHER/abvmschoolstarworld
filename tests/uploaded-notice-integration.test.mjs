@@ -35,3 +35,29 @@ test("stale uploaded-notice receipts fail closed",()=>{
   stale.uploadedNotices.latestIntegratedAt="2000-01-01T00:00:00.000Z";
   assert.throws(()=>validateUploadedNoticeIntegration(stale,structuredClone(uploaded)),/latestIntegratedAt is stale/);
 });
+
+test("integration publishes only the newest verified nearby event and preserves raw provenance",()=>{
+  const notices=structuredClone(uploaded);
+  const authoritative=notices.documents.find(d=>d.id===notices.sourcePrecedence.authoritativeCurrentDocument);
+  const later=structuredClone(authoritative);
+  later.id="new-integration-precedence-test";
+  later.receivedAt="2026-10-16T13:28:00.000Z";
+  later.label="Newer verified weekly notice test";
+  later.review.reviewedBy="automated-fixed-event-extraction-v1";
+  notices.documents.push(later);
+  notices.importantDates.push({date:"Monday, Oct. 19",label:"Lego Club",
+    kind:"club",sourceDocument:later.id});
+
+  const rawCount=notices.importantDates.length;
+  const result=integrateUploadedNotices(structuredClone(source),notices,{
+    now:new Date("2026-10-16T14:00:00.000Z")
+  });
+  const publicLego=result.data.pack.importantDates.filter(item=>/lego club/i.test(item.label));
+
+  assert.deepEqual(publicLego,[{
+    date:"Monday, Oct. 19",label:"Lego Club",kind:"club",
+    sourceDocument:later.id,source:"uploaded-notice"
+  }]);
+  assert.equal(notices.importantDates.length,rawCount);
+  assert.doesNotThrow(()=>validateUploadedNoticeIntegration(result.data,notices));
+});
