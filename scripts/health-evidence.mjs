@@ -4,8 +4,11 @@ export function workflowEvidenceAt(run){
   return Date.parse(run?.updated_at||run?.created_at||0)||0;
 }
 
-export function selectPublicationEvidence(deployRun,refreshRun){
-  if(refreshRun?.conclusion==="success"&&(!deployRun||workflowEvidenceAt(refreshRun)>workflowEvidenceAt(deployRun)))return refreshRun;
+export function selectPublicationEvidence(deployRun,...sourceRuns){
+  const successfulSourceRun=sourceRuns
+    .filter(run=>run?.conclusion==="success")
+    .sort((a,b)=>workflowEvidenceAt(b)-workflowEvidenceAt(a))[0]||null;
+  if(successfulSourceRun&&(!deployRun||workflowEvidenceAt(successfulSourceRun)>workflowEvidenceAt(deployRun)))return successfulSourceRun;
   return deployRun||null;
 }
 
