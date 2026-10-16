@@ -32,6 +32,7 @@ test('library and reader escape source text and preserve accurate empty and unda
  const html=renderNotesLibrary(hostile,{subject:'<Math>',query:'<script>'});
  assert.ok(html.includes('&lt;script&gt;'));assert.ok(!html.includes('<script>'));
  assert.ok(html.includes('Search study notes'));assert.ok(html.includes('Back to subjects'));
+ assert.ok(renderNotesLibrary(data,{subject:'Reading / ELA'}).includes('<small>1 word</small>'));
  assert.ok(renderNotesLibrary(data,{subject:'Math'}).includes('Undated schoolwork'));
  assert.ok(renderNotesLibrary({notes:[]}).includes('No lesson notes are included in this selection.'));
 });
