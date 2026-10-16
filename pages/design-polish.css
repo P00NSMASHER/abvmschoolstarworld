@@ -386,7 +386,6 @@
   object-fit: contain;
   filter: drop-shadow(0 4px 7px rgba(70,42,15,.10));
 }
-.today-screen > .lunch-card .lunch-art:not(.lunch-art-tray) figcaption { font-size: .59rem; }
 
 /* Related rows become a genuine compact plan, not empty space between cards. */
 .today-screen .today-panel { min-width: 0; }
@@ -630,7 +629,6 @@
 .calendar-studio .agenda-lunch p {font-size:.77rem;line-height:1.45;color:#3f493f;overflow-wrap:anywhere;}
 .calendar-studio .agenda-lunch .lunch-art:not(.lunch-art-tray),.calendar-studio .agenda-lunch .lunch-art:not(.lunch-art-tray) img {width:68px;flex:none;}
 .calendar-studio .agenda-lunch .lunch-art:not(.lunch-art-tray) img {height:auto;aspect-ratio:1;object-fit:contain;}
-.calendar-studio .agenda-lunch .lunch-art:not(.lunch-art-tray) figcaption {font-size:.51rem;color:#665d48;}
 .calendar-studio .calendar-study-action {display:flex;align-items:center;justify-content:space-between;width:100%;min-height:48px;padding:10px 13px;margin-top:12px;border:1px solid #d5e6dd;border-radius:12px;background:#edf5f0;color:var(--cal-action);font-size:.80rem;font-weight:700;box-shadow:none;}
 .calendar-studio .calendar-study-action svg {width:18px;height:18px;}
 .calendar-studio .cal-picker {margin-bottom:14px;padding:10px 12px;border:1px solid var(--cal-line);border-radius:18px;background:white;box-shadow:0 5px 25px #203b3c12;}
@@ -2026,5 +2024,3 @@
 .calendar-studio .agenda-lunch{flex-wrap:wrap}
 .calendar-studio .agenda-lunch > .lunch-art-tray{width:100%;flex-basis:100%}
 .lunch-art.lunch-art-tray img{width:100%;height:auto;aspect-ratio:3/2;object-fit:contain;border-radius:12px}
-.lunch-art.lunch-art-tray figcaption{font-size:.65rem;line-height:1.4;text-align:left;width:100%;margin-top:6px}
-.lunch-art-tray figcaption > span{display:block;color:#69582d;margin-top:2px}

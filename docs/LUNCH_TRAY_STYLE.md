@@ -17,15 +17,15 @@ when generating a different menu. Style ID: `abvm-maroon-tray-v1`.
 Use high-quality natural photorealism, a landscape 3:2 composition with the entire
 tray visible, elevated three-quarter overhead framing, soft neutral daylight,
 crisp natural food texture and no text/logos/drinks/extra food. Small clear plain
-side cups match the visible reference. Images are **Meal illustration**, with
-illustrative appearance and portions, never actual photographs or evidence of
-exact school servings. Keep the complete verified menu text visible.
+side cups match the visible reference. Images are illustrations with descriptive
+alt text, not actual photographs or evidence of exact school servings. Keep the
+complete verified menu text visible; do not render a caption beneath the image.
 
 Source details remain authoritative. Do not invent fruit varieties, taco filling,
 dipping sauce, toppings, condiments or allergens. The current generic Fruit is
-not pictured, with that omission explicitly disclosed. For Taco Tuesday & chips,
-show chips and explicitly named sides only, disclosing the unspecified taco
-filling. Generic Dipping sauce is omitted with disclosure. These choices allow
+not pictured; its omission remains recorded in reviewed registry metadata. For
+Taco Tuesday & chips, show chips and explicitly named sides only, recording the
+unspecified filling. Generic Dipping sauce is omitted and recorded. These choices allow
 ongoing artwork completion without requiring an educator approval or inventing
 food content. Named meals/sides otherwise remain visually represented.
 

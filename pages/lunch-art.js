@@ -13,7 +13,7 @@ function renderLunchArtwork(meal, approved) {
   const art = approved[mealSignature(meal)];
   if (!art) return '';
   const escape = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
-  return `<figure class="lunch-art${art.styleId?' lunch-art-tray':''}"><img src="${escape(art.src)}" alt="${escape(art.alt)}" width="${art.width||320}" height="${art.height||320}" loading="lazy" decoding="async"><figcaption>${escape(art.label)}${art.styleId?'<span>Illustrative appearance and portions. '+escape(art.omissionNote)+'</span>':''}</figcaption></figure>`;
+  return `<figure class="lunch-art${art.styleId?' lunch-art-tray':''}"><img src="${escape(art.src)}" alt="${escape(art.alt)}" width="${art.width||320}" height="${art.height||320}" loading="lazy" decoding="async"></figure>`;
 }
 function trayMenuContents(menu) {
   const foods=[],omitted=[];

@@ -7,9 +7,10 @@ const meal = catalogMeals().find(meal => meal.date === '2026-10-05');
 const entry = { id: 'popcorn-chicken', src: 'assets/lunch-art/popcorn-chicken.webp', alt: 'Illustration of popcorn chicken', status: 'reviewed', reviewedAt: '2026-10-05T04:00:00Z', reviewNotes: 'Entrée only; no sides depicted.', approvedMenus: [meal] };
 const registry = { schemaVersion: 1, artworks: [entry] };
 
-test('exact reviewed menu displays labeled art, changed sides or source do not', () => {
+test('exact reviewed menu displays descriptive art without a footnote, changed sides or source do not', () => {
   const map = approvedArtwork(catalogMeals(), registry);
-  assert.match(renderLunchArtwork(meal, map), /Meal illustration/);
+  assert.match(renderLunchArtwork(meal, map), /alt="Illustration of popcorn chicken"/);
+  assert.doesNotMatch(renderLunchArtwork(meal, map), /<figcaption/);
   assert.match(renderLunchArtwork(meal, map), /popcorn-chicken.webp/);
   assert.equal(renderLunchArtwork({ ...meal, items: [...meal.items, 'Milk'] }, map), '');
   assert.equal(renderLunchArtwork({ ...meal, sourceId: 'unreviewed-source' }, map), '');
@@ -87,7 +88,10 @@ test('every published tray has verified optimized bytes and preserves full menu 
     assert.equal(createHash('sha256').update(asset).digest('hex'),art.sha256);
     assert.ok(asset.length<=256*1024);
     assert.equal(art.styleId,TRAY_STYLE_ID);
-    assert.match(renderLunchArtwork(art.approvedMenus[0],approved),/Fruit variety not specified/);
+    const html=renderLunchArtwork(art.approvedMenus[0],approved);
+    assert.match(html,/alt="Illustration of/);
+    assert.doesNotMatch(html,/<figcaption|Illustrative appearance and portions|Fruit variety not specified/);
+    assert.equal(approved[JSON.stringify([art.approvedMenus[0].sourceId,art.approvedMenus[0].items])].omissionNote,art.omissionNote);
   }
   // Retained historical months must not block later monthly publication.
   const monthAssets=new Map();
