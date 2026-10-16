@@ -97,7 +97,7 @@ try {
   }
   if (await page.locator('.lunch-card').count()) await page.locator('.lunch-card').first().scrollIntoViewIfNeeded();
   const mealArt=page.locator('.today-screen .lunch-art-tray img');
-  if(await mealArt.count()){await expect.poll(()=>mealArt.evaluate(img=>img.complete&&img.naturalWidth>=1200)).toBe(true);await expect(page.locator('.lunch-art-tray figcaption')).toContainText('Meal illustration');receipt.todayTrayImage={src:await mealArt.getAttribute('src'),decoded:true};}
+  if(await mealArt.count()){await expect.poll(()=>mealArt.evaluate(img=>img.complete&&img.naturalWidth>=1200)).toBe(true);await expect(mealArt).toHaveAttribute('alt',/^Illustration of/);await expect(page.locator('.lunch-art-tray figcaption')).toHaveCount(0);receipt.todayTrayImage={src:await mealArt.getAttribute('src'),decoded:true};}
   await page.screenshot({ path: `${out}/today.png` });
   receipt.screens.push({ screen: 'Today', date: today, lunch: await page.locator('.lunch-card').allTextContents() });
 
