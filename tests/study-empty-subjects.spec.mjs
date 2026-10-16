@@ -47,7 +47,9 @@ test('teacher notes remain the explicit lesson content when notes arrive',async(
   await notes.locator('[data-notes-source=saved]').click();
   const math=notes.locator('[data-note-subject="Math"]');
   await expect(math).toBeVisible();
-  await expect(math.locator('.study-note-topic > summary')).toContainText(['Compare three-digit numbers','Class notes']);
+  await expect(math.locator('.study-note-topic > summary')).toHaveText(['Class notes','Topics from class']);
+  await expect(math.getByText('Compare three-digit numbers',{exact:true})).toHaveCount(1);
+  await expect(math.locator('.study-note-topic').filter({has:page.getByText('Topics from class',{exact:true})}).locator('li')).toHaveText(['Compare three-digit numbers']);
   const bullets=math.locator('[data-note-disclosure$="-class-notes"] li');
   await expect(bullets).toHaveText(['Start with the hundreds.']);
   await expect(bullets).toBeVisible();

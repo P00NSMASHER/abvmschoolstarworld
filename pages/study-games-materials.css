@@ -316,8 +316,8 @@
 .games-screen [data-study-notes] .study-note-heading div{min-width:0}
 .games-screen [data-study-notes] .study-note-heading small{display:block;margin-bottom:5px;color:var(--study-muted);font-size:.78rem;line-height:1.45}
 .games-screen [data-study-notes] .study-note-heading h3{margin:0;font-size:1.4rem;line-height:1.25;letter-spacing:-.025em;overflow-wrap:anywhere}
-.games-screen [data-study-notes] .study-note-topic-grid{display:grid;grid-template-columns:minmax(0,1fr);align-items:start;gap:10px}
-.games-screen [data-study-notes] :is(.study-note-topic,.game-material-lesson){min-width:0;margin:0 0 12px;border:1px solid var(--study-line);border-radius:15px;background:white;box-shadow:none;overflow:hidden}
+.games-screen [data-study-notes] .study-note-topic-grid{display:grid;grid-template-columns:minmax(0,1fr);align-items:start;gap:14px}
+.games-screen [data-study-notes] :is(.study-note-topic,.game-material-lesson){min-width:0;margin:0;border:1px solid var(--study-line);border-radius:15px;background:white;box-shadow:none;overflow:hidden}
 .games-screen [data-study-notes] details:not([open])>:not(summary){display:none}
 .games-screen [data-study-notes] :is(.study-note-topic,.game-material-lesson)>summary{display:list-item;min-height:52px;padding:14px 16px;background:#f8fbfe;color:var(--study-ink);font-size:.98rem;line-height:1.45;cursor:pointer;list-style:disclosure-closed inside}
 .games-screen [data-study-notes] :is(.study-note-topic,.game-material-lesson)[open]>summary{list-style-type:disclosure-open}
@@ -330,13 +330,6 @@
 .games-screen [data-study-notes] .study-note-body dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:14px;margin-top:16px;font-size:1rem;line-height:1.6}
 .games-screen [data-study-notes] .study-note-body dl>div{padding:12px;border-radius:12px;background:#f5f9fe}
 .games-screen [data-study-notes] .study-note-body dd{margin:4px 0 0}
-.games-screen [data-study-notes] .study-note-point{margin:0;padding:14px 0;border-bottom:1px solid #e6edf5}
-.games-screen [data-study-notes] .study-note-point:last-child{border-bottom:0}
-.games-screen [data-study-notes] .study-note-point p{margin:0;padding:0;font-size:1rem;line-height:1.65}
-.games-screen [data-study-notes] .study-notes-original{margin-top:22px;border-top:1px solid var(--study-line);color:var(--study-muted)}
-.games-screen [data-study-notes] .study-notes-original>summary{min-height:48px;padding:14px 0;font-size:.86rem;line-height:1.5;cursor:pointer}
-.games-screen [data-study-notes] .study-notes-original>summary small{display:block;padding-top:3px}
-.games-screen [data-study-notes] .study-note-schoolwork h4{margin:20px 0 12px;font-size:1.05rem}
 .games-screen [data-study-notes] .study-note-references{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
 .games-screen [data-study-notes] .study-note-references:empty{display:none}
 .games-screen [data-study-notes] [data-religion-review]{display:flex;align-items:center;gap:8px;min-height:48px;margin:0;padding:10px 14px;border:1px solid #d5c4ee;border-radius:12px;background:#f8f3ff;color:#503377;font-size:.92rem;font-weight:650;line-height:1.4;text-decoration:none}

@@ -72,3 +72,13 @@ test('study-note paragraphs are fully consolidated and visible without a practic
  assert.ok(html.indexOf('Say each sound')>html.indexOf('study-note-topic-grid'));
  assert.ok(html.includes('Cumulative'));
  });
+
+test('topic-only entries appear once below teaching, in a compact source list',()=>{
+ const source={notes:[{subject:'Reading / ELA',kind:'topic',text:'Story: Families Work'},{subject:'Reading / ELA',kind:'topic',text:'Sight words: all, right, work'},{subject:'Reading / ELA',kind:'topic',text:'Phonics: short i'},{subject:'Reading / ELA',kind:'study-note',text:'Say the short i sound.',topics:['Phonics: short i']}]};
+ const html=renderNotesLibrary(source,{subject:'Reading / ELA'});
+ assert.equal(html.split('Story: Families Work').length-1,1);
+ assert.equal(html.split('Sight words: all, right, work').length-1,1);
+ assert.ok(html.includes('<li>Story: Families Work</li>'));
+ assert.ok(html.indexOf('Say the short i sound.')<html.indexOf('Topics from class'));
+ assert.deepEqual(notesLibraryData(source)[0].original,source.notes.map(row=>row.text));
+});

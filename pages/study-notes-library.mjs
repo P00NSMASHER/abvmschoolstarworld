@@ -57,15 +57,18 @@ function detailHtml(row,{source,meaning}) {
  const paragraphs=section=>'<div class="notes-explanation"><small>'+esc(section.label)+'</small>'+list(section.paragraphs)+'</div>';
  const topics=row.topics.map((topic,i)=>{
   const sections=row.explanations.filter(section=>section.topic===topic);
+  if(!sections.length)return '';
   return '<details class="study-note-topic" data-note-disclosure="'+row.index+'-topic-'+i+'" open><summary><strong>'+esc(topic)+'</strong></summary><div class="study-note-body">'+
-   (sections.length?sections.map(paragraphs).join(''):list([topic]))+'</div></details>';
+   sections.map(paragraphs).join('')+'</div></details>';
  }).join('');
+ const topicOnly=row.topics.filter(topic=>!row.explanations.some(section=>section.topic===topic));
+ const topicList=topicOnly.length?'<details class="study-note-topic" data-note-disclosure="'+row.index+'-topics" open><summary><strong>Topics from class</strong></summary><div class="study-note-body">'+list(topicOnly)+'</div></details>':'';
  const classNotes=row.review.length?'<details class="study-note-topic" data-note-disclosure="'+row.index+'-class-notes" open><summary><strong>Class notes</strong></summary><div class="study-note-body">'+list(row.review)+'</div></details>':'';
  const words=row.words.length?'<details class="study-note-topic study-vocabulary" data-note-disclosure="'+row.index+'-words" open><summary><strong>Words to know</strong><small>'+row.words.length+' '+(row.words.length===1?'word':'words')+'</small></summary><div class="study-note-body"><ul>'+row.words.map(word=>{const definition=meaning(word);return '<li><strong>'+esc(word.term)+'</strong>'+(definition?' — '+esc(definition):'')+'</li>';}).join('')+'</ul></div></details>':'';
  const saved=row.lessons.map((lesson,i)=>'<details class="study-note-topic game-material-lesson" data-note-disclosure="'+row.index+'-saved-'+i+'" open><summary><strong>'+esc(lesson.title)+'</strong><small>'+esc(dateLabel(lesson.studiedOn))+'</small></summary><div class="study-note-body">'+list((lesson.notes||[]).filter(text))+'</div></details>').join('');
  return '<header class="study-note-heading"><img src="./assets/illustrations/'+art(row.subject)+'.webp" alt="" width="64" height="64"><div><small>'+esc(source==='saved'?'Cumulative learning':'This week’s confirmed material')+'</small><h3 id="study-notes-title-'+row.index+'" tabindex="-1">'+esc(row.subject)+'</h3></div></header>'+
   row.warnings.map(value=>'<p class="game-note-warning">'+esc(value.text)+'</p>').join('')+
-  '<div class="study-note-topic-grid">'+topics+classNotes+words+saved+'</div>'+
+  '<div class="study-note-topic-grid">'+topics+classNotes+topicList+words+saved+'</div>'+
   '<div class="study-note-references">'+row.links.map(link=>'<a data-religion-review href="'+esc(link.url)+'" target="_blank" rel="noopener">'+esc(link.label)+'</a>').join('')+'</div>';
 }
 
