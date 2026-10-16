@@ -6,6 +6,7 @@ import { publishedMealForDate } from './published-meal.mjs';
 
 const base = process.env.ABVM_LIVE_URL || 'https://p00nsmasher.github.io/abvmschoolstarworld/';
 const expected = JSON.parse(readFileSync(new URL('../pages/data/study-pack.json', import.meta.url), 'utf8'));
+const artRegistry=JSON.parse(readFileSync(new URL('../pages/data/lunch-art-registry.json',import.meta.url),'utf8'));
 const out = 'live-lunch-proof';
 mkdirSync(out, { recursive: true });
 const receipt = {
@@ -42,7 +43,6 @@ function eastToday() {
   return `${p.year}-${p.month}-${p.day}`;
 }
 async function liveStudyAssets() {
-  const artRegistry=JSON.parse(readFileSync(new URL('../pages/data/lunch-art-registry.json',import.meta.url),'utf8'));
   const assets = ['lunch-art.js','data/lunch-art-current.json','data/lunch-art-registry.json',...artRegistry.artworks.filter(art=>art.status==='reviewed').map(art=>art.src),'index.html', 'app.js', 'product-view.js', 'styles.css', 'study-teaching.css', 'study-review.js', 'weekly-learning.js', 'assets/school/abvm-school-hero.webp', 'study-games.js', 'study-games-view.js', 'study-materials.mjs', 'study-games-materials-view.mjs', 'study-games-materials.css', 'sw.js', ...['math', 'reading', 'spelling', 'religion', 'eagle'].map(name => 'assets/illustrations/' + name + '.webp'), ...['eaglet','starlight','spark','scholar','golden','eagle','champion'].map(name=>'assets/badges/'+name+'.webp'), ...['nest-explorer','little-luminary','feather-cadet','star-voyager','sky-scholar','wing-leader','study-sentinel','school-spirit','blue-ribbon-ace','golden-quill','sky-captain','eagle-vanguard','honor-guardian','crown-keeper','star-commander'].map(name=>'assets/badges/'+name+'-premium.webp')];
   // A live source timestamp is insufficient if the published question bank,
   // Homework feed, or printable renderers still contain an earlier build.
@@ -110,6 +110,15 @@ try {
   for (const meal of data.pack.lunchMenu) {
     await selectWeekDate(meal.date);
     for (const item of meal.items) await expect(page.locator('.lunch-card')).toContainText(item);
+    const reviewed=artRegistry.artworks.find(art=>art.status==='reviewed'&&art.approvedMenus.some(menu=>menu.sourceId===meal.sourceId&&JSON.stringify(menu.items)===JSON.stringify(meal.items)));
+    if(reviewed){
+      const image=page.locator('.week-rail .lunch-art-tray img');
+      await expect(image,'a reviewed published menu must actually display its tray image').toHaveCount(1);
+      await expect(image).toHaveAttribute('src',reviewed.src);
+      await image.scrollIntoViewIfNeeded();
+      await expect.poll(()=>image.evaluate(img=>img.complete&&img.naturalWidth>=1200)).toBe(true);
+      (receipt.reviewedTrayImages??=[]).push({date:meal.date,src:reviewed.src,decoded:true});
+    }
     receipt.screens.push({ screen: 'Week', date: meal.date, lunch: await page.locator('.lunch-card').textContent() });
   }
   await page.locator('.lunch-card').scrollIntoViewIfNeeded();
