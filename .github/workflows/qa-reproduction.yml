@@ -2,6 +2,8 @@ name: Independent QA reproduction bundle
 on:
   pull_request:
     paths:
+      - 'scripts/import-yahoo-weekly-reminders.py'
+      - 'tests/test_yahoo_weekly_import.py'
       - 'pages/data/lunch-art-registry.json'
       - 'pages/data/lunch-art-current.json'
       - 'pages/lunch-art.js'

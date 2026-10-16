@@ -14,6 +14,46 @@ spec.loader.exec_module(module)
 
 
 class YahooWeeklyImportTests(unittest.TestCase):
+
+    def test_touching_friday_and_reminder_cards_are_isolated_without_cutting_words(self):
+        # Geometry observed in the Oct 19 planner; no private PDF or mail URL.
+        region=(880,1029,1958,1669)
+        anchors=[(588.5,392),(1132.5,401),(1672.5,402),(591.5,992),(1130,994)]
+        words=[(1260,1250,1345,1280),(1388,1080,1445,1110)]
+        pieces=module.isolated_calendar_regions([region],anchors,words,2200)
+        self.assertEqual(len(pieces),2)
+        left,right=pieces
+        self.assertEqual((left[0],right[2]),(region[0],region[2]))
+        self.assertEqual(left[2],right[0])
+        self.assertGreater(left[2],1345)
+        self.assertLess(left[2],1388)
+        self.assertEqual(module.isolated_calendar_regions([(884,576,1376,928)],anchors,words,2200),[(884,576,1376,928)])
+
+    def test_merged_card_without_a_safe_word_seam_fails_closed(self):
+        anchors=[(588.5,392),(1132.5,401),(1672.5,402),(591.5,992),(1130,994)]
+        with self.assertRaisesRegex(ValueError,'isolate'):
+            module.isolated_calendar_regions([(880,1029,1958,1669)],anchors,[(1280,1200,1530,1240)],2200)
+
+    def test_an_upper_grade_closure_is_not_published_as_grade_two_no_school(self):
+        events=module.events_from_text('Monday 10/19/2026: No School for students in 5th-8th grade\nTuesday 10/20/2026: No School for students in grades K-4',dt.date(2026,10,19))
+        self.assertEqual([(row['date'],row['label']) for row in events],[('Tuesday, Oct. 20','No School')])
+
+    def test_reminder_date_prefix_and_printed_football_scope_stay_explicit(self):
+        rows=module.events_from_text('s 10/26 DDD Flag football K-4\n10/29 DDD Flag football for 5-8',dt.date(2026,10,19))
+        pairs={(row['date'],row['label']) for row in rows}
+        self.assertIn(('Monday, Oct. 26','K–4 Flag football'),pairs)
+        self.assertIn(('Thursday, Oct. 29','Flag football (for 5–8)'),pairs)
+        self.assertIn(('Thursday, Oct. 29','Dress Down Day (Flag football for 5–8)'),pairs)
+        self.assertNotIn(('Thursday, Oct. 29','Flag football'),pairs)
+        self.assertNotIn(('Thursday, Oct. 29','Dress Down Day'),pairs)
+
+    def test_unscoped_no_school_and_football_hours_are_not_inferred_grade_ranges(self):
+        for hours in ['5-8 pm','5-8 p.m.','5-8 AM','5-8 a.m.']:
+            rows=module.events_from_text('Monday 10/19/2026: No School\nTuesday 10/20/2026: Flag football '+hours,dt.date(2026,10,19))
+            self.assertIn({'date':'Monday, Oct. 19','label':'No School','kind':'holiday'},rows)
+            self.assertIn({'date':'Tuesday, Oct. 20','label':'Flag football','kind':'school event'},rows)
+            self.assertFalse(any('for 5' in row['label'] for row in rows))
+
     def test_only_matching_weekly_pdf_name_is_accepted(self):
         self.assertEqual(module.week_from_name("Weekly Reminders for Week of 10.05.26.pdf"), dt.date(2026, 10, 5))
         self.assertIsNone(module.week_from_name("Gift Card Winners.pdf"))
