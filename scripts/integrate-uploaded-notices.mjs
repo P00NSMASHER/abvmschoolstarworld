@@ -2,7 +2,7 @@ import {createHash} from "node:crypto";
 import {readFileSync, writeFileSync} from "node:fs";
 import {resolve} from "node:path";
 import {fileURLToPath} from "node:url";
-import {validateUploadedNoticePolicy} from "./uploaded-notice-policy.mjs";
+import {currentImportantDates,validateUploadedNoticePolicy} from "./uploaded-notice-policy.mjs";
 
 const DATA_PATH=new URL("../pages/data/study-pack.json",import.meta.url);
 const NOTICES_PATH=new URL("../pages/data/uploaded-notices.json",import.meta.url);
@@ -44,7 +44,7 @@ function eventTime(value,now=new Date()){
   return Date.UTC(year,month,Number(m[2]));
 }
 function mergeEvents(existing,uploaded,now){
-  const incoming=uploaded.importantDates.map(item=>({...item,source:"uploaded-notice"}));
+  const incoming=currentImportantDates(uploaded).map(item=>({...item,source:"uploaded-notice"}));
   const incomingKeys=new Set(incoming.map(item=>`${dateKey(item.date)}:${topicKey(item.label)}`));
   const replacementKeys=new Set(uploaded.replacements.map(item=>`${dateKey(item.date)}:${item.topic}`));
   const kept=(existing||[]).filter(item=>{
