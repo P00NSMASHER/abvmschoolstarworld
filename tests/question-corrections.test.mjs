@@ -1,4 +1,11 @@
 import test from 'node:test';
+import vm from 'node:vm';
+import {readFileSync} from 'node:fs';
+import {buildRuntimePack} from '../scripts/build-runtime-pack.mjs';
+import {buildStudyUniverse} from '../scripts/build-study-universe.mjs';
+import {buildRecentReviewPipeline} from '../scripts/curriculum-continuity.mjs';
+import {createStudyMaterials} from '../pages/study-materials.mjs';
+import {withOriginalMathFixture} from './helpers/original-math-fixture.mjs';
 import assert from 'node:assert/strict';
 import {mkdtemp,mkdir,writeFile,readFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
@@ -43,4 +50,51 @@ test('the original-practice correction never rewrites other questions or teacher
  for(const change of [{id:'teacher-source-row'},{subject:'Reading / ELA'},{skill:'different-skill'},{answer:'6 + 4 = 10'},{choices:['5 + 4 = 9','A different fact','9 + 4 = 13']},{prompt:'A different subtraction question'}]){
   const q={...original(),...change};assert.equal(correctOriginalQuestion(q),q);
  }
+});
+
+
+const historical=JSON.parse(readFileSync(new URL('./fixtures/math-original-practice.json',import.meta.url),'utf8'));
+const legacyQuestion=()=>structuredClone(historical.questions.find(q=>q.prompt.startsWith('Sam says 9 - 4 = 6.')));
+test('cached current, retained, runtime, archive and export readers share the exact editorial correction',()=>{
+ const q=legacyQuestion(),fixed=correctOriginalQuestion(q),window={};
+ class Clock extends Date{constructor(...a){super(...(a.length?a:['2026-10-16T12:00:00Z']))}static now(){return Date.parse('2026-10-16T12:00:00Z')}}
+ vm.runInNewContext(readFileSync(new URL('../pages/study-games.js',import.meta.url),'utf8'),{window,Intl,Date:Clock,console,localStorage:{getItem:()=>null}});
+ const engine=window.ABVMStudyGames;
+ assert.deepEqual(JSON.parse(JSON.stringify(engine.correctOriginalQuestion(q))),fixed);
+ assert.notEqual(fixed.variantFingerprint,q.variantFingerprint);
+ assert.notEqual(fixed.contentFingerprint,q.contentFingerprint);
+ assert.equal(correctOriginalQuestion(fixed),fixed);
+ const fixture=withOriginalMathFixture(JSON.parse(readFileSync(new URL('../pages/data/study-pack.json',import.meta.url),'utf8')));
+ fixture.pack.contentPipeline.questions=[...fixture.pack.contentPipeline.questions.filter(row=>row.subject!=='Math'),q];
+ const review={...q,reviewVerifiedAt:'2026-10-15T12:00:00Z',reviewExpiresAt:'2026-10-29T12:00:00Z',reviewSourceHash:'historical-reviewed-math'};
+ fixture.pack.recentReviewPipeline={schemaVersion:1,retentionDays:14,bankFingerprint:'historical-cached-review',skills:[],questions:[review]};
+ const before=JSON.stringify(fixture),runtime=buildRuntimePack(fixture);
+ for(const pipeline of [runtime.pack.contentPipeline,runtime.pack.recentReviewPipeline]){
+  const repaired=pipeline.questions.find(row=>row.skill==='math-subtraction');
+  assert.equal(repaired.prompt,SUBTRACTION_CHECK_PROMPT);
+  assert.equal(repaired.variantFingerprint,fixed.variantFingerprint);
+ }
+ const catalog=engine.buildCatalog(fixture.pack,{sourceKey:'cached-source-fixture'});
+ assert.ok(catalog.questions.some(row=>row.prompt===SUBTRACTION_CHECK_PROMPT));
+ assert.ok(catalog.questions.every(row=>row.prompt!==q.prompt));
+ const saved=archive();saved.questions=[{...q,...original()}];
+ const noCurrent={...fixture.pack,subjects:fixture.pack.subjects.map(row=>row.subject==='Math'?{...row,topics:[]}:row),contentPipeline:{...fixture.pack.contentPipeline,questions:fixture.pack.contentPipeline.questions.filter(row=>row.subject!=='Math')}};
+ const model=createStudyMaterials({pack:noCurrent,catalog:engine.buildCatalog(noCurrent,{sourceKey:'withdrawn'}),engine,archive:saved,now:()=>new Clock()});
+ const scope=model.forMode('math',{source:'weekly'}),eligible=new Set(scope.eligibleIds),served=scope.catalog.questions.filter(row=>eligible.has(row.id));
+ assert.ok(served.some(row=>row.prompt===SUBTRACTION_CHECK_PROMPT));assert.ok(served.every(row=>row.prompt!==q.prompt));
+ const exported=buildStudyUniverse({pack:fixture,archive:saved});
+ assert.ok(exported.questions.every(row=>row.prompt!==q.prompt));
+ assert.equal(JSON.stringify(fixture),before,'read-time repairs never mutate governed source data');
+});
+
+test('retained-review repair changes the item identity without renewing its source verification',()=>{
+ const q=legacyQuestion(),previous={generatedAt:'2026-10-15T12:00:00Z',sourceHash:'historical-reviewed-math',qa:{status:'pass'},skills:historical.skills,questions:[q]};
+ const options={previousCurrent:previous,current:{skills:[],questions:[]},now:'2026-10-16T12:00:00Z'};
+ const result=buildRecentReviewPipeline(options),retained=result.questions[0];
+ assert.equal(retained.prompt,SUBTRACTION_CHECK_PROMPT);
+ assert.equal(Date.parse(retained.reviewVerifiedAt),Date.parse(previous.generatedAt));
+ assert.equal(retained.reviewSourceHash,previous.sourceHash);
+ assert.equal(retained.variantFingerprint,correctOriginalQuestion(q).variantFingerprint);
+ const repeated=buildRecentReviewPipeline({...options,previousCurrent:{...previous,questions:[correctOriginalQuestion(q)]}});
+ assert.equal(repeated.bankFingerprint,result.bankFingerprint);
 });

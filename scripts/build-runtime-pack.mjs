@@ -1,3 +1,4 @@
+import {correctOriginalQuestion} from './question-corrections.mjs';
 import fs from "node:fs";
 import {religionChapterScopes} from "../pages/study-hub-core.mjs";
 import path from "node:path";
@@ -24,6 +25,7 @@ function religionGuideFacts(skills){
   return Object.fromEntries([...chapters.entries()].sort((a,b)=>Number(a[0])-Number(b[0])));
 }
 function pickQuestion(question){
+  question=correctOriginalQuestion(question);
   // This public pack gets compact instructional content, never governance metadata.
   const picked=Object.fromEntries(
     RUNTIME_QUESTION_FIELDS

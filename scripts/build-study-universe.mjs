@@ -1,3 +1,4 @@
+import {correctOriginalQuestion} from './question-corrections.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -31,6 +32,7 @@ function schoolDate(value,year){
   return d.getUTCMonth()===month&&d.getUTCDate()===Number(match[2])?d.toISOString().slice(0,10):null;
 }
 function checkedQuestion(row,tier,provenance){
+  row=correctOriginalQuestion(row);
   privacyCheck(row);
   const out=Object.fromEntries(['id','subject','skill','prompt','answer','explanation','sourceFact'].map(f=>[f,text(row?.[f],f)]));
   if(!/^[a-zA-Z0-9][a-zA-Z0-9_-]*$/.test(out.id))throw new Error('Invalid question ID');

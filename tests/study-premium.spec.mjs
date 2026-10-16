@@ -145,7 +145,7 @@ async function beforeDismissal(page){
     const file=new URL(route.request().url()).pathname.endsWith('study-pack-runtime.json')?'study-pack-runtime.json':'study-pack.json';
     const data=withOriginalMathFixture(JSON.parse(readFileSync(new URL('../pages/data/'+file,import.meta.url),'utf8')));
     // Explicit isolated planner fixture; public teacher data and questions stay untouched.
-    data.pack.importantDates=(data.pack.importantDates||[]).filter(item=>item.kind!=='test');
+    data.pack.importantDates=[];
     data.pack.importantDates.push(...[['Oct. 15','QA fixture: Thursday Math'],['Oct. 16','QA fixture: Friday Spelling'],['Oct. 16','QA fixture: Friday Phonics']].map(([date,label])=>({date,label,kind:'test'})));
     await route.fulfill({json:data});
   });

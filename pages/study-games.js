@@ -1,4 +1,29 @@
 (()=>{"use strict";
+// Editorial repair to an identified original practice item, never teacher text.
+const SUBTRACTION_CHECK_PROMPT='Sam says 9 - 4 = 6. Which addition fact checks the correct difference?';
+const legacy=new Set([
+ 'Sam says 9 - 4 = 6. Which fact shows that his answer is one too high?',
+ 'Sam says 9 - 4 = 6. Which fact shows his answer is one too high?',
+]);
+function knownSubtractionCheck(q){
+ return q?.subject==='Math'&&q.skill==='math-subtraction'&&typeof q.id==='string'&&/^auto-math-subtraction-/.test(q.id||'')&&q.answer==='5 + 4 = 9'&&
+  Array.isArray(q.choices)&&q.choices.length===3&&[...q.choices].sort().join('|')==='5 + 4 = 9|6 + 4 = 10|9 + 4 = 13'&&
+  (legacy.has(q.prompt)||q.prompt===SUBTRACTION_CHECK_PROMPT);
+}
+function revisionFingerprint(value){
+ let hash=2166136261>>>0;
+ for(const ch of value){hash^=ch.charCodeAt(0);hash=Math.imul(hash,16777619)>>>0;}
+ return hash.toString(16).padStart(8,'0');
+}
+// A wording revision gets its own identity; archive history stays stable.
+function correctOriginalQuestion(q){
+ if(!knownSubtractionCheck(q))return q;
+ const fixed={...q,id:q.id.endsWith('-wording-v2')?q.id:q.id+'-wording-v2',prompt:SUBTRACTION_CHECK_PROMPT};
+ if(q.contentFingerprint)fixed.contentFingerprint=revisionFingerprint(`${q.skill}|${q.questionType||'direct'}|${fixed.prompt}`);
+ if(q.variantFingerprint)fixed.variantFingerprint=revisionFingerprint(`${fixed.prompt}|${q.answer}|${q.choices.join('|')}`);
+ return Object.keys(fixed).every(key=>fixed[key]===q[key])?q:fixed;
+}
+
 const VERSION="abvm-starblox-study-engine-v2-research-quality";
 const SOURCE_TRANSFORM="skill-only-equivalent-item-v2";
 const MATERIAL_PROVENANCE="original-practice-derived-from-verified-abvm-skills";
@@ -259,8 +284,9 @@ function addTriad(out,prefix,base,items){
 function add(out,question){out.push(makeQuestion(question))}
 function materialContentPipeline(pack,out){
   const specs=Array.isArray(pack?.contentPipeline?.questions)?pack.contentPipeline.questions:[];
-  for(const spec of specs){
-    if(!spec||typeof spec!=="object")continue;
+  for(const raw of specs){
+    if(!raw||typeof raw!=="object")continue;
+    const spec=correctOriginalQuestion(raw);
     const diagnostics=spec.choiceDiagnostics&&typeof spec.choiceDiagnostics==="object"?spec.choiceDiagnostics:{};
     add(out,{
       id:text(spec.id),subject:text(spec.subject),skill:text(spec.skill),tier:"material",
@@ -280,8 +306,9 @@ function materialContentPipeline(pack,out){
 }
 function recentReviewContentPipeline(pack,out){
   const specs=Array.isArray(pack?.recentReviewPipeline?.questions)?pack.recentReviewPipeline.questions:[];
-  for(const spec of specs){
-    if(!spec||typeof spec!=="object")continue;
+  for(const raw of specs){
+    if(!raw||typeof raw!=="object")continue;
+    const spec=correctOriginalQuestion(raw);
     const diagnostics=spec.choiceDiagnostics&&typeof spec.choiceDiagnostics==="object"?spec.choiceDiagnostics:{};
     add(out,{
       id:"review-"+text(spec.id),subject:text(spec.subject),skill:text(spec.skill),tier:"recent-review",
@@ -2165,6 +2192,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,REVIEW_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  buildCatalog,validateCatalog,validateRichContent,vocabularyDefinition,selectQuestions,selectDailyQuestions,learningFirstSummary,studyStarPolicy,nextStreakBonus,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,commitStudyStarPenalty,studyBadgeCatalog,studyBadgeCollection,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,reviewQuestionFamilySafeUsage,questionFamilyRolloutPolicy,reviewQuestionFamilyPromotion,itemQualityKey
+  correctOriginalQuestion,buildCatalog,validateCatalog,validateRichContent,vocabularyDefinition,selectQuestions,selectDailyQuestions,learningFirstSummary,studyStarPolicy,nextStreakBonus,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,commitStudyStarPenalty,studyBadgeCatalog,studyBadgeCollection,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,reviewQuestionFamilySafeUsage,questionFamilyRolloutPolicy,reviewQuestionFamilyPromotion,itemQualityKey
 });
 })();

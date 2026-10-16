@@ -257,6 +257,9 @@ export function createStudyMaterials({
   status = {ready:true, partial:false, errors:[], loaded:{schoolwork:true, archive:true}},
 } = {}) {
   const instant = () => typeof now === 'function' ? now() : now;
+  const repair=engine?.correctOriginalQuestion||((q)=>q);
+  archive={...archive,questions:array(archive.questions).map(repair)};
+  schoolwork={...schoolwork,lessons:array(schoolwork.lessons).map(lesson=>({...lesson,questions:array(lesson.questions).map(repair)}))};
   // The engine deliberately omits audit lineage from questions. Rejoin only
   // the compact, reviewed chapter numbers by stable current-material IDs.
   const scopesById=new Map(array(pack?.contentPipeline?.questions)

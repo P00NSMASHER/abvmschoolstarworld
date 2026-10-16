@@ -11,7 +11,7 @@ const STATIC_SHELL = [
   "./study-teaching.css?v=1",
   "./school-updates.js?v=4",
   "./weekly-learning.js?v=6",
-  "./study-games.js?v=103",
+  "./study-games.js?v=104",
   "./study-games-view.js?v=15",
   "./manifest.webmanifest",
   "./assets/abvm-app-icon-192.png"
