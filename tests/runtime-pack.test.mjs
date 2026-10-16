@@ -15,7 +15,7 @@ test("runtime pack preserves live data and strips audit-only question metadata",
   assert.deepEqual(runtime.pack.homework,source.pack.homework);
   assert.deepEqual(runtime.pack.subjects,source.pack.subjects);
   assert.deepEqual(
-    runtime.pack.contentPipeline.skills,
+    runtime.pack.contentPipeline.skills.map(({noteTopics,...skill})=>skill),
     source.pack.contentPipeline.skills.map(({sourceLineage,evidenceContract,...skill})=>skill),
     "runtime skill labels, notes, standards and other study fields must remain unchanged"
   );
@@ -89,7 +89,10 @@ test("skill audit lineage stays in full pack and is omitted only from the runtim
   for(let i=0;i<full.length;i++){
     assert.equal(Object.hasOwn(small[i],"sourceLineage"),false,"browser skill must not carry teacher capture hashes");
     assert.equal(Object.hasOwn(small[i],"evidenceContract"),false,"browser skill must not repeat the QA contract");
-    for(const key of Object.keys(small[i])){
+    const normalized=value=>String(value).toLowerCase().replace(/[’‘]/g,"'").replace(/[^a-z0-9]+/g,' ').trim();
+    const expectedTopics=source.pack.subjects.filter(row=>row.subject===full[i].subject).flatMap(row=>row.topics||[]).filter(topic=>(full[i].sourceLineage?.matchedEvidence||[]).some(line=>normalized(line).includes(normalized(topic))));
+    assert.deepEqual(small[i].noteTopics,expectedTopics,'compact links reproduce exact source topic associations');
+    for(const key of Object.keys(small[i]).filter(key=>key!=='noteTopics')){
       assert.deepEqual(small[i][key],full[i][key],"displayed skill data changed: "+full[i].id+"."+key);
     }
   }

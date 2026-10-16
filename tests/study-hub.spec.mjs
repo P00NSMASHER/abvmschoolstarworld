@@ -153,7 +153,7 @@ test('on-demand subject notes retain the verified chapter review and disclose a 
   await expect(page.locator('[data-religion-review],.game-note-warning')).toHaveCount(0);
   await page.locator('[data-study-notes] > summary').click();
   const religion=page.locator('[data-note-subject="Religion"]');
-  await openNoteSubject(page,'Religion');
+  await openNoteSubject(page,'Religion','saved');
   await expect(religion).toBeVisible();
   const review=religion.locator('[data-religion-review]');
   await expect(review).toHaveAttribute('href',chapter.url);
@@ -162,12 +162,12 @@ test('on-demand subject notes retain the verified chapter review and disclose a 
   await expect(review).toHaveAttribute('rel',/noopener/);
   await expect(review).toBeVisible();
   const spelling=page.locator('[data-note-subject="Spelling / Handwriting"]');
-  await openNoteSubject(page,'Spelling / Handwriting');
+  await openNoteSubject(page,'Spelling / Handwriting','saved');
   await expect(religion).toBeHidden();
   await expect(spelling.locator('.game-note-warning')).toContainText('Spelling (short i / long i) (2026-10-09)');
   await expect(spelling.locator('.game-note-warning')).toContainText('earlier vowel pattern');
   await expect(spelling.locator('.game-note-warning')).toContainText('do not establish test coverage');
-  await openNoteSubject(page,'Religion');
+  await openNoteSubject(page,'Religion','saved');
   await page.locator('[data-study-notes] > summary').click();
   await expect(page.locator('[data-study-notes]')).not.toHaveAttribute('open','');
   await expect(review).not.toBeVisible();

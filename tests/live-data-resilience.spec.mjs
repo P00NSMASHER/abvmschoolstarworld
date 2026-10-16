@@ -127,9 +127,9 @@ test("timestamp-only verification refresh does not reset open UI state",async({b
   await expect(page.locator(".games-screen")).toHaveAttribute("data-study-state","ready");
   await expect(page.locator(".freshness")).toHaveClass(/stale/);
   const notes=page.locator("[data-study-notes]");
-  await openNoteSubject(page);
-  const first=notes.locator("[data-note-subject]:not([hidden]) .study-notes-original").first();
-  await first.locator(":scope > summary").click();
+  await openNoteSubject(page,null,'saved');
+  const first=notes.locator("[data-note-subject]:not([hidden]) .study-note-topic").first();
+
   await expect(notes).toHaveAttribute("open","");
   await expect(first).toHaveAttribute("open","");
 
@@ -381,8 +381,8 @@ test("Study labels a distant test with its actual date and keeps it out of weekl
   await expect(next).not.toContainText(/this week/i);
   await expect(page.locator("[data-study-source]")).toHaveCount(0);
   const notes=page.locator("[data-study-notes]");
-  await openNoteSubject(page);
-  await expect(notes.locator("[data-note-subject]:not([hidden]) .study-notes-original").first()).toBeVisible();
+  await openNoteSubject(page,null,'saved');
+  await expect(notes.locator("[data-note-subject]:not([hidden]) .study-note-topic").first()).toBeVisible();
   await expect(notes.locator("[data-study-notes-content]")).not.toContainText("STAR Testing window");
   await context.close();
 });

@@ -59,7 +59,26 @@ test('chapter explanations stay scoped, searchable and separate from exact sourc
 
 test('study-note paragraphs are fully consolidated and visible without a practice panel',()=>{
  const html=renderNotesLibrary({notes:[{subject:'Math',kind:'topic',text:'Compare numbers'},{subject:'Math',kind:'study-note',text:'Compare hundreds, then tens, then ones.'}]},{subject:'Math'});
- assert.ok(html.includes('<p>Compare hundreds, then tens, then ones.</p>'));
+ assert.ok(html.includes('<li>Compare hundreds, then tens, then ones.</li>'));
  assert.ok(!html.includes('Practice ideas'));assert.ok(!html.includes('-ideas'));
  assert.ok(!/study-note-review[^>]*><summary/.test(html));
+});
+
+ test('all subject notes and explanations live in bullet cards, without duplicate bottom notes',()=>{
+ const html=renderNotesLibrary(data,{subject:'Reading / ELA',source:'saved'});
+ assert.ok(html.includes('<li>Say each sound, then blend.</li>'));
+ assert.ok(!html.includes('study-note-review'));
+ assert.ok(!html.includes('study-notes-original'));
+ assert.ok(html.indexOf('Say each sound')>html.indexOf('study-note-topic-grid'));
+ assert.ok(html.includes('Cumulative'));
+ });
+
+test('topic-only entries appear once below teaching, in a compact source list',()=>{
+ const source={notes:[{subject:'Reading / ELA',kind:'topic',text:'Story: Families Work'},{subject:'Reading / ELA',kind:'topic',text:'Sight words: all, right, work'},{subject:'Reading / ELA',kind:'topic',text:'Phonics: short i'},{subject:'Reading / ELA',kind:'study-note',text:'Say the short i sound.',topics:['Phonics: short i']}]};
+ const html=renderNotesLibrary(source,{subject:'Reading / ELA'});
+ assert.equal(html.split('Story: Families Work').length-1,1);
+ assert.equal(html.split('Sight words: all, right, work').length-1,1);
+ assert.ok(html.includes('<li>Story: Families Work</li>'));
+ assert.ok(html.indexOf('Say the short i sound.')<html.indexOf('Topics from class'));
+ assert.deepEqual(notesLibraryData(source)[0].original,source.notes.map(row=>row.text));
 });
