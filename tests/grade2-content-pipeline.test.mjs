@@ -104,12 +104,23 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
   for (const skill of expandedFamilies.filter(skill => ids.has(skill))) {
     assert.ok((pipeline.qa.questionsPerSkill?.[skill] || 0) >= 8, `${skill} should have at least eight genuine semantic variants while source-backed`);
   }
-  assert.ok(pipeline.qa.questionCount >= 100, 'current verified pack should expose at least 100 playable questions after renewable expansion');
   assert.ok((pipeline.qa.questionTypeCounts?.transfer || 0) > 0);
   assert.ok((pipeline.qa.questionTypeCounts?.reasoning || 0) > 0);
   assert.ok((pipeline.qa.dokCounts?.[1] || 0) > 0);
   assert.ok((pipeline.qa.dokCounts?.[2] || 0) > 0);
   assert.ok((pipeline.qa.dokCounts?.[3] || 0) > 0);
+});
+
+test('historical renewable-quality benchmark retains at least 100 distinct original questions',()=>{
+  const fixture=JSON.parse(readFileSync(new URL('./fixtures/renewable-content-2026-10-16.json',import.meta.url),'utf8'));
+  const pipeline=buildGrade2ContentPipeline(fixture.pack,{
+    sourceHash:fixture.pack.sourceHash,generatedAt:'2026-10-16T07:23:45.715Z',
+  });
+  assert.equal(pipeline.qa.status,'pass');
+  assert.ok(pipeline.qa.questionCount>=100,'retain the original renewable-bank quality benchmark on its actual source snapshot');
+  assert.equal(new Set(pipeline.questions.map(q=>q.prompt.toLowerCase()+'|'+q.answer.toLowerCase())).size,pipeline.questions.length);
+  assert.deepEqual([...new Set(pipeline.questions.map(q=>q.questionType))].sort(),['direct','reasoning','transfer']);
+  assert.deepEqual(validateGrade2ContentPipeline(pipeline),[]);
 });
 
 test('source rollover drops lesson skills that are no longer present instead of carrying stale questions forward', () => {

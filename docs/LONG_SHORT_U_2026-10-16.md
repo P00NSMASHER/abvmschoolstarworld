@@ -25,7 +25,7 @@ mismatched source line cannot authorize its questions.
 Tests first reproduced the missing skill. The positive regression checks all
 nine unique prompts, direct/transfer/reasoning coverage, complete answer choices,
 teaching notes and exact Tests-page lineage. Negative cases reject unrelated
-subjects/topics and mismatched page evidence. All 616 local unit cases and
+subjects/topics and mismatched page evidence. All 617 local unit cases and
 static/syntax/hygiene pass. Full exact-head browser, independent reproduction and
 fresh-source acceptance remain required before integration, followed by actual
 automatic teacher refresh, Pages publication and live source parity.
@@ -36,3 +36,13 @@ unspecified second vowel still fails closed. Practice and printable-guide
 regressions require all nine matching questions and prohibit promoting original
 examples into a verified teacher word list. Cache v192 and its reload identity
 ship together so installed clients receive the corrected selection code.
+
+Fresh-source acceptance exposed an unrelated fixed-size assumption: a current
+source bank was required to contain 100 questions even after legitimate teacher
+withdrawal. Preserve that exact quality benchmark against a fixed, attributed
+October 16 snapshot; current-source checks still require source-backed skills,
+minimum sibling/semantic coverage, all answer keys, lineage and validation.
+The historical fixture is test-only and is never a production fallback. A slow
+WebKit completion test now uses reviewed correct answers after verifying retry
+state once per subject, retaining all 16 checked questions, exact subject/source
+selection and completion persistence without increasing retries or timeouts.
