@@ -9,7 +9,7 @@ const NOTICES_PATH=new URL("../pages/data/uploaded-notices.json",import.meta.url
 
 const MONTHS={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,sept:8,oct:9,nov:10,dec:11};
 
-function dateKey(value){
+export function dateKey(value){
   const m=String(value||"").match(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]*\.?\s*(\d{1,2})/i);
   if(!m)return "";
   return `${m[1].replace(".","").toLowerCase()}-${Number(m[2])}`;
