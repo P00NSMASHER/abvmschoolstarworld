@@ -25,7 +25,14 @@ mismatched source line cannot authorize its questions.
 Tests first reproduced the missing skill. The positive regression checks all
 nine unique prompts, direct/transfer/reasoning coverage, complete answer choices,
 teaching notes and exact Tests-page lineage. Negative cases reject unrelated
-subjects/topics and mismatched page evidence. All 607 local unit cases and
+subjects/topics and mismatched page evidence. All 616 local unit cases and
 static/syntax/hygiene pass. Full exact-head browser, independent reproduction and
 fresh-source acceptance remain required before integration, followed by actual
 automatic teacher refresh, Pages publication and live source parity.
+
+The actual teacher shorthand long/short u is expanded only in internal test
+matching, so both explicitly shared sounds select the complete u family. An
+unspecified second vowel still fails closed. Practice and printable-guide
+regressions require all nine matching questions and prohibit promoting original
+examples into a verified teacher word list. Cache v192 and its reload identity
+ship together so installed clients receive the corrected selection code.

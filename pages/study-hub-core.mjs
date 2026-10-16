@@ -29,7 +29,10 @@ export function questionsForTest(test, questions) {
     // The teacher page may name a new long vowel but leave a second short
     // vowel unspecified, e.g. "long o / Short )". Never reuse last week's
     // unrelated i/a practice to make this test appear ready.
-    const focus = [...label.matchAll(/\b(short|long)\s+([aeiou])\b/g)]
+    // Expand only an explicitly shared vowel, e.g. long/short u. A label
+    // such as long o / Short ) still leaves the second sound unspecified.
+    const focusLabel = label.replace(/\b(long|short)\s*\/\s*(long|short)\s+([aeiou])\b/g,'$1 $3 / $2 $3');
+    const focus = [...focusLabel.matchAll(/\b(short|long)\s+([aeiou])\b/g)]
       .map(match => ({sound:match[1],vowel:match[2]}));
     const date = /^\d{4}-\d{2}-\d{2}$/.test(test.date || '') ? test.date : null;
     return questions

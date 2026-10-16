@@ -42,3 +42,19 @@ test('saved candidate and runtime bank stay identical while automated acceptance
  assert.deepEqual(candidate.readiness.blockers,['automated-qa-required']);
  assert.equal(candidate.readiness.automaticPromotion,false);
 });
+
+test('the actual shared-vowel test label selects all u questions for practice and printable guides',async()=>{
+ const {questionsForTest}=await import('../pages/study-hub-core.mjs');
+ const {createStudyMaterials}=await import('../pages/study-materials.mjs');
+ const pipeline=buildGrade2ContentPipeline(pack(),{sourceHash:'teacher-pages-long-short-u',sourcePages,requirePageExactLineage:true});
+ const event={date:'2026-10-23',label:'Spelling (long/short u)/Handwriting',kind:'test'};
+ const other={...pipeline.questions[0],id:'old-i',skill:'short-i-long-i',sourceFact:'Short i and long i'};
+ const rows=[...pipeline.questions,other].map(q=>({...q,tier:'material'}));
+ assert.equal(questionsForTest(event,rows).length,9);
+ assert.equal(questionsForTest({...event,label:'Spelling (long o / Short )/Handwriting'},rows).length,0);
+ const model=createStudyMaterials({pack:{...pack(),weekLabel:'Week of October 19, 2026',contentPipeline:pipeline},events:[event],catalog:{sourceKey:'test-u',questions:rows},now:()=>Date.parse('2026-10-21T12:00:00Z'),storage:{getItem:()=>null,setItem(){}}});
+ const guide=model.testGuide(0);
+ assert.equal(guide.practice.length,9);
+ assert.ok(guide.practice.every(q=>q.skill==='long-short-u'));
+ assert.deepEqual(guide.spellingWords,[],'original examples must not become a verified teacher word list');
+});
