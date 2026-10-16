@@ -133,7 +133,7 @@ const refreshOperationallyHealthy=refreshHealthy;
 const pipelineHealthy=Boolean(
   status.contentPipeline.present &&
   status.contentPipeline.qaStatus==="pass" &&
-  status.contentPipeline.unsupportedSkillCount===0 &&
+  ["SAFE_PARTIAL","READY"].includes(status.contentPipeline.safetyState) &&
   (!status.contentPipeline.lineageRequired || (
     status.contentPipeline.unresolvedLineageCount===0 &&
     status.contentPipeline.pageExactLineageCount===status.contentPipeline.questionCount
@@ -171,6 +171,9 @@ const criticalHealthy=Boolean(
 const warnings=[];
 if(status.curriculumHold){
   warnings.push("Teacher refresh is awaiting automated curriculum quality checks for candidate PR #"+status.curriculumHold.candidatePrNumber+"; no educator or owner approval is required.");
+}
+if(status.contentPipeline.unsupportedSkillCount>0){
+  warnings.push("Practice questions remain isolated for "+status.contentPipeline.unsupportedSkillCount+" verified topic(s): "+(status.contentPipeline.unsupportedTopics.join(", ")||"details unavailable")+". Verified source facts remain publishable.");
 }
 if(!lunchVerified&&lunchOperationallyUsable){
   warnings.push("Lunch source bridge is unavailable; complete previously reviewed coverage remains usable"+(status.lunch.lastError?" ("+status.lunch.lastError+")":"")+".");
