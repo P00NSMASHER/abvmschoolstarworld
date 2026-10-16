@@ -13,7 +13,8 @@ async function visibleQuestion(page){
     const envelope=await fetch('./data/study-pack-runtime.json').then(r=>r.json());
     const engine=window.ABVMStudyGames,{buildStarBank}=await import('./star-practice.mjs');
     const catalog=engine.buildCatalog(envelope.pack,{sourceKey:engine.sourceKeyFromEnvelope(envelope.pack,envelope)});
-    const q=[...catalog.questions,...buildStarBank()].find(row=>row.prompt===prompt&&row.choices.length===choices.length&&row.choices.every(c=>choices.includes(c)));
+    const [archive,schoolwork]=await Promise.all(['study-archive.json','schoolwork.json'].map(file=>fetch('./data/'+file).then(response=>response.json())));
+    const q=[...catalog.questions,...(archive.questions||[]),...(schoolwork.lessons||[]).flatMap(lesson=>lesson.questions||[]),...buildStarBank()].find(row=>row.prompt===prompt&&row.choices.length===choices.length&&row.choices.every(c=>choices.includes(c)));
     return q?{answer:q.answer,subject:q.subject,prompt:q.prompt,choices}:null;
   },{prompt,choices});
 }

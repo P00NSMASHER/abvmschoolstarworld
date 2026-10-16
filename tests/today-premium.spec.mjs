@@ -175,7 +175,7 @@ test('Today remains operable with long verified titles and larger interface text
 test('Today preserves accurate meal details if reviewed artwork cannot be loaded', async ({ page }) => {
   await page.clock.setFixedTime(new Date('2026-10-08T12:00:00-04:00'));
   await page.setViewportSize({ width: 390, height: 852 });
-  await page.route('**/assets/lunch-art/beef-cheesesteak.webp', route =>
+  await page.route('**/assets/lunch-art/tray-2026-10-08-v1.webp', route =>
     route.fulfill({ status: 404, contentType: 'image/webp', body: '' }));
   await page.goto('/#today');
   const lunch = page.locator('.today-screen > .lunch-card');

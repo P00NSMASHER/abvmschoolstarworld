@@ -6,6 +6,7 @@ import { publishedMealForDate } from './published-meal.mjs';
 
 const base = process.env.ABVM_LIVE_URL || 'https://p00nsmasher.github.io/abvmschoolstarworld/';
 const expected = JSON.parse(readFileSync(new URL('../pages/data/study-pack.json', import.meta.url), 'utf8'));
+const artRegistry=JSON.parse(readFileSync(new URL('../pages/data/lunch-art-registry.json',import.meta.url),'utf8'));
 const out = 'live-lunch-proof';
 mkdirSync(out, { recursive: true });
 const receipt = {
@@ -42,7 +43,7 @@ function eastToday() {
   return `${p.year}-${p.month}-${p.day}`;
 }
 async function liveStudyAssets() {
-  const assets = ['index.html', 'app.js', 'product-view.js', 'styles.css', 'study-teaching.css', 'study-review.js', 'weekly-learning.js', 'assets/school/abvm-school-hero.webp', 'study-games.js', 'study-games-view.js', 'study-materials.mjs', 'study-games-materials-view.mjs', 'study-games-materials.css', 'sw.js', ...['math', 'reading', 'spelling', 'religion', 'eagle'].map(name => 'assets/illustrations/' + name + '.webp'), ...['eaglet','starlight','spark','scholar','golden','eagle','champion'].map(name=>'assets/badges/'+name+'.webp'), ...['nest-explorer','little-luminary','feather-cadet','star-voyager','sky-scholar','wing-leader','study-sentinel','school-spirit','blue-ribbon-ace','golden-quill','sky-captain','eagle-vanguard','honor-guardian','crown-keeper','star-commander'].map(name=>'assets/badges/'+name+'-premium.webp')];
+  const assets = ['lunch-art.js','data/lunch-art-current.json','data/lunch-art-registry.json',...artRegistry.artworks.filter(art=>art.status==='reviewed').map(art=>art.src),'index.html', 'app.js', 'product-view.js', 'styles.css', 'study-teaching.css', 'study-review.js', 'weekly-learning.js', 'assets/school/abvm-school-hero.webp', 'study-games.js', 'study-games-view.js', 'study-materials.mjs', 'study-games-materials-view.mjs', 'study-games-materials.css', 'sw.js', ...['math', 'reading', 'spelling', 'religion', 'eagle'].map(name => 'assets/illustrations/' + name + '.webp'), ...['eaglet','starlight','spark','scholar','golden','eagle','champion'].map(name=>'assets/badges/'+name+'.webp'), ...['nest-explorer','little-luminary','feather-cadet','star-voyager','sky-scholar','wing-leader','study-sentinel','school-spirit','blue-ribbon-ace','golden-quill','sky-captain','eagle-vanguard','honor-guardian','crown-keeper','star-commander'].map(name=>'assets/badges/'+name+'-premium.webp')];
   // A live source timestamp is insufficient if the published question bank,
   // Homework feed, or printable renderers still contain an earlier build.
   assets.push('data/study-pack-runtime.json', 'data/homework-current.json',
@@ -84,12 +85,19 @@ try {
   await expect(page.locator('.today-screen .study-invitation')).toHaveCount(0);
   const today = eastToday();
   const todayMeal = publishedMealForDate(data.pack, today);
-  if (todayMeal?.items.length) {
+  if ([0,6].includes(new Date(today+'T12:00:00Z').getUTCDay())) {
+    await expect(page.locator('.lunch-card')).toHaveCount(0);
+  } else if (todayMeal?.status==='no-school') {
+    await expect(page.locator('.lunch-card')).toContainText('No school lunch');
+    await expect(page.locator('.lunch-card .lunch-art')).toHaveCount(0);
+  } else if (todayMeal?.items.length) {
     for (const item of todayMeal.items) await expect(page.locator('.lunch-card')).toContainText(item);
   } else if (![0, 6].includes(new Date(today + 'T12:00:00Z').getUTCDay())) {
     await expect(page.locator('.lunch-card')).toContainText(/No school lunch|Lunch menu not yet verified/);
   }
   if (await page.locator('.lunch-card').count()) await page.locator('.lunch-card').first().scrollIntoViewIfNeeded();
+  const mealArt=page.locator('.today-screen .lunch-art-tray img');
+  if(await mealArt.count()){await expect.poll(()=>mealArt.evaluate(img=>img.complete&&img.naturalWidth>=1200)).toBe(true);await expect(page.locator('.lunch-art-tray figcaption')).toContainText('Meal illustration');receipt.todayTrayImage={src:await mealArt.getAttribute('src'),decoded:true};}
   await page.screenshot({ path: `${out}/today.png` });
   receipt.screens.push({ screen: 'Today', date: today, lunch: await page.locator('.lunch-card').allTextContents() });
 
@@ -104,9 +112,26 @@ try {
     }
     throw new Error('Could not reach published lunch date in Week: ' + date);
   }
-  for (const meal of data.pack.lunchMenu) {
+  for (const publishedMeal of data.pack.lunchMenu) {
+    const meal=publishedMealForDate(data.pack,publishedMeal.date);
     await selectWeekDate(meal.date);
+    if(meal.status==='no-school'){
+      await expect(page.locator('.lunch-card')).toContainText('No school lunch');
+      await expect(page.locator('.lunch-card .lunch-art')).toHaveCount(0);
+      (receipt.verifiedClosures??=[]).push({date:meal.date,label:meal.closure||'Published no-school lunch',imageAbsent:true});
+      receipt.screens.push({screen:'Week',date:meal.date,lunch:await page.locator('.lunch-card').textContent()});
+      continue;
+    }
     for (const item of meal.items) await expect(page.locator('.lunch-card')).toContainText(item);
+    const reviewed=artRegistry.artworks.find(art=>art.status==='reviewed'&&art.approvedMenus.some(menu=>menu.sourceId===meal.sourceId&&JSON.stringify(menu.items)===JSON.stringify(meal.items)));
+    if(reviewed){
+      const image=page.locator('.week-rail .lunch-art-tray img');
+      await expect(image,'a reviewed published menu must actually display its tray image').toHaveCount(1);
+      await expect(image).toHaveAttribute('src',reviewed.src);
+      await image.scrollIntoViewIfNeeded();
+      await expect.poll(()=>image.evaluate(img=>img.complete&&img.naturalWidth>=1200)).toBe(true);
+      (receipt.reviewedTrayImages??=[]).push({date:meal.date,src:reviewed.src,decoded:true});
+    }
     receipt.screens.push({ screen: 'Week', date: meal.date, lunch: await page.locator('.lunch-card').textContent() });
   }
   await page.locator('.lunch-card').scrollIntoViewIfNeeded();

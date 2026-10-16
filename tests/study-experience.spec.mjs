@@ -1,3 +1,4 @@
+import {installOriginalMathFixture} from './helpers/original-math-fixture.mjs';
 import {test,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {writeFile} from 'node:fs/promises';
@@ -194,7 +195,7 @@ test('game answers and hints are readable and rejected choices cannot be retried
    expect(savedMisses).toEqual([0,0]); // both attempts are saved, but a zero balance cannot go negative
 });
 test('three complete Math rounds rotate through the available current material',async({page})=>{
-  test.setTimeout(60000);await page.goto('/#games');await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');const prompts=[];
+  test.setTimeout(60000);await installOriginalMathFixture(page);await page.goto('/#games');await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');const prompts=[];
   const pool=await page.evaluate(async()=>{
     const envelope=await fetch('./data/study-pack-runtime.json').then(r=>r.json()),engine=window.ABVMStudyGames;
     return engine.buildCatalog(envelope.pack,{sourceKey:engine.sourceKeyFromEnvelope(envelope.pack,envelope)}).questions.filter(q=>q.subject==='Math'&&q.tier==='material').map(q=>q.prompt);

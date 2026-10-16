@@ -304,12 +304,6 @@ function loadStudyRanks(){return ensureStudyGameEngine().then(e=>e.studyBadgeCol
 function renderToday(){
  const d=today();
  stack().innerHTML=window.ABVMProductView.today({d,pack,header,freshness,taskHtml,kindClass,fmtDate,fmtShort,linkedTextHtml,events:eventItemsForDate(d),tasks:taskRecordsForSurface("today"),homeworkHtml:homeworkCardForDate(d),next:window.ABVMProductView.nextAssessments(datedImportantEvents(),kindClass),reminders:upcomingReminderTexts(d,2),lunchHtml:lunchCardHtml(d,lunchForDate(d))});
- const mealArt=stack().querySelector(".today-screen .lunch-art img");
- if(mealArt){
-   const hideBrokenArt=()=>mealArt.closest(".lunch-art")?.remove();
-   mealArt.addEventListener("error",hideBrokenArt,{once:true});
-   if(mealArt.complete&&mealArt.naturalWidth===0)hideBrokenArt();
- }
  window.ABVMStudyBadges.mount(stack(),"today",loadStudyRanks);
 }
 function renderWeek(){
@@ -697,6 +691,7 @@ function promotePackCandidate({response,data}){
   return changed;
 }
 async function fetchPack({force=false,notify=false}={}){
+  window.ABVMLunchArt?.refresh?.(()=>{if(pack&&["today","week","calendar"].includes(activeTab))render({preserveScroll:true})});
   const now=Date.now();
   if(!force&&pack&&(now-lastPackFetchAt)<PACK_REFRESH_MS)return false;
   if(packRefreshPromise)return packRefreshPromise;
@@ -793,5 +788,6 @@ window.addEventListener("pageshow",event=>{
   if(event.persisted&&pack){fetchPack({force:true,notify:true}).catch(()=>{});fetchHomeworkFeed({force:true}).catch(()=>{});}
 });
 window.ABVMProductView.watchSchoolClock(()=>{if(pack&&activeTab==="today")render({preserveScroll:true})});
+setInterval(()=>{if(pack&&document.visibilityState==="visible"&&!isStudyRoute()){fetchPack({notify:true}).catch(()=>{});fetchHomeworkFeed().catch(()=>{})}},PACK_REFRESH_MS);
 load();
 })();

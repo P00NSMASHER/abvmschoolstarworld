@@ -1,3 +1,4 @@
+import {withOriginalMathFixture} from './helpers/original-math-fixture.mjs';
 import {test,expect} from '@playwright/test';
 import {writeFile} from 'node:fs/promises';
 
@@ -7,7 +8,7 @@ const QUEUE='abvm-study-comebacks:v1';
 
 async function openFixture(page){
   await page.clock.setFixedTime(new Date('2026-10-06T13:00:00Z'));
-  const initial=structuredClone(await(await page.request.get(APP+'/data/study-pack.json')).json());
+  const initial=withOriginalMathFixture(await(await page.request.get(APP+'/data/study-pack.json')).json());
   initial.pack.importantDates=[{date:'Wednesday, Oct. 7',label:'Math test',kind:'test'}];
   initial.sourceLastSeenAt='2026-10-06T12:00:00.000Z';
   let current=initial,revision=0;
