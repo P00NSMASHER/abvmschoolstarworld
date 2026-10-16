@@ -85,7 +85,12 @@ try {
   await expect(page.locator('.today-screen .study-invitation')).toHaveCount(0);
   const today = eastToday();
   const todayMeal = publishedMealForDate(data.pack, today);
-  if (todayMeal?.items.length) {
+  if ([0,6].includes(new Date(today+'T12:00:00Z').getUTCDay())) {
+    await expect(page.locator('.lunch-card')).toHaveCount(0);
+  } else if (todayMeal?.status==='no-school') {
+    await expect(page.locator('.lunch-card')).toContainText('No school lunch');
+    await expect(page.locator('.lunch-card .lunch-art')).toHaveCount(0);
+  } else if (todayMeal?.items.length) {
     for (const item of todayMeal.items) await expect(page.locator('.lunch-card')).toContainText(item);
   } else if (![0, 6].includes(new Date(today + 'T12:00:00Z').getUTCDay())) {
     await expect(page.locator('.lunch-card')).toContainText(/No school lunch|Lunch menu not yet verified/);
@@ -107,8 +112,16 @@ try {
     }
     throw new Error('Could not reach published lunch date in Week: ' + date);
   }
-  for (const meal of data.pack.lunchMenu) {
+  for (const publishedMeal of data.pack.lunchMenu) {
+    const meal=publishedMealForDate(data.pack,publishedMeal.date);
     await selectWeekDate(meal.date);
+    if(meal.status==='no-school'){
+      await expect(page.locator('.lunch-card')).toContainText('No school lunch');
+      await expect(page.locator('.lunch-card .lunch-art')).toHaveCount(0);
+      (receipt.verifiedClosures??=[]).push({date:meal.date,label:meal.closure||'Published no-school lunch',imageAbsent:true});
+      receipt.screens.push({screen:'Week',date:meal.date,lunch:await page.locator('.lunch-card').textContent()});
+      continue;
+    }
     for (const item of meal.items) await expect(page.locator('.lunch-card')).toContainText(item);
     const reviewed=artRegistry.artworks.find(art=>art.status==='reviewed'&&art.approvedMenus.some(menu=>menu.sourceId===meal.sourceId&&JSON.stringify(menu.items)===JSON.stringify(meal.items)));
     if(reviewed){
