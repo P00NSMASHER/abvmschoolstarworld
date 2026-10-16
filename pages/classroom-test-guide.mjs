@@ -111,7 +111,7 @@ function keyHtml(item,index,kind) {
     ? letters[clean(item?.answer).toLowerCase()] || clean(item?.answer)
     : clean(item?.answer);
   const explanation=clean(item?.explanation);
-  return '<li class="key-entry"><span class="key-answer"><b>'+(index+1)+'.</b> '+escape(answer)+'</span>'+
+  return '<li><b>'+(index+1)+'.</b> '+escape(answer)+
     (explanation&&explanation!==clean(item?.answer)?'<small class="answer-why">Why: '+escape(explanation)+'</small>':'')+'</li>';
 }
 function spellingSheet(guide) {
