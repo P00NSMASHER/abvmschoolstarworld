@@ -6,25 +6,28 @@ Mobile-first parent/student companion for the current Assumption BVM Grade 2 sch
 
 - **Frontend:** static PWA deployed by GitHub Pages from `pages/`
 - **School-data refresh:** GitHub Actions validates the six public Grade 2 teacher pages before publishing
-- **Refresh schedule:** 6:17 AM, 9:47 AM, 1:17 PM, and 3:47 PM Eastern, plus manual workflow runs
+- **Teacher refresh:** four scheduled UTC source scans (06:17, 09:47, 13:17 and 15:47 UTC), with manual dispatch and bounded recovery
+- **Homework refresh:** independent hourly source checks from 06:23–23:23 UTC; unchanged pages preserve their first-observed dates
 - **Lunch source:** reviewed school lunch documents, verified through the ABVM AppDeploy source bridge
 - **Local state:** checklist completion and Study Games learning state use browser `localStorage`
 - **Offline behavior:** the service worker retains the app shell and the latest verified school pack
 
 ## App sections
 
-The bottom navigation has six destinations:
+The bottom navigation has **four** destinations:
 
-1. **Today** — current date, priority test, focused tasks, events, and lunch
-2. **Week** — weekday picker, events, checklist, reminders, and lunch
-3. **Calendar** — month grid, selected-day details, full agenda, specials, and upcoming dates
-4. **Study** — current subject material, sight words, vocabulary, and study priorities
-5. **Study Games** — short adaptive practice generated from current verified class skills
-6. **Family** — current actions, notices, test-day count, privacy/source information
+1. **Today** — school-day homework, verified upcoming tests, events and lunch
+2. **Calendar** — Month/Week switch, selected-day agenda, five weekday lunches, school events and homework
+3. **Study** — subject practice, Test Prep, notes, official resources, printable guides and worksheets
+4. **Progress** — saved practice evidence, achievements, current study context and family notices
+
+Older `#week`, `#games` and `#family` deep links remain supported. Week is a view inside Calendar, not a fifth tab.
 
 ## Data safety and reliability
 
-The refresh job reads the public Grade 2 Homework, Home, Reading Work, Weekly Spelling List, Tests, and Religion pages. It publishes only after every expected page and required homework section passes validation, so an incomplete teacher-page response cannot erase the last reliable school information.
+The teacher refresh reads the six public Grade 2 Home, Homework, Reading Work, Weekly Spelling List, Tests and Religion pages and validates their content and provenance before promotion. Independently checked homework may publish without waiting for curriculum promotion. Unverified lesson candidates stay isolated; verified current school information continues refreshing. No teacher/educator signoff or manual curriculum promotion is required for routine, source-matched updates. Original-question, date, copyright, privacy and QA safeguards remain in place.
+
+An undated homework assignment is shown as today's work only when first observed on that Eastern school date. A source check today can truthfully show an unchanged “no specific assignments listed” or “no homework” page status without carrying forward yesterday's actionable assignments.
 
 Information transcribed from school flyers or reminders is stored in `pages/data/uploaded-notices.json`. Those notices take priority when they clarify or correct a matching calendar item, and the teacher-page refresh reapplies them on every run.
 
@@ -47,8 +50,8 @@ GitHub Pages deployment repeats release QA and then verifies the live lunch/mobi
 ## iPhone experience
 
 The phone layout prioritizes the next dated action, readable school information,
-44-point-or-larger control heights, and a compact five-tab navigation bar. Week
-opens the coming Monday on weekends. Repeated calendar entries are merged for
+44-point-or-larger control heights, and a compact four-tab navigation bar. Calendar's Week
+view opens the coming Monday on weekends. Repeated calendar entries are merged for
 presentation while distinct dates and detailed event variants remain available.
 
 New school notices, teacher lessons, homework, and teacher calendar changes show
