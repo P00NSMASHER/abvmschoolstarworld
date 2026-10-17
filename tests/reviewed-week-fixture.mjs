@@ -1,7 +1,7 @@
 // Test-only school clock: pins homework and checklist scenarios to the dated
 // teacher evidence, NOT the independently refreshed lunch calendar week.
 export function reviewedSchoolMonday(document) {
-  const label=String(document?.pack?.weekLabel||'');
+  const label=String(document?.pack?.teacherPostingWeekLabel||document?.pack?.weekLabel||'');
   const match=/^Week of ([A-Z][a-z]+) (\d{1,2}), (20\d{2})$/.exec(label);
   if(!match)throw new Error('School source has no dated reviewed teacher week');
   const date=new Date(`${match[1]} ${match[2]}, ${match[3]} 12:00:00 GMT`);
