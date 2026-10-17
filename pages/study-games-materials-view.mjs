@@ -1,4 +1,4 @@
-import {createNotesLibrary} from './study-notes-library.mjs?v=3';
+import {createNotesLibrary} from './study-notes-library.mjs?v=4';
 import {createReadAloud} from './study-room-view.mjs';
 import {renderTestStudyGuide,renderTestWorksheet} from './test-study-pair.mjs?v=4';
 
@@ -112,13 +112,15 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
   function secondaryHtml() {
     const tests=model?.tests(),pending=tests?.tests||[],completed=tests?.completed||[];
     const printable=(model?.printableTests?.()?.tests||pending).map((test,index)=>({...test,index}));
-    const guideButtons=printable.map(test=>'<article class="study-material-pair"><strong>'+esc(test.label)+'</strong><small>'+esc(dateLabel(test.date))+'</small><div class="study-material-pair-buttons"><button type="button" class="study-guide-button" data-test-guide="'+test.index+'" data-test-key="'+esc(test.date+'|'+test.label)+'">Study guide</button><button type="button" class="study-guide-button" data-test-worksheet="'+test.index+'" data-test-key="'+esc(test.date+'|'+test.label)+'">Practice worksheet</button></div></article>').join('');
+    const guideButtons=printable.map(test=>'<article class="study-material-pair"><div class="study-material-pair-heading"><strong>'+esc(test.label)+'</strong><small>'+esc(dateLabel(test.date))+'</small></div><div class="study-material-pair-buttons"><button type="button" class="study-guide-button" data-test-guide="'+test.index+'" data-test-key="'+esc(test.date+'|'+test.label)+'">Study guide</button><button type="button" class="study-guide-button" data-test-worksheet="'+test.index+'" data-test-key="'+esc(test.date+'|'+test.label)+'">Practice worksheet</button></div></article>').join('');
     return '<section class="study-tools" aria-labelledby="study-tools-title"><div class="study-section-heading compact"><span>KEEP LEARNING</span><h2 id="study-tools-title">A little extra help</h2></div><div class="study-tool-list">' +
       '<details class="study-tool-card" data-study-notes'+(notesOpen?' open':'')+'><summary><span class="study-tool-icon notes" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg></span><span class="study-tool-copy"><strong>Notes &amp; study guides</strong><small>Class notes, words &amp; official reviews</small></span><b aria-hidden="true">›</b></summary><div class="study-tool-body" data-study-notes-content>'+(notesOpen?notesContent():'')+'</div></details>' +
-      '<details class="study-tool-card" data-study-test-options'+(testsOpen?' open':'')+'><summary><span class="study-tool-icon tests" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4h10a2 2 0 0 1 2 2v15H5V6a2 2 0 0 1 2-2ZM8 2v4M16 2v4M8 10h8M8 14h5"/></svg></span><span class="study-tool-copy"><strong>Guides, worksheets &amp; history</strong><small>Study first, then practice on paper</small></span><b aria-hidden="true">›</b></summary><div class="study-tool-body"><p>Finished tests are hidden only on this browser.</p>' +
-      (printable.length?'<h3>Printable materials for every test</h3><div class="study-guide-tool-list">'+guideButtons+'</div>':'')+
-      (pending.length?'<h3>Test list</h3><button type="button" data-complete-test>'+(pending.length>1?'Mark current tests finished':'Mark test finished')+'</button>':'')+
-      (completed.length?'<h3>Hidden tests</h3>'+completed.map(test=>'<button type="button" data-restore-test="'+esc(test.key)+'">Restore '+esc(test.label)+'</button>').join(''):'')+
+      '<details class="study-tool-card" data-study-test-options'+(testsOpen?' open':'')+'><summary><span class="study-tool-icon tests" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4h10a2 2 0 0 1 2 2v15H5V6a2 2 0 0 1 2-2ZM8 2v4M16 2v4M8 10h8M8 14h5"/></svg></span><span class="study-tool-copy"><strong>Guides, worksheets &amp; history</strong><small>Find materials for each test</small></span><b aria-hidden="true">›</b></summary><div class="study-tool-body">' +
+      (printable.length?'<section class="study-material-upcoming" aria-label="Materials by test"><h3>Study materials by test</h3><div class="study-guide-tool-list">'+guideButtons+'</div></section>':'')+
+      (pending.length||completed.length?'<details class="study-test-history"><summary>Test status &amp; history</summary><div class="study-test-history-body"><p>Finished tests are hidden only on this browser. You can restore them here.</p>'+
+      (pending.length?'<h3>Current test list</h3><button type="button" data-complete-test>'+(pending.length>1?'Mark current tests finished':'Mark test finished')+'</button>':'')+
+      (completed.length?'<h3>Finished tests</h3>'+completed.map(test=>'<button type="button" data-restore-test="'+esc(test.key)+'">Restore '+esc(test.label)+'</button>').join(''):'')+
+      '</div></details>':'')+
       (!printable.length&&!pending.length&&!completed.length?'<p>No tests to manage.</p>':'')+'</div></details></div></section>';
   }
 
@@ -134,7 +136,7 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
     host.querySelectorAll('[data-test-select]').forEach(button=>button.addEventListener('click',()=>{
       const next=(model?.upcomingTests?.().tests||[]).findIndex(test=>test.date+'|'+test.label===button.dataset.testKey);if(next<0){change('.prep-header h1');return;}
       selectedTest=next;change('[data-test-select="'+next+'"]');
-      const selected=win.document.querySelector('[data-test-select="'+next+'"]'),rail=selected?.parentElement;if(rail)rail.scrollLeft=selected.offsetLeft-rail.offsetLeft;
+      // The whole test grid is visible; no horizontal carousel offset is needed.
     }));
     const notes=host.querySelector('[data-study-notes]');
     notes?.addEventListener('toggle',()=>{notesOpen=notes.open;});

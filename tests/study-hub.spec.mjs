@@ -84,6 +84,7 @@ test('weekly test prep covers same-day subjects in the existing player and compl
     expect(new Set(seen).size).toBe(total);await page.locator('[data-game-home]').last().click();
   }
   await page.locator('[data-study-test-options] > summary').click();
+  await page.locator('[data-study-test-options] .study-test-history > summary').click();
   await page.locator('[data-complete-test]').click();
   await expect(prep.locator('time')).toHaveAttribute('datetime','2026-10-09');
   expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('abvm-completed-tests')).length)).toBe(2);

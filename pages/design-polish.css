@@ -1907,3 +1907,238 @@
 .calendar-studio .agenda-lunch{flex-wrap:wrap}
 .calendar-studio .agenda-lunch > .lunch-art-tray{width:100%;flex-basis:100%}
 .lunch-art.lunch-art-tray img{width:100%;height:auto;aspect-ratio:3/2;object-fit:contain;border-radius:12px}
+
+
+/* 2026-10-17: learning-first refinements. Calendar and Week are intentionally
+   excluded from every rule in this block. Preserve their approved appearance. */
+
+/* Today: keep checked homework, verified tests and lunch up front. The
+   separately approved school sign now follows the school-day essentials. */
+.today-screen>.school-sign-card{
+  margin:10px 0 14px;
+  background:#f8fbff;
+  box-shadow:0 2px 9px rgba(12,42,79,.04);
+}
+.today-screen>.today-homework{
+  margin:10px 0 12px;
+  padding:13px 14px;
+  box-shadow:0 4px 12px rgba(11,42,79,.065);
+}
+.today-screen .today-panel{margin-top:12px}
+.today-screen .today-updates-card{margin-top:12px}
+@media(min-width:700px){
+  .today-screen>.today-homework{grid-row:2}
+  .today-screen .today-primary{grid-column:1;grid-row:3}
+  .today-screen>.lunch-card{grid-column:2;grid-row:3}
+  .today-screen .today-panel{grid-column:1;grid-row:4}
+  .today-screen>.study-badge-surface{grid-column:2;grid-row:4}
+  .today-screen .today-updates-card{grid-column:1;grid-row:5}
+  .today-screen>.school-sign-card{grid-column:2;grid-row:5;align-self:start}
+  .today-screen>.freshness{grid-column:1/-1;grid-row:6}
+}
+
+/* Study: the learning resources now precede the optional star tracker. */
+.games-screen:not(.is-playing) .study-tools{margin:14px 0 0}
+.games-screen:not(.is-playing) .study-tools .study-section-heading{margin-bottom:8px}
+.games-screen:not(.is-playing) .study-tool-card>summary{
+  min-height:60px;
+  padding:11px 14px;
+}
+.games-screen:not(.is-playing) .study-tool-card>summary:focus-visible,
+.games-screen:not(.is-playing) .study-test-history>summary:focus-visible{
+  outline:3px solid #174c89;
+  outline-offset:-3px;
+}
+.games-screen:not(.is-playing) .study-badge-surface{margin:13px 0 9px}
+
+/* Test Prep: show choices simultaneously, not a one-card-at-a-time strip. */
+.games-screen:not(.is-playing) .prep-test-choices{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:stretch;
+  overflow:visible;
+  margin:0 0 14px;
+  padding:2px;
+  gap:9px;
+  scroll-snap-type:none;
+  scroll-padding:0;
+}
+.games-screen:not(.is-playing) .prep-test-choice{
+  display:grid;
+  grid-template-columns:32px minmax(0,1fr);
+  align-items:center;
+  position:relative;
+  flex:none;
+  width:100%;
+  min-width:0;
+  min-height:83px;
+  gap:8px;
+  padding:10px 9px;
+  border-radius:15px;
+  scroll-snap-align:none;
+}
+.games-screen:not(.is-playing) .prep-test-choice[aria-pressed="true"]{padding:9px 8px}
+.games-screen:not(.is-playing) .prep-test-choice>img{
+  width:32px;
+  height:32px;
+  padding:1px;
+}
+.games-screen:not(.is-playing) .prep-test-choice>span{
+  min-width:0;
+  padding-right:4px;
+}
+.games-screen:not(.is-playing) .prep-test-choice strong{
+  font-size:.83rem;
+  line-height:1.31;
+  padding-right:6px;
+}
+.games-screen:not(.is-playing) .prep-test-choice small{
+  font-size:.73rem;
+  margin-top:5px;
+}
+.games-screen:not(.is-playing) .prep-test-choice>b{
+  position:absolute;
+  top:5px;
+  right:5px;
+  width:21px;
+  height:21px;
+  min-width:21px;
+}
+@media(max-width:359px){
+  .games-screen:not(.is-playing) .prep-test-choices{grid-template-columns:1fr}
+  .games-screen:not(.is-playing) .prep-test-choice{min-height:64px}
+}
+@media(min-width:850px){
+  .games-screen:not(.is-playing) .prep-test-choices{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .games-screen:not(.is-playing) .prep-test-choice{min-height:80px}
+}
+
+/* Resources: by-test handouts are always grouped before test management. */
+.games-screen:not(.is-playing) .study-material-upcoming{min-width:0}
+.games-screen:not(.is-playing) .study-material-upcoming>h3{
+  margin:0 0 10px;
+  font-size:.98rem;
+  line-height:1.35;
+  color:#15385f;
+}
+.games-screen:not(.is-playing) .study-material-pair{
+  display:block;
+  min-width:0;
+  padding:13px;
+  border-radius:17px;
+}
+.games-screen:not(.is-playing) .study-material-pair-heading{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:2px 10px;
+}
+.games-screen:not(.is-playing) .study-material-pair-heading strong{
+  min-width:0;
+  font-size:.94rem;
+  line-height:1.4;
+}
+.games-screen:not(.is-playing) .study-material-pair-heading small{
+  white-space:normal;
+  text-align:left;
+  font-size:.78rem;
+}
+.games-screen:not(.is-playing) .study-material-pair-buttons{margin-top:9px}
+.games-screen:not(.is-playing) .study-test-history{
+  min-width:0;
+  margin:14px 0 0;
+  border:1px solid #d9e6f2;
+  border-radius:16px;
+  background:#f5f9ff;
+  overflow:hidden;
+}
+.games-screen:not(.is-playing) .study-test-history>summary{
+  display:flex;
+  align-items:center;
+  min-height:48px;
+  padding:11px 13px;
+  color:#183d67;
+  font-size:.9rem;
+  font-weight:750;
+  cursor:pointer;
+}
+.games-screen:not(.is-playing) .study-test-history-body{padding:0 13px 13px}
+.games-screen:not(.is-playing) .study-test-history-body p{
+  font-size:.77rem;
+  line-height:1.5;
+  color:#526981;
+}
+.games-screen:not(.is-playing) .study-test-history-body h3{
+  margin:12px 0 7px;
+  font-size:.85rem;
+}
+.games-screen:not(.is-playing) .study-test-history-body button{
+  min-height:44px;
+  max-width:100%;
+  overflow-wrap:anywhere;
+  margin:5px 6px 5px 0;
+}
+
+/* Original notes are available on demand without repeating them on first read. */
+.games-screen:not(.is-playing) .study-note-source-variants{
+  min-width:0;
+  margin:9px 0;
+  border:1px solid #dce7f1;
+  border-radius:12px;
+  background:#f8fbff;
+}
+.games-screen:not(.is-playing) .study-note-source-variants>summary{
+  cursor:pointer;
+  min-height:44px;
+  padding:10px 13px;
+  color:#244769;
+  font-size:.84rem;
+  line-height:1.4;
+  font-weight:710;
+}
+.games-screen:not(.is-playing) .study-note-source-variants>.study-note-body{
+  padding:7px 12px 12px;
+}
+.games-screen:not(.is-playing) .study-note-source-variants>summary:focus-visible{
+  outline:3px solid #174c89;
+  outline-offset:-3px;
+}
+
+/* Progress: real learning appears first. The complete reward ladder is an
+   independently collapsible, keyboard-accessible secondary destination. */
+.progress-screen .progress-achievements{
+  min-width:0;
+  margin:16px 0;
+  border:1px solid #e7d9ad;
+  border-radius:20px;
+  background:#fffcf5;
+  overflow:hidden;
+}
+.progress-screen .progress-achievements>summary{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  min-height:51px;
+  padding:12px 15px;
+  gap:12px;
+  color:#173a66;
+  font-size:.91rem;
+  font-weight:790;
+  cursor:pointer;
+}
+.progress-screen .progress-achievements[open]>summary{
+  border-bottom:1px solid #f0dfb8;
+}
+.progress-screen .progress-achievements>summary:focus-visible{
+  outline:3px solid #174c89;
+  outline-offset:-3px;
+}
+.progress-screen .progress-badges-slot{min-width:0;padding:12px}
+.progress-screen .progress-badges-slot>.study-badge-surface{margin:0}
+.progress-screen .learning-subject h3{font-size:clamp(.87rem,1.8vw,.99rem)}
+.progress-screen .learning-subject p{font-size:clamp(.73rem,1.5vw,.82rem)}
+@media(prefers-contrast:more){
+  .progress-screen .progress-achievements,
+  .games-screen:not(.is-playing) .study-test-history{border:2px solid currentColor}
+}
