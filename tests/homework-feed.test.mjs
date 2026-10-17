@@ -90,3 +90,32 @@ test('an unchanged recheck updates provenance without altering the displayed hom
  const updated={...recheck,contentHash:'a'.repeat(64),assignments:[...recheck.assignments,{subject:'Math',task:'Page 23'}]};
  assert.notEqual(model.viewSignature(updated,day,now),model.viewSignature(recheck,day,now));
 });
+
+test('freshly checked no-specific posting is current even when unchanged since yesterday',()=>{
+  const page={...verifiedPosting,status:'no-specific-posting',assignments:[],
+    firstObservedAt:'2026-10-16T14:55:31.600Z',contentChangedAt:'2026-10-16T14:55:31.600Z',
+    checkedAt:'2026-10-17T08:23:00.000Z',contentHash:'c'.repeat(64)};
+  const actual=model.forDate(page,'2026-10-17',new Date('2026-10-17T08:30:00.000Z'));
+  assert.equal(actual.state,'no-specific-posting');
+  assert.deepEqual([...actual.assignments],[]);
+  assert.equal(actual.checkedAt,page.checkedAt);
+  assert.equal(actual.firstObservedAt,page.firstObservedAt,'rechecking must preserve first observation provenance');
+  assert.notEqual(model.forDate(page,'2026-10-16',new Date('2026-10-17T08:30:00.000Z')).state,'no-specific-posting');
+});
+test('freshly checked explicit no-homework status reports page state without inventing tasks',()=>{
+  const page={...verifiedPosting,status:'no-homework',assignments:[],
+    firstObservedAt:'2026-10-16T14:55:31.600Z',contentChangedAt:'2026-10-16T14:55:31.600Z',
+    checkedAt:'2026-10-17T08:23:00.000Z',contentHash:'d'.repeat(64)};
+  const actual=model.forDate(page,'2026-10-17',new Date('2026-10-17T08:30:00.000Z'));
+  assert.equal(actual.state,'no-homework');
+  assert.deepEqual([...actual.assignments],[]);
+});
+test('empty homework status still fails closed on stale and future checks',()=>{
+  const page={...verifiedPosting,status:'no-specific-posting',assignments:[],
+    firstObservedAt:'2026-10-16T14:55:31.600Z',contentChangedAt:'2026-10-16T14:55:31.600Z',
+    checkedAt:'2026-10-17T08:23:00.000Z',contentHash:'c'.repeat(64)};
+  const now=new Date('2026-10-17T12:00:00.000Z');
+  assert.equal(model.forDate({...page,checkedAt:'2026-10-16T20:23:00.000Z'},'2026-10-17',now).state,'outdated');
+  assert.equal(model.forDate({...page,checkedAt:'2026-10-17T12:10:00.000Z'},'2026-10-17',now).state,'outdated');
+  assert.equal(model.forDate({...page,checkedAt:'2026-10-17T11:50:00.000Z'},'2026-10-17',now).state,'no-specific-posting');
+});
