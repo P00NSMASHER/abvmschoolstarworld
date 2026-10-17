@@ -46,14 +46,17 @@ test('only Today, Study and Progress receive the new presentation rules',()=>{
 test('offline shell versions align after UI changes',()=>{
  const page=filename=>readFileSync(new URL('../pages/'+filename,import.meta.url),'utf8');
  const html=page('index.html'),worker=page('sw.js'),app=page('app.js'),materials=page('study-games-materials-view.mjs');
- for(const route of ['./design-polish.css?v=19','./app.js?v=164','./product-view.js?v=22']){
-  assert.ok(html.includes(route));
-  assert.ok(worker.includes(route));
+ for(const file of ['design-polish.css','app.js','product-view.js']){
+  const asset=html.match(new RegExp('\\./'+file.replaceAll('.','\\.')+'\\?v=\\d+'))?.[0];
+  assert.ok(asset,'Missing active asset from HTML: '+file);
+  assert.ok(worker.includes(asset),'Offline worker must precache exact HTML asset: '+asset);
  }
  assert.match(app,/study-games-materials-view\.mjs\?v=16/);
  assert.match(materials,/study-notes-library\.mjs\?v=4/);
  assert.match(worker,/study-games-materials-view\.mjs\?v=16/);
  assert.match(worker,/study-notes-library\.mjs\?v=4/);
- assert.match(worker,/parent-companion-v194-/);
- assert.match(html,/abvm-sw-reloaded-v194/);
+ const cacheVersion=worker.match(/parent-companion-v(\d+)-/)?.[1];
+ const reloadVersion=html.match(/abvm-sw-reloaded-v(\d+)/)?.[1];
+ assert.ok(cacheVersion,'Offline cache must be versioned');
+ assert.equal(reloadVersion,cacheVersion,'SW cache and reload identity must match');
 });
