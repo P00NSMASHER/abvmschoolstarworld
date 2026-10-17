@@ -151,15 +151,12 @@
         "date": "Monday, Sep. 7",
         "label": "No School",
         "kind": "holiday",
-        "sourceDocument": "weekly-reminders-2026-08-31",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Monday, Sep. 7",
-        "label": "No School",
-        "kind": "holiday",
         "sourceDocument": "weekly-reminders-2026-09-07",
-        "source": "uploaded-notice"
+        "source": "uploaded-notice",
+        "sourceDocuments": [
+          "weekly-reminders-2026-08-31",
+          "weekly-reminders-2026-09-07"
+        ]
       },
       {
         "date": "Tuesday, Sep. 8",
@@ -193,36 +190,24 @@
         "date": "Wednesday, Sep. 16",
         "label": "Mass",
         "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-08-31",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Sep. 16",
-        "label": "Mass",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-09-07",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Sep. 16",
-        "label": "Communication Folder",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-09-07",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Sep. 16",
-        "label": "Mass",
-        "kind": "school event",
         "sourceDocument": "weekly-reminders-2026-09-14",
-        "source": "uploaded-notice"
+        "source": "uploaded-notice",
+        "sourceDocuments": [
+          "weekly-reminders-2026-08-31",
+          "weekly-reminders-2026-09-07",
+          "weekly-reminders-2026-09-14"
+        ]
       },
       {
         "date": "Wednesday, Sep. 16",
         "label": "Communication Folder",
         "kind": "school event",
         "sourceDocument": "weekly-reminders-2026-09-14",
-        "source": "uploaded-notice"
+        "source": "uploaded-notice",
+        "sourceDocuments": [
+          "weekly-reminders-2026-09-07",
+          "weekly-reminders-2026-09-14"
+        ]
       },
       {
         "date": "Monday–Friday, Sept. 21–25",
@@ -244,25 +229,16 @@
         "source": "uploaded-notice"
       },
       {
-        "date": "Thursday, Sept. 24",
-        "label": "Pretzel delivery",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-09-21",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Thursday, Sep. 24",
-        "label": "Pretzel delivery",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-09-07",
-        "source": "uploaded-notice"
-      },
-      {
         "date": "Thursday, Sep. 24",
         "label": "Pretzel delivery",
         "kind": "school event",
         "sourceDocument": "weekly-reminders-2026-09-14",
-        "source": "uploaded-notice"
+        "source": "uploaded-notice",
+        "sourceDocuments": [
+          "weekly-reminders-2026-09-21",
+          "weekly-reminders-2026-09-07",
+          "weekly-reminders-2026-09-14"
+        ]
       },
       {
         "date": "Friday, Sept. 25",
@@ -282,15 +258,12 @@
         "date": "Friday, Sep. 25",
         "label": "Lego Club",
         "kind": "club",
-        "sourceDocument": "weekly-reminders-2026-09-07",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Friday, Sep. 25",
-        "label": "Lego Club",
-        "kind": "club",
         "sourceDocument": "weekly-reminders-2026-09-14",
-        "source": "uploaded-notice"
+        "source": "uploaded-notice",
+        "sourceDocuments": [
+          "weekly-reminders-2026-09-07",
+          "weekly-reminders-2026-09-14"
+        ]
       },
       {
         "date": "Friday, Sep. 25",
@@ -345,8 +318,12 @@
         "date": "Thursday, Oct. 1",
         "label": "Picture Day",
         "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-09-28",
-        "source": "uploaded-notice"
+        "sourceDocument": "weekly-reminders-2026-09-14",
+        "source": "uploaded-notice",
+        "sourceDocuments": [
+          "weekly-reminders-2026-09-28",
+          "weekly-reminders-2026-09-14"
+        ]
       },
       {
         "date": "Thursday, Oct. 1",
@@ -360,13 +337,6 @@
         "label": "HSA virtual meeting",
         "kind": "meeting",
         "sourceDocument": "weekly-reminders-2026-09-28",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Thursday, Oct. 1",
-        "label": "Picture Day",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-09-14",
         "source": "uploaded-notice"
       },
       {
@@ -448,35 +418,20 @@
         "date": "Friday, Oct. 9",
         "label": "12:00 dismissal",
         "kind": "schedule change",
-        "sourceDocument": "weekly-reminders-2026-10-05",
-        "source": "uploaded-notice"
+        "sourceDocument": "weekly-reminders-2026-09-14",
+        "source": "uploaded-notice",
+        "sourceDocuments": [
+          "weekly-reminders-2026-10-05",
+          "weekly-reminders-2026-08-31",
+          "weekly-reminders-2026-09-07",
+          "weekly-reminders-2026-09-14"
+        ]
       },
       {
         "date": "Friday, Oct. 9",
         "label": "Conference schedule portal closes",
         "kind": "deadline",
         "sourceDocument": "weekly-reminders-2026-10-05",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Friday, Oct. 9",
-        "label": "12:00 dismissal",
-        "kind": "schedule change",
-        "sourceDocument": "weekly-reminders-2026-08-31",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Friday, Oct. 9",
-        "label": "12:00 dismissal",
-        "kind": "schedule change",
-        "sourceDocument": "weekly-reminders-2026-09-07",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Friday, Oct. 9",
-        "label": "12:00 dismissal",
-        "kind": "schedule change",
-        "sourceDocument": "weekly-reminders-2026-09-14",
         "source": "uploaded-notice"
       },
       {
@@ -502,29 +457,14 @@
         "date": "Monday, Oct. 12",
         "label": "No School",
         "kind": "holiday",
-        "sourceDocument": "weekly-reminders-2026-08-31",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Monday, Oct. 12",
-        "label": "No School",
-        "kind": "holiday",
-        "sourceDocument": "weekly-reminders-2026-09-07",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Monday, Oct. 12",
-        "label": "No School",
-        "kind": "holiday",
-        "sourceDocument": "weekly-reminders-2026-09-14",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Monday, Oct. 12",
-        "label": "No School",
-        "kind": "holiday",
         "sourceDocument": "weekly-reminders-2026-10-12",
-        "source": "uploaded-notice"
+        "source": "uploaded-notice",
+        "sourceDocuments": [
+          "weekly-reminders-2026-08-31",
+          "weekly-reminders-2026-09-07",
+          "weekly-reminders-2026-09-14",
+          "weekly-reminders-2026-10-12"
+        ]
       },
       {
         "date": "Tuesday, Oct. 13",
@@ -550,35 +490,29 @@
         "date": "Wednesday, Oct. 14",
         "label": "Mass",
         "kind": "school event",
-        "sourceDocument": "october-calendar-2026",
-        "source": "uploaded-notice"
+        "sourceDocument": "weekly-reminders-2026-10-12",
+        "source": "uploaded-notice",
+        "sourceDocuments": [
+          "october-calendar-2026",
+          "weekly-reminders-2026-10-12"
+        ]
       },
       {
         "date": "Wednesday, Oct. 14",
         "label": "Communication Folder",
         "kind": "school event",
-        "sourceDocument": "october-calendar-2026",
-        "source": "uploaded-notice"
+        "sourceDocument": "weekly-reminders-2026-10-12",
+        "source": "uploaded-notice",
+        "sourceDocuments": [
+          "october-calendar-2026",
+          "weekly-reminders-2026-10-12"
+        ]
       },
       {
         "date": "Wednesday, Oct. 14",
         "label": "Student Council Meeting",
         "kind": "school event",
         "sourceDocument": "october-calendar-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Oct. 14",
-        "label": "Mass",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-10-12",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Oct. 14",
-        "label": "Communication Folder",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-10-12",
         "source": "uploaded-notice"
       },
       {
@@ -674,15 +608,12 @@
         "date": "Wednesday, Oct. 21",
         "label": "Mass",
         "kind": "school event",
-        "sourceDocument": "october-calendar-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Oct. 21",
-        "label": "Mass",
-        "kind": "school event",
         "sourceDocument": "weekly-reminders-2026-10-19",
-        "source": "uploaded-notice"
+        "source": "uploaded-notice",
+        "sourceDocuments": [
+          "october-calendar-2026",
+          "weekly-reminders-2026-10-19"
+        ]
       },
       {
         "date": "Wednesday, Oct. 21",
@@ -790,21 +721,18 @@
         "date": "Wednesday, Oct. 28",
         "label": "Mass",
         "kind": "school event",
-        "sourceDocument": "october-calendar-2026",
-        "source": "uploaded-notice"
+        "sourceDocument": "weekly-reminders-2026-10-19",
+        "source": "uploaded-notice",
+        "sourceDocuments": [
+          "october-calendar-2026",
+          "weekly-reminders-2026-10-19"
+        ]
       },
       {
         "date": "Wednesday, Oct. 28",
         "label": "Communication Folder",
         "kind": "school event",
         "sourceDocument": "october-calendar-2026",
-        "source": "uploaded-notice"
-      },
-      {
-        "date": "Wednesday, Oct. 28",
-        "label": "Mass",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-10-19",
         "source": "uploaded-notice"
       },
       {
