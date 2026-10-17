@@ -193,12 +193,18 @@ test('the complete dashboard turns critical for stale homework despite healthy w
   try{
     for(const dir of ['scripts','pages/data'])mkdirSync(join(root,dir),{recursive:true});
     for(const file of ['scripts/build-health-report.mjs','scripts/health-evidence.mjs',
-      'scripts/source-freshness-recovery.mjs','pages/sw.js','package.json']){
+      'scripts/source-freshness-recovery.mjs','scripts/school-week-label.mjs','pages/sw.js','package.json']){
       copyFileSync(new URL('../'+file,import.meta.url),join(root,file));
     }
     const now=new Date().toISOString();
+    const {schoolWeekLabel,displayedSchoolWeekDates}=await import('../scripts/school-week-label.mjs');
     const pack=JSON.parse(readFileSync(new URL('../pages/data/study-pack.json',import.meta.url),'utf8'));
     pack.sourceLastCheckedAt=now;
+    // Stabilize the isolated fixture against weekend rollover and future lunch
+    // horizons. This test isolates workflow and Homework health behavior.
+    pack.pack.teacherPostingWeekLabel=schoolWeekLabel(now);
+    pack.pack.weekLabel=schoolWeekLabel(now,{calendarDisplay:true});
+    pack.pack.lunchArchive=displayedSchoolWeekDates(now).map(date=>({date}));
     // This test controls health inputs; a future teacher topic must not alter
     // its intentionally healthy pipeline baseline.
     pack.pack.contentPipeline={safetyState:'READY',coverage:[],
