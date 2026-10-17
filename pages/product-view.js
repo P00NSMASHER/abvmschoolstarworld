@@ -159,7 +159,7 @@
     const status=state?.state||"unverified";
     const stamp=state?.checkedAt?new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}).format(new Date(state.checkedAt)):"";
     return status==="assignments"?"Current teacher posting · checked "+stamp+" ET · no date shown on page"
-      :status==="no-homework"?"Teacher explicitly posted no homework · checked "+stamp+" ET"
+      :status==="no-homework"?"Teacher page currently says no homework · checked "+stamp+" ET · no date shown on page"
       :status==="no-specific-posting"?"No specific assignment is currently listed · checked "+stamp+" ET"
       :status==="other-day"?"The teacher does not date assignments; only today's verified posting is shown."
       :status==="outdated"?"Homework needs today's teacher verification. Last checked "+stamp+" ET."
