@@ -45,5 +45,9 @@ function forDate(data,dateKey,now=new Date()){
   return{state:feed.status,checkedAt:feed.checkedAt,firstObservedAt:feed.firstObservedAt,
     contentChangedAt:feed.contentChangedAt,assignments:feed.assignments};
 }
-window.ABVMHomeworkFeed=Object.freeze({validate,forDate,schoolKey,sourceUrl:SOURCE_URL});
+function viewSignature(data,dateKey,now=new Date()){
+  const state=forDate(data,dateKey,now);
+  return JSON.stringify([state.state,state.assignments,state.firstObservedAt,state.contentChangedAt]);
+}
+window.ABVMHomeworkFeed=Object.freeze({validate,forDate,viewSignature,schoolKey,sourceUrl:SOURCE_URL});
 })();

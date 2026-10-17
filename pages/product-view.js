@@ -164,6 +164,10 @@
       :status==="outdated"?"Homework needs today's teacher verification. Last checked "+stamp+" ET."
       :"Today's homework is not yet verified in the app.";
   }
+  function updateHomeworkStamp(root,state) {
+    const label=root.querySelector(".today-homework .homework-source, .today-homework .homework-empty, .week-homework-card .homework-source, .week-homework-card .homework-empty");
+    if(label)label.textContent=homeworkStatusText(state);
+  }
   function homeworkCard({state,items=[],compact=false,taskHtml,isToday=true}) {
     const status=state?.state||"unverified";
     const live=status==="assignments"||status==="no-homework"||status==="no-specific-posting";
@@ -621,7 +625,7 @@
     window.addEventListener("pageshow",check);
     document.addEventListener("close",check,true);
   }
-  window.ABVMProductView = Object.freeze({ nextAssessments, assessmentWindow, watchSchoolClock, today, week, homeworkCard, homeworkStatusText, progress, icon, plannerDate, compactMonthCard, calendarSpecials, freshnessControl, replaceFreshness, calendar, calendarDate, calendarShift, calendarGrid, calendarEvent, bindCalendar, searchCalendarEvents, calendarSearch });
+  window.ABVMProductView = Object.freeze({ nextAssessments, assessmentWindow, watchSchoolClock, today, week, homeworkCard, homeworkStatusText, updateHomeworkStamp, progress, icon, plannerDate, compactMonthCard, calendarSpecials, freshnessControl, replaceFreshness, calendar, calendarDate, calendarShift, calendarGrid, calendarEvent, bindCalendar, searchCalendarEvents, calendarSearch });
 })();
 
 (()=>{"use strict";
