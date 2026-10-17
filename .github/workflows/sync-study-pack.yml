@@ -21,8 +21,6 @@ on:
       - 'scripts/grade2-content-alignment.mjs'
       - 'scripts/teacher-page-parsers.mjs'
       - 'scripts/lunch-publication.mjs'
-      - 'scripts/build-runtime-pack.mjs'
-      - 'tests/runtime-pack.test.mjs'
       - 'tests/runtime-pack-fallback.spec.mjs'
       - 'scripts/refresh-reviewed-lunch.mjs'
       - 'tests/refresh-reviewed-lunch.test.mjs'
