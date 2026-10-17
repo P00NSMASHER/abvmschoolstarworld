@@ -31,6 +31,7 @@ import { buildSchoolChangeFeed, validateSchoolChangeFeed } from './school-change
 import { curriculumFamilyRegistrySnapshot } from './curriculum-family-registry.mjs';
 import { parseCurriculumPreviewOptions } from './curriculum-preview-options.mjs';
 import { upcomingTeacherTests } from './teacher-test-focus.mjs';
+import { schoolWeekLabel } from './school-week-label.mjs';
 
 const DATA_PATH = new URL('../pages/data/study-pack.json', import.meta.url);
 const UPLOADED_NOTICES_PATH = new URL('../pages/data/uploaded-notices.json', import.meta.url);
@@ -239,13 +240,6 @@ function upsertSubject(subjects, matcher, next) {
   else subjects.push(next);
 }
 
-function schoolWeekLabel(now) {
-  const local = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-  const monday = new Date(local);
-  const day = local.getDay();
-  monday.setDate(local.getDate() - (day === 0 ? 6 : day - 1));
-  return `Week of ${monday.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
-}
 
 function readableList(items) {
   if (!items.length) return '';
@@ -469,7 +463,10 @@ pack.uploadedNoticeHash = uploadedNoticeHash;
 pack.sourceCapturedAt = capturedAt;
 pack.sourceCheckedAt = checkedAt;
 pack.generatedAt = checkedAt;
-pack.weekLabel = schoolWeekLabel(new Date(checkedAt));
+// Teacher posting remains scoped to the week it was checked, even when the
+// Calendar displays next Monday-Friday over a weekend.
+pack.teacherPostingWeekLabel = schoolWeekLabel(new Date(checkedAt));
+pack.weekLabel = schoolWeekLabel(new Date(checkedAt), { calendarDisplay: true });
 pack.summary = `Current Grade 2 teacher-site material: Homework lists ${readableList(homework.slice(0, 4).map(item => item.subject === 'Parent' ? `parent task “${item.task}”` : `${item.subject} “${item.task}”`))}. Upcoming tests include ${readableList(currentTests.slice(0, 4).map(item => `${item.label} on ${item.date}`))}. ${uploadedNotices.documents.length} uploaded school notices are integrated with the teacher pages.`;
 pack.sourceSufficient = true;
 pack.gaps = (pack.gaps || []).filter(item => !/source bridge|four-hour|does not show a date|spelling-word list|weekly spelling|reading work page leaves/i.test(item));
