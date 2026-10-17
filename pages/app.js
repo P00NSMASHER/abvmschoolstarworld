@@ -8,7 +8,7 @@ let studyMaterials=null,studyMaterialsPack=null,studyMaterialsPromise=null,study
 let homeworkFeed=null,homeworkFetchPromise=null,lastHomeworkFetchAt=0;
 const HOMEWORK_FEED_URL='./data/homework-current.json',HOMEWORK_REFRESH_MS=45*60*1000;
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
-function linkedTextHtml(value){return esc(value).replace(/https?:\/\/[^\s<]+/g,url=>'<a href="'+url+'" target="_blank" rel="noopener">'+url.replace(/^https?:\/\//,"")+'</a>')}
+const linkedTextHtml=window.ABVMProductView.linkedTextHtml;
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
 const SHORT_MONTHS={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,sept:8,oct:9,nov:10,dec:11};
 const WEEKDAY=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
@@ -117,7 +117,6 @@ function calendarSegments(view){
   return '<nav class="calendar-segments" aria-label="Calendar view"><button type="button" data-route="calendar" aria-pressed="'+(view==="month")+'">Month</button><button type="button" data-route="week" aria-pressed="'+(view==="week")+'">Week</button></nav>';
 }
 function freshnessState(){
-  // A newer Yahoo notice is not proof of a new teacher-page check.
   const raw=envelope?.sourceLastCheckedAt||pack?.sourceCheckedAt;
   const d=raw?new Date(raw):null;
   if(!d||Number.isNaN(d.getTime()))return{state:"attention",label:"Teacher page check unavailable"};
@@ -209,8 +208,6 @@ function taskRecordsForSurface(surface,date=today()){
   return getDerivedPack().homeworkRows.filter(record=>record.policy[surface]!==false&&taskAppliesToDate(record.item,date));
 }
 function homeworkForDate(date){
-  // Homework is an optional independently cached source. An offline miss cannot
-  // prevent the governed school planner, lunch and Study screens from rendering.
   return window.ABVMHomeworkFeed?.forDate?.(homeworkFeed,isoDateKey(date),new Date())
     || {state:"unverified",assignments:[]};
 }

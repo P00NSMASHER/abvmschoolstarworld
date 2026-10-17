@@ -14,6 +14,7 @@
           "'": "&#39;",
         })[c],
     );
+  const linkedTextHtml=value=>esc(value).replace(/https?:\/\/[^\s<]+/g,url=>'<a href="'+url+'" target="_blank" rel="noopener">'+url.replace(/^https?:\/\//,"")+'</a>');
   const paths = {
     arrow: "M5 12h14m-6-6 6 6-6 6",
     book: "M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1m0-15c3-2 6-2 9-1v15c-3-1-6-1-9 1V5",
@@ -625,7 +626,7 @@
     window.addEventListener("pageshow",check);
     document.addEventListener("close",check,true);
   }
-  window.ABVMProductView = Object.freeze({ nextAssessments, assessmentWindow, watchSchoolClock, today, week, homeworkCard, homeworkStatusText, updateHomeworkStamp, progress, icon, plannerDate, compactMonthCard, calendarSpecials, freshnessControl, replaceFreshness, calendar, calendarDate, calendarShift, calendarGrid, calendarEvent, bindCalendar, searchCalendarEvents, calendarSearch });
+  window.ABVMProductView = Object.freeze({ nextAssessments, assessmentWindow, watchSchoolClock, today, week, homeworkCard, homeworkStatusText, updateHomeworkStamp, linkedTextHtml, progress, icon, plannerDate, compactMonthCard, calendarSpecials, freshnessControl, replaceFreshness, calendar, calendarDate, calendarShift, calendarGrid, calendarEvent, bindCalendar, searchCalendarEvents, calendarSearch });
 })();
 
 (()=>{"use strict";
