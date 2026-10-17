@@ -26,12 +26,18 @@ export function validStudyResource(name, value) {
 /** Coalesce simultaneous reads; abort stalled requests without retaining bad data. */
 export function createStudyResourceLoader(fetcher, timeoutMs = 12000) {
   const cache = new Map();
-  return async function resource(name) {
+  const expiry = new Map();
+  const maxAgeMs = 5 * 60 * 1000;
+  const resource = async function resource(name) {
+    if (expiry.has(name) && Date.now() >= expiry.get(name)) {
+      cache.delete(name);
+      expiry.delete(name);
+    }
     if (cache.has(name)) return cache.get(name);
     const controller = new AbortController();
     let timer;
     const pending = Promise.race([
-      Promise.resolve().then(() => fetcher('./data/' + name, {signal: controller.signal}))
+      Promise.resolve().then(() => fetcher('./data/' + name, {signal: controller.signal, cache: 'no-store'}))
         .then(response => {
           if (!response.ok) throw new Error('Study materials could not load.');
           return response.json();
@@ -44,11 +50,21 @@ export function createStudyResourceLoader(fetcher, timeoutMs = 12000) {
         controller.abort();
         reject(new Error('Study materials took too long to load.'));
       }, timeoutMs); }),
-    ]).catch(error => {
-      if (cache.get(name) === pending) cache.delete(name);
+    ]).then(value => {
+      if (cache.get(name) === pending) expiry.set(name, Date.now() + maxAgeMs);
+      return value;
+    }).catch(error => {
+      if (cache.get(name) === pending) { cache.delete(name); expiry.delete(name); }
       throw error;
     }).finally(() => clearTimeout(timer));
     cache.set(name, pending);
     return pending;
   };
+  // New school evidence or an explicit retry invalidates successful reads.
+  // An older in-flight request cannot overwrite a freshly loaded resource.
+  resource.invalidate = name => {
+    if (name) { cache.delete(name); expiry.delete(name); }
+    else { cache.clear(); expiry.clear(); }
+  };
+  return resource;
 }

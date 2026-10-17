@@ -81,3 +81,12 @@ test('observations or content changes occurring after their source checks fail c
     contentChangedAt:'2026-10-14T01:00:00.000Z',
     checkedAt:'2026-10-14T00:32:53.326Z'}),/Invalid/);
 });
+
+test('an unchanged recheck updates provenance without altering the displayed homework state',()=>{
+ const original={...verifiedPosting,checkedAt:'2026-10-14T00:32:53.326Z'};
+ const recheck={...original,checkedAt:'2026-10-14T00:45:00.000Z'};
+ const now=new Date('2026-10-14T01:00:00Z'),day='2026-10-13';
+ assert.equal(model.viewSignature(original,day,now),model.viewSignature(recheck,day,now));
+ const updated={...recheck,contentHash:'a'.repeat(64),assignments:[...recheck.assignments,{subject:'Math',task:'Page 23'}]};
+ assert.notEqual(model.viewSignature(updated,day,now),model.viewSignature(recheck,day,now));
+});

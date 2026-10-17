@@ -21,6 +21,7 @@ const modes = {
 };
 const emptyArchive = () => ({questions:[], notes:[], vocabulary:[]});
 const sharedResource = createStudyResourceLoader((...args) => fetch(...args));
+let lastResourcePack = null;
 const array = value => Array.isArray(value) ? value : [];
 const meaningfulText = value => typeof value === 'string' && value.trim().length > 0;
 const safeQuestion = q => q && typeof q.id === 'string' && q.id &&
@@ -235,7 +236,13 @@ function guideReviewTopics(group,practiceRows,pack) {
 }
 
 /** Failures stay retryable and cannot prevent the current Games from opening. */
-export async function loadStudyMaterials({resourceLoader = sharedResource, ...options} = {}) {
+export async function loadStudyMaterials({resourceLoader = sharedResource, refreshResources = false, ...options} = {}) {
+  // Independently published schoolwork and archives must never be stuck in
+  // a successful prior session cache after a new pack or an explicit retry.
+  if (resourceLoader === sharedResource && (refreshResources || options.pack !== lastResourcePack)) {
+    resourceLoader.invalidate();
+    lastResourcePack = options.pack;
+  }
   const resources = ['schoolwork.json','study-archive.json'];
   const results = await Promise.allSettled(resources.map(name => Promise.resolve().then(() => resourceLoader(name))));
   const errors = results.flatMap((result,index) => result.status === 'rejected'

@@ -39,3 +39,19 @@ test("watchdog follows both standalone deploys and completed teacher refresh wor
   assert.doesNotMatch(watchdog,/workflow_run\.conclusion == 'success'/);
   assert.match(watchdog,/github\.event\.workflow_run\.head_branch == 'main'/);
 });
+
+test("unchanged reviewed lunch never repeats full browser QA; changed lunch still requires it",()=>{
+  const lane=workflow.split("\n  reviewed-lunch:\n")[1]||"";
+  assert.ok(lane,"reviewed-lunch job missing");
+  assert.match(lane,/name: Prove lunch isolation and negative-case integrity/);
+  assert.match(lane,/name: Detect verified lunch publication changes\n\s+id: lunch-change/);
+  assert.match(lane,/git diff --quiet -- pages\/data\/study-pack\.json/);
+  assert.match(lane,/echo "changed=false" >> "\$GITHUB_OUTPUT"/);
+  assert.match(lane,/echo "changed=true" >> "\$GITHUB_OUTPUT"/);
+  for(const name of ["Independent full app QA before any main write","Commit only verified changed lunch pack on exact main"]){
+    const section=lane.split("      - name: "+name+"\n")[1]||"";
+    assert.match(section,/^\s+if: steps\.lunch-change\.outputs\.changed == 'true'/);
+  }
+  assert.match(lane,/npx playwright install --with-deps chromium webkit\n\s+npm run qa/);
+  assert.match(lane,/git ls-remote --exit-code origin refs\/heads\/main/);
+});

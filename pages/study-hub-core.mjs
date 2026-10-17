@@ -67,11 +67,21 @@ export function questionsForTest(test, questions) {
     return questions.filter(q => q.subject === 'Math' &&
       (!operations.length || operations.some(operation => String(q.skill || '').includes(operation))));
   }
-  if (/reading|ela/.test(label))
-    return questions.filter(
-      (q) =>
-        q.subject === "Reading / ELA" &&
-        !/subject-predicate|sentence-types|long-short|possessive/.test(q.skill),
-    );
+  if (/reading|ela/.test(label)) {
+    // A text-set assessment needs exact verified linkage. Generic Reading
+    // exercises may still be used in Reading Games, but never as evidence
+    // that a specific announced text set is covered by Test Prep.
+    const announced = label.match(/\bunit\s*(\d+)\s*text\s*set\s*(\d+)\b/i);
+    if (announced) {
+      return questions.filter(q => q.subject === "Reading / ELA" &&
+        (Array.isArray(q.sourceTestScopes) ? q.sourceTestScopes : []).some(scope => {
+          const matched = String(scope).match(/\bunit\s*(\d+)\s*text\s*set\s*(\d+)\b/i);
+          return matched && Number(matched[1]) === Number(announced[1]) &&
+            Number(matched[2]) === Number(announced[2]);
+        }));
+    }
+    return questions.filter(q => q.subject === "Reading / ELA" &&
+      !/subject-predicate|sentence-types|long-short|possessive/.test(q.skill));
+  }
   return [];
 }

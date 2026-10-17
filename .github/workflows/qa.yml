@@ -2,21 +2,6 @@ name: ABVM App QA
 
 on:
   pull_request:
-    paths:
-      - 'pages/**'
-      - 'scripts/**'
-      - 'tests/**'
-      - 'curriculum-candidates/**'
-      - 'package.json'
-      - 'package-lock.json'
-      - 'playwright.config.mjs'
-      - '.github/workflows/qa.yml'
-      - '.github/workflows/pages.yml'
-      - '.github/workflows/sync-study-pack.yml'
-      - '.github/workflows/sync-uploaded-notices.yml'
-      - '.github/workflows/import-yahoo-weekly-reminders.yml'
-      - '.github/workflows/refresh-health.yml'
-      - '.github/workflows/health-dashboard.yml'
   push:
     branches: [main]
     # Pages runs release QA for live-site changes. Keep non-deployable tooling and

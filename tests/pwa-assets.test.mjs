@@ -19,3 +19,13 @@ test('installed shell and lazy Study modules precache the exact active versioned
  }
  assert.equal(sw.match(/abvm-grade2-parent-companion-v(\d+)-/)?.[1],index.match(/abvm-sw-reloaded-v(\d+)/)?.[1],'Installed cache and one-time reload must advance together');
 });
+
+test('initial offline install avoids unrelated artwork and caps concurrent downloads',()=>{
+ const sw=page('sw.js');
+ assert.match(sw,/const INITIAL_OFFLINE_DATA = OPTIONAL_DATA\.filter/);
+ assert.match(sw,/const batchSize=4/);
+ assert.match(sw,/INITIAL_OFFLINE_DATA\.slice\(i,i\+batchSize\)/);
+ assert.match(sw,/await warmOfflineCore\(cache\)/);
+ assert.doesNotMatch(sw,/OPTIONAL_DATA\.map\(url=>cache\.add\(url\)\)/);
+ assert.match(sw,/schoolwork\|religion-sources\|homework-current/);
+});
