@@ -372,7 +372,7 @@ function ensureStudyMaterials(retry=false){
   const request={pack:data,promise:null};
   request.promise=Promise.all([import("./study-materials.mjs"),import("./study-games-materials-view.mjs?v=15")]).then(async([materials,view])=>{
     if(pack===data&&!studyMaterialsView){studyMaterialsView=view.createMaterialsView({onChange:()=>{if(isStudyRoute())renderGames()},onRetry:retryStudyMaterials,onTest:startStudyTest,onGuideRefresh:refreshTestGuideSources});if(isStudyRoute()&&gameState.screen==="menu")renderGames()}
-    const model=await materials.loadStudyMaterials({pack:data,catalog,events,engine});
+    const model=await materials.loadStudyMaterials({pack:data,catalog,events,engine,refreshResources:retry});
     if(pack===data){
       studyMaterials=model;studyMaterialsPack=data;studyMaterialsError=null;studyMaterialsView.setModel(model);
     }

@@ -244,7 +244,7 @@ function validateRichContent(input){return input==null||!!normalizeRichContent(i
 function makeQuestion({
   id,subject,skill,tier,type,prompt,choices,answer,explanation,hint,sourceFact,
   dok=2,difficulty=2,standards,domain,wrongFeedback,misconception,richContent=null,
-  contentFingerprint="",variantFingerprint="",reviewVerifiedAt="",reviewExpiresAt=""
+  contentFingerprint="",variantFingerprint="",reviewVerifiedAt="",reviewExpiresAt="",sourceTestScopes=[]
 }){
   const cleanChoices=[...choices].map(text);
   return {
@@ -271,7 +271,10 @@ function makeQuestion({
     variantFingerprint:text(variantFingerprint),
     richContent:normalizeRichContent(richContent),
     reviewVerifiedAt:text(reviewVerifiedAt),
-    reviewExpiresAt:text(reviewExpiresAt)
+    reviewExpiresAt:text(reviewExpiresAt),
+    ...(Array.isArray(sourceTestScopes) && sourceTestScopes.length
+      ? {sourceTestScopes:sourceTestScopes.filter(scope=>/^Unit [1-9]\d* Text Set [1-9]\d*$/.test(scope))}
+      : {})
   };
 }
 function addTriad(out,prefix,base,items){
@@ -298,6 +301,7 @@ function materialContentPipeline(pack,out){
       domain:spec.domain,
       contentFingerprint:spec.contentFingerprint,
       variantFingerprint:spec.variantFingerprint,
+      sourceTestScopes:spec.sourceTestScopes,
       richContent:spec.richContent,
       wrongFeedback:choice=>text(diagnostics?.[choice]?.feedback||"Review the target skill and use the hint before choosing again."),
       misconception:choice=>text(diagnostics?.[choice]?.misconception||"pipeline-generated-distractor")
@@ -320,6 +324,7 @@ function recentReviewContentPipeline(pack,out){
       domain:spec.domain,
       contentFingerprint:spec.contentFingerprint,
       variantFingerprint:spec.variantFingerprint,
+      sourceTestScopes:spec.sourceTestScopes,
       richContent:spec.richContent,
       reviewVerifiedAt:spec.reviewVerifiedAt,
       reviewExpiresAt:spec.reviewExpiresAt,
