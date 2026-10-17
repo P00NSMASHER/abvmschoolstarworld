@@ -14,6 +14,7 @@
           "'": "&#39;",
         })[c],
     );
+  const linkedTextHtml=value=>esc(value).replace(/https?:\/\/[^\s<]+/g,url=>'<a href="'+url+'" target="_blank" rel="noopener">'+url.replace(/^https?:\/\//,"")+'</a>');
   const paths = {
     arrow: "M5 12h14m-6-6 6 6-6 6",
     book: "M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1m0-15c3-2 6-2 9-1v15c-3-1-6-1-9 1V5",
@@ -152,16 +153,26 @@
       "</div>"
     );
   }
-  function homeworkCard({state,items=[],compact=false,taskHtml,isToday=true}) {
+  // Exposed for a targeted timestamp refresh without replacing active
+  // homework checkboxes, keyboard focus, or an in-progress Study player.
+  function homeworkStatusText(state) {
     const status=state?.state||"unverified";
     const stamp=state?.checkedAt?new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}).format(new Date(state.checkedAt)):"";
-    const live=status==="assignments"||status==="no-homework"||status==="no-specific-posting";
-    const text=status==="assignments"?"Current teacher posting · checked "+stamp+" ET · no date shown on page"
-      :status==="no-homework"?"Teacher explicitly posted no homework · checked "+stamp+" ET"
+    return status==="assignments"?"Current teacher posting · checked "+stamp+" ET · no date shown on page"
+      :status==="no-homework"?"Teacher page currently says no homework · checked "+stamp+" ET · no date shown on page"
       :status==="no-specific-posting"?"No specific assignment is currently listed · checked "+stamp+" ET"
       :status==="other-day"?"The teacher does not date assignments; only today's verified posting is shown."
       :status==="outdated"?"Homework needs today's teacher verification. Last checked "+stamp+" ET."
       :"Today's homework is not yet verified in the app.";
+  }
+  function updateHomeworkStamp(root,state) {
+    const label=root.querySelector(".today-homework .homework-source, .today-homework .homework-empty, .week-homework-card .homework-source, .week-homework-card .homework-empty");
+    if(label)label.textContent=homeworkStatusText(state);
+  }
+  function homeworkCard({state,items=[],compact=false,taskHtml,isToday=true}) {
+    const status=state?.state||"unverified";
+    const live=status==="assignments"||status==="no-homework"||status==="no-specific-posting";
+    const text=homeworkStatusText(state);
     const rows=status==="assignments"
       ?'<div class="homework-task-list">'+items.map(({item,index})=>taskHtml(item,index)).join("")+'</div>'
       :'<p class="homework-empty">'+esc(text)+'</p>';
@@ -616,7 +627,7 @@
     window.addEventListener("pageshow",check);
     document.addEventListener("close",check,true);
   }
-  window.ABVMProductView = Object.freeze({ nextAssessments, assessmentWindow, watchSchoolClock, today, week, homeworkCard, progress, icon, plannerDate, compactMonthCard, calendarSpecials, freshnessControl, replaceFreshness, calendar, calendarDate, calendarShift, calendarGrid, calendarEvent, bindCalendar, searchCalendarEvents, calendarSearch });
+  window.ABVMProductView = Object.freeze({ nextAssessments, assessmentWindow, watchSchoolClock, today, week, homeworkCard, homeworkStatusText, updateHomeworkStamp, linkedTextHtml, progress, icon, plannerDate, compactMonthCard, calendarSpecials, freshnessControl, replaceFreshness, calendar, calendarDate, calendarShift, calendarGrid, calendarEvent, bindCalendar, searchCalendarEvents, calendarSearch });
 })();
 
 (()=>{"use strict";

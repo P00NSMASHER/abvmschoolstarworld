@@ -117,3 +117,16 @@ test("schoolwork integration stays outside the child-facing app", () => {
   assert(!source.includes('type="file"'));
   assert(!source.includes("Tesseract"));
 });
+
+test('named reading text sets accept only verified exact-scope questions',()=>{
+  const pool=[
+    {id:'general-reading',subject:'Reading / ELA',skill:'main-idea-details'},
+    {id:'phonics',subject:'Reading / ELA',skill:'long-i-i-e-and-short-i'},
+    {id:'text3',subject:'Reading / ELA',skill:'main-idea-details',sourceTestScopes:['Unit 1 Text Set 3']},
+    {id:'text30',subject:'Reading / ELA',skill:'reading-charts',sourceTestScopes:['Unit 1 Text Set 30']},
+    {id:'text4',subject:'Reading / ELA',skill:'reading-charts',sourceTestScopes:['Unit 1 Text Set 4']},
+  ];
+  assert.deepEqual(questionsForTest({label:'Reading (Unit 1 Text Set 3)'},pool).map(q=>q.id),['text3']);
+  assert.deepEqual(questionsForTest({label:'Reading (Unit 2 Text Set 3)'},pool),[]);
+  assert.equal(questionsForTest({label:'Reading (Unit 1 Text Set 3)'},pool.slice(0,2)).length,0);
+});

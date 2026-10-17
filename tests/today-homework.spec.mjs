@@ -1,5 +1,5 @@
 import {test,expect} from '@playwright/test';
-import {HOMEWORK_E2E_NOW,installFreshHomeworkFixture,installHomeworkFixture} from './homework-e2e-fixture.mjs';
+import {HOMEWORK_E2E_NOW,HISTORICAL_HOMEWORK_POSTING,installFreshHomeworkFixture,installHomeworkFixture} from './homework-e2e-fixture.mjs';
 test.use({serviceWorkers:'block'});
 const TUESDAY=HOMEWORK_E2E_NOW;
 
@@ -58,6 +58,26 @@ test('when teacher data belongs to yesterday or is missing, Today never mislabel
   await expect(card).not.toContainText('Page 22');
   await expect(card).not.toContainText('Choice Board activity');
   await expect(card.locator('a')).toHaveAttribute('href','https://sites.google.com/view/abvmgr2/homework');
+});
+
+test('rechecked undated empty teacher page shows a current status on Today and Week',async({page})=>{
+  await installHomeworkFixture(page,{
+    status:'no-specific-posting',assignments:[],
+    firstObservedAt:'2026-10-13T20:00:00.000Z',
+    contentChangedAt:'2026-10-13T20:00:00.000Z',
+    checkedAt:'2026-10-14T12:00:00-04:00'
+  });
+  await page.clock.setFixedTime(new Date('2026-10-14T13:00:00-04:00'));
+  await page.goto('/#today');
+  const today=page.locator('.today-homework');
+  await expect(today).toContainText('No specific assignment is currently listed');
+  await expect(today).not.toContainText('needs today');
+  await expect(today.locator('[data-homework-check]')).toHaveCount(0);
+  await page.getByRole('button',{name:'Calendar'}).click();
+  await page.locator('.calendar-segments [data-route="week"]').click();
+  const week=page.locator('.week-homework-card');
+  await expect(week).toContainText('No specific assignment is currently listed');
+  await expect(week.locator('[data-homework-check]')).toHaveCount(0);
 });
 
 test('Today remains usable if the independently cached Homework helper cannot load offline',async({page})=>{
@@ -154,4 +174,27 @@ test('Math paper and choice board appear together on Today and Week with current
   await expect(week.locator('.homework-task-list .check-item')).toHaveCount(2);
   await expect(week).toContainText('Math paper');
   await expect(week).toContainText('Spelling Choice Board activity');
+});
+
+test('a source timestamp-only refresh updates the label without replacing homework cards or focus',async({page})=>{
+  await page.clock.setFixedTime(TUESDAY);
+  let posting={...HISTORICAL_HOMEWORK_POSTING};
+  await page.route('**/data/homework-current.json*',route=>route.fulfill({json:posting}));
+  await page.goto('/#today');
+  const first=page.locator('.today-homework [data-homework-check="0"]');
+  await expect(first).toBeVisible();
+  await first.focus();
+  await page.evaluate(()=>{
+    window.__originalHomeworkCard=document.querySelector('.today-homework');
+    window.__originalHomeworkFocus=document.activeElement;
+  });
+  posting={...posting,checkedAt:'2026-10-14T00:45:00.000Z'};
+  await page.evaluate(()=>window.dispatchEvent(new Event('online')));
+  await expect(page.locator('.today-homework .homework-source')).toContainText('8:45');
+  const identity=await page.evaluate(()=>({
+    card:document.querySelector('.today-homework')===window.__originalHomeworkCard,
+    focus:document.activeElement===window.__originalHomeworkFocus
+  }));
+  expect(identity.card).toBe(true);
+  expect(identity.focus).toBe(true);
 });

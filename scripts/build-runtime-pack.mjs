@@ -9,7 +9,7 @@ const INPUT=new URL("../pages/data/study-pack.json",import.meta.url);
 const OUTPUT=new URL("../pages/data/study-pack-runtime.json",import.meta.url);
 export const RUNTIME_QUESTION_FIELDS=Object.freeze([
   "id","subject","skill","questionType","prompt","choices","answer","explanation","hint",
-  "dok","difficulty","standards","domain","variantFingerprint","richContent","choiceDiagnostics","sourceChapters"
+  "dok","difficulty","standards","domain","variantFingerprint","richContent","choiceDiagnostics","sourceChapters","sourceTestScopes"
 ]);
 
 function clone(value){return JSON.parse(JSON.stringify(value));}
@@ -42,6 +42,16 @@ function pickQuestion(question){
     /^https:\/\/sites\.google\.com\//.test(l.sourceUrl||"") &&
     /^[a-fA-F0-9]{64}$/.test(l.sourceCaptureHash||"") &&
     /^sha256:[a-f0-9]{64}$/.test(l.evidenceExcerptHash||"");
+  if(question?.subject==="Reading / ELA"&&validLineage){
+    const scopes=new Set();
+    for(const entry of l.matchedEvidence||[]){
+      if(typeof entry!=="string")continue;
+      for(const match of entry.matchAll(/\bunit\s*(\d+)\s*text\s*set\s*(\d+)\b/gi)){
+        scopes.add("Unit "+Number(match[1])+" Text Set "+Number(match[2]));
+      }
+    }
+    if(scopes.size)picked.sourceTestScopes=[...scopes];
+  }
   if(question?.subject==="Religion"&&validLineage){
     const scopes=religionChapterScopes({subject:"Religion",sourceLineage:l});
     if(scopes.length)picked.sourceChapters=scopes;

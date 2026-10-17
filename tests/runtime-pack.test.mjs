@@ -150,3 +150,16 @@ test("curriculum turnover cannot defeat the 30 percent runtime budget with retir
   const runtimeBytes=Buffer.byteLength(runtimePackJson(envelope),"utf8");
   assert.ok(runtimeBytes<fullBytes*.7,{fullBytes,runtimeBytes});
 });
+
+test('only page-exact lineage can supply compact Reading text-set scope identifiers',()=>{
+  const fixture=structuredClone(source);
+  const [approved,unverified]=fixture.pack.contentPipeline.questions.filter(row=>row.subject==='Reading / ELA').slice(0,2);
+  assert.ok(approved&&unverified);
+  approved.sourceLineage.matchedEvidence.push('Unit 1 Text Set 3: reviewed source match');
+  unverified.sourceLineage.matchedEvidence.push('Unit 1 Text Set 3: unverified source');
+  unverified.sourceLineage.quality='unknown';
+  const questions=buildRuntimePack(fixture).pack.contentPipeline.questions;
+  assert.deepEqual(questions.find(q=>q.id===approved.id).sourceTestScopes,['Unit 1 Text Set 3']);
+  assert.equal(questions.find(q=>q.id===unverified.id).sourceTestScopes,undefined);
+  assert.doesNotMatch(JSON.stringify(questions),/reviewed source match|sourceCaptureHash/);
+});

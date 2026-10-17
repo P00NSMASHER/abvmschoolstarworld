@@ -16,7 +16,10 @@ const triggeredPaths = [
 ];
 
 test('candidate-only changes trigger independent exact-head full QA', () => {
-  for (const path of triggeredPaths) assert.ok(independent.includes(path), path);
+  // The independent workflow now triggers for every pull request, including
+  // previously listed candidate-only changes and docs-only updates.
+  assert.match(independent,/^  pull_request:\s*$/m);
+  assert.doesNotMatch(independent,/^  pull_request:\s*\n\s{4}paths:/m);
   assert.ok(independent.includes('ref: $' + '{{ github.event.pull_request.head.sha || github.sha }}'));
   assert.ok(independent.includes('git archive --format=tar HEAD'));
   assert.ok(independent.includes('npm run qa:static'));

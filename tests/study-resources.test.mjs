@@ -53,3 +53,29 @@ test('stalled read is aborted and a later request can recover',async()=>{
 test('the recovery module is included in the service worker',()=>{
   assert(readFileSync(new URL('../pages/sw.js',import.meta.url),'utf8').includes('"./study-resources.mjs"'));
 });
+
+test('successfully cached resources can be invalidated after publication',async()=>{
+  let calls=0;
+  const load=createStudyResourceLoader(async()=>response({lessons:[{title:'Class',subject:'Math',studiedOn:null,notes:[++calls===1?'old note':'new note']}]}));
+  assert.equal((await load('schoolwork.json')).lessons[0].notes[0],'old note');
+  assert.equal((await load('schoolwork.json')).lessons[0].notes[0],'old note');
+  assert.equal(calls,1);
+  load.invalidate('schoolwork.json');
+  assert.equal((await load('schoolwork.json')).lessons[0].notes[0],'new note');
+  assert.equal(calls,2);
+});
+test('an invalidated in-flight old read cannot repopulate the new cache',async()=>{
+  let finishOld,calls=0;
+  const load=createStudyResourceLoader(async()=>{
+    calls++;
+    return calls===1?new Promise(resolve=>{finishOld=resolve;}):response({lessons:[]});
+  });
+  const old=load('schoolwork.json');
+  await new Promise(resolve=>setImmediate(resolve));
+  load.invalidate();
+  const latest=await load('schoolwork.json');
+  finishOld(response({lessons:[{title:'Old',subject:'Math',studiedOn:null}]}));
+  await old;
+  assert.deepEqual(await load('schoolwork.json'),latest);
+  assert.equal(calls,2);
+});

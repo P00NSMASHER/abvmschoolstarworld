@@ -8,7 +8,7 @@ let studyMaterials=null,studyMaterialsPack=null,studyMaterialsPromise=null,study
 let homeworkFeed=null,homeworkFetchPromise=null,lastHomeworkFetchAt=0;
 const HOMEWORK_FEED_URL='./data/homework-current.json',HOMEWORK_REFRESH_MS=45*60*1000;
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
-function linkedTextHtml(value){return esc(value).replace(/https?:\/\/[^\s<]+/g,url=>'<a href="'+url+'" target="_blank" rel="noopener">'+url.replace(/^https?:\/\//,"")+'</a>')}
+const linkedTextHtml=window.ABVMProductView.linkedTextHtml;
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
 const SHORT_MONTHS={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,sept:8,oct:9,nov:10,dec:11};
 const WEEKDAY=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
@@ -117,7 +117,6 @@ function calendarSegments(view){
   return '<nav class="calendar-segments" aria-label="Calendar view"><button type="button" data-route="calendar" aria-pressed="'+(view==="month")+'">Month</button><button type="button" data-route="week" aria-pressed="'+(view==="week")+'">Week</button></nav>';
 }
 function freshnessState(){
-  // A newer Yahoo notice is not proof of a new teacher-page check.
   const raw=envelope?.sourceLastCheckedAt||pack?.sourceCheckedAt;
   const d=raw?new Date(raw):null;
   if(!d||Number.isNaN(d.getTime()))return{state:"attention",label:"Teacher page check unavailable"};
@@ -209,8 +208,6 @@ function taskRecordsForSurface(surface,date=today()){
   return getDerivedPack().homeworkRows.filter(record=>record.policy[surface]!==false&&taskAppliesToDate(record.item,date));
 }
 function homeworkForDate(date){
-  // Homework is an optional independently cached source. An offline miss cannot
-  // prevent the governed school planner, lunch and Study screens from rendering.
   return window.ABVMHomeworkFeed?.forDate?.(homeworkFeed,isoDateKey(date),new Date())
     || {state:"unverified",assignments:[]};
 }
@@ -372,7 +369,7 @@ function ensureStudyMaterials(retry=false){
   const request={pack:data,promise:null};
   request.promise=Promise.all([import("./study-materials.mjs"),import("./study-games-materials-view.mjs?v=16")]).then(async([materials,view])=>{
     if(pack===data&&!studyMaterialsView){studyMaterialsView=view.createMaterialsView({onChange:()=>{if(isStudyRoute())renderGames()},onRetry:retryStudyMaterials,onTest:startStudyTest,onGuideRefresh:refreshTestGuideSources});if(isStudyRoute()&&gameState.screen==="menu")renderGames()}
-    const model=await materials.loadStudyMaterials({pack:data,catalog,events,engine});
+    const model=await materials.loadStudyMaterials({pack:data,catalog,events,engine,refreshResources:retry});
     if(pack===data){
       studyMaterials=model;studyMaterialsPack=data;studyMaterialsError=null;studyMaterialsView.setModel(model);
     }
@@ -393,7 +390,7 @@ function ensureStudyGameEngine(){
   if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
   if(studyEnginePromise)return studyEnginePromise;
   const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.async=true;s.onload=()=>window[key]?resolve():reject(new Error(key+" did not initialize"));s.onerror=()=>reject(new Error(key+" could not be loaded"));document.head.append(s)});
-  studyEnginePromise=Promise.all([load("./study-games.js?v=104","ABVMStudyGames"),load("./study-games-view.js?v=15","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
+  studyEnginePromise=Promise.all([load("./study-games.js?v=105","ABVMStudyGames"),load("./study-games-view.js?v=15","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
   return studyEnginePromise;
 }
 function studyGameCatalog(){
@@ -719,11 +716,15 @@ async function fetchHomeworkFeed({force=false}={}){
       const response=await fetch(HOMEWORK_FEED_URL,{cache:"no-store",signal:controller.signal});
       if(!response.ok)throw Error("Current teacher Homework feed unavailable: "+response.status);
       const next=window.ABVMHomeworkFeed.validate(await response.json());
-      const changed=JSON.stringify(next)!==JSON.stringify(homeworkFeed);
+      const date=activeTab==="week"?(selectedDay||today()):today();
+      const day=isoDateKey(date);
+      const prior=window.ABVMHomeworkFeed.viewSignature(homeworkFeed,day);
+      const updated=window.ABVMHomeworkFeed.viewSignature(next,day);
       homeworkFeed=next;
       lastHomeworkFetchAt=Date.now();
-      if(changed&&pack)render({preserveScroll:true});
-      return changed;
+      if(prior!==updated&&pack&&["today","week"].includes(activeTab))render({preserveScroll:true});
+      else if(pack)window.ABVMProductView.updateHomeworkStamp(stack(),homeworkForDate(date));
+      return prior!==updated;
     }finally{clearTimeout(timeout);}
   })().finally(()=>{homeworkFetchPromise=null;});
   return homeworkFetchPromise;
