@@ -294,15 +294,26 @@ jobs:
 
   deploy:
     name: deploy verified refresh through Pages workflow
-    needs: refresh
+    # Reviewed lunch and teacher refresh previously raced: lunch could commit
+    # verified source changes during the 1,000+ test Pages QA, invalidating its
+    # admitted main SHA. Finish both source lanes before selecting the release.
+    needs: [refresh, reviewed-lunch]
+    # A verified lunch-only change still publishes when curriculum QA is held.
+    # An unchanged lunch-only check cannot turn a failed teacher refresh into
+    # an unverified publication.
+    if: ${{ always() && (needs.refresh.result == 'success' || (needs.reviewed-lunch.result == 'success' && needs.reviewed-lunch.outputs.changed == 'true')) }}
     uses: ./.github/workflows/pages.yml
     with:
-      # Pass the exact newly-published commit, not the original push SHA.
-      # The Pages workflow independently verifies this SHA remains main HEAD.
-      ref: ${{ needs.refresh.outputs.published_sha }}
+      # An immutable SHA from reviewed-lunch wins when available; teacher
+      # refresh SHA is the fallback if lunch validation failed. The publisher
+      # independently rejects refs that are not the exact current main HEAD.
+      ref: ${{ needs.reviewed-lunch.outputs.published_sha || needs.refresh.outputs.published_sha }}
   reviewed-lunch:
     name: Refresh reviewed lunch week independently of held curriculum
     needs: refresh
+    outputs:
+      published_sha: ${{ steps.confirm-lunch-published-sha.outputs.sha }}
+      changed: ${{ steps.lunch-change.outputs.changed }}
     if: always() && github.ref == 'refs/heads/main'
     permissions:
       contents: write
@@ -324,11 +335,29 @@ jobs:
         run: node scripts/refresh-reviewed-lunch.mjs --write
       - name: Prove lunch isolation and negative-case integrity
         run: node --test tests/lunch-publication.test.mjs tests/refresh-reviewed-lunch.test.mjs
+      # Source isolation and negative-case checks run on every attempt.
+      # The lunch preparer emits no file change for an unchanged reviewed week.
+      # Running 1,000+ full browser tests for that no-op delays true releases
+      # without adding evidence, so reserve independent full QA for a changed pack.
+      - name: Detect verified lunch publication changes
+        id: lunch-change
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- pages/data/study-pack.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Reviewed lunch unchanged; no publication or full release QA needed."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Reviewed lunch changed; independent full release QA required."
+          fi
       - name: Independent full app QA before any main write
+        if: steps.lunch-change.outputs.changed == 'true'
         run: |
           npx playwright install --with-deps chromium webkit
           npm run qa
       - name: Commit only verified changed lunch pack on exact main
+        if: steps.lunch-change.outputs.changed == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -347,3 +376,16 @@ jobs:
           REMOTE="$(git ls-remote --exit-code origin refs/heads/main | cut -f1)"
           test "$REMOTE" = "$EXPECTED" || { echo 'Main advanced; refusing lunch write.' >&2; exit 1; }
           git push origin HEAD:main
+      # Select a concrete post-lunch main SHA; Pages still repeats its exact
+      # current-main admission, complete release QA, and pre-deploy recheck.
+      - name: Confirm current protected-main SHA after lunch verification
+        id: confirm-lunch-published-sha
+        shell: bash
+        run: |
+          set -euo pipefail
+          REMOTE_MAIN="$(git ls-remote --exit-code origin refs/heads/main | cut -f1)"
+          [[ "$REMOTE_MAIN" =~ ^[0-9a-f]{40}$ ]] || {
+            echo 'Could not verify post-lunch main SHA.' >&2
+            exit 1
+          }
+          echo "sha=$REMOTE_MAIN" >> "$GITHUB_OUTPUT"
