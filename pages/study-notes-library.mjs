@@ -51,24 +51,52 @@ export function notesLibraryData(data={}, {query='',meaning=row=>row.meaning||''
  }).filter(row=>!tokens.length||row.count>0);
 }
 
-function detailHtml(row,{source,meaning}) {
+// Conservative presentation-only collapse: original school wording remains
+// available in the disclosure and in the source model. No chapter attribution
+// or teacher evidence is inferred from these comparisons.
+const noteStopWords=new Set(['the','and','for','with','that','this','from','are','was','were','which','their','they','has','have','will','into','about','when','then','also','your','you','our','after','before']);
+const noteKeywords=value=>new Set(normalized(value).replace(/[^a-z0-9]+/g,' ').split(/\s+/).filter(word=>word.length>=3&&!noteStopWords.has(word)));
+function sameTeachingPoint(a,b){
+ const left=noteKeywords(a),right=noteKeywords(b);
+ if(left.size<5||right.size<5)return false;
+ const shared=[...left].filter(word=>right.has(word)).length;
+ return shared>=5&&shared/Math.min(left.size,right.size)>=0.80&&shared/Math.max(left.size,right.size)>=0.60;
+}
+
+function detailHtml(row,{source,meaning,query=''}) {
  // A source note without an explicit topic association stays in its subject's
  // Class notes card. Never guess a chapter from keywords or source order.
  const paragraphs=section=>'<div class="notes-explanation"><small>'+esc(section.label)+'</small>'+list(section.paragraphs)+'</div>';
+ const seenAcrossTopics=[];
  const topics=row.topics.map((topic,i)=>{
   const sections=row.explanations.filter(section=>section.topic===topic);
   if(!sections.length)return '';
+  const seenInThisTopic=[],alternative=[];
+  const body=sections.map(section=>{
+   const kept=section.paragraphs.filter(paragraph=>{
+    // Search matches must stay immediately readable, even if similar.
+    if(!query&&seenInThisTopic.some(prior=>sameTeachingPoint(prior,paragraph))){
+     alternative.push({label:section.label,text:paragraph});return false;
+    }
+    seenInThisTopic.push(paragraph);seenAcrossTopics.push(paragraph);return true;
+   });
+   return kept.length?paragraphs({...section,paragraphs:kept}):'';
+  }).join('');
+  const alternateHtml=alternative.length?'<details class="study-note-source-variants" data-note-disclosure="'+row.index+'-variants-'+i+'"><summary>Alternative original wording ('+alternative.length+')</summary><div class="study-note-body">'+list(alternative.map(item=>item.text))+'</div></details>':'';
   return '<details class="study-note-topic" data-note-disclosure="'+row.index+'-topic-'+i+'" open><summary><strong>'+esc(topic)+'</strong></summary><div class="study-note-body">'+
-   sections.map(paragraphs).join('')+'</div></details>';
+   body+alternateHtml+'</div></details>';
  }).join('');
  const topicOnly=row.topics.filter(topic=>!row.explanations.some(section=>section.topic===topic));
  const topicList=topicOnly.length?'<details class="study-note-topic" data-note-disclosure="'+row.index+'-topics" open><summary><strong>Topics from class</strong></summary><div class="study-note-body">'+list(topicOnly)+'</div></details>':'';
- const classNotes=row.review.length?'<details class="study-note-topic" data-note-disclosure="'+row.index+'-class-notes" open><summary><strong>Class notes</strong></summary><div class="study-note-body">'+list(row.review)+'</div></details>':'';
+ const separate=row.review.filter(paragraph=>query||!seenAcrossTopics.some(prior=>sameTeachingPoint(prior,paragraph)));
+ const duplicates=query?[]:row.review.filter(paragraph=>!separate.includes(paragraph));
+ const classNotes=separate.length?'<details class="study-note-topic" data-note-disclosure="'+row.index+'-class-notes" open><summary><strong>'+(seenAcrossTopics.length?'Additional class notes':'Class notes')+'</strong></summary><div class="study-note-body">'+list(separate)+'</div></details>':'';
+ const originalWording=duplicates.length?'<details class="study-note-topic study-note-source-variants" data-note-disclosure="'+row.index+'-original"><summary><strong>Original classroom wording</strong><small>'+duplicates.length+' similar '+(duplicates.length===1?'note':'notes')+'</small></summary><div class="study-note-body">'+list(duplicates)+'</div></details>':'';
  const words=row.words.length?'<details class="study-note-topic study-vocabulary" data-note-disclosure="'+row.index+'-words" open><summary><strong>Words to know</strong><small>'+row.words.length+' '+(row.words.length===1?'word':'words')+'</small></summary><div class="study-note-body"><ul>'+row.words.map(word=>{const definition=meaning(word);return '<li><strong>'+esc(word.term)+'</strong>'+(definition?' — '+esc(definition):'')+'</li>';}).join('')+'</ul></div></details>':'';
  const saved=row.lessons.map((lesson,i)=>'<details class="study-note-topic game-material-lesson" data-note-disclosure="'+row.index+'-saved-'+i+'" open><summary><strong>'+esc(lesson.title)+'</strong><small>'+esc(dateLabel(lesson.studiedOn))+'</small></summary><div class="study-note-body">'+list((lesson.notes||[]).filter(text))+'</div></details>').join('');
  return '<header class="study-note-heading"><img src="./assets/illustrations/'+art(row.subject)+'.webp" alt="" width="64" height="64"><div><small>'+esc(source==='saved'?'Cumulative learning':'This week’s confirmed material')+'</small><h3 id="study-notes-title-'+row.index+'" tabindex="-1">'+esc(row.subject)+'</h3></div></header>'+
   row.warnings.map(value=>'<p class="game-note-warning">'+esc(value.text)+'</p>').join('')+
-  '<div class="study-note-topic-grid">'+topics+classNotes+topicList+words+saved+'</div>'+
+  '<div class="study-note-topic-grid">'+topics+classNotes+originalWording+topicList+words+saved+'</div>'+
   '<div class="study-note-references">'+row.links.map(link=>'<a data-religion-review href="'+esc(link.url)+'" target="_blank" rel="noopener">'+esc(link.label)+'</a>').join('')+'</div>';
 }
 
@@ -85,7 +113,7 @@ export function renderNotesLibrary(data,{source='weekly',subject='',query='',ove
   '<div class="notes-search"><label class="visually-hidden" for="study-notes-search">Search study notes</label><input id="study-notes-search" type="search" data-notes-search placeholder="Search notes, words or topics" value="'+esc(queryText)+'" maxlength="120" autocomplete="off" enterkeyhint="search">'+(queryText?'<button type="button" data-notes-clear aria-label="Clear note search">Clear</button>':'')+'</div>'+
   '<p class="notes-search-status" role="status" aria-live="polite">'+esc(queryText?count+' '+(count===1?'match':'matches')+' across '+rows.length+' '+(rows.length===1?'subject':'subjects'):source==='saved'?'Includes saved lessons. Undated work stays here, not in This week.':'Confirmed for this school week. Undated and earlier material stays in Cumulative.')+'</p>'+
   '<div class="notes-subject-browser"'+(selected?' hidden':'')+'><div class="study-note-subjects notes-subject-grid" role="group" aria-label="Choose a subject">'+cards+'</div>'+(!rows.length?'<p class="study-tools-empty">'+(queryText?'No matching notes. Try another word or clear your search.':'No lesson notes are included in this selection.')+'</p>':'')+'</div>'+
-  '<div class="notes-reader"'+(!selected?' hidden':'')+'><button type="button" class="notes-back" data-notes-back>‹ Back to subjects</button><div class="study-notes-grid">'+rows.map(row=>'<section class="study-note-panel" id="study-notes-panel-'+row.index+'" data-note-subject="'+esc(row.subject)+'"'+(row.subject!==selected?.subject?' hidden':'')+' aria-labelledby="study-notes-title-'+row.index+'">'+detailHtml(row,{source,meaning})+'</section>').join('')+'</div></div></div>';
+  '<div class="notes-reader"'+(!selected?' hidden':'')+'><button type="button" class="notes-back" data-notes-back>‹ Back to subjects</button><div class="study-notes-grid">'+rows.map(row=>'<section class="study-note-panel" id="study-notes-panel-'+row.index+'" data-note-subject="'+esc(row.subject)+'"'+(row.subject!==selected?.subject?' hidden':'')+' aria-labelledby="study-notes-title-'+row.index+'">'+detailHtml(row,{source,meaning,query:queryText})+'</section>').join('')+'</div></div></div>';
 }
 
 export function createNotesLibrary({getModel,win,meaning}={}) {

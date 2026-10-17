@@ -36,10 +36,13 @@ function forDate(data,dateKey,now=new Date()){
   let feed;
   try{feed=validate(data);}catch{return{state:"unverified",assignments:[]};}
   const checked=new Date(feed.checkedAt),firstObserved=new Date(feed.firstObservedAt),age=now.getTime()-checked.getTime();
-  // An undated posting is safe to treat as today's homework only on the
-  // Eastern school day when this exact content was first observed. Rechecking
-  // unchanged text tomorrow proves source availability, not a new assignment.
-  if(schoolKey(firstObserved)!==current||schoolKey(checked)!==current||age< -5*60*1000||age>30*60*60*1000)
+  // A successful check today can report the current state of the page even if
+  // an empty or explicit no-homework message first appeared yesterday. Only
+  // actionable undated assignments require first observation on this school day:
+  // an unchanged recheck never promotes yesterday's tasks into today's work.
+  const checkedToday=schoolKey(checked)===current&&age>=-5*60*1000&&age<=30*60*60*1000;
+  const assignmentsObservedToday=schoolKey(firstObserved)===current;
+  if(!checkedToday||(feed.status==="assignments"&&!assignmentsObservedToday))
     return{state:"outdated",checkedAt:feed.checkedAt,firstObservedAt:feed.firstObservedAt,
       contentChangedAt:feed.contentChangedAt,assignments:[]};
   return{state:feed.status,checkedAt:feed.checkedAt,firstObservedAt:feed.firstObservedAt,

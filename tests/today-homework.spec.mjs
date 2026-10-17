@@ -60,6 +60,26 @@ test('when teacher data belongs to yesterday or is missing, Today never mislabel
   await expect(card.locator('a')).toHaveAttribute('href','https://sites.google.com/view/abvmgr2/homework');
 });
 
+test('rechecked undated empty teacher page shows a current status on Today and Week',async({page})=>{
+  await installHomeworkFixture(page,{
+    status:'no-specific-posting',assignments:[],
+    firstObservedAt:'2026-10-13T20:00:00.000Z',
+    contentChangedAt:'2026-10-13T20:00:00.000Z',
+    checkedAt:'2026-10-14T12:00:00-04:00'
+  });
+  await page.clock.setFixedTime(new Date('2026-10-14T13:00:00-04:00'));
+  await page.goto('/#today');
+  const today=page.locator('.today-homework');
+  await expect(today).toContainText('No specific assignment is currently listed');
+  await expect(today).not.toContainText('needs today');
+  await expect(today.locator('[data-homework-check]')).toHaveCount(0);
+  await page.getByRole('button',{name:'Calendar'}).click();
+  await page.locator('.calendar-segments [data-route="week"]').click();
+  const week=page.locator('.week-homework-card');
+  await expect(week).toContainText('No specific assignment is currently listed');
+  await expect(week.locator('[data-homework-check]')).toHaveCount(0);
+});
+
 test('Today remains usable if the independently cached Homework helper cannot load offline',async({page})=>{
   await page.clock.setFixedTime(TUESDAY);
   await page.route('**/homework-feed.js*',route=>route.abort('failed'));

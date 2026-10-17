@@ -122,7 +122,6 @@
       '<div class="today-primary">' + nextHtml +
       "</div>" +
       eagerTodayLunchArt(lunchHtml) +
-      '<figure class="school-sign-card"><img class="school-sign-photo" src="./assets/school/abvm-school-sign.webp" width="420" height="280" loading="eager" decoding="async" alt="Original photograph of the Assumption BVM school sign on Howard Avenue"><figcaption><strong>Our school sign</strong><span>Assumption BVM · Howard Avenue</span></figcaption></figure>' +
       '<section class="today-panel">' +
       sectionHead(closed ? "Today’s plan" : "At school today") +
       '<div class="timeline">' +
@@ -149,6 +148,7 @@
             .join("") +
           "</section>"
         : "") +
+      '<figure class="school-sign-card"><img class="school-sign-photo" src="./assets/school/abvm-school-sign.webp" width="420" height="280" loading="lazy" decoding="async" alt="Original photograph of the Assumption BVM school sign on Howard Avenue"><figcaption><strong>Our school sign</strong><span>Assumption BVM · Howard Avenue</span></figcaption></figure>' +
       freshness() +
       "</div>"
     );
@@ -159,7 +159,7 @@
     const status=state?.state||"unverified";
     const stamp=state?.checkedAt?new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}).format(new Date(state.checkedAt)):"";
     return status==="assignments"?"Current teacher posting · checked "+stamp+" ET · no date shown on page"
-      :status==="no-homework"?"Teacher explicitly posted no homework · checked "+stamp+" ET"
+      :status==="no-homework"?"Teacher page currently says no homework · checked "+stamp+" ET · no date shown on page"
       :status==="no-specific-posting"?"No specific assignment is currently listed · checked "+stamp+" ET"
       :status==="other-day"?"The teacher does not date assignments; only today's verified posting is shown."
       :status==="outdated"?"Homework needs today's teacher verification. Last checked "+stamp+" ET."
@@ -349,6 +349,7 @@
       "<p>Class notes, reviewed schoolwork and earlier lessons stay available for practice.</p>" +
       route("study?notes", "Explore notes & guides") +
       "</section>" +
+      '<details class="progress-achievements" open><summary><span>Study ranks &amp; achievements</span><b aria-hidden="true">⌄</b></summary><div class="progress-badges-slot"></div></details>' +
       '<details class="school-details" open><summary><span>' +
       icon("bell") +
       'School & family updates</span><b aria-hidden="true">⌄</b></summary><div class="family-updates">' +
@@ -647,7 +648,7 @@ function render(c,kind='collection'){
 function promotion(ranks){const latest=ranks?.at(-1);if(!latest)return "";return '<section class="study-rank-promotion" role="status" aria-label="New ABVM rank earned"><span class="promotion-eyebrow">NEW RANK UNLOCKED</span>'+image(latest,150)+'<h3>'+esc(latest.title)+'</h3><p>'+esc(ranks.length>1?ranks.length+' new ranks earned this round!':'You earned your next ABVM rank!')+'</p><button type="button" data-open-badges>Explore your rank ladder <span aria-hidden="true">›</span></button></section>'}
 function sync(c){const changed=JSON.stringify(saved)!==JSON.stringify(c);saved=c;if(!changed)return c;document.querySelectorAll('[data-badge-surface]').forEach(host=>{host.innerHTML=render(c,host.dataset.badgeSurface)});return c}
 function surface(kind){return '<div class="study-badge-surface" data-badge-surface="'+kind+'">'+render(saved,kind)+'</div>'}
-function mount(root,kind,load){const anchor=kind==='today'?(root.querySelector('.today-updates-card')||root.querySelector('.today-panel')):root.querySelector(kind==='collection'?'.family-hero':'.study-tools');if(!anchor)return;anchor.insertAdjacentHTML(kind==='collection'||kind==='today'?'afterend':'beforebegin',surface(kind));refresh(load)}
+function mount(root,kind,load){const anchor=kind==='today'?(root.querySelector('.today-updates-card')||root.querySelector('.today-panel')):root.querySelector(kind==='collection'?'.progress-badges-slot':'.study-tools');if(!anchor)return;anchor.insertAdjacentHTML(kind==='collection'?'afterbegin':'afterend',surface(kind));refresh(load)}
 function refresh(load){if(pending)return pending;pending=Promise.resolve().then(load).then(sync).catch(()=>{saved=null;document.querySelectorAll('[data-badge-surface]').forEach(host=>{host.innerHTML='<p class="badge-storage-error" role="status">Your stars could not be loaded. Practice is still available.</p>'})}).finally(()=>{pending=null});return pending}
 window.ABVMStudyBadges=Object.freeze({render,promotion,surface,mount,refresh,sync,snapshot:()=>saved});
 })();

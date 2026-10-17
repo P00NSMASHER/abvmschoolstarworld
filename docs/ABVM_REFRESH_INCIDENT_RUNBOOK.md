@@ -1,53 +1,54 @@
 # ABVM refresh incident runbook
 
-## Source freshness vs curriculum promotion
+## Current source freshness and curriculum policy (October 17, 2026)
 
-The scheduled **Refresh ABVM teacher pages** job scans six teacher pages,
-checks lunch sources, and generates the current pack candidate. If a teacher
-skill is not represented by an approved curriculum family, the
-**Block publication while curriculum candidates are unresolved** step must
-fail. Its draft candidate PR does not authorize publication: educator review,
-page-exact evidence, safe-usage evidence, manual approval, and promotion QA
-remain mandatory.
+The scheduled **Refresh ABVM teacher pages** job scans six public teacher pages,
+checks source/provenance integrity, verifies the current pack and publishes through
+independent QA and protected release gates. Source-matched curriculum families
+with complete original practice and evidence are promoted through the existing
+automatic pipeline. Unsupported or incomplete lesson/question candidates remain
+isolated while verified teacher data and independently checked homework continue
+to refresh; a draft candidate PR is not a publication approval.
 
-The **Monitor ABVM refresh health** watchdog compares the published and
-repository pack source timestamps and hashes using the strict 16-hour limit.
-A stale pack remains stale even if the Pages website deploys successfully.
-Do not backdate or advance a source check without real verified retrieval,
-increase the freshness threshold to hide a blockage, or rewrite approved
-schoolwork to make it green.
+**No teacher, educator, school, parent or owner verification/signoff is required
+for routine private-companion app updates.** Do not request educator credentials or
+fabricate a teacher review. Do not bypass independent source-date, academic-answer,
+reuse-rights, public child-privacy, exact-commit, browser, accessibility or Pages
+verification gates. Where an original photo or source evidence is unavailable,
+hold only the unsupported claim or candidate and report the evidence gap; never
+invent the missing source or redate an assignment.
 
-## Incident handling (October 9, 2026 example)
+The **Monitor ABVM refresh health** watchdog compares published and repository
+source timestamps and hashes against the configured strict freshness limit.
+Successful Pages deployment cannot make a stale teacher pack fresh. Never
+backdate a source check, relax age limits to suppress incidents or silently
+rewrite governed source material.
 
-- Teacher refresh run [37936203689](https://github.com/P00NSMASHER/abvmschoolstarworld/actions/runs/37936203689) stopped at the
-  unresolved-coverage gate for four Reading/ELA skills: long i / short i,
-  possessives, ask/answer questions, and main idea/details.
-- Draft educator-review [PR #270](https://github.com/P00NSMASHER/abvmschoolstarworld/pull/270) holds 32 authored candidates; all four
-  remain disabled and unpromoted. A passing QA test is **not** educator approval.
-- Watchdog [37936260051](https://github.com/P00NSMASHER/abvmschoolstarworld/actions/runs/37936260051) reported 22.4 hours since the last genuine teacher source check
-  in both repository and deployed pack, exceeding 16 hours.
-- Official-calendar [PR #279](https://github.com/P00NSMASHER/abvmschoolstarworld/pull/279) successfully deployed separately; that source-labeled link
-  does not imply teacher-source freshness or Facebook retrieval approval.
-- Facebook [PR #274](https://github.com/P00NSMASHER/abvmschoolstarworld/pull/274) remains a draft with both Page retrieval flags disabled,
-  no approved or published Facebook posts, and separate school/HSA IDs.
+## Historical incident: October 9, 2026 (superseded workflow)
 
-## Health dashboard fail-closed observability
+The former coverage gate held the six-page refresh for unsupported Reading/ELA
+topics, including long/short i, possessives, asking/answering and main ideas.
+Historical [refresh run #37936203689](https://github.com/P00NSMASHER/abvmschoolstarworld/actions/runs/37936203689)
+and candidate [PR #270](https://github.com/P00NSMASHER/abvmschoolstarworld/pull/270)
+document that failure. Its former *educator approval and manual promotion*
+instructions are **retired** and must not be applied to current routine refreshes.
+The correction is to isolate unresolved curriculum safely while continuing to
+publish verified teacher-page and homework facts. Do not label an archived incident
+or PR as a current blocker without verifying current Actions.
 
-The dashboard is triggered by every **completed main-branch** watchdog run,
-including failures and cancellations. This fixes the earlier configuration
-where failed watchdogs left the operational dashboard skipped. The dashboard
-still computes strict operational health, preserves the source-age and
-curriculum gates, and exits with failure when its verdict is critical.
-Its summary and machine-readable artifact are retained with \`if: always()\`
-even if the verdict is critical. Other branches remain excluded.
+The operational dashboard runs after completed main-branch watchdog runs,
+including failed/cancelled watchdogs, and retains its machine-readable health
+evidence. A green snapshot alone is not live publication proof.
 
-To recover:
-1. Review the actual failing refresh steps and linked curriculum candidate,
-   not a previous successful or unrelated run.
-2. Complete independent source/educator/safe-usage review and manual promotion
-   when warranted. Until then, keep the unsupported-skill block.
-3. Allow the existing refresh workflow to fetch real teacher and lunch sources,
-   validate the candidate pack, and publish only through its normal QA process.
-4. Verify repository and deployed pack checkedAt/source hashes and watchdog
-   freshness. Inspect the generated health summary whether the watchdog
-   succeeded or failed. Do not create a replacement schedule.
+## Recovery procedure
+
+1. Inspect the actual newest failing workflow, source URL, candidate report,
+   deployment SHA and timestamp; distinguish source outage from candidate isolation.
+2. Independently resolve page-exact evidence and original question accuracy; keep
+   unsupported candidates out of production **without stopping safe source updates**.
+   Never wait for teacher/educator approval.
+3. Allow the existing bounded source-recovery and refresh workflows to recheck real
+   teacher and lunch sources and run the existing static, unit and browser gates.
+4. Verify exact published main SHA, actual source-check time/hash, homework evidence,
+   GitHub Pages deployment and live freshness; inspect health evidence even for
+   a failed watchdog. Do not create replacement schedules or false receipt evidence.

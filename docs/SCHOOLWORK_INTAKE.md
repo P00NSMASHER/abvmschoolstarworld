@@ -305,11 +305,13 @@ bytes**. It excludes question wording, lesson notes, private responses and free-
 source reasons from the output. Do not publish the report externally without
 checking that the already-public source/lesson IDs are appropriate to share.
 
-A valid public `sourceManifest` or green CI is not original-photo transcription
-approval. The report's release status is deliberately always
-`HOLD_EXTERNAL_SIGNOFF`: original photo/source comparison, public-text child
-privacy, educator/source rights, required physical Safari checks and exact-scope
-release authorization remain separate human decisions. An undated lesson is a
+A valid public `sourceManifest` or green CI does not independently authenticate
+the original private photos. This **optional photo-audit report** always displays
+`HOLD_EXTERNAL_SIGNOFF` as a conservative diagnostic; it is not a teacher,
+school, educator or parent approval prerequisite for normal, source-verified app
+updates. Preserve independent evidence, original academic correctness, date,
+privacy, reuse-rights and technical release checks. Unverifiable individual
+photos or unsupported claims stay held; do not delay unrelated verified lessons. An undated lesson is a
 **date-authority review item**, not automatic evidence of a current school week,
 a missed assessment, or defective learning. Held sources remain visible but
 cannot support published lessons.
@@ -342,9 +344,10 @@ lesson are **not automatically claimed to appear in each linked photo**. Source
 accuracy, educational correctness, privacy, rights and any uncertain dates remain
 human review responsibilities. Paper checkboxes are not authenticated signoff.
 
-Every workbook is marked `HOLD_EXTERNAL_SIGNOFF`, including if fully annotated.
-Neither this output nor a valid photo receipt changes schoolwork, publishes held
-curriculum, or authorizes a production merge. Keep any annotated workbook private
+Every optional comparison workbook is marked `HOLD_EXTERNAL_SIGNOFF`, including
+if annotated. This is not a mandatory educator-review queue or school approval
+for routine curriculum publication. The workbook and receipts cannot themselves
+change schoolwork, establish missing photo evidence, or bypass production QA. Keep any annotated workbook private
 and out of the public GitHub repository and CI artifacts.
 ## Private original-photo comparison (review-only)
 
@@ -363,11 +366,11 @@ node scripts/verify-schoolwork-photo-reviews.mjs --verify pages/data/schoolwork.
 ```
 
 The template deliberately begins with `reviewedOn: null`,
-`reviewerId: null`, and five false manual checklist flags. A person must
-compare each **original** photograph with its mapped lesson/skills/notes,
-independently check the original practice answers, inspect child privacy, and
-confirm permission/educator source status before filling in any approval flag.
-No AI-generated receipt, template or CI pass constitutes that human review.
+`reviewerId: null`, and five false manual checklist flags. The original photographs must be compared with mapped lessons, answers,
+privacy boundaries and reuse rights before **optional photo-audit** receipt
+fields are recorded. Never synthesize a receipt for inaccessible originals.
+Teacher or educator identity/approval is not required for routine source-backed
+updates; a template or CI pass alone does not verify missing photo bytes.
 
 The verifier opens photos only from a folder **outside** the public repository,
 computes each file's exact SHA-256, and compares it to the public manifest.
@@ -380,12 +383,12 @@ unknown fields, unsafe photo paths and receipts for held photos fail closed.
 `--verify` exits with code 2 for unresolved sources and prints only source
 IDs and status codes, **never private photos, reviewer IDs or answers**.
 
-Even with all receipts matching, the output is
-`HOLD_EXTERNAL_SIGNOFF`: receipt assertions are not independently authenticated
-human approval. Educator/source rights, child privacy, physical iPhone Safari
-acceptance when required, and explicit approval of the exact production release
-still need separate human decisions. Do not publish original photos or receipts
-to the public repository, CI logs, Pages, or Roblox exports.
+Even with all optional comparison receipts matching, the audit output remains
+`HOLD_EXTERNAL_SIGNOFF` because receipt claims are not independent source proof.
+This diagnostic is **not a requirement to obtain teacher/educator signoff**.
+Apply the already-authorized normal app release path with independent source,
+rights, child-privacy, device-when-required and exact-commit QA. Never publish
+original photos or receipts to the public repository, CI logs, Pages or Roblox.
 
 ### 12. Update weekly and test-prep surfaces only when warranted
 

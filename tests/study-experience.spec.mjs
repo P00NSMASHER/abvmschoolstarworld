@@ -256,7 +256,7 @@ test('test completion storage failure leaves the next test recoverable',async({p
  await room(page);
  await page.locator('[data-open-prep]').click();const before=await page.locator('[data-study-tests]').innerText();
  await page.evaluate(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k==='abvm-completed-tests')throw new DOMException('full','QuotaExceededError');return original.call(this,k,v);};});
- await page.locator('[data-study-test-options] > summary').click();await page.locator('[data-complete-test]').click();
+ await page.locator('[data-study-test-options] > summary').click();await page.locator('[data-study-test-options] .study-test-history > summary').click();await page.locator('[data-complete-test]').click();
  await expect(page.locator('[data-study-tests]')).toHaveText(before,{useInnerText:true});
  await expect(page.locator('.game-test-status')).toContainText('Could not save');
  await expect(page.locator('[data-test-single]')).toBeVisible();
@@ -264,6 +264,7 @@ test('test completion storage failure leaves the next test recoverable',async({p
 
 test('Undo returns keyboard focus to visible test practice',async({page})=>{
  await room(page);await page.locator('[data-open-prep]').click();await page.locator('[data-study-test-options] > summary').click();
+ await page.locator('[data-study-test-options] .study-test-history > summary').click();
  await page.locator('[data-complete-test]').click();
  const undo=page.locator('[data-undo-test]');await expect(undo).toBeFocused();await page.keyboard.press('Enter');
  await expect(page.locator('[data-test-single]')).toBeFocused();await expect(page.locator('[data-test-single]')).toBeVisible();
