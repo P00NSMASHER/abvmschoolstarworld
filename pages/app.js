@@ -100,7 +100,7 @@ function getDerivedPack(){
     pictureLinked:/^Picture (?:ordering|backgrounds):/i.test(String(text||""))
   }));
   const lunchProofs=new Map((pack?.lunchMenuSource?.sourcePages||[]).map(row=>[row.id,row]));
-  const packWeekStart=parseDate(pack?.weekLabel||"");
+  const packWeekStart=parseDate(pack?.teacherPostingWeekLabel||pack?.weekLabel||"");
   const pictureDayEnd=datedEvents.find(({item})=>/\bPicture Day\b/i.test(item.label||""))?.range?.[1]||null;
   derivedPackCache={pack,datedEvents,chronologicalEvents,eventsByDate,lunchByDate,lunchProofs,subjects,specials,reminderRows,homeworkRows,parentNoticeRows,packWeekStart,pictureDayEnd};
   return derivedPackCache;
@@ -161,7 +161,7 @@ function lunchForDate(date){
   return getDerivedPack().lunchByDate.get(isoDateKey(date))||null;
 }
 function keyPart(value){return String(value||"").trim().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,90)||"item";}
-function taskWeekKey(){return keyPart(pack?.weekLabel||"current-week");}
+function taskWeekKey(){return keyPart(pack?.teacherPostingWeekLabel||pack?.weekLabel||"current-week");}
 function checkKey(item){if(item?._homeworkDay)return "abvm-homework:v1:"+item._homeworkDay+":"+keyPart(item.subject)+":"+keyPart(item.task);return "abvm-task:v2:"+taskWeekKey()+":"+keyPart(item?._sourceSubject||item?.subject)+":"+keyPart(item?.task||item?.label);}
 function legacyCheckKey(item,index){return "abvm-old-look:"+String(pack?.sourceHash||"pack")+":"+index+":"+(item?.task||item?.label||"");}
 function checked(item,index){
@@ -636,6 +636,7 @@ function packContentKey(data){
     sourceHash:p.sourceHash||"",
     uploadedNoticeHash:p.uploadedNoticeHash||"",
     weekLabel:p.weekLabel||"",
+    teacherPostingWeekLabel:p.teacherPostingWeekLabel||"",
     importantDates:p.importantDates||[],
     homework:p.homework||[],
     subjects:p.subjects||[],
