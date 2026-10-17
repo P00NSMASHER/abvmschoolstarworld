@@ -60,3 +60,13 @@ test('notice deduplication normalizes repeated whitespace, without losing source
   assert.equal(rows.length,1);
   assert.deepEqual(new Set(rows[0].sourceDocuments),new Set([first.sourceDocument,other.id]));
 });
+
+test('freshly merged September abbreviation variants keep all independently reviewed source receipts',()=>{
+  const result=integrateUploadedNotices(structuredClone(source),structuredClone(uploaded),{now:new Date('2026-10-17T07:00:00Z')});
+  assert.doesNotThrow(()=>validateUploadedNoticeIntegration(result.data,uploaded));
+  const rows=result.data.pack.importantDates.filter(row=>/pretzel delivery/i.test(row.label)&&/sep/i.test(row.date));
+  assert.equal(rows.length,1);
+  assert.deepEqual(new Set([rows[0].sourceDocument,...rows[0].sourceDocuments||[]]),new Set([
+    'weekly-reminders-2026-09-21','weekly-reminders-2026-09-07','weekly-reminders-2026-09-14'
+  ]));
+});

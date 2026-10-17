@@ -1,7 +1,7 @@
 import {readFileSync} from "node:fs";
 import {resolve} from "node:path";
 import {fileURLToPath} from "node:url";
-import {noticeHash} from "./integrate-uploaded-notices.mjs";
+import {noticeHash,dateKey} from "./integrate-uploaded-notices.mjs";
 import {validateUploadedNoticePolicy} from "./uploaded-notice-policy.mjs";
 
 const NOTICES_PATH=new URL("../pages/data/uploaded-notices.json",import.meta.url);
@@ -21,10 +21,17 @@ export function validateUploadedNoticeIntegration(data,uploaded){
   if(JSON.stringify(metadata.documents||[])!==JSON.stringify(expectedDocuments))errors.push("study-pack uploaded notice document receipt is stale");
 
   const dates=pack.importantDates||[];
+  // Display text is not event identity: "Sep." and "Sept." are the same day,
+  // and deduplication may retain capitalization from another reviewed notice.
+  // Every originally reviewed document must still appear in source provenance.
+  const eventLabel=value=>String(value||"").normalize("NFC").trim().toLowerCase().replace(/\s+/g," ");
   for(const item of uploaded.importantDates||[]){
-    const found=dates.some(candidate=>candidate.date===item.date&&candidate.label===item.label&&(
-      candidate.sourceDocument===item.sourceDocument||(candidate.sourceDocuments||[]).includes(item.sourceDocument)
-    ));
+    const expectedDate=dateKey(item.date),expectedLabel=eventLabel(item.label);
+    const found=!!expectedDate&&dates.some(candidate=>
+      dateKey(candidate.date)===expectedDate&&eventLabel(candidate.label)===expectedLabel&&(
+        candidate.sourceDocument===item.sourceDocument||(candidate.sourceDocuments||[]).includes(item.sourceDocument)
+      )
+    );
     if(!found)errors.push(`missing important date from ${item.sourceDocument}: ${item.label}`);
   }
   const reminders=new Set(pack.reminders||[]),parentNotices=new Set(pack.parentNotices||[]);
