@@ -515,7 +515,7 @@ export function createStudyMaterials({
       : [];
     // A new teacher-published spelling list can replace old photo lists only if
     // the pack identifies the same school week as this specific test.
-    const announcedWeek = String(pack.weekLabel || '').match(/week of\s+([a-z]+\s+\d{1,2},?\s+\d{4})/i);
+    const announcedWeek = String(pack.teacherPostingWeekLabel || pack.weekLabel || '').match(/week of\s+([a-z]+\s+\d{1,2},?\s+\d{4})/i);
     const teacherWeek = announcedWeek && Number.isFinite(Date.parse(announcedWeek[1] + ' 12:00 GMT'))
       ? new Date(Date.parse(announcedWeek[1] + ' 12:00 GMT')).toISOString().slice(0,10) : '';
     const teacherLists = subject === 'Spelling / Handwriting' && teacherWeek === weekBounds(test.date).start
