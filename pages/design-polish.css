@@ -2142,3 +2142,67 @@
   .progress-screen .progress-achievements,
   .games-screen:not(.is-playing) .study-test-history{border:2px solid currentColor}
 }
+
+
+/* Short-phone acceptance: put verified study actions before the multi-test chooser.
+   The entire chooser stays accessible in a two-column grid farther down. */
+.games-screen:not(.is-playing) .prep-chooser-panel{
+  min-width:0;
+  margin:18px 0 0;
+  padding:13px 0 0;
+  border-top:1px solid #dce8f4;
+}
+.games-screen:not(.is-playing) .prep-chooser-panel>h3{
+  margin:0 0 9px;
+  font-size:.96rem;
+  font-weight:780;
+  color:#17395f;
+}
+.games-screen:not(.is-playing) .prep-jump-tests{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  float:right;
+  min-height:44px;
+  max-width:55%;
+  margin:-28px 0 7px 8px;
+  padding:7px 10px;
+  border:1px solid #bdd2e7;
+  border-radius:12px;
+  background:#f5f9ff;
+  color:#173f70;
+  font-size:.76rem;
+  font-weight:750;
+  line-height:1.35;
+  text-align:center;
+  cursor:pointer;
+}
+.games-screen:not(.is-playing) .prep-jump-tests:focus-visible{
+  outline:3px solid #174c89;outline-offset:2px;
+}
+@media(max-width:699px){
+  .games-screen:not(.is-playing) .prep-header{
+    min-height:116px;
+    padding-top:10px;
+    padding-bottom:7px;
+  }
+  .games-screen:not(.is-playing) .prep-header h1{
+    margin:0;
+    font-size:clamp(1.48rem,5vw,1.7rem);
+  }
+  .games-screen:not(.is-playing) .prep-header .prep-eagle{
+    width:76px;height:76px;bottom:-4px;
+  }
+  .games-screen:not(.is-playing) .prep-sheet{padding-top:10px}
+  .games-screen:not(.is-playing) .prep-sheet>h2{margin-bottom:5px}
+  .games-screen:not(.is-playing) .prep-topic-card{
+    padding:11px;
+  }
+  .games-screen:not(.is-playing) .prep-test-choices{margin-top:5px}
+}
+@media(min-width:700px){
+  .games-screen:not(.is-playing) .prep-jump-tests{
+    font-size:.86rem;
+    margin-top:-33px;
+  }
+}
