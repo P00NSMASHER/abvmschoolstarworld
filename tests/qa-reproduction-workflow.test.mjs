@@ -7,8 +7,9 @@ const primary=readFileSync(new URL("../.github/workflows/qa.yml",import.meta.url
 
 test("independent reproduction and QA always report a check for every PR",()=>{
   for(const source of [workflow,primary]){
-    const trigger=source.match(/on:\n  pull_request:\n([\s\S]*?)\n(?:permissions:|  push:)/)?.[1];
-    assert.equal(trigger?.trim(),"","PR checks must not be skipped by changed-file filters");
+    assert.match(source,/^  pull_request:\s*$/m);
+    assert.doesNotMatch(source,/^  pull_request:\s*\n\s{4}paths:/m,
+      "PR checks must not be skipped by changed-file filters");
   }
   assert.match(workflow,/ref: \$\{\{ github\.event\.pull_request\.head\.sha \|\| github\.sha \}\}/);
   assert.match(primary,/ref: \$\{\{ github\.event\.pull_request\.head\.sha \|\| github\.sha \}\}/);
