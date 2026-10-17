@@ -1,5 +1,5 @@
 import {test,expect} from '@playwright/test';
-import {HOMEWORK_E2E_NOW,installFreshHomeworkFixture,installHomeworkFixture} from './homework-e2e-fixture.mjs';
+import {HOMEWORK_E2E_NOW,HISTORICAL_HOMEWORK_POSTING,installFreshHomeworkFixture,installHomeworkFixture} from './homework-e2e-fixture.mjs';
 test.use({serviceWorkers:'block'});
 const TUESDAY=HOMEWORK_E2E_NOW;
 
@@ -154,4 +154,27 @@ test('Math paper and choice board appear together on Today and Week with current
   await expect(week.locator('.homework-task-list .check-item')).toHaveCount(2);
   await expect(week).toContainText('Math paper');
   await expect(week).toContainText('Spelling Choice Board activity');
+});
+
+test('a source timestamp-only refresh updates the label without replacing homework cards or focus',async({page})=>{
+  await page.clock.setFixedTime(TUESDAY);
+  let posting={...HISTORICAL_HOMEWORK_POSTING};
+  await page.route('**/data/homework-current.json*',route=>route.fulfill({json:posting}));
+  await page.goto('/#today');
+  const first=page.locator('.today-homework [data-homework-check="0"]');
+  await expect(first).toBeVisible();
+  await first.focus();
+  await page.evaluate(()=>{
+    window.__originalHomeworkCard=document.querySelector('.today-homework');
+    window.__originalHomeworkFocus=document.activeElement;
+  });
+  posting={...posting,checkedAt:'2026-10-14T00:45:00.000Z'};
+  await page.evaluate(()=>window.dispatchEvent(new Event('online')));
+  await expect(page.locator('.today-homework .homework-source')).toContainText('8:45');
+  const identity=await page.evaluate(()=>({
+    card:document.querySelector('.today-homework')===window.__originalHomeworkCard,
+    focus:document.activeElement===window.__originalHomeworkFocus
+  }));
+  expect(identity.card).toBe(true);
+  expect(identity.focus).toBe(true);
 });

@@ -710,6 +710,18 @@ async function fetchPack({force=false,notify=false}={}){
   })();
   return packRefreshPromise;
 }
+function homeworkViewSignature(feed,date) {
+  const state=window.ABVMHomeworkFeed?.forDate?.(feed,isoDateKey(date),new Date())
+    || {state:"unverified",assignments:[]};
+  return JSON.stringify({state:state.state,assignments:state.assignments,
+    firstObservedAt:state.firstObservedAt,contentChangedAt:state.contentChangedAt});
+}
+function updateHomeworkSourceStamp(date) {
+  if(!["today","week"].includes(activeTab))return;
+  const card=stack().querySelector(".today-homework, .week-homework-card");
+  const label=card?.querySelector(".homework-source, .homework-empty");
+  if(label)label.textContent=window.ABVMProductView.homeworkStatusText(homeworkForDate(date));
+}
 async function fetchHomeworkFeed({force=false}={}){
   if(!force&&homeworkFeed&&Date.now()-lastHomeworkFetchAt<HOMEWORK_REFRESH_MS)return false;
   if(homeworkFetchPromise)return homeworkFetchPromise;
@@ -719,11 +731,14 @@ async function fetchHomeworkFeed({force=false}={}){
       const response=await fetch(HOMEWORK_FEED_URL,{cache:"no-store",signal:controller.signal});
       if(!response.ok)throw Error("Current teacher Homework feed unavailable: "+response.status);
       const next=window.ABVMHomeworkFeed.validate(await response.json());
-      const changed=JSON.stringify(next)!==JSON.stringify(homeworkFeed);
+      const date=activeTab==="week"?(selectedDay||today()):today();
+      const prior=homeworkViewSignature(homeworkFeed,date);
+      const updated=homeworkViewSignature(next,date);
       homeworkFeed=next;
       lastHomeworkFetchAt=Date.now();
-      if(changed&&pack)render({preserveScroll:true});
-      return changed;
+      if(prior!==updated&&pack&&["today","week"].includes(activeTab))render({preserveScroll:true});
+      else if(pack)updateHomeworkSourceStamp(date);
+      return prior!==updated;
     }finally{clearTimeout(timeout);}
   })().finally(()=>{homeworkFetchPromise=null;});
   return homeworkFetchPromise;

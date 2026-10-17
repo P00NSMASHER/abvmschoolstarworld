@@ -192,7 +192,7 @@ function mergeUploadedEvents(existing, uploaded) {
   const incomingByKey = new Map();
   for (const item of uploaded.importantDates) {
     const event = { ...item, source: 'uploaded-notice' };
-    const key = `${dateKey(event.date)}:${String(event.label || '').normalize('NFC').trim().toLowerCase().replace(/\\s+/g, ' ')}`;
+    const key = `${dateKey(event.date)}:${String(event.label || '').normalize('NFC').trim().toLowerCase().replace(/\s+/g, ' ')}`;
     const current = incomingByKey.get(key);
     if (current) {
       const sourceDocuments = [...new Set([...(current.sourceDocuments || []), current.sourceDocument, ...(event.sourceDocuments || []), event.sourceDocument].filter(Boolean))];

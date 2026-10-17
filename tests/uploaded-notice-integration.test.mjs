@@ -47,3 +47,16 @@ test("same-day uploaded notice labels are emitted once with complete provenance"
   assert.equal(matches.length,1);
   assert.deepEqual(matches[0].sourceDocuments.sort(),[event.sourceDocument,alternateDocument.id].sort());
 });
+
+test('notice deduplication normalizes repeated whitespace, without losing source receipts',()=>{
+  const duplicated=structuredClone(uploaded);
+  const first=duplicated.importantDates[0];
+  const other=duplicated.documents.find(item=>item.id!==first.sourceDocument);
+  assert.ok(other);
+  duplicated.importantDates.push({...structuredClone(first),label:'  '+first.label.toUpperCase().replaceAll(' ','   ')+' ',sourceDocument:other.id});
+  const result=integrateUploadedNotices(structuredClone(source),duplicated,{now:new Date('2026-10-16T22:00:00Z')});
+  const clean=value=>String(value).toLowerCase().trim().replace(/\s+/g,' ');
+  const rows=result.data.pack.importantDates.filter(row=>row.date===first.date&&clean(row.label)===clean(first.label));
+  assert.equal(rows.length,1);
+  assert.deepEqual(new Set(rows[0].sourceDocuments),new Set([first.sourceDocument,other.id]));
+});
