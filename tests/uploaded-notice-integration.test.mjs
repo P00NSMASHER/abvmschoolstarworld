@@ -35,3 +35,15 @@ test("stale uploaded-notice receipts fail closed",()=>{
   stale.uploadedNotices.latestIntegratedAt="2000-01-01T00:00:00.000Z";
   assert.throws(()=>validateUploadedNoticeIntegration(stale,structuredClone(uploaded)),/latestIntegratedAt is stale/);
 });
+
+test("same-day uploaded notice labels are emitted once with complete provenance",()=>{
+  const duplicated=structuredClone(uploaded);
+  const event=structuredClone(duplicated.importantDates[0]);
+  const alternateDocument=duplicated.documents.find(item=>item.id!==event.sourceDocument);
+  assert.ok(alternateDocument);
+  duplicated.importantDates.push({...event,sourceDocument:alternateDocument.id});
+  const result=integrateUploadedNotices(structuredClone(source),duplicated,{now:new Date("2026-10-16T22:00:00.000Z")});
+  const matches=result.data.pack.importantDates.filter(item=>item.date===event.date&&item.label===event.label);
+  assert.equal(matches.length,1);
+  assert.deepEqual(matches[0].sourceDocuments.sort(),[event.sourceDocument,alternateDocument.id].sort());
+});

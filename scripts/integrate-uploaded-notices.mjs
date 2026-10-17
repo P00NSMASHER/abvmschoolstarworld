@@ -9,7 +9,7 @@ const NOTICES_PATH=new URL("../pages/data/uploaded-notices.json",import.meta.url
 
 const MONTHS={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,sept:8,oct:9,nov:10,dec:11};
 
-function dateKey(value){
+export function dateKey(value){
   const m=String(value||"").match(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]*\.?\s*(\d{1,2})/i);
   if(!m)return "";
   return `${m[1].replace(".","").toLowerCase()}-${Number(m[2])}`;
@@ -44,7 +44,17 @@ function eventTime(value,now=new Date()){
   return Date.UTC(year,month,Number(m[2]));
 }
 function mergeEvents(existing,uploaded,now){
-  const incoming=uploaded.importantDates.map(item=>({...item,source:"uploaded-notice"}));
+  const incomingByKey=new Map();
+  for(const item of uploaded.importantDates){
+    const event={...item,source:"uploaded-notice"};
+    const key=`${dateKey(event.date)}:${String(event.label||"").normalize("NFC").trim().toLowerCase().replace(/\\s+/g," ")}`;
+    const current=incomingByKey.get(key);
+    if(current){
+      const sourceDocuments=[...new Set([...(current.sourceDocuments||[]),current.sourceDocument,...(event.sourceDocuments||[]),event.sourceDocument].filter(Boolean))];
+      incomingByKey.set(key,{...event,sourceDocuments});
+    }else incomingByKey.set(key,event);
+  }
+  const incoming=[...incomingByKey.values()];
   const incomingKeys=new Set(incoming.map(item=>`${dateKey(item.date)}:${topicKey(item.label)}`));
   const replacementKeys=new Set(uploaded.replacements.map(item=>`${dateKey(item.date)}:${item.topic}`));
   const kept=(existing||[]).filter(item=>{

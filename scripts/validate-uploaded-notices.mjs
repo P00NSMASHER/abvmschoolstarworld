@@ -20,9 +20,12 @@ export function validateUploadedNoticeIntegration(data,uploaded){
   const expectedDocuments=uploaded.documents.map(({id,label,receivedAt})=>({id,label,receivedAt}));
   if(JSON.stringify(metadata.documents||[])!==JSON.stringify(expectedDocuments))errors.push("study-pack uploaded notice document receipt is stale");
 
-  const dates=new Set((pack.importantDates||[]).map(item=>[item.date,item.label,item.sourceDocument].join("\u0000")));
+  const dates=pack.importantDates||[];
   for(const item of uploaded.importantDates||[]){
-    if(!dates.has([item.date,item.label,item.sourceDocument].join("\u0000")))errors.push(`missing important date from ${item.sourceDocument}: ${item.label}`);
+    const found=dates.some(candidate=>candidate.date===item.date&&candidate.label===item.label&&(
+      candidate.sourceDocument===item.sourceDocument||(candidate.sourceDocuments||[]).includes(item.sourceDocument)
+    ));
+    if(!found)errors.push(`missing important date from ${item.sourceDocument}: ${item.label}`);
   }
   const reminders=new Set(pack.reminders||[]),parentNotices=new Set(pack.parentNotices||[]);
   for(const item of uploaded.reminders||[])if(!reminders.has(item.text))errors.push(`missing reminder topic: ${item.topic}`);
