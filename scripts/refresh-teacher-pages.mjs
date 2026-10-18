@@ -31,7 +31,7 @@ import { buildSchoolChangeFeed, validateSchoolChangeFeed } from './school-change
 import { curriculumFamilyRegistrySnapshot } from './curriculum-family-registry.mjs';
 import { parseCurriculumPreviewOptions } from './curriculum-preview-options.mjs';
 import { upcomingTeacherTests } from './teacher-test-focus.mjs';
-import { schoolWeekLabel } from './school-week-label.mjs';
+import { schoolWeekLabel, preservedPostingWeek } from './school-week-label.mjs';
 
 const DATA_PATH = new URL('../pages/data/study-pack.json', import.meta.url);
 const UPLOADED_NOTICES_PATH = new URL('../pages/data/uploaded-notices.json', import.meta.url);
@@ -339,6 +339,36 @@ const pack = data.pack || {};
 const previousPackSnapshot = structuredClone(pack);
 const previousCurrentPipeline = pack.contentPipeline ? structuredClone(pack.contentPipeline) : null;
 const previousReviewPipeline = pack.recentReviewPipeline ? structuredClone(pack.recentReviewPipeline) : null;
+const observedTeacherWeek=schoolWeekLabel(new Date(checkedAt));
+const priorHomeworkSourceHash=data.sourcePages?.find(page=>page.title==='Homework')?.contentHash||'';
+const currentHomeworkSourceHash=teacherSourcePages.find(page=>page.title==='Homework')?.contentHash||'';
+const homeworkPostingWeek=preservedPostingWeek({
+  observedWeek:observedTeacherWeek,
+  previousWeek:previousPackSnapshot.teacherPostingWeekLabel||previousPackSnapshot.weekLabel,
+  previousFingerprint:priorHomeworkSourceHash,
+  currentFingerprint:currentHomeworkSourceHash,
+});
+// An undated spelling list is NOT newly posted when a Monday rescan sees the
+// same old words. Track the actual word list independently of Homework or
+// Calendar week, including a conservative upgrade from the old pack format.
+const spellingWords=weeklySpelling.spellingList?.words||[];
+const wordDigest=words=>words.length?createHash('sha256').update(JSON.stringify(words)).digest('hex'):'';
+const spellingWordsHash=wordDigest(spellingWords);
+const priorSpellingNotes=previousPackSnapshot.subjects?.find(row=>row.subject==='Spelling / Handwriting')?.studyNotes||[];
+const legacySpellingNote=priorSpellingNotes.find(note=>/^Teacher-posted spelling words \(page undated\):/i.test(note));
+const legacySpellingWords=legacySpellingNote
+  ?legacySpellingNote.slice(legacySpellingNote.indexOf(':')+1).split(',').map(word=>word.trim().toLowerCase()).filter(Boolean)
+  :[];
+const previousSpellingWordsHash=previousPackSnapshot.spellingListProvenance?.wordsHash||wordDigest(legacySpellingWords);
+const spellingPostingWeek=preservedPostingWeek({
+  observedWeek:observedTeacherWeek,
+  previousWeek:previousPackSnapshot.spellingListProvenance?.weekLabel||
+    previousPackSnapshot.teacherPostingWeekLabel||previousPackSnapshot.weekLabel,
+  previousFingerprint:previousSpellingWordsHash,
+  currentFingerprint:spellingWordsHash,
+});
+const spellingWordsUnchanged=!!spellingWordsHash&&previousSpellingWordsHash===spellingWordsHash;
+
 const contentChanged = pack.sourceHash !== sourceHash || pack.uploadedNoticeHash !== uploadedNoticeHash;
 const capturedAt = contentChanged ? checkedAt : (data.sourceCapturedAt || pack.sourceCapturedAt || checkedAt);
 
@@ -463,9 +493,18 @@ pack.uploadedNoticeHash = uploadedNoticeHash;
 pack.sourceCapturedAt = capturedAt;
 pack.sourceCheckedAt = checkedAt;
 pack.generatedAt = checkedAt;
-// Teacher posting remains scoped to the week it was checked, even when the
-// Calendar displays next Monday-Friday over a weekend.
-pack.teacherPostingWeekLabel = schoolWeekLabel(new Date(checkedAt));
+// Calendar changes independently; unchanged undated teacher homework and
+// spelling words retain their original posting-week provenance.
+pack.teacherPostingWeekLabel = homeworkPostingWeek;
+pack.spellingListProvenance = spellingWords.length ? {
+  wordsHash: spellingWordsHash,
+  weekLabel: spellingPostingWeek,
+  firstObservedAt: spellingWordsUnchanged
+    ? (previousPackSnapshot.spellingListProvenance?.firstObservedAt||data.sourceCapturedAt||checkedAt)
+    : checkedAt,
+  sourceUrl: weeklySpelling.url,
+  dateProvided: false,
+} : null;
 pack.weekLabel = schoolWeekLabel(new Date(checkedAt), { calendarDisplay: true });
 pack.summary = `Current Grade 2 teacher-site material: Homework lists ${readableList(homework.slice(0, 4).map(item => item.subject === 'Parent' ? `parent task “${item.task}”` : `${item.subject} “${item.task}”`))}. Upcoming tests include ${readableList(currentTests.slice(0, 4).map(item => `${item.label} on ${item.date}`))}. ${uploadedNotices.documents.length} uploaded school notices are integrated with the teacher pages.`;
 pack.sourceSufficient = true;

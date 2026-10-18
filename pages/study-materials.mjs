@@ -506,7 +506,6 @@ export function createStudyMaterials({
         .filter(note => /^(?:Photo-confirmed practice words|Verified spelling words|Teacher spelling words|Spelling words|Short i:|Long a:)/i.test(note))
       : [];
     // Keep every source-matched fact in a printable guide; page layout owns pagination.
-    const facts = uniqueGuideText([...verifiedWeekNotes,...questionFacts,...subjectFacts]);
     const teacherFacts = subject === 'Religion' ? religionChapterFacts(group,test,pack) : [];
     const reviewTopics = guideReviewTopics(group,practiceRows,pack);
     const vocabulary = subject === 'Reading / ELA' && !/grammar|predicate|subject\s*&|phonics/.test(lower)
@@ -515,9 +514,18 @@ export function createStudyMaterials({
       : [];
     // A new teacher-published spelling list can replace old photo lists only if
     // the pack identifies the same school week as this specific test.
-    const announcedWeek = String(pack.teacherPostingWeekLabel || pack.weekLabel || '').match(/week of\s+([a-z]+\s+\d{1,2},?\s+\d{4})/i);
+    const announcedWeek = String(pack.spellingListProvenance?.weekLabel || pack.teacherPostingWeekLabel || pack.weekLabel || '').match(/week of\s+([a-z]+\s+\d{1,2},?\s+\d{4})/i);
     const teacherWeek = announcedWeek && Number.isFinite(Date.parse(announcedWeek[1] + ' 12:00 GMT'))
       ? new Date(Date.parse(announcedWeek[1] + ' 12:00 GMT')).toISOString().slice(0,10) : '';
+    // General guide facts must obey the same source-week gate as the
+    // dictation list. Otherwise an old undated teacher list can leak into
+    // a newly dated guide even when guide.spellingWords is correctly empty.
+    const testWeekMatchesSpellingList = teacherWeek === weekBounds(test.date).start;
+    const isTeacherWordList = text =>
+      /^(?:Weekly spelling words|Spelling words|Teacher spelling words|Teacher-posted spelling words(?: \(page undated\))?|Verified spelling words|Words for spelling test)\s*:/i.test(text);
+    const facts = uniqueGuideText([...verifiedWeekNotes,...questionFacts,
+      ...subjectFacts.filter(text => subject !== 'Spelling / Handwriting' || testWeekMatchesSpellingList || !isTeacherWordList(text)),
+    ]);
     const teacherLists = subject === 'Spelling / Handwriting' && teacherWeek === weekBounds(test.date).start
       ? sourceSubjects.flatMap(row => [...array(row.studyNotes), ...array(row.topics)])
         .filter(note => /^(?:Weekly spelling words|Spelling words|Teacher spelling words|Teacher-posted spelling words(?: \(page undated\))?|Verified spelling words|Words for spelling test)\s*:/i.test(note))
