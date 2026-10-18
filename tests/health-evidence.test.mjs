@@ -289,10 +289,12 @@ test('the complete dashboard turns critical for stale homework despite healthy w
     }))}));
     const postingPath=join(root,'pages/data/homework-current.json');
     const posting={schemaVersion:1,status:'assignments',checkedAt:now};
+    const refreshJobsPath=join(root,'refresh-jobs.json');
+    writeFileSync(refreshJobsPath,JSON.stringify({run_id:null,jobs:[]}));
     const run=()=>{
       const result=spawnSync(process.execPath,['scripts/build-health-report.mjs'],{
         cwd:root,encoding:'utf8',env:{...process.env,WORKFLOW_RUNS_FILE:workflowFile,
-          REFRESH_JOBS_FILE:'',OPEN_PULLS_FILE:'',HOMEWORK_PUBLICATIONS_FILE:join(root,'publications.json')},
+          REFRESH_JOBS_FILE:refreshJobsPath,OPEN_PULLS_FILE:'',HOMEWORK_PUBLICATIONS_FILE:join(root,'publications.json')},
       });
       const report=JSON.parse(readFileSync(join(root,'health-output/abvm-health-status.json'),'utf8'));
       return {result,report};
@@ -316,6 +318,49 @@ test('the complete dashboard turns critical for stale homework despite healthy w
     assert.equal(recovered.result.status,0,recovered.result.stderr);
     assert.equal(recovered.report.publicationEvidence.id,77);
     assert.equal(recovered.report.overall,'healthy');
+    // Reproduce the October 18 race, not just the pure helper: teacher and
+    // lunch jobs pass, the stale Pages SHA is rejected, and the later publisher
+    // plus watchdog independently verify recovery. A real source failure must
+    // still terminate CRITICAL.
+    const ago=sec=>new Date(Date.now()-sec*1000).toISOString();
+    const historyForRace=JSON.parse(readFileSync(workflowFile,'utf8'));
+    const refresh=historyForRace.workflow_runs.find(x=>x.name==='Refresh ABVM teacher pages');
+    const pages=historyForRace.workflow_runs.find(x=>x.name==='Deploy ABVM to GitHub Pages');
+    const watchdog=historyForRace.workflow_runs.find(x=>x.name==='Monitor ABVM refresh health');
+    refresh.conclusion='failure';refresh.created_at=ago(900);refresh.updated_at=ago(600);
+    pages.conclusion='failure';pages.created_at=ago(900);pages.updated_at=ago(700);
+    watchdog.created_at=ago(60);watchdog.updated_at=ago(30);
+    writeFileSync(workflowFile,JSON.stringify(historyForRace));
+    pack.sourceLastCheckedAt=ago(720);pack.pack.sourceCheckedAt=ago(720);
+    writeFileSync(join(root,'pages/data/study-pack.json'),JSON.stringify(pack));
+    const provenPublisher={id:77,name:'Refresh current ABVM homework',head_branch:'main',
+      status:'completed',conclusion:'success',created_at:ago(260),
+      updated_at:ago(120),publisherJobId:88};
+    writeFileSync(join(root,'publications.json'),JSON.stringify([provenPublisher]));
+    const recordedRace=recoveredRaceFixture().refreshJobs;
+    recordedRace.run_id=refresh.id;
+    writeFileSync(refreshJobsPath,JSON.stringify(recordedRace));
+    const verifiedRace=run();
+    assert.equal(verifiedRace.result.status,0,verifiedRace.result.stderr);
+    assert.equal(verifiedRace.report.overall,'attention');
+    assert.equal(verifiedRace.report.refreshRecovery?.state,'recovered');
+    assert.equal(verifiedRace.report.workflows.refresh.latestDecisive.conclusion,'failure');
+    assert.match(verifiedRace.report.warnings.join(' '),/later gated publication/);
+    writeFileSync(join(root,'publications.json'),'[]');
+    const missingPublisher=run();
+    assert.equal(missingPublisher.result.status,1);
+    assert.equal(missingPublisher.report.overall,'critical');
+    writeFileSync(join(root,'publications.json'),JSON.stringify([provenPublisher]));
+    recordedRace.jobs[0].conclusion='failure';
+    writeFileSync(refreshJobsPath,JSON.stringify(recordedRace));
+    const sourceFailure=run();
+    assert.equal(sourceFailure.result.status,1);
+    assert.equal(sourceFailure.report.overall,'critical');
+    // Restore the synthetic healthy baseline before unrelated pipeline tests.
+    refresh.conclusion='success';refresh.updated_at=ago(550);
+    writeFileSync(workflowFile,JSON.stringify(historyForRace));
+    writeFileSync(refreshJobsPath,JSON.stringify({run_id:null,jobs:[]}));
+
     pack.pack.contentPipeline.coverage.push({subject:'Spelling / Handwriting',
       topic:'long / short u',status:'GENERATOR_UNSUPPORTED'});
     pack.pack.contentPipeline.qa.unsupportedSkillCount=1;
