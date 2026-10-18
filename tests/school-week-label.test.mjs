@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {assessUpcomingLunchCoverage,displayedSchoolWeekDates,schoolWeekLabel} from '../scripts/school-week-label.mjs';
+import {assessUpcomingLunchCoverage,displayedSchoolWeekDates,schoolWeekLabel,preservedPostingWeek} from '../scripts/school-week-label.mjs';
 
 test('week labels follow New York school dates and preserve the checked posting week',()=>{
   assert.equal(schoolWeekLabel('2026-10-16T22:00:00Z'), 'Week of October 12, 2026');
@@ -32,4 +32,13 @@ test('upcoming lunch monitor checks verified archive and honors explicit school 
 
 test('invalid timestamps must fail closed rather than inventing a week',()=>{
   assert.throws(()=>schoolWeekLabel('not-a-date'),/Invalid school-week instant/);
+});
+
+test('undated homework and word lists keep their first posting week through Monday if evidence is unchanged',()=>{
+  const old='Week of October 12, 2026', next='Week of October 19, 2026';
+  assert.equal(preservedPostingWeek({observedWeek:next,previousWeek:old,previousFingerprint:'old-homework',currentFingerprint:'old-homework'}),old);
+  assert.equal(preservedPostingWeek({observedWeek:next,previousWeek:old,previousFingerprint:'long-o-list',currentFingerprint:'long-o-list'}),old);
+  assert.equal(preservedPostingWeek({observedWeek:next,previousWeek:old,previousFingerprint:'long-o-list',currentFingerprint:'new-long-u-list'}),next);
+  assert.equal(preservedPostingWeek({observedWeek:next,previousWeek:old,previousFingerprint:'',currentFingerprint:'long-o-list'}),next);
+  assert.throws(()=>preservedPostingWeek({observedWeek:'invalid',previousWeek:old,previousFingerprint:'a',currentFingerprint:'a'}),/Invalid observed/);
 });

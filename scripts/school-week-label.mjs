@@ -58,3 +58,12 @@ export function assessUpcomingLunchCoverage(pack,at){
     noSchoolDates:[...closures],
   };
 }
+
+// Preserve an undated teacher posting's observed week across unchanged scans.
+// Only changed source content may acquire a new week; calendar rollover is not proof.
+export function preservedPostingWeek({observedWeek,previousWeek,previousFingerprint,currentFingerprint}){
+  const validWeek=value=>/^Week of [A-Za-z]+ \d{1,2}, \d{4}$/.test(String(value||''));
+  if(!validWeek(observedWeek))throw new TypeError('Invalid observed posting week');
+  const same=typeof currentFingerprint==='string'&&currentFingerprint.length>0&&previousFingerprint===currentFingerprint;
+  return same&&validWeek(previousWeek)?previousWeek:observedWeek;
+}

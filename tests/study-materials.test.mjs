@@ -99,6 +99,14 @@ test('all official undated spelling words reach this-week guide and adult dictat
   })).testGuide(0);
   assert.deepEqual(rolledForward.spellingWords,[],
     'calendar display rollover cannot recertify an undated list from the teacher posting week');
+  const mondayRescan=createStudyMaterials(opts({...options,
+    now:()=> '2026-10-19T17:00:00Z',
+    events:[{date:'2026-10-23',label:'Spelling (long / short u) / Handwriting',kind:'test'}],
+    pack:{...pack,weekLabel:'Week of October 19, 2026',teacherPostingWeekLabel:'Week of October 19, 2026',
+      spellingListProvenance:{weekLabel:'Week of October 12, 2026',wordsHash:'unchanged-old-words'}},
+  })).testGuide(0);
+  assert.deepEqual(mondayRescan.spellingWords,[],
+    'a Monday rescan of unchanged undated long-o words must not certify them for the Oct. 23 long/short-u test');
 });
 
 test('live release gate compares actual runtime, homework, premium theme and paper renderers',() => {
