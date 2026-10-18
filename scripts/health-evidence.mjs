@@ -79,6 +79,61 @@ export function selectGovernedCurriculumHold(refreshRun,refreshJobsData,openPull
   };
 }
 
+/**
+ * Report a guarded release race as recovered only when fresh teacher-source QA,
+ * reviewed lunch, later proven publication, and an even later live-vs-main
+ * watchdog all succeeded. Ordinary failed refreshes stay critical.
+ */
+export function selectRecoveredRefreshRace({refreshRun,refreshJobs,publicationRun,watchdogRun,sourceCheckedAt}={}){
+  if(refreshRun?.name!=="Refresh ABVM teacher pages"||
+     refreshRun?.head_branch!=="main"||refreshRun?.status!=="completed"||
+     refreshRun?.conclusion!=="failure"||
+     !Number.isInteger(refreshRun?.id)||Number(refreshJobs?.run_id)!==refreshRun.id)return null;
+  const jobs=Array.isArray(refreshJobs?.jobs)?refreshJobs.jobs:[];
+  const source=jobs.find(job=>job.name==="refresh");
+  const lunch=jobs.find(job=>job.name==="Refresh reviewed lunch week independently of held curriculum");
+  const deploy=jobs.find(job=>job.name==="deploy verified refresh through Pages workflow / deploy");
+  if(jobs.length!==3||!source||!lunch||!deploy)return null;
+  const passed=job=>job.status==="completed"&&job.conclusion==="success";
+  const step=(job,name,conclusion="success")=>
+    (job?.steps||[]).some(row=>row.name===name&&row.status==="completed"&&row.conclusion===conclusion);
+  if(!passed(source)||!passed(lunch)||
+     !step(source,"Verify page-exact source parity and isolate unsupported curriculum")||
+     !step(source,"Verify refreshed source health")||
+     !step(source,"Validate the candidate app before changing main")||
+     !step(source,"Commit refreshed pack against latest main")||
+     !step(lunch,"Refresh only previously reviewed source-backed lunch fields")||
+     !step(lunch,"Prove lunch isolation and negative-case integrity"))return null;
+  if(deploy.status!=="completed"||deploy.conclusion!=="failure"||
+     !step(deploy,"Admit exact current protected-main commit")||
+     !step(deploy,"Verify checked-out source identity")||
+     !step(deploy,"Run release QA")||
+     !step(deploy,"Recheck protected-main before publishing","failure")||
+     !step(deploy,"Deploy","skipped")||
+     !step(deploy,"Verify live lunch data and visible mobile flows","skipped"))return null;
+  const failed=jobs.flatMap(job=>(job.steps||[]).filter(row=>row.conclusion==="failure")
+    .map(row=>({job:job.name,name:row.name})));
+  if(failed.length!==1||failed[0].job!==deploy.name||
+     failed[0].name!=="Recheck protected-main before publishing")return null;
+  if(publicationRun?.status!=="completed"||publicationRun?.conclusion!=="success"||
+     publicationRun?.head_branch!=="main"||
+     !(publicationRun.name==="Deploy ABVM to GitHub Pages"||
+       (publicationRun.name==="Refresh current ABVM homework"&&
+        Number.isInteger(publicationRun.publisherJobId))))return null;
+  if(watchdogRun?.name!=="Monitor ABVM refresh health"||
+     watchdogRun?.head_branch!=="main"||watchdogRun?.status!=="completed"||
+     watchdogRun?.conclusion!=="success")return null;
+  const refreshCompleted=Date.parse(refreshRun.updated_at||"");
+  const published=Date.parse(publicationRun.updated_at||"");
+  const watchdogStarted=Date.parse(watchdogRun.created_at||"");
+  const checked=Date.parse(sourceCheckedAt||"");
+  if(![refreshCompleted,published,watchdogStarted,checked].every(Number.isFinite)||
+     !(checked<=refreshCompleted&&refreshCompleted<published&&published<watchdogStarted))return null;
+  return {state:"recovered",refreshRunId:refreshRun.id,
+    publisherRunId:publicationRun.id,watchdogRunId:watchdogRun.id,
+    failedStep:"Recheck protected-main before publishing"};
+}
+
 export function assessHomeworkHealth(posting, now) {
   const checked=Date.parse(posting?.checkedAt||'');
   const current=Date.parse(now);

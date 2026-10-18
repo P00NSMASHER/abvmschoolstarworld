@@ -136,3 +136,10 @@ test('homework publication completion triggers the freshness watchdog and dashbo
   const watched=refreshHealthWorkflow.match(/workflow_run:\n([\s\S]*?)\n  schedule:/)?.[1]||'';
   assert.match(watched,/- Refresh current ABVM homework/);
 });
+
+test("guarded refresh-race recovery requires independent publication and watchdog proof",()=>{
+  for(const token of ["selectRecoveredRefreshRace(","refreshJobs:refreshJobsData",
+    "watchdogRun:effectiveRun(status.workflows.watchdog)",
+    "refreshOperationallyHealthy=refreshHealthy||Boolean(status.refreshRecovery)",
+    "Guarded refresh race recovery"])assert.ok(report.includes(token),token);
+});

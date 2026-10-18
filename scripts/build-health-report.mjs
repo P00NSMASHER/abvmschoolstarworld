@@ -1,5 +1,5 @@
 import {readFileSync,mkdirSync,writeFileSync} from "node:fs";
-import {assessHomeworkHealth,selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence} from "./health-evidence.mjs";
+import {assessHomeworkHealth,selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence,selectRecoveredRefreshRace} from "./health-evidence.mjs";
 import {assessUpcomingLunchCoverage,schoolWeekLabel} from "./school-week-label.mjs";
 
 const packData=JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8"));
@@ -141,7 +141,14 @@ status.curriculumReview={
 };
 const refreshDisplayRun=status.curriculumHold?curriculumHoldRefreshRun:effectiveRefreshRun;
 const refreshHealthy=completedHealthy(status.workflows.refresh,30);
-const refreshOperationallyHealthy=refreshHealthy;
+status.refreshRecovery=selectRecoveredRefreshRace({
+  refreshRun:effectiveRefreshRun,
+  refreshJobs:refreshJobsData,
+  publicationRun:status.publicationEvidence,
+  watchdogRun:effectiveRun(status.workflows.watchdog),
+  sourceCheckedAt,
+});
+const refreshOperationallyHealthy=refreshHealthy||Boolean(status.refreshRecovery);
 const pipelineHealthy=Boolean(
   status.contentPipeline.present &&
   status.contentPipeline.qaStatus==="pass" &&
@@ -181,6 +188,7 @@ const criticalHealthy=Boolean(
   pipelineHealthy
 );
 const warnings=[];
+if(status.refreshRecovery)warnings.push("The teacher refresh and reviewed lunch QA passed, but the Pages release safely stopped when main advanced. A later gated publication and live freshness watchdog confirmed recovery.");
 if(reportedWeekLabel!==expectedWeekLabel){
   warnings.push("School-data week label "+(reportedWeekLabel||"is missing")+" does not match the displayed "+expectedWeekLabel+"; retain the actual teacher-posting week for assignments.");
 }
@@ -232,6 +240,7 @@ const md=[
   ...(warnings.length?["## Attention items",...warnings.map(w=>"- "+w),""]:[]),
   "## Workflow evidence used for health verdict",
   line("Teacher refresh",refreshDisplayRun),
+  `- **Guarded refresh race recovery:** ${status.refreshRecovery?"verified by publication "+status.refreshRecovery.publisherRunId+" and watchdog "+status.refreshRecovery.watchdogRunId:"not established"}`,
   line("Homework refresh",effectiveRun(status.workflows.homework)),
   line("App QA",effectiveRun(status.workflows.qa)),
   line("Publication evidence",status.publicationEvidence),
