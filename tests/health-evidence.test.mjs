@@ -1,8 +1,77 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence} from "../scripts/health-evidence.mjs";
+import {selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence,selectRecoveredRefreshRace} from "../scripts/health-evidence.mjs";
 
 const run=(name,conclusion,updated_at)=>({name,conclusion,updated_at,created_at:updated_at});
+
+const successfulStep=name=>({name,status:"completed",conclusion:"success"});
+const recoveredRaceFixture=()=>{
+  const refreshRun={id:101,name:"Refresh ABVM teacher pages",head_branch:"main",
+    status:"completed",conclusion:"failure",created_at:"2026-10-18T04:00:00Z",updated_at:"2026-10-18T04:40:00Z"};
+  const refreshJobs={run_id:101,jobs:[
+    {name:"refresh",status:"completed",conclusion:"success",steps:[
+      successfulStep("Verify page-exact source parity and isolate unsupported curriculum"),
+      successfulStep("Verify refreshed source health"),successfulStep("Validate the candidate app before changing main"),
+      successfulStep("Commit refreshed pack against latest main")]},
+    {name:"Refresh reviewed lunch week independently of held curriculum",
+      status:"completed",conclusion:"success",steps:[
+        successfulStep("Refresh only previously reviewed source-backed lunch fields"),
+        successfulStep("Prove lunch isolation and negative-case integrity")]},
+    {name:"deploy verified refresh through Pages workflow / deploy",
+      status:"completed",conclusion:"failure",steps:[
+        successfulStep("Admit exact current protected-main commit"),
+        successfulStep("Verify checked-out source identity"),
+        successfulStep("Run release QA"),
+        {name:"Recheck protected-main before publishing",status:"completed",conclusion:"failure"},
+        {name:"Deploy",status:"completed",conclusion:"skipped"},
+        {name:"Verify live lunch data and visible mobile flows",status:"completed",conclusion:"skipped"}]}
+  ]};
+  const publicationRun={id:102,name:"Refresh current ABVM homework",publisherJobId:909,
+    head_branch:"main",status:"completed",conclusion:"success",updated_at:"2026-10-18T06:00:00Z"};
+  const watchdogRun={id:103,name:"Monitor ABVM refresh health",head_branch:"main",
+    status:"completed",conclusion:"success",created_at:"2026-10-18T06:01:00Z"};
+  return {refreshRun,refreshJobs,publicationRun,watchdogRun,sourceCheckedAt:"2026-10-18T04:03:00Z"};
+};
+test("a guarded main race recovers only after complete source QA, later proven publication, and live watchdog",()=>{
+  assert.deepEqual(selectRecoveredRefreshRace(recoveredRaceFixture()),{
+    state:"recovered",refreshRunId:101,publisherRunId:102,watchdogRunId:103,
+    failedStep:"Recheck protected-main before publishing"});
+});
+test("unproven or genuinely failed teacher refreshes never recover",()=>{
+  const modifications=[
+    f=>{f.publicationRun=null;},
+    f=>{f.publicationRun.publisherJobId=null;},
+    f=>{f.publicationRun.name="Refresh ABVM teacher pages";},
+    f=>{f.publicationRun.status="in_progress";},
+    f=>{f.publicationRun.conclusion="failure";},
+    f=>{f.publicationRun.head_branch="feature";},
+    f=>{f.publicationRun.updated_at="invalid";},
+    f=>{f.publicationRun.updated_at="2026-10-18T04:30:00Z";},
+    f=>{f.watchdogRun.status="in_progress";},
+    f=>{f.watchdogRun.conclusion="failure";},
+    f=>{f.watchdogRun.created_at="2026-10-18T05:58:00Z";},
+    f=>{f.refreshJobs.run_id=999;},
+    f=>{f.refreshJobs.jobs[0].conclusion="failure";},
+    f=>{f.refreshJobs.jobs[1].steps=[];},
+    f=>{f.refreshJobs.jobs[2].steps[2].conclusion="failure";},
+    f=>{f.refreshJobs.jobs[2].steps[4].conclusion="success";},
+    f=>{f.refreshJobs.jobs[2].steps.push({name:"Deploy",status:"completed",conclusion:"failure"});},
+    f=>{f.sourceCheckedAt="2026-10-18T04:55:00Z";}
+  ];
+  for(const [i,modify] of modifications.entries()){
+    const fixture=recoveredRaceFixture();modify(fixture);
+    assert.equal(selectRecoveredRefreshRace(fixture),null,"unsafe scenario "+i);
+  }
+});
+test("later successful standalone Pages release still requires an even later independent watchdog",()=>{
+  const f=recoveredRaceFixture();
+  f.publicationRun={id:207,name:"Deploy ABVM to GitHub Pages",head_branch:"main",
+    status:"completed",conclusion:"success",updated_at:"2026-10-18T05:05:00Z"};
+  assert.equal(selectRecoveredRefreshRace(f)?.publisherRunId,207);
+  f.watchdogRun.created_at="2026-10-18T05:00:00Z";
+  assert.equal(selectRecoveredRefreshRace(f),null);
+});
+
 
 test("newer successful refresh supersedes older cancelled standalone deploy",()=>{
   const deploy=run("Deploy ABVM to GitHub Pages","cancelled","2026-10-02T13:30:00Z");
@@ -220,10 +289,12 @@ test('the complete dashboard turns critical for stale homework despite healthy w
     }))}));
     const postingPath=join(root,'pages/data/homework-current.json');
     const posting={schemaVersion:1,status:'assignments',checkedAt:now};
+    const refreshJobsPath=join(root,'refresh-jobs.json');
+    writeFileSync(refreshJobsPath,JSON.stringify({run_id:null,jobs:[]}));
     const run=()=>{
       const result=spawnSync(process.execPath,['scripts/build-health-report.mjs'],{
         cwd:root,encoding:'utf8',env:{...process.env,WORKFLOW_RUNS_FILE:workflowFile,
-          REFRESH_JOBS_FILE:'',OPEN_PULLS_FILE:'',HOMEWORK_PUBLICATIONS_FILE:join(root,'publications.json')},
+          REFRESH_JOBS_FILE:refreshJobsPath,OPEN_PULLS_FILE:'',HOMEWORK_PUBLICATIONS_FILE:join(root,'publications.json')},
       });
       const report=JSON.parse(readFileSync(join(root,'health-output/abvm-health-status.json'),'utf8'));
       return {result,report};
@@ -247,6 +318,49 @@ test('the complete dashboard turns critical for stale homework despite healthy w
     assert.equal(recovered.result.status,0,recovered.result.stderr);
     assert.equal(recovered.report.publicationEvidence.id,77);
     assert.equal(recovered.report.overall,'healthy');
+    // Reproduce the October 18 race, not just the pure helper: teacher and
+    // lunch jobs pass, the stale Pages SHA is rejected, and the later publisher
+    // plus watchdog independently verify recovery. A real source failure must
+    // still terminate CRITICAL.
+    const ago=sec=>new Date(Date.now()-sec*1000).toISOString();
+    const historyForRace=JSON.parse(readFileSync(workflowFile,'utf8'));
+    const refresh=historyForRace.workflow_runs.find(x=>x.name==='Refresh ABVM teacher pages');
+    const pages=historyForRace.workflow_runs.find(x=>x.name==='Deploy ABVM to GitHub Pages');
+    const watchdog=historyForRace.workflow_runs.find(x=>x.name==='Monitor ABVM refresh health');
+    refresh.conclusion='failure';refresh.created_at=ago(900);refresh.updated_at=ago(600);
+    pages.conclusion='failure';pages.created_at=ago(900);pages.updated_at=ago(700);
+    watchdog.created_at=ago(60);watchdog.updated_at=ago(30);
+    writeFileSync(workflowFile,JSON.stringify(historyForRace));
+    pack.sourceLastCheckedAt=ago(720);pack.pack.sourceCheckedAt=ago(720);
+    writeFileSync(join(root,'pages/data/study-pack.json'),JSON.stringify(pack));
+    const provenPublisher={id:77,name:'Refresh current ABVM homework',head_branch:'main',
+      status:'completed',conclusion:'success',created_at:ago(260),
+      updated_at:ago(120),publisherJobId:88};
+    writeFileSync(join(root,'publications.json'),JSON.stringify([provenPublisher]));
+    const recordedRace=recoveredRaceFixture().refreshJobs;
+    recordedRace.run_id=refresh.id;
+    writeFileSync(refreshJobsPath,JSON.stringify(recordedRace));
+    const verifiedRace=run();
+    assert.equal(verifiedRace.result.status,0,verifiedRace.result.stderr);
+    assert.equal(verifiedRace.report.overall,'attention');
+    assert.equal(verifiedRace.report.refreshRecovery?.state,'recovered');
+    assert.equal(verifiedRace.report.workflows.refresh.latestDecisive.conclusion,'failure');
+    assert.match(verifiedRace.report.warnings.join(' '),/later gated publication/);
+    writeFileSync(join(root,'publications.json'),'[]');
+    const missingPublisher=run();
+    assert.equal(missingPublisher.result.status,1);
+    assert.equal(missingPublisher.report.overall,'critical');
+    writeFileSync(join(root,'publications.json'),JSON.stringify([provenPublisher]));
+    recordedRace.jobs[0].conclusion='failure';
+    writeFileSync(refreshJobsPath,JSON.stringify(recordedRace));
+    const sourceFailure=run();
+    assert.equal(sourceFailure.result.status,1);
+    assert.equal(sourceFailure.report.overall,'critical');
+    // Restore the synthetic healthy baseline before unrelated pipeline tests.
+    refresh.conclusion='success';refresh.updated_at=ago(550);
+    writeFileSync(workflowFile,JSON.stringify(historyForRace));
+    writeFileSync(refreshJobsPath,JSON.stringify({run_id:null,jobs:[]}));
+
     pack.pack.contentPipeline.coverage.push({subject:'Spelling / Handwriting',
       topic:'long / short u',status:'GENERATOR_UNSUPPORTED'});
     pack.pack.contentPipeline.qa.unsupportedSkillCount=1;

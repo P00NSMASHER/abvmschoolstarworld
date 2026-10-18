@@ -121,12 +121,12 @@ test("health dashboard fetches exact refresh failure steps and open draft candid
   assert.match(workflow,/OPEN_PULLS_FILE: open-pulls\.json/);
 });
 
-test("curriculum QA holds remain critical until a successful real teacher refresh",()=>{
+test("curriculum QA holds remain critical unless exact source and publication recovery is proven",()=>{
   assert.match(report,/selectGovernedCurriculumHold/);
   assert.match(report,/const curriculumHoldRefreshRun=selectRefreshFailureEvidence\(productionRuns,refreshJobsData\)/);
   assert.match(report,/status\.curriculumHold=selectGovernedCurriculumHold\(curriculumHoldRefreshRun,refreshJobsData,openPulls\)/);
   assert.match(report,/const refreshDisplayRun=status\.curriculumHold\?curriculumHoldRefreshRun:effectiveRefreshRun/);
-  assert.match(report,/const refreshOperationallyHealthy=refreshHealthy;/);
+  assert.match(report,/const refreshOperationallyHealthy=refreshHealthy\|\|Boolean\(status\.refreshRecovery\);/);
   assert.match(report,/Teacher refresh is awaiting automated curriculum quality checks for candidate PR/);
   assert.match(report,/Curriculum hold:/);
   assert.match(report,/status\.overall=criticalHealthy\?\(warnings\.length\?"attention":"healthy"\):"critical"/);
@@ -135,4 +135,11 @@ test("curriculum QA holds remain critical until a successful real teacher refres
 test('homework publication completion triggers the freshness watchdog and dashboard chain',()=>{
   const watched=refreshHealthWorkflow.match(/workflow_run:\n([\s\S]*?)\n  schedule:/)?.[1]||'';
   assert.match(watched,/- Refresh current ABVM homework/);
+});
+
+test("guarded refresh-race recovery requires independent publication and watchdog proof",()=>{
+  for(const token of ["selectRecoveredRefreshRace(","refreshJobs:refreshJobsData",
+    "watchdogRun:effectiveRun(status.workflows.watchdog)",
+    "refreshOperationallyHealthy=refreshHealthy||Boolean(status.refreshRecovery)",
+    "Guarded refresh race recovery"])assert.ok(report.includes(token),token);
 });
