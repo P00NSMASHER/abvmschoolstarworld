@@ -100,7 +100,7 @@ function getDerivedPack(){
     pictureLinked:/^Picture (?:ordering|backgrounds):/i.test(String(text||""))
   }));
   const lunchProofs=new Map((pack?.lunchMenuSource?.sourcePages||[]).map(row=>[row.id,row]));
-  const packWeekStart=parseDate(pack?.weekLabel||"");
+  const packWeekStart=parseDate(pack?.teacherPostingWeekLabel||pack?.weekLabel||"");
   const pictureDayEnd=datedEvents.find(({item})=>/\bPicture Day\b/i.test(item.label||""))?.range?.[1]||null;
   derivedPackCache={pack,datedEvents,chronologicalEvents,eventsByDate,lunchByDate,lunchProofs,subjects,specials,reminderRows,homeworkRows,parentNoticeRows,packWeekStart,pictureDayEnd};
   return derivedPackCache;
@@ -161,7 +161,7 @@ function lunchForDate(date){
   return getDerivedPack().lunchByDate.get(isoDateKey(date))||null;
 }
 function keyPart(value){return String(value||"").trim().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,90)||"item";}
-function taskWeekKey(){return keyPart(pack?.weekLabel||"current-week");}
+function taskWeekKey(){return keyPart(pack?.teacherPostingWeekLabel||pack?.weekLabel||"current-week");}
 function checkKey(item){if(item?._homeworkDay)return "abvm-homework:v1:"+item._homeworkDay+":"+keyPart(item.subject)+":"+keyPart(item.task);return "abvm-task:v2:"+taskWeekKey()+":"+keyPart(item?._sourceSubject||item?.subject)+":"+keyPart(item?.task||item?.label);}
 function legacyCheckKey(item,index){return "abvm-old-look:"+String(pack?.sourceHash||"pack")+":"+index+":"+(item?.task||item?.label||"");}
 function checked(item,index){
@@ -422,101 +422,101 @@ function activateDueGameComeback(){if(gameState.strict)return false;const due=st
 function clearActiveGameComeback(){studyGameEngine()?.resolveComeback?.(gameState.comebackKey);Object.assign(gameState,{comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null})}
 function activeGameQuestion(){return gameState.comebackMode?gameState.comebackQuestion:gameState.supportMode?gameState.supportQuestion:gameState.questions[gameState.index]}
 function startStudyGame(modeId){
-  if(modeId==="test-ready"){startStudyTest(gameState.testIndex);return}
-  const engine=studyGameEngine(),catalog=studyGameCatalog(),mode=gameMode(modeId),model=currentStudyMaterials(),selection=studySelection();
-  if(!engine||!catalog)return;
-  if(model){openStudyRound(model.round(modeId,{...selection,learning:engine.loadLearning?.()||{}}),mode);return}
-  if(selection.source!=="weekly"){toast("Those materials are still loading. Please try again.");return}
-  const sourceKey=currentGameSourceKey(),sessionSeed=engine.nextSessionSeed?.(sourceKey,mode.id)||"session";
-  const questions=mode.id==="daily"?engine.selectDailyQuestions(catalog,{count:8,seed:sessionSeed,skillStats:engine.loadLearning(),pack}):engine.selectQuestions(catalog,{subjects:mode.subjects,skills:mode.skills||[],preferredSkills:mode.preferredSkills||[],count:mode.count,seed:sessionSeed,skillStats:engine.loadLearning?.()||{}});
-  const eligibleIds=catalog.questions.filter(q=>!mode.subjects?.length||mode.subjects.includes(q.subject)).map(q=>q.id);
-  openStudyRound({questions,catalog,eligibleIds,sourceKey,sessionSeed,strict:false},mode);
+if(modeId==="test-ready"){startStudyTest(gameState.testIndex);return}
+const engine=studyGameEngine(),catalog=studyGameCatalog(),mode=gameMode(modeId),model=currentStudyMaterials(),selection=studySelection();
+if(!engine||!catalog)return;
+if(model){openStudyRound(model.round(modeId,{...selection,learning:engine.loadLearning?.()||{}}),mode);return}
+if(selection.source!=="weekly"){toast("Those materials are still loading. Please try again.");return}
+const sourceKey=currentGameSourceKey(),sessionSeed=engine.nextSessionSeed?.(sourceKey,mode.id)||"session";
+const questions=mode.id==="daily"?engine.selectDailyQuestions(catalog,{count:8,seed:sessionSeed,skillStats:engine.loadLearning(),pack}):engine.selectQuestions(catalog,{subjects:mode.subjects,skills:mode.skills||[],preferredSkills:mode.preferredSkills||[],count:mode.count,seed:sessionSeed,skillStats:engine.loadLearning?.()||{}});
+const eligibleIds=catalog.questions.filter(q=>!mode.subjects?.length||mode.subjects.includes(q.subject)).map(q=>q.id);
+openStudyRound({questions,catalog,eligibleIds,sourceKey,sessionSeed,strict:false},mode);
 }
 function startStudyTest(index){const round=currentStudyMaterials()?.testRound({index,upcoming:true});if(round)openStudyRound(round,{id:"test-ready",title:round.title,subjects:[],count:8},index)}
 function openStudyRound(round,mode,testIndex){
-  if(!isStudyRoute()||!round.questions?.length){toast("No questions are ready for that selection.");return}
-  const {questions,catalog,sourceKey,sessionSeed,strict,eligibleIds}=round;
-  gameState={screen:"play",mode:mode.id,modeInfo:mode,testIndex,catalog,eligibleIds:Object.freeze([...(eligibleIds||catalog.questions.map(q=>q.id))]),strict:!!strict,questions,index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,learningRow:null,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null,sourceKey,sessionSeed,learningEvents:[],results:[],comebackSucceeded:false,rewardStatus:"idle",rewardAwarded:0,rewardCurrency:"Study Stars",rewardRevealAmount:0,rewardRevealScheduled:false,penaltyTasks:[],starBalance:window.ABVMStudyBadges.snapshot()?.balance??null,tries:0,misses:0,hints:0,retry:0,wrong:[]};
-  activateDueGameComeback();
-  const started=gameState;loadStudyRanks().then(c=>{if(gameState===started&&started.screen==="play"){started.starBalance=c.balance;started.starBalanceUnavailable=false;const node=stack().querySelector(".game-star-balance");if(node)node.textContent="★ "+c.balance+" Study Stars"}}).catch(()=>{if(gameState===started&&started.screen==="play"){started.starBalanceUnavailable=true;const node=stack().querySelector(".game-star-balance");if(node)node.textContent="Study Stars unavailable"}});
-  renderGames();bindScreen();
+if(!isStudyRoute()||!round.questions?.length){toast("No questions are ready for that selection.");return}
+const {questions,catalog,sourceKey,sessionSeed,strict,eligibleIds}=round;
+gameState={screen:"play",mode:mode.id,modeInfo:mode,testIndex,catalog,eligibleIds:Object.freeze([...(eligibleIds||catalog.questions.map(q=>q.id))]),strict:!!strict,questions,index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,learningRow:null,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null,sourceKey,sessionSeed,learningEvents:[],results:[],comebackSucceeded:false,rewardStatus:"idle",rewardAwarded:0,rewardCurrency:"Study Stars",rewardRevealAmount:0,rewardRevealScheduled:false,penaltyTasks:[],starBalance:window.ABVMStudyBadges.snapshot()?.balance??null,tries:0,misses:0,hints:0,retry:0,wrong:[]};
+activateDueGameComeback();
+const started=gameState;loadStudyRanks().then(c=>{if(gameState===started&&started.screen==="play"){started.starBalance=c.balance;started.starBalanceUnavailable=false;const node=stack().querySelector(".game-star-balance");if(node)node.textContent="★ "+c.balance+" Study Stars"}}).catch(()=>{if(gameState===started&&started.screen==="play"){started.starBalanceUnavailable=true;const node=stack().querySelector(".game-star-balance");if(node)node.textContent="Study Stars unavailable"}});
+renderGames();bindScreen();
 }
 function noteRoundLearning(g,q,kind,correct,independent=false){
-  const skill=String(q?.skill||"").trim();if(!skill)return;
-  if(!Array.isArray(g.learningEvents))g.learningEvents=[];
-  if(kind!=="support")g.learningEvents.push({skill,kind,correct:!!correct,independent:!!independent});
-  if(kind==="comeback"&&correct)g.comebackSucceeded=true;
+const skill=String(q?.skill||"").trim();if(!skill)return;
+if(!Array.isArray(g.learningEvents))g.learningEvents=[];
+if(kind!=="support")g.learningEvents.push({skill,kind,correct:!!correct,independent:!!independent});
+if(kind==="comeback"&&correct)g.comebackSucceeded=true;
 }
 function focusStudyAnswer(g){const node=stack().querySelector(g.answered||g.penaltyPending?".game-feedback":".game-answer:not(:disabled)");if(node){if(node.classList.contains("game-feedback"))node.tabIndex=-1;node.focus({preventScroll:true})}}
 function answerStudyGame(index){
-  const g=gameState,q=activeGameQuestion(),choice=q?.choices?.[index];if(g.screen!=="play"||g.answered||g.penaltyPending||choice===undefined||g.wrong?.includes(index))return;
-  const correct=choice===q.answer,e=studyGameEngine();e?.note?.(q,index);g.tries=(g.tries||0)+1;g.selectedIndex=index;g.hintOpen=false;
-  const firstScoredAttempt=!g.comebackMode&&!g.supportMode&&g.tries===1;
-  if(firstScoredAttempt){
-    const streak=e?.nextStreakBonus?.({positiveStreak:g.streak,negativeStreak:g.negativeStreak,adjustment:g.streakAdjustment},correct);
-    if(streak){g.streak=streak.positiveStreak;g.negativeStreak=streak.negativeStreak;g.lastStreakDelta=correct?streak.delta:-2;g.streakAdjustment=correct?streak.adjustment:(g.streakAdjustment||0);g.bestStreak=Math.max(g.bestStreak,g.streak)}
-  }
-  if(g.comebackMode){g.answered=true;g.learningRow=e?.recordComeback?.(q,correct)||null;g.comebackCorrect=correct;noteRoundLearning(g,q,"comeback",correct,false)}
-  else if(g.supportMode){g.answered=true;g.learningRow=e?.recordSupport?.(q,correct)||null;g.supportCorrect=correct}
-  else if(correct){g.answered=true;g.retry=0;g.learningRow=e?.recordLearning?.(q,true,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;noteRoundLearning(g,q,q.tier==="recent-review"?"review":"normal",true,g.learningRow?.LastResolution?.independent===true);g.score++}
-  else{g.misses=(g.misses||0)+1;g.wrong.push(index);if(g.misses<Math.min(2,q.choices.length-1)){g.retry=g.misses;g.selectedIndex=null}else{g.answered=true;g.retry=g.misses;g.learningRow=e?.recordLearning?.(q,false,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;noteRoundLearning(g,q,q.tier==="recent-review"?"review":"normal",false,false)}}
-  window.ABVMStudyGameView?.recordAttempt?.(g,q,{counted:!g.comebackMode&&!g.supportMode,kind:g.comebackMode?"comeback":g.supportMode?"support":"primary",correct,resolved:g.answered,index:g.index,hintUsed:(g.hints||0)>0,attempt:g.tries});
-  if(!correct){
-    g.penaltyPending=true;g.lastStarPenalty={status:"pending",amount:0};
-    const attemptId=[q.id,g.index,g.tries,g.comebackMode?"comeback":g.supportMode?"support":"primary"].join("|");
-    const penalty=e.commitStudyStarPenalty({sourcePack:g.sourceKey,mode:g.mode,sessionSeed:g.sessionSeed,attemptId}).then(result=>{g.penaltyPending=false;g.lastStarPenalty={status:"done",amount:result.deductedAmount};g.starBalance=result.balance;g.starBalanceUnavailable=false;window.ABVMStudyBadges.sync(result.collection);if(gameState===g&&isStudyRoute()&&g.screen==="play"){renderGames();bindScreen();focusStudyAnswer(g)}}).catch(error=>{g.penaltyPending=false;g.lastStarPenalty={status:"error",amount:0};if(gameState===g&&isStudyRoute()&&g.screen==="play"){renderGames();bindScreen();focusStudyAnswer(g)}throw error});
-    (g.penaltyTasks||(g.penaltyTasks=[])).push(penalty);penalty.catch(()=>{});
-  }
-  renderGames();bindScreen();focusStudyAnswer(g)
+const g=gameState,q=activeGameQuestion(),choice=q?.choices?.[index];if(g.screen!=="play"||g.answered||g.penaltyPending||choice===undefined||g.wrong?.includes(index))return;
+const correct=choice===q.answer,e=studyGameEngine();e?.note?.(q,index);g.tries=(g.tries||0)+1;g.selectedIndex=index;g.hintOpen=false;
+const firstScoredAttempt=!g.comebackMode&&!g.supportMode&&g.tries===1;
+if(firstScoredAttempt){
+  const streak=e?.nextStreakBonus?.({positiveStreak:g.streak,negativeStreak:g.negativeStreak,adjustment:g.streakAdjustment},correct);
+  if(streak){g.streak=streak.positiveStreak;g.negativeStreak=streak.negativeStreak;g.lastStreakDelta=correct?streak.delta:-2;g.streakAdjustment=correct?streak.adjustment:(g.streakAdjustment||0);g.bestStreak=Math.max(g.bestStreak,g.streak)}
+}
+if(g.comebackMode){g.answered=true;g.learningRow=e?.recordComeback?.(q,correct)||null;g.comebackCorrect=correct;noteRoundLearning(g,q,"comeback",correct,false)}
+else if(g.supportMode){g.answered=true;g.learningRow=e?.recordSupport?.(q,correct)||null;g.supportCorrect=correct}
+else if(correct){g.answered=true;g.retry=0;g.learningRow=e?.recordLearning?.(q,true,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;noteRoundLearning(g,q,q.tier==="recent-review"?"review":"normal",true,g.learningRow?.LastResolution?.independent===true);g.score++}
+else{g.misses=(g.misses||0)+1;g.wrong.push(index);if(g.misses<Math.min(2,q.choices.length-1)){g.retry=g.misses;g.selectedIndex=null}else{g.answered=true;g.retry=g.misses;g.learningRow=e?.recordLearning?.(q,false,{attemptCount:g.tries,incorrectCount:g.misses,hintCount:g.hints})||null;noteRoundLearning(g,q,q.tier==="recent-review"?"review":"normal",false,false)}}
+window.ABVMStudyGameView?.recordAttempt?.(g,q,{counted:!g.comebackMode&&!g.supportMode,kind:g.comebackMode?"comeback":g.supportMode?"support":"primary",correct,resolved:g.answered,index:g.index,hintUsed:(g.hints||0)>0,attempt:g.tries});
+if(!correct){
+  g.penaltyPending=true;g.lastStarPenalty={status:"pending",amount:0};
+  const attemptId=[q.id,g.index,g.tries,g.comebackMode?"comeback":g.supportMode?"support":"primary"].join("|");
+  const penalty=e.commitStudyStarPenalty({sourcePack:g.sourceKey,mode:g.mode,sessionSeed:g.sessionSeed,attemptId}).then(result=>{g.penaltyPending=false;g.lastStarPenalty={status:"done",amount:result.deductedAmount};g.starBalance=result.balance;g.starBalanceUnavailable=false;window.ABVMStudyBadges.sync(result.collection);if(gameState===g&&isStudyRoute()&&g.screen==="play"){renderGames();bindScreen();focusStudyAnswer(g)}}).catch(error=>{g.penaltyPending=false;g.lastStarPenalty={status:"error",amount:0};if(gameState===g&&isStudyRoute()&&g.screen==="play"){renderGames();bindScreen();focusStudyAnswer(g)}throw error});
+  (g.penaltyTasks||(g.penaltyTasks=[])).push(penalty);penalty.catch(()=>{});
+}
+renderGames();bindScreen();focusStudyAnswer(g)
 }
 function settleStudyStarRewards(g=gameState){
-  const e=studyGameEngine();
-  if(!e||g.rewardStatus!=="idle"||!g.sessionSeed)return;
-  g.rewardStatus="pending";
-  let roundId;
-  const sourceKey=g.sourceKey||currentGameSourceKey();
-  try{roundId=e.studyStarRoundId({sourcePack:sourceKey,mode:g.mode,sessionSeed:g.sessionSeed})}
-  catch{g.rewardStatus="error";return}
-  g.roundId=roundId;
-  Promise.all(g.penaltyTasks||[]).then(()=>e.commitStudyStarRewards({sourcePack:sourceKey,mode:g.mode,sessionSeed:g.sessionSeed,roundId,completed:true,comebackSucceeded:!!g.comebackSucceeded,streakAdjustment:g.streakAdjustment||0,firstTryCorrect:window.ABVMStudyGameView.scoreSummary(g).correct,questionCount:g.questions.length}))
-    .then(async result=>{
-      const balance=result.balance;g.perfectBonus=result.perfectBonus;g.rankCollection=result.collection;
-      g.newRanks=(result.newlyUnlocked||[]).map(id=>result.collection.badges.find(b=>b.id===id)).filter(Boolean);
-      window.ABVMStudyBadges.sync(result.collection);
-      if(gameState!==g)return;
-      g.rewardStatus="done";g.rewardAwarded=Number(result?.awardedAmount)||0;g.rewardCurrency=String(result?.currency||"Study Stars");g.starBalance=Math.max(0,Number(balance)||0);g.starBalanceUnavailable=false;g.rewardRevealAmount=g.rewardAwarded;g.rewardRevealScheduled=false;
-      if(isStudyRoute()&&g.screen==="finish"&&g.renderGeneration===screenGeneration){renderGames();bindScreen();}
-    })
-    .catch(()=>{if(gameState===g){g.rewardStatus="error";if(isStudyRoute()&&g.screen==="finish"&&g.renderGeneration===screenGeneration){renderGames();bindScreen();}}});
+const e=studyGameEngine();
+if(!e||g.rewardStatus!=="idle"||!g.sessionSeed)return;
+g.rewardStatus="pending";
+let roundId;
+const sourceKey=g.sourceKey||currentGameSourceKey();
+try{roundId=e.studyStarRoundId({sourcePack:sourceKey,mode:g.mode,sessionSeed:g.sessionSeed})}
+catch{g.rewardStatus="error";return}
+g.roundId=roundId;
+Promise.all(g.penaltyTasks||[]).then(()=>e.commitStudyStarRewards({sourcePack:sourceKey,mode:g.mode,sessionSeed:g.sessionSeed,roundId,completed:true,comebackSucceeded:!!g.comebackSucceeded,streakAdjustment:g.streakAdjustment||0,firstTryCorrect:window.ABVMStudyGameView.scoreSummary(g).correct,questionCount:g.questions.length}))
+  .then(async result=>{
+    const balance=result.balance;g.perfectBonus=result.perfectBonus;g.rankCollection=result.collection;
+    g.newRanks=(result.newlyUnlocked||[]).map(id=>result.collection.badges.find(b=>b.id===id)).filter(Boolean);
+    window.ABVMStudyBadges.sync(result.collection);
+    if(gameState!==g)return;
+    g.rewardStatus="done";g.rewardAwarded=Number(result?.awardedAmount)||0;g.rewardCurrency=String(result?.currency||"Study Stars");g.starBalance=Math.max(0,Number(balance)||0);g.starBalanceUnavailable=false;g.rewardRevealAmount=g.rewardAwarded;g.rewardRevealScheduled=false;
+    if(isStudyRoute()&&g.screen==="finish"&&g.renderGeneration===screenGeneration){renderGames();bindScreen();}
+  })
+  .catch(()=>{if(gameState===g){g.rewardStatus="error";if(isStudyRoute()&&g.screen==="finish"&&g.renderGeneration===screenGeneration){renderGames();bindScreen();}}});
 }
 function finishStudyGame(){
-  const g=gameState;markGameComebacksNextSession();g.screen="finish";if(g.mode==="daily")window.ABVMStudyReview.complete();saveGameRecord();settleStudyStarRewards(g);
+const g=gameState;markGameComebacksNextSession();g.screen="finish";if(g.mode==="daily")window.ABVMStudyReview.complete();saveGameRecord();settleStudyStarRewards(g);
 }
 function advanceStudyGame(){
-  const g=gameState;if(!g.answered||g.penaltyPending)return;
-  const reset=()=>Object.assign(g,{selectedIndex:null,answered:false,hintOpen:false,learningRow:null,lastStreakDelta:0,lastStarPenalty:null,tries:0,misses:0,hints:0,retry:0,wrong:[]});
-  if(g.comebackMode){clearActiveGameComeback();reset();renderGames();bindScreen();return}
-  if(g.supportMode){
-    const origin=g.supportOriginQuestion;Object.assign(g,{supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null});
-    if(origin)scheduleGameComeback(origin);
-    if(g.index>=g.questions.length-1){finishStudyGame()}
-    else{g.index++;tickGameComebacks();reset();activateDueGameComeback()}
-    renderGames();bindScreen();return
-  }
-  const current=g.questions[g.index],selected=current?.choices?.[g.selectedIndex],correct=selected===current?.answer;
-  if(!correct)scheduleGameComeback(current);
-  if(!g.strict&&!correct&&(g.learningRow?.ConsecutiveWrong||0)>=2){
-    const engine=studyGameEngine(),catalog=roundCatalog(true),support=engine?.supportQuestion(catalog,current,{skillStats:engine?.loadLearning?.()||{},seed:String(catalog?.sourceKey||"current")+"|support|"+String(current?.id||"item")+"|"+String(g.learningRow?.Seen||0)});
-    if(support){Object.assign(g,{supportMode:true,supportQuestion:support,supportCorrect:null,supportOriginQuestion:current});reset();renderGames();bindScreen();return}
-  }
+const g=gameState;if(!g.answered||g.penaltyPending)return;
+const reset=()=>Object.assign(g,{selectedIndex:null,answered:false,hintOpen:false,learningRow:null,lastStreakDelta:0,lastStarPenalty:null,tries:0,misses:0,hints:0,retry:0,wrong:[]});
+if(g.comebackMode){clearActiveGameComeback();reset();renderGames();bindScreen();return}
+if(g.supportMode){
+  const origin=g.supportOriginQuestion;Object.assign(g,{supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null});
+  if(origin)scheduleGameComeback(origin);
   if(g.index>=g.questions.length-1){finishStudyGame()}
   else{g.index++;tickGameComebacks();reset();activateDueGameComeback()}
-  renderGames();bindScreen()
+  renderGames();bindScreen();return
+}
+const current=g.questions[g.index],selected=current?.choices?.[g.selectedIndex],correct=selected===current?.answer;
+if(!correct)scheduleGameComeback(current);
+if(!g.strict&&!correct&&(g.learningRow?.ConsecutiveWrong||0)>=2){
+  const engine=studyGameEngine(),catalog=roundCatalog(true),support=engine?.supportQuestion(catalog,current,{skillStats:engine?.loadLearning?.()||{},seed:String(catalog?.sourceKey||"current")+"|support|"+String(current?.id||"item")+"|"+String(g.learningRow?.Seen||0)});
+  if(support){Object.assign(g,{supportMode:true,supportQuestion:support,supportCorrect:null,supportOriginQuestion:current});reset();renderGames();bindScreen();return}
+}
+if(g.index>=g.questions.length-1){finishStudyGame()}
+else{g.index++;tickGameComebacks();reset();activateDueGameComeback()}
+renderGames();bindScreen()
 }
 function leaveStudyGame(){markGameComebacksNextSession();gameState.screen="menu";renderGames();bindScreen()}
 function toggleStudyHint(){const g=gameState;if(g.screen==="play"&&!g.answered){g.hintOpen=!g.hintOpen;if(g.hintOpen)g.hints=(g.hints||0)+1;renderGames();bindScreen()}}
 function gameMenuHtml(catalog){
-  const modes=STUDY_GAME_MODES,materials=currentStudyMaterials(),view=studyMaterialsView,selection=studySelection();
+const modes=STUDY_GAME_MODES,materials=currentStudyMaterials(),view=studyMaterialsView,selection=studySelection();
   const grid='<div class="study-game-grid">'+modes.map(mode=>{
     const scope=materials?.forMode(mode.id,selection),record=loadGameRecord(mode.id,scope?.sourceKey||catalog.sourceKey),total=scope?Math.min(8,scope.count):selection.source==="weekly"?gameModeQuestionTotal(catalog,mode):0,disabled=total===0;
     return '<button type="button" class="study-game-tile game-'+mode.icon+'" data-game-start="'+esc(mode.id)+'"'+(mode.id==="reading"?' aria-label="Reading / ELA"':'')+(disabled?' disabled aria-disabled="true"':'')+'>'+window.ABVMStudyGameView.icon(mode.icon)+'<span class="study-game-copy"><strong>'+esc(mode.id==="spelling"?"Spelling":mode.id==="reading"?"Reading":mode.title)+'</strong><small>'+esc(mode.copy)+'</small>'+(disabled?'<em>Not ready yet</em>':record.plays?'<em>Practiced before · Best solved: '+record.best+' / '+total+' (includes retries)</em>':'')+'</span><b aria-hidden="true">›</b></button>';
@@ -636,6 +636,7 @@ function packContentKey(data){
     sourceHash:p.sourceHash||"",
     uploadedNoticeHash:p.uploadedNoticeHash||"",
     weekLabel:p.weekLabel||"",
+    teacherPostingWeekLabel:p.teacherPostingWeekLabel||"",
     importantDates:p.importantDates||[],
     homework:p.homework||[],
     subjects:p.subjects||[],

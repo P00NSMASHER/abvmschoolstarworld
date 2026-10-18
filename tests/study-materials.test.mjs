@@ -92,6 +92,13 @@ test('all official undated spelling words reach this-week guide and adult dictat
   assert.match(worksheet,/Teacher source checked 2026-10-15/);
   const previous=createStudyMaterials(opts({...options,pack:{...pack,weekLabel:'Week of October 5, 2026'}})).testGuide(0);
   assert.deepEqual(previous.spellingWords,[],'a teacher page without dated words cannot silently certify a different week');
+  const rolledForward=createStudyMaterials(opts({...options,
+    now:()=> '2026-10-17T23:00:00Z',
+    events:[{date:'2026-10-23',label:'Spelling (long / short u) / Handwriting',kind:'test'}],
+    pack:{...pack,weekLabel:'Week of October 19, 2026',teacherPostingWeekLabel:'Week of October 12, 2026'},
+  })).testGuide(0);
+  assert.deepEqual(rolledForward.spellingWords,[],
+    'calendar display rollover cannot recertify an undated list from the teacher posting week');
 });
 
 test('live release gate compares actual runtime, homework, premium theme and paper renderers',() => {

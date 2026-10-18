@@ -1,5 +1,6 @@
 import {readFileSync,mkdirSync,writeFileSync} from "node:fs";
 import {assessHomeworkHealth,selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence} from "./health-evidence.mjs";
+import {assessUpcomingLunchCoverage,schoolWeekLabel} from "./school-week-label.mjs";
 
 const packData=JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8"));
 const pkg=JSON.parse(readFileSync(new URL("../package.json",import.meta.url),"utf8"));
@@ -50,6 +51,10 @@ const pipelineUnsupportedCount=Number.isFinite(Number(contentPipeline?.qa?.unsup
   ?Number(contentPipeline.qa.unsupportedSkillCount)
   :unsupportedTopics.length;
 const now=new Date().toISOString();
+const reportedWeekLabel=packData.pack?.weekLabel||null;
+const postingWeekLabel=packData.pack?.teacherPostingWeekLabel||reportedWeekLabel;
+const expectedWeekLabel=schoolWeekLabel(now,{calendarDisplay:true});
+const upcomingLunch=assessUpcomingLunchCoverage(packData.pack,now);
 const status={
   generatedAt:now,
   appVersion:pkg.version,
@@ -61,6 +66,9 @@ const status={
     sourceSufficient:packData.pack?.sourceSufficient===true,
     sourcePages:packData.sourcePages?.length||0,
     sourceHash:packData.pack?.sourceHash||null,
+    displayWeekLabel:reportedWeekLabel,
+    teacherPostingWeekLabel:postingWeekLabel,
+    expectedCalendarWeekLabel:expectedWeekLabel,
   },
   homework:assessHomeworkHealth(JSON.parse(readFileSync(new URL("../pages/data/homework-current.json",import.meta.url),"utf8")),now),
   lunch:{
@@ -72,6 +80,7 @@ const status={
     pendingDocuments:packData.pack?.lunchMenuSource?.pendingDocuments||[],
     sourcePages:packData.pack?.lunchMenuSource?.sourcePages||[],
     lastError:packData.pack?.lunchMenuSource?.lastError||null,
+    upcomingWeek:upcomingLunch,
   },
   contentPipeline:{
     present:Boolean(contentPipeline),
@@ -172,6 +181,15 @@ const criticalHealthy=Boolean(
   pipelineHealthy
 );
 const warnings=[];
+if(reportedWeekLabel!==expectedWeekLabel){
+  warnings.push("School-data week label "+(reportedWeekLabel||"is missing")+" does not match the displayed "+expectedWeekLabel+"; retain the actual teacher-posting week for assignments.");
+}
+if(upcomingLunch.missingDates.length){
+  warnings.push("Upcoming school-week lunch archive has no verified menu or explicit no-school status for: "+upcomingLunch.missingDates.join(", ")+".");
+}
+if(sourceInsufficientTopics.length){
+  warnings.push(sourceInsufficientTopics.length+" study topic(s) have insufficient verified teacher-source detail for full practice: "+sourceInsufficientTopics.join(", ")+". No definitions or lesson facts were invented.");
+}
 if(status.contentPipeline.unsupportedSkillCount>0){
   warnings.push("Practice questions remain isolated for "+status.contentPipeline.unsupportedSkillCount+" verified topic(s): "+(status.contentPipeline.unsupportedTopics.join(", ")||"details unavailable")+". Verified source facts remain publishable.");
 }
@@ -194,6 +212,8 @@ const md=[
   `**Overall: ${status.overall.toUpperCase()}**`,
   "",
   `- **School data checked:** ${sourceCheckedAt||"missing"}${sourceAgeHours===null?"":` (${sourceAgeHours.toFixed(1)}h old)`}`,
+  `- **School-week labels:** Calendar ${expectedWeekLabel}; pack ${reportedWeekLabel||"missing"}; teacher posting ${postingWeekLabel||"missing"}`,
+  `- **Upcoming week lunches (${upcomingLunch.weekLabel}):** missing verified or no-school entries: ${upcomingLunch.missingDates.join(", ")||"none"}`,
   `- **Source coverage:** ${status.schoolData.sourcePages}/6 teacher pages; source sufficient = ${status.schoolData.sourceSufficient}; fresh <=${SOURCE_FRESH_HOURS}h = ${sourceFresh}`,
   `- **Homework checked:** ${status.homework.checkedAt||"missing"}; status ${status.homework.status}; same Eastern day and <=8h = ${status.homework.healthy}`,
   `- **Lunch source:** ${status.lunch.retrievalState}; ${status.lunch.days} reviewed days; complete reviewed coverage = ${lunchReviewedCoverageComplete}; missing dates: ${status.lunch.missingDates.join(", ")||"none"}`,
