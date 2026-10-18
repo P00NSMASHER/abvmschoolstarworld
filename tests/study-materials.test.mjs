@@ -108,11 +108,11 @@ test('all official undated spelling words reach this-week guide and adult dictat
   assert.deepEqual(mondayRescan.spellingWords,[],
     'a Monday rescan of unchanged undated long-o words must not certify them for the Oct. 23 long/short-u test');
   for (const guide of [rolledForward,mondayRescan]) {
-    assert.ok(guide.facts.every(fact=>!/box,\\s*side,\\s*fox/i.test(fact)),
+    assert.ok(guide.facts.every(fact=>!/box,\s*side,\s*fox/i.test(fact)),
       'old spelling words must not survive as general guide facts');
-    assert.doesNotMatch(printableStudyGuideHtml(guide),/box,\\s*side,\\s*fox/i,
+    assert.doesNotMatch(printableStudyGuideHtml(guide),/box,\s*side,\s*fox/i,
       'October 23 guide must not contain the earlier undated long-o list');
-    assert.doesNotMatch(printableWorksheetHtml(guide),/box,\\s*side,\\s*fox/i,
+    assert.doesNotMatch(printableWorksheetHtml(guide),/box,\s*side,\s*fox/i,
       'October 23 worksheet must not contain the earlier undated long-o list');
   }
 });

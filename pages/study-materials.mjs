@@ -522,7 +522,7 @@ export function createStudyMaterials({
     // a newly dated guide even when guide.spellingWords is correctly empty.
     const testWeekMatchesSpellingList = teacherWeek === weekBounds(test.date).start;
     const isTeacherWordList = text =>
-      /^(?:Weekly spelling words|Spelling words|Teacher spelling words|Teacher-posted spelling words(?: \\(page undated\\))?|Verified spelling words|Words for spelling test)\\s*:/i.test(text);
+      /^(?:Weekly spelling words|Spelling words|Teacher spelling words|Teacher-posted spelling words(?: \(page undated\))?|Verified spelling words|Words for spelling test)\s*:/i.test(text);
     const facts = uniqueGuideText([...verifiedWeekNotes,...questionFacts,
       ...subjectFacts.filter(text => subject !== 'Spelling / Handwriting' || testWeekMatchesSpellingList || !isTeacherWordList(text)),
     ]);
