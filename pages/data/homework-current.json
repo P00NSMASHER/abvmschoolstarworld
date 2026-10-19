@@ -2,10 +2,19 @@
   "schemaVersion": 1,
   "sourceUrl": "https://sites.google.com/view/abvmgr2/homework",
   "sourceDateProvided": false,
-  "status": "no-specific-posting",
-  "checkedAt": "2026-10-19T17:00:46.188Z",
-  "firstObservedAt": "2026-10-16T14:55:31.600Z",
-  "contentChangedAt": "2026-10-16T14:55:31.600Z",
-  "contentHash": "cc2f44a7607f774f7d0bf02f76fdc4500d9c367398a0daa9a6d2c93a140bf2f3",
-  "assignments": []
+  "status": "assignments",
+  "checkedAt": "2026-10-19T21:35:44.690Z",
+  "firstObservedAt": "2026-10-19T21:35:44.690Z",
+  "contentChangedAt": "2026-10-19T21:35:44.690Z",
+  "contentHash": "7977257a0e99020064bc05b6cd715cb94d032ad98d4257f995a7e594fe20dddf",
+  "assignments": [
+    {
+      "subject": "Spelling",
+      "task": "Spelling Choice Board activity"
+    },
+    {
+      "subject": "Math",
+      "task": "Page 28"
+    }
+  ]
 }
