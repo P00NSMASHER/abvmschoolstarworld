@@ -1,0 +1,70 @@
+{
+  "candidateId": "curriculum-reading-ela-author-s-opinion-66513ad049",
+  "familyId": "author-s-opinion",
+  "subject": "Reading / ELA",
+  "topic": "author's opinion",
+  "sourceHash": "teacher-pages-aabf196d95e556a85ffe",
+  "generatedAt": "2026-10-19T19:29:28.132Z",
+  "sourceContext": {
+    "quality": "page-exact",
+    "matchMethod": "exact-topic-phrase",
+    "subject": "Reading / ELA",
+    "topic": "author's opinion",
+    "sourceTitle": "Reading Work",
+    "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
+    "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
+    "sourceCheckedAt": "2026-10-19T19:29:28.132Z",
+    "sourceLine": "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion",
+    "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36"
+  },
+  "featureFlag": "curriculum-family:author-s-opinion-candidate",
+  "enabledByDefault": false,
+  "registryMatch": null,
+  "minimumSemanticVariants": 8,
+  "requiredQuestionTypes": [
+    "direct",
+    "transfer",
+    "reasoning"
+  ],
+  "proposedQuestions": [],
+  "authoring": {
+    "status": "AUTHORING_REQUIRED",
+    "generatedQuestionCount": 0,
+    "minimumSemanticVariants": 8,
+    "requiredQuestionTypes": [
+      "direct",
+      "transfer",
+      "reasoning"
+    ],
+    "requiredQuestionFields": [
+      "questionType",
+      "prompt",
+      "choices",
+      "answer",
+      "explanation",
+      "hint",
+      "dok",
+      "difficulty"
+    ]
+  },
+  "rollout": {
+    "featureFlagRequired": false,
+    "automatedQaRequired": true,
+    "safeUsageEvidenceRequired": false,
+    "manualPromotionRequired": false,
+    "automaticPromotion": true
+  },
+  "readiness": {
+    "status": "HOLD",
+    "blockers": [
+      "minimum-semantic-variants:0/8",
+      "question-type-required:direct",
+      "question-type-required:transfer",
+      "question-type-required:reasoning",
+      "automated-qa-required"
+    ],
+    "automaticPromotion": false,
+    "automaticDelete": false,
+    "automaticRewrite": false
+  }
+}
