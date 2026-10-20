@@ -552,9 +552,11 @@ test('dated current schoolwork is selectable by existing engine without relabeli
   const row = question('archived-math'); delete row.tier;
   const archive = {questions:[archiveRow(row,'2026-10-05',[{capturedAt:'2026-10-05'}])],notes:[],vocabulary:[]};
   const model = createStudyMaterials(opts({catalog:catalog(pool('fallback-',8,'Math',{tier:'star-fallback'})),archive,engine:loadEngine()}));
-  assert.equal(model.round('math',{seed:0}).questions[0].id,'archived-math');
+  const firstRound=model.round('math',{seed:0});
+  assert.equal(firstRound.questions[0].id,'archived-math');
   assert.equal(archive.questions[0].tier,undefined);
-  assert.deepEqual(model.round('math',{seed:0}).questions[0].provenance,archive.questions[0].provenance);
+  assert.deepEqual(firstRound.questions[0].provenance,archive.questions[0].provenance,
+    'the original reviewed source must remain intact even when later rounds rotate');
 });
 
 test('explicit Saved and STAR source choices control all eligible questions and preserve four-choice answers',() => {
