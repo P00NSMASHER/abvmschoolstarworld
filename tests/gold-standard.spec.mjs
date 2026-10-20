@@ -508,6 +508,10 @@ test("current week lunch menu is verified and visible instead of last week's men
     await expect(day).toHaveCount(1);
     await day.click();
     await expect(day).toHaveClass(/active/);
+    await expect(day).toHaveAttribute("aria-pressed","true");
+    const requested=new Date(lunch.date+"T12:00:00Z");
+    const requestedHeading=new Intl.DateTimeFormat("en-US",{weekday:"long",month:"long",day:"numeric",timeZone:"UTC"}).format(requested);
+    await expect(page.locator(".day-detail-title h2")).toHaveText(requestedHeading);
     const sourceMarksClosure=(await page.locator(".day-detail-title > span").innerText())==="No school";
     if(lunch.status==="no-school"||sourceMarksClosure){
       await expect(page.locator(".lunch-card")).toContainText(/No school lunch/i);
