@@ -65,9 +65,14 @@ async function answerKey(page){
   return page.evaluate(async prompt=>{
     const envelope=await fetch('./data/study-pack-runtime.json').then(r=>r.json());
     const e=window.ABVMStudyGames,c=e.buildCatalog(envelope.pack,{sourceKey:e.sourceKeyFromEnvelope(envelope.pack,envelope)});
-    const q=c.questions.find(q=>q.prompt===prompt);
-    if(!q)throw Error('Presented question is not in its source catalog');
-    return {answer:q.answer,prompt:q.prompt,skill:q.skill};
+    const {buildStarBank}=await import('./star-practice.mjs');
+    // Original STAR practice is a separately verified bank. Every displayed
+    // answer must resolve to the canonical or that checked original bank.
+    const matches=[...c.questions,...buildStarBank()].filter(q=>q.prompt===prompt);
+    if(!matches.length)throw Error('Presented question is not in a source catalog');
+    const answers=[...new Set(matches.map(q=>q.answer))];
+    if(answers.length!==1)throw Error('Source catalogs disagree about the correct answer');
+    return {answer:answers[0],prompt,skill:matches[0].skill,tier:matches[0].tier};
   },prompt);
 }
 async function richTextMetrics(page){
@@ -195,27 +200,47 @@ test('game answers and hints are readable and rejected choices cannot be retried
      .filter(row=>row.rewardType.startsWith('wrong-answer:')).map(row=>row.amount));
    expect(savedMisses).toEqual([0,0]); // both attempts are saved, but a zero balance cannot go negative
 });
-test('three complete Math rounds rotate through the available current material',async({page})=>{
-  test.setTimeout(60000);await installOriginalMathFixture(page);await page.goto('/#games');await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');const prompts=[];
-  const pool=await page.evaluate(async()=>{
+test('three complete Math rounds use current practice first, then source-checked original fallback',async({page})=>{
+  test.setTimeout(60000);
+  // Isolate the exact nine original current Math items. Old archived and saved
+  // lessons must not accidentally be counted as this week's teacher material.
+  await page.route('**/data/study-archive.json*',route=>route.fulfill({json:{notes:[],vocabulary:[],questions:[]}}));
+  await page.route('**/data/schoolwork.json*',route=>route.fulfill({json:{lessons:[]}}));
+  await installOriginalMathFixture(page);
+  await page.goto('/#games');
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+  const current=await page.evaluate(async()=>{
     const envelope=await fetch('./data/study-pack-runtime.json').then(r=>r.json()),engine=window.ABVMStudyGames;
-    return engine.buildCatalog(envelope.pack,{sourceKey:engine.sourceKeyFromEnvelope(envelope.pack,envelope)}).questions.filter(q=>q.subject==='Math'&&q.tier==='material').map(q=>q.prompt);
+    return engine.buildCatalog(envelope.pack,{sourceKey:engine.sourceKeyFromEnvelope(envelope.pack,envelope)})
+      .questions.filter(q=>q.subject==='Math'&&q.tier==='material').map(q=>q.prompt);
   });
-  expect(pool.length).toBeGreaterThanOrEqual(8);
+  expect(current).toHaveLength(9);
+  const allPrompts=[],fallback=[];
   for(let round=0;round<3;round++){
     await page.locator('[data-game-start="math"]').click();
-    const roundPrompts=[];
+    const roundPrompts=[],currentRound=[];
     for(let i=0;i<8;i++){
-      await expect(page.locator('.game-question-card')).toBeVisible();const q=await answerKey(page);prompts.push(q.prompt);roundPrompts.push(q.prompt);expect(pool).toContain(q.prompt);
-      const texts=await page.locator('.game-answer strong').allTextContents();await page.locator('.game-answer').nth(texts.indexOf(q.answer)).click();
+      await expect(page.locator('.game-question-card')).toBeVisible();
+      const q=await answerKey(page);
+      expect(q.answer,'every visible Math answer comes from a verified source bank').toBeTruthy();
+      const displayed=(await page.locator('.game-answer strong').allTextContents()).map(t=>t.trim());
+      expect(displayed.filter(choice=>choice===q.answer)).toHaveLength(1);
+      allPrompts.push(q.prompt);roundPrompts.push(q.prompt);
+      if(current.includes(q.prompt))currentRound.push(q.prompt);
+      else{expect(q.tier).toBe('star-fallback');fallback.push(q.prompt);}
+      await page.locator('.game-answer').nth(displayed.indexOf(q.answer)).click();
       await page.locator('[data-game-next]').click();
     }
-    expect(new Set(roundPrompts).size).toBe(8);
-    if(round===1&&pool.length>8)expect(new Set(prompts).size).toBeGreaterThan(8);
-    await expect(page.locator('.game-finish')).toBeVisible();await expect(page.locator('.game-finish')).toContainText('counts are skills');
+    expect(new Set(roundPrompts).size,'a Math round may not repeat the same question').toBe(8);
+    if(round===0)expect(currentRound).toHaveLength(8);
+    if(round===1)expect(currentRound).toHaveLength(1);
+    if(round===2)expect(currentRound).toHaveLength(0);
+    await expect(page.locator('.game-finish')).toBeVisible();
+    await expect(page.locator('.game-finish')).toContainText('counts are skills');
     if(round<2)await page.locator('[data-game-home]').last().click();
   }
-  expect(new Set(prompts).size).toBe(Math.min(24,pool.length));
+  expect(new Set(allPrompts).size,'three rounds should offer 24 distinct items').toBe(24);
+  expect(fallback.length).toBe(15);
 });
 test('new Study and game surfaces have no serious automated accessibility findings',async({page})=>{
   // Contrast belongs to the visible resting surface. Wait for finite navigation
