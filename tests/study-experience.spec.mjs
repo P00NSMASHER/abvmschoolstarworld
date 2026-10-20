@@ -60,15 +60,15 @@ async function placeValueGame(page){
   await expect(page.locator('.game-topbar > div > strong')).toHaveText('1 of 8');
   return source.questions;
 }
-async function answerKey(page){
-  const prompt=await page.locator('.game-question-card > h2').innerText();
-  return page.evaluate(async prompt=>{
-    const envelope=await fetch('./data/study-pack-runtime.json').then(r=>r.json());
-    const e=window.ABVMStudyGames,c=e.buildCatalog(envelope.pack,{sourceKey:e.sourceKeyFromEnvelope(envelope.pack,envelope)});
-    const q=c.questions.find(q=>q.prompt===prompt);
-    if(!q)throw Error('Presented question is not in its source catalog');
-    return {answer:q.answer,prompt:q.prompt,skill:q.skill};
-  },prompt);
+async function answerKey(page,eligibleQuestions){
+  const prompt=(await page.locator('.game-question-card > h2').innerText()).trim();
+  const choices=(await page.locator('.game-answer strong').allTextContents()).map(value=>value.trim());
+  const matches=eligibleQuestions.filter(q=>q.prompt.trim()===prompt &&
+    q.choices.length===choices.length &&
+    q.choices.every(choice=>choices.includes(choice.trim())));
+  expect(matches.length,'visible Math question must belong to an eligible, source-backed study bank').toBeGreaterThan(0);
+  expect(new Set(matches.map(q=>q.answer)).size,'matching source questions must agree on the answer').toBe(1);
+  return matches[0];
 }
 async function richTextMetrics(page){
   return page.locator('.rich-place-value small,.rich-place-value figcaption').evaluateAll(nodes=>nodes.map(node=>({
@@ -195,27 +195,53 @@ test('game answers and hints are readable and rejected choices cannot be retried
      .filter(row=>row.rewardType.startsWith('wrong-answer:')).map(row=>row.amount));
    expect(savedMisses).toEqual([0,0]); // both attempts are saved, but a zero balance cannot go negative
 });
-test('three complete Math rounds rotate through the available current material',async({page})=>{
-  test.setTimeout(60000);await installOriginalMathFixture(page);await page.goto('/#games');await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');const prompts=[];
-  const pool=await page.evaluate(async()=>{
-    const envelope=await fetch('./data/study-pack-runtime.json').then(r=>r.json()),engine=window.ABVMStudyGames;
-    return engine.buildCatalog(envelope.pack,{sourceKey:engine.sourceKeyFromEnvelope(envelope.pack,envelope)}).questions.filter(q=>q.subject==='Math'&&q.tier==='material').map(q=>q.prompt);
+test('three complete Math rounds rotate through current and source-backed saved or original practice',async({page})=>{
+  test.setTimeout(60000);
+  await installOriginalMathFixture(page);
+  await page.goto('/#games');
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+  const source=await page.evaluate(async()=>{
+    const [envelope,schoolwork,archive]=await Promise.all([
+      fetch('./data/study-pack-runtime.json').then(r=>r.json()),
+      fetch('./data/schoolwork.json').then(r=>r.json()),
+      fetch('./data/study-archive.json').then(r=>r.json()),
+    ]);
+    const engine=window.ABVMStudyGames;
+    const catalog=engine.buildCatalog(envelope.pack,{sourceKey:engine.sourceKeyFromEnvelope(envelope.pack,envelope)});
+    const {createStudyMaterials}=await import('./study-materials.mjs');
+    const model=createStudyMaterials({pack:envelope.pack,catalog,engine,schoolwork,archive});
+    const scope=model.forMode('math',{source:'weekly'});
+    const ids=new Set(scope.eligibleIds);
+    return {
+      questions:scope.catalog.questions.filter(q=>ids.has(q.id)&&q.subject==='Math')
+        .map(({id,subject,skill,prompt,choices,answer,tier})=>({id,subject,skill,prompt,choices,answer,tier})),
+      currentIds:scope.groups[0].map(q=>q.id),
+    };
   });
-  expect(pool.length).toBeGreaterThanOrEqual(8);
+  expect(source.questions.length,'the isolated Math fixture must contain 24 eligible checked questions').toBeGreaterThanOrEqual(24);
+  const current=new Set(source.currentIds),seen=[],ids=[];
   for(let round=0;round<3;round++){
     await page.locator('[data-game-start="math"]').click();
-    const roundPrompts=[];
+    const roundIds=[];
     for(let i=0;i<8;i++){
-      await expect(page.locator('.game-question-card')).toBeVisible();const q=await answerKey(page);prompts.push(q.prompt);roundPrompts.push(q.prompt);expect(pool).toContain(q.prompt);
-      const texts=await page.locator('.game-answer strong').allTextContents();await page.locator('.game-answer').nth(texts.indexOf(q.answer)).click();
+      await expect(page.locator('.game-question-card')).toBeVisible();
+      const q=await answerKey(page,source.questions);
+      expect(q.subject).toBe('Math');
+      seen.push(q.prompt);ids.push(q.id);roundIds.push(q.id);
+      const texts=(await page.locator('.game-answer strong').allTextContents()).map(t=>t.trim());
+      const answerIndex=texts.indexOf(q.answer.trim());
+      expect(answerIndex,'the verified answer must be a displayed choice').toBeGreaterThanOrEqual(0);
+      await page.locator('.game-answer').nth(answerIndex).click();
       await page.locator('[data-game-next]').click();
     }
-    expect(new Set(roundPrompts).size).toBe(8);
-    if(round===1&&pool.length>8)expect(new Set(prompts).size).toBeGreaterThan(8);
-    await expect(page.locator('.game-finish')).toBeVisible();await expect(page.locator('.game-finish')).toContainText('counts are skills');
+    expect(new Set(roundIds).size,'each full round must contain eight distinct source questions').toBe(8);
+    if(round===0)expect(roundIds.every(id=>current.has(id)),'fresh current Math must be first').toBe(true);
+    await expect(page.locator('.game-finish')).toBeVisible();
+    await expect(page.locator('.game-finish')).toContainText('counts are skills');
     if(round<2)await page.locator('[data-game-home]').last().click();
   }
-  expect(new Set(prompts).size).toBe(Math.min(24,pool.length));
+  expect(new Set(ids).size,'new source-backed items must be used before repeating older questions').toBe(24);
+  expect(new Set(seen).size,'three rounds must not repeat an equivalent displayed prompt').toBe(24);
 });
 test('new Study and game surfaces have no serious automated accessibility findings',async({page})=>{
   // Contrast belongs to the visible resting surface. Wait for finite navigation
