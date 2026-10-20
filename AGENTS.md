@@ -77,6 +77,9 @@ states) and every verified test for the displayed school week. Main-meal summari
 are allowed; selected-day details retain the complete governed menu.
 
 Rendered phone and tablet evidence is required for visual acceptance. Static/browser
-tests alone are not aesthetic approval. Keep independent review separate from
-implementation and release only the exact reviewed head through normal QA,
-independent reproduction and Pages gates. No routine design approval is required.
+tests alone are not aesthetic approval. The repository owner's recorded release approval is sufficient for ABVM repairs;
+a second human code reviewer is not required. Preserve exact-head CI, source
+verification, privacy safeguards, independently reproducible automated QA, and
+the guarded GitHub Pages publication gates. Never invent or claim a human review.
+Headless testing does not replace actual phone/tablet visual acceptance.
+No routine design approval is required.
