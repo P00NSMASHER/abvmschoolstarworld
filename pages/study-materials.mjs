@@ -391,21 +391,45 @@ export function createStudyMaterials({
         questions = engine.selectDailyQuestions(scope.catalog,{count:8, seed:chosenSeed, skillStats:history, pack, now:instant()});
       } else if (scope.source === 'weekly' && modeId !== 'daily') {
         const seen = new Set();
-        for (const [stage,group] of scope.groups.entries()) {
-          if (questions.length >= 8) break;
-          const available = group.filter(q => !seen.has(practiceIdentity(q)));
-          const originals = new Map(available.map(q => [q.id,q]));
-          // The engine ranks known tiers. A selection-only copy lets older
-          // reviewed records without a tier participate without relabeling data.
-          const selectionCatalog = {...scope.catalog,questions:available.map(q => q.tier ? q : {...q,tier:'material'})};
-          const chosen = engine?.selectQuestions
-            ? engine.selectQuestions(selectionCatalog,{subjects:mode.subjects, preferredSkills:mode.preferredSkills || [], count:8-questions.length, seed:chosenSeed+'|stage:'+stage, skillStats:history})
-            : adaptive([available],chosenSeed+'|stage:'+stage,history).slice(0,8-questions.length);
-          for (const row of chosen) {
-            const q = originals.get(row.id);
-            if (q && !seen.has(practiceIdentity(q))) { seen.add(practiceIdentity(q)); questions.push(q); }
+        // A second Math round must not recycle the first eight current items
+        // while unused source-backed saved work or original fallback exists.
+        // This local history is source-key scoped and never changes a question's
+        // original tier, evidence, answer or published curriculum.
+        const rotationKey = 'abvm-hub-weekly-rotation:v1';
+        const savedRotation = read(storage,rotationKey,{});
+        const previous = savedRotation?.sourceKey === scope.sourceKey
+          ? array(savedRotation.recent).filter(value => typeof value === 'string')
+          : [];
+        const recent = new Set(previous);
+        // Use every eligible, unshown item across the ordered source stages
+        // before any earlier item is repeated. A second pass is bounded and
+        // permits repetition only when the source-backed bank is exhausted.
+        for (const freshOnly of [true,false]) {
+          for (const [stage,group] of scope.groups.entries()) {
+            if (questions.length >= 8) break;
+            const available = group.filter(q => {
+              const identity = practiceIdentity(q);
+              return !seen.has(identity) && (!freshOnly || !recent.has(identity));
+            });
+            if (!available.length) continue;
+            const originals = new Map(available.map(q => [q.id,q]));
+            // A selection-only copy admits older reviewed tierless work
+            // without relabeling the original saved source or answer.
+            const selectionCatalog = {...scope.catalog,questions:available.map(q => q.tier ? q : {...q,tier:'material'})};
+            const chosen = engine?.selectQuestions
+              ? engine.selectQuestions(selectionCatalog,{subjects:mode.subjects, preferredSkills:mode.preferredSkills || [], count:8-questions.length, seed:chosenSeed+'|stage:'+stage+'|'+freshOnly, skillStats:history})
+              : adaptive([available],chosenSeed+'|stage:'+stage,history).slice(0,8-questions.length);
+            for (const row of chosen) {
+              const q = originals.get(row.id);
+              if (q && !seen.has(practiceIdentity(q))) { seen.add(practiceIdentity(q)); questions.push(q); }
+            }
           }
+          if (questions.length >= 8) break;
         }
+        if (questions.length) write(storage,rotationKey,{
+          sourceKey:scope.sourceKey,
+          recent:[...new Set([...previous,...questions.map(practiceIdentity)])].slice(-64),
+        });
       } else {
         // Passing a mixed union through selectQuestions would discard selected
         // STAR/saved sources when current material exists. Preserve source turns.
