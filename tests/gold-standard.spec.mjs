@@ -507,7 +507,14 @@ test("current week lunch menu is verified and visible instead of last week's men
     const day=page.locator(`[data-day^="${lunch.date}"]`);
     await expect(day).toHaveCount(1);
     await day.click();
-    for(const item of lunch.items)await expect(page.locator(".lunch-card")).toContainText(item);
+    await expect(day).toHaveClass(/active/);
+    const sourceMarksClosure=/\\bno school\\b/i.test(await page.locator(".day-detail").innerText());
+    if(lunch.status==="no-school"||sourceMarksClosure){
+      await expect(page.locator(".lunch-card")).toContainText(/No school lunch/i);
+      for(const item of lunch.items)await expect(page.locator(".lunch-card")).not.toContainText(item);
+    }else{
+      for(const item of lunch.items)await expect(page.locator(".lunch-card")).toContainText(item);
+    }
   }
 });
 
