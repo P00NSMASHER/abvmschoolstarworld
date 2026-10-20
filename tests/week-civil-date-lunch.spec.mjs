@@ -6,6 +6,8 @@ test.use({timezoneId:"America/New_York",serviceWorkers:"block"});
 async function openWeek(page,instant="2026-10-20T16:00:00Z"){
   await page.clock.setFixedTime(new Date(instant));
   await page.goto("/#week");
+  // Same-URL navigation may retain the existing document after a clock jump.
+  await page.reload();
   await expect(page.locator(".day-picker")).toBeVisible();
 }
 
