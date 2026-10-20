@@ -582,15 +582,23 @@ test("Subject Study Games stay on current material for full rounds",async({page}
       expect(rows.length).toBeGreaterThan(0);
       return;
     }
-    if(currentIds.size){
+    // A sparse live teacher bank is allowed to finish with verified review
+    // and clearly labeled original STAR-style practice, never fake lessons.
+    const tiers={material:0,"recent-review":1,"star-fallback":2};
+    for(const q of rows){
+      if(q.tier==="material"){
+        expect(currentIds.has(q.skill),"current material requires a verified current skill: "+q.skill).toBe(true);
+      }else if(q.tier==="recent-review"){
+        expect(reviewIds.has(q.skill),"review requires a verified historical skill: "+q.skill).toBe(true);
+      }else if(q.tier==="star-fallback"){
+        expect(starFallback,"only Math and ELA may use original STAR fallback").toBe(true);
+        expect(q.sourceFact,"fallback must be labeled as original practice").toMatch(/original/i);
+      }else throw Error("Unrecognized source tier: "+String(q.tier));
+    }
+    const ranks=rows.map(q=>tiers[q.tier]);
+    expect(ranks,"verified current / review questions must precede original fallback").toEqual([...ranks].sort((a,b)=>a-b));
+    if(currentIds.size||reviewIds.size||starFallback){
       expect(rows.length).toBeGreaterThan(0);
-      expect(rows.every(q=>q.tier==="material"&&currentIds.has(q.skill))).toBe(true);
-    }else if(reviewIds.size){
-      expect(rows.length).toBeGreaterThan(0);
-      expect(rows.every(q=>q.tier==="recent-review"&&reviewIds.has(q.skill))).toBe(true);
-    }else if(starFallback){
-      expect(rows.length).toBeGreaterThan(0);
-      expect(rows.every(q=>q.tier==="star-fallback")).toBe(true);
     }else expect(rows).toEqual([]);
   };
   assertSubjectTier(report.math,mathSkills,reviewMath,{starFallback:true});
