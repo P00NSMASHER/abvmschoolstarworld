@@ -54,12 +54,6 @@ function sameDay(a,b){return a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth
 function isoDateKey(date){
   return date.getFullYear()+"-"+String(date.getMonth()+1).padStart(2,"0")+"-"+String(date.getDate()).padStart(2,"0");
 }
-function parseLocalDayKey(key){
-  if(!/^\d{4}-\d{2}-\d{2}$/.test(key))return null;
-  const [year,month,day]=key.split("-").map(Number);
-  const parsed=new Date(year,month-1,day,12);
-  return isoDateKey(parsed)===key?parsed:null;
-}
 function getDerivedPack(){
   if(derivedPackCache?.pack===pack)return derivedPackCache;
   const datedEvents=window.ABVMSchoolUpdates.uniqueRows((pack?.importantDates||[]).map(item=>{
@@ -312,7 +306,7 @@ function renderToday(){
 function renderWeek(){
  const days=weekDays();
  if(!selectedDay||!days.some(d=>sameDay(d,selectedDay)))selectedDay=weekOffset===0?(days.find(d=>sameDay(d,today()))||days[0]):days[0];
- stack().innerHTML=window.ABVMProductView.week({days,selectedDay,dateKey:isoDateKey,offset:weekOffset,header,segments:calendarSegments("week"),freshness,taskHtml,kindClass,fmtDate,fmtShort,weekRangeLabel,eventItemsForDate,events:eventItemsForDate(selectedDay),tasks:isPackWeek(days)?taskRecordsForSurface("week",selectedDay):[],homeworkHtml:homeworkCardForDate(selectedDay,{compact:true}),lunchHtml:lunchCardHtml(selectedDay,lunchForDate(selectedDay)),reminder:reminderForDate(selectedDay),future:datedImportantEvents().filter(({date})=>date>selectedDay).slice(0,4).map(({item,date})=>({x:item,d:date})),overview:window.ABVMWeeklyLearning.renderWeekOverview({days,lunchForDate,eventItemsForDate,kindClass,fmtShort,lunchText,lunchUnavailableText})});
+ stack().innerHTML=window.ABVMProductView.week({days,selectedDay,offset:weekOffset,header,segments:calendarSegments("week"),freshness,taskHtml,kindClass,fmtDate,fmtShort,weekRangeLabel,eventItemsForDate,events:eventItemsForDate(selectedDay),tasks:isPackWeek(days)?taskRecordsForSurface("week",selectedDay):[],homeworkHtml:homeworkCardForDate(selectedDay,{compact:true}),lunchHtml:lunchCardHtml(selectedDay,lunchForDate(selectedDay)),reminder:reminderForDate(selectedDay),future:datedImportantEvents().filter(({date})=>date>selectedDay).slice(0,4).map(({item,date})=>({x:item,d:date})),overview:window.ABVMWeeklyLearning.renderWeekOverview({days,lunchForDate,eventItemsForDate,kindClass,fmtShort,lunchText,lunchUnavailableText})});
 }
 function agendaLunchHtml(date,lunch){
   const events=eventItemsForDate(date),closed=events.some(e=>kindClass(e)==="closed"),weekend=[0,6].includes(date.getDay());
@@ -619,7 +613,7 @@ function bindScreen(){
     if(target.matches("[data-refresh-pack]")){manualRefreshSchoolInfo();return;}
     if(target.matches("[data-homework-check]")){const index=Number(target.dataset.homeworkCheck),day=activeTab==="week"?(selectedDay||today()):today(),row=homeworkForDate(day).assignments[index];if(row)toggleChecked({...row,_homeworkDay:isoDateKey(day)},index);return;}
     if(target.matches("[data-check]")){toggleChecked((pack.homework||[])[Number(target.dataset.check)],Number(target.dataset.check));return;}
-    if(target.matches("[data-day]")){const day=parseLocalDayKey(target.dataset.day);if(!day)return;selectedDay=day;redrawPlanner(renderWeek,'[data-day="'+target.dataset.day+'"]');return;}
+    if(target.matches("[data-day]")){if(!(selectedDay=window.ABVMProductView.calendarDate(target.dataset.day)))return;redrawPlanner(renderWeek,'[data-day="'+target.dataset.day+'"]');return;}
     if(target.matches("[data-week-step]")){weekOffset+=Number(target.dataset.weekStep||0);selectedDay=null;redrawPlanner(renderWeek,'[data-week-step="'+target.dataset.weekStep+'"]');return;}
     if(target.matches("[data-week-today]")){weekOffset=0;selectedDay=null;redrawPlanner(renderWeek,".day-picker button.active");return;}
     if(target.matches("[data-cal-today]")){calendarOffset=0;calendarDay=null;redrawPlanner(renderCalendar,".calendar-grid button.active");return;}
