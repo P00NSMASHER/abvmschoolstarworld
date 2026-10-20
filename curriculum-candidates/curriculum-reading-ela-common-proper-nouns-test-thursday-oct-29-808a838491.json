@@ -1,0 +1,66 @@
+{
+  "candidateId": "curriculum-reading-ela-common-proper-nouns-test-thursday-oct-29-808a838491",
+  "familyId": "common-proper-nouns-test-thursday-oct-29",
+  "subject": "Reading / ELA",
+  "topic": "common & proper nouns (test Thursday, Oct. 29)",
+  "sourceHash": "teacher-pages-b062e74481323f3b70dd",
+  "generatedAt": "2026-10-20T18:07:08.926Z",
+  "sourceContext": {
+    "quality": "unresolved",
+    "matchMethod": "none",
+    "subject": "Reading / ELA",
+    "topic": "common & proper nouns (test Thursday, Oct. 29)",
+    "evidenceExcerptHash": "sha256:8421ed84f438bf4438e66b6e84437211249f40fdb3caef6a0cfb23884d909a2d"
+  },
+  "featureFlag": "curriculum-family:common-proper-nouns-test-thursday-oct-29-candidate",
+  "enabledByDefault": false,
+  "registryMatch": null,
+  "minimumSemanticVariants": 8,
+  "requiredQuestionTypes": [
+    "direct",
+    "transfer",
+    "reasoning"
+  ],
+  "proposedQuestions": [],
+  "authoring": {
+    "status": "AUTHORING_REQUIRED",
+    "generatedQuestionCount": 0,
+    "minimumSemanticVariants": 8,
+    "requiredQuestionTypes": [
+      "direct",
+      "transfer",
+      "reasoning"
+    ],
+    "requiredQuestionFields": [
+      "questionType",
+      "prompt",
+      "choices",
+      "answer",
+      "explanation",
+      "hint",
+      "dok",
+      "difficulty"
+    ]
+  },
+  "rollout": {
+    "featureFlagRequired": false,
+    "automatedQaRequired": true,
+    "safeUsageEvidenceRequired": false,
+    "manualPromotionRequired": false,
+    "automaticPromotion": true
+  },
+  "readiness": {
+    "status": "HOLD",
+    "blockers": [
+      "page-exact-source-context-required",
+      "minimum-semantic-variants:0/8",
+      "question-type-required:direct",
+      "question-type-required:transfer",
+      "question-type-required:reasoning",
+      "automated-qa-required"
+    ],
+    "automaticPromotion": false,
+    "automaticDelete": false,
+    "automaticRewrite": false
+  }
+}
