@@ -1,0 +1,70 @@
+{
+  "candidateId": "curriculum-spelling-handwriting-soft-c-and-g-1721655385",
+  "familyId": "soft-c-and-g",
+  "subject": "Spelling / Handwriting",
+  "topic": "soft c and g",
+  "sourceHash": "teacher-pages-16d327768b352f2a88b2",
+  "generatedAt": "2026-10-20T20:39:23.519Z",
+  "sourceContext": {
+    "quality": "page-exact",
+    "matchMethod": "exact-topic-phrase",
+    "subject": "Spelling / Handwriting",
+    "topic": "soft c and g",
+    "sourceTitle": "Tests",
+    "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+    "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
+    "sourceCheckedAt": "2026-10-20T20:39:23.519Z",
+    "sourceLine": "Friday Oct. 20: Spelling (soft c and g)/Handwriting",
+    "evidenceExcerptHash": "sha256:6f6aecd7698d22f87aa0628daf816d9471d047ed3f8a6b33dc1a9427bb1f0abb"
+  },
+  "featureFlag": "curriculum-family:soft-c-and-g-candidate",
+  "enabledByDefault": false,
+  "registryMatch": null,
+  "minimumSemanticVariants": 8,
+  "requiredQuestionTypes": [
+    "direct",
+    "transfer",
+    "reasoning"
+  ],
+  "proposedQuestions": [],
+  "authoring": {
+    "status": "AUTHORING_REQUIRED",
+    "generatedQuestionCount": 0,
+    "minimumSemanticVariants": 8,
+    "requiredQuestionTypes": [
+      "direct",
+      "transfer",
+      "reasoning"
+    ],
+    "requiredQuestionFields": [
+      "questionType",
+      "prompt",
+      "choices",
+      "answer",
+      "explanation",
+      "hint",
+      "dok",
+      "difficulty"
+    ]
+  },
+  "rollout": {
+    "featureFlagRequired": false,
+    "automatedQaRequired": true,
+    "safeUsageEvidenceRequired": false,
+    "manualPromotionRequired": false,
+    "automaticPromotion": true
+  },
+  "readiness": {
+    "status": "HOLD",
+    "blockers": [
+      "minimum-semantic-variants:0/8",
+      "question-type-required:direct",
+      "question-type-required:transfer",
+      "question-type-required:reasoning",
+      "automated-qa-required"
+    ],
+    "automaticPromotion": false,
+    "automaticDelete": false,
+    "automaticRewrite": false
+  }
+}
