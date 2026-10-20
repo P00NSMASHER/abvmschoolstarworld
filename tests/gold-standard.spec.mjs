@@ -562,8 +562,14 @@ test("Subject Study Games stay on current material for full rounds",async({page}
     });
     const pipelinePresent=Array.isArray(source.pack?.contentPipeline?.skills);
     const skills=pipelinePresent?source.pack.contentPipeline.skills:[];
+    const available=(subjects,tier)=>catalog.questions.filter(q=>subjects.includes(q.subject)&&q.tier===tier).length;
     return {
       pipelinePresent,
+      available:{
+        math:{current:available(["Math"],"material"),review:available(["Math"],"recent-review")},
+        faith:{current:available(["Religion"],"material"),review:available(["Religion"],"recent-review")},
+        words:{current:available(["Reading / ELA","Spelling / Handwriting"],"material"),review:available(["Reading / ELA","Spelling / Handwriting"],"recent-review")}
+      },
       math:math.map(q=>({tier:q.tier,skill:q.skill,sourceFact:q.sourceFact})),
       faith:faith.map(q=>({tier:q.tier,skill:q.skill,sourceFact:q.sourceFact})),
       words:words.map(q=>({tier:q.tier,skill:q.skill,sourceFact:q.sourceFact})),
@@ -577,25 +583,32 @@ test("Subject Study Games stay on current material for full rounds",async({page}
   });
   const mathSkills=new Set(report.authorizedMath),faithSkills=new Set(report.authorizedFaith),wordSkills=new Set(report.authorizedWords);
   const reviewMath=new Set(report.reviewMath),reviewFaith=new Set(report.reviewFaith),reviewWords=new Set(report.reviewWords);
-  const assertSubjectTier=(rows,currentIds,reviewIds,{starFallback=false}={})=>{
+  const assertSubjectTier=(rows,currentIds,reviewIds,{starFallback=false,available={current:0,review:0}}={})=>{
     if(!report.pipelinePresent){
       expect(rows.length).toBeGreaterThan(0);
       return;
     }
-    if(currentIds.size){
-      expect(rows.length).toBeGreaterThan(0);
-      expect(rows.every(q=>q.tier==="material"&&currentIds.has(q.skill))).toBe(true);
-    }else if(reviewIds.size){
-      expect(rows.length).toBeGreaterThan(0);
-      expect(rows.every(q=>q.tier==="recent-review"&&reviewIds.has(q.skill))).toBe(true);
+    // A live teacher can withdraw most of a subject's topics. The player must
+    // exhaust what is actually verified before filling a full round with
+    // original, non-teacher STAR practice; do not require eight teacher-backed
+    // questions simply because one current skill still exists.
+    expect(rows.every(q=>q.tier==="material"?currentIds.has(q.skill):
+      q.tier==="recent-review"?reviewIds.has(q.skill):
+      q.tier==="star-fallback"&&starFallback&&["Math","Reading / ELA"].includes(q.subject))).toBe(true);
+    if(available.current){
+      expect(rows.some(q=>q.tier==="material")).toBe(true);
+      if(available.current>=8)expect(rows.every(q=>q.tier==="material")).toBe(true);
+    }else if(available.review){
+      expect(rows.some(q=>q.tier==="recent-review")).toBe(true);
+      if(available.review>=8)expect(rows.every(q=>q.tier==="recent-review")).toBe(true);
     }else if(starFallback){
       expect(rows.length).toBeGreaterThan(0);
       expect(rows.every(q=>q.tier==="star-fallback")).toBe(true);
     }else expect(rows).toEqual([]);
   };
-  assertSubjectTier(report.math,mathSkills,reviewMath,{starFallback:true});
-  assertSubjectTier(report.faith,faithSkills,reviewFaith);
-  assertSubjectTier(report.words,wordSkills,reviewWords,{starFallback:true});
+  assertSubjectTier(report.math,mathSkills,reviewMath,{starFallback:true,available:report.available.math});
+  assertSubjectTier(report.faith,faithSkills,reviewFaith,{available:report.available.faith});
+  assertSubjectTier(report.words,wordSkills,reviewWords,{starFallback:true,available:report.available.words});
   if(!mathSkills.size&&!reviewMath.size)expect(report.math.length).toBe(8);
   expect(report.math.length).toBeLessThanOrEqual(8);
   expect(report.faith.length).toBeLessThanOrEqual(8);
