@@ -1042,54 +1042,58 @@
     ],
     "lunchMenu": [
       {
-        "date": "2026-10-12",
-        "day": "Monday, Oct. 12",
-        "items": [],
-        "status": "no-school",
-        "sourceId": "abvm-2026-10-official"
-      },
-      {
-        "date": "2026-10-13",
-        "day": "Tuesday, Oct. 13",
+        "date": "2026-10-19",
+        "day": "Monday, Oct. 19",
         "items": [
-          "Meatballs in sauce",
-          "Whole-grain buttered pasta",
-          "Steamed corn",
-          "Fruit"
-        ],
-        "sourceId": "abvm-2026-10-official"
-      },
-      {
-        "date": "2026-10-14",
-        "day": "Wednesday, Oct. 14",
-        "items": [
-          "Baked cheese pizza",
-          "Garden salad",
+          "Breaded chicken",
+          "Buttered pasta",
           "Steamed broccoli",
           "Fruit"
         ],
         "sourceId": "abvm-2026-10-official"
       },
       {
-        "date": "2026-10-15",
-        "day": "Thursday, Oct. 15",
+        "date": "2026-10-20",
+        "day": "Tuesday, Oct. 20",
         "items": [
-          "Chicken patty on a roll",
-          "French fries",
-          "Mixed vegetables",
+          "Hot ham & cheese",
+          "Whole-grain pretzel roll",
+          "Tortilla chips",
+          "Steamed peas",
           "Fruit"
         ],
-        "sourceId": "abvm-2026-10-15-school-notice"
+        "sourceId": "abvm-2026-10-official"
       },
       {
-        "date": "2026-10-16",
-        "day": "Friday, Oct. 16",
+        "date": "2026-10-21",
+        "day": "Wednesday, Oct. 21",
         "items": [
-          "Chicken taco",
-          "Brown rice",
-          "Cheese",
-          "Salsa",
-          "Refried beans",
+          "Pasta with meatballs",
+          "Whole-grain roll",
+          "Shredded cheese",
+          "Steamed carrots",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-22",
+        "day": "Thursday, Oct. 22",
+        "items": [
+          "Chicken patty on whole-grain roll",
+          "Baby cake potatoes",
+          "Green beans",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-10-23",
+        "day": "Friday, Oct. 23",
+        "items": [
+          "Cheesy breadsticks",
+          "Dipping sauce",
+          "Kidney beans",
           "Fruit"
         ],
         "sourceId": "abvm-2026-10-official"
@@ -1404,16 +1408,16 @@
     "lunchMenuSource": {
       "status": "current-week",
       "retrievalState": "verified",
-      "checkedAt": "2026-10-18T21:55:57.552Z",
-      "lastAttemptAt": "2026-10-18T21:55:57.552Z",
+      "checkedAt": "2026-10-20T23:02:56.999Z",
+      "lastAttemptAt": "2026-10-20T23:02:56.999Z",
       "provider": "Saint Clair Area School District",
       "school": "Assumption BVM School",
       "feedUrl": "https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu",
-      "verificationMode": "direct-official-source+reviewed-notice",
+      "verificationMode": "direct-official-source",
       "parentResourcesUrl": "https://www.assumptionbvmschool.net/parent-resources",
-      "weekStart": "2026-10-12",
-      "weekEnd": "2026-10-16",
-      "coverageThrough": "2026-10-16",
+      "weekStart": "2026-10-19",
+      "weekEnd": "2026-10-23",
+      "coverageThrough": "2026-10-23",
       "missingDates": [],
       "sourcePages": [
         {
@@ -1422,17 +1426,8 @@
           "contentHash": "a99ce9385295921c9fff19ae4051732da45f7c38df077d30d9b62577c8c6eb45",
           "proofMode": "pinned-url",
           "reviewedAt": "2026-10-01T00:44:00Z",
-          "checkedAt": "2026-10-18T21:55:57.552Z",
+          "checkedAt": "2026-10-20T23:02:56.999Z",
           "state": "verified"
-        },
-        {
-          "id": "abvm-2026-10-15-school-notice",
-          "sourceDocument": "lunch-revision-2026-10-15",
-          "contentHash": "f94a773df280e45523c370f77f54ccb0e8b0ac59a0b5e2c7cd9a051af83a7634",
-          "proofMode": "reviewed-notice",
-          "reviewedAt": "2026-10-14T09:45:56Z",
-          "checkedAt": "2026-10-18T21:55:57.552Z",
-          "state": "reviewed-notice"
         }
       ],
       "pendingDocuments": [],
@@ -1927,7 +1922,7 @@
         "sourceId": "abvm-2026-10-official"
       }
     ],
-    "lunchMenuHash": "1592423b490720859e86d8ba9c98cf2cab0d5c146fde3647cb0da9643816d358",
+    "lunchMenuHash": "43dbc53c984138fdb41183da930ff5cc6a338c54cfc600ae4056c0e4a84cdeaa",
     "contentPipeline": {
       "schemaVersion": 2,
       "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
