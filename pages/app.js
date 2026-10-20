@@ -613,7 +613,7 @@ function bindScreen(){
     if(target.matches("[data-refresh-pack]")){manualRefreshSchoolInfo();return;}
     if(target.matches("[data-homework-check]")){const index=Number(target.dataset.homeworkCheck),day=activeTab==="week"?(selectedDay||today()):today(),row=homeworkForDate(day).assignments[index];if(row)toggleChecked({...row,_homeworkDay:isoDateKey(day)},index);return;}
     if(target.matches("[data-check]")){toggleChecked((pack.homework||[])[Number(target.dataset.check)],Number(target.dataset.check));return;}
-    if(target.matches("[data-day]")){selectedDay=new Date(target.dataset.day);redrawPlanner(renderWeek,'[data-day="'+target.dataset.day+'"]');return;}
+    if(target.matches("[data-day]")){if(!(selectedDay=window.ABVMProductView.calendarDate(target.dataset.day)))return;redrawPlanner(renderWeek,'[data-day="'+target.dataset.day+'"]');return;}
     if(target.matches("[data-week-step]")){weekOffset+=Number(target.dataset.weekStep||0);selectedDay=null;redrawPlanner(renderWeek,'[data-week-step="'+target.dataset.weekStep+'"]');return;}
     if(target.matches("[data-week-today]")){weekOffset=0;selectedDay=null;redrawPlanner(renderWeek,".day-picker button.active");return;}
     if(target.matches("[data-cal-today]")){calendarOffset=0;calendarDay=null;redrawPlanner(renderCalendar,".calendar-grid button.active");return;}

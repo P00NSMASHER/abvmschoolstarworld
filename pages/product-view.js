@@ -202,7 +202,7 @@
           '<button type="button" class="' +
           (+d === +selectedDay ? "active" : "") +
           '" data-day="' +
-          d.toISOString() +
+          calendarKey(d) +
           '" aria-label="' +
           esc(fmtDate(d)) +
           '" aria-pressed="' +
