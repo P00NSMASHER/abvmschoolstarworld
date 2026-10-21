@@ -50,14 +50,14 @@ test("full browser QA and Pages reuse binaries only for the matching npm lockfil
     "sync-study-pack.yml"
   ]){
     const workflow=read(name);
-    assert.match(workflow,/uses: actions\/cache@v4/,"missing browser cache "+name);
+    assert.match(workflow,/name: Cache version-pinned Playwright browsers\n\s+continue-on-error: true\n\s+uses: actions\/cache@v4/,"optional browser cache must never block QA "+name);
     assert.match(workflow,/path: ~\/.cache\/ms-playwright/,"wrong cache path "+name);
     assert.match(workflow,/key: abvm-playwright-/,"missing browser-cache prefix "+name);
     assert.ok(workflow.includes("hashFiles('package-lock.json')"),"unversioned browser cache "+name);
     assert.match(workflow,/npx playwright install --with-deps chromium webkit/,"must keep install and OS dependencies "+name);
     assert.match(workflow,/npm run qa/,"full release QA must remain present "+name);
   }
-  assert.match(teacher,/Cache Playwright browsers only for changed reviewed lunch\n\s+if: steps\.lunch-change\.outputs\.changed == 'true'/);
+  assert.match(teacher,/Cache Playwright browsers only for changed reviewed lunch\n\s+if: steps\.lunch-change\.outputs\.changed == 'true'\n\s+continue-on-error: true/);
 });
 
 const fakeSha="0123456789abcdef0123456789abcdef01234567";
