@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {assessMainBranchProtection,selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence,selectRecoveredRefreshRace} from "../scripts/health-evidence.mjs";
+import {assessHomeworkPollingCadence,assessMainBranchProtection,selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence,selectRecoveredRefreshRace} from "../scripts/health-evidence.mjs";
 
 const run=(name,conclusion,updated_at)=>({name,conclusion,updated_at,created_at:updated_at});
 
@@ -394,4 +394,36 @@ test("main branch protection requires affirmative GitHub evidence and never gues
     {name:"other",protected:true}, {name:"main",protected:null}]){
     assert.deepEqual(assessMainBranchProtection(source),{state:"unknown",protected:null});
   }
+});
+
+test("hourly Homework schedule delivery cannot be concealed by a newer successful push or recovery",()=>{
+  const recent=[
+    {name:"Refresh current ABVM homework",event:"schedule",head_branch:"main",
+      status:"completed",conclusion:"success",created_at:"2026-10-21T15:21:42Z"},
+    {name:"Refresh current ABVM homework",event:"push",head_branch:"main",
+      status:"completed",conclusion:"success",created_at:"2026-10-21T19:17:42Z"},
+    {name:"Refresh current ABVM homework",event:"workflow_dispatch",head_branch:"main",
+      status:"completed",conclusion:"success",created_at:"2026-10-21T19:18:00Z"}
+  ];
+  const delayed=assessHomeworkPollingCadence(recent,"2026-10-21T19:35:00Z");
+  assert.equal(delayed.state,"delayed");
+  assert.equal(delayed.lastScheduledAt,"2026-10-21T15:21:42Z");
+  assert.ok(delayed.ageHours>4);
+  recent.push({name:"Refresh current ABVM homework",event:"schedule",head_branch:"main",
+    status:"completed",conclusion:"success",created_at:"2026-10-21T19:23:00Z"});
+  assert.equal(assessHomeworkPollingCadence(recent,"2026-10-21T19:35:00Z").state,"current");
+});
+
+test("polling cadence handles missing evidence, off hours and future timestamps",()=>{
+  assert.equal(assessHomeworkPollingCadence([],"2026-10-21T19:35:00Z").state,"unknown");
+  assert.equal(assessHomeworkPollingCadence([],"2026-10-22T04:20:00Z").state,"off-hours");
+  assert.equal(assessHomeworkPollingCadence([{name:"Refresh current ABVM homework",
+    event:"schedule",head_branch:"main",created_at:"2026-10-21T23:50:00Z"}],
+    "2026-10-21T19:35:00Z").state,"unknown");
+  assert.equal(assessHomeworkPollingCadence(null,"2026-10-21T19:35:00Z").state,"unknown");
+  assert.equal(assessHomeworkPollingCadence([],"bad-time").state,"unknown");
+  assert.equal(assessHomeworkPollingCadence([
+    {name:"Refresh current ABVM homework",event:"schedule",head_branch:"other",
+      created_at:"2026-10-21T19:34:00Z"}
+  ],"2026-10-21T19:35:00Z").state,"unknown");
 });
