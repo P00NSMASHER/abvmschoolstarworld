@@ -79,7 +79,9 @@ function sameRefresh(local,live){
   return local?.sourceLastCheckedAt===live?.sourceLastCheckedAt
     && local?.pack?.sourceHash===live?.pack?.sourceHash
     && local?.pack?.uploadedNoticeHash===live?.pack?.uploadedNoticeHash
-    && local?.pack?.lunchMenuHash===live?.pack?.lunchMenuHash;
+    && local?.pack?.lunchMenuHash===live?.pack?.lunchMenuHash
+    // A matching source hash alone cannot certify a deployed question bank.
+    && JSON.stringify(local)===JSON.stringify(live);
 }
 async function fetchLive(){
   const separator=liveUrl.includes("?")?"&":"?";
