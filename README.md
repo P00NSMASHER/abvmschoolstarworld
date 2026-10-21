@@ -33,6 +33,21 @@ Information transcribed from school flyers or reminders is stored in `pages/data
 
 The app distinguishes reviewed lunch data from automated source verification and retains previously reviewed meals if a live source check is temporarily unavailable.
 
+## Release authority and reviewers
+
+The owner's October 20, 2026 standing authorization permits routine current and
+future ABVM repairs, source-backed improvements, checked curriculum updates and
+production publication **without mandatory human reviewers or case-by-case owner
+approval**. An independent person, educator, device tester or external reviewer
+may provide optional feedback, but is not a merge or deployment prerequisite.
+Automated independent reproduction is a software test, not a human approval.
+
+A successful exact-head PR QA, provenance/child-privacy checks and bounded Pages
+release are still mandatory. Incomplete sources or ambiguous learner records remain
+held, never invented. The source-freshness watchdog must confirm genuine live
+recovery; a green PR is not a completed production recovery. No background code
+merging is implied without an authorized operational workflow.
+
 ## Quality gates
 
 Before candidate code or refreshed school data reaches `main`, the repository runs:
