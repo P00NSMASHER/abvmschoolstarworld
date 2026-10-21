@@ -133,3 +133,62 @@ test('an active source refresh prevents duplicate recovery dispatch',()=>{
   assert.equal(result.status,0);
   assert.doesNotMatch(result.stdout,/DISPATCHED/);
 });
+
+test('matching source stamps cannot conceal an old question bank, false test date or lunch data',()=>{
+  const curriculum=teacherPack(), assignments=homework();
+  curriculum.pack.contentPipeline={bankFingerprint:'safe-bank',questions:[{id:'noun',answer:'Chicago'}]};
+  curriculum.pack.importantDates=[{date:'Thursday, Oct. 29',label:'Grammar (common & proper nouns)',kind:'test'}];
+  curriculum.pack.lunchMenuHash='lunch-v1';
+  const corruptions=[
+    live=>{live.pack.contentPipeline.questions[0].answer='city';},
+    live=>{live.pack.importantDates.push({date:'Friday, Oct. 20',label:'Invalid spelling',kind:'test'});},
+    live=>{live.pack.lunchMenuHash='stale-lunch';},
+    live=>{live.sourcePages[4].contentHash='stale-tests-page';},
+  ];
+  for(const corrupt of corruptions){
+    const live=structuredClone(curriculum);
+    corrupt(live);
+    const status=assessDailySchoolSources({now:NOW,curriculum,homework:assignments,
+      publishedCurriculum:live,publishedHomework:structuredClone(assignments)});
+    assert.equal(status.curriculumFresh,true);
+    assert.equal(status.curriculumLiveMatches,false,'same timestamp cannot hide stale content');
+    assert.equal(status.redeploy,true,'the guarded Pages workflow must recover mismatched public data');
+    assert.equal(status.refreshCurriculum,false,'do not fabricate new teacher evidence');
+  }
+});
+
+test('live watchdog enforces complete JSON parity and the recovery event is repository scoped',()=>{
+  const check=readFileSync(new URL('../scripts/check-refresh-health.mjs',import.meta.url),'utf8');
+  assert.ok(check.includes('JSON.stringify(local)===JSON.stringify(live)'));
+  const workflow=readFileSync(new URL('../.github/workflows/daily-source-recovery.yml',import.meta.url),'utf8');
+  assert.match(workflow,/workflow_run:\s+workflows:\s+- Monitor ABVM refresh health\s+types: \[completed\]/);
+  assert.ok(workflow.includes("workflow_run.head_branch == 'main'"));
+  assert.ok(workflow.includes('workflow_run.head_repository.full_name == github.repository'));
+  assert.match(workflow,/attempts >= 6/);
+  assert.match(workflow,/count >= 2/);
+});
+
+test('six same-day successful dispatches cannot start a watchdog feedback loop',()=>{
+  const result=dispatchRecovery(Array.from({length:6},()=>recoveryRun('success')));
+  assert.equal(result.status,1);
+  assert.doesNotMatch(result.stdout,/DISPATCHED/);
+});
+
+test('unchanged Homework source timestamps and hashes cannot hide stale assignments',()=>{
+  const curriculum=teacherPack(), assignments=homework();
+  const changes=[
+    live=>{live.assignments[0].task='Different worksheet';},
+    live=>{live.status='no-homework';},
+    live=>{live.assignments.push({subject:'Spelling',task:'Unverified extra task'});},
+  ];
+  for(const change of changes){
+    const publishedHomework=structuredClone(assignments);
+    change(publishedHomework);
+    const result=assessDailySchoolSources({now:NOW,curriculum,homework:assignments,
+      publishedCurriculum:structuredClone(curriculum),publishedHomework});
+    assert.equal(result.homeworkFresh,true);
+    assert.equal(result.homeworkLiveMatches,false);
+    assert.equal(result.redeploy,true);
+    assert.equal(result.refreshHomework,false);
+  }
+});
