@@ -1,5 +1,5 @@
 import {readFileSync,mkdirSync,writeFileSync} from "node:fs";
-import {assessHomeworkHealth,assessMainBranchProtection,selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence,selectRecoveredRefreshRace} from "./health-evidence.mjs";
+import {assessHomeworkHealth,assessHomeworkPollingCadence,assessMainBranchProtection,selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence,selectRecoveredRefreshRace} from "./health-evidence.mjs";
 import {assessUpcomingLunchCoverage,schoolWeekLabel} from "./school-week-label.mjs";
 
 const packData=JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8"));
@@ -190,7 +190,15 @@ const criticalHealthy=Boolean(
   completedHealthy(status.workflows.watchdog,30) &&
   pipelineHealthy
 );
+status.homeworkPolling=assessHomeworkPollingCadence(productionRuns,now);
 const warnings=[];
+if(status.homeworkPolling.state==="delayed"){
+  warnings.push("Scheduled hourly Homework polling is delayed: the last actual cron run was "+
+    status.homeworkPolling.ageHours+"h ago. A successful manual, push or recovery run does not prove the hourly schedule was delivered.");
+}
+if(status.homeworkPolling.state==="unknown"){
+  warnings.push("No valid scheduled Homework polling run was observed in the available workflow history during active school hours.");
+}
 if(mainBranchPath && status.repositorySecurity.mainBranch.state==="unprotected"){
   warnings.push("GitHub main is unprotected: in Settings > Branches, block force pushes and deletion while preserving verified direct fast-forward teacher and homework updates.");
 }
@@ -233,6 +241,7 @@ const md=[
   `- **Upcoming week lunches (${upcomingLunch.weekLabel}):** missing verified or no-school entries: ${upcomingLunch.missingDates.join(", ")||"none"}`,
   `- **Source coverage:** ${status.schoolData.sourcePages}/6 teacher pages; source sufficient = ${status.schoolData.sourceSufficient}; fresh <=${SOURCE_FRESH_HOURS}h = ${sourceFresh}`,
   `- **Homework checked:** ${status.homework.checkedAt||"missing"}; status ${status.homework.status}; same Eastern day and <=8h = ${status.homework.healthy}`,
+  `- **Hourly Homework cron:** ${status.homeworkPolling.state}; last scheduled ${status.homeworkPolling.lastScheduledAt||"not observed"}; age ${status.homeworkPolling.ageHours===null?"n/a":status.homeworkPolling.ageHours+"h"}`,
   `- **Lunch source:** ${status.lunch.retrievalState}; ${status.lunch.days} reviewed days; complete reviewed coverage = ${lunchReviewedCoverageComplete}; missing dates: ${status.lunch.missingDates.join(", ")||"none"}`,
   `- **Grade 2 content pipeline:** QA ${status.contentPipeline.qaStatus}; safety ${status.contentPipeline.safetyState}; ${status.contentPipeline.skillCount} skills; ${status.contentPipeline.questionCount} questions; partial ${status.contentPipeline.partiallyCoveredCount}; source-insufficient ${status.contentPipeline.sourceInsufficientCount}; not-practiced-by-design ${status.contentPipeline.notPracticedByDesignCount}; unsupported ${status.contentPipeline.unsupportedSkillCount}`,
   `- **Question lineage:** required = ${status.contentPipeline.lineageRequired}; page-exact ${status.contentPipeline.pageExactLineageCount}/${status.contentPipeline.questionCount}; unresolved ${status.contentPipeline.unresolvedLineageCount}`,
