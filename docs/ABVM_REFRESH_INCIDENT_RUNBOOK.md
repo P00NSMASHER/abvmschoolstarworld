@@ -18,6 +18,15 @@ verification gates. Where an original photo or source evidence is unavailable,
 hold only the unsupported claim or candidate and report the evidence gap; never
 invent the missing source or redate an assignment.
 
+**Standing ABVM release rule (owner authorized October 20, 2026):** human
+code, design, teacher, privacy and source reviewers are optional for every
+current or future routine ABVM update. No human approval or repeat owner
+release decision is needed after objective exact-head source, answer,
+privacy, browser, accessibility and Pages checks pass. A genuinely unknown
+source stays held as unknown; never treat absence of a reviewer as a reason
+to fail an otherwise verified automated teacher/Homework refresh. This rule
+supersedes older manual-review instructions in archived release packets.
+
 The **Monitor ABVM refresh health** watchdog compares published and repository
 source timestamps and hashes against the configured strict freshness limit.
 Successful Pages deployment cannot make a stale teacher pack fresh. Never
