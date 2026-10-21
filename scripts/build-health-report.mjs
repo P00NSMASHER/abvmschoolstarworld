@@ -1,5 +1,5 @@
 import {readFileSync,mkdirSync,writeFileSync} from "node:fs";
-import {assessHomeworkHealth,selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence,selectRecoveredRefreshRace} from "./health-evidence.mjs";
+import {assessHomeworkHealth,assessMainBranchProtection,selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence,selectRecoveredRefreshRace} from "./health-evidence.mjs";
 import {assessUpcomingLunchCoverage,schoolWeekLabel} from "./school-week-label.mjs";
 
 const packData=JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8"));
@@ -10,10 +10,12 @@ const runsPath=process.env.WORKFLOW_RUNS_FILE;
 const refreshJobsPath=process.env.REFRESH_JOBS_FILE;
 const openPullsPath=process.env.OPEN_PULLS_FILE;
 const publicationsPath=process.env.HOMEWORK_PUBLICATIONS_FILE;
+const mainBranchPath=process.env.MAIN_BRANCH_FILE;
 const runs=runsPath?JSON.parse(readFileSync(runsPath,"utf8")).workflow_runs||[]:[];
 const refreshJobsData=refreshJobsPath?JSON.parse(readFileSync(refreshJobsPath,"utf8")):{run_id:null,jobs:[]};
 const openPulls=openPullsPath?JSON.parse(readFileSync(openPullsPath,"utf8")):[];
 const homeworkPublications=publicationsPath?JSON.parse(readFileSync(publicationsPath,"utf8")):[];
+const mainBranchEvidence=mainBranchPath?JSON.parse(readFileSync(mainBranchPath,"utf8")):null;
 
 const productionRuns=runs.filter(run=>run.head_branch==="main"||run.event==="schedule");
 
@@ -57,6 +59,7 @@ const expectedWeekLabel=schoolWeekLabel(now,{calendarDisplay:true});
 const upcomingLunch=assessUpcomingLunchCoverage(packData.pack,now);
 const status={
   generatedAt:now,
+  repositorySecurity:{mainBranch:assessMainBranchProtection(mainBranchEvidence)},
   appVersion:pkg.version,
   serviceWorkerCache:cache,
   gitSha:process.env.GITHUB_SHA||null,
@@ -188,6 +191,12 @@ const criticalHealthy=Boolean(
   pipelineHealthy
 );
 const warnings=[];
+if(mainBranchPath && status.repositorySecurity.mainBranch.state==="unprotected"){
+  warnings.push("GitHub main is unprotected: in Settings > Branches, block force pushes and deletion while preserving verified direct fast-forward teacher and homework updates.");
+}
+if(mainBranchPath && status.repositorySecurity.mainBranch.state==="unknown"){
+  warnings.push("GitHub main branch protection could not be verified; do not report repository security as healthy.");
+}
 if(status.refreshRecovery)warnings.push("The teacher refresh and reviewed lunch QA passed, but the Pages release safely stopped when main advanced. A later gated publication and live freshness watchdog confirmed recovery.");
 if(reportedWeekLabel!==expectedWeekLabel){
   warnings.push("School-data week label "+(reportedWeekLabel||"is missing")+" does not match the displayed "+expectedWeekLabel+"; retain the actual teacher-posting week for assignments.");
@@ -235,6 +244,7 @@ const md=[
   `- **Curriculum hold:** ${status.curriculumHold?"draft PR #"+status.curriculumHold.candidatePrNumber+"; publication intentionally blocked":"none verified in available workflow evidence"}`,
   `- **App version:** ${status.appVersion}`,
   `- **Service worker cache:** ${status.serviceWorkerCache}`,
+  `- **Main branch protection:** ${status.repositorySecurity.mainBranch.state.toUpperCase()} (GitHub branch-status evidence)`,
   `- **Git SHA:** ${status.gitSha||"unknown"}`,
   "",
   ...(warnings.length?["## Attention items",...warnings.map(w=>"- "+w),""]:[]),

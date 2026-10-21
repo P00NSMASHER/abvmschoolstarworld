@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence,selectRecoveredRefreshRace} from "../scripts/health-evidence.mjs";
+import {assessMainBranchProtection,selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence,selectRecoveredRefreshRace} from "../scripts/health-evidence.mjs";
 
 const run=(name,conclusion,updated_at)=>({name,conclusion,updated_at,created_at:updated_at});
 
@@ -384,4 +384,14 @@ test('the complete dashboard turns critical for stale homework despite healthy w
     assert.equal(stale.report.overall,'critical');
     assert.equal(stale.report.homework.healthy,false);
   }finally{rmSync(root,{recursive:true,force:true});}
+});
+
+
+test("main branch protection requires affirmative GitHub evidence and never guesses success",()=>{
+  assert.deepEqual(assessMainBranchProtection({name:"main",protected:true}),{state:"protected",protected:true});
+  assert.deepEqual(assessMainBranchProtection({name:"main",protected:false}),{state:"unprotected",protected:false});
+  for(const source of [null,{}, {name:"main"}, {name:"main",protected:"true"},
+    {name:"other",protected:true}, {name:"main",protected:null}]){
+    assert.deepEqual(assessMainBranchProtection(source),{state:"unknown",protected:null});
+  }
 });

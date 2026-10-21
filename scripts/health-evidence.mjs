@@ -146,3 +146,9 @@ export function assessHomeworkHealth(posting, now) {
     healthy:assessDailySchoolSources({now,homework:posting}).homeworkFresh,
   };
 }
+
+/** Fail closed on absent or malformed GitHub branch-status evidence. */
+export function assessMainBranchProtection(branch){
+  if(branch?.name!=="main"||typeof branch?.protected!=="boolean")return {state:"unknown",protected:null};
+  return {state:branch.protected?"protected":"unprotected",protected:branch.protected};
+}

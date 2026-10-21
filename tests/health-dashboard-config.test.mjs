@@ -143,3 +143,15 @@ test("guarded refresh-race recovery requires independent publication and watchdo
     "refreshOperationallyHealthy=refreshHealthy||Boolean(status.refreshRecovery)",
     "Guarded refresh race recovery"])assert.ok(report.includes(token),token);
 });
+
+
+test("dashboard independently verifies branch protection without breaking normal teacher publishes",()=>{
+  assert.match(workflow,/- name: Read main branch protection status/);
+  assert.match(workflow,/gh api "repos\/\$\{GITHUB_REPOSITORY\}\/branches\/main"/);
+  assert.match(workflow,/MAIN_BRANCH_FILE: main-branch-status\.json/);
+  assert.match(report,/assessMainBranchProtection\(mainBranchEvidence\)/);
+  assert.match(report,/Main branch protection:/);
+  assert.match(report,/GitHub main is unprotected/);
+  assert.match(report,/GitHub main branch protection could not be verified/);
+  assert.doesNotMatch(workflow,/branches\/main\/protection\/required_status_checks/);
+});
