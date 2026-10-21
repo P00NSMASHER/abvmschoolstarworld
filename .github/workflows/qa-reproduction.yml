@@ -54,6 +54,12 @@ jobs:
           node --test tests/curriculum-pilot-gates.test.mjs tests/curriculum-pilot-kit.test.mjs tests/curriculum-review-packet.test.mjs tests/curriculum-review-source-parity.test.mjs
           node scripts/audit-held-curriculum-pilot.mjs
 
+      - name: Cache version-pinned Playwright browsers
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: abvm-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
       - name: Install Chromium and WebKit
         run: npx playwright install --with-deps chromium webkit
 

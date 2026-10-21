@@ -78,6 +78,12 @@ jobs:
       - name: Yahoo weekly importer parser tests
         run: python3 -m unittest discover -s tests -p test_yahoo_weekly_import.py
 
+      - name: Cache version-pinned Playwright browsers
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: abvm-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
       - name: Install Chromium and WebKit
         run: npx playwright install --with-deps chromium webkit
 

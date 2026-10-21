@@ -68,10 +68,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
-  pull-requests: write
-  pages: write
-  id-token: write
+  contents: read
 
 concurrency:
   group: abvm-school-pack
@@ -80,6 +77,9 @@ concurrency:
 
 jobs:
   refresh:
+    permissions:
+      contents: write
+      pull-requests: write
     # One mutation/publication at a time; job scope avoids parent-child deadlock.
     concurrency:
       group: abvm-verified-school-state
@@ -224,6 +224,12 @@ jobs:
       - name: Verify refreshed source health
         run: node scripts/check-refresh-health.mjs --require-today --max-age-hours 1
 
+      - name: Cache version-pinned Playwright browsers
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: abvm-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
       - name: Install Chromium and WebKit for candidate QA
         run: npx playwright install --with-deps chromium webkit
 
@@ -306,6 +312,10 @@ jobs:
     # An unchanged lunch-only check cannot turn a failed teacher refresh into
     # an unverified publication.
     if: ${{ always() && (needs.refresh.result == 'success' || (needs.reviewed-lunch.result == 'success' && needs.reviewed-lunch.outputs.changed == 'true')) }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     uses: ./.github/workflows/pages.yml
     with:
       # An immutable SHA from reviewed-lunch wins when available; teacher
@@ -361,6 +371,13 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
             echo "Reviewed lunch changed; independent full release QA required."
           fi
+      - name: Cache Playwright browsers only for changed reviewed lunch
+        if: steps.lunch-change.outputs.changed == 'true'
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: abvm-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
       - name: Independent full app QA before any main write
         if: steps.lunch-change.outputs.changed == 'true'
         run: |
