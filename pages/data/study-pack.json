@@ -14,14 +14,14 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-10-21T18:16:08.823Z",
+  "sourceLastSeenAt": "2026-10-21T20:27:02.538Z",
   "sourceCapturedAt": "2026-10-21T18:16:08.823Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-384d6f0d3a12fbed14f4",
     "sourceCapturedAt": "2026-10-21T18:16:08.823Z",
-    "generatedAt": "2026-10-21T18:16:08.823Z",
+    "generatedAt": "2026-10-21T20:27:02.538Z",
     "weekLabel": "Week of October 19, 2026",
     "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity”, Math “Page 29-30”, Reading “Read”, and parent task “Cover books”. Upcoming tests include Reading (Unit 1 Text Set 3) on Wednesday, Oct. 21, Spelling (long / short u) / Handwriting on Friday, Oct. 23, Math (place value, expanded form) on Tuesday, Oct. 27, and Grammar (common & proper nouns) on Thursday, Oct. 29. 28 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
@@ -1390,7 +1390,7 @@
       "Christmas Caroling date is TBD.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
-    "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+    "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
     "uploadedNoticeHash": "uploaded-notices-b565f57cd128382433cc",
     "uploadedNoticeTopics": {
       "reminders": [
@@ -1443,8 +1443,8 @@
     "lunchMenuSource": {
       "status": "current-week",
       "retrievalState": "verified",
-      "checkedAt": "2026-10-21T18:16:08.823Z",
-      "lastAttemptAt": "2026-10-21T18:16:08.823Z",
+      "checkedAt": "2026-10-21T20:27:02.538Z",
+      "lastAttemptAt": "2026-10-21T20:27:02.538Z",
       "provider": "Saint Clair Area School District",
       "school": "Assumption BVM School",
       "feedUrl": "https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu",
@@ -1461,7 +1461,7 @@
           "contentHash": "a99ce9385295921c9fff19ae4051732da45f7c38df077d30d9b62577c8c6eb45",
           "proofMode": "pinned-url",
           "reviewedAt": "2026-10-01T00:44:00Z",
-          "checkedAt": "2026-10-21T18:16:08.823Z",
+          "checkedAt": "2026-10-21T20:27:02.538Z",
           "state": "verified"
         }
       ],
@@ -1957,11 +1957,11 @@
         "sourceId": "abvm-2026-10-official"
       }
     ],
-    "lunchMenuHash": "7a07a182845ef9478c51ca67c447e08280513a0f944125b4a86224e21f2b3104",
+    "lunchMenuHash": "b8e49b12cf7d4720e458b3c6e3864cea50e585c1b81b1c18aba8f818ac8ba243",
     "contentPipeline": {
       "schemaVersion": 2,
       "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-      "generatedAt": "2026-10-21T18:16:08.823Z",
+      "generatedAt": "2026-10-21T20:27:02.538Z",
       "sourceHash": "teacher-pages-384d6f0d3a12fbed14f4",
       "bankFingerprint": "0a958798",
       "lifecycleStage": "QA_PASSED",
@@ -2000,7 +2000,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:60b80fb2befda1e38ff645c55ceb6324cb8b265beec5c73a30c4e7ddd55c8697",
             "matchedEvidence": [
               "Thursday Oct. 29: Grammar (common & proper nouns)"
@@ -2027,7 +2027,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "4b85655995e4793e9d52cda893f550bb6e621f9cf3b69252b7605e3914ae7ece",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:beb09449a3c459dd1636f6e4a51317235438392bcd05ca3a02ea8f1e83ef6665",
             "matchedEvidence": [
               "Skill: short and long u"
@@ -2055,7 +2055,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -2085,7 +2085,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:f6d7fa8aafaa70c221bb32b63e294e2afad208d5145b4a6ea8b901eb020aa6c0",
             "matchedEvidence": [
               "Friday Oct. 23: Spelling (long/short u)/Handwriting"
@@ -2113,7 +2113,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -2140,7 +2140,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:8752cf7ebaad32dd1d8ea2eec3983ff61c97f9637dddd4a7a4755caddcc6e9c5",
             "matchedEvidence": [
               "Phonics: long i (i_e) and short i"
@@ -2168,7 +2168,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -2195,7 +2195,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:4e521aa5fa424551741189f4d5985a23d50815298b13d45d660e99c5bb8afa87",
             "matchedEvidence": [
               "Word Structure: possessives ('s)"
@@ -2222,7 +2222,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:b4895a0792f913a1592b4deda4b8515c98060dce863fea64f0445b073018d6b2",
             "matchedEvidence": [
               "Tuesday Oct. 27: Math (place value, expanded form)"
@@ -2249,7 +2249,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -2276,7 +2276,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -2303,7 +2303,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -2330,7 +2330,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:ac2300eab0a6f0c63efeedf37faae7d1585484b3821c607b099359d76da0721f",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit",
@@ -2358,7 +2358,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -2385,7 +2385,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -2412,7 +2412,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -2439,7 +2439,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -2466,7 +2466,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -2493,7 +2493,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -2520,7 +2520,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -2547,7 +2547,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -2574,7 +2574,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -2870,7 +2870,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:60b80fb2befda1e38ff645c55ceb6324cb8b265beec5c73a30c4e7ddd55c8697",
             "matchedEvidence": [
               "Thursday Oct. 29: Grammar (common & proper nouns)"
@@ -2950,7 +2950,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "4b85655995e4793e9d52cda893f550bb6e621f9cf3b69252b7605e3914ae7ece",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:beb09449a3c459dd1636f6e4a51317235438392bcd05ca3a02ea8f1e83ef6665",
             "matchedEvidence": [
               "Skill: short and long u"
@@ -3030,7 +3030,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -3110,7 +3110,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:f6d7fa8aafaa70c221bb32b63e294e2afad208d5145b4a6ea8b901eb020aa6c0",
             "matchedEvidence": [
               "Friday Oct. 23: Spelling (long/short u)/Handwriting"
@@ -3191,7 +3191,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -3271,7 +3271,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:8752cf7ebaad32dd1d8ea2eec3983ff61c97f9637dddd4a7a4755caddcc6e9c5",
             "matchedEvidence": [
               "Phonics: long i (i_e) and short i"
@@ -3352,7 +3352,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -3432,7 +3432,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:4e521aa5fa424551741189f4d5985a23d50815298b13d45d660e99c5bb8afa87",
             "matchedEvidence": [
               "Word Structure: possessives ('s)"
@@ -3512,7 +3512,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:b4895a0792f913a1592b4deda4b8515c98060dce863fea64f0445b073018d6b2",
             "matchedEvidence": [
               "Tuesday Oct. 27: Math (place value, expanded form)"
@@ -3592,7 +3592,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -3672,7 +3672,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -3752,7 +3752,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -3832,7 +3832,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:ac2300eab0a6f0c63efeedf37faae7d1585484b3821c607b099359d76da0721f",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit",
@@ -3913,7 +3913,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -3993,7 +3993,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -4073,7 +4073,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -4153,7 +4153,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -4233,7 +4233,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -4313,7 +4313,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -4393,7 +4393,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -4473,7 +4473,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -4553,7 +4553,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -4634,7 +4634,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:60b80fb2befda1e38ff645c55ceb6324cb8b265beec5c73a30c4e7ddd55c8697",
             "matchedEvidence": [
               "Thursday Oct. 29: Grammar (common & proper nouns)"
@@ -4715,7 +4715,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:60b80fb2befda1e38ff645c55ceb6324cb8b265beec5c73a30c4e7ddd55c8697",
             "matchedEvidence": [
               "Thursday Oct. 29: Grammar (common & proper nouns)"
@@ -4796,7 +4796,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:60b80fb2befda1e38ff645c55ceb6324cb8b265beec5c73a30c4e7ddd55c8697",
             "matchedEvidence": [
               "Thursday Oct. 29: Grammar (common & proper nouns)"
@@ -4877,7 +4877,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:60b80fb2befda1e38ff645c55ceb6324cb8b265beec5c73a30c4e7ddd55c8697",
             "matchedEvidence": [
               "Thursday Oct. 29: Grammar (common & proper nouns)"
@@ -4958,7 +4958,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:60b80fb2befda1e38ff645c55ceb6324cb8b265beec5c73a30c4e7ddd55c8697",
             "matchedEvidence": [
               "Thursday Oct. 29: Grammar (common & proper nouns)"
@@ -5039,7 +5039,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:60b80fb2befda1e38ff645c55ceb6324cb8b265beec5c73a30c4e7ddd55c8697",
             "matchedEvidence": [
               "Thursday Oct. 29: Grammar (common & proper nouns)"
@@ -5120,7 +5120,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:60b80fb2befda1e38ff645c55ceb6324cb8b265beec5c73a30c4e7ddd55c8697",
             "matchedEvidence": [
               "Thursday Oct. 29: Grammar (common & proper nouns)"
@@ -5200,7 +5200,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "4b85655995e4793e9d52cda893f550bb6e621f9cf3b69252b7605e3914ae7ece",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:beb09449a3c459dd1636f6e4a51317235438392bcd05ca3a02ea8f1e83ef6665",
             "matchedEvidence": [
               "Skill: short and long u"
@@ -5280,7 +5280,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "4b85655995e4793e9d52cda893f550bb6e621f9cf3b69252b7605e3914ae7ece",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:beb09449a3c459dd1636f6e4a51317235438392bcd05ca3a02ea8f1e83ef6665",
             "matchedEvidence": [
               "Skill: short and long u"
@@ -5360,7 +5360,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "4b85655995e4793e9d52cda893f550bb6e621f9cf3b69252b7605e3914ae7ece",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:beb09449a3c459dd1636f6e4a51317235438392bcd05ca3a02ea8f1e83ef6665",
             "matchedEvidence": [
               "Skill: short and long u"
@@ -5440,7 +5440,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "4b85655995e4793e9d52cda893f550bb6e621f9cf3b69252b7605e3914ae7ece",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:beb09449a3c459dd1636f6e4a51317235438392bcd05ca3a02ea8f1e83ef6665",
             "matchedEvidence": [
               "Skill: short and long u"
@@ -5520,7 +5520,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "4b85655995e4793e9d52cda893f550bb6e621f9cf3b69252b7605e3914ae7ece",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:beb09449a3c459dd1636f6e4a51317235438392bcd05ca3a02ea8f1e83ef6665",
             "matchedEvidence": [
               "Skill: short and long u"
@@ -5600,7 +5600,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "4b85655995e4793e9d52cda893f550bb6e621f9cf3b69252b7605e3914ae7ece",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:beb09449a3c459dd1636f6e4a51317235438392bcd05ca3a02ea8f1e83ef6665",
             "matchedEvidence": [
               "Skill: short and long u"
@@ -5680,7 +5680,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "4b85655995e4793e9d52cda893f550bb6e621f9cf3b69252b7605e3914ae7ece",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:beb09449a3c459dd1636f6e4a51317235438392bcd05ca3a02ea8f1e83ef6665",
             "matchedEvidence": [
               "Skill: short and long u"
@@ -5760,7 +5760,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -5840,7 +5840,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -5920,7 +5920,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -6000,7 +6000,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -6080,7 +6080,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -6160,7 +6160,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -6240,7 +6240,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -6320,7 +6320,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:f6d7fa8aafaa70c221bb32b63e294e2afad208d5145b4a6ea8b901eb020aa6c0",
             "matchedEvidence": [
               "Friday Oct. 23: Spelling (long/short u)/Handwriting"
@@ -6400,7 +6400,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:f6d7fa8aafaa70c221bb32b63e294e2afad208d5145b4a6ea8b901eb020aa6c0",
             "matchedEvidence": [
               "Friday Oct. 23: Spelling (long/short u)/Handwriting"
@@ -6480,7 +6480,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:f6d7fa8aafaa70c221bb32b63e294e2afad208d5145b4a6ea8b901eb020aa6c0",
             "matchedEvidence": [
               "Friday Oct. 23: Spelling (long/short u)/Handwriting"
@@ -6560,7 +6560,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:f6d7fa8aafaa70c221bb32b63e294e2afad208d5145b4a6ea8b901eb020aa6c0",
             "matchedEvidence": [
               "Friday Oct. 23: Spelling (long/short u)/Handwriting"
@@ -6640,7 +6640,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:f6d7fa8aafaa70c221bb32b63e294e2afad208d5145b4a6ea8b901eb020aa6c0",
             "matchedEvidence": [
               "Friday Oct. 23: Spelling (long/short u)/Handwriting"
@@ -6720,7 +6720,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:f6d7fa8aafaa70c221bb32b63e294e2afad208d5145b4a6ea8b901eb020aa6c0",
             "matchedEvidence": [
               "Friday Oct. 23: Spelling (long/short u)/Handwriting"
@@ -6800,7 +6800,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:f6d7fa8aafaa70c221bb32b63e294e2afad208d5145b4a6ea8b901eb020aa6c0",
             "matchedEvidence": [
               "Friday Oct. 23: Spelling (long/short u)/Handwriting"
@@ -6880,7 +6880,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:f6d7fa8aafaa70c221bb32b63e294e2afad208d5145b4a6ea8b901eb020aa6c0",
             "matchedEvidence": [
               "Friday Oct. 23: Spelling (long/short u)/Handwriting"
@@ -6961,7 +6961,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -7042,7 +7042,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -7123,7 +7123,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -7204,7 +7204,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -7285,7 +7285,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -7366,7 +7366,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -7447,7 +7447,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -7527,7 +7527,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:8752cf7ebaad32dd1d8ea2eec3983ff61c97f9637dddd4a7a4755caddcc6e9c5",
             "matchedEvidence": [
               "Phonics: long i (i_e) and short i"
@@ -7607,7 +7607,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:8752cf7ebaad32dd1d8ea2eec3983ff61c97f9637dddd4a7a4755caddcc6e9c5",
             "matchedEvidence": [
               "Phonics: long i (i_e) and short i"
@@ -7687,7 +7687,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:8752cf7ebaad32dd1d8ea2eec3983ff61c97f9637dddd4a7a4755caddcc6e9c5",
             "matchedEvidence": [
               "Phonics: long i (i_e) and short i"
@@ -7767,7 +7767,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:8752cf7ebaad32dd1d8ea2eec3983ff61c97f9637dddd4a7a4755caddcc6e9c5",
             "matchedEvidence": [
               "Phonics: long i (i_e) and short i"
@@ -7847,7 +7847,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:8752cf7ebaad32dd1d8ea2eec3983ff61c97f9637dddd4a7a4755caddcc6e9c5",
             "matchedEvidence": [
               "Phonics: long i (i_e) and short i"
@@ -7927,7 +7927,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:8752cf7ebaad32dd1d8ea2eec3983ff61c97f9637dddd4a7a4755caddcc6e9c5",
             "matchedEvidence": [
               "Phonics: long i (i_e) and short i"
@@ -8007,7 +8007,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:8752cf7ebaad32dd1d8ea2eec3983ff61c97f9637dddd4a7a4755caddcc6e9c5",
             "matchedEvidence": [
               "Phonics: long i (i_e) and short i"
@@ -8088,7 +8088,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -8169,7 +8169,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -8250,7 +8250,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -8331,7 +8331,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -8412,7 +8412,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -8493,7 +8493,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -8574,7 +8574,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:75b6e735bf3e7ff07e3ea88204fddc6bcb90559efdcbc323a4f9563c30fc9f36",
             "matchedEvidence": [
               "Reading Comprehension: ask & answer questions; main idea/details; charts; author's opinion"
@@ -8654,7 +8654,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:4e521aa5fa424551741189f4d5985a23d50815298b13d45d660e99c5bb8afa87",
             "matchedEvidence": [
               "Word Structure: possessives ('s)"
@@ -8734,7 +8734,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:4e521aa5fa424551741189f4d5985a23d50815298b13d45d660e99c5bb8afa87",
             "matchedEvidence": [
               "Word Structure: possessives ('s)"
@@ -8814,7 +8814,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:4e521aa5fa424551741189f4d5985a23d50815298b13d45d660e99c5bb8afa87",
             "matchedEvidence": [
               "Word Structure: possessives ('s)"
@@ -8894,7 +8894,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:4e521aa5fa424551741189f4d5985a23d50815298b13d45d660e99c5bb8afa87",
             "matchedEvidence": [
               "Word Structure: possessives ('s)"
@@ -8974,7 +8974,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:4e521aa5fa424551741189f4d5985a23d50815298b13d45d660e99c5bb8afa87",
             "matchedEvidence": [
               "Word Structure: possessives ('s)"
@@ -9054,7 +9054,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:4e521aa5fa424551741189f4d5985a23d50815298b13d45d660e99c5bb8afa87",
             "matchedEvidence": [
               "Word Structure: possessives ('s)"
@@ -9134,7 +9134,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:4e521aa5fa424551741189f4d5985a23d50815298b13d45d660e99c5bb8afa87",
             "matchedEvidence": [
               "Word Structure: possessives ('s)"
@@ -9214,7 +9214,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:b4895a0792f913a1592b4deda4b8515c98060dce863fea64f0445b073018d6b2",
             "matchedEvidence": [
               "Tuesday Oct. 27: Math (place value, expanded form)"
@@ -9294,7 +9294,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:b4895a0792f913a1592b4deda4b8515c98060dce863fea64f0445b073018d6b2",
             "matchedEvidence": [
               "Tuesday Oct. 27: Math (place value, expanded form)"
@@ -9374,7 +9374,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -9454,7 +9454,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -9534,7 +9534,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -9614,7 +9614,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -9694,7 +9694,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -9774,7 +9774,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -9854,7 +9854,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:ac2300eab0a6f0c63efeedf37faae7d1585484b3821c607b099359d76da0721f",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit",
@@ -9935,7 +9935,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:ac2300eab0a6f0c63efeedf37faae7d1585484b3821c607b099359d76da0721f",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit",
@@ -10016,7 +10016,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -10096,7 +10096,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -10176,7 +10176,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -10256,7 +10256,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -10336,7 +10336,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -10416,7 +10416,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -10496,7 +10496,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -10576,7 +10576,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -10656,7 +10656,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -10736,7 +10736,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -10816,7 +10816,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -10896,7 +10896,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -10976,7 +10976,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -11056,7 +11056,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -11136,7 +11136,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -11216,7 +11216,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -11296,7 +11296,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -11376,7 +11376,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f",
-            "sourceCheckedAt": "2026-10-21T18:16:08.823Z",
+            "sourceCheckedAt": "2026-10-21T20:27:02.538Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -11448,7 +11448,7 @@
     "recentReviewPipeline": {
       "schemaVersion": 1,
       "retentionDays": 14,
-      "generatedAt": "2026-10-21T18:16:08.823Z",
+      "generatedAt": "2026-10-21T20:27:02.538Z",
       "bankFingerprint": "e6bee5e300134c597c7f901051a972eb761afcde928698e8e863c9c0a6f59f57",
       "skills": [
         {
@@ -20421,7 +20421,7 @@
     },
     "schoolChangeFeed": {
       "schemaVersion": 1,
-      "generatedAt": "2026-10-21T18:16:08.823Z",
+      "generatedAt": "2026-10-21T20:27:02.538Z",
       "sourceHash": "teacher-pages-384d6f0d3a12fbed14f4",
       "changed": false,
       "items": [
@@ -20468,42 +20468,42 @@
       "dateProvided": false
     }
   },
-  "sourceLastCheckedAt": "2026-10-21T18:16:08.823Z",
+  "sourceLastCheckedAt": "2026-10-21T20:27:02.538Z",
   "sourcePages": [
     {
       "title": "Home",
       "url": "https://sites.google.com/view/abvmgr2/home",
-      "checkedAt": "2026-10-21T18:16:08.823Z",
+      "checkedAt": "2026-10-21T20:27:02.538Z",
       "contentHash": "9edb553812e9f1bbd723d1dbcae7dbfffc6ce7883f63a4f874de6d3a952ed236"
     },
     {
       "title": "Homework",
       "url": "https://sites.google.com/view/abvmgr2/homework",
-      "checkedAt": "2026-10-21T18:16:08.823Z",
+      "checkedAt": "2026-10-21T20:27:02.538Z",
       "contentHash": "8b21c1c7367b38ffde8a1e49eedec07f60d36feaf297bb8df494f73628f49bc0"
     },
     {
       "title": "Reading Work",
       "url": "https://sites.google.com/view/abvmgr2/reading-work",
-      "checkedAt": "2026-10-21T18:16:08.823Z",
+      "checkedAt": "2026-10-21T20:27:02.538Z",
       "contentHash": "3ffb18c44f6ddbe761c15abe1e1a0a20663da90288958be85193ca9817429fd0"
     },
     {
       "title": "Weekly Spelling List",
       "url": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-      "checkedAt": "2026-10-21T18:16:08.823Z",
+      "checkedAt": "2026-10-21T20:27:02.538Z",
       "contentHash": "4b85655995e4793e9d52cda893f550bb6e621f9cf3b69252b7605e3914ae7ece"
     },
     {
       "title": "Tests",
       "url": "https://sites.google.com/view/abvmgr2/tests",
-      "checkedAt": "2026-10-21T18:16:08.823Z",
+      "checkedAt": "2026-10-21T20:27:02.538Z",
       "contentHash": "d641129fdc55aa04173df4e2e2a4d9c4843d14bff5ec7c9ab0431c4bca3a7ee7"
     },
     {
       "title": "Religion",
       "url": "https://sites.google.com/view/abvmgr2/religion",
-      "checkedAt": "2026-10-21T18:16:08.823Z",
+      "checkedAt": "2026-10-21T20:27:02.538Z",
       "contentHash": "c71b43dcf1fcacaa7d225fb5ac93f6366ff37af7d14ab4576910a3ebf9da495f"
     }
   ],
