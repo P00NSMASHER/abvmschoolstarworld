@@ -40,9 +40,12 @@ function publishedCurriculumMatches(repo, live) {
 }
 
 function publishedHomeworkMatches(repo, live) {
+  // Content checksums describe the teacher page, not necessarily the derived
+  // assignment list. Require the complete public Homework record to match.
   return live?.schemaVersion === 1
     && repo?.checkedAt === live?.checkedAt
-    && repo?.contentHash === live?.contentHash;
+    && repo?.contentHash === live?.contentHash
+    && JSON.stringify(repo) === JSON.stringify(live);
 }
 
 /** Read-only decision: an unavailable source is never treated as confirmed. */
