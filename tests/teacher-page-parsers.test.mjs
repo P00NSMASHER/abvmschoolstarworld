@@ -3,7 +3,7 @@ import test from 'node:test';
 import {createHash} from 'node:crypto';
 import {readFileSync} from 'node:fs';
 
-import {cleanTeacherText, pageLines, parseGoogleSitesSpellingList, parseHomework, parseStoryTitles, teacherContentLines} from '../scripts/teacher-page-parsers.mjs';
+import {assertExpectedTeacherPageUrl, cleanTeacherText, pageLines, parseGoogleSitesSpellingList, parseHomework, parseStoryTitles, teacherContentLines} from '../scripts/teacher-page-parsers.mjs';
 
 test('pageLines reads current Google Sites text containers without scripts', () => {
   const html = `
@@ -225,4 +225,32 @@ test('unknown Math assignment never disappears silently behind a valid Spelling 
     ()=>parseHomework(['Homework','Math take-home assessment','Spelling Choice Board activity']),
     /Unrecognized Math assignment/
   );
+});
+
+test('ambiguous no-homework references never override the current assignment',()=>{
+  for(const message of [
+    'There is no homework on Friday. Check today\'s homework folder.',
+    'No homework except the packet mentioned in class.',
+    'No homework for Reading; Math instructions will follow.',
+  ]) assert.throws(()=>parseHomework(['Homework',message]),
+    /verifiable academic assignment or an explicit no-homework state/);
+  assert.deepEqual(parseHomework(['Homework','There is no homework tonight!'])[0].task,
+    'No homework assigned');
+  assert.deepEqual(parseHomework(['Homework','No assignments for today.'])[0].task,
+    'No homework assigned');
+});
+
+test('teacher-source redirect must preserve official HTTPS origin and exact page path',()=>{
+  const official='https://sites.google.com/view/abvmgr2/homework';
+  for(const accepted of [official,official+'/',official+'?embedded=1']){
+    assert.equal(assertExpectedTeacherPageUrl(accepted,official),true);
+  }
+  for(const rejected of [
+    'https://accounts.google.com/login',
+    'https://sites.google.com/view/another-school/homework',
+    'https://sites.google.com/view/abvmgr2/tests',
+    'http://sites.google.com/view/abvmgr2/homework',
+    'https://sites.google.com.evil.example/view/abvmgr2/homework'
+  ]) assert.throws(()=>assertExpectedTeacherPageUrl(rejected,official),
+    /redirected outside its expected source/);
 });

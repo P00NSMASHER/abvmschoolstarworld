@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 import {
+  assertExpectedTeacherPageUrl,
   cleanTeacherText,
   pageLines,
   parseGoogleSitesSpellingList,
@@ -69,6 +70,7 @@ async function fetchPage(path, title) {
         signal: AbortSignal.timeout(25_000),
       });
       if (!response.ok) throw new Error(`${title} returned HTTP ${response.status}.`);
+      assertExpectedTeacherPageUrl(response.url, url);
       const html = await response.text();
       if (new URL(response.url).hostname === 'accounts.google.com' || /<title>\s*Sign in(?:\s|<)/i.test(html)) {
         throw new Error(`${title} unexpectedly requires Google sign-in.`);

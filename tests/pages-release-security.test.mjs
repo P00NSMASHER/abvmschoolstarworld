@@ -69,3 +69,33 @@ test("untrusted refs never reach checkout; importer publishes only pushed SHA",(
   assert.match(importer,/source_sha=\$\(git rev-parse HEAD\)/);
   assert.match(importer,/ref:\s*\$\{\{ needs\.import\.outputs\.source_sha \}\}/);
 });
+
+// Execute the real admission shell, not a separate model of its decisions.
+test('trusted source writers reconcile stale queued SHAs to current main', {skip:process.platform==='win32'},()=>{
+  for(const caller of ['Refresh ABVM teacher pages','Refresh current ABVM homework','Integrate ABVM uploaded notices','Import ABVM Yahoo weekly reminders']){
+    const result=runGuard(admit,{CALLER_WORKFLOW:caller,TRIGGER_EVENT:'schedule',
+      TRIGGER_SHA:stale,REQUESTED_REF:stale,RECONCILE_LATEST_MAIN:'true'});
+    assert.equal(result.status,0,result.stderr);
+    assert.equal(result.output.trim(),'sha='+sha);
+  }
+});
+test('queue reconciliation cannot admit untrusted callers, branches or malformed source refs', {skip:process.platform==='win32'},()=>{
+  const trusted={CALLER_WORKFLOW:'Refresh ABVM teacher pages',RECONCILE_LATEST_MAIN:'true'};
+  for(const extra of [
+    {CALLER_WORKFLOW:'Untrusted workflow'},
+    {TRIGGER_REF:'refs/heads/feature'},
+    {REQUESTED_REF:'main'},
+    {REQUESTED_REF:'refs/tags/v1'},
+    {REQUESTED_REF:'not-a-commit'},
+    {MOCK_REMOTE_SHA:''},
+  ])assert.notEqual(runGuard(admit,{...trusted,...extra}).status,0);
+});
+test('unpinned main releases select main at queue admission while pinned stale SHAs stay rejected', {skip:process.platform==='win32'},()=>{
+  for(const event of ['push','workflow_dispatch']){
+    const actual={CALLER_WORKFLOW:'Deploy ABVM to GitHub Pages',TRIGGER_EVENT:event,TRIGGER_SHA:stale};
+    assert.equal(runGuard(admit,{...actual,REQUESTED_REF:'main'}).output.trim(),'sha='+sha);
+    assert.equal(runGuard(admit,{...actual,REQUESTED_REF:''}).output.trim(),'sha='+sha);
+    assert.notEqual(runGuard(admit,{...actual,REQUESTED_REF:stale}).status,0);
+    assert.notEqual(runGuard(admit,{...actual,REQUESTED_REF:'main',TRIGGER_REF:'refs/heads/pr'}).status,0);
+  }
+});

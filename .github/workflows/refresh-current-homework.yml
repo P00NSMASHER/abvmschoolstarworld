@@ -23,9 +23,15 @@ permissions:
 concurrency:
   group: abvm-homework-source
   cancel-in-progress: false
+  queue: max
 
 jobs:
   homework:
+    # One mutation/publication at a time; job scope avoids parent-child deadlock.
+    concurrency:
+      group: abvm-verified-school-state
+      cancel-in-progress: false
+      queue: max
     name: Verify Homework independently of study-curriculum promotion
     permissions:
       contents: write
@@ -93,3 +99,4 @@ jobs:
     uses: ./.github/workflows/pages.yml
     with:
       ref: ${{ needs.homework.outputs.release_sha }}
+      reconcile_latest_main: true

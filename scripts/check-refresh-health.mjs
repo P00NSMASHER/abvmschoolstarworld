@@ -1,7 +1,9 @@
 import {appendFileSync, readFileSync} from "node:fs";
 import {validateLunchPublication} from "./lunch-publication.mjs";
+import {liveHomeworkUrl,homeworkPublicationErrors} from "./homework-live-monitor.mjs";
 
 const DATA_PATH=new URL("../pages/data/study-pack.json",import.meta.url);
+const HOMEWORK_PATH=new URL("../pages/data/homework-current.json",import.meta.url);
 const argv=process.argv.slice(2);
 
 function option(name,fallback=null){
@@ -83,36 +85,45 @@ function sameRefresh(local,live){
     // A matching source hash alone cannot certify a deployed question bank.
     && JSON.stringify(local)===JSON.stringify(live);
 }
-async function fetchLive(){
-  const separator=liveUrl.includes("?")?"&":"?";
-  const response=await fetch(liveUrl+separator+"health="+Date.now(),{
+async function fetchLiveResource(url,label){
+  const separator=url.includes("?")?"&":"?";
+  const response=await fetch(url+separator+"health="+Date.now(),{
     headers:{"cache-control":"no-cache","user-agent":"ABVM-Refresh-Health/1.0"},
     signal:AbortSignal.timeout(15_000),
   });
-  if(!response.ok)throw new Error("live pack returned HTTP "+response.status);
+  if(!response.ok)throw new Error(label+" returned HTTP "+response.status);
   return response.json();
 }
+const fetchLive=()=>fetchLiveResource(liveUrl,"live pack");
+const fetchLiveHomework=()=>fetchLiveResource(liveHomeworkUrl(liveUrl),"live Homework");
 function writeSummary(lines){
   const summary=process.env.GITHUB_STEP_SUMMARY;
   if(summary)appendFileSync(summary,lines.join("\n")+"\n","utf8");
 }
 
 const local=readLocal();
+const localHomework=liveUrl?JSON.parse(readFileSync(HOMEWORK_PATH,"utf8")):null;
 let errors=validatePack(local,"repository pack");
 let live=null;
 let liveError=null;
+let homeworkState="not requested";
 
 if(liveUrl){
   const deadline=Date.now()+waitSeconds*1000;
   do{
     try{
-      live=await fetchLive();
+      const [candidatePack,candidateHomework]=await Promise.all([fetchLive(),fetchLiveHomework()]);
+      live=candidatePack;
       const candidateErrors=validatePack(live,"deployed pack");
       if(!sameRefresh(local,live))candidateErrors.push("deployed pack does not match the repository refresh timestamp/hash");
+      const homeworkIssues=homeworkPublicationErrors(localHomework,candidateHomework,new Date().toISOString());
+      homeworkState=homeworkIssues.length?"FAIL":"PASS";
+      candidateErrors.push(...homeworkIssues);
       if(candidateErrors.length===0){liveError=null;break}
       liveError=candidateErrors.join("; ");
     }catch(error){
       liveError=error instanceof Error?error.message:String(error);
+      homeworkState="UNKNOWN";
     }
     if(Date.now()>=deadline)break;
     await new Promise(resolve=>setTimeout(resolve,10_000));
@@ -130,6 +141,7 @@ const summary=[
   "- Lunch gaps: "+JSON.stringify(local.pack?.lunchMenuSource?.missingDates||[]),
   "- Repository pack: **"+(errors.filter(e=>e.startsWith("repository pack")).length?"FAIL":"PASS")+"**",
   "- Deployed pack comparison: **"+(liveUrl?(liveError?"FAIL":"PASS"):"not requested")+"**",
+  "- Deployed Homework parity: **"+homeworkState+"**",
   "- Freshness requirement: **"+(requireToday?"checked today":"<="+maxAgeHours+"h")+"**",
 ];
 writeSummary(summary);
@@ -139,4 +151,4 @@ if(errors.length){
   for(const error of errors)console.error("- "+error);
   process.exit(1);
 }
-console.log("ABVM refresh health passed:",{checkedAt:checked,sourcePages:local.sourcePages?.length||0,liveVerified:Boolean(liveUrl)});
+console.log("ABVM refresh health passed:",{checkedAt:checked,sourcePages:local.sourcePages?.length||0,liveVerified:Boolean(liveUrl),homeworkLiveVerified:homeworkState==="PASS"});

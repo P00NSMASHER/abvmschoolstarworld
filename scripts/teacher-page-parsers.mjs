@@ -9,6 +9,20 @@ const TEACHER_NAVIGATION_LABELS = new Set([
   'more home',
 ]);
 
+
+// Follow redirects only when they preserve the exact six teacher-page paths.
+// A lookalike or unrelated Google Sites page cannot establish current homework.
+export function assertExpectedTeacherPageUrl(actualUrl, expectedUrl) {
+  const actual = new URL(actualUrl);
+  const expected = new URL(expectedUrl);
+  const path = url => url.pathname.replace(/\/+$/, '');
+  if (actual.origin !== expected.origin || actual.protocol !== 'https:' ||
+      path(actual) !== path(expected) || actual.username || actual.password) {
+    throw new Error('Official teacher page redirected outside its expected source URL.');
+  }
+  return true;
+}
+
 export function decodeHtml(value) {
   return String(value || '')
     .replace(/&#x([0-9a-f]+);/gi, (_, code) => String.fromCodePoint(Number.parseInt(code, 16)))
@@ -144,9 +158,10 @@ export function parseHomework(lines) {
     .filter(line => !/^Homework\s*:?\s*$/i.test(line));
 
   const day = 'Current Homework posting';
+  // A reference to a different day or an exception is not proof that today's
+  // posting has no assignments. Unclear wording must fail closed.
   const explicitNoHomework = source.some(line =>
-    /^(?:no homework|none|no assignments?)(?:\s*[.!])?$/i.test(line)
-    || /\bno homework\b/i.test(line)
+    /^(?:(?:there\s+(?:is|are)|there['’]s)\s+)?(?:no\s+homework|no\s+assignments?|none)(?:\s+(?:assigned|today|tonight|for\s+(?:today|tonight)))?[.!]?$/i.test(line)
   );
 
   const entries = [];

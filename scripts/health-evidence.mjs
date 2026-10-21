@@ -152,3 +152,32 @@ export function assessMainBranchProtection(branch){
   if(branch?.name!=="main"||typeof branch?.protected!=="boolean")return {state:"unknown",protected:null};
   return {state:branch.protected?"protected":"unprotected",protected:branch.protected};
 }
+
+/**
+ * GitHub cron can silently skip a scheduled Homework poll while an earlier
+ * successful on-demand check keeps the saved source timestamp looking fresh.
+ * Distinguish regular delivery from manual, push, or recovery dispatches.
+ */
+export function assessHomeworkPollingCadence(runs, now, {maxGapHours=2.5}={}) {
+  const current=Date.parse(now||'');
+  if(!Number.isFinite(current)||!Array.isArray(runs)||!(maxGapHours>0)){
+    return {state:'unknown',lastScheduledAt:null,ageHours:null};
+  }
+  const parts=Object.fromEntries(new Intl.DateTimeFormat('en-US',{
+    timeZone:'America/New_York',hourCycle:'h23',hour:'2-digit',minute:'2-digit'
+  }).formatToParts(new Date(current)).map(part=>[part.type,part.value]));
+  const localHour=Number(parts.hour),localMinute=Number(parts.minute);
+  // Outside the active school polling window, an old cron run is expected.
+  if(localHour<8 || localHour>23 || !Number.isFinite(localMinute)){
+    return {state:'off-hours',lastScheduledAt:null,ageHours:null};
+  }
+  const last=(runs.filter(run=>run?.name==='Refresh current ABVM homework'&&
+    run?.event==='schedule'&&run?.head_branch==='main'&&
+    Number.isFinite(Date.parse(run?.created_at||'')))
+    .sort((a,b)=>Date.parse(b.created_at)-Date.parse(a.created_at)))[0];
+  if(!last)return {state:'unknown',lastScheduledAt:null,ageHours:null};
+  const age=(current-Date.parse(last.created_at))/3_600_000;
+  if(age<-.25)return {state:'unknown',lastScheduledAt:last.created_at,ageHours:null};
+  return {state:age>maxGapHours?'delayed':'current',
+    lastScheduledAt:last.created_at,ageHours:Number(age.toFixed(2))};
+}

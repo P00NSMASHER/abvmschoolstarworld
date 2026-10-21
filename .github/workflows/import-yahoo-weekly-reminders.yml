@@ -19,11 +19,17 @@ permissions:
 concurrency:
   group: abvm-yahoo-weekly-reminders
   cancel-in-progress: false
+  queue: max
 
 jobs:
   import:
     permissions:
       contents: write
+    # One mutation/publication at a time; job scope avoids parent-child deadlock.
+    concurrency:
+      group: abvm-verified-school-state
+      cancel-in-progress: false
+      queue: max
     runs-on: ubuntu-latest
     timeout-minutes: 20
     outputs:
@@ -112,3 +118,4 @@ jobs:
     uses: ./.github/workflows/pages.yml
     with:
       ref: ${{ needs.import.outputs.source_sha }}
+      reconcile_latest_main: true

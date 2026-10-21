@@ -29,7 +29,7 @@ test('optional draft question candidate bookkeeping cannot block verified curric
 });
 
 test('bounded no-signoff recovery checks repository and live site, then dispatches only guarded workflows', () => {
-  assert.match(recovery, /cron: '11 7,11,16,20,23 \* \* \*'/);
+  assert.match(recovery, /cron: '11 6-23 \* \* \*'/);
   assert.match(recovery, /node scripts\/source-freshness-recovery\.mjs --report=/);
   assert.match(recovery, /maybe_dispatch sync-study-pack\.yml "\$curriculum"/);
   assert.match(recovery, /maybe_dispatch refresh-current-homework\.yml "\$homework"/);

@@ -73,12 +73,18 @@ permissions:
 concurrency:
   group: abvm-school-pack
   cancel-in-progress: false
+  queue: max
 
 jobs:
   refresh:
     permissions:
       contents: write
       pull-requests: write
+    # One mutation/publication at a time; job scope avoids parent-child deadlock.
+    concurrency:
+      group: abvm-verified-school-state
+      cancel-in-progress: false
+      queue: max
     outputs:
       published_sha: ${{ steps.confirm-published-sha.outputs.sha }}
     # Full source scan, Chromium/WebKit QA, and a bounded main-race revalidation
@@ -316,7 +322,13 @@ jobs:
       # refresh SHA is the fallback if lunch validation failed. The publisher
       # independently rejects refs that are not the exact current main HEAD.
       ref: ${{ needs.reviewed-lunch.outputs.published_sha || needs.refresh.outputs.published_sha }}
+      reconcile_latest_main: true
   reviewed-lunch:
+    # One mutation/publication at a time; job scope avoids parent-child deadlock.
+    concurrency:
+      group: abvm-verified-school-state
+      cancel-in-progress: false
+      queue: max
     name: Refresh reviewed lunch week independently of held curriculum
     needs: refresh
     outputs:

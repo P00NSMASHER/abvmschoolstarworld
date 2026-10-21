@@ -4,8 +4,15 @@ name: ABVM daily source self-recovery
 # refresh already verified private companion-app school information.
 # Integrity, source attribution and release QA still gate publication.
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/refresh-controller.mjs'
+      - 'scripts/source-freshness-recovery.mjs'
+      - 'tests/refresh-controller.test.mjs'
+      - '.github/workflows/daily-source-recovery.yml'
   schedule:
-    - cron: '11 7,11,16,20,23 * * *'
+    - cron: '11 6-23 * * *'
       timezone: 'America/New_York'
   # Run bounded recovery after the watchdog, including a failed watchdog.
   # GitHub cron may run late or be dropped, so it cannot be the sole trigger.
@@ -39,7 +46,7 @@ jobs:
           node-version: 22
 
       - name: Prove decisions preserve verified source identity and date
-        run: node --test tests/source-freshness-recovery.test.mjs
+        run: node --test tests/source-freshness-recovery.test.mjs tests/refresh-controller.test.mjs tests/recovery-history-integrity.test.mjs
 
       - name: Inspect source freshness and published-site parity
         run: node scripts/source-freshness-recovery.mjs --report=source-recovery-plan.json
@@ -62,22 +69,34 @@ jobs:
               echo "Already current: $workflow"
               return 0
             fi
-            local recent running count today
-            recent="$(gh run list --workflow "$workflow" --branch main --limit 70 --json status,event,createdAt,conclusion)"
-            running="$(jq '[.[] | select(.status == "in_progress" or .status == "queued" or .status == "pending" or .status == "waiting" or .status == "requested")] | length' <<< "$recent")"
+            local recent running count today attempts
+            # This function is called in an OR-list; Bash errexit alone does
+            # not stop failed reads inside it. Never guess an empty history.
+            if ! recent="$(gh run list --workflow "$workflow" --branch main --limit 70 --json status,event,createdAt,conclusion)"; then
+              echo "::error::Cannot verify workflow history for $workflow; no recovery dispatched."
+              return 1
+            fi
+            if ! jq -e 'type == "array" and all(.[];
+              (.status | IN("completed", "in_progress", "queued", "pending", "waiting", "requested")) and
+              ((.event | type) == "string") and ((.createdAt | type) == "string") and
+              has("conclusion"))' <<< "$recent" >/dev/null; then
+              echo "::error::Invalid workflow history for $workflow; no recovery dispatched."
+              return 1
+            fi
+            running="$(jq '[.[] | select(.status == "in_progress" or .status == "queued" or .status == "pending" or .status == "waiting" or .status == "requested")] | length' <<< "$recent")" || return 1
             if (( running > 0 )); then
               echo "Recovery already in progress: $workflow"
               return 0
             fi
-            today="$(date -u +%Y-%m-%d)"
-            count="$(jq -r --arg day "$today" '[.[] | select(.event == "workflow_dispatch" and .status == "completed" and .conclusion != "success" and (.createdAt | startswith($day)))] | length' <<< "$recent")"
+            today="$(date -u +%Y-%m-%d)" || return 1
+            count="$(jq -r --arg day "$today" '[.[] | select(.event == "workflow_dispatch" and .status == "completed" and .conclusion != "success" and (.createdAt | startswith($day)))] | length' <<< "$recent")" || return 1
             if (( count >= 2 )); then
               echo "::error::Daily failed-recovery budget reached for $workflow; data remains stale. Do not bypass verification."
               return 1
             fi
             # A successful dispatch with persistently stale source evidence
             # can otherwise create an unbounded watchdog/recovery feedback loop.
-            attempts="$(jq -r --arg day "$today" '[.[] | select(.event == "workflow_dispatch" and (.createdAt | startswith($day)))] | length' <<< "$recent")"
+            attempts="$(jq -r --arg day "$today" '[.[] | select(.event == "workflow_dispatch" and (.createdAt | startswith($day)))] | length' <<< "$recent")" || return 1
             if (( attempts >= 6 )); then
               echo "::error::Daily recovery dispatch cap reached for $workflow; hold stale source and surface the incident."
               return 1
@@ -105,5 +124,5 @@ jobs:
         with:
           name: abvm-daily-source-recovery-${{ github.run_id }}
           path: source-recovery-plan.json
-          retention-days: 14
+          retention-days: 30
           if-no-files-found: ignore
