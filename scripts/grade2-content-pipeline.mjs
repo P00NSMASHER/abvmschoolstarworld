@@ -67,6 +67,25 @@ const BASE_SKILLS = [
     }),
   },
   {
+    id: 'common-proper-nouns',
+    subject: 'Reading / ELA',
+    label: 'Common and proper nouns',
+    pattern: /common\s*(?:&|and)\s*proper\s+nouns?/i,
+    standards: ['CCSS.L.2.1', 'CCSS.L.2.2'],
+    domain: 'Language',
+    studyNotes: [
+      'A common noun names any person, place or thing (girl, city, book).',
+      'A proper noun names a particular person, place or thing (Sofia, Chicago, Tuesday) and begins with a capital letter.',
+    ],
+    question: () => ({
+      prompt: 'Which word is a proper noun naming a particular day?',
+      choices: ['Tuesday', 'weekday', 'calendar'],
+      answer: 'Tuesday',
+      explanation: 'Tuesday names a specific day of the week, so it is a proper noun and begins with a capital letter.',
+      hint: 'A proper noun is a particular name, not a general kind of thing.',
+    }),
+  },
+  {
     id: 'consonant-blends',
     subject: 'Spelling / Handwriting',
     label: 'Consonant blends',
@@ -1385,6 +1404,61 @@ const SUPPLEMENTAL_QUESTION_FAMILIES = Object.freeze({
 });
 
 const RENEWABLE_EXTENSION_FAMILIES = Object.freeze({
+  'common-proper-nouns': [
+    {
+      questionType:'direct',
+      prompt:'Which word is a common noun rather than the name of a particular person or day?',
+      choices:['teacher','Monday','Sofia'],answer:'teacher',
+      explanation:'Teacher is a common noun for any person with that job; Monday and Sofia are proper names.',
+      hint:'Find the general name, not a particular name.',dok:1,difficulty:2,
+    },
+    {
+      questionType:'transfer',
+      prompt:'Which sentence correctly capitalizes the proper noun naming a person?',
+      choices:['Maya packed her lunch.','maya packed her lunch.','Maya Packed Her Lunch.'],
+      answer:'Maya packed her lunch.',
+      explanation:'Maya is a proper noun and starts with a capital letter; the other words do not need extra capital letters.',
+      hint:'Capitalize the person’s special name, not every word.',dok:2,difficulty:2,
+    },
+    {
+      questionType:'transfer',
+      prompt:'In the sentence “Owen saw a kitten,” which word is a common noun?',
+      choices:['kitten','Owen','Tuesday'],answer:'kitten',
+      explanation:'Kitten names any young cat; Owen and Tuesday are proper nouns that name something specific.',
+      hint:'A common noun is a general name of a person, place or thing.',dok:2,difficulty:2,
+    },
+    {
+      questionType:'transfer',
+      prompt:'Which pair lists a common noun first and a proper noun second?',
+      choices:['city — Chicago','Chicago — city','April — month'],answer:'city — Chicago',
+      explanation:'City is a general place name (common noun); Chicago is the name of one particular city (proper noun).',
+      hint:'Check whether the first word is general and the second is a specific name.',dok:2,difficulty:2,
+    },
+    {
+      questionType:'reasoning',
+      prompt:'Why is “Oceanview School” a proper noun instead of a common noun?',
+      choices:['It names one particular school.','It can name any building.','It tells an action.'],
+      answer:'It names one particular school.',
+      explanation:'A proper noun identifies a particular school by its name rather than referring to schools in general.',
+      hint:'Ask whether the words identify one named place or a general kind of place.',dok:3,difficulty:3,
+    },
+    {
+      questionType:'reasoning',
+      prompt:'How do the nouns “girl” and “Sofia” differ?',
+      choices:['Girl can name any girl; Sofia names a particular person.','Girl is always a proper noun; Sofia is a verb.','Both words are names of individual people.'],
+      answer:'Girl can name any girl; Sofia names a particular person.',
+      explanation:'Girl is a common noun; Sofia is a proper noun naming one person and begins with a capital letter.',
+      hint:'Compare a general person word with the special name of one person.',dok:3,difficulty:3,
+    },
+    {
+      questionType:'reasoning',
+      prompt:'Which sentence uses capitals correctly for the proper nouns of a place and a month?',
+      choices:['We visited Lake Erie in June.','We visited lake erie in June.','We visited Lake erie in june.'],
+      answer:'We visited Lake Erie in June.',
+      explanation:'Lake Erie is a named place and June is a named month; both are proper nouns with capital letters.',
+      hint:'Capitalize each important part of a particular place name and the name of a month.',dok:3,difficulty:3,
+    },
+  ],
   'sentence-types': [
     {questionType:'direct',prompt:'What type of sentence is “Please line up quietly.”?',choices:['command','question','statement'],answer:'command',explanation:'The sentence gives a direction, so it is a command.',hint:'Ask whether the sentence tells, asks, directs, or shows strong feeling.',dok:1,difficulty:2},
     {questionType:'transfer',prompt:'What type of sentence is “The moon is bright tonight.”?',choices:['statement','command','question'],answer:'statement',explanation:'It tells information and ends with a period.',hint:'Decide what the sentence is doing.',dok:2,difficulty:2},
@@ -1453,6 +1527,7 @@ const RENEWABLE_EXTENSION_FAMILIES = Object.freeze({
 const PRIORITY_THREE_TYPE_SKILLS = new Set([
   ...registeredPrioritySkillIds(),
   'sentence-types',
+  'common-proper-nouns',
   'dialogue',
   'sequence',
   'caption',
