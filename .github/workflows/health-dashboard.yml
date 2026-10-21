@@ -62,7 +62,7 @@ jobs:
           set -euo pipefail
           if ! gh api "repos/${GITHUB_REPOSITORY}/branches/main" > main-branch-status.json; then
             echo "::warning::Could not verify main branch protection."
-            printf '%s\\n' '{"name":"main","protected":null}' > main-branch-status.json
+            printf '%s\n' '{"name":"main","protected":null}' > main-branch-status.json
           fi
 
       - name: Build health dashboard
