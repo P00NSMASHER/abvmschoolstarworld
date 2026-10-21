@@ -18,9 +18,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
-  pages: write
-  id-token: write
+  contents: read
 
 concurrency:
   group: abvm-homework-source
@@ -29,6 +27,8 @@ concurrency:
 jobs:
   homework:
     name: Verify Homework independently of study-curriculum promotion
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     outputs:
       published: ${{ steps.publish.outputs.published }}
@@ -86,6 +86,10 @@ jobs:
     name: Verify and deploy independently refreshed Homework
     needs: homework
     if: needs.homework.outputs.published == 'true'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     uses: ./.github/workflows/pages.yml
     with:
       ref: ${{ needs.homework.outputs.release_sha }}
