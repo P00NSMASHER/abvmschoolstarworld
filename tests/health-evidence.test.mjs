@@ -262,7 +262,8 @@ test('the complete dashboard turns critical for stale homework despite healthy w
   try{
     for(const dir of ['scripts','pages/data'])mkdirSync(join(root,dir),{recursive:true});
     for(const file of ['scripts/build-health-report.mjs','scripts/health-evidence.mjs',
-      'scripts/source-freshness-recovery.mjs','scripts/school-week-label.mjs','pages/sw.js','package.json']){
+      'scripts/source-freshness-recovery.mjs','scripts/refresh-controller.mjs',
+      'scripts/school-week-label.mjs','pages/sw.js','package.json']){
       copyFileSync(new URL('../'+file,import.meta.url),join(root,file));
     }
     const now=new Date().toISOString();

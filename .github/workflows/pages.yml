@@ -19,6 +19,11 @@ on:
         required: false
         type: string
         default: main
+      reconcile_latest_main:
+        description: Revalidate latest main after a trusted source writer waited in the shared queue
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -30,9 +35,15 @@ permissions:
 concurrency:
   group: "pages"
   cancel-in-progress: false
+  queue: max
 
 jobs:
   deploy:
+    # One mutation/publication at a time; job scope avoids parent-child deadlock.
+    concurrency:
+      group: abvm-verified-school-state
+      cancel-in-progress: false
+      queue: max
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -48,6 +59,9 @@ jobs:
           TRIGGER_REF: ${{ github.ref }}
           TRIGGER_SHA: ${{ github.sha }}
           REQUESTED_REF: ${{ inputs.ref || '' }}
+          RECONCILE_LATEST_MAIN: ${{ inputs.reconcile_latest_main || false }}
+          CALLER_WORKFLOW: ${{ github.workflow }}
+          TRIGGER_EVENT: ${{ github.event_name }}
         run: |
           set -euo pipefail
           if [[ "$TRIGGER_REF" != 'refs/heads/main' ]]; then
@@ -63,6 +77,22 @@ jobs:
             ''|main) candidate="$TRIGGER_SHA" ;;
             *) candidate="$REQUESTED_REF" ;;
           esac
+          # Queue wait can legitimately supersede a source writer's commit.
+          # Only these main-branch source workflows may request reconciliation.
+          # The selected immutable current-main SHA still receives full release QA.
+          if [[ "${RECONCILE_LATEST_MAIN:-false}" == true ]]; then
+            case "${CALLER_WORKFLOW:-}" in
+              'Refresh ABVM teacher pages'|'Refresh current ABVM homework'|'Integrate ABVM uploaded notices'|'Import ABVM Yahoo weekly reminders') ;;
+              *) echo '::error::Untrusted caller cannot reconcile release source.' >&2; exit 1 ;;
+            esac
+            [[ "$REQUESTED_REF" =~ ^[0-9a-f]{40}$ ]] || { echo '::error::Reconciliation needs the verified source SHA.' >&2; exit 1; }
+            candidate="$current_main"
+            echo '::notice::Revalidating current main after the coordinated source queue.'
+          elif [[ "${CALLER_WORKFLOW:-}" == 'Deploy ABVM to GitHub Pages' && ( "${TRIGGER_EVENT:-}" == push || "${TRIGGER_EVENT:-}" == workflow_dispatch ) && ( "$REQUESTED_REF" == '' || "$REQUESTED_REF" == main ) ]]; then
+            # An unpinned main release chooses main when its queue turn starts.
+            # Explicit SHA/tag/branch requests keep the strict rejection below.
+            candidate="$current_main"
+          fi
           if [[ ! "$candidate" =~ ^[0-9a-f]{40}$ || "$candidate" != "$current_main" ]]; then
             echo "::error::Requested release is not the exact current protected-main commit."
             exit 1

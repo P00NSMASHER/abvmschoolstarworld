@@ -99,3 +99,6 @@ no reviewer can be demanded as a way around missing verification. Keep student
 records private, retain actual physical-device acceptance as an outstanding
 quality observation when it has not been performed, and never fabricate proof.
 
+
+## Refresh reliability coordination (October 21, 2026)
+Read `docs/REFRESH_RELIABILITY.md` before editing teacher/Homework intake, recovery or Pages. Source writers and Pages share one job-level queue; do not introduce a competing publisher or a parent/child concurrency deadlock. Preserve the immutable admitted main SHA, full automated QA and final main recheck. Use the existing schedule-aware recovery report and active-run/budget checks before manual redispatch. Retain last verified source facts on outages; never claim freshness from a dispatch acknowledgment. Do not treat a superseded run as a continuing incident after later exact-content publication and watchdog verification. The existing hourly intake task owns follow-through; do not create another task or require human review.
