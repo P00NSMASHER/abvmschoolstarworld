@@ -30,7 +30,7 @@ import {
 import { buildSchoolChangeFeed, validateSchoolChangeFeed } from './school-change-feed.mjs';
 import { curriculumFamilyRegistrySnapshot } from './curriculum-family-registry.mjs';
 import { parseCurriculumPreviewOptions } from './curriculum-preview-options.mjs';
-import { upcomingTeacherTests } from './teacher-test-focus.mjs';
+import { upcomingTeacherTests, teacherTestDateMatchesWeekday } from './teacher-test-focus.mjs';
 import { schoolWeekLabel, preservedPostingWeek } from './school-week-label.mjs';
 
 const DATA_PATH = new URL('../pages/data/study-pack.json', import.meta.url);
@@ -181,6 +181,8 @@ function mergeTeacherEvents(existing, incoming, source, { now = new Date() } = {
     if (newKeys.has(key)) return false;
     if (item.source === source) {
       const when = eventTime(item.date, new Date(now));
+      // Discard old invalid test weekdays even within the historical lookback.
+      if (source === 'teacher-tests' && !teacherTestDateMatchesWeekday(item, when)) return false;
       return Number.isFinite(when) && when < nowMs && when >= historyFloor;
     }
     return !uniqueTopicKeys.has(topicKey(item.label));
@@ -306,8 +308,17 @@ const phonics = requireLine(readingLines, 'Phonics:', 'Reading Work');
 const vocabulary = requireLine(readingLines, 'Vocab Words:', 'Reading Work');
 const wordStructure = requireLine(readingLines, 'Word Structure:', 'Reading Work');
 const comprehension = cleanTeacherText(requireLine(readingLines, 'Reading Comprehension:', 'Reading Work'));
-const testItems = parseDatedLines(pages.Tests.lines).map(item => ({ ...item, kind: 'test', source: 'teacher-tests' }));
-if (testItems.length < 2) throw new Error('Tests page did not contain enough dated tests to publish safely.');
+const parsedTestItems = parseDatedLines(pages.Tests.lines).map(item => ({ ...item, kind: 'test', source: 'teacher-tests' }));
+if (parsedTestItems.length < 2) throw new Error('Tests page did not contain enough dated tests to publish safely.');
+// Preserve the scanned original source hashes, but never promote a mismatched
+// weekday/date as a present-year test. Absence of such tests must not prevent
+// safe Homework, teacher-page or verified curriculum publication.
+const testItems = parsedTestItems.filter(item =>
+  teacherTestDateMatchesWeekday(item, eventTime(item.date)));
+const withheldTestItems = parsedTestItems.filter(item =>
+  !teacherTestDateMatchesWeekday(item, eventTime(item.date)));
+if (withheldTestItems.length) console.warn('Withheld teacher Tests entries with conflicting weekday/date:',
+  withheldTestItems.map(item => item.date + ' — ' + item.label).join('; '));
 
 const religionLines = teacherContentLines(pages.Religion.lines, 'Religion');
 const weeklySpelling = pages['Weekly Spelling List'];
@@ -508,9 +519,10 @@ pack.spellingListProvenance = spellingWords.length ? {
 pack.weekLabel = schoolWeekLabel(new Date(checkedAt), { calendarDisplay: true });
 pack.summary = `Current Grade 2 teacher-site material: Homework lists ${readableList(homework.slice(0, 4).map(item => item.subject === 'Parent' ? `parent task “${item.task}”` : `${item.subject} “${item.task}”`))}. Upcoming tests include ${readableList(currentTests.slice(0, 4).map(item => `${item.label} on ${item.date}`))}. ${uploadedNotices.documents.length} uploaded school notices are integrated with the teacher pages.`;
 pack.sourceSufficient = true;
-pack.gaps = (pack.gaps || []).filter(item => !/source bridge|four-hour|does not show a date|spelling-word list|weekly spelling|reading work page leaves/i.test(item));
+pack.gaps = (pack.gaps || []).filter(item => !/source bridge|four-hour|does not show a date|spelling-word list|weekly spelling|reading work page leaves|teacher Tests weekday\/date conflict/i.test(item));
 pack.gaps = [...new Set([...pack.gaps,
   'The public teacher Homework page does not show a date, so assignments are labeled as the current posting and refreshed daily.',
+  ...(withheldTestItems.length ? ['Teacher Tests weekday/date conflict withheld from calendar and Test Prep: ' + withheldTestItems.map(item => item.date + ' — ' + item.label).join('; ')] : []),
   ...(spellingLines.length ? [] : ['The Weekly Spelling List page currently has no word list posted.']),
   ...(comprehension ? [] : ['The current Reading Work page leaves Reading Comprehension blank, so no comprehension target is invented.']),
 ])];
