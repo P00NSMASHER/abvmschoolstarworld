@@ -219,6 +219,7 @@ jobs:
         run: node scripts/check-refresh-health.mjs --require-today --max-age-hours 1
 
       - name: Cache version-pinned Playwright browsers
+        continue-on-error: true
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
@@ -360,6 +361,7 @@ jobs:
           fi
       - name: Cache Playwright browsers only for changed reviewed lunch
         if: steps.lunch-change.outputs.changed == 'true'
+        continue-on-error: true
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
