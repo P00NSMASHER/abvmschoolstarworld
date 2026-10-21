@@ -18,8 +18,8 @@ On October 16, 2026 the former **Complete lunch artwork** task was repurposed as
 trigger and now prioritizes source/publication failures and broken learning flows.
 Future missing-menu images remain part of the existing hourly **ABVM School Data
 Intake** task and the menu-import process below. No dedicated artwork task or new
-schedule is required. Reuse active work, exact menu/style approvals and normal
-independent QA/Pages gates. If generation is unavailable, retain accurate menu text
+schedule is required. Reuse active work, exact verified menu/style metadata and normal
+independent automated QA/Pages gates. No human approval is required. If generation is unavailable, retain accurate menu text
 and record precise incomplete coverage. No private-chat upload watcher or paid
 image API service is introduced.
 
@@ -64,7 +64,9 @@ Use the style-aware pending-art queue to replace legacy entree-only coverage.
    review in `docs/lunch-art-prompts.md` or an explicitly linked supplement in its
    prompt/review index; record the asset, alt text, generator,
    review date, review notes and exact menu approvals in
-   `pages/data/lunch-art-registry.json`. Only `status: reviewed` entries render.
+   `pages/data/lunch-art-registry.json`. Only `status: reviewed` entries render. Here `reviewed` means a checked
+source-locked image/menu record with reproducible evidence, not a human
+reviewer signature. Unverifiable art stays omitted; accurate text remains.
    Keep the source image immutable when changing foods; add a new asset and review.
 6. Rebuild, run `node --test tests/lunch-art.test.mjs` and the existing QA gates.
    Review iPhone and iPad views, including an illustrated day, an uncovered meal,
@@ -76,8 +78,9 @@ The October catalog contains 20 lunch days, one no-lunch/noon-dismissal day and 
 no-school day. It contains 16 unique entrée labels but 20 distinct full menus.
 Twenty reviewed photorealistic tray illustrations cover all 20 October catalog menus. The
 remaining plan entries are historical September menus and are excluded from the
-automatic current/future queue. Other months do not receive images without explicit
-source/menu approval. No-school, missing and no-lunch days never receive food art.
+automatic current/future queue. Other months receive imagery only after independently verified full-menu
+source identity and matching registry evidence; recurring human approval is
+not a prerequisite. Unknown menu components remain text-only. No-school, missing and no-lunch days never receive food art.
 
 `ABVMLunchArt.html(lunch)` returns an image-only figure with descriptive alt text
 for an exact approved source and menu match, or an empty string. No visible caption
