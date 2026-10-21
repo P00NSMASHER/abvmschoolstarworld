@@ -4,8 +4,15 @@ name: ABVM daily source self-recovery
 # refresh already verified private companion-app school information.
 # Integrity, source attribution and release QA still gate publication.
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/refresh-controller.mjs'
+      - 'scripts/source-freshness-recovery.mjs'
+      - 'tests/refresh-controller.test.mjs'
+      - '.github/workflows/daily-source-recovery.yml'
   schedule:
-    - cron: '11 7,11,16,20,23 * * *'
+    - cron: '11 6-23 * * *'
       timezone: 'America/New_York'
   # Run bounded recovery after the watchdog, including a failed watchdog.
   # GitHub cron may run late or be dropped, so it cannot be the sole trigger.
@@ -39,7 +46,7 @@ jobs:
           node-version: 22
 
       - name: Prove decisions preserve verified source identity and date
-        run: node --test tests/source-freshness-recovery.test.mjs
+        run: node --test tests/source-freshness-recovery.test.mjs tests/refresh-controller.test.mjs
 
       - name: Inspect source freshness and published-site parity
         run: node scripts/source-freshness-recovery.mjs --report=source-recovery-plan.json
@@ -105,5 +112,5 @@ jobs:
         with:
           name: abvm-daily-source-recovery-${{ github.run_id }}
           path: source-recovery-plan.json
-          retention-days: 14
+          retention-days: 30
           if-no-files-found: ignore

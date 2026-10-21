@@ -1,14 +1,8 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-export function easternSchoolDay(value) {
-  const date = new Date(value);
-  if (!Number.isFinite(date.getTime())) return null;
-  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
-    timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit',
-  }).formatToParts(date).map(part => [part.type, part.value]));
-  return `${parts.year}-${parts.month}-${parts.day}`;
-}
+import { easternSchoolDay, reconcileScheduledSources } from './refresh-controller.mjs';
+export { easternSchoolDay, scheduledSourceDue, reconcileScheduledSources } from './refresh-controller.mjs';
 
 function checkedToday(value, now, maximumHours) {
   const current = Date.parse(now), checked = Date.parse(value || '');
@@ -137,8 +131,9 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
     publishedCurriculum: liveCurriculum.data, curriculumLiveAvailable: liveCurriculum.available,
     publishedHomework: liveHomework.data, homeworkLiveAvailable: liveHomework.available,
   });
-  const plan=applyOfficialHomeworkObservation(baseline,officialHomework);
-  plan.checkedAt = { curriculum: curriculum.sourceLastCheckedAt, homework: homework.checkedAt };
+  const checkedAt = { curriculum: curriculum.sourceLastCheckedAt, homework: homework.checkedAt };
+  const plan=reconcileScheduledSources(applyOfficialHomeworkObservation(baseline,officialHomework),{now,checkedAt});
+  plan.checkedAt = checkedAt;
   plan.errors = [liveCurriculum.error, liveHomework.error, officialHomework.error].filter(Boolean);
   const report = process.argv.find(arg => arg.startsWith('--report='))?.slice(9);
   if (report) writeFileSync(report, JSON.stringify(plan, null, 2) + '\n', 'utf8');
