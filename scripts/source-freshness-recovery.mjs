@@ -1,7 +1,5 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import {assertExpectedTeacherPageUrl,pageLines} from './teacher-page-parsers.mjs';
-import {HOMEWORK_SOURCE_URL,summarizeTeacherHomework} from './homework-posting.mjs';
 
 export function easternSchoolDay(value) {
   const date = new Date(value);
@@ -86,6 +84,10 @@ export function assessDailySchoolSources({
 // posting. A fresh *timestamp* on the repository does not prove the teacher
 // has not changed an undated assignment since the last hourly cron.
 export async function probeOfficialHomework(homework, {fetchImpl=fetch, now=new Date().toISOString()} = {}) {
+  // Lazy-load only for a real recovery probe. The health dashboard imports
+  // the pure freshness classifier without acquiring live network dependencies.
+  const [{assertExpectedTeacherPageUrl,pageLines},{HOMEWORK_SOURCE_URL,summarizeTeacherHomework}]=
+    await Promise.all([import('./teacher-page-parsers.mjs'),import('./homework-posting.mjs')]);
   const response=await fetchImpl(HOMEWORK_SOURCE_URL,{
     headers:{accept:'text/html','user-agent':'ABVM-Parent-Companion/1.0'},
     redirect:'follow',signal:AbortSignal.timeout(12000)
