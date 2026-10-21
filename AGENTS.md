@@ -46,7 +46,7 @@ When the user uploads a lunch menu and asks to integrate/update the app, follow
 `docs/LUNCH_ART.md` in the same run. Menu import includes the missing-illustration
 work automatically; do not wait for a separate artwork request. Verify the exact
 printed menu, update the reviewed lunch catalog, reuse exact reviewed meal art in the approved tray style
-with explicit new source/full-menu approvals, generate missing artwork with the built-in
+only when the exact source ID and complete menu are verified, generate missing artwork with the built-in
 high-quality image generator, visually inspect it, and run the existing QA before
 publishing through a pull request. Never invent unspecified ingredients. Use
 `pendingArtMenus(plan, currentNewYorkMonth, {styleId:TRAY_STYLE_ID})` from the lunch-art builder to avoid
@@ -57,7 +57,7 @@ The former “Complete lunch artwork” merge-event task was repurposed on Octob
 merge trigger. Future missing-menu artwork remains part of the existing hourly
 ABVM School Data Intake task and normal menu-import workflow; no new task is needed.
 Follow `docs/LUNCH_ART.md` and `docs/LUNCH_TRAY_STYLE.md`, the style-aware queue,
-exact full-menu approvals and privacy-safe generated references. Private originals
+exact source/menu proof and privacy-safe generated references. Private originals
 and people never enter this repository.
 Do not change unrelated tasks to make room. If artwork generation or review is blocked,
 retain accurate text-only cards and report the specific incomplete coverage.
@@ -77,11 +77,25 @@ states) and every verified test for the displayed school week. Main-meal summari
 are allowed; selected-day details retain the complete governed menu.
 
 Rendered phone and tablet evidence is required for visual acceptance. Static/browser
-tests alone are not aesthetic approval. As authorized by the owner on October 20,
-2026, eligible ABVM changes may be merged on the owner's explicit approval after
-passing exact-head automated QA, source/privacy verification, independently
-executable test reproduction and guarded Pages publication checks. A separate
-human reviewer is optional, not a release requirement. Record approval as owner
-approval, never as an independent human review. Never bypass failed tests,
-unverified school sources, student privacy controls or live acceptance to obtain
-a release. No routine design approval is required.
+tests are objective release checks, not proof of hands-on physical-device review.
+
+## Standing ABVM release authorization — October 20, 2026
+
+The owner has authorized current and future routine ABVM fixes, curriculum refreshes,
+source-matched schoolwork, accessibility improvements and deployments without any
+mandatory human reviewer, second-person code review, educator signoff or repeated
+owner approval/release decision. Human advice, visual feedback and pilots are optional,
+not blocking conditions. Do not request or invent an independent human review or
+represent automated test reproduction as a human approval. This applies to future
+ABVM changes until the owner explicitly changes the policy.
+
+Release code through an exact-head pull request with passing automated App QA,
+independently reproducible tests, source/privacy/provenance checks and guarded Pages
+publication. Existing verified teacher/Homework/notice automation may publish its
+strictly scoped source-backed data using its own bounded, tested workflows. Do not
+merge a red or incomplete candidate. Missing or ambiguous teacher facts, academic
+answers, rights, original photos or learner evidence stay isolated or text-only;
+no reviewer can be demanded as a way around missing verification. Keep student
+records private, retain actual physical-device acceptance as an outstanding
+quality observation when it has not been performed, and never fabricate proof.
+
