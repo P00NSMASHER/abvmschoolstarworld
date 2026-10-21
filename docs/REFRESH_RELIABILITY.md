@@ -27,3 +27,5 @@ Before merging: passing exact-head App QA, independent automated reproduction, a
 Fourteen consecutive school days without manual repairs remain an observation requirement. Preserve failed attempts and actual interventions; do not count elapsed calendar time, simulated runs or a new source SHA as an already-completed reliability period. Retain the original failure and the exact merged source fingerprint in the canonical PR checkpoint. This document does not claim that observation has passed.
 
 Rollback is a normal tested revert of the coordination PR; do not reset main, remove source verification, change teacher facts or disable the healthy existing schedules. The last verified school data must remain available with honest source dates during outages.
+
+Recovery must explicitly reject unavailable, malformed or incomplete workflow history before evaluating its budgets. Do not rely on Bash `set -e` inside a function invoked with `||`: that shell context suppresses implicit error termination.

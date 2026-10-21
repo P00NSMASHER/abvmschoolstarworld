@@ -15,9 +15,15 @@ Parent/child lock deadlock; untrusted release input; schedule/DST boundaries; bo
 
 ## Tasks
 - [x] Reproduce missing shared lock with tests/refresh-coordination.test.mjs (12 failing tests before implementation).
-- [ ] Coordinate source-writer jobs and Pages; keep parent locks distinct and queue pending work.
-- [ ] Test and implement trusted latest-main admission; retain explicit-ref rejection and final guard.
-- [ ] Test and implement source schedule policy and recovery phase evidence.
+- [x] Coordinate source-writer jobs and Pages; keep parent locks distinct and queue pending work.
+- [x] Test and implement trusted latest-main admission; retain explicit-ref rejection and final guard.
+- [x] Test and implement source schedule policy and recovery phase evidence.
 - [ ] Verify baseline versus new tests, full unit/static checks, hosted exact-head QA and reproduction.
 - [ ] Merge only green exact head; inspect real source and Pages outcomes and compare live JSON.
 - [ ] Reuse the existing independent ABVM intake check and record the 14-school-day observation boundary without claiming it passed.
+
+## Additional reproduced recovery defect
+The actual shell call site uses an OR-list, which disables implicit Bash errexit inside maybe_dispatch. A failing GitHub history read and malformed history both dispatched anyway in red tests. Explicit read/schema/parse guards now reject unknown history without dispatching. The daily failure and total-dispatch caps are unchanged.
+
+## Verified before final hosted acceptance
+On integrated head df7f8f81, Windows unit QA: 714 passed, zero failed, ten platform-specific skips; static/data/privacy validation passed. The fresh main/live/source probe at 19:57:17Z was current with full JSON parity. Final hosted exact-head QA and live deployment remain pending, as does the fourteen-school-day observation.
