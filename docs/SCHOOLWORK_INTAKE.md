@@ -183,10 +183,10 @@ Dry-run first. Review the derived status/trend/practice queue, then write.
 Use the private practice queue to decide what practice is useful now. Prefer small,
 specific practice sets aimed at the evidenced skill rather than generic subject-wide
 worksheets. Include retention checks for older mastered skills when appropriate.
-A `review-unscored` target is **for the parent/reviewer to verify unclear
-evidence first**; it is not evidence of a learning deficit or permission to
-generate remedial practice from an unverified answer. Leave the source
-unresolved until its correctness can be independently reviewed.
+A `review-unscored` target remains **unresolved until actual source evidence can
+be verified**, not until a human reviewer signs off. It is not evidence of a
+learning deficit or a reason to generate remedial practice from an unknown
+answer. Optional human feedback is welcome but never a release prerequisite.
 
 The private reason for targeting a skill is not published. Public ABVM content may
 contain original practice for the skill, but it must not say that the learner is weak,
@@ -257,7 +257,9 @@ embedded data URIs). Source SHA-256 digests are excluded from those text-pattern
 checks because hexadecimal digests are not human-readable contact information.
 These deterministic checks cannot establish that free text has no student names,
 grades, handwriting details, subtle identity clues or source-rights problems:
-manual value-level privacy, academic and provenance review **remains required**.
+value-level privacy, academic and provenance **verification remains required**;
+reproducible automated checks and actual supported source evidence suffice.
+If a photo or answer cannot be verified, retain a HOLD rather than demand a reviewer.
 
 Manifest statuses:
 
@@ -268,7 +270,9 @@ Manifest statuses:
   When a duplicate has **exactly the same SHA-256** as a reviewed integrated
   source, it **must** identify that exact source as its canonical, regardless
   of manifest ordering or a supplied free-text `reason`. Differing hashes
-  require a human-reviewed `reason` (semantic rephotograph). Every lesson
+  require independently verifiable duplicate evidence (e.g., the original
+  private images) and a documented `reason`; a person's signoff or a free-text
+  assertion alone is not evidence. Every lesson
   citing the duplicate must also cite that canonical ID. A duplicate does not
   authorize a separate lesson, question bank, or invented source coverage.
   Duplicate chains are not accepted.
@@ -341,8 +345,9 @@ The workbook has no original photo bytes, private student answers, teacher marks
 network resources, scripts or upload controls. It is printable in black and white.
 Open actual private photos separately for comparison. Questions associated with a
 lesson are **not automatically claimed to appear in each linked photo**. Source
-accuracy, educational correctness, privacy, rights and any uncertain dates remain
-human review responsibilities. Paper checkboxes are not authenticated signoff.
+accuracy, educational correctness, privacy, rights and any uncertain dates require
+verifiable evidence and guarded checks. Human feedback is optional, not a gate;
+unknown original-image claims remain held. Paper checkboxes are not authenticated signoff.
 
 Every optional comparison workbook is marked `HOLD_EXTERNAL_SIGNOFF`, including
 if annotated. This is not a mandatory educator-review queue or school approval
@@ -385,7 +390,9 @@ IDs and status codes, **never private photos, reviewer IDs or answers**.
 
 Even with all optional comparison receipts matching, the audit output remains
 `HOLD_EXTERNAL_SIGNOFF` because receipt claims are not independent source proof.
-This diagnostic is **not a requirement to obtain teacher/educator signoff**.
+This diagnostic is **not an external human-review requirement**. The status
+`HOLD_EXTERNAL_SIGNOFF` is a historical label for missing original-photo proof,
+not a mandatory signoff path. An unverified record stays held even with a signature.
 Apply the already-authorized normal app release path with independent source,
 rights, child-privacy, device-when-required and exact-commit QA. Never publish
 original photos or receipts to the public repository, CI logs, Pages or Roblox.

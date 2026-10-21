@@ -31,4 +31,4 @@ No new event importer, RSS endpoint, cron job, notification, student data, brows
 
 ## Future feed activation
 
-If an official stable RSS/ICS export or authorized event API is demonstrated, validate it independently first. Require exact school identity, bounded date windows, source event IDs, amendments/cancellations, student privacy review, deduplication against existing reviewed notices, and non-authority over teacher assessments. Reuse an existing refresh schedule only after those gates pass.
+If an official stable RSS/ICS export or authorized event API is demonstrated, validate it independently first. Require exact school identity, bounded date windows, source event IDs, amendments/cancellations, automated student-privacy validation (no human signoff gate), deduplication against existing reviewed notices, and non-authority over teacher assessments. Reuse an existing refresh schedule only after those gates pass.

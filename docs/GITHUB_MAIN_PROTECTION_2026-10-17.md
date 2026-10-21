@@ -2,15 +2,20 @@
 
 Checked 2026-10-17: GitHub reports `main.protected=false` and no repository rulesets. The exact-main Pages workflow fails closed on stale SHAs, but this **does not prevent someone from pushing unreviewed code directly to main**.
 
-## Owner action required in GitHub Settings
+## Optional future branch hardening (no reviewer approvals)
 
 1. Open **Settings → Rules → Rulesets → New branch ruleset**, targeting the default `main` branch.
 2. Set the ruleset to **Active**. Require a pull request before merging, disallow force pushes and deletions, require linear history if squash/rebase is preferred, and require the branch to be up to date before merging.
-3. Require both always-triggered status checks from the connected GitHub Actions app:
+3. Set **required approving human reviews to zero**. Do not enable code-owner
+   review requirements, two-person approval rules, human deployment reviewers,
+   or owner reapproval per release. Human reviewers are optional for all future
+   ABVM work under the owner's standing October 20 authorization. Repository
+   rules and approval counts are not changed by editing this document.
+4. Require both always-triggered status checks from the connected GitHub Actions app:
    - `ABVM App QA / qa`
    - `Independent QA reproduction bundle / independent-reproduction`
-4. Keep bypass permissions minimal. Let the repository's existing verified teacher/Homework/notice automation identities publish **only governed generated school data** through their current independently tested workflows, or adapt the bot-write flow to a safe auto-merge PR design before activating a rule that blocks those automated writes.
-5. Verify that a deliberate branch PR without green checks cannot merge, then verify that official source refresh and Pages publication still work end to end. Do not disable source verification or full release QA to satisfy a ruleset.
+5. Keep bypass permissions minimal. Let the repository's existing verified teacher/Homework/notice automation identities publish **only governed generated school data** through their current independently tested workflows, or adapt the bot-write flow to a safe auto-merge PR design before activating a rule that blocks those automated writes.
+6. Verify that a deliberate branch PR without green checks cannot merge, then verify that official source refresh and Pages publication still work end to end. Do not disable source verification or full release QA to satisfy a ruleset.
 
 The companion application cannot safely enable this setting through the connected GitHub connector, which currently offers rule/protection reads but no administrative write action. **Do not claim branch protection is active until GitHub returns `main.protected=true` or an active `main` ruleset.**
 

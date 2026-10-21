@@ -1,5 +1,14 @@
 # ABVM premium consolidated release review — October 11, 2026
 
+**ARCHIVED HISTORICAL CHECKLIST — NOT AN ACTIVE HUMAN-REVIEW GATE.** This
+October 11 draft's independent-person, educator and separate owner-approval
+requirements were superseded by the owner's standing October 20, 2026 ABVM
+policy in `AGENTS.md`. No current or future ABVM release requires a human
+reviewer or per-release owner reapproval. Preserve current exact-head automated
+QA, school-source/privacy safeguards and genuine live publication checks. The
+below historical non-release findings and missing evidence were not retroactively
+verified or changed.
+
 ## Decision status: REVIEW ONLY / NO PRODUCTION AUTHORIZATION
 
 This draft is a **single reviewable PR targeting `main`** for the fully tested premium app stack. It combines the prior draft PR histories rather than releasing them automatically. It does not change protected school sources, private student histories, scheduled tasks, secrets, credentials, production Pages or curriculum approvals.
