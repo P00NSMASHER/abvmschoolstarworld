@@ -1,5 +1,13 @@
 # Premium ABVM composite release candidate — sign-integrity review (2026-10-12)
 
+**HISTORICAL ARTIFACT; HUMAN ASSET-SIGNOFF BLOCKER RETIRED.** As of the
+owner's October 20, 2026 directive no ABVM human reviewer is required to
+approve a fix or release. Exact original-asset checksums, independently
+verified source identity, privacy, render quality, QA and Pages parity are
+still required. Missing original bytes or failed parity remain blocked on
+verifiable evidence, not on someone's signature. The dated report below is
+archived evidence, not today's release gate.
+
 Review branch: PR #317. Original image provenance: draft PR #315.
 
 - Restored exact Git blob `a2079e2643abaf0b89e595862c290155be3d7e0c` at `pages/assets/school/abvm-school-sign.webp`, identical to approved SHA-256 `e0ba8feebe0ca8484492a85f686d64774ad6603a846469d7a29b584912d4ff11` (24,164 bytes, 420×280 WebP). No photo was recreated.
