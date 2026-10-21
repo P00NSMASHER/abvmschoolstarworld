@@ -130,3 +130,16 @@ test('named reading text sets accept only verified exact-scope questions',()=>{
   assert.deepEqual(questionsForTest({label:'Reading (Unit 2 Text Set 3)'},pool),[]);
   assert.equal(questionsForTest({label:'Reading (Unit 1 Text Set 3)'},pool.slice(0,2)).length,0);
 });
+
+test('specific common/proper-noun exam excludes unrelated grammar and fails closed',()=>{
+  const pool=[
+    {id:'nouns',subject:'Reading / ELA',skill:'common-proper-nouns'},
+    {id:'predicate',subject:'Reading / ELA',skill:'subject-predicate'},
+    {id:'sentences',subject:'Reading / ELA',skill:'sentence-types'},
+    {id:'spelling',subject:'Spelling / Handwriting',skill:'long-short-a'},
+  ];
+  assert.deepEqual(questionsForTest({label:'Grammar (common & proper nouns)',date:'2026-10-29'},pool).map(q=>q.id),['nouns']);
+  assert.deepEqual(questionsForTest({label:'Grammar (common and proper nouns)'},pool).map(q=>q.id),['nouns']);
+  assert.deepEqual(questionsForTest({label:'Grammar (common & proper nouns)'},pool.slice(1)),[],
+    'unavailable noun lessons must not be replaced with a subject/predicate exercise');
+});
