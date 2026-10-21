@@ -30,10 +30,13 @@ function sixTeacherPagesMatch(pack) {
 }
 
 function publishedCurriculumMatches(repo, live) {
+  // Matching teacher timestamps do not prove identical practice questions,
+  // test dates, teaching explanations or reviewed lunch reached public Pages.
   return live?.delivery === 'verified'
     && repo?.sourceLastCheckedAt === live?.sourceLastCheckedAt
     && repo?.pack?.sourceHash === live?.pack?.sourceHash
-    && repo?.pack?.uploadedNoticeHash === live?.pack?.uploadedNoticeHash;
+    && repo?.pack?.uploadedNoticeHash === live?.pack?.uploadedNoticeHash
+    && JSON.stringify(repo) === JSON.stringify(live);
 }
 
 function publishedHomeworkMatches(repo, live) {
