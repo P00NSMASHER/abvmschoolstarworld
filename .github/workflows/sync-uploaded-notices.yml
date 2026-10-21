@@ -16,9 +16,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
-  pages: write
-  id-token: write
+  contents: read
 
 concurrency:
   group: abvm-uploaded-notices
@@ -27,6 +25,8 @@ concurrency:
 
 jobs:
   integrate:
+    permissions:
+      contents: write
     # One mutation/publication at a time; job scope avoids parent-child deadlock.
     concurrency:
       group: abvm-verified-school-state
@@ -36,6 +36,7 @@ jobs:
     timeout-minutes: 15
     outputs:
       release_sha: ${{ steps.integrate.outputs.release_sha }}
+      published: ${{ steps.integrate.outputs.published }}
     steps:
       - uses: actions/checkout@v6
         with:
@@ -69,6 +70,7 @@ jobs:
             if git diff --quiet -- pages/data/study-pack.json pages/data/study-archive.json; then
               echo "Latest main already contains the reviewed uploaded notices."
               echo "release_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+              echo "published=false" >> "$GITHUB_OUTPUT"
               exit 0
             fi
 
@@ -77,6 +79,7 @@ jobs:
 
             if git push origin HEAD:main; then
               echo "release_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+              echo "published=true" >> "$GITHUB_OUTPUT"
               exit 0
             fi
 
@@ -89,6 +92,11 @@ jobs:
   deploy:
     name: deploy reviewed notice update through Pages workflow
     needs: integrate
+    if: needs.integrate.outputs.published == 'true'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     uses: ./.github/workflows/pages.yml
     with:
       ref: ${{ needs.integrate.outputs.release_sha }}

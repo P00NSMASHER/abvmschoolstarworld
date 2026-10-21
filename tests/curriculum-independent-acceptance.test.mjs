@@ -27,7 +27,10 @@ test('candidate-only changes trigger independent exact-head full QA', () => {
   assert.ok(independent.includes('npm run qa:e2e'));
   assert.ok(independent.includes('Verify publication checker against candidate app'));
   assert.ok(independent.includes('timeout-minutes: 30'));
-  assert.ok(!independent.includes('continue-on-error: true'));
+  // Cache is an optional optimization; failures in static, unit, browser, privacy
+  // or publication QA still fail the independent job. No other step is tolerant.
+  assert.match(independent,/name: Cache version-pinned Playwright browsers\n\s+continue-on-error: true\n\s+uses: actions\/cache@v4/);
+  assert.equal((independent.match(/continue-on-error: true/g)||[]).length,1);
 });
 
 test('separate independent gate tests held questions without claiming real pilot evidence', () => {
