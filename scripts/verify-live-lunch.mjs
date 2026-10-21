@@ -143,7 +143,10 @@ try {
   }
 
   await page.getByRole('button', { name: 'Calendar', exact: true }).click();
-  for (const meal of data.pack.lunchMenu) {
+  for (const publishedMeal of data.pack.lunchMenu) {
+    // Match Today and Week: a reviewed closure supersedes a district meal.
+    // Never fail publication because the app correctly says no school.
+    const meal = publishedMealForDate(data.pack, publishedMeal.date);
     for (let attempt = 0; attempt < 24; attempt++) {
       const displayedMonth = (await page.locator('[data-cal-day]').first().getAttribute('data-cal-day')).slice(0, 7);
       const targetMonth = meal.date.slice(0, 7);
@@ -151,7 +154,12 @@ try {
       await page.getByRole('button', { name: displayedMonth < targetMonth ? 'Next month' : 'Previous month', exact: true }).click();
     }
     await page.locator(`[data-cal-day^="${meal.date}"]`).click();
-    for (const item of meal.items) await expect(page.locator('.calendar-day-card .agenda-lunch')).toContainText(item);
+    if (meal.status === 'no-school') {
+      await expect(page.locator('.calendar-day-card .agenda-lunch')).toContainText('No school lunch');
+      (receipt.verifiedClosures??=[]).push({date:meal.date,label:meal.closure||'Published no-school lunch',screen:'Calendar'});
+    } else {
+      for (const item of meal.items) await expect(page.locator('.calendar-day-card .agenda-lunch')).toContainText(item);
+    }
     receipt.screens.push({ screen: 'Calendar', date: meal.date, lunch: await page.locator('.calendar-day-card .agenda-lunch').textContent() });
   }
   await page.locator('.calendar-day-card').scrollIntoViewIfNeeded();

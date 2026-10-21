@@ -45,6 +45,33 @@ const freeze = value => {
 };
 
 
+test('weekly Math consumes fresh current then reviewed saved questions before repeating',() => {
+  const storage=memory(),engine=loadEngine(storage);
+  const current=pool('reviewed-current-',9);
+  const saved=pool('source-backed-saved-',20,'Math',{tier:undefined});
+  const model=createStudyMaterials(opts({
+    storage,engine,pack:{sourceHash:'checked-math-week'},
+    catalog:catalog(current,'source-key-with-rotating-math'),
+    schoolwork:{lessons:[lesson('reviewed-saved-math',saved)]},
+  }));
+  const rounds=[0,1,2].map(seed=>model.round('math',{seed:String(seed)}).questions);
+  assert.deepEqual(rounds.map(rows=>rows.length),[8,8,8]);
+  assert.ok(rounds[0].every(q=>q.id.startsWith('reviewed-current-')));
+  assert.equal(rounds[1].filter(q=>q.id.startsWith('reviewed-current-')).length,1);
+  assert.ok(rounds[1].slice(1).every(q=>q.id.startsWith('source-backed-saved-')));
+  const all=rounds.flat();
+  assert.equal(new Set(all.map(q=>q.id)).size,24,
+    'an available reviewed question should never repeat across three sessions');
+  assert.equal(new Set(all.map(practiceIdentity)).size,24);
+  for(const row of all.filter(q=>q.id.startsWith('source-backed-saved-'))) {
+    assert.equal(row.tier,undefined,'original saved-source labels must not be rewritten');
+    assert.equal(row.sourceFact,'Reviewed source fact');
+  }
+  const rotation=JSON.parse(storage.getItem('abvm-hub-weekly-rotation:v1'));
+  assert.equal(rotation.sourceKey,'source-key-with-rotating-math');
+  assert.equal(rotation.recent.length,24);
+});
+
 test('full current test bank interleaves skills and prints every verified question',() => {
   const rows=[
     ...pool('first-',12,'Reading / ELA',{skill:'text-evidence',sourceFact:'Use details from the story.'}),
@@ -525,9 +552,11 @@ test('dated current schoolwork is selectable by existing engine without relabeli
   const row = question('archived-math'); delete row.tier;
   const archive = {questions:[archiveRow(row,'2026-10-05',[{capturedAt:'2026-10-05'}])],notes:[],vocabulary:[]};
   const model = createStudyMaterials(opts({catalog:catalog(pool('fallback-',8,'Math',{tier:'star-fallback'})),archive,engine:loadEngine()}));
-  assert.equal(model.round('math',{seed:0}).questions[0].id,'archived-math');
+  const firstRound=model.round('math',{seed:0});
+  assert.equal(firstRound.questions[0].id,'archived-math');
   assert.equal(archive.questions[0].tier,undefined);
-  assert.deepEqual(model.round('math',{seed:0}).questions[0].provenance,archive.questions[0].provenance);
+  assert.deepEqual(firstRound.questions[0].provenance,archive.questions[0].provenance,
+    'the original reviewed source must remain intact even when later rounds rotate');
 });
 
 test('explicit Saved and STAR source choices control all eligible questions and preserve four-choice answers',() => {

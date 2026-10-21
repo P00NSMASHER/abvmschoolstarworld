@@ -77,6 +77,11 @@ states) and every verified test for the displayed school week. Main-meal summari
 are allowed; selected-day details retain the complete governed menu.
 
 Rendered phone and tablet evidence is required for visual acceptance. Static/browser
-tests alone are not aesthetic approval. Keep independent review separate from
-implementation and release only the exact reviewed head through normal QA,
-independent reproduction and Pages gates. No routine design approval is required.
+tests alone are not aesthetic approval. As authorized by the owner on October 20,
+2026, eligible ABVM changes may be merged on the owner's explicit approval after
+passing exact-head automated QA, source/privacy verification, independently
+executable test reproduction and guarded Pages publication checks. A separate
+human reviewer is optional, not a release requirement. Record approval as owner
+approval, never as an independent human review. Never bypass failed tests,
+unverified school sources, student privacy controls or live acceptance to obtain
+a release. No routine design approval is required.
