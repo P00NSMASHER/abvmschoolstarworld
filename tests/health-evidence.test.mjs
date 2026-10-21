@@ -281,7 +281,7 @@ test('the complete dashboard turns critical for stale homework despite healthy w
         questionCount:1,unsupportedSkillCount:0,pageExactLineageCount:1,unresolvedLineageCount:0}};
     pack.pack.lunchMenuSource.retrievalState='verified';
     writeFileSync(join(root,'pages/data/study-pack.json'),JSON.stringify(pack));
-    const names=['Refresh ABVM teacher pages','ABVM App QA','Deploy ABVM to GitHub Pages','Monitor ABVM refresh health'];
+    const names=['Refresh ABVM teacher pages','ABVM App QA','Deploy ABVM to GitHub Pages','Monitor ABVM refresh health','Refresh current ABVM homework'];
     const workflowFile=join(root,'runs.json');
     writeFileSync(workflowFile,JSON.stringify({workflow_runs:names.map((name,id)=>({
       id,name,head_branch:'main',event:'schedule',status:'completed',conclusion:'success',
