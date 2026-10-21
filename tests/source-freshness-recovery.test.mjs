@@ -173,3 +173,22 @@ test('six same-day successful dispatches cannot start a watchdog feedback loop',
   assert.equal(result.status,1);
   assert.doesNotMatch(result.stdout,/DISPATCHED/);
 });
+
+test('unchanged Homework source timestamps and hashes cannot hide stale assignments',()=>{
+  const curriculum=teacherPack(), assignments=homework();
+  const changes=[
+    live=>{live.assignments[0].task='Different worksheet';},
+    live=>{live.status='no-homework';},
+    live=>{live.assignments.push({subject:'Spelling',task:'Unverified extra task'});},
+  ];
+  for(const change of changes){
+    const publishedHomework=structuredClone(assignments);
+    change(publishedHomework);
+    const result=assessDailySchoolSources({now:NOW,curriculum,homework:assignments,
+      publishedCurriculum:structuredClone(curriculum),publishedHomework});
+    assert.equal(result.homeworkFresh,true);
+    assert.equal(result.homeworkLiveMatches,false);
+    assert.equal(result.redeploy,true);
+    assert.equal(result.refreshHomework,false);
+  }
+});
