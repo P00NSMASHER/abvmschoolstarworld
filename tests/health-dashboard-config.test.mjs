@@ -155,3 +155,13 @@ test("dashboard independently verifies branch protection without breaking normal
   assert.match(report,/GitHub main branch protection could not be verified/);
   assert.doesNotMatch(workflow,/branches\/main\/protection\/required_status_checks/);
 });
+
+test("operational dashboard surfaces missed Homework cron while preserving the existing source-age gate",()=>{
+  assert.match(report,/assessHomeworkPollingCadence\(productionRuns,now\)/);
+  assert.match(report,/Hourly Homework cron:/);
+  assert.match(report,/Scheduled hourly Homework polling is delayed/);
+  assert.match(report,/No valid scheduled Homework polling run was observed/);
+  assert.match(report,/status\.homework\.healthy/);
+  assert.match(refreshHealthWorkflow,/scripts\/homework-live-monitor\.mjs/);
+  assert.match(refreshHealthWorkflow,/scripts\/check-refresh-health\.mjs/);
+});

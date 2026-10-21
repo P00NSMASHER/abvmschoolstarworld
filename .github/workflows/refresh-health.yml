@@ -1,6 +1,13 @@
 name: Monitor ABVM refresh health
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/check-refresh-health.mjs'
+      - 'scripts/homework-live-monitor.mjs'
+      - 'tests/homework-live-monitor.test.mjs'
+      - '.github/workflows/refresh-health.yml'
   workflow_run:
     workflows:
       - Deploy ABVM to GitHub Pages
