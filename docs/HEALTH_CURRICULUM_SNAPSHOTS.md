@@ -7,6 +7,6 @@ The operational dashboard compares **two independent evidence epochs**:
 
 The dashboard now labels these sources distinctly in both Markdown and JSON. When exact hold evidence is missing, it says `not-established`, not “no gaps.” Source freshness, the 16-hour watchdog threshold, academic publication gates, and the critical process exit status remain unchanged.
 
-The October 9 teacher refresh was blocked by four unpublished Reading/ELA families held in educator-review PR #270. This note does not approve those families or assert that the refresh has succeeded. The reviewer must complete educator and safe-usage requirements before the separately governed curriculum registry is promoted.
+Historical context: The October 9 teacher refresh was blocked by four unpublished Reading/ELA families held in PR #270. That educator-review gate is retired under the current source-verified curriculum policy and the owner's standing October 20 authorization. Candidate families remain held for missing verifiable source/content/QA evidence, **not** for absent human review. Publication still requires the independent automated curriculum and source-integrity gates; this note does not certify a refreshed pack.
 
 No new schedule, automatic notification, personal data, Facebook access, or application asset is added by this reporting-only change.
