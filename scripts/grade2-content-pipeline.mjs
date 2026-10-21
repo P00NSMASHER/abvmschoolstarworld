@@ -1415,7 +1415,7 @@ const RENEWABLE_EXTENSION_FAMILIES = Object.freeze({
     {
       questionType:'transfer',
       prompt:'Which sentence correctly capitalizes the proper noun naming a person?',
-      choices:['Maya packed her lunch.','maya packed her lunch.','Maya Packed Her Lunch.'],
+      choices:['Maya packed her lunch.','My friend maya packed lunch.','The Girl gave Maya a book.'],
       answer:'Maya packed her lunch.',
       explanation:'Maya is a proper noun and starts with a capital letter; the other words do not need extra capital letters.',
       hint:'Capitalize the person’s special name, not every word.',dok:2,difficulty:2,
@@ -1453,7 +1453,7 @@ const RENEWABLE_EXTENSION_FAMILIES = Object.freeze({
     {
       questionType:'reasoning',
       prompt:'Which sentence uses capitals correctly for the proper nouns of a place and a month?',
-      choices:['We visited Lake Erie in June.','We visited lake erie in June.','We visited Lake erie in june.'],
+      choices:['We visited Lake Erie in June.','Our trip to lake erie was in June.','We saw Lake erie during june.'],
       answer:'We visited Lake Erie in June.',
       explanation:'Lake Erie is a named place and June is a named month; both are proper nouns with capital letters.',
       hint:'Capitalize each important part of a particular place name and the name of a month.',dok:3,difficulty:3,
