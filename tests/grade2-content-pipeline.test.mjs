@@ -91,7 +91,7 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
   }
 
   const priorityFamilies = [
-    'sentence-types','consonant-blends','cvc-structure','long-short-a','suffix-ed-ing',
+    'sentence-types','common-proper-nouns','consonant-blends','cvc-structure','long-short-a','suffix-ed-ing',
     'dialogue','subtraction-within-12',
     'religion-trinity','religion-image-likeness','religion-creation-care','religion-jesus-savior',
     'religion-original-sin','religion-faith-gift','religion-sacrament-sign','religion-baptism-grace',
@@ -102,7 +102,7 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
     const types = new Set(pipeline.questions.filter(question => question.skill === skill).map(question => question.questionType));
     assert.deepEqual([...types].sort(), ['direct','reasoning','transfer'], `${skill} must include direct, transfer, and reasoning siblings while source-backed`);
   }
-  const expandedFamilies = ['sentence-types','consonant-blends','cvc-structure','long-short-a','suffix-ed-ing','theme','visualize','dialogue','subtraction-within-12'];
+  const expandedFamilies = ['sentence-types','common-proper-nouns','consonant-blends','cvc-structure','long-short-a','suffix-ed-ing','theme','visualize','dialogue','subtraction-within-12'];
   for (const skill of expandedFamilies.filter(skill => ids.has(skill))) {
     assert.ok((pipeline.qa.questionsPerSkill?.[skill] || 0) >= 8, `${skill} should have at least eight genuine semantic variants while source-backed`);
   }
@@ -592,4 +592,44 @@ test('teacher characters topic maps to existing original main-character practice
     assert.ok(pipeline.coverage.some(c=>c.status==='GENERATOR_UNSUPPORTED'&&c.topic===topic));
     assert.ok(!pipeline.skills.some(s=>s.id==='main-character'));
   }
+});
+
+test('October 29 common/proper nouns get eight original, independently checked questions',()=>{
+  const original=JSON.parse(readFileSync(DATA_PATH,'utf8')).pack;
+  const pack=structuredClone(original);
+  const reading=pack.subjects.find(row=>row.subject==='Reading / ELA');
+  assert.ok(reading,'teacher Reading/ELA subject required');
+  reading.topics=[...(reading.topics||[]).filter(t=>!/^Grammar:/i.test(t)),
+    'Grammar: common & proper nouns (test Thursday, Oct. 29)'];
+  const sourcePages=[{
+    title:'Tests',
+    url:'https://sites.google.com/view/abvmgr2/tests',
+    checkedAt:'2026-10-21T00:47:51.249Z',
+    contentHash:'checked-common-proper-nouns',
+    lines:['Thursday Oct. 29: Grammar (common & proper nouns)'],
+  }];
+  const pipeline=buildGrade2ContentPipeline(pack,{sourceHash:pack.sourceHash,sourcePages});
+  assert.deepEqual(validateGrade2ContentPipeline(pipeline),[]);
+  const skill=pipeline.skills.find(row=>row.id==='common-proper-nouns');
+  assert.ok(skill);
+  assert.equal(skill.subject,'Reading / ELA');
+  assert.equal(skill.sourceLineage.quality,'page-exact');
+  assert.equal(skill.sourceLineage.sourceTitle,'Tests');
+  const bank=pipeline.questions.filter(row=>row.skill===skill.id);
+  assert.equal(bank.length,8,'the announced test needs several genuine original turns');
+  assert.deepEqual([...new Set(bank.map(q=>q.questionType))].sort(),['direct','reasoning','transfer']);
+  assert.equal(new Set(bank.map(q=>q.variantFingerprint)).size,8);
+  assert.ok(bank.every(q=>q.choices.length===3 && q.choices.filter(v=>v===q.answer).length===1));
+  assert.ok(bank.every(q=>new Set(q.choices.map(v=>v.toLowerCase())).size===3),
+    'distractors must differ in content, never only in capitalization');
+  assert.ok(bank.every(q=>q.sourceMode==='DETERMINISTIC_TEMPLATE'&&q.sourceLineage?.quality==='page-exact'));
+  assert.ok(pipeline.coverage.some(row=>row.skillId==='common-proper-nouns'&&row.status==='COVERED'));
+  assert.equal(pipeline.coverage.some(row=>row.topic.includes('common & proper nouns')&&row.status==='GENERATOR_UNSUPPORTED'),false);
+  assert.ok(bank.every(q=>/noun|name|capital/i.test(q.prompt+' '+q.explanation+' '+q.hint)));
+  const withdrawn=structuredClone(pack);
+  withdrawn.subjects.find(row=>row.subject==='Reading / ELA').topics=
+    withdrawn.subjects.find(row=>row.subject==='Reading / ELA').topics.filter(t=>!t.startsWith('Grammar:'));
+  const without=buildGrade2ContentPipeline(withdrawn,{sourceHash:pack.sourceHash});
+  assert.equal(without.questions.some(q=>q.skill==='common-proper-nouns'),false,
+    'withdrawn teacher skill cannot survive as fresh classroom practice');
 });

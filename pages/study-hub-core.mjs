@@ -17,6 +17,11 @@ export function religionChapterScopes(question) {
 /** Match practice to an announced test without inventing scope or altering sources. */
 export function questionsForTest(test, questions) {
   const label = test.label.toLowerCase();
+  // Exact common/proper-noun exams must never be padded with unrelated
+  // subject-predicate or sentence-type questions when their own bank is absent.
+  if (/common\s*(?:&|and)\s*proper\s+nouns?/.test(label)) {
+    return questions.filter(q => q.subject === 'Reading / ELA' && q.skill === 'common-proper-nouns');
+  }
   if (/grammar|predicate|subject &|sentence types|punctuation/.test(label)) {
     if (/subject|predicate/.test(label)) return questions.filter(q=>q.skill==="subject-predicate");
     if (/sentence types|punctuation/.test(label)) return questions.filter(q=>q.skill==="sentence-types");

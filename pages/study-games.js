@@ -1513,6 +1513,7 @@ function teachCardFor(question){
   if(!question?.skill)return null;
   const cards={
     "sentence-types":["Ask what job the sentence does.","A statement tells, a question asks, a command directs, and an exclamation shows strong feeling."],
+    "common-proper-nouns":["Decide whether the word is a general kind or a particular name.","City is a common noun. Chicago is a proper noun that names one specific city and begins with a capital letter."],
     "subject-predicate":["Find who or what the sentence is about, then what that subject does or is.","In “The dog barked loudly,” The dog is the subject and barked loudly is the predicate."],
     "consonant-blends":["Listen for both beginning consonant sounds.","In “flag,” you can hear both /f/ and /l/."],
     "cvc-structure":["Check the three letter types from left to right.","“Map” is consonant-vowel-consonant: m-a-p."],

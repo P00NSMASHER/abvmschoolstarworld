@@ -138,3 +138,11 @@ test('corrupt optional recent/history state cannot crash non-test selection',()=
 test('practice selection module exports only its active selection API',()=>{
  assert.deepEqual(Object.keys(experience).sort(),['adaptivePracticeRound','practiceIdentity']);
 });
+
+test('common/proper noun misconception receives specific Teach Card guidance',()=>{
+  const card=engine.teachCardFor({skill:'common-proper-nouns',hint:'Read the sentence.'});
+  assert.match(card.instruction,/general kind|particular name/i);
+  assert.match(card.example,/common noun/i);
+  assert.match(card.example,/proper noun/i);
+  assert.match(card.example,/capital letter/i);
+});
