@@ -1,5 +1,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import {assertExpectedTeacherPageUrl,pageLines} from './teacher-page-parsers.mjs';
+import {HOMEWORK_SOURCE_URL,summarizeTeacherHomework} from './homework-posting.mjs';
 
 export function easternSchoolDay(value) {
   const date = new Date(value);
@@ -80,6 +82,30 @@ export function assessDailySchoolSources({
   };
 }
 
+// Independently compare current official teacher text with the last accepted
+// posting. A fresh *timestamp* on the repository does not prove the teacher
+// has not changed an undated assignment since the last hourly cron.
+export async function probeOfficialHomework(homework, {fetchImpl=fetch, now=new Date().toISOString()} = {}) {
+  const response=await fetchImpl(HOMEWORK_SOURCE_URL,{
+    headers:{accept:'text/html','user-agent':'ABVM-Parent-Companion/1.0'},
+    redirect:'follow',signal:AbortSignal.timeout(12000)
+  });
+  if(!response.ok)throw new Error('Official Homework source returned HTTP '+response.status);
+  assertExpectedTeacherPageUrl(response.url,HOMEWORK_SOURCE_URL);
+  const parsed=summarizeTeacherHomework(pageLines(await response.text()),now,homework);
+  return {available:true,changed:parsed.contentHash!==homework?.contentHash,
+    observedContentHash:parsed.contentHash};
+}
+
+export function applyOfficialHomeworkObservation(plan, probe) {
+  if(probe?.available===true && typeof probe.changed==='boolean'){
+    return {...plan,officialHomeworkChanged:probe.changed,
+      refreshHomework:plan.refreshHomework||probe.changed};
+  }
+  return {...plan,officialHomeworkChanged:null,
+    caution:[...(plan.caution||[]),'official-homework-unavailable']};
+}
+
 const ROOT = new URL('../pages/data/', import.meta.url);
 const LIVE = 'https://p00nsmasher.github.io/abvmschoolstarworld/data/';
 async function readLive(file) {
@@ -98,16 +124,20 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const now = new Date().toISOString();
   const curriculum = JSON.parse(readFileSync(new URL('study-pack.json', ROOT), 'utf8'));
   const homework = JSON.parse(readFileSync(new URL('homework-current.json', ROOT), 'utf8'));
-  const [liveCurriculum, liveHomework] = await Promise.all([
+  const [liveCurriculum, liveHomework, officialHomework] = await Promise.all([
     readLive('study-pack.json'), readLive('homework-current.json'),
+    probeOfficialHomework(homework).catch(error=>({
+      available:false,error:String(error?.message||error)
+    })),
   ]);
-  const plan = assessDailySchoolSources({
+  const baseline = assessDailySchoolSources({
     now, curriculum, homework,
     publishedCurriculum: liveCurriculum.data, curriculumLiveAvailable: liveCurriculum.available,
     publishedHomework: liveHomework.data, homeworkLiveAvailable: liveHomework.available,
   });
+  const plan=applyOfficialHomeworkObservation(baseline,officialHomework);
   plan.checkedAt = { curriculum: curriculum.sourceLastCheckedAt, homework: homework.checkedAt };
-  plan.errors = [liveCurriculum.error, liveHomework.error].filter(Boolean);
+  plan.errors = [liveCurriculum.error, liveHomework.error, officialHomework.error].filter(Boolean);
   const report = process.argv.find(arg => arg.startsWith('--report='))?.slice(9);
   if (report) writeFileSync(report, JSON.stringify(plan, null, 2) + '\n', 'utf8');
   console.log(JSON.stringify(plan, null, 2));
