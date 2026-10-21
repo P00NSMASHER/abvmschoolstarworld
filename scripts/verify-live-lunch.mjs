@@ -3,6 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { chromium, expect } from '@playwright/test';
 import { publishedMealForDate } from './published-meal.mjs';
+import {sameDeployedStudyPack} from './live-pack-parity.mjs';
 
 const base = process.env.ABVM_LIVE_URL || 'https://p00nsmasher.github.io/abvmschoolstarworld/';
 const expected = JSON.parse(readFileSync(new URL('../pages/data/study-pack.json', import.meta.url), 'utf8'));
@@ -30,8 +31,8 @@ async function livePack() {
       });
       if (!r.ok || !(r.headers.get('content-type') || '').includes('json')) throw new Error('Live pack is not JSON: ' + r.status);
       const data = await r.json();
-      if (data.pack?.lunchMenuHash === expected.pack.lunchMenuHash && data.pack?.sourceHash === expected.pack.sourceHash && data.sourceLastCheckedAt === expected.sourceLastCheckedAt) return data;
-      detail = 'CDN has not served the exact deployed source and lunch hashes yet';
+      if (sameDeployedStudyPack(expected,data)) return data;
+      detail = 'CDN has not served the exact governed study pack yet';
     } catch (error) { detail = error.message; }
     await sleep(5000);
   }
@@ -46,7 +47,7 @@ async function liveStudyAssets() {
   const assets = ['lunch-art.js','data/lunch-art-current.json','data/lunch-art-registry.json',...artRegistry.artworks.filter(art=>art.status==='reviewed').map(art=>art.src),'index.html', 'app.js', 'product-view.js', 'styles.css', 'study-teaching.css', 'study-review.js', 'weekly-learning.js', 'assets/school/abvm-school-hero.webp', 'study-games.js', 'study-games-view.js', 'study-materials.mjs', 'study-games-materials-view.mjs', 'study-games-materials.css', 'sw.js', ...['math', 'reading', 'spelling', 'religion', 'eagle'].map(name => 'assets/illustrations/' + name + '.webp'), ...['eaglet','starlight','spark','scholar','golden','eagle','champion'].map(name=>'assets/badges/'+name+'.webp'), ...['nest-explorer','little-luminary','feather-cadet','star-voyager','sky-scholar','wing-leader','study-sentinel','school-spirit','blue-ribbon-ace','golden-quill','sky-captain','eagle-vanguard','honor-guardian','crown-keeper','star-commander'].map(name=>'assets/badges/'+name+'-premium.webp')];
   // A live source timestamp is insufficient if the published question bank,
   // Homework feed, or printable renderers still contain an earlier build.
-  assets.push('data/study-pack-runtime.json', 'data/study-archive.json', 'data/homework-current.json',
+  assets.push('data/study-pack.json', 'data/study-pack-runtime.json', 'data/study-archive.json', 'data/homework-current.json',
     'test-study-pair.mjs', 'classroom-test-guide.mjs', 'premium-paper-theme.mjs', 'study-notes-library.mjs');
   const digest = bytes => createHash('sha256').update(bytes).digest('hex');
   return Promise.all(assets.map(async path => {

@@ -1,5 +1,5 @@
 import {readFileSync,writeFileSync} from 'node:fs';
-import {pageLines} from './teacher-page-parsers.mjs';
+import {assertExpectedTeacherPageUrl,pageLines} from './teacher-page-parsers.mjs';
 import {HOMEWORK_SOURCE_URL,summarizeTeacherHomework,shouldPublishHomework} from './homework-posting.mjs';
 
 const destination=new URL('../pages/data/homework-current.json',import.meta.url);
@@ -11,7 +11,8 @@ for(let i=0;i<3;i++){
     const response=await fetch(HOMEWORK_SOURCE_URL,{
       headers:{accept:'text/html','user-agent':'ABVM-Parent-Companion/1.0'},
       redirect:'follow',signal:AbortSignal.timeout(25000)});
-    if(!response.ok || new URL(response.url).hostname==='accounts.google.com')throw Error('Teacher Homework page is not publicly available: '+response.status);
+    if(!response.ok)throw Error('Teacher Homework page is not publicly available: '+response.status);
+    assertExpectedTeacherPageUrl(response.url, HOMEWORK_SOURCE_URL);
     html=await response.text();
     break;
   }catch(error){lastError=error;if(i<2)await new Promise(resolve=>setTimeout(resolve,(i+1)*1500));}
