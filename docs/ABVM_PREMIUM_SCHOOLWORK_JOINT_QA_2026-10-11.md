@@ -1,5 +1,13 @@
 # ABVM premium + cumulative schoolwork: joint integration QA (October 11, 2026)
 
+**HISTORICAL DRAFT ONLY; HUMAN REVIEW HOLDS SUPERSEDED.** The October 20,
+2026 standing ABVM authorization removes any mandatory independent person,
+photo reviewer, educator signoff and repeated owner release decision. Any
+inaccessible original photo or ambiguous schoolwork still remains **unverified**
+and cannot support a claim merely because signoff is no longer required. Use
+current source-specific QA, privacy and exact-head release gates instead. The
+below record remains a true October 11 snapshot, not present production policy.
+
 ## Intent and release authority
 
 This branch is a **non-deploying, draft integration test candidate**. It combines two separately green, unmerged, review-only PRs, **not** a joint source approval or permission to publish. Do not merge this branch, deploy GitHub Pages, promote curriculum, add user/student records, change existing ChatGPT scheduled tasks, or reconfigure GitHub production permissions.
