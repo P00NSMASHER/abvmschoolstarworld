@@ -247,7 +247,7 @@ const md=[
   `- **School-week labels:** Calendar ${expectedWeekLabel}; pack ${reportedWeekLabel||"missing"}; teacher posting ${postingWeekLabel||"missing"}`,
   `- **Upcoming week lunches (${upcomingLunch.weekLabel}):** missing verified or no-school entries: ${upcomingLunch.missingDates.join(", ")||"none"}`,
   `- **Source coverage:** ${status.schoolData.sourcePages}/6 teacher pages; source sufficient = ${status.schoolData.sourceSufficient}; fresh <=${SOURCE_FRESH_HOURS}h = ${sourceFresh}`,
-  `- **Homework checked:** ${status.homework.checkedAt||"missing"}; status ${status.homework.status}; same Eastern day and <=8h = ${status.homework.healthy}`,
+  `- **Homework checked:** ${status.homework.checkedAt||"missing"}; status ${status.homework.status}; scheduled school-day window and <=8h = ${status.homework.healthy}`,
   `- **Hourly Homework cron:** ${status.homeworkPolling.state}; last scheduled ${status.homeworkPolling.lastScheduledAt||"not observed"}; age ${status.homeworkPolling.ageHours===null?"n/a":status.homeworkPolling.ageHours+"h"}`,
   `- **Lunch source:** ${status.lunch.retrievalState}; ${status.lunch.days} reviewed days; complete reviewed coverage = ${lunchReviewedCoverageComplete}; missing dates: ${status.lunch.missingDates.join(", ")||"none"}`,
   `- **Grade 2 content pipeline:** QA ${status.contentPipeline.qaStatus}; safety ${status.contentPipeline.safetyState}; ${status.contentPipeline.skillCount} skills; ${status.contentPipeline.questionCount} questions; partial ${status.contentPipeline.partiallyCoveredCount}; source-insufficient ${status.contentPipeline.sourceInsufficientCount}; not-practiced-by-design ${status.contentPipeline.notPracticedByDesignCount}; unsupported ${status.contentPipeline.unsupportedSkillCount}`,

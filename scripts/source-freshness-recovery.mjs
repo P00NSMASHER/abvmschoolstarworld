@@ -1,15 +1,22 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-import { easternSchoolDay, reconcileScheduledSources } from './refresh-controller.mjs';
+import { easternSchoolDay, reconcileScheduledSources, scheduledSourceDue } from './refresh-controller.mjs';
 export { easternSchoolDay, scheduledSourceDue, reconcileScheduledSources } from './refresh-controller.mjs';
 
-function checkedToday(value, now, maximumHours) {
+function checkedWithinSchoolSchedule(value, now, maximumHours, kind) {
   const current = Date.parse(now), checked = Date.parse(value || '');
   if (!Number.isFinite(current) || !Number.isFinite(checked)) return false;
   const ageHours = (current - checked) / 3_600_000;
-  return ageHours >= -0.25 && ageHours <= maximumHours
-    && easternSchoolDay(checked) === easternSchoolDay(current);
+  if (ageHours < -0.25 || ageHours > maximumHours) return false;
+  const checkedDay = easternSchoolDay(checked), currentDay = easternSchoolDay(current);
+  if (checkedDay === currentDay) return true;
+  // Midnight is not a configured scan deadline. Preserve the real previous
+  // check date until the next morning scan is due, and only if the last
+  // scheduled scan was actually satisfied. Hard age limits stay unchanged.
+  const schedule = scheduledSourceDue({kind, now, checkedAt: value});
+  return schedule.due === false && checkedDay === schedule.expectedSchoolDate
+    && schedule.expectedSchoolDate < currentDay;
 }
 
 function sixTeacherPagesMatch(pack) {
@@ -49,10 +56,10 @@ export function assessDailySchoolSources({
   homeworkLiveAvailable = publishedHomework !== null && publishedHomework !== undefined,
 } = {}) {
   const curriculumFresh = sixTeacherPagesMatch(curriculum)
-    && checkedToday(curriculum.sourceLastCheckedAt, now, 20);
+    && checkedWithinSchoolSchedule(curriculum.sourceLastCheckedAt, now, 20, 'curriculum');
   const homeworkFresh = homework?.schemaVersion === 1
     && ['assignments', 'no-homework', 'no-specific-posting'].includes(homework.status)
-    && checkedToday(homework.checkedAt, now, 8);
+    && checkedWithinSchoolSchedule(homework.checkedAt, now, 8, 'homework');
   const curriculumLiveMatches = curriculumLiveAvailable
     ? publishedCurriculumMatches(curriculum, publishedCurriculum) : null;
   const homeworkLiveMatches = homeworkLiveAvailable

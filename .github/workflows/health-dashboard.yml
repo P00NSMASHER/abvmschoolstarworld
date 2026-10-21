@@ -8,6 +8,8 @@ on:
       - 'scripts/build-health-report.mjs'
       - 'scripts/health-evidence.mjs'
       - 'scripts/fetch-health-history.mjs'
+      - 'scripts/refresh-stage-health.mjs'
+      - 'tests/refresh-stage-health.test.mjs'
       - 'tests/health-dashboard-config.test.mjs'
       - 'tests/health-evidence.test.mjs'
   workflow_run:
