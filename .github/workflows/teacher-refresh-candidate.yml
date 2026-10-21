@@ -81,6 +81,11 @@ jobs:
       - name: Independently execute reviewed calendar precedence regressions
         run: node --test tests/teacher-event-precedence.test.mjs tests/october-2026-photo-notices.test.mjs
 
+      - name: Cache version-pinned Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: abvm-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
       - name: Install Chromium and WebKit
         run: npx playwright install --with-deps chromium webkit
 
