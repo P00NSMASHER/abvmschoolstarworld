@@ -104,10 +104,14 @@ const footer=guide=>'<footer class="footer">'+esc(guide?.sourceLabel||'Current r
 const warningHtml=guide=>rows(guide?.warnings).slice(0,3).filter(Boolean).map(w=>'<p class="warning">'+esc(w)+'</p>').join('');
 function strategies(guide,kind){
   const label=clean(guide?.label).toLowerCase(),skills=rows(guide?.practice).map(q=>clean(q.skill)).join(' ').toLowerCase();
+  if(kind==='math'&&/place.?value|expanded.?form/.test(label+' '+skills))
+    return ['Name each digit’s place: hundreds, tens, or ones.','Write expanded form by showing each digit’s value, such as 347 = 300 + 40 + 7.','Check by adding the expanded parts to rebuild the original number.'];
   if(kind==='math'&&/subtraction|subtract|minus/.test(label+' '+skills))
     return ['Read the subtraction problem. Find the starting amount and how much is taken away.','Break apart tens and ones, or count back, to find the difference.','Check by adding the answer to the amount taken away.'];
   if(kind==='math'&&/addition|sum/.test(label+' '+skills))
     return ['Look for the two amounts to join.','Add the ones and tens carefully.','Check by counting on or using the related subtraction fact.'];
+  if(kind==='grammar'&&/common.?proper.?nouns?/.test(label+' '+skills))
+    return ['Ask whether the noun is a general name or one particular name.','Capitalize a proper noun, such as Sofia, Chicago, or Tuesday.','Read the sentence again and check that ordinary common nouns are not capitalized without a reason.'];
   if(kind==='grammar'&&/subject|predicate/.test(label+' '+skills))
     return ['Ask: Who or what is the sentence about? That is the complete subject.','Ask: What does the subject do or what is it? That is the complete predicate.','Check that you included every word in the whole subject or predicate.'];
   if(kind==='grammar'&&/sentence.?types|punctuation/.test(label+' '+skills))
@@ -122,7 +126,9 @@ function strategies(guide,kind){
 }
 function goal(guide,kind){
   const label=clean(guide?.label),name=label.replace(/\s*\/\s*Handwriting/i,'').trim();
+  if(kind==='math'&&/place.?value|expanded.?form/i.test(name))return 'I can name each digit’s value and write a number in expanded form.';
   if(kind==='math')return 'I can solve '+(/subtraction/i.test(name)?'subtraction':/addition/i.test(name)?'addition':'math')+' problems and check my work.';
+  if(kind==='grammar'&&/common.?proper.?nouns?/i.test(name))return 'I can tell common and proper nouns apart and capitalize particular names.';
   if(kind==='grammar')return 'I can read a sentence, recognize the skill in '+name+', and explain my answer.';
   if(kind==='religion')return 'I can recall and explain the important ideas in '+name+'.';
   if(/phonics/i.test(name))return 'I can hear and recognize the sounds named in '+name+'.';
