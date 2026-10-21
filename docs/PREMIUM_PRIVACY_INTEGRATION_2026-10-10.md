@@ -1,5 +1,13 @@
 # ABVM premium release — main privacy integration review (2026-10-10)
 
+**ARCHIVED OCTOBER 10 RELEASE PLAN.** Its human/device/educator and separate
+owner-release approval gates are no longer active. The owner's standing
+October 20, 2026 ABVM directive permits automated-tested changes without a
+human reviewer or fresh owner signoff. Exact-head source/privacy QA and live
+Pages verification remain mandatory; unperformed physical-device checks must
+still be described as unverified, not falsely passed. The historical facts and
+unmerged draft-status observations below remain unchanged.
+
 ## Exact inputs (do not reinterpret historical approvals)
 
 - Latest checked public production `main`: `7cdc2047855ccf5b849e8e8d67e765164864a583`.
