@@ -7,6 +7,12 @@ on:
   schedule:
     - cron: '11 7,11,16,20,23 * * *'
       timezone: 'America/New_York'
+  # Run bounded recovery after the watchdog, including a failed watchdog.
+  # GitHub cron may run late or be dropped, so it cannot be the sole trigger.
+  workflow_run:
+    workflows:
+      - Monitor ABVM refresh health
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -19,6 +25,8 @@ concurrency:
 
 jobs:
   check-and-recover:
+    # Only the original repository's main watchdog may trigger write actions.
+    if: github.event_name != 'workflow_run' || (github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -65,6 +73,13 @@ jobs:
             count="$(jq -r --arg day "$today" '[.[] | select(.event == "workflow_dispatch" and .status == "completed" and .conclusion != "success" and (.createdAt | startswith($day)))] | length' <<< "$recent")"
             if (( count >= 2 )); then
               echo "::error::Daily failed-recovery budget reached for $workflow; data remains stale. Do not bypass verification."
+              return 1
+            fi
+            # A successful dispatch with persistently stale source evidence
+            # can otherwise create an unbounded watchdog/recovery feedback loop.
+            attempts="$(jq -r --arg day "$today" '[.[] | select(.event == "workflow_dispatch" and (.createdAt | startswith($day)))] | length' <<< "$recent")"
+            if (( attempts >= 6 )); then
+              echo "::error::Daily recovery dispatch cap reached for $workflow; hold stale source and surface the incident."
               return 1
             fi
             echo "Dispatching verified-source recovery: $workflow (failed-attempt budget $((count+1))/2 UTC day)"
