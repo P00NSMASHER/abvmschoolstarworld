@@ -620,6 +620,8 @@ test('October 29 common/proper nouns get eight original, independently checked q
   assert.deepEqual([...new Set(bank.map(q=>q.questionType))].sort(),['direct','reasoning','transfer']);
   assert.equal(new Set(bank.map(q=>q.variantFingerprint)).size,8);
   assert.ok(bank.every(q=>q.choices.length===3 && q.choices.filter(v=>v===q.answer).length===1));
+  assert.ok(bank.every(q=>new Set(q.choices.map(v=>v.toLowerCase())).size===3),
+    'distractors must differ in content, never only in capitalization');
   assert.ok(bank.every(q=>q.sourceMode==='DETERMINISTIC_TEMPLATE'&&q.sourceLineage?.quality==='page-exact'));
   assert.ok(pipeline.coverage.some(row=>row.skillId==='common-proper-nouns'&&row.status==='COVERED'));
   assert.equal(pipeline.coverage.some(row=>row.topic.includes('common & proper nouns')&&row.status==='GENERATOR_UNSUPPORTED'),false);
