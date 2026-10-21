@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { assessDailySchoolSources, easternSchoolDay } from '../scripts/source-freshness-recovery.mjs';
+import { assessDailySchoolSources, easternSchoolDay, probeOfficialHomework, applyOfficialHomeworkObservation } from '../scripts/source-freshness-recovery.mjs';
+import {summarizeTeacherHomework} from '../scripts/homework-posting.mjs';
 
 const DAYS = ['Home', 'Homework', 'Reading Work', 'Weekly Spelling List', 'Tests', 'Religion'];
 function teacherPack(stamp = '2026-10-15T14:00:00Z') {
@@ -191,4 +192,43 @@ test('unchanged Homework source timestamps and hashes cannot hide stale assignme
     assert.equal(result.redeploy,true);
     assert.equal(result.refreshHomework,false);
   }
+});
+
+test('verified official Homework changes dispatch recovery even while published metadata is fresh',async()=>{
+  const prior=summarizeTeacherHomework(['Homework','Math Page 28'],'2026-10-21T15:21:51Z');
+  const official='https://sites.google.com/view/abvmgr2/homework';
+  const readPage=task=>async()=>({
+    ok:true,url:official,text:async()=>'<h1>Homework</h1><p>'+task+'</p>'
+  });
+  const changed=await probeOfficialHomework(prior,{fetchImpl:readPage('Math Page 29-30'),
+    now:'2026-10-21T18:25:00Z'});
+  assert.equal(changed.available,true);
+  assert.equal(changed.changed,true);
+  const fresh=assessDailySchoolSources({now:'2026-10-21T18:25:00Z',
+    curriculum:teacherPack('2026-10-21T15:42:00Z'),homework:prior});
+  assert.equal(fresh.refreshHomework,false,'the prior fresh timestamp alone misses changed assignments');
+  const plan=applyOfficialHomeworkObservation(fresh,changed);
+  assert.equal(plan.officialHomeworkChanged,true);
+  assert.equal(plan.refreshHomework,true,'verified new teacher content must dispatch existing guarded refresh');
+  assert.equal(plan.refreshCurriculum,false);
+  const unchanged=await probeOfficialHomework(prior,{fetchImpl:readPage('Math Page 28'),
+    now:'2026-10-21T18:25:00Z'});
+  assert.equal(unchanged.changed,false);
+  assert.equal(applyOfficialHomeworkObservation(fresh,unchanged).refreshHomework,false);
+});
+
+test('inaccessible or redirected Homework source cannot invent a verified change',async()=>{
+  const prior=summarizeTeacherHomework(['Homework','Math Page 28'],'2026-10-21T15:21:51Z');
+  await assert.rejects(probeOfficialHomework(prior,{fetchImpl:async()=>({
+    ok:true,url:'https://sites.google.com/view/other-class/homework',
+    text:async()=>'<h1>Homework</h1><p>Math Page 30</p>'
+  })}),/redirected outside/);
+  await assert.rejects(probeOfficialHomework(prior,{fetchImpl:async()=>({
+    ok:false,status:503,url:'https://sites.google.com/view/abvmgr2/homework'
+  })}),/HTTP 503/);
+  const old={refreshHomework:false,caution:[]};
+  const result=applyOfficialHomeworkObservation(old,{available:false,error:'unreachable'});
+  assert.equal(result.refreshHomework,false);
+  assert.equal(result.officialHomeworkChanged,null);
+  assert.deepEqual(result.caution,['official-homework-unavailable']);
 });
