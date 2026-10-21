@@ -54,12 +54,24 @@ jobs:
           node scripts/fetch-health-history.mjs
           gh api "repos/${GITHUB_REPOSITORY}/pulls?state=open&per_page=100" > open-pulls.json
 
+      - name: Read main branch protection status
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! gh api "repos/${GITHUB_REPOSITORY}/branches/main" > main-branch-status.json; then
+            echo "::warning::Could not verify main branch protection."
+            printf '%s\\n' '{"name":"main","protected":null}' > main-branch-status.json
+          fi
+
       - name: Build health dashboard
         env:
           WORKFLOW_RUNS_FILE: workflow-runs.json
           REFRESH_JOBS_FILE: refresh-jobs.json
           OPEN_PULLS_FILE: open-pulls.json
           HOMEWORK_PUBLICATIONS_FILE: homework-publications.json
+          MAIN_BRANCH_FILE: main-branch-status.json
         run: npm run health:report
 
       - name: Publish dashboard to job summary
