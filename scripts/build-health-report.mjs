@@ -192,7 +192,7 @@ const criticalHealthy=Boolean(
 );
 const warnings=[];
 if(mainBranchPath && status.repositorySecurity.mainBranch.state==="unprotected"){
-  warnings.push("GitHub main is unprotected: enable deletion and force-push protection while preserving verified direct fast-forward teacher and homework updates.");
+  warnings.push("GitHub main is unprotected: in Settings > Branches, block force pushes and deletion while preserving verified direct fast-forward teacher and homework updates.");
 }
 if(mainBranchPath && status.repositorySecurity.mainBranch.state==="unknown"){
   warnings.push("GitHub main branch protection could not be verified; do not report repository security as healthy.");
