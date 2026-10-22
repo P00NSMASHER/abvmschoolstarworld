@@ -79,7 +79,7 @@ const VOCAB_WORD_USE_CONTEXTS = Object.freeze({
   alive: { sentence: 'The plant is ___; it is growing new leaves.', distractors: ['fur', 'offspring'] },
   covered: { sentence: 'We ___ the picnic food with a cloth.', distractors: ['adult', 'alive'] },
   fur: { sentence: 'The soft hair on a rabbit is called ___.', distractors: ['adult', 'offspring'] },
-  giant: { sentence: 'The ___ pumpkin was much bigger than all the others.', distractors: ['covered', 'offspring'] },
+  giant: { sentence: 'The ___ pumpkin was much bigger than all the others.', distractors: ['fur', 'offspring'] },
   offspring: { sentence: 'The baby rabbits are the mother rabbit’s ___.', distractors: ['fur', 'covered'] },
   checks: { sentence: 'Every morning, the librarian ___ that all the books are back.', distractors: ['choose', 'tools'] },
   choose: { sentence: 'You may ___ one book to read before bedtime.', distractors: ['jobs', 'checks'] },

@@ -97,3 +97,14 @@ test('reviewed vocabulary punctuation interpretation is narrow and leaves unknow
  assert.deepEqual(teacherVocabularyTerms('Dr. Smith, unknown. phrase'),['Dr. Smith','unknown. phrase']);
  assert.deepEqual(teacherVocabularyTerms('groom, mammal'),['groom','mammal']);
 });
+
+test('original teaching changes trigger fresh candidate and production teacher checks with retained public candidate evidence',()=>{
+ for(const name of ['teacher-refresh-candidate.yml','sync-study-pack.yml']){
+  const workflow=readFileSync(new URL('../.github/workflows/'+name,import.meta.url),'utf8');
+  assert.ok(workflow.includes("- 'pages/grade2-original-vocabulary.mjs'"));
+ }
+ const workflow=readFileSync(new URL('../.github/workflows/teacher-refresh-candidate.yml',import.meta.url),'utf8');
+ assert.ok(workflow.includes('sha256sum pages/data/study-pack.json > candidate-sha256.txt'));
+ assert.ok(workflow.includes('            pages/data/study-pack.json'));
+ assert.ok(workflow.includes('            candidate-commit.txt'));
+});

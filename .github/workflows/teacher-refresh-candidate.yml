@@ -9,6 +9,7 @@ on:
       - 'scripts/refresh-teacher-pages.mjs'
       - 'scripts/teacher-event-precedence.mjs'
       - 'scripts/grade2-content-pipeline.mjs'
+      - 'pages/grade2-original-vocabulary.mjs'
       - 'scripts/question-corrections.mjs'
       - 'scripts/build-study-archive.mjs'
       - 'tests/question-corrections.test.mjs'
@@ -108,6 +109,13 @@ jobs:
           trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
           ABVM_LIVE_URL=http://127.0.0.1:4173/ node scripts/verify-live-lunch.mjs
 
+      - name: Record exact candidate identity
+        if: always()
+        shell: bash
+        run: |
+          git rev-parse HEAD > candidate-commit.txt
+          sha256sum pages/data/study-pack.json > candidate-sha256.txt
+
       - name: Retain exact-head candidate QA evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -115,6 +123,9 @@ jobs:
           name: abvm-fresh-teacher-candidate-${{ github.run_id }}
           path: |
             .curriculum-coverage-plan.json
+            pages/data/study-pack.json
+            candidate-commit.txt
+            candidate-sha256.txt
             playwright-report
             test-results
             live-lunch-proof
