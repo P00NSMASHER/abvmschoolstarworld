@@ -47,6 +47,39 @@ const SIGHT_WORD_CONTEXTS = Object.freeze({
   funny: { sentence: 'The joke was very ___.', distractors: ['sounds', 'find'] },
   find: { sentence: 'Can you ___ my missing sock?', distractors: ['funny', 'sounds'] },
   could: { sentence: 'I ___ read that book by myself.', distractors: ['find', 'funny'] },
+  understands: { sentence: 'Noah ___ the math problem after he practices.', distractors: ['new', 'work'] },
+  all: { sentence: 'I put ___ ten crayons in the box.', distractors: ['goes', 'work'] },
+  right: { sentence: 'Mia got the spelling answer ___ on her first try.', distractors: ['other', 'says'] },
+  work: { sentence: 'Every afternoon, I finish my school ___ before going outside.', distractors: ['goes', 'any'] },
+  new: { sentence: 'We opened a ___ pack of pencils today.', distractors: ['all', 'says'] },
+  other: { sentence: 'I have two socks. One is red; the ___ is blue.', distractors: ['all', 'says'] },
+  any: { sentence: 'Are there ___ apples left in the bowl?', distractors: ['right', 'says'] },
+  goes: { sentence: 'Each morning the yellow bus ___ past our house.', distractors: ['all', 'number'] },
+  says: { sentence: 'The note ___, “Bring your jacket.”', distractors: ['work', 'all'] },
+  number: { sentence: 'Write the ___ seven below the picture.', distractors: ['goes', 'any'] },
+});
+
+// Only teacher-listed words are selected; examples are independent, original
+// contextual use (not teacher-provided vocabulary definitions or sentences).
+const VOCAB_WORD_USE_CONTEXTS = Object.freeze({
+  checks: { sentence: 'Every morning, the librarian ___ that all the books are back.', distractors: ['choose', 'tools'] },
+  choose: { sentence: 'You may ___ one book to read before bedtime.', distractors: ['jobs', 'checks'] },
+  chores: { sentence: 'Cleaning my room and washing dishes are two of my ___ at home.', distractors: ['cost', 'customers'] },
+  cost: { sentence: 'What is the ___ of that red notebook?', distractors: ['spend', 'choose'] },
+  customers: { sentence: 'The bakery had ten ___ waiting in line to buy bread.', distractors: ['jobs', 'checks'] },
+  jobs: { sentence: 'People at the store have different ___, such as cashier and baker.', distractors: ['customers', 'chores'] },
+  spend: { sentence: 'I want to ___ five dollars on a small gift.', distractors: ['choose', 'jobs'] },
+  tools: { sentence: 'The gardener put the shovel and rake away with the other ___.', distractors: ['customers', 'spend'] },
+});
+
+// Catholic Grade 2's published Christ Our Life Chapter 2 sample and the
+// USCCB's John 15:4-5 independently support this teaching. The current ABVM
+// teacher source gates the topic, but does NOT provide these exact questions.
+const VINE_BRANCHES_SUPPLEMENT = Object.freeze({
+  url: 'https://bible.usccb.org/bible/john/15',
+  textbookUrl: 'https://lpress-craft-flippingbooks.s3.amazonaws.com/christ-our-life-2024/christ-our-life-2024-se-gr2/index.html',
+  passage: 'John 15:4–5; Christ Our Life Grade 2 Chapter 2, student sample, p. 14',
+  attribution: 'Independent Catholic Bible and publisher reference; not a teacher question or teacher-approved answer key.',
 });
 
 const BASE_SKILLS = [
@@ -1775,6 +1808,7 @@ function addSkill(out, skill) {
     domain: skill.domain || 'Grade 2',
     sourceBacked: true,
     ...(skill.evidenceContract ? { evidenceContract: structuredClone(skill.evidenceContract) } : {}),
+    ...(skill.supplementalReference ? { supplementalReference: structuredClone(skill.supplementalReference) } : {}),
   });
 }
 
@@ -1808,6 +1842,7 @@ function questionFor(skill, raw) {
     hint: text(raw.hint),
     sourceFact,
     sourceEvidence: uniqueText(skill.evidence || []),
+    ...(raw.supplementalReference || skill.supplementalReference ? { supplementalReference: structuredClone(raw.supplementalReference || skill.supplementalReference) } : {}),
     sourceMode,
     supportType: raw.supportType || 'deterministic_transform',
     provenance: 'verified-abvm-skill-template',
