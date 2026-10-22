@@ -1,6 +1,6 @@
 # Verified quality scorecard
 
-Updated: 2026-10-16. Historical baseline: 6/10; no new overall score established yet. Passing code checks alone cannot earn 10/10.
+Updated quality baseline: 2026-10-16. Owner observation-policy amendment: 2026-10-22. Historical baseline: 6/10; no new overall score established yet. Passing code checks alone cannot earn 10/10.
 
 ## Scoring
 
@@ -8,7 +8,7 @@ Each of the ten domains has five binary requirements below, worth two points eac
 
 | Domain | Five independently verifiable requirements |
 | --- | --- |
-| Deployment | Exact protected-main admission; full release QA; successful Pages publish; live curriculum/homework timestamp and hash parity; three consecutive successful update/publication cycles over at least 24 hours |
+| Deployment | Exact protected-main admission; full release QA; successful Pages publish; live curriculum/homework timestamp and hash parity; 24 consecutive hours of actual unattended operation, with at least three successful scheduled source-check opportunities and exact live parity for every changed publication |
 | Source automation | Six official pages verified; hourly homework scheduler enabled; unchanged checks retain truthful provenance; no manual curriculum promotion; source failure recovers within bounded policy |
 | Recovery and monitoring | Success does not exhaust failure budget; at most two unsuccessful dispatches/day; active refresh prevents duplicates; stale homework fails dashboard; live source mismatch is detected and subsequently clears after real publication |
 | Daily planning | Today uses correct Eastern school date; old undated homework does not roll forward; Week includes five lunch states; latest authoritative event precedence passes; notifications remain accurate and dismissible |
@@ -28,6 +28,6 @@ Each of the ten domains has five binary requirements below, worth two points eac
 - Teacher data in that release was checked at `2026-10-16T07:23:45.715Z`; independent fresh-source acceptance at 14:23Z passed the then-current teacher content. A later actual scan at `15:27:09.726Z` reports newly unsupported `long / short u` on the October 23 Tests page. Teacher refresh [38919588183](https://github.com/P00NSMASHER/abvmschoolstarworld/actions/runs/38919588183) failed candidate QA; do not claim current source parity or all refresh cycles healthy. The new teacher snapshot must pass automated source-safe gates before publication.
 - Reused PR #319 (`2a2529a65adf9df549b8335dd0221b6d57f41b86`) fixes actual weekly-planner OCR column mixing and grade-specific closures, preserving independent source/date safeguards. Actual new PDF plus three historical PDFs, 16 Python parser tests and 21 source/date/privacy tests pass; pure integration accepts the corrected October 23 Lego date without an authority override and is idempotent. Protected browser QA and actual importer/live verification remain pending. Redundant PR #381 was closed because newest-receipt precedence would unnecessarily weaken the guard that caught the OCR mistake.
 - A separate monitoring correction recognizes completed, gate-verified nested Homework publication and fetches bounded history per production workflow so PR bursts cannot hide source evidence. Sixty-two focused regressions pass, including missing/skipped gates, absent completion time, wrong run binding, real failed publishers, unsafe curriculum and stale homework; safely isolated unsupported practice remains explicit attention while verified source facts remain publishable. Integration and an actual post-merge dashboard remain pending; no green operational-health claim is made from local tests.
-- Physical iPhone Safari offline verification and three consecutive successful update/publication cycles spanning at least 24 hours are still unverified. No new overall score or perfect score is awarded.
+- Physical iPhone Safari offline verification and the amended 24-consecutive-hour unattended production observation are still unverified. Source checks with unchanged content prove a real check, not a deployment. Every actual changed publication must independently pass release QA and exact live JSON parity. No new overall score or perfect score is awarded.
 
 Next actions: complete #319's protected QA and verified importer publication; integrate the monitoring correction only after its exact-head gates; resolve the new source-backed long/short-u generator gap without bypassing isolation or source checks; verify actual fresh teacher/Homework/Pages/dashboard cycles. Recalculate all ten domains only from linked production-backed evidence.
