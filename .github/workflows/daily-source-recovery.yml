@@ -10,6 +10,7 @@ on:
       - 'scripts/refresh-controller.mjs'
       - 'scripts/source-freshness-recovery.mjs'
       - 'tests/refresh-controller.test.mjs'
+      - 'tests/nested-publication-recovery.test.mjs'
       - '.github/workflows/daily-source-recovery.yml'
   schedule:
     - cron: '11 6-23 * * *'
@@ -46,7 +47,7 @@ jobs:
           node-version: 22
 
       - name: Prove decisions preserve verified source identity and date
-        run: node --test tests/source-freshness-recovery.test.mjs tests/refresh-controller.test.mjs tests/recovery-history-integrity.test.mjs
+        run: node --test tests/source-freshness-recovery.test.mjs tests/refresh-controller.test.mjs tests/recovery-history-integrity.test.mjs tests/nested-publication-recovery.test.mjs
 
       - name: Inspect source freshness and published-site parity
         run: node scripts/source-freshness-recovery.mjs --report=source-recovery-plan.json
@@ -87,6 +88,29 @@ jobs:
             if (( running > 0 )); then
               echo "Recovery already in progress: $workflow"
               return 0
+            fi
+            if [[ "$workflow" == pages.yml ]]; then
+              # Reusable Pages jobs belong to their source workflow in run
+              # history. A standalone-only query misses those active publishers.
+              local publisher publisher_history
+              for publisher in sync-study-pack.yml refresh-current-homework.yml sync-uploaded-notices.yml import-yahoo-weekly-reminders.yml; do
+                if ! publisher_history="$(gh run list --workflow "$publisher" --branch main --limit 70 --json status,event,createdAt,conclusion)"; then
+                  echo "::error::Cannot verify nested publisher history for $publisher; no recovery dispatched."
+                  return 1
+                fi
+                if ! jq -e 'type == "array" and all(.[];
+                  (.status | IN("completed", "in_progress", "queued", "pending", "waiting", "requested")) and
+                  ((.event | type) == "string") and ((.createdAt | type) == "string") and
+                  has("conclusion"))' <<< "$publisher_history" >/dev/null; then
+                  echo "::error::Invalid nested publisher history for $publisher; no recovery dispatched."
+                  return 1
+                fi
+                running="$(jq '[.[] | select(.status != "completed")] | length' <<< "$publisher_history")" || return 1
+                if (( running > 0 )); then
+                  echo "Source/publication already in progress: $publisher; defer standalone Pages recovery."
+                  return 0
+                fi
+              done
             fi
             today="$(date -u +%Y-%m-%d)" || return 1
             count="$(jq -r --arg day "$today" '[.[] | select(.event == "workflow_dispatch" and .status == "completed" and .conclusion != "success" and (.createdAt | startswith($day)))] | length' <<< "$recent")" || return 1

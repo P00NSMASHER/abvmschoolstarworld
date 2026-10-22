@@ -12,6 +12,8 @@ Teacher, reviewed lunch, Homework, reviewed notices and Yahoo jobs retain their 
 
 The plan records one of `current`, `refresh-required`, `publish-required` or `evidence-incomplete`, plus the expected school date/time, real observed time, prior verified check timestamps and reasons. It never changes school facts or invents a successful check. Recovery runs hourly at :11 between 6 a.m. and 11 p.m. Eastern, after the existing watchdog, and on relevant main-branch policy changes. Actual source schedules remain unchanged.
 
+Before standalone Pages recovery, inspect both its own history and the four main-branch source workflows that call Pages. An active teacher, Homework, reviewed-notice or Yahoo parent defers redundant publication; missing or malformed parent history blocks dispatch rather than inventing an idle queue. Deferral is not a successful deployment. Completed parents do not suppress a needed recovery.
+
 Before dispatch, the existing recovery workflow checks active runs and preserves its caps of two failed on-demand recoveries and six total on-demand runs per workflow per UTC day. Pages recovery remains conditional on current verified repository sources. The report artifact is retained for 30 days. Missing provider evidence is UNKNOWN, not healthy or repaired.
 
 ## Existing independent supervision
