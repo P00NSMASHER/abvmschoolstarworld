@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 const root = new URL('../', import.meta.url);
-const read = path => readFileSync(new URL(path, root), 'utf8');
+const read = path => readFileSync(new URL(path, root), 'utf8').replace(/\r\n/g,'\n');
 const independent = read('.github/workflows/qa-reproduction.yml');
 const privacy = read('.github/workflows/public-privacy-visual-acceptance.yml');
 const triggeredPaths = [
@@ -26,7 +26,7 @@ test('candidate-only changes trigger independent exact-head full QA', () => {
   assert.ok(independent.includes('npm run qa:unit'));
   assert.ok(independent.includes('npm run qa:e2e'));
   assert.ok(independent.includes('Verify publication checker against candidate app'));
-  assert.ok(independent.includes('timeout-minutes: 30'));
+  assert.ok(independent.includes('timeout-minutes: 60'));
   // Cache is an optional optimization; failures in static, unit, browser, privacy
   // or publication QA still fail the independent job. No other step is tolerant.
   assert.match(independent,/name: Cache version-pinned Playwright browsers\n\s+continue-on-error: true\n\s+uses: actions\/cache@v4/);

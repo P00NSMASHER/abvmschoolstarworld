@@ -48,7 +48,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 60
     steps:
       # Only the current protected-main commit may publish. Caller-supplied
       # refs must be immutable SHAs; no branch/tag/PR may select site content.

@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     # Browser provisioning and real iPhone/WebKit checks can exceed 12 minutes.
     # Keep every privacy/source assertion and evidence-upload gate required.
-    timeout-minutes: 35
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v6
         with:
