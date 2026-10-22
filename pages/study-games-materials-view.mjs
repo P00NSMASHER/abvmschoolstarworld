@@ -1,5 +1,6 @@
 import {createNotesLibrary} from './study-notes-library.mjs?v=4';
 import {createReadAloud} from './study-room-view.mjs';
+import {originalGrade2VocabularyMeaning} from './grade2-original-vocabulary.mjs';
 import {renderTestStudyGuide,renderTestWorksheet} from './test-study-pair.mjs?v=4';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -11,15 +12,15 @@ const missingDefinition = value => /teacher page does not provide a definition|n
 export function resolveVocabularyMeaning(row,dictionary = () => '') {
   const supplied = nonempty(row?.meaning) ? String(row.meaning).trim() : '';
   if (supplied && !missingDefinition(supplied)) return supplied;
-  const resolved = dictionary(row?.term);
+  const resolved = dictionary(row?.term) || originalGrade2VocabularyMeaning(row?.term);
   return nonempty(resolved) ? String(resolved).trim() : '';
 }
 
 export function printableStudyGuideHtml(guide, dictionary = () => '') {
-  return renderTestStudyGuide(guide, dictionary);
+  return renderTestStudyGuide(guide, term => dictionary(term) || originalGrade2VocabularyMeaning(term));
 }
 export function printableWorksheetHtml(guide, dictionary = () => '') {
-  return renderTestWorksheet(guide, dictionary);
+  return renderTestWorksheet(guide, term => dictionary(term) || originalGrade2VocabularyMeaning(term));
 }
 
 /** Compact controls only. The existing Games controller owns every round and result. */
