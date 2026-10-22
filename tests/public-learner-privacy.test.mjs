@@ -62,3 +62,16 @@ test("completed practice still uses an anonymous, encouraging heading",()=>{
   assert.match(result,/Practice again/);
   assert.match(result,/Study Stars/);
 });
+
+test("anonymous privacy acceptance has a realistic browser-install budget and retains all safeguards",()=>{
+  const workflow=read("../.github/workflows/public-privacy-visual-acceptance.yml");
+  assert.match(workflow,/name: ABVM public privacy and teacher freshness acceptance/);
+  assert.match(workflow,/timeout-minutes:\s*35/);
+  assert.match(workflow,/Cache version-pinned Playwright browsers[\s\S]*uses: actions\/cache@v4/);
+  assert.match(workflow,/key: abvm-playwright-\$\{\{ runner\.os \}\}-\$\{\{ hashFiles\('package-lock\.json'\) \}\}/);
+  assert.match(workflow,/npx playwright install --with-deps chromium webkit/);
+  assert.match(workflow,/test "\$\(git rev-parse HEAD\)" = "\$PR_HEAD_SHA"/);
+  assert.match(workflow,/node --test tests\/public-learner-privacy\.test\.mjs/);
+  assert.match(workflow,/--project=mobile --project=iphone-webkit --output=test-results\/anonymous --workers=1 --retries=0/);
+  assert.match(workflow,/if-no-files-found: error/);
+});
