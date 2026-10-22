@@ -46,7 +46,7 @@ concurrency:
 jobs:
   verify-fresh-teacher-candidate:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - name: Checkout exact review head
         uses: actions/checkout@v6

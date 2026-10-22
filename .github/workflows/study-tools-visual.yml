@@ -28,7 +28,7 @@ jobs:
   rendered-study-resources:
     runs-on: ubuntu-latest
     # Give multi-view WebKit/Chromium verification a bounded real browser budget.
-    timeout-minutes: 35
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v6
         with:

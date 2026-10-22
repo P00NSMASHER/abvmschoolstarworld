@@ -26,3 +26,29 @@ test('hosted-runner provisioning receives a bounded 60-minute budget without wea
   assert.match(pages,/Recheck protected-main before publishing/);
   assert.match(pages,/Verify live lunch data and visible mobile flows/);
 });
+
+
+test('source-gated visual and fresh-curriculum QA retain full engine checks within adequate runner budgets',()=>{
+  const visual=[
+    'study-visual-acceptance.yml',
+    'today-visual-acceptance.yml',
+    'study-player-visual-acceptance.yml',
+    'study-tools-visual.yml',
+  ];
+  for(const file of visual){
+    const source=read(file);
+    assert.match(source,/timeout-minutes:\\s*60\\b/,file);
+    assert.match(source,/name: Cache version-pinned Playwright browsers/,file);
+    assert.match(source,/npx playwright install --with-deps chromium webkit/,file);
+    assert.match(source,/--project=mobile --project=iphone-webkit/,file);
+    assert.match(source,/if: always\\(\\)/,file);
+    assert.doesNotMatch(source,/continue-on-error:\\s*true/,file);
+  }
+  const teacher=read('teacher-refresh-candidate.yml');
+  assert.match(teacher,/timeout-minutes:\\s*60\\b/);
+  assert.match(teacher,/Generate a fresh candidate from all verified teacher pages/);
+  assert.match(teacher,/Reject unverified curriculum and source-lineage gaps/);
+  assert.match(teacher,/Verify fresh teacher check, not just a recent notice import/);
+  assert.match(teacher,/npm run qa/);
+  assert.match(teacher,/npx playwright install --with-deps chromium webkit/);
+});
