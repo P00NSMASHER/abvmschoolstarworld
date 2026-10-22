@@ -23,7 +23,7 @@ export const AUTHOR_OPINION_FAMILY = Object.freeze({
     'Read the author’s words and decide what is being judged or preferred.',
     'Ask: “Could two people disagree about this?” Opinions can differ; facts can be checked.',
   ]),
-  assessmentPatterns: Object.freeze(["author[’']?s?\\s+opinions?", "writer[’']?s?\\s+opinions?"],
+  assessmentPatterns: Object.freeze(["author[’']?s?\\s+opinions?", "writer[’']?s?\\s+opinions?"]),
   baseQuestion: Object.freeze({
     questionType: 'direct',
     prompt: 'An author writes, “Our library is the best place to spend recess.” Which words express the author’s opinion?',
