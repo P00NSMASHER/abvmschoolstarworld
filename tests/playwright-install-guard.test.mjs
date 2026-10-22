@@ -8,6 +8,7 @@ import {spawnSync} from 'node:child_process';
 const installer=new URL('../scripts/install-playwright-ci.sh',import.meta.url);
 const qaWorkflow=new URL('../.github/workflows/qa.yml',import.meta.url);
 const refreshWorkflow=new URL('../.github/workflows/sync-study-pack.yml',import.meta.url);
+const pagesWorkflow=new URL('../.github/workflows/pages.yml',import.meta.url);
 
 function fakeNpx(mode){
   const dir=mkdtempSync(join(tmpdir(),'abvm-playwright-bootstrap-'));
@@ -58,12 +59,16 @@ test('Playwright bootstrap retries once, then fails fast with explicit timeout e
 test('workflows use the bounded installer without widening their job budgets',()=>{
   const qa=readFileSync(qaWorkflow,'utf8');
   const refresh=readFileSync(refreshWorkflow,'utf8');
+  const pages=readFileSync(pagesWorkflow,'utf8');
   const installerCall=/bash scripts\/install-playwright-ci\.sh/g;
   assert.equal((qa.match(installerCall)||[]).length,1);
   assert.equal((refresh.match(installerCall)||[]).length,2);
+  assert.equal((pages.match(installerCall)||[]).length,1);
   assert.match(qa,/timeout-minutes: 30/);
   assert.match(refresh,/timeout-minutes: 45/);
   assert.match(refresh,/timeout-minutes: 30/);
+  assert.match(pages,/timeout-minutes: 25/);
   assert.doesNotMatch(qa,/npx playwright install --with-deps chromium webkit/);
   assert.doesNotMatch(refresh,/npx playwright install --with-deps chromium webkit/);
+  assert.doesNotMatch(pages,/npx playwright install --with-deps chromium webkit/);
 });
