@@ -2,11 +2,22 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {buildGrade2ContentPipeline,validateGrade2ContentPipeline} from '../scripts/grade2-content-pipeline.mjs';
-import {originalGrade2VocabularyMeaning} from '../pages/grade2-original-vocabulary.mjs';
+import {ORIGINAL_GRADE2_VOCABULARY,originalGrade2VocabularyMeaning} from '../pages/grade2-original-vocabulary.mjs';
 import {printableStudyGuideHtml,resolveVocabularyMeaning} from '../pages/study-games-materials-view.mjs';
 
 const envelope=JSON.parse(readFileSync(new URL('../pages/data/study-pack.json',import.meta.url),'utf8'));
 const pack=()=>structuredClone(envelope.pack);
+const supportedPack=()=>{
+  const p=pack(),terms=Object.keys(ORIGINAL_GRADE2_VOCABULARY);
+  p.vocabulary=terms.map(term=>({
+    subject:'Reading / ELA',term,
+    meaning:'Current Reading Work vocabulary word; the teacher page does not provide a definition.',
+  }));
+  const reading=p.subjects.find(row=>row.subject==='Reading / ELA');
+  reading.topics=reading.topics.filter(row=>!/^Vocabulary:/i.test(row));
+  reading.topics.push('Vocabulary: '+terms.join(', '));
+  return p;
+};
 const sourcePagesFor=p=>envelope.sourcePages.map(page=>page.title==='Reading Work'?{
   ...page,
   lines:[
@@ -20,7 +31,7 @@ const generate=p=>buildGrade2ContentPipeline(p,{
 const supplementalQuestions=p=>p.questions.filter(q=>q.skill==='vocabulary-in-context');
 
 test('teacher-listed words all receive original Grade 2 definitions without false teacher attribution',()=>{
-  const p=pack(),result=generate(p),terms=p.vocabulary.map(row=>row.term);
+  const p=supportedPack(),result=generate(p),terms=p.vocabulary.map(row=>row.term);
   const rows=supplementalQuestions(result);
   assert.equal(rows.length,terms.length);
   assert.equal(new Set(rows.map(row=>row.prompt.match(/“([^”]+)”/)?.[1])).size,terms.length);
@@ -32,7 +43,7 @@ test('teacher-listed words all receive original Grade 2 definitions without fals
   assert.ok(result.coverage.some(row=>row.topic==='Reading / ELA vocabulary definitions'&&row.status==='COVERED'&&row.supplementalTerms?.length===terms.length));
   assert.equal(result.coverage.some(row=>row.topic==='Reading / ELA vocabulary definitions'&&row.status==='SOURCE_INSUFFICIENT'),false);
   assert.equal(validateGrade2ContentPipeline(result).length,0);
-  assert.deepEqual(p.vocabulary.map(row=>row.meaning),pack().vocabulary.map(row=>row.meaning),'teacher fields must remain untouched');
+  assert.ok(p.vocabulary.every(row=>/teacher page does not provide a definition/i.test(row.meaning)),'teacher fields must remain untouched');
 });
 
 test('original meanings withdraw when current teacher vocabulary list is removed',()=>{
@@ -54,7 +65,7 @@ test('unknown teacher word remains an evidence gap rather than an invented expla
 });
 
 test('a verified teacher meaning overrides the independent explanation',()=>{
-  const p=pack(),official='looks closely to make sure something is correct';
+  const p=supportedPack(),official='looks closely to make sure something is correct';
   p.vocabulary.find(row=>row.term==='checks').meaning=official;
   const result=generate(p);
   const checks=supplementalQuestions(result).find(row=>row.prompt.includes('“checks”'));
