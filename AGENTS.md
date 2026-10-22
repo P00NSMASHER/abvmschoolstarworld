@@ -106,3 +106,30 @@ Read `docs/REFRESH_RELIABILITY.md` before editing teacher/Homework intake, recov
 ## ABVM 24-hour production observation (owner amendment, October 22, 2026)
 
 The owner shortened the post-release unattended acceptance observation from 14 consecutive school days to **24 consecutive elapsed hours**. The authoritative eligibility, baseline, failure/reset and evidence rules are in `docs/REFRESH_RELIABILITY.md`; do not revive the older 14-day period from historical plans, tasks or PR descriptions. Require a successful guarded exact-main production publication and real live-watchdog source parity before starting the 24-hour clock. Do not backdate, simulate elapsed operation, or treat a PR merge as observed acceptance. All source/privacy, protection, QA, retry and live verification gates remain unchanged. Physical-iPhone offline observation is separate.
+
+## Owner-authorized original teaching for source gaps (October 22, 2026)
+
+When the verified classroom source lists a vocabulary word or a general Grade 2
+skill but omits explanatory definitions or worked examples, teach it with checked,
+age-appropriate **original ABVM supplemental instruction** rather than repeatedly
+requiring the teacher to supply ordinary pedagogical material. This standing owner
+authorization applies to original common-word meanings, illustrative sentences,
+hints, strategies and original practice. Keep the verified teacher list or named
+skill as the current inclusion gate; withdraw supplementation when that gate
+disappears. Do not alter the teacher's stored wording, meaning field, source
+timestamps, or official-provenance fingerprints.
+
+Mark every original explanation as **not teacher-provided** in displayed Notes,
+printable materials, question metadata and curricular coverage. The current
+single-source vocabulary supplement lives in
+`pages/grade2-original-vocabulary.mjs`; the Grade 2 pipeline consumes only its
+reviewed entries. When new words arrive, author and test accurate common meanings
+for them under the existing exact-head QA/guarded release path. A term whose
+meaning or context cannot be safely established remains explicitly uncovered until
+that work is ready. Prefer a stated common-usage sense over pretending to know a
+particular story's intended sense.
+
+This authorization never permits inventing teacher announcements, assignments,
+dates, school closures, spelling lists, chapter/page facts, copyrighted passages,
+student results, or answers to unseen teacher test questions. Do not recast
+original teaching as official source facts to suppress an actual source alert.
