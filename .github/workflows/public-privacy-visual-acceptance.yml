@@ -60,7 +60,6 @@ jobs:
         run: node --test tests/private-curriculum-pilot.test.mjs
       - run: npm run pack:runtime
       - name: Cache version-pinned Playwright browsers
-        continue-on-error: true
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
