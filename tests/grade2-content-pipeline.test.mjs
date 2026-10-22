@@ -64,7 +64,10 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
     assert.ok(pipeline.coverage.some(row => row.status === 'NOT_PRACTICED_BY_DESIGN' && /^Story:/i.test(row.topic)));
   }
   if (/vine and the branches|vine and branches/i.test([...(religion?.topics || []), ...(religion?.studyNotes || [])].join(' | '))) {
-    assert.ok(pipeline.coverage.some(row => row.status === 'SOURCE_INSUFFICIENT' && /vine and the branches/i.test(row.topic)));
+    assert.ok(pipeline.coverage.some(row => row.status === 'COVERED' && /vine and the branches/i.test(row.topic)));
+    const vineItems=pipeline.questions.filter(item => item.skill === 'religion-vine-branches');
+    assert.equal(vineItems.length,3);
+    assert.ok(vineItems.every(item => item.supplementalReference?.url === 'https://bible.usccb.org/bible/john/15'));
   }
   const hasVerifiedVocabularyMeanings = (pack.vocabulary || []).some(row => String(row?.meaning || '').trim() && !/^(?:tbd|unknown|not provided|not posted)$/i.test(String(row?.meaning || '').trim()));
   if (!hasVerifiedVocabularyMeanings && (pack.vocabulary || []).length) {

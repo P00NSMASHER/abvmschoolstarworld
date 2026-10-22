@@ -47,6 +47,39 @@ const SIGHT_WORD_CONTEXTS = Object.freeze({
   funny: { sentence: 'The joke was very ___.', distractors: ['sounds', 'find'] },
   find: { sentence: 'Can you ___ my missing sock?', distractors: ['funny', 'sounds'] },
   could: { sentence: 'I ___ read that book by myself.', distractors: ['find', 'funny'] },
+  understands: { sentence: 'Noah ___ the math problem after he practices.', distractors: ['new', 'work'] },
+  all: { sentence: 'I put ___ ten crayons in the box.', distractors: ['goes', 'work'] },
+  right: { sentence: 'Mia got the spelling answer ___ on her first try.', distractors: ['other', 'says'] },
+  work: { sentence: 'Every afternoon, I finish my school ___ before going outside.', distractors: ['goes', 'any'] },
+  new: { sentence: 'We opened a ___ pack of pencils today.', distractors: ['all', 'says'] },
+  other: { sentence: 'I have two socks. One is red; the ___ is blue.', distractors: ['all', 'says'] },
+  any: { sentence: 'Are there ___ apples left in the bowl?', distractors: ['right', 'says'] },
+  goes: { sentence: 'Each morning the yellow bus ___ past our house.', distractors: ['all', 'number'] },
+  says: { sentence: 'The note ___, “Bring your jacket.”', distractors: ['work', 'all'] },
+  number: { sentence: 'Write the ___ seven below the picture.', distractors: ['goes', 'any'] },
+});
+
+// Only teacher-listed words are selected; examples are independent, original
+// contextual use (not teacher-provided vocabulary definitions or sentences).
+const VOCAB_WORD_USE_CONTEXTS = Object.freeze({
+  checks: { sentence: 'Every morning, the librarian ___ that all the books are back.', distractors: ['choose', 'tools'] },
+  choose: { sentence: 'You may ___ one book to read before bedtime.', distractors: ['jobs', 'checks'] },
+  chores: { sentence: 'Cleaning my room and washing dishes are two of my ___ at home.', distractors: ['cost', 'customers'] },
+  cost: { sentence: 'What is the ___ of that red notebook?', distractors: ['spend', 'choose'] },
+  customers: { sentence: 'The bakery had ten ___ waiting in line to buy bread.', distractors: ['jobs', 'checks'] },
+  jobs: { sentence: 'People at the store have different ___, such as cashier and baker.', distractors: ['customers', 'chores'] },
+  spend: { sentence: 'I want to ___ five dollars on a small gift.', distractors: ['choose', 'jobs'] },
+  tools: { sentence: 'The gardener put the shovel and rake away with the other ___.', distractors: ['customers', 'spend'] },
+});
+
+// Catholic Grade 2's published Christ Our Life Chapter 2 sample and the
+// USCCB's John 15:4-5 independently support this teaching. The current ABVM
+// teacher source gates the topic, but does NOT provide these exact questions.
+const VINE_BRANCHES_SUPPLEMENT = Object.freeze({
+  url: 'https://bible.usccb.org/bible/john/15',
+  textbookUrl: 'https://lpress-craft-flippingbooks.s3.amazonaws.com/christ-our-life-2024/christ-our-life-2024-se-gr2/index.html',
+  passage: 'John 15:4–5; Christ Our Life Grade 2 Chapter 2, student sample, p. 14',
+  attribution: 'Independent Catholic Bible and publisher reference; not a teacher question or teacher-approved answer key.',
 });
 
 const BASE_SKILLS = [
@@ -1775,6 +1808,7 @@ function addSkill(out, skill) {
     domain: skill.domain || 'Grade 2',
     sourceBacked: true,
     ...(skill.evidenceContract ? { evidenceContract: structuredClone(skill.evidenceContract) } : {}),
+    ...(skill.supplementalReference ? { supplementalReference: structuredClone(skill.supplementalReference) } : {}),
   });
 }
 
@@ -1808,6 +1842,7 @@ function questionFor(skill, raw) {
     hint: text(raw.hint),
     sourceFact,
     sourceEvidence: uniqueText(skill.evidence || []),
+    ...(raw.supplementalReference || skill.supplementalReference ? { supplementalReference: structuredClone(raw.supplementalReference || skill.supplementalReference) } : {}),
     sourceMode,
     supportType: raw.supportType || 'deterministic_transform',
     provenance: 'verified-abvm-skill-template',
@@ -2118,6 +2153,110 @@ function detectReligion(pack, skills, questions) {
   }
 }
 
+function detectVocabularyWordUse(pack, skills, questions, coverage) {
+  const reading = subjectRow(pack, 'Reading / ELA');
+  const teacherList = (reading?.topics || []).find(topic => /^Vocabulary\s*:/i.test(text(topic)));
+  if (!teacherList) return;
+  const listed = new Set(uniqueText(text(teacherList).replace(/^Vocabulary\s*:/i, '').split(','))
+    .map(normalize).filter(Boolean));
+  const verifiedTerms = uniqueText((pack?.vocabulary || []).filter(row =>
+    normalize(row?.subject) === 'reading / ela' && listed.has(normalize(row?.term))
+  ).map(row => normalize(row.term)));
+  if (!verifiedTerms.length) return;
+  const candidates = verifiedTerms.map(word => ({ word, ...VOCAB_WORD_USE_CONTEXTS[word] }))
+    .filter(row => row.sentence && row.distractors.every(word => listed.has(word) && verifiedTerms.includes(word)));
+  const uncovered = verifiedTerms.filter(word => !candidates.some(row => row.word === word));
+  if (candidates.length < 2) {
+    coverage.push({ topic: 'Teacher vocabulary in original contexts', subject: 'Reading / ELA',
+      status: 'SOURCE_INSUFFICIENT',
+      reason: 'Fewer than two current vocabulary words have reviewed, non-definition original usage examples with teacher-listed alternatives.',
+      uncovered: verifiedTerms });
+    return;
+  }
+  const skill = {
+    id: 'vocabulary-word-use', subject: 'Reading / ELA', label: 'Use teacher-listed vocabulary words in context',
+    // The stored pack says `Vocabulary:` while the original page says `Vocab Words:`.
+    // Match the stable list content, not either display prefix, for exact lineage.
+    evidence: [text(teacherList).replace(/^Vocabulary\s*:/i, '').trim()],
+    studyNotes: [
+      'Use the current teacher vocabulary words in new, original sentence contexts to practice choosing a word that fits.',
+      'These are not teacher-published definitions. The app does not claim definition mastery without verified meaning evidence.',
+    ],
+    standards: ['CCSS.L.2.4.a'], domain: 'Word knowledge and skills',
+    evidenceContract: { evidenceType: 'DIRECT_TARGET', supports: ['vocabulary-word-use'],
+      strongestClaim: 'original-sentence-contextual-word-use',
+      doesNotClaim: ['teacher-provided-definitions', 'isolated-print-recognition', 'teacher-test-questions', 'global-subject-mastery'] },
+  };
+  addSkill(skills, skill);
+  for (const row of candidates) {
+    questions.push(questionFor(skill, {
+      questionType: 'transfer',
+      prompt: `Which vocabulary word correctly completes this original sentence? “${row.sentence}”`,
+      choices: [row.word, ...row.distractors], answer: row.word,
+      explanation: `“${row.word}” fits the meaning and grammar of this newly written practice sentence. The teacher listed the word, not this sentence or its definition.`,
+      hint: 'Read the whole sentence, then check which listed word fits naturally.',
+      sourceMode: 'CURATED_CONTEXT',
+      sourceFact: `Current verified Reading Work vocabulary term: ${row.word}; original sentence constructed independently.`,
+      dok: 2, difficulty: 2,
+    }));
+  }
+  coverage.push({ topic: 'Teacher vocabulary in original contexts', subject: 'Reading / ELA', skillId: skill.id,
+    status: uncovered.length ? 'PARTIALLY_COVERED' : 'COVERED',
+    ...(uncovered.length ? { uncovered, reason: 'Some current terms lack approved original context templates.' } : {}),
+  });
+}
+
+function detectVineBranches(pack, skills, questions, coverage) {
+  const religion = subjectRow(pack, 'Religion');
+  const line = uniqueText([...(religion?.topics || []), ...(religion?.studyNotes || [])])
+    .find(value => /vine and the branches|vine and branches/i.test(value));
+  if (!line) return;
+  const skill = {
+    id: 'religion-vine-branches', subject: 'Religion', label: 'Jesus as the vine and disciples as branches',
+    evidence: [text(line).match(/(?:the )?parable of the vine and the branches|the vine and the branches|vine and branches/i)?.[0] || 'vine and the branches'],
+    studyNotes: [
+      'In John 15:4–5, Jesus uses a vine-and-branches picture to teach about staying close to him.',
+      'The public Christ Our Life Grade 2 Chapter 2 sample explains that Jesus is the vine, disciples are branches, and good deeds are pictured as fruit.',
+      'These original examples supplement the teacher-named topic; they do not pretend to be teacher-supplied questions.',
+    ],
+    standards: ['ABVM.RELIGION.CURRENT'], domain: 'Religion',
+    supplementalReference: VINE_BRANCHES_SUPPLEMENT,
+    evidenceContract: { evidenceType: 'DIRECT_TARGET', supports: ['religion-vine-branches'],
+      strongestClaim: 'scripture-and-publisher-backed-original-parable-practice',
+      doesNotClaim: ['teacher-exact-lesson-questions', 'teacher-quoted-passages', 'global-religion-mastery'] },
+  };
+  addSkill(skills, skill);
+  const items = [
+    {questionType: 'direct',
+      prompt: 'In the Bible’s vine-and-branches image from John 15, who does Jesus describe as the vine?',
+      choices: ['Jesus', 'The disciples', 'The good deeds'], answer: 'Jesus',
+      explanation: 'Jesus uses the vine to describe himself and the branches to describe the people close to him.',
+      hint: 'Think about the person teaching the comparison in John 15.', dok: 1, difficulty: 2},
+    {questionType: 'transfer',
+      prompt: 'In the Grade 2 vine-and-branches explanation, what can the fruit stand for?',
+      choices: ['Good deeds that show love', 'The class spelling list', 'A favorite snack'], answer: 'Good deeds that show love',
+      explanation: 'The Grade 2 textbook sample describes good deeds as the fruit of living close to Jesus.',
+      hint: 'Choose actions that show kindness and care for others.', dok: 2, difficulty: 2},
+    {questionType: 'reasoning',
+      prompt: 'In Jesus’ vine-and-branches lesson, why is it important for a branch to stay connected to the vine?',
+      choices: [
+        'A branch relies on the vine for life, like disciples relying on Jesus to do good.',
+        'A branch can learn to grow without any plant.',
+        'The vine is a kind of school book.',
+      ], answer: 'A branch relies on the vine for life, like disciples relying on Jesus to do good.',
+      explanation: 'John 15 explains that branches need the vine to bear fruit; the image teaches staying close to Jesus.',
+      hint: 'Think about how plants grow and what Jesus wants his disciples to do.', dok: 3, difficulty: 3},
+  ];
+  for (const item of items) questions.push(questionFor(skill, {
+    ...item, sourceMode: 'CURATED_CONTEXT', supportType: 'independent-scripture-and-publisher-support',
+    supplementalReference: VINE_BRANCHES_SUPPLEMENT,
+    sourceFact: 'Teacher names the vine-and-branches topic; original explanation is supported separately by John 15 and the Grade 2 Christ Our Life student sample.',
+  }));
+  coverage.push({ topic: 'Parable of the vine and the branches', subject: 'Religion', status: 'COVERED',
+    skillId: skill.id, supplementalReference: VINE_BRANCHES_SUPPLEMENT,
+    reason: 'Original Grade 2 practice grounded in John 15 and the publisher’s public Chapter 2 sample; exact teacher lesson questions remain unknown.' });
+}
+
 function detectVocabulary(pack, skills, questions, coverage) {
   const rows = (pack?.vocabulary || [])
     .map(row => ({
@@ -2233,7 +2372,8 @@ function detectUnsupportedExplicitSkills(pack, coverage, curriculumOptions = {})
 
   const religion = subjectRow(pack, 'Religion');
   const religionLines = [...(religion?.topics || []), ...(religion?.studyNotes || [])].map(text).filter(Boolean);
-  if (religionLines.some(line => /vine and the branches|vine and branches/i.test(line))) {
+  if (religionLines.some(line => /vine and the branches|vine and branches/i.test(line))
+    && !coverage.some(row => row.topic === 'Parable of the vine and the branches' && row.status === 'COVERED')) {
     coverage.push({
       topic: 'Parable of the vine and the branches',
       subject: 'Religion',
@@ -2415,6 +2555,8 @@ export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash, sour
   detectSightWords(pack, skills, rawQuestions, coverage);
   detectMath(pack, skills, rawQuestions);
   detectReligion(pack, skills, rawQuestions);
+  detectVocabularyWordUse(pack, skills, rawQuestions, coverage);
+  detectVineBranches(pack, skills, rawQuestions, coverage);
   detectVocabulary(pack, skills, rawQuestions, coverage);
   addSupplementalQuestionFamilies(skills, rawQuestions, curriculumOptions);
   attachSourceLineage(skills, rawQuestions, { sourcePages, sourceHash: sourceHash || pack?.sourceHash });
