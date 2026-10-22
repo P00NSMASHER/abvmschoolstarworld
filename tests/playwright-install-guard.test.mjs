@@ -10,48 +10,78 @@ const qaWorkflow=new URL('../.github/workflows/qa.yml',import.meta.url);
 const refreshWorkflow=new URL('../.github/workflows/sync-study-pack.yml',import.meta.url);
 const pagesWorkflow=new URL('../.github/workflows/pages.yml',import.meta.url);
 
-function fakeNpx(mode){
+function fakeBootstrap({probe='success',fallback='success'}={}){
   const dir=mkdtempSync(join(tmpdir(),'abvm-playwright-bootstrap-'));
-  const countFile=join(dir,'count');
-  const executable=join(dir,'npx');
-  writeFileSync(executable,`#!/usr/bin/env bash
+  const callsFile=join(dir,'calls');
+  const probeCountFile=join(dir,'probe-count');
+  const npx=join(dir,'npx');
+  const node=join(dir,'node');
+  writeFileSync(npx,`#!/usr/bin/env bash
 set -eu
-count=0
-if [[ -f "$COUNT_FILE" ]]; then count="$(cat "$COUNT_FILE")"; fi
-echo "$((count + 1))" > "$COUNT_FILE"
-if [[ "$FAKE_MODE" == "slow" ]]; then sleep 3; fi
+printf '%s\\n' "$*" >> "$CALLS_FILE"
+if [[ "$*" == *"--with-deps"* ]]; then
+  if [[ "$FALLBACK_MODE" == "slow" ]]; then sleep 3; fi
+  if [[ "$FALLBACK_MODE" == "fail" ]]; then exit 17; fi
+fi
 exit 0
 `);
-  chmodSync(executable,0o755);
+  writeFileSync(node,`#!/usr/bin/env bash
+set -eu
+count=0
+if [[ -f "$PROBE_COUNT_FILE" ]]; then count="$(cat "$PROBE_COUNT_FILE")"; fi
+count="$((count + 1))"
+echo "$count" > "$PROBE_COUNT_FILE"
+if [[ "$PROBE_MODE" == "fail" ]]; then exit 19; fi
+if [[ "$PROBE_MODE" == "fail-first" && "$count" == "1" ]]; then exit 19; fi
+exit 0
+`);
+  chmodSync(npx,0o755);
+  chmodSync(node,0o755);
   const started=Date.now();
   const result=spawnSync('bash',[installer.pathname],{
     encoding:'utf8',
-    timeout:6000,
-    env:{...process.env,PATH:dir+delimiter+(process.env.PATH||''),COUNT_FILE:countFile,
-      FAKE_MODE:mode,PLAYWRIGHT_INSTALL_TIMEOUT_SECONDS:'1',PLAYWRIGHT_INSTALL_ATTEMPTS:'2'},
+    timeout:5000,
+    env:{...process.env,PATH:dir+delimiter+(process.env.PATH||''),CALLS_FILE:callsFile,
+      PROBE_COUNT_FILE:probeCountFile,PROBE_MODE:probe,FALLBACK_MODE:fallback,
+      PLAYWRIGHT_INSTALL_TIMEOUT_SECONDS:'1'},
   });
-  return {dir,countFile,result,elapsed:Date.now()-started};
+  const calls=readFileSync(callsFile,'utf8').trim().split('\n').filter(Boolean);
+  return {dir,result,calls,elapsed:Date.now()-started};
 }
 
-test('Playwright bootstrap succeeds once and preserves Chromium/WebKit coverage',()=>{
-  const {dir,countFile,result}=fakeNpx('success');
+test('cached Chromium and WebKit launch without a redundant apt transaction',()=>{
+  const {dir,result,calls}=fakeBootstrap();
   try{
     assert.equal(result.status,0,result.stderr);
-    assert.equal(readFileSync(countFile,'utf8').trim(),'1');
-    assert.match(result.stdout,/Chromium\/WebKit browsers and OS dependencies are ready/);
-    const source=readFileSync(installer,'utf8');
-    assert.match(source,/npx playwright install --with-deps chromium webkit/);
+    assert.deepEqual(calls,['playwright install chromium webkit']);
+    assert.match(result.stdout,/Cached Playwright Chromium\/WebKit browsers and runtime dependencies are ready/);
   }finally{rmSync(dir,{recursive:true,force:true});}
 });
 
-test('Playwright bootstrap retries once, then fails fast with explicit timeout evidence',()=>{
-  const {dir,countFile,result,elapsed}=fakeNpx('slow');
+test('failed cached-browser probe permits exactly one dependency fallback',()=>{
+  const {dir,result,calls}=fakeBootstrap({probe:'fail-first',fallback:'success'});
+  try{
+    assert.equal(result.status,0,result.stderr);
+    assert.deepEqual(calls,[
+      'playwright install chromium webkit',
+      'playwright install --with-deps chromium webkit',
+    ]);
+    assert.match(result.stderr,/Playwright dependency fallback/);
+    assert.match(result.stdout,/ready after the bounded fallback/);
+  }finally{rmSync(dir,{recursive:true,force:true});}
+});
+
+test('dependency timeout fails closed without starting an overlapping apt retry',()=>{
+  const {dir,result,calls,elapsed}=fakeBootstrap({probe:'fail',fallback:'slow'});
   try{
     assert.equal(result.status,124,result.stderr);
-    assert.equal(readFileSync(countFile,'utf8').trim(),'2');
-    assert.ok(elapsed<4500,`bounded retry took ${elapsed}ms`);
-    assert.match(result.stderr,/Playwright bootstrap retry/);
+    assert.deepEqual(calls,[
+      'playwright install chromium webkit',
+      'playwright install --with-deps chromium webkit',
+    ]);
+    assert.ok(elapsed<2500,`bounded fallback took ${elapsed}ms`);
     assert.match(result.stderr,/Playwright bootstrap timeout/);
+    assert.match(result.stderr,/no overlapping apt retry was started/);
     assert.match(result.stderr,/browser QA was not run/);
   }finally{rmSync(dir,{recursive:true,force:true});}
 });
