@@ -18,6 +18,8 @@ const DOMAIN_BY_SKILL = Object.freeze({
   'suffix-s-es': ['Language'],
   'high-frequency-word-use': ['Foundational reading'],
   'vocabulary-in-context': ['Word knowledge and skills'],
+  'vocabulary-word-use': ['Word knowledge and skills'],
+  'religion-vine-branches': ['Religion'],
   theme: ['Analyzing literary text'],
   visualize: ['Comprehension / constructing meaning'],
   sequence: ['Comprehension / constructing meaning'],
@@ -143,6 +145,16 @@ const EXACT_SKILLS = Object.freeze({
     subject: 'Reading / ELA',
     standards: ['CCSS.RF.2.3.f'],
     anchors: ['word', 'sentence', 'complete', 'grammar', 'meaning', 'high-frequency'],
+  },
+  'vocabulary-word-use': {
+    subject: 'Reading / ELA',
+    standards: ['CCSS.L.2.4.a'],
+    anchors: ['vocabulary', 'word', 'sentence', 'context'],
+  },
+  'religion-vine-branches': {
+    subject: 'Religion',
+    standards: ['ABVM.RELIGION.CURRENT'],
+    anchors: ['vine', 'branch', 'Jesus', 'fruit', 'disciples'],
   },
   'vocabulary-in-context': {
     subject: 'Reading / ELA',
