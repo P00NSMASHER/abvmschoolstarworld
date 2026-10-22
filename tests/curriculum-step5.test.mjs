@@ -39,7 +39,7 @@ test('frozen verified example high-frequency words have contextual, source-limit
  assert.equal(p.coverage.some(x=>x.topic==='Sight / high-frequency words'&&x.status==='SOURCE_INSUFFICIENT'),false);
 });
 
-test('fixture author's opinion questions exercise original fact/opinion distinctions with three reasoning levels',()=>{
+test('fixture author-opinion questions exercise original fact/opinion distinctions with three reasoning levels',()=>{
  const p=generate(structuredClone(envelope.pack)),q=items(p,'author-opinion');
  assert.equal(q.length,8);
  assert.deepEqual([...new Set(q.map(x=>x.questionType))].sort(),['direct','reasoning','transfer']);
