@@ -69,10 +69,19 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
     assert.equal(vineItems.length,3);
     assert.ok(vineItems.every(item => item.supplementalReference?.url === 'https://bible.usccb.org/bible/john/15'));
   }
-  const hasVerifiedVocabularyMeanings = (pack.vocabulary || []).some(row => String(row?.meaning || '').trim() && !/^(?:tbd|unknown|not provided|not posted)$/i.test(String(row?.meaning || '').trim()));
+  const hasVerifiedVocabularyMeanings = (pack.vocabulary || []).some(row => String(row?.meaning || '').trim()
+    && !/teacher page does not provide a definition|no definition supplied|^(?:tbd|unknown|not provided|not posted)$/i.test(String(row?.meaning || '').trim()));
   if (!hasVerifiedVocabularyMeanings && (pack.vocabulary || []).length) {
-    assert.equal(ids.has('vocabulary-in-context'), false, 'must not invent vocabulary definitions absent from source');
-    assert.ok(pipeline.coverage.some(row => row.status === 'SOURCE_INSUFFICIENT' && /vocabulary definitions/i.test(row.topic)));
+    const originalItems = pipeline.questions.filter(row => row.skill === 'vocabulary-in-context' && row.supportType === 'original-grade2-vocabulary-teaching');
+    if (originalItems.length) {
+      assert.ok(ids.has('vocabulary-in-context'));
+      assert.ok(originalItems.every(row => row.sourceMode === 'CURATED_CONTEXT'));
+      assert.ok(originalItems.every(row => row.evidenceContract?.doesNotClaim?.includes('teacher-provided-definitions')));
+      assert.ok(pipeline.coverage.some(row => row.status === 'COVERED' && /vocabulary definitions/i.test(row.topic)));
+    } else {
+      assert.equal(ids.has('vocabulary-in-context'), false);
+      assert.ok(pipeline.coverage.some(row => row.status === 'SOURCE_INSUFFICIENT' && /vocabulary definitions/i.test(row.topic)));
+    }
   }
   assert.ok(pipeline.questions.length >= pipeline.skills.length);
   assert.equal(validateGrade2ContentPipeline(pipeline).length, 0);

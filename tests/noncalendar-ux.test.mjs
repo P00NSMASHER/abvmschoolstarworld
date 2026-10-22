@@ -51,10 +51,11 @@ test('offline shell versions align after UI changes',()=>{
   assert.ok(asset,'Missing active asset from HTML: '+file);
   assert.ok(worker.includes(asset),'Offline worker must precache exact HTML asset: '+asset);
  }
- assert.match(app,/study-games-materials-view\.mjs\?v=16/);
- assert.match(materials,/study-notes-library\.mjs\?v=4/);
- assert.match(worker,/study-games-materials-view\.mjs\?v=16/);
- assert.match(worker,/study-notes-library\.mjs\?v=4/);
+ assert.match(app,/study-games-materials-view\.mjs\?v=17/);
+ assert.match(materials,/study-notes-library\.mjs\?v=5/);
+ assert.match(worker,/study-games-materials-view\.mjs\?v=17/);
+ assert.match(worker,/study-notes-library\.mjs\?v=5/);
+ assert.ok(worker.includes('./grade2-original-vocabulary.mjs?v=1'),'offline vocabulary module must be cached');
  const cacheVersion=worker.match(/parent-companion-v(\d+)-/)?.[1];
  const reloadVersion=html.match(/abvm-sw-reloaded-v(\d+)/)?.[1];
  assert.ok(cacheVersion,'Offline cache must be versioned');

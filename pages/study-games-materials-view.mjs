@@ -1,4 +1,4 @@
-import {createNotesLibrary} from './study-notes-library.mjs?v=4';
+import {createNotesLibrary} from './study-notes-library.mjs?v=5';
 import {originalGrade2VocabularyMeaning} from './grade2-original-vocabulary.mjs?v=1';
 import {createReadAloud} from './study-room-view.mjs';
 import {renderTestStudyGuide,renderTestWorksheet} from './test-study-pair.mjs?v=4';
