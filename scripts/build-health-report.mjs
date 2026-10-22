@@ -8,11 +8,13 @@ const sw=readFileSync(new URL("../pages/sw.js",import.meta.url),"utf8");
 const cache=(sw.match(/const CACHE = "([^"]+)"/)||[])[1]||"unknown";
 const runsPath=process.env.WORKFLOW_RUNS_FILE;
 const refreshJobsPath=process.env.REFRESH_JOBS_FILE;
+const refreshStageJobsPath=process.env.REFRESH_STAGE_JOBS_FILE;
 const openPullsPath=process.env.OPEN_PULLS_FILE;
 const publicationsPath=process.env.HOMEWORK_PUBLICATIONS_FILE;
 const mainBranchPath=process.env.MAIN_BRANCH_FILE;
 const runs=runsPath?JSON.parse(readFileSync(runsPath,"utf8")).workflow_runs||[]:[];
 const refreshJobsData=refreshJobsPath?JSON.parse(readFileSync(refreshJobsPath,"utf8")):{run_id:null,jobs:[]};
+const refreshStageJobs=refreshStageJobsPath?JSON.parse(readFileSync(refreshStageJobsPath,"utf8")):{run_id:null,jobs:[]};
 const openPulls=openPullsPath?JSON.parse(readFileSync(openPullsPath,"utf8")):[];
 const homeworkPublications=publicationsPath?JSON.parse(readFileSync(publicationsPath,"utf8")):[];
 const mainBranchEvidence=mainBranchPath?JSON.parse(readFileSync(mainBranchPath,"utf8")):null;
@@ -142,6 +144,10 @@ status.curriculumReview={
   candidatePrNumber:status.curriculumHold?.candidatePrNumber||null,
   automatedPromotion:false,
 };
+status.refreshStage=refreshStageJobsPath?(await import("./refresh-stage-health.mjs")).selectPublishedRefreshStage({
+  refreshRun:status.workflows.refresh.latestCreated,refreshJobs:refreshStageJobs,
+  publicationRun:status.publicationEvidence,watchdogRun:effectiveRun(status.workflows.watchdog),sourceCheckedAt,
+}):null;
 const refreshDisplayRun=status.curriculumHold?curriculumHoldRefreshRun:effectiveRefreshRun;
 const refreshHealthy=completedHealthy(status.workflows.refresh,30);
 status.refreshRecovery=selectRecoveredRefreshRace({
@@ -186,12 +192,13 @@ const criticalHealthy=Boolean(
   lunchOperationallyUsable &&
   completedHealthy(status.workflows.qa,48) &&
   completedRunHealthy(status.publicationEvidence,48) &&
-  refreshOperationallyHealthy &&
+  (refreshOperationallyHealthy || Boolean(status.refreshStage)) &&
   completedHealthy(status.workflows.watchdog,30) &&
   pipelineHealthy
 );
 status.homeworkPolling=assessHomeworkPollingCadence(productionRuns,now);
 const warnings=[];
+if(status.refreshStage)warnings.push("The newest teacher source passed every source/QA/commit gate and a later guarded publication plus live watchdog verified it. Its parent workflow is still running; historical failures are retained, not relabeled as success.");
 if(status.homeworkPolling.state==="delayed"){
   warnings.push("Scheduled hourly Homework polling is delayed: the last actual cron run was "+
     status.homeworkPolling.ageHours+"h ago. A successful manual, push or recovery run does not prove the hourly schedule was delivered.");
@@ -240,7 +247,7 @@ const md=[
   `- **School-week labels:** Calendar ${expectedWeekLabel}; pack ${reportedWeekLabel||"missing"}; teacher posting ${postingWeekLabel||"missing"}`,
   `- **Upcoming week lunches (${upcomingLunch.weekLabel}):** missing verified or no-school entries: ${upcomingLunch.missingDates.join(", ")||"none"}`,
   `- **Source coverage:** ${status.schoolData.sourcePages}/6 teacher pages; source sufficient = ${status.schoolData.sourceSufficient}; fresh <=${SOURCE_FRESH_HOURS}h = ${sourceFresh}`,
-  `- **Homework checked:** ${status.homework.checkedAt||"missing"}; status ${status.homework.status}; same Eastern day and <=8h = ${status.homework.healthy}`,
+  `- **Homework checked:** ${status.homework.checkedAt||"missing"}; status ${status.homework.status}; scheduled school-day window and <=8h = ${status.homework.healthy}`,
   `- **Hourly Homework cron:** ${status.homeworkPolling.state}; last scheduled ${status.homeworkPolling.lastScheduledAt||"not observed"}; age ${status.homeworkPolling.ageHours===null?"n/a":status.homeworkPolling.ageHours+"h"}`,
   `- **Lunch source:** ${status.lunch.retrievalState}; ${status.lunch.days} reviewed days; complete reviewed coverage = ${lunchReviewedCoverageComplete}; missing dates: ${status.lunch.missingDates.join(", ")||"none"}`,
   `- **Grade 2 content pipeline:** QA ${status.contentPipeline.qaStatus}; safety ${status.contentPipeline.safetyState}; ${status.contentPipeline.skillCount} skills; ${status.contentPipeline.questionCount} questions; partial ${status.contentPipeline.partiallyCoveredCount}; source-insufficient ${status.contentPipeline.sourceInsufficientCount}; not-practiced-by-design ${status.contentPipeline.notPracticedByDesignCount}; unsupported ${status.contentPipeline.unsupportedSkillCount}`,
@@ -259,6 +266,8 @@ const md=[
   ...(warnings.length?["## Attention items",...warnings.map(w=>"- "+w),""]:[]),
   "## Workflow evidence used for health verdict",
   line("Teacher refresh",refreshDisplayRun),
+  ...(status.refreshStage?[line("Current teacher workflow",status.workflows.refresh.latestCreated)]:[]),
+  `- **Verified source stage:** ${status.refreshStage?"job "+status.refreshStage.sourceJobId+"; live publication "+status.refreshStage.publisherRunId+"; watchdog "+status.refreshStage.watchdogRunId+"; parent still pending":"no separate pending-parent proof"}`,
   `- **Guarded refresh race recovery:** ${status.refreshRecovery?"verified by publication "+status.refreshRecovery.publisherRunId+" and watchdog "+status.refreshRecovery.watchdogRunId:"not established"}`,
   line("Homework refresh",effectiveRun(status.workflows.homework)),
   line("App QA",effectiveRun(status.workflows.qa)),
