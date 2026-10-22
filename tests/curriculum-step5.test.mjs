@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {buildGrade2ContentPipeline, validateGrade2ContentPipeline} from '../scripts/grade2-content-pipeline.mjs';
 
-const envelope=JSON.parse(readFileSync(new URL('../pages/data/study-pack.json',import.meta.url),'utf8'));
+const envelope=JSON.parse(readFileSync(new URL('./fixtures/verified-grade2-teaching-source.json',import.meta.url),'utf8'));
 const checkedAt=envelope.sourceLastCheckedAt;
 const reading=envelope.pack.subjects.find(row=>row.subject==='Reading / ELA');
 const religion=envelope.pack.subjects.find(row=>row.subject==='Religion');
@@ -25,7 +25,7 @@ const items=(bank,id)=>bank.questions.filter(x=>x.skill===id);
 
 // These expectations are the safe learning outcomes of source-backed improvement,
 // rather than claims about unseen teacher word meanings or copyrighted story passages.
-test('current teacher high-frequency words have contextual, source-limited practice for every word',()=>{
+test('frozen verified example high-frequency words have contextual, source-limited practice for every word',()=>{
  const pack=structuredClone(envelope.pack),p=generate(pack);
  const words=reading.topics.find(x=>/^Sight words:/i.test(x)).split(':')[1].split(',').map(x=>x.trim().toLowerCase());
  const q=items(p,'high-frequency-word-use');
@@ -39,7 +39,7 @@ test('current teacher high-frequency words have contextual, source-limited pract
  assert.equal(p.coverage.some(x=>x.topic==='Sight / high-frequency words'&&x.status==='SOURCE_INSUFFICIENT'),false);
 });
 
-test('authors opinion questions exercise original fact/opinion distinctions with three reasoning levels',()=>{
+test('fixture author's opinion questions exercise original fact/opinion distinctions with three reasoning levels',()=>{
  const p=generate(structuredClone(envelope.pack)),q=items(p,'author-opinion');
  assert.equal(q.length,8);
  assert.deepEqual([...new Set(q.map(x=>x.questionType))].sort(),['direct','reasoning','transfer']);
@@ -61,7 +61,7 @@ test('unsupported author skill withdraws automatically when current teacher sour
  assert.equal(items(p,'author-opinion').length,0);
 });
 
-test('each teacher-listed vocabulary term gets original word-use context without claiming teacher definitions',()=>{
+test('each fixture-verified vocabulary term gets original word-use context without claiming teacher definitions',()=>{
  const pack=structuredClone(envelope.pack),p=generate(pack);
  const words=pack.vocabulary.map(x=>x.term);
  const q=items(p,'vocabulary-word-use');

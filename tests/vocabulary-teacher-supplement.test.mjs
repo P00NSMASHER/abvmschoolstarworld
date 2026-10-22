@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {buildGrade2ContentPipeline,validateGrade2ContentPipeline} from '../scripts/grade2-content-pipeline.mjs';
 
-const envelope=JSON.parse(readFileSync(new URL('../pages/data/study-pack.json',import.meta.url),'utf8'));
+const envelope=JSON.parse(readFileSync(new URL('./fixtures/verified-grade2-teaching-source.json',import.meta.url),'utf8'));
 const pack=()=>structuredClone(envelope.pack);
 const sourcePagesFor=p=>envelope.sourcePages.map(page=>page.title==='Reading Work'?{
   ...page,
@@ -19,7 +19,7 @@ const generate=p=>buildGrade2ContentPipeline(p,{
 });
 const supplements=p=>p.questions.filter(q=>q.skill==='vocabulary-in-context');
 
-test('current teacher-listed words all receive original Grade 2 definitions without false teacher attribution',()=>{
+test('verified source-fixture words all receive original Grade 2 definitions without false teacher attribution',()=>{
   const p=pack(),result=generate(p),terms=p.vocabulary.map(row=>row.term);
   const rows=supplements(result);
   assert.equal(rows.length,terms.length);
@@ -65,4 +65,20 @@ test('explicit teacher meaning always beats supplemental meaning for the same ve
   assert.equal(checks.supportType,'explicit');
   assert.match(checks.explanation,/verified teacher/i);
   assert.ok(supplements(result).some(row=>row.sourceMode==='CURATED_CONTEXT'));
+});
+
+
+test('fresh production source never receives supplemental word meanings after topic withdrawal',()=>{
+  const liveEnvelope=JSON.parse(readFileSync(new URL('../pages/data/study-pack.json',import.meta.url),'utf8'));
+  const live=structuredClone(liveEnvelope.pack);
+  const result=buildGrade2ContentPipeline(live,{sourceHash:live.sourceHash,sourcePages:liveEnvelope.sourcePages,requirePageExactLineage:false});
+  const supplemental=result.questions.filter(row=>row.skill==='vocabulary-in-context'&&row.supportType==='original-grade2-vocabulary-teaching');
+  const topic=live.subjects.find(row=>row.subject==='Reading / ELA')?.topics?.find(row=>/^Vocabulary:/i.test(row));
+  if(!topic||!live.vocabulary?.length){
+    assert.equal(supplemental.length,0,'removed vocabulary must not leave stale meanings');
+  }else{
+    const teacherTerms=topic.split(':').slice(1).join(':').split(',').map(word=>word.trim().toLowerCase());
+    assert.ok(supplemental.every(row=>teacherTerms.some(term=>row.prompt.includes('“'+term+'”'))));
+  }
+  assert.ok(supplemental.every(row=>row.evidenceContract.doesNotClaim.includes('teacher-provided-definitions')));
 });

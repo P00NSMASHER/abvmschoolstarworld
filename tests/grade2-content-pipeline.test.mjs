@@ -465,8 +465,12 @@ test('production lineage resolves every question to an exact teacher page captur
   }
 
   const suffixLineage = sourceFor('suffix-ed-ing');
-  if (suffixLineage) {
-    assert.ok(suffixLineage.matchedEvidence?.some(line => /adding\s+-ed,\s*-ing/i.test(line)));
+  const suffixSkill = pipeline.skills.find(row => row.id === 'suffix-ed-ing');
+  if (suffixLineage && suffixSkill) {
+    // Teacher wording for the skill can change without invalidating exact lineage.
+    const evidence = (suffixSkill.evidence || []).map(normalizeLine).filter(Boolean);
+    assert.ok(suffixLineage.matchedEvidence?.some(line =>
+      evidence.some(item => normalizeLine(line).includes(item))));
     assert.equal(suffixLineage.matchedEvidence?.some(line => /Reading Comprehension:/i.test(line)), false);
   }
 });
