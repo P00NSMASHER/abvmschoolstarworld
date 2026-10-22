@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { chromium, expect } from '@playwright/test';
 import { publishedMealForDate } from './published-meal.mjs';
 import {sameDeployedStudyPack} from './live-pack-parity.mjs';
+import { scrollLiveElementAfterRepaint } from './live-lunch-dom.mjs';
 
 const base = process.env.ABVM_LIVE_URL || 'https://p00nsmasher.github.io/abvmschoolstarworld/';
 const expected = JSON.parse(readFileSync(new URL('../pages/data/study-pack.json', import.meta.url), 'utf8'));
@@ -96,7 +97,9 @@ try {
   } else if (![0, 6].includes(new Date(today + 'T12:00:00Z').getUTCDay())) {
     await expect(page.locator('.lunch-card')).toContainText(/No school lunch|Lunch menu not yet verified/);
   }
-  if (await page.locator('.lunch-card').count()) await page.locator('.lunch-card').first().scrollIntoViewIfNeeded();
+  // Today may re-render its verified lunch card while the live pack finishes loading.
+  // Retry only the detached DOM scroll, never the source/meal or image assertions.
+  if (await page.locator('.lunch-card').count()) await scrollLiveElementAfterRepaint(page.locator('.lunch-card').first());
   const mealArt=page.locator('.today-screen .lunch-art-tray img');
   if(await mealArt.count()){await expect.poll(()=>mealArt.evaluate(img=>img.complete&&img.naturalWidth>=1200)).toBe(true);await expect(mealArt).toHaveAttribute('alt',/^Illustration of/);await expect(page.locator('.lunch-art-tray figcaption')).toHaveCount(0);receipt.todayTrayImage={src:await mealArt.getAttribute('src'),decoded:true};}
   await page.screenshot({ path: `${out}/today.png` });
