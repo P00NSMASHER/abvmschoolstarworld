@@ -1,4 +1,5 @@
 import {createNotesLibrary} from './study-notes-library.mjs?v=4';
+import {originalGrade2VocabularyMeaning} from './grade2-original-vocabulary.mjs?v=1';
 import {createReadAloud} from './study-room-view.mjs';
 import {renderTestStudyGuide,renderTestWorksheet} from './test-study-pair.mjs?v=4';
 
@@ -11,6 +12,8 @@ const missingDefinition = value => /teacher page does not provide a definition|n
 export function resolveVocabularyMeaning(row,dictionary = () => '') {
   const supplied = nonempty(row?.meaning) ? String(row.meaning).trim() : '';
   if (supplied && !missingDefinition(supplied)) return supplied;
+  const original=originalGrade2VocabularyMeaning(row?.term);
+  if(original)return original;
   const resolved = dictionary(row?.term);
   return nonempty(resolved) ? String(resolved).trim() : '';
 }

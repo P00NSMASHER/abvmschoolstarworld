@@ -1,4 +1,5 @@
 import {SUBTRACTION_CHECK_PROMPT} from './question-corrections.mjs';
+import {originalGrade2Vocabulary} from '../pages/grade2-original-vocabulary.mjs';
 import { createHash } from 'node:crypto';
 
 import { validateGrade2PipelineAlignment } from './grade2-content-alignment.mjs';
@@ -1691,7 +1692,8 @@ function isPlaceholderVocabularyMeaning(value) {
   const clean = normalize(value);
   return !clean
     || clean.includes('teacher page does not provide a definition')
-    || clean.includes('current reading work vocabulary word');
+    || clean.includes('current reading work vocabulary word')
+    || /^(?:unknown|tbd|not provided|not posted|no definition supplied)$/.test(clean);
 }
 
 function uniqueText(values) {
@@ -2257,69 +2259,87 @@ function detectVineBranches(pack, skills, questions, coverage) {
     reason: 'Original Grade 2 practice grounded in John 15 and the publisher’s public Chapter 2 sample; exact teacher lesson questions remain unknown.' });
 }
 
-function detectVocabulary(pack, skills, questions, coverage) {
-  const rows = (pack?.vocabulary || [])
-    .map(row => ({
-      term: text(row?.term).toLowerCase(),
-      meaning: text(row?.meaning),
-    }))
-    .filter(row => row.term);
-
-  if (!rows.length) return;
-
-  const supported = rows.filter(row => !isPlaceholderVocabularyMeaning(row.meaning));
-  if (!supported.length) {
+function detectVocabulary(pack,skills,questions,coverage) {
+  const reading=subjectRow(pack,'Reading / ELA');
+  const teacherList=(reading?.topics||[]).find(line=>/^Vocabulary\s*:/i.test(text(line)));
+  if(!teacherList)return;
+  const verifiedList=text(teacherList).replace(/^Vocabulary\s*:/i,'').trim();
+  const listed=uniqueText(verifiedList.split(',')).map(normalize).filter(Boolean);
+  if(!listed.length)return;
+  const allowed=new Set(listed);
+  const supplied=new Map();
+  for(const row of pack?.vocabulary||[]) {
+    const term=normalize(row?.term);
+    if(!allowed.has(term) || (text(row?.subject)&&normalize(row.subject)!=='reading / ela') || supplied.has(term))continue;
+    supplied.set(term,row);
+  }
+  const eligible=listed.map(term=>{
+    const row=supplied.get(term);
+    if(!row)return null;
+    const teacherMeaning=text(row.meaning);
+    const official=!isPlaceholderVocabularyMeaning(teacherMeaning);
+    const original=official?null:originalGrade2Vocabulary(term);
+    return official||original?{
+      term,meaning:official?teacherMeaning:original.meaning,
+      teacherProvided:official,example:official?'':original.example,
+    }:null;
+  }).filter(Boolean);
+  const covered=new Set(eligible.map(row=>row.term));
+  const uncovered=listed.filter(term=>!covered.has(term));
+  const topic='Reading / ELA vocabulary definitions';
+  if(eligible.length<3) {
     coverage.push({
-      topic: 'Reading / ELA vocabulary definitions',
-      subject: 'Reading / ELA',
-      status: 'SOURCE_INSUFFICIENT',
-      reason: 'Vocabulary terms are present, but the verified teacher source does not provide definitions. Definition questions are intentionally suppressed.',
+      topic,subject:'Reading / ELA',status:'SOURCE_INSUFFICIENT',
+      uncovered,
+      reason:'Current teacher-listed words have fewer than three supported meanings for a three-choice Grade 2 lesson. Unknown terms are not guessed.',
     });
     return;
   }
-
-  const skill = {
-    id: 'vocabulary-in-context',
-    subject: 'Reading / ELA',
-    label: 'Vocabulary meaning',
-    evidence: supported.map(row => `${row.term}: ${row.meaning}`),
-    studyNotes: supported.map(row => `${row.term}: ${row.meaning}`),
-    standards: ['CCSS.L.2.4.a'],
-    domain: 'Word knowledge and skills',
-    sourceMode: 'STRICT_SOURCE',
+  const skill={
+    id:'vocabulary-in-context',subject:'Reading / ELA',label:'Vocabulary meaning',
+    evidence:[verifiedList],
+    studyNotes:[
+      'Original ABVM teaching explanations supplement the teacher-listed vocabulary; they are not teacher-published definitions or test questions.',
+      ...eligible.map(row=>row.term+': '+row.meaning+(row.teacherProvided?' (teacher-provided definition)':' (original ABVM teaching explanation)')),
+    ],
+    standards:['CCSS.L.2.4.a'],domain:'Word knowledge and skills',
+    sourceMode:'CURATED_CONTEXT',
   };
-  addSkill(skills, skill);
-
-  for (const row of supported.slice(0, 6)) {
-    const distractors = supported
-      .filter(other => other.term !== row.term)
-      .map(other => other.meaning)
-      .filter(Boolean)
-      .slice(0, 2);
-    if (distractors.length < 2) {
-      coverage.push({
-        topic: `Vocabulary: ${row.term}`,
-        subject: 'Reading / ELA',
-        status: 'SOURCE_INSUFFICIENT',
-        reason: 'A verified definition exists, but there are not enough same-construct verified distractors for a three-choice item.',
-      });
-      continue;
-    }
-    questions.push(questionFor(skill, {
-      prompt: `Which meaning matches the vocabulary word “${row.term}”?`,
-      choices: [row.meaning, ...distractors],
-      answer: row.meaning,
-      explanation: `The verified source defines “${row.term}” as ${row.meaning}.`,
-      hint: 'Use the verified vocabulary meaning from the current school material.',
-      sourceMode: 'STRICT_SOURCE',
-      supportType: 'explicit',
-      sourceFact: `Verified vocabulary definition: ${row.term} — ${row.meaning}`,
-      dok: 1,
-      difficulty: 2,
+  addSkill(skills,skill);
+  for(const row of eligible) {
+    const distractors=eligible.filter(other=>other.term!==row.term).map(other=>other.meaning).slice(0,2);
+    const original=!row.teacherProvided;
+    questions.push(questionFor(skill,{
+      prompt:'Which meaning matches the vocabulary word “'+row.term+'”?',
+      choices:[row.meaning,...distractors],
+      answer:row.meaning,
+      explanation:original
+        ? 'Original ABVM teaching explanation: “'+row.term+'” means '+row.meaning+'. Example: '+row.example+' The teacher listed this word but did not supply this definition.'
+        : 'The verified teacher material defines “'+row.term+'” as '+row.meaning+'.',
+      hint:'Think about how the word is used in a sentence, then choose the meaning that fits.',
+      sourceMode:original?'CURATED_CONTEXT':'STRICT_SOURCE',
+      supportType:original?'original-grade2-vocabulary-teaching':'explicit',
+      sourceFact:original
+        ? 'Verified current teacher vocabulary term: '+row.term+'; meaning supplied by original Grade 2 enrichment, not by the teacher.'
+        : 'Verified teacher-provided vocabulary definition: '+row.term+' — '+row.meaning,
+      evidenceContract:{
+        evidenceType:'DIRECT_TARGET',
+        supports:['vocabulary-in-context'],
+        strongestClaim:original?'supplemental-original-grade2-vocabulary-meaning-practice':'teacher-provided-vocabulary-definition-practice',
+        doesNotClaim:original?['teacher-provided-definitions','teacher-test-questions','global-subject-mastery']:['teacher-test-questions','global-subject-mastery'],
+      },
+      dok:1,difficulty:2,
     }));
   }
+  coverage.push({
+    topic,subject:'Reading / ELA',skillId:skill.id,
+    status:uncovered.length?'PARTIALLY_COVERED':'COVERED',
+    supplementalTerms:eligible.filter(row=>!row.teacherProvided).map(row=>row.term),
+    teacherDefinitionTerms:eligible.filter(row=>row.teacherProvided).map(row=>row.term),
+    ...(uncovered.length?{uncovered,reason:'No approved meaning for some listed words; unknown meanings are not invented.'}:
+      {reason:'Teacher-listed words taught with clearly labeled original ABVM explanations when no teacher definition exists.'}),
+  });
 }
-
 
 function detectUnsupportedExplicitSkills(pack, coverage, curriculumOptions = {}) {
   const addUnsupported = (subject, topic) => {

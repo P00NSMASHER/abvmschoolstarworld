@@ -1,6 +1,7 @@
 /** Separate current-curriculum learning notes and assessment-style practice papers. */
 import {renderClassroomStudyGuide} from './classroom-test-guide.mjs?v=3';
 import {premiumPaperCss,decoratePaper} from './premium-paper-theme.mjs?v=2';
+import {originalGrade2VocabularyMeaning} from './grade2-original-vocabulary.mjs?v=1';
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clean=value=>String(value??'').replace(/\s+/g,' ').trim();
@@ -169,8 +170,9 @@ export function renderTestStudyGuide(guide,dictionary=()=> ''){
   const teacherFacts=unique(guide?.teacherFacts);
   const vocabulary=rows(guide?.vocabulary).map(word=>{
     const term=clean(word?.term),supplied=clean(word?.meaning);
-    const meaning=supplied&&!/teacher page does not provide a definition|no definition supplied/i.test(supplied)?supplied:clean(dictionary(term));
-    return {term,meaning};
+    const teacherProvided=Boolean(supplied&&!/teacher page does not provide a definition|no definition supplied/i.test(supplied));
+    const meaning=teacherProvided?supplied:originalGrade2VocabularyMeaning(term)||clean(dictionary(term));
+    return {term,meaning,originalTeaching:!teacherProvided&&Boolean(meaning)};
   }).filter(word=>word.term);
   const steps=strategies(guide,kind);
   const topicHtml=topics.length?'<div class="topic-grid">'+topics.map(topic=>'<article class="topic-card" data-guide-skill="'+esc(topic.id||topic.label)+'">'+
@@ -184,7 +186,7 @@ export function renderTestStudyGuide(guide,dictionary=()=> ''){
     '<p class="subtitle">Read every line, then explain it in your own words. This list is kept with the matching test.</p><ul class="teacher-checklist">'+
     completeFacts.map(f=>'<li>'+esc(f)+'</li>').join('')+'</ul></section>':'';
   const vocabHtml=vocabulary.length?'<section class="section"><h2><span class="index">03</span> Words to know</h2><dl class="vocabulary">'+
-    vocabulary.map(q=>'<div><dt>'+esc(q.term)+'</dt>'+(q.meaning?'<dd>'+esc(q.meaning)+'</dd>':'')+'</div>').join('')+'</dl></section>':'';
+    vocabulary.map(q=>'<div><dt>'+esc(q.term)+'</dt>'+(q.meaning?'<dd>'+esc(q.meaning)+(q.originalTeaching?'<small class="vocabulary-source">Original ABVM teaching explanation (not teacher-provided)</small>':'')+'</dd>':'')+'</div>').join('')+'</dl></section>':'';
   const missing=rows(guide?.coverage?.missingGuideSkills);
   const coverageWarning=missing.length?'<p class="warning">This guide is missing '+missing.length+' tested topic'+(missing.length===1?'':'s')+'. Use the current classroom materials until the guide refreshes.</p>':'';
   return decoratePaper(htmlHead(guide,'Study guide')+'<main class="sheet study-guide">'+

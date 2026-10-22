@@ -1135,3 +1135,20 @@ test('notes expose only explicitly sourced chapter explanations in full and comp
     assert.equal(data.notes.find(row=>row.kind==='study-note').text,'Unscoped class note.');
   }
 });
+
+
+test('supplemental teacher-listed vocabulary appears in print and notes with explicit original-author labels',()=>{
+  const placeholder='Current Reading Work vocabulary word; the teacher page does not provide a definition.';
+  const row={term:'checks',subject:'Reading / ELA',meaning:placeholder};
+  const resolved=resolveVocabularyMeaning(row);
+  assert.equal(resolved,'looks at something carefully to make sure it is correct');
+  const guide={label:'Reading',subject:'Reading / ELA',date:'2026-10-27',
+    vocabulary:[row],practice:[{prompt:'What word means looking carefully?',answer:'checks'}],sourceLabel:'Verified teacher vocabulary list'};
+  const html=printableStudyGuideHtml(guide);
+  assert.match(html,/looks at something carefully to make sure it is correct/);
+  assert.match(html,/Original ABVM teaching explanation \(not teacher-provided\)/);
+  assert.doesNotMatch(html,/teacher page does not provide a definition/);
+  const teacherHtml=printableStudyGuideHtml({...guide,vocabulary:[{...row,meaning:'looks again to make sure something is correct'}]});
+  assert.match(teacherHtml,/looks again to make sure something is correct/);
+  assert.doesNotMatch(teacherHtml,/Original ABVM teaching explanation \(not teacher-provided\)/);
+});
