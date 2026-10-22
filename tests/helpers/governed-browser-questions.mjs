@@ -4,15 +4,23 @@
  * the browser QA resolver must not label those formerly-current items unknown.
  * An unrecognized or conflicting answer must still fail closed.
  */
-export function mergeGovernedQuestionPools({catalog,schoolwork,archive,star}={}){
+import {schoolDay} from '../../pages/study-model.mjs';
+
+export function mergeGovernedQuestionPools({catalog,schoolwork,archive,star,observedAt}={}){
+  const observedDay=schoolDay(observedAt??new Date());
+  const approvedSources=archive?.sources||{};
   const validArchiveQuestion=q=>q&&typeof q.id==='string'&&q.id&&
     typeof q.prompt==='string'&&q.prompt&&typeof q.answer==='string'&&
     Array.isArray(q.choices)&&q.choices.length>1&&
     q.choices.every(choice=>typeof choice==='string')&&
     new Set(q.choices).size===q.choices.length&&q.choices.includes(q.answer)&&
+    typeof q.firstSeenAt==='string'&&Number.isFinite(Date.parse(q.firstSeenAt))&&
+    schoolDay(q.firstSeenAt)<=observedDay&&
     Array.isArray(q.provenance)&&q.provenance.some(p=>
       typeof p?.sourceRef==='string'&&p.sourceRef&&
-      typeof p.capturedAt==='string'&&Number.isFinite(Date.parse(p.capturedAt)));
+      Object.hasOwn(approvedSources,p.sourceRef)&&
+      typeof p.capturedAt==='string'&&Number.isFinite(Date.parse(p.capturedAt))&&
+      schoolDay(p.capturedAt)<=observedDay);
   return [
     ...(Array.isArray(catalog?.questions)?catalog.questions:[]),
     ...(Array.isArray(schoolwork?.lessons)?schoolwork.lessons.flatMap(lesson=>Array.isArray(lesson?.questions)?lesson.questions:[]):[]),
@@ -31,7 +39,7 @@ export async function governedBrowserQuestions(page){
     const engine=window.ABVMStudyGames;
     const {buildStarBank}=await import('./star-practice.mjs');
     const catalog=engine.buildCatalog(runtime.pack,{sourceKey:engine.sourceKeyFromEnvelope(runtime.pack,runtime)});
-    return {catalog,schoolwork,archive,star:buildStarBank()};
+    return {catalog,schoolwork,archive,star:buildStarBank(),observedAt:new Date().toISOString()};
   });
   return mergeGovernedQuestionPools(sources);
 }
