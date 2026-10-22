@@ -964,7 +964,12 @@ test("actual October 15 Chapter 3 live Test Prep works with compact runtime and 
   const allowed=new Set(reviewed.map(q=>q.id));
   assert.equal(allowed.size,18);
   const excluded=full.pack.contentPipeline.questions.filter(q=>q.subject==='Religion'&&!allowed.has(q.id));
-  assert.equal(excluded.length,21);
+  // A source-backed Chapter 2 vine-and-branches family adds three exercises,
+  // but must never leak into the 18 verified Chapter 3 review questions.
+  const vine=excluded.filter(q=>q.skill==='religion-vine-branches');
+  assert.equal(vine.length,full.pack.contentPipeline.skills.some(s=>s.id==='religion-vine-branches')?3:0);
+  assert.ok(vine.every(q=>!religionChapterScopes(q).includes(3)));
+  assert.equal(excluded.length,21+vine.length);
   const engine=loadEngine();
   for(const envelope of [runtime,full]){
     const pack=envelope.pack;
