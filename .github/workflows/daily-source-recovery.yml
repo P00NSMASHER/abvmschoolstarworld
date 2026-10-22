@@ -91,7 +91,7 @@ jobs:
               local stalled
               # Do not silently report recovery as healthy when GitHub has
               # left an active/queued main workflow without progress for 2h.
-              stalled="$(jq -r --argjson cutoff "$(($(date -u +%s) - 7200))" '[.[] | select(.status != "completed") | select(((.updatedAt // .createdAt) | fromdateiso8601) < $cutoff)] | length' <<< "$recent")" || return 1
+              stalled="$(jq -r --argjson cutoff "$(($(date -u +%s) - 7200))" '[.[] | select(.status != "completed") | select(((.updatedAt // .createdAt) | sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601) < $cutoff)] | length' <<< "$recent")" || return 1
               if (( stalled > 0 )); then
                 echo "::error::Detected stalled active workflow: $workflow; $stalled run(s) older than 2 hours. Keep source/release gates intact and report the incident."
                 return 1
@@ -120,7 +120,7 @@ jobs:
                   local stalled_publisher
                   # A queued nested publisher may legitimately need a full QA
                   # window, but two hours with no completion is material.
-                  stalled_publisher="$(jq -r --argjson cutoff "$(($(date -u +%s) - 7200))" '[.[] | select(.status != "completed") | select(((.updatedAt // .createdAt) | fromdateiso8601) < $cutoff)] | length' <<< "$publisher_history")" || return 1
+                  stalled_publisher="$(jq -r --argjson cutoff "$(($(date -u +%s) - 7200))" '[.[] | select(.status != "completed") | select(((.updatedAt // .createdAt) | sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601) < $cutoff)] | length' <<< "$publisher_history")" || return 1
                   if (( stalled_publisher > 0 )); then
                     echo "::error::Detected stalled source publisher: $publisher ($stalled_publisher run(s) older than 2 hours); release still unverified."
                     return 1
