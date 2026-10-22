@@ -1022,6 +1022,26 @@ test("Chapter 3 guide does not mix in Chapter 1 or Chapter 2 subject notes",()=>
   assert.ok(guide.practice.some(item=>item.skill==='religion-chapter-3'));
 });
 
+test('current place-value and common/proper-noun guides teach the announced skill instead of generic study advice',() => {
+  const math=printableStudyGuideHtml({
+    label:'Math (place value, expanded form)',date:'2026-10-27',subject:'Math',
+    practice:[{skill:'place-value',prompt:'What is 347 in expanded form?',answer:'300 + 40 + 7',
+      choices:['300 + 40 + 7','30 + 4 + 7','300 + 47'],explanation:'The digits show 3 hundreds, 4 tens, and 7 ones.'}],
+  });
+  assert.match(math,/I can name each digit’s value and write a number in expanded form/);
+  assert.match(math,/hundreds, tens, or ones/);
+  assert.match(math,/347 = 300 \+ 40 \+ 7/);
+
+  const nouns=printableStudyGuideHtml({
+    label:'Grammar (common & proper nouns)',date:'2026-10-29',subject:'Reading / ELA',
+    practice:[{skill:'common-proper-nouns',prompt:'Which word is a proper noun?',answer:'Tuesday',
+      choices:['Tuesday','weekday','calendar'],explanation:'Tuesday names one particular day.'}],
+  });
+  assert.match(nouns,/I can tell common and proper nouns apart and capitalize particular names/);
+  assert.match(nouns,/Capitalize a proper noun/);
+  assert.match(nouns,/ordinary common nouns are not capitalized without a reason/);
+});
+
 test('premium test packets print every matched current skill with existing ImageGen art and matching answers',() => {
   const events=[{date:'2026-10-15',label:'Math (subtraction)',kind:'test'}];
   const currentRows=Array.from({length:18},(_,index)=>{
