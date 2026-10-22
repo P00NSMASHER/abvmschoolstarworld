@@ -72,8 +72,13 @@ test('each teacher-listed vocabulary term gets original word-use context without
  assert.ok(q.every(x=>x.sourceLineage.quality==='page-exact'&&x.sourceLineage.sourceTitle==='Reading Work'));
  assert.ok(q.every(x=>!/(?:teacher defines|teacher's definition|verified vocabulary definition)/i.test(x.sourceFact+' '+x.explanation+' '+x.prompt)));
  assert.ok(q.every(x=>x.evidenceContract.doesNotClaim.includes('teacher-provided-definitions')));
- assert.equal(skill(p,'vocabulary-in-context'),undefined,'missing teacher definitions cannot produce purported sourced definition quizzes');
- assert.ok(p.coverage.some(x=>x.topic==='Reading / ELA vocabulary definitions'&&x.status==='SOURCE_INSUFFICIENT'));
+ const meanings=items(p,'vocabulary-in-context');
+ assert.equal(meanings.length,words.length,'each teacher-listed term receives one original common-meaning question');
+ assert.ok(meanings.every(x=>x.sourceMode==='CURATED_CONTEXT'&&x.supportType==='original-grade2-vocabulary-teaching'));
+ assert.ok(meanings.every(x=>x.explanation.includes('Original ABVM teaching explanation')));
+ assert.ok(meanings.every(x=>x.sourceLineage.quality==='page-exact'&&x.sourceLineage.sourceTitle==='Reading Work'));
+ assert.ok(p.coverage.some(x=>x.topic==='Reading / ELA vocabulary definitions'&&x.status==='COVERED'&&x.supplementalTerms?.length===words.length));
+ assert.equal(p.coverage.some(x=>x.topic==='Reading / ELA vocabulary definitions'&&x.status==='SOURCE_INSUFFICIENT'),false);
  assert.ok(p.coverage.some(x=>x.topic==='Teacher vocabulary in original contexts'&&x.status==='COVERED'));
 });
 
