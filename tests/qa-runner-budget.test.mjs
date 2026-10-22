@@ -37,18 +37,18 @@ test('source-gated visual and fresh-curriculum QA retain full engine checks with
   ];
   for(const file of visual){
     const source=read(file);
-    assert.match(source,/timeout-minutes:\\s*60\\b/,file);
-    assert.match(source,/name: Cache version-pinned Playwright browsers/,file);
-    assert.match(source,/npx playwright install --with-deps chromium webkit/,file);
-    assert.match(source,/--project=mobile --project=iphone-webkit/,file);
-    assert.match(source,/if: always\\(\\)/,file);
-    assert.doesNotMatch(source,/continue-on-error:\\s*true/,file);
+    assert.ok(source.includes('timeout-minutes: 60'),file+' has sufficient job budget');
+    assert.ok(source.includes('name: Cache version-pinned Playwright browsers'),file+' caches installed browsers');
+    assert.ok(source.includes('npx playwright install --with-deps chromium webkit'),file+' installs both browsers');
+    assert.ok(source.includes('--project=mobile --project=iphone-webkit'),file+' runs both mobile engines');
+    assert.ok(source.includes('if: always()'),file+' retains evidence');
+    assert.ok(!source.includes('continue-on-error: true'),file+' has mandatory visual gate');
   }
   const teacher=read('teacher-refresh-candidate.yml');
-  assert.match(teacher,/timeout-minutes:\\s*60\\b/);
-  assert.match(teacher,/Generate a fresh candidate from all verified teacher pages/);
-  assert.match(teacher,/Reject unverified curriculum and source-lineage gaps/);
-  assert.match(teacher,/Verify fresh teacher check, not just a recent notice import/);
-  assert.match(teacher,/npm run qa/);
-  assert.match(teacher,/npx playwright install --with-deps chromium webkit/);
+  assert.ok(teacher.includes('timeout-minutes: 60'));
+  assert.ok(teacher.includes('Generate a fresh candidate from all verified teacher pages'));
+  assert.ok(teacher.includes('Reject unverified curriculum and source-lineage gaps'));
+  assert.ok(teacher.includes('Verify fresh teacher check, not just a recent notice import'));
+  assert.ok(teacher.includes('npm run qa'));
+  assert.ok(teacher.includes('npx playwright install --with-deps chromium webkit'));
 });
