@@ -39,13 +39,14 @@ test('current high-frequency practice follows the active teacher topic without r
   assert.ok(p.coverage.some(x=>x.topic==='Sight / high-frequency words'&&x.status==='SOURCE_INSUFFICIENT'));
   return;
  }
- assert.equal(q.length,words.length);
- assert.equal(new Set(q.map(x=>x.answer)).size,words.length);
+ const coverage=p.coverage.find(x=>x.topic==='Sight / high-frequency words');
+ assert.deepEqual([...q.map(x=>x.answer),...(coverage.uncovered||[])].sort(),[...words].sort());
+ assert.equal(new Set(q.map(x=>x.answer)).size,q.length);
  assert.ok(q.every(x=>words.includes(x.answer)));
  assert.ok(q.every(x=>x.choices.every(y=>words.includes(y.toLowerCase()))));
  assert.ok(q.every(x=>x.sourceMode==='CURATED_CONTEXT'));
  assert.ok(q.every(x=>x.evidenceContract.doesNotClaim.includes('isolated-print-recognition')));
- assert.ok(p.coverage.some(x=>x.topic==='Sight / high-frequency words'&&x.status==='COVERED'));
+ assert.ok(p.coverage.some(x=>x.topic==='Sight / high-frequency words'&&x.status===(q.length===words.length?'COVERED':'PARTIALLY_COVERED')));
 });
 
 test('author-opinion practice is complete only while the current teacher source names that skill',()=>{
@@ -187,4 +188,13 @@ test('an explicitly supported author-opinion fixture still requires all eight or
  assert.equal(q.length,8);
  assert.deepEqual([...new Set(q.map(x=>x.questionType))].sort(),['direct','reasoning','transfer']);
  assert.ok(q.every(x=>x.sourceLineage.quality==='page-exact'));
+});
+
+test('a partially supported future sight list retains all known contexts and accounts for the new word',()=>{
+ const {pack,sources}=october22Fixture();
+ pack.subjects[0].topics[0]+=', unmodeledword';sources[0].lines[0]+=', unmodeledword';
+ const p=generate(pack,sources),q=items(p,'high-frequency-word-use');
+ assert.equal(q.length,10);
+ const row=p.coverage.find(x=>x.topic==='Sight / high-frequency words');
+ assert.equal(row.status,'PARTIALLY_COVERED');assert.deepEqual(row.uncovered,['unmodeledword']);
 });
