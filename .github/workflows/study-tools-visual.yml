@@ -27,7 +27,8 @@ concurrency:
 jobs:
   rendered-study-resources:
     runs-on: ubuntu-latest
-    timeout-minutes: 16
+    # Give multi-view WebKit/Chromium verification a bounded real browser budget.
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v6
         with:
@@ -43,7 +44,13 @@ jobs:
           cache: npm
       - run: npm ci --no-audit --no-fund
       - run: npm run pack:runtime
-      - run: npx playwright install --with-deps chromium webkit
+      - name: Cache version-pinned Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: abvm-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - name: Install Chromium and WebKit
+        run: npx playwright install --with-deps chromium webkit
       - name: Check new resources and inherited Study components in WebKit and Chromium
         run: npx playwright test tests/study-notes-library.spec.mjs tests/study-tools-premium.spec.mjs tests/study-premium.spec.mjs tests/study-player-premium.spec.mjs --project=mobile --project=iphone-webkit --workers=1 --retries=0
       - name: Preserve independent WebKit Study Tools report and screenshots

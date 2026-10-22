@@ -24,3 +24,16 @@ for (const file of acceptanceWorkflows) {
     assert.match(source, /test "\$\(git rev-parse HEAD\)" = "\$PR_HEAD_SHA"/);
   });
 }
+
+for (const file of ["calendar-visual-acceptance.yml", "study-tools-visual.yml"]) {
+  test(file + " retains strict visual acceptance with a bounded browser-install budget", () => {
+    const text = readFileSync(new URL("../.github/workflows/" + file, import.meta.url), "utf8").replace(/\r\n/g, "\n");
+    assert.match(text, /timeout-minutes:\s*35/);
+    assert.match(text, /name: Cache version-pinned Playwright browsers\n\s+uses: actions\/cache@v4/);
+    assert.match(text, /key: abvm-playwright-\$\{\{ runner\.os \}\}-\$\{\{ hashFiles\('package-lock\.json'\) \}\}/);
+    assert.match(text, /npx playwright install --with-deps chromium webkit/);
+    assert.match(text, /--project=mobile --project=iphone-webkit --workers=1 --retries=0/);
+    assert.doesNotMatch(text, /continue-on-error:\s*true/);
+    assert.match(text, /if: always\(\)/);
+  });
+}
