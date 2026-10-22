@@ -65,14 +65,14 @@ test('operational dashboard never reports healthy when known repository/live par
   }finally{rmSync(dir,{recursive:true,force:true})}
 });
 
-test('dashboard and hourly watchdog inspect actual public data without manual intervention',()=>{
+test('dashboard and existing watchdog inspect actual public data without manual intervention',()=>{
   const dashboard=read('.github/workflows/health-dashboard.yml');
   const watchdog=read('.github/workflows/refresh-health.yml');
   assert.match(dashboard,/node scripts\/source-freshness-recovery\.mjs --report=source-recovery-plan\.json/);
   assert.match(dashboard,/SOURCE_RECOVERY_PLAN_FILE: source-recovery-plan\.json/);
   assert.match(dashboard,/node scripts\/fetch-health-history\.mjs/);
   assert.match(dashboard,/npm run health:report/);
-  assert.match(watchdog,/cron: '29 6-23 \* \* \*'/);
+  assert.match(watchdog,/cron: '29 16 \* \* \*'/);
   assert.match(watchdog,/timezone: 'America\/New_York'/);
   assert.match(watchdog,/workflow_run:[\s\S]*?Refresh ABVM teacher pages/);
   assert.match(watchdog,/workflow_run:[\s\S]*?Refresh current ABVM homework/);
@@ -81,6 +81,7 @@ test('dashboard and hourly watchdog inspect actual public data without manual in
 
 test('queued publishers older than two hours must be reported, not silently treated as recovery',()=>{
   const recovery=read('.github/workflows/daily-source-recovery.yml');
+  assert.match(recovery,/sub\("\\\\\.\[0-9\]\+Z\$"; "Z"\)/);
   assert.match(recovery,/fromdateiso8601/);
   assert.match(recovery,/7200/);
   assert.match(recovery,/stalled active workflow/);
