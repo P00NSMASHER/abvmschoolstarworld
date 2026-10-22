@@ -231,7 +231,7 @@ jobs:
           path: ~/.cache/ms-playwright
           key: abvm-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
       - name: Install Chromium and WebKit for candidate QA
-        run: npx playwright install --with-deps chromium webkit
+        run: bash scripts/install-playwright-ci.sh
 
       - name: Validate the candidate app before changing main
         run: npm run qa
@@ -381,7 +381,7 @@ jobs:
       - name: Independent full app QA before any main write
         if: steps.lunch-change.outputs.changed == 'true'
         run: |
-          npx playwright install --with-deps chromium webkit
+          bash scripts/install-playwright-ci.sh
           npm run qa
       - name: Commit only verified changed lunch pack on exact main
         if: steps.lunch-change.outputs.changed == 'true'

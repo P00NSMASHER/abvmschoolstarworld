@@ -77,7 +77,9 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
       assert.ok(ids.has('vocabulary-in-context'));
       assert.ok(originalItems.every(row=>row.sourceMode==='CURATED_CONTEXT'));
       assert.ok(originalItems.every(row=>row.evidenceContract?.doesNotClaim?.includes('teacher-provided-definitions')));
-      assert.ok(pipeline.coverage.some(row => row.status === 'COVERED' && /vocabulary definitions/i.test(row.topic)));
+      const row=pipeline.coverage.find(row=>/vocabulary definitions/i.test(row.topic));
+      assert.equal(row.status,originalItems.length===pack.vocabulary.length?'COVERED':'PARTIALLY_COVERED');
+      assert.equal(originalItems.length+(row.uncovered||[]).length,pack.vocabulary.length);
     } else {
       assert.equal(ids.has('vocabulary-in-context'), false);
       assert.ok(pipeline.coverage.some(row => row.status === 'SOURCE_INSUFFICIENT' && /vocabulary definitions/i.test(row.topic)));

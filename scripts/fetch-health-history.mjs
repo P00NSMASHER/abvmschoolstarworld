@@ -24,6 +24,11 @@ export async function collectHealthHistory({repository,fetchJson}){
     return {run_id:run.id,jobs:data.jobs};
   };
   const refreshJobs=failed?await jobsFor(failed):{run_id:null,jobs:[]};
+  // Capture real cancelled nested-publisher gates for conditional post-release recovery.
+  // A cancellation by itself is never evidence of success.
+  const cancelled=runs.find(run=>run.name==='Refresh ABVM teacher pages'&&
+    run.head_branch==='main'&&run.status==='completed'&&run.conclusion==='cancelled');
+  const cancelledRefreshJobs=cancelled?await jobsFor(cancelled):{run_id:null,jobs:[]};
   // A source job can finish and be published by another guarded Pages run
   // while its parent still waits for a redundant queued publisher.
   const latestRefresh=runs.filter(run=>run.name==='Refresh ABVM teacher pages')
@@ -38,7 +43,7 @@ export async function collectHealthHistory({repository,fetchJson}){
     const publication=publicationRunFromJobs(run,await jobsFor(run));
     if(publication){homeworkPublications.push(publication);break;}
   }
-  return {runs:{workflow_runs:runs},refreshJobs,refreshStageJobs,homeworkPublications};
+  return {runs:{workflow_runs:runs},refreshJobs,cancelledRefreshJobs,refreshStageJobs,homeworkPublications};
 }
 
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
@@ -47,6 +52,7 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
   }));
   const result=await collectHealthHistory({repository:process.env.GITHUB_REPOSITORY,fetchJson});
   for(const [file,data] of [['workflow-runs.json',result.runs],['refresh-jobs.json',result.refreshJobs],
+    ['cancelled-refresh-jobs.json',result.cancelledRefreshJobs],
     ['refresh-stage-jobs.json',result.refreshStageJobs],
     ['homework-publications.json',result.homeworkPublications]])writeFileSync(file,JSON.stringify(data,null,2)+'\n');
 }

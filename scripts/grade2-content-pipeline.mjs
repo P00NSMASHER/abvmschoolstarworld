@@ -2,7 +2,7 @@ import {SUBTRACTION_CHECK_PROMPT} from './question-corrections.mjs';
 import { createHash } from 'node:crypto';
 
 import { validateGrade2PipelineAlignment } from './grade2-content-alignment.mjs';
-import { originalGrade2Vocabulary, originalGrade2VocabularyMeaning } from '../pages/grade2-original-vocabulary.mjs';
+import { originalGrade2Vocabulary, originalGrade2VocabularyMeaning, teacherVocabularyTerms } from '../pages/grade2-original-vocabulary.mjs';
 import {
   registeredCurriculumFamilyRules,
   registeredPrioritySkillIds,
@@ -18,6 +18,16 @@ const FORBIDDEN_QUESTION_PATTERNS = [
 ];
 
 const SIGHT_WORD_CONTEXTS = Object.freeze({
+  picture: { sentence: 'I drew a ___ of a red apple.', distractors: ['because', 'took'] },
+  because: { sentence: 'We opened our umbrellas ___ it was raining.', distractors: ['picture', 'have'] },
+  know: { sentence: 'Do you ___ the answer to this question?', distractors: ['cold', 'because'] },
+  cold: { sentence: 'Ice feels ___ when I touch it.', distractors: ['took', 'because'] },
+  took: { sentence: 'Yesterday, I ___ my library book back.', distractors: ['because', 'off'] },
+  have: { sentence: 'I ___ two pencils in my bag.', distractors: ['because', 'cold'] },
+  off: { sentence: 'Please turn ___ the light before you leave.', distractors: ['because', 'took'] },
+  family: { sentence: 'My parents and I are part of one ___.', distractors: ['because', 'took'] },
+  school: { sentence: 'Our teacher meets our class at ___.', distractors: ['because', 'have'] },
+  friends: { sentence: 'The two children enjoy playing together and are good ___.', distractors: ['because', 'took'] },
   she: { sentence: '___ packed her lunch before school.', distractors: ['what', 'small'] },
   boy: { sentence: 'The ___ carried a blue backpack.', distractors: ['what', 'were'] },
   he: { sentence: '___ hung his coat by the door.', distractors: ['what', 'small'] },
@@ -63,6 +73,14 @@ const SIGHT_WORD_CONTEXTS = Object.freeze({
 // Only teacher-listed words are selected; examples are independent, original
 // contextual use (not teacher-provided vocabulary definitions or sentences).
 const VOCAB_WORD_USE_CONTEXTS = Object.freeze({
+  groom: { sentence: 'Cats ___ themselves by licking their coats clean.', distractors: ['mammal', 'fur'] },
+  mammal: { sentence: 'An animal with hair or fur whose mother feeds it milk is a ___.', distractors: ['covered', 'alive'] },
+  adult: { sentence: 'A child grows up to become an ___.', distractors: ['alive', 'covered'] },
+  alive: { sentence: 'The plant is ___; it is growing new leaves.', distractors: ['fur', 'offspring'] },
+  covered: { sentence: 'We ___ the picnic food with a cloth.', distractors: ['adult', 'alive'] },
+  fur: { sentence: 'The soft hair on a rabbit is called ___.', distractors: ['adult', 'offspring'] },
+  giant: { sentence: 'The ___ pumpkin was much bigger than all the others.', distractors: ['covered', 'offspring'] },
+  offspring: { sentence: 'The baby rabbits are the mother rabbit’s ___.', distractors: ['fur', 'covered'] },
   checks: { sentence: 'Every morning, the librarian ___ that all the books are back.', distractors: ['choose', 'tools'] },
   choose: { sentence: 'You may ___ one book to read before bedtime.', distractors: ['jobs', 'checks'] },
   chores: { sentence: 'Cleaning my room and washing dishes are two of my ___ at home.', distractors: ['cost', 'customers'] },
@@ -2158,9 +2176,10 @@ function detectVocabularyWordUse(pack, skills, questions, coverage) {
   const reading = subjectRow(pack, 'Reading / ELA');
   const teacherList = (reading?.topics || []).find(topic => /^Vocabulary\s*:/i.test(text(topic)));
   if (!teacherList) return;
-  const listed = new Set(uniqueText(text(teacherList).replace(/^Vocabulary\s*:/i, '').split(','))
+  const listed = new Set(uniqueText(teacherVocabularyTerms(text(teacherList).replace(/^Vocabulary\s*:/i, '')))
     .map(normalize).filter(Boolean));
-  const verifiedTerms = uniqueText((pack?.vocabulary || []).filter(row =>
+  const normalizedVocabulary=(pack?.vocabulary||[]).flatMap(row=>teacherVocabularyTerms(row.term).map(term=>({...row,term})));
+  const verifiedTerms = uniqueText(normalizedVocabulary.filter(row =>
     normalize(row?.subject) === 'reading / ela' && listed.has(normalize(row?.term))
   ).map(row => normalize(row.term)));
   if (!verifiedTerms.length) return;
@@ -2261,7 +2280,7 @@ function detectVineBranches(pack, skills, questions, coverage) {
 function detectVocabulary(pack, skills, questions, coverage) {
   const reading = subjectRow(pack, 'Reading / ELA');
   const teacherList = (reading?.topics || []).find(topic => /^Vocabulary\s*:/i.test(text(topic)));
-  const listed = uniqueText(text(teacherList).replace(/^Vocabulary\s*:/i, '').split(','))
+  const listed = uniqueText(teacherVocabularyTerms(text(teacherList).replace(/^Vocabulary\s*:/i, '')))
     .map(normalize).filter(Boolean);
   // The current classroom list authorizes *which* words to teach. The pack's
   // meaning field is retained as teacher evidence and is never overwritten.

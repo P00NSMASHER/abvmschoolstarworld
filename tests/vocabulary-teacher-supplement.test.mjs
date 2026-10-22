@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {buildGrade2ContentPipeline,validateGrade2ContentPipeline} from '../scripts/grade2-content-pipeline.mjs';
-import {ORIGINAL_GRADE2_VOCABULARY,originalGrade2VocabularyMeaning} from '../pages/grade2-original-vocabulary.mjs';
+import {ORIGINAL_GRADE2_VOCABULARY,originalGrade2VocabularyMeaning,teacherVocabularyTerms} from '../pages/grade2-original-vocabulary.mjs';
 import {printableStudyGuideHtml,resolveVocabularyMeaning} from '../pages/study-games-materials-view.mjs';
 
 const envelope=JSON.parse(readFileSync(new URL('../pages/data/study-pack.json',import.meta.url),'utf8'));
@@ -90,4 +90,10 @@ test('printable guides and Notes use the same original meanings with visible pro
   assert.match(html,/Original study explanation — not supplied by the teacher/);
   assert.doesNotMatch(html,/the teacher page does not provide a definition/);
   assert.equal((html.match(/Original study explanation — not supplied by the teacher/g)||[]).length,2);
+});
+
+test('reviewed vocabulary punctuation interpretation is narrow and leaves unknown phrases untouched',()=>{
+ assert.deepEqual(teacherVocabularyTerms('adult, groom. mammal, offspring'),['adult','groom','mammal','offspring']);
+ assert.deepEqual(teacherVocabularyTerms('Dr. Smith, unknown. phrase'),['Dr. Smith','unknown. phrase']);
+ assert.deepEqual(teacherVocabularyTerms('groom, mammal'),['groom','mammal']);
 });

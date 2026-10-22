@@ -78,6 +78,7 @@ jobs:
           SOURCE_RECOVERY_PLAN_FILE: source-recovery-plan.json
           WORKFLOW_RUNS_FILE: workflow-runs.json
           REFRESH_JOBS_FILE: refresh-jobs.json
+          REFRESH_CANCELLED_JOBS_FILE: cancelled-refresh-jobs.json
           REFRESH_STAGE_JOBS_FILE: refresh-stage-jobs.json
           OPEN_PULLS_FILE: open-pulls.json
           HOMEWORK_PUBLICATIONS_FILE: homework-publications.json
@@ -103,3 +104,4 @@ jobs:
           path: health-output/
           if-no-files-found: error
           retention-days: 30
+

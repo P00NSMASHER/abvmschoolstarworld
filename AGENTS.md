@@ -133,3 +133,17 @@ This authorization never permits inventing teacher announcements, assignments,
 dates, school closures, spelling lists, chapter/page facts, copyrighted passages,
 student results, or answers to unseen teacher test questions. Do not recast
 original teaching as official source facts to suppress an actual source alert.
+
+## Autonomous teaching interpretation — October 22, 2026
+
+The owner explicitly directs the app and its existing maintenance automation to
+resolve routine educational-material questions as a teacher would, without asking
+for teacher verification or repeated owner decisions. Supply checked original
+explanations, examples and practice for verified topics. Resolve clear punctuation
+and formatting mistakes with narrow tested interpretations while retaining raw
+source wording, hashes and explicit interpretation metadata. Distinguish source
+withdrawal from missing original templates; missing templates are repair work, not
+a reason to fabricate assignments or silently remove useful current practice.
+Do not weaken positive generator assertions to make gaps pass. Pair current-source
+checks with stable positive fixtures and withdrawal/lineage negative tests.
+This policy does not authorize invented school dates, assignments or student facts.

@@ -54,7 +54,7 @@ test("full browser QA and Pages reuse binaries only for the matching npm lockfil
     assert.match(workflow,/path: ~\/.cache\/ms-playwright/,"wrong cache path "+name);
     assert.match(workflow,/key: abvm-playwright-/,"missing browser-cache prefix "+name);
     assert.ok(workflow.includes("hashFiles('package-lock.json')"),"unversioned browser cache "+name);
-    assert.match(workflow,/npx playwright install --with-deps chromium webkit/,"must keep install and OS dependencies "+name);
+    assert.match(workflow,/bash scripts\/install-playwright-ci\.sh/,"must use bounded browser and OS dependency bootstrap "+name);
     assert.match(workflow,/npm run qa/,"full release QA must remain present "+name);
   }
   assert.match(teacher,/Cache Playwright browsers only for changed reviewed lunch\n\s+if: steps\.lunch-change\.outputs\.changed == 'true'\n\s+continue-on-error: true/);

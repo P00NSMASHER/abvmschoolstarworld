@@ -126,7 +126,7 @@ test("curriculum QA holds remain critical unless exact source and publication re
   assert.match(report,/const curriculumHoldRefreshRun=selectRefreshFailureEvidence\(productionRuns,refreshJobsData\)/);
   assert.match(report,/status\.curriculumHold=selectGovernedCurriculumHold\(curriculumHoldRefreshRun,refreshJobsData,openPulls\)/);
   assert.match(report,/const refreshDisplayRun=status\.curriculumHold\?curriculumHoldRefreshRun:effectiveRefreshRun/);
-  assert.match(report,/const refreshOperationallyHealthy=refreshHealthy\|\|Boolean\(status\.refreshRecovery\);/);
+  assert.match(report,/const refreshOperationallyHealthy=refreshHealthy\|\|Boolean\(status\.refreshRecovery\)\|\|Boolean\(status\.cancelledRefreshRecovery\);/);
   assert.match(report,/Teacher refresh is awaiting automated curriculum quality checks for candidate PR/);
   assert.match(report,/Curriculum hold:/);
   assert.match(report,/status\.overall=criticalHealthy\?\(warnings\.length\?"attention":"healthy"\):"critical"/);
