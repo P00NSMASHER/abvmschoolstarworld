@@ -52,6 +52,6 @@ test("unchanged reviewed lunch never repeats full browser QA; changed lunch stil
     const section=lane.split("      - name: "+name+"\n")[1]||"";
     assert.match(section,/^\s+if: steps\.lunch-change\.outputs\.changed == 'true'/);
   }
-  assert.match(lane,/npx playwright install --with-deps chromium webkit\n\s+npm run qa/);
+  assert.match(lane,/bash scripts\\/install-playwright-ci\\.sh\\n\\s+npm run qa/);
   assert.match(lane,/git ls-remote --exit-code origin refs\/heads\/main/);
 });
