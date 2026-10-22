@@ -19,12 +19,12 @@ export const AUTHOR_OPINION_FAMILY = Object.freeze({
   enabledByDefault: true,
   minimumSemanticVariants: 8,
   requiredQuestionTypes: Object.freeze(['direct', 'transfer', 'reasoning']),
-  teachCard: [
+  teachCard: Object.freeze([
     'Read the author’s words and decide what is being judged or preferred.',
     'Ask: “Could two people disagree about this?” Opinions can differ; facts can be checked.',
-  ],
-  assessmentPatterns: ["author[’']?s?\\s+opinions?", "writer[’']?s?\\s+opinions?"],
-  baseQuestion: {
+  ]),
+  assessmentPatterns: Object.freeze(["author[’']?s?\\s+opinions?", "writer[’']?s?\\s+opinions?"],
+  baseQuestion: Object.freeze({
     questionType: 'direct',
     prompt: 'An author writes, “Our library is the best place to spend recess.” Which words express the author’s opinion?',
     choices: ['the best place to spend recess', 'Our library', 'recess'],
@@ -32,8 +32,8 @@ export const AUTHOR_OPINION_FAMILY = Object.freeze({
     explanation: 'Calling the library the best place is a judgment the author makes, not a detail everyone must agree with.',
     hint: 'Find the words that show a preference rather than naming a place.',
     sourceMode: 'CURATED_CONTEXT', dok: 1, difficulty: 2,
-  },
-  supplementalQuestions: [
+  }),
+  supplementalQuestions: Object.freeze([
     {
       questionType: 'direct',
       prompt: 'Which sentence most clearly states a writer’s opinion?',
@@ -101,5 +101,5 @@ export const AUTHOR_OPINION_FAMILY = Object.freeze({
       hint: 'Compare which sport each writer prefers.',
       sourceMode: 'CURATED_CONTEXT', dok: 3, difficulty: 3,
     },
-  ],
+  ]),
 });
