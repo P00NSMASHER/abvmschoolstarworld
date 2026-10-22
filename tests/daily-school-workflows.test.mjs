@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import test from 'node:test';
-const file = name => readFileSync(new URL('../.github/workflows/' + name, import.meta.url), 'utf8');
+const file = name => readFileSync(new URL('../.github/workflows/' + name, import.meta.url), 'utf8').replace(/\r\n/g,'\n');
 const teacher = file('sync-study-pack.yml');
 const homework = file('refresh-current-homework.yml');
 const recovery = file('daily-source-recovery.yml');
