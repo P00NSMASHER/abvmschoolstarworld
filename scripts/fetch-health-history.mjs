@@ -24,6 +24,13 @@ export async function collectHealthHistory({repository,fetchJson}){
     return {run_id:run.id,jobs:data.jobs};
   };
   const refreshJobs=failed?await jobsFor(failed):{run_id:null,jobs:[]};
+  // A source job can finish and be published by another guarded Pages run
+  // while its parent still waits for a redundant queued publisher.
+  const latestRefresh=runs.filter(run=>run.name==='Refresh ABVM teacher pages')
+    .sort((a,b)=>Date.parse(b.created_at||'')-Date.parse(a.created_at||''))[0];
+  const refreshStageJobs=latestRefresh&&Number.isFinite(Date.parse(latestRefresh.created_at||''))&&latestRefresh.conclusion==null&&
+    ['in_progress','pending','queued','waiting'].includes(latestRefresh.status)
+    ?await jobsFor(latestRefresh):{run_id:null,jobs:[]};
   const homeworkPublications=[];
   // Skip source-only/no-change checks. Bound every request; absent proof is never success.
   const homework=runs.filter(run=>run.name==='Refresh current ABVM homework'&&run.status==='completed').slice(0,10);
@@ -31,7 +38,7 @@ export async function collectHealthHistory({repository,fetchJson}){
     const publication=publicationRunFromJobs(run,await jobsFor(run));
     if(publication){homeworkPublications.push(publication);break;}
   }
-  return {runs:{workflow_runs:runs},refreshJobs,homeworkPublications};
+  return {runs:{workflow_runs:runs},refreshJobs,refreshStageJobs,homeworkPublications};
 }
 
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
@@ -40,5 +47,6 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
   }));
   const result=await collectHealthHistory({repository:process.env.GITHUB_REPOSITORY,fetchJson});
   for(const [file,data] of [['workflow-runs.json',result.runs],['refresh-jobs.json',result.refreshJobs],
+    ['refresh-stage-jobs.json',result.refreshStageJobs],
     ['homework-publications.json',result.homeworkPublications]])writeFileSync(file,JSON.stringify(data,null,2)+'\n');
 }
