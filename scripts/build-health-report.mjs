@@ -1,6 +1,7 @@
 import {readFileSync,mkdirSync,writeFileSync} from "node:fs";
 import {assessHomeworkHealth,assessHomeworkPollingCadence,assessMainBranchProtection,selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence,selectRecoveredRefreshRace} from "./health-evidence.mjs";
 import {assessUpcomingLunchCoverage,schoolWeekLabel} from "./school-week-label.mjs";
+import {assessPublicationParity} from "./publication-parity-health.mjs";
 
 const packData=JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8"));
 const pkg=JSON.parse(readFileSync(new URL("../package.json",import.meta.url),"utf8"));
@@ -18,6 +19,8 @@ const refreshStageJobs=refreshStageJobsPath?JSON.parse(readFileSync(refreshStage
 const openPulls=openPullsPath?JSON.parse(readFileSync(openPullsPath,"utf8")):[];
 const homeworkPublications=publicationsPath?JSON.parse(readFileSync(publicationsPath,"utf8")):[];
 const mainBranchEvidence=mainBranchPath?JSON.parse(readFileSync(mainBranchPath,"utf8")):null;
+const liveParityPath=process.env.SOURCE_RECOVERY_PLAN_FILE;
+const publicationParity=assessPublicationParity(liveParityPath?JSON.parse(readFileSync(liveParityPath,"utf8")):null);
 
 const productionRuns=runs.filter(run=>run.head_branch==="main"||run.event==="schedule");
 
@@ -61,6 +64,7 @@ const expectedWeekLabel=schoolWeekLabel(now,{calendarDisplay:true});
 const upcomingLunch=assessUpcomingLunchCoverage(packData.pack,now);
 const status={
   generatedAt:now,
+  publicationParity,
   repositorySecurity:{mainBranch:assessMainBranchProtection(mainBranchEvidence)},
   appVersion:pkg.version,
   serviceWorkerCache:cache,
@@ -194,10 +198,13 @@ const criticalHealthy=Boolean(
   completedRunHealthy(status.publicationEvidence,48) &&
   (refreshOperationallyHealthy || Boolean(status.refreshStage)) &&
   completedHealthy(status.workflows.watchdog,30) &&
-  pipelineHealthy
+  pipelineHealthy &&
+  publicationParity.verified
 );
 status.homeworkPolling=assessHomeworkPollingCadence(productionRuns,now);
 const warnings=[];
+if(publicationParity.state==="mismatch")warnings.push("Confirmed public study-pack/Homework deployment mismatch: curriculum "+publicationParity.curriculum+"; Homework "+publicationParity.homework+". Recent successful jobs alone cannot certify current public content.");
+if(publicationParity.state==="unknown")warnings.push("Live school publication parity is unavailable or unverified; never assert a healthy published site without both exact file comparisons.");
 if(status.refreshStage)warnings.push("The newest teacher source passed every source/QA/commit gate and a later guarded publication plus live watchdog verified it. Its parent workflow is still running; historical failures are retained, not relabeled as success.");
 if(status.homeworkPolling.state==="delayed"){
   warnings.push("Scheduled hourly Homework polling is delayed: the last actual cron run was "+
@@ -252,6 +259,7 @@ const md=[
   `- **Lunch source:** ${status.lunch.retrievalState}; ${status.lunch.days} reviewed days; complete reviewed coverage = ${lunchReviewedCoverageComplete}; missing dates: ${status.lunch.missingDates.join(", ")||"none"}`,
   `- **Grade 2 content pipeline:** QA ${status.contentPipeline.qaStatus}; safety ${status.contentPipeline.safetyState}; ${status.contentPipeline.skillCount} skills; ${status.contentPipeline.questionCount} questions; partial ${status.contentPipeline.partiallyCoveredCount}; source-insufficient ${status.contentPipeline.sourceInsufficientCount}; not-practiced-by-design ${status.contentPipeline.notPracticedByDesignCount}; unsupported ${status.contentPipeline.unsupportedSkillCount}`,
   `- **Question lineage:** required = ${status.contentPipeline.lineageRequired}; page-exact ${status.contentPipeline.pageExactLineageCount}/${status.contentPipeline.questionCount}; unresolved ${status.contentPipeline.unresolvedLineageCount}`,
+  `- **Live study-pack and Homework parity:** curriculum ${publicationParity.curriculum}; Homework ${publicationParity.homework}; overall ${publicationParity.state}`,
   `- **Partially covered study topics:** ${status.contentPipeline.partiallyCoveredTopics.join(", ")||"none"}`,
   `- **Source-insufficient study topics:** ${status.contentPipeline.sourceInsufficientTopics.join(", ")||"none"}`,
   `- **Intentionally not practiced:** ${status.contentPipeline.notPracticedByDesignTopics.join(", ")||"none"}`,

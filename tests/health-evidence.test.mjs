@@ -261,7 +261,7 @@ test('the complete dashboard turns critical for stale homework despite healthy w
   const root=mkdtempSync(join(tmpdir(),'abvm-health-'));
   try{
     for(const dir of ['scripts','pages/data'])mkdirSync(join(root,dir),{recursive:true});
-    for(const file of ['scripts/build-health-report.mjs','scripts/health-evidence.mjs',
+    for(const file of ['scripts/build-health-report.mjs','scripts/publication-parity-health.mjs','scripts/health-evidence.mjs',
       'scripts/source-freshness-recovery.mjs','scripts/refresh-controller.mjs',
       'scripts/school-week-label.mjs','pages/sw.js','package.json']){
       copyFileSync(new URL('../'+file,import.meta.url),join(root,file));
@@ -288,6 +288,8 @@ test('the complete dashboard turns critical for stale homework despite healthy w
       id,name,head_branch:'main',event:'schedule',status:'completed',conclusion:'success',
       created_at:now,updated_at:now,html_url:'https://example.invalid/run/'+id,
     }))}));
+    const parityPath=join(root,'parity.json');
+    writeFileSync(parityPath,JSON.stringify({curriculumLiveMatches:true,homeworkLiveMatches:true}));
     const postingPath=join(root,'pages/data/homework-current.json');
     const posting={schemaVersion:1,status:'assignments',checkedAt:now};
     const refreshJobsPath=join(root,'refresh-jobs.json');
@@ -295,7 +297,8 @@ test('the complete dashboard turns critical for stale homework despite healthy w
     const run=()=>{
       const result=spawnSync(process.execPath,['scripts/build-health-report.mjs'],{
         cwd:root,encoding:'utf8',env:{...process.env,WORKFLOW_RUNS_FILE:workflowFile,
-          REFRESH_JOBS_FILE:refreshJobsPath,OPEN_PULLS_FILE:'',HOMEWORK_PUBLICATIONS_FILE:join(root,'publications.json')},
+          REFRESH_JOBS_FILE:refreshJobsPath,OPEN_PULLS_FILE:'',HOMEWORK_PUBLICATIONS_FILE:join(root,'publications.json'),
+          SOURCE_RECOVERY_PLAN_FILE:parityPath},
       });
       const report=JSON.parse(readFileSync(join(root,'health-output/abvm-health-status.json'),'utf8'));
       return {result,report};

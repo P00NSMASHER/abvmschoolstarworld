@@ -110,7 +110,7 @@ test('actual dashboard distinguishes verified pending publication from an unreso
   const root=mkdtempSync(join(tmpdir(),'abvm-stage-dashboard-'));
   try{
     for(const dir of ['scripts','pages/data'])mkdirSync(join(root,dir),{recursive:true});
-    for(const file of ['scripts/build-health-report.mjs','scripts/health-evidence.mjs',
+    for(const file of ['scripts/build-health-report.mjs','scripts/publication-parity-health.mjs','scripts/health-evidence.mjs',
       'scripts/source-freshness-recovery.mjs','scripts/refresh-controller.mjs','scripts/refresh-stage-health.mjs',
       'scripts/school-week-label.mjs','pages/sw.js','package.json']){
       copyFileSync(new URL('../'+file,import.meta.url),join(root,file));
@@ -138,11 +138,12 @@ test('actual dashboard distinguishes verified pending publication from an unreso
         id:100+id,name,head_branch:'main',event:'schedule',status:'completed',conclusion:'success',created_at:now,updated_at:now,
       }))]});
     write('stage.json',f.refreshJobs);write('failure.json',{run_id:null,jobs:[]});write('publications.json',[]);
+    write('parity.json',{curriculumLiveMatches:true,homeworkLiveMatches:true});
     const run=()=>{
       const result=spawnSync(process.execPath,['scripts/build-health-report.mjs'],{cwd:root,encoding:'utf8',env:{...process.env,
         WORKFLOW_RUNS_FILE:join(root,'runs.json'),REFRESH_JOBS_FILE:join(root,'failure.json'),
         REFRESH_STAGE_JOBS_FILE:join(root,'stage.json'),HOMEWORK_PUBLICATIONS_FILE:join(root,'publications.json'),
-        OPEN_PULLS_FILE:'',MAIN_BRANCH_FILE:''}});
+        OPEN_PULLS_FILE:'',MAIN_BRANCH_FILE:'',SOURCE_RECOVERY_PLAN_FILE:join(root,'parity.json')}});
       assert.ok(result.status===0||result.status===1,result.stderr);
       return {result,report:JSON.parse(readFileSync(join(root,'health-output/abvm-health-status.json'),'utf8'))};
     };

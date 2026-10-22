@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'scripts/check-refresh-health.mjs'
+      - 'scripts/publication-parity-health.mjs'
+      - 'tests/unattended-parity-health.test.mjs'
       - 'scripts/homework-live-monitor.mjs'
       - 'tests/homework-live-monitor.test.mjs'
       - '.github/workflows/refresh-health.yml'
@@ -15,7 +17,11 @@ on:
       - Refresh current ABVM homework
     types: [completed]
   schedule:
-    - cron: '29 16 * * *'
+    # GitHub may delay individual scheduled jobs; this hourly independent
+    # heartbeat supplements source-workflow completion and bounded recovery.
+    - cron: '29 6-23 * * *'
+      timezone: 'America/New_York'
+    - cron: '29 2 * * *'
       timezone: 'America/New_York'
   workflow_dispatch:
 
