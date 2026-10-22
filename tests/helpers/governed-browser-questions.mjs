@@ -1,19 +1,39 @@
 /**
  * Resolve visible Study Games questions against every governed app pool.
- * Test helpers must follow the real merged schoolwork bank, rather than
- * treating the teacher pack as the only available source of questions.
+ * The Study materials player can select verified historical archive questions;
+ * the browser QA resolver must not label those formerly-current items unknown.
+ * An unrecognized or conflicting answer must still fail closed.
  */
+export function mergeGovernedQuestionPools({catalog,schoolwork,archive,star}={}){
+  const validArchiveQuestion=q=>q&&typeof q.id==='string'&&q.id&&
+    typeof q.prompt==='string'&&q.prompt&&typeof q.answer==='string'&&
+    Array.isArray(q.choices)&&q.choices.length>1&&
+    q.choices.every(choice=>typeof choice==='string')&&
+    new Set(q.choices).size===q.choices.length&&q.choices.includes(q.answer)&&
+    Array.isArray(q.provenance)&&q.provenance.some(p=>
+      typeof p?.sourceRef==='string'&&p.sourceRef&&
+      typeof p.capturedAt==='string'&&Number.isFinite(Date.parse(p.capturedAt)));
+  return [
+    ...(Array.isArray(catalog?.questions)?catalog.questions:[]),
+    ...(Array.isArray(schoolwork?.lessons)?schoolwork.lessons.flatMap(lesson=>Array.isArray(lesson?.questions)?lesson.questions:[]):[]),
+    ...(Array.isArray(star)?star:[]),
+    ...(Array.isArray(archive?.questions)?archive.questions.filter(validArchiveQuestion):[]),
+  ];
+}
+
 export async function governedBrowserQuestions(page){
-  return page.evaluate(async()=>{
-    const [runtime,schoolwork]=await Promise.all([
+  const sources=await page.evaluate(async()=>{
+    const [runtime,schoolwork,archive]=await Promise.all([
       fetch('./data/study-pack-runtime.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('Runtime pack unavailable');return r.json()}),
-      fetch('./data/schoolwork.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('Reviewed schoolwork unavailable');return r.json()})
+      fetch('./data/schoolwork.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('Reviewed schoolwork unavailable');return r.json()}),
+      fetch('./data/study-archive.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('Verified historical study archive unavailable');return r.json()}),
     ]);
     const engine=window.ABVMStudyGames;
     const {buildStarBank}=await import('./star-practice.mjs');
     const catalog=engine.buildCatalog(runtime.pack,{sourceKey:engine.sourceKeyFromEnvelope(runtime.pack,runtime)});
-    return [...catalog.questions,...schoolwork.lessons.flatMap(lesson=>lesson.questions),...buildStarBank()];
+    return {catalog,schoolwork,archive,star:buildStarBank()};
   });
+  return mergeGovernedQuestionPools(sources);
 }
 
 export async function resolveGovernedBrowserQuestion(page){
