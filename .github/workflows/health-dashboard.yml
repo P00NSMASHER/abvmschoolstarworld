@@ -6,6 +6,9 @@ on:
     paths:
       - '.github/workflows/health-dashboard.yml'
       - 'scripts/build-health-report.mjs'
+      - 'scripts/publication-parity-health.mjs'
+      - 'scripts/source-freshness-recovery.mjs'
+      - 'tests/unattended-parity-health.test.mjs'
       - 'scripts/health-evidence.mjs'
       - 'scripts/fetch-health-history.mjs'
       - 'scripts/refresh-stage-health.mjs'
@@ -67,8 +70,12 @@ jobs:
             printf '%s\n' '{"name":"main","protected":null}' > main-branch-status.json
           fi
 
+      - name: Inspect live Pages publication parity against verified main
+        run: node scripts/source-freshness-recovery.mjs --report=source-recovery-plan.json
+
       - name: Build health dashboard
         env:
+          SOURCE_RECOVERY_PLAN_FILE: source-recovery-plan.json
           WORKFLOW_RUNS_FILE: workflow-runs.json
           REFRESH_JOBS_FILE: refresh-jobs.json
           REFRESH_CANCELLED_JOBS_FILE: cancelled-refresh-jobs.json
@@ -97,3 +104,4 @@ jobs:
           path: health-output/
           if-no-files-found: error
           retention-days: 30
+

@@ -9,6 +9,8 @@ on:
     paths:
       - 'scripts/refresh-controller.mjs'
       - 'scripts/source-freshness-recovery.mjs'
+      - 'scripts/publication-parity-health.mjs'
+      - 'tests/unattended-parity-health.test.mjs'
       - 'tests/refresh-controller.test.mjs'
       - 'tests/nested-publication-recovery.test.mjs'
       - '.github/workflows/daily-source-recovery.yml'
@@ -73,7 +75,7 @@ jobs:
             local recent running count today attempts
             # This function is called in an OR-list; Bash errexit alone does
             # not stop failed reads inside it. Never guess an empty history.
-            if ! recent="$(gh run list --workflow "$workflow" --branch main --limit 70 --json status,event,createdAt,conclusion)"; then
+            if ! recent="$(gh run list --workflow "$workflow" --branch main --limit 70 --json status,event,createdAt,updatedAt,conclusion)"; then
               echo "::error::Cannot verify workflow history for $workflow; no recovery dispatched."
               return 1
             fi
@@ -86,6 +88,14 @@ jobs:
             fi
             running="$(jq '[.[] | select(.status == "in_progress" or .status == "queued" or .status == "pending" or .status == "waiting" or .status == "requested")] | length' <<< "$recent")" || return 1
             if (( running > 0 )); then
+              local stalled
+              # Do not silently report recovery as healthy when GitHub has
+              # left an active/queued main workflow without progress for 2h.
+              stalled="$(jq -r --argjson cutoff "$(($(date -u +%s) - 7200))" '[.[] | select(.status != "completed") | select(((.updatedAt // .createdAt) | sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601) < $cutoff)] | length' <<< "$recent")" || return 1
+              if (( stalled > 0 )); then
+                echo "::error::Detected stalled active workflow: $workflow; $stalled run(s) older than 2 hours. Keep source/release gates intact and report the incident."
+                return 1
+              fi
               echo "Recovery already in progress: $workflow"
               return 0
             fi
@@ -94,7 +104,7 @@ jobs:
               # history. A standalone-only query misses those active publishers.
               local publisher publisher_history
               for publisher in sync-study-pack.yml refresh-current-homework.yml sync-uploaded-notices.yml import-yahoo-weekly-reminders.yml; do
-                if ! publisher_history="$(gh run list --workflow "$publisher" --branch main --limit 70 --json status,event,createdAt,conclusion)"; then
+                if ! publisher_history="$(gh run list --workflow "$publisher" --branch main --limit 70 --json status,event,createdAt,updatedAt,conclusion)"; then
                   echo "::error::Cannot verify nested publisher history for $publisher; no recovery dispatched."
                   return 1
                 fi
@@ -107,6 +117,14 @@ jobs:
                 fi
                 running="$(jq '[.[] | select(.status != "completed")] | length' <<< "$publisher_history")" || return 1
                 if (( running > 0 )); then
+                  local stalled_publisher
+                  # A queued nested publisher may legitimately need a full QA
+                  # window, but two hours with no completion is material.
+                  stalled_publisher="$(jq -r --argjson cutoff "$(($(date -u +%s) - 7200))" '[.[] | select(.status != "completed") | select(((.updatedAt // .createdAt) | sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601) < $cutoff)] | length' <<< "$publisher_history")" || return 1
+                  if (( stalled_publisher > 0 )); then
+                    echo "::error::Detected stalled source publisher: $publisher ($stalled_publisher run(s) older than 2 hours); release still unverified."
+                    return 1
+                  fi
                   echo "Source/publication already in progress: $publisher; defer standalone Pages recovery."
                   return 0
                 fi
