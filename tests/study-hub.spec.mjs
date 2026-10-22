@@ -19,6 +19,9 @@ async function mount(page,day,testInfo){
 }
 
 test('weekly test prep covers same-day subjects in the existing player and completion persists',async({page},testInfo)=>{
+  // Two full eight-question sessions plus reload can exceed a cold WebKit runner's
+  // default 30-second total budget; retain every interaction/answer assertion.
+  test.setTimeout(90000);
   const [archive,work]=await Promise.all([
     page.request.get('/data/study-archive.json').then(response=>response.json()),
     page.request.get('/data/schoolwork.json').then(response=>response.json())
@@ -89,7 +92,7 @@ test('weekly test prep covers same-day subjects in the existing player and compl
   await expect(prep.locator('time')).toHaveAttribute('datetime','2026-10-09');
   expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('abvm-completed-tests')).length)).toBe(2);
   await page.reload();
-  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready',{timeout:15000});
   await page.locator('[data-open-prep]').click();
   await expect(prep.locator('time')).toHaveAttribute('datetime','2026-10-09');
 });
