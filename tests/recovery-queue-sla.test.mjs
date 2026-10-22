@@ -10,7 +10,10 @@ const end=source.indexOf('          curriculum=',start);
 assert.ok(start>=0&&end>start,'real recovery function must remain discoverable');
 const body=source.slice(start,end).split('\n').map(line=>line.slice(10)).join('\n');
 
-const hoursAgo=hours=>new Date(Date.now()-hours*3600_000).toISOString().replace(/\.\d{3}Z$/,'Z');
+// GitHub's Actions API returns fractional-second timestamps. Keep that exact
+// shape in the regression so the production jq parser cannot drift back to
+// accepting only whole-second ISO-8601 values.
+const hoursAgo=hours=>new Date(Date.now()-hours*3600_000).toISOString();
 const active=({createdHours=3,updatedHours=3}={})=>[{
   status:'queued',event:'schedule',createdAt:hoursAgo(createdHours),updatedAt:hoursAgo(updatedHours),conclusion:null,
 }];
