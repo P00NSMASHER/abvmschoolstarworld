@@ -57,7 +57,14 @@ jobs:
         if: ${{ hashFiles('scripts/build-private-curriculum-pilot.mjs') != '' }}
         run: node --test tests/private-curriculum-pilot.test.mjs
       - run: npm run pack:runtime
-      - run: npx playwright install --with-deps chromium webkit
+      - name: Cache version-pinned Playwright browsers
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: abvm-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - name: Install Chromium and WebKit with bounded dependency fallback
+        run: bash scripts/install-playwright-ci.sh
       - name: Offline shell and anonymous copy contracts
         run: node --test tests/public-learner-privacy.test.mjs
       - name: Anonymous iPhone 375-430 Chromium and Safari-WebKit

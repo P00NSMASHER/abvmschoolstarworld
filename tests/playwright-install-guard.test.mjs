@@ -102,3 +102,15 @@ test('workflows use the bounded installer without widening their job budgets',()
   assert.doesNotMatch(refresh,/npx playwright install --with-deps chromium webkit/);
   assert.doesNotMatch(pages,/npx playwright install --with-deps chromium webkit/);
 });
+
+test('every Chromium and WebKit workflow uses the same bounded bootstrap and lockfile-pinned cache',()=>{
+ const names=['today-visual-acceptance.yml','calendar-visual-acceptance.yml','public-privacy-visual-acceptance.yml',
+  'study-tools-visual.yml','study-player-visual-acceptance.yml','study-visual-acceptance.yml','progress-visual-acceptance.yml'];
+ for(const name of names){
+  const workflow=readFileSync(new URL('../.github/workflows/'+name,import.meta.url),'utf8');
+  assert.match(workflow,/bash scripts\/install-playwright-ci\.sh/,name);
+  assert.doesNotMatch(workflow,/npx playwright install --with-deps chromium webkit/,name);
+  assert.ok(workflow.includes("hashFiles('package-lock.json')"),name);
+  assert.ok(workflow.includes('path: ~/.cache/ms-playwright'),name);
+ }
+});

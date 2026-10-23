@@ -51,7 +51,14 @@ jobs:
           cache: npm
       - run: npm ci --no-audit --no-fund
       - run: npm run pack:runtime
-      - run: npx playwright install --with-deps chromium webkit
+      - name: Cache version-pinned Playwright browsers
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: abvm-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - name: Install Chromium and WebKit with bounded dependency fallback
+        run: bash scripts/install-playwright-ci.sh
       - name: Real iPhone-width Chromium and Safari-WebKit visual acceptance
         run: npx playwright test tests/today-premium.spec.mjs tests/today-assessments.spec.mjs tests/lunch-trays.spec.mjs tests/teacher-source-fallback.spec.mjs --project=mobile --project=iphone-webkit --workers=1 --retries=0
       - name: Preserve phone visual evidence before subsequent Playwright runs
