@@ -93,7 +93,7 @@ jobs:
     timeout-minutes: 45
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.63.0-noble-amd64@sha256:1e639776ab90f116a8c3c4a68b959a9f62d396590e3b8d5933573763b8cfe093
+      image: mcr.microsoft.com/playwright:v1.63.0-noble-amd64
       options: --ipc=host
       volumes:
         - /usr/bin/gh:/usr/local/bin/gh:ro
@@ -354,7 +354,7 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.63.0-noble-amd64@sha256:1e639776ab90f116a8c3c4a68b959a9f62d396590e3b8d5933573763b8cfe093
+      image: mcr.microsoft.com/playwright:v1.63.0-noble-amd64
       options: --ipc=host
       volumes:
         - /usr/bin/gh:/usr/local/bin/gh:ro

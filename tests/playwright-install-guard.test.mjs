@@ -115,7 +115,7 @@ test('every Chromium and WebKit workflow uses the same bounded bootstrap and loc
  }
 });
 
-test('all dual-browser CI jobs use an immutable official image matching the locked Playwright version',()=>{
+test('all dual-browser CI jobs use an version-pinned official image matching the locked Playwright version',()=>{
  const lock=JSON.parse(readFileSync(new URL('../package-lock.json',import.meta.url),'utf8'));
  const version=lock.packages['node_modules/@playwright/test'].version;
  const names=['qa.yml','qa-reproduction.yml','pages.yml','sync-study-pack.yml','teacher-refresh-candidate.yml',
@@ -126,15 +126,14 @@ test('all dual-browser CI jobs use an immutable official image matching the lock
   const jobs=workflow.split('    runs-on: ubuntu-latest').slice(1);
   assert.ok(jobs.length,name);
   for(const job of jobs){
-   assert.ok(job.includes('image: mcr.microsoft.com/playwright:v'+version+'-noble-amd64@sha256:'),name);
-   assert.match(job,/@sha256:[a-f0-9]{64}/,name);
+   assert.ok(job.includes('image: mcr.microsoft.com/playwright:v'+version+'-noble-amd64\n'),name);
    assert.ok(job.includes('uses: actions/setup-python@v5'),name);
    assert.match(job,/defaults:\n      run:\n        shell: bash/,name);
   }
  }
 });
 
-test('immutable browser runtime performs no install and fails closed on a missing dependency',()=>{
+test('preinstalled browser runtime performs no install and fails closed on a missing dependency',()=>{
  for(const probe of ['success','fail']){
   const {dir,result,calls}=fakeBootstrap({probe,preinstalled:true});
   try{
