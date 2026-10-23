@@ -55,7 +55,9 @@ test('held candidates independently trigger privacy acceptance without dropping 
   assert.ok(privacy.includes('tests/curriculum-pilot-kit.test.mjs'));
   assert.ok(privacy.includes('abvm-held-educator-kit-$' + '{{ github.run_id }}'));
   assert.ok(privacy.includes('node --test tests/private-curriculum-pilot.test.mjs'), 'Private preview safety step required');
-  assert.ok(!privacy.includes('continue-on-error: true'));
+  const cache=privacy.match(/      - name: Cache version-pinned Playwright browsers\n[\s\S]*?(?=      - name:)/)?.[0]||'';
+  assert.ok(cache.includes('uses: actions/cache@v4'));
+  assert.ok(!privacy.replace(cache,'').includes('continue-on-error: true'),'only the optional binary cache may fail open; privacy and browser checks remain mandatory');
 });
 
 test('no curriculum release or private learner record is introduced by independent check expansion', () => {
