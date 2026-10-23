@@ -1,0 +1,70 @@
+{
+  "candidateId": "curriculum-reading-ela-diagrams-labels-b2dc2b003b",
+  "familyId": "diagrams-labels",
+  "subject": "Reading / ELA",
+  "topic": "diagrams & labels",
+  "sourceHash": "teacher-pages-d1720bdab78a4413a482",
+  "generatedAt": "2026-10-23T20:30:23.509Z",
+  "sourceContext": {
+    "quality": "page-exact",
+    "matchMethod": "exact-topic-phrase",
+    "subject": "Reading / ELA",
+    "topic": "diagrams & labels",
+    "sourceTitle": "Reading Work",
+    "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
+    "sourceCaptureHash": "2d67535cd66e0b0ba5cdcca99bfbb19abe40ede46ff2939b8bcc94886566c65e",
+    "sourceCheckedAt": "2026-10-23T20:30:23.509Z",
+    "sourceLine": "Reading Comprehension: main idea/details; diagrams & labels",
+    "evidenceExcerptHash": "sha256:fd966332d0a4fed8d5752d201d58641a880ea4f31d80548fe2f0cb03af1bc4be"
+  },
+  "featureFlag": "curriculum-family:diagrams-labels-candidate",
+  "enabledByDefault": false,
+  "registryMatch": null,
+  "minimumSemanticVariants": 8,
+  "requiredQuestionTypes": [
+    "direct",
+    "transfer",
+    "reasoning"
+  ],
+  "proposedQuestions": [],
+  "authoring": {
+    "status": "AUTHORING_REQUIRED",
+    "generatedQuestionCount": 0,
+    "minimumSemanticVariants": 8,
+    "requiredQuestionTypes": [
+      "direct",
+      "transfer",
+      "reasoning"
+    ],
+    "requiredQuestionFields": [
+      "questionType",
+      "prompt",
+      "choices",
+      "answer",
+      "explanation",
+      "hint",
+      "dok",
+      "difficulty"
+    ]
+  },
+  "rollout": {
+    "featureFlagRequired": false,
+    "automatedQaRequired": true,
+    "safeUsageEvidenceRequired": false,
+    "manualPromotionRequired": false,
+    "automaticPromotion": true
+  },
+  "readiness": {
+    "status": "HOLD",
+    "blockers": [
+      "minimum-semantic-variants:0/8",
+      "question-type-required:direct",
+      "question-type-required:transfer",
+      "question-type-required:reasoning",
+      "automated-qa-required"
+    ],
+    "automaticPromotion": false,
+    "automaticDelete": false,
+    "automaticRewrite": false
+  }
+}
