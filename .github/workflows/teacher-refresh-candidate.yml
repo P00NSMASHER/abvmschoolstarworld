@@ -24,6 +24,7 @@ on:
       - 'tests/calendar-bottom-premium.spec.mjs'
       - 'tests/calendar-premium.spec.mjs'
       - 'tests/content-pipeline.spec.mjs'
+      - 'tests/gold-standard.spec.mjs'
       - 'tests/integrated-premium.spec.mjs'
       - 'tests/today-premium.spec.mjs'
       - 'tests/study-experience.spec.mjs'
