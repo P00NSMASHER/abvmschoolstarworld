@@ -115,7 +115,7 @@ test('every Chromium and WebKit workflow uses the same bounded bootstrap and loc
  }
 });
 
-test('all dual-browser CI jobs use an version-pinned official image matching the locked Playwright version',()=>{
+test('all dual-browser CI jobs use a version-pinned official image matching the locked Playwright version',()=>{
  const lock=JSON.parse(readFileSync(new URL('../package-lock.json',import.meta.url),'utf8'));
  const version=lock.packages['node_modules/@playwright/test'].version;
  const names=['qa.yml','qa-reproduction.yml','pages.yml','sync-study-pack.yml','teacher-refresh-candidate.yml',
@@ -128,6 +128,7 @@ test('all dual-browser CI jobs use an version-pinned official image matching the
   for(const job of jobs){
    assert.ok(job.includes('image: mcr.microsoft.com/playwright:v'+version+'-noble-amd64\n'),name);
    assert.ok(job.includes('uses: actions/setup-python@v5'),name);
+   assert.ok(job.includes('git config --global --add safe.directory "$GITHUB_WORKSPACE"'),name);
    assert.match(job,/defaults:\n      run:\n        shell: bash/,name);
   }
  }
