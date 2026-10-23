@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "lastIntegratedAt": "2026-10-16T16:02:06.807Z",
+  "lastIntegratedAt": "2026-10-23T14:48:08.824Z",
   "documents": [
     {
       "id": "dress-down-2026-09-25",
@@ -625,6 +625,29 @@
         "reviewedBy": "automated-fixed-event-extraction-v1",
         "reviewedAt": "2026-10-16T16:02:06.807Z"
       }
+    },
+    {
+      "id": "weekly-reminders-2026-10-26",
+      "label": "Weekly reminders for week of 2026-10-26",
+      "receivedAt": "2026-10-23",
+      "facts": [
+        "Wednesday, Oct. 28: Mass.",
+        "Wednesday, Oct. 28: Communication Folder.",
+        "Monday, Oct. 26: Dress Down Day.",
+        "Monday, Oct. 26: Flag football.",
+        "Thursday, Oct. 29: Dress Down Day.",
+        "Thursday, Oct. 29: Flag football."
+      ],
+      "provenance": {
+        "factsHash": "bab4ec0e279d079f1d2c15cd3858eca8cbd936bcd082777c294aacdaa126136b",
+        "sourceContentHash": "b7cead7ce583fb5c843d5274ec9fb4a959b6b0b2f574f55b9f75763deef0a126"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "automated-fixed-event-extraction-v1",
+        "reviewedAt": "2026-10-23T14:48:08.824Z"
+      }
     }
   ],
   "importantDates": [
@@ -1221,6 +1244,42 @@
       "label": "Chick-fil-A",
       "kind": "school event",
       "sourceDocument": "weekly-reminders-2026-10-19"
+    },
+    {
+      "date": "Wednesday, Oct. 28",
+      "label": "Mass",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-26"
+    },
+    {
+      "date": "Wednesday, Oct. 28",
+      "label": "Communication Folder",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-26"
+    },
+    {
+      "date": "Monday, Oct. 26",
+      "label": "Dress Down Day",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-26"
+    },
+    {
+      "date": "Monday, Oct. 26",
+      "label": "Flag football",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-26"
+    },
+    {
+      "date": "Thursday, Oct. 29",
+      "label": "Dress Down Day",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-26"
+    },
+    {
+      "date": "Thursday, Oct. 29",
+      "label": "Flag football",
+      "kind": "school event",
+      "sourceDocument": "weekly-reminders-2026-10-26"
     }
   ],
   "reminders": [

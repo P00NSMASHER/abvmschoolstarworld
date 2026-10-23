@@ -14,16 +14,16 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-10-23T01:04:59.327Z",
-  "sourceCapturedAt": "2026-10-23T01:04:59.327Z",
+  "sourceLastSeenAt": "2026-10-23T14:48:08.824Z",
+  "sourceCapturedAt": "2026-10-23T14:48:08.982Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-8cb890e706d6f68d7872",
-    "sourceCapturedAt": "2026-10-23T01:04:59.327Z",
-    "generatedAt": "2026-10-23T01:04:59.327Z",
+    "sourceCapturedAt": "2026-10-23T14:48:08.982Z",
+    "generatedAt": "2026-10-23T14:48:08.982Z",
     "weekLabel": "Week of October 19, 2026",
-    "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity”, Math “Page 31”, Reading “Read”, and parent task “Cover books”. Upcoming tests include Spelling (long / short u) / Handwriting on Friday, Oct. 23, Math (place value, expanded form) on Tuesday, Oct. 27, Grammar (common & proper nouns) on Thursday, Oct. 29, and Religion Ch. 4 on Tuesday, Nov. 3. 28 uploaded school notices are integrated with the teacher pages.",
+    "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity”, Math “Page 31”, Reading “Read”, and parent task “Cover books”. Upcoming tests include Spelling (long / short u) / Handwriting on Friday, Oct. 23, Math (place value, expanded form) on Tuesday, Oct. 27, Grammar (common & proper nouns) on Thursday, Oct. 29, and Religion Ch. 4 on Tuesday, Nov. 3. 29 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
       {
         "subject": "Reading / ELA",
@@ -721,14 +721,25 @@
         "date": "Monday, Oct. 26",
         "label": "Dress Down Day",
         "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-10-19",
-        "source": "uploaded-notice"
+        "sourceDocument": "weekly-reminders-2026-10-26",
+        "source": "uploaded-notice",
+        "sourceDocuments": [
+          "weekly-reminders-2026-10-19",
+          "weekly-reminders-2026-10-26"
+        ]
       },
       {
         "date": "Monday, Oct. 26",
         "label": "K–4 Flag football",
         "kind": "school event",
         "sourceDocument": "weekly-reminders-2026-10-19",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Oct. 26",
+        "label": "Flag football",
+        "kind": "school event",
+        "sourceDocument": "weekly-reminders-2026-10-26",
         "source": "uploaded-notice"
       },
       {
@@ -748,19 +759,24 @@
         "date": "Wednesday, Oct. 28",
         "label": "Mass",
         "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-10-19",
+        "sourceDocument": "weekly-reminders-2026-10-26",
         "source": "uploaded-notice",
         "sourceDocuments": [
           "october-calendar-2026",
-          "weekly-reminders-2026-10-19"
+          "weekly-reminders-2026-10-19",
+          "weekly-reminders-2026-10-26"
         ]
       },
       {
         "date": "Wednesday, Oct. 28",
         "label": "Communication Folder",
         "kind": "school event",
-        "sourceDocument": "october-calendar-2026",
-        "source": "uploaded-notice"
+        "sourceDocument": "weekly-reminders-2026-10-26",
+        "source": "uploaded-notice",
+        "sourceDocuments": [
+          "october-calendar-2026",
+          "weekly-reminders-2026-10-26"
+        ]
       },
       {
         "date": "Thursday, Oct. 29",
@@ -780,15 +796,23 @@
         "date": "Thursday, Oct. 29",
         "label": "Dress Down Day",
         "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-10-12",
-        "source": "uploaded-notice"
+        "sourceDocument": "weekly-reminders-2026-10-26",
+        "source": "uploaded-notice",
+        "sourceDocuments": [
+          "weekly-reminders-2026-10-12",
+          "weekly-reminders-2026-10-26"
+        ]
       },
       {
         "date": "Thursday, Oct. 29",
         "label": "Flag football",
         "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-10-12",
-        "source": "uploaded-notice"
+        "sourceDocument": "weekly-reminders-2026-10-26",
+        "source": "uploaded-notice",
+        "sourceDocuments": [
+          "weekly-reminders-2026-10-12",
+          "weekly-reminders-2026-10-26"
+        ]
       },
       {
         "date": "Thursday, Oct. 29",
@@ -1413,7 +1437,7 @@
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
     "sourceCheckedAt": "2026-10-23T01:04:59.327Z",
-    "uploadedNoticeHash": "uploaded-notices-b565f57cd128382433cc",
+    "uploadedNoticeHash": "uploaded-notices-fc25bd06e58c0719d2fa",
     "uploadedNoticeTopics": {
       "reminders": [
         "fundraiser",
@@ -18474,8 +18498,8 @@
     }
   ],
   "uploadedNotices": {
-    "count": 28,
-    "latestIntegratedAt": "2026-10-16T16:02:06.807Z",
+    "count": 29,
+    "latestIntegratedAt": "2026-10-23T14:48:08.824Z",
     "documents": [
       {
         "id": "dress-down-2026-09-25",
@@ -18616,6 +18640,11 @@
         "id": "weekly-reminders-2026-10-19",
         "label": "Weekly reminders for week of 2026-10-19",
         "receivedAt": "2026-10-16"
+      },
+      {
+        "id": "weekly-reminders-2026-10-26",
+        "label": "Weekly reminders for week of 2026-10-26",
+        "receivedAt": "2026-10-23"
       }
     ]
   }
