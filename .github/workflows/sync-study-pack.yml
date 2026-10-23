@@ -15,6 +15,7 @@ on:
       - 'scripts/school-change-feed.mjs'
       - 'scripts/validate-curriculum-candidates.mjs'
       - 'scripts/grade2-content-pipeline.mjs'
+      - 'pages/grade2-original-vocabulary.mjs'
       - 'scripts/question-corrections.mjs'
       - 'scripts/build-study-archive.mjs'
       - 'tests/question-corrections.test.mjs'
@@ -91,7 +92,31 @@ jobs:
     # can legitimately exceed 25 minutes without indicating a stuck refresh.
     timeout-minutes: 45
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble-amd64
+      options: --ipc=host
+      volumes:
+        - /usr/bin/gh:/usr/local/bin/gh:ro
+    env:
+      ABVM_PREINSTALLED_BROWSERS: '1'
+    defaults:
+      run:
+        shell: bash
     steps:
+      - name: Trust only the mounted Actions workspace
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Install checksum-verified jq for recovery contracts
+        run: |
+          mkdir -p "$RUNNER_TEMP/abvm-bin"
+          curl --fail --location --retry 2 --max-time 30 --retry-max-time 90 https://github.com/jqlang/jq/releases/download/jq-1.8.1/jq-linux-amd64 -o "$RUNNER_TEMP/abvm-bin/jq"
+          echo "020468de7539ce70ef1bceaf7cde2e8c4f2ca6c3afb84642aabc5c97d9fc2a0d  $RUNNER_TEMP/abvm-bin/jq" | sha256sum --check
+          chmod +x "$RUNNER_TEMP/abvm-bin/jq"
+          "$RUNNER_TEMP/abvm-bin/jq" --version
+          echo "$RUNNER_TEMP/abvm-bin" >> "$GITHUB_PATH"
+      - name: Set up Python for local app server and parser checks
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
       - uses: actions/checkout@v6
         with:
           ref: main
@@ -231,7 +256,7 @@ jobs:
           path: ~/.cache/ms-playwright
           key: abvm-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
       - name: Install Chromium and WebKit for candidate QA
-        run: npx playwright install --with-deps chromium webkit
+        run: bash scripts/install-playwright-ci.sh
 
       - name: Validate the candidate app before changing main
         run: npm run qa
@@ -338,8 +363,32 @@ jobs:
     permissions:
       contents: write
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble-amd64
+      options: --ipc=host
+      volumes:
+        - /usr/bin/gh:/usr/local/bin/gh:ro
+    env:
+      ABVM_PREINSTALLED_BROWSERS: '1'
+    defaults:
+      run:
+        shell: bash
     timeout-minutes: 30
     steps:
+      - name: Trust only the mounted Actions workspace
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Install checksum-verified jq for recovery contracts
+        run: |
+          mkdir -p "$RUNNER_TEMP/abvm-bin"
+          curl --fail --location --retry 2 --max-time 30 --retry-max-time 90 https://github.com/jqlang/jq/releases/download/jq-1.8.1/jq-linux-amd64 -o "$RUNNER_TEMP/abvm-bin/jq"
+          echo "020468de7539ce70ef1bceaf7cde2e8c4f2ca6c3afb84642aabc5c97d9fc2a0d  $RUNNER_TEMP/abvm-bin/jq" | sha256sum --check
+          chmod +x "$RUNNER_TEMP/abvm-bin/jq"
+          "$RUNNER_TEMP/abvm-bin/jq" --version
+          echo "$RUNNER_TEMP/abvm-bin" >> "$GITHUB_PATH"
+      - name: Set up Python for local app server and parser checks
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
       - name: Checkout latest main without using unapproved teacher data
         uses: actions/checkout@v6
         with:
@@ -381,7 +430,7 @@ jobs:
       - name: Independent full app QA before any main write
         if: steps.lunch-change.outputs.changed == 'true'
         run: |
-          npx playwright install --with-deps chromium webkit
+          bash scripts/install-playwright-ci.sh
           npm run qa
       - name: Commit only verified changed lunch pack on exact main
         if: steps.lunch-change.outputs.changed == 'true'

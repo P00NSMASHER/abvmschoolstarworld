@@ -1,5 +1,5 @@
 import {readFileSync,mkdirSync,writeFileSync} from "node:fs";
-import {assessHomeworkHealth,assessHomeworkPollingCadence,assessMainBranchProtection,selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence,selectRecoveredRefreshRace} from "./health-evidence.mjs";
+import {assessHomeworkHealth,assessHomeworkPollingCadence,assessMainBranchProtection,selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence,selectRecoveredRefreshRace,selectRecoveredCancelledRefresh} from "./health-evidence.mjs";
 import {assessUpcomingLunchCoverage,schoolWeekLabel} from "./school-week-label.mjs";
 import {assessPublicationParity} from "./publication-parity-health.mjs";
 
@@ -9,12 +9,14 @@ const sw=readFileSync(new URL("../pages/sw.js",import.meta.url),"utf8");
 const cache=(sw.match(/const CACHE = "([^"]+)"/)||[])[1]||"unknown";
 const runsPath=process.env.WORKFLOW_RUNS_FILE;
 const refreshJobsPath=process.env.REFRESH_JOBS_FILE;
+const cancelledRefreshJobsPath=process.env.REFRESH_CANCELLED_JOBS_FILE;
 const refreshStageJobsPath=process.env.REFRESH_STAGE_JOBS_FILE;
 const openPullsPath=process.env.OPEN_PULLS_FILE;
 const publicationsPath=process.env.HOMEWORK_PUBLICATIONS_FILE;
 const mainBranchPath=process.env.MAIN_BRANCH_FILE;
 const runs=runsPath?JSON.parse(readFileSync(runsPath,"utf8")).workflow_runs||[]:[];
 const refreshJobsData=refreshJobsPath?JSON.parse(readFileSync(refreshJobsPath,"utf8")):{run_id:null,jobs:[]};
+const cancelledRefreshJobsData=cancelledRefreshJobsPath?JSON.parse(readFileSync(cancelledRefreshJobsPath,"utf8")):{run_id:null,jobs:[]};
 const refreshStageJobs=refreshStageJobsPath?JSON.parse(readFileSync(refreshStageJobsPath,"utf8")):{run_id:null,jobs:[]};
 const openPulls=openPullsPath?JSON.parse(readFileSync(openPullsPath,"utf8")):[];
 const homeworkPublications=publicationsPath?JSON.parse(readFileSync(publicationsPath,"utf8")):[];
@@ -161,7 +163,14 @@ status.refreshRecovery=selectRecoveredRefreshRace({
   watchdogRun:effectiveRun(status.workflows.watchdog),
   sourceCheckedAt,
 });
-const refreshOperationallyHealthy=refreshHealthy||Boolean(status.refreshRecovery);
+// A superseded cancelled publisher is recoverable only after independent
+// exact-main publication and a later live watchdog both succeed.
+status.cancelledRefreshRecovery=!status.curriculumHold?selectRecoveredCancelledRefresh({
+  refreshRun:effectiveRefreshRun,refreshJobs:cancelledRefreshJobsData,
+  publicationRun:status.publicationEvidence,watchdogRun:effectiveRun(status.workflows.watchdog),
+  sourceCheckedAt,homeworkCheckedAt:status.homework.checkedAt,
+}):null;
+const refreshOperationallyHealthy=refreshHealthy||Boolean(status.refreshRecovery)||Boolean(status.cancelledRefreshRecovery);
 const pipelineHealthy=Boolean(
   status.contentPipeline.present &&
   status.contentPipeline.qaStatus==="pass" &&
@@ -220,6 +229,7 @@ if(mainBranchPath && status.repositorySecurity.mainBranch.state==="unknown"){
   warnings.push("GitHub main branch protection could not be verified; do not report repository security as healthy.");
 }
 if(status.refreshRecovery)warnings.push("The teacher refresh and reviewed lunch QA passed, but the Pages release safely stopped when main advanced. A later gated publication and live freshness watchdog confirmed recovery.");
+if(status.cancelledRefreshRecovery)warnings.push("The teacher and lunch source checks passed, but their nested browser install was cancelled. A later protected-main Pages release and independent live watchdog proved recovery; the cancelled workflow remains in history.");
 if(reportedWeekLabel!==expectedWeekLabel){
   warnings.push("School-data week label "+(reportedWeekLabel||"is missing")+" does not match the displayed "+expectedWeekLabel+"; retain the actual teacher-posting week for assignments.");
 }
@@ -277,6 +287,7 @@ const md=[
   ...(status.refreshStage?[line("Current teacher workflow",status.workflows.refresh.latestCreated)]:[]),
   `- **Verified source stage:** ${status.refreshStage?"job "+status.refreshStage.sourceJobId+"; live publication "+status.refreshStage.publisherRunId+"; watchdog "+status.refreshStage.watchdogRunId+"; parent still pending":"no separate pending-parent proof"}`,
   `- **Guarded refresh race recovery:** ${status.refreshRecovery?"verified by publication "+status.refreshRecovery.publisherRunId+" and watchdog "+status.refreshRecovery.watchdogRunId:"not established"}`,
+  `- **Cancelled publisher recovery:** ${status.cancelledRefreshRecovery?"verified by publication "+status.cancelledRefreshRecovery.publisherRunId+" and watchdog "+status.cancelledRefreshRecovery.watchdogRunId:"not established"}`,
   line("Homework refresh",effectiveRun(status.workflows.homework)),
   line("App QA",effectiveRun(status.workflows.qa)),
   line("Publication evidence",status.publicationEvidence),
@@ -291,3 +302,4 @@ const md=[
 writeFileSync("health-output/abvm-health-summary.md",md);
 console.log(md);
 if(status.overall==="critical")process.exitCode=1;
+

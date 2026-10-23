@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { teacherVocabularyTerms } from '../pages/grade2-original-vocabulary.mjs';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
@@ -450,9 +451,10 @@ pack.homework = homework;
 const lunchResult = await refreshLunchPublication(pack, { now: new Date(checkedAt) });
 console.log('Lunch source result:', JSON.stringify(lunchResult));
 
-pack.vocabulary = vocabulary.split(',').map(term => term.trim()).filter(Boolean).map(term => ({
+pack.vocabulary = teacherVocabularyTerms(vocabulary).map(term => ({
   subject: 'Reading / ELA',
   term,
+  ...( /groom\. mammal/i.test(vocabulary) && ['groom','mammal'].includes(term) ? {sourceTerm:'groom. mammal',teachingInterpretation:'ABVM punctuation interpretation: two vocabulary words; original teacher text retained.'} : {}),
   meaning: 'Current Reading Work vocabulary word; the teacher page does not provide a definition.',
 }));
 

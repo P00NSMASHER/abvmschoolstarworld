@@ -9,6 +9,7 @@ on:
       - 'scripts/refresh-teacher-pages.mjs'
       - 'scripts/teacher-event-precedence.mjs'
       - 'scripts/grade2-content-pipeline.mjs'
+      - 'pages/grade2-original-vocabulary.mjs'
       - 'scripts/question-corrections.mjs'
       - 'scripts/build-study-archive.mjs'
       - 'tests/question-corrections.test.mjs'
@@ -23,6 +24,7 @@ on:
       - 'tests/calendar-bottom-premium.spec.mjs'
       - 'tests/calendar-premium.spec.mjs'
       - 'tests/content-pipeline.spec.mjs'
+      - 'tests/gold-standard.spec.mjs'
       - 'tests/integrated-premium.spec.mjs'
       - 'tests/today-premium.spec.mjs'
       - 'tests/study-experience.spec.mjs'
@@ -46,8 +48,30 @@ concurrency:
 jobs:
   verify-fresh-teacher-candidate:
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble-amd64
+      options: --ipc=host
+    env:
+      ABVM_PREINSTALLED_BROWSERS: '1'
+    defaults:
+      run:
+        shell: bash
     timeout-minutes: 30
     steps:
+      - name: Trust only the mounted Actions workspace
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Install checksum-verified jq for recovery contracts
+        run: |
+          mkdir -p "$RUNNER_TEMP/abvm-bin"
+          curl --fail --location --retry 2 --max-time 30 --retry-max-time 90 https://github.com/jqlang/jq/releases/download/jq-1.8.1/jq-linux-amd64 -o "$RUNNER_TEMP/abvm-bin/jq"
+          echo "020468de7539ce70ef1bceaf7cde2e8c4f2ca6c3afb84642aabc5c97d9fc2a0d  $RUNNER_TEMP/abvm-bin/jq" | sha256sum --check
+          chmod +x "$RUNNER_TEMP/abvm-bin/jq"
+          "$RUNNER_TEMP/abvm-bin/jq" --version
+          echo "$RUNNER_TEMP/abvm-bin" >> "$GITHUB_PATH"
+      - name: Set up Python for local app server and parser checks
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
       - name: Checkout exact review head
         uses: actions/checkout@v6
         with:
@@ -88,7 +112,7 @@ jobs:
           path: ~/.cache/ms-playwright
           key: abvm-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
       - name: Install Chromium and WebKit
-        run: npx playwright install --with-deps chromium webkit
+        run: bash scripts/install-playwright-ci.sh
 
       - name: Verify interaction fixtures survive a legitimate teacher-topic withdrawal
         run: |
@@ -108,6 +132,13 @@ jobs:
           trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
           ABVM_LIVE_URL=http://127.0.0.1:4173/ node scripts/verify-live-lunch.mjs
 
+      - name: Record exact candidate identity
+        if: always()
+        shell: bash
+        run: |
+          git rev-parse HEAD > candidate-commit.txt
+          sha256sum pages/data/study-pack.json > candidate-sha256.txt
+
       - name: Retain exact-head candidate QA evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -115,6 +146,9 @@ jobs:
           name: abvm-fresh-teacher-candidate-${{ github.run_id }}
           path: |
             .curriculum-coverage-plan.json
+            pages/data/study-pack.json
+            candidate-commit.txt
+            candidate-sha256.txt
             playwright-report
             test-results
             live-lunch-proof

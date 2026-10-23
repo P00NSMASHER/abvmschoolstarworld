@@ -2,6 +2,7 @@ import {SUBTRACTION_CHECK_PROMPT} from './question-corrections.mjs';
 import { createHash } from 'node:crypto';
 
 import { validateGrade2PipelineAlignment } from './grade2-content-alignment.mjs';
+import { originalGrade2Vocabulary, originalGrade2VocabularyMeaning, teacherVocabularyTerms } from '../pages/grade2-original-vocabulary.mjs';
 import {
   registeredCurriculumFamilyRules,
   registeredPrioritySkillIds,
@@ -17,6 +18,16 @@ const FORBIDDEN_QUESTION_PATTERNS = [
 ];
 
 const SIGHT_WORD_CONTEXTS = Object.freeze({
+  picture: { sentence: 'I drew a ___ of a red apple.', distractors: ['because', 'took'] },
+  because: { sentence: 'We opened our umbrellas ___ it was raining.', distractors: ['picture', 'have'] },
+  know: { sentence: 'Do you ___ the answer to this question?', distractors: ['cold', 'because'] },
+  cold: { sentence: 'Ice feels ___ when I touch it.', distractors: ['took', 'because'] },
+  took: { sentence: 'Yesterday, I ___ my library book back.', distractors: ['because', 'off'] },
+  have: { sentence: 'I ___ two pencils in my bag.', distractors: ['because', 'cold'] },
+  off: { sentence: 'Please turn ___ the light before you leave.', distractors: ['because', 'took'] },
+  family: { sentence: 'My parents and I are part of one ___.', distractors: ['because', 'took'] },
+  school: { sentence: 'Our teacher meets our class at ___.', distractors: ['because', 'have'] },
+  friends: { sentence: 'The two children enjoy playing together and are good ___.', distractors: ['because', 'took'] },
   she: { sentence: '___ packed her lunch before school.', distractors: ['what', 'small'] },
   boy: { sentence: 'The ___ carried a blue backpack.', distractors: ['what', 'were'] },
   he: { sentence: '___ hung his coat by the door.', distractors: ['what', 'small'] },
@@ -62,6 +73,14 @@ const SIGHT_WORD_CONTEXTS = Object.freeze({
 // Only teacher-listed words are selected; examples are independent, original
 // contextual use (not teacher-provided vocabulary definitions or sentences).
 const VOCAB_WORD_USE_CONTEXTS = Object.freeze({
+  groom: { sentence: 'Cats ___ themselves by licking their coats clean.', distractors: ['mammal', 'fur'] },
+  mammal: { sentence: 'An animal with hair or fur whose mother feeds it milk is a ___.', distractors: ['covered', 'alive'] },
+  adult: { sentence: 'A child grows up to become an ___.', distractors: ['alive', 'covered'] },
+  alive: { sentence: 'The plant is ___; it is growing new leaves.', distractors: ['fur', 'offspring'] },
+  covered: { sentence: 'We ___ the picnic food with a cloth.', distractors: ['adult', 'alive'] },
+  fur: { sentence: 'The soft hair on a rabbit is called ___.', distractors: ['adult', 'offspring'] },
+  giant: { sentence: 'The ___ pumpkin was much bigger than all the others.', distractors: ['fur', 'offspring'] },
+  offspring: { sentence: 'The baby rabbits are the mother rabbit’s ___.', distractors: ['fur', 'covered'] },
   checks: { sentence: 'Every morning, the librarian ___ that all the books are back.', distractors: ['choose', 'tools'] },
   choose: { sentence: 'You may ___ one book to read before bedtime.', distractors: ['jobs', 'checks'] },
   chores: { sentence: 'Cleaning my room and washing dishes are two of my ___ at home.', distractors: ['cost', 'customers'] },
@@ -2157,9 +2176,10 @@ function detectVocabularyWordUse(pack, skills, questions, coverage) {
   const reading = subjectRow(pack, 'Reading / ELA');
   const teacherList = (reading?.topics || []).find(topic => /^Vocabulary\s*:/i.test(text(topic)));
   if (!teacherList) return;
-  const listed = new Set(uniqueText(text(teacherList).replace(/^Vocabulary\s*:/i, '').split(','))
+  const listed = new Set(uniqueText(teacherVocabularyTerms(text(teacherList).replace(/^Vocabulary\s*:/i, '')))
     .map(normalize).filter(Boolean));
-  const verifiedTerms = uniqueText((pack?.vocabulary || []).filter(row =>
+  const normalizedVocabulary=(pack?.vocabulary||[]).flatMap(row=>teacherVocabularyTerms(row.term).map(term=>({...row,term})));
+  const verifiedTerms = uniqueText(normalizedVocabulary.filter(row =>
     normalize(row?.subject) === 'reading / ela' && listed.has(normalize(row?.term))
   ).map(row => normalize(row.term)));
   if (!verifiedTerms.length) return;
@@ -2258,68 +2278,118 @@ function detectVineBranches(pack, skills, questions, coverage) {
 }
 
 function detectVocabulary(pack, skills, questions, coverage) {
-  const rows = (pack?.vocabulary || [])
-    .map(row => ({
-      term: text(row?.term).toLowerCase(),
-      meaning: text(row?.meaning),
-    }))
-    .filter(row => row.term);
-
+  const reading = subjectRow(pack, 'Reading / ELA');
+  const teacherList = (reading?.topics || []).find(topic => /^Vocabulary\s*:/i.test(text(topic)));
+  const listed = uniqueText(teacherVocabularyTerms(text(teacherList).replace(/^Vocabulary\s*:/i, '')))
+    .map(normalize).filter(Boolean);
+  // The current classroom list authorizes *which* words to teach. The pack's
+  // meaning field is retained as teacher evidence and is never overwritten.
+  const vocab = (pack?.vocabulary || []).filter(row =>
+    !row?.subject || normalize(row.subject) === 'reading / ela'
+  );
+  const rows = teacherList
+    ? listed.map(term => ({
+        term,
+        meaning: text(vocab.find(row => normalize(row?.term) === term)?.meaning),
+      }))
+    : vocab.map(row => ({term: normalize(row?.term), meaning: text(row?.meaning)}))
+        .filter(row => row.term);
   if (!rows.length) return;
 
-  const supported = rows.filter(row => !isPlaceholderVocabularyMeaning(row.meaning));
-  if (!supported.length) {
+  const teacherDefined = rows.filter(row => !isPlaceholderVocabularyMeaning(row.meaning));
+  const prepared = rows.map(row => {
+    const teacherMeaning = !isPlaceholderVocabularyMeaning(row.meaning);
+    const curated = teacherList ? originalGrade2Vocabulary(row.term) : null;
+    const meaning = teacherMeaning ? row.meaning : curated?.meaning;
+    if (!meaning) return null;
+    const verifiedAlternatives = teacherDefined
+      .filter(other => other.term !== row.term && normalize(other.meaning) !== normalize(meaning))
+      .map(other => other.meaning);
+    const strictChoices = teacherMeaning && new Set(verifiedAlternatives.map(normalize)).size >= 2;
+    const distractors = strictChoices
+      ? uniqueText(verifiedAlternatives).slice(0, 2)
+      : curated?.distractors.map(term => originalGrade2VocabularyMeaning(term)) || [];
+    if (distractors.length !== 2 || new Set([meaning, ...distractors].map(normalize)).size !== 3) return null;
+    return {
+      term: row.term, meaning, curated,
+      origin: teacherMeaning ? 'verified-teacher' : 'original-abvm',
+      distractors,
+      sourceMode: strictChoices ? 'STRICT_SOURCE' : 'CURATED_CONTEXT',
+      supportType: strictChoices
+        ? 'explicit'
+        : teacherMeaning ? 'teacher-meaning-with-original-choices' : 'original-grade2-vocabulary-teaching',
+    };
+  }).filter(Boolean);
+  const uncovered = rows.filter(row => !prepared.some(ready => ready.term === row.term)).map(row => row.term);
+  if (prepared.length < 2) {
     coverage.push({
-      topic: 'Reading / ELA vocabulary definitions',
-      subject: 'Reading / ELA',
-      status: 'SOURCE_INSUFFICIENT',
-      reason: 'Vocabulary terms are present, but the verified teacher source does not provide definitions. Definition questions are intentionally suppressed.',
+      topic: 'Reading / ELA vocabulary definitions', subject: 'Reading / ELA',
+      status: 'SOURCE_INSUFFICIENT', uncovered: uncovered.length ? uncovered : rows.map(row => row.term),
+      reason: 'Fewer than two listed vocabulary terms have checked teacher meanings or original Grade 2 explanations with unambiguous choices. Unknown meanings are not invented.',
     });
     return;
   }
 
+  const supplements = prepared.filter(row => row.origin === 'original-abvm');
   const skill = {
     id: 'vocabulary-in-context',
     subject: 'Reading / ELA',
     label: 'Vocabulary meaning',
-    evidence: supported.map(row => `${row.term}: ${row.meaning}`),
-    studyNotes: supported.map(row => `${row.term}: ${row.meaning}`),
+    evidence: teacherList
+      ? [text(teacherList).replace(/^Vocabulary\s*:/i, '').trim()]
+      : prepared.map(row => `${row.term}: ${row.meaning}`),
+    studyNotes: [
+      ...(supplements.length ? [
+        'Original ABVM teaching explanations (not teacher-provided): these are common Grade 2 meanings and examples, not the exact words of a classroom lesson or story.',
+      ] : []),
+      ...prepared.map(row => row.origin === 'original-abvm'
+        ? `${row.term}: ${row.meaning}. Original example: ${row.curated.example} (ABVM teaching supplement, not from the teacher.)`
+        : `${row.term}: ${row.meaning}. (Verified teacher-provided meaning.)`),
+    ],
     standards: ['CCSS.L.2.4.a'],
     domain: 'Word knowledge and skills',
-    sourceMode: 'STRICT_SOURCE',
   };
   addSkill(skills, skill);
 
-  for (const row of supported.slice(0, 6)) {
-    const distractors = supported
-      .filter(other => other.term !== row.term)
-      .map(other => other.meaning)
-      .filter(Boolean)
-      .slice(0, 2);
-    if (distractors.length < 2) {
-      coverage.push({
-        topic: `Vocabulary: ${row.term}`,
-        subject: 'Reading / ELA',
-        status: 'SOURCE_INSUFFICIENT',
-        reason: 'A verified definition exists, but there are not enough same-construct verified distractors for a three-choice item.',
-      });
-      continue;
-    }
+  for (const row of prepared) {
+    const isOriginal = row.origin === 'original-abvm';
     questions.push(questionFor(skill, {
       prompt: `Which meaning matches the vocabulary word “${row.term}”?`,
-      choices: [row.meaning, ...distractors],
+      choices: [row.meaning, ...row.distractors],
       answer: row.meaning,
-      explanation: `The verified source defines “${row.term}” as ${row.meaning}.`,
-      hint: 'Use the verified vocabulary meaning from the current school material.',
-      sourceMode: 'STRICT_SOURCE',
-      supportType: 'explicit',
-      sourceFact: `Verified vocabulary definition: ${row.term} — ${row.meaning}`,
-      dok: 1,
-      difficulty: 2,
+      explanation: isOriginal
+        ? `Original ABVM teaching explanation: “${row.term}” commonly means ${row.meaning}. ${row.curated.example} This meaning was not supplied by the classroom teacher.`
+        : `The verified teacher meaning of “${row.term}” is ${row.meaning}. ${row.sourceMode === 'CURATED_CONTEXT' ? 'The other choices are original ABVM examples.' : ''}`,
+      hint: 'Use the meaning of the word in a simple everyday sentence.',
+      sourceMode: row.sourceMode,
+      supportType: row.supportType,
+      sourceFact: isOriginal
+        ? `Verified current teacher vocabulary word: ${row.term}; definition and example are original ABVM instruction, not teacher-published facts.`
+        : `Verified teacher vocabulary definition: ${row.term} — ${row.meaning}; ${row.sourceMode === 'CURATED_CONTEXT' ? 'alternative meanings were written independently.' : 'alternatives are other verified meanings.'}`,
+      evidenceContract: {
+        evidenceType: 'DIRECT_TARGET',
+        supports: ['vocabulary-in-context'],
+        strongestClaim: 'performance-choosing-a-common-vocabulary-meaning',
+        doesNotClaim: [
+          ...(isOriginal ? ['teacher-provided-definitions'] : []),
+          'teacher-test-questions', 'exact-story-word-sense', 'global-subject-mastery',
+        ],
+      },
+      dok: 1, difficulty: 2,
     }));
   }
+  coverage.push({
+    topic: 'Reading / ELA vocabulary definitions',
+    subject: 'Reading / ELA', skillId: skill.id,
+    status: uncovered.length ? 'PARTIALLY_COVERED' : 'COVERED',
+    supplementalTerms: supplements.map(row => row.term),
+    verifiedTeacherTerms: prepared.filter(row => row.origin === 'verified-teacher').map(row => row.term),
+    ...(uncovered.length ? {uncovered} : {}),
+    reason: supplements.length
+      ? 'Current teacher-listed words are taught using independently authored, checked Grade 2 common meanings. These are not teacher-published definitions or a claim about a specific story sense.'
+      : 'Vocabulary meanings are supplied by the verified teacher material.',
+  });
 }
-
 
 function detectUnsupportedExplicitSkills(pack, coverage, curriculumOptions = {}) {
   const addUnsupported = (subject, topic) => {

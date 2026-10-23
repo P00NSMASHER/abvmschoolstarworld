@@ -69,10 +69,21 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
     assert.equal(vineItems.length,3);
     assert.ok(vineItems.every(item => item.supplementalReference?.url === 'https://bible.usccb.org/bible/john/15'));
   }
-  const hasVerifiedVocabularyMeanings = (pack.vocabulary || []).some(row => String(row?.meaning || '').trim() && !/^(?:tbd|unknown|not provided|not posted)$/i.test(String(row?.meaning || '').trim()));
+  const hasVerifiedVocabularyMeanings = (pack.vocabulary || []).some(row => String(row?.meaning || '').trim()
+    && !/teacher page does not provide a definition|no definition supplied|^(?:tbd|unknown|not provided|not posted)$/i.test(String(row?.meaning || '').trim()));
   if (!hasVerifiedVocabularyMeanings && (pack.vocabulary || []).length) {
-    assert.equal(ids.has('vocabulary-in-context'), false, 'must not invent vocabulary definitions absent from source');
-    assert.ok(pipeline.coverage.some(row => row.status === 'SOURCE_INSUFFICIENT' && /vocabulary definitions/i.test(row.topic)));
+    const originalItems=pipeline.questions.filter(row=>row.skill==='vocabulary-in-context'&&row.supportType==='original-grade2-vocabulary-teaching');
+    if (originalItems.length) {
+      assert.ok(ids.has('vocabulary-in-context'));
+      assert.ok(originalItems.every(row=>row.sourceMode==='CURATED_CONTEXT'));
+      assert.ok(originalItems.every(row=>row.evidenceContract?.doesNotClaim?.includes('teacher-provided-definitions')));
+      const row=pipeline.coverage.find(row=>/vocabulary definitions/i.test(row.topic));
+      assert.equal(row.status,originalItems.length===pack.vocabulary.length?'COVERED':'PARTIALLY_COVERED');
+      assert.equal(originalItems.length+(row.uncovered||[]).length,pack.vocabulary.length);
+    } else {
+      assert.equal(ids.has('vocabulary-in-context'), false);
+      assert.ok(pipeline.coverage.some(row => row.status === 'SOURCE_INSUFFICIENT' && /vocabulary definitions/i.test(row.topic)));
+    }
   }
   assert.ok(pipeline.questions.length >= pipeline.skills.length);
   assert.equal(validateGrade2ContentPipeline(pipeline).length, 0);
@@ -457,7 +468,11 @@ test('production lineage resolves every question to an exact teacher page captur
 
   const suffixLineage = sourceFor('suffix-ed-ing');
   if (suffixLineage) {
-    assert.ok(suffixLineage.matchedEvidence?.some(line => /adding\s+-ed,\s*-ing/i.test(line)));
+    const suffixSkill=pipeline.skills.find(row=>row.id==='suffix-ed-ing');
+    const suffixEvidence=(suffixSkill?.evidence||[]).map(normalizeLine).filter(Boolean);
+    const suffixMatched=(suffixLineage.matchedEvidence||[]).map(normalizeLine).filter(Boolean);
+    assert.ok(suffixMatched.some(line=>suffixEvidence.some(item=>line.includes(item))),
+      'suffix lineage must follow the current source wording rather than a prior-week phrase');
     assert.equal(suffixLineage.matchedEvidence?.some(line => /Reading Comprehension:/i.test(line)), false);
   }
 });

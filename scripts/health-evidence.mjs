@@ -134,6 +134,67 @@ export function selectRecoveredRefreshRace({refreshRun,refreshJobs,publicationRu
     failedStep:"Recheck protected-main before publishing"};
 }
 
+/**
+ * A cancelled nested publisher remains a failure unless all teacher and lunch
+ * gates passed, a separate protected-main Pages release later succeeded, and
+ * an even later watchdog independently verified the published school data.
+ * This is not a blanket "ignore cancelled workflows" exception.
+ */
+export function selectRecoveredCancelledRefresh({
+  refreshRun,refreshJobs,publicationRun,watchdogRun,sourceCheckedAt,homeworkCheckedAt,
+}={}){
+  if(refreshRun?.name!=="Refresh ABVM teacher pages"||
+     refreshRun?.head_branch!=="main"||refreshRun?.status!=="completed"||
+     refreshRun?.conclusion!=="cancelled"||!Number.isInteger(refreshRun.id)||
+     Number(refreshJobs?.run_id)!==refreshRun.id)return null;
+  const jobs=Array.isArray(refreshJobs?.jobs)?refreshJobs.jobs:[];
+  const source=jobs.find(job=>job.name==="refresh");
+  const lunch=jobs.find(job=>job.name==="Refresh reviewed lunch week independently of held curriculum");
+  const deploy=jobs.find(job=>job.name==="deploy verified refresh through Pages workflow / deploy");
+  if(jobs.length!==3||!source||!lunch||!deploy)return null;
+  const step=(job,name,conclusion="success")=>
+    (job?.steps||[]).some(row=>row.name===name&&row.status==="completed"&&row.conclusion===conclusion);
+  const passed=job=>job.status==="completed"&&job.conclusion==="success";
+  if(!passed(source)||!passed(lunch)||
+     !step(source,"Verify page-exact source parity and isolate unsupported curriculum")||
+     !step(source,"Verify refreshed source health")||
+     !step(source,"Validate the candidate app before changing main")||
+     !step(source,"Commit refreshed pack against latest main")||
+     !step(source,"Confirm exact published main SHA for gated Pages handoff")||
+     !step(lunch,"Refresh only previously reviewed source-backed lunch fields")||
+     !step(lunch,"Prove lunch isolation and negative-case integrity")||
+     !step(lunch,"Confirm current protected-main SHA after lunch verification"))return null;
+  // A completed or failed original deployment is a different event, never this exception.
+  if(deploy.status!=="completed"||deploy.conclusion!=="cancelled"||
+     !step(deploy,"Admit exact current protected-main commit")||
+     !step(deploy,"Verify checked-out source identity")||
+     !step(deploy,"Install Chromium and WebKit","cancelled")||
+     !step(deploy,"Run release QA","skipped")||
+     !step(deploy,"Deploy","skipped")||
+     !step(deploy,"Verify live lunch data and visible mobile flows","skipped")||
+     jobs.some(job=>(job.steps||[]).some(row=>row.conclusion==="failure")))return null;
+  if(publicationRun?.status!=="completed"||publicationRun?.conclusion!=="success"||
+     publicationRun?.head_branch!=="main"||
+     !(publicationRun.name==="Deploy ABVM to GitHub Pages"||
+       (publicationRun.name==="Refresh current ABVM homework"&&
+        Number.isInteger(publicationRun.publisherJobId))))return null;
+  if(watchdogRun?.name!=="Monitor ABVM refresh health"||
+     watchdogRun.head_branch!=="main"||watchdogRun.status!=="completed"||
+     watchdogRun.conclusion!=="success")return null;
+  const times=[
+    refreshRun.updated_at,publicationRun.created_at,publicationRun.updated_at,
+    watchdogRun.run_started_at||watchdogRun.created_at,watchdogRun.updated_at,
+    sourceCheckedAt,homeworkCheckedAt,
+  ].map(value=>Date.parse(value||""));
+  if(!times.every(Number.isFinite))return null;
+  const [cancelled,pubStarted,published,watchStarted,watchCompleted,teacherChecked,homeworkChecked]=times;
+  if(!(teacherChecked<=cancelled&&cancelled<pubStarted&&pubStarted<=published&&
+       teacherChecked<=published&&homeworkChecked<=published&&
+       published<watchStarted&&watchStarted<=watchCompleted))return null;
+  return {state:"recovered",refreshRunId:refreshRun.id,publisherRunId:publicationRun.id,
+    watchdogRunId:watchdogRun.id,cancelledStep:"Install Chromium and WebKit"};
+}
+
 export function assessHomeworkHealth(posting, now) {
   const checked=Date.parse(posting?.checkedAt||'');
   const current=Date.parse(now);
