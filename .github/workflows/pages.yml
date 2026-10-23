@@ -48,8 +48,20 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble-amd64@sha256:1e639776ab90f116a8c3c4a68b959a9f62d396590e3b8d5933573763b8cfe093
+      options: --ipc=host
+    env:
+      ABVM_PREINSTALLED_BROWSERS: '1'
+    defaults:
+      run:
+        shell: bash
     timeout-minutes: 25
     steps:
+      - name: Set up Python for local app server and parser checks
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
       # Only the current protected-main commit may publish. Caller-supplied
       # refs must be immutable SHAs; no branch/tag/PR may select site content.
       - name: Admit exact current protected-main commit

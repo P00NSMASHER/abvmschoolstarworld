@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {chmodSync, mkdtempSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
+import {chmodSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {delimiter, join} from 'node:path';
 import {spawnSync} from 'node:child_process';
@@ -10,7 +10,7 @@ const qaWorkflow=new URL('../.github/workflows/qa.yml',import.meta.url);
 const refreshWorkflow=new URL('../.github/workflows/sync-study-pack.yml',import.meta.url);
 const pagesWorkflow=new URL('../.github/workflows/pages.yml',import.meta.url);
 
-function fakeBootstrap({probe='success',fallback='success'}={}){
+function fakeBootstrap({probe='success',fallback='success',preinstalled=false}={}){
   const dir=mkdtempSync(join(tmpdir(),'abvm-playwright-bootstrap-'));
   const callsFile=join(dir,'calls');
   const probeCountFile=join(dir,'probe-count');
@@ -43,9 +43,9 @@ exit 0
     timeout:5000,
     env:{...process.env,PATH:dir+delimiter+(process.env.PATH||''),CALLS_FILE:callsFile,
       PROBE_COUNT_FILE:probeCountFile,PROBE_MODE:probe,FALLBACK_MODE:fallback,
-      PLAYWRIGHT_INSTALL_TIMEOUT_SECONDS:'1'},
+      ABVM_PREINSTALLED_BROWSERS:preinstalled?'1':'0',PLAYWRIGHT_INSTALL_TIMEOUT_SECONDS:'1'},
   });
-  const calls=readFileSync(callsFile,'utf8').trim().split('\n').filter(Boolean);
+  const calls=existsSync(callsFile)?readFileSync(callsFile,'utf8').trim().split('\n').filter(Boolean):[];
   return {dir,result,calls,elapsed:Date.now()-started};
 }
 
@@ -112,5 +112,35 @@ test('every Chromium and WebKit workflow uses the same bounded bootstrap and loc
   assert.doesNotMatch(workflow,/npx playwright install --with-deps chromium webkit/,name);
   assert.ok(workflow.includes("hashFiles('package-lock.json')"),name);
   assert.ok(workflow.includes('path: ~/.cache/ms-playwright'),name);
+ }
+});
+
+test('all dual-browser CI jobs use an immutable official image matching the locked Playwright version',()=>{
+ const lock=JSON.parse(readFileSync(new URL('../package-lock.json',import.meta.url),'utf8'));
+ const version=lock.packages['node_modules/@playwright/test'].version;
+ const names=['qa.yml','qa-reproduction.yml','pages.yml','sync-study-pack.yml','teacher-refresh-candidate.yml',
+  'today-visual-acceptance.yml','calendar-visual-acceptance.yml','public-privacy-visual-acceptance.yml',
+  'study-tools-visual.yml','study-player-visual-acceptance.yml','study-visual-acceptance.yml','progress-visual-acceptance.yml'];
+ for(const name of names){
+  const workflow=readFileSync(new URL('../.github/workflows/'+name,import.meta.url),'utf8');
+  const jobs=workflow.split('    runs-on: ubuntu-latest').slice(1);
+  assert.ok(jobs.length,name);
+  for(const job of jobs){
+   assert.ok(job.includes('image: mcr.microsoft.com/playwright:v'+version+'-noble-amd64@sha256:'),name);
+   assert.match(job,/@sha256:[a-f0-9]{64}/,name);
+   assert.ok(job.includes('uses: actions/setup-python@v5'),name);
+   assert.match(job,/defaults:\n      run:\n        shell: bash/,name);
+  }
+ }
+});
+
+test('immutable browser runtime performs no install and fails closed on a missing dependency',()=>{
+ for(const probe of ['success','fail']){
+  const {dir,result,calls}=fakeBootstrap({probe,preinstalled:true});
+  try{
+   assert.deepEqual(calls,[],'preinstalled CI must not invoke npm installs or apt');
+   assert.equal(result.status,probe==='success'?0:19);
+   assert.match(result.stdout+result.stderr,probe==='success'?/no installation needed/:/no mutable dependency installation was attempted/);
+  }finally{rmSync(dir,{recursive:true,force:true});}
  }
 });

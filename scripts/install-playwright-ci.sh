@@ -39,6 +39,17 @@ probe_browsers() {
   return "$last_status"
 }
 
+# The immutable CI image already contains the exact browser builds and shared
+# libraries. Prove both launch, and never mutate that runtime through apt.
+if [[ "${ABVM_PREINSTALLED_BROWSERS:-0}" == "1" ]]; then
+  if probe_browsers; then
+    echo "Pinned Playwright image: Chromium/WebKit launch successfully; no installation needed."
+    exit 0
+  fi
+  echo "::error title=Pinned Playwright runtime failure::The preinstalled browsers could not launch; no mutable dependency installation was attempted." >&2
+  exit "$last_status"
+fi
+
 # The workflow restores version-pinned browser binaries before this script.
 # First prove that those exact browsers can launch on the hosted runner. This
 # avoids a redundant 364 MB apt transaction when the runner already has the
