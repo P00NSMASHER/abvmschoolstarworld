@@ -239,7 +239,10 @@ test("Study Games hard-blocks list-recognition and restores researched quality g
     const pipelineSkills=pipelinePresent?source.pack.contentPipeline.skills:[];
     const authorizedSkills=new Set(pipelineSkills.map(skill=>skill.id));
     const authorizedMath=pipelineSkills.filter(skill=>skill.subject==="Math").map(skill=>skill.id);
-    const contextVocabularyCount=catalog.questions.filter(q=>/What does “.+” mean in this sentence\\?/.test(q.prompt)).length;
+    // Original definitions and sentence completion assess the authorized vocabulary
+    // skills without depending on a legacy prompt sentence or teacher wording.
+    const contextVocabularyCount=catalog.questions.filter(q=>q.tier==="material"&&q.skill==="vocabulary-in-context").length;
+    const vocabularyIds=questions=>questions.filter(q=>["vocabulary-in-context","vocabulary-word-use"].includes(q.skill)).map(q=>q.id).sort();
     return {
       issues:window.ABVMStudyGames.validateCatalog(catalog),
       count:catalog.questionCount,
@@ -258,6 +261,8 @@ test("Study Games hard-blocks list-recognition and restores researched quality g
       pipelinePresent,
       vocabularyAuthorized:authorizedSkills.has("vocabulary-in-context"),
       contextVocabularyCount,
+      expectedVocabularyIds:vocabularyIds(source.pack?.contentPipeline?.questions||[]),
+      actualVocabularyIds:vocabularyIds(catalog.questions.filter(q=>q.tier==="material")),
       selectionMaxPerSkill:maxSkillCount(selected),
       selectionConsecutive:selected.some((q,i)=>i>0&&selected[i-1].skill===q.skill)
     };
@@ -275,7 +280,10 @@ test("Study Games hard-blocks list-recognition and restores researched quality g
   expect(report.unauthorizedMaterial).toEqual([]);
   expect(report.hasStarReading).toBe(true);
   expect(report.hasStarMath).toBe(true);
-  if(report.pipelinePresent)expect(report.contextVocabularyCount>0).toBe(report.vocabularyAuthorized);
+  if(report.pipelinePresent){
+    expect(report.contextVocabularyCount>0).toBe(report.vocabularyAuthorized);
+    expect(report.actualVocabularyIds).toEqual(report.expectedVocabularyIds);
+  }
   else expect(report.contextVocabularyCount).toBeGreaterThanOrEqual(0);
   expect(report.selectionMaxPerSkill).toBeLessThanOrEqual(3);
   expect(report.selectionConsecutive).toBe(false);
