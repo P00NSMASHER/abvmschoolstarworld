@@ -19,6 +19,17 @@ function evidence(){
     ],
   };
 }
+
+function yearBoundaryEvidence(){
+  const id='melissa-weekly-planner-2026-12-28-user-reviewed';
+  return {
+    sourcePrecedence:{authoritativeCurrentDocument:id},
+    documents:[{id,review:{status:'reviewed',reviewedBy:'user-confirmed-Melissa-planner'}}],
+    replacements:[{topic:'lego-club',date:'Tuesday, Jan. 5'}],
+    importantDates:[{date:'Tuesday, Jan. 5',label:'Lego Club',sourceDocument:id}],
+  };
+}
+
 test('dated, reviewed Melissa planner supersedes contradictory teacher Home pickup date',()=>{
   assert.equal(supersededByReviewedPlanner({
     date:'Thursday, Oct. 23',label:'Chick-Fil-A pick up',source:'teacher-home'
@@ -34,6 +45,14 @@ test('old Lego and progress dates lose only to exact newer reviewed corrections'
   assert.equal(supersededByReviewedPlanner({
     date:'Thursday, Oct. 8',label:'Progress Reports Sent Home',source:'teacher-home'
   },evidence()),true);
+});
+test('reviewed corrections remain authoritative across December to January',()=>{
+  assert.equal(supersededByReviewedPlanner({
+    date:'Thursday, Dec. 31',label:'Lego Club',source:'teacher-home'
+  },yearBoundaryEvidence()),true);
+  assert.equal(supersededByReviewedPlanner({
+    date:'Friday, Nov. 20',label:'Lego Club',source:'teacher-home'
+  },yearBoundaryEvidence()),false);
 });
 test('never erase sales, order deadlines, unrelated dates or independently authored notices',()=>{
   for(const row of [
