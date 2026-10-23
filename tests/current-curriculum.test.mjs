@@ -4,9 +4,11 @@ import {readFileSync} from 'node:fs';
 import {matchCurriculumFamily} from '../scripts/curriculum-family-registry.mjs';
 import {buildGrade2ContentPipeline} from '../scripts/grade2-content-pipeline.mjs';
 import {questionsForTest} from '../pages/study-hub-core.mjs';
+import {printableStudyGuideHtml,printableWorksheetHtml} from '../pages/study-games-materials-view.mjs';
 
 const skills = [
   {subject:'Reading / ELA',topic:'charts',id:'reading-charts'},
+  {subject:'Reading / ELA',topic:'diagrams & labels',id:'diagrams-labels'},
   {subject:'Spelling / Handwriting',topic:'long o / Short )',id:'long-o'},
   {subject:'Reading / ELA',topic:'short vowels',id:'short-vowels'},
 ];
@@ -31,19 +33,19 @@ test('original owner-authorized teacher-topic question families have eight valid
   }
 });
 
-test('source-covered chart, long-o, and short-vowel practice flows into current Test Prep without fake short-vowel specificity', () => {
+test('source-covered chart, diagram-label, long-o, and short-vowel practice flows into current Test Prep without fake short-vowel specificity', () => {
   const timestamp='2026-10-14T23:00:00.000Z';
   const readingHash='1'.repeat(64), testsHash='2'.repeat(64);
   const pack = {
     sourceHash:'teacher-pages-'+'f'.repeat(20),
     subjects:[
-      {subject:'Reading / ELA',topics:['Reading comprehension: charts','Phonics: short vowels (test Friday, Oct. 16)'],studyNotes:[]},
+      {subject:'Reading / ELA',topics:['Reading comprehension: charts; diagrams & labels','Phonics: short vowels (test Friday, Oct. 16)'],studyNotes:[]},
       {subject:'Spelling / Handwriting',topics:['Friday, Oct. 16 test focus: long o / Short )'],studyNotes:[]},
     ],
     vocabulary:[],
   };
   const pages=[
-    {title:'Reading Work',url:'https://sites.google.com/view/abvmgr2/reading-work',checkedAt:timestamp,contentHash:readingHash,lines:['Reading Comprehension: charts']},
+    {title:'Reading Work',url:'https://sites.google.com/view/abvmgr2/reading-work',checkedAt:timestamp,contentHash:readingHash,lines:['Reading Comprehension: charts; diagrams & labels']},
     {title:'Tests',url:'https://sites.google.com/view/abvmgr2/tests',checkedAt:timestamp,contentHash:testsHash,lines:['Friday Oct. 16: Spelling (long o / Short ) / Handwriting','Friday Oct. 16: Phonics (short vowels)']},
   ];
   const out=buildGrade2ContentPipeline(pack,{
@@ -65,6 +67,70 @@ test('source-covered chart, long-o, and short-vowel practice flows into current 
   assert(!out.questions.some(q=>q.sourceLineage?.quality!=='page-exact'));
 });
 
+
+
+test('diagram-label practice withdraws without the source topic, requires exact lineage, and renders both papers', () => {
+  const timestamp='2026-10-23T20:30:23.509Z';
+  const sourceHash='teacher-pages-'+'d'.repeat(20);
+  const sourcePack={
+    sourceHash,
+    subjects:[{subject:'Reading / ELA',topics:['Reading comprehension: Main idea / details; diagrams & labels'],studyNotes:[]}],
+    vocabulary:[],
+  };
+  const sourcePages=[{
+    title:'Reading Work',
+    url:'https://sites.google.com/view/abvmgr2/reading-work',
+    checkedAt:timestamp,
+    contentHash:'3'.repeat(64),
+    lines:['Reading Comprehension: Main idea / details; diagrams & labels'],
+  }];
+  const out=buildGrade2ContentPipeline(sourcePack,{
+    sourceHash,generatedAt:timestamp,sourcePages,requirePageExactLineage:true,
+  });
+  const skill=out.skills.find(row=>row.id==='diagrams-labels');
+  const practice=out.questions.filter(row=>row.skill==='diagrams-labels');
+  assert(skill);
+  assert.equal(practice.length,8);
+  assert(practice.every(row=>row.sourceLineage?.quality==='page-exact'));
+  assert(practice.every(row=>row.sourceMode==='CURATED_CONTEXT'));
+  assert.match(skill.studyNotes.join(' '),/Teacher-style supplemental practice/i);
+  assert(!out.coverage.some(row=>row.topic==='diagrams & labels'&&row.status==='GENERATOR_UNSUPPORTED'));
+
+  const guide={
+    label:'Reading Comprehension: diagrams & labels',
+    date:'2026-10-30',
+    subject:'Reading / ELA',
+    facts:skill.studyNotes,
+    teacherFacts:[],
+    vocabulary:[],
+    practice,
+    warnings:[],
+    sourceLabel:'Current published ABVM topic with teacher-style supplemental practice',
+    sourceCheckedAt:timestamp,
+    coverage:{missingGuideSkills:[]},
+  };
+  const guideHtml=printableStudyGuideHtml(guide);
+  const worksheetHtml=printableWorksheetHtml(guide);
+  for(const question of practice){
+    assert(guideHtml.includes(question.prompt),question.id);
+    assert(worksheetHtml.includes(question.prompt),question.id);
+  }
+  assert.match(guideHtml,/Teacher-style supplemental practice/i);
+  assert.match(guideHtml,/@media screen and \(max-width:620px\)/);
+  assert.match(worksheetHtml,/Answer Key/i);
+  assert.match(worksheetHtml,/@media print/);
+
+  const withdrawn=buildGrade2ContentPipeline({
+    ...sourcePack,
+    subjects:[{subject:'Reading / ELA',topics:['Reading comprehension: Main idea / details'],studyNotes:[]}],
+  },{sourceHash,generatedAt:timestamp,sourcePages,requirePageExactLineage:true});
+  assert(!withdrawn.skills.some(row=>row.id==='diagrams-labels'));
+  assert(!withdrawn.questions.some(row=>row.skill==='diagrams-labels'));
+
+  assert.throws(()=>buildGrade2ContentPipeline(sourcePack,{
+    sourceHash,generatedAt:timestamp,sourcePages:[],requirePageExactLineage:true,
+  }),/lineage|page-exact/i);
+});
 
 test('service worker returns current test-routing modules online while preserving offline cache fallback', () => {
   const sw=readFileSync(new URL('../pages/sw.js',import.meta.url),'utf8');
