@@ -42,9 +42,12 @@ function forDate(data,dateKey,now=new Date()){
   // an unchanged recheck never promotes yesterday's tasks into today's work.
   const checkedToday=schoolKey(checked)===current&&age>=-5*60*1000&&age<=30*60*60*1000;
   const assignmentsObservedToday=schoolKey(firstObserved)===current;
-  if(!checkedToday||(feed.status==="assignments"&&!assignmentsObservedToday))
+  if(!checkedToday)
     return{state:"outdated",checkedAt:feed.checkedAt,firstObservedAt:feed.firstObservedAt,
-      contentChangedAt:feed.contentChangedAt,assignments:[]};
+      contentChangedAt:feed.contentChangedAt,assignments:[],reason:"verification-stale"};
+  if(feed.status==="assignments"&&!assignmentsObservedToday)
+    return{state:"outdated",checkedAt:feed.checkedAt,firstObservedAt:feed.firstObservedAt,
+      contentChangedAt:feed.contentChangedAt,assignments:[],reason:"undated-carryover"};
   return{state:feed.status,checkedAt:feed.checkedAt,firstObservedAt:feed.firstObservedAt,
     contentChangedAt:feed.contentChangedAt,assignments:feed.assignments};
 }

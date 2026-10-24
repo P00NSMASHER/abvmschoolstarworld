@@ -162,6 +162,7 @@
       :status==="no-homework"?"Teacher page currently says no homework · checked "+stamp+" ET · no date shown on page"
       :status==="no-specific-posting"?"No specific assignment is currently listed · checked "+stamp+" ET"
       :status==="other-day"?"The teacher does not date assignments; only today's verified posting is shown."
+      :status==="outdated"&&state?.reason==="undated-carryover"?"Teacher page checked "+stamp+" ET. No undated assignment was newly posted today."
       :status==="outdated"?"Homework needs today's teacher verification. Last checked "+stamp+" ET."
       :"Today's homework is not yet verified in the app.";
   }
