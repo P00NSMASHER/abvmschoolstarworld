@@ -194,7 +194,7 @@ test('Religion Chapter 4 test receives scoped guide, worksheet, and correct answ
   const worksheetHtml=printableWorksheetHtml(guide);
   assert.match(guideHtml,/God Speaks to Us/i);
   assert.match(guideHtml,/Teacher-style supplemental practice/i);
-  assert.match(guideHtml,/@media screen and \\(max-width:620px\\)/);
+  assert.match(guideHtml,/@media screen and \(max-width:620px\)/);
   assert.match(worksheetHtml,/Answer Key/i);
   assert.match(worksheetHtml,/@media print/);
   for(const question of practice){
