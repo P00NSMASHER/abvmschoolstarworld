@@ -11,7 +11,6 @@ const skills = [
   {subject:'Reading / ELA',topic:'diagrams & labels',id:'diagrams-labels'},
   {subject:'Spelling / Handwriting',topic:'long o / Short )',id:'long-o'},
   {subject:'Reading / ELA',topic:'short vowels',id:'short-vowels'},
-  {subject:'Religion',topic:'Religion Ch. 4',id:'religion-chapter-4'},
 ];
 test('original owner-authorized teacher-topic question families have eight valid nonduplicate variants', () => {
   for (const {subject,topic,id} of skills) {
@@ -135,6 +134,10 @@ test('diagram-label practice withdraws without the source topic, requires exact 
 
 
 test('Religion Chapter 4 test receives scoped guide, worksheet, and correct answer keys', () => {
+  const family=matchCurriculumFamily('Religion','Religion Ch. 4');
+  assert.equal(family?.id,'religion-chapter-4');
+  assert.equal(family?.rolloutStatus,'APPROVED');
+  assert.equal([family.baseQuestion,...family.supplementalQuestions].length,8);
   const timestamp='2026-10-24T05:00:00.000Z';
   const sourceHash='teacher-pages-'+'4'.repeat(20);
   const pack={
