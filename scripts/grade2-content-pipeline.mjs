@@ -1828,6 +1828,7 @@ function addSkill(out, skill) {
     sourceBacked: true,
     ...(skill.evidenceContract ? { evidenceContract: structuredClone(skill.evidenceContract) } : {}),
     ...(skill.supplementalReference ? { supplementalReference: structuredClone(skill.supplementalReference) } : {}),
+    ...(skill.sourceChapters ? { sourceChapters: [...skill.sourceChapters] } : {}),
   });
 }
 
@@ -1861,6 +1862,7 @@ function questionFor(skill, raw) {
     hint: text(raw.hint),
     sourceFact,
     sourceEvidence: uniqueText(skill.evidence || []),
+    ...(raw.sourceChapters || skill.sourceChapters ? { sourceChapters: [...(raw.sourceChapters || skill.sourceChapters)] } : {}),
     ...(raw.supplementalReference || skill.supplementalReference ? { supplementalReference: structuredClone(raw.supplementalReference || skill.supplementalReference) } : {}),
     sourceMode,
     supportType: raw.supportType || 'deterministic_transform',
@@ -1938,6 +1940,8 @@ function detectBaseSkills(pack, skills, questions, curriculumOptions = {}) {
       standards: rule.standards,
       domain: rule.domain,
       evidenceContract: rule.evidenceContract,
+      sourceChapters: rule.sourceChapters,
+      supplementalReference: rule.supplementalReference,
     };
     addSkill(skills, skill);
     questions.push(questionFor(skill, rule.question()));
