@@ -11,6 +11,7 @@ const skills = [
   {subject:'Reading / ELA',topic:'diagrams & labels',id:'diagrams-labels'},
   {subject:'Spelling / Handwriting',topic:'long o / Short )',id:'long-o'},
   {subject:'Reading / ELA',topic:'short vowels',id:'short-vowels'},
+  {subject:'Religion',topic:'Religion Ch. 4',id:'religion-chapter-4'},
 ];
 test('original owner-authorized teacher-topic question families have eight valid nonduplicate variants', () => {
   for (const {subject,topic,id} of skills) {
