@@ -132,6 +132,81 @@ test('diagram-label practice withdraws without the source topic, requires exact 
   }),/lineage|page-exact/i);
 });
 
+
+test('Religion Chapter 4 test receives scoped guide, worksheet, and correct answer keys', () => {
+  const family=matchCurriculumFamily('Religion','Religion Ch. 4');
+  assert.equal(family?.id,'religion-chapter-4');
+  assert.equal(family?.rolloutStatus,'APPROVED');
+  assert.equal([family.baseQuestion,...family.supplementalQuestions].length,8);
+  const timestamp='2026-10-24T05:00:00.000Z';
+  const sourceHash='teacher-pages-'+'4'.repeat(20);
+  const pack={
+    sourceHash,
+    subjects:[{
+      subject:'Religion',
+      topics:['Religion Ch. 4'],
+      studyNotes:['The Tests page lists Religion Ch. 4 for Tuesday, Nov. 3.'],
+    }],
+    vocabulary:[],
+  };
+  const sourcePages=[{
+    title:'Tests',
+    url:'https://sites.google.com/view/abvmgr2/tests',
+    checkedAt:timestamp,
+    contentHash:'4'.repeat(64),
+    lines:['Tuesday, Nov. 3: Religion Ch. 4'],
+  }];
+  const out=buildGrade2ContentPipeline(pack,{
+    sourceHash,generatedAt:timestamp,sourcePages,requirePageExactLineage:true,
+  });
+  assert.equal(out.qa.status,'pass');
+  assert.equal(out.qa.rejectedCount,0);
+  const skill=out.skills.find(row=>row.id==='religion-chapter-4');
+  const practice=questionsForTest({label:'Religion Ch. 4',date:'2026-11-03'},out.questions);
+  assert(skill);
+  assert.equal(practice.length,8);
+  assert(practice.every(row=>row.skill==='religion-chapter-4'));
+  assert(practice.every(row=>row.sourceChapters?.includes(4)));
+  assert(practice.every(row=>row.sourceLineage?.quality==='page-exact'));
+  assert(practice.every(row=>row.sourceLineage?.sourceTitle==='Tests'));
+  assert(practice.every(row=>row.sourceMode==='CURATED_CONTEXT'));
+  assert.match(skill.studyNotes.join(' '),/Teacher-style supplemental practice/i);
+  assert.match(skill.studyNotes.join(' '),/Old Testament.*New Testament.*saint/i);
+  for(const question of practice){
+    assert.equal(question.choices.filter(choice=>choice===question.answer).length,1,question.id);
+    assert(question.explanation.length>20,question.id);
+  }
+
+  const guide={
+    label:'Religion Ch. 4',
+    date:'2026-11-03',
+    subject:'Religion',
+    facts:skill.studyNotes,
+    teacherFacts:[],
+    vocabulary:['Old Testament','New Testament','saint'],
+    practice,
+    warnings:[],
+    sourceLabel:'Current published ABVM test with teacher-style supplemental practice',
+    sourceCheckedAt:timestamp,
+    coverage:{missingGuideSkills:[]},
+  };
+  const guideHtml=printableStudyGuideHtml(guide);
+  const worksheetHtml=printableWorksheetHtml(guide);
+  assert.match(guideHtml,/God Speaks to Us/i);
+  assert.match(guideHtml,/Teacher-style supplemental practice/i);
+  assert.match(guideHtml,/@media screen and \(max-width:620px\)/);
+  assert.match(worksheetHtml,/Answer Key/i);
+  assert.match(worksheetHtml,/@media print/);
+  for(const question of practice){
+    assert(guideHtml.includes(question.prompt),question.id);
+    assert(worksheetHtml.includes(question.prompt),question.id);
+    assert(worksheetHtml.includes(question.answer),question.id);
+  }
+
+  const unrelated=out.questions.filter(row=>row.subject==='Religion'&&row.skill!=='religion-chapter-4');
+  assert.equal(unrelated.length,0);
+});
+
 test('service worker returns current test-routing modules online while preserving offline cache fallback', () => {
   const sw=readFileSync(new URL('../pages/sw.js',import.meta.url),'utf8');
   assert.match(sw,/study-hub-core\|study-materials/);

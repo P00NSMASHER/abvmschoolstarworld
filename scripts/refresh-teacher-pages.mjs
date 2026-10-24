@@ -424,14 +424,18 @@ for (const line of religionLines) {
   if (segments[0]) religionTopics.push(segments[0]);
   religionNotes.push(...segments.slice(1));
 }
+const religionTest = currentTests.find(item => /^religion\b|\bfaith\b/i.test(item.label));
 upsertSubject(subjects, /^Religion$/i, {
   subject: 'Religion',
-  topics: religionTopics,
-  studyNotes: religionNotes.map(note => cleanTeacherText(note
+  topics: [...religionTopics, ...(religionTest ? [religionTest.label] : [])],
+  studyNotes: [
+    ...religionNotes.map(note => cleanTeacherText(note
     .replace(/^\|+|\|+$/g, '')
     .replace(/---/g, ' — ')
     .replace(/\bhe tell us\b/i, 'he tells us')
     .replace(/\bresponsiblity\b/i, 'responsibility'))),
+    ...(religionTest ? [`The Tests page lists ${religionTest.label} for ${religionTest.date}.`] : []),
+  ],
 });
 
 const mathTest = currentTests.find(item => /subtraction|addition|math/i.test(item.label));
