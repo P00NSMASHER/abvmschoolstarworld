@@ -7,6 +7,7 @@ import { AUTHOR_OPINION_FAMILY } from './curriculum-families/author-opinion.mjs'
 import { LONG_O_FAMILY } from './curriculum-families/long-o.mjs';
 import { SHORT_VOWELS_FAMILY } from './curriculum-families/short-vowels.mjs';
 import { DIAGRAMS_LABELS_FAMILY } from './curriculum-families/diagrams-labels.mjs';
+import { RELIGION_CHAPTER_4_FAMILY } from './curriculum-families/religion-chapter-4.mjs';
 
 const FAMILY_REGISTRY = Object.freeze([
   Object.freeze({
@@ -137,6 +138,7 @@ const FAMILY_REGISTRY = Object.freeze([
   MATH_SUBTRACTION_FAMILY,
   CHART_READING_FAMILY,
   DIAGRAMS_LABELS_FAMILY,
+  RELIGION_CHAPTER_4_FAMILY,
   AUTHOR_OPINION_FAMILY,
   LONG_O_FAMILY,
   SHORT_VOWELS_FAMILY,
@@ -211,6 +213,8 @@ export function curriculumFamilyRegistrySnapshot() {
     requiredQuestionTypes: [...family.requiredQuestionTypes],
     teachCard: [...family.teachCard],
     assessmentPatterns: [...family.assessmentPatterns],
+    ...(family.sourceChapters ? { sourceChapters: [...family.sourceChapters] } : {}),
+    ...(family.supplementalReference ? { supplementalReference: clone(family.supplementalReference) } : {}),
   }));
 }
 
@@ -226,6 +230,8 @@ export function registeredCurriculumFamilyRules(options = {}) {
       domain: family.domain,
       studyNotes: [...family.studyNotes],
       question: () => clone(family.baseQuestion),
+      ...(family.sourceChapters ? { sourceChapters: [...family.sourceChapters] } : {}),
+      ...(family.supplementalReference ? { supplementalReference: clone(family.supplementalReference) } : {}),
     }));
 }
 
