@@ -37,6 +37,7 @@ test('unchanged Tuesday posting rechecked Wednesday is not newly assigned on Wed
   const rechecked={...verifiedPosting,checkedAt:'2026-10-14T12:00:00-04:00'};
   const actual=model.forDate(rechecked,'2026-10-14',new Date('2026-10-14T13:00:00-04:00'));
   assert.equal(actual.state,'outdated');
+  assert.equal(actual.reason,'undated-carryover');
   assert.equal(actual.firstObservedAt,verifiedPosting.firstObservedAt);
   assert.deepEqual([...actual.assignments],[]);
 });
@@ -118,4 +119,13 @@ test('empty homework status still fails closed on stale and future checks',()=>{
   assert.equal(model.forDate({...page,checkedAt:'2026-10-16T20:23:00.000Z'},'2026-10-17',now).state,'outdated');
   assert.equal(model.forDate({...page,checkedAt:'2026-10-17T12:10:00.000Z'},'2026-10-17',now).state,'outdated');
   assert.equal(model.forDate({...page,checkedAt:'2026-10-17T11:50:00.000Z'},'2026-10-17',now).state,'no-specific-posting');
+});
+
+test('outdated Homework distinguishes a stale check from a checked undated carryover',()=>{
+  const now=new Date('2026-10-14T13:00:00-04:00');
+  const stale=model.forDate({...verifiedPosting,checkedAt:'2026-10-13T12:00:00-04:00',
+    firstObservedAt:'2026-10-13T10:00:00-04:00',contentChangedAt:'2026-10-13T10:00:00-04:00'},'2026-10-14',now);
+  const checked=model.forDate({...verifiedPosting,checkedAt:'2026-10-14T12:00:00-04:00'},'2026-10-14',now);
+  assert.equal(stale.reason,'verification-stale');
+  assert.equal(checked.reason,'undated-carryover');
 });
