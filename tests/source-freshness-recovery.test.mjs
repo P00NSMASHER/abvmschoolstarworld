@@ -169,6 +169,14 @@ test('live watchdog enforces complete JSON parity and the recovery event is repo
   assert.match(workflow,/count >= 2/);
 });
 
+test('late-night Homework misses receive two independent post-grace recovery wake-ups',()=>{
+  const recovery=readFileSync(new URL('../.github/workflows/daily-source-recovery.yml',import.meta.url),'utf8');
+  const watchdog=readFileSync(new URL('../.github/workflows/refresh-health.yml',import.meta.url),'utf8');
+  assert.match(recovery,/- cron: '59 0 \* \* \*'\n\s+timezone: 'America\/New_York'/);
+  assert.match(watchdog,/- cron: '53 0 \* \* \*'\n\s+timezone: 'America\/New_York'/);
+  assert.match(recovery,/workflow_run:\s+workflows:\s+- Monitor ABVM refresh health\s+types: \[completed\]/);
+});
+
 test('six same-day successful dispatches cannot start a watchdog feedback loop',()=>{
   const result=dispatchRecovery(Array.from({length:6},()=>recoveryRun('success')));
   assert.equal(result.status,1);
