@@ -4,7 +4,7 @@ export const RELIGION_CHAPTER_4_FAMILY = Object.freeze({
   label: 'Chapter 4: God Speaks to Us',
   patternSource: '\\breligion\\s+(?:chapter|ch\\.?)\\s*4\\b|\\bchapter\\s*4\\s*:\\s*god speaks to us\\b',
   patternFlags: 'i',
-  standards: Object.freeze(['NCEA.IF.2.1']),
+  standards: Object.freeze(['ABVM.RELIGION.CURRENT']),
   domain: 'Catholic faith and Scripture',
   studyNotes: Object.freeze([
     'Chapter 4 is “God Speaks to Us.” We listen for God’s Word in the Bible, at church, and at home.',
