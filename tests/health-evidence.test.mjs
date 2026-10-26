@@ -262,8 +262,8 @@ test('the complete dashboard turns critical for stale homework despite healthy w
   try{
     for(const dir of ['scripts','pages/data'])mkdirSync(join(root,dir),{recursive:true});
     for(const file of ['scripts/build-health-report.mjs','scripts/publication-parity-health.mjs','scripts/health-evidence.mjs',
-      'scripts/source-freshness-recovery.mjs','scripts/refresh-controller.mjs',
-      'scripts/school-week-label.mjs','pages/sw.js','package.json']){
+      'scripts/source-freshness-recovery.mjs','scripts/refresh-controller.mjs','scripts/lunch-publication.mjs',
+      'scripts/school-week-label.mjs','pages/sw.js','pages/data/lunch-catalog.json','pages/data/uploaded-notices.json','package.json']){
       copyFileSync(new URL('../'+file,import.meta.url),join(root,file));
     }
     const now=new Date().toISOString();
@@ -275,6 +275,8 @@ test('the complete dashboard turns critical for stale homework despite healthy w
     pack.pack.teacherPostingWeekLabel=schoolWeekLabel(now);
     pack.pack.weekLabel=schoolWeekLabel(now,{calendarDisplay:true});
     pack.pack.lunchArchive=displayedSchoolWeekDates(now).map(date=>({date}));
+    pack.pack.lunchMenuSource.weekStart=displayedSchoolWeekDates(now)[0];
+    pack.pack.lunchMenuSource.weekEnd=displayedSchoolWeekDates(now).at(-1);
     // This test controls health inputs; a future teacher topic must not alter
     // its intentionally healthy pipeline baseline.
     pack.pack.contentPipeline={safetyState:'READY',coverage:[],

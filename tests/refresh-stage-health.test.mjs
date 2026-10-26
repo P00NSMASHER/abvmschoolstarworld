@@ -111,8 +111,8 @@ test('actual dashboard distinguishes verified pending publication from an unreso
   try{
     for(const dir of ['scripts','pages/data'])mkdirSync(join(root,dir),{recursive:true});
     for(const file of ['scripts/build-health-report.mjs','scripts/publication-parity-health.mjs','scripts/health-evidence.mjs',
-      'scripts/source-freshness-recovery.mjs','scripts/refresh-controller.mjs','scripts/refresh-stage-health.mjs',
-      'scripts/school-week-label.mjs','pages/sw.js','package.json']){
+      'scripts/source-freshness-recovery.mjs','scripts/refresh-controller.mjs','scripts/lunch-publication.mjs','scripts/refresh-stage-health.mjs',
+      'scripts/school-week-label.mjs','pages/sw.js','pages/data/lunch-catalog.json','pages/data/uploaded-notices.json','package.json']){
       copyFileSync(new URL('../'+file,import.meta.url),join(root,file));
     }
     const ago=seconds=>new Date(Date.now()-seconds*1000).toISOString();
@@ -126,6 +126,8 @@ test('actual dashboard distinguishes verified pending publication from an unreso
     pack.pack.teacherPostingWeekLabel=schoolWeekLabel(now);
     pack.pack.weekLabel=schoolWeekLabel(now,{calendarDisplay:true});
     pack.pack.lunchArchive=displayedSchoolWeekDates(now).map(date=>({date}));
+    pack.pack.lunchMenuSource.weekStart=displayedSchoolWeekDates(now)[0];
+    pack.pack.lunchMenuSource.weekEnd=displayedSchoolWeekDates(now).at(-1);
     pack.pack.contentPipeline={safetyState:'READY',coverage:[],qa:{status:'pass',skillCount:1,questionCount:1,unsupportedSkillCount:0}};
     pack.pack.lunchMenuSource.retrievalState='verified';
     const write=(name,data)=>writeFileSync(join(root,name),JSON.stringify(data));
