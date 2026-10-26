@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 import { easternSchoolDay, reconcileScheduledSources, scheduledSourceDue } from './refresh-controller.mjs';
+import {validateLunchPublication} from './lunch-publication.mjs';
 export { easternSchoolDay, scheduledSourceDue, reconcileScheduledSources } from './refresh-controller.mjs';
 
 function checkedWithinSchoolSchedule(value, now, maximumHours, kind) {
@@ -49,6 +50,16 @@ function publishedHomeworkMatches(repo, live) {
     && JSON.stringify(repo) === JSON.stringify(live);
 }
 
+// A fresh teacher timestamp cannot certify a lunch publication from last week.
+// Compare the entire reviewed weekly menu and its content hash with the pinned
+// catalog. A disagreement requests only the isolated, guarded lunch writer.
+export function reviewedLunchWeekReady(curriculum,now) {
+  const date=new Date(now);
+  if(!Number.isFinite(date.getTime()))return false;
+  try{return validateLunchPublication(curriculum?.pack||{},{now:date}).length===0;}
+  catch{return false;}
+}
+
 /** Read-only decision: an unavailable source is never treated as confirmed. */
 export function assessDailySchoolSources({
   now, curriculum, homework, publishedCurriculum, publishedHomework,
@@ -60,6 +71,7 @@ export function assessDailySchoolSources({
   const homeworkFresh = homework?.schemaVersion === 1
     && ['assignments', 'no-homework', 'no-specific-posting'].includes(homework.status)
     && checkedWithinSchoolSchedule(homework.checkedAt, now, 8, 'homework');
+  const reviewedLunchWeekCurrent=reviewedLunchWeekReady(curriculum,now);
   const curriculumLiveMatches = curriculumLiveAvailable
     ? publishedCurriculumMatches(curriculum, publishedCurriculum) : null;
   const homeworkLiveMatches = homeworkLiveAvailable
@@ -68,6 +80,8 @@ export function assessDailySchoolSources({
     easternDate: easternSchoolDay(now),
     curriculumFresh,
     homeworkFresh,
+    reviewedLunchWeekCurrent,
+    refreshReviewedLunch:!reviewedLunchWeekCurrent,
     curriculumLiveMatches,
     homeworkLiveMatches,
     refreshCurriculum: !curriculumFresh,

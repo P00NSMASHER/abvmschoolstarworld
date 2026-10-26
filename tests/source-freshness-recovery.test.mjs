@@ -1,16 +1,30 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { assessDailySchoolSources, easternSchoolDay, probeOfficialHomework, applyOfficialHomeworkObservation } from '../scripts/source-freshness-recovery.mjs';
+import { assessDailySchoolSources, reviewedLunchWeekReady, easternSchoolDay, probeOfficialHomework, applyOfficialHomeworkObservation } from '../scripts/source-freshness-recovery.mjs';
 import {summarizeTeacherHomework} from '../scripts/homework-posting.mjs';
+import {reconcileScheduledSources} from '../scripts/refresh-controller.mjs';
+import {CATALOG, catalogMeals, schoolWeek, lunchDigest} from '../scripts/lunch-publication.mjs';
 
 const DAYS = ['Home', 'Homework', 'Reading Work', 'Weekly Spelling List', 'Tests', 'Religion'];
 function teacherPack(stamp = '2026-10-15T14:00:00Z') {
+  const at=Number.isFinite(Date.parse(stamp))?new Date(stamp):new Date('2026-10-15T14:00:00Z');
+  const dates=schoolWeek(at);
+  const menu=catalogMeals().filter(row=>dates.includes(row.date));
+  const pack={
+    sourceSufficient: true,sourceCheckedAt:stamp,
+    sourceHash:'teacher-pages-current',uploadedNoticeHash:'reviewed-notices-current',
+    lunchMenu:menu,
+    lunchMenuSource:{
+      school:CATALOG.school,provider:CATALOG.provider,
+      weekStart:dates[0],weekEnd:dates.at(-1),
+      retrievalState:'unavailable',missingDates:dates.filter(day=>!menu.some(row=>row.date===day)),
+    },
+  };
+  pack.lunchMenuHash=lunchDigest(pack);
   return {
-    delivery: 'verified',
-    sourceLastCheckedAt: stamp,
-    sourcePages: DAYS.map(title => ({title, checkedAt: stamp, contentHash: title + '-hash'})),
-    pack: {sourceSufficient: true, sourceCheckedAt: stamp,
-      sourceHash: 'teacher-pages-current', uploadedNoticeHash: 'reviewed-notices-current'},
+    delivery:'verified',sourceLastCheckedAt:stamp,
+    sourcePages:DAYS.map(title=>({title,checkedAt:stamp,contentHash:title+'-hash'})),
+    pack,
   };
 }
 function homework(stamp = '2026-10-15T17:00:00Z') {
@@ -30,6 +44,40 @@ test('one successful check each school day is enough without teacher or educator
   assert.equal(status.refreshHomework,false);
   assert.equal(status.redeploy,false);
   assert.deepEqual(status.caution,[]);
+});
+
+test('Monday lunch rollover dispatches the isolated writer while teacher and Homework sources remain fresh',()=>{
+  const now='2026-10-26T11:05:00Z';
+  const curriculum=teacherPack('2026-10-25T22:47:24Z');
+  const assignments=homework('2026-10-26T10:23:00Z');
+  const status=assessDailySchoolSources({now,curriculum,homework:assignments,
+    publishedCurriculum:structuredClone(curriculum),publishedHomework:structuredClone(assignments)});
+  assert.equal(status.curriculumFresh,true,'Sunday teacher check remains fresh before Monday grace expires');
+  assert.equal(status.homeworkFresh,true);
+  assert.equal(status.reviewedLunchWeekCurrent,false);
+  assert.equal(status.refreshCurriculum,false);
+  assert.equal(status.refreshHomework,false);
+  assert.equal(status.refreshReviewedLunch,true);
+  assert.equal(status.redeploy,false);
+  const plan=reconcileScheduledSources(status,{
+    now,checkedAt:{curriculum:curriculum.sourceLastCheckedAt,homework:assignments.checkedAt},
+  });
+  assert.equal(plan.phase,'refresh-required');
+  assert.equal(plan.refreshReviewedLunch,true);
+  assert.equal(plan.refreshCurriculum,false);
+});
+
+test('a changed or missing reviewed lunch row cannot be disguised by correct week dates',()=>{
+  const now='2026-10-26T13:00:00Z';
+  const curriculum=teacherPack('2026-10-26T12:00:00Z');
+  assert.equal(reviewedLunchWeekReady(curriculum,now),true);
+  curriculum.pack.lunchMenu[0].items=['Unreviewed lunch'];
+  assert.equal(reviewedLunchWeekReady(curriculum,now),false);
+  const status=assessDailySchoolSources({now,curriculum,homework:homework('2026-10-26T12:05:00Z')});
+  assert.equal(status.refreshReviewedLunch,true);
+  assert.equal(status.refreshCurriculum,false,'do not refresh unrelated teacher content');
+  assert.equal(reviewedLunchWeekReady({pack:{}},now),false,'missing lunch proof must not be accepted');
+  assert.equal(reviewedLunchWeekReady(curriculum,'invalid-date'),false);
 });
 
 test('an unchanged teacher source still needs a check on the next Eastern day', () => {
@@ -239,4 +287,19 @@ test('inaccessible or redirected Homework source cannot invent a verified change
   assert.equal(result.refreshHomework,false);
   assert.equal(result.officialHomeworkChanged,null);
   assert.deepEqual(result.caution,['official-homework-unavailable']);
+});
+
+test('reviewed lunch cron and bounded watchdog recovery are independently wired',()=>{
+  const lunch=readFileSync(new URL('../.github/workflows/refresh-reviewed-lunch-week.yml',import.meta.url),'utf8');
+  const recovery=readFileSync(new URL('../.github/workflows/daily-source-recovery.yml',import.meta.url),'utf8');
+  const pages=readFileSync(new URL('../.github/workflows/pages.yml',import.meta.url),'utf8');
+  assert.match(lunch,/cron: '11 0 \* \* \*'/);
+  assert.match(lunch,/cron: '37 5 \* \* 1'/);
+  assert.match(lunch,/node scripts\/refresh-reviewed-lunch\.mjs --write/);
+  assert.match(lunch,/npm run qa/);
+  assert.match(lunch,/git push origin HEAD:main/);
+  assert.match(lunch,/reconcile_latest_main: true/);
+  assert.match(recovery,/maybe_dispatch refresh-reviewed-lunch-week\.yml "\$lunch"/);
+  assert.match(recovery,/&& "\$lunch" == false/);
+  assert.match(pages,/Roll forward ABVM reviewed lunch week/);
 });
