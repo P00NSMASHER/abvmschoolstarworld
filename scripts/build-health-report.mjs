@@ -14,6 +14,7 @@ const cancelledRefreshJobsPath=process.env.REFRESH_CANCELLED_JOBS_FILE;
 const refreshStageJobsPath=process.env.REFRESH_STAGE_JOBS_FILE;
 const openPullsPath=process.env.OPEN_PULLS_FILE;
 const publicationsPath=process.env.HOMEWORK_PUBLICATIONS_FILE;
+const lunchPublicationsPath=process.env.LUNCH_PUBLICATIONS_FILE;
 const mainBranchPath=process.env.MAIN_BRANCH_FILE;
 const runs=runsPath?JSON.parse(readFileSync(runsPath,"utf8")).workflow_runs||[]:[];
 const refreshJobsData=refreshJobsPath?JSON.parse(readFileSync(refreshJobsPath,"utf8")):{run_id:null,jobs:[]};
@@ -21,6 +22,7 @@ const cancelledRefreshJobsData=cancelledRefreshJobsPath?JSON.parse(readFileSync(
 const refreshStageJobs=refreshStageJobsPath?JSON.parse(readFileSync(refreshStageJobsPath,"utf8")):{run_id:null,jobs:[]};
 const openPulls=openPullsPath?JSON.parse(readFileSync(openPullsPath,"utf8")):[];
 const homeworkPublications=publicationsPath?JSON.parse(readFileSync(publicationsPath,"utf8")):[];
+const lunchPublications=lunchPublicationsPath?JSON.parse(readFileSync(lunchPublicationsPath,"utf8")):[];
 const mainBranchEvidence=mainBranchPath?JSON.parse(readFileSync(mainBranchPath,"utf8")):null;
 const liveParityPath=process.env.SOURCE_RECOVERY_PLAN_FILE;
 const publicationParity=assessPublicationParity(liveParityPath?JSON.parse(readFileSync(liveParityPath,"utf8")):null);
@@ -33,6 +35,7 @@ const workflowNames={
   deploy:"Deploy ABVM to GitHub Pages",
   watchdog:"Monitor ABVM refresh health",
   homework:"Refresh current ABVM homework",
+  lunch:"Roll forward ABVM reviewed lunch week",
 };
 const runEvidenceAt=run=>Date.parse(run?.updated_at||run?.created_at||0)||0;
 const runCreatedAt=run=>Date.parse(run?.created_at||0)||0;
@@ -118,6 +121,7 @@ const status={
   workflows:{
     refresh:{latest:latest(workflowNames.refresh),latestCreated:latestCreated(workflowNames.refresh),latestCompleted:latestCompleted(workflowNames.refresh),latestDecisive:latestDecisive(workflowNames.refresh),latestSuccess:latestSuccess(workflowNames.refresh)},
     homework:{latest:latest(workflowNames.homework),latestCreated:latestCreated(workflowNames.homework),latestCompleted:latestCompleted(workflowNames.homework),latestDecisive:latestDecisive(workflowNames.homework),latestSuccess:latestSuccess(workflowNames.homework)},
+    lunch:{latest:latest(workflowNames.lunch),latestCreated:latestCreated(workflowNames.lunch),latestCompleted:latestCompleted(workflowNames.lunch),latestDecisive:latestDecisive(workflowNames.lunch),latestSuccess:latestSuccess(workflowNames.lunch)},
     qa:{latest:latest(workflowNames.qa),latestCreated:latestCreated(workflowNames.qa),latestCompleted:latestCompleted(workflowNames.qa),latestDecisive:latestDecisive(workflowNames.qa),latestSuccess:latestSuccess(workflowNames.qa)},
     deploy:{latest:latest(workflowNames.deploy),latestCreated:latestCreated(workflowNames.deploy),latestCompleted:latestCompleted(workflowNames.deploy),latestDecisive:latestDecisive(workflowNames.deploy),latestSuccess:latestSuccess(workflowNames.deploy)},
     watchdog:{latest:latest(workflowNames.watchdog),latestCreated:latestCreated(workflowNames.watchdog),latestCompleted:latestCompleted(workflowNames.watchdog),latestDecisive:latestDecisive(workflowNames.watchdog),latestSuccess:latestSuccess(workflowNames.watchdog)},
@@ -138,6 +142,8 @@ const effectivePublicationRun=()=>selectPublicationEvidence(
   effectiveRun(status.workflows.deploy),
   effectiveRun(status.workflows.refresh),
   homeworkPublications.filter(run=>run.head_branch==="main"&&run.name===workflowNames.homework&&
+    Number.isInteger(run.publisherJobId)).sort((a,b)=>runEvidenceAt(b)-runEvidenceAt(a))[0]||null,
+  lunchPublications.filter(run=>run.head_branch==="main"&&run.name===workflowNames.lunch&&
     Number.isInteger(run.publisherJobId)).sort((a,b)=>runEvidenceAt(b)-runEvidenceAt(a))[0]||null
 );
 status.publicationEvidence=effectivePublicationRun();
@@ -302,6 +308,7 @@ const md=[
   `- **Guarded refresh race recovery:** ${status.refreshRecovery?"verified by publication "+status.refreshRecovery.publisherRunId+" and watchdog "+status.refreshRecovery.watchdogRunId:"not established"}`,
   `- **Cancelled publisher recovery:** ${status.cancelledRefreshRecovery?"verified by publication "+status.cancelledRefreshRecovery.publisherRunId+" and watchdog "+status.cancelledRefreshRecovery.watchdogRunId:"not established"}`,
   line("Homework refresh",effectiveRun(status.workflows.homework)),
+  line("Reviewed lunch rollover",effectiveRun(status.workflows.lunch)),
   line("App QA",effectiveRun(status.workflows.qa)),
   line("Publication evidence",status.publicationEvidence),
   line("Standalone Pages deploy",effectiveRun(status.workflows.deploy)),

@@ -4,7 +4,7 @@ import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {publicationRunFromJobs,workflowEvidenceAt} from './health-evidence.mjs';
 
-const workflows=['sync-study-pack.yml','qa.yml','pages.yml','refresh-health.yml','refresh-current-homework.yml'];
+const workflows=['sync-study-pack.yml','qa.yml','pages.yml','refresh-health.yml','refresh-current-homework.yml','refresh-reviewed-lunch-week.yml'];
 export async function collectHealthHistory({repository,fetchJson}){
   if(!/^[\w.-]+\/[\w.-]+$/.test(repository||''))throw new Error('Invalid health repository');
   const root=`repos/${repository}`;
@@ -43,7 +43,13 @@ export async function collectHealthHistory({repository,fetchJson}){
     const publication=publicationRunFromJobs(run,await jobsFor(run));
     if(publication){homeworkPublications.push(publication);break;}
   }
-  return {runs:{workflow_runs:runs},refreshJobs,cancelledRefreshJobs,refreshStageJobs,homeworkPublications};
+  const lunchPublications=[];
+  const lunches=runs.filter(run=>run.name==='Roll forward ABVM reviewed lunch week'&&run.status==='completed').slice(0,10);
+  for(const run of lunches){
+    const publication=publicationRunFromJobs(run,await jobsFor(run));
+    if(publication){lunchPublications.push(publication);break;}
+  }
+  return {runs:{workflow_runs:runs},refreshJobs,cancelledRefreshJobs,refreshStageJobs,homeworkPublications,lunchPublications};
 }
 
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
@@ -54,5 +60,6 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
   for(const [file,data] of [['workflow-runs.json',result.runs],['refresh-jobs.json',result.refreshJobs],
     ['cancelled-refresh-jobs.json',result.cancelledRefreshJobs],
     ['refresh-stage-jobs.json',result.refreshStageJobs],
-    ['homework-publications.json',result.homeworkPublications]])writeFileSync(file,JSON.stringify(data,null,2)+'\n');
+    ['homework-publications.json',result.homeworkPublications],
+    ['lunch-publications.json',result.lunchPublications]])writeFileSync(file,JSON.stringify(data,null,2)+'\n');
 }

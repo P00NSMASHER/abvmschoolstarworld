@@ -15,6 +15,7 @@ test('workflow history retains each production lane despite a burst of unrelated
  assert.deepEqual(result.runs.workflow_runs.map(r=>r.id).sort(),[1,2]);
  assert.deepEqual(result.refreshJobs,{run_id:null,jobs:[]});
  assert.deepEqual(result.homeworkPublications,[]);
+ assert.deepEqual(result.lunchPublications,[]);
 });
 
 test('history skips no-publication checks and binds the first actual Homework publisher jobs',async()=>{
@@ -50,4 +51,21 @@ test('a newer active refresh cannot change the binding of fetched failure steps'
  }});
  assert.equal(result.refreshJobs.run_id,1);
  assert.equal(result.refreshJobs.jobs[0].steps[0].name,'Commit refreshed pack against latest main');
+});
+
+test('history only recognizes actual, bound independent lunch Pages publisher jobs',async()=>{
+ const result=await history.collectHealthHistory({repository:repo,fetchJson:async path=>{
+  if(path.includes('/workflows/refresh-reviewed-lunch-week.yml/'))return {workflow_runs:[
+   {id:12,name:'Roll forward ABVM reviewed lunch week',head_branch:'main',status:'completed',conclusion:'success',updated_at:'2026-10-26T15:40:00Z'},
+  ]};
+  if(path.includes('/workflows/'))return {workflow_runs:[]};
+  if(path.includes('/runs/12/jobs?'))return {jobs:[{
+    id:13,run_id:12,name:'Release published reviewed lunches through guarded Pages / deploy',
+    status:'completed',conclusion:'failure',completed_at:'2026-10-26T15:40:00Z',steps:[],
+  }]};
+  throw Error('Unrecognized history request '+path);
+ }});
+ assert.equal(result.lunchPublications.length,1);
+ assert.equal(result.lunchPublications[0].publisherJobId,13);
+ assert.equal(result.lunchPublications[0].conclusion,'failure','failed release must remain red');
 });
