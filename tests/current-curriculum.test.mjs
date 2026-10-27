@@ -287,8 +287,21 @@ test('soft c and g test receives source-backed guide, worksheet, and correct ans
 
   const withdrawn=buildGrade2ContentPipeline({
     ...pack,
-    subjects:[{subject:'Spelling / Handwriting',topics:['Friday, Oct. 30 handwriting practice'],studyNotes:[]}],
-  },{sourceHash,generatedAt:timestamp,sourcePages,requirePageExactLineage:true});
+    subjects:[
+      {subject:'Spelling / Handwriting',topics:['Friday, Oct. 30 handwriting practice'],studyNotes:[]},
+      {subject:'Reading / ELA',topics:['Reading comprehension: Main idea / details'],studyNotes:[]},
+    ],
+  },{
+    sourceHash,generatedAt:timestamp,
+    sourcePages:[...sourcePages,{
+      title:'Reading Work',
+      url:'https://sites.google.com/view/abvmgr2/reading-work',
+      checkedAt:timestamp,
+      contentHash:'7'.repeat(64),
+      lines:['Reading comprehension: Main idea / details'],
+    }],
+    requirePageExactLineage:true,
+  });
   assert(!withdrawn.skills.some(row=>row.id==='soft-c-g'));
   assert(!withdrawn.questions.some(row=>row.skill==='soft-c-g'));
 });
