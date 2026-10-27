@@ -235,7 +235,9 @@ function noBankWorksheet(guide){
   return decoratePaper(htmlHead(guide,'Practice worksheet')+paper+'</body></html>',kindOf(guide));
 }
 export function renderTestWorksheet(guide,dictionary=()=> ''){
-  if(kindOf(guide)==='spelling')return dictationWorksheet(guide);
-  if(!rows(guide?.practice).length)return noBankWorksheet(guide);
+  const practice=rows(guide?.practice);
+  const hasVerifiedSpellingList=unique(guide?.spellingWords).length>0;
+  if(kindOf(guide)==='spelling'&&(!practice.length||hasVerifiedSpellingList))return dictationWorksheet(guide);
+  if(!practice.length)return noBankWorksheet(guide);
   return renderClassroomStudyGuide(guide,dictionary);
 }
