@@ -13,7 +13,7 @@ const teacherSourcePages=[
  {title:'Religion',url:'https://sites.google.com/view/abvmgr2/religion',checkedAt,contentHash:'religion-verification-hash',
   lines:[...religion.topics,...religion.studyNotes]},
  {title:'Tests',url:'https://sites.google.com/view/abvmgr2/tests',checkedAt,contentHash:'tests-verification-hash',
-  lines:['Tuesday Oct. 27: Math (place value, expanded form)','Thursday Oct. 29: Grammar (common & proper nouns)','Friday Oct. 23: Spelling (long/short u)/Handwriting']},
+  lines:['Tuesday Oct. 27: Math (place value, expanded form)','Thursday Oct. 29: Grammar (common & proper nouns)','Friday Oct. 23: Spelling (long/short u)/Handwriting','Friday Oct. 30: Spelling (soft c and g) / Handwriting']},
  {title:'Weekly Spelling List',url:'https://sites.google.com/view/abvmgr2/weekly-spelling-list',checkedAt,contentHash:'spelling-verification-hash',
   lines:['Skill: short and long u']},
 ];
