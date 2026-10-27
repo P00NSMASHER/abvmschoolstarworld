@@ -132,6 +132,23 @@ export function teacherContentLines(lines, pageTitle = '') {
     });
 }
 
+function trimUnmatchedTrailingDelimiters(value) {
+  let text = String(value || '').trim();
+  const pairs = [['(', ')'], ['[', ']'], ['{', '}']];
+
+  // The source hash still binds the teacher's exact wording. This normalization
+  // only prevents a stray trailing closer from becoming part of a public title.
+  while (text) {
+    const pair = pairs.find(([open, close]) =>
+      text.endsWith(close)
+      && [...text].filter(char => char === close).length > [...text].filter(char => char === open).length
+    );
+    if (!pair) break;
+    text = text.slice(0, -1).trimEnd();
+  }
+  return text;
+}
+
 export function parseStoryTitles(value) {
   const normalized = String(value || '')
     .replace(/[“”]/g, '"')
@@ -139,14 +156,18 @@ export function parseStoryTitles(value) {
     .replace(/\s+/g, ' ')
     .trim();
   const quoted = [...normalized.matchAll(/["']([^"']+?)["']/g)]
-    .map(match => match[1].trim())
+    .map(match => trimUnmatchedTrailingDelimiters(match[1]))
     .filter(Boolean);
   if (quoted.length >= 2) return [...new Set(quoted)];
 
-  const cleaned = normalized.replace(/^["']+|["']+$/g, '').trim();
+  const cleaned = trimUnmatchedTrailingDelimiters(
+    normalized.replace(/^["']+|["']+$/g, '').trim()
+  );
   const pieces = cleaned
     .split(/["']+\s+["']?(?=[A-Z])/)
-    .map(part => part.replace(/^["']+|["']+$/g, '').trim())
+    .map(part => trimUnmatchedTrailingDelimiters(
+      part.replace(/^["']+|["']+$/g, '').trim()
+    ))
     .filter(Boolean);
   return [...new Set(pieces.length ? pieces : [cleaned].filter(Boolean))];
 }
