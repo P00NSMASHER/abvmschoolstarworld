@@ -244,6 +244,7 @@ test('soft c and g test receives source-backed guide, worksheet, and correct ans
   const skill=out.skills.find(row=>row.id==='soft-c-g');
   const practice=questionsForTest({label:'Spelling (soft c and g) / Handwriting',date:'2026-10-30'},out.questions);
   assert(skill);
+  assert.equal(out.qa.unsupportedSkillCount,0);
   assert.equal(practice.length,3);
   assert(practice.every(row=>row.skill==='soft-c-g'));
   assert(practice.every(row=>row.sourceLineage?.quality==='page-exact'));
@@ -281,4 +282,11 @@ test('soft c and g test receives source-backed guide, worksheet, and correct ans
     assert(worksheetHtml.includes(question.prompt),question.id);
     assert(worksheetHtml.includes(question.answer),question.id);
   }
+
+  const withdrawn=buildGrade2ContentPipeline({
+    ...pack,
+    subjects:[{subject:'Spelling / Handwriting',topics:['Friday, Oct. 30 handwriting practice'],studyNotes:[]}],
+  },{sourceHash,generatedAt:timestamp,sourcePages,requirePageExactLineage:true});
+  assert(!withdrawn.skills.some(row=>row.id==='soft-c-g'));
+  assert(!withdrawn.questions.some(row=>row.skill==='soft-c-g'));
 });
