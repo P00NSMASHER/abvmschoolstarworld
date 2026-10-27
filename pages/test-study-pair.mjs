@@ -239,5 +239,5 @@ export function renderTestWorksheet(guide,dictionary=()=> ''){
   const hasVerifiedSpellingList=unique(guide?.spellingWords).length>0;
   if(kindOf(guide)==='spelling'&&(!practice.length||hasVerifiedSpellingList))return dictationWorksheet(guide);
   if(!practice.length)return noBankWorksheet(guide);
-  return renderClassroomStudyGuide(guide,dictionary);
+  return renderClassroomStudyGuide(guide,dictionary,{forcePracticePacket:true});
 }
