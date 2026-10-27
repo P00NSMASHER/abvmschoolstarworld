@@ -62,7 +62,7 @@ test('closure text is explicit and a missing event time is never invented',()=>{
 });
 test('calendar redesign is admitted to unchanged fail-closed source parity',()=>{
   const workflow=fs.readFileSync(new URL('../.github/workflows/preview-source-parity.yml',import.meta.url),'utf8');
-  assert.ok(workflow.includes("github.head_ref == 'design/calendar-reimagined-20261012'"));
+  assert.ok(workflow.includes("startsWith(github.head_ref, 'design/calendar-')"));
   assert.ok(workflow.includes('node scripts/assert-release-preview-parity.mjs'));
   assert.ok(workflow.includes('persist-credentials: false'));
 });

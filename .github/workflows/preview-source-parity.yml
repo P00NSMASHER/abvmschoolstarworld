@@ -14,10 +14,17 @@ concurrency:
 
 jobs:
   source-parity:
-    # Validate both integration heads and all three explicitly authorized review layers.
-    # Every nested Calendar PR must execute the authoritative school-source gate.
-    # Held PR #270 must also prove school-data parity on its exact review head.
-    if: github.head_ref == 'curriculum-candidate-gaps-d1be1039a3249f0be976e785' || github.base_ref == 'curriculum-candidate-gaps-d1be1039a3249f0be976e785' || github.head_ref == 'ux/calendar-summary-day-jump-20261013' || github.base_ref == 'ux/calendar-summary-day-jump-20261013' || github.head_ref == 'design/calendar-reimagined-20261012' || github.base_ref == 'design/calendar-reimagined-20261012' || github.event_name == 'workflow_dispatch' || github.head_ref == 'release/abvm-unified-preview-20261009' || github.base_ref == 'release/abvm-unified-preview-20261009' || github.base_ref == 'ux/calendar-focus-scroll-20261010' || github.base_ref == 'ux/calendar-date-wayfinding-20261010' || github.head_ref == 'release/abvm-premium-privacy-integration-20261010' || github.base_ref == 'release/abvm-premium-privacy-integration-20261010' || github.base_ref == 'qa/abvm-exact-review-head-20261010' || github.head_ref == 'release/abvm-premium-single-release-review-20261011' || github.base_ref == 'release/abvm-premium-single-release-review-20261011' || github.head_ref == 'integration/abvm-premium-schoolwork-qa-20261011' || github.base_ref == 'integration/abvm-premium-schoolwork-qa-20261011' || github.head_ref == 'schoolwork/review-readiness-audit-20261011' || github.base_ref == 'schoolwork/review-readiness-audit-20261011' || github.head_ref == 'schoolwork/private-photo-evidence-verification-20261011' || github.base_ref == 'schoolwork/private-photo-evidence-verification-20261011' || github.head_ref == 'schoolwork/offline-review-workbook-20261011' || github.base_ref == 'schoolwork/offline-review-workbook-20261011' || github.head_ref == 'release/abvm-schoolwork-final-candidate-20261011' || github.base_ref == 'release/abvm-schoolwork-final-candidate-20261011'
+    # Review lanes are stable namespaces; do not keep a dated PR allowlist.
+    # Source-changing intake/fix PRs retain their separate source/provenance QA.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      startsWith(github.head_ref, 'release/') || startsWith(github.base_ref, 'release/') ||
+      startsWith(github.head_ref, 'integration/') || startsWith(github.base_ref, 'integration/') ||
+      startsWith(github.head_ref, 'schoolwork/') || startsWith(github.base_ref, 'schoolwork/') ||
+      startsWith(github.head_ref, 'ux/calendar-') || startsWith(github.base_ref, 'ux/calendar-') ||
+      startsWith(github.head_ref, 'design/calendar-') || startsWith(github.base_ref, 'design/calendar-') ||
+      startsWith(github.head_ref, 'qa/') || startsWith(github.base_ref, 'qa/') ||
+      startsWith(github.head_ref, 'curriculum-candidate-') || startsWith(github.base_ref, 'curriculum-candidate-')
     runs-on: ubuntu-latest
     timeout-minutes: 6
     steps:

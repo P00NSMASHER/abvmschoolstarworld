@@ -18,10 +18,14 @@ export async function collectHealthHistory({repository,fetchJson}){
   }
   const runs=[...byId.values()].sort((a,b)=>workflowEvidenceAt(b)-workflowEvidenceAt(a));
   const failed=runs.find(run=>run.name==='Refresh ABVM teacher pages'&&run.conclusion==='failure');
+  const jobCache=new Map();
   const jobsFor=async run=>{
+    if(jobCache.has(run.id))return jobCache.get(run.id);
     const data=await fetchJson(`${root}/actions/runs/${run.id}/jobs?per_page=100`);
     if(!Array.isArray(data?.jobs))throw new Error('Missing workflow job evidence');
-    return {run_id:run.id,jobs:data.jobs};
+    const evidence={run_id:run.id,jobs:data.jobs};
+    jobCache.set(run.id,evidence);
+    return evidence;
   };
   const refreshJobs=failed?await jobsFor(failed):{run_id:null,jobs:[]};
   // Capture real cancelled nested-publisher gates for conditional post-release recovery.
@@ -49,7 +53,14 @@ export async function collectHealthHistory({repository,fetchJson}){
     const publication=publicationRunFromJobs(run,await jobsFor(run));
     if(publication){lunchPublications.push(publication);break;}
   }
-  return {runs:{workflow_runs:runs},refreshJobs,cancelledRefreshJobs,refreshStageJobs,homeworkPublications,lunchPublications};
+  const qaPublications=[...homeworkPublications,...lunchPublications];
+  for(const name of ['Deploy ABVM to GitHub Pages','Refresh ABVM teacher pages']){
+    for(const run of runs.filter(run=>run.name===name&&run.status==='completed').slice(0,10)){
+      const publication=publicationRunFromJobs(run,await jobsFor(run));
+      if(publication){qaPublications.push(publication);break;}
+    }
+  }
+  return {runs:{workflow_runs:runs},refreshJobs,cancelledRefreshJobs,refreshStageJobs,homeworkPublications,lunchPublications,qaPublications};
 }
 
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
@@ -61,5 +72,6 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
     ['cancelled-refresh-jobs.json',result.cancelledRefreshJobs],
     ['refresh-stage-jobs.json',result.refreshStageJobs],
     ['homework-publications.json',result.homeworkPublications],
-    ['lunch-publications.json',result.lunchPublications]])writeFileSync(file,JSON.stringify(data,null,2)+'\n');
+    ['lunch-publications.json',result.lunchPublications],
+    ['qa-publications.json',result.qaPublications]])writeFileSync(file,JSON.stringify(data,null,2)+'\n');
 }

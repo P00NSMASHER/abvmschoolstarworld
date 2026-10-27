@@ -6,41 +6,31 @@ const source=readFileSync(
   new URL("../.github/workflows/preview-source-parity.yml",import.meta.url),
   "utf8",
 );
-const previewBranch="release/abvm-unified-preview-20261009";
-const calendarReviewBranch="ux/calendar-focus-scroll-20261010";
-const calendarDateBranch="ux/calendar-date-wayfinding-20261010";
-const integratedPrivacyBranch="release/abvm-premium-privacy-integration-20261010";
-const consolidatedReviewBranch="release/abvm-premium-single-release-review-20261011";
-const schoolworkPremiumReviewBranch="integration/abvm-premium-schoolwork-qa-20261011";
+// Exercise the actual workflow expression against historical and future branches.
+const expression=source.match(/    if: >-\n([\s\S]*?)    runs-on:/)?.[1];
+const selected=(head_ref,base_ref='main',event_name='pull_request')=>
+  Function('github','startsWith','return ('+expression+')')(
+    {head_ref,base_ref,event_name},(value,prefix)=>String(value||'').startsWith(prefix));
 
-test("authoritative source parity covers the premium release preview and its directly stacked review PRs",()=>{
-  const condition=source.match(/^\s+if:\s*(.+)$/m)?.[1]||"";
-  assert.ok(condition.includes("github.head_ref == '"+previewBranch+"'"),
-    "the unified release preview head must run source parity");
-  assert.ok(condition.includes("github.base_ref == '"+previewBranch+"'"),
-    "review PRs based on the unified preview must not skip school-source parity");
-  assert.ok(condition.includes("github.base_ref == '"+calendarReviewBranch+"'"),
-    "nested calendar review PRs must not skip the school-source gate");
-  assert.ok(condition.includes("github.base_ref == '"+calendarDateBranch+"'"),
-    "agenda-polish PRs stacked on date wayfinding must not skip school-source parity");
-  assert.ok(condition.includes("github.head_ref == '"+integratedPrivacyBranch+"'"),
-    "reconciled production-privacy integration must run protected source parity");
-  assert.ok(condition.includes("github.base_ref == '"+integratedPrivacyBranch+"'"),
-    "review PRs stacked on the privacy integration must not skip source parity");
-  assert.ok(condition.includes("github.base_ref == 'qa/abvm-exact-review-head-20261010'"),
-    "verified exact-head QA stack must retain authoritative source parity");
-  assert.ok(condition.includes("github.head_ref == '"+consolidatedReviewBranch+"'"),
-    "single-PR consolidated release candidate must run protected source parity");
-  assert.ok(condition.includes("github.base_ref == '"+consolidatedReviewBranch+"'"),
-    "further release-review PRs must not skip protected source parity");
-  assert.ok(condition.includes("github.head_ref == '"+schoolworkPremiumReviewBranch+"'"),
-    "joint premium + schoolwork integration head must execute authoritative source parity");
-  assert.ok(condition.includes("github.base_ref == '"+schoolworkPremiumReviewBranch+"'"),
-    "further joint integration review branches cannot silently skip source parity");
-  assert.ok(condition.includes("github.event_name == 'workflow_dispatch'"),
-    "maintainers retain the manual source-parity verification path");
-  assert.ok(!/\bmain\b/.test(condition),
-    "source parity must remain scoped to the release-preview review lane");
+test("source parity covers review namespaces without a stale dated branch allowlist",()=>{
+  assert.ok(expression);
+  assert.doesNotMatch(expression,/202610|2026-10/);
+  for(const branch of [
+    'release/abvm-unified-preview-20261009',
+    'integration/abvm-premium-schoolwork-qa-20261011',
+    'schoolwork/offline-review-workbook-20261011',
+    'ux/calendar-date-wayfinding-20261010',
+    'design/calendar-reimagined-20261012',
+    'qa/abvm-exact-review-head-20261010',
+    'curriculum-candidate-gaps-d1be1039a3249f0be976e785',
+    'release/future-preview','integration/future-review','schoolwork/future-intake',
+  ]){
+    assert.equal(selected(branch),true,branch+' head');
+    assert.equal(selected('fix/nested',branch),true,branch+' base');
+  }
+  assert.equal(selected('main','main','workflow_dispatch'),true);
+  for(const branch of ['main','fix/source-refresh','repair/health','not-release/preview'])
+    assert.equal(selected(branch),false,branch);
 });
 test("source parity compares exact review head to latest main in read-only mode",()=>{
   assert.match(source,/ref:\s*\$\{\{\s*github\.event\.pull_request\.head\.sha\s*\|\|\s*github\.sha\s*\}\}/,

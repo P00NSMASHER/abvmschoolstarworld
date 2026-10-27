@@ -18,6 +18,8 @@ export function selectPublicationEvidence(deployRun,refreshRun,homeworkPublicati
 // can establish publication; missing successful gates remain unhealthy.
 export function publicationRunFromJobs(run,evidence){
   const publisherJobName={
+    "Deploy ABVM to GitHub Pages":"deploy",
+    "Refresh ABVM teacher pages":"deploy verified refresh through Pages workflow / deploy",
     "Refresh current ABVM homework":"Verify and deploy independently refreshed Homework / deploy",
     "Roll forward ABVM reviewed lunch week":"Release published reviewed lunches through guarded Pages / deploy",
   }[run?.name];
@@ -33,8 +35,24 @@ export function publicationRunFromJobs(run,evidence){
     Number.isFinite(Date.parse(job.completed_at||""))&&required.every(name=>
     (job.steps||[]).some(step=>step.name===name&&step.status==="completed"&&step.conclusion==="success"));
   return {...run,conclusion:verified?"success":job.conclusion==="success"?"action_required":job.conclusion,
+    verifiedReleaseQa:verified,
     publisherJobId:job.id,created_at:job.started_at||run.created_at,
     updated_at:job.completed_at||run.updated_at};
+}
+
+// Pages runs the same full application QA inside every guarded publication.
+// A source-only check, workflow title or old successful run is not QA evidence.
+export function selectQaEvidence(standalone,publications=[]){
+  let selected=standalone||null;
+  for(const run of publications){
+    if(typeof run?.verifiedReleaseQa!=="boolean"||run.head_branch!=="main"||
+       run.status!=="completed"||(run.conclusion==="success"&&!run.verifiedReleaseQa)||
+       !Number.isInteger(run.publisherJobId)||!Number.isFinite(Date.parse(run.updated_at||"")))continue;
+    // Unknown completion time on an existing failure must not be hidden.
+    if(selected&&!Number.isFinite(Date.parse(selected.updated_at||"")))continue;
+    if(!selected||workflowEvidenceAt(run)>workflowEvidenceAt(selected))selected=run;
+  }
+  return selected;
 }
 
 const completedEvidenceTime=run=>{
