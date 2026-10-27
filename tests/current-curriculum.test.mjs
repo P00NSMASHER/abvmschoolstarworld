@@ -274,7 +274,7 @@ test('soft c and g test receives source-backed guide, worksheet, and correct ans
   const guideHtml=printableStudyGuideHtml(guide);
   const worksheetHtml=printableWorksheetHtml(guide);
   assert.match(guideHtml,/Teacher-style supplemental practice/i);
-  assert.match(guideHtml,/@media screen and \(max-width:620px\)/);
+  assert.match(guideHtml,/@media screen and \(max-width:640px\)/);
   assert.match(worksheetHtml,/Answer Key/i);
   assert.match(worksheetHtml,/@media print/);
   for(const question of practice){
