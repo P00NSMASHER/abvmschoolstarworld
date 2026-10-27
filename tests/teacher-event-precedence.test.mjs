@@ -6,7 +6,7 @@ function evidence(){
   const id='melissa-weekly-planner-2026-10-12-user-reviewed';
   return {
     sourcePrecedence:{authoritativeCurrentDocument:id},
-    documents:[{id,review:{status:'reviewed',reviewedBy:'user-confirmed-Melissa-planner'}}],
+    documents:[{id,review:{status:'reviewed',reviewedBy:'user-confirmed-Melissa-planner',reviewedAt:'2026-10-12'}}],
     replacements:[
       {topic:'chick-fil-a-delivery',date:'Thursday, Oct. 22'},
       {topic:'lego-club',date:'Friday, Oct. 23'},
@@ -19,6 +19,17 @@ function evidence(){
     ],
   };
 }
+
+function yearBoundaryEvidence(){
+  const id='melissa-weekly-planner-2026-12-28-user-reviewed';
+  return {
+    sourcePrecedence:{authoritativeCurrentDocument:id},
+    documents:[{id,review:{status:'reviewed',reviewedBy:'user-confirmed-Melissa-planner',reviewedAt:'2026-12-28'}}],
+    replacements:[{topic:'lego-club',date:'Tuesday, Jan. 5'}],
+    importantDates:[{date:'Tuesday, Jan. 5',label:'Lego Club',sourceDocument:id}],
+  };
+}
+
 test('dated, reviewed Melissa planner supersedes contradictory teacher Home pickup date',()=>{
   assert.equal(supersededByReviewedPlanner({
     date:'Thursday, Oct. 23',label:'Chick-Fil-A pick up',source:'teacher-home'
@@ -35,6 +46,14 @@ test('old Lego and progress dates lose only to exact newer reviewed corrections'
     date:'Thursday, Oct. 8',label:'Progress Reports Sent Home',source:'teacher-home'
   },evidence()),true);
 });
+test('reviewed corrections use the planner civil date across December to January',()=>{
+  assert.equal(supersededByReviewedPlanner({
+    date:'Thursday, Dec. 31',label:'Lego Club',source:'teacher-home'
+  },yearBoundaryEvidence()),true);
+  assert.equal(supersededByReviewedPlanner({
+    date:'Friday, Nov. 20',label:'Lego Club',source:'teacher-home'
+  },yearBoundaryEvidence()),false);
+});
 test('never erase sales, order deadlines, unrelated dates or independently authored notices',()=>{
   for(const row of [
     {date:'Friday, Oct. 9',label:'Chick-fil-A orders and money due',source:'teacher-home'},
@@ -49,6 +68,7 @@ test('cannot suppress events without an actual reviewed matching authority and r
   const event={date:'Thursday, Oct. 23',label:'Chick-fil-A pick up',source:'teacher-home'};
   for(const mutate of [
     d=>d.documents[0].review.status='HOLD',
+    d=>delete d.documents[0].review.reviewedAt,
     d=>d.sourcePrecedence.authoritativeCurrentDocument='unknown',
     d=>d.replacements=[],
     d=>d.importantDates=[],
