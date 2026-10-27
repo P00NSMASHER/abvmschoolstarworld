@@ -276,6 +276,8 @@ test('soft c and g test receives source-backed guide, worksheet, and correct ans
   assert.match(guideHtml,/Teacher-style supplemental practice/i);
   assert.match(guideHtml,/@media screen and \(max-width:640px\)/);
   assert.match(worksheetHtml,/Answer Key/i);
+  assert.match(worksheetHtml,/\.work-area\{min-height:\.5in/);
+  assert.match(worksheetHtml,/@media screen and \(max-width:640px\)/);
   assert.match(worksheetHtml,/@media print/);
   for(const question of practice){
     assert(guideHtml.includes(question.prompt),question.id);
