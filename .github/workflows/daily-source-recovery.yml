@@ -13,6 +13,9 @@ on:
       - 'tests/unattended-parity-health.test.mjs'
       - 'tests/refresh-controller.test.mjs'
       - 'tests/nested-publication-recovery.test.mjs'
+      - 'scripts/lunch-publication.mjs'
+      - 'scripts/refresh-reviewed-lunch.mjs'
+      - '.github/workflows/refresh-reviewed-lunch-week.yml'
       - '.github/workflows/daily-source-recovery.yml'
   schedule:
     - cron: '11 6-23 * * *'
@@ -108,7 +111,7 @@ jobs:
               # Reusable Pages jobs belong to their source workflow in run
               # history. A standalone-only query misses those active publishers.
               local publisher publisher_history
-              for publisher in sync-study-pack.yml refresh-current-homework.yml sync-uploaded-notices.yml import-yahoo-weekly-reminders.yml; do
+              for publisher in sync-study-pack.yml refresh-current-homework.yml refresh-reviewed-lunch-week.yml sync-uploaded-notices.yml import-yahoo-weekly-reminders.yml; do
                 if ! publisher_history="$(gh run list --workflow "$publisher" --branch main --limit 70 --json status,event,createdAt,updatedAt,conclusion)"; then
                   echo "::error::Cannot verify nested publisher history for $publisher; no recovery dispatched."
                   return 1
@@ -152,15 +155,17 @@ jobs:
             gh workflow run "$workflow" --ref main
           }
 
-          curriculum="$(jq -r '.refreshCurriculum' "$plan")"
-          homework="$(jq -r '.refreshHomework' "$plan")"
-          deploy="$(jq -r '.redeploy' "$plan")"
+          curriculum="$(jq -er '.refreshCurriculum | if type == "boolean" then tostring else error("invalid curriculum verdict") end' "$plan")"
+          homework="$(jq -er '.refreshHomework | if type == "boolean" then tostring else error("invalid Homework verdict") end' "$plan")"
+          lunch="$(jq -er '.refreshReviewedLunch | if type == "boolean" then tostring else error("invalid lunch verdict") end' "$plan")"
+          deploy="$(jq -er '.redeploy | if type == "boolean" then tostring else error("invalid publication verdict") end' "$plan")"
           result=0
+          maybe_dispatch refresh-reviewed-lunch-week.yml "$lunch" || result=1
           maybe_dispatch sync-study-pack.yml "$curriculum" || result=1
           maybe_dispatch refresh-current-homework.yml "$homework" || result=1
-          # Pages may be re-dispatched ONLY if repository sources are current.
+          # Pages may be re-dispatched ONLY if every repository source lane is current.
           # Its independent exact-main SHA and full QA safeguards remain active.
-          if [[ "$curriculum" == false && "$homework" == false ]]; then
+          if [[ "$curriculum" == false && "$homework" == false && "$lunch" == false ]]; then
             maybe_dispatch pages.yml "$deploy" || result=1
           fi
           exit "$result"

@@ -36,7 +36,8 @@ test('bounded no-signoff recovery checks repository and live site, then dispatch
   assert.match(recovery, /maybe_dispatch pages\.yml "\$deploy"/);
   assert.match(recovery, /count >= 2/);
   assert.match(recovery, /running > 0/);
-  assert.match(recovery, /if \[\[ "\$curriculum" == false && "\$homework" == false \]\]/);
+  assert.match(recovery, /if \[\[ "\$curriculum" == false && "\$homework" == false && "\$lunch" == false \]\]/);
+  assert.match(recovery,/maybe_dispatch refresh-reviewed-lunch-week\.yml "\$lunch"/);
   assert.match(pages, /Requested release is not the exact current protected-main commit/);
   assert.match(pages, /Main advanced while QA ran/);
 });

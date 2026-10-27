@@ -50,7 +50,7 @@ export function reconcileScheduledSources(assessment,{now,checkedAt={}}={}){
   };
   const refreshCurriculum=assessment.refreshCurriculum||schedule.curriculum.due;
   const refreshHomework=assessment.refreshHomework||schedule.homework.due;
-  const phase=refreshCurriculum||refreshHomework?'refresh-required':assessment.redeploy?
+  const phase=refreshCurriculum||refreshHomework||assessment.refreshReviewedLunch?'refresh-required':assessment.redeploy?
     'publish-required':caution.length?'evidence-incomplete':'current';
   return {...assessment,controllerVersion:2,observedAt:now,phase,schedule,
     refreshCurriculum,refreshHomework,caution};

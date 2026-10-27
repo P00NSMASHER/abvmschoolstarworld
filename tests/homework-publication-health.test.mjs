@@ -51,3 +51,21 @@ test('missing publisher completion time cannot establish verified publication',(
  const data=evidence();delete data.jobs[0].completed_at;
  assert.equal(health.publicationRunFromJobs(run,data).conclusion,'action_required');
 });
+
+test('reviewed lunch requires exact protected-main Pages step proof',()=>{
+ const lunchRun={...run,id:101,name:'Roll forward ABVM reviewed lunch week',
+  created_at:'2026-10-26T15:30:00Z',updated_at:'2026-10-26T15:50:00Z'};
+ const jobs={run_id:101,jobs:[{...evidence().jobs[0],id:102,run_id:101,
+  name:'Release published reviewed lunches through guarded Pages / deploy'}]};
+ const release=health.publicationRunFromJobs(lunchRun,jobs);
+ assert.equal(release.conclusion,'success');
+ assert.equal(release.publisherJobId,102);
+ assert.equal(health.selectPublicationEvidence(null,null,null,release),release);
+ for(const missing of names){
+   const broken=structuredClone(jobs);
+   broken.jobs[0].steps=broken.jobs[0].steps.filter(step=>step.name!==missing);
+   assert.equal(health.publicationRunFromJobs(lunchRun,broken).conclusion,'action_required');
+ }
+ assert.equal(health.publicationRunFromJobs({...lunchRun,head_branch:'candidate'},jobs),null);
+ assert.equal(health.publicationRunFromJobs(lunchRun,{run_id:102,jobs:jobs.jobs}),null);
+});

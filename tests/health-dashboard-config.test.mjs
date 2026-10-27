@@ -165,3 +165,16 @@ test("operational dashboard surfaces missed Homework cron while preserving the e
   assert.match(refreshHealthWorkflow,/scripts\/homework-live-monitor\.mjs/);
   assert.match(refreshHealthWorkflow,/scripts\/check-refresh-health\.mjs/);
 });
+
+test('the dashboard cannot call previous-week lunch healthy just because future meals exist in the archive',()=>{
+  assert.match(report,/status\.lunch\.currentWeek/);
+  assert.match(report,/const targetLunchWeek=schoolWeek/);
+  assert.match(report,/Published reviewed lunch week/);
+  assert.match(refreshHealthWorkflow,/Roll forward ABVM reviewed lunch week/);
+});
+
+test('independent reviewed lunch publication requires a proven nested Pages job before health can recover',()=>{
+  assert.match(workflow,/LUNCH_PUBLICATIONS_FILE: lunch-publications\.json/);
+  assert.match(report,/lunchPublications\.filter\(run=>run\.head_branch==="main"/);
+  assert.match(report,/line\("Reviewed lunch rollover",effectiveRun\(status\.workflows\.lunch\)\)/);
+});

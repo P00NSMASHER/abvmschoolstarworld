@@ -2,6 +2,7 @@ import {readFileSync,mkdirSync,writeFileSync} from "node:fs";
 import {assessHomeworkHealth,assessHomeworkPollingCadence,assessMainBranchProtection,selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence,selectRecoveredRefreshRace,selectRecoveredCancelledRefresh} from "./health-evidence.mjs";
 import {assessUpcomingLunchCoverage,schoolWeekLabel} from "./school-week-label.mjs";
 import {assessPublicationParity} from "./publication-parity-health.mjs";
+import {schoolWeek} from "./lunch-publication.mjs";
 
 const packData=JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8"));
 const pkg=JSON.parse(readFileSync(new URL("../package.json",import.meta.url),"utf8"));
@@ -13,6 +14,7 @@ const cancelledRefreshJobsPath=process.env.REFRESH_CANCELLED_JOBS_FILE;
 const refreshStageJobsPath=process.env.REFRESH_STAGE_JOBS_FILE;
 const openPullsPath=process.env.OPEN_PULLS_FILE;
 const publicationsPath=process.env.HOMEWORK_PUBLICATIONS_FILE;
+const lunchPublicationsPath=process.env.LUNCH_PUBLICATIONS_FILE;
 const mainBranchPath=process.env.MAIN_BRANCH_FILE;
 const runs=runsPath?JSON.parse(readFileSync(runsPath,"utf8")).workflow_runs||[]:[];
 const refreshJobsData=refreshJobsPath?JSON.parse(readFileSync(refreshJobsPath,"utf8")):{run_id:null,jobs:[]};
@@ -20,6 +22,7 @@ const cancelledRefreshJobsData=cancelledRefreshJobsPath?JSON.parse(readFileSync(
 const refreshStageJobs=refreshStageJobsPath?JSON.parse(readFileSync(refreshStageJobsPath,"utf8")):{run_id:null,jobs:[]};
 const openPulls=openPullsPath?JSON.parse(readFileSync(openPullsPath,"utf8")):[];
 const homeworkPublications=publicationsPath?JSON.parse(readFileSync(publicationsPath,"utf8")):[];
+const lunchPublications=lunchPublicationsPath?JSON.parse(readFileSync(lunchPublicationsPath,"utf8")):[];
 const mainBranchEvidence=mainBranchPath?JSON.parse(readFileSync(mainBranchPath,"utf8")):null;
 const liveParityPath=process.env.SOURCE_RECOVERY_PLAN_FILE;
 const publicationParity=assessPublicationParity(liveParityPath?JSON.parse(readFileSync(liveParityPath,"utf8")):null);
@@ -32,6 +35,7 @@ const workflowNames={
   deploy:"Deploy ABVM to GitHub Pages",
   watchdog:"Monitor ABVM refresh health",
   homework:"Refresh current ABVM homework",
+  lunch:"Roll forward ABVM reviewed lunch week",
 };
 const runEvidenceAt=run=>Date.parse(run?.updated_at||run?.created_at||0)||0;
 const runCreatedAt=run=>Date.parse(run?.created_at||0)||0;
@@ -85,6 +89,8 @@ const status={
   lunch:{
     status:packData.pack?.lunchMenuSource?.status||"unknown",
     retrievalState:packData.pack?.lunchMenuSource?.retrievalState||"unknown",
+    weekStart:packData.pack?.lunchMenuSource?.weekStart||null,
+    weekEnd:packData.pack?.lunchMenuSource?.weekEnd||null,
     days:packData.pack?.lunchMenu?.length||0,
     missingDates:packData.pack?.lunchMenuSource?.missingDates||[],
     coverageThrough:packData.pack?.lunchMenuSource?.coverageThrough||null,
@@ -115,6 +121,7 @@ const status={
   workflows:{
     refresh:{latest:latest(workflowNames.refresh),latestCreated:latestCreated(workflowNames.refresh),latestCompleted:latestCompleted(workflowNames.refresh),latestDecisive:latestDecisive(workflowNames.refresh),latestSuccess:latestSuccess(workflowNames.refresh)},
     homework:{latest:latest(workflowNames.homework),latestCreated:latestCreated(workflowNames.homework),latestCompleted:latestCompleted(workflowNames.homework),latestDecisive:latestDecisive(workflowNames.homework),latestSuccess:latestSuccess(workflowNames.homework)},
+    lunch:{latest:latest(workflowNames.lunch),latestCreated:latestCreated(workflowNames.lunch),latestCompleted:latestCompleted(workflowNames.lunch),latestDecisive:latestDecisive(workflowNames.lunch),latestSuccess:latestSuccess(workflowNames.lunch)},
     qa:{latest:latest(workflowNames.qa),latestCreated:latestCreated(workflowNames.qa),latestCompleted:latestCompleted(workflowNames.qa),latestDecisive:latestDecisive(workflowNames.qa),latestSuccess:latestSuccess(workflowNames.qa)},
     deploy:{latest:latest(workflowNames.deploy),latestCreated:latestCreated(workflowNames.deploy),latestCompleted:latestCompleted(workflowNames.deploy),latestDecisive:latestDecisive(workflowNames.deploy),latestSuccess:latestSuccess(workflowNames.deploy)},
     watchdog:{latest:latest(workflowNames.watchdog),latestCreated:latestCreated(workflowNames.watchdog),latestCompleted:latestCompleted(workflowNames.watchdog),latestDecisive:latestDecisive(workflowNames.watchdog),latestSuccess:latestSuccess(workflowNames.watchdog)},
@@ -135,6 +142,8 @@ const effectivePublicationRun=()=>selectPublicationEvidence(
   effectiveRun(status.workflows.deploy),
   effectiveRun(status.workflows.refresh),
   homeworkPublications.filter(run=>run.head_branch==="main"&&run.name===workflowNames.homework&&
+    Number.isInteger(run.publisherJobId)).sort((a,b)=>runEvidenceAt(b)-runEvidenceAt(a))[0]||null,
+  lunchPublications.filter(run=>run.head_branch==="main"&&run.name===workflowNames.lunch&&
     Number.isInteger(run.publisherJobId)).sort((a,b)=>runEvidenceAt(b)-runEvidenceAt(a))[0]||null
 );
 status.publicationEvidence=effectivePublicationRun();
@@ -192,6 +201,9 @@ const lunchReviewedCoverageComplete=Boolean(
     /^[a-f0-9]{64}$/i.test(String(page?.contentHash||""))
   )
 );
+const targetLunchWeek=schoolWeek(new Date(now));
+status.lunch.currentWeek=status.lunch.weekStart===targetLunchWeek[0]&&
+  status.lunch.weekEnd===targetLunchWeek.at(-1);
 const lunchVerified=status.lunch.retrievalState==="verified";
 const lunchOperationallyUsable=Boolean(
   lunchVerified ||
@@ -203,6 +215,7 @@ const criticalHealthy=Boolean(
   sourceFresh &&
   status.homework.healthy &&
   lunchOperationallyUsable &&
+  status.lunch.currentWeek &&
   completedHealthy(status.workflows.qa,48) &&
   completedRunHealthy(status.publicationEvidence,48) &&
   (refreshOperationallyHealthy || Boolean(status.refreshStage)) &&
@@ -232,6 +245,12 @@ if(status.refreshRecovery)warnings.push("The teacher refresh and reviewed lunch 
 if(status.cancelledRefreshRecovery)warnings.push("The teacher and lunch source checks passed, but their nested browser install was cancelled. A later protected-main Pages release and independent live watchdog proved recovery; the cancelled workflow remains in history.");
 if(reportedWeekLabel!==expectedWeekLabel){
   warnings.push("School-data week label "+(reportedWeekLabel||"is missing")+" does not match the displayed "+expectedWeekLabel+"; retain the actual teacher-posting week for assignments.");
+}
+if(!status.lunch.currentWeek){
+  warnings.push("Published reviewed lunch week "+(status.lunch.weekStart||"unknown")+
+    "–"+(status.lunch.weekEnd||"unknown")+" is not current "+
+    targetLunchWeek[0]+"–"+targetLunchWeek.at(-1)+
+    "; the isolated reviewed-lunch recovery must publish exact current-week data.");
 }
 if(upcomingLunch.missingDates.length){
   warnings.push("Upcoming school-week lunch archive has no verified menu or explicit no-school status for: "+upcomingLunch.missingDates.join(", ")+".");
@@ -266,7 +285,7 @@ const md=[
   `- **Source coverage:** ${status.schoolData.sourcePages}/6 teacher pages; source sufficient = ${status.schoolData.sourceSufficient}; fresh <=${SOURCE_FRESH_HOURS}h = ${sourceFresh}`,
   `- **Homework checked:** ${status.homework.checkedAt||"missing"}; status ${status.homework.status}; scheduled school-day window and <=8h = ${status.homework.healthy}`,
   `- **Hourly Homework cron:** ${status.homeworkPolling.state}; last scheduled ${status.homeworkPolling.lastScheduledAt||"not observed"}; age ${status.homeworkPolling.ageHours===null?"n/a":status.homeworkPolling.ageHours+"h"}`,
-  `- **Lunch source:** ${status.lunch.retrievalState}; ${status.lunch.days} reviewed days; complete reviewed coverage = ${lunchReviewedCoverageComplete}; missing dates: ${status.lunch.missingDates.join(", ")||"none"}`,
+  `- **Lunch source:** ${status.lunch.retrievalState}; ${status.lunch.days} reviewed days; current published week = ${status.lunch.currentWeek}; complete reviewed coverage = ${lunchReviewedCoverageComplete}; missing dates: ${status.lunch.missingDates.join(", ")||"none"}`,
   `- **Grade 2 content pipeline:** QA ${status.contentPipeline.qaStatus}; safety ${status.contentPipeline.safetyState}; ${status.contentPipeline.skillCount} skills; ${status.contentPipeline.questionCount} questions; partial ${status.contentPipeline.partiallyCoveredCount}; source-insufficient ${status.contentPipeline.sourceInsufficientCount}; not-practiced-by-design ${status.contentPipeline.notPracticedByDesignCount}; unsupported ${status.contentPipeline.unsupportedSkillCount}`,
   `- **Question lineage:** required = ${status.contentPipeline.lineageRequired}; page-exact ${status.contentPipeline.pageExactLineageCount}/${status.contentPipeline.questionCount}; unresolved ${status.contentPipeline.unresolvedLineageCount}`,
   `- **Live study-pack and Homework parity:** curriculum ${publicationParity.curriculum}; Homework ${publicationParity.homework}; overall ${publicationParity.state}`,
@@ -289,6 +308,7 @@ const md=[
   `- **Guarded refresh race recovery:** ${status.refreshRecovery?"verified by publication "+status.refreshRecovery.publisherRunId+" and watchdog "+status.refreshRecovery.watchdogRunId:"not established"}`,
   `- **Cancelled publisher recovery:** ${status.cancelledRefreshRecovery?"verified by publication "+status.cancelledRefreshRecovery.publisherRunId+" and watchdog "+status.cancelledRefreshRecovery.watchdogRunId:"not established"}`,
   line("Homework refresh",effectiveRun(status.workflows.homework)),
+  line("Reviewed lunch rollover",effectiveRun(status.workflows.lunch)),
   line("App QA",effectiveRun(status.workflows.qa)),
   line("Publication evidence",status.publicationEvidence),
   line("Standalone Pages deploy",effectiveRun(status.workflows.deploy)),

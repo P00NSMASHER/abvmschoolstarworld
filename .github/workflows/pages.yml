@@ -104,7 +104,7 @@ jobs:
           # The selected immutable current-main SHA still receives full release QA.
           if [[ "${RECONCILE_LATEST_MAIN:-false}" == true ]]; then
             case "${CALLER_WORKFLOW:-}" in
-              'Refresh ABVM teacher pages'|'Refresh current ABVM homework'|'Integrate ABVM uploaded notices'|'Import ABVM Yahoo weekly reminders') ;;
+              'Refresh ABVM teacher pages'|'Refresh current ABVM homework'|'Integrate ABVM uploaded notices'|'Import ABVM Yahoo weekly reminders'|'Roll forward ABVM reviewed lunch week') ;;
               *) echo '::error::Untrusted caller cannot reconcile release source.' >&2; exit 1 ;;
             esac
             [[ "$REQUESTED_REF" =~ ^[0-9a-f]{40}$ ]] || { echo '::error::Reconciliation needs the verified source SHA.' >&2; exit 1; }

@@ -4,21 +4,27 @@ export function workflowEvidenceAt(run){
   return Date.parse(run?.updated_at||run?.created_at||0)||0;
 }
 
-export function selectPublicationEvidence(deployRun,refreshRun,homeworkPublication=null){
+export function selectPublicationEvidence(deployRun,refreshRun,homeworkPublication=null,lunchPublication=null){
   let publication=deployRun||null;
   if(refreshRun?.conclusion==="success"&&(!publication||workflowEvidenceAt(refreshRun)>workflowEvidenceAt(publication)))publication=refreshRun;
-  if(Number.isInteger(homeworkPublication?.publisherJobId)&&(!publication||workflowEvidenceAt(homeworkPublication)>workflowEvidenceAt(publication)))publication=homeworkPublication;
+  // Source-only success cannot replace protected-main publication proof.
+  for(const nested of [homeworkPublication,lunchPublication]){
+    if(Number.isInteger(nested?.publisherJobId)&&(!publication||workflowEvidenceAt(nested)>workflowEvidenceAt(publication)))publication=nested;
+  }
   return publication;
 }
 
 // A successful source check may skip Pages. Only the actual nested release job
 // can establish publication; missing successful gates remain unhealthy.
 export function publicationRunFromJobs(run,evidence){
-  if(run?.name!=="Refresh current ABVM homework"||run.head_branch!=="main"||
+  const publisherJobName={
+    "Refresh current ABVM homework":"Verify and deploy independently refreshed Homework / deploy",
+    "Roll forward ABVM reviewed lunch week":"Release published reviewed lunches through guarded Pages / deploy",
+  }[run?.name];
+  if(!publisherJobName||run.head_branch!=="main"||
      run.status!=="completed"||Number(evidence?.run_id)!==Number(run.id))return null;
   const job=(evidence.jobs||[]).find(job=>Number(job.run_id)===Number(run.id)&&
-    job.name==="Verify and deploy independently refreshed Homework / deploy"&&
-    job.status==="completed"&&job.conclusion!=="skipped");
+    job.name===publisherJobName&&job.status==="completed"&&job.conclusion!=="skipped");
   if(!job)return null;
   const required=["Admit exact current protected-main commit","Verify checked-out source identity",
     "Run release QA","Recheck protected-main before publishing","Deploy",
