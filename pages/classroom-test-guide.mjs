@@ -144,19 +144,22 @@ function spellingSheet(guide) {
     '</div></section>'+arr(guide?.warnings).slice(0,2).map(note=>'<p class="caution">'+escape(note)+'</p>').join('')+
     sourceNote(guide)+'</main>';
 }
-export function renderClassroomStudyGuide(guide,dictionary=()=> '') {
-  const kind=subjectKind(guide),titles={math:'Math Practice Test',grammar:'Grammar Practice Test',reading:'Reading Practice Test',religion:'Religion Practice Test'};
+export function renderClassroomStudyGuide(guide,dictionary=()=> '',options={}) {
+  const forcePracticePacket=Boolean(options?.forcePracticePacket);
+  const kind=subjectKind(guide),titles={math:'Math Practice Test',grammar:'Grammar Practice Test',reading:'Reading Practice Test',religion:'Religion Practice Test',spelling:'Spelling Pattern Practice'};
   const head='<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+
     escape(guide?.label || 'Study Guide')+'</title><style>'+styles+premiumPaperCss+'</style></head><body>';
-  if(kind==='spelling')return decoratePaper(head+spellingSheet(guide)+'</body></html>',kind);
-  // A test packet must not silently drop verified topics or checked practice questions.
+  // Verified word lists use dictation; source-backed spelling patterns use the keyed question packet.
   const questions=arr(guide?.practice);
+  if(kind==='spelling'&&!forcePracticePacket)return decoratePaper(head+spellingSheet(guide)+'</body></html>',kind);
+  // A test packet must not silently drop verified topics or checked practice questions.
   const instructions={math:'Solve each problem. Show your work in the boxes. Write your answer clearly.',
     grammar:'Read each question. Underline, mark, or circle the answer as directed.',
     reading:'Read each question. Circle the best answer using what you learned.',
-    religion:'Read each question. Circle the best answer or write the missing word.'};
+    religion:'Read each question. Circle the best answer or write the missing word.',
+    spelling:'Read each question. Circle the best answer, then use the work space to explain the letter-sound pattern.'};
   const subjectHeading={math:'Math Maintenance · Solve & show work',grammar:'Sentence and grammar skills',
-    reading:'Reading comprehension and word skills',religion:'Religion review'};
+    reading:'Reading comprehension and word skills',religion:'Religion review',spelling:'Spelling patterns and word sounds'};
   const student='<main class="sheet student-test">'+pageHeader(titles[kind],guide)+
     '<div class="student-fields"><span>Name: <i class="field-line"></i></span><span>Date: <i class="field-line date"></i></span>'+
     '<span>Score: <i class="field-line score"></i> / '+questions.length+'</span></div>'+

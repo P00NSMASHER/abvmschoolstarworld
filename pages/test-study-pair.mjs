@@ -153,7 +153,8 @@ const vowelStory=()=>'<aside class="vowel-story" aria-label="Short vowel memory 
   '<small>Say the five words in order: cat, bed, pig, hot, sun.</small></aside>';
 
 export function renderTestStudyGuide(guide,dictionary=()=> ''){
-  if(kindOf(guide)==='spelling')return renderClassroomStudyGuide(guide,dictionary);
+  const patternPractice=rows(guide?.practice).some(q=>clean(q?.skill)==='soft-c-g');
+  if(kindOf(guide)==='spelling'&&!patternPractice)return renderClassroomStudyGuide(guide,dictionary);
   const kind=kindOf(guide),facts=unique(guide?.facts);
   const questions=rows(guide?.practice).filter(q=>clean(q?.prompt)&&clean(q?.answer));
   const suppliedTopics=rows(guide?.reviewTopics).filter(topic=>clean(topic?.label));
@@ -235,7 +236,9 @@ function noBankWorksheet(guide){
   return decoratePaper(htmlHead(guide,'Practice worksheet')+paper+'</body></html>',kindOf(guide));
 }
 export function renderTestWorksheet(guide,dictionary=()=> ''){
-  if(kindOf(guide)==='spelling')return dictationWorksheet(guide);
-  if(!rows(guide?.practice).length)return noBankWorksheet(guide);
-  return renderClassroomStudyGuide(guide,dictionary);
+  const practice=rows(guide?.practice);
+  const hasVerifiedSpellingList=unique(guide?.spellingWords).length>0;
+  if(kindOf(guide)==='spelling'&&(!practice.length||hasVerifiedSpellingList))return dictationWorksheet(guide);
+  if(!practice.length)return noBankWorksheet(guide);
+  return renderClassroomStudyGuide(guide,dictionary,{forcePracticePacket:true});
 }

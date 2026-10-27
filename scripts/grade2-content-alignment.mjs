@@ -81,6 +81,11 @@ const EXACT_SKILLS = Object.freeze({
     standards: ['CCSS.RF.2.3'],
     anchors: ['long', 'short', 'vowel', 'a_e'],
   },
+  'soft-c-g': {
+    subject: 'Spelling / Handwriting',
+    standards: ['CCSS.RF.2.3'],
+    anchors: ['soft c', 'soft g', '/s/', '/j/', 'cent', 'city', 'gem', 'giant'],
+  },
   'suffix-ed-ing': {
     subject: 'Reading / ELA',
     standards: ['CCSS.RF.2.3.d'],
