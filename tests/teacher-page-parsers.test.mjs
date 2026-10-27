@@ -187,6 +187,17 @@ test('parseStoryTitles handles malformed mixed story quotes from the live teache
   );
 });
 
+test('parseStoryTitles removes only an unmatched trailing delimiter from the live teacher source', () => {
+  assert.deepEqual(
+    parseStoryTitles('"Eagles and Eaglets)'),
+    ['Eagles and Eaglets']
+  );
+  assert.deepEqual(
+    parseStoryTitles('"Eagles (and Eaglets)"'),
+    ['Eagles (and Eaglets)']
+  );
+});
+
 test('parseHomework reads the official teacher page’s undelimited math and spelling lines', () => {
   const rows = parseHomework([
     'Homework',
