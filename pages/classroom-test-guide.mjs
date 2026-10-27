@@ -144,13 +144,14 @@ function spellingSheet(guide) {
     '</div></section>'+arr(guide?.warnings).slice(0,2).map(note=>'<p class="caution">'+escape(note)+'</p>').join('')+
     sourceNote(guide)+'</main>';
 }
-export function renderClassroomStudyGuide(guide,dictionary=()=> '') {
+export function renderClassroomStudyGuide(guide,dictionary=()=> '',options={}) {
+  const forcePracticePacket=Boolean(options?.forcePracticePacket);
   const kind=subjectKind(guide),titles={math:'Math Practice Test',grammar:'Grammar Practice Test',reading:'Reading Practice Test',religion:'Religion Practice Test',spelling:'Spelling Pattern Practice'};
   const head='<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+
     escape(guide?.label || 'Study Guide')+'</title><style>'+styles+premiumPaperCss+'</style></head><body>';
   // Verified word lists use dictation; source-backed spelling patterns use the keyed question packet.
   const questions=arr(guide?.practice);
-  if(kind==='spelling'&&(!questions.length||unique(guide?.spellingWords).length))return decoratePaper(head+spellingSheet(guide)+'</body></html>',kind);
+  if(kind==='spelling'&&!forcePracticePacket)return decoratePaper(head+spellingSheet(guide)+'</body></html>',kind);
   // A test packet must not silently drop verified topics or checked practice questions.
   const instructions={math:'Solve each problem. Show your work in the boxes. Write your answer clearly.',
     grammar:'Read each question. Underline, mark, or circle the answer as directed.',
