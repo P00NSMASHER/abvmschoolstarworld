@@ -300,16 +300,37 @@ test('the complete dashboard turns critical for stale homework despite healthy w
       const result=spawnSync(process.execPath,['scripts/build-health-report.mjs'],{
         cwd:root,encoding:'utf8',env:{...process.env,WORKFLOW_RUNS_FILE:workflowFile,
           REFRESH_JOBS_FILE:refreshJobsPath,OPEN_PULLS_FILE:'',HOMEWORK_PUBLICATIONS_FILE:join(root,'publications.json'),
-          SOURCE_RECOVERY_PLAN_FILE:parityPath},
+          SOURCE_RECOVERY_PLAN_FILE:parityPath,QA_PUBLICATIONS_FILE:join(root,'qa-publications.json')},
       });
       const report=JSON.parse(readFileSync(join(root,'health-output/abvm-health-status.json'),'utf8'));
       return {result,report};
     };
     writeFileSync(postingPath,JSON.stringify(posting));
     writeFileSync(join(root,'publications.json'),'[]');
+    writeFileSync(join(root,'qa-publications.json'),'[]');
     const fresh=run();
     assert.equal(fresh.result.status,0,fresh.result.stderr);
     assert.equal(fresh.report.homework.healthy,true);
+    // A changed-source deployment ran full QA, although standalone code QA is old.
+    const qaHistory=JSON.parse(readFileSync(workflowFile,'utf8'));
+    const qa=qaHistory.workflow_runs.find(r=>r.name==='ABVM App QA');
+    qa.created_at=qa.updated_at=new Date(Date.now()-72*3600000).toISOString();
+    writeFileSync(workflowFile,JSON.stringify(qaHistory));
+    assert.equal(run().report.overall,'critical');
+    writeFileSync(join(root,'qa-publications.json'),JSON.stringify([{
+      id:77,name:'Refresh current ABVM homework',head_branch:'main',status:'completed',
+      conclusion:'success',created_at:now,updated_at:now,publisherJobId:88,verifiedReleaseQa:true,
+    }]));
+    const releaseQa=run();
+    assert.equal(releaseQa.report.overall,'healthy');
+    assert.equal(releaseQa.report.qaEvidence.publisherJobId,88);
+    qa.created_at=qa.updated_at=now;
+    qa.conclusion='failure';
+    writeFileSync(workflowFile,JSON.stringify(qaHistory));
+    assert.equal(run().report.overall,'critical','same-time failure is not hidden');
+    qa.conclusion='success';
+    writeFileSync(workflowFile,JSON.stringify(qaHistory));
+    writeFileSync(join(root,'qa-publications.json'),'[]');
     const history=JSON.parse(readFileSync(workflowFile,'utf8'));
     const deploy=history.workflow_runs.find(r=>r.name==='Deploy ABVM to GitHub Pages');
     deploy.conclusion='failure';

@@ -4,13 +4,13 @@ import test from 'node:test';
 
 const WORKFLOW = readFileSync(new URL('../.github/workflows/preview-source-parity.yml', import.meta.url), 'utf8');
 const GUARD = readFileSync(new URL('../scripts/assert-release-preview-parity.mjs', import.meta.url), 'utf8');
-const HELD_REVIEW_BRANCH = 'curriculum-candidate-gaps-d1be1039a3249f0be976e785';
 
-test('held PR #270 runs exact-head authoritative source parity rather than skipping it', () => {
+
+test('curriculum review namespace runs exact-head authoritative source parity', () => {
   assert.match(WORKFLOW, /^on:\s*\n\s+pull_request:/m);
-  const gate = WORKFLOW.match(/^    if: (.+)$/m)?.[1] || '';
-  assert.ok(gate.includes("github.head_ref == '" + HELD_REVIEW_BRANCH + "'"));
-  assert.ok(gate.includes("github.base_ref == '" + HELD_REVIEW_BRANCH + "'"), 'Nested private review must run source parity');
+  const gate = WORKFLOW.match(/    if: >-\n([\s\S]*?)    runs-on:/)?.[1] || '';
+  assert.ok(gate.includes("startsWith(github.head_ref, 'curriculum-candidate-')"));
+  assert.ok(gate.includes("startsWith(github.base_ref, 'curriculum-candidate-')"), 'Nested private review must run source parity');
   assert.ok(!gate.includes('true ||'), 'The gate may not bypass branch-scoped review');
   assert.match(WORKFLOW, /ref: \$\{\{ github\.event\.pull_request\.head\.sha \|\| github\.sha \}\}/);
   assert.match(WORKFLOW, /git fetch --no-tags origin \+refs\/heads\/main:refs\/remotes\/origin\/main/);

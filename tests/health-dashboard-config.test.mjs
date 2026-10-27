@@ -57,7 +57,9 @@ test("health summary displays the same effective evidence used by the verdict",(
   assert.match(report,/## Workflow evidence used for health verdict/);
   assert.match(report,/line\("Teacher refresh",refreshDisplayRun\)/);
   assert.match(report,/line\("Homework refresh",effectiveRun\(status\.workflows\.homework\)\)/);
-  assert.match(report,/line\("App QA",effectiveRun\(status\.workflows\.qa\)\)/);
+  assert.match(report,/line\("App QA \(standalone or verified release\)",status\.qaEvidence\)/);
+  assert.match(report,/completedRunHealthy\(status\.qaEvidence,48\)/);
+  assert.match(workflow,/QA_PUBLICATIONS_FILE: qa-publications\.json/);
   assert.match(report,/line\("Publication evidence",status\.publicationEvidence\)/);
   assert.match(report,/line\("Standalone Pages deploy",effectiveRun\(status\.workflows\.deploy\)\)/);
   assert.match(report,/line\("Refresh watchdog",effectiveRun\(status\.workflows\.watchdog\)\)/);

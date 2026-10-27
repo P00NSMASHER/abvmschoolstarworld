@@ -1,5 +1,5 @@
 import {readFileSync,mkdirSync,writeFileSync} from "node:fs";
-import {assessHomeworkHealth,assessHomeworkPollingCadence,assessMainBranchProtection,selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence,selectRecoveredRefreshRace,selectRecoveredCancelledRefresh} from "./health-evidence.mjs";
+import {selectQaEvidence,assessHomeworkHealth,assessHomeworkPollingCadence,assessMainBranchProtection,selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence,selectRecoveredRefreshRace,selectRecoveredCancelledRefresh} from "./health-evidence.mjs";
 import {assessUpcomingLunchCoverage,schoolWeekLabel} from "./school-week-label.mjs";
 import {assessPublicationParity} from "./publication-parity-health.mjs";
 import {schoolWeek} from "./lunch-publication.mjs";
@@ -15,6 +15,7 @@ const refreshStageJobsPath=process.env.REFRESH_STAGE_JOBS_FILE;
 const openPullsPath=process.env.OPEN_PULLS_FILE;
 const publicationsPath=process.env.HOMEWORK_PUBLICATIONS_FILE;
 const lunchPublicationsPath=process.env.LUNCH_PUBLICATIONS_FILE;
+const qaPublicationsPath=process.env.QA_PUBLICATIONS_FILE;
 const mainBranchPath=process.env.MAIN_BRANCH_FILE;
 const runs=runsPath?JSON.parse(readFileSync(runsPath,"utf8")).workflow_runs||[]:[];
 const refreshJobsData=refreshJobsPath?JSON.parse(readFileSync(refreshJobsPath,"utf8")):{run_id:null,jobs:[]};
@@ -23,6 +24,7 @@ const refreshStageJobs=refreshStageJobsPath?JSON.parse(readFileSync(refreshStage
 const openPulls=openPullsPath?JSON.parse(readFileSync(openPullsPath,"utf8")):[];
 const homeworkPublications=publicationsPath?JSON.parse(readFileSync(publicationsPath,"utf8")):[];
 const lunchPublications=lunchPublicationsPath?JSON.parse(readFileSync(lunchPublicationsPath,"utf8")):[];
+const qaPublications=qaPublicationsPath?JSON.parse(readFileSync(qaPublicationsPath,"utf8")):[];
 const mainBranchEvidence=mainBranchPath?JSON.parse(readFileSync(mainBranchPath,"utf8")):null;
 const liveParityPath=process.env.SOURCE_RECOVERY_PLAN_FILE;
 const publicationParity=assessPublicationParity(liveParityPath?JSON.parse(readFileSync(liveParityPath,"utf8")):null);
@@ -147,6 +149,7 @@ const effectivePublicationRun=()=>selectPublicationEvidence(
     Number.isInteger(run.publisherJobId)).sort((a,b)=>runEvidenceAt(b)-runEvidenceAt(a))[0]||null
 );
 status.publicationEvidence=effectivePublicationRun();
+status.qaEvidence=selectQaEvidence(effectiveRun(status.workflows.qa),qaPublications);
 const effectiveRefreshRun=effectiveRun(status.workflows.refresh);
 const curriculumHoldRefreshRun=selectRefreshFailureEvidence(productionRuns,refreshJobsData);
 status.curriculumHold=selectGovernedCurriculumHold(curriculumHoldRefreshRun,refreshJobsData,openPulls);
@@ -216,7 +219,7 @@ const criticalHealthy=Boolean(
   status.homework.healthy &&
   lunchOperationallyUsable &&
   status.lunch.currentWeek &&
-  completedHealthy(status.workflows.qa,48) &&
+  completedRunHealthy(status.qaEvidence,48) &&
   completedRunHealthy(status.publicationEvidence,48) &&
   (refreshOperationallyHealthy || Boolean(status.refreshStage)) &&
   completedHealthy(status.workflows.watchdog,30) &&
@@ -309,7 +312,7 @@ const md=[
   `- **Cancelled publisher recovery:** ${status.cancelledRefreshRecovery?"verified by publication "+status.cancelledRefreshRecovery.publisherRunId+" and watchdog "+status.cancelledRefreshRecovery.watchdogRunId:"not established"}`,
   line("Homework refresh",effectiveRun(status.workflows.homework)),
   line("Reviewed lunch rollover",effectiveRun(status.workflows.lunch)),
-  line("App QA",effectiveRun(status.workflows.qa)),
+  line("App QA (standalone or verified release)",status.qaEvidence),
   line("Publication evidence",status.publicationEvidence),
   line("Standalone Pages deploy",effectiveRun(status.workflows.deploy)),
   line("Refresh watchdog",effectiveRun(status.workflows.watchdog)),

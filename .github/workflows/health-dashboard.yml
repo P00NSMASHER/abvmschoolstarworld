@@ -83,6 +83,7 @@ jobs:
           OPEN_PULLS_FILE: open-pulls.json
           HOMEWORK_PUBLICATIONS_FILE: homework-publications.json
           LUNCH_PUBLICATIONS_FILE: lunch-publications.json
+          QA_PUBLICATIONS_FILE: qa-publications.json
           MAIN_BRANCH_FILE: main-branch-status.json
         run: npm run health:report
 
