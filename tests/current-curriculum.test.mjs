@@ -217,3 +217,68 @@ test('service worker returns current test-routing modules online while preservin
   assert.match(branch,/networkFirst\(event.request,null,event\)/);
   assert.match(sw,/cachedFallback\(request,fallback\)/);
 });
+
+
+test('soft c and g test receives source-backed guide, worksheet, and correct answer keys', () => {
+  const timestamp='2026-10-27T19:07:28.519Z';
+  const sourceHash='teacher-pages-'+'6'.repeat(20);
+  const pack={
+    sourceHash,
+    subjects:[{
+      subject:'Spelling / Handwriting',
+      topics:['Friday, Oct. 30 test focus: soft c and g'],
+      studyNotes:[],
+    }],
+    vocabulary:[],
+  };
+  const sourcePages=[{
+    title:'Tests',
+    url:'https://sites.google.com/view/abvmgr2/tests',
+    checkedAt:timestamp,
+    contentHash:'6'.repeat(64),
+    lines:['Friday Oct. 30: Spelling (soft c and g) / Handwriting'],
+  }];
+  const out=buildGrade2ContentPipeline(pack,{
+    sourceHash,generatedAt:timestamp,sourcePages,requirePageExactLineage:true,
+  });
+  const skill=out.skills.find(row=>row.id==='soft-c-g');
+  const practice=questionsForTest({label:'Spelling (soft c and g) / Handwriting',date:'2026-10-30'},out.questions);
+  assert(skill);
+  assert.equal(practice.length,3);
+  assert(practice.every(row=>row.skill==='soft-c-g'));
+  assert(practice.every(row=>row.sourceLineage?.quality==='page-exact'));
+  assert(practice.every(row=>row.sourceLineage?.sourceTitle==='Tests'));
+  assert.match(skill.studyNotes.join(' '),/Teacher-style supplemental practice/i);
+  assert(!out.coverage.some(row=>/soft c and g/i.test(row.topic)&&row.status==='GENERATOR_UNSUPPORTED'));
+  for(const question of practice){
+    assert.equal(question.choices.length,3,question.id);
+    assert.equal(new Set(question.choices).size,3,question.id);
+    assert.equal(question.choices.filter(choice=>choice===question.answer).length,1,question.id);
+    assert(question.explanation.length>20,question.id);
+  }
+
+  const guide={
+    label:'Spelling (soft c and g) / Handwriting',
+    date:'2026-10-30',
+    subject:'Spelling / Handwriting',
+    facts:skill.studyNotes,
+    teacherFacts:[],
+    vocabulary:[],
+    practice,
+    warnings:[],
+    sourceLabel:'Current published ABVM test with teacher-style supplemental practice',
+    sourceCheckedAt:timestamp,
+    coverage:{missingGuideSkills:[]},
+  };
+  const guideHtml=printableStudyGuideHtml(guide);
+  const worksheetHtml=printableWorksheetHtml(guide);
+  assert.match(guideHtml,/Teacher-style supplemental practice/i);
+  assert.match(guideHtml,/@media screen and \(max-width:620px\)/);
+  assert.match(worksheetHtml,/Answer Key/i);
+  assert.match(worksheetHtml,/@media print/);
+  for(const question of practice){
+    assert(guideHtml.includes(question.prompt),question.id);
+    assert(worksheetHtml.includes(question.prompt),question.id);
+    assert(worksheetHtml.includes(question.answer),question.id);
+  }
+});
