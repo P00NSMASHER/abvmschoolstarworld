@@ -376,8 +376,21 @@ test('consonant digraph test receives a teacher-style guide, keyed worksheet, an
 
   const withdrawn=buildGrade2ContentPipeline({
     ...pack,
-    subjects:[{subject:'Spelling / Handwriting',topics:['Friday, Nov. 6 handwriting practice'],studyNotes:[]}],
-  },{sourceHash,generatedAt:timestamp,sourcePages,requirePageExactLineage:true});
+    subjects:[
+      {subject:'Spelling / Handwriting',topics:['Friday, Nov. 6 handwriting practice'],studyNotes:[]},
+      {subject:'Reading / ELA',topics:['Reading comprehension: Main idea / details'],studyNotes:[]},
+    ],
+  },{
+    sourceHash,generatedAt:timestamp,
+    sourcePages:[...sourcePages,{
+      title:'Reading Work',
+      url:'https://sites.google.com/view/abvmgr2/reading-work',
+      checkedAt:timestamp,
+      contentHash:'9'.repeat(64),
+      lines:['Reading comprehension: Main idea / details'],
+    }],
+    requirePageExactLineage:true,
+  });
   assert(!withdrawn.skills.some(row=>row.id==='consonant-digraphs'));
   assert(!withdrawn.questions.some(row=>row.skill==='consonant-digraphs'));
 });
