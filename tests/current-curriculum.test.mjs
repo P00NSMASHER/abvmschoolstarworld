@@ -305,3 +305,79 @@ test('soft c and g test receives source-backed guide, worksheet, and correct ans
   assert(!withdrawn.skills.some(row=>row.id==='soft-c-g'));
   assert(!withdrawn.questions.some(row=>row.skill==='soft-c-g'));
 });
+
+
+test('consonant digraph test receives a teacher-style guide, keyed worksheet, and exact lineage', () => {
+  const timestamp='2026-10-28T17:30:35.873Z';
+  const sourceHash='teacher-pages-'+'8'.repeat(20);
+  const pack={
+    sourceHash,
+    subjects:[{
+      subject:'Spelling / Handwriting',
+      topics:['Friday, Nov. 6 test focus: consonant digraphs'],
+      studyNotes:[],
+    }],
+    vocabulary:[],
+  };
+  const sourcePages=[{
+    title:'Tests',
+    url:'https://sites.google.com/view/abvmgr2/tests',
+    checkedAt:timestamp,
+    contentHash:'8'.repeat(64),
+    lines:['Friday Nov. 6: Spelling (consonant digraphs) / Handwriting'],
+  }];
+  const out=buildGrade2ContentPipeline(pack,{
+    sourceHash,generatedAt:timestamp,sourcePages,requirePageExactLineage:true,
+  });
+  const skill=out.skills.find(row=>row.id==='consonant-digraphs');
+  const practice=questionsForTest({label:'Spelling (consonant digraphs) / Handwriting',date:'2026-11-06'},out.questions);
+  assert(skill);
+  assert.equal(out.qa.unsupportedSkillCount,0);
+  assert.equal(practice.length,3);
+  assert(practice.every(row=>row.skill==='consonant-digraphs'));
+  assert(practice.every(row=>row.sourceLineage?.quality==='page-exact'));
+  assert(practice.every(row=>row.sourceLineage?.sourceTitle==='Tests'));
+  assert.match(skill.studyNotes.join(' '),/Teacher-style supplemental practice/i);
+  assert(!out.coverage.some(row=>/consonant digraph/i.test(row.topic)&&row.status==='GENERATOR_UNSUPPORTED'));
+  for(const question of practice){
+    assert.equal(question.choices.length,3,question.id);
+    assert.equal(new Set(question.choices).size,3,question.id);
+    assert.equal(question.choices.filter(choice=>choice===question.answer).length,1,question.id);
+    assert(question.explanation.length>20,question.id);
+  }
+
+  const guide={
+    label:'Spelling (consonant digraphs) / Handwriting',
+    date:'2026-11-06',
+    subject:'Spelling / Handwriting',
+    facts:skill.studyNotes,
+    teacherFacts:[],
+    vocabulary:[],
+    spellingWords:[],
+    practice,
+    warnings:[],
+    sourceLabel:'Current published ABVM test with teacher-style supplemental practice',
+    sourceCheckedAt:timestamp,
+    coverage:{missingGuideSkills:[]},
+  };
+  const guideHtml=printableStudyGuideHtml(guide);
+  const worksheetHtml=printableWorksheetHtml(guide);
+  assert.match(guideHtml,/Teacher-style supplemental practice/i);
+  assert.match(guideHtml,/@media screen and \(max-width:640px\)/);
+  assert.match(worksheetHtml,/Answer Key/i);
+  assert.match(worksheetHtml,/\.work-area\{min-height:\.5in/);
+  assert.match(worksheetHtml,/@media screen and \(max-width:640px\)/);
+  assert.match(worksheetHtml,/@media print/);
+  for(const question of practice){
+    assert(guideHtml.includes(question.prompt),question.id);
+    assert(worksheetHtml.includes(question.prompt),question.id);
+    assert(worksheetHtml.includes(question.answer),question.id);
+  }
+
+  const withdrawn=buildGrade2ContentPipeline({
+    ...pack,
+    subjects:[{subject:'Spelling / Handwriting',topics:['Friday, Nov. 6 handwriting practice'],studyNotes:[]}],
+  },{sourceHash,generatedAt:timestamp,sourcePages,requirePageExactLineage:true});
+  assert(!withdrawn.skills.some(row=>row.id==='consonant-digraphs'));
+  assert(!withdrawn.questions.some(row=>row.skill==='consonant-digraphs'));
+});
