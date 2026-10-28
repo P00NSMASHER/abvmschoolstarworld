@@ -3,14 +3,18 @@
   "sourceUrl": "https://sites.google.com/view/abvmgr2/homework",
   "sourceDateProvided": false,
   "status": "assignments",
-  "checkedAt": "2026-10-28T16:51:49.355Z",
-  "firstObservedAt": "2026-10-27T19:47:19.141Z",
-  "contentChangedAt": "2026-10-27T19:47:19.141Z",
-  "contentHash": "e700a368c203e18400393285b677038ea55cd9f4daf668565491f7264f97f6fe",
+  "checkedAt": "2026-10-28T18:10:18.972Z",
+  "firstObservedAt": "2026-10-28T18:10:18.972Z",
+  "contentChangedAt": "2026-10-28T18:10:18.972Z",
+  "contentHash": "02f0561859d0b999dedc1f34295345c62dc48448711aaff891a835e27198ce87",
   "assignments": [
     {
       "subject": "Spelling",
       "task": "Spelling Choice Board activity"
+    },
+    {
+      "subject": "Math",
+      "task": "Page 34"
     }
   ]
 }
