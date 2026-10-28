@@ -66,3 +66,11 @@ test('refresh keeps original teacher source hashes but filters invalid calendar 
   assert.match(refresh,/mergeTeacherEvents\(pack\.importantDates, testItems, 'teacher-tests'/);
   assert.match(refresh,/Teacher Tests weekday\/date conflict withheld from calendar and Test Prep/);
 });
+
+
+test('refresh includes every upcoming spelling test in the material pipeline',()=>{
+  const refresh=readFileSync(new URL('../scripts/refresh-teacher-pages.mjs',import.meta.url),'utf8');
+  assert.match(refresh,/const spellingTests = currentTests\.filter\(item => \/spelling\/i\.test\(item\.label\)\);/);
+  assert.match(refresh,/topics: spellingTests\.length\s*\?\s*spellingTests\.map\(/);
+  assert.doesNotMatch(refresh,/const spellingTest = currentTests\.find\(item => \/spelling\/i\.test\(item\.label\)\);/);
+});
