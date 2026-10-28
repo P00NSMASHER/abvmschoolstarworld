@@ -12,6 +12,7 @@ const DOMAIN_BY_SKILL = Object.freeze({
   'common-proper-nouns': ['Language'],
   'subject-predicate': ['Language'],
   'consonant-blends': ['Foundational reading'],
+  'consonant-digraphs': ['Foundational reading'],
   'cvc-structure': ['Foundational reading'],
   'long-short-a': ['Foundational reading'],
   'suffix-ed-ing': ['Foundational reading'],
@@ -70,6 +71,11 @@ const EXACT_SKILLS = Object.freeze({
     subject: 'Spelling / Handwriting',
     standards: ['CCSS.RF.2.3'],
     anchors: ['blend', 'consonant', 'sound'],
+  },
+  'consonant-digraphs': {
+    subject: 'Spelling / Handwriting',
+    standards: ['CCSS.RF.2.3'],
+    anchors: ['digraph', 'consonant', 'two letters', 'one sound', 'ch', 'sh', 'th', 'wh'],
   },
   'cvc-structure': {
     subject: 'Reading / ELA',
