@@ -408,10 +408,12 @@ upsertSubject(subjects, /Reading \/ ELA/i, {
     : ['The current Reading Work page does not list a reading-comprehension skill.'],
 });
 
-const spellingTest = currentTests.find(item => /spelling/i.test(item.label));
+const spellingTests = currentTests.filter(item => /spelling/i.test(item.label));
 upsertSubject(subjects, /Spelling/i, {
   subject: 'Spelling / Handwriting',
-  topics: spellingTest ? [`${spellingTest.date} test focus: ${spellingTest.label.replace(/^Spelling\s*/i, '').replace(/\s*\/\s*Handwriting$/i, '').replace(/^\(([^)]+)\)$/, '$1')}`] : [`Phonics: ${phonics}`],
+  topics: spellingTests.length
+    ? spellingTests.map(item => `${item.date} test focus: ${item.label.replace(/^Spelling\s*/i, '').replace(/\s*\/\s*Handwriting$/i, '').replace(/^\(([^)]+)\)$/, '$1')}`)
+    : [`Phonics: ${phonics}`],
   studyNotes: spellingLines.length
     ? spellingLines
     : ['The Weekly Spelling List page currently has no word list posted.'],
