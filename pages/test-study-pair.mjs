@@ -153,7 +153,7 @@ const vowelStory=()=>'<aside class="vowel-story" aria-label="Short vowel memory 
   '<small>Say the five words in order: cat, bed, pig, hot, sun.</small></aside>';
 
 export function renderTestStudyGuide(guide,dictionary=()=> ''){
-  const patternPractice=rows(guide?.practice).some(q=>clean(q?.skill)==='soft-c-g');
+  const patternPractice=rows(guide?.practice).some(q=>['soft-c-g','consonant-digraphs'].includes(clean(q?.skill)));
   if(kindOf(guide)==='spelling'&&!patternPractice)return renderClassroomStudyGuide(guide,dictionary);
   const kind=kindOf(guide),facts=unique(guide?.facts);
   const questions=rows(guide?.practice).filter(q=>clean(q?.prompt)&&clean(q?.answer));
