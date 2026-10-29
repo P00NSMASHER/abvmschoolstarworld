@@ -441,6 +441,34 @@ test("hourly Homework schedule delivery cannot be concealed by a newer successfu
   assert.equal(assessHomeworkPollingCadence(recent,"2026-10-21T19:35:00Z").state,"current");
 });
 
+test("hourly Homework reporting exposes an earlier same-day cron gap even after recovery",()=>{
+  const scheduled=created_at=>({name:"Refresh current ABVM homework",
+    event:"schedule",head_branch:"main",status:"completed",conclusion:"success",created_at});
+  const history=[
+    scheduled("2026-10-29T08:38:30Z"),
+    scheduled("2026-10-29T16:58:36Z"),
+    {name:"Refresh current ABVM homework",event:"workflow_dispatch",head_branch:"main",
+      status:"completed",conclusion:"success",created_at:"2026-10-29T18:30:00Z"},
+  ];
+  const result=assessHomeworkPollingCadence(history,"2026-10-29T18:36:35Z");
+  assert.equal(result.state,"current","the latest scheduled check is fresh");
+  assert.ok(result.observedGapHours>8 && result.observedGapHours<8.5,
+    "freshness must not conceal the historical 8-hour delivery gap");
+  assert.equal(result.gapFrom,"2026-10-29T08:38:30Z");
+  assert.equal(result.gapTo,"2026-10-29T16:58:36Z");
+});
+
+test("overnight scheduled Homework gap is not a same-school-day delivery failure",()=>{
+  const scheduled=created_at=>({name:"Refresh current ABVM homework",
+    event:"schedule",head_branch:"main",status:"completed",conclusion:"success",created_at});
+  const result=assessHomeworkPollingCadence([
+    scheduled("2026-10-29T03:23:00Z"), // Oct. 28, 11:23 PM EDT
+    scheduled("2026-10-29T12:23:00Z"), // Oct. 29, 8:23 AM EDT
+  ],"2026-10-29T13:00:00Z");
+  assert.equal(result.state,"current");
+  assert.equal(result.observedGapHours,null);
+});
+
 test("polling cadence handles missing evidence, off hours and future timestamps",()=>{
   assert.equal(assessHomeworkPollingCadence([],"2026-10-21T19:35:00Z").state,"unknown");
   assert.equal(assessHomeworkPollingCadence([],"2026-10-22T04:20:00Z").state,"off-hours");
