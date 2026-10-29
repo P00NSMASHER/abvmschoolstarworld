@@ -238,6 +238,12 @@ if(status.homeworkPolling.state==="delayed"){
 if(status.homeworkPolling.state==="unknown"){
   warnings.push("No valid scheduled Homework polling run was observed in the available workflow history during active school hours.");
 }
+if(Number.isFinite(status.homeworkPolling.observedGapHours)){
+  warnings.push("Scheduled Homework polling had an observed "+
+    status.homeworkPolling.observedGapHours+"h same-day gap between "+
+    status.homeworkPolling.gapFrom+" and "+status.homeworkPolling.gapTo+
+    ". The latest scheduled run may be current, but it cannot retroactively establish missing school-day polls.");
+}
 if(mainBranchPath && status.repositorySecurity.mainBranch.state==="unprotected"){
   warnings.push("GitHub main is unprotected: in Settings > Branches, block force pushes and deletion while preserving verified direct fast-forward teacher and homework updates.");
 }
