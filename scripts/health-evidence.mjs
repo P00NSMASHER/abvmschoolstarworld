@@ -256,13 +256,40 @@ export function assessHomeworkPollingCadence(runs, now, {maxGapHours=2.5}={}) {
   if(localHour<8 || localHour>23 || !Number.isFinite(localMinute)){
     return {state:'off-hours',lastScheduledAt:null,ageHours:null};
   }
-  const last=(runs.filter(run=>run?.name==='Refresh current ABVM homework'&&
+  const scheduled=runs.filter(run=>run?.name==='Refresh current ABVM homework'&&
     run?.event==='schedule'&&run?.head_branch==='main'&&
     Number.isFinite(Date.parse(run?.created_at||'')))
-    .sort((a,b)=>Date.parse(b.created_at)-Date.parse(a.created_at)))[0];
+    .sort((a,b)=>Date.parse(b.created_at)-Date.parse(a.created_at));
+  const last=scheduled[0];
   if(!last)return {state:'unknown',lastScheduledAt:null,ageHours:null};
   const age=(current-Date.parse(last.created_at))/3_600_000;
   if(age<-.25)return {state:'unknown',lastScheduledAt:last.created_at,ageHours:null};
+
+  // A late but successful scheduled run repairs CURRENT freshness; it must not
+  // silently erase earlier dropped/delayed school-day polling windows.
+  // Compare only original scheduled runs on today's Eastern calendar date:
+  // a legitimate prior-night interval is not an hourly-delivery failure.
+  const localDay=value=>new Intl.DateTimeFormat('en-CA',{
+    timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'
+  }).format(new Date(value));
+  const day=localDay(current);
+  const schoolHour=value=>Number(new Intl.DateTimeFormat('en-US',{
+    timeZone:'America/New_York',hourCycle:'h23',hour:'2-digit'
+  }).format(new Date(value)));
+  const sameDay=scheduled.filter(run=>localDay(run.created_at)===day)
+    .sort((a,b)=>Date.parse(a.created_at)-Date.parse(b.created_at));
+  let observedGapHours=null,gapFrom=null,gapTo=null;
+  for(let i=1;i<sameDay.length;i++){
+    const prior=sameDay[i-1],later=sameDay[i];
+    if(schoolHour(later.created_at)<8)continue;
+    const gap=(Date.parse(later.created_at)-Date.parse(prior.created_at))/3_600_000;
+    if(gap>maxGapHours&&(observedGapHours===null||gap>observedGapHours)){
+      observedGapHours=Number(gap.toFixed(2));
+      gapFrom=prior.created_at;
+      gapTo=later.created_at;
+    }
+  }
   return {state:age>maxGapHours?'delayed':'current',
-    lastScheduledAt:last.created_at,ageHours:Number(age.toFixed(2))};
+    lastScheduledAt:last.created_at,ageHours:Number(age.toFixed(2)),
+    observedGapHours,gapFrom,gapTo};
 }
