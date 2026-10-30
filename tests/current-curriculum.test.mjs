@@ -333,11 +333,14 @@ test('consonant digraph test receives a teacher-style guide, keyed worksheet, an
   const practice=questionsForTest({label:'Spelling (consonant digraphs) / Handwriting',date:'2026-11-06'},out.questions);
   assert(skill);
   assert.equal(out.qa.unsupportedSkillCount,0);
-  assert.equal(practice.length,3);
+  assert.equal(practice.length,5);
   assert(practice.every(row=>row.skill==='consonant-digraphs'));
+  assert(practice.some(row=>row.answer==='whale'&&/begins with wh/i.test(row.explanation)));
+  assert(practice.some(row=>row.answer==='fish'&&/ends with sh/i.test(row.explanation)));
   assert(practice.every(row=>row.sourceLineage?.quality==='page-exact'));
   assert(practice.every(row=>row.sourceLineage?.sourceTitle==='Tests'));
   assert.match(skill.studyNotes.join(' '),/Teacher-style supplemental practice/i);
+  assert.match(skill.studyNotes.join(' '),/Box the digraph, tap the box once/i);
   assert(!out.coverage.some(row=>/consonant digraph/i.test(row.topic)&&row.status==='GENERATOR_UNSUPPORTED'));
   for(const question of practice){
     assert.equal(question.choices.length,3,question.id);
