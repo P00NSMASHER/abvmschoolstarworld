@@ -80,6 +80,24 @@ test('spelling study notes do not falsely teach that have obeys the silent-e rul
   assert.match(worksheet,/Adult Dictation List/);
 });
 
+
+test('source-limited topic worksheets include an honest adult checking guide without inventing chapter facts',()=>{
+  const html=renderTestWorksheet(sample('Math (Ch. 2)',[],{
+    subject:'Math',facts:[],vocabulary:[],
+    warnings:['The matching question bank is not yet available.'],
+  }));
+  const student=html.split('<section class="sheet adult-key">')[0];
+  const adult=html.split('<section class="sheet adult-key">')[1];
+  assert.match(student,/class="sheet organizer-sheet"/);
+  assert.match(student,/class-topic organizer/);
+  assert.doesNotMatch(student,/Answer Key \/ Adult Checking Guide/);
+  assert.match(adult,/Answer Key \/ Adult Checking Guide/);
+  assert.match(adult,/Answers vary/);
+  assert.match(adult,/current class notes or textbook/);
+  assert.match(adult,/does not supply unverified chapter facts/);
+});
+
+
 test('paper theme keeps bright previews but uses grayscale outlines and splittable cards for home printing',()=>{
   assert.match(premiumPaperCss,/\.premium-paper \.vowel-cards/);
   assert.match(premiumPaperCss,/\.premium-paper \.response-lines/);
