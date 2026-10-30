@@ -244,7 +244,8 @@ function noBankWorksheet(guide){
   });
   const paper='<main class="sheet organizer-sheet">'+header(guide,'Topic Practice Worksheet',topic)+
     '<div class="name-row">Name: <span></span> Date: <span></span></div>'+
-    '<p class="warning">The matching question bank is not yet available. This is a class-topic organizer, not a reproduction of the teacher test.</p>'+\n    '<p class="focus-note"><strong>Teacher-style supplemental practice</strong>These original prompts help review the announced topic. They are not school-issued questions.</p>'+
+    '<p class="warning">The matching question bank is not yet available. This is a class-topic organizer, not a reproduction of the teacher test.</p>'+
+    '<p class="focus-note"><strong>Teacher-style supplemental practice</strong>These original prompts help review the announced topic. They are not school-issued questions.</p>'+
     items.map((item,i)=>'<section class="organizer-prompt"><h2>'+(i+1)+'. '+esc(item.prompt)+'</h2>'+
       '<div class="writing-lines"><span></span><span></span><span></span></div></section>').join('')+
     warningHtml(guide)+footer(guide)+'</main>';
