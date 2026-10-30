@@ -502,6 +502,8 @@ test("6:23 AM Homework polling is checked after grace rather than hidden until 8
 });
 
 test("polling cadence handles missing evidence, off hours and future timestamps",()=>{
+  assert.equal(assessHomeworkPollingCadence([],"2026-10-30T11:59:00Z").state,"unknown",
+    "missing run history after the 6:23 AM grace must not be reported as benign off-hours");
   assert.equal(assessHomeworkPollingCadence([],"2026-10-21T19:35:00Z").state,"unknown");
   assert.equal(assessHomeworkPollingCadence([],"2026-10-22T04:20:00Z").state,"off-hours");
   assert.equal(assessHomeworkPollingCadence([{name:"Refresh current ABVM homework",
