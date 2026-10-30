@@ -163,6 +163,7 @@ const BASE_SKILLS = [
     studyNotes: [
       'A consonant digraph is two consonant letters that work together to make one sound, as in sh, ch, th, and wh.',
       'In a digraph, the two letters make one sound. In a blend, you can still hear both consonant sounds.',
+      'Teacher-style mnemonic: “Two letters, one sound.” Box the digraph, tap the box once, and say its sound.',
       'Teacher-style supplemental practice: these explanations and examples are original ABVM teaching, not a school-provided spelling list or question set.',
     ],
     evidenceContract: {
@@ -799,6 +800,26 @@ const SUPPLEMENTAL_QUESTION_FAMILIES = Object.freeze({
       hint: 'Say ship and slip slowly, then count the beginning sounds you hear.',
       dok: 3,
       difficulty: 3,
+    },
+    {
+      questionType: 'direct',
+      prompt: 'Which word begins with the consonant digraph wh?',
+      choices: ['whale', 'wing', 'wait'],
+      answer: 'whale',
+      explanation: 'Whale begins with wh. The two letters work together as the beginning digraph.',
+      hint: 'Look at the first two letters in each word.',
+      dok: 1,
+      difficulty: 2,
+    },
+    {
+      questionType: 'transfer',
+      prompt: 'Which word ends with a consonant digraph?',
+      choices: ['fish', 'fast', 'fan'],
+      answer: 'fish',
+      explanation: 'Fish ends with sh. The letters s and h work together to make one ending sound.',
+      hint: 'Look at the last two letters and listen for one sound.',
+      dok: 2,
+      difficulty: 2,
     },
   ],
   'soft-c-g': [
