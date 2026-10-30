@@ -219,21 +219,41 @@ function dictationWorksheet(guide){
 function noBankWorksheet(guide){
   const topic=clean(guide?.label)||'this test';
   const knownFacts=unique(guide?.facts);
-  const questions=knownFacts.length
-    ? knownFacts.map(fact=>'Explain this verified class idea in your own words: '+fact)
+  const items=knownFacts.length
+    ? knownFacts.map(fact=>({
+      prompt:'Explain this verified class idea in your own words: '+fact,
+      check:'A correct response should explain this verified idea: '+fact,
+    }))
     : ['Write one important fact you learned about '+topic+'.',
       'Write or draw an example from your current class notes.',
-      'Explain something about '+topic+' that you could teach someone else.'];
+      'Explain something about '+topic+' that you could teach someone else.']
+      .map(prompt=>({
+        prompt,
+        check:'Answers vary. Check that the response matches the current class notes or textbook.',
+      }));
   rows(guide?.vocabulary).forEach(entry=>{
-    if(clean(entry?.term))questions.push('What does '+clean(entry.term)+' mean?');
+    const term=clean(entry?.term);
+    if(!term)return;
+    const meaning=clean(entry?.meaning);
+    items.push({
+      prompt:'What does '+term+' mean?',
+      check:meaning
+        ? 'Expected meaning: '+meaning
+        : 'Answers vary. Check the meaning against the current class notes or textbook.',
+    });
   });
   const paper='<main class="sheet organizer-sheet">'+header(guide,'Topic Practice Worksheet',topic)+
     '<div class="name-row">Name: <span></span> Date: <span></span></div>'+
     '<p class="warning">The matching question bank is not yet available. This is a class-topic organizer, not a reproduction of the teacher test.</p>'+
-    questions.map((q,i)=>'<section class="organizer-prompt"><h2>'+(i+1)+'. '+esc(q)+'</h2>'+
+    '<p class="focus-note"><strong>Teacher-style supplemental practice</strong>These original prompts help review the announced topic. They are not school-issued questions.</p>'+
+    items.map((item,i)=>'<section class="organizer-prompt"><h2>'+(i+1)+'. '+esc(item.prompt)+'</h2>'+
       '<div class="writing-lines"><span></span><span></span><span></span></div></section>').join('')+
     warningHtml(guide)+footer(guide)+'</main>';
-  return decoratePaper(htmlHead(guide,'Practice worksheet')+paper+'</body></html>',kindOf(guide));
+  const key='<section class="sheet adult-key">'+header(guide,'Answer Key / Adult Checking Guide',topic)+
+    '<p><strong>Source-honest checking:</strong> This guide does not supply unverified chapter facts. Use the current class notes or textbook for open-ended responses.</p>'+
+    '<ol>'+items.map((item,i)=>'<li><strong>'+(i+1)+'.</strong> '+esc(item.check)+'</li>').join('')+'</ol>'+
+    footer(guide)+'</section>';
+  return decoratePaper(htmlHead(guide,'Practice worksheet')+paper+key+'</body></html>',kindOf(guide));
 }
 export function renderTestWorksheet(guide,dictionary=()=> ''){
   const practice=rows(guide?.practice);
