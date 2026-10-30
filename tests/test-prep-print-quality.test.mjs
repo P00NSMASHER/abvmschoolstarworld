@@ -90,6 +90,8 @@ test('source-limited topic worksheets include an honest adult checking guide wit
   const adult=html.split('<section class="sheet adult-key">')[1];
   assert.match(student,/class="sheet organizer-sheet"/);
   assert.match(student,/class-topic organizer/);
+  assert.match(student,/Teacher-style supplemental practice/);
+  assert.match(student,/not school-issued questions/);
   assert.doesNotMatch(student,/Answer Key \/ Adult Checking Guide/);
   assert.match(adult,/Answer Key \/ Adult Checking Guide/);
   assert.match(adult,/Answers vary/);
