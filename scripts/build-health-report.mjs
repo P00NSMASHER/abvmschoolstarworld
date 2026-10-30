@@ -232,8 +232,15 @@ if(publicationParity.state==="mismatch")warnings.push("Confirmed public study-pa
 if(publicationParity.state==="unknown")warnings.push("Live school publication parity is unavailable or unverified; never assert a healthy published site without both exact file comparisons.");
 if(status.refreshStage)warnings.push("The newest teacher source passed every source/QA/commit gate and a later guarded publication plus live watchdog verified it. Its parent workflow is still running; historical failures are retained, not relabeled as success.");
 if(status.homeworkPolling.state==="delayed"){
-  warnings.push("Scheduled hourly Homework polling is delayed: the last actual cron run was "+
-    status.homeworkPolling.ageHours+"h ago. A successful manual, push or recovery run does not prove the hourly schedule was delivered.");
+  if(status.homeworkPolling.offHours===true){
+    warnings.push("Scheduled Homework polling missed an expected school-time check after the 90-minute grace: "+
+      status.homeworkPolling.expectedSchoolDate+" "+status.homeworkPolling.expectedLocalTime+
+      " America/New_York. Last observed scheduled run: "+status.homeworkPolling.lastScheduledAt+
+      ". A previous night or morning polling gap is not erased by entering off-hours.");
+  }else{
+    warnings.push("Scheduled hourly Homework polling is delayed: the last actual cron run was "+
+      status.homeworkPolling.ageHours+"h ago. A successful manual, push or recovery run does not prove the hourly schedule was delivered.");
+  }
 }
 if(status.homeworkPolling.state==="unknown"){
   warnings.push("No valid scheduled Homework polling run was observed in the available workflow history during active school hours.");
