@@ -88,7 +88,7 @@ test('source-limited topic worksheets include an honest adult checking guide wit
   }));
   const student=html.split('<section class="sheet adult-key">')[0];
   const adult=html.split('<section class="sheet adult-key">')[1];
-  assert.match(student,/class="organizer-sheet"/);
+  assert.match(student,/class="sheet organizer-sheet"/);
   assert.match(student,/class-topic organizer/);
   assert.doesNotMatch(student,/Answer Key \/ Adult Checking Guide/);
   assert.match(adult,/Answer Key \/ Adult Checking Guide/);
