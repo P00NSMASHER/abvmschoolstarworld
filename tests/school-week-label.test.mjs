@@ -32,6 +32,14 @@ test('upcoming lunch monitor checks verified archive and honors explicit school 
 
 test('invalid timestamps must fail closed rather than inventing a week',()=>{
   assert.throws(()=>schoolWeekLabel('not-a-date'),/Invalid school-week instant/);
+  // JavaScript otherwise maps all three to 1969-12-29 in New York.
+  for(const invalid of [null,false,true,[],{}]){
+    assert.throws(()=>schoolWeekLabel(invalid),/Invalid school-week instant/);
+    assert.throws(()=>displayedSchoolWeekDates(invalid),/Invalid school-week instant/);
+  }
+  const iso='2026-10-16T22:00:00Z';
+  assert.equal(schoolWeekLabel(new Date(iso)),schoolWeekLabel(iso));
+  assert.equal(schoolWeekLabel(Date.parse(iso)),schoolWeekLabel(iso));
 });
 
 test('undated homework and word lists keep their first posting week through Monday if evidence is unchanged',()=>{

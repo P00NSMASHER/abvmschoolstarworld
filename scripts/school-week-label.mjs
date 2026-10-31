@@ -13,6 +13,10 @@ const isoDate=date=>date.toISOString().slice(0,10);
 const canonical=value=>String(value||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
 
 export function schoolWeekStart(at,{calendarDisplay=false}={}){
+  // Date(null), Date(false) and Date([]) all silently become the Unix epoch.
+  // Only explicit date/time inputs may select a school week.
+  if(!(typeof at==='string'||typeof at==='number'||at instanceof Date))
+    throw new TypeError('Invalid school-week instant');
   const instant=new Date(at);
   if(Number.isNaN(instant.getTime()))throw new TypeError('Invalid school-week instant');
   const parts=Object.fromEntries(easternParts.formatToParts(instant).map(part=>[part.type,part.value]));
