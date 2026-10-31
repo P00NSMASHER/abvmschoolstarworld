@@ -48,6 +48,8 @@ function parseDate(text){
   const now=today(); let year=now.getFullYear();
   if(now.getMonth()>=7&&month<=5)year++;
   else if(now.getMonth()<=5&&month>=7)year--;
+  // Reject impossible source dates instead of silently rolling them to another day.
+  if(day<1||day>new Date(year,month+1,0,12).getDate())return null;
   return new Date(year,month,day,12);
 }
 function sameDay(a,b){return a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
@@ -151,8 +153,11 @@ function eventDateRange(text){
   const start=parseDate(m[1]+" "+m[2]); if(!start)return null;
   const endMonth=SHORT_MONTHS[(m[3]||m[1]).toLowerCase()];
   let endYear=start.getFullYear(); if(endMonth<start.getMonth())endYear++;
-  const end=new Date(endYear,endMonth,Number(m[4]),12);
-  return [start,end];
+  const endDay=Number(m[4]);
+  if(endDay<1||endDay>new Date(endYear,endMonth+1,0,12).getDate())return null;
+  const end=new Date(endYear,endMonth,endDay,12);
+  // A backwards same-month interval cannot create a new verified calendar span.
+  return end<start?null:[start,end];
 }
 function eventItemsForDate(date){
   return getDerivedPack().eventsByDate.get(isoDateKey(date))||[];
