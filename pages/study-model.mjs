@@ -12,7 +12,7 @@ export function schoolDay(now = new Date()) {
   if (typeof now === 'string') {
     // Date silently normalizes impossible ISO instants as well as civil dates.
     // Reject bad calendar components before timezone conversion or archive reuse.
-    const civil = /^(\d{4}-\d{2}-\d{2})(?=$|[Tt ])/ .exec(now);
+    const civil = /^(\d{4}-\d{2}-\d{2})(?=$|[Tt ])/.exec(now);
     if (civil && !validCivilDay(civil[1])) throw new TypeError('Invalid study date');
     if (civil && civil[0] === now) return now;
   }
