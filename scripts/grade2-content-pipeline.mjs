@@ -251,7 +251,11 @@ const BASE_SKILLS = [
     pattern: /adding\s+-?ed.*-?ing|-ed,\s*-ing|\b-ed\b.*\b-ing\b/i,
     standards: ['CCSS.RF.2.3.d'],
     domain: 'Foundational reading',
-    studyNotes: ['Practice building words by adding -ed and -ing to a base word.'],
+    studyNotes: [
+      'Practice building words by adding -ed and -ing to a base word.',
+      'Teacher-style supplemental practice: When a base word ends in silent e, add -d for -ed (bake → baked), but drop the e before -ing (bake → baking).',
+      'Teacher-style supplemental practice: For many one-syllable CVC words with a short vowel, double the final consonant before -ed or -ing (hop → hopped, hopping).',
+    ],
     question: () => ({
       prompt: 'Which word correctly adds -ing to the base word jump?',
       choices: ['jumping', 'jumpeding', 'jumpsing'],
@@ -1668,6 +1672,10 @@ const RENEWABLE_EXTENSION_FAMILIES = Object.freeze({
     {questionType:'transfer',prompt:'Which word best completes “Yesterday we ___ at recess”?',choices:['played','playing','plays'],answer:'played',explanation:'Yesterday signals a completed past action, so played fits.',hint:'Use the word yesterday.',dok:2,difficulty:2},
     {questionType:'reasoning',prompt:'Why does “walked” fit “We walked home yesterday”?',choices:['-ed helps show the action already happened.','-ed makes the word name a person.','-ed always means the action is happening now.'],answer:'-ed helps show the action already happened.',explanation:'The -ed ending commonly marks a completed past action.',hint:'Use the time clue yesterday.',dok:3,difficulty:3},
     {questionType:'reasoning',prompt:'How are “jumped” and “jumping” alike?',choices:['Both keep the base action jump and add an ending.','Both mean the action happened yesterday.','Both are plural nouns.'],answer:'Both keep the base action jump and add an ending.',explanation:'Both words keep the base word jump while changing how the action is described.',hint:'Find the unchanged base word.',dok:3,difficulty:3},
+    {questionType:'direct',prompt:'Which word correctly adds -ed to “bake”?',choices:['baked','bakeed','bakked'],answer:'baked',explanation:'Bake already ends in silent e, so add only d to make baked.',hint:'The base word already has the e in -ed.',dok:1,difficulty:2},
+    {questionType:'transfer',prompt:'Which word correctly adds -ing to “bake”?',choices:['baking','bakeing','bakking'],answer:'baking',explanation:'Drop the final silent e in bake before adding -ing: bake becomes baking.',hint:'A final silent e usually steps away before -ing.',dok:2,difficulty:2},
+    {questionType:'transfer',prompt:'Which word correctly adds -ing to “hop”?',choices:['hopping','hoping','hoppinging'],answer:'hopping',explanation:'Hop is a short-vowel CVC word, so double p before adding -ing: hopping.',hint:'For this short CVC word, double the final consonant.',dok:2,difficulty:3},
+    {questionType:'reasoning',prompt:'Why do the base words “hope” and “hop” make “hoping” and “hopping” differently?',choices:['Hope drops silent e before -ing, while short-vowel CVC hop doubles p.','Every word ending in p must drop its final letter.','Both words follow exactly the same spelling change.'],answer:'Hope drops silent e before -ing, while short-vowel CVC hop doubles p.',explanation:'Hope follows the silent-e rule to make hoping; hop follows the short-vowel CVC doubling rule to make hopping.',hint:'Compare the base words hope and hop before adding -ing.',dok:3,difficulty:3},
   ],
   theme: [
     {questionType:'direct',prompt:'Lena practices tying her shoes each morning until she can do it alone. Which theme fits best?',choices:['Practice can help you improve.','Shoes should always be new.','Mornings are the longest part of the day.'],answer:'Practice can help you improve.',explanation:'Lena improves because she keeps practicing.',hint:'Choose the lesson shown by the whole situation.',dok:2,difficulty:2},
