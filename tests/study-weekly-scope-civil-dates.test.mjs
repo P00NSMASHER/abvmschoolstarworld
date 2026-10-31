@@ -29,3 +29,18 @@ test('malformed or normalized-away test dates cannot promote unrelated material 
   assert.deepEqual(weeklySourceNotes(pack,real,friday,matchingQuestions).map(row=>row.text),
     ['Addition','Add the parts.']);
 });
+
+test('malformed source rows cannot forge weekly topic matches or hide verified lessons',()=>{
+  const dirty={...pack,
+    subjects:[null, 'invalid', [], {}, ...pack.subjects],
+    contentPipeline:{skills:[null, [], {}, {subject:'Math',label:'Phantom topic',studyNotes:['Phantom lesson.']},...pack.contentPipeline.skills]},
+  };
+  const verified=[{date:'2026-02-27',label:'Verified math test'}];
+  const malformedQuestionMatches=()=>[null,false,{}, {skill:null}, {assessedSkillIds:[undefined,0,'']}, {skill:'add'}];
+  assert.deepEqual(
+    weeklySourceNotes(dirty,verified,friday,malformedQuestionMatches).map(row=>row.text),
+    ['Addition','Add the parts.'],
+  );
+  // An undefined question skill must never select an undefined-ID source skill.
+  assert.deepEqual(weeklySourceNotes(dirty,verified,friday,()=>[null,{}, {skill:null}]),[]);
+});
