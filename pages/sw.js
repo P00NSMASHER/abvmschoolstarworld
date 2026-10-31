@@ -1,5 +1,5 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v198-school-week";
+const CACHE = "abvm-grade2-parent-companion-v199-version-integrity";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=116",
@@ -53,8 +53,13 @@ self.addEventListener("activate",event=>{
 
 async function cachedFallback(request,fallback=null){
   const cache=await caches.open(CACHE);
-  return (await cache.match(request))||
-    (await cache.match(request,{ignoreSearch:true}))||
+  const url=new URL(request.url);
+  // Treat ?v= as source identity: a previous JS/CSS revision must never
+  // masquerade as missing versioned code when the device is offline.
+  const versionedCode=/\.(?:css|js|mjs)$/.test(url.pathname)&&url.searchParams.has("v");
+  const exact=await cache.match(request);
+  if(exact||versionedCode)return exact||null;
+  return (await cache.match(request,{ignoreSearch:true}))||
     (fallback?await cache.match(fallback,{ignoreSearch:true}):null);
 }
 function networkFirst(request,fallback="./index.html",event=null){
