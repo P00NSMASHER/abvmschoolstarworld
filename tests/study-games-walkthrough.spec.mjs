@@ -1,5 +1,6 @@
 import {test,expect} from '@playwright/test';
 import {writeFile} from 'node:fs/promises';
+import {governedBrowserQuestions} from './helpers/governed-browser-questions.mjs';
 
 test.use({video:{mode:'on',size:{width:393,height:852}},viewport:{width:393,height:852},isMobile:true,hasTouch:true,serviceWorkers:'block'});
 
@@ -12,11 +13,7 @@ test.describe('recorded Games walkthrough',()=>{
     await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready');
     await expect(page.locator('.study-game-grid > .study-game-tile')).toHaveCount(5);
     await expect(page.locator('[data-study-source]')).toHaveCount(0);
-    const catalog=await page.evaluate(async()=>{
-      const envelope=await fetch('./data/study-pack-runtime.json').then(response=>response.json());
-      const engine=window.ABVMStudyGames;
-      return engine.buildCatalog(envelope.pack,{sourceKey:engine.sourceKeyFromEnvelope(envelope.pack,envelope)}).questions;
-    });
+    const catalog=await governedBrowserQuestions(page);
     // These short holds intentionally make each learning state reviewable in
     // the retained recording; synchronization is provided by the assertions.
     await page.waitForTimeout(350);
@@ -27,7 +24,7 @@ test.describe('recorded Games walkthrough',()=>{
       const prompt=await page.locator('.game-question-card > h2').innerText();
       const choices=await page.locator('[data-game-answer] strong').allTextContents();
       const question=catalog.find(q=>q.prompt===prompt&&q.choices.length===choices.length&&q.choices.every(choice=>choices.includes(choice)));
-      expect(question,'walkthrough question resolves from its public weekly source').toBeTruthy();
+      expect(question,'walkthrough question resolves from a governed public source').toBeTruthy();
       const correct=choices.indexOf(question.answer);expect(correct).toBeGreaterThanOrEqual(0);
       if(index===0){
         await page.waitForTimeout(350);
