@@ -1,6 +1,9 @@
 /** Lesson dates, never crawl timestamps, determine the weekly notes selection. */
 import {weekBounds,validCivilDay} from './study-model.mjs';
 const array=value=>Array.isArray(value)?value:[];
+// Public source packs may contain malformed rows; quarantine them without
+// allowing missing skill IDs to become evidence for a fabricated weekly topic.
+const records=value=>array(value).filter(row=>row!==null&&typeof row==='object'&&!Array.isArray(row));
 const clean=value=>String(value||'').toLowerCase().replace(/[’‘]/g,"'").replace(/[^a-z0-9]+/g,' ').trim();
 const chapter=value=>String(value||'').match(/\b(?:chapter|ch\.?)\s*(\d+)\b/i)?.[1];
 export function explicitlyInWeek(row,now){
@@ -10,13 +13,14 @@ export function explicitlyInWeek(row,now){
  return dates.length>0&&dates.every(value=>validCivilDay(value)&&value>=start&&value<=end)&&(!row?.weekOf||row.weekOf===start);
 }
 export function exactSkillTopics(pack,skill){
+ if(!skill||typeof skill!=='object')return [];
  if(Array.isArray(skill.noteTopics))return skill.noteTopics;
- return array(pack.subjects).filter(row=>row.subject===skill.subject).flatMap(row=>array(row.topics)).filter(topic=>typeof topic==='string'&&topic.trim()&&array(skill.sourceLineage?.matchedEvidence).some(line=>clean(line).includes(clean(topic))));
+ return records(pack?.subjects).filter(row=>row.subject===skill.subject).flatMap(row=>array(row.topics)).filter(topic=>typeof topic==='string'&&topic.trim()&&array(skill.sourceLineage?.matchedEvidence).some(line=>clean(line).includes(clean(topic))));
 }
 /** Attach only exact pipeline associations; a subject match alone is insufficient. */
 export function sourceStudyNotes(pack={}){
- const skills=array(pack.contentPipeline?.skills);
- return array(pack.subjects).flatMap(subject=>{
+ const skills=records(pack.contentPipeline?.skills);
+ return records(pack.subjects).flatMap(subject=>{
   const topics=array(subject.topics).filter(value=>typeof value==='string'&&value.trim());
   return [
    ...topics.map(text=>({subject:subject.subject,text,kind:'topic'})),
@@ -30,7 +34,9 @@ export function sourceStudyNotes(pack={}){
 }
 export function weeklySourceNotes(pack,events,now,matchingQuestions){
  const {start,end}=weekBounds(now),tests=array(events).filter(row=>validCivilDay(row?.date)&&row.date>=start&&row.date<=end);
- const skills=array(pack.contentPipeline?.skills),ids=new Set(tests.flatMap(test=>array(matchingQuestions(test)).flatMap(q=>[q.skill,...array(q.assessedSkillIds)])));
+ const skills=records(pack.contentPipeline?.skills).filter(skill=>typeof skill.id==='string'&&skill.id.trim()&&typeof skill.subject==='string'&&skill.subject.trim());
+ const ids=new Set(tests.flatMap(test=>records(matchingQuestions(test)).flatMap(q=>[q.skill,...array(q.assessedSkillIds)]))
+  .filter(id=>typeof id==='string'&&id.trim()));
  const chapters=new Set(tests.filter(test=>/religion/i.test(test.label)).map(test=>chapter(test.label)).filter(Boolean));
  const selected=skills.filter(skill=>{
   if(!ids.has(skill.id))return false;
