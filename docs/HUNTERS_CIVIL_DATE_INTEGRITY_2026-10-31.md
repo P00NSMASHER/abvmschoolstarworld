@@ -1,0 +1,34 @@
+# Source Hunter B | civil-date integrity | 2026-10-31
+
+## Baseline defect and narrowly scoped fix
+
+Authoritative repository: `P00NSMASHER/abvmschoolstarworld`, default `main`, read on 2026-10-31. Latest open owners checked: #436 (curriculum), #442 (PWA cache), #434 (Homework). This repair does **not** touch their files, the source-refresh scheduler, live app state, child records, or protected release behavior.
+
+Before the patch, `schoolDay('2026-02-30')` returned the impossible date unchanged. `weekBounds()` could silently normalize it; `nextTests()` accepted impossible date-only entries and could display them ahead of verified tests. Baseline reproducer (Node 22): a date-only regex accepted `2026-02-29`, `2026-02-30`, `2026-04-31`, and `2026-13-01` despite those dates not existing.
+
+The patch applies one shared strict YYYY-MM-DD round-trip at UTC noon to date-only school-day inputs, future assessment filtering and existing historical-archive validation. Invalid date-only inputs fail closed or are excluded from malformed event collections. Existing UTC-instant conversion, timezone choice, 3pm Eastern dismissal and regular archived instant treatment are unchanged.
+
+## Upstream source scan (two verified licenses, no code imported)
+
+1. [moment/luxon](https://github.com/moment/luxon), inspected at upstream commit `f427515a38f6a671f8de663e6bcc040ed81f114e` (2026-08-09). [MIT LICENSE](https://github.com/moment/luxon/blob/master/LICENSE.md), blob `2d560a6433eb68f3b1277d58a819ce56a01f9dd5`; package `3.7.2` reviewed. Full datetime dependency adds unnecessary browser bytes and lockfile risk for a single civil-day guard.
+2. [js-temporal/temporal-polyfill](https://github.com/js-temporal/temporal-polyfill), inspected at upstream commit `c55b211de913320d8aba32c456bb45914739f414` (2026-09-22). [ISC LICENSE](https://github.com/js-temporal/temporal-polyfill/blob/main/LICENSE), blob `75c4ded485dee91270b2c06a75ed12e4b560fb85`; package `0.5.1` includes runtime `jsbi ^4.3.0`. Comprehensive Temporal semantics are valuable but not justified for this isolated compatibility fix.
+
+**Decision:** independent minimal implementation using existing browser APIs; no upstream code or new dependency, hence no copied-code NOTICE or transitive dependency chain. The already-shipped archive round-trip rule is consolidated, not replaced with external source.
+
+## Reproducible validation
+
+Run `node --test tests/study-civil-dates.test.mjs tests/study-model.test.mjs` and standard `npm run qa` in the PR exact-head CI. Added independent adversarial checks for impossible leap days, 30/31 overflows, null/malformed rows, DST, valid centuries, earliest verified test selection, archive history and 3pm school dismissal preserved by existing tests.
+
+Baseline observed: four impossible date-only strings were accepted (synthetic test values; not real school postings). Expected post-patch: every one is rejected or skipped. **No production deployment or field observation is implied.** No course data or test facts altered.
+
+## Engineering economics, limitations, rollback
+
+Zero new runtime dependencies. Estimated **1–3 engineering hours avoided** relative to integrating and auditing a new date dependency; low-confidence planning estimate, not measured labor hours or commercial value. Main risk: any out-of-policy invalid YYYY-MM-DD input previously passed through will now be rejected, intentionally fail-closed. JavaScript timestamp strings containing an invalid civil component are not comprehensively validated by this patch; those should be separately governed at the source-ingestion boundary.
+
+Rollback: revert this isolated PR; no schema, offline cache version, data or migration changes.
+
+## Next ranked investigations
+
+1. Independently verify full release QA and browser/mobile tests after PR head advances; merge only if exact-head protection and owner standing release policy permit.
+2. Review upstream Homework event-date ingestion for strict invalid timestamp normalization, with separate repo-owner coordination. Do not weaken source checks.
+3. Hunter A: continue trading-platform reproducibility research through its existing Tradier/Golden Goose PR owners; **do not** merge or modify Portfolio Brain's paused 12-hour observation baseline.
