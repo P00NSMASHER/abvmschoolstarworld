@@ -34,11 +34,11 @@ test('overnight acceptance works across spring DST, fall DST and year boundaries
 });
 test('previous-day proof expires at the first scheduled morning deadline, not at midnight',()=>{
   const checked='2026-10-22T03:55:00Z';
-  const before=assessDailySchoolSources(input('2026-10-22T11:45:00Z',checked));
+  const before=assessDailySchoolSources(input('2026-10-22T11:36:00Z',checked));
   assert.equal(before.curriculumFresh,true);assert.equal(before.homeworkFresh,true);
   const teacherDue=assessDailySchoolSources(input('2026-10-22T11:48:00Z',checked));
   assert.equal(teacherDue.curriculumFresh,false);
-  const homeworkDue=assessDailySchoolSources(input('2026-10-22T11:54:00Z',checked));
+  const homeworkDue=assessDailySchoolSources(input('2026-10-22T11:38:00Z',checked));
   assert.equal(homeworkDue.homeworkFresh,false);
 });
 test('a genuinely missed last scan stays stale overnight',()=>{

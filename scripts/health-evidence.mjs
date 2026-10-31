@@ -257,9 +257,9 @@ export function assessHomeworkPollingCadence(runs, now, {maxGapHours=2.5}={}) {
     Number.isFinite(Date.parse(run?.created_at||'')))
     .sort((a,b)=>Date.parse(b.created_at)-Date.parse(a.created_at));
   const last=scheduled[0];
-  // The last school-hour Homework poll is 23:23 Eastern. An absent late
+  // The last school-hour Homework poll is 23:37 Eastern. An absent late
   // poll remains overdue after its 90-minute grace even after midnight.
-  // Likewise, 06:23 is due at 07:53, not 08:00. Reuse the exact
+  // Likewise, 06:07 is due at 07:37, not 08:00. Reuse the exact
   // source-recovery controller's Eastern schedule instead of a second clock.
   const outsideActiveWindow=localHour<8||localHour>23||!Number.isFinite(localMinute);
   if(outsideActiveWindow){
