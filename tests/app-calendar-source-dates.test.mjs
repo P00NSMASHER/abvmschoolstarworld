@@ -23,7 +23,7 @@ function api(year=2026){
 const dayKey=date=>date?[
   date.getFullYear(),String(date.getMonth()+1).padStart(2,'0'),String(date.getDate()).padStart(2,'0')
 ].join('-'):null;
-const rangeKeys=dates=>dates?.map(dayKey)??null;
+const rangeKeys=dates=>dates?Array.from(dates,dayKey):null;
 
 test('malformed source month days never become invented school dates',()=>{
   const dates=api();
