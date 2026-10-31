@@ -30,6 +30,19 @@ test('October 16 partial long-o test never reuses last week short-i/a bank', () 
   );
 });
 
+test('consonant-digraph test excludes prior spelling and reading skills', () => {
+  const pool = [
+    {id:'digraph-sh',subject:'Spelling / Handwriting',skill:'consonant-digraphs'},
+    {id:'old-soft-c-g',subject:'Spelling / Handwriting',skill:'soft-c-g'},
+    {id:'reading-suffix',subject:'Reading / ELA',skill:'suffix-ed-ing'},
+    {id:'old-long-o',subject:'Spelling / Handwriting',skill:'long-o'},
+  ];
+  assert.deepEqual(
+    questionsForTest({label:'Spelling (consonant digraphs) / Handwriting',date:'2026-11-06'},pool).map(q=>q.id),
+    ['digraph-sh'],
+  );
+});
+
 test('Phonics short-vowel and Math subtraction tests do not absorb unrelated skills', () => {
   const pool = [
     {id:'vowels',subject:'Reading / ELA',skill:'short-vowels'},

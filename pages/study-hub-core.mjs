@@ -31,6 +31,12 @@ export function questionsForTest(test, questions) {
     return questions.filter(q => q.subject === 'Reading / ELA' && q.skill === 'short-vowels');
   }
   if (/spelling|handwriting/.test(label)) {
+    // A test that names consonant digraphs has an exact verified scope.
+    // Do not pad its guide or worksheet with prior long-vowel, soft-c/g, or
+    // reading-suffix questions merely because they share a broad subject.
+    if (/\bconsonant\s+digraphs?\b/.test(label)) {
+      return questions.filter(q => q.skill === 'consonant-digraphs');
+    }
     // The teacher page may name a new long vowel but leave a second short
     // vowel unspecified, e.g. "long o / Short )". Never reuse last week's
     // unrelated i/a practice to make this test appear ready.
