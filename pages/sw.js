@@ -56,7 +56,7 @@ async function cachedFallback(request,fallback=null){
   const url=new URL(request.url);
   // Treat ?v= as source identity: a previous JS/CSS revision must never
   // masquerade as missing versioned code when the device is offline.
-  const versionedCode=/\\.(?:css|js|mjs)$/.test(url.pathname)&&url.searchParams.has("v");
+  const versionedCode=/\.(?:css|js|mjs)$/.test(url.pathname)&&url.searchParams.has("v");
   const exact=await cache.match(request);
   if(exact||versionedCode)return exact||null;
   return (await cache.match(request,{ignoreSearch:true}))||
