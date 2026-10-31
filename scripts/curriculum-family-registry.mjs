@@ -9,6 +9,7 @@ import { LONG_O_FAMILY } from './curriculum-families/long-o.mjs';
 import { SHORT_VOWELS_FAMILY } from './curriculum-families/short-vowels.mjs';
 import { DIAGRAMS_LABELS_FAMILY } from './curriculum-families/diagrams-labels.mjs';
 import { RELIGION_CHAPTER_4_FAMILY } from './curriculum-families/religion-chapter-4.mjs';
+import { READING_LONG_SHORT_O_FAMILY } from './curriculum-families/reading-long-short-o.mjs';
 
 const FAMILY_REGISTRY = Object.freeze([
   Object.freeze({
@@ -141,6 +142,7 @@ const FAMILY_REGISTRY = Object.freeze([
   CHART_READING_FAMILY,
   DIAGRAMS_LABELS_FAMILY,
   RELIGION_CHAPTER_4_FAMILY,
+  READING_LONG_SHORT_O_FAMILY,
   AUTHOR_OPINION_FAMILY,
   LONG_O_FAMILY,
   SHORT_VOWELS_FAMILY,
