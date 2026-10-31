@@ -1,8 +1,7 @@
 import {readFileSync,mkdirSync,writeFileSync} from "node:fs";
 import {selectQaEvidence,assessHomeworkHealth,assessHomeworkPollingCadence,assessMainBranchProtection,selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence,selectRecoveredRefreshRace,selectRecoveredCancelledRefresh} from "./health-evidence.mjs";
-import {assessUpcomingLunchCoverage,schoolWeekLabel} from "./school-week-label.mjs";
+import {assessUpcomingLunchCoverage,displayedSchoolWeekDates,schoolWeekLabel} from "./school-week-label.mjs";
 import {assessPublicationParity} from "./publication-parity-health.mjs";
-import {schoolWeek} from "./lunch-publication.mjs";
 
 const packData=JSON.parse(readFileSync(new URL("../pages/data/study-pack.json",import.meta.url),"utf8"));
 const pkg=JSON.parse(readFileSync(new URL("../package.json",import.meta.url),"utf8"));
@@ -204,7 +203,7 @@ const lunchReviewedCoverageComplete=Boolean(
     /^[a-f0-9]{64}$/i.test(String(page?.contentHash||""))
   )
 );
-const targetLunchWeek=schoolWeek(new Date(now));
+const targetLunchWeek=displayedSchoolWeekDates(now);
 status.lunch.currentWeek=status.lunch.weekStart===targetLunchWeek[0]&&
   status.lunch.weekEnd===targetLunchWeek.at(-1);
 const lunchVerified=status.lunch.retrievalState==="verified";
