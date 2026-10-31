@@ -174,7 +174,7 @@ test('Religion Chapter 4 test receives scoped guide, worksheet, and correct answ
   assert(practice.every(row=>row.sourceMode==='CURATED_CONTEXT'));
   assert.match(skill.studyNotes.join(' '),/Teacher-style supplemental practice/i);
   assert.match(skill.studyNotes.join(' '),/Old Testament.*New Testament.*saint/i);
-  assert.match(skill.studyNotes.join(' '),/ears, mouths, and hearts.*Baptism/i);
+  assert.match(skill.studyNotes.join(' '),/Baptism.*ears, mouths, and hearts/i);
   assert.match(skill.studyNotes.join(' '),/best way God speaks.*Jesus/i);
   for(const question of practice){
     assert.equal(question.choices.filter(choice=>choice===question.answer).length,1,question.id);
