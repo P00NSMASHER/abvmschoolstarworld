@@ -32,3 +32,11 @@ Rollback: revert this isolated PR; no schema, offline cache version, data or mig
 1. Independently verify full release QA and browser/mobile tests after PR head advances; merge only if exact-head protection and owner standing release policy permit.
 2. Review upstream Homework event-date ingestion for strict invalid timestamp normalization, with separate repo-owner coordination. Do not weaken source checks.
 3. Hunter A: continue trading-platform reproducibility research through its existing Tradier/Golden Goose PR owners; **do not** merge or modify Portfolio Brain's paused 12-hour observation baseline.
+
+## Follow-on source-scope regression, same PR (2026-10-31)
+
+A second baseline defect remained in `pages/study-notes-scope.mjs`: `explicitlyInWeek` required only a valid-looking date plus finite `Date.parse`, and `weeklySourceNotes` used only a date-shaped regex. Node 22 normalizes synthetic `2026-02-30T12:00:00Z` into March 2 instead of rejecting it; its unnormalized text sorts inside the February 23–March 1 school week. That could promote an impossible dated note or invented test to current-week source evidence.
+
+Repair shares the existing `validCivilDay` function from Study Model (export only, no behavioral change to existing callers), and uses it in both evidence gates. Also excludes malformed event rows without throwing. The dedicated `tests/study-weekly-scope-civil-dates.test.mjs` checks February 29/30 rejection, a conflicting explicit week, valid same-week dates, malformed rows, and valid assessment selection. All fixture names are synthetic. Expected baseline: invalid `studiedOn` and invalid test-date entries are accepted; expected fixed behavior: neither can select weekly material. Exact-head hosted CI remains authoritative; do not treat this note as confirmation of passing CI.
+
+Upstream dependency comparison and no-import/no-notice decision remain as documented above. No new dependencies or child data. Estimated incremental engineering effort avoided: 0.5–1.5 hours versus a separate validator and its review, low confidence. Rollback the whole date-integrity PR if necessary, preserving preexisting upstream owner branches.
