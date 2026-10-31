@@ -1,5 +1,5 @@
 /** Lesson dates, never crawl timestamps, determine the weekly notes selection. */
-import {weekBounds} from './study-model.mjs';
+import {weekBounds,validCivilDay} from './study-model.mjs';
 const array=value=>Array.isArray(value)?value:[];
 const clean=value=>String(value||'').toLowerCase().replace(/[’‘]/g,"'").replace(/[^a-z0-9]+/g,' ').trim();
 const chapter=value=>String(value||'').match(/\b(?:chapter|ch\.?)\s*(\d+)\b/i)?.[1];
