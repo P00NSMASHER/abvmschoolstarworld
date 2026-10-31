@@ -38,13 +38,40 @@ export function balancedRound(groups = [], count = 12, seed = 0) {
   while(result.length<limit&&progress){progress=false;for(const pool of pools){while(pool.length){const item=pool.pop(),key=identity(item);if(seen.has(key))continue;seen.add(key);result.push(item);progress=true;break;}if(result.length===limit)break;}}
   return result;
 }
+// Invalid historical entries must not take down otherwise verified Study content.
+function archivedSchoolDay(value) {
+  if (value === null || value === undefined || value === '') return null;
+  try {
+    // Date-only archive values must represent an actual civil day, not a date
+    // silently normalized by Date (for example, February 31).
+    if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      const parsed = new Date(value + 'T12:00:00Z');
+      if (!Number.isFinite(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== value) return null;
+    }
+    return schoolDay(value);
+  } catch {
+    return null;
+  }
+}
 export function visibleArchive(archive = {}, now = new Date()) {
-  const day=schoolDay(now);
-  return Object.fromEntries(['notes','vocabulary','questions'].map(key=>[key,(archive[key]||[]).filter(item=>item.firstSeenAt && schoolDay(item.firstSeenAt)<=day)]));
+  const day = schoolDay(now);
+  return Object.fromEntries(['notes','vocabulary','questions'].map(key => {
+    const rows = Array.isArray(archive?.[key]) ? archive[key] : [];
+    return [key, rows.filter(item => {
+      const first = archivedSchoolDay(item?.firstSeenAt);
+      return first !== null && first <= day;
+    })];
+  }));
 }
 export function weeklyArchive(archive = {}, now = new Date()) {
-  const {start,end}=weekBounds(now),day=schoolDay(now),visible=visibleArchive(archive,now);
-  return Object.fromEntries(Object.entries(visible).map(([key,items])=>[key,items.filter(item=>(item.provenance||[]).some(p=>{const date=schoolDay(p.capturedAt);return date>=start&&date<=end&&date<=day;}))]));
+  const {start,end} = weekBounds(now), day = schoolDay(now), visible = visibleArchive(archive,now);
+  return Object.fromEntries(Object.entries(visible).map(([key,items]) => [key,items.filter(item => {
+    const provenance = Array.isArray(item?.provenance) ? item.provenance : [];
+    return provenance.some(p => {
+      const date = archivedSchoolDay(p?.capturedAt);
+      return date !== null && date >= start && date <= end && date <= day;
+    });
+  })]));
 }
 /** Strict test coverage: complete equal quotas only, including overlapping banks. */
 export function balancedTestRound(groups = [], count = 12, seed = 0) {
