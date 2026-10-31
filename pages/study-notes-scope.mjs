@@ -29,7 +29,7 @@ export function sourceStudyNotes(pack={}){
  });
 }
 export function weeklySourceNotes(pack,events,now,matchingQuestions){
- const {start,end}=weekBounds(now),tests=array(events).filter(row=>/^\d{4}-\d{2}-\d{2}$/.test(row.date||'')&&row.date>=start&&row.date<=end);
+ const {start,end}=weekBounds(now),tests=array(events).filter(row=>validCivilDay(row?.date)&&row.date>=start&&row.date<=end);
  const skills=array(pack.contentPipeline?.skills),ids=new Set(tests.flatMap(test=>array(matchingQuestions(test)).flatMap(q=>[q.skill,...array(q.assessedSkillIds)])));
  const chapters=new Set(tests.filter(test=>/religion/i.test(test.label)).map(test=>chapter(test.label)).filter(Boolean));
  const selected=skills.filter(skill=>{
