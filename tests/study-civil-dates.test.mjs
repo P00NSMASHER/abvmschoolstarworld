@@ -47,3 +47,26 @@ test('the same strict civil-date guard excludes invalid archived date-only evide
   ]};
   assert.deepEqual(visibleArchive(archive,'2026-02-28').notes.map(x=>x.id), ['good']);
 });
+
+test('invalid ISO timestamp calendar components cannot be normalized into invented archive evidence', () => {
+  const invalid = [
+    '2026-02-29T12:00:00Z',
+    '2026-02-30T12:00:00Z',
+    '2026-04-31T08:00:00+00:00',
+    '1900-02-29 12:00:00Z',
+    '2026-13-01T00:00:00Z',
+  ];
+  for (const value of invalid) {
+    assert.throws(() => schoolDay(value), /Invalid study date/, value);
+    assert.throws(() => studyAssessmentDay(value), /Invalid study date/, value);
+    assert.throws(() => weekBounds(value), /Invalid study date/, value);
+  }
+  // Actual leap days and the existing New York DST semantics remain valid.
+  assert.equal(schoolDay('2024-02-29T12:00:00Z'), '2024-02-29');
+  assert.equal(schoolDay('2026-03-08T07:01:00Z'), '2026-03-08');
+  const archive = {notes: [
+    {id:'normalized-bogus',firstSeenAt:'2026-02-30T12:00:00Z'},
+    {id:'verified',firstSeenAt:'2026-02-28T12:00:00Z'},
+  ]};
+  assert.deepEqual(visibleArchive(archive,'2026-03-03').notes.map(row=>row.id),['verified']);
+});
