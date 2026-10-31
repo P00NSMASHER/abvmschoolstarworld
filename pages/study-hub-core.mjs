@@ -92,7 +92,8 @@ export function questionsForTest(test, questions) {
         }));
     }
     return questions.filter(q => q.subject === "Reading / ELA" &&
-      !/subject-predicate|sentence-types|long-short|possessive/.test(q.skill));
+      (q.skill === 'reading-long-short-o' ||
+        !/subject-predicate|sentence-types|long-short|possessive/.test(q.skill)));
   }
   return [];
 }
