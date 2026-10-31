@@ -107,6 +107,7 @@ test('actual dashboard distinguishes verified pending publication from an unreso
   const {join}=await import('node:path');
   const {spawnSync}=await import('node:child_process');
   const {schoolWeekLabel,displayedSchoolWeekDates}=await import('../scripts/school-week-label.mjs');
+  const {schoolWeek}=await import('../scripts/lunch-publication.mjs');
   const root=mkdtempSync(join(tmpdir(),'abvm-stage-dashboard-'));
   try{
     for(const dir of ['scripts','pages/data'])mkdirSync(join(root,dir),{recursive:true});
@@ -126,8 +127,11 @@ test('actual dashboard distinguishes verified pending publication from an unreso
     pack.pack.teacherPostingWeekLabel=schoolWeekLabel(now);
     pack.pack.weekLabel=schoolWeekLabel(now,{calendarDisplay:true});
     pack.pack.lunchArchive=displayedSchoolWeekDates(now).map(date=>({date}));
-    pack.pack.lunchMenuSource.weekStart=displayedSchoolWeekDates(now)[0];
-    pack.pack.lunchMenuSource.weekEnd=displayedSchoolWeekDates(now).at(-1);
+    // Displayed weekend planning looks ahead; operational published-week proof
+    // must still refer to the current Monday-Friday source window.
+    const publishedWeek=schoolWeek(new Date(now));
+    pack.pack.lunchMenuSource.weekStart=publishedWeek[0];
+    pack.pack.lunchMenuSource.weekEnd=publishedWeek.at(-1);
     pack.pack.contentPipeline={safetyState:'READY',coverage:[],qa:{status:'pass',skillCount:1,questionCount:1,unsupportedSkillCount:0}};
     pack.pack.lunchMenuSource.retrievalState='verified';
     const write=(name,data)=>writeFileSync(join(root,name),JSON.stringify(data));

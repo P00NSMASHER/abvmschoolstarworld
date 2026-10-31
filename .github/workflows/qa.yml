@@ -52,7 +52,7 @@ jobs:
           "$RUNNER_TEMP/abvm-bin/jq" --version
           echo "$RUNNER_TEMP/abvm-bin" >> "$GITHUB_PATH"
       - name: Set up Python for local app server and parser checks
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: Checkout
@@ -75,7 +75,7 @@ jobs:
           sha256sum source.tar > SHA256SUMS
 
       - name: Retain tracked source snapshot
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: abvm-source-${{ github.run_id }}
           path: ${{ runner.temp }}/abvm-candidate-source/
@@ -83,7 +83,7 @@ jobs:
           if-no-files-found: error
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -102,7 +102,7 @@ jobs:
 
       - name: Cache version-pinned Playwright browsers
         continue-on-error: true
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: abvm-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
@@ -123,7 +123,7 @@ jobs:
 
       - name: Retain candidate verification receipt and browser evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: abvm-qa-${{ github.run_id }}
           path: |
@@ -137,7 +137,7 @@ jobs:
       # includes large traces. The complete QA artifact above remains intact.
       - name: Retain directly reviewable Study Games visuals
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: abvm-games-visuals-${{ github.run_id }}
           path: |

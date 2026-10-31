@@ -268,6 +268,7 @@ test('the complete dashboard turns critical for stale homework despite healthy w
     }
     const now=new Date().toISOString();
     const {schoolWeekLabel,displayedSchoolWeekDates}=await import('../scripts/school-week-label.mjs');
+    const {schoolWeek}=await import('../scripts/lunch-publication.mjs');
     const pack=JSON.parse(readFileSync(new URL('../pages/data/study-pack.json',import.meta.url),'utf8'));
     pack.sourceLastCheckedAt=now;
     // Stabilize the isolated fixture against weekend rollover and future lunch
@@ -275,8 +276,11 @@ test('the complete dashboard turns critical for stale homework despite healthy w
     pack.pack.teacherPostingWeekLabel=schoolWeekLabel(now);
     pack.pack.weekLabel=schoolWeekLabel(now,{calendarDisplay:true});
     pack.pack.lunchArchive=displayedSchoolWeekDates(now).map(date=>({date}));
-    pack.pack.lunchMenuSource.weekStart=displayedSchoolWeekDates(now)[0];
-    pack.pack.lunchMenuSource.weekEnd=displayedSchoolWeekDates(now).at(-1);
+    // Displayed weekend planning looks ahead; operational published-week proof
+    // must still refer to the current Monday-Friday source window.
+    const publishedWeek=schoolWeek(new Date(now));
+    pack.pack.lunchMenuSource.weekStart=publishedWeek[0];
+    pack.pack.lunchMenuSource.weekEnd=publishedWeek.at(-1);
     // This test controls health inputs; a future teacher topic must not alter
     // its intentionally healthy pipeline baseline.
     pack.pack.contentPipeline={safetyState:'READY',coverage:[],

@@ -338,4 +338,3 @@ const md=[
 writeFileSync("health-output/abvm-health-summary.md",md);
 console.log(md);
 if(status.overall==="critical")process.exitCode=1;
-

@@ -69,7 +69,7 @@ jobs:
           "$RUNNER_TEMP/abvm-bin/jq" --version
           echo "$RUNNER_TEMP/abvm-bin" >> "$GITHUB_PATH"
       - name: Set up Python for local app server and parser checks
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       # Only the current protected-main commit may publish. Caller-supplied
@@ -135,7 +135,7 @@ jobs:
           test "$(git rev-parse HEAD)" = "$ADMITTED_SHA"
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -145,7 +145,7 @@ jobs:
 
       - name: Cache version-pinned Playwright browsers
         continue-on-error: true
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: abvm-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
@@ -198,7 +198,7 @@ jobs:
 
       - name: Retain exact live publication proof
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: abvm-live-lunch-${{ github.run_id }}-${{ github.run_attempt }}
           path: live-lunch-proof
