@@ -970,7 +970,8 @@ test("actual October 15 Chapter 3 live Test Prep works with compact runtime and 
   assert.equal(vine.length,full.pack.contentPipeline.skills.some(s=>s.id==='religion-vine-branches')?3:0);
   assert.ok(vine.every(q=>!religionChapterScopes(q).includes(3)));
   const chapter4=excluded.filter(q=>q.skill==='religion-chapter-4');
-  assert.equal(chapter4.length,full.pack.contentPipeline.skills.some(s=>s.id==='religion-chapter-4')?8:0);
+  const chapter4Bank=full.pack.contentPipeline.questions.filter(q=>q.skill==='religion-chapter-4');
+  assert.equal(chapter4.length,chapter4Bank.length);
   assert.ok(chapter4.every(q=>religionChapterScopes(q).includes(4)&&!religionChapterScopes(q).includes(3)));
   assert.equal(excluded.length,21+vine.length+chapter4.length);
   const engine=loadEngine();
