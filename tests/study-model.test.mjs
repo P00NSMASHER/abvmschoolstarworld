@@ -81,3 +81,18 @@ test('Home and Study keep the same Eastern dismissal boundary across DST and dev
   assert.equal(studyAssessmentDay(instant),expected,instant);
  }
 });
+
+test('corrupt archive records are isolated without losing verified Study history',()=>{
+ const known={id:'known',firstSeenAt:'2026-10-01T14:00:00Z',provenance:[{capturedAt:'2026-10-01T14:00:00Z'}]};
+ const recovered={id:'recovered',firstSeenAt:'2026-10-01T14:00:00Z',provenance:[null,{capturedAt:'not-a-date'},{capturedAt:'2026-10-02T14:00:00Z'}]};
+ const invalidShape={id:'bad-provenance',firstSeenAt:'2026-10-01T14:00:00Z',provenance:{capturedAt:'2026-10-01T14:00:00Z'}};
+ const archive={
+   notes:[null,{id:'invalid-date',firstSeenAt:'not-a-date'},{id:'impossible-day',firstSeenAt:'2026-02-31'},known,recovered,invalidShape,{id:'future',firstSeenAt:'2026-10-03T14:00:00Z'}],
+   vocabulary:null,questions:{not:'an array'}
+ };
+ assert.deepEqual(visibleArchive(archive,'2026-10-02').notes.map(row=>row.id),['known','recovered','bad-provenance']);
+ assert.deepEqual(weeklyArchive(archive,'2026-10-02').notes.map(row=>row.id),['known','recovered']);
+ assert.deepEqual(visibleArchive(null,'2026-10-02'),{notes:[],vocabulary:[],questions:[]});
+ assert.deepEqual(weeklyArchive({notes:[{firstSeenAt:'2026-10-01',provenance:[{capturedAt:'invalid'}]}]},'2026-10-02').notes,[]);
+ assert.throws(()=>visibleArchive(archive,'invalid-current-date'),/Invalid study date/);
+});
