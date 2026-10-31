@@ -10,7 +10,10 @@ test('Playwright preview uses the cross-platform Node server', () => {
 
 test('preview server confines requests to the published pages directory', () => {
   const server = readFileSync(new URL('../scripts/serve-pages.mjs', import.meta.url), 'utf8');
-  assert.match(server, /target\.startsWith\(`\$\{root\}\$\{sep\}`\)/);
+  assert.match(server, /resolvePreviewPath\(root, relative\)/);
+  const policy = readFileSync(new URL('../scripts/preview-path.mjs', import.meta.url), 'utf8');
+  assert.match(policy, /realpathSync\(requested\)/);
+  assert.match(policy, /canonicalTarget\.startsWith\(canonicalRoot \+ sep\)/);
   assert.match(server, /writeHead\(403\)/);
   assert.match(server, /Cache-Control': 'no-store'/);
   assert.match(server, /'\.webmanifest', 'application\/manifest\+json; charset=utf-8'/);
