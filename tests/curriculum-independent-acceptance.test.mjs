@@ -29,7 +29,7 @@ test('candidate-only changes trigger independent exact-head full QA', () => {
   assert.ok(independent.includes('timeout-minutes: 30'));
   // Cache is an optional optimization; failures in static, unit, browser, privacy
   // or publication QA still fail the independent job. No other step is tolerant.
-  assert.match(independent,/name: Cache version-pinned Playwright browsers\n\s+continue-on-error: true\n\s+uses: actions\/cache@v4/);
+  assert.match(independent,/name: Cache version-pinned Playwright browsers\n\s+continue-on-error: true\n\s+uses: actions\/cache@v6/);
   assert.equal((independent.match(/continue-on-error: true/g)||[]).length,1);
 });
 
@@ -56,7 +56,7 @@ test('held candidates independently trigger privacy acceptance without dropping 
   assert.ok(privacy.includes('abvm-held-educator-kit-$' + '{{ github.run_id }}'));
   assert.ok(privacy.includes('node --test tests/private-curriculum-pilot.test.mjs'), 'Private preview safety step required');
   const cache=privacy.match(/      - name: Cache version-pinned Playwright browsers\n[\s\S]*?(?=      - name:)/)?.[0]||'';
-  assert.ok(cache.includes('uses: actions/cache@v4'));
+  assert.ok(cache.includes('uses: actions/cache@v6'));
   assert.ok(!privacy.replace(cache,'').includes('continue-on-error: true'),'only the optional binary cache may fail open; privacy and browser checks remain mandatory');
 });
 
