@@ -42,3 +42,15 @@ test('undated homework and word lists keep their first posting week through Mond
   assert.equal(preservedPostingWeek({observedWeek:next,previousWeek:old,previousFingerprint:'',currentFingerprint:'long-o-list'}),next);
   assert.throws(()=>preservedPostingWeek({observedWeek:'invalid',previousWeek:old,previousFingerprint:'a',currentFingerprint:'a'}),/Invalid observed/);
 });
+
+test('malformed public lunch and closure feed shapes fail closed without dropping valid archive dates',()=>{
+  const at='2026-10-17T22:00:00Z';
+  const dates=displayedSchoolWeekDates(at);
+  const malformed={lunchMenu:{date:dates[2]},lunchArchive:dates.slice(0,2).map(date=>({date})),importantDates:{date:dates[3],label:'No School'}};
+  assert.deepEqual(assessUpcomingLunchCoverage(malformed,at).missingDates,dates.slice(2));
+  assert.deepEqual(assessUpcomingLunchCoverage(malformed,at).noSchoolDates,[]);
+  assert.deepEqual(assessUpcomingLunchCoverage({lunchMenu:'bad',lunchArchive:false,importantDates:0},at).missingDates,dates);
+  const repaired={...malformed,lunchMenu:[{date:dates[2]}],importantDates:[null,{date:dates[3],label:'No School'}]};
+  assert.deepEqual(assessUpcomingLunchCoverage(repaired,at).missingDates,[dates[4]]);
+  assert.deepEqual(assessUpcomingLunchCoverage(repaired,at).noSchoolDates,[dates[3]]);
+});

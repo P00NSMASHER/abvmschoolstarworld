@@ -41,12 +41,16 @@ export function displayedSchoolWeekDates(at){
 // independently reviewed entries must count toward next week's coverage.
 export function assessUpcomingLunchCoverage(pack,at){
   const dates=displayedSchoolWeekDates(at);
-  const menus=[...(pack?.lunchMenu||[]),...(pack?.lunchArchive||[])];
+  // A malformed or partial source pack must not crash the forward-coverage
+  // health check or turn an unverified closure into a published lunch day.
+  const sourceRows=value=>Array.isArray(value)?value:[];
+  const menus=[...sourceRows(pack?.lunchMenu),...sourceRows(pack?.lunchArchive)];
+  const importantDates=sourceRows(pack?.importantDates);
   const publishedDates=new Set(menus.map(row=>row?.date).filter(date=>/^\d{4}-\d{2}-\d{2}$/.test(date)));
   const closures=new Set();
   for(const date of dates){
     const display=canonical(closureDateLabel.format(new Date(date+'T12:00:00Z')));
-    if((pack?.importantDates||[]).some(event=>
+    if(importantDates.some(event=>
       /\bno school\b|\bschool closed\b/i.test(String(event?.label||''))&&
       (event?.date===date||canonical(event?.date)===display)
     ))closures.add(date);
