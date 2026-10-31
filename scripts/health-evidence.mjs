@@ -254,6 +254,7 @@ export function assessHomeworkPollingCadence(runs, now, {maxGapHours=2.5}={}) {
   const localHour=Number(parts.hour),localMinute=Number(parts.minute);
   const scheduled=runs.filter(run=>run?.name==='Refresh current ABVM homework'&&
     run?.event==='schedule'&&run?.head_branch==='main'&&
+    run?.status==='completed'&&run?.conclusion==='success'&&
     Number.isFinite(Date.parse(run?.created_at||'')))
     .sort((a,b)=>Date.parse(b.created_at)-Date.parse(a.created_at));
   const last=scheduled[0];

@@ -462,6 +462,17 @@ test("hourly Homework reporting exposes an earlier same-day cron gap even after 
   assert.equal(result.gapTo,"2026-10-29T16:58:36Z");
 });
 
+test("failed or unfinished schedules never count as successful polling evidence",()=>{
+  const base={name:"Refresh current ABVM homework",event:"schedule",head_branch:"main"};
+  const result=assessHomeworkPollingCadence([
+    {...base,status:"completed",conclusion:"success",created_at:"2026-10-21T15:21:42Z"},
+    {...base,status:"completed",conclusion:"failure",created_at:"2026-10-21T18:37:00Z"},
+    {...base,status:"in_progress",conclusion:null,created_at:"2026-10-21T19:07:00Z"},
+  ],"2026-10-21T19:35:00Z");
+  assert.equal(result.state,"delayed");
+  assert.equal(result.lastScheduledAt,"2026-10-21T15:21:42Z");
+});
+
 test("overnight scheduled Homework gap is not a same-school-day delivery failure",()=>{
   const scheduled=created_at=>({name:"Refresh current ABVM homework",
     event:"schedule",head_branch:"main",status:"completed",conclusion:"success",created_at});
