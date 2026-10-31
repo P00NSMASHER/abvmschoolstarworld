@@ -137,7 +137,7 @@ test('Religion Chapter 4 test receives scoped guide, worksheet, and correct answ
   const family=matchCurriculumFamily('Religion','Religion Ch. 4');
   assert.equal(family?.id,'religion-chapter-4');
   assert.equal(family?.rolloutStatus,'APPROVED');
-  assert.equal([family.baseQuestion,...family.supplementalQuestions].length,8);
+  assert.equal([family.baseQuestion,...family.supplementalQuestions].length,10);
   const timestamp='2026-10-24T05:00:00.000Z';
   const sourceHash='teacher-pages-'+'4'.repeat(20);
   const pack={
@@ -164,14 +164,18 @@ test('Religion Chapter 4 test receives scoped guide, worksheet, and correct answ
   const skill=out.skills.find(row=>row.id==='religion-chapter-4');
   const practice=questionsForTest({label:'Religion Ch. 4',date:'2026-11-03'},out.questions);
   assert(skill);
-  assert.equal(practice.length,8);
+  assert.equal(practice.length,10);
   assert(practice.every(row=>row.skill==='religion-chapter-4'));
+  assert(practice.some(row=>row.answer==='our ears, mouths, and hearts'&&/Baptism/i.test(row.explanation)));
+  assert(practice.some(row=>row.answer==='through his Son, Jesus'&&/best way God speaks/i.test(row.explanation)));
   assert(practice.every(row=>row.sourceChapters?.includes(4)));
   assert(practice.every(row=>row.sourceLineage?.quality==='page-exact'));
   assert(practice.every(row=>row.sourceLineage?.sourceTitle==='Tests'));
   assert(practice.every(row=>row.sourceMode==='CURATED_CONTEXT'));
   assert.match(skill.studyNotes.join(' '),/Teacher-style supplemental practice/i);
   assert.match(skill.studyNotes.join(' '),/Old Testament.*New Testament.*saint/i);
+  assert.match(skill.studyNotes.join(' '),/ears, mouths, and hearts.*Baptism/i);
+  assert.match(skill.studyNotes.join(' '),/best way God speaks.*Jesus/i);
   for(const question of practice){
     assert.equal(question.choices.filter(choice=>choice===question.answer).length,1,question.id);
     assert(question.explanation.length>20,question.id);
