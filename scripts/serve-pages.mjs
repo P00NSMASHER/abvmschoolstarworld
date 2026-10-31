@@ -1,7 +1,8 @@
 import { createReadStream, statSync } from 'node:fs';
 import { createServer } from 'node:http';
-import { extname, resolve, sep } from 'node:path';
+import { extname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { resolvePreviewPath } from './preview-path.mjs';
 
 const root = resolve(fileURLToPath(new URL('../pages/', import.meta.url)));
 const port = Number(process.env.ABVM_PREVIEW_PORT || 4173);
@@ -22,11 +23,15 @@ const types = new Map([
 ]);
 
 const server = createServer((request, response) => {
+  if (request.method !== 'GET' && request.method !== 'HEAD') {
+    response.writeHead(405, { Allow: 'GET, HEAD' }).end('Method not allowed');
+    return;
+  }
   try {
     const pathname = decodeURIComponent(new URL(request.url || '/', 'http://127.0.0.1').pathname);
     const relative = pathname === '/' ? 'index.html' : pathname.replace(/^\/+/, '');
-    const target = resolve(root, relative);
-    if (target !== root && !target.startsWith(`${root}${sep}`)) {
+    const target = resolvePreviewPath(root, relative);
+    if (!target) {
       response.writeHead(403).end('Forbidden');
       return;
     }
@@ -35,6 +40,7 @@ const server = createServer((request, response) => {
     response.writeHead(200, {
       'Content-Type': types.get(extname(target).toLowerCase()) || 'application/octet-stream',
       'Cache-Control': 'no-store',
+      'X-Content-Type-Options': 'nosniff',
     });
     if (request.method === 'HEAD') response.end();
     else createReadStream(target).pipe(response);
