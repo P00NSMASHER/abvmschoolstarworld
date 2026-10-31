@@ -13,4 +13,5 @@ test('preview server confines requests to the published pages directory', () => 
   assert.match(server, /target\.startsWith\(`\$\{root\}\$\{sep\}`\)/);
   assert.match(server, /writeHead\(403\)/);
   assert.match(server, /Cache-Control': 'no-store'/);
+  assert.match(server, /'\.webmanifest', 'application\/manifest\+json; charset=utf-8'/);
 });
