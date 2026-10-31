@@ -473,7 +473,7 @@ test("overnight scheduled Homework gap is not a same-school-day delivery failure
   assert.equal(result.observedGapHours,null);
 });
 
-test("missed 11:23 PM Homework schedule remains visible after midnight",()=>{
+test("missed 11:37 PM Homework schedule remains visible after midnight",()=>{
   const scheduled=created_at=>({name:"Refresh current ABVM homework",
     event:"schedule",head_branch:"main",status:"completed",conclusion:"success",created_at});
   const result=assessHomeworkPollingCadence([
@@ -481,7 +481,7 @@ test("missed 11:23 PM Homework schedule remains visible after midnight",()=>{
   ],"2026-10-30T05:57:00Z"); // Oct. 30, 1:57 AM EDT
   assert.equal(result.state,"delayed");
   assert.equal(result.expectedSchoolDate,"2026-10-29");
-  assert.equal(result.expectedLocalTime,"23:23");
+  assert.equal(result.expectedLocalTime,"23:37");
   assert.equal(result.offHours,true);
 });
 
@@ -493,16 +493,16 @@ test("late previous-night Homework poll is not a false overnight outage",()=>{
   assert.equal(result.state,"off-hours");
 });
 
-test("6:23 AM Homework polling is checked after grace rather than hidden until 8 AM",()=>{
+test("6:07 AM Homework polling is checked after grace rather than hidden until 8 AM",()=>{
   const scheduled=created_at=>({name:"Refresh current ABVM homework",
     event:"schedule",head_branch:"main",status:"completed",conclusion:"success",created_at});
   const runs=[scheduled("2026-10-30T03:40:00Z")]; // Thursday 11:40 PM EDT
-  assert.equal(assessHomeworkPollingCadence(runs,"2026-10-30T11:40:00Z").state,
+  assert.equal(assessHomeworkPollingCadence(runs,"2026-10-30T11:36:00Z").state,
     "off-hours","allow the documented 90-minute morning grace");
-  const overdue=assessHomeworkPollingCadence(runs,"2026-10-30T11:59:00Z");
-  assert.equal(overdue.state,"delayed","missing first school-hour poll must be visible at 7:59 AM");
+  const overdue=assessHomeworkPollingCadence(runs,"2026-10-30T11:38:00Z");
+  assert.equal(overdue.state,"delayed","missing first school-hour poll must be visible at 7:38 AM");
   assert.equal(overdue.expectedSchoolDate,"2026-10-30");
-  assert.equal(overdue.expectedLocalTime,"06:23");
+  assert.equal(overdue.expectedLocalTime,"06:07");
 });
 
 test("polling cadence handles missing evidence, off hours and future timestamps",()=>{

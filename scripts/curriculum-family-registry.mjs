@@ -1,5 +1,6 @@
 import { LONG_SHORT_U_FAMILY } from './curriculum-families/long-short-u.mjs';
 import { MATH_SUBTRACTION_FAMILY } from './curriculum-families/math-subtraction.mjs';
+import { MATH_CHAPTER_2_PLACE_VALUE_FAMILY } from './curriculum-families/math-chapter-2-place-value.mjs';
 import { SHORT_I_LONG_I_FAMILY } from './curriculum-families/short-i-long-i.mjs';
 import { APPROVED_PR270_FAMILIES } from './curriculum-families/approved-pr270.mjs';
 import { CHART_READING_FAMILY } from './curriculum-families/charts.mjs';
@@ -135,6 +136,7 @@ const FAMILY_REGISTRY = Object.freeze([
     ]),
   }),
   SHORT_I_LONG_I_FAMILY,
+  MATH_CHAPTER_2_PLACE_VALUE_FAMILY,
   MATH_SUBTRACTION_FAMILY,
   CHART_READING_FAMILY,
   DIAGRAMS_LABELS_FAMILY,
