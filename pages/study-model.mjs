@@ -9,9 +9,12 @@ export function validCivilDay(value) {
   return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
 }
 export function schoolDay(now = new Date()) {
-  if (typeof now === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(now)) {
-    if (!validCivilDay(now)) throw new TypeError('Invalid study date');
-    return now;
+  if (typeof now === 'string') {
+    // Date silently normalizes impossible ISO instants as well as civil dates.
+    // Reject bad calendar components before timezone conversion or archive reuse.
+    const civil = /^(\d{4}-\d{2}-\d{2})(?=$|[Tt ])/ .exec(now);
+    if (civil && !validCivilDay(civil[1])) throw new TypeError('Invalid study date');
+    if (civil && civil[0] === now) return now;
   }
   const d = new Date(now);
   if (!Number.isFinite(d.getTime())) throw new TypeError('Invalid study date');
