@@ -1,8 +1,18 @@
 /** Calendar and sampling rules shared by every Study surface. */
 const zone = 'America/New_York';
 const schoolClock=new Intl.DateTimeFormat('en-US',{timeZone:zone,hour:'numeric',hourCycle:'h23'});
+// Round-trip a civil date at UTC noon: Date silently normalizes impossible days
+// (e.g. February 30) and a regex alone would treat them as verified school dates.
+function validCivilDay(value) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const parsed = new Date(value + 'T12:00:00Z');
+  return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
+}
 export function schoolDay(now = new Date()) {
-  if (typeof now === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(now)) return now;
+  if (typeof now === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(now)) {
+    if (!validCivilDay(now)) throw new TypeError('Invalid study date');
+    return now;
+  }
   const d = new Date(now);
   if (!Number.isFinite(d.getTime())) throw new TypeError('Invalid study date');
   const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', {timeZone:zone,year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d).map(p=>[p.type,p.value]));
@@ -22,7 +32,7 @@ export function weekBounds(now = new Date()) {
 }
 export function nextTests(events = [], now = new Date()) {
   const day=studyAssessmentDay(now), instant=new Date(now).getTime();
-  const eligible=events.filter(e=> /^\d{4}-\d{2}-\d{2}$/.test(e.date||'') && e.date>=day && (!e.endsAt || !Number.isFinite(Date.parse(e.endsAt)) || Date.parse(e.endsAt)>instant));
+  const eligible=(Array.isArray(events)?events:[]).filter(e=> validCivilDay(e?.date) && e.date>=day && (!e.endsAt || !Number.isFinite(Date.parse(e.endsAt)) || Date.parse(e.endsAt)>instant));
   const first=eligible.map(e=>e.date).sort()[0];
   const seen=new Set();
   return eligible.filter(e=>e.date===first).filter(e=>{const key=`${e.date}|${e.label}`;if(seen.has(key))return false;seen.add(key);return true;});
@@ -44,10 +54,7 @@ function archivedSchoolDay(value) {
   try {
     // Date-only archive values must represent an actual civil day, not a date
     // silently normalized by Date (for example, February 31).
-    if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
-      const parsed = new Date(value + 'T12:00:00Z');
-      if (!Number.isFinite(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== value) return null;
-    }
+    if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && !validCivilDay(value)) return null;
     return schoolDay(value);
   } catch {
     return null;
