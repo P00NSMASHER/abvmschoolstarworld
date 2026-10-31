@@ -6,7 +6,7 @@ const clock=new Intl.DateTimeFormat('en-US',{
 });
 export const REFRESH_SCHEDULES=Object.freeze({
   curriculum:Object.freeze([377,587,797,947]),
-  homework:Object.freeze(Array.from({length:18},(_,i)=>(i+6)*60+23)),
+  homework:Object.freeze(Array.from({length:18},(_,i)=>[(i+6)*60+7,(i+6)*60+37]).flat()),
 });
 function localTime(value){
   const date=new Date(value);

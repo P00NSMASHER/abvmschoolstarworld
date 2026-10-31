@@ -59,6 +59,7 @@ test('controller scan expectations match the configured source cron times',async
   const teacher=[...read('sync-study-pack.yml').matchAll(/cron: '(\d+) (\d+) \* \* \*'/g)]
     .map(([,minute,hour])=>Number(hour)*60+Number(minute));
   assert.deepEqual([...REFRESH_SCHEDULES.curriculum],teacher);
-  assert.match(read('refresh-current-homework.yml'),/cron: '23 6-23 \* \* \*'/);
-  assert.deepEqual([...REFRESH_SCHEDULES.homework],Array.from({length:18},(_,i)=>(i+6)*60+23));
+  assert.match(read('refresh-current-homework.yml'),/cron: '7,37 6-23 \* \* \*'/);
+  assert.deepEqual([...REFRESH_SCHEDULES.homework],
+    Array.from({length:18},(_,i)=>[(i+6)*60+7,(i+6)*60+37]).flat());
 });
