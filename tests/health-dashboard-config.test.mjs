@@ -168,9 +168,9 @@ test("operational dashboard surfaces missed Homework cron while preserving the e
   assert.match(refreshHealthWorkflow,/scripts\/check-refresh-health\.mjs/);
 });
 
-test('the dashboard cannot call previous-week lunch healthy just because future meals exist in the archive',()=>{
+test('the dashboard validates lunch against the same displayed school week',()=>{
   assert.match(report,/status\.lunch\.currentWeek/);
-  assert.match(report,/const targetLunchWeek=schoolWeek/);
+  assert.match(report,/const targetLunchWeek=displayedSchoolWeekDates\(now\)/);
   assert.match(report,/Published reviewed lunch week/);
   assert.match(refreshHealthWorkflow,/Roll forward ABVM reviewed lunch week/);
 });
