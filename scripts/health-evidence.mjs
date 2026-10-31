@@ -1,4 +1,4 @@
-import {assessDailySchoolSources,scheduledSourceDue} from './source-freshness-recovery.mjs';
+import {assessDailySchoolSources,easternSchoolDay,scheduledSourceDue} from './source-freshness-recovery.mjs';
 
 export function workflowEvidenceAt(run){
   return Date.parse(run?.updated_at||run?.created_at||0)||0;
@@ -254,6 +254,7 @@ export function assessHomeworkPollingCadence(runs, now, {maxGapHours=2.5}={}) {
   const localHour=Number(parts.hour),localMinute=Number(parts.minute);
   const scheduled=runs.filter(run=>run?.name==='Refresh current ABVM homework'&&
     run?.event==='schedule'&&run?.head_branch==='main'&&
+    run?.status==='completed'&&run?.conclusion==='success'&&
     Number.isFinite(Date.parse(run?.created_at||'')))
     .sort((a,b)=>Date.parse(b.created_at)-Date.parse(a.created_at));
   const last=scheduled[0];
@@ -263,7 +264,15 @@ export function assessHomeworkPollingCadence(runs, now, {maxGapHours=2.5}={}) {
   // source-recovery controller's Eastern schedule instead of a second clock.
   const outsideActiveWindow=localHour<8||localHour>23||!Number.isFinite(localMinute);
   if(outsideActiveWindow){
-    if(!last)return {state:'off-hours',lastScheduledAt:null,ageHours:null};
+    if(!last){
+      const schedule=scheduledSourceDue({kind:'homework',now,checkedAt:null});
+      if(schedule.expectedSchoolDate===easternSchoolDay(now)){
+        return {state:'unknown',lastScheduledAt:null,ageHours:null,
+          expectedSchoolDate:schedule.expectedSchoolDate,
+          expectedLocalTime:schedule.expectedLocalTime};
+      }
+      return {state:'off-hours',lastScheduledAt:null,ageHours:null};
+    }
     const schedule=scheduledSourceDue({kind:'homework',now,checkedAt:last.created_at});
     if(schedule.reason==='scheduled-check-overdue'){
       const age=(current-Date.parse(last.created_at))/3_600_000;
