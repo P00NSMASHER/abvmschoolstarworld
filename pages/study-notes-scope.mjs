@@ -7,7 +7,7 @@ export function explicitlyInWeek(row,now){
  const {start,end}=weekBounds(now);
  const dates=[row?.weekOf,row?.studiedOn].filter(value=>value!=null&&value!=='');
  // Conflicting explicit dates cannot be resolved by silently preferring one.
- return dates.length>0&&dates.every(value=>typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value)&&Number.isFinite(Date.parse(value+'T12:00:00Z'))&&value>=start&&value<=end)&&(!row?.weekOf||row.weekOf===start);
+ return dates.length>0&&dates.every(value=>validCivilDay(value)&&value>=start&&value<=end)&&(!row?.weekOf||row.weekOf===start);
 }
 export function exactSkillTopics(pack,skill){
  if(Array.isArray(skill.noteTopics))return skill.noteTopics;
