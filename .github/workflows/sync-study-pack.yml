@@ -114,14 +114,14 @@ jobs:
           "$RUNNER_TEMP/abvm-bin/jq" --version
           echo "$RUNNER_TEMP/abvm-bin" >> "$GITHUB_PATH"
       - name: Set up Python for local app server and parser checks
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - uses: actions/checkout@v6
         with:
           ref: main
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -231,7 +231,7 @@ jobs:
 
       - name: Retain curriculum coverage evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: curriculum-coverage-${{ github.run_id }}
           path: .curriculum-coverage-plan.json
@@ -251,7 +251,7 @@ jobs:
 
       - name: Cache version-pinned Playwright browsers
         continue-on-error: true
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: abvm-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
@@ -318,7 +318,7 @@ jobs:
 
       - name: Retain failed candidate QA evidence for bounded recovery
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: teacher-refresh-qa-failure-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
@@ -386,7 +386,7 @@ jobs:
           "$RUNNER_TEMP/abvm-bin/jq" --version
           echo "$RUNNER_TEMP/abvm-bin" >> "$GITHUB_PATH"
       - name: Set up Python for local app server and parser checks
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: Checkout latest main without using unapproved teacher data
@@ -394,7 +394,7 @@ jobs:
         with:
           ref: main
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -423,7 +423,7 @@ jobs:
       - name: Cache Playwright browsers only for changed reviewed lunch
         if: steps.lunch-change.outputs.changed == 'true'
         continue-on-error: true
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: abvm-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}

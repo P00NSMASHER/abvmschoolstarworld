@@ -69,7 +69,7 @@ jobs:
           "$RUNNER_TEMP/abvm-bin/jq" --version
           echo "$RUNNER_TEMP/abvm-bin" >> "$GITHUB_PATH"
       - name: Set up Python for local app server and parser checks
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: Checkout exact review head
@@ -85,7 +85,7 @@ jobs:
         run: test "$(git rev-parse HEAD)" = "$REVIEW_SHA"
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -107,7 +107,7 @@ jobs:
 
       - name: Cache version-pinned Playwright browsers
         continue-on-error: true
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: abvm-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
@@ -141,7 +141,7 @@ jobs:
 
       - name: Retain exact-head candidate QA evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: abvm-fresh-teacher-candidate-${{ github.run_id }}
           path: |

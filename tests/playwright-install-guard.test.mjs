@@ -127,7 +127,7 @@ test('all dual-browser CI jobs use a version-pinned official image matching the 
   assert.ok(jobs.length,name);
   for(const job of jobs){
    assert.ok(job.includes('image: mcr.microsoft.com/playwright:v'+version+'-noble-amd64\n'),name);
-   assert.ok(job.includes('uses: actions/setup-python@v5'),name);
+   assert.ok(job.includes('uses: actions/setup-python@v7'),name);
    assert.ok(job.includes('jq-1.8.1/jq-linux-amd64'),name);
    assert.ok(job.includes('sha256sum --check'),name);
    assert.ok(job.includes('git config --global --add safe.directory "$GITHUB_WORKSPACE"'),name);

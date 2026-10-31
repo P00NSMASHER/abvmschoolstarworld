@@ -50,7 +50,7 @@ test("full browser QA and Pages reuse binaries only for the matching npm lockfil
     "sync-study-pack.yml"
   ]){
     const workflow=read(name);
-    assert.match(workflow,/name: Cache version-pinned Playwright browsers\n\s+continue-on-error: true\n\s+uses: actions\/cache@v4/,"optional browser cache must never block QA "+name);
+    assert.match(workflow,/name: Cache version-pinned Playwright browsers\n\s+continue-on-error: true\n\s+uses: actions\/cache@v6/,"optional browser cache must never block QA "+name);
     assert.match(workflow,/path: ~\/.cache\/ms-playwright/,"wrong cache path "+name);
     assert.match(workflow,/key: abvm-playwright-/,"missing browser-cache prefix "+name);
     assert.ok(workflow.includes("hashFiles('package-lock.json')"),"unversioned browser cache "+name);

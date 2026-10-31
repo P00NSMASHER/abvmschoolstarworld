@@ -30,7 +30,7 @@ jobs:
           "$RUNNER_TEMP/abvm-bin/jq" --version
           echo "$RUNNER_TEMP/abvm-bin" >> "$GITHUB_PATH"
       - name: Set up Python for local app server and parser checks
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - uses: actions/checkout@v6
@@ -52,7 +52,7 @@ jobs:
           cd "$RUNNER_TEMP/abvm-candidate-source"
           sha256sum source.tar > SHA256SUMS
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -78,7 +78,7 @@ jobs:
 
       - name: Cache version-pinned Playwright browsers
         continue-on-error: true
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: abvm-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
@@ -110,7 +110,7 @@ jobs:
           if [ -d playwright-report ]; then cp -R playwright-report "$RUNNER_TEMP/abvm-independent-qa/"; fi
           if [ -d test-results ]; then cp -R test-results "$RUNNER_TEMP/abvm-independent-qa/"; fi
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: abvm-study-independent-qa-${{ github.run_id }}

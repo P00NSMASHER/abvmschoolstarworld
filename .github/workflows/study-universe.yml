@@ -29,7 +29,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       - run: node --test tests/study-universe.test.mjs
@@ -40,7 +40,7 @@ jobs:
           cmp "$RUNNER_TEMP/study-universe.json" "$RUNNER_TEMP/repeated.json"
           git rev-parse HEAD > "$RUNNER_TEMP/source-sha.txt"
           sha256sum "$RUNNER_TEMP/study-universe.json" > "$RUNNER_TEMP/content.sha256"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: study-universe-${{ github.event.pull_request.head.sha || github.sha }}
           path: |
