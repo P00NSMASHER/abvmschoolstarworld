@@ -28,3 +28,9 @@ Added regression tests in `tests/study-model.test.mjs` for valid/invalid mixed r
 1. Confirm exact-head App QA and independent reproduction, fix any new failures before merging.
 2. Keep unrelated #434/#436, live school data, protected branch policies and Portfolio Brain observation authority untouched.
 3. On the next Hunter A cycle, investigate a reproducible shared-HTTP rate-limit or evidence-digest defect in trading infrastructure only after consulting its current PR owners; compare candidates and implement only if nonduplicative.
+
+## Exact-head CI regression triage
+- Initial candidate head `06b5d1c6bef71c32d859632d4620dae58a3e78b3` failed [App QA](https://github.com/P00NSMASHER/abvmschoolstarworld/actions/runs/41194472103) and [independent reproduction](https://github.com/P00NSMASHER/abvmschoolstarworld/actions/runs/41194472102) in the same two existing operational-health fixture cases. The new Study archive test did **not** fail.
+- Source-specific cause: the synthetic health tests set the published `lunchMenuSource.weekStart/weekEnd` to `displayedSchoolWeekDates(now)`. On Saturdays and Sundays, this is **next** week's classroom planning dates; the real dashboard correctly validates the published **current** week using `schoolWeek(new Date(now))`. Consequently the simulated supposedly healthy publication failed with exit 1. Future school-week archive coverage remains legitimately next-week-facing.
+- Repaired only two fixture assignments in `tests/health-evidence.test.mjs` and `tests/refresh-stage-health.test.mjs` to use the existing actual `schoolWeek` published-week rule, while preserving `displayedSchoolWeekDates` for the future archive. No production dashboard state rules or reliability gates were relaxed.
+- New exact-head CI, independent reproduction, visual/offline smoke checks and eventual guarded publication must be independently assessed before merge or acceptance.
