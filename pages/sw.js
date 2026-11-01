@@ -100,8 +100,11 @@ function staleWhileRevalidate(request,event){
   const persist=network.then(async response=>{
     if(!response?.ok)return;
     try{
+      // Snapshot before any await: the browser may begin consuming the
+      // returned body while the cache is still opening.
+      const copy=response.clone();
       const cache=await caches.open(CACHE);
-      await cache.put(request,response.clone());
+      await cache.put(request,copy);
     }catch{}
   });
   event.waitUntil(persist);
