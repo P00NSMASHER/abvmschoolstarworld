@@ -490,7 +490,9 @@ test("stale-while-revalidate online response does not wait for blocked cache loo
   );
   let delivered=false;
   responsePromise.then(()=>{delivered=true;});
-  await new Promise(resolve=>setImmediate(resolve));
+  // The service worker gives fast cache hits a bounded 12 ms head start.
+  // Observe after that grace period but before the held Cache Storage opens.
+  await new Promise(resolve=>setTimeout(resolve,40));
   const onlineDeliveredBeforeCacheOpens=delivered;
   releaseStorage();
   assert.strictEqual(await responsePromise,onlineResponse);
