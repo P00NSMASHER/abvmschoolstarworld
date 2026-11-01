@@ -11,14 +11,32 @@ const schoolKey=date=>{
 };
 const routine=task=>/^(?:read|read\s+\d+\s*(?:min(?:ute)?s?)?)$/i.test(task)
   ||/cover books|reading log|behavior chart|everything should be returned|return everything in the hw folder|attend mass/i.test(task);
+// Verified source checks must carry an unambiguous, real civil timestamp.
+// Date.parse alone accepts timezone-less values and normalizes Feb 30.
+function validObservationTime(value){
+  if(typeof value!=="string")return false;
+  const match=/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d{1,9})?(Z|[+-]\d{2}:\d{2})$/.exec(value);
+  if(!match)return false;
+  const [,yearText,monthText,dayText,hourText,minuteText,secondText,zone]=match;
+  const year=Number(yearText),month=Number(monthText),day=Number(dayText);
+  const leap=year%4===0&&(year%100!==0||year%400===0);
+  const days=[31,leap?29:28,31,30,31,30,31,31,30,31,30,31];
+  if(year<1||month<1||month>12||day<1||day>days[month-1]||
+     Number(hourText)>23||Number(minuteText)>59||Number(secondText)>59)return false;
+  if(zone!=="Z"){
+    const offsetHours=Number(zone.slice(1,3)),offsetMinutes=Number(zone.slice(4,6));
+    if(offsetHours>14||offsetMinutes>59||(offsetHours===14&&offsetMinutes!==0))return false;
+  }
+  return Number.isFinite(Date.parse(value));
+}
 function validate(data){
   if(!data||data.schemaVersion!==1||data.sourceUrl!==SOURCE_URL||data.sourceDateProvided!==false||
     !["assignments","no-homework","no-specific-posting"].includes(data.status)||
     !Array.isArray(data.assignments)||data.assignments.length>20||
     !/^[a-f0-9]{64}$/i.test(String(data.contentHash||""))||
-    !Number.isFinite(Date.parse(data.checkedAt))||
-    !Number.isFinite(Date.parse(data.firstObservedAt))||
-    !Number.isFinite(Date.parse(data.contentChangedAt)))throw Error("Invalid verified Homework feed");
+    !validObservationTime(data.checkedAt)||
+    !validObservationTime(data.firstObservedAt)||
+    !validObservationTime(data.contentChangedAt))throw Error("Invalid verified Homework feed");
   for(const row of data.assignments){
     if(!row||!SUBJECTS.has(row.subject)||typeof row.task!=="string"||
       !row.task.trim()||row.task.length>220||routine(row.task))throw Error("Invalid or standing Homework item");
