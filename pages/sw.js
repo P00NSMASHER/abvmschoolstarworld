@@ -80,12 +80,17 @@ function networkFirst(request,fallback="./index.html",event=null){
     let cached=null;
     try{cached=await cachedFallback(request,fallback);}catch{}
     if(!cached)return response||Response.error();
-    const headers=new Headers(cached.headers);
-    headers.set("X-ABVM-Cache-Fallback","1");
-    // HTTP 204/205/304 forbid even an empty Blob response body. Cache.match
-    // may return a valid 204/205, so retain its status on offline fallback.
-    const body=[204,205,304].includes(cached.status)?null:await cached.blob();
-    return new Response(body,{status:cached.status,statusText:cached.statusText,headers});
+    // Cached body reads can fail after a successful cache.match (e.g. disk
+    // corruption). Do not turn an upstream HTTP failure into a network error.
+    try {
+      const headers=new Headers(cached.headers);
+      headers.set("X-ABVM-Cache-Fallback","1");
+      // HTTP 204/205/304 require a literal null response body.
+      const body=[204,205,304].includes(cached.status)?null:await cached.blob();
+      return new Response(body,{status:cached.status,statusText:cached.statusText,headers});
+    } catch {
+      return response||Response.error();
+    }
   });
 }
 function staleWhileRevalidate(request,event){

@@ -269,3 +269,49 @@ test("network-first cached HTTP 205 remains a valid offline response",async()=>{
 test("network-first cached HTTP 200 preserves offline body and fallback marker",async()=>{
   assert.equal(await (await cachedNetworkFirstFallback(200)).text(),"cached-good");
 });
+
+
+// A cached Response may become unreadable after a successful CacheStorage.match.
+// Network-first must fail explicitly offline and preserve a real HTTP 503 online.
+async function cachedResponseBodyReadFailure(upstreamStatus=null) {
+  const corruptCachedResponse = {
+    status: 200,
+    statusText: "OK",
+    headers: new Headers({"Content-Type": "text/plain"}),
+    async blob() { throw new Error("synthetic cached response body is unreadable"); },
+  };
+  const upstream = upstreamStatus === null
+    ? null : new Response("service unavailable", {status: upstreamStatus});
+  const pending=[];
+  const context={
+    URL,Headers,Response,
+    caches:{async open(){return {
+      async match(){return corruptCachedResponse;},
+      async put(){},
+    };}},
+    async fetch(){
+      if(upstream)return upstream;
+      throw new Error("synthetic offline network");
+    },
+    self:{location:{origin:"https://school.example"},addEventListener(){}},
+  };
+  runInNewContext(workerSource,context,{filename:"pages/sw.js"});
+  const actual=await context.networkFirst(
+    {url:"https://school.example/data/schoolwork.json"},null,
+    {waitUntil(promise){pending.push(promise);}}
+  );
+  await Promise.all(pending);
+  return {actual,upstream};
+}
+
+test("network-first returns an explicit offline error if cached response body is unreadable",async()=>{
+  const {actual}=await cachedResponseBodyReadFailure();
+  assert.equal(actual.type,"error");
+  assert.equal(actual.status,0);
+});
+
+test("network-first preserves upstream HTTP 503 if cached response body is unreadable",async()=>{
+  const {actual,upstream}=await cachedResponseBodyReadFailure(503);
+  assert.strictEqual(actual,upstream);
+  assert.equal(actual.status,503);
+});
