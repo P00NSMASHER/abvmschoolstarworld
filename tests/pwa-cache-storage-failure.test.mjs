@@ -12,6 +12,7 @@ function workerHarness({
   storageOpenError = false,
   storageReadError = false,
   storageWriteError = false,
+  storageWriteGate = null,
   cached = false,
 } = {}) {
   const networkResponse = { ok: true, clone() { return this; } };
@@ -29,6 +30,7 @@ function workerHarness({
     async put() {
       calls.put += 1;
       if (storageWriteError) throw new Error("synthetic quota exceeded");
+      if (storageWriteGate) await storageWriteGate;
     },
   };
   const context = {
@@ -105,6 +107,27 @@ test("cache miss still returns the successful network response", async () => {
   const h = workerHarness();
   assert.strictEqual(await run(h), h.networkResponse);
   assert.equal(h.calls.put, 1);
+});
+
+test("online cold-cache response does not wait for slow Cache Storage persistence", async () => {
+  let finishWrite;
+  const writeGate = new Promise(resolve => { finishWrite = resolve; });
+  const h = workerHarness({ storageWriteGate: writeGate });
+  const responsePromise = h.context.staleWhileRevalidate(h.request, h.event);
+  let delivered = false;
+  responsePromise.then(() => { delivered = true; });
+
+  // Give the resolved synthetic fetch and cache lookup a complete event-loop
+  // turn. The best-effort cache put remains deliberately unresolved.
+  await new Promise(resolve => setImmediate(resolve));
+  const deliveredBeforeWrite = delivered;
+  finishWrite();
+
+  assert.strictEqual(await responsePromise, h.networkResponse);
+  await Promise.all(h.pending);
+  assert.equal(deliveredBeforeWrite, true,
+    "successful network response must not wait on best-effort Cache Storage writes");
+  assert.equal(h.calls.put, 1, "background persistence must still be attempted");
 });
 
 test("network-first online assets survive unavailable Cache Storage", async () => {
