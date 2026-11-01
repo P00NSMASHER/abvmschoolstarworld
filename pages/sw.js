@@ -69,8 +69,11 @@ function networkFirst(request,fallback="./index.html",event=null){
   const network=fetch(request,{cache:"no-store"}).catch(()=>null);
   const persist=network.then(async response=>{
     if(!response?.ok)return;
+    // Clone before Cache Storage opens: the browser may consume an online
+    // response body while asynchronous persistence is still awaiting storage.
+    const copy=response.clone();
     const cache=await caches.open(CACHE);
-    await cache.put(request,response.clone());
+    await cache.put(request,copy);
   });
   if(event)event.waitUntil(persist.catch(()=>{}));
   return network.then(async response=>{
