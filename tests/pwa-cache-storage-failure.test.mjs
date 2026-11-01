@@ -19,6 +19,7 @@ function workerHarness({
   const offlineResponse = { offline: true };
   const calls = { fetch: 0, match: 0, put: 0 };
   const pending = [];
+  const listeners = new Map();
   const cache = {
     async match() {
       calls.match += 1;
@@ -44,12 +45,15 @@ function workerHarness({
       return networkResponse;
     },
     Response: { error() { return offlineResponse; } },
-    self: { addEventListener() {} },
+    self: {
+      location: { origin: "https://school.example" },
+      addEventListener(type, handler) { listeners.set(type, handler); },
+    },
   };
   runInNewContext(workerSource, context, { filename: "pages/sw.js" });
   assert.equal(typeof context.staleWhileRevalidate, "function");
   return {
-    context, calls, pending, networkResponse, cachedResponse, offlineResponse,
+    context, calls, pending, listeners, networkResponse, cachedResponse, offlineResponse,
     request: { url: "https://school.example/assets/illustrations/reading.webp" },
     event: { waitUntil(promise) { pending.push(promise); } },
   };
@@ -101,4 +105,55 @@ test("cache miss still returns the successful network response", async () => {
   const h = workerHarness();
   assert.strictEqual(await run(h), h.networkResponse);
   assert.equal(h.calls.put, 1);
+});
+
+test("network-first online assets survive unavailable Cache Storage", async () => {
+  const h = workerHarness({ storageOpenError: true });
+  assert.strictEqual(await h.context.networkFirst(h.request, null, h.event), h.networkResponse);
+  await Promise.all(h.pending);
+  assert.equal(h.calls.fetch, 1);
+});
+
+test("network-first offline asset returns an explicit error when storage is denied", async () => {
+  const h = workerHarness({ networkError: true, storageOpenError: true });
+  assert.strictEqual(await h.context.networkFirst(h.request, null, h.event), h.offlineResponse);
+  await Promise.all(h.pending);
+});
+
+test("network-first offline asset returns an explicit error when cache read fails", async () => {
+  const h = workerHarness({ networkError: true, storageReadError: true });
+  assert.strictEqual(await h.context.networkFirst(h.request, null, h.event), h.offlineResponse);
+  await Promise.all(h.pending);
+});
+
+async function dispatchUncategorizedGet(h) {
+  let responsePromise;
+  h.listeners.get("fetch")({
+    request: {
+      url: "https://school.example/robots.txt",
+      method: "GET",
+      mode: "same-origin",
+    },
+    respondWith(promise) { responsePromise = promise; },
+  });
+  assert.ok(responsePromise, "real service worker must handle an uncategorized same-origin GET");
+  return responsePromise;
+}
+
+test("uncategorized online GET survives Cache Storage open rejection", async () => {
+  const h = workerHarness({ storageOpenError: true });
+  assert.strictEqual(await dispatchUncategorizedGet(h), h.networkResponse);
+  assert.equal(h.calls.fetch, 1);
+});
+
+test("uncategorized online GET survives Cache Storage match rejection", async () => {
+  const h = workerHarness({ storageReadError: true });
+  assert.strictEqual(await dispatchUncategorizedGet(h), h.networkResponse);
+  assert.equal(h.calls.fetch, 1);
+});
+
+test("uncategorized cached GET still avoids an unnecessary fetch", async () => {
+  const h = workerHarness({ cached: true });
+  assert.strictEqual(await dispatchUncategorizedGet(h), h.cachedResponse);
+  assert.equal(h.calls.fetch, 0);
 });
