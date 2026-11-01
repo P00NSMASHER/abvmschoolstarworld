@@ -62,3 +62,29 @@ test('real missing file produces 404 with no unhandled stream error', async () =
   await finished;
   assert.equal(response.statusCode, 404);
 });
+
+test('client disconnect before open cancels the source without committing HTTP 200', async () => {
+  const { response } = responseFixture();
+  const stream = new PassThrough();
+  streamPreviewFile('synthetic', response, {}, () => stream);
+  const closed = once(stream, 'close');
+  response.destroy();
+  await closed;
+  // A late open cannot write a success header to an abandoned connection.
+  stream.emit('open', 5);
+  assert.equal(stream.destroyed, true);
+  assert.equal(response.headersSent, false);
+});
+
+test('client disconnect after open destroys the source stream promptly', async () => {
+  const { response } = responseFixture();
+  const stream = new PassThrough();
+  streamPreviewFile('synthetic', response, {}, () => stream);
+  stream.emit('open', 5);
+  assert.equal(response.statusCode, 200);
+  const closed = once(stream, 'close');
+  response.destroy();
+  await closed;
+  assert.equal(response.destroyed, true);
+  assert.equal(stream.destroyed, true);
+});
