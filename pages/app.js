@@ -45,10 +45,9 @@ function parseDate(text){
   const m=String(text).match(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]*\.?\s*(\d{1,2})/i);
   if(!m)return null;
   const month=SHORT_MONTHS[m[1].toLowerCase()], day=Number(m[2]);
-  const now=today(); let year=now.getFullYear();
-  if(now.getMonth()>=7&&month<=5)year++;
-  else if(now.getMonth()<=5&&month>=7)year--;
-  return new Date(year,month,day,12);
+  const now=today(),year=now.getFullYear()+(now.getMonth()>=7&&month<=5)-(now.getMonth()<=5&&month>=7);
+  const d=new Date(year,month,day,12);
+  return d.getDate()===day?d:null;
 }
 function sameDay(a,b){return a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
 function isoDateKey(date){
@@ -150,9 +149,8 @@ function eventDateRange(text){
   if(!m){const d=parseDate(value);return d?[d,d]:null;}
   const start=parseDate(m[1]+" "+m[2]); if(!start)return null;
   const endMonth=SHORT_MONTHS[(m[3]||m[1]).toLowerCase()];
-  let endYear=start.getFullYear(); if(endMonth<start.getMonth())endYear++;
-  const end=new Date(endYear,endMonth,Number(m[4]),12);
-  return [start,end];
+  const end=new Date(start.getFullYear()+(endMonth<start.getMonth()?1:0),endMonth,+m[4],12);
+  return end>=start&&end.getDate()===+m[4]?[start,end]:null;
 }
 function eventItemsForDate(date){
   return getDerivedPack().eventsByDate.get(isoDateKey(date))||[];

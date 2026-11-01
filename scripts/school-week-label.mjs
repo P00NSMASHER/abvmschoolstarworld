@@ -17,8 +17,13 @@ export function schoolWeekStart(at,{calendarDisplay=false}={}){
   // Only explicit date/time inputs may select a school week.
   if(!(typeof at==='string'||typeof at==='number'||at instanceof Date))
     throw new TypeError('Invalid school-week instant');
-  const instant=new Date(at);
-  if(Number.isNaN(instant.getTime()))throw new TypeError('Invalid school-week instant');
+  // A bare ISO date is a school-local civil day, not an instant at UTC midnight.
+  // Interpreting Monday's UTC midnight as Sunday in New York moves the week back.
+  const civilDay=typeof at==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(at);
+  const instant=new Date(civilDay?at+'T12:00:00Z':at);
+  if(Number.isNaN(instant.getTime())||
+     (civilDay&&instant.toISOString().slice(0,10)!==at))
+    throw new TypeError('Invalid school-week instant');
   const parts=Object.fromEntries(easternParts.formatToParts(instant).map(part=>[part.type,part.value]));
   const localDay=new Date(Date.UTC(Number(parts.year),Number(parts.month)-1,Number(parts.day),12));
   const weekday=localDay.getUTCDay();

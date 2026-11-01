@@ -129,3 +129,36 @@ test('outdated Homework distinguishes a stale check from a checked undated carry
   assert.equal(stale.reason,'verification-stale');
   assert.equal(checked.reason,'undated-carryover');
 });
+
+
+test('homework timestamps require explicit offsets and real civil days',()=>{
+  const base={...verifiedPosting,status:'no-homework',assignments:[],
+    firstObservedAt:'2026-02-27T11:00:00.000Z',
+    contentChangedAt:'2026-02-27T11:00:00.000Z',
+    checkedAt:'2026-02-28T12:00:00.000Z'};
+  assert.doesNotThrow(()=>model.validate(base));
+  const malformed=[
+    '2026-02-30T12:00:00Z', // Date.parse normalizes nonexistent February 30.
+    '2026-02-28T12:00:00',  // Missing offset depends on the viewer's timezone.
+    '2026-02-28',
+    '2026-02-28T24:00:00Z',
+    '2026-02-28T12:00:60Z',
+    '2026-02-28T12:00:00+15:00',
+    '2026-02-28T12:00:00+14:30',
+  ];
+  for(const field of ['checkedAt','firstObservedAt','contentChangedAt']){
+    for(const timestamp of malformed)
+      assert.throws(()=>model.validate({...base,[field]:timestamp}),/Invalid verified Homework feed/,
+        field+' accepted '+timestamp);
+  }
+  assert.equal(model.forDate({...base,checkedAt:'2026-02-28T12:00:00'},
+    '2026-02-28',new Date('2026-02-28T13:00:00Z')).state,'unverified');
+  assert.doesNotThrow(()=>model.validate({...base,checkedAt:'2026-02-28T12:00:00+05:30'}));
+  assert.doesNotThrow(()=>model.validate({...base,
+    firstObservedAt:'2028-02-28T11:00:00Z',contentChangedAt:'2028-02-28T11:00:00Z',
+    checkedAt:'2028-02-29T12:00:00Z'}),'real leap day must remain accepted');
+  assert.throws(()=>model.validate({...base,
+    firstObservedAt:'2027-02-27T11:00:00Z',contentChangedAt:'2027-02-27T11:00:00Z',
+    checkedAt:'2027-02-29T12:00:00Z'}),/Invalid verified Homework feed/,
+    'non-leap February 29 must fail closed');
+});
