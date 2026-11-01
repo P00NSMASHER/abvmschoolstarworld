@@ -233,3 +233,39 @@ test("healthy activation cleans only obsolete ABVM cache and still claims client
   assert.equal(calls.claims, 1);
   assert.deepEqual(calls.deleted, ["abvm-grade2-parent-companion-v198"]);
 });
+
+
+// A successful 204/205 may be stored by networkFirst. Offline fallback must
+// not reconstruct that cached response with an empty Blob: Fetch forbids even
+// an empty body for null-body status codes.
+async function cachedNetworkFirstFallback(status) {
+  const cached=new Response(status===200?"cached-good":null,{status});
+  const pending=[];
+  const context={
+    URL,Headers,Response,
+    caches:{async open(){return {async match(){return cached;},async put(){}};}},
+    async fetch(){throw new Error("synthetic offline network");},
+    self:{location:{origin:"https://school.example"},addEventListener(){}},
+  };
+  runInNewContext(workerSource,context,{filename:"pages/sw.js"});
+  const actual=await context.networkFirst(
+    {url:"https://school.example/data/schoolwork.json"},null,
+    {waitUntil(promise){pending.push(promise);}}
+  );
+  await Promise.all(pending);
+  assert.equal(actual.status,status);
+  assert.equal(actual.headers.get("X-ABVM-Cache-Fallback"),"1");
+  return actual;
+}
+
+test("network-first cached HTTP 204 remains a valid offline response",async()=>{
+  assert.equal(await (await cachedNetworkFirstFallback(204)).text(),"");
+});
+
+test("network-first cached HTTP 205 remains a valid offline response",async()=>{
+  assert.equal(await (await cachedNetworkFirstFallback(205)).text(),"");
+});
+
+test("network-first cached HTTP 200 preserves offline body and fallback marker",async()=>{
+  assert.equal(await (await cachedNetworkFirstFallback(200)).text(),"cached-good");
+});
