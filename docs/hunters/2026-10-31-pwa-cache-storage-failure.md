@@ -65,3 +65,23 @@ The code now handles these failures locally: `networkFirst` returns a safe HTTP/
 - Safety: no runtime logging, telemetrics, third-party assets, source-feed changes, student records, paid services, release triggers or migrations introduced.
 - Rollback: revert the two follow-up source/test commits or abandon the draft PR. No main branch or live deployment was touched.
 - Ownership: draft PR #459 remains separate from integration PRs #457/#458; Brain's protected observation and Tradier research code were not modified.
+
+## 2026-11-01 follow-up: uncategorized GET offline negative control
+
+A subsequent audit of the **actual** draft-worker source found another uncovered failure: the generic same-origin GET route could handle denied Cache Storage when online, but if the network was simultaneously unavailable its `respondWith` promise **rejected**, rather than resolving to the worker's defined `Response.error()` result. It affected unclassified paths such as `robots.txt`, not the explicitly routed curriculum/API resources.
+
+Verified in a dependency-free V8 source-executing mock (using the current branch's complete `pages/sw.js`, with synthetic offline/network and storage-error injection). The 3 failing baseline cases all resolved to `Response.error()` after the bounded change; two positive online controls continued to resolve to the successful network response. The test matrix:
+
+| Scenario | Before | After |
+| --- | --- | --- |
+| Offline network + denied cache open | rejected `respondWith` promise | explicit network error response |
+| Offline network + rejected cache match | rejected promise | explicit network error response |
+| Offline network + ordinary cache miss | rejected promise | explicit network error response |
+| Online network + denied cache open | network response | network response |
+| Online network + rejected cache match | network response | network response |
+
+- Implementation commit `d4be22b30440f4a22ecde3a15c0dc6f11b408e51`: guard the final network fetch in the generic handler, retain its on-line response path, and return `Response.error()` after a rejected offline fetch. No service-worker cache-name, routing, dependency, feed, asset, user-data or production changes.
+- Test commit `f46c0566cae19f804ae40880b3a84ed8e66e70e9`: add **3 additional source-executing Node regression cases** to `tests/pwa-cache-storage-failure.test.mjs`. Total worker cases now **16**.
+- Upstream alternatives: revalidated exact MIT `LICENSE` blobs for [Workbox](https://github.com/GoogleChrome/workbox/blob/4ea3138a120fd2c87389b54130e25f47e0fd7089/LICENSE) and [Serwist](https://github.com/serwist/serwist/blob/1b2ea2b397999c6a579a777988f5f401e5969296/LICENSE); a complete caching framework was again rejected as excessive supply-chain and migration cost for this local error boundary. No external code copied. Security of all transitive dependencies is not asserted because no new dependencies were added.
+- Countable benefit: three additional failing simulated offline scenarios made deterministic; **no real-user incident or engineer-hours saved claim**. To estimate hours responsibly, compare review plus CI effort against a manually implemented/retested equivalent; no such independent time study exists.
+- Remains **draft**. Full exact-head GitHub CI, hardware Safari/offline acceptance and protected merge authorization must be verified before release. The user has not approved production deployment. Existing integration PRs #457/#458 are not modified. Portfolio Brain main/observation and Tradier research were not touched.
