@@ -124,7 +124,12 @@ function staleWhileRevalidate(request,event){
     })();
     const first=await Promise.race([
       cachedLookup.then(response=>({source:"cache",response})),
-      network.then(response=>({source:"network",response}))
+      // Let immediately available Cache Storage win over a near-instant
+      // network response. A bounded grace period still prevents a hung
+      // cache open/read from indefinitely blocking a successful fetch.
+      network.then(response=>new Promise(resolve=>{
+        setTimeout(()=>resolve({source:"network",response}),12);
+      }))
     ]);
     if(first.source==="cache"){
       if(first.response)return first.response;

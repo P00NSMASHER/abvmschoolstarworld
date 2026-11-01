@@ -34,7 +34,7 @@ function workerHarness({
     },
   };
   const context = {
-    URL,
+    URL, setTimeout,
     caches: {
       async open() {
         if (storageOpenError) throw new Error("synthetic Cache Storage unavailable");
@@ -468,7 +468,7 @@ test("stale-while-revalidate online response does not wait for blocked cache loo
     clone(){clones++;return {independentCopy:true};},
   };
   const context={
-    URL,
+    URL,setTimeout,
     caches:{async open(){
       await storageGate;
       return {
