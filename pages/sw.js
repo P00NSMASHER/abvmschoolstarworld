@@ -41,8 +41,11 @@ self.addEventListener("install",event=>{
 });
 self.addEventListener("activate",event=>{
   event.waitUntil((async()=>{
-    const keys=await caches.keys();
-    await Promise.all(
+    // Cleanup is best-effort. Transient Cache Storage failures must not
+    // prevent this worker from controlling pages that are still online.
+    let keys=[];
+    try{keys=await caches.keys();}catch{}
+    await Promise.allSettled(
       keys
         .filter(key=>key.startsWith(CACHE_PREFIX)&&key!==CACHE)
         .map(key=>caches.delete(key))
