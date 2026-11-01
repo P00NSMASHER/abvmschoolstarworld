@@ -112,13 +112,26 @@ function staleWhileRevalidate(request,event){
   });
   event.waitUntil(persist);
   return (async()=>{
-    // A cached hit can be returned while the network refresh continues.
-    try{
-      const cache=await caches.open(CACHE);
-      const cached=(await cache.match(request))||(await cache.match(request,{ignoreSearch:true}));
-      if(cached)return cached;
-    }catch{}
-    return (await network)||Response.error();
+    // Race the network against cache lookup. A Cache Storage open/read that
+    // stalls must not prevent an already successful online asset response.
+    // Keep a fast cached hit and use the cache for offline/HTTP errors.
+    const cachedLookup=(async()=>{
+      try{
+        const cache=await caches.open(CACHE);
+        return (await cache.match(request))||
+          (await cache.match(request,{ignoreSearch:true}))||null;
+      }catch{return null;}
+    })();
+    const first=await Promise.race([
+      cachedLookup.then(response=>({source:"cache",response})),
+      network.then(response=>({source:"network",response}))
+    ]);
+    if(first.source==="cache"){
+      if(first.response)return first.response;
+      return (await network)||Response.error();
+    }
+    if(first.response?.ok)return first.response;
+    return (await cachedLookup)||first.response||Response.error();
   })();
 }
 

@@ -454,3 +454,49 @@ test("network-first preserves upstream HTTP 503 if cached response body is unrea
   assert.strictEqual(actual,upstream);
   assert.equal(actual.status,503);
 });
+
+// A Cache Storage API can stall, rather than reject. The worker must still
+// deliver an already successful online response while cache reads/writes wait.
+test("stale-while-revalidate online response does not wait for blocked cache lookup",async()=>{
+  let releaseStorage;
+  const storageGate=new Promise(resolve=>{releaseStorage=resolve;});
+  const pending=[];
+  let clones=0;
+  let writes=0;
+  const onlineResponse={
+    ok:true,
+    clone(){clones++;return {independentCopy:true};},
+  };
+  const context={
+    URL,
+    caches:{async open(){
+      await storageGate;
+      return {
+        async match(){return undefined;},
+        async put(_request,copy){
+          assert.equal(copy.independentCopy,true);
+          writes++;
+        },
+      };
+    }},
+    async fetch(){return onlineResponse;},
+    Response:{error(){return {offline:true};}},
+    self:{location:{origin:"https://school.example"},addEventListener(){}},
+  };
+  runInNewContext(workerSource,context,{filename:"pages/sw.js"});
+  const responsePromise=context.staleWhileRevalidate(
+    {url:"https://school.example/assets/illustrations/reading.webp"},
+    {waitUntil(promise){pending.push(promise);}}
+  );
+  let delivered=false;
+  responsePromise.then(()=>{delivered=true;});
+  await new Promise(resolve=>setImmediate(resolve));
+  const onlineDeliveredBeforeCacheOpens=delivered;
+  releaseStorage();
+  assert.strictEqual(await responsePromise,onlineResponse);
+  await Promise.all(pending);
+  assert.equal(onlineDeliveredBeforeCacheOpens,true,
+    "successful online requests must not hang behind a stalled cache read");
+  assert.equal(clones,1,"persistence should clone the response once");
+  assert.equal(writes,1,"background cache persistence must still complete");
+});
