@@ -167,6 +167,12 @@ self.addEventListener("fetch",event=>{
       const cached=await cache.match(event.request);
       if(cached)return cached;
     }catch{}
-    return fetch(event.request);
+    try {
+      return await fetch(event.request);
+    } catch {
+      // A missing uncategorized asset offline must produce a defined
+      // network-error response, even when Cache Storage also fails.
+      return Response.error();
+    }
   })());
 });
