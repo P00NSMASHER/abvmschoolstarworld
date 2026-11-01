@@ -19,6 +19,24 @@ test('week rollover remains correct across DST and year boundaries',()=>{
   ]);
 });
 
+test('bare ISO dates represent exact Eastern school days, never the preceding UTC day',()=>{
+  // Before this fix, Monday 2026-10-19 at 00:00Z mapped to Sunday October 18.
+  assert.equal(schoolWeekLabel('2026-10-19'),'Week of October 19, 2026');
+  assert.equal(schoolWeekLabel('2026-03-09'),'Week of March 9, 2026');
+  assert.equal(schoolWeekLabel('2026-11-02'),'Week of November 2, 2026');
+  assert.equal(schoolWeekLabel('2026-10-17',{calendarDisplay:true}),'Week of October 19, 2026');
+  assert.deepEqual(displayedSchoolWeekDates('2026-10-19'),[
+    '2026-10-19','2026-10-20','2026-10-21','2026-10-22','2026-10-23',
+  ]);
+  // Full UTC instants continue to represent instants, not local civil labels.
+  assert.equal(schoolWeekLabel('2026-10-19T00:00:00Z'),'Week of October 12, 2026');
+  for(const day of ['2026-02-30','2026-11-31','2027-02-29','2026-00-10','2026-13-01']){
+    assert.throws(()=>schoolWeekLabel(day),/Invalid school-week instant/,day);
+    assert.throws(()=>displayedSchoolWeekDates(day),/Invalid school-week instant/,day);
+  }
+  assert.equal(schoolWeekLabel('2028-02-29'),'Week of February 28, 2028');
+});
+
 test('upcoming lunch monitor checks verified archive and honors explicit school closures',()=>{
   const dates=displayedSchoolWeekDates('2026-10-17T22:00:00Z');
   const pack={lunchMenu:[{date:'2026-10-12'}],lunchArchive:dates.map(date=>({date})),importantDates:[]};
