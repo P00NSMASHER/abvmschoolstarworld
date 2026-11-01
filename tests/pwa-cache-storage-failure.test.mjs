@@ -154,7 +154,8 @@ test("network response body is cloned before asynchronous Cache Storage opens", 
     },
   };
   const context = {
-    URL,
+    // Real service workers provide timers; the isolated VM must do so too.
+    URL, setTimeout,
     caches: {
       async open() {
         opens += 1;
