@@ -503,3 +503,62 @@ test("stale-while-revalidate online response does not wait for blocked cache loo
   assert.equal(clones,1,"persistence should clone the response once");
   assert.equal(writes,1,"background cache persistence must still complete");
 });
+
+
+// A Cache Storage read can remain pending indefinitely instead of rejecting.
+// The worker must return a genuine HTTP error/offline error in finite time,
+// while allowing a merely slow cached response to recover an offline page.
+async function stalledOfflineLookup({upstreamStatus=null,cacheDelayMs=null}={}){
+  const upstream=upstreamStatus===null?null:{ok:false,status:upstreamStatus};
+  const offline={type:"error",status:0};
+  const cached={ok:true,status:200,cached:true};
+  const pending=[];
+  const context={
+    URL,clearTimeout,
+    // Compress only the 1.5s worker fallback into 35ms for deterministic CI.
+    setTimeout:(callback,delay)=>setTimeout(callback,delay>=1000?35:delay),
+    caches:{open:()=>cacheDelayMs===null
+      ?new Promise(()=>{})
+      :new Promise(resolve=>setTimeout(()=>resolve({
+        async match(){return cached;},
+        async put(){},
+      }),cacheDelayMs))},
+    async fetch(){
+      if(!upstream)throw new Error("synthetic offline network");
+      return upstream;
+    },
+    Response:{error(){return offline;}},
+    self:{location:{origin:"https://school.example"},addEventListener(){}},
+  };
+  runInNewContext(workerSource,context,{filename:"pages/sw.js"});
+  const response=context.staleWhileRevalidate(
+    {url:"https://school.example/assets/illustrations/reading.webp"},
+    {waitUntil(promise){pending.push(promise);}}
+  );
+  let watchdog;
+  const deadline=new Promise((_,reject)=>{
+    watchdog=setTimeout(()=>reject(new Error(
+      "Cache Storage stalled the fetch past the bounded fallback"
+    )),200);
+  });
+  try{
+    const actual=await Promise.race([response,deadline]);
+    await Promise.all(pending);
+    return {actual,upstream,offline,cached};
+  }finally{clearTimeout(watchdog);}
+}
+
+test("stalled cache lookup preserves a real upstream HTTP 503",async()=>{
+  const {actual,upstream}=await stalledOfflineLookup({upstreamStatus:503});
+  assert.strictEqual(actual,upstream);
+});
+
+test("stalled offline cache lookup resolves to an explicit network error",async()=>{
+  const {actual,offline}=await stalledOfflineLookup();
+  assert.strictEqual(actual,offline);
+});
+
+test("slower offline cache hit still wins before the bounded timeout",async()=>{
+  const {actual,cached}=await stalledOfflineLookup({cacheDelayMs:25});
+  assert.strictEqual(actual,cached);
+});

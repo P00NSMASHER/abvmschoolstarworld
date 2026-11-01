@@ -136,7 +136,20 @@ function staleWhileRevalidate(request,event){
       return (await network)||Response.error();
     }
     if(first.response?.ok)return first.response;
-    return (await cachedLookup)||first.response||Response.error();
+    // Cache Storage may hang without rejecting. Give a slow offline cache
+    // read a bounded chance, but never hold a failed upstream indefinitely.
+    let timeout;
+    try{
+      const cached=await Promise.race([
+        cachedLookup,
+        new Promise(resolve=>{
+          timeout=setTimeout(()=>resolve(null),1500);
+        }),
+      ]);
+      return cached||first.response||Response.error();
+    }finally{
+      clearTimeout(timeout);
+    }
   })();
 }
 
