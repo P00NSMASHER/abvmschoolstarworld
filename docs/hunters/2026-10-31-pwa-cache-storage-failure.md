@@ -47,3 +47,21 @@ Decision: independent dependency-free repair; no transitive license or vulnerabi
 - Adversarial unit coverage: **70,080 fifteen-minute points** across 2026 and 2027, the precise October 31/November 1 transition reproducer and invalid timestamp controls. The 3 independent Node tests passed locally on Nov 1 before push; full exact-head CI still required.
 - External test-framework candidates checked: [sinonjs/fake-timers](https://github.com/sinonjs/fake-timers) `466d18e2651839370e927957b967ea5eaa172806` (2026-05-05; BSD-3-Clause LICENSE blob `eb84755e17ccd397ef09889a9c689605ef9f5acf`) and [vitest-dev/vitest](https://github.com/vitest-dev/vitest) `42770759fcca4ff82ab4df49e4ee241f4f680e99` (2026-10-30; MIT LICENSE blob `0e5771dddf4e96ebc77c349f53fc763b910e63c0`). Both are maintained and licensed, but rejected for this narrow fix because built-in Node tests and existing Playwright require no new dependencies, supply-chain additions or license obligations. No external source copied; dependency/license chains unchanged.
 - Delivery state: isolated PR #459 only; expected-head fast-forward, no main modification. If the independent QA rerun passes, confirm the remaining required checks and current branch-protection release authority before any merge; do not force or bypass checks. No elapsed-time observation claims.
+
+
+## Follow-up: remaining Cache Storage failure paths (2026-11-01)
+
+The exact PR-head worker review revealed the same storage-versus-network coupling in two paths not covered by the original seven tests:
+
+1. `networkFirst` called `cachedFallback` without guarding failures from `caches.open` or `cache.match`. When offline, a rejected Cache Storage operation produced a rejected service-worker response instead of the worker's defined `Response.error()` fallback. The successful online path was already independent of that background cache write.
+2. The final same-origin GET handler (for resources outside its explicit route table, e.g. `robots.txt`) opened Cache Storage **before** considering `fetch`. Rejection prevented a successful network fetch entirely.
+
+The code now handles these failures locally: `networkFirst` returns a safe HTTP/offline result when best-effort fallback reads reject, and the generic GET route attempts network access when cache open/read fails. Normal successful cache hits and the existing route precedence are preserved. Six additional source-executing Node regression tests cover storage-open faults, storage-read faults, offline negative controls, online success, and cache-hit preservation.
+
+- Code commits: `1d568694ccbabbc6698ffd03df698828428b7dbe` and `acc0c865e738a40a9d74f8be6e32d5ae70069837`.
+- External candidates: rechecked pinned MIT LICENSE blobs for Workbox `845b545fd0f5031a944cda8cf9018eb066500040` and Serwist `6af66043c3a85f6cef5b5715c00eee8486d27eb4`. Both repositories were accessible and not archived. No upstream implementation imported, no new dependency/lockfile change.
+- Measurable improvement: before source inspection, two additional route families were still unguarded; after patch, two route families are protected by six dedicated tests. **Real user incident reduction and engineer-hours saved are not independently measurable.**
+- Test status: 13 worker fault-injection tests expected in this PR, plus 3 DST fixture tests; **exact-head CI must be checked after this commit before calling them passed**. Safari/iOS hardware and production deployment remain unverified.
+- Safety: no runtime logging, telemetrics, third-party assets, source-feed changes, student records, paid services, release triggers or migrations introduced.
+- Rollback: revert the two follow-up source/test commits or abandon the draft PR. No main branch or live deployment was touched.
+- Ownership: draft PR #459 remains separate from integration PRs #457/#458; Brain's protected observation and Tradier research code were not modified.
