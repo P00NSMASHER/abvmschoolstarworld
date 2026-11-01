@@ -94,32 +94,25 @@ function networkFirst(request,fallback="./index.html",event=null){
   });
 }
 function staleWhileRevalidate(request,event){
-  const update=(async()=>{
+  // Fetch and persist independently: slow Cache Storage writes should not
+  // hold a successful online response hostage on a cold-cache request.
+  const network=Promise.resolve().then(()=>fetch(request)).catch(()=>null);
+  const persist=network.then(async response=>{
+    if(!response?.ok)return;
     try{
-      const response=await fetch(request);
-      if(response?.ok){
-        // Storage may reject writes (for example on quota exhaustion).
-        // Keep the successful network response usable regardless.
-        try{
-          const cache=await caches.open(CACHE);
-          await cache.put(request,response.clone());
-        }catch{}
-      }
-      return response;
-    }catch{
-      return null;
-    }
-  })();
-  event.waitUntil(update.then(()=>{}));
+      const cache=await caches.open(CACHE);
+      await cache.put(request,response.clone());
+    }catch{}
+  });
+  event.waitUntil(persist);
   return (async()=>{
-    // Cache Storage can fail independently of connectivity. Do not turn a
-    // successful online fetch into an offline error when reads are blocked.
+    // A cached hit can be returned while the network refresh continues.
     try{
       const cache=await caches.open(CACHE);
       const cached=(await cache.match(request))||(await cache.match(request,{ignoreSearch:true}));
       if(cached)return cached;
     }catch{}
-    return (await update)||Response.error();
+    return (await network)||Response.error();
   })();
 }
 
