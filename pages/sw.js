@@ -84,8 +84,12 @@ function staleWhileRevalidate(request,event){
     try{
       const response=await fetch(request);
       if(response?.ok){
-        const cache=await caches.open(CACHE);
-        await cache.put(request,response.clone());
+        // Storage may reject writes (for example on quota exhaustion).
+        // Keep the successful network response usable regardless.
+        try{
+          const cache=await caches.open(CACHE);
+          await cache.put(request,response.clone());
+        }catch{}
       }
       return response;
     }catch{
@@ -94,9 +98,13 @@ function staleWhileRevalidate(request,event){
   })();
   event.waitUntil(update.then(()=>{}));
   return (async()=>{
-    const cache=await caches.open(CACHE);
-    const cached=(await cache.match(request))||(await cache.match(request,{ignoreSearch:true}));
-    if(cached)return cached;
+    // Cache Storage can fail independently of connectivity. Do not turn a
+    // successful online fetch into an offline error when reads are blocked.
+    try{
+      const cache=await caches.open(CACHE);
+      const cached=(await cache.match(request))||(await cache.match(request,{ignoreSearch:true}));
+      if(cached)return cached;
+    }catch{}
     return (await update)||Response.error();
   })();
 }
