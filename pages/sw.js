@@ -72,7 +72,10 @@ function networkFirst(request,fallback="./index.html",event=null){
   if(event)event.waitUntil(persist.catch(()=>{}));
   return network.then(async response=>{
     if(response?.ok)return response;
-    const cached=await cachedFallback(request,fallback);
+    // A denied or broken Cache Storage API must not turn an ordinary
+    // network miss into a rejected service-worker response.
+    let cached=null;
+    try{cached=await cachedFallback(request,fallback);}catch{}
     if(!cached)return response||Response.error();
     const headers=new Headers(cached.headers);
     headers.set("X-ABVM-Cache-Fallback","1");
@@ -156,5 +159,14 @@ self.addEventListener("fetch",event=>{
     event.respondWith(staleWhileRevalidate(event.request,event));
     return;
   }
-  event.respondWith(caches.open(CACHE).then(cache=>cache.match(event.request)).then(cached=>cached||fetch(event.request)));
+  // Other same-origin GET resources must still load online when Cache
+  // Storage is unavailable or a cached read rejects (e.g. private mode).
+  event.respondWith((async()=>{
+    try{
+      const cache=await caches.open(CACHE);
+      const cached=await cache.match(event.request);
+      if(cached)return cached;
+    }catch{}
+    return fetch(event.request);
+  })());
 });
