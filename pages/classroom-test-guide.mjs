@@ -46,6 +46,8 @@ const styles = '@page{size:Letter portrait;margin:.46in}'+
 '.memory-section ul{margin:.03in 0;padding-left:.25in}.memory-section li{margin:.06in 0}'+
 '.activity-steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.12in;margin:.15in 0}.activity{border:1px solid #888;padding:.11in;font-size:9.5pt}'+
 '.activity h3{font-size:10pt;margin:0 0 .04in}.activity p{margin:0}'+
+'.story-practice{margin:.18in 0}.story-practice>p{font-size:9.5pt}.story-response{break-inside:avoid;page-break-inside:avoid;border:1px solid #888;border-radius:10px;padding:.12in;margin:.11in 0}'+
+'.story-response h3{font-size:11pt;margin:0 0 .07in}.story-response label{display:block;font-size:9pt;font-weight:700;margin:.08in 0 .02in}.response-line{display:block;height:.3in;border-bottom:1px solid #777}'+
 '@media screen{body{background:#edf0f3;padding:20px}.sheet{background:#fff;padding:.46in;box-shadow:0 5px 22px #0002;margin:0 auto 16px}.adult-key{margin-top:16px;break-before:auto}}'+
 '@media screen and (max-width:640px){body{padding:9px;font-size:11pt}.sheet{width:100%;padding:13px;box-shadow:none;border-radius:8px}.paper-topline{font-size:8pt}.sheet-header h1{font-size:18pt}.field-line{width:1.1in}.field-line.date{width:.8in}.student-fields{gap:.11in;font-size:9pt}.choices{grid-template-columns:minmax(0,1fr)}.math-grid{grid-template-columns:minmax(0,1fr)}.word-list{grid-template-columns:repeat(2,minmax(0,1fr))}.activity-steps{grid-template-columns:minmax(0,1fr)}.key-list{columns:1}}'+
 '@media print{body{background:#fff}.sheet{max-width:none;width:100%}.adult-key{break-before:page}.problem,.memory-section{break-inside:avoid}}';
@@ -160,6 +162,17 @@ export function renderClassroomStudyGuide(guide,dictionary=()=> '',options={}) {
     spelling:'Read each question. Circle the best answer, then use the work space to explain the letter-sound pattern.'};
   const subjectHeading={math:'Math Maintenance · Solve & show work',grammar:'Sentence and grammar skills',
     reading:'Reading comprehension and word skills',religion:'Religion review',spelling:'Spelling patterns and word sounds'};
+  const facts=unique(guide?.facts);
+  const storyTitles=kind==='reading'?facts
+    .filter(fact=>/^Story:\s*\S/i.test(fact))
+    .map(fact=>fact.replace(/^Story:\s*/i,'')) : [];
+  const storyPractice=storyTitles.length?'<section class="story-practice" aria-labelledby="story-practice-title">'+
+    '<h2 class="section-title" id="story-practice-title">Teacher-style supplemental practice · Story organizers</h2>'+
+    '<p>Use the teacher-provided story. These organizers do not add or guess story facts.</p>'+
+    storyTitles.map(title=>'<article class="story-response"><h3>'+escape(title)+'</h3>'+
+      '<p>After reading, write what the whole story is mostly about and one detail that supports it.</p>'+
+      '<label>Main idea</label><span class="response-line"></span><span class="response-line"></span>'+
+      '<label>Supporting detail</label><span class="response-line"></span><span class="response-line"></span></article>').join('')+'</section>':'';
   const student='<main class="sheet student-test">'+pageHeader(titles[kind],guide)+
     '<div class="student-fields"><span>Name: <i class="field-line"></i></span><span>Date: <i class="field-line date"></i></span>'+
     '<span>Score: <i class="field-line score"></i> / '+questions.length+'</span></div>'+
@@ -167,10 +180,10 @@ export function renderClassroomStudyGuide(guide,dictionary=()=> '',options={}) {
     (questions.length?'<h2 class="section-title">'+escape(subjectHeading[kind])+'</h2><ol class="paper-problems '+(kind==='math'?'math-grid':'')+'">'+
       questions.map((row,i)=>questionHtml(row,i,kind)).join('')+'</ol>'
       :'<p class="caution">No matching original-practice questions are available for this assessment. Review the available class notes.</p>')+
+    storyPractice+
     '<div class="student-self-check"><strong>Before I finish</strong><span>□ I answered every question.</span><span>□ I checked my work.</span></div>'+
     arr(guide?.warnings).slice(0,3).map(note=>'<p class="caution">'+escape(note)+'</p>').join('')+sourceNote(guide)+'</main>';
   if(!questions.length)return decoratePaper(head+student+'</body></html>',kind);
-  const facts=unique(guide?.facts);
   const words=arr(guide?.vocabulary).map(row=>{
     const term=clean(row?.term),supplied=clean(row?.meaning);
     const meaning=supplied&&!/teacher page does not provide a definition|no definition supplied/i.test(supplied)?supplied:clean(dictionary(term));
@@ -178,9 +191,13 @@ export function renderClassroomStudyGuide(guide,dictionary=()=> '',options={}) {
   }).filter(row=>row.term);
   const factsHtml=facts.length?'<h3>Skills and facts to review</h3><ul>'+facts.map(f=>'<li>'+escape(f)+'</li>').join('')+'</ul>':'';
   const wordsHtml=words.length?'<h3>Vocabulary</h3><ul>'+words.map(w=>'<li><b>'+escape(w.term)+'</b>'+(w.meaning?' — '+escape(w.meaning):'')+'</li>').join('')+'</ul>':'';
+  const storyKey=storyTitles.length?'<section class="key-notes story-check-key"><h3>Story organizer checking guide</h3>'+
+    '<p>Use the teacher-provided story. A correct main idea should cover the whole story; the supporting detail should come from that story and explain the main idea.</p><ul>'+
+    storyTitles.map(title=>'<li><b>'+escape(title)+'</b> — Answers depend on the teacher-provided text; no plot answer is invented here.</li>').join('')+'</ul></section>':'';
   const key='<section class="sheet adult-key">'+pageHeader('Parent Answer Key',guide,true)+
     '<p class="instruction">Keep this sheet separate. These are answers to original, class-aligned practice questions—not to the actual school test.</p>'+
     '<h2>Answers</h2><ol class="key-list">'+questions.map((row,i)=>keyHtml(row,i,kind)).join('')+'</ol>'+
+    storyKey+
     (factsHtml||wordsHtml?'<section class="key-notes">'+factsHtml+wordsHtml+'</section>':'')+
     sourceNote(guide)+'</section>';
   return decoratePaper(head+student+key+'</body></html>',kind);

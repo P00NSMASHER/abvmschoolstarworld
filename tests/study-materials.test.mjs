@@ -456,6 +456,32 @@ test('every test has both an instructional study guide and an independent worksh
   assert.match(printableWorksheetHtml(science),/Topic Practice Worksheet/);
   assert.match(printableWorksheetHtml(science),/not a reproduction of the teacher test/);
 });
+
+test('reading worksheet gives title-only verified stories source-honest student organizers',()=>{
+  const guide={
+    label:'Reading',subject:'Reading / ELA',date:'2026-11-11',
+    sourceLabel:'Current published ABVM topics',sourceCheckedAt:'2026-10-31T22:52:18.588Z',
+    practice:[question('reading-title-organizer','Reading / ELA',{
+      skill:'main-idea-details',prompt:'Which choice states the main idea?',
+      choices:['One small detail.','What the whole text is mostly about.','A new title.'],
+      answer:'What the whole text is mostly about.',
+    })],
+    facts:['Story: Eagles and Eaglets','Story: Baby Bears','Phonics: long o (o_e) and short o'],
+    vocabulary:[],warnings:[],
+  };
+  const html=printableWorksheetHtml(guide);
+  const [student,key]=html.split('<section class="sheet adult-key">');
+  assert.match(student,/Teacher-style supplemental practice/);
+  assert.match(student,/Eagles and Eaglets/);
+  assert.match(student,/Baby Bears/);
+  assert.equal((student.match(/class="story-response"/g)||[]).length,2);
+  assert.equal((student.match(/class="response-line"/g)||[]).length,8,
+    'each verified story gets enough space for a main idea and supporting detail');
+  assert.match(key,/Story organizer checking guide/);
+  assert.match(key,/Use the teacher-provided story/);
+  assert.doesNotMatch(student,/eagle.*flies|bear.*cave/i,
+    'title-only source evidence must never grow invented plot facts');
+});
 test('spelling worksheet uses blank dictation lines and separates the current word list',()=>{
   const events=[{date:'2026-10-09',label:'Spelling (short i / long i) / Handwriting'}];
   const schoolwork={lessons:[{id:'spelling',subject:'Spelling / Handwriting',weekOf:'2026-10-05',
