@@ -130,6 +130,69 @@ test("online cold-cache response does not wait for slow Cache Storage persistenc
   assert.equal(h.calls.put, 1, "background persistence must still be attempted");
 });
 
+test("network response body is cloned before asynchronous Cache Storage opens", async () => {
+  let finishOpen;
+  const openGate = new Promise(resolve => { finishOpen = resolve; });
+  const pending = [];
+  let opens = 0;
+  let writes = 0;
+  let clones = 0;
+  let bodyConsumed = false;
+  const networkResponse = {
+    ok: true,
+    clone() {
+      clones += 1;
+      if (bodyConsumed) throw new Error("network body already consumed");
+      return { copied: true };
+    },
+  };
+  const cache = {
+    async match() { return undefined; },
+    async put(_request, copy) {
+      assert.equal(copy.copied, true);
+      writes += 1;
+    },
+  };
+  const context = {
+    URL,
+    caches: {
+      async open() {
+        opens += 1;
+        if (opens === 2) await openGate;
+        return cache;
+      },
+    },
+    async fetch() { return networkResponse; },
+    Response: { error() { return { offline: true }; } },
+    self: {
+      location: { origin: "https://school.example" },
+      addEventListener() {},
+    },
+  };
+  runInNewContext(workerSource, context, { filename: "pages/sw.js" });
+  const received = context.staleWhileRevalidate(
+    { url: "https://school.example/assets/illustrations/reading.webp" },
+    { waitUntil(promise) { pending.push(promise); } }
+  );
+  let delivered = false;
+  received.then(() => {
+    delivered = true;
+    bodyConsumed = true;
+  });
+  await new Promise(resolve => setImmediate(resolve));
+  const deliveredBeforeCacheOpen = delivered;
+  finishOpen();
+
+  assert.strictEqual(await received, networkResponse);
+  await Promise.all(pending);
+  assert.equal(deliveredBeforeCacheOpen, true,
+    "cache open must not delay a successful online response");
+  assert.equal(clones, 1,
+    "network response must be cloned exactly once before the body is consumed");
+  assert.equal(writes, 1,
+    "deferred persistence must still store the independently cloned response");
+});
+
 test("network-first online assets survive unavailable Cache Storage", async () => {
   const h = workerHarness({ storageOpenError: true });
   assert.strictEqual(await h.context.networkFirst(h.request, null, h.event), h.networkResponse);
