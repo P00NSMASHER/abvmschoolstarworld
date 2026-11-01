@@ -157,3 +157,24 @@ test("uncategorized cached GET still avoids an unnecessary fetch", async () => {
   assert.strictEqual(await dispatchUncategorizedGet(h), h.cachedResponse);
   assert.equal(h.calls.fetch, 0);
 });
+
+test("uncategorized offline GET returns an explicit network error when Cache Storage cannot open", async () => {
+  const h = workerHarness({ networkError: true, storageOpenError: true });
+  assert.strictEqual(await dispatchUncategorizedGet(h), h.offlineResponse);
+  assert.equal(h.calls.fetch, 1);
+  assert.equal(h.calls.match, 0);
+});
+
+test("uncategorized offline GET returns an explicit network error when cache reads reject", async () => {
+  const h = workerHarness({ networkError: true, storageReadError: true });
+  assert.strictEqual(await dispatchUncategorizedGet(h), h.offlineResponse);
+  assert.equal(h.calls.fetch, 1);
+  assert.equal(h.calls.match, 1);
+});
+
+test("uncategorized offline GET returns an explicit error on a normal cache miss", async () => {
+  const h = workerHarness({ networkError: true });
+  assert.strictEqual(await dispatchUncategorizedGet(h), h.offlineResponse);
+  assert.equal(h.calls.fetch, 1);
+  assert.equal(h.calls.match, 1);
+});
