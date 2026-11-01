@@ -178,3 +178,58 @@ test("uncategorized offline GET returns an explicit error on a normal cache miss
   assert.equal(h.calls.fetch, 1);
   assert.equal(h.calls.match, 1);
 });
+
+
+// Activation must be usable online even when background Cache Storage cleanup
+// fails. Execute the actual worker's activate event with deliberate faults.
+async function runActivation({keysError = false, deletionError = false} = {}) {
+  const listeners = new Map();
+  const pending = [];
+  const calls = {claims: 0, deleted: []};
+  const cacheKeys = [
+    "abvm-grade2-parent-companion-v198",
+    "abvm-grade2-parent-companion-v199-version-integrity",
+    "unrelated-application-cache",
+  ];
+  runInNewContext(workerSource, {
+    caches: {
+      async keys() {
+        if (keysError) throw new Error("synthetic Cache Storage keys rejection");
+        return cacheKeys;
+      },
+      async delete(key) {
+        calls.deleted.push(key);
+        if (deletionError) throw new Error("synthetic cleanup rejection");
+        return true;
+      },
+    },
+    self: {
+      addEventListener(type, handler) { listeners.set(type, handler); },
+      clients: { async claim() { calls.claims += 1; } },
+    },
+  }, {filename: "pages/sw.js"});
+  const activate = listeners.get("activate");
+  assert.equal(typeof activate, "function");
+  activate({waitUntil(promise) { pending.push(promise); }});
+  assert.equal(pending.length, 1);
+  await Promise.all(pending);
+  return calls;
+}
+
+test("activation still claims online clients when Cache Storage enumeration rejects", async () => {
+  const calls = await runActivation({keysError: true});
+  assert.equal(calls.claims, 1);
+  assert.deepEqual(calls.deleted, []);
+});
+
+test("activation still claims clients if deleting an obsolete cache rejects", async () => {
+  const calls = await runActivation({deletionError: true});
+  assert.equal(calls.claims, 1);
+  assert.deepEqual(calls.deleted, ["abvm-grade2-parent-companion-v198"]);
+});
+
+test("healthy activation cleans only obsolete ABVM cache and still claims clients", async () => {
+  const calls = await runActivation();
+  assert.equal(calls.claims, 1);
+  assert.deepEqual(calls.deleted, ["abvm-grade2-parent-companion-v198"]);
+});
