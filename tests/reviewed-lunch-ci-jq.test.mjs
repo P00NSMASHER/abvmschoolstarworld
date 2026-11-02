@@ -17,8 +17,8 @@ test('Playwright lunch publication QA prepares checksum-verified jq before full 
   assert.ok(setup.includes(expectedDigest), 'jq must have a known checksum');
   assert.ok(standardQa.includes(expectedDigest), 'lunch and standard QA must trust the same binary digest');
   assert.match(setup, /sha256sum --check/);
-  assert.match(setup, /\\$GITHUB_PATH/);
+  assert.ok(setup.includes('$GITHUB_PATH'), 'jq path must be exported for later steps');
   assert.match(setup, /set -euo pipefail/);
   assert.match(workflow.slice(qaIndex), /npm run qa/);
-  assert.match(packageJson.scripts['qa:unit'], /tests\\/\\*\\.test\\.mjs/);
+  assert.ok(packageJson.scripts['qa:unit'].includes('tests/*.test.mjs'));
 });
