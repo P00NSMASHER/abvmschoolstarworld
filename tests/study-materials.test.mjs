@@ -457,6 +457,25 @@ test('every test has both an instructional study guide and an independent worksh
   assert.match(printableWorksheetHtml(science),/not a reproduction of the teacher test/);
 });
 
+test('curated test families visibly label both printable artifacts as teacher-style supplemental practice',()=>{
+  const curated=question('religion-curated-label','Religion',{
+    skill:'religion-chapter-4',
+    prompt:'Which title belongs to Chapter 4?',
+    answer:'God Speaks to Us',
+    choices:['God Speaks to Us','God Gives Us Life','Jesus Lives in His Church'],
+    sourceMode:'CURATED_CONTEXT',
+    supportType:'independent-publisher-support',
+  });
+  const model=createStudyMaterials(opts({
+    events:[{date:'2026-11-03',label:'Religion Ch. 4',kind:'test'}],
+    catalog:catalog([curated]),
+  }));
+  const guide=model.testGuide(0);
+  assert.match(guide.sourceLabel,/teacher-style supplemental practice/i);
+  assert.match(printableStudyGuideHtml(guide),/Teacher-style supplemental practice/i);
+  assert.match(printableWorksheetHtml(guide),/Teacher-style supplemental practice/i);
+});
+
 test('reading worksheet gives title-only verified stories source-honest student organizers',()=>{
   const guide={
     label:'Reading',subject:'Reading / ELA',date:'2026-11-11',

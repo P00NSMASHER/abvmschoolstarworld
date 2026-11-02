@@ -587,6 +587,8 @@ export function createStudyMaterials({
       warnings.push('The teacher test label does not name the short vowel. Practice here covers only named sounds; no missing spelling words are guessed.');
     }
     const fallback = state.fallback.some(row => row.index === i);
+    const hasCuratedSupplement = practiceRows.some(row =>
+      row?.sourceMode === 'CURATED_CONTEXT' || row?.supportType === 'independent-publisher-support');
     if (fallback) warnings.push('This practice requires current, matching class material. Earlier Grade 2 topics are not substituted.');
     if (!group.length) warnings.push('No current, matching test questions are available. Review the announced classroom material; unrelated older questions are not substituted.');
     if (subject === 'Spelling / Handwriting') {
@@ -605,7 +607,9 @@ export function createStudyMaterials({
           : 'Current school-week teacher spelling words with parent-created practice')
         : verifiedWeekNotes.length
           ? 'Teacher-announced topic with family photo-confirmed homework words; practice is not an official test'
-          : 'Current published ABVM topics and checked original practice',
+          : hasCuratedSupplement
+            ? 'Current published ABVM topic with teacher-style supplemental practice; not school-issued questions'
+            : 'Current published ABVM topics and checked original practice',
     };
   }
 
