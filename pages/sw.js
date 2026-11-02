@@ -41,8 +41,11 @@ self.addEventListener("install",event=>{
 });
 self.addEventListener("activate",event=>{
   event.waitUntil((async()=>{
-    const keys=await caches.keys();
-    await Promise.all(
+    // Cleanup is best-effort. Transient Cache Storage failures must not
+    // prevent this worker from controlling pages that are still online.
+    let keys=[];
+    try{keys=await caches.keys();}catch{}
+    await Promise.allSettled(
       keys
         .filter(key=>key.startsWith(CACHE_PREFIX)&&key!==CACHE)
         .map(key=>caches.delete(key))
@@ -66,38 +69,87 @@ function networkFirst(request,fallback="./index.html",event=null){
   const network=fetch(request,{cache:"no-store"}).catch(()=>null);
   const persist=network.then(async response=>{
     if(!response?.ok)return;
+    // Clone before Cache Storage opens: the browser may consume an online
+    // response body while asynchronous persistence is still awaiting storage.
+    const copy=response.clone();
     const cache=await caches.open(CACHE);
-    await cache.put(request,response.clone());
+    await cache.put(request,copy);
   });
   if(event)event.waitUntil(persist.catch(()=>{}));
   return network.then(async response=>{
     if(response?.ok)return response;
-    const cached=await cachedFallback(request,fallback);
+    // A denied or broken Cache Storage API must not turn an ordinary
+    // network miss into a rejected service-worker response.
+    let cached=null;
+    try{cached=await cachedFallback(request,fallback);}catch{}
     if(!cached)return response||Response.error();
-    const headers=new Headers(cached.headers);
-    headers.set("X-ABVM-Cache-Fallback","1");
-    return new Response(await cached.blob(),{status:cached.status,statusText:cached.statusText,headers});
+    // Cached body reads can fail after a successful cache.match (e.g. disk
+    // corruption). Do not turn an upstream HTTP failure into a network error.
+    try {
+      const headers=new Headers(cached.headers);
+      headers.set("X-ABVM-Cache-Fallback","1");
+      // HTTP 204/205/304 require a literal null response body.
+      const body=[204,205,304].includes(cached.status)?null:await cached.blob();
+      return new Response(body,{status:cached.status,statusText:cached.statusText,headers});
+    } catch {
+      return response||Response.error();
+    }
   });
 }
 function staleWhileRevalidate(request,event){
-  const update=(async()=>{
+  // Fetch and persist independently: slow Cache Storage writes should not
+  // hold a successful online response hostage on a cold-cache request.
+  const network=Promise.resolve().then(()=>fetch(request)).catch(()=>null);
+  const persist=network.then(async response=>{
+    if(!response?.ok)return;
     try{
-      const response=await fetch(request);
-      if(response?.ok){
-        const cache=await caches.open(CACHE);
-        await cache.put(request,response.clone());
-      }
-      return response;
-    }catch{
-      return null;
-    }
-  })();
-  event.waitUntil(update.then(()=>{}));
+      // Snapshot before any await: the browser may begin consuming the
+      // returned body while the cache is still opening.
+      const copy=response.clone();
+      const cache=await caches.open(CACHE);
+      await cache.put(request,copy);
+    }catch{}
+  });
+  event.waitUntil(persist);
   return (async()=>{
-    const cache=await caches.open(CACHE);
-    const cached=(await cache.match(request))||(await cache.match(request,{ignoreSearch:true}));
-    if(cached)return cached;
-    return (await update)||Response.error();
+    // Race the network against cache lookup. A Cache Storage open/read that
+    // stalls must not prevent an already successful online asset response.
+    // Keep a fast cached hit and use the cache for offline/HTTP errors.
+    const cachedLookup=(async()=>{
+      try{
+        const cache=await caches.open(CACHE);
+        return (await cache.match(request))||
+          (await cache.match(request,{ignoreSearch:true}))||null;
+      }catch{return null;}
+    })();
+    const first=await Promise.race([
+      cachedLookup.then(response=>({source:"cache",response})),
+      // Let immediately available Cache Storage win over a near-instant
+      // network response. A bounded grace period still prevents a hung
+      // cache open/read from indefinitely blocking a successful fetch.
+      network.then(response=>new Promise(resolve=>{
+        setTimeout(()=>resolve({source:"network",response}),12);
+      }))
+    ]);
+    if(first.source==="cache"){
+      if(first.response)return first.response;
+      return (await network)||Response.error();
+    }
+    if(first.response?.ok)return first.response;
+    // Cache Storage may hang without rejecting. Give a slow offline cache
+    // read a bounded chance, but never hold a failed upstream indefinitely.
+    let timeout;
+    try{
+      const cached=await Promise.race([
+        cachedLookup,
+        new Promise(resolve=>{
+          timeout=setTimeout(()=>resolve(null),1500);
+        }),
+      ]);
+      return cached||first.response||Response.error();
+    }finally{
+      clearTimeout(timeout);
+    }
   })();
 }
 
@@ -148,5 +200,20 @@ self.addEventListener("fetch",event=>{
     event.respondWith(staleWhileRevalidate(event.request,event));
     return;
   }
-  event.respondWith(caches.open(CACHE).then(cache=>cache.match(event.request)).then(cached=>cached||fetch(event.request)));
+  // Other same-origin GET resources must still load online when Cache
+  // Storage is unavailable or a cached read rejects (e.g. private mode).
+  event.respondWith((async()=>{
+    try{
+      const cache=await caches.open(CACHE);
+      const cached=await cache.match(event.request);
+      if(cached)return cached;
+    }catch{}
+    try {
+      return await fetch(event.request);
+    } catch {
+      // A missing uncategorized asset offline must produce a defined
+      // network-error response, even when Cache Storage also fails.
+      return Response.error();
+    }
+  })());
 });

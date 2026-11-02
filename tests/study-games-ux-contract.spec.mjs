@@ -104,8 +104,9 @@ test('Study Games support text remains readable on phone and tablet', async ({ p
 
     const privacy = page.locator('.game-privacy-note');
     if (await privacy.count()) {
-      const size = await privacy.evaluate(el => parseFloat(getComputedStyle(el).fontSize));
-      expect(size).toBeGreaterThanOrEqual(11);
+      // Re-query during hydration: a detached transient node can report an empty font size.
+      await expect.poll(() => privacy.evaluate(el => parseFloat(getComputedStyle(el).fontSize)))
+        .toBeGreaterThanOrEqual(11);
     }
 
     await page.getByRole('button', { name: /^Mix/i }).click();

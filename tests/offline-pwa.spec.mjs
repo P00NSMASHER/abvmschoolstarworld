@@ -172,7 +172,14 @@ test("stale-while-revalidate keeps its cache update alive",async({request})=>{
   const start=source.indexOf("function staleWhileRevalidate");
   const end=source.indexOf('self.addEventListener("fetch"',start);
   const body=source.slice(start,end);
-  expect(body).toContain("event.waitUntil(update.then(()=>{}))");
+  // The worker now starts network delivery independently of background
+  // persistence. Assert the updated lifecycle contract, not the retired
+  // update.then callback spelling; source-executing Node probes additionally
+  // test slow cache writes, stalled cache opening, and offline fallback.
+  expect(body).toContain("const persist=network.then(async response=>{");
+  expect(body).toContain("event.waitUntil(persist)");
+  expect(body).toContain("await cache.put(request,copy)");
+  expect(body.indexOf("const copy=response.clone()")).toBeLessThan(body.indexOf("const cache=await caches.open(CACHE)"));
   expect(source).toContain("staleWhileRevalidate(event.request,event)");
 });
 

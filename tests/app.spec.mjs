@@ -1,6 +1,7 @@
 import {test,expect} from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import {readFileSync} from "node:fs";
+import {olderTeacherCheckWithNewNotice} from "./helpers/source-freshness-fixture.mjs";
 
 async function openTab(page,label){
   if(label==="Week"){
@@ -397,11 +398,10 @@ test("newly imported Yahoo notices never make older teacher checks appear verifi
   const context=await browser.newContext({serviceWorkers:"block"});
   const page=await context.newPage();
   try{
-  // Deliberately stay in the 8–30h "older" band. Fixed calendar dates
-  // drifted past 30h during CI and asserted the wrong severity label.
-  // Verify the real teacher-check timestamp, not the newer Yahoo timestamp.
-  const checkedAt=new Date(Date.now()-24*60*60*1000).toISOString();
-  const noticeAt=new Date(Date.now()-60*1000).toISOString();
+  // Remain in the 8–30h "older" band while guaranteeing different
+  // Eastern civil days even at midnight and during the 25-hour DST fall-back.
+  // Verify the teacher-check timestamp, not the newer Yahoo timestamp.
+  const {checkedAt,noticeAt}=olderTeacherCheckWithNewNotice();
   const etDate=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",month:"short",day:"numeric"});
   const expectedTeacherDay=etDate.format(new Date(checkedAt));
   const newerNoticeDay=etDate.format(new Date(noticeAt));
