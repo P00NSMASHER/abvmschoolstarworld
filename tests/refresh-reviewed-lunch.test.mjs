@@ -70,7 +70,7 @@ test('transient outage never downgrades an already-verified current-week proof',
   assert.equal(second.document.pack.lunchMenuSource.retrievalState, 'verified');
 });
 test('unknown future week exposes gaps rather than inventing meals', async () => {
-  const future = new Date('2026-11-02T15:00:00Z');
+  const future = new Date('2026-12-07T15:00:00Z'); // November is now reviewed; December has no reviewed menu.
   const {document} = await prepareReviewedLunch(fixture(), {now: future, fetchImpl: offline});
   assert.deepEqual(document.pack.lunchMenu, []);
   assert.deepEqual(document.pack.lunchMenuSource.missingDates, schoolWeek(future));
