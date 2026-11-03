@@ -441,6 +441,205 @@
           ]
         }
       ]
+    },
+    {
+      "id": "abvm-2026-11-parent-school-menu",
+      "sourceDocument": "nov-2026-lunch-menu-parent-photo",
+      "contentHash": "a5d25beb5cbd34522ce4645172ab4efce1d041aab7fcc33521f3433c5cd0b178",
+      "proofMode": "reviewed-notice",
+      "reviewedAt": "2026-11-03T15:00:00.000Z",
+      "reviewMethod": "18 dated meals visually transcribed from parent-supplied school menu photo; three explicitly printed closure days; no live official URL is claimed.",
+      "coverageStart": "2026-11-02",
+      "coverageEnd": "2026-11-30",
+      "meals": [
+        {
+          "date": "2026-11-02",
+          "items": [
+            "Breaded chicken",
+            "Buttered pasta",
+            "Baked beans",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-11-03",
+          "items": [
+            "Meatballs in gravy",
+            "Mashed potatoes",
+            "Garlic stick",
+            "Corn",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-11-04",
+          "items": [
+            "French toast sticks",
+            "Hash browns",
+            "Sausage link",
+            "Carrots",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-11-05",
+          "items": [
+            "Macaroni & cheese",
+            "Breaded chicken",
+            "Stewed tomatoes",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-11-06",
+          "items": [
+            "Hamburger with roll",
+            "French fries",
+            "Steamed peas",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-11-09",
+          "items": [
+            "Breaded chicken",
+            "Brown rice",
+            "Steamed broccoli",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-11-10",
+          "items": [
+            "CH. quesadilla wedge",
+            "Garden salad",
+            "Salsa",
+            "Steamed corn",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-11-11",
+          "items": [
+            "Breaded fish sandwich",
+            "Baby cake potatoes",
+            "Baked beans",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-11-12",
+          "items": [
+            "Baked cheese pizza",
+            "Tortilla chips",
+            "Mixed vegetables",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-11-13",
+          "items": [
+            "Cheesy breadsticks",
+            "Dipping sauce",
+            "Garden salad",
+            "Green beans",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-11-16",
+          "items": [
+            "Popcorn chicken",
+            "Mashed potatoes",
+            "WG roll",
+            "Corn",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-11-17",
+          "items": [
+            "Taco Tuesday & chips",
+            "Cheese",
+            "Brown rice",
+            "Salsa",
+            "Beans",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-11-18",
+          "items": [
+            "Buttered pierogies",
+            "WG roll",
+            "String cheese",
+            "Steamed carrots",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-11-19",
+          "items": [
+            "Beef cheesesteak",
+            "WG roll",
+            "French fries",
+            "Steamed broccoli",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-11-20",
+          "items": [
+            "Macaroni & cheese",
+            "Breaded chicken",
+            "Stewed tomatoes",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-11-23",
+          "items": [
+            "Breaded chicken",
+            "Scallop potatoes",
+            "WG roll",
+            "Green beans",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-11-24",
+          "items": [
+            "Meatballs in sauce",
+            "WG pasta",
+            "Steamed corn",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-11-25",
+          "items": [
+            "Baked cheese pizza",
+            "Garden salad",
+            "Steamed broccoli",
+            "Fruit"
+          ]
+        },
+        {
+          "date": "2026-11-26",
+          "status": "no-school",
+          "items": []
+        },
+        {
+          "date": "2026-11-27",
+          "status": "no-school",
+          "items": []
+        },
+        {
+          "date": "2026-11-30",
+          "status": "no-school",
+          "items": []
+        }
+      ]
     }
   ]
 }
