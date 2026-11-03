@@ -2019,7 +2019,7 @@
             "the park"
           ],
           "explanation": "Pine Hill is the specific name of a place.",
-          "hint": "Look for a particular place name.",
+          "hint": "A particular town, person, or place is a proper noun. Look for a name, not a general place.",
           "sourceFact": "Common and proper nouns • supplemental practice (topic review only; original practice, not copied worksheet questions)",
           "tier": "material",
           "questionType": "direct",
@@ -2090,7 +2090,7 @@
             "14"
           ],
           "explanation": "Eight plus five equals thirteen.",
-          "hint": "Count on five from eight.",
+          "hint": "Begin with eight pencils. Count five more one at a time, checking the total with your fingers.",
           "sourceFact": "Daily review 38 • number reasoning (topic review only; original practice, not copied worksheet questions)",
           "tier": "material",
           "questionType": "direct",
@@ -2115,7 +2115,7 @@
             "49"
           ],
           "explanation": "Add 20 + 10, then 7 + 2.",
-          "hint": "Add tens and ones separately.",
+          "hint": "Break 27 and 12 into tens and ones. Add the tens first, then combine the ones.",
           "sourceFact": "Daily review 38 • number reasoning (topic review only; original practice, not copied worksheet questions)",
           "tier": "material",
           "questionType": "direct",
@@ -2161,7 +2161,7 @@
             "14 cents"
           ],
           "explanation": "Each dime is worth ten cents, so four are worth forty cents.",
-          "hint": "Count 10, 20, 30, 40.",
+          "hint": "Every dime is worth ten cents. Skip-count by tens once for each dime you can see.",
           "sourceFact": "Daily review 43 • halves and coins (topic review only; original practice, not copied worksheet questions)",
           "tier": "material",
           "questionType": "direct",
@@ -2186,7 +2186,7 @@
             "6"
           ],
           "explanation": "Two equal groups of five make ten.",
-          "hint": "Make two equal groups.",
+          "hint": "Draw ten blocks and divide them into two groups that have exactly the same number.",
           "sourceFact": "Daily review 43 • halves and coins (topic review only; original practice, not copied worksheet questions)",
           "tier": "material",
           "questionType": "direct",
@@ -2232,7 +2232,7 @@
             "8"
           ],
           "explanation": "Five tens is fifty and three ones makes fifty-three.",
-          "hint": "Write the tens before the ones.",
+          "hint": "Five tens means five groups of ten. Add the three leftover ones to make the numeral.",
           "sourceFact": "Daily review 42 • place value (topic review only; original practice, not copied worksheet questions)",
           "tier": "material",
           "questionType": "direct",
@@ -2257,7 +2257,7 @@
             "Neither"
           ],
           "explanation": "Eight tens is more than five tens.",
-          "hint": "Compare the tens digits first.",
+          "hint": "Compare the number of tens in 58 and 85 before comparing their ones digits.",
           "sourceFact": "Daily review 42 • place value (topic review only; original practice, not copied worksheet questions)",
           "tier": "material",
           "questionType": "direct",
@@ -2374,7 +2374,7 @@
             "58"
           ],
           "explanation": "Subtract 10 to get 36, then 2 to get 34.",
-          "hint": "Use the tens, then ones.",
+          "hint": "Subtract one ten from the tens place, then subtract the remaining two ones.",
           "sourceFact": "Daily review 39 • addition and money (topic review only; original practice, not copied worksheet questions)",
           "tier": "material",
           "questionType": "direct",
@@ -2399,7 +2399,7 @@
             "100"
           ],
           "explanation": "Each quarter is 25 cents: 25 + 25 + 25 = 75.",
-          "hint": "Count by twenty-fives.",
+          "hint": "A quarter has a value of twenty-five cents. Count that value three times.",
           "sourceFact": "Daily review 39 • addition and money (topic review only; original practice, not copied worksheet questions)",
           "tier": "material",
           "questionType": "direct",
@@ -2445,7 +2445,7 @@
             "17"
           ],
           "explanation": "Nine plus seven is sixteen.",
-          "hint": "Make ten first: nine plus one.",
+          "hint": "To make ten, move one from seven to nine. Then add the six remaining ones.",
           "sourceFact": "Daily review 40 • arrays and equations (topic review only; original practice, not copied worksheet questions)",
           "tier": "material",
           "questionType": "direct",
@@ -2470,7 +2470,7 @@
             "14"
           ],
           "explanation": "Three groups of four total twelve.",
-          "hint": "Count 4, 8, 12.",
+          "hint": "Each row has four tiles. Count four more for each of the three rows in the array.",
           "sourceFact": "Daily review 40 • arrays and equations (topic review only; original practice, not copied worksheet questions)",
           "tier": "material",
           "questionType": "direct",
@@ -2561,7 +2561,7 @@
             "30 cents"
           ],
           "explanation": "Two dimes equal twenty cents, plus a nickel is twenty-five.",
-          "hint": "Count 10 + 10 + 5.",
+          "hint": "Two dimes are two groups of ten cents. Add the nickel's five cents afterward.",
           "sourceFact": "Daily review 44 • numbers and coins (topic review only; original practice, not copied worksheet questions)",
           "tier": "material",
           "questionType": "direct",
@@ -2586,7 +2586,7 @@
             "+"
           ],
           "explanation": "Sixty-three has six tens, more than thirty-six with three tens.",
-          "hint": "Compare tens first.",
+          "hint": "Look at the tens place in each number first. Choose the sign opening toward the larger number.",
           "sourceFact": "Daily review 44 • numbers and coins (topic review only; original practice, not copied worksheet questions)",
           "tier": "material",
           "questionType": "direct",
@@ -2757,7 +2757,7 @@
             "4/1"
           ],
           "explanation": "One of four equal parts is one fourth.",
-          "hint": "Count all the equal parts.",
+          "hint": "The denominator counts all equal slices in the whole. The numerator counts the chosen slices.",
           "sourceFact": "Grade 2 math maintenance • mixed review (topic review only; original practice, not copied worksheet questions)",
           "tier": "material",
           "questionType": "direct",
@@ -2804,7 +2804,7 @@
             "cute"
           ],
           "explanation": "Drum has the same short-u vowel sound as sun.",
-          "hint": "Say each word slowly.",
+          "hint": "Say sun aloud and listen to its middle vowel sound. Find the word with the same short-u sound.",
           "sourceFact": "Spelling patterns • long and short vowels (topic review only; original practice, not copied worksheet questions)",
           "tier": "material",
           "questionType": "direct",
@@ -2829,7 +2829,7 @@
             "costoomm"
           ],
           "explanation": "Costume is the correct spelling of the word.",
-          "hint": "Check the ending of the word.",
+          "hint": "Sound the word out slowly, then check the spelling of every syllable and the final letters.",
           "sourceFact": "Spelling patterns • long and short vowels (topic review only; original practice, not copied worksheet questions)",
           "tier": "material",
           "questionType": "direct",
@@ -2886,7 +2886,7 @@
             "Washing a plate"
           ],
           "explanation": "The farm produces apples by growing them.",
-          "hint": "A producer makes or grows goods.",
+          "hint": "Producing means making or growing something. Decide which action creates a good to sell.",
           "sourceFact": "Families and work • unit review (topic review only; original practice, not copied worksheet questions)",
           "tier": "material",
           "questionType": "direct",
@@ -2911,7 +2911,7 @@
             "A carpenter makes a chair."
           ],
           "explanation": "Buying a product is an example of consuming.",
-          "hint": "A consumer buys or uses goods.",
+          "hint": "A consumer is someone who buys or uses a good. Look for the action of making a purchase.",
           "sourceFact": "Families and work • unit review (topic review only; original practice, not copied worksheet questions)",
           "tier": "material",
           "questionType": "direct",
