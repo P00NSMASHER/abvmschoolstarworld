@@ -17,8 +17,10 @@ test('polished lower calendar has scannable date groups and all source-backed ev
   await expect(group.locator('li')).toHaveCount(4);
   const next=page.locator('.next-month-card');
   await expect(next.locator('.cal-card-heading')).toContainText('Coming in November');
+  await expect(next.locator('.cal-date-row')).toHaveCount(5);
   await expect(next).toContainText('Free Diocesan Family Festival');
-  await expect(next).toContainText('12:00 dismissal');
+  // More early-November notices must not bury the first school-day dismissal.
+  await expect(next.locator('.cal-date-row').filter({hasText:'Fri 6'})).toContainText('12:00 dismissal');
   await expect(present.locator('.agenda-lunch')).toHaveCount(0);
 });
 test('weekly school plan is open by default, lunches and tests remain fully available',async({page})=>{

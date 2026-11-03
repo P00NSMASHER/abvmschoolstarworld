@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "uploadedPhotoCount": 23,
-  "distinctWorksheetNote": "Day 23 appears twice; one lesson is retained.",
+  "uploadedPhotoCount": 69,
+  "distinctWorksheetNote": "Day 23 appears twice; one lesson is retained. November 3 PDF: 46 scanned pages; 21 new instruction-bearing pages included in public original practice, one personal reflection withheld, eight prior duplicates held and 16 blank reverse scans held. Undated original work is not presented as current homework.",
   "lessons": [
     {
       "id": "fact-families",
@@ -1987,6 +1987,1018 @@
           "provenance": "original-practice-from-uploaded-schoolwork"
         }
       ]
+    },
+    {
+      "id": "nov26-common-proper-nouns",
+      "title": "Common and proper nouns • supplemental practice",
+      "subject": "Reading / ELA",
+      "sources": [
+        "abvm-nov2026-scan-p01.png"
+      ],
+      "skills": [
+        "common-proper-nouns"
+      ],
+      "notes": [
+        "A common noun names a general person, place, or thing.",
+        "A proper noun names a specific person, place, or thing and starts with a capital letter."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; completion date not verified.",
+      "questions": [
+        {
+          "id": "work-nov26-common-proper-nouns-01",
+          "subject": "Reading / ELA",
+          "skill": "common-proper-nouns",
+          "prompt": "Which name should begin with capital letters because it is a particular place?",
+          "answer": "Pine Hill",
+          "choices": [
+            "a lake",
+            "Pine Hill",
+            "a road",
+            "the park"
+          ],
+          "explanation": "Pine Hill is the specific name of a place.",
+          "hint": "A particular town, person, or place is a proper noun. Look for a name, not a general place.",
+          "sourceFact": "Common and proper nouns • supplemental practice (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-nov26-common-proper-nouns-02",
+          "subject": "Reading / ELA",
+          "skill": "common-proper-nouns",
+          "prompt": "Which choice is a common noun, rather than a particular name?",
+          "answer": "teacher",
+          "choices": [
+            "Mrs. Lark",
+            "Friday",
+            "teacher",
+            "Maple Street"
+          ],
+          "explanation": "Teacher names a general kind of person.",
+          "hint": "Think general, not one special name.",
+          "sourceFact": "Common and proper nouns • supplemental practice (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov26-daily38-math",
+      "title": "Daily review 38 • number reasoning",
+      "subject": "Math",
+      "sources": [
+        "abvm-nov2026-scan-p03.png"
+      ],
+      "skills": [
+        "number-sentences",
+        "two-digit-addition"
+      ],
+      "notes": [
+        "In addition, the parts combine to make the whole.",
+        "Check an answer by adding the parts and seeing whether they equal the whole."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; completion date not verified.",
+      "questions": [
+        {
+          "id": "work-nov26-daily38-math-01",
+          "subject": "Math",
+          "skill": "number-sentences",
+          "prompt": "A box has 8 red pencils and 5 blue pencils. How many pencils are there?",
+          "answer": "13",
+          "choices": [
+            "11",
+            "12",
+            "13",
+            "14"
+          ],
+          "explanation": "Eight plus five equals thirteen.",
+          "hint": "Begin with eight pencils. Count five more one at a time, checking the total with your fingers.",
+          "sourceFact": "Daily review 38 • number reasoning (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-nov26-daily38-math-02",
+          "subject": "Math",
+          "skill": "two-digit-addition",
+          "prompt": "What is 27 + 12?",
+          "answer": "39",
+          "choices": [
+            "29",
+            "37",
+            "39",
+            "49"
+          ],
+          "explanation": "Add 20 + 10, then 7 + 2.",
+          "hint": "Break 27 and 12 into tens and ones. Add the tens first, then combine the ones.",
+          "sourceFact": "Daily review 38 • number reasoning (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov26-daily43-math",
+      "title": "Daily review 43 • halves and coins",
+      "subject": "Math",
+      "sources": [
+        "abvm-nov2026-scan-p05.png"
+      ],
+      "skills": [
+        "counting-money",
+        "equal-groups"
+      ],
+      "notes": [
+        "Count equal coin values by repeated addition.",
+        "Splitting an even number into two equal groups makes halves."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; completion date not verified.",
+      "questions": [
+        {
+          "id": "work-nov26-daily43-math-01",
+          "subject": "Math",
+          "skill": "counting-money",
+          "prompt": "Four dimes are worth how many cents?",
+          "answer": "40 cents",
+          "choices": [
+            "4 cents",
+            "20 cents",
+            "40 cents",
+            "14 cents"
+          ],
+          "explanation": "Each dime is worth ten cents, so four are worth forty cents.",
+          "hint": "Every dime is worth ten cents. Skip-count by tens once for each dime you can see.",
+          "sourceFact": "Daily review 43 • halves and coins (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-nov26-daily43-math-02",
+          "subject": "Math",
+          "skill": "equal-groups",
+          "prompt": "Ten blocks are shared equally between two children. How many does each receive?",
+          "answer": "5",
+          "choices": [
+            "3",
+            "4",
+            "5",
+            "6"
+          ],
+          "explanation": "Two equal groups of five make ten.",
+          "hint": "Draw ten blocks and divide them into two groups that have exactly the same number.",
+          "sourceFact": "Daily review 43 • halves and coins (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov26-daily42-placevalue",
+      "title": "Daily review 42 • place value",
+      "subject": "Math",
+      "sources": [
+        "abvm-nov2026-scan-p07.png"
+      ],
+      "skills": [
+        "tens-and-ones",
+        "number-comparison"
+      ],
+      "notes": [
+        "Five groups of ten equal fifty.",
+        "To compare two numbers, compare their tens before their ones."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; completion date not verified.",
+      "questions": [
+        {
+          "id": "work-nov26-daily42-placevalue-01",
+          "subject": "Math",
+          "skill": "tens-and-ones",
+          "prompt": "A chart shows 5 tens and 3 ones. What number is that?",
+          "answer": "53",
+          "choices": [
+            "35",
+            "53",
+            "503",
+            "8"
+          ],
+          "explanation": "Five tens is fifty and three ones makes fifty-three.",
+          "hint": "Five tens means five groups of ten. Add the three leftover ones to make the numeral.",
+          "sourceFact": "Daily review 42 • place value (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-nov26-daily42-placevalue-02",
+          "subject": "Math",
+          "skill": "number-comparison",
+          "prompt": "Which number is greater: 58 or 85?",
+          "answer": "85",
+          "choices": [
+            "58",
+            "85",
+            "They are equal",
+            "Neither"
+          ],
+          "explanation": "Eight tens is more than five tens.",
+          "hint": "Compare the number of tens in 58 and 85 before comparing their ones digits.",
+          "sourceFact": "Daily review 42 • place value (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov26-families-work-words",
+      "title": "Families working together • vocabulary",
+      "subject": "Reading / ELA",
+      "sources": [
+        "abvm-nov2026-scan-p09.png"
+      ],
+      "skills": [
+        "family-work-vocabulary"
+      ],
+      "notes": [
+        "A customer buys goods or services from a business.",
+        "A cost is the price paid for something.",
+        "A chore is a small job that helps at home."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; completion date not verified.",
+      "questions": [
+        {
+          "id": "work-nov26-families-work-words-01",
+          "subject": "Reading / ELA",
+          "skill": "family-work-vocabulary",
+          "prompt": "A person buys a loaf of bread at a bakery. What is that person called?",
+          "answer": "customer",
+          "choices": [
+            "customer",
+            "cash register",
+            "tool",
+            "chores"
+          ],
+          "explanation": "The person buying something is a customer.",
+          "hint": "Think about who makes the purchase.",
+          "sourceFact": "Families working together • vocabulary (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-nov26-families-work-words-02",
+          "subject": "Reading / ELA",
+          "skill": "family-work-vocabulary",
+          "prompt": "Which word means the price someone pays for an item?",
+          "answer": "cost",
+          "choices": [
+            "check",
+            "cost",
+            "job",
+            "choose"
+          ],
+          "explanation": "Cost means the price of a good or service.",
+          "hint": "A price is how much something costs.",
+          "sourceFact": "Families working together • vocabulary (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov26-daily39-math",
+      "title": "Daily review 39 • addition and money",
+      "subject": "Math",
+      "sources": [
+        "abvm-nov2026-scan-p11.png"
+      ],
+      "skills": [
+        "two-digit-subtraction",
+        "money-counting"
+      ],
+      "notes": [
+        "Subtract ones and tens carefully.",
+        "Four quarters make one dollar, or one hundred cents."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; completion date not verified.",
+      "questions": [
+        {
+          "id": "work-nov26-daily39-math-01",
+          "subject": "Math",
+          "skill": "two-digit-subtraction",
+          "prompt": "What is 46 minus 12?",
+          "answer": "34",
+          "choices": [
+            "32",
+            "34",
+            "36",
+            "58"
+          ],
+          "explanation": "Subtract 10 to get 36, then 2 to get 34.",
+          "hint": "Subtract one ten from the tens place, then subtract the remaining two ones.",
+          "sourceFact": "Daily review 39 • addition and money (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-nov26-daily39-math-02",
+          "subject": "Math",
+          "skill": "money-counting",
+          "prompt": "How many cents are three quarters worth?",
+          "answer": "75",
+          "choices": [
+            "25",
+            "50",
+            "75",
+            "100"
+          ],
+          "explanation": "Each quarter is 25 cents: 25 + 25 + 25 = 75.",
+          "hint": "A quarter has a value of twenty-five cents. Count that value three times.",
+          "sourceFact": "Daily review 39 • addition and money (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov26-daily40-math",
+      "title": "Daily review 40 • arrays and equations",
+      "subject": "Math",
+      "sources": [
+        "abvm-nov2026-scan-p13.png"
+      ],
+      "skills": [
+        "addition-facts",
+        "equal-arrays"
+      ],
+      "notes": [
+        "Rows and columns help count objects in equal groups.",
+        "Related addition and subtraction facts describe the same total."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; completion date not verified.",
+      "questions": [
+        {
+          "id": "work-nov26-daily40-math-01",
+          "subject": "Math",
+          "skill": "addition-facts",
+          "prompt": "What is 9 + 7?",
+          "answer": "16",
+          "choices": [
+            "14",
+            "15",
+            "16",
+            "17"
+          ],
+          "explanation": "Nine plus seven is sixteen.",
+          "hint": "To make ten, move one from seven to nine. Then add the six remaining ones.",
+          "sourceFact": "Daily review 40 • arrays and equations (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-nov26-daily40-math-02",
+          "subject": "Math",
+          "skill": "equal-arrays",
+          "prompt": "There are 3 rows of 4 tiles. How many tiles in all?",
+          "answer": "12",
+          "choices": [
+            "7",
+            "10",
+            "12",
+            "14"
+          ],
+          "explanation": "Three groups of four total twelve.",
+          "hint": "Each row has four tiles. Count four more for each of the three rows in the array.",
+          "sourceFact": "Daily review 40 • arrays and equations (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov26-organize-ideas",
+      "title": "Organizing ideas with a bubble map",
+      "subject": "Reading / ELA",
+      "sources": [
+        "abvm-nov2026-scan-p15.png"
+      ],
+      "skills": [
+        "planning-writing"
+      ],
+      "notes": [
+        "A bubble map puts a main topic in the center and related ideas around it.",
+        "Before writing, choose ideas that connect to the topic."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; completion date not verified.",
+      "questions": [
+        {
+          "id": "work-nov26-organize-ideas-01",
+          "subject": "Reading / ELA",
+          "skill": "planning-writing",
+          "prompt": "You are writing about caring for pets. Which is a helpful bubble-map idea?",
+          "answer": "Giving them fresh water",
+          "choices": [
+            "A rocket launch",
+            "Giving them fresh water",
+            "A mountain map",
+            "A traffic light"
+          ],
+          "explanation": "Fresh water is a detail about caring for pets.",
+          "hint": "Choose an idea connected to your topic.",
+          "sourceFact": "Organizing ideas with a bubble map (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov26-daily44-math",
+      "title": "Daily review 44 • numbers and coins",
+      "subject": "Math",
+      "sources": [
+        "abvm-nov2026-scan-p19.png"
+      ],
+      "skills": [
+        "money-counting",
+        "compare-numbers"
+      ],
+      "notes": [
+        "Count coins by their value, not by how many coins are shown.",
+        "The sign > means greater than and < means less than."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; completion date not verified.",
+      "questions": [
+        {
+          "id": "work-nov26-daily44-math-01",
+          "subject": "Math",
+          "skill": "money-counting",
+          "prompt": "How much money is two dimes and one nickel?",
+          "answer": "25 cents",
+          "choices": [
+            "15 cents",
+            "20 cents",
+            "25 cents",
+            "30 cents"
+          ],
+          "explanation": "Two dimes equal twenty cents, plus a nickel is twenty-five.",
+          "hint": "Two dimes are two groups of ten cents. Add the nickel's five cents afterward.",
+          "sourceFact": "Daily review 44 • numbers and coins (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-nov26-daily44-math-02",
+          "subject": "Math",
+          "skill": "compare-numbers",
+          "prompt": "Which symbol makes this true: 63 __ 36?",
+          "answer": ">",
+          "choices": [
+            "<",
+            ">",
+            "=",
+            "+"
+          ],
+          "explanation": "Sixty-three has six tens, more than thirty-six with three tens.",
+          "hint": "Look at the tens place in each number first. Choose the sign opening toward the larger number.",
+          "sourceFact": "Daily review 44 • numbers and coins (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov26-reading-detail",
+      "title": "Finding evidence in an informational passage",
+      "subject": "Reading / ELA",
+      "sources": [
+        "abvm-nov2026-scan-p21.png",
+        "abvm-nov2026-scan-p23.png"
+      ],
+      "skills": [
+        "reading-key-details",
+        "complete-written-answers"
+      ],
+      "notes": [
+        "An informational text gives facts about a topic.",
+        "Answer who, what, where and why questions using information from the text.",
+        "A complete written answer states an idea clearly and gives a supporting reason."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; completion date not verified.",
+      "questions": [
+        {
+          "id": "work-nov26-reading-detail-01",
+          "subject": "Reading / ELA",
+          "skill": "reading-key-details",
+          "prompt": "Which reading strategy helps answer why a traveler chose a route?",
+          "answer": "Find the sentence that explains the reason",
+          "choices": [
+            "Guess from the title",
+            "Find the sentence that explains the reason",
+            "Choose the longest word",
+            "Ignore the passage"
+          ],
+          "explanation": "A why-question asks for the reason given in the passage.",
+          "hint": "Locate a sentence with because or so.",
+          "sourceFact": "Finding evidence in an informational passage (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-nov26-reading-detail-02",
+          "subject": "Reading / ELA",
+          "skill": "complete-written-answers",
+          "prompt": "Which response gives a complete reason?",
+          "answer": "They traveled by boat because the river connected the towns.",
+          "choices": [
+            "Because boat.",
+            "By the river.",
+            "They traveled by boat because the river connected the towns.",
+            "It was a trip."
+          ],
+          "explanation": "A complete sentence tells what happened and why.",
+          "hint": "Look for both an action and a reason.",
+          "sourceFact": "Finding evidence in an informational passage (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov26-math-maintenance",
+      "title": "Grade 2 math maintenance • mixed review",
+      "subject": "Math",
+      "sources": [
+        "abvm-nov2026-scan-p25.png"
+      ],
+      "skills": [
+        "two-digit-subtraction",
+        "reading-clocks",
+        "fractions-halves-fourths"
+      ],
+      "notes": [
+        "Subtraction checks: add the difference to the smaller amount to get the original amount.",
+        "The minute hand pointing at 6 means thirty minutes past the hour.",
+        "A whole can be divided into two equal halves or four equal fourths."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; completion date not verified.",
+      "questions": [
+        {
+          "id": "work-nov26-math-maintenance-01",
+          "subject": "Math",
+          "skill": "two-digit-subtraction",
+          "prompt": "What is 82 minus 47?",
+          "answer": "35",
+          "choices": [
+            "25",
+            "35",
+            "45",
+            "39"
+          ],
+          "explanation": "Regroup one ten: 12 minus 7 is 5, and 7 tens minus 4 tens is 3 tens.",
+          "hint": "Regroup if the ones on top are smaller.",
+          "sourceFact": "Grade 2 math maintenance • mixed review (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-nov26-math-maintenance-02",
+          "subject": "Math",
+          "skill": "reading-clocks",
+          "prompt": "The long hand points to 6 and the short hand is between 2 and 3. What time is it?",
+          "answer": "2:30",
+          "choices": [
+            "2:00",
+            "2:30",
+            "3:30",
+            "6:02"
+          ],
+          "explanation": "The long hand at six shows thirty minutes; the short hand has passed two.",
+          "hint": "The long hand at 6 means half past.",
+          "sourceFact": "Grade 2 math maintenance • mixed review (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-nov26-math-maintenance-03",
+          "subject": "Math",
+          "skill": "fractions-halves-fourths",
+          "prompt": "Four equal pizza slices make one whole. What fraction is one slice?",
+          "answer": "1/4",
+          "choices": [
+            "1/2",
+            "1/3",
+            "1/4",
+            "4/1"
+          ],
+          "explanation": "One of four equal parts is one fourth.",
+          "hint": "The denominator counts all equal slices in the whole. The numerator counts the chosen slices.",
+          "sourceFact": "Grade 2 math maintenance • mixed review (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov26-spelling-patterns",
+      "title": "Spelling patterns • long and short vowels",
+      "subject": "Spelling / Handwriting",
+      "sources": [
+        "abvm-nov2026-scan-p27.png"
+      ],
+      "skills": [
+        "long-short-u",
+        "spelling-patterns"
+      ],
+      "notes": [
+        "Short-u often appears in words like cup and sun.",
+        "Long-u appears in words like cube and mule.",
+        "Listen to the vowel sound, then check letter order and spelling."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; completion date not verified.",
+      "questions": [
+        {
+          "id": "work-nov26-spelling-patterns-01",
+          "subject": "Spelling / Handwriting",
+          "skill": "long-short-u",
+          "prompt": "Which word has the short-u sound heard in sun?",
+          "answer": "drum",
+          "choices": [
+            "cube",
+            "drum",
+            "mule",
+            "cute"
+          ],
+          "explanation": "Drum has the same short-u vowel sound as sun.",
+          "hint": "Say sun aloud and listen to its middle vowel sound. Find the word with the same short-u sound.",
+          "sourceFact": "Spelling patterns • long and short vowels (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-nov26-spelling-patterns-02",
+          "subject": "Spelling / Handwriting",
+          "skill": "spelling-patterns",
+          "prompt": "Which word is spelled correctly for a pretend play outfit?",
+          "answer": "costume",
+          "choices": [
+            "costoom",
+            "costume",
+            "costum",
+            "costoomm"
+          ],
+          "explanation": "Costume is the correct spelling of the word.",
+          "hint": "Sound the word out slowly, then check the spelling of every syllable and the final letters.",
+          "sourceFact": "Spelling patterns • long and short vowels (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov26-families-work-reading",
+      "title": "Families and work • unit review",
+      "subject": "Reading / ELA",
+      "sources": [
+        "abvm-nov2026-scan-p39.png",
+        "abvm-nov2026-scan-p40.png",
+        "abvm-nov2026-scan-p41.png",
+        "abvm-nov2026-scan-p42.png",
+        "abvm-nov2026-scan-p43.png",
+        "abvm-nov2026-scan-p44.png",
+        "abvm-nov2026-scan-p45.png",
+        "abvm-nov2026-scan-p46.png"
+      ],
+      "skills": [
+        "economic-vocabulary",
+        "reading-comprehension",
+        "long-short-i",
+        "text-evidence"
+      ],
+      "notes": [
+        "A producer makes a product or provides a service. A consumer uses or buys a product.",
+        "The main idea is what a text is mostly about. Details help explain it.",
+        "Short-i and long-i are different sounds; the silent e in time can make the vowel say its name.",
+        "For written comprehension, answer the question and support it with a fact from the passage."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; completion date not verified.",
+      "questions": [
+        {
+          "id": "work-nov26-families-work-reading-01",
+          "subject": "Reading / ELA",
+          "skill": "economic-vocabulary",
+          "prompt": "A farm sells apples to neighbors. Which action is producing?",
+          "answer": "Growing the apples",
+          "choices": [
+            "Buying the apples",
+            "Eating the apples",
+            "Growing the apples",
+            "Washing a plate"
+          ],
+          "explanation": "The farm produces apples by growing them.",
+          "hint": "Producing means making or growing something. Decide which action creates a good to sell.",
+          "sourceFact": "Families and work • unit review (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-nov26-families-work-reading-02",
+          "subject": "Reading / ELA",
+          "skill": "economic-vocabulary",
+          "prompt": "Which sentence describes a consumer?",
+          "answer": "A shopper buys a basket of berries.",
+          "choices": [
+            "A farmer plants seeds.",
+            "A baker mixes dough for sale.",
+            "A shopper buys a basket of berries.",
+            "A carpenter makes a chair."
+          ],
+          "explanation": "Buying a product is an example of consuming.",
+          "hint": "A consumer is someone who buys or uses a good. Look for the action of making a purchase.",
+          "sourceFact": "Families and work • unit review (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-nov26-families-work-reading-03",
+          "subject": "Reading / ELA",
+          "skill": "reading-comprehension",
+          "prompt": "After reading a story about a family farm, what helps you identify the main idea?",
+          "answer": "Details repeated throughout the story",
+          "choices": [
+            "The biggest picture",
+            "Details repeated throughout the story",
+            "Only the first word",
+            "The longest name"
+          ],
+          "explanation": "Repeated related details point to the central topic.",
+          "hint": "Ask what most of the passage is about.",
+          "sourceFact": "Families and work • unit review (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-nov26-families-work-reading-04",
+          "subject": "Reading / ELA",
+          "skill": "long-short-i",
+          "prompt": "Which word has the long-i sound?",
+          "answer": "shine",
+          "choices": [
+            "pin",
+            "sit",
+            "shine",
+            "fin"
+          ],
+          "explanation": "The silent e in shine makes the i sound long.",
+          "hint": "Look for i followed by a consonant and silent e.",
+          "sourceFact": "Families and work • unit review (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-nov26-families-work-reading-05",
+          "subject": "Reading / ELA",
+          "skill": "text-evidence",
+          "prompt": "Which sentence best supports the idea that a family works together?",
+          "answer": "Each person helps with a different chore.",
+          "choices": [
+            "They own a green house.",
+            "The road is long.",
+            "Each person helps with a different chore.",
+            "The sky is blue."
+          ],
+          "explanation": "Sharing household chores provides evidence of working together.",
+          "hint": "Choose the detail that supports the claim.",
+          "sourceFact": "Families and work • unit review (topic review only; original practice, not copied worksheet questions)",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
     }
   ],
   "sourceManifest": [
@@ -2105,6 +3117,261 @@
     {
       "id": "spelling-2026-10-09-practice-c.jpeg",
       "sha256": "6c9bc4c05660a0e5b02a122e7bd10a0c0ea18fce2811001e12290bedccd91f1c",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p01.png",
+      "sha256": "a0b819a1c8ba42f141d8b030d316f6e1128361b8dc4c7a908b9f86592bfd71a3",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p02.png",
+      "sha256": "a18054ad34274c580180494fcb92f76e3e2ec76a95e91a56a0125d5147222319",
+      "status": "held",
+      "reason": "Blank scanned reverse, no instructional content."
+    },
+    {
+      "id": "abvm-nov2026-scan-p03.png",
+      "sha256": "0d56e4df37460f5c0539141b606dba21603a17ee10ae810b83328faa0604522f",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p04.png",
+      "sha256": "61accdefd334e2d143e7783b8b2372b63a5111e6f41a666cfa29134acfd42047",
+      "status": "held",
+      "reason": "Blank scanned reverse, no instructional content."
+    },
+    {
+      "id": "abvm-nov2026-scan-p05.png",
+      "sha256": "f982ad6b409f469440a18650df79a159a9d6d766b6cc07e54a8bdf3ba8079395",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p06.png",
+      "sha256": "c6b2849ccbe345e703519542e139ca48b6064b0b38ac07f17b9d1c5d565bab58",
+      "status": "held",
+      "reason": "Blank scanned reverse, no instructional content."
+    },
+    {
+      "id": "abvm-nov2026-scan-p07.png",
+      "sha256": "13d3ac53b4e6e5c8026feefcf9d5435a7d2297e333d6b976989d09aa6e5228a9",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p08.png",
+      "sha256": "623e91dbbcdf203ad27d513dfc661cfb864d119796fa4dd3e0820d937f354ce7",
+      "status": "held",
+      "reason": "Blank scanned reverse, no instructional content."
+    },
+    {
+      "id": "abvm-nov2026-scan-p09.png",
+      "sha256": "083a74fd7fa7e88a1b6a376b096146883cd6b8be7ab8fb5d14bd2076f39aac6a",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p10.png",
+      "sha256": "3beb103e64b6c42693fb23510bf059ce9c66c6107a2c881edbbf16380ec22100",
+      "status": "held",
+      "reason": "Blank scanned reverse, no instructional content."
+    },
+    {
+      "id": "abvm-nov2026-scan-p11.png",
+      "sha256": "bc82b811365c1d3ce309ce2fd60426c5a000d4e1b195954f65b3f741fe8b0c31",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p12.png",
+      "sha256": "90ffa1ded04f880a4eb9c3e584f8318d07778df3e35f26a876e48a0e0e150f48",
+      "status": "held",
+      "reason": "Blank scanned reverse, no instructional content."
+    },
+    {
+      "id": "abvm-nov2026-scan-p13.png",
+      "sha256": "0a1a2d024c846a6a8caf7b9dcc1b42593296c1a21c56c873fb79c27e3d3d649d",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p14.png",
+      "sha256": "5810c6435e9e9c10f1d95629cf8d593c9acb580b3fdfb8082022e778203517c1",
+      "status": "held",
+      "reason": "Blank scanned reverse, no instructional content."
+    },
+    {
+      "id": "abvm-nov2026-scan-p15.png",
+      "sha256": "68aad463b3dbab304a6d75096a3e7e446366a1af3d54d771a284fdf2db02afde",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p16.png",
+      "sha256": "913d91f85dc0adf707b476f916b62eedad4b4598c3fd8958b3e45b0485d74580",
+      "status": "held",
+      "reason": "Blank scanned reverse, no instructional content."
+    },
+    {
+      "id": "abvm-nov2026-scan-p17.png",
+      "sha256": "1b5c5262959467cfd33a20345171f7b90cd82880abb66ad2fda7f468dc0cd2b6",
+      "status": "held",
+      "reason": "Personal reflection withheld from public instructional materials."
+    },
+    {
+      "id": "abvm-nov2026-scan-p18.png",
+      "sha256": "c63117a17037602e41cf201ff4ecd034cf3f23ea13b9b7eab516871eded1601f",
+      "status": "held",
+      "reason": "Blank scanned reverse, no instructional content."
+    },
+    {
+      "id": "abvm-nov2026-scan-p19.png",
+      "sha256": "97adc0eca39d484ced1f7b6d10af87a49b54ecb002a27ac3810137d6858fc4fb",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p20.png",
+      "sha256": "823bf835f27df158b3e4d831e364f57170a4d0baf332746bc6836158eb4f6209",
+      "status": "held",
+      "reason": "Blank scanned reverse, no instructional content."
+    },
+    {
+      "id": "abvm-nov2026-scan-p21.png",
+      "sha256": "cb046a3e41d34300c8de589e59c08c3f06d4cefe0013b0ddbbc1dec2c4d67f0b",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p22.png",
+      "sha256": "b8dd84bd0d7fac03d5bb20946aa451ca8a3f199cc5328cf76b61519bc50ac330",
+      "status": "held",
+      "reason": "Blank scanned reverse, no instructional content."
+    },
+    {
+      "id": "abvm-nov2026-scan-p23.png",
+      "sha256": "092226aa83d8e1063314cb187e64f27e900ad35cef9f0a1e9c346e3dcab17fdc",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p24.png",
+      "sha256": "598f47a4e7b7c17a628b381eb7d9cd61b5dc111cad7c039154057d212e361554",
+      "status": "held",
+      "reason": "Blank scanned reverse, no instructional content."
+    },
+    {
+      "id": "abvm-nov2026-scan-p25.png",
+      "sha256": "02af5575ddafa35dd07c99d86ce48df0bdbe07328830f32069e003e6fa9770e0",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p26.png",
+      "sha256": "f6fff9db4a0e8d64b8e28d0c09255d58554cd8ea4f1c9b9346c74f90b07da197",
+      "status": "held",
+      "reason": "Blank scanned reverse, no instructional content."
+    },
+    {
+      "id": "abvm-nov2026-scan-p27.png",
+      "sha256": "251301a6b346d8b0c17eb3ceaf162917f9c1037323fa8941c4a4c3afb52cd9d8",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p28.png",
+      "sha256": "8bf3d567606e858454c34299947afbe60e8757146db89f9add91bdda1123a2eb",
+      "status": "held",
+      "reason": "Blank scanned reverse, no instructional content."
+    },
+    {
+      "id": "abvm-nov2026-scan-p29.png",
+      "sha256": "4f166a8a33929975dfe6376fb4248daddf2457881e4d299bfc0a651dea7bd774",
+      "status": "held",
+      "reason": "Prior private intake duplicate, not independently assessed again."
+    },
+    {
+      "id": "abvm-nov2026-scan-p30.png",
+      "sha256": "4d77cb7c5676b564b409c05c2c979b0fcaef2ac78b3f3abc1f06bc2c3cb6879f",
+      "status": "held",
+      "reason": "Prior private intake duplicate, not independently assessed again."
+    },
+    {
+      "id": "abvm-nov2026-scan-p31.png",
+      "sha256": "9365a3e36bc25fff76455072aab1aa14ae68b7ea4e46a6b0a6c0709fa51432ed",
+      "status": "held",
+      "reason": "Prior private intake duplicate, not independently assessed again."
+    },
+    {
+      "id": "abvm-nov2026-scan-p32.png",
+      "sha256": "742952fce7a0aa37d8c3dd4b64f98dda7014f06f7d80299bc4b6adb4a2994c96",
+      "status": "held",
+      "reason": "Blank scanned reverse, no instructional content."
+    },
+    {
+      "id": "abvm-nov2026-scan-p33.png",
+      "sha256": "1d578374535cd427323f3b6f9eb0061b0ac3294188c070d4c5f05b16d6f95145",
+      "status": "held",
+      "reason": "Prior private intake duplicate, not independently assessed again."
+    },
+    {
+      "id": "abvm-nov2026-scan-p34.png",
+      "sha256": "b469e83b067ebee657691160bc90ab7b62184f9b3076054156df8b49096a0849",
+      "status": "held",
+      "reason": "Prior private intake duplicate, not independently assessed again."
+    },
+    {
+      "id": "abvm-nov2026-scan-p35.png",
+      "sha256": "60ca0c7332c70bdb8083e5e4909b0a44ed079635561a90eac3d6041728630a6b",
+      "status": "held",
+      "reason": "Prior private intake duplicate, not independently assessed again."
+    },
+    {
+      "id": "abvm-nov2026-scan-p36.png",
+      "sha256": "c1623f2e7c361822f0d52096191edc788546b39a1497c71664437861abca5079",
+      "status": "held",
+      "reason": "Blank scanned reverse, no instructional content."
+    },
+    {
+      "id": "abvm-nov2026-scan-p37.png",
+      "sha256": "98654cbba71315b8cc4e9de270009540b98532c7d9dd9e99cdb40713973c0b16",
+      "status": "held",
+      "reason": "Prior private intake duplicate, not independently assessed again."
+    },
+    {
+      "id": "abvm-nov2026-scan-p38.png",
+      "sha256": "95fe6534e8a49d89dd49793674ea00bfaecfada2582b2845e661d56fe3a3296e",
+      "status": "held",
+      "reason": "Prior private intake duplicate, not independently assessed again."
+    },
+    {
+      "id": "abvm-nov2026-scan-p39.png",
+      "sha256": "003ec4729194b926532edc14947a376cbd5565e9956baa348fe13e594180daf0",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p40.png",
+      "sha256": "3de3135b0d92fe26323a315178cd495f3227b6652aa8ee3aafd235bd5425ded3",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p41.png",
+      "sha256": "0db8c6eff10b965f14422520d3194317a288c953b9f081724a0ffc7f579c09ca",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p42.png",
+      "sha256": "714691e4d799ac93745f37bedc7c0bcfc361fb0b4580a98307dd67ddb1e67859",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p43.png",
+      "sha256": "9961ebd183b33437bf1c8526425e1c3edd1b5b3b99b046409eaf40ca8753c880",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p44.png",
+      "sha256": "53610b4aaad87416c5e9fd1e9058dac8909512fdae30577baaa862ed1aa70bc5",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p45.png",
+      "sha256": "52b07e520eae3e26c0c9cb51affec3c13573ed66072e7e2c7a92da750297820f",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov2026-scan-p46.png",
+      "sha256": "ca86153a337fb246c036fe8289bcf6549f0303ad680f29cf11e687c01cd37fc2",
       "status": "integrated"
     }
   ]

@@ -14,16 +14,16 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-11-02T03:35:15.896Z",
-  "sourceCapturedAt": "2026-10-29T16:54:08.074Z",
+  "sourceLastSeenAt": "2026-11-03T15:00:00.000Z",
+  "sourceCapturedAt": "2026-11-03T15:00:00.000Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-7e345f8ef837196ec349",
-    "sourceCapturedAt": "2026-10-29T16:54:08.074Z",
-    "generatedAt": "2026-11-02T03:35:15.896Z",
+    "sourceCapturedAt": "2026-11-03T15:00:00.000Z",
+    "generatedAt": "2026-11-03T15:00:00.000Z",
     "weekLabel": "Week of November 2, 2026",
-    "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity”, Math “Page 35”, Reading “Read”, and Reading “Keep Reading Log and Behavior Chart in the HW folder”. Upcoming tests include Religion Ch. 4 on Tuesday, Nov. 3, Math (Ch. 2) on Wednesday, Nov. 4, Spelling (consonant digraphs) / Handwriting on Friday, Nov. 6, and Reading on Wednesday, Nov. 11. 29 uploaded school notices are integrated with the teacher pages.",
+    "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity”, Math “Page 35”, Reading “Read”, and Reading “Keep Reading Log and Behavior Chart in the HW folder”. Upcoming tests include Religion Ch. 4 on Tuesday, Nov. 3, Math (Ch. 2) on Wednesday, Nov. 4, Spelling (consonant digraphs) / Handwriting on Friday, Nov. 6, and Reading on Wednesday, Nov. 11. 31 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
       {
         "subject": "Reading / ELA",
@@ -901,10 +901,24 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Monday, Nov. 2",
+        "label": "Raise Right physical card order placed",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
         "date": "Tuesday, Nov. 3",
         "label": "Optional Eucharistic Holy Hour — 6 PM at Nativity BVM High School",
         "kind": "school event",
         "sourceDocument": "eucharistic-consecration-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Nov. 3",
+        "label": "Wounded Warriors bands sale begins",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
         "source": "uploaded-notice"
       },
       {
@@ -915,15 +929,23 @@
       },
       {
         "date": "Wednesday, Nov. 4",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Nov. 4",
         "label": "Math (Ch. 2)",
         "kind": "test",
         "source": "teacher-tests"
       },
       {
         "date": "Thursday, Nov. 5",
-        "label": "HSA Meeting",
-        "source": "teacher-home",
-        "kind": "meeting"
+        "label": "HSA meeting (Google Meet)",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
       },
       {
         "date": "Friday, Nov. 6",
@@ -934,9 +956,30 @@
       },
       {
         "date": "Friday, Nov. 6",
+        "label": "Noon dismissal",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Nov. 6",
         "label": "Spelling (consonant digraphs) / Handwriting",
         "kind": "test",
         "source": "teacher-tests"
+      },
+      {
+        "date": "Tuesday, Nov. 10",
+        "label": "Faculty meeting",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Nov. 10",
+        "label": "DDD for Wounded Warriors donation",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
       },
       {
         "date": "Tuesday, Nov. 10",
@@ -946,9 +989,24 @@
       },
       {
         "date": "Wednesday, Nov. 11",
-        "label": "Prayer Service at 9:00",
-        "source": "teacher-home",
-        "kind": "school event"
+        "label": "Prayer service",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Nov. 11",
+        "label": "Communication folder",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Nov. 11",
+        "label": "Last day of Wounded Warriors bands sale",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
       },
       {
         "date": "Wednesday, Nov. 11",
@@ -966,8 +1024,23 @@
       {
         "date": "Friday, Nov. 13",
         "label": "Pretzel money due",
-        "source": "teacher-home",
-        "kind": "deadline"
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Nov. 13",
+        "label": "The Little Mermaid Jr. drama club play",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Saturday, Nov. 14",
+        "label": "The Little Mermaid Jr. drama club play",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
       },
       {
         "date": "Tuesday, Nov. 17",
@@ -985,9 +1058,30 @@
       },
       {
         "date": "Tuesday, Nov. 17",
+        "label": "Nut roll delivery",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Nov. 17",
         "label": "Nut Roll pick up",
         "source": "teacher-home",
         "kind": "school event"
+      },
+      {
+        "date": "Wednesday, Nov. 18",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Thursday, Nov. 19",
+        "label": "Pretzel day",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
       },
       {
         "date": "Thursday, Nov. 19",
@@ -996,22 +1090,31 @@
         "kind": "deadline"
       },
       {
-        "date": "Thursday, Nov. 19",
-        "label": "Pretzel day",
-        "source": "teacher-home",
-        "kind": "school event"
-      },
-      {
         "date": "Friday, Nov. 20",
-        "label": "End of Trimester 1",
-        "source": "teacher-home",
-        "kind": "school event"
+        "label": "End of trimester 1",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
       },
       {
         "date": "Saturday, Nov. 21",
         "label": "Reading Royals Game Family Fun Night — student anthem performance; ticket link in notices",
         "kind": "school event",
         "sourceDocument": "reading-royals-family-night-2026-11-21",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Saturday, Nov. 21",
+        "label": "Reading Royals Family Fun Night",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Nov. 23",
+        "label": "Trimester 2 begins",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
         "source": "uploaded-notice"
       },
       {
@@ -1027,15 +1130,44 @@
       },
       {
         "date": "Tuesday, Nov. 24",
+        "label": "Dress Down Day to benefit SPCA",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Tuesday, Nov. 24",
         "label": "DDD for SPCA",
         "source": "teacher-home",
         "kind": "school event"
       },
       {
         "date": "Wednesday, Nov. 25",
-        "label": "12:00 Dismissal",
-        "source": "teacher-home",
-        "kind": "schedule change"
+        "label": "Noon dismissal",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Nov. 25",
+        "label": "Mass",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Nov. 25",
+        "label": "Communication folder",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Wednesday, Nov. 25",
+        "label": "Report cards distributed",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
       },
       {
         "date": "Wednesday, Nov. 25",
@@ -1044,9 +1176,25 @@
         "kind": "school event"
       },
       {
-        "label": "Thanksgiving Holiday — School Closed",
-        "date": "Thursday–Monday, Nov. 26–30",
-        "kind": "holiday"
+        "date": "Thursday, Nov. 26",
+        "label": "No school",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Nov. 27",
+        "label": "No school",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Nov. 30",
+        "label": "No school",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
       },
       {
         "date": "Tuesday, Dec. 1",
@@ -1227,61 +1375,61 @@
     ],
     "lunchMenu": [
       {
-        "date": "2026-10-26",
-        "day": "Monday, Oct. 26",
+        "date": "2026-11-02",
+        "day": "Monday, Nov. 2",
         "items": [
-          "Chicken finger wrap",
-          "Brown rice",
-          "Steamed corn",
+          "Breaded chicken",
+          "Buttered pasta",
+          "Baked beans",
           "Fruit"
         ],
-        "sourceId": "abvm-2026-10-official"
+        "sourceId": "abvm-2026-11-parent-school-menu"
       },
       {
-        "date": "2026-10-27",
-        "day": "Tuesday, Oct. 27",
+        "date": "2026-11-03",
+        "day": "Tuesday, Nov. 3",
         "items": [
-          "Taco Tuesday & chips",
-          "Cheese",
-          "Shredded lettuce",
-          "Green beans",
+          "Meatballs in gravy",
+          "Mashed potatoes",
+          "Garlic stick",
+          "Corn",
           "Fruit"
         ],
-        "sourceId": "abvm-2026-10-official"
+        "sourceId": "abvm-2026-11-parent-school-menu"
       },
       {
-        "date": "2026-10-28",
-        "day": "Wednesday, Oct. 28",
+        "date": "2026-11-04",
+        "day": "Wednesday, Nov. 4",
         "items": [
-          "Fish shapes",
+          "French toast sticks",
+          "Hash browns",
+          "Sausage link",
+          "Carrots",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-05",
+        "day": "Thursday, Nov. 5",
+        "items": [
+          "Macaroni & cheese",
+          "Breaded chicken",
+          "Stewed tomatoes",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-06",
+        "day": "Friday, Nov. 6",
+        "items": [
+          "Hamburger with roll",
           "French fries",
-          "Steamed broccoli",
-          "Fruit"
-        ],
-        "sourceId": "abvm-2026-10-official"
-      },
-      {
-        "date": "2026-10-29",
-        "day": "Thursday, Oct. 29",
-        "items": [
-          "Beef-a-roni",
-          "Shredded cheese",
-          "Whole-grain roll",
-          "Steamed carrots",
-          "Fruit"
-        ],
-        "sourceId": "abvm-2026-10-official"
-      },
-      {
-        "date": "2026-10-30",
-        "day": "Friday, Oct. 30",
-        "items": [
-          "Baked cheese pizza",
-          "Garden salad",
           "Steamed peas",
           "Fruit"
         ],
-        "sourceId": "abvm-2026-10-official"
+        "sourceId": "abvm-2026-11-parent-school-menu"
       }
     ],
     "vocabulary": [
@@ -1386,6 +1534,8 @@
       "Friday, Oct. 23: Lego Club and S’mores Family. Club time and eligibility are not specified in this planner.",
       "Monday, Oct. 26: K–4 Dress Down Day and flag football.",
       "October 19–30: Halloween bucket-of-candy chance fundraiser; $1 per chance.",
+      "November 6: noon dismissal and no after-school care; lunch is served.",
+      "November 25: noon dismissal with lunch served. November 26, 27, and 30: no school.",
       "Stationary money ($17) is due Wednesday, Sept. 23.",
       "Pretzel delivery is Thursday, Sept. 24 after lunch.",
       "Keep the Reading Log and Behavior Chart in the HW folder.",
@@ -1539,13 +1689,14 @@
       "ABVM is collecting hygiene donations for Servants for All; the October 22 and 29 donation flyer refers to grade-specific activities, and Melissa's latest planner confirms K–4 dress down/flag football on October 26.",
       "Eucharistic Consecration at ABVM: Oct. 20–Dec. 8, with Consecration at school Mass on Dec. 8. School provides a student book and a parent copy; weekly reading guidelines follow. Optional Holy Hours: Oct. 22, 7 PM (Bethlehem Catholic High School); Nov. 3, 6 PM (Nativity BVM High School); Nov. 17, 7 PM (Berks Catholic High School).",
       "Free Diocesan Family Festival: Sunday, Nov. 1, noon–4:30 PM; location: St. Joseph the Worker in Orefield.",
+      "November 2026 school lunch costs $4.25. Assorted milks are available daily. Menu is subject to change.",
       "Picture ordering: a digital image is $10 when added to a package; glossy finish is $5 per package; a 10×13 is $20; the other listed add-on items are $13 each.",
       "Picture backgrounds: 1 Universe, 2 Pink Mist, 3 Fall Leaves, 4 Traditional, 5 School Spirit, 6 Patriotic, 7 Dinosaur, 8 Pastel, 9 Bookcase, 10 Blue Brush, 11 Laser. Backgrounds 1, 2, and 11 are marked NEW.",
       "Christmas Caroling date is TBD.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
     "sourceCheckedAt": "2026-11-02T03:35:15.896Z",
-    "uploadedNoticeHash": "uploaded-notices-fc25bd06e58c0719d2fa",
+    "uploadedNoticeHash": "uploaded-notices-e57dca15a6dfb9887780",
     "uploadedNoticeTopics": {
       "reminders": [
         "fundraiser",
@@ -1566,7 +1717,9 @@
         "progress-report",
         "winter-uniform",
         "lego-club",
-        "halloween-fundraiser"
+        "halloween-fundraiser",
+        "nov-2026-noon-dismissal-6",
+        "nov-2026-thanksgiving-closure"
       ],
       "parentNotices": [
         "conference",
@@ -1591,32 +1744,33 @@
         "cyo-basketball-older",
         "servants-hygiene",
         "eucharistic-consecration",
-        "diocesan-festival"
+        "diocesan-festival",
+        "nov-2026-lunch-cost"
       ]
     },
     "lunchMenuSource": {
       "status": "current-week",
       "retrievalState": "verified",
-      "checkedAt": "2026-11-02T03:35:15.896Z",
-      "lastAttemptAt": "2026-11-02T03:35:15.896Z",
+      "checkedAt": "2026-11-03T15:00:00.000Z",
+      "lastAttemptAt": "2026-11-03T15:00:00.000Z",
       "provider": "Saint Clair Area School District",
       "school": "Assumption BVM School",
       "feedUrl": "https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu",
-      "verificationMode": "direct-official-source",
+      "verificationMode": "reviewed-school-handout",
       "parentResourcesUrl": "https://www.assumptionbvmschool.net/parent-resources",
-      "weekStart": "2026-10-26",
-      "weekEnd": "2026-10-30",
-      "coverageThrough": "2026-10-30",
+      "weekStart": "2026-11-02",
+      "weekEnd": "2026-11-06",
+      "coverageThrough": "2026-11-06",
       "missingDates": [],
       "sourcePages": [
         {
-          "id": "abvm-2026-10-official",
-          "url": "https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1790692534/adeducatorsorg/xdbrqzybydptd5srbor0/Octobercalendar.heic",
-          "contentHash": "a99ce9385295921c9fff19ae4051732da45f7c38df077d30d9b62577c8c6eb45",
-          "proofMode": "pinned-url",
-          "reviewedAt": "2026-10-01T00:44:00Z",
-          "checkedAt": "2026-11-02T03:35:15.896Z",
-          "state": "verified"
+          "id": "abvm-2026-11-parent-school-menu",
+          "sourceDocument": "nov-2026-lunch-menu-parent-photo",
+          "contentHash": "a5d25beb5cbd34522ce4645172ab4efce1d041aab7fcc33521f3433c5cd0b178",
+          "proofMode": "reviewed-notice",
+          "reviewedAt": "2026-11-03T15:00:00.000Z",
+          "checkedAt": "2026-11-03T15:00:00.000Z",
+          "state": "reviewed-notice"
         }
       ],
       "pendingDocuments": [],
@@ -2109,9 +2263,238 @@
           "Fruit"
         ],
         "sourceId": "abvm-2026-10-official"
+      },
+      {
+        "date": "2026-11-02",
+        "day": "Monday, Nov. 2",
+        "items": [
+          "Breaded chicken",
+          "Buttered pasta",
+          "Baked beans",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-03",
+        "day": "Tuesday, Nov. 3",
+        "items": [
+          "Meatballs in gravy",
+          "Mashed potatoes",
+          "Garlic stick",
+          "Corn",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-04",
+        "day": "Wednesday, Nov. 4",
+        "items": [
+          "French toast sticks",
+          "Hash browns",
+          "Sausage link",
+          "Carrots",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-05",
+        "day": "Thursday, Nov. 5",
+        "items": [
+          "Macaroni & cheese",
+          "Breaded chicken",
+          "Stewed tomatoes",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-06",
+        "day": "Friday, Nov. 6",
+        "items": [
+          "Hamburger with roll",
+          "French fries",
+          "Steamed peas",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-09",
+        "day": "Monday, Nov. 9",
+        "items": [
+          "Breaded chicken",
+          "Brown rice",
+          "Steamed broccoli",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-10",
+        "day": "Tuesday, Nov. 10",
+        "items": [
+          "CH. quesadilla wedge",
+          "Garden salad",
+          "Salsa",
+          "Steamed corn",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-11",
+        "day": "Wednesday, Nov. 11",
+        "items": [
+          "Breaded fish sandwich",
+          "Baby cake potatoes",
+          "Baked beans",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-12",
+        "day": "Thursday, Nov. 12",
+        "items": [
+          "Baked cheese pizza",
+          "Tortilla chips",
+          "Mixed vegetables",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-13",
+        "day": "Friday, Nov. 13",
+        "items": [
+          "Cheesy breadsticks",
+          "Dipping sauce",
+          "Garden salad",
+          "Green beans",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-16",
+        "day": "Monday, Nov. 16",
+        "items": [
+          "Popcorn chicken",
+          "Mashed potatoes",
+          "WG roll",
+          "Corn",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-17",
+        "day": "Tuesday, Nov. 17",
+        "items": [
+          "Taco Tuesday & chips",
+          "Cheese",
+          "Brown rice",
+          "Salsa",
+          "Beans",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-18",
+        "day": "Wednesday, Nov. 18",
+        "items": [
+          "Buttered pierogies",
+          "WG roll",
+          "String cheese",
+          "Steamed carrots",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-19",
+        "day": "Thursday, Nov. 19",
+        "items": [
+          "Beef cheesesteak",
+          "WG roll",
+          "French fries",
+          "Steamed broccoli",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-20",
+        "day": "Friday, Nov. 20",
+        "items": [
+          "Macaroni & cheese",
+          "Breaded chicken",
+          "Stewed tomatoes",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-23",
+        "day": "Monday, Nov. 23",
+        "items": [
+          "Breaded chicken",
+          "Scallop potatoes",
+          "WG roll",
+          "Green beans",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-24",
+        "day": "Tuesday, Nov. 24",
+        "items": [
+          "Meatballs in sauce",
+          "WG pasta",
+          "Steamed corn",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-25",
+        "day": "Wednesday, Nov. 25",
+        "items": [
+          "Baked cheese pizza",
+          "Garden salad",
+          "Steamed broccoli",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-26",
+        "day": "Thursday, Nov. 26",
+        "items": [],
+        "status": "no-school",
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-27",
+        "day": "Friday, Nov. 27",
+        "items": [],
+        "status": "no-school",
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-30",
+        "day": "Monday, Nov. 30",
+        "items": [],
+        "status": "no-school",
+        "sourceId": "abvm-2026-11-parent-school-menu"
       }
     ],
-    "lunchMenuHash": "38abfacdb3423128329e31990b7dd044f5ae3a7b99b45de0d3b2cec55948fdfb",
+    "lunchMenuHash": "3e611fdc838be39aa7024557e0e847e484738d1bfbc4bfe494848ec8bef966e8",
     "contentPipeline": {
       "schemaVersion": 2,
       "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
@@ -21552,8 +21935,8 @@
     }
   ],
   "uploadedNotices": {
-    "count": 29,
-    "latestIntegratedAt": "2026-10-23T14:48:08.824Z",
+    "count": 31,
+    "latestIntegratedAt": "2026-11-03T15:00:00.000Z",
     "documents": [
       {
         "id": "dress-down-2026-09-25",
@@ -21699,6 +22082,16 @@
         "id": "weekly-reminders-2026-10-26",
         "label": "Weekly reminders for week of 2026-10-26",
         "receivedAt": "2026-10-23"
+      },
+      {
+        "id": "nov-2026-school-calendar-parent-photo",
+        "label": "Assumption BVM November 2026 monthly calendar",
+        "receivedAt": "2026-11-03"
+      },
+      {
+        "id": "nov-2026-lunch-menu-parent-photo",
+        "label": "Assumption BVM November 2026 lunch menu",
+        "receivedAt": "2026-11-03"
       }
     ]
   }

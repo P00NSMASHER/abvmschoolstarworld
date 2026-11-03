@@ -311,19 +311,19 @@ function agendaLunchHtml(date,lunch){
   const text=closed||weekend||lunch?.status==="no-school"?"No school lunch":lunch?lunchText(lunch):lunchUnavailableText(date);
   return '<div class="agenda-lunch'+(lunch?"":" is-missing")+'"><span class="meal-icon" aria-hidden="true">'+window.ABVMProductView.icon("lunch")+'</span><div><b>Lunch</b><p>'+esc(text)+'</p></div>'+(!closed&&!weekend?(window.ABVMLunchArt?.html(lunch)||''):'')+'</div>';
 }
-function compactMonthCardHtml(month,rows,extraClass){
-  const dates=new Map();
-  for(const {x,d} of rows){
-    const key=d.getTime();
-    if(!dates.has(key)){
-      if(dates.size>=5)continue;
-      dates.set(key,{d,labels:[]});
-    }
-    const group=dates.get(key);
-    if(!group.labels.includes(x.label))group.labels.push(x.label);
-  }
-  return window.ABVMProductView.compactMonthCard(MONTHS[month],
-    [...dates.values()].map(o=>({date:fmtShort(o.d),dayKey:isoDateKey(o.d),labels:o.labels})),extraClass);
+function compactMonthCardHtml(m,rows,c){
+ let g=new Map;
+ for(let {x,d}of rows){
+  let o=g.get(+d);
+  if(!o)g.set(+d,o={d,labels:[]});
+  if(!o.labels.includes(x.label))o.labels.push(x.label);
+ }
+ let a=[...g.values()],v=a.slice(0,5);
+ if(c==="next-month-card"){
+  let p=a.find(o=>o.labels.some(s=>/dismissal|no school|closed/i.test(s)));
+  if(p&&!v.includes(p))v[4]=p;
+ }
+ return window.ABVMProductView.compactMonthCard(MONTHS[m],v.map(x=>({date:fmtShort(x.d),dayKey:isoDateKey(x.d),labels:x.labels})),c);
 }
 function renderCalendar(){
   const base=calendarBase(),y=base.getFullYear(),m=base.getMonth();
