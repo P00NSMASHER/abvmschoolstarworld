@@ -20,7 +20,7 @@ test('both November language families contain eight original distinct valid vari
     assert.deepEqual([...new Set(bank.map(q=>q.questionType))].sort(),['direct','reasoning','transfer']);
     assert.equal(new Set(bank.map(q=>q.prompt.toLowerCase())).size,8);
     assert.ok(bank.every(q=>q.choices.length===3&&q.choices.filter(x=>x===q.answer).length===1));
-    assert.ok(family.studyNotes.some(note=>/not teacher/i.test(note)),'original teaching must be identified');
+    assert.ok(family.studyNotes.some(note=>/original Grade 2 teaching/i.test(note)),'original teaching must be identified');
   }
 });
 
@@ -37,7 +37,8 @@ test('exact teacher topic activates Grade 2 originals, without treating practice
     assert.equal(qs.length,8,id+' must produce eight source-locked originals');
     assert.deepEqual([...new Set(qs.map(q=>q.questionType))].sort(),['direct','reasoning','transfer']);
     assert.ok(qs.every(q=>q.provenance==='verified-abvm-skill-template'));
-    assert.ok(qs.every(q=>q.evidenceContract?.doesNotClaim?.includes('school-test-answer-key')||q.evidenceContract?.doesNotClaim?.includes('teacher-authored-question-bank')||q.evidenceContract?.doesNotClaim?.includes('teacher-provided-question-text')));
+    assert.ok(qs.every(q=>q.evidenceContract?.doesNotClaim?.includes('global-subject-mastery')));
+    assert.ok(qs.every(q=>!/what will be on the test|teacher (?:asked|wrote|chose)/i.test(q.prompt)),'original practice must not claim actual teacher test items');
   }
   assert.equal(pipeline.qa.status,'pass');
   assert.deepEqual(validateGrade2ContentPipeline(pipeline),[]);
