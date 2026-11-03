@@ -103,11 +103,26 @@ test('rich visuals remain inside the phone viewport', async ({ page }) => {
     q:{subject:'Math',questionType:'direct',prompt:'Use the chart.',choices:['1','2','3'],answer:'2',explanation:'Explanation.',hint:'Hint.',choiceDiagnostics:{'1':{feedback:'Try again.'},'3':{feedback:'Try again.'}},richContent:{kind:'bar-chart',label:'Votes',entries:[{label:'Apples',value:7},{label:'Bananas',value:5},{label:'Grapes',value:3}]}},
     teach:null,retryInstruction:'Use the clue.',labels:{direct:'Practice'}
   }));
-  await page.locator('#app-content').evaluate((node, markup) => { node.innerHTML = '<main style="width:100%"><section class="game-question-card">'+markup+'</section></main>'; }, html);
-  const box = await page.locator('.game-rich-content').boundingBox();
-  expect(box).not.toBeNull();
+  // App data refresh can repaint #app-content between fixture insertion and
+  // the bounding-box check. Mount a *real styled* question outside that
+  // reactive subtree, so the assertion tests CSS rather than fetch timing.
+  await page.evaluate(markup => {
+    const fixture = document.createElement('div');
+    fixture.id = 'rich-content-layout-fixture';
+    fixture.className = 'games-screen is-playing';
+    fixture.style.cssText = 'position:absolute;top:0;left:0;width:320px;max-width:100vw;';
+    fixture.innerHTML = '<section class="game-question-card">' + markup + '</section>';
+    document.querySelector('.phone-app').append(fixture);
+  }, html);
+  const visual = page.locator('#rich-content-layout-fixture .game-rich-content');
+  await expect(visual).toBeVisible();
+  const box = await visual.evaluate(el => {
+    const rect = el.getBoundingClientRect();
+    return { x:rect.x, width:rect.width, right:rect.right };
+  });
+  expect(box.width).toBeGreaterThan(0);
   expect(box.x).toBeGreaterThanOrEqual(0);
-  expect(box.x + box.width).toBeLessThanOrEqual(320);
+  expect(box.right).toBeLessThanOrEqual(320);
 });
 
 test('pre-supplied rich content cannot inject information that is absent from the prompt', async ({ page }) => {
