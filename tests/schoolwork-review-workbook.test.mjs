@@ -17,13 +17,13 @@ const rekey=value=>Array.isArray(value)?value.map(rekey):
     ?Object.fromEntries(Object.entries(value).reverse().map(([key,item])=>[key,rekey(item)]))
     :value;
 
-test('existing 23/13/67 public library renders every practice question once and lists every source',async()=>{
+test('cumulative 69/26/96 public library renders every practice question once and lists every source',async()=>{
   const pack=await load();
   const before=JSON.stringify(pack);
   const html=renderSchoolworkReviewWorkbook(pack);
   assert.equal(JSON.stringify(pack),before);
-  assert.equal((html.match(/class="question" data-question-id=/g)||[]).length,67);
-  assert.equal((html.match(/class="lesson" id="lesson-/g)||[]).length,13);
+  assert.equal((html.match(/class="question" data-question-id=/g)||[]).length,96);
+  assert.equal((html.match(/class="lesson" id="lesson-/g)||[]).length,26);
   for(const source of pack.sourceManifest){
     assert(html.includes(source.id),source.id);
     assert(html.includes(source.sha256),source.id+' SHA-256');
@@ -77,7 +77,7 @@ test('held sources stay visible without giving them new lessons or questions',as
   const html=renderSchoolworkReviewWorkbook(pack);
   assert.match(html,/held-review\.jpeg/);
   assert.match(html,/HELD — no content permitted/);
-  assert.equal((html.match(/class="question" data-question-id=/g)||[]).length,67);
+  assert.equal((html.match(/class="question" data-question-id=/g)||[]).length,96);
 });
 
 test('private output file uses owner-only permissions and refuses overwrite',{skip:process.platform==='win32'},async()=>{
@@ -85,7 +85,7 @@ test('private output file uses owner-only permissions and refuses overwrite',{sk
   try{
     const target=path.join(dir,'private','review.html'),pack=await load();
     const result=await createPrivateSchoolworkReviewWorkbook(pack,target,{repoRoot});
-    assert.deepEqual([result.photos,result.lessons,result.questions],[23,13,67]);
+    assert.deepEqual([result.photos,result.lessons,result.questions],[69,26,96]);
     assert.equal(result.releaseStatus,'HOLD_EXTERNAL_SIGNOFF');
     assert.equal((await stat(target)).mode&0o777,0o600);
     const original=await readFile(target,'utf8');
