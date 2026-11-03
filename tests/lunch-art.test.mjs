@@ -40,12 +40,12 @@ test('monthly plan is deterministic, records exact menu and omits non-meal days'
 test('automatic queue includes current and future menus without expired-month churn', () => {
   const plan = buildArtPlan(CATALOG, registry);
   const queue = pendingArtMenus(plan, '2026-10');
-  assert.equal(queue.length, 20);
+  assert.equal(queue.length, 37); // October's 20 distinct menus plus 17 still awaiting November art.
   assert.ok(queue.every(menu => menu.dates.some(date => date >= '2026-10-01')));
-  assert.equal(pendingArtMenus(plan, '2026-11').length, 0);
+  assert.equal(pendingArtMenus(plan, '2026-11').length, 17);
   assert.throws(() => pendingArtMenus(plan, '2026-13'), /Invalid/);
   const future = { ...plan, menus: [...plan.menus, { artwork: null, dates: ['2026-11-02'] }] };
-  assert.equal(pendingArtMenus(future, '2026-10').length, 21);
+  assert.equal(pendingArtMenus(future, '2026-10').length, 38);
 });
 
 test('published October registry renders only exact approved meals and leaves closures text-only and covers the exact amendment', () => {
@@ -57,13 +57,13 @@ test('published October registry renders only exact approved meals and leaves cl
   assert.equal(october.filter(meal => !hasLunch(meal)).length, 2);
   assert.ok(october.filter(meal => !hasLunch(meal)).every(meal => renderLunchArtwork(meal, map) === ''));
   assert.match(renderLunchArtwork(october.find(meal => meal.date === '2026-10-15'), map), /tray-2026-10-15-v1.webp/);
-  assert.equal(pendingArtMenus(buildArtPlan(CATALOG, published), '2026-10').length, 0);
+  assert.equal(pendingArtMenus(buildArtPlan(CATALOG, published), '2026-10').length, 17); // November meals remain text-only until reviewed art exists.
 });
 
 test('tray queue catches legacy coverage and current style discloses unknown foods', async()=>{
   const {TRAY_STYLE_ID,trayMenuSpec}=await import('../scripts/lunch-art-style.mjs');
   const legacy=buildArtPlan(CATALOG,registry);
-  assert.equal(pendingArtMenus(legacy,'2026-10',{styleId:TRAY_STYLE_ID}).length,20);
+  assert.equal(pendingArtMenus(legacy,'2026-10',{styleId:TRAY_STYLE_ID}).length,37);
   const spec=trayMenuSpec({items:['Taco Tuesday & chips','Cheese','Fruit']});
   assert.deepEqual(spec.foods,['Tortilla chips','Cheese']);
   assert.match(spec.omissionNote,/Taco filling not specified/);
@@ -100,7 +100,7 @@ test('every published tray has verified optimized bytes and preserves full menu 
     const month=meal.date.slice(0,7);if(!monthAssets.has(month))monthAssets.set(month,new Set());monthAssets.get(month).add(art.src);
   }
   for(const paths of monthAssets.values())assert.ok([...paths].reduce((n,path)=>n+readFileSync(new URL('../pages/'+path,import.meta.url)).length,0)<8*1024*1024);
-  assert.equal(pendingArtMenus(buildArtPlan(CATALOG,r),'2026-10',{styleId:TRAY_STYLE_ID}).length,0);
+  assert.equal(pendingArtMenus(buildArtPlan(CATALOG,r),'2026-10',{styleId:TRAY_STYLE_ID}).length,17);
 });
 
 test('specialized potato terminology does not become whole potatoes or an unlisted side on other menus',async()=>{
