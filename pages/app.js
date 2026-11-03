@@ -315,15 +315,26 @@ function compactMonthCardHtml(month,rows,extraClass){
   const dates=new Map();
   for(const {x,d} of rows){
     const key=d.getTime();
-    if(!dates.has(key)){
-      if(dates.size>=5)continue;
-      dates.set(key,{d,labels:[]});
-    }
+    if(!dates.has(key))dates.set(key,{d,labels:[]});
     const group=dates.get(key);
     if(!group.labels.includes(x.label))group.labels.push(x.label);
   }
+  const all=[...dates.values()].sort((a,b)=>a.d-b.d);
+  const visible=all.slice(0,5);
+  // A busy beginning of next month must not conceal a source-backed
+  // school closure or early dismissal. Keep the teaser at five date rows
+  // while reserving its final row for the earliest such schedule change.
+  if(extraClass==="next-month-card"){
+    const schedule=all.find(o=>o.labels.some(label=>
+      /\b(?:12:00|noon|early)\s+dismissal\b|\bno school\b|\bschool closed\b/i.test(label)
+    ));
+    if(schedule&&!visible.includes(schedule)){
+      visible[visible.length-1]=schedule;
+      visible.sort((a,b)=>a.d-b.d);
+    }
+  }
   return window.ABVMProductView.compactMonthCard(MONTHS[month],
-    [...dates.values()].map(o=>({date:fmtShort(o.d),dayKey:isoDateKey(o.d),labels:o.labels})),extraClass);
+    visible.map(o=>({date:fmtShort(o.d),dayKey:isoDateKey(o.d),labels:o.labels})),extraClass);
 }
 function renderCalendar(){
   const base=calendarBase(),y=base.getFullYear(),m=base.getMonth();
