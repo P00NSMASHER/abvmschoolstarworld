@@ -53,7 +53,14 @@ test('current Grade 2 pack automatically yields source-backed skills and questio
     const sightQuestions = pipeline.questions.filter(question => question.skill === 'high-frequency-word-use');
     if (ids.has('high-frequency-word-use')) {
       assert.ok(sightQuestions.length >= 2);
-      assert.ok(pipeline.coverage.some(row => row.status === 'COVERED' && row.skillId === 'high-frequency-word-use'));
+      const sightCoverage = pipeline.coverage.find(row => row.skillId === 'high-frequency-word-use');
+      assert.ok(sightCoverage, 'active contextual high-frequency questions require an explicit coverage receipt');
+      const currentWords = [...new Set(String(sightTopic).replace(/^Sight words\\s*:/i, '')
+        .split(',').map(word => word.toLowerCase().trim()).filter(Boolean))];
+      const uncovered = sightCoverage.uncovered || [];
+      assert.equal(sightCoverage.status, uncovered.length ? 'PARTIALLY_COVERED' : 'COVERED');
+      assert.equal(sightQuestions.length + uncovered.length, currentWords.length,
+        'every teacher-listed word is either covered by original contextual practice or explicitly held');
       assert.ok(sightQuestions.every(question => question.evidenceContract?.doesNotClaim?.includes('spelling')));
       assert.ok(sightQuestions.every(question => question.evidenceContract?.doesNotClaim?.includes('isolated-print-recognition')));
     } else {
@@ -320,6 +327,24 @@ test('source-bound sight-word contexts restore the older StarBlox high-frequency
   assert.ok(questions.every(question => question.evidenceContract?.strongestClaim === 'contextual-high-frequency-word-use'));
   assert.ok(questions.every(question => question.evidenceContract?.doesNotClaim?.includes('spelling')));
   assert.equal(validateGrade2ContentPipeline(pipeline).length, 0);
+});
+
+test('a newly listed sight word without approved context is explicitly partial, never fabricated', () => {
+  const words = 'put, why, blue, help, for, yellow, both, there, even, ball, or, green, how, little, one, see, sounds, funny, find, could, newly';
+  const pack = {
+    sourceHash: 'synthetic-sight-word-partial',
+    subjects: [{subject: 'Reading / ELA', topics: ['Sight words: ' + words], studyNotes: []}],
+    vocabulary: [],
+  };
+  const pipeline = buildGrade2ContentPipeline(pack, {sourceHash:pack.sourceHash});
+  assert.equal(validateGrade2ContentPipeline(pipeline).length, 0);
+  const row = pipeline.coverage.find(x => x.skillId === 'high-frequency-word-use');
+  assert.equal(row?.status, 'PARTIALLY_COVERED');
+  assert.deepEqual(row.uncovered, ['newly']);
+  const questions = pipeline.questions.filter(q => q.skill === 'high-frequency-word-use');
+  assert.equal(questions.length, 20, 'the original authorized contexts must remain available');
+  assert.ok(questions.every(q => q.evidenceContract?.doesNotClaim?.includes('spelling')));
+  assert.equal(pipeline.qa.status, 'pass');
 });
 
 test('future teacher skills are detected without hand-editing the app', () => {
