@@ -65,7 +65,7 @@ test('legitimate punctuation practice and SHA digests are not rejected as person
 
 test('the existing published photo-reviewed library remains structurally valid',async()=>{
   const full=JSON.parse(await readFile(new URL('../pages/data/schoolwork.json',import.meta.url),'utf8'));
-  assert.deepEqual(validateSchoolwork(full,{requireManifest:true}),{lessons:13,questions:67,photos:23});
+  assert.deepEqual(validateSchoolwork(full,{requireManifest:true}),{lessons:26,questions:96,photos:69});
 });
 
 test('a rejected public-value leak cannot change cumulative content on write',async()=>{
