@@ -23,6 +23,7 @@ export const SINGULAR_PLURAL_NOUNS_FAMILY=Object.freeze({
   "featureFlag": "curriculum-family:singular-plural-nouns-v1",
   "rolloutStatus": "CANDIDATE",
   "enabledByDefault": false,
+  "strictSourceReviewRequired": true,
   "minimumSemanticVariants": 8,
   "requiredQuestionTypes": [
     "direct",
@@ -175,6 +176,7 @@ export const THREE_LETTER_BLENDS_FAMILY=Object.freeze({
   "featureFlag": "curriculum-family:three-letter-blends-v1",
   "rolloutStatus": "CANDIDATE",
   "enabledByDefault": false,
+  "strictSourceReviewRequired": true,
   "minimumSemanticVariants": 8,
   "requiredQuestionTypes": [
     "direct",
