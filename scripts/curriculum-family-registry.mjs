@@ -236,6 +236,9 @@ export function registeredCurriculumFamilyRules(options = {}) {
       standards: [...family.standards],
       domain: family.domain,
       studyNotes: [...family.studyNotes],
+      // Newly eligible candidate families still require page-exact evidence
+      // before publishing their original practice on a strict source run.
+      sourceReviewRequired: family.rolloutStatus === 'CANDIDATE',
       question: () => clone(family.baseQuestion),
       ...(family.sourceChapters ? { sourceChapters: [...family.sourceChapters] } : {}),
       ...(family.supplementalReference ? { supplementalReference: clone(family.supplementalReference) } : {}),
