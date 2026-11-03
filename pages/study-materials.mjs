@@ -619,7 +619,7 @@ export function createStudyMaterials({
       sourceHash:pack.sourceHash || null, sourceCheckedAt:pack.sourceCheckedAt || null,
       coverage:{availableSkills,representedSkills,missingSkills,guideSkills,missingGuideSkills},
       sourceLabel:unitOneReligion
-        ? 'Publisher-confirmed Grade 2 Unit 1 review (Chapters 1–4); original practice, not a school-issued assessment'
+        ? 'Publisher-confirmed Grade 2 Unit 1 review (Chapters 1–4); original practice (teacher-style supplemental practice), not a school-issued assessment'
         : teacherLists.length
         ? (teacherLists.some(note => /page undated/i.test(note))
           ? 'Teacher spelling words verified this week (teacher page undated); original home practice'
