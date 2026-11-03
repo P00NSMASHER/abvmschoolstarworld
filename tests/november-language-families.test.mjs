@@ -51,8 +51,10 @@ test('withdrawing teacher topic removes its corresponding original question bank
   assert.equal(pipeline.questions.some(q=>q.skill==='singular-plural-nouns'),false);
   assert.equal(pipeline.questions.filter(q=>q.skill==='three-letter-blends').length,8);
   pack.subjects[1].topics=[];
-  pipeline=buildGrade2ContentPipeline(pack,{sourceHash:pack.sourceHash});
-  assert.equal(pipeline.questions.some(q=>['singular-plural-nouns','three-letter-blends'].includes(q.skill)),false);
+  // An entirely empty source pack intentionally fails closed. It must not
+  // silently reintroduce withdrawn material just to satisfy the QA minimum.
+  assert.throws(() => buildGrade2ContentPipeline(pack,{sourceHash:pack.sourceHash}),
+    /skills-empty|questions-empty/);
 });
 
 test('eligible family rules are limited to exact named subjects and do not enable a fake spelling word list',()=>{
