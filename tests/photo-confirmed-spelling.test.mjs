@@ -20,7 +20,7 @@ test('every supplied weekly spelling photo is accounted without publishing handw
   assert.equal(lesson.weekOf,'2026-10-05');
   assert.equal(lesson.addedOn,'2026-10-08');
   assert.equal(lesson.questions.length,15);
-  assert.equal(proof.photos,23);
+  assert.equal(proof.photos,69); // Preserve the October 23 and add every November scanned page.
   assert.equal(lesson.sources.length,3);
   assert.deepEqual(lesson.questions.map(q=>q.answer),words);
   const sourceHashes=lesson.sources.map(id=>schoolwork.sourceManifest.find(row=>row.id===id)?.sha256);
