@@ -311,30 +311,19 @@ function agendaLunchHtml(date,lunch){
   const text=closed||weekend||lunch?.status==="no-school"?"No school lunch":lunch?lunchText(lunch):lunchUnavailableText(date);
   return '<div class="agenda-lunch'+(lunch?"":" is-missing")+'"><span class="meal-icon" aria-hidden="true">'+window.ABVMProductView.icon("lunch")+'</span><div><b>Lunch</b><p>'+esc(text)+'</p></div>'+(!closed&&!weekend?(window.ABVMLunchArt?.html(lunch)||''):'')+'</div>';
 }
-function compactMonthCardHtml(month,rows,extraClass){
-  const dates=new Map();
-  for(const {x,d} of rows){
-    const key=d.getTime();
-    if(!dates.has(key))dates.set(key,{d,labels:[]});
-    const group=dates.get(key);
-    if(!group.labels.includes(x.label))group.labels.push(x.label);
-  }
-  const all=[...dates.values()].sort((a,b)=>a.d-b.d);
-  const visible=all.slice(0,5);
-  // A busy beginning of next month must not conceal a source-backed
-  // school closure or early dismissal. Keep the teaser at five date rows
-  // while reserving its final row for the earliest such schedule change.
-  if(extraClass==="next-month-card"){
-    const schedule=all.find(o=>o.labels.some(label=>
-      /\b(?:12:00|noon|early)\s+dismissal\b|\bno school\b|\bschool closed\b/i.test(label)
-    ));
-    if(schedule&&!visible.includes(schedule)){
-      visible[visible.length-1]=schedule;
-      visible.sort((a,b)=>a.d-b.d);
-    }
-  }
-  return window.ABVMProductView.compactMonthCard(MONTHS[month],
-    visible.map(o=>({date:fmtShort(o.d),dayKey:isoDateKey(o.d),labels:o.labels})),extraClass);
+function compactMonthCardHtml(m,rows,c){
+ let g=new Map;
+ for(let {x,d}of rows){
+  let o=g.get(+d);
+  if(!o)g.set(+d,o={d,labels:[]});
+  if(!o.labels.includes(x.label))o.labels.push(x.label);
+ }
+ let a=[...g.values()],v=a.slice(0,5);
+ if(c==="next-month-card"){
+  let p=a.find(o=>o.labels.some(s=>/dismissal|no school|closed/i.test(s)));
+  if(p&&!v.includes(p))v[4]=p;
+ }
+ return window.ABVMProductView.compactMonthCard(MONTHS[m],v.map(x=>({date:fmtShort(x.d),dayKey:isoDateKey(x.d),labels:x.labels})),c);
 }
 function renderCalendar(){
   const base=calendarBase(),y=base.getFullYear(),m=base.getMonth();
