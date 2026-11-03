@@ -34,11 +34,19 @@ export function catalogMeals(catalog = CATALOG) {
     if (!validBase) throw new Error('Invalid reviewed lunch source');
     if (proofMode === 'reviewed-notice') {
       const notice = UPLOADED_NOTICES.documents.find(document => document.id === source.sourceDocument);
-      const superseded = catalog.sources.find(candidate => candidate.id === source.supersedes?.sourceId);
+      // A reviewed school handout can establish a new month's menu without
+      // masquerading as a live official URL. Existing one-day corrections
+      // retain their explicit supersession checks.
+      const superseded = source.supersedes
+        ? catalog.sources.find(candidate => candidate.id === source.supersedes.sourceId)
+        : null;
+      const invalidSupersession = source.supersedes !== undefined && (
+        !superseded || !validIsoDate(source.supersedes.date) ||
+        !source.meals.some(meal => meal.date === source.supersedes.date)
+      );
       if (source.url !== undefined || !notice || notice.review?.status !== 'reviewed' ||
           notice.review?.piiReviewed !== true || notice.provenance?.sourceContentHash !== source.contentHash ||
-          !superseded || !validIsoDate(source.supersedes?.date) ||
-          !source.meals.some(meal => meal.date === source.supersedes.date)) {
+          invalidSupersession) {
         throw new Error('Invalid reviewed lunch notice proof');
       }
     } else if (typeof source.url !== 'string' || !source.url.startsWith('https://resources.finalsite.net/')) {
