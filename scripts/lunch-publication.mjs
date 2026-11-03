@@ -151,7 +151,11 @@ export async function verifyCatalogSources({ fetchImpl = fetch, now = new Date()
     pendingDocuments: [],
     gaps: missingDates.map(date => 'No reviewed school lunch menu is available for ' + date + '.'),
     sourcePages,
-    verificationMode: sources.some(source => source.proofMode === 'reviewed-notice') ? 'direct-official-source+reviewed-notice' : 'direct-official-source',
+    verificationMode: sources.every(source => source.proofMode === 'reviewed-notice')
+      ? 'reviewed-school-handout'
+      : sources.some(source => source.proofMode === 'reviewed-notice')
+        ? 'direct-official-source+reviewed-notice'
+        : 'direct-official-source',
   };
   validateLunchFeed(feed, { now, catalog });
   return feed;
