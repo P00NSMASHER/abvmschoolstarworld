@@ -1,0 +1,66 @@
+{
+  "candidateId": "curriculum-reading-ela-singular-plural-nouns-test-thursday-nov-12-f783deb7cb",
+  "familyId": "singular-plural-nouns-test-thursday-nov-12",
+  "subject": "Reading / ELA",
+  "topic": "singular & plural nouns (test Thursday, Nov. 12)",
+  "sourceHash": "teacher-pages-3b597ffd2c51c46235bc",
+  "generatedAt": "2026-11-03T18:45:52.638Z",
+  "sourceContext": {
+    "quality": "unresolved",
+    "matchMethod": "none",
+    "subject": "Reading / ELA",
+    "topic": "singular & plural nouns (test Thursday, Nov. 12)",
+    "evidenceExcerptHash": "sha256:b96582af68ff956d02485e2d0dddd098875aae5152433fd26f94c427fa0c7667"
+  },
+  "featureFlag": "curriculum-family:singular-plural-nouns-test-thursday-nov-12-candidate",
+  "enabledByDefault": false,
+  "registryMatch": null,
+  "minimumSemanticVariants": 8,
+  "requiredQuestionTypes": [
+    "direct",
+    "transfer",
+    "reasoning"
+  ],
+  "proposedQuestions": [],
+  "authoring": {
+    "status": "AUTHORING_REQUIRED",
+    "generatedQuestionCount": 0,
+    "minimumSemanticVariants": 8,
+    "requiredQuestionTypes": [
+      "direct",
+      "transfer",
+      "reasoning"
+    ],
+    "requiredQuestionFields": [
+      "questionType",
+      "prompt",
+      "choices",
+      "answer",
+      "explanation",
+      "hint",
+      "dok",
+      "difficulty"
+    ]
+  },
+  "rollout": {
+    "featureFlagRequired": false,
+    "automatedQaRequired": true,
+    "safeUsageEvidenceRequired": false,
+    "manualPromotionRequired": false,
+    "automaticPromotion": true
+  },
+  "readiness": {
+    "status": "HOLD",
+    "blockers": [
+      "page-exact-source-context-required",
+      "minimum-semantic-variants:0/8",
+      "question-type-required:direct",
+      "question-type-required:transfer",
+      "question-type-required:reasoning",
+      "automated-qa-required"
+    ],
+    "automaticPromotion": false,
+    "automaticDelete": false,
+    "automaticRewrite": false
+  }
+}
