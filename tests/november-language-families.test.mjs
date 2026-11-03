@@ -85,6 +85,11 @@ test('eligible family rules are limited to exact named subjects and do not enabl
   const ids=registeredCurriculumFamilyRules().map(x=>x.id);
   assert.ok(ids.includes('singular-plural-nouns'));
   assert.ok(ids.includes('three-letter-blends'));
+  const rules=registeredCurriculumFamilyRules();
+  assert.equal(rules.find(x=>x.id==='singular-plural-nouns')?.sourceReviewRequired,true);
+  assert.equal(rules.find(x=>x.id==='three-letter-blends')?.sourceReviewRequired,true);
+  assert.equal(rules.find(x=>x.id==='long-short-u')?.sourceReviewRequired,false,
+    'historical candidate families retain their established explicit lineage path');
   assert.equal(matchCurriculumFamily('Math','3 letter blends'),null);
   assert.equal(matchCurriculumFamily('Religion','singular & plural nouns'),null);
   assert.equal(registeredSupplementalQuestionFamily('three-letter-blends').length,7);
