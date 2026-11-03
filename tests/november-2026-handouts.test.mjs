@@ -19,8 +19,8 @@ test('November handout provenance and every posted event survive the runtime pac
   assert.ok(calendar && lunch);
   const events = notices.importantDates.filter(entry => entry.sourceDocument === calendar.id);
   assert.equal(events.length, 27);
-  assert.ok(events.some(entry => /Nov\\.? 6/.test(entry.date) && entry.label === 'Noon dismissal'));
-  assert.ok(events.some(entry => /Nov\\.? 25/.test(entry.date) && entry.label === 'Report cards distributed'));
+  assert.ok(events.some(entry => entry.date.endsWith('Nov. 6') && entry.label === 'Noon dismissal'));
+  assert.ok(events.some(entry => entry.date.endsWith('Nov. 25') && entry.label === 'Report cards distributed'));
   assert.ok(!JSON.stringify({calendar,lunch}).includes('Emma'));
 });
 
