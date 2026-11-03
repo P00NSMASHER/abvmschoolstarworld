@@ -56,7 +56,7 @@ test('actual teacher shorthand no longer generates a Chapter 4-only practice she
   for (const html of [study,worksheet]) {
     assert.match(html,/Unit 1 cumulative review: Chapters 1–4/);
     assert.match(html,/original practice|Original study practice/);
-    assert.doesNotMatch(html,/Emma|private learner|actual marked test/i);
+    assert.doesNotMatch(html,/private learner|actual marked test|handwritten score/i);
   }
   assert.match(worksheet,/The pope and bishops/);
   assert.match(study,/Holy Spirit guides the Church/);
