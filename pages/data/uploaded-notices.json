@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "lastIntegratedAt": "2026-10-23T14:48:08.824Z",
+  "lastIntegratedAt": "2026-11-03T15:00:00.000Z",
   "documents": [
     {
       "id": "dress-down-2026-09-25",
@@ -648,6 +648,72 @@
         "reviewedBy": "automated-fixed-event-extraction-v1",
         "reviewedAt": "2026-10-23T14:48:08.824Z"
       }
+    },
+    {
+      "id": "nov-2026-school-calendar-parent-photo",
+      "label": "Assumption BVM November 2026 monthly calendar",
+      "receivedAt": "2026-11-03",
+      "facts": [
+        "Monday, Nov. 2: Raise Right physical card order placed; School calendar.",
+        "Tuesday, Nov. 3: Wounded Warriors bands sale begins; Bands $5 each; sale Nov 3–11.",
+        "Wednesday, Nov. 4: Mass; No time specified.",
+        "Thursday, Nov. 5: HSA meeting (Google Meet); Student login; no time specified.",
+        "Friday, Nov. 6: Noon dismissal at 12:00; No after-school care; school lunch served.",
+        "Tuesday, Nov. 10: Faculty meeting; No time specified.",
+        "Tuesday, Nov. 10: DDD for Wounded Warriors donation; DDD abbreviation printed; expansion not specified.",
+        "Wednesday, Nov. 11: Prayer service at 09:00; St. John the Baptist Church.",
+        "Wednesday, Nov. 11: Communication folder; School calendar.",
+        "Wednesday, Nov. 11: Last day of Wounded Warriors bands sale; Bands $5 each; source lists Nov 3–11.",
+        "Friday, Nov. 13: Pretzel money due; $2.00.",
+        "Friday, Nov. 13: The Little Mermaid Jr. drama club play; Showtime not specified.",
+        "Saturday, Nov. 14: The Little Mermaid Jr. drama club play; Showtime not specified.",
+        "Tuesday, Nov. 17: Nut roll delivery; School calendar.",
+        "Wednesday, Nov. 18: Mass; No time specified.",
+        "Thursday, Nov. 19: Pretzel day; School calendar.",
+        "Friday, Nov. 20: End of trimester 1; School calendar.",
+        "Saturday, Nov. 21: Reading Royals Family Fun Night; No time specified.",
+        "Monday, Nov. 23: Trimester 2 begins; School calendar.",
+        "Tuesday, Nov. 24: Dress Down Day to benefit SPCA; Donation/dress rules not specified.",
+        "Wednesday, Nov. 25: Noon dismissal at 12:00; School lunch served.",
+        "Wednesday, Nov. 25: Mass; No time specified.",
+        "Wednesday, Nov. 25: Communication folder; School calendar.",
+        "Wednesday, Nov. 25: Report cards distributed; School calendar.",
+        "Thursday, Nov. 26: No school; Thanksgiving break.",
+        "Friday, Nov. 27: No school; Thanksgiving break.",
+        "Monday, Nov. 30: No school; Thanksgiving break."
+      ],
+      "provenance": {
+        "factsHash": "6107269a45dddb38487b1870e5e99c2c4794353544730de52aa046968cd8d6ca",
+        "sourceContentHash": "13e04ac0e55b56e099e6d7dbc946f610670ccae8f6829413498be6b3f0ddc170"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "source-backed-parent-photo-review",
+        "reviewedAt": "2026-11-03T15:00:00.000Z"
+      }
+    },
+    {
+      "id": "nov-2026-lunch-menu-parent-photo",
+      "label": "Assumption BVM November 2026 lunch menu",
+      "receivedAt": "2026-11-03",
+      "facts": [
+        "School lunch is $4.25 and assorted milk is available daily.",
+        "The printed November 2026 school menu has 18 dated lunch entries.",
+        "Lunch is served on the noon dismissal dates November 6 and November 25.",
+        "No school is listed November 26, 27, and 30.",
+        "School handout states the menu is subject to change."
+      ],
+      "provenance": {
+        "factsHash": "9266624344f4420b7725cf1c400fd014d4736c6aa9c749c187dfd1d88badff6b",
+        "sourceContentHash": "a5d25beb5cbd34522ce4645172ab4efce1d041aab7fcc33521f3433c5cd0b178"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "source-backed-parent-photo-review",
+        "reviewedAt": "2026-11-03T15:00:00.000Z"
+      }
     }
   ],
   "importantDates": [
@@ -1280,6 +1346,168 @@
       "label": "Flag football",
       "kind": "school event",
       "sourceDocument": "weekly-reminders-2026-10-26"
+    },
+    {
+      "date": "Monday, Nov. 2",
+      "label": "Raise Right physical card order placed",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Tuesday, Nov. 3",
+      "label": "Wounded Warriors bands sale begins",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Wednesday, Nov. 4",
+      "label": "Mass",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Thursday, Nov. 5",
+      "label": "HSA meeting (Google Meet)",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Friday, Nov. 6",
+      "label": "Noon dismissal",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Tuesday, Nov. 10",
+      "label": "Faculty meeting",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Tuesday, Nov. 10",
+      "label": "DDD for Wounded Warriors donation",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Wednesday, Nov. 11",
+      "label": "Prayer service",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Wednesday, Nov. 11",
+      "label": "Communication folder",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Wednesday, Nov. 11",
+      "label": "Last day of Wounded Warriors bands sale",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Friday, Nov. 13",
+      "label": "Pretzel money due",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Friday, Nov. 13",
+      "label": "The Little Mermaid Jr. drama club play",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Saturday, Nov. 14",
+      "label": "The Little Mermaid Jr. drama club play",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Tuesday, Nov. 17",
+      "label": "Nut roll delivery",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Wednesday, Nov. 18",
+      "label": "Mass",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Thursday, Nov. 19",
+      "label": "Pretzel day",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Friday, Nov. 20",
+      "label": "End of trimester 1",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Saturday, Nov. 21",
+      "label": "Reading Royals Family Fun Night",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Monday, Nov. 23",
+      "label": "Trimester 2 begins",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Tuesday, Nov. 24",
+      "label": "Dress Down Day to benefit SPCA",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Wednesday, Nov. 25",
+      "label": "Noon dismissal",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Wednesday, Nov. 25",
+      "label": "Mass",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Wednesday, Nov. 25",
+      "label": "Communication folder",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Wednesday, Nov. 25",
+      "label": "Report cards distributed",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Thursday, Nov. 26",
+      "label": "No school",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Friday, Nov. 27",
+      "label": "No school",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Monday, Nov. 30",
+      "label": "No school",
+      "kind": "school event",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
     }
   ],
   "reminders": [
@@ -1397,6 +1625,16 @@
       "text": "October 19–30: Halloween bucket-of-candy chance fundraiser; $1 per chance.",
       "topic": "halloween-fundraiser",
       "sourceDocument": "melissa-weekly-planner-2026-10-12-user-reviewed"
+    },
+    {
+      "text": "November 6: noon dismissal and no after-school care; lunch is served.",
+      "topic": "nov-2026-noon-dismissal-6",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "text": "November 25: noon dismissal with lunch served. November 26, 27, and 30: no school.",
+      "topic": "nov-2026-thanksgiving-closure",
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
     }
   ],
   "parentNotices": [
@@ -1519,6 +1757,11 @@
       "text": "Free Diocesan Family Festival: Sunday, Nov. 1, noon–4:30 PM; location: St. Joseph the Worker in Orefield.",
       "topic": "diocesan-festival",
       "sourceDocument": "eucharistic-consecration-2026"
+    },
+    {
+      "text": "November 2026 school lunch costs $4.25. Assorted milks are available daily. Menu is subject to change.",
+      "topic": "nov-2026-lunch-cost",
+      "sourceDocument": "nov-2026-lunch-menu-parent-photo"
     }
   ],
   "replacements": [
