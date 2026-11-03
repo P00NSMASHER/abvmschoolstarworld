@@ -177,6 +177,7 @@ export function renderClassroomStudyGuide(guide,dictionary=()=> '',options={}) {
     '<div class="student-fields"><span>Name: <i class="field-line"></i></span><span>Date: <i class="field-line date"></i></span>'+
     '<span>Score: <i class="field-line score"></i> / '+questions.length+'</span></div>'+
     '<div class="directions"><strong>Directions:</strong> '+escape(instructions[kind])+'</div>'+
+    (guide?.scopeNotice?'<p class="caution scope-notice">'+escape(guide.scopeNotice)+'</p>':'')+
     (questions.length?'<h2 class="section-title">'+escape(subjectHeading[kind])+'</h2><ol class="paper-problems '+(kind==='math'?'math-grid':'')+'">'+
       questions.map((row,i)=>questionHtml(row,i,kind)).join('')+'</ol>'
       :'<p class="caution">No matching original-practice questions are available for this assessment. Review the available class notes.</p>')+
