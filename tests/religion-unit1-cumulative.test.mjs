@@ -86,3 +86,33 @@ test('Unit 1 review rejects religion questions without a confirmed chapter',()=>
   assert.deepEqual(questionsForTest({label:'Religion Ch. 3'},all).map(q=>q.id),[]);
   assert.equal(religionChapterScopes({subject:'Religion',sourceChapters:[5]})[0],5);
 });
+
+test('original Unit 1 supplement covers the full curriculum instead of only a few weak topics',async()=>{
+  const {religionUnitOneQuestions,religionUnitOneFacts}=await import('../pages/religion-unit1-review.mjs');
+  assert.equal(religionUnitOneQuestions.length,15);
+  assert.equal(new Set(religionUnitOneQuestions.map(q=>q.id)).size,15);
+  const required=[
+    'religion-unit1-church-leaders','religion-unit1-apostles','religion-unit1-sign-cross',
+    'religion-unit1-grace','religion-unit1-holy-spirit','religion-unit1-saints',
+    'religion-unit1-original-sin','religion-unit1-creator','religion-unit1-trinity',
+    'religion-unit1-church-family','religion-unit1-baptism-members',
+    'religion-unit1-baptism-water','religion-unit1-jesus-sent',
+    'religion-unit1-jesus-all','religion-unit1-christian-example',
+  ];
+  const skills=new Set(religionUnitOneQuestions.map(q=>q.skill));
+  for(const skill of required) assert.ok(skills.has(skill),'missing Unit 1 skill: '+skill);
+  for(const q of religionUnitOneQuestions) {
+    assert.ok(q.prompt&&q.explanation&&q.hint);
+    assert.equal(new Set(q.choices).size,q.choices.length);
+    assert.equal(q.choices.filter(choice=>choice===q.answer).length,1);
+    assert.ok(q.sourceChapters.length>0&&q.sourceChapters.every(ch=>ch>=1&&ch<=4));
+    assert.match(q.sourceFact,/Original cumulative practice/);
+  }
+  assert.ok(religionUnitOneFacts.length>=12,'unit guide should contain full cumulative facts');
+});
+
+test('new Unit 1 module is cached for offline installed ABVM apps',()=>{
+  const sw=readFileSync(new URL('../pages/sw.js',import.meta.url),'utf8');
+  assert.match(sw,/"\.\/religion-unit1-review\.mjs"/);
+  assert.match(sw,/CACHE.*v200-unit1-cumulative/);
+});
