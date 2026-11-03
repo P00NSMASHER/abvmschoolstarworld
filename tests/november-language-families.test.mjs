@@ -44,6 +44,30 @@ test('exact teacher topic activates Grade 2 originals, without treating practice
   assert.deepEqual(validateGrade2ContentPipeline(pipeline),[]);
 });
 
+test('strict publication includes only a new family with page-exact teacher evidence',()=>{
+  const pack=sourcePack();
+  const pipeline=buildGrade2ContentPipeline(pack,{
+    sourceHash:pack.sourceHash,
+    requirePageExactLineage:true,
+    sourcePages:[{
+      title:'Tests',
+      url:'https://sites.google.com/view/abvmgr2/tests',
+      contentHash:'a'.repeat(64),
+      checkedAt:'2026-11-03T18:45:52.000Z',
+      lines:['Friday Nov. 13: Spelling (3 letter blends)/Handwriting'],
+    }],
+  });
+  assert.equal(pipeline.questions.filter(q=>q.skill==='three-letter-blends').length,8);
+  assert.equal(pipeline.questions.some(q=>q.skill==='singular-plural-nouns'),false,
+    'a current-topic summary is not independent teacher-page proof');
+  const held=pipeline.coverage.find(row=>row.status==='SOURCE_INSUFFICIENT' && /singular.*plural/i.test(row.topic));
+  assert.ok(held,'unproven candidate must be explicitly held, not claimed covered');
+  assert.equal(pipeline.safetyState,'SAFE_PARTIAL');
+  assert.equal(pipeline.qa.status,'pass');
+  assert.deepEqual(validateGrade2ContentPipeline(pipeline),[]);
+  assert.ok(pipeline.questions.every(q=>q.sourceLineage?.quality==='page-exact'));
+});
+
 test('withdrawing teacher topic removes its corresponding original question bank',()=>{
   const pack=sourcePack();
   pack.subjects[0].topics=[];
