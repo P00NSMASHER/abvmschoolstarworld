@@ -3037,7 +3037,7 @@
             "fifty-two"
           ],
           "explanation": "Six tens is sixty, and two ones makes sixty-two.",
-          "hint": "Say the tens first, then the ones.",
+          "hint": "Say six tens aloud as sixty, then add the two ones before choosing a word.",
           "sourceFact": "Reviewed Chapter 2 place-value written practice skill: original home practice for math-chapter-2-place-value, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
@@ -3062,7 +3062,7 @@
             "5 + 80"
           ],
           "explanation": "Fifty-eight is five tens and eight ones.",
-          "hint": "Separate the tens from the ones.",
+          "hint": "Separate five groups of ten from eight single ones, then write both values.",
           "sourceFact": "Reviewed Chapter 2 place-value written practice skill: original home practice for math-chapter-2-place-value, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
@@ -3162,7 +3162,7 @@
             "63"
           ],
           "explanation": "Four tens plus two tens gives six tens; three plus five gives eight.",
-          "hint": "Add tens and ones separately.",
+          "hint": "Add the tens first and the ones second; check whether your total is reasonable.",
           "sourceFact": "Reviewed Grade 2 mixed math maintenance practice skill: original home practice for addition-within-100, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
@@ -3187,7 +3187,7 @@
             "50 cents"
           ],
           "explanation": "Four dimes total forty cents; a nickel adds five cents.",
-          "hint": "Each dime is worth ten cents.",
+          "hint": "Count four dimes by tens, then add the nickel's five cents at the end.",
           "sourceFact": "Reviewed Grade 2 mixed math maintenance practice skill: original home practice for coin-addition, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
@@ -3212,7 +3212,7 @@
             "8:00"
           ],
           "explanation": "Half past seven is thirty minutes after seven.",
-          "hint": "Half past means thirty minutes.",
+          "hint": "Half past means thirty minutes; read the hour hand before choosing the time.",
           "sourceFact": "Reviewed Grade 2 mixed math maintenance practice skill: original home practice for telling-time, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
@@ -3237,7 +3237,7 @@
             "four-fourths"
           ],
           "explanation": "One out of four equal parts is one-fourth.",
-          "hint": "Count equal parts in the whole.",
+          "hint": "Count all the equal parts in the shape, then count how many are selected.",
           "sourceFact": "Reviewed Grade 2 mixed math maintenance practice skill: original home practice for equal-parts, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
@@ -3285,7 +3285,7 @@
             "coat"
           ],
           "explanation": "The c in race has the soft /s/ sound.",
-          "hint": "Look for c followed by e or i.",
+          "hint": "Look for a c followed by e, i or y, then say its sound before picking.",
           "sourceFact": "Reviewed Spelling and handwriting pattern practice skill: original home practice for soft-c-g, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
@@ -3333,7 +3333,7 @@
             "brown"
           ],
           "explanation": "The s and h together make one sound.",
-          "hint": "Find the letters s and h together.",
+          "hint": "Find the two letters s and h together, and say their single sound.",
           "sourceFact": "Reviewed Spelling and handwriting pattern practice skill: original home practice for consonant-digraphs, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
@@ -3357,7 +3357,7 @@
             "bring"
           ],
           "explanation": "Bridge ends with the spelling pattern dge.",
-          "hint": "Check the final three letters.",
+          "hint": "Check whether the final three letters are d, g and e in that order.",
           "sourceFact": "Reviewed Spelling and handwriting pattern practice skill: original home practice for spelling-patterns, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
@@ -3409,7 +3409,7 @@
             "57"
           ],
           "explanation": "Five tens is fifty and two ones makes fifty-two.",
-          "hint": "Count tens first and ones second.",
+          "hint": "Count the groups of ten first, then add the single ones to build the number.",
           "sourceFact": "Reviewed Chapter 2 place-value four-choice practice skill: original home practice for math-chapter-2-place-value, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
@@ -3648,7 +3648,7 @@
             "Our Trip is on monday."
           ],
           "explanation": "Monday is a particular day and needs a capital M.",
-          "hint": "Days of the week are proper nouns.",
+          "hint": "Days of the week are proper nouns, so capitalize Monday but not every word.",
           "sourceFact": "Reviewed Common and proper nouns capitalization assessment practice skill: original home practice for proper-noun-capitalization, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
@@ -3719,7 +3719,7 @@
             "grass"
           ],
           "explanation": "Race tells what the pups do.",
-          "hint": "Ask which word shows the action.",
+          "hint": "Ask which word tells the action that the animals are performing.",
           "sourceFact": "Reviewed Daily warm-up 47 language and vocabulary skill: original home practice for verbs, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
@@ -3743,7 +3743,7 @@
             "warm and cozy"
           ],
           "explanation": "Cold is the opposite of warm.",
-          "hint": "Choose meanings that disagree.",
+          "hint": "Find the two words with opposite meanings, not words that are similar.",
           "sourceFact": "Reviewed Daily warm-up 47 language and vocabulary skill: original home practice for antonyms, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
@@ -3767,7 +3767,7 @@
             "red"
           ],
           "explanation": "Seed has a long e sound spelled ee.",
-          "hint": "Listen to the vowel sound.",
+          "hint": "Say each word aloud and listen for a long e sound in the middle.",
           "sourceFact": "Reviewed Daily warm-up 47 language and vocabulary skill: original home practice for spelling-patterns, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
@@ -3815,7 +3815,7 @@
             "14"
           ],
           "explanation": "Seven tens is seventy; adding four ones gives seventy-four.",
-          "hint": "Write the tens digit first.",
+          "hint": "Write the number of tens in the tens place and the ones in the ones place.",
           "sourceFact": "Reviewed Daily warm-up 47 math and time skill: original home practice for place-value, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
@@ -3840,7 +3840,7 @@
             "8"
           ],
           "explanation": "Thirteen minus eight is five.",
-          "hint": "Count on from eight to thirteen.",
+          "hint": "Count up from eight to thirteen and record how many steps you counted.",
           "sourceFact": "Reviewed Daily warm-up 47 math and time skill: original home practice for missing-addend, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
@@ -3865,7 +3865,7 @@
             "6:00"
           ],
           "explanation": "Minute hand at twelve means an exact hour.",
-          "hint": "The short hand tells the hour.",
+          "hint": "The short clock hand indicates the hour; the long hand tells the minutes.",
           "sourceFact": "Reviewed Daily warm-up 47 math and time skill: original home practice for telling-time, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
@@ -3986,7 +3986,7 @@
             "A guess unrelated to the story"
           ],
           "explanation": "Why questions call for reasons from the passage.",
-          "hint": "Explain what happened and why.",
+          "hint": "Explain what happened and give the reason the passage actually supports.",
           "sourceFact": "Reviewed Original Grade 2 narrative comprehension practice skill: original home practice for reading-comprehension, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
@@ -4032,7 +4032,7 @@
             "12"
           ],
           "explanation": "Four plus four equals eight.",
-          "hint": "Write 4 + 4.",
+          "hint": "Write four plus four, then count each group of four to check the total.",
           "sourceFact": "Reviewed Domino doubles and addition facts skill: original home practice for doubles-facts, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
@@ -4056,7 +4056,7 @@
             "6 + 5 = 11"
           ],
           "explanation": "Two equal groups of six are a doubles fact.",
-          "hint": "Both addends should be six.",
+          "hint": "A doubles fact has the same number on both sides of the plus sign.",
           "sourceFact": "Reviewed Domino doubles and addition facts skill: original home practice for doubles-facts, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
@@ -4081,7 +4081,7 @@
             "19"
           ],
           "explanation": "Nine plus nine is eighteen.",
-          "hint": "Try 10 + 10 and subtract two.",
+          "hint": "You can double ten to make twenty, then subtract two to double nine.",
           "sourceFact": "Reviewed Domino doubles and addition facts skill: original home practice for doubles-facts, not copied from a teacher assessment.",
           "tier": "material",
           "questionType": "direct",
