@@ -55,6 +55,15 @@ const reference = Object.freeze({
     pages:2,
     origin:'prior-actual-teacher-test',
   }),
+  nounCapitalization:Object.freeze({
+    id:'ela-noun-capitalization-three-bubbles',
+    kind:'bubble-choice',
+    optionCount:3,
+    referenceCount:10,
+    columns:2,
+    response:'fill-bubble',
+    origin:'prior-actual-teacher-test',
+  }),
   spellingDictation:Object.freeze({
     id:'spelling-numbered-dictation',
     kind:'dictation',
@@ -66,9 +75,22 @@ const reference = Object.freeze({
   }),
 });
 
+// Teacher-marked publisher exercises are evidence of practice layout,
+// not proof of the format of a future school-issued assessment.
+const classroomReference = Object.freeze({
+  mathChapterTwo:Object.freeze({
+    id:'math-chapter-two-publisher-bubble-practice',
+    kind:'bubble-choice',
+    optionCount:4,
+    referenceCount:16,
+    columns:2,
+    response:'fill-bubble',
+    origin:'prior-teacher-marked-publisher-practice',
+  }),
+});
 const normalize=value=>String(value??'').replace(/\s+/g,' ').trim().toLowerCase();
 const numberBetween=(value,min,max)=>Number.isInteger(value)&&value>=min&&value<=max;
-const formats=new Set(['letter-choice','word-bank','dictation','matching','written-response','mixed','math-structured','picture-assessment']);
+const formats=new Set(['letter-choice','word-bank','dictation','matching','written-response','mixed','math-structured','picture-assessment','bubble-choice']);
 
 /**
  * Future reviewed test intakes may pass a format profile on a guide.
@@ -86,7 +108,7 @@ function checkedExplicitFormat(value) {
   };
   if(numberBetween(value.optionCount,2,5))out.optionCount=value.optionCount;
   if(numberBetween(value.referenceCount,1,100))out.referenceCount=value.referenceCount;
-  out.response=value.kind==='letter-choice'?'write-letter':'write-word';
+  out.response=value.kind==='letter-choice'?'write-letter':value.kind==='bubble-choice'?'fill-bubble':'write-word';
   return out;
 }
 
@@ -101,6 +123,9 @@ export function teacherTestReferenceForGuide(guide) {
     return reference.religionChapterOne;
   if(subject==='religion' && /\b(?:chapter|ch\.?)\s*3\b/.test(label))
     return reference.religionChapterThree;
+  if(/reading|ela|grammar/.test(subject) &&
+    /\b(?:common\s+(?:and|&)\s+proper\s+nouns?|proper\s+nouns?)\b/.test(label))
+    return reference.nounCapitalization;
   if((subject==='math'||/\bmath\b/.test(label)) &&
     /\b(?:chapter|ch\.?)\s*1\s*b\b/.test(label))
     return reference.mathChapterOneB;
@@ -109,6 +134,36 @@ export function teacherTestReferenceForGuide(guide) {
   if((/spelling/.test(subject) || /spelling/.test(label))&& !/grammar/.test(label))
     return reference.spellingDictation;
   return null;
+}
+
+/** Publisher/teacher-marked classwork is not categorized as an actual teacher test. */
+export function classroomPracticeReferenceForGuide(guide) {
+  const label=normalize(guide?.label),subject=normalize(guide?.subject);
+  if((subject==='math'||/\bmath\b/.test(label)) &&
+    /\b(?:chapter|ch\.?)\s*2\b/.test(label))
+    return classroomReference.mathChapterTwo;
+  return null;
+}
+const checkedChoices=(profile,practice)=>
+  Array.isArray(practice) && practice.length>0 &&
+  practice.every(q=>Array.isArray(q?.choices) &&
+    q.choices.length===profile.optionCount &&
+    q.choices.every(choice=>typeof choice==='string'&&choice.trim()) &&
+    typeof q.prompt==='string'&&q.prompt.trim() &&
+    typeof q.answer==='string'&&q.choices.includes(q.answer));
+
+/** A partial, heterogeneous bank retains every verified item in its original answer form. */
+export function checkedBubbleQuestionForGuide(guide,question) {
+  const profile=teacherTestReferenceForGuide(guide) || classroomPracticeReferenceForGuide(guide);
+  return profile?.kind==='bubble-choice' && profile.response==='fill-bubble' &&
+    checkedChoices(profile,[question]) ? profile : null;
+}
+
+/** Only fully checked original items get a teacher-like bubble paper. */
+export function checkedBubblePaperFormat(guide,practice) {
+  const profile=teacherTestReferenceForGuide(guide) || classroomPracticeReferenceForGuide(guide);
+  return profile?.kind==='bubble-choice' && profile.response==='fill-bubble' &&
+    checkedChoices(profile,practice) ? profile : null;
 }
 
 /**
@@ -120,11 +175,7 @@ export function canRenderTeacherLetterChoice(guide,practice) {
   return profile?.kind==='letter-choice' &&
     profile.response==='write-letter' &&
     Array.isArray(practice) && practice.length>0 &&
-    practice.every(q=>Array.isArray(q?.choices) &&
-      q.choices.length===profile.optionCount &&
-      q.choices.every(choice=>typeof choice==='string'&&choice.trim()) &&
-      typeof q.prompt==='string'&&q.prompt.trim() &&
-      q.choices.includes(q.answer));
+    checkedChoices(profile,practice);
 }
 
 export function teacherFormatSummary(guide) {
@@ -138,6 +189,8 @@ export function teacherFormatSummary(guide) {
       profile.optionCount+' choices; a prior example used '+
       profile.columns+' columns. '+observed+
       'This is an observed format, not a guarantee about the next test.';
+  if(profile.kind==='bubble-choice')
+    return 'Teacher-format example: mark one of '+profile.optionCount+' answer bubbles in two columns. '+observed+'This is an observed format, not a guarantee about the next test.';
   if(profile.kind==='word-bank')
     return 'Teacher-format example: choose a word from a word bank and fill a blank. '+
       observed+'Use new, original prompts for practice.';
@@ -157,4 +210,13 @@ export function teacherFormatSummary(guide) {
       'three-choice items and fifteen picture-word writing entries on writing lines. '+
       'Use only source-checked, original pictures and vocabulary.';
   return 'A teacher-format sample is available. Follow its answer format only when the reviewed practice supports it.';
+}
+
+/** A clearly labeled publisher example, never presented as a teacher test. */
+export function classroomPracticeFormatSummary(guide) {
+  const profile=classroomPracticeReferenceForGuide(guide);
+  if(!profile)return '';
+  return 'Previous teacher-marked publisher practice (not a teacher-issued test): '+
+    'four-option multiple-choice problems with answer bubbles in two columns. '+
+    'A past exercise had '+profile.referenceCount+' questions; the next test format is unverified.';
 }

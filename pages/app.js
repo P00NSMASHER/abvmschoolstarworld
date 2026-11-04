@@ -365,7 +365,7 @@ function ensureStudyMaterials(retry=false){
   if(currentStudyMaterials()&&!retry)return Promise.resolve(studyMaterials);
   const data=pack,catalog=studyGameCatalog(),engine=studyGameEngine(),events=datedImportantEvents().filter(r=>kindClass(r.item)==="test").map(r=>({date:isoDateKey(r.date),label:r.item.label,kind:r.item.kind,endsAt:r.item.endsAt}));
   const request={pack:data,promise:null};
-  request.promise=Promise.all([import("./study-materials.mjs"),import("./study-games-materials-view.mjs?v=17")]).then(async([materials,view])=>{
+  request.promise=Promise.all([import("./study-materials.mjs"),import("./study-games-materials-view.mjs?v=18")]).then(async([materials,view])=>{
     if(pack===data&&!studyMaterialsView){studyMaterialsView=view.createMaterialsView({onChange:()=>{if(isStudyRoute())renderGames()},onRetry:retryStudyMaterials,onTest:startStudyTest,onGuideRefresh:refreshTestGuideSources});if(isStudyRoute()&&gameState.screen==="menu")renderGames()}
     const model=await materials.loadStudyMaterials({pack:data,catalog,events,engine,refreshResources:retry});
     if(pack===data){
@@ -430,7 +430,7 @@ const questions=mode.id==="daily"?engine.selectDailyQuestions(catalog,{count:8,s
 const eligibleIds=catalog.questions.filter(q=>!mode.subjects?.length||mode.subjects.includes(q.subject)).map(q=>q.id);
 openStudyRound({questions,catalog,eligibleIds,sourceKey,sessionSeed,strict:false},mode);
 }
-function startStudyTest(index){const round=currentStudyMaterials()?.testRound({index,upcoming:true});if(round)openStudyRound(round,{id:"test-ready",title:round.title,subjects:[],count:8},index)}
+function startStudyTest(i,retryMissed){const r=currentStudyMaterials()?.testRound({index:i,upcoming:true,retryMissed});if(r)openStudyRound(r,{id:r.modeId,title:r.title,subjects:[],count:8},i)}
 function openStudyRound(round,mode,testIndex){
 if(!isStudyRoute()||!round.questions?.length){toast("No questions are ready for that selection.");return}
 const {questions,catalog,sourceKey,sessionSeed,strict,eligibleIds}=round;

@@ -259,6 +259,18 @@ export async function loadStudyMaterials({resourceLoader = sharedResource, refre
 }
 
 /** Pure bank construction; only explicit round/test actions write local state. */
+/** A retry follows private on-device learning, never public student history. */
+export function testRetryPriority(row) {
+  if(!row || typeof row!=='object' || !(Number(row.Seen)>0))return 0;
+  if(row.LastResolution?.independent===true)return 0;
+  if(row.LastResolution?.correct===false)return 5;
+  if(row.LastResolution?.independent===false)return 4;
+  if(Number(row.ConsecutiveWrong)>0)return 3;
+  if(Number(row.CorrectAfterRetry)>0 &&
+     Number(row.LastIndependentCorrectAt||0)<Number(row.LastSeenAt||0))return 2;
+  return 0;
+}
+
 export function createStudyMaterials({
   pack = {}, catalog = {questions:[]}, schoolwork = {lessons:[]}, archive = emptyArchive(),
   events = [], engine, storage = defaultStorage(), now = () => Date.now(),
@@ -640,6 +652,11 @@ export function createStudyMaterials({
     const key = sourceKey + '|tests:' + selected.map(testKey).join('+') + ':' + bankKey(full);
     return {single,groups,selected,full,key};
   }
+  function testRetryCandidates(scope) {
+    const learning=learningState();
+    return unique(scope.full.filter(q=>testRetryPriority(learning[q.skill])>0))
+      .sort((a,b)=>testRetryPriority(learning[b.skill])-testRetryPriority(learning[a.skill]));
+  }
   function testPreview(index) {
     const state = printableTestState(true), scope = testScope(state,index);
     if (!scope.single) return null;
@@ -647,20 +664,25 @@ export function createStudyMaterials({
       .filter(row => meaningfulText(row?.id) && meaningfulText(row?.label)).map(row => [row.id,row.label.trim()]));
     const topics = [...new Set(scope.full.flatMap(row => [row.skill,...array(row.assessedSkillIds)]).map(id => labels.get(id)).filter(meaningfulText))].slice(0,2);
     const total = Math.min(8,unique(scope.full).length);
+    const retryCount=testRetryCandidates(scope).length;
     const saved = read(storage,'abvm-study-games:'+scope.key+':test-ready',null);
     const plays = Number(saved?.plays), best = Number(saved?.best);
     const recorded = total > 0 && Number.isInteger(plays) && plays > 0 && Number.isInteger(best) && best >= 0 && best <= total;
-    return {sourceKey:scope.key,topics,total,practice:recorded ? {plays,best,label:'Best practice '+best+' / '+total} : {plays:0,best:null,label:'First practice'}};
+    return {sourceKey:scope.key,topics,total,retryCount,practice:recorded ? {plays,best,label:'Best practice '+best+' / '+total} : {plays:0,best:null,label:'First practice'}};
   }
-  function testRound({index, seed, upcoming = false} = {}) {
+  function testRound({index, seed, upcoming = false, retryMissed = false} = {}) {
     const state = upcoming ? printableTestState(true) : testState();
     const {single,groups,full,key} = testScope(state,index);
-    const chosenSeed = sessionSeed(key,'test-ready',seed);
+    const retry=Boolean(retryMissed && single);
+    const scoped=retry ? testRetryCandidates({full}) : unique(full);
+    const targetGroups=retry?[scoped]:groups;
+    const mode=retry?'test-retry':'test-ready', scopedKey=retry?key+'|retry':key;
+    const chosenSeed = sessionSeed(scopedKey,mode,seed);
     return {
-      questions:balancedTestRound(groups,8,chosenSeed), catalog:{...catalog,sourceKey:key,questions:full},
-      groups, count:unique(full).length, eligibleIds:full.map(q => q.id), sourceKey:key,
-      sessionSeed:chosenSeed, title:single ? state.tests[index].label + ' practice' : 'Test practice',
-      modeId:'test-ready', strict:true,
+      questions:balancedTestRound(targetGroups,8,chosenSeed), catalog:{...catalog,sourceKey:scopedKey,questions:retry?scoped:full},
+      groups:targetGroups, count:scoped.length, eligibleIds:scoped.map(q => q.id), sourceKey:scopedKey,
+      sessionSeed:chosenSeed, title:single ? state.tests[index].label + (retry?' skill retry':' practice') : 'Test practice',
+      modeId:mode, strict:!retry,
       fallback:state.fallback.filter(t => index === undefined || t.index === index),
     };
   }
