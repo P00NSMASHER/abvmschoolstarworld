@@ -47,13 +47,18 @@ When uploaded, distinguish it from parent-created practice before processing.
    tests. Follow the normal protected PR, two QA gates and live release
    verification; do not present an open PR as a deployed correction.
 
-Verified historical examples available as of this instruction: a Grade 2
-Chapter 1 religion quiz using ten word-bank completions; two separate spelling
-tests using fifteen numbered dictation lines and bonus work; and a Grade 2
-religion Unit 1 assessment containing twenty three-choice questions with
-letter answers across two columns. The evidence documents are held in
-private ChatGPT schoolwork/archive context, not in this public repository.
-These are format **examples**, not promises about future school exams.
+Verified historical examples available as of this instruction include:
+a Grade 2 Chapter 1 religion quiz (ten word-bank completions); a Chapter 3
+religion quiz (five word-bank meanings, one picture choice, four true/false);
+three spelling tests (fifteen numbered dictation lines and bonus work);
+a math Chapter 1B post-test (twelve structured questions on two two-column
+pages with diagrams, number lines and two word problems); a two-page,
+thirty-item short-vowel phonics picture assessment (fifteen picture choices,
+then fifteen picture-word writing lines); and a Grade 2 religion Unit 1
+assessment (twenty three-choice letter answers across two columns).
+The originals are preserved in private Library archives and prior conversation
+attachments, not in this public repository. These are format **examples**,
+not promises about future school exams.
 
 ## Canonical 12-step school-photo workflow
 
