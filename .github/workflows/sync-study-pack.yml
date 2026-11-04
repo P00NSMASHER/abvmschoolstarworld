@@ -340,18 +340,26 @@ jobs:
           # Only independently verified Homework data may advance main between
           # exact-head teacher QA and this locked source commit. Any code,
           # curricular or other data change requires a fresh full QA run.
+          changed_paths="$(git diff --name-only "$VERIFIED_BASE" "$current")" || {
+            echo '::error::Could not inspect all upstream changes; no publication.' >&2
+            exit 1
+          }
           while IFS= read -r changed; do
+            [[ -z "$changed" ]] && continue
             case "$changed" in
               'pages/data/homework-current.json') ;;
               *) echo "::error::Main changed outside isolated Homework: $changed"; exit 1 ;;
             esac
-          done < <(git diff --name-only "$VERIFIED_BASE" "$current")
+          done <<< "$changed_paths"
           git reset --hard "$current"
           cp .abvm-teacher-verified/pages/data/study-pack.json pages/data/study-pack.json
           cp .abvm-teacher-verified/pages/data/study-archive.json pages/data/study-archive.json
           (cd .abvm-teacher-verified && sha256sum --check SHA256SUMS)
           cmp .abvm-teacher-verified/pages/data/study-pack.json pages/data/study-pack.json
           cmp .abvm-teacher-verified/pages/data/study-archive.json pages/data/study-archive.json
+      - name: Reject stale teacher data after a publication queue delay
+        shell: bash
+        run: node scripts/check-refresh-health.mjs --require-today --max-age-hours 1
       - name: Commit verified teacher candidate without rerunning long QA under lock
         shell: bash
         run: |
