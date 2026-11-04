@@ -2058,12 +2058,28 @@ function subjectSourceLines(pack, subject) {
   return uniqueText([...(row?.topics || []), ...(row?.studyNotes || [])]);
 }
 
-function detectBaseSkills(pack, skills, questions, curriculumOptions = {}) {
+function detectBaseSkills(pack, skills, questions, curriculumOptions = {}, sourceReview = {}, coverage = []) {
   for (const rule of baseSkillRules(curriculumOptions)) {
     const sourceLines = uniqueText(sourceSubjectsForRule(rule).flatMap(subject => subjectSourceLines(pack, subject)));
     const sourceLine = sourceLines.find(line => rule.pattern.test(line));
     if (!sourceLine) continue;
     const matchedEvidence = text(sourceLine).match(rule.pattern)?.[0] || sourceLine;
+    if (sourceReview.requirePageExactLineage && rule.sourceReviewRequired) {
+      const proof = pageLineageForSkill({
+        id: rule.id, subject: rule.subject, evidence: [matchedEvidence],
+      }, sourceReview.sourcePages, sourceReview.sourceHash);
+      if (proof.quality !== 'page-exact') {
+        // Keep the verified old bank available; do not promote a newly
+        // authored family from an unproven topic summary.
+        coverage.push({
+          topic: sourceLine,
+          subject: rule.subject,
+          status: 'SOURCE_INSUFFICIENT',
+          reason: 'Original practice for this named skill requires exact verified teacher-page evidence.',
+        });
+        continue;
+      }
+    }
     const skill = {
       id: rule.id,
       subject: rule.subject,
@@ -2758,7 +2774,8 @@ export function buildGrade2ContentPipeline(pack, { generatedAt, sourceHash, sour
   const curriculumOptions = { activeFeatureFlags: activeCurriculumFeatureFlags };
   const rawQuestions = [];
   const coverage = [];
-  detectBaseSkills(pack, skills, rawQuestions, curriculumOptions);
+  detectBaseSkills(pack, skills, rawQuestions, curriculumOptions,
+    {sourcePages, sourceHash:sourceHash || pack?.sourceHash, requirePageExactLineage}, coverage);
   detectSightWords(pack, skills, rawQuestions, coverage);
   detectMath(pack, skills, rawQuestions);
   detectReligion(pack, skills, rawQuestions);
