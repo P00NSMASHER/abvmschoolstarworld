@@ -28,6 +28,11 @@ export function isReligionUnitOneReviewTest(test) {
 /** Match practice to an announced test without inventing scope or altering sources. */
 export function questionsForTest(test, questions) {
   const label = test.label.toLowerCase();
+  // Exact singular/plural-noun exams use only their source-gated bank.
+  // Fail closed when that bank is absent instead of borrowing other grammar.
+  if (/singular\s*(?:&|and)\s*plural\s+nouns?/.test(label)) {
+    return questions.filter(q => q.subject === 'Reading / ELA' && q.skill === 'singular-plural-nouns');
+  }
   // Exact common/proper-noun exams must never be padded with unrelated
   // subject-predicate or sentence-type questions when their own bank is absent.
   if (/common\s*(?:&|and)\s*proper\s+nouns?/.test(label)) {
