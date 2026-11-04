@@ -29,17 +29,17 @@ test('read-only report reconciles the exact published cumulative library',async(
   const original=JSON.stringify(pack);
   const report=buildSchoolworkReviewReport(pack);
   assert.equal(JSON.stringify(pack),original,'no mutation of the supplied source object');
-  assert.deepEqual(report.totals,{photos:69,lessons:26,questions:96});
+  assert.deepEqual(report.totals,{photos:86,lessons:36,questions:131});
   assert.deepEqual(report.statusCounts,{
-    integratedSources:43,exactDuplicates:0,semanticRephotographs:1,heldSources:25,
-    verifiedDayLessons:0,verifiedWeekOnlyLessons:1,undatedLessons:25
+    integratedSources:55,exactDuplicates:0,semanticRephotographs:1,heldSources:30,
+    verifiedDayLessons:0,verifiedWeekOnlyLessons:3,undatedLessons:33
   });
-  assert.equal(report.sourceReviewQueue.length,69);
-  assert.equal(report.lessonReviewQueue.length,26);
-  assert.deepEqual(report.attention.verifiedWeekOnlyLessonIds,['spelling-oct-09-2026']);
+  assert.equal(report.sourceReviewQueue.length,86);
+  assert.equal(report.lessonReviewQueue.length,36);
+  assert.deepEqual(report.attention.verifiedWeekOnlyLessonIds,['spelling-oct-09-2026','nov3-photo-math-ch2-written','nov3-photo-math-ch2-four-choice']);
   assert.equal(report.releaseStatus,'HOLD_EXTERNAL_SIGNOFF');
   assert(Object.values(report.humanReleaseGates).every(value=>value==='EXTERNAL_REVIEW_REQUIRED'));
-  assert.equal(report.lessonReviewQueue.reduce((count,lesson)=>count+lesson.questionIds.length,0),96);
+  assert.equal(report.lessonReviewQueue.reduce((count,lesson)=>count+lesson.questionIds.length,0),131);
   assert.equal(report.sourceReviewQueue.filter(source=>source.status!=='held')
     .every(source=>source.lessonIds.length>0),true);
 });
