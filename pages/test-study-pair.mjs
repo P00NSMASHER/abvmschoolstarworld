@@ -193,6 +193,7 @@ export function renderTestStudyGuide(guide,dictionary=()=> ''){
   const coverageWarning=missing.length?'<p class="warning">This guide is missing '+missing.length+' tested topic'+(missing.length===1?'':'s')+'. Use the current classroom materials until the guide refreshes.</p>':'';
   return decoratePaper(htmlHead(guide,'Study guide')+'<main class="sheet study-guide">'+
     header(guide,'Study Guide',clean(guide?.label)||'Upcoming class test')+
+    (guide?.scopeNotice?'<p class="warning scope-notice">'+esc(guide.scopeNotice)+'</p>':'')+
     (formatExample?'<p class="focus-note teacher-test-reference"><strong>Previous actual test format (example only)</strong>'+esc(formatExample)+'</p>':'')+
     '<div class="guide-summary"><div><b>'+topics.length+'</b><span>tested topic'+(topics.length===1?'':'s')+'</span></div><div><b>'+questions.length+'</b><span>matching practice question'+(questions.length===1?'':'s')+'</span></div><div><b>'+esc(when(guide?.date)||'Current')+'</b><span>test date</span></div></div>'+
     '<div class="focus-note"><strong>My learning goal</strong>'+esc(goal(guide,kind))+'</div>'+    (kind==='reading'&&isShortVowelGuide(guide,topics,questions)?vowelStory():'')+

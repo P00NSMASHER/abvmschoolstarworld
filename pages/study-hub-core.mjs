@@ -14,6 +14,17 @@ export function religionChapterScopes(question) {
   }
   return [...scopes].sort((a,b) => a-b);
 }
+/**
+ * Christ Our Life Grade 2's Chapter 4 includes the Unit 1 Review and Test.
+ * A teacher shorthand such as "Religion Ch. 4" must not be treated as proof
+ * that only Chapter 4 will be assessed. Explicit Unit 1 labels also qualify.
+ */
+export function isReligionUnitOneReviewTest(test) {
+  const label=String(test?.label || '').toLowerCase();
+  return /\b(?:religion|faith)\b/.test(label) &&
+    (/\bunit\s*1\b/.test(label) || /\b(?:chapter|ch\.?)\s*4\b/.test(label));
+}
+
 /** Match practice to an announced test without inventing scope or altering sources. */
 export function questionsForTest(test, questions) {
   const label = test.label.toLowerCase();
@@ -65,6 +76,23 @@ export function questionsForTest(test, questions) {
   }
   if (/religion|faith/.test(label)) {
     const chapter = label.match(/\b(?:chapter|ch\.?)\s*([1-9]\d*)\b/);
+    if (isReligionUnitOneReviewTest(test)) {
+      // Chapter 4 is a Unit 1 assessment boundary in the publisher's Grade 2
+      // guide. Retain all current Chapter 4 questions and one checked item
+      // per earlier chapter skill, rather than a huge, repetitive question bank.
+      // Never pull in unscoped/unknown chapters merely to fill the worksheet.
+      const currentChapter=[], reviewBySkill=new Map();
+      for (const q of questions) {
+        if (q.subject !== 'Religion') continue;
+        const scopes=religionChapterScopes(q);
+        const bySkill=/^religion-chapter-([1-9]\d*)$/.exec(String(q.skill || ''));
+        if (bySkill) scopes.push(Number(bySkill[1]));
+        if (scopes.includes(4)) currentChapter.push(q);
+        else if (scopes.some(n=>n>=1&&n<=3) && !reviewBySkill.has(q.skill))
+          reviewBySkill.set(q.skill,q);
+      }
+      return [...currentChapter,...reviewBySkill.values()];
+    }
     return questions.filter(q => {
       if (q.subject !== "Religion") return false;
       if (!chapter) return true;
