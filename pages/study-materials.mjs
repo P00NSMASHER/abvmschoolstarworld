@@ -1,6 +1,7 @@
 /** Material selection for the existing Games player. This module owns no DOM or answers. */
 import {createStudyResourceLoader, validStudyResource} from './study-resources.mjs';
-import {questionsForTest,religionChapterScopes} from './study-hub-core.mjs';
+import {questionsForTest,religionChapterScopes,isReligionUnitOneReviewTest} from './study-hub-core.mjs';
+import {religionUnitOneFacts,religionUnitOneQuestions} from './religion-unit1-review.mjs';
 import {adaptivePracticeRound, practiceIdentity} from './study-experience.mjs';
 import {schoolDay, studyAssessmentDay, weekBounds, nextTests, visibleArchive, weeklyArchive, balancedTestRound} from './study-model.mjs';
 import {sourceStudyNotes,weeklySourceNotes,explicitlyInWeek} from './study-notes-scope.mjs';
@@ -453,9 +454,13 @@ export function createStudyMaterials({
       lesson.weekOf === testWeek.start ||
       (lesson.studiedOn && lesson.studiedOn >= testWeek.start && lesson.studiedOn <= testWeek.end));
     const recent = testWeek.start === thisWeek.start ? day.week.questions : [];
-    return questionsForTest(test,unique([
+    const matched=questionsForTest(test,unique([
       ...current,...recent,...matchedLessons.flatMap(lesson => array(lesson.questions)),
     ]));
+    // These original publisher-aligned questions supplement, never replace,
+    // the reviewed lessons. Earlier chapters remain out of other tests.
+    return isReligionUnitOneReviewTest(test)
+      ? unique([...matched,...religionUnitOneQuestions]) : matched;
   }
   function testState() {
     const time = instant(), done = completedKeys();
@@ -530,7 +535,12 @@ export function createStudyMaterials({
         .filter(note => /^(?:Photo-confirmed practice words|Verified spelling words|Teacher spelling words|Spelling words|Short i:|Long a:)/i.test(note))
       : [];
     // Keep every source-matched fact in a printable guide; page layout owns pagination.
-    const teacherFacts = subject === 'Religion' ? religionChapterFacts(group,test,pack) : [];
+    const unitOneReligion=subject==='Religion'&&isReligionUnitOneReviewTest(test);
+    const teacherFacts=subject==='Religion' ? uniqueGuideText([
+      ...(unitOneReligion ? [1,2,3,4].flatMap(ch=>religionChapterFacts(
+        group,{label:'Religion Ch. '+ch},pack)) : religionChapterFacts(group,test,pack)),
+      ...(unitOneReligion ? religionUnitOneFacts : []),
+    ]) : [];
     const reviewTopics = guideReviewTopics(group,practiceRows,pack);
     const vocabulary = subject === 'Reading / ELA' && !/grammar|predicate|subject\s*&|phonics/.test(lower)
       ? [...new Map(array(pack.vocabulary).filter(row => row?.subject === subject && meaningfulText(row?.term))
@@ -579,6 +589,9 @@ export function createStudyMaterials({
     const guideSkills = reviewTopics.map(row=>row.id);
     const missingGuideSkills = availableSkills.filter(skill=>!guideSkills.includes(skill));
     const warnings = [];
+    if (unitOneReligion) warnings.push(
+      'The publisher places the Unit 1 Review and Unit 1 Test after Chapter 4. '+
+      'This original review covers Chapters 1–4; the school’s exact assessment scope was not stated on its Tests page.');
     if (missingSkills.length) warnings.push('Some current verified skills are missing from this paper. Check the linked teacher page and use in-app practice.');
     if (pack.sourceCheckedAt && schoolDay(pack.sourceCheckedAt) !== schoolDay(time)) {
       warnings.push('Teacher pages were last checked on '+schoolDay(pack.sourceCheckedAt)+'. Current school topics may have changed; check the linked teacher page for updates.');
@@ -598,10 +611,16 @@ export function createStudyMaterials({
     if (!facts.length) warnings.push('No reviewed test-specific facts are available yet, so this guide does not invent missing material.');
     return {
       key:testKey(test), label:compactGuideText(test.label,120), date:test.date, subject:subject || 'Test review',
+      scopeNotice:unitOneReligion
+        ? 'Unit 1 cumulative review: Chapters 1–4. The publisher places the Unit 1 Test after Chapter 4. '+
+          'Original study practice, not the school’s actual questions.'
+        : '',
       facts, teacherFacts, reviewTopics, vocabulary, practice, spellingWords, fallback, warnings:uniqueGuideText(warnings).slice(0,3),
       sourceHash:pack.sourceHash || null, sourceCheckedAt:pack.sourceCheckedAt || null,
       coverage:{availableSkills,representedSkills,missingSkills,guideSkills,missingGuideSkills},
-      sourceLabel:teacherLists.length
+      sourceLabel:unitOneReligion
+        ? 'Publisher-confirmed Grade 2 Unit 1 review (Chapters 1–4); original practice (teacher-style supplemental practice), not a school-issued assessment'
+        : teacherLists.length
         ? (teacherLists.some(note => /page undated/i.test(note))
           ? 'Teacher spelling words verified this week (teacher page undated); original home practice'
           : 'Current school-week teacher spelling words with parent-created practice')

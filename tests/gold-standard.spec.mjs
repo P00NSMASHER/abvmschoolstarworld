@@ -334,7 +334,7 @@ test("simplicity pass keeps core actions obvious and reduces rendering overhead"
   await expect(page.locator(".games-screen .freshness")).toHaveCount(0);
 
   const {sw,cacheName}=await readPwaVersions(page.request);
-  expect(cacheName).toMatch(/^abvm-grade2-parent-companion-v\d+-[a-z-]+$/);
+  expect(cacheName).toMatch(/^abvm-grade2-parent-companion-v\d+-[a-z0-9-]+$/);
   expect(sw).not.toContain("hero-today.webp");
   expect(sw).not.toContain("calendar/picture-day.svg");
   const staticShell=sw.match(/const STATIC_SHELL = \[([\s\S]*?)\];/)?.[1]||"";
