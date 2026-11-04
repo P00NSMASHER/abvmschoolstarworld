@@ -28,6 +28,46 @@ function assess(value){
   assert.equal(typeof evidence.selectPublishedRefreshStage,'function','completed source stages require their own evidence classifier');
   return evidence.selectPublishedRefreshStage(value);
 }
+function splitTeacherFixture(){
+  const input=fixture();
+  // Exact current workflow: read-only source/QA followed by a separate
+  // serialized source-commit job. The preparation job is NOT publication.
+  input.refreshJobs.jobs[0].steps=input.refreshJobs.jobs[0].steps.slice(0,4);
+  input.refreshJobs.jobs.splice(1,0,{
+    id:32,run_id:20,name:'Commit only exact checked source data under the shared writer lock',
+    status:'completed',conclusion:'success',
+    started_at:'2026-10-21T20:41:43Z',completed_at:'2026-10-21T20:45:00Z',
+    steps:[
+      'Reject incompatible main drift and restore verified candidate',
+      'Reject stale teacher data after a publication queue delay',
+      'Commit verified teacher candidate without rerunning long QA under lock',
+      'Confirm exact published main SHA for gated Pages handoff',
+    ].map(name=>({name,status:'completed',conclusion:'success'}))
+  });
+  return input;
+}
+test('new two-job teacher refresh requires source QA and actual locked source commit',()=>{
+  const input=splitTeacherFixture();
+  assert.deepEqual(assess(input).lockedSourcePublisherJobId,32);
+  for(const name of input.refreshJobs.jobs[1].steps.map(x=>x.name))
+    for(const state of ['failure','skipped','cancelled',null]){
+      const bad=splitTeacherFixture();
+      bad.refreshJobs.jobs[1].steps.find(step=>step.name===name).conclusion=state;
+      assert.equal(assess(bad),null,name+' '+state);
+    }
+  const missing=splitTeacherFixture();
+  missing.refreshJobs.jobs.splice(1,1);
+  assert.equal(assess(missing),null,'full QA without a source commit must not be considered published');
+  for(const mutate of [
+    x=>x.refreshJobs.jobs[1].completed_at=null,
+    x=>x.refreshJobs.jobs[1].started_at='2026-10-21T20:40:00Z',
+    x=>x.refreshJobs.jobs[1].completed_at='2026-10-21T21:03:26Z',
+    x=>x.refreshJobs.jobs[1].status='in_progress',
+    x=>x.refreshJobs.jobs[1].conclusion='failure',
+    x=>x.refreshJobs.jobs.push({...x.refreshJobs.jobs[1],id:33}),
+  ]){const bad=splitTeacherFixture();mutate(bad);assert.equal(assess(bad),null,mutate.toString());}
+});
+
 test('real source/publication/watchdog evidence confirms service without claiming the parent finished',()=>{
   const input=fixture(),before=structuredClone(input),result=assess(input);
   assert.equal(result.state,'published-parent-pending');

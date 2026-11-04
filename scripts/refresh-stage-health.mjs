@@ -14,11 +14,26 @@ export function selectPublishedRefreshStage({refreshRun,refreshJobs,publicationR
   if(sources.length!==1)return null;
   const source=sources[0];
   const passed=run=>run?.status==="completed"&&run?.conclusion==="success";
-  const required=["Scan and validate the public teacher pages",
+  const sourceRequired=["Scan and validate the public teacher pages",
     "Verify page-exact source parity and isolate unsupported curriculum",
-    "Verify refreshed source health","Validate the candidate app before changing main",
-    "Commit refreshed pack against latest main","Confirm exact published main SHA for gated Pages handoff"];
-  if(!Number.isInteger(source.id)||!passed(source)||!required.every(name=>
+    "Verify refreshed source health","Validate the candidate app before changing main"];
+  const historicalPublishRequired=["Commit refreshed pack against latest main",
+    "Confirm exact published main SHA for gated Pages handoff"];
+  const lockedPublishRequired=["Reject incompatible main drift and restore verified candidate",
+    "Reject stale teacher data after a publication queue delay",
+    "Commit verified teacher candidate without rerunning long QA under lock",
+    "Confirm exact published main SHA for gated Pages handoff"];
+  if(!Number.isInteger(source.id)||!passed(source)||!sourceRequired.every(name=>
+    source.steps?.some(step=>step.name===name&&passed(step))))return null;
+  // Existing completed runs put the source commit in refresh. New runs put
+  // it in a separate job: never treat preparation alone as publication.
+  const locked=jobs.filter(job=>job.name==="Commit only exact checked source data under the shared writer lock");
+  if(locked.length>1)return null;
+  const publisher=locked[0]||null;
+  if(publisher){
+    if(!Number.isInteger(publisher.id)||!passed(publisher)||!lockedPublishRequired.every(name=>
+      publisher.steps?.some(step=>step.name===name&&passed(step))))return null;
+  }else if(!historicalPublishRequired.every(name=>
     source.steps?.some(step=>step.name===name&&passed(step))))return null;
   if(!passed(publicationRun)||publicationRun.head_branch!=="main"||!Number.isInteger(publicationRun.id)||
     !(publicationRun.name==="Deploy ABVM to GitHub Pages"||
@@ -26,8 +41,11 @@ export function selectPublishedRefreshStage({refreshRun,refreshJobs,publicationR
   if(!passed(watchdogRun)||watchdogRun.name!=="Monitor ABVM refresh health"||
     watchdogRun.head_branch!=="main"||!Number.isInteger(watchdogRun.id))return null;
   const values=[refreshRun.created_at,source.started_at,sourceCheckedAt,source.completed_at,
+    ...(publisher?[publisher.started_at,publisher.completed_at]:[]),
     publicationRun.updated_at,watchdogRun.created_at,watchdogRun.updated_at].map(value=>Date.parse(value||""));
   if(!values.every(Number.isFinite)||values.some((value,index)=>index>0&&value<values[index-1]))return null;
   return {state:"published-parent-pending",refreshRunId:refreshRun.id,sourceJobId:source.id,
-    sourceCompletedAt:source.completed_at,publisherRunId:publicationRun.id,watchdogRunId:watchdogRun.id};
+    sourceCompletedAt:source.completed_at,
+    ...(publisher?{lockedSourcePublisherJobId:publisher.id}:{}),
+    publisherRunId:publicationRun.id,watchdogRunId:watchdogRun.id};
 }
