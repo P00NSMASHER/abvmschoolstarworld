@@ -38,16 +38,10 @@ concurrency:
   queue: max
 
 jobs:
-  deploy:
-    # One mutation/publication at a time; job scope avoids parent-child deadlock.
-    concurrency:
-      group: abvm-verified-school-state
-      cancel-in-progress: false
-      queue: max
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  verify:
+    name: Source-bound full release QA without exclusive data lock
     runs-on: ubuntu-latest
+    timeout-minutes: 35
     container:
       image: mcr.microsoft.com/playwright:v1.63.0-noble-amd64
       options: --ipc=host
@@ -56,7 +50,8 @@ jobs:
     defaults:
       run:
         shell: bash
-    timeout-minutes: 25
+    outputs:
+      sha: ${{ steps.admit.outputs.sha }}
     steps:
       - name: Trust only the mounted Actions workspace
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
@@ -164,21 +159,83 @@ jobs:
           cp -R pages/. _site/
           touch _site/.nojekyll
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
-
       - name: Upload site
         uses: actions/upload-pages-artifact@v4
         with:
           path: _site
           name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
 
+
+  deploy:
+    name: Publish only the exact successfully tested main revision
+    needs: verify
+    concurrency:
+      group: abvm-verified-school-state
+      cancel-in-progress: false
+      queue: max
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble-amd64
+      options: --ipc=host
+    env:
+      ABVM_PREINSTALLED_BROWSERS: '1'
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Trust only the mounted Actions workspace
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Check completed QA is still bound to current protected main
+        shell: bash
+        env:
+          ADMITTED_SHA: ${{ needs.verify.outputs.sha }}
+        run: |
+          set -euo pipefail
+          [[ "$ADMITTED_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo '::error::QA result did not name an immutable commit.'; exit 1; }
+          current_main="$(git ls-remote "https://github.com/${GITHUB_REPOSITORY}.git" refs/heads/main | cut -f1)"
+          if [[ "$current_main" != "$ADMITTED_SHA" ]]; then
+            echo '::error::Main advanced after full release QA; refusing untested publication.'
+            exit 1
+          fi
+      - name: Checkout QA-bound release commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.verify.outputs.sha }}
+      - name: Prove the deployment workspace matches passed QA
+        shell: bash
+        env:
+          ADMITTED_SHA: ${{ needs.verify.outputs.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$ADMITTED_SHA"
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install live-verification dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Cache version-pinned Playwright browsers
+        continue-on-error: true
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: abvm-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - name: Install Chromium and WebKit
+        run: bash scripts/install-playwright-ci.sh
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
       - name: Recheck protected-main before publishing
         shell: bash
         env:
-          ADMITTED_SHA: ${{ steps.admit.outputs.sha }}
+          ADMITTED_SHA: ${{ needs.verify.outputs.sha }}
         run: |
           set -euo pipefail
           latest="$(git ls-remote origin refs/heads/main | cut -f1)"
