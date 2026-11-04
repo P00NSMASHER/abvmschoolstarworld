@@ -1222,7 +1222,7 @@ test('Nov 12 noun packet prints all eight source-gated questions and correct key
   }
   assert.match(worksheet,/Cats name more than one cat\./);
   assert.doesNotMatch(worksheet,/\bCats (?:names|tells)\b/);
-  assert.match(worksheet,/@media screen and \(max-width:620px\)/,
+  assert.match(worksheet,/@media screen and \(max-width:640px\)/,
     'the packet must retain its single-column mobile layout');
   assert.match(worksheet,/@media print\{body\{background:#fff\}/,
     'the packet must retain its black-on-white print treatment');
