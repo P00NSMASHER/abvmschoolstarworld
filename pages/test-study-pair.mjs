@@ -15,7 +15,7 @@ const when=date=>{
 const kindOf=guide=>{
   const label=clean(guide?.label).toLowerCase(),subject=clean(guide?.subject).toLowerCase();
   if(/spell|handwriting/.test(label)||/spell|handwriting/.test(subject))return 'spelling';
-  if(/grammar|predicate|sentence type|punctuation/.test(label))return 'grammar';
+  if(/grammar|predicate|sentence type|punctuation|common.{0,8}proper nouns|proper nouns/.test(label))return 'grammar';
   if(/math|subtraction|addition/.test(label)||subject==='math')return 'math';
   if(/religion|chapter|faith/.test(label)||subject==='religion')return 'religion';
   return 'reading';
