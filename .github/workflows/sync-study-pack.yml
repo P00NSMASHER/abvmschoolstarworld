@@ -314,6 +314,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           ref: ${{ needs.refresh.outputs.base_sha }}
+          fetch-depth: 0
       - name: Restore source bytes approved by the exact successful QA
         uses: actions/download-artifact@v8
         with:
@@ -349,6 +350,8 @@ jobs:
           cp .abvm-teacher-verified/pages/data/study-pack.json pages/data/study-pack.json
           cp .abvm-teacher-verified/pages/data/study-archive.json pages/data/study-archive.json
           (cd .abvm-teacher-verified && sha256sum --check SHA256SUMS)
+          cmp .abvm-teacher-verified/pages/data/study-pack.json pages/data/study-pack.json
+          cmp .abvm-teacher-verified/pages/data/study-archive.json pages/data/study-archive.json
       - name: Commit verified teacher candidate without rerunning long QA under lock
         shell: bash
         run: |
