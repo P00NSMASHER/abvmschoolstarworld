@@ -93,11 +93,15 @@ test('workflows use the bounded installer without widening their job budgets',()
   const installerCall=/bash scripts\/install-playwright-ci\.sh/g;
   assert.equal((qa.match(installerCall)||[]).length,1);
   assert.equal((refresh.match(installerCall)||[]).length,2);
-  assert.equal((pages.match(installerCall)||[]).length,1);
+  // Verify and publish are separate containers; each uses the same bounded,
+  // preinstalled-browser probe while only the publish job holds the data lock.
+  assert.equal((pages.match(installerCall)||[]).length,2);
   assert.match(qa,/timeout-minutes: 30/);
   assert.match(refresh,/timeout-minutes: 45/);
   assert.match(refresh,/timeout-minutes: 30/);
   assert.match(pages,/timeout-minutes: 25/);
+  assert.match(pages,/timeout-minutes: 15/);
+  assert.match(pages,/needs: verify/);
   assert.doesNotMatch(qa,/npx playwright install --with-deps chromium webkit/);
   assert.doesNotMatch(refresh,/npx playwright install --with-deps chromium webkit/);
   assert.doesNotMatch(pages,/npx playwright install --with-deps chromium webkit/);

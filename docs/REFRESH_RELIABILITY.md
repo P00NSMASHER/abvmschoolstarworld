@@ -6,6 +6,14 @@ All source writers and the Pages publisher use the job-level `abvm-verified-scho
 
 Teacher, reviewed lunch, Homework, reviewed notices and Yahoo jobs retain their independent source validation. A completed collection stays on main even if publication later fails. Queued trusted source workflows hand their verified source SHA to Pages with `reconcile_latest_main: true`. Admission selects the then-current immutable main SHA and runs the full existing release QA, final main-identity guard, deployment and live checks. Arbitrary refs and non-main callers remain rejected. Human code merges can still advance main during QA; that final guard must remain.
 
+## Source-delivery queue mitigation (November 4, 2026)
+
+The guarded Pages workflow now has two separately accountable jobs: `verify` and `deploy`. `verify` admits the exact latest authorized protected-main commit, runs the **entire unchanged** App QA suite outside the shared `abvm-verified-school-state` mutex, and seals the candidate Pages artifact plus its generated runtime-study assets. It cannot publish. The `deploy` job depends on that successful exact-commit result, acquires the existing source-publication mutex, checks current protected-main again before and immediately before publication, deploys **only the artifact created by the same workflow attempt**, and verifies the actual CDN/phone experience against both committed data and the retained QA-generated assets.
+
+This removes the long browser-test hold on source updates, while keeping source writers serialized against the actual publication operation. If main advances during QA, the old candidate is **rejected**, not grandfathered into release. A later authorized source/push workflow and existing bounded recovery controller must publish the newly checked main; a stale PR or run is not accepted. A successful source commit or an active queued publish still does not establish live parity. Do not relax the independent watchdog's complete Homework and study-pack comparisons.
+
+The goal is reducing recurring source/Pages queue contention, not guaranteeing zero propagation time on third-party infrastructure. Check actual production latency and real scheduled runs after release; never report this change as permanently proven merely because its static tests pass.
+
 ## Recovery controller
 
 `scripts/source-freshness-recovery.mjs` remains the executable entry point. Its pure schedule policy is `scripts/refresh-controller.mjs`. It combines verified source timestamps, complete main/live JSON equality, the official Homework observation, and the actual configured New York schedules. A missed scan is due after a 90-minute delivery grace, not only when the older daily/8-hour age limit is exceeded. The age/schema/source-identity gates remain in force.
