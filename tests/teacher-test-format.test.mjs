@@ -35,6 +35,29 @@ test('past actual test references retain only anonymous structural information',
   assert.equal(teacherTestReferenceForGuide(sample('Reading Unit 1 Text Set 4',[],{subject:'Reading / ELA'})),null);
 });
 
+test('older actual religion, math and phonics assessments have distinct format families',()=>{
+  const ch3=teacherTestReferenceForGuide(sample('Religion Chapter 3',[]));
+  assert.equal(ch3.kind,'mixed');
+  assert.equal(ch3.referenceCount,10);
+  assert.deepEqual(Array.from(ch3.sections,s=>s.count),[5,1,4]);
+  assert.match(teacherFormatSummary(sample('Religion Ch. 3',[])),/word-bank responses/);
+
+  const math=teacherTestReferenceForGuide(sample('Math Chapter 1B',[],{subject:'Math'}));
+  assert.equal(math.kind,'math-structured');
+  assert.equal(math.referenceCount,12);
+  assert.equal(math.columns,2);
+  assert.match(teacherFormatSummary(sample('Math Chapter 1B',[],{subject:'Math'})),/number lines/);
+
+  const phonics=teacherTestReferenceForGuide(sample('Phonics (short vowels)',[],{subject:'Reading / ELA'}));
+  assert.equal(phonics.kind,'picture-assessment');
+  assert.equal(phonics.referenceCount,30);
+  assert.deepEqual(Array.from(phonics.sections,s=>s.count),[15,15]);
+  assert.match(teacherFormatSummary(sample('Phonics (short vowels)',[],{subject:'Reading / ELA'})),/picture-word writing/);
+
+  assert.equal(teacherTestReferenceForGuide(sample('Math Chapter 2',[],{subject:'Math'})),null);
+  assert.equal(teacherTestReferenceForGuide(sample('Phonics (long i)',[],{subject:'Reading / ELA'})),null);
+});
+
 test('future explicit references must be verified and structurally bounded',()=>{
   const guide=sample('Religion Chapter 7',[],{teacherTestFormat:{
     verifiedFrom:'actual-teacher-test',kind:'letter-choice',columns:2,optionCount:4,referenceCount:24,
