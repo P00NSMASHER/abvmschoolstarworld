@@ -51,9 +51,11 @@ test('offline shell versions align after UI changes',()=>{
   assert.ok(asset,'Missing active asset from HTML: '+file);
   assert.ok(worker.includes(asset),'Offline worker must precache exact HTML asset: '+asset);
  }
- assert.match(app,/study-games-materials-view\.mjs\?v=17/);
+ const viewAsset=app.match(/study-games-materials-view\.mjs\?v=\d+/)?.[0];
+ assert.ok(viewAsset,'App must reference a versioned materials view');
+ assert.ok(worker.includes(viewAsset),'Offline cache must contain exactly the view loaded by the app');
  assert.match(materials,/study-notes-library\.mjs\?v=5/);
- assert.match(worker,/study-games-materials-view\.mjs\?v=17/);
+
  assert.match(worker,/study-notes-library\.mjs\?v=5/);
  const cacheVersion=worker.match(/parent-companion-v(\d+)-/)?.[1];
  const reloadVersion=html.match(/abvm-sw-reloaded-v(\d+)/)?.[1];
