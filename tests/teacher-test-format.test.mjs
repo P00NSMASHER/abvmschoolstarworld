@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {teacherTestReferenceForGuide,canRenderTeacherLetterChoice,teacherFormatSummary} from '../pages/teacher-test-format.mjs';
 import {renderTestWorksheet,renderTestStudyGuide} from '../pages/test-study-pair.mjs';
 
@@ -63,7 +64,7 @@ test('the actual teacher-style print layout keeps every original question and an
   assert.match(student,/columns:2/);
   assert.match(student,/Write the letter of the best answer on the line/);
   assert.doesNotMatch(student,/class="bubble"/,'letter-on-line replaces bubbling');
-  assert.equal((student.match(/class="teacher-letter-choice-item"/g)||[]).length,20);
+  assert.equal((student.match(/class="problem teacher-letter-choice-item"/g)||[]).length,20);
   assert.equal((student.match(/class="teacher-choice-row"/g)||[]).length,60);
   assert.ok(student.includes('20.'),'the 20th question must not disappear');
   assert.doesNotMatch(student,/A reviewed original explanation/,'student paper does not reveal answer explanation');
@@ -78,6 +79,15 @@ test('study guide identifies observed exam format as example rather than forecas
   assert.match(html,/Previous actual test format \(example only\)/);
   assert.match(html,/three|3 choices/i);
   assert.match(html,/not a guarantee about the next test/i);
+});
+
+test('offline shell includes this new module and keeps the reload identity synchronized',()=>{
+  const sw=readFileSync(new URL('../pages/sw.js',import.meta.url),'utf8');
+  const html=readFileSync(new URL('../pages/index.html',import.meta.url),'utf8');
+  assert.match(sw,/"\.\/teacher-test-format\.mjs"/);
+  assert.match(sw,/const INITIAL_OFFLINE_DATA = OPTIONAL_DATA\.filter/);
+  assert.equal(sw.match(/abvm-grade2-parent-companion-v(\d+)-/)?.[1],
+    html.match(/abvm-sw-reloaded-v(\d+)/)?.[1]);
 });
 
 test('unknown or mismatched formats never rewrite the question or manufacture content',()=>{
