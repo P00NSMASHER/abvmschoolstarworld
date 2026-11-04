@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "uploadedPhotoCount": 69,
-  "distinctWorksheetNote": "Day 23 appears twice; one lesson is retained. November 3 PDF: 46 scanned pages; 21 new instruction-bearing pages included in public original practice, one personal reflection withheld, eight prior duplicates held and 16 blank reverse scans held. Undated original work is not presented as current homework.",
+  "uploadedPhotoCount": 86,
+  "distinctWorksheetNote": "Day 23 appears twice; one lesson is retained. November 3 PDF: 46 scanned pages; 21 new instruction-bearing pages included in public original practice, one personal reflection withheld, eight prior duplicates held and 16 blank reverse scans held. Undated original work is not presented as current homework. November 3 seventeen-photo follow-up: twelve privacy-safe academic images support ten original-practice lessons; three rephotographed publisher assessment pages and two private reflections are held and not copied into the public app. Reuploads are not independent learning evidence.",
   "lessons": [
     {
       "id": "fact-families",
@@ -2999,6 +2999,1101 @@
           "provenance": "original-practice-from-uploaded-schoolwork"
         }
       ]
+    },
+    {
+      "id": "nov3-photo-math-ch2-written",
+      "title": "Chapter 2 place-value written practice",
+      "subject": "Math",
+      "sources": [
+        "abvm-nov3-photo-4510.jpeg",
+        "abvm-nov3-photo-4511.jpeg"
+      ],
+      "skills": [
+        "math-chapter-2-place-value",
+        "counting-by-tens",
+        "place-value-word-problems"
+      ],
+      "notes": [
+        "A two-digit number can be built from its tens and ones; 6 tens and 2 ones means 62.",
+        "In expanded form, 58 = 50 + 8.",
+        "When counting backward by tens, subtract ten each time.",
+        "The teacher's practice pages used number words, patterns, odd/even, and place-value word problems."
+      ],
+      "studiedOn": null,
+      "weekOf": "2026-11-02",
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated completion; teacher-marked school week of Nov. 2, 2026, not a verified completion day.",
+      "questions": [
+        {
+          "id": "work-abvm-nov3-math-written-1",
+          "subject": "Math",
+          "skill": "math-chapter-2-place-value",
+          "prompt": "Which number word names 6 tens and 2 ones?",
+          "answer": "sixty-two",
+          "choices": [
+            "twenty-six",
+            "sixty-two",
+            "sixty-seven",
+            "fifty-two"
+          ],
+          "explanation": "Six tens is sixty, and two ones makes sixty-two.",
+          "hint": "Say six tens aloud as sixty, then add the two ones before choosing a word.",
+          "sourceFact": "Reviewed Chapter 2 place-value written practice skill: original home practice for math-chapter-2-place-value, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-math-written-2",
+          "subject": "Math",
+          "skill": "math-chapter-2-place-value",
+          "prompt": "Which expression is the expanded form of 58?",
+          "answer": "50 + 8",
+          "choices": [
+            "5 + 8",
+            "50 + 8",
+            "80 + 5",
+            "5 + 80"
+          ],
+          "explanation": "Fifty-eight is five tens and eight ones.",
+          "hint": "Separate five groups of ten from eight single ones, then write both values.",
+          "sourceFact": "Reviewed Chapter 2 place-value written practice skill: original home practice for math-chapter-2-place-value, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-math-written-3",
+          "subject": "Math",
+          "skill": "counting-by-tens",
+          "prompt": "What comes next? 84, 74, 64, __",
+          "answer": "54",
+          "choices": [
+            "44",
+            "54",
+            "63",
+            "74"
+          ],
+          "explanation": "Subtract ten each time; the tens digit goes down by one.",
+          "hint": "Start with 64 and subtract one ten.",
+          "sourceFact": "Reviewed Chapter 2 place-value written practice skill: original home practice for counting-by-tens, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-math-written-4",
+          "subject": "Math",
+          "skill": "place-value-word-problems",
+          "prompt": "A number has more than 3 tens but fewer than 5 tens, and 7 ones. What number is it?",
+          "answer": "47",
+          "choices": [
+            "37",
+            "47",
+            "57",
+            "74"
+          ],
+          "explanation": "Four tens and seven ones make forty-seven.",
+          "hint": "Choose how many tens fit between three and five.",
+          "sourceFact": "Reviewed Chapter 2 place-value written practice skill: original home practice for place-value-word-problems, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov3-photo-math-maintenance",
+      "title": "Grade 2 mixed math maintenance practice",
+      "subject": "Math",
+      "sources": [
+        "abvm-nov3-photo-4512.jpeg"
+      ],
+      "skills": [
+        "addition-within-100",
+        "coin-addition",
+        "telling-time",
+        "equal-parts"
+      ],
+      "notes": [
+        "Check each arithmetic operation and whether a result is reasonable.",
+        "A clock's minute hand at six means thirty minutes past the hour.",
+        "Money problems require counting each coin's value, not the number of coins.",
+        "A fourth means one of four equal parts."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; original completion day not confirmed.",
+      "questions": [
+        {
+          "id": "work-abvm-nov3-math-maint-1",
+          "subject": "Math",
+          "skill": "addition-within-100",
+          "prompt": "What is 43 + 25?",
+          "answer": "68",
+          "choices": [
+            "58",
+            "68",
+            "78",
+            "63"
+          ],
+          "explanation": "Four tens plus two tens gives six tens; three plus five gives eight.",
+          "hint": "Add the tens first and the ones second; check whether your total is reasonable.",
+          "sourceFact": "Reviewed Grade 2 mixed math maintenance practice skill: original home practice for addition-within-100, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-math-maint-2",
+          "subject": "Math",
+          "skill": "coin-addition",
+          "prompt": "What is the value of four dimes and one nickel?",
+          "answer": "45 cents",
+          "choices": [
+            "25 cents",
+            "40 cents",
+            "45 cents",
+            "50 cents"
+          ],
+          "explanation": "Four dimes total forty cents; a nickel adds five cents.",
+          "hint": "Count four dimes by tens, then add the nickel's five cents at the end.",
+          "sourceFact": "Reviewed Grade 2 mixed math maintenance practice skill: original home practice for coin-addition, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-math-maint-3",
+          "subject": "Math",
+          "skill": "telling-time",
+          "prompt": "Which time means half past seven?",
+          "answer": "7:30",
+          "choices": [
+            "7:00",
+            "6:30",
+            "7:30",
+            "8:00"
+          ],
+          "explanation": "Half past seven is thirty minutes after seven.",
+          "hint": "Half past means thirty minutes; read the hour hand before choosing the time.",
+          "sourceFact": "Reviewed Grade 2 mixed math maintenance practice skill: original home practice for telling-time, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-math-maint-4",
+          "subject": "Math",
+          "skill": "equal-parts",
+          "prompt": "A shape is split into four equal pieces. What fraction is one piece?",
+          "answer": "one-fourth",
+          "choices": [
+            "one-half",
+            "one-third",
+            "one-fourth",
+            "four-fourths"
+          ],
+          "explanation": "One out of four equal parts is one-fourth.",
+          "hint": "Count all the equal parts in the shape, then count how many are selected.",
+          "sourceFact": "Reviewed Grade 2 mixed math maintenance practice skill: original home practice for equal-parts, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov3-photo-spelling-patterns",
+      "title": "Spelling and handwriting pattern practice",
+      "subject": "Spelling / Handwriting",
+      "sources": [
+        "abvm-nov3-photo-4513.jpeg"
+      ],
+      "skills": [
+        "soft-c-g",
+        "consonant-digraphs",
+        "spelling-patterns"
+      ],
+      "notes": [
+        "A soft c can sound like s, as in race.",
+        "A soft g may sound like j, as in huge.",
+        "Use sh and other consonant digraphs as one sound when decoding.",
+        "Numbered handwriting lines and a separate bonus are historical format examples; the exact next word list is unconfirmed."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; original completion day not confirmed.",
+      "questions": [
+        {
+          "id": "work-abvm-nov3-spell-1",
+          "subject": "Spelling / Handwriting",
+          "skill": "soft-c-g",
+          "prompt": "Which word contains a c with the /s/ sound?",
+          "answer": "race",
+          "choices": [
+            "cake",
+            "race",
+            "coat"
+          ],
+          "explanation": "The c in race has the soft /s/ sound.",
+          "hint": "Look for a c followed by e, i or y, then say its sound before picking.",
+          "sourceFact": "Reviewed Spelling and handwriting pattern practice skill: original home practice for soft-c-g, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-spell-2",
+          "subject": "Spelling / Handwriting",
+          "skill": "soft-c-g",
+          "prompt": "In which word does g sound like /j/?",
+          "answer": "huge",
+          "choices": [
+            "goat",
+            "gum",
+            "huge"
+          ],
+          "explanation": "The g in huge has the soft /j/ sound.",
+          "hint": "Listen for the sound at the end of huge.",
+          "sourceFact": "Reviewed Spelling and handwriting pattern practice skill: original home practice for soft-c-g, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-spell-3",
+          "subject": "Spelling / Handwriting",
+          "skill": "consonant-digraphs",
+          "prompt": "Which word contains the two-letter sh sound?",
+          "answer": "brush",
+          "choices": [
+            "brick",
+            "brush",
+            "brown"
+          ],
+          "explanation": "The s and h together make one sound.",
+          "hint": "Find the two letters s and h together, and say their single sound.",
+          "sourceFact": "Reviewed Spelling and handwriting pattern practice skill: original home practice for consonant-digraphs, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-spell-4",
+          "subject": "Spelling / Handwriting",
+          "skill": "spelling-patterns",
+          "prompt": "Which word ends with the letters dge?",
+          "answer": "bridge",
+          "choices": [
+            "bride",
+            "bridge",
+            "bring"
+          ],
+          "explanation": "Bridge ends with the spelling pattern dge.",
+          "hint": "Check whether the final three letters are d, g and e in that order.",
+          "sourceFact": "Reviewed Spelling and handwriting pattern practice skill: original home practice for spelling-patterns, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov3-photo-math-ch2-four-choice",
+      "title": "Chapter 2 place-value four-choice practice",
+      "subject": "Math",
+      "sources": [
+        "abvm-nov3-photo-4514.jpeg",
+        "abvm-nov3-photo-4515.jpeg"
+      ],
+      "skills": [
+        "math-chapter-2-place-value",
+        "place-value",
+        "expanded-form",
+        "number-words-to-numerals"
+      ],
+      "notes": [
+        "The publisher's Check Your Progress pages used two columns, diagrams, and four answer bubbles.",
+        "A tens block represents ten ones.",
+        "Expanded form shows the value of each digit.",
+        "This is original practice, not a copy of the publisher test."
+      ],
+      "studiedOn": null,
+      "weekOf": "2026-11-02",
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated completion; teacher-marked school week of Nov. 2, 2026, not a verified completion day.",
+      "questions": [
+        {
+          "id": "work-abvm-nov3-math-bubble-1",
+          "subject": "Math",
+          "skill": "math-chapter-2-place-value",
+          "prompt": "Which number is made of 5 tens and 2 ones?",
+          "answer": "52",
+          "choices": [
+            "25",
+            "50",
+            "52",
+            "57"
+          ],
+          "explanation": "Five tens is fifty and two ones makes fifty-two.",
+          "hint": "Count the groups of ten first, then add the single ones to build the number.",
+          "sourceFact": "Reviewed Chapter 2 place-value four-choice practice skill: original home practice for math-chapter-2-place-value, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-math-bubble-2",
+          "subject": "Math",
+          "skill": "place-value",
+          "prompt": "In 64, what value does the digit 6 represent?",
+          "answer": "60",
+          "choices": [
+            "6",
+            "4",
+            "60",
+            "64"
+          ],
+          "explanation": "The six is in the tens place, so it represents sixty.",
+          "hint": "The left digit in a two-digit number represents tens.",
+          "sourceFact": "Reviewed Chapter 2 place-value four-choice practice skill: original home practice for place-value, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-math-bubble-3",
+          "subject": "Math",
+          "skill": "expanded-form",
+          "prompt": "Which shows 49 in expanded form?",
+          "answer": "40 + 9",
+          "choices": [
+            "4 + 9",
+            "40 + 9",
+            "9 + 40 + 4",
+            "49 + 0 + 9"
+          ],
+          "explanation": "Forty-nine means four tens and nine ones.",
+          "hint": "Break the number into tens and ones.",
+          "sourceFact": "Reviewed Chapter 2 place-value four-choice practice skill: original home practice for expanded-form, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-math-bubble-4",
+          "subject": "Math",
+          "skill": "number-words-to-numerals",
+          "prompt": "Which number matches the word eighty-one?",
+          "answer": "81",
+          "choices": [
+            "18",
+            "80",
+            "81",
+            "91"
+          ],
+          "explanation": "Eighty-one means eight tens and one one.",
+          "hint": "Find the numeral that has eight in the tens place.",
+          "sourceFact": "Reviewed Chapter 2 place-value four-choice practice skill: original home practice for number-words-to-numerals, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov3-photo-nouns-written",
+      "title": "Common and proper nouns written classification",
+      "subject": "Reading / ELA",
+      "sources": [
+        "abvm-nov3-photo-4519.jpeg"
+      ],
+      "skills": [
+        "common-proper-nouns",
+        "proper-noun-capitalization"
+      ],
+      "notes": [
+        "A common noun names a general person, place, animal or thing.",
+        "A proper noun names a particular person, place or event and uses capitals.",
+        "Historical teacher worksheets asked students to write a corrected name or label the noun type."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; original completion day not confirmed.",
+      "questions": [
+        {
+          "id": "work-abvm-nov3-noun-written-1",
+          "subject": "Reading / ELA",
+          "skill": "common-proper-nouns",
+          "prompt": "Which word is a common noun?",
+          "answer": "river",
+          "choices": [
+            "Hudson River",
+            "river",
+            "Tuesday"
+          ],
+          "explanation": "River names any river, rather than one particular river.",
+          "hint": "Does the word name something general?",
+          "sourceFact": "Reviewed Common and proper nouns written classification skill: original home practice for common-proper-nouns, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-noun-written-2",
+          "subject": "Reading / ELA",
+          "skill": "proper-noun-capitalization",
+          "prompt": "Which spelling correctly names a particular park?",
+          "answer": "Maple Park",
+          "choices": [
+            "maple park",
+            "Maple Park",
+            "maple Park"
+          ],
+          "explanation": "Both words are part of the park's name.",
+          "hint": "Capitalize words in the special name.",
+          "sourceFact": "Reviewed Common and proper nouns written classification skill: original home practice for proper-noun-capitalization, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-noun-written-3",
+          "subject": "Reading / ELA",
+          "skill": "common-proper-nouns",
+          "prompt": "Which sentence has a proper noun?",
+          "answer": "We visited Lake Pine.",
+          "choices": [
+            "We walked in a forest.",
+            "We visited Lake Pine.",
+            "We found a stone."
+          ],
+          "explanation": "Lake Pine is a special name of a place.",
+          "hint": "Choose the sentence with a specific name.",
+          "sourceFact": "Reviewed Common and proper nouns written classification skill: original home practice for common-proper-nouns, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov3-photo-nouns-assessment",
+      "title": "Common and proper nouns capitalization assessment practice",
+      "subject": "Reading / ELA",
+      "sources": [
+        "abvm-nov3-photo-4520.jpeg"
+      ],
+      "skills": [
+        "proper-noun-capitalization",
+        "common-proper-nouns"
+      ],
+      "notes": [
+        "The genuine classroom assessment used two columns and three bubble choices.",
+        "Students judged an underlined phrase for correct capitalization.",
+        "Names of people, places, holidays, and days of the week need appropriate capitals."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; original completion day not confirmed.",
+      "questions": [
+        {
+          "id": "work-abvm-nov3-noun-assessment-1",
+          "subject": "Reading / ELA",
+          "skill": "proper-noun-capitalization",
+          "prompt": "Choose the correctly written name of a teacher.",
+          "answer": "Ms. Carter",
+          "choices": [
+            "ms. carter",
+            "Ms. Carter",
+            "Ms. carter"
+          ],
+          "explanation": "A title and person's name use capitals.",
+          "hint": "Check both the title and last name.",
+          "sourceFact": "Reviewed Common and proper nouns capitalization assessment practice skill: original home practice for proper-noun-capitalization, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-noun-assessment-2",
+          "subject": "Reading / ELA",
+          "skill": "proper-noun-capitalization",
+          "prompt": "Which sentence correctly capitalizes a day?",
+          "answer": "Our trip is on Monday.",
+          "choices": [
+            "Our trip is on monday.",
+            "Our trip is on Monday.",
+            "Our Trip is on monday."
+          ],
+          "explanation": "Monday is a particular day and needs a capital M.",
+          "hint": "Days of the week are proper nouns, so capitalize Monday but not every word.",
+          "sourceFact": "Reviewed Common and proper nouns capitalization assessment practice skill: original home practice for proper-noun-capitalization, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-noun-assessment-3",
+          "subject": "Reading / ELA",
+          "skill": "common-proper-nouns",
+          "prompt": "Which phrase contains a properly written place name?",
+          "answer": "the lake near Willow Street",
+          "choices": [
+            "the lake near willow street",
+            "the Lake near willow Street",
+            "the lake near Willow Street"
+          ],
+          "explanation": "Street names are proper nouns, while lake can be a common noun.",
+          "hint": "Capitalize the street's name, not every nearby noun.",
+          "sourceFact": "Reviewed Common and proper nouns capitalization assessment practice skill: original home practice for common-proper-nouns, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov3-photo-day47-ela",
+      "title": "Daily warm-up 47 language and vocabulary",
+      "subject": "Reading / ELA",
+      "sources": [
+        "abvm-nov3-photo-4523.jpeg"
+      ],
+      "skills": [
+        "verbs",
+        "antonyms",
+        "spelling-patterns"
+      ],
+      "notes": [
+        "Read a sentence and find its action word.",
+        "Two antonyms have opposite meanings.",
+        "Read teacher directions precisely: circle, cross out, sort, or rewrite."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; original completion day not confirmed.",
+      "questions": [
+        {
+          "id": "work-abvm-nov3-day47-ela-1",
+          "subject": "Reading / ELA",
+          "skill": "verbs",
+          "prompt": "Which word is the action word in 'The pups race across the grass'?",
+          "answer": "race",
+          "choices": [
+            "pups",
+            "race",
+            "grass"
+          ],
+          "explanation": "Race tells what the pups do.",
+          "hint": "Ask which word tells the action that the animals are performing.",
+          "sourceFact": "Reviewed Daily warm-up 47 language and vocabulary skill: original home practice for verbs, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-day47-ela-2",
+          "subject": "Reading / ELA",
+          "skill": "antonyms",
+          "prompt": "Which pair shows opposites?",
+          "answer": "warm and cold",
+          "choices": [
+            "warm and cold",
+            "warm and hot",
+            "warm and cozy"
+          ],
+          "explanation": "Cold is the opposite of warm.",
+          "hint": "Find the two words with opposite meanings, not words that are similar.",
+          "sourceFact": "Reviewed Daily warm-up 47 language and vocabulary skill: original home practice for antonyms, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-day47-ela-3",
+          "subject": "Reading / ELA",
+          "skill": "spelling-patterns",
+          "prompt": "Which word has the long e sound?",
+          "answer": "seed",
+          "choices": [
+            "bed",
+            "seed",
+            "red"
+          ],
+          "explanation": "Seed has a long e sound spelled ee.",
+          "hint": "Say each word aloud and listen for a long e sound in the middle.",
+          "sourceFact": "Reviewed Daily warm-up 47 language and vocabulary skill: original home practice for spelling-patterns, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov3-photo-day47-math",
+      "title": "Daily warm-up 47 math and time",
+      "subject": "Math",
+      "sources": [
+        "abvm-nov3-photo-4523.jpeg"
+      ],
+      "skills": [
+        "place-value",
+        "missing-addend",
+        "telling-time"
+      ],
+      "notes": [
+        "Build a number from tens and ones.",
+        "Use related addition facts to make a given total.",
+        "Tell time from the position of the clock hands."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; original completion day not confirmed.",
+      "questions": [
+        {
+          "id": "work-abvm-nov3-day47-math-1",
+          "subject": "Math",
+          "skill": "place-value",
+          "prompt": "Which number has seven tens and four ones?",
+          "answer": "74",
+          "choices": [
+            "47",
+            "70",
+            "74",
+            "14"
+          ],
+          "explanation": "Seven tens is seventy; adding four ones gives seventy-four.",
+          "hint": "Write the number of tens in the tens place and the ones in the ones place.",
+          "sourceFact": "Reviewed Daily warm-up 47 math and time skill: original home practice for place-value, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-day47-math-2",
+          "subject": "Math",
+          "skill": "missing-addend",
+          "prompt": "Which number completes 8 + __ = 13?",
+          "answer": "5",
+          "choices": [
+            "4",
+            "5",
+            "6",
+            "8"
+          ],
+          "explanation": "Thirteen minus eight is five.",
+          "hint": "Count up from eight to thirteen and record how many steps you counted.",
+          "sourceFact": "Reviewed Daily warm-up 47 math and time skill: original home practice for missing-addend, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-day47-math-3",
+          "subject": "Math",
+          "skill": "telling-time",
+          "prompt": "The minute hand is at 12 and the hour hand at 9. What time is it?",
+          "answer": "9:00",
+          "choices": [
+            "9:00",
+            "9:30",
+            "12:09",
+            "6:00"
+          ],
+          "explanation": "Minute hand at twelve means an exact hour.",
+          "hint": "The short clock hand indicates the hour; the long hand tells the minutes.",
+          "sourceFact": "Reviewed Daily warm-up 47 math and time skill: original home practice for telling-time, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov3-photo-halloween-reading",
+      "title": "Original Grade 2 narrative comprehension practice",
+      "subject": "Reading / ELA",
+      "sources": [
+        "abvm-nov3-photo-4524.jpeg",
+        "abvm-nov3-photo-4525.jpeg"
+      ],
+      "skills": [
+        "reading-comprehension",
+        "vocabulary-in-context",
+        "text-evidence"
+      ],
+      "notes": [
+        "Read a passage before choosing an answer; details in the text are evidence.",
+        "Use context clues for unfamiliar vocabulary.",
+        "An effective written response answers the exact question and mentions supporting text evidence.",
+        "The original third-party story has not been copied into this app."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; original completion day not confirmed.",
+      "questions": [
+        {
+          "id": "work-abvm-nov3-read-1",
+          "subject": "Reading / ELA",
+          "skill": "reading-comprehension",
+          "prompt": "In a story, Leo carries a flashlight because the path is dark. Why does Leo carry it?",
+          "answer": "To see the path",
+          "choices": [
+            "To see the path",
+            "To make it snow",
+            "To wash his shoes"
+          ],
+          "explanation": "The passage says the path is dark, so the light helps him see.",
+          "hint": "Look for the sentence explaining why.",
+          "sourceFact": "Reviewed Original Grade 2 narrative comprehension practice skill: original home practice for reading-comprehension, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-read-2",
+          "subject": "Reading / ELA",
+          "skill": "vocabulary-in-context",
+          "prompt": "Two friends called out in unison. What does in unison mean?",
+          "answer": "at the same time",
+          "choices": [
+            "at the same time",
+            "in different towns",
+            "very softly"
+          ],
+          "explanation": "In unison means together or at the same time.",
+          "hint": "Imagine two voices speaking together.",
+          "sourceFact": "Reviewed Original Grade 2 narrative comprehension practice skill: original home practice for vocabulary-in-context, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-read-3",
+          "subject": "Reading / ELA",
+          "skill": "text-evidence",
+          "prompt": "Which detail best shows a character feels nervous?",
+          "answer": "Her hands shake as she approaches the door.",
+          "choices": [
+            "She wears a green hat.",
+            "Her hands shake as she approaches the door.",
+            "She has a favorite game."
+          ],
+          "explanation": "Shaking hands can support the inference that someone is nervous.",
+          "hint": "Choose the detail about feelings or reactions.",
+          "sourceFact": "Reviewed Original Grade 2 narrative comprehension practice skill: original home practice for text-evidence, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-read-4",
+          "subject": "Reading / ELA",
+          "skill": "reading-comprehension",
+          "prompt": "When answering 'Why did the character leave?', what should your answer include?",
+          "answer": "A reason supported by the story",
+          "choices": [
+            "Only the character's name",
+            "A reason supported by the story",
+            "A guess unrelated to the story"
+          ],
+          "explanation": "Why questions call for reasons from the passage.",
+          "hint": "Explain what happened and give the reason the passage actually supports.",
+          "sourceFact": "Reviewed Original Grade 2 narrative comprehension practice skill: original home practice for reading-comprehension, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov3-photo-doubles-domino",
+      "title": "Domino doubles and addition facts",
+      "subject": "Math",
+      "sources": [
+        "abvm-nov3-photo-4526.jpeg"
+      ],
+      "skills": [
+        "doubles-facts"
+      ],
+      "notes": [
+        "A double uses the same number in both addends.",
+        "Adding two equal sets makes a doubles fact.",
+        "Pictured domino halves help learners connect dot counts with equations."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-03",
+      "dateStatus": "Undated schoolwork; original completion day not confirmed.",
+      "questions": [
+        {
+          "id": "work-abvm-nov3-double-1",
+          "subject": "Math",
+          "skill": "doubles-facts",
+          "prompt": "A domino has four dots on each half. How many dots are there altogether?",
+          "answer": "8",
+          "choices": [
+            "6",
+            "8",
+            "10",
+            "12"
+          ],
+          "explanation": "Four plus four equals eight.",
+          "hint": "Write four plus four, then count each group of four to check the total.",
+          "sourceFact": "Reviewed Domino doubles and addition facts skill: original home practice for doubles-facts, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-double-2",
+          "subject": "Math",
+          "skill": "doubles-facts",
+          "prompt": "Which equation describes two groups of six?",
+          "answer": "6 + 6 = 12",
+          "choices": [
+            "6 + 3 = 9",
+            "6 + 6 = 12",
+            "6 + 5 = 11"
+          ],
+          "explanation": "Two equal groups of six are a doubles fact.",
+          "hint": "A doubles fact has the same number on both sides of the plus sign.",
+          "sourceFact": "Reviewed Domino doubles and addition facts skill: original home practice for doubles-facts, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "work-abvm-nov3-double-3",
+          "subject": "Math",
+          "skill": "doubles-facts",
+          "prompt": "What is double nine?",
+          "answer": "18",
+          "choices": [
+            "16",
+            "17",
+            "18",
+            "19"
+          ],
+          "explanation": "Nine plus nine is eighteen.",
+          "hint": "You can double ten to make twenty, then subtract two to double nine.",
+          "sourceFact": "Reviewed Domino doubles and addition facts skill: original home practice for doubles-facts, not copied from a teacher assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 supplemental practice",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
     }
   ],
   "sourceManifest": [
@@ -3372,6 +4467,96 @@
     {
       "id": "abvm-nov2026-scan-p46.png",
       "sha256": "ca86153a337fb246c036fe8289bcf6549f0303ad680f29cf11e687c01cd37fc2",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov3-photo-4510.jpeg",
+      "sha256": "8aee210d8839f8053189d094688e782dd71efbd7ca6694e365a2c4f4a5b1748a",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov3-photo-4511.jpeg",
+      "sha256": "22671ca9b5a9ca435c2e6aa8f8d350b98fb0d8b0a58ce90b8cae3b78acc06418",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov3-photo-4512.jpeg",
+      "sha256": "38574915f86a4cbc03cbdc9b7a203fff1bbcc7a7f2e3336191a0e62df361886a",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov3-photo-4513.jpeg",
+      "sha256": "836cf3cdfbb73a14bf834909a080186ee3c4695e03eec5facd6af78292dabceb",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov3-photo-4514.jpeg",
+      "sha256": "acdc680193ea1bf8a84c655c3da8045a7486445437348f25518f0e027ea24ba3",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov3-photo-4515.jpeg",
+      "sha256": "cc84d6770fac04cb5fef0271308f183d293932b96c3ad6f4ad09c927c7cb86b6",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov3-photo-4516.jpeg",
+      "sha256": "5cb4db1f794d58321fd9df12571814f847caebf5618ae839a6c8a52ae9074375",
+      "status": "held",
+      "reason": "Actual publisher assessment rephotograph: private test-format evidence only; avoid copied questions and repeated scoring."
+    },
+    {
+      "id": "abvm-nov3-photo-4517.jpeg",
+      "sha256": "497421957143fb489fb256a6030623695ddfe2b6745f220843b844e5193a3a4d",
+      "status": "held",
+      "reason": "Actual publisher assessment rephotograph: private test-format evidence only; avoid copied questions and repeated scoring."
+    },
+    {
+      "id": "abvm-nov3-photo-4518.jpeg",
+      "sha256": "80b8aec35a1d7635f4237144839f0e713487a25041ad4a9c9daa18592b822fba",
+      "status": "held",
+      "reason": "Actual publisher assessment rephotograph: private test-format evidence only; avoid copied questions and repeated scoring."
+    },
+    {
+      "id": "abvm-nov3-photo-4519.jpeg",
+      "sha256": "4532cf140a8fdf5f929f255cea542206b8e970f99c894ac3fe5996a1cceb76bb",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov3-photo-4520.jpeg",
+      "sha256": "aae616ffff049f1cb056e07c2a3eead27912b2eb6ab8e8b9345c3c3ebc6806a2",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov3-photo-4521.jpeg",
+      "sha256": "b7285cd0f13253a83b54e60bc3099b1322f7f90105ecbb333189771654b61acf",
+      "status": "held",
+      "reason": "Personal reflection containing private student responses: private learning archive only."
+    },
+    {
+      "id": "abvm-nov3-photo-4522.jpeg",
+      "sha256": "5b9f26d8b4a479ef0968f87c6a013413e177466890661340b51b2851eb6c3c0f",
+      "status": "held",
+      "reason": "Personal reflection containing private student responses: private learning archive only."
+    },
+    {
+      "id": "abvm-nov3-photo-4523.jpeg",
+      "sha256": "fa9c0a47de1af7c2fe78a684fb1d31b005ebec45f7dad01f711e7226172ff38b",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov3-photo-4524.jpeg",
+      "sha256": "dc44d1aa4d1482f0f4d2899393dc535018b1b60757801f888d8542c4f713730e",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov3-photo-4525.jpeg",
+      "sha256": "7fcafddff6b9712aa8f9408a3520dee68dde997c8b0b74b3f978e36bd3d08c76",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-nov3-photo-4526.jpeg",
+      "sha256": "c3c4944e5465c0ac2b3c784d6ad464e1228efaced313e02d8e0818a61ca573cc",
       "status": "integrated"
     }
   ]
