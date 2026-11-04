@@ -10,6 +10,7 @@ import { SHORT_VOWELS_FAMILY } from './curriculum-families/short-vowels.mjs';
 import { DIAGRAMS_LABELS_FAMILY } from './curriculum-families/diagrams-labels.mjs';
 import { RELIGION_CHAPTER_4_FAMILY } from './curriculum-families/religion-chapter-4.mjs';
 import { READING_LONG_SHORT_O_FAMILY } from './curriculum-families/reading-long-short-o.mjs';
+import { SINGULAR_PLURAL_NOUNS_FAMILY, THREE_LETTER_BLENDS_FAMILY } from './curriculum-families/november-language.mjs';
 
 const FAMILY_REGISTRY = Object.freeze([
   Object.freeze({
@@ -143,6 +144,8 @@ const FAMILY_REGISTRY = Object.freeze([
   DIAGRAMS_LABELS_FAMILY,
   RELIGION_CHAPTER_4_FAMILY,
   READING_LONG_SHORT_O_FAMILY,
+  SINGULAR_PLURAL_NOUNS_FAMILY,
+  THREE_LETTER_BLENDS_FAMILY,
   AUTHOR_OPINION_FAMILY,
   LONG_O_FAMILY,
   SHORT_VOWELS_FAMILY,
@@ -233,6 +236,9 @@ export function registeredCurriculumFamilyRules(options = {}) {
       standards: [...family.standards],
       domain: family.domain,
       studyNotes: [...family.studyNotes],
+      // Newly eligible candidate families still require page-exact evidence
+      // before publishing their original practice on a strict source run.
+      sourceReviewRequired: family.strictSourceReviewRequired === true,
       question: () => clone(family.baseQuestion),
       ...(family.sourceChapters ? { sourceChapters: [...family.sourceChapters] } : {}),
       ...(family.supplementalReference ? { supplementalReference: clone(family.supplementalReference) } : {}),
