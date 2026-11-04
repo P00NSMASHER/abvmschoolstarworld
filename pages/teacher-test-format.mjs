@@ -23,6 +23,38 @@ const reference = Object.freeze({
     response:'write-word',
     origin:'prior-actual-teacher-test',
   }),
+  religionChapterThree:Object.freeze({
+    id:'religion-chapter-three-mixed-quiz',
+    kind:'mixed',
+    referenceCount:10,
+    sections:Object.freeze([
+      Object.freeze({kind:'word-bank',count:5}),
+      Object.freeze({kind:'picture-select',count:1}),
+      Object.freeze({kind:'true-false',count:4}),
+    ]),
+    columns:1,
+    origin:'prior-actual-teacher-test',
+  }),
+  mathChapterOneB:Object.freeze({
+    id:'math-chapter-one-b-post-test',
+    kind:'math-structured',
+    referenceCount:12,
+    columns:2,
+    pages:2,
+    origin:'prior-actual-teacher-test',
+  }),
+  shortVowelPhonics:Object.freeze({
+    id:'phonics-short-vowel-picture-assessment',
+    kind:'picture-assessment',
+    referenceCount:30,
+    sections:Object.freeze([
+      Object.freeze({kind:'picture-three-choice',count:15}),
+      Object.freeze({kind:'picture-write-word',count:15}),
+    ]),
+    columns:3,
+    pages:2,
+    origin:'prior-actual-teacher-test',
+  }),
   spellingDictation:Object.freeze({
     id:'spelling-numbered-dictation',
     kind:'dictation',
@@ -36,7 +68,7 @@ const reference = Object.freeze({
 
 const normalize=value=>String(value??'').replace(/\s+/g,' ').trim().toLowerCase();
 const numberBetween=(value,min,max)=>Number.isInteger(value)&&value>=min&&value<=max;
-const formats=new Set(['letter-choice','word-bank','dictation','matching','written-response']);
+const formats=new Set(['letter-choice','word-bank','dictation','matching','written-response','mixed','math-structured','picture-assessment']);
 
 /**
  * Future reviewed test intakes may pass a format profile on a guide.
@@ -67,6 +99,13 @@ export function teacherTestReferenceForGuide(guide) {
     return reference.religionUnitOne;
   if(subject==='religion' && /\b(?:chapter|ch\.?)\s*1\b/.test(label))
     return reference.religionChapterOne;
+  if(subject==='religion' && /\b(?:chapter|ch\.?)\s*3\b/.test(label))
+    return reference.religionChapterThree;
+  if((subject==='math'||/\bmath\b/.test(label)) &&
+    /\b(?:chapter|ch\.?)\s*1\s*b\b/.test(label))
+    return reference.mathChapterOneB;
+  if(/\bphonics\b/.test(label) && /\bshort[- ]vowels?\b/.test(label))
+    return reference.shortVowelPhonics;
   if((/spelling/.test(subject) || /spelling/.test(label))&& !/grammar/.test(label))
     return reference.spellingDictation;
   return null;
@@ -105,5 +144,17 @@ export function teacherFormatSummary(guide) {
   if(profile.kind==='dictation')
     return 'Teacher-format example: write dictated words on numbered lines. '+
       observed+'Bonus work was observed previously, but is not promised for a future test.';
+  if(profile.kind==='mixed')
+    return 'Teacher-format example: a prior religion quiz combined five word-bank responses, '+
+      'one picture selection and four true/false answers. '+observed+
+      'Use an original practice mix only when current lesson evidence supports it.';
+  if(profile.kind==='math-structured')
+    return 'Teacher-format example: an earlier math post-test used twelve problems on two pages, '+
+      'with two columns, number lines, related facts, visual models and word problems. '+
+      'Practice current skills in comparable response spaces, not copied problems.';
+  if(profile.kind==='picture-assessment')
+    return 'Teacher-format example: a prior short-vowel assessment had fifteen picture-to-word '+
+      'three-choice items and fifteen picture-naming entries on writing lines. '+
+      'Use only source-checked, original pictures and vocabulary.';
   return 'A teacher-format sample is available. Follow its answer format only when the reviewed practice supports it.';
 }
