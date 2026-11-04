@@ -1,6 +1,6 @@
 /** Print-friendly, photo-informed original Grade 2 practice, never teacher test copies. */
 import {premiumPaperCss,decoratePaper} from './premium-paper-theme.mjs?v=2';
-import {canRenderTeacherLetterChoice,checkedBubblePaperFormat} from './teacher-test-format.mjs';
+import {canRenderTeacherLetterChoice,checkedBubblePaperFormat,checkedBubbleQuestionForGuide} from './teacher-test-format.mjs';
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clean = value => String(value ?? '').replace(/\s+/g,' ').trim();
 const arr = value => Array.isArray(value) ? value : [];
@@ -207,7 +207,11 @@ export function renderClassroomStudyGuide(guide,dictionary=()=> '',options={}) {
   // Verified word lists use dictation; source-backed spelling patterns use the keyed question packet.
   const questions=arr(guide?.practice);
   const teacherLetterChoice=kind==='religion' && canRenderTeacherLetterChoice(guide,questions);
-  const bubbleFormat=!teacherLetterChoice?checkedBubblePaperFormat(guide,questions):null;
+  const fullBubbleFormat=!teacherLetterChoice?checkedBubblePaperFormat(guide,questions):null;
+  const firstBubble=teacherLetterChoice?null:questions.find(row=>checkedBubbleQuestionForGuide(guide,row));
+  const bubbleFormat=fullBubbleFormat||(firstBubble&&checkedBubbleQuestionForGuide(guide,firstBubble));
+  const eligibleBubbles=bubbleFormat?questions.filter(row=>checkedBubbleQuestionForGuide(guide,row)).length:0;
+  const mixedBubbles=bubbleFormat&&eligibleBubbles<questions.length;
   if(kind==='spelling'&&!forcePracticePacket)return decoratePaper(head+spellingSheet(guide)+'</body></html>',kind);
   // A test packet must not silently drop verified topics or checked practice questions.
   const instructions={math:'Solve each problem. Show your work in the boxes. Write your answer clearly.',
@@ -233,9 +237,13 @@ export function renderClassroomStudyGuide(guide,dictionary=()=> '',options={}) {
     '<span>Score: <i class="field-line score"></i> / '+questions.length+'</span></div>'+
     '<div class="directions"><strong>Directions:</strong> '+escape(teacherLetterChoice?'Read each question. Write the letter of the best answer on the line.':bubbleFormat?'Read each question. Fill in one bubble next to the best answer.':instructions[kind])+'</div>'+
     (guide?.scopeNotice?'<p class="caution scope-notice">'+escape(guide.scopeNotice)+'</p>':'')+
-    (bubbleFormat?'<p class="caution format-evidence">'+escape(bubbleFormat.origin==='prior-actual-teacher-test'?'Mode: Practice like my teacher. Original questions follow a previous actual teacher-test layout; future format is not guaranteed.':'Mode: Practice like my teacher. A teacher-marked publisher practice sheet informed this layout; it is not proof of the next test format.')+'</p>':'')+
+    (bubbleFormat?'<p class="caution format-evidence">'+escape(
+      bubbleFormat.origin==='prior-actual-teacher-test'?
+        'Mode: Practice like my teacher. Prior actual teacher-test layout; future format is not guaranteed.':
+        'Mode: Practice like my teacher. Prior teacher-marked publisher practice; the next test format is unverified.'
+    )+(mixedBubbles?' '+escape(eligibleBubbles+' of '+questions.length+' items use the observed bubble layout; other items retain their original response format.'):'')+'</p>':'')+
     (questions.length?'<h2 class="section-title">'+escape(subjectHeading[kind])+'</h2><ol class="paper-problems '+(teacherLetterChoice?'teacher-letter-choice-problems ':bubbleFormat?'teacher-bubble-choice-problems ':kind==='math'?'math-grid':'')+'">'+
-      questions.map((row,i)=>teacherLetterChoice?teacherLetterChoiceHtml(row,i):bubbleFormat?teacherBubbleChoiceHtml(row,i):questionHtml(row,i,kind)).join('')+'</ol>'
+      questions.map((row,i)=>teacherLetterChoice?teacherLetterChoiceHtml(row,i):bubbleFormat&&checkedBubbleQuestionForGuide(guide,row)?teacherBubbleChoiceHtml(row,i):questionHtml(row,i,kind)).join('')+'</ol>'
       :'<p class="caution">No matching original-practice questions are available for this assessment. Review the available class notes.</p>')+
     storyPractice+
     '<div class="student-self-check"><strong>Before I finish</strong><span>□ I answered every question.</span><span>□ I checked my work.</span></div>'+
