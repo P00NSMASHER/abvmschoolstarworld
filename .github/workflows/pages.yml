@@ -165,6 +165,16 @@ jobs:
           path: _site
           name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
 
+      - name: Preserve exact QA-generated runtime assets for downstream verification
+        uses: actions/upload-artifact@v7
+        with:
+          name: abvm-release-generated-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            pages/data/study-pack-runtime.json
+            pages/data/study-archive.json
+          retention-days: 7
+          if-no-files-found: error
+
 
   deploy:
     name: Publish only the exact successfully tested main revision
@@ -212,6 +222,18 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$ADMITTED_SHA"
+
+      - name: Restore QA-generated runtime assets from this workflow attempt
+        uses: actions/download-artifact@v8
+        with:
+          name: abvm-release-generated-${{ github.run_id }}-${{ github.run_attempt }}
+          path: pages/data
+      - name: Prove runtime assets were restored before independent live comparison
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s pages/data/study-pack-runtime.json
+          test -s pages/data/study-archive.json
       - name: Setup Node
         uses: actions/setup-node@v7
         with:
