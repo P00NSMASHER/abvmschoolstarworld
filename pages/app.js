@@ -430,11 +430,7 @@ const questions=mode.id==="daily"?engine.selectDailyQuestions(catalog,{count:8,s
 const eligibleIds=catalog.questions.filter(q=>!mode.subjects?.length||mode.subjects.includes(q.subject)).map(q=>q.id);
 openStudyRound({questions,catalog,eligibleIds,sourceKey,sessionSeed,strict:false},mode);
 }
-function startStudyTest(index,retryMissed=false){
-  const round=currentStudyMaterials()?.testRound({index,upcoming:true,retryMissed});
-  if(round?.questions?.length)openStudyRound(round,{id:round.modeId,title:round.title,subjects:[],count:round.questions.length},index);
-  else toast(retryMissed?"No matching tricky skills are recorded on this device.":"No checked practice is ready for this test.");
-}
+function startStudyTest(i,retryMissed){const r=currentStudyMaterials()?.testRound({index:i,upcoming:true,retryMissed});if(r)openStudyRound(r,{id:r.modeId,title:r.title,subjects:[],count:8},i)}
 function openStudyRound(round,mode,testIndex){
 if(!isStudyRoute()||!round.questions?.length){toast("No questions are ready for that selection.");return}
 const {questions,catalog,sourceKey,sessionSeed,strict,eligibleIds}=round;
