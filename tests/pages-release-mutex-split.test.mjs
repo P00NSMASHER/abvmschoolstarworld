@@ -41,9 +41,9 @@ test('only post-QA publication holds the shared mutex; no writer can race the de
 
 test('publication and live comparison consume the same immutable QA-generated assets',()=>{
   assert.match(verify,/name: github-pages-\$\{\{ github\.run_id \}\}-\$\{\{ github\.run_attempt \}\}/);
-  assert.match(deploy,/artifact_name: github-pages-\$\{\{ github\.run_id \}\}-\$\{\{ github\.run_attempt \}\}/);
+  assert.match(deploy,/artifact_name: github-pages-\$\{\{ github\.run_id \}\}-\$\{\{ needs\.verify\.outputs\.qa_attempt \}\}/);
   assert.match(verify,/name: abvm-release-generated-\$\{\{ github\.run_id \}\}-\$\{\{ github\.run_attempt \}\}/);
-  assert.match(deploy,/name: abvm-release-generated-\$\{\{ github\.run_id \}\}-\$\{\{ github\.run_attempt \}\}/);
+  assert.match(deploy,/name: abvm-release-generated-\$\{\{ github\.run_id \}\}-\$\{\{ needs\.verify\.outputs\.qa_attempt \}\}/);
   for(const f of ['study-pack-runtime.json','study-archive.json']){
     assert.ok(verify.includes('pages/data/'+f),'missing QA-generated proof '+f);
     assert.ok(deploy.includes('test -s pages/data/'+f),'missing exact deployed proof '+f);
@@ -54,10 +54,19 @@ test('publication and live comparison consume the same immutable QA-generated as
 
 test('stale/replaced verification cannot be mistaken for an accepted release',()=>{
   assert.match(verify,/outputs:\s*\n\s+sha: \$\{\{ steps\.admit\.outputs\.sha \}\}/);
+  assert.match(verify,/qa_attempt: \$\{\{ steps\.artifact-identity\.outputs\.attempt \}\}/);
+  assert.match(verify,/attempt=\$\{\{ github\.run_attempt \}\}/);
   assert.match(deploy,/ADMITTED_SHA: \$\{\{ needs\.verify\.outputs\.sha \}\}/);
   assert.ok(deploy.indexOf('Check completed QA is still bound to current protected main') <
     deploy.indexOf('Checkout QA-bound release commit'));
   assert.ok(deploy.indexOf('Check completed QA is still bound to current protected main') <
     deploy.indexOf('Configure Pages'));
   assert.match(workflow,/cancel-in-progress: false\n  queue: max/);
+});
+
+test('a publish-only rerun reuses the exact successful QA attempt instead of looking for missing new artifacts',()=>{
+  assert.match(verify,/name: github-pages-\$\{\{ github\.run_id \}\}-\$\{\{ github\.run_attempt \}\}/);
+  assert.match(deploy,/artifact_name: github-pages-\$\{\{ github\.run_id \}\}-\$\{\{ needs\.verify\.outputs\.qa_attempt \}\}/);
+  assert.match(deploy,/name: abvm-release-generated-\$\{\{ github\.run_id \}\}-\$\{\{ needs\.verify\.outputs\.qa_attempt \}\}/);
+  assert.doesNotMatch(deploy,/artifact_name: github-pages-\$\{\{ github\.run_id \}\}-\$\{\{ github\.run_attempt \}\}/);
 });
