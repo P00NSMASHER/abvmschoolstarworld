@@ -154,7 +154,7 @@ export function teacherFormatSummary(guide) {
       'Practice current skills in comparable response spaces, not copied problems.';
   if(profile.kind==='picture-assessment')
     return 'Teacher-format example: a prior short-vowel assessment had fifteen picture-to-word '+
-      'three-choice items and fifteen picture-naming entries on writing lines. '+
+      'three-choice items and fifteen picture-word writing entries on writing lines. '+
       'Use only source-checked, original pictures and vocabulary.';
   return 'A teacher-format sample is available. Follow its answer format only when the reviewed practice supports it.';
 }
