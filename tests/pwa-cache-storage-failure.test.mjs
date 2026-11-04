@@ -328,7 +328,7 @@ async function runActivation({keysError = false, deletionError = false} = {}) {
   const calls = {claims: 0, deleted: []};
   const cacheKeys = [
     "abvm-grade2-parent-companion-v198",
-    "abvm-grade2-parent-companion-v199-version-integrity",
+    "abvm-grade2-parent-companion-v201-teacher-test-reference",
     "unrelated-application-cache",
   ];
   runInNewContext(workerSource, {
