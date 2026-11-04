@@ -20,7 +20,7 @@ test('teacher-style worksheet renders twenty genuine browser-visible letter choi
   await expect(page.locator('main.student-test .teacher-letter-choice-item')).toHaveCount(20);
   await expect(page.locator('main.student-test .teacher-choice-row')).toHaveCount(60);
   await expect(page.locator('main.student-test .teacher-answer-blank')).toHaveCount(20);
-  await expect(page.getByText('Parent Answer Key',{exact:false})).toHaveCount(1);
+  await expect(page.locator('section.adult-key h1')).toHaveText('Parent Answer Key');
   const screen=await page.evaluate(()=>{
     const student=document.querySelector('main.student-test');
     const key=document.querySelector('section.adult-key');
