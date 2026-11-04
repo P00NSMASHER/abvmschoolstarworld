@@ -114,5 +114,5 @@ test('original Unit 1 supplement covers the full curriculum instead of only a fe
 test('new Unit 1 module is cached for offline installed ABVM apps',()=>{
   const sw=readFileSync(new URL('../pages/sw.js',import.meta.url),'utf8');
   assert.match(sw,/"\.\/religion-unit1-review\.mjs"/);
-  assert.match(sw,/CACHE.*v200-unit1-cumulative/);
+  assert.match(sw,/CACHE.*v202-unit1-teacher-test/);
 });

@@ -40,6 +40,43 @@ content.
   Check current remote state, avoid conflicting work, and verify publication before
   claiming the app is updated. Never weaken gates to get a deployment.
 
+## Parent-provided actual teacher tests are the study-format standard (November 3, 2026)
+
+For all future ABVM study guides, practice worksheets and printed packets, the
+owner directs the system to imitate the **structure and presentation of actual
+teacher-issued assessments the parent uploaded**, as closely as educationally
+appropriate. Use older verified teacher tests too. This preference supersedes
+generic assistant-created practice formats; it does not supersede current
+classroom source facts, child privacy, or copyright safeguards.
+
+- First locate and inspect prior actual test examples in the private learning
+  archive; **never confuse ChatGPT-generated practice or home worksheets with
+  authentic teacher tests**. Keep the provenance and assessment date/edition.
+- Extract only non-identifying **structural** evidence: subject, unit/chapter,
+  cumulative scope, question types and mix, approximate count and length,
+  directions type, answer placement (e.g., letter on a line), options per question,
+  page arrangement, difficulty and whether bonus sections were present.
+- For a new test, verify what the teacher actually assessed; for the *next* test,
+  use current assigned lessons and officially published chapters to determine
+  content, and the most relevant prior authentic sample to shape question style.
+  Never assert that the next test will reuse the same format or number of items.
+- Write **fresh original** questions using comparable sentence length, question
+  forms, distractor plausibility, response spaces and layout, plus a separate
+  answer key. Do not republish teacher/publisher test wording or replicate an
+  entire protected assessment. Distinguish original practice clearly.
+- Use the exact observed mix when sufficiently evidenced; otherwise state
+  "format not yet verified", use mixed checked practice and do not guess.
+  A Chapter 4 announcement can refer to a cumulative Unit 1 assessment; verify
+  unit boundaries from the publisher before limiting the study scope.
+- Store photographs, learner answers, grades, corrections and full teacher
+  test text privately, not in this public repository. A public format module
+  may contain only anonymous presentation structure. The current
+  `pages/teacher-test-format.mjs` holds safe historical format examples.
+- For a newly uploaded actual test, update the **private** assessment-format
+  reference, use it to make the relevant worksheets genuinely test-like, and
+  add positive/negative format regressions on a protected PR. This intake
+  occurs when requested; there is no autonomous new-photo watcher.
+
 ## Lunch menus received in ChatGPT
 
 When the user uploads a lunch menu and asks to integrate/update the app, follow

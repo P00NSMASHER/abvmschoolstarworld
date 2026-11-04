@@ -1,6 +1,7 @@
 /** Separate current-curriculum learning notes and assessment-style practice papers. */
 import {renderClassroomStudyGuide} from './classroom-test-guide.mjs?v=3';
 import {premiumPaperCss,decoratePaper} from './premium-paper-theme.mjs?v=2';
+import {teacherFormatSummary} from './teacher-test-format.mjs';
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clean=value=>String(value??'').replace(/\s+/g,' ').trim();
@@ -175,6 +176,7 @@ export function renderTestStudyGuide(guide,dictionary=()=> ''){
     return {term,meaning,supplemental:!hasTeacherMeaning&&Boolean(meaning)};
   }).filter(word=>word.term);
   const steps=strategies(guide,kind);
+  const formatExample=teacherFormatSummary(guide);
   const topicHtml=topics.length?'<div class="topic-grid">'+topics.map(topic=>'<article class="topic-card" data-guide-skill="'+esc(topic.id||topic.label)+'">'+
     '<div class="topic-topline"><h3>'+esc(topic.label)+'</h3><span class="topic-count">'+rows(topic.checks?.length?topic.checks:(topic.check?[topic.check]:[])).length+' check(s)</span></div><p>'+esc(topic.summary||'Review this tested idea in the current class materials.')+'</p>'+
     rows(topic.checks?.length?topic.checks:(topic.check?[topic.check]:[])).map((check,index)=>'<div class="say-it"><span class="prompt-label">'+
@@ -192,6 +194,7 @@ export function renderTestStudyGuide(guide,dictionary=()=> ''){
   return decoratePaper(htmlHead(guide,'Study guide')+'<main class="sheet study-guide">'+
     header(guide,'Study Guide',clean(guide?.label)||'Upcoming class test')+
     (guide?.scopeNotice?'<p class="warning scope-notice">'+esc(guide.scopeNotice)+'</p>':'')+
+    (formatExample?'<p class="focus-note teacher-test-reference"><strong>Previous actual test format (example only)</strong>'+esc(formatExample)+'</p>':'')+
     '<div class="guide-summary"><div><b>'+topics.length+'</b><span>tested topic'+(topics.length===1?'':'s')+'</span></div><div><b>'+questions.length+'</b><span>matching practice question'+(questions.length===1?'':'s')+'</span></div><div><b>'+esc(when(guide?.date)||'Current')+'</b><span>test date</span></div></div>'+
     '<div class="focus-note"><strong>My learning goal</strong>'+esc(goal(guide,kind))+'</div>'+    (kind==='reading'&&isShortVowelGuide(guide,topics,questions)?vowelStory():'')+
     '<section class="section"><h2><span class="index">01</span> What I need to know</h2>'+topicHtml+'</section>'+checklistHtml+vocabHtml+

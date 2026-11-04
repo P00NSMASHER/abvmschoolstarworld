@@ -14,6 +14,52 @@ The canonical workflow is now **cumulative**. Every reviewed schoolwork photo mu
 contribute to a private longitudinal learning record before privacy-safe material is
 published to ABVM. Read `docs/LEARNING_HISTORY.md` before processing a batch.
 
+## Authentic teacher-test reference workflow (owner direction, Nov. 3, 2026)
+
+A photographed actual teacher assessment is the **primary reference for
+worksheet structure and question-writing style**, not a document to duplicate.
+When uploaded, distinguish it from parent-created practice before processing.
+
+1. Inspect every page, read the printed directions and detect unit/chapter
+   boundaries and cumulative scope. Compare teacher announcements with the
+   actual test and official publisher review; flag any mismatch.
+2. Privately record an assessment-format profile keyed by subject, school
+   curriculum/edition, unit/chapter, review date and non-identifying source
+   reference: question count, topic mix, question families, three/four option
+   counts, answer mode, blank placement, word bank/matching/dictation use,
+   directions, page count, spacing and readability. Do **not** carry over
+   completed answers, handwriting, grades, marked corrections, or copyrighted
+   exam text into public files.
+3. For later tests, select the closest *verified* actual teacher example and
+   independently check the announced material against the current classroom
+   sources. Format evidence is historical; do not claim the next test has
+   precisely the same topics, question counts, or item order.
+4. Make original practice imitate the demonstrated type and difficulty:
+   e.g., a letter written on a blank with three vertically stacked choices,
+   word-bank sentence completion, or numbered spelling dictation. Use separate
+   teaching guide, student test-style sheet, and adult answer key.
+5. Evaluate coverage at **each verified current learning objective**, not just
+   whether practice looks realistic. Include all relevant prior chapters if
+   the publisher's chapter review is cumulative, and highlight unresolved
+   test-scope uncertainty.
+6. Update anonymous public rendering patterns in
+   `pages/teacher-test-format.mjs` only with real structure, plus regression
+   tests. Follow the normal protected PR, two QA gates and live release
+   verification; do not present an open PR as a deployed correction.
+
+Verified historical examples available as of this instruction include:
+a Grade 2 Chapter 1 religion quiz (ten word-bank completions); a Chapter 3
+religion quiz (five word-bank meanings, one picture choice, four true/false);
+three spelling tests (fifteen numbered dictation lines and bonus work);
+a math Chapter 1B post-test (twelve structured questions on two two-column
+pages with diagrams, number lines and two word problems); a two-page,
+thirty-item short-vowel phonics picture assessment (fifteen picture choices,
+then fifteen picture-word writing lines); and a Grade 2 religion Unit 1
+assessment (twenty three-choice letter answers across two columns).
+The originals are preserved in private Library archives and prior conversation
+attachments, not in this public repository. These are format **examples**,
+not promises about future school exams.
+
 ## Canonical 12-step school-photo workflow
 
 ### 1. Preserve the source and reconcile prior intake
