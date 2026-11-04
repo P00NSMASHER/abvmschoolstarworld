@@ -152,6 +152,13 @@ const checkedChoices=(profile,practice)=>
     typeof q.prompt==='string'&&q.prompt.trim() &&
     typeof q.answer==='string'&&q.choices.includes(q.answer));
 
+/** A partial, heterogeneous bank retains every verified item in its original answer form. */
+export function checkedBubbleQuestionForGuide(guide,question) {
+  const profile=teacherTestReferenceForGuide(guide) || classroomPracticeReferenceForGuide(guide);
+  return profile?.kind==='bubble-choice' && profile.response==='fill-bubble' &&
+    checkedChoices(profile,[question]) ? profile : null;
+}
+
 /** Only fully checked original items get a teacher-like bubble paper. */
 export function checkedBubblePaperFormat(guide,practice) {
   const profile=teacherTestReferenceForGuide(guide) || classroomPracticeReferenceForGuide(guide);
