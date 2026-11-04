@@ -58,3 +58,16 @@ for(const [name,guide,options,count] of [
     await info.attach('teacher-prep-v2-'+options+'-choice.pdf',{body:pdf,contentType:'application/pdf'});
   });
 }
+
+
+test('heterogeneous actual source practice keeps teacher bubbles and generic response forms',async({page})=>{
+  const guide=makeGuide('Reading / ELA','Grammar (Common & Proper Nouns)',3,2);
+  guide.practice[1].choices.push('Original choice D');
+  await page.setContent(renderTestWorksheet(guide),{waitUntil:'load'});
+  await expect(page.locator('main.student-test .teacher-bubble-choice-item')).toHaveCount(1);
+  await expect(page.locator('main.student-test .pick-problem')).toHaveCount(1);
+  await expect(page.locator('main.student-test .format-evidence')).toContainText('1 of 2 items');
+  await expect(page.locator('main.student-test .teacher-bubble-mark')).toHaveCount(3);
+  await expect(page.locator('main.student-test .choice')).toHaveCount(4);
+  await expect(page.locator('section.adult-key .key-list li')).toHaveCount(2);
+});
