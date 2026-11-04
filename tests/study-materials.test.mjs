@@ -1198,7 +1198,9 @@ test('Nov 12 noun packet prints all eight source-gated questions and correct key
     vocabulary:[],
   };
   const pipeline=buildGrade2ContentPipeline(pack,{sourceHash:pack.sourceHash});
-  const nouns=pipeline.questions.filter(question=>question.skill==='singular-plural-nouns');
+  const nouns=pipeline.questions
+    .filter(question=>question.skill==='singular-plural-nouns')
+    .map(question=>({...question,tier:'material'}));
   assert.equal(nouns.length,8,'the source-gated family must provide eight questions');
   const event={date:'2026-11-12',label:'Grammar (singular & plural nouns)',kind:'test'};
   const model=createStudyMaterials(opts({
