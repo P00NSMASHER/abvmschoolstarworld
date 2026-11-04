@@ -42,7 +42,7 @@ jobs:
   verify:
     name: Source-bound full release QA without exclusive data lock
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 25
     container:
       image: mcr.microsoft.com/playwright:v1.63.0-noble-amd64
       options: --ipc=host
@@ -205,6 +205,20 @@ jobs:
     steps:
       - name: Trust only the mounted Actions workspace
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Install checksum-verified jq for recovery contracts
+        run: |
+          mkdir -p "$RUNNER_TEMP/abvm-bin"
+          curl --fail --location --retry 2 --max-time 30 --retry-max-time 90 https://github.com/jqlang/jq/releases/download/jq-1.8.1/jq-linux-amd64 -o "$RUNNER_TEMP/abvm-bin/jq"
+          echo "020468de7539ce70ef1bceaf7cde2e8c4f2ca6c3afb84642aabc5c97d9fc2a0d  $RUNNER_TEMP/abvm-bin/jq" | sha256sum --check
+          chmod +x "$RUNNER_TEMP/abvm-bin/jq"
+          "$RUNNER_TEMP/abvm-bin/jq" --version
+          echo "$RUNNER_TEMP/abvm-bin" >> "$GITHUB_PATH"
+      - name: Set up Python for local app server and parser checks
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      # Only the current protected-main commit may publish. Caller-supplied
+      # refs must be immutable SHAs; no branch/tag/PR may select site content.
       - name: Check completed QA is still bound to current protected main
         shell: bash
         env:
