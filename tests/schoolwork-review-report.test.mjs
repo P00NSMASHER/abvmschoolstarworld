@@ -36,7 +36,7 @@ test('read-only report reconciles the exact published cumulative library',async(
   });
   assert.equal(report.sourceReviewQueue.length,86);
   assert.equal(report.lessonReviewQueue.length,36);
-  assert.deepEqual(report.attention.verifiedWeekOnlyLessonIds,['spelling-oct-09-2026','nov3-photo-math-ch2-written','nov3-photo-math-ch2-four-choice']);
+  assert.deepEqual(report.attention.verifiedWeekOnlyLessonIds,['nov3-photo-math-ch2-four-choice','nov3-photo-math-ch2-written','spelling-oct-09-2026']);
   assert.equal(report.releaseStatus,'HOLD_EXTERNAL_SIGNOFF');
   assert(Object.values(report.humanReleaseGates).every(value=>value==='EXTERNAL_REVIEW_REQUIRED'));
   assert.equal(report.lessonReviewQueue.reduce((count,lesson)=>count+lesson.questionIds.length,0),131);
