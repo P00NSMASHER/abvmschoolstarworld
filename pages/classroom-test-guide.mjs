@@ -1,6 +1,6 @@
 /** Print-friendly, photo-informed original Grade 2 practice, never teacher test copies. */
 import {premiumPaperCss,decoratePaper} from './premium-paper-theme.mjs?v=2';
-import {canRenderTeacherLetterChoice} from './teacher-test-format.mjs';
+import {canRenderTeacherLetterChoice,checkedBubblePaperFormat} from './teacher-test-format.mjs';
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clean = value => String(value ?? '').replace(/\s+/g,' ').trim();
 const arr = value => Array.isArray(value) ? value : [];
@@ -14,7 +14,7 @@ const dateText = date => {
 const subjectKind = guide => {
   const name=clean(guide?.label).toLowerCase(),subject=clean(guide?.subject).toLowerCase();
   if (/spelling|handwriting/.test(name) || /spelling|handwriting/.test(subject)) return 'spelling';
-  if (/grammar|predicate|punctuation|sentence types/.test(name)) return 'grammar';
+  if (/grammar|predicate|punctuation|sentence types|common.{0,8}proper nouns|proper nouns/.test(name)) return 'grammar';
   if (/math|subtraction|addition/.test(name) || subject==='math') return 'math';
   if (/religion|chapter|faith/.test(name) || subject==='religion') return 'religion';
   return 'reading';
@@ -61,7 +61,14 @@ const teacherExamPatternCss = [
   '.teacher-letter-choice-item .teacher-vertical-choices{display:block!important;margin-left:.12in}',
   '.teacher-letter-choice-item .teacher-choice-row{display:flex;gap:.08in;padding:.025in 0;font-size:10.4pt;line-height:1.26}',
   '.teacher-letter-choice-item .teacher-choice-letter{width:.22in;flex:0 0 .22in;font-weight:500}',
-  '@media screen and (max-width:700px){.teacher-letter-choice-problems{columns:1}}',
+  '.teacher-bubble-choice-problems{columns:2;column-gap:.26in;display:block!important;list-style:none!important}',
+  '.teacher-bubble-choice-item{display:block!important;break-inside:avoid;page-break-inside:avoid;min-height:1.05in;margin:0 0 .10in!important;padding:.1in .06in!important;border:0!important}',
+  '.teacher-bubble-choice-item .prompt{font-size:10.6pt!important;margin:0 0 .08in!important}',
+  '.teacher-bubble-options{display:grid!important;grid-template-columns:1fr;gap:.04in;padding-left:.12in}',
+  '.teacher-bubble-choice-item .teacher-bubble-option{display:flex;gap:.07in;align-items:baseline;font-size:10.1pt;line-height:1.25}',
+  '.teacher-bubble-option .teacher-bubble-mark{display:inline-block;flex:none;width:.16in;height:.16in;border:1.4px solid #222;border-radius:50%;background:transparent;align-self:center}',
+  '.teacher-bubble-option .teacher-bubble-letter{flex:none;width:.19in}',
+  '@media screen and (max-width:700px){.teacher-letter-choice-problems,.teacher-bubble-choice-problems{columns:1}}',
   '@media print{',
   '  .premium-paper .student-test.teacher-letter-choice{background:#fff!important;color:#111!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:0!important}',
   '  .premium-paper .student-test.teacher-letter-choice .sheet-header{background:#fff!important;border:0!important;border-bottom:2px solid #222!important;border-radius:0!important;padding:.05in 0!important;min-height:0!important}',
@@ -73,6 +80,8 @@ const teacherExamPatternCss = [
   '  .premium-paper .student-test.teacher-letter-choice .teacher-letter-choice-item{background:#fff!important;border:0!important;color:#111!important}',
   '  .premium-paper .student-test.teacher-letter-choice .teacher-letter-choice-problems{columns:2!important}',
   '  .premium-paper .student-test.teacher-letter-choice .teacher-choice-row{color:#111!important}',
+  '  .premium-paper .student-test.teacher-bubble-choice .teacher-bubble-choice-problems{columns:2!important}',
+  '  .premium-paper .student-test.teacher-bubble-choice .teacher-bubble-mark{border:1.5px solid #222!important;background:transparent!important}',
   '}'
 ].join('\n');
 
@@ -86,6 +95,15 @@ function teacherLetterChoiceHtml(item,index) {
       '<span>'+escape(choice)+'</span></div>').join('')+'</div></div></li>';
 }
 
+/** Realistic original bubble layout; full question content is never changed or dropped. */
+function teacherBubbleChoiceHtml(item,index) {
+  return '<li class="problem teacher-bubble-choice-item"><p class="prompt"><span class="number">'+
+    (index+1)+'.</span> '+escape(clean(item?.prompt))+'</p>'+
+    '<div class="teacher-bubble-options">'+arr(item?.choices).map((choice,j)=>
+      '<div class="teacher-bubble-option"><span class="teacher-bubble-mark" aria-hidden="true"></span>'+
+      '<span class="teacher-bubble-letter">'+String.fromCharCode(65+j)+'.</span>'+
+      '<span>'+escape(choice)+'</span></div>').join('')+'</div></li>';
+}
 function pageHeader(title,guide,adult=false) {
   return '<header class="sheet-header"><div class="paper-topline"><span>ABVM · GRADE 2 · PRACTICE</span><span>'+escape(dateText(guide?.date))+'</span></div>'+
     '<h1>'+escape(title)+'</h1><p class="test-label">'+(adult?'Parent answer key — keep separate':'Parent-created practice based on school topics')+'</p></header>';
@@ -189,6 +207,7 @@ export function renderClassroomStudyGuide(guide,dictionary=()=> '',options={}) {
   // Verified word lists use dictation; source-backed spelling patterns use the keyed question packet.
   const questions=arr(guide?.practice);
   const teacherLetterChoice=kind==='religion' && canRenderTeacherLetterChoice(guide,questions);
+  const bubbleFormat=!teacherLetterChoice?checkedBubblePaperFormat(guide,questions):null;
   if(kind==='spelling'&&!forcePracticePacket)return decoratePaper(head+spellingSheet(guide)+'</body></html>',kind);
   // A test packet must not silently drop verified topics or checked practice questions.
   const instructions={math:'Solve each problem. Show your work in the boxes. Write your answer clearly.',
@@ -209,13 +228,14 @@ export function renderClassroomStudyGuide(guide,dictionary=()=> '',options={}) {
       '<p>After reading, write what the whole story is mostly about and one detail that supports it.</p>'+
       '<label>Main idea</label><span class="response-line"></span><span class="response-line"></span>'+
       '<label>Supporting detail</label><span class="response-line"></span><span class="response-line"></span></article>').join('')+'</section>':'';
-  const student='<main class="sheet student-test'+(teacherLetterChoice?' teacher-letter-choice':'')+'">'+pageHeader(titles[kind],guide)+
+  const student='<main class="sheet student-test'+(teacherLetterChoice?' teacher-letter-choice':bubbleFormat?' teacher-bubble-choice':'')+'">'+pageHeader(titles[kind],guide)+
     '<div class="student-fields"><span>Name: <i class="field-line"></i></span><span>Date: <i class="field-line date"></i></span>'+
     '<span>Score: <i class="field-line score"></i> / '+questions.length+'</span></div>'+
-    '<div class="directions"><strong>Directions:</strong> '+escape(teacherLetterChoice?'Read each question. Write the letter of the best answer on the line.':instructions[kind])+'</div>'+
+    '<div class="directions"><strong>Directions:</strong> '+escape(teacherLetterChoice?'Read each question. Write the letter of the best answer on the line.':bubbleFormat?'Read each question. Fill in one bubble next to the best answer.':instructions[kind])+'</div>'+
     (guide?.scopeNotice?'<p class="caution scope-notice">'+escape(guide.scopeNotice)+'</p>':'')+
-    (questions.length?'<h2 class="section-title">'+escape(subjectHeading[kind])+'</h2><ol class="paper-problems '+(teacherLetterChoice?'teacher-letter-choice-problems ':kind==='math'?'math-grid':'')+'">'+
-      questions.map((row,i)=>teacherLetterChoice?teacherLetterChoiceHtml(row,i):questionHtml(row,i,kind)).join('')+'</ol>'
+    (bubbleFormat?'<p class="caution format-evidence">'+escape(bubbleFormat.origin==='prior-actual-teacher-test'?'Mode: Practice like my teacher. Original questions follow a previous actual teacher-test layout; future format is not guaranteed.':'Mode: Practice like my teacher. A teacher-marked publisher practice sheet informed this layout; it is not proof of the next test format.')+'</p>':'')+
+    (questions.length?'<h2 class="section-title">'+escape(subjectHeading[kind])+'</h2><ol class="paper-problems '+(teacherLetterChoice?'teacher-letter-choice-problems ':bubbleFormat?'teacher-bubble-choice-problems ':kind==='math'?'math-grid':'')+'">'+
+      questions.map((row,i)=>teacherLetterChoice?teacherLetterChoiceHtml(row,i):bubbleFormat?teacherBubbleChoiceHtml(row,i):questionHtml(row,i,kind)).join('')+'</ol>'
       :'<p class="caution">No matching original-practice questions are available for this assessment. Review the available class notes.</p>')+
     storyPractice+
     '<div class="student-self-check"><strong>Before I finish</strong><span>□ I answered every question.</span><span>□ I checked my work.</span></div>'+
