@@ -1,5 +1,6 @@
 /** Print-friendly, photo-informed original Grade 2 practice, never teacher test copies. */
 import {premiumPaperCss,decoratePaper} from './premium-paper-theme.mjs?v=2';
+import {canRenderTeacherLetterChoice} from './teacher-test-format.mjs';
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clean = value => String(value ?? '').replace(/\s+/g,' ').trim();
 const arr = value => Array.isArray(value) ? value : [];
@@ -51,6 +52,40 @@ const styles = '@page{size:Letter portrait;margin:.46in}'+
 '@media screen{body{background:#edf0f3;padding:20px}.sheet{background:#fff;padding:.46in;box-shadow:0 5px 22px #0002;margin:0 auto 16px}.adult-key{margin-top:16px;break-before:auto}}'+
 '@media screen and (max-width:640px){body{padding:9px;font-size:11pt}.sheet{width:100%;padding:13px;box-shadow:none;border-radius:8px}.paper-topline{font-size:8pt}.sheet-header h1{font-size:18pt}.field-line{width:1.1in}.field-line.date{width:.8in}.student-fields{gap:.11in;font-size:9pt}.choices{grid-template-columns:minmax(0,1fr)}.math-grid{grid-template-columns:minmax(0,1fr)}.word-list{grid-template-columns:repeat(2,minmax(0,1fr))}.activity-steps{grid-template-columns:minmax(0,1fr)}.key-list{columns:1}}'+
 '@media print{body{background:#fff}.sheet{max-width:none;width:100%}.adult-key{break-before:page}.problem,.memory-section{break-inside:avoid}}';
+const teacherExamPatternCss = [
+  '.teacher-letter-choice-problems{columns:2;column-gap:.3in;column-fill:auto;display:block!important;list-style:none!important}',
+  '.teacher-letter-choice-problems .teacher-letter-choice-item{break-inside:avoid;page-break-inside:avoid;display:flex;align-items:flex-start;gap:.1in;min-height:1.2in;margin:0 0 .14in;padding:.1in .04in!important;border:0!important;background:transparent!important}',
+  '.teacher-letter-choice-item .teacher-answer-blank{display:block;flex:0 0 .24in;border-bottom:1px solid #222;height:.27in;margin-top:.18in}',
+  '.teacher-letter-choice-item .teacher-prompt-and-options{min-width:0;flex:1}',
+  '.teacher-letter-choice-item .prompt{font-size:11.2pt!important;line-height:1.35!important;margin:0 0 .07in!important}',
+  '.teacher-letter-choice-item .teacher-vertical-choices{display:block!important;margin-left:.12in}',
+  '.teacher-letter-choice-item .teacher-choice-row{display:flex;gap:.08in;padding:.025in 0;font-size:10.4pt;line-height:1.26}',
+  '.teacher-letter-choice-item .teacher-choice-letter{width:.22in;flex:0 0 .22in;font-weight:500}',
+  '@media screen and (max-width:700px){.teacher-letter-choice-problems{columns:1}}',
+  '@media print{',
+  '  .premium-paper .student-test.teacher-letter-choice{background:#fff!important;color:#111!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:0!important}',
+  '  .premium-paper .student-test.teacher-letter-choice .sheet-header{background:#fff!important;border:0!important;border-bottom:2px solid #222!important;border-radius:0!important;padding:.05in 0!important;min-height:0!important}',
+  '  .premium-paper .student-test.teacher-letter-choice .sheet-header h1{color:#111!important;font-family:Arial,Helvetica,sans-serif!important;font-size:18pt!important}',
+  '  .premium-paper .student-test.teacher-letter-choice .sheet-header .premium-paper-hero{display:none!important}',
+  '  .premium-paper .student-test.teacher-letter-choice .section-title{background:#fff!important;border:0!important;border-bottom:1px solid #999!important;border-radius:0!important;color:#111!important;padding:0!important}',
+  '  .premium-paper .student-test.teacher-letter-choice .section-title .premium-mini-art{display:none!important}',
+  '  .premium-paper .student-test.teacher-letter-choice .directions{background:#fff!important;color:#111!important;border:0!important;border-radius:0!important;padding:0!important;font-weight:600!important}',
+  '  .premium-paper .student-test.teacher-letter-choice .teacher-letter-choice-item{background:#fff!important;border:0!important;color:#111!important}',
+  '  .premium-paper .student-test.teacher-letter-choice .teacher-letter-choice-problems{columns:2!important}',
+  '  .premium-paper .student-test.teacher-letter-choice .teacher-choice-row{color:#111!important}',
+  '}'
+].join('\n');
+
+function teacherLetterChoiceHtml(item,index) {
+  return '<li class="problem teacher-letter-choice-item">' +
+    '<span class="teacher-answer-blank" aria-label="Write one answer letter"></span>' +
+    '<div class="teacher-prompt-and-options"><p class="prompt"><span class="number">'+(index+1)+'.</span> '+
+      escape(clean(item?.prompt))+'</p>' +
+    '<div class="teacher-vertical-choices">'+arr(item?.choices).map((choice,j)=>
+      '<div class="teacher-choice-row"><span class="teacher-choice-letter">'+String.fromCharCode(65+j)+'.</span>'+
+      '<span>'+escape(choice)+'</span></div>').join('')+'</div></div></li>';
+}
+
 function pageHeader(title,guide,adult=false) {
   return '<header class="sheet-header"><div class="paper-topline"><span>ABVM · GRADE 2 · PRACTICE</span><span>'+escape(dateText(guide?.date))+'</span></div>'+
     '<h1>'+escape(title)+'</h1><p class="test-label">'+(adult?'Parent answer key — keep separate':'Parent-created practice based on school topics')+'</p></header>';
@@ -150,9 +185,10 @@ export function renderClassroomStudyGuide(guide,dictionary=()=> '',options={}) {
   const forcePracticePacket=Boolean(options?.forcePracticePacket);
   const kind=subjectKind(guide),titles={math:'Math Practice Test',grammar:'Grammar Practice Test',reading:'Reading Practice Test',religion:'Religion Practice Test',spelling:'Spelling Pattern Practice'};
   const head='<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+
-    escape(guide?.label || 'Study Guide')+'</title><style>'+styles+premiumPaperCss+'</style></head><body>';
+    escape(guide?.label || 'Study Guide')+'</title><style>'+styles+premiumPaperCss+teacherExamPatternCss+'</style></head><body>';
   // Verified word lists use dictation; source-backed spelling patterns use the keyed question packet.
   const questions=arr(guide?.practice);
+  const teacherLetterChoice=kind==='religion' && canRenderTeacherLetterChoice(guide,questions);
   if(kind==='spelling'&&!forcePracticePacket)return decoratePaper(head+spellingSheet(guide)+'</body></html>',kind);
   // A test packet must not silently drop verified topics or checked practice questions.
   const instructions={math:'Solve each problem. Show your work in the boxes. Write your answer clearly.',
@@ -173,12 +209,12 @@ export function renderClassroomStudyGuide(guide,dictionary=()=> '',options={}) {
       '<p>After reading, write what the whole story is mostly about and one detail that supports it.</p>'+
       '<label>Main idea</label><span class="response-line"></span><span class="response-line"></span>'+
       '<label>Supporting detail</label><span class="response-line"></span><span class="response-line"></span></article>').join('')+'</section>':'';
-  const student='<main class="sheet student-test">'+pageHeader(titles[kind],guide)+
+  const student='<main class="sheet student-test'+(teacherLetterChoice?' teacher-letter-choice':'')+'">'+pageHeader(titles[kind],guide)+
     '<div class="student-fields"><span>Name: <i class="field-line"></i></span><span>Date: <i class="field-line date"></i></span>'+
     '<span>Score: <i class="field-line score"></i> / '+questions.length+'</span></div>'+
-    '<div class="directions"><strong>Directions:</strong> '+escape(instructions[kind])+'</div>'+
-    (questions.length?'<h2 class="section-title">'+escape(subjectHeading[kind])+'</h2><ol class="paper-problems '+(kind==='math'?'math-grid':'')+'">'+
-      questions.map((row,i)=>questionHtml(row,i,kind)).join('')+'</ol>'
+    '<div class="directions"><strong>Directions:</strong> '+escape(teacherLetterChoice?'Read each question. Write the letter of the best answer on the line.':instructions[kind])+'</div>'+
+    (questions.length?'<h2 class="section-title">'+escape(subjectHeading[kind])+'</h2><ol class="paper-problems '+(teacherLetterChoice?'teacher-letter-choice-problems ':kind==='math'?'math-grid':'')+'">'+
+      questions.map((row,i)=>teacherLetterChoice?teacherLetterChoiceHtml(row,i):questionHtml(row,i,kind)).join('')+'</ol>'
       :'<p class="caution">No matching original-practice questions are available for this assessment. Review the available class notes.</p>')+
     storyPractice+
     '<div class="student-self-check"><strong>Before I finish</strong><span>□ I answered every question.</span><span>□ I checked my work.</span></div>'+
