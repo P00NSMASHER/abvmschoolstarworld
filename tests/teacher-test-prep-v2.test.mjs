@@ -60,24 +60,41 @@ test('math Chapter 2 publisher practice uses four bubbles while remaining explic
   assert.match(student,/student-test teacher-bubble-choice/);
   assert.equal((student.match(/class="problem teacher-bubble-choice-item"/g)||[]).length,16);
   assert.equal((student.match(/class="teacher-bubble-mark"/g)||[]).length,64);
-  assert.match(student,/not proof of the next test format/);
+  assert.match(student,/next test format is unverified/);
   const notes=renderTestStudyGuide(guide);
   assert.match(notes,/Previous publisher practice format \(not a teacher-issued test\)/);
   assert.match(notes,/next test format is unverified/);
   assert.match(classroomPracticeFormatSummary(guide),/not a teacher-issued test/);
 });
 
-test('unknown and partially unchecked formats never fabricate bubble papers or discard practice',()=>{
+test('mixed source-backed questions use only eligible bubble formats and preserve generic responses',()=>{
   const rows=[question(1,['one','two','three']),{
     ...question(2,['one','two','three']),answer:'not a checked answer',
   }];
   const guide=nounGuide(rows),student=renderTestWorksheet(guide).split('<section class="sheet adult-key">')[0];
   assert.equal(checkedBubblePaperFormat(guide,rows),null);
-  assert.doesNotMatch(student,/class="problem teacher-bubble-choice-item"/);
-  assert.equal((student.match(/class="problem pick-problem"/g)||[]).length,2);
+  assert.equal((student.match(/class="problem teacher-bubble-choice-item"/g)||[]).length,1);
+  assert.equal((student.match(/class="problem pick-problem"/g)||[]).length,1);
+  assert.match(student,/1 of 2 items use the observed bubble layout/);
   assert.ok(rows.every(q=>student.includes(q.prompt)));
   assert.equal(teacherTestReferenceForGuide({...guide,label:'Reading Text Set 4'}),null);
   assert.equal(classroomPracticeReferenceForGuide({...guide,label:'Math Chapter 1B',subject:'Math'}),null);
+});
+
+test('Math worksheet preserves mixed three/four-option original questions without fabricating a fourth answer',()=>{
+  const practice=[
+    {id:'four',subject:'Math',skill:'place-value',prompt:'Four-choice synthetic math problem?',
+      choices:['1','2','3','4'],answer:'2',explanation:'Synthetic source explanation.'},
+    {id:'three',subject:'Math',skill:'place-value',prompt:'Three-choice synthetic math problem?',
+      choices:['5','6','7'],answer:'6',explanation:'Synthetic source explanation.'},
+  ];
+  const guide=mathGuide(practice),student=renderTestWorksheet(guide).split('<section class="sheet adult-key">')[0];
+  assert.equal((student.match(/class="problem teacher-bubble-choice-item"/g)||[]).length,1);
+  assert.equal((student.match(/class="problem pick-problem"/g)||[]).length,1);
+  assert.equal((student.match(/class="teacher-bubble-mark"/g)||[]).length,4);
+  assert.ok(practice.every(q=>student.includes(q.prompt)));
+  assert.match(student,/1 of 2 items use the observed bubble layout/);
+  assert.doesNotMatch(student,/Synthetic source explanation/);
 });
 
 test('private learning priority only selects unresolved skill evidence',()=>{
