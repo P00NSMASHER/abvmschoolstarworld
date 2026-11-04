@@ -1184,3 +1184,46 @@ test('notes expose only explicitly sourced chapter explanations in full and comp
     assert.equal(data.notes.find(row=>row.kind==='study-note').text,'Unscoped class note.');
   }
 });
+
+
+test('Nov 12 noun packet prints all eight source-gated questions and correct keys responsively',()=>{
+  const pack={
+    sourceHash:'teacher-pages-nov12-nouns',
+    sourceCheckedAt:'2026-11-04T20:30:00Z',
+    subjects:[{
+      subject:'Reading / ELA',
+      topics:['Grammar: singular & plural nouns (test Thursday, Nov. 12)'],
+      studyNotes:[],
+    }],
+    vocabulary:[],
+  };
+  const pipeline=buildGrade2ContentPipeline(pack,{sourceHash:pack.sourceHash});
+  const nouns=pipeline.questions.filter(question=>question.skill==='singular-plural-nouns');
+  assert.equal(nouns.length,8,'the source-gated family must provide eight questions');
+  const event={date:'2026-11-12',label:'Grammar (singular & plural nouns)',kind:'test'};
+  const model=createStudyMaterials(opts({
+    now:()=> '2026-11-11T17:00:00Z',
+    events:[event],
+    pack:{...pack,contentPipeline:pipeline},
+    catalog:catalog(nouns,pack.sourceHash),
+  }));
+  const available=model.printableTests().tests;
+  const index=available.findIndex(row=>row.label===event.label);
+  assert.ok(index>=0,'the Nov 12 test must appear in printable test prep');
+  const guide=model.testGuide(index);
+  assert.equal(guide.practice.length,8,'all eight noun questions must reach the printable route');
+  assert.ok(guide.practice.every(question=>question.skill==='singular-plural-nouns'));
+  const worksheet=printableWorksheetHtml(guide);
+  for(const question of guide.practice){
+    assert.ok(worksheet.includes(question.prompt),'worksheet omitted '+question.id);
+    assert.ok(worksheet.includes(question.answer),'answer key omitted '+question.id);
+  }
+  assert.match(worksheet,/Cats name more than one cat\./);
+  assert.doesNotMatch(worksheet,/\bCats (?:names|tells)\b/);
+  assert.match(worksheet,/@media screen and \(max-width:620px\)/,
+    'the packet must retain its single-column mobile layout');
+  assert.match(worksheet,/@media print\{body\{background:#fff\}/,
+    'the packet must retain its black-on-white print treatment');
+  assert.match(worksheet,/\.adult-key\{break-before:page\}/,
+    'the answer key must start on a separate printed page');
+});
