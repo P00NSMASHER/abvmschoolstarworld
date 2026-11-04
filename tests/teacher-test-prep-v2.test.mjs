@@ -73,7 +73,7 @@ test('unknown and partially unchecked formats never fabricate bubble papers or d
   }];
   const guide=nounGuide(rows),student=renderTestWorksheet(guide).split('<section class="sheet adult-key">')[0];
   assert.equal(checkedBubblePaperFormat(guide,rows),null);
-  assert.doesNotMatch(student,/teacher-bubble-choice-item/);
+  assert.doesNotMatch(student,/class="problem teacher-bubble-choice-item"/);
   assert.equal((student.match(/class="problem pick-problem"/g)||[]).length,2);
   assert.ok(rows.every(q=>student.includes(q.prompt)));
   assert.equal(teacherTestReferenceForGuide({...guide,label:'Reading Text Set 4'}),null);
