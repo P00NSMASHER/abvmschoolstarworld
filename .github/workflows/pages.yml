@@ -30,8 +30,9 @@ permissions:
   pages: write
   id-token: write
 
-# Serialize publications rather than canceling an active release when a
-# teacher-page refresh lands while post-deployment verification is running.
+# Serialize whole candidate releases, including full QA, without blocking
+# source writers. Only the short publish job takes the shared source mutex.
+# A newer main commit invalidates the preflight SHA and must fail closed.
 concurrency:
   group: "pages"
   cancel-in-progress: false
