@@ -184,3 +184,17 @@ test('Nov 12 singular/plural noun exam routes all eight exact questions and fail
     );
   }
 });
+
+test('Nov 13 three-letter blends routes eight matching spelling questions only, never older topics',()=>{
+  const blends=Array.from({length:8},(_,i)=>({id:'blend-'+i,subject:'Spelling / Handwriting',skill:'three-letter-blends'}));
+  const unrelated=[
+    {id:'digraph',subject:'Spelling / Handwriting',skill:'consonant-digraphs'},
+    {id:'vowel',subject:'Spelling / Handwriting',skill:'long-o'},
+    {id:'cross',subject:'Reading / ELA',skill:'three-letter-blends'},
+  ];
+  for(const label of ['Spelling (3 letter blends) / Handwriting','Spelling (three-letter blends) / Handwriting']){
+    assert.deepEqual(questionsForTest({label,date:'2026-11-13'},[...blends,...unrelated]).map(q=>q.id),blends.map(q=>q.id));
+    assert.deepEqual(questionsForTest({label,date:'2026-11-13'},unrelated),[],
+      'missing current blend evidence must not be padded with older spelling topics');
+  }
+});
