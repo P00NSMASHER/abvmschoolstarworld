@@ -104,22 +104,35 @@ test('candidate branch identity is stable across unrelated source-hash churn', (
   assert.match(workflow, /Source revision: \$SOURCE_HASH/);
 });
 
-test('refresh publication reconciles main races without force-pushing unverified state', () => {
-  const workflow = readFileSync('.github/workflows/sync-study-pack.yml', 'utf8');
-  assert.match(workflow, /for ATTEMPT in 1 2 3/);
-  assert.match(workflow, /git fetch origin main/);
-  assert.match(workflow, /git reset --hard "\$REMOTE_MAIN"/);
-  assert.match(workflow, /refresh-teacher-pages\.mjs --autopilot-report=/);
-  assert.match(workflow, /node scripts\/assert-safe-teacher-refresh\.mjs --report=\.curriculum-coverage-plan\.json/);
-  assert.match(workflow, /npm run qa/);
-  assert.match(workflow, /git push origin HEAD:main/);
-  assert.doesNotMatch(workflow, /git push[^\n]*--force/);
+test('refresh publication reconciles main races without force-pushing unverified state',()=>{
+  const workflow=readFileSync('.github/workflows/sync-study-pack.yml','utf8');
+  const source=workflow.split('\n  refresh:\n')[1]?.split('\n  publish:\n')[0]||'';
+  const publisher=workflow.split('\n  publish:\n')[1]?.split('\n  deploy:\n')[0]||'';
+  assert.match(source,/refresh-teacher-pages\.mjs --autopilot-report=/);
+  assert.match(source,/node scripts\/assert-safe-teacher-refresh\.mjs --report=\.curriculum-coverage-plan\.json/);
+  assert.match(source,/Validate the candidate app before changing main\n\s+run: npm run qa/);
+  assert.match(source,/SHA256SUMS/);
+  assert.doesNotMatch(source,/group: abvm-verified-school-state/);
+  assert.match(publisher,/git fetch --no-tags origin main/);
+  assert.match(publisher,/git merge-base --is-ancestor/);
+  assert.match(publisher,/git diff --name-only "\$VERIFIED_BASE" "\$current"/);
+  assert.match(publisher,/Main changed outside isolated Homework/);
+  assert.match(publisher,/git reset --hard "\$current"/);
+  assert.match(publisher,/sha256sum --check SHA256SUMS/);
+  assert.match(publisher,/Reject stale teacher data after a publication queue delay/);
+  assert.match(publisher,/git push origin HEAD:main/);
+  assert.doesNotMatch(publisher,/npm run qa/,'no long QA under the source-publication mutex');
+  assert.doesNotMatch(workflow,/git push[^\n]*--force/);
 });
 
-test('teacher refresh timeout covers full dual-browser QA plus bounded main-race revalidation', () => {
-  const workflow = readFileSync('.github/workflows/sync-study-pack.yml', 'utf8');
-  const refreshJob = workflow.match(/jobs:\n  refresh:\n([\s\S]*?)\n  deploy:/)?.[1] || '';
-  assert.match(refreshJob, /timeout-minutes:\s*45/);
-  assert.match(refreshJob, /Install Chromium and WebKit for candidate QA/);
-  assert.match(refreshJob, /for ATTEMPT in 1 2 3/);
+test('teacher full QA keeps its timeout while short locked publication has a separate bounded budget',()=>{
+  const workflow=readFileSync('.github/workflows/sync-study-pack.yml','utf8');
+  const source=workflow.split('\n  refresh:\n')[1]?.split('\n  publish:\n')[0]||'';
+  const publisher=workflow.split('\n  publish:\n')[1]?.split('\n  deploy:\n')[0]||'';
+  assert.match(source,/timeout-minutes:\s*45/);
+  assert.match(source,/Install Chromium and WebKit for candidate QA/);
+  assert.match(publisher,/timeout-minutes:\s*10/);
+  assert.match(publisher,/needs: refresh/);
+  assert.match(publisher,/group: abvm-verified-school-state/);
+  assert.match(publisher,/steps\.confirm-published-sha\.outputs\.sha/);
 });

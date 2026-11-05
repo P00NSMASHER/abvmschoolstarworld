@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const read=name=>readFileSync(new URL('../.github/workflows/'+name,import.meta.url),'utf8').replaceAll('\r\n','\n');
 const jobs={
-  'sync-study-pack.yml':['refresh','reviewed-lunch'],
+  'sync-study-pack.yml':['publish','reviewed-lunch'],
   'refresh-current-homework.yml':['homework'],
   'sync-uploaded-notices.yml':['integrate'],
   'import-yahoo-weekly-reminders.yml':['import'],
@@ -36,6 +36,17 @@ test('Pages retains exact-source admission and final guard around full release Q
   assert.match(pages,/Run release QA\n\s+run: npm run qa/);
   assert.match(pages,/Main advanced while QA ran/);
   assert.match(pages,/Verify live lunch data and visible mobile flows/);
+});
+test('teacher source scan and browser QA cannot hold the exclusive publish mutex',()=>{
+  const teacher=read('sync-study-pack.yml');
+  const verify=job(teacher,'refresh'),publish=job(teacher,'publish');
+  assert.match(verify,/Validate the candidate app before changing main\n\s+run: npm run qa/);
+  assert.doesNotMatch(verify,/group: abvm-verified-school-state/);
+  assert.match(publish,/needs: refresh/);
+  assert.match(publish,/concurrency:\n\s+group: abvm-verified-school-state/);
+  assert.doesNotMatch(publish,/npm run qa/);
+  assert.match(publish,/Reject incompatible main drift and restore verified candidate/);
+  assert.match(publish,/Commit verified teacher candidate without rerunning long QA under lock/);
 });
 test('a scheduled recovery tick does not require a preceding workflow to finish',()=>{
   const recovery=read('daily-source-recovery.yml');

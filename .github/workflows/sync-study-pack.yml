@@ -78,16 +78,14 @@ concurrency:
 
 jobs:
   refresh:
+    # Scan and full QA are read/prepare operations and do NOT occupy the
+    # shared source/publication mutex. Publication is a separate locked job.
     permissions:
       contents: write
       pull-requests: write
-    # One mutation/publication at a time; job scope avoids parent-child deadlock.
-    concurrency:
-      group: abvm-verified-school-state
-      cancel-in-progress: false
-      queue: max
     outputs:
-      published_sha: ${{ steps.confirm-published-sha.outputs.sha }}
+      base_sha: ${{ steps.source-base.outputs.sha }}
+      prepared_attempt: ${{ steps.source-base.outputs.attempt }}
     # Full source scan, Chromium/WebKit QA, and a bounded main-race revalidation
     # can legitimately exceed 25 minutes without indicating a stuck refresh.
     timeout-minutes: 45
@@ -120,6 +118,13 @@ jobs:
       - uses: actions/checkout@v6
         with:
           ref: main
+      - name: Bind verified teacher candidate to an immutable main revision
+        id: source-base
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "attempt=${{ github.run_attempt }}" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-node@v7
         with:
@@ -261,60 +266,24 @@ jobs:
       - name: Validate the candidate app before changing main
         run: npm run qa
 
-      - name: Commit refreshed pack against latest main
+
+      - name: Seal full-QA-validated teacher source data for locked publication
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet -- pages/data/study-pack.json pages/data/study-archive.json; then
-            echo "No school-pack changes."
-            exit 0
-          fi
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          for ATTEMPT in 1 2 3; do
-            git fetch origin main
-            REMOTE_MAIN="$(git rev-parse origin/main)"
-            LOCAL_HEAD="$(git rev-parse HEAD)"
-
-            if [ "$LOCAL_HEAD" != "$REMOTE_MAIN" ]; then
-              echo "main advanced during refresh QA; regenerating and revalidating on $REMOTE_MAIN."
-              git reset --hard "$REMOTE_MAIN"
-              node scripts/refresh-teacher-pages.mjs --autopilot-report=.curriculum-coverage-plan.json
-              node scripts/assert-safe-teacher-refresh.mjs --report=.curriculum-coverage-plan.json
-              node scripts/check-refresh-health.mjs --require-today --max-age-hours 1
-              npm run qa
-            fi
-
-            if git diff --quiet -- pages/data/study-pack.json pages/data/study-archive.json; then
-              echo "Latest main already contains the refreshed school pack."
-              exit 0
-            fi
-
-            git add pages/data/study-pack.json pages/data/study-archive.json
-            git commit -m "Refresh verified ABVM teacher pages"
-            if git push origin HEAD:main; then
-              exit 0
-            fi
-
-            echo "main moved during publish attempt $ATTEMPT; retrying from the latest verified base."
-          done
-
-          echo "Could not publish the verified school pack after 3 main-race retries." >&2
-          exit 1
-
-      - name: Confirm exact published main SHA for gated Pages handoff
-        id: confirm-published-sha
-        shell: bash
-        run: |
-          set -euo pipefail
-          git fetch --no-tags origin main
-          EXPECTED="$(git rev-parse refs/remotes/origin/main)"
-          CURRENT="$(git ls-remote --exit-code origin refs/heads/main | cut -f1)"
-          test "$EXPECTED" = "$CURRENT" || { echo 'Main moved during release SHA handoff.' >&2; exit 1; }
-          test "${#CURRENT}" -eq 40 || { echo 'Invalid release SHA.' >&2; exit 1; }
-          echo "sha=$CURRENT" >> "$GITHUB_OUTPUT"
+          mkdir -p "$RUNNER_TEMP/abvm-teacher-verified/pages/data"
+          cp pages/data/study-pack.json "$RUNNER_TEMP/abvm-teacher-verified/pages/data/study-pack.json"
+          cp pages/data/study-archive.json "$RUNNER_TEMP/abvm-teacher-verified/pages/data/study-archive.json"
+          cd "$RUNNER_TEMP/abvm-teacher-verified"
+          sha256sum pages/data/study-pack.json pages/data/study-archive.json > SHA256SUMS
+          sha256sum --check SHA256SUMS
+      - name: Preserve only source bytes validated by the exact full QA
+        uses: actions/upload-artifact@v7
+        with:
+          name: abvm-teacher-verified-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/abvm-teacher-verified/
+          retention-days: 7
+          if-no-files-found: error
 
       - name: Retain failed candidate QA evidence for bounded recovery
         if: failure()
@@ -327,16 +296,108 @@ jobs:
           retention-days: 14
           if-no-files-found: ignore
 
+  publish:
+    name: Commit only exact checked source data under the shared writer lock
+    needs: refresh
+    permissions:
+      contents: write
+    concurrency:
+      group: abvm-verified-school-state
+      cancel-in-progress: false
+      queue: max
+    outputs:
+      published_sha: ${{ steps.confirm-published-sha.outputs.sha }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout verified teacher candidate base
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.refresh.outputs.base_sha }}
+          fetch-depth: 0
+      - name: Restore source bytes approved by the exact successful QA
+        uses: actions/download-artifact@v8
+        with:
+          name: abvm-teacher-verified-${{ github.run_id }}-${{ needs.refresh.outputs.prepared_attempt }}
+          path: .abvm-teacher-verified
+      - name: Reject incompatible main drift and restore verified candidate
+        shell: bash
+        env:
+          VERIFIED_BASE: ${{ needs.refresh.outputs.base_sha }}
+        run: |
+          set -euo pipefail
+          [[ "$VERIFIED_BASE" =~ ^[0-9a-f]{40}$ ]] || { echo '::error::Missing verified candidate SHA'; exit 1; }
+          test "$(git rev-parse HEAD)" = "$VERIFIED_BASE"
+          (cd .abvm-teacher-verified && sha256sum --check SHA256SUMS)
+          git fetch --no-tags origin main
+          remote_main="$(git ls-remote --exit-code origin refs/heads/main | cut -f1)"
+          current="$(git rev-parse refs/remotes/origin/main)"
+          test "$current" = "$remote_main"
+          git merge-base --is-ancestor "$VERIFIED_BASE" "$current" || {
+            echo '::error::Verified teacher base no longer precedes current main.' >&2
+            exit 1
+          }
+          # Only independently verified Homework data may advance main between
+          # exact-head teacher QA and this locked source commit. Any code,
+          # curricular or other data change requires a fresh full QA run.
+          changed_paths="$(git diff --name-only "$VERIFIED_BASE" "$current")" || {
+            echo '::error::Could not inspect all upstream changes; no publication.' >&2
+            exit 1
+          }
+          while IFS= read -r changed; do
+            [[ -z "$changed" ]] && continue
+            case "$changed" in
+              'pages/data/homework-current.json') ;;
+              *) echo "::error::Main changed outside isolated Homework: $changed"; exit 1 ;;
+            esac
+          done <<< "$changed_paths"
+          git reset --hard "$current"
+          cp .abvm-teacher-verified/pages/data/study-pack.json pages/data/study-pack.json
+          cp .abvm-teacher-verified/pages/data/study-archive.json pages/data/study-archive.json
+          (cd .abvm-teacher-verified && sha256sum --check SHA256SUMS)
+          cmp .abvm-teacher-verified/pages/data/study-pack.json pages/data/study-pack.json
+          cmp .abvm-teacher-verified/pages/data/study-archive.json pages/data/study-archive.json
+      - name: Reject stale teacher data after a publication queue delay
+        shell: bash
+        run: node scripts/check-refresh-health.mjs --require-today --max-age-hours 1
+      - name: Commit verified teacher candidate without rerunning long QA under lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if git diff --quiet -- pages/data/study-pack.json pages/data/study-archive.json; then
+            echo "Published source is already identical; no new main commit needed."
+          else
+            git add pages/data/study-pack.json pages/data/study-archive.json
+            git commit -m "Refresh verified ABVM teacher pages"
+          fi
+          # The shared lock excludes cooperating school-data writers. If an
+          # external human/code writer advanced main, never force it backwards.
+          git push origin HEAD:main
+      - name: Confirm exact published main SHA for gated Pages handoff
+        id: confirm-published-sha
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          EXPECTED="$(git rev-parse refs/remotes/origin/main)"
+          CURRENT="$(git ls-remote --exit-code origin refs/heads/main | cut -f1)"
+          test "$EXPECTED" = "$CURRENT" || { echo 'Main moved during release SHA handoff.' >&2; exit 1; }
+          test "${#CURRENT}" -eq 40 || { echo 'Invalid release SHA.' >&2; exit 1; }
+          echo "sha=$CURRENT" >> "$GITHUB_OUTPUT"
+
+
   deploy:
     name: deploy verified refresh through Pages workflow
     # Reviewed lunch and teacher refresh previously raced: lunch could commit
     # verified source changes during the 1,000+ test Pages QA, invalidating its
     # admitted main SHA. Finish both source lanes before selecting the release.
-    needs: [refresh, reviewed-lunch]
+    needs: [publish, reviewed-lunch]
     # A verified lunch-only change still publishes when curriculum QA is held.
     # An unchanged lunch-only check cannot turn a failed teacher refresh into
     # an unverified publication.
-    if: ${{ always() && (needs.refresh.result == 'success' || (needs.reviewed-lunch.result == 'success' && needs.reviewed-lunch.outputs.changed == 'true')) }}
+    if: ${{ always() && (needs.publish.result == 'success' || (needs.reviewed-lunch.result == 'success' && needs.reviewed-lunch.outputs.changed == 'true')) }}
     permissions:
       contents: read
       pages: write
@@ -346,7 +407,7 @@ jobs:
       # An immutable SHA from reviewed-lunch wins when available; teacher
       # refresh SHA is the fallback if lunch validation failed. The publisher
       # independently rejects refs that are not the exact current main HEAD.
-      ref: ${{ needs.reviewed-lunch.outputs.published_sha || needs.refresh.outputs.published_sha }}
+      ref: ${{ needs.reviewed-lunch.outputs.published_sha || needs.publish.outputs.published_sha }}
       reconcile_latest_main: true
   reviewed-lunch:
     # One mutation/publication at a time; job scope avoids parent-child deadlock.
@@ -355,7 +416,7 @@ jobs:
       cancel-in-progress: false
       queue: max
     name: Refresh reviewed lunch week independently of held curriculum
-    needs: refresh
+    needs: publish
     outputs:
       published_sha: ${{ steps.confirm-lunch-published-sha.outputs.sha }}
       changed: ${{ steps.lunch-change.outputs.changed }}

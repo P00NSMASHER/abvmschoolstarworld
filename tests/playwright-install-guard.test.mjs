@@ -129,7 +129,18 @@ test('all dual-browser CI jobs use a version-pinned official image matching the 
   const workflow=readFileSync(new URL('../.github/workflows/'+name,import.meta.url),'utf8');
   const jobs=workflow.split('    runs-on: ubuntu-latest').slice(1);
   assert.ok(jobs.length,name);
+  if(name==='sync-study-pack.yml')assert.equal(jobs.length,3,
+    'teacher preparation, short locked publisher, and lunch verification must remain separate');
   for(const job of jobs){
+   const shortPublisher=name==='sync-study-pack.yml'&&
+     job.includes('Reject incompatible main drift and restore verified candidate');
+   if(shortPublisher){
+     assert.match(job,/download-artifact@v8/,name);
+     assert.match(job,/git merge-base --is-ancestor/,name);
+     assert.match(job,/sha256sum --check SHA256SUMS/,name);
+     assert.doesNotMatch(job,/npm run qa/,'source publisher must never run browser QA under lock');
+     continue;
+   }
    assert.ok(job.includes('image: mcr.microsoft.com/playwright:v'+version+'-noble-amd64\n'),name);
    assert.ok(job.includes('uses: actions/setup-python@v7'),name);
    assert.ok(job.includes('jq-1.8.1/jq-linux-amd64'),name);

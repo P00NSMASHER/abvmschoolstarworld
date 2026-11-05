@@ -2,7 +2,7 @@
 
 ## Single coordination contract
 
-All source writers and the Pages publisher use the job-level `abvm-verified-school-state` concurrency group with `cancel-in-progress: false` and `queue: max`. Parent workflow locks remain distinct. Never put the common lock on a reusable caller's whole workflow: that can block the child publisher behind its own parent.
+All **source mutation jobs** and the Pages publisher use the job-level `abvm-verified-school-state` concurrency group with `cancel-in-progress: false` and `queue: max`. Long-running read-only source scans and full candidate QA execute outside that mutex. Parent workflow locks remain distinct. Never put the common lock on a reusable caller's whole workflow: that can block the child publisher behind its own parent.
 
 Teacher, reviewed lunch, Homework, reviewed notices and Yahoo jobs retain their independent source validation. A completed collection stays on main even if publication later fails. Queued trusted source workflows hand their verified source SHA to Pages with `reconcile_latest_main: true`. Admission selects the then-current immutable main SHA and runs the full existing release QA, final main-identity guard, deployment and live checks. Arbitrary refs and non-main callers remain rejected. Human code merges can still advance main during QA; that final guard must remain.
 
@@ -13,6 +13,16 @@ The guarded Pages workflow now has two separately accountable jobs: `verify` and
 This removes the long browser-test hold on source updates, while keeping source writers serialized against the actual publication operation. If main advances during QA, the old candidate is **rejected**, not grandfathered into release. A later authorized source/push workflow and existing bounded recovery controller must publish the newly checked main; a stale PR or run is not accepted. A successful source commit or an active queued publish still does not establish live parity. Do not relax the independent watchdog's complete Homework and study-pack comparisons.
 
 The goal is reducing recurring source/Pages queue contention, not guaranteeing zero propagation time on third-party infrastructure. Check actual production latency and real scheduled runs after release; never report this change as permanently proven merely because its static tests pass.
+
+## Independent teacher scan and locked source commit (November 4, 2026)
+
+The teacher refresh has separate `refresh` and `publish` jobs. `refresh` scans the official six pages, isolates unsupported candidate work, validates exact teacher evidence, runs **full Chromium/WebKit/App QA**, and seals the two validated source JSON files together with their SHA-256 checksums and the immutable starting main SHA. It does not hold the school-data writer mutex. Candidate PR bookkeeping remains isolated from these source files.
+
+Only a successful `refresh` permits the `publish` job to acquire the shared mutex. It restores and checksum-verifies **the exact candidate artifacts from the successful refresh attempt**. Before applying them, it checks current origin/main is an actual descendant of the verified base. Any intervening changes other than `pages/data/homework-current.json` are rejected because the original QA did not test that combined source/code state. An independent Homework update is the sole allowed disjoint change, and is retained without rewriting. The verified teacher source must still pass the same within-one-hour freshness check under the commit lock. The publisher may only commit those two original approved files and uses a normal non-force push; it reports the live current SHA only after an exact remote check.
+
+A failed or stale candidate remains **unpublished**; neither skipped QA nor a successful scan alone is proof of published source. Existing bounded recovery/schedule logic may initiate a new full verification. The independent health dashboard must require both successful stages before treating a still-pending teacher parent as verified publication. The downstream guarded Pages workflow still performs full release QA on the exact resulting main and verifies real live parity.
+
+The reviewed-lunch path retains its own independent verification and protected shared mutation lock. Reducing the teacher/Pages QA lock contention improves throughput but is not evidence of a permanently zero-latency CDN; retain all latency monitoring and the full 24-hour real-world acceptance window.
 
 ## Recovery controller
 
