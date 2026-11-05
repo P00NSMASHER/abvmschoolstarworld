@@ -12235,11 +12235,11 @@
           ],
           "prompt": "Why is “cats” plural while “cat” is singular?",
           "choices": [
-            "Cats names more than one cat.",
-            "Cats names only one cat.",
-            "Cats tells what an animal does."
+            "Cats name more than one cat.",
+            "Cats name only one cat.",
+            "Cats tell what an animal does."
           ],
-          "answer": "Cats names more than one cat.",
+          "answer": "Cats name more than one cat.",
           "explanation": "The added -s makes cats refer to more than one animal.",
           "hint": "Ask how many animals each noun names.",
           "sourceFact": "Verified Grade 2 skill: Singular and plural nouns",
@@ -12258,11 +12258,11 @@
           "difficulty": 3,
           "questionType": "reasoning",
           "choiceDiagnostics": {
-            "Cats names only one cat.": {
+            "Cats name only one cat.": {
               "misconception": "singular-plural-nouns-distractor",
               "feedback": "Review: Singular and plural nouns. Then use the clue in the question."
             },
-            "Cats tells what an animal does.": {
+            "Cats tell what an animal does.": {
               "misconception": "singular-plural-nouns-distractor",
               "feedback": "Review: Singular and plural nouns. Then use the clue in the question."
             }
@@ -12274,8 +12274,8 @@
               "Uses the clue, rule, or evidence required by the item."
             ],
             "partialCredit": {
-              "Cats names only one cat.": 0,
-              "Cats tells what an animal does.": 0
+              "Cats name only one cat.": 0,
+              "Cats tell what an animal does.": 0
             }
           },
           "evidenceContract": {

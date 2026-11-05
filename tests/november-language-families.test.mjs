@@ -94,3 +94,23 @@ test('eligible family rules are limited to exact named subjects and do not enabl
   assert.equal(matchCurriculumFamily('Religion','singular & plural nouns'),null);
   assert.equal(registeredSupplementalQuestionFamily('three-letter-blends').length,7);
 });
+
+
+test('all eight noun keys are independently valid and the cats reasoning key is grammatical',()=>{
+  const bank=[SINGULAR_PLURAL_NOUNS_FAMILY.baseQuestion,...SINGULAR_PLURAL_NOUNS_FAMILY.supplementalQuestions];
+  assert.equal(bank.length,8);
+  assert.ok(bank.every(question=>
+    question.choices.length===3 &&
+    question.choices.filter(choice=>choice===question.answer).length===1
+  ),'each noun item must have exactly one independently valid key');
+  assert.ok(bank.every(question=>!/\bCats (?:names|tells)\b/.test(JSON.stringify(question))),
+    'plural subject/verb agreement errors must not reach questions or keys');
+  const cats=bank.find(question=>/Why is “cats” plural/i.test(question.prompt));
+  assert.ok(cats,'the reasoning item must remain in the eight-question family');
+  assert.equal(cats.answer,'Cats name more than one cat.');
+  assert.deepEqual(cats.choices,[
+    'Cats name more than one cat.',
+    'Cats name only one cat.',
+    'Cats tell what an animal does.',
+  ]);
+});

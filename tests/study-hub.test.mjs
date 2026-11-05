@@ -156,3 +156,31 @@ test('specific common/proper-noun exam excludes unrelated grammar and fails clos
   assert.deepEqual(questionsForTest({label:'Grammar (common & proper nouns)'},pool.slice(1)),[],
     'unavailable noun lessons must not be replaced with a subject/predicate exercise');
 });
+
+
+test('Nov 12 singular/plural noun exam routes all eight exact questions and fails closed',()=>{
+  const nouns=Array.from({length:8},(_,index)=>({
+    id:'noun-'+index,
+    subject:'Reading / ELA',
+    skill:'singular-plural-nouns',
+  }));
+  const unrelated=[
+    {id:'predicate',subject:'Reading / ELA',skill:'subject-predicate'},
+    {id:'sentences',subject:'Reading / ELA',skill:'sentence-types'},
+  ];
+  const pool=[...nouns,...unrelated];
+  for(const label of [
+    'Grammar (singular & plural nouns)',
+    'Grammar (singular and plural nouns)',
+  ]){
+    assert.deepEqual(
+      questionsForTest({label,date:'2026-11-12'},pool).map(q=>q.id),
+      nouns.map(q=>q.id),
+    );
+    assert.deepEqual(
+      questionsForTest({label,date:'2026-11-12'},unrelated),
+      [],
+      'missing noun evidence must not be replaced with unrelated grammar',
+    );
+  }
+});

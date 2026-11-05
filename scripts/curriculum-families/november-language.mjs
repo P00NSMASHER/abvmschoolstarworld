@@ -141,11 +141,11 @@ export const SINGULAR_PLURAL_NOUNS_FAMILY=Object.freeze({
       "questionType": "reasoning",
       "prompt": "Why is “cats” plural while “cat” is singular?",
       "choices": [
-        "Cats names more than one cat.",
-        "Cats names only one cat.",
-        "Cats tells what an animal does."
+        "Cats name more than one cat.",
+        "Cats name only one cat.",
+        "Cats tell what an animal does."
       ],
-      "answer": "Cats names more than one cat.",
+      "answer": "Cats name more than one cat.",
       "explanation": "The added -s makes cats refer to more than one animal.",
       "hint": "Ask how many animals each noun names.",
       "dok": 3,
