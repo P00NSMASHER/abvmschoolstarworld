@@ -36,6 +36,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      actions: write
     runs-on: ubuntu-latest
     outputs:
       published: ${{ steps.publish.outputs.published }}
@@ -56,6 +57,8 @@ jobs:
         run: node scripts/refresh-current-homework.mjs
       - name: Commit only independently verified homework updates
         id: publish
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           if git diff --quiet -- pages/data/homework-current.json; then
@@ -117,6 +120,10 @@ jobs:
                 exit 1
               }
               echo "::notice::Verified update staged for protected review: $candidate_pr"
+              # PRs opened with GITHUB_TOKEN can require workflow approval; dispatch
+              # full, exact-ref test-only QA without bypassing protected merge.
+              gh workflow run qa.yml --ref "$candidate_branch" || { echo "::error::App QA dispatch failed; PR held."; exit 1; }
+              gh workflow run qa-reproduction.yml --ref "$candidate_branch" || { echo "::error::Independent QA dispatch failed; PR held."; exit 1; }
               echo "published=false" >> "$GITHUB_OUTPUT"
               echo "publication_pending=true" >> "$GITHUB_OUTPUT"
               echo "candidate_pr=$candidate_pr" >> "$GITHUB_OUTPUT"
