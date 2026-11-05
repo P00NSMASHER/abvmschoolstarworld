@@ -6,8 +6,8 @@ Mobile-first parent/student companion for the current Assumption BVM Grade 2 sch
 
 - **Frontend:** static PWA deployed by GitHub Pages from `pages/`
 - **School-data refresh:** GitHub Actions validates the six public Grade 2 teacher pages before publishing
-- **Teacher refresh:** four scheduled UTC source scans (06:17, 09:47, 13:17 and 15:47 UTC), with manual dispatch and bounded recovery
-- **Homework refresh:** independent hourly source checks from 06:23–23:23 UTC; unchanged pages preserve their first-observed dates
+- **Teacher refresh:** four daily source scans scheduled at 6:17 AM, 9:47 AM, 1:17 PM and 3:47 PM **America/New_York**, plus bounded recovery; delivery of GitHub cron events is not guaranteed
+- **Homework refresh:** source checks scheduled twice hourly at :07 and :37 from 6 AM through 11 PM **America/New_York**; unchanged pages retain their first-observed dates, and successful scheduling is monitored separately from successful publication
 - **Lunch source:** reviewed school lunch documents, verified through the ABVM AppDeploy source bridge
 - **Local state:** checklist completion and Study Games learning state use browser `localStorage`
 - **Offline behavior:** the service worker retains the app shell and the latest verified school pack
