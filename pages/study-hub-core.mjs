@@ -53,6 +53,10 @@ export function questionsForTest(test, questions) {
     if (/\bconsonant\s+digraphs?\b/.test(label)) {
       return questions.filter(q => q.skill === 'consonant-digraphs');
     }
+    // A Nov 13 three-letter blends test is specific, never older digraphs or vowels.
+    if (/\b(?:3|three)[ -]?letter\s+blends?\b/.test(label)) {
+      return questions.filter(q => q.subject === 'Spelling / Handwriting' && q.skill === 'three-letter-blends');
+    }
     // The teacher page may name a new long vowel but leave a second short
     // vowel unspecified, e.g. "long o / Short )". Never reuse last week's
     // unrelated i/a practice to make this test appear ready.
