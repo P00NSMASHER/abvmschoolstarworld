@@ -35,6 +35,7 @@ jobs:
     name: Verify Homework independently of study-curriculum promotion
     permissions:
       contents: write
+      pull-requests: write
     runs-on: ubuntu-latest
     outputs:
       published: ${{ steps.publish.outputs.published }}
@@ -78,12 +79,51 @@ jobs:
             fi
             git add pages/data/homework-current.json
             git commit -m "Refresh independently verified ABVM homework"
-            if git push origin HEAD:main; then
+            if git push origin HEAD:main 2>"$RUNNER_TEMP/abvm-homework-push.log"; then
               echo "published=true" >> "$GITHUB_OUTPUT"
               echo "release_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
               exit 0
             fi
-            echo "Main advanced during Homework publication; retrying verified source."
+            # A protected-branch policy rejection is not a main-branch race.
+            # Preserve verified data as a reviewable PR, never bypass protection.
+            if grep -Eqi 'commit_refs_rules|GH006|GH013|protected branch|repository rule' "$RUNNER_TEMP/abvm-homework-push.log"; then
+              echo "::warning::Direct publication rejected by protected-main policy; preparing a guarded source PR."
+              checked_day="$(date -u +%Y%m%d)"
+              content_hash="$(node -p 'JSON.parse(require("fs").readFileSync("pages/data/homework-current.json","utf8")).contentHash')"
+              [[ "$content_hash" =~ ^[a-f0-9]{64}$ ]] || { echo "::error::Verified Homework hash missing."; exit 1; }
+              candidate_branch="abvm-homework-${checked_day}-${content_hash:0:12}"
+              existing="$(gh pr list --head "$candidate_branch" --state open --json url --jq '.[0].url // empty')"
+              if [[ -n "$existing" ]]; then
+                echo "::notice::A source-identical protected candidate is already awaiting review: $existing"
+                echo "published=false" >> "$GITHUB_OUTPUT"
+                echo "publication_pending=true" >> "$GITHUB_OUTPUT"
+                echo "candidate_pr=$existing" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+              # Never force-push; a repeated source check must not overwrite an
+              # independently reviewed candidate with fresher unreviewed bytes.
+              if git ls-remote --exit-code --heads origin "$candidate_branch" >/dev/null 2>&1; then
+                echo "::error::Existing candidate branch has no open PR. Reconcile it before retrying; no destructive update."
+                exit 1
+              fi
+              git push origin "HEAD:refs/heads/$candidate_branch" || {
+                echo "::error::Cannot stage verified Homework on an ordinary branch."
+                exit 1
+              }
+              candidate_pr="$(gh pr create --base main --head "$candidate_branch" \
+                --title "ABVM Homework: publish verified source update ($checked_day)" \
+                --body "Source-verified Grade 2 Homework update. Official Homework content hash: $content_hash. Candidate is not a production release. Merge only after exact-head app/source checks and protected review; Pages must verify the new live data independently. No student-identifying data.")" || {
+                echo "::error::Verified candidate branch staged but protected PR could not be created."
+                exit 1
+              }
+              echo "::notice::Verified update staged for protected review: $candidate_pr"
+              echo "published=false" >> "$GITHUB_OUTPUT"
+              echo "publication_pending=true" >> "$GITHUB_OUTPUT"
+              echo "candidate_pr=$candidate_pr" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            cat "$RUNNER_TEMP/abvm-homework-push.log" >&2
+            echo "Main advanced or push failed outside the protected-branch policy; retrying verified source."
           done
           echo "Could not publish verified Homework data." >&2
           exit 1
