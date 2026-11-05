@@ -75,7 +75,7 @@ test("later successful standalone Pages release still requires an even later ind
 
 const provenRun=(name,conclusion,updated_at)=>({
   ...run(name,conclusion,updated_at),
-  verifiedReleaseQa:conclusion==="success",verificationJobId:87,publisherJobId:88,
+  verifiedReleaseQa:conclusion==="success",head_branch:"main",status:"completed",verificationJobId:87,publisherJobId:88,
 });
 
 test("a source-only success never qualifies as published application evidence",()=>{
@@ -129,7 +129,8 @@ test("missing or failed source QA, commit guard, deploy, or live readback cannot
     const faulty=structuredClone(jobs);faulty.jobs[jobIndex].steps[stepIndex].conclusion="failure";
     const proof=publicationRunFromJobs(run,faulty);
     assert.equal(proof?.verifiedReleaseQa,false);
-    assert.equal(selectPublicationEvidence(null,null,proof),null);
+    assert.equal(selectPublicationEvidence(null,null,proof),proof);
+    assert.notEqual(proof?.conclusion,"success");
   }
   const incorrectBranch={...run,head_branch:"feature/test"};
   assert.equal(publicationRunFromJobs(incorrectBranch,jobs),null);
@@ -376,7 +377,11 @@ test('the complete dashboard turns critical for stale homework despite healthy w
     };
     writeFileSync(postingPath,JSON.stringify(posting));
     writeFileSync(join(root,'publications.json'),'[]');
-    writeFileSync(join(root,'qa-publications.json'),'[]');
+    writeFileSync(join(root,'qa-publications.json'),JSON.stringify([{
+      id:201,name:'Deploy ABVM to GitHub Pages',head_branch:'main',
+      status:'completed',conclusion:'success',created_at:now,updated_at:now,
+      verifiedReleaseQa:true,verificationJobId:210,publisherJobId:211,
+    }]));
     const fresh=run();
     assert.equal(fresh.result.status,0,fresh.result.stderr);
     assert.equal(fresh.report.homework.healthy,true);
@@ -388,7 +393,7 @@ test('the complete dashboard turns critical for stale homework despite healthy w
     assert.equal(run().report.overall,'critical');
     writeFileSync(join(root,'qa-publications.json'),JSON.stringify([{
       id:77,name:'Refresh current ABVM homework',head_branch:'main',status:'completed',
-      conclusion:'success',created_at:now,updated_at:now,publisherJobId:88,verifiedReleaseQa:true,
+      conclusion:'success',created_at:now,updated_at:now,verificationJobId:87,publisherJobId:88,verifiedReleaseQa:true,
     }]));
     const releaseQa=run();
     assert.equal(releaseQa.report.overall,'healthy');
@@ -408,7 +413,7 @@ test('the complete dashboard turns critical for stale homework despite healthy w
     writeFileSync(workflowFile,JSON.stringify(history));
     writeFileSync(join(root,'publications.json'),JSON.stringify([{
       id:77,name:'Refresh current ABVM homework',head_branch:'main',status:'completed',
-      conclusion:'success',created_at:now,updated_at:now,publisherJobId:88,
+      conclusion:'success',created_at:now,updated_at:now,verificationJobId:87,publisherJobId:88,verifiedReleaseQa:true,
     }]));
     const recovered=run();
     assert.equal(recovered.result.status,0,recovered.result.stderr);
@@ -431,7 +436,7 @@ test('the complete dashboard turns critical for stale homework despite healthy w
     writeFileSync(join(root,'pages/data/study-pack.json'),JSON.stringify(pack));
     const provenPublisher={id:77,name:'Refresh current ABVM homework',head_branch:'main',
       status:'completed',conclusion:'success',created_at:ago(260),
-      updated_at:ago(120),publisherJobId:88};
+      updated_at:ago(120),publisherJobId:88,verificationJobId:87,verifiedReleaseQa:true};
     writeFileSync(join(root,'publications.json'),JSON.stringify([provenPublisher]));
     const recordedRace=recoveredRaceFixture().refreshJobs;
     recordedRace.run_id=refresh.id;

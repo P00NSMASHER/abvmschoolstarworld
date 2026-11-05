@@ -184,12 +184,14 @@ test('actual dashboard distinguishes verified pending publication from an unreso
         id:100+id,name,head_branch:'main',event:'schedule',status:'completed',conclusion:'success',created_at:now,updated_at:now,
       }))]});
     write('stage.json',f.refreshJobs);write('failure.json',{run_id:null,jobs:[]});write('publications.json',[]);
+    write('qa-publications.json',[{...f.publicationRun,verifiedReleaseQa:true,
+      verificationJobId:70,publisherJobId:71}]);
     write('parity.json',{curriculumLiveMatches:true,homeworkLiveMatches:true});
     const run=()=>{
       const result=spawnSync(process.execPath,['scripts/build-health-report.mjs'],{cwd:root,encoding:'utf8',env:{...process.env,
         WORKFLOW_RUNS_FILE:join(root,'runs.json'),REFRESH_JOBS_FILE:join(root,'failure.json'),
         REFRESH_STAGE_JOBS_FILE:join(root,'stage.json'),HOMEWORK_PUBLICATIONS_FILE:join(root,'publications.json'),
-        OPEN_PULLS_FILE:'',MAIN_BRANCH_FILE:'',SOURCE_RECOVERY_PLAN_FILE:join(root,'parity.json')}});
+        OPEN_PULLS_FILE:'',MAIN_BRANCH_FILE:'',QA_PUBLICATIONS_FILE:join(root,'qa-publications.json'),SOURCE_RECOVERY_PLAN_FILE:join(root,'parity.json')}});
       assert.ok(result.status===0||result.status===1,result.stderr);
       return {result,report:JSON.parse(readFileSync(join(root,'health-output/abvm-health-status.json'),'utf8'))};
     };

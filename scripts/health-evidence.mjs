@@ -8,8 +8,9 @@ export function selectPublicationEvidence(deployRun,refreshRun,homeworkPublicati
   // A successful teacher or Homework source scan is not a release. Require
   // BOTH exact-main QA and downstream Pages publication/live-readback jobs.
   return [deployRun,refreshRun,homeworkPublication,lunchPublication]
-    .filter(run=>run?.verifiedReleaseQa===true && run?.conclusion==="success" &&
+    .filter(run=>run?.head_branch==="main" && run?.status==="completed" &&
       Number.isInteger(run?.verificationJobId) && Number.isInteger(run?.publisherJobId) &&
+      (run.conclusion!=="success" || run.verifiedReleaseQa===true) &&
       workflowEvidenceAt(run)>0)
     .sort((a,b)=>workflowEvidenceAt(b)-workflowEvidenceAt(a))[0]||null;
 }
@@ -32,6 +33,28 @@ export function publicationRunFromJobs(run,evidence){
     .filter(job=>Number(job?.run_id)===Number(run.id));
   const verifier=jobs.find(job=>job.name===prefix+"Source-bound full release QA without exclusive data lock");
   const publisher=jobs.find(job=>job.name===prefix+"Publish only the exact successfully tested main revision");
+  // Old Pages releases bundled QA and publication into one job. Retain
+  // historical failure evidence, but never infer a successful release without
+  // its original exact-main QA and independent live verification steps.
+  if(!verifier&&!publisher){
+    const legacy=jobs.find(job=>job.name===prefix+"deploy" &&
+      job.status==="completed" && job.conclusion!=="skipped");
+    if(!legacy)return null;
+    const required=["Admit exact current protected-main commit",
+      "Verify checked-out source identity","Run release QA",
+      "Recheck protected-main before publishing","Deploy",
+      "Verify live lunch data and visible mobile flows","Retain exact live publication proof"];
+    const legacyVerified=run.conclusion==="success" &&
+      legacy.conclusion==="success" &&
+      Number.isFinite(Date.parse(legacy.completed_at||"")) &&
+      required.every(name=>(legacy.steps||[]).some(step=>step.name===name &&
+        step.status==="completed" && step.conclusion==="success"));
+    return {...run,
+      conclusion:legacyVerified?"success":legacy.conclusion==="success"?"action_required":legacy.conclusion||"action_required",
+      verifiedReleaseQa:legacyVerified,verificationJobId:legacy.id,publisherJobId:legacy.id,
+      created_at:legacy.started_at||run.created_at,
+      updated_at:legacy.completed_at||run.updated_at};
+  }
   if(!verifier||!publisher||verifier.status!=="completed"||publisher.status!=="completed")return null;
   const step=(job,name)=>(job.steps||[]).some(item=>item.name===name &&
     item.status==="completed"&&item.conclusion==="success");
