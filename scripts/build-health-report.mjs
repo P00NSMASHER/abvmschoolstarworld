@@ -141,8 +141,11 @@ const completedRunHealthy=(run,maxAgeHours)=>{
 };
 const completedHealthy=(workflow,maxAgeHours)=>completedRunHealthy(effectiveRun(workflow),maxAgeHours);
 const effectivePublicationRun=()=>selectPublicationEvidence(
-  effectiveRun(status.workflows.deploy),
-  effectiveRun(status.workflows.refresh),
+  // Evidence collector must prove BOTH Pages jobs, not just a green source run.
+  qaPublications.filter(run=>run.name===workflowNames.deploy && run.verifiedReleaseQa===true)
+    .sort((a,b)=>runEvidenceAt(b)-runEvidenceAt(a))[0]||null,
+  qaPublications.filter(run=>run.name===workflowNames.refresh && run.verifiedReleaseQa===true)
+    .sort((a,b)=>runEvidenceAt(b)-runEvidenceAt(a))[0]||null,
   homeworkPublications.filter(run=>run.head_branch==="main"&&run.name===workflowNames.homework&&
     Number.isInteger(run.publisherJobId)).sort((a,b)=>runEvidenceAt(b)-runEvidenceAt(a))[0]||null,
   lunchPublications.filter(run=>run.head_branch==="main"&&run.name===workflowNames.lunch&&

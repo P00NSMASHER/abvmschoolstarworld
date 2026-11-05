@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {assessHomeworkPollingCadence,assessMainBranchProtection,selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,selectRefreshFailureEvidence,selectRecoveredRefreshRace} from "../scripts/health-evidence.mjs";
+import {assessHomeworkPollingCadence,assessMainBranchProtection,selectEffectiveWorkflowRun,selectGovernedCurriculumHold,selectPublicationEvidence,publicationRunFromJobs,selectRefreshFailureEvidence,selectRecoveredRefreshRace} from "../scripts/health-evidence.mjs";
 
 const run=(name,conclusion,updated_at)=>({name,conclusion,updated_at,created_at:updated_at});
 
@@ -73,50 +73,115 @@ test("later successful standalone Pages release still requires an even later ind
 });
 
 
+const provenRun=(name,conclusion,updated_at)=>({
+  ...run(name,conclusion,updated_at),
+  verifiedReleaseQa:conclusion==="success",verificationJobId:87,publisherJobId:88,
+});
+
+test("a source-only success never qualifies as published application evidence",()=>{
+  assert.equal(selectPublicationEvidence(null,run("Refresh ABVM teacher pages","success","2026-11-05T21:00:00Z")),null);
+  assert.equal(selectPublicationEvidence(run("Deploy ABVM to GitHub Pages","success","2026-11-05T21:00:00Z"),null),null);
+});
+
+const releaseStep=name=>({name,status:"completed",conclusion:"success"});
+function releaseJobs(name="Refresh current ABVM homework"){
+  const prefix={
+    "Deploy ABVM to GitHub Pages":"",
+    "Refresh ABVM teacher pages":"deploy verified refresh through Pages workflow / ",
+    "Refresh current ABVM homework":"Verify and deploy independently refreshed Homework / ",
+    "Roll forward ABVM reviewed lunch week":"Release published reviewed lunches through guarded Pages / ",
+  }[name];
+  const run={id:900,name,head_branch:"main",status:"completed",conclusion:"success",
+    created_at:"2026-11-05T19:30:00Z",updated_at:"2026-11-05T20:00:00Z"};
+  const jobs={run_id:900,jobs:[
+    {id:901,run_id:900,name:prefix+"Source-bound full release QA without exclusive data lock",
+      status:"completed",conclusion:"success",completed_at:"2026-11-05T19:48:00Z",
+      steps:["Admit exact current protected-main commit","Verify checked-out source identity",
+        "Run release QA","Bind this verified artifact to the source QA attempt"].map(releaseStep)},
+    {id:902,run_id:900,name:prefix+"Publish only the exact successfully tested main revision",
+      status:"completed",conclusion:"success",started_at:"2026-11-05T19:49:00Z",
+      completed_at:"2026-11-05T20:00:00Z",
+      steps:["Prove the deployment workspace matches passed QA",
+        "Prove runtime assets were restored before independent live comparison",
+        "Recheck protected-main before publishing","Deploy",
+        "Verify live lunch data and visible mobile flows","Retain exact live publication proof"].map(releaseStep)},
+  ]};
+  return {run,jobs};
+}
+test("all four real Pages entry points require both separate release jobs",()=>{
+  for(const name of ["Deploy ABVM to GitHub Pages","Refresh ABVM teacher pages",
+      "Refresh current ABVM homework","Roll forward ABVM reviewed lunch week"]){
+    const {run,jobs}=releaseJobs(name);
+    const proof=publicationRunFromJobs(run,jobs);
+    assert.equal(proof?.verifiedReleaseQa,true,name);
+    assert.equal(proof?.publisherJobId,902,name);
+    assert.equal(proof?.verificationJobId,901,name);
+    assert.equal(selectPublicationEvidence(null,null,proof),proof,name);
+  }
+});
+test("missing or failed source QA, commit guard, deploy, or live readback cannot become publication",()=>{
+  const {run,jobs}=releaseJobs();
+  for(const index of [0,1]){
+    const absent=structuredClone(jobs);absent.jobs.splice(index,1);
+    assert.equal(publicationRunFromJobs(run,absent),null);
+  }
+  for(const [jobIndex,stepIndex] of [[0,0],[0,1],[0,2],[0,3],[1,0],[1,1],[1,2],[1,3],[1,4],[1,5]]){
+    const faulty=structuredClone(jobs);faulty.jobs[jobIndex].steps[stepIndex].conclusion="failure";
+    const proof=publicationRunFromJobs(run,faulty);
+    assert.equal(proof?.verifiedReleaseQa,false);
+    assert.equal(selectPublicationEvidence(null,null,proof),null);
+  }
+  const incorrectBranch={...run,head_branch:"feature/test"};
+  assert.equal(publicationRunFromJobs(incorrectBranch,jobs),null);
+  assert.equal(publicationRunFromJobs(run,{...jobs,run_id:901}),null);
+  const oldShape=structuredClone(jobs);oldShape.jobs[1].name="Verify and deploy independently refreshed Homework / deploy";
+  assert.equal(publicationRunFromJobs(run,oldShape),null);
+});
+
 test("newer successful refresh supersedes older cancelled standalone deploy",()=>{
-  const deploy=run("Deploy ABVM to GitHub Pages","cancelled","2026-10-02T13:30:00Z");
-  const refresh=run("Refresh ABVM teacher pages","success","2026-10-02T13:33:00Z");
+  const deploy=provenRun("Deploy ABVM to GitHub Pages","cancelled","2026-10-02T13:30:00Z");
+  const refresh=provenRun("Refresh ABVM teacher pages","success","2026-10-02T13:33:00Z");
   assert.equal(selectPublicationEvidence(deploy,refresh),refresh);
 });
 
 test("newer standalone deploy remains publication evidence",()=>{
-  const refresh=run("Refresh ABVM teacher pages","success","2026-10-02T13:33:00Z");
-  const deploy=run("Deploy ABVM to GitHub Pages","success","2026-10-02T13:35:00Z");
+  const refresh=provenRun("Refresh ABVM teacher pages","success","2026-10-02T13:33:00Z");
+  const deploy=provenRun("Deploy ABVM to GitHub Pages","success","2026-10-02T13:35:00Z");
   assert.equal(selectPublicationEvidence(deploy,refresh),deploy);
 });
 
 test("failed refresh never replaces standalone publication evidence",()=>{
-  const deploy=run("Deploy ABVM to GitHub Pages","success","2026-10-02T13:30:00Z");
-  const refresh=run("Refresh ABVM teacher pages","failure","2026-10-02T13:33:00Z");
+  const deploy=provenRun("Deploy ABVM to GitHub Pages","success","2026-10-02T13:30:00Z");
+  const refresh=provenRun("Refresh ABVM teacher pages","failure","2026-10-02T13:33:00Z");
   assert.equal(selectPublicationEvidence(deploy,refresh),deploy);
 });
 
-test("successful refresh is valid publication evidence when no standalone deploy exists",()=>{
-  const refresh=run("Refresh ABVM teacher pages","success","2026-10-02T13:33:00Z");
+test("verified nested teacher release is publication evidence when no standalone deploy exists",()=>{
+  const refresh=provenRun("Refresh ABVM teacher pages","success","2026-10-02T13:33:00Z");
   assert.equal(selectPublicationEvidence(null,refresh),refresh);
 });
 
 
 test("newer successful homework publication supersedes an older guarded Pages failure",()=>{
-  const deploy=run("Deploy ABVM to GitHub Pages","failure","2026-10-16T15:05:47Z");
-  const refresh=run("Refresh ABVM teacher pages","failure","2026-10-16T15:27:01Z");
-  const homework={...run("Refresh current ABVM homework","success","2026-10-16T15:21:23Z"),publisherJobId:88};
+  const deploy=provenRun("Deploy ABVM to GitHub Pages","failure","2026-10-16T15:05:47Z");
+  const refresh=provenRun("Refresh ABVM teacher pages","failure","2026-10-16T15:27:01Z");
+  const homework={...provenRun("Refresh current ABVM homework","success","2026-10-16T15:21:23Z"),publisherJobId:88};
   assert.equal(selectPublicationEvidence(deploy,refresh,homework),homework);
 });
 
 test("failed or unresolved homework runs cannot replace standalone publication evidence",()=>{
-  const deploy=run("Deploy ABVM to GitHub Pages","success","2026-10-16T15:05:47Z");
-  const refresh=run("Refresh ABVM teacher pages","failure","2026-10-16T15:27:01Z");
+  const deploy=provenRun("Deploy ABVM to GitHub Pages","success","2026-10-16T15:05:47Z");
+  const refresh=provenRun("Refresh ABVM teacher pages","failure","2026-10-16T15:27:01Z");
   for(const conclusion of ["failure",null]){
-    const homework=run("Refresh current ABVM homework",conclusion,"2026-10-16T15:21:23Z");
+    const homework=provenRun("Refresh current ABVM homework",conclusion,"2026-10-16T15:21:23Z");
     assert.equal(selectPublicationEvidence(deploy,refresh,homework),deploy);
   }
 });
 
 test("the newest successful source-bound publication wins when both source workflows succeed",()=>{
-  const deploy=run("Deploy ABVM to GitHub Pages","failure","2026-10-16T15:05:47Z");
-  const refresh=run("Refresh ABVM teacher pages","success","2026-10-16T15:18:00Z");
-  const homework={...run("Refresh current ABVM homework","success","2026-10-16T15:21:23Z"),publisherJobId:88};
+  const deploy=provenRun("Deploy ABVM to GitHub Pages","failure","2026-10-16T15:05:47Z");
+  const refresh=provenRun("Refresh ABVM teacher pages","success","2026-10-16T15:18:00Z");
+  const homework={...provenRun("Refresh current ABVM homework","success","2026-10-16T15:21:23Z"),publisherJobId:88};
   assert.equal(selectPublicationEvidence(deploy,refresh,homework),homework);
 });
 
