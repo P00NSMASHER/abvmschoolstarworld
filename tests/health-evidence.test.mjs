@@ -153,7 +153,7 @@ test("newer standalone deploy remains publication evidence",()=>{
 
 test("failed refresh never replaces standalone publication evidence",()=>{
   const deploy=provenRun("Deploy ABVM to GitHub Pages","success","2026-10-02T13:30:00Z");
-  const refresh=provenRun("Refresh ABVM teacher pages","failure","2026-10-02T13:33:00Z");
+  const refresh=run("Refresh ABVM teacher pages","failure","2026-10-02T13:33:00Z");
   assert.equal(selectPublicationEvidence(deploy,refresh),deploy);
 });
 
@@ -165,16 +165,16 @@ test("verified nested teacher release is publication evidence when no standalone
 
 test("newer successful homework publication supersedes an older guarded Pages failure",()=>{
   const deploy=provenRun("Deploy ABVM to GitHub Pages","failure","2026-10-16T15:05:47Z");
-  const refresh=provenRun("Refresh ABVM teacher pages","failure","2026-10-16T15:27:01Z");
+  const refresh=run("Refresh ABVM teacher pages","failure","2026-10-16T15:27:01Z");
   const homework={...provenRun("Refresh current ABVM homework","success","2026-10-16T15:21:23Z"),publisherJobId:88};
   assert.equal(selectPublicationEvidence(deploy,refresh,homework),homework);
 });
 
 test("failed or unresolved homework runs cannot replace standalone publication evidence",()=>{
   const deploy=provenRun("Deploy ABVM to GitHub Pages","success","2026-10-16T15:05:47Z");
-  const refresh=provenRun("Refresh ABVM teacher pages","failure","2026-10-16T15:27:01Z");
+  const refresh=run("Refresh ABVM teacher pages","failure","2026-10-16T15:27:01Z");
   for(const conclusion of ["failure",null]){
-    const homework=provenRun("Refresh current ABVM homework",conclusion,"2026-10-16T15:21:23Z");
+    const homework=run("Refresh current ABVM homework",conclusion,"2026-10-16T15:21:23Z");
     assert.equal(selectPublicationEvidence(deploy,refresh,homework),deploy);
   }
 });
@@ -390,6 +390,7 @@ test('the complete dashboard turns critical for stale homework despite healthy w
     const qa=qaHistory.workflow_runs.find(r=>r.name==='ABVM App QA');
     qa.created_at=qa.updated_at=new Date(Date.now()-72*3600000).toISOString();
     writeFileSync(workflowFile,JSON.stringify(qaHistory));
+    writeFileSync(join(root,'qa-publications.json'),'[]');
     assert.equal(run().report.overall,'critical');
     writeFileSync(join(root,'qa-publications.json'),JSON.stringify([{
       id:77,name:'Refresh current ABVM homework',head_branch:'main',status:'completed',
