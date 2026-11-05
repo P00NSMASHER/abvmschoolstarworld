@@ -187,6 +187,19 @@ try {
     {date:'2026-11-12',label:/singular.*plural nouns/i,name:'nov12-nouns'},
     {date:'2026-11-13',label:/3 letter blends/i,name:'nov13-blends'},
   ]) {
+    // Current-school-week acceptance expires with the test and follows the
+    // latest verified announcement. Do not block December releases for
+    // November assessments that have legitimately finished or moved.
+    const posted=data.pack.importantDates.some(row=>row.kind==='test' && check.label.test(row.label));
+    const hourEastern=Number(new Intl.DateTimeFormat('en-US',{
+      timeZone:'America/New_York',hour:'2-digit',hourCycle:'h23',
+    }).format(new Date()));
+    const noLongerUpcoming=eastToday()>check.date || (eastToday()===check.date && hourEastern>=15);
+    if(!posted || noLongerUpcoming) {
+      receipt.screens.push({screen:'Live printable',testDate:check.date,worksheet:check.name,
+        checked:false,reason:posted?'assessment concluded':'teacher announcement changed'});
+      continue;
+    }
     const choice=page.locator('[data-test-select]').filter({hasText:check.label});
     await expect(choice).toHaveCount(1);
     await choice.click();
