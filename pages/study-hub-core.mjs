@@ -49,7 +49,7 @@ export function questionsForTest(test, questions) {
   if (/spelling|handwriting/.test(label)) {
     // A dated three-letter-blend test must not silently inherit prior digraphs,
     // vowel practice or suffix questions from the broad Spelling bank.
-    if (/\\b(?:3|three)[ -]+letter\\s+(?:consonant\\s+)?blends?\\b/.test(label)) {
+    if (/\b(?:3|three)[ -]+letter\s+(?:consonant\s+)?blends?\b/.test(label)) {
       return questions.filter(q=>q.subject==='Spelling / Handwriting'&&q.skill==='three-letter-blends');
     }
     // A test that names consonant digraphs has an exact verified scope.
