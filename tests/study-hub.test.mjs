@@ -184,3 +184,17 @@ test('Nov 12 singular/plural noun exam routes all eight exact questions and fail
     );
   }
 });
+
+test('Nov 13 three-letter-blend Spelling test uses exactly its own eight questions',()=>{
+  const blends=Array.from({length:8},(_,i)=>({id:'blend-'+i,subject:'Spelling / Handwriting',skill:'three-letter-blends'}));
+  const other=[
+    {id:'digraph',subject:'Spelling / Handwriting',skill:'consonant-digraphs'},
+    {id:'long-o',subject:'Spelling / Handwriting',skill:'long-o'},
+    {id:'suffix',subject:'Reading / ELA',skill:'suffix-ed-ing'},
+  ];
+  const pool=[...blends,...other];
+  for(const label of ['Spelling (3 letter blends) / Handwriting','Spelling (three-letter blends) / Handwriting','Spelling (3-letter consonant blends) / Handwriting']){
+    assert.deepEqual(questionsForTest({label,date:'2026-11-13'},pool).map(q=>q.id),blends.map(q=>q.id));
+    assert.deepEqual(questionsForTest({label,date:'2026-11-13'},other),[],'no unrelated substitute when the exact bank is missing');
+  }
+});
