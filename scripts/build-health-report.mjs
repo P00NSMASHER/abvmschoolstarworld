@@ -141,11 +141,20 @@ const completedRunHealthy=(run,maxAgeHours)=>{
 };
 const completedHealthy=(workflow,maxAgeHours)=>completedRunHealthy(effectiveRun(workflow),maxAgeHours);
 const effectivePublicationRun=()=>selectPublicationEvidence(
-  effectiveRun(status.workflows.deploy),
-  effectiveRun(status.workflows.refresh),
+  // Evidence collector must prove BOTH Pages jobs, not just a green source run.
+  qaPublications.filter(run=>run.name===workflowNames.deploy && Number.isInteger(run.publisherJobId))
+    .sort((a,b)=>runEvidenceAt(b)-runEvidenceAt(a))[0]||null,
+  qaPublications.filter(run=>run.name===workflowNames.refresh && Number.isInteger(run.publisherJobId))
+    .sort((a,b)=>runEvidenceAt(b)-runEvidenceAt(a))[0]||null,
   homeworkPublications.filter(run=>run.head_branch==="main"&&run.name===workflowNames.homework&&
+    Number.isInteger(run.publisherJobId)).sort((a,b)=>runEvidenceAt(b)-runEvidenceAt(a))[0]||
+  // The shared QA publication ledger may retain the exact sealed Pages proof
+  // even if the lane-specific history window no longer includes that run.
+  qaPublications.filter(run=>run.head_branch==="main"&&run.name===workflowNames.homework&&
     Number.isInteger(run.publisherJobId)).sort((a,b)=>runEvidenceAt(b)-runEvidenceAt(a))[0]||null,
   lunchPublications.filter(run=>run.head_branch==="main"&&run.name===workflowNames.lunch&&
+    Number.isInteger(run.publisherJobId)).sort((a,b)=>runEvidenceAt(b)-runEvidenceAt(a))[0]||
+  qaPublications.filter(run=>run.head_branch==="main"&&run.name===workflowNames.lunch&&
     Number.isInteger(run.publisherJobId)).sort((a,b)=>runEvidenceAt(b)-runEvidenceAt(a))[0]||null
 );
 status.publicationEvidence=effectivePublicationRun();

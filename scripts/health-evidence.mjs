@@ -5,39 +5,86 @@ export function workflowEvidenceAt(run){
 }
 
 export function selectPublicationEvidence(deployRun,refreshRun,homeworkPublication=null,lunchPublication=null){
-  let publication=deployRun||null;
-  if(refreshRun?.conclusion==="success"&&(!publication||workflowEvidenceAt(refreshRun)>workflowEvidenceAt(publication)))publication=refreshRun;
-  // Source-only success cannot replace protected-main publication proof.
-  for(const nested of [homeworkPublication,lunchPublication]){
-    if(Number.isInteger(nested?.publisherJobId)&&(!publication||workflowEvidenceAt(nested)>workflowEvidenceAt(publication)))publication=nested;
-  }
-  return publication;
+  // A successful teacher or Homework source scan is not a release. Require
+  // BOTH exact-main QA and downstream Pages publication/live-readback jobs.
+  return [deployRun,refreshRun,homeworkPublication,lunchPublication]
+    .filter(run=>run?.head_branch==="main" && run?.status==="completed" &&
+      Number.isInteger(run?.verificationJobId) && Number.isInteger(run?.publisherJobId) &&
+      (run.conclusion!=="success" || run.verifiedReleaseQa===true) &&
+      workflowEvidenceAt(run)>0)
+    .sort((a,b)=>workflowEvidenceAt(b)-workflowEvidenceAt(a))[0]||null;
 }
 
 // A successful source check may skip Pages. Only the actual nested release job
 // can establish publication; missing successful gates remain unhealthy.
 export function publicationRunFromJobs(run,evidence){
-  const publisherJobName={
-    "Deploy ABVM to GitHub Pages":"deploy",
-    "Refresh ABVM teacher pages":"deploy verified refresh through Pages workflow / deploy",
-    "Refresh current ABVM homework":"Verify and deploy independently refreshed Homework / deploy",
-    "Roll forward ABVM reviewed lunch week":"Release published reviewed lunches through guarded Pages / deploy",
+  const prefix={
+    "Deploy ABVM to GitHub Pages":"",
+    "Refresh ABVM teacher pages":"deploy verified refresh through Pages workflow / ",
+    "Refresh current ABVM homework":"Verify and deploy independently refreshed Homework / ",
+    "Roll forward ABVM reviewed lunch week":"Release published reviewed lunches through guarded Pages / ",
   }[run?.name];
-  if(!publisherJobName||run.head_branch!=="main"||
-     run.status!=="completed"||Number(evidence?.run_id)!==Number(run.id))return null;
-  const job=(evidence.jobs||[]).find(job=>Number(job.run_id)===Number(run.id)&&
-    job.name===publisherJobName&&job.status==="completed"&&job.conclusion!=="skipped");
-  if(!job)return null;
-  const required=["Admit exact current protected-main commit","Verify checked-out source identity",
-    "Run release QA","Recheck protected-main before publishing","Deploy",
-    "Verify live lunch data and visible mobile flows","Retain exact live publication proof"];
-  const verified=run.conclusion==="success"&&job.conclusion==="success"&&
-    Number.isFinite(Date.parse(job.completed_at||""))&&required.every(name=>
-    (job.steps||[]).some(step=>step.name===name&&step.status==="completed"&&step.conclusion==="success"));
-  return {...run,conclusion:verified?"success":job.conclusion==="success"?"action_required":job.conclusion,
+  if(prefix===undefined||run?.head_branch!=="main"||
+     run?.status!=="completed"||Number(evidence?.run_id)!==Number(run?.id))return null;
+
+  // Pages is a two-job reusable workflow. The old single-job contract falsely
+  // rejected verified nested releases and accepted source-only success.
+  const jobs=(Array.isArray(evidence?.jobs)?evidence.jobs:[])
+    .filter(job=>Number(job?.run_id)===Number(run.id));
+  const verifier=jobs.find(job=>job.name===prefix+"Source-bound full release QA without exclusive data lock");
+  const publisher=jobs.find(job=>job.name===prefix+"Publish only the exact successfully tested main revision");
+  // Old Pages releases bundled QA and publication into one job. Retain
+  // historical failure evidence, but never infer a successful release without
+  // its original exact-main QA and independent live verification steps.
+  if(!verifier&&!publisher){
+    const legacy=jobs.find(job=>job.name===prefix+"deploy" &&
+      job.status==="completed" && job.conclusion!=="skipped");
+    if(!legacy)return null;
+    const required=["Admit exact current protected-main commit",
+      "Verify checked-out source identity","Run release QA",
+      "Recheck protected-main before publishing","Deploy",
+      "Verify live lunch data and visible mobile flows","Retain exact live publication proof"];
+    const legacyVerified=run.conclusion==="success" &&
+      legacy.conclusion==="success" &&
+      Number.isFinite(Date.parse(legacy.completed_at||"")) &&
+      required.every(name=>(legacy.steps||[]).some(step=>step.name===name &&
+        step.status==="completed" && step.conclusion==="success"));
+    return {...run,
+      conclusion:legacyVerified?"success":legacy.conclusion==="success"?"action_required":legacy.conclusion||"action_required",
+      verifiedReleaseQa:legacyVerified,verificationJobId:legacy.id,publisherJobId:legacy.id,
+      created_at:legacy.started_at||run.created_at,
+      updated_at:legacy.completed_at||run.updated_at};
+  }
+  if(!verifier||!publisher||verifier.status!=="completed"||publisher.status!=="completed")return null;
+  const step=(job,name)=>(job.steps||[]).some(item=>item.name===name &&
+    item.status==="completed"&&item.conclusion==="success");
+  const verificationSteps=[
+    "Admit exact current protected-main commit",
+    "Verify checked-out source identity",
+    "Run release QA",
+    "Bind this verified artifact to the source QA attempt",
+  ];
+  const publicationSteps=[
+    "Prove the deployment workspace matches passed QA",
+    "Prove runtime assets were restored before independent live comparison",
+    "Recheck protected-main before publishing",
+    "Deploy",
+    "Verify live lunch data and visible mobile flows",
+    "Retain exact live publication proof",
+  ];
+  const verified=run.conclusion==="success" &&
+    verifier.conclusion==="success" && publisher.conclusion==="success" &&
+    Number.isFinite(Date.parse(verifier.completed_at||"")) &&
+    Number.isFinite(Date.parse(publisher.completed_at||"")) &&
+    verificationSteps.every(name=>step(verifier,name)) &&
+    publicationSteps.every(name=>step(publisher,name));
+  return {...run,
+    conclusion:verified?"success":publisher.conclusion==="success"?"action_required":publisher.conclusion||"action_required",
     verifiedReleaseQa:verified,
-    publisherJobId:job.id,created_at:job.started_at||run.created_at,
-    updated_at:job.completed_at||run.updated_at};
+    verificationJobId:verifier.id,
+    publisherJobId:publisher.id,
+    created_at:publisher.started_at||run.created_at,
+    updated_at:publisher.completed_at||run.updated_at};
 }
 
 // Pages runs the same full application QA inside every guarded publication.

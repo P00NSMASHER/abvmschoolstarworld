@@ -43,7 +43,7 @@ test('a newer failed nested publisher remains unhealthy even after an older succ
  assert.equal(failed.conclusion,'failure');
  const previous={conclusion:'success',updated_at:'2026-10-16T15:00:00Z'};
  assert.equal(health.selectPublicationEvidence(previous,null,failed).conclusion,'failure');
- const newer={conclusion:'success',updated_at:'2026-10-16T15:30:00Z'};
+ const newer={conclusion:'success',updated_at:'2026-10-16T15:30:00Z',head_branch:'main',status:'completed',verifiedReleaseQa:true,verificationJobId:140,publisherJobId:141};
  assert.equal(health.selectPublicationEvidence(newer,null,failed),newer);
 });
 
