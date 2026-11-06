@@ -69,3 +69,11 @@ export function shouldPublishHomework(candidate,previous,{hours=1}={}) {
   if(easternDay(candidate.checkedAt)!==easternDay(previous.checkedAt))return true;
   return Date.parse(candidate.checkedAt)-Date.parse(previous.checkedAt)>=hours*3600000;
 }
+
+// A guarded writer also republishes an unchanged observation hourly so the
+// checkedAt timestamp remains genuine. The read-only backup must not label
+// that observation-only publication as changed teacher content: its failure
+// signal wakes recovery and is reserved for an actual content-hash change.
+export function homeworkContentChanged(candidate,previous) {
+  return !previous || previous.schemaVersion!==1 || previous.contentHash!==candidate?.contentHash;
+}
