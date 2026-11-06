@@ -19,16 +19,16 @@ test('full QA and site generation remain inside the workflow-wide school-state t
   assert.match(verify,/Run release QA\n\s+run: npm run qa/);
   assert.match(verify,/Build static site/);
   assert.match(verify,/Upload site/);
-  assert.match(workflow.split('\\njobs:')[0],/concurrency:\\n\\s+group: abvm-verified-school-state\\n\\s+cancel-in-progress: false\\n\\s+queue: max/);
-  assert.doesNotMatch(verify,/\\n\\s+concurrency:\\n/);
+  assert.match(workflow.split('\njobs:')[0],/concurrency:\n\s+group: abvm-verified-school-state\n\s+cancel-in-progress: false\n\s+queue: max/);
+  assert.doesNotMatch(verify,/\n\s+concurrency:\n/);
   assert.equal((workflow.match(/run: npm run qa/g)||[]).length,1,
     'exact-head full release QA must never be silently skipped or duplicated');
 });
 
 test('the same workflow mutex excludes source commits throughout QA and final deploy',()=>{
   assert.match(deploy,/needs: verify/);
-  assert.match(workflow.split('\\njobs:')[0],/concurrency:\\n\\s+group: abvm-verified-school-state\\n\\s+cancel-in-progress: false\\n\\s+queue: max/);
-  assert.doesNotMatch(deploy,/\\n\\s+concurrency:\\n/);
+  assert.match(workflow.split('\njobs:')[0],/concurrency:\n\s+group: abvm-verified-school-state\n\s+cancel-in-progress: false\n\s+queue: max/);
+  assert.doesNotMatch(deploy,/\n\s+concurrency:\n/);
   assert.match(deploy,/Check completed QA is still bound to current protected main/);
   assert.match(deploy,/Main advanced after full release QA; refusing untested publication/);
   assert.match(deploy,/ref:\s*\$\{\{ needs\.verify\.outputs\.sha \}\}/);
