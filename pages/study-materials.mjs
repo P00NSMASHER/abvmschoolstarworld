@@ -149,6 +149,9 @@ function noteMatchesTest(text, label, subject) {
   if (subject === 'Math' && /addition|add|sum/.test(lower))
     return /addition|add|sum|total/i.test(value) && !/subtraction-only/i.test(value);
   if (subject === 'Spelling / Handwriting') {
+    if (/\bdigraphs?\b/.test(lower)) return /\bdigraphs?\b/i.test(value);
+    if (/\b(?:3|three)[ -](?:letter|consonant) blends?\b/.test(lower))
+      return /\b(?:3|three)[ -](?:letter|consonant) blends?\b|\bthree consonants?\b|\b(?:str|spl|spr)\b/i.test(value);
     const focus = lower.match(/short\s+([aeiou])/i)?.[1]?.toLowerCase();
     const mentioned = [...value.matchAll(/\b(?:short|long)\s+([aeiou])\b/gi)].map(match=>match[1].toLowerCase());
     if (focus && mentioned.length && !mentioned.includes(focus)) return false;
