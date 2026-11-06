@@ -1,6 +1,12 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {summarizeTeacherHomework,shouldPublishHomework,HOMEWORK_SOURCE_URL} from '../scripts/homework-posting.mjs';
+import {
+  actionableTeacherHomeworkRows,
+  studyPackHomeworkSummary,
+  summarizeTeacherHomework,
+  shouldPublishHomework,
+  HOMEWORK_SOURCE_URL,
+} from '../scripts/homework-posting.mjs';
 
 const checkedAt='2026-10-13T23:00:00.000Z';
 const routine=['Read','Parents: cover books',
@@ -18,6 +24,22 @@ test('no-specific posting is not falsely reported as no homework',()=>{
   const rows=summarizeTeacherHomework(['Homework',...routine],checkedAt);
   assert.equal(rows.status,'no-specific-posting');
   assert.deepEqual(rows.assignments,[]);
+});
+test('study-pack homework uses the same standing-routine filter as the direct feed',()=>{
+  const rows=actionableTeacherHomeworkRows([
+    {day:'Current Homework posting',subject:'Religion',task:'Attend Mass',due:'Current posting'},
+    {day:'Current Homework posting',subject:'Reading',task:'Read',due:'Current posting'},
+    {day:'Current Homework posting',subject:'Reading',task:'Keep Reading Log and Behavior Chart in the HW folder',due:'Ongoing'},
+    {day:'Current Homework posting',subject:'Homework Folder',task:'Return everything in the HW folder',due:'Next school day'},
+  ]);
+  assert.deepEqual(rows,[]);
+  assert.equal(studyPackHomeworkSummary(rows),'No specific assignments are currently posted');
+});
+test('study-pack homework retains source metadata for real assignments',()=>{
+  const math={day:'Current Homework posting',subject:'Math',task:'Page 55',due:'Current posting'};
+  const rows=actionableTeacherHomeworkRows([math,{...math}]);
+  assert.deepEqual(rows,[math]);
+  assert.equal(studyPackHomeworkSummary(rows),'Homework lists Math “Page 55”');
 });
 test('explicit teacher no-homework wording is distinct from missing specifics',()=>{
   const rows=summarizeTeacherHomework(['Homework','No homework!'],checkedAt);

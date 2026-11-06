@@ -6,15 +6,32 @@ const VALID_SUBJECTS = new Set(['Math','Spelling','Reading','Religion','Parent']
 const standingRoutine = task => /^(?:read|read\s+\d+\s*(?:min(?:ute)?s?)?)$/i.test(task)
   || /cover books|reading log|behavior chart|everything should be returned|return everything in the hw folder|attend mass/i.test(task);
 
+export function actionableTeacherHomeworkRows(rows) {
+  const items=rows.filter(row=>VALID_SUBJECTS.has(row.subject) && !standingRoutine(row.task))
+    .map(row=>({...row,task:String(row.task).trim()}))
+    .filter(row=>row.task.length>0);
+  return [...new Map(items.map(row=>[row.subject+'|'+row.task.toLowerCase(),row])).values()];
+}
+
+const readableList=items=>{
+  if(items.length===1)return items[0];
+  if(items.length===2)return `${items[0]} and ${items[1]}`;
+  return `${items.slice(0,-1).join(', ')}, and ${items.at(-1)}`;
+};
+
+export function studyPackHomeworkSummary(rows) {
+  if(!rows.length)return 'No specific assignments are currently posted';
+  const items=rows.slice(0,4).map(row=>row.subject==='Parent'
+    ? `parent task “${row.task}”` : `${row.subject} “${row.task}”`);
+  return `Homework lists ${readableList(items)}`;
+}
+
 export function summarizeTeacherHomework(lines,checkedAt=new Date().toISOString(),previous=null) {
   if(!Array.isArray(lines) || !lines.some(line=>/^Homework\s*:?\s*$/i.test(String(line).trim()))) {
     throw new Error('Official homework heading not verified.');
   }
   const rows=parseHomework(lines);
-  const items=rows.filter(row=>VALID_SUBJECTS.has(row.subject) && !standingRoutine(row.task))
-    .map(({subject,task})=>({subject,task:String(task).trim()}))
-    .filter(row=>row.task.length>0);
-  const unique=[...new Map(items.map(row=>[row.subject+'|'+row.task.toLowerCase(),row])).values()];
+  const unique=actionableTeacherHomeworkRows(rows).map(({subject,task})=>({subject,task}));
   if(unique.length>20)throw new Error('Homework page has an implausible number of assignments.');
   const explicitNoHomework=rows.some(row=>row.subject==='Homework' && /^no homework assigned$/i.test(row.task));
   const status=unique.length?'assignments':explicitNoHomework?'no-homework':'no-specific-posting';
