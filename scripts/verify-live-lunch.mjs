@@ -184,8 +184,8 @@ try {
   // Release acceptance must open the ACTUAL deployed printable worksheets,
   // not infer success from source JSON or a non-deploying PR test alone.
   for (const check of [
-    {date:'2026-11-12',label:/singular.*plural nouns/i,name:'nov12-nouns'},
-    {date:'2026-11-13',label:/3 letter blends/i,name:'nov13-blends'},
+    {date:'2026-11-12',label:/singular.*plural nouns/i,name:'nov12-nouns',skill:'singular-plural-nouns'},
+    {date:'2026-11-13',label:/3 letter blends/i,name:'nov13-blends',skill:'three-letter-blends'},
   ]) {
     // Current-school-week acceptance expires with the test and follows the
     // latest verified announcement. Do not block December releases for
@@ -211,14 +211,27 @@ try {
     const dialog=page.locator('[data-study-guide-dialog]');
     await expect(dialog).toBeVisible({timeout:20000});
     const frame=page.frameLocator('[data-study-guide-dialog] iframe');
-    await expect(frame.locator('.student-test .problem')).toHaveCount(8,{timeout:20000});
-    await expect(frame.locator('.adult-key .key-list li')).toHaveCount(8);
-    const prompts=await frame.locator('.student-test .problem .prompt').allTextContents();
-    expect(new Set(prompts.map(p=>p.trim())).size).toBe(8);
+    await expect(frame.locator('.student-test .problem')).toHaveCount(6,{timeout:20000});
+    await expect(frame.locator('.adult-key .key-list li')).toHaveCount(6);
+    const prompts=(await frame.locator('.student-test .problem .prompt').allTextContents())
+      .map(prompt=>prompt.replace(/^\d+\.\s*/,'').trim());
+    expect(new Set(prompts).size).toBe(6);
+    const bank=data.pack.contentPipeline.questions.filter(q=>q.skill===check.skill);
+    const key=await frame.locator('.adult-key .key-list li').allTextContents();
+    for(const [index,prompt] of prompts.entries()){
+      const answer=key[index].replace(/^\d+\.\s*/,'').split(/Why:|Adult:/)[0].trim();
+      const handwriting=prompt==='Listen to the practice word. Write it on the lines.';
+      const source=handwriting?bank.find(q=>q.answer===answer&&/which (?:of these )?word/i.test(q.prompt))
+        :bank.find(q=>q.prompt===prompt);
+      expect(source,'matching source for '+prompt).toBeTruthy();
+      expect(answer).toBe(source.answer);
+    }
+    if(check.name==='nov13-blends')await expect(frame.locator('.student-test .handwriting-answer')).toHaveCount(1);
     const printed=await frame.locator('body').innerText();
     expect(printed).toContain('Parent Answer Key');
     if(check.name==='nov12-nouns'){
       expect(printed).toContain('Cats name more than one cat.');
+      expect(printed).toContain('Two babies laugh.');
       expect(printed).not.toContain('Cats names more than one cat.');
       expect(printed).not.toContain('Cats tells what an animal does.');
     }

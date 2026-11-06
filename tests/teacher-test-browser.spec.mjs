@@ -13,13 +13,13 @@ const makeGuide=()=>({
     answer:'Second new idea',explanation:'A separate adult explanation.',
   })),
 });
-test('teacher-style worksheet renders twenty genuine browser-visible letter choices on mobile and desktop',async({page},testInfo)=>{
+test('teacher-style worksheet renders six letter-choice questions on mobile and desktop',async({page},testInfo)=>{
   const html=renderTestWorksheet(makeGuide());
   await page.setContent(html,{waitUntil:'load'});
   await expect(page.locator('main.student-test.teacher-letter-choice')).toHaveCount(1);
-  await expect(page.locator('main.student-test .teacher-letter-choice-item')).toHaveCount(20);
-  await expect(page.locator('main.student-test .teacher-choice-row')).toHaveCount(60);
-  await expect(page.locator('main.student-test .teacher-answer-blank')).toHaveCount(20);
+  await expect(page.locator('main.student-test .teacher-letter-choice-item')).toHaveCount(6);
+  await expect(page.locator('main.student-test .teacher-choice-row')).toHaveCount(18);
+  await expect(page.locator('main.student-test .teacher-answer-blank')).toHaveCount(6);
   await expect(page.locator('section.adult-key h1')).toHaveText('Parent Answer Key');
   const screen=await page.evaluate(()=>{
     const student=document.querySelector('main.student-test');
@@ -63,16 +63,19 @@ test('real Chromium print media keeps two columns and a separate answer key',asy
     };
   });
   expect(print.columnCount).toBe('2');
-  expect(print.studentCount).toBe(20);
+  expect(print.studentCount).toBe(6);
   expect(['page','always','left','right']).toContain(print.parentBreak);
   const pdf=await page.pdf({format:'Letter',printBackground:false});
   expect(pdf.subarray(0,5).toString('ascii')).toBe('%PDF-');
   expect(pdf.length).toBeGreaterThan(5_000);
+  expect(pdf.toString('latin1').match(/\/Type \/Page\b/g)).toHaveLength(2);
   await testInfo.attach('synthetic-teacher-format-letter.pdf',{body:pdf,contentType:'application/pdf'});
 });
 test('actual browser displays historical test format as example, never a forecast',async({page})=>{
   await page.setContent(renderTestStudyGuide(makeGuide()),{waitUntil:'load'});
-  const marker=page.locator('.teacher-test-reference');
+  const details=page.locator('details.guide-source');
+  await details.locator('summary').click();
+  const marker=details.locator('p').filter({hasText:'Previous actual test format'});
   await expect(marker).toHaveCount(1);
   await expect(marker).toContainText('example only');
   await expect(marker).toContainText('not a guarantee');

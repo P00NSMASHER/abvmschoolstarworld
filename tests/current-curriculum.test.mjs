@@ -1,3 +1,4 @@
+import {assertFocusedWorksheet} from './helpers/focused-worksheet.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -110,11 +111,11 @@ test('diagram-label practice withdraws without the source topic, requires exact 
     coverage:{missingGuideSkills:[]},
   };
   const guideHtml=printableStudyGuideHtml(guide);
+  assert.match(guideHtml,/Labels name its parts/);
+  assert.match(guideHtml,/follow each label line/);
+  assert(!guideHtml.includes(practice.at(-1).prompt),'guide does not repeat the full exercise bank');
   const worksheetHtml=printableWorksheetHtml(guide);
-  for(const question of practice){
-    assert(guideHtml.includes(question.prompt),question.id);
-    assert(worksheetHtml.includes(question.prompt),question.id);
-  }
+  assertFocusedWorksheet(worksheetHtml,practice);
   assert.match(guideHtml,/Teacher-style supplemental practice/i);
   assert.match(guideHtml,/@media screen and \(max-width:620px\)/);
   assert.match(worksheetHtml,/Answer Key/i);
@@ -195,17 +196,16 @@ test('Religion Chapter 4 test receives scoped guide, worksheet, and correct answ
     coverage:{missingGuideSkills:[]},
   };
   const guideHtml=printableStudyGuideHtml(guide);
+  assert.match(guideHtml,/Old Testament.*New Testament/);
+  assert.match(guideHtml,/best way God speaks.*Jesus/i);
+  assert(!guideHtml.includes(practice.at(-1).prompt),'guide does not repeat the full exercise bank');
   const worksheetHtml=printableWorksheetHtml(guide);
   assert.match(guideHtml,/God Speaks to Us/i);
   assert.match(guideHtml,/Teacher-style supplemental practice/i);
   assert.match(guideHtml,/@media screen and \(max-width:620px\)/);
   assert.match(worksheetHtml,/Answer Key/i);
   assert.match(worksheetHtml,/@media print/);
-  for(const question of practice){
-    assert(guideHtml.includes(question.prompt),question.id);
-    assert(worksheetHtml.includes(question.prompt),question.id);
-    assert(worksheetHtml.includes(question.answer),question.id);
-  }
+  assertFocusedWorksheet(worksheetHtml,practice);
 
   const unrelated=out.questions.filter(row=>row.subject==='Religion'&&row.skill!=='religion-chapter-4');
   assert.equal(unrelated.length,0);
@@ -276,6 +276,9 @@ test('soft c and g test receives source-backed guide, worksheet, and correct ans
     coverage:{missingGuideSkills:[]},
   };
   const guideHtml=printableStudyGuideHtml(guide);
+  assert.match(guideHtml,/soft c/i);
+  assert.match(guideHtml,/soft g/i);
+  assert(!guideHtml.includes(practice.at(-1).prompt),'guide does not repeat the full exercise bank');
   const worksheetHtml=printableWorksheetHtml(guide);
   assert.match(guideHtml,/Teacher-style supplemental practice/i);
   assert.match(guideHtml,/@media screen and \(max-width:640px\)/);
@@ -283,11 +286,7 @@ test('soft c and g test receives source-backed guide, worksheet, and correct ans
   assert.match(worksheetHtml,/\.work-area\{min-height:\.5in/);
   assert.match(worksheetHtml,/@media screen and \(max-width:640px\)/);
   assert.match(worksheetHtml,/@media print/);
-  for(const question of practice){
-    assert(guideHtml.includes(question.prompt),question.id);
-    assert(worksheetHtml.includes(question.prompt),question.id);
-    assert(worksheetHtml.includes(question.answer),question.id);
-  }
+  assertFocusedWorksheet(worksheetHtml,practice);
 
   const withdrawn=buildGrade2ContentPipeline({
     ...pack,
@@ -368,6 +367,9 @@ test('consonant digraph test receives a teacher-style guide, keyed worksheet, an
     coverage:{missingGuideSkills:[]},
   };
   const guideHtml=printableStudyGuideHtml(guide);
+  assert.match(guideHtml,/sh, ch, th, and wh/);
+  assert.match(guideHtml,/Two letters, one sound/i);
+  assert(!guideHtml.includes(practice.at(-1).prompt),'guide does not repeat the full exercise bank');
   const worksheetHtml=printableWorksheetHtml(guide);
   assert.match(guideHtml,/Teacher-style supplemental practice/i);
   assert.match(guideHtml,/@media screen and \(max-width:640px\)/);
@@ -375,11 +377,7 @@ test('consonant digraph test receives a teacher-style guide, keyed worksheet, an
   assert.match(worksheetHtml,/\.work-area\{min-height:\.5in/);
   assert.match(worksheetHtml,/@media screen and \(max-width:640px\)/);
   assert.match(worksheetHtml,/@media print/);
-  for(const question of practice){
-    assert(guideHtml.includes(question.prompt),question.id);
-    assert(worksheetHtml.includes(question.prompt),question.id);
-    assert(worksheetHtml.includes(question.answer),question.id);
-  }
+  assertFocusedWorksheet(worksheetHtml,practice);
 
   const withdrawn=buildGrade2ContentPipeline({
     ...pack,

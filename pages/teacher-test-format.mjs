@@ -132,7 +132,9 @@ export function teacherTestReferenceForGuide(guide) {
   if(/\bphonics\b/.test(label) && /\bshort[- ]vowels?\b/.test(label))
     return reference.shortVowelPhonics;
   if((/spelling/.test(subject) || /spelling/.test(label))&& !/grammar/.test(label))
-    return reference.spellingDictation;
+    return /handwriting/.test(label)
+      ? {...reference.spellingDictation,id:'spelling-handwriting-two-column-dictation',columns:2}
+      : reference.spellingDictation;
   return null;
 }
 
@@ -195,7 +197,7 @@ export function teacherFormatSummary(guide) {
     return 'Teacher-format example: choose a word from a word bank and fill a blank. '+
       observed+'Use new, original prompts for practice.';
   if(profile.kind==='dictation')
-    return 'Teacher-format example: write dictated words on numbered lines. '+
+    return 'Teacher-format example: write dictated words on numbered '+(profile.columns===2?'handwriting lines in two columns. ':'lines. ')+
       observed+'Bonus work was observed previously, but is not promised for a future test.';
   if(profile.kind==='mixed')
     return 'Teacher-format example: a prior religion quiz combined five word-bank responses, '+

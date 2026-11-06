@@ -81,24 +81,19 @@ test('spelling study notes do not falsely teach that have obeys the silent-e rul
 });
 
 
-test('source-limited topic worksheets include an honest adult checking guide without inventing chapter facts',()=>{
-  const html=renderTestWorksheet(sample('Math (Ch. 2)',[],{
-    subject:'Math',facts:[],vocabulary:[],
-    warnings:['The matching question bank is not yet available.'],
-  }));
-  const student=html.split('<section class="sheet adult-key">')[0];
-  const adult=html.split('<section class="sheet adult-key">')[1];
-  assert.match(student,/class="sheet organizer-sheet"/);
-  assert.match(student,/class-topic organizer/);
-  assert.match(student,/Teacher-style supplemental practice/);
-  assert.match(student,/not school-issued questions/);
-  assert.doesNotMatch(student,/Answer Key \/ Adult Checking Guide/);
-  assert.match(adult,/Answer Key \/ Adult Checking Guide/);
-  assert.match(adult,/Answers vary/);
-  assert.match(adult,/current class notes or textbook/);
-  assert.match(adult,/does not supply unverified chapter facts/);
+test('source-limited tests show the announcement without fabricated exercises or a key',()=>{
+  const question={prompt:'Unrelated example?',answer:'Unrelated answer',choices:[]};
+  for(const guide of [
+    sample('Math (Ch. 2)',[],{subject:'Math'}),
+    sample('Reading',[question],{scopePending:true,facts:['Unrelated note']}),
+    sample('Spelling',[],{scopePending:true,spellingWords:['unrelated']}),
+  ]){
+    const html=renderTestWorksheet(guide);
+    assert.ok(html.includes(guide.label));
+    assert.match(html,/Check your class/);
+    assert.doesNotMatch(html,/<section class="sheet adult-key"|class="dictation-item"|class="problem |Unrelated (note|answer|example)/);
+  }
 });
-
 
 test('paper theme keeps bright previews but uses grayscale outlines and splittable cards for home printing',()=>{
   assert.match(premiumPaperCss,/\.premium-paper \.vowel-cards/);
@@ -107,4 +102,19 @@ test('paper theme keeps bright previews but uses grayscale outlines and splittab
   assert.match(premiumPaperCss,/\.premium-paper \.topic-grid\{display:block!important\}/);
   assert.match(premiumPaperCss,/\.premium-paper \.topic-card\{break-inside:auto!important/);
   assert.match(premiumPaperCss,/filter:grayscale\(1\) contrast\(1\.35\)/);
+});
+
+test('a combined test without a confirmed list uses a checked original word for one handwriting response',()=>{
+  const practice=[
+    {skill:'three-letter-blends',prompt:'Which word begins with three consonants?',choices:['street','tree','sea'],answer:'street'},
+    {skill:'three-letter-blends',prompt:'Which letters begin the word splash?',choices:['sp','spl','sl'],answer:'spl'}
+  ];
+  const guide=sample('Spelling (3 letter blends) / Handwriting',practice,{subject:'Spelling / Handwriting'});
+  const [student,key]=renderTestWorksheet(guide).split('<section class="sheet adult-key">');
+  assert.match(student,/class="handwriting-answer"/);
+  assert.doesNotMatch(student,/street|Adult Dictation List/);
+  assert.match(key,/<li><b>1\.<\/b> street<small/);
+  assert.match(key,/original example word/);
+  assert.match(key,/matching teacher word list is unavailable/);
+  assert.doesNotMatch(renderTestWorksheet({...guide,label:'Spelling (3 letter blends)'}),/class="handwriting-answer"/);
 });

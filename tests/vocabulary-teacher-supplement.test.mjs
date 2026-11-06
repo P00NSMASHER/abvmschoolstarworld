@@ -89,7 +89,8 @@ test('printable guides and Notes use the same original meanings with visible pro
   assert.match(html,/looks at something carefully to make sure it is correct/);
   assert.match(html,/Original study explanation — not supplied by the teacher/);
   assert.doesNotMatch(html,/the teacher page does not provide a definition/);
-  assert.equal((html.match(/Original study explanation — not supplied by the teacher/g)||[]).length,2);
+  assert.equal((html.match(/Original study explanation — not supplied by the teacher/g)||[]).length,1);
+  for(const term of ['checks','choose']) assert.ok(html.includes(term+'<sup>*</sup>'));
 });
 
 test('reviewed vocabulary punctuation interpretation is narrow and leaves unknown phrases untouched',()=>{

@@ -4,7 +4,7 @@ import {questionsForTest,religionChapterScopes,isReligionUnitOneReviewTest} from
 import {religionUnitOneFacts,religionUnitOneQuestions} from './religion-unit1-review.mjs';
 import {adaptivePracticeRound, practiceIdentity} from './study-experience.mjs';
 import {schoolDay, studyAssessmentDay, weekBounds, nextTests, visibleArchive, weeklyArchive, balancedTestRound} from './study-model.mjs';
-import {sourceStudyNotes,weeklySourceNotes,explicitlyInWeek} from './study-notes-scope.mjs';
+import {sourceStudyNotes,weeklySourceNotes,explicitlyInWeek,exactSkillTopics} from './study-notes-scope.mjs';
 import {buildStarBank} from './star-practice.mjs';
 
 const names = {weekly:'This week', saved:'Saved learning', star:'STAR practice', mix:'Study mix'};
@@ -126,7 +126,7 @@ function compactGuideText(value, limit = 180) {
 function uniqueGuideText(rows) {
   const seen = new Set(), out = [];
   for (const row of rows) {
-    const text = compactGuideText(row);
+    const text = String(row ?? '').replace(/\s+/g,' ').trim();
     if (!text) continue;
     const key = text.toLowerCase();
     if (seen.has(key)) continue;
@@ -134,13 +134,50 @@ function uniqueGuideText(rows) {
   }
   return out;
 }
+const chapterOf=text=>String(text||'').match(/\b(?:chapter|ch\.?)\s*(\d+[a-z]?)\b/i)?.[1]?.toLowerCase();
+const focusWords=text=>String(text||'').toLowerCase()
+  .replace(/\b(?:reading|ela|math|spelling|handwriting|grammar|phonics|comprehension|test|assessment|and)\b/g,' ')
+  .replace(/[^a-z0-9]+/g,' ').trim();
+const includesPhrase=(text,phrase)=>!!phrase&&(' '+text+' ').includes(' '+phrase+' ');
+
+// The digital Reading/Math/Spelling pools intentionally include general practice.
+// A printable must instead have an exact named skill, scoped source, or dated chapter lesson.
+function scopedPrintQuestions(test,subject,all,matched,chapterLessons,metadata){
+  const label=test.label.toLowerCase(),focus=focusWords(label);
+  if(!focus)return [];
+  const sameSubject=all.filter(q=>q.subject===subject);
+  if(subject==='Math'&&chapterOf(label)){
+    const chapter=chapterOf(label);
+    const namedSkill=new RegExp('(?:^|-)chapter-'+chapter+'(?:-|$)');
+    return unique([...chapterLessons.flatMap(lesson=>array(lesson.questions).filter(q=>q.subject===subject)),
+      ...sameSubject.filter(q=>namedSkill.test(q.skill))]);
+  }
+  // Reuse existing positively scoped matchers. Their fallback subject routes
+  // are deliberately excluded and may never introduce a printed topic.
+  if((subject==='Religion'&&(chapterOf(label)||isReligionUnitOneReviewTest(test)))||
+    /\bunit\s*\d+\s*text\s*set\s*\d+\b/.test(label)||
+    /singular\s*(?:&|and)\s*plural\s+nouns?|common\s*(?:&|and)\s*proper\s+nouns?|subject\s*(?:&|and)\s*predicate|sentence types|punctuation/.test(label)||
+    /\bphonics\b.*\bshort\s+vowels?\b/.test(label)||
+    (subject==='Spelling / Handwriting'&&/\b(?:consonant digraphs?|(?:3|three)[ -]+letter\s+(?:consonant\s+)?blends?|(?:long|short)\s+[aeiou])\b/.test(label)))
+    return matched.filter(q=>q.subject===subject);
+  const names=new Map(metadata.filter(s=>s.subject===subject).map(s=>[s.id,focusWords(s.label)]));
+  return sameSubject.filter(q=>{
+    if(array(q.sourceTestScopes).some(scope=>focusWords(scope)===focus))return true;
+    if(subject==='Spelling / Handwriting'&&/soft c/.test(label))return q.skill==='soft-c-g';
+    return [focusWords(q.skill),names.get(q.skill)].some(name=>
+      name&&(includesPhrase(focus,name)||includesPhrase(name,focus)));
+  });
+}
+
 function noteMatchesTest(text, label, subject) {
   const value = compactGuideText(text,240), lower = String(label || '').toLowerCase();
   if (!value) return false;
   if (subject === 'Reading / ELA' && /grammar|predicate|subject\s*&|sentence types|punctuation/.test(lower)) {
     if (/subject|predicate/.test(lower)) return /\b(?:subject|predicate)\b/i.test(value);
     if (/sentence types|punctuation/.test(lower)) return /sentence type|statement|question|command|exclamation|punctuation|end mark/i.test(value);
-    return /\b(?:grammar|subject|predicate|sentence type|punctuation)\b/i.test(value);
+    if (/singular.*plural/.test(lower)) return /\b(?:singular|plural)\b/i.test(value);
+    if (/common.*proper/.test(lower)) return /\b(?:common|proper) nouns?\b/i.test(value);
+    return false;
   }
   if (subject === 'Reading / ELA' && /phonics/.test(lower) && /short[ -]vowels?/.test(lower))
     return /short[ -]vowels?/i.test(value);
@@ -148,25 +185,27 @@ function noteMatchesTest(text, label, subject) {
     return /subtraction|subtract|difference|minus|take away|related addition facts to check subtraction/i.test(value);
   if (subject === 'Math' && /addition|add|sum/.test(lower))
     return /addition|add|sum|total/i.test(value) && !/subtraction-only/i.test(value);
+  if (subject === 'Math' && /place value|expanded form/.test(lower))
+    return /place value|expanded form|digit.{0,10}value/i.test(value);
   if (subject === 'Spelling / Handwriting') {
+    if (/soft c/.test(lower)) return /soft [cg]/i.test(value);
     if (/\bdigraphs?\b/.test(lower)) return /\bdigraphs?\b/i.test(value);
     if (/\b(?:3|three)[ -](?:letter|consonant) blends?\b/.test(lower))
       return /\b(?:3|three)[ -](?:letter|consonant) blends?\b|\bthree consonants?\b|\b(?:str|spl|spr)\b/i.test(value);
-    const focus = lower.match(/short\s+([aeiou])/i)?.[1]?.toLowerCase();
+    const focuses = [...lower.matchAll(/(?:short|long)\s+([aeiou])\b/gi)].map(match=>match[1]);
     const mentioned = [...value.matchAll(/\b(?:short|long)\s+([aeiou])\b/gi)].map(match=>match[1].toLowerCase());
-    if (focus && mentioned.length && !mentioned.includes(focus)) return false;
-    return /spell|handwriting|phonics|vowel|short|long|blend|word|letter/i.test(value);
+    return mentioned.some(vowel=>focuses.includes(vowel));
   }
   if (subject === 'Religion') {
     const chapter = lower.match(/\b(?:chapter|ch\.?)\s*([1-9]\d*)\b/i)?.[1];
     // A named chapter's notes must begin with its own chapter header.
-    return chapter ? new RegExp('^\\s*Chapter\\s+' + chapter + '\\s*:','i').test(value) : true;
+    return chapter ? new RegExp('^\\s*Chapter\\s+' + chapter + '\\s*:','i').test(value) : false;
   }
-  return true;
+  return false;
 }
 
 function polishedReligionFact(value) {
-  let text = compactGuideText(value,320)
+  let text = String(value ?? '').trim()
     .replace(/\borignial\b|\boirginal\b/gi,'original')
     .replace(/\btendancy\b/gi,'tendency')
     .replace(/\brecieve\b/gi,'receive')
@@ -212,7 +251,7 @@ function readableSkillLabel(skill,questions,skillById) {
 }
 
 function guideReviewTopics(group,practiceRows,pack) {
-  const skillRows=[...array(pack.contentPipeline?.skills),...array(pack.recentReviewPipeline?.skills)];
+  const skillRows=[...array(pack.recentReviewPipeline?.skills),...array(pack.contentPipeline?.skills)];
   const skillById=new Map(skillRows.filter(row=>meaningfulText(row?.id)).map(row=>[row.id,row]));
   const skills=[];
   for(const row of group)for(const skill of [row.skill,...array(row.assessedSkillIds)])
@@ -231,7 +270,7 @@ function guideReviewTopics(group,practiceRows,pack) {
     return {
       id:skill,
       label:readableSkillLabel(skill,matching,skillById),
-      summary:compactGuideText(summary,320),
+      summary, notes:uniqueGuideText(array(metadata?.studyNotes)),
       questionCount:matching.length,
       check:checks[0]||null,
       checks,
@@ -461,7 +500,7 @@ export function createStudyMaterials({
   function completedKeys() {
     return new Set(array(read(storage,'abvm-completed-tests',[])).filter(key => typeof key === 'string'));
   }
-  function currentTestQuestions(test,time) {
+  function testQuestionPool(test,time) {
     const day = materialDay(time), testWeek = weekBounds(test.date), thisWeek = weekBounds(time);
     // Explicitly match each future test's school week. An undated or older
     // worksheet is saved learning, not proof of this test's current curriculum.
@@ -469,9 +508,10 @@ export function createStudyMaterials({
       lesson.weekOf === testWeek.start ||
       (lesson.studiedOn && lesson.studiedOn >= testWeek.start && lesson.studiedOn <= testWeek.end));
     const recent = testWeek.start === thisWeek.start ? day.week.questions : [];
-    const matched=questionsForTest(test,unique([
-      ...current,...recent,...matchedLessons.flatMap(lesson => array(lesson.questions)),
-    ]));
+    return unique([...current,...recent,...matchedLessons.flatMap(lesson => array(lesson.questions))]);
+  }
+  function currentTestQuestions(test,time) {
+    const matched=questionsForTest(test,testQuestionPool(test,time));
     // These original publisher-aligned questions supplement, never replace,
     // the reviewed lessons. Earlier chapters remain out of other tests.
     return isReligionUnitOneReviewTest(test)
@@ -533,14 +573,38 @@ export function createStudyMaterials({
     const time = instant();
     const state = printableTestState(upcoming), i = Number(index);
     if (!Number.isInteger(i) || i < 0 || i >= state.tests.length) return null;
-    const test = state.tests[i], group = unique(state.groups[i] || []);
-    const subject = subjectForTest(test,group);
+    const test = state.tests[i], candidates = unique(state.groups[i] || []);
+    const subject = subjectForTest(test,candidates);
     const lower = String(test.label || '').toLowerCase();
+    // A subject heading alone announces a date, not the contents of a paper.
+    // Leave ordinary Study practice available when the printable scope is unknown.
+    const subjectOnly = /^(?:reading(?:\s*\/\s*ela)?|ela|math|grammar|religion|faith|spelling(?:\s*\/\s*handwriting)?|handwriting)(?:\s+(?:test|assessment))?$/i.test(lower.trim());
+    const chapter=subject==='Math'&&chapterOf(test.label);
+    const chapterLessons=chapter?materialDay(time).lessons.filter(lesson=>lesson.subject===subject&&
+      explicitlyInWeek(lesson,test.date)&&chapterOf(lesson.title)===chapter):[];
+    const metadata=array(pack.contentPipeline?.skills);
+    const group=subjectOnly?[]:scopedPrintQuestions(test,subject,testQuestionPool(test,time),candidates,chapterLessons,metadata);
     const sourceSubjects = array(pack.subjects).filter(row => row?.subject === subject);
     const practiceRows = representativePractice(group);
     const questionFacts = practiceRows.flatMap(row => [row.sourceFact === row.skill ? null : row.sourceFact,row.explanation]).filter(meaningfulText);
-    const subjectFacts = sourceSubjects.flatMap(row => [...array(row.topics),...array(row.studyNotes)])
-      .filter(text => noteMatchesTest(text,test.label,subject));
+    const selectedIds = new Set(group.flatMap(row=>[row.skill,...array(row.assessedSkillIds)]));
+    const linkedSkills = array(pack.contentPipeline?.skills).filter(row=>row.subject===subject && selectedIds.has(row.id));
+    const linkedTopics = new Set(linkedSkills.flatMap(skill=>exactSkillTopics(pack,skill)));
+    // Other notes for this subject may belong to a different test. The matching
+    // skill's instructional notes travel separately with its review topic.
+    const authoredNotes = new Set(array(pack.contentPipeline?.skills).flatMap(skill=>array(skill.studyNotes)));
+    const focus=focusWords(test.label);
+    const scopeLine=text=>chapter?chapterOf(text)===chapter:
+      noteMatchesTest(text,test.label,subject)||includesPhrase(focusWords(text),focus);
+    const subjectFacts = subjectOnly ? [] : [
+      ...chapterLessons.flatMap(lesson=>array(lesson.notes)).filter(meaningfulText),
+      ...sourceSubjects.flatMap(row => [
+        // A multi-topic teacher line must not import neighboring skills into this test.
+        ...array(row.topics).flatMap(text=>String(text).split(/\s*;\s*/)).filter(scopeLine),
+        ...array(row.studyNotes).filter(text=>!authoredNotes.has(text)).flatMap(text=>
+          /^(?:reading comprehension|phonics|grammar|word structure|test focus):/i.test(text)?String(text).split(/\s*;\s*/):[text]).filter(scopeLine),
+      ]),
+    ];
     // Only a photo-confirmed week-matched list can outrank general vowel examples.
     // Do not infer a daily assignment date from a parent's weekly photos.
     const verifiedWeekNotes = subject === 'Spelling / Handwriting'
@@ -557,10 +621,14 @@ export function createStudyMaterials({
       ...(unitOneReligion ? religionUnitOneFacts : []),
     ]) : [];
     const reviewTopics = guideReviewTopics(group,practiceRows,pack);
-    const vocabulary = subject === 'Reading / ELA' && !/grammar|predicate|subject\s*&|phonics/.test(lower)
-      ? [...new Map(array(pack.vocabulary).filter(row => row?.subject === subject && meaningfulText(row?.term))
-        .map(row => [String(row.term).trim().toLowerCase(),row])).values()].slice(0,8)
-      : [];
+    // Only an explicitly linked vocabulary list identifies the words for this
+    // paper. The pack also holds words for other weekly lessons.
+    const vocabularyTopic=/\bvocabulary\b|\bunit\s*\d+\s*text\s*set\s*\d+/i.test(test.label);
+    const vocabTerms = new Set([...linkedTopics].filter(t=>vocabularyTopic&&/^vocabulary\s*:/i.test(t))
+      .flatMap(t=>t.slice(t.indexOf(':')+1).toLowerCase().split(/[,.;]/).map(word=>word.trim())));
+    const vocabulary = [...new Map(array(pack.vocabulary).filter(row=>row?.subject===subject &&
+      meaningfulText(row.term) && vocabTerms.has(row.term.trim().toLowerCase()))
+      .map(row=>[row.term.trim().toLowerCase(),row])).values()];
     // A new teacher-published spelling list can replace old photo lists only if
     // the pack identifies the same school week as this specific test.
     const announcedWeek = String(pack.spellingListProvenance?.weekLabel || pack.teacherPostingWeekLabel || pack.weekLabel || '').match(/week of\s+([a-z]+\s+\d{1,2},?\s+\d{4})/i);
@@ -569,12 +637,10 @@ export function createStudyMaterials({
     // General guide facts must obey the same source-week gate as the
     // dictation list. Otherwise an old undated teacher list can leak into
     // a newly dated guide even when guide.spellingWords is correctly empty.
-    const testWeekMatchesSpellingList = teacherWeek === weekBounds(test.date).start;
     const isTeacherWordList = text =>
       /^(?:Weekly spelling words|Spelling words|Teacher spelling words|Teacher-posted spelling words(?: \(page undated\))?|Verified spelling words|Words for spelling test)\s*:/i.test(text);
-    const facts = uniqueGuideText([...verifiedWeekNotes,...questionFacts,
-      ...subjectFacts.filter(text => subject !== 'Spelling / Handwriting' || testWeekMatchesSpellingList || !isTeacherWordList(text)),
-    ]);
+    const classFacts = uniqueGuideText(subjectFacts.filter(text=>!isTeacherWordList(text)));
+    const facts = uniqueGuideText([...verifiedWeekNotes,...questionFacts,...classFacts]);
     const teacherLists = subject === 'Spelling / Handwriting' && teacherWeek === weekBounds(test.date).start
       ? sourceSubjects.flatMap(row => [...array(row.studyNotes), ...array(row.topics)])
         .filter(note => /^(?:Weekly spelling words|Spelling words|Teacher spelling words|Teacher-posted spelling words(?: \(page undated\))?|Verified spelling words|Words for spelling test)\s*:/i.test(note))
@@ -583,23 +649,24 @@ export function createStudyMaterials({
       /^(?:Photo-confirmed practice words in the recorded order|Weekly spelling words|Spelling words|Teacher spelling words|Teacher-posted spelling words(?: \(page undated\))?|Verified spelling words|Words for spelling test)\s*:/i.test(note));
     const spellingWords = wordNote
       ? [...new Set(wordNote.slice(wordNote.indexOf(':') + 1).split(',')
-        .map(word => word.replace(/[.\s]+$/,'').trim()).filter(word => /^[a-z][a-z'-]*$/i.test(word)))].slice(0,30)
+        .map(word => word.replace(/[.\s]+$/,'').trim()).filter(word => /^[a-z][a-z'-]*$/i.test(word)))]
       : [];
     // Print the actual checked choices, but never mix in private responses,
     // teacher markings or answers on the student's test page.
-    // Preserve the complete verified question set for both printable resources.
-    // This presentation-only expansion does not change study rounds or refresh.
+    // Keep the full eligible bank so the paper can select examples per skill.
     const practice = practiceRows.map(row => ({
-      prompt:compactGuideText(row.prompt,320),
-      answer:compactGuideText(row.answer,140),
-      choices:array(row.choices).map(choice => compactGuideText(choice,160)),
-      skill:compactGuideText(row.skill,60),
+      prompt:row.prompt,
+      answer:row.answer,
+      choices:array(row.choices),
+      skill:row.skill,
+      ...(row.subject==='Religion'?{sourceChapters:religionChapterScopes(row)}:{}),
+      ...(array(row.assessedSkillIds).length?{assessedSkillIds:row.assessedSkillIds}:{}),
       questionType:compactGuideText(row.questionType,40),
-      explanation:compactGuideText(row.explanation,240),
-      hint:compactGuideText(row.hint,160),
+      explanation:row.explanation || '',
+      hint:row.hint || '',
     }));
     const availableSkills = [...new Set(group.flatMap(row=>[row.skill,...array(row.assessedSkillIds)]).filter(meaningfulText))];
-    const representedSkills = [...new Set(practiceRows.map(row => row.skill))];
+    const representedSkills = [...new Set(practiceRows.flatMap(row => [row.skill,...array(row.assessedSkillIds)]))];
     const missingSkills = availableSkills.filter(skill => !representedSkills.includes(skill));
     const guideSkills = reviewTopics.map(row=>row.id);
     const missingGuideSkills = availableSkills.filter(skill=>!guideSkills.includes(skill));
@@ -624,13 +691,15 @@ export function createStudyMaterials({
       if (!spellingWords.length) warnings.push('No verified word list matches this test week. Older weeks\' spelling words are not substituted.');
     }
     if (!facts.length) warnings.push('No reviewed test-specific facts are available yet, so this guide does not invent missing material.');
+    const scopePending = subjectOnly && !spellingWords.length;
     return {
       key:testKey(test), label:compactGuideText(test.label,120), date:test.date, subject:subject || 'Test review',
-      scopeNotice:unitOneReligion
+      scopePending,
+      scopeNotice:scopePending ? 'Your teacher has posted the test date. The topics for this test haven’t been listed yet.' : unitOneReligion
         ? 'Unit 1 cumulative review: Chapters 1–4. The publisher places the Unit 1 Test after Chapter 4. '+
           'Original study practice, not the school’s actual questions.'
         : '',
-      facts, teacherFacts, reviewTopics, vocabulary, practice, spellingWords, fallback, warnings:uniqueGuideText(warnings).slice(0,3),
+      facts, classFacts, teacherFacts, reviewTopics, vocabulary, practice, spellingWords, fallback, warnings:uniqueGuideText(warnings).slice(0,3),
       sourceHash:pack.sourceHash || null, sourceCheckedAt:pack.sourceCheckedAt || null,
       coverage:{availableSkills,representedSkills,missingSkills,guideSkills,missingGuideSkills},
       sourceLabel:unitOneReligion

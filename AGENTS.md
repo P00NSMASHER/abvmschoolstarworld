@@ -77,6 +77,17 @@ classroom source facts, child privacy, or copyright safeguards.
   add positive/negative format regressions on a protected PR. This intake
   occurs when requested; there is no autonomous new-photo watcher.
 
+## Test study guides and worksheets
+
+Write the quick review for a second grader. Keep every source-linked fact, rule,
+and assigned word, with one clear explanation per idea. Omit repeated drills
+and directions for adults from the child's review. Use a short practice sheet
+targeting the announced skills, with the existing illustrated paper style,
+handwriting space and a separate matching answer key. A date and a subject
+alone do not identify a test's contents. Show that gap and keep unassigned
+weekly material available in class notes. Check the rendered current papers,
+including a later test that must not inherit this week's spelling list.
+
 ## Lunch menus received in ChatGPT
 
 When the user uploads a lunch menu and asks to integrate/update the app, follow
