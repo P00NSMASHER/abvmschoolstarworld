@@ -5,6 +5,7 @@ import {
   studyPackHomeworkConsistencyErrors,
   studyPackHomeworkSummary,
   summarizeTeacherHomework,
+  homeworkContentChanged,
   shouldPublishHomework,
   HOMEWORK_SOURCE_URL,
 } from '../scripts/homework-posting.mjs';
@@ -74,8 +75,11 @@ test('unchanged posting publishes hourly while preserving observation and change
   assert.equal(atHour.firstObservedAt,checkedAt);
   assert.equal(atHour.contentChangedAt,checkedAt);
   assert.equal(shouldPublishHomework(atHour,first),true);
+  assert.equal(homeworkContentChanged(atHour,first),false,
+    'an observation-only publication must not make the read-only backup report a source change');
   const changed=summarizeTeacherHomework(['Homework','Math pg. 23',...routine],'2026-10-13T23:01:00.000Z',first);
   assert.equal(shouldPublishHomework(changed,first),true);
+  assert.equal(homeworkContentChanged(changed,first),true);
 });
 
 test('same assignments still publish after Eastern midnight before school starts',()=>{
