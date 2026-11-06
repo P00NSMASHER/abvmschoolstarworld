@@ -7,7 +7,6 @@ const jobs={
   'refresh-current-homework.yml':['homework'],
   'sync-uploaded-notices.yml':['integrate'],
   'import-yahoo-weekly-reminders.yml':['import'],
-  'pages.yml':['deploy'],
 };
 function job(text,name){return text.split('\n  '+name+':\n')[1]?.split(/\n  [a-z][a-z-]*:\n/)[0]||'';}
 for(const [file,names] of Object.entries(jobs)){
@@ -16,9 +15,18 @@ for(const [file,names] of Object.entries(jobs)){
     assert.ok(body,'job must exist');
     assert.match(body,/concurrency:\n\s+group: abvm-verified-school-state\n\s+cancel-in-progress: false\n\s+queue: max/);
     const parent=text.split('\njobs:')[0];
-    assert.doesNotMatch(parent,/group: abvm-verified-school-state/,'a reusable caller cannot hold its child release lock');
+    assert.doesNotMatch(parent,/group: abvm-verified-school-state/,'source writers must hold only job-scoped locks, never their entire caller workflow');
   });
 }
+test('Pages owns the same source-publication mutex for its entire verify-and-deploy transaction',()=>{
+  const pages=read('pages.yml');
+  const parent=pages.split('\n'+'jobs:')[0];
+  assert.match(parent,/concurrency:\n\s+group: abvm-verified-school-state\n\s+cancel-in-progress: false\n\s+queue: max/);
+  assert.doesNotMatch(job(pages,'verify'),/\n\s+concurrency:\n/);
+  assert.doesNotMatch(job(pages,'deploy'),/\n\s+concurrency:\n/);
+  assert.match(job(pages,'deploy'),/needs: verify/);
+});
+
 for(const file of Object.keys(jobs).filter(f=>f!=='pages.yml')){
   test(`${file} release reconciles only through the guarded main publisher`,()=>{
     const deploy=job(read(file),'deploy');
