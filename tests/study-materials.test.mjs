@@ -1229,3 +1229,37 @@ test('Nov 12 noun packet prints all eight source-gated questions and correct key
   assert.match(worksheet,/\.adult-key\{break-before:page\}/,
     'the answer key must start on a separate printed page');
 });
+
+test('Nov 6 consonant-digraph guide excludes future blends and unrelated vowel notes',()=> {
+  const event={date:'2026-11-06',label:'Spelling (consonant digraphs) / Handwriting',kind:'test'};
+  const row=question('digraph-guide','Spelling / Handwriting',{
+    skill:'consonant-digraphs',
+    prompt:'Which word begins with the digraph sh?',
+    answer:'Ship',
+    choices:['Ship','Clip','Trip'],
+    sourceFact:'A consonant digraph uses two letters to spell one sound.',
+    explanation:'The letters s and h work together to spell /sh/ in ship.',
+  });
+  const model=createStudyMaterials(opts({
+    now:()=> '2026-11-05T17:00:00Z',
+    events:[event],
+    catalog:catalog([row],'teacher-pages-nov6-digraphs'),
+    pack:{subjects:[{
+      subject:'Spelling / Handwriting',
+      topics:[
+        'Friday, Nov. 6 test focus: consonant digraphs',
+        'Friday, Nov. 13 test focus: 3 letter blends',
+      ],
+      studyNotes:[
+        'Some words start with three consonants, such as str, spl, and spr.',
+        'Long o sounds like the letter name o.',
+      ],
+    }]},
+  }));
+  const guide=model.testGuide(0);
+  assert.ok(guide.facts.some(text=>/Nov\. 6 test focus: consonant digraphs/i.test(text)));
+  assert.ok(guide.facts.some(text=>/two letters to spell one sound/i.test(text)));
+  assert.ok(guide.facts.every(text=>!/Nov\. 13|3 letter blends|three consonants|Long o/i.test(text)));
+  assert.equal(guide.practice.length,1);
+  assert.equal(guide.practice[0].id,'digraph-guide');
+});
