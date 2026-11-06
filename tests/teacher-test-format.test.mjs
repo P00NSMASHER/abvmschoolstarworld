@@ -1,3 +1,4 @@
+import {assertFocusedWorksheet} from './helpers/focused-worksheet.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -32,6 +33,8 @@ test('past actual test references retain only anonymous structural information',
   assert.equal(spelling.kind,'dictation');
   assert.equal(spelling.referenceCount,15);
   assert.equal(spelling.bonusObserved,true);
+  assert.equal(spelling.columns,2);
+  assert.equal(teacherTestReferenceForGuide(sample('Spelling',[],{subject:'Spelling'})).columns,1);
   assert.equal(teacherTestReferenceForGuide(sample('Reading Unit 1 Text Set 4',[],{subject:'Reading / ELA'})),null);
 });
 
@@ -74,7 +77,7 @@ test('future explicit references must be verified and structurally bounded',()=>
     verifiedFrom:'actual-teacher-test',kind:'unsupported',optionCount:3}}),null);
 });
 
-test('the actual teacher-style print layout keeps every original question and answer option',()=>{
+test('the actual teacher-style print layout uses a short sample with the original answer options',()=>{
   const questions=Array.from({length:20},(_,i)=>item(i+1));
   const guide=sample('Religion Ch. 4',questions);
   assert.equal(canRenderTeacherLetterChoice(guide,questions),true);
@@ -87,13 +90,13 @@ test('the actual teacher-style print layout keeps every original question and an
   assert.match(student,/columns:2/);
   assert.match(student,/Write the letter of the best answer on the line/);
   assert.doesNotMatch(student,/class="bubble"/,'letter-on-line replaces bubbling');
-  assert.equal((student.match(/class="problem teacher-letter-choice-item"/g)||[]).length,20);
-  assert.equal((student.match(/class="teacher-choice-row"/g)||[]).length,60);
-  assert.ok(student.includes('20.'),'the 20th question must not disappear');
+  assert.equal((student.match(/class="problem teacher-letter-choice-item"/g)||[]).length,6);
+  assert.equal((student.match(/class="teacher-choice-row"/g)||[]).length,18);
+  assertFocusedWorksheet(html,questions);
   assert.doesNotMatch(student,/A reviewed original explanation/,'student paper does not reveal answer explanation');
   assert.match(parent,/Parent Answer Key/);
   assert.match(parent,/A reviewed original explanation/);
-  for(const q of questions)assert.ok(student.includes(q.prompt),q.prompt+' retained');
+
 });
 
 test('study guide identifies observed exam format as example rather than forecasting an unseen test',()=>{
