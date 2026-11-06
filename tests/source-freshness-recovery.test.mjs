@@ -210,7 +210,7 @@ test('live watchdog enforces complete JSON parity and the recovery event is repo
   const check=readFileSync(new URL('../scripts/check-refresh-health.mjs',import.meta.url),'utf8');
   assert.ok(check.includes('JSON.stringify(local)===JSON.stringify(live)'));
   const workflow=readFileSync(new URL('../.github/workflows/daily-source-recovery.yml',import.meta.url),'utf8');
-  assert.match(workflow,/workflow_run:\s+workflows:\s+- Monitor ABVM refresh health\s+types: \[completed\]/);
+  assert.match(workflow,/workflow_run:\s+workflows:\s+- Monitor ABVM refresh health\s+- Verify ABVM Homework backup poll\s+types: \[completed\]/);
   assert.ok(workflow.includes("workflow_run.head_branch == 'main'"));
   assert.ok(workflow.includes('workflow_run.head_repository.full_name == github.repository'));
   assert.match(workflow,/attempts >= 6/);
@@ -222,7 +222,7 @@ test('late-night Homework misses receive two independent post-grace recovery wak
   const watchdog=readFileSync(new URL('../.github/workflows/refresh-health.yml',import.meta.url),'utf8');
   assert.match(recovery,/- cron: '59 0 \* \* \*'\n\s+timezone: 'America\/New_York'/);
   assert.match(watchdog,/- cron: '53 0 \* \* \*'\n\s+timezone: 'America\/New_York'/);
-  assert.match(recovery,/workflow_run:\s+workflows:\s+- Monitor ABVM refresh health\s+types: \[completed\]/);
+  assert.match(recovery,/workflow_run:\s+workflows:\s+- Monitor ABVM refresh health\s+- Verify ABVM Homework backup poll\s+types: \[completed\]/);
 });
 
 test('six same-day successful dispatches cannot start a watchdog feedback loop',()=>{
