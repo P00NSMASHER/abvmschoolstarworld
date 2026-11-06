@@ -1,3 +1,4 @@
+import {assertFocusedWorksheet} from './helpers/focused-worksheet.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
@@ -44,12 +45,12 @@ test('Reading test receives exact long-o/short-o practice and printable keys',()
     teacherFacts:[],vocabulary:[],practice,warnings:[],sourceLabel:'Current Reading Work topic with teacher-style supplemental practice',
     sourceCheckedAt:timestamp,coverage:{missingGuideSkills:[]}};
   const guideHtml=printableStudyGuideHtml(guide),worksheetHtml=printableWorksheetHtml(guide);
+  assert.match(guideHtml,/hop → hope/);
+  assert.match(guideHtml,/Short o has the sound heard in hot/);
+  assert(!guideHtml.includes(practice.at(-1).prompt),'guide does not repeat the full exercise bank');
   assert.match(guideHtml,/Teacher-style supplemental practice/i);
   assert.match(worksheetHtml,/Answer Key/i);
   assert.match(worksheetHtml,/\.work-area\{min-height:\.5in/);
   assert.match(worksheetHtml,/@media print/);
-  for(const question of practice){
-    assert(guideHtml.includes(question.prompt),question.id);
-    assert(worksheetHtml.includes(question.prompt),question.id);
-  }
+  assertFocusedWorksheet(worksheetHtml,practice);
 });
