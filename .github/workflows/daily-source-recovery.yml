@@ -30,6 +30,7 @@ on:
   workflow_run:
     workflows:
       - Monitor ABVM refresh health
+      - Verify ABVM Homework backup poll
     types: [completed]
   workflow_dispatch:
 

@@ -516,6 +516,16 @@ test("hourly Homework schedule delivery cannot be concealed by a newer successfu
   assert.equal(assessHomeworkPollingCadence(recent,"2026-10-21T19:35:00Z").state,"current");
 });
 
+test("a successful scheduled backup source poll is honest current polling evidence",()=>{
+  const recent=[{
+    name:"Verify ABVM Homework backup poll",event:"schedule",head_branch:"main",
+    status:"completed",conclusion:"success",created_at:"2026-10-21T19:19:00Z"
+  }];
+  const result=assessHomeworkPollingCadence(recent,"2026-10-21T19:35:00Z");
+  assert.equal(result.state,"current");
+  assert.equal(result.lastScheduledAt,"2026-10-21T19:19:00Z");
+});
+
 test("hourly Homework reporting exposes an earlier same-day cron gap even after recovery",()=>{
   const scheduled=created_at=>({name:"Refresh current ABVM homework",
     event:"schedule",head_branch:"main",status:"completed",conclusion:"success",created_at});

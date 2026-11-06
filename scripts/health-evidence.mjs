@@ -299,7 +299,9 @@ export function assessHomeworkPollingCadence(runs, now, {maxGapHours=2.5}={}) {
     timeZone:'America/New_York',hourCycle:'h23',hour:'2-digit',minute:'2-digit'
   }).formatToParts(new Date(current)).map(part=>[part.type,part.value]));
   const localHour=Number(parts.hour),localMinute=Number(parts.minute);
-  const scheduled=runs.filter(run=>run?.name==='Refresh current ABVM homework'&&
+  const scheduled=runs.filter(run=>[
+      'Refresh current ABVM homework','Verify ABVM Homework backup poll'
+    ].includes(run?.name)&&
     run?.event==='schedule'&&run?.head_branch==='main'&&
     run?.status==='completed'&&run?.conclusion==='success'&&
     Number.isFinite(Date.parse(run?.created_at||'')))

@@ -11,6 +11,7 @@ on:
       - 'tests/unattended-parity-health.test.mjs'
       - 'scripts/health-evidence.mjs'
       - 'scripts/fetch-health-history.mjs'
+      - '.github/workflows/backup-homework-poll.yml'
       - 'scripts/refresh-stage-health.mjs'
       - 'tests/refresh-stage-health.test.mjs'
       - 'tests/health-dashboard-config.test.mjs'
@@ -18,6 +19,7 @@ on:
   workflow_run:
     workflows:
       - Monitor ABVM refresh health
+      - Verify ABVM Homework backup poll
     types: [completed]
   schedule:
     - cron: '43 16 * * *'
@@ -106,4 +108,3 @@ jobs:
           path: health-output/
           if-no-files-found: error
           retention-days: 30
-

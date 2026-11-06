@@ -1,0 +1,42 @@
+name: Verify ABVM Homework backup poll
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/refresh-current-homework.mjs'
+      - 'scripts/homework-posting.mjs'
+      - 'scripts/teacher-page-parsers.mjs'
+      - '.github/workflows/backup-homework-poll.yml'
+  schedule:
+    # Independent observation slots between the primary :07/:37 polls.
+    # This job is read-only. A detected change wakes bounded recovery; only
+    # refresh-current-homework.yml may commit and publish verified data.
+    - cron: '19,49 6-23 * * *'
+      timezone: 'America/New_York'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: abvm-homework-backup-poll
+  cancel-in-progress: true
+
+jobs:
+  poll:
+    name: Verify official Homework source without publication
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Test source parser and change gate
+        run: node --test tests/teacher-page-parsers.test.mjs tests/homework-posting.test.mjs tests/homework-backup-poll.test.mjs
+      - name: Poll official Homework source read-only
+        run: node scripts/refresh-current-homework.mjs --dry-run --fail-on-change
