@@ -145,6 +145,7 @@ test('short study guides spread across verified skills instead of printing one s
   f.pack.contentPipeline.questions=['theme','main-character','visualize'].flatMap(skill=>
     Array.from({length:5},(_,i)=>q(skill+'-'+i,'Reading / ELA',skill,{
       questionType:['direct','transfer','reasoning'][i%3],
+      sourceTestScopes:['Reading'],
     })));
   const guide=buildStudyUniverse(f).printableGuides.find(row=>row.kind==='test');
   assert.equal(guide.questionIds.length,6);

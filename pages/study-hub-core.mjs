@@ -129,6 +129,16 @@ export function questionsForTest(test, questions) {
             Number(matched[2]) === Number(announced[2]);
         }));
     }
+    // An unqualified Reading announcement does not identify a story, text set,
+    // phonics focus, or comprehension skill. Use only practice whose provenance
+    // explicitly names that generic test; otherwise fail closed instead of
+    // treating the full Reading / ELA bank as the assigned scope.
+    const genericLabel = label.replace(/\s+/g, ' ').trim();
+    if (/^(?:reading|ela)(?:\s+test)?$/.test(genericLabel)) {
+      return questions.filter(q => q.subject === "Reading / ELA" &&
+        (Array.isArray(q.sourceTestScopes) ? q.sourceTestScopes : []).some(scope =>
+          String(scope).toLowerCase().replace(/\s+/g, ' ').trim() === genericLabel));
+    }
     return questions.filter(q => q.subject === "Reading / ELA" &&
       (q.skill === 'reading-long-short-o' ||
         !/subject-predicate|sentence-types|long-short|possessive/.test(q.skill)));

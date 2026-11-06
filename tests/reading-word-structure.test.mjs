@@ -26,7 +26,7 @@ test('announced silent-e and CVC ending rules receive explicit practice',()=>{
   const out=build();
   assert.deepEqual(validateGrade2ContentPipeline(out),[]);
   const skill=out.skills.find(row=>row.id==='suffix-ed-ing');
-  const selected=questionsForTest({label:'Reading',date:'2026-11-11'},out.questions);
+  const selected=questionsForTest({label:'Reading (silent-e and CVC ending rules)',date:'2026-11-11'},out.questions);
   const practice=selected.filter(row=>row.skill==='suffix-ed-ing');
   assert.ok(skill);
   assert.equal(practice.length,12);
@@ -45,7 +45,7 @@ test('announced silent-e and CVC ending rules receive explicit practice',()=>{
 test('expanded word-structure practice renders in the guide and printable worksheet',()=>{
   const out=build();
   const skill=out.skills.find(row=>row.id==='suffix-ed-ing');
-  const practice=questionsForTest({label:'Reading',date:'2026-11-11'},out.questions)
+  const practice=questionsForTest({label:'Reading (silent-e and CVC ending rules)',date:'2026-11-11'},out.questions)
     .filter(row=>row.skill==='suffix-ed-ing');
   const guide={label:'Reading',date:'2026-11-11',subject:'Reading / ELA',facts:skill.studyNotes,
     teacherFacts:[],vocabulary:[],practice,warnings:[],sourceLabel:'Current Reading Work topic with teacher-style supplemental practice',

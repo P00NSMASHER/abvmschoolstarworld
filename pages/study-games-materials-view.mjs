@@ -171,7 +171,7 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
       const result = model?.completeTests(); change(result?.ok?'[data-undo-test]':'[data-complete-test]');
     });
     host.querySelector('[data-undo-test]')?.addEventListener('click',()=>{
-      model?.undoTests(); change('[data-test],[data-test-single],[data-complete-test]');
+      model?.undoTests(); change('[data-test]:not([disabled]),[data-test-single]:not([disabled]),[data-test-guide]:not([disabled]),[data-complete-test]:not([disabled])');
     });
     host.querySelectorAll('[data-restore-test]').forEach(button=>button.addEventListener('click',()=>{
       model?.restoreTest(button.dataset.restoreTest); change('[data-test],[data-test-single],[data-complete-test]');
