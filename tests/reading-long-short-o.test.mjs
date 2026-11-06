@@ -30,7 +30,7 @@ test('Reading test receives exact long-o/short-o practice and printable keys',()
   const out=buildGrade2ContentPipeline(pack,{sourceHash,generatedAt:timestamp,sourcePages,requirePageExactLineage:true});
   assert.deepEqual(validateGrade2ContentPipeline(out),[]);
   const skill=out.skills.find(row=>row.id==='reading-long-short-o');
-  const practice=questionsForTest({label:'Reading',date:'2026-11-11'},out.questions);
+  const practice=questionsForTest({label:'Reading (long o / short o)',date:'2026-11-11'},out.questions);
   assert.ok(skill);
   assert.equal(practice.length,8);
   assert(practice.every(row=>row.skill==='reading-long-short-o'));
