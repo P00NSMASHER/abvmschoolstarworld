@@ -26,6 +26,14 @@ export function studyPackHomeworkSummary(rows) {
   return `Homework lists ${readableList(items)}`;
 }
 
+export function studyPackHomeworkConsistencyErrors(packHomework,posting,label='pack') {
+  if(!Array.isArray(packHomework))return [`${label}: homework is not an array`];
+  if(packHomework.length)return [];
+  const emptyOfficialState=['no-homework','no-specific-posting'].includes(posting?.status)
+    && Array.isArray(posting?.assignments) && posting.assignments.length===0;
+  return emptyOfficialState?[]:[`${label}: homework set is empty without matching official Homework state`];
+}
+
 export function summarizeTeacherHomework(lines,checkedAt=new Date().toISOString(),previous=null) {
   if(!Array.isArray(lines) || !lines.some(line=>/^Homework\s*:?\s*$/i.test(String(line).trim()))) {
     throw new Error('Official homework heading not verified.');

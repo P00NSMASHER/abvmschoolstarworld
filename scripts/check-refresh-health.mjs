@@ -1,6 +1,7 @@
 import {appendFileSync, readFileSync} from "node:fs";
 import {validateLunchPublication} from "./lunch-publication.mjs";
 import {liveHomeworkUrl,homeworkPublicationErrors} from "./homework-live-monitor.mjs";
+import {studyPackHomeworkConsistencyErrors} from "./homework-posting.mjs";
 
 const DATA_PATH=new URL("../pages/data/study-pack.json",import.meta.url);
 const HOMEWORK_PATH=new URL("../pages/data/homework-current.json",import.meta.url);
@@ -29,7 +30,7 @@ function isoDate(value){
   return Number.isNaN(date.getTime())?null:date;
 }
 
-function validatePack(data,label,{freshness=true}={}){
+function validatePack(data,label,{freshness=true,homework=null}={}){
   const errors=[];
   const pack=data?.pack||{};
   const expectedTitles=["Home","Homework","Reading Work","Weekly Spelling List","Tests","Religion"];
@@ -56,7 +57,7 @@ function validatePack(data,label,{freshness=true}={}){
     if(!/^[a-f0-9]{64}$/i.test(String(page?.contentHash||"")))errors.push(label+": invalid content hash for "+(page?.title||"unknown"));
   }
 
-  if(!Array.isArray(pack?.homework)||pack.homework.length<1)errors.push(label+": homework set is empty");
+  errors.push(...studyPackHomeworkConsistencyErrors(pack?.homework,homework,label));
   if(!Array.isArray(pack?.subjects)||pack.subjects.length<4)errors.push(label+": subject set is unexpectedly small");
   if(!Array.isArray(pack?.importantDates)||pack.importantDates.length<1)errors.push(label+": importantDates is empty");
   if(!Array.isArray(pack?.parentNotices))errors.push(label+": parentNotices is not an array");
@@ -102,8 +103,8 @@ function writeSummary(lines){
 }
 
 const local=readLocal();
-const localHomework=liveUrl?JSON.parse(readFileSync(HOMEWORK_PATH,"utf8")):null;
-let errors=validatePack(local,"repository pack");
+const localHomework=JSON.parse(readFileSync(HOMEWORK_PATH,"utf8"));
+let errors=validatePack(local,"repository pack",{homework:localHomework});
 let live=null;
 let liveError=null;
 let homeworkState="not requested";
@@ -114,7 +115,7 @@ if(liveUrl){
     try{
       const [candidatePack,candidateHomework]=await Promise.all([fetchLive(),fetchLiveHomework()]);
       live=candidatePack;
-      const candidateErrors=validatePack(live,"deployed pack");
+      const candidateErrors=validatePack(live,"deployed pack",{homework:candidateHomework});
       if(!sameRefresh(local,live))candidateErrors.push("deployed pack does not match the repository refresh timestamp/hash");
       const homeworkIssues=homeworkPublicationErrors(localHomework,candidateHomework,new Date().toISOString());
       homeworkState=homeworkIssues.length?"FAIL":"PASS";

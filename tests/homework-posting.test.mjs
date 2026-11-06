@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   actionableTeacherHomeworkRows,
+  studyPackHomeworkConsistencyErrors,
   studyPackHomeworkSummary,
   summarizeTeacherHomework,
   shouldPublishHomework,
@@ -40,6 +41,20 @@ test('study-pack homework retains source metadata for real assignments',()=>{
   const rows=actionableTeacherHomeworkRows([math,{...math}]);
   assert.deepEqual(rows,[math]);
   assert.equal(studyPackHomeworkSummary(rows),'Homework lists Math “Page 55”');
+});
+test('refresh health accepts an empty study pack only with matching official Homework state',()=>{
+  assert.deepEqual(studyPackHomeworkConsistencyErrors([],{
+    status:'no-specific-posting',assignments:[],
+  },'repository pack'),[]);
+  assert.deepEqual(studyPackHomeworkConsistencyErrors([],{
+    status:'no-homework',assignments:[],
+  },'repository pack'),[]);
+  assert.deepEqual(studyPackHomeworkConsistencyErrors([],{
+    status:'assignments',assignments:[{subject:'Math',task:'Page 55'}],
+  },'repository pack'),['repository pack: homework set is empty without matching official Homework state']);
+  assert.deepEqual(studyPackHomeworkConsistencyErrors(null,{
+    status:'no-specific-posting',assignments:[],
+  },'repository pack'),['repository pack: homework is not an array']);
 });
 test('explicit teacher no-homework wording is distinct from missing specifics',()=>{
   const rows=summarizeTeacherHomework(['Homework','No homework!'],checkedAt);

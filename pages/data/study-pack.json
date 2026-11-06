@@ -14,14 +14,14 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-11-06T15:51:22.271Z",
+  "sourceLastSeenAt": "2026-11-06T18:04:11.717Z",
   "sourceCapturedAt": "2026-11-06T15:51:22.271Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-6f6a955c718a966bbe9c",
     "sourceCapturedAt": "2026-11-06T15:51:22.271Z",
-    "generatedAt": "2026-11-06T15:51:22.271Z",
+    "generatedAt": "2026-11-06T18:04:11.717Z",
     "weekLabel": "Week of November 2, 2026",
     "summary": "Current Grade 2 teacher-site material: Homework lists Religion “Attend Mass”, Reading “Read”, Reading “Keep Reading Log and Behavior Chart in the HW folder”, and Homework Folder “Return everything in the HW folder”. Upcoming tests include Spelling (consonant digraphs) / Handwriting on Friday, Nov. 6, Reading on Wednesday, Nov. 11, Grammar (singular & plural nouns) on Thursday, Nov. 12, and Spelling (3 letter blends) / Handwriting on Friday, Nov. 13. 31 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
@@ -1711,7 +1711,7 @@
       "Christmas Caroling date is TBD.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
-    "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+    "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
     "uploadedNoticeHash": "uploaded-notices-e57dca15a6dfb9887780",
     "uploadedNoticeTopics": {
       "reminders": [
@@ -1767,8 +1767,8 @@
     "lunchMenuSource": {
       "status": "current-week",
       "retrievalState": "verified",
-      "checkedAt": "2026-11-06T15:51:22.271Z",
-      "lastAttemptAt": "2026-11-06T15:51:22.271Z",
+      "checkedAt": "2026-11-06T18:04:11.717Z",
+      "lastAttemptAt": "2026-11-06T18:04:11.717Z",
       "provider": "Saint Clair Area School District",
       "school": "Assumption BVM School",
       "feedUrl": "https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu",
@@ -1785,7 +1785,7 @@
           "contentHash": "a5d25beb5cbd34522ce4645172ab4efce1d041aab7fcc33521f3433c5cd0b178",
           "proofMode": "reviewed-notice",
           "reviewedAt": "2026-11-03T15:00:00.000Z",
-          "checkedAt": "2026-11-06T15:51:22.271Z",
+          "checkedAt": "2026-11-06T18:04:11.717Z",
           "state": "reviewed-notice"
         }
       ],
@@ -2510,11 +2510,11 @@
         "sourceId": "abvm-2026-11-parent-school-menu"
       }
     ],
-    "lunchMenuHash": "c650d10cad723f9c59a02e542cb2d1e6dfca98ba1975025eaaea09789a6744f0",
+    "lunchMenuHash": "6fb97b0cf1cdcf22bf95abc5e31f8d7b4f11f97c245cd4336752d68cecd95c36",
     "contentPipeline": {
       "schemaVersion": 2,
       "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-      "generatedAt": "2026-11-06T15:51:22.271Z",
+      "generatedAt": "2026-11-06T18:04:11.717Z",
       "sourceHash": "teacher-pages-6f6a955c718a966bbe9c",
       "bankFingerprint": "66317e78",
       "lifecycleStage": "QA_PASSED",
@@ -2566,7 +2566,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "aadbbaa4d1ed4b50a051b00b773d8dfe26da6c0a5f5c47214c26f575f640a14f",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:45b3384e0e9c9a02ec8c0b403f92357d258676d8df452ae69db855a6075ac298",
             "matchedEvidence": [
               "Skill: consonant digraphs"
@@ -2593,7 +2593,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -2622,7 +2622,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -2660,7 +2660,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -2689,7 +2689,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -2729,7 +2729,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:f53cdd9f82bc8f0518bc9cb7025d809bd8ebc288a023abbc4ffa6aeddbb250c9",
             "matchedEvidence": [
               "Chapter 4: God Speaks to Us"
@@ -2759,7 +2759,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -2789,7 +2789,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "00d41127203e70378886f3d0ed7a0015509cd7a95ad10bd76e5ad6c19cff3afc",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4098b708aa8940c4c4d4e92e422b56ba1fdf5eb147ec138d5caadf938f555c8d",
             "matchedEvidence": [
               "Thursday Nov. 12: Grammar (singular & plural nouns)"
@@ -2819,7 +2819,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "00d41127203e70378886f3d0ed7a0015509cd7a95ad10bd76e5ad6c19cff3afc",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:208862d701d845965f117a66bc6c208ce0ff9d3213edcc6bb4d9071243f07aa1",
             "matchedEvidence": [
               "Friday Nov. 13: Spelling (3 letter blends)/Handwriting"
@@ -2847,7 +2847,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -2875,7 +2875,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -2914,7 +2914,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
@@ -2941,7 +2941,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -2968,7 +2968,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -2995,7 +2995,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -3022,7 +3022,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:ac2300eab0a6f0c63efeedf37faae7d1585484b3821c607b099359d76da0721f",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit",
@@ -3050,7 +3050,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -3077,7 +3077,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -3104,7 +3104,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -3131,7 +3131,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4bd387fa7ee09ba165f3b67603aafe4b0ac79a3d1aa4c96188dbf477cdf388fb",
             "matchedEvidence": [
               "our ears, mouths, and hearts are open to God's message at Baptism",
@@ -3159,7 +3159,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -3186,7 +3186,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -3213,7 +3213,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -3240,7 +3240,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -3267,7 +3267,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -3308,7 +3308,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -3355,7 +3355,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -3390,7 +3390,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -3762,7 +3762,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "aadbbaa4d1ed4b50a051b00b773d8dfe26da6c0a5f5c47214c26f575f640a14f",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:45b3384e0e9c9a02ec8c0b403f92357d258676d8df452ae69db855a6075ac298",
             "matchedEvidence": [
               "Skill: consonant digraphs"
@@ -3842,7 +3842,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -3922,7 +3922,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -4002,7 +4002,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -4082,7 +4082,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -4170,7 +4170,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:f53cdd9f82bc8f0518bc9cb7025d809bd8ebc288a023abbc4ffa6aeddbb250c9",
             "matchedEvidence": [
               "Chapter 4: God Speaks to Us"
@@ -4250,7 +4250,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -4330,7 +4330,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "00d41127203e70378886f3d0ed7a0015509cd7a95ad10bd76e5ad6c19cff3afc",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4098b708aa8940c4c4d4e92e422b56ba1fdf5eb147ec138d5caadf938f555c8d",
             "matchedEvidence": [
               "Thursday Nov. 12: Grammar (singular & plural nouns)"
@@ -4410,7 +4410,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "00d41127203e70378886f3d0ed7a0015509cd7a95ad10bd76e5ad6c19cff3afc",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:208862d701d845965f117a66bc6c208ce0ff9d3213edcc6bb4d9071243f07aa1",
             "matchedEvidence": [
               "Friday Nov. 13: Spelling (3 letter blends)/Handwriting"
@@ -4490,7 +4490,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -4571,7 +4571,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -4652,7 +4652,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
@@ -4733,7 +4733,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
@@ -4814,7 +4814,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
@@ -4895,7 +4895,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
@@ -4976,7 +4976,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
@@ -5057,7 +5057,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
@@ -5138,7 +5138,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
@@ -5219,7 +5219,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
@@ -5300,7 +5300,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
@@ -5380,7 +5380,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -5460,7 +5460,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -5540,7 +5540,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -5620,7 +5620,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:ac2300eab0a6f0c63efeedf37faae7d1585484b3821c607b099359d76da0721f",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit",
@@ -5701,7 +5701,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -5781,7 +5781,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -5861,7 +5861,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -5941,7 +5941,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4bd387fa7ee09ba165f3b67603aafe4b0ac79a3d1aa4c96188dbf477cdf388fb",
             "matchedEvidence": [
               "our ears, mouths, and hearts are open to God's message at Baptism",
@@ -6022,7 +6022,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -6102,7 +6102,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -6182,7 +6182,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -6262,7 +6262,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -6342,7 +6342,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -6424,7 +6424,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -6506,7 +6506,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -6588,7 +6588,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -6670,7 +6670,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -6752,7 +6752,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -6834,7 +6834,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -6916,7 +6916,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -6998,7 +6998,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -7085,7 +7085,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -7172,7 +7172,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -7259,7 +7259,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -7341,7 +7341,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -7423,7 +7423,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -7505,7 +7505,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -7587,7 +7587,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -7669,7 +7669,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -7751,7 +7751,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -7833,7 +7833,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -7915,7 +7915,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -7996,7 +7996,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "aadbbaa4d1ed4b50a051b00b773d8dfe26da6c0a5f5c47214c26f575f640a14f",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:45b3384e0e9c9a02ec8c0b403f92357d258676d8df452ae69db855a6075ac298",
             "matchedEvidence": [
               "Skill: consonant digraphs"
@@ -8077,7 +8077,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "aadbbaa4d1ed4b50a051b00b773d8dfe26da6c0a5f5c47214c26f575f640a14f",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:45b3384e0e9c9a02ec8c0b403f92357d258676d8df452ae69db855a6075ac298",
             "matchedEvidence": [
               "Skill: consonant digraphs"
@@ -8158,7 +8158,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "aadbbaa4d1ed4b50a051b00b773d8dfe26da6c0a5f5c47214c26f575f640a14f",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:45b3384e0e9c9a02ec8c0b403f92357d258676d8df452ae69db855a6075ac298",
             "matchedEvidence": [
               "Skill: consonant digraphs"
@@ -8239,7 +8239,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "aadbbaa4d1ed4b50a051b00b773d8dfe26da6c0a5f5c47214c26f575f640a14f",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:45b3384e0e9c9a02ec8c0b403f92357d258676d8df452ae69db855a6075ac298",
             "matchedEvidence": [
               "Skill: consonant digraphs"
@@ -8319,7 +8319,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -8399,7 +8399,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -8479,7 +8479,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -8559,7 +8559,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -8639,7 +8639,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -8719,7 +8719,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -8799,7 +8799,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -8879,7 +8879,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -8959,7 +8959,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -9039,7 +9039,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -9119,7 +9119,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -9199,7 +9199,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -9279,7 +9279,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -9359,7 +9359,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -9439,7 +9439,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -9519,7 +9519,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -9599,7 +9599,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -9679,7 +9679,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -9759,7 +9759,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -9839,7 +9839,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -9919,7 +9919,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -9999,7 +9999,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -10079,7 +10079,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -10159,7 +10159,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -10239,7 +10239,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -10319,7 +10319,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -10399,7 +10399,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -10487,7 +10487,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:f53cdd9f82bc8f0518bc9cb7025d809bd8ebc288a023abbc4ffa6aeddbb250c9",
             "matchedEvidence": [
               "Chapter 4: God Speaks to Us"
@@ -10575,7 +10575,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:f53cdd9f82bc8f0518bc9cb7025d809bd8ebc288a023abbc4ffa6aeddbb250c9",
             "matchedEvidence": [
               "Chapter 4: God Speaks to Us"
@@ -10663,7 +10663,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:f53cdd9f82bc8f0518bc9cb7025d809bd8ebc288a023abbc4ffa6aeddbb250c9",
             "matchedEvidence": [
               "Chapter 4: God Speaks to Us"
@@ -10751,7 +10751,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:f53cdd9f82bc8f0518bc9cb7025d809bd8ebc288a023abbc4ffa6aeddbb250c9",
             "matchedEvidence": [
               "Chapter 4: God Speaks to Us"
@@ -10839,7 +10839,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:f53cdd9f82bc8f0518bc9cb7025d809bd8ebc288a023abbc4ffa6aeddbb250c9",
             "matchedEvidence": [
               "Chapter 4: God Speaks to Us"
@@ -10927,7 +10927,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:f53cdd9f82bc8f0518bc9cb7025d809bd8ebc288a023abbc4ffa6aeddbb250c9",
             "matchedEvidence": [
               "Chapter 4: God Speaks to Us"
@@ -11015,7 +11015,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:f53cdd9f82bc8f0518bc9cb7025d809bd8ebc288a023abbc4ffa6aeddbb250c9",
             "matchedEvidence": [
               "Chapter 4: God Speaks to Us"
@@ -11103,7 +11103,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:f53cdd9f82bc8f0518bc9cb7025d809bd8ebc288a023abbc4ffa6aeddbb250c9",
             "matchedEvidence": [
               "Chapter 4: God Speaks to Us"
@@ -11191,7 +11191,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:f53cdd9f82bc8f0518bc9cb7025d809bd8ebc288a023abbc4ffa6aeddbb250c9",
             "matchedEvidence": [
               "Chapter 4: God Speaks to Us"
@@ -11271,7 +11271,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -11351,7 +11351,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -11431,7 +11431,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -11511,7 +11511,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -11591,7 +11591,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -11671,7 +11671,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -11751,7 +11751,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -11831,7 +11831,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "00d41127203e70378886f3d0ed7a0015509cd7a95ad10bd76e5ad6c19cff3afc",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4098b708aa8940c4c4d4e92e422b56ba1fdf5eb147ec138d5caadf938f555c8d",
             "matchedEvidence": [
               "Thursday Nov. 12: Grammar (singular & plural nouns)"
@@ -11911,7 +11911,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "00d41127203e70378886f3d0ed7a0015509cd7a95ad10bd76e5ad6c19cff3afc",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4098b708aa8940c4c4d4e92e422b56ba1fdf5eb147ec138d5caadf938f555c8d",
             "matchedEvidence": [
               "Thursday Nov. 12: Grammar (singular & plural nouns)"
@@ -11991,7 +11991,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "00d41127203e70378886f3d0ed7a0015509cd7a95ad10bd76e5ad6c19cff3afc",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4098b708aa8940c4c4d4e92e422b56ba1fdf5eb147ec138d5caadf938f555c8d",
             "matchedEvidence": [
               "Thursday Nov. 12: Grammar (singular & plural nouns)"
@@ -12071,7 +12071,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "00d41127203e70378886f3d0ed7a0015509cd7a95ad10bd76e5ad6c19cff3afc",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4098b708aa8940c4c4d4e92e422b56ba1fdf5eb147ec138d5caadf938f555c8d",
             "matchedEvidence": [
               "Thursday Nov. 12: Grammar (singular & plural nouns)"
@@ -12151,7 +12151,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "00d41127203e70378886f3d0ed7a0015509cd7a95ad10bd76e5ad6c19cff3afc",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4098b708aa8940c4c4d4e92e422b56ba1fdf5eb147ec138d5caadf938f555c8d",
             "matchedEvidence": [
               "Thursday Nov. 12: Grammar (singular & plural nouns)"
@@ -12231,7 +12231,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "00d41127203e70378886f3d0ed7a0015509cd7a95ad10bd76e5ad6c19cff3afc",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4098b708aa8940c4c4d4e92e422b56ba1fdf5eb147ec138d5caadf938f555c8d",
             "matchedEvidence": [
               "Thursday Nov. 12: Grammar (singular & plural nouns)"
@@ -12311,7 +12311,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "00d41127203e70378886f3d0ed7a0015509cd7a95ad10bd76e5ad6c19cff3afc",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4098b708aa8940c4c4d4e92e422b56ba1fdf5eb147ec138d5caadf938f555c8d",
             "matchedEvidence": [
               "Thursday Nov. 12: Grammar (singular & plural nouns)"
@@ -12391,7 +12391,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "00d41127203e70378886f3d0ed7a0015509cd7a95ad10bd76e5ad6c19cff3afc",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:208862d701d845965f117a66bc6c208ce0ff9d3213edcc6bb4d9071243f07aa1",
             "matchedEvidence": [
               "Friday Nov. 13: Spelling (3 letter blends)/Handwriting"
@@ -12471,7 +12471,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "00d41127203e70378886f3d0ed7a0015509cd7a95ad10bd76e5ad6c19cff3afc",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:208862d701d845965f117a66bc6c208ce0ff9d3213edcc6bb4d9071243f07aa1",
             "matchedEvidence": [
               "Friday Nov. 13: Spelling (3 letter blends)/Handwriting"
@@ -12551,7 +12551,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "00d41127203e70378886f3d0ed7a0015509cd7a95ad10bd76e5ad6c19cff3afc",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:208862d701d845965f117a66bc6c208ce0ff9d3213edcc6bb4d9071243f07aa1",
             "matchedEvidence": [
               "Friday Nov. 13: Spelling (3 letter blends)/Handwriting"
@@ -12631,7 +12631,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "00d41127203e70378886f3d0ed7a0015509cd7a95ad10bd76e5ad6c19cff3afc",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:208862d701d845965f117a66bc6c208ce0ff9d3213edcc6bb4d9071243f07aa1",
             "matchedEvidence": [
               "Friday Nov. 13: Spelling (3 letter blends)/Handwriting"
@@ -12711,7 +12711,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "00d41127203e70378886f3d0ed7a0015509cd7a95ad10bd76e5ad6c19cff3afc",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:208862d701d845965f117a66bc6c208ce0ff9d3213edcc6bb4d9071243f07aa1",
             "matchedEvidence": [
               "Friday Nov. 13: Spelling (3 letter blends)/Handwriting"
@@ -12791,7 +12791,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "00d41127203e70378886f3d0ed7a0015509cd7a95ad10bd76e5ad6c19cff3afc",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:208862d701d845965f117a66bc6c208ce0ff9d3213edcc6bb4d9071243f07aa1",
             "matchedEvidence": [
               "Friday Nov. 13: Spelling (3 letter blends)/Handwriting"
@@ -12871,7 +12871,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "00d41127203e70378886f3d0ed7a0015509cd7a95ad10bd76e5ad6c19cff3afc",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:208862d701d845965f117a66bc6c208ce0ff9d3213edcc6bb4d9071243f07aa1",
             "matchedEvidence": [
               "Friday Nov. 13: Spelling (3 letter blends)/Handwriting"
@@ -12951,7 +12951,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -13031,7 +13031,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -13111,7 +13111,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -13191,7 +13191,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -13271,7 +13271,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -13351,7 +13351,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -13431,7 +13431,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -13512,7 +13512,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -13593,7 +13593,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -13674,7 +13674,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -13755,7 +13755,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -13836,7 +13836,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -13917,7 +13917,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -13998,7 +13998,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -14078,7 +14078,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -14158,7 +14158,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -14238,7 +14238,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -14318,7 +14318,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -14398,7 +14398,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -14478,7 +14478,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -14558,7 +14558,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:ac2300eab0a6f0c63efeedf37faae7d1585484b3821c607b099359d76da0721f",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit",
@@ -14639,7 +14639,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:ac2300eab0a6f0c63efeedf37faae7d1585484b3821c607b099359d76da0721f",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit",
@@ -14720,7 +14720,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -14800,7 +14800,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -14880,7 +14880,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -14960,7 +14960,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -15040,7 +15040,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -15120,7 +15120,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -15200,7 +15200,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4bd387fa7ee09ba165f3b67603aafe4b0ac79a3d1aa4c96188dbf477cdf388fb",
             "matchedEvidence": [
               "our ears, mouths, and hearts are open to God's message at Baptism",
@@ -15281,7 +15281,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:4bd387fa7ee09ba165f3b67603aafe4b0ac79a3d1aa4c96188dbf477cdf388fb",
             "matchedEvidence": [
               "our ears, mouths, and hearts are open to God's message at Baptism",
@@ -15362,7 +15362,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -15442,7 +15442,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -15522,7 +15522,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -15602,7 +15602,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:893a863aeeea3cec13891bf4178e6b0aea228110a7cbb3b1d43461616375ed22",
             "matchedEvidence": [
               "Chapter 3: Jesus Lives in His Church * orignial sin; human tendancy to sin which is the result of Adam & Eve's sin * faith: gift from god tht helps us believe * sacrament: sacred sign given to the Church by Jesus * at Baptism, oirginal sin is washed away and we recieve the gift of the Holy Spirit and the gift of faith as well as the new life of grace * The Rite (steps) of Baptism * Church members/Christians live as Jesus taught. Church leaders act in Jesus' name and guide the Church. * Jesus is the head of the Church; Mary is the Mother of the Church; we are the body of the Church * Pope Leo; Bishop Schlert * Steps to Baptism: Priest welcomes person; parents/godparents make promises; Bible is read; water is poured; What garment given; candle lit"
@@ -15682,7 +15682,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -15762,7 +15762,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:49d5767e2894e73c7fdee266ce11fba5c0e31d92318f4706b413f18324a5393f",
             "matchedEvidence": [
               "Chapter 2: Jesus is God's Best Gift * Jesus is God's greatest gift to us; he tell us about God and teaches us how to live * Jesus gave us the new life of grace * Jesus died for our sins; He is our Savior * Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace) * We are called to be disciples, friends of Jesus. Mary is Jesus' mother and the mother of the Church so she is our mother too * The parable of the vine and the branches"
@@ -15842,7 +15842,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -15922,7 +15922,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -16002,7 +16002,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -16082,7 +16082,7 @@
             "sourceTitle": "Religion",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/religion",
             "sourceCaptureHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7",
-            "sourceCheckedAt": "2026-11-06T15:51:22.271Z",
+            "sourceCheckedAt": "2026-11-06T18:04:11.717Z",
             "evidenceExcerptHash": "sha256:db9b5fa742bafb9128a835a0b87c6a1dcc2dd6d8da2ceea069396f865ba11d35",
             "matchedEvidence": [
               "Chapter 1: God is the Giver of Gifts * gifts from God |* we are made in God's image and likeness; we can think, choose, love *Trinity: 3 persons in one God (Father, Son, Holy Spirit) * we use our senses to enjoy God's gifts * it is our responsiblity to take care of God's gifts of creation * we thank God for His gift of creation"
@@ -16159,7 +16159,7 @@
     "recentReviewPipeline": {
       "schemaVersion": 1,
       "retentionDays": 14,
-      "generatedAt": "2026-11-06T15:51:22.271Z",
+      "generatedAt": "2026-11-06T18:04:11.717Z",
       "bankFingerprint": "976554faa6270c0238fba159a14931f4b4c3f25de226d0d5adaf277a76963a6b",
       "skills": [
         {
@@ -19699,7 +19699,7 @@
     },
     "schoolChangeFeed": {
       "schemaVersion": 1,
-      "generatedAt": "2026-11-06T15:51:22.271Z",
+      "generatedAt": "2026-11-06T18:04:11.717Z",
       "sourceHash": "teacher-pages-6f6a955c718a966bbe9c",
       "changed": false,
       "items": [
@@ -19746,42 +19746,42 @@
       "dateProvided": false
     }
   },
-  "sourceLastCheckedAt": "2026-11-06T15:51:22.271Z",
+  "sourceLastCheckedAt": "2026-11-06T18:04:11.717Z",
   "sourcePages": [
     {
       "title": "Home",
       "url": "https://sites.google.com/view/abvmgr2/home",
-      "checkedAt": "2026-11-06T15:51:22.271Z",
+      "checkedAt": "2026-11-06T18:04:11.717Z",
       "contentHash": "0d37595fa53c90ec198afd4260347f88ac02a3fc0d9621185cbdd1e164e767ab"
     },
     {
       "title": "Homework",
       "url": "https://sites.google.com/view/abvmgr2/homework",
-      "checkedAt": "2026-11-06T15:51:22.271Z",
+      "checkedAt": "2026-11-06T18:04:11.717Z",
       "contentHash": "f4c3a7dabe9e9e3c6f444087f573a32cb027498275dfe519f98b72b63e11f292"
     },
     {
       "title": "Reading Work",
       "url": "https://sites.google.com/view/abvmgr2/reading-work",
-      "checkedAt": "2026-11-06T15:51:22.271Z",
+      "checkedAt": "2026-11-06T18:04:11.717Z",
       "contentHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb"
     },
     {
       "title": "Weekly Spelling List",
       "url": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-      "checkedAt": "2026-11-06T15:51:22.271Z",
+      "checkedAt": "2026-11-06T18:04:11.717Z",
       "contentHash": "aadbbaa4d1ed4b50a051b00b773d8dfe26da6c0a5f5c47214c26f575f640a14f"
     },
     {
       "title": "Tests",
       "url": "https://sites.google.com/view/abvmgr2/tests",
-      "checkedAt": "2026-11-06T15:51:22.271Z",
+      "checkedAt": "2026-11-06T18:04:11.717Z",
       "contentHash": "00d41127203e70378886f3d0ed7a0015509cd7a95ad10bd76e5ad6c19cff3afc"
     },
     {
       "title": "Religion",
       "url": "https://sites.google.com/view/abvmgr2/religion",
-      "checkedAt": "2026-11-06T15:51:22.271Z",
+      "checkedAt": "2026-11-06T18:04:11.717Z",
       "contentHash": "3c11a4d7de4f27cd64702e794c7d93e8f7dfae4b41e586798247a4970b60aad7"
     }
   ],
