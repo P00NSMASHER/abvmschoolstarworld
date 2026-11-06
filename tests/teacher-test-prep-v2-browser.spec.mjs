@@ -14,8 +14,8 @@ const makeGuide=(subject,label,optionCount,count)=>({
 });
 
 for(const [name,guide,options,count] of [
-  ['genuine ELA noun assessment',makeGuide('Reading / ELA','Grammar (Common & Proper Nouns)',3,10),3,10],
-  ['teacher-marked publisher Math Chapter 2 practice',makeGuide('Math','Math (Ch. 2)',4,16),4,16],
+  ['genuine ELA noun assessment',makeGuide('Reading / ELA','Grammar (Common & Proper Nouns)',3,10),3,6],
+  ['teacher-marked publisher Math Chapter 2 practice',makeGuide('Math','Math (Ch. 2)',4,16),4,6],
 ]){
   test(name+' renders checked bubble responses and protects parent key on real browsers',async({page},info)=>{
     await page.setContent(renderTestWorksheet(guide),{waitUntil:'load'});
@@ -55,6 +55,7 @@ for(const [name,guide,options,count] of [
     const pdf=await page.pdf({format:'Letter',printBackground:false});
     expect(pdf.subarray(0,5).toString('ascii')).toBe('%PDF-');
     expect(pdf.byteLength).toBeGreaterThan(4500);
+    expect(pdf.toString('latin1').match(/\/Type \/Page\b/g)).toHaveLength(2);
     await info.attach('teacher-prep-v2-'+options+'-choice.pdf',{body:pdf,contentType:'application/pdf'});
   });
 }
@@ -70,4 +71,26 @@ test('heterogeneous actual source practice keeps teacher bubbles and generic res
   await expect(page.locator('main.student-test .teacher-bubble-mark')).toHaveCount(3);
   await expect(page.locator('main.student-test .choice')).toHaveCount(4);
   await expect(page.locator('section.adult-key .key-list li')).toHaveCount(2);
+});
+
+test('combined spelling and handwriting keeps every assigned word on the key and numbered primary lines on the paper',async({page},info)=>{
+  const words=['chop','place','catch','badge','shape','trash','phone','seven','that',"isn't",'sting','early','thin','bring','while'];
+  const html=renderTestWorksheet({label:'Spelling (consonant digraphs) / Handwriting',subject:'Spelling / Handwriting',spellingWords:words});
+  await page.setContent(html);
+  const paper=page.locator('main.dictation-sheet');
+  await expect(paper.locator('.hand-line')).toHaveCount(words.length);
+  await expect(paper.locator('.dictation-item .n')).toHaveText(words.map((_,i)=>(i+1)+'.'));
+  await expect(page.locator('.adult-key ol li')).toHaveText(words);
+  await expect(paper).not.toContainText(/chop|badge|bonus/i);
+  if(info.project.name==='iphone-webkit')return;
+  await page.emulateMedia({media:'print'});
+  const lines=await paper.locator('.hand-line').evaluateAll(lines=>lines.map(line=>{
+    const {x,y,height}=line.getBoundingClientRect();return {x,y,height};
+  }));
+  expect(lines[0].height).toBeGreaterThanOrEqual(48);
+  expect(lines[7].x).toBe(lines[0].x);
+  expect(lines[8].x).toBeGreaterThan(lines[0].x+100);
+  expect(lines[8].y).toBe(lines[0].y);
+  const pdf=await page.pdf({format:'Letter'});
+  expect(pdf.toString('latin1').match(/\/Type \/Page\b/g)).toHaveLength(2);
 });

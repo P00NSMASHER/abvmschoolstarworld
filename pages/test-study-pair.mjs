@@ -1,7 +1,7 @@
 /** Separate current-curriculum learning notes and assessment-style practice papers. */
-import {renderClassroomStudyGuide} from './classroom-test-guide.mjs?v=4';
+import {renderClassroomStudyGuide} from './classroom-test-guide.mjs?v=5';
 import {premiumPaperCss,decoratePaper} from './premium-paper-theme.mjs?v=2';
-import {teacherFormatSummary,classroomPracticeFormatSummary} from './teacher-test-format.mjs';
+import {teacherTestReferenceForGuide,teacherFormatSummary,classroomPracticeFormatSummary} from './teacher-test-format.mjs';
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clean=value=>String(value??'').replace(/\s+/g,' ').trim();
@@ -37,6 +37,10 @@ const baseCss=[
   '.section h2 .index{font-size:9.5pt;letter-spacing:.06em;color:#536575;margin-right:5px}',
   '.focus-note{border:1px solid #526774;border-left:5px solid #344b5b;padding:.10in .13in;margin:.14in 0;font-size:10pt}',
   '.focus-note strong{display:block;font-size:9pt;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}',
+  '.faith-rules{column-width:2.8in;column-gap:.35in}.faith-rules li{break-inside:avoid}',
+  '@media print{.premium-paper .study-guide .section{break-inside:auto;page-break-inside:auto}.study-guide .section h2{break-after:avoid;page-break-after:avoid}}',
+  '@media print{.study-guide .quick-rules,.study-guide .quick-words{font-size:12pt;line-height:1.5}}',
+  '.quick-rules{margin:.055in 0;padding-left:1.2em}.quick-rules li+li{margin-top:.045in}.quick-words{display:flex;flex-wrap:wrap;gap:.08in;list-style:none;padding:0}.quick-words li{padding:.035in .10in;border:1px solid #aeb9c0;border-radius:6px}.guide-source{font-size:9pt;margin-top:.15in}.guide-source summary{cursor:pointer}.study-guide .topic-grid:has(> :only-child){grid-template-columns:minmax(0,1fr)}',
   '.guide-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.08in;margin:.14in 0}',
   '.guide-summary div{border:1px solid #aeb9c0;border-radius:7px;padding:.075in .1in}',
   '.guide-summary b{display:block;font-size:12pt}.guide-summary span{font-size:8.5pt;color:#465761}',
@@ -84,6 +88,9 @@ const baseCss=[
   '.dictation-body{display:grid;grid-template-columns:1fr;gap:.04in;margin:.14in 0}',
   '.dictation-item{display:flex;align-items:center;gap:.13in;height:.38in;break-inside:avoid}',
   '.dictation-item .n{font-size:10pt;font-weight:700;width:.32in;flex:none;text-align:right}',
+  '@media print{.premium-paper .combined-dictation .dictation-item{min-height:.76in}.combined-dictation .hand-line{height:.54in}}',
+  '.combined-dictation{grid-template-columns:repeat(2,minmax(0,1fr));gap:.35in}.dictation-body>div{min-width:0}',
+  '@media screen and (max-width:620px){.combined-dictation{grid-template-columns:1fr;gap:0}}',
   '.hand-line{display:block;position:relative;flex:1;height:.33in;border-top:1px solid #b8b8b8;border-bottom:1.3px solid #444}',
   '.hand-line:after{content:"";position:absolute;top:50%;left:0;right:0;border-top:1px dashed #b2b2b2}',
   '.name-row{display:flex;gap:.25in;align-items:baseline;margin:.18in 0;font-size:10pt}',
@@ -103,38 +110,6 @@ const footer=guide=>'<footer class="footer">'+esc(guide?.sourceLabel||'Current r
   (guide?.sourceCheckedAt ? ' · Teacher source checked '+esc(String(guide.sourceCheckedAt).slice(0,10)) : '')+
   ' · Original home practice · Not a school-issued test.</footer>';
 const warningHtml=guide=>rows(guide?.warnings).slice(0,3).filter(Boolean).map(w=>'<p class="warning">'+esc(w)+'</p>').join('');
-function strategies(guide,kind){
-  const label=clean(guide?.label).toLowerCase(),skills=rows(guide?.practice).map(q=>clean(q.skill)).join(' ').toLowerCase();
-  if(kind==='math'&&/place.?value|expanded.?form/.test(label+' '+skills))
-    return ['Name each digit’s place: hundreds, tens, or ones.','Write expanded form by showing each digit’s value, such as 347 = 300 + 40 + 7.','Check by adding the expanded parts to rebuild the original number.'];
-  if(kind==='math'&&/subtraction|subtract|minus/.test(label+' '+skills))
-    return ['Read the subtraction problem. Find the starting amount and how much is taken away.','Break apart tens and ones, or count back, to find the difference.','Check by adding the answer to the amount taken away.'];
-  if(kind==='math'&&/addition|sum/.test(label+' '+skills))
-    return ['Look for the two amounts to join.','Add the ones and tens carefully.','Check by counting on or using the related subtraction fact.'];
-  if(kind==='grammar'&&/common.*proper.*nouns?/.test(label+' '+skills))
-    return ['Ask whether the noun is a general name or one particular name.','Capitalize a proper noun, such as Sofia, Chicago, or Tuesday.','Read the sentence again and check that ordinary common nouns are not capitalized without a reason.'];
-  if(kind==='grammar'&&/subject|predicate/.test(label+' '+skills))
-    return ['Ask: Who or what is the sentence about? That is the complete subject.','Ask: What does the subject do or what is it? That is the complete predicate.','Check that you included every word in the whole subject or predicate.'];
-  if(kind==='grammar'&&/sentence.?types|punctuation/.test(label+' '+skills))
-    return ['Decide whether the sentence tells, asks, directs, or shows strong feeling.','Choose the matching end mark: period, question mark, or exclamation mark.','Read the sentence aloud to double-check.'];
-  if(/short.vowels?/.test(label+' '+skills))
-    return ['Say the vowel sound slowly in the word.','Remember the five sounds in order: cat (a), bed (e), pig (i), hot (o), sun (u).','Say the whole word again to confirm the sound.'];
-  if(kind==='religion')
-    return ['Read the chapter facts and important words aloud.','Explain each idea in your own words, without peeking.','Check your explanation against the reviewed class notes.'];
-  if(kind==='reading')
-    return ['Read the question and identify what it asks.','Find the story detail or phonics clue that supports your answer.','Explain why your answer fits.'];
-  return ['Read the announced test topic and class notes.','Explain the key facts in your own words.','Try a matching practice question and check your answer.'];
-}
-function goal(guide,kind){
-  const label=clean(guide?.label),name=label.replace(/\s*\/\s*Handwriting/i,'').trim();
-  if(kind==='math'&&/place.?value|expanded.?form/i.test(name))return 'I can name each digit’s value and write a number in expanded form.';
-  if(kind==='math')return 'I can solve '+(/subtraction/i.test(name)?'subtraction':/addition/i.test(name)?'addition':'math')+' problems and check my work.';
-  if(kind==='grammar'&&/common.*proper.*nouns?/i.test(name))return 'I can tell common and proper nouns apart and capitalize particular names.';
-  if(kind==='grammar')return 'I can read a sentence, recognize the skill in '+name+', and explain my answer.';
-  if(kind==='religion')return 'I can recall and explain the important ideas in '+name+'.';
-  if(/phonics/i.test(name))return 'I can hear and recognize the sounds named in '+name+'.';
-  return 'I can use the class skills in '+name+' and explain what I know.';
-}
 /**
  * A five-anchor picture prompt, only for verified short-vowel test scopes.
  * Never add this activity to an unrelated reading or long-vowel assessment.
@@ -153,117 +128,190 @@ const vowelStory=()=>'<aside class="vowel-story" aria-label="Short vowel memory 
     '</b><span>'+word+'</span></span>').join('')+'</div>'+
   '<small>Say the five words in order: cat, bed, pig, hot, sun.</small></aside>';
 
-export function renderTestStudyGuide(guide,dictionary=()=> ''){
-  const patternPractice=rows(guide?.practice).some(q=>['soft-c-g','consonant-digraphs'].includes(clean(q?.skill)));
-  if(kindOf(guide)==='spelling'&&!patternPractice)return renderClassroomStudyGuide(guide,dictionary);
-  const kind=kindOf(guide),facts=unique(guide?.facts);
-  const questions=rows(guide?.practice).filter(q=>clean(q?.prompt)&&clean(q?.answer));
-  const suppliedTopics=rows(guide?.reviewTopics).filter(topic=>clean(topic?.label));
-  const fallbackTopics=new Map();
-  for(const q of questions){
-    const id=clean(q.skill)||clean(q.prompt),existing=fallbackTopics.get(id);
-    const check={prompt:clean(q.prompt),answer:clean(q.answer)};
-    if(existing){existing.checks.push(check);existing.questionCount+=1;continue;}
-    fallbackTopics.set(id,{id,label:clean(q.skill).replace(/-/g,' ')||'Test topic',
-      summary:clean(q.explanation)||clean(q.answer),questionCount:1,check,checks:[check]});
-  }
-  const topics=suppliedTopics.length?suppliedTopics:[...fallbackTopics.values()];
-  const teacherFacts=unique(guide?.teacherFacts);
-  const vocabulary=rows(guide?.vocabulary).map(word=>{
-    const term=clean(word?.term),supplied=clean(word?.meaning);
-    const hasTeacherMeaning=Boolean(supplied&&!/teacher page does not provide a definition|no definition supplied/i.test(supplied));
-    const meaning=hasTeacherMeaning?supplied:clean(dictionary(term));
-    return {term,meaning,supplemental:!hasTeacherMeaning&&Boolean(meaning)};
-  }).filter(word=>word.term);
-  const steps=strategies(guide,kind);
-  const authenticFormat=teacherFormatSummary(guide);
-  const formatExample=authenticFormat||classroomPracticeFormatSummary(guide);
-  const topicHtml=topics.length?'<div class="topic-grid">'+topics.map(topic=>'<article class="topic-card" data-guide-skill="'+esc(topic.id||topic.label)+'">'+
-    '<div class="topic-topline"><h3>'+esc(topic.label)+'</h3><span class="topic-count">'+rows(topic.checks?.length?topic.checks:(topic.check?[topic.check]:[])).length+' check(s)</span></div><p>'+esc(topic.summary||'Review this tested idea in the current class materials.')+'</p>'+
-    rows(topic.checks?.length?topic.checks:(topic.check?[topic.check]:[])).map((check,index)=>'<div class="say-it"><span class="prompt-label">'+
-      (index?'Try another way':'Say it without looking')+'</span><p>'+esc(check.prompt)+'</p>'+
-      '<p class="cover-answer"><span>Cover, then check</span>'+esc(check.answer)+'</p></div>').join('')+'</article>').join('')+'</div>':
-    '<p>Use the classroom materials for this announced test. Additional verified facts have not been published yet.</p>';
-  const completeFacts=teacherFacts.length?teacherFacts:facts.filter(f=>!/^Verified Grade 2 skill:/i.test(f));
-  const checklistHtml=completeFacts.length?'<section class="section"><h2><span class="index">02</span> Complete class checklist</h2>'+
-    '<p class="subtitle">Read every line, then explain it in your own words. This list is kept with the matching test.</p><ul class="teacher-checklist">'+
-    completeFacts.map(f=>'<li>'+esc(f)+'</li>').join('')+'</ul></section>':'';
-  const vocabHtml=vocabulary.length?'<section class="section"><h2><span class="index">03</span> Words to know</h2><dl class="vocabulary">'+
-    vocabulary.map(q=>'<div><dt>'+esc(q.term)+'</dt>'+(q.meaning?'<dd>'+esc(q.meaning)+(q.supplemental?'<small>Original study explanation — not supplied by the teacher.</small>':'')+'</dd>':'')+'</div>').join('')+'</dl></section>':'';
-  const missing=rows(guide?.coverage?.missingGuideSkills);
-  const coverageWarning=missing.length?'<p class="warning">This guide is missing '+missing.length+' tested topic'+(missing.length===1?'':'s')+'. Use the current classroom materials until the guide refreshes.</p>':'';
-  return decoratePaper(htmlHead(guide,'Study guide')+'<main class="sheet study-guide">'+
-    header(guide,'Study Guide',clean(guide?.label)||'Upcoming class test')+
-    (guide?.scopeNotice?'<p class="warning scope-notice">'+esc(guide.scopeNotice)+'</p>':'')+
-    (formatExample?'<p class="focus-note teacher-test-reference"><strong>'+(authenticFormat?'Previous actual test format (example only)':'Previous publisher practice format (not a teacher-issued test)')+'</strong>'+esc(formatExample)+'</p>':'')+
-    '<div class="guide-summary"><div><b>'+topics.length+'</b><span>tested topic'+(topics.length===1?'':'s')+'</span></div><div><b>'+questions.length+'</b><span>matching practice question'+(questions.length===1?'':'s')+'</span></div><div><b>'+esc(when(guide?.date)||'Current')+'</b><span>test date</span></div></div>'+
-    '<div class="focus-note"><strong>My learning goal</strong>'+esc(goal(guide,kind))+'</div>'+    (kind==='reading'&&isShortVowelGuide(guide,topics,questions)?vowelStory():'')+
-    '<section class="section"><h2><span class="index">01</span> What I need to know</h2>'+topicHtml+'</section>'+checklistHtml+vocabHtml+
-    '<section class="section"><h2><span class="index">'+(vocabulary.length?'04':'03')+'</span> How to remember it</h2><ol class="study-steps">'+
-    steps.map(step=>'<li>'+esc(step)+'</li>').join('')+'</ol></section>'+
-    (topics.length?'<section class="section"><h2><span class="index">'+(vocabulary.length?'05':'04')+'</span> Ready check</h2><div class="ready-grid">'+
-      topics.map(topic=>'<label class="ready-item"><i class="checkbox" aria-hidden="true"></i><span>I can explain <b>'+esc(topic.label)+'</b>.</span></label>').join('')+'</div></section>':'')+
-    coverageWarning+warningHtml(guide)+footer(guide)+'</main></body></html>',kind);
+// Shorten reviewed teaching copy by exact match. New or changed facts pass through in full.
+const quickCopy=new Map([
+  ['A consonant digraph is two consonant letters that work together to make one sound, as in sh, ch, th, and wh.',
+    'Two consonants can make one sound. Look for sh, ch, th, and wh.'],
+  ['In a digraph, the two letters make one sound. In a blend, you can still hear both consonant sounds.',
+    'A digraph makes one sound. In a blend, you hear each sound.'],
+  ['“Two letters, one sound.” Box the digraph, tap the box once, and say its sound.',
+    '“Two letters, one sound.” Box the letters. Tap once. Say the sound.'],
+  ['Some words start with three consonants whose individual sounds can still be heard, such as str in street, spl in splash, and spr in spring.',
+    'Hear all three starting sounds in str (street), spl (splash), and spr (spring).'],
+  ['A blend keeps the consonant sounds together. A digraph, such as sh in ship, makes one new sound instead.',
+    'In a blend, hear each sound. In ship, sh makes just one sound.'],
+  ['Tap the first three consonant sounds separately, then blend them smoothly into the whole word.',
+    'Tap each sound. Slide the sounds together and say the word.'],
+  ['A singular noun names one person, place, animal, or thing. A plural noun names more than one.',
+    'A noun names a person, place, animal, or thing. Singular means one. Plural means more than one.'],
+  ['Most nouns add -s to become plural; nouns ending in sounds such as s, x, and ch often add -es.',
+    'Usually add -s (cat → cats). Words ending in s, x, or ch often add -es (box → boxes).'],
+  ['For a consonant followed by y, many plural nouns change y to -ies, as in baby → babies.',
+    'After a consonant, y often changes to -ies (baby → babies).'],
+]);
+// Equivalent wordings from class checklists and lesson notes share one child-facing line.
+// A different wording stays intact until it has been reviewed.
+const faithPhrases=[
+  ['Original sin comes from Adam and Eve’s sin. It makes it hard to choose what is right.',
+    "Original sin; human tendency to sin which is the result of Adam & Eve's sin.",
+    'Original sin is the human tendency to sin connected with Adam and Eve’s sin.'],
+  ['Faith is God’s gift that helps us believe.',
+    'Faith: gift from God that helps us believe.', 'Faith is a gift from God that helps us believe.'],
+  ['A sacrament is a sacred sign Jesus gave the Church.',
+    'Sacrament: sacred sign given to the Church by Jesus.', 'A sacrament is a sacred sign given to the Church by Jesus.'],
+  ['Baptism washes away original sin. We receive the Holy Spirit, faith, and new life in grace.',
+    'At Baptism, original sin is washed away and we receive the gift of the Holy Spirit and the gift of faith as well as the new life of grace.',
+    'At Baptism, original sin is washed away and we receive the Holy Spirit, faith, and new life in grace.'],
+  ['The Trinity is one God in three Persons: Father, Son, and Holy Spirit.',
+    'Remember: the Trinity is three Persons in one God — Father, Son, and Holy Spirit.',
+    'Trinity: 3 persons in one God (Father, Son, Holy Spirit).', 'The Trinity means one God in three Persons.'],
+  ['God made us in his image and likeness. We can think, choose, and love.',
+    "We are made in God's image and likeness; we can think, choose, love.",
+    "Being made in God's image means people can think, choose, and love."],
+  ['Our senses help us enjoy God’s gifts.',
+    "We use our senses to enjoy God's gifts.", 'The current Religion lesson connects our senses with noticing and enjoying God’s gifts of creation.'],
+  ['A seed dies so a new plant can grow. Jesus died so we can have new life in grace.',
+    'Jesus is like a seed. A seed dies for a new plant to grow---Jesus died so we can have new life (grace).',
+    'The current Religion lesson compares a seed dying so a new plant can grow with Jesus dying so we can have new life in grace.'],
+  ['Mary is the mother of Jesus and of the Church.', 'The current Religion lesson identifies Mary as Jesus’ mother and the mother of the Church.'],
+  ['Jesus died for us and rose again so we can have new life in grace.',
+    'Jesus is our Savior; class notes connect his death and Resurrection with new life in grace.'],
+  ['Jesus is God’s greatest gift. He tells us about God and teaches us how to live.',
+    "Jesus is God's greatest gift to us; he tell us about God and teaches us how to live."],
+  ['We must care for God’s creation.', "It is our responsiblity to take care of God's gifts of creation."],
+  ['At Baptism, our ears, mouths, and hearts open to God’s message.',
+    "our ears, mouths, and hearts are open to God's message at Baptism", 'At Baptism, our ears, mouths, and hearts are open to God’s message.'],
+  ['Jesus is the vine. His disciples are branches. The fruit stands for good deeds.',
+    'The public Christ Our Life Grade 2 Chapter 2 sample explains that Jesus is the vine, disciples are branches, and good deeds are pictured as fruit.'],
+  ['Grace is sharing in God’s own life.', 'Grace means a share in God’s very own life.'],
+  ['The pope and bishops carry on the mission of the Apostles as Church leaders.', 'The pope and bishops lead the Church and carry on the Apostles’ work.'],
+  ['The Church is the worldwide community of Jesus’ followers.', 'The Church is the community of Jesus’ followers everywhere.'],
+  ['God made each person in his image and likeness.', 'God created every person in his image and likeness.'],
+  ['The priest uses water when celebrating Baptism.', 'Water is used during the Rite of Baptism.'],
+];
+for(const [short,...sources] of faithPhrases)for(const source of sources)quickCopy.set(source,short);
+function teachingLine(value){
+  const line=clean(value).replace(/^Teacher-style (?:supplemental practice|mnemonic):\s*/i,'');
+  // Publisher/author credits belong in the source note. Keep the entire teaching line.
+  if(/^verified Grade 2 skill:|^original ABVM teaching explanations \(not teacher-provided\):/i.test(line)||
+    /^these (?:explanations|examples|original examples|are not teacher-published).*(?:teacher-provided|not a (?:teacher|school)|not teacher-|original ABVM teaching|not supplied|were not|teacher-supplied questions|without verified meaning evidence)/i.test(line))return '';
+  return quickCopy.get(line)??line;
 }
-function dictationWorksheet(guide){
-  const words=unique(guide?.spellingWords).filter(word=>/^[a-z][a-z'-]*$/i.test(word));
-  const count=words.length||15;
-  const lines=Array.from({length:count},(_,index)=>'<div class="dictation-item"><span class="n">'+(index+1)+'.</span>'+
-    '<span class="hand-line" aria-label="Write word '+(index+1)+'"></span></div>').join('');
-  const student='<main class="sheet dictation-sheet">'+header(guide,'Spelling Dictation','Listen to each word. Write each word neatly on the lines.')+
+function skillTip(id){
+  if(/^(?:math-)?(?:place-value|expanded-form)$/.test(id))
+    return 'Each digit has a place. In 347, the 3 means 300, the 4 means 40, and the 7 means 7. So 347 = 300 + 40 + 7.';
+  if(id==='common-proper-nouns')
+    return 'A common noun names any person, place, or thing, like a city. A proper noun names a special one, like Pottsville. Start a proper noun with a capital letter.';
+  return '';
+}
+function spellingWordsHtml(guide){
+  const words=unique(guide.spellingWords);
+  if(!words.length)return '<p class="warning">No confirmed word list is available for this test yet.</p>';
+  const longO=/\blong o\b/i.test(guide.label);
+  const examples=longO?words.filter(word=>/^(?:home|cone|nose|poke|rope)$/i.test(word)):[];
+  const tips=(examples.length?'<p><b>Magic e:</b> '+examples.map(esc).join(', ')+'. The silent e helps o say its name.</p>':'')+
+    (longO&&words.some(word=>/^have$/i.test(word))?'<p><b>Watch out:</b> have ends in e, but its a is short.</p>':'');
+  return '<section class="section"><h2>My spelling words</h2><ul class="quick-words">'+
+    words.map(word=>'<li><strong>'+esc(word)+'</strong></li>').join('')+'</ul>'+tips+'</section>';
+}
+export function renderTestStudyGuide(guide={},dictionary=()=> ''){
+  const kind=kindOf(guide),questions=rows(guide.practice);
+  const bySkill=new Map();
+  for(const question of questions){
+    const id=clean(question?.skill);
+    if(!bySkill.has(id))bySkill.set(id,question);
+  }
+  const supplied=rows(guide.reviewTopics).filter(topic=>clean(topic?.label));
+  const topics=supplied.length?supplied:[...bySkill].map(([id,q])=>({
+    id,label:id.replace(/-/g,' ')||'Example',summary:clean(q?.explanation),
+  }));
+  const seen=new Set();
+  function distinct(lines){
+    return unique(lines.map(teachingLine)).filter(line=>{
+      const key=line.toLowerCase();
+      if(seen.has(key))return false;
+      seen.add(key);
+      return true;
+    });
+  }
+  // Keep all verified facts and skill rules. Repeated exercises stay in the practice bank.
+  const chapters=rows(guide.teacherFacts);
+  const announced=clean(guide.label).toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ');
+  const sourceLines=[...chapters,...rows(guide.classFacts??guide.facts)].filter(line=>{
+    if(/^((?:weekly |teacher(?:-posted)? |verified )?spelling words|photo-confirmed practice words|words for spelling test)\b/i.test(line))return false;
+    const title=clean(line).match(/^(?:.*?test focus|skill|grammar):\s*(.*?)(?:\s*\(test [^)]+\))?$/i)?.[1];
+    return !title||!announced.includes(title.toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim());
+  });
+  const list=lines=>'<ul class="quick-rules">'+lines.map(line=>'<li>'+esc(line)+'</li>').join('')+'</ul>';
+  // Cumulative Religion has a separate chapter checklist. Its Unit 1 practice
+  // questions rehearse that checklist; render those facts once without Q&A cards.
+  const religionList=kind==='religion'&&chapters.length>0;
+  const cards=topics.map(topic=>{
+    const notes=rows(topic.notes).map(teachingLine).filter(Boolean);
+    const tip=skillTip(topic.id);
+    const lines=distinct([...(notes.length?notes:[topic.summary]),tip]);
+    const example=bySkill.get(topic.id);
+    const worked=!notes.length&&!chapters.length&&example?.prompt&&example?.answer
+      ? '<p class="say-it"><b>Example</b> '+esc(example.prompt)+' <b>'+esc(example.answer)+'</b></p>':'';
+    if(!lines.length&&!worked)return '';
+    if(religionList)return lines.map(line=>'<li data-guide-skill="'+esc(topic.id)+'">'+esc(line)+'</li>').join('');
+    return '<article class="topic-card" data-guide-skill="'+esc(topic.id||topic.label)+'"><h3>'+esc(topic.label)+'</h3>'+
+      (lines.length?list(lines):'')+worked+'</article>';
+  }).join('');
+  const facts=distinct(sourceLines);
+  const words=rows(guide.vocabulary).map(word=>{
+    const term=clean(typeof word==='string'?word:word?.term),provided=clean(word?.meaning);
+    const meaning=provided&&!/teacher page does not provide a definition|no definition supplied/i.test(provided)?provided:'';
+    const teaching=meaning?'':clean(dictionary(term));
+    return {term,meaning:meaning||teaching,original:!!teaching};
+  }).filter(word=>word.term);
+  const wordList=words.length?'<section class="section"><h2>Words to know</h2><dl class="vocabulary">'+words.map(word=>
+    '<div><dt>'+esc(word.term)+(word.original?'<sup>*</sup>':'')+'</dt><dd>'+esc(word.meaning||'Look up this word in your class notes.')+'</dd></div>'
+  ).join('')+'</dl>'+(words.some(word=>word.original)?'<small>* Original study explanation — not supplied by the teacher.</small>':'')+'</section>':'';
+  const actual=teacherFormatSummary(guide),format=actual||classroomPracticeFormatSummary(guide);
+  const details='<details class="guide-source"><summary>Original home review · Sources for grown-ups</summary>'+
+    (format?'<p><strong>'+(actual?'Previous actual test format (example only)':'Previous publisher practice format (not a teacher-issued test)')+'</strong> '+esc(format)+'</p>':'')+
+    warningHtml(guide)+footer(guide)+'</details>';
+  const hasScope=cards||facts.length||words.length||rows(guide.spellingWords).length;
+  const missing=rows(guide.coverage?.missingGuideSkills);
+  return decoratePaper(htmlHead(guide,'Study guide')+'<main class="sheet study-guide">'+
+    header(guide,kind==='spelling'?'Spelling Word Study':'Study Guide',clean(guide.label)||'Upcoming class test')+
+    (guide.scopeNotice?'<p class="warning scope-notice">'+esc(guide.scopeNotice)+'</p>':'')+
+    (kind==='spelling'?spellingWordsHtml(guide):'')+
+    (religionList?'<section class="section"><h2>What I need to know</h2><ul class="quick-rules faith-rules">'+cards+facts.map(line=>'<li>'+esc(line)+'</li>').join('')+'</ul></section>':
+      cards?'<section class="section"><h2>What I need to know</h2><div class="topic-grid">'+cards+'</div></section>':'')+
+    (!religionList&&facts.length?'<section class="section"><h2>'+(!cards?'What I need to know':'Class notes')+'</h2>'+list(facts)+'</section>':'')+
+    (kind==='reading'&&isShortVowelGuide(guide,topics,questions)?vowelStory():'')+wordList+
+    (kind==='spelling'&&/handwriting/i.test(guide.label)?'<p class="focus-note"><strong>Handwriting</strong>Write on the line. Check tall letters and letters that dip below it.</p>':'')+
+    (!hasScope&&!guide.scopeNotice?'<p class="warning">Your teacher has named the test. Check your class notes for what to study. Additional verified facts have not been published yet.</p>':'')+
+    (missing.length?'<p class="warning">Also review these topics in your class notes: '+missing.map(id=>esc(clean(id).replace(/-/g,' '))).join(', ')+'.</p>':'')+
+    details+'</main></body></html>',kind);
+}
+function dictationWorksheet(guide,words){
+  const lines=words.map((_,index)=>'<div class="dictation-item"><span class="n">'+(index+1)+'.</span>'+
+    '<span class="hand-line" aria-label="Write word '+(index+1)+'"></span></div>');
+  const combined=teacherTestReferenceForGuide(guide)?.columns===2;
+  const split=Math.ceil(lines.length/2);
+  const columns=combined?[lines.slice(0,split),lines.slice(split)]:[lines];
+  const student='<main class="sheet dictation-sheet">'+header(guide,'Spelling Dictation','Listen to each word. Write it on the next line.')+
     '<div class="name-row">Name: <span></span> Date: <span></span></div>'+
-    '<p class="focus-note"><strong>Practice test</strong>Have an adult read one word at a time. Do not look at your spelling study guide while writing.</p>'+
-    '<div class="dictation-body">'+lines+'</div>'+
-    (!words.length?'<p class="warning">The current spelling list is not yet confirmed. These are blank practice lines, not a verified test word count.</p>':'')+
-    footer(guide)+'</main>';
-  const key=words.length?'<section class="sheet adult-key">'+header(guide,'Adult Dictation List','Keep this page separate from the student worksheet.')+
-    '<p>Read each verified word aloud. Repeat it once if needed; do not show this sheet until the student finishes.</p>'+
-    '<ol>'+words.map(word=>'<li>'+esc(word)+'</li>').join('')+'</ol>'+footer(guide)+'</section>':'';
+    '<div class="dictation-body'+(combined?' combined-dictation':'')+'">'+columns.map(lines=>'<div>'+lines.join('')+'</div>').join('')+'</div>'+footer(guide)+'</main>';
+  const key='<section class="sheet adult-key">'+header(guide,'Adult Dictation List',clean(guide.label))+
+    '<p>Read one word at a time. Repeat it once if needed.</p>'+
+    '<ol>'+words.map(word=>'<li>'+esc(word)+'</li>').join('')+'</ol>'+footer(guide)+'</section>';
   return decoratePaper(htmlHead(guide,'Spelling dictation worksheet')+student+key+'</body></html>','spelling');
 }
-function noBankWorksheet(guide){
-  const topic=clean(guide?.label)||'this test';
-  const knownFacts=unique(guide?.facts);
-  const items=knownFacts.length
-    ? knownFacts.map(fact=>({
-      prompt:'Explain this verified class idea in your own words: '+fact,
-      check:'A correct response should explain this verified idea: '+fact,
-    }))
-    : ['Write one important fact you learned about '+topic+'.',
-      'Write or draw an example from your current class notes.',
-      'Explain something about '+topic+' that you could teach someone else.']
-      .map(prompt=>({
-        prompt,
-        check:'Answers vary. Check that the response matches the current class notes or textbook.',
-      }));
-  rows(guide?.vocabulary).forEach(entry=>{
-    const term=clean(entry?.term);
-    if(!term)return;
-    const meaning=clean(entry?.meaning);
-    items.push({
-      prompt:'What does '+term+' mean?',
-      check:meaning
-        ? 'Expected meaning: '+meaning
-        : 'Answers vary. Check the meaning against the current class notes or textbook.',
-    });
-  });
-  const paper='<main class="sheet organizer-sheet">'+header(guide,'Topic Practice Worksheet',topic)+
-    '<div class="name-row">Name: <span></span> Date: <span></span></div>'+
-    '<p class="warning">The matching question bank is not yet available. This is a class-topic organizer, not a reproduction of the teacher test.</p>'+
-    '<p class="focus-note"><strong>Teacher-style supplemental practice</strong>These original prompts help review the announced topic. They are not school-issued questions.</p>'+
-    items.map((item,i)=>'<section class="organizer-prompt"><h2>'+(i+1)+'. '+esc(item.prompt)+'</h2>'+
-      '<div class="writing-lines"><span></span><span></span><span></span></div></section>').join('')+
-    warningHtml(guide)+footer(guide)+'</main>';
-  const key='<section class="sheet adult-key">'+header(guide,'Answer Key / Adult Checking Guide',topic)+
-    '<p><strong>Source-honest checking:</strong> This guide does not supply unverified chapter facts. Use the current class notes or textbook for open-ended responses.</p>'+
-    '<ol>'+items.map((item,i)=>'<li><strong>'+(i+1)+'.</strong> '+esc(item.check)+'</li>').join('')+'</ol>'+
-    footer(guide)+'</section>';
-  return decoratePaper(htmlHead(guide,'Practice worksheet')+paper+key+'</body></html>',kindOf(guide));
-}
-export function renderTestWorksheet(guide,dictionary=()=> ''){
-  const practice=rows(guide?.practice);
-  const hasVerifiedSpellingList=unique(guide?.spellingWords).length>0;
-  if(kindOf(guide)==='spelling'&&(!practice.length||hasVerifiedSpellingList))return dictationWorksheet(guide);
-  if(!practice.length)return noBankWorksheet(guide);
-  return renderClassroomStudyGuide(guide,dictionary,{forcePracticePacket:true});
+export function renderTestWorksheet(guide){
+  const words=unique(guide?.spellingWords).filter(word=>/^[a-z][a-z'-]*$/i.test(word));
+  if(!guide?.scopePending){
+    if(kindOf(guide)==='spelling'&&words.length)return dictationWorksheet(guide,words);
+    const practice=rows(guide?.practice).filter(row=>clean(row?.prompt)&&clean(row.answer)&&
+      (!rows(row.choices).length||row.choices.filter(choice=>choice===row.answer).length===1));
+    if(practice.length)return renderClassroomStudyGuide({...guide,practice});
+  }
+  const message=guide?.scopePending?'The teacher has announced the test. Check your class notes for the topics to review.':
+    'Check your class materials for this test. Matching practice questions are not available yet.';
+  return decoratePaper(htmlHead(guide,'Practice worksheet')+'<main class="sheet">'+
+    header(guide,'Practice worksheet',clean(guide?.label))+'<p class="focus-note">'+esc(message)+'</p>'+
+    footer(guide)+'</main></body></html>',kindOf(guide));
 }

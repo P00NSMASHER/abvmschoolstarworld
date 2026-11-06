@@ -9,7 +9,7 @@ const INPUT=new URL("../pages/data/study-pack.json",import.meta.url);
 const OUTPUT=new URL("../pages/data/study-pack-runtime.json",import.meta.url);
 export const RUNTIME_QUESTION_FIELDS=Object.freeze([
   "id","subject","skill","questionType","prompt","choices","answer","explanation","hint",
-  "dok","difficulty","standards","domain","variantFingerprint","richContent","choiceDiagnostics","sourceChapters","sourceTestScopes"
+  "dok","difficulty","standards","domain","variantFingerprint","richContent","choiceDiagnostics","sourceChapters","sourceTestScopes","sourceTestDate","weekOf","studiedOn"
 ]);
 
 function clone(value){return JSON.parse(JSON.stringify(value));}

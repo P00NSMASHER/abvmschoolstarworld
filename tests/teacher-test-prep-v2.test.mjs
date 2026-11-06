@@ -1,3 +1,4 @@
+import {assertFocusedWorksheet} from './helpers/focused-worksheet.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
@@ -25,7 +26,7 @@ const mathGuide=practice=>({
   sourceLabel:'Original grade 2 place-value practice',
 });
 
-test('genuine noun assessment selects only verified three-bubble format and prints every original item',()=>{
+test('genuine noun assessment selects only verified three-bubble format and prints a short sample',()=>{
   const practice=Array.from({length:10},(_,i)=>question(i+1,['Use lowercase','Capitalize the name','Keep both lowercase']));
   const guide=nounGuide(practice);
   assert.equal(teacherTestReferenceForGuide(guide)?.origin,'prior-actual-teacher-test');
@@ -36,10 +37,10 @@ test('genuine noun assessment selects only verified three-bubble format and prin
   assert.match(student,/student-test teacher-bubble-choice/);
   assert.match(student,/teacher-bubble-choice-problems/);
   assert.match(student,/Fill in one bubble/);
-  assert.equal((student.match(/class="problem teacher-bubble-choice-item"/g)||[]).length,10);
-  assert.equal((student.match(/class="teacher-bubble-mark"/g)||[]).length,30);
+  assert.equal((student.match(/class="problem teacher-bubble-choice-item"/g)||[]).length,6);
+  assert.equal((student.match(/class="teacher-bubble-mark"/g)||[]).length,18);
   assert.match(html,/teacher-bubble-choice-problems\{columns:2/);
-  for(const q of practice)assert.ok(student.includes(q.prompt));
+  assertFocusedWorksheet(html,practice);
   assert.doesNotMatch(student,/Synthetic explanation kept on the parent page/);
   assert.match(adult,/Synthetic explanation kept on the parent page/);
   assert.match(adult,/Parent Answer Key/);
@@ -58,8 +59,8 @@ test('math Chapter 2 publisher practice uses four bubbles while remaining explic
   assert.equal(checkedBubblePaperFormat(guide,practice)?.optionCount,4);
   const student=renderTestWorksheet(guide).split('<section class="sheet adult-key">')[0];
   assert.match(student,/student-test teacher-bubble-choice/);
-  assert.equal((student.match(/class="problem teacher-bubble-choice-item"/g)||[]).length,16);
-  assert.equal((student.match(/class="teacher-bubble-mark"/g)||[]).length,64);
+  assert.equal((student.match(/class="problem teacher-bubble-choice-item"/g)||[]).length,6);
+  assert.equal((student.match(/class="teacher-bubble-mark"/g)||[]).length,24);
   assert.match(student,/next test format is unverified/);
   const notes=renderTestStudyGuide(guide);
   assert.match(notes,/Previous publisher practice format \(not a teacher-issued test\)/);
@@ -67,16 +68,14 @@ test('math Chapter 2 publisher practice uses four bubbles while remaining explic
   assert.match(classroomPracticeFormatSummary(guide),/not a teacher-issued test/);
 });
 
-test('mixed source-backed questions use only eligible bubble formats and preserve generic responses',()=>{
-  const rows=[question(1,['one','two','three']),{
-    ...question(2,['one','two','three']),answer:'not a checked answer',
-  }];
-  const guide=nounGuide(rows),student=renderTestWorksheet(guide).split('<section class="sheet adult-key">')[0];
-  assert.equal(checkedBubblePaperFormat(guide,rows),null);
-  assert.equal((student.match(/class="problem teacher-bubble-choice-item"/g)||[]).length,1);
-  assert.equal((student.match(/class="problem pick-problem"/g)||[]).length,1);
-  assert.match(student,/1 of 2 items use the observed bubble layout/);
-  assert.ok(rows.every(q=>student.includes(q.prompt)));
+test('a choice question with no correct option cannot enter the paper or key',()=>{
+  const valid=question(1,['one','two','three']);
+  const invalid={...question(2,['one','two','three']),answer:'not a checked answer'};
+  const guide=nounGuide([valid,invalid]),html=renderTestWorksheet(guide);
+  assert.equal(checkedBubblePaperFormat(guide,guide.practice),null);
+  assertFocusedWorksheet(html,[valid]);
+  assert.ok(!html.includes(invalid.prompt));
+  assert.ok(!html.includes(invalid.answer));
   assert.equal(teacherTestReferenceForGuide({...guide,label:'Reading Text Set 4'}),null);
   assert.equal(classroomPracticeReferenceForGuide({...guide,label:'Math Chapter 1B',subject:'Math'}),null);
 });

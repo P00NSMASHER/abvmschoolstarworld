@@ -36,7 +36,7 @@ const styles = '@page{size:Letter portrait;margin:.46in}'+
 '.work-area{min-height:.5in;display:flex;align-items:flex-end;justify-content:flex-end;padding:0 .1in .08in}.answer-rule{width:1.6in;border-bottom:1px solid #111}'+
 '.math-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid #777;border-left:1px solid #777}'+
 '.math-grid .problem{border-right:1px solid #777;border-bottom:1px solid #777;padding:.12in;min-height:1.23in}.math-grid .work-area{min-height:.45in}'+
-'.adult-key{break-before:page;page-break-before:always}.adult-key h2{font-size:12pt}.key-list{columns:2;column-gap:.25in;line-height:1.5;padding-left:.24in;font-size:10.5pt}'+
+'.adult-key{break-before:page;page-break-before:always}.adult-key h2{font-size:12pt}.key-list{list-style:none;columns:2;column-gap:.25in;line-height:1.5;padding-left:.24in;font-size:10.5pt}'+
 '.key-list li{break-inside:avoid;margin-bottom:.1in}.key-notes{margin-top:.15in;border:1px solid #888;padding:.12in}.key-notes h3{font-size:11pt;margin:0 0 .07in}'+
 '.key-notes ul{margin:.02in 0 .09in;padding-left:.22in;font-size:10pt}.key-notes li{margin-bottom:.04in}'+
 '.source-note{font-size:8.25pt;color:#444;margin-top:.18in;border-top:1px solid #888;padding-top:.1in}'+
@@ -53,6 +53,8 @@ const styles = '@page{size:Letter portrait;margin:.46in}'+
 '@media screen and (max-width:640px){body{padding:9px;font-size:11pt}.sheet{width:100%;padding:13px;box-shadow:none;border-radius:8px}.paper-topline{font-size:8pt}.sheet-header h1{font-size:18pt}.field-line{width:1.1in}.field-line.date{width:.8in}.student-fields{gap:.11in;font-size:9pt}.choices{grid-template-columns:minmax(0,1fr)}.math-grid{grid-template-columns:minmax(0,1fr)}.word-list{grid-template-columns:repeat(2,minmax(0,1fr))}.activity-steps{grid-template-columns:minmax(0,1fr)}.key-list{columns:1}}'+
 '@media print{body{background:#fff}.sheet{max-width:none;width:100%}.adult-key{break-before:page}.problem,.memory-section{break-inside:avoid}}';
 const teacherExamPatternCss = [
+  '.handwriting-answer{height:.48in;position:relative;margin:.2in 0 .09in;border-top:1px solid #888;border-bottom:1.4px solid #333}',
+  '.handwriting-answer:after{content:"";position:absolute;width:100%;top:50%;border-top:1px dashed #999}',
   '.teacher-letter-choice-problems{columns:2;column-gap:.3in;column-fill:auto;display:block!important;list-style:none!important}',
   '.teacher-letter-choice-problems .teacher-letter-choice-item{break-inside:avoid;page-break-inside:avoid;display:flex;align-items:flex-start;gap:.1in;min-height:1.2in;margin:0 0 .14in;padding:.1in .04in!important;border:0!important;background:transparent!important}',
   '.teacher-letter-choice-item .teacher-answer-blank{display:block;flex:0 0 .24in;border-bottom:1px solid #222;height:.27in;margin-top:.18in}',
@@ -70,6 +72,11 @@ const teacherExamPatternCss = [
   '.teacher-bubble-option .teacher-bubble-letter{flex:none;width:.19in}',
   '@media screen and (max-width:700px){.teacher-letter-choice-problems,.teacher-bubble-choice-problems{columns:1}}',
   '@media print{',
+  '  .premium-paper .student-test .question-topline{display:none}',
+  '  .premium-paper .student-test .teacher-letter-choice-problems{column-fill:balance}',
+  '  .premium-paper .compact-problems{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.09in}',
+  '  .premium-paper .compact-problems .problem{margin:0!important;padding:.08in .10in!important}',
+  '  .premium-paper .compact-problems .choices{grid-template-columns:1fr}',
   '  .premium-paper .student-test.teacher-letter-choice{background:#fff!important;color:#111!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:0!important}',
   '  .premium-paper .student-test.teacher-letter-choice .sheet-header{background:#fff!important;border:0!important;border-bottom:2px solid #222!important;border-radius:0!important;padding:.05in 0!important;min-height:0!important}',
   '  .premium-paper .student-test.teacher-letter-choice .sheet-header h1{color:#111!important;font-family:Arial,Helvetica,sans-serif!important;font-size:18pt!important}',
@@ -133,6 +140,8 @@ function questionSkill(item) {
   return '<div class="question-topline"><span class="question-skill">'+escape(skill)+'</span></div>';
 }
 function questionHtml(item,index,kind) {
+  if(item.handwritingPractice)return '<li class="problem handwriting-item"><p class="prompt"><span class="number">'+
+    (index+1)+'.</span> Listen to the practice word. Write it on the lines.</p><div class="handwriting-answer" aria-label="Write the word"></div></li>';
   const mode=itemMode(item,kind);
   const text='<p class="prompt"><span class="number">'+(index+1)+'.</span> '+escape(mode.prompt)+'</p>';
   const skill=questionSkill(item);
@@ -159,111 +168,98 @@ function questionHtml(item,index,kind) {
     '<div class="choice"><span class="bubble" aria-hidden="true"></span><span>'+
       String.fromCharCode(65+j)+'. '+escape(choice)+'</span></div>').join('')+'</div></li>';
 }
-function keyHtml(item,index,kind) {
+function keyHtml(item,index,kind,markedChoice) {
   const mode=itemMode(item,kind);
   const letters={statement:'S / .',question:'Q / ?',command:'C / .',exclamation:'E / !'};
-  const answer=mode.mode==='sentence-type'
+  const answer=markedChoice?String.fromCharCode(65+item.choices.indexOf(item.answer))+'. '+clean(item.answer):mode.mode==='sentence-type'
     ? letters[clean(item?.answer).toLowerCase()] || clean(item?.answer)
     : clean(item?.answer);
-  const explanation=clean(item?.explanation);
+  const explanation=item.handwritingPractice?'Read this original practice word aloud. Check its spelling and letter formation.':clean(item?.explanation);
   return '<li><b>'+(index+1)+'.</b> '+escape(answer)+
-    (explanation&&explanation!==clean(item?.answer)?'<small class="answer-why">Why: '+escape(explanation)+'</small>':'')+'</li>';
+    (explanation&&explanation!==clean(item?.answer)?'<small class="answer-why">'+(item.handwritingPractice?'Adult: ':'Why: ')+escape(explanation)+'</small>':'')+'</li>';
 }
-function spellingSheet(guide) {
-  const words=unique(guide?.spellingWords).filter(word=>/^[a-z][a-z'-]*$/i.test(word));
-  const silentEExceptions=new Set(['have','give','love','some','come','one','done','gone','live','move','prove','shove','above']);
-  const silent=words.filter(word=>/[aeiou][^aeiou]e$/i.test(word)&&!silentEExceptions.has(word.toLowerCase()));
-  const watchOut=words.filter(word=>silentEExceptions.has(word.toLowerCase()));
-  const shortI=words.filter(word=>/i[^aeiou]+$/i.test(word));
-  const tips=[];
-  if(silent.length)tips.push('<li><b>Magic e:</b> '+silent.map(escape).join(', ')+'. The final e usually helps the vowel say its name.</li>');
-  if(watchOut.length)tips.push('<li><b>Watch out:</b> '+watchOut.map(escape).join(', ')+'. These words do not follow the usual magic-e sound rule.</li>');
-  if(shortI.length)tips.push('<li><b>Short-i beat:</b> '+shortI.map(escape).join(', ')+'. Say the quick i sound, then spell every letter.</li>');
-  if(words.includes('all'))tips.push('<li><b>all:</b> One a, then two l letters. Clap A-L-L.</li>');
-  if(words.includes('any'))tips.push('<li><b>any:</b> It sounds like “eh-nee” but starts with a. Say A-N-Y.</li>');
-  if(words.includes('says'))tips.push('<li><b>says:</b> It sounds like “sez”; remember the surprising A-Y. Say S-A-Y-S.</li>');
-  if(!tips.length)tips.push('<li>Circle the tricky letters. Group words that share a vowel sound or ending.</li>');
-  const list=words.length
-    ? '<p class="instruction">'+escape(/teacher page undated/i.test(String(guide?.sourceLabel || ''))
-      ? "Words observed on the teacher’s public spelling page this week (page undated). The teacher may dictate them in a different order."
-      : 'Words confirmed from matching-week schoolwork. The teacher may dictate them in a different order.')+'</p>'+
-      '<ol class="word-list">'+words.map((word,index)=>'<li><span class="word-number">'+(index+1)+'.</span><strong>'+escape(word)+'</strong><span class="word-check" aria-hidden="true">□</span></li>').join('')+'</ol>'
-    : '<p class="caution">No confirmed word list is available for this test. Older spelling words are not substituted for the current list.</p>';
-  return '<main class="sheet spelling-sheet">'+pageHeader('Spelling Word Study',guide)+
-    '<div class="student-fields"><span>Name: <i class="field-line"></i></span><span>Date: <i class="field-line date"></i></span></div>'+
-    '<div class="directions"><strong>How to study:</strong> Read. Cover. Write the word on scrap paper. Check your letters. On test day your teacher will read the words aloud.</div>'+
-    list+'<section class="memory-section"><h2>Remember the tricky parts</h2><ul>'+tips.join('')+'</ul></section>'+
-    '<section class="memory-section"><h2>Make it stick</h2><div class="activity-steps">'+
-    '<div class="activity"><h3>Cheer-the-letters</h3><p>Clap once per letter, then spell the whole word without looking.</p></div>'+
-    '<div class="activity"><h3>Roblox word builder</h3><p>Draw a block for each letter. Fill the blocks from memory, then check.</p></div>'+
-    '</div></section>'+arr(guide?.warnings).slice(0,2).map(note=>'<p class="caution">'+escape(note)+'</p>').join('')+
-    sourceNote(guide)+'</main>';
+// Prefer uncovered chapters, then skills and explicitly taught endings. A
+// paper can sample several rules even when they share one curriculum skill ID.
+function worksheetSample(bank,limit){
+  if(bank.length<=limit)return bank;
+  const remaining=bank.map(question=>{
+    const skills=new Set([question.skill,...arr(question.assessedSkillIds)].filter(Boolean));
+    const endings=[...clean(question.explanation).matchAll(/(?:^|\s)(-[a-z]{1,5})\b/gi)]
+      .map(match=>question.skill+' '+match[1].toLowerCase());
+    return {question,chapters:arr(question.sourceChapters),skills:[...skills],endings:[...new Set(endings)]};
+  });
+  const seen=new Set(),types=new Map(),result=[];
+  const unseen=values=>values.filter(value=>!seen.has(value)).length;
+  while(result.length<limit){
+    const best=remaining.reduce((left,right)=>{
+      const priority=unseen(right.chapters)-unseen(left.chapters)||
+        unseen(right.skills)-unseen(left.skills)||unseen(right.endings)-unseen(left.endings)||
+        (types.get(left.question.questionType)||0)-(types.get(right.question.questionType)||0);
+      return priority>0?right:left;
+    });
+    remaining.splice(remaining.indexOf(best),1);
+    for(const value of [...best.chapters,...best.skills,...best.endings])seen.add(value);
+    types.set(best.question.questionType,(types.get(best.question.questionType)||0)+1);
+    result.push(best.question);
+  }
+  return result;
 }
-export function renderClassroomStudyGuide(guide,dictionary=()=> '',options={}) {
-  const forcePracticePacket=Boolean(options?.forcePracticePacket);
+
+export function renderClassroomStudyGuide(guide) {
   const kind=subjectKind(guide),titles={math:'Math Practice Test',grammar:'Grammar Practice Test',reading:'Reading Practice Test',religion:'Religion Practice Test',spelling:'Spelling Pattern Practice'};
   const head='<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+
-    escape(guide?.label || 'Study Guide')+'</title><style>'+styles+premiumPaperCss+teacherExamPatternCss+'</style></head><body>';
-  // Verified word lists use dictation; source-backed spelling patterns use the keyed question packet.
-  const questions=arr(guide?.practice);
+    escape(guide?.label || 'Practice worksheet')+'</title><style>'+styles+premiumPaperCss+teacherExamPatternCss+'</style></head><body>';
+  const bank=arr(guide?.practice);
+  const storyTitles=kind==='reading'&&bank.some(row=>row.skill==='main-idea-details')
+    ? unique(guide?.facts).filter(fact=>/^Story:\s*\S/i.test(fact)).map(fact=>fact.replace(/^Story:\s*/i,''))
+    : [];
+  const sample=worksheetSample(bank,storyTitles.length?5:6);
+  // Only a checked whole-word answer can serve as original dictation. Keep it
+  // out of every other printed prompt and choice so the student cannot copy it.
+  const dictatedWord=kind==='spelling'&&/handwriting/i.test(guide.label)&&sample.find(row=>
+    /^[a-z][a-z'-]+$/i.test(row.answer)&&/\bwhich (?:of these )?word\b/i.test(row.prompt)&&
+    !sample.some(other=>other!==row&&[other.prompt,...arr(other.choices)].some(text=>
+      clean(text).toLowerCase().split(/[^a-z'-]+/).includes(row.answer.toLowerCase()))));
+  const questions=sample.map(row=>row===dictatedWord?{...row,handwritingPractice:true}:row);
+  const count=questions.length+(storyTitles.length?1:0);
   const teacherLetterChoice=kind==='religion' && canRenderTeacherLetterChoice(guide,questions);
   const fullBubbleFormat=!teacherLetterChoice?checkedBubblePaperFormat(guide,questions):null;
   const firstBubble=teacherLetterChoice?null:questions.find(row=>checkedBubbleQuestionForGuide(guide,row));
   const bubbleFormat=fullBubbleFormat||(firstBubble&&checkedBubbleQuestionForGuide(guide,firstBubble));
   const eligibleBubbles=bubbleFormat?questions.filter(row=>checkedBubbleQuestionForGuide(guide,row)).length:0;
   const mixedBubbles=bubbleFormat&&eligibleBubbles<questions.length;
-  if(kind==='spelling'&&!forcePracticePacket)return decoratePaper(head+spellingSheet(guide)+'</body></html>',kind);
-  // A test packet must not silently drop verified topics or checked practice questions.
-  const instructions={math:'Solve each problem. Show your work in the boxes. Write your answer clearly.',
-    grammar:'Read each question. Underline, mark, or circle the answer as directed.',
-    reading:'Read each question. Circle the best answer using what you learned.',
-    religion:'Read each question. Circle the best answer or write the missing word.',
-    spelling:'Read each question. Circle the best answer, then use the work space to explain the letter-sound pattern.'};
-  const subjectHeading={math:'Math Maintenance · Solve & show work',grammar:'Sentence and grammar skills',
-    reading:'Reading comprehension and word skills',religion:'Religion review',spelling:'Spelling patterns and word sounds'};
-  const facts=unique(guide?.facts);
-  const storyTitles=kind==='reading'?facts
-    .filter(fact=>/^Story:\s*\S/i.test(fact))
-    .map(fact=>fact.replace(/^Story:\s*/i,'')) : [];
-  const storyPractice=storyTitles.length?'<section class="story-practice" aria-labelledby="story-practice-title">'+
-    '<h2 class="section-title" id="story-practice-title">Teacher-style supplemental practice · Story organizers</h2>'+
-    '<p>Use the teacher-provided story. These organizers do not add or guess story facts.</p>'+
-    storyTitles.map(title=>'<article class="story-response"><h3>'+escape(title)+'</h3>'+
-      '<p>After reading, write what the whole story is mostly about and one detail that supports it.</p>'+
-      '<label>Main idea</label><span class="response-line"></span><span class="response-line"></span>'+
-      '<label>Supporting detail</label><span class="response-line"></span><span class="response-line"></span></article>').join('')+'</section>':'';
+  const instructions={math:'Solve each problem. Show your work in the boxes.',
+    grammar:'Read each question and follow its directions.',
+    reading:'Read each question and follow its directions.',
+    religion:'Read each question and follow its directions.',
+    spelling:dictatedWord?'Choose an answer or write the word your adult reads.':'Read each question and choose your answer.'};
+  const storyPractice=storyTitles.length?'<section class="story-practice"><article class="story-response"><h3>'+count+
+    '. Read '+(storyTitles.length>1?'one of these stories':'this story')+'</h3><p>'+storyTitles.map(escape).join(' · ')+'</p>'+
+    '<label>Main idea</label><span class="response-line"></span><span class="response-line"></span>'+
+    '<label>One detail that supports it</label><span class="response-line"></span><span class="response-line"></span></article></section>':'';
   const student='<main class="sheet student-test'+(teacherLetterChoice?' teacher-letter-choice':bubbleFormat?' teacher-bubble-choice':'')+'">'+pageHeader(titles[kind],guide)+
     '<div class="student-fields"><span>Name: <i class="field-line"></i></span><span>Date: <i class="field-line date"></i></span>'+
-    '<span>Score: <i class="field-line score"></i> / '+questions.length+'</span></div>'+
-    '<div class="directions"><strong>Directions:</strong> '+escape(teacherLetterChoice?'Read each question. Write the letter of the best answer on the line.':bubbleFormat?'Read each question. Fill in one bubble next to the best answer.':instructions[kind])+'</div>'+
+    '<span>Score: <i class="field-line score"></i> / '+count+'</span></div>'+
+    '<div class="directions"><strong>Directions:</strong> '+escape(teacherLetterChoice?'Read each question. Write the letter of the best answer on the line.':mixedBubbles?'Follow the directions for each item. For a bubble question, fill in one bubble.':bubbleFormat?'Read each question. Fill in one bubble next to the best answer.':instructions[kind])+'</div>'+
     (guide?.scopeNotice?'<p class="caution scope-notice">'+escape(guide.scopeNotice)+'</p>':'')+
     (bubbleFormat?'<p class="caution format-evidence">'+escape(
       bubbleFormat.origin==='prior-actual-teacher-test'?
         'Mode: Practice like my teacher. Prior actual teacher-test layout; future format is not guaranteed.':
         'Mode: Practice like my teacher. Prior teacher-marked publisher practice; the next test format is unverified.'
     )+(mixedBubbles?' '+escape(eligibleBubbles+' of '+questions.length+' items use the observed bubble layout; other items retain their original response format.'):'')+'</p>':'')+
-    (questions.length?'<h2 class="section-title">'+escape(subjectHeading[kind])+'</h2><ol class="paper-problems '+(teacherLetterChoice?'teacher-letter-choice-problems ':bubbleFormat?'teacher-bubble-choice-problems ':kind==='math'?'math-grid':'')+'">'+
+    (questions.length?'<h2 class="section-title">'+escape(clean(guide.label)||'Practice questions')+'</h2><ol class="paper-problems '+(teacherLetterChoice?'teacher-letter-choice-problems ':bubbleFormat?'teacher-bubble-choice-problems ':kind==='math'?'math-grid':'compact-problems')+'">'+
       questions.map((row,i)=>teacherLetterChoice?teacherLetterChoiceHtml(row,i):bubbleFormat&&checkedBubbleQuestionForGuide(guide,row)?teacherBubbleChoiceHtml(row,i):questionHtml(row,i,kind)).join('')+'</ol>'
       :'<p class="caution">No matching original-practice questions are available for this assessment. Review the available class notes.</p>')+
     storyPractice+
     '<div class="student-self-check"><strong>Before I finish</strong><span>□ I answered every question.</span><span>□ I checked my work.</span></div>'+
-    arr(guide?.warnings).slice(0,3).map(note=>'<p class="caution">'+escape(note)+'</p>').join('')+sourceNote(guide)+'</main>';
+    sourceNote(guide)+'</main>';
   if(!questions.length)return decoratePaper(head+student+'</body></html>',kind);
-  const words=arr(guide?.vocabulary).map(row=>{
-    const term=clean(row?.term),supplied=clean(row?.meaning);
-    const meaning=supplied&&!/teacher page does not provide a definition|no definition supplied/i.test(supplied)?supplied:clean(dictionary(term));
-    return {term,meaning};
-  }).filter(row=>row.term);
-  const factsHtml=facts.length?'<h3>Skills and facts to review</h3><ul>'+facts.map(f=>'<li>'+escape(f)+'</li>').join('')+'</ul>':'';
-  const wordsHtml=words.length?'<h3>Vocabulary</h3><ul>'+words.map(w=>'<li><b>'+escape(w.term)+'</b>'+(w.meaning?' — '+escape(w.meaning):'')+'</li>').join('')+'</ul>':'';
-  const storyKey=storyTitles.length?'<section class="key-notes story-check-key"><h3>Story organizer checking guide</h3>'+
-    '<p>Use the teacher-provided story. A correct main idea should cover the whole story; the supporting detail should come from that story and explain the main idea.</p><ul>'+
-    storyTitles.map(title=>'<li><b>'+escape(title)+'</b> — Answers depend on the teacher-provided text; no plot answer is invented here.</li>').join('')+'</ul></section>':'';
+  const storyKey=storyTitles.length?'<li><b>'+count+'.</b> The main idea tells what the chosen story is mostly about. The detail must come from the story and support that idea.</li>':'';
   const key='<section class="sheet adult-key">'+pageHeader('Parent Answer Key',guide,true)+
-    '<p class="instruction">Keep this sheet separate. These are answers to original, class-aligned practice questions—not to the actual school test.</p>'+
-    '<h2>Answers</h2><ol class="key-list">'+questions.map((row,i)=>keyHtml(row,i,kind)).join('')+'</ol>'+
-    storyKey+
-    (factsHtml||wordsHtml?'<section class="key-notes">'+factsHtml+wordsHtml+'</section>':'')+
+    '<p class="instruction">Keep this sheet separate. Check each answer after the student finishes.</p>'+
+    (dictatedWord?'<p class="instruction">Use the original example word below for handwriting practice. A matching teacher word list is unavailable.</p>':'')+
+    '<h2>Answers</h2><ol class="key-list" role="list">'+questions.map((row,i)=>keyHtml(row,i,kind,teacherLetterChoice||checkedBubbleQuestionForGuide(guide,row))).join('')+storyKey+'</ol>'+
+    arr(guide?.warnings).filter(note=>note!==guide.scopeNotice).slice(0,3).map(note=>'<p class="caution">'+escape(note)+'</p>').join('')+
     sourceNote(guide)+'</section>';
   return decoratePaper(head+student+key+'</body></html>',kind);
 }
