@@ -198,3 +198,15 @@ test('Nov 13 three-letter-blend Spelling test uses exactly its own eight questio
     assert.deepEqual(questionsForTest({label,date:'2026-11-13'},other),[],'no unrelated substitute when the exact bank is missing');
   }
 });
+
+
+test('generic Reading test uses only explicitly source-linked practice',()=>{
+  const pool=[
+    {id:'broad-reading',subject:'Reading / ELA',skill:'main-idea-details'},
+    {id:'next-day-grammar',subject:'Reading / ELA',skill:'singular-plural-nouns'},
+    {id:'source-linked',subject:'Reading / ELA',skill:'main-idea-details',sourceTestScopes:['Reading']},
+    {id:'different-reading-test',subject:'Reading / ELA',skill:'reading-charts',sourceTestScopes:['Reading (Unit 1 Text Set 4)']},
+  ];
+  assert.deepEqual(questionsForTest({label:'Reading',date:'2026-11-11'},pool).map(q=>q.id),['source-linked']);
+  assert.deepEqual(questionsForTest({label:'Reading',date:'2026-11-11'},pool.slice(0,2)),[]);
+});
