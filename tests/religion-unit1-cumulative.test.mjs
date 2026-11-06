@@ -1,3 +1,4 @@
+import {assertFocusedWorksheet} from './helpers/focused-worksheet.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -58,7 +59,8 @@ test('actual teacher shorthand no longer generates a Chapter 4-only practice she
     assert.match(html,/original practice|Original study practice/);
     assert.doesNotMatch(html,/private learner|actual marked test|handwritten score/i);
   }
-  assert.match(worksheet,/The pope and bishops/);
+  const selected=assertFocusedWorksheet(worksheet,guide.practice);
+  assert.deepEqual(new Set(selected.flatMap(q=>q.sourceChapters)),new Set([1,2,3,4]));
   assert.match(study,/Holy Spirit guides the Church/);
 });
 
