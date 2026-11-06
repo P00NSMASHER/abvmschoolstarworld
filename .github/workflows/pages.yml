@@ -30,11 +30,14 @@ permissions:
   pages: write
   id-token: write
 
-# Serialize whole candidate releases, including full QA, without blocking
-# source writers. Only the short publish job takes the shared source mutex.
-# A newer main commit invalidates the preflight SHA and must fail closed.
+# Hold the same school-state lock for the ENTIRE verify-to-publication
+# transaction. Previously source commits could advance main during long
+# Playwright QA, repeatedly invalidating the tested release before publishing.
+# Read-only teacher QA still runs independently; source-commit jobs queue here.
+# Keep queue:max so pending source work is never silently cancelled.
+# External/code changes still require the exact protected-main SHA recheck.
 concurrency:
-  group: "pages"
+  group: abvm-verified-school-state
   cancel-in-progress: false
   queue: max
 
@@ -185,10 +188,8 @@ jobs:
   deploy:
     name: Publish only the exact successfully tested main revision
     needs: verify
-    concurrency:
-      group: abvm-verified-school-state
-      cancel-in-progress: false
-      queue: max
+    # Already held by the workflow-wide school-state lock. A second identical
+    # job lock would self-deadlock this reusable workflow.
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

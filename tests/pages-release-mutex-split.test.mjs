@@ -12,21 +12,23 @@ function job(name) {
 }
 const verify=job('verify'),deploy=job('deploy');
 
-test('full QA and site generation happen outside exclusive source-publication lock',()=>{
+test('full QA and site generation remain inside the workflow-wide school-state transaction',()=>{
   assert.match(verify,/Admit exact current protected-main commit/);
   assert.match(verify,/ref:\s*\$\{\{ steps\.admit\.outputs\.sha \}\}/);
   assert.match(verify,/test "\$\(git rev-parse HEAD\)" = "\$ADMITTED_SHA"/);
   assert.match(verify,/Run release QA\n\s+run: npm run qa/);
   assert.match(verify,/Build static site/);
   assert.match(verify,/Upload site/);
-  assert.doesNotMatch(verify,/abvm-verified-school-state/);
+  assert.match(workflow.split('\njobs:')[0],/concurrency:\n\s+group: abvm-verified-school-state\n\s+cancel-in-progress: false\n\s+queue: max/);
+  assert.doesNotMatch(verify,/\n\s+concurrency:\n/);
   assert.equal((workflow.match(/run: npm run qa/g)||[]).length,1,
     'exact-head full release QA must never be silently skipped or duplicated');
 });
 
-test('only post-QA publication holds the shared mutex; no writer can race the deploy',()=>{
+test('the same workflow mutex excludes source commits throughout QA and final deploy',()=>{
   assert.match(deploy,/needs: verify/);
-  assert.match(deploy,/concurrency:\n\s+group: abvm-verified-school-state\n\s+cancel-in-progress: false\n\s+queue: max/);
+  assert.match(workflow.split('\njobs:')[0],/concurrency:\n\s+group: abvm-verified-school-state\n\s+cancel-in-progress: false\n\s+queue: max/);
+  assert.doesNotMatch(deploy,/\n\s+concurrency:\n/);
   assert.match(deploy,/Check completed QA is still bound to current protected main/);
   assert.match(deploy,/Main advanced after full release QA; refusing untested publication/);
   assert.match(deploy,/ref:\s*\$\{\{ needs\.verify\.outputs\.sha \}\}/);
@@ -49,7 +51,7 @@ test('publication and live comparison consume the same immutable QA-generated as
     assert.ok(deploy.includes('test -s pages/data/'+f),'missing exact deployed proof '+f);
   }
   assert.ok(deploy.indexOf('Restore QA-generated runtime assets') < deploy.indexOf('Verify live lunch data and visible mobile flows'));
-  assert.doesNotMatch(deploy,/npm run qa/,'publisher must not occupy the exclusive lock during expensive QA');
+  assert.doesNotMatch(deploy,/npm run qa/,'publisher must not duplicate expensive full QA after the atomic workflow verified it');
 });
 
 test('stale/replaced verification cannot be mistaken for an accepted release',()=>{
