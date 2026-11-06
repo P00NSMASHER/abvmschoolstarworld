@@ -1,3 +1,4 @@
+import {assertFocusedWorksheet} from './helpers/focused-worksheet.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -72,25 +73,40 @@ test('weekly Math consumes fresh current then reviewed saved questions before re
   assert.equal(rotation.recent.length,24);
 });
 
-test('full current test bank interleaves skills and prints every verified question',() => {
+test('a linked Reading bank interleaves the verified skills and prints a short keyed sample',() => {
   const rows=[
-    ...pool('first-',12,'Reading / ELA',{skill:'text-evidence',sourceFact:'Use details from the story.',sourceTestScopes:['Reading']}),
-    ...pool('chart-',4,'Reading / ELA',{skill:'reading-charts',sourceFact:'Check labels and counts on a chart.',sourceTestScopes:['Reading']}),
+    ...pool('first-',12,'Reading / ELA',{skill:'text-evidence',sourceFact:'Use details from the story.'}),
+    ...pool('chart-',4,'Reading / ELA',{skill:'reading-charts',sourceFact:'Check labels and counts on a chart.'}),
   ];
   const pack={sourceHash:'teacher-pages-test',sourceCheckedAt:monday,subjects:[]};
+  const linked=rows.map(row=>({...row,sourceTestScopes:['Reading'],sourceTestDate:'2026-10-05'}));
+  const model=createStudyMaterials(opts({pack,events:[{date:'2026-10-05',label:'Reading'}],catalog:catalog(linked)}));
+  const guide=model.testGuide(0);
+  assert.equal(guide.scopePending,false);
+  assert.equal(guide.practice.length,16);
+  assert.deepEqual(guide.practice.slice(0,2).map(q=>q.skill),['text-evidence','reading-charts']);
+  assert.deepEqual(guide.coverage.missingGuideSkills,[]);
+  const paper=printableWorksheetHtml(guide);
+  const student=paper.split('<section class="sheet adult-key">')[0];
+  assert.equal((student.match(/class="problem /g)||[]).length,6);
+  assert.ok(student.includes('Question first-') && student.includes('Question chart-'));
+});
+
+test('a Reading date alone cannot certify weekly topics, words or questions for the printed test',() => {
+  const rows=pool('unlinked-',12,'Reading / ELA',{skill:'text-evidence'});
+  const pack={sourceHash:'teacher-pages-test',sourceCheckedAt:monday,
+    subjects:[{subject:'Reading / ELA',topics:['Story: Unlinked title'],studyNotes:['Unlinked class fact.']}],
+    vocabulary:[{subject:'Reading / ELA',term:'unlinked',meaning:'Not attached to the exam.'}]};
   const model=createStudyMaterials(opts({pack,events:[{date:'2026-10-05',label:'Reading'}],catalog:catalog(rows)}));
   const guide=model.testGuide(0);
-  assert.equal(guide.practice.length,16,'premium printouts cannot drop later current questions');
-  assert.deepEqual(guide.practice.slice(0,2).map(q=>q.skill),['text-evidence','reading-charts']);
-  assert.deepEqual(guide.coverage.availableSkills,['text-evidence','reading-charts']);
-  assert.deepEqual(guide.coverage.missingSkills,[]);
-  assert.equal(guide.sourceHash,'teacher-pages-test');
-  assert.equal(guide.sourceCheckedAt,monday);
-  for (const html of [printableStudyGuideHtml(guide),printableWorksheetHtml(guide)]) {
-    assert.match(html,/Question first-11/);
-    assert.match(html,/Question chart-3/);
+  assert.equal(guide.scopePending,true);
+  for(const key of ['practice','reviewTopics','classFacts','vocabulary'])assert.deepEqual(guide[key],[]);
+  assert.match(guide.scopeNotice,/topics for this test/i);
+  for(const html of [printableStudyGuideHtml(guide),printableWorksheetHtml(guide)]) {
+    assert.doesNotMatch(html,/Unlinked title|Unlinked class fact|Question unlinked/i);
     assert.match(html,/Teacher source checked 2026-10-05/);
   }
+  assert.equal(model.forMode('reading').count,12,'ordinary reading practice remains available');
 });
 
 test('all official undated spelling words reach this-week guide and adult dictation key only',() => {
@@ -241,8 +257,8 @@ test('test-week spelling guide uses only the photographed matching-week word lis
     'did','fin','pick','line','tip','pipe','mix','five','side','cape','hike','made','all','any','says']);
   const printed=printableStudyGuideHtml(guide);
   assert.match(printed,/Spelling Word Study/);
-  assert.match(printed,/Cheer-the-letters/);
-  assert.match(printed,/Roblox word builder/);
+  for (const word of guide.spellingWords) assert.ok(printed.includes('<strong>'+word+'</strong>'));
+  assert.doesNotMatch(printed,/Make it stick/);
   assert.doesNotMatch(printed,/>cat</);
   assert.doesNotMatch(printed,/Parent Answer Key/);
   assert.doesNotMatch(printed,/class="choices"/);
@@ -406,8 +422,8 @@ test('printable study guide document is Letter-sized and resolves vocabulary def
   assert.match(html,/@page\{size:Letter portrait/);
   assert.match(html,/<h1>Study Guide<\/h1>/);
   assert.match(html,/What I need to know/);
-  assert.match(html,/How to remember it/);
-  assert.match(html,/Say it without looking/);
+  assert.match(html,/What detail supports the answer/);
+  assert.doesNotMatch(html,/Ready check/);
   assert.match(html,/to need or rely on someone or something/);
   assert.doesNotMatch(html,/teacher page does not provide a definition/);
   assert.doesNotMatch(html,/Parent Answer Key/);
@@ -445,7 +461,7 @@ test('every test has both an instructional study guide and an independent worksh
   assert.equal(math.practice[0].explanation,'Subtract six from fifteen to get nine.');
   const learned=printableStudyGuideHtml(math),tested=printableWorksheetHtml(math);
   assert.match(learned,/Subtract six from fifteen to get nine/);
-  assert.match(learned,/How to remember it/);
+  assert.match(learned,/Solve 15 - 6/);
   assert.match(tested,/Math Practice Test/);
   assert.match(tested,/Show your work/);
   assert.doesNotMatch(learned,/Math Practice Test/);
@@ -453,8 +469,8 @@ test('every test has both an instructional study guide and an independent worksh
   const science=model.testGuide(scienceIndex);
   assert.equal(science.practice.length,0);
   assert.match(printableStudyGuideHtml(science),/Additional verified facts have not been published yet/);
-  assert.match(printableWorksheetHtml(science),/Topic Practice Worksheet/);
-  assert.match(printableWorksheetHtml(science),/not a reproduction of the teacher test/);
+  assert.match(printableWorksheetHtml(science),/Practice worksheet/);
+  assert.doesNotMatch(printableWorksheetHtml(science),/<section class="sheet adult-key|class="problem /);
 });
 
 test('curated test families visibly label both printable artifacts as teacher-style supplemental practice',()=>{
@@ -490,14 +506,14 @@ test('reading worksheet gives title-only verified stories source-honest student 
   };
   const html=printableWorksheetHtml(guide);
   const [student,key]=html.split('<section class="sheet adult-key">');
-  assert.match(student,/Teacher-style supplemental practice/);
+  assert.match(student,/Read one of these stories/);
   assert.match(student,/Eagles and Eaglets/);
   assert.match(student,/Baby Bears/);
-  assert.equal((student.match(/class="story-response"/g)||[]).length,2);
-  assert.equal((student.match(/class="response-line"/g)||[]).length,8,
-    'each verified story gets enough space for a main idea and supporting detail');
-  assert.match(key,/Story organizer checking guide/);
-  assert.match(key,/Use the teacher-provided story/);
+  assert.equal((student.match(/class="story-response"/g)||[]).length,1);
+  assert.equal((student.match(/class="response-line"/g)||[]).length,4,
+    'one response has room for a main idea and supporting detail');
+  assert.match(key,/The detail must come from the story/);
+  assert.doesNotMatch(printableWorksheetHtml({...guide,practice:[{...guide.practice[0],skill:"short-vowels"}]}),/class="story-response"/);
   assert.doesNotMatch(student,/eagle.*flies|bear.*cave/i,
     'title-only source evidence must never grow invented plot facts');
 });
@@ -508,7 +524,7 @@ test('spelling worksheet uses blank dictation lines and separates the current wo
   const model=createStudyMaterials(opts({events,schoolwork}));
   const guide=model.testGuide(0),study=printableStudyGuideHtml(guide),worksheet=printableWorksheetHtml(guide);
   assert.match(study,/Spelling Word Study/);
-  assert.match(study,/Cheer-the-letters/);
+  for(const word of guide.spellingWords)assert.ok(study.includes('<strong>'+word+'</strong>'));
   assert.match(worksheet,/Spelling Dictation/);
   assert.equal((worksheet.match(/class="dictation-item"/g)||[]).length,15);
   const student=worksheet.split('<section class="sheet adult-key">')[0];
@@ -519,9 +535,9 @@ test('spelling worksheet uses blank dictation lines and separates the current wo
   assert.match(worksheet,/<li>did<\/li>/);
   assert.match(worksheet,/<li>says<\/li>/);
   const unknown=printableWorksheetHtml({...guide,spellingWords:[],warnings:[]});
-  assert.equal((unknown.match(/class="dictation-item"/g)||[]).length,15);
+  assert.equal((unknown.match(/class="dictation-item"/g)||[]).length,0);
   assert.doesNotMatch(unknown,/Adult Dictation List/);
-  assert.match(unknown,/current spelling list is not yet confirmed/);
+  assert.match(unknown,/Matching practice questions are not available yet/);
 });
 test('printable guide and worksheet escape untrusted teacher labels and practice prompts',()=>{
   const input={label:'Reading <script>bad</script>',subject:'Reading / ELA',date:'2026-10-09',
@@ -1077,8 +1093,7 @@ test('current place-value and common/proper-noun guides teach the announced skil
     practice:[{skill:'place-value',prompt:'What is 347 in expanded form?',answer:'300 + 40 + 7',
       choices:['300 + 40 + 7','30 + 4 + 7','300 + 47'],explanation:'The digits show 3 hundreds, 4 tens, and 7 ones.'}],
   });
-  assert.match(math,/I can name each digit’s value and write a number in expanded form/);
-  assert.match(math,/hundreds, tens, or ones/);
+  assert.match(math,/the 3 means 300, the 4 means 40, and the 7 means 7/i);
   assert.match(math,/347 = 300 \+ 40 \+ 7/);
 
   const nouns=printableStudyGuideHtml({
@@ -1086,12 +1101,12 @@ test('current place-value and common/proper-noun guides teach the announced skil
     practice:[{skill:'common-proper-nouns',prompt:'Which word is a proper noun?',answer:'Tuesday',
       choices:['Tuesday','weekday','calendar'],explanation:'Tuesday names one particular day.'}],
   });
-  assert.match(nouns,/I can tell common and proper nouns apart and capitalize particular names/);
-  assert.match(nouns,/Capitalize a proper noun/);
-  assert.match(nouns,/ordinary common nouns are not capitalized without a reason/);
+  assert.match(nouns,/common noun names any person, place, or thing/i);
+  assert.match(nouns,/proper noun names a special one/i);
+  assert.match(nouns,/proper noun with a capital letter/i);
 });
 
-test('premium test packets print every matched current skill with existing ImageGen art and matching answers',() => {
+test('premium test packets use current skills, existing subject art and matching answers',() => {
   const events=[{date:'2026-10-15',label:'Math (subtraction)',kind:'test'}];
   const currentRows=Array.from({length:18},(_,index)=>{
     const first=20-index,answer=String(first-1);
@@ -1112,13 +1127,10 @@ test('premium test packets print every matched current skill with existing Image
   const guide=model.testGuide(0),study=printableStudyGuideHtml(guide),sheet=printableWorksheetHtml(guide);
   assert.equal(guide.practice.length,18,'all source-matched questions must reach presentation');
   assert.ok(guide.facts.length >= 18,'all distinct source-matched facts must reach the guide');
-  for(const row of guide.practice){
-    assert.ok(study.includes(row.prompt),'guide omitted '+row.prompt);
-    assert.ok(sheet.includes(row.prompt),'worksheet omitted '+row.prompt);
-  }
+  assert.ok(study.includes(guide.practice[0].prompt),'guide shows one worked example');
+  assert.ok(!study.includes(guide.practice.at(-1).prompt),'guide excludes repeated exercises');
   const student=sheet.split('<section class="sheet adult-key">')[0];
-  assert.equal((student.match(/class="problem /g)||[]).length,18);
-  assert.equal((sheet.match(/<li><b>\d+\.<\/b>/g)||[]).length,18);
+  assertFocusedWorksheet(sheet,guide.practice);
   assert.doesNotMatch(student,/Parent Answer Key/);
   for(const page of [study,sheet]){
     assert.match(page,/body class="premium-paper paper-math"/);
@@ -1186,7 +1198,7 @@ test('notes expose only explicitly sourced chapter explanations in full and comp
 });
 
 
-test('Nov 12 noun packet prints all eight source-gated questions and correct keys responsively',()=>{
+test('Nov 12 noun worksheet samples the tested noun rules and keeps a matching key',()=>{
   const pack={
     sourceHash:'teacher-pages-nov12-nouns',
     sourceCheckedAt:'2026-11-04T20:30:00Z',
@@ -1216,11 +1228,9 @@ test('Nov 12 noun packet prints all eight source-gated questions and correct key
   assert.equal(guide.practice.length,8,'all eight noun questions must reach the printable route');
   assert.ok(guide.practice.every(question=>question.skill==='singular-plural-nouns'));
   const worksheet=printableWorksheetHtml(guide);
-  for(const question of guide.practice){
-    assert.ok(worksheet.includes(question.prompt),'worksheet omitted '+question.id);
-    assert.ok(worksheet.includes(question.answer),'answer key omitted '+question.id);
-  }
-  assert.match(worksheet,/Cats name more than one cat\./);
+  const printed=assertFocusedWorksheet(worksheet,guide.practice);
+  for(const ending of ['-s','-es','-ies'])assert.ok(printed.some(q=>q.explanation.includes(ending)),ending);
+  assert.ok(printed.some(q=>q.answer==='kitten'),'identifying a singular noun');
   assert.doesNotMatch(worksheet,/\bCats (?:names|tells)\b/);
   assert.match(worksheet,/@media screen and \(max-width:640px\)/,
     'the packet must retain its single-column mobile layout');
