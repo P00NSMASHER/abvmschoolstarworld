@@ -1261,5 +1261,5 @@ test('Nov 6 consonant-digraph guide excludes future blends and unrelated vowel n
   assert.ok(guide.facts.some(text=>/two letters to spell one sound/i.test(text)));
   assert.ok(guide.facts.every(text=>!/Nov\. 13|3 letter blends|three consonants|Long o/i.test(text)));
   assert.equal(guide.practice.length,1);
-  assert.equal(guide.practice[0].id,'digraph-guide');
+  assert.equal(guide.practice[0].prompt,'Which word begins with the digraph sh?');
 });
