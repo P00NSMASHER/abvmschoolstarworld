@@ -86,3 +86,37 @@ test('a chapter paper keeps all question IDs and notes from matching dated lesso
   assert.ok(guide.practice.some(q=>q.skill==='counting-by-tens'));
   assert.ok(guide.practice.some(q=>q.skill==='number-words-to-numerals'));
 });
+
+test('a generic Reading paper requires both explicit test linkage and matching instructional dates',async()=>{
+  const {createStudyMaterials}=await import('../pages/study-materials.mjs');
+  const question=(id,extra={})=>({id,subject:'Reading / ELA',skill:'main-idea-details',
+    prompt:id+'?',answer:'yes',choices:['yes','no'],tier:'material',explanation:'Rule '+id,
+    sourceTestScopes:['Reading'],...extra});
+  const published=[question('same-week'),question('exact-day',{sourceTestDate:'2026-11-11'}),
+    question('stale',{sourceTestDate:'2026-11-04'}),question('general',{sourceTestScopes:[]})];
+  const pack={teacherPostingWeekLabel:'Week of November 9, 2026',sourceCheckedAt:'2026-11-11T12:00:00Z',
+    contentPipeline:{questions:published,skills:[{id:'main-idea-details',subject:'Reading / ELA',studyNotes:['Unrelated classroom note']}]},
+    subjects:[{subject:'Reading / ELA',topics:['Other weekly topic'],studyNotes:['Unrelated classroom note']}]};
+  const lessons=[{subject:'Reading / ELA',weekOf:'2026-11-09',questions:[question('dated-lesson')]},
+    {subject:'Reading / ELA',weekOf:'2026-11-02',questions:[question('older-lesson')]}];
+  const {buildRuntimePack}=await import('../scripts/build-runtime-pack.mjs');
+  const runtime=buildRuntimePack({pack:{...pack,sourceSufficient:true,recentReviewPipeline:{questions:[],skills:[]}}}).pack;
+  const get=date=>createStudyMaterials({pack:runtime,catalog:{questions:published.map(q=>({...q,sourceTestScopes:[]}))},
+    schoolwork:{lessons},events:[{date,label:'Reading'}],now:()=>Date.parse('2026-11-09T16:00:00Z')}).testGuide(0);
+  const guide=get('2026-11-11');
+  assert.deepEqual(new Set(guide.practice.map(q=>q.prompt)),new Set(['same-week?','exact-day?','dated-lesson?']));
+  assert.equal(guide.scopePending,false);
+  assert.doesNotMatch(childPage(guide),/Unrelated classroom note|Other weekly topic|older-lesson|Rule stale/);
+  assert.equal(get('2026-11-18').scopePending,true);
+});
+
+test('a revised spelling test cannot take the word list or dated focus line from a different skill',async()=>{
+  const {createStudyMaterials}=await import('../pages/study-materials.mjs');
+  const pack={weekLabel:'Week of November 2, 2026',subjects:[{subject:'Spelling / Handwriting',
+    studyNotes:['Skill: consonant digraphs','Teacher spelling words: ship, that.'],
+    topics:['Friday, Nov. 13 test focus: 3 letter blends']}]};
+  const guide=createStudyMaterials({pack,events:[{date:'2026-11-06',label:'Spelling (3 letter blends) / Handwriting'}],
+    now:()=>Date.parse('2026-11-06T13:00:00Z')}).testGuide(0);
+  assert.deepEqual(guide.spellingWords,[]);
+  assert.deepEqual(guide.classFacts,[]);
+});

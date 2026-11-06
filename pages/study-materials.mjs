@@ -140,6 +140,18 @@ const focusWords=text=>String(text||'').toLowerCase()
   .replace(/[^a-z0-9]+/g,' ').trim();
 const includesPhrase=(text,phrase)=>!!phrase&&(' '+text+' ').includes(' '+phrase+' ');
 
+function postingWeek(label){
+  const date=String(label||'').match(/week of\s+([a-z]+\s+\d{1,2},?\s+\d{4})/i)?.[1];
+  const time=Date.parse((date||'')+' 12:00 GMT');
+  return date&&Number.isFinite(time)?new Date(time).toISOString().slice(0,10):'';
+}
+function sameFocusDate(line,date){
+  const named=String(line).match(/\b([a-z]{3,9})\.?\s+(\d{1,2})\s+test focus:/i);
+  if(!named)return true;
+  const when=Date.parse(named[1]+' '+named[2]+', '+date.slice(0,4)+' 12:00 GMT');
+  return Number.isFinite(when)&&new Date(when).toISOString().slice(0,10)===date;
+}
+
 // The digital Reading/Math/Spelling pools intentionally include general practice.
 // A printable must instead have an exact named skill, scoped source, or dated chapter lesson.
 function scopedPrintQuestions(test,subject,all,matched,chapterLessons,metadata){
@@ -569,6 +581,28 @@ export function createStudyMaterials({
     const {groups, ...state} = printableTestState(true);
     return {...state,canUndo:!!completionUndo,message};
   }
+  function linkedReadingPractice(test,time){
+    const normalize=scope=>String(scope).trim().toLowerCase().replace(/\s+/g,' ');
+    const namesTest=row=>row?.subject==='Reading / ELA'&&array(row.sourceTestScopes)
+      .some(scope=>normalize(scope)===normalize(test.label));
+    const week=weekBounds(test.date).start;
+    const inPostingWeek=postingWeek(pack.teacherPostingWeekLabel)===week;
+    // Source scopes come from the published row, even when an older player
+    // serialized only text-set scopes. An observation time is never a lesson date.
+    const published=new Map(array(pack.contentPipeline?.questions).map(q=>[q.id,q]));
+    const linked=current.filter(q=>{
+      const source=published.get(q.id)||q;
+      if(!namesTest(source))return false;
+      if(source.sourceTestDate)return source.sourceTestDate===test.date;
+      if(source.weekOf||source.studiedOn)return explicitlyInWeek(source,test.date);
+      return inPostingWeek;
+    });
+    for(const lesson of materialDay(time).lessons){
+      if(lesson.subject!=='Reading / ELA'||!explicitlyInWeek(lesson,test.date))continue;
+      linked.push(...array(lesson.questions).filter(q=>namesTest(q)&&(!q.sourceTestDate||q.sourceTestDate===test.date)));
+    }
+    return unique(linked);
+  }
   function testGuide(index, {upcoming = false} = {}) {
     const time = instant();
     const state = printableTestState(upcoming), i = Number(index);
@@ -583,7 +617,9 @@ export function createStudyMaterials({
     const chapterLessons=chapter?materialDay(time).lessons.filter(lesson=>lesson.subject===subject&&
       explicitlyInWeek(lesson,test.date)&&chapterOf(lesson.title)===chapter):[];
     const metadata=array(pack.contentPipeline?.skills);
-    const group=subjectOnly?[]:scopedPrintQuestions(test,subject,testQuestionPool(test,time),candidates,chapterLessons,metadata);
+    const genericReading=subjectOnly&&/^(?:reading|ela)\b/.test(lower.trim());
+    const group=genericReading?linkedReadingPractice(test,time):subjectOnly?[]:
+      scopedPrintQuestions(test,subject,testQuestionPool(test,time),candidates,chapterLessons,metadata);
     const sourceSubjects = array(pack.subjects).filter(row => row?.subject === subject);
     const practiceRows = representativePractice(group);
     const questionFacts = practiceRows.flatMap(row => [row.sourceFact === row.skill ? null : row.sourceFact,row.explanation]).filter(meaningfulText);
@@ -594,8 +630,8 @@ export function createStudyMaterials({
     // skill's instructional notes travel separately with its review topic.
     const authoredNotes = new Set(array(pack.contentPipeline?.skills).flatMap(skill=>array(skill.studyNotes)));
     const focus=focusWords(test.label);
-    const scopeLine=text=>chapter?chapterOf(text)===chapter:
-      noteMatchesTest(text,test.label,subject)||includesPhrase(focusWords(text),focus);
+    const scopeLine=text=>sameFocusDate(text,test.date)&&(chapter?chapterOf(text)===chapter:
+      noteMatchesTest(text,test.label,subject)||includesPhrase(focusWords(text),focus));
     const subjectFacts = subjectOnly ? [] : [
       ...chapterLessons.flatMap(lesson=>array(lesson.notes)).filter(meaningfulText),
       ...sourceSubjects.flatMap(row => [
@@ -607,7 +643,13 @@ export function createStudyMaterials({
     ];
     // Only a photo-confirmed week-matched list can outrank general vowel examples.
     // Do not infer a daily assignment date from a parent's weekly photos.
-    const verifiedWeekNotes = subject === 'Spelling / Handwriting'
+    const teacherWeek=postingWeek(pack.spellingListProvenance?.weekLabel||pack.teacherPostingWeekLabel||pack.weekLabel);
+    const listFocus=sourceSubjects.flatMap(row=>array(row.studyNotes)).map(text=>String(text).match(/^Skill:\s*(.+)/i)?.[1]).filter(Boolean);
+    const spellFocus=text=>focusWords(text).replace(/\bthree\b/g,'3');
+    const listMatchesFocus=subjectOnly||!listFocus.length||listFocus.some(text=>
+      includesPhrase(spellFocus(test.label),spellFocus(text))||includesPhrase(spellFocus(text),spellFocus(test.label)));
+    const verifiedWeekNotes = subject === 'Spelling / Handwriting' &&
+      (teacherWeek!==weekBounds(test.date).start||listMatchesFocus)
       ? materialDay(time).lessons
         .filter(lesson => lesson.subject === subject && lesson.weekOf === weekBounds(test.date).start)
         .flatMap(lesson => array(lesson.notes))
@@ -620,7 +662,7 @@ export function createStudyMaterials({
         group,{label:'Religion Ch. '+ch},pack)) : religionChapterFacts(group,test,pack)),
       ...(unitOneReligion ? religionUnitOneFacts : []),
     ]) : [];
-    const reviewTopics = guideReviewTopics(group,practiceRows,pack);
+    const reviewTopics = guideReviewTopics(group,practiceRows,genericReading?{}:pack);
     // Only an explicitly linked vocabulary list identifies the words for this
     // paper. The pack also holds words for other weekly lessons.
     const vocabularyTopic=/\bvocabulary\b|\bunit\s*\d+\s*text\s*set\s*\d+/i.test(test.label);
@@ -631,17 +673,15 @@ export function createStudyMaterials({
       .map(row=>[row.term.trim().toLowerCase(),row])).values()];
     // A new teacher-published spelling list can replace old photo lists only if
     // the pack identifies the same school week as this specific test.
-    const announcedWeek = String(pack.spellingListProvenance?.weekLabel || pack.teacherPostingWeekLabel || pack.weekLabel || '').match(/week of\s+([a-z]+\s+\d{1,2},?\s+\d{4})/i);
-    const teacherWeek = announcedWeek && Number.isFinite(Date.parse(announcedWeek[1] + ' 12:00 GMT'))
-      ? new Date(Date.parse(announcedWeek[1] + ' 12:00 GMT')).toISOString().slice(0,10) : '';
     // General guide facts must obey the same source-week gate as the
     // dictation list. Otherwise an old undated teacher list can leak into
     // a newly dated guide even when guide.spellingWords is correctly empty.
     const isTeacherWordList = text =>
       /^(?:Weekly spelling words|Spelling words|Teacher spelling words|Teacher-posted spelling words(?: \(page undated\))?|Verified spelling words|Words for spelling test)\s*:/i.test(text);
-    const classFacts = uniqueGuideText(subjectFacts.filter(text=>!isTeacherWordList(text)));
+    const classFacts = uniqueGuideText(genericReading?group.map(q=>q.explanation).filter(meaningfulText):
+      subjectFacts.filter(text=>!isTeacherWordList(text)));
     const facts = uniqueGuideText([...verifiedWeekNotes,...questionFacts,...classFacts]);
-    const teacherLists = subject === 'Spelling / Handwriting' && teacherWeek === weekBounds(test.date).start
+    const teacherLists = subject === 'Spelling / Handwriting' && listMatchesFocus && teacherWeek === weekBounds(test.date).start
       ? sourceSubjects.flatMap(row => [...array(row.studyNotes), ...array(row.topics)])
         .filter(note => /^(?:Weekly spelling words|Spelling words|Teacher spelling words|Teacher-posted spelling words(?: \(page undated\))?|Verified spelling words|Words for spelling test)\s*:/i.test(note))
       : [];
@@ -691,7 +731,7 @@ export function createStudyMaterials({
       if (!spellingWords.length) warnings.push('No verified word list matches this test week. Older weeks\' spelling words are not substituted.');
     }
     if (!facts.length) warnings.push('No reviewed test-specific facts are available yet, so this guide does not invent missing material.');
-    const scopePending = subjectOnly && !spellingWords.length;
+    const scopePending = subjectOnly && !spellingWords.length && !group.length;
     return {
       key:testKey(test), label:compactGuideText(test.label,120), date:test.date, subject:subject || 'Test review',
       scopePending,

@@ -73,6 +73,25 @@ test('weekly Math consumes fresh current then reviewed saved questions before re
   assert.equal(rotation.recent.length,24);
 });
 
+test('a linked Reading bank interleaves the verified skills and prints a short keyed sample',() => {
+  const rows=[
+    ...pool('first-',12,'Reading / ELA',{skill:'text-evidence',sourceFact:'Use details from the story.'}),
+    ...pool('chart-',4,'Reading / ELA',{skill:'reading-charts',sourceFact:'Check labels and counts on a chart.'}),
+  ];
+  const pack={sourceHash:'teacher-pages-test',sourceCheckedAt:monday,subjects:[]};
+  const linked=rows.map(row=>({...row,sourceTestScopes:['Reading'],sourceTestDate:'2026-10-05'}));
+  const model=createStudyMaterials(opts({pack,events:[{date:'2026-10-05',label:'Reading'}],catalog:catalog(linked)}));
+  const guide=model.testGuide(0);
+  assert.equal(guide.scopePending,false);
+  assert.equal(guide.practice.length,16);
+  assert.deepEqual(guide.practice.slice(0,2).map(q=>q.skill),['text-evidence','reading-charts']);
+  assert.deepEqual(guide.coverage.missingGuideSkills,[]);
+  const paper=printableWorksheetHtml(guide);
+  const student=paper.split('<section class="sheet adult-key">')[0];
+  assert.equal((student.match(/class="problem /g)||[]).length,6);
+  assert.ok(student.includes('Question first-') && student.includes('Question chart-'));
+});
+
 test('a Reading date alone cannot certify weekly topics, words or questions for the printed test',() => {
   const rows=pool('unlinked-',12,'Reading / ELA',{skill:'text-evidence'});
   const pack={sourceHash:'teacher-pages-test',sourceCheckedAt:monday,
