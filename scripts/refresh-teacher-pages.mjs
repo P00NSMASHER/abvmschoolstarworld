@@ -34,6 +34,7 @@ import { curriculumFamilyRegistrySnapshot } from './curriculum-family-registry.m
 import { parseCurriculumPreviewOptions } from './curriculum-preview-options.mjs';
 import { upcomingTeacherTests, teacherTestDateMatchesWeekday } from './teacher-test-focus.mjs';
 import { schoolWeekLabel, preservedPostingWeek } from './school-week-label.mjs';
+import { actionableTeacherHomeworkRows, studyPackHomeworkSummary } from './homework-posting.mjs';
 
 const DATA_PATH = new URL('../pages/data/study-pack.json', import.meta.url);
 const UPLOADED_NOTICES_PATH = new URL('../pages/data/uploaded-notices.json', import.meta.url);
@@ -301,7 +302,7 @@ if (homeEvents.some(item => !dateKey(item.date))) {
   throw new Error('Teacher Home page contained an unreadable event date.');
 }
 
-const homework = parseHomework(pages.Homework.lines);
+const homework = actionableTeacherHomeworkRows(parseHomework(pages.Homework.lines));
 const readingLines = pages['Reading Work'].lines;
 const storyLine = requireLine(readingLines, 'Stories:', 'Reading Work');
 const stories = parseStoryTitles(storyLine);
@@ -527,7 +528,7 @@ pack.spellingListProvenance = spellingWords.length ? {
   dateProvided: false,
 } : null;
 pack.weekLabel = schoolWeekLabel(new Date(checkedAt), { calendarDisplay: true });
-pack.summary = `Current Grade 2 teacher-site material: Homework lists ${readableList(homework.slice(0, 4).map(item => item.subject === 'Parent' ? `parent task “${item.task}”` : `${item.subject} “${item.task}”`))}. Upcoming tests include ${readableList(currentTests.slice(0, 4).map(item => `${item.label} on ${item.date}`))}. ${uploadedNotices.documents.length} uploaded school notices are integrated with the teacher pages.`;
+pack.summary = `Current Grade 2 teacher-site material: ${studyPackHomeworkSummary(homework)}. Upcoming tests include ${readableList(currentTests.slice(0, 4).map(item => `${item.label} on ${item.date}`))}. ${uploadedNotices.documents.length} uploaded school notices are integrated with the teacher pages.`;
 pack.sourceSufficient = true;
 pack.gaps = (pack.gaps || []).filter(item => !/source bridge|four-hour|does not show a date|spelling-word list|weekly spelling|reading work page leaves|teacher Tests weekday\/date conflict/i.test(item));
 pack.gaps = [...new Set([...pack.gaps,
