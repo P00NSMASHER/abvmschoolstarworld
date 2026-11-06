@@ -42,8 +42,12 @@ function checkedQuestion(row,tier,provenance){
   if(choices.filter(c=>c===out.answer).length!==1)throw new Error(`Question ${out.id} answer is not exactly one choice`);
   for(const [f,max] of [['difficulty',5],['dok',4]])if(row[f]!==undefined&&(!Number.isInteger(row[f])||row[f]<1||row[f]>max))throw new Error(`Invalid ${f}`);
   if(row.richContent||row.image||row.media||row.passage)throw new Error('Rich questions need a reviewed text adapter before export');
+  const sourceTestScopes=row.sourceTestScopes===undefined?undefined:
+    [...new Set((Array.isArray(row.sourceTestScopes)?row.sourceTestScopes:[]).map(scope=>text(scope,'sourceTestScope')))];
+  if(row.sourceTestScopes!==undefined&&!Array.isArray(row.sourceTestScopes))throw new Error(`Question ${out.id} has invalid sourceTestScopes`);
   return {...out,choices,hint:row.hint===undefined?'Read the question again and look for a helpful clue.':text(row.hint,'hint'),
-    questionType:row.questionType===undefined?'practice':text(row.questionType,'questionType'),difficulty:row.difficulty??2,dok:row.dok??1,tier,provenance};
+    questionType:row.questionType===undefined?'practice':text(row.questionType,'questionType'),difficulty:row.difficulty??2,dok:row.dok??1,
+    ...(sourceTestScopes===undefined?{}:{sourceTestScopes}),tier,provenance};
 }
 function unique(rows){
   const ids=new Map(),prompts=new Map(),seen=new Set();
