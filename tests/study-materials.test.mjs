@@ -74,8 +74,8 @@ test('weekly Math consumes fresh current then reviewed saved questions before re
 
 test('full current test bank interleaves skills and prints every verified question',() => {
   const rows=[
-    ...pool('first-',12,'Reading / ELA',{skill:'text-evidence',sourceFact:'Use details from the story.'}),
-    ...pool('chart-',4,'Reading / ELA',{skill:'reading-charts',sourceFact:'Check labels and counts on a chart.'}),
+    ...pool('first-',12,'Reading / ELA',{skill:'text-evidence',sourceFact:'Use details from the story.',sourceTestScopes:['Reading']}),
+    ...pool('chart-',4,'Reading / ELA',{skill:'reading-charts',sourceFact:'Check labels and counts on a chart.',sourceTestScopes:['Reading']}),
   ];
   const pack={sourceHash:'teacher-pages-test',sourceCheckedAt:monday,subjects:[]};
   const model=createStudyMaterials(opts({pack,events:[{date:'2026-10-05',label:'Reading'}],catalog:catalog(rows)}));
