@@ -9,7 +9,7 @@ const end=workflow.indexOf('          curriculum=',start);
 assert.ok(start>=0&&end>start,'bounded recovery dispatcher must exist');
 const shell=workflow.slice(start,end).split('\n').map(line=>line.slice(10)).join('\n');
 const parents=['sync-study-pack.yml','refresh-current-homework.yml','sync-uploaded-notices.yml','import-yahoo-weekly-reminders.yml'];
-const row=(status='in_progress',event='push',conclusion=null)=>({status,event,conclusion,createdAt:new Date().toISOString()});
+const row=(status='in_progress',event='push',conclusion=null,createdAt=new Date().toISOString())=>({status,event,conclusion,createdAt});
 function dispatch({histories={},failedRead='',malformed='',target='pages.yml',needed=true}={}){
   const result=spawnSync('bash',['-c',`set -euo pipefail
     gh() {
@@ -73,4 +73,33 @@ test('standalone Pages activity and retry caps remain enforced',()=>{
     assert.doesNotMatch(result.stdout,/DISPATCHED/);
     assert.equal(result.status,history[0].status==='completed'?1:0,result.stderr);
   }
+});
+
+test('two old failed recovery attempts permit one later retry without waiting until midnight',()=>{
+  const old1=new Date(Date.now()-3*3600_000).toISOString();
+  const old2=new Date(Date.now()-2*3600_000).toISOString();
+  const history=[row('completed','workflow_dispatch','failure',old2),
+    row('completed','workflow_dispatch','failure',old1)];
+  const result=dispatch({target:'refresh-current-homework.yml',
+    histories:{'refresh-current-homework.yml':history}});
+  assert.equal(result.status,0,result.stderr);
+  assert.match(result.stdout,/DISPATCHED refresh-current-homework.yml/);
+});
+
+test('a recent failed recovery still enforces cooldown and never dispatches twice',()=>{
+  const history=[row('completed','workflow_dispatch','failure'),
+    row('completed','workflow_dispatch','failure')];
+  const result=dispatch({target:'refresh-current-homework.yml',
+    histories:{'refresh-current-homework.yml':history}});
+  assert.equal(result.status,1,result.stderr);
+  assert.doesNotMatch(result.stdout,/DISPATCHED/);
+});
+
+test('six recovery dispatches remain the hard daily ceiling even after cooldown',()=>{
+  const old=new Date(Date.now()-3*3600_000).toISOString();
+  const history=Array.from({length:6},()=>row('completed','workflow_dispatch','failure',old));
+  const result=dispatch({target:'refresh-current-homework.yml',
+    histories:{'refresh-current-homework.yml':history}});
+  assert.equal(result.status,1,result.stderr);
+  assert.doesNotMatch(result.stdout,/DISPATCHED/);
 });

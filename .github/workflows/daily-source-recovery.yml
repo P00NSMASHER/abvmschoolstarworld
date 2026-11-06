@@ -139,17 +139,25 @@ jobs:
               done
             fi
             today="$(date -u +%Y-%m-%d)" || return 1
-            count="$(jq -r --arg day "$today" '[.[] | select(.event == "workflow_dispatch" and .status == "completed" and .conclusion != "success" and (.createdAt | startswith($day)))] | length' <<< "$recent")" || return 1
-            if (( count >= 2 )); then
-              echo "::error::Daily failed-recovery budget reached for $workflow; data remains stale. Do not bypass verification."
-              return 1
-            fi
-            # A successful dispatch with persistently stale source evidence
-            # can otherwise create an unbounded watchdog/recovery feedback loop.
+            # Hard daily ceiling prevents an unbounded watchdog feedback loop.
             attempts="$(jq -r --arg day "$today" '[.[] | select(.event == "workflow_dispatch" and (.createdAt | startswith($day)))] | length' <<< "$recent")" || return 1
             if (( attempts >= 6 )); then
-              echo "::error::Daily recovery dispatch cap reached for $workflow; hold stale source and surface the incident."
+              echo "::error::Daily recovery dispatch cap reached for $workflow; retain stale-source alarm and wait for next UTC day."
               return 1
+            fi
+            # The old two-fail *daily* cutoff stranded genuine source changes
+            # even after repaired code shipped. After a 90-minute cooling-off
+            # period permit one more verified attempt, still bound by six/day.
+            count="$(jq -r --arg day "$today" '[.[] | select(.event == "workflow_dispatch" and .status == "completed" and .conclusion != "success" and (.createdAt | startswith($day)))] | length' <<< "$recent")" || return 1
+            if (( count >= 2 )); then
+              local last_failure_epoch now_epoch
+              last_failure_epoch="$(jq -r --arg day "$today" '[.[] | select(.event == "workflow_dispatch" and .status == "completed" and .conclusion != "success" and (.createdAt | startswith($day))) | .createdAt | sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601] | max // 0' <<< "$recent")" || return 1
+              now_epoch="$(date -u +%s)" || return 1
+              if (( last_failure_epoch <= 0 || now_epoch - last_failure_epoch < 5400 )); then
+                echo "::error::Recovery cooling off after $count failed $workflow dispatches today (90 minutes); preserve evidence and no duplicate retry."
+                return 1
+              fi
+              echo "::notice::Bounded recovery retry after 90-minute cooldown; $attempts of 6 daily attempts used."
             fi
             echo "Dispatching verified-source recovery: $workflow (failed-attempt budget $((count+1))/2 UTC day)"
             gh workflow run "$workflow" --ref main
