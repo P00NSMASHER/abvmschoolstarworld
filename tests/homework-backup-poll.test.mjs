@@ -18,7 +18,7 @@ test('backup poll is scheduled between primary polls and has no write permission
 
 test('backup poll performs a real read-only source check and fails closed on change',()=>{
   assert.match(workflow,/refresh-current-homework\.mjs --dry-run --fail-on-change/);
-  assert.match(script,/process\.argv\.includes\('--fail-on-change'\)&&publish/);
+  assert.match(script,/process\.argv\.includes\('--fail-on-change'\)&&contentChanged/);
   assert.match(script,/process\.exit\(2\)/);
 });
 

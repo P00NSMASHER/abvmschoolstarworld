@@ -1,6 +1,6 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {assertExpectedTeacherPageUrl,pageLines} from './teacher-page-parsers.mjs';
-import {HOMEWORK_SOURCE_URL,summarizeTeacherHomework,shouldPublishHomework} from './homework-posting.mjs';
+import {HOMEWORK_SOURCE_URL,homeworkContentChanged,summarizeTeacherHomework,shouldPublishHomework} from './homework-posting.mjs';
 
 const destination=new URL('../pages/data/homework-current.json',import.meta.url);
 let previous=null;
@@ -21,12 +21,13 @@ if(html===null)throw new Error('Unable to verify Homework page: '+lastError?.mes
 const lines=pageLines(html);
 const posting=summarizeTeacherHomework(lines,new Date().toISOString(),previous);
 const publish=shouldPublishHomework(posting,previous);
-if(process.argv.includes('--fail-on-change')&&publish){
+const contentChanged=homeworkContentChanged(posting,previous);
+if(process.argv.includes('--fail-on-change')&&contentChanged){
   console.error('Verified official Homework content changed; guarded publication is required.');
   process.exit(2);
 }
 if(process.argv.includes('--dry-run')){
-  console.log(JSON.stringify({publish,posting},null,2));
+  console.log(JSON.stringify({publish,contentChanged,posting},null,2));
 }else if(publish){
   writeFileSync(destination,JSON.stringify(posting,null,2)+'\n','utf8');
   console.log('Verified official Homework posting: '+posting.status+'; '+posting.assignments.length+' specific assignment(s).');
