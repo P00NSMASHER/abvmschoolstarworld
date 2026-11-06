@@ -1,7 +1,7 @@
 import {createNotesLibrary} from './study-notes-library.mjs?v=5';
 import {createReadAloud} from './study-room-view.mjs';
 import {originalGrade2VocabularyMeaning} from './grade2-original-vocabulary.mjs';
-import {renderTestStudyGuide,renderTestWorksheet} from './test-study-pair.mjs?v=6';
+import {renderTestStudyGuide,renderTestWorksheet} from './test-study-pair.mjs?v=7';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const nonempty = value => typeof value === 'string' && value.trim();
@@ -171,7 +171,7 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
       const result = model?.completeTests(); change(result?.ok?'[data-undo-test]':'[data-complete-test]');
     });
     host.querySelector('[data-undo-test]')?.addEventListener('click',()=>{
-      model?.undoTests(); change('[data-test],[data-test-single],[data-complete-test]');
+      model?.undoTests(); change('[data-test]:not([disabled]),[data-test-single]:not([disabled]),[data-test-guide]:not([disabled]),[data-complete-test]:not([disabled])');
     });
     host.querySelectorAll('[data-restore-test]').forEach(button=>button.addEventListener('click',()=>{
       model?.restoreTest(button.dataset.restoreTest); change('[data-test],[data-test-single],[data-complete-test]');
