@@ -21,6 +21,10 @@ if(html===null)throw new Error('Unable to verify Homework page: '+lastError?.mes
 const lines=pageLines(html);
 const posting=summarizeTeacherHomework(lines,new Date().toISOString(),previous);
 const publish=shouldPublishHomework(posting,previous);
+if(process.argv.includes('--fail-on-change')&&publish){
+  console.error('Verified official Homework content changed; guarded publication is required.');
+  process.exit(2);
+}
 if(process.argv.includes('--dry-run')){
   console.log(JSON.stringify({publish,posting},null,2));
 }else if(publish){

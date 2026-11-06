@@ -4,7 +4,7 @@ import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {publicationRunFromJobs,workflowEvidenceAt} from './health-evidence.mjs';
 
-const workflows=['sync-study-pack.yml','qa.yml','pages.yml','refresh-health.yml','refresh-current-homework.yml','refresh-reviewed-lunch-week.yml'];
+const workflows=['sync-study-pack.yml','qa.yml','pages.yml','refresh-health.yml','refresh-current-homework.yml','backup-homework-poll.yml','refresh-reviewed-lunch-week.yml'];
 export async function collectHealthHistory({repository,fetchJson}){
   if(!/^[\w.-]+\/[\w.-]+$/.test(repository||''))throw new Error('Invalid health repository');
   const root=`repos/${repository}`;
