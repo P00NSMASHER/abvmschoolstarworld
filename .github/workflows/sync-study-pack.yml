@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/refresh-teacher-pages.mjs'
+      - 'scripts/teacher-test-focus.mjs'
       - 'scripts/build-runtime-pack.mjs'
       - 'tests/runtime-pack.test.mjs'
       - 'scripts/assert-safe-teacher-refresh.mjs'
