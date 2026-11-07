@@ -9,6 +9,8 @@ const refresh=readFileSync(new URL("../scripts/refresh-teacher-pages.mjs",import
 
 test("teacher refresh covers the school day and self-triggers only for refresh-relevant workflow changes",()=>{
   for(const cron of ["17 6 * * *","47 9 * * *","17 13 * * *","47 15 * * *"])assert.match(workflow,new RegExp(cron.replace(/\*/g,"\\*")));
+  assert.match(workflow,/scripts\/teacher-test-focus\.mjs/,
+    "changing the shared upcoming-test filter must regenerate the public study pack");
   assert.match(workflow,/\.github\/workflows\/sync-study-pack\.yml/);
   assert.doesNotMatch(workflow,/\.github\/workflows\/refresh-health\.yml/);
   assert.doesNotMatch(workflow,/\.github\/workflows\/health-dashboard\.yml/);
