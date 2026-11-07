@@ -22,12 +22,21 @@ test('current test focus skips expired tests and sorts the next valid Eastern da
   ]);
   assert(!upcoming.some(item=>item.label.includes('short i')));
 });
-test('Eastern school day does not advance early in the UTC evening', () => {
-  const late = upcomingTeacherTests(exams,'2026-10-16T03:30:00Z',parser);
-  assert(late.some(item=>item.label==='Math (subtraction)'),'still Oct. 15 in Eastern time');
+test('Eastern school-day cutoff does not advance early from UTC time', () => {
+  const late = upcomingTeacherTests(exams,'2026-10-15T18:30:00Z',parser);
+  assert(late.some(item=>item.label==='Math (subtraction)'),'still before 3 PM on Oct. 15 Eastern');
   const nextDay = upcomingTeacherTests(exams,'2026-10-16T04:30:00Z',parser);
   assert(!nextDay.some(item=>item.label==='Math (subtraction)'));
   assert(nextDay.some(item=>item.label.includes('long o')));
+});
+test('same-day tests retire at the 3 PM Eastern school-day rollover', () => {
+  const friday={date:'Friday, Nov. 6',label:'Spelling (consonant digraphs) / Handwriting'};
+  const wednesday={date:'Wednesday, Nov. 11',label:'Reading'};
+  const novemberParser=item=>Date.UTC(2026,10,Number(String(item.date).match(/Nov\.\s+(\d+)/)?.[1]));
+  const before=upcomingTeacherTests([friday,wednesday],'2026-11-06T19:59:59Z',novemberParser);
+  assert.deepEqual(before.map(item=>item.label),[friday.label,wednesday.label]);
+  const after=upcomingTeacherTests([friday,wednesday],'2026-11-06T20:00:00Z',novemberParser);
+  assert.deepEqual(after.map(item=>item.label),[wednesday.label]);
 });
 test('rejects invalid timestamps and does not treat unknown dates as upcoming', () => {
   assert.deepEqual(upcomingTeacherTests([{date:'???',label:'Unknown'}],'2026-10-14T12:00:00Z',parser),[]);

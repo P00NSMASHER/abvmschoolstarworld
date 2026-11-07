@@ -1,6 +1,7 @@
 /** Determine the upcoming source-announced tests by Eastern school day.
  * Date interpretation stays with the existing validated teacher event parser.
- * Do not carry past test focus into a current study pack.
+ * Same-day tests retire at the established 3 PM school-day rollover so a
+ * completed test cannot remain in the current study pack for the evening.
  */
 /** A date on the teacher Tests page must match its stated weekday in
  * the current Eastern school year. An old or mistyped "Friday, Oct. 20"
@@ -27,12 +28,14 @@ export function upcomingTeacherTests(tests, checkedAt, eventTimestamp) {
   if (!Number.isFinite(now.getTime())) throw new Error('Invalid teacher source check timestamp');
   if (typeof eventTimestamp !== 'function') throw new Error('Teacher event timestamp parser required');
   const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
-    timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit',
+    timeZone: 'America/New_York', hourCycle: 'h23', year: 'numeric', month: '2-digit',
+    day: '2-digit', hour: '2-digit',
   }).formatToParts(now).map(part => [part.type, part.value]));
   const today = Date.UTC(Number(parts.year), Number(parts.month) - 1, Number(parts.day));
+  const firstUpcomingDay = today + (Number(parts.hour) >= 15 ? 86_400_000 : 0);
   return (Array.isArray(tests) ? tests : [])
     .map((item, index) => ({item, index, date: eventTimestamp(item)}))
-    .filter(row => row.date >= today && teacherTestDateMatchesWeekday(row.item, row.date))
+    .filter(row => row.date >= firstUpcomingDay && teacherTestDateMatchesWeekday(row.item, row.date))
     .sort((a, b) => a.date - b.date || a.index - b.index)
     .map(row => row.item);
 }
