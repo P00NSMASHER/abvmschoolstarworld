@@ -798,3 +798,22 @@
 }
 
 .games-screen [data-study-notes] .notes-explanation>small{display:block;margin-top:14px;color:var(--study-muted);font-size:.78rem;font-weight:650;line-height:1.5}
+
+
+/* Test Prep: independent reviewed Reading practice is NOT the announced test. */
+.games-screen .prep-question-coverage{
+  margin:8px 0 2px;color:var(--study-ink);font-size:.84rem;font-weight:750;
+}
+.games-screen .prep-reading-alternative{
+  margin:14px 0 4px;padding:16px;border:1px solid var(--study-line);
+  border-radius:18px;background:var(--study-paper,#fff);
+}
+.games-screen .prep-reading-alternative h3{
+  margin:0 0 6px;font-size:1rem;line-height:1.4;color:var(--study-ink);
+}
+.games-screen .prep-reading-alternative p{
+  margin:0;font-size:.88rem;line-height:1.5;color:var(--study-ink);
+}
+.games-screen .prep-reading-alternative .prep-start{
+  margin-top:12px;min-height:52px;text-align:center;
+}
