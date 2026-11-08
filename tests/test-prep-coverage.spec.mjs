@@ -6,6 +6,7 @@ test.use({serviceWorkers:'block'});
 test('mobile and desktop show true per-test coverage and launch independent Reading practice',async({page},info)=>{
   await page.goto('/#today');
   await page.evaluate(async()=>{
+    history.replaceState(null,'','#study?prep=1');
     const [{createStudyMaterials},{createMaterialsView}]=await Promise.all([
       import('./study-materials.mjs'),
       import('./study-games-materials-view.mjs?v=20'),
@@ -32,7 +33,7 @@ test('mobile and desktop show true per-test coverage and launch independent Read
     document.body.replaceChildren(host);
     const view=createMaterialsView({
       win:window,
-      onGeneralReading:()=>{const round=model.generalReadingRound({seed:'browser'});window.__generalReadingResult=round.questions.map(q=>({id:q.id,subject:q.subject}));},
+      onTest:index=>{if(index===null){const round=model.generalReadingRound({seed:'browser'});window.__generalReadingResult=round.questions.map(q=>({id:q.id,subject:q.subject}));}},
       onChange:()=>{host.innerHTML=view.priorityHtml({loading:false});view.bind(host);}
     });
     view.setModel(model);
