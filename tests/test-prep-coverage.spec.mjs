@@ -32,7 +32,7 @@ test('mobile and desktop show true per-test coverage and launch independent Read
     document.body.replaceChildren(host);
     const view=createMaterialsView({
       win:window,
-      onGeneralReading:()=>{const round=model.generalReadingRound({seed:'browser'});window.__generalReadingResult=round.questions.map(q=>({id:q.id,subject:q.subject}));},
+      onTest:index=>{if(index===null){const round=model.generalReadingRound({seed:'browser'});window.__generalReadingResult=round.questions.map(q=>({id:q.id,subject:q.subject}));}},
       onChange:()=>{host.innerHTML=view.priorityHtml({loading:false});view.bind(host);}
     });
     view.setModel(model);
