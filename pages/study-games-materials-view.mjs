@@ -96,7 +96,7 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
     const matchedCount=index=>[...(tests.supported||[]),...(tests.missing||[])].find(test=>test.index===index)?.count||0;
     const coverageLabel=index=>matchedCount(index)+(model?.testPreview?.(index)?.teacherTopicOnly
       ? ' teacher-topic questions' : ' matching questions');
-    const generalReadingHtml=!entry&&/^(?:reading(?:\\s*\\/\\s*ela)?|ela)(?:\\s+(?:test|assessment))?$/i.test(String(chosen.label||'').trim())&&
+    const generalReadingHtml=!entry&&/^(?:reading(?:\s*\/\s*ela)?|ela)(?:\s+(?:test|assessment))?$/i.test(String(chosen.label||'').trim())&&
       (model?.forMode?.('reading')?.count||0)>0
       ? '<section class="game-material-status" data-general-reading-link><p>No test-matched questions are available. General Reading games are not confirmed test questions.</p><button type="button" class="prep-guide" data-close-prep>Choose general Reading games</button></section>' : '';
     const history=preview?(preview.total?preview.practice.label:'No verified practice yet'):'Practice';
