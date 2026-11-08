@@ -121,3 +121,15 @@ test('explicit assessment-linked questions take precedence over generic teacher-
   assert.deepEqual(model.testRound({index:0,upcoming:true}).eligibleIds,['exact-nov11']);
   assert.doesNotMatch(model.testGuide(0,{upcoming:true}).scopeNotice,/not confirmed/i);
 });
+
+
+test('production-style compact runtime attestation enables the same Reading practice without audit metadata',()=>{
+  const rows=topics.map(({sourceLineage,...question})=>({...question,readingWorkTopicVerified:true}));
+  const model=create({rows});
+  assert.equal(model.testPreview(0).teacherTopicOnly,true);
+  assert.equal(model.testPreview(0).total,3);
+  assert.ok(model.testRound({index:0,upcoming:true}).questions.length>0);
+  assert.ok(model.testRound({index:0,upcoming:true}).questions.every(row=>
+    row.readingWorkTopicVerified===true||row.id.startsWith('source-')),
+    'the runtime catalog need not expose audit lineage to provide valid practice');
+});
