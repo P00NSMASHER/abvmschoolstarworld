@@ -3,7 +3,7 @@ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const stack=()=>$("#app-content");
 if(location.hash==="#progress")history.replaceState(null,"","#family");
 let envelope=null, pack=null, activeTab=(["today","week","calendar","study","games","family"].includes(location.hash.slice(1).split("?")[0])?location.hash.slice(1).split("?")[0]:"today"), selectedDay=null, calendarDay=null, weekOffset=0, calendarOffset=0;
-let studyGameCatalogCache=null, derivedPackCache=null, studyEnginePromise=null, screenEventsBound=false, lastPackFetchAt=0, packRefreshPromise=null, manualRefreshActive=false, lastPackFetchUsedCache=false, gameState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,negativeStreak:0,bestStreak:0,streakAdjustment:0,lastStreakDelta:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null,sourceKey:"",sessionSeed:"",learningEvents:[],results:[],comebackSucceeded:false,rewardStatus:"idle",rewardAwarded:0,rewardCurrency:"Study Stars",starBalance:0,rewardRevealAmount:0,rewardRevealScheduled:false,tries:0,misses:0,hints:0,retry:0,wrong:[]};
+let studyGameCatalogCache=null, derivedPackCache=null, studyEnginePromise=null, screenEventsBound=false, lastPackFetchAt=0, packRefreshPromise=null, manualRefreshActive=false, lastPackFetchUsedCache=false, gState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,negativeStreak:0,bestStreak:0,streakAdjustment:0,lastStreakDelta:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null,sourceKey:"",sessionSeed:"",learningEvents:[],results:[],comebackSucceeded:false,rewardStatus:"idle",rewardAwarded:0,rewardCurrency:"Study Stars",starBalance:0,rewardRevealAmount:0,rewardRevealScheduled:false,tries:0,misses:0,hints:0,retry:0,wrong:[]};
 let studyMaterials=null,studyMaterialsPack=null,studyMaterialsPromise=null,studyMaterialsError=null,studyMaterialsView=null,screenGeneration=0;
 let homeworkFeed=null,homeworkFetchPromise=null,lastHomeworkFetchAt=0;
 const HOMEWORK_FEED_URL='./data/homework-current.json',HOMEWORK_REFRESH_MS=45*60*1000;
@@ -366,7 +366,7 @@ function ensureStudyMaterials(retry=false){
   const data=pack,catalog=studyGameCatalog(),engine=studyGameEngine(),events=datedImportantEvents().filter(r=>kindClass(r.item)==="test").map(r=>({date:isoDateKey(r.date),label:r.item.label,kind:r.item.kind,endsAt:r.item.endsAt}));
   const request={pack:data,promise:null};
   request.promise=Promise.all([import("./study-materials.mjs"),import("./study-games-materials-view.mjs?v=20")]).then(async([materials,view])=>{
-    if(pack===data&&!studyMaterialsView){studyMaterialsView=view.createMaterialsView({onChange:()=>{if(isStudyRoute())renderGames()},onRetry:retryStudyMaterials,onTest:startStudyTest,onGuideRefresh:refreshTestGuideSources});if(isStudyRoute()&&gameState.screen==="menu")renderGames()}
+    if(pack===data&&!studyMaterialsView){studyMaterialsView=view.createMaterialsView({onChange:()=>{if(isStudyRoute())renderGames()},onRetry:retryStudyMaterials,onTest:startStudyTest,onGuideRefresh:refreshTestGuideSources});if(isStudyRoute()&&gState.screen==="menu")renderGames()}
     const model=await materials.loadStudyMaterials({pack:data,catalog,events,engine,refreshResources:retry});
     if(pack===data){
       studyMaterials=model;studyMaterialsPack=data;studyMaterialsError=null;studyMaterialsView.setModel(model);
@@ -400,7 +400,7 @@ function studyGameCatalog(){
   }
   return studyGameCatalogCache;
 }
-function gameMode(id){if(gameState.mode===id&&gameState.modeInfo)return gameState.modeInfo;if(id==="daily")return{id:"daily",title:"Daily Practice",subjects:[],count:8};return STUDY_GAME_MODES.find(mode=>mode.id===id)||STUDY_GAME_MODES[0]}
+function gameMode(id){if(gState.mode===id&&gState.modeInfo)return gState.modeInfo;if(id==="daily")return{id:"daily",title:"Daily Practice",subjects:[],count:8};return STUDY_GAME_MODES.find(mode=>mode.id===id)||STUDY_GAME_MODES[0]}
 function gameModeQuestionTotal(c,m){
   const s=m?.subjects||[],k=m?.skills||[],x=s.length||k.length;
   const eligible=(c?.questions||[]).filter(q=>(!s.length||s.includes(q.subject))&&(!k.length||k.includes(q.skill)));
@@ -410,17 +410,17 @@ function gameModeQuestionTotal(c,m){
   return Math.min(m?.count||0,(current.length?current:review.length?review:star).length)
 }
 function loadGameRecord(modeId,sourceKey=currentGameSourceKey()){return studyGameEngine()?.loadGameRecord?.(sourceKey,modeId)||{best:0,plays:0,totalCorrect:0,totalAnswered:0}}
-function saveGameRecord(){if(gameState.saved||!gameState.mode||!gameState.questions.length)return;studyGameEngine()?.saveGameRecord?.(gameState.sourceKey||currentGameSourceKey(),gameState.mode,{score:gameState.score,total:gameState.questions.length});gameState.saved=true}
+function saveGameRecord(){if(gState.saved||!gState.mode||!gState.questions.length)return;studyGameEngine()?.saveGameRecord?.(gState.sourceKey||currentGameSourceKey(),gState.mode,{score:gState.score,total:gState.questions.length});gState.saved=true}
 function currentGameSourceKey(){return studyGameCatalog()?.sourceKey||"current"}
-function roundCatalog(eligible=false){const g=gameState,c=g.catalog||studyGameCatalog();return eligible&&g.eligibleIds?{...c,questions:c.questions.filter(q=>g.eligibleIds.includes(q.id))}:c}
-function scheduleGameComeback(origin){if(gameState.strict)return null;const e=studyGameEngine(),c=roundCatalog(true),s=gameState.sourceKey||currentGameSourceKey();return e?.scheduleComeback?.(c,origin,{sourceKey:s,remaining:3,seenIds:gameState.questions.slice(0,gameState.index+1).map(q=>q.id),seed:s+"|comeback|"+String(origin?.id||"item")})||null}
-function tickGameComebacks(){if(!gameState.strict)studyGameEngine()?.tickComebacks?.(gameState.sourceKey||currentGameSourceKey())}
-function markGameComebacksNextSession(){if(!gameState.strict)studyGameEngine()?.deferComebacksToNextSession?.(gameState.sourceKey||currentGameSourceKey())}
-function activateDueGameComeback(){if(gameState.strict)return false;const due=studyGameEngine()?.dueComeback?.(roundCatalog(),gameState.sourceKey||currentGameSourceKey(),{eligibleIds:gameState.eligibleIds});if(!due||gameState.eligibleIds&&!gameState.eligibleIds.includes(due.question.id))return false;Object.assign(gameState,{comebackMode:true,comebackQuestion:due.question,comebackKey:due.row.key,comebackCorrect:null,selectedIndex:null,answered:false,hintOpen:false,learningRow:null,tries:0,misses:0,hints:0,retry:0,wrong:[]});return true}
-function clearActiveGameComeback(){studyGameEngine()?.resolveComeback?.(gameState.comebackKey);Object.assign(gameState,{comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null})}
-function activeGameQuestion(){return gameState.comebackMode?gameState.comebackQuestion:gameState.supportMode?gameState.supportQuestion:gameState.questions[gameState.index]}
+function roundCatalog(eligible=false){const g=gState,c=g.catalog||studyGameCatalog();return eligible&&g.eligibleIds?{...c,questions:c.questions.filter(q=>g.eligibleIds.includes(q.id))}:c}
+function scheduleGameComeback(origin){if(gState.strict)return null;const e=studyGameEngine(),c=roundCatalog(true),s=gState.sourceKey||currentGameSourceKey();return e?.scheduleComeback?.(c,origin,{sourceKey:s,remaining:3,seenIds:gState.questions.slice(0,gState.index+1).map(q=>q.id),seed:s+"|comeback|"+String(origin?.id||"item")})||null}
+function tickGameComebacks(){if(!gState.strict)studyGameEngine()?.tickComebacks?.(gState.sourceKey||currentGameSourceKey())}
+function markGameComebacksNextSession(){if(!gState.strict)studyGameEngine()?.deferComebacksToNextSession?.(gState.sourceKey||currentGameSourceKey())}
+function activateDueGameComeback(){if(gState.strict)return false;const due=studyGameEngine()?.dueComeback?.(roundCatalog(),gState.sourceKey||currentGameSourceKey(),{eligibleIds:gState.eligibleIds});if(!due||gState.eligibleIds&&!gState.eligibleIds.includes(due.question.id))return false;Object.assign(gState,{comebackMode:true,comebackQuestion:due.question,comebackKey:due.row.key,comebackCorrect:null,selectedIndex:null,answered:false,hintOpen:false,learningRow:null,tries:0,misses:0,hints:0,retry:0,wrong:[]});return true}
+function clearActiveGameComeback(){studyGameEngine()?.resolveComeback?.(gState.comebackKey);Object.assign(gState,{comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null})}
+function activeGameQuestion(){return gState.comebackMode?gState.comebackQuestion:gState.supportMode?gState.supportQuestion:gState.questions[gState.index]}
 function startStudyGame(modeId){
-if(modeId==="test-ready"){startStudyTest(gameState.testIndex);return}
+if(modeId==="test-ready"){startStudyTest(gState.testIndex);return}
 const engine=studyGameEngine(),catalog=studyGameCatalog(),mode=gameMode(modeId),model=currentStudyMaterials(),selection=studySelection();
 if(!engine||!catalog)return;
 if(model){openStudyRound(model.round(modeId,{...selection,learning:engine.loadLearning?.()||{}}),mode);return}
@@ -434,9 +434,9 @@ function startStudyTest(i,retryMissed){const m=currentStudyMaterials(),r=i===nul
 function openStudyRound(round,mode,testIndex){
 if(!isStudyRoute()||!round.questions?.length){toast("No questions are ready for that selection.");return}
 const {questions,catalog,sourceKey,sessionSeed,strict,eligibleIds}=round;
-gameState={screen:"play",mode:mode.id,modeInfo:mode,testIndex,catalog,eligibleIds:Object.freeze([...(eligibleIds||catalog.questions.map(q=>q.id))]),strict:!!strict,questions,index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,learningRow:null,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null,sourceKey,sessionSeed,learningEvents:[],results:[],comebackSucceeded:false,rewardStatus:"idle",rewardAwarded:0,rewardCurrency:"Study Stars",rewardRevealAmount:0,rewardRevealScheduled:false,penaltyTasks:[],starBalance:window.ABVMStudyBadges.snapshot()?.balance??null,tries:0,misses:0,hints:0,retry:0,wrong:[]};
+gState={screen:"play",mode:mode.id,modeInfo:mode,testIndex,catalog,eligibleIds:Object.freeze([...(eligibleIds||catalog.questions.map(q=>q.id))]),strict:!!strict,questions,index:0,score:0,streak:0,bestStreak:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,learningRow:null,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null,sourceKey,sessionSeed,learningEvents:[],results:[],comebackSucceeded:false,rewardStatus:"idle",rewardAwarded:0,rewardCurrency:"Study Stars",rewardRevealAmount:0,rewardRevealScheduled:false,penaltyTasks:[],starBalance:window.ABVMStudyBadges.snapshot()?.balance??null,tries:0,misses:0,hints:0,retry:0,wrong:[]};
 activateDueGameComeback();
-const started=gameState;loadStudyRanks().then(c=>{if(gameState===started&&started.screen==="play"){started.starBalance=c.balance;started.starBalanceUnavailable=false;const node=stack().querySelector(".game-star-balance");if(node)node.textContent="★ "+c.balance+" Study Stars"}}).catch(()=>{if(gameState===started&&started.screen==="play"){started.starBalanceUnavailable=true;const node=stack().querySelector(".game-star-balance");if(node)node.textContent="Study Stars unavailable"}});
+const started=gState;loadStudyRanks().then(c=>{if(gState===started&&started.screen==="play"){started.starBalance=c.balance;started.starBalanceUnavailable=false;const node=stack().querySelector(".game-star-balance");if(node)node.textContent="★ "+c.balance+" Study Stars"}}).catch(()=>{if(gState===started&&started.screen==="play"){started.starBalanceUnavailable=true;const node=stack().querySelector(".game-star-balance");if(node)node.textContent="Study Stars unavailable"}});
 renderGames();bindScreen();
 }
 function noteRoundLearning(g,q,kind,correct,independent=false){
@@ -447,7 +447,7 @@ if(kind==="comeback"&&correct)g.comebackSucceeded=true;
 }
 function focusStudyAnswer(g){const node=stack().querySelector(g.answered||g.penaltyPending?".game-feedback":".game-answer:not(:disabled)");if(node){if(node.classList.contains("game-feedback"))node.tabIndex=-1;node.focus({preventScroll:true})}}
 function answerStudyGame(index){
-const g=gameState,q=activeGameQuestion(),choice=q?.choices?.[index];if(g.screen!=="play"||g.answered||g.penaltyPending||choice===undefined||g.wrong?.includes(index))return;
+const g=gState,q=activeGameQuestion(),choice=q?.choices?.[index];if(g.screen!=="play"||g.answered||g.penaltyPending||choice===undefined||g.wrong?.includes(index))return;
 const correct=choice===q.answer,e=studyGameEngine();e?.note?.(q,index);g.tries=(g.tries||0)+1;g.selectedIndex=index;g.hintOpen=false;
 const firstScoredAttempt=!g.comebackMode&&!g.supportMode&&g.tries===1;
 if(firstScoredAttempt){
@@ -462,12 +462,12 @@ window.ABVMStudyGameView?.recordAttempt?.(g,q,{counted:!g.comebackMode&&!g.suppo
 if(!correct){
   g.penaltyPending=true;g.lastStarPenalty={status:"pending",amount:0};
   const attemptId=[q.id,g.index,g.tries,g.comebackMode?"comeback":g.supportMode?"support":"primary"].join("|");
-  const penalty=e.commitStudyStarPenalty({sourcePack:g.sourceKey,mode:g.mode,sessionSeed:g.sessionSeed,attemptId}).then(result=>{g.penaltyPending=false;g.lastStarPenalty={status:"done",amount:result.deductedAmount};g.starBalance=result.balance;g.starBalanceUnavailable=false;window.ABVMStudyBadges.sync(result.collection);if(gameState===g&&isStudyRoute()&&g.screen==="play"){renderGames();bindScreen();focusStudyAnswer(g)}}).catch(error=>{g.penaltyPending=false;g.lastStarPenalty={status:"error",amount:0};if(gameState===g&&isStudyRoute()&&g.screen==="play"){renderGames();bindScreen();focusStudyAnswer(g)}throw error});
+  const penalty=e.commitStudyStarPenalty({sourcePack:g.sourceKey,mode:g.mode,sessionSeed:g.sessionSeed,attemptId}).then(result=>{g.penaltyPending=false;g.lastStarPenalty={status:"done",amount:result.deductedAmount};g.starBalance=result.balance;g.starBalanceUnavailable=false;window.ABVMStudyBadges.sync(result.collection);if(gState===g&&isStudyRoute()&&g.screen==="play"){renderGames();bindScreen();focusStudyAnswer(g)}}).catch(error=>{g.penaltyPending=false;g.lastStarPenalty={status:"error",amount:0};if(gState===g&&isStudyRoute()&&g.screen==="play"){renderGames();bindScreen();focusStudyAnswer(g)}throw error});
   (g.penaltyTasks||(g.penaltyTasks=[])).push(penalty);penalty.catch(()=>{});
 }
 renderGames();bindScreen();focusStudyAnswer(g)
 }
-function settleStudyStarRewards(g=gameState){
+function settleStudyStarRewards(g=gState){
 const e=studyGameEngine();
 if(!e||g.rewardStatus!=="idle"||!g.sessionSeed)return;
 g.rewardStatus="pending";
@@ -481,17 +481,17 @@ Promise.all(g.penaltyTasks||[]).then(()=>e.commitStudyStarRewards({sourcePack:so
     const balance=result.balance;g.perfectBonus=result.perfectBonus;g.rankCollection=result.collection;
     g.newRanks=(result.newlyUnlocked||[]).map(id=>result.collection.badges.find(b=>b.id===id)).filter(Boolean);
     window.ABVMStudyBadges.sync(result.collection);
-    if(gameState!==g)return;
+    if(gState!==g)return;
     g.rewardStatus="done";g.rewardAwarded=Number(result?.awardedAmount)||0;g.rewardCurrency=String(result?.currency||"Study Stars");g.starBalance=Math.max(0,Number(balance)||0);g.starBalanceUnavailable=false;g.rewardRevealAmount=g.rewardAwarded;g.rewardRevealScheduled=false;
     if(isStudyRoute()&&g.screen==="finish"&&g.renderGeneration===screenGeneration){renderGames();bindScreen();}
   })
-  .catch(()=>{if(gameState===g){g.rewardStatus="error";if(isStudyRoute()&&g.screen==="finish"&&g.renderGeneration===screenGeneration){renderGames();bindScreen();}}});
+  .catch(()=>{if(gState===g){g.rewardStatus="error";if(isStudyRoute()&&g.screen==="finish"&&g.renderGeneration===screenGeneration){renderGames();bindScreen();}}});
 }
 function finishStudyGame(){
-const g=gameState;markGameComebacksNextSession();g.screen="finish";if(g.mode==="daily")window.ABVMStudyReview.complete();saveGameRecord();settleStudyStarRewards(g);
+const g=gState;markGameComebacksNextSession();g.screen="finish";if(g.mode==="daily")window.ABVMStudyReview.complete();saveGameRecord();settleStudyStarRewards(g);
 }
 function advanceStudyGame(){
-const g=gameState;if(!g.answered||g.penaltyPending)return;
+const g=gState;if(!g.answered||g.penaltyPending)return;
 const reset=()=>Object.assign(g,{selectedIndex:null,answered:false,hintOpen:false,learningRow:null,lastStreakDelta:0,lastStarPenalty:null,tries:0,misses:0,hints:0,retry:0,wrong:[]});
 if(g.comebackMode){clearActiveGameComeback();reset();renderGames();bindScreen();return}
 if(g.supportMode){
@@ -511,8 +511,8 @@ if(g.index>=g.questions.length-1){finishStudyGame()}
 else{g.index++;tickGameComebacks();reset();activateDueGameComeback()}
 renderGames();bindScreen()
 }
-function leaveStudyGame(){markGameComebacksNextSession();gameState.screen="menu";renderGames();bindScreen()}
-function toggleStudyHint(){const g=gameState;if(g.screen==="play"&&!g.answered){g.hintOpen=!g.hintOpen;if(g.hintOpen)g.hints=(g.hints||0)+1;renderGames();bindScreen()}}
+function leaveStudyGame(){markGameComebacksNextSession();gState.screen="menu";renderGames();bindScreen()}
+function toggleStudyHint(){const g=gState;if(g.screen==="play"&&!g.answered){g.hintOpen=!g.hintOpen;if(g.hintOpen)g.hints=(g.hints||0)+1;renderGames();bindScreen()}}
 function gameMenuHtml(catalog){
 const modes=STUDY_GAME_MODES,materials=currentStudyMaterials(),view=studyMaterialsView,selection=studySelection();
   const grid='<div class="study-game-grid">'+modes.map(mode=>{
@@ -523,9 +523,9 @@ const modes=STUDY_GAME_MODES,materials=currentStudyMaterials(),view=studyMateria
   return '<section class="study-game-section"><div class="study-section-heading"><h2>Choose your subject</h2></div>'+grid+'</section>'+
     '<p class="game-material-status" role="status">Loading notes and test prep…</p>';
 }
-function gamePlayHtml(){const g=gameState,q=activeGameQuestion(),e=studyGameEngine();if(q)e?.markQuestionShown?.(q,g.sourceKey||currentGameSourceKey());return window.ABVMStudyGameView.play({g,mode:gameMode(g.mode),q,teach:g.supportMode?e?.teachCardFor?.(q):null,retryInstruction:e?.teachCardFor?.(q)?.instruction,labels:GAME_TYPE_LABELS,canRead:!!studyMaterialsView?.readAloud.supported})}
+function gamePlayHtml(){const g=gState,q=activeGameQuestion(),e=studyGameEngine();if(q)e?.markQuestionShown?.(q,g.sourceKey||currentGameSourceKey());return window.ABVMStudyGameView.play({g,mode:gameMode(g.mode),q,teach:g.supportMode?e?.teachCardFor?.(q):null,retryInstruction:e?.teachCardFor?.(q)?.instruction,labels:GAME_TYPE_LABELS,canRead:!!studyMaterialsView?.readAloud.supported})}
 function gameFinishHtml(){
-  const g=gameState,e=studyGameEngine(),v=window.ABVMStudyGameView;
+  const g=gState,e=studyGameEngine(),v=window.ABVMStudyGameView;
   const summary=e?.learningFirstSummary?.(g.learningEvents)||{strong:0,remembered:0,practice:0,total:0};
   const reward={status:g.rewardStatus,awardedAmount:g.rewardAwarded,currency:g.rewardCurrency,balance:g.starBalance};
   const reveal=g.rewardRevealAmount>0?v.rewardReveal({amount:g.rewardRevealAmount,currency:g.rewardCurrency}):"";
@@ -535,7 +535,7 @@ function gameFinishHtml(){
   return reveal+promotion+finish+goal;
 }
 function renderGames(){
-  const previousScreen=stack().querySelector(".games-screen"),menuScroll=gameState.screen==="menu"&&previousScreen&&!previousScreen.classList.contains("is-playing")?previousScreen.scrollTop:null;
+  const previousScreen=stack().querySelector(".games-screen"),menuScroll=gState.screen==="menu"&&previousScreen&&!previousScreen.classList.contains("is-playing")?previousScreen.scrollTop:null;
   if(!isStudyRoute())return;
   studyMaterialsView?.readAloud.stop();
   const engine=studyGameEngine(),generation=++screenGeneration,data=pack;
@@ -545,21 +545,21 @@ function renderGames(){
     return;
   }
   if(!currentStudyMaterials()&&studyMaterialsError?.pack!==pack)ensureStudyMaterials().catch(()=>{});
-  if(studyMaterialsPromise?.pack===pack)studyMaterialsPromise.promise.then(()=>{if(currentStudyScreen(generation,data)&&gameState.screen==="menu")renderGames()}).catch(()=>{if(currentStudyScreen(generation,data)&&gameState.screen==="menu")renderGames()});
+  if(studyMaterialsPromise?.pack===pack)studyMaterialsPromise.promise.then(()=>{if(currentStudyScreen(generation,data)&&gState.screen==="menu")renderGames()}).catch(()=>{if(currentStudyScreen(generation,data)&&gState.screen==="menu")renderGames()});
   const materials=currentStudyMaterials();studyMaterialsView?.setModel(materials);
   const catalog=studyGameCatalog();
-  const practiceTitle=gameState.screen!=="menu"?'<h1 class="visually-hidden" tabindex="-1">'+esc(gameMode(gameState.mode).title.replace(/ practice$/i,""))+(gameState.screen==="finish"?' results':' practice')+'</h1>':"";
-  const body=practiceTitle+(gameState.screen==="play"?gamePlayHtml():gameState.screen==="finish"?gameFinishHtml():gameMenuHtml(catalog));
-  const chrome=gameState.screen==="menu"&&!studyMaterialsView?.isPrep?.()?'<header class="app-header study-hero"><div class="study-hero-copy"><p>ASSUMPTION BVM · GRADE 2</p><h1 class="visually-hidden" tabindex="-1">Study</h1><h2>Let’s learn, <span>eagle!</span></h2></div>'+SCHOOL_LOGO_HTML+'<img class="study-hero-art" src="./assets/illustrations/eagle.webp" width="240" height="240" alt=""></header>':"";
+  const practiceTitle=gState.screen!=="menu"?'<h1 class="visually-hidden" tabindex="-1">'+esc(gameMode(gState.mode).title.replace(/ practice$/i,""))+(gState.screen==="finish"?' results':' practice')+'</h1>':"";
+  const body=practiceTitle+(gState.screen==="play"?gamePlayHtml():gState.screen==="finish"?gameFinishHtml():gameMenuHtml(catalog));
+  const chrome=gState.screen==="menu"&&!studyMaterialsView?.isPrep?.()?'<header class="app-header study-hero"><div class="study-hero-copy"><p>ASSUMPTION BVM · GRADE 2</p><h1 class="visually-hidden" tabindex="-1">Study</h1><h2>Let’s learn, <span>eagle!</span></h2></div>'+SCHOOL_LOGO_HTML+'<img class="study-hero-art" src="./assets/illustrations/eagle.webp" width="240" height="240" alt=""></header>':"";
   const state=materials?(materials.status.partial?"partial":"ready"):studyMaterialsError?.pack===pack?"partial":"loading";
-  stack().innerHTML='<div class="screen games-screen'+(gameState.screen!=="menu"?' is-playing':'')+'" data-study-state="'+state+'" role="region" aria-label="Study games">'+chrome+body+(gameState.screen==="menu"?freshness():"")+'</div>';
-  if(gameState.screen==="menu")window.ABVMStudyBadges.mount(stack(),"study",loadStudyRanks);
+  stack().innerHTML='<div class="screen games-screen'+(gState.screen!=="menu"?' is-playing':'')+'" data-study-state="'+state+'" role="region" aria-label="Study games">'+chrome+body+(gState.screen==="menu"?freshness():"")+'</div>';
+  if(gState.screen==="menu")window.ABVMStudyBadges.mount(stack(),"study",loadStudyRanks);
   if(menuScroll!==null)stack().querySelector(".games-screen").scrollTop=menuScroll;
-  if(gameState.screen==="menu"){studyMaterialsView?.bind(stack());if(location.hash.includes("?notes")&&!stack().querySelector("[data-study-notes]")?.open)studyMaterialsView?.openNotes?.();}
-  gameState.renderGeneration=generation;
-  if(gameState.screen==="finish"&&gameState.rewardRevealAmount>0&&!gameState.rewardRevealScheduled){
-    const round=gameState;round.rewardRevealScheduled=true;
-    setTimeout(()=>{if(gameState!==round)return;round.rewardRevealAmount=0;stack().querySelector("[data-reward-reveal]")?.remove()},1200);
+  if(gState.screen==="menu"){studyMaterialsView?.bind(stack());if(location.hash.includes("?notes")&&!stack().querySelector("[data-study-notes]")?.open)studyMaterialsView?.openNotes?.();}
+  gState.renderGeneration=generation;
+  if(gState.screen==="finish"&&gState.rewardRevealAmount>0&&!gState.rewardRevealScheduled){
+    const round=gState;round.rewardRevealScheduled=true;
+    setTimeout(()=>{if(gState!==round)return;round.rewardRevealAmount=0;stack().querySelector("[data-reward-reveal]")?.remove()},1200);
   }
 }
 function renderFamily(){
@@ -572,7 +572,7 @@ function renderFamily(){
 function render({preserveScroll=false}={}){
   if(!pack)return;
   screenGeneration++;studyMaterialsView?.readAloud.stop();
-  if(!isStudyRoute()&&gameState.screen!=="menu"){markGameComebacksNextSession();gameState.screen="menu"}
+  if(!isStudyRoute()&&gState.screen!=="menu"){markGameComebacksNextSession();gState.screen="menu"}
   const scrollTop=stack().querySelector(".screen")?.scrollTop||0;
   ({today:renderToday,week:renderWeek,calendar:renderCalendar,study:renderGames,games:renderGames,family:renderFamily}[activeTab]||renderToday)();
   const navTab=activeTab==="games"?"study":activeTab==="week"?"calendar":activeTab;
@@ -624,10 +624,10 @@ function bindScreen(){
     if(target.matches("[data-game-next]")){advanceStudyGame();return;}
     if(target.matches("[data-game-home]")){leaveStudyGame();return;}
     if(target.matches("[data-game-hint]")){toggleStudyHint();return;}
-    if(target.matches("[data-open-games]")){event.preventDefault();activeTab="games";history.replaceState(null,"","#games");gameState.screen="menu";render();return;}
+    if(target.matches("[data-open-games]")){event.preventDefault();activeTab="games";history.replaceState(null,"","#games");gState.screen="menu";render();return;}
   });
 }
-$$(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.tab==="study"){markGameComebacksNextSession();gameState.screen="menu"}carryPlannerDate(b.dataset.tab);activeTab=b.dataset.tab;history.replaceState(null,"","#"+activeTab);render();}));
+$$(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.tab==="study"){markGameComebacksNextSession();gState.screen="menu"}carryPlannerDate(b.dataset.tab);activeTab=b.dataset.tab;history.replaceState(null,"","#"+activeTab);render();}));
 function packContentKey(data){
   const p=data?.pack||{},lunchSource=p.lunchMenuSource||{};
   return JSON.stringify({
@@ -775,7 +775,7 @@ window.addEventListener("hashchange",()=>{
   if(["today","week","calendar","study","games","family"].includes(next)&&next!==activeTab){
     carryPlannerDate(next);
     activeTab=next;
-    if(next==="games"||next==="study"){markGameComebacksNextSession();gameState.screen="menu"}
+    if(next==="games"||next==="study"){markGameComebacksNextSession();gState.screen="menu"}
     render();
   }
 });
@@ -787,7 +787,7 @@ document.addEventListener("visibilitychange",()=>{
 window.addEventListener("pageshow",event=>{
   if(event.persisted&&pack){fetchPack({force:true,notify:true}).catch(()=>{});fetchHomeworkFeed({force:true}).catch(()=>{});}
 });
-window.ABVMProductView.watchSchoolClock(()=>{if(pack&&(activeTab==="today"||isStudyRoute()&&gameState.screen==="menu"&&!document.querySelector("dialog[open]")&&!window.speechSynthesis?.speaking))render({preserveScroll:true});else if(isStudyRoute())return false});
+window.ABVMProductView.watchSchoolClock(()=>{if(pack&&(activeTab==="today"||isStudyRoute()&&gState.screen==="menu"&&!document.querySelector("dialog[open]")&&!window.speechSynthesis?.speaking))render({preserveScroll:true});else if(isStudyRoute())return false});
 setInterval(()=>{if(pack&&document.visibilityState==="visible"&&!isStudyRoute()){fetchPack({notify:true}).catch(()=>{});fetchHomeworkFeed().catch(()=>{})}},PACK_REFRESH_MS);
 load();
 })();
