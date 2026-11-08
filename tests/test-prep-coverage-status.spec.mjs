@@ -16,9 +16,11 @@ async function mount(page,{readingCount=8,teacherTopic=true,readingGames=12,firs
        practice:{label:'Original reviewed practice'},topics:[],retryCount:0};},
      forMode(mode){return {count:mode==='reading'?readingGames:0};},
    };
-   const host=document.createElement('section');
-   host.className='games-screen';
-   document.body.replaceChildren(host);
+   // Keep the PWA shell and its screen padding: the Test Prep header uses
+   // negative margins relative to that real, scrollable screen.
+   const host=document.createElement('div');
+   host.className='screen games-screen';
+   document.querySelector('#app-content').replaceChildren(host);
    const view=createMaterialsView({win:window,onChange:()=>{host.innerHTML=view.priorityHtml({loading:false});view.bind(host);}});
    view.setModel(model);host.innerHTML=view.priorityHtml({loading:false});view.bind(host);
  },{readingCount,teacherTopic,readingGames,firstLabel});
