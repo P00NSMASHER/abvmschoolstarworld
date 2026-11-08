@@ -630,12 +630,16 @@ export function createStudyMaterials({
     const aligned=current.filter(q=>{
       const row=published.get(q.id);
       const lineage=row?.sourceLineage;
-      return q.subject==='Reading / ELA'&&row?.subject==='Reading / ELA'&&
-        lineage?.quality==='page-exact'&&lineage.sourceTitle==='Reading Work'&&
+      // The mobile runtime carries only a compiler-attested boolean; the
+      // governed full source fallback can still use its detailed lineage.
+      const fullProof=lineage?.quality==='page-exact'&&
+        lineage.sourceTitle==='Reading Work'&&
         lineage.sourceUrl==='https://sites.google.com/view/abvmgr2/reading-work'&&
         lineage.sourceCheckedAt===pack.sourceCheckedAt&&
         /^[0-9a-f]{64}$/.test(lineage.sourceCaptureHash||'')&&
         array(lineage.matchedEvidence).some(evidence=>typeof evidence==='string'&&evidence.trim());
+      return q.subject==='Reading / ELA'&&row?.subject==='Reading / ELA'&&
+        (row.readingWorkTopicVerified===true||fullProof);
     });
     const questions=representativePractice(unique(aligned));
     return {questions,teacherTopicOnly:questions.length>0};
