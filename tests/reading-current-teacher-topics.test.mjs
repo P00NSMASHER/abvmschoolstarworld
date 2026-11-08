@@ -97,16 +97,16 @@ test('Reading Work fallback rejects unrelated Tests page even with similar skill
 
 test('Reading Work fallback withdraws when pack lineage is stale or source hashes disagree',()=>{
   const old=create({clock:'2026-11-16T22:29:00Z',
-    otherEvents:[{date:'2026-11-20',label:'Reading'}]});
+    events:[{date:'2026-11-20',label:'Reading'}]});
   assert.equal(old.testPreview(0).total,0);
   const mismatch=create({packChanges:{sourceHash:'another-verified-source-version'}});
   assert.equal(mismatch.testPreview(0).total,0);
-  const future=create({otherEvents:[{date:'2026-11-25',label:'Reading'}]});
+  const future=create({events:[{date:'2026-11-25',label:'Reading'}]});
   assert.equal(future.testPreview(0).total,0);
 });
 
 test('a named text-set test never inherits general Reading Work topics',()=>{
-  const model=create({otherEvents:[{date:'2026-11-11',label:'Reading (Unit 1 Text Set 3)'}]});
+  const model=create({events:[{date:'2026-11-11',label:'Reading (Unit 1 Text Set 3)'}]});
   assert.equal(model.testPreview(0).total,0);
   assert.equal(model.testGuide(0,{upcoming:true}).scopePending,false,
     'named assessments retain their existing missing-scope rules');
