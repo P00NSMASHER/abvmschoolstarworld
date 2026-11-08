@@ -28,9 +28,11 @@ test('mobile and desktop show true per-test coverage and launch independent Read
       {date:'2026-11-13',label:'Spelling (3 letter blends) / Handwriting',kind:'test'},
     ];
     const model=createStudyMaterials({now:()=> '2026-11-08T22:00:00Z',events,catalog:{sourceKey:'synthetic',questions}});
-    const host=document.createElement('section');
-    host.className='games-screen';
-    document.body.replaceChildren(host);
+    // Use the production screen and phone shell; removing the whole body
+    // incorrectly removes the screen padding that contains the prep header.
+    const host=document.createElement('div');
+    host.className='screen games-screen';
+    document.querySelector('#app-content').replaceChildren(host);
     const view=createMaterialsView({
       win:window,
       onTest:index=>{if(index===null){const round=model.generalReadingRound({seed:'browser'});window.__generalReadingResult=round.questions.map(q=>({id:q.id,subject:q.subject}));}},
