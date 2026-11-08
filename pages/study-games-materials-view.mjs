@@ -24,7 +24,7 @@ export function printableWorksheetHtml(guide, dictionary = () => '') {
 }
 
 /** Compact controls only. The existing Games controller owns every round and result. */
-export function createMaterialsView({onChange,onRetry,onTest,onGeneralReading,onGuideRefresh,win=window} = {}) {
+export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=window} = {}) {
   let model = null, notesOpen = /(?:^|[?&])notes(?:=1)?(?:&|$)/.test(String(win?.location?.hash || '').split('?')[1] || ''), testsOpen = false, selectedTest = 0;
   const readAloud = createReadAloud(win);
   const notesLibrary=createNotesLibrary({getModel:()=>model,win,meaning:row=>resolveVocabularyMeaning(row,term=>win?.ABVMStudyGames?.vocabularyDefinition?.(term))});
@@ -173,7 +173,8 @@ export function createMaterialsView({onChange,onRetry,onTest,onGeneralReading,on
         change('.prep-header h1');
         return;
       }
-      onGeneralReading?.();
+      // A null test index is the explicit non-assessment Reading round.
+      onTest?.(null);
     });
     host.querySelectorAll('[data-test-retry]').forEach(button=>button.addEventListener('click',async()=>{
       const key=button.dataset.testKey;
