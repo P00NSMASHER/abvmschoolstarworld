@@ -96,9 +96,10 @@ test('Reading Work fallback rejects unrelated Tests page even with similar skill
 });
 
 test('Reading Work fallback withdraws when pack lineage is stale or source hashes disagree',()=>{
-  const old=create({clock:'2026-11-16T22:29:00Z',
-    events:[{date:'2026-11-20',label:'Reading'}]});
-  assert.equal(old.testPreview(0).total,0);
+  const old=create({clock:'2026-11-11T02:29:00Z',
+    packChanges:{sourceCheckedAt:'2026-11-01T22:12:56Z'}});
+  assert.equal(old.testPreview(0)?.total??0,0,
+    'stale teacher source cannot unlock practice on the actual assessment day');
   const mismatch=create({packChanges:{sourceHash:'another-verified-source-version'}});
   assert.equal(mismatch.testPreview(0).total,0);
   const future=create({events:[{date:'2026-11-25',label:'Reading'}]});
