@@ -365,8 +365,8 @@ function ensureStudyMaterials(retry=false){
   if(currentStudyMaterials()&&!retry)return Promise.resolve(studyMaterials);
   const data=pack,catalog=studyGameCatalog(),engine=studyGameEngine(),events=datedImportantEvents().filter(r=>kindClass(r.item)==="test").map(r=>({date:isoDateKey(r.date),label:r.item.label,kind:r.item.kind,endsAt:r.item.endsAt}));
   const request={pack:data,promise:null};
-  request.promise=Promise.all([import("./study-materials.mjs"),import("./study-games-materials-view.mjs?v=19")]).then(async([materials,view])=>{
-    if(pack===data&&!studyMaterialsView){studyMaterialsView=view.createMaterialsView({onChange:()=>{if(isStudyRoute())renderGames()},onRetry:retryStudyMaterials,onTest:startStudyTest,onGuideRefresh:refreshTestGuideSources});if(isStudyRoute()&&gameState.screen==="menu")renderGames()}
+  request.promise=Promise.all([import("./study-materials.mjs"),import("./study-games-materials-view.mjs?v=20")]).then(async([materials,view])=>{
+    if(pack===data&&!studyMaterialsView){studyMaterialsView=view.createMaterialsView({onChange:()=>{if(isStudyRoute())renderGames()},onRetry:retryStudyMaterials,onTest:startStudyTest,onGeneralReading:startGeneralReadingPractice,onGuideRefresh:refreshTestGuideSources});if(isStudyRoute()&&gameState.screen==="menu")renderGames()}
     const model=await materials.loadStudyMaterials({pack:data,catalog,events,engine,refreshResources:retry});
     if(pack===data){
       studyMaterials=model;studyMaterialsPack=data;studyMaterialsError=null;studyMaterialsView.setModel(model);
@@ -429,6 +429,12 @@ const sourceKey=currentGameSourceKey(),sessionSeed=engine.nextSessionSeed?.(sour
 const questions=mode.id==="daily"?engine.selectDailyQuestions(catalog,{count:8,seed:sessionSeed,skillStats:engine.loadLearning(),pack}):engine.selectQuestions(catalog,{subjects:mode.subjects,skills:mode.skills||[],preferredSkills:mode.preferredSkills||[],count:mode.count,seed:sessionSeed,skillStats:engine.loadLearning?.()||{}});
 const eligibleIds=catalog.questions.filter(q=>!mode.subjects?.length||mode.subjects.includes(q.subject)).map(q=>q.id);
 openStudyRound({questions,catalog,eligibleIds,sourceKey,sessionSeed,strict:false},mode);
+}
+function startGeneralReadingPractice(){
+  const model=currentStudyMaterials(),engine=studyGameEngine();
+  if(!model||!engine){toast("Reading practice is still loading.");return;}
+  const round=model.generalReadingRound({learning:engine.loadLearning?.()||{}});
+  openStudyRound(round,{id:'reading',title:'General Reading practice',subjects:['Reading / ELA'],count:8});
 }
 function startStudyTest(i,retryMissed){const r=currentStudyMaterials()?.testRound({index:i,upcoming:true,retryMissed});if(r)openStudyRound(r,{id:r.modeId,title:r.title,subjects:[],count:8},i)}
 function openStudyRound(round,mode,testIndex){
