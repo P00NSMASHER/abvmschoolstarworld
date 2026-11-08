@@ -531,6 +531,16 @@ export function createStudyMaterials({
   function currentTestQuestions(test,time) {
     if(isGenericReadingTest(test))return readingTestSelection(test,time).questions;
     const matched=questionsForTest(test,testQuestionPool(test,time));
+    // A named text set can only use that exact verified source scope. Other
+    // Reading Work questions cannot be treated as evidence of this assessment.
+    const textSet=String(test?.label||'').match(/\bunit\s*(\d+)\s*text\s*set\s*(\d+)\b/i);
+    if(/\b(?:reading|ela)\b/i.test(String(test?.label||''))&&textSet){
+      return matched.filter(q=>array(q.sourceTestScopes).some(scope=>{
+        const named=String(scope).match(/\bunit\s*(\d+)\s*text\s*set\s*(\d+)\b/i);
+        return named&&Number(named[1])===Number(textSet[1])&&
+          Number(named[2])===Number(textSet[2]);
+      }));
+    }
     // These original publisher-aligned questions supplement, never replace,
     // the reviewed lessons. Earlier chapters remain out of other tests.
     return isReligionUnitOneReviewTest(test)
