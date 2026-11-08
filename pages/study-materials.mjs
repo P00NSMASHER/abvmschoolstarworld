@@ -581,6 +581,30 @@ export function createStudyMaterials({
     const {groups, ...state} = printableTestState(true);
     return {...state,canUndo:!!completionUndo,message};
   }
+  // General Reading is independent of any announced test. Only reviewed
+  // current or this-school-week practice is eligible; never import STAR,
+  // saved undated work, or an unrelated Grammar test's noun bank.
+  function generalReadingPool(time = instant()) {
+    const day = materialDay(time);
+    const suitable = q => q?.subject === 'Reading / ELA' &&
+      !/grammar|nouns?|predicate|sentence-types?|punctuation|possessive|plurals?|adjectives?/i.test(String(q.skill || '')) &&
+      q.tier !== 'star-fallback' && q.tier !== 'recent-review';
+    return unique([...current,...day.raw.weekly].filter(suitable));
+  }
+  function generalReadingPreview() {
+    const count=generalReadingPool().length;
+    return {count,total:Math.min(8,count)};
+  }
+  function generalReadingRound({seed,learning} = {}) {
+    const pool=generalReadingPool(), key=sourceKey+'|general-reading:'+bankKey(pool);
+    const chosenSeed=sessionSeed(key,'reading',seed);
+    const questions=unique(adaptive([pool],chosenSeed,learningState(learning)));
+    return {
+      questions,catalog:{...catalog,sourceKey:key,questions:pool},
+      groups:[pool],count:pool.length,eligibleIds:pool.map(q=>q.id),sourceKey:key,
+      sessionSeed:chosenSeed,title:'General Reading practice',modeId:'reading',strict:false,
+    };
+  }
   function linkedReadingPractice(test,time){
     const normalize=scope=>String(scope).trim().toLowerCase().replace(/\s+/g,' ');
     const namesTest=row=>row?.subject==='Reading / ELA'&&array(row.sourceTestScopes)
@@ -886,5 +910,5 @@ export function createStudyMaterials({
       links:referenceLinks().filter(link=>saved||notes.some(note=>note.subject==='Religion'&&note.kind==='topic'&&new RegExp('^\\s*Chapter\\s+'+link.chapter+'\\s*:','i').test(note.text))), warnings:coverageWarnings(time),
     };
   }
-  return {status, banks, forMode, round, tests, printableTests, upcomingTests, testGuide, testPreview, testRound, completeTests, undoTests, restoreTest, notes, loadReferences};
+  return {status, banks, forMode, round, tests, printableTests, upcomingTests, generalReadingPreview, generalReadingRound, testGuide, testPreview, testRound, completeTests, undoTests, restoreTest, notes, loadReferences};
 }
