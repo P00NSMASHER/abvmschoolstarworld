@@ -9,7 +9,7 @@ const INPUT=new URL("../pages/data/study-pack.json",import.meta.url);
 const OUTPUT=new URL("../pages/data/study-pack-runtime.json",import.meta.url);
 export const RUNTIME_QUESTION_FIELDS=Object.freeze([
   "id","subject","skill","questionType","prompt","choices","answer","explanation","hint",
-  "dok","difficulty","standards","domain","variantFingerprint","richContent","choiceDiagnostics","sourceChapters","sourceTestScopes","sourceTestDate","weekOf","studiedOn"
+  "dok","difficulty","standards","domain","variantFingerprint","richContent","choiceDiagnostics","sourceChapters","sourceTestScopes","sourceTestDate","weekOf","studiedOn","readingWorkTopicVerified"
 ]);
 
 function clone(value){return JSON.parse(JSON.stringify(value));}
@@ -25,12 +25,33 @@ function religionGuideFacts(skills){
   }
   return Object.fromEntries([...chapters.entries()].sort((a,b)=>Number(a[0])-Number(b[0])));
 }
+// Emit only a boolean topic attestation, never raw teacher lines, capture hashes,
+// identities, or an assertion that the teacher assigned a skill to a test date.
+function currentReadingWorkProof(question,envelope){
+  const lineage=question?.sourceLineage;
+  const pack=envelope?.pack;
+  const page=(Array.isArray(envelope?.sourcePages)?envelope.sourcePages:[])
+    .find(row=>row?.title==='Reading Work'&&
+      row.url==='https://sites.google.com/view/abvmgr2/reading-work');
+  return question?.subject==='Reading / ELA'&&
+    lineage?.quality==='page-exact'&&
+    lineage.sourceTitle==='Reading Work'&&
+    lineage.sourceUrl===page?.url&&
+    /^[0-9a-f]{64}$/.test(lineage.sourceCaptureHash||'')&&
+    lineage.sourceCaptureHash===page?.contentHash&&
+    lineage.sourceCheckedAt===page?.checkedAt&&
+    page.checkedAt===pack?.sourceCheckedAt&&
+    typeof pack?.sourceHash==='string'&&pack.sourceHash.length>0&&
+    pack.contentPipeline?.sourceHash===pack.sourceHash&&
+    Array.isArray(lineage.matchedEvidence)&&lineage.matchedEvidence.some(
+      evidence=>typeof evidence==='string'&&evidence.trim());
+}
 function pickQuestion(question){
   question=correctOriginalQuestion(question);
   // This public pack gets compact instructional content, never governance metadata.
   const picked=Object.fromEntries(
     RUNTIME_QUESTION_FIELDS
-      .filter(key=>key!=="sourceChapters"&&Object.prototype.hasOwnProperty.call(question||{},key))
+      .filter(key=>key!=="sourceChapters"&&key!=="readingWorkTopicVerified"&&Object.prototype.hasOwnProperty.call(question||{},key))
       .map(key=>[key,question[key]])
   );
   // contentFingerprint and sourceFact remain in the governed full pack. The browser
@@ -63,7 +84,11 @@ export function buildRuntimePack(envelope){
   const runtime=clone(envelope);
   const questions=runtime.pack?.contentPipeline?.questions;
   if(!Array.isArray(questions))throw new Error("Full study pack is missing contentPipeline.questions");
-  runtime.pack.contentPipeline.questions=questions.map(pickQuestion);
+  runtime.pack.contentPipeline.questions=questions.map(question=>{
+    const picked=pickQuestion(question);
+    if(currentReadingWorkProof(question,envelope))picked.readingWorkTopicVerified=true;
+    return picked;
+  });
   const skills=runtime.pack.contentPipeline.skills;
   if(!Array.isArray(skills))throw new Error("Full study pack is missing contentPipeline.skills");
   // Audit lineage and assessment contracts stay intact in the governed full pack.
