@@ -522,7 +522,14 @@ export function createStudyMaterials({
     const recent = testWeek.start === thisWeek.start ? day.week.questions : [];
     return unique([...current,...recent,...matchedLessons.flatMap(lesson => array(lesson.questions))]);
   }
+  // A generic Reading heading verifies the assessment date, not its exact scope.
+  // Current teacher-page topics can still support clearly labeled original
+  // practice, provided the question's individual Reading Work lineage is exact.
+  const isGenericReadingTest=test=>
+    /^(?:reading(?:\s*\/\s*ela)?|ela)(?:\s+(?:test|assessment))?$/i
+      .test(String(test?.label||'').trim());
   function currentTestQuestions(test,time) {
+    if(isGenericReadingTest(test))return readingTestSelection(test,time).questions;
     const matched=questionsForTest(test,testQuestionPool(test,time));
     // These original publisher-aligned questions supplement, never replace,
     // the reviewed lessons. Earlier chapters remain out of other tests.
@@ -581,14 +588,14 @@ export function createStudyMaterials({
     const {groups, ...state} = printableTestState(true);
     return {...state,canUndo:!!completionUndo,message};
   }
-  function linkedReadingPractice(test,time){
+  function readingTestSelection(test,time){
     const normalize=scope=>String(scope).trim().toLowerCase().replace(/\s+/g,' ');
     const namesTest=row=>row?.subject==='Reading / ELA'&&array(row.sourceTestScopes)
       .some(scope=>normalize(scope)===normalize(test.label));
     const week=weekBounds(test.date).start;
     const inPostingWeek=postingWeek(pack.teacherPostingWeekLabel)===week;
-    // Source scopes come from the published row, even when an older player
-    // serialized only text-set scopes. An observation time is never a lesson date.
+    // Explicit test-scoped material always wins. A stale posting-week heading
+    // alone must never establish that a question belongs to the next exam.
     const published=new Map(array(pack.contentPipeline?.questions).map(q=>[q.id,q]));
     const linked=current.filter(q=>{
       const source=published.get(q.id)||q;
@@ -601,7 +608,37 @@ export function createStudyMaterials({
       if(lesson.subject!=='Reading / ELA'||!explicitlyInWeek(lesson,test.date))continue;
       linked.push(...array(lesson.questions).filter(q=>namesTest(q)&&(!q.sourceTestDate||q.sourceTestDate===test.date)));
     }
-    return unique(linked);
+    if(linked.length)return {questions:unique(linked),teacherTopicOnly:false};
+
+    // The teacher publishes a dated generic "Reading" test and a separate
+    // Reading Work page. They do not explicitly claim that every topic on that
+    // page is on the paper. Offer topic-aligned practice, never verified scope.
+    // This lane cannot borrow the Tests-page grammar bank, old worksheets or
+    // unproven generic Grade 2 exercises.
+    const nowMs=new Date(time).getTime();
+    const checkedMs=Date.parse(pack.sourceCheckedAt||'');
+    const testMs=Date.parse(String(test.date||'')+'T12:00:00Z');
+    const todayMs=Date.parse(studyAssessmentDay(time)+'T12:00:00Z');
+    const daysAhead=(testMs-todayMs)/86400000;
+    const recent=Number.isFinite(checkedMs)&&checkedMs<=nowMs+60000&&
+      nowMs-checkedMs<=7*86400000;
+    const currentPipeline=typeof pack.sourceHash==='string'&&pack.sourceHash.length>0&&
+      pack.contentPipeline?.sourceHash===pack.sourceHash;
+    if(!isGenericReadingTest(test)||!Number.isInteger(daysAhead)||daysAhead<0||
+      daysAhead>7||!recent||!currentPipeline)
+      return {questions:[],teacherTopicOnly:false};
+    const aligned=current.filter(q=>{
+      const row=published.get(q.id);
+      const lineage=row?.sourceLineage;
+      return q.subject==='Reading / ELA'&&row?.subject==='Reading / ELA'&&
+        lineage?.quality==='page-exact'&&lineage.sourceTitle==='Reading Work'&&
+        lineage.sourceUrl==='https://sites.google.com/view/abvmgr2/reading-work'&&
+        lineage.sourceCheckedAt===pack.sourceCheckedAt&&
+        /^[0-9a-f]{64}$/.test(lineage.sourceCaptureHash||'')&&
+        array(lineage.matchedEvidence).some(evidence=>typeof evidence==='string'&&evidence.trim());
+    });
+    const questions=representativePractice(unique(aligned));
+    return {questions,teacherTopicOnly:questions.length>0};
   }
   function testGuide(index, {upcoming = false} = {}) {
     const time = instant();
@@ -617,8 +654,9 @@ export function createStudyMaterials({
     const chapterLessons=chapter?materialDay(time).lessons.filter(lesson=>lesson.subject===subject&&
       explicitlyInWeek(lesson,test.date)&&chapterOf(lesson.title)===chapter):[];
     const metadata=array(pack.contentPipeline?.skills);
-    const genericReading=subjectOnly&&/^(?:reading|ela)\b/.test(lower.trim());
-    const group=genericReading?linkedReadingPractice(test,time):subjectOnly?[]:
+    const genericReading=subjectOnly&&isGenericReadingTest(test);
+    const readingSelection=genericReading?readingTestSelection(test,time):null;
+    const group=readingSelection?readingSelection.questions:subjectOnly?[]:
       scopedPrintQuestions(test,subject,testQuestionPool(test,time),candidates,chapterLessons,metadata);
     const sourceSubjects = array(pack.subjects).filter(row => row?.subject === subject);
     const practiceRows = representativePractice(group);
@@ -734,15 +772,19 @@ export function createStudyMaterials({
     const scopePending = subjectOnly && !spellingWords.length && !group.length;
     return {
       key:testKey(test), label:compactGuideText(test.label,120), date:test.date, subject:subject || 'Test review',
-      scopePending,
-      scopeNotice:scopePending ? 'Your teacher has posted the test date. The topics for this test haven’t been listed yet.' : unitOneReligion
+      scopePending, teacherTopicOnly:!!readingSelection?.teacherTopicOnly,
+      scopeNotice:scopePending ? 'Your teacher has posted the test date. The topics for this test haven’t been listed yet.' :
+        readingSelection?.teacherTopicOnly
+        ? 'These questions practice skills on the teacher’s current Reading Work page. The teacher has not confirmed which of these skills are on this test; all questions are original, not school-issued.' : unitOneReligion
         ? 'Unit 1 cumulative review: Chapters 1–4. The publisher places the Unit 1 Test after Chapter 4. '+
           'Original study practice, not the school’s actual questions.'
         : '',
       facts, classFacts, teacherFacts, reviewTopics, vocabulary, practice, spellingWords, fallback, warnings:uniqueGuideText(warnings).slice(0,3),
       sourceHash:pack.sourceHash || null, sourceCheckedAt:pack.sourceCheckedAt || null,
       coverage:{availableSkills,representedSkills,missingSkills,guideSkills,missingGuideSkills},
-      sourceLabel:unitOneReligion
+      sourceLabel:readingSelection?.teacherTopicOnly
+        ? 'Teacher-listed Reading Work topics with original supplemental practice; exact test coverage is not confirmed'
+        : unitOneReligion
         ? 'Publisher-confirmed Grade 2 Unit 1 review (Chapters 1–4); original practice (teacher-style supplemental practice), not a school-issued assessment'
         : teacherLists.length
         ? (teacherLists.some(note => /page undated/i.test(note))
@@ -774,13 +816,15 @@ export function createStudyMaterials({
     if (!scope.single) return null;
     const labels = new Map([...array(pack.contentPipeline?.skills), ...array(pack.recentReviewPipeline?.skills)]
       .filter(row => meaningfulText(row?.id) && meaningfulText(row?.label)).map(row => [row.id,row.label.trim()]));
-    const topics = [...new Set(scope.full.flatMap(row => [row.skill,...array(row.assessedSkillIds)]).map(id => labels.get(id)).filter(meaningfulText))].slice(0,2);
+    const teacherTopicOnly=isGenericReadingTest(state.tests[index])&&
+      readingTestSelection(state.tests[index],instant()).teacherTopicOnly;
+    const topics = [...new Set(scope.full.flatMap(row => [row.skill,...array(row.assessedSkillIds)]).map(id => labels.get(id)).filter(meaningfulText))].slice(0,teacherTopicOnly?5:2);
     const total = Math.min(8,unique(scope.full).length);
     const retryCount=testRetryCandidates(scope).length;
     const saved = read(storage,'abvm-study-games:'+scope.key+':test-ready',null);
     const plays = Number(saved?.plays), best = Number(saved?.best);
     const recorded = total > 0 && Number.isInteger(plays) && plays > 0 && Number.isInteger(best) && best >= 0 && best <= total;
-    return {sourceKey:scope.key,topics,total,retryCount,practice:recorded ? {plays,best,label:'Best practice '+best+' / '+total} : {plays:0,best:null,label:'First practice'}};
+    return {sourceKey:scope.key,topics,total,retryCount,teacherTopicOnly,practice:recorded ? {plays,best,label:'Best practice '+best+' / '+total} : {plays:0,best:null,label:'First practice'}};
   }
   function testRound({index, seed, upcoming = false, retryMissed = false} = {}) {
     const state = upcoming ? printableTestState(true) : testState();
