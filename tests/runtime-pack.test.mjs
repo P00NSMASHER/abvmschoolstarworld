@@ -163,3 +163,46 @@ test('only page-exact lineage can supply compact Reading text-set scope identifi
   assert.equal(questions.find(q=>q.id===unverified.id).sourceTestScopes,undefined);
   assert.doesNotMatch(JSON.stringify(questions),/reviewed source match|sourceCaptureHash/);
 });
+
+
+test('mobile runtime preserves only current page-exact Reading Work topic attestations',()=>{
+  const page=source.sourcePages.find(row=>row.title==='Reading Work'&&
+    row.url==='https://sites.google.com/view/abvmgr2/reading-work');
+  assert.ok(page,'governed pack must identify the current teacher Reading Work source');
+  const evidence=source.pack.contentPipeline.questions.filter(row=>
+    row.subject==='Reading / ELA'&&
+    row.sourceLineage?.quality==='page-exact'&&
+    row.sourceLineage?.sourceTitle==='Reading Work'&&
+    row.sourceLineage?.sourceUrl===page.url&&
+    row.sourceLineage?.sourceCaptureHash===page.contentHash&&
+    row.sourceLineage?.sourceCheckedAt===page.checkedAt&&
+    page.checkedAt===source.pack.sourceCheckedAt&&
+    row.sourceLineage?.matchedEvidence?.length);
+  assert.ok(evidence.length>=3,'several current teacher-topic families must be independently verified');
+  const attested=runtime.pack.contentPipeline.questions.filter(row=>row.readingWorkTopicVerified===true);
+  assert.deepEqual(attested.map(row=>row.id).sort(),evidence.map(row=>row.id).sort());
+  assert.ok(attested.every(row=>row.subject==='Reading / ELA'));
+  assert.ok(!attested.some(row=>row.skill==='singular-plural-nouns'),
+    'Nov 12 grammar belongs to the Tests page and must not be borrowed');
+  assert.doesNotMatch(JSON.stringify(attested),/sourceLineage|matchedEvidence|sourceCaptureHash|evidenceExcerptHash/);
+});
+
+test('a mismatched teacher capture, forged flag or unverified lineage cannot certify a runtime topic',()=>{
+  const reading=source.pack.contentPipeline.questions.find(row=>
+    row.subject==='Reading / ELA'&&row.sourceLineage?.sourceTitle==='Reading Work');
+  assert.ok(reading);
+  const altered=structuredClone(source);
+  altered.sourcePages.find(row=>row.title==='Reading Work').contentHash='b'.repeat(64);
+  assert.equal(buildRuntimePack(altered).pack.contentPipeline.questions
+    .filter(row=>row.readingWorkTopicVerified===true).length,0);
+  const forged=structuredClone(source);
+  const row=forged.pack.contentPipeline.questions.find(row=>row.id===reading.id);
+  row.readingWorkTopicVerified=true;
+  row.sourceLineage.quality='unverified';
+  assert.equal(buildRuntimePack(forged).pack.contentPipeline.questions
+    .find(item=>item.id===reading.id).readingWorkTopicVerified,undefined);
+  const wrongCheck=structuredClone(source);
+  wrongCheck.sourcePages.find(row=>row.title==='Reading Work').checkedAt='2026-10-01T00:00:00Z';
+  assert.equal(buildRuntimePack(wrongCheck).pack.contentPipeline.questions
+    .filter(row=>row.readingWorkTopicVerified===true).length,0);
+});
