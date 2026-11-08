@@ -95,7 +95,7 @@ export function createMaterialsView({onChange,onRetry,onTest,onGeneralReading,on
     const chosen=pending[selectedTest],entry=(tests.supported||[]).find(test=>test.index===selectedTest),preview=model?.testPreview?.(selectedTest),art=testArt(chosen.subject||chosen.label);
     const matchingCount=index=>[...(tests.supported||[]),...(tests.missing||[])].find(test=>test.index===index)?.count||0;
     const exactCount=matchingCount(selectedTest);
-    const isGenericReading=/^(?:reading|ela)(?:\\s+test)?$/i.test(String(chosen.label||'').trim());
+    const isGenericReading=/^(?:reading|ela)(?:\s+test)?$/i.test(String(chosen.label||'').trim());
     const generalReadingCount=!exactCount&&isGenericReading ? model?.generalReadingPreview?.().total||0 : 0;
     const history=preview?(preview.total?preview.practice.label:'No verified practice yet'):'Practice';
     const choices=pending.map((test,index)=>'<button type="button" class="prep-test-choice" data-test-select="'+index+'" data-test-key="'+esc(test.date+'|'+test.label)+'" aria-pressed="'+(index===selectedTest)+'" aria-label="'+esc(test.label+' - '+dateLabel(test.date))+'"><img src="./assets/illustrations/'+testArt(test.subject||test.label)+'.webp" width="40" height="40" alt=""><span><strong>'+esc(shortTestLabel(test.label))+'</strong><small>'+esc(dateLabel(test.date)+' · '+matchingCount(index)+' matching question'+(matchingCount(index)===1?'':'s'))+'</small></span><b aria-hidden="true">'+(index===selectedTest?'✓':'')+'</b></button>').join('');
@@ -168,7 +168,7 @@ export function createMaterialsView({onChange,onRetry,onTest,onGeneralReading,on
       const state=model?.upcomingTests?.();
       const current=state?.tests?.find(test=>test.date+'|'+test.label===key);
       const exact=state?.supported?.some(test=>test.key===key);
-      if(!current || !/^(?:reading|ela)(?:\\s+test)?$/i.test(current.label) ||
+      if(!current || !/^(?:reading|ela)(?:\s+test)?$/i.test(current.label) ||
         exact || !(model?.generalReadingPreview?.().total>0)) {
         change('.prep-header h1');
         return;
