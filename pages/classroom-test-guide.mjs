@@ -1,6 +1,6 @@
 /** Print-friendly, photo-informed original Grade 2 practice, never teacher test copies. */
 import {premiumPaperCss,decoratePaper} from './premium-paper-theme.mjs?v=2';
-import {canRenderTeacherLetterChoice,checkedBubblePaperFormat,checkedBubbleQuestionForGuide} from './teacher-test-format.mjs';
+import {teacherTestReferenceForGuide,canRenderTeacherLetterChoice,checkedBubblePaperFormat,checkedBubbleQuestionForGuide} from './teacher-test-format.mjs';
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clean = value => String(value ?? '').replace(/\s+/g,' ').trim();
 const arr = value => Array.isArray(value) ? value : [];
@@ -29,6 +29,22 @@ const styles = '@page{size:Letter portrait;margin:.46in}'+
 '.directions{border:1px solid #222;padding:.09in .12in;margin:.12in 0 .18in;font-size:10pt}'+
 '.section-title{font-size:12pt;margin:.1in 0 .12in;border-bottom:1px solid #777;padding-bottom:.06in}'+
 '.paper-problems{list-style:none;padding:0;margin:0}.problem{break-inside:avoid;page-break-inside:avoid;padding:.06in 0 .16in;border-bottom:1px solid #ccc}'+
+'.teacher-word-bank{border:1.5px solid #444;padding:.09in .12in;margin:.1in 0 .16in;break-inside:avoid}'+
+'.teacher-word-bank h3,.math-visual h3{font-size:10pt;margin:0 0 .05in}'+
+'.word-bank-words{display:flex;flex-wrap:wrap;gap:.055in .16in;font-size:11pt;font-weight:600;list-style:none;padding:0;margin:0}'+
+'.word-bank-words li{padding:.025in .06in;border-bottom:1px solid #aaa}'+
+'.word-bank-problems{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.03in .22in}'+
+'.word-bank-item{min-height:.8in}.word-bank-answer{display:flex;gap:.12in;align-items:baseline;font-size:9.5pt}'+
+'.word-bank-answer .answer-rule{flex:1;display:block;min-width:.6in;height:.27in;border-bottom:1px solid #333}'+
+'.math-visual{margin:.1in 0 .13in;padding:.085in .12in;border:1px solid #777;break-inside:avoid}'+
+'.math-visual p{margin:0 0 .06in;font-size:9pt}.place-value-cells{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.08in}'+
+'.place-value-cell{display:grid;text-align:center;border:1px solid #777;font-size:9pt;font-weight:700}'+
+'.place-value-cell span{height:.27in;border-top:1px dashed #bbb}'+
+'.number-line{display:grid;grid-template-columns:repeat(21,minmax(0,1fr));margin:.12in 0 0;border-top:1.5px solid #333}'+
+'.number-tick{height:.27in;position:relative;text-align:center;font-size:7pt;padding-top:.08in}'+
+'.number-tick:before{content:"";position:absolute;top:-.05in;left:50%;height:.09in;border-left:1px solid #333}'+
+'.number-tick:nth-child(even){font-size:0}'+
+'@media screen and (max-width:640px){.word-bank-problems{grid-template-columns:1fr}.place-value-cells{gap:.025in}}'+
 '.problem:last-child{border-bottom:0}.prompt{margin:0 0 .08in;line-height:1.43;font-size:11pt}.number{font-weight:700;padding-right:.05in}'+
 '.instruction{font-size:9.5pt;margin:0 0 .075in;color:#333}.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.06in .18in;margin-left:.18in}'+
 '.choice{display:flex;align-items:baseline;gap:.05in;font-size:10.5pt;min-width:0}.bubble{width:.13in;height:.13in;border:1.4px solid #111;border-radius:50%;display:inline-block;flex:none;align-self:center}'+
@@ -110,6 +126,44 @@ function teacherBubbleChoiceHtml(item,index) {
       '<div class="teacher-bubble-option"><span class="teacher-bubble-mark" aria-hidden="true"></span>'+
       '<span class="teacher-bubble-letter">'+String.fromCharCode(65+j)+'.</span>'+
       '<span>'+escape(choice)+'</span></div>').join('')+'</div></li>';
+}
+/** Only reproduce an observed word-bank arrangement with original, checked content. */
+function checkedWordBank(guide,questions,kind) {
+  if(kind!=='religion'||teacherTestReferenceForGuide(guide)?.kind!=='word-bank'||questions.length<2)return null;
+  const answers=questions.map(item=>clean(item?.answer));
+  if(answers.some(answer=>answer.length>44||!/^[-\p{L}][\p{L}\p{M}'’ -]*$/u.test(answer)))return null;
+  const normalized=answers.map(answer=>answer.toLocaleLowerCase('en-US'));
+  if(new Set(normalized).size!==answers.length)return null;
+  if(questions.some((item,i)=>clean(item.prompt).toLocaleLowerCase('en-US').includes(normalized[i])))return null;
+  const words=[...answers].sort((a,b)=>a.localeCompare(b,'en',{sensitivity:'base'}));
+  if(words.every((word,i)=>word===answers[i]))words.push(words.shift());
+  return words;
+}
+function wordBankHeader(words) {
+  return '<aside class="teacher-word-bank" aria-label="Words to choose from"><h3>Word Bank · Use each answer once</h3>'+
+    '<ul class="word-bank-words">'+words.map(word=>'<li>'+escape(word)+'</li>').join('')+'</ul></aside>';
+}
+function wordBankQuestionHtml(item,index) {
+  return '<li class="problem word-bank-item"><p class="prompt"><span class="number">'+(index+1)+'.</span> '+
+    escape(clean(item.prompt))+'</p><div class="word-bank-answer">Answer <span class="answer-rule" aria-label="Write an answer from the word bank"></span></div></li>';
+}
+/** Blank visuals support current, checked math skills without supplying answers. */
+function mathVisual(guide,questions) {
+  const skills=[clean(guide?.label),...questions.map(item=>clean(item.skill))].join(' ').toLowerCase();
+  const values=questions.flatMap(item=>[clean(item.prompt),clean(item.answer)]
+    .flatMap(row=>[...row.matchAll(/\b\d{1,5}\b/g)].map(match=>Number(match[0]))));
+  if(!values.length)return '';
+  if(/place[- ]value|expanded[- ]form/.test(skills) && values.every(value=>value<=999))
+    return '<aside class="math-visual" aria-label="Empty place-value chart"><h3>Scratch chart · Place value</h3>'+
+      '<p>Use the empty columns to organize a number. Work out each question yourself.</p>'+
+      '<div class="place-value-cells">'+['Hundreds','Tens','Ones'].map(label=>
+        '<div class="place-value-cell">'+label+'<span aria-hidden="true"></span></div>').join('')+'</div></aside>';
+  if(/subtract|subtraction/.test(skills) && values.every(value=>value<=20) &&
+    questions.every(item=>/[-−]|subtract|minus|left/i.test(clean(item.prompt))))
+    return '<aside class="math-visual" aria-label="Number line from zero to twenty"><h3>Scratch chart · Number line</h3>'+
+      '<p>Start at a number. Count backward for subtraction.</p><div class="number-line">'+
+      Array.from({length:21},(_,n)=>'<span class="number-tick">'+n+'</span>').join('')+'</div></aside>';
+  return '';
 }
 function pageHeader(title,guide,adult=false) {
   return '<header class="sheet-header"><div class="paper-topline"><span>ABVM · GRADE 2 · PRACTICE</span><span>'+escape(dateText(guide?.date))+'</span></div>'+
@@ -228,6 +282,7 @@ export function renderClassroomStudyGuide(guide) {
   const bubbleFormat=fullBubbleFormat||(firstBubble&&checkedBubbleQuestionForGuide(guide,firstBubble));
   const eligibleBubbles=bubbleFormat?questions.filter(row=>checkedBubbleQuestionForGuide(guide,row)).length:0;
   const mixedBubbles=bubbleFormat&&eligibleBubbles<questions.length;
+  const wordBank=!teacherLetterChoice&&!bubbleFormat?checkedWordBank(guide,questions,kind):null;
   const instructions={math:'Solve each problem. Show your work in the boxes.',
     grammar:'Read each question and follow its directions.',
     reading:'Read each question and follow its directions.',
@@ -240,15 +295,17 @@ export function renderClassroomStudyGuide(guide) {
   const student='<main class="sheet student-test'+(teacherLetterChoice?' teacher-letter-choice':bubbleFormat?' teacher-bubble-choice':'')+'">'+pageHeader(titles[kind],guide)+
     '<div class="student-fields"><span>Name: <i class="field-line"></i></span><span>Date: <i class="field-line date"></i></span>'+
     '<span>Score: <i class="field-line score"></i> / '+count+'</span></div>'+
-    '<div class="directions"><strong>Directions:</strong> '+escape(teacherLetterChoice?'Read each question. Write the letter of the best answer on the line.':mixedBubbles?'Follow the directions for each item. For a bubble question, fill in one bubble.':bubbleFormat?'Read each question. Fill in one bubble next to the best answer.':instructions[kind])+'</div>'+
+    '<div class="directions"><strong>Directions:</strong> '+escape(wordBank?'Read each question. Choose the best word or phrase from the word bank. Use each answer once.':teacherLetterChoice?'Read each question. Write the letter of the best answer on the line.':mixedBubbles?'Follow the directions for each item. For a bubble question, fill in one bubble.':bubbleFormat?'Read each question. Fill in one bubble next to the best answer.':instructions[kind])+'</div>'+
     (guide?.scopeNotice?'<p class="caution scope-notice">'+escape(guide.scopeNotice)+'</p>':'')+
     (bubbleFormat?'<p class="caution format-evidence">'+escape(
       bubbleFormat.origin==='prior-actual-teacher-test'?
         'Mode: Practice like my teacher. Prior actual teacher-test layout; future format is not guaranteed.':
         'Mode: Practice like my teacher. Prior teacher-marked publisher practice; the next test format is unverified.'
     )+(mixedBubbles?' '+escape(eligibleBubbles+' of '+questions.length+' items use the observed bubble layout; other items retain their original response format.'):'')+'</p>':'')+
-    (questions.length?'<h2 class="section-title">'+escape(clean(guide.label)||'Practice questions')+'</h2><ol class="paper-problems '+(teacherLetterChoice?'teacher-letter-choice-problems ':bubbleFormat?'teacher-bubble-choice-problems ':kind==='math'?'math-grid':'compact-problems')+'">'+
-      questions.map((row,i)=>teacherLetterChoice?teacherLetterChoiceHtml(row,i):bubbleFormat&&checkedBubbleQuestionForGuide(guide,row)?teacherBubbleChoiceHtml(row,i):questionHtml(row,i,kind)).join('')+'</ol>'
+    (wordBank?'<p class="caution format-evidence">Practice layout from a previous actual teacher test; the next test format is not guaranteed.</p>'+wordBankHeader(wordBank):'')+
+    mathVisual(guide,questions)+
+    (questions.length?'<h2 class="section-title">'+escape(clean(guide.label)||'Practice questions')+'</h2><ol class="paper-problems '+(teacherLetterChoice?'teacher-letter-choice-problems ':wordBank?'word-bank-problems ':bubbleFormat?'teacher-bubble-choice-problems ':kind==='math'?'math-grid':'compact-problems')+'">'+
+      questions.map((row,i)=>teacherLetterChoice?teacherLetterChoiceHtml(row,i):wordBank?wordBankQuestionHtml(row,i):bubbleFormat&&checkedBubbleQuestionForGuide(guide,row)?teacherBubbleChoiceHtml(row,i):questionHtml(row,i,kind)).join('')+'</ol>'
       :'<p class="caution">No matching original-practice questions are available for this assessment. Review the available class notes.</p>')+
     storyPractice+
     '<div class="student-self-check"><strong>Before I finish</strong><span>□ I answered every question.</span><span>□ I checked my work.</span></div>'+
