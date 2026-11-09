@@ -59,6 +59,12 @@ function richVisual(raw){
 
 function playfulMiss(g){return ["That answer took a wrong turn. Rude!","That answer just tripped over its shoelaces.","The eagle has questions about that answer.","Oops. That answer needs a tiny timeout."][(Number(g.index||0)+Number(g.tries||0))%4]}
 function starPenalty(g){const p=g.lastStarPenalty;if(!p)return "";return '<small class="study-star-penalty">'+esc(p.status==='pending'?'Saving star change…':p.status==='error'?'Star change could not be saved.':p.amount>0?'−'+p.amount+' Study Stars · you can earn them back.':'No stars lost — your balance is at zero.')+'</small>'}
+function gameMenuTiles({modes,materials,selection,catalog,loadRecord,questionTotal}){
+  return '<div class="study-game-grid">'+modes.map(mode=>{
+    const scope=materials?.forMode(mode.id,selection),record=loadRecord(mode.id,scope?.sourceKey||catalog.sourceKey),total=scope?Math.min(8,scope.count):selection.source==="weekly"?questionTotal(catalog,mode):0,disabled=total===0;
+    return '<button type="button" class="study-game-tile game-'+mode.icon+'" data-game-start="'+esc(mode.id)+'"'+(mode.id==="reading"?' aria-label="Reading / ELA"':'')+(disabled?' disabled aria-disabled="true"':'')+'>'+icon(mode.icon)+'<span class="study-game-copy"><strong>'+esc(mode.id==="spelling"?"Spelling":mode.id==="reading"?"Reading":mode.title)+'</strong><small>'+esc(mode.copy)+'</small>'+(disabled?'<em>Not ready yet</em>':record.plays?'<em>Practiced before · Best solved: '+record.best+' / '+total+' (includes retries)</em>':'')+'</span><b aria-hidden="true">›</b></button>';
+  }).join("")+'</div>';
+}
 function gameModeQuestionTotal(c,m){
   const s=m?.subjects||[],k=m?.skills||[],x=s.length||k.length;
   const eligible=(c?.questions||[]).filter(q=>(!s.length||s.includes(q.subject))&&(!k.length||k.includes(q.skill)));
@@ -155,5 +161,5 @@ function finish({mode,state,record,summary={},reward={}}){
   const starsHtml='<div class="game-finish-stars" aria-label="'+stars+' practice stars">'+[0,1,2].map(i=>'<span class="'+(i<stars?'earned':'')+'">★</span>').join("")+'</div>';
   return '<section class="game-finish learning-first"><div class="study-finish-hero"><img class="study-finish-eagle" src="./assets/illustrations/eagle.webp" alt="" width="160" height="160" decoding="async"><div><span class="study-finish-eyebrow">'+esc(mode.title.toUpperCase())+'</span><h2>'+(accuracy.answered?'Nice work, eagle!':'Practice paused')+'</h2><p>'+(accuracy.answered?accuracy.answered+' questions practiced':'Your next practice is ready when you are.')+'</p></div></div><h3 class="learning-heading">Your score</h3><div class="game-score-summary" aria-label="First-try accuracy"><strong>'+esc(scoreText)+'</strong><span>'+esc(scoreDetails)+'</span></div>'+sectionsHtml+'<h3 class="learning-heading">What you learned</h3><div class="learning-summary" aria-label="Round learning summary"><div><strong>'+strong+'</strong><span>Skills answered independently</span></div><div><strong>'+remembered+'</strong><span>Skills recalled later</span></div><div><strong>'+practice+'</strong><span>Skills to revisit</span></div></div><p class="learning-summary-note">These learning counts are skills, not questions. One round does not prove mastery or predict a STAR score.</p>'+legacy+starsHtml+streakSummary+perfectHtml+rewardHtml+'<div class="game-finish-actions"><button type="button" class="primary" data-game-start="'+esc(mode.id)+'">Practice again</button><button type="button" data-game-home>Back to study</button></div></section>';
 }
-window.ABVMStudyGameView=Object.freeze({icon,play,goal,rewardReveal,finish,recordAttempt,scoreSummary,sectionScores,canUseScratchCounter,updateScratchCounter,gameModeQuestionTotal,learningHistoryWarning});
+window.ABVMStudyGameView=Object.freeze({icon,play,goal,rewardReveal,finish,recordAttempt,scoreSummary,sectionScores,canUseScratchCounter,updateScratchCounter,gameModeQuestionTotal,gameMenuTiles,learningHistoryWarning});
 })();

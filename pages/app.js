@@ -508,10 +508,7 @@ function leaveStudyGame(){markGameComebacksNextSession();gameState.screen="menu"
 function toggleStudyHint(){const g=gameState;if(g.screen==="play"&&!g.answered){g.hintOpen=!g.hintOpen;if(g.hintOpen)g.hints=(g.hints||0)+1;renderGames();bindScreen()}}
 function gameMenuHtml(catalog){
 const modes=STUDY_GAME_MODES,materials=currentStudyMaterials(),view=studyMaterialsView,selection=studySelection();
-  const grid='<div class="study-game-grid">'+modes.map(mode=>{
-    const scope=materials?.forMode(mode.id,selection),record=loadGameRecord(mode.id,scope?.sourceKey||catalog.sourceKey),total=scope?Math.min(8,scope.count):selection.source==="weekly"?gameModeQuestionTotal(catalog,mode):0,disabled=total===0;
-    return '<button type="button" class="study-game-tile game-'+mode.icon+'" data-game-start="'+esc(mode.id)+'"'+(mode.id==="reading"?' aria-label="Reading / ELA"':'')+(disabled?' disabled aria-disabled="true"':'')+'>'+window.ABVMStudyGameView.icon(mode.icon)+'<span class="study-game-copy"><strong>'+esc(mode.id==="spelling"?"Spelling":mode.id==="reading"?"Reading":mode.title)+'</strong><small>'+esc(mode.copy)+'</small>'+(disabled?'<em>Not ready yet</em>':record.plays?'<em>Practiced before · Best solved: '+record.best+' / '+total+' (includes retries)</em>':'')+'</span><b aria-hidden="true">›</b></button>';
-  }).join("")+'</div>';
+  const grid=window.ABVMStudyGameView.gameMenuTiles({modes,materials,selection,catalog,loadRecord:loadGameRecord,questionTotal:gameModeQuestionTotal});
   if(view)return view.homeHtml({gameGrid:grid,complete:!!window.ABVMStudyReview?.completion(),loading:studyMaterialsError?.pack!==pack,error:studyMaterialsError?.pack===pack});
   return '<section class="study-game-section"><div class="study-section-heading"><h2>Choose your subject</h2></div>'+grid+'</section>'+
     '<p class="game-material-status" role="status">Loading notes and test prep…</p>';
