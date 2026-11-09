@@ -1,6 +1,8 @@
 import {openNoteSubject} from './helpers/study-notes.mjs';
 import {withOriginalMathFixture} from './helpers/original-math-fixture.mjs';
 import {test,expect} from '@playwright/test';
+import {readFileSync} from 'node:fs';
+import {buildRuntimePack} from '../scripts/build-runtime-pack.mjs';
 test.use({serviceWorkers:'block'});
 
 async function mount(page,day,testInfo,scopedSchoolwork=null){
@@ -214,10 +216,16 @@ test('current notes and cumulative reviewed schoolwork remain separately availab
 
 test('October 15 Religion Chapter 3 Test Prep uses only reviewed source-backed questions in the actual browser',async({page})=>{
   await page.clock.setFixedTime(new Date('2026-10-13T20:00:00-04:00'));
-  const [source,runtime]=await Promise.all([
-    page.request.get('/data/study-pack.json').then(response=>response.json()),
-    page.request.get('/data/study-pack-runtime.json').then(response=>response.json())
-  ]);
+  // This is an archived, checked October lesson, not a current November assignment.
+  // Preserve the teacher-withdrawal contract while testing the historical player
+  // with a pinned public-source snapshot and the real runtime compactor.
+  const source=JSON.parse(readFileSync(
+    new URL('./fixtures/abvm-source-snapshot-2026-11-09.json',import.meta.url),'utf8'));
+  const runtime=buildRuntimePack(source);
+  await page.route('**/data/study-pack*.json*',route=>{
+    const isRuntime=new URL(route.request().url()).pathname.endsWith('/study-pack-runtime.json');
+    return route.fulfill({json:isRuntime?runtime:source});
+  });
   const reviewed=source.pack.contentPipeline.questions.filter(q=>
     q.subject==='Religion'&&q.sourceLineage?.matchedEvidence?.some(value=>
       typeof value==='string'&&/^\s*Chapter\s+3\s*:/i.test(value)));
@@ -241,7 +249,7 @@ test('October 15 Religion Chapter 3 Test Prep uses only reviewed source-backed q
     await expect(page.locator('.game-question-card')).toBeVisible();
     const prompt=await page.locator('.game-question-card > h2').innerText();
     const q=allowed.get(prompt);
-    expect(q,'only reviewed Chapter 3 questions may appear in the live player').toBeTruthy();
+    expect(q,'only reviewed Chapter 3 questions from the pinned historical source may appear').toBeTruthy();
     const choices=await page.locator('[data-game-answer] strong').allTextContents();
     expect([...choices].sort()).toEqual([...q.choices].sort());
     const index=choices.indexOf(q.answer);
