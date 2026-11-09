@@ -66,6 +66,20 @@ test('math worksheets show only relevant blank diagrams, without answers or extr
   ]}))[0],/Empty place-value chart/);
 });
 
+test('compact publisher bubble papers retain six questions and do not add overflow-inducing organizers',()=>{
+  const items=Array.from({length:16},(_,i)=>({
+    id:'new-'+i,skill:'place-value',prompt:'Which original example matches goal '+(i+1)+'?',
+    choices:['Original A','Original B','Original C','Original D'],answer:'Original B',
+    explanation:'Separate parent explanation.',
+  }));
+  const sheet=renderTestWorksheet(guide('Math (Ch. 2)',items,{subject:'Math'}));
+  const [student,key]=split(sheet);
+  assert.match(student,/class="sheet student-test teacher-bubble-choice"/);
+  assert.equal((student.match(/class="problem teacher-bubble-choice-item"/g)||[]).length,6);
+  assert.doesNotMatch(student.slice(student.indexOf('</style>')),/class="math-visual"|Empty place-value chart|Number line from zero to twenty/);
+  assert.match(key,/Separate parent explanation/);
+});
+
 test('unknown test scope cannot create a bank, diagram, questions, or parent answers',()=>{
   const html=renderTestWorksheet(guide('Religion Chapter 1',[question(1,'Baptism')],{scopePending:true}));
   assert.doesNotMatch(html.slice(html.indexOf('</head>')),/teacher-word-bank|math-visual|adult-key|word-bank-item/);
