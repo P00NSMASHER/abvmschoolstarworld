@@ -62,14 +62,16 @@ test('two distinct due prior skills return to an ordinary Math round; six slots 
   assert.equal(local.has('abvm-study-learning:v2'),false,'no new privacy-sensitive storage lane');
 });
 test('fresh, future, malformed, or unsupported review state never pulls in old material',()=>{
-  const {review,engine,storage}=setup();
-  const m=model(engine,storage);
+  const {review}=setup();
   for(const learning of [
     {},{'review-a':{Seen:0}},
     {'review-a':{Review:{version:1,reviewedAt:NOW+5*DAY,dueAt:NOW+6*DAY}}},
     {'review-a':{Seen:1,Review:{version:2,dueAt:NOW-DAY}}},
     {'review-a':{Seen:1,Review:{version:1,reviewedAt:Infinity,dueAt:0}}},
   ]){
+    // Each negative case starts a fresh session. Reusing one 16-item current
+    // bank over five sessions legitimately exhausts it via existing rotation.
+    const {engine,storage}=setup(),m=model(engine,storage);
     const round=m.round('math',{seed:'safe',learning});
     assert.equal(round.questions.length,8);
     assert(round.questions.every(q=>q.id.startsWith('current-')));
