@@ -1,5 +1,5 @@
 /** Separate current-curriculum learning notes and assessment-style practice papers. */
-import {renderClassroomStudyGuide} from './classroom-test-guide.mjs?v=5';
+import {renderClassroomStudyGuide} from './classroom-test-guide.mjs?v=6';
 import {premiumPaperCss,decoratePaper} from './premium-paper-theme.mjs?v=2';
 import {teacherTestReferenceForGuide,teacherFormatSummary,classroomPracticeFormatSummary} from './teacher-test-format.mjs';
 
