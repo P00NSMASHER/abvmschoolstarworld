@@ -39,7 +39,7 @@ test('November lunch entries include all school dates, closures and noon dismiss
   // lunch publication always remain on November 2-6. The production recovery
   // controller independently checks the current school week and live parity.
   const declaredWeek = pack.pack?.lunchMenuSource?.weekStart;
-  assert.match(declaredWeek, /^\\d{4}-\\d{2}-\\d{2}$/);
+  assert.match(declaredWeek, /^\d{4}-\d{2}-\d{2}$/);
   const publishedDate = new Date(declaredWeek + 'T15:00:00Z');
   assert.equal(schoolWeek(publishedDate)[0], declaredWeek,
     'A published lunch week must begin on its declared school Monday');
@@ -66,7 +66,7 @@ test('November lunch entries include all school dates, closures and noon dismiss
     const wrongWeek = structuredClone(candidate);
     wrongWeek.lunchMenuSource.weekStart = '2026-10-26';
     assert.match(validateLunchPublication(wrongWeek, {now}).join(' '),
-      /identity\\/week is invalid/);
+      /identity\/week is invalid/);
   }
 });
 
