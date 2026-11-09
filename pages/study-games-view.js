@@ -62,8 +62,8 @@ function starPenalty(g){const p=g.lastStarPenalty;if(!p)return "";return '<small
 function canUseScratchCounter(question){
   if(question?.subject!=="Math"||question?.skill!=="math-subtraction")return false;
   const prompt=String(question.prompt||"");
-  if(!/(?:\\d\\s*[-−]\\s*\\d|subtract|take away|left\\b)/i.test(prompt))return false;
-  const values=[...prompt.matchAll(/\\b\\d{1,3}\\b/g)].map(match=>Number(match[0]));
+  if(!/(?:\d\s*[-−]\s*\d|subtract|take away|left\b)/i.test(prompt))return false;
+  const values=[...prompt.matchAll(/\b\d{1,3}\b/g)].map(match=>Number(match[0]));
   return values.length>0&&values.every(value=>value>=0&&value<=20);
 }
 function updateScratchCounter(current,delta){
