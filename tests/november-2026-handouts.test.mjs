@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {catalogMeals, validateLunchPublication} from '../scripts/lunch-publication.mjs';
+import {catalogMeals, schoolWeek, refreshLunchPublication, validateLunchPublication} from '../scripts/lunch-publication.mjs';
 import {validateUploadedNoticePolicy} from '../scripts/uploaded-notice-policy.mjs';
 import {validateUploadedNoticeIntegration} from '../scripts/validate-uploaded-notices.mjs';
 import {validateSchoolwork} from '../scripts/validate-schoolwork.mjs';
@@ -24,7 +24,7 @@ test('November handout provenance and every posted event survive the runtime pac
   assert.ok(!JSON.stringify({calendar,lunch}).includes('Emma'));
 });
 
-test('November lunch entries include all school dates, closures and noon dismissal meals', () => {
+test('November lunch entries include all school dates, closures and noon dismissal meals', async () => {
   const november = catalogMeals().filter(meal => meal.date.startsWith('2026-11'));
   assert.equal(november.length, 21);
   assert.equal(november.filter(meal => meal.status !== 'no-school').length, 18);
@@ -34,7 +34,40 @@ test('November lunch entries include all school dates, closures and noon dismiss
   for (const date of ['2026-11-06','2026-11-25']) {
     assert.ok(november.find(x => x.date === date)?.items.length >= 3);
   }
-  assert.deepEqual(validateLunchPublication(pack.pack, {now: new Date('2026-11-03T15:00:00Z')}), []);
+
+  // This is a versioned November archive test, not a demand that the *live*
+  // lunch publication always remain on November 2-6. The production recovery
+  // controller independently checks the current school week and live parity.
+  const declaredWeek = pack.pack?.lunchMenuSource?.weekStart;
+  assert.match(declaredWeek, /^\\d{4}-\\d{2}-\\d{2}$/);
+  const publishedDate = new Date(declaredWeek + 'T15:00:00Z');
+  assert.equal(schoolWeek(publishedDate)[0], declaredWeek,
+    'A published lunch week must begin on its declared school Monday');
+  assert.deepEqual(validateLunchPublication(pack.pack, {now: publishedDate}), []);
+
+  // Reproduce both handout-backed weeks offline. An independent newly built
+  // November 9-13 publication must pass without accepting invented lunches,
+  // a forged source week, or a network-only replacement of reviewed evidence.
+  for (const iso of ['2026-11-03T15:00:00Z','2026-11-09T15:00:00Z']) {
+    const now = new Date(iso), candidate = {};
+    const result = await refreshLunchPublication(candidate, {
+      now,
+      fetchImpl: async () => { throw new Error('Unexpected network lunch source'); },
+    });
+    assert.equal(result.verified, true,
+      'The pinned, reviewed November school notice must establish its own meals');
+    assert.deepEqual(candidate.lunchMenu.map(meal => meal.date), schoolWeek(now));
+    assert.deepEqual(validateLunchPublication(candidate, {now}), []);
+
+    const changedMeal = structuredClone(candidate);
+    changedMeal.lunchMenu[0].items = ['Unreviewed replacement'];
+    assert.match(validateLunchPublication(changedMeal, {now}).join(' '),
+      /lost or changed a reviewed meal/);
+    const wrongWeek = structuredClone(candidate);
+    wrongWeek.lunchMenuSource.weekStart = '2026-10-26';
+    assert.match(validateLunchPublication(wrongWeek, {now}).join(' '),
+      /identity\\/week is invalid/);
+  }
 });
 
 test('Only original Grade 2 practice is public and undated work stays undated', () => {
