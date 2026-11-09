@@ -14,7 +14,7 @@ or upload learner work.
   Ambiguous answers, repeated answers, prompt-leaked answers, or missing format evidence
   revert to the original multiple-choice or written-response form. Do not claim the next test
   will use a word bank.
-- A Math paper whose verified test topic is place value/expanded form may include an **empty**
+- A compact Math paper (up to four questions, excluding existing bubble-layout papers) whose verified test topic is place value/expanded form may include an **empty**
   hundreds/tens/ones scratch chart for 1–3 digit problems. Supported subtraction within 20
   may include a number line; larger or unrelated problems get no invented model.
 - Every question retains its independently checked answer in the **separate adult key**;
