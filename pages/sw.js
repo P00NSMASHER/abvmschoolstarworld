@@ -1,22 +1,22 @@
 const CACHE_PREFIX = "abvm-grade2-parent-companion-";
-const CACHE = "abvm-grade2-parent-companion-v206-test-prep-coverage";
+const CACHE = "abvm-grade2-parent-companion-v207-due-review-interleave";
 const STATIC_SHELL = [
   "./index.html",
   "./styles.css?v=116",
   "./design-polish.css?v=19",
   "./study-games-materials.css?v=22",
   "./study-review.js?v=4",
-  "./app.js?v=170",
+  "./app.js?v=171",
   "./product-view.js?v=23",
   "./study-teaching.css?v=1",
   "./school-updates.js?v=4",
   "./weekly-learning.js?v=6",
-  "./study-games.js?v=105",
+  "./study-games.js?v=106",
   "./study-games-view.js?v=15",
   "./manifest.webmanifest",
   "./assets/abvm-app-icon-192.png"
 ];
-const OPTIONAL_DATA = ["./assets/abvm-app-icon-180.png", "./assets/abvm-app-icon-512.png", "./assets/badges/nest-explorer-premium.webp", "./assets/badges/little-luminary-premium.webp", "./assets/badges/feather-cadet-premium.webp", "./assets/badges/star-voyager-premium.webp", "./assets/badges/sky-scholar-premium.webp", "./assets/badges/wing-leader-premium.webp", "./assets/badges/study-sentinel-premium.webp", "./assets/badges/school-spirit-premium.webp", "./assets/badges/blue-ribbon-ace-premium.webp", "./assets/badges/golden-quill-premium.webp", "./assets/badges/sky-captain-premium.webp", "./assets/badges/eagle-vanguard-premium.webp", "./assets/badges/honor-guardian-premium.webp", "./assets/badges/crown-keeper-premium.webp", "./assets/badges/star-commander-premium.webp", "./assets/badges/eaglet.webp", "./assets/badges/starlight.webp", "./assets/badges/spark.webp", "./assets/badges/scholar.webp", "./assets/badges/golden.webp", "./assets/badges/eagle.webp", "./assets/badges/champion.webp", "./assets/illustrations/reading.webp", "./assets/illustrations/math.webp", "./assets/illustrations/spelling.webp", "./assets/illustrations/religion.webp", "./assets/illustrations/eagle.webp", "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./data/homework-current.json", "./homework-feed.js?v=5", "./study-materials.mjs?v=1", "./study-notes-scope.mjs", "./study-games-materials-view.mjs?v=21", "./grade2-original-vocabulary.mjs", "./study-notes-library.mjs?v=5", "./study-hub-core.mjs", "./teacher-test-format.mjs", "./religion-unit1-review.mjs", "./study-room-view.mjs", "./classroom-test-guide.mjs?v=5", "./test-study-pair.mjs?v=7", "./premium-paper-theme.mjs?v=2", "./study-experience.mjs","./study-resources.mjs", "./study-model.mjs", "./star-practice.mjs", "./lunch-art.js?v=3", "./data/lunch-art-current.json", "./assets/school/abvm-school-sign.webp", "./assets/school/abvm-school-hero.webp", "./assets/school/abvm-school-aerial.webp", "./assets/school/abvm-school-facade.webp"];
+const OPTIONAL_DATA = ["./assets/abvm-app-icon-180.png", "./assets/abvm-app-icon-512.png", "./assets/badges/nest-explorer-premium.webp", "./assets/badges/little-luminary-premium.webp", "./assets/badges/feather-cadet-premium.webp", "./assets/badges/star-voyager-premium.webp", "./assets/badges/sky-scholar-premium.webp", "./assets/badges/wing-leader-premium.webp", "./assets/badges/study-sentinel-premium.webp", "./assets/badges/school-spirit-premium.webp", "./assets/badges/blue-ribbon-ace-premium.webp", "./assets/badges/golden-quill-premium.webp", "./assets/badges/sky-captain-premium.webp", "./assets/badges/eagle-vanguard-premium.webp", "./assets/badges/honor-guardian-premium.webp", "./assets/badges/crown-keeper-premium.webp", "./assets/badges/star-commander-premium.webp", "./assets/badges/eaglet.webp", "./assets/badges/starlight.webp", "./assets/badges/spark.webp", "./assets/badges/scholar.webp", "./assets/badges/golden.webp", "./assets/badges/eagle.webp", "./assets/badges/champion.webp", "./assets/illustrations/reading.webp", "./assets/illustrations/math.webp", "./assets/illustrations/spelling.webp", "./assets/illustrations/religion.webp", "./assets/illustrations/eagle.webp", "./data/study-pack-runtime.json", "./data/study-archive.json", "./data/schoolwork.json", "./data/religion-sources.json", "./data/homework-current.json", "./homework-feed.js?v=5", "./study-materials.mjs?v=2", "./study-notes-scope.mjs", "./study-games-materials-view.mjs?v=21", "./grade2-original-vocabulary.mjs", "./study-notes-library.mjs?v=5", "./study-hub-core.mjs", "./teacher-test-format.mjs", "./religion-unit1-review.mjs", "./study-room-view.mjs", "./classroom-test-guide.mjs?v=5", "./test-study-pair.mjs?v=7", "./premium-paper-theme.mjs?v=2", "./study-experience.mjs","./study-resources.mjs", "./study-model.mjs", "./star-practice.mjs", "./lunch-art.js?v=3", "./data/lunch-art-current.json", "./assets/school/abvm-school-sign.webp", "./assets/school/abvm-school-hero.webp", "./assets/school/abvm-school-aerial.webp", "./assets/school/abvm-school-facade.webp"];
 
 // Only core offline learning, class notes and the current governed feed are
 // eagerly downloaded. Large badge collections and school/lunch artwork warm
