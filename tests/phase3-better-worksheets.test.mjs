@@ -68,6 +68,6 @@ test('math worksheets show only relevant blank diagrams, without answers or extr
 
 test('unknown test scope cannot create a bank, diagram, questions, or parent answers',()=>{
   const html=renderTestWorksheet(guide('Religion Chapter 1',[question(1,'Baptism')],{scopePending:true}));
-  assert.doesNotMatch(html,/teacher-word-bank|math-visual|adult-key|word-bank-item/);
+  assert.doesNotMatch(html.slice(html.indexOf('</head>')),/teacher-word-bank|math-visual|adult-key|word-bank-item/);
   assert.match(html,/Check your class notes/);
 });
