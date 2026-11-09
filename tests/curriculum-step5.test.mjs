@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {buildGrade2ContentPipeline, validateGrade2ContentPipeline} from '../scripts/grade2-content-pipeline.mjs';
 
-const envelope=JSON.parse(readFileSync(new URL('../pages/data/study-pack.json',import.meta.url),'utf8'));
+const envelope=JSON.parse(readFileSync(new URL('./fixtures/abvm-source-snapshot-2026-11-09.json',import.meta.url),'utf8'));
 const checkedAt=envelope.sourceLastCheckedAt;
 const reading=envelope.pack.subjects.find(row=>row.subject==='Reading / ELA');
 const religion=envelope.pack.subjects.find(row=>row.subject==='Religion');

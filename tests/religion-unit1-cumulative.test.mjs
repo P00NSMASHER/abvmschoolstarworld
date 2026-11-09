@@ -7,7 +7,7 @@ import {questionsForTest,isReligionUnitOneReviewTest,religionChapterScopes} from
 import {printableStudyGuideHtml,printableWorksheetHtml} from '../pages/study-games-materials-view.mjs';
 
 const published=JSON.parse(readFileSync(
-  new URL('../pages/data/study-pack.json',import.meta.url),'utf8')).pack;
+  new URL('./fixtures/abvm-source-snapshot-2026-11-09.json',import.meta.url),'utf8')).pack;
 const questions=published.contentPipeline.questions.map(q=>({...q,tier:'material'}));
 const storage={getItem:()=>null,setItem:()=>{},removeItem:()=>{}};
 function model(label='Religion Ch. 4') {

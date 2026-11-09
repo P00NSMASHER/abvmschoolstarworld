@@ -1019,7 +1019,7 @@ test('Class notes display exact repeats once per subject while preserving govern
 });
 
 test("actual October 15 Chapter 3 live Test Prep works with compact runtime and full-pack fallback",()=>{
-  const full=JSON.parse(readFileSync(new URL('../pages/data/study-pack.json',import.meta.url),'utf8'));
+  const full=JSON.parse(readFileSync(new URL('./fixtures/abvm-source-snapshot-2026-11-09.json',import.meta.url),'utf8'));
   const runtime=buildRuntimePack(full);
   const reviewed=full.pack.contentPipeline.questions.filter(row=>religionChapterScopes(row).includes(3));
   const allowed=new Set(reviewed.map(q=>q.id));
