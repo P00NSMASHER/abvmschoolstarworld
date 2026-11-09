@@ -102,7 +102,8 @@ test('silent storage write rejection is detected instead of falsely promising hi
     }finally{Storage.prototype.setItem=old}
   },sample);
   expect(result).toEqual({status:'not-saved',seen:1,persisted:null});
-  await page.getByRole('button',{name:/Math/i}).first().click();
+  await page.locator('.bottom-nav [data-tab="today"]').click();
+  await page.locator('.bottom-nav [data-tab="study"]').click();
   await expect(page.locator('.game-history-warning')).toBeVisible();
   await expect(page.locator('.game-history-warning')).toContainText('not saved on this device');
   await page.locator('[data-game-save-retry]').click();
