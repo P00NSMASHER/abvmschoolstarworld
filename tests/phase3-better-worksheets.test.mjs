@@ -17,7 +17,7 @@ test('observed Chapter 1 word-bank format prints checked original questions with
   const [student,key]=split(renderTestWorksheet(guide('Religion Chapter 1',items)));
   assert.match(student,/class="teacher-word-bank"/);
   assert.match(student,/class="word-bank-words"/);
-  assert.match(student,/class="word-bank-problems"/);
+  assert.match(student,/class="paper-problems word-bank-problems /);
   assert.equal((student.match(/class="problem word-bank-item"/g)||[]).length,3);
   assert.equal((student.match(/aria-label="Write an answer from the word bank"/g)||[]).length,3);
   for(const answer of items.map(item=>item.answer))assert.match(student,new RegExp('<li>'+answer+'</li>'));
@@ -27,7 +27,7 @@ test('observed Chapter 1 word-bank format prints checked original questions with
   assert.match(key,/3\.<\/b> Holy Spirit/);
   assert.match(key,/Checked original reason 3/);
   const words=[...student.matchAll(/class="word-bank-words">([\s\S]*?)<\/ul>/g)][0][1];
-  assert.notEqual(words.indexOf('Baptism')<words.indexOf('Grace'),false,'word bank remains deterministic');
+  assert.ok(words.indexOf('Baptism')>words.indexOf('Grace'),'word bank order must not give away answer sequence');
 });
 
 test('unverified, duplicated, leaked and unsuitable answer banks keep the original checked response options',()=>{
