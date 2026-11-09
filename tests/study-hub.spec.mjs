@@ -3,7 +3,7 @@ import {withOriginalMathFixture} from './helpers/original-math-fixture.mjs';
 import {test,expect} from '@playwright/test';
 test.use({serviceWorkers:'block'});
 
-async function mount(page,day,testInfo){
+async function mount(page,day,testInfo,scopedSchoolwork=null){
   await page.clock.setFixedTime(new Date(day+'T16:00:00-04:00'));
   const envelope=await (await page.request.get('/data/study-pack.json')).json();
   const fixture=withOriginalMathFixture(envelope);
@@ -13,6 +13,7 @@ async function mount(page,day,testInfo){
     {date:'Friday, Oct. 9',label:'Math test',kind:'test'}
   ];
   await page.route('**/data/study-pack*.json*',route=>route.fulfill({json:fixture}));
+  if(scopedSchoolwork)await page.route('**/data/schoolwork.json*',route=>route.fulfill({json:scopedSchoolwork}));
   await page.goto('/#study');
   await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready',{timeout:15000});
   await page.screenshot({animations:"disabled",path:testInfo.outputPath('games-weekly-test-prep.png'),fullPage:true});
@@ -30,7 +31,21 @@ test('weekly test prep covers same-day subjects in the existing player and compl
   const religion=work.lessons.filter(lesson=>lesson.subject==='Religion'&&lesson.chapter===2)
     .flatMap(lesson=>lesson.questions).filter(q=>q.skill==='religion-chapter-2');
   expect(archivedMath).toHaveLength(3);expect(religion).toHaveLength(10);
-  await mount(page,'2026-10-04',testInfo);
+  // A positive strict-Test-Prep check needs practice actually dated to the
+  // simulated assessment week. Current live teacher content can legitimately
+  // withdraw older Math and Religion topics. Reuse checked historical questions
+  // in a TEST-ONLY hypothetical weekly lesson, without changing public sources
+  // or admitting stale exercises into production test prep.
+  const weekOf='2026-10-05';
+  const chapterTwo=work.lessons.find(lesson=>lesson.subject==='Religion'&&lesson.chapter===2);
+  expect(chapterTwo).toBeTruthy();
+  const scopedSchoolwork={...work,lessons:[
+    ...work.lessons,
+    {id:'qa-weekly-original-math',title:'QA original Math practice for dated Test Prep',subject:'Math',
+      weekOf,studiedOn:null,notes:[],questions:archivedMath},
+    {...chapterTwo,id:'qa-weekly-original-religion-ch2',weekOf,studiedOn:null},
+  ]};
+  await mount(page,'2026-10-06',testInfo,scopedSchoolwork);
   const currentMath=await page.evaluate(async()=>{
     const envelope=await fetch('./data/study-pack-runtime.json',{cache:'no-store'}).then(response=>response.json());
     const sourceKey=window.ABVMStudyGames.sourceKeyFromEnvelope(envelope.pack,envelope);
