@@ -303,7 +303,7 @@ export function renderClassroomStudyGuide(guide) {
         'Mode: Practice like my teacher. Prior teacher-marked publisher practice; the next test format is unverified.'
     )+(mixedBubbles?' '+escape(eligibleBubbles+' of '+questions.length+' items use the observed bubble layout; other items retain their original response format.'):'')+'</p>':'')+
     (wordBank?'<p class="caution format-evidence">Practice layout from a previous actual teacher test; the next test format is not guaranteed.</p>'+wordBankHeader(wordBank):'')+
-    mathVisual(guide,questions)+
+    (kind==='math' && !bubbleFormat && questions.length<=4 ? mathVisual(guide,questions) : '')+
     (questions.length?'<h2 class="section-title">'+escape(clean(guide.label)||'Practice questions')+'</h2><ol class="paper-problems '+(teacherLetterChoice?'teacher-letter-choice-problems ':wordBank?'word-bank-problems ':bubbleFormat?'teacher-bubble-choice-problems ':kind==='math'?'math-grid':'compact-problems')+'">'+
       questions.map((row,i)=>teacherLetterChoice?teacherLetterChoiceHtml(row,i):wordBank?wordBankQuestionHtml(row,i):bubbleFormat&&checkedBubbleQuestionForGuide(guide,row)?teacherBubbleChoiceHtml(row,i):questionHtml(row,i,kind)).join('')+'</ol>'
       :'<p class="caution">No matching original-practice questions are available for this assessment. Review the available class notes.</p>')+
