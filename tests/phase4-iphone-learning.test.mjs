@@ -17,9 +17,9 @@ test('phase 4 offline versions match page, bootloader, CSS and cache identity',(
 });
 test('phase 4 counter stays optional and has no scoring path',()=>{
  const app=read('pages/app.js'),view=read('pages/study-games-view.js');
- assert.match(app,/if\(target\.matches\("\[data-game-counter\]"\)\)\{changeStudyScratchCounter/);
- assert.match(app,/function changeStudyScratchCounter\(value\)/);
- const step=app.split('function changeStudyScratchCounter(value)')[1].split('function answerStudyGame(index)')[0];
+ assert.match(app,/target\.matches\("\[data-game-counter\],\[data-game-counter-reset\]"\)/);
+ const step=app.split('if(target.matches("[data-game-counter],[data-game-counter-reset]"))')[1].split('if(target.matches("[data-game-save-retry]"))')[0];
+ assert.match(step,/updateScratchCounter\(g\.counterValue,delta\)/);
  assert.doesNotMatch(step,/recordLearning|recordAttempt|commitStudyStar|score\+\+|noteRoundLearning|answerStudyGame/);
  assert.match(view,/question\?\.subject!=="Math"\|\|question\?\.skill!=="math-subtraction"/);
  assert.match(view,/aria-label="Add one counter"/);
