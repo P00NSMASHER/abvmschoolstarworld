@@ -365,7 +365,7 @@ function ensureStudyMaterials(retry=false){
   if(currentStudyMaterials()&&!retry)return Promise.resolve(studyMaterials);
   const data=pack,catalog=studyGameCatalog(),engine=studyGameEngine(),events=datedImportantEvents().filter(r=>kindClass(r.item)==="test").map(r=>({date:isoDateKey(r.date),label:r.item.label,kind:r.item.kind,endsAt:r.item.endsAt}));
   const request={pack:data,promise:null};
-  request.promise=Promise.all([import("./study-materials.mjs?v=1"),import("./study-games-materials-view.mjs?v=21")]).then(async([materials,view])=>{
+  request.promise=Promise.all([import("./study-materials.mjs?v=2"),import("./study-games-materials-view.mjs?v=21")]).then(async([materials,view])=>{
     if(pack===data&&!studyMaterialsView){studyMaterialsView=view.createMaterialsView({onChange:()=>{if(isStudyRoute())renderGames()},onRetry:retryStudyMaterials,onTest:startStudyTest,onGuideRefresh:refreshTestGuideSources});if(isStudyRoute()&&gameState.screen==="menu")renderGames()}
     const model=await materials.loadStudyMaterials({pack:data,catalog,events,engine,refreshResources:retry});
     if(pack===data){
@@ -388,7 +388,7 @@ function ensureStudyGameEngine(){
   if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
   if(studyEnginePromise)return studyEnginePromise;
   const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.async=true;s.onload=()=>window[key]?resolve():reject(new Error(key+" did not initialize"));s.onerror=()=>reject(new Error(key+" could not be loaded"));document.head.append(s)});
-  studyEnginePromise=Promise.all([load("./study-games.js?v=105","ABVMStudyGames"),load("./study-games-view.js?v=15","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
+  studyEnginePromise=Promise.all([load("./study-games.js?v=106","ABVMStudyGames"),load("./study-games-view.js?v=15","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
   return studyEnginePromise;
 }
 function studyGameCatalog(){

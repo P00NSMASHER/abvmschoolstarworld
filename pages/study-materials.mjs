@@ -468,6 +468,26 @@ export function createStudyMaterials({
           ? array(savedRotation.recent).filter(value => typeof value === 'string')
           : [];
         const recent = new Set(previous);
+        // Reserve at most two of eight questions for genuinely due, previously
+        // reviewed skills. Only the already permitted saved/review sources qualify.
+        // Strict Test Prep and teacher-scoped question pools never pass here.
+        const olderDue = unique([...array(scope.groups[1]),...array(scope.groups[2])]
+          .filter(q => engine?.reviewDue?.(history,q.skill,instant()) === true));
+        const priority = skill => {
+          const score=Number(engine?.reviewPriority?.(history,skill,instant()));
+          return Number.isFinite(score)?score:0;
+        };
+        olderDue.sort((a,b) =>
+          Number(recent.has(practiceIdentity(a)))-Number(recent.has(practiceIdentity(b))) ||
+          priority(b.skill)-priority(a.skill) || a.skill.localeCompare(b.skill) || a.id.localeCompare(b.id));
+        const revisitedSkills = new Set();
+        for (const q of olderDue) {
+          if (questions.length >= 2) break;
+          if (revisitedSkills.has(q.skill)) continue;
+          revisitedSkills.add(q.skill);
+          seen.add(practiceIdentity(q));
+          questions.push(q);
+        }
         // Use every eligible, unshown item across the ordered source stages
         // before any earlier item is repeated. A second pass is bounded and
         // permits repetition only when the source-backed bank is exhausted.

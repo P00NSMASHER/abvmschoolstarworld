@@ -1278,6 +1278,10 @@ function targetDifficultyFor(skillStats,skill){
   if((Number(row.ConsecutiveWrong)||0)>=2)return 2;
   return Math.max(2,Math.min(3,Number(row.TargetDifficulty)||2));
 }
+// Only the existing, validated local review history decides whether an older skill is due.
+function reviewDue(skillStats,skill,now=Date.now()){
+  return window.ABVMStudyReview?.isDue(skillStats?.[skill],now)===true;
+}
 function reviewPriority(skillStats,skill,now=Date.now()){
   const row=skillStats?.[skill]||{};
   const scheduled=window.ABVMStudyReview?.validReview(row,now);
@@ -2198,6 +2202,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,REVIEW_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  correctOriginalQuestion,buildCatalog,validateCatalog,validateRichContent,vocabularyDefinition,selectQuestions,selectDailyQuestions,learningFirstSummary,studyStarPolicy,nextStreakBonus,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,commitStudyStarPenalty,studyBadgeCatalog,studyBadgeCollection,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,reviewQuestionFamilySafeUsage,questionFamilyRolloutPolicy,reviewQuestionFamilyPromotion,itemQualityKey
+  correctOriginalQuestion,buildCatalog,validateCatalog,validateRichContent,vocabularyDefinition,selectQuestions,selectDailyQuestions,learningFirstSummary,studyStarPolicy,nextStreakBonus,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,commitStudyStarPenalty,studyBadgeCatalog,studyBadgeCollection,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,reviewDue,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,reviewQuestionFamilySafeUsage,questionFamilyRolloutPolicy,reviewQuestionFamilyPromotion,itemQualityKey
 });
 })();
