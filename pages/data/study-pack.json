@@ -1396,58 +1396,58 @@
     ],
     "lunchMenu": [
       {
-        "date": "2026-11-02",
-        "day": "Monday, Nov. 2",
+        "date": "2026-11-09",
+        "day": "Monday, Nov. 9",
         "items": [
           "Breaded chicken",
-          "Buttered pasta",
+          "Brown rice",
+          "Steamed broccoli",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-10",
+        "day": "Tuesday, Nov. 10",
+        "items": [
+          "CH. quesadilla wedge",
+          "Garden salad",
+          "Salsa",
+          "Steamed corn",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-11",
+        "day": "Wednesday, Nov. 11",
+        "items": [
+          "Breaded fish sandwich",
+          "Baby cake potatoes",
           "Baked beans",
           "Fruit"
         ],
         "sourceId": "abvm-2026-11-parent-school-menu"
       },
       {
-        "date": "2026-11-03",
-        "day": "Tuesday, Nov. 3",
+        "date": "2026-11-12",
+        "day": "Thursday, Nov. 12",
         "items": [
-          "Meatballs in gravy",
-          "Mashed potatoes",
-          "Garlic stick",
-          "Corn",
+          "Baked cheese pizza",
+          "Tortilla chips",
+          "Mixed vegetables",
           "Fruit"
         ],
         "sourceId": "abvm-2026-11-parent-school-menu"
       },
       {
-        "date": "2026-11-04",
-        "day": "Wednesday, Nov. 4",
+        "date": "2026-11-13",
+        "day": "Friday, Nov. 13",
         "items": [
-          "French toast sticks",
-          "Hash browns",
-          "Sausage link",
-          "Carrots",
-          "Fruit"
-        ],
-        "sourceId": "abvm-2026-11-parent-school-menu"
-      },
-      {
-        "date": "2026-11-05",
-        "day": "Thursday, Nov. 5",
-        "items": [
-          "Macaroni & cheese",
-          "Breaded chicken",
-          "Stewed tomatoes",
-          "Fruit"
-        ],
-        "sourceId": "abvm-2026-11-parent-school-menu"
-      },
-      {
-        "date": "2026-11-06",
-        "day": "Friday, Nov. 6",
-        "items": [
-          "Hamburger with roll",
-          "French fries",
-          "Steamed peas",
+          "Cheesy breadsticks",
+          "Dipping sauce",
+          "Garden salad",
+          "Green beans",
           "Fruit"
         ],
         "sourceId": "abvm-2026-11-parent-school-menu"
@@ -1741,16 +1741,16 @@
     "lunchMenuSource": {
       "status": "current-week",
       "retrievalState": "verified",
-      "checkedAt": "2026-11-09T01:35:48.020Z",
-      "lastAttemptAt": "2026-11-09T01:35:48.020Z",
+      "checkedAt": "2026-11-09T15:41:28.040Z",
+      "lastAttemptAt": "2026-11-09T15:41:28.040Z",
       "provider": "Saint Clair Area School District",
       "school": "Assumption BVM School",
       "feedUrl": "https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu",
       "verificationMode": "reviewed-school-handout",
       "parentResourcesUrl": "https://www.assumptionbvmschool.net/parent-resources",
-      "weekStart": "2026-11-02",
-      "weekEnd": "2026-11-06",
-      "coverageThrough": "2026-11-06",
+      "weekStart": "2026-11-09",
+      "weekEnd": "2026-11-13",
+      "coverageThrough": "2026-11-13",
       "missingDates": [],
       "sourcePages": [
         {
@@ -1759,7 +1759,7 @@
           "contentHash": "a5d25beb5cbd34522ce4645172ab4efce1d041aab7fcc33521f3433c5cd0b178",
           "proofMode": "reviewed-notice",
           "reviewedAt": "2026-11-03T15:00:00.000Z",
-          "checkedAt": "2026-11-09T01:35:48.020Z",
+          "checkedAt": "2026-11-09T15:41:28.040Z",
           "state": "reviewed-notice"
         }
       ],
@@ -2484,7 +2484,7 @@
         "sourceId": "abvm-2026-11-parent-school-menu"
       }
     ],
-    "lunchMenuHash": "538372d8f57b884f4ee8d46c8d4e6109c3615269270b10e7b90670b7655cda1a",
+    "lunchMenuHash": "3db74989035a33b82a7e25dbf214c0e88fb185716fb1f2eb12410a8b3a051691",
     "contentPipeline": {
       "schemaVersion": 2,
       "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
