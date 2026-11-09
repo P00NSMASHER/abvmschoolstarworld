@@ -401,14 +401,7 @@ function studyGameCatalog(){
   return studyGameCatalogCache;
 }
 function gameMode(id){if(gameState.mode===id&&gameState.modeInfo)return gameState.modeInfo;if(id==="daily")return{id:"daily",title:"Daily Practice",subjects:[],count:8};return STUDY_GAME_MODES.find(mode=>mode.id===id)||STUDY_GAME_MODES[0]}
-function gameModeQuestionTotal(c,m){
-  const s=m?.subjects||[],k=m?.skills||[],x=s.length||k.length;
-  const eligible=(c?.questions||[]).filter(q=>(!s.length||s.includes(q.subject))&&(!k.length||k.includes(q.skill)));
-  if(!x)return Math.min(m?.count||0,eligible.length);
-  if(k.length)return Math.min(m?.count||0,eligible.filter(q=>q.tier==="material").length);
-  const current=eligible.filter(q=>q.tier==="material"),review=eligible.filter(q=>q.tier==="recent-review"),star=eligible.filter(q=>q.tier==="star-fallback");
-  return Math.min(m?.count||0,(current.length?current:review.length?review:star).length)
-}
+function gameModeQuestionTotal(c,m){return window.ABVMStudyGameView.gameModeQuestionTotal(c,m)}
 function loadGameRecord(modeId,sourceKey=currentGameSourceKey()){return studyGameEngine()?.loadGameRecord?.(sourceKey,modeId)||{best:0,plays:0,totalCorrect:0,totalAnswered:0}}
 function saveGameRecord(){if(gameState.saved||!gameState.mode||!gameState.questions.length)return;studyGameEngine()?.saveGameRecord?.(gameState.sourceKey||currentGameSourceKey(),gameState.mode,{score:gameState.score,total:gameState.questions.length});gameState.saved=true}
 function currentGameSourceKey(){return studyGameCatalog()?.sourceKey||"current"}
@@ -446,14 +439,6 @@ if(kind!=="support")g.learningEvents.push({skill,kind,correct:!!correct,independ
 if(kind==="comeback"&&correct)g.comebackSucceeded=true;
 }
 function focusStudyAnswer(g){const node=stack().querySelector(g.answered||g.penaltyPending?".game-feedback":".game-answer:not(:disabled)");if(node){if(node.classList.contains("game-feedback"))node.tabIndex=-1;node.focus({preventScroll:true})}}
-function changeStudyScratchCounter(value){
-  const g=gameState,q=activeGameQuestion(),view=window.ABVMStudyGameView;
-  if(g.screen!=="play"||g.answered||g.penaltyPending||!view?.canUseScratchCounter?.(q))return;
-  const n=value==="reset"?0:view.updateScratchCounter(g.counterValue,value);
-  if(n===g.counterValue)return;
-  g.counterValue=n;renderGames();bindScreen();
-  stack().querySelector(value==="reset"?"[data-game-counter-reset]":'[data-game-counter="'+value+'"]')?.focus({preventScroll:true});
-}
 function answerStudyGame(index){
 const g=gameState,q=activeGameQuestion(),choice=q?.choices?.[index];if(g.screen!=="play"||g.answered||g.penaltyPending||choice===undefined||g.wrong?.includes(index))return;
 const correct=choice===q.answer,e=studyGameEngine();e?.note?.(q,index);g.tries=(g.tries||0)+1;g.selectedIndex=index;g.hintOpen=false;
@@ -542,13 +527,6 @@ function gameFinishHtml(){
   const promotion=g.rewardStatus==="done"&&g.newRanks?.length?window.ABVMStudyBadges.promotion(g.newRanks):"";
   return reveal+promotion+finish+goal;
 }
-function learningHistoryWarning(){
-  if(studyGameEngine()?.learningStorageState?.()!=="not-saved")return "";
-  return '<aside class="game-history-warning" role="status" aria-live="polite">'+
-    '<strong>Learning history is not saved on this device.</strong>'+
-    '<p>Recent answers remain in this tab, but could be lost if it closes. Check device storage, then retry.</p>'+
-    '<button type="button" data-game-save-retry>Try saving again</button></aside>';
-}
 function renderGames(){
   const previousScreen=stack().querySelector(".games-screen"),menuScroll=gameState.screen==="menu"&&previousScreen&&!previousScreen.classList.contains("is-playing")?previousScreen.scrollTop:null;
   if(!isStudyRoute())return;
@@ -567,7 +545,7 @@ function renderGames(){
   const body=practiceTitle+(gameState.screen==="play"?gamePlayHtml():gameState.screen==="finish"?gameFinishHtml():gameMenuHtml(catalog));
   const chrome=gameState.screen==="menu"&&!studyMaterialsView?.isPrep?.()?'<header class="app-header study-hero"><div class="study-hero-copy"><p>ASSUMPTION BVM · GRADE 2</p><h1 class="visually-hidden" tabindex="-1">Study</h1><h2>Let’s learn, <span>eagle!</span></h2></div>'+SCHOOL_LOGO_HTML+'<img class="study-hero-art" src="./assets/illustrations/eagle.webp" width="240" height="240" alt=""></header>':"";
   const state=materials?(materials.status.partial?"partial":"ready"):studyMaterialsError?.pack===pack?"partial":"loading";
-  stack().innerHTML='<div class="screen games-screen'+(gameState.screen!=="menu"?' is-playing':'')+'" data-study-state="'+state+'" role="region" aria-label="Study games">'+chrome+learningHistoryWarning()+body+(gameState.screen==="menu"?freshness():"")+'</div>';
+  stack().innerHTML='<div class="screen games-screen'+(gameState.screen!=="menu"?' is-playing':'')+'" data-study-state="'+state+'" role="region" aria-label="Study games">'+chrome+window.ABVMStudyGameView.learningHistoryWarning(studyGameEngine()?.learningStorageState?.())+body+(gameState.screen==="menu"?freshness():"")+'</div>';
   if(gameState.screen==="menu")window.ABVMStudyBadges.mount(stack(),"study",loadStudyRanks);
   if(menuScroll!==null)stack().querySelector(".games-screen").scrollTop=menuScroll;
   if(gameState.screen==="menu"){studyMaterialsView?.bind(stack());if(location.hash.includes("?notes")&&!stack().querySelector("[data-study-notes]")?.open)studyMaterialsView?.openNotes?.();}
@@ -635,8 +613,14 @@ function bindScreen(){
     if(target.matches("[data-game-read]")){const q=activeGameQuestion();if(q&&!studyMaterialsView?.readAloud.read(q.prompt+". "+q.choices.map((choice,i)=>String.fromCharCode(65+i)+". "+choice).join(". ")))toast("Read aloud is unavailable. You can keep practicing.");return;}
     if(target.matches("[data-game-start]")){startStudyGame(target.dataset.gameStart);return;}
     if(target.matches("[data-study-star-goal]")){studyGameEngine()?.selectStudyStarGoal?.(target.dataset.studyStarGoal);renderGames();return;}
-    if(target.matches("[data-game-counter]")){changeStudyScratchCounter(Number(target.dataset.gameCounter));return;}
-    if(target.matches("[data-game-counter-reset]")){changeStudyScratchCounter("reset");return;}
+    if(target.matches("[data-game-counter],[data-game-counter-reset]")){
+      const g=gameState,v=window.ABVMStudyGameView,delta=target.hasAttribute("data-game-counter-reset")?0:Number(target.dataset.gameCounter);
+      if(g.screen==="play"&&!g.answered&&!g.penaltyPending&&v?.canUseScratchCounter(activeGameQuestion())){
+        g.counterValue=delta===0?0:v.updateScratchCounter(g.counterValue,delta);renderGames();bindScreen();
+        stack().querySelector(delta===0?"[data-game-counter-reset]":'[data-game-counter="'+delta+'"]')?.focus({preventScroll:true});
+      }
+      return;
+    }
     if(target.matches("[data-game-save-retry]")){
       const saved=studyGameEngine()?.retrySaveLearning?.()===true;
       renderGames();bindScreen();toast(saved?"Learning history saved on this device.":"Device storage is still unavailable.");

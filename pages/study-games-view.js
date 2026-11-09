@@ -59,6 +59,14 @@ function richVisual(raw){
 
 function playfulMiss(g){return ["That answer took a wrong turn. Rude!","That answer just tripped over its shoelaces.","The eagle has questions about that answer.","Oops. That answer needs a tiny timeout."][(Number(g.index||0)+Number(g.tries||0))%4]}
 function starPenalty(g){const p=g.lastStarPenalty;if(!p)return "";return '<small class="study-star-penalty">'+esc(p.status==='pending'?'Saving star change…':p.status==='error'?'Star change could not be saved.':p.amount>0?'−'+p.amount+' Study Stars · you can earn them back.':'No stars lost — your balance is at zero.')+'</small>'}
+function gameModeQuestionTotal(c,m){
+  const s=m?.subjects||[],k=m?.skills||[],x=s.length||k.length;
+  const eligible=(c?.questions||[]).filter(q=>(!s.length||s.includes(q.subject))&&(!k.length||k.includes(q.skill)));
+  if(!x)return Math.min(m?.count||0,eligible.length);
+  if(k.length)return Math.min(m?.count||0,eligible.filter(q=>q.tier==="material").length);
+  const current=eligible.filter(q=>q.tier==="material"),review=eligible.filter(q=>q.tier==="recent-review"),star=eligible.filter(q=>q.tier==="star-fallback");
+  return Math.min(m?.count||0,(current.length?current:review.length?review:star).length)
+}
 function canUseScratchCounter(question){
   if(question?.subject!=="Math"||question?.skill!=="math-subtraction")return false;
   const prompt=String(question.prompt||"");
@@ -86,6 +94,13 @@ function scratchCounterHtml(question,g){
     '<button type="button" data-game-counter-reset aria-label="Clear counting board" '+(locked||count===0?'disabled':'')+'>Clear</button>'+
     '<button type="button" data-game-counter="1" aria-label="Add one counter" '+(locked||count===20?'disabled':'')+'>+ Add one</button>'+
     '</div></aside>';
+}
+function learningHistoryWarning(status){
+  if(status!=="not-saved")return "";
+  return '<aside class="game-history-warning" role="status" aria-live="polite">'+
+    '<strong>Learning history is not saved on this device.</strong>'+
+    '<p>Recent answers remain in this tab, but could be lost if it closes. Check device storage, then retry.</p>'+
+    '<button type="button" data-game-save-retry>Try saving again</button></aside>';
 }
 function play({g,mode,q,teach,retryInstruction,labels,canRead=false}){
   if(!q)return '<section class="game-empty"><h2>This practice is not ready yet.</h2><button type="button" data-game-home>Back to study</button></section>';
@@ -140,5 +155,5 @@ function finish({mode,state,record,summary={},reward={}}){
   const starsHtml='<div class="game-finish-stars" aria-label="'+stars+' practice stars">'+[0,1,2].map(i=>'<span class="'+(i<stars?'earned':'')+'">★</span>').join("")+'</div>';
   return '<section class="game-finish learning-first"><div class="study-finish-hero"><img class="study-finish-eagle" src="./assets/illustrations/eagle.webp" alt="" width="160" height="160" decoding="async"><div><span class="study-finish-eyebrow">'+esc(mode.title.toUpperCase())+'</span><h2>'+(accuracy.answered?'Nice work, eagle!':'Practice paused')+'</h2><p>'+(accuracy.answered?accuracy.answered+' questions practiced':'Your next practice is ready when you are.')+'</p></div></div><h3 class="learning-heading">Your score</h3><div class="game-score-summary" aria-label="First-try accuracy"><strong>'+esc(scoreText)+'</strong><span>'+esc(scoreDetails)+'</span></div>'+sectionsHtml+'<h3 class="learning-heading">What you learned</h3><div class="learning-summary" aria-label="Round learning summary"><div><strong>'+strong+'</strong><span>Skills answered independently</span></div><div><strong>'+remembered+'</strong><span>Skills recalled later</span></div><div><strong>'+practice+'</strong><span>Skills to revisit</span></div></div><p class="learning-summary-note">These learning counts are skills, not questions. One round does not prove mastery or predict a STAR score.</p>'+legacy+starsHtml+streakSummary+perfectHtml+rewardHtml+'<div class="game-finish-actions"><button type="button" class="primary" data-game-start="'+esc(mode.id)+'">Practice again</button><button type="button" data-game-home>Back to study</button></div></section>';
 }
-window.ABVMStudyGameView=Object.freeze({icon,play,goal,rewardReveal,finish,recordAttempt,scoreSummary,sectionScores,canUseScratchCounter,updateScratchCounter});
+window.ABVMStudyGameView=Object.freeze({icon,play,goal,rewardReveal,finish,recordAttempt,scoreSummary,sectionScores,canUseScratchCounter,updateScratchCounter,gameModeQuestionTotal,learningHistoryWarning});
 })();
