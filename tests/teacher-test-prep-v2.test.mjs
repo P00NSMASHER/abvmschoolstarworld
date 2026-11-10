@@ -47,13 +47,15 @@ test('genuine noun assessment selects only verified three-bubble format and prin
   assert.match(student,/future format is not guaranteed/);
 });
 
-test('math Chapter 2 publisher practice uses four bubbles while remaining explicitly non-test evidence',()=>{
+test('prior actual Math Chapter 2 assessment and publisher bubble practice retain distinct sources',()=>{
   const practice=Array.from({length:16},(_,i)=>({
     ...question(i+1,['hundreds','tens','ones','thousands'],'place-value'),
     subject:'Math',answer:'tens',prompt:'Which place does the digit occupy in new number '+(i+1)+'?',
   }));
   const guide=mathGuide(practice);
-  assert.equal(teacherTestReferenceForGuide(guide),null,'publisher practice is not a teacher-issued test');
+  const actual=teacherTestReferenceForGuide(guide);
+  assert.equal(actual?.origin,'prior-actual-teacher-test');
+  assert.equal(actual?.referenceCount,18,'the actual Chapter 2 post-test now gives stronger format evidence');
   const profile=classroomPracticeReferenceForGuide(guide);
   assert.equal(profile?.origin,'prior-teacher-marked-publisher-practice');
   assert.equal(checkedBubblePaperFormat(guide,practice)?.optionCount,4);
