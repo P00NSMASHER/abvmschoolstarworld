@@ -212,9 +212,16 @@ try {
     const dialog=page.locator('[data-study-guide-dialog]');
     await expect(dialog).toBeVisible({timeout:20000});
     const frame=page.frameLocator('[data-study-guide-dialog] iframe');
+    // Use the actual selected teacher test title, NOT check.label (a regex
+    // used only for discovery). Dictation's exact skill/week/hash gate must
+    // receive the original dated source label, never a search expression.
+    const selectedTestKey=await worksheet.getAttribute('data-test-key');
+    expect(selectedTestKey?.startsWith(check.date+'|'),'worksheet must retain its exact date and teacher label').toBe(true);
+    const selectedTestLabel=selectedTestKey.slice(check.date.length+1);
+    expect(check.label.test(selectedTestLabel),'worksheet must be for the verified teacher assessment').toBe(true);
     const bank=data.pack.contentPipeline.questions.filter(q=>q.skill===check.skill);
     const dictionary=check.skill==='three-letter-blends'
-      ?verifiedSpellingDictationWords(data.pack,check.date,check.label):[];
+      ?verifiedSpellingDictationWords(data.pack,check.date,selectedTestLabel):[];
     // A current, source-hashed spelling list intentionally renders a
     // parent-led dictation paper rather than six multiple-choice items.
     // Check every adult-key word against the verified source before accepting.
@@ -250,7 +257,7 @@ try {
     // A public scope receipt prevents accidental switching to an unrelated
     // teacher test when opening consecutive worksheets. Never log answers.
     const actualKey=await dialog.getAttribute('data-guide-test-key');
-    const selectedKey=await worksheet.getAttribute('data-test-key');
+    const selectedKey=selectedTestKey;
     const preparedCount=Number(await dialog.getAttribute('data-guide-practice-count'));
     expect(actualKey,'preview must belong to the selected announced test').toBe(selectedKey);
     expect(preparedCount,'source-backed practice must survive the preview refresh for '+check.name).toBeGreaterThanOrEqual(6);

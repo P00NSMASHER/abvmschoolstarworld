@@ -47,3 +47,13 @@ test('old week, wrong skill, corrupted hash and foreign source never count as ve
   assert.deepEqual(verifiedSpellingDictationWords(pack(),'2026-11-20',label),[]);
   assert.deepEqual(verifiedSpellingDictationWords(pack(),'2026-11-13','Grammar (singular & plural nouns)'),[]);
 });
+
+test('live verifier passes the selected teacher label, not a regex, to the strict dictation source gate',()=>{
+  const src=readFileSync(new URL('../scripts/verify-live-lunch.mjs',import.meta.url),'utf8');
+  assert.match(src,/selectedTestKey=await worksheet\.getAttribute\('data-test-key'\)/);
+  assert.match(src,/selectedTestLabel=selectedTestKey\.slice\(check\.date\.length\+1\)/);
+  assert.match(src,/verifiedSpellingDictationWords\(data\.pack,check\.date,selectedTestLabel\)/);
+  assert.doesNotMatch(src,/verifiedSpellingDictationWords\(data\.pack,check\.date,check\.label\)/);
+  assert.deepEqual(verifiedSpellingDictationWords(pack(),'2026-11-13',/3 letter blends/i),[],
+    'search regex is not a teacher title and must never authorize dictation');
+});
