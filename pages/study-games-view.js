@@ -59,9 +59,59 @@ function richVisual(raw){
 
 function playfulMiss(g){return ["That answer took a wrong turn. Rude!","That answer just tripped over its shoelaces.","The eagle has questions about that answer.","Oops. That answer needs a tiny timeout."][(Number(g.index||0)+Number(g.tries||0))%4]}
 function starPenalty(g){const p=g.lastStarPenalty;if(!p)return "";return '<small class="study-star-penalty">'+esc(p.status==='pending'?'Saving star change…':p.status==='error'?'Star change could not be saved.':p.amount>0?'−'+p.amount+' Study Stars · you can earn them back.':'No stars lost — your balance is at zero.')+'</small>'}
+function gameMenuTiles({modes,materials,selection,catalog,loadRecord,questionTotal}){
+  return '<div class="study-game-grid">'+modes.map(mode=>{
+    const scope=materials?.forMode(mode.id,selection),record=loadRecord(mode.id,scope?.sourceKey||catalog.sourceKey),total=scope?Math.min(8,scope.count):selection.source==="weekly"?questionTotal(catalog,mode):0,disabled=total===0;
+    return '<button type="button" class="study-game-tile game-'+mode.icon+'" data-game-start="'+esc(mode.id)+'"'+(mode.id==="reading"?' aria-label="Reading / ELA"':'')+(disabled?' disabled aria-disabled="true"':'')+'>'+icon(mode.icon)+'<span class="study-game-copy"><strong>'+esc(mode.id==="spelling"?"Spelling":mode.id==="reading"?"Reading":mode.title)+'</strong><small>'+esc(mode.copy)+'</small>'+(disabled?'<em>Not ready yet</em>':record.plays?'<em>Practiced before · Best solved: '+record.best+' / '+total+' (includes retries)</em>':'')+'</span><b aria-hidden="true">›</b></button>';
+  }).join("")+'</div>';
+}
+function gameModeQuestionTotal(c,m){
+  const s=m?.subjects||[],k=m?.skills||[],x=s.length||k.length;
+  const eligible=(c?.questions||[]).filter(q=>(!s.length||s.includes(q.subject))&&(!k.length||k.includes(q.skill)));
+  if(!x)return Math.min(m?.count||0,eligible.length);
+  if(k.length)return Math.min(m?.count||0,eligible.filter(q=>q.tier==="material").length);
+  const current=eligible.filter(q=>q.tier==="material"),review=eligible.filter(q=>q.tier==="recent-review"),star=eligible.filter(q=>q.tier==="star-fallback");
+  return Math.min(m?.count||0,(current.length?current:review.length?review:star).length)
+}
+function canUseScratchCounter(question){
+  if(question?.subject!=="Math"||question?.skill!=="math-subtraction")return false;
+  const prompt=String(question.prompt||"");
+  if(/(^|[\s(])-\d/.test(prompt))return false; // A 0–20 board cannot model negative quantities.
+  if(!/(?:\d\s*[-−]\s*\d|subtract|take away|left\b)/i.test(prompt))return false;
+  const values=[...prompt.matchAll(/\b\d{1,3}\b/g)].map(match=>Number(match[0]));
+  return values.length>0&&values.every(value=>value>=0&&value<=20);
+}
+function updateScratchCounter(current,delta){
+  const n=Number(current),step=Number(delta);
+  const safe=Number.isInteger(n)?n:0;
+  if(step!==1&&step!==-1)return Math.max(0,Math.min(20,safe));
+  return Math.max(0,Math.min(20,safe+step));
+}
+function scratchCounterHtml(question,g){
+  if(!canUseScratchCounter(question))return "";
+  const count=updateScratchCounter(g?.counterValue,0),locked=!!(g.answered||g.penaltyPending);
+  const dots=Array.from({length:20},(_,i)=>'<span class="'+(i<count?'filled':'')+'" aria-hidden="true"></span>').join("");
+  return '<aside class="game-scratch-counter" aria-label="Math scratch counting board">'+
+    '<div class="game-scratch-heading"><strong>Count it out</strong><small>My scratch board · not scored</small></div>'+
+    '<div class="game-scratch-status" role="status" aria-live="polite" aria-atomic="true">'+count+' counters</div>'+
+    '<div class="game-scratch-dots" role="img" aria-label="'+count+' of 20 counters shown">'+dots+'</div>'+
+    '<div class="game-scratch-controls">'+
+    '<button type="button" data-game-counter="-1" aria-label="Remove one counter" '+(locked||count===0?'disabled':'')+'>− Take away</button>'+
+    '<button type="button" data-game-counter-reset aria-label="Clear counting board" '+(locked||count===0?'disabled':'')+'>Clear</button>'+
+    '<button type="button" data-game-counter="1" aria-label="Add one counter" '+(locked||count===20?'disabled':'')+'>+ Add one</button>'+
+    '</div></aside>';
+}
+function learningHistoryWarning(status){
+  if(status!=="not-saved")return "";
+  return '<aside class="game-history-warning" role="status" aria-live="polite">'+
+    '<strong>Learning history is not saved on this device.</strong>'+
+    '<p>Recent answers remain in this tab, but could be lost if it closes. Check device storage, then retry.</p>'+
+    '<button type="button" data-game-save-retry>Try saving again</button></aside>';
+}
 function play({g,mode,q,teach,retryInstruction,labels,canRead=false}){
   if(!q)return '<section class="game-empty"><h2>This practice is not ready yet.</h2><button type="button" data-game-home>Back to study</button></section>';
   const support=g.supportMode,comeback=g.comebackMode,review=support||comeback,progress=g.index+1,total=g.questions.length,pct=Math.round((progress/Math.max(1,total))*100),chosen=g.selectedIndex,visual=richVisual(q.richContent),numeric=q.choices.length<=3&&q.choices.every(choice=>/^\d{1,4}(?:[.,]\d{1,2})?$/.test(choice)),wrong=new Set(g.wrong||[]),score=scoreSummary(g);
+  const scratch=scratchCounterHtml(q,g);
   const answers=q.choices.map((choice,index)=>{
     let klass="";
     if(g.answered){if(choice===q.answer)klass=" correct";else if(index===chosen||wrong.has(index))klass=" wrong"}
@@ -84,7 +134,7 @@ function play({g,mode,q,teach,retryInstruction,labels,canRead=false}){
   }
   return '<header class="study-player-header"><div class="game-topbar"><button type="button" data-game-home aria-label="Back to study"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button><div><span>'+esc(comeback?"Comeback":support?"Support step":mode.title)+'</span><strong>'+(comeback?'Remember this skill later':support?'Same skill · smaller step':progress+' of '+total)+'</strong><small class="game-live-score" aria-label="Current first-try score">'+esc(scoreText)+'</small><small class="game-streak '+streakClass+'" aria-label="'+esc('Current streak bonus: '+streakText+'; round '+(streakAdjustment>0?'+':'')+streakAdjustment)+'">'+esc(streakText)+' · round '+(streakAdjustment>0?'+':'')+streakAdjustment+'</small><small class="game-star-balance">★ '+(g.starBalanceUnavailable?'Study Stars unavailable':g.starBalance===null?'Loading…':Math.max(0,Number(g.starBalance)||0)+' Study Stars')+'</small></div></div>'+
     '<div class="game-progress" role="progressbar" aria-label="Game progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><span style="width:'+pct+'%"></span></div></header>'+
-    '<section class="game-question-card'+(numeric&&q.prompt.length<35?' is-equation':'')+'"><div class="game-question-meta"><span>'+esc(q.subject)+'</span><b>'+esc(comeback?"Comeback":support?"Support":q.tier==="recent-review"?"Recent review":q.tier==="star-fallback"?"STAR-style practice":labels[q.questionType]||"Practice")+'</b></div>'+(teach?'<div class="game-hint-wrap teach-card"><small class="adaptive-note">Quick lesson · not scored</small><p class="game-hint">'+esc(teach.instruction)+(teach.example?' '+esc(teach.example):'')+'</p></div>':'')+'<h2>'+esc(q.prompt)+'</h2>'+visual+(!visual&&numeric&&q.prompt.length<60?'<img class="game-question-art" src="./assets/illustrations/reading.webp" width="160" height="160" alt="">':'')+'<div class="game-answer-list'+(numeric?' is-numeric':'')+'">'+answers+'</div>'+(canRead?'<button type="button" class="game-read-button" data-game-read><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m11 5-5 4H3v6h3l5 4Zm4 3a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></svg>Read to me</button>':'')+(g.answered?feedback:retryClue+'<div class="game-hint-wrap">'+(review?'<small class="adaptive-note">Review question · not part of the section score</small>':'')+'<button type="button" class="game-hint-button" data-game-hint><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6m-5 3h4M8 14a6 6 0 1 1 8 0l-1 2H9Z"/></svg>'+(g.hintOpen?'Hide hint':'Need a hint?')+'</button>'+(g.hintOpen?'<p class="game-hint">'+esc(q.hint)+'</p>':'')+'</div>')+'</section>'+
+    '<section class="game-question-card'+(numeric&&q.prompt.length<35?' is-equation':'')+'"><div class="game-question-meta"><span>'+esc(q.subject)+'</span><b>'+esc(comeback?"Comeback":support?"Support":q.tier==="recent-review"?"Recent review":q.tier==="star-fallback"?"STAR-style practice":labels[q.questionType]||"Practice")+'</b></div>'+(teach?'<div class="game-hint-wrap teach-card"><small class="adaptive-note">Quick lesson · not scored</small><p class="game-hint">'+esc(teach.instruction)+(teach.example?' '+esc(teach.example):'')+'</p></div>':'')+'<h2>'+esc(q.prompt)+'</h2>'+visual+scratch+(!visual&&numeric&&q.prompt.length<60?'<img class="game-question-art" src="./assets/illustrations/reading.webp" width="160" height="160" alt="">':'')+'<div class="game-answer-list'+(numeric?' is-numeric':'')+'">'+answers+'</div>'+(canRead?'<button type="button" class="game-read-button" data-game-read><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m11 5-5 4H3v6h3l5 4Zm4 3a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></svg>Read to me</button>':'')+(g.answered?feedback:retryClue+'<div class="game-hint-wrap">'+(review?'<small class="adaptive-note">Review question · not part of the section score</small>':'')+'<button type="button" class="game-hint-button" data-game-hint><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6m-5 3h4M8 14a6 6 0 1 1 8 0l-1 2H9Z"/></svg>'+(g.hintOpen?'Hide hint':'Need a hint?')+'</button>'+(g.hintOpen?'<p class="game-hint">'+esc(q.hint)+'</p>':'')+'</div>')+'</section>'+
     '<p class="round-persistence-note">Leaving ends this round.</p>';
 }
 function goal({state}){
@@ -111,5 +161,5 @@ function finish({mode,state,record,summary={},reward={}}){
   const starsHtml='<div class="game-finish-stars" aria-label="'+stars+' practice stars">'+[0,1,2].map(i=>'<span class="'+(i<stars?'earned':'')+'">★</span>').join("")+'</div>';
   return '<section class="game-finish learning-first"><div class="study-finish-hero"><img class="study-finish-eagle" src="./assets/illustrations/eagle.webp" alt="" width="160" height="160" decoding="async"><div><span class="study-finish-eyebrow">'+esc(mode.title.toUpperCase())+'</span><h2>'+(accuracy.answered?'Nice work, eagle!':'Practice paused')+'</h2><p>'+(accuracy.answered?accuracy.answered+' questions practiced':'Your next practice is ready when you are.')+'</p></div></div><h3 class="learning-heading">Your score</h3><div class="game-score-summary" aria-label="First-try accuracy"><strong>'+esc(scoreText)+'</strong><span>'+esc(scoreDetails)+'</span></div>'+sectionsHtml+'<h3 class="learning-heading">What you learned</h3><div class="learning-summary" aria-label="Round learning summary"><div><strong>'+strong+'</strong><span>Skills answered independently</span></div><div><strong>'+remembered+'</strong><span>Skills recalled later</span></div><div><strong>'+practice+'</strong><span>Skills to revisit</span></div></div><p class="learning-summary-note">These learning counts are skills, not questions. One round does not prove mastery or predict a STAR score.</p>'+legacy+starsHtml+streakSummary+perfectHtml+rewardHtml+'<div class="game-finish-actions"><button type="button" class="primary" data-game-start="'+esc(mode.id)+'">Practice again</button><button type="button" data-game-home>Back to study</button></div></section>';
 }
-window.ABVMStudyGameView=Object.freeze({icon,play,goal,rewardReveal,finish,recordAttempt,scoreSummary,sectionScores});
+window.ABVMStudyGameView=Object.freeze({icon,play,goal,rewardReveal,finish,recordAttempt,scoreSummary,sectionScores,canUseScratchCounter,updateScratchCounter,gameModeQuestionTotal,gameMenuTiles,learningHistoryWarning});
 })();

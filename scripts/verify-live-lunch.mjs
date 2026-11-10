@@ -5,6 +5,7 @@ import { chromium, expect } from '@playwright/test';
 import { publishedMealForDate } from './published-meal.mjs';
 import {sameDeployedStudyPack} from './live-pack-parity.mjs';
 import { scrollLiveElementAfterRepaint } from './live-lunch-dom.mjs';
+import {verifiedSpellingDictationWords} from './live-spelling-dictation-evidence.mjs';
 
 const base = process.env.ABVM_LIVE_URL || 'https://p00nsmasher.github.io/abvmschoolstarworld/';
 const expected = JSON.parse(readFileSync(new URL('../pages/data/study-pack.json', import.meta.url), 'utf8'));
@@ -211,12 +212,67 @@ try {
     const dialog=page.locator('[data-study-guide-dialog]');
     await expect(dialog).toBeVisible({timeout:20000});
     const frame=page.frameLocator('[data-study-guide-dialog] iframe');
-    await expect(frame.locator('.student-test .problem')).toHaveCount(6,{timeout:20000});
+    // Use the actual selected teacher test title, NOT check.label (a regex
+    // used only for discovery). Dictation's exact skill/week/hash gate must
+    // receive the original dated source label, never a search expression.
+    const selectedTestKey=await worksheet.getAttribute('data-test-key');
+    expect(selectedTestKey?.startsWith(check.date+'|'),'worksheet must retain its exact date and teacher label').toBe(true);
+    const selectedTestLabel=selectedTestKey.slice(check.date.length+1);
+    expect(check.label.test(selectedTestLabel),'worksheet must be for the verified teacher assessment').toBe(true);
+    const bank=data.pack.contentPipeline.questions.filter(q=>q.skill===check.skill);
+    const dictionary=check.skill==='three-letter-blends'
+      ?verifiedSpellingDictationWords(data.pack,check.date,selectedTestLabel):[];
+    // A current, source-hashed spelling list intentionally renders a
+    // parent-led dictation paper rather than six multiple-choice items.
+    // Check every adult-key word against the verified source before accepting.
+    if(dictionary.length){
+      await expect(frame.locator('.dictation-sheet .dictation-item')).toHaveCount(dictionary.length,{timeout:20000});
+      await expect(frame.locator('.dictation-sheet .hand-line')).toHaveCount(dictionary.length);
+      await expect(frame.locator('.adult-key ol li')).toHaveText(dictionary);
+      await expect(frame.locator('.student-test .problem')).toHaveCount(0);
+      await page.screenshot({path:out+'/'+check.name+'-live-dictation.png',animations:'disabled'});
+      receipt.screens.push({screen:'Live printable',testDate:check.date,worksheet:check.name,
+        status:'verified-source-dictation',verifiedWords:dictionary.length,
+        wordListSource:'Weekly Spelling List',sourceMatchedQuestions:bank.length});
+      await dialog.locator('[data-guide-close]').click();
+      await expect(dialog).toHaveCount(0);
+      continue;
+    }
+    // A posted test date does not establish source-matched question content.
+    // When the teacher has withdrawn a skill, verify that the live printable
+    // supplies neither invented questions nor invented answer keys.
+    if(!bank.length){
+      await expect(frame.locator('.student-test .problem')).toHaveCount(0,{timeout:20000});
+      await expect(frame.locator('.adult-key .key-list li')).toHaveCount(0);
+      await expect(frame.locator('.student-test')).toContainText(
+        'No matching original-practice questions are available for this assessment.');
+      await page.screenshot({path:`${out}/${check.name}-source-pending-worksheet.png`,animations:'disabled'});
+      receipt.screens.push({screen:'Live printable',testDate:check.date,worksheet:check.name,
+        checked:true,sourceMatchedQuestions:0,verifiedQuestions:0,answerKeys:0,
+        status:'source-pending',reason:'Current verified teacher scope provides no matching question bank'});
+      await dialog.locator('[data-guide-close]').click();
+      await expect(dialog).toHaveCount(0);
+      continue;
+    }
+    // A public scope receipt prevents accidental switching to an unrelated
+    // teacher test when opening consecutive worksheets. Never log answers.
+    const actualKey=await dialog.getAttribute('data-guide-test-key');
+    const selectedKey=selectedTestKey;
+    const preparedCount=Number(await dialog.getAttribute('data-guide-practice-count'));
+    expect(actualKey,'preview must belong to the selected announced test').toBe(selectedKey);
+    expect(preparedCount,'source-backed practice must survive the preview refresh for '+check.name).toBeGreaterThanOrEqual(6);
+    try{
+      await expect(frame.locator('.student-test .problem')).toHaveCount(6,{timeout:20000});
+    }catch(error){
+      const excerpt=await frame.locator('body').innerText({timeout:5000}).catch(()=>'(frame unavailable)');
+      throw new Error('Worksheet preview was not rendered after source-scoped model refresh: '+
+        check.name+' | '+actualKey+' | model practice='+preparedCount+
+        ' | frame excerpt='+excerpt.slice(0,350),{cause:error});
+    }
     await expect(frame.locator('.adult-key .key-list li')).toHaveCount(6);
     const prompts=(await frame.locator('.student-test .problem .prompt').allTextContents())
       .map(prompt=>prompt.replace(/^\d+\.\s*/,'').trim());
     expect(new Set(prompts).size).toBe(6);
-    const bank=data.pack.contentPipeline.questions.filter(q=>q.skill===check.skill);
     const key=await frame.locator('.adult-key .key-list li').allTextContents();
     for(const [index,prompt] of prompts.entries()){
       const answer=key[index].replace(/^\d+\.\s*/,'').split(/Why:|Adult:/)[0].trim();

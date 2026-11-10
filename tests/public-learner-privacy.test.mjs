@@ -33,8 +33,9 @@ test("privacy copy deployment keeps service-worker shell and reload versions ali
     assert.ok(url,"versioned script missing in HTML: "+asset);
     assert.ok(sw.includes('"'+url+'"'),url+" missing in SW shell");
   }
-  assert.ok(app.includes("./study-games-view.js?v=15"));
-  assert.ok(sw.includes("./study-games-view.js?v=15"));
+  const gameView=app.match(/["'](\.\/study-games-view\.js\?v=\d+)["']/)?.[1];
+  assert.ok(gameView,"Study player must load a versioned, anonymous view");
+  assert.ok(sw.includes('"'+gameView+'"'),"SW must precache exact active Study player version");
   const reload=index.match(/abvm-sw-reloaded-v(\d+)/)?.[1];
   const cache=sw.match(/abvm-grade2-parent-companion-v(\d+)-/)?.[1];
   assert.ok(reload,"SW reload revision missing from HTML");

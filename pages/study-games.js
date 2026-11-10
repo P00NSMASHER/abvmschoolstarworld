@@ -1863,6 +1863,7 @@ function saveGameRecord(sourceKey,modeId,{score=0,total=0}={}){
   return next;
 }
 const LEARNING_STORAGE_KEY="abvm-study-learning:v2";
+let lastLearningSnapshot=null,learningStorageStateValue="unverified";
 const COMEBACK_STORAGE_KEY="abvm-study-comebacks:v1";
 const ITEM_QUALITY_STORAGE_KEY="abvm-study-item-quality:v1";
 const ITEM_QUALITY_SCHEMA_VERSION=2,ITEM_QUALITY_LIMIT=250;
@@ -2068,13 +2069,38 @@ function reviewQuestionFamilyPromotion({familyId,featureFlagged=false,automatedQ
     automaticPromotion:false,automaticDelete:false,automaticRewrite:false,irtUsed:false
   });
 }
+function learningStorageState(){return learningStorageStateValue}
 function loadLearning(){
+  if(learningStorageStateValue==="not-saved"&&lastLearningSnapshot!==null)
+    return JSON.parse(JSON.stringify(lastLearningSnapshot));
   try{
     const parsed=JSON.parse(localStorage.getItem(LEARNING_STORAGE_KEY)||"{}");
-    return parsed&&typeof parsed==="object"?parsed:{};
-  }catch{return {}}
+    return parsed&&typeof parsed==="object"&&!Array.isArray(parsed)?parsed:{};
+  }catch{
+    learningStorageStateValue="not-saved";
+    return lastLearningSnapshot===null?{}:JSON.parse(JSON.stringify(lastLearningSnapshot));
+  }
 }
-function writeLearning(all){try{localStorage.setItem(LEARNING_STORAGE_KEY,JSON.stringify(all))}catch{};return all}
+function writeLearning(all){
+  // Preserve every completed attempt in memory when iOS private storage is
+  // unavailable, full, or silently rejects a write. Never claim it was saved.
+  const serialized=JSON.stringify(all);
+  lastLearningSnapshot=JSON.parse(serialized);
+  try{
+    localStorage.setItem(LEARNING_STORAGE_KEY,serialized);
+    if(localStorage.getItem(LEARNING_STORAGE_KEY)!==serialized)
+      throw new Error("Learning history did not survive its storage write.");
+    learningStorageStateValue="saved";
+    lastLearningSnapshot=null;
+  }catch{learningStorageStateValue="not-saved"}
+  return all;
+}
+function retrySaveLearning(){
+  if(learningStorageStateValue==="saved")return true;
+  if(lastLearningSnapshot===null)return false;
+  writeLearning(lastLearningSnapshot);
+  return learningStorageStateValue==="saved";
+}
 function priorAbility(all,exclude){
   let seen=0,correct=0;
   for(const [skill,row] of Object.entries(all||{})){
@@ -2202,6 +2228,6 @@ function sourceKeyFromEnvelope(pack,envelope){
 }
 window.ABVMStudyGames=Object.freeze({
   VERSION,SOURCE_TRANSFORM,MATERIAL_PROVENANCE,REVIEW_PROVENANCE,FALLBACK_PROVENANCE,FORBIDDEN,
-  correctOriginalQuestion,buildCatalog,validateCatalog,validateRichContent,vocabularyDefinition,selectQuestions,selectDailyQuestions,learningFirstSummary,studyStarPolicy,nextStreakBonus,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,commitStudyStarPenalty,studyBadgeCatalog,studyBadgeCollection,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,reviewDue,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,reviewQuestionFamilySafeUsage,questionFamilyRolloutPolicy,reviewQuestionFamilyPromotion,itemQualityKey
+  correctOriginalQuestion,buildCatalog,validateCatalog,validateRichContent,vocabularyDefinition,selectQuestions,selectDailyQuestions,learningFirstSummary,studyStarPolicy,nextStreakBonus,studyStarRewardEvents,studyStarRoundId,commitStudyStarRewards,commitStudyStarPenalty,studyBadgeCatalog,studyBadgeCollection,loadStudyStarLedger,studyStarBalance,studyStarDreamGoal,loadStudyStarGoal,selectStudyStarGoal,studyStarGoalProgress,supportQuestion,teachCardFor,comebackQuestion,scheduleComeback,tickComebacks,deferComebacksToNextSession,dueComeback,resolveComeback,loadLearning,learningStorageState,retrySaveLearning,recordLearning,recordSupport,recordComeback,nextSessionSeed,loadGameRecord,saveGameRecord,sourceKeyFromEnvelope,targetDifficultyFor,reviewPriority,reviewDue,testReadyMode,markQuestionShown,note:noteItemAttempt,loadItemQuality,reviewItemQuality,reviewQuestionFamilySafeUsage,questionFamilyRolloutPolicy,reviewQuestionFamilyPromotion,itemQualityKey
 });
 })();

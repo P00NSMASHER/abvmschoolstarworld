@@ -7,6 +7,12 @@ import {religionChapterScopes} from "../pages/study-hub-core.mjs";
 
 const source=JSON.parse(fs.readFileSync("pages/data/study-pack.json","utf8"));
 const runtime=buildRuntimePack(source);
+ // Fixed, published original teacher-scope snapshot for historical Chapter 3
+ // regression checks. Live pack assertions above and source-withdrawal
+ // assertions elsewhere still run against regenerated teacher data.
+ const historicalSource=JSON.parse(fs.readFileSync(
+   new URL('./fixtures/abvm-source-snapshot-2026-11-09.json',import.meta.url),'utf8'));
+ const historicalRuntime=buildRuntimePack(historicalSource);
 
 test("runtime pack preserves live data and strips audit-only question metadata",()=>{
   assert.equal(runtime.pack.sourceHash,source.pack.sourceHash);
@@ -54,6 +60,7 @@ test("runtime pack compacts provenance while retaining governed or explicitly co
 });
 
 test("real runtime pack retains only 18 source-verified Chapter 3 identifiers, not teacher evidence",()=>{
+  const source=historicalSource,runtime=historicalRuntime;
   const all=source.pack.contentPipeline.questions;
   const expected=all.filter(q=>religionChapterScopes(q).includes(3)).map(q=>q.id).sort();
   const encoded=runtime.pack.contentPipeline.questions.filter(q=>
@@ -69,6 +76,7 @@ test("real runtime pack retains only 18 source-verified Chapter 3 identifiers, n
 });
 
 test("runtime keeps a compact chapter-scoped study-guide checklist without audit lineage",()=>{
+  const source=historicalSource,runtime=historicalRuntime;
   const facts=runtime.pack.testGuideFacts?.religionChapters?.["3"];
   assert.ok(Array.isArray(facts)&&facts.length>=9,"Chapter 3 guide facts must survive runtime compaction");
   assert.ok(facts.some(row=>/(?:original|orignial|oirginal) sin/i.test(row)),"missing compact original-sin guide fact");
@@ -79,6 +87,7 @@ test("runtime keeps a compact chapter-scoped study-guide checklist without audit
 
 
 test("skill audit lineage stays in full pack and is omitted only from the runtime",()=>{
+  const source=historicalSource,runtime=historicalRuntime;
   const full=source.pack.contentPipeline.skills;
   const small=runtime.pack.contentPipeline.skills;
   assert.equal(small.length,full.length);
@@ -98,6 +107,7 @@ test("skill audit lineage stays in full pack and is omitted only from the runtim
   }
 });
 test("retained original review questions stay date-bound, chapter-exact and free of audit-only text",()=>{
+  const source=historicalSource,runtime=historicalRuntime;
   const original=source.pack.contentPipeline.questions.find(q=>
     q.subject==="Religion"&&religionChapterScopes(q).includes(3));
   assert.ok(original,"governed Chapter 3 question is required for a faithful review fixture");

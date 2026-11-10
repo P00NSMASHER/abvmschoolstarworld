@@ -165,7 +165,7 @@ test('source rollover drops lesson skills that are no longer present instead of 
 });
 
 test('Religion banks stay source-framed and avoid the rejected ambiguous/cross-subject distractor patterns', () => {
-  const envelope = JSON.parse(readFileSync(DATA_PATH, 'utf8'));
+  const envelope = JSON.parse(readFileSync(new URL('./fixtures/abvm-source-snapshot-2026-11-09.json',import.meta.url), 'utf8'));
   const pipeline = buildGrade2ContentPipeline(structuredClone(envelope.pack), {
     generatedAt: '2026-09-30T12:15:00.000Z',
     sourceHash: envelope.pack.sourceHash,
