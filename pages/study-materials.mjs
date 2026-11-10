@@ -25,6 +25,35 @@ const sharedResource = createStudyResourceLoader((...args) => fetch(...args));
 let lastResourcePack = null;
 const array = value => Array.isArray(value) ? value : [];
 const meaningfulText = value => typeof value === 'string' && value.trim().length > 0;
+
+// A parent photo independently verified the three groups on the November 9
+// spelling sheet. Raw photography, student markings and responses stay private.
+// Match the teacher-list hash AND the test week before displaying these labels.
+export const photoSpellingEvidence = Object.freeze({
+  weekLabel:'Week of November 9, 2026',
+  testDate:'2026-11-13',
+  sourceSha256:'107ae6ec5cbe4da8a8d8456f70829fa4f4920509598b084f709311dd7d29ea6b',
+  teacherWordsHash:'7b27f1738b5f79f5bfb147ac5c12806ae547daae3f22022f48d181943dbb5c3b',
+  groups:[
+    {label:'Basic',words:['scratch','scrape','spring','throne','stripe','strange','shred','shrub','splash','split']},
+    {label:'Review',words:['catch','sting']},
+    {label:'Sight',words:['far','flower','until']},
+  ],
+});
+export function photoConfirmedSpellingGroupFacts({test,pack,spellingWords}={}) {
+  const proof=photoSpellingEvidence;
+  if(test?.date!==proof.testDate ||
+     !/\b(?:3|three)[ -]+letter\s+(?:consonant\s+)?blends?\b/i.test(String(test?.label||'')) ||
+     pack?.spellingListProvenance?.weekLabel!==proof.weekLabel ||
+     pack?.spellingListProvenance?.wordsHash!==proof.teacherWordsHash)return [];
+  const expected=proof.groups.flatMap(group=>group.words);
+  if(!Array.isArray(spellingWords)||spellingWords.length!==expected.length||
+     new Set(spellingWords).size!==expected.length||
+     !expected.every(word=>spellingWords.includes(word)))return [];
+  return proof.groups.map(group=>
+    'Photo-confirmed '+group.label.toLowerCase()+' words ('+group.words.length+'): '+group.words.join(', '));
+}
+
 const safeQuestion = q => q && typeof q.id === 'string' && q.id &&
   typeof q.subject === 'string' && typeof q.skill === 'string' &&
   typeof q.prompt === 'string' && typeof q.answer === 'string' &&
@@ -763,6 +792,7 @@ export function createStudyMaterials({
       ? [...new Set(wordNote.slice(wordNote.indexOf(':') + 1).split(',')
         .map(word => word.replace(/[.\s]+$/,'').trim()).filter(word => /^[a-z][a-z'-]*$/i.test(word)))]
       : [];
+    facts.push(...photoConfirmedSpellingGroupFacts({test,pack,spellingWords}));
     // Print the actual checked choices, but never mix in private responses,
     // teacher markings or answers on the student's test page.
     // Keep the full eligible bank so the paper can select examples per skill.
