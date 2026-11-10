@@ -3,10 +3,10 @@
   "sourceUrl": "https://sites.google.com/view/abvmgr2/homework",
   "sourceDateProvided": false,
   "status": "assignments",
-  "checkedAt": "2026-11-10T12:29:08.246Z",
-  "firstObservedAt": "2026-11-09T21:01:11.212Z",
-  "contentChangedAt": "2026-11-09T21:01:11.212Z",
-  "contentHash": "a91e0b9ebe2c02448954cfdfa4a76aafbcde15f1148c551621e8c6cdf82ccddc",
+  "checkedAt": "2026-11-10T12:53:56.951Z",
+  "firstObservedAt": "2026-11-10T12:53:56.951Z",
+  "contentChangedAt": "2026-11-10T12:53:56.951Z",
+  "contentHash": "ef1be9661ec43e035a42c0a5818145f0c8cf555a4181fcd867ac23778003bf89",
   "assignments": [
     {
       "subject": "Spelling",
@@ -14,7 +14,7 @@
     },
     {
       "subject": "Math",
-      "task": "Page 56"
+      "task": "Page 57"
     }
   ]
 }
