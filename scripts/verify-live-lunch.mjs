@@ -5,6 +5,7 @@ import { chromium, expect } from '@playwright/test';
 import { publishedMealForDate } from './published-meal.mjs';
 import {sameDeployedStudyPack} from './live-pack-parity.mjs';
 import { scrollLiveElementAfterRepaint } from './live-lunch-dom.mjs';
+import {verifiedSpellingDictationWords} from './live-spelling-dictation-evidence.mjs';
 
 const base = process.env.ABVM_LIVE_URL || 'https://p00nsmasher.github.io/abvmschoolstarworld/';
 const expected = JSON.parse(readFileSync(new URL('../pages/data/study-pack.json', import.meta.url), 'utf8'));
@@ -212,6 +213,24 @@ try {
     await expect(dialog).toBeVisible({timeout:20000});
     const frame=page.frameLocator('[data-study-guide-dialog] iframe');
     const bank=data.pack.contentPipeline.questions.filter(q=>q.skill===check.skill);
+    const dictionary=check.skill==='three-letter-blends'
+      ?verifiedSpellingDictationWords(data.pack,check.date,check.label):[];
+    // A current, source-hashed spelling list intentionally renders a
+    // parent-led dictation paper rather than six multiple-choice items.
+    // Check every adult-key word against the verified source before accepting.
+    if(dictionary.length){
+      await expect(frame.locator('.dictation-sheet .dictation-item')).toHaveCount(dictionary.length,{timeout:20000});
+      await expect(frame.locator('.dictation-sheet .hand-line')).toHaveCount(dictionary.length);
+      await expect(frame.locator('.adult-key ol li')).toHaveText(dictionary);
+      await expect(frame.locator('.student-test .problem')).toHaveCount(0);
+      await page.screenshot({path:out+'/'+check.name+'-live-dictation.png',animations:'disabled'});
+      receipt.screens.push({screen:'Live printable',testDate:check.date,worksheet:check.name,
+        status:'verified-source-dictation',verifiedWords:dictionary.length,
+        wordListSource:'Weekly Spelling List',sourceMatchedQuestions:bank.length});
+      await dialog.locator('[data-guide-close]').click();
+      await expect(dialog).toHaveCount(0);
+      continue;
+    }
     // A posted test date does not establish source-matched question content.
     // When the teacher has withdrawn a skill, verify that the live printable
     // supplies neither invented questions nor invented answer keys.
