@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "uploadedPhotoCount": 86,
+  "uploadedPhotoCount": 91,
   "distinctWorksheetNote": "Day 23 appears twice; one lesson is retained. November 3 PDF: 46 scanned pages; 21 new instruction-bearing pages included in public original practice, one personal reflection withheld, eight prior duplicates held and 16 blank reverse scans held. Undated original work is not presented as current homework. November 3 seventeen-photo follow-up: twelve privacy-safe academic images support ten original-practice lessons; three rephotographed publisher assessment pages and two private reflections are held and not copied into the public app. Reuploads are not independent learning evidence.",
   "lessons": [
     {
@@ -4094,6 +4094,644 @@
           "provenance": "original-practice-from-uploaded-schoolwork"
         }
       ]
+    },
+    {
+      "id": "nov10-returned-spelling-patterns",
+      "title": "Mixed consonant patterns and original dictation review",
+      "subject": "Spelling / Handwriting",
+      "sources": [
+        "abvm-20261110-spelling-dictation.jpeg"
+      ],
+      "skills": [
+        "consonant-blends",
+        "consonant-digraphs",
+        "spelling-patterns"
+      ],
+      "notes": [
+        "Consonant blends keep each separate consonant sound, as in st at the beginning of stop.",
+        "Consonant digraphs such as ch and sh work together to make one sound.",
+        "A word may end with the ng sound.",
+        "This is undated historical pattern review, not a claim about current weekly dictation words."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-10",
+      "dateStatus": "Undated schoolwork: received 2026-11-10; exact completion day and week were not verified.",
+      "questions": [
+        {
+          "id": "abvm-nov10-sp-01",
+          "subject": "Spelling / Handwriting",
+          "skill": "consonant-blends",
+          "prompt": "Which new word starts with the same blend of sounds as stop?",
+          "answer": "step",
+          "choices": [
+            "step",
+            "shop",
+            "top",
+            "soap"
+          ],
+          "explanation": "Both stop and step begin with the s and t consonant sounds.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original spelling-pattern practice (historical format; not a current weekly word list).",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-nov10-sp-02",
+          "subject": "Spelling / Handwriting",
+          "skill": "consonant-digraphs",
+          "prompt": "Which word begins with the /ch/ sound?",
+          "answer": "chair",
+          "choices": [
+            "chair",
+            "share",
+            "there",
+            "train"
+          ],
+          "explanation": "The letters ch make one sound at the start of chair.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original spelling-pattern practice (historical format; not a current weekly word list).",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-nov10-sp-03",
+          "subject": "Spelling / Handwriting",
+          "skill": "consonant-digraphs",
+          "prompt": "Which word begins with the /sh/ sound?",
+          "answer": "shell",
+          "choices": [
+            "tell",
+            "shell",
+            "spell",
+            "sell"
+          ],
+          "explanation": "The letters sh work together to make one sound.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original spelling-pattern practice (historical format; not a current weekly word list).",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-nov10-sp-04",
+          "subject": "Spelling / Handwriting",
+          "skill": "spelling-patterns",
+          "prompt": "Which word has the /ng/ ending sound?",
+          "answer": "swing",
+          "choices": [
+            "swim",
+            "swing",
+            "switch",
+            "swish"
+          ],
+          "explanation": "The ng letters represent the ending sound of swing.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original spelling-pattern practice (historical format; not a current weekly word list).",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov10-returned-math-maintenance",
+      "title": "Mixed Grade 2 clock, place-value, calculation, and money review",
+      "subject": "Math",
+      "sources": [
+        "abvm-20261110-math-maintenance.jpeg"
+      ],
+      "skills": [
+        "place-value",
+        "telling-time",
+        "two-digit-addition",
+        "addition-facts",
+        "even-odd",
+        "money-coin-values",
+        "subtraction-word-problems"
+      ],
+      "notes": [
+        "Model two-digit numbers with groups of ten and single ones.",
+        "When a minute hand points to six, the clock is thirty minutes past the hour.",
+        "Add or subtract after determining what the story asks.",
+        "Even numbers end in zero, two, four, six, or eight.",
+        "A dime is worth ten cents and a nickel is worth five cents."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-10",
+      "dateStatus": "Undated schoolwork: received 2026-11-10; exact completion day and week were not verified.",
+      "questions": [
+        {
+          "id": "abvm-nov10-ma-01",
+          "subject": "Math",
+          "skill": "place-value",
+          "prompt": "Six tens and eight ones make which number?",
+          "answer": "68",
+          "choices": [
+            "86",
+            "68",
+            "608",
+            "14"
+          ],
+          "explanation": "Six tens are 60 and eight ones make 68.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original mixed Grade 2 review; not copied from a school assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-nov10-ma-02",
+          "subject": "Math",
+          "skill": "telling-time",
+          "prompt": "When a clock has the minute hand on 6 and the hour hand between 4 and 5, what time is it?",
+          "answer": "4:30",
+          "choices": [
+            "4:00",
+            "5:30",
+            "4:30",
+            "6:04"
+          ],
+          "explanation": "The 6 indicates thirty minutes past four.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original mixed Grade 2 review; not copied from a school assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-nov10-ma-03",
+          "subject": "Math",
+          "skill": "two-digit-addition",
+          "prompt": "Add forty-six and thirty-two. What sum do you get?",
+          "answer": "78",
+          "choices": [
+            "68",
+            "74",
+            "78",
+            "88"
+          ],
+          "explanation": "Forty plus thirty is seventy; six plus two is eight.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original mixed Grade 2 review; not copied from a school assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-nov10-ma-04",
+          "subject": "Math",
+          "skill": "addition-facts",
+          "prompt": "Seven shells plus six more shells makes how many?",
+          "answer": "13",
+          "choices": [
+            "12",
+            "13",
+            "14",
+            "15"
+          ],
+          "explanation": "Seven and six make thirteen.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original mixed Grade 2 review; not copied from a school assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-nov10-ma-05",
+          "subject": "Math",
+          "skill": "even-odd",
+          "prompt": "Which choice shows an even number?",
+          "answer": "58",
+          "choices": [
+            "41",
+            "57",
+            "63",
+            "58"
+          ],
+          "explanation": "An even number ends in zero, two, four, six, or eight.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original mixed Grade 2 review; not copied from a school assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-nov10-ma-06",
+          "subject": "Math",
+          "skill": "money-coin-values",
+          "prompt": "Two dimes and a nickel together have what value?",
+          "answer": "25 cents",
+          "choices": [
+            "15 cents",
+            "20 cents",
+            "25 cents",
+            "30 cents"
+          ],
+          "explanation": "Two dimes give twenty cents, and one nickel adds five.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original mixed Grade 2 review; not copied from a school assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-nov10-ma-07",
+          "subject": "Math",
+          "skill": "subtraction-word-problems",
+          "prompt": "Fifteen robins are sitting on a fence. Six fly away. How many stay?",
+          "answer": "9",
+          "choices": [
+            "7",
+            "8",
+            "9",
+            "21"
+          ],
+          "explanation": "Subtract six from fifteen to find the nine that remain.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original mixed Grade 2 review; not copied from a school assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov10-returned-math-chapter-two",
+      "title": "Chapter 2 original number sense and problem-solving practice",
+      "subject": "Math",
+      "sources": [
+        "abvm-20261110-math-ch2-post-p1.jpeg",
+        "abvm-20261110-math-ch2-post-p2.jpeg",
+        "abvm-20261110-math-ch2-post-q10-crop.jpeg"
+      ],
+      "skills": [
+        "number-words-to-numerals",
+        "number-words",
+        "expanded-form",
+        "even-odd",
+        "counting-by-tens",
+        "rounding-nearest-ten",
+        "subtraction-word-problems",
+        "counting-order",
+        "place-value",
+        "number-comparison",
+        "number-patterns"
+      ],
+      "notes": [
+        "Write tens and ones separately to make a two-digit numeral or its expanded form.",
+        "Use a number line to round to the closer ten; a number ending in five rounds up.",
+        "To count consecutive numbers, move one at a time while respecting the requested tens group.",
+        "Identify whether a word problem describes joining objects or taking objects away.",
+        "Use the ones digit to classify even and odd numbers."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-10",
+      "dateStatus": "Undated schoolwork: received 2026-11-10; exact completion day and week were not verified.",
+      "questions": [
+        {
+          "id": "abvm-nov10-ch2-01",
+          "subject": "Math",
+          "skill": "number-words-to-numerals",
+          "prompt": "Which number is written as forty-six?",
+          "answer": "46",
+          "choices": [
+            "40",
+            "64",
+            "46",
+            "45"
+          ],
+          "explanation": "Forty gives four tens and six adds six ones.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original Chapter 2 number-sense review; not copied from a school assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-nov10-ch2-02",
+          "subject": "Math",
+          "skill": "number-words",
+          "prompt": "Which word describes nine groups of ten?",
+          "answer": "ninety",
+          "choices": [
+            "nine",
+            "ninety",
+            "nineteen",
+            "nine hundred"
+          ],
+          "explanation": "Nine tens total ninety.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original Chapter 2 number-sense review; not copied from a school assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-nov10-ch2-03",
+          "subject": "Math",
+          "skill": "expanded-form",
+          "prompt": "Which expression is the expanded form of fifty-two?",
+          "answer": "50 + 2",
+          "choices": [
+            "5 + 2",
+            "50 + 2",
+            "20 + 5",
+            "52 + 10"
+          ],
+          "explanation": "Fifty-two is fifty plus two.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original Chapter 2 number-sense review; not copied from a school assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-nov10-ch2-04",
+          "subject": "Math",
+          "skill": "even-odd",
+          "prompt": "Which digit might appear in the ones place of an odd number?",
+          "answer": "7",
+          "choices": [
+            "2",
+            "4",
+            "7",
+            "8"
+          ],
+          "explanation": "Odd numbers have 1, 3, 5, 7, or 9 in the ones place.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original Chapter 2 number-sense review; not copied from a school assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-nov10-ch2-05",
+          "subject": "Math",
+          "skill": "counting-by-tens",
+          "prompt": "Complete this new counting-by-tens pattern: 24, 34, 44, __.",
+          "answer": "54",
+          "choices": [
+            "45",
+            "50",
+            "54",
+            "64"
+          ],
+          "explanation": "Adding ten keeps four in the ones place.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original Chapter 2 number-sense review; not copied from a school assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-nov10-ch2-06",
+          "subject": "Math",
+          "skill": "rounding-nearest-ten",
+          "prompt": "A number line shows 78 between 70 and 80. What is 78 rounded to the nearest ten?",
+          "answer": "80",
+          "choices": [
+            "70",
+            "78",
+            "80",
+            "90"
+          ],
+          "explanation": "Seventy-eight is two from eighty and eight from seventy.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original Chapter 2 number-sense review; not copied from a school assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-nov10-ch2-07",
+          "subject": "Math",
+          "skill": "subtraction-word-problems",
+          "prompt": "There are 27 red and blue shells in a box. Eight are blue. How many are not blue?",
+          "answer": "19",
+          "choices": [
+            "8",
+            "19",
+            "27",
+            "35"
+          ],
+          "explanation": "Subtract the eight blue shells from twenty-seven.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original Chapter 2 number-sense review; not copied from a school assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-nov10-ch2-08",
+          "subject": "Math",
+          "skill": "counting-order",
+          "prompt": "Which group counts by ones with 45 as its middle number?",
+          "answer": "44, 45, 46",
+          "choices": [
+            "43, 45, 47",
+            "45, 46, 47",
+            "44, 45, 46",
+            "35, 45, 55"
+          ],
+          "explanation": "Forty-four is just before forty-five; forty-six is just after.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original Chapter 2 number-sense review; not copied from a school assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-nov10-ch2-09",
+          "subject": "Math",
+          "skill": "place-value",
+          "prompt": "Which number is made from five tens and eight ones?",
+          "answer": "58",
+          "choices": [
+            "85",
+            "508",
+            "58",
+            "13"
+          ],
+          "explanation": "Five tens and eight ones total fifty-eight.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original Chapter 2 number-sense review; not copied from a school assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-nov10-ch2-10",
+          "subject": "Math",
+          "skill": "number-comparison",
+          "prompt": "Which statement compares seventeen and twenty-three correctly?",
+          "answer": "17 < 23",
+          "choices": [
+            "17 > 23",
+            "17 = 23",
+            "17 < 23",
+            "23 < 17"
+          ],
+          "explanation": "Seventeen is less than twenty-three.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original Chapter 2 number-sense review; not copied from a school assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-nov10-ch2-11",
+          "subject": "Math",
+          "skill": "number-patterns",
+          "prompt": "Numbers go 31, 32, 33, 34. What counting rule connects them?",
+          "answer": "add 1",
+          "choices": [
+            "add 1",
+            "add 2",
+            "add 5",
+            "add 10"
+          ],
+          "explanation": "Each number is one larger than the one before it.",
+          "hint": "Read the question, say what it asks, then check your choice.",
+          "sourceFact": "Original Chapter 2 number-sense review; not copied from a school assessment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
     }
   ],
   "sourceManifest": [
@@ -4558,6 +5196,33 @@
       "id": "abvm-nov3-photo-4526.jpeg",
       "sha256": "c3c4944e5465c0ac2b3c784d6ad464e1228efaced313e02d8e0818a61ca573cc",
       "status": "integrated"
+    },
+    {
+      "id": "abvm-20261110-spelling-dictation.jpeg",
+      "sha256": "e1bb15c6115a68f648d1fabebd82223dcfd60905f1c5523def07e9577c1454ad",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261110-math-maintenance.jpeg",
+      "sha256": "16add7902cb0817d9b6addd94dee71619106810d4e956c6f7177004ee25635d8",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261110-math-ch2-post-p1.jpeg",
+      "sha256": "86170749356a1e68e3f5e423454db9e1f6634f3dd1650c0389b1dcf4bc20e0eb",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261110-math-ch2-post-p2.jpeg",
+      "sha256": "33336753d5a5ca6eb4f17134b9937f46fab229aa1bb1fe19334cc1b523b6b2bf",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261110-math-ch2-post-q10-crop.jpeg",
+      "sha256": "79d8750e699877e9b067f6a153615d855cfff611a670380d49f0c4e4d0191427",
+      "status": "duplicate",
+      "duplicateOf": "abvm-20261110-math-ch2-post-p2.jpeg",
+      "reason": "Visually matched detail crop of the same number-line item on the second full assessment page, not another completed assignment."
     }
   ]
 }
