@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
+import {readFileSync} from 'node:fs';
 import {verifiedSpellingDictationWords} from '../scripts/live-spelling-dictation-evidence.mjs';
 import {renderTestWorksheet} from '../pages/test-study-pair.mjs';
 
