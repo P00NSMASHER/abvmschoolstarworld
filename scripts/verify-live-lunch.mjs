@@ -247,7 +247,21 @@ try {
       await expect(dialog).toHaveCount(0);
       continue;
     }
-    await expect(frame.locator('.student-test .problem')).toHaveCount(6,{timeout:20000});
+    // A public scope receipt prevents accidental switching to an unrelated
+    // teacher test when opening consecutive worksheets. Never log answers.
+    const actualKey=await dialog.getAttribute('data-guide-test-key');
+    const selectedKey=await worksheet.getAttribute('data-test-key');
+    const preparedCount=Number(await dialog.getAttribute('data-guide-practice-count'));
+    expect(actualKey,'preview must belong to the selected announced test').toBe(selectedKey);
+    expect(preparedCount,'source-backed practice must survive the preview refresh for '+check.name).toBeGreaterThanOrEqual(6);
+    try{
+      await expect(frame.locator('.student-test .problem')).toHaveCount(6,{timeout:20000});
+    }catch(error){
+      const excerpt=await frame.locator('body').innerText({timeout:5000}).catch(()=>'(frame unavailable)');
+      throw new Error('Worksheet preview was not rendered after source-scoped model refresh: '+
+        check.name+' | '+actualKey+' | model practice='+preparedCount+
+        ' | frame excerpt='+excerpt.slice(0,350),{cause:error});
+    }
     await expect(frame.locator('.adult-key .key-list li')).toHaveCount(6);
     const prompts=(await frame.locator('.student-test .problem .prompt').allTextContents())
       .map(prompt=>prompt.replace(/^\d+\.\s*/,'').trim());

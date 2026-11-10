@@ -54,10 +54,13 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
     ].slice(0,3)};
     const isWorksheet = kind === 'worksheet';
     const doc = win.document;
-    doc.querySelector('[data-study-guide-dialog]')?.close();
+    const staleDialog = doc.querySelector('[data-study-guide-dialog]');
+    if (staleDialog) { staleDialog.close(); staleDialog.remove(); }
     const dialog = doc.createElement('dialog');
     dialog.className = 'study-guide-dialog';
     dialog.setAttribute('data-study-guide-dialog','');
+    dialog.setAttribute('data-guide-practice-count',String(guide.practice?.length||0));
+    dialog.setAttribute('data-guide-test-key',String(guide.key||''));
     dialog.setAttribute('aria-labelledby','study-guide-modal-title');
     dialog.innerHTML = '<header class="study-guide-modal-bar"><button type="button" data-guide-close>Close</button><strong id="study-guide-modal-title">'+esc((isWorksheet?'Worksheet: ':'Study guide: ')+(guide.label || 'Upcoming test'))+'</strong><button type="button" data-guide-print disabled>Print</button></header><iframe class="study-guide-frame" title="'+(isWorksheet?'Practice worksheet':'Study guide')+' preview"></iframe>';
     const closeButton = dialog.querySelector('[data-guide-close]');
@@ -65,7 +68,7 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
     const frame = dialog.querySelector('.study-guide-frame');
     frame.addEventListener('load', () => { printButton.disabled = false; }, {once:true});
     const createSheet = isWorksheet ? printableWorksheetHtml : printableStudyGuideHtml;
-    frame.srcdoc = createSheet(guide, term => win?.ABVMStudyGames?.vocabularyDefinition?.(term));
+    const printableHtml = createSheet(guide, term => win?.ABVMStudyGames?.vocabularyDefinition?.(term));
     closeButton.addEventListener('click', () => dialog.close());
     printButton.addEventListener('click', () => {
       try { frame.contentWindow?.focus(); frame.contentWindow?.print(); } catch {}
@@ -77,6 +80,9 @@ export function createMaterialsView({onChange,onRetry,onTest,onGuideRefresh,win=
     }, {once:true});
     doc.body.append(dialog);
     dialog.showModal();
+    // Assign srcdoc only after the iframe is connected. A second worksheet
+    // must not expose an old or empty browsing context after a prior preview.
+    frame.srcdoc = printableHtml;
     closeButton.focus({preventScroll:true});
   }
 
