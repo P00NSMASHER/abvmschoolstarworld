@@ -144,8 +144,8 @@ export function teacherTestReferenceForGuide(guide) {
   if((subject==='math'||/\bmath\b/.test(label)) &&
     /\b(?:chapter|ch\.?)\s*1\s*b\b/.test(label))
     return reference.mathChapterOneB;
-  if((subject==='math'||/\\bmath\\b/.test(label)) &&
-    /\\b(?:chapter|ch\\.?)\\s*2\\b/.test(label))
+  if((subject==='math'||/\bmath\b/.test(label)) &&
+    /\b(?:chapter|ch\.?)\s*2\b/.test(label))
     return reference.mathChapterTwoPost;
   if(/\bphonics\b/.test(label) && /\bshort[- ]vowels?\b/.test(label))
     return reference.shortVowelPhonics;
