@@ -65,8 +65,8 @@ test('prior actual Math Chapter 2 assessment and publisher bubble practice retai
   assert.equal((student.match(/class="teacher-bubble-mark"/g)||[]).length,24);
   assert.match(student,/next test format is unverified/);
   const notes=renderTestStudyGuide(guide);
-  assert.match(notes,/Previous publisher practice format \(not a teacher-issued test\)/);
-  assert.match(notes,/next test format is unverified/);
+  assert.match(notes,/Previous actual test format \(example only\)/);
+  assert.match(notes,/eighteen numbered question groups/);
   assert.match(classroomPracticeFormatSummary(guide),/not a teacher-issued test/);
 });
 
