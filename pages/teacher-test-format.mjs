@@ -43,6 +43,21 @@ const reference = Object.freeze({
     pages:2,
     origin:'prior-actual-teacher-test',
   }),
+  mathChapterTwoPost:Object.freeze({
+    id:'math-chapter-two-post-test',
+    kind:'math-structured',
+    referenceCount:18,
+    columns:2,
+    pages:2,
+    response:'write-number-or-short-answer',
+    sections:Object.freeze([
+      Object.freeze({kind:'number-words-and-place-value'}),
+      Object.freeze({kind:'number-patterns-and-even-odd'}),
+      Object.freeze({kind:'rounding-number-line'}),
+      Object.freeze({kind:'picture-counting-and-word-problems'}),
+    ]),
+    origin:'prior-actual-teacher-test',
+  }),
   shortVowelPhonics:Object.freeze({
     id:'phonics-short-vowel-picture-assessment',
     kind:'picture-assessment',
@@ -129,6 +144,9 @@ export function teacherTestReferenceForGuide(guide) {
   if((subject==='math'||/\bmath\b/.test(label)) &&
     /\b(?:chapter|ch\.?)\s*1\s*b\b/.test(label))
     return reference.mathChapterOneB;
+  if((subject==='math'||/\\bmath\\b/.test(label)) &&
+    /\\b(?:chapter|ch\\.?)\\s*2\\b/.test(label))
+    return reference.mathChapterTwoPost;
   if(/\bphonics\b/.test(label) && /\bshort[- ]vowels?\b/.test(label))
     return reference.shortVowelPhonics;
   if((/spelling/.test(subject) || /spelling/.test(label))&& !/grammar/.test(label))
@@ -156,14 +174,14 @@ const checkedChoices=(profile,practice)=>
 
 /** A partial, heterogeneous bank retains every verified item in its original answer form. */
 export function checkedBubbleQuestionForGuide(guide,question) {
-  const profile=teacherTestReferenceForGuide(guide) || classroomPracticeReferenceForGuide(guide);
+  const profile=classroomPracticeReferenceForGuide(guide) || teacherTestReferenceForGuide(guide);
   return profile?.kind==='bubble-choice' && profile.response==='fill-bubble' &&
     checkedChoices(profile,[question]) ? profile : null;
 }
 
 /** Only fully checked original items get a teacher-like bubble paper. */
 export function checkedBubblePaperFormat(guide,practice) {
-  const profile=teacherTestReferenceForGuide(guide) || classroomPracticeReferenceForGuide(guide);
+  const profile=classroomPracticeReferenceForGuide(guide) || teacherTestReferenceForGuide(guide);
   return profile?.kind==='bubble-choice' && profile.response==='fill-bubble' &&
     checkedChoices(profile,practice) ? profile : null;
 }
@@ -203,6 +221,8 @@ export function teacherFormatSummary(guide) {
     return 'Teacher-format example: a prior religion quiz combined five word-bank responses, '+
       'one picture selection and four true/false answers. '+observed+
       'Use an original practice mix only when current lesson evidence supports it.';
+  if(profile.kind==='math-structured' && profile.id==='math-chapter-two-post-test')
+    return 'Teacher-format example: a prior Chapter 2 post-test used eighteen numbered question groups over two pages in two columns, with number words, place value, rounding on a number line, number patterns, visual counting and short written word problems. This is an observed format, not a prediction of the next test.';
   if(profile.kind==='math-structured')
     return 'Teacher-format example: an earlier math post-test used twelve problems on two pages, '+
       'with two columns, number lines, related facts, visual models and word problems. '+
