@@ -211,12 +211,28 @@ try {
     const dialog=page.locator('[data-study-guide-dialog]');
     await expect(dialog).toBeVisible({timeout:20000});
     const frame=page.frameLocator('[data-study-guide-dialog] iframe');
+    const bank=data.pack.contentPipeline.questions.filter(q=>q.skill===check.skill);
+    // A posted test date does not establish source-matched question content.
+    // When the teacher has withdrawn a skill, verify that the live printable
+    // supplies neither invented questions nor invented answer keys.
+    if(!bank.length){
+      await expect(frame.locator('.student-test .problem')).toHaveCount(0,{timeout:20000});
+      await expect(frame.locator('.adult-key .key-list li')).toHaveCount(0);
+      await expect(frame.locator('.student-test')).toContainText(
+        'No matching original-practice questions are available for this assessment.');
+      await page.screenshot({path:`${out}/${check.name}-source-pending-worksheet.png`,animations:'disabled'});
+      receipt.screens.push({screen:'Live printable',testDate:check.date,worksheet:check.name,
+        checked:true,sourceMatchedQuestions:0,verifiedQuestions:0,answerKeys:0,
+        status:'source-pending',reason:'Current verified teacher scope provides no matching question bank'});
+      await dialog.locator('[data-guide-close]').click();
+      await expect(dialog).toHaveCount(0);
+      continue;
+    }
     await expect(frame.locator('.student-test .problem')).toHaveCount(6,{timeout:20000});
     await expect(frame.locator('.adult-key .key-list li')).toHaveCount(6);
     const prompts=(await frame.locator('.student-test .problem .prompt').allTextContents())
       .map(prompt=>prompt.replace(/^\d+\.\s*/,'').trim());
     expect(new Set(prompts).size).toBe(6);
-    const bank=data.pack.contentPipeline.questions.filter(q=>q.skill===check.skill);
     const key=await frame.locator('.adult-key .key-list li').allTextContents();
     for(const [index,prompt] of prompts.entries()){
       const answer=key[index].replace(/^\d+\.\s*/,'').split(/Why:|Adult:/)[0].trim();
