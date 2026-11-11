@@ -14,14 +14,14 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-11-11T13:09:15.621Z",
+  "sourceLastSeenAt": "2026-11-11T18:39:31.956Z",
   "sourceCapturedAt": "2026-11-10T18:42:40.819Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-c771461a1fda8bb48443",
     "sourceCapturedAt": "2026-11-10T18:42:40.819Z",
-    "generatedAt": "2026-11-11T13:09:15.621Z",
+    "generatedAt": "2026-11-11T18:39:31.956Z",
     "weekLabel": "Week of November 9, 2026",
     "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity” and Math “Page 57”. Upcoming tests include Grammar (singular & plural nouns) on Thursday, Nov. 12, Spelling (3 letter blends) / Handwriting on Friday, Nov. 13, Religion on Tuesday, Nov. 17, and Math lessons 1-5 (2 digiit with & without regrouping) on Tuesday, Nov. 17. 31 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
@@ -1698,7 +1698,7 @@
       "Christmas Caroling date is TBD.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
-    "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+    "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
     "uploadedNoticeHash": "uploaded-notices-e57dca15a6dfb9887780",
     "uploadedNoticeTopics": {
       "reminders": [
@@ -1754,8 +1754,8 @@
     "lunchMenuSource": {
       "status": "current-week",
       "retrievalState": "verified",
-      "checkedAt": "2026-11-11T13:09:15.621Z",
-      "lastAttemptAt": "2026-11-11T13:09:15.621Z",
+      "checkedAt": "2026-11-11T18:39:31.956Z",
+      "lastAttemptAt": "2026-11-11T18:39:31.956Z",
       "provider": "Saint Clair Area School District",
       "school": "Assumption BVM School",
       "feedUrl": "https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu",
@@ -1772,7 +1772,7 @@
           "contentHash": "a5d25beb5cbd34522ce4645172ab4efce1d041aab7fcc33521f3433c5cd0b178",
           "proofMode": "reviewed-notice",
           "reviewedAt": "2026-11-03T15:00:00.000Z",
-          "checkedAt": "2026-11-11T13:09:15.621Z",
+          "checkedAt": "2026-11-11T18:39:31.956Z",
           "state": "reviewed-notice"
         }
       ],
@@ -2497,11 +2497,11 @@
         "sourceId": "abvm-2026-11-parent-school-menu"
       }
     ],
-    "lunchMenuHash": "d33abff1dbf13b4f4d17730cc9c33c761bce867013863f7f2f84b00d11e5c1f8",
+    "lunchMenuHash": "6de43ddb4afb8fa5e116ba5ca8cd9291c8a1bfa2a6cd5a6d761676e379035297",
     "contentPipeline": {
       "schemaVersion": 2,
       "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-      "generatedAt": "2026-11-11T13:09:15.621Z",
+      "generatedAt": "2026-11-11T18:39:31.956Z",
       "sourceHash": "teacher-pages-c771461a1fda8bb48443",
       "bankFingerprint": "4a92788d",
       "lifecycleStage": "QA_PASSED",
@@ -2538,7 +2538,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -2565,7 +2565,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "e932d1a0b8784637215e21973676a6edbd608665e038fa1eb46af5dd89760646",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:fb4359ce06f3c4fc0abd5df31ffbf8369681f386c331cc216142887868266c0e",
             "matchedEvidence": [
               "Friday Nov. 20: Spelling (long a)/Handwriting"
@@ -2594,7 +2594,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -2632,7 +2632,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -2661,7 +2661,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -2691,7 +2691,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -2721,7 +2721,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "e932d1a0b8784637215e21973676a6edbd608665e038fa1eb46af5dd89760646",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4098b708aa8940c4c4d4e92e422b56ba1fdf5eb147ec138d5caadf938f555c8d",
             "matchedEvidence": [
               "Thursday Nov. 12: Grammar (singular & plural nouns)"
@@ -2751,7 +2751,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "6cdf08cfc29bd19dadf938ac5318ce9e53c04974c95f1419dae32debb9c722be",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:af8b39cd672c810e0b390ed932fd521a989cb2736ae84f8ee8c2ceeacf5513a7",
             "matchedEvidence": [
               "Skill: 3 letter blends"
@@ -2779,7 +2779,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -2807,7 +2807,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -2846,7 +2846,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
@@ -2887,7 +2887,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -2922,7 +2922,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -3181,7 +3181,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -3261,7 +3261,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "e932d1a0b8784637215e21973676a6edbd608665e038fa1eb46af5dd89760646",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:fb4359ce06f3c4fc0abd5df31ffbf8369681f386c331cc216142887868266c0e",
             "matchedEvidence": [
               "Friday Nov. 20: Spelling (long a)/Handwriting"
@@ -3341,7 +3341,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -3421,7 +3421,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -3501,7 +3501,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -3581,7 +3581,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -3661,7 +3661,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "e932d1a0b8784637215e21973676a6edbd608665e038fa1eb46af5dd89760646",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4098b708aa8940c4c4d4e92e422b56ba1fdf5eb147ec138d5caadf938f555c8d",
             "matchedEvidence": [
               "Thursday Nov. 12: Grammar (singular & plural nouns)"
@@ -3741,7 +3741,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "6cdf08cfc29bd19dadf938ac5318ce9e53c04974c95f1419dae32debb9c722be",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:af8b39cd672c810e0b390ed932fd521a989cb2736ae84f8ee8c2ceeacf5513a7",
             "matchedEvidence": [
               "Skill: 3 letter blends"
@@ -3821,7 +3821,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -3902,7 +3902,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -3983,7 +3983,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
@@ -4064,7 +4064,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
@@ -4145,7 +4145,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
@@ -4226,7 +4226,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
@@ -4307,7 +4307,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
@@ -4388,7 +4388,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
@@ -4469,7 +4469,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
@@ -4550,7 +4550,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
@@ -4631,7 +4631,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
@@ -4713,7 +4713,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -4795,7 +4795,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -4877,7 +4877,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -4959,7 +4959,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -5041,7 +5041,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -5123,7 +5123,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -5205,7 +5205,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -5287,7 +5287,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -5369,7 +5369,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -5451,7 +5451,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -5533,7 +5533,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -5615,7 +5615,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -5697,7 +5697,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -5779,7 +5779,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -5861,7 +5861,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -5943,7 +5943,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4809ca506f73bd0dc90843c1386f56c0feb2231cc266a745ba284eab04ab60c3",
             "matchedEvidence": [
               "Vocab Words: adult, alive, covered, fur, giant, groom. mammal, offspring"
@@ -6023,7 +6023,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -6103,7 +6103,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -6183,7 +6183,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -6263,7 +6263,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -6343,7 +6343,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -6423,7 +6423,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -6503,7 +6503,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -6583,7 +6583,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "e932d1a0b8784637215e21973676a6edbd608665e038fa1eb46af5dd89760646",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:fb4359ce06f3c4fc0abd5df31ffbf8369681f386c331cc216142887868266c0e",
             "matchedEvidence": [
               "Friday Nov. 20: Spelling (long a)/Handwriting"
@@ -6663,7 +6663,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "e932d1a0b8784637215e21973676a6edbd608665e038fa1eb46af5dd89760646",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:fb4359ce06f3c4fc0abd5df31ffbf8369681f386c331cc216142887868266c0e",
             "matchedEvidence": [
               "Friday Nov. 20: Spelling (long a)/Handwriting"
@@ -6743,7 +6743,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "e932d1a0b8784637215e21973676a6edbd608665e038fa1eb46af5dd89760646",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:fb4359ce06f3c4fc0abd5df31ffbf8369681f386c331cc216142887868266c0e",
             "matchedEvidence": [
               "Friday Nov. 20: Spelling (long a)/Handwriting"
@@ -6823,7 +6823,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "e932d1a0b8784637215e21973676a6edbd608665e038fa1eb46af5dd89760646",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:fb4359ce06f3c4fc0abd5df31ffbf8369681f386c331cc216142887868266c0e",
             "matchedEvidence": [
               "Friday Nov. 20: Spelling (long a)/Handwriting"
@@ -6903,7 +6903,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "e932d1a0b8784637215e21973676a6edbd608665e038fa1eb46af5dd89760646",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:fb4359ce06f3c4fc0abd5df31ffbf8369681f386c331cc216142887868266c0e",
             "matchedEvidence": [
               "Friday Nov. 20: Spelling (long a)/Handwriting"
@@ -6983,7 +6983,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "e932d1a0b8784637215e21973676a6edbd608665e038fa1eb46af5dd89760646",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:fb4359ce06f3c4fc0abd5df31ffbf8369681f386c331cc216142887868266c0e",
             "matchedEvidence": [
               "Friday Nov. 20: Spelling (long a)/Handwriting"
@@ -7063,7 +7063,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "e932d1a0b8784637215e21973676a6edbd608665e038fa1eb46af5dd89760646",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:fb4359ce06f3c4fc0abd5df31ffbf8369681f386c331cc216142887868266c0e",
             "matchedEvidence": [
               "Friday Nov. 20: Spelling (long a)/Handwriting"
@@ -7143,7 +7143,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -7223,7 +7223,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -7303,7 +7303,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -7383,7 +7383,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -7463,7 +7463,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -7543,7 +7543,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -7623,7 +7623,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -7703,7 +7703,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -7783,7 +7783,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -7863,7 +7863,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -7943,7 +7943,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:a41abb72aadc66eba2135e5de75b6c2e0b81d8204c13153b9cef02e431d6e085",
             "matchedEvidence": [
               "Word Structure: -ed, -ing endings (silent e & cvc words); CVCe words"
@@ -8023,7 +8023,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -8103,7 +8103,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -8183,7 +8183,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -8263,7 +8263,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -8343,7 +8343,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -8423,7 +8423,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -8503,7 +8503,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -8583,7 +8583,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -8663,7 +8663,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -8743,7 +8743,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -8823,7 +8823,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -8903,7 +8903,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -8983,7 +8983,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -9063,7 +9063,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -9143,7 +9143,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -9223,7 +9223,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -9303,7 +9303,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "e932d1a0b8784637215e21973676a6edbd608665e038fa1eb46af5dd89760646",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4098b708aa8940c4c4d4e92e422b56ba1fdf5eb147ec138d5caadf938f555c8d",
             "matchedEvidence": [
               "Thursday Nov. 12: Grammar (singular & plural nouns)"
@@ -9383,7 +9383,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "e932d1a0b8784637215e21973676a6edbd608665e038fa1eb46af5dd89760646",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4098b708aa8940c4c4d4e92e422b56ba1fdf5eb147ec138d5caadf938f555c8d",
             "matchedEvidence": [
               "Thursday Nov. 12: Grammar (singular & plural nouns)"
@@ -9463,7 +9463,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "e932d1a0b8784637215e21973676a6edbd608665e038fa1eb46af5dd89760646",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4098b708aa8940c4c4d4e92e422b56ba1fdf5eb147ec138d5caadf938f555c8d",
             "matchedEvidence": [
               "Thursday Nov. 12: Grammar (singular & plural nouns)"
@@ -9543,7 +9543,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "e932d1a0b8784637215e21973676a6edbd608665e038fa1eb46af5dd89760646",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4098b708aa8940c4c4d4e92e422b56ba1fdf5eb147ec138d5caadf938f555c8d",
             "matchedEvidence": [
               "Thursday Nov. 12: Grammar (singular & plural nouns)"
@@ -9623,7 +9623,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "e932d1a0b8784637215e21973676a6edbd608665e038fa1eb46af5dd89760646",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4098b708aa8940c4c4d4e92e422b56ba1fdf5eb147ec138d5caadf938f555c8d",
             "matchedEvidence": [
               "Thursday Nov. 12: Grammar (singular & plural nouns)"
@@ -9703,7 +9703,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "e932d1a0b8784637215e21973676a6edbd608665e038fa1eb46af5dd89760646",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4098b708aa8940c4c4d4e92e422b56ba1fdf5eb147ec138d5caadf938f555c8d",
             "matchedEvidence": [
               "Thursday Nov. 12: Grammar (singular & plural nouns)"
@@ -9783,7 +9783,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "e932d1a0b8784637215e21973676a6edbd608665e038fa1eb46af5dd89760646",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:4098b708aa8940c4c4d4e92e422b56ba1fdf5eb147ec138d5caadf938f555c8d",
             "matchedEvidence": [
               "Thursday Nov. 12: Grammar (singular & plural nouns)"
@@ -9863,7 +9863,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "6cdf08cfc29bd19dadf938ac5318ce9e53c04974c95f1419dae32debb9c722be",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:af8b39cd672c810e0b390ed932fd521a989cb2736ae84f8ee8c2ceeacf5513a7",
             "matchedEvidence": [
               "Skill: 3 letter blends"
@@ -9943,7 +9943,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "6cdf08cfc29bd19dadf938ac5318ce9e53c04974c95f1419dae32debb9c722be",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:af8b39cd672c810e0b390ed932fd521a989cb2736ae84f8ee8c2ceeacf5513a7",
             "matchedEvidence": [
               "Skill: 3 letter blends"
@@ -10023,7 +10023,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "6cdf08cfc29bd19dadf938ac5318ce9e53c04974c95f1419dae32debb9c722be",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:af8b39cd672c810e0b390ed932fd521a989cb2736ae84f8ee8c2ceeacf5513a7",
             "matchedEvidence": [
               "Skill: 3 letter blends"
@@ -10103,7 +10103,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "6cdf08cfc29bd19dadf938ac5318ce9e53c04974c95f1419dae32debb9c722be",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:af8b39cd672c810e0b390ed932fd521a989cb2736ae84f8ee8c2ceeacf5513a7",
             "matchedEvidence": [
               "Skill: 3 letter blends"
@@ -10183,7 +10183,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "6cdf08cfc29bd19dadf938ac5318ce9e53c04974c95f1419dae32debb9c722be",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:af8b39cd672c810e0b390ed932fd521a989cb2736ae84f8ee8c2ceeacf5513a7",
             "matchedEvidence": [
               "Skill: 3 letter blends"
@@ -10263,7 +10263,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "6cdf08cfc29bd19dadf938ac5318ce9e53c04974c95f1419dae32debb9c722be",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:af8b39cd672c810e0b390ed932fd521a989cb2736ae84f8ee8c2ceeacf5513a7",
             "matchedEvidence": [
               "Skill: 3 letter blends"
@@ -10343,7 +10343,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "6cdf08cfc29bd19dadf938ac5318ce9e53c04974c95f1419dae32debb9c722be",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:af8b39cd672c810e0b390ed932fd521a989cb2736ae84f8ee8c2ceeacf5513a7",
             "matchedEvidence": [
               "Skill: 3 letter blends"
@@ -10423,7 +10423,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -10503,7 +10503,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -10583,7 +10583,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -10663,7 +10663,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -10743,7 +10743,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -10823,7 +10823,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -10903,7 +10903,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
             "matchedEvidence": [
               "Phonics: long o (o_e) and short o; long u (u_e); short u"
@@ -10984,7 +10984,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -11065,7 +11065,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -11146,7 +11146,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -11227,7 +11227,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -11308,7 +11308,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -11389,7 +11389,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -11470,7 +11470,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T13:09:15.621Z",
+            "sourceCheckedAt": "2026-11-11T18:39:31.956Z",
             "evidenceExcerptHash": "sha256:b8740e61791aec6175cb500dfa23bd0ca15d2644b237850dd8e3033214b1e15a",
             "matchedEvidence": [
               "Reading Comprehension: main idea/details; diagrams & labels; text features"
@@ -11531,7 +11531,7 @@
     "recentReviewPipeline": {
       "schemaVersion": 1,
       "retentionDays": 14,
-      "generatedAt": "2026-11-11T13:09:15.621Z",
+      "generatedAt": "2026-11-11T18:39:31.956Z",
       "bankFingerprint": "5a0c08c7fe5c814ed7ef6d1d59ae4d23e8ceb0c98d9b67c59678955c3f06bc88",
       "skills": [
         {
@@ -18691,7 +18691,7 @@
     },
     "schoolChangeFeed": {
       "schemaVersion": 1,
-      "generatedAt": "2026-11-11T13:09:15.621Z",
+      "generatedAt": "2026-11-11T18:39:31.956Z",
       "sourceHash": "teacher-pages-c771461a1fda8bb48443",
       "changed": false,
       "items": [
@@ -18738,42 +18738,42 @@
       "dateProvided": false
     }
   },
-  "sourceLastCheckedAt": "2026-11-11T13:09:15.621Z",
+  "sourceLastCheckedAt": "2026-11-11T18:39:31.956Z",
   "sourcePages": [
     {
       "title": "Home",
       "url": "https://sites.google.com/view/abvmgr2/home",
-      "checkedAt": "2026-11-11T13:09:15.621Z",
+      "checkedAt": "2026-11-11T18:39:31.956Z",
       "contentHash": "421e607da663659fc44df158c62228c7e1e0fe53a2dc8f77d4798697ba8d55b6"
     },
     {
       "title": "Homework",
       "url": "https://sites.google.com/view/abvmgr2/homework",
-      "checkedAt": "2026-11-11T13:09:15.621Z",
+      "checkedAt": "2026-11-11T18:39:31.956Z",
       "contentHash": "bfb2643c3ab597757f951933d245c1be146e4f6bd4e5d1e1355b55d868f99b55"
     },
     {
       "title": "Reading Work",
       "url": "https://sites.google.com/view/abvmgr2/reading-work",
-      "checkedAt": "2026-11-11T13:09:15.621Z",
+      "checkedAt": "2026-11-11T18:39:31.956Z",
       "contentHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb"
     },
     {
       "title": "Weekly Spelling List",
       "url": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-      "checkedAt": "2026-11-11T13:09:15.621Z",
+      "checkedAt": "2026-11-11T18:39:31.956Z",
       "contentHash": "6cdf08cfc29bd19dadf938ac5318ce9e53c04974c95f1419dae32debb9c722be"
     },
     {
       "title": "Tests",
       "url": "https://sites.google.com/view/abvmgr2/tests",
-      "checkedAt": "2026-11-11T13:09:15.621Z",
+      "checkedAt": "2026-11-11T18:39:31.956Z",
       "contentHash": "e932d1a0b8784637215e21973676a6edbd608665e038fa1eb46af5dd89760646"
     },
     {
       "title": "Religion",
       "url": "https://sites.google.com/view/abvmgr2/religion",
-      "checkedAt": "2026-11-11T13:09:15.621Z",
+      "checkedAt": "2026-11-11T18:39:31.956Z",
       "contentHash": "1744a98f928d6d039918ee3485a971c17e4d6cd397c24ff1b0e48d951df5cdd2"
     }
   ],
