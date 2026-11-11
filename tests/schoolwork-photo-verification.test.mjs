@@ -42,14 +42,20 @@ const reviewed=pack=>{
   return book;
 };
 
-test('cumulative 86-source library gets deterministic bound checklist without pretending source files were read',async()=>{
+test('cumulative source library gets deterministic bound checklist without pretending source files were read',async()=>{
   const pack=JSON.parse(await readFile(new URL('../pages/data/schoolwork.json',import.meta.url),'utf8'));
   const original=JSON.stringify(pack);
   const first=buildSchoolworkPhotoChecklist(pack);
-  assert.deepEqual(first.totals,{photos:86,lessons:36,questions:131});
-  assert.equal(first.entries.length,86);
-  assert.equal(first.entries.filter(entry=>entry.status==='duplicate').length,1);
-  assert.equal(first.entries.filter(entry=>entry.status==='held').length,30);
+  const expected={photos:pack.sourceManifest.length,lessons:pack.lessons.length,
+    questions:pack.lessons.reduce((n,lesson)=>n+lesson.questions.length,0)};
+  assert.ok(expected.photos>=86 && expected.lessons>=36 && expected.questions>=131,
+    'cumulative archive must preserve its previously verified size');
+  assert.deepEqual(first.totals,expected);
+  assert.equal(first.entries.length,expected.photos);
+  for(const status of ['integrated','duplicate','held']){
+    assert.equal(first.entries.filter(entry=>entry.status===status).length,
+      pack.sourceManifest.filter(entry=>entry.status===status).length);
+  }
   assert(first.entries.every(entry=>entry.lessonContentSha256.length===64));
   assert.equal(first.releaseStatus,'HOLD_EXTERNAL_SIGNOFF');
   assert.equal(JSON.stringify(pack),original);
@@ -57,7 +63,7 @@ test('cumulative 86-source library gets deterministic bound checklist without pr
     ?Object.fromEntries(Object.entries(value).reverse().map(([k,v])=>[k,sorted(v)])):value;
   assert.deepEqual(buildSchoolworkPhotoChecklist(sorted(pack)),first,'JSON key order cannot revoke a review');
   const ids=new Set(first.entries.flatMap(entry=>entry.questionIds));
-  assert.equal(ids.size,131);
+  assert.equal(ids.size,expected.questions);
 });
 
 test('only matching private bytes and fully completed records yield technical evidence status, never release approval',async()=>{

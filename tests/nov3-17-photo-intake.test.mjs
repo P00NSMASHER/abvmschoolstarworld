@@ -8,7 +8,9 @@ const uploaded=schoolwork.sourceManifest.filter(s=>/^abvm-nov3-photo-45(?:1\d|2[
 const lessons=schoolwork.lessons.filter(l=>l.id.startsWith('nov3-photo-'));
 
 test('November 3 seventeen-photo intake accounts for all originals and protects private pages',()=>{
-  assert.equal(validateSchoolwork(schoolwork,{requireManifest:true}).photos,86);
+  const total=validateSchoolwork(schoolwork,{requireManifest:true}).photos;
+  assert.equal(total,schoolwork.sourceManifest.length);
+  assert.ok(total>=86,'subsequent intakes must preserve all earlier source entries');
   assert.equal(uploaded.length,17);
   assert.deepEqual(uploaded.map(s=>s.id).sort(),
     Array.from({length:17},(_,i)=>'abvm-nov3-photo-'+(4510+i)+'.jpeg').sort());

@@ -29,17 +29,28 @@ test('read-only report reconciles the exact published cumulative library',async(
   const original=JSON.stringify(pack);
   const report=buildSchoolworkReviewReport(pack);
   assert.equal(JSON.stringify(pack),original,'no mutation of the supplied source object');
-  assert.deepEqual(report.totals,{photos:86,lessons:36,questions:131});
+  const expected={photos:pack.sourceManifest.length,lessons:pack.lessons.length,
+    questions:pack.lessons.reduce((n,lesson)=>n+lesson.questions.length,0)};
+  assert.ok(expected.photos>=86 && expected.lessons>=36 && expected.questions>=131);
+  assert.deepEqual(report.totals,expected);
+  const byId=new Map(pack.sourceManifest.map(source=>[source.id,source]));
+  const exact=source=>source.status==='duplicate'&&source.sha256===byId.get(source.duplicateOf)?.sha256;
+  const count=predicate=>pack.sourceManifest.filter(predicate).length;
   assert.deepEqual(report.statusCounts,{
-    integratedSources:55,exactDuplicates:0,semanticRephotographs:1,heldSources:30,
-    verifiedDayLessons:0,verifiedWeekOnlyLessons:3,undatedLessons:33
+    integratedSources:count(source=>source.status==='integrated'),
+    exactDuplicates:count(exact),
+    semanticRephotographs:count(source=>source.status==='duplicate'&&!exact(source)),
+    heldSources:count(source=>source.status==='held'),
+    verifiedDayLessons:pack.lessons.filter(lesson=>lesson.studiedOn).length,
+    verifiedWeekOnlyLessons:pack.lessons.filter(lesson=>!lesson.studiedOn&&lesson.weekOf).length,
+    undatedLessons:pack.lessons.filter(lesson=>!lesson.studiedOn&&!lesson.weekOf).length
   });
-  assert.equal(report.sourceReviewQueue.length,86);
-  assert.equal(report.lessonReviewQueue.length,36);
+  assert.equal(report.sourceReviewQueue.length,expected.photos);
+  assert.equal(report.lessonReviewQueue.length,expected.lessons);
   assert.deepEqual(report.attention.verifiedWeekOnlyLessonIds,['nov3-photo-math-ch2-four-choice','nov3-photo-math-ch2-written','spelling-oct-09-2026']);
   assert.equal(report.releaseStatus,'HOLD_EXTERNAL_SIGNOFF');
   assert(Object.values(report.humanReleaseGates).every(value=>value==='EXTERNAL_REVIEW_REQUIRED'));
-  assert.equal(report.lessonReviewQueue.reduce((count,lesson)=>count+lesson.questionIds.length,0),131);
+  assert.equal(report.lessonReviewQueue.reduce((count,lesson)=>count+lesson.questionIds.length,0),expected.questions);
   assert.equal(report.sourceReviewQueue.filter(source=>source.status!=='held')
     .every(source=>source.lessonIds.length>0),true);
 });

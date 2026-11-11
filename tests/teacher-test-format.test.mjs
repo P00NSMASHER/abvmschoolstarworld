@@ -57,7 +57,16 @@ test('older actual religion, math and phonics assessments have distinct format f
   assert.deepEqual(Array.from(phonics.sections,s=>s.count),[15,15]);
   assert.match(teacherFormatSummary(sample('Phonics (short vowels)',[],{subject:'Reading / ELA'})),/picture-word writing/);
 
-  assert.equal(teacherTestReferenceForGuide(sample('Math Chapter 2',[],{subject:'Math'})),null);
+  const math2=teacherTestReferenceForGuide(sample('Math Chapter 2',[],{subject:'Math'}));
+  assert.equal(math2.kind,'math-structured');
+  assert.equal(math2.referenceCount,18);
+  assert.equal(math2.columns,2);
+  assert.equal(math2.pages,2);
+  assert.equal(math2.origin,'prior-actual-teacher-test');
+  assert.match(teacherFormatSummary(sample('Math Chapter 2',[],{subject:'Math'})),/eighteen/);
+  assert.doesNotMatch(JSON.stringify(math2),/studentName|handwriting|scoreReceived|teacherMark/);
+  // The old teacher-marked four-choice publisher practice remains separately grounded.
+  assert.equal(teacherTestReferenceForGuide(sample('Math Chapter 2',[],{subject:'Math'})).kind,'math-structured');
   assert.equal(teacherTestReferenceForGuide(sample('Phonics (long i)',[],{subject:'Reading / ELA'})),null);
 });
 
