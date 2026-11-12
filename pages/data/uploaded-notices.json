@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "lastIntegratedAt": "2026-11-12T17:04:17.644Z",
+  "lastIntegratedAt": "2026-11-12T17:13:53.423Z",
   "documents": [
     {
       "id": "dress-down-2026-09-25",
@@ -1433,15 +1433,15 @@
     },
     {
       "date": "Friday, Nov. 13",
-      "label": "The Little Mermaid Jr. drama club play — 7 PM at ABVM",
+      "label": "The Little Mermaid Jr. drama club play",
       "kind": "school event",
-      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
     },
     {
       "date": "Saturday, Nov. 14",
-      "label": "The Little Mermaid Jr. drama club play — 5 PM at ABVM",
+      "label": "The Little Mermaid Jr. drama club play",
       "kind": "school event",
-      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+      "sourceDocument": "nov-2026-school-calendar-parent-photo"
     },
     {
       "date": "Tuesday, Nov. 17",
@@ -1554,6 +1554,18 @@
     {
       "date": "Sunday, Apr. 18",
       "label": "HSA Bingo — details to come (2027)",
+      "kind": "school event",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "date": "Friday, Nov. 13",
+      "label": "HSA play showtime — The Little Mermaid Jr. at ABVM, 7 PM",
+      "kind": "school event",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "date": "Saturday, Nov. 14",
+      "label": "HSA play showtime — The Little Mermaid Jr. at ABVM, 5 PM",
       "kind": "school event",
       "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
     }
