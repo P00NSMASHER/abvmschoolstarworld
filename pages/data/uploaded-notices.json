@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "lastIntegratedAt": "2026-11-03T15:00:00.000Z",
+  "lastIntegratedAt": "2026-11-12T16:47:00.000Z",
   "documents": [
     {
       "id": "dress-down-2026-09-25",
@@ -713,6 +713,28 @@
         "piiReviewed": true,
         "reviewedBy": "source-backed-parent-photo-review",
         "reviewedAt": "2026-11-03T15:00:00.000Z"
+      }
+    },
+    {
+      "id": "hsa-melody-message-cheer-dec-2026",
+      "label": "HSA — A Melody & Message of Cheer and Christmas Card Club flyer",
+      "receivedAt": "2026-11-12",
+      "facts": [
+        "The ABVM Home & School Association invites families to A Melody & Message of Cheer on Friday, December 18, 2026, from 5:30 to 7:00 PM, bringing handmade Christmas cards and carols to local nursing homes.",
+        "The December 18 caroling stops are not specified; the flyer says another flyer with the night's caroling stops will follow.",
+        "The optional Christmas Card Club meets after school Thursday, December 3 and/or Wednesday, December 9, 2026, from 3:00 to 3:45 PM.",
+        "For Christmas Card Club, a parent should complete the bottom student-name form, check December 3 and/or December 9, and return it to school; the flyer does not state a submission deadline.",
+        "Parent pickup after either Christmas Card Club session is 3:45 PM."
+      ],
+      "provenance": {
+        "factsHash": "6c18624664f3b3712b67f7286c02b866aa1fd0903c407fd8a9c4678a9c7c664e",
+        "sourceContentHash": "1ea7cf8fca280c732faf50fc890a4c9627d202cf6ccd631ae684e5fadc7c5eb8"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "source-backed-chat-photo-review",
+        "reviewedAt": "2026-11-12T16:47:00.000Z"
       }
     }
   ],
@@ -1508,6 +1530,24 @@
       "label": "No school",
       "kind": "school event",
       "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Thursday, Dec. 3",
+      "label": "Christmas Card Club — 3:00–3:45 PM; pickup 3:45 PM",
+      "kind": "school event",
+      "sourceDocument": "hsa-melody-message-cheer-dec-2026"
+    },
+    {
+      "date": "Wednesday, Dec. 9",
+      "label": "Christmas Card Club — 3:00–3:45 PM; pickup 3:45 PM",
+      "kind": "school event",
+      "sourceDocument": "hsa-melody-message-cheer-dec-2026"
+    },
+    {
+      "date": "Friday, Dec. 18",
+      "label": "A Melody & Message of Cheer — nursing-home caroling 5:30–7:00 PM; stops to be announced",
+      "kind": "school event",
+      "sourceDocument": "hsa-melody-message-cheer-dec-2026"
     }
   ],
   "reminders": [
@@ -1635,6 +1675,11 @@
       "text": "November 25: noon dismissal with lunch served. November 26, 27, and 30: no school.",
       "topic": "nov-2026-thanksgiving-closure",
       "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "text": "Optional Christmas Card Club: fill out and return the school flyer form for Thursday, Dec. 3 and/or Wednesday, Dec. 9 (3:00–3:45 PM; pickup at 3:45 PM). No form-return deadline is printed.",
+      "topic": "dec-2026-christmas-card-club-form",
+      "sourceDocument": "hsa-melody-message-cheer-dec-2026"
     }
   ],
   "parentNotices": [
@@ -1762,6 +1807,11 @@
       "text": "November 2026 school lunch costs $4.25. Assorted milks are available daily. Menu is subject to change.",
       "topic": "nov-2026-lunch-cost",
       "sourceDocument": "nov-2026-lunch-menu-parent-photo"
+    },
+    {
+      "text": "HSA's A Melody & Message of Cheer is Friday, Dec. 18, 2026, from 5:30–7:00 PM. The event brings handmade cards and Christmas carols to local nursing homes. Stops and visit locations will be announced in a later flyer.",
+      "topic": "dec-2026-melody-message-cheer",
+      "sourceDocument": "hsa-melody-message-cheer-dec-2026"
     }
   ],
   "replacements": [
