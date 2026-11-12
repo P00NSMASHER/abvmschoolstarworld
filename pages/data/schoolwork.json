@@ -4758,7 +4758,7 @@
       "dateStatus": "Undated completed schoolwork in parent PDF received Nov. 12, 2026; printed Grade 2 Unit 2 Week 1 is publisher sequence, not a verified school calendar date; cumulative review only.",
       "questions": [
         {
-          "id": "abvm-1211-o1",
+          "id": "abvm-1212-o1",
           "subject": "Reading / ELA",
           "skill": "phoneme-blending",
           "prompt": "Which word do the sounds /s/ /t/ /o/ /p/ make?",
@@ -4778,10 +4778,11 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Say each consonant and vowel sound separately, then sweep through the full sequence without skipping the ending sound."
         },
         {
-          "id": "abvm-1211-o2",
+          "id": "abvm-1212-o2",
           "subject": "Reading / ELA",
           "skill": "short-long-o",
           "prompt": "Which word has the long O sound?",
@@ -4801,10 +4802,11 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Read each option aloud and listen for a vowel that says its own letter name rather than making the short O sound."
         },
         {
-          "id": "abvm-1211-o3",
+          "id": "abvm-1212-o3",
           "subject": "Reading / ELA",
           "skill": "silent-e-pattern",
           "prompt": "What does a silent E do to the vowel in the word hop when we make hope?",
@@ -4824,7 +4826,8 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Compare a short-vowel word with its silent-E partner and listen for what changes when the final letter is added."
         }
       ]
     },
@@ -4850,7 +4853,7 @@
       "dateStatus": "Undated completed schoolwork in parent PDF received Nov. 12, 2026; printed Grade 2 Unit 2 Week 1 is publisher sequence, not a verified school calendar date; cumulative review only.",
       "questions": [
         {
-          "id": "abvm-1211-end1",
+          "id": "abvm-1212-end1",
           "subject": "Reading / ELA",
           "skill": "inflectional-endings",
           "prompt": "Which word says the puppy is jumping right now?",
@@ -4870,10 +4873,11 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Look closely at the ending and choose the form used for an action happening at this moment."
         },
         {
-          "id": "abvm-1211-end2",
+          "id": "abvm-1212-end2",
           "subject": "Reading / ELA",
           "skill": "inflectional-endings",
           "prompt": "Which word tells that the cook finished yesterday?",
@@ -4893,10 +4897,11 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "The clue says the action already happened, so find the verb ending that signals the past."
         },
         {
-          "id": "abvm-1211-hf1",
+          "id": "abvm-1212-hf1",
           "subject": "Reading / ELA",
           "skill": "high-frequency-words",
           "prompt": "Choose the word that completes: I stayed inside ___ it was raining.",
@@ -4916,7 +4921,8 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Read the entire sentence and decide whether the missing word should give a reason or name an object."
         }
       ]
     },
@@ -4947,7 +4953,7 @@
       "dateStatus": "Undated completed schoolwork in parent PDF received Nov. 12, 2026; printed Grade 2 Unit 2 Week 2 is publisher sequence, not a verified school calendar date; cumulative review only.",
       "questions": [
         {
-          "id": "abvm-1211-u1",
+          "id": "abvm-1212-u1",
           "subject": "Reading / ELA",
           "skill": "short-long-u",
           "prompt": "Which word has the long U sound?",
@@ -4967,10 +4973,11 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Read each word aloud, compare the middle vowel sounds, and look for the word with a final silent E."
         },
         {
-          "id": "abvm-1211-u2",
+          "id": "abvm-1212-u2",
           "subject": "Reading / ELA",
           "skill": "phoneme-segmentation",
           "prompt": "How many separate sounds are in the spoken word sun?",
@@ -4990,10 +4997,11 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Stretch out the spoken word slowly and count one finger tap for each distinct sound you can hear."
         },
         {
-          "id": "abvm-1211-u3",
+          "id": "abvm-1212-u3",
           "subject": "Reading / ELA",
           "skill": "phoneme-deletion",
           "prompt": "Say 'plane' without the /p/ sound at the start. What word do you hear?",
@@ -5013,10 +5021,11 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Say the full spoken word, take away only its first sound, and listen to the sounds remaining."
         },
         {
-          "id": "abvm-1211-u4",
+          "id": "abvm-1212-u4",
           "subject": "Reading / ELA",
           "skill": "word-ladders",
           "prompt": "What one-letter change makes the word cub into cube?",
@@ -5036,7 +5045,8 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Compare the two spellings and consider what a silent E at the very end would do to the middle vowel."
         }
       ]
     },
@@ -5062,7 +5072,7 @@
       "dateStatus": "Undated completed schoolwork in parent PDF received Nov. 12, 2026; printed Grade 2 Unit 2 Week 2 is publisher sequence, not a verified school calendar date; cumulative review only.",
       "questions": [
         {
-          "id": "abvm-1211-cvce1",
+          "id": "abvm-1212-cvce1",
           "subject": "Reading / ELA",
           "skill": "cvce-syllables",
           "prompt": "Which word has a silent-E syllable?",
@@ -5082,10 +5092,11 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Clap each word into syllables and look for one syllable with the consonant-vowel-consonant-silent-E pattern."
         },
         {
-          "id": "abvm-1211-cvce2",
+          "id": "abvm-1212-cvce2",
           "subject": "Reading / ELA",
           "skill": "high-frequency-words",
           "prompt": "Complete: We will ___ when our team scores.",
@@ -5105,10 +5116,11 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Think about the noise and actions people make when they support a team that just scored a point."
         },
         {
-          "id": "abvm-1211-cvce3",
+          "id": "abvm-1212-cvce3",
           "subject": "Reading / ELA",
           "skill": "high-frequency-words",
           "prompt": "Complete: They ___ the game yesterday.",
@@ -5128,7 +5140,8 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "The time clue tells you the action happened yesterday; look for a word that describes a past victory."
         }
       ]
     },
@@ -5153,7 +5166,7 @@
       "dateStatus": "Undated completed schoolwork in parent PDF received Nov. 12, 2026; cumulative review only.",
       "questions": [
         {
-          "id": "abvm-1211-bear1",
+          "id": "abvm-1212-bear1",
           "subject": "Reading / ELA",
           "skill": "science-vocabulary",
           "prompt": "A baby bear is its parent's ___.",
@@ -5173,10 +5186,11 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Think about animal families and the word for a baby or young animal in relation to its parents."
         },
         {
-          "id": "abvm-1211-bear2",
+          "id": "abvm-1212-bear2",
           "subject": "Reading / ELA",
           "skill": "vocabulary-in-context",
           "prompt": "When an animal grooms its fur, what does it do?",
@@ -5196,7 +5210,8 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Picture an animal caring for its coat and choose the description that best matches that behavior."
         }
       ]
     },
@@ -5222,7 +5237,7 @@
       "dateStatus": "Undated completed schoolwork in parent PDF received Nov. 12, 2026; cumulative review only.",
       "questions": [
         {
-          "id": "abvm-1211-warmela1",
+          "id": "abvm-1212-warmela1",
           "subject": "Reading / ELA",
           "skill": "possessives",
           "prompt": "Which word completes: ___ books are on the table?",
@@ -5242,10 +5257,11 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "The missing word tells whose books they are. Choose a possessive word instead of the verb are."
         },
         {
-          "id": "abvm-1211-warmela2",
+          "id": "abvm-1212-warmela2",
           "subject": "Reading / ELA",
           "skill": "vocabulary-in-context",
           "prompt": "What does 'defeat' mean in a game?",
@@ -5265,7 +5281,8 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Imagine two teams competing and decide what happened when one won against the other."
         }
       ]
     },
@@ -5291,7 +5308,7 @@
       "dateStatus": "Undated completed schoolwork in parent PDF received Nov. 12, 2026; cumulative review only.",
       "questions": [
         {
-          "id": "abvm-1211-warmmath1",
+          "id": "abvm-1212-warmmath1",
           "subject": "Math",
           "skill": "addition-facts",
           "prompt": "What is 7 + 10?",
@@ -5311,10 +5328,11 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Make a group of ten and add seven single objects; count the total without changing the ones digit."
         },
         {
-          "id": "abvm-1211-warmmath2",
+          "id": "abvm-1212-warmmath2",
           "subject": "Math",
           "skill": "word-problems",
           "prompt": "A student made 4 paper boats. Another student made 3 more boats. How many boats altogether?",
@@ -5334,10 +5352,11 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Draw the first group of boats and then the extra group; recount each boat just one time."
         },
         {
-          "id": "abvm-1211-warmmath3",
+          "id": "abvm-1212-warmmath3",
           "subject": "Math",
           "skill": "place-value",
           "prompt": "How much is 6 tens?",
@@ -5357,7 +5376,8 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Remember that each group named a ten is made of ten individual objects; count the groups."
         }
       ]
     },
@@ -5369,7 +5389,7 @@
         "abvm-20261112-p17.png"
       ],
       "skills": [
-        "subject-predicate",
+        "sentence-structure",
         "sentence-writing"
       ],
       "notes": [
@@ -5382,9 +5402,9 @@
       "dateStatus": "Undated completed schoolwork in parent PDF received Nov. 12, 2026; cumulative review only.",
       "questions": [
         {
-          "id": "abvm-1211-gram1",
+          "id": "abvm-1212-gram1",
           "subject": "Reading / ELA",
-          "skill": "subject-predicate",
+          "skill": "sentence-structure",
           "prompt": "Which words are the subject of: The little puppy chased the ball?",
           "answer": "The little puppy",
           "choices": [
@@ -5402,12 +5422,13 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Ask who is doing the chasing and include all the words that identify that person or animal."
         },
         {
-          "id": "abvm-1211-gram2",
+          "id": "abvm-1212-gram2",
           "subject": "Reading / ELA",
-          "skill": "subject-predicate",
+          "skill": "sentence-structure",
           "prompt": "Which words make a complete predicate for: The turkey ___?",
           "answer": "ran across the yard",
           "choices": [
@@ -5425,10 +5446,11 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "A predicate says what the named subject does; choose an action that finishes the sentence."
         },
         {
-          "id": "abvm-1211-gram3",
+          "id": "abvm-1212-gram3",
           "subject": "Reading / ELA",
           "skill": "sentence-writing",
           "prompt": "Which sentence is complete?",
@@ -5448,7 +5470,8 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Read each option and check that it contains both a subject and something the subject does or is."
         }
       ]
     },
@@ -5474,7 +5497,7 @@
       "dateStatus": "Undated completed schoolwork in parent PDF received Nov. 12, 2026; cumulative review only.",
       "questions": [
         {
-          "id": "abvm-1211-pv1",
+          "id": "abvm-1212-pv1",
           "subject": "Math",
           "skill": "hundreds-tens-ones",
           "prompt": "Which amount equals 4 hundreds?",
@@ -5494,10 +5517,11 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Trade each hundred-block for ten ten-bars and then count how many bars you have altogether."
         },
         {
-          "id": "abvm-1211-pv2",
+          "id": "abvm-1212-pv2",
           "subject": "Math",
           "skill": "tens-and-ones",
           "prompt": "How many ones are in 7 tens?",
@@ -5517,10 +5541,11 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Draw seven ten-bars; each bar holds ten individual squares, so count the individual squares."
         },
         {
-          "id": "abvm-1211-pv3",
+          "id": "abvm-1212-pv3",
           "subject": "Math",
           "skill": "place-value",
           "prompt": "What number equals 50 tens?",
@@ -5540,7 +5565,8 @@
           "standards": [
             "ABVM.CLASSROOM"
           ],
-          "provenance": "original-practice-from-uploaded-schoolwork"
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Count how many groups of ten there are, then multiply by ten to find the value of all the groups."
         }
       ]
     }
