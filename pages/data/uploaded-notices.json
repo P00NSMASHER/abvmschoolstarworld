@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "lastIntegratedAt": "2026-11-03T15:00:00.000Z",
+  "lastIntegratedAt": "2026-11-12T17:04:17.644Z",
   "documents": [
     {
       "id": "dress-down-2026-09-25",
@@ -714,6 +714,30 @@
         "reviewedBy": "source-backed-parent-photo-review",
         "reviewedAt": "2026-11-03T15:00:00.000Z"
       }
+    },
+    {
+      "id": "hsa-newsletter-2026-11-parent-pdf",
+      "label": "ABVM HSA newsletter — November 2026 (parent PDF page 21)",
+      "receivedAt": "2026-11-12",
+      "facts": [
+        "ABVM November 2026 HSA newsletter announces The Little Mermaid Jr. at ABVM on Friday, Nov. 13, 2026 at 7 PM and Saturday, Nov. 14, 2026 at 5 PM.",
+        "HSA virtual meeting is Thursday, Dec. 3, 2026 at 7 PM; meeting link is available via the child's Google Classroom, not published.",
+        "Volunteer clearances are required to volunteer at school; Mrs. Thompson has packets.",
+        "Upcoming HSA events with more information to come: Christmas card making Dec. 3 and Dec. 9, 2026; Santa Workshop Dec. 14; Christmas caroling Dec. 18; Christmas party Dec. 22.",
+        "Book fair planned January 2027; exact date not specified. HSA bingo planned Sunday, Apr. 18, 2027; additional information to come.",
+        "Mandatory fundraisers on November list: cash tickets in November, ongoing RaiseRight gift cards, Kowalonek gift cards in January, lottery board raffle in February, Race for Education in March, cash ticket sale in April. Buyouts available.",
+        "Optional HSA fundraisers: Nov. 17 nut roll pickup; nut rolls in March; April 18 bingo. Student Council fundraisers include fall/spring Chick-fil-A and pretzels."
+      ],
+      "provenance": {
+        "factsHash": "302f0af2577329b1b122567c1d3c75e16f2471bcbca14e140b1a1ef1dfcbe3bc",
+        "sourceContentHash": "dd81970fd9eae5acfaa98db909f3e039cc7bb8f7bfa181fe99cb4017048a607d"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "source-backed-parent-pdf-review",
+        "reviewedAt": "2026-11-12T17:04:17.644Z"
+      }
     }
   ],
   "importantDates": [
@@ -896,12 +920,6 @@
       "label": "Halloween Celebration",
       "kind": "school event",
       "sourceDocument": "october-calendar-2026"
-    },
-    {
-      "date": "Friday–Saturday, Nov. 13–14",
-      "label": "Drama Club Play",
-      "kind": "school event",
-      "sourceDocument": "weekly-reminders-2026-09-28"
     },
     {
       "date": "Monday, Oct. 5",
@@ -1415,15 +1433,15 @@
     },
     {
       "date": "Friday, Nov. 13",
-      "label": "The Little Mermaid Jr. drama club play",
+      "label": "The Little Mermaid Jr. drama club play — 7 PM at ABVM",
       "kind": "school event",
-      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
     },
     {
       "date": "Saturday, Nov. 14",
-      "label": "The Little Mermaid Jr. drama club play",
+      "label": "The Little Mermaid Jr. drama club play — 5 PM at ABVM",
       "kind": "school event",
-      "sourceDocument": "nov-2026-school-calendar-parent-photo"
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
     },
     {
       "date": "Tuesday, Nov. 17",
@@ -1508,6 +1526,36 @@
       "label": "No school",
       "kind": "school event",
       "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Thursday, Dec. 3",
+      "label": "HSA meeting — 7 PM (virtual; link in school Classroom)",
+      "kind": "school event",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "date": "Thursday, Dec. 3",
+      "label": "HSA Christmas card making — details to come",
+      "kind": "school event",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "date": "Wednesday, Dec. 9",
+      "label": "HSA Christmas card making — details to come",
+      "kind": "school event",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "date": "Friday, Dec. 18",
+      "label": "HSA Christmas caroling — details to come",
+      "kind": "school event",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "date": "Sunday, Apr. 18",
+      "label": "HSA Bingo — details to come (2027)",
+      "kind": "school event",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
     }
   ],
   "reminders": [
@@ -1635,6 +1683,11 @@
       "text": "November 25: noon dismissal with lunch served. November 26, 27, and 30: no school.",
       "topic": "nov-2026-thanksgiving-closure",
       "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "topic": "hsa-2026-nov-volunteer-clearances",
+      "text": "HSA volunteers need school clearances. Ask Mrs. Thompson for a clearance packet.",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
     }
   ],
   "parentNotices": [
@@ -1762,6 +1815,31 @@
       "text": "November 2026 school lunch costs $4.25. Assorted milks are available daily. Menu is subject to change.",
       "topic": "nov-2026-lunch-cost",
       "sourceDocument": "nov-2026-lunch-menu-parent-photo"
+    },
+    {
+      "topic": "hsa-2026-nov-drama-showtimes",
+      "text": "HSA newsletter confirms ABVM drama club performances: Friday Nov. 13 at 7 PM and Saturday Nov. 14 at 5 PM, at ABVM.",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "topic": "hsa-2026-nov-meeting-details",
+      "text": "Next HSA meeting: Thursday Dec. 3, 2026 at 7 PM, virtual. The meeting link is in the child's Google Classroom; no public link provided.",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "topic": "hsa-2026-december-plans",
+      "text": "HSA plans Christmas card making Dec. 3 and 9; Santa Workshop Dec. 14; caroling Dec. 18; Christmas party Dec. 22. Details and participation information are still to come.",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "topic": "hsa-2027-events",
+      "text": "HSA newsletter lists a book fair in January 2027 (date not specified) and Bingo on April 18, 2027 (details to come).",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "topic": "hsa-2026-27-fundraisers",
+      "text": "HSA mandatory fundraisers include cash ticket sales (November and April), ongoing RaiseRight gift cards, Kowalonek gift cards (January), Lottery Board (February), and Race for Education (March); buyouts are available. Optional student fundraisers include pretzels and Chick-fil-A.",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
     }
   ],
   "replacements": [
