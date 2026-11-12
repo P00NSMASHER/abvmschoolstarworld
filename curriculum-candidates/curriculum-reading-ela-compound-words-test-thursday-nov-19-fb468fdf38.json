@@ -1,0 +1,66 @@
+{
+  "candidateId": "curriculum-reading-ela-compound-words-test-thursday-nov-19-fb468fdf38",
+  "familyId": "compound-words-test-thursday-nov-19",
+  "subject": "Reading / ELA",
+  "topic": "compound words (test Thursday, Nov. 19)",
+  "sourceHash": "teacher-pages-0dd731599dd08c5629df",
+  "generatedAt": "2026-11-12T21:36:54.408Z",
+  "sourceContext": {
+    "quality": "unresolved",
+    "matchMethod": "none",
+    "subject": "Reading / ELA",
+    "topic": "compound words (test Thursday, Nov. 19)",
+    "evidenceExcerptHash": "sha256:9a5ad0383013c5a6015562b82659644e8e80de8c696ca419a2eac44e81ce9167"
+  },
+  "featureFlag": "curriculum-family:compound-words-test-thursday-nov-19-candidate",
+  "enabledByDefault": false,
+  "registryMatch": null,
+  "minimumSemanticVariants": 8,
+  "requiredQuestionTypes": [
+    "direct",
+    "transfer",
+    "reasoning"
+  ],
+  "proposedQuestions": [],
+  "authoring": {
+    "status": "AUTHORING_REQUIRED",
+    "generatedQuestionCount": 0,
+    "minimumSemanticVariants": 8,
+    "requiredQuestionTypes": [
+      "direct",
+      "transfer",
+      "reasoning"
+    ],
+    "requiredQuestionFields": [
+      "questionType",
+      "prompt",
+      "choices",
+      "answer",
+      "explanation",
+      "hint",
+      "dok",
+      "difficulty"
+    ]
+  },
+  "rollout": {
+    "featureFlagRequired": false,
+    "automatedQaRequired": true,
+    "safeUsageEvidenceRequired": false,
+    "manualPromotionRequired": false,
+    "automaticPromotion": true
+  },
+  "readiness": {
+    "status": "HOLD",
+    "blockers": [
+      "page-exact-source-context-required",
+      "minimum-semantic-variants:0/8",
+      "question-type-required:direct",
+      "question-type-required:transfer",
+      "question-type-required:reasoning",
+      "automated-qa-required"
+    ],
+    "automaticPromotion": false,
+    "automaticDelete": false,
+    "automaticRewrite": false
+  }
+}
