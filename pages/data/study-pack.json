@@ -14,14 +14,14 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-11-12T17:04:17.644Z",
-  "sourceCapturedAt": "2026-11-12T17:04:17.644Z",
+  "sourceLastSeenAt": "2026-11-12T17:13:53.423Z",
+  "sourceCapturedAt": "2026-11-12T17:13:53.423Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-c771461a1fda8bb48443",
-    "sourceCapturedAt": "2026-11-12T17:04:17.644Z",
-    "generatedAt": "2026-11-12T17:04:17.644Z",
+    "sourceCapturedAt": "2026-11-12T17:13:53.423Z",
+    "generatedAt": "2026-11-12T17:13:53.423Z",
     "weekLabel": "Week of November 9, 2026",
     "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity” and Math “Page 57”. Upcoming tests include Grammar (singular & plural nouns) on Thursday, Nov. 12, Spelling (3 letter blends) / Handwriting on Friday, Nov. 13, Religion on Tuesday, Nov. 17, and Math lessons 1-5 (2 digiit with & without regrouping) on Tuesday, Nov. 17. 32 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
@@ -1002,7 +1002,14 @@
       },
       {
         "date": "Friday, Nov. 13",
-        "label": "The Little Mermaid Jr. drama club play — 7 PM at ABVM",
+        "label": "The Little Mermaid Jr. drama club play",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Nov. 13",
+        "label": "HSA play showtime — The Little Mermaid Jr. at ABVM, 7 PM",
         "kind": "school event",
         "sourceDocument": "hsa-newsletter-2026-11-parent-pdf",
         "source": "uploaded-notice"
@@ -1015,7 +1022,14 @@
       },
       {
         "date": "Saturday, Nov. 14",
-        "label": "The Little Mermaid Jr. drama club play — 5 PM at ABVM",
+        "label": "The Little Mermaid Jr. drama club play",
+        "kind": "school event",
+        "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Saturday, Nov. 14",
+        "label": "HSA play showtime — The Little Mermaid Jr. at ABVM, 5 PM",
         "kind": "school event",
         "sourceDocument": "hsa-newsletter-2026-11-parent-pdf",
         "source": "uploaded-notice"
@@ -1727,7 +1741,7 @@
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
     "sourceCheckedAt": "2026-11-11T19:22:13.816Z",
-    "uploadedNoticeHash": "uploaded-notices-47907d44f22ccc4c309c",
+    "uploadedNoticeHash": "uploaded-notices-a513492dc5f4ea1eaa5a",
     "uploadedNoticeTopics": {
       "reminders": [
         "fundraiser",
@@ -18813,7 +18827,7 @@
   ],
   "uploadedNotices": {
     "count": 32,
-    "latestIntegratedAt": "2026-11-12T17:04:17.644Z",
+    "latestIntegratedAt": "2026-11-12T17:13:53.423Z",
     "documents": [
       {
         "id": "dress-down-2026-09-25",
