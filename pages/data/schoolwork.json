@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "uploadedPhotoCount": 91,
-  "distinctWorksheetNote": "Day 23 appears twice; one lesson is retained. November 3 PDF: 46 scanned pages; 21 new instruction-bearing pages included in public original practice, one personal reflection withheld, eight prior duplicates held and 16 blank reverse scans held. Undated original work is not presented as current homework. November 3 seventeen-photo follow-up: twelve privacy-safe academic images support ten original-practice lessons; three rephotographed publisher assessment pages and two private reflections are held and not copied into the public app. Reuploads are not independent learning evidence.",
+  "uploadedPhotoCount": 115,
+  "distinctWorksheetNote": "Day 23 appears twice; one lesson is retained. November 3 PDF: 46 scanned pages; 21 new instruction-bearing pages included in public original practice, one personal reflection withheld, eight prior duplicates held and 16 blank reverse scans held. Undated original work is not presented as current homework. November 3 seventeen-photo follow-up: twelve privacy-safe academic images support ten original-practice lessons; three rephotographed publisher assessment pages and two private reflections are held and not copied into the public app. Reuploads are not independent learning evidence. November 12 parent PDF intake: 24 page images reviewed; 16 instructional pages support nine undated cumulative lessons, five blank backs and three noncurricular/private pages held. Unit numbers do not establish a study date; newsletter and calendar are reviewed separately. No learner answers or marks are public.",
   "lessons": [
     {
       "id": "fact-families",
@@ -4732,6 +4732,817 @@
           "provenance": "original-practice-from-uploaded-schoolwork"
         }
       ]
+    },
+    {
+      "id": "nov12-pdf-unit2-o-phonemes",
+      "title": "Unit 2 phoneme blending and short/long O",
+      "subject": "Reading / ELA",
+      "sources": [
+        "abvm-20261112-p01.png",
+        "abvm-20261112-p02.png",
+        "abvm-20261112-p03.png",
+        "abvm-20261112-p04.png"
+      ],
+      "skills": [
+        "phoneme-blending",
+        "short-long-o",
+        "silent-e-pattern"
+      ],
+      "notes": [
+        "Add, blend, or remove individual sounds to make words.",
+        "Short o sounds like the vowel in hot; a final silent e can make a long o as in rope.",
+        "Original practice does not reproduce the workbook's illustrated answer choices."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-12",
+      "dateStatus": "Undated completed schoolwork in parent PDF received Nov. 12, 2026; printed Grade 2 Unit 2 Week 1 is publisher sequence, not a verified school calendar date; cumulative review only.",
+      "questions": [
+        {
+          "id": "abvm-1211-o1",
+          "subject": "Reading / ELA",
+          "skill": "phoneme-blending",
+          "prompt": "Which word do the sounds /s/ /t/ /o/ /p/ make?",
+          "answer": "stop",
+          "choices": [
+            "shop",
+            "stop",
+            "top"
+          ],
+          "explanation": "Blend each sound in order: s, t, o, p.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-1211-o2",
+          "subject": "Reading / ELA",
+          "skill": "short-long-o",
+          "prompt": "Which word has the long O sound?",
+          "answer": "bone",
+          "choices": [
+            "box",
+            "hot",
+            "bone"
+          ],
+          "explanation": "Bone has long o and ends with silent e.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-1211-o3",
+          "subject": "Reading / ELA",
+          "skill": "silent-e-pattern",
+          "prompt": "What does a silent E do to the vowel in the word hop when we make hope?",
+          "answer": "It makes the O long.",
+          "choices": [
+            "It makes the O long.",
+            "It removes the O.",
+            "It changes P to B."
+          ],
+          "explanation": "The final e changes hop to hope, with a long o.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov12-pdf-unit2-endings-words",
+      "title": "Unit 2 -ed/-ing and frequent words",
+      "subject": "Reading / ELA",
+      "sources": [
+        "abvm-20261112-p05.png",
+        "abvm-20261112-p06.png"
+      ],
+      "skills": [
+        "inflectional-endings",
+        "high-frequency-words"
+      ],
+      "notes": [
+        "The ending -ed usually describes an action in the past.",
+        "The ending -ing often describes an action happening now.",
+        "Read frequent words in a full sentence to choose their meaning."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-12",
+      "dateStatus": "Undated completed schoolwork in parent PDF received Nov. 12, 2026; printed Grade 2 Unit 2 Week 1 is publisher sequence, not a verified school calendar date; cumulative review only.",
+      "questions": [
+        {
+          "id": "abvm-1211-end1",
+          "subject": "Reading / ELA",
+          "skill": "inflectional-endings",
+          "prompt": "Which word says the puppy is jumping right now?",
+          "answer": "jumping",
+          "choices": [
+            "jumped",
+            "jumping",
+            "jumps"
+          ],
+          "explanation": "The -ing ending tells an action in progress.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-1211-end2",
+          "subject": "Reading / ELA",
+          "skill": "inflectional-endings",
+          "prompt": "Which word tells that the cook finished yesterday?",
+          "answer": "cooked",
+          "choices": [
+            "cooking",
+            "cook",
+            "cooked"
+          ],
+          "explanation": "The -ed ending tells an action in the past.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-1211-hf1",
+          "subject": "Reading / ELA",
+          "skill": "high-frequency-words",
+          "prompt": "Choose the word that completes: I stayed inside ___ it was raining.",
+          "answer": "because",
+          "choices": [
+            "have",
+            "because",
+            "picture"
+          ],
+          "explanation": "Because tells why something happened.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov12-pdf-unit2-u-phonemes",
+      "title": "Unit 2 phoneme deletion, segmentation, and short/long U",
+      "subject": "Reading / ELA",
+      "sources": [
+        "abvm-20261112-p07.png",
+        "abvm-20261112-p08.png",
+        "abvm-20261112-p09.png",
+        "abvm-20261112-p10.png"
+      ],
+      "skills": [
+        "phoneme-deletion",
+        "phoneme-segmentation",
+        "short-long-u",
+        "word-ladders"
+      ],
+      "notes": [
+        "Taking away one spoken sound can make a new word.",
+        "Segment sounds one at a time before blending them into a word.",
+        "A final silent e can signal long u, as in cube.",
+        "Word ladders change or add sounds and letters step by step."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-12",
+      "dateStatus": "Undated completed schoolwork in parent PDF received Nov. 12, 2026; printed Grade 2 Unit 2 Week 2 is publisher sequence, not a verified school calendar date; cumulative review only.",
+      "questions": [
+        {
+          "id": "abvm-1211-u1",
+          "subject": "Reading / ELA",
+          "skill": "short-long-u",
+          "prompt": "Which word has the long U sound?",
+          "answer": "mule",
+          "choices": [
+            "mud",
+            "mug",
+            "mule"
+          ],
+          "explanation": "Mule uses the long u sound with a final silent e.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-1211-u2",
+          "subject": "Reading / ELA",
+          "skill": "phoneme-segmentation",
+          "prompt": "How many separate sounds are in the spoken word sun?",
+          "answer": "3",
+          "choices": [
+            "2",
+            "3",
+            "4"
+          ],
+          "explanation": "Say /s/, /u/, /n/ to hear three sounds.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-1211-u3",
+          "subject": "Reading / ELA",
+          "skill": "phoneme-deletion",
+          "prompt": "Say 'plane' without the /p/ sound at the start. What word do you hear?",
+          "answer": "lane",
+          "choices": [
+            "lane",
+            "plan",
+            "pane"
+          ],
+          "explanation": "Removing the first sound /p/ leaves lane.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-1211-u4",
+          "subject": "Reading / ELA",
+          "skill": "word-ladders",
+          "prompt": "What one-letter change makes the word cub into cube?",
+          "answer": "Add E at the end.",
+          "choices": [
+            "Add E at the end.",
+            "Change U to O.",
+            "Remove B."
+          ],
+          "explanation": "The silent e changes the short u sound to the long u sound.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov12-pdf-unit2-cvce",
+      "title": "Unit 2 CVCe syllables and high-frequency words",
+      "subject": "Reading / ELA",
+      "sources": [
+        "abvm-20261112-p11.png",
+        "abvm-20261112-p12.png"
+      ],
+      "skills": [
+        "cvce-syllables",
+        "high-frequency-words"
+      ],
+      "notes": [
+        "Some longer words have a syllable with a consonant-vowel-consonant-silent-e pattern.",
+        "Find the vowel pattern and clap the syllables.",
+        "Use the meaning of the whole sentence to choose frequent words."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-12",
+      "dateStatus": "Undated completed schoolwork in parent PDF received Nov. 12, 2026; printed Grade 2 Unit 2 Week 2 is publisher sequence, not a verified school calendar date; cumulative review only.",
+      "questions": [
+        {
+          "id": "abvm-1211-cvce1",
+          "subject": "Reading / ELA",
+          "skill": "cvce-syllables",
+          "prompt": "Which word has a silent-E syllable?",
+          "answer": "cupcake",
+          "choices": [
+            "rabbit",
+            "cupcake",
+            "window"
+          ],
+          "explanation": "Cupcake has two syllables; the second syllable cake ends in silent e.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-1211-cvce2",
+          "subject": "Reading / ELA",
+          "skill": "high-frequency-words",
+          "prompt": "Complete: We will ___ when our team scores.",
+          "answer": "cheer",
+          "choices": [
+            "cheer",
+            "change",
+            "open"
+          ],
+          "explanation": "Cheer means to shout in support.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-1211-cvce3",
+          "subject": "Reading / ELA",
+          "skill": "high-frequency-words",
+          "prompt": "Complete: They ___ the game yesterday.",
+          "answer": "won",
+          "choices": [
+            "look",
+            "won",
+            "fall"
+          ],
+          "explanation": "Won is the past form of win.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov12-pdf-bear-vocabulary",
+      "title": "Animal science vocabulary: baby bears",
+      "subject": "Reading / ELA",
+      "sources": [
+        "abvm-20261112-p13.png"
+      ],
+      "skills": [
+        "science-vocabulary",
+        "vocabulary-in-context"
+      ],
+      "notes": [
+        "A mammal is an animal that feeds milk to its young.",
+        "Offspring means an animal's young.",
+        "A bear has fur; groom means to clean or arrange fur."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-12",
+      "dateStatus": "Undated completed schoolwork in parent PDF received Nov. 12, 2026; cumulative review only.",
+      "questions": [
+        {
+          "id": "abvm-1211-bear1",
+          "subject": "Reading / ELA",
+          "skill": "science-vocabulary",
+          "prompt": "A baby bear is its parent's ___.",
+          "answer": "offspring",
+          "choices": [
+            "offspring",
+            "weather",
+            "shelter"
+          ],
+          "explanation": "Offspring means the young of a parent animal.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-1211-bear2",
+          "subject": "Reading / ELA",
+          "skill": "vocabulary-in-context",
+          "prompt": "When an animal grooms its fur, what does it do?",
+          "answer": "It cleans or arranges its fur.",
+          "choices": [
+            "It grows taller.",
+            "It cleans or arranges its fur.",
+            "It falls asleep."
+          ],
+          "explanation": "Groom means to clean or care for fur.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov12-pdf-warmup-language",
+      "title": "Daily language warm-up: word meaning and possessives",
+      "subject": "Reading / ELA",
+      "sources": [
+        "abvm-20261112-p15.png"
+      ],
+      "skills": [
+        "vocabulary-in-context",
+        "possessives",
+        "spelling-patterns"
+      ],
+      "notes": [
+        "A possessive word shows who owns something, such as our class.",
+        "Check the question's exact direction before selecting an answer.",
+        "A word's meaning can often be checked using a complete sentence."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-12",
+      "dateStatus": "Undated completed schoolwork in parent PDF received Nov. 12, 2026; cumulative review only.",
+      "questions": [
+        {
+          "id": "abvm-1211-warmela1",
+          "subject": "Reading / ELA",
+          "skill": "possessives",
+          "prompt": "Which word completes: ___ books are on the table?",
+          "answer": "Our",
+          "choices": [
+            "Are",
+            "Our",
+            "Out"
+          ],
+          "explanation": "Our is a possessive word that shows the books belong to us.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-1211-warmela2",
+          "subject": "Reading / ELA",
+          "skill": "vocabulary-in-context",
+          "prompt": "What does 'defeat' mean in a game?",
+          "answer": "To win against an opponent",
+          "choices": [
+            "To win against an opponent",
+            "To pack your bag",
+            "To move slowly"
+          ],
+          "explanation": "Defeat means to beat someone or something in a contest.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov12-pdf-warmup-math",
+      "title": "Daily math warm-up: add ten and read word problems",
+      "subject": "Math",
+      "sources": [
+        "abvm-20261112-p15.png"
+      ],
+      "skills": [
+        "addition-facts",
+        "word-problems",
+        "place-value"
+      ],
+      "notes": [
+        "Adding ten changes the tens count while the ones digit stays the same.",
+        "A story problem may need an equation; check the total after counting.",
+        "Five tens make fifty."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-12",
+      "dateStatus": "Undated completed schoolwork in parent PDF received Nov. 12, 2026; cumulative review only.",
+      "questions": [
+        {
+          "id": "abvm-1211-warmmath1",
+          "subject": "Math",
+          "skill": "addition-facts",
+          "prompt": "What is 7 + 10?",
+          "answer": "17",
+          "choices": [
+            "16",
+            "17",
+            "70"
+          ],
+          "explanation": "Seven ones plus one ten is seventeen.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-1211-warmmath2",
+          "subject": "Math",
+          "skill": "word-problems",
+          "prompt": "A student made 4 paper boats. Another student made 3 more boats. How many boats altogether?",
+          "answer": "7",
+          "choices": [
+            "6",
+            "7",
+            "8"
+          ],
+          "explanation": "Four plus three equals seven; reread what the story asks.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-1211-warmmath3",
+          "subject": "Math",
+          "skill": "place-value",
+          "prompt": "How much is 6 tens?",
+          "answer": "60",
+          "choices": [
+            "6",
+            "16",
+            "60"
+          ],
+          "explanation": "Each ten is ten ones, so six tens is sixty.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov12-pdf-subjects-predicates",
+      "title": "Subject and predicate: complete sentences",
+      "subject": "Reading / ELA",
+      "sources": [
+        "abvm-20261112-p17.png"
+      ],
+      "skills": [
+        "subject-predicate",
+        "sentence-writing"
+      ],
+      "notes": [
+        "The subject names who or what a sentence is about.",
+        "The predicate tells what the subject does or is.",
+        "Choose a phrase that makes a full sentence with correct meaning and grammar."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-12",
+      "dateStatus": "Undated completed schoolwork in parent PDF received Nov. 12, 2026; cumulative review only.",
+      "questions": [
+        {
+          "id": "abvm-1211-gram1",
+          "subject": "Reading / ELA",
+          "skill": "subject-predicate",
+          "prompt": "Which words are the subject of: The little puppy chased the ball?",
+          "answer": "The little puppy",
+          "choices": [
+            "chased the ball",
+            "The little puppy",
+            "the ball"
+          ],
+          "explanation": "The little puppy tells who performed the action.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-1211-gram2",
+          "subject": "Reading / ELA",
+          "skill": "subject-predicate",
+          "prompt": "Which words make a complete predicate for: The turkey ___?",
+          "answer": "ran across the yard",
+          "choices": [
+            "the farm",
+            "ran across the yard",
+            "a bright feather"
+          ],
+          "explanation": "The predicate tells what the turkey did.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-1211-gram3",
+          "subject": "Reading / ELA",
+          "skill": "sentence-writing",
+          "prompt": "Which sentence is complete?",
+          "answer": "The birds are flying.",
+          "choices": [
+            "Birds flying.",
+            "The birds are flying.",
+            "In the tree."
+          ],
+          "explanation": "A complete sentence has a subject and a predicate.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
+    },
+    {
+      "id": "nov12-pdf-placevalue-equivalence",
+      "title": "Equivalent hundreds, tens, and ones",
+      "subject": "Math",
+      "sources": [
+        "abvm-20261112-p19.png"
+      ],
+      "skills": [
+        "place-value",
+        "tens-and-ones",
+        "hundreds-tens-ones"
+      ],
+      "notes": [
+        "Ten ones equal one ten; ten tens equal one hundred.",
+        "Three hundreds equals thirty tens or three hundred ones.",
+        "Use equivalent groups to match numbers represented in different forms."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-12",
+      "dateStatus": "Undated completed schoolwork in parent PDF received Nov. 12, 2026; cumulative review only.",
+      "questions": [
+        {
+          "id": "abvm-1211-pv1",
+          "subject": "Math",
+          "skill": "hundreds-tens-ones",
+          "prompt": "Which amount equals 4 hundreds?",
+          "answer": "40 tens",
+          "choices": [
+            "4 tens",
+            "40 tens",
+            "400 tens"
+          ],
+          "explanation": "Four hundreds is four hundred, equal to forty tens.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-1211-pv2",
+          "subject": "Math",
+          "skill": "tens-and-ones",
+          "prompt": "How many ones are in 7 tens?",
+          "answer": "70",
+          "choices": [
+            "7",
+            "17",
+            "70"
+          ],
+          "explanation": "Seven groups of ten total seventy ones.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        },
+        {
+          "id": "abvm-1211-pv3",
+          "subject": "Math",
+          "skill": "place-value",
+          "prompt": "What number equals 50 tens?",
+          "answer": "500",
+          "choices": [
+            "50",
+            "150",
+            "500"
+          ],
+          "explanation": "Fifty tens equal five hundred.",
+          "sourceFact": "Original Grade 2 cumulative practice aligned to a parent-supplied Unit 2 workbook or classroom worksheet; not an official test or current dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork"
+        }
+      ]
     }
   ],
   "sourceManifest": [
@@ -5223,6 +6034,134 @@
       "status": "duplicate",
       "duplicateOf": "abvm-20261110-math-ch2-post-p2.jpeg",
       "reason": "Visually matched detail crop of the same number-line item on the second full assessment page, not another completed assignment."
+    },
+    {
+      "id": "abvm-20261112-p01.png",
+      "sha256": "4c9b80e868a9b048b5e09ff84b082fe339d837580f3507a130c902752c9cc77b",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261112-p02.png",
+      "sha256": "8488cb91478217dbaf621bdd3052a5f41a211c4463a9d753f1cbe9352d088b52",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261112-p03.png",
+      "sha256": "fe9bfb536d790e58e8d9c295e09b4597de7f790ebeb56632964c58afad9ffc21",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261112-p04.png",
+      "sha256": "193817321083970296218eb9cb7a1dc6c3be7f76220fe5a2f33e3decb743f9ae",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261112-p05.png",
+      "sha256": "bc60c4df1d09af87a76b7fe502d2da8fd9ff9e5773cafcdeb38c2dc756b88746",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261112-p06.png",
+      "sha256": "5a53a036a6b94811b0f33eb7e889a4eb62a5e3e36fac8c279c08139ed33b82cc",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261112-p07.png",
+      "sha256": "f08ac809470b4acb6627977a78cde3b514875bc1360b2b7c3d47ae9038dbc6a1",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261112-p08.png",
+      "sha256": "b29661970a90bf906b5c161d88a6673963710657336aa49564273e68808f96d7",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261112-p09.png",
+      "sha256": "e052def914198572651b1c8263ee91dbd14fadd42f6a219c2de918d988d763c8",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261112-p10.png",
+      "sha256": "2d9a0a905956518fb94691fa584b7d6741e0363039516ef4fabd7a796bab5d34",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261112-p11.png",
+      "sha256": "a288e81031a192218f109f2eaefb6d785de248c1e49b77e2c43ddc84eec09f73",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261112-p12.png",
+      "sha256": "a73c1cd34f63129bfd54da9b3448c97545d2f0f3174fb73eef026e6f33afad6b",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261112-p13.png",
+      "sha256": "c5de98c26281100b461e36c43560ba5a6849458178d01d7286f3f70f18b78d50",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261112-p14.png",
+      "sha256": "2c0a544b65d6c64d01a97d5be46ac232f80e7fe2ca5505d9bfd1a71c46b886cc",
+      "status": "held",
+      "reason": "Blank reverse side; no instructional content."
+    },
+    {
+      "id": "abvm-20261112-p15.png",
+      "sha256": "73cfffed9e8470db3c50b066a30713773296972efb38d590997ed7358a0c0f97",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261112-p16.png",
+      "sha256": "1bce7478ead436de753645eb1b6d1b5cdf9208bd3cfa3d5f0da4b8e2531ba204",
+      "status": "held",
+      "reason": "Blank reverse side; no instructional content."
+    },
+    {
+      "id": "abvm-20261112-p17.png",
+      "sha256": "ff804da316b55d91849a8c9da1aa71f123fd28a0b6bc5a859a1c40d89126e6fe",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261112-p18.png",
+      "sha256": "8f14f695ebee5e0dcae27966daa92d68ac702b0c5f83c2946c5330fed3e5db85",
+      "status": "held",
+      "reason": "Blank reverse side; no instructional content."
+    },
+    {
+      "id": "abvm-20261112-p19.png",
+      "sha256": "d21323d7bdbf628feccdcd5a99b09090a2e6395a97998a1310f1940450abe413",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261112-p20.png",
+      "sha256": "3e362d9295c224b7c5fd830c13d1212d39b27d8754f1b40d2a1f2108c401b1d7",
+      "status": "held",
+      "reason": "Student-created art/handwriting retained only in the private learning archive."
+    },
+    {
+      "id": "abvm-20261112-p21.png",
+      "sha256": "dd81970fd9eae5acfaa98db909f3e039cc7bb8f7bfa181fe99cb4017048a607d",
+      "status": "held",
+      "reason": "HSA newsletter; extracted into school notices rather than public curriculum."
+    },
+    {
+      "id": "abvm-20261112-p22.png",
+      "sha256": "da8aa702187b10d1d2d7fc8c6976bb8bd8433e60385168c69bcd7cdf9e3eabfe",
+      "status": "held",
+      "reason": "Blank reverse side; no instructional content."
+    },
+    {
+      "id": "abvm-20261112-p23.png",
+      "sha256": "fe2d31f07839f8a8c1fcfc530a87c2292fd68da8c0737e74924a400e3498ecd7",
+      "status": "held",
+      "reason": "Monthly school calendar; already integrated as a prior reviewed source; this copy retained privately."
+    },
+    {
+      "id": "abvm-20261112-p24.png",
+      "sha256": "233e84a09bbd9de9daae00d9080260cd2b5b488640d77aeecbd24ec3b63ca521",
+      "status": "held",
+      "reason": "Blank reverse side; no instructional content."
     }
   ]
 }
