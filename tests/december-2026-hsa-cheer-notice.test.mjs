@@ -33,7 +33,7 @@ test("all three December dates and participation instructions reach the visible 
     assert.equal(entries.length,1, "exactly one source-backed calendar entry expected for "+date);
   }
   assert.ok(studyPack.pack.reminders.some(x=>/return the school flyer form/.test(x)&&/pickup at 3:45 PM/.test(x)));
-  assert.ok(studyPack.pack.parentNotices.some(x=>/caroling/.test(x)&&/later flyer/.test(x)));
+  assert.ok(studyPack.pack.parentNotices.some(x=>/Christmas carols/.test(x)&&/later flyer/.test(x)));
   assert.equal(validateUploadedNoticeIntegration(studyPack,notices).documents,32);
 });
 
