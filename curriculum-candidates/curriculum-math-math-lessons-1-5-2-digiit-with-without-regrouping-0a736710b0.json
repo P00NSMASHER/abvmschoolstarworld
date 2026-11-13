@@ -1,0 +1,70 @@
+{
+  "candidateId": "curriculum-math-math-lessons-1-5-2-digiit-with-without-regrouping-0a736710b0",
+  "familyId": "math-lessons-1-5-2-digiit-with-without-regrouping",
+  "subject": "Math",
+  "topic": "Math lessons 1-5 (2 digiit with & without regrouping)",
+  "sourceHash": "teacher-pages-29f26d9cf28631802a8e",
+  "generatedAt": "2026-11-13T18:30:04.123Z",
+  "sourceContext": {
+    "quality": "page-exact",
+    "matchMethod": "exact-topic-phrase",
+    "subject": "Math",
+    "topic": "Math lessons 1-5 (2 digiit with & without regrouping)",
+    "sourceTitle": "Tests",
+    "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+    "sourceCaptureHash": "1211ca7be589a97c2edc4cd44f0237f3e6133fb6d42604f9be7465df1650b510",
+    "sourceCheckedAt": "2026-11-13T18:30:04.123Z",
+    "sourceLine": "Tuesday Nov. 17: Math lessons 1-5 (2 digiit with & without regrouping)",
+    "evidenceExcerptHash": "sha256:0353d40e97a230030debbd9ca03a0274a0b9249969dfe01a6f46d1d3b594acc3"
+  },
+  "featureFlag": "curriculum-family:math-lessons-1-5-2-digiit-with-without-regrouping-candidate",
+  "enabledByDefault": false,
+  "registryMatch": null,
+  "minimumSemanticVariants": 8,
+  "requiredQuestionTypes": [
+    "direct",
+    "transfer",
+    "reasoning"
+  ],
+  "proposedQuestions": [],
+  "authoring": {
+    "status": "AUTHORING_REQUIRED",
+    "generatedQuestionCount": 0,
+    "minimumSemanticVariants": 8,
+    "requiredQuestionTypes": [
+      "direct",
+      "transfer",
+      "reasoning"
+    ],
+    "requiredQuestionFields": [
+      "questionType",
+      "prompt",
+      "choices",
+      "answer",
+      "explanation",
+      "hint",
+      "dok",
+      "difficulty"
+    ]
+  },
+  "rollout": {
+    "featureFlagRequired": false,
+    "automatedQaRequired": true,
+    "safeUsageEvidenceRequired": false,
+    "manualPromotionRequired": false,
+    "automaticPromotion": true
+  },
+  "readiness": {
+    "status": "HOLD",
+    "blockers": [
+      "minimum-semantic-variants:0/8",
+      "question-type-required:direct",
+      "question-type-required:transfer",
+      "question-type-required:reasoning",
+      "automated-qa-required"
+    ],
+    "automaticPromotion": false,
+    "automaticDelete": false,
+    "automaticRewrite": false
+  }
+}

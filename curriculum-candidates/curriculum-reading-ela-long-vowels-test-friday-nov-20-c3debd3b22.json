@@ -1,0 +1,66 @@
+{
+  "candidateId": "curriculum-reading-ela-long-vowels-test-friday-nov-20-c3debd3b22",
+  "familyId": "long-vowels-test-friday-nov-20",
+  "subject": "Reading / ELA",
+  "topic": "long vowels (test Friday, Nov. 20)",
+  "sourceHash": "teacher-pages-29f26d9cf28631802a8e",
+  "generatedAt": "2026-11-13T18:30:04.123Z",
+  "sourceContext": {
+    "quality": "unresolved",
+    "matchMethod": "none",
+    "subject": "Reading / ELA",
+    "topic": "long vowels (test Friday, Nov. 20)",
+    "evidenceExcerptHash": "sha256:e7fb2601d3a91b2cb91383633fbcb9e63c4c74e1697d91dd229d6f0cad304feb"
+  },
+  "featureFlag": "curriculum-family:long-vowels-test-friday-nov-20-candidate",
+  "enabledByDefault": false,
+  "registryMatch": null,
+  "minimumSemanticVariants": 8,
+  "requiredQuestionTypes": [
+    "direct",
+    "transfer",
+    "reasoning"
+  ],
+  "proposedQuestions": [],
+  "authoring": {
+    "status": "AUTHORING_REQUIRED",
+    "generatedQuestionCount": 0,
+    "minimumSemanticVariants": 8,
+    "requiredQuestionTypes": [
+      "direct",
+      "transfer",
+      "reasoning"
+    ],
+    "requiredQuestionFields": [
+      "questionType",
+      "prompt",
+      "choices",
+      "answer",
+      "explanation",
+      "hint",
+      "dok",
+      "difficulty"
+    ]
+  },
+  "rollout": {
+    "featureFlagRequired": false,
+    "automatedQaRequired": true,
+    "safeUsageEvidenceRequired": false,
+    "manualPromotionRequired": false,
+    "automaticPromotion": true
+  },
+  "readiness": {
+    "status": "HOLD",
+    "blockers": [
+      "page-exact-source-context-required",
+      "minimum-semantic-variants:0/8",
+      "question-type-required:direct",
+      "question-type-required:transfer",
+      "question-type-required:reasoning",
+      "automated-qa-required"
+    ],
+    "automaticPromotion": false,
+    "automaticDelete": false,
+    "automaticRewrite": false
+  }
+}
