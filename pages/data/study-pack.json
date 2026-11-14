@@ -14,16 +14,16 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-11-11T19:22:13.816Z",
-  "sourceCapturedAt": "2026-11-10T18:42:40.819Z",
+  "sourceLastSeenAt": "2026-11-12T17:13:53.423Z",
+  "sourceCapturedAt": "2026-11-12T17:13:53.423Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-c771461a1fda8bb48443",
-    "sourceCapturedAt": "2026-11-10T18:42:40.819Z",
-    "generatedAt": "2026-11-11T19:22:13.816Z",
+    "sourceCapturedAt": "2026-11-12T17:13:53.423Z",
+    "generatedAt": "2026-11-12T17:13:53.423Z",
     "weekLabel": "Week of November 9, 2026",
-    "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity” and Math “Page 57”. Upcoming tests include Grammar (singular & plural nouns) on Thursday, Nov. 12, Spelling (3 letter blends) / Handwriting on Friday, Nov. 13, Religion on Tuesday, Nov. 17, and Math lessons 1-5 (2 digiit with & without regrouping) on Tuesday, Nov. 17. 31 uploaded school notices are integrated with the teacher pages.",
+    "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity” and Math “Page 57”. Upcoming tests include Grammar (singular & plural nouns) on Thursday, Nov. 12, Spelling (3 letter blends) / Handwriting on Friday, Nov. 13, Religion on Tuesday, Nov. 17, and Math lessons 1-5 (2 digiit with & without regrouping) on Tuesday, Nov. 17. 32 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
       {
         "subject": "Reading / ELA",
@@ -994,13 +994,6 @@
         "source": "teacher-tests"
       },
       {
-        "date": "Friday–Saturday, Nov. 13–14",
-        "label": "Drama Club Play",
-        "kind": "school event",
-        "sourceDocument": "weekly-reminders-2026-09-28",
-        "source": "uploaded-notice"
-      },
-      {
         "date": "Friday, Nov. 13",
         "label": "Pretzel money due",
         "kind": "school event",
@@ -1016,6 +1009,13 @@
       },
       {
         "date": "Friday, Nov. 13",
+        "label": "HSA play showtime — The Little Mermaid Jr. at ABVM, 7 PM",
+        "kind": "school event",
+        "sourceDocument": "hsa-newsletter-2026-11-parent-pdf",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Nov. 13",
         "label": "Spelling (3 letter blends) / Handwriting",
         "kind": "test",
         "source": "teacher-tests"
@@ -1025,6 +1025,13 @@
         "label": "The Little Mermaid Jr. drama club play",
         "kind": "school event",
         "sourceDocument": "nov-2026-school-calendar-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Saturday, Nov. 14",
+        "label": "HSA play showtime — The Little Mermaid Jr. at ABVM, 5 PM",
+        "kind": "school event",
+        "sourceDocument": "hsa-newsletter-2026-11-parent-pdf",
         "source": "uploaded-notice"
       },
       {
@@ -1231,9 +1238,17 @@
       },
       {
         "date": "Thursday, Dec. 3",
-        "label": "HSA meeting",
-        "source": "teacher-home",
-        "kind": "meeting"
+        "label": "HSA meeting — 7 PM (virtual; link in school Classroom)",
+        "kind": "school event",
+        "sourceDocument": "hsa-newsletter-2026-11-parent-pdf",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Thursday, Dec. 3",
+        "label": "HSA Christmas card making — details to come",
+        "kind": "school event",
+        "sourceDocument": "hsa-newsletter-2026-11-parent-pdf",
+        "source": "uploaded-notice"
       },
       {
         "date": "Tuesday, Dec. 8",
@@ -1243,9 +1258,23 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Wednesday, Dec. 9",
+        "label": "HSA Christmas card making — details to come",
+        "kind": "school event",
+        "sourceDocument": "hsa-newsletter-2026-11-parent-pdf",
+        "source": "uploaded-notice"
+      },
+      {
         "label": "Santa Workshop",
         "date": "Monday, Dec. 14",
         "kind": "school event"
+      },
+      {
+        "date": "Friday, Dec. 18",
+        "label": "HSA Christmas caroling — details to come",
+        "kind": "school event",
+        "sourceDocument": "hsa-newsletter-2026-11-parent-pdf",
+        "source": "uploaded-notice"
       },
       {
         "label": "Christmas Party",
@@ -1361,6 +1390,13 @@
         "label": "Mid-trimester Progress Reports; 12:00 dismissal",
         "date": "Friday, Apr. 16",
         "kind": "school"
+      },
+      {
+        "date": "Sunday, Apr. 18",
+        "label": "HSA Bingo — details to come (2027)",
+        "kind": "school event",
+        "sourceDocument": "hsa-newsletter-2026-11-parent-pdf",
+        "source": "uploaded-notice"
       },
       {
         "date": "Thursday, May 6",
@@ -1539,6 +1575,7 @@
       "October 19–30: Halloween bucket-of-candy chance fundraiser; $1 per chance.",
       "November 6: noon dismissal and no after-school care; lunch is served.",
       "November 25: noon dismissal with lunch served. November 26, 27, and 30: no school.",
+      "HSA volunteers need school clearances. Ask Mrs. Thompson for a clearance packet.",
       "Stationary money ($17) is due Wednesday, Sept. 23.",
       "Pretzel delivery is Thursday, Sept. 24 after lunch.",
       "Keep the Reading Log and Behavior Chart in the HW folder.",
@@ -1693,13 +1730,18 @@
       "Eucharistic Consecration at ABVM: Oct. 20–Dec. 8, with Consecration at school Mass on Dec. 8. School provides a student book and a parent copy; weekly reading guidelines follow. Optional Holy Hours: Oct. 22, 7 PM (Bethlehem Catholic High School); Nov. 3, 6 PM (Nativity BVM High School); Nov. 17, 7 PM (Berks Catholic High School).",
       "Free Diocesan Family Festival: Sunday, Nov. 1, noon–4:30 PM; location: St. Joseph the Worker in Orefield.",
       "November 2026 school lunch costs $4.25. Assorted milks are available daily. Menu is subject to change.",
+      "HSA newsletter confirms ABVM drama club performances: Friday Nov. 13 at 7 PM and Saturday Nov. 14 at 5 PM, at ABVM.",
+      "Next HSA meeting: Thursday Dec. 3, 2026 at 7 PM, virtual. The meeting link is in the child's Google Classroom; no public link provided.",
+      "HSA plans Christmas card making Dec. 3 and 9; Santa Workshop Dec. 14; caroling Dec. 18; Christmas party Dec. 22. Details and participation information are still to come.",
+      "HSA newsletter lists a book fair in January 2027 (date not specified) and Bingo on April 18, 2027 (details to come).",
+      "HSA mandatory fundraisers include cash ticket sales (November and April), ongoing RaiseRight gift cards, Kowalonek gift cards (January), Lottery Board (February), and Race for Education (March); buyouts are available. Optional student fundraisers include pretzels and Chick-fil-A.",
       "Picture ordering: a digital image is $10 when added to a package; glossy finish is $5 per package; a 10×13 is $20; the other listed add-on items are $13 each.",
       "Picture backgrounds: 1 Universe, 2 Pink Mist, 3 Fall Leaves, 4 Traditional, 5 School Spirit, 6 Patriotic, 7 Dinosaur, 8 Pastel, 9 Bookcase, 10 Blue Brush, 11 Laser. Backgrounds 1, 2, and 11 are marked NEW.",
       "Christmas Caroling date is TBD.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
     "sourceCheckedAt": "2026-11-11T19:22:13.816Z",
-    "uploadedNoticeHash": "uploaded-notices-e57dca15a6dfb9887780",
+    "uploadedNoticeHash": "uploaded-notices-a513492dc5f4ea1eaa5a",
     "uploadedNoticeTopics": {
       "reminders": [
         "fundraiser",
@@ -1722,7 +1764,8 @@
         "lego-club",
         "halloween-fundraiser",
         "nov-2026-noon-dismissal-6",
-        "nov-2026-thanksgiving-closure"
+        "nov-2026-thanksgiving-closure",
+        "hsa-2026-nov-volunteer-clearances"
       ],
       "parentNotices": [
         "conference",
@@ -1748,7 +1791,12 @@
         "servants-hygiene",
         "eucharistic-consecration",
         "diocesan-festival",
-        "nov-2026-lunch-cost"
+        "nov-2026-lunch-cost",
+        "hsa-2026-nov-drama-showtimes",
+        "hsa-2026-nov-meeting-details",
+        "hsa-2026-december-plans",
+        "hsa-2027-events",
+        "hsa-2026-27-fundraisers"
       ]
     },
     "lunchMenuSource": {
@@ -18778,8 +18826,8 @@
     }
   ],
   "uploadedNotices": {
-    "count": 31,
-    "latestIntegratedAt": "2026-11-03T15:00:00.000Z",
+    "count": 32,
+    "latestIntegratedAt": "2026-11-12T17:13:53.423Z",
     "documents": [
       {
         "id": "dress-down-2026-09-25",
@@ -18935,6 +18983,11 @@
         "id": "nov-2026-lunch-menu-parent-photo",
         "label": "Assumption BVM November 2026 lunch menu",
         "receivedAt": "2026-11-03"
+      },
+      {
+        "id": "hsa-newsletter-2026-11-parent-pdf",
+        "label": "ABVM HSA newsletter — November 2026 (parent PDF page 21)",
+        "receivedAt": "2026-11-12"
       }
     ]
   }
