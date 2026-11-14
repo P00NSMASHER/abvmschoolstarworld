@@ -14,16 +14,16 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-11-11T19:22:13.816Z",
-  "sourceCapturedAt": "2026-11-10T18:42:40.819Z",
+  "sourceLastSeenAt": "2026-11-12T16:47:00.000Z",
+  "sourceCapturedAt": "2026-11-12T16:47:00.000Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-c771461a1fda8bb48443",
-    "sourceCapturedAt": "2026-11-10T18:42:40.819Z",
-    "generatedAt": "2026-11-11T19:22:13.816Z",
+    "sourceCapturedAt": "2026-11-12T16:47:00.000Z",
+    "generatedAt": "2026-11-12T16:47:00.000Z",
     "weekLabel": "Week of November 9, 2026",
-    "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity” and Math “Page 57”. Upcoming tests include Grammar (singular & plural nouns) on Thursday, Nov. 12, Spelling (3 letter blends) / Handwriting on Friday, Nov. 13, Religion on Tuesday, Nov. 17, and Math lessons 1-5 (2 digiit with & without regrouping) on Tuesday, Nov. 17. 31 uploaded school notices are integrated with the teacher pages.",
+    "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity” and Math “Page 57”. Upcoming tests include Grammar (singular & plural nouns) on Thursday, Nov. 12, Spelling (3 letter blends) / Handwriting on Friday, Nov. 13, Religion on Tuesday, Nov. 17, and Math lessons 1-5 (2 digiit with & without regrouping) on Tuesday, Nov. 17. 32 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
       {
         "subject": "Reading / ELA",
@@ -1231,6 +1231,13 @@
       },
       {
         "date": "Thursday, Dec. 3",
+        "label": "Christmas Card Club — 3:00–3:45 PM; pickup 3:45 PM",
+        "kind": "school event",
+        "sourceDocument": "hsa-melody-message-cheer-dec-2026",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Thursday, Dec. 3",
         "label": "HSA meeting",
         "source": "teacher-home",
         "kind": "meeting"
@@ -1243,9 +1250,23 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Wednesday, Dec. 9",
+        "label": "Christmas Card Club — 3:00–3:45 PM; pickup 3:45 PM",
+        "kind": "school event",
+        "sourceDocument": "hsa-melody-message-cheer-dec-2026",
+        "source": "uploaded-notice"
+      },
+      {
         "label": "Santa Workshop",
         "date": "Monday, Dec. 14",
         "kind": "school event"
+      },
+      {
+        "date": "Friday, Dec. 18",
+        "label": "A Melody & Message of Cheer — nursing-home caroling 5:30–7:00 PM; stops to be announced",
+        "kind": "school event",
+        "sourceDocument": "hsa-melody-message-cheer-dec-2026",
+        "source": "uploaded-notice"
       },
       {
         "label": "Christmas Party",
@@ -1539,6 +1560,7 @@
       "October 19–30: Halloween bucket-of-candy chance fundraiser; $1 per chance.",
       "November 6: noon dismissal and no after-school care; lunch is served.",
       "November 25: noon dismissal with lunch served. November 26, 27, and 30: no school.",
+      "Optional Christmas Card Club: fill out and return the school flyer form for Thursday, Dec. 3 and/or Wednesday, Dec. 9 (3:00–3:45 PM; pickup at 3:45 PM). No form-return deadline is printed.",
       "Stationary money ($17) is due Wednesday, Sept. 23.",
       "Pretzel delivery is Thursday, Sept. 24 after lunch.",
       "Keep the Reading Log and Behavior Chart in the HW folder.",
@@ -1693,13 +1715,14 @@
       "Eucharistic Consecration at ABVM: Oct. 20–Dec. 8, with Consecration at school Mass on Dec. 8. School provides a student book and a parent copy; weekly reading guidelines follow. Optional Holy Hours: Oct. 22, 7 PM (Bethlehem Catholic High School); Nov. 3, 6 PM (Nativity BVM High School); Nov. 17, 7 PM (Berks Catholic High School).",
       "Free Diocesan Family Festival: Sunday, Nov. 1, noon–4:30 PM; location: St. Joseph the Worker in Orefield.",
       "November 2026 school lunch costs $4.25. Assorted milks are available daily. Menu is subject to change.",
+      "HSA's A Melody & Message of Cheer is Friday, Dec. 18, 2026, from 5:30–7:00 PM. The event brings handmade cards and Christmas carols to local nursing homes. Stops and visit locations will be announced in a later flyer.",
       "Picture ordering: a digital image is $10 when added to a package; glossy finish is $5 per package; a 10×13 is $20; the other listed add-on items are $13 each.",
       "Picture backgrounds: 1 Universe, 2 Pink Mist, 3 Fall Leaves, 4 Traditional, 5 School Spirit, 6 Patriotic, 7 Dinosaur, 8 Pastel, 9 Bookcase, 10 Blue Brush, 11 Laser. Backgrounds 1, 2, and 11 are marked NEW.",
       "Christmas Caroling date is TBD.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
     "sourceCheckedAt": "2026-11-11T19:22:13.816Z",
-    "uploadedNoticeHash": "uploaded-notices-e57dca15a6dfb9887780",
+    "uploadedNoticeHash": "uploaded-notices-bff09532ae6f61467c13",
     "uploadedNoticeTopics": {
       "reminders": [
         "fundraiser",
@@ -1722,7 +1745,8 @@
         "lego-club",
         "halloween-fundraiser",
         "nov-2026-noon-dismissal-6",
-        "nov-2026-thanksgiving-closure"
+        "nov-2026-thanksgiving-closure",
+        "dec-2026-christmas-card-club-form"
       ],
       "parentNotices": [
         "conference",
@@ -1748,7 +1772,8 @@
         "servants-hygiene",
         "eucharistic-consecration",
         "diocesan-festival",
-        "nov-2026-lunch-cost"
+        "nov-2026-lunch-cost",
+        "dec-2026-melody-message-cheer"
       ]
     },
     "lunchMenuSource": {
@@ -18778,8 +18803,8 @@
     }
   ],
   "uploadedNotices": {
-    "count": 31,
-    "latestIntegratedAt": "2026-11-03T15:00:00.000Z",
+    "count": 32,
+    "latestIntegratedAt": "2026-11-12T16:47:00.000Z",
     "documents": [
       {
         "id": "dress-down-2026-09-25",
@@ -18935,6 +18960,11 @@
         "id": "nov-2026-lunch-menu-parent-photo",
         "label": "Assumption BVM November 2026 lunch menu",
         "receivedAt": "2026-11-03"
+      },
+      {
+        "id": "hsa-melody-message-cheer-dec-2026",
+        "label": "HSA — A Melody & Message of Cheer and Christmas Card Club flyer",
+        "receivedAt": "2026-11-12"
       }
     ]
   }
