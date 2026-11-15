@@ -45,6 +45,22 @@ test("runtime pack preserves live data and strips audit-only question metadata",
 });
 
 
+test("runtime omits duplicate governance indexes without losing school content or source evidence",()=>{
+  const full=structuredClone(source);
+  const onPhone=buildRuntimePack(full);
+  assert.ok(full.uploadedNotices?.documents?.length,"full reviewed notices are required");
+  assert.ok(Array.isArray(full.pack.contentPipeline.coverage),"full coverage audit is required");
+  assert.deepEqual(onPhone.pack.importantDates,full.pack.importantDates,"all dated events remain intact");
+  assert.deepEqual(onPhone.pack.subjects,full.pack.subjects,"notes and teacher topics remain intact");
+  assert.deepEqual(onPhone.sourcePages,full.sourcePages,"teacher source identities remain intact");
+  assert.equal(Object.hasOwn(onPhone,"uploadedNotices"),false,"do not duplicate intake manifest on a phone");
+  for(const key of ["coverage","qa","sourcePolicy","studyNotesBySubject"]){
+    assert.equal(Object.hasOwn(onPhone.pack.contentPipeline,key),false,"runtime leaked audit-only field: "+key);
+    assert.ok(Object.hasOwn(full.pack.contentPipeline,key),"full certified pack lost audit field: "+key);
+  }
+  assert.deepEqual(full,source,"building the runtime must not mutate the certified source");
+});
+
 test("runtime pack compacts provenance while retaining governed or explicitly corrected item identity",()=>{
   const sourceById=new Map(source.pack.contentPipeline.questions.map(correctOriginalQuestion).map(question=>[question.id,question]));
   assert.ok(source.pack.contentPipeline.questions.some(question=>Object.hasOwn(question,"sourceFact")),"full governed pack must retain source facts");
