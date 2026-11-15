@@ -146,9 +146,13 @@ test("retired review skills keep dated source windows without exposing teacher a
     for(const field of ["reviewVerifiedAt","reviewExpiresAt","reviewSourceHash"])
       assert.equal(compact[index][field],original[index][field]);
   }
-  const broken=structuredClone(source);
-  delete broken.pack.recentReviewPipeline.skills;
-  assert.throws(()=>buildRuntimePack(broken),/missing recentReviewPipeline.skills/);
+  const noReviewSkills=structuredClone(source);
+  delete noReviewSkills.pack.recentReviewPipeline.skills;
+  assert.deepEqual(buildRuntimePack(noReviewSkills).pack.recentReviewPipeline.skills,[],
+    "partial lesson fixtures without archived review skills remain supported");
+  const malformed=structuredClone(source);
+  malformed.pack.recentReviewPipeline.skills={unexpected:true};
+  assert.throws(()=>buildRuntimePack(malformed),/invalid recentReviewPipeline.skills/);
 });
 
 test("curriculum turnover preserves 30 percent question-bank compaction without inflating total runtime",()=>{
