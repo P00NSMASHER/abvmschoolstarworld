@@ -19,7 +19,7 @@ function topicKey(value){
   const patterns=[
     ["star",/\bstar\b/],["mass-communication",/mass.*communication|communication.*mass/],
     ["communication-folder",/communication folder/],["mass",/\bmass\b/],
-    ["stationery",/stationa(?:ry|ery).*money/],["pretzel",/pretzel/],["dress-down",/dress down/],
+    ["stationery",/stationa(?:ry|ery).*money/],["pretzel",/pretzel/],["nut-roll",/nut roll/],["dress-down",/dress down/],
     ["lego",/lego club/],["hsa",/hsa.*meeting/],["picture",/picture day/],["closed",/no school|closed/],
     ["dismissal",/dismissal/],["conference-schedule",/conference schedule portal/],["conference",/conference/],
     ["dance",/welcome back dance/],["chick-fil",/chick[-\s]?fil[-\s]?a/],["flag-football",/flag football/],
