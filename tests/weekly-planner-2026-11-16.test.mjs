@@ -52,7 +52,10 @@ test("Tuesday pickup window supersedes outdated unscheduled notice in the user-v
   const runtime={window:{}};
   runInNewContext(readFileSync(new URL("../pages/school-updates.js",import.meta.url),"utf8"),runtime);
   const raw=envelope.pack.importantDates.filter(item=>dateKey(item.date)==="nov-17"&&/nut roll/i.test(item.label));
-  assert.equal(raw.length,2,"Monthly entry and detailed planner entry must retain source provenance");
+  assert.ok(raw.some(row=>row.sourceDocument==="nov-2026-school-calendar-parent-photo"),"retain monthly source");
+  assert.ok(raw.some(row=>row.sourceDocument===plannerId),"retain newer detailed source");
+  // The teacher candidate generator may additionally restore a generic teacher-home pickup.
+  // All genuine source rows must still collapse to ONE visible, time-specific event.
   const shown=runtime.window.ABVMSchoolUpdates.uniqueEvents(raw);
   assert.equal(shown.length,1,"The calendar must show one pickup, not duplicate rows");
   assert.equal(shown[0].label,"Nut roll delivery — pickup 3–4:30 PM");
