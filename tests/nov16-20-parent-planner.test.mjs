@@ -26,13 +26,14 @@ test("calendar contains source-backed exact Nov 17 pickup and all unique Decembe
   const plan=uploaded.importantDates.filter(x=>x.sourceDocument===sourceId);
   const has=(date,label)=>plan.some(x=>x.date===date&&x.label===label);
   assert.ok(has("Monday, Nov. 16","RaiseRight physical gift card order"));
-  assert.ok(has("Tuesday, Nov. 17","Nut roll delivery — pickup 3–4:30 PM"));
+  assert.ok(has("Tuesday, Nov. 17","Nut roll delivery — Nut Roll Sale pickup 3–4:30 PM"));
   assert.ok(has("Thursday, Dec. 3","Christmas Card Making"));
   assert.ok(has("Wednesday, Dec. 9","Christmas Card Making"));
   assert.ok(has("Tuesday, Dec. 1","School resumes"));
   assert.ok(has("Monday, Dec. 14","Santa Secret Shop"));
   assert.ok(has("Thursday, Dec. 17","Christmas Play — 1 PM"));
   assert.ok(!uploaded.importantDates.some(x=>/time assigned by school/i.test(x.label)));
+  assert.ok(uploaded.importantDates.some(x=>x.sourceDocument==="hsa-nut-roll-order-a-2026"&&x.label.includes("Nut Roll Sale")&&x.label.includes("3–4:30 PM")));
   for(const x of plan)assert.ok(app.pack.importantDates.some(y=>y.date===x.date&&y.label===x.label&&(y.sourceDocument===sourceId||(y.sourceDocuments||[]).includes(sourceId))),"Not published: "+x.label);
 });
 
