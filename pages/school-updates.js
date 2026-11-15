@@ -4,6 +4,10 @@ const normalize=s=>String(s||"").normalize("NFKC").toLowerCase().replace(/pick[ 
 function sameEvent(a,b){
   const x=normalize(a.label),y=normalize(b.label);
   if(x===y)return true;
+  // The same-day Nut Roll handouts alternate between "delivery" and "pick up".
+  // Treat them as one pickup, while preserving separate order deadlines.
+  const nutRollPickup=value=>value.startsWith("nut roll ")&&/(?:^| )(?:pickup|delivery)(?: |$)/.test(value);
+  if(nutRollPickup(x)&&nutRollPickup(y))return true;
   // A bare event and the same event with an explanatory suffix are one entry.
   // Two different detailed entries remain separate, even on the same date.
   const base=s=>normalize(String(s||"").split(/\s[—–]\s/)[0]);
