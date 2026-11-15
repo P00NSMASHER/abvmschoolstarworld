@@ -82,3 +82,14 @@ test('topic-only entries appear once below teaching, in a compact source list',(
  assert.ok(html.indexOf('Say the short i sound.')<html.indexOf('Topics from class'));
  assert.deepEqual(notesLibraryData(source)[0].original,source.notes.map(row=>row.text));
 });
+
+test('one-subject notes keep subject navigation available after a scope switch',()=>{
+  const one={notes:[{subject:'Math',kind:'topic',text:'Subtraction within 20'}],vocabulary:[],lessons:[],links:[],warnings:[]};
+  const initial=renderNotesLibrary(one,{source:'weekly'});
+  const switched=renderNotesLibrary(one,{source:'weekly',overview:true});
+  assert.match(initial,/class="notes-subject-browser" hidden/);
+  assert.match(switched,/class="notes-subject-browser"><div class="study-note-subjects/);
+  assert.match(switched,/class="notes-reader" hidden/);
+  assert.match(switched,/aria-label="Math"/);
+  assert.match(renderNotesLibrary(one,{subject:'Math',overview:true}),/class="notes-reader"><button/);
+});

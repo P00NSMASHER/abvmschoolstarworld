@@ -151,7 +151,7 @@ export function createNotesLibrary({getModel,win,meaning}={}) {
   node.addEventListener('click',event=>{
    if(event.target.closest('summary')===node.querySelector(':scope > summary')){userOpening=!node.open;return;}
    const scope=event.target.closest('[data-notes-source]');
-   if(scope){source=scope.dataset.notesSource==='saved'?'saved':'weekly';subject='';overview=false;paint('[data-notes-source="'+source+'"]');references();return;}
+   if(scope){source=scope.dataset.notesSource==='saved'?'saved':'weekly';subject='';overview=true;paint('[data-notes-source="'+source+'"]');references();return;}
    if(event.target.closest('[data-notes-clear]')){query='';subject='';overview=true;paint('[data-notes-search]');return;}
    if(event.target.closest('[data-notes-back]')){const previous=subject;subject='';const value=data();const rows=notesLibraryData(value||{},{query,meaning});
     overview=true;paint();
