@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "lastIntegratedAt": "2026-11-15T23:26:00.172Z",
+  "lastIntegratedAt": "2026-11-15T23:28:06.375Z",
   "documents": [
     {
       "id": "dress-down-2026-09-25",
@@ -1960,6 +1960,10 @@
     {
       "topic": "k4-dressdown-flag-football",
       "date": "Monday, Oct. 26"
+    },
+    {
+      "topic": "roll-pick",
+      "date": "Tuesday, Nov. 17"
     }
   ],
   "sourcePrecedence": {
