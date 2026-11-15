@@ -136,7 +136,9 @@ test("retained original review questions stay date-bound, chapter-exact and free
 });
 
 test("curriculum turnover cannot defeat the 30 percent runtime budget with retired full-evidence questions",()=>{
-  const envelope=structuredClone(source);
+  // Synthetic turnover must use immutable reviewed evidence, not changing daily teacher captures.
+  // The separate live-runtime assertion and build-time 30% gate still validate fresh packs.
+  const envelope=structuredClone(historicalSource);
   const retiredSkills=envelope.pack.contentPipeline.skills.filter((_,index)=>index%3===0);
   const retiredIds=new Set(retiredSkills.map(skill=>skill.id));
   const retired=envelope.pack.contentPipeline.questions.filter(q=>retiredIds.has(q.skill));
