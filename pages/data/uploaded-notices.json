@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "lastIntegratedAt": "2026-11-15T23:28:06.375Z",
+  "lastIntegratedAt": "2026-11-15T23:31:56.485Z",
   "documents": [
     {
       "id": "dress-down-2026-09-25",
@@ -1542,7 +1542,13 @@
     },
     {
       "date": "Tuesday, Nov. 17",
-      "label": "Nut roll delivery — pickup 3–4:30 PM",
+      "label": "Nut roll delivery — Nut Roll Sale pickup 3–4:30 PM",
+      "kind": "school event",
+      "sourceDocument": "hsa-nut-roll-order-a-2026"
+    },
+    {
+      "date": "Tuesday, Nov. 17",
+      "label": "Nut roll delivery — Nut Roll Sale pickup 3–4:30 PM",
       "kind": "school event",
       "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
     },
@@ -1872,7 +1878,7 @@
       "sourceDocument": "gift-card-winners-2026-10-01-02"
     },
     {
-      "text": "HSA Fall Nut Roll Sale: prepaid orders were due Oct. 30 ($20 per roll; cash or check to Assumption B.V.M.). Flavors: Nut, Poppy, Apricot, Lekvar, Seedless Raspberry, Pumpkin Cheese. Pickup Tuesday, Nov. 17, 3–4:30 PM, per the Nov. 16–20 school planner. Earn $2 in Tuition Bucks per roll; orders cannot be held for later pickup.",
+      "text": "HSA Fall Nut Roll Sale: prepaid orders were due Oct. 30 ($20 per roll; cash or check to Assumption B.V.M.). Flavors: Nut, Poppy, Apricot, Lekvar, Seedless Raspberry, Pumpkin Cheese. The earlier sale flyer specified a school-designated time; the newer Nov. 16–20 planner confirms pickup Tuesday, Nov. 17, 3–4:30 PM. Earn $2 in Tuition Bucks per roll; orders cannot be held for later pickup.",
       "topic": "nut-roll",
       "sourceDocument": "hsa-nut-roll-order-a-2026",
       "sourceDocuments": [
