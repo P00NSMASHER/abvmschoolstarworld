@@ -93,10 +93,20 @@ test("native Test Prep, notes and guide history preserve verified interactions",
   await expect(notes.locator("[data-notes-source=saved]")).toHaveAttribute("aria-pressed","true");
   await notes.locator("[data-notes-source=weekly]").click();
   await expect(notes.locator("[data-notes-source=weekly]")).toHaveAttribute("aria-pressed","true");
-  const subjects=notes.locator("[data-notes-subject]");
-  expect(await subjects.count()).toBeGreaterThan(0);
-  await subjects.first().click();
-  await expect(notes.locator(".study-note-panel:not([hidden])")).toHaveCount(1);
+  // A verified one-subject selection opens its reader directly; the subject
+  // picker is deliberately hidden until the user goes back to subjects.
+  const subjectCards=notes.locator(".notes-subject-browser:not([hidden]) [data-notes-subject]");
+  const selectedPanel=notes.locator(".notes-reader:not([hidden]) .study-note-panel:not([hidden])");
+  if(await subjectCards.count()) await subjectCards.first().click();
+  else if(!(await selectedPanel.count())) {
+    // No confirmed current-week notes is a valid empty state, not permission
+    // to display old lessons as today's teacher-assigned work.
+    await expect(notes.locator(".notes-subject-browser:not([hidden]) .study-tools-empty")).toBeVisible();
+    await notes.locator("[data-notes-source=saved]").click();
+    const savedCards=notes.locator(".notes-subject-browser:not([hidden]) [data-notes-subject]");
+    if(await savedCards.count()) await savedCards.first().click();
+  }
+  await expect(selectedPanel).toHaveCount(1);
   await noOverflow(page,390);
   await notes.locator(":scope > summary").scrollIntoViewIfNeeded();
   await capture(page,info,"study-tools-notes-390-first");
@@ -130,7 +140,10 @@ test("resource navigation remains accessible at 200% text and tablet size",async
   await page.locator("details[data-study-notes] > summary").click();
   await page.evaluate(()=>{const e=document.documentElement;e.style.fontSize=2*parseFloat(getComputedStyle(e).fontSize)+"px"});
   await noOverflow(page,375);
-  const heights=await page.locator("details[data-study-notes] > summary,.study-note-scope button,.study-note-subjects button").evaluateAll(nodes=>nodes.map(el=>el.getBoundingClientRect().height));
+  const heights=await page.locator("details[data-study-notes] > summary,.study-note-scope button,.study-note-subjects button").evaluateAll(nodes=>
+    nodes.filter(el=>el.getClientRects().length>0&&getComputedStyle(el).visibility==="visible")
+      .map(el=>el.getBoundingClientRect().height));
+  expect(heights.length).toBeGreaterThanOrEqual(3);
   expect(Math.min(...heights)).toBeGreaterThanOrEqual(44);
   await page.evaluate(()=>{document.documentElement.style.fontSize=""});
   for(const width of [820,1440]) {
