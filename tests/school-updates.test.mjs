@@ -14,6 +14,18 @@ test('duplicate labels merge but different event details are retained',()=>{
  assert.equal(events[0].label,'No School — Columbus Day');
  assert.equal(u.uniqueEvents([{label:'Chick-fil-A pickup'},{label:'Chick-Fil-A pick up'}]).length,1);
 });
+test('same-day Nut Roll pickup variants collapse without removing an order deadline',()=>{
+ const u=api();
+ const events=u.uniqueEvents([
+  {label:'Nut roll delivery'},
+  {label:'Nut Roll pick up'},
+  {label:'Nut roll delivery — pickup 3–4:30 PM'},
+  {label:'Nut Roll orders due'},
+ ]);
+ assert.equal(events.length,2);
+ assert.equal(events[0].label,'Nut roll delivery — pickup 3–4:30 PM');
+ assert.equal(events[1].label,'Nut Roll orders due');
+});
 test('same event on two separate dates remains two events',()=>{
  const u=api(),make=d=>({item:{label:'Mass'},range:[new Date(d),new Date(d)]});
  assert.equal(u.uniqueRows([make('2026-10-07'),make('2026-10-07'),make('2026-10-14')]).length,2);
