@@ -14,14 +14,14 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-11-15T23:28:06.375Z",
-  "sourceCapturedAt": "2026-11-15T23:28:06.375Z",
+  "sourceLastSeenAt": "2026-11-15T23:31:56.485Z",
+  "sourceCapturedAt": "2026-11-15T23:31:56.485Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-c771461a1fda8bb48443",
-    "sourceCapturedAt": "2026-11-15T23:28:06.375Z",
-    "generatedAt": "2026-11-15T23:28:06.375Z",
+    "sourceCapturedAt": "2026-11-15T23:31:56.485Z",
+    "generatedAt": "2026-11-15T23:31:56.485Z",
     "weekLabel": "Week of November 9, 2026",
     "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity” and Math “Page 57”. Upcoming tests include Grammar (singular & plural nouns) on Thursday, Nov. 12, Spelling (3 letter blends) / Handwriting on Friday, Nov. 13, Religion on Tuesday, Nov. 17, and Math lessons 1-5 (2 digiit with & without regrouping) on Tuesday, Nov. 17. 32 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
@@ -1050,10 +1050,14 @@
       },
       {
         "date": "Tuesday, Nov. 17",
-        "label": "Nut roll delivery — pickup 3–4:30 PM",
+        "label": "Nut roll delivery — Nut Roll Sale pickup 3–4:30 PM",
         "kind": "school event",
         "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo",
-        "source": "uploaded-notice"
+        "source": "uploaded-notice",
+        "sourceDocuments": [
+          "hsa-nut-roll-order-a-2026",
+          "abvm-weekly-planner-2026-11-16-parent-photo"
+        ]
       },
       {
         "date": "Tuesday, Nov. 17",
@@ -1765,7 +1769,7 @@
       "Friday, Oct. 9: Conference schedule portal closes.",
       "Tuesday, Oct. 13: Dress Down Day supports the Knights of Columbus Thanksgiving Meal.",
       "Gift Card Calendar update: two $50 winners were announced for the first two October drawings; the featured businesses were Cracker Barrel and Roman Delight. Winner and seller names are kept out of the public app.",
-      "HSA Fall Nut Roll Sale: prepaid orders were due Oct. 30 ($20 per roll; cash or check to Assumption B.V.M.). Flavors: Nut, Poppy, Apricot, Lekvar, Seedless Raspberry, Pumpkin Cheese. Pickup Tuesday, Nov. 17, 3–4:30 PM, per the Nov. 16–20 school planner. Earn $2 in Tuition Bucks per roll; orders cannot be held for later pickup.",
+      "HSA Fall Nut Roll Sale: prepaid orders were due Oct. 30 ($20 per roll; cash or check to Assumption B.V.M.). Flavors: Nut, Poppy, Apricot, Lekvar, Seedless Raspberry, Pumpkin Cheese. The earlier sale flyer specified a school-designated time; the newer Nov. 16–20 planner confirms pickup Tuesday, Nov. 17, 3–4:30 PM. Earn $2 in Tuition Bucks per roll; orders cannot be held for later pickup.",
       "Reading Royals Family Fun Night is Saturday, Nov. 21, 2026. ABVM students may sing the National Anthem; return the signed parent participation slip. Student tickets are free by choosing the $0 student ticket in checkout. Each ticket sold earns $5 for ABVM. Tickets: https://www.gofevo.com/event/AssumptionBVM2027",
       "CYO basketball registration for girls and boys in grades 3–8: https://forms.gle/C5BpMzwk5Uw2b2qXA. This is separate from the K–2 St. Nicholas Seahawks form already listed.",
       "ABVM is collecting hygiene donations for Servants for All; the October 22 and 29 donation flyer refers to grade-specific activities, and Melissa's latest planner confirms K–4 dress down/flag football on October 26.",
@@ -1780,7 +1784,7 @@
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
     "sourceCheckedAt": "2026-11-11T19:22:13.816Z",
-    "uploadedNoticeHash": "uploaded-notices-fa340fd9739866cd82c7",
+    "uploadedNoticeHash": "uploaded-notices-3bf2d31a5513cdfc8bb3",
     "uploadedNoticeTopics": {
       "reminders": [
         "fundraiser",
@@ -18861,7 +18865,7 @@
   ],
   "uploadedNotices": {
     "count": 32,
-    "latestIntegratedAt": "2026-11-15T23:28:06.375Z",
+    "latestIntegratedAt": "2026-11-15T23:31:56.485Z",
     "documents": [
       {
         "id": "dress-down-2026-09-25",
