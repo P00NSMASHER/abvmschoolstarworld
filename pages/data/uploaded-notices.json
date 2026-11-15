@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "lastIntegratedAt": "2026-11-03T15:00:00.000Z",
+  "lastIntegratedAt": "2026-11-15T23:26:00.172Z",
   "documents": [
     {
       "id": "dress-down-2026-09-25",
@@ -714,6 +714,37 @@
         "reviewedBy": "source-backed-parent-photo-review",
         "reviewedAt": "2026-11-03T15:00:00.000Z"
       }
+    },
+    {
+      "id": "abvm-weekly-planner-2026-11-16-parent-photo",
+      "label": "ABVM weekly planner — November 16–20, 2026 (parent-supplied photo)",
+      "receivedAt": "2026-11-15",
+      "facts": [
+        "Monday, November 16: RaiseRight physical gift card order.",
+        "Tuesday, November 17: Nut Roll delivery pickup from 3:00 to 4:30 PM.",
+        "Wednesday, November 18: Mass.",
+        "Thursday, November 19: Pretzel Day.",
+        "Friday, November 20: First trimester ends.",
+        "Saturday, November 21: Reading Royals Family Night.",
+        "Monday, November 23: Second trimester starts.",
+        "Tuesday, November 24: DDD SPCA (dress-down day benefiting SPCA per earlier monthly calendar).",
+        "Wednesday, November 25: Mass, 12:00 noon dismissal, and report cards.",
+        "Thursday, November 26; Friday, November 27; and Monday, November 30: No school.",
+        "Tuesday, December 1: School resumes.",
+        "Thursday, December 3 and Wednesday, December 9: Christmas Card Making.",
+        "Monday, December 14: Santa Secret Shop.",
+        "Thursday, December 17: Christmas Play at 1:00 PM."
+      ],
+      "provenance": {
+        "factsHash": "65e48d55874a4bc66ed7d4ee0950c7906cb61fd24db87add8daed7f03d94b2d9",
+        "sourceContentHash": "46bd772b6e2c2343038b1e86dbfcc7cfaeb84670a9b48c726ca4c07ab0e1e3de"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "assistant-visual-review-of-parent-photo",
+        "reviewedAt": "2026-11-15T23:26:00.172Z"
+      }
     }
   ],
   "importantDates": [
@@ -1126,12 +1157,6 @@
       "sourceDocument": "hsa-nut-roll-order-a-2026"
     },
     {
-      "date": "Tuesday, Nov. 17",
-      "label": "HSA Nut Roll Sale — pickup (time assigned by school)",
-      "kind": "school event",
-      "sourceDocument": "hsa-nut-roll-order-a-2026"
-    },
-    {
       "date": "Saturday, Nov. 21",
       "label": "Reading Royals Game Family Fun Night — student anthem performance; ticket link in notices",
       "kind": "school event",
@@ -1508,6 +1533,120 @@
       "label": "No school",
       "kind": "school event",
       "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Monday, Nov. 16",
+      "label": "RaiseRight physical gift card order",
+      "kind": "school event",
+      "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Tuesday, Nov. 17",
+      "label": "Nut roll delivery — pickup 3–4:30 PM",
+      "kind": "school event",
+      "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Wednesday, Nov. 18",
+      "label": "Mass",
+      "kind": "school event",
+      "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Thursday, Nov. 19",
+      "label": "Pretzel day",
+      "kind": "school event",
+      "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Friday, Nov. 20",
+      "label": "End of trimester 1",
+      "kind": "school event",
+      "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Saturday, Nov. 21",
+      "label": "Reading Royals Family Fun Night",
+      "kind": "school event",
+      "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Monday, Nov. 23",
+      "label": "Trimester 2 begins",
+      "kind": "school event",
+      "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Tuesday, Nov. 24",
+      "label": "Dress Down Day to benefit SPCA",
+      "kind": "school event",
+      "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Wednesday, Nov. 25",
+      "label": "Mass",
+      "kind": "school event",
+      "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Wednesday, Nov. 25",
+      "label": "Noon dismissal",
+      "kind": "schedule change",
+      "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Wednesday, Nov. 25",
+      "label": "Report cards distributed",
+      "kind": "school event",
+      "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Thursday, Nov. 26",
+      "label": "No school",
+      "kind": "holiday",
+      "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Friday, Nov. 27",
+      "label": "No school",
+      "kind": "holiday",
+      "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Monday, Nov. 30",
+      "label": "No school",
+      "kind": "holiday",
+      "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Tuesday, Dec. 1",
+      "label": "School resumes",
+      "kind": "school event",
+      "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Thursday, Dec. 3",
+      "label": "Christmas Card Making",
+      "kind": "school event",
+      "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Wednesday, Dec. 9",
+      "label": "Christmas Card Making",
+      "kind": "school event",
+      "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Monday, Dec. 14",
+      "label": "Santa Secret Shop",
+      "kind": "school event",
+      "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Thursday, Dec. 17",
+      "label": "Christmas Play — 1 PM",
+      "kind": "school event",
+      "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
     }
   ],
   "reminders": [
@@ -1577,9 +1716,13 @@
       "sourceDocument": "weekly-reminders-2026-10-05"
     },
     {
-      "text": "Friday, Oct. 30: Return prepaid HSA Nut Roll Sale orders and payment to the school office. Each roll is $20; pickup is Tuesday, Nov. 17 (school-designated time).",
+      "text": "Tuesday, Nov. 17: pickup for prepaid HSA Nut Rolls is 3–4:30 PM according to the Nov. 16–20 school planner (orders were due Oct. 30).",
       "topic": "nut-roll",
-      "sourceDocument": "hsa-nut-roll-order-a-2026"
+      "sourceDocument": "hsa-nut-roll-order-a-2026",
+      "sourceDocuments": [
+        "hsa-nut-roll-order-a-2026",
+        "abvm-weekly-planner-2026-11-16-parent-photo"
+      ]
     },
     {
       "text": "Saturday, Nov. 21: Reading Royals Family Fun Night; students may sing the National Anthem with a signed parent slip. Student tickets are free using the $0 ticket selection.",
@@ -1729,9 +1872,13 @@
       "sourceDocument": "gift-card-winners-2026-10-01-02"
     },
     {
-      "text": "HSA Fall Nut Roll Sale: prepaid orders and money due Friday, Oct. 30 ($20 per roll; cash or check payable to Assumption B.V.M.). Flavors: Nut, Poppy, Apricot, Lekvar, Seedless Raspberry, Pumpkin Cheese. Pickup Tuesday, Nov. 17 at a school-designated time. Earn $2 in Tuition Bucks per roll sold; orders cannot be held for later pickup.",
+      "text": "HSA Fall Nut Roll Sale: prepaid orders were due Oct. 30 ($20 per roll; cash or check to Assumption B.V.M.). Flavors: Nut, Poppy, Apricot, Lekvar, Seedless Raspberry, Pumpkin Cheese. Pickup Tuesday, Nov. 17, 3–4:30 PM, per the Nov. 16–20 school planner. Earn $2 in Tuition Bucks per roll; orders cannot be held for later pickup.",
       "topic": "nut-roll",
-      "sourceDocument": "hsa-nut-roll-order-a-2026"
+      "sourceDocument": "hsa-nut-roll-order-a-2026",
+      "sourceDocuments": [
+        "hsa-nut-roll-order-a-2026",
+        "abvm-weekly-planner-2026-11-16-parent-photo"
+      ]
     },
     {
       "text": "Reading Royals Family Fun Night is Saturday, Nov. 21, 2026. ABVM students may sing the National Anthem; return the signed parent participation slip. Student tickets are free by choosing the $0 student ticket in checkout. Each ticket sold earns $5 for ABVM. Tickets: https://www.gofevo.com/event/AssumptionBVM2027",
@@ -1762,6 +1909,11 @@
       "text": "November 2026 school lunch costs $4.25. Assorted milks are available daily. Menu is subject to change.",
       "topic": "nov-2026-lunch-cost",
       "sourceDocument": "nov-2026-lunch-menu-parent-photo"
+    },
+    {
+      "text": "Weekly planner Nov. 16–20: RaiseRight physical gift card order Monday; Nut Roll pickup Tuesday 3–4:30 PM; Mass Wednesday; Pretzel Day Thursday; first trimester ends Friday. Looking ahead: school resumes Dec. 1, Santa Secret Shop Dec. 14, and Christmas Play Dec. 17 at 1 PM.",
+      "topic": "weekly-planner-2026-11-16",
+      "sourceDocument": "abvm-weekly-planner-2026-11-16-parent-photo"
     }
   ],
   "replacements": [
