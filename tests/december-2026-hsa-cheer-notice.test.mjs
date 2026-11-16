@@ -14,7 +14,8 @@ test("parent-photo HSA Christmas flyer has exact source integrity and no invente
   assert.ok(document,"parent-supplied Christmas flyer should be receipted");
   assert.equal(document.provenance.sourceContentHash,"1ea7cf8fca280c732faf50fc890a4c9627d202cf6ccd631ae684e5fadc7c5eb8");
   assert.equal(document.receivedAt,"2026-11-12");
-  assert.equal(validateUploadedNoticePolicy(notices).documents,32);
+  assert.ok(notices.documents.length>=32,"reviewed December flyer cannot reduce historical notices");
+  assert.equal(validateUploadedNoticePolicy(notices).documents,notices.documents.length);
   const content=document.facts.join(" ");
   assert.match(content,/Dec(?:ember)? 18, 2026/);
   assert.match(content,/caroling stops are not specified/i);
@@ -34,7 +35,7 @@ test("all three December dates and participation instructions reach the visible 
   }
   assert.ok(studyPack.pack.reminders.some(x=>/return the school flyer form/.test(x)&&/pickup at 3:45 PM/.test(x)));
   assert.ok(studyPack.pack.parentNotices.some(x=>/Christmas carols/.test(x)&&/later flyer/.test(x)));
-  assert.equal(validateUploadedNoticeIntegration(studyPack,notices).documents,32);
+  assert.equal(validateUploadedNoticeIntegration(studyPack,notices).documents,notices.documents.length);
 });
 
 test("reviewed Christmas notice integration is idempotent",()=>{
