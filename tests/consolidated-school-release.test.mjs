@@ -71,5 +71,26 @@ test('a source-verified flyer resolves obsolete TBD wording without changing gov
  const copy=structuredClone(data);
  const again=integrateUploadedNotices(copy,structuredClone(notice),{now:new Date('2026-11-15T23:09:03.109Z')});
  assert.equal(again.changed,false);
- assert.deepEqual(again.data,data);
+ // A newly checked teacher Home page may add the older generic pickup label.
+  // The verified parent planner overrides only that specific obsolete duplicate.
+  const expected=structuredClone(data);
+  expected.pack.importantDates=expected.pack.importantDates.filter(item=>!(
+    item.source==='teacher-home'&&item.date==='Tuesday, Nov. 17'&&
+    /^Nut Roll pick up$/i.test(item.label)
+  ));
+  assert.deepEqual(again.data,expected);
+  const repeat=integrateUploadedNotices(structuredClone(expected),structuredClone(notice),{now:new Date('2026-11-15T23:09:03.109Z')});
+  assert.equal(repeat.changed,false);
+  assert.deepEqual(repeat.data,expected);
+});
+
+test('a fresh teacher Home recheck cannot restore superseded unspecified Nut Roll pickup',()=>{
+ const refreshed=structuredClone(data);
+ refreshed.pack.importantDates.push({
+  date:'Tuesday, Nov. 17',label:'Nut Roll pick up',kind:'school event',source:'teacher-home'
+ });
+ const corrected=integrateUploadedNotices(refreshed,structuredClone(notice),{now:new Date('2026-11-15T23:09:03.109Z')});
+ assert.equal(corrected.changed,false,'no forged new notice source timestamp');
+ assert.deepEqual(corrected.data,data,'only the superseded teacher label may be removed');
+ assert.equal(corrected.data.pack.importantDates.filter(item=>dateKey(item.date)==='nov-17'&&/nut roll delivery.*3–4:30 PM/i.test(item.label)).length,1);
 });

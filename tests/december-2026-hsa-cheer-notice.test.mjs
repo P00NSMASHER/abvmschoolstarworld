@@ -42,5 +42,15 @@ test("reviewed Christmas notice integration is idempotent",()=>{
   const copy=structuredClone(studyPack);
   const result=integrateUploadedNotices(copy,structuredClone(notices),{now:new Date("2026-11-12T16:47:00.000Z")});
   assert.equal(result.changed,false);
-  assert.deepEqual(result.data,studyPack);
+  // A newly checked teacher Home page may add the older generic pickup label.
+  // The verified parent planner overrides only that specific obsolete duplicate.
+  const expected=structuredClone(studyPack);
+  expected.pack.importantDates=expected.pack.importantDates.filter(item=>!(
+    item.source==='teacher-home'&&item.date==='Tuesday, Nov. 17'&&
+    /^Nut Roll pick up$/i.test(item.label)
+  ));
+  assert.deepEqual(result.data,expected);
+  const repeat=integrateUploadedNotices(structuredClone(expected),structuredClone(notices),{now:new Date('2026-11-15T23:09:03.109Z')});
+  assert.equal(repeat.changed,false);
+  assert.deepEqual(repeat.data,expected);
 });
