@@ -1484,58 +1484,61 @@
     ],
     "lunchMenu": [
       {
-        "date": "2026-11-09",
-        "day": "Monday, Nov. 9",
+        "date": "2026-11-16",
+        "day": "Monday, Nov. 16",
         "items": [
-          "Breaded chicken",
+          "Popcorn chicken",
+          "Mashed potatoes",
+          "WG roll",
+          "Corn",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-17",
+        "day": "Tuesday, Nov. 17",
+        "items": [
+          "Taco Tuesday & chips",
+          "Cheese",
           "Brown rice",
+          "Salsa",
+          "Beans",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-18",
+        "day": "Wednesday, Nov. 18",
+        "items": [
+          "Buttered pierogies",
+          "WG roll",
+          "String cheese",
+          "Steamed carrots",
+          "Fruit"
+        ],
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-19",
+        "day": "Thursday, Nov. 19",
+        "items": [
+          "Beef cheesesteak",
+          "WG roll",
+          "French fries",
           "Steamed broccoli",
           "Fruit"
         ],
         "sourceId": "abvm-2026-11-parent-school-menu"
       },
       {
-        "date": "2026-11-10",
-        "day": "Tuesday, Nov. 10",
+        "date": "2026-11-20",
+        "day": "Friday, Nov. 20",
         "items": [
-          "CH. quesadilla wedge",
-          "Garden salad",
-          "Salsa",
-          "Steamed corn",
-          "Fruit"
-        ],
-        "sourceId": "abvm-2026-11-parent-school-menu"
-      },
-      {
-        "date": "2026-11-11",
-        "day": "Wednesday, Nov. 11",
-        "items": [
-          "Breaded fish sandwich",
-          "Baby cake potatoes",
-          "Baked beans",
-          "Fruit"
-        ],
-        "sourceId": "abvm-2026-11-parent-school-menu"
-      },
-      {
-        "date": "2026-11-12",
-        "day": "Thursday, Nov. 12",
-        "items": [
-          "Baked cheese pizza",
-          "Tortilla chips",
-          "Mixed vegetables",
-          "Fruit"
-        ],
-        "sourceId": "abvm-2026-11-parent-school-menu"
-      },
-      {
-        "date": "2026-11-13",
-        "day": "Friday, Nov. 13",
-        "items": [
-          "Cheesy breadsticks",
-          "Dipping sauce",
-          "Garden salad",
-          "Green beans",
+          "Macaroni & cheese",
+          "Breaded chicken",
+          "Stewed tomatoes",
           "Fruit"
         ],
         "sourceId": "abvm-2026-11-parent-school-menu"
@@ -1854,16 +1857,16 @@
     "lunchMenuSource": {
       "status": "current-week",
       "retrievalState": "verified",
-      "checkedAt": "2026-11-11T19:22:13.816Z",
-      "lastAttemptAt": "2026-11-11T19:22:13.816Z",
+      "checkedAt": "2026-11-16T11:22:38.861Z",
+      "lastAttemptAt": "2026-11-16T11:22:38.861Z",
       "provider": "Saint Clair Area School District",
       "school": "Assumption BVM School",
       "feedUrl": "https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu",
       "verificationMode": "reviewed-school-handout",
       "parentResourcesUrl": "https://www.assumptionbvmschool.net/parent-resources",
-      "weekStart": "2026-11-09",
-      "weekEnd": "2026-11-13",
-      "coverageThrough": "2026-11-13",
+      "weekStart": "2026-11-16",
+      "weekEnd": "2026-11-20",
+      "coverageThrough": "2026-11-20",
       "missingDates": [],
       "sourcePages": [
         {
@@ -1872,7 +1875,7 @@
           "contentHash": "a5d25beb5cbd34522ce4645172ab4efce1d041aab7fcc33521f3433c5cd0b178",
           "proofMode": "reviewed-notice",
           "reviewedAt": "2026-11-03T15:00:00.000Z",
-          "checkedAt": "2026-11-11T19:22:13.816Z",
+          "checkedAt": "2026-11-16T11:22:38.861Z",
           "state": "reviewed-notice"
         }
       ],
@@ -2597,7 +2600,7 @@
         "sourceId": "abvm-2026-11-parent-school-menu"
       }
     ],
-    "lunchMenuHash": "93b4635a633b26d26d36527fd771c1b13d3e4ccf378dd1b693484b673a6e079b",
+    "lunchMenuHash": "9cac1934466a3b1ffd48795d3b646b553b795069e76eb6b878d9a0e12d15b73d",
     "contentPipeline": {
       "schemaVersion": 2,
       "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
