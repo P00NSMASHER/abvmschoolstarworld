@@ -87,7 +87,8 @@ test('one-subject notes keep subject navigation available after a scope switch',
   const one={notes:[{subject:'Math',kind:'topic',text:'Subtraction within 20'}],vocabulary:[],lessons:[],links:[],warnings:[]};
   const initial=renderNotesLibrary(one,{source:'weekly'});
   const switched=renderNotesLibrary(one,{source:'weekly',overview:true});
-  assert.match(initial,/class="notes-subject-browser" hidden/);
+  assert.match(initial,/class="notes-subject-browser"><div class="study-note-subjects/);
+  assert.match(initial,/class="notes-reader"><button/);
   assert.match(switched,/class="notes-subject-browser"><div class="study-note-subjects/);
   assert.match(switched,/class="notes-reader" hidden/);
   assert.match(switched,/aria-label="Math"/);
