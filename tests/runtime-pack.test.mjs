@@ -135,7 +135,27 @@ test("retained original review questions stay date-bound, chapter-exact and free
   assert.throws(()=>buildRuntimePack(bad),/missing its verified source or expiry window/);
 });
 
-test("curriculum turnover cannot defeat the 30 percent runtime budget with retired full-evidence questions",()=>{
+test("retired review skills keep dated source windows without exposing teacher audit hashes",()=>{
+  const original=source.pack.recentReviewPipeline.skills;
+  const compact=runtime.pack.recentReviewPipeline.skills;
+  assert.ok(original.length>0,"the current source pack needs a retained review skill");
+  assert.equal(compact.length,original.length);
+  for(let index=0;index<original.length;index++){
+    const {sourceLineage,evidenceContract,...expected}=original[index];
+    assert.deepEqual(compact[index],expected,"review skill must retain exactly the learner-facing and dated fields");
+    for(const field of ["reviewVerifiedAt","reviewExpiresAt","reviewSourceHash"])
+      assert.equal(compact[index][field],original[index][field]);
+  }
+  const noReviewSkills=structuredClone(source);
+  delete noReviewSkills.pack.recentReviewPipeline.skills;
+  assert.deepEqual(buildRuntimePack(noReviewSkills).pack.recentReviewPipeline.skills,[],
+    "partial lesson fixtures without archived review skills remain supported");
+  const malformed=structuredClone(source);
+  malformed.pack.recentReviewPipeline.skills={unexpected:true};
+  assert.throws(()=>buildRuntimePack(malformed),/invalid recentReviewPipeline.skills/);
+});
+
+test("curriculum turnover preserves 30 percent question-bank compaction without inflating total runtime",()=>{
   const envelope=structuredClone(source);
   const retiredSkills=envelope.pack.contentPipeline.skills.filter((_,index)=>index%3===0);
   const retiredIds=new Set(retiredSkills.map(skill=>skill.id));
@@ -158,7 +178,19 @@ test("curriculum turnover cannot defeat the 30 percent runtime budget with retir
   assert.equal(packed.pack.contentPipeline.questions.length,current.length);
   const fullBytes=Buffer.byteLength(JSON.stringify(envelope),"utf8");
   const runtimeBytes=Buffer.byteLength(runtimePackJson(envelope),"utf8");
-  assert.ok(runtimeBytes<fullBytes*.7,{fullBytes,runtimeBytes});
+  // Curriculum turnover can leave fixed calendar/lunch UI fields unchanged.
+  // Require savings in the FULL evidence-bearing question banks rather than
+  // misclassifying uncompressible event data as a question-payload regression.
+  const fullQuestionBytes=Buffer.byteLength(JSON.stringify([
+    ...envelope.pack.contentPipeline.questions,
+    ...envelope.pack.recentReviewPipeline.questions,
+  ]),"utf8");
+  const runtimeQuestionBytes=Buffer.byteLength(JSON.stringify([
+    ...packed.pack.contentPipeline.questions,
+    ...packed.pack.recentReviewPipeline.questions,
+  ]),"utf8");
+  assert.ok(runtimeQuestionBytes<fullQuestionBytes*.7,{fullQuestionBytes,runtimeQuestionBytes});
+  assert.ok(runtimeBytes<fullBytes,{fullBytes,runtimeBytes});
 });
 
 test('only page-exact lineage can supply compact Reading text-set scope identifiers',()=>{

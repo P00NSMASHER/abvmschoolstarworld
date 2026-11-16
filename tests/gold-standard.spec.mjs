@@ -430,7 +430,18 @@ test("Sept 28 weekly notice is integrated without duplicate stale events",async(
   expect(events.some(e=>e.date==="Monday–Tuesday, Oct. 19–20"&&e.label==="Parent-Teacher Conferences")).toBe(false);
   expect(has("Thursday, Oct. 22","Chick-fil-A Delivery")).toBe(true);
   expect(has("Friday, Oct. 23","S’mores Family")).toBe(true);
-  expect(has("Friday–Saturday, Nov. 13–14","Drama Club Play")).toBe(true);
+  // The verified November calendar and HSA newsletter supersede the older
+  // generic two-day play reminder. Require exact showtimes and source receipts.
+  expect(has("Friday–Saturday, Nov. 13–14","Drama Club Play")).toBe(false);
+  for(const [date,label] of [
+    ["Friday, Nov. 13","HSA play showtime — The Little Mermaid Jr. at ABVM, 7 PM"],
+    ["Saturday, Nov. 14","HSA play showtime — The Little Mermaid Jr. at ABVM, 5 PM"],
+  ]){
+    const matches=events.filter(e=>
+      e.date===date&&e.label===label&&
+      e.sourceDocument==="hsa-newsletter-2026-11-parent-pdf");
+    expect(matches).toHaveLength(1);
+  }
   const royals=events.filter(e=>e.date==="Saturday, Nov. 21"&&e.label.startsWith("Reading Royals Game Family Fun Night"));
   expect(royals).toHaveLength(1);
   expect(royals[0].label).toContain("student anthem performance");

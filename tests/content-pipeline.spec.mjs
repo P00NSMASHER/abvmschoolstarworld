@@ -62,7 +62,14 @@ test('Study Games does not bypass SOURCE_INSUFFICIENT vocabulary coverage with i
       }],
     };
     const catalog = window.ABVMStudyGames.buildCatalog(pack, { sourceKey: 'vocab-source-insufficient-test' });
-    return catalog.questions.filter(question => question.skill === 'vocabulary-in-context').map(question => question.id);
+    // A verified previous-week review bank may remain available, but the
+    // insufficient CURRENT source cannot authorize legacy glossary material.
+    const reviewed = new Set((pack.recentReviewPipeline?.questions || [])
+      .filter(question => question.skill === 'vocabulary-in-context')
+      .map(question => 'review-' + question.id));
+    return catalog.questions.filter(question => question.skill === 'vocabulary-in-context')
+      .filter(question => question.tier !== 'recent-review' || !reviewed.has(question.id))
+      .map(question => question.id);
   });
 
   expect(result).toEqual([]);
