@@ -14,16 +14,16 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-11-11T19:22:13.816Z",
-  "sourceCapturedAt": "2026-11-10T18:42:40.819Z",
+  "sourceLastSeenAt": "2026-11-15T23:09:03.109Z",
+  "sourceCapturedAt": "2026-11-15T23:09:03.109Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
     "sourceHash": "teacher-pages-c771461a1fda8bb48443",
-    "sourceCapturedAt": "2026-11-10T18:42:40.819Z",
-    "generatedAt": "2026-11-11T19:22:13.816Z",
+    "sourceCapturedAt": "2026-11-15T23:09:03.109Z",
+    "generatedAt": "2026-11-15T23:09:03.109Z",
     "weekLabel": "Week of November 9, 2026",
-    "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity” and Math “Page 57”. Upcoming tests include Grammar (singular & plural nouns) on Thursday, Nov. 12, Spelling (3 letter blends) / Handwriting on Friday, Nov. 13, Religion on Tuesday, Nov. 17, and Math lessons 1-5 (2 digiit with & without regrouping) on Tuesday, Nov. 17. 31 uploaded school notices are integrated with the teacher pages.",
+    "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity” and Math “Page 57”. Upcoming tests include Grammar (singular & plural nouns) on Thursday, Nov. 12, Spelling (3 letter blends) / Handwriting on Friday, Nov. 13, Religion on Tuesday, Nov. 17, and Math lessons 1-5 (2 digiit with & without regrouping) on Tuesday, Nov. 17. 32 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
       {
         "subject": "Reading / ELA",
@@ -838,12 +838,6 @@
       },
       {
         "date": "Friday, Oct. 30",
-        "label": "Nut Roll orders due",
-        "source": "teacher-home",
-        "kind": "deadline"
-      },
-      {
-        "date": "Friday, Oct. 30",
         "label": "Spelling (soft c and g) / Handwriting",
         "kind": "test",
         "source": "teacher-tests"
@@ -1028,10 +1022,10 @@
         "source": "uploaded-notice"
       },
       {
-        "date": "Tuesday, Nov. 17",
-        "label": "HSA Nut Roll Sale — pickup (time assigned by school)",
+        "date": "Monday, Nov. 16",
+        "label": "Raise Right physical gift card order",
         "kind": "school event",
-        "sourceDocument": "hsa-nut-roll-order-a-2026",
+        "sourceDocument": "weekly-planner-2026-11-16-parent-photo",
         "source": "uploaded-notice"
       },
       {
@@ -1050,9 +1044,10 @@
       },
       {
         "date": "Tuesday, Nov. 17",
-        "label": "Nut Roll pick up",
-        "source": "teacher-home",
-        "kind": "school event"
+        "label": "Nut roll delivery — pickup 3–4:30 PM",
+        "kind": "school event",
+        "sourceDocument": "weekly-planner-2026-11-16-parent-photo",
+        "source": "uploaded-notice"
       },
       {
         "date": "Tuesday, Nov. 17",
@@ -1220,14 +1215,22 @@
       {
         "date": "Tuesday, Dec. 1",
         "label": "School resumes",
-        "source": "teacher-home",
-        "kind": "school event"
+        "kind": "school event",
+        "sourceDocument": "weekly-planner-2026-11-16-parent-photo",
+        "source": "uploaded-notice"
       },
       {
         "date": "Tuesday, Dec. 1",
         "label": "Cash raffle tickets / money due",
         "source": "teacher-home",
         "kind": "deadline"
+      },
+      {
+        "date": "Thursday, Dec. 3",
+        "label": "Christmas card making",
+        "kind": "school event",
+        "sourceDocument": "weekly-planner-2026-11-16-parent-photo",
+        "source": "uploaded-notice"
       },
       {
         "date": "Thursday, Dec. 3",
@@ -1243,9 +1246,30 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Wednesday, Dec. 9",
+        "label": "Christmas card making",
+        "kind": "school event",
+        "sourceDocument": "weekly-planner-2026-11-16-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
+        "date": "Monday, Dec. 14",
+        "label": "Santa Secret Shop",
+        "kind": "school event",
+        "sourceDocument": "weekly-planner-2026-11-16-parent-photo",
+        "source": "uploaded-notice"
+      },
+      {
         "label": "Santa Workshop",
         "date": "Monday, Dec. 14",
         "kind": "school event"
+      },
+      {
+        "date": "Thursday, Dec. 17",
+        "label": "Christmas Play — 1 PM",
+        "kind": "school event",
+        "sourceDocument": "weekly-planner-2026-11-16-parent-photo",
+        "source": "uploaded-notice"
       },
       {
         "label": "Christmas Party",
@@ -1530,7 +1554,6 @@
       "Tuesday, Oct. 6: Flag football sign-ups are due. Wednesday, Oct. 7: K–4 flag football permission form is due.",
       "Friday, Oct. 9: Conference schedule portal closes.",
       "Tuesday, Oct. 13: Dress Down Day supports the Knights of Columbus Thanksgiving Meal.",
-      "Friday, Oct. 30: Return prepaid HSA Nut Roll Sale orders and payment to the school office. Each roll is $20; pickup is Tuesday, Nov. 17 (school-designated time).",
       "Saturday, Nov. 21: Reading Royals Family Fun Night; students may sing the National Anthem with a signed parent slip. Student tickets are free using the $0 ticket selection.",
       "Tuesday, Dec. 8: ABVM Eucharistic Consecration takes place during the school Mass; family reading journey begins Oct. 20.",
       "Wednesday, Oct. 14: Progress reports are sent home. Sign and return them.",
@@ -1542,6 +1565,7 @@
       "October 19–30: Halloween bucket-of-candy chance fundraiser; $1 per chance.",
       "November 6: noon dismissal and no after-school care; lunch is served.",
       "November 25: noon dismissal with lunch served. November 26, 27, and 30: no school.",
+      "Tuesday, Nov. 17: Nut Roll delivery pickup is 3–4:30 PM.",
       "Stationary money ($17) is due Wednesday, Sept. 23.",
       "Pretzel delivery is Thursday, Sept. 24 after lunch.",
       "Keep the Reading Log and Behavior Chart in the HW folder.",
@@ -1689,20 +1713,20 @@
       "Friday, Oct. 9: Conference schedule portal closes.",
       "Tuesday, Oct. 13: Dress Down Day supports the Knights of Columbus Thanksgiving Meal.",
       "Gift Card Calendar update: two $50 winners were announced for the first two October drawings; the featured businesses were Cracker Barrel and Roman Delight. Winner and seller names are kept out of the public app.",
-      "HSA Fall Nut Roll Sale: prepaid orders and money due Friday, Oct. 30 ($20 per roll; cash or check payable to Assumption B.V.M.). Flavors: Nut, Poppy, Apricot, Lekvar, Seedless Raspberry, Pumpkin Cheese. Pickup Tuesday, Nov. 17 at a school-designated time. Earn $2 in Tuition Bucks per roll sold; orders cannot be held for later pickup.",
       "Reading Royals Family Fun Night is Saturday, Nov. 21, 2026. ABVM students may sing the National Anthem; return the signed parent participation slip. Student tickets are free by choosing the $0 student ticket in checkout. Each ticket sold earns $5 for ABVM. Tickets: https://www.gofevo.com/event/AssumptionBVM2027",
       "CYO basketball registration for girls and boys in grades 3–8: https://forms.gle/C5BpMzwk5Uw2b2qXA. This is separate from the K–2 St. Nicholas Seahawks form already listed.",
       "ABVM is collecting hygiene donations for Servants for All; the October 22 and 29 donation flyer refers to grade-specific activities, and Melissa's latest planner confirms K–4 dress down/flag football on October 26.",
       "Eucharistic Consecration at ABVM: Oct. 20–Dec. 8, with Consecration at school Mass on Dec. 8. School provides a student book and a parent copy; weekly reading guidelines follow. Optional Holy Hours: Oct. 22, 7 PM (Bethlehem Catholic High School); Nov. 3, 6 PM (Nativity BVM High School); Nov. 17, 7 PM (Berks Catholic High School).",
       "Free Diocesan Family Festival: Sunday, Nov. 1, noon–4:30 PM; location: St. Joseph the Worker in Orefield.",
       "November 2026 school lunch costs $4.25. Assorted milks are available daily. Menu is subject to change.",
+      "Nut Roll pickup: Tuesday, November 17, 3–4:30 PM, per the newer weekly school planner.",
       "Picture ordering: a digital image is $10 when added to a package; glossy finish is $5 per package; a 10×13 is $20; the other listed add-on items are $13 each.",
       "Picture backgrounds: 1 Universe, 2 Pink Mist, 3 Fall Leaves, 4 Traditional, 5 School Spirit, 6 Patriotic, 7 Dinosaur, 8 Pastel, 9 Bookcase, 10 Blue Brush, 11 Laser. Backgrounds 1, 2, and 11 are marked NEW.",
       "Christmas Caroling date is TBD.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
     "sourceCheckedAt": "2026-11-11T19:22:13.816Z",
-    "uploadedNoticeHash": "uploaded-notices-e57dca15a6dfb9887780",
+    "uploadedNoticeHash": "uploaded-notices-605cae38e27f7af87279",
     "uploadedNoticeTopics": {
       "reminders": [
         "fundraiser",
@@ -1717,7 +1741,6 @@
         "flag-football",
         "conference-schedule",
         "knights-thanksgiving-ddd",
-        "nut-roll",
         "reading-royals-game",
         "eucharistic-consecration",
         "progress-report",
@@ -1725,7 +1748,8 @@
         "lego-club",
         "halloween-fundraiser",
         "nov-2026-noon-dismissal-6",
-        "nov-2026-thanksgiving-closure"
+        "nov-2026-thanksgiving-closure",
+        "nut-roll"
       ],
       "parentNotices": [
         "conference",
@@ -1745,13 +1769,13 @@
         "conference-schedule",
         "knights-thanksgiving-ddd",
         "gift-card-winners",
-        "nut-roll",
         "reading-royals-game",
         "cyo-basketball-older",
         "servants-hygiene",
         "eucharistic-consecration",
         "diocesan-festival",
-        "nov-2026-lunch-cost"
+        "nov-2026-lunch-cost",
+        "nut-roll"
       ]
     },
     "lunchMenuSource": {
@@ -18781,8 +18805,8 @@
     }
   ],
   "uploadedNotices": {
-    "count": 31,
-    "latestIntegratedAt": "2026-11-03T15:00:00.000Z",
+    "count": 32,
+    "latestIntegratedAt": "2026-11-15T23:09:03.109Z",
     "documents": [
       {
         "id": "dress-down-2026-09-25",
@@ -18938,6 +18962,11 @@
         "id": "nov-2026-lunch-menu-parent-photo",
         "label": "Assumption BVM November 2026 lunch menu",
         "receivedAt": "2026-11-03"
+      },
+      {
+        "id": "weekly-planner-2026-11-16-parent-photo",
+        "label": "ABVM weekly planner — Nov. 16–20, 2026 (parent-provided image)",
+        "receivedAt": "2026-11-15"
       }
     ]
   }

@@ -147,14 +147,23 @@ test("curriculum turnover cannot defeat the 30 percent runtime budget with retir
   const reviewSourceHash=source.pack.sourceHash;
   envelope.pack.contentPipeline.skills=envelope.pack.contentPipeline.skills.filter(skill=>!retiredIds.has(skill.id));
   envelope.pack.contentPipeline.questions=current;
-  envelope.pack.recentReviewPipeline.skills=retiredSkills.map(skill=>({
-    ...skill,reviewVerifiedAt,reviewExpiresAt,reviewSourceHash,
-  }));
-  envelope.pack.recentReviewPipeline.questions=retired.map(question=>({
-    ...question,reviewVerifiedAt,reviewExpiresAt,reviewSourceHash,
-  }));
+  // A real curriculum turnover retains the existing 14-day review bank
+  // and appends retired material; replacing the whole bank makes a tiny
+  // nonrepresentative synthetic envelope that artificially fails the budget.
+  const priorSkills=structuredClone(envelope.pack.recentReviewPipeline.skills||[]);
+  const priorQuestions=structuredClone(envelope.pack.recentReviewPipeline.questions);
+  envelope.pack.recentReviewPipeline.skills=[
+    ...priorSkills,
+    ...retiredSkills.map(skill=>({...skill,reviewVerifiedAt,reviewExpiresAt,reviewSourceHash})),
+  ];
+  envelope.pack.recentReviewPipeline.questions=[
+    ...priorQuestions,
+    ...retired.map(question=>({...question,reviewVerifiedAt,reviewExpiresAt,reviewSourceHash})),
+  ];
   const packed=buildRuntimePack(envelope);
-  assert.equal(packed.pack.recentReviewPipeline.questions.length,retired.length);
+  assert.equal(packed.pack.recentReviewPipeline.questions.length,priorQuestions.length+retired.length);
+  assert.deepEqual(packed.pack.recentReviewPipeline.questions.slice(0,priorQuestions.length).map(q=>q.id),
+    priorQuestions.map(q=>q.id),'previous verified review questions must survive turnover');
   assert.equal(packed.pack.contentPipeline.questions.length,current.length);
   const fullBytes=Buffer.byteLength(JSON.stringify(envelope),"utf8");
   const runtimeBytes=Buffer.byteLength(runtimePackJson(envelope),"utf8");
