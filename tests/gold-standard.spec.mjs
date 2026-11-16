@@ -98,7 +98,10 @@ test("requested polish is present",async({page})=>{
   await openTab(page,"Study");
   await expectCurrentStudyGameTiles(page);
   await page.locator('[data-open-prep]').click();await expect(page.locator('[data-test-single]')).toBeVisible();
-  await page.locator('[data-close-prep]').click();
+  // Both the header Back and optional generic Reading CTA close Test Prep.
+  // Target the header action explicitly when checking the primary navigation.
+  await expect(page.locator('.prep-back[data-close-prep]')).toHaveCount(1);
+  await page.locator('.prep-back[data-close-prep]').click();
   await openNoteSubject(page,null,'saved');
   await expect(page.locator('[data-note-subject]:not([hidden]) .study-note-topic').first()).toBeVisible();
   await expect(page.locator('[data-learning-panel],.study-games-cta')).toHaveCount(0);

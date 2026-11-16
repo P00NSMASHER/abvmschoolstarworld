@@ -91,6 +91,12 @@ export function buildRuntimePack(envelope){
   });
   const skills=runtime.pack.contentPipeline.skills;
   if(!Array.isArray(skills))throw new Error("Full study pack is missing contentPipeline.skills");
+  // Keep all reviewed-source and curriculum QA evidence in the governed full
+  // pack. The mobile app consumes the already-integrated dates, notices, notes,
+  // skills and questions; it does not read these duplicate intake/audit indexes.
+  delete runtime.uploadedNotices;
+  for(const key of ["coverage","qa","sourcePolicy","studyNotesBySubject"])
+    delete runtime.pack.contentPipeline[key];
   // Audit lineage and assessment contracts stay intact in the governed full pack.
   // Phone/tablet clients use the skill ID, label and teaching notes, not hashes
   // or raw teacher evidence repeated once for every skill in the runtime pack.
