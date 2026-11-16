@@ -14,14 +14,14 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-11-16T17:29:33.364Z",
-  "sourceCapturedAt": "2026-11-16T17:29:33.364Z",
+  "sourceLastSeenAt": "2026-11-16T21:06:02.169Z",
+  "sourceCapturedAt": "2026-11-16T21:06:02.169Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
-    "sourceHash": "teacher-pages-585ea4e8f608761dc1ad",
-    "sourceCapturedAt": "2026-11-16T17:29:33.364Z",
-    "generatedAt": "2026-11-16T17:29:33.364Z",
+    "sourceHash": "teacher-pages-f3ff74ca2acf37f53052",
+    "sourceCapturedAt": "2026-11-16T21:06:02.169Z",
+    "generatedAt": "2026-11-16T21:06:02.169Z",
     "weekLabel": "Week of November 16, 2026",
     "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity” and Math “Page 59”. Upcoming tests include Religion on Tuesday, Nov. 17, Math lessons 1-5 (2 digiit with & without regrouping) on Tuesday, Nov. 17, Trimester 1 Math assessment on Wednesday, Nov. 18, and Grammar (compound words) on Thursday, Nov. 19. 34 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
@@ -44,7 +44,10 @@
       {
         "subject": "Spelling / Handwriting",
         "topics": [
-          "Friday, Nov. 20 test focus: long a"
+          "Friday, Nov. 20 test focus: long a",
+          "Friday, Dec. 4 test focus: long i",
+          "Friday, Dec. 11 test focus: long o",
+          "Friday, Dec. 18 test focus: long e"
         ],
         "studyNotes": [
           "Skill: 3 letter blends",
@@ -56,7 +59,9 @@
           "Some words start with three consonants whose individual sounds can still be heard, such as str in street, spl in splash, and spr in spring.",
           "A blend keeps the consonant sounds together. A digraph, such as sh in ship, makes one new sound instead.",
           "Tap the first three consonant sounds separately, then blend them smoothly into the whole word.",
-          "These examples and practice questions are original Grade 2 teaching, not a teacher spelling list or copied test."
+          "These examples and practice questions are original Grade 2 teaching, not a teacher spelling list or copied test.",
+          "Long o sounds like the letter name in go, home, and boat. These are original examples, not an official spelling list.",
+          "If a teacher test label also says “short” without naming the vowel, do not guess which short-vowel pattern is included."
         ]
       },
       {
@@ -1244,6 +1249,12 @@
         "source": "uploaded-notice"
       },
       {
+        "date": "Friday, Dec. 4",
+        "label": "Spelling (long i) / Handwriting",
+        "kind": "test",
+        "source": "teacher-tests"
+      },
+      {
         "date": "Tuesday, Dec. 8",
         "label": "Eucharistic Consecration during school Mass — Immaculate Conception",
         "kind": "school event",
@@ -1270,6 +1281,12 @@
         "kind": "school event",
         "sourceDocument": "hsa-melody-message-cheer-dec-2026",
         "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Dec. 11",
+        "label": "Spelling (long o) / Handwriting",
+        "kind": "test",
+        "source": "teacher-tests"
       },
       {
         "date": "Monday, Dec. 14",
@@ -1303,6 +1320,12 @@
         "kind": "school event",
         "sourceDocument": "hsa-melody-message-cheer-dec-2026",
         "source": "uploaded-notice"
+      },
+      {
+        "date": "Friday, Dec. 18",
+        "label": "Spelling (long e) / Handwriting",
+        "kind": "test",
+        "source": "teacher-tests"
       },
       {
         "label": "Christmas Party",
@@ -1766,7 +1789,7 @@
       "Picture backgrounds: 1 Universe, 2 Pink Mist, 3 Fall Leaves, 4 Traditional, 5 School Spirit, 6 Patriotic, 7 Dinosaur, 8 Pastel, 9 Bookcase, 10 Blue Brush, 11 Laser. Backgrounds 1, 2, and 11 are marked NEW.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
-    "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+    "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
     "uploadedNoticeHash": "uploaded-notices-7165922c19535ee87ca7",
     "uploadedNoticeTopics": {
       "reminders": [
@@ -1829,8 +1852,8 @@
     "lunchMenuSource": {
       "status": "current-week",
       "retrievalState": "verified",
-      "checkedAt": "2026-11-16T17:29:33.364Z",
-      "lastAttemptAt": "2026-11-16T17:29:33.364Z",
+      "checkedAt": "2026-11-16T21:06:02.169Z",
+      "lastAttemptAt": "2026-11-16T21:06:02.169Z",
       "provider": "Saint Clair Area School District",
       "school": "Assumption BVM School",
       "feedUrl": "https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu",
@@ -1847,7 +1870,7 @@
           "contentHash": "a5d25beb5cbd34522ce4645172ab4efce1d041aab7fcc33521f3433c5cd0b178",
           "proofMode": "reviewed-notice",
           "reviewedAt": "2026-11-03T15:00:00.000Z",
-          "checkedAt": "2026-11-16T17:29:33.364Z",
+          "checkedAt": "2026-11-16T21:06:02.169Z",
           "state": "reviewed-notice"
         }
       ],
@@ -2572,13 +2595,13 @@
         "sourceId": "abvm-2026-11-parent-school-menu"
       }
     ],
-    "lunchMenuHash": "190ff67ca6e1edb9316c7772d0348cb916f6959dac1d5d04edc225907cc68fcf",
+    "lunchMenuHash": "132f295b30ea39b6803036330014467fcd6146fb5e595deefe38740d94c5a005",
     "contentPipeline": {
       "schemaVersion": 2,
       "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-      "generatedAt": "2026-11-16T17:29:33.364Z",
-      "sourceHash": "teacher-pages-585ea4e8f608761dc1ad",
-      "bankFingerprint": "31687300",
+      "generatedAt": "2026-11-16T21:06:02.169Z",
+      "sourceHash": "teacher-pages-f3ff74ca2acf37f53052",
+      "bankFingerprint": "16ee667b",
       "lifecycleStage": "QA_PASSED",
       "safetyState": "SAFE_PARTIAL",
       "sourcePolicy": {
@@ -2612,8 +2635,8 @@
             "quality": "page-exact",
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
-            "sourceCaptureHash": "1211ca7be589a97c2edc4cd44f0237f3e6133fb6d42604f9be7465df1650b510",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCaptureHash": "680b39a654412b7cb01d2ad290005bc3b88c18d3ddf4901b45bfc4f0b270bfc3",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:fb4359ce06f3c4fc0abd5df31ffbf8369681f386c331cc216142887868266c0e",
             "matchedEvidence": [
               "Friday Nov. 20: Spelling (long a)/Handwriting"
@@ -2654,7 +2677,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "b252c0bb178b542e7e79f4eb43350965c94da8fba05f47126309239a3fd01316",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:2c785938da9c57eeba5c8fc2e3c0b93d8e624b4ee9699ae537d4a50d9d766e8a",
             "matchedEvidence": [
               "Phonics: soft c and soft g"
@@ -2692,7 +2715,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "b252c0bb178b542e7e79f4eb43350965c94da8fba05f47126309239a3fd01316",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:9327bc96e01a2ce259a85ab4a81626a6e95cd9f2ff3a77c1e75e99f78a8b897c",
             "matchedEvidence": [
               "Reading Comprehension: predictions; character traits; plot/sequence of events"
@@ -2722,10 +2745,38 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "6cdf08cfc29bd19dadf938ac5318ce9e53c04974c95f1419dae32debb9c722be",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:af8b39cd672c810e0b390ed932fd521a989cb2736ae84f8ee8c2ceeacf5513a7",
             "matchedEvidence": [
               "Skill: 3 letter blends"
+            ]
+          }
+        },
+        {
+          "id": "long-o",
+          "subject": "Spelling / Handwriting",
+          "label": "Long o sound (original practice, not teacher word list)",
+          "evidence": [
+            "long o"
+          ],
+          "studyNotes": [
+            "Long o sounds like the letter name in go, home, and boat. These are original examples, not an official spelling list.",
+            "If a teacher test label also says “short” without naming the vowel, do not guess which short-vowel pattern is included."
+          ],
+          "standards": [
+            "CCSS.RF.2.3"
+          ],
+          "domain": "Phonics and word recognition",
+          "sourceBacked": true,
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "680b39a654412b7cb01d2ad290005bc3b88c18d3ddf4901b45bfc4f0b270bfc3",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
+            "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
+            "matchedEvidence": [
+              "Friday Dec. 11: Spelling (long o)/Handwriting"
             ]
           }
         }
@@ -2806,6 +2857,18 @@
           "reason": "Only the story title is verified here; the pipeline does not invent plot, character, or comprehension facts without passage-level evidence."
         },
         {
+          "topic": "long i",
+          "subject": "Spelling / Handwriting",
+          "status": "GENERATOR_UNSUPPORTED",
+          "reason": "The verified teacher source names this instructional skill, but the current deterministic generator does not yet have an approved practice template for it."
+        },
+        {
+          "topic": "long e",
+          "subject": "Spelling / Handwriting",
+          "status": "GENERATOR_UNSUPPORTED",
+          "reason": "The verified teacher source names this instructional skill, but the current deterministic generator does not yet have an approved practice template for it."
+        },
+        {
           "topic": "Math lessons 1-5 (2 digiit with & without regrouping)",
           "subject": "Math",
           "status": "GENERATOR_UNSUPPORTED",
@@ -2834,6 +2897,12 @@
           "subject": "Spelling / Handwriting",
           "status": "COVERED",
           "skillId": "three-letter-blends"
+        },
+        {
+          "topic": "Long o sound (original practice, not teacher word list)",
+          "subject": "Spelling / Handwriting",
+          "status": "COVERED",
+          "skillId": "long-o"
         }
       ],
       "studyNotesBySubject": {
@@ -2845,7 +2914,9 @@
           "Some words start with three consonants whose individual sounds can still be heard, such as str in street, spl in splash, and spr in spring.",
           "A blend keeps the consonant sounds together. A digraph, such as sh in ship, makes one new sound instead.",
           "Tap the first three consonant sounds separately, then blend them smoothly into the whole word.",
-          "These examples and practice questions are original Grade 2 teaching, not a teacher spelling list or copied test."
+          "These examples and practice questions are original Grade 2 teaching, not a teacher spelling list or copied test.",
+          "Long o sounds like the letter name in go, home, and boat. These are original examples, not an official spelling list.",
+          "If a teacher test label also says “short” without naming the vowel, do not guess which short-vowel pattern is included."
         ],
         "Reading / ELA": [
           "Sequence means putting events in the order they happen; beginning, middle, and end describe story order."
@@ -2924,8 +2995,8 @@
             "quality": "page-exact",
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
-            "sourceCaptureHash": "1211ca7be589a97c2edc4cd44f0237f3e6133fb6d42604f9be7465df1650b510",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCaptureHash": "680b39a654412b7cb01d2ad290005bc3b88c18d3ddf4901b45bfc4f0b270bfc3",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:fb4359ce06f3c4fc0abd5df31ffbf8369681f386c331cc216142887868266c0e",
             "matchedEvidence": [
               "Friday Nov. 20: Spelling (long a)/Handwriting"
@@ -3006,7 +3077,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "b252c0bb178b542e7e79f4eb43350965c94da8fba05f47126309239a3fd01316",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:2c785938da9c57eeba5c8fc2e3c0b93d8e624b4ee9699ae537d4a50d9d766e8a",
             "matchedEvidence": [
               "Phonics: soft c and soft g"
@@ -3086,7 +3157,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "b252c0bb178b542e7e79f4eb43350965c94da8fba05f47126309239a3fd01316",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:9327bc96e01a2ce259a85ab4a81626a6e95cd9f2ff3a77c1e75e99f78a8b897c",
             "matchedEvidence": [
               "Reading Comprehension: predictions; character traits; plot/sequence of events"
@@ -3166,10 +3237,90 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "6cdf08cfc29bd19dadf938ac5318ce9e53c04974c95f1419dae32debb9c722be",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:af8b39cd672c810e0b390ed932fd521a989cb2736ae84f8ee8c2ceeacf5513a7",
             "matchedEvidence": [
               "Skill: 3 letter blends"
+            ]
+          }
+        },
+        {
+          "id": "auto-long-o-rope-bc34c9",
+          "templateId": "grade2-long-o-v1",
+          "subject": "Spelling / Handwriting",
+          "skill": "long-o",
+          "assessedSkillIds": [
+            "long-o"
+          ],
+          "prompt": "Which word has the long o sound, like the o sound in home?",
+          "choices": [
+            "Hop",
+            "Rope",
+            "Hot"
+          ],
+          "answer": "Rope",
+          "explanation": "Rope has the long o sound; hop and hot use short o.",
+          "hint": "Say the words slowly and compare the vowel with home.",
+          "sourceFact": "Verified Grade 2 skill: Long o sound (original practice, not teacher word list)",
+          "sourceEvidence": [
+            "long o"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.RF.2.3"
+          ],
+          "domain": "Phonics and word recognition",
+          "dok": 1,
+          "cognitiveDemand": "recall-and-fluency",
+          "difficulty": 2,
+          "questionType": "direct",
+          "choiceDiagnostics": {
+            "Hop": {
+              "misconception": "long-o-distractor",
+              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
+            },
+            "Hot": {
+              "misconception": "long-o-distractor",
+              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "Hop": 0,
+              "Hot": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "long-o"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "ceb19ced",
+          "variantFingerprint": "2336b628",
+          "presentationFingerprint": "73c201e7",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "680b39a654412b7cb01d2ad290005bc3b88c18d3ddf4901b45bfc4f0b270bfc3",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
+            "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
+            "matchedEvidence": [
+              "Friday Dec. 11: Spelling (long o)/Handwriting"
             ]
           }
         },
@@ -3184,8 +3335,8 @@
           "prompt": "Which pair of words both use the short a sound?",
           "choices": [
             "cake and game",
-            "cat and map",
-            "late and cap"
+            "late and cap",
+            "cat and map"
           ],
           "answer": "cat and map",
           "explanation": "Both cat and map use the short a sound.",
@@ -3240,13 +3391,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "1774536a",
           "variantFingerprint": "a42833d6",
-          "presentationFingerprint": "d3f47676",
+          "presentationFingerprint": "4797ccfc",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
-            "sourceCaptureHash": "1211ca7be589a97c2edc4cd44f0237f3e6133fb6d42604f9be7465df1650b510",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCaptureHash": "680b39a654412b7cb01d2ad290005bc3b88c18d3ddf4901b45bfc4f0b270bfc3",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:fb4359ce06f3c4fc0abd5df31ffbf8369681f386c331cc216142887868266c0e",
             "matchedEvidence": [
               "Friday Nov. 20: Spelling (long a)/Handwriting"
@@ -3263,9 +3414,9 @@
           ],
           "prompt": "Why does the a in “game” have a long sound?",
           "choices": [
+            "The final e helps the a say its name.",
             "The g makes every vowel long.",
-            "Every four-letter word has a long vowel.",
-            "The final e helps the a say its name."
+            "Every four-letter word has a long vowel."
           ],
           "answer": "The final e helps the a say its name.",
           "explanation": "Game follows the a_e pattern in which the final e changes the a sound.",
@@ -3320,13 +3471,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "edf51b1c",
           "variantFingerprint": "d528452a",
-          "presentationFingerprint": "cff31f32",
+          "presentationFingerprint": "bc362802",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
-            "sourceCaptureHash": "1211ca7be589a97c2edc4cd44f0237f3e6133fb6d42604f9be7465df1650b510",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCaptureHash": "680b39a654412b7cb01d2ad290005bc3b88c18d3ddf4901b45bfc4f0b270bfc3",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:fb4359ce06f3c4fc0abd5df31ffbf8369681f386c331cc216142887868266c0e",
             "matchedEvidence": [
               "Friday Nov. 20: Spelling (long a)/Handwriting"
@@ -3343,8 +3494,8 @@
           ],
           "prompt": "Which word has the short a sound?",
           "choices": [
-            "cap",
             "cake",
+            "cap",
             "late"
           ],
           "answer": "cap",
@@ -3400,13 +3551,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "e090abf4",
           "variantFingerprint": "089e3f60",
-          "presentationFingerprint": "837970f3",
+          "presentationFingerprint": "526a09ff",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
-            "sourceCaptureHash": "1211ca7be589a97c2edc4cd44f0237f3e6133fb6d42604f9be7465df1650b510",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCaptureHash": "680b39a654412b7cb01d2ad290005bc3b88c18d3ddf4901b45bfc4f0b270bfc3",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:fb4359ce06f3c4fc0abd5df31ffbf8369681f386c331cc216142887868266c0e",
             "matchedEvidence": [
               "Friday Nov. 20: Spelling (long a)/Handwriting"
@@ -3424,8 +3575,8 @@
           "prompt": "Which word uses the a_e pattern to make long a?",
           "choices": [
             "cat",
-            "gate",
-            "map"
+            "map",
+            "gate"
           ],
           "answer": "gate",
           "explanation": "Gate has a consonant between a and final e, making the a long.",
@@ -3480,13 +3631,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "850f7e0d",
           "variantFingerprint": "934fa41b",
-          "presentationFingerprint": "ddebdd28",
+          "presentationFingerprint": "bfff8384",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
-            "sourceCaptureHash": "1211ca7be589a97c2edc4cd44f0237f3e6133fb6d42604f9be7465df1650b510",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCaptureHash": "680b39a654412b7cb01d2ad290005bc3b88c18d3ddf4901b45bfc4f0b270bfc3",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:fb4359ce06f3c4fc0abd5df31ffbf8369681f386c331cc216142887868266c0e",
             "matchedEvidence": [
               "Friday Nov. 20: Spelling (long a)/Handwriting"
@@ -3503,9 +3654,9 @@
           ],
           "prompt": "Which pair has one short-a word followed by one long-a word?",
           "choices": [
+            "pan — plane",
             "game — lake",
-            "cat — map",
-            "pan — plane"
+            "cat — map"
           ],
           "answer": "pan — plane",
           "explanation": "Pan has short a; plane has long a.",
@@ -3560,13 +3711,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "03937c5a",
           "variantFingerprint": "90e264db",
-          "presentationFingerprint": "254662a5",
+          "presentationFingerprint": "6ddcf411",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
-            "sourceCaptureHash": "1211ca7be589a97c2edc4cd44f0237f3e6133fb6d42604f9be7465df1650b510",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCaptureHash": "680b39a654412b7cb01d2ad290005bc3b88c18d3ddf4901b45bfc4f0b270bfc3",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:fb4359ce06f3c4fc0abd5df31ffbf8369681f386c331cc216142887868266c0e",
             "matchedEvidence": [
               "Friday Nov. 20: Spelling (long a)/Handwriting"
@@ -3583,8 +3734,8 @@
           ],
           "prompt": "Why does “late” have a different a sound from “lat”?",
           "choices": [
-            "The final e changes the a to its long sound.",
             "The l always makes a long vowel.",
+            "The final e changes the a to its long sound.",
             "The t changes a into e."
           ],
           "answer": "The final e changes the a to its long sound.",
@@ -3640,13 +3791,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "9e37c399",
           "variantFingerprint": "2ca9ff5f",
-          "presentationFingerprint": "27e6ec7b",
+          "presentationFingerprint": "597ef1bb",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
-            "sourceCaptureHash": "1211ca7be589a97c2edc4cd44f0237f3e6133fb6d42604f9be7465df1650b510",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCaptureHash": "680b39a654412b7cb01d2ad290005bc3b88c18d3ddf4901b45bfc4f0b270bfc3",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:fb4359ce06f3c4fc0abd5df31ffbf8369681f386c331cc216142887868266c0e",
             "matchedEvidence": [
               "Friday Nov. 20: Spelling (long a)/Handwriting"
@@ -3664,8 +3815,8 @@
           "prompt": "Which explanation correctly compares “map” and “made”?",
           "choices": [
             "Both words have short a.",
-            "Map has short a; made has long a because of final e.",
-            "Made has short a because it has four letters."
+            "Made has short a because it has four letters.",
+            "Map has short a; made has long a because of final e."
           ],
           "answer": "Map has short a; made has long a because of final e.",
           "explanation": "The final e in made changes the vowel sound.",
@@ -3720,13 +3871,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "d1b00c7e",
           "variantFingerprint": "0fbe9aba",
-          "presentationFingerprint": "bdfceae2",
+          "presentationFingerprint": "e93a7102",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
-            "sourceCaptureHash": "1211ca7be589a97c2edc4cd44f0237f3e6133fb6d42604f9be7465df1650b510",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCaptureHash": "680b39a654412b7cb01d2ad290005bc3b88c18d3ddf4901b45bfc4f0b270bfc3",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:fb4359ce06f3c4fc0abd5df31ffbf8369681f386c331cc216142887868266c0e",
             "matchedEvidence": [
               "Friday Nov. 20: Spelling (long a)/Handwriting"
@@ -3743,9 +3894,9 @@
           ],
           "prompt": "Which word begins with soft g, where g sounds like /j/?",
           "choices": [
+            "gem",
             "gate",
-            "gum",
-            "gem"
+            "gum"
           ],
           "answer": "gem",
           "explanation": "In gem, g comes before e and has the soft /j/ sound.",
@@ -3801,13 +3952,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "3ffb1d1e",
           "variantFingerprint": "b5883f47",
-          "presentationFingerprint": "1d0d4166",
+          "presentationFingerprint": "30a20108",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "b252c0bb178b542e7e79f4eb43350965c94da8fba05f47126309239a3fd01316",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:2c785938da9c57eeba5c8fc2e3c0b93d8e624b4ee9699ae537d4a50d9d766e8a",
             "matchedEvidence": [
               "Phonics: soft c and soft g"
@@ -3824,8 +3975,8 @@
           ],
           "prompt": "Why does the c in “cent” have its soft /s/ sound?",
           "choices": [
-            "The c comes before e, where c often sounds like /s/.",
             "Every c always sounds like /s/.",
+            "The c comes before e, where c often sounds like /s/.",
             "The final t changes c into /s/."
           ],
           "answer": "The c comes before e, where c often sounds like /s/.",
@@ -3882,13 +4033,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "98232ba3",
           "variantFingerprint": "bb215626",
-          "presentationFingerprint": "d15326a5",
+          "presentationFingerprint": "c1d67213",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "b252c0bb178b542e7e79f4eb43350965c94da8fba05f47126309239a3fd01316",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:2c785938da9c57eeba5c8fc2e3c0b93d8e624b4ee9699ae537d4a50d9d766e8a",
             "matchedEvidence": [
               "Phonics: soft c and soft g"
@@ -3906,8 +4057,8 @@
           "prompt": "Which sequence has one clear cause-and-effect order?",
           "choices": [
             "The water freezes → put water in a tray → place it in a freezer",
-            "Put water in an ice tray → place it in a freezer → the water freezes",
-            "Place an empty tray in a freezer → the water freezes → pour in water"
+            "Place an empty tray in a freezer → the water freezes → pour in water",
+            "Put water in an ice tray → place it in a freezer → the water freezes"
           ],
           "answer": "Put water in an ice tray → place it in a freezer → the water freezes",
           "explanation": "The water must be in the tray before it can freeze there.",
@@ -3962,13 +4113,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "43376e82",
           "variantFingerprint": "36a5bd2b",
-          "presentationFingerprint": "77188596",
+          "presentationFingerprint": "fe39b60a",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "b252c0bb178b542e7e79f4eb43350965c94da8fba05f47126309239a3fd01316",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:9327bc96e01a2ce259a85ab4a81626a6e95cd9f2ff3a77c1e75e99f78a8b897c",
             "matchedEvidence": [
               "Reading Comprehension: predictions; character traits; plot/sequence of events"
@@ -3985,9 +4136,9 @@
           ],
           "prompt": "Why is “put on socks → put on shoes → tie the laces” a stronger sequence than “put on shoes → put on socks → tie the laces”?",
           "choices": [
+            "The steps have a necessary order because socks go on before shoes.",
             "The first sequence has more words.",
-            "Any order works exactly the same.",
-            "The steps have a necessary order because socks go on before shoes."
+            "Any order works exactly the same."
           ],
           "answer": "The steps have a necessary order because socks go on before shoes.",
           "explanation": "A strong sequence uses events whose order is supported by a real dependency.",
@@ -4042,13 +4193,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "68c38a50",
           "variantFingerprint": "8cd4aafa",
-          "presentationFingerprint": "29bb2aad",
+          "presentationFingerprint": "912df8c9",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "b252c0bb178b542e7e79f4eb43350965c94da8fba05f47126309239a3fd01316",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:9327bc96e01a2ce259a85ab4a81626a6e95cd9f2ff3a77c1e75e99f78a8b897c",
             "matchedEvidence": [
               "Reading Comprehension: predictions; character traits; plot/sequence of events"
@@ -4065,8 +4216,8 @@
           ],
           "prompt": "Which three letters begin the word splash?",
           "choices": [
-            "spl",
             "sp",
+            "spl",
             "sh"
           ],
           "answer": "spl",
@@ -4122,13 +4273,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "7ae6359c",
           "variantFingerprint": "37bf2de5",
-          "presentationFingerprint": "463a2038",
+          "presentationFingerprint": "81bebace",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "6cdf08cfc29bd19dadf938ac5318ce9e53c04974c95f1419dae32debb9c722be",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:af8b39cd672c810e0b390ed932fd521a989cb2736ae84f8ee8c2ceeacf5513a7",
             "matchedEvidence": [
               "Skill: 3 letter blends"
@@ -4146,8 +4297,8 @@
           "prompt": "Which word begins with three consonant sounds blended together?",
           "choices": [
             "snake",
-            "sprint",
-            "chime"
+            "chime",
+            "sprint"
           ],
           "answer": "sprint",
           "explanation": "Sprint begins with spr; snake begins with sn and chime begins with a digraph.",
@@ -4202,13 +4353,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "32418713",
           "variantFingerprint": "57b7228a",
-          "presentationFingerprint": "468ae045",
+          "presentationFingerprint": "47fba691",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "6cdf08cfc29bd19dadf938ac5318ce9e53c04974c95f1419dae32debb9c722be",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:af8b39cd672c810e0b390ed932fd521a989cb2736ae84f8ee8c2ceeacf5513a7",
             "matchedEvidence": [
               "Skill: 3 letter blends"
@@ -4225,9 +4376,9 @@
           ],
           "prompt": "Read “The strong wind blew.” Which word starts with a three-letter blend?",
           "choices": [
+            "strong",
             "wind",
-            "blew",
-            "strong"
+            "blew"
           ],
           "answer": "strong",
           "explanation": "Strong begins with str. The other words do not start with three-consonant blends.",
@@ -4282,13 +4433,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "c3c1c8e3",
           "variantFingerprint": "b8a2334e",
-          "presentationFingerprint": "35c6a82a",
+          "presentationFingerprint": "1b5ce81e",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "6cdf08cfc29bd19dadf938ac5318ce9e53c04974c95f1419dae32debb9c722be",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:af8b39cd672c810e0b390ed932fd521a989cb2736ae84f8ee8c2ceeacf5513a7",
             "matchedEvidence": [
               "Skill: 3 letter blends"
@@ -4305,8 +4456,8 @@
           ],
           "prompt": "Which of these words starts with a three-consonant blend?",
           "choices": [
-            "scrub",
             "slip",
+            "scrub",
             "clap"
           ],
           "answer": "scrub",
@@ -4362,13 +4513,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "012b193c",
           "variantFingerprint": "e0826b3f",
-          "presentationFingerprint": "637f2194",
+          "presentationFingerprint": "1e72459a",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "6cdf08cfc29bd19dadf938ac5318ce9e53c04974c95f1419dae32debb9c722be",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:af8b39cd672c810e0b390ed932fd521a989cb2736ae84f8ee8c2ceeacf5513a7",
             "matchedEvidence": [
               "Skill: 3 letter blends"
@@ -4386,8 +4537,8 @@
           "prompt": "Which word completes “The stone made a big ___” and starts with a three-letter blend?",
           "choices": [
             "sound",
-            "splash",
-            "ripple"
+            "ripple",
+            "splash"
           ],
           "answer": "splash",
           "explanation": "Splash completes the sentence and begins with spl, a three-letter blend.",
@@ -4442,13 +4593,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "e4faa689",
           "variantFingerprint": "4d492b53",
-          "presentationFingerprint": "fc99ddd3",
+          "presentationFingerprint": "a9a6a761",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "6cdf08cfc29bd19dadf938ac5318ce9e53c04974c95f1419dae32debb9c722be",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:af8b39cd672c810e0b390ed932fd521a989cb2736ae84f8ee8c2ceeacf5513a7",
             "matchedEvidence": [
               "Skill: 3 letter blends"
@@ -4465,9 +4616,9 @@
           ],
           "prompt": "Why is the beginning of stripe a consonant blend rather than one new sound?",
           "choices": [
+            "You can still hear three consonant sounds.",
             "All the consonants are silent.",
-            "The consonants turn into vowels.",
-            "You can still hear three consonant sounds."
+            "The consonants turn into vowels."
           ],
           "answer": "You can still hear three consonant sounds.",
           "explanation": "The letters s, t, and r keep their individual sounds when blended in stripe.",
@@ -4522,13 +4673,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "7b617c7f",
           "variantFingerprint": "af3722da",
-          "presentationFingerprint": "9a79c3f6",
+          "presentationFingerprint": "a9524188",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "6cdf08cfc29bd19dadf938ac5318ce9e53c04974c95f1419dae32debb9c722be",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:af8b39cd672c810e0b390ed932fd521a989cb2736ae84f8ee8c2ceeacf5513a7",
             "matchedEvidence": [
               "Skill: 3 letter blends"
@@ -4545,8 +4696,8 @@
           ],
           "prompt": "A student marks only sp as the whole beginning blend in spring. What did they miss?",
           "choices": [
-            "The r joins the first two consonants.",
             "The g belongs at the start.",
+            "The r joins the first two consonants.",
             "The i is another consonant."
           ],
           "answer": "The r joins the first two consonants.",
@@ -4602,48 +4753,609 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "205a9ca2",
           "variantFingerprint": "16a6f8ee",
-          "presentationFingerprint": "354e7676",
+          "presentationFingerprint": "63b3c42e",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "6cdf08cfc29bd19dadf938ac5318ce9e53c04974c95f1419dae32debb9c722be",
-            "sourceCheckedAt": "2026-11-16T17:29:33.364Z",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
             "evidenceExcerptHash": "sha256:af8b39cd672c810e0b390ed932fd521a989cb2736ae84f8ee8c2ceeacf5513a7",
             "matchedEvidence": [
               "Skill: 3 letter blends"
+            ]
+          }
+        },
+        {
+          "id": "auto-long-o-goat-f3e8a7",
+          "templateId": "grade2-long-o-v1",
+          "subject": "Spelling / Handwriting",
+          "skill": "long-o",
+          "assessedSkillIds": [
+            "long-o"
+          ],
+          "prompt": "Which word has the same long o sound as the word snow?",
+          "choices": [
+            "Sock",
+            "Stop",
+            "Goat"
+          ],
+          "answer": "Goat",
+          "explanation": "Goat and snow both have the long o sound.",
+          "hint": "Listen for the o that sounds like its letter name.",
+          "sourceFact": "Verified Grade 2 skill: Long o sound (original practice, not teacher word list)",
+          "sourceEvidence": [
+            "long o"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.RF.2.3"
+          ],
+          "domain": "Phonics and word recognition",
+          "dok": 1,
+          "cognitiveDemand": "recall-and-fluency",
+          "difficulty": 2,
+          "questionType": "direct",
+          "choiceDiagnostics": {
+            "Sock": {
+              "misconception": "long-o-distractor",
+              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
+            },
+            "Stop": {
+              "misconception": "long-o-distractor",
+              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "Sock": 0,
+              "Stop": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "long-o"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "9ee49ea7",
+          "variantFingerprint": "b4ef7e68",
+          "presentationFingerprint": "ba8da616",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "680b39a654412b7cb01d2ad290005bc3b88c18d3ddf4901b45bfc4f0b270bfc3",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
+            "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
+            "matchedEvidence": [
+              "Friday Dec. 11: Spelling (long o)/Handwriting"
+            ]
+          }
+        },
+        {
+          "id": "auto-long-o-box-fce14d",
+          "templateId": "grade2-long-o-v1",
+          "subject": "Spelling / Handwriting",
+          "skill": "long-o",
+          "assessedSkillIds": [
+            "long-o"
+          ],
+          "prompt": "Which word has a short o sound instead of a long o sound?",
+          "choices": [
+            "Box",
+            "Cone",
+            "Rose"
+          ],
+          "answer": "Box",
+          "explanation": "Box has short o, while cone and rose have long o.",
+          "hint": "Compare each middle vowel with the sound in hot.",
+          "sourceFact": "Verified Grade 2 skill: Long o sound (original practice, not teacher word list)",
+          "sourceEvidence": [
+            "long o"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.RF.2.3"
+          ],
+          "domain": "Phonics and word recognition",
+          "dok": 1,
+          "cognitiveDemand": "recall-and-fluency",
+          "difficulty": 2,
+          "questionType": "direct",
+          "choiceDiagnostics": {
+            "Cone": {
+              "misconception": "long-o-distractor",
+              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
+            },
+            "Rose": {
+              "misconception": "long-o-distractor",
+              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "Cone": 0,
+              "Rose": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "long-o"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "e0b35b99",
+          "variantFingerprint": "ba9181b0",
+          "presentationFingerprint": "a8bd90cc",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "680b39a654412b7cb01d2ad290005bc3b88c18d3ddf4901b45bfc4f0b270bfc3",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
+            "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
+            "matchedEvidence": [
+              "Friday Dec. 11: Spelling (long o)/Handwriting"
+            ]
+          }
+        },
+        {
+          "id": "auto-long-o-boat-1648c0",
+          "templateId": "grade2-long-o-v1",
+          "subject": "Spelling / Handwriting",
+          "skill": "long-o",
+          "assessedSkillIds": [
+            "long-o"
+          ],
+          "prompt": "Read the sentence: The boat floats in the pond. Which word has a long o sound?",
+          "choices": [
+            "Pond",
+            "Boat",
+            "In"
+          ],
+          "answer": "Boat",
+          "explanation": "Boat has long o spelled oa; pond has short o.",
+          "hint": "Read each word aloud and listen for the long vowel.",
+          "sourceFact": "Verified Grade 2 skill: Long o sound (original practice, not teacher word list)",
+          "sourceEvidence": [
+            "long o"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.RF.2.3"
+          ],
+          "domain": "Phonics and word recognition",
+          "dok": 2,
+          "cognitiveDemand": "skill-and-concept-application",
+          "difficulty": 2,
+          "questionType": "transfer",
+          "choiceDiagnostics": {
+            "Pond": {
+              "misconception": "long-o-distractor",
+              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
+            },
+            "In": {
+              "misconception": "long-o-distractor",
+              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "Pond": 0,
+              "In": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "long-o"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "00d3047e",
+          "variantFingerprint": "f429989f",
+          "presentationFingerprint": "97ab848b",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "680b39a654412b7cb01d2ad290005bc3b88c18d3ddf4901b45bfc4f0b270bfc3",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
+            "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
+            "matchedEvidence": [
+              "Friday Dec. 11: Spelling (long o)/Handwriting"
+            ]
+          }
+        },
+        {
+          "id": "auto-long-o-the-o-changes-from-short-to-long-2feb6c",
+          "templateId": "grade2-long-o-v1",
+          "subject": "Spelling / Handwriting",
+          "skill": "long-o",
+          "assessedSkillIds": [
+            "long-o"
+          ],
+          "prompt": "Add a silent e to the word not to make note. What happens to the vowel sound?",
+          "choices": [
+            "The o stays short.",
+            "The word no longer has an o.",
+            "The o changes from short to long."
+          ],
+          "answer": "The o changes from short to long.",
+          "explanation": "Not has short o; note has long o with a final silent e.",
+          "hint": "Compare the sounds in not and note.",
+          "sourceFact": "Verified Grade 2 skill: Long o sound (original practice, not teacher word list)",
+          "sourceEvidence": [
+            "long o"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.RF.2.3"
+          ],
+          "domain": "Phonics and word recognition",
+          "dok": 2,
+          "cognitiveDemand": "skill-and-concept-application",
+          "difficulty": 2,
+          "questionType": "transfer",
+          "choiceDiagnostics": {
+            "The o stays short.": {
+              "misconception": "long-o-distractor",
+              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
+            },
+            "The word no longer has an o.": {
+              "misconception": "long-o-distractor",
+              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "The o stays short.": 0,
+              "The word no longer has an o.": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "long-o"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "b0bf0ef6",
+          "variantFingerprint": "78e09572",
+          "presentationFingerprint": "53a6d47a",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "680b39a654412b7cb01d2ad290005bc3b88c18d3ddf4901b45bfc4f0b270bfc3",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
+            "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
+            "matchedEvidence": [
+              "Friday Dec. 11: Spelling (long o)/Handwriting"
+            ]
+          }
+        },
+        {
+          "id": "auto-long-o-go-and-rope-e2523d",
+          "templateId": "grade2-long-o-v1",
+          "subject": "Spelling / Handwriting",
+          "skill": "long-o",
+          "assessedSkillIds": [
+            "long-o"
+          ],
+          "prompt": "Which pair of words both have a long o sound?",
+          "choices": [
+            "Go and rope",
+            "Fox and rock",
+            "Hot and home"
+          ],
+          "answer": "Go and rope",
+          "explanation": "Go and rope both have long o; the other pairs include short o.",
+          "hint": "Check both words in each pair.",
+          "sourceFact": "Verified Grade 2 skill: Long o sound (original practice, not teacher word list)",
+          "sourceEvidence": [
+            "long o"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.RF.2.3"
+          ],
+          "domain": "Phonics and word recognition",
+          "dok": 2,
+          "cognitiveDemand": "skill-and-concept-application",
+          "difficulty": 2,
+          "questionType": "transfer",
+          "choiceDiagnostics": {
+            "Fox and rock": {
+              "misconception": "long-o-distractor",
+              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
+            },
+            "Hot and home": {
+              "misconception": "long-o-distractor",
+              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "Fox and rock": 0,
+              "Hot and home": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "long-o"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "51e576c2",
+          "variantFingerprint": "aca031ed",
+          "presentationFingerprint": "6e1e04e0",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "680b39a654412b7cb01d2ad290005bc3b88c18d3ddf4901b45bfc4f0b270bfc3",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
+            "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
+            "matchedEvidence": [
+              "Friday Dec. 11: Spelling (long o)/Handwriting"
+            ]
+          }
+        },
+        {
+          "id": "auto-long-o-they-both-use-the-long-o-vowel-sound-0ab3d0",
+          "templateId": "grade2-long-o-v1",
+          "subject": "Spelling / Handwriting",
+          "skill": "long-o",
+          "assessedSkillIds": [
+            "long-o"
+          ],
+          "prompt": "Why do the words boat and coat belong in the same long o group?",
+          "choices": [
+            "They both have a short o sound.",
+            "They both use the long o vowel sound.",
+            "They both begin with the same letter."
+          ],
+          "answer": "They both use the long o vowel sound.",
+          "explanation": "Boat and coat share the long o sound, spelled oa.",
+          "hint": "Focus on the vowel sound, not just the first letter.",
+          "sourceFact": "Verified Grade 2 skill: Long o sound (original practice, not teacher word list)",
+          "sourceEvidence": [
+            "long o"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.RF.2.3"
+          ],
+          "domain": "Phonics and word recognition",
+          "dok": 3,
+          "cognitiveDemand": "strategic-reasoning",
+          "difficulty": 3,
+          "questionType": "reasoning",
+          "choiceDiagnostics": {
+            "They both have a short o sound.": {
+              "misconception": "long-o-distractor",
+              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
+            },
+            "They both begin with the same letter.": {
+              "misconception": "long-o-distractor",
+              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "They both have a short o sound.": 0,
+              "They both begin with the same letter.": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "long-o"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "034e6706",
+          "variantFingerprint": "7ab96f1b",
+          "presentationFingerprint": "633fdf82",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "680b39a654412b7cb01d2ad290005bc3b88c18d3ddf4901b45bfc4f0b270bfc3",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
+            "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
+            "matchedEvidence": [
+              "Friday Dec. 11: Spelling (long o)/Handwriting"
+            ]
+          }
+        },
+        {
+          "id": "auto-long-o-hop-5c1c1f",
+          "templateId": "grade2-long-o-v1",
+          "subject": "Spelling / Handwriting",
+          "skill": "long-o",
+          "assessedSkillIds": [
+            "long-o"
+          ],
+          "prompt": "A student groups home, hope, and hop as three long o words. Which word should be replaced?",
+          "choices": [
+            "Home",
+            "Hope",
+            "Hop"
+          ],
+          "answer": "Hop",
+          "explanation": "Hop has short o; home and hope have long o.",
+          "hint": "Read each word and find the one with a different o sound.",
+          "sourceFact": "Verified Grade 2 skill: Long o sound (original practice, not teacher word list)",
+          "sourceEvidence": [
+            "long o"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.RF.2.3"
+          ],
+          "domain": "Phonics and word recognition",
+          "dok": 3,
+          "cognitiveDemand": "strategic-reasoning",
+          "difficulty": 3,
+          "questionType": "reasoning",
+          "choiceDiagnostics": {
+            "Home": {
+              "misconception": "long-o-distractor",
+              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
+            },
+            "Hope": {
+              "misconception": "long-o-distractor",
+              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "Home": 0,
+              "Hope": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "long-o"
+            ],
+            "strongestClaim": "practice-performance-on-this-skill",
+            "doesNotClaim": [
+              "standardized-test-score",
+              "global-subject-mastery"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "d27cc33a",
+          "variantFingerprint": "db153971",
+          "presentationFingerprint": "00956bab",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Tests",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+            "sourceCaptureHash": "680b39a654412b7cb01d2ad290005bc3b88c18d3ddf4901b45bfc4f0b270bfc3",
+            "sourceCheckedAt": "2026-11-16T21:06:02.169Z",
+            "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
+            "matchedEvidence": [
+              "Friday Dec. 11: Spelling (long o)/Handwriting"
             ]
           }
         }
       ],
       "qa": {
         "status": "pass",
-        "skillCount": 4,
-        "questionCount": 22,
+        "skillCount": 5,
+        "questionCount": 30,
         "minimumQuestionsPerSkill": 2,
         "duplicatesRemoved": 0,
         "answerPositionCounts": [
-          8,
-          7,
-          7
+          10,
+          10,
+          10
         ],
-        "semanticVariantCount": 22,
+        "semanticVariantCount": 30,
         "maxConsecutiveAnswerPosition": 1,
         "questionTypeCounts": {
-          "direct": 7,
-          "transfer": 8,
-          "reasoning": 7
+          "direct": 10,
+          "transfer": 11,
+          "reasoning": 9
         },
         "dokCounts": {
-          "1": 5,
-          "2": 10,
-          "3": 7
+          "1": 8,
+          "2": 13,
+          "3": 9
         },
         "questionsPerSkill": {
           "long-short-a": 8,
           "soft-c-g": 3,
           "sequence": 3,
-          "three-letter-blends": 8
+          "three-letter-blends": 8,
+          "long-o": 8
         },
         "rejectedCount": 0,
         "rejected": [],
@@ -4652,16 +5364,16 @@
           "Spelling / Handwriting"
         ],
         "sourceInsufficientCount": 3,
-        "unsupportedSkillCount": 6,
-        "pageExactLineageCount": 22,
+        "unsupportedSkillCount": 8,
+        "pageExactLineageCount": 30,
         "unresolvedLineageCount": 0
       }
     },
     "recentReviewPipeline": {
       "schemaVersion": 1,
       "retentionDays": 14,
-      "generatedAt": "2026-11-16T17:29:33.364Z",
-      "bankFingerprint": "4b6dbe7bf13dce69f6cd68ea3b0739ece6bdb9e3c00231489359ad22149bddaf",
+      "generatedAt": "2026-11-16T21:06:02.169Z",
+      "bankFingerprint": "9abecc60b4fb29c4e2e01afcb3ec79bedd89a031dfa2e02d43ade7704b628bab",
       "skills": [
         {
           "id": "caption",
@@ -4802,37 +5514,6 @@
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
-            ]
-          },
-          "reviewVerifiedAt": "2026-11-11T19:22:13.816Z",
-          "reviewExpiresAt": "2026-11-25T19:22:13.816Z",
-          "reviewSourceHash": "teacher-pages-c771461a1fda8bb48443"
-        },
-        {
-          "id": "long-o",
-          "subject": "Spelling / Handwriting",
-          "label": "Long o sound (original practice, not teacher word list)",
-          "evidence": [
-            "long o"
-          ],
-          "studyNotes": [
-            "Long o sounds like the letter name in go, home, and boat. These are original examples, not an official spelling list.",
-            "If a teacher test label also says “short” without naming the vowel, do not guess which short-vowel pattern is included."
-          ],
-          "standards": [
-            "CCSS.RF.2.3"
-          ],
-          "domain": "Phonics and word recognition",
-          "sourceBacked": true,
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Reading Work",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T19:22:13.816Z",
-            "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
-            "matchedEvidence": [
-              "Phonics: long o (o_e) and short o; long u (u_e); short u"
             ]
           },
           "reviewVerifiedAt": "2026-11-11T19:22:13.816Z",
@@ -7951,670 +8632,6 @@
             "evidenceExcerptHash": "sha256:44064195b3c29d8d40a57287ac43f4d942e254af7166c18e9dab2e8a02a672ce",
             "matchedEvidence": [
               "Sight Words: picture, because, know, cold, took, have, off, family, school, friends should, open, won, cheer, fall, yes, their, change, five, look"
-            ]
-          },
-          "reviewVerifiedAt": "2026-11-11T19:22:13.816Z",
-          "reviewExpiresAt": "2026-11-25T19:22:13.816Z",
-          "reviewSourceHash": "teacher-pages-c771461a1fda8bb48443"
-        },
-        {
-          "id": "auto-long-o-rope-bc34c9",
-          "templateId": "grade2-long-o-v1",
-          "subject": "Spelling / Handwriting",
-          "skill": "long-o",
-          "assessedSkillIds": [
-            "long-o"
-          ],
-          "prompt": "Which word has the long o sound, like the o sound in home?",
-          "choices": [
-            "Hop",
-            "Hot",
-            "Rope"
-          ],
-          "answer": "Rope",
-          "explanation": "Rope has the long o sound; hop and hot use short o.",
-          "hint": "Say the words slowly and compare the vowel with home.",
-          "sourceFact": "Verified Grade 2 skill: Long o sound (original practice, not teacher word list)",
-          "sourceEvidence": [
-            "long o"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.RF.2.3"
-          ],
-          "domain": "Phonics and word recognition",
-          "dok": 1,
-          "cognitiveDemand": "recall-and-fluency",
-          "difficulty": 2,
-          "questionType": "direct",
-          "choiceDiagnostics": {
-            "Hop": {
-              "misconception": "long-o-distractor",
-              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
-            },
-            "Hot": {
-              "misconception": "long-o-distractor",
-              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "Hop": 0,
-              "Hot": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "long-o"
-            ],
-            "strongestClaim": "practice-performance-on-this-skill",
-            "doesNotClaim": [
-              "standardized-test-score",
-              "global-subject-mastery"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "ceb19ced",
-          "variantFingerprint": "2336b628",
-          "presentationFingerprint": "a8579959",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Reading Work",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T19:22:13.816Z",
-            "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
-            "matchedEvidence": [
-              "Phonics: long o (o_e) and short o; long u (u_e); short u"
-            ]
-          },
-          "reviewVerifiedAt": "2026-11-11T19:22:13.816Z",
-          "reviewExpiresAt": "2026-11-25T19:22:13.816Z",
-          "reviewSourceHash": "teacher-pages-c771461a1fda8bb48443"
-        },
-        {
-          "id": "auto-long-o-goat-f3e8a7",
-          "templateId": "grade2-long-o-v1",
-          "subject": "Spelling / Handwriting",
-          "skill": "long-o",
-          "assessedSkillIds": [
-            "long-o"
-          ],
-          "prompt": "Which word has the same long o sound as the word snow?",
-          "choices": [
-            "Goat",
-            "Sock",
-            "Stop"
-          ],
-          "answer": "Goat",
-          "explanation": "Goat and snow both have the long o sound.",
-          "hint": "Listen for the o that sounds like its letter name.",
-          "sourceFact": "Verified Grade 2 skill: Long o sound (original practice, not teacher word list)",
-          "sourceEvidence": [
-            "long o"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.RF.2.3"
-          ],
-          "domain": "Phonics and word recognition",
-          "dok": 1,
-          "cognitiveDemand": "recall-and-fluency",
-          "difficulty": 2,
-          "questionType": "direct",
-          "choiceDiagnostics": {
-            "Sock": {
-              "misconception": "long-o-distractor",
-              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
-            },
-            "Stop": {
-              "misconception": "long-o-distractor",
-              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "Sock": 0,
-              "Stop": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "long-o"
-            ],
-            "strongestClaim": "practice-performance-on-this-skill",
-            "doesNotClaim": [
-              "standardized-test-score",
-              "global-subject-mastery"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "9ee49ea7",
-          "variantFingerprint": "b4ef7e68",
-          "presentationFingerprint": "f60425f6",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Reading Work",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T19:22:13.816Z",
-            "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
-            "matchedEvidence": [
-              "Phonics: long o (o_e) and short o; long u (u_e); short u"
-            ]
-          },
-          "reviewVerifiedAt": "2026-11-11T19:22:13.816Z",
-          "reviewExpiresAt": "2026-11-25T19:22:13.816Z",
-          "reviewSourceHash": "teacher-pages-c771461a1fda8bb48443"
-        },
-        {
-          "id": "auto-long-o-box-fce14d",
-          "templateId": "grade2-long-o-v1",
-          "subject": "Spelling / Handwriting",
-          "skill": "long-o",
-          "assessedSkillIds": [
-            "long-o"
-          ],
-          "prompt": "Which word has a short o sound instead of a long o sound?",
-          "choices": [
-            "Cone",
-            "Box",
-            "Rose"
-          ],
-          "answer": "Box",
-          "explanation": "Box has short o, while cone and rose have long o.",
-          "hint": "Compare each middle vowel with the sound in hot.",
-          "sourceFact": "Verified Grade 2 skill: Long o sound (original practice, not teacher word list)",
-          "sourceEvidence": [
-            "long o"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.RF.2.3"
-          ],
-          "domain": "Phonics and word recognition",
-          "dok": 1,
-          "cognitiveDemand": "recall-and-fluency",
-          "difficulty": 2,
-          "questionType": "direct",
-          "choiceDiagnostics": {
-            "Cone": {
-              "misconception": "long-o-distractor",
-              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
-            },
-            "Rose": {
-              "misconception": "long-o-distractor",
-              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "Cone": 0,
-              "Rose": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "long-o"
-            ],
-            "strongestClaim": "practice-performance-on-this-skill",
-            "doesNotClaim": [
-              "standardized-test-score",
-              "global-subject-mastery"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "e0b35b99",
-          "variantFingerprint": "ba9181b0",
-          "presentationFingerprint": "5d6d6b6a",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Reading Work",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T19:22:13.816Z",
-            "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
-            "matchedEvidence": [
-              "Phonics: long o (o_e) and short o; long u (u_e); short u"
-            ]
-          },
-          "reviewVerifiedAt": "2026-11-11T19:22:13.816Z",
-          "reviewExpiresAt": "2026-11-25T19:22:13.816Z",
-          "reviewSourceHash": "teacher-pages-c771461a1fda8bb48443"
-        },
-        {
-          "id": "auto-long-o-boat-1648c0",
-          "templateId": "grade2-long-o-v1",
-          "subject": "Spelling / Handwriting",
-          "skill": "long-o",
-          "assessedSkillIds": [
-            "long-o"
-          ],
-          "prompt": "Read the sentence: The boat floats in the pond. Which word has a long o sound?",
-          "choices": [
-            "Pond",
-            "In",
-            "Boat"
-          ],
-          "answer": "Boat",
-          "explanation": "Boat has long o spelled oa; pond has short o.",
-          "hint": "Read each word aloud and listen for the long vowel.",
-          "sourceFact": "Verified Grade 2 skill: Long o sound (original practice, not teacher word list)",
-          "sourceEvidence": [
-            "long o"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.RF.2.3"
-          ],
-          "domain": "Phonics and word recognition",
-          "dok": 2,
-          "cognitiveDemand": "skill-and-concept-application",
-          "difficulty": 2,
-          "questionType": "transfer",
-          "choiceDiagnostics": {
-            "Pond": {
-              "misconception": "long-o-distractor",
-              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
-            },
-            "In": {
-              "misconception": "long-o-distractor",
-              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "Pond": 0,
-              "In": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "long-o"
-            ],
-            "strongestClaim": "practice-performance-on-this-skill",
-            "doesNotClaim": [
-              "standardized-test-score",
-              "global-subject-mastery"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "00d3047e",
-          "variantFingerprint": "f429989f",
-          "presentationFingerprint": "c43e9e81",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Reading Work",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T19:22:13.816Z",
-            "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
-            "matchedEvidence": [
-              "Phonics: long o (o_e) and short o; long u (u_e); short u"
-            ]
-          },
-          "reviewVerifiedAt": "2026-11-11T19:22:13.816Z",
-          "reviewExpiresAt": "2026-11-25T19:22:13.816Z",
-          "reviewSourceHash": "teacher-pages-c771461a1fda8bb48443"
-        },
-        {
-          "id": "auto-long-o-the-o-changes-from-short-to-long-2feb6c",
-          "templateId": "grade2-long-o-v1",
-          "subject": "Spelling / Handwriting",
-          "skill": "long-o",
-          "assessedSkillIds": [
-            "long-o"
-          ],
-          "prompt": "Add a silent e to the word not to make note. What happens to the vowel sound?",
-          "choices": [
-            "The o changes from short to long.",
-            "The o stays short.",
-            "The word no longer has an o."
-          ],
-          "answer": "The o changes from short to long.",
-          "explanation": "Not has short o; note has long o with a final silent e.",
-          "hint": "Compare the sounds in not and note.",
-          "sourceFact": "Verified Grade 2 skill: Long o sound (original practice, not teacher word list)",
-          "sourceEvidence": [
-            "long o"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.RF.2.3"
-          ],
-          "domain": "Phonics and word recognition",
-          "dok": 2,
-          "cognitiveDemand": "skill-and-concept-application",
-          "difficulty": 2,
-          "questionType": "transfer",
-          "choiceDiagnostics": {
-            "The o stays short.": {
-              "misconception": "long-o-distractor",
-              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
-            },
-            "The word no longer has an o.": {
-              "misconception": "long-o-distractor",
-              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "The o stays short.": 0,
-              "The word no longer has an o.": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "long-o"
-            ],
-            "strongestClaim": "practice-performance-on-this-skill",
-            "doesNotClaim": [
-              "standardized-test-score",
-              "global-subject-mastery"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "b0bf0ef6",
-          "variantFingerprint": "78e09572",
-          "presentationFingerprint": "f4fb44ba",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Reading Work",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T19:22:13.816Z",
-            "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
-            "matchedEvidence": [
-              "Phonics: long o (o_e) and short o; long u (u_e); short u"
-            ]
-          },
-          "reviewVerifiedAt": "2026-11-11T19:22:13.816Z",
-          "reviewExpiresAt": "2026-11-25T19:22:13.816Z",
-          "reviewSourceHash": "teacher-pages-c771461a1fda8bb48443"
-        },
-        {
-          "id": "auto-long-o-go-and-rope-e2523d",
-          "templateId": "grade2-long-o-v1",
-          "subject": "Spelling / Handwriting",
-          "skill": "long-o",
-          "assessedSkillIds": [
-            "long-o"
-          ],
-          "prompt": "Which pair of words both have a long o sound?",
-          "choices": [
-            "Fox and rock",
-            "Go and rope",
-            "Hot and home"
-          ],
-          "answer": "Go and rope",
-          "explanation": "Go and rope both have long o; the other pairs include short o.",
-          "hint": "Check both words in each pair.",
-          "sourceFact": "Verified Grade 2 skill: Long o sound (original practice, not teacher word list)",
-          "sourceEvidence": [
-            "long o"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.RF.2.3"
-          ],
-          "domain": "Phonics and word recognition",
-          "dok": 2,
-          "cognitiveDemand": "skill-and-concept-application",
-          "difficulty": 2,
-          "questionType": "transfer",
-          "choiceDiagnostics": {
-            "Fox and rock": {
-              "misconception": "long-o-distractor",
-              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
-            },
-            "Hot and home": {
-              "misconception": "long-o-distractor",
-              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "Fox and rock": 0,
-              "Hot and home": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "long-o"
-            ],
-            "strongestClaim": "practice-performance-on-this-skill",
-            "doesNotClaim": [
-              "standardized-test-score",
-              "global-subject-mastery"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "51e576c2",
-          "variantFingerprint": "aca031ed",
-          "presentationFingerprint": "a4de986e",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Reading Work",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T19:22:13.816Z",
-            "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
-            "matchedEvidence": [
-              "Phonics: long o (o_e) and short o; long u (u_e); short u"
-            ]
-          },
-          "reviewVerifiedAt": "2026-11-11T19:22:13.816Z",
-          "reviewExpiresAt": "2026-11-25T19:22:13.816Z",
-          "reviewSourceHash": "teacher-pages-c771461a1fda8bb48443"
-        },
-        {
-          "id": "auto-long-o-they-both-use-the-long-o-vowel-sound-0ab3d0",
-          "templateId": "grade2-long-o-v1",
-          "subject": "Spelling / Handwriting",
-          "skill": "long-o",
-          "assessedSkillIds": [
-            "long-o"
-          ],
-          "prompt": "Why do the words boat and coat belong in the same long o group?",
-          "choices": [
-            "They both have a short o sound.",
-            "They both begin with the same letter.",
-            "They both use the long o vowel sound."
-          ],
-          "answer": "They both use the long o vowel sound.",
-          "explanation": "Boat and coat share the long o sound, spelled oa.",
-          "hint": "Focus on the vowel sound, not just the first letter.",
-          "sourceFact": "Verified Grade 2 skill: Long o sound (original practice, not teacher word list)",
-          "sourceEvidence": [
-            "long o"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.RF.2.3"
-          ],
-          "domain": "Phonics and word recognition",
-          "dok": 3,
-          "cognitiveDemand": "strategic-reasoning",
-          "difficulty": 3,
-          "questionType": "reasoning",
-          "choiceDiagnostics": {
-            "They both have a short o sound.": {
-              "misconception": "long-o-distractor",
-              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
-            },
-            "They both begin with the same letter.": {
-              "misconception": "long-o-distractor",
-              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "They both have a short o sound.": 0,
-              "They both begin with the same letter.": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "long-o"
-            ],
-            "strongestClaim": "practice-performance-on-this-skill",
-            "doesNotClaim": [
-              "standardized-test-score",
-              "global-subject-mastery"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "034e6706",
-          "variantFingerprint": "7ab96f1b",
-          "presentationFingerprint": "e16910aa",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Reading Work",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T19:22:13.816Z",
-            "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
-            "matchedEvidence": [
-              "Phonics: long o (o_e) and short o; long u (u_e); short u"
-            ]
-          },
-          "reviewVerifiedAt": "2026-11-11T19:22:13.816Z",
-          "reviewExpiresAt": "2026-11-25T19:22:13.816Z",
-          "reviewSourceHash": "teacher-pages-c771461a1fda8bb48443"
-        },
-        {
-          "id": "auto-long-o-hop-5c1c1f",
-          "templateId": "grade2-long-o-v1",
-          "subject": "Spelling / Handwriting",
-          "skill": "long-o",
-          "assessedSkillIds": [
-            "long-o"
-          ],
-          "prompt": "A student groups home, hope, and hop as three long o words. Which word should be replaced?",
-          "choices": [
-            "Hop",
-            "Home",
-            "Hope"
-          ],
-          "answer": "Hop",
-          "explanation": "Hop has short o; home and hope have long o.",
-          "hint": "Read each word and find the one with a different o sound.",
-          "sourceFact": "Verified Grade 2 skill: Long o sound (original practice, not teacher word list)",
-          "sourceEvidence": [
-            "long o"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.RF.2.3"
-          ],
-          "domain": "Phonics and word recognition",
-          "dok": 3,
-          "cognitiveDemand": "strategic-reasoning",
-          "difficulty": 3,
-          "questionType": "reasoning",
-          "choiceDiagnostics": {
-            "Home": {
-              "misconception": "long-o-distractor",
-              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
-            },
-            "Hope": {
-              "misconception": "long-o-distractor",
-              "feedback": "Review: Long o sound (original practice, not teacher word list). Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "Home": 0,
-              "Hope": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "long-o"
-            ],
-            "strongestClaim": "practice-performance-on-this-skill",
-            "doesNotClaim": [
-              "standardized-test-score",
-              "global-subject-mastery"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "d27cc33a",
-          "variantFingerprint": "db153971",
-          "presentationFingerprint": "d773ac87",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Reading Work",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "d11bfbd62e7fcda7c769485ef070e5dd564da9474b26787862780f943b7927cb",
-            "sourceCheckedAt": "2026-11-11T19:22:13.816Z",
-            "evidenceExcerptHash": "sha256:992d5ea0b9bce30d82ccd3f11dd983c257a2319dc757a5c40881f65e0338b221",
-            "matchedEvidence": [
-              "Phonics: long o (o_e) and short o; long u (u_e); short u"
             ]
           },
           "reviewVerifiedAt": "2026-11-11T19:22:13.816Z",
@@ -18560,81 +18577,51 @@
     },
     "schoolChangeFeed": {
       "schemaVersion": 1,
-      "generatedAt": "2026-11-16T17:29:33.364Z",
-      "sourceHash": "teacher-pages-585ea4e8f608761dc1ad",
+      "generatedAt": "2026-11-16T21:06:02.169Z",
+      "sourceHash": "teacher-pages-f3ff74ca2acf37f53052",
       "changed": true,
       "items": [
         {
-          "id": "change-8e45e42b1044",
-          "kind": "new-skill",
-          "subject": "Reading / ELA",
-          "text": "New: Reading / ELA — Sequence / beginning, middle, end"
-        },
-        {
-          "id": "change-74a67be89ce8",
-          "kind": "review-skill",
-          "subject": "Reading / ELA",
-          "text": "Moved to recent review: Reading / ELA — CVC word structure"
-        },
-        {
-          "id": "change-95359a9f6d17",
-          "kind": "review-skill",
-          "subject": "Reading / ELA",
-          "text": "Moved to recent review: Reading / ELA — Adding -ed and -ing"
-        },
-        {
-          "id": "change-67931f3a7712",
-          "kind": "review-skill",
-          "subject": "Reading / ELA",
-          "text": "Moved to recent review: Reading / ELA — Captions / text features"
-        },
-        {
-          "id": "change-bf50b9362889",
-          "kind": "review-skill",
-          "subject": "Reading / ELA",
-          "text": "Moved to recent review: Reading / ELA — Read diagrams and labels"
-        },
-        {
-          "id": "change-1b8ce2f76f66",
-          "kind": "review-skill",
-          "subject": "Reading / ELA",
-          "text": "Moved to recent review: Reading / ELA — Long o (o_e) and short o"
-        },
-        {
-          "id": "change-8650351dab45",
-          "kind": "review-skill",
-          "subject": "Reading / ELA",
-          "text": "Moved to recent review: Reading / ELA — Singular and plural nouns"
-        },
-        {
-          "id": "change-f3c35ce23e1e",
-          "kind": "review-skill",
-          "subject": "Reading / ELA",
-          "text": "Moved to recent review: Reading / ELA — main idea / details"
-        },
-        {
-          "id": "change-41982636e0e0",
-          "kind": "review-skill",
-          "subject": "Reading / ELA",
-          "text": "Moved to recent review: Reading / ELA — High-frequency words in context"
-        },
-        {
-          "id": "change-4875cb1a90d5",
-          "kind": "review-skill",
-          "subject": "Reading / ELA",
-          "text": "Moved to recent review: Reading / ELA — Use teacher-listed vocabulary words in context"
-        },
-        {
-          "id": "change-f0f04342cd4c",
-          "kind": "review-skill",
-          "subject": "Reading / ELA",
-          "text": "Moved to recent review: Reading / ELA — Vocabulary meaning"
-        },
-        {
-          "id": "change-744dd41b6478",
+          "id": "change-1744254fc1b6",
           "kind": "new-skill",
           "subject": "Spelling / Handwriting",
-          "text": "New: Spelling / Handwriting — Soft c and soft g, test Friday, Oct. 30"
+          "text": "New: Spelling / Handwriting — Long o sound (original practice, not teacher word list)"
+        },
+        {
+          "id": "change-e8e9174c3a8e",
+          "kind": "event",
+          "subject": "School",
+          "text": "Added school event: Spelling (long i) / Handwriting — Friday, Dec. 4"
+        },
+        {
+          "id": "change-818f47cf0912",
+          "kind": "event",
+          "subject": "School",
+          "text": "Added school event: Spelling (long o) / Handwriting — Friday, Dec. 11"
+        },
+        {
+          "id": "change-65c9651c3b0b",
+          "kind": "event",
+          "subject": "School",
+          "text": "Added school event: Spelling (long e) / Handwriting — Friday, Dec. 18"
+        },
+        {
+          "id": "change-56afd30b5fa9",
+          "kind": "unchanged",
+          "subject": "Reading / ELA",
+          "text": "No changes to Reading / ELA."
+        },
+        {
+          "id": "change-a3b58d6f4906",
+          "kind": "unchanged",
+          "subject": "Math",
+          "text": "No changes to Math."
+        },
+        {
+          "id": "change-c91c235819ed",
+          "kind": "unchanged",
+          "subject": "Religion",
+          "text": "No changes to Religion."
         }
       ]
     },
@@ -18655,42 +18642,42 @@
       "dateProvided": false
     }
   },
-  "sourceLastCheckedAt": "2026-11-16T17:29:33.364Z",
+  "sourceLastCheckedAt": "2026-11-16T21:06:02.169Z",
   "sourcePages": [
     {
       "title": "Home",
       "url": "https://sites.google.com/view/abvmgr2/home",
-      "checkedAt": "2026-11-16T17:29:33.364Z",
+      "checkedAt": "2026-11-16T21:06:02.169Z",
       "contentHash": "171081fa814cc90f0ccf04a99f7d5b3ca8d6c455cc9c3d06da5c9fce92177fd7"
     },
     {
       "title": "Homework",
       "url": "https://sites.google.com/view/abvmgr2/homework",
-      "checkedAt": "2026-11-16T17:29:33.364Z",
+      "checkedAt": "2026-11-16T21:06:02.169Z",
       "contentHash": "369ac61912e4e964f1d243a65d7bf7605510acbd8aed0a0643caded6dc78b643"
     },
     {
       "title": "Reading Work",
       "url": "https://sites.google.com/view/abvmgr2/reading-work",
-      "checkedAt": "2026-11-16T17:29:33.364Z",
+      "checkedAt": "2026-11-16T21:06:02.169Z",
       "contentHash": "b252c0bb178b542e7e79f4eb43350965c94da8fba05f47126309239a3fd01316"
     },
     {
       "title": "Weekly Spelling List",
       "url": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-      "checkedAt": "2026-11-16T17:29:33.364Z",
+      "checkedAt": "2026-11-16T21:06:02.169Z",
       "contentHash": "6cdf08cfc29bd19dadf938ac5318ce9e53c04974c95f1419dae32debb9c722be"
     },
     {
       "title": "Tests",
       "url": "https://sites.google.com/view/abvmgr2/tests",
-      "checkedAt": "2026-11-16T17:29:33.364Z",
-      "contentHash": "1211ca7be589a97c2edc4cd44f0237f3e6133fb6d42604f9be7465df1650b510"
+      "checkedAt": "2026-11-16T21:06:02.169Z",
+      "contentHash": "680b39a654412b7cb01d2ad290005bc3b88c18d3ddf4901b45bfc4f0b270bfc3"
     },
     {
       "title": "Religion",
       "url": "https://sites.google.com/view/abvmgr2/religion",
-      "checkedAt": "2026-11-16T17:29:33.364Z",
+      "checkedAt": "2026-11-16T21:06:02.169Z",
       "contentHash": "6281f67a5e63195835bed1dab9ff496201253d824264a67c367059ba2cdbccf5"
     }
   ],
