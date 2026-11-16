@@ -12,7 +12,8 @@ test("seven October 8 notice photos have distinct evidence receipts",()=>{
 });
 test("fundraiser deadlines, consecration, Mass, family events and optional Holy Hours are dated",()=>{
  assert.ok(hasDate("Friday, Oct. 30","Nut Roll Sale"));
- assert.ok(hasDate("Tuesday, Nov. 17","Nut Roll Sale"));
+ assert.ok(hasDate("Tuesday, Nov. 17","Nut roll delivery — pickup 3–4:30 PM"));
+ assert.ok(dates.some(row=>row.date==="Tuesday, Nov. 17"&&row.sourceDocument==="weekly-planner-2026-11-16-parent-photo"&&row.label.includes("3–4:30 PM")));
  assert.ok(hasDate("Saturday, Nov. 21","Reading Royals"));
  assert.ok(hasDate("Tuesday, Oct. 20","Eucharistic Consecration"));
  assert.ok(hasDate("Sunday, Nov. 1","Family Festival"));
@@ -25,11 +26,16 @@ test("new donation notice does not silently replace the K-4 flag football date",
  assert.ok(dates.some(d=>d.date.includes("Oct. 26")&&/flag football/i.test(d.label)));
  assert.ok(data.pack.parentNotices.some(text=>/(?:Oct\.|October)\s*22\s+and\s+29/i.test(text)&&/(?:Oct\.|October)\s*26/i.test(text)));
 });
-test("links and no made-up basketball date, ticket prices or pickup time",()=>{
+test("links and verified pickup time supersede the original unspecified HSA pickup hour",()=>{
  const parents=data.pack.parentNotices.join("\\n");
  assert.ok(parents.includes("https://www.gofevo.com/event/AssumptionBVM2027"));
  assert.ok(parents.includes("https://forms.gle/C5BpMzwk5Uw2b2qXA"));
- assert.ok(parents.includes("school-designated time"));
+ const original=notices.documents.find(doc=>doc.id==="hsa-nut-roll-order-a-2026");
+ const correction=notices.documents.find(doc=>doc.id==="weekly-planner-2026-11-16-parent-photo");
+ assert.ok(original.facts.some(fact=>fact.includes("does not specify the hour")),"preserve the older handout as historical evidence");
+ assert.ok(correction.facts.some(fact=>fact.includes("pickup 3–4:30 PM")),"new verified time must have source evidence");
+ assert.ok(parents.includes("3–4:30 PM"));
+ assert.ok(!parents.includes("school-designated time"),"stale pickup wording must not remain user-facing");
  assert.ok(parents.includes("$0 student ticket"));
  assert.equal(dates.filter(d=>d.sourceDocument==="cyo-basketball-grades-3-8-2026").length,0);
 });

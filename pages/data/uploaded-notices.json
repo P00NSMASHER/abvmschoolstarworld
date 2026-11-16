@@ -1,7 +1,102 @@
 {
   "schemaVersion": 2,
-  "lastIntegratedAt": "2026-11-03T15:00:00.000Z",
+  "lastIntegratedAt": "2026-11-15T23:09:03.109Z",
   "documents": [
+    {
+      "id": "weekly-reminders-2026-08-31",
+      "label": "Weekly reminders for week of 2026-08-31",
+      "receivedAt": "2026-08-27",
+      "facts": [
+        "Wednesday, Sep. 2: Communication Folder.",
+        "Monday, Sep. 7: No School.",
+        "Wednesday, Sep. 16: Mass.",
+        "Friday, Oct. 9: 12:00 dismissal.",
+        "Monday, Oct. 12: No School.",
+        "Friday, Sep. 4: No School."
+      ],
+      "provenance": {
+        "factsHash": "01e4b4c518478f1b9453341bad7a33750f014206e5ed850e34f2d80e0e60eada",
+        "sourceContentHash": "02639854f3b623bcaec03303a02b266725a95f36478c319b37d8e7691ebfc500"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "automated-fixed-event-extraction-v1",
+        "reviewedAt": "2026-10-04T21:39:26.051Z"
+      }
+    },
+    {
+      "id": "weekly-reminders-2026-09-07",
+      "label": "Weekly reminders for week of 2026-09-07",
+      "receivedAt": "2026-09-03",
+      "facts": [
+        "Monday, Sep. 7: No School.",
+        "Tuesday, Sep. 8: STAR testing.",
+        "Wednesday, Sep. 9: Mass.",
+        "Wednesday, Sep. 16: Mass.",
+        "Wednesday, Sep. 16: Communication Folder.",
+        "Thursday, Sep. 24: Pretzel delivery.",
+        "Friday, Sep. 25: Lego Club.",
+        "Friday, Oct. 9: 12:00 dismissal.",
+        "Monday, Oct. 12: No School.",
+        "Monday, Oct. 19: Parent-Teacher Conferences.",
+        "Tuesday, Oct. 20: Parent-Teacher Conferences.",
+        "Thursday, Sep. 10: Communication Folder."
+      ],
+      "provenance": {
+        "factsHash": "822b2df4f8a0f32e2a3400a4736e48327c3633c7b035a8a13ecb4ae34213f36b",
+        "sourceContentHash": "8785350eb78b838ee4561c84cf4556a2e3ca3134067ad48ba88d3249b3b4e02d"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "automated-fixed-event-extraction-v1",
+        "reviewedAt": "2026-10-04T21:39:36.240Z"
+      }
+    },
+    {
+      "id": "weekly-reminders-2026-09-14",
+      "label": "Weekly reminders for week of 2026-09-14",
+      "receivedAt": "2026-09-11",
+      "facts": [
+        "Tuesday, Sep. 15: STAR testing.",
+        "Wednesday, Sep. 16: Mass.",
+        "Wednesday, Sep. 16: Communication Folder.",
+        "Thursday, Sep. 24: Pretzel delivery.",
+        "Friday, Sep. 25: Lego Club.",
+        "Thursday, Oct. 1: Picture Day.",
+        "Friday, Oct. 9: 12:00 dismissal.",
+        "Monday, Oct. 12: No School."
+      ],
+      "provenance": {
+        "factsHash": "48b0cd781bcce9ac5b4f55939898530f7a0777839b76eac1fb5dbbb80997fd11",
+        "sourceContentHash": "459745ce2fef6c0b47d5b9e89b646b0f6ef44031eb05e28c232a64b635a39e8f"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "automated-fixed-event-extraction-v1",
+        "reviewedAt": "2026-10-04T21:39:48.816Z"
+      }
+    },
+    {
+      "id": "school-flyer-ca26241222dca1cf4795",
+      "label": "Dress Down Day flyer",
+      "receivedAt": "2026-09-18",
+      "facts": [
+        "Friday, Sep. 25: Dress Down Day."
+      ],
+      "provenance": {
+        "factsHash": "169a5ba271743da4cd105949ee3f3335fbc3a53c03855cde5fd2618dc8bafd86",
+        "sourceContentHash": "8af4f76eb7fb13c20ebb8979edd079f5a897c6e5bcaccd8436fd9daef59fda02"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "automated-fixed-event-extraction-v1",
+        "reviewedAt": "2026-10-04T21:39:57.167Z"
+      }
+    },
     {
       "id": "dress-down-2026-09-25",
       "label": "Dress Down Day flyer",
@@ -46,6 +141,24 @@
       }
     },
     {
+      "id": "school-email-b44b85fd20772d689a49",
+      "label": "Gym schedule update",
+      "receivedAt": "2026-09-25",
+      "facts": [
+        "Monday, Sep. 28: Gym classes moved to this date."
+      ],
+      "provenance": {
+        "factsHash": "8e0fd548b4437a872e0488d645b14547c431f41b10d8daa67a31f6736eea7f1f",
+        "sourceContentHash": "b44b85fd20772d689a494d95e4fc48f725656b3ef38c5d36c0770a04a4167df0"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "automated-fixed-event-extraction-v1",
+        "reviewedAt": "2026-10-04T21:48:15.578Z"
+      }
+    },
+    {
       "id": "weekly-reminders-2026-09-28",
       "label": "Weekly reminders for September 28–October 2, 2026",
       "receivedAt": "2026-09-28",
@@ -72,6 +185,24 @@
         "piiReviewed": true,
         "reviewedBy": "manual-school-notice-review",
         "reviewedAt": "2026-09-28T18:12:00.000Z"
+      }
+    },
+    {
+      "id": "school-flyer-e8dbe7d93fcf35bc311a",
+      "label": "CYO Basketball flyer",
+      "receivedAt": "2026-09-28",
+      "facts": [
+        "CYO Basketball flyer received."
+      ],
+      "provenance": {
+        "factsHash": "4a81d4cc9c1c9e1f1f414ee90e85e41c1f8cb1462dc3efc5faf14cecc7cd9d22",
+        "sourceContentHash": "bdf00b3d3d409282c2e8004668d4277047609d78b92f9e691d95ad8958c4f290"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "automated-fixed-event-extraction-v1",
+        "reviewedAt": "2026-10-04T21:40:04.538Z"
       }
     },
     {
@@ -240,137 +371,6 @@
         "piiReviewed": true,
         "reviewedBy": "manual-school-notice-review",
         "reviewedAt": "2026-10-03T16:45:00.000Z"
-      }
-    },
-    {
-      "id": "weekly-reminders-2026-08-31",
-      "label": "Weekly reminders for week of 2026-08-31",
-      "receivedAt": "2026-08-27",
-      "facts": [
-        "Wednesday, Sep. 2: Communication Folder.",
-        "Monday, Sep. 7: No School.",
-        "Wednesday, Sep. 16: Mass.",
-        "Friday, Oct. 9: 12:00 dismissal.",
-        "Monday, Oct. 12: No School.",
-        "Friday, Sep. 4: No School."
-      ],
-      "provenance": {
-        "factsHash": "01e4b4c518478f1b9453341bad7a33750f014206e5ed850e34f2d80e0e60eada",
-        "sourceContentHash": "02639854f3b623bcaec03303a02b266725a95f36478c319b37d8e7691ebfc500"
-      },
-      "review": {
-        "status": "reviewed",
-        "piiReviewed": true,
-        "reviewedBy": "automated-fixed-event-extraction-v1",
-        "reviewedAt": "2026-10-04T21:39:26.051Z"
-      }
-    },
-    {
-      "id": "weekly-reminders-2026-09-07",
-      "label": "Weekly reminders for week of 2026-09-07",
-      "receivedAt": "2026-09-03",
-      "facts": [
-        "Monday, Sep. 7: No School.",
-        "Tuesday, Sep. 8: STAR testing.",
-        "Wednesday, Sep. 9: Mass.",
-        "Wednesday, Sep. 16: Mass.",
-        "Wednesday, Sep. 16: Communication Folder.",
-        "Thursday, Sep. 24: Pretzel delivery.",
-        "Friday, Sep. 25: Lego Club.",
-        "Friday, Oct. 9: 12:00 dismissal.",
-        "Monday, Oct. 12: No School.",
-        "Monday, Oct. 19: Parent-Teacher Conferences.",
-        "Tuesday, Oct. 20: Parent-Teacher Conferences.",
-        "Thursday, Sep. 10: Communication Folder."
-      ],
-      "provenance": {
-        "factsHash": "822b2df4f8a0f32e2a3400a4736e48327c3633c7b035a8a13ecb4ae34213f36b",
-        "sourceContentHash": "8785350eb78b838ee4561c84cf4556a2e3ca3134067ad48ba88d3249b3b4e02d"
-      },
-      "review": {
-        "status": "reviewed",
-        "piiReviewed": true,
-        "reviewedBy": "automated-fixed-event-extraction-v1",
-        "reviewedAt": "2026-10-04T21:39:36.240Z"
-      }
-    },
-    {
-      "id": "weekly-reminders-2026-09-14",
-      "label": "Weekly reminders for week of 2026-09-14",
-      "receivedAt": "2026-09-11",
-      "facts": [
-        "Tuesday, Sep. 15: STAR testing.",
-        "Wednesday, Sep. 16: Mass.",
-        "Wednesday, Sep. 16: Communication Folder.",
-        "Thursday, Sep. 24: Pretzel delivery.",
-        "Friday, Sep. 25: Lego Club.",
-        "Thursday, Oct. 1: Picture Day.",
-        "Friday, Oct. 9: 12:00 dismissal.",
-        "Monday, Oct. 12: No School."
-      ],
-      "provenance": {
-        "factsHash": "48b0cd781bcce9ac5b4f55939898530f7a0777839b76eac1fb5dbbb80997fd11",
-        "sourceContentHash": "459745ce2fef6c0b47d5b9e89b646b0f6ef44031eb05e28c232a64b635a39e8f"
-      },
-      "review": {
-        "status": "reviewed",
-        "piiReviewed": true,
-        "reviewedBy": "automated-fixed-event-extraction-v1",
-        "reviewedAt": "2026-10-04T21:39:48.816Z"
-      }
-    },
-    {
-      "id": "school-flyer-ca26241222dca1cf4795",
-      "label": "Dress Down Day flyer",
-      "receivedAt": "2026-09-18",
-      "facts": [
-        "Friday, Sep. 25: Dress Down Day."
-      ],
-      "provenance": {
-        "factsHash": "169a5ba271743da4cd105949ee3f3335fbc3a53c03855cde5fd2618dc8bafd86",
-        "sourceContentHash": "8af4f76eb7fb13c20ebb8979edd079f5a897c6e5bcaccd8436fd9daef59fda02"
-      },
-      "review": {
-        "status": "reviewed",
-        "piiReviewed": true,
-        "reviewedBy": "automated-fixed-event-extraction-v1",
-        "reviewedAt": "2026-10-04T21:39:57.167Z"
-      }
-    },
-    {
-      "id": "school-flyer-e8dbe7d93fcf35bc311a",
-      "label": "CYO Basketball flyer",
-      "receivedAt": "2026-09-28",
-      "facts": [
-        "CYO Basketball flyer received."
-      ],
-      "provenance": {
-        "factsHash": "4a81d4cc9c1c9e1f1f414ee90e85e41c1f8cb1462dc3efc5faf14cecc7cd9d22",
-        "sourceContentHash": "bdf00b3d3d409282c2e8004668d4277047609d78b92f9e691d95ad8958c4f290"
-      },
-      "review": {
-        "status": "reviewed",
-        "piiReviewed": true,
-        "reviewedBy": "automated-fixed-event-extraction-v1",
-        "reviewedAt": "2026-10-04T21:40:04.538Z"
-      }
-    },
-    {
-      "id": "school-email-b44b85fd20772d689a49",
-      "label": "Gym schedule update",
-      "receivedAt": "2026-09-25",
-      "facts": [
-        "Monday, Sep. 28: Gym classes moved to this date."
-      ],
-      "provenance": {
-        "factsHash": "8e0fd548b4437a872e0488d645b14547c431f41b10d8daa67a31f6736eea7f1f",
-        "sourceContentHash": "b44b85fd20772d689a494d95e4fc48f725656b3ef38c5d36c0770a04a4167df0"
-      },
-      "review": {
-        "status": "reviewed",
-        "piiReviewed": true,
-        "reviewedBy": "automated-fixed-event-extraction-v1",
-        "reviewedAt": "2026-10-04T21:48:15.578Z"
       }
     },
     {
@@ -713,6 +713,84 @@
         "piiReviewed": true,
         "reviewedBy": "source-backed-parent-photo-review",
         "reviewedAt": "2026-11-03T15:00:00.000Z"
+      }
+    },
+    {
+      "id": "hsa-newsletter-2026-11-parent-pdf",
+      "label": "ABVM HSA newsletter — November 2026 (parent PDF page 21)",
+      "receivedAt": "2026-11-12",
+      "facts": [
+        "ABVM November 2026 HSA newsletter announces The Little Mermaid Jr. at ABVM on Friday, Nov. 13, 2026 at 7 PM and Saturday, Nov. 14, 2026 at 5 PM.",
+        "HSA virtual meeting is Thursday, Dec. 3, 2026 at 7 PM; meeting link is available via the child's Google Classroom, not published.",
+        "Volunteer clearances are required to volunteer at school; Mrs. Thompson has packets.",
+        "Upcoming HSA events with more information to come: Christmas card making Dec. 3 and Dec. 9, 2026; Santa Workshop Dec. 14; Christmas caroling Dec. 18; Christmas party Dec. 22.",
+        "Book fair planned January 2027; exact date not specified. HSA bingo planned Sunday, Apr. 18, 2027; additional information to come.",
+        "Mandatory fundraisers on November list: cash tickets in November, ongoing RaiseRight gift cards, Kowalonek gift cards in January, lottery board raffle in February, Race for Education in March, cash ticket sale in April. Buyouts available.",
+        "Optional HSA fundraisers: Nov. 17 nut roll pickup; nut rolls in March; April 18 bingo. Student Council fundraisers include fall/spring Chick-fil-A and pretzels."
+      ],
+      "provenance": {
+        "factsHash": "302f0af2577329b1b122567c1d3c75e16f2471bcbca14e140b1a1ef1dfcbe3bc",
+        "sourceContentHash": "dd81970fd9eae5acfaa98db909f3e039cc7bb8f7bfa181fe99cb4017048a607d"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "source-backed-parent-pdf-review",
+        "reviewedAt": "2026-11-12T17:04:17.644Z"
+      }
+    },
+    {
+      "id": "hsa-melody-message-cheer-dec-2026",
+      "label": "HSA — A Melody & Message of Cheer and Christmas Card Club flyer",
+      "receivedAt": "2026-11-12",
+      "facts": [
+        "The ABVM Home & School Association invites families to A Melody & Message of Cheer on Friday, December 18, 2026, from 5:30 to 7:00 PM, bringing handmade Christmas cards and carols to local nursing homes.",
+        "The December 18 caroling stops are not specified; the flyer says another flyer with the night's caroling stops will follow.",
+        "The optional Christmas Card Club meets after school Thursday, December 3 and/or Wednesday, December 9, 2026, from 3:00 to 3:45 PM.",
+        "For Christmas Card Club, a parent should complete the bottom student-name form, check December 3 and/or December 9, and return it to school; the flyer does not state a submission deadline.",
+        "Parent pickup after either Christmas Card Club session is 3:45 PM."
+      ],
+      "provenance": {
+        "factsHash": "6c18624664f3b3712b67f7286c02b866aa1fd0903c407fd8a9c4678a9c7c664e",
+        "sourceContentHash": "1ea7cf8fca280c732faf50fc890a4c9627d202cf6ccd631ae684e5fadc7c5eb8"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "source-backed-chat-photo-review",
+        "reviewedAt": "2026-11-12T16:47:00.000Z"
+      }
+    },
+    {
+      "id": "weekly-planner-2026-11-16-parent-photo",
+      "label": "ABVM weekly planner — Nov. 16–20, 2026 (parent-provided image)",
+      "receivedAt": "2026-11-15",
+      "facts": [
+        "Weekly planner covers November 16–20, 2026.",
+        "Monday, November 16: Raise Right physical gift card order.",
+        "Tuesday, November 17: Nut Roll delivery; pickup 3–4:30 PM.",
+        "Wednesday, November 18: Mass.",
+        "Thursday, November 19: Pretzel day.",
+        "Friday, November 20: First trimester ends.",
+        "Saturday, November 21: Reading Royals Family Night.",
+        "Monday, November 23: Second trimester begins.",
+        "Tuesday, November 24: DDD SPCA (abbreviation as printed).",
+        "Wednesday, November 25: Mass, noon dismissal, and report cards.",
+        "Thursday, November 26; Friday, November 27; Monday, November 30: No school.",
+        "Tuesday, December 1: School resumes.",
+        "Thursday, December 3 and Wednesday, December 9: Christmas card making.",
+        "Monday, December 14: Santa Secret Shop.",
+        "Thursday, December 17: Christmas play at 1 PM."
+      ],
+      "provenance": {
+        "factsHash": "8aed9e6d54fd30091fa92823e54e0143811311f83de82b8a4fcd678804c87848",
+        "sourceContentHash": "46bd772b6e2c2343038b1e86dbfcc7cfaeb84670a9b48c726ca4c07ab0e1e3de"
+      },
+      "review": {
+        "status": "reviewed",
+        "piiReviewed": true,
+        "reviewedBy": "manual-parent-photo-review",
+        "reviewedAt": "2026-11-15T23:09:03.109Z"
       }
     }
   ],
@@ -1126,12 +1204,6 @@
       "sourceDocument": "hsa-nut-roll-order-a-2026"
     },
     {
-      "date": "Tuesday, Nov. 17",
-      "label": "HSA Nut Roll Sale — pickup (time assigned by school)",
-      "kind": "school event",
-      "sourceDocument": "hsa-nut-roll-order-a-2026"
-    },
-    {
       "date": "Saturday, Nov. 21",
       "label": "Reading Royals Game Family Fun Night — student anthem performance; ticket link in notices",
       "kind": "school event",
@@ -1508,6 +1580,108 @@
       "label": "No school",
       "kind": "school event",
       "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "date": "Monday, Nov. 16",
+      "label": "Raise Right physical gift card order",
+      "kind": "school event",
+      "sourceDocument": "weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Tuesday, Nov. 17",
+      "label": "Nut roll delivery — pickup 3–4:30 PM",
+      "kind": "school event",
+      "sourceDocument": "weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Tuesday, Dec. 1",
+      "label": "School resumes",
+      "kind": "school event",
+      "sourceDocument": "weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Thursday, Dec. 3",
+      "label": "Christmas card making",
+      "kind": "school event",
+      "sourceDocument": "weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Wednesday, Dec. 9",
+      "label": "Christmas card making",
+      "kind": "school event",
+      "sourceDocument": "weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Monday, Dec. 14",
+      "label": "Santa Secret Shop",
+      "kind": "school event",
+      "sourceDocument": "weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Thursday, Dec. 17",
+      "label": "Christmas Play — 1 PM",
+      "kind": "school event",
+      "sourceDocument": "weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "date": "Thursday, Dec. 3",
+      "label": "HSA meeting — 7 PM (virtual; link in school Classroom)",
+      "kind": "school event",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "date": "Thursday, Dec. 3",
+      "label": "HSA Christmas card making — details to come",
+      "kind": "school event",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "date": "Wednesday, Dec. 9",
+      "label": "HSA Christmas card making — details to come",
+      "kind": "school event",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "date": "Friday, Dec. 18",
+      "label": "HSA Christmas caroling — details to come",
+      "kind": "school event",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "date": "Sunday, Apr. 18",
+      "label": "HSA Bingo — details to come (2027)",
+      "kind": "school event",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "date": "Friday, Nov. 13",
+      "label": "HSA play showtime — The Little Mermaid Jr. at ABVM, 7 PM",
+      "kind": "school event",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "date": "Saturday, Nov. 14",
+      "label": "HSA play showtime — The Little Mermaid Jr. at ABVM, 5 PM",
+      "kind": "school event",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "date": "Thursday, Dec. 3",
+      "label": "Christmas Card Club — 3:00–3:45 PM; pickup 3:45 PM",
+      "kind": "school event",
+      "sourceDocument": "hsa-melody-message-cheer-dec-2026"
+    },
+    {
+      "date": "Wednesday, Dec. 9",
+      "label": "Christmas Card Club — 3:00–3:45 PM; pickup 3:45 PM",
+      "kind": "school event",
+      "sourceDocument": "hsa-melody-message-cheer-dec-2026"
+    },
+    {
+      "date": "Friday, Dec. 18",
+      "label": "A Melody & Message of Cheer — nursing-home caroling 5:30–7:00 PM; stops to be announced",
+      "kind": "school event",
+      "sourceDocument": "hsa-melody-message-cheer-dec-2026"
     }
   ],
   "reminders": [
@@ -1577,11 +1751,6 @@
       "sourceDocument": "weekly-reminders-2026-10-05"
     },
     {
-      "text": "Friday, Oct. 30: Return prepaid HSA Nut Roll Sale orders and payment to the school office. Each roll is $20; pickup is Tuesday, Nov. 17 (school-designated time).",
-      "topic": "nut-roll",
-      "sourceDocument": "hsa-nut-roll-order-a-2026"
-    },
-    {
       "text": "Saturday, Nov. 21: Reading Royals Family Fun Night; students may sing the National Anthem with a signed parent slip. Student tickets are free using the $0 ticket selection.",
       "topic": "reading-royals-game",
       "sourceDocument": "reading-royals-family-night-2026-11-21"
@@ -1635,6 +1804,21 @@
       "text": "November 25: noon dismissal with lunch served. November 26, 27, and 30: no school.",
       "topic": "nov-2026-thanksgiving-closure",
       "sourceDocument": "nov-2026-school-calendar-parent-photo"
+    },
+    {
+      "text": "Tuesday, Nov. 17: Nut Roll delivery pickup is 3–4:30 PM.",
+      "topic": "nut-roll",
+      "sourceDocument": "weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "topic": "hsa-2026-nov-volunteer-clearances",
+      "text": "HSA volunteers need school clearances. Ask Mrs. Thompson for a clearance packet.",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "text": "Optional Christmas Card Club: fill out and return the school flyer form for Thursday, Dec. 3 and/or Wednesday, Dec. 9 (3:00–3:45 PM; pickup at 3:45 PM). No form-return deadline is printed.",
+      "topic": "dec-2026-christmas-card-club-form",
+      "sourceDocument": "hsa-melody-message-cheer-dec-2026"
     }
   ],
   "parentNotices": [
@@ -1729,11 +1913,6 @@
       "sourceDocument": "gift-card-winners-2026-10-01-02"
     },
     {
-      "text": "HSA Fall Nut Roll Sale: prepaid orders and money due Friday, Oct. 30 ($20 per roll; cash or check payable to Assumption B.V.M.). Flavors: Nut, Poppy, Apricot, Lekvar, Seedless Raspberry, Pumpkin Cheese. Pickup Tuesday, Nov. 17 at a school-designated time. Earn $2 in Tuition Bucks per roll sold; orders cannot be held for later pickup.",
-      "topic": "nut-roll",
-      "sourceDocument": "hsa-nut-roll-order-a-2026"
-    },
-    {
       "text": "Reading Royals Family Fun Night is Saturday, Nov. 21, 2026. ABVM students may sing the National Anthem; return the signed parent participation slip. Student tickets are free by choosing the $0 student ticket in checkout. Each ticket sold earns $5 for ABVM. Tickets: https://www.gofevo.com/event/AssumptionBVM2027",
       "topic": "reading-royals-game",
       "sourceDocument": "reading-royals-family-night-2026-11-21"
@@ -1762,6 +1941,36 @@
       "text": "November 2026 school lunch costs $4.25. Assorted milks are available daily. Menu is subject to change.",
       "topic": "nov-2026-lunch-cost",
       "sourceDocument": "nov-2026-lunch-menu-parent-photo"
+    },
+    {
+      "text": "Nut Roll pickup: Tuesday, November 17, 3–4:30 PM, per the newer weekly school planner.",
+      "topic": "nut-roll",
+      "sourceDocument": "weekly-planner-2026-11-16-parent-photo"
+    },
+    {
+      "topic": "hsa-2026-nov-drama-showtimes",
+      "text": "HSA newsletter confirms ABVM drama club performances: Friday Nov. 13 at 7 PM and Saturday Nov. 14 at 5 PM, at ABVM.",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "topic": "hsa-2026-nov-meeting-details",
+      "text": "Next HSA meeting: Thursday Dec. 3, 2026 at 7 PM, virtual. The meeting link is in the child's Google Classroom; no public link provided.",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "topic": "hsa-2027-events",
+      "text": "HSA newsletter lists a book fair in January 2027 (date not specified) and Bingo on April 18, 2027 (details to come).",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "topic": "hsa-2026-27-fundraisers",
+      "text": "HSA mandatory fundraisers include cash ticket sales (November and April), ongoing RaiseRight gift cards, Kowalonek gift cards (January), Lottery Board (February), and Race for Education (March); buyouts are available. Optional student fundraisers include pretzels and Chick-fil-A.",
+      "sourceDocument": "hsa-newsletter-2026-11-parent-pdf"
+    },
+    {
+      "text": "HSA's A Melody & Message of Cheer is Friday, Dec. 18, 2026, from 5:30–7:00 PM. The event brings handmade cards and Christmas carols to local nursing homes. Stops and visit locations will be announced in a later flyer.",
+      "topic": "dec-2026-melody-message-cheer",
+      "sourceDocument": "hsa-melody-message-cheer-dec-2026"
     }
   ],
   "replacements": [
@@ -1808,6 +2017,10 @@
     {
       "topic": "k4-dressdown-flag-football",
       "date": "Monday, Oct. 26"
+    },
+    {
+      "topic": "nut-roll",
+      "date": "Tuesday, Nov. 17"
     }
   ],
   "sourcePrecedence": {

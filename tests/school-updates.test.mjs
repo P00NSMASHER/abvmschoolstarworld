@@ -14,6 +14,18 @@ test('duplicate labels merge but different event details are retained',()=>{
  assert.equal(events[0].label,'No School — Columbus Day');
  assert.equal(u.uniqueEvents([{label:'Chick-fil-A pickup'},{label:'Chick-Fil-A pick up'}]).length,1);
 });
+test('same-day Nut Roll pickup variants collapse without removing an order deadline',()=>{
+ const u=api();
+ const events=u.uniqueEvents([
+  {label:'Nut roll delivery'},
+  {label:'Nut Roll pick up'},
+  {label:'Nut roll delivery — pickup 3–4:30 PM'},
+  {label:'Nut Roll orders due'},
+ ]);
+ assert.equal(events.length,2);
+ assert.equal(events[0].label,'Nut roll delivery — pickup 3–4:30 PM');
+ assert.equal(events[1].label,'Nut Roll orders due');
+});
 test('same event on two separate dates remains two events',()=>{
  const u=api(),make=d=>({item:{label:'Mass'},range:[new Date(d),new Date(d)]});
  assert.equal(u.uniqueRows([make('2026-10-07'),make('2026-10-07'),make('2026-10-14')]).length,2);
@@ -77,4 +89,38 @@ test('official calendar source is directly accessible without claiming Facebook 
  assert.match(html,/rel="noopener noreferrer"/);
  assert.match(html,/target="_blank"/);
  assert.doesNotMatch(html,/facebook\.com|teacher-verified|published post/i);
+});
+
+test('cumulative planner and flyer notices keep precise session times without duplicate school events',()=>{
+ const u=api();
+ const card=u.uniqueEvents([
+  {label:'HSA Christmas card making — details to come'},
+  {label:'Christmas card making'},
+  {label:'Christmas Card Club — 3:00–3:45 PM; pickup 3:45 PM'},
+  {label:'HSA meeting — 7 PM (virtual; link in school Classroom)'},
+ ]);
+ assert.equal(card.length,2);
+ assert.ok(card.some(x=>x.label==='Christmas Card Club — 3:00–3:45 PM; pickup 3:45 PM'));
+ assert.ok(card.some(x=>x.label.startsWith('HSA meeting')));
+ const carols=u.uniqueEvents([
+  {label:'HSA Christmas caroling — details to come'},
+  {label:'A Melody & Message of Cheer — nursing-home caroling 5:30–7:00 PM; stops to be announced'},
+ ]);
+ assert.equal(carols.length,1);
+ assert.match(carols[0].label,/5:30–7:00 PM/);
+ const nutRoll=u.uniqueEvents([
+  {label:'HSA Nut Roll Sale — pickup (time assigned by school)'},
+  {label:'Nut roll delivery'},
+  {label:'Nut roll delivery — pickup 3–4:30 PM'},
+  {label:'Nut Roll orders due'},
+ ]);
+ assert.equal(nutRoll.length,2);
+ assert.equal(nutRoll[0].label,'Nut roll delivery — pickup 3–4:30 PM');
+ assert.equal(nutRoll[1].label,'Nut Roll orders due');
+ const make=(date,label)=>({range:[new Date(date),new Date(date)],item:{label}});
+ assert.equal(u.uniqueRows([
+  make('2026-12-03','Christmas card making'),
+  make('2026-12-03','Christmas Card Club — 3:00–3:45 PM; pickup 3:45 PM'),
+  make('2026-12-09','Christmas Card Club — 3:00–3:45 PM; pickup 3:45 PM'),
+ ]).length,2,'dates must never collapse together');
 });

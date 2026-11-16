@@ -98,7 +98,10 @@ test("requested polish is present",async({page})=>{
   await openTab(page,"Study");
   await expectCurrentStudyGameTiles(page);
   await page.locator('[data-open-prep]').click();await expect(page.locator('[data-test-single]')).toBeVisible();
-  await page.locator('[data-close-prep]').click();
+  // Both header Back and the optional generic Reading CTA close Test Prep.
+  // Exercise the unique header control when verifying primary navigation.
+  await expect(page.locator('.prep-back[data-close-prep]')).toHaveCount(1);
+  await page.locator('.prep-back[data-close-prep]').click();
   await openNoteSubject(page,null,'saved');
   await expect(page.locator('[data-note-subject]:not([hidden]) .study-note-topic').first()).toBeVisible();
   await expect(page.locator('[data-learning-panel],.study-games-cta')).toHaveCount(0);
@@ -431,6 +434,13 @@ test("Sept 28 weekly notice is integrated without duplicate stale events",async(
   expect(has("Thursday, Oct. 22","Chick-fil-A Delivery")).toBe(true);
   expect(has("Friday, Oct. 23","S’mores Family")).toBe(true);
   expect(has("Friday–Saturday, Nov. 13–14","Drama Club Play")).toBe(true);
+  // Retain historical sources while also requiring exact later-confirmed showtimes.
+  for(const [date,label] of [
+    ["Friday, Nov. 13","HSA play showtime — The Little Mermaid Jr. at ABVM, 7 PM"],
+    ["Saturday, Nov. 14","HSA play showtime — The Little Mermaid Jr. at ABVM, 5 PM"],
+  ]){
+    expect(events.filter(item=>item.date===date&&item.label===label&&item.sourceDocument==="hsa-newsletter-2026-11-parent-pdf")).toHaveLength(1);
+  }
   const royals=events.filter(e=>e.date==="Saturday, Nov. 21"&&e.label.startsWith("Reading Royals Game Family Fun Night"));
   expect(royals).toHaveLength(1);
   expect(royals[0].label).toContain("student anthem performance");
