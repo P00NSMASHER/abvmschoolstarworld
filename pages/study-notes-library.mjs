@@ -112,7 +112,7 @@ export function renderNotesLibrary(data,{source='weekly',subject='',query='',ove
   '<div class="study-note-scope" role="group" aria-label="Notes to review">'+['weekly','saved'].map(key=>'<button type="button" data-notes-source="'+key+'" aria-pressed="'+(source===key)+'">'+(key==='weekly'?'This week':'Cumulative')+'</button>').join('')+'</div>'+
   '<div class="notes-search"><label class="visually-hidden" for="study-notes-search">Search study notes</label><input id="study-notes-search" type="search" data-notes-search placeholder="Search notes, words or topics" value="'+esc(queryText)+'" maxlength="120" autocomplete="off" enterkeyhint="search">'+(queryText?'<button type="button" data-notes-clear aria-label="Clear note search">Clear</button>':'')+'</div>'+
   '<p class="notes-search-status" role="status" aria-live="polite">'+esc(queryText?count+' '+(count===1?'match':'matches')+' across '+rows.length+' '+(rows.length===1?'subject':'subjects'):source==='saved'?'Includes saved lessons. Undated work stays here, not in This week.':'Confirmed for this school week. Undated and earlier material stays in Cumulative.')+'</p>'+
-  '<div class="notes-subject-browser"'+(selected?' hidden':'')+'><div class="study-note-subjects notes-subject-grid" role="group" aria-label="Choose a subject">'+cards+'</div>'+(!rows.length?'<p class="study-tools-empty">'+(queryText?'No matching notes. Try another word or clear your search.':'No lesson notes are included in this selection.')+'</p>':'')+'</div>'+
+  '<div class="notes-subject-browser"'+(selected&&rows.length!==1?' hidden':'')+'><div class="study-note-subjects notes-subject-grid" role="group" aria-label="Choose a subject">'+cards+'</div>'+(!rows.length?'<p class="study-tools-empty">'+(queryText?'No matching notes. Try another word or clear your search.':'No lesson notes are included in this selection.')+'</p>':'')+'</div>'+
   '<div class="notes-reader"'+(!selected?' hidden':'')+'><button type="button" class="notes-back" data-notes-back>‹ Back to subjects</button><div class="study-notes-grid">'+rows.map(row=>'<section class="study-note-panel" id="study-notes-panel-'+row.index+'" data-note-subject="'+esc(row.subject)+'"'+(row.subject!==selected?.subject?' hidden':'')+' aria-labelledby="study-notes-title-'+row.index+'">'+detailHtml(row,{source,meaning,query:queryText})+'</section>').join('')+'</div></div></div>';
 }
 
@@ -151,7 +151,7 @@ export function createNotesLibrary({getModel,win,meaning}={}) {
   node.addEventListener('click',event=>{
    if(event.target.closest('summary')===node.querySelector(':scope > summary')){userOpening=!node.open;return;}
    const scope=event.target.closest('[data-notes-source]');
-   if(scope){source=scope.dataset.notesSource==='saved'?'saved':'weekly';subject='';overview=true;paint('[data-notes-source="'+source+'"]');references();return;}
+   if(scope){source=scope.dataset.notesSource==='saved'?'saved':'weekly';subject='';overview=false;paint('[data-notes-source="'+source+'"]');references();return;}
    if(event.target.closest('[data-notes-clear]')){query='';subject='';overview=true;paint('[data-notes-search]');return;}
    if(event.target.closest('[data-notes-back]')){const previous=subject;subject='';const value=data();const rows=notesLibraryData(value||{},{query,meaning});
     overview=true;paint();
