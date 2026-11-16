@@ -103,6 +103,10 @@ export function buildRuntimePack(envelope){
   const scopedReligionFacts=religionGuideFacts(envelope.pack.contentPipeline.skills);
   if(Object.keys(scopedReligionFacts).length)runtime.pack.testGuideFacts={religionChapters:scopedReligionFacts};
   runtime.pack.contentPipeline.skills=skills.map(({sourceLineage,evidenceContract,...skill})=>({...skill,noteTopics:exactSkillTopics(envelope.pack,{...skill,sourceLineage})}));
+  // Retained review skill notes must not ship teacher capture hashes or QA contracts.
+  const reviewSkills=runtime.pack?.recentReviewPipeline?.skills ?? [];
+  if(!Array.isArray(reviewSkills))throw new Error("Full study pack has invalid recentReviewPipeline.skills");
+  runtime.pack.recentReviewPipeline.skills=reviewSkills.map(({sourceLineage,evidenceContract,...skill})=>skill);
   // The 14-day review bank may retain previously verified question families.
   // Those full records carry large governance-only source/evidence fields;
   // compact them exactly like current questions, but keep dated expiry proof.

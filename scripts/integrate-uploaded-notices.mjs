@@ -19,7 +19,7 @@ function topicKey(value){
   const patterns=[
     ["star",/\bstar\b/],["mass-communication",/mass.*communication|communication.*mass/],
     ["communication-folder",/communication folder/],["mass",/\bmass\b/],
-    ["stationery",/stationa(?:ry|ery).*money/],["pretzel",/pretzel/],["dress-down",/dress down/],
+    ["stationery",/stationa(?:ry|ery).*money/],["pretzel",/pretzel/],["nut-roll",/nut roll/],["dress-down",/dress down/],
     ["lego",/lego club/],["hsa",/hsa.*meeting/],["picture",/picture day/],["closed",/no school|closed/],
     ["dismissal",/dismissal/],["conference-schedule",/conference schedule portal/],["conference",/conference/],
     ["dance",/welcome back dance/],["chick-fil",/chick[-\s]?fil[-\s]?a/],["flag-football",/flag football/],
@@ -84,6 +84,23 @@ export function integrateUploadedNotices(data,uploaded,{now=new Date()}={}){
   pack.importantDates=mergeEvents(pack.importantDates,uploaded,now);
   pack.reminders=mergeText(pack.reminders,uploaded.reminders,pack.uploadedNoticeTopics?.reminders);
   pack.parentNotices=mergeText(pack.parentNotices,uploaded.parentNotices,pack.uploadedNoticeTopics?.parentNotices);
+  // The reviewed Dec 18 flyer resolves two older undated/TBD statements.
+  // Exact source receipt + matching scheduled event are mandatory before
+  // suppressing these out-of-date parent-facing summaries; retain originals
+  // in the reviewed documents and teacher source provenance.
+  const exactCheerSource=uploaded.documents.some(doc=>
+    doc.id==="hsa-melody-message-cheer-dec-2026"&&
+    doc.provenance?.sourceContentHash==="1ea7cf8fca280c732faf50fc890a4c9627d202cf6ccd631ae684e5fadc7c5eb8"&&
+    doc.review?.piiReviewed===true)&&
+    uploaded.importantDates.some(item=>item.sourceDocument==="hsa-melody-message-cheer-dec-2026"&&
+      /Friday, Dec\. 18/.test(item.date)&&/5:30.*7:00 PM/.test(item.label));
+  if(exactCheerSource){
+    const oldTbd=text=>/^Christmas Caroling date (?:is )?(?:still )?TBD\.?$/i.test(String(text).trim());
+    pack.reminders=pack.reminders.filter(text=>!oldTbd(text));
+    pack.parentNotices=pack.parentNotices.filter(text=>!oldTbd(text)&&
+      !/^HSA plans Christmas card making Dec\. 3 and 9;.*Details and participation information are still to come\.$/i.test(String(text).trim()));
+  }
+
   pack.uploadedNoticeTopics={
     reminders:[...new Set(uploaded.reminders.map(item=>item.topic))],
     parentNotices:[...new Set(uploaded.parentNotices.map(item=>item.topic))]
