@@ -75,7 +75,7 @@ for(const ref of [
 ])if(exists(ref))fail("Duplicate unused school-model source must stay removed: "+ref);
 // Keep the retired Netlify proxy forbidden; permit only the exact owner-approved
 // production-build credit guard. Changing or removing the guard must fail QA.
-const approvedNetlifyGuard='[build]\\n  ignore = \\'test "$CONTEXT" = "production"\\'\\n';
+const approvedNetlifyGuard="[build]\n  ignore = 'test \"$CONTEXT\" = \"production\"'\n";
 if(!exists("netlify.toml")||read("netlify.toml")!==approvedNetlifyGuard)
   fail("Netlify production credit guard must match the exact approved ignore-only configuration");
 for(const ref of ["netlify/functions/refresh-study-pack.mjs","netlify/functions/study-pack.mjs"])
