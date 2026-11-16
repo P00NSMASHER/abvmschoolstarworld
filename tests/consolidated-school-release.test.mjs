@@ -91,6 +91,10 @@ test('a fresh teacher Home recheck cannot restore superseded unspecified Nut Rol
  });
  const corrected=integrateUploadedNotices(refreshed,structuredClone(notice),{now:new Date('2026-11-15T23:09:03.109Z')});
  assert.equal(corrected.changed,false,'no forged new notice source timestamp');
- assert.deepEqual(corrected.data,data,'only the superseded teacher label may be removed');
+ const expected=structuredClone(data);
+ expected.pack.importantDates=expected.pack.importantDates.filter(item=>!(
+   item.source==='teacher-home'&&item.date==='Tuesday, Nov. 17'&&/^Nut Roll pick up$/i.test(item.label)
+ ));
+ assert.deepEqual(corrected.data,expected,'only the superseded teacher label may be removed');
  assert.equal(corrected.data.pack.importantDates.filter(item=>dateKey(item.date)==='nov-17'&&/nut roll delivery.*3–4:30 PM/i.test(item.label)).length,1);
 });
