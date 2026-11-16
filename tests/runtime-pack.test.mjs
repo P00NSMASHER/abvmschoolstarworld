@@ -45,6 +45,22 @@ test("runtime pack preserves live data and strips audit-only question metadata",
 });
 
 
+test("runtime omits duplicate governance indexes without losing school content or source evidence",()=>{
+  const full=structuredClone(source);
+  const onPhone=buildRuntimePack(full);
+  assert.ok(full.uploadedNotices?.documents?.length,"full reviewed notices are required");
+  assert.ok(Array.isArray(full.pack.contentPipeline.coverage),"full coverage audit is required");
+  assert.deepEqual(onPhone.pack.importantDates,full.pack.importantDates,"all dated events remain intact");
+  assert.deepEqual(onPhone.pack.subjects,full.pack.subjects,"notes and teacher topics remain intact");
+  assert.deepEqual(onPhone.sourcePages,full.sourcePages,"teacher source identities remain intact");
+  assert.equal(Object.hasOwn(onPhone,"uploadedNotices"),false,"do not duplicate intake manifest on a phone");
+  for(const key of ["coverage","qa","sourcePolicy","studyNotesBySubject"]){
+    assert.equal(Object.hasOwn(onPhone.pack.contentPipeline,key),false,"runtime leaked audit-only field: "+key);
+    assert.ok(Object.hasOwn(full.pack.contentPipeline,key),"full certified pack lost audit field: "+key);
+  }
+  assert.deepEqual(full,source,"building the runtime must not mutate the certified source");
+});
+
 test("runtime pack compacts provenance while retaining governed or explicitly corrected item identity",()=>{
   const sourceById=new Map(source.pack.contentPipeline.questions.map(correctOriginalQuestion).map(question=>[question.id,question]));
   assert.ok(source.pack.contentPipeline.questions.some(question=>Object.hasOwn(question,"sourceFact")),"full governed pack must retain source facts");
@@ -133,6 +149,26 @@ test("retained original review questions stay date-bound, chapter-exact and free
   const bad=structuredClone(envelope);
   delete bad.pack.recentReviewPipeline.questions[0].reviewExpiresAt;
   assert.throws(()=>buildRuntimePack(bad),/missing its verified source or expiry window/);
+});
+
+test("retired review skills keep dated source windows without exposing teacher audit hashes",()=>{
+  const original=source.pack.recentReviewPipeline.skills;
+  const compact=runtime.pack.recentReviewPipeline.skills;
+  assert.ok(original.length>0,"the current source pack needs a retained review skill");
+  assert.equal(compact.length,original.length);
+  for(let index=0;index<original.length;index++){
+    const {sourceLineage,evidenceContract,...expected}=original[index];
+    assert.deepEqual(compact[index],expected,"review skill must retain exactly the learner-facing and dated fields");
+    for(const field of ["reviewVerifiedAt","reviewExpiresAt","reviewSourceHash"])
+      assert.equal(compact[index][field],original[index][field]);
+  }
+  const noReviewSkills=structuredClone(source);
+  delete noReviewSkills.pack.recentReviewPipeline.skills;
+  assert.deepEqual(buildRuntimePack(noReviewSkills).pack.recentReviewPipeline.skills,[],
+    "partial lesson fixtures without archived review skills remain supported");
+  const malformed=structuredClone(source);
+  malformed.pack.recentReviewPipeline.skills={unexpected:true};
+  assert.throws(()=>buildRuntimePack(malformed),/invalid recentReviewPipeline.skills/);
 });
 
 test("curriculum turnover cannot defeat the 30 percent runtime budget with retired full-evidence questions",()=>{

@@ -46,7 +46,7 @@ test('Study Games consumes generated content-pipeline questions and validates th
 });
 
 
-test('Study Games does not bypass SOURCE_INSUFFICIENT vocabulary coverage with its legacy glossary', async ({ page }) => {
+test('SOURCE_INSUFFICIENT forbids legacy vocabulary but keeps separately verified recent review', async ({ page }) => {
   const result = await page.evaluate(async () => {
     const envelope = await fetch('./data/study-pack.json', { cache: 'no-store' }).then(response => response.json());
     const pack = structuredClone(envelope.pack);
@@ -61,11 +61,29 @@ test('Study Games does not bypass SOURCE_INSUFFICIENT vocabulary coverage with i
         status: 'SOURCE_INSUFFICIENT',
       }],
     };
+    // Verified, dated review is independent of current-week coverage.
+    // Remove the review bank only when asserting that the legacy glossary
+    // cannot supply currently unverified vocabulary questions.
     const catalog = window.ABVMStudyGames.buildCatalog(pack, { sourceKey: 'vocab-source-insufficient-test' });
-    return catalog.questions.filter(question => question.skill === 'vocabulary-in-context').map(question => question.id);
+    const noReview = window.ABVMStudyGames.buildCatalog(
+      {...pack, recentReviewPipeline: {skills: [], questions: []}},
+      {sourceKey: 'vocab-source-insufficient-without-review-test'}
+    );
+    return {
+      withoutReview: noReview.questions.filter(question => question.skill === 'vocabulary-in-context').map(question => question.id),
+      withReview: catalog.questions.filter(question => question.skill === 'vocabulary-in-context')
+        .map(({id,tier,provenance,reviewVerifiedAt,reviewExpiresAt}) =>
+          ({id,tier,provenance,reviewVerifiedAt,reviewExpiresAt})),
+    };
   });
 
-  expect(result).toEqual([]);
+  expect(result.withoutReview).toEqual([]);
+  for (const question of result.withReview) {
+    expect(question.tier, question.id).toBe('recent-review');
+    expect(question.provenance, question.id).toBe('original-practice-derived-from-recently-verified-abvm-skills');
+    expect(Number.isFinite(Date.parse(question.reviewVerifiedAt)), question.id).toBe(true);
+    expect(Date.parse(question.reviewExpiresAt), question.id).toBeGreaterThan(Date.parse(question.reviewVerifiedAt));
+  }
 });
 
 

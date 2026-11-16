@@ -91,12 +91,22 @@ export function buildRuntimePack(envelope){
   });
   const skills=runtime.pack.contentPipeline.skills;
   if(!Array.isArray(skills))throw new Error("Full study pack is missing contentPipeline.skills");
+  // Keep all reviewed-source and curriculum QA evidence in the governed full
+  // pack. The mobile app consumes the already-integrated dates, notices, notes,
+  // skills and questions; it does not read these duplicate intake/audit indexes.
+  delete runtime.uploadedNotices;
+  for(const key of ["coverage","qa","sourcePolicy","studyNotesBySubject"])
+    delete runtime.pack.contentPipeline[key];
   // Audit lineage and assessment contracts stay intact in the governed full pack.
   // Phone/tablet clients use the skill ID, label and teaching notes, not hashes
   // or raw teacher evidence repeated once for every skill in the runtime pack.
   const scopedReligionFacts=religionGuideFacts(envelope.pack.contentPipeline.skills);
   if(Object.keys(scopedReligionFacts).length)runtime.pack.testGuideFacts={religionChapters:scopedReligionFacts};
   runtime.pack.contentPipeline.skills=skills.map(({sourceLineage,evidenceContract,...skill})=>({...skill,noteTopics:exactSkillTopics(envelope.pack,{...skill,sourceLineage})}));
+  // Retained review skill notes must not ship teacher capture hashes or QA contracts.
+  const reviewSkills=runtime.pack?.recentReviewPipeline?.skills ?? [];
+  if(!Array.isArray(reviewSkills))throw new Error("Full study pack has invalid recentReviewPipeline.skills");
+  runtime.pack.recentReviewPipeline.skills=reviewSkills.map(({sourceLineage,evidenceContract,...skill})=>skill);
   // The 14-day review bank may retain previously verified question families.
   // Those full records carry large governance-only source/evidence fields;
   // compact them exactly like current questions, but keep dated expiry proof.

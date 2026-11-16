@@ -4,26 +4,60 @@ const normalize=s=>String(s||"").normalize("NFKC").toLowerCase().replace(/pick[ 
 function sameEvent(a,b){
   const x=normalize(a.label),y=normalize(b.label);
   if(x===y)return true;
+  // The same-day Nut Roll handouts alternate between "delivery" and "pick up".
+  // Treat them as one pickup, while preserving separate order deadlines.
+  const nutRollPickup=value=>/\bnut roll\b/.test(value)&&/\b(?:pickup|delivery)\b/.test(value)&&!/\borders? due\b/.test(value);
+  if(nutRollPickup(x)&&nutRollPickup(y))return true;
+  // Historical flyer/calendar wording and dated showtime describe one school
+  // play on the same day; keep the source-specific showtime on screen.
+  const dramaPlay=value=>/\b(?:drama club play|little mermaid jr)\b/.test(value);
+  if(dramaPlay(x)&&dramaPlay(y))return true;
+  // Distinct source documents can describe the same event with different detail.
+  // Keep the confirmed card-club/caroling session when a prior planner or
+  // newsletter still says "details to come". A same-day HSA meeting is distinct.
+  const cardClub=value=>/\bchristmas card (?:club|making)\b/.test(value);
+  if(cardClub(x)&&cardClub(y))return true;
+  const caroling=value=>/\b(?:christmas caroling|nursing home caroling|melody (?:and )?message of cheer)\b/.test(value);
+  if(caroling(x)&&caroling(y))return true;
   // A bare event and the same event with an explanatory suffix are one entry.
   // Two different detailed entries remain separate, even on the same date.
   const base=s=>normalize(String(s||"").split(/\s[—–]\s/)[0]);
   return (x===base(b.label)&&x!==y)||(y===base(a.label)&&x!==y);
+}
+function eventDetailScore(item){
+  const label=String(item?.label||"");
+  const explicitTime=/\b\d{1,2}(?::\d{2})?(?:\s*[–—-]\s*\d{1,2}(?::\d{2})?)?\s*(?:am|pm)\b/i.test(label);
+  const unconfirmed=/\b(?:details to come|time assigned|time to be announced)\b/i.test(label);
+  return (explicitTime?1000:0)-(unconfirmed?1000:0)+Math.min(label.length,200);
 }
 function uniqueEvents(items){
   const out=[];
   for(const item of items){
     const i=out.findIndex(row=>sameEvent(row,item));
     if(i<0)out.push(item);
-    else if(String(item.label).length>String(out[i].label).length)out[i]=item;
+    else if(eventDetailScore(item)>eventDetailScore(out[i]))out[i]=item;
   }
   return out;
 }
 function uniqueRows(rows){
+  // Only retire a generic multi-day play from presentation after every date
+  // it covered has an exact independently sourced showtime. The historical
+  // entries stay untouched in the governed pack and source receipts.
+  const precise=rows.filter(row=>/HSA play showtime.*The Little Mermaid Jr\. at ABVM,\s*\d+\s*PM/i.test(row?.item?.label||"")&&
+    row.item?.sourceDocument==="hsa-newsletter-2026-11-parent-pdf"&&row.range?.[0]&&row.range?.[1]);
+  const superseded=row=>{
+    if(!/^(?:Drama Club Play|The Little Mermaid Jr\. drama club play)$/i.test(row?.item?.label||"")||!row.range?.[0]||!row.range?.[1])return false;
+    for(let day=new Date(row.range[0]);day<=row.range[1];day.setDate(day.getDate()+1)){
+      if(!precise.some(source=>+source.range[0]<=+day&&+source.range[1]>=+day))return false;
+    }
+    return true;
+  };
   const out=[];
   for(const row of rows){
+    if(superseded(row))continue;
     const i=out.findIndex(other=>+other.range[0]===+row.range[0]&&+other.range[1]===+row.range[1]&&sameEvent(other.item,row.item));
     if(i<0)out.push(row);
-    else if(String(row.item.label).length>String(out[i].item.label).length)out[i]=row;
+    else if(eventDetailScore(row.item)>eventDetailScore(out[i].item))out[i]=row;
   }
   return out;
 }
