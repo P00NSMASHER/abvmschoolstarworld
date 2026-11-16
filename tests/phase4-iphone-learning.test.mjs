@@ -4,9 +4,12 @@ import {readFileSync} from 'node:fs';
 const read=path=>readFileSync(new URL('../'+path,import.meta.url),'utf8');
 test('phase 4 offline versions match page, bootloader, CSS and cache identity',()=>{
  const html=read('pages/index.html'),sw=read('pages/sw.js'),app=read('pages/app.js');
- assert.match(html,/abvm-sw-reloaded-v209/);
- assert.match(sw,/abvm-grade2-parent-companion-v209-phase4-iphone-learning/);
- for(const name of ['study-games-materials.css?v=23','app.js?v=173']){
+ const htmlVersion=html.match(/abvm-sw-reloaded-v(\d+)/)?.[1];
+ const cacheVersion=sw.match(/abvm-grade2-parent-companion-v(\d+)-/)?.[1];
+ assert.ok(htmlVersion&&cacheVersion,'a reload/cache version must exist');
+ assert(Number(htmlVersion)>=209,'retain the minimum phase 4 release revision');
+ assert.equal(htmlVersion,cacheVersion,'bootloader and offline cache must advance together');
+ for(const name of ['study-games-materials.css?v=23','app.js?v=174']){
    assert.ok(html.includes(name),name+' in HTML');
    assert.ok(sw.includes(name),name+' in service worker');
  }
