@@ -73,7 +73,12 @@ for(const ref of [
   "pages/js/date-utils.js","pages/js/events.js","pages/js/school-model.js",
   "pages/data/school-year-calendar.json","tests/events.test.mjs","tests/school-model.test.mjs"
 ])if(exists(ref))fail("Duplicate unused school-model source must stay removed: "+ref);
-for(const ref of ["netlify.toml","netlify/functions/refresh-study-pack.mjs","netlify/functions/study-pack.mjs"])
+// Keep the retired Netlify proxy forbidden; permit only the exact owner-approved
+// production-build credit guard. Changing or removing the guard must fail QA.
+const approvedNetlifyGuard="[build]\n  ignore = 'test \"$CONTEXT\" = \"production\"'\n";
+if(!exists("netlify.toml")||read("netlify.toml")!==approvedNetlifyGuard)
+  fail("Netlify production credit guard must match the exact approved ignore-only configuration");
+for(const ref of ["netlify/functions/refresh-study-pack.mjs","netlify/functions/study-pack.mjs"])
   if(exists(ref))fail("Obsolete Netlify proxy/fallback source must stay removed: "+ref);
 for(const selector of [".quest-launcher",".mission-picker",".school-star-avatar",".avatar-studio",".shop-grid",".star-league",".purchase-dialog",".ambient",".offline-banner",".calendar-lunch",".calendar-note",".study-intro",".study-jumps",".subject-title",".say-it",".story-line",".word-line",".chip-row",".study-source-warning",".privacy-card",".policy-card",".conflicts",".source-note",".game-controls",".install-card",".error-shell",".reading-policy-card",".game-section-heading",".question-tech-card",".game-engine-stats",".question-quality-note",".month-agenda",".agenda-day",".agenda-event",".agenda-events",".agenda-regular",".study-star-goal-head",".study-star-goal-progress",".study-star-goal-selected"])
   if(css.includes(selector))fail("Obsolete CSS must stay removed: "+selector);
