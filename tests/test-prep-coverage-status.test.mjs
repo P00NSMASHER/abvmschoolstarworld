@@ -27,9 +27,10 @@ test('topic-aligned Reading is counted and labeled without claiming exact assess
  const html=htmlFor(modelFor());
  assert.match(html,/data-test-coverage[^>]*>8 teacher-topic questions</);
  assert.match(html,/data-test-topic-aligned/);
- assert.match(html,/Reading[^<]*<\/strong><small>[^<]*8 teacher-topic questions/s);
- assert.match(html,/Grammar[^<]*<\/strong><small>[^<]*8 matching questions/s);
- assert.match(html,/Spelling[^<]*<\/strong><small>[^<]*8 matching questions/s);
+ assert.match(html,/<strong>Reading<\/strong><small>Wed, Nov 11<\/small>/);
+ assert.match(html,/<strong>Grammar<\/strong><small>Thu, Nov 12<\/small>/);
+ assert.match(html,/<strong>Spelling &amp; handwriting<\/strong><small>Fri, Nov 13<\/small>/);
+ assert.doesNotMatch(html,/<small>[^<]*matching questions<\/small>/,'the chooser carries dates; selected-test coverage remains explicit');
  assert.doesNotMatch(html,/data-test-missing/);
  assert.doesNotMatch(html,/data-general-reading-link/);
 });
