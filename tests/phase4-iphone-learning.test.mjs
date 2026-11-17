@@ -9,7 +9,7 @@ test('phase 4 offline versions match page, bootloader, CSS and cache identity',(
  assert.ok(htmlVersion&&cacheVersion,'a reload/cache version must exist');
  assert(Number(htmlVersion)>=209,'retain the minimum phase 4 release revision');
  assert.equal(htmlVersion,cacheVersion,'bootloader and offline cache must advance together');
- for(const name of ['study-games-materials.css?v=23','app.js?v=175']){
+ for(const name of ['study-games-materials.css?v=23','app.js?v=176']){
    assert.ok(html.includes(name),name+' in HTML');
    assert.ok(sw.includes(name),name+' in service worker');
  }
