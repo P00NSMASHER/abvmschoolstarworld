@@ -1,0 +1,70 @@
+{
+  "candidateId": "curriculum-math-trimester-1-math-assessment-8f2ab9c440",
+  "familyId": "trimester-1-math-assessment",
+  "subject": "Math",
+  "topic": "Trimester 1 Math assessment",
+  "sourceHash": "teacher-pages-4725bd99673f05c3d3fb",
+  "generatedAt": "2026-11-17T22:18:42.341Z",
+  "sourceContext": {
+    "quality": "page-exact",
+    "matchMethod": "exact-topic-phrase",
+    "subject": "Math",
+    "topic": "Trimester 1 Math assessment",
+    "sourceTitle": "Tests",
+    "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+    "sourceCaptureHash": "3660c2d635a701ba088e51ee26d4e39e5b3357e7541fea94f598bf273cfb6bdf",
+    "sourceCheckedAt": "2026-11-17T22:18:42.341Z",
+    "sourceLine": "Wednesday Nov. 18: Trimester 1 Math assessment",
+    "evidenceExcerptHash": "sha256:1fce6b4816a85066678311627bffd13d3f04fa63fd6c39ae4e1176e2e71b4ec5"
+  },
+  "featureFlag": "curriculum-family:trimester-1-math-assessment-candidate",
+  "enabledByDefault": false,
+  "registryMatch": null,
+  "minimumSemanticVariants": 8,
+  "requiredQuestionTypes": [
+    "direct",
+    "transfer",
+    "reasoning"
+  ],
+  "proposedQuestions": [],
+  "authoring": {
+    "status": "AUTHORING_REQUIRED",
+    "generatedQuestionCount": 0,
+    "minimumSemanticVariants": 8,
+    "requiredQuestionTypes": [
+      "direct",
+      "transfer",
+      "reasoning"
+    ],
+    "requiredQuestionFields": [
+      "questionType",
+      "prompt",
+      "choices",
+      "answer",
+      "explanation",
+      "hint",
+      "dok",
+      "difficulty"
+    ]
+  },
+  "rollout": {
+    "featureFlagRequired": false,
+    "automatedQaRequired": true,
+    "safeUsageEvidenceRequired": false,
+    "manualPromotionRequired": false,
+    "automaticPromotion": true
+  },
+  "readiness": {
+    "status": "HOLD",
+    "blockers": [
+      "minimum-semantic-variants:0/8",
+      "question-type-required:direct",
+      "question-type-required:transfer",
+      "question-type-required:reasoning",
+      "automated-qa-required"
+    ],
+    "automaticPromotion": false,
+    "automaticDelete": false,
+    "automaticRewrite": false
+  }
+}
