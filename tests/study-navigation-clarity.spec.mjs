@@ -54,3 +54,40 @@ for(const viewport of [{width:390,height:844},{width:820,height:1024}]){
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
   });
 }
+
+test('long verified test lists stay contained while a selected test remains actionable',async({page},info)=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.clock.setFixedTime(new Date('2026-10-05T16:00:00-04:00'));
+  const fixture=structuredClone(await (await page.request.get('/data/study-pack.json')).json());
+  fixture.pack.importantDates=Array.from({length:14},(_,i)=>({
+    date:'Friday, Oct. 9',label:'Math (Lesson '+(i+1)+')',kind:'test'
+  }));
+  await page.route('**/data/study-pack-runtime.json*',route=>route.fulfill({json:fixture}));
+  await page.goto('/#study');
+  await expect(page.locator('.games-screen')).toHaveAttribute('data-study-state','ready',{timeout:15000});
+  await page.locator('[data-open-prep]').click();
+  const list=page.locator('.prep-test-choices');
+  await expect(list).toHaveAttribute('data-many-tests','true');
+  const geometry=await list.evaluate(el=>({
+    clientHeight:el.clientHeight,scrollHeight:el.scrollHeight,
+    scrollWidth:el.scrollWidth,clientWidth:el.clientWidth
+  }));
+  expect(geometry.clientHeight).toBeLessThanOrEqual(160);
+  expect(geometry.scrollHeight).toBeGreaterThan(geometry.clientHeight+25);
+  expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.clientWidth+1);
+  await expect(page.locator('.prep-chooser-note')).toContainText('Scroll this list');
+  const last=page.locator('[data-test-select]').last();
+  await last.scrollIntoViewIfNeeded();
+  const before=await list.evaluate(el=>el.scrollTop);
+  expect(before).toBeGreaterThan(0);
+  await last.click();
+  await expect(last).toHaveAttribute('aria-pressed','true');
+  const after=await list.evaluate(el=>el.scrollTop);
+  expect(after).toBeGreaterThanOrEqual(before-5);
+  await expect(page.locator('.prep-material-actions [data-test-guide]')).toBeVisible();
+  await expect(page.locator('.prep-material-actions [data-test-worksheet]')).toBeVisible();
+  expect(await page.locator('.games-screen').evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true);
+  await info.attach('Study test chooser with 14 announced tests',{
+    body:await page.screenshot({animations:'disabled'}),contentType:'image/png'
+  });
+});
