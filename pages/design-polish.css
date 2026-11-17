@@ -2318,3 +2318,11 @@
   font-size:.76rem;
   line-height:1.4;
 }
+
+/* The smallest iPhone usable viewport (including real status/home insets)
+   gets one row of long-list choices before the selected test's actions. */
+@media(max-width:405px){
+  .games-screen:not(.is-playing) .prep-sheet>.prep-chooser-panel .prep-test-choices[data-many-tests="true"]{
+    max-height:85px;
+  }
+}
