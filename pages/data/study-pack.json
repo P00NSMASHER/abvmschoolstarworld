@@ -1040,12 +1040,6 @@
       },
       {
         "date": "Tuesday, Nov. 17",
-        "label": "Nut Roll pick up",
-        "source": "teacher-home",
-        "kind": "school event"
-      },
-      {
-        "date": "Tuesday, Nov. 17",
         "label": "Religion",
         "kind": "test",
         "source": "teacher-tests"
