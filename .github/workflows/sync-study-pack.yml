@@ -59,13 +59,7 @@ on:
       - '.github/workflows/daily-source-recovery.yml'
       - '.github/workflows/sync-study-pack.yml'
   schedule:
-    - cron: '17 6 * * *'
-      timezone: 'America/New_York'
-    - cron: '47 9 * * *'
-      timezone: 'America/New_York'
-    - cron: '17 13 * * *'
-      timezone: 'America/New_York'
-    - cron: '47 15 * * *'
+    - cron: '0 6,18 * * *'
       timezone: 'America/New_York'
   workflow_dispatch:
 
