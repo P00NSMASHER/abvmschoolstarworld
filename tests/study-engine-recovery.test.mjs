@@ -6,7 +6,7 @@ import {runInNewContext} from 'node:vm';
 const app = readFileSync(new URL('../pages/app.js', import.meta.url), 'utf8');
 const productView = readFileSync(new URL('../pages/product-view.js', import.meta.url), 'utf8');
 const engineSource = readFileSync(new URL('../pages/study-games.js', import.meta.url), 'utf8');
-const start = app.indexOf('function ensureStudyGameEngine(){');
+const start = app.indexOf('function ensureStudyGameEngine(');
 const end = app.indexOf('function studyGameCatalog(){', start);
 assert.ok(start >= 0 && end > start);
 
@@ -60,12 +60,47 @@ test('Study engine request timeout rejects instead of leaving the app loading fo
   assert.equal(h.scripts.find(script => script.src.includes('study-games.js')).removed,true);
 });
 
+test('idle warm-up cannot silently retry a failed engine before the user retries', async () => {
+  const h = harness();
+  let warmGames;
+  Object.assign(h.context,{
+    pack:{},fetchPack:async()=>{},fetchHomeworkFeed:async()=>{},
+    requestIdleCallback(callback){warmGames=callback;},
+  });
+  h.context.window.requestIdleCallback=h.context.requestIdleCallback;
+  const loadStart=app.indexOf('async function load(){');
+  const loadEnd=app.indexOf('window.addEventListener("hashchange"',loadStart);
+  assert.ok(loadStart>=0&&loadEnd>loadStart);
+  runInNewContext(app.slice(loadStart,loadEnd),h.context,{filename:'pages/app.js'});
+
+  const first=h.context.ensureStudyGameEngine();
+  h.loaded('study-games-view.js','ABVMStudyGameView');
+  await h.context.load();
+  assert.equal(typeof warmGames,'function');
+  h.expireNetworkDeadline();
+  assert.equal((await outcome(first)).state,'error');
+  const before=h.scripts.length;
+  // Run the actual scheduled app callback after failure, matching the CI
+  // trace where idle warm-up raced the visible Try again button.
+  warmGames();
+  await Promise.resolve();
+  assert.equal(h.scripts.length,before,'background warm-up must preserve the failed state');
+  assert.equal((await outcome(h.context.ensureStudyGameEngine())).state,'error');
+  assert.equal(h.scripts.length,before,'passive callers must not start hidden retries');
+
+  const retry=h.context.ensureStudyGameEngine(true);
+  assert.equal(h.scripts.length,before+1);
+  assert.strictEqual(h.context.ensureStudyGameEngine(),retry,'background callers share an explicit active retry');
+  h.loaded('study-games.js','ABVMStudyGames');
+  assert.equal((await outcome(retry)).state,'ready');
+});
+
 test('retry starts a fresh engine request and retains the already loaded renderer', async () => {
   const h = harness(), first = h.context.ensureStudyGameEngine();
   h.loaded('study-games-view.js','ABVMStudyGameView');
   h.expireNetworkDeadline();
   assert.equal((await outcome(first)).state,'error');
-  const second = h.context.ensureStudyGameEngine();
+  const second = h.context.ensureStudyGameEngine(true);
   h.loaded('study-games.js','ABVMStudyGames');
   const actual = await outcome(second);
   assert.equal(actual.state,'ready');
@@ -81,7 +116,7 @@ test('retry uses a new request URL while preserving the exact engine version', a
   const firstUrl = new URL(h.scripts[0].src,'https://abvm.example/');
   h.expireNetworkDeadline();
   assert.equal((await outcome(first)).state,'error');
-  const second = h.context.ensureStudyGameEngine();
+  const second = h.context.ensureStudyGameEngine(true);
   const retryUrl = new URL(h.scripts.at(-1).src,'https://abvm.example/');
   assert.notEqual(retryUrl.href,firstUrl.href,
     'a browser must not coalesce the retry with the still-pending original request');
@@ -97,7 +132,7 @@ test('ordinary script errors settle promptly and can retry successfully', async 
   h.loaded('study-games-view.js','ABVMStudyGameView');
   h.scripts.find(script => script.src.includes('study-games.js')).onerror();
   assert.equal((await outcome(first)).state,'error');
-  const second = h.context.ensureStudyGameEngine();
+  const second = h.context.ensureStudyGameEngine(true);
   h.loaded('study-games.js','ABVMStudyGames');
   assert.equal((await outcome(second)).state,'ready');
   assert.equal(h.timers.size,0);
@@ -110,7 +145,7 @@ test('one failed script retires its pending sibling before a new attempt', async
   assert.equal((await outcome(first)).state,'error');
   assert.equal(oldScripts.every(script => script.removed),true);
   assert.equal(h.timers.size,0);
-  const second = h.context.ensureStudyGameEngine();
+  const second = h.context.ensureStudyGameEngine(true);
   const currentPromise = h.context.ensureStudyGameEngine();
   assert.strictEqual(currentPromise,second,'concurrent callers share one attempt');
   // A callback queued before cleanup cannot clear/resolve the newer attempt.

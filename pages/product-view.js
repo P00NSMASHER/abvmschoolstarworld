@@ -603,10 +603,14 @@
     if (node.nextElementSibling?.matches(".teacher-live-source")) node.nextElementSibling.remove();
     node.outerHTML = markup;
   }
-  let studyEnginePromise=null,studyEngineAttempt=0;
-  function ensureStudyGameScripts({engineSrc,viewSrc}) {
+  let studyEnginePromise=null,studyEngineAttempt=0,studyEngineError=null;
+  function ensureStudyGameScripts({engineSrc,viewSrc,retry=false}) {
     if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
     if(studyEnginePromise)return studyEnginePromise;
+    // Idle warm-up and background redraws must not replace a visible failure
+    // with a hidden request that a later Try again click would merely join.
+    if(studyEngineError&&!retry)return Promise.reject(studyEngineError);
+    studyEngineError=null;
     const attempt=studyEngineAttempt++;
     const pendingScripts=new Set();
     const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{
@@ -630,7 +634,7 @@
     });
     studyEnginePromise=Promise.all([load(engineSrc,"ABVMStudyGames"),load(viewSrc,"ABVMStudyGameView")])
       .then(()=>window.ABVMStudyGames)
-      .catch(error=>{for(const finish of pendingScripts)finish(error);studyEnginePromise=null;throw error;});
+      .catch(error=>{for(const finish of pendingScripts)finish(error);studyEngineError=error;studyEnginePromise=null;throw error;});
     return studyEnginePromise;
   }
   // Compare school civil dates, independent of the device timezone and DST.

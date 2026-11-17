@@ -25,6 +25,11 @@ test('a stalled Study engine exposes retry and recovers without reloading the ap
     await expect(page.getByRole('heading',{name:'Practice could not load'})).toBeVisible();
     await expect(page.getByRole('button',{name:'Try again',exact:true})).toBeVisible();
     await page.screenshot({path:info.outputPath('study-stall-retry.png')});
+    // A delayed idle warm-up must preserve this failure. Otherwise it starts
+    // another held request before the user restores the connection and retries.
+    await page.clock.fastForward(2500);
+    expect(attempts).toBe(1);
+    await expect(page.getByRole('button',{name:'Try again',exact:true})).toBeVisible();
 
     hold = false;
     await page.getByRole('button',{name:'Try again',exact:true}).click();

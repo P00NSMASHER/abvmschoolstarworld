@@ -67,6 +67,28 @@ An initialization guard also prevents a late original script from replacing
 the active engine and erasing volatile learning state when device storage is
 unavailable; the engine's versioned asset identity advances with that change.
 
+## Browser findings from the revised candidate
+
+The next exact-head App QA run `44009938800` reported 1,148 passes, one
+failure, two flaky cases, and four existing skips. Independent reproduction
+`44009938950` passed with one flaky recovery case. All Math, long-a, and
+planner cases passed, but the Study recovery results still blocked release.
+
+The new traces showed distinct original and retry requests both starting
+before the Try again click. The application's delayed idle warm-up ran after
+the initial timeout and silently started the retry behind the visible error
+card. The user action then joined that already-stalled background request.
+Executing the actual scheduled application callback reproduced this race
+outside the browser as well.
+
+The loader now retains its failed state for passive warm-up, navigation, and
+rank-loading calls. Only the explicit Try again action starts a fresh attempt;
+concurrent callers may still share that active attempt. The browser regression
+additionally requires the failure to remain visible with exactly one engine
+request through the idle window, before the user retries. Its existing fresh
+request, ready screen, working question, and late-response state checks remain
+intact. These changes require new exact-head browser results before release.
+
 ## Release and privacy boundaries
 
 No teacher facts, test announcements, source documents, schoolwork answers,

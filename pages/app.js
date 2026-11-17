@@ -384,8 +384,8 @@ async function refreshTestGuideSources(){
 }
 
 function studyGameEngine(){return window.ABVMStudyGames||null}
-function ensureStudyGameEngine(){
-  return window.ABVMProductView.ensureStudyGameScripts({engineSrc:"./study-games.js?v=108",viewSrc:"./study-games-view.js?v=16"});
+function ensureStudyGameEngine(retry=false){
+  return window.ABVMProductView.ensureStudyGameScripts({engineSrc:"./study-games.js?v=108",viewSrc:"./study-games-view.js?v=16",retry});
 }
 function studyGameCatalog(){
   const engine=studyGameEngine();
@@ -520,14 +520,14 @@ function gameFinishHtml(){
   const promotion=g.rewardStatus==="done"&&g.newRanks?.length?window.ABVMStudyBadges.promotion(g.newRanks):"";
   return reveal+promotion+finish+goal;
 }
-function renderGames(){
+function renderGames(retry=false){
   const previousScreen=stack().querySelector(".games-screen"),menuScroll=gameState.screen==="menu"&&previousScreen&&!previousScreen.classList.contains("is-playing")?previousScreen.scrollTop:null;
   if(!isStudyRoute())return;
   studyMaterialsView?.readAloud.stop();
   const engine=studyGameEngine(),generation=++screenGeneration,data=pack;
   if(!engine||!window.ABVMStudyGameView){
     stack().innerHTML='<div class="screen games-screen game-loading" data-study-state="loading" role="region" aria-label="Study games"><section class="game-empty"><span class="loading-star" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg></span><h2>Getting your practice ready…</h2><p>One moment.</p></section></div>';
-    ensureStudyGameEngine().then(()=>{if(currentStudyScreen(generation,data)){studyGameCatalogCache=null;renderGames();bindScreen();}}).catch(()=>{if(currentStudyScreen(generation,data))stack().innerHTML='<div class="screen games-screen"><section class="error-card"><p>STUDY</p><h1>Practice could not load</h1><span>Check your connection and try again.</span><button type="button" data-retry-games>Try again</button></section></div>';});
+    ensureStudyGameEngine(retry).then(()=>{if(currentStudyScreen(generation,data)){studyGameCatalogCache=null;renderGames();bindScreen();}}).catch(()=>{if(currentStudyScreen(generation,data))stack().innerHTML='<div class="screen games-screen"><section class="error-card"><p>STUDY</p><h1>Practice could not load</h1><span>Check your connection and try again.</span><button type="button" data-retry-games>Try again</button></section></div>';});
     return;
   }
   if(!currentStudyMaterials()&&studyMaterialsError?.pack!==pack)ensureStudyMaterials().catch(()=>{});
@@ -612,7 +612,7 @@ function bindScreen(){
     if(target.matches("[data-week-today]")){weekOffset=0;selectedDay=null;redrawPlanner(renderWeek,".day-picker button.active");return;}
     if(target.matches("[data-cal-today]")){calendarOffset=0;calendarDay=null;redrawPlanner(renderCalendar,".calendar-grid button.active");return;}
     if(target.matches("[data-study-retry]")){if(!studyMaterialsView)retryStudyMaterials();return;}
-    if(target.matches("[data-retry-games]")){renderGames();return;}
+    if(target.matches("[data-retry-games]")){renderGames(true);return;}
     if(target.matches("[data-game-read]")){const q=activeGameQuestion();if(q&&!studyMaterialsView?.readAloud.read(q.prompt+". "+q.choices.map((choice,i)=>String.fromCharCode(65+i)+". "+choice).join(". ")))toast("Read aloud is unavailable. You can keep practicing.");return;}
     if(target.matches("[data-game-start]")){startStudyGame(target.dataset.gameStart);return;}
     if(target.matches("[data-study-star-goal]")){studyGameEngine()?.selectStudyStarGoal?.(target.dataset.studyStarGoal);renderGames();return;}
