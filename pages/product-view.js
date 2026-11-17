@@ -603,6 +603,33 @@
     if (node.nextElementSibling?.matches(".teacher-live-source")) node.nextElementSibling.remove();
     node.outerHTML = markup;
   }
+  let studyEnginePromise=null;
+  function ensureStudyGameScripts({engineSrc,viewSrc}) {
+    if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
+    if(studyEnginePromise)return studyEnginePromise;
+    const pendingScripts=new Set();
+    const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{
+      const script=document.createElement("script");let settled=false;
+      const finish=error=>{
+        if(settled)return;settled=true;clearTimeout(timeout);
+        pendingScripts.delete(finish);
+        script.onload=null;script.onerror=null;
+        if(error){script.remove();reject(error)}else resolve();
+      };
+      // Mobile connections can stay pending without firing a script error.
+      // Settle into the existing retry UI and retire this whole load attempt.
+      const timeout=setTimeout(()=>finish(new Error(key+" took too long to load")),8000);
+      pendingScripts.add(finish);
+      script.src=src;script.async=true;
+      script.onload=()=>finish(window[key]?null:new Error(key+" did not initialize"));
+      script.onerror=()=>finish(new Error(key+" could not be loaded"));
+      document.head.append(script);
+    });
+    studyEnginePromise=Promise.all([load(engineSrc,"ABVMStudyGames"),load(viewSrc,"ABVMStudyGameView")])
+      .then(()=>window.ABVMStudyGames)
+      .catch(error=>{for(const finish of pendingScripts)finish(error);studyEnginePromise=null;throw error;});
+    return studyEnginePromise;
+  }
   // Compare school civil dates, independent of the device timezone and DST.
   const schoolClock = new Intl.DateTimeFormat("en-US", {timeZone:"America/New_York",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",hourCycle:"h23"});
   function assessmentWindow(now=new Date()) {
@@ -613,22 +640,37 @@
   }
   function nextAssessments(rows,kindClass,now=new Date()) {
     const {day,afterSchool}=assessmentWindow(now);
-    const tests=rows.filter(({date,item})=>kindClass(item)==="test"&&(date>day||(!afterSchool&&+date===+day)));
+    const earliest=new Date(day);
+    if(afterSchool)earliest.setDate(earliest.getDate()+1);
+    const closures=rows.filter(({item})=>kindClass(item)==="closed");
+    const tests=rows.flatMap(row=>{
+      if(kindClass(row.item)!=="test")return [];
+      let date=row.date;
+      const end=row.range?.[1];
+      if(end&&end>date){
+        // A verified testing window remains active after its start day. Move
+        // only its displayed next school day, never the source date or range.
+        date=new Date(Math.max(+date,+earliest));
+        while(date<=end&&([0,6].includes(date.getDay())||closures.some(closed=>date>=closed.date&&date<=(closed.range?.[1]||closed.date))))date.setDate(date.getDate()+1);
+        if(date>end)return [];
+      }else if(date<earliest)return [];
+      return [{...row,date}];
+    }).sort((a,b)=>a.date-b.date);
     const first=tests[0];
     if(first)return {x:first.item,d:first.date,items:tests.filter(row=>+row.date===+first.date).map(row=>row.item)};
     const due=rows.find(({date,item})=>date>=day&&kindClass(item)==="due");
     return due?{x:due.item,d:due.date,items:[due.item]}:null;
   }
   function watchSchoolClock(refresh) {
-    let key=assessmentWindow().key;
-    const check=()=>{const next=assessmentWindow().key;if(next!==key){try{if(refresh()!==false)key=next}catch{}}};
+    let state=assessmentWindow();
+    const check=()=>{const next=assessmentWindow();if(next.key!==state.key){try{if(refresh({dayChanged:+next.day!==+state.day})!==false)state=next}catch{}}};
     const tick=()=>{check();setTimeout(tick,60000-Date.now()%60000)};
     setTimeout(tick,60000-Date.now()%60000);
     document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")check()});
     window.addEventListener("pageshow",check);
     document.addEventListener("close",check,true);
   }
-  window.ABVMProductView = Object.freeze({ nextAssessments, assessmentWindow, watchSchoolClock, today, week, homeworkCard, homeworkStatusText, updateHomeworkStamp, linkedTextHtml, progress, icon, plannerDate, compactMonthCard, calendarSpecials, freshnessControl, replaceFreshness, calendar, calendarDate, calendarShift, calendarGrid, calendarEvent, bindCalendar, searchCalendarEvents, calendarSearch });
+  window.ABVMProductView = Object.freeze({ nextAssessments, assessmentWindow, watchSchoolClock, ensureStudyGameScripts, today, week, homeworkCard, homeworkStatusText, updateHomeworkStamp, linkedTextHtml, progress, icon, plannerDate, compactMonthCard, calendarSpecials, freshnessControl, replaceFreshness, calendar, calendarDate, calendarShift, calendarGrid, calendarEvent, bindCalendar, searchCalendarEvents, calendarSearch });
 })();
 
 (()=>{"use strict";

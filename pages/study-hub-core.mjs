@@ -25,6 +25,20 @@ export function isReligionUnitOneReviewTest(test) {
     (/\bunit\s*1\b/.test(label) || /\b(?:chapter|ch\.?)\s*4\b/.test(label));
 }
 
+// A combined long/short bank can contain questions that explicitly ask for
+// only one sound. Admit those individual items without treating the entire
+// combined bank (or its general source description) as a single-sound scope.
+function targetsOnlyAnnouncedVowels(question, focus, familyVowel) {
+  const prompt=String(question?.prompt||'').toLowerCase();
+  const targets=[...prompt.matchAll(/\b(long|short)[ -]([aeiou])\b/g)]
+    .map(match=>({sound:match[1],vowel:match[2]}));
+  // Also recognize the reviewed form: "Why does the a in ... have a long sound?"
+  for(const match of prompt.matchAll(/\bthe ([aeiou]) in\b[^.!?]{0,80}\b(long|short) sound\b/g))
+    targets.push({sound:match[2],vowel:match[1]});
+  return targets.length>0&&targets.every(target=>target.vowel===familyVowel&&focus.some(announced=>
+    announced.sound===target.sound&&announced.vowel===target.vowel));
+}
+
 /** Match practice to an announced test without inventing scope or altering sources. */
 export function questionsForTest(test, questions) {
   const label = test.label.toLowerCase();
@@ -76,6 +90,9 @@ export function questionsForTest(test, questions) {
         if (photographed) return date === photographed[1];
         if (!focus.length) return !/\b(?:short|long)\s*\)/.test(label);
         const evidence = String(q.skill || '') + ' ' + String(q.sourceFact || '');
+        const combined=/^long-short-([aeiou])$|^short-([aeiou])-long-\2$/.exec(String(q.skill||''));
+        if(combined&&focus.some(row=>row.vowel===(combined[1]||combined[2]))&&
+          targetsOnlyAnnouncedVowels(q,focus,combined[1]||combined[2]))return true;
         return focus.some(({sound,vowel}) => {
           const pairConfirmed = focus.some(row => row.vowel === vowel && row.sound !== sound);
           const solo = new RegExp('\\b' + sound + '[- ]' + vowel + '\\b','i').test(evidence);

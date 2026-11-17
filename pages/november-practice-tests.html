@@ -25,6 +25,16 @@ const TESTS={"math":{"title":"Two-Digit Addition","sub":"Mathematics · Lessons 
 const STORE='abvm-grade2-tuesday-2026-11-17-v2';
 let state={active:'math',answers:{math:{},religion:{},spelling:{}},submitted:{},student:'',date:''};
 try{const s=JSON.parse(localStorage.getItem(STORE)||'null');if(s && s.answers && s.submitted)state={...state,...s,active:TESTS[s.active]?s.active:'math'};}catch(_e){}
+// Earlier single-answer inputs were accidentally saved as two-part arrays.
+// Recover those values in place so an update preserves existing practice work.
+if(!state.answers||typeof state.answers!=='object'||Array.isArray(state.answers))state.answers={};
+for(const [testId,test] of Object.entries(TESTS)){
+ if(!state.answers[testId]||typeof state.answers[testId]!=='object'||Array.isArray(state.answers[testId]))state.answers[testId]={};
+ for(const q of test.questions){
+  const value=state.answers[testId][q.id];
+  if(q.kind!=='pair'&&q.kind!=='multi'&&Array.isArray(value))state.answers[testId][q.id]=String(value[0]??'').replace(/,+$/,'');
+ }
+}
 const $=id=>document.getElementById(id), safe=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\"':'&quot;',"'":'&#39;'}[c]));
 function persist(){try{localStorage.setItem(STORE,JSON.stringify(state));$('saved').textContent='Saved on this iPad';}catch(_e){$('saved').textContent='Current session only';}}
 const eq=(a,b)=>String(a??'').toLowerCase().trim().replace(/[\s,]/g,'')===String(b??'').toLowerCase().trim().replace(/[\s,]/g,'');
@@ -40,7 +50,7 @@ function completed(q,v){
  if(q.kind==='pair')return Array.isArray(v)&&v.every(x=>String(x??'').trim());
  return v!==undefined&&v!==null&&String(v).trim()!=='';
 }
-function answerLine(q,v,part=0){return `<input class="hand" data-qid="${q.id}" data-part="${part}" aria-label="Answer to question ${q.id.replace(/\D/g,'')}" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" value="${safe(q.kind==='pair'?(v?.[part]??''):(v??''))}" ${state.submitted[state.active]?'disabled':''}>`;}
+function answerLine(q,v,part=0){return `<input class="hand" data-qid="${q.id}" ${q.kind==='pair'?`data-part="${part}"`:''} aria-label="Answer to question ${q.id.replace(/\D/g,'')}" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" value="${safe(q.kind==='pair'?(v?.[part]??''):(v??''))}" ${state.submitted[state.active]?'disabled':''}>`;}
 function choiceList(q,v){const rows=q.options.map(([key,label])=>{
  const checked=q.kind==='multi'?(v||[]).includes(key):v===key;
  return `<label class="choice"><input type="${q.kind==='multi'?'checkbox':'radio'}" name="${q.id}" data-qid="${q.id}" value="${key}" ${checked?'checked':''} ${state.submitted[state.active]?'disabled':''}><span class="letter">${key}.</span><span>${safe(label)}</span></label>`;

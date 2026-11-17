@@ -33,6 +33,6 @@ test('installed PWA version links and cache include this one-time practice page'
  assert.match(sw,/november-practice-tests\.html/);
  assert.match(sw,/study-games-materials-view\.mjs\?v=23/);
  assert.match(app,/study-games-materials-view\.mjs\?v=23/);
- assert.match(sw,/app\.js\?v=174/);
- assert.match(index,/app\.js\?v=174/);
+ assert.match(sw,/app\.js\?v=175/);
+ assert.match(index,/app\.js\?v=175/);
 });
