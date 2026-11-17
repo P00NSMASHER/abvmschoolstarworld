@@ -1,0 +1,70 @@
+{
+  "candidateId": "curriculum-reading-ela-predictions-2f383f7e66",
+  "familyId": "predictions",
+  "subject": "Reading / ELA",
+  "topic": "Predictions",
+  "sourceHash": "teacher-pages-4725bd99673f05c3d3fb",
+  "generatedAt": "2026-11-17T19:54:29.343Z",
+  "sourceContext": {
+    "quality": "page-exact",
+    "matchMethod": "exact-topic-phrase",
+    "subject": "Reading / ELA",
+    "topic": "Predictions",
+    "sourceTitle": "Reading Work",
+    "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
+    "sourceCaptureHash": "118850cfd85ef818053662d8f144ea55d09e15743b5bc5b0bcea143dc9645abf",
+    "sourceCheckedAt": "2026-11-17T19:54:29.343Z",
+    "sourceLine": "Reading Comprehension: predictions; character traits; plot/sequence of events; text & picture clues",
+    "evidenceExcerptHash": "sha256:54b9d8f116aa7ccdc91a07747aba04d016eb941be533a16207eca17dacb482fc"
+  },
+  "featureFlag": "curriculum-family:predictions-candidate",
+  "enabledByDefault": false,
+  "registryMatch": null,
+  "minimumSemanticVariants": 8,
+  "requiredQuestionTypes": [
+    "direct",
+    "transfer",
+    "reasoning"
+  ],
+  "proposedQuestions": [],
+  "authoring": {
+    "status": "AUTHORING_REQUIRED",
+    "generatedQuestionCount": 0,
+    "minimumSemanticVariants": 8,
+    "requiredQuestionTypes": [
+      "direct",
+      "transfer",
+      "reasoning"
+    ],
+    "requiredQuestionFields": [
+      "questionType",
+      "prompt",
+      "choices",
+      "answer",
+      "explanation",
+      "hint",
+      "dok",
+      "difficulty"
+    ]
+  },
+  "rollout": {
+    "featureFlagRequired": false,
+    "automatedQaRequired": true,
+    "safeUsageEvidenceRequired": false,
+    "manualPromotionRequired": false,
+    "automaticPromotion": true
+  },
+  "readiness": {
+    "status": "HOLD",
+    "blockers": [
+      "minimum-semantic-variants:0/8",
+      "question-type-required:direct",
+      "question-type-required:transfer",
+      "question-type-required:reasoning",
+      "automated-qa-required"
+    ],
+    "automaticPromotion": false,
+    "automaticDelete": false,
+    "automaticRewrite": false
+  }
+}
