@@ -2296,3 +2296,25 @@
   .games-screen:not(.is-playing) .prep-sheet>.prep-start{margin-top:7px}
   .games-screen:not(.is-playing) .prep-material-actions{margin-top:6px}
 }
+
+/* Do not bury selected test actions under months of later dates. The selector
+   remains complete, keyboard-operable, and independently scrollable. */
+.games-screen:not(.is-playing) .prep-sheet>.prep-chooser-panel .prep-test-choices[data-many-tests="true"]{
+  max-height:156px;
+  overflow-x:hidden;
+  overflow-y:auto;
+  overscroll-behavior-y:contain;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+  scrollbar-color:#799bbd #f1f6fc;
+  padding:3px 7px 3px 3px;
+  border:1px solid #d9e7f2;
+  border-radius:16px;
+  background:#f8fbff;
+}
+.games-screen:not(.is-playing) .prep-chooser-note{
+  margin:6px 0 0;
+  color:#43607c;
+  font-size:.76rem;
+  line-height:1.4;
+}
