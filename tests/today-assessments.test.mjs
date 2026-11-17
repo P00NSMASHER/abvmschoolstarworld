@@ -26,6 +26,32 @@ test('Friday advances to the next listed assessment, skipping dates without test
  assert.equal(view.nextAssessments([],kind),null);
  const due=row(19,'Return folder','due');assert.equal(view.nextAssessments([due],kind,new Date('2026-10-16T16:00:00-04:00')).x,due.item);
 });
+
+test('multi-day assessment windows remain eligible after their first day and group with same-day tests',()=>{
+ const window={date:new Date(2027,0,12,12),range:[new Date(2027,0,12,12),new Date(2027,0,22,12)],item:{label:'STAR Testing window',kind:'test'}};
+ const reading={date:new Date(2027,0,13,12),item:{label:'Reading',kind:'test'}};
+ const next={date:new Date(2027,1,1,12),item:{label:'Later assessment',kind:'test'}};
+ const rangeRows=[window,reading,next];
+ for(const now of ['2027-01-12T15:00:00-05:00','2027-01-13T08:00:00-05:00']){
+  const result=view.nextAssessments(rangeRows,kind,new Date(now));
+  assert.equal(result.d.getDate(),13);
+  assert.deepEqual(Array.from(result.items,item=>item.label),['STAR Testing window','Reading']);
+ }
+ assert.equal(window.date.getDate(),12,'presentation must not move the source start date');
+ assert.equal(window.range[1].getDate(),22,'presentation must not move the source end date');
+ assert.equal(view.nextAssessments(rangeRows,kind,new Date('2027-01-22T15:00:00-05:00')).x,next.item);
+});
+
+test('ongoing assessment windows skip weekends and verified school closures without extending their source range',()=>{
+ const window={date:new Date(2027,0,12,12),range:[new Date(2027,0,12,12),new Date(2027,0,22,12)],item:{label:'STAR Testing window',kind:'test'}};
+ const closed={date:new Date(2027,0,18,12),range:[new Date(2027,0,18,12),new Date(2027,0,18,12)],item:{label:'School Closed',kind:'closed'}};
+ const next={date:new Date(2027,1,1,12),item:{label:'Later assessment',kind:'test'}};
+ const result=view.nextAssessments([window,closed,next],kind,new Date('2027-01-15T15:00:00-05:00'));
+ assert.equal(result.d.getDate(),19);
+ assert.equal(result.x,window.item);
+ const ended={...window,range:[window.date,new Date(2027,0,17,12)]};
+ assert.equal(view.nextAssessments([ended,closed,next],kind,new Date('2027-01-15T15:00:00-05:00')).x,next.item);
+});
 test('school-clock watcher refreshes once per boundary and on resume without a source request',()=>{
  let now=Date.parse('2026-10-15T14:59:59-04:00'),timer,refreshes=0;
  class Clock extends Date{constructor(...args){super(...(args.length?args:[now]))}static now(){return now}}

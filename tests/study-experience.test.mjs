@@ -69,7 +69,7 @@ test('every reviewed schoolwork item has a non-boilerplate instructional cue',()
 test('new modules and stylesheet are present in offline asset manifest',()=>{
  const sw=readFileSync(new URL('../pages/sw.js',import.meta.url),'utf8');
  const app=readFileSync(new URL('../pages/app.js',import.meta.url),'utf8');
- const loaded=app.match(/load\("(\.\/study-games\.js\?v=\d+)","ABVMStudyGames"\)/);
+ const loaded=app.match(/ensureStudyGameScripts\(\{engineSrc:"(\.\/study-games\.js\?v=\d+)",viewSrc:/);
  assert(loaded,'the app must load a versioned Study Games engine');
  for(const name of ['study-experience.mjs','study-teaching.css?v=1','study-review.js?v=4',loaded[1]])assert(sw.includes(name),name);
 });

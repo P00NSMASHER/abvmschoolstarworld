@@ -3,7 +3,7 @@ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const stack=()=>$("#app-content");
 if(location.hash==="#progress")history.replaceState(null,"","#family");
 let envelope=null, pack=null, activeTab=(["today","week","calendar","study","games","family"].includes(location.hash.slice(1).split("?")[0])?location.hash.slice(1).split("?")[0]:"today"), selectedDay=null, calendarDay=null, weekOffset=0, calendarOffset=0;
-let studyGameCatalogCache=null, derivedPackCache=null, studyEnginePromise=null, screenEventsBound=false, lastPackFetchAt=0, packRefreshPromise=null, manualRefreshActive=false, lastPackFetchUsedCache=false, gameState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,negativeStreak:0,bestStreak:0,streakAdjustment:0,lastStreakDelta:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null,sourceKey:"",sessionSeed:"",learningEvents:[],results:[],comebackSucceeded:false,rewardStatus:"idle",rewardAwarded:0,rewardCurrency:"Study Stars",starBalance:0,rewardRevealAmount:0,rewardRevealScheduled:false,tries:0,misses:0,hints:0,retry:0,wrong:[],counterValue:0};
+let studyGameCatalogCache=null, derivedPackCache=null, screenEventsBound=false, lastPackFetchAt=0, packRefreshPromise=null, manualRefreshActive=false, lastPackFetchUsedCache=false, gameState={screen:"menu",mode:null,questions:[],index:0,score:0,streak:0,negativeStreak:0,bestStreak:0,streakAdjustment:0,lastStreakDelta:0,selectedIndex:null,answered:false,hintOpen:false,saved:false,supportMode:false,supportQuestion:null,supportCorrect:null,supportOriginQuestion:null,comebackMode:false,comebackQuestion:null,comebackKey:null,comebackCorrect:null,sourceKey:"",sessionSeed:"",learningEvents:[],results:[],comebackSucceeded:false,rewardStatus:"idle",rewardAwarded:0,rewardCurrency:"Study Stars",starBalance:0,rewardRevealAmount:0,rewardRevealScheduled:false,tries:0,misses:0,hints:0,retry:0,wrong:[],counterValue:0};
 let studyMaterials=null,studyMaterialsPack=null,studyMaterialsPromise=null,studyMaterialsError=null,studyMaterialsView=null,screenGeneration=0;
 let homeworkFeed=null,homeworkFetchPromise=null,lastHomeworkFetchAt=0;
 const HOMEWORK_FEED_URL='./data/homework-current.json',HOMEWORK_REFRESH_MS=45*60*1000;
@@ -384,12 +384,8 @@ async function refreshTestGuideSources(){
 }
 
 function studyGameEngine(){return window.ABVMStudyGames||null}
-function ensureStudyGameEngine(){
-  if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
-  if(studyEnginePromise)return studyEnginePromise;
-  const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.async=true;s.onload=()=>window[key]?resolve():reject(new Error(key+" did not initialize"));s.onerror=()=>reject(new Error(key+" could not be loaded"));document.head.append(s)});
-  studyEnginePromise=Promise.all([load("./study-games.js?v=107","ABVMStudyGames"),load("./study-games-view.js?v=16","ABVMStudyGameView")]).then(()=>window.ABVMStudyGames).catch(error=>{studyEnginePromise=null;throw error;});
-  return studyEnginePromise;
+function ensureStudyGameEngine(retry=false){
+  return window.ABVMProductView.ensureStudyGameScripts({engineSrc:"./study-games.js?v=108",viewSrc:"./study-games-view.js?v=16",retry});
 }
 function studyGameCatalog(){
   const engine=studyGameEngine();
@@ -524,14 +520,14 @@ function gameFinishHtml(){
   const promotion=g.rewardStatus==="done"&&g.newRanks?.length?window.ABVMStudyBadges.promotion(g.newRanks):"";
   return reveal+promotion+finish+goal;
 }
-function renderGames(){
+function renderGames(retry=false){
   const previousScreen=stack().querySelector(".games-screen"),menuScroll=gameState.screen==="menu"&&previousScreen&&!previousScreen.classList.contains("is-playing")?previousScreen.scrollTop:null;
   if(!isStudyRoute())return;
   studyMaterialsView?.readAloud.stop();
   const engine=studyGameEngine(),generation=++screenGeneration,data=pack;
   if(!engine||!window.ABVMStudyGameView){
     stack().innerHTML='<div class="screen games-screen game-loading" data-study-state="loading" role="region" aria-label="Study games"><section class="game-empty"><span class="loading-star" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg></span><h2>Getting your practice ready…</h2><p>One moment.</p></section></div>';
-    ensureStudyGameEngine().then(()=>{if(currentStudyScreen(generation,data)){studyGameCatalogCache=null;renderGames();bindScreen();}}).catch(()=>{if(currentStudyScreen(generation,data))stack().innerHTML='<div class="screen games-screen"><section class="error-card"><p>STUDY</p><h1>Practice could not load</h1><span>Check your connection and try again.</span><button type="button" data-retry-games>Try again</button></section></div>';});
+    ensureStudyGameEngine(retry).then(()=>{if(currentStudyScreen(generation,data)){studyGameCatalogCache=null;renderGames();bindScreen();}}).catch(()=>{if(currentStudyScreen(generation,data))stack().innerHTML='<div class="screen games-screen"><section class="error-card"><p>STUDY</p><h1>Practice could not load</h1><span>Check your connection and try again.</span><button type="button" data-retry-games>Try again</button></section></div>';});
     return;
   }
   if(!currentStudyMaterials()&&studyMaterialsError?.pack!==pack)ensureStudyMaterials().catch(()=>{});
@@ -582,6 +578,16 @@ function carryPlannerDate(next){
   const state=window.ABVMProductView.plannerDate(next,activeTab,calendarDay,selectedDay,today(),weekDays(0)[0]);
   if(state)({calendarDay,selectedDay,weekOffset,calendarOffset}={calendarDay,selectedDay,weekOffset,calendarOffset,...state});
 }
+function rebasePlannerDates(){
+  // Offsets are relative to the current school month/week. A new civil day
+  // can change either origin; preserve the user's selected absolute dates.
+  const now=today();
+  if(calendarDay)calendarOffset=(calendarDay.getFullYear()-now.getFullYear())*12+calendarDay.getMonth()-now.getMonth();
+  if(selectedDay){
+    const ordinal=d=>Date.UTC(d.getFullYear(),d.getMonth(),d.getDate());
+    weekOffset=Math.round((ordinal(mondayFor(selectedDay))-ordinal(weekDays(0)[0]))/604800000);
+  }
+}
 function redrawPlanner(draw,selector){
   const old=stack().firstElementChild,top=old?.scrollTop||0;
   draw();
@@ -606,7 +612,7 @@ function bindScreen(){
     if(target.matches("[data-week-today]")){weekOffset=0;selectedDay=null;redrawPlanner(renderWeek,".day-picker button.active");return;}
     if(target.matches("[data-cal-today]")){calendarOffset=0;calendarDay=null;redrawPlanner(renderCalendar,".calendar-grid button.active");return;}
     if(target.matches("[data-study-retry]")){if(!studyMaterialsView)retryStudyMaterials();return;}
-    if(target.matches("[data-retry-games]")){renderGames();return;}
+    if(target.matches("[data-retry-games]")){renderGames(true);return;}
     if(target.matches("[data-game-read]")){const q=activeGameQuestion();if(q&&!studyMaterialsView?.readAloud.read(q.prompt+". "+q.choices.map((choice,i)=>String.fromCharCode(65+i)+". "+choice).join(". ")))toast("Read aloud is unavailable. You can keep practicing.");return;}
     if(target.matches("[data-game-start]")){startStudyGame(target.dataset.gameStart);return;}
     if(target.matches("[data-study-star-goal]")){studyGameEngine()?.selectStudyStarGoal?.(target.dataset.studyStarGoal);renderGames();return;}
@@ -790,7 +796,7 @@ document.addEventListener("visibilitychange",()=>{
 window.addEventListener("pageshow",event=>{
   if(event.persisted&&pack){fetchPack({force:true,notify:true}).catch(()=>{});fetchHomeworkFeed({force:true}).catch(()=>{});}
 });
-window.ABVMProductView.watchSchoolClock(()=>{if(pack&&(activeTab==="today"||isStudyRoute()&&gameState.screen==="menu"&&!document.querySelector("dialog[open]")&&!window.speechSynthesis?.speaking))render({preserveScroll:true});else if(isStudyRoute())return false});
+window.ABVMProductView.watchSchoolClock(({dayChanged})=>{if(dayChanged)rebasePlannerDates();if(pack&&(activeTab==="today"||dayChanged&&["week","calendar"].includes(activeTab)||isStudyRoute()&&gameState.screen==="menu"&&!document.querySelector("dialog[open]")&&!window.speechSynthesis?.speaking))render({preserveScroll:true});else if(isStudyRoute())return false});
 setInterval(()=>{if(pack&&document.visibilityState==="visible"&&!isStudyRoute()){fetchPack({notify:true}).catch(()=>{});fetchHomeworkFeed().catch(()=>{})}},PACK_REFRESH_MS);
 load();
 })();
