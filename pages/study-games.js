@@ -1,4 +1,6 @@
 (()=>{"use strict";
+// A timed-out script can arrive after its retry. Preserve live learning state.
+if(window.ABVMStudyGames)return;
 // Editorial repair to an identified original practice item, never teacher text.
 const SUBTRACTION_CHECK_PROMPT='Sam says 9 - 4 = 6. Which addition fact checks the correct difference?';
 const legacy=new Set([

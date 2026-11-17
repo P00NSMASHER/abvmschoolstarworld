@@ -13,7 +13,7 @@ test('phase 4 offline versions match page, bootloader, CSS and cache identity',(
    assert.ok(html.includes(name),name+' in HTML');
    assert.ok(sw.includes(name),name+' in service worker');
  }
- for(const name of ['study-games.js?v=107','study-games-view.js?v=16']){
+ for(const name of ['study-games.js?v=108','study-games-view.js?v=16']){
    assert.ok(sw.includes(name),name+' offline precache');
    assert.ok(app.includes(name),name+' loaded by application');
  }

@@ -47,3 +47,66 @@ test("nonversioned data keeps the proven query-insensitive offline fallback",asy
   assert.equal(result,p.stale);
   assert.deepEqual(p.calls.map(call=>call.ignoreSearch),[false,true]);
 });
+
+function retryCacheProbe({online=false,version='107'}={}){
+  const cachedUrl='https://abvm.example/study-games.js?v='+version;
+  const entries=new Map(online?[]:[[cachedUrl,new Response('saved engine '+version)]]);
+  const fetched=[],matched=[],written=[],pending=[];
+  const key=request=>typeof request==='string'?request:request.url;
+  const context={URL,Request,Response,Headers,
+    caches:{async open(){return {
+      async match(request,options){
+        matched.push({url:key(request),ignoreSearch:!!options?.ignoreSearch});
+        return entries.get(key(request))?.clone();
+      },
+      async put(request,response){written.push(key(request));entries.set(key(request),response);},
+    };}},
+    async fetch(request){
+      fetched.push(key(request));
+      if(!online)throw new Error('synthetic offline connection');
+      return new Response('fresh engine 107');
+    },
+    self:{addEventListener(){}},
+  };
+  runInNewContext(workerSource,context,{filename:'sw.js'});
+  return {context,fetched,matched,written,entries,pending,
+    request:new Request('https://abvm.example/study-games.js?v=107&abvm-retry=1'),
+    event:{waitUntil(promise){pending.push(promise);}},
+  };
+}
+
+test('online engine retry fetches its isolated URL but caches under the exact version URL',async()=>{
+  const h=retryCacheProbe({online:true});
+  const response=await h.context.networkFirst(h.request,null,h.event);
+  assert.equal(await response.text(),'fresh engine 107');
+  await Promise.all(h.pending);
+  assert.deepEqual(h.fetched,[h.request.url]);
+  assert.deepEqual(h.written,['https://abvm.example/study-games.js?v=107']);
+  assert.equal(h.entries.size,1,'retry tokens must not create growing duplicate script caches');
+});
+
+test('offline engine retry uses the already cached exact version',async()=>{
+  const h=retryCacheProbe();
+  const response=await h.context.networkFirst(h.request,null,h.event);
+  assert.equal(await response.text(),'saved engine 107');
+  assert.equal(response.headers.get('X-ABVM-Cache-Fallback'),'1');
+  assert.deepEqual(h.matched,[{url:'https://abvm.example/study-games.js?v=107',ignoreSearch:false}]);
+});
+
+test('offline engine retry cannot use another cached code version',async()=>{
+  const h=retryCacheProbe({version:'106'});
+  const response=await h.context.networkFirst(h.request,null,h.event);
+  assert.equal(response.type,'error');
+  assert.equal(h.matched.some(row=>row.ignoreSearch),false);
+});
+
+test('retry normalization is limited to the two versioned Study scripts',async()=>{
+  const h=retryCacheProbe();
+  for(const suffix of ['app.js?v=175&abvm-retry=1','study-games.js?abvm-retry=1',
+    'study-games.js?v=107&abvm-retry=unexpected','study-games-view.js?v=16&abvm-retry=1&abvm-retry=2']){
+    const request=new Request('https://abvm.example/'+suffix);
+    assert.strictEqual(h.context.studyScriptCacheRequest(request),request,suffix);
+  }
+  const view=new Request('https://abvm.example/study-games-view.js?v=16&abvm-retry=2');
+  assert.equal(h.context.studyScriptCacheRequest(view).url,'https://abvm.example/study-games-view.js?v=16');
+});

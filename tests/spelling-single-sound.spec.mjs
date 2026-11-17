@@ -39,15 +39,21 @@ test('long-a Test Prep opens its three questions, prints them and completes a sc
   await expect(page.locator('[data-test-single]')).toBeEnabled();
   await page.screenshot({path:info.outputPath('long-a-prep-enabled.png'),fullPage:true});
 
-  await page.locator('[data-test-worksheet]').click();
-  await expect(page.locator('[data-study-guide-dialog]')).toHaveAttribute('data-guide-practice-count','3');
-  const paper=page.frameLocator('.study-guide-frame');
+  const prep=page.locator('.prep-sheet');
+  await prep.getByRole('group',{name:'Printable test materials',exact:true})
+    .getByRole('button',{name:'Practice worksheet',exact:true}).click();
+  const dialog=page.getByRole('dialog',{name:'Worksheet: Spelling (long a) / Handwriting',exact:true});
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toHaveAttribute('data-guide-practice-count','3');
+  await expect(dialog).toHaveAttribute('data-guide-test-key','2026-11-20|Spelling (long a) / Handwriting');
+  const paper=dialog.frameLocator('iframe[title="Practice worksheet preview"]');
   await expect(paper.locator('main.student-test .problem')).toHaveCount(3);
   await expect(paper.locator('section.adult-key .key-list li')).toHaveCount(3);
   await expect(paper.locator('main.student-test')).not.toContainText('Which word has the short a sound?');
-  await page.locator('[data-guide-close]').click();
+  await dialog.getByRole('button',{name:'Close',exact:true}).click();
+  await expect(dialog).toHaveCount(0);
 
-  await page.locator('[data-test-single]').click();
+  await prep.getByRole('button',{name:'Start test prep',exact:true}).click();
   const observed=new Set();
   for(let index=0;index<3;index++){
     await expect(page.locator('.game-topbar')).toContainText(`${index+1} of 3`);

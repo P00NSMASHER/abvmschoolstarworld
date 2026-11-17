@@ -11,7 +11,7 @@ const STATIC_SHELL = [
   "./study-teaching.css?v=1",
   "./school-updates.js?v=4",
   "./weekly-learning.js?v=6",
-  "./study-games.js?v=107",
+  "./study-games.js?v=108",
   "./study-games-view.js?v=16",
   "./manifest.webmanifest",
   "./assets/abvm-app-icon-192.png"
@@ -54,13 +54,22 @@ self.addEventListener("activate",event=>{
   })());
 });
 
+function studyScriptCacheRequest(request){
+  const url=new URL(request.url),retry=url.searchParams.getAll("abvm-retry");
+  // Only this loader's transport token is disposable. Keep every source
+  // version and all other query parameters in the exact offline cache key.
+  if(!/\/(?:study-games|study-games-view)\.js$/.test(url.pathname)||!url.searchParams.has("v")||retry.length!==1||!(/^[1-9]\d*$/).test(retry[0]))return request;
+  url.searchParams.delete("abvm-retry");
+  return new Request(url.href,{headers:request.headers});
+}
+
 async function cachedFallback(request,fallback=null){
   const cache=await caches.open(CACHE);
   const url=new URL(request.url);
   // Treat ?v= as source identity: a previous JS/CSS revision must never
   // masquerade as missing versioned code when the device is offline.
   const versionedCode=/\.(?:css|js|mjs)$/.test(url.pathname)&&url.searchParams.has("v");
-  const exact=await cache.match(request);
+  const exact=await cache.match(studyScriptCacheRequest(request));
   if(exact||versionedCode)return exact||null;
   return (await cache.match(request,{ignoreSearch:true}))||
     (fallback?await cache.match(fallback,{ignoreSearch:true}):null);
@@ -73,7 +82,7 @@ function networkFirst(request,fallback="./index.html",event=null){
     // response body while asynchronous persistence is still awaiting storage.
     const copy=response.clone();
     const cache=await caches.open(CACHE);
-    await cache.put(request,copy);
+    await cache.put(studyScriptCacheRequest(request),copy);
   });
   if(event)event.waitUntil(persist.catch(()=>{}));
   return network.then(async response=>{

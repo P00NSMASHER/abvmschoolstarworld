@@ -5,6 +5,7 @@ import {runInNewContext} from 'node:vm';
 
 const app = readFileSync(new URL('../pages/app.js', import.meta.url), 'utf8');
 const productView = readFileSync(new URL('../pages/product-view.js', import.meta.url), 'utf8');
+const engineSource = readFileSync(new URL('../pages/study-games.js', import.meta.url), 'utf8');
 const start = app.indexOf('function ensureStudyGameEngine(){');
 const end = app.indexOf('function studyGameCatalog(){', start);
 assert.ok(start >= 0 && end > start);
@@ -74,6 +75,23 @@ test('retry starts a fresh engine request and retains the already loaded rendere
   assert.equal(h.timers.size,0);
 });
 
+test('retry uses a new request URL while preserving the exact engine version', async () => {
+  const h = harness(), first = h.context.ensureStudyGameEngine();
+  h.loaded('study-games-view.js','ABVMStudyGameView');
+  const firstUrl = new URL(h.scripts[0].src,'https://abvm.example/');
+  h.expireNetworkDeadline();
+  assert.equal((await outcome(first)).state,'error');
+  const second = h.context.ensureStudyGameEngine();
+  const retryUrl = new URL(h.scripts.at(-1).src,'https://abvm.example/');
+  assert.notEqual(retryUrl.href,firstUrl.href,
+    'a browser must not coalesce the retry with the still-pending original request');
+  assert.equal(retryUrl.pathname,firstUrl.pathname);
+  assert.equal(retryUrl.searchParams.get('v'),firstUrl.searchParams.get('v'));
+  assert.equal(retryUrl.searchParams.get('abvm-retry'),'1');
+  h.loaded('study-games.js','ABVMStudyGames');
+  assert.equal((await outcome(second)).state,'ready');
+});
+
 test('ordinary script errors settle promptly and can retry successfully', async () => {
   const h = harness(), first = h.context.ensureStudyGameEngine();
   h.loaded('study-games-view.js','ABVMStudyGameView');
@@ -102,4 +120,22 @@ test('one failed script retires its pending sibling before a new attempt', async
   h.loaded('study-games-view.js','ABVMStudyGameView');
   assert.equal((await outcome(second)).state,'ready');
   assert.equal(h.timers.size,0);
+});
+
+test('a late duplicate engine preserves the initialized engine and unsaved learning', () => {
+  const context = {
+    window:{},
+    localStorage:{getItem(){return null;},setItem(){throw new Error('synthetic storage denial');}},
+  };
+  runInNewContext(engineSource,context,{filename:'pages/study-games.js'});
+  const engine = context.window.ABVMStudyGames;
+  engine.recordLearning({id:'retry-math-proof',subject:'Math',skill:'math-addition',prompt:'1 + 1',choices:['2','3'],answer:'2'},true);
+  assert.equal(engine.learningStorageState(),'not-saved');
+  assert.equal(engine.loadLearning()['math-addition'].Seen,1);
+  // A removed script can finish after the new request already initialized
+  // practice. Execute its real body again, as that late response would.
+  runInNewContext(engineSource,context,{filename:'late-study-games.js'});
+  assert.strictEqual(context.window.ABVMStudyGames,engine);
+  assert.equal(context.window.ABVMStudyGames.loadLearning()['math-addition'].Seen,1);
+  assert.equal(context.window.ABVMStudyGames.learningStorageState(),'not-saved');
 });

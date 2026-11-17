@@ -603,10 +603,11 @@
     if (node.nextElementSibling?.matches(".teacher-live-source")) node.nextElementSibling.remove();
     node.outerHTML = markup;
   }
-  let studyEnginePromise=null;
+  let studyEnginePromise=null,studyEngineAttempt=0;
   function ensureStudyGameScripts({engineSrc,viewSrc}) {
     if(window.ABVMStudyGames&&window.ABVMStudyGameView)return Promise.resolve(window.ABVMStudyGames);
     if(studyEnginePromise)return studyEnginePromise;
+    const attempt=studyEngineAttempt++;
     const pendingScripts=new Set();
     const load=(src,key)=>window[key]?Promise.resolve():new Promise((resolve,reject)=>{
       const script=document.createElement("script");let settled=false;
@@ -620,7 +621,9 @@
       // Settle into the existing retry UI and retire this whole load attempt.
       const timeout=setTimeout(()=>finish(new Error(key+" took too long to load")),8000);
       pendingScripts.add(finish);
-      script.src=src;script.async=true;
+      // Removing a script need not cancel its fetch. A fresh URL prevents a
+      // retry from rejoining that still-pending browser request; v stays exact.
+      script.src=attempt?src+(src.includes("?")?"&":"?")+"abvm-retry="+attempt:src;script.async=true;
       script.onload=()=>finish(window[key]?null:new Error(key+" did not initialize"));
       script.onerror=()=>finish(new Error(key+" could not be loaded"));
       document.head.append(script);

@@ -44,6 +44,29 @@ Chromium, and the explicit iPhone-sized WebKit project. They cover the real UI,
 controlled offline/date/network conditions, a complete scored spelling round,
 the printable worksheet and separate key, and restored Math answers.
 
+## Browser findings from the first candidate
+
+The first exact-head App QA run `43989813255` and independent reproduction run
+`43989813314` each reported 1,145 passes, five failures, one flaky case, and four
+existing skips. The new Math and planner cases passed. Those runs did not qualify
+the candidate for release.
+
+The long-a case stopped because its worksheet selector matched both the active
+Test Prep control and a second control in the collapsed materials section. The
+test now scopes the visible Test Prep group and verifies the exact worksheet
+dialog identity, while retaining all question, answer-key, and scoring checks.
+
+The Study retry case exposed a real remaining loader defect. The desktop trace
+contains only one engine request: removing a timed-out script did not cancel its
+request, and the browser reused that pending request on retry. The loader now
+uses a distinct retry request identity. Offline cache keys remove only that
+retry marker for the two Study scripts and retain their exact version. The
+browser regression keeps the original request stalled and still requires a
+fresh request, a ready Study screen, and a playable Math question.
+An initialization guard also prevents a late original script from replacing
+the active engine and erasing volatile learning state when device storage is
+unavailable; the engine's versioned asset identity advances with that change.
+
 ## Release and privacy boundaries
 
 No teacher facts, test announcements, source documents, schoolwork answers,

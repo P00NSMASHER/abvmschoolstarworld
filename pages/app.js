@@ -385,7 +385,7 @@ async function refreshTestGuideSources(){
 
 function studyGameEngine(){return window.ABVMStudyGames||null}
 function ensureStudyGameEngine(){
-  return window.ABVMProductView.ensureStudyGameScripts({engineSrc:"./study-games.js?v=107",viewSrc:"./study-games-view.js?v=16"});
+  return window.ABVMProductView.ensureStudyGameScripts({engineSrc:"./study-games.js?v=108",viewSrc:"./study-games-view.js?v=16"});
 }
 function studyGameCatalog(){
   const engine=studyGameEngine();
