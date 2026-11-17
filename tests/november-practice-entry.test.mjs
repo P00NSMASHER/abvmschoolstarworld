@@ -31,8 +31,8 @@ test('installed PWA version links and cache include this one-time practice page'
  const app=readFileSync(new URL('app.js',base),'utf8');
  const index=readFileSync(new URL('index.html',base),'utf8');
  assert.match(sw,/november-practice-tests\.html/);
- assert.match(sw,/study-games-materials-view\.mjs\?v=23/);
- assert.match(app,/study-games-materials-view\.mjs\?v=23/);
- assert.match(sw,/app\.js\?v=175/);
- assert.match(index,/app\.js\?v=175/);
+ assert.match(sw,/study-games-materials-view\.mjs\?v=24/);
+ assert.match(app,/study-games-materials-view\.mjs\?v=24/);
+ assert.match(sw,/app\.js\?v=176/);
+ assert.match(index,/app\.js\?v=176/);
 });
