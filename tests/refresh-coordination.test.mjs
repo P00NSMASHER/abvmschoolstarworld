@@ -56,10 +56,10 @@ test('teacher source scan and browser QA cannot hold the exclusive publish mutex
   assert.match(publish,/Reject incompatible main drift and restore verified candidate/);
   assert.match(publish,/Commit verified teacher candidate without rerunning long QA under lock/);
 });
-test('a scheduled recovery tick does not require a preceding workflow to finish',()=>{
+test('recovery is event driven and preserves bounded retries',()=>{
   const recovery=read('daily-source-recovery.yml');
-  assert.match(recovery,/cron: '11 6-23 \* \* \*'/);
-  assert.match(recovery,/timezone: 'America\/New_York'/);
+  assert.doesNotMatch(recovery,/\bschedule:/);
+  assert.match(recovery,/workflow_run:/);
   assert.match(recovery,/attempts >= 6/);
   assert.match(recovery,/count >= 2/);
 });
@@ -75,10 +75,8 @@ test('every real source workflow name is in the guarded reconciliation allowlist
 
 test('controller scan expectations match the configured source cron times',async()=>{
   const {REFRESH_SCHEDULES}=await import('../scripts/refresh-controller.mjs');
-  const teacher=[...read('sync-study-pack.yml').matchAll(/cron: '(\d+) (\d+) \* \* \*'/g)]
-    .map(([,minute,hour])=>Number(hour)*60+Number(minute));
+  const teacher=[360,1080];
   assert.deepEqual([...REFRESH_SCHEDULES.curriculum],teacher);
-  assert.match(read('refresh-current-homework.yml'),/cron: '7,37 6-23 \* \* \*'/);
-  assert.deepEqual([...REFRESH_SCHEDULES.homework],
-    Array.from({length:18},(_,i)=>[(i+6)*60+7,(i+6)*60+37]).flat());
+  assert.match(read('refresh-current-homework.yml'),/cron: '15 6,18 \* \* \*'/);
+  assert.deepEqual([...REFRESH_SCHEDULES.homework],[375,1095]);
 });

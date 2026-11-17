@@ -290,7 +290,7 @@ export function assessMainBranchProtection(branch){
  * successful on-demand check keeps the saved source timestamp looking fresh.
  * Distinguish regular delivery from manual, push, or recovery dispatches.
  */
-export function assessHomeworkPollingCadence(runs, now, {maxGapHours=2.5}={}) {
+export function assessHomeworkPollingCadence(runs, now, {maxGapHours=14.5}={}) {
   const current=Date.parse(now||'');
   if(!Number.isFinite(current)||!Array.isArray(runs)||!(maxGapHours>0)){
     return {state:'unknown',lastScheduledAt:null,ageHours:null};
@@ -307,11 +307,10 @@ export function assessHomeworkPollingCadence(runs, now, {maxGapHours=2.5}={}) {
     Number.isFinite(Date.parse(run?.created_at||'')))
     .sort((a,b)=>Date.parse(b.created_at)-Date.parse(a.created_at));
   const last=scheduled[0];
-  // The last school-hour Homework poll is 23:37 Eastern. An absent late
-  // poll remains overdue after its 90-minute grace even after midnight.
-  // Likewise, 06:07 is due at 07:37, not 08:00. Reuse the exact
+  // The two owner-approved Homework polls are 06:15 and 18:15 Eastern.
+  // A missing poll becomes overdue after its 90-minute grace. Reuse the exact
   // source-recovery controller's Eastern schedule instead of a second clock.
-  const outsideActiveWindow=localHour<8||localHour>23||!Number.isFinite(localMinute);
+  const outsideActiveWindow=localHour<8||localHour>20||!Number.isFinite(localMinute);
   if(outsideActiveWindow){
     if(!last){
       const schedule=scheduledSourceDue({kind:'homework',now,checkedAt:null});
@@ -339,7 +338,7 @@ export function assessHomeworkPollingCadence(runs, now, {maxGapHours=2.5}={}) {
   // A late but successful scheduled run repairs CURRENT freshness; it must not
   // silently erase earlier dropped/delayed school-day polling windows.
   // Compare only original scheduled runs on today's Eastern calendar date:
-  // a legitimate prior-night interval is not an hourly-delivery failure.
+  // a legitimate prior-night interval is not a twice-daily delivery failure.
   const localDay=value=>new Intl.DateTimeFormat('en-CA',{
     timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'
   }).format(new Date(value));
@@ -360,7 +359,10 @@ export function assessHomeworkPollingCadence(runs, now, {maxGapHours=2.5}={}) {
       gapTo=later.created_at;
     }
   }
-  return {state:age>maxGapHours?'delayed':'current',
+  const currentSchedule=scheduledSourceDue({kind:'homework',now,checkedAt:last.created_at});
+  return {state:currentSchedule.due||age>maxGapHours?'delayed':'current',
     lastScheduledAt:last.created_at,ageHours:Number(age.toFixed(2)),
+    expectedSchoolDate:currentSchedule.expectedSchoolDate,
+    expectedLocalTime:currentSchedule.expectedLocalTime,
     observedGapHours,gapFrom,gapTo};
 }

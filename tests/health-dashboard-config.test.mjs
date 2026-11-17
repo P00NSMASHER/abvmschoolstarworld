@@ -17,7 +17,7 @@ test("health classifier changes trigger an immediate main-branch dashboard run",
 });
 
 test("operational dashboard runs for completed main watchdog even if the watchdog failed",()=>{
-  const workflowRun=workflow.match(/workflow_run:\n([\s\S]*?)\n  schedule:/)?.[1]||"";
+  const workflowRun=workflow.match(/workflow_run:\n([\s\S]*?)\n  workflow_dispatch:/)?.[1]||"";
   assert.match(workflowRun,/Monitor ABVM refresh health/);
   assert.doesNotMatch(workflowRun,/ABVM App QA/);
   assert.doesNotMatch(workflowRun,/Deploy ABVM to GitHub Pages/);
@@ -160,8 +160,8 @@ test("dashboard independently verifies branch protection without breaking normal
 
 test("operational dashboard surfaces missed Homework cron while preserving the existing source-age gate",()=>{
   assert.match(report,/assessHomeworkPollingCadence\(productionRuns,now\)/);
-  assert.match(report,/Hourly Homework cron:/);
-  assert.match(report,/Scheduled hourly Homework polling is delayed/);
+  assert.match(report,/Twice-daily Homework cron:/);
+  assert.match(report,/Scheduled twice-daily Homework polling is delayed/);
   assert.match(report,/No valid scheduled Homework polling run was observed/);
   assert.match(report,/status\.homework\.healthy/);
   assert.match(refreshHealthWorkflow,/scripts\/homework-live-monitor\.mjs/);

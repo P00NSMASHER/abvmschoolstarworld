@@ -5,8 +5,8 @@ const clock=new Intl.DateTimeFormat('en-US',{
   hour:'2-digit',minute:'2-digit',hourCycle:'h23',
 });
 export const REFRESH_SCHEDULES=Object.freeze({
-  curriculum:Object.freeze([377,587,797,947]),
-  homework:Object.freeze(Array.from({length:18},(_,i)=>[(i+6)*60+7,(i+6)*60+37]).flat()),
+  curriculum:Object.freeze([360,1080]),
+  homework:Object.freeze([375,1095]),
 });
 function localTime(value){
   const date=new Date(value);

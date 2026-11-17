@@ -309,7 +309,7 @@ test('homework freshness is required even when all curriculum checks pass',async
   assert.equal(typeof assessHomeworkHealth,'function');
   assert.equal(assessHomeworkHealth(posting,now).healthy,true);
   for(const changed of [
-    {...posting,checkedAt:'2026-10-15T14:00:00Z'},
+    {...posting,checkedAt:'2026-10-15T08:00:00Z'},
     {...posting,checkedAt:'invalid'},
     {...posting,checkedAt:'2026-10-16T00:00:00Z'},
     {...posting,status:'unknown'},
@@ -480,7 +480,7 @@ test('the complete dashboard turns critical for stale homework despite healthy w
     pack.pack.contentPipeline.qa.unsupportedSkillCount=0;
     pack.pack.contentPipeline.safetyState='READY';
     writeFileSync(join(root,'pages/data/study-pack.json'),JSON.stringify(pack));
-    writeFileSync(postingPath,JSON.stringify({...posting,checkedAt:new Date(Date.now()-9*3600000).toISOString()}));
+    writeFileSync(postingPath,JSON.stringify({...posting,checkedAt:new Date(Date.now()-15*3600000).toISOString()}));
     const stale=run();
     assert.equal(stale.result.status,1);
     assert.equal(stale.report.overall,'critical');
@@ -498,22 +498,22 @@ test("main branch protection requires affirmative GitHub evidence and never gues
   }
 });
 
-test("hourly Homework schedule delivery cannot be concealed by a newer successful push or recovery",()=>{
+test("twice-daily Homework schedule delivery cannot be concealed by a newer successful push or recovery",()=>{
   const recent=[
     {name:"Refresh current ABVM homework",event:"schedule",head_branch:"main",
-      status:"completed",conclusion:"success",created_at:"2026-10-21T15:21:42Z"},
+      status:"completed",conclusion:"success",created_at:"2026-10-21T10:20:00Z"},
     {name:"Refresh current ABVM homework",event:"push",head_branch:"main",
-      status:"completed",conclusion:"success",created_at:"2026-10-21T19:17:42Z"},
+      status:"completed",conclusion:"success",created_at:"2026-10-21T23:30:00Z"},
     {name:"Refresh current ABVM homework",event:"workflow_dispatch",head_branch:"main",
-      status:"completed",conclusion:"success",created_at:"2026-10-21T19:18:00Z"}
+      status:"completed",conclusion:"success",created_at:"2026-10-21T23:31:00Z"}
   ];
-  const delayed=assessHomeworkPollingCadence(recent,"2026-10-21T19:35:00Z");
+  const delayed=assessHomeworkPollingCadence(recent,"2026-10-21T23:50:00Z");
   assert.equal(delayed.state,"delayed");
-  assert.equal(delayed.lastScheduledAt,"2026-10-21T15:21:42Z");
-  assert.ok(delayed.ageHours>4);
+  assert.equal(delayed.lastScheduledAt,"2026-10-21T10:20:00Z");
+  assert.ok(delayed.ageHours>13);
   recent.push({name:"Refresh current ABVM homework",event:"schedule",head_branch:"main",
-    status:"completed",conclusion:"success",created_at:"2026-10-21T19:23:00Z"});
-  assert.equal(assessHomeworkPollingCadence(recent,"2026-10-21T19:35:00Z").state,"current");
+    status:"completed",conclusion:"success",created_at:"2026-10-21T22:20:00Z"});
+  assert.equal(assessHomeworkPollingCadence(recent,"2026-10-21T23:50:00Z").state,"current");
 });
 
 test("a successful scheduled backup source poll is honest current polling evidence",()=>{
@@ -526,82 +526,82 @@ test("a successful scheduled backup source poll is honest current polling eviden
   assert.equal(result.lastScheduledAt,"2026-10-21T19:19:00Z");
 });
 
-test("hourly Homework reporting exposes an earlier same-day cron gap even after recovery",()=>{
+test("twice-daily Homework reporting exposes an excessive same-day cron gap even after recovery",()=>{
   const scheduled=created_at=>({name:"Refresh current ABVM homework",
     event:"schedule",head_branch:"main",status:"completed",conclusion:"success",created_at});
   const history=[
-    scheduled("2026-10-29T08:38:30Z"),
-    scheduled("2026-10-29T16:58:36Z"),
+    scheduled("2026-10-29T05:00:00Z"),
+    scheduled("2026-10-29T20:00:00Z"),
     {name:"Refresh current ABVM homework",event:"workflow_dispatch",head_branch:"main",
       status:"completed",conclusion:"success",created_at:"2026-10-29T18:30:00Z"},
   ];
-  const result=assessHomeworkPollingCadence(history,"2026-10-29T18:36:35Z");
+  const result=assessHomeworkPollingCadence(history,"2026-10-29T22:30:00Z");
   assert.equal(result.state,"current","the latest scheduled check is fresh");
-  assert.ok(result.observedGapHours>8 && result.observedGapHours<8.5,
-    "freshness must not conceal the historical 8-hour delivery gap");
-  assert.equal(result.gapFrom,"2026-10-29T08:38:30Z");
-  assert.equal(result.gapTo,"2026-10-29T16:58:36Z");
+  assert.equal(result.observedGapHours,15,
+    "freshness must not conceal a delivery gap beyond the twice-daily allowance");
+  assert.equal(result.gapFrom,"2026-10-29T05:00:00Z");
+  assert.equal(result.gapTo,"2026-10-29T20:00:00Z");
 });
 
 test("failed or unfinished schedules never count as successful polling evidence",()=>{
   const base={name:"Refresh current ABVM homework",event:"schedule",head_branch:"main"};
   const result=assessHomeworkPollingCadence([
-    {...base,status:"completed",conclusion:"success",created_at:"2026-10-21T15:21:42Z"},
-    {...base,status:"completed",conclusion:"failure",created_at:"2026-10-21T18:37:00Z"},
-    {...base,status:"in_progress",conclusion:null,created_at:"2026-10-21T19:07:00Z"},
-  ],"2026-10-21T19:35:00Z");
+    {...base,status:"completed",conclusion:"success",created_at:"2026-10-21T10:20:00Z"},
+    {...base,status:"completed",conclusion:"failure",created_at:"2026-10-21T22:20:00Z"},
+    {...base,status:"in_progress",conclusion:null,created_at:"2026-10-21T22:30:00Z"},
+  ],"2026-10-21T23:50:00Z");
   assert.equal(result.state,"delayed");
-  assert.equal(result.lastScheduledAt,"2026-10-21T15:21:42Z");
+  assert.equal(result.lastScheduledAt,"2026-10-21T10:20:00Z");
 });
 
 test("overnight scheduled Homework gap is not a same-school-day delivery failure",()=>{
   const scheduled=created_at=>({name:"Refresh current ABVM homework",
     event:"schedule",head_branch:"main",status:"completed",conclusion:"success",created_at});
   const result=assessHomeworkPollingCadence([
-    scheduled("2026-10-29T03:23:00Z"), // Oct. 28, 11:23 PM EDT
-    scheduled("2026-10-29T12:23:00Z"), // Oct. 29, 8:23 AM EDT
-  ],"2026-10-29T13:00:00Z");
+    scheduled("2026-10-28T22:20:00Z"), // Oct. 28, 6:20 PM EDT
+    scheduled("2026-10-29T10:20:00Z"), // Oct. 29, 6:20 AM EDT
+  ],"2026-10-29T12:00:00Z");
   assert.equal(result.state,"current");
   assert.equal(result.observedGapHours,null);
 });
 
-test("missed 11:37 PM Homework schedule remains visible after midnight",()=>{
+test("missed 6:15 PM Homework schedule remains visible after midnight",()=>{
   const scheduled=created_at=>({name:"Refresh current ABVM homework",
     event:"schedule",head_branch:"main",status:"completed",conclusion:"success",created_at});
   const result=assessHomeworkPollingCadence([
-    scheduled("2026-10-30T02:00:11Z"), // Oct. 29, 10:00 PM EDT
+    scheduled("2026-10-29T10:20:00Z"), // Oct. 29, 6:20 AM EDT
   ],"2026-10-30T05:57:00Z"); // Oct. 30, 1:57 AM EDT
   assert.equal(result.state,"delayed");
   assert.equal(result.expectedSchoolDate,"2026-10-29");
-  assert.equal(result.expectedLocalTime,"23:37");
+  assert.equal(result.expectedLocalTime,"18:15");
   assert.equal(result.offHours,true);
 });
 
 test("late previous-night Homework poll is not a false overnight outage",()=>{
   const result=assessHomeworkPollingCadence([{
     name:"Refresh current ABVM homework",event:"schedule",head_branch:"main",
-    status:"completed",conclusion:"success",created_at:"2026-10-30T04:10:00Z",
+    status:"completed",conclusion:"success",created_at:"2026-10-29T22:20:00Z",
   }],"2026-10-30T05:57:00Z");
   assert.equal(result.state,"off-hours");
 });
 
-test("6:07 AM Homework polling is checked after grace rather than hidden until 8 AM",()=>{
+test("6:15 AM Homework polling is checked after grace rather than hidden until 8 AM",()=>{
   const scheduled=created_at=>({name:"Refresh current ABVM homework",
     event:"schedule",head_branch:"main",status:"completed",conclusion:"success",created_at});
-  const runs=[scheduled("2026-10-30T03:40:00Z")]; // Thursday 11:40 PM EDT
-  assert.equal(assessHomeworkPollingCadence(runs,"2026-10-30T11:36:00Z").state,
+  const runs=[scheduled("2026-10-29T22:20:00Z")]; // Thursday 6:20 PM EDT
+  assert.equal(assessHomeworkPollingCadence(runs,"2026-10-30T11:44:00Z").state,
     "off-hours","allow the documented 90-minute morning grace");
-  const overdue=assessHomeworkPollingCadence(runs,"2026-10-30T11:38:00Z");
-  assert.equal(overdue.state,"delayed","missing first school-hour poll must be visible at 7:38 AM");
+  const overdue=assessHomeworkPollingCadence(runs,"2026-10-30T11:46:00Z");
+  assert.equal(overdue.state,"delayed","missing first school-hour poll must be visible at 7:46 AM");
   assert.equal(overdue.expectedSchoolDate,"2026-10-30");
-  assert.equal(overdue.expectedLocalTime,"06:07");
+  assert.equal(overdue.expectedLocalTime,"06:15");
 });
 
 test("polling cadence handles missing evidence, off hours and future timestamps",()=>{
-  const missingMorning=assessHomeworkPollingCadence([],"2026-10-30T11:38:00Z");
+  const missingMorning=assessHomeworkPollingCadence([],"2026-10-30T11:46:00Z");
   assert.equal(missingMorning.state,"unknown",
-    "missing run history after the 6:07 AM grace must not be reported as benign off-hours");
-  assert.equal(missingMorning.expectedLocalTime,"06:07");
+    "missing run history after the 6:15 AM grace must not be reported as benign off-hours");
+  assert.equal(missingMorning.expectedLocalTime,"06:15");
   assert.equal(assessHomeworkPollingCadence([],"2026-10-21T19:35:00Z").state,"unknown");
   assert.equal(assessHomeworkPollingCadence([],"2026-10-22T04:20:00Z").state,"off-hours");
   assert.equal(assessHomeworkPollingCadence([{name:"Refresh current ABVM homework",

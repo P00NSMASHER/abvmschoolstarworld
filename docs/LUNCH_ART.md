@@ -16,7 +16,7 @@ The 20 October tray illustrations are complete and production-verified in PR #37
 On October 16, 2026 the former **Complete lunch artwork** task was repurposed as
 **Protect ABVM learning reliability**. It retains the existing repository merge
 trigger and now prioritizes source/publication failures and broken learning flows.
-Future missing-menu images remain part of the existing hourly **ABVM School Data
+Future missing-menu images remain part of the existing twice-daily **ABVM School Data
 Intake** task and the menu-import process below. No dedicated artwork task or new
 schedule is required. Reuse active work, exact verified menu/style metadata and normal
 independent automated QA/Pages gates. No human approval is required. If generation is unavailable, retain accurate menu text

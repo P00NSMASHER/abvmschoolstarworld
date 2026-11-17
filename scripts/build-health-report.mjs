@@ -247,8 +247,8 @@ if(status.homeworkPolling.state==="delayed"){
       " America/New_York. Last observed scheduled run: "+status.homeworkPolling.lastScheduledAt+
       ". A previous night or morning polling gap is not erased by entering off-hours.");
   }else{
-    warnings.push("Scheduled hourly Homework polling is delayed: the last actual cron run was "+
-      status.homeworkPolling.ageHours+"h ago. A successful manual, push or recovery run does not prove the hourly schedule was delivered.");
+    warnings.push("Scheduled twice-daily Homework polling is delayed: the last actual cron run was "+
+      status.homeworkPolling.ageHours+"h ago. A successful manual, push or recovery run does not prove the twice-daily schedule was delivered.");
   }
 }
 if(status.homeworkPolling.state==="unknown"){
@@ -309,7 +309,7 @@ const md=[
   `- **Upcoming week lunches (${upcomingLunch.weekLabel}):** missing verified or no-school entries: ${upcomingLunch.missingDates.join(", ")||"none"}`,
   `- **Source coverage:** ${status.schoolData.sourcePages}/6 teacher pages; source sufficient = ${status.schoolData.sourceSufficient}; fresh <=${SOURCE_FRESH_HOURS}h = ${sourceFresh}`,
   `- **Homework checked:** ${status.homework.checkedAt||"missing"}; status ${status.homework.status}; scheduled school-day window and <=8h = ${status.homework.healthy}`,
-  `- **Hourly Homework cron:** ${status.homeworkPolling.state}; last scheduled ${status.homeworkPolling.lastScheduledAt||"not observed"}; age ${status.homeworkPolling.ageHours===null?"n/a":status.homeworkPolling.ageHours+"h"}`,
+  `- **Twice-daily Homework cron:** ${status.homeworkPolling.state}; last scheduled ${status.homeworkPolling.lastScheduledAt||"not observed"}; age ${status.homeworkPolling.ageHours===null?"n/a":status.homeworkPolling.ageHours+"h"}`,
   `- **Lunch source:** ${status.lunch.retrievalState}; ${status.lunch.days} reviewed days; current published week = ${status.lunch.currentWeek}; complete reviewed coverage = ${lunchReviewedCoverageComplete}; missing dates: ${status.lunch.missingDates.join(", ")||"none"}`,
   `- **Grade 2 content pipeline:** QA ${status.contentPipeline.qaStatus}; safety ${status.contentPipeline.safetyState}; ${status.contentPipeline.skillCount} skills; ${status.contentPipeline.questionCount} questions; partial ${status.contentPipeline.partiallyCoveredCount}; source-insufficient ${status.contentPipeline.sourceInsufficientCount}; not-practiced-by-design ${status.contentPipeline.notPracticedByDesignCount}; unsupported ${status.contentPipeline.unsupportedSkillCount}`,
   `- **Question lineage:** required = ${status.contentPipeline.lineageRequired}; page-exact ${status.contentPipeline.pageExactLineageCount}/${status.contentPipeline.questionCount}; unresolved ${status.contentPipeline.unresolvedLineageCount}`,

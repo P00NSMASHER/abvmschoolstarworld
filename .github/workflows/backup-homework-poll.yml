@@ -8,12 +8,8 @@ on:
       - 'scripts/homework-posting.mjs'
       - 'scripts/teacher-page-parsers.mjs'
       - '.github/workflows/backup-homework-poll.yml'
-  schedule:
-    # Independent observation slots between the primary :07/:37 polls.
-    # This job is read-only. A detected change wakes bounded recovery; only
-    # refresh-current-homework.yml may commit and publish verified data.
-    - cron: '19,49 6-23 * * *'
-      timezone: 'America/New_York'
+  # Retained as a manual/read-only diagnostic. Routine scheduled duplication
+  # is unnecessary because the post-refresh watchdog wakes bounded recovery.
   workflow_dispatch:
 
 permissions:

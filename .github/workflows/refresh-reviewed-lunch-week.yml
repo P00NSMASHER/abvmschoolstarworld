@@ -11,11 +11,9 @@ on:
       - 'scripts/lunch-publication.mjs'
       - 'pages/data/lunch-catalog.json'
   schedule:
-    # Roll over near the start of Monday, before the morning family check.
-    # Daily no-change checks are cheap; Monday has a separate missed-cron backup.
-    - cron: '11 0 * * *'
-      timezone: 'America/New_York'
-    - cron: '37 5 * * 1'
+    # The teacher workflow already checks reviewed lunch data twice daily.
+    # Keep one weekly independent roll-forward as a backstop.
+    - cron: '50 6 * * 1'
       timezone: 'America/New_York'
   workflow_dispatch:
 

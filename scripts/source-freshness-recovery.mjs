@@ -70,7 +70,7 @@ export function assessDailySchoolSources({
     && checkedWithinSchoolSchedule(curriculum.sourceLastCheckedAt, now, 20, 'curriculum');
   const homeworkFresh = homework?.schemaVersion === 1
     && ['assignments', 'no-homework', 'no-specific-posting'].includes(homework.status)
-    && checkedWithinSchoolSchedule(homework.checkedAt, now, 8, 'homework');
+    && checkedWithinSchoolSchedule(homework.checkedAt, now, 14.5, 'homework');
   const reviewedLunchWeekCurrent=reviewedLunchWeekReady(curriculum,now);
   const curriculumLiveMatches = curriculumLiveAvailable
     ? publishedCurriculumMatches(curriculum, publishedCurriculum) : null;
@@ -97,7 +97,7 @@ export function assessDailySchoolSources({
 
 // Independently compare current official teacher text with the last accepted
 // posting. A fresh *timestamp* on the repository does not prove the teacher
-// has not changed an undated assignment since the last hourly cron.
+// has not changed an undated assignment since the last scheduled check.
 export async function probeOfficialHomework(homework, {fetchImpl=fetch, now=new Date().toISOString()} = {}) {
   // Lazy-load only for a real recovery probe. The health dashboard imports
   // the pure freshness classifier without acquiring live network dependencies.
