@@ -1,0 +1,70 @@
+{
+  "candidateId": "curriculum-spelling-handwriting-long-i-278fb58b0a",
+  "familyId": "long-i",
+  "subject": "Spelling / Handwriting",
+  "topic": "long i",
+  "sourceHash": "teacher-pages-ea7267e395a1609bb98e",
+  "generatedAt": "2026-11-18T20:07:12.589Z",
+  "sourceContext": {
+    "quality": "page-exact",
+    "matchMethod": "exact-topic-phrase",
+    "subject": "Spelling / Handwriting",
+    "topic": "long i",
+    "sourceTitle": "Tests",
+    "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+    "sourceCaptureHash": "0ffa5e11c9fa582d832b6245d5a427fa3698dcea056ca20c5a6aa894954558eb",
+    "sourceCheckedAt": "2026-11-18T20:07:12.589Z",
+    "sourceLine": "Friday Dec. 4: Spelling (long i)/Handwriting",
+    "evidenceExcerptHash": "sha256:c15d2266bb639a1bc677107f8ee4c143086eefe87f23cafebd52b5b0fc1a9bf3"
+  },
+  "featureFlag": "curriculum-family:long-i-candidate",
+  "enabledByDefault": false,
+  "registryMatch": null,
+  "minimumSemanticVariants": 8,
+  "requiredQuestionTypes": [
+    "direct",
+    "transfer",
+    "reasoning"
+  ],
+  "proposedQuestions": [],
+  "authoring": {
+    "status": "AUTHORING_REQUIRED",
+    "generatedQuestionCount": 0,
+    "minimumSemanticVariants": 8,
+    "requiredQuestionTypes": [
+      "direct",
+      "transfer",
+      "reasoning"
+    ],
+    "requiredQuestionFields": [
+      "questionType",
+      "prompt",
+      "choices",
+      "answer",
+      "explanation",
+      "hint",
+      "dok",
+      "difficulty"
+    ]
+  },
+  "rollout": {
+    "featureFlagRequired": false,
+    "automatedQaRequired": true,
+    "safeUsageEvidenceRequired": false,
+    "manualPromotionRequired": false,
+    "automaticPromotion": true
+  },
+  "readiness": {
+    "status": "HOLD",
+    "blockers": [
+      "minimum-semantic-variants:0/8",
+      "question-type-required:direct",
+      "question-type-required:transfer",
+      "question-type-required:reasoning",
+      "automated-qa-required"
+    ],
+    "automaticPromotion": false,
+    "automaticDelete": false,
+    "automaticRewrite": false
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "candidateId": "curriculum-math-math-2-digit-addition-bf89b883fc",
+  "familyId": "math-2-digit-addition",
+  "subject": "Math",
+  "topic": "Math (2 digit addition)",
+  "sourceHash": "teacher-pages-ea7267e395a1609bb98e",
+  "generatedAt": "2026-11-18T20:07:12.589Z",
+  "sourceContext": {
+    "quality": "page-exact",
+    "matchMethod": "exact-topic-phrase",
+    "subject": "Math",
+    "topic": "Math (2 digit addition)",
+    "sourceTitle": "Tests",
+    "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
+    "sourceCaptureHash": "0ffa5e11c9fa582d832b6245d5a427fa3698dcea056ca20c5a6aa894954558eb",
+    "sourceCheckedAt": "2026-11-18T20:07:12.589Z",
+    "sourceLine": "Tuesday Nov. 24: Math (2 digit addition)",
+    "evidenceExcerptHash": "sha256:e50797590c40fb535e30a78bfe1ad13f79b847773f56e05f5830f6a037364cc1"
+  },
+  "featureFlag": "curriculum-family:math-2-digit-addition-candidate",
+  "enabledByDefault": false,
+  "registryMatch": null,
+  "minimumSemanticVariants": 8,
+  "requiredQuestionTypes": [
+    "direct",
+    "transfer",
+    "reasoning"
+  ],
+  "proposedQuestions": [],
+  "authoring": {
+    "status": "AUTHORING_REQUIRED",
+    "generatedQuestionCount": 0,
+    "minimumSemanticVariants": 8,
+    "requiredQuestionTypes": [
+      "direct",
+      "transfer",
+      "reasoning"
+    ],
+    "requiredQuestionFields": [
+      "questionType",
+      "prompt",
+      "choices",
+      "answer",
+      "explanation",
+      "hint",
+      "dok",
+      "difficulty"
+    ]
+  },
+  "rollout": {
+    "featureFlagRequired": false,
+    "automatedQaRequired": true,
+    "safeUsageEvidenceRequired": false,
+    "manualPromotionRequired": false,
+    "automaticPromotion": true
+  },
+  "readiness": {
+    "status": "HOLD",
+    "blockers": [
+      "minimum-semantic-variants:0/8",
+      "question-type-required:direct",
+      "question-type-required:transfer",
+      "question-type-required:reasoning",
+      "automated-qa-required"
+    ],
+    "automaticPromotion": false,
+    "automaticDelete": false,
+    "automaticRewrite": false
+  }
+}
