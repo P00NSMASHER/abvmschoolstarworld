@@ -14,14 +14,14 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-11-20T13:59:20.851Z",
-  "sourceCapturedAt": "2026-11-20T13:59:20.851Z",
+  "sourceLastSeenAt": "2026-11-20T19:04:50.969Z",
+  "sourceCapturedAt": "2026-11-20T19:04:50.969Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
-    "sourceHash": "teacher-pages-5e6b183b6415cdf61579",
-    "sourceCapturedAt": "2026-11-20T13:59:20.851Z",
-    "generatedAt": "2026-11-20T13:59:20.851Z",
+    "sourceHash": "teacher-pages-6cffd3f91cd38a7cb643",
+    "sourceCapturedAt": "2026-11-20T19:04:50.969Z",
+    "generatedAt": "2026-11-20T19:04:50.969Z",
     "weekLabel": "Week of November 16, 2026",
     "summary": "Current Grade 2 teacher-site material: No specific assignments are currently posted. Upcoming tests include Spelling (long a) / Handwriting on Friday, Nov. 20, Phonics (long vowels) on Friday, Nov. 20, Math (2 digit addition) on Tuesday, Nov. 24, and Spelling (long i) / Handwriting on Friday, Dec. 4. 34 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
@@ -31,10 +31,10 @@
           "Story: The Boy Who Cried Wolf",
           "Story: Wolf! Wolf!",
           "Sight words: pull, wash, under, food, almost, saw, out, sky, buy. straight",
-          "Phonics: soft c and soft g",
+          "Phonics: soft c and soft g; digraphs (ch, tch, sh, ph, th, ng, wh)",
           "Phonics: long vowels (test Friday, Nov. 20)",
           "Vocabulary: stories, delicious, fond, lessons, feast, snatch, remarkable, believe",
-          "Word structure: prefixe (re-, un-, dis-)"
+          "Word structure: prefixe (re-, un-, dis-); suffixes (-less, -ful)"
         ],
         "studyNotes": [
           "Reading comprehension: Predictions; character traits; plot / sequence of events; text & picture clues",
@@ -52,10 +52,13 @@
         "studyNotes": [
           "Skill: long a",
           "Teacher-posted spelling words (page undated): nail, scrape, train, strange, main, hay, stay, break, steak, good, weigh, often, sleigh, two, prey",
+          "A consonant digraph is two consonant letters that work together to make one sound, as in sh, ch, th, and wh.",
+          "In a digraph, the two letters make one sound. In a blend, you can still hear both consonant sounds.",
+          "Teacher-style mnemonic: “Two letters, one sound.” Box the digraph, tap the box once, and say its sound.",
+          "Teacher-style supplemental practice: these explanations and examples are original ABVM teaching, not a school-provided spelling list or question set.",
           "Compare short a words like cat with a_e long-a words like game.",
           "Soft c usually sounds like /s/ before e, i, or y, as in cent, city, and cycle.",
           "Soft g often sounds like /j/ before e, i, or y, as in gem, giant, and gym.",
-          "Teacher-style supplemental practice: these explanations and examples are original ABVM teaching, not a school-provided spelling list or question set.",
           "Long o sounds like the letter name in go, home, and boat. These are original examples, not an official spelling list.",
           "If a teacher test label also says “short” without naming the vowel, do not guess which short-vowel pattern is included."
         ]
@@ -1780,7 +1783,7 @@
       "Picture backgrounds: 1 Universe, 2 Pink Mist, 3 Fall Leaves, 4 Traditional, 5 School Spirit, 6 Patriotic, 7 Dinosaur, 8 Pastel, 9 Bookcase, 10 Blue Brush, 11 Laser. Backgrounds 1, 2, and 11 are marked NEW.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
-    "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+    "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
     "uploadedNoticeHash": "uploaded-notices-7165922c19535ee87ca7",
     "uploadedNoticeTopics": {
       "reminders": [
@@ -1843,8 +1846,8 @@
     "lunchMenuSource": {
       "status": "current-week",
       "retrievalState": "verified",
-      "checkedAt": "2026-11-20T13:59:20.851Z",
-      "lastAttemptAt": "2026-11-20T13:59:20.851Z",
+      "checkedAt": "2026-11-20T19:04:50.969Z",
+      "lastAttemptAt": "2026-11-20T19:04:50.969Z",
       "provider": "Saint Clair Area School District",
       "school": "Assumption BVM School",
       "feedUrl": "https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu",
@@ -1861,7 +1864,7 @@
           "contentHash": "a5d25beb5cbd34522ce4645172ab4efce1d041aab7fcc33521f3433c5cd0b178",
           "proofMode": "reviewed-notice",
           "reviewedAt": "2026-11-03T15:00:00.000Z",
-          "checkedAt": "2026-11-20T13:59:20.851Z",
+          "checkedAt": "2026-11-20T19:04:50.969Z",
           "state": "reviewed-notice"
         }
       ],
@@ -2586,13 +2589,13 @@
         "sourceId": "abvm-2026-11-parent-school-menu"
       }
     ],
-    "lunchMenuHash": "131a758214125eb71bb7b119ed2ccfeb82db37ae2fa35a6e815f56dad88508fa",
+    "lunchMenuHash": "e3da7fa775aefe70c00d9ddbb0f86e20c259b27273856ed595e7f81addc6347f",
     "contentPipeline": {
       "schemaVersion": 2,
       "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-      "generatedAt": "2026-11-20T13:59:20.851Z",
-      "sourceHash": "teacher-pages-5e6b183b6415cdf61579",
-      "bankFingerprint": "1753699c",
+      "generatedAt": "2026-11-20T19:04:50.969Z",
+      "sourceHash": "teacher-pages-6cffd3f91cd38a7cb643",
+      "bankFingerprint": "5d74573f",
       "lifecycleStage": "QA_PASSED",
       "safetyState": "SAFE_PARTIAL",
       "sourcePolicy": {
@@ -2607,6 +2610,48 @@
         "activeCurriculumFeatureFlags": []
       },
       "skills": [
+        {
+          "id": "consonant-digraphs",
+          "subject": "Spelling / Handwriting",
+          "label": "Consonant digraphs",
+          "evidence": [
+            "digraphs"
+          ],
+          "studyNotes": [
+            "A consonant digraph is two consonant letters that work together to make one sound, as in sh, ch, th, and wh.",
+            "In a digraph, the two letters make one sound. In a blend, you can still hear both consonant sounds.",
+            "Teacher-style mnemonic: “Two letters, one sound.” Box the digraph, tap the box once, and say its sound.",
+            "Teacher-style supplemental practice: these explanations and examples are original ABVM teaching, not a school-provided spelling list or question set."
+          ],
+          "standards": [
+            "CCSS.RF.2.3"
+          ],
+          "domain": "Foundational reading",
+          "sourceBacked": true,
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "common-consonant-digraphs",
+              "digraph-versus-blend"
+            ],
+            "strongestClaim": "recognizes-common-consonant-digraphs-and-their-one-sound-pattern",
+            "doesNotClaim": [
+              "teacher-spelling-list-mastery",
+              "all-digraph-patterns"
+            ]
+          },
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Reading Work",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
+            "sourceCaptureHash": "300fdef05a3562c6e1d79fa8d054de2882c9d262d94ea78ee0ecb7c4b20d9a10",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
+            "evidenceExcerptHash": "sha256:49c33f205af4460c57405d67b0516797f9929cda5f7045b524a2af7ccdcc728e",
+            "matchedEvidence": [
+              "Phonics: soft c and soft g; digraphs (ch, tch, sh, ph, th, ng, wh)"
+            ]
+          }
+        },
         {
           "id": "long-short-a",
           "subject": "Spelling / Handwriting",
@@ -2627,7 +2672,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "5c922d3aa2c66c65647a3893eb6c27f168e3adcd87d9f9358820825e38804dc7",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:d1679471b0eba274dbb13371bde9b25540b15fc89e8a827fe0e946cedb16fd01",
             "matchedEvidence": [
               "Skill: long a"
@@ -2667,11 +2712,11 @@
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "118850cfd85ef818053662d8f144ea55d09e15743b5bc5b0bcea143dc9645abf",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
-            "evidenceExcerptHash": "sha256:2c785938da9c57eeba5c8fc2e3c0b93d8e624b4ee9699ae537d4a50d9d766e8a",
+            "sourceCaptureHash": "300fdef05a3562c6e1d79fa8d054de2882c9d262d94ea78ee0ecb7c4b20d9a10",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
+            "evidenceExcerptHash": "sha256:49c33f205af4460c57405d67b0516797f9929cda5f7045b524a2af7ccdcc728e",
             "matchedEvidence": [
-              "Phonics: soft c and soft g"
+              "Phonics: soft c and soft g; digraphs (ch, tch, sh, ph, th, ng, wh)"
             ]
           }
         },
@@ -2705,8 +2750,8 @@
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "118850cfd85ef818053662d8f144ea55d09e15743b5bc5b0bcea143dc9645abf",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCaptureHash": "300fdef05a3562c6e1d79fa8d054de2882c9d262d94ea78ee0ecb7c4b20d9a10",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:54b9d8f116aa7ccdc91a07747aba04d016eb941be533a16207eca17dacb482fc",
             "matchedEvidence": [
               "Reading Comprehension: predictions; character traits; plot/sequence of events; text & picture clues"
@@ -2734,7 +2779,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "35856963be994a6f8a42b6f20cf93acd9ff9e14c50bcb764ba9d05f32b9b5c03",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
             "matchedEvidence": [
               "Friday Dec. 11: Spelling (long o)/Handwriting"
@@ -2788,7 +2833,7 @@
           "reason": "The verified teacher source names this instructional skill, but the current deterministic generator does not yet have an approved practice template for it."
         },
         {
-          "topic": "prefixe (re-, un-, dis-)",
+          "topic": "prefixe (re-, un-, dis-); suffixes (-less, -ful)",
           "subject": "Reading / ELA",
           "status": "GENERATOR_UNSUPPORTED",
           "reason": "The verified teacher source names this instructional skill, but the current deterministic generator does not yet have an approved practice template for it."
@@ -2842,6 +2887,12 @@
           "reason": "The verified teacher source names this instructional skill, but the current deterministic generator does not yet have an approved practice template for it."
         },
         {
+          "topic": "Consonant digraphs",
+          "subject": "Spelling / Handwriting",
+          "status": "COVERED",
+          "skillId": "consonant-digraphs"
+        },
+        {
           "topic": "Long a and short a",
           "subject": "Spelling / Handwriting",
           "status": "COVERED",
@@ -2868,10 +2919,13 @@
       ],
       "studyNotesBySubject": {
         "Spelling / Handwriting": [
+          "A consonant digraph is two consonant letters that work together to make one sound, as in sh, ch, th, and wh.",
+          "In a digraph, the two letters make one sound. In a blend, you can still hear both consonant sounds.",
+          "Teacher-style mnemonic: “Two letters, one sound.” Box the digraph, tap the box once, and say its sound.",
+          "Teacher-style supplemental practice: these explanations and examples are original ABVM teaching, not a school-provided spelling list or question set.",
           "Compare short a words like cat with a_e long-a words like game.",
           "Soft c usually sounds like /s/ before e, i, or y, as in cent, city, and cycle.",
           "Soft g often sounds like /j/ before e, i, or y, as in gem, giant, and gym.",
-          "Teacher-style supplemental practice: these explanations and examples are original ABVM teaching, not a school-provided spelling list or question set.",
           "Long o sounds like the letter name in go, home, and boat. These are original examples, not an official spelling list.",
           "If a teacher test label also says “short” without naming the vowel, do not guess which short-vowel pattern is included."
         ],
@@ -2880,6 +2934,87 @@
         ]
       },
       "questions": [
+        {
+          "id": "auto-consonant-digraphs-ship-7079fd",
+          "templateId": "grade2-consonant-digraphs-v1",
+          "subject": "Spelling / Handwriting",
+          "skill": "consonant-digraphs",
+          "assessedSkillIds": [
+            "consonant-digraphs"
+          ],
+          "prompt": "Which word begins with a consonant digraph whose two letters make one sound?",
+          "choices": [
+            "ship",
+            "slip",
+            "sun"
+          ],
+          "answer": "ship",
+          "explanation": "Ship begins with sh. The letters s and h work together to make one /sh/ sound.",
+          "hint": "Listen for two beginning letters that work together as one sound.",
+          "sourceFact": "Verified Grade 2 skill: Consonant digraphs",
+          "sourceEvidence": [
+            "digraphs"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.RF.2.3"
+          ],
+          "domain": "Foundational reading",
+          "dok": 1,
+          "cognitiveDemand": "recall-and-fluency",
+          "difficulty": 2,
+          "questionType": "direct",
+          "choiceDiagnostics": {
+            "slip": {
+              "misconception": "consonant-digraphs-distractor",
+              "feedback": "Review: Consonant digraphs. Then use the clue in the question."
+            },
+            "sun": {
+              "misconception": "consonant-digraphs-distractor",
+              "feedback": "Review: Consonant digraphs. Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "slip": 0,
+              "sun": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "common-consonant-digraphs",
+              "digraph-versus-blend"
+            ],
+            "strongestClaim": "recognizes-common-consonant-digraphs-and-their-one-sound-pattern",
+            "doesNotClaim": [
+              "teacher-spelling-list-mastery",
+              "all-digraph-patterns"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "e57c7ab7",
+          "variantFingerprint": "57a3acee",
+          "presentationFingerprint": "abcee775",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Reading Work",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
+            "sourceCaptureHash": "300fdef05a3562c6e1d79fa8d054de2882c9d262d94ea78ee0ecb7c4b20d9a10",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
+            "evidenceExcerptHash": "sha256:49c33f205af4460c57405d67b0516797f9929cda5f7045b524a2af7ccdcc728e",
+            "matchedEvidence": [
+              "Phonics: soft c and soft g; digraphs (ch, tch, sh, ph, th, ng, wh)"
+            ]
+          }
+        },
         {
           "id": "auto-long-short-a-game-db4f86",
           "templateId": "grade2-long-short-a-v1",
@@ -2890,8 +3025,8 @@
           ],
           "prompt": "Which word has a long a sound because of the a_e pattern?",
           "choices": [
-            "game",
             "cat",
+            "game",
             "map"
           ],
           "answer": "game",
@@ -2947,13 +3082,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "725c7499",
           "variantFingerprint": "602bfae3",
-          "presentationFingerprint": "0b897559",
+          "presentationFingerprint": "ee294541",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "5c922d3aa2c66c65647a3893eb6c27f168e3adcd87d9f9358820825e38804dc7",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:d1679471b0eba274dbb13371bde9b25540b15fc89e8a827fe0e946cedb16fd01",
             "matchedEvidence": [
               "Skill: long a"
@@ -2971,8 +3106,8 @@
           "prompt": "Which word begins with soft c, where c sounds like /s/?",
           "choices": [
             "cat",
-            "city",
-            "cup"
+            "cup",
+            "city"
           ],
           "answer": "city",
           "explanation": "In city, c comes before i and has the soft /s/ sound.",
@@ -3028,16 +3163,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "43639da3",
           "variantFingerprint": "0049fd28",
-          "presentationFingerprint": "a7985a12",
+          "presentationFingerprint": "5fbd7462",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "118850cfd85ef818053662d8f144ea55d09e15743b5bc5b0bcea143dc9645abf",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
-            "evidenceExcerptHash": "sha256:2c785938da9c57eeba5c8fc2e3c0b93d8e624b4ee9699ae537d4a50d9d766e8a",
+            "sourceCaptureHash": "300fdef05a3562c6e1d79fa8d054de2882c9d262d94ea78ee0ecb7c4b20d9a10",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
+            "evidenceExcerptHash": "sha256:49c33f205af4460c57405d67b0516797f9929cda5f7045b524a2af7ccdcc728e",
             "matchedEvidence": [
-              "Phonics: soft c and soft g"
+              "Phonics: soft c and soft g; digraphs (ch, tch, sh, ph, th, ng, wh)"
             ]
           }
         },
@@ -3051,9 +3186,9 @@
           ],
           "prompt": "First Ava pours water into an ice tray. Next she puts the tray in the freezer. Later the water becomes ice. What happens immediately before the water becomes ice?",
           "choices": [
+            "She puts the tray in the freezer.",
             "She pours water into the tray.",
-            "She takes the ice outside.",
-            "She puts the tray in the freezer."
+            "She takes the ice outside."
           ],
           "answer": "She puts the tray in the freezer.",
           "explanation": "The tray goes into the freezer directly before the water becomes ice.",
@@ -3108,13 +3243,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "45723e7b",
           "variantFingerprint": "3bb55fab",
-          "presentationFingerprint": "eb1796f3",
+          "presentationFingerprint": "936923c3",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "118850cfd85ef818053662d8f144ea55d09e15743b5bc5b0bcea143dc9645abf",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCaptureHash": "300fdef05a3562c6e1d79fa8d054de2882c9d262d94ea78ee0ecb7c4b20d9a10",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:54b9d8f116aa7ccdc91a07747aba04d016eb941be533a16207eca17dacb482fc",
             "matchedEvidence": [
               "Reading Comprehension: predictions; character traits; plot/sequence of events; text & picture clues"
@@ -3131,8 +3266,8 @@
           ],
           "prompt": "Which word has the long o sound, like the o sound in home?",
           "choices": [
-            "Rope",
             "Hop",
+            "Rope",
             "Hot"
           ],
           "answer": "Rope",
@@ -3188,16 +3323,340 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "ceb19ced",
           "variantFingerprint": "2336b628",
-          "presentationFingerprint": "40d261f1",
+          "presentationFingerprint": "73c201e7",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "35856963be994a6f8a42b6f20cf93acd9ff9e14c50bcb764ba9d05f32b9b5c03",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
             "matchedEvidence": [
               "Friday Dec. 11: Spelling (long o)/Handwriting"
+            ]
+          }
+        },
+        {
+          "id": "auto-consonant-digraphs-chair-and-cheese-69782f",
+          "templateId": "grade2-consonant-digraphs-v1",
+          "subject": "Spelling / Handwriting",
+          "skill": "consonant-digraphs",
+          "assessedSkillIds": [
+            "consonant-digraphs"
+          ],
+          "prompt": "Which pair of words begins with the same consonant digraph?",
+          "choices": [
+            "ship and soap",
+            "thin and tree",
+            "chair and cheese"
+          ],
+          "answer": "chair and cheese",
+          "explanation": "Chair and cheese both begin with ch, a two-letter consonant digraph that makes one sound.",
+          "hint": "Compare the first two letters and their sound in each pair.",
+          "sourceFact": "Verified Grade 2 skill: Consonant digraphs",
+          "sourceEvidence": [
+            "digraphs"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.RF.2.3"
+          ],
+          "domain": "Foundational reading",
+          "dok": 2,
+          "cognitiveDemand": "skill-and-concept-application",
+          "difficulty": 2,
+          "questionType": "transfer",
+          "choiceDiagnostics": {
+            "ship and soap": {
+              "misconception": "consonant-digraphs-distractor",
+              "feedback": "Review: Consonant digraphs. Then use the clue in the question."
+            },
+            "thin and tree": {
+              "misconception": "consonant-digraphs-distractor",
+              "feedback": "Review: Consonant digraphs. Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "ship and soap": 0,
+              "thin and tree": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "common-consonant-digraphs",
+              "digraph-versus-blend"
+            ],
+            "strongestClaim": "recognizes-common-consonant-digraphs-and-their-one-sound-pattern",
+            "doesNotClaim": [
+              "teacher-spelling-list-mastery",
+              "all-digraph-patterns"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "2dd703d9",
+          "variantFingerprint": "9b505702",
+          "presentationFingerprint": "d0613de8",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Reading Work",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
+            "sourceCaptureHash": "300fdef05a3562c6e1d79fa8d054de2882c9d262d94ea78ee0ecb7c4b20d9a10",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
+            "evidenceExcerptHash": "sha256:49c33f205af4460c57405d67b0516797f9929cda5f7045b524a2af7ccdcc728e",
+            "matchedEvidence": [
+              "Phonics: soft c and soft g; digraphs (ch, tch, sh, ph, th, ng, wh)"
+            ]
+          }
+        },
+        {
+          "id": "auto-consonant-digraphs-in-sh-the-letters-make-one-sound-in-sl-both-sounds-can-be-heard-03d2b7",
+          "templateId": "grade2-consonant-digraphs-v1",
+          "subject": "Spelling / Handwriting",
+          "skill": "consonant-digraphs",
+          "assessedSkillIds": [
+            "consonant-digraphs"
+          ],
+          "prompt": "Why is sh in “ship” a digraph, but sl in “slip” is a blend?",
+          "choices": [
+            "In sh the letters make one sound; in sl both sounds can be heard.",
+            "Every word beginning with s uses a digraph.",
+            "A digraph must always contain the letter h."
+          ],
+          "answer": "In sh the letters make one sound; in sl both sounds can be heard.",
+          "explanation": "The sh letters work together as one /sh/ sound, while the /s/ and /l/ sounds remain separate in sl.",
+          "hint": "Say ship and slip slowly, then count the beginning sounds you hear.",
+          "sourceFact": "Verified Grade 2 skill: Consonant digraphs",
+          "sourceEvidence": [
+            "digraphs"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.RF.2.3"
+          ],
+          "domain": "Foundational reading",
+          "dok": 3,
+          "cognitiveDemand": "strategic-reasoning",
+          "difficulty": 3,
+          "questionType": "reasoning",
+          "choiceDiagnostics": {
+            "Every word beginning with s uses a digraph.": {
+              "misconception": "consonant-digraphs-distractor",
+              "feedback": "Review: Consonant digraphs. Then use the clue in the question."
+            },
+            "A digraph must always contain the letter h.": {
+              "misconception": "consonant-digraphs-distractor",
+              "feedback": "Review: Consonant digraphs. Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "Every word beginning with s uses a digraph.": 0,
+              "A digraph must always contain the letter h.": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "common-consonant-digraphs",
+              "digraph-versus-blend"
+            ],
+            "strongestClaim": "recognizes-common-consonant-digraphs-and-their-one-sound-pattern",
+            "doesNotClaim": [
+              "teacher-spelling-list-mastery",
+              "all-digraph-patterns"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "db0b387b",
+          "variantFingerprint": "8ebc98bd",
+          "presentationFingerprint": "b72c4327",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Reading Work",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
+            "sourceCaptureHash": "300fdef05a3562c6e1d79fa8d054de2882c9d262d94ea78ee0ecb7c4b20d9a10",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
+            "evidenceExcerptHash": "sha256:49c33f205af4460c57405d67b0516797f9929cda5f7045b524a2af7ccdcc728e",
+            "matchedEvidence": [
+              "Phonics: soft c and soft g; digraphs (ch, tch, sh, ph, th, ng, wh)"
+            ]
+          }
+        },
+        {
+          "id": "auto-consonant-digraphs-whale-a3baa3",
+          "templateId": "grade2-consonant-digraphs-v1",
+          "subject": "Spelling / Handwriting",
+          "skill": "consonant-digraphs",
+          "assessedSkillIds": [
+            "consonant-digraphs"
+          ],
+          "prompt": "Which word begins with the consonant digraph wh?",
+          "choices": [
+            "wing",
+            "whale",
+            "wait"
+          ],
+          "answer": "whale",
+          "explanation": "Whale begins with wh. The two letters work together as the beginning digraph.",
+          "hint": "Look at the first two letters in each word.",
+          "sourceFact": "Verified Grade 2 skill: Consonant digraphs",
+          "sourceEvidence": [
+            "digraphs"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.RF.2.3"
+          ],
+          "domain": "Foundational reading",
+          "dok": 1,
+          "cognitiveDemand": "recall-and-fluency",
+          "difficulty": 2,
+          "questionType": "direct",
+          "choiceDiagnostics": {
+            "wing": {
+              "misconception": "consonant-digraphs-distractor",
+              "feedback": "Review: Consonant digraphs. Then use the clue in the question."
+            },
+            "wait": {
+              "misconception": "consonant-digraphs-distractor",
+              "feedback": "Review: Consonant digraphs. Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "wing": 0,
+              "wait": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "common-consonant-digraphs",
+              "digraph-versus-blend"
+            ],
+            "strongestClaim": "recognizes-common-consonant-digraphs-and-their-one-sound-pattern",
+            "doesNotClaim": [
+              "teacher-spelling-list-mastery",
+              "all-digraph-patterns"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "e0ece446",
+          "variantFingerprint": "a109087f",
+          "presentationFingerprint": "0de8e704",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Reading Work",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
+            "sourceCaptureHash": "300fdef05a3562c6e1d79fa8d054de2882c9d262d94ea78ee0ecb7c4b20d9a10",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
+            "evidenceExcerptHash": "sha256:49c33f205af4460c57405d67b0516797f9929cda5f7045b524a2af7ccdcc728e",
+            "matchedEvidence": [
+              "Phonics: soft c and soft g; digraphs (ch, tch, sh, ph, th, ng, wh)"
+            ]
+          }
+        },
+        {
+          "id": "auto-consonant-digraphs-fish-53d2fc",
+          "templateId": "grade2-consonant-digraphs-v1",
+          "subject": "Spelling / Handwriting",
+          "skill": "consonant-digraphs",
+          "assessedSkillIds": [
+            "consonant-digraphs"
+          ],
+          "prompt": "Which word ends with a consonant digraph?",
+          "choices": [
+            "fast",
+            "fan",
+            "fish"
+          ],
+          "answer": "fish",
+          "explanation": "Fish ends with sh. The letters s and h work together to make one ending sound.",
+          "hint": "Look at the last two letters and listen for one sound.",
+          "sourceFact": "Verified Grade 2 skill: Consonant digraphs",
+          "sourceEvidence": [
+            "digraphs"
+          ],
+          "sourceMode": "DETERMINISTIC_TEMPLATE",
+          "supportType": "deterministic_transform",
+          "provenance": "verified-abvm-skill-template",
+          "standards": [
+            "CCSS.RF.2.3"
+          ],
+          "domain": "Foundational reading",
+          "dok": 2,
+          "cognitiveDemand": "skill-and-concept-application",
+          "difficulty": 2,
+          "questionType": "transfer",
+          "choiceDiagnostics": {
+            "fast": {
+              "misconception": "consonant-digraphs-distractor",
+              "feedback": "Review: Consonant digraphs. Then use the clue in the question."
+            },
+            "fan": {
+              "misconception": "consonant-digraphs-distractor",
+              "feedback": "Review: Consonant digraphs. Then use the clue in the question."
+            }
+          },
+          "rubric": {
+            "maxPoints": 2,
+            "criteria": [
+              "Selects the correct answer using the target Grade 2 skill.",
+              "Uses the clue, rule, or evidence required by the item."
+            ],
+            "partialCredit": {
+              "fast": 0,
+              "fan": 0
+            }
+          },
+          "evidenceContract": {
+            "evidenceType": "DIRECT_TARGET",
+            "supports": [
+              "common-consonant-digraphs",
+              "digraph-versus-blend"
+            ],
+            "strongestClaim": "recognizes-common-consonant-digraphs-and-their-one-sound-pattern",
+            "doesNotClaim": [
+              "teacher-spelling-list-mastery",
+              "all-digraph-patterns"
+            ]
+          },
+          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
+          "contentFingerprint": "63568ca9",
+          "variantFingerprint": "0fccd97f",
+          "presentationFingerprint": "a102d3d0",
+          "sourceLineage": {
+            "quality": "page-exact",
+            "sourceTitle": "Reading Work",
+            "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
+            "sourceCaptureHash": "300fdef05a3562c6e1d79fa8d054de2882c9d262d94ea78ee0ecb7c4b20d9a10",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
+            "evidenceExcerptHash": "sha256:49c33f205af4460c57405d67b0516797f9929cda5f7045b524a2af7ccdcc728e",
+            "matchedEvidence": [
+              "Phonics: soft c and soft g; digraphs (ch, tch, sh, ph, th, ng, wh)"
             ]
           }
         },
@@ -3211,8 +3670,8 @@
           ],
           "prompt": "Which pair of words both use the short a sound?",
           "choices": [
-            "cake and game",
             "cat and map",
+            "cake and game",
             "late and cap"
           ],
           "answer": "cat and map",
@@ -3268,13 +3727,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "1774536a",
           "variantFingerprint": "a42833d6",
-          "presentationFingerprint": "d3f47676",
+          "presentationFingerprint": "e162694a",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "5c922d3aa2c66c65647a3893eb6c27f168e3adcd87d9f9358820825e38804dc7",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:d1679471b0eba274dbb13371bde9b25540b15fc89e8a827fe0e946cedb16fd01",
             "matchedEvidence": [
               "Skill: long a"
@@ -3292,8 +3751,8 @@
           "prompt": "Why does the a in “game” have a long sound?",
           "choices": [
             "The g makes every vowel long.",
-            "Every four-letter word has a long vowel.",
-            "The final e helps the a say its name."
+            "The final e helps the a say its name.",
+            "Every four-letter word has a long vowel."
           ],
           "answer": "The final e helps the a say its name.",
           "explanation": "Game follows the a_e pattern in which the final e changes the a sound.",
@@ -3348,13 +3807,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "edf51b1c",
           "variantFingerprint": "d528452a",
-          "presentationFingerprint": "cff31f32",
+          "presentationFingerprint": "7dce8432",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "5c922d3aa2c66c65647a3893eb6c27f168e3adcd87d9f9358820825e38804dc7",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:d1679471b0eba274dbb13371bde9b25540b15fc89e8a827fe0e946cedb16fd01",
             "matchedEvidence": [
               "Skill: long a"
@@ -3371,9 +3830,9 @@
           ],
           "prompt": "Which word has the short a sound?",
           "choices": [
-            "cap",
             "cake",
-            "late"
+            "late",
+            "cap"
           ],
           "answer": "cap",
           "explanation": "Cap uses the short a sound.",
@@ -3428,13 +3887,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "e090abf4",
           "variantFingerprint": "089e3f60",
-          "presentationFingerprint": "837970f3",
+          "presentationFingerprint": "064339c3",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "5c922d3aa2c66c65647a3893eb6c27f168e3adcd87d9f9358820825e38804dc7",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:d1679471b0eba274dbb13371bde9b25540b15fc89e8a827fe0e946cedb16fd01",
             "matchedEvidence": [
               "Skill: long a"
@@ -3451,8 +3910,8 @@
           ],
           "prompt": "Which word uses the a_e pattern to make long a?",
           "choices": [
-            "cat",
             "gate",
+            "cat",
             "map"
           ],
           "answer": "gate",
@@ -3508,13 +3967,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "850f7e0d",
           "variantFingerprint": "934fa41b",
-          "presentationFingerprint": "ddebdd28",
+          "presentationFingerprint": "3af95460",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "5c922d3aa2c66c65647a3893eb6c27f168e3adcd87d9f9358820825e38804dc7",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:d1679471b0eba274dbb13371bde9b25540b15fc89e8a827fe0e946cedb16fd01",
             "matchedEvidence": [
               "Skill: long a"
@@ -3532,8 +3991,8 @@
           "prompt": "Which pair has one short-a word followed by one long-a word?",
           "choices": [
             "game — lake",
-            "cat — map",
-            "pan — plane"
+            "pan — plane",
+            "cat — map"
           ],
           "answer": "pan — plane",
           "explanation": "Pan has short a; plane has long a.",
@@ -3588,13 +4047,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "03937c5a",
           "variantFingerprint": "90e264db",
-          "presentationFingerprint": "254662a5",
+          "presentationFingerprint": "d3bde359",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "5c922d3aa2c66c65647a3893eb6c27f168e3adcd87d9f9358820825e38804dc7",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:d1679471b0eba274dbb13371bde9b25540b15fc89e8a827fe0e946cedb16fd01",
             "matchedEvidence": [
               "Skill: long a"
@@ -3611,9 +4070,9 @@
           ],
           "prompt": "Why does “late” have a different a sound from “lat”?",
           "choices": [
-            "The final e changes the a to its long sound.",
             "The l always makes a long vowel.",
-            "The t changes a into e."
+            "The t changes a into e.",
+            "The final e changes the a to its long sound."
           ],
           "answer": "The final e changes the a to its long sound.",
           "explanation": "The a_e pattern makes the vowel say its long sound.",
@@ -3668,13 +4127,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "9e37c399",
           "variantFingerprint": "2ca9ff5f",
-          "presentationFingerprint": "27e6ec7b",
+          "presentationFingerprint": "b0e8c47f",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "5c922d3aa2c66c65647a3893eb6c27f168e3adcd87d9f9358820825e38804dc7",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:d1679471b0eba274dbb13371bde9b25540b15fc89e8a827fe0e946cedb16fd01",
             "matchedEvidence": [
               "Skill: long a"
@@ -3691,8 +4150,8 @@
           ],
           "prompt": "Which explanation correctly compares “map” and “made”?",
           "choices": [
-            "Both words have short a.",
             "Map has short a; made has long a because of final e.",
+            "Both words have short a.",
             "Made has short a because it has four letters."
           ],
           "answer": "Map has short a; made has long a because of final e.",
@@ -3748,13 +4207,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "d1b00c7e",
           "variantFingerprint": "0fbe9aba",
-          "presentationFingerprint": "bdfceae2",
+          "presentationFingerprint": "24f02798",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "5c922d3aa2c66c65647a3893eb6c27f168e3adcd87d9f9358820825e38804dc7",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:d1679471b0eba274dbb13371bde9b25540b15fc89e8a827fe0e946cedb16fd01",
             "matchedEvidence": [
               "Skill: long a"
@@ -3772,8 +4231,8 @@
           "prompt": "Which word begins with soft g, where g sounds like /j/?",
           "choices": [
             "gate",
-            "gum",
-            "gem"
+            "gem",
+            "gum"
           ],
           "answer": "gem",
           "explanation": "In gem, g comes before e and has the soft /j/ sound.",
@@ -3829,16 +4288,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "3ffb1d1e",
           "variantFingerprint": "b5883f47",
-          "presentationFingerprint": "1d0d4166",
+          "presentationFingerprint": "96f50d66",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "118850cfd85ef818053662d8f144ea55d09e15743b5bc5b0bcea143dc9645abf",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
-            "evidenceExcerptHash": "sha256:2c785938da9c57eeba5c8fc2e3c0b93d8e624b4ee9699ae537d4a50d9d766e8a",
+            "sourceCaptureHash": "300fdef05a3562c6e1d79fa8d054de2882c9d262d94ea78ee0ecb7c4b20d9a10",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
+            "evidenceExcerptHash": "sha256:49c33f205af4460c57405d67b0516797f9929cda5f7045b524a2af7ccdcc728e",
             "matchedEvidence": [
-              "Phonics: soft c and soft g"
+              "Phonics: soft c and soft g; digraphs (ch, tch, sh, ph, th, ng, wh)"
             ]
           }
         },
@@ -3852,9 +4311,9 @@
           ],
           "prompt": "Why does the c in “cent” have its soft /s/ sound?",
           "choices": [
-            "The c comes before e, where c often sounds like /s/.",
             "Every c always sounds like /s/.",
-            "The final t changes c into /s/."
+            "The final t changes c into /s/.",
+            "The c comes before e, where c often sounds like /s/."
           ],
           "answer": "The c comes before e, where c often sounds like /s/.",
           "explanation": "Soft c commonly appears before e, i, or y; cent begins with ce.",
@@ -3910,16 +4369,16 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "98232ba3",
           "variantFingerprint": "bb215626",
-          "presentationFingerprint": "d15326a5",
+          "presentationFingerprint": "71e86783",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "118850cfd85ef818053662d8f144ea55d09e15743b5bc5b0bcea143dc9645abf",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
-            "evidenceExcerptHash": "sha256:2c785938da9c57eeba5c8fc2e3c0b93d8e624b4ee9699ae537d4a50d9d766e8a",
+            "sourceCaptureHash": "300fdef05a3562c6e1d79fa8d054de2882c9d262d94ea78ee0ecb7c4b20d9a10",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
+            "evidenceExcerptHash": "sha256:49c33f205af4460c57405d67b0516797f9929cda5f7045b524a2af7ccdcc728e",
             "matchedEvidence": [
-              "Phonics: soft c and soft g"
+              "Phonics: soft c and soft g; digraphs (ch, tch, sh, ph, th, ng, wh)"
             ]
           }
         },
@@ -3933,8 +4392,8 @@
           ],
           "prompt": "Which sequence has one clear cause-and-effect order?",
           "choices": [
-            "The water freezes → put water in a tray → place it in a freezer",
             "Put water in an ice tray → place it in a freezer → the water freezes",
+            "The water freezes → put water in a tray → place it in a freezer",
             "Place an empty tray in a freezer → the water freezes → pour in water"
           ],
           "answer": "Put water in an ice tray → place it in a freezer → the water freezes",
@@ -3990,13 +4449,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "43376e82",
           "variantFingerprint": "36a5bd2b",
-          "presentationFingerprint": "77188596",
+          "presentationFingerprint": "ef9ca8bc",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "118850cfd85ef818053662d8f144ea55d09e15743b5bc5b0bcea143dc9645abf",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCaptureHash": "300fdef05a3562c6e1d79fa8d054de2882c9d262d94ea78ee0ecb7c4b20d9a10",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:54b9d8f116aa7ccdc91a07747aba04d016eb941be533a16207eca17dacb482fc",
             "matchedEvidence": [
               "Reading Comprehension: predictions; character traits; plot/sequence of events; text & picture clues"
@@ -4014,8 +4473,8 @@
           "prompt": "Why is “put on socks → put on shoes → tie the laces” a stronger sequence than “put on shoes → put on socks → tie the laces”?",
           "choices": [
             "The first sequence has more words.",
-            "Any order works exactly the same.",
-            "The steps have a necessary order because socks go on before shoes."
+            "The steps have a necessary order because socks go on before shoes.",
+            "Any order works exactly the same."
           ],
           "answer": "The steps have a necessary order because socks go on before shoes.",
           "explanation": "A strong sequence uses events whose order is supported by a real dependency.",
@@ -4070,13 +4529,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "68c38a50",
           "variantFingerprint": "8cd4aafa",
-          "presentationFingerprint": "29bb2aad",
+          "presentationFingerprint": "5c2a9073",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
-            "sourceCaptureHash": "118850cfd85ef818053662d8f144ea55d09e15743b5bc5b0bcea143dc9645abf",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCaptureHash": "300fdef05a3562c6e1d79fa8d054de2882c9d262d94ea78ee0ecb7c4b20d9a10",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:54b9d8f116aa7ccdc91a07747aba04d016eb941be533a16207eca17dacb482fc",
             "matchedEvidence": [
               "Reading Comprehension: predictions; character traits; plot/sequence of events; text & picture clues"
@@ -4093,9 +4552,9 @@
           ],
           "prompt": "Which word has the same long o sound as the word snow?",
           "choices": [
-            "Goat",
             "Sock",
-            "Stop"
+            "Stop",
+            "Goat"
           ],
           "answer": "Goat",
           "explanation": "Goat and snow both have the long o sound.",
@@ -4150,13 +4609,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "9ee49ea7",
           "variantFingerprint": "b4ef7e68",
-          "presentationFingerprint": "f60425f6",
+          "presentationFingerprint": "ba8da616",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "35856963be994a6f8a42b6f20cf93acd9ff9e14c50bcb764ba9d05f32b9b5c03",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
             "matchedEvidence": [
               "Friday Dec. 11: Spelling (long o)/Handwriting"
@@ -4173,8 +4632,8 @@
           ],
           "prompt": "Which word has a short o sound instead of a long o sound?",
           "choices": [
-            "Cone",
             "Box",
+            "Cone",
             "Rose"
           ],
           "answer": "Box",
@@ -4230,13 +4689,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "e0b35b99",
           "variantFingerprint": "ba9181b0",
-          "presentationFingerprint": "5d6d6b6a",
+          "presentationFingerprint": "a8bd90cc",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "35856963be994a6f8a42b6f20cf93acd9ff9e14c50bcb764ba9d05f32b9b5c03",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
             "matchedEvidence": [
               "Friday Dec. 11: Spelling (long o)/Handwriting"
@@ -4254,8 +4713,8 @@
           "prompt": "Read the sentence: The boat floats in the pond. Which word has a long o sound?",
           "choices": [
             "Pond",
-            "In",
-            "Boat"
+            "Boat",
+            "In"
           ],
           "answer": "Boat",
           "explanation": "Boat has long o spelled oa; pond has short o.",
@@ -4310,13 +4769,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "00d3047e",
           "variantFingerprint": "f429989f",
-          "presentationFingerprint": "c43e9e81",
+          "presentationFingerprint": "97ab848b",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "35856963be994a6f8a42b6f20cf93acd9ff9e14c50bcb764ba9d05f32b9b5c03",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
             "matchedEvidence": [
               "Friday Dec. 11: Spelling (long o)/Handwriting"
@@ -4333,9 +4792,9 @@
           ],
           "prompt": "Add a silent e to the word not to make note. What happens to the vowel sound?",
           "choices": [
-            "The o changes from short to long.",
             "The o stays short.",
-            "The word no longer has an o."
+            "The word no longer has an o.",
+            "The o changes from short to long."
           ],
           "answer": "The o changes from short to long.",
           "explanation": "Not has short o; note has long o with a final silent e.",
@@ -4390,13 +4849,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "b0bf0ef6",
           "variantFingerprint": "78e09572",
-          "presentationFingerprint": "f4fb44ba",
+          "presentationFingerprint": "53a6d47a",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "35856963be994a6f8a42b6f20cf93acd9ff9e14c50bcb764ba9d05f32b9b5c03",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
             "matchedEvidence": [
               "Friday Dec. 11: Spelling (long o)/Handwriting"
@@ -4413,8 +4872,8 @@
           ],
           "prompt": "Which pair of words both have a long o sound?",
           "choices": [
-            "Fox and rock",
             "Go and rope",
+            "Fox and rock",
             "Hot and home"
           ],
           "answer": "Go and rope",
@@ -4470,13 +4929,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "51e576c2",
           "variantFingerprint": "aca031ed",
-          "presentationFingerprint": "a4de986e",
+          "presentationFingerprint": "6e1e04e0",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "35856963be994a6f8a42b6f20cf93acd9ff9e14c50bcb764ba9d05f32b9b5c03",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
             "matchedEvidence": [
               "Friday Dec. 11: Spelling (long o)/Handwriting"
@@ -4494,8 +4953,8 @@
           "prompt": "Why do the words boat and coat belong in the same long o group?",
           "choices": [
             "They both have a short o sound.",
-            "They both begin with the same letter.",
-            "They both use the long o vowel sound."
+            "They both use the long o vowel sound.",
+            "They both begin with the same letter."
           ],
           "answer": "They both use the long o vowel sound.",
           "explanation": "Boat and coat share the long o sound, spelled oa.",
@@ -4550,13 +5009,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "034e6706",
           "variantFingerprint": "7ab96f1b",
-          "presentationFingerprint": "e16910aa",
+          "presentationFingerprint": "633fdf82",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "35856963be994a6f8a42b6f20cf93acd9ff9e14c50bcb764ba9d05f32b9b5c03",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
             "matchedEvidence": [
               "Friday Dec. 11: Spelling (long o)/Handwriting"
@@ -4573,9 +5032,9 @@
           ],
           "prompt": "A student groups home, hope, and hop as three long o words. Which word should be replaced?",
           "choices": [
-            "Hop",
             "Home",
-            "Hope"
+            "Hope",
+            "Hop"
           ],
           "answer": "Hop",
           "explanation": "Hop has short o; home and hope have long o.",
@@ -4630,13 +5089,13 @@
           "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
           "contentFingerprint": "d27cc33a",
           "variantFingerprint": "db153971",
-          "presentationFingerprint": "d773ac87",
+          "presentationFingerprint": "00956bab",
           "sourceLineage": {
             "quality": "page-exact",
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "35856963be994a6f8a42b6f20cf93acd9ff9e14c50bcb764ba9d05f32b9b5c03",
-            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
+            "sourceCheckedAt": "2026-11-20T19:04:50.969Z",
             "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
             "matchedEvidence": [
               "Friday Dec. 11: Spelling (long o)/Handwriting"
@@ -4646,28 +5105,29 @@
       ],
       "qa": {
         "status": "pass",
-        "skillCount": 4,
-        "questionCount": 22,
+        "skillCount": 5,
+        "questionCount": 27,
         "minimumQuestionsPerSkill": 2,
         "duplicatesRemoved": 0,
         "answerPositionCounts": [
-          8,
-          7,
-          7
+          9,
+          9,
+          9
         ],
-        "semanticVariantCount": 22,
+        "semanticVariantCount": 27,
         "maxConsecutiveAnswerPosition": 1,
         "questionTypeCounts": {
-          "direct": 7,
-          "transfer": 8,
-          "reasoning": 7
+          "direct": 9,
+          "transfer": 10,
+          "reasoning": 8
         },
         "dokCounts": {
-          "1": 5,
-          "2": 10,
-          "3": 7
+          "1": 7,
+          "2": 12,
+          "3": 8
         },
         "questionsPerSkill": {
+          "consonant-digraphs": 5,
           "long-short-a": 8,
           "soft-c-g": 3,
           "sequence": 3,
@@ -4681,15 +5141,15 @@
         ],
         "sourceInsufficientCount": 3,
         "unsupportedSkillCount": 8,
-        "pageExactLineageCount": 22,
+        "pageExactLineageCount": 27,
         "unresolvedLineageCount": 0
       }
     },
     "recentReviewPipeline": {
       "schemaVersion": 1,
       "retentionDays": 14,
-      "generatedAt": "2026-11-20T13:59:20.851Z",
-      "bankFingerprint": "b78f08efe881cb9fec80feeccbc30611be5540f0281d949888210ffbc3427783",
+      "generatedAt": "2026-11-20T19:04:50.969Z",
+      "bankFingerprint": "5749e40fad8a744f434b565059c411b9376287e55f818effb089844d9394616b",
       "skills": [
         {
           "id": "three-letter-blends",
@@ -5079,51 +5539,6 @@
           "reviewVerifiedAt": "2026-11-11T19:22:13.816Z",
           "reviewExpiresAt": "2026-11-25T19:22:13.816Z",
           "reviewSourceHash": "teacher-pages-c771461a1fda8bb48443"
-        },
-        {
-          "id": "consonant-digraphs",
-          "subject": "Spelling / Handwriting",
-          "label": "Consonant digraphs",
-          "evidence": [
-            "consonant digraphs"
-          ],
-          "studyNotes": [
-            "A consonant digraph is two consonant letters that work together to make one sound, as in sh, ch, th, and wh.",
-            "In a digraph, the two letters make one sound. In a blend, you can still hear both consonant sounds.",
-            "Teacher-style mnemonic: “Two letters, one sound.” Box the digraph, tap the box once, and say its sound.",
-            "Teacher-style supplemental practice: these explanations and examples are original ABVM teaching, not a school-provided spelling list or question set."
-          ],
-          "standards": [
-            "CCSS.RF.2.3"
-          ],
-          "domain": "Foundational reading",
-          "sourceBacked": true,
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "common-consonant-digraphs",
-              "digraph-versus-blend"
-            ],
-            "strongestClaim": "recognizes-common-consonant-digraphs-and-their-one-sound-pattern",
-            "doesNotClaim": [
-              "teacher-spelling-list-mastery",
-              "all-digraph-patterns"
-            ]
-          },
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Weekly Spelling List",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-            "sourceCaptureHash": "aadbbaa4d1ed4b50a051b00b773d8dfe26da6c0a5f5c47214c26f575f640a14f",
-            "sourceCheckedAt": "2026-11-09T17:00:30.189Z",
-            "evidenceExcerptHash": "sha256:45b3384e0e9c9a02ec8c0b403f92357d258676d8df452ae69db855a6075ac298",
-            "matchedEvidence": [
-              "Skill: consonant digraphs"
-            ]
-          },
-          "reviewVerifiedAt": "2026-11-09T17:00:30.189Z",
-          "reviewExpiresAt": "2026-11-23T17:00:30.189Z",
-          "reviewSourceHash": "teacher-pages-6f6a955c718a966bbe9c"
         },
         {
           "id": "religion-baptism-grace",
@@ -12966,426 +13381,6 @@
           "reviewSourceHash": "teacher-pages-c771461a1fda8bb48443"
         },
         {
-          "id": "auto-consonant-digraphs-ship-7079fd",
-          "templateId": "grade2-consonant-digraphs-v1",
-          "subject": "Spelling / Handwriting",
-          "skill": "consonant-digraphs",
-          "assessedSkillIds": [
-            "consonant-digraphs"
-          ],
-          "prompt": "Which word begins with a consonant digraph whose two letters make one sound?",
-          "choices": [
-            "ship",
-            "slip",
-            "sun"
-          ],
-          "answer": "ship",
-          "explanation": "Ship begins with sh. The letters s and h work together to make one /sh/ sound.",
-          "hint": "Listen for two beginning letters that work together as one sound.",
-          "sourceFact": "Verified Grade 2 skill: Consonant digraphs",
-          "sourceEvidence": [
-            "consonant digraphs"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.RF.2.3"
-          ],
-          "domain": "Foundational reading",
-          "dok": 1,
-          "cognitiveDemand": "recall-and-fluency",
-          "difficulty": 2,
-          "questionType": "direct",
-          "choiceDiagnostics": {
-            "slip": {
-              "misconception": "consonant-digraphs-distractor",
-              "feedback": "Review: Consonant digraphs. Then use the clue in the question."
-            },
-            "sun": {
-              "misconception": "consonant-digraphs-distractor",
-              "feedback": "Review: Consonant digraphs. Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "slip": 0,
-              "sun": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "common-consonant-digraphs",
-              "digraph-versus-blend"
-            ],
-            "strongestClaim": "recognizes-common-consonant-digraphs-and-their-one-sound-pattern",
-            "doesNotClaim": [
-              "teacher-spelling-list-mastery",
-              "all-digraph-patterns"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "e57c7ab7",
-          "variantFingerprint": "57a3acee",
-          "presentationFingerprint": "abcee775",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Weekly Spelling List",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-            "sourceCaptureHash": "aadbbaa4d1ed4b50a051b00b773d8dfe26da6c0a5f5c47214c26f575f640a14f",
-            "sourceCheckedAt": "2026-11-09T17:00:30.189Z",
-            "evidenceExcerptHash": "sha256:45b3384e0e9c9a02ec8c0b403f92357d258676d8df452ae69db855a6075ac298",
-            "matchedEvidence": [
-              "Skill: consonant digraphs"
-            ]
-          },
-          "reviewVerifiedAt": "2026-11-09T17:00:30.189Z",
-          "reviewExpiresAt": "2026-11-23T17:00:30.189Z",
-          "reviewSourceHash": "teacher-pages-6f6a955c718a966bbe9c"
-        },
-        {
-          "id": "auto-consonant-digraphs-chair-and-cheese-69782f",
-          "templateId": "grade2-consonant-digraphs-v1",
-          "subject": "Spelling / Handwriting",
-          "skill": "consonant-digraphs",
-          "assessedSkillIds": [
-            "consonant-digraphs"
-          ],
-          "prompt": "Which pair of words begins with the same consonant digraph?",
-          "choices": [
-            "ship and soap",
-            "chair and cheese",
-            "thin and tree"
-          ],
-          "answer": "chair and cheese",
-          "explanation": "Chair and cheese both begin with ch, a two-letter consonant digraph that makes one sound.",
-          "hint": "Compare the first two letters and their sound in each pair.",
-          "sourceFact": "Verified Grade 2 skill: Consonant digraphs",
-          "sourceEvidence": [
-            "consonant digraphs"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.RF.2.3"
-          ],
-          "domain": "Foundational reading",
-          "dok": 2,
-          "cognitiveDemand": "skill-and-concept-application",
-          "difficulty": 2,
-          "questionType": "transfer",
-          "choiceDiagnostics": {
-            "ship and soap": {
-              "misconception": "consonant-digraphs-distractor",
-              "feedback": "Review: Consonant digraphs. Then use the clue in the question."
-            },
-            "thin and tree": {
-              "misconception": "consonant-digraphs-distractor",
-              "feedback": "Review: Consonant digraphs. Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "ship and soap": 0,
-              "thin and tree": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "common-consonant-digraphs",
-              "digraph-versus-blend"
-            ],
-            "strongestClaim": "recognizes-common-consonant-digraphs-and-their-one-sound-pattern",
-            "doesNotClaim": [
-              "teacher-spelling-list-mastery",
-              "all-digraph-patterns"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "2dd703d9",
-          "variantFingerprint": "9b505702",
-          "presentationFingerprint": "a61c179c",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Weekly Spelling List",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-            "sourceCaptureHash": "aadbbaa4d1ed4b50a051b00b773d8dfe26da6c0a5f5c47214c26f575f640a14f",
-            "sourceCheckedAt": "2026-11-09T17:00:30.189Z",
-            "evidenceExcerptHash": "sha256:45b3384e0e9c9a02ec8c0b403f92357d258676d8df452ae69db855a6075ac298",
-            "matchedEvidence": [
-              "Skill: consonant digraphs"
-            ]
-          },
-          "reviewVerifiedAt": "2026-11-09T17:00:30.189Z",
-          "reviewExpiresAt": "2026-11-23T17:00:30.189Z",
-          "reviewSourceHash": "teacher-pages-6f6a955c718a966bbe9c"
-        },
-        {
-          "id": "auto-consonant-digraphs-in-sh-the-letters-make-one-sound-in-sl-both-sounds-can-be-heard-03d2b7",
-          "templateId": "grade2-consonant-digraphs-v1",
-          "subject": "Spelling / Handwriting",
-          "skill": "consonant-digraphs",
-          "assessedSkillIds": [
-            "consonant-digraphs"
-          ],
-          "prompt": "Why is sh in “ship” a digraph, but sl in “slip” is a blend?",
-          "choices": [
-            "Every word beginning with s uses a digraph.",
-            "A digraph must always contain the letter h.",
-            "In sh the letters make one sound; in sl both sounds can be heard."
-          ],
-          "answer": "In sh the letters make one sound; in sl both sounds can be heard.",
-          "explanation": "The sh letters work together as one /sh/ sound, while the /s/ and /l/ sounds remain separate in sl.",
-          "hint": "Say ship and slip slowly, then count the beginning sounds you hear.",
-          "sourceFact": "Verified Grade 2 skill: Consonant digraphs",
-          "sourceEvidence": [
-            "consonant digraphs"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.RF.2.3"
-          ],
-          "domain": "Foundational reading",
-          "dok": 3,
-          "cognitiveDemand": "strategic-reasoning",
-          "difficulty": 3,
-          "questionType": "reasoning",
-          "choiceDiagnostics": {
-            "Every word beginning with s uses a digraph.": {
-              "misconception": "consonant-digraphs-distractor",
-              "feedback": "Review: Consonant digraphs. Then use the clue in the question."
-            },
-            "A digraph must always contain the letter h.": {
-              "misconception": "consonant-digraphs-distractor",
-              "feedback": "Review: Consonant digraphs. Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "Every word beginning with s uses a digraph.": 0,
-              "A digraph must always contain the letter h.": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "common-consonant-digraphs",
-              "digraph-versus-blend"
-            ],
-            "strongestClaim": "recognizes-common-consonant-digraphs-and-their-one-sound-pattern",
-            "doesNotClaim": [
-              "teacher-spelling-list-mastery",
-              "all-digraph-patterns"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "db0b387b",
-          "variantFingerprint": "8ebc98bd",
-          "presentationFingerprint": "5355b7fb",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Weekly Spelling List",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-            "sourceCaptureHash": "aadbbaa4d1ed4b50a051b00b773d8dfe26da6c0a5f5c47214c26f575f640a14f",
-            "sourceCheckedAt": "2026-11-09T17:00:30.189Z",
-            "evidenceExcerptHash": "sha256:45b3384e0e9c9a02ec8c0b403f92357d258676d8df452ae69db855a6075ac298",
-            "matchedEvidence": [
-              "Skill: consonant digraphs"
-            ]
-          },
-          "reviewVerifiedAt": "2026-11-09T17:00:30.189Z",
-          "reviewExpiresAt": "2026-11-23T17:00:30.189Z",
-          "reviewSourceHash": "teacher-pages-6f6a955c718a966bbe9c"
-        },
-        {
-          "id": "auto-consonant-digraphs-whale-a3baa3",
-          "templateId": "grade2-consonant-digraphs-v1",
-          "subject": "Spelling / Handwriting",
-          "skill": "consonant-digraphs",
-          "assessedSkillIds": [
-            "consonant-digraphs"
-          ],
-          "prompt": "Which word begins with the consonant digraph wh?",
-          "choices": [
-            "whale",
-            "wing",
-            "wait"
-          ],
-          "answer": "whale",
-          "explanation": "Whale begins with wh. The two letters work together as the beginning digraph.",
-          "hint": "Look at the first two letters in each word.",
-          "sourceFact": "Verified Grade 2 skill: Consonant digraphs",
-          "sourceEvidence": [
-            "consonant digraphs"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.RF.2.3"
-          ],
-          "domain": "Foundational reading",
-          "dok": 1,
-          "cognitiveDemand": "recall-and-fluency",
-          "difficulty": 2,
-          "questionType": "direct",
-          "choiceDiagnostics": {
-            "wing": {
-              "misconception": "consonant-digraphs-distractor",
-              "feedback": "Review: Consonant digraphs. Then use the clue in the question."
-            },
-            "wait": {
-              "misconception": "consonant-digraphs-distractor",
-              "feedback": "Review: Consonant digraphs. Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "wing": 0,
-              "wait": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "common-consonant-digraphs",
-              "digraph-versus-blend"
-            ],
-            "strongestClaim": "recognizes-common-consonant-digraphs-and-their-one-sound-pattern",
-            "doesNotClaim": [
-              "teacher-spelling-list-mastery",
-              "all-digraph-patterns"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "e0ece446",
-          "variantFingerprint": "a109087f",
-          "presentationFingerprint": "f646183a",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Weekly Spelling List",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-            "sourceCaptureHash": "aadbbaa4d1ed4b50a051b00b773d8dfe26da6c0a5f5c47214c26f575f640a14f",
-            "sourceCheckedAt": "2026-11-09T17:00:30.189Z",
-            "evidenceExcerptHash": "sha256:45b3384e0e9c9a02ec8c0b403f92357d258676d8df452ae69db855a6075ac298",
-            "matchedEvidence": [
-              "Skill: consonant digraphs"
-            ]
-          },
-          "reviewVerifiedAt": "2026-11-09T17:00:30.189Z",
-          "reviewExpiresAt": "2026-11-23T17:00:30.189Z",
-          "reviewSourceHash": "teacher-pages-6f6a955c718a966bbe9c"
-        },
-        {
-          "id": "auto-consonant-digraphs-fish-53d2fc",
-          "templateId": "grade2-consonant-digraphs-v1",
-          "subject": "Spelling / Handwriting",
-          "skill": "consonant-digraphs",
-          "assessedSkillIds": [
-            "consonant-digraphs"
-          ],
-          "prompt": "Which word ends with a consonant digraph?",
-          "choices": [
-            "fast",
-            "fish",
-            "fan"
-          ],
-          "answer": "fish",
-          "explanation": "Fish ends with sh. The letters s and h work together to make one ending sound.",
-          "hint": "Look at the last two letters and listen for one sound.",
-          "sourceFact": "Verified Grade 2 skill: Consonant digraphs",
-          "sourceEvidence": [
-            "consonant digraphs"
-          ],
-          "sourceMode": "DETERMINISTIC_TEMPLATE",
-          "supportType": "deterministic_transform",
-          "provenance": "verified-abvm-skill-template",
-          "standards": [
-            "CCSS.RF.2.3"
-          ],
-          "domain": "Foundational reading",
-          "dok": 2,
-          "cognitiveDemand": "skill-and-concept-application",
-          "difficulty": 2,
-          "questionType": "transfer",
-          "choiceDiagnostics": {
-            "fast": {
-              "misconception": "consonant-digraphs-distractor",
-              "feedback": "Review: Consonant digraphs. Then use the clue in the question."
-            },
-            "fan": {
-              "misconception": "consonant-digraphs-distractor",
-              "feedback": "Review: Consonant digraphs. Then use the clue in the question."
-            }
-          },
-          "rubric": {
-            "maxPoints": 2,
-            "criteria": [
-              "Selects the correct answer using the target Grade 2 skill.",
-              "Uses the clue, rule, or evidence required by the item."
-            ],
-            "partialCredit": {
-              "fast": 0,
-              "fan": 0
-            }
-          },
-          "evidenceContract": {
-            "evidenceType": "DIRECT_TARGET",
-            "supports": [
-              "common-consonant-digraphs",
-              "digraph-versus-blend"
-            ],
-            "strongestClaim": "recognizes-common-consonant-digraphs-and-their-one-sound-pattern",
-            "doesNotClaim": [
-              "teacher-spelling-list-mastery",
-              "all-digraph-patterns"
-            ]
-          },
-          "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-          "contentFingerprint": "63568ca9",
-          "variantFingerprint": "0fccd97f",
-          "presentationFingerprint": "c02c274e",
-          "sourceLineage": {
-            "quality": "page-exact",
-            "sourceTitle": "Weekly Spelling List",
-            "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-            "sourceCaptureHash": "aadbbaa4d1ed4b50a051b00b773d8dfe26da6c0a5f5c47214c26f575f640a14f",
-            "sourceCheckedAt": "2026-11-09T17:00:30.189Z",
-            "evidenceExcerptHash": "sha256:45b3384e0e9c9a02ec8c0b403f92357d258676d8df452ae69db855a6075ac298",
-            "matchedEvidence": [
-              "Skill: consonant digraphs"
-            ]
-          },
-          "reviewVerifiedAt": "2026-11-09T17:00:30.189Z",
-          "reviewExpiresAt": "2026-11-23T17:00:30.189Z",
-          "reviewSourceHash": "teacher-pages-6f6a955c718a966bbe9c"
-        },
-        {
           "id": "auto-religion-baptism-grace-original-sin-is-washed-away-and-we-receive-the-holy-spirit-faith-and-new-life-in-grace-d0ced0",
           "templateId": "grade2-religion-baptism-grace-v1",
           "subject": "Religion",
@@ -17812,21 +17807,21 @@
     },
     "schoolChangeFeed": {
       "schemaVersion": 1,
-      "generatedAt": "2026-11-20T13:59:20.851Z",
-      "sourceHash": "teacher-pages-5e6b183b6415cdf61579",
-      "changed": false,
+      "generatedAt": "2026-11-20T19:04:50.969Z",
+      "sourceHash": "teacher-pages-6cffd3f91cd38a7cb643",
+      "changed": true,
       "items": [
+        {
+          "id": "change-dca876d59278",
+          "kind": "new-skill",
+          "subject": "Spelling / Handwriting",
+          "text": "New: Spelling / Handwriting — Consonant digraphs, test Friday, Nov. 6"
+        },
         {
           "id": "change-56afd30b5fa9",
           "kind": "unchanged",
           "subject": "Reading / ELA",
           "text": "No changes to Reading / ELA."
-        },
-        {
-          "id": "change-251915f390c9",
-          "kind": "unchanged",
-          "subject": "Spelling / Handwriting",
-          "text": "No changes to Spelling / Handwriting."
         },
         {
           "id": "change-a3b58d6f4906",
@@ -17859,42 +17854,42 @@
       "dateProvided": false
     }
   },
-  "sourceLastCheckedAt": "2026-11-20T13:59:20.851Z",
+  "sourceLastCheckedAt": "2026-11-20T19:04:50.969Z",
   "sourcePages": [
     {
       "title": "Home",
       "url": "https://sites.google.com/view/abvmgr2/home",
-      "checkedAt": "2026-11-20T13:59:20.851Z",
+      "checkedAt": "2026-11-20T19:04:50.969Z",
       "contentHash": "be2236b3e22f38a5d9d833e59ee5d3eaa055c832586497ba7d8e6b6a7f558bf7"
     },
     {
       "title": "Homework",
       "url": "https://sites.google.com/view/abvmgr2/homework",
-      "checkedAt": "2026-11-20T13:59:20.851Z",
+      "checkedAt": "2026-11-20T19:04:50.969Z",
       "contentHash": "f4c3a7dabe9e9e3c6f444087f573a32cb027498275dfe519f98b72b63e11f292"
     },
     {
       "title": "Reading Work",
       "url": "https://sites.google.com/view/abvmgr2/reading-work",
-      "checkedAt": "2026-11-20T13:59:20.851Z",
-      "contentHash": "118850cfd85ef818053662d8f144ea55d09e15743b5bc5b0bcea143dc9645abf"
+      "checkedAt": "2026-11-20T19:04:50.969Z",
+      "contentHash": "300fdef05a3562c6e1d79fa8d054de2882c9d262d94ea78ee0ecb7c4b20d9a10"
     },
     {
       "title": "Weekly Spelling List",
       "url": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-      "checkedAt": "2026-11-20T13:59:20.851Z",
+      "checkedAt": "2026-11-20T19:04:50.969Z",
       "contentHash": "5c922d3aa2c66c65647a3893eb6c27f168e3adcd87d9f9358820825e38804dc7"
     },
     {
       "title": "Tests",
       "url": "https://sites.google.com/view/abvmgr2/tests",
-      "checkedAt": "2026-11-20T13:59:20.851Z",
+      "checkedAt": "2026-11-20T19:04:50.969Z",
       "contentHash": "35856963be994a6f8a42b6f20cf93acd9ff9e14c50bcb764ba9d05f32b9b5c03"
     },
     {
       "title": "Religion",
       "url": "https://sites.google.com/view/abvmgr2/religion",
-      "checkedAt": "2026-11-20T13:59:20.851Z",
+      "checkedAt": "2026-11-20T19:04:50.969Z",
       "contentHash": "6281f67a5e63195835bed1dab9ff496201253d824264a67c367059ba2cdbccf5"
     }
   ],
