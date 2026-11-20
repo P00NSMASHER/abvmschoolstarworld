@@ -14,16 +14,16 @@
     "retriesPerSource": 3,
     "source": "https://sites.google.com/view/abvmgr2/home"
   },
-  "sourceLastSeenAt": "2026-11-20T01:54:52.399Z",
-  "sourceCapturedAt": "2026-11-19T20:17:53.411Z",
+  "sourceLastSeenAt": "2026-11-20T13:59:20.851Z",
+  "sourceCapturedAt": "2026-11-20T13:59:20.851Z",
   "freshnessHours": 0,
   "pack": {
     "schemaVersion": 2,
-    "sourceHash": "teacher-pages-d3eff7c200cb4421a3ad",
-    "sourceCapturedAt": "2026-11-19T20:17:53.411Z",
-    "generatedAt": "2026-11-20T01:54:52.399Z",
+    "sourceHash": "teacher-pages-5e6b183b6415cdf61579",
+    "sourceCapturedAt": "2026-11-20T13:59:20.851Z",
+    "generatedAt": "2026-11-20T13:59:20.851Z",
     "weekLabel": "Week of November 16, 2026",
-    "summary": "Current Grade 2 teacher-site material: Homework lists Spelling “Spelling Choice Board activity” and Math “Page 62”. Upcoming tests include Spelling (long a) / Handwriting on Friday, Nov. 20, Phonics (long vowels) on Friday, Nov. 20, Math (2 digit addition) on Tuesday, Nov. 24, and Spelling (long i) / Handwriting on Friday, Dec. 4. 34 uploaded school notices are integrated with the teacher pages.",
+    "summary": "Current Grade 2 teacher-site material: No specific assignments are currently posted. Upcoming tests include Spelling (long a) / Handwriting on Friday, Nov. 20, Phonics (long vowels) on Friday, Nov. 20, Math (2 digit addition) on Tuesday, Nov. 24, and Spelling (long i) / Handwriting on Friday, Dec. 4. 34 uploaded school notices are integrated with the teacher pages.",
     "subjects": [
       {
         "subject": "Reading / ELA",
@@ -82,8 +82,7 @@
           "Math (2 digit addition)"
         ],
         "studyNotes": [
-          "The Tests page lists Math (2 digit addition) for Tuesday, Nov. 24.",
-          "The current Homework page assigns Page 62."
+          "The Tests page lists Math (2 digit addition) for Tuesday, Nov. 24."
         ]
       },
       {
@@ -1590,20 +1589,7 @@
         "meaning": "Current Reading Work vocabulary word; the teacher page does not provide a definition."
       }
     ],
-    "homework": [
-      {
-        "day": "Current Homework posting",
-        "subject": "Spelling",
-        "task": "Spelling Choice Board activity",
-        "due": "Current posting"
-      },
-      {
-        "day": "Current Homework posting",
-        "subject": "Math",
-        "task": "Page 62",
-        "due": "Current posting"
-      }
-    ],
+    "homework": [],
     "reminders": [
       "October Gift Card Calendar Fundraiser money and calendar bottoms are due Monday, Sept. 28.",
       "Sign up for conferences using the OptionC portal on Tuesday, Sept. 29.",
@@ -1794,7 +1780,7 @@
       "Picture backgrounds: 1 Universe, 2 Pink Mist, 3 Fall Leaves, 4 Traditional, 5 School Spirit, 6 Patriotic, 7 Dinosaur, 8 Pastel, 9 Bookcase, 10 Blue Brush, 11 Laser. Backgrounds 1, 2, and 11 are marked NEW.",
       "Lego Club is Friday, Sept. 25 from 3–4 PM."
     ],
-    "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+    "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
     "uploadedNoticeHash": "uploaded-notices-7165922c19535ee87ca7",
     "uploadedNoticeTopics": {
       "reminders": [
@@ -1857,8 +1843,8 @@
     "lunchMenuSource": {
       "status": "current-week",
       "retrievalState": "verified",
-      "checkedAt": "2026-11-20T01:54:52.399Z",
-      "lastAttemptAt": "2026-11-20T01:54:52.399Z",
+      "checkedAt": "2026-11-20T13:59:20.851Z",
+      "lastAttemptAt": "2026-11-20T13:59:20.851Z",
       "provider": "Saint Clair Area School District",
       "school": "Assumption BVM School",
       "feedUrl": "https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu",
@@ -1875,7 +1861,7 @@
           "contentHash": "a5d25beb5cbd34522ce4645172ab4efce1d041aab7fcc33521f3433c5cd0b178",
           "proofMode": "reviewed-notice",
           "reviewedAt": "2026-11-03T15:00:00.000Z",
-          "checkedAt": "2026-11-20T01:54:52.399Z",
+          "checkedAt": "2026-11-20T13:59:20.851Z",
           "state": "reviewed-notice"
         }
       ],
@@ -2600,12 +2586,12 @@
         "sourceId": "abvm-2026-11-parent-school-menu"
       }
     ],
-    "lunchMenuHash": "9cb568ee2eae0a234f6c7729f6ab4ebc1a65c27a0726b2dac0b052902f64b531",
+    "lunchMenuHash": "131a758214125eb71bb7b119ed2ccfeb82db37ae2fa35a6e815f56dad88508fa",
     "contentPipeline": {
       "schemaVersion": 2,
       "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
-      "generatedAt": "2026-11-20T01:54:52.399Z",
-      "sourceHash": "teacher-pages-d3eff7c200cb4421a3ad",
+      "generatedAt": "2026-11-20T13:59:20.851Z",
+      "sourceHash": "teacher-pages-5e6b183b6415cdf61579",
       "bankFingerprint": "1753699c",
       "lifecycleStage": "QA_PASSED",
       "safetyState": "SAFE_PARTIAL",
@@ -2641,7 +2627,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "5c922d3aa2c66c65647a3893eb6c27f168e3adcd87d9f9358820825e38804dc7",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:d1679471b0eba274dbb13371bde9b25540b15fc89e8a827fe0e946cedb16fd01",
             "matchedEvidence": [
               "Skill: long a"
@@ -2682,7 +2668,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "118850cfd85ef818053662d8f144ea55d09e15743b5bc5b0bcea143dc9645abf",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:2c785938da9c57eeba5c8fc2e3c0b93d8e624b4ee9699ae537d4a50d9d766e8a",
             "matchedEvidence": [
               "Phonics: soft c and soft g"
@@ -2720,7 +2706,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "118850cfd85ef818053662d8f144ea55d09e15743b5bc5b0bcea143dc9645abf",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:54b9d8f116aa7ccdc91a07747aba04d016eb941be533a16207eca17dacb482fc",
             "matchedEvidence": [
               "Reading Comprehension: predictions; character traits; plot/sequence of events; text & picture clues"
@@ -2748,7 +2734,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "35856963be994a6f8a42b6f20cf93acd9ff9e14c50bcb764ba9d05f32b9b5c03",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
             "matchedEvidence": [
               "Friday Dec. 11: Spelling (long o)/Handwriting"
@@ -2967,7 +2953,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "5c922d3aa2c66c65647a3893eb6c27f168e3adcd87d9f9358820825e38804dc7",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:d1679471b0eba274dbb13371bde9b25540b15fc89e8a827fe0e946cedb16fd01",
             "matchedEvidence": [
               "Skill: long a"
@@ -3048,7 +3034,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "118850cfd85ef818053662d8f144ea55d09e15743b5bc5b0bcea143dc9645abf",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:2c785938da9c57eeba5c8fc2e3c0b93d8e624b4ee9699ae537d4a50d9d766e8a",
             "matchedEvidence": [
               "Phonics: soft c and soft g"
@@ -3128,7 +3114,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "118850cfd85ef818053662d8f144ea55d09e15743b5bc5b0bcea143dc9645abf",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:54b9d8f116aa7ccdc91a07747aba04d016eb941be533a16207eca17dacb482fc",
             "matchedEvidence": [
               "Reading Comprehension: predictions; character traits; plot/sequence of events; text & picture clues"
@@ -3208,7 +3194,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "35856963be994a6f8a42b6f20cf93acd9ff9e14c50bcb764ba9d05f32b9b5c03",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
             "matchedEvidence": [
               "Friday Dec. 11: Spelling (long o)/Handwriting"
@@ -3288,7 +3274,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "5c922d3aa2c66c65647a3893eb6c27f168e3adcd87d9f9358820825e38804dc7",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:d1679471b0eba274dbb13371bde9b25540b15fc89e8a827fe0e946cedb16fd01",
             "matchedEvidence": [
               "Skill: long a"
@@ -3368,7 +3354,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "5c922d3aa2c66c65647a3893eb6c27f168e3adcd87d9f9358820825e38804dc7",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:d1679471b0eba274dbb13371bde9b25540b15fc89e8a827fe0e946cedb16fd01",
             "matchedEvidence": [
               "Skill: long a"
@@ -3448,7 +3434,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "5c922d3aa2c66c65647a3893eb6c27f168e3adcd87d9f9358820825e38804dc7",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:d1679471b0eba274dbb13371bde9b25540b15fc89e8a827fe0e946cedb16fd01",
             "matchedEvidence": [
               "Skill: long a"
@@ -3528,7 +3514,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "5c922d3aa2c66c65647a3893eb6c27f168e3adcd87d9f9358820825e38804dc7",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:d1679471b0eba274dbb13371bde9b25540b15fc89e8a827fe0e946cedb16fd01",
             "matchedEvidence": [
               "Skill: long a"
@@ -3608,7 +3594,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "5c922d3aa2c66c65647a3893eb6c27f168e3adcd87d9f9358820825e38804dc7",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:d1679471b0eba274dbb13371bde9b25540b15fc89e8a827fe0e946cedb16fd01",
             "matchedEvidence": [
               "Skill: long a"
@@ -3688,7 +3674,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "5c922d3aa2c66c65647a3893eb6c27f168e3adcd87d9f9358820825e38804dc7",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:d1679471b0eba274dbb13371bde9b25540b15fc89e8a827fe0e946cedb16fd01",
             "matchedEvidence": [
               "Skill: long a"
@@ -3768,7 +3754,7 @@
             "sourceTitle": "Weekly Spelling List",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
             "sourceCaptureHash": "5c922d3aa2c66c65647a3893eb6c27f168e3adcd87d9f9358820825e38804dc7",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:d1679471b0eba274dbb13371bde9b25540b15fc89e8a827fe0e946cedb16fd01",
             "matchedEvidence": [
               "Skill: long a"
@@ -3849,7 +3835,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "118850cfd85ef818053662d8f144ea55d09e15743b5bc5b0bcea143dc9645abf",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:2c785938da9c57eeba5c8fc2e3c0b93d8e624b4ee9699ae537d4a50d9d766e8a",
             "matchedEvidence": [
               "Phonics: soft c and soft g"
@@ -3930,7 +3916,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "118850cfd85ef818053662d8f144ea55d09e15743b5bc5b0bcea143dc9645abf",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:2c785938da9c57eeba5c8fc2e3c0b93d8e624b4ee9699ae537d4a50d9d766e8a",
             "matchedEvidence": [
               "Phonics: soft c and soft g"
@@ -4010,7 +3996,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "118850cfd85ef818053662d8f144ea55d09e15743b5bc5b0bcea143dc9645abf",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:54b9d8f116aa7ccdc91a07747aba04d016eb941be533a16207eca17dacb482fc",
             "matchedEvidence": [
               "Reading Comprehension: predictions; character traits; plot/sequence of events; text & picture clues"
@@ -4090,7 +4076,7 @@
             "sourceTitle": "Reading Work",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/reading-work",
             "sourceCaptureHash": "118850cfd85ef818053662d8f144ea55d09e15743b5bc5b0bcea143dc9645abf",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:54b9d8f116aa7ccdc91a07747aba04d016eb941be533a16207eca17dacb482fc",
             "matchedEvidence": [
               "Reading Comprehension: predictions; character traits; plot/sequence of events; text & picture clues"
@@ -4170,7 +4156,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "35856963be994a6f8a42b6f20cf93acd9ff9e14c50bcb764ba9d05f32b9b5c03",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
             "matchedEvidence": [
               "Friday Dec. 11: Spelling (long o)/Handwriting"
@@ -4250,7 +4236,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "35856963be994a6f8a42b6f20cf93acd9ff9e14c50bcb764ba9d05f32b9b5c03",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
             "matchedEvidence": [
               "Friday Dec. 11: Spelling (long o)/Handwriting"
@@ -4330,7 +4316,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "35856963be994a6f8a42b6f20cf93acd9ff9e14c50bcb764ba9d05f32b9b5c03",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
             "matchedEvidence": [
               "Friday Dec. 11: Spelling (long o)/Handwriting"
@@ -4410,7 +4396,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "35856963be994a6f8a42b6f20cf93acd9ff9e14c50bcb764ba9d05f32b9b5c03",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
             "matchedEvidence": [
               "Friday Dec. 11: Spelling (long o)/Handwriting"
@@ -4490,7 +4476,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "35856963be994a6f8a42b6f20cf93acd9ff9e14c50bcb764ba9d05f32b9b5c03",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
             "matchedEvidence": [
               "Friday Dec. 11: Spelling (long o)/Handwriting"
@@ -4570,7 +4556,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "35856963be994a6f8a42b6f20cf93acd9ff9e14c50bcb764ba9d05f32b9b5c03",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
             "matchedEvidence": [
               "Friday Dec. 11: Spelling (long o)/Handwriting"
@@ -4650,7 +4636,7 @@
             "sourceTitle": "Tests",
             "sourceUrl": "https://sites.google.com/view/abvmgr2/tests",
             "sourceCaptureHash": "35856963be994a6f8a42b6f20cf93acd9ff9e14c50bcb764ba9d05f32b9b5c03",
-            "sourceCheckedAt": "2026-11-20T01:54:52.399Z",
+            "sourceCheckedAt": "2026-11-20T13:59:20.851Z",
             "evidenceExcerptHash": "sha256:2cdea07e465da22b38a268deaded806c30cc17b7376deea0e26787c790e489a1",
             "matchedEvidence": [
               "Friday Dec. 11: Spelling (long o)/Handwriting"
@@ -4702,7 +4688,7 @@
     "recentReviewPipeline": {
       "schemaVersion": 1,
       "retentionDays": 14,
-      "generatedAt": "2026-11-20T01:54:52.399Z",
+      "generatedAt": "2026-11-20T13:59:20.851Z",
       "bankFingerprint": "b78f08efe881cb9fec80feeccbc30611be5540f0281d949888210ffbc3427783",
       "skills": [
         {
@@ -17826,8 +17812,8 @@
     },
     "schoolChangeFeed": {
       "schemaVersion": 1,
-      "generatedAt": "2026-11-20T01:54:52.399Z",
-      "sourceHash": "teacher-pages-d3eff7c200cb4421a3ad",
+      "generatedAt": "2026-11-20T13:59:20.851Z",
+      "sourceHash": "teacher-pages-5e6b183b6415cdf61579",
       "changed": false,
       "items": [
         {
@@ -17873,42 +17859,42 @@
       "dateProvided": false
     }
   },
-  "sourceLastCheckedAt": "2026-11-20T01:54:52.399Z",
+  "sourceLastCheckedAt": "2026-11-20T13:59:20.851Z",
   "sourcePages": [
     {
       "title": "Home",
       "url": "https://sites.google.com/view/abvmgr2/home",
-      "checkedAt": "2026-11-20T01:54:52.399Z",
-      "contentHash": "bb41eae4722427fc7bf01abbec6b7b095ea2383ea92c511216c4a56c3ad12a41"
+      "checkedAt": "2026-11-20T13:59:20.851Z",
+      "contentHash": "be2236b3e22f38a5d9d833e59ee5d3eaa055c832586497ba7d8e6b6a7f558bf7"
     },
     {
       "title": "Homework",
       "url": "https://sites.google.com/view/abvmgr2/homework",
-      "checkedAt": "2026-11-20T01:54:52.399Z",
-      "contentHash": "d02d9060dd0f47f4801514944292e0733a03ef47edbb4d3829609590c600a1d1"
+      "checkedAt": "2026-11-20T13:59:20.851Z",
+      "contentHash": "f4c3a7dabe9e9e3c6f444087f573a32cb027498275dfe519f98b72b63e11f292"
     },
     {
       "title": "Reading Work",
       "url": "https://sites.google.com/view/abvmgr2/reading-work",
-      "checkedAt": "2026-11-20T01:54:52.399Z",
+      "checkedAt": "2026-11-20T13:59:20.851Z",
       "contentHash": "118850cfd85ef818053662d8f144ea55d09e15743b5bc5b0bcea143dc9645abf"
     },
     {
       "title": "Weekly Spelling List",
       "url": "https://sites.google.com/view/abvmgr2/weekly-spelling-list",
-      "checkedAt": "2026-11-20T01:54:52.399Z",
+      "checkedAt": "2026-11-20T13:59:20.851Z",
       "contentHash": "5c922d3aa2c66c65647a3893eb6c27f168e3adcd87d9f9358820825e38804dc7"
     },
     {
       "title": "Tests",
       "url": "https://sites.google.com/view/abvmgr2/tests",
-      "checkedAt": "2026-11-20T01:54:52.399Z",
+      "checkedAt": "2026-11-20T13:59:20.851Z",
       "contentHash": "35856963be994a6f8a42b6f20cf93acd9ff9e14c50bcb764ba9d05f32b9b5c03"
     },
     {
       "title": "Religion",
       "url": "https://sites.google.com/view/abvmgr2/religion",
-      "checkedAt": "2026-11-20T01:54:52.399Z",
+      "checkedAt": "2026-11-20T13:59:20.851Z",
       "contentHash": "6281f67a5e63195835bed1dab9ff496201253d824264a67c367059ba2cdbccf5"
     }
   ],
