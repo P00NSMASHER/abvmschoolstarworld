@@ -2206,3 +2206,123 @@
     margin-top:-33px;
   }
 }
+
+/* Study clarity: the same route is now organized as choose test → review → act.
+   Presentation only: question banks, provenance and device progress are untouched. */
+.games-screen:not(.is-playing) .study-section-description{
+  margin:4px 0 12px;
+  color:#48637f;
+  font-size:.82rem;
+  line-height:1.4;
+}
+.games-screen:not(.is-playing) .prep-sheet>.prep-chooser-panel{
+  min-width:0;
+  margin:0 0 9px;
+  padding:0;
+  border:0;
+}
+.games-screen:not(.is-playing) .prep-sheet>.prep-chooser-panel .prep-test-choices{
+  gap:8px;
+  margin:0;
+  padding:2px;
+}
+.games-screen:not(.is-playing) .prep-sheet>.prep-chooser-panel .prep-test-choice{
+  min-height:68px;
+  padding:8px 9px;
+  border-radius:14px;
+}
+.games-screen:not(.is-playing) .prep-sheet>.prep-chooser-panel .prep-test-choice[aria-pressed="true"]{
+  padding:7px 8px;
+}
+.games-screen:not(.is-playing) .prep-test-choice:focus-visible{
+  outline:3px solid #164f8b;
+  outline-offset:2px;
+}
+.games-screen:not(.is-playing) .prep-topic-card{
+  box-shadow:inset 0 1px 0 #fff;
+}
+.games-screen:not(.is-playing) .prep-more-topics{
+  margin:8px 0 0;
+  padding-top:3px;
+  border-top:1px solid #cfdfef;
+}
+.games-screen:not(.is-playing) .prep-more-topics>summary{
+  display:flex;
+  align-items:center;
+  min-height:44px;
+  padding:8px 1px;
+  color:#164b7c;
+  font-size:.85rem;
+  line-height:1.4;
+  font-weight:750;
+  cursor:pointer;
+}
+.games-screen:not(.is-playing) .prep-more-topics>ul{margin-top:2px}
+.games-screen:not(.is-playing) .prep-learning-more{
+  margin:13px 0 0;
+  border-top:1px solid #d8e5f0;
+}
+.games-screen:not(.is-playing) .prep-learning-more>summary{
+  display:flex;
+  align-items:center;
+  min-height:44px;
+  padding:9px 2px;
+  color:#214b78;
+  font-size:.85rem;
+  line-height:1.4;
+  font-weight:750;
+  cursor:pointer;
+}
+.games-screen:not(.is-playing) .prep-learning-more>p{
+  padding:2px 0 10px;
+  color:#405a75;
+  font-size:.81rem;
+  line-height:1.55;
+}
+.games-screen:not(.is-playing) .prep-learning-more>summary:focus-visible,
+.games-screen:not(.is-playing) .prep-more-topics>summary:focus-visible{
+  outline:3px solid #174c89;
+  outline-offset:2px;
+}
+@media(max-width:699px){
+  .games-screen:not(.is-playing) .prep-header{min-height:106px;padding-bottom:6px}
+  .games-screen:not(.is-playing) .prep-header .prep-eagle{width:70px;height:70px;bottom:-4px}
+  .games-screen:not(.is-playing) .prep-header .prep-seal{width:36px;height:36px}
+  .games-screen:not(.is-playing) .prep-sheet>h2{margin-bottom:6px}
+  .games-screen:not(.is-playing) .prep-topic-card{padding:9px 11px}
+  .games-screen:not(.is-playing) .prep-topic-card>h3{font-size:1.12rem;line-height:1.2}
+  .games-screen:not(.is-playing) .prep-topics{margin:3px 0}
+  .games-screen:not(.is-playing) .prep-topics>img{height:55px}
+  .games-screen:not(.is-playing) .prep-sheet>.prep-start{margin-top:7px}
+  .games-screen:not(.is-playing) .prep-material-actions{margin-top:6px}
+}
+
+/* Do not bury selected test actions under months of later dates. The selector
+   remains complete, keyboard-operable, and independently scrollable. */
+.games-screen:not(.is-playing) .prep-sheet>.prep-chooser-panel .prep-test-choices[data-many-tests="true"]{
+  max-height:156px;
+  overflow-x:hidden;
+  overflow-y:auto;
+  overscroll-behavior-y:contain;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+  scrollbar-color:#799bbd #f1f6fc;
+  padding:3px 7px 3px 3px;
+  border:1px solid #d9e7f2;
+  border-radius:16px;
+  background:#f8fbff;
+}
+.games-screen:not(.is-playing) .prep-chooser-note{
+  margin:6px 0 0;
+  color:#43607c;
+  font-size:.76rem;
+  line-height:1.4;
+}
+
+/* The smallest iPhone usable viewport (including real status/home insets)
+   gets one row of long-list choices before the selected test's actions. */
+@media(max-width:405px){
+  .games-screen:not(.is-playing) .prep-sheet>.prep-chooser-panel .prep-test-choices[data-many-tests="true"]{
+    max-height:85px;
+  }
+}
