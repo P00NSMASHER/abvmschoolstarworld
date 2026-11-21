@@ -217,11 +217,11 @@ test('live watchdog enforces complete JSON parity and the recovery event is repo
   assert.match(workflow,/count >= 2/);
 });
 
-test('late-night Homework misses receive two independent post-grace recovery wake-ups',()=>{
+test('twice-daily Homework misses retain an independent recovery wake-up',()=>{
   const recovery=readFileSync(new URL('../.github/workflows/daily-source-recovery.yml',import.meta.url),'utf8');
   const watchdog=readFileSync(new URL('../.github/workflows/refresh-health.yml',import.meta.url),'utf8');
-  assert.match(recovery,/- cron: '59 0 \* \* \*'\n\s+timezone: 'America\/New_York'/);
-  assert.match(watchdog,/- cron: '53 0 \* \* \*'\n\s+timezone: 'America\/New_York'/);
+  assert.doesNotMatch(recovery,/\bschedule:/);
+  assert.match(watchdog,/- cron: '45 6,18 \* \* \*'\n\s+timezone: 'America\/New_York'/);
   assert.match(recovery,/workflow_run:\s+workflows:\s+- Monitor ABVM refresh health\s+- Verify ABVM Homework backup poll\s+types: \[completed\]/);
 });
 
@@ -293,8 +293,7 @@ test('reviewed lunch cron and bounded watchdog recovery are independently wired'
   const lunch=readFileSync(new URL('../.github/workflows/refresh-reviewed-lunch-week.yml',import.meta.url),'utf8');
   const recovery=readFileSync(new URL('../.github/workflows/daily-source-recovery.yml',import.meta.url),'utf8');
   const pages=readFileSync(new URL('../.github/workflows/pages.yml',import.meta.url),'utf8');
-  assert.match(lunch,/cron: '11 0 \* \* \*'/);
-  assert.match(lunch,/cron: '37 5 \* \* 1'/);
+  assert.match(lunch,/cron: '50 6 \* \* 1'/);
   assert.match(lunch,/node scripts\/refresh-reviewed-lunch\.mjs --write/);
   assert.match(lunch,/npm run qa/);
   assert.match(lunch,/git push origin HEAD:main/);

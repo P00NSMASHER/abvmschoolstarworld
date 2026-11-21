@@ -9,9 +9,10 @@ const recovery=read('.github/workflows/daily-source-recovery.yml');
 const dashboard=read('.github/workflows/health-dashboard.yml');
 const script=read('scripts/refresh-current-homework.mjs');
 
-test('backup poll is scheduled between primary polls and has no write permission',()=>{
-  assert.match(primary,/cron: '7,37 6-23 \* \* \*'/);
-  assert.match(workflow,/cron: '19,49 6-23 \* \* \*'/);
+test('backup poll remains an on-demand read-only diagnostic',()=>{
+  assert.match(primary,/cron: '15 6,18 \* \* \*'/);
+  assert.doesNotMatch(workflow,/\bschedule:/);
+  assert.match(workflow,/workflow_dispatch:/);
   assert.match(workflow,/permissions:\n  contents: read/);
   assert.doesNotMatch(workflow,/contents: write|pages: write|id-token: write/);
 });

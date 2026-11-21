@@ -9,14 +9,14 @@ const pages = file('pages.yml');
 
 test('both school sources have scheduled Eastern daily runs and no teacher/educator approval job', () => {
   assert.match(teacher, /name: Refresh ABVM teacher pages/);
-  assert.match(teacher, /cron: '17 6 \* \* \*'/);
-  assert.match(teacher, /cron: '47 15 \* \* \*'/);
+  assert.match(teacher, /cron: '0 6,18 \* \* \*'/);
   assert.match(homework, /name: Refresh current ABVM homework/);
-  assert.match(homework, /cron: '7,37 6-23 \* \* \*'/);
-  for (const workflow of [teacher, homework, recovery]) {
+  assert.match(homework, /cron: '15 6,18 \* \* \*'/);
+  for (const workflow of [teacher, homework]) {
     assert.match(workflow,/timezone: 'America\/New_York'/);
     assert.doesNotMatch(workflow,/needs:\s*(?:educator|teacher-approval|manual-approval|parent-signoff)/i);
   }
+  assert.doesNotMatch(recovery,/\bschedule:/);
 });
 
 test('optional draft question candidate bookkeeping cannot block verified curriculum publication', () => {
@@ -28,8 +28,9 @@ test('optional draft question candidate bookkeeping cannot block verified curric
   assert.match(teacher, /- name: Validate the candidate app before changing main\n\s+run: npm run qa/);
 });
 
-test('bounded no-signoff recovery checks repository and live site, then dispatches only guarded workflows', () => {
-  assert.match(recovery, /cron: '11 6-23 \* \* \*'/);
+test('bounded no-signoff recovery is event driven and dispatches only guarded workflows', () => {
+  assert.doesNotMatch(recovery, /\bschedule:/);
+  assert.match(recovery,/workflow_run:/);
   assert.match(recovery, /node scripts\/source-freshness-recovery\.mjs --report=/);
   assert.match(recovery, /maybe_dispatch sync-study-pack\.yml "\$curriculum"/);
   assert.match(recovery, /maybe_dispatch refresh-current-homework\.yml "\$homework"/);

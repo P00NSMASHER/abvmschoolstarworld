@@ -21,9 +21,6 @@ on:
       - Monitor ABVM refresh health
       - Verify ABVM Homework backup poll
     types: [completed]
-  schedule:
-    - cron: '43 16 * * *'
-      timezone: 'America/New_York'
   workflow_dispatch:
 
 permissions:

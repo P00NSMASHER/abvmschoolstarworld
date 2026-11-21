@@ -207,7 +207,7 @@ test('actual dashboard distinguishes verified pending publication from an unreso
     write('stage.json',{run_id:null,jobs:[]});
     assert.equal(run().report.overall,'critical');
     f.refreshJobs.jobs[0].steps[0].conclusion='success';write('stage.json',f.refreshJobs);
-    write('pages/data/homework-current.json',{schemaVersion:1,status:'assignments',checkedAt:ago(9*3600)});
+    write('pages/data/homework-current.json',{schemaVersion:1,status:'assignments',checkedAt:ago(15*3600)});
     assert.equal(run().report.overall,'critical','source-stage proof cannot hide stale Homework');
   }finally{rmSync(root,{recursive:true,force:true});}
 });
