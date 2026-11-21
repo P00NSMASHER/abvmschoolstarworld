@@ -11,9 +11,8 @@ on:
       - '.github/workflows/daily-source-recovery.yml'
       - '.github/workflows/refresh-current-homework.yml'
   schedule:
-    # Two off-peak attempts per hour reduce the update window when GitHub drops
-    # a delayed scheduled event under platform load.
-    - cron: '7,37 6-23 * * *'
+    # Twice-daily source publication; event-driven recovery remains available.
+    - cron: '0 6,18 * * *'
       timezone: 'America/New_York'
   workflow_dispatch:
 
