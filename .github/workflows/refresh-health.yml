@@ -18,18 +18,7 @@ on:
       - Refresh current ABVM homework
       - Roll forward ABVM reviewed lunch week
     types: [completed]
-  schedule:
-    # Independent school-hour wake-up: source cron events can be delayed or dropped.
-    # A completed watchdog wakes the existing bounded source-recovery controller;
-    # this never bypasses exact-main QA, source provenance, or release parity.
-    - cron: '43 6-23 * * *'
-      timezone: 'America/New_York'
-    - cron: '29 16 * * *'
-      timezone: 'America/New_York'
-    # Verify the final 11:23 PM Homework poll after its 90-minute grace
-    # window. Completion also wakes the bounded self-recovery controller.
-    - cron: '53 0 * * *'
-      timezone: 'America/New_York'
+  # Event-driven health verification follows actual publication runs.
   workflow_dispatch:
 
 permissions:
