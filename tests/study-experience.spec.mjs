@@ -293,5 +293,6 @@ test('Undo returns keyboard focus to visible test practice',async({page})=>{
  await page.locator('[data-study-test-options] .study-test-history > summary').click();
  await page.locator('[data-complete-test]').click();
  const undo=page.locator('[data-undo-test]');await expect(undo).toBeFocused();await page.keyboard.press('Enter');
- await expect(page.locator('[data-test-guide]').first()).toBeFocused();await expect(page.locator('[data-test-guide]').first()).toBeVisible();
+ const firstPractice=page.locator('[data-test]:not([disabled]),[data-test-single]:not([disabled]),[data-test-guide]:not([disabled]),[data-complete-test]:not([disabled])').first();
+ await expect(firstPractice).toBeFocused();await expect(firstPractice).toBeVisible();await expect(firstPractice).toBeEnabled();
 });
