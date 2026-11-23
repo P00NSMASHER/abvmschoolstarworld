@@ -1488,63 +1488,51 @@
     ],
     "lunchMenu": [
       {
-        "date": "2026-11-16",
-        "day": "Monday, Nov. 16",
+        "date": "2026-11-23",
+        "day": "Monday, Nov. 23",
         "items": [
-          "Popcorn chicken",
-          "Mashed potatoes",
+          "Breaded chicken",
+          "Scallop potatoes",
           "WG roll",
-          "Corn",
+          "Green beans",
           "Fruit"
         ],
         "sourceId": "abvm-2026-11-parent-school-menu"
       },
       {
-        "date": "2026-11-17",
-        "day": "Tuesday, Nov. 17",
+        "date": "2026-11-24",
+        "day": "Tuesday, Nov. 24",
         "items": [
-          "Taco Tuesday & chips",
-          "Cheese",
-          "Brown rice",
-          "Salsa",
-          "Beans",
+          "Meatballs in sauce",
+          "WG pasta",
+          "Steamed corn",
           "Fruit"
         ],
         "sourceId": "abvm-2026-11-parent-school-menu"
       },
       {
-        "date": "2026-11-18",
-        "day": "Wednesday, Nov. 18",
+        "date": "2026-11-25",
+        "day": "Wednesday, Nov. 25",
         "items": [
-          "Buttered pierogies",
-          "WG roll",
-          "String cheese",
-          "Steamed carrots",
-          "Fruit"
-        ],
-        "sourceId": "abvm-2026-11-parent-school-menu"
-      },
-      {
-        "date": "2026-11-19",
-        "day": "Thursday, Nov. 19",
-        "items": [
-          "Beef cheesesteak",
-          "WG roll",
-          "French fries",
+          "Baked cheese pizza",
+          "Garden salad",
           "Steamed broccoli",
           "Fruit"
         ],
         "sourceId": "abvm-2026-11-parent-school-menu"
       },
       {
-        "date": "2026-11-20",
-        "day": "Friday, Nov. 20",
-        "items": [
-          "Macaroni & cheese",
-          "Breaded chicken",
-          "Stewed tomatoes",
-          "Fruit"
-        ],
+        "date": "2026-11-26",
+        "day": "Thursday, Nov. 26",
+        "items": [],
+        "status": "no-school",
+        "sourceId": "abvm-2026-11-parent-school-menu"
+      },
+      {
+        "date": "2026-11-27",
+        "day": "Friday, Nov. 27",
+        "items": [],
+        "status": "no-school",
         "sourceId": "abvm-2026-11-parent-school-menu"
       }
     ],
@@ -1844,16 +1832,16 @@
     "lunchMenuSource": {
       "status": "current-week",
       "retrievalState": "verified",
-      "checkedAt": "2026-11-20T21:58:53.610Z",
-      "lastAttemptAt": "2026-11-20T21:58:53.610Z",
+      "checkedAt": "2026-11-23T07:48:33.454Z",
+      "lastAttemptAt": "2026-11-23T07:48:33.454Z",
       "provider": "Saint Clair Area School District",
       "school": "Assumption BVM School",
       "feedUrl": "https://api-v2.appdeploy.ai/app/abvm-source-bridge-gkj08k/api/lunch-menu",
       "verificationMode": "reviewed-school-handout",
       "parentResourcesUrl": "https://www.assumptionbvmschool.net/parent-resources",
-      "weekStart": "2026-11-16",
-      "weekEnd": "2026-11-20",
-      "coverageThrough": "2026-11-20",
+      "weekStart": "2026-11-23",
+      "weekEnd": "2026-11-27",
+      "coverageThrough": "2026-11-27",
       "missingDates": [],
       "sourcePages": [
         {
@@ -1862,7 +1850,7 @@
           "contentHash": "a5d25beb5cbd34522ce4645172ab4efce1d041aab7fcc33521f3433c5cd0b178",
           "proofMode": "reviewed-notice",
           "reviewedAt": "2026-11-03T15:00:00.000Z",
-          "checkedAt": "2026-11-20T21:58:53.610Z",
+          "checkedAt": "2026-11-23T07:48:33.454Z",
           "state": "reviewed-notice"
         }
       ],
@@ -2587,7 +2575,7 @@
         "sourceId": "abvm-2026-11-parent-school-menu"
       }
     ],
-    "lunchMenuHash": "468f8a8fa84f252e48eaba3dea64fb7ec60511a6b12daf4e6f6b7fed044ca161",
+    "lunchMenuHash": "143b51323095f6cf61f0b8ac365c2403e8545b348905a6f656d61bcb65440582",
     "contentPipeline": {
       "schemaVersion": 2,
       "generatorVersion": "grade2-content-pipeline-v2-research-recovery",
