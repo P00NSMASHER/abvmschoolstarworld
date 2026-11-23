@@ -88,6 +88,8 @@ test('October 9 spelling test gets all 15 homework words, without leaking into l
 test('the deterministic Roblox curriculum export includes each word, current tier and dated test',()=>{
   const historicalPack=read('study-pack.json');
   historicalPack.pack.generatedAt='2026-10-08T16:00:00Z';
+  // Pin the verified October 9 teacher event independently of the rolling 45-day feed.
+  historicalPack.pack.importantDates=[{...spellingTest,date:'Friday, Oct. 9',source:'teacher-tests'}];
   const input={pack:historicalPack,archive:read('study-archive.json'),schoolwork:read('schoolwork.json'),fallbackQuestions:buildStarBank()};
   const out=buildStudyUniverse(input);
   const exported=out.questions.filter(q=>q.id.startsWith('work-spelling-oct09-'));
