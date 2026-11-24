@@ -5765,7 +5765,7 @@
     {
       "id": "nov24-cumulative-spelling-vowel-teams",
       "title": "Spelling: long-a spelling patterns",
-      "subject": "Spelling",
+      "subject": "Spelling / Handwriting",
       "sources": [
         "abvm-20261124-source-07.jpeg"
       ],
@@ -5783,7 +5783,7 @@
       "questions": [
         {
           "id": "abvm-1124-spelling-vowel-teams-1",
-          "subject": "Spelling",
+          "subject": "Spelling / Handwriting",
           "skill": "spelling-patterns",
           "prompt": "Which word is spelled correctly?",
           "answer": "eight",
@@ -5807,7 +5807,7 @@
         },
         {
           "id": "abvm-1124-spelling-vowel-teams-2",
-          "subject": "Spelling",
+          "subject": "Spelling / Handwriting",
           "skill": "spelling-patterns",
           "prompt": "Which word has long a spelled ay?",
           "answer": "day",
@@ -5831,7 +5831,7 @@
         },
         {
           "id": "abvm-1124-spelling-vowel-teams-3",
-          "subject": "Spelling",
+          "subject": "Spelling / Handwriting",
           "skill": "spelling-patterns",
           "prompt": "Which word has long a spelled ai?",
           "answer": "snail",
