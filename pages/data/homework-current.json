@@ -2,15 +2,10 @@
   "schemaVersion": 1,
   "sourceUrl": "https://sites.google.com/view/abvmgr2/homework",
   "sourceDateProvided": false,
-  "status": "assignments",
-  "checkedAt": "2026-11-24T06:20:40.314Z",
-  "firstObservedAt": "2026-11-23T15:59:04.988Z",
-  "contentChangedAt": "2026-11-23T15:59:04.988Z",
-  "contentHash": "87c2638c0873c245f4eeb90ea0467bba3cbd2e633f5b2f235c398b4137ba60b1",
-  "assignments": [
-    {
-      "subject": "Math",
-      "task": "Math paper"
-    }
-  ]
+  "status": "no-specific-posting",
+  "checkedAt": "2026-11-24T15:52:06.739Z",
+  "firstObservedAt": "2026-11-24T15:52:06.739Z",
+  "contentChangedAt": "2026-11-24T15:52:06.739Z",
+  "contentHash": "cc2f44a7607f774f7d0bf02f76fdc4500d9c367398a0daa9a6d2c93a140bf2f3",
+  "assignments": []
 }
